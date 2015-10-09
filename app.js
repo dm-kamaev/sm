@@ -17,7 +17,7 @@ const CONFIG = {
     PORT: 3000
 };
 
-const html = path.resolve(__dirname + '/src/index.html');
+const html = path.resolve(__dirname + '/dev/index.html');
 
 app.use(express.static(path.resolve(__dirname + '/public')))   ;
 
