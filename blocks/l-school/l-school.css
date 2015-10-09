@@ -1,0 +1,120 @@
+.l-school {
+    text-align: center;
+}
+
+.l-school__body {
+    display: inline-block;
+    width: 1200px;
+}
+
+.l-school__headline {
+    display: inline-block;
+    width:100%;
+    outline: 1px solid #aac71b;
+    text-align: left;
+    font-size: 25px;
+}
+
+.l-school__type {
+    display: inline;
+}
+.l-school__name {
+    display: inline;
+    font-weight: bold;
+    font-family: arial;
+    font-size: 30px;
+}
+.l-school__description {
+    width: 700px;
+    margin-top: 20px;
+    font-size: 20px;
+}
+
+.l-school__line-thingy {
+    display: inline-block;
+    width:100%;
+    height: 50px;
+    margin: 10 0;
+    background-color: #f4f4ec;
+}
+
+.l-school__content {
+    display: inline-block;
+    width:100%;
+    outline: 1px solid #1bc731;
+    font-size: 0px;
+}
+
+.l-school__content-column {
+    display: inline-block;
+    margin: 0 10;
+    width: 300px;
+    min-height: 500px;
+    vertical-align: top;
+    outline: 1px solid #1b68c7;
+    font-size: 10px;
+}
+
+.l-school__content-title {
+    margin-bottom: 20px;
+    display: inline-block;
+    width: 100%;
+    text-align: left;
+    font-weight: bold;
+}
+
+.l-school__content-title-image {
+
+}
+.l-school__content-title-text {
+    display: inline-block;
+    font-size: 20px;
+}
+
+
+.l-chool__content-link {
+    color: #ee362a;
+}
+
+
+
+
+.l-school__content-column_small {
+    width: 250px;
+}
+
+
+
+.l-school__header-dummy {
+    width:100%;
+    height: 100px;
+    display: inline-block;
+    background-color: #c80018;
+}
+
+.l-school__comment-dummy {
+    margin: 5;
+    width:100%;
+    height: 300px;
+
+    display: inline-block;
+    background-color: #c80018;
+}
+
+.l-school__ratings-dummy {
+    margin: 5;
+    width:100%;
+    height: 300px;
+
+    display: inline-block;
+    background-color: #c80018;
+}
+
+.l-school__map-dummy {
+    margin: 5;
+    width:100%;
+    height: 300px;
+
+    display: inline-block;
+    background-color: #c80018;
+}

@@ -1,0 +1,39 @@
+.b-section {
+    width:100%;
+    text-align: left;
+    font-size: 20px;
+}
+
+.b-section__header {
+    margin-bottom: 20px;
+    display: inline-block;
+    width: 100%;
+
+    font-weight: bold;
+}
+
+.b-section__image {
+
+}
+
+.b-section__header-text {
+    display: inline-block;
+    font-family: arial;
+
+}
+
+.b-section__text {
+
+}
+
+.b-section__text_bold {
+    font-weight: bold;
+}
+
+.b-section__link-list {
+    font-weight: bold;
+}
+
+.b-section-link {
+    color: #ee362a;
+}
