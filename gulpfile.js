@@ -5,10 +5,16 @@ const autoprefixer = require('gulp-autoprefixer');
 const cssnano = require('gulp-cssnano');
 const util = require('gulp-util');
 const uglify = require('gulp-uglify');
+const soy = require('gulp-soy');
 
 const production = !!util.env.production;
 
-gulp.task('scripts', function () {
+gulp.task('soy', function () {
+    return gulp.src(path.resolve(__dirname, 'dev/templates/*.soy'))
+        .pipe(soy());
+});
+
+gulp.task('scripts', ['soy'], function () {
     return gulp.src([path.resolve(__dirname, 'dev/js/lib/*.js'), path.resolve(__dirname, 'dev/**(!lib)/*.js'), path.resolve(__dirname, 'dev/**/*.js')])
         .pipe(concat('script.js'))
         .pipe(production ? uglify() : util.noop())
@@ -19,7 +25,7 @@ gulp.task('css', function () {
     return gulp.src([path.resolve(__dirname, 'dev/css/lib/*.css'), path.resolve(__dirname, 'dev/**(!lib)/*.css'), path.resolve(__dirname, 'dev/**/*.css')])
         .pipe(concat('styles.css'))
         .pipe(autoprefixer({
-            browsers: ['> 1%', 'last 4 versions'],
+            browsers: ['> 1%', 'last 4 versions', 'IE>=9'],
             cascade: false
         }))
         .pipe(production ? cssnano() : util.noop())
