@@ -1,16 +1,6 @@
 'use strict';
 const path = require('path');
 const express = require('express');
-const webpack = require('webpack');
-
-// const wpConfig = require('./webpack.config.js');
-//
-// const compiler = webpack(wpConfig);
-//
-// compiler.watch({
-//     aggregateTimeout: 300, // wait so long for more changes
-//     poll: true
-// }, (err, stats) => err ? err : stats);
 
 const app = express();
 const CONFIG = {

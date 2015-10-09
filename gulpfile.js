@@ -6,26 +6,29 @@ const cssnano = require('gulp-cssnano');
 const util = require('gulp-util');
 const uglify = require('gulp-uglify');
 const soy = require('gulp-soy');
+const sass = require('gulp-ruby-sass');
 
 const production = !!util.env.production;
 
 gulp.task('soy', function () {
-    return gulp.src(path.resolve(__dirname, 'dev/templates/*.soy'))
-        .pipe(soy());
+    return gulp.src(path.resolve(__dirname, 'dev/blocks/**/*.soy'))
+        .pipe(soy())
+        .pipe(concat('templates.js'))
+        .pipe(gulp.dest(path.resolve(__dirname, 'tmp')));
 });
 
 gulp.task('scripts', ['soy'], function () {
-    return gulp.src([path.resolve(__dirname, 'dev/js/lib/*.js'), path.resolve(__dirname, 'dev/**(!lib)/*.js'), path.resolve(__dirname, 'dev/**/*.js')])
+    return gulp.src([path.resolve(__dirname, 'tmp/template.js'), path.resolve(__dirname, 'dev/blocks/**/*.js')])
         .pipe(concat('script.js'))
         .pipe(production ? uglify() : util.noop())
         .pipe(gulp.dest(path.resolve(__dirname, 'public')));
 });
 
-gulp.task('css', function () {
-    return gulp.src([path.resolve(__dirname, 'dev/css/lib/*.css'), path.resolve(__dirname, 'dev/**(!lib)/*.css'), path.resolve(__dirname, 'dev/**/*.css')])
+gulp.task('styles', function () {
+    return sass([path.resolve(__dirname, 'dev/blocks/**/*.scss'), path.resolve(__dirname, 'dev/**/*.css')])
         .pipe(concat('styles.css'))
         .pipe(autoprefixer({
-            browsers: ['> 1%', 'last 4 versions', 'IE>=9'],
+            browsers: ['> 1%', 'last 4 versions', 'ie >= 9'],
             cascade: false
         }))
         .pipe(production ? cssnano() : util.noop())
@@ -33,12 +36,12 @@ gulp.task('css', function () {
 });
 
 gulp.task('images', function () {
-    return gulp.src(path.resolve(__dirname, 'dev/images/**/*'))
+    return gulp.src(path.resolve(__dirname, 'dev/blocks/**/*.png'))
         .pipe(gulp.dest(path.resolve(__dirname, 'public/images')));
 });
 
 gulp.task('fonts', function () {
-    return gulp.src(path.resolve(__dirname, 'dev/fonts/**/*'))
+    return gulp.src(path.resolve(__dirname, 'dev/fonts/*'))
         .pipe(gulp.dest(path.resolve(__dirname, 'public/fonts')));
 });
 
@@ -49,11 +52,11 @@ gulp.task('shared', function () {
 
 gulp.task('watch', function () {
     gulp.watch(path.resolve(__dirname, 'dev/js/**/*.js'), ['scripts']);
-    gulp.watch(path.resolve(__dirname, 'dev/css/**/*.css'), ['css']);
+    gulp.watch(path.resolve(__dirname, 'dev/css/**/*.scss'), ['styles']);
 });
 
 const tasks = function (bool) {
-    return bool ? ['scripts', 'images', 'css', 'fonts', 'shared'] : ['watch', 'scripts', 'images', 'css', 'fonts']
+    return bool ? ['soy', 'scripts', 'images', 'styles', 'fonts', 'shared'] : ['watch', 'soy', 'scripts', 'images', 'styles', 'fonts']
 }
 
 gulp.task('default', tasks(production));
