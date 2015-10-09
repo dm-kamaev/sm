@@ -1,0 +1,102 @@
+.l-school-market {
+    margin: 0;
+    padding: 0;
+}
+
+.b-mark {
+    width: auto;
+    padding: 0 20px;
+}
+
+.b-mark__total {
+    margin-right: 20px;
+
+    min-width: 60px;
+
+    display: inline-block;
+    float: left;
+
+    text-align: center;
+}
+
+.b-mark__average {
+    padding-bottom: 15px;
+
+    font-size: 24px;
+    font-weight: bold;
+
+    color: #fd3424;
+}
+
+.b-mark__count {
+    font-size: 10px;
+    color: #a1a1a1;
+}
+
+.b-mark__count-value {
+    display: inline-block;
+}
+
+.b-mark__count-context {
+    display: inline-block;
+}
+
+
+.b-mark__stats {
+    padding-left: 30px;
+
+    display: inline-block;
+    font-size: 11px;
+
+    border-left: 1px solid #a1a1a1;
+}
+
+.b-mark__stat {
+    padding: 5px 0;
+}
+
+.b-stars {
+    display: inline-block;
+
+    min-width: 50px;
+
+    text-align: right;
+}
+
+.b-mark__bar {
+    position: relative;
+
+    margin: 0 27px;
+    display: inline-block;
+
+    width: 100px;
+    height: 5px;
+
+    background-color: #e7e7e7;
+}
+
+.b-mark__bar-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    display: inline-block;
+
+    width: 40%;
+    height: 5px;
+
+    background-color: #000000;
+}
+
+
+.b-mark__bar_max .b-mark__bar-progress {
+    background-color: #fd3424;
+}
+
+.b-mark__count {
+    width: auto;
+    display: inline-block;
+
+    vertical-align: middle;
+
+}
