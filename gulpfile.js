@@ -24,19 +24,20 @@ gulp.task('soy', function () {
 
 gulp.task('scripts', ['soy'], function () {
     return gulp.src([
-            path.resolve(__dirname, COMPILED_SOY_DIR, COMPILED_SOY_FILE),
-            path.resolve(__dirname, BLOCKS_DIR, '**/*.js')
-        ])
+        path.resolve(__dirname, COMPILED_SOY_DIR, COMPILED_SOY_FILE),
+        path.resolve(__dirname, BLOCKS_DIR, '**/*.js')
+    ])
         .pipe(concat('script.js'))
         .pipe(production ? uglify() : util.noop())
         .pipe(gulp.dest(path.resolve(__dirname, 'public')));
 });
 
 gulp.task('styles', function () {
-    return sass([
-            path.resolve(__dirname, BLOCKS_DIR, '/**/*.scss'),
-            path.resolve(__dirname, 'dev/**/*.css')
-        ])
+    return gulp.src([
+        path.resolve(__dirname, BLOCKS_DIR, '/**/*.scss'),
+        path.resolve(__dirname, BLOCKS_DIR, '/**/*.css')
+    ])
+        .pipe(sass().on('error', sass.logError))
         .pipe(concat('styles.css'))
         .pipe(autoprefixer({
             browsers: ['> 1%', 'last 4 versions', 'ie >= 9'],
@@ -62,14 +63,23 @@ gulp.task('shared', function () {
 });
 
 gulp.task('watch', function () {
-    gulp.watch(path.resolve(__dirname, 'dev/js/**/*.js'), ['scripts']);
-    gulp.watch(path.resolve(__dirname, 'dev/css/**/*.scss'), ['styles']);
+    gulp.watch([
+        path.resolve(__dirname, COMPILED_SOY_DIR, COMPILED_SOY_FILE),
+        path.resolve(__dirname, BLOCKS_DIR, '**/*.js')
+    ], ['scripts']);
+    gulp.watch([
+        path.resolve(__dirname, BLOCKS_DIR, '**/*.scss'),
+        path.resolve(__dirname, BLOCKS_DIR, '**/*.css')
+    ], ['styles']);
+    gulp.watch(
+        path.resolve(__dirname, BLOCKS_DIR, '**/*.soy'),
+        ['soy']);
 });
 
 const tasks = function (bool) {
     return bool ?
         ['soy', 'scripts', 'images', 'styles', 'fonts', 'shared'] :
-        ['watch', 'soy', 'scripts', 'images', 'styles', 'fonts'];
+        ['watch', 'soy', 'scripts', 'images', 'styles'];
 };
 
 gulp.task('default', tasks(production));

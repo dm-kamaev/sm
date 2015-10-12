@@ -13,28 +13,29 @@ const CONFIG = {
 //     allowDinamicRecompile: true
 // });
 
-const soyTemplate = (dir, template) => soynode.compileTemplates(dir, (err) => err ?
-console.log('Compilation fucked up: ' + err) : soynode.render(template));
+const sendCompiledTemplate = (template, action) =>
+    soynode.loadCompiledTemplates(path.resolve(__dirname, '/tmp'), (err) =>
+        err ? console.log('Compilation fucked up: ' + err) : action(soynode.render(template))
+);
 
-const html = soyTemplate(path.resolve(__dirname + '/dev/blocks/l-schools'), 'mel.lschools.layout');
-
+// const html = soyTemplate(path.resolve(__dirname + '/dev/blocks/l-schools'), 'mel.lschools.layout');
+// console.log(html);
 app.use(express.static(path.resolve(__dirname + '/public')));
 
 
 app.get('/', (req, res) => {
     console.log('/');
-    res.sendFile(html);
-    // console.log(html)
+    sendCompiledTemplate('mel.lschools.layout', res.send.bind(res));
 });
 
 app.get('/search', (req, res) => {
     console.log('/search');
-    res.send(html);
+    // res.send(html);
 });
 
 app.get('/school/:id', (req, res) => {
     console.log('/school/' + req.params.id);
-    res.send(html);
+    // res.send(html);
 });
 
 
