@@ -6,26 +6,37 @@ const cssnano = require('gulp-cssnano');
 const util = require('gulp-util');
 const uglify = require('gulp-uglify');
 const soy = require('gulp-soy');
-const sass = require('gulp-ruby-sass');
+const sass = require('gulp-sass');
 
 const production = !!util.env.production;
 
+const BLOCKS_DIR = 'dev/blocks';
+const COMPILED_SOY_DIR = 'tmp';
+const COMPILED_SOY_FILE = 'templates.js';
+
+
 gulp.task('soy', function () {
-    return gulp.src(path.resolve(__dirname, 'dev/blocks/**/*.soy'))
+    return gulp.src(path.resolve(__dirname, BLOCKS_DIR, '**/*.soy'))
         .pipe(soy())
-        .pipe(concat('templates.js'))
-        .pipe(gulp.dest(path.resolve(__dirname, 'tmp')));
+        .pipe(concat(COMPILED_SOY_FILE))
+        .pipe(gulp.dest(path.resolve(__dirname, COMPILED_SOY_DIR)));
 });
 
 gulp.task('scripts', ['soy'], function () {
-    return gulp.src([path.resolve(__dirname, 'tmp/template.js'), path.resolve(__dirname, 'dev/blocks/**/*.js')])
+    return gulp.src([
+            path.resolve(__dirname, COMPILED_SOY_DIR, COMPILED_SOY_FILE),
+            path.resolve(__dirname, BLOCKS_DIR, '**/*.js')
+        ])
         .pipe(concat('script.js'))
         .pipe(production ? uglify() : util.noop())
         .pipe(gulp.dest(path.resolve(__dirname, 'public')));
 });
 
 gulp.task('styles', function () {
-    return sass([path.resolve(__dirname, 'dev/blocks/**/*.scss'), path.resolve(__dirname, 'dev/**/*.css')])
+    return sass([
+            path.resolve(__dirname, BLOCKS_DIR, '/**/*.scss'),
+            path.resolve(__dirname, 'dev/**/*.css')
+        ])
         .pipe(concat('styles.css'))
         .pipe(autoprefixer({
             browsers: ['> 1%', 'last 4 versions', 'ie >= 9'],
@@ -36,7 +47,7 @@ gulp.task('styles', function () {
 });
 
 gulp.task('images', function () {
-    return gulp.src(path.resolve(__dirname, 'dev/blocks/**/*.png'))
+    return gulp.src(path.resolve(__dirname, BLOCKS_DIR, '**/*.png'))
         .pipe(gulp.dest(path.resolve(__dirname, 'public/images')));
 });
 
@@ -56,7 +67,9 @@ gulp.task('watch', function () {
 });
 
 const tasks = function (bool) {
-    return bool ? ['soy', 'scripts', 'images', 'styles', 'fonts', 'shared'] : ['watch', 'soy', 'scripts', 'images', 'styles', 'fonts']
-}
+    return bool ?
+        ['soy', 'scripts', 'images', 'styles', 'fonts', 'shared'] :
+        ['watch', 'soy', 'scripts', 'images', 'styles', 'fonts'];
+};
 
 gulp.task('default', tasks(production));
