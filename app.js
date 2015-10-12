@@ -2,13 +2,21 @@
 
 const path = require('path');
 const express = require('express');
+const soynode = require('soynode');
 
 const app = express();
 const CONFIG = {
     PORT: 3000
 };
+//
+// soynode.setOptions({
+//     allowDinamicRecompile: true
+// });
 
-const html = path.resolve(__dirname + '/dev/index.html');
+const soyTemplate = (dir, template) => soynode.compileTemplates(dir, (err) => err ?
+console.log('Compilation fucked up: ' + err) : soynode.render(template));
+
+const html = soyTemplate(path.resolve(__dirname + '/dev/blocks/l-schools'), 'mel.lschools.layout');
 
 app.use(express.static(path.resolve(__dirname + '/public')));
 
@@ -16,6 +24,7 @@ app.use(express.static(path.resolve(__dirname + '/public')));
 app.get('/', (req, res) => {
     console.log('/');
     res.sendFile(html);
+    // console.log(html)
 });
 
 app.get('/search', (req, res) => {
