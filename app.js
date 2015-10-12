@@ -14,7 +14,7 @@ const CONFIG = {
 // });
 
 const sendCompiledTemplate = (template, action) =>
-    soynode.loadCompiledTemplates(path.resolve(__dirname, '/tmp'), (err) =>
+    soynode.loadCompiledTemplates(path.resolve(__dirname + '/tmp'), (err) =>
         err ? console.log('Compilation fucked up: ' + err) : action(soynode.render(template))
 );
 
