@@ -16,26 +16,26 @@ const COMPILED_SOY_FILE = '/templates.js';
 
 
 gulp.task('soy', function () {
-    return gulp.src(path.resolve(__dirname + BLOCKS_DIR + '/**/*.soy'))
+    return gulp.src(path.join(__dirname + BLOCKS_DIR + '/**/*.soy'))
         .pipe(soy())
         .pipe(concat(COMPILED_SOY_FILE))
-        .pipe(gulp.dest(path.resolve(__dirname + COMPILED_SOY_DIR)));
+        .pipe(gulp.dest(path.join(__dirname + COMPILED_SOY_DIR)));
 });
 
 gulp.task('scripts', ['soy'], function () {
     return gulp.src([
-        path.resolve(__dirname + COMPILED_SOY_DIR + COMPILED_SOY_FILE),
-        path.resolve(__dirname + BLOCKS_DIR + '/**/*.js')
+        path.join(__dirname + COMPILED_SOY_DIR + COMPILED_SOY_FILE),
+        path.join(__dirname + BLOCKS_DIR + '/**/*.js')
     ])
         .pipe(concat('script.js'))
         .pipe(production ? uglify() : util.noop())
-        .pipe(gulp.dest(path.resolve(__dirname + '/public')));
+        .pipe(gulp.dest(path.join(__dirname + '/public')));
 });
 
 gulp.task('styles', function () {
     return gulp.src([
-        path.resolve(__dirname + BLOCKS_DIR + '/**/*.scss'),
-        path.resolve(__dirname + BLOCKS_DIR + '/**/*.css')
+        path.join(__dirname + BLOCKS_DIR + '/**/*.scss'),
+        path.join(__dirname + BLOCKS_DIR + '/**/*.css')
     ])
         .pipe(sass().on('error', sass.logError))
         .pipe(concat('styles.css'))
@@ -44,38 +44,38 @@ gulp.task('styles', function () {
             cascade: false
         }))
         .pipe(production ? cssnano() : util.noop())
-        .pipe(gulp.dest(path.resolve(__dirname + '/public')));
+        .pipe(gulp.dest(path.join(__dirname + '/public')));
 });
 
 gulp.task('images', function () {
-    return gulp.src(path.resolve(__dirname + BLOCKS_DIR + '/**/*.png'))
-        .pipe(gulp.dest(path.resolve(__dirname + '/public/images')));
+    return gulp.src(path.join(__dirname + BLOCKS_DIR + '/**/*.png'))
+        .pipe(gulp.dest(path.join(__dirname + '/public/images')));
 });
 
 gulp.task('fonts', function () {
-    return gulp.src(path.resolve(__dirname + '/dev/fonts/*'))
-        .pipe(gulp.dest(path.resolve(__dirname + '/public/fonts')));
+    return gulp.src(path.join(__dirname + '/dev/fonts/*'))
+        .pipe(gulp.dest(path.join(__dirname + '/public/fonts')));
 });
 
 gulp.task('shared', function () {
-    return gulp.src(path.resolve(__dirname + '/dev/shared/*'))
-        .pipe(gulp.dest(path.resolve(__dirname + '/public/shared')));
+    return gulp.src(path.join(__dirname + '/dev/shared/*'))
+        .pipe(gulp.dest(path.join(__dirname + '/public/shared')));
 });
 
 gulp.task('watch', function () {
     gulp.watch([
-        path.resolve(__dirname + COMPILED_SOY_DIR + COMPILED_SOY_FILE),
-        path.resolve(__dirname + BLOCKS_DIR + '/**/*.js')
+        path.join(__dirname + COMPILED_SOY_DIR + COMPILED_SOY_FILE),
+        path.join(__dirname + BLOCKS_DIR + '/**/*.js')
     ], ['scripts']);
     gulp.watch([
-        path.resolve(__dirname + BLOCKS_DIR + '/**/*.scss'),
-        path.resolve(__dirname + BLOCKS_DIR + '/**/*.css')
+        path.join(__dirname + BLOCKS_DIR + '/**/*.scss'),
+        path.join(__dirname + BLOCKS_DIR + '/**/*.css')
     ], ['styles']);
     gulp.watch(
-        path.resolve(__dirname + BLOCKS_DIR + '/**/*.soy'),
+        path.join(__dirname + BLOCKS_DIR + '/**/*.soy'),
         ['soy']);
 });
-console.log(path.resolve(__dirname + COMPILED_SOY_DIR + COMPILED_SOY_FILE));
+console.log(path.join(__dirname + COMPILED_SOY_DIR + COMPILED_SOY_FILE));
 const tasks = function (bool) {
     return bool ?
         ['soy', 'scripts', 'images', 'styles', 'fonts', 'shared'] :

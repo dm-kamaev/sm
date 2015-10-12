@@ -12,15 +12,15 @@ const CONFIG = {
 // soynode.setOptions({
 //     allowDinamicRecompile: true
 // });
-
+console.log(path.join(__dirname + '/tmp'));
 const sendCompiledTemplate = (template, action) =>
-    soynode.loadCompiledTemplates(path.resolve(__dirname + '/tmp'), (err) =>
+    soynode.loadCompiledTemplateFiles(path.join(__dirname + '/tmp/templates.js'), (err) =>
         err ? console.log('Compilation fucked up: ' + err) : action(soynode.render(template))
 );
 
-// const html = soyTemplate(path.resolve(__dirname + '/dev/blocks/l-schools'), 'mel.lschools.layout');
+// const html = soyTemplate(path.join(__dirname + '/dev/blocks/l-schools'), 'mel.lschools.layout');
 // console.log(html);
-app.use(express.static(path.resolve(__dirname + '/public')));
+app.use(express.static(path.join(__dirname + '/public')));
 
 
 app.get('/', (req, res) => {
