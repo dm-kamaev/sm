@@ -1,0 +1,9 @@
+.idea/
+assets
+node_modules/
+
+public/
+tmp/
+
+.sass-cache/
+*.log

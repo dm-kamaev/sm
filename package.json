@@ -1,0 +1,37 @@
+{
+  "name": "schools-admin",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./server/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "NODE_ENV=development node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/c7s/shools-admin.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/c7s/shools-admin/issues"
+  },
+  "homepage": "https://github.com/c7s/shools-admin#readme",
+  "devDependencies": {
+    "concat": "^1.0.0",
+    "eslint": "^1.6.0",
+    "gulp": "^3.9.0",
+    "gulp-autoprefixer": "^3.0.2",
+    "gulp-concat": "^2.6.0",
+    "gulp-cssnano": "^2.0.0",
+    "gulp-sass": "^2.0.4",
+    "gulp-soy": "^1.0.1",
+    "gulp-uglify": "^1.4.1",
+    "gulp-util": "^3.0.6",
+    "node-sass": "^3.3.3",
+    "soynode": "^1.0.1"
+  },
+  "dependencies": {
+    "express": "^4.13.3"
+  }
+}
