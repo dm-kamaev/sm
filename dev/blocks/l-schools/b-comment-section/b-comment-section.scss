@@ -1,0 +1,45 @@
+.b-comment-section{
+    display: inline-block;
+    *display: inline;
+    zoom: 1;
+
+    width: 100%;
+    margin: 0 0 10px 0;
+
+    background-color: white;
+}
+
+.b-comment-section__section-name{
+    display: inline-block;
+    *display: inline;
+    zoom: 1;
+	float: left;
+	
+	width:15%;
+    /*margin: 0 0 10px 0;*/
+
+    text-align: left;
+	font-weight: bold;
+}
+
+.b-comment-section__stars-rating{
+    display: inline-block;
+    *display: inline;
+    zoom: 1;
+	float: left;
+
+	width: 10%;
+    font-size: 14px;
+}
+
+.b-comment-section__text{
+    display: inline-block;
+    *display: inline;
+    zoom: 1;
+	float: left;
+
+	width: 75%;
+    /*margin: 0 0 10px 0;*/
+
+    text-align: left;
+}
