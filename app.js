@@ -5,27 +5,31 @@ const express = require('express');
 const soynode = require('soynode');
 
 const app = express();
+
 const CONFIG = {
     PORT: 3000
 };
-//
+
+const LANDING_TEMPLATE = {
+    template: 'mel.lschools.layout',
+    params: {}
+};
 // soynode.setOptions({
 //     allowDinamicRecompile: true
 // });
-console.log(path.join(__dirname + '/tmp'));
-const sendCompiledTemplate = (template, action) =>
+
+const sendCompiledTemplate = (action, templateObj) =>
     soynode.loadCompiledTemplateFiles(path.join(__dirname + '/tmp/templates.js'), (err) =>
-        err ? console.log('Compilation fucked up: ' + err) : action(soynode.render(template))
+        err ? console.log('Compilation failed: ' + err) : action(soynode.render(templateObj.template, templateObj.params))
 );
 
-// const html = soyTemplate(path.join(__dirname + '/dev/blocks/l-schools'), 'mel.lschools.layout');
-// console.log(html);
+
 app.use(express.static(path.join(__dirname + '/public')));
 
 
 app.get('/', (req, res) => {
     console.log('/');
-    sendCompiledTemplate('mel.lschools.layout', res.send.bind(res));
+    sendCompiledTemplate(res.send.bind(res), LANDING_TEMPLATE);
 });
 
 app.get('/search', (req, res) => {
