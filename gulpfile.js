@@ -9,6 +9,7 @@ const soynode = require('gulp-soynode');
 const sass = require('gulp-sass');
 const babel = require('gulp-babel');
 const gulpFilter = require('gulp-filter');
+// const gulpHelper = require('./node_modules/frobl/gulp-helper.js').use(gulp);
 
 const production = !!util.env.production;
 
@@ -82,7 +83,7 @@ gulp.task('watch', function () {
         path.join(__dirname + BLOCKS_DIR + '/**/*.css')
     ], ['styles']);
 });
-console.log(path.join(__dirname + COMPILED_SOY_DIR + COMPILED_SOY_FILE));
+
 const tasks = function (bool) {
     return bool ?
         ['soy', 'scripts', 'images', 'styles', 'fonts', 'shared'] :
