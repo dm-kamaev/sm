@@ -66,13 +66,17 @@
  */
 {template .stat_ private="true"}
         <div class="b-mark__stat">
-            {call sm.bStar.Template.base}
-                {param params: $params.mark /}
+            {call sm.bStars.Template.base}
+                {param params: [
+                    'data': [
+                        'mark': $params.mark
+                    ]
+                ] /}
             {/call}
 
             <div class="b-mark__bar
-                        {$params.isMax ? " b-mark__bar_max" : ""}">
-                <div class='b-mark__bar-progress'>
+                        {$params.isMax ? ' b-mark__bar_max' : ''}">
+                <div class="b-mark__bar-progress">
                 </div>
             </div>
 
