@@ -12,7 +12,7 @@ const CONFIG = {
 
 const LANDING_TEMPLATE = {
     template: 'mel.lschools.layout',
-    params: {}
+    args: {}
 };
 // soynode.setOptions({
 //     allowDinamicRecompile: true
@@ -20,7 +20,7 @@ const LANDING_TEMPLATE = {
 
 const sendCompiledTemplate = (action, templateObj) =>
     soynode.loadCompiledTemplateFiles(path.join(__dirname + '/tmp/templates.js'), (err) =>
-        err ? console.log('Compilation failed: ' + err) : action(soynode.render(templateObj.template, templateObj.params))
+        err ? console.log('Compilation failed: ' + err) : action(soynode.render(templateObj.template, templateObj.args))
 );
 
 

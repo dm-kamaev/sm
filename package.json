@@ -31,7 +31,8 @@
     "gulp-uglify": "^1.4.1",
     "gulp-util": "^3.0.6",
     "node-sass": "^3.3.3",
-    "soynode": "^1.0.1"
+    "soynode": "^1.0.1",
+    "frobl": "git+ssh://git@github.com:c7s/frobl.git#dev"
   },
   "dependencies": {
     "express": "^4.13.3"
