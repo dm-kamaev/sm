@@ -5,9 +5,10 @@ const autoprefixer = require('gulp-autoprefixer');
 const cssnano = require('gulp-cssnano');
 const util = require('gulp-util');
 const uglify = require('gulp-uglify');
-const soy = require('gulp-soy');
+const soynode = require('gulp-soynode');
 const sass = require('gulp-sass');
 const babel = require('gulp-babel');
+const gulpFilter = require('gulp-filter');
 
 const production = !!util.env.production;
 
@@ -25,7 +26,8 @@ gulp.task('appES5', function () {
 
 gulp.task('soy', function () {
     return gulp.src(path.join(__dirname + BLOCKS_DIR + '/**/*.soy'))
-        .pipe(soy())
+        .pipe(soynode({loadCompiledTemplates: false}))
+        .pipe(gulpFilter('**/*.js'))
         .pipe(concat(COMPILED_SOY_FILE))
         .pipe(gulp.dest(path.join(__dirname + COMPILED_SOY_DIR)));
 });
@@ -72,16 +74,13 @@ gulp.task('shared', function () {
 
 gulp.task('watch', function () {
     gulp.watch([
-        path.join(__dirname + COMPILED_SOY_DIR + COMPILED_SOY_FILE),
+        path.join(__dirname + BLOCKS_DIR + '/**/*.soy'),
         path.join(__dirname + BLOCKS_DIR + '/**/*.js')
     ], ['scripts']);
     gulp.watch([
         path.join(__dirname + BLOCKS_DIR + '/**/*.scss'),
         path.join(__dirname + BLOCKS_DIR + '/**/*.css')
     ], ['styles']);
-    gulp.watch(
-        path.join(__dirname + BLOCKS_DIR + '/**/*.soy'),
-        ['soy']);
 });
 console.log(path.join(__dirname + COMPILED_SOY_DIR + COMPILED_SOY_FILE));
 const tasks = function (bool) {
