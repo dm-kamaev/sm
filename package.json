@@ -28,6 +28,7 @@
     "gulp-soy": "^1.0.1",
     "gulp-uglify": "^1.4.1",
     "gulp-util": "^3.0.6",
+    "gulp-babel": "^5.2.1",
     "node-sass": "^3.3.3",
     "soynode": "^1.0.1"
   },
