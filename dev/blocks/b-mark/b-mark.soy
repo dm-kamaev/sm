@@ -1,0 +1,83 @@
+{namespace sm.bMark.Template}
+
+/**
+ * The mark template
+ * @param params {{
+ *     data: {
+ *         stats: [{
+ *             value: ?Number,
+ *             mark: ?Number,
+ *             isMax: ?Boolean
+ *         }],
+ *         total: {
+ *             average: ?Number,
+ *             countValue: ?Number
+ *         }
+ *     }
+ * }}
+*/
+{template .base}
+    <div class="b-mark">
+        {call .total_}
+            {param params: $params.data.total /}
+        {/call}
+        <div class="b-mark__stats">
+            {foreach $stat in $params.data.stats}
+                {call .stat_}
+                    {param params: $stat /}
+                {/call}
+            {/foreach}
+        </div>
+    </div>
+{/template}
+
+
+/**
+ * The total template
+ * @param params {{
+ *    average: ?Number,
+ *    countValue: ?Number
+ * }}
+ */
+{template .total_ private="true"}
+    <div class="b-mark__total">
+        <div class="b-mark__average">
+            {$params.average}
+        </div>
+        <div class="b-mark__count">
+            <div class="b-mark__count-value">
+                {$params.countValue}
+            </div>
+            <div class="b-mark__count-label">
+                голосов
+            </div>
+        </div>
+    </div>
+{/template}
+
+
+/**
+ * The stat template
+ * @param params {{
+ *     value: ?Number,
+ *     mark: ?Number,
+ *     isMax: ?Boolean
+ * }}
+ */
+{template .stat_ private="true"}
+        <div class="b-mark__stat">
+            {call sm.bStar.Template.base}
+                {param params: $params.mark /}
+            {/call}
+
+            <div class="b-mark__bar
+                        {$params.isMax ? " b-mark__bar_max" : ""}">
+                <div class='b-mark__bar-progress'>
+                </div>
+            </div>
+
+            <div class="b-mark__count">
+                {$params.value}
+            </div>
+        </div>
+{/template}
