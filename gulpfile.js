@@ -5,7 +5,7 @@ const autoprefixer = require('gulp-autoprefixer');
 const cssnano = require('gulp-cssnano');
 const util = require('gulp-util');
 const uglify = require('gulp-uglify');
-const soy = require('gulp-soy');
+const soy = require('gulp-soynode');
 const sass = require('gulp-sass');
 
 const production = !!util.env.production;
