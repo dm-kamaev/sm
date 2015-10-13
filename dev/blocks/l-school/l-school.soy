@@ -1,0 +1,132 @@
+{namespace bp.lSchool.Template}
+
+/**
+ * Content title
+ *
+ */
+{template .contentTitle autoescape="strict" kind="html"}
+    {@param?
+        params: [
+            image?:string,
+            text:string,
+            buttonAlt:string,
+        ]
+    }
+    /*{@param?
+        params: [
+            image:string,
+            text:string
+        ]
+    }*/
+    <div class="l-school__content-header">
+        {if $params.image!=null}
+            <img class="l-school__content-header-image" src="{$params.image}">
+        {/if}
+        <div class="l-school__content-header-text ">{$params.text}</div>
+    </div>
+{/template}
+
+
+/**
+ * Director block
+ *
+ */
+{template .director autoescape="strict" kind="html"}
+    {@param
+        dirName:string
+    }
+    <div class="l-school__content-director">
+        {let $title.image:"123.png"}
+        {let $title.text:"ДИРЕКТОР"}
+        {let $title.buttonAlt:"надпись"}
+        {call .contentTitle}
+            {param params: $title /}
+        {/call}
+    </div>
+{/template}
+
+/**
+ * Contacts block
+ *
+ */
+{template .director autoescape="strict" kind="html"}
+    {@param
+        dirName:string
+    }
+    <div class="l-school__content-contacts">
+        {let $title.image:"123.png"}
+        {let $title.text:"КОНТАКТЫ"}
+        {let $title.buttonAlt:"надпись2"}
+        {call .contentTitle}
+            {param params: $title /}
+        {/call}
+    </div>
+{/template}
+
+
+
+/**
+ * Defaul school view
+ *
+ */
+{template .base autoescape="strict" kind="html"}
+    {@param? params:
+     [
+         data:
+         [
+             schoolName: string,
+             schoolDescr: string
+         ]
+     ]
+    }
+
+   <div class="l-school">
+       /*Тут должен вызываться шаблон хедера*/
+       <div class="l-school__header-dummy"></div>
+   </div>
+   <div class="l-school__body">
+       <div class="l-school__top-content">
+           <div class="l-school__content-column l-school__content-column_double_width">
+               <div class="l-school__name">{$params.data.schoolName}</div>
+               <div class="l-school__description">{$params.data.schoolDescr}</div>
+           </div>
+           <div class="l-school__content-column l-school__content-column_last">
+                /*хрень*/
+           </div>
+       </div>
+       <hr class="l-school__horisontal-line">
+       <div class="l-school__middle-content">
+
+           /*СЕКЦИЯ 1*/
+           <div class="l-school__content-column">
+                 /*тут должен ывзываться шаблон карты*/
+                 <div class="l-school__map-dummy">
+                 </div>
+           </div>
+
+           /*СЕКЦИЯ 2*/
+           <div class="l-school__content-column">
+           </div>
+
+           /*СЕКЦИЯ 3*/
+           <div class="l-school__content-column l-school__content-column_last">
+           </div>
+       </div>
+       <hr class="l-school__horisontal-line">
+       <div class="l-school__bottom-content">
+           <div class="l-school__content-column">
+               /*тут должен ывзываться шаблон оценок*/
+               <div class="l-school__ratings-dummy">
+               </div>
+           </div>
+           <div class="l-school__content-column l-school__content-column_double_width l-school__content-column_last">
+               /*тут должен ывзываться шаблон комментариев*/
+               <div class="l-school__comment-dummy">
+               </div>
+           </div>
+       </div>
+       <hr class="l-school__horisontal-line">
+       <div class="l-school__footer"></div>
+   </div>
+
+{/template}

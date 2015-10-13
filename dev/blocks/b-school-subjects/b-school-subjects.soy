@@ -1,0 +1,25 @@
+{namespace bp.bSchoolSubject.Template}
+
+
+/**
+ * Defaul subjects view
+ *
+ */
+{template .base autoescape="strict" kind="html"}
+    {@param? params:
+        {
+            subjects: list<{
+                picture:string,
+                name:string
+            }>
+        }
+    }
+    <div class="b-school-subjects">
+        {foreach $subject in $params.subjects}
+            <div class="b-school-subjects__line">
+                <img src="{$subject.picture}" alt="">
+                <div class="l-scool__content-text">{$subject.name}</div>
+            </div>
+        {/foreach}
+     </div>
+{/template}
