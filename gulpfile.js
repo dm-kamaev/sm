@@ -7,6 +7,7 @@ const util = require('gulp-util');
 const uglify = require('gulp-uglify');
 const soy = require('gulp-soy');
 const sass = require('gulp-sass');
+const babel = require('gulp-babel');
 
 const production = !!util.env.production;
 
@@ -14,6 +15,13 @@ const BLOCKS_DIR = '/dev/blocks';
 const COMPILED_SOY_DIR = '/tmp';
 const COMPILED_SOY_FILE = '/templates.js';
 
+
+gulp.task('appES5', function () {
+    return gulp.src('app.js')
+        .pipe(babel())
+        .pipe(concat('appES5.js'))
+        .pipe(gulp.dest(''));
+});
 
 gulp.task('soy', function () {
     return gulp.src(path.join(__dirname + BLOCKS_DIR + '/**/*.soy'))
