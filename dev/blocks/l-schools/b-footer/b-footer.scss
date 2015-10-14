@@ -1,0 +1,33 @@
+.b-schools-footer{
+    padding: 17px 0;
+    box-sizing: border-box;
+    width:100%;
+    font-family: 'Roboto';
+    background-color: red;
+}
+
+.b-schools-footer__left-block{
+    display: inline-block;
+    font-size: 14pt;
+}
+
+.b-schools-footer__right-block{
+    text-align: right;
+    display: inline-block;
+    float:right;
+}
+
+.b-schools-footer__link{
+    display: inline;
+    margin-right: 20px;
+    color: black;
+    text-decoration: none;
+}
+
+.b-schools-footer__help{
+    font-size: 12pt;
+    color: #a3a3a3;
+}
+.b-schools-footer__help_key{
+    font-weight: bold;
+}
