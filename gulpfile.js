@@ -9,7 +9,6 @@ const soynode = require('gulp-soynode');
 const sass = require('gulp-sass');
 const babel = require('gulp-babel');
 const gulpFilter = require('gulp-filter');
-// const gulpHelper = require('./node_modules/frobl/gulp-helper.js').use(gulp);
 
 const production = !!util.env.production;
 

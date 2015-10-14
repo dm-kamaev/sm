@@ -25,7 +25,7 @@
     },
     "env": {
         "node": true,
-        "es6": tru
+        "es6": true
     },
     "extends": "eslint:recommended"
 }
