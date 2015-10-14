@@ -91,11 +91,15 @@ sm.lSchools.bMap.Map.prototype.setInit = function(settingsObj) {
 
 sm.lSchools.bMap.Map.prototype.init = function() {
     this.setYmapsURL(CONFIG.ymapsURL);
+    console.log(this.ymapsURL);
     this.setYmaps();
     this.setZoom(CONFIG.initZoom);
+    console.log(this.zoom_);
     this.setCoords(CONFIG.initCoords);
+    console.log(this.coords_.lat, this.coords_.lng);
     this.setMapContainer(CONFIG.mapContainer);
     ymaps.ready(function() {
+        console.log('YMaps ready!');
         this.ymaps_ = new ymaps.Map(
             this.mapContainer_,
             {
@@ -106,4 +110,4 @@ sm.lSchools.bMap.Map.prototype.init = function() {
     });
 };
 
-Map.init();
+sm.lSchools.bMap.Map.init();
