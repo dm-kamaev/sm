@@ -4,33 +4,106 @@
 //     center: [37.60, 55.75],
 //     zoom: 11
 // });
-
-schools.bMap.Map = function() {
-    this.ymaps_ = undefined;
-    this.INIT_ZOOM = undefined;
-}
-
-schools.bMap.Map.prototype.setMapContainer = function(domSel) {
-    this.mapContainer = domSel;
-}
-
-schools.bMap.Map.prototype.setInitZoom = function(zoom) {
-    (typeof zoom !== Number) ? new Error('Initial zoom parameter must be a number!') : this.initZoom = integer;
-}
-
-schools.bMap.Map.prototype.setInitCoords = function(lat, lng) {
-    if (typeof lat !== Number || typeof lng !== Number) {
-        throw new Error('Initial coords parameters must be numbers!')
+var sm = {
+    lSchools: {
+        bMap: {}
     }
-    this.initCoords.lat = lat;
-    this.initCoords.lng = lng;
-}
+};
 
-schools.bMap.Map.prototype.initMap = function() {
-    var container = this.mapContainer,
-        zoom = this.initZoom,
-        lat = this.initCoords.lat,
-        lng = this.initCoords.lng;
+var ymaps;
 
-    this.ymaps_ = new ymaps.Map(container, {'center': [lat, lng], 'zoom': zoom});
-}
+var CONFIG = {
+    ymapsURL: 'https://api-maps.yandex.ru/2.1/?lang=ru_RU',
+    initZoom: 11,
+    initCoords: {
+        lat: 37.60,
+        lng: 55.75
+    },
+    // Must be a DOM element
+    mapContainer: document.querySelector('.b-map__wrapper')
+};
+
+sm.lSchools.bMap.Map = function() {
+    /**
+    *   @private
+    */
+    this.ymaps_ = undefined;
+    /**
+    *   @private
+    */
+    this.zoom_ = undefined;
+    /**
+    *   @private
+    */
+    this.mapContainer_ = undefined;
+    /**
+    *   @private
+    */
+    this.coords_ = {};
+};
+
+sm.lSchools.bMap.Map.prototype.setYmapsURL = function(url) {
+    this.ymapsURL = url;
+};
+
+sm.lSchools.bMap.Map.prototype.setYmaps = function() {
+    if (typeof ymaps === undefined) {
+        var req = new XMLHttpRequest(),
+            ymapsURL = this.ymapsURL;
+        req.addEventListener('error', function(err) {throw new Error(err);});
+        req.open('GET', ymapsURL);
+        req.onreadystatechange = function() {
+            if (req.readyState === 4) {
+                if (req.status === 200) {
+                    ymaps = req.responseText;
+                } else {
+                    throw new Error('Cannot get ymaps!');
+                }
+            }
+        };
+    }
+};
+
+sm.lSchools.bMap.Map.prototype.setMapContainer = function(domEl) {
+    this.mapContainer_ = domEl;
+};
+
+sm.lSchools.bMap.Map.prototype.setZoom = function(zoom) {
+    if (typeof zoom !== Number) {
+        throw new Error('Initial zoom parameter must be a number!');
+    }
+    this.zoom_ = zoom;
+};
+
+sm.lSchools.bMap.Map.prototype.setCoords = function(lat, lng) {
+    if (typeof lat !== Number || typeof lng !== Number) {
+        throw new Error('Initial coords parameters must be numbers!');
+    }
+    this.coords_.lat = lat;
+    this.coords_.lng = lng;
+};
+
+sm.lSchools.bMap.Map.prototype.setInit = function(settingsObj) {
+    this.setmapContainer(settingsObj.domEl);
+    this.setZoom(settingsObj.zoom);
+    this.setCoords(settingsObj.coords.lat, settingsObj.coords.lng);
+};
+
+sm.lSchools.bMap.Map.prototype.init = function() {
+    this.setYmapsURL(CONFIG.ymapsURL);
+    this.setYmaps();
+    this.setZoom(CONFIG.initZoom);
+    this.setCoords(CONFIG.initCoords);
+    this.setMapContainer(CONFIG.mapContainer);
+    ymaps.ready(function() {
+        this.ymaps_ = new ymaps.Map(
+            this.mapContainer_,
+            {
+                'center': [this.coords_.lat, this.coords_.lng],
+                'zoom':this.zoom_
+            }
+        );
+    });
+};
+
+Map.init();
