@@ -30,7 +30,8 @@
                      description:string
                  ]>,
                  phones:list<string>
-             ]
+             ],
+             mark:?
          ]
      ]
     }
@@ -297,6 +298,9 @@
  * @private
  */
 {template .comments_ autoescape="strict" kind="html"}
+    {@param
+        mark:?
+    }
     <div class="l-school__content-comments">
         <div class="l-school__content-column">
             {call .contentTitle_}
@@ -304,9 +308,11 @@
                 {param text: 'комментарии и оценки' /}
                 {param buttonAlt: 'надпись2' /}
             {/call}
-            /*тут должен ывзываться шаблон оценок*/
-            <div class="l-school__ratings-dummy">
-            </div>
+
+            {call sm.bMark.Template.base}
+                {param params: $mark /}
+            {/call}
+
         </div>
         <div class="l-school__content-column l-school__content-column_double_width l-school__content-column_last">
             /*тут должен ывзываться шаблон комментариев*/
