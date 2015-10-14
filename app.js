@@ -16,8 +16,9 @@ const LANDING_TEMPLATE = {
         params:{
             data:{
                 schoolName: "Имя школы",
-                schoolDescr: "Много много текста",
+                schoolDescr: "Много много текста Много много текста Много много текста Много много текста Много много текста Много много текста Много много текста",
                 directorName: "Имя директора",
+                schoolQuote : "Мел",
                 classes:"строка классов обучения",
                 social:[
                     {name:"Твиттер", href:"#"},
@@ -27,7 +28,7 @@ const LANDING_TEMPLATE = {
                 ],
                 sites:[
                     {name:"Перейти на сайт школы", href:"#", link:"safasf.com"},
-                    {name:"Страница образования на сайте гор москвы", href:"#", link:"safasf.com"}
+                    {name:"Страница образования на сайте города москвы текст текст текст", href:"#", link:"safasf.com"}
                 ],
                 contacts:{
                     address:[
@@ -36,8 +37,8 @@ const LANDING_TEMPLATE = {
                         {title:"sagasg", description:"dsaggadgsadasgaggas"}
                     ],
                     phones:[
-                        {phone:"+7-909-673-96-55"},
-                        {phone:"+8-909-673-96-56"}
+                        "+7-909-673-96-55",
+                        "+8-909-673-96-56"
                     ]
                 }
             }

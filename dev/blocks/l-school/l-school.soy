@@ -1,180 +1,5 @@
 {namespace bp.lSchool.Template}
 
-/**
- * Content title
- *
- */
-{template .contentTitle autoescape="strict" kind="html"}
-    {@param image:string}
-    {@param text:string}
-    {@param buttonAlt:string}
-    <div class="l-school__content-header">
-        {if $image!=null}
-            <img class="l-school__content-header-image" src="{$image}">
-        {/if}
-        <div class="l-school__content-header-text ">{$text}</div>
-        <div clas={$buttonAlt}></div>
-
-    </div>
-{/template}
-
-
-/**
- * Classes block
- */
-{template .classes autoescape="strict" kind="html"}
-    {@param
-        classesStr:string
-    }
-    <div class="l-school__content-classes">
-        {call .contentTitle}
-            {param image: '123.png' /}
-            {param text: 'классы обучения' /}
-            {param buttonAlt: 'надпись' /}
-        {/call}
-        {$classesStr}
-    </div>
-{/template}
-
-
-/**
- *sites
- */
-{template .sites autoescape="strict" kind="html"}
-    {@param data:
-        list<[
-            name:string,
-            href:string,
-            link:string
-        ]>
-    }
-    <div class="l-school__content-sites">
-        {call .contentTitle}
-            {param image: '123.png' /}
-            {param text: 'Сайты' /}
-            {param buttonAlt: 'надпись' /}
-        {/call}
-        {foreach $record in $data}
-            <div class="l-school__site-record">
-                <div class="l-school__link-record">
-                    <a href="{$record.href}" class="l-school__link">{$record.name}</a>
-                    <div class="l-school__link-image"></div>
-                </div>
-                <div class="l-school__site-name">
-                    {$record.link}
-                </div>
-            </div>
-        {/foreach}
-    </div>
-{/template}
-
-/**
- *social
- */
-{template .social autoescape="strict" kind="html"}
-    {@param data:
-        list<[
-            name:string,
-            href:string
-        ]>
-    }
-    <div class="l-school__content-social">
-        {call .contentTitle}
-            {param image: '123.png' /}
-            {param text: 'Социальные сети' /}
-            {param buttonAlt: 'надпись' /}
-        {/call}
-        {foreach $record in $data}
-            <div class="l-school__link-record">
-                <a href="{$record.href}" class="l-school__link">{$record.name}</a>
-                <div class="l-school__link-image"></div>
-            </div>
-        {/foreach}
-    </div>
-{/template}
-
-/**
- * Director block
- *
- */
-{template .director autoescape="strict" kind="html"}
-    {@param
-        dirName:string
-    }
-    <div class="l-school__content-director">
-        {call .contentTitle}
-            {param image: '123.png' /}
-            {param text: 'ДИРЕКТОР' /}
-            {param buttonAlt: 'надпись' /}
-        {/call}
-        {$dirName}
-    </div>
-{/template}
-
-
-/**
- * Comments block
- *
- */
-{template .comments autoescape="strict" kind="html"}
-    <div class="l-school__content-comments">
-        <div class="l-school__content-column">
-            {call .contentTitle}
-                {param image: '123.png' /}
-                {param text: 'комментарии и оценки' /}
-                {param buttonAlt: 'надпись2' /}
-            {/call}
-            /*тут должен ывзываться шаблон оценок*/
-            <div class="l-school__ratings-dummy">
-            </div>
-        </div>
-        <div class="l-school__content-column l-school__content-column_double_width l-school__content-column_last">
-            /*тут должен ывзываться шаблон комментариев*/
-            <div class="l-school__comment-dummy">
-            </div>
-        </div>
-    </div>
-{/template}
-
-/**
- * Contacts block
- *
- */
-{template .contacts autoescape="strict" kind="html"}
-    {@param
-        data:[
-            address:list<[
-                title:string,
-                description:string
-            ]>,
-            phones:list<[
-                phone:string
-            ]>
-        ]
-    }
-    <div class="l-school__content-contacts">
-        {call .contentTitle}
-            {param image: '123.png' /}
-            {param text: 'контакты' /}
-            {param buttonAlt: 'надпись2' /}
-        {/call}
-        {foreach $adresRecord in $data.address}
-            <div class="l-school__contacts-record">
-                {if $adresRecord.title}
-                <div class="l-school__contacts-subtitle">
-                    {$adresRecord.title}
-                </div>
-                {/if}
-                {$adresRecord.description}
-            </div>
-        {/foreach}
-        {foreach $phoneRecord in $data.phones}
-            {$phoneRecord.phone}
-        {/foreach}
-    </div>
-{/template}
-
-
 
 /**
  * Defaul school view
@@ -188,6 +13,7 @@
              schoolName: string,
              schoolDescr: string,
              directorName: string,
+             schoolQuote: string,
              classes: string,
              social:list<[
                  name:string,
@@ -203,7 +29,7 @@
                      title:string,
                      description:string
                  ]>,
-                 phones:list<[phone:string]>
+                 phones:list<string>
              ]
          ]
      ]
@@ -212,7 +38,8 @@
     <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Mel</title>
+        <title>Title</title>
+        <link  href='https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700,700italic&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" href="styles.css">
     </head>
     <body>
@@ -224,7 +51,11 @@
                <div class="l-school__top-content">
                    <div class="l-school__content-column l-school__content-column_double_width">
                        <div class="l-school__name">{$params.data.schoolName}</div>
-                       <div class="l-school__description">{$params.data.schoolDescr}</div>
+                       <div class="l-school__description">
+                           <div class="l-school__description-text">{$params.data.schoolDescr + ' - '}</div>
+                           <div class="l-school__description-quote">{$params.data.schoolQuote}</div>
+                       </div>
+
                    </div>
                    <div class="l-school__content-column l-school__content-column_last">
                         /*хрень*/
@@ -277,9 +108,188 @@
                {call .comments}
                {/call}
                <hr class="l-school__horisontal-line">
-               <div class="l-school__footer"></div>
+               <div class="l-school__footer">
+                   /*шаблон футера*/
+               </div>
            </div>
         </div>
    </body>
 
+{/template}
+
+/**
+ * Content title
+ *
+ */
+{template .contentTitle autoescape="strict" kind="html"}
+    {@param image:string}
+    {@param text:string}
+    {@param buttonAlt:string}
+    <div class="l-school__content-header">
+        {if $image!=null}
+            <img class="l-school__content-header-image" src="{$image}">
+        {/if}
+        <div class="l-school__content-header-text">{$text}</div>
+        <div class="l-school__content-header-button" alt="{$buttonAlt}"></div>
+
+    </div>
+{/template}
+
+
+/**
+ * Classes block
+ */
+{template .classes autoescape="strict" kind="html"}
+    {@param
+        classesStr:string
+    }
+    <div class="l-school__content-block">
+        {call .contentTitle}
+            {param image: '123.png' /}
+            {param text: 'классы обучения' /}
+            {param buttonAlt: 'надпись' /}
+        {/call}
+        {$classesStr}
+    </div>
+{/template}
+
+
+/**
+ *sites
+ */
+{template .sites autoescape="strict" kind="html"}
+    {@param data:
+        list<[
+            name:string,
+            href:string,
+            link:string
+        ]>
+    }
+    <div class="l-school__content-block">
+        {call .contentTitle}
+            {param image: '123.png' /}
+            {param text: 'Сайты' /}
+            {param buttonAlt: 'надпись' /}
+        {/call}
+        {foreach $record in $data}
+            <div class="l-school__site-record">
+                <div class="l-school__link-record">
+                    <a href="{$record.href}" class="l-school__link">{$record.name}</a>
+                    <div class="l-school__link-image"></div>
+                </div>
+                <div class="l-school__site-name">
+                    {$record.link}
+                </div>
+            </div>
+        {/foreach}
+    </div>
+{/template}
+
+/**
+ *social
+ */
+{template .social autoescape="strict" kind="html"}
+    {@param data:
+        list<[
+            name:string,
+            href:string
+        ]>
+    }
+    <div class="l-school__content-block">
+        {call .contentTitle}
+            {param image: '123.png' /}
+            {param text: 'Социальные сети' /}
+            {param buttonAlt: 'надпись' /}
+        {/call}
+        {foreach $record in $data}
+            <div class="l-school__link-record">
+                <a href="{$record.href}" class="l-school__link">{$record.name}</a>
+                <div class="l-school__link-image"></div>
+            </div>
+        {/foreach}
+    </div>
+{/template}
+
+/**
+ * Director block
+ *
+ */
+{template .director autoescape="strict" kind="html"}
+    {@param
+        dirName:string
+    }
+    <div class="l-school__content-block">
+        {call .contentTitle}
+            {param image: '123.png' /}
+            {param text: 'ДИРЕКТОР' /}
+            {param buttonAlt: 'надпись' /}
+        {/call}
+        <div class="l-school__director-name">
+            {$dirName}
+        </div>
+    </div>
+{/template}
+
+
+/**
+ * Comments block
+ *
+ */
+{template .comments autoescape="strict" kind="html"}
+    <div class="l-school__content-comments">
+        <div class="l-school__content-column">
+            {call .contentTitle}
+                {param image: '123.png' /}
+                {param text: 'комментарии и оценки' /}
+                {param buttonAlt: 'надпись2' /}
+            {/call}
+            /*тут должен ывзываться шаблон оценок*/
+            <div class="l-school__ratings-dummy">
+            </div>
+        </div>
+        <div class="l-school__content-column l-school__content-column_double_width l-school__content-column_last">
+            /*тут должен ывзываться шаблон комментариев*/
+            <div class="l-school__comment-dummy">
+            </div>
+        </div>
+    </div>
+{/template}
+
+/**
+ * Contacts block
+ *
+ */
+{template .contacts autoescape="strict" kind="html"}
+    {@param
+        data:[
+            address:list<[
+                title:string,
+                description:string
+            ]>,
+            phones:list<string>
+        ]
+    }
+    <div class="l-school__content-block">
+        {call .contentTitle}
+            {param image: '123.png' /}
+            {param text: 'контакты' /}
+            {param buttonAlt: 'надпись2' /}
+        {/call}
+        {foreach $adresRecord in $data.address}
+            <div class="l-school__contacts-record">
+                {if $adresRecord.title}
+                <div class="l-school__contacts-subtitle">
+                    {$adresRecord.title}
+                </div>
+                {/if}
+                {$adresRecord.description}
+            </div>
+        {/foreach}
+        {foreach $phone in $data.phones}
+            {$phone}
+            {if not isLast($phone)}
+                ,{sp}
+            {/if}
+        {/foreach}
+    </div>
 {/template}

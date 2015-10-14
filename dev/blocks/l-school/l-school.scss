@@ -1,5 +1,7 @@
 .l-school {
     text-align: center;
+    font-family: 'PT Serif';
+
 }
 
 .l-school__body {
@@ -11,14 +13,22 @@
 }
 
 .l-school__content-header{
-
+    margin-bottom: 20px;
 }
 .l-school__content-header-image{
     display: inline-block;;
 }
+
+.l-school__content-header-button{
+    width: 20px;
+    height: 19px;
+    background-image: url("images/l-school/school-button.png");
+    margin-left: 10px;
+    display: inline-block;
+}
 .l-school__content-header-text{
     display: inline-block;;
-    font-size: 21pt;
+    font-size: 21px;
     font-weight: bold;
     text-transform: uppercase;
 }
@@ -32,11 +42,19 @@
 
 .l-school__name{
     font-weight: bold;
-    font-size: 32pt;
+    font-size: 32px;
 }
 .l-school__description{
-    font-size: 21pt;
+    font-size: 21px;
 }
+.l-school__description-text{
+    display: inline;;
+}
+.l-school__description-quote{
+    display: inline;
+    font-style: italic;
+}
+
 
 .l-school__comment-dummy {
     margin: 5;
@@ -84,7 +102,7 @@
     margin-right: 31px;
     width: 381px;
     vertical-align: top;
-    font-size: 10px;
+    font-size: 16px;
 }
 
 .l-school__content-column_double_width {
@@ -96,13 +114,6 @@
     margin-right: 0;
 }
 
-.l-school__content-director {
-    text-align: left;
-}
-
-.l-school__content-classes {
-    text-align: left;
-}
 
 .l-school__content-comments {
     text-align: left;
@@ -111,20 +122,31 @@
     font-size: 0px;
 }
 
-.l-school__content-sites {
+.l-school__content-block{
     text-align: left;
+    margin-bottom: 20px;
 }
-.l-school__content-social {
-    text-align: left;
+
+.l-school__director-name{
+    font-weight: bold;
 }
+
+
+.l-school__contacts-subtitle {
+    font-weight: bold;
+}
+.l-school__contacts-record{
+    margin-bottom: 10px;
+}
+
+
 .l-school__site-record{
     display: block;
     width: 100%;
+    margin-bottom: 20px;
 }
 .l-school__site-name{
-    font-family: arial;
-    font-size: 12pt;
-    font-style: italic;
+    font-size: 12px;
 }
 .l-school__link-record{
 
@@ -137,16 +159,5 @@
     color:#ee362c;
 }
 .l-school__link-image{
-
-}
-
-
-
-.l-school__content-contacts {
-    text-align: left;
-
-}
-
-.l-school__content-contacts-subtitle {
 
 }
