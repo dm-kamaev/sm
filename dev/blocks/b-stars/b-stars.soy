@@ -1,0 +1,17 @@
+{namespace sm.bStars.Template}
+
+/**
+ * The stars template
+ * @param params {{
+ *     data: {
+ *         mark: ?Number
+ *     }
+ * }}
+ */
+{template .base}
+    <div class="b-stars">
+        {for $i in range($params.data.mark)}
+            ★
+        {/for}
+    </div>
+{/template}
