@@ -48,64 +48,15 @@
            <div class="l-school__header-dummy"></div>
 
            <div class="l-school__body">
-               <div class="l-school__top-content">
-                   <div class="l-school__content-column l-school__content-column_double_width">
-                       <div class="l-school__name">{$params.data.schoolName}</div>
-                       <div class="l-school__description">
-                           <div class="l-school__description-text">{$params.data.schoolDescr + ' - '}</div>
-                           <div class="l-school__description-quote">{$params.data.schoolQuote}</div>
-                       </div>
-
-                   </div>
-                   <div class="l-school__content-column l-school__content-column_last">
-                        /*хрень*/
-                   </div>
-               </div>
+               {call .top_}
+                   {param params: $params /}
+               {/call}
                <hr class="l-school__horisontal-line">
-               <div class="l-school__middle-content">
-
-                   /*СЕКЦИЯ 1*/
-                   <div class="l-school__content-column">
-                         /*тут должен ывзываться шаблон карты*/
-                         <div class="l-school__map-dummy">
-                         </div>
-                   </div>
-
-                   /*СЕКЦИЯ 2*/
-                   <div class="l-school__content-column">
-                       {if $params.data.directorName}
-                            {call .director}
-                                {param dirName: $params.data.directorName /}
-                            {/call}
-                       {/if}
-                       {if $params.data.classes}
-                            {call .classes}
-                                {param classesStr: $params.data.classes /}
-                            {/call}
-                       {/if}
-                       {if $params.data.contacts}
-                            {call .contacts}
-                                {param data: $params.data.contacts /}
-                            {/call}
-                       {/if}
-                   </div>
-
-                   /*СЕКЦИЯ 3*/
-                   <div class="l-school__content-column l-school__content-column_last">
-                       {if $params.data.sites}
-                            {call .sites}
-                                {param data:  $params.data.sites /}
-                            {/call}
-                       {/if}
-                       {if $params.data.social}
-                            {call .social}
-                                {param data:  $params.data.social /}
-                            {/call}
-                       {/if}
-                   </div>
-               </div>
+               {call .middle_}
+                   {param params: $params /}
+               {/call}
                <hr class="l-school__horisontal-line">
-               {call .comments}
+               {call .comments_}
                {/call}
                <hr class="l-school__horisontal-line">
                <div class="l-school__footer">
@@ -118,10 +69,120 @@
 {/template}
 
 /**
- * Content title
- *
+ * Content top
+ * @private
  */
-{template .contentTitle autoescape="strict" kind="html"}
+{template .top_ autoescape="strict" kind="html"}
+    {@param? params:
+     [
+         data:
+         [
+             schoolName: string,
+             schoolDescr: string,
+             schoolQuote: string
+         ]
+     ]
+    }
+    <div class="l-school__top-content">
+        <div class="l-school__content-column l-school__content-column_double_width">
+            <div class="l-school__name">{$params.data.schoolName}</div>
+            <div class="l-school__description">
+                <div class="l-school__description-text">{$params.data.schoolDescr + ' - '}</div>
+                <div class="l-school__description-quote">{$params.data.schoolQuote}</div>
+            </div>
+
+        </div>
+        <div class="l-school__content-column l-school__content-column_last">
+             /*хрень*/
+        </div>
+    </div>
+{/template}
+
+/**
+ * Content middle
+ * @private
+ */
+{template .middle_ autoescape="strict" kind="html"}
+{@param? params:
+ [
+     data:
+     [
+         directorName: string,
+         classes: string,
+         social:list<[
+             name:string,
+             href:string
+         ]>,
+         sites:list<[
+             name:string,
+             href:string,
+             link:string
+         ]>,
+         contacts:[
+             address:list<[
+                 title:string,
+                 description:string
+             ]>,
+             phones:list<string>
+         ]
+     ]
+ ]
+}
+    <div class="l-school__middle-content">
+        /*СЕКЦИЯ 1*/
+        <div class="l-school__content-column">
+              /*тут должен ывзываться шаблон карты*/
+              <div class="l-school__map-dummy">
+              </div>
+        </div>
+
+        /*СЕКЦИЯ 2*/
+        <div class="l-school__content-column">
+            {if $params.data.directorName}
+                 {call .director_}
+                     {param dirName: $params.data.directorName /}
+                 {/call}
+            {/if}
+            {if $params.data.classes}
+                 {call .classes_}
+                     {param classesStr: $params.data.classes /}
+                 {/call}
+            {/if}
+            {if $params.data.contacts}
+                 {call .contacts_}
+                     {param data: $params.data.contacts /}
+                 {/call}
+            {/if}
+        </div>
+
+        /*СЕКЦИЯ 3*/
+        <div class="l-school__content-column l-school__content-column_last">
+            {if $params.data.sites}
+                 {call .sites_}
+                     {param data:  $params.data.sites /}
+                 {/call}
+            {/if}
+            {if $params.data.social}
+                 {call .social_}
+                     {param data:  $params.data.social /}
+                 {/call}
+            {/if}
+        </div>
+    </div>
+{/template}
+
+/**
+ * Content bottom
+ * @private
+ */
+{template .bottom_ autoescape="strict" kind="html"}
+{/template}
+
+/**
+ * Content title
+ * @private
+ */
+{template .contentTitle_ autoescape="strict" kind="html"}
     {@param image:string}
     {@param text:string}
     {@param buttonAlt:string}
@@ -138,13 +199,14 @@
 
 /**
  * Classes block
+ * @private
  */
-{template .classes autoescape="strict" kind="html"}
+{template .classes_ autoescape="strict" kind="html"}
     {@param
         classesStr:string
     }
     <div class="l-school__content-block">
-        {call .contentTitle}
+        {call .contentTitle_}
             {param image: '123.png' /}
             {param text: 'классы обучения' /}
             {param buttonAlt: 'надпись' /}
@@ -155,9 +217,10 @@
 
 
 /**
- *sites
+ * Sites links
+ * @private
  */
-{template .sites autoescape="strict" kind="html"}
+{template .sites_ autoescape="strict" kind="html"}
     {@param data:
         list<[
             name:string,
@@ -166,7 +229,7 @@
         ]>
     }
     <div class="l-school__content-block">
-        {call .contentTitle}
+        {call .contentTitle_}
             {param image: '123.png' /}
             {param text: 'Сайты' /}
             {param buttonAlt: 'надпись' /}
@@ -186,9 +249,10 @@
 {/template}
 
 /**
- *social
+ * Social links
+ * @private
  */
-{template .social autoescape="strict" kind="html"}
+{template .social_ autoescape="strict" kind="html"}
     {@param data:
         list<[
             name:string,
@@ -196,7 +260,7 @@
         ]>
     }
     <div class="l-school__content-block">
-        {call .contentTitle}
+        {call .contentTitle_}
             {param image: '123.png' /}
             {param text: 'Социальные сети' /}
             {param buttonAlt: 'надпись' /}
@@ -212,14 +276,14 @@
 
 /**
  * Director block
- *
+ * @private
  */
-{template .director autoescape="strict" kind="html"}
+{template .director_ autoescape="strict" kind="html"}
     {@param
         dirName:string
     }
     <div class="l-school__content-block">
-        {call .contentTitle}
+        {call .contentTitle_}
             {param image: '123.png' /}
             {param text: 'ДИРЕКТОР' /}
             {param buttonAlt: 'надпись' /}
@@ -233,12 +297,12 @@
 
 /**
  * Comments block
- *
+ * @private
  */
-{template .comments autoescape="strict" kind="html"}
+{template .comments_ autoescape="strict" kind="html"}
     <div class="l-school__content-comments">
         <div class="l-school__content-column">
-            {call .contentTitle}
+            {call .contentTitle_}
                 {param image: '123.png' /}
                 {param text: 'комментарии и оценки' /}
                 {param buttonAlt: 'надпись2' /}
@@ -257,9 +321,9 @@
 
 /**
  * Contacts block
- *
+ * @private
  */
-{template .contacts autoescape="strict" kind="html"}
+{template .contacts_ autoescape="strict" kind="html"}
     {@param
         data:[
             address:list<[
@@ -270,7 +334,7 @@
         ]
     }
     <div class="l-school__content-block">
-        {call .contentTitle}
+        {call .contentTitle_}
             {param image: '123.png' /}
             {param text: 'контакты' /}
             {param buttonAlt: 'надпись2' /}
