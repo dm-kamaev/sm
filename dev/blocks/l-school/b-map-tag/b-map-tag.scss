@@ -1,0 +1,27 @@
+.b-map-tag__tag-icon > img {
+    height: 30px;
+    width: 25px;
+    position: absolute;
+
+}
+
+.b-map-tag_wrapper {
+    display: none;
+}
+
+.b-map-tag__baloon {
+    width: 200px;
+    height: 120px;
+    background-color: #FFFFFF;
+    box-shadow: 0, -1px, 1px, 1px, d4d4d4;
+}
+
+.b-map-tag__info {
+    padding: 20px;
+    font-size: 16px;
+}
+
+.b-map-tag__rating {
+    margin-top: 20px;
+    color: #ee362c;
+}
