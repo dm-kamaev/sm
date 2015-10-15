@@ -1,0 +1,59 @@
+{namespace sm.lDoc.nDemo.bBlockStars.Template}
+
+/**
+* doc
+*/
+{template .preview}
+    {call sm.bStars.Template.base}
+        {param params: [
+            'data': [
+                'mark': 4
+            ]
+        ] /}
+    {/call}
+{/template}
+
+/**
+* doc
+*/
+{template .doc}
+    {call sm.bStars.Template.base}
+        {param params: [
+            'data': [
+                'mark': 1
+            ]
+        ] /}
+    {/call}
+    <br>
+    {call sm.bStars.Template.base}
+        {param params: [
+            'data': [
+                'mark': 2
+            ]
+        ] /}
+    {/call}
+    <br>
+    {call sm.bStars.Template.base}
+        {param params: [
+            'data': [
+                'mark': 3
+            ]
+        ] /}
+    {/call}
+    <br>
+    {call sm.bStars.Template.base}
+        {param params: [
+            'data': [
+                'mark': 4
+            ]
+        ] /}
+    {/call}
+    <br>
+    {call sm.bStars.Template.base}
+        {param params: [
+            'data': [
+                'mark': 5
+            ]
+        ] /}
+    {/call}
+{/template}

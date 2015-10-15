@@ -50,7 +50,8 @@ const DOC_TEMPLATE = {
     template: 'sm.lDoc.Template.index',
     arghs: {
         list:[
-            "b-mark"
+            "b-mark",
+            "b-stars"
         ]
     }
 };
