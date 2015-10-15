@@ -4,10 +4,19 @@
 */
 {template .map}
     <section class="b-map">
-        <div class="b-map__wrapper">
+        <div class="b-map__wrapper" id="map">
         </div>
         <div class="b-map__info">
             <span class="b-map__location">м. Домодедовская, Орехово</span>
         </div>
     </section>
+{/template}
+
+/**
+* API request for ymaps
+*/
+{template .api}
+    <script type="text/javascript" src="https://api-maps.yandex.ru/2.1/?lang=ru_RU">
+
+    </script>
 {/template}

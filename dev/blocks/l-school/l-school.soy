@@ -41,8 +41,8 @@
             ]>
         ]
     ]}
-    <!DOCTYPE html>
-    <html lang="en">
+<!DOCTYPE html>
+<html lang="en">
     <head>
         <meta charset="UTF-8">
         <title>Title</title>
@@ -62,7 +62,7 @@
         <div class="l-school" data-params="{$dataParams}">
             /*Тут должен вызываться шаблон хедера*/
             {call sm.bHeader.Template.base /}
-
+    
             <div class="l-school__body">
                 {call .top_}
                    {param params: $params /}
@@ -84,7 +84,9 @@
         <script type="text/javascript" src="/external.min.js"></script>
         <script type="text/javascript">var CLOSURE_NO_DEPS = true;</script>
         <script type="text/javascript" src="/script.js"></script>
-   </body>
+        {call sm.lSchools.bMap.Template.api}{/call}
+    </body>
+</html>
 {/template}
 
 /**

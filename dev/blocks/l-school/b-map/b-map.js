@@ -1,33 +1,12 @@
 'use strict';
 
-// var map = new ymaps.Map("map", {
-//     center: [37.60, 55.75],
-//     zoom: 11
-// });
 var sm = {
     lSchool: {
         bMap: {}
     }
 };
 
-var ymaps;
-
-var CONFIG = {
-    ymapsURL: 'https://api-maps.yandex.ru/2.1/?lang=ru_RU',
-    initZoom: 11,
-    initCoords: {
-        lat: 37.60,
-        lng: 55.75
-    },
-    // Must be a DOM element
-    mapContainer: document.querySelector('.b-map__wrapper')
-};
-
 sm.lSchool.bMap.Map = function() {
-    /**
-    *   @private
-    */
-    this.ymaps_ = undefined;
     /**
     *   @private
     */
@@ -40,82 +19,104 @@ sm.lSchool.bMap.Map = function() {
     *   @private
     */
     this.coords_ = {};
-};
-
-sm.lSchool.bMap.Map.prototype.setYmapsURL = function(url) {
-    this.ymapsURL = url;
-};
-
-sm.lSchool.bMap.Map.prototype.setYmaps = function(cb) {
-    if (typeof ymaps === 'undefined') {
-        var req = new XMLHttpRequest(),
-            ymapsURL = this.ymapsURL;
-        req.addEventListener('error', function(err) {throw new Error(err);});
-        req.open('GET', ymapsURL);
-        req.send();
-        console.log('Request: ' + JSON.stringify(req));
-        req.onreadystatechange = function() {
-            if (req.readyState === 1) {console.log('Connecting...');}
-            if (req.readyState === 4) {
-                console.log('Connection established');
-                if (req.status === 200) {
-                    ymaps = req.responseText;
-                    console.log('Ymaps loaded successfully!');
-                    cb()
-                } else {
-                    throw new Error('Cannot get ymaps!');
-                }
-            }
-        };
-    } else console.log(ymaps);
+    /**
+    *   @private
+    */
+    this.markArr_ = [];
+    /**
+    *   @static
+    */
+    this.config = {
+        initZoom: 11,
+        initCoords: {
+            lng: 37.64,
+            lat: 55.76
+        },
+        // Must be a DOM element!
+        mapContainer: document.querySelector('.b-map__wrapper')
+    };
+    /**
+    *   @static
+    */
+    this.markDataArr = [
+        {
+            coords: {lat: 55.731488, lng: 37.638394},
+            hint: 'Мы здесь',
+            balloon: 'По версии Яндекса'
+        },
+        {
+            coords: {lat: 55.703819, lng: 37.625587},
+            hint: 'А на самом деле',
+            balloon: 'Тут'
+        }
+    ];
+    /**
+    *   @static
+    */
 };
 
 sm.lSchool.bMap.Map.prototype.setMapContainer = function(domEl) {
     this.mapContainer_ = domEl;
 };
 
+sm.lSchool.bMap.Map.prototype.setConfig = function (obj) {
+    this.config = obj;
+};
+
 sm.lSchool.bMap.Map.prototype.setZoom = function(zoom) {
-    if (typeof zoom !== 'number') {
-        throw new Error('Zoom parameter must be a number!');
-    }
     this.zoom_ = zoom;
 };
 
 sm.lSchool.bMap.Map.prototype.setCoords = function(lat, lng) {
-    if (typeof lat !== 'number' || typeof lng !== 'number') {
-        throw new Error('Coords parameters must be numbers!');
-    }
     this.coords_.lat = lat;
     this.coords_.lng = lng;
 };
 
-sm.lSchool.bMap.Map.prototype.setInit = function(settingsObj) {
-    this.setmapContainer(settingsObj.domEl);
-    this.setZoom(settingsObj.zoom);
-    this.setCoords(settingsObj.coords.lat, settingsObj.coords.lng);
+sm.lSchool.bMap.Map.prototype.setInit = function() {
+    this.setMapContainer(this.config.mapContainer);
+    this.setZoom(this.config.initZoom);
+    this.setCoords(this.config.initCoords.lat, this.config.initCoords.lng);
+};
+
+sm.lSchool.bMap.Map.prototype.markFactory = function (config) {
+    var mark = new sm.lSchool.bMap.bMark.Mark();
+    mark.init(config);
+    return mark.contents;
+};
+
+sm.lSchool.bMap.Map.prototype.setMarkArr = function () {
+    var that = this;
+    this.markArr_ = this.markDataArr.map(
+        function (item) {
+            return that.markFactory(item);
+        }
+    );
+};
+
+sm.lSchool.bMap.Map.prototype.placeMarks = function () {
+    if (this.markArr_.length === 0) {
+        console.log('No marks!');
+        return;
+    }
+    console.log(this.markArr_.length + ' marks should be on the map');
+    var that = this;
+    this.markArr_.forEach(
+        function(item) {that.ymaps_.geoObjects.add(item);}
+    );
 };
 
 sm.lSchool.bMap.Map.prototype.init = function() {
-    this.setYmapsURL(CONFIG.ymapsURL);
-    console.log(this.ymapsURL);
-    this.setZoom(CONFIG.initZoom);
-    console.log(this.zoom_);
-    this.setCoords(CONFIG.initCoords.lat, CONFIG.initCoords.lng);
-    console.log(this.coords_.lat, this.coords_.lng);
-    this.setMapContainer(CONFIG.mapContainer);
-    console.log(CONFIG.mapContainer);
-    this.setYmaps(function() {
-        console.log('YMaps ready!');
-        this.ymaps_ = new ymaps.Map(
-            this.mapContainer_,
-            {
-                'center': [this.coords_.lat, this.coords_.lng],
-                'zoom':this.zoom_
-            }
-        );
-    });
+    this.setInit();
+    this.ymaps_ = new ymaps.Map(
+        this.mapContainer_,
+        {
+            'center': [this.coords_.lat, this.coords_.lng],
+            'zoom': this.zoom_
+        }
+    );
+    this.setMarkArr();
+    this.placeMarks();
 };
 
-console.log('Hello, Yandex!');
-var Map = new sm.lSchool.bMap.Map();
-Map.init();
+var map = new sm.lSchool.bMap.Map();
+ymaps.ready(map.init.bind(map));
