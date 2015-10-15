@@ -1,4 +1,5 @@
 const gulp = require('gulp');
+const gulpHelper = require('./node_modules/frobl/gulp-helper.js').use(gulp);
 const path = require('path');
 const concat = require('gulp-concat');
 const autoprefixer = require('gulp-autoprefixer');
@@ -32,30 +33,32 @@ gulp.task('soy', function () {
         .pipe(gulp.dest(path.join(__dirname + COMPILED_SOY_DIR)));
 });
 
+
 gulp.task('scripts', ['soy'], function () {
-    return gulp.src([
-        path.join(__dirname + COMPILED_SOY_DIR + COMPILED_SOY_FILE),
-        path.join(__dirname + BLOCKS_DIR + '/**/*.js')
-    ])
-        .pipe(concat('script.js'))
-        .pipe(production ? uglify() : util.noop())
-        .pipe(gulp.dest(path.join(__dirname + '/public')));
+    return gulpHelper.buildJs(
+        [
+            path.join(__dirname, COMPILED_SOY_DIR),
+            path.join(__dirname, BLOCKS_DIR, '/**/*.js')
+        ],
+        'script.js',
+        'sm.lSchool.School',
+        path.join(__dirname, '/public'),
+        production
+    );
 });
 
 gulp.task('styles', function () {
-    return gulp.src([
-        path.join(__dirname + BLOCKS_DIR + '/**/*.scss'),
-        path.join(__dirname + BLOCKS_DIR + '/**/*.css')
-    ])
-        .pipe(sass().on('error', sass.logError))
-        .pipe(concat('styles.css'))
-        .pipe(autoprefixer({
-            browsers: ['> 1%', 'last 4 versions', 'ie >= 9'],
-            cascade: false
-        }))
-        .pipe(production ? cssnano() : util.noop())
-        .pipe(gulp.dest(path.join(__dirname + '/public')));
+    return gulpHelper.buildCss([{
+        src: [
+            path.join(__dirname, BLOCKS_DIR, '/**/*.scss'),
+            path.join(__dirname, BLOCKS_DIR, '/**/*.css')
+        ],
+        fileName: 'styles.css'
+    }], production, path.join(__dirname, '/public'));
 });
+
+
+
 
 gulp.task('images', function () {
     return gulp.src(path.join(__dirname + BLOCKS_DIR + '/**/*.png'))

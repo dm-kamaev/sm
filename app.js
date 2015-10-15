@@ -11,7 +11,7 @@ const CONFIG = {
 };
 
 const LANDING_TEMPLATE = {
-    template: 'bp.lSchool.Template.base',
+    template: 'sm.lSchool.Template.base',
     arghs: {
         params:{
             data:{
@@ -45,9 +45,17 @@ const LANDING_TEMPLATE = {
         }
     }
 };
-// soynode.setOptions({
-//     allowDinamicRecompile: true
-// });
+
+const DOC_TEMPLATE = {
+    template: 'sm.lDoc.Template.index',
+    arghs: {
+        list:[
+            "b-mark"
+        ]
+    }
+};
+
+
 
 const sendCompiledTemplate = (action, templateObj) =>
     soynode.loadCompiledTemplateFiles(path.join(__dirname + '/tmp/templates.js'), (err) =>
@@ -61,6 +69,20 @@ app.use(express.static(path.join(__dirname + '/public')));
 app.get('/', (req, res) => {
     console.log('/');
     sendCompiledTemplate(res.send.bind(res), LANDING_TEMPLATE);
+});
+
+app.get('/doc', (req, res) => {
+    console.log('/doc: '+JSON.stringify(DOC_TEMPLATE));
+    sendCompiledTemplate(res.end.bind(res), DOC_TEMPLATE);
+});
+
+app.get('/doc/:id', (req, res) => {
+    var doc_item_template = JSON.parse(JSON.stringify(DOC_TEMPLATE));
+    doc_item_template.template = 'sm.lDoc.Template.item';
+    doc_item_template.arghs.name = req.params.id;
+    console.log('/doctest/' + req.params.id);
+    sendCompiledTemplate(res.end.bind(res), doc_item_template);
+    // res.send(html);
 });
 
 app.get('/search', (req, res) => {
