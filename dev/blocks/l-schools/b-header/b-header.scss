@@ -15,9 +15,7 @@ body{
 
 .b-header__menu{
     display: inline-block;
-    *display: inline;
     float: left;
-    zoom: 1;
 
     height: 100%;
     width: 13%;
@@ -25,9 +23,7 @@ body{
 
 .b-header__main{
     display: inline-block;
-    *display: inline;
     float: left;
-    zoom: 1;
 
     width: 74%;
     height: 100%;
@@ -37,9 +33,7 @@ body{
 
 .b-header__search{
     display: inline-block;
-    *display: inline;
     float: left;
-    zoom: 1;
 
     width: 13%;
     height: 100%;
@@ -47,16 +41,12 @@ body{
 
 .b-header__wrap{
     display: inline-block;
-	*display: inline;
-	zoom: 1;
 	
     vertical-align: middle;
 }
 
 .b-header__before{
     display: inline-block;
-	*display: inline;
-	zoom: 1;
 
     height: 100%;
 
@@ -65,52 +55,49 @@ body{
 }
 
 .b-header__title{
-	margin: -5pt 0 0 0;
+	margin: -5px 0 0 0;
 	
-    font-size: 24pt;
+    font-size: 24px;
 }
 
 .b-header__city{
-	margin: -2pt 0 0 0;
+	margin: -2px 0 0 0;
 	
-	font-size: 9pt;
+	font-size: 9px;
 }
 
 .b-header__stars{
-	margin: 0 15pt 0 15pt;
+	margin: 0 15px 0 15px;
 	
 	color: red;
 }
 
 .b-header__star{
-	margin: 0 1.7pt 0 1.7pt;
+	margin: 0 1.7px 0 1.7px;
 }
 
 .b-header__star_first{
-    font-size: 9pt;
+    font-size: 9px;
 }
 
 .b-header__star_second{
-    font-size: 10pt;
+    font-size: 10px;
 }
 
 .b-header__star_third{
-    font-size: 11pt;
+    font-size: 11px;
 }
 
 .b-header__star_forth{
-    font-size: 12pt;
+    font-size: 12px;
 }
 
 .b-header__star_fifth{
-    font-size: 13pt;
+    font-size: 13px;
 }
 
 .b-header__menu-image{
-	display: inline-block;
-	*display: inline;
 	float:right;
-	zoom: 1;
 	
 	width: 70%;
 	height:100%;
@@ -119,11 +106,6 @@ body{
 }
 
 .b-header__search-image{
-	display: inline-block;
-	*display: inline;
-	float: left;
-	zoom: 1;
-	
 	width: 70%;
 	height:100%;
 	
@@ -133,11 +115,7 @@ body{
 .b-header__line{
 	position: relative;
 	top: 25%;
-	/*
-	display: inline-block;
-	*display: inline;
-	zoom: 1;
-	*/
+
 	width: 0px;
 	height: 50%;
 	
