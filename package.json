@@ -47,6 +47,7 @@
     "sequelize-cli": "^1.9.1"
   },
   "dependencies": {
-    "express": "^4.13.3"
+    "express": "^4.13.3",
+    "reset.css": "^2.0.2"
   }
 }
