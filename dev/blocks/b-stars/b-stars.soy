@@ -5,13 +5,22 @@
  * @param params {{
  *     data: {
  *         mark: ?Number
- *     }
+ *     },
+ *     isClickable: ?bool
  * }}
  */
 {template .base}
+    {let $count: $params.data.mark > 5 ? 5 : $params.data.mark /}
     <div class="b-stars">
-        {for $i in range($params.data.mark)}
-            ★
-        {/for}
+        {if $params.isClickable}
+            {for $i in range(5)}
+                {let $class: $i < $count ? 'b-stars__star b-stars__star_selected' : 'b-stars__star'/}
+                <div class={$class}>★</div>
+            {/for}
+        {else}
+            {for $i in range($count)}
+                <div class='b-stars__star'>★</div>
+            {/for}
+        {/if}
     </div>
 {/template}

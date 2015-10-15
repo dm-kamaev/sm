@@ -41,7 +41,7 @@ gulp.task('scripts', ['soy'], function () {
             path.join(__dirname, BLOCKS_DIR, '/**/*.js')
         ],
         'script.js',
-        'sm.lSchool.School',
+        'sm.lDoc.Doc',
         path.join(__dirname, '/public'),
         production
     );
