@@ -1,27 +1,33 @@
-.b-map-tag__tag-icon > img {
+.b-map-mark__mark-icon > img {
     height: 30px;
     width: 25px;
     position: absolute;
 
 }
 
-.b-map-tag_wrapper {
-    display: none;
-}
-
-.b-map-tag__baloon {
+.b-map-mark__balloon {
     width: 200px;
     height: 120px;
+    padding: 0;
+    margin: 0;
     background-color: #FFFFFF;
-    box-shadow: 0, -1px, 1px, 1px, d4d4d4;
 }
 
-.b-map-tag__info {
+.b-map-mark__info {
     padding: 20px;
-    font-size: 16px;
+    font-size: 16px !important;
+    font-family: serif !important;
 }
 
-.b-map-tag__rating {
+.b-map-mark__school-name {
+    font-weight: bold;
+}
+
+.b-map-mark__rating {
     margin-top: 20px;
     color: #ee362c;
+}
+
+.arrow::after {
+    background-color: red;
 }

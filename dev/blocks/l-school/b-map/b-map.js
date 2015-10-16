@@ -111,7 +111,8 @@ sm.lSchool.bMap.Map.prototype.init = function() {
         this.mapContainer_,
         {
             'center': [this.coords_.lat, this.coords_.lng],
-            'zoom': this.zoom_
+            'zoom': this.zoom_,
+            controls: []
         }
     );
     this.setMarkArr();
