@@ -4,6 +4,8 @@ const path = require('path');
 const express = require('express');
 const soynode = require('soynode');
 
+const soy = require('./app/components/soy');
+
 const app = express();
 
 const CONFIG = {
@@ -58,10 +60,10 @@ const DOC_TEMPLATE = {
 
 
 
-const sendCompiledTemplate = (action, templateObj) =>
-    soynode.loadCompiledTemplateFiles(path.join(__dirname + '/tmp/templates.js'), (err) =>
-        err ? console.log('Compilation failed: ' + err) : action(soynode.render(templateObj.template, templateObj.arghs))
-);
+// const sendCompiledTemplate = (action, templateObj) =>
+//     soynode.loadCompiledTemplateFiles(path.join(__dirname, '/tmp/templates.js'), (err) =>
+//         err ? console.log('Compilation failed: ' + err) : action(soynode.render(templateObj.template, templateObj.arghs))
+// );
 
 
 app.use(express.static(path.join(__dirname + '/public')));
@@ -69,12 +71,18 @@ app.use(express.static(path.join(__dirname + '/public')));
 
 app.get('/', (req, res) => {
     console.log('/');
-    sendCompiledTemplate(res.send.bind(res), LANDING_TEMPLATE);
+    //sendCompiledTemplate(res.send.bind(res), LANDING_TEMPLATE);
+    res.end(
+        soy.render(LANDING_TEMPLATE.template, LANDING_TEMPLATE.arghs)
+    );
 });
 
 app.get('/doc', (req, res) => {
     console.log('/doc: '+JSON.stringify(DOC_TEMPLATE));
-    sendCompiledTemplate(res.end.bind(res), DOC_TEMPLATE);
+    res.end(
+        soy.render(DOC_TEMPLATE.template, DOC_TEMPLATE.arghs)
+    );
+    //sendCompiledTemplate(res.end.bind(res), DOC_TEMPLATE);
 });
 
 app.get('/doc/:id', (req, res) => {
@@ -82,7 +90,10 @@ app.get('/doc/:id', (req, res) => {
     doc_item_template.template = 'sm.lDoc.Template.item';
     doc_item_template.arghs.name = req.params.id;
     console.log('/doctest/' + req.params.id);
-    sendCompiledTemplate(res.end.bind(res), doc_item_template);
+    res.end(
+        soy.render(doc_item_template.template, doc_item_template.arghs)
+    );
+    //sendCompiledTemplate(res.end.bind(res), doc_item_template);
     // res.send(html);
 });
 
@@ -97,4 +108,6 @@ app.get('/school/:id', (req, res) => {
 });
 
 
-app.listen(CONFIG.PORT, () => console.log('Running at port ' + CONFIG.PORT));
+soy.init(__dirname, function() {
+    app.listen(CONFIG.PORT, () => console.log('Running at port ' + CONFIG.PORT));
+});
