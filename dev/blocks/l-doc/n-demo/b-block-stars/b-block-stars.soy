@@ -17,6 +17,7 @@
 * doc
 */
 {template .doc}
+<br>NOT CLICKABLE:<br>
     {call sm.bStars.Template.base}
         {param params: [
             'data': [
@@ -37,8 +38,7 @@
         {param params: [
             'data': [
                 'mark': 3
-            ],
-            'isClickable':true
+            ]
         ] /}
     {/call}
     <br>
@@ -55,6 +55,15 @@
             'data': [
                 'mark': 5
             ]
+        ] /}
+    {/call}
+    <br><br>CLICKABLE:<br>
+    {call sm.bStars.Template.base}
+        {param params: [
+            'data': [
+                'mark': 3
+            ],
+            'isClickable':true
         ] /}
     {/call}
 {/template}

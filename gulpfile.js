@@ -27,18 +27,22 @@ gulp.task('appES5', function () {
 
 gulp.task('soy', function () {
     return gulp.src(path.join(__dirname + BLOCKS_DIR + '/**/*.soy'))
-        .pipe(soynode({loadCompiledTemplates: false}))
-        .pipe(gulpFilter('**/*.js'))
-        .pipe(concat(COMPILED_SOY_FILE))
-        .pipe(gulp.dest(path.join(__dirname + COMPILED_SOY_DIR)));
+         .pipe(soynode({loadCompiledTemplates: true}))
+         .pipe(gulpFilter('**/*.js'))
+         .pipe(concat(COMPILED_SOY_FILE))
+         .pipe(gulp.dest(path.join(__dirname + COMPILED_SOY_DIR)));
 });
-
+//const temps = path.join(__dirname, COMPILED_SOY_DIR);
+//const scrpts = path.join(__dirname, BLOCKS_DIR, '/**/*.js')
 
 gulp.task('scripts', ['soy'], function () {
+    console.log(path.join(__dirname + COMPILED_SOY_DIR));
     return gulpHelper.buildJs(
         [
-            path.join(__dirname, COMPILED_SOY_DIR),
-            path.join(__dirname, BLOCKS_DIR, '/**/*.js')
+            //path.join(__dirname + COMPILED_SOY_DIR + '/templates.js'),
+            //path.join(__dirname, BLOCKS_DIR, '/**/*.js')
+            //temps,
+            //scrpts
         ],
         'script.js',
         'sm.lDoc.Doc',

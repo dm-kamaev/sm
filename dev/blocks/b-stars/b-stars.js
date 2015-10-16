@@ -1,45 +1,54 @@
 goog.provide('sm.bStars.Stars');
 
-goog.require('goog.ui.Component');
+goog.require('sm.bStars.Template');
+goog.require('goog.ui.Control');
 goog.require('goog.dom.classes');
 goog.require('goog.events');
+goog.require('goog.soy');
+
 
 /**
  * Stars Component
  * @param {object=} opt_params
  * @constructor
- * @extends {goog.ui.Component}
+ * @extends {goog.ui.Control}
  */
 sm.bStars.Stars = function(opt_params) {
-    goog.base(this, opt_params);
-    console.log('Stars');
+    goog.base(this);
 
     /**
-     * @private {object}
+     * @private
+     * @type{object}
      */
-    var params_ = opt_params;
+    this.params_ = opt_params;
+    /**
+     * @private
+     * @type{number}
+     */
+    this.starsMark_ = this.params_.data.mark || 1;
 
     /**
-     * @private {number}
+     * @private
+     * @type {bool}
      */
-    var starsMark = params_.data.mark || 1;
+    this.isClickable_ = this.params_.isClickable || false;
 
     /**
-     * @private {object}
+     * @private
+     * @type {object}
      */
-    var stars_ = [];
-
-
+    this.stars_ = [];
 };
-goog.inherits(sm.bStars.Stars, goog.ui.Component);
+goog.inherits(sm.bStars.Stars, goog.ui.Control);
+
 
 goog.scope(function() {
     var Stars = sm.bStars.Stars;
 
-/**
- * CSS-class enum
- * @enum {string}
- */
+    /**
+     * CSS-class enum
+     * @enum {string}
+     */
     Stars.CssClass = {
         ROOT: 'b-stars',
         STAR: 'b-stars__star',
@@ -47,7 +56,18 @@ goog.scope(function() {
     };
 
 
-
+    /**
+     * Template-based dom element creation.
+     * @return {!Node}
+     * @public
+     */
+    Stars.prototype.createDom = function() {
+        console.log("rendering template, params: "+JSON.stringify(this.params_));
+        var el = goog.soy.renderAsElement(sm.bStars.Template.base, {
+            params: this.params_
+        });
+        this.decorateInternal(el);
+    };
 
 
     /**
@@ -58,7 +78,7 @@ goog.scope(function() {
     Stars.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
         this.stars_= goog.dom.getElementsByClass(
-            Stars.CssClass.ROOT, element
+            Stars.CssClass.STAR, element
         );
     };
 
@@ -69,8 +89,8 @@ goog.scope(function() {
      */
     Stars.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
-        if (this.params_.isClickable) {
-            for (var i = 0; i< this.stars_.length; i++)
+        if (this.isClickable_) {
+            for (var i = 0; i < this.stars_.length; i++)
             {
                 var star = this.stars_[i];
                 goog.events.listen(
@@ -82,19 +102,67 @@ goog.scope(function() {
         }
     };
 
+    /**
+     * star onclick handler
+     * @param {object}
+     * @private
+     */
     Stars.prototype.onClick_ = function(event) {
-        console.log(event);
-        //this.changeActiveButton(event.target);
+        //console.log(event);
+        var starNumber = this.getStarNumber_(event.target);
+        this.recolorStars_(starNumber);
     };
 
 
+    /**
+     * Gets clicked star number
+     * @param {node}
+     * @return {number}
+     * @private
+     */
+    Stars.prototype.getStarNumber_ = function(element) {
+        for (var i = 0; i< this.stars_.length; i++)
+        {
+            if (element ===  this.stars_[i])
+                return i;
+        }
+        return -1;
+    }
+
+    /**
+     * Clearing selection
+     * @private
+     */
+    Stars.prototype.clearSelection_ = function (){
+        for (var i = 0; i< this.stars_.length; i++)
+        {
+            if (goog.dom.classes.has(this.stars_[i], Stars.CssClass.STAR_SELECTED))
+                goog.dom.classes.remove(this.stars_[i], Stars.CssClass.STAR_SELECTED);
+        }
+    }
+
+    /**
+     * Recoloring stars
+     * @param {number}
+     * @private
+     */
+    Stars.prototype.recolorStars_ = function (count){
+        this.clearSelection_();
+        for (var i = 0; i<= count; i++)
+        {
+            if (! goog.dom.classes.has(this.stars_[i], Stars.CssClass.STAR_SELECTED)) {
+                goog.dom.classes.add(this.stars_[i], Stars.CssClass.STAR_SELECTED);
+            }
+        }
+        this.starsMark_ = i;
+        console.log('Stars.mark is now:' + this.starsMark_);
+    }
 
     /**
      * Cleans up the Component.
      * @inheritDoc
      */
     Stars.prototype.exitDocument = function() {
-
         goog.base(this, 'exitDocument');
     };
 
@@ -106,7 +174,4 @@ goog.scope(function() {
         goog.base(this, 'dispose');
         this.exitDocument.bind(this);
     };
-
-
-
 });
