@@ -1,8 +1,4 @@
-﻿body{
-    margin: 0;
-}
-
-.b-header{
+﻿.b-header{
 	display: inline-block;
 	overflow: hidden;
 	
@@ -14,7 +10,6 @@
 }
 
 .b-header__menu{
-    display: inline-block;
     float: left;
 
     height: 100%;
@@ -22,7 +17,6 @@
 }
 
 .b-header__main{
-    display: inline-block;
     float: left;
 
     width: 74%;
@@ -32,11 +26,44 @@
 }
 
 .b-header__search{
-    display: inline-block;
     float: left;
 
     width: 13%;
     height: 100%;
+}
+
+.b-header__menu-image{
+	float: right;
+	
+	width: 70%;
+	height: 100%;
+	
+	background: url(images/l-schools/b-header/menu.png) no-repeat center;
+}
+
+.b-header__search-image{
+	width: 70%;
+	height: 100%;
+	
+	background: url(images/l-schools/b-header/search.png) no-repeat center;
+}
+
+.b-header__line{
+	position: relative;
+	top: 25%;
+
+	width: 0;
+	height: 50%;
+	
+	border: 1px solid rgba(0,0,0,0.08);
+}
+
+.b-header__line_right{
+	float: right;
+}
+
+.b-header__line_left{
+	float: left;
 }
 
 .b-header__wrap{
@@ -96,36 +123,6 @@
     font-size: 13px;
 }
 
-.b-header__menu-image{
-	float: right;
-	
-	width: 70%;
-	height: 100%;
-	
-	background: url(images/l-schools/b-header/menu.png) no-repeat center;
-}
-
-.b-header__search-image{
-	width: 70%;
-	height: 100%;
-	
-	background: url(images/l-schools/b-header/search.png) no-repeat center;
-}
-
-.b-header__line{
-	position: relative;
-	top: 25%;
-
-	width: 0;
-	height: 50%;
-	
-	border: 1px solid rgba(0,0,0,0.08);
-}
-
-.b-header__line_right{
-	float: right;
-}
-
-.b-header__line_left{
-	float: left;
+body{
+    margin: 0;
 }
