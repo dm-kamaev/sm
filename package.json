@@ -32,7 +32,12 @@
     "gulp-util": "^3.0.6",
     "node-sass": "^3.3.3",
     "soynode": "^1.0.1",
-    "frobl": "git+ssh://git@github.com:c7s/frobl.git#dev"
+    "frobl": "git+ssh://git@github.com:c7s/frobl.git#dev",
+    "sequelize": "^3.8.0",
+    "sequelize-cli": "^1.9.1",
+    "pg": "^4.4.2",
+    "pg-hstore": "^2.3.2",
+    "node-xlsx": "^0.6.0"
   },
   "dependencies": {
     "express": "^4.13.3"

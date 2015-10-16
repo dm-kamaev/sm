@@ -1,0 +1,1 @@
+exports.school = require('./school');
