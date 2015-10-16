@@ -14,8 +14,8 @@ const gulpFilter = require('gulp-filter');
 const production = !!util.env.production;
 
 const BLOCKS_DIR = '/dev/blocks';
-const COMPILED_SOY_DIR = '/tmp';
-const COMPILED_SOY_FILE = '/templates.js';
+const COMPILED_SOY_DIR = '/node_modules/frobl/tmp/';
+const COMPILED_SOY_FILE = 'templates.js';
 
 
 gulp.task('appES5', function () {
@@ -26,22 +26,18 @@ gulp.task('appES5', function () {
 });
 
 gulp.task('soy', function () {
-    return gulp.src(path.join(__dirname + BLOCKS_DIR + '/**/*.soy'))
-        .pipe(soynode({loadCompiledTemplates: false}))
-        .pipe(gulpFilter('**/*.js'))
-        .pipe(concat(COMPILED_SOY_FILE))
-        .pipe(gulp.dest(path.join(__dirname + COMPILED_SOY_DIR)));
+    return gulpHelper.soy(['./dev/blocks/**/*.soy']);
+
 });
 
 
 gulp.task('scripts', ['soy'], function () {
     return gulpHelper.buildJs(
         [
-            path.join(__dirname, COMPILED_SOY_DIR),
             path.join(__dirname, BLOCKS_DIR, '/**/*.js')
         ],
         'script.js',
-        'sm.lSchool.School',
+        'sm.lDoc.Doc',
         path.join(__dirname, '/public'),
         production
     );

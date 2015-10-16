@@ -6,3 +6,11 @@
     text-align: right;
     color: #000;
 }
+
+.b-stars__star {
+    display: inline-block;
+}
+
+.b-stars__star_selected {
+    color: red;
+}
