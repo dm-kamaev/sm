@@ -20,12 +20,16 @@
             1
         ]
     },
+     "globals": {
+         "goog",
+         "sm"
+     },
     "ecmaFeatures": {
         "modules": true
     },
     "env": {
         "node": true,
-        "es6": tru
+        "es6": true
     },
     "extends": "eslint:recommended"
 }

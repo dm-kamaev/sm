@@ -1,0 +1,187 @@
+{namespace sm.lDoc.Template}
+
+
+/**
+ * Doc index layout
+ * @param list
+ */
+{template .index}
+    {let $html kind="html"}
+        {call .html_}
+            {param list: $list /}
+        {/call}
+    {/let}
+
+    {call .base_}
+        {param title: 'doc' /}
+        {param html: $html /}
+    {/call}
+{/template}
+
+
+/**
+ * Doc item layout
+ * @param? name
+ * @param list
+ */
+{template .item}
+    {let $html kind="html"}
+        {call .html_}
+            {param name: $name /}
+            {param list: $list /}
+        {/call}
+    {/let}
+
+    {call .base_}
+        {param title: $name /}
+        {param html: $html /}
+    {/call}
+{/template}
+
+
+/**
+ * Base layout
+ * @param title
+ * @param html
+ */
+{template .base_ private="true" kind="html"}
+    {call sm.lBase.Template.index}
+        {param title: $title /}
+        {param html: $html /}
+        {param css: ['/frobl.build.css', '/styles.css'] /}
+        {param js: ['/external.min.js', '/script.js'] /}
+    {/call}
+{/template}
+
+
+/**
+ * Doc html
+ * @param? name
+ * @param list
+ */
+{template .html_ private="true" kind="html"}
+<link  href='https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700,700italic&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+    <div class="l-doc">
+        {call .menu_}
+            {param name: $name /}
+            {param list: $list /}
+        {/call}
+        {call .content_}
+            {param name: $name /}
+            {param list: $list /}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Doc menu
+ * @param? name
+ * @param list
+ */
+{template .menu_ private="true" kind="html"}
+    <div class="l-doc__menu">
+        {if $name}
+            <a class="l-doc__menu-return" href="/doc">Back</a>
+        {/if}
+        <div class="l-doc__menu-section">
+            <ul class="l-doc__menu-items">
+                {foreach $item in $list}
+                    <li class="l-doc__menu-item">
+                        {if $item == $name}
+                            <span class="l-doc__menu-selected">
+                                {$item}
+                            </span>
+                        {else}
+                            <a class="l-doc__menu-link" href="/doc/{$item}">
+                                {$item}
+                            </a>
+                        {/if}
+                    </li>
+                {/foreach}
+            </ul>
+        </div>
+    </div>
+{/template}
+
+
+/**
+ * Doc content
+ * @param? name
+ * @param? list
+ */
+{template .content_ private="true" kind="html"}
+    <div class="l-doc__content">
+        {if $name}
+            {call .itemContent_}
+                {param name: $name /}
+            {/call}
+        {else}
+            {call .indexContent_}
+                {param list: $list /}
+            {/call}
+        {/if}
+    </div>
+{/template}
+
+
+/**
+ * Doc index content
+ * @param? list
+ */
+{template .indexContent_ private="true" kind="html"}
+    <h1 class="l-doc__h1">All blocks</h1>
+    <div class="l-doc__previews">
+        {foreach $item in $list}
+            <div class="l-doc__preview">
+                <h2 class="l-doc__h2">
+                    <a href="/doc/{$item}">{$item}</a>
+                </h2>
+                <div class="l-doc__preview-content">
+                    {call .preview_}
+                        {param name: $item /}
+                    {/call}
+                </div>
+            </div>
+        {/foreach}
+    </div>
+{/template}
+
+
+/**
+ * Doc index preview
+ * @param? name
+ */
+{template .preview_ private="true" kind="html"}
+    {switch $name}
+        {case 'b-mark'}
+            {call sm.lDoc.nDemo.bBlockMark.Template.preview/}
+    {/switch}
+{/template}
+
+
+/**
+ * Doc item content
+ * @param? name
+ */
+{template .itemContent_ private="true" kind="html"}
+    <h1 class="l-doc__h1">{$name}</h1>
+    <div class="l-doc__documentation">
+        {call .documentation_}
+            {param name: $name /}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Doc item documentation
+ * @param? name
+ */
+{template .documentation_ private="true" kind="html"}
+    {switch $name}
+        {case 'b-mark'}
+            {call sm.lDoc.nDemo.bBlockMark.Template.doc /}
+
+    {/switch}
+{/template}
