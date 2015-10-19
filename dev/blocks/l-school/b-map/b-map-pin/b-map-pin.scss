@@ -1,11 +1,11 @@
-.b-map-mark__mark-icon > img {
+.b-map-pin__pin-icon > img {
     height: 30px;
     width: 25px;
     position: absolute;
 
 }
 
-.b-map-mark__balloon {
+.b-map-pin__balloon {
     width: 200px;
     height: 120px;
     padding: 0;
@@ -13,17 +13,17 @@
     background-color: #FFFFFF;
 }
 
-.b-map-mark__info {
+.b-map-pin__info {
     padding: 20px;
     font-size: 16px !important;
     font-family: serif !important;
 }
 
-.b-map-mark__school-name {
+.b-map-pin__school-name {
     font-weight: bold;
 }
 
-.b-map-mark__rating {
+.b-map-pin__rating {
     margin-top: 20px;
     color: #ee362c;
 }

@@ -22,7 +22,7 @@ sm.lSchool.bMap.Map = function() {
     /**
     *   @private
     */
-    this.markArr_ = [];
+    this.pinArr_ = [];
     /**
     *   @static
     */
@@ -38,7 +38,7 @@ sm.lSchool.bMap.Map = function() {
     /**
     *   @static
     */
-    this.markDataArr = [
+    this.pinDataArr = [
         {
             coords: {lat: 55.731488, lng: 37.638394},
             hint: 'Мы здесь',
@@ -78,29 +78,29 @@ sm.lSchool.bMap.Map.prototype.setInit = function() {
     this.setCoords(this.config.initCoords.lat, this.config.initCoords.lng);
 };
 
-sm.lSchool.bMap.Map.prototype.markFactory = function (config) {
-    var mark = new sm.lSchool.bMap.bMark.Mark();
-    mark.init(config);
-    return mark.contents;
+sm.lSchool.bMap.Map.prototype.pinFactory = function (config) {
+    var pin = new sm.lSchool.bMap.bPin.Pin();
+    pin.init(config);
+    return pin.contents;
 };
 
-sm.lSchool.bMap.Map.prototype.setMarkArr = function () {
+sm.lSchool.bMap.Map.prototype.setPinArr = function () {
     var that = this;
-    this.markArr_ = this.markDataArr.map(
+    this.pinArr_ = this.pinDataArr.map(
         function (item) {
-            return that.markFactory(item);
+            return that.pinFactory(item);
         }
     );
 };
 
-sm.lSchool.bMap.Map.prototype.placeMarks = function () {
-    if (this.markArr_.length === 0) {
-        console.log('No marks!');
+sm.lSchool.bMap.Map.prototype.placePins = function () {
+    if (this.pinArr_.length === 0) {
+        console.log('No pins!');
         return;
     }
-    console.log(this.markArr_.length + ' marks should be on the map');
+    console.log(this.pinArr_.length + ' pins should be on the map');
     var that = this;
-    this.markArr_.forEach(
+    this.pinArr_.forEach(
         function(item) {that.ymaps_.geoObjects.add(item);}
     );
 };
@@ -115,8 +115,8 @@ sm.lSchool.bMap.Map.prototype.init = function() {
             controls: []
         }
     );
-    this.setMarkArr();
-    this.placeMarks();
+    this.setPinArr();
+    this.placePins();
 };
 
 var map = new sm.lSchool.bMap.Map();
