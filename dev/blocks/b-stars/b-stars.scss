@@ -1,16 +1,43 @@
 .b-stars {
     display: inline-block;
-
+    outline: none;
     min-width: 50px;
-
     text-align: right;
     color: #000;
+}
+
+.b-stars_clickable {
+    cursor: pointer;
+}
+
+.b-stars__hidden-input{
+    display: none;
+}
+
+.b-stars_size_large {
+    font-size: 30px;
 }
 
 .b-stars__star {
     display: inline-block;
 }
 
+.b-star__star_not-selected {
+    display: none;
+}
+
 .b-stars__star_selected {
-    color: red;
+    color: black;
+}
+
+.b-stars__star_theme_colored {
+
+    .b-star__star_not-selected {
+        color: black;
+        display: inline-block;
+    }
+
+    .b-stars__star_selected {
+        color: red;
+    }
 }
