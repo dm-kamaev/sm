@@ -1,7 +1,7 @@
 goog.provide('sm.bStars.Stars');
 
 goog.require('sm.bStars.Template');
-goog.require('goog.ui.Control');
+goog.require('goog.ui.Component');
 goog.require('goog.dom.classes');
 goog.require('goog.events');
 goog.require('goog.soy');
@@ -11,7 +11,7 @@ goog.require('goog.soy');
  * Stars Component
  * @param {object=} opt_params
  * @constructor
- * @extends {goog.ui.Control}
+ * @extends {goog.ui.Component}
  */
 sm.bStars.Stars = function(opt_params) {
     goog.base(this);
@@ -21,6 +21,12 @@ sm.bStars.Stars = function(opt_params) {
      * @type{object}
      */
     this.params_ = opt_params;
+
+    /**
+     * @private
+     * @type{object}
+     */
+    this.config_ = this.params_.config ? this.params_.config : {} ;
     /**
      * @private
      * @type{number}
@@ -31,15 +37,21 @@ sm.bStars.Stars = function(opt_params) {
      * @private
      * @type {bool}
      */
-    this.isClickable_ = this.params_.isClickable || false;
+    this.isClickable_ = this.config_.isClickable || false;
 
     /**
      * @private
-     * @type {object}
+     * @type {array}
      */
     this.stars_ = [];
+
+    /**
+     * @private
+     * @type {node}
+     */
+    this.inputElem_ = null;
 };
-goog.inherits(sm.bStars.Stars, goog.ui.Control);
+goog.inherits(sm.bStars.Stars, goog.ui.Component);
 
 
 goog.scope(function() {
@@ -52,7 +64,13 @@ goog.scope(function() {
     Stars.CssClass = {
         ROOT: 'b-stars',
         STAR: 'b-stars__star',
-        STAR_SELECTED: 'b-stars__star_selected'
+        STAR_SELECTED: 'b-stars__star_selected',
+        STAR_NOT_SELECTED: 'b-star__star_not-selected',
+        INPUT: 'b-stars__hidden-input'
+    };
+
+    Stars.Event = {
+        VALUE_CHANGED: 'VALUE_CHANGED'
     };
 
 
@@ -62,7 +80,6 @@ goog.scope(function() {
      * @public
      */
     Stars.prototype.createDom = function() {
-        console.log("rendering template, params: "+JSON.stringify(this.params_));
         var el = goog.soy.renderAsElement(sm.bStars.Template.base, {
             params: this.params_
         });
@@ -77,8 +94,11 @@ goog.scope(function() {
      */
     Stars.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
-        this.stars_= goog.dom.getElementsByClass(
+        this.stars_ = goog.dom.getElementsByClass(
             Stars.CssClass.STAR, element
+        );
+        this.inputElem_ = goog.dom.getElementByClass(
+            Stars.CssClass.INPUT, element
         );
     };
 
@@ -96,7 +116,7 @@ goog.scope(function() {
                 goog.events.listen(
                     star,
                     goog.events.EventType.CLICK,
-                    this.onClick_.bind(this)
+                    this.onClick_.bind(this, i)
                 );
             }
         }
@@ -107,56 +127,67 @@ goog.scope(function() {
      * @param {object}
      * @private
      */
-    Stars.prototype.onClick_ = function(event) {
+    Stars.prototype.onClick_ = function(index, event) {
         //console.log(event);
-        var starNumber = this.getStarNumber_(event.target);
-        this.recolorStars_(starNumber);
+        var starNumber = index + 1;
+        if (this.starsMark_ != starNumber)
+            this.selectStars(starNumber);
     };
 
-
     /**
-     * Gets clicked star number
-     * @param {node}
-     * @return {number}
+     * Change value
+     * @param {number}
      * @private
      */
-    Stars.prototype.getStarNumber_ = function(element) {
-        for (var i = 0; i< this.stars_.length; i++)
-        {
-            if (element ===  this.stars_[i])
-                return i;
-        }
-        return -1;
-    }
+    Stars.prototype.changeValue_ = function (newValue) {
+        var oldValue = this.starsMark_;
+        this.starsMark_ = newValue;
+        goog.dom.setProperties(
+            this.inputElem_,
+            {value:newValue}
+        );
+        var newEvent = new goog.events.Event(Stars.Event.VALUE_CHANGED, this);
+        newEvent.newValue = newValue;
+        newEvent.oldValue = oldValue;
+        this.dispatchEvent(newEvent);
+    };
 
     /**
      * Clearing selection
      * @private
      */
     Stars.prototype.clearSelection_ = function (){
-        for (var i = 0; i< this.stars_.length; i++)
+        for (var i = 0, star; i < this.stars_.length; i++)
         {
-            if (goog.dom.classes.has(this.stars_[i], Stars.CssClass.STAR_SELECTED))
-                goog.dom.classes.remove(this.stars_[i], Stars.CssClass.STAR_SELECTED);
-        }
-    }
-
-    /**
-     * Recoloring stars
-     * @param {number}
-     * @private
-     */
-    Stars.prototype.recolorStars_ = function (count){
-        this.clearSelection_();
-        for (var i = 0; i<= count; i++)
-        {
-            if (! goog.dom.classes.has(this.stars_[i], Stars.CssClass.STAR_SELECTED)) {
-                goog.dom.classes.add(this.stars_[i], Stars.CssClass.STAR_SELECTED);
+            star = this.stars_[i];
+            if (goog.dom.classes.has(star, Stars.CssClass.STAR_SELECTED)) {
+                goog.dom.classes.remove(star, Stars.CssClass.STAR_SELECTED);
+            }
+            if (!goog.dom.classes.has(star, Stars.CssClass.STAR_NOT_SELECTED)) {
+                goog.dom.classes.add(star, Stars.CssClass.STAR_NOT_SELECTED);
             }
         }
-        this.starsMark_ = i;
-        console.log('Stars.mark is now:' + this.starsMark_);
-    }
+    };
+
+    /**
+     * Reselecting stars
+     * @param {number}
+     */
+    Stars.prototype.selectStars = function (count) {
+        this.clearSelection_();
+        var index = count - 1;
+        for (var i = 0, star; i <= index; i++)
+        {
+            star = this.stars_[i];
+            if (!goog.dom.classes.has(star, Stars.CssClass.STAR_SELECTED)) {
+                goog.dom.classes.add(star, Stars.CssClass.STAR_SELECTED);
+            }
+            if (goog.dom.classes.has(star, Stars.CssClass.STAR_NOT_SELECTED)) {
+                goog.dom.classes.remove(star, Stars.CssClass.STAR_NOT_SELECTED);
+            }
+        }
+        this.changeValue_(count);
+    };
 
     /**
      * Cleans up the Component.
