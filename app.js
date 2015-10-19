@@ -4,7 +4,9 @@ const path = require('path');
 const express = require('express');
 const soynode = require('soynode');
 
-const soy = require('./app/components/soy');
+var db = require('./app/components/db');
+var soy = require('./app/components/soy');
+var modules = require('./app/modules');
 
 const app = express();
 
@@ -71,10 +73,7 @@ app.use(express.static(path.join(__dirname + '/public')));
 
 app.get('/', (req, res) => {
     console.log('/');
-    //sendCompiledTemplate(res.send.bind(res), LANDING_TEMPLATE);
-    res.end(
-        soy.render(LANDING_TEMPLATE.template, LANDING_TEMPLATE.arghs)
-    );
+    sendCompiledTemplate(res.send.bind(res), LANDING_TEMPLATE);
 });
 
 app.get('/doc', (req, res) => {
@@ -102,12 +101,13 @@ app.get('/search', (req, res) => {
     // res.send(html);
 });
 
-app.get('/school/:id', (req, res) => {
-    console.log('/school/' + req.params.id);
-    // res.send(html);
-});
+app.use('/', modules.school.router);
 
 
 soy.init(__dirname, function() {
-    app.listen(CONFIG.PORT, () => console.log('Running at port ' + CONFIG.PORT));
+    db.sync().then(function() {
+        app.listen(CONFIG.PORT, function() {
+            console.log('Running at port ' + CONFIG.PORT)
+        });
+    });
 });

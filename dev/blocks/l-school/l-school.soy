@@ -39,8 +39,8 @@
     <head>
         <meta charset="UTF-8">
         <title>Title</title>
-        <link  href='https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700,700italic&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
-        <link rel="stylesheet" href="styles.css">
+        <link href='https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700,700italic&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="/styles.css">
     </head>
     <body>
        <div class="l-school">
@@ -187,9 +187,7 @@
     {@param text:string}
     {@param buttonAlt:string}
     <div class="l-school__content-header">
-        {if $image!=null}
-            <img class="l-school__content-header-image" src="{$image}">
-        {/if}
+        {if $image != null}{/if}
         <div class="l-school__content-header-text">{$text}</div>
         <div class="l-school__content-header-button" alt="{$buttonAlt}"></div>
 
