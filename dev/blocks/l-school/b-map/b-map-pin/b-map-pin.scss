@@ -1,22 +1,24 @@
-.b-map-pin__pin-icon > img {
-    height: 30px;
-    width: 25px;
-    position: absolute;
-
-}
+$pinIconUrl: "/images/l-school/b-map/b-map-pin/geotag.png";
+// Dimensions of the pin icon. Required for correct view after a pin is clicked.
+$pinHeight: 30px;
+$pinWidth: 30px;
 
 .b-map-pin__balloon {
-    width: 200px;
-    height: 120px;
-    padding: 0;
+    width: 176px;
     margin: 0;
+    padding: 0;
+    
     background-color: #FFFFFF;
 }
 
-.b-map-pin__info {
-    padding: 20px;
-    font-size: 16px !important;
-    font-family: serif !important;
+.b-map-pin__school-info {
+    padding: 8px;
+}
+
+.b-map-pin__school-info,
+.b-map-pin__school-type {
+    font-size: 16px;
+    font-family: serif;
 }
 
 .b-map-pin__school-name {
@@ -24,10 +26,27 @@
 }
 
 .b-map-pin__rating {
-    margin-top: 20px;
+    display: inline-block;
+
+    margin: 10px 0;
+
     color: #ee362c;
 }
 
-.arrow::after {
-    background-color: red;
+.b-map-pin__balloon-pin {
+    position: absolute;
+    z-index: 10;
+    bottom: calc(#{$pinHeight} / -2);
+    left: calc(50% - #{$pinWidth} / 2);
+
+    display: inline-block;
+
+    width: $pinWidth;
+    height: $pinWidth;
+
+    background: {
+        image: url(#{$pinIconUrl});
+        size: max($pinHeight, $pinWidth);
+        repeat: no-repeat;
+    }
 }
