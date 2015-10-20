@@ -20,6 +20,8 @@
   "homepage": "https://github.com/c7s/shools-admin#readme",
   "devDependencies": {
     "commander": "^2.9.0",
+    "closure": "^1.0.3",
+	"closure-library": "^1.43629075.2",
     "concat": "^1.0.0",
     "eslint": "^1.6.0",
     "frobl": "git+ssh://git@github.com:c7s/frobl.git#dev",
