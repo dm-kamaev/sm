@@ -1,6 +1,7 @@
 .idea/
 assets
 node_modules/
+deployment-config.json
 
 public/
 tmp/
