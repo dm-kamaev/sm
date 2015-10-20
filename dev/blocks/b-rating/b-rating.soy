@@ -1,0 +1,30 @@
+{namespace sm.bRating.Template}
+
+/**
+ * rating view
+ * @param params [
+ *      {
+ *          name: string,
+ *          mark: int
+ *      }
+ * ]
+ */
+{template .base autoescape="strict" kind="html"}
+    <div class="b-rating">
+        <div class="b-rating__sections">
+            {foreach $section in $params}
+                <div class="b-rating__section">
+                    <div class="b-rating__mark {$section.name=='Средний балл' ? 'b-rating__mark_selected' : ''} ">
+                        {$section.mark}
+                    </div>
+                    <div class="b-rating__section-name">
+                        {$section.name}
+                    </div>
+                </div>
+            {/foreach}
+        </div>
+        {call gorod.bBouton.BoutonTemplate.render}
+            {param params: ['label':'Проголосовать','state':['pressed':'true'],'style':['theme':'default','color':'red','size':'extralarge','width':'block','borderWidth':'l','borderRadius':'none','uppercase':'true']]/}
+        {/call}
+    </div>
+{/template}
