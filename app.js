@@ -67,8 +67,15 @@ const DOC_TEMPLATE = {
 //         err ? console.log('Compilation failed: ' + err) : action(soynode.render(templateObj.template, templateObj.arghs))
 // );
 
+app.set('views', path.join(__dirname, 'app/modules/debug/views'));
 
-app.use(express.static(path.join(__dirname + '/public')));
+// template engines
+app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'html');
+app.set('view engine', 'jade');
+
+
+app.use(express.static(path.join(__dirname, '/public')));
 
 
 app.get('/', (req, res) => {
@@ -101,8 +108,12 @@ app.get('/search', (req, res) => {
     // res.send(html);
 });
 
+
 app.use('/', modules.school.router);
 app.use('/', modules.comment.router);
+app.use('/', modules.debug);
+app.use('/api', express.static(path.join(__dirname, '/doc')));
+
 
 
 soy.init(__dirname, function() {

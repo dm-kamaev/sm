@@ -25,6 +25,19 @@ var await = require('asyncawait/await');
         }));
     });
 
+
+    /**
+     * @api {get} /viev
+     * @apiVersion 0.0.0
+     * @apiName CreateIdea
+     * @apiGroup Idea
+     *
+     * @apiParam {String} name Name.
+     * @apiParam {String} description Description.
+     * @apiParam {Int} [expertId] ID of the expert.
+     *
+     * @apiSuccess {Int} id ID of the created idea.
+     */
     exports.view = function(req, res) {
         Comment.findById(req.params.id).then(function(comment) {
         var html = '';

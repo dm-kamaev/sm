@@ -10,6 +10,7 @@ const soynode = require('gulp-soynode');
 const sass = require('gulp-sass');
 const babel = require('gulp-babel');
 const gulpFilter = require('gulp-filter');
+const apidoc = require('gulp-apidoc');
 
 const production = !!util.env.production;
 
@@ -17,6 +18,15 @@ const BLOCKS_DIR = '/dev/blocks';
 const COMPILED_SOY_DIR = '/node_modules/frobl/tmp/';
 const COMPILED_SOY_FILE = 'templates.js';
 
+
+
+gulp.task('doc', function () {
+    apidoc({
+        src: "./app/modules/",
+        dest: "./doc"
+    }, function() {
+    });
+});
 
 gulp.task('appES5', function () {
     return gulp.src('app.js')
