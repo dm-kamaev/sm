@@ -1,16 +1,29 @@
-{namespace mel.lSchools.bComments.Template}
+{namespace sm.lSchool.bComments.Template}
 /**
-* Hi
-* @param comments
-*/
+ * Comments template
+ */
 {template .base}
-<div class="b-comments">
-	{foreach $comment in $comments}
-	{call mel.lSchools.bComment.Template.base}
-		{param author: $comment.author /}
-		{param rank: $comment.rank/}
-		{param sections: $comment.sections/}
-	{/call}
-	{/foreach}
-</div>
+	{@param params:[
+	 		comments:list<[
+	 				author: string,
+	 				rank: string,
+	 				text: string,
+	 				sections:list<[
+	 					name: string,
+	 					rating: int
+	 					]>
+	 			]>
+	 	]
+	 }
+	<div class="b-comments">
+		{foreach $comment in $params.comments}
+		{call sm.lSchool.bComment.Template.base}
+			{param params: [ 'author': $comment.author, 'rank': $comment.rank, 'text': $comment.text, 'sections': $comment.sections ] /}
+		{/call}
+		{if not isLast($comment)}
+		    <div class="b-comments__line">
+            </div>
+		{/if}
+		{/foreach}
+	</div>
 {/template}

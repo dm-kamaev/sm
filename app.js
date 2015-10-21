@@ -11,7 +11,7 @@ var modules = require('./app/modules');
 const app = express();
 
 const CONFIG = {
-    PORT: 3000
+    PORT: 80
 };
 
 const LANDING_TEMPLATE = {
@@ -73,7 +73,10 @@ app.use(express.static(path.join(__dirname + '/public')));
 
 app.get('/', (req, res) => {
     console.log('/');
-    sendCompiledTemplate(res.send.bind(res), LANDING_TEMPLATE);
+    res.end(
+        soy.render(LANDING_TEMPLATE.template, LANDING_TEMPLATE.arghs)
+    );
+    //sendCompiledTemplate(res.send.bind(res), LANDING_TEMPLATE);
 });
 
 app.get('/doc', (req, res) => {
