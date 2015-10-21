@@ -27,7 +27,6 @@ gulp.task('appES5', function () {
 
 gulp.task('soy', function () {
     return gulpHelper.soy(['./dev/blocks/**/*.soy']);
-
 });
 
 
