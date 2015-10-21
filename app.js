@@ -55,7 +55,8 @@ const DOC_TEMPLATE = {
     arghs: {
         list:[
             "b-mark",
-            "b-stars"
+            "b-stars",
+            "b-comments"
         ]
     }
 };

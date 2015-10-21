@@ -21,10 +21,22 @@
     			{/call}
     		{/foreach}
 		</div>
-		
-		<div class="b-comment__text">
-			{$params.text}
-		</div>
+
+		{if strLen($params.text)>430}
+			<div class="b-comment__text">
+				{print $params.text |truncate:430}
+				<div class="b-comment__show-all" tabindex="0">
+                    Показать полностью
+                </div>
+				<span class="b-comment__hidden-text">
+				hidden text
+				</span>
+			</div>
+		{else}
+			<div class="b-comment__text">
+        		{$params.text}
+        	</div>
+        {/if}
 
 		<div class="b-comment__footer">
 			<img class="b-comment__avatar" align="top" src="images/l-school/b-comment/person.png">
