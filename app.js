@@ -102,6 +102,7 @@ app.get('/search', (req, res) => {
 });
 
 app.use('/', modules.school.router);
+app.use('/', modules.comment.router);
 
 
 soy.init(__dirname, function() {

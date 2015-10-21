@@ -1,2 +1,2 @@
 exports.school = require('./school');
-exports.commentGroup = require('./commentGroup');
+exports.comment = require('./comment');
