@@ -30,8 +30,7 @@
                      description:string
                  ]>,
                  phones:list<string>
-             ],
-             mark:?
+             ]
          ]
      ]
     }
@@ -190,7 +189,6 @@
         {if $image != null}{/if}
         <div class="l-school__content-header-text">{$text}</div>
         <div class="l-school__content-header-button" alt="{$buttonAlt}"></div>
-
     </div>
 {/template}
 
@@ -298,9 +296,6 @@
  * @private
  */
 {template .comments_ autoescape="strict" kind="html"}
-    {@param
-        mark:?
-    }
     <div class="l-school__content-comments">
         <div class="l-school__content-column">
             {call .contentTitle_}
@@ -310,7 +305,33 @@
             {/call}
 
             {call sm.bMark.Template.base}
-                {param params: $mark /}
+                {param params: [
+                    'data': [
+                       'stats': [
+                           [
+                               'value': 212,
+                               'mark': 5,
+                               'isMax': true
+                           ], [
+                               'value': 13,
+                               'mark': 4
+                           ], [
+                               'value': 19,
+                               'mark': 3
+                           ], [
+                               'value': 25,
+                               'mark': 2
+                           ], [
+                               'value': 71,
+                               'mark': 1
+                           ]
+                       ],
+                       'total': [
+                           'average': 4.2,
+                           'countValue': 330
+                       ]
+                    ]
+                ] /}
             {/call}
 
         </div>
