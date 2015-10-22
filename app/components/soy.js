@@ -1,4 +1,5 @@
 var os = require('os'),
+    path = require('path'),
     soynode = require('soynode');
 
 soynode.setOptions({
@@ -32,7 +33,7 @@ exports.render = function(template, data) {
  *
  **/
 
-global.CLOSURE_BASE_PATH = 'node_modules\\closure-library\\closure\\goog\\'; // default
+global.CLOSURE_BASE_PATH = path.normalize('node_modules/closure-library/closure/goog/');
 var goog = require('closure').Closure(global);
 
 goog.require('goog.soy');

@@ -14,8 +14,10 @@ const gulpFilter = require('gulp-filter');
 const production = !!util.env.production;
 
 const BLOCKS_DIR = '/dev/blocks';
-const COMPILED_SOY_DIR = '/node_modules/frobl/tmp/';
-const COMPILED_SOY_FILE = 'templates.js';
+
+
+gulpHelper.paths.closureTemplatesJs = path.join(__dirname,
+    '/node_modules/gulp-soynode/node_modules/closure-templates/**/*.js');
 
 
 gulp.task('appES5', function () {
@@ -31,9 +33,6 @@ gulp.task('soy', function () {
 
 
 gulp.task('scripts', ['soy'], function () {
-    gulpHelper.paths.closureTemplatesJs = __dirname +
-        '/node_modules/gulp-soynode/node_modules/closure-templates/**/*.js';
-
     return gulpHelper.buildJs(
         [
             path.join(__dirname, BLOCKS_DIR, '/**/*.js')
