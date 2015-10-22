@@ -1,54 +1,23 @@
 var models = require('../models'),
     Comment = models.Comment;
 
-var async = require('asyncawait/async');
-var await = require('asyncawait/await');
 
-
-    exports.createComment = async (function  (instance, commentText) {
-        if (instance.comment_group_id == null) {
-            var newCommentGroup = await (CommentGroup.create());
-            await (instance.update({comment_group_id: newCommentGroup.id}))
-        }
-
-        var commentGroupId = instance.comment_group_id;
-
-        if (commentGroupId == null){
-            console.log('CRITICAL ERROR');
-            process.exit();
-        }
-        //console.log(instance);
-
-        await (Comment.create({
-            comment_group_id: commentGroupId,
-            text: commentText
-        }));
-    });
-
-
-    /**
-     * @api {get} /viev
-     * @apiVersion 0.0.0
-     * @apiName CreateIdea
-     * @apiGroup Idea
-     *
-     * @apiParam {String} name Name.
-     * @apiParam {String} description Description.
-     * @apiParam {Int} [expertId] ID of the expert.
-     *
-     * @apiSuccess {Int} id ID of the created idea.
-     */
-    exports.view = function(req, res) {
-        Comment.findById(req.params.id).then(function(comment) {
-        var html = '';
-        if (comment == null)
-            html = "404";
-        else {
-            html += 'text: '+ comment.text +'<br>';
+/**
+ * @api {get} /viev Get comment view
+ * @apiVersion 0.0.0
+ * @apiName Comment
+ * @apiGroup Comment
+ * @apiParam {Int} id Comment unique ID.
+ */
+exports.view = function(req, res) {
+    Comment.findById(req.params.id).then(function(comment) {
+        var html = '404';
+        if (comment) {
+            html = 'text: '+ comment.text +'<br>';
             html += 'comment_group_id: '+ comment.comment_group_id +'<br>';
         }
 
-            res.header("Content-Type", "text/html; charset=utf-8");
-            res.end(html);
-        });
-    };
+        res.header('Content-Type', 'text/html; charset=utf-8');
+        res.end(html);
+    });
+};

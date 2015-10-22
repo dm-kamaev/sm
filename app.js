@@ -7,6 +7,7 @@ const soynode = require('soynode');
 var db = require('./app/components/db');
 var soy = require('./app/components/soy');
 var modules = require('./app/modules');
+var bodyParser = require('body-parser');
 
 const app = express();
 
@@ -73,7 +74,8 @@ app.set('views', path.join(__dirname, 'app/modules/debug/views'));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 app.set('view engine', 'jade');
-
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 app.use(express.static(path.join(__dirname, '/public')));
 

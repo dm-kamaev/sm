@@ -3,8 +3,9 @@ var xlsx = require('node-xlsx');
 var obj = xlsx.parse(__dirname + '/open-data.xlsx'),
     data = obj[0].data;
 
-var models = require.main.require('./app/modules/school/models'),
-    School = models.School;
+var modules = require.main.require('./app/modules');
+    //School = models.School.School;
+console.log(models);
 
 
 function getArray(row, index) {
@@ -14,11 +15,11 @@ function getArray(row, index) {
             .map(item => item.trim()) :
         [];
 }
+//console.log(data[1]);
 
-
-School.sync({force: true}).then(function () {
+modules.school.models.School.sync({force: true}).then(function () {
     for (var i = 1, row; row = data[i]; i++) {
-        School.create({
+        modules.school.models.School.create({
             name: row[6],
             director: row[13],
             phones: getArray(row, 15),
