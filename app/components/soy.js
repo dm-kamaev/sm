@@ -2,8 +2,7 @@ var os = require('os'),
     soynode = require('soynode');
 
 soynode.setOptions({
-    //outputDir: os.tmpdir(),
-    outputDir: './tmp',
+    outputDir: os.tmpdir(),
     uniqueDir: true,
     allowDynamicRecompile: true
 });
@@ -88,5 +87,5 @@ var a = function(obj){
             return (JSON.stringify(attr.json));
         }
     }
-}
+};
 

@@ -31,6 +31,9 @@ gulp.task('soy', function () {
 
 
 gulp.task('scripts', ['soy'], function () {
+    gulpHelper.paths.closureTemplatesJs = __dirname +
+        '/node_modules/gulp-soynode/node_modules/closure-templates/**/*.js';
+
     return gulpHelper.buildJs(
         [
             path.join(__dirname, BLOCKS_DIR, '/**/*.js')
