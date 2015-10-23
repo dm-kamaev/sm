@@ -1,0 +1,107 @@
+{namespace sm.lSchool.bFeedbackModal.Template}
+
+
+/**
+* feedback
+* @param params {?{
+*     data: ?{
+*         url: ?string
+*     }
+* }}
+*/
+{template .feedback}
+    <form class="b-feedback" method="POST" action="{$params?.data?.url ?: ''}">
+        <div class="b-feedback__content">
+            <div class="b-feedback__title">Ваш отзыв</div>
+            {call gorod.bTextarea.TextareaTemplate.render}
+                {param params: [
+                    'name': 'comment',
+                    'autoheight': true,
+                    'placeholder': 'Ваш комментарий',
+                    'customClasses': 'b-feedback__comment'
+                ] /}
+            {/call}
+            {call .whoAreYou_ /}
+            {call .score_ /}
+        </div>
+        <input type="submit" class="b-feedback__button" value="Отправить" />
+    </form>
+{/template}
+
+
+/**
+* whoAreYou_
+*/
+{template .whoAreYou_ private="true"}
+    {let $userTypes: [
+        'Родитель',
+        'Выпускник',
+        'Ученик',
+    ] /}
+    <div class="b-feedback__who-are-you">
+        <div class="b-feedback__title b-feedback__title_sub b-feedback__title_who-are-you">
+            Кто вы?
+        </div>
+        <ul class="b-feedback__user-types">
+            {foreach $userType in $userTypes}
+                <li class="b-feedback__user-type">
+                    <input class="b-feedback__radio"
+                           id="b-feedback__user-type-{index($userType)}"
+                           type="radio"
+                           name="userType"
+                           value="{$userType}"
+                           {isFirst($userType) ? 'checked' : ''} />
+                    <label class="b-feedback__radio-label"
+                           for="b-feedback__user-type-{index($userType)}">
+                           {$userType}
+                    </label>
+                </li>
+            {/foreach}
+        </ul>
+    </div>
+{/template}
+
+
+/**
+* score_
+*/
+{template .score_ private="true"}
+    {let $scores: [
+        [
+            'name': 'score[]',
+            'title': 'Образование'
+        ], [
+            'name': 'score[]',
+            'title': 'Преподаватели'
+        ], [
+            'name': 'score[]',
+            'title': 'Доступность'
+        ], [
+            'name': 'score[]',
+            'title': 'Атмосфера'
+        ]
+    ] /}
+    <ul class="b-feedback__scores">
+        {foreach $score in $scores}
+            <li class="b-feedback__score">
+                <div class="b-feedback__title b-feedback__title_subsub">
+                    {$score.title}
+                </div>
+                {call sm.bStars.Template.base}
+                    {param params: [
+                        'data': [
+                            'mark': 0
+                        ],
+                        'config': [
+                            'style': [
+                                'theme': 'colored',
+                                'size': 'large'
+                            ],
+                            'isClickable': true
+                        ]
+                    ] /}
+                {/call}
+            </li>
+        {/foreach}
+    </ul>
+{/template}
