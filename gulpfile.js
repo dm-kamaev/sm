@@ -4,7 +4,6 @@ const path = require('path');
 const concat = require('gulp-concat');
 const util = require('gulp-util');
 const babel = require('gulp-babel');
-const gulpFilter = require('gulp-filter');
 const apidoc = require('gulp-apidoc');
 
 const production = !!util.env.production;
@@ -33,7 +32,7 @@ gulp.task('appES5', function () {
 });
 
 gulp.task('soy', function () {
-    return gulpHelper.soy(['./dev/blocks/**/*.soy']);
+    return gulpHelper.soy(['./app/blocks/**/*.soy']);
 });
 
 
