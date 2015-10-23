@@ -18,14 +18,14 @@ const DOC_TEMPLATE = {
     arghs: {
         list:[
             "b-mark",
-            "b-stars"
+            "b-stars",
+            "b-comments"
         ]
     }
 };
 
 
 app.use(express.static(path.join(__dirname + '/public')));
-
 
 app.get('/doc', (req, res) => {
     console.log('/doc: '+JSON.stringify(DOC_TEMPLATE));
