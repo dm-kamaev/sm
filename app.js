@@ -2,11 +2,11 @@
 
 const path = require('path');
 const express = require('express');
-const soynode = require('soynode');
 
 var db = require('./app/components/db');
 var soy = require('./app/components/soy');
 var modules = require('./app/modules');
+var api = require('./api/modules');
 var bodyParser = require('body-parser');
 
 const app = express();
@@ -113,8 +113,10 @@ app.get('/search', (req, res) => {
 
 app.use('/', modules.school.router);
 app.use('/', modules.comment.router);
+app.use('/', api.comment.router);
+app.use('/api', api.school.router);
 app.use('/', modules.debug);
-app.use('/api', express.static(path.join(__dirname, '/doc')));
+app.use('/apidoc', express.static(path.join(__dirname, '/doc')));
 
 
 

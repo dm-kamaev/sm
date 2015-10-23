@@ -3,10 +3,9 @@ var express = require('express'),
 
 var schoolController = require('./schoolController');
 
-router.get('/', schoolController.list);
 router.get('/school', schoolController.list);
 router.get('/school/:id', schoolController.view);
-router.post('/school', schoolController.create);
+ // router.post('/school', schoolController.create);
 router.post('/school/:id/comment', schoolController.createComment);
 
 module.exports = router;

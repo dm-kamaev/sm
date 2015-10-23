@@ -3,6 +3,6 @@ var express = require('express'),
 
 var commentController = require('./commentController');
 
-//router.get('/comment/:id', commentController.view);
+// router.get('/comment/:id', commentController.view);
 
 module.exports = router;

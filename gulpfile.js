@@ -22,7 +22,7 @@ const COMPILED_SOY_FILE = 'templates.js';
 
 gulp.task('doc', function () {
     apidoc({
-        src: "./app/modules/",
+        src: "./api/modules/",
         dest: "./doc"
     }, function() {
     });
