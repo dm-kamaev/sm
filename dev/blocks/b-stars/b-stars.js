@@ -20,7 +20,7 @@ sm.bStars.Stars = function(opt_params) {
      * @private
      * @type{object}
      */
-    this.params_ = opt_params;
+    this.params_ = opt_params || {data: {}};
 
     /**
      * @private
