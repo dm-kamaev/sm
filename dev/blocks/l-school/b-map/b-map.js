@@ -106,18 +106,20 @@ sm.lSchool.bMap.Map.prototype.placePins = function () {
 };
 
 sm.lSchool.bMap.Map.prototype.init = function() {
-    this.setInit();
-    this.ymaps_ = new ymaps.Map(
-        this.mapContainer_,
-        {
-            'center': [this.coords_.lat, this.coords_.lng],
-            'zoom': this.zoom_,
-            controls: []
-        }
-    );
-    this.setPinArr();
-    this.placePins();
+    ymaps.ready(function () {
+        this.setInit();
+        this.ymaps_ = new ymaps.Map(
+            this.mapContainer_,
+            {
+                'center': [this.coords_.lat, this.coords_.lng],
+                'zoom': this.zoom_,
+                controls: []
+            }
+        );
+        this.setPinArr();
+        this.placePins();
+    });
 };
 
 var map = new sm.lSchool.bMap.Map();
-ymaps.ready(map.init.bind(map));
+map.init.bind(map);

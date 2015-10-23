@@ -1,3 +1,0 @@
-var goog = {
-    DEBUG: false
-};
