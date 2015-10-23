@@ -1,9 +1,11 @@
 .idea/
 assets
 node_modules/
+deployment-config.json
 
 public/
 tmp/
 
 .sass-cache/
 *.log
+doc

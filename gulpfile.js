@@ -10,6 +10,7 @@ const soynode = require('gulp-soynode');
 const sass = require('gulp-sass');
 const babel = require('gulp-babel');
 const gulpFilter = require('gulp-filter');
+const apidoc = require('gulp-apidoc');
 
 const production = !!util.env.production;
 
@@ -19,6 +20,15 @@ const BLOCKS_DIR = '/dev/blocks';
 gulpHelper.paths.closureTemplatesJs = path.join(__dirname,
     '/node_modules/gulp-soynode/node_modules/closure-templates/**/*.js');
 
+
+
+gulp.task('doc', function () {
+    apidoc({
+        src: "./api/modules/",
+        dest: "./doc"
+    }, function() {
+    });
+});
 
 gulp.task('appES5', function () {
     return gulp.src('app.js')

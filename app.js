@@ -6,6 +6,8 @@ const express = require('express');
 var db = require('./app/components/db');
 var soy = require('./app/components/soy');
 var modules = require('./app/modules');
+var api = require('./api/modules');
+var bodyParser = require('body-parser');
 
 const app = express();
 
@@ -25,7 +27,18 @@ const DOC_TEMPLATE = {
 };
 
 
-app.use(express.static(path.join(__dirname + '/public')));
+
+app.set('views', path.join(__dirname, 'app/modules/debug/views'));
+
+// template engines
+app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'html');
+app.set('view engine', 'jade');
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+app.use(express.static(path.join(__dirname, '/public')));
+
 
 app.get('/doc', (req, res) => {
     console.log('/doc: '+JSON.stringify(DOC_TEMPLATE));
@@ -49,7 +62,13 @@ app.get('/search', (req, res) => {
     // res.send(html);
 });
 
+
 app.use('/', modules.school.router);
+app.use('/api', api.comment.router);
+app.use('/api', api.school.router);
+app.use('/', modules.debug);
+app.use('/apidoc', express.static(path.join(__dirname, '/doc')));
+
 
 
 soy.init(__dirname, function() {

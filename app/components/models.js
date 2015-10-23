@@ -1,5 +1,6 @@
 var path = require('path'),
     fs = require('fs');
+//var school = require.main.require('./app/modules/school/models/school');
 
 var models = {};
 
@@ -20,4 +21,15 @@ exports.initModels = function(dirPath) {
     Object.assign(models, localModels);
 
     return localModels;
+};
+
+
+exports.initAssociations = function() {
+    Object.keys(models).forEach(function (name) {
+        var model = models[name];
+        if (model.associate) {
+            model.associate(models);
+            model.sync();
+        }
+    });
 };

@@ -1,8 +1,7 @@
 var commander = require('commander');
 var xlsx = require('node-xlsx');
 
-var models = require.main.require('./app/modules/school/models'),
-    School = models.School;
+var modules = require.main.require('./app/modules');
 
 var NAME_INDEX = 6,
     DIRECTOR_INDEX = 13,
@@ -34,9 +33,9 @@ var parse = path => {
     var parsed = xlsx.parse(path),
         data = parsed[0].data;
 
-    School.sync({force: true}).then(function () {
+    modules.school.models.School.sync({force: true}).then(function () {
         data.map(rowToSchool)
-            .forEach(item => School.create(item));
+            .forEach(item => modules.school.models.School.create(item));
     });
 };
 
