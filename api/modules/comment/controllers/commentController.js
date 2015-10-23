@@ -4,42 +4,56 @@ var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 
 /**
- * @api {get} /viev Get comment view
+ * @api {get} api/comment/:id Get comment view
  * @apiVersion 0.0.0
- * @apiName Comment
+ * @apiName view
  * @apiGroup Comment
- * @apiParam {Int} id Comment unique ID.
+ * @apiSuccess {Text} text Comment text
+ * @apiSuccess {String = "Parent", "Graduate", "Scholar"} userType UserType
+ * @apiSuccess {Int[]} score Array[4] of scores.
+ * @apiSuccess {Int} comment_group_id Comment group id
  */
-exports.view = function(req, res) {
-    var comment = commentServices.get(req.params.id);
+exports.view = async(function(req, res) {
+    var comment = await(commentServices.get(req.params.id));
     res.header('Content-Type', 'text/html; charset=utf-8');
-    res.end(comment);
-};
+    res.end(JSON.stringify(comment));
+});
 
 /**
- * @api {get} school/:id/comments Gets comments in simple list
+ * @api {get} api/comment Get all the comments
  * @apiVersion 0.0.0
- * @apiGroup School
- * @apiName viewComments
+ * @apiGroup Comment
+ * @apiName listAll
+ * @apiSuccess {Object[]} comments Very userful documentation here.
  */
-exports.list = function(req, res) {
-    var groupID = req.params.id;
-    var comments = commentServices.list(groupID, params);
+/**
+ * @api {get} api/comment/group/id Get comments for group
+ * @apiVersion 0.0.0
+ * @apiGroup Comment
+ * @apiName list
+ * @apiSuccess {Object[]} comments Very userful documentation here.
+ */
+exports.list = async(function(req, res) {
+    var groupID = req.params.id || null;
+    var comments = await(commentServices.list(groupID));
     res.header('Content-Type', 'text/html; charset=utf-8');
-    res.end (comments);
-}
+    res.end(JSON.stringify(comments));
+});
 
 
 /**
- * @api {get} school/:id/comments Gets comments in simple list
+ * @api {post} api/comment/group/id Create new comment in group
  * @apiVersion 0.0.0
- * @apiGroup School
- * @apiName viewComments
+ * @apiGroup Comment
+ * @apiName create
+ * @apiParam {Text} text Comment text.
+ * @apiParam {String = "Parent", "Graduate", "Scholar"} userType UserType.
+ * @apiParam {Int[]} score Array[4] of scores.
  */
-exports.create = function(req, res) {
+exports.create = async(function(req, res) {
     var groupID = req.params.id;
     var params = req.body
-    var comment = commentServices.create(groupID, params);
+    var comment = await(commentServices.create(groupID, params));
     res.header('Content-Type', 'text/html; charset=utf-8');
-    res.end (comment);
-}
+    res.end(JSON.stringify(comment));
+});

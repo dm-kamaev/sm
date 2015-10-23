@@ -112,8 +112,7 @@ app.get('/search', (req, res) => {
 
 
 app.use('/', modules.school.router);
-app.use('/', modules.comment.router);
-app.use('/', api.comment.router);
+app.use('/api', api.comment.router);
 app.use('/api', api.school.router);
 app.use('/', modules.debug);
 app.use('/apidoc', express.static(path.join(__dirname, '/doc')));

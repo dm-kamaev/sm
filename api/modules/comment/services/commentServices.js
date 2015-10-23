@@ -20,19 +20,22 @@ exports.create = async (function(commentGroupId, params) {
     }
 });
 
-exports.list = async (function (commentGroupId){
-    var comments = await ( models.Comment.findAll({
-        where : {
-            comment_group_id : commentGroupId
-        }
-    }));
+exports.list = async (function (commentGroupId) {
+    var params = commentGroupId ?
+        {
+            where: {
+                comment_group_id: commentGroupId
+            }
+        } : {};
+        console.log(params);
+    var comments = await (models.Comment.findAll(params));
     return comments;
 });
 
-exports.get = async (function (commentId){
+exports.get = async (function (commentId) {
     var comment = await (models.Comment.findOne({
-        where : {
-            id : commentId
+        where: {
+            id: commentId
         }
     }));
     return comment;
