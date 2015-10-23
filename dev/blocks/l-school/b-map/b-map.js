@@ -1,10 +1,8 @@
 'use strict';
 
-var sm = {
-    lSchool: {
-        bMap: {}
-    }
-};
+goog.provide('sm.lSchool.bMap.Map');
+
+goog.require('sm.lSchool.bMap.bPin.Pin');
 
 sm.lSchool.bMap.Map = function() {
     /**
@@ -32,7 +30,7 @@ sm.lSchool.bMap.Map = function() {
             lng: 37.64,
             lat: 55.76
         },
-        // Must be a DOM element!
+        // Must be a DOM element!!
         mapContainer: document.querySelector('.b-map__wrapper')
     };
     /**
@@ -106,20 +104,24 @@ sm.lSchool.bMap.Map.prototype.placePins = function () {
 };
 
 sm.lSchool.bMap.Map.prototype.init = function() {
+    console.log('Initializing ymaps...');
+    var that = this;
     ymaps.ready(function () {
-        this.setInit();
-        this.ymaps_ = new ymaps.Map(
-            this.mapContainer_,
+        console.log('Hello, Yandex!');
+        that.setInit();
+        that.ymaps_ = new ymaps.Map(
+            that.mapContainer_,
             {
-                'center': [this.coords_.lat, this.coords_.lng],
-                'zoom': this.zoom_,
+                'center': [that.coords_.lat, that.coords_.lng],
+                'zoom': that.zoom_,
                 controls: []
             }
         );
-        this.setPinArr();
-        this.placePins();
+        that.setPinArr();
+        that.placePins();
     });
 };
 
+console.log('Map script.');
 var map = new sm.lSchool.bMap.Map();
-map.init.bind(map);
+map.init();
