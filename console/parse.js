@@ -1,7 +1,7 @@
 var commander = require('commander');
 var xlsx = require('node-xlsx');
 
-var modules = require.main.require('./app/modules');
+var modules = require.main.require('./api/modules');
 
 var NAME_INDEX = 6,
     DIRECTOR_INDEX = 13,
