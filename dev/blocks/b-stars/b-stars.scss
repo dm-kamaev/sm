@@ -1,9 +1,13 @@
 .b-stars {
     display: inline-block;
-    outline: none;
+
     min-width: 50px;
+
+    outline: none;
     text-align: right;
     color: #000;
+
+    line-height: 1em;
 }
 
 .b-stars_clickable {
@@ -15,7 +19,7 @@
 }
 
 .b-stars_size_large {
-    font-size: 30px;
+    font-size: 28px;
 }
 
 .b-stars__star {
@@ -33,11 +37,11 @@
 .b-stars__star_theme_colored {
 
     .b-star__star_not-selected {
-        color: black;
+        color: #e6e6e6;
         display: inline-block;
     }
 
     .b-stars__star_selected {
-        color: red;
+        color: #e2332a;
     }
 }

@@ -6,64 +6,83 @@
  *
  */
 {template .base autoescape="strict" kind="html"}
-    {@param? params:
-     [
-         data:
-         [
-             schoolName: string,
-             schoolDescr: string,
-             directorName: string,
-             schoolQuote: string,
-             classes: string,
-             social:list<[
-                 name:string,
-                 href:string
-             ]>,
-             sites:list<[
-                 name:string,
-                 href:string,
-                 link:string
-             ]>,
-             contacts:[
-                 address:list<[
-                     title:string,
-                     description:string
-                 ]>,
-                 phones:list<string>
-             ]
-         ]
-     ]
-    }
+    {@param? params: [
+        data: [
+            id: number,
+            schoolName: string,
+            schoolDescr: string,
+            directorName: string,
+            schoolQuote: string,
+            classes: string,
+            social: list<[
+                name: string,
+                href: string
+            ]>,
+            sites: list<[
+                name: string,
+                href: string,
+                link: string
+            ]>,
+            contacts: [
+                address: list<[
+                    title: string,
+                    description: string
+                ]>,
+                phones: list<string>
+            ],
+            comments: list<[
+                author: string,
+                rank: string,
+                text: string,
+                sections: list<[
+                    name: string,
+                    rating: int
+                ]>
+            ]>
+        ]
+    ]}
     <!DOCTYPE html>
     <html lang="en">
     <head>
         <meta charset="UTF-8">
         <title>Title</title>
         <link href='https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700,700italic&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="/frobl.build.css">
         <link rel="stylesheet" href="/styles.css">
     </head>
     <body>
-        <div class="l-school">
+        {let $dataParams kind="html"}
+            {call gorod.iUtils.stringify}
+                {param json: [
+                    'id': $params?.data?.id
+                ] /}
+            {/call}
+        {/let}
+        <div class="l-school" data-params="{$dataParams}">
             /*Тут должен вызываться шаблон хедера*/
             {call sm.bHeader.Template.base /}
 
             <div class="l-school__body">
-               {call .top_}
+                {call .top_}
                    {param params: $params /}
-               {/call}
-               <hr class="l-school__horisontal-line">
-               {call .middle_}
+                {/call}
+                <hr class="l-school__horisontal-line">
+                {call .middle_}
                    {param params: $params /}
-               {/call}
-               <hr class="l-school__horisontal-line">
-               {call .comments_}
-               {/call}
-               <hr class="l-school__horisontal-line">
-               <div class="l-school__footer">
+                {/call}
+                <hr class="l-school__horisontal-line">
+                {call .comments_}
+                    {param comments: $params?.data?.comments /}
+                {/call}
+                <hr class="l-school__horisontal-line">
+                <div class="l-school__footer">
                    /*шаблон футера*/
-               </div>
+                </div>
             </div>
         </div>
+        <script type="text/javascript" src="/external.min.js"></script>
+        <script type="text/javascript">var CLOSURE_NO_DEPS = true;</script>
+        <script type="text/javascript" src="/script.js"></script>
    </body>
 {/template}
 
@@ -296,6 +315,17 @@
  * @private
  */
 {template .comments_ autoescape="strict" kind="html"}
+    {@param
+        comments: list<[
+            author: string,
+            rank: string,
+            text: string,
+            sections: list<[
+                name: string,
+                rating: int
+            ]>
+        ]>
+    }
     <div class="l-school__content-comments">
         <div class="l-school__content-column">
             {call .contentTitle_}
@@ -303,43 +333,30 @@
                 {param text: 'комментарии и оценки' /}
                 {param buttonAlt: 'надпись2' /}
             {/call}
-
-            {call sm.bMark.Template.base}
+            {call gorod.bBouton.BoutonTemplate.render}
                 {param params: [
-                    'data': [
-                       'stats': [
-                           [
-                               'value': 212,
-                               'mark': 5,
-                               'isMax': true
-                           ], [
-                               'value': 13,
-                               'mark': 4
-                           ], [
-                               'value': 19,
-                               'mark': 3
-                           ], [
-                               'value': 25,
-                               'mark': 2
-                           ], [
-                               'value': 71,
-                               'mark': 1
-                           ]
-                       ],
-                       'total': [
-                           'average': 4.2,
-                           'countValue': 330
-                       ]
+                    'label': 'Оставить отзыв',
+                    'customClasses': 'b-bouton_feedback-opener',
+                    'state': [
+                        'pressed': true
+                    ],
+                    'style': [
+                        'theme': 'default',
+                        'size': 'extralarge',
+                        'width': 'block',
+                        'color': 'red',
+                        'borderRadius': 'none',
+                        'borderWidth': 'l'
                     ]
                 ] /}
             {/call}
-
         </div>
         <div class="l-school__content-column l-school__content-column_double_width l-school__content-column_last">
-            /*тут должен ывзываться шаблон комментариев*/
-        {call sm.lSchool.bComments.Template.base}
-            {param params: ['comments':[['author': 'Елена 321', 'rank': 'родитель','text':'Если ваш ребенок не силен в самостоятельном образовании, смело идите в эту школу, фраза "Быть тебе дворником" будет преследовать его все года обучения. Хотелось бы спросить преподавательский состав: "Если вы не любите детей и свою профессию, может быть профессия дворника вам как-то ближе?"', 'sections':[['name':'Педагоги','rating':3],['name':'Образование','rating':3]]], ['author': 'Елена 321', 'rank': 'родитель','text':'Для того чтобы поступить в школу 548 надо приходить на подготовку за 3 года. Тогда вашего ребенка возьмут точно и не важно как он себя ведет на уроке (кричит, воет, плачет). Еще такой вариант: если он не тянет в 7 лет, то его, по желанию родителей, могут оставить до 8 лет и тогда он точно поступит. Тестирования, проводящиеся якобы для проверки успеваемости детей, больше нужны для поднятия и без того большой самооценки школы тра та та и тара таратррр', 'sections':[['name':'Педагоги','rating':3],['name':'Образование','rating':3]]]]]/}
-        {/call}
+            {call sm.lSchool.bComments.Template.base}
+                {param params: [
+                    'comments': $comments
+                ] /}
+            {/call}
         </div>
     </div>
 {/template}

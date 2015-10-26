@@ -47,11 +47,17 @@ exports.list = async (function(req, res) {
 
 exports.view = async (function(req, res) {
     var school = await (schoolServices.get(req.params.id));
-    var sComments = school.comment_group ?
-        school.comment_group.comments : [];
+    var CommentGroup = school.CommentGroup ? school.CommentGroup.comments : [];
+
+    var typeConvert = {
+        'Parent': 'родитель',
+        'Graduate': 'выпускник',
+        'Scholar': 'ученик'
+    };
 
     var params = {
         data: {
+            id: school.id,
             schoolName: school.name,
             schoolDescr: school.name + " — школа, как школа. Обычная такая",
             directorName: school.director,
@@ -66,9 +72,29 @@ exports.view = async (function(req, res) {
                 address: school.addresses.map(address => { return {title:'', description: address}; }),
                 phones: school.phones
             },
-            comments: sComments
+            comments: CommentGroup.map(comment => {
+                return {
+                    author: '',
+                    rank: typeConvert[comment.userType],
+                    text: comment.text,
+                    sections: comment.score.map((score, index) => {
+                        var type = [
+                            'Педагоги',
+                            'Образование',
+                            'Доступность',
+                            'Атмосфера'
+                        ];
+                        return {
+                            name: type[index],
+                            rating: score
+                        };
+                    })
+                };
+            })
         }
     };
+
+    console.log(params.data);
 
     res.header("Content-Type", "text/html; charset=utf-8");
     res.end(

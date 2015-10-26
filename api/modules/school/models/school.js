@@ -7,7 +7,8 @@ var School = db.define('School', {
     phones: DataType.ARRAY(DataType.STRING),
     site: DataType.STRING,
     addresses: DataType.ARRAY(DataType.STRING),
-    coords: DataType.ARRAY(DataType.ARRAY(DataType.FLOAT))
+    coords: DataType.ARRAY(DataType.ARRAY(DataType.FLOAT)),
+    comment_group_id: DataType.INTEGER
 }, {
     underscored: true,
     tableName: 'school',

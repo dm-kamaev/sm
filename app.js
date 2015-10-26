@@ -21,6 +21,7 @@ const DOC_TEMPLATE = {
         list:[
             "b-mark",
             "b-stars",
+            "b-feedback-modal",
             "b-comments"
         ]
     }

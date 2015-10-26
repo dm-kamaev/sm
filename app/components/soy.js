@@ -86,7 +86,9 @@ var a = function(obj){
         },
         "stringify": function (attr) {
             return (JSON.stringify(attr.json));
+        },
+        "ext_generateId": function() {
+            return 'id' + Math.round(Math.random() * 100000);
         }
     }
 };
-
