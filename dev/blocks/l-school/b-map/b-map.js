@@ -2,7 +2,7 @@ goog.provide('sm.lSchool.bMap.Map');
 
 goog.require('sm.lSchool.bMap.MapPin');
 
-sm.lSchool.bMap.Map = function(domEl) {
+sm.lSchool.bMap.Map = function(root) {
     /**
     *   @private
     */
@@ -18,7 +18,9 @@ sm.lSchool.bMap.Map = function(domEl) {
     /**
     *   @private
     */
-    this.root_ = domEl;
+    this.root_ = root;
+
+    this.params_ = jQuery(root).data('params') || {};
 };
 
 sm.lSchool.bMap.Map.MAP_CONFIG = {
@@ -58,10 +60,11 @@ sm.lSchool.bMap.Map.prototype.setCoords = function(lat, lng) {
 
 sm.lSchool.bMap.Map.prototype.setInit = function() {
     this.setZoom(sm.lSchool.bMap.Map.MAP_CONFIG.initZoom);
-    this.setCoords(
-        sm.lSchool.bMap.Map.MAP_CONFIG.initCoords.lat,
-        sm.lSchool.bMap.Map.MAP_CONFIG.initCoords.lng
-    );
+    var coords = this.params_.coords[0] || {
+            lat: sm.lSchool.bMap.Map.MAP_CONFIG.initCoords.lat,
+            lng: sm.lSchool.bMap.Map.MAP_CONFIG.initCoords.lng
+        };
+    this.setCoords(coords.lat, coords.lng);
 };
 
 sm.lSchool.bMap.Map.prototype.pinFactory = function (config) {
@@ -70,9 +73,17 @@ sm.lSchool.bMap.Map.prototype.pinFactory = function (config) {
 
 sm.lSchool.bMap.Map.prototype.setPinArr = function () {
     var that = this;
-    this.pinArr_ = sm.lSchool.bMap.Map.PIN_DATA.map(
+    console.log(this);
+    this.pinArr_ = this.params_.coords.map(
         function (item) {
-            return that.pinFactory(item);
+            return that.pinFactory({
+                type: that.params_.type,
+                name: that.params_.name,
+                rating: that.params_.totalScore.toFixed(2),
+                coords: item,
+                url: '#',
+                isCurrent: true
+            });
         }
     );
 };
@@ -87,6 +98,10 @@ sm.lSchool.bMap.Map.prototype.placePins = function () {
     this.pinArr_.forEach(
         function(item) {that.ymaps_.geoObjects.add(item);}
     );
+    var geoObject = that.ymaps_.geoObjects.get(0);
+    if (geoObject) {
+        geoObject.balloon.open();
+    }
 };
 
 sm.lSchool.bMap.Map.prototype.init = function() {
@@ -96,7 +111,7 @@ sm.lSchool.bMap.Map.prototype.init = function() {
         console.log('Hello, Yandex!');
         that.setInit();
         that.ymaps_ = new ymaps.Map(
-            that.root_,
+            jQuery(that.root_).find('.b-map__wrapper').get(0),
             {
                 'center': [that.coords_.lat, that.coords_.lng],
                 'zoom': that.zoom_,
@@ -108,6 +123,9 @@ sm.lSchool.bMap.Map.prototype.init = function() {
     });
 };
 
-console.log('Map script.');
-var map = new sm.lSchool.bMap.Map(document.querySelector('.b-map__wrapper'));
-map.init();
+
+jQuery(function() {
+    var root = goog.dom.getElementByClass('b-map');
+    var map = new sm.lSchool.bMap.Map(root);
+    map.init();
+});

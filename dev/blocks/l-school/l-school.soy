@@ -10,6 +10,7 @@
         data: [
             id: number,
             schoolName: string,
+            schoolType: string,
             schoolDescr: string,
             directorName: string,
             schoolQuote: string,
@@ -38,7 +39,12 @@
                     name: string,
                     rating: int
                 ]>
-            ]>
+            ]>,
+            coords: list<
+               list<number>
+            >,
+            score: list<number>,
+            totalScore: number
         ]
     ]}
 <!DOCTYPE html>
@@ -81,10 +87,10 @@
                 </div>
             </div>
         </div>
+        {call sm.lSchool.bMap.Template.api}{/call}
         <script type="text/javascript" src="/external.min.js"></script>
         <script type="text/javascript">var CLOSURE_NO_DEPS = true;</script>
         <script type="text/javascript" src="/script.js"></script>
-        {call sm.lSchools.bMap.Template.api}{/call}
     </body>
 </html>
 {/template}
@@ -128,6 +134,8 @@
  [
      data:
      [
+         schoolName: string,
+         schoolType: string,
          directorName: string,
          classes: string,
          social:list<[
@@ -145,17 +153,31 @@
                  description:string
              ]>,
              phones:list<string>
-         ]
+         ],
+         coords: list<
+            list<number>
+         >,
+         score: list<number>,
+         totalScore: number
      ]
  ]
 }
     <div class="l-school__middle-content">
         /*СЕКЦИЯ 1*/
         <div class="l-school__content-column">
-              /*тут должен ывзываться шаблон карты*/
-              <div class="l-school__map-dummy">
-                  {call sm.lSchool.bMap.Template.map}{/call}
-              </div>
+            /*тут должен ывзываться шаблон карты*/
+            <div class="l-school__map-dummy">
+                {call sm.lSchool.bMap.Template.map}
+                    {param params: [
+                        'data': [
+                            'coords': $params.data.coords,
+                            'name': $params.data.schoolName,
+                            'type': $params.data.schoolType,
+                            'totalScore': $params.data.totalScore
+                        ]
+                    ] /}
+                {/call}
+            </div>
         </div>
 
         /*СЕКЦИЯ 2*/
