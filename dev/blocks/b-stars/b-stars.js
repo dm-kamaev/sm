@@ -31,7 +31,7 @@ sm.bStars.Stars = function(opt_params) {
      * @private
      * @type{number}
      */
-    this.starsMark_ = this.params_.data.mark || 1;
+    this.starsMark_ = this.params_.data.mark || 0;
 
     /**
      * @private
@@ -122,13 +122,27 @@ goog.scope(function() {
         }
     };
 
+
+    /**
+     * Set stars value
+     * @param {number} value
+     * @return {boolean}
+     */
+    Stars.prototype.setValue = function(value) {
+        var isChanged = (value != this.starsMark_);
+        if (isChanged) {
+            this.selectStars(value);
+        }
+        return isChanged;
+    };
+
+
     /**
      * star onclick handler
      * @param {object}
      * @private
      */
     Stars.prototype.onClick_ = function(index, event) {
-        //console.log(event);
         var starNumber = index + 1;
         if (this.starsMark_ != starNumber)
             this.selectStars(starNumber);

@@ -15,7 +15,7 @@
             <div class="b-feedback__title">Ваш отзыв</div>
             {call gorod.bTextarea.TextareaTemplate.render}
                 {param params: [
-                    'name': 'comment',
+                    'name': 'text',
                     'autoheight': true,
                     'placeholder': 'Ваш комментарий',
                     'customClasses': 'b-feedback__comment'
@@ -34,10 +34,18 @@
 */
 {template .whoAreYou_ private="true"}
     {let $userTypes: [
-        'Родитель',
-        'Выпускник',
-        'Ученик',
+        [
+            'title': 'Родитель',
+            'value': 'Parent'
+        ], [
+            'title': 'Выпускник',
+            'value': 'Graduate'
+        ], [
+            'title': 'Ученик',
+            'value': 'Scholar'
+        ]
     ] /}
+
     <div class="b-feedback__who-are-you">
         <div class="b-feedback__title b-feedback__title_sub b-feedback__title_who-are-you">
             Кто вы?
@@ -49,11 +57,11 @@
                            id="b-feedback__user-type-{index($userType)}"
                            type="radio"
                            name="userType"
-                           value="{$userType}"
+                           value="{$userType.value}"
                            {isFirst($userType) ? 'checked' : ''} />
                     <label class="b-feedback__radio-label"
                            for="b-feedback__user-type-{index($userType)}">
-                           {$userType}
+                           {$userType.title}
                     </label>
                 </li>
             {/foreach}

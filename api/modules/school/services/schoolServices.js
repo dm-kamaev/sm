@@ -11,6 +11,7 @@ exports.getGroupId = async (function(schoolId) {
     if (instance.comment_group_id == null) {
         var newCommentGroup = await (models.CommentGroup.create());
         await (instance.update({comment_group_id: newCommentGroup.id}))
+        console.log('instance', instance);
     }
     return instance.comment_group_id;
 });

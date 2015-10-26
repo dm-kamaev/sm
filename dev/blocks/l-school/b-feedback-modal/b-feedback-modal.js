@@ -37,6 +37,8 @@ goog.scope(function() {
 
     FeedbackModal.prototype.show = function() {
         this.modal_.show();
+        this.textarea_.setValue('');
+        this.stars_.forEach(stars => stars.setValue(0));
     };
 
 
@@ -129,6 +131,43 @@ goog.scope(function() {
 
     FeedbackModal.prototype.onSubmit_ = function(event) {
         event.preventDefault();
+
+        this.submit_();
+    };
+
+
+    FeedbackModal.prototype.submit_ = function() {
+        var form = jQuery(this.getElement());
+
+        var data = form.serializeArray(),
+            score = 0,
+            text = "";
+
+        /**
+         * TODO: rewrite this trash
+         */
+        for (var i = 0, n = data.length, item; i < n; i++) {
+            item = data[i];
+            if (item.name == 'score[]') {
+                score += parseInt(item.value);
+            } else if (item.name == 'text') {
+                text = item.value.trim();
+            }
+        }
+
+        if (score || text) {
+            jQuery.ajax({
+                url: form.attr('action'),
+                type: form.attr('method'),
+                data: form.serialize(),
+                success: function(data) {
+                    location.reload();
+                }
+            });
+        }
+        else {
+            this.hide();
+        }
     };
 
 
