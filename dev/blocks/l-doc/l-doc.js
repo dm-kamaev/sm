@@ -9,6 +9,8 @@ goog.require('gorod.bBouton.BoutonTemplate');
 
 goog.require('sm.lSchool.School');
 
+goog.require('sm.lSchool.bMap.Map');
+
 
 sm.lDoc.Doc = function() {
     console.log('debug doc');
