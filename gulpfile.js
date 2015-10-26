@@ -10,6 +10,7 @@ var glob = require("glob");
 var exec = require('child_process').exec;
 var Q = require('q');
 var fs = require('fs-extra');
+const config = require('./config.json');
 
 
 const production = !!util.env.production;
@@ -23,6 +24,16 @@ gulp.task('doc', function () {
         dest: "./doc"
     }, function() {
     });
+});
+
+gulp.task('lint', function() {
+    var pathArray = [].concat('./dev/blocks/**/*.js');
+    var ignore = config.lintIgnore;
+
+    for (var i = 0; i < ignore.length; i++) {
+        var pathArray = pathArray.concat('!' + __dirname + ignore[i]);
+    }
+    return gulpHelper.lint(pathArray, false);
 });
 
 

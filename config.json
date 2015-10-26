@@ -1,0 +1,5 @@
+{
+    "lintIgnore": [
+        "/dev/blocks/l-doc/**/*.js"
+    ]
+}
