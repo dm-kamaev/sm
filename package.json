@@ -43,7 +43,12 @@
     "pg": "^4.4.2",
     "pg-hstore": "^2.3.2",
     "sequelize": "^3.8.0",
-    "sequelize-cli": "^1.9.1"
+    "sequelize-cli": "^1.9.1",
+    "node-xlsx": "^0.6.0",
+    "ejs": "^2.3.4",
+    "body-parser": "~1.13.2",
+    "asyncawait": "^1.0.1",
+    "gulp-apidoc": "^0.2.0"
   },
   "dependencies": {
     "express": "^4.13.3"
