@@ -41,8 +41,10 @@
         <title>Title</title>
         <link href='https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700,700italic&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" href="/styles.css">
+        <link rel="stylesheet" href="/frobl.build.css">
     </head>
     <body>
+
         <div class="l-school">
             /*Тут должен вызываться шаблон хедера*/
             {call sm.bHeader.Template.base /}
@@ -89,7 +91,32 @@
                 <div class="l-school__description-text">{$params.data.schoolDescr + ' - '}</div>
                 <div class="l-school__description-quote">{$params.data.schoolQuote}</div>
             </div>
-
+        </div>
+        <div class="l-school__content-column">
+        {call sm.lSchool.bRating.Template.base}
+             {param params: [
+                [
+                    'name': 'Средний балл',
+                    'mark': 3.85
+                ],
+                [
+                    'name': 'Образование',
+                    'mark': 4.15
+                ],
+                [
+                    'name': 'Педагоги',
+                    'mark': 4.15
+                ],
+                [
+                    'name': 'Доступность',
+                    'mark': 4.66
+                ],
+                [
+                    'name': 'Атмосфера',
+                    'mark': 3
+                ],
+             ]/}
+             {/call}
         </div>
         <div class="l-school__content-column l-school__content-column_last">
              /*хрень*/
