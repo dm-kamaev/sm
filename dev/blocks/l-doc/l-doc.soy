@@ -156,6 +156,10 @@
     {switch $name}
         {case 'b-mark'}
             {call sm.lDoc.nDemo.bBlockMark.Template.preview/}
+        {case 'b-stars'}
+            {call sm.lDoc.nDemo.bBlockStars.Template.preview/}
+        {case 'b-comments'}
+            {call sm.lDoc.nDemo.bBlockComments.Template.preview/}
     {/switch}
 {/template}
 
@@ -182,6 +186,10 @@
     {switch $name}
         {case 'b-mark'}
             {call sm.lDoc.nDemo.bBlockMark.Template.doc /}
+        {case 'b-stars'}
+            {call sm.lDoc.nDemo.bBlockStars.Template.doc/}
+        {case 'b-comments'}
+            {call sm.lDoc.nDemo.bBlockComments.Template.preview/}
 
     {/switch}
 {/template}

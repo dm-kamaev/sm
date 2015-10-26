@@ -2,7 +2,12 @@
 
 const path = require('path');
 const express = require('express');
-const soynode = require('soynode');
+
+var db = require('./app/components/db');
+var soy = require('./app/components/soy');
+var modules = require('./app/modules');
+var api = require('./api/modules');
+var bodyParser = require('body-parser');
 
 const app = express();
 
@@ -10,70 +15,36 @@ const CONFIG = {
     PORT: 3000
 };
 
-const LANDING_TEMPLATE = {
-    template: 'sm.lSchool.Template.base',
-    arghs: {
-        params:{
-            data:{
-                schoolName: "Имя школы",
-                schoolDescr: "Много много текста Много много текста Много много текста Много много текста Много много текста Много много текста Много много текста",
-                directorName: "Имя директора",
-                schoolQuote : "Мел",
-                classes:"строка классов обучения",
-                social:[
-                    {name:"Твиттер", href:"#"},
-                    {name:"Вконтакте", href:"#"},
-                    {name:"Одноклассники", href:"#"},
-                    {name:"Фейсбук", href:"#"}
-                ],
-                sites:[
-                    {name:"Перейти на сайт школы", href:"#", link:"safasf.com"},
-                    {name:"Страница образования на сайте города москвы текст текст текст", href:"#", link:"safasf.com"}
-                ],
-                contacts:{
-                    address:[
-                        {title:"", description:"dsaggadgsadgas"},
-                        {title:"asgasgdda", description:"dsaggadgsadsagdgas"},
-                        {title:"sagasg", description:"dsaggadgsadasgaggas"}
-                    ],
-                    phones:[
-                        "+7-909-673-96-55",
-                        "+8-909-673-96-56"
-                    ]
-                }
-            }
-        }
-    }
-};
-
 const DOC_TEMPLATE = {
     template: 'sm.lDoc.Template.index',
     arghs: {
         list:[
-            "b-mark"
+            "b-mark",
+            "b-stars",
+            "b-comments"
         ]
     }
 };
 
 
 
-const sendCompiledTemplate = (action, templateObj) =>
-    soynode.loadCompiledTemplateFiles(path.join(__dirname + '/tmp/templates.js'), (err) =>
-        err ? console.log('Compilation failed: ' + err) : action(soynode.render(templateObj.template, templateObj.arghs))
-);
+app.set('views', path.join(__dirname, 'app/modules/debug/views'));
 
+// template engines
+app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'html');
+app.set('view engine', 'jade');
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
-app.use(express.static(path.join(__dirname + '/public')));
+app.use(express.static(path.join(__dirname, '/public')));
 
-
-app.get('/', (req, res) => {
-    console.log('/');
-    sendCompiledTemplate(res.send.bind(res), LANDING_TEMPLATE);
-});
 
 app.get('/doc', (req, res) => {
     console.log('/doc: '+JSON.stringify(DOC_TEMPLATE));
-    sendCompiledTemplate(res.end.bind(res), DOC_TEMPLATE);
+    res.end(
+        soy.render(DOC_TEMPLATE.template, DOC_TEMPLATE.arghs)
+    );
 });
 
 app.get('/doc/:id', (req, res) => {
@@ -81,8 +52,9 @@ app.get('/doc/:id', (req, res) => {
     doc_item_template.template = 'sm.lDoc.Template.item';
     doc_item_template.arghs.name = req.params.id;
     console.log('/doctest/' + req.params.id);
-    sendCompiledTemplate(res.end.bind(res), doc_item_template);
-    // res.send(html);
+    res.end(
+        soy.render(doc_item_template.template, doc_item_template.arghs)
+    );
 });
 
 app.get('/search', (req, res) => {
@@ -90,10 +62,19 @@ app.get('/search', (req, res) => {
     // res.send(html);
 });
 
-app.get('/school/:id', (req, res) => {
-    console.log('/school/' + req.params.id);
-    // res.send(html);
+
+app.use('/', modules.school.router);
+app.use('/api', api.comment.router);
+app.use('/api', api.school.router);
+app.use('/', modules.debug);
+app.use('/apidoc', express.static(path.join(__dirname, '/doc')));
+
+
+
+soy.init(__dirname, function() {
+    db.sync().then(function() {
+        app.listen(CONFIG.PORT, function() {
+            console.log('Running at port ' + CONFIG.PORT)
+        });
+    });
 });
-
-
-app.listen(CONFIG.PORT, () => console.log('Running at port ' + CONFIG.PORT));
