@@ -1,15 +1,33 @@
-{namespace sm.lSchool.bMap.bPin.Template}
+{namespace sm.lSchool.bMap.PinTemplate}
 /**
 * A template for map pins
+* @param params {{
+*   type: string,
+*   name: string,
+*   isCurrent: boolean,
+*   url: ?string,
+*   rating: ?number,
+* }}
 */
 {template .pin}
     <div class="b-map-pin">
         <div class="b-map-pin__balloon">
             <div class="b-map-pin__school-info">
-                <span class="b-map-pin__school-type"></span> <span class="b-map-pin__school-name"></span>
-                <span class="b-map-pin__rating">
-
+                <span class="b-map-pin__school-type">
+                    {$params.type}
                 </span>
+                <br/>
+                <span class="b-map-pin__school-name">
+                    {$params.name}
+                </span>
+                <br/>
+                <span class="b-map-pin__rating{$params.rating?'':'_hidden'}">
+                    {$params.rating}
+                </span>
+                <br/>
+                <a href="{$params.url}" class="b-map-pin__link{$params.isCurrent?'_hidden':''}">
+                    Перейти на страницу школы
+                </a>
             </div>
         </div>
     </div>
