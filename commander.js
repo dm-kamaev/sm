@@ -5,7 +5,7 @@ const commander = require('commander');
  */
 
 require('./console/parse.js');
-
+require('./console/geocord.js');
 
 /*
  * The line below initializes the interface on `node ./commander`

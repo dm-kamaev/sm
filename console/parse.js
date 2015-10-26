@@ -33,7 +33,6 @@ var parse = path => {
     var parsed = xlsx.parse(path),
         data = parsed[0].data;
 
-
     modules.school.models.School.sync({force: true}).then(function () {
         data.map(rowToSchool)
             .filter((item, index) => index)
