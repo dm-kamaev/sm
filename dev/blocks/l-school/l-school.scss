@@ -45,18 +45,20 @@
     background-color: #c80018;
 }
 
-.l-school__name{
+.l-school__name {
+    margin: 0 0 30px 0;
+
     font-family: Arial, sans-serif;
     font-weight: bold;
     font-size: 32px;
 }
-.l-school__description{
+.l-school__description {
     font-size: 21px;
 }
-.l-school__description-text{
+.l-school__description-text {
     display: inline;;
 }
-.l-school__description-quote{
+.l-school__description-quote {
     display: inline;
     font-style: italic;
 }
@@ -117,6 +119,8 @@
 }
 
 .l-school__content-column_last {
+    float: right;
+
     margin-right: 0;
 }
 
@@ -141,29 +145,33 @@
 .l-school__contacts-subtitle {
     font-weight: bold;
 }
-.l-school__contacts-record{
+.l-school__contacts-record {
     margin-bottom: 10px;
 }
 
 
-.l-school__site-record{
+.l-school__site-record {
     display: block;
     width: 100%;
     margin-bottom: 20px;
 }
-.l-school__site-name{
+.l-school__site-name {
     font-size: 12px;
 }
-.l-school__link-record{
+.l-school__link-record {
 
     display: inline-block;
     margin-right: 10px;
     font-size: 16px;
 }
-.l-school__link{
+.l-school__link {
     text-decoration: none;
     color:#ee362c;
 }
-.l-school__link-image{
+.l-school__link-image {
 
+}
+
+.l-school__rating {
+    float: right;
 }

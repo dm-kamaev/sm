@@ -92,34 +92,34 @@
                 <div class="l-school__description-quote">{$params.data.schoolQuote}</div>
             </div>
         </div>
-        <div class="l-school__content-column">
-        {call sm.lSchool.bRating.Template.base}
+        <div class="l-school__content-column l-school__content-column_last">
+             /*хрень*/
+             <div class = "l-school__rating">
+            {call sm.lSchool.bRating.Template.base}
              {param params: [
                 [
                     'name': 'Средний балл',
-                    'mark': 3.85
+                    'mark': 3.75
                 ],
                 [
                     'name': 'Образование',
-                    'mark': 4.15
+                    'mark': 4.3
                 ],
                 [
                     'name': 'Педагоги',
-                    'mark': 4.15
+                    'mark': 4.8
                 ],
                 [
                     'name': 'Доступность',
-                    'mark': 4.66
+                    'mark': 3.1
                 ],
                 [
                     'name': 'Атмосфера',
-                    'mark': 3
+                    'mark': 2.8
                 ],
              ]/}
              {/call}
-        </div>
-        <div class="l-school__content-column l-school__content-column_last">
-             /*хрень*/
+             </div>
         </div>
     </div>
 {/template}
