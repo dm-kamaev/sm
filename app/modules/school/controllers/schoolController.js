@@ -94,6 +94,7 @@ exports.view = async (function(req, res) {
                 phones: school.phones
             },
             comments: commentGroup.map(comment => {
+                console.log('!!!');
                 return {
                     author: '',
                     rank: typeConvert[comment.userType],

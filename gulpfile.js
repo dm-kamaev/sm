@@ -4,17 +4,13 @@ const path = require('path');
 const concat = require('gulp-concat');
 const util = require('gulp-util');
 const babel = require('gulp-babel');
-const gulpFilter = require('gulp-filter');
 const apidoc = require('gulp-apidoc');
+const soynode = require('gulp-soynode');
+
 
 const production = !!util.env.production;
 
-const BLOCKS_DIR = '/dev/blocks';
-
-
-gulpHelper.paths.closureTemplatesJs = path.join(__dirname,
-    '/node_modules/gulp-soynode/node_modules/closure-templates/**/*.js');
-
+const BLOCKS_DIR = '/app/blocks';
 
 
 gulp.task('doc', function () {
@@ -25,6 +21,7 @@ gulp.task('doc', function () {
     });
 });
 
+
 gulp.task('appES5', function () {
     return gulp.src('app.js')
         .pipe(babel())
@@ -32,8 +29,24 @@ gulp.task('appES5', function () {
         .pipe(gulp.dest(''));
 });
 
+
 gulp.task('soy', function () {
-    return gulpHelper.soy(['./dev/blocks/**/*.soy']);
+    //return gulpHelper.soy([
+    //    path.join(__dirname, BLOCKS_DIR, '/**/*.soy')
+    //]);
+
+    return gulp.src([
+            path.join(__dirname, BLOCKS_DIR, '/**/*.soy'),
+            path.join(__dirname, '/node_modules/frobl/blocks', '/**/*.soy')
+        ])
+        .pipe(soynode({
+            outputDir: path.join(__dirname, '/node_modules/frobl', '/tmp/soy'),
+            loadCompiledTemplates: false,
+            useClosureStyle: true,
+            contextJsPaths: [
+                path.join(__dirname, '/node_modules/google-closure-library/closure/goog/base.js')
+            ]
+        }));
 });
 
 
@@ -48,6 +61,7 @@ gulp.task('scripts', ['soy'], function () {
         production
     );
 });
+
 
 gulp.task('styles', function () {
     return gulpHelper.buildCss([{
@@ -67,15 +81,6 @@ gulp.task('images', function () {
         .pipe(gulp.dest(path.join(__dirname + '/public/images')));
 });
 
-gulp.task('fonts', function () {
-    return gulp.src(path.join(__dirname + '/dev/fonts/*'))
-        .pipe(gulp.dest(path.join(__dirname + '/public/fonts')));
-});
-
-gulp.task('shared', function () {
-    return gulp.src(path.join(__dirname + '/dev/shared/*'))
-        .pipe(gulp.dest(path.join(__dirname + '/public/shared')));
-});
 
 gulp.task('watch', function () {
     gulp.watch([
@@ -88,10 +93,11 @@ gulp.task('watch', function () {
     ], ['styles']);
 });
 
+
 const tasks = function (bool) {
     return bool ?
-        ['soy', 'scripts', 'images', 'styles', 'fonts', 'shared'] :
-        ['watch', 'soy', 'scripts', 'images', 'styles', 'fonts'];
+        ['soy', 'scripts', 'images', 'styles'] :
+        ['watch', 'soy', 'scripts', 'images', 'styles'];
 };
 
 gulp.task('default', tasks(production));

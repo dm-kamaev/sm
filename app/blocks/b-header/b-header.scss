@@ -1,4 +1,6 @@
 ﻿.b-header {
+    z-index: auto;
+
     display: inline-block;
     overflow: hidden;
 
@@ -133,8 +135,4 @@
 
 .b-header__star_fifth {
     font-size: 13px;
-}
-
-body {
-    margin: 0;
 }
