@@ -3,15 +3,15 @@ var xlsx = require('node-xlsx');
 
 var modules = require.main.require('./api/modules');
 
-var replace = require('./parseConfig');
-var ignore = require('./parseIgnor');
+var replace = require('./parseConfig').replace;
+var ignore = require('./parseConfig').ignore;
+var exclusion = require('./parseConfig').exclusion;
 
 var NAME_INDEX = 6,
     DIRECTOR_INDEX = 13,
     PHONES_INDEX = 15,
     SITE_INDEX = 17,
     ADDRESSES_INDEX = 20;
-
 
 var getName = arr => {
     return arr[0];
@@ -53,10 +53,9 @@ var nameParse = item => {
         str = str.replace("«",'');
     }
 
-    str.replace("проГимназия","Прогимназия");
-
-    str=str.replace('ГБОУ','');
-    str=str.replace('ГКОУ','');
+    for(var ex in exclusion){
+        str = str.replace(ex, exclusion[ex]);
+    }
 
     for(var ignoreName in ignore){
         ignore[ignoreName].forEach(name => {
@@ -72,14 +71,10 @@ var nameParse = item => {
 };
 
 var notIgnor = item => {
-    if( item == 'Колледж') {
-        return false;
-    }
-    if( item == 'Детский сад') {
-        return false;
-    }
-    if( item == 'Техникум') {
-        return false;
+    for(ignorName in ignore){
+        if( item == ignorName ){
+            return false;
+        }
     }
     if( item == 'unknown') {
         return false;
@@ -115,11 +110,12 @@ var parse = path => {
         data = parsed[0].data;
     var createSchoolDataBase = err => {
         console.log(err);
-        data.map(rowToSchool).forEach(item => {
-            if( notIgnor(item.type) ) {
+        data
+            .map(rowToSchool)
+            .filter(item => notIgnor(item.type))
+            .forEach(item => {
                 modules.school.models.School.create(item);
-            }
-        });
+            });
     };
 
     modules.school.models.School.sync({force:true}).then(createSchoolDataBase, createSchoolDataBase);
