@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Hello world</title>
+    <link rel="stylesheet" href="/api-debug/debugStyle.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="/api-debug/debugScript.js"></script>
+</head>
+<body>
+    <h1>Debug page</h1>
+    <div>
+        <div class="groupDiv">
+            <span>Группа</span>
+            <select size="10" class="group-select">
+            </select>
+        </div>
+        <div class="pathDiv">
+            <span>api</span>
+            <select size="10" class="path-select">
+            </select>
+        </div>
+    </div>
+
+    <div>
+        <h2 class="description">Request</h2>
+        <div>
+            <span>URL:</span>
+            <input class="area-url" type="text" value="user"/>
+            <div class="rb">
+                <input class="post-rb" type="radio" name="request" value="post">
+                <span>Post</span>
+            </div>
+            <div class="rb">
+                <input class="get-rb" type="radio" name="request" value="get" checked="checked">
+                <span>Get</span>
+            </div>
+            <button class="btn">Send</button>
+        </div>
+        <br/>
+        <textarea class="area" contenteditable="true">
+{
+  "username": "Василий Иванович",
+  "email": "vasiliy_ivanovich@mail.com",
+  "password": "123qwe",
+  "post": "Менеджер"
+}</textarea>
+    </div>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+
+
+    <h2>Output</h2>
+    <div class="output">
+        ...
+    </div>
+</body>
+</html>
