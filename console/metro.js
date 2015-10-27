@@ -64,10 +64,6 @@ var getMetroArr = async(adrArr => {
 var processSchool = async(school => {
     var cordArr = school.coords;
     if (cordArr && cordArr.length != 0){
-        //cordArr.forEach(pair =>{
-        //    var metro = await(request(pair.reverse()));
-        //    metroArr.push(metro);
-        //})
         var metroArr = await(getMetroArr(cordArr));
         if (cordArr.length == metroArr.length)
             school.update({metro:metroArr})
