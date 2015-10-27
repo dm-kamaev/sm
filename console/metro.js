@@ -34,13 +34,13 @@ var start = async(() => {
     });
 });
 
-var getMetro = async(pair => {
+var getMetro = async((pair, adr) => {
     var metro = '',
         tryNum = 0;
     do {
         var result = await(request(pair));
         if (result == 'not_found')
-            writeError('cant find metro for coordinats: ' + pair);
+            writeError('cant find metro for coordinats: ' + pair +', address: ' +adr);
         else if (result == 'no_response')
             writeError('cant get any response for coordinats: ' + pair +
                 ' on ' + (tryNum + 1) + ' try');
@@ -51,20 +51,27 @@ var getMetro = async(pair => {
     return metro;
 });
 
-var getMetroArr = async(adrArr => {
+var getMetroArr = async((cordArr, adrArr) => {
     var metroArr = [];
-    adrArr.forEach(pair =>{
+    for (var i = 0; i<adrArr.length; i++){
+        pair=cordArr[i];
         truepair = REVERSE_COORDS ? pair.reverse() : pair;
         metroArr.push(
-            await (getMetro(truepair)));
-    });
+            await (getMetro(truepair,adrArr[i])));
+    }
+
+    //adrArr.forEach(pair =>{
+    //    truepair = REVERSE_COORDS ? pair.reverse() : pair;
+    //    metroArr.push(
+    //        await (getMetro(truepair)));
+    //});
     return metroArr;
 });
 
 var processSchool = async(school => {
     var cordArr = school.coords;
     if (cordArr && cordArr.length != 0){
-        var metroArr = await(getMetroArr(cordArr));
+        var metroArr = await(getMetroArr(cordArr,school.addresses));
         if (cordArr.length == metroArr.length)
             school.update({metro:metroArr})
         else
