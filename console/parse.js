@@ -34,11 +34,7 @@ var nameParse = item => {
         if (flag) {
             replace[newName].forEach(oldName => {
                 if (~str.indexOf(oldName)) {
-                    if (newName !== "Коррекционная школа") {
-                        str = str.replace(oldName, newName);
-                    } else {
-                        str = str.replace(oldName, "Коррекционная школа ");
-                    }
+                    str = str.replace(oldName, newName);
                     arr[1] = newName;
                     flag = false;
                 }
