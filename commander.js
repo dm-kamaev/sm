@@ -5,10 +5,11 @@ const commander = require('commander');
  */
 
 require('./console/parse.js');
+require('./console/metro.js');
 
 
 /*
- * The line below initializes the interface on `node ./commander`
+ * The line below initializes the interface on `node ./commander
  */
 
 commander.parse(process.argv);
