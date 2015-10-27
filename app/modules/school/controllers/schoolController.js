@@ -71,6 +71,26 @@ exports.view = async (function(req, res) {
             res: [0, 0, 0, 0]
         }).res;
 
+
+    var classFrontier = () => {
+        var frontierBegin = '',
+            frontierEnd = '';
+
+        if (school.edu_programm_begin !== '') {
+            frontierBegin = school.edu_programm_begin == '0' ?
+                'детского сада' :
+                school.edu_programm_begin;
+            frontierBegin = 'C ' + frontierBegin;
+        }
+
+        if (school.edu_programm_end !== '') {
+            frontierEnd = ' по ' + school.edu_programm_end + ' класс';
+        }
+
+        return  frontierBegin + frontierEnd;
+    };
+
+
     var params = {
         data: {
             id: school.id,
@@ -79,7 +99,7 @@ exports.view = async (function(req, res) {
             schoolDescr: school.name + " — школа, как школа. Обычная такая",
             directorName: school.director,
             schoolQuote : "Мел",
-            classes: "с 1 по 11",
+            classes: classFrontier(),
             social:[],
             sites:[{
                 name: "Перейти на сайт школы",

@@ -1,11 +1,10 @@
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
-var modules = require.main.require('./api/modules');
 var commander = require('commander');
 var xlsx = require('node-xlsx');
 var colors = require('colors');
 
-
+var modules = require.main.require('./api/modules');
 var schoolServices =
     require.main.require('./api/modules/school/services').schoolServices;
 
@@ -13,15 +12,15 @@ var replace = require('./parseConfig').replace;
 var ignore = require('./parseConfig').ignore;
 var exclusion = require('./parseConfig').exclusion;
 
-var async = require('asyncawait/async');
-var await = require('asyncawait/await');
 
-var NAME_INDEX = 6,
+var GOVERMENT_KEY_INDEX = 2,
+    NAME_INDEX = 6,
     DIRECTOR_INDEX = 13,
     PHONES_INDEX = 15,
     SITE_INDEX = 17,
     ADDRESSES_INDEX = 20,
-    GOVERMENT_KEY_INDEX = 2;
+    EDU_PROGRAMM_INDEX = 21;
+
 
 var getName = arr => {
     return arr[0];
@@ -96,10 +95,48 @@ var getArray = (row, index) => {
         [];
 };
 
+var getEducationInterval = (programms) => {
+    var res = {
+            begin: -1,
+            end: -1
+        },
+        types = [
+            {
+                regExp: /дошкольное образование/i,
+                begin: 0,
+                end: 0
+            }, {
+                regExp: /начальное общее образование/i,
+                begin: 1,
+                end: 4
+            }, {
+                regExp: /основное общее образование/i,
+                begin: 5,
+                end: 9
+            }, {
+                regExp: /среднее общее образование/i,
+                begin: 10,
+                end: 11
+            }
+        ];
+
+    types.forEach(item => {
+        if (programms.search(item.regExp) >= 0) {
+            if (res.begin == -1) {
+                res.begin = item.begin;
+            }
+            res.end = item.end;
+        }
+    });
+
+    return [res.begin, res.end];
+};
+
 var rowToSchool = row => {
     var nParse = nameParse(row[NAME_INDEX]);
     var schoolName = getName(nParse);
     var schoolType = getType(nParse);
+
     return {
         name: schoolName,
         schoolType: schoolType,
@@ -108,18 +145,18 @@ var rowToSchool = row => {
         site: row[SITE_INDEX],
         addresses: getArray(row, ADDRESSES_INDEX),
         goverment_key: row[GOVERMENT_KEY_INDEX],
+        educationInterval: getEducationInterval(row[EDU_PROGRAMM_INDEX]),
         coords: []
     };
 };
 
 
 var parseSchool = async(schoolData => {
-    //var School = modules.school.models.School;
     var params = {
         where: {
             goverment_key: schoolData.goverment_key
         }
-    }
+    };
     var school = await(schoolServices.get(params, {count: 'one'}));
     if (school)
         schoolServices.update(school, schoolData);
@@ -128,14 +165,11 @@ var parseSchool = async(schoolData => {
 });
 
 var parse = async(path => {
-    //await (mdl.initAssociations());
-
-
     var parsed = xlsx.parse(path),
         data = parsed[0].data;
 
     data.map(rowToSchool)
-        .filter((item, index) => (index>0) && notIgnor(item.schoolType))
+        .filter((item, index) => (index > 0) && notIgnor(item.schoolType))
         .forEach(item => parseSchool(item));
 });
 
@@ -145,4 +179,5 @@ commander
     .command('parse <path>')
     .description('Parses an .xlsx file from a given path')
     .action(file => parse(file));
+
 exports.Command;

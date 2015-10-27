@@ -3,7 +3,7 @@ var DataType = require('sequelize'),
 
 var Address = db.define('Address', {
     name: DataType.STRING,
-    coords: DataType.ARRAY(DataType.FLOAT),
+    coords: DataType.ARRAY(DataType.FLOAT)
 }, {
     underscored: true,
     tableName: 'address',
