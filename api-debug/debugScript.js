@@ -81,7 +81,9 @@ jQuery(function() {
             }
             setCategories(catArray);
             setPaths(catArray[0]);
-
+            $('.group-select :nth-child(1)').attr("selected", "selected");
+            $('.path-select :nth-child(1)').attr("selected", "selected");
+            pathSelectOnchangeHandler();
         });
 
     };
@@ -92,6 +94,8 @@ jQuery(function() {
             if (BIGJSON[i].group == groupName)
                 $(".path-select").append( $('<option value='+BIGJSON[i].name+'>'+BIGJSON[i].name+'</option>'));
         }
+        $('.path-select :nth-child(1)').attr("selected", "selected");
+        pathSelectOnchangeHandler();
     }
 
     var setCategories = function(catArray) {

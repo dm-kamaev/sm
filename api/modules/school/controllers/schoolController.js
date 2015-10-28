@@ -10,10 +10,16 @@ var await = require('asyncawait/await');
  * @api {post} api/school/:id/comment Create new comment
  * @apiVersion 0.0.0
  * @apiGroup School
- * @apiName createComment
+ * @apiName CreateComment
  * @apiParam {Text} text Comment text.
  * @apiParam {String = "Parent", "Graduate", "Scholar"} userType UserType.
  * @apiParam {Int[]} score Array[4] of scores.
+ * @apiParamExample {json} Request-Example:
+ *     {
+ *       "text": "test comment",
+ *       "userType": "Parent",
+ *       "score": [3,2,1,5]
+ *     }
  */
 exports.createComment = async (function(req, res) {
     var result = '';
@@ -32,10 +38,14 @@ exports.createComment = async (function(req, res) {
 
 
 /**
- * @api {post} school/createschool Creates cchool
+ * @api {post} api/school/createschool Creates school (TODO)
  * @apiVersion 0.0.0
  * @apiGroup School
- * @apiName create
+ * @apiName CreateSchool
+ * @apiParamExample {json} Request-Example:
+ *     {
+ *       "params": "would be here",
+ *     }
  */
 exports.create = function(req, res) {
 
@@ -47,7 +57,7 @@ exports.create = function(req, res) {
  * @api {get} api/school Get school list
  * @apiVersion 0.0.0
  * @apiGroup School
- * @apiName list
+ * @apiName List
  * @apiSuccess {Object[]} schools Very userful documentation here.
  */
 exports.list = async (function(req, res) {
@@ -57,10 +67,10 @@ exports.list = async (function(req, res) {
 });
 
 /**
- * @api {get} api/school/:id Get school view
+ * @api {get} api/school/:id Get school
  * @apiVersion 0.0.0
  * @apiGroup School
- * @apiName view
+ * @apiName View
  * @apiSuccess {Object} schools Very userful documentation here.
  */
 exports.view = async (function(req, res) {

@@ -6,7 +6,7 @@ var await = require('asyncawait/await');
 /**
  * @api {get} api/comment/:id Get comment view
  * @apiVersion 0.0.0
- * @apiName view
+ * @apiName View
  * @apiGroup Comment
  * @apiSuccess {Text} text Comment text
  * @apiSuccess {String = "Parent", "Graduate", "Scholar"} userType UserType
@@ -23,14 +23,14 @@ exports.view = async(function(req, res) {
  * @api {get} api/comment Get all the comments
  * @apiVersion 0.0.0
  * @apiGroup Comment
- * @apiName listAll
+ * @apiName ListAll
  * @apiSuccess {Object[]} comments Very userful documentation here.
  */
 /**
- * @api {get} api/comment/group/id Get comments for group
+ * @api {get} api/comment/group/:id  Get comments for group
  * @apiVersion 0.0.0
  * @apiGroup Comment
- * @apiName list
+ * @apiName List
  * @apiSuccess {Object[]} comments Very userful documentation here.
  */
 exports.list = async(function(req, res) {
@@ -42,13 +42,19 @@ exports.list = async(function(req, res) {
 
 
 /**
- * @api {post} api/comment/group/id Create new comment in group
+ * @api {post} api/comment/group/:id Create new comment in group
  * @apiVersion 0.0.0
  * @apiGroup Comment
- * @apiName create
+ * @apiName Create
  * @apiParam {Text} text Comment text.
  * @apiParam {String = "Parent", "Graduate", "Scholar"} userType UserType.
  * @apiParam {Int[]} score Array[4] of scores.
+ * @apiParamExample {json} Request-Example:
+ *     {
+ *       "text": "test comment",
+ *       "userType": "Parent",
+ *       "score": [3,2,1,5]
+ *     }
  */
 exports.create = async(function(req, res) {
     var groupID = req.params.id;

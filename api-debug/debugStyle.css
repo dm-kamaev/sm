@@ -25,10 +25,7 @@ h2 {
     min-height: 150px;
 }
 
-.pathDiv {
-    display: inline-block;
-    font-size: 15px;
-}
+
 
 .group-select{
     font-size: 15px;
@@ -46,13 +43,25 @@ h2 {
 
 
 .groupDiv {
+    text-align: center;
     margin-right: 30pt;
     display: inline-block;
     font-size: 15px;
 }
 
+.pathDiv {
+    display: inline-block;
+    font-size: 15px;
+    text-align: center;
+}
+
 .rb{
     display: inline-block;
+}
+
+.groupText{
+    font-weight: bold;
+    margin-bottom: 10px;
 }
 
 .get-rb{
