@@ -1,0 +1,27 @@
+{namespace sm.lDoc.nDemo.bBlockRating.Template}
+
+/**
+ * doc
+ */
+{template .preview}
+{call sm.lSchool.bRating.Template.base}
+    {param params: [
+        [
+            'name': 'Образование',
+            'mark': 4.3
+        ],
+        [
+            'name': 'Педагоги',
+            'mark': 4.8
+        ],
+        [
+            'name': 'Доступность',
+            'mark': 3.1
+        ],
+        [
+            'name': 'Атмосфера',
+            'mark': 2.8
+        ],
+    ]/}
+{/call}
+{/template}

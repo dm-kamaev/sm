@@ -21,7 +21,8 @@ const DOC_TEMPLATE = {
         list:[
             "b-mark",
             "b-stars",
-            "b-comments"
+            "b-comments",
+            "b-rating"
         ]
     }
 };
