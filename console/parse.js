@@ -46,3 +46,5 @@ commander
     .command('parse <path>')
     .description('Parses an .xlsx file from a given path')
     .action(file => parse(file));
+
+exports.Command;
