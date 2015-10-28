@@ -8,11 +8,11 @@ var await = require('asyncawait/await');
 var modules = require.main.require('./api/modules');
 
 const PATH_TO_ERROR_FILE = 'metrolog.txt';
-const REQUEST_RETRY_COUNT = 2; //Rоличество попыток обращения к яндекс api
+const REQUEST_RETRY_COUNT = 2; //Количество попыток обращения к яндекс api
 const REVERSE_COORDS = true; //Менять ли местами координаты перед запросом
 
 const DEBUG_RESTRICTION = 3; //ограничение по количеству школ, 0 для отсутсвия
-const KM_RESTRIСTION = 2; //ограничение радиуса поиска в км, 0 для отсутствия
+const KM_RESTRIСTION = 3; //ограничение радиуса поиска в км, 0 для отсутствия
 
 var error_count = 0;
 
@@ -70,12 +70,6 @@ var getMetroArr = async((cordArr, adrArr) => {
             await (getMetro(truepair,adrArr[i]))
         );
     }
-
-    //adrArr.forEach(pair =>{
-    //    truepair = REVERSE_COORDS ? pair.reverse() : pair;
-    //    metroArr.push(
-    //        await (getMetro(truepair)));
-    //});
     return metroArr;
 });
 
@@ -108,11 +102,12 @@ var request = async ((pair) => {
     var restrictionString = '';
     if (KM_RESTRIСTION) {
         var restriction = countRestriction(KM_RESTRIСTION, pair);
-        restrictionString += "&" + restriction.longitude + ','
+        restrictionString += "&spn=" + restriction.longitude + ','
             + restriction.latitude;
     }
     var apiString = '/1.x/?geocode=' + pair.join(',') +
-        '&kind=metro&format=json' + restriction;
+        '&kind=metro&format=json' + restrictionString;
+    console.log('Sending request to '+apiString);
     var options = {
         host: 'geocode-maps.yandex.ru',
         path: apiString
@@ -139,11 +134,6 @@ var request = async ((pair) => {
                         })
                         resolve(metroNames);
                     }
-                    //var firstResult = resp.GeoObjectCollection.featureMember[0];
-                    //if (firstResult)
-                    //    resolve(firstResult.GeoObject.name);
-                    //else
-                    //    resolve('not_found');
                 }
             });
           }).end()
