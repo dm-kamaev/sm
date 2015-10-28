@@ -53,12 +53,12 @@ exports.list = async(function(req, res) {
  *     {
  *       "text": "test comment",
  *       "userType": "Parent",
- *       "score": [3,2,1,5]
+ *       "score": [3, 2, 1, 5]
  *     }
  */
 exports.create = async(function(req, res) {
     var groupID = req.params.id;
-    var params = req.body
+    var params = req.body;
     var comment = await(commentServices.create(groupID, params));
     res.header('Content-Type', 'text/html; charset=utf-8');
     res.end(JSON.stringify(comment));
