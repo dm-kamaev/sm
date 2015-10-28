@@ -97,22 +97,13 @@
              <div class = "l-school__rating">
             {call sm.lSchool.bRating.Template.base}
              {param params: [
-                [
-                    'name': 'Образование',
-                    'mark': 4.3
-                ],
-                [
-                    'name': 'Педагоги',
-                    'mark': 4.8
-                ],
-                [
-                    'name': 'Доступность',
-                    'mark': 3.1
-                ],
-                [
-                    'name': 'Атмосфера',
-                    'mark': 2.8
-                ],
+                    'marks': [
+                        3.1,
+                        3.4,
+                        2.5,
+                        4.8,
+                    ],
+                    'averageMark': 4.3
              ]/}
              {/call}
              </div>

@@ -2,25 +2,23 @@
 
 /**
  * rating view
- * @param params [
- *      {
- *          name: string,
- *          mark: int
- *      }
- * ]
+ * @param params {
+ *          marks: [],
+ *          averageMark
+ *        }
  */
 {template .base autoescape="strict" kind="html"}
     <div class="b-rating">
         <div class="b-rating__marks">
             <div class="b-rating__section">
                 <div class="b-rating__mark b-rating__mark_selected">
-                    —
+                    {$params.averageMark}
                 </div>
             </div>
-            {foreach $section in $params}
+            {foreach $mark in $params.marks}
                 <div class="b-rating__section">
                     <div class="b-rating__mark">
-                        {$section.mark}
+                        {$mark}
                     </div>
                 </div>
             {/foreach}
@@ -31,16 +29,41 @@
                     Средний балл
                 </div>
             </div>
-                {foreach $section in $params}
-                    <div class = "b-rating__section">
-                        <div class="b-rating__section-name">
-                            {$section.name}
-                        </div>
-                    </div>
-                {/foreach}
-            </div>
+            <div class = "b-rating__section">
+                <div class="b-rating__section-name">
+                    Образование
+                </div>
+             </div>
+            <div class = "b-rating__section">
+                <div class="b-rating__section-name">
+                    Педагоги
+                </div>
+             </div>
+            <div class = "b-rating__section">
+                <div class="b-rating__section-name">
+                    Доступность
+                </div>
+             </div>
+            <div class = "b-rating__section">
+                <div class="b-rating__section-name">
+                    Атмосфера
+                </div>
+             </div>
+        </div>
         {call gorod.bBouton.BoutonTemplate.render}
-            {param params: ['label':'Проголосовать','state':['pressed':'true'],'style':['theme':'default','color':'red','size':'extralarge','width':'block','borderWidth':'l','borderRadius':'none','uppercase':'true']]/}
+            {param params: [
+                'label': 'Проголосовать',
+                'state': ['pressed':'true'],
+                'style': [
+                    'theme': 'default',
+                    'color': 'red',
+                    'size': 'extralarge',
+                    'width': 'block',
+                    'borderWidth': 'l',
+                    'borderRadius': 'none',
+                    'uppercase': 'true'
+                ]
+            ]/}
         {/call}
     </div>
 {/template}
