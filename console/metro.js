@@ -11,12 +11,15 @@ const PATH_TO_ERROR_FILE = 'metrolog.txt';
 const REQUEST_RETRY_COUNT = 2; //Rоличество попыток обращения к яндекс api
 const REVERSE_COORDS = true; //Менять ли местами координаты перед запросом
 
+var error_count = 0;
+
 var writeError = async(string => {
     var str = string+'\n';
     await (fs.appendFile(PATH_TO_ERROR_FILE ,str, function (err) {
         if (err)
             throw err;
     }));
+    error_count++;
 });
 
 var start = async(() => {
@@ -75,7 +78,8 @@ var processSchool = async(school => {
         if (cordArr.length == metroArr.length)
             school.update({metro:metroArr})
         else
-            throw new Error('what');
+            writeError('Number of addreses and returned coords for ' +
+                'whatewer reason not even for school '+school.name);
     }
 });
 
