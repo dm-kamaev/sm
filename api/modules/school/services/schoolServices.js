@@ -1,3 +1,4 @@
+var colors = require('colors');
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var models = require.main.require('./app/components/models').all;
@@ -16,9 +17,45 @@ exports.getGroupId = async (function(schoolId) {
     return instance.comment_group_id;
 });
 
-exports.create = async (function(params) {
-    var id = -1;
-    return id
+var getSchoolParams = parasm => {
+    var schoolParams = {
+        name: params.name,
+        director: params.director,
+        phonres: params.phones,
+        site: params.site,
+        addresses: []
+    };
+    params.addresses.forEach(adr => {
+        schoolParams.addresses.push({
+            name: adr,
+            coords: []
+        })
+    });
+    return schoolParams;
+}
+
+exports.update = async ((school, params) => {
+    await(school.update(
+        getSchoolParams(params),
+        {
+            include: [{
+                model: models.Address,
+                as: 'addresses'
+            }]
+        }
+    ));
+});
+
+exports.create = async (params => {
+    await(models.School.create(
+        getSchoolParams(params),
+        {
+            include: [{
+                model: models.Address,
+                as: 'addresses'
+            }]
+        }
+    ));
 });
 
 exports.list = async (function() {

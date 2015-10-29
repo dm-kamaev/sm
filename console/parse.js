@@ -1,13 +1,22 @@
+var async = require('asyncawait/async');
+var await = require('asyncawait/await');
+
 var commander = require('commander');
 var xlsx = require('node-xlsx');
-
+var colors = require('colors');
 var modules = require.main.require('./api/modules');
+var mdl = require.main.require('./app/components/models');
+
+
+var schoolServices =
+    require.main.require('./api/modules/school/services').schoolServices;
 
 var NAME_INDEX = 6,
     DIRECTOR_INDEX = 13,
     PHONES_INDEX = 15,
     SITE_INDEX = 17,
-    ADDRESSES_INDEX = 20;
+    ADDRESSES_INDEX = 20,
+    GOVERMENT_KEY_INDEX = 2;
 
 
 var getArray = (row, index) => {
@@ -25,20 +34,36 @@ var rowToSchool = row => {
         phones: getArray(row, PHONES_INDEX),
         site: row[SITE_INDEX],
         addresses: getArray(row, ADDRESSES_INDEX),
+        govermentKey: row[GOVERMENT_KEY_INDEX],
         coords: []
     };
 };
 
-var parse = path => {
+var parseSchool = async(schoolData => {
+    var School = modules.school.models.School;
+    var school = await(School.findOne({
+        where: {
+            govermentKey: schoolData.govermentKey
+        }
+    }));
+    if (school)
+        schoolServices.update(school, schoolData);
+    else
+        schoolServices.create(schoolData);
+});
+
+var parse = async(path => {
+    console.log(mdl);
+    await (mdl.initAssociations());
+    console.log(colors.green('All models associated'));
+
     var parsed = xlsx.parse(path),
         data = parsed[0].data;
 
-    modules.school.models.School.sync({force: true}).then(function () {
-        data.map(rowToSchool)
-            .filter((item, index) => index)
-            .forEach(item => modules.school.models.School.create(item));
-    });
-};
+    data.map(rowToSchool)
+        .filter((item, index) => index > 0)
+        .forEach(item => parseSchool(item));
+});
 
 
 // Settings for accessing this script using cli
