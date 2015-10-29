@@ -195,7 +195,8 @@ goog.scope(function() {
 
         this.values_ = values;
 
-        this.averageValue_ = this.params_.averageValue || this.stringToValue_(this.averageMark_.innerHTML);
+        this.averageValue_ = this.params_.averageValue ||
+            this.stringToValue_(this.averageMark_.innerHTML);
     };
 
     /**
