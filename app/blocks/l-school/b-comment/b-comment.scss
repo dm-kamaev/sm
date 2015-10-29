@@ -1,10 +1,18 @@
-.b-comment{
+.b-comment {
     display: inline-block;
 
     width: 100%;
-    margin: 0 0 23px 0;
+    margin: 0 0 20px 0;
+    padding: 0 0 23px 0;
+
+    border-bottom: 1px solid #e5e5e5;
 
     background-color: white;
+
+    &:last-child {
+        margin-bottom: 0;
+        border-bottom: none;
+    }
 }
 
 .b-comment__header{

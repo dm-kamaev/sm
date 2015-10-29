@@ -2,13 +2,11 @@ var soy = require.main.require('./app/components/soy');
 
 var docPages = [
         "b-mark",
-        "b-stars"
+        "b-stars",
+        "b-comment",
+        "b-comments",
+        "b-block-feedback-modal"
     ];
-
-
-exports.create = function(req, res) {
-    //models.user.
-};
 
 
 exports.list = function(req, res) {
