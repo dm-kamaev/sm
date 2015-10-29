@@ -45,7 +45,6 @@ sm.lSchool.bRating.Rating = function(opt_params) {
      */
     this.averageValue_ = 0;
 };
-
 goog.inherits(sm.lSchool.bRating.Rating, goog.ui.Component);
 
 goog.scope(function() {
@@ -178,7 +177,6 @@ goog.scope(function() {
         }
 
         this.values_ = values;
-
         this.averageValue_ = this.params_.averageValue ||
             this.stringToValue_(this.averageMark_.innerHTML);
     };
