@@ -11,13 +11,13 @@
     <div class="b-rating">
         <div class="b-rating__marks">
             <div class="b-rating__section">
-                <div class="b-rating__mark b-rating__mark_selected">
+                <div class="b-rating__mark b-rating__mark_average">
                     {$params.averageMark}
                 </div>
             </div>
             {foreach $mark in $params.marks}
                 <div class="b-rating__section">
-                    <div class="b-rating__mark">
+                    <div class="b-rating__mark b-rating__mark_ordinary">
                         {$mark}
                     </div>
                 </div>

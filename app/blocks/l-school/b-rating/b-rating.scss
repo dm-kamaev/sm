@@ -36,10 +36,6 @@
     display: inline-block;
 
     width: 100%;
-
-    color: rgb(247, 173, 171);
-    font-size: 28px;
-    font-weight: normal;
 }
 
 .b-rating__section-name {
@@ -47,13 +43,21 @@
 
     width: 100%;
 
-    font-size: 10px;
     color: #9a9a9a;
+
+    font-size: 10px;
 }
 
-.b-rating__mark_selected {
+.b-rating__mark_average {
     color: red;
 
     font-size: 32px;
     font-weight: bold;
+}
+
+.b-rating__mark_ordinary {
+    color: rgb(247, 173, 171);
+
+    font-size: 28px;
+    font-weight: normal;
 }

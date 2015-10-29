@@ -23,15 +23,15 @@ sm.lSchool.bRating.Rating = function(opt_params) {
 
     /**
      * @private
-     * @type{object}
+     * @type{array.<element>}
      */
-    this.markElements_ = {};
+    this.marks_ = [];
 
     /**
      * @private
-     * @type{array.<object>}
+     * @type{element}
      */
-    this.marks_ = [];
+    this.averageMark_ = {};
 
     /**
      * @private
@@ -43,7 +43,7 @@ sm.lSchool.bRating.Rating = function(opt_params) {
      * @private
      * @type{number}
      */
-    this.averageValue_;
+    this.averageValue_ = 0;
 };
 
 goog.inherits(sm.lSchool.bRating.Rating, goog.ui.Component);
@@ -57,12 +57,12 @@ goog.scope(function() {
      */
     Rating.CssClass = {
         ROOT: 'b-rating',
-        MARK: 'b-rating__mark'
+        ORDINARYMARK: 'b-rating__mark_ordinary',
+        AVERAGEMARK: 'b-rating__mark_average'
     };
 
     /**
      * Template-based dom element creation.
-     * @return {!Node}
      * @public
      */
     Rating.prototype.createDom = function() {
@@ -82,11 +82,13 @@ goog.scope(function() {
     Rating.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
-        this.markElements_ = goog.dom.getElementsByClass(
-            Rating.CssClass.MARK, element
+        this.marks_ = goog.dom.getElementsByClass(
+            Rating.CssClass.ORDINARYMARK, element
         );
 
-        this.initMarks_();
+        this.averageMark_ = goog.dom.getElementByClass(
+            Rating.CssClass.AVERAGEMARK, element
+        );
 
         this.initValues_();
 
@@ -132,7 +134,6 @@ goog.scope(function() {
 
     /**
      * Cleans up the Component.
-     * @inheritDoc
      */
     Rating.prototype.exitDocument = function() {
         goog.base(this, 'exitDocument');
@@ -143,8 +144,6 @@ goog.scope(function() {
      */
     Rating.prototype.dispose = function() {
         goog.base(this, 'dispose');
-
-        this.exitDocument.bind(this);
     };
 
     /**
@@ -164,33 +163,18 @@ goog.scope(function() {
     };
 
     /**
-     * init marks elements
-     * @private
-     */
-    Rating.prototype.initMarks_ = function() {
-            for(index in this.markElements_) {
-                if(index !== 'length' && index !== 'item'){
-                    this.marks_.push(this.markElements_[index]);
-                }
-            }
-
-        this.averageMark_ = this.marks_.splice(0,1)[0];
-    };
-
-    /**
      * init marks values
      * @private
      */
     Rating.prototype.initValues_ = function() {
         var values = [];
-        var func =this.stringToValue_;
 
         if(this.params_.values) {
             values = this.params_.values;
         } else {
-            this.marks_.forEach(function(mark) {
-               values.push(func(mark.innerHTML))
-            });
+            for(var i = 0; i < this.marks_.length; i++){
+                values.push(this.stringToValue_(this.marks_[i].innerHTML));
+            }
         }
 
         this.values_ = values;
