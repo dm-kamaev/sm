@@ -12,6 +12,7 @@ sm.lDoc.nDemo.bBlockRating.Rating = function() {
     for (var i = 0, elem; elem = elements[i]; i++) {
         rating = new sm.lSchool.bRating.Rating();
         rating.decorate(elem);
+        rating.setValues([1,3,5,2]);
     }
 };
 

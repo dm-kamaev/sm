@@ -90,7 +90,7 @@ goog.scope(function() {
 
         this.initValues_();
 
-        this.renderValues(this.values_,this.averageValue_);
+        this.setValues(this.values_,this.averageValue_);
     };
 
     /**
@@ -101,14 +101,14 @@ goog.scope(function() {
     };
 
     /**
-     * render marks values
+     * set and render marks values
      * @param {array.<number>=} opt_values values of marks
      * @param {number=} opt_averageValue
      * @public
      */
-    Rating.prototype.renderValues = function(opt_values, opt_averageValue) {
+    Rating.prototype.setValues = function(opt_values, opt_averageValue) {
         if (opt_values) {
-            this.setValues_(opt_values);
+            this.changeValues_(opt_values);
         }
 
         for(var i = 0, value; i < this.values_.length; i++){
@@ -168,11 +168,11 @@ goog.scope(function() {
      * @private
      */
     Rating.prototype.initMarks_ = function() {
-        for(index in this.markElements_) {
-            if(index !== 'length' && index !== 'item'){
-                this.marks_.push(this.markElements_[index]);
+            for(index in this.markElements_) {
+                if(index !== 'length' && index !== 'item'){
+                    this.marks_.push(this.markElements_[index]);
+                }
             }
-        }
 
         this.averageMark_ = this.marks_.splice(0,1)[0];
     };
@@ -227,7 +227,7 @@ goog.scope(function() {
      * @return {boolean} true if mark exists, false in other case
      * @private
      */
-    Rating.prototype.setValue_ = function(index, value) {
+    Rating.prototype.changeValue_ = function(index, value) {
         var isChanged = (this.getValue(index) !== value);
 
         if (isChanged) {
@@ -243,11 +243,11 @@ goog.scope(function() {
      * @return {boolean} true if mark exists, false in other case
      * @private
      */
-    Rating.prototype.setValues_ = function(values) {
+    Rating.prototype.changeValues_ = function(values) {
         var isChanged = false;
 
         for(var i = 0; i < values.length; i++) {
-            if (this.setValue_(i, values[i])) {
+            if (this.changeValue_(i, values[i])) {
                 isChanged = true;
             }
         }

@@ -11,27 +11,27 @@
     padding-top: 40px;
 }
 
-.l-school__horisontal-line{
+.l-school__horisontal-line {
     width:100%;
 }
 
-.l-school__content-header{
+.l-school__content-header {
     margin-bottom: 20px;
 
     font-family: Arial, sans-serif;
 }
-.l-school__content-header-image{
+.l-school__content-header-image {
     display: inline-block;;
 }
 
-.l-school__content-header-button{
+.l-school__content-header-button {
     width: 20px;
     height: 19px;
     background-image: url("images/l-school/school-button.png");
     margin-left: 10px;
     display: inline-block;
 }
-.l-school__content-header-text{
+.l-school__content-header-text {
     display: inline-block;;
     font-size: 21px;
     font-weight: bold;
@@ -46,18 +46,29 @@
 }
 
 .l-school__name {
-    margin: 0 0 30px 0;
+    float: left;
+
+    width: 100%;
+    margin: 0 0 40px 0;
 
     font-family: Arial, sans-serif;
     font-weight: bold;
     font-size: 32px;
 }
+
 .l-school__description {
+    float: left;
+
+    width: 100%;
+    height: 50%;
+
     font-size: 21px;
 }
+
 .l-school__description-text {
-    display: inline;;
+    display: inline;
 }
+
 .l-school__description-quote {
     display: inline;
     font-style: italic;
@@ -107,8 +118,10 @@
 
 .l-school__content-column {
     display: inline-block;
+
     margin-right: 31px;
     width: 381px;
+
     vertical-align: top;
     font-size: 16px;
 }
