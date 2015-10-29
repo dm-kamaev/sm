@@ -60,6 +60,7 @@ goog.scope(function(){
      */
     Comment.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
+
         this.spoiler_ = goog.dom.getElementByClass(
             Comment.CssClass.SPOILER, element
         );
@@ -90,7 +91,9 @@ goog.scope(function(){
             goog.events.listen(
                 this.spoiler_,
                 goog.events.EventType.CLICK,
-                this.showText_.bind(this)
+                this.showText_,
+                false,
+                this
             );
         }
     };
@@ -126,16 +129,8 @@ goog.scope(function(){
             goog.events.unlisten(
                 this.spoiler_,
                 goog.events.EventType.CLICK,
-                this.showText_.bind(this)
+                this.showText_
             );
         }
-    };
-
-    /**
-     * Delete label component and dom elements
-     */
-    Comment.prototype.dispose = function() {
-        goog.base(this, 'dispose');
-        this.exitDocument.bind(this);
     };
 });
