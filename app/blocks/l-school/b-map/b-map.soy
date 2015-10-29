@@ -1,0 +1,32 @@
+{namespace sm.lSchool.bMap.Template}
+/**
+* A layout for Yandex.Maps block
+* @param? params {{
+*     data: ?{
+*         coords: ?number[][],
+*         type: ?string,
+*         name: ?string,
+*         totalScore: ?number
+*     }
+* }}
+*/
+{template .map}
+    {let $dataParams kind="html"}
+        {call gorod.iUtils.stringify}
+            {param json: $params?.data /}
+        {/call}
+    {/let}
+    <section class="b-map" data-params="{$dataParams}">
+        <div class="b-map__wrapper">
+        </div>
+        <div class="b-map__info"></div>
+    </section>
+{/template}
+
+/**
+* API request for ymaps
+*/
+{template .api}
+    <script type="text/javascript" src="https://api-maps.yandex.ru/2.1/?mode=debug&lang=ru_RU">
+    </script>
+{/template}

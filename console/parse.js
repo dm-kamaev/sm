@@ -35,6 +35,7 @@ var parse = path => {
 
     modules.school.models.School.sync({force: true}).then(function () {
         data.map(rowToSchool)
+            .filter((item, index) => index)
             .forEach(item => modules.school.models.School.create(item));
     });
 };

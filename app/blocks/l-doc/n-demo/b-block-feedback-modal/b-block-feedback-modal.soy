@@ -1,0 +1,43 @@
+{namespace sm.lDoc.nDemo.bBlockFeedbackModal.Template}
+
+
+/**
+* preview
+*/
+{template .preview}
+    {call gorod.bBouton.BoutonTemplate.render}
+        {param params: [
+            'label': 'Оставить отзыв',
+            'customClasses': 'b-bouton_feedback-opener',
+            'state': [
+                'pressed': true
+            ],
+            'style': [
+                'theme': 'default',
+                'size': 'extralarge',
+                'color': 'red'
+            ]
+        ] /}
+    {/call}
+{/template}
+
+
+/**
+* doc
+*/
+{template .doc}
+    {call gorod.bBouton.BoutonTemplate.render}
+        {param params: [
+            'label': 'Оставить отзыв',
+            'customClasses': 'b-bouton_feedback-opener',
+            'state': [
+                'pressed': true
+            ],
+            'style': [
+                'theme': 'default',
+                'size': 'extralarge',
+                'color': 'red'
+            ]
+        ] /}
+    {/call}
+{/template}

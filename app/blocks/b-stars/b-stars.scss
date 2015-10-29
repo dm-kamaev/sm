@@ -1,0 +1,47 @@
+.b-stars {
+    display: inline-block;
+
+    min-width: 50px;
+
+    outline: none;
+    text-align: right;
+    color: #000;
+
+    line-height: 1em;
+}
+
+.b-stars_clickable {
+    cursor: pointer;
+}
+
+.b-stars__hidden-input{
+    display: none;
+}
+
+.b-stars_size_large {
+    font-size: 28px;
+}
+
+.b-stars__star {
+    display: inline-block;
+}
+
+.b-star__star_not-selected {
+    color: rgb(230, 230, 230);
+}
+
+.b-stars__star_selected {
+    color: rgb(154, 154, 154);
+}
+
+.b-stars__star_theme_colored {
+
+    .b-star__star_not-selected {
+        color: #e6e6e6;
+        display: inline-block;
+    }
+
+    .b-stars__star_selected {
+        color: #e2332a;
+    }
+}

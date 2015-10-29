@@ -2,8 +2,6 @@ var soy = require.main.require('./app/components/soy');
 
 var schoolServices =
     require.main.require('./api/modules/school/services').schoolServices;
-var commentServices =
-    require.main.require('./api/modules/comment/services').commentServices;
 
 var fs = require('fs');
 var async = require('asyncawait/async');
@@ -28,9 +26,7 @@ exports.createComment = async (function(req, res) {
 
 exports.create = function(req, res) {
 
-
-
-}
+};
 
 
 exports.list = async (function(req, res) {
@@ -47,28 +43,99 @@ exports.list = async (function(req, res) {
 
 exports.view = async (function(req, res) {
     var school = await (schoolServices.get(req.params.id));
-    var sComments = school.comment_group ?
-        school.comment_group.comments : [];
+    var commentGroup = school.CommentGroup ? school.CommentGroup.comments : [];
+
+    var typeConvert = {
+        'Parent': 'родитель',
+        'Graduate': 'выпускник',
+        'Scholar': 'ученик'
+    };
+
+    var sumScore = commentGroup
+        .map(comment => comment.score)
+        .reduce((context, coords) => {
+            coords.forEach((value, index) => {
+                if (value) {
+                    context.count[index]++;
+                    context.sum[index] += value;
+                    context.res[index] = context.sum[index] / context.count[index];
+                }
+            });
+
+            return context;
+        }, {
+            sum: [0, 0, 0, 0],
+            count: [0, 0, 0, 0],
+            res: [0, 0, 0, 0]
+        }).res;
 
     var params = {
         data: {
+            id: school.id,
             schoolName: school.name,
+            schoolType: '',
             schoolDescr: school.name + " — школа, как школа. Обычная такая",
             directorName: school.director,
             schoolQuote : "Мел",
             classes: "с 1 по 11",
-            social:[
-            ],
-            sites:[
-                {name: "Перейти на сайт школы", href: 'http://' + school.site, link: school.site}
-            ],
+            social:[],
+            sites:[{
+                name: "Перейти на сайт школы",
+                href: 'http://' + school.site,
+                link: school.site
+            }],
             contacts:{
-                address: school.addresses.map(address => { return {title:'', description: address}; }),
+                address: school.addresses.map(address => {
+                    return {
+                        title: '',
+                        description: address
+                    };
+                }),
                 phones: school.phones
             },
-            comments: sComments
+            comments: commentGroup.map(comment => {
+                console.log('!!!');
+                return {
+                    author: '',
+                    rank: typeConvert[comment.userType],
+                    text: comment.text,
+                    sections: comment.score.map((score, index) => {
+                        var type = [
+                            'Педагоги',
+                            'Образование',
+                            'Доступность',
+                            'Атмосфера'
+                        ];
+                        return {
+                            name: type[index],
+                            rating: score
+                        };
+                    })
+                };
+            }),
+            coords: school.coords.map(coords => {
+                return {
+                    lat: coords[0],
+                    lng: coords[1]
+                };
+            }),
+            score: sumScore,
+            totalScore: sumScore.reduce((context, value) => {
+                if (value) {
+                    context.sum += value;
+                    context.count++;
+                    context.res = context.sum / context.count;
+                }
+                return context;
+            }, {
+                sum: 0,
+                count: 0,
+                res: 0
+            }).res
         }
     };
+
+    console.log(params.data);
 
     res.header("Content-Type", "text/html; charset=utf-8");
     res.end(

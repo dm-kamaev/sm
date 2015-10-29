@@ -1,11 +1,12 @@
 .idea/
-assets
+.sass-cache/
 node_modules/
-deployment-config.json
 
+assets/
 public/
 tmp/
+doc/
 
-.sass-cache/
 *.log
-doc
+deployment-config.json
+.remote-sync.json
