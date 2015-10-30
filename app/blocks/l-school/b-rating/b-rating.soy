@@ -12,13 +12,13 @@
         <div class="b-rating__marks">
             <div class="b-rating__section">
                 <div class="b-rating__mark b-rating__mark_average">
-                    {$params.averageMark > 0 ? $params.averageMark : '—'}
+                    {$params.averageMark > 0 ? round($params.averageMark, 1) : '—'}
                 </div>
             </div>
             {foreach $mark in $params.marks}
                 <div class="b-rating__section">
                     <div class="b-rating__mark b-rating__mark_ordinary">
-                        {$mark > 0 ? $mark : '—'}
+                        {$mark > 0 ? round($mark, 1) : '—'}
                     </div>
                 </div>
             {/foreach}
@@ -42,6 +42,7 @@
         {call gorod.bBouton.BoutonTemplate.render}
             {param params: [
                 'label': 'Оставить отзыв',
+                'customClasses': 'b-bouton_feedback-opener',
                 'state': ['pressed':'true'],
                 'style': [
                     'theme': 'default',

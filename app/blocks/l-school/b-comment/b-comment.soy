@@ -62,21 +62,22 @@
 			rating: int
 		]
 	}
+    {if $params.rating > 0}
+        <div class="b-comment__header-section">
+		    <div class="b-comment__header-section-name">
+			    {$params.name}
+		    </div>
 
-    <div class="b-comment__header-section">
-		<div class="b-comment__header-section-name">
-			{$params.name}
-		</div>
-
-        <div class="b-comment__stars-rating">
-			{call sm.bStars.Template.base}
-				{param params: [
-					'data': [
-						'mark': $params.rating
-					],
-					'isClickable': false
-				]/}
-			{/call}
-		</div>
-    </div>
+            <div class="b-comment__stars-rating">
+			    {call sm.bStars.Template.base}
+				    {param params: [
+					    'data': [
+						    'mark': $params.rating
+			    		],
+				    	'isClickable': false
+				    ]/}
+			    {/call}
+		    </div>
+        </div>
+    {/if}
 {/template}
