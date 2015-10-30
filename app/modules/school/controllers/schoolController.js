@@ -101,8 +101,8 @@ exports.view = async (function(req, res) {
                     text: comment.text,
                     sections: comment.score.map((score, index) => {
                         var type = [
-                            'Педагоги',
                             'Образование',
+                            'Преподаватели',
                             'Доступность',
                             'Атмосфера'
                         ];
