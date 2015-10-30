@@ -6,6 +6,10 @@ const util = require('gulp-util');
 const babel = require('gulp-babel');
 const apidoc = require('gulp-apidoc');
 const soynode = require('gulp-soynode');
+var glob = require("glob");
+var exec = require('child_process').exec;
+var Q = require('q');
+
 
 
 const production = !!util.env.production;
@@ -20,6 +24,39 @@ gulp.task('doc', function () {
     }, function() {
     });
 });
+
+gulp.task('migrate', function () {
+    var deferred = Q.defer();
+
+    var migrations = glob.sync('app/**/migrations/*.js', {
+        cwd: __dirname
+    });
+
+    migrations.forEach(function (file) {
+        var fileName = path.basename(file);
+        fs.copySync(file, path.resolve(__dirname, 'tmp/migrations', fileName));
+    });
+
+    var sequelizePath = path.resolve('node_modules/.bin/sequelize');
+
+    exec(
+        sequelizePath + ' db:migrate',
+        __dirname,
+        function (error, stdout) {
+            console.log(stdout);
+
+            if (error) {
+                console.log(error);
+            }
+
+            fs.remove(path.resolve(__dirname, 'tmp'));
+
+            deferred.resolve();
+        });
+
+    return deferred.promise;
+});
+
 
 
 gulp.task('appES5', function () {

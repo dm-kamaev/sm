@@ -162,6 +162,8 @@
             {call sm.lDoc.nDemo.bBlockFeedbackModal.Template.preview/}
         {case 'b-comments'}
             {call sm.lDoc.nDemo.bBlockComments.Template.preview/}
+        {case 'b-rating'}
+            {call sm.lDoc.nDemo.bBlockRating.Template.preview/}
     {/switch}
 {/template}
 
@@ -189,10 +191,12 @@
         {case 'b-mark'}
             {call sm.lDoc.nDemo.bBlockMark.Template.doc /}
         {case 'b-stars'}
-            {call sm.lDoc.nDemo.bBlockStars.Template.doc/}
+            {call sm.lDoc.nDemo.bBlockStars.Template.doc /}
         {case 'b-feedback-modal'}
-            {call sm.lDoc.nDemo.bBlockFeedbackModal.Template.doc/}
+            {call sm.lDoc.nDemo.bBlockFeedbackModal.Template.doc /}
         {case 'b-comments'}
-            {call sm.lDoc.nDemo.bBlockComments.Template.preview/}
+            {call sm.lDoc.nDemo.bBlockComments.Template.doc /}
+        {case 'b-rating'}
+            {call sm.lDoc.nDemo.bBlockRating.Template.doc /}
     {/switch}
 {/template}

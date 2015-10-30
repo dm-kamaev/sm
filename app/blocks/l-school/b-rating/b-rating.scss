@@ -1,0 +1,63 @@
+.b-rating {
+    display: inline-block;
+
+    width: 100%;
+    height: 100%;
+
+    text-align: center;
+    font-weight: bold;
+}
+
+.b-rating__sections {
+    display: inline-block;
+
+    width: 100%;
+    margin: 0 0 15px 0;
+
+    font-weight: normal;
+}
+
+.b-rating__marks {
+    display: inline-block;
+
+    width: 100%;
+    margin: 0 0 5px 0;
+
+    font-weight: normal;
+}
+
+.b-rating__section {
+    float: left;
+
+    width: 20%;
+}
+
+.b-rating__mark {
+    display: inline-block;
+
+    width: 100%;
+}
+
+.b-rating__section-name {
+    display: inline-block;
+
+    width: 100%;
+
+    color: #9a9a9a;
+
+    font-size: 10px;
+}
+
+.b-rating__mark_average {
+    color: red;
+
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.b-rating__mark_ordinary {
+    color: rgb(247, 173, 171);
+
+    font-size: 28px;
+    font-weight: normal;
+}

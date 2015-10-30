@@ -21,6 +21,12 @@ sm.lSchool.bComments.Comments = function(opt_params){
      * @type{object}
      */
     this.params_ = opt_params || {};
+
+    /**
+     * @private
+     * @type{NodeList}
+     */
+    this.comments_ = [];
 };
 goog.inherits(sm.lSchool.bComments.Comments, goog.ui.Component);
 
@@ -40,7 +46,6 @@ goog.scope(function(){
 
     /**
      * Template-based dom element creation.
-     * @return {!Node}
      * @public
      */
     Comments.prototype.createDom = function() {
@@ -52,19 +57,23 @@ goog.scope(function(){
 
     /**
      * Internal decorates the DOM element
-     * @param {Node} element
-     * @inheritDoc
+     * @param {node} element
      */
     Comments.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
-        this.comments_ = goog.dom.getElementsByClass(
-            Comments.CssClass.COMMENT, element
+
+        var comments = goog.dom.getElementsByClass(
+            Comments.CssClass.COMMENT, this.element_
         );
 
+        this.comments_ = [].slice.call(comments);
+
         /** comments decoration */
-        if(this.comments_.length > 0) {
-            for (var i = 0, comment, commentInstance; i < this.comments_.length; i++) {
-                comment = this.comments_[i];
+        var comment,
+            commentInstance;
+        if (comments.length > 0) {
+            for (var i = 0; i < comments.length; i++) {
+                comment = comments[i];
                 commentInstance = new sm.lSchool.bComment.Comment();
                 this.addChild(commentInstance);
                 commentInstance.decorate(comment);
@@ -74,26 +83,35 @@ goog.scope(function(){
 
     /**
      * Sets up the Component.
-     * @inheritDoc
      */
     Comments.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
     };
 
     /**
+     * creates and returns comment
+     * @param {object} params
+     * @return {Element}
+     * @public
+     */
+    Comments.prototype.addComment = function(params) {
+        var comment = goog.soy.renderAsElement(
+                sm.lSchool.bComment.Template.base, {
+                    params: params
+                }
+            ),
+            commentInstance = new sm.lSchool.bComment.Comment(params);
+
+        this.addChild(commentInstance, true);
+        this.comments_.push(commentInstance.getElement());
+
+        return comment;
+    };
+
+    /**
      * Cleans up the Component.
-     * @inheritDoc
      */
     Comments.prototype.exitDocument = function() {
         goog.base(this, 'exitDocument');
-    };
-
-
-    /**
-     * Delete label component and dom elements
-     */
-    Comments.prototype.dispose = function() {
-        goog.base(this, 'dispose');
-        this.exitDocument.bind(this);
     };
 });
