@@ -1,131 +1,108 @@
 goog.provide('sm.lSchool.bMap.Map');
 
+goog.require('goog.dom');
+goog.require('goog.dom.dataset');
+goog.require('goog.object');
+goog.require('goog.array');
 goog.require('sm.lSchool.bMap.MapPin');
 
 sm.lSchool.bMap.Map = function(root) {
+
     /**
     *   @private
     */
-    this.zoom_ = undefined;
+    this.root_ = goog.dom.getElementByClass(
+        sm.lSchool.bMap.Map.CssClass.ROOT,
+        root
+    );
+
     /**
     *   @private
     */
-    this.coords_ = {};
+    this.wrap_ = goog.dom.getElementByClass(
+        sm.lSchool.bMap.Map.CssClass.WRAP,
+        this.root_
+    );
+
     /**
     *   @private
     */
-    this.pinArr_ = [];
+    this.ymaps_ = undefined;
     /**
     *   @private
     */
-    this.root_ = root;
-
-    this.params_ = jQuery(root).data('params') || {};
+    this.id_ = JSON.parse(goog.dom.dataset.get(root, 'params'));
 };
 
-sm.lSchool.bMap.Map.MAP_CONFIG = {
-    initZoom: 11,
-    initCoords: {
-        lng: 37.64,
-        lat: 55.76
-    }
-};
+goog.scope(function () {
+    var Map = sm.lSchool.bMap.Map;
 
-sm.lSchool.bMap.Map.PIN_DATA = [
-    {
-        type: 'ГБОУ',
-        name: 'Лицей №1535',
-        rating: 4.9,
-        coords: {lat: 55.724186, lng: 37.556252},
-        url: '#',
-        isCurrent: true
-    },
-    {
-        type: 'ГОУ',
-        name: 'СОШ №1247',
-        coords: {lat: 55.755768, lng: 37.617671},
-        url: '#',
-        isCurrent: false
-    }
-];
+    Map.CssClass = {
+        ROOT: 'b-map',
+        WRAP: 'b-map__wrapper'
+    };
 
-sm.lSchool.bMap.Map.prototype.setZoom = function(zoom) {
-    this.zoom_ = zoom;
-};
+    // Map.dataObj = JSON.parse(goog.dom.dataset.get(root, 'params')) || {};
 
-sm.lSchool.bMap.Map.prototype.setCoords = function(lat, lng) {
-    this.coords_.lat = lat;
-    this.coords_.lng = lng;
-};
+    Map.prototype.itemToPinArray_ = function(item) {
+        return item.coords.map(function (coord) {
+            var pinData = {};
+            goog.object.extend(
+                pinData,
+                item,
+                {
+                    coords: coord,
+                    isCurrent: (item.id === this.id_)
+                }
+            );
 
-sm.lSchool.bMap.Map.prototype.setInit = function() {
-    this.setZoom(sm.lSchool.bMap.Map.MAP_CONFIG.initZoom);
-    var coords = this.params_.coords[0] || {
-            lat: sm.lSchool.bMap.Map.MAP_CONFIG.initCoords.lat,
-            lng: sm.lSchool.bMap.Map.MAP_CONFIG.initCoords.lng
-        };
-    this.setCoords(coords.lat, coords.lng);
-};
+            return new sm.lSchool.bMap.MapPin(pinData);
+        });
+    };
 
-sm.lSchool.bMap.Map.prototype.pinFactory = function (config) {
-    return sm.lSchool.bMap.MapPin.init().setPin(config);
-};
-
-sm.lSchool.bMap.Map.prototype.setPinArr = function () {
-    var that = this;
-    console.log(this);
-    this.pinArr_ = this.params_.coords.map(
-        function (item) {
-            return that.pinFactory({
-                type: that.params_.type,
-                name: that.params_.name,
-                rating: that.params_.totalScore.toFixed(2),
-                coords: item,
-                url: '#',
-                isCurrent: true
-            });
+    Map.prototype.dataToPlacemarks_ = function (data) {
+        var that = this;
+        if (!Array.isArray(data)) {
+            data = [data];
         }
-    );
-};
-
-sm.lSchool.bMap.Map.prototype.placePins = function () {
-    if (this.pinArr_.length === 0) {
-        console.log('No pins!');
-        return;
-    }
-    console.log(this.pinArr_.length + ' pins should be on the map');
-    var that = this;
-    this.pinArr_.forEach(
-        function(item) {that.ymaps_.geoObjects.add(item);}
-    );
-    var geoObject = that.ymaps_.geoObjects.get(0);
-    if (geoObject) {
-        geoObject.balloon.open();
-    }
-};
-
-sm.lSchool.bMap.Map.prototype.init = function() {
-    console.log('Initializing ymaps...');
-    var that = this;
-    ymaps.ready(function () {
-        console.log('Hello, Yandex!');
-        that.setInit();
-        that.ymaps_ = new ymaps.Map(
-            jQuery(that.root_).find('.b-map__wrapper').get(0),
-            {
-                'center': [that.coords_.lat, that.coords_.lng],
-                'zoom': that.zoom_,
-                controls: []
-            }
+        return goog.array.flatten(
+            data.map(
+                function (item) {
+                    var pins = that.itemToPinArray_(item);
+                    return pins.map(function(pin) {
+                        return pin.createPlacemark();
+                    });
+                }
+            )
         );
-        that.setPinArr();
-        that.placePins();
-    });
-};
+    };
 
+    Map.prototype.placePlacemarks_ = function (data) {
+        var that = this;
 
-jQuery(function() {
-    var root = goog.dom.getElementByClass('b-map');
-    var map = new sm.lSchool.bMap.Map(root);
-    map.init();
+        var placemarks = this.dataToPlacemarks_(data);
+        placemarks.forEach(
+            function(item) {that.ymaps_.geoObjects.add(item);}
+        );
+
+        var geoObject = that.ymaps_.geoObjects.get(0);
+        if (geoObject) {
+            geoObject.balloon.open();
+        }
+    };
+
+    Map.prototype.init = function(data) {
+        var that = this;
+        ymaps.ready(function () {
+            that.ymaps_ = new ymaps.Map(
+                that.wrap_,
+                {
+                    'center': [55.755768, 37.617671],
+                    'zoom': 11,
+                    controls: []
+                }
+            );
+            that.placePlacemarks_(data);
+        });
+    };
 });

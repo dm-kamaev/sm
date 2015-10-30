@@ -13,17 +13,30 @@
     <div class="b-map-pin">
         <div class="b-map-pin__balloon">
             <div class="b-map-pin__school-info">
-                <span class="b-map-pin__school-name">
-                    {$params.name}
-                </span>
+                {let $school kind="html"}
+                    <span class="b-map-pin__school-type">
+                        {$params.type}
+                    </span>
+                    </br>
+                    <span class="b-map-pin__school-name">
+                        {$params.name}
+                    </span>
+                {/let}
+                {if $params.isCurrent}
+                    {$school}
+                {else}
+                    <a href="{$params.url}">
+                        {$school}
+                    </a>
+                {/if}
                 <br/>
-                <span class="b-map-pin__rating{$params.rating?'':'_hidden'}">
-                    {$params.rating}
+                <span class="b-map-pin__rating">
+                    {if $params.rating > 0}
+                        {$params.rating}
+                    {else}
+                        Нет оценок
+                    {/if}
                 </span>
-                <br/>
-                <a href="{$params.url}" class="b-map-pin__link{$params.isCurrent?'_hidden':''}">
-                    Перейти на страницу школы
-                </a>
             </div>
         </div>
     </div>

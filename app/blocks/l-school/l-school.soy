@@ -68,7 +68,7 @@
         <div class="l-school" data-params="{$dataParams}">
             /*Тут должен вызываться шаблон хедера*/
             {call sm.bHeader.Template.base /}
-    
+
             <div class="l-school__body">
                 {call .top_}
                    {param params: $params /}
@@ -143,6 +143,7 @@
  [
      data:
      [
+         id: number,
          schoolName: string,
          schoolType: string,
          directorName: string,
