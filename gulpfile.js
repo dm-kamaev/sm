@@ -9,6 +9,7 @@ const soynode = require('gulp-soynode');
 var glob = require("glob");
 var exec = require('child_process').exec;
 var Q = require('q');
+var fs = require('fs-extra');
 
 
 
@@ -25,10 +26,10 @@ gulp.task('doc', function () {
     });
 });
 
-gulp.task('migrate', function () {
+gulp.task('migrate', function () { //TODO: fix
     var deferred = Q.defer();
 
-    var migrations = glob.sync('app/**/migrations/*.js', {
+    var migrations = glob.sync('api/**/migrations/*.js', {
         cwd: __dirname
     });
 
@@ -37,7 +38,7 @@ gulp.task('migrate', function () {
         fs.copySync(file, path.resolve(__dirname, 'tmp/migrations', fileName));
     });
 
-    var sequelizePath = path.resolve('node_modules/.bin/sequelize');
+    var sequelizePath = path.resolve(__dirname, 'node_modules/.bin/sequelize');
 
     exec(
         sequelizePath + ' db:migrate',
@@ -49,7 +50,7 @@ gulp.task('migrate', function () {
                 console.log(error);
             }
 
-            fs.remove(path.resolve(__dirname, 'tmp'));
+            //fs.remove(path.resolve(__dirname, 'tmp/migrations'));
 
             deferred.resolve();
         });
