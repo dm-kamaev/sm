@@ -22,11 +22,18 @@ module.exports = {
       },
       user_type: {
         allowNull: false,
-        type: DataType.ENUM('Parent','Graduate','Scholar'),
+        type: Sequelize.ENUM('Parent','Graduate','Scholar'),
       },
       score: {
         allowNull: false,
-        type: DataType.ARRAY(DataType.INTEGER)
+        type: Sequelize.ARRAY(Sequelize.INTEGER)
+      },
+      comment_group_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model:"comment_group",
+          key: "id",
+        }
       }
     });
   },
