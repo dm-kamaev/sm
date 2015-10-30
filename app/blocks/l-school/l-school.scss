@@ -11,11 +11,11 @@
     max-width: 1200px;
 }
 
-.l-school__horisontal-line{
+.l-school__horisontal-line {
     width:100%;
 }
 
-.l-school__content-header{
+.l-school__content-header {
     margin-bottom: 20px;
 
     font-family: Arial, sans-serif;
@@ -124,6 +124,7 @@
 
 .l-school__content-column {
     display: inline-block;
+
     margin-right: 30px;
 
     vertical-align: top;
@@ -135,6 +136,8 @@
 }
 
 .l-school__content-column_last {
+    float: right;
+
     margin-right: 0;
 }
 
@@ -168,7 +171,7 @@
 }
 
 
-.l-school__site-record{
+.l-school__site-record {
     display: block;
     margin-bottom: 20px;
 
