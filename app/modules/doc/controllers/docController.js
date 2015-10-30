@@ -3,10 +3,9 @@ var soy = require.main.require('./app/components/soy');
 var docPages = [
         "b-mark",
         "b-stars",
-        "b-comment",
         "b-comments",
         "b-rating",
-        "b-block-feedback-modal"
+        "b-feedback-modal"
     ];
 
 

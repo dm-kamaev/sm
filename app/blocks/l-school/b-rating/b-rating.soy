@@ -3,52 +3,41 @@
 /**
  * rating view
  * @param params {
- *          marks: [],
- *          averageMark
- *        }
+ *     marks: [],
+ *     averageMark
+ * }
  */
 {template .base autoescape="strict" kind="html"}
     <div class="b-rating">
         <div class="b-rating__marks">
             <div class="b-rating__section">
                 <div class="b-rating__mark b-rating__mark_average">
-                    {$params.averageMark}
+                    {$params.averageMark > 0 ? $params.averageMark : '—'}
                 </div>
             </div>
             {foreach $mark in $params.marks}
                 <div class="b-rating__section">
                     <div class="b-rating__mark b-rating__mark_ordinary">
-                        {$mark}
+                        {$mark > 0 ? $mark : '—'}
                     </div>
                 </div>
             {/foreach}
         </div>
+        {let $sectionNames: [
+            'Средний балл',
+            'Образование',
+            'Педагоги',
+            'Доступность',
+            'Атмосфера'
+        ] /}
         <div class="b-rating__sections">
-            <div class="b-rating__section">
-                <div class="b-rating__section-name">
-                    Средний балл
+            {foreach $sectionName in $sectionNames}
+                <div class="b-rating__section">
+                    <div class="b-rating__section-name">
+                        {$sectionName}
+                    </div>
                 </div>
-            </div>
-            <div class = "b-rating__section">
-                <div class="b-rating__section-name">
-                    Образование
-                </div>
-             </div>
-            <div class = "b-rating__section">
-                <div class="b-rating__section-name">
-                    Педагоги
-                </div>
-             </div>
-            <div class = "b-rating__section">
-                <div class="b-rating__section-name">
-                    Доступность
-                </div>
-             </div>
-            <div class = "b-rating__section">
-                <div class="b-rating__section-name">
-                    Атмосфера
-                </div>
-             </div>
+            {/foreach}
         </div>
         {call gorod.bBouton.BoutonTemplate.render}
             {param params: [

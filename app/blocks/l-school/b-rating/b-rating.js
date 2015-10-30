@@ -29,9 +29,9 @@ sm.lSchool.bRating.Rating = function(opt_params) {
 
     /**
      * @private
-     * @type{element}
+     * @type{?element}
      */
-    this.averageMark_ = {};
+    this.averageMark_ = null;
 
     /**
      * @private
@@ -56,8 +56,8 @@ goog.scope(function() {
      */
     Rating.CssClass = {
         ROOT: 'b-rating',
-        ORDINARYMARK: 'b-rating__mark_ordinary',
-        AVERAGEMARK: 'b-rating__mark_average'
+        ORDINARY_MARK: 'b-rating__mark_ordinary',
+        AVERAGE_MARK: 'b-rating__mark_average'
     };
 
     /**
@@ -82,16 +82,16 @@ goog.scope(function() {
         goog.base(this, 'decorateInternal', element);
 
         this.marks_ = goog.dom.getElementsByClass(
-            Rating.CssClass.ORDINARYMARK, element
+            Rating.CssClass.ORDINARY_MARK, element
         );
 
         this.averageMark_ = goog.dom.getElementByClass(
-            Rating.CssClass.AVERAGEMARK, element
+            Rating.CssClass.AVERAGE_MARK, element
         );
 
         this.initValues_();
 
-        this.setValues(this.values_,this.averageValue_);
+        this.setValues(this.values_, this.averageValue_);
     };
 
     /**
