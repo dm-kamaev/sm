@@ -41,8 +41,8 @@ exports.initAssociations = async(function() {
             console.log(colors.yellow('Associating model '+name))
             model.associate(models);
             console.log(colors.green('Model '+name+' associated'))
-           // await (model.sync());
+            //await (model.sync());
         }
     });
-    await(syncAll());
+    //await(syncAll());
 });

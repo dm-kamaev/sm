@@ -25,7 +25,7 @@ var Comment = db.define('Comment', {
             }
         },
         allowNull: false
-    }
+    },
 }, {
     underscored: true,
     tableName: 'comment',

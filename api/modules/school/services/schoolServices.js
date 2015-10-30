@@ -17,12 +17,13 @@ exports.getGroupId = async (function(schoolId) {
     return instance.comment_group_id;
 });
 
-var getSchoolParams = parasm => {
+var getSchoolParams = (params) => {
     var schoolParams = {
         name: params.name,
         director: params.director,
         phonres: params.phones,
         site: params.site,
+        goverment_key: params.goverment_key,
         addresses: []
     };
     params.addresses.forEach(adr => {
@@ -35,7 +36,10 @@ var getSchoolParams = parasm => {
 }
 
 exports.update = async ((school, params) => {
-    await(school.update(
+    console.log(JSON.stringify(params).blue);
+    console.log(JSON.stringify(getSchoolParams(params)).green);
+
+    await(school.update(//TODO: fix
         getSchoolParams(params),
         {
             include: [{
@@ -44,7 +48,23 @@ exports.update = async ((school, params) => {
             }]
         }
     ));
+    console.log(JSON.stringify('123').yellow);
 });
+
+//TODO: переделать
+exports.get = async((sqlizeOptions, params) => {
+    params.include = [{
+        model: models.Address,
+        as: 'addresses'
+    }]
+    if (params.count == 'one') {
+        return await (models.School.findOne(sqlizeOptions));
+    }
+    else
+        return await (models.School.findAll(sqlizeOptions));
+});
+
+
 
 exports.create = async (params => {
     await(models.School.create(
@@ -69,20 +89,22 @@ exports.list = async (function() {
     return schools;
 });
 
-exports.get = async (function(schoolId) {
-    var school =  await (models.School.findOne(
-        {
-            where: {
-                id: schoolId
-            },
-            include: [{
-                all: true,
-                nested: true
-            }]
-        }
-    ));
-    return school;
-});
+
+
+//exports.get = async (function(schoolId) {
+//    var school =  await (models.School.findOne(
+//        {
+//            where: {
+//                id: schoolId
+//            },
+//            include: [{
+//                all: true,
+//                nested: true
+//            }]
+//        }
+//    ));
+//    return school;
+//});
 
 // exports.getComments = async ( function(comment) {
 //

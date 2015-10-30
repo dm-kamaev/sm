@@ -6,7 +6,7 @@ var School = db.define('School', {
     director: DataType.STRING,
     phones: DataType.ARRAY(DataType.STRING),
     site: DataType.STRING,
-    govermentKey: {
+    goverment_key: {
         type: DataType.INTEGER,
         unique: true,
         allowNull: false
