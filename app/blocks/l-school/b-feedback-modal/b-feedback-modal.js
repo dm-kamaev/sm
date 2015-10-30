@@ -38,7 +38,9 @@ goog.scope(function() {
     FeedbackModal.prototype.show = function() {
         this.modal_.show();
         this.textarea_.setValue('');
-        this.stars_.forEach(stars => stars.setValue(0));
+        this.stars_.forEach(function(stars) {
+            stars.setValue(0);
+        });
     };
 
 
@@ -101,7 +103,25 @@ goog.scope(function() {
         goog.events.listen(
             this.getElement(),
             goog.events.EventType.SUBMIT,
-            this.onSubmit_.bind(this)
+            this.onSubmit_,
+            false,
+            this
+        );
+    };
+
+
+    /**
+     * @overwrite
+     */
+    FeedbackModal.prototype.exitDocument = function() {
+        goog.base(this, 'exitDocument');
+
+        goog.events.unlisten(
+            this.getElement(),
+            goog.events.EventType.SUBMIT,
+            this.onSubmit_,
+            false,
+            this
         );
     };
 
