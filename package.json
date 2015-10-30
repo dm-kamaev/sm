@@ -46,7 +46,9 @@
     "pg-hstore": "^2.3.2",
     "sequelize": "^3.8.0",
     "sequelize-cli": "^1.9.1",
-    "soynode": "^1.1.0"
+    "soynode": "^1.1.0",
+    "sleep": "^3.0.0"
+
   },
   "dependencies": {
     "express": "^4.13.3",

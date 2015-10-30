@@ -10,33 +10,99 @@ var commander = require('commander');
 var https = require('https');
 var colors = require('colors');
 
+var sleep = require('sleep');
+
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 
 const ACCESSS_TOKEN = require('./token.json').value;
-
-var start = async(() => {
-   // console.log(colors.green(await(getSchools())));
-    getSchoolUsers(8243);
-})
 
 var getSchools = async ((cityId) => {
     cityId = cityId ? cityId : 1;
     return await (request('database.getSchools',{city_id: cityId}));
 });
 
+var getSchoolUsersDay = async ((params)=> {
+    var res = []
+    for (var i = 1; i <= 31; i++) {
+        var dayParams =  params;
+        dayParams.birth_day = i;
+        var dayRes = await (request('users.search',dayParams));
+        if (dayRes.response.count>1000){
+            //throw new Error();
+            console.log(colors.red('по дню много людей: ' + dayRes.response.count));
+            res = res.concat(dayRes.response.items);
+        } else
+            res = res.concat(dayRes.response.items);
+    }
+    return res;
+});
+
+var getUserfulUsers = (users=>{
+    console.log(colors.yellow('users found: '+users.length));
+    var results = [];
+    users.forEach(user => {
+        if (/*user.university*/true)
+            results.push(user);
+    })
+    //console.log(colors.yellow('usefull: '+results.length));
+    return results;
+});
+
+var getSchoolUsersMonth = async ((params)=>{
+    var res = []
+    for (var i = 1; i <= 12; i++) {
+        var monthParams = params;
+        monthParams.birth_month = i;
+        var monthRes = await (request('users.search',monthParams));
+        if (monthRes.response.count>1000){
+            console.log(colors.red('по меесяцу много людей: ' + monthRes.response.count));
+            res = res.concat(getUserfulUsers(monthRes.response.items));
+        }
+        else {
+            console.log(colors.green(JSON.stringify(monthParams)));
+            var users = monthRes.response.items;
+            var userfull = getUserfulUsers(users);
+            res = res.concat(userfull);
+        }
+    }
+    return res;
+});
+
 var getSchoolUsers = async ((schoolId) => {
+    var results = [];
     var params = {
         fields:'education',
-        //age_from: '',
-        //age_to: '',
         school: schoolId,
-        
+        count: 1000
     }
-    var answ = await (request('users.search',params));
-    console.log(colors.yellow(answ.response.count));
-    console.log(colors.green(JSON.stringify(answ.response.items[3])));
+    for (var i = 2013; i <= 2013; i++) {
+        var yearParams = params;
+        yearParams.school_year = i;
+        var answ = await (request('users.search',yearParams));
+        if (answ.response.count>1000) {
+            console.log(colors.yellow(JSON.stringify(yearParams)
+                + ' \n too many answers ('+answ.response.count
+                + '). Starting processing by birth month'));
+            var monthRes = await(getSchoolUsersMonth(yearParams));
+            console.log(colors.green(JSON.stringify(yearParams)
+                + 'got results by year:  '
+                + JSON.stringify(monthRes.length)));
+            results = results.concat(monthRes);
+        }
+        else {
+            console.log(colors.green(JSON.stringify(yearParams)
+                + 'got results by year:  '
+                + JSON.stringify(answ.response.item)));
+            results = results.concat(answ.response.items)
+        }
+        console.log(colors.yellow(answ.response.count));
+        console.log(colors.green(results.length));
+    }
+    //console.log(colors.green(JSON.stringify(answ.response.items[3])));
 });
+
+
 
 var request = async ((methodName, params) => {
     var paramsString = '';
@@ -59,10 +125,29 @@ var request = async ((methodName, params) => {
             });
             response.on('end', function () {
                 resolve(JSON.parse(data));
+                sleep.usleep(210000);
             });
         }).end()
     });
-    return await (doRequest);
+
+    var res
+    do {
+        if (res && res.error) {
+            console.log(colors.red('ERROR: ' + res.error.error_msg));
+            console.log(colors.yellow('Params:'));
+            console.log(colors.yellow(JSON.stringify(params)));
+            sleep.sleep(10);
+        }
+        res = await(doRequest);
+    } while (res.error && res.error.error_code == 6)
+
+    if (!res.response || res.response.count == 0){
+        console.log(colors.red("Error on request:"));
+        console.log(colors.red(JSON.stringify(res)));
+        throw new Error('');
+    }
+    return res;
+
 });
 
 commander
@@ -71,3 +156,9 @@ commander
     .action(() => start());
 
 exports.Command;
+
+var start = async(() => {
+
+    // console.log(colors.green(await(getSchools())));
+    getSchoolUsers(8243);
+})
