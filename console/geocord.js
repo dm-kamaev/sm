@@ -3,6 +3,7 @@ var modules = require.main.require('./api/modules');
 var commander = require('commander');
 var geocoder = new MultiGeocoder({ coordorder: 'latlong', lang: 'ru-RU' });
 var fs = require('fs');
+var colors = require('colors');
 
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
@@ -16,7 +17,9 @@ var start = async(() => {
             console.log(err);
     }));
     var School = modules.school.models.School;
-    var schools = await(School.findAll());
+    var schools = await(School.findAll(
+        { include: [{ model: modules.school.models.Address,
+        as: 'addresses' }]}));
     console.log('\nPatience, my friend');
     schools.forEach( school => {
          processSchool(school);
@@ -54,6 +57,7 @@ var processSchoolPrecisely = async(school => {
 });
 
 var processSchool = async(school => {
+    console.log(colors.green(JSON.stringify(school)));
     var cordArr = [],
         adressArr = school.addresses;
     res = await(geocoder.geocode(adressArr));
