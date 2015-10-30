@@ -60,6 +60,11 @@ goog.scope(function() {
         AVERAGE_MARK: 'b-rating__mark_average'
     };
 
+    Rating.soyRound = function(param) {
+        param.value = 3;
+        return "hello";
+    };
+
     /**
      * Template-based dom element creation.
      * @public
@@ -187,7 +192,7 @@ goog.scope(function() {
      * @private
      */
     Rating.prototype.renderAverageValue_ = function(averageValue) {
-        this.averageMark_.innerHTML = this.valueToString_(averageValue);
+        this.averageMark_.innerHTML = this.valueToString_(averageValue, 1);
     };
 
     /**
@@ -198,7 +203,7 @@ goog.scope(function() {
      */
     Rating.prototype.renderValue_ = function(index, value) {
         if (this.marks_[index]) {
-            this.marks_[index].innerHTML = this.valueToString_(value);
+            this.marks_[index].innerHTML = this.valueToString_(value, 1);
         }
     };
 
@@ -239,30 +244,32 @@ goog.scope(function() {
 
     /**
      * value to string cast
-     * @param {string=} opt_strValue
+     * @param {string} strValue
      * @return {number}
      * @private
      */
-    Rating.prototype.stringToValue_ = function(opt_strValue) {
+    Rating.prototype.stringToValue_ = function(strValue) {
         var value = 0;
 
-        if (opt_strValue !== '—') {
-            value = parseFloat(opt_strValue);
+        if (strValue !== '—') {
+            value = parseFloat(strValue);
         }
         return value;
     };
 
     /**
      * value to string cast
-     * @param {number=} opt_value
+     * @param {number} value
+     * @param {number=} opt_digitCount
      * @return {string}
      * @private
      */
-    Rating.prototype.valueToString_ = function(opt_value) {
+    Rating.prototype.valueToString_ = function(value, opt_digitCount) {
         var strValue = '—';
 
-        if (opt_value) {
-            strValue = parseFloat(opt_value.toFixed(2));
+        if (value) {
+            var digitCount = opt_digitCount ? opt_digitCount : 0;
+            strValue = parseFloat(value.toFixed(digitCount));
         }
 
         return strValue;
