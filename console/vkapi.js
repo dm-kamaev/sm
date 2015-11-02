@@ -4,13 +4,13 @@
  * и скопировать токен из адресной строки в файл token.json
  *
  */
-
+var schoolServices = require.main.require('./api/modules/school/services').schoolServices;
 
 var commander = require('commander');
 var https = require('https');
 var colors = require('colors');
-
 var sleep = require('sleep');
+var fs = require('fs');
 
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
@@ -19,7 +19,10 @@ const ACCESSS_TOKEN = require('./token.json').value;
 
 var getSchools = async ((cityId) => {
     cityId = cityId ? cityId : 1;
-    return await (request('database.getSchools',{city_id: cityId}));
+    return await (request('database.getSchools',{
+        city_id: cityId,
+        count: 5000
+    }));
 });
 
 var getSchoolUsersDay = async ((params)=> {
@@ -150,15 +153,49 @@ var request = async ((methodName, params) => {
 
 });
 
+var getMatches = (vkSchools, ourSchools) => {
+    var n = 0;
+    var results = []
+    for (var i = 0; i<ourSchools.length; i++ ){
+        for (var j = 0; j<vkSchools.length; j++){
+            console.log(colors.yellow(n)+') '+colors.green(ourSchools[i].name)+
+                     ' '+colors.red(vkSchools[j].title));
+            if (ourSchools[i].name == vkSchools[j].title)
+                results.push(vkSchools[j].title);
+            n++;
+        }
+    }
+    //ourSchools.forEach((ourSchool)=>{
+    //    var match = vkSchools.find(vkSchool => {
+    //        console.log(colors.yellow(i)+') '+colors.green(ourSchool.name)+
+    //            ' '+colors.red(vkSchool.title));
+    //        i++;
+    //        if (ourSchool.name == vkSchool.title)
+    //            return true;
+    //    })
+    //    if (match)
+    //        results.push(match);
+    //})
+    return results;
+}
+var start = async(() => {
+    // console.log(colors.green(await(getSchools())));
+    //getSchoolUsers(8243);
+    var schools = await(getSchools());
+    var ourSchools = await(schoolServices.list());
+    console.log(schools.response.items.length);
+    console.log(ourSchools.length);
+    //var js = JSON.parse(schools.response.items);
+    //console.log(js);
+    //fs.writeFileSync('vk_schools.json',js);
+    var matches = getMatches(schools.response.items, ourSchools);
+    console.log(('================================').yellow);
+    console.log('Количество совпадений: ' + colors.yellow(matches.length));
+})
+
 commander
     .command('vkapi')
     .description('Parses an .xlsx file from a given path')
     .action(() => start());
 
 exports.Command;
-
-var start = async(() => {
-
-    // console.log(colors.green(await(getSchools())));
-    getSchoolUsers(8243);
-})
