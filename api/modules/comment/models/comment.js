@@ -8,6 +8,7 @@ var Comment = db.define('Comment', {
         allowNull: false
     },
     userType: {
+        field: "user_type",
         type: DataType.ENUM('Parent','Graduate','Scholar'),
         allowNull: false
     },

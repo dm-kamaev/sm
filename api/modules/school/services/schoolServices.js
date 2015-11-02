@@ -67,15 +67,15 @@ exports.update = async ((school, params) => {
         await(this.setAddresses(school,convertedParams.addresses))
 });
 
-exports.getAllById = async((id)=>{
+exports.getAllById = async((sch_id)=>{
     return await (models.School.findOne({
-        where:{id: id},
+        where:{id: sch_id},
         include: [{
             all:true,
             nested: true
         }]
     }));
-})
+});
 
 //TODO: переделать
 exports.get = async((sqlizeOptions, params) => {
