@@ -109,3 +109,4 @@ commander
      .command('geocord')
      .description('gets cords from yandex api')
      .action(() => start());
+exports.Command;
