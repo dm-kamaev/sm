@@ -1,6 +1,7 @@
 goog.provide('sm.lSchool.School');
 
 goog.require('sm.lSchool.bFeedbackModal.FeedbackModal');
+
 goog.require('sm.lSchool.bComments.Comments');
 goog.require('sm.lSchool.bComment.Comment');
 goog.require('sm.lSchool.bRating.Rating');
@@ -9,6 +10,7 @@ goog.require('goog.dom.classes');
 goog.require('goog.events');
 goog.require('goog.soy');
 
+goog.require('sm.lSchool.bMap.Map');
 
 /**
  * School page
