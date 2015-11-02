@@ -15,7 +15,7 @@ const CONFIG = {
     PORT: 3000
 };
 
-app.set('views', path.join(__dirname, 'public/api-debug'));
+app.set('views', path.join(__dirname, 'api-debug'));
 
 // template engines
 app.engine('html', require('ejs').renderFile);
@@ -34,6 +34,7 @@ app.use('/api', api.school.router);
 app.use('/', api.debug.router);
 
 app.use('/apidoc', express.static(path.join(__dirname, '/doc')));
+app.use('/api-debug', express.static(path.join(__dirname, '/api-debug')));
 
 
 

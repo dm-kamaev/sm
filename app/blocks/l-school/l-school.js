@@ -27,18 +27,6 @@ sm.lSchool.School = function(opt_params) {
     this.params_ = opt_params || {};
 
     /**
-     * elements
-     * @type {Object}
-     * @private
-     */
-    this.elements_ = {
-        map: goog.dom.getElementByClass(
-            sm.lSchool.bMap.Map.CssClass.ROOT,
-            root
-        )
-    };
-
-    /**
      * modal window
      * @type {?sm.lSchool.bFeedbackModal.FeedbackModal}
      * @private
@@ -69,16 +57,6 @@ goog.scope(function() {
         'CREATE_COMMENT': '/api/school/:id/comment'
     };
 
-    this.schoolData_ = JSON.parse(goog.dom.dataset.get(
-        this.elements_.map,
-        'params'
-    ));
-
-    this.map_ = new sm.lSchool.bMap.Map();
-    this.map_.decorate(this.elements_.map);
-    //this.map_.init(this.schoolData_);
-
-
     /**
      * Template-based dom element creation.
      * @public
@@ -97,15 +75,7 @@ goog.scope(function() {
     School.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
-<<<<<<< HEAD
         this.initElements_(element);
-=======
-
-sm.lSchool.School.CssClass = {
-    'ROOT': 'l-school',
-    'FEEDBACK_BUTTON': 'b-bouton_feedback-opener'
-};
->>>>>>> BP-473: Added pin icon switching
 
         this.initChildren_();
     };
@@ -181,6 +151,11 @@ sm.lSchool.School.CssClass = {
         this.addChild(rating);
         rating.decorate(this.elements_.rating);
 
+        /** map */
+        var map = new sm.lSchool.bMap.Map();
+        this.addChild(map);
+        map.decorate(this.elements_.map);
+
         /** modal */
         this.modal_ =  new sm.lSchool.bFeedbackModal.FeedbackModal({
             data: {
@@ -209,6 +184,10 @@ sm.lSchool.School.CssClass = {
             ),
             comments: goog.dom.getElementByClass(
                 sm.lSchool.School.CssClass.COMMENTS,
+                root
+            ),
+            map: goog.dom.getElementByClass(
+                sm.lSchool.bMap.Map.CssClass.ROOT,
                 root
             )
         };
