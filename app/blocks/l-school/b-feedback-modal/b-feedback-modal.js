@@ -11,22 +11,28 @@ goog.require('gorod.bModal.Template');
 goog.require('gorod.bTextarea.Textarea');
 
 
+/**
+ * Feedback modal
+ * @param opt_params
+ * @constructor
+ * @inherits goog.ui.Component
+ */
 sm.lSchool.bFeedbackModal.FeedbackModal = function(opt_params) {
     goog.base(this);
 
     /**
      * parameters
-     * @type {*|{}}
+     * @type {Object}
      * @private
      */
     this.params_ = opt_params || {};
 
     /**
-     * radio-buttons
-     * @type {Array.<Element>}
+     * DOM elements
+     * @type {Object}
      * @private
      */
-    this.radio_ = [];
+    this.elements_ = {};
 
     /**
      * modal
@@ -40,7 +46,6 @@ sm.lSchool.bFeedbackModal.FeedbackModal = function(opt_params) {
     });
 };
 goog.inherits(sm.lSchool.bFeedbackModal.FeedbackModal, goog.ui.Component);
-
 
 goog.scope(function() {
     var FeedbackModal = sm.lSchool.bFeedbackModal.FeedbackModal;
@@ -63,10 +68,6 @@ goog.scope(function() {
      */
     FeedbackModal.prototype.show = function () {
         this.modal_.show();
-        this.textarea_.setValue('');
-        this.stars_.forEach(function (stars) {
-            stars.setValue(0);
-        });
     };
 
     /**
@@ -77,6 +78,17 @@ goog.scope(function() {
         this.modal_.hide();
     };
 
+    /**
+     * From cleaning
+     * @public
+     */
+    FeedbackModal.prototype.clean = function() {
+        this.textarea_.setValue('');
+        this.stars_.forEach(function (stars) {
+            stars.setValue(0);
+        });
+        this.removeRadioCheck_();
+    };
 
     /**
      * Component render
@@ -92,7 +104,6 @@ goog.scope(function() {
         goog.base(this, 'render', modalDialogBody);
     };
 
-
     /**
      * Template-based dom element creation.
      * @public
@@ -105,7 +116,6 @@ goog.scope(function() {
 
         this.decorateInternal(elem);
     };
-
 
     /**
      * Internal decorates the DOM element
@@ -127,17 +137,16 @@ goog.scope(function() {
              */
             textarea: goog.dom.getElementByClass(
                 'b-textarea', element
+            ),
+
+            radio: goog.dom.getElementsByClass(
+                FeedbackModal.CssClass.RADIO,
+                element
             )
         };
 
-        this.radio_ = goog.dom.getElementsByClass(
-            FeedbackModal.CssClass.RADIO,
-            element
-        );
-
         this.stars_ = this.initStars_(this.elements_.stars);
     };
-
 
     /**
      * Sets up the Component.
@@ -156,7 +165,6 @@ goog.scope(function() {
             this
         );
     };
-
 
     /**
      * Cleans up the Component.
@@ -203,7 +211,7 @@ goog.scope(function() {
     };
 
     /**
-     * onSubmit_
+     * Submit event handler
      * @param {Function} event
      * @private
      */
@@ -235,58 +243,47 @@ goog.scope(function() {
      * @private
      */
     FeedbackModal.prototype.isValid_ = function(data) {
-        var isValid = true,
-            isValidOpt = false,
-            validateListCheck = {};
+        var isValid = false,
+            isValidOpt = false;
 
         /** list of parameters for validate */
         var validateList = {
             'text': function (value) {
-                if(value.trim()) {
+                if (value.trim()) {
                     isValidOpt = true;
                 }
             },
             'score[]': function(value) {
-                if(parseInt(value)) {
+                if (parseInt(value)) {
                     isValidOpt = true;
                 }
             },
             'userType': function(value) {
-                if(!value.trim()) {
-                    isValid = false;
+                if (value.trim()) {
+                    isValid = true;
                 }
             }
         };
 
         /** checks parameters */
-        data.map(function(item){
+        data.forEach(function(item) {
             var value = item.value,
                 name = item.name;
 
             validateList[name](value);
-
-            if(!validateListCheck[name]) {
-                validateListCheck[name] = true;
-            }
         });
-
-        /** checks count of parameters for validate */
-        for(var name in validateList) {
-            if(!validateListCheck[name]) {
-                isValid = false;
-            }
-        }
 
         return (isValid && isValidOpt);
     };
+
 
     /**
      * removes 'checked' attribute from radio
      * @private
      */
     FeedbackModal.prototype.removeRadioCheck_ = function() {
-        for(var i = 0, radio; i < this.radio_.length; i++) {
-            radio = this.radio_[i];
+        for(var i = 0, radio; i < this.elements_.radio.length; i++) {
+            radio = this.elements_.radio[i];
 
             if(radio.checked) {
                 radio.checked = false;
@@ -295,7 +292,7 @@ goog.scope(function() {
     };
 
     /**
-     * actions for onSubmit_
+     * Submit form
      * @private
      */
     FeedbackModal.prototype.submit_ = function () {
@@ -307,8 +304,13 @@ goog.scope(function() {
                 location.reload();
             });
         } else {
-            this.removeRadioCheck_();
             this.hide();
+            /**
+             * TODO: remove scroll bug
+             */
+            location.reload();
         }
+
+        this.clean();
     };
 });
