@@ -1,6 +1,6 @@
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
-
+var modules = require.main.require('./api/modules');
 var commander = require('commander');
 var xlsx = require('node-xlsx');
 var colors = require('colors');
@@ -52,14 +52,14 @@ var parseSchool = async(schoolData => {
 });
 
 var parse = async(path => {
-   // await (mdl.initAssociations());
+    //await (mdl.initAssociations());
 
 
     var parsed = xlsx.parse(path),
         data = parsed[0].data;
 
     data.map(rowToSchool)
-        .filter((item, index) => (index && index <= 3))
+        .filter((item, index) => (index>0))
         .forEach(item => parseSchool(item));
 });
 

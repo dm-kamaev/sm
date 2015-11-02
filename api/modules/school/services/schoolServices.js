@@ -35,20 +35,44 @@ var getSchoolParams = (params) => {
     return schoolParams;
 }
 
+
+
+exports.getAddresses = async (school => {
+    return await(models.Address.findAll({
+        where:{school_id: school.id}
+    }));
+})
+
+exports.setAddresses = async ((school, addresses) => {
+    var currentAddresses = await(this.getAddresses(school));
+    addresses.forEach((adr)=>{
+        var sameAdr = currentAddresses.find(element => {
+         if (element.name == adr.name)
+            return true;
+        });
+        if (!sameAdr){
+            models.Address.create(adr).then(adrinst => {
+                school.addAddresses(adrinst)
+            });
+         }
+    })
+    //var adrModels = await(addresses.map(adr => {
+    //    return models.Address.create(adr);
+    //}));
+    //console.log(JSON.stringify(adrModels).yellow);
+    //await(school.setAddresses(adrModels));
+});
+
 exports.update = async ((school, params) => {
-    console.log(JSON.stringify(params).blue);
-    console.log(JSON.stringify(getSchoolParams(params)).green);
+    //console.log(JSON.stringify(params).blue);
+    var convertedParams = getSchoolParams(params);
+    //console.log(JSON.stringify(convertedParams).green);
 
     await(school.update(//TODO: fix
-        getSchoolParams(params),
-        {
-            include: [{
-                model: models.Address,
-                as: 'addresses'
-            }]
-        }
+        convertedParams
     ));
-    console.log(JSON.stringify('123').yellow);
+    if (convertedParams.addresses)
+        await(this.setAddresses(school,convertedParams.addresses))
 });
 
 //TODO: переделать
