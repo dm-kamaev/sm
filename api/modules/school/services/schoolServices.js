@@ -56,24 +56,26 @@ exports.setAddresses = async ((school, addresses) => {
             });
          }
     })
-    //var adrModels = await(addresses.map(adr => {
-    //    return models.Address.create(adr);
-    //}));
-    //console.log(JSON.stringify(adrModels).yellow);
-    //await(school.setAddresses(adrModels));
 });
 
 exports.update = async ((school, params) => {
-    //console.log(JSON.stringify(params).blue);
     var convertedParams = getSchoolParams(params);
-    //console.log(JSON.stringify(convertedParams).green);
-
-    await(school.update(//TODO: fix
+    await(school.update(
         convertedParams
     ));
     if (convertedParams.addresses)
         await(this.setAddresses(school,convertedParams.addresses))
 });
+
+exports.getAllById = async((id)=>{
+    return await (models.School.findOne({
+        where:{id: id},
+        include: [{
+            all:true,
+            nested: true
+        }]
+    }));
+})
 
 //TODO: переделать
 exports.get = async((sqlizeOptions, params) => {

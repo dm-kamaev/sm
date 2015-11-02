@@ -42,9 +42,9 @@ exports.list = async (function(req, res) {
 });
 
 exports.view = async (function(req, res) {
-    var school = await (schoolServices.get(req.params.id));
+    var school = await (schoolServices.getAllById(req.params.id));
     var commentGroup = school.CommentGroup ? school.CommentGroup.comments : [];
-
+    //console.log(JSON.stringify(commentGroup).blue);
     var typeConvert = {
         'Parent': 'родитель',
         'Graduate': 'выпускник',
@@ -96,7 +96,7 @@ exports.view = async (function(req, res) {
             comments: commentGroup.map(comment => {
                 return {
                     author: '',
-                    rank: typeConvert[comment.userType],
+                    rank: 'родител',//typeConvert[comment.userType],
                     text: comment.text,
                     sections: comment.score.map((score, index) => {
                         var type = [
