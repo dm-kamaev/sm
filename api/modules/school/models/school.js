@@ -3,7 +3,10 @@ var DataType = require('sequelize'),
 
 var School = db.define('School', {
     name:DataType.STRING,
-    type: DataType.ENUM('Школа', 'Лицей', 'Гимназия', 'Центр образования', 'Коррекционная школа', 'Коррекционная школа-интернат', 'Кадетская школа', 'Кадетская школа-интернат'),
+    schoolType: {
+        type: DataType.ENUM('Школа', 'Лицей', 'Гимназия', 'Центр образования', 'Коррекционная школа', 'Коррекционная школа-интернат', 'Кадетская школа-интернат', 'Кадетская школа'),
+        allowNull: false
+    },
     director: DataType.STRING,
     phones: DataType.ARRAY(DataType.STRING),
     site: DataType.STRING,

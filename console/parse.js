@@ -7,6 +7,9 @@ var replace = require('./parseConfig').replace;
 var ignore = require('./parseConfig').ignore;
 var exclusion = require('./parseConfig').exclusion;
 
+var async = require('asyncawait/async');
+var await = require('asyncawait/await');
+
 var NAME_INDEX = 6,
     DIRECTOR_INDEX = 13,
     PHONES_INDEX = 15,
@@ -92,7 +95,7 @@ var rowToSchool = row => {
     var schoolType = getType(nParse);
     return {
         name: schoolName,
-        type: schoolType,
+        schoolType: schoolType,
         director: row[DIRECTOR_INDEX],
         phones: getArray(row, PHONES_INDEX),
         site: row[SITE_INDEX],
@@ -101,21 +104,22 @@ var rowToSchool = row => {
     };
 };
 
-var parse = path => {
+var parse = async(path => {
     var parsed = xlsx.parse(path),
         data = parsed[0].data;
     var createSchoolDataBase = err => {
         console.log(err);
         data
             .map(rowToSchool)
-            .filter(item => notIgnor(item.type))
+            .filter(item => notIgnor(item.schoolType))
             .forEach(item => {
                 modules.school.models.School.create(item);
             });
     };
 
-    modules.school.models.School.sync({force:true}).then(createSchoolDataBase, createSchoolDataBase);
-};
+    await(modules.school.models.School.sync({force:true}));
+    createSchoolDataBase({});
+});
 
 // Settings for accessing this script using cli
 commander
