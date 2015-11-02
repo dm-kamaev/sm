@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "NODE_ENV=development node app.js",
-    "cli": "node ./commander.js"
+    "cli": "node ./commander.js",
+    "gulp": "node ./node_modules/.bin/gulp"
   },
   "repository": {
     "type": "git",

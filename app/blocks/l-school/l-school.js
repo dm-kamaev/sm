@@ -1,6 +1,7 @@
 goog.provide('sm.lSchool.School');
 
 goog.require('sm.lSchool.bFeedbackModal.FeedbackModal');
+
 goog.require('sm.lSchool.bComments.Comments');
 goog.require('sm.lSchool.bComment.Comment');
 goog.require('sm.lSchool.bRating.Rating');
@@ -9,12 +10,14 @@ goog.require('goog.dom.classes');
 goog.require('goog.events');
 goog.require('goog.soy');
 
+goog.require('sm.lSchool.bMap.Map');
 
 /**
  * School page
  * @param {Object=} opt_params
  * @constructor
  */
+
 sm.lSchool.School = function(opt_params) {
 
     /**
@@ -28,7 +31,12 @@ sm.lSchool.School = function(opt_params) {
      * @type {Object}
      * @private
      */
-    this.elements_ = {};
+    this.elements_ = {
+        map: goog.dom.getElementByClass(
+            sm.lSchool.bMap.Map.CssClass.ROOT,
+            root
+        )
+    };
 
     /**
      * modal window
@@ -61,6 +69,16 @@ goog.scope(function() {
         'CREATE_COMMENT': '/api/school/:id/comment'
     };
 
+    this.schoolData_ = JSON.parse(goog.dom.dataset.get(
+        this.elements_.map,
+        'params'
+    ));
+
+    this.map_ = new sm.lSchool.bMap.Map();
+    this.map_.decorate(this.elements_.map);
+    //this.map_.init(this.schoolData_);
+
+
     /**
      * Template-based dom element creation.
      * @public
@@ -79,7 +97,15 @@ goog.scope(function() {
     School.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
+<<<<<<< HEAD
         this.initElements_(element);
+=======
+
+sm.lSchool.School.CssClass = {
+    'ROOT': 'l-school',
+    'FEEDBACK_BUTTON': 'b-bouton_feedback-opener'
+};
+>>>>>>> BP-473: Added pin icon switching
 
         this.initChildren_();
     };
