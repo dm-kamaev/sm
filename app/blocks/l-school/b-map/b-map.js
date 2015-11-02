@@ -10,52 +10,32 @@ goog.require('goog.dom.dataset');
 goog.require('goog.ui.Component');
 goog.require('goog.object');
 goog.require('goog.array');
+goog.require('sm.lSchool.bMap.Template');
 goog.require('sm.lSchool.bMap.MapPin');
 
 /**
- * @constructor
- * @param DOM element containing layout
+ * @param {Object=} opt_params
  * @extends {goog.ui.Component}
+ * @constructor
  */
-sm.lSchool.bMap.Map = function(root) {
+sm.lSchool.bMap.Map = function(opt_params) {
 
     goog.base(this);
 
     /**
-     *   A root element of the component
-     *   @private
-     *   @type DOM element
-     */
-    this.root_ = goog.dom.getElementByClass(
-        sm.lSchool.bMap.Map.CssClass.ROOT,
-        root
-    );
-
-    /**
-     *   An element which wraps the map
-     *   @private
-     *   @type DOM element
-     */
-    this.wrap_ = goog.dom.getElementByClass(
-        sm.lSchool.bMap.Map.CssClass.WRAP,
-        this.root_
-    );
-
-    /**
      *   The ymaps object
+     *   @type {Object=}
      *   @private
-     *   @type object
      */
     this.ymaps_ = undefined;
 
     /**
      *   An ID of a current school
+     *   @type {Number}
      *   @private
-     *   @type number
      */
-    this.id_ = JSON.parse(goog.dom.dataset.get(root, 'params'));
+    this.params_ = opt_params;
 };
-
 goog.inherits(sm.lSchool.bMap.Map, goog.ui.Component);
 
 goog.scope(function() {
@@ -63,49 +43,81 @@ goog.scope(function() {
 
     /**
      * A config object with DOM class names
+     * @enum {String}
      */
     Map.CssClass = {
-        ROOT: 'b-map',
-        WRAP: 'b-map__wrapper'
+        ROOT: 'b-map'
     };
 
     /**
     * These params are necessary for initializing ymaps,
     * represent center of Moscow
+    * @type {Object}
     */
     Map.defaultPosition = {
-        coords: [55.755768, 37.617671],
-        zoom: 11
+        COORDS: [55.755768, 37.617671],
+        ZOOM: 11
     };
-    
-    // Map.dataObj = JSON.parse(goog.dom.dataset.get(root, 'params')) || {};
+
+    /**
+    * @override
+    */
+    Map.prototype.createDom = function() {
+        var element = sm.lSchool.bMap.Template();
+        this.decorateInternal(element);
+    };
+
+
+    /**
+    * @override
+    */
+    Map.prototype.decorateInternal = function(element) {
+        goog.base(this, 'decorateInternal', element);
+
+        if (!this.params_) {
+            var dataset = goog.dom.dataset.get(element, 'params');
+            this.params_ = JSON.parse(dataset);
+        }
+
+        ymaps.ready(function() {
+            this.ymaps_ = new ymaps.Map(
+                element, {
+                    'center': Map.defaultPosition.COORDS,
+                    'zoom': Map.defaultPosition.ZOOM,
+                    controls: []
+                }
+            );
+            this.placePlacemarks_(this.params_);
+        }.bind(this));
+    };
 
     /**
      * Creates an array of placemark objects from provided data
+     * @param {Object}
+     * @return {Array<ymaps.Placemark>}
      * @private
-     * @param object
-     * @returns [object]
      */
-    Map.prototype.itemToPinArray_ = function(item) {
+    Map.prototype.itemToPlacemarks_ = function(item) {
         return item.coords.map(function(coord) {
             var pinData = {};
             goog.object.extend(
                 pinData,
                 item, {
                     coords: coord,
-                    isCurrent: (item.id === this.id_)
+                    isCurrent: (item.id === this.params_.id)
                 }
             );
 
-            return new sm.lSchool.bMap.MapPin(pinData);
-        });
+            var pin = new sm.lSchool.bMap.MapPin(pinData);
+            return pin.createPlacemark();
+        }.bind(this));
     };
 
     /**
      * Initializes a placemark before placing on the map
+     * @param {(Object|Array<Object>)}
+     * @return {Array<ymaps.Placemark>}
      * @private
-     * @param object || [object]
-     * @returns [object]
      */
     Map.prototype.dataToPlacemarks_ = function(data) {
         if (!Array.isArray(data)) {
@@ -114,10 +126,7 @@ goog.scope(function() {
         return goog.array.flatten(
             data.map(
                 function(item) {
-                    var pins = this.itemToPinArray_(item);
-                    return pins.map(function(pin) {
-                        return pin.createPlacemark();
-                    });
+                    return this.itemToPlacemarks_(item);
                 }.bind(this)
             )
         );
@@ -125,8 +134,8 @@ goog.scope(function() {
 
     /**
      * Appends generated placemarks to the map
+     * @param {Object}
      * @private
-     * @param object
      */
     Map.prototype.placePlacemarks_ = function(data) {
         var placemarks = this.dataToPlacemarks_(data);
@@ -140,23 +149,5 @@ goog.scope(function() {
         if (geoObject) {
             geoObject.balloon.open();
         }
-    };
-
-    /**
-     * A factory for creating a map
-     * @public
-     * @param object
-     */
-    Map.prototype.init = function(data) {
-        ymaps.ready(function() {
-            this.ymaps_ = new ymaps.Map(
-                this.wrap_, {
-                    'center': Map.defaultPosition.coords,
-                    'zoom': Map.defaultPosition.zoom,
-                    controls: []
-                }
-            );
-            this.placePlacemarks_(data);
-        }.bind(this));
     };
 });

@@ -74,8 +74,9 @@ goog.scope(function() {
         'params'
     ));
 
-    this.map_ = new sm.lSchool.bMap.Map(this.elements_.root);
-    this.map_.init(this.schoolData_);
+    this.map_ = new sm.lSchool.bMap.Map();
+    this.map_.decorate(this.elements_.map);
+    //this.map_.init(this.schoolData_);
 
 
     /**

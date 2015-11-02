@@ -4,37 +4,39 @@
  */
 
 goog.provide('sm.lSchool.bMap.MapPin');
+
 goog.require('sm.lSchool.bMap.PinTemplate');
 
 /**
+ * @param {Object}
  * @constructor
- * @param object
  */
 sm.lSchool.bMap.MapPin = function(data) {
     /**
      *   Coordinates of a point where a plaсemark should be placed
+     *   @type {Object}
      *   @private
-     *   @type [{number}]
      */
     this.coords_ = data.coords;
 
     /**
      *   Contents of a hint popping on hover
+     *   @type {String=}
      *   @private
-     *   @type string
      */
     this.hintContent_ = data.hintContent;
 
     /**
      *   A layout for the balloon, a part of ymaps API
+     *   @type {ymaps.Layout=}
      *   @private
      */
     this.balloonLayout_ = this.generateBalloonLayout_(data);
 
     /**
      *   Settings for choosing appropriate placemark icon based on provided data
+     *   @type {Object}
      *   @private
-     *   @type {a}
      */
     this.iconSettings_ = this.generateIcon_(data);
 };
@@ -46,12 +48,14 @@ goog.scope(function() {
 
     /**
     * A path to icons directory
+    * @const {String}
     */
     MapPin.ICON_PATH = '/images/l-school/b-map/b-map-pin/icons/';
 
     /**
     * Config for icons that mark coordinates of a school,
     * the current page belongs to
+    * @type {Object}
     */
     MapPin.CurrentSchoolIcon = {
         IMAGE_SIZE: [30, 30],
@@ -64,6 +68,7 @@ goog.scope(function() {
 
     /**
     * Config for icons that mark all other schools which are not current
+    * @type {Object}
     */
     MapPin.OtherSchoolIcon = {
         IMAGE_SIZE: [],
@@ -76,8 +81,8 @@ goog.scope(function() {
 
     /**
      * A placemark factory
+     * @return {ymaps.Placemark}
      * @public
-     * @returns object
      */
     MapPin.prototype.createPlacemark = function() {
         return new ymaps.Placemark(
@@ -97,9 +102,9 @@ goog.scope(function() {
 
     /**
      * Sets a layout for the balloon, required by ymaps API
+     * @param {Object}
+     * @return {ymaps.Layout}
      * @private
-     * @param object
-     * @returns object
      */
     MapPin.prototype.generateBalloonLayout_ = function(data) {
         var balloonContent = sm.lSchool.bMap.PinTemplate.pin({
@@ -110,9 +115,9 @@ goog.scope(function() {
 
     /**
      * Sets settings for a custom placemark icon
+     * @param {Object}
+     * @return {Object}
      * @private
-     * @param object
-     * @returns object
      */
     MapPin.prototype.generateIcon_ = function(data) {
         var ratingFactor = 'NO_RATING';
