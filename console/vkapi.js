@@ -158,8 +158,8 @@ var getMatches = (vkSchools, ourSchools) => {
     var results = []
     for (var i = 0; i<ourSchools.length; i++ ){
         for (var j = 0; j<vkSchools.length; j++){
-            console.log(colors.yellow(n)+') '+colors.green(ourSchools[i].name)+
-                     ' '+colors.red(vkSchools[j].title));
+            //console.log(colors.yellow(n)+') '+colors.green(ourSchools[i].name)+
+            //         ' '+colors.red(vkSchools[j].title));
             if (ourSchools[i].name == vkSchools[j].title)
                 results.push(vkSchools[j].title);
             n++;
