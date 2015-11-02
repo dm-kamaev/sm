@@ -1,6 +1,7 @@
 goog.provide('sm.lSchool.bFeedbackModal.FeedbackModal');
 
 goog.require('goog.ui.Component');
+goog.require('goog.dom.classes');
 
 goog.require('sm.bStars.Stars');
 goog.require('sm.lSchool.bFeedbackModal.Template');
@@ -13,8 +14,25 @@ goog.require('gorod.bTextarea.Textarea');
 sm.lSchool.bFeedbackModal.FeedbackModal = function(opt_params) {
     goog.base(this);
 
+    /**
+     * parameters
+     * @type {*|{}}
+     * @private
+     */
     this.params_ = opt_params || {};
 
+    /**
+     * radio-buttons
+     * @type {Array.<Element>}
+     * @private
+     */
+    this.radio_ = [];
+
+    /**
+     * modal
+     * @type {gorod.bModal.Modal}
+     * @private
+     */
     this.modal_ = gorod.bModal.Modal.create('', {
         config: {
             customClasses: 'b-modal_feedback'
@@ -27,40 +45,59 @@ goog.inherits(sm.lSchool.bFeedbackModal.FeedbackModal, goog.ui.Component);
 goog.scope(function() {
     var FeedbackModal = sm.lSchool.bFeedbackModal.FeedbackModal;
 
-
+    /**
+     * CSS-class enum
+     * @enum {string}
+     */
     FeedbackModal.CssClass = {
         'FEEDBACK': 'b-feedback',
         'MODAL': 'b-modal_feedback',
-        'BUTTON': 'b-feedback__button'
+        'BUTTON': 'b-feedback__button',
+        'RADIO': 'b-feedback__radio',
+        'DIALOG_BODY': 'b-dialog__body'
     };
 
-
-    FeedbackModal.prototype.show = function() {
+    /**
+     * shows modal window
+     * @public
+     */
+    FeedbackModal.prototype.show = function () {
         this.modal_.show();
         this.textarea_.setValue('');
-        this.stars_.forEach(function(stars) {
+        this.stars_.forEach(function (stars) {
             stars.setValue(0);
         });
     };
 
-
-    FeedbackModal.prototype.hide = function() {
+    /**
+     * hides modal window
+     * @public
+     */
+    FeedbackModal.prototype.hide = function () {
         this.modal_.hide();
     };
 
 
     /**
-     * @overwrite
+     * Component render
+     * @public
      */
-    FeedbackModal.prototype.render = function() {
-        goog.base(this, 'render', this.getContainer_());
+    FeedbackModal.prototype.render = function () {
+        var modalDialog = this.modal_.getDialog()[0],
+            modalDialogBody = goog.dom.getElementByClass(
+                FeedbackModal.CssClass.DIALOG_BODY,
+                modalDialog
+            );
+
+        goog.base(this, 'render', modalDialogBody);
     };
 
 
     /**
-     * @overwrite
+     * Template-based dom element creation.
+     * @public
      */
-    FeedbackModal.prototype.createDom = function() {
+    FeedbackModal.prototype.createDom = function () {
         var elem = goog.soy.renderAsElement(
             sm.lSchool.bFeedbackModal.Template.feedback, {
                 params: this.params_
@@ -71,14 +108,19 @@ goog.scope(function() {
 
 
     /**
-     * @overwrite
+     * Internal decorates the DOM element
+     * @param {Element} element
+     * @public
      */
-    FeedbackModal.prototype.decorateInternal = function(element) {
+    FeedbackModal.prototype.decorateInternal = function (element) {
         goog.base(this, 'decorateInternal', element);
+
+        goog.dom.getParentElement(element).style.display = 'none';
 
         this.elements_ = {
             stars: goog.dom.getElementsByClass(
-                sm.bStars.Stars.CssClass.ROOT, element
+                sm.bStars.Stars.CssClass.ROOT,
+                element
             ),
             /**
              * TODO: Add 'b-textarea' to gorod.bTextarea.Textarea.Classes.ROOT
@@ -88,14 +130,20 @@ goog.scope(function() {
             )
         };
 
+        this.radio_ = goog.dom.getElementsByClass(
+            FeedbackModal.CssClass.RADIO,
+            element
+        );
+
         this.stars_ = this.initStars_(this.elements_.stars);
     };
 
 
     /**
-     * @overwrite
+     * Sets up the Component.
+     * @public
      */
-    FeedbackModal.prototype.enterDocument = function() {
+    FeedbackModal.prototype.enterDocument = function () {
         goog.base(this, 'enterDocument');
 
         this.textarea_ = new gorod.bTextarea.Textarea(this.elements_.textarea);
@@ -111,9 +159,10 @@ goog.scope(function() {
 
 
     /**
-     * @overwrite
+     * Cleans up the Component.
+     * @public
      */
-    FeedbackModal.prototype.exitDocument = function() {
+    FeedbackModal.prototype.exitDocument = function () {
         goog.base(this, 'exitDocument');
 
         goog.events.unlisten(
@@ -125,14 +174,19 @@ goog.scope(function() {
         );
     };
 
-
-    FeedbackModal.prototype.initStars_ = function(elems) {
+    /**
+     * stars initialization
+     * @param {Array.<Element>} elements
+     * @returns {Array}
+     * @private
+     */
+    FeedbackModal.prototype.initStars_ = function (elements) {
         var res = [],
             elem,
             star;
 
-        for (var i = 0, n = elems.length; i < n; i++) {
-            elem = elems[i];
+        for (var i = 0, n = elements.length; i < n; i++) {
+            elem = elements[i];
             star = new sm.bStars.Stars({
                 data: {
                     mark: 0
@@ -148,59 +202,113 @@ goog.scope(function() {
         return res;
     };
 
-
-    FeedbackModal.prototype.onSubmit_ = function(event) {
+    /**
+     * onSubmit_
+     * @param {Function} event
+     * @private
+     */
+    FeedbackModal.prototype.onSubmit_ = function (event) {
         event.preventDefault();
 
         this.submit_();
     };
 
+    /**
+     * Sends form using jQuery.ajax
+     * @param {Element} form
+     * @param {Function=} opt_callback
+     * @private
+     */
+    FeedbackModal.prototype.send_ = function (form, opt_callback) {
+        jQuery.ajax({
+            url: form.attr('action'),
+            type: form.attr('method'),
+            data: form.serialize(),
+            success: opt_callback || function () {}
+        });
+    };
 
-    FeedbackModal.prototype.submit_ = function() {
-        var form = jQuery(this.getElement());
+    /**
+     * data validation
+     * @param {Array.<Object>} data
+     * @returns {boolean}
+     * @private
+     */
+    FeedbackModal.prototype.isValid_ = function(data) {
+        var isValid = true,
+            isValidOpt = false,
+            validateListCheck = {};
 
-        var data = form.serializeArray(),
-            score = 0,
-            text = "";
+        /** list of parameters for validate */
+        var validateList = {
+            'text': function (value) {
+                if(value.trim()) {
+                    isValidOpt = true;
+                }
+            },
+            'score[]': function(value) {
+                if(parseInt(value)) {
+                    isValidOpt = true;
+                }
+            },
+            'userType': function(value) {
+                if(!value.trim()) {
+                    isValid = false;
+                }
+            }
+        };
 
-        /**
-         * TODO: rewrite this trash
-         */
-        for (var i = 0, n = data.length, item; i < n; i++) {
-            item = data[i];
-            if (item.name == 'score[]') {
-                score += parseInt(item.value);
-            } else if (item.name == 'text') {
-                text = item.value.trim();
+        /** checks parameters */
+        data.map(function(item){
+            var value = item.value,
+                name = item.name;
+
+            validateList[name](value);
+
+            if(!validateListCheck[name]) {
+                validateListCheck[name] = true;
+            }
+        });
+
+        /** checks count of parameters for validate */
+        for(var name in validateList) {
+            if(!validateListCheck[name]) {
+                isValid = false;
             }
         }
 
-        if (score || text) {
-            jQuery.ajax({
-                url: form.attr('action'),
-                type: form.attr('method'),
-                data: form.serialize(),
-                success: function(data) {
-                    location.reload();
-                }
-            });
-        }
-        else {
-            this.hide();
+        return (isValid && isValidOpt);
+    };
+
+    /**
+     * removes 'checked' attribute from radio
+     * @private
+     */
+    FeedbackModal.prototype.removeRadioCheck_ = function() {
+        for(var i = 0, radio; i < this.radio_.length; i++) {
+            radio = this.radio_[i];
+
+            if(radio.checked) {
+                radio.checked = false;
+            }
         }
     };
 
-
     /**
-     * Get modal container element
-     * TODO: Do something about this terrible method
-     * @return {Element}
+     * actions for onSubmit_
      * @private
      */
-    FeedbackModal.prototype.getContainer_ = function() {
-        return this.modal_
-            .getRoot()
-            .find('.b-dialog__body')
-            .get(0);
+    FeedbackModal.prototype.submit_ = function () {
+        var form = jQuery(this.getElement()),
+            data = form.serializeArray();
+
+        if (this.isValid_(data)) {
+            this.send_(form, function(){
+                location.reload();
+            });
+        } else {
+            this.removeRadioCheck_();
+            this.hide();
+        }
     };
 });
