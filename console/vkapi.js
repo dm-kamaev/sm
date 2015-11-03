@@ -87,7 +87,13 @@ var getSchoolUsers = async ((school) => {
     for (var i = 2013; i <= 2013; i++) {
         var yearParams = params;
         yearParams.school_year = i;
-        var answ = await (request('users.search',yearParams));
+        var reqTry = 0;
+        do {
+            var answ = await(request('users.search', yearParams));
+            if (reqTry)
+                console.log(colors.red(reqTry+1) + ' try for school '
+                    + school.title + ' year ' + colors.red(i));
+        } while (!answ)
         if (answ.response.count>1000) {
             //console.log(colors.yellow(JSON.stringify(yearParams)
             //    + ' \n too many answers ('+answ.response.count
@@ -141,7 +147,7 @@ var request = async ((methodName, params) => {
         }).end()
         rqq.on('error', function(e) {
             console.log('problem with request: ' + e.message);
-            resolve({});
+            resolve(null);
         });
     });
 
@@ -154,12 +160,12 @@ var request = async ((methodName, params) => {
             console.log(colors.yellow(JSON.stringify(params)));
             sleep.sleep(10);
         }
-    } while (res.error && res.error.error_code == 6)
+    } while (res && res.error && res.error.error_code == 6)
 
     if (!res.response || res.response.count == 0){
         console.log(colors.red("Error on request:"));
         console.log(colors.red(JSON.stringify(res)));
-        return null;
+        return null;;
         //throw new Error('');
     }
     return res;
@@ -215,10 +221,11 @@ var start = async(() => {
                 + colors.green(cached_match.title) + " already cached");
             processed_matches.push(match);
         } else {
+            var local_match = match;
             var univArr = [];
             var uniCountForSchool = 0;
-            var users = await(getSchoolUsers(match));
-            if (users) {
+            var users = await(getSchoolUsers(local_match));
+            if (users || users.length != 0) {
                 users.forEach(user => {
                     var uni = user.university_name
                     if (uni) {
@@ -236,9 +243,9 @@ var start = async(() => {
                             });
                     }
                 })
-                match.universities = univArr;
-                match.universities.total = uniCountForSchool;
-                processed_matches.push(match);
+                univArr.total = uniCountForSchool;
+                local_match.universities = univArr;
+                processed_matches.push(local_match);
             } else {
                 console.log('Got nothing for ' + colors.red(match.title));
             }
