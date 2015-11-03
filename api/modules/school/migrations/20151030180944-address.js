@@ -2,7 +2,7 @@
 
 module.exports = {
   up: function (queryInterface, Sequelize) {
-    return queryInterface.createTable('school', {
+    return queryInterface.createTable('address', {
         id: {
             allowNull: false,
             autoIncrement: true,
@@ -20,35 +20,19 @@ module.exports = {
         name: {
             type: Sequelize.STRING,
         },
-        director: {
-            type: Sequelize.STRING,
-        },
-        phones: {
-            type: Sequelize.ARRAY(Sequelize.STRING),
-        },
-        site: {
-            type: Sequelize.STRING,
-        },
-        addresses: {
-            type: Sequelize.ARRAY(Sequelize.STRING),
-        },
         coords: {
             type: Sequelize.ARRAY(Sequelize.ARRAY(Sequelize.FLOAT)),
         },
-        goverment_key: {
-          type: Sequelize.INTEGER,
-            unique: true
-        },
-        comment_group_id: {
+        school_id: {
             type: Sequelize.INTEGER,
             references: {
-                model:"comment_group",
+                model:"school",
                 key: "id",
             }
         }
     });
   },
   down: function (queryInterface, Sequelize) {
-    return queryInterface.dropTable('school');
+    return queryInterface.dropTable('address');
   }
 };
