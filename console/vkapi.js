@@ -45,7 +45,7 @@ var getUserfulUsers = (users=>{
     console.log(colors.yellow('users found: '+users.length));
     var results = [];
     users.forEach(user => {
-        if (/*user.university*/true)
+        if (user.university)
             results.push(user);
     })
     //console.log(colors.yellow('usefull: '+results.length));
@@ -94,15 +94,10 @@ var getSchoolUsers = async ((schoolId) => {
             results = results.concat(monthRes);
         }
         else {
-            console.log(colors.green(JSON.stringify(yearParams)
-                + 'got results by year:  '
-                + JSON.stringify(answ.response.item)));
             results = results.concat(answ.response.items)
         }
-        console.log(colors.yellow(answ.response.count));
-        console.log(colors.green(results.length));
     }
-    //console.log(colors.green(JSON.stringify(answ.response.items[3])));
+    return results;
 });
 
 
@@ -161,21 +156,21 @@ var getMatches = (vkSchools, ourSchools) => {
             //console.log(colors.yellow(n)+') '+colors.green(ourSchools[i].name)+
             //         ' '+colors.red(vkSchools[j].title));
             if (ourSchools[i].name == vkSchools[j].title)
-                results.push(vkSchools[j].title);
+                results.push(vkSchools[j]);
             n++;
         }
     }
     return results;
 }
 
-var saveToJson = (schools) => {
+var saveToJson = (schools, name) => { //'vk_schools.json'
     var js = JSON.stringify(schools);
-    fs.writeFileSync('vk_schools.json',js);
+    fs.writeFileSync(name,js);
 }
 
+
+
 var start = async(() => {
-    // console.log(colors.green(await(getSchools())));
-    //getSchoolUsers(8243);
     var schools = await(getSchools());
     var ourSchools = await(schoolServices.list());
     console.log('Школ вконтакте: ' + colors.yellow(schools.response.items.length));
@@ -184,6 +179,31 @@ var start = async(() => {
     console.log(('================================').yellow);
     console.log('Количество совпадений: ' + colors.yellow(matches.length));
     console.log(matches);
+    console.log(('================================').yellow);
+    await (matches.forEach(match =>{
+        var univArr = [];
+        var users =  await(getSchoolUsers(match.id));
+        users.forEach(user => {
+            var uni = user.university_name
+            if (uni){
+                var uniInArray = univArr.find(univ => {
+                    if (univ.name == uni)
+                        return true;
+                });
+                if (uniInArray)
+                    uniInArray.count++;
+                else
+                    univArr.push({
+                        name: uni,
+                        count: 1
+                    });
+            }
+        })
+        match.universities = univArr;
+    }));
+    saveToJson(matches, 'school_matches.json')
+    //console.log(matches);
+
 })
 
 commander
