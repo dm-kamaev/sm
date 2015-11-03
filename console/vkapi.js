@@ -165,32 +165,25 @@ var getMatches = (vkSchools, ourSchools) => {
             n++;
         }
     }
-    //ourSchools.forEach((ourSchool)=>{
-    //    var match = vkSchools.find(vkSchool => {
-    //        console.log(colors.yellow(i)+') '+colors.green(ourSchool.name)+
-    //            ' '+colors.red(vkSchool.title));
-    //        i++;
-    //        if (ourSchool.name == vkSchool.title)
-    //            return true;
-    //    })
-    //    if (match)
-    //        results.push(match);
-    //})
     return results;
 }
+
+var saveToJson = (schools) => {
+    var js = JSON.stringify(schools);
+    fs.writeFileSync('vk_schools.json',js);
+}
+
 var start = async(() => {
     // console.log(colors.green(await(getSchools())));
     //getSchoolUsers(8243);
     var schools = await(getSchools());
     var ourSchools = await(schoolServices.list());
-    console.log(schools.response.items.length);
-    console.log(ourSchools.length);
-    //var js = JSON.parse(schools.response.items);
-    //console.log(js);
-    //fs.writeFileSync('vk_schools.json',js);
+    console.log('Школ вконтакте: ' + colors.yellow(schools.response.items.length));
+    console.log('Наших школ: ' + colors.yellow(ourSchools.length));
     var matches = getMatches(schools.response.items, ourSchools);
     console.log(('================================').yellow);
     console.log('Количество совпадений: ' + colors.yellow(matches.length));
+    console.log(matches);
 })
 
 commander
