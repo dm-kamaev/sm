@@ -12,6 +12,7 @@ var colors = require('colors');
 var sleep = require('sleep');
 var fs = require('fs');
 
+
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 
@@ -72,7 +73,11 @@ var getSchoolUsersMonth = async ((params)=>{
     return res;
 });
 
-var getSchoolUsers = async ((schoolId) => {
+var getSchoolUsers = async ((school) => {
+    schoolId = school.id;
+
+    console.log('Getting users for school ' + colors.yellow(school.id) +
+    ' || ' + colors.yellow(school.title));
     var results = [];
     var params = {
         fields:'education',
@@ -84,14 +89,16 @@ var getSchoolUsers = async ((schoolId) => {
         yearParams.school_year = i;
         var answ = await (request('users.search',yearParams));
         if (answ.response.count>1000) {
-            console.log(colors.yellow(JSON.stringify(yearParams)
-                + ' \n too many answers ('+answ.response.count
-                + '). Starting processing by birth month'));
-            var monthRes = await(getSchoolUsersMonth(yearParams));
-            console.log(colors.green(JSON.stringify(yearParams)
-                + 'got results by year:  '
-                + JSON.stringify(monthRes.length)));
-            results = results.concat(monthRes);
+            //console.log(colors.yellow(JSON.stringify(yearParams)
+            //    + ' \n too many answers ('+answ.response.count
+            //    + '). Starting processing by birth month'));
+            //var monthRes = await(getSchoolUsersMonth(yearParams));
+            //console.log(colors.green(JSON.stringify(yearParams)
+            //    + 'got results by year:  '
+            //    + JSON.stringify(monthRes.length)));
+            //results = results.concat(monthRes);
+            console.log('There are too many results in school ' + colors.red(school.title)
+                + " year "+colors.red(i));
         }
         else {
             results = results.concat(answ.response.items)
@@ -116,33 +123,44 @@ var request = async ((methodName, params) => {
         method: 'GET',
     };
     var doRequest = new Promise( function(resolve, reject) {
-        https.request(options).on('response', function (response) {
+        rqq = https.request(options);
+        rqq.on('response', function (response) {
             var data = '';
             response.on("data", function (chunk) {
+
                 data += chunk;
             });
             response.on('end', function () {
-                resolve(JSON.parse(data));
+                if (params.school)
+                    console.log("got answer for school " +
+                        colors.green(params.school));
                 sleep.usleep(210000);
+                resolve(JSON.parse(data));
+                //sleep.usleep(210000);
             });
         }).end()
+        rqq.on('error', function(e) {
+            console.log('problem with request: ' + e.message);
+            resolve({});
+        });
     });
 
     var res
     do {
+        res = await(doRequest);
         if (res && res.error) {
             console.log(colors.red('ERROR: ' + res.error.error_msg));
             console.log(colors.yellow('Params:'));
             console.log(colors.yellow(JSON.stringify(params)));
             sleep.sleep(10);
         }
-        res = await(doRequest);
     } while (res.error && res.error.error_code == 6)
 
     if (!res.response || res.response.count == 0){
         console.log(colors.red("Error on request:"));
         console.log(colors.red(JSON.stringify(res)));
-        throw new Error('');
+        return null;
+        //throw new Error('');
     }
     return res;
 
@@ -168,7 +186,9 @@ var saveToJson = (schools, name) => { //'vk_schools.json'
     fs.writeFileSync(name,js);
 }
 
-
+var loadFromJson = (name) => { //'vk_schools.json'
+    return require('../'+name);
+}
 
 var start = async(() => {
     var schools = await(getSchools());
@@ -178,30 +198,56 @@ var start = async(() => {
     var matches = getMatches(schools.response.items, ourSchools);
     console.log(('================================').yellow);
     console.log('Количество совпадений: ' + colors.yellow(matches.length));
-    console.log(matches);
+   // console.log(matches);
     console.log(('================================').yellow);
-    await (matches.forEach(match =>{
-        var univArr = [];
-        var users =  await(getSchoolUsers(match.id));
-        users.forEach(user => {
-            var uni = user.university_name
-            if (uni){
-                var uniInArray = univArr.find(univ => {
-                    if (univ.name == uni)
-                        return true;
-                });
-                if (uniInArray)
-                    uniInArray.count++;
-                else
-                    univArr.push({
-                        name: uni,
-                        count: 1
-                    });
-            }
+    console.log('Getting universities for schools. Patience');
+    var processed_matches = [];
+    var cached_matches = loadFromJson('pr_matches.json');
+//    console.log(JSON.stringify(cached_matches).blue);
+
+    matches.forEach(match =>{
+        var cached_match = cached_matches.find(school =>{
+            if (school.id == match.id)
+                return true;
         })
-        match.universities = univArr;
-    }));
-    saveToJson(matches, 'school_matches.json')
+        if (cached_match){
+            console.log("Users for school "
+                + colors.green(cached_match.title) + " already cached");
+            processed_matches.push(match);
+        } else {
+            var univArr = [];
+            var uniCountForSchool = 0;
+            var users = await(getSchoolUsers(match));
+            if (users) {
+                users.forEach(user => {
+                    var uni = user.university_name
+                    if (uni) {
+                        uniCountForSchool++;
+                        var uniInArray = univArr.find(univ => {
+                            if (univ.name == uni)
+                                return true;
+                        });
+                        if (uniInArray)
+                            uniInArray.count++;
+                        else
+                            univArr.push({
+                                name: uni,
+                                count: 1
+                            });
+                    }
+                })
+                match.universities = univArr;
+                match.universities.total = uniCountForSchool;
+                processed_matches.push(match);
+            } else {
+                console.log('Got nothing for ' + colors.red(match.title));
+            }
+
+        }
+        saveToJson(processed_matches, 'pr_matches.json')
+        //console.log(JSON.stringify('Updated cached schools').green);
+    });
+   // saveToJson(matches, 'school_matches.json')
     //console.log(matches);
 
 })
