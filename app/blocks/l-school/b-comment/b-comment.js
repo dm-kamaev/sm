@@ -60,6 +60,7 @@ goog.scope(function(){
      */
     Comment.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
+
         this.spoiler_ = goog.dom.getElementByClass(
             Comment.CssClass.SPOILER, element
         );
@@ -69,14 +70,16 @@ goog.scope(function(){
         this.hiddenText_ = goog.dom.getElementByClass(
             Comment.CssClass.HIDDENTEXT, element
         );
-        this.stars_ = goog.dom.getElementByClass(
+        this.stars_ = goog.dom.getElementsByClass(
             Comment.CssClass.STARS, element
         );
 
         /** stars decoration */
-        var stars = new sm.bStars.Stars();
-        this.addChild(stars,false);
-        stars.decorate(this.stars_);
+        for(var i = 0, stars; i < this.stars_.length; i++) {
+            stars = new sm.bStars.Stars();
+            this.addChild(stars, false);
+            stars.decorate(this.stars_[i]);
+        }
     };
 
     /**
@@ -90,7 +93,9 @@ goog.scope(function(){
             goog.events.listen(
                 this.spoiler_,
                 goog.events.EventType.CLICK,
-                this.showText_.bind(this)
+                this.showText_,
+                false,
+                this
             );
         }
     };
@@ -116,7 +121,6 @@ goog.scope(function(){
 
     /**
      * Cleans up the Component.
-     * @inheritDoc
      */
     Comment.prototype.exitDocument = function() {
         goog.base(this, 'exitDocument');
@@ -126,16 +130,8 @@ goog.scope(function(){
             goog.events.unlisten(
                 this.spoiler_,
                 goog.events.EventType.CLICK,
-                this.showText_.bind(this)
+                this.showText_
             );
         }
-    };
-
-    /**
-     * Delete label component and dom elements
-     */
-    Comment.prototype.dispose = function() {
-        goog.base(this, 'dispose');
-        this.exitDocument.bind(this);
     };
 });

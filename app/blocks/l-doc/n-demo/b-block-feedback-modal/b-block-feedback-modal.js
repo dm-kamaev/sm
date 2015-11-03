@@ -30,13 +30,14 @@ sm.lDoc.nDemo.bBlockFeedbackModal.BlockFeedbackModal = function(root) {
     }
 };
 
+goog.scope(function() {
+    var BlockFeedbackModal =
+        sm.lDoc.nDemo.bBlockFeedbackModal.BlockFeedbackModal;
 
-sm.lDoc.nDemo.bBlockFeedbackModal.BlockFeedbackModal.prototype.onClick_ =
-    function(event) {
-
-    this.modal_.show();
-};
-
+    BlockFeedbackModal.prototype.onClick_ = function (event) {
+        this.modal_.show();
+    };
+});
 
 jQuery(function() {
     var root = goog.dom.getElementByClass('l-doc');

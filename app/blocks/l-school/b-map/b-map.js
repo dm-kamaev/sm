@@ -1,131 +1,153 @@
+/**
+ * @fileoverview A constructor for a Yandex Maps map
+ * @author Nikita Gubchenko
+ */
+
 goog.provide('sm.lSchool.bMap.Map');
 
+goog.require('goog.dom');
+goog.require('goog.dom.dataset');
+goog.require('goog.ui.Component');
+goog.require('goog.object');
+goog.require('goog.array');
+goog.require('sm.lSchool.bMap.Template');
 goog.require('sm.lSchool.bMap.MapPin');
 
-sm.lSchool.bMap.Map = function(root) {
+/**
+ * @param {Object=} opt_params
+ * @extends {goog.ui.Component}
+ * @constructor
+ */
+sm.lSchool.bMap.Map = function(opt_params) {
+
+    goog.base(this);
+
     /**
-    *   @private
-    */
-    this.zoom_ = undefined;
+     *   The ymaps object
+     *   @type {Object=}
+     *   @private
+     */
+    this.ymaps_ = undefined;
+
     /**
-    *   @private
-    */
-    this.coords_ = {};
+     *   An ID of a current school
+     *   @type {Number}
+     *   @private
+     */
+    this.params_ = opt_params;
+};
+goog.inherits(sm.lSchool.bMap.Map, goog.ui.Component);
+
+goog.scope(function() {
+    var Map = sm.lSchool.bMap.Map;
+
     /**
-    *   @private
-    */
-    this.pinArr_ = [];
+     * A config object with DOM class names
+     * @enum {String}
+     */
+    Map.CssClass = {
+        ROOT: 'b-map'
+    };
+
     /**
-    *   @private
+    * These params are necessary for initializing ymaps,
+    * represent center of Moscow
+    * @type {Object}
     */
-    this.root_ = root;
+    Map.defaultPosition = {
+        COORDS: [55.755768, 37.617671],
+        ZOOM: 11
+    };
 
-    this.params_ = jQuery(root).data('params') || {};
-};
+    /**
+    * @override
+    */
+    Map.prototype.createDom = function() {
+        var element = sm.lSchool.bMap.Template();
+        this.decorateInternal(element);
+    };
 
-sm.lSchool.bMap.Map.MAP_CONFIG = {
-    initZoom: 11,
-    initCoords: {
-        lng: 37.64,
-        lat: 55.76
-    }
-};
 
-sm.lSchool.bMap.Map.PIN_DATA = [
-    {
-        type: 'ГБОУ',
-        name: 'Лицей №1535',
-        rating: 4.9,
-        coords: {lat: 55.724186, lng: 37.556252},
-        url: '#',
-        isCurrent: true
-    },
-    {
-        type: 'ГОУ',
-        name: 'СОШ №1247',
-        coords: {lat: 55.755768, lng: 37.617671},
-        url: '#',
-        isCurrent: false
-    }
-];
+    /**
+    * @override
+    */
+    Map.prototype.decorateInternal = function(element) {
+        goog.base(this, 'decorateInternal', element);
 
-sm.lSchool.bMap.Map.prototype.setZoom = function(zoom) {
-    this.zoom_ = zoom;
-};
-
-sm.lSchool.bMap.Map.prototype.setCoords = function(lat, lng) {
-    this.coords_.lat = lat;
-    this.coords_.lng = lng;
-};
-
-sm.lSchool.bMap.Map.prototype.setInit = function() {
-    this.setZoom(sm.lSchool.bMap.Map.MAP_CONFIG.initZoom);
-    var coords = this.params_.coords[0] || {
-            lat: sm.lSchool.bMap.Map.MAP_CONFIG.initCoords.lat,
-            lng: sm.lSchool.bMap.Map.MAP_CONFIG.initCoords.lng
-        };
-    this.setCoords(coords.lat, coords.lng);
-};
-
-sm.lSchool.bMap.Map.prototype.pinFactory = function (config) {
-    return sm.lSchool.bMap.MapPin.init().setPin(config);
-};
-
-sm.lSchool.bMap.Map.prototype.setPinArr = function () {
-    var that = this;
-    console.log(this);
-    this.pinArr_ = this.params_.coords.map(
-        function (item) {
-            return that.pinFactory({
-                type: that.params_.type,
-                name: that.params_.name,
-                rating: that.params_.totalScore.toFixed(2),
-                coords: item,
-                url: '#',
-                isCurrent: true
-            });
+        if (!this.params_) {
+            var dataset = goog.dom.dataset.get(element, 'params');
+            this.params_ = JSON.parse(dataset);
         }
-    );
-};
 
-sm.lSchool.bMap.Map.prototype.placePins = function () {
-    if (this.pinArr_.length === 0) {
-        console.log('No pins!');
-        return;
-    }
-    console.log(this.pinArr_.length + ' pins should be on the map');
-    var that = this;
-    this.pinArr_.forEach(
-        function(item) {that.ymaps_.geoObjects.add(item);}
-    );
-    var geoObject = that.ymaps_.geoObjects.get(0);
-    if (geoObject) {
-        geoObject.balloon.open();
-    }
-};
+        ymaps.ready(function() {
+            this.ymaps_ = new ymaps.Map(
+                element, {
+                    'center': Map.defaultPosition.COORDS,
+                    'zoom': Map.defaultPosition.ZOOM,
+                    controls: []
+                }
+            );
+            this.placePlacemarks_(this.params_);
+        }.bind(this));
+    };
 
-sm.lSchool.bMap.Map.prototype.init = function() {
-    console.log('Initializing ymaps...');
-    var that = this;
-    ymaps.ready(function () {
-        console.log('Hello, Yandex!');
-        that.setInit();
-        that.ymaps_ = new ymaps.Map(
-            jQuery(that.root_).find('.b-map__wrapper').get(0),
-            {
-                'center': [that.coords_.lat, that.coords_.lng],
-                'zoom': that.zoom_,
-                controls: []
-            }
+    /**
+     * Creates an array of placemark objects from provided data
+     * @param {Object}
+     * @return {Array<ymaps.Placemark>}
+     * @private
+     */
+    Map.prototype.itemToPlacemarks_ = function(item) {
+        return item.coords.map(function(coord) {
+            var pinData = {};
+            goog.object.extend(
+                pinData,
+                item, {
+                    coords: coord,
+                    isCurrent: (item.id === this.params_.id)
+                }
+            );
+
+            var pin = new sm.lSchool.bMap.MapPin(pinData);
+            return pin.createPlacemark();
+        }.bind(this));
+    };
+
+    /**
+     * Initializes a placemark before placing on the map
+     * @param {(Object|Array<Object>)}
+     * @return {Array<ymaps.Placemark>}
+     * @private
+     */
+    Map.prototype.dataToPlacemarks_ = function(data) {
+        if (!Array.isArray(data)) {
+            data = [data];
+        }
+        return goog.array.flatten(
+            data.map(
+                function(item) {
+                    return this.itemToPlacemarks_(item);
+                }.bind(this)
+            )
         );
-        that.setPinArr();
-        that.placePins();
-    });
-};
+    };
 
+    /**
+     * Appends generated placemarks to the map
+     * @param {Object}
+     * @private
+     */
+    Map.prototype.placePlacemarks_ = function(data) {
+        var placemarks = this.dataToPlacemarks_(data);
+        placemarks.forEach(
+            function(item) {
+                this.ymaps_.geoObjects.add(item);
+            }.bind(this)
+        );
 
-jQuery(function() {
-    var root = goog.dom.getElementByClass('b-map');
-    var map = new sm.lSchool.bMap.Map(root);
-    map.init();
+        var geoObject = this.ymaps_.geoObjects.get(0);
+        if (geoObject) {
+            geoObject.balloon.open();
+        }
+    };
 });

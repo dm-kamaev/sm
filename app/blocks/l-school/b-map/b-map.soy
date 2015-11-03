@@ -3,6 +3,7 @@
 * A layout for Yandex.Maps block
 * @param? params {{
 *     data: ?{
+*         id: ?number,
 *         coords: ?number[][],
 *         type: ?string,
 *         name: ?string,
@@ -17,9 +18,6 @@
         {/call}
     {/let}
     <section class="b-map" data-params="{$dataParams}">
-        <div class="b-map__wrapper">
-        </div>
-        <div class="b-map__info"></div>
     </section>
 {/template}
 

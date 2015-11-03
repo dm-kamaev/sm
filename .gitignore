@@ -2,7 +2,6 @@
 .sass-cache/
 node_modules/
 
-assets/
 public/
 tmp/
 doc/
@@ -10,3 +9,5 @@ doc/
 *.log
 deployment-config.json
 .remote-sync.json
+
+assets

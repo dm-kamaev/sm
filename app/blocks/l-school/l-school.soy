@@ -68,7 +68,7 @@
         <div class="l-school" data-params="{$dataParams}">
             /*Тут должен вызываться шаблон хедера*/
             {call sm.bHeader.Template.base /}
-    
+
             <div class="l-school__body">
                 {call .top_}
                    {param params: $params /}
@@ -106,7 +106,9 @@
          [
              schoolName: string,
              schoolDescr: string,
-             schoolQuote: string
+             schoolQuote: string,
+             score: list<number>,
+             totalScore: number
          ]
      ]
     }
@@ -117,10 +119,17 @@
                 <div class="l-school__description-text">{$params.data.schoolDescr + ' - '}</div>
                 <div class="l-school__description-quote">{$params.data.schoolQuote}</div>
             </div>
-
         </div>
         <div class="l-school__content-column l-school__content-column_last">
              /*хрень*/
+             <div class = "l-school__rating">
+            {call sm.lSchool.bRating.Template.base}
+             {param params: [
+                    'marks': $params.data.score,
+                    'averageMark': $params.data.totalScore
+             ]/}
+             {/call}
+             </div>
         </div>
     </div>
 {/template}
@@ -134,6 +143,7 @@
  [
      data:
      [
+         id: number,
          schoolName: string,
          schoolType: string,
          directorName: string,
@@ -170,6 +180,7 @@
                 {call sm.lSchool.bMap.Template.map}
                     {param params: [
                         'data': [
+                            'id': $params.data.id,
                             'coords': $params.data.coords,
                             'name': $params.data.schoolName,
                             'type': $params.data.schoolType,
