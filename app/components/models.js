@@ -29,7 +29,7 @@ exports.initAssociations = function() {
         var model = models[name];
         if (model.associate) {
             model.associate(models);
-            model.sync();
+            //model.sync();
         }
     });
 };

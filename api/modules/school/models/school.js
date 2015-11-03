@@ -14,6 +14,10 @@ var School = db.define('School', {
     tableName: 'school',
     classMethods: {
         associate: function (models) {
+            School.hasMany(models.GiaResults, {
+                as: 'gia_results', foreignKey: 'school_id'
+            });
+
             School.belongsTo(models.CommentGroup, { foreignKey: 'comment_group_id'});
         }
     }
