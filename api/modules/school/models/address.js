@@ -4,7 +4,6 @@ var DataType = require('sequelize'),
 var Address = db.define('Address', {
     name: DataType.STRING,
     coords: DataType.ARRAY(DataType.FLOAT),
-    //school_id: DataType.INTEGER
 }, {
     underscored: true,
     tableName: 'address',

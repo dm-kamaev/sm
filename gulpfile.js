@@ -25,7 +25,7 @@ gulp.task('doc', function () {
     });
 });
 
-gulp.task('migrate', function () { //TODO: fix
+gulp.task('migrate', function () {
         var deferred = Q.defer();
 
         var migrations = glob.sync('api/**/migrations/*.js', {
