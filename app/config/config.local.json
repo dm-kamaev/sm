@@ -1,7 +1,7 @@
 {
     "host": "localhost",
     "port": "5432",
-    "user": "gorod",
+    "username": "gorod",
     "password": "123qwe",
     "database": "school_market",
     "dialect": "postgres"
