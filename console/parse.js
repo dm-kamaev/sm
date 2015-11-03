@@ -3,12 +3,83 @@ var xlsx = require('node-xlsx');
 
 var modules = require.main.require('./api/modules');
 
+var replace = require('./parseConfig').replace;
+var ignore = require('./parseConfig').ignore;
+var exclusion = require('./parseConfig').exclusion;
+
+var async = require('asyncawait/async');
+var await = require('asyncawait/await');
+
 var NAME_INDEX = 6,
     DIRECTOR_INDEX = 13,
     PHONES_INDEX = 15,
     SITE_INDEX = 17,
     ADDRESSES_INDEX = 20;
 
+var getName = arr => {
+    return arr[0];
+};
+
+var getType = arr => {
+    if (arr.length > 1){
+        return arr[1];
+    } else {
+        return 'unknown';
+    }
+};
+
+var nameParse = item => {
+    var str = item;
+    var arr = [];
+    var flag = true;
+
+    for (var newName in replace) {
+        if (flag) {
+            replace[newName].forEach(oldName => {
+                if (~str.indexOf(oldName)) {
+                    str = str.replace(oldName, newName);
+                    arr[1] = newName;
+                    flag = false;
+                }
+            });
+        }
+    }
+
+    if( ~str.indexOf("»") && !(~str.indexOf("«")) ){
+        str = str.replace("»",'');
+    }
+    if(  (str.split("«").length) > (str.split("»").length) ){
+        str = str.replace("«",'');
+    }
+
+    for(var ex in exclusion){
+        str = str.replace(ex, exclusion[ex]);
+    }
+
+    for(var ignoreName in ignore){
+        ignore[ignoreName].forEach(name => {
+            if(~str.indexOf(name)) {
+                arr[1] = ignoreName;
+            }
+        });
+    }
+
+    arr[0] = str;
+
+    return arr;
+};
+
+var notIgnor = item => {
+    for(ignorName in ignore){
+        if( item == ignorName ){
+            return false;
+        }
+    }
+    if( item == 'unknown') {
+        return false;
+    }
+    return true;
+};
 
 var getArray = (row, index) => {
     return row[index] ?
@@ -19,8 +90,12 @@ var getArray = (row, index) => {
 };
 
 var rowToSchool = row => {
+    var nParse = nameParse(row[NAME_INDEX]);
+    var schoolName = getName(nParse);
+    var schoolType = getType(nParse);
     return {
-        name: row[NAME_INDEX],
+        name: schoolName,
+        schoolType: schoolType,
         director: row[DIRECTOR_INDEX],
         phones: getArray(row, PHONES_INDEX),
         site: row[SITE_INDEX],
@@ -29,17 +104,21 @@ var rowToSchool = row => {
     };
 };
 
-var parse = path => {
+var parse = async(path => {
     var parsed = xlsx.parse(path),
         data = parsed[0].data;
-
-    modules.school.models.School.sync({force: true}).then(function () {
-        data.map(rowToSchool)
-            .filter((item, index) => index)
-            .forEach(item => modules.school.models.School.create(item));
-    });
-};
-
+    var createSchoolDataBase = err => {
+        console.log(err);
+        data
+            .map(rowToSchool)
+            .filter((item,index) => index && notIgnor(item.schoolType))
+            .forEach(item => {
+                modules.school.models.School.create(item);
+            });
+    };
+    await(modules.school.models.School.sync({force:true}));
+    createSchoolDataBase({});
+});
 
 // Settings for accessing this script using cli
 commander
