@@ -2,7 +2,13 @@ var DataType = require('sequelize'),
     db = require.main.require('./app/components/db');
 
 var School = db.define('School', {
-    name: DataType.STRING,
+    name:DataType.STRING,
+    schoolType: {
+        field: 'school_type',
+        type: DataType.ENUM,
+        values: ['Школа', 'Лицей', 'Гимназия', 'Центр образования', 'Коррекционная школа', 'Коррекционная школа-интернат', 'Кадетская школа-интернат', 'Кадетская школа'],
+        //allowNull: false
+    },
     director: DataType.STRING,
     phones: DataType.ARRAY(DataType.STRING),
     site: DataType.STRING,

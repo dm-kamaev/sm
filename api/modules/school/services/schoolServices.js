@@ -24,6 +24,7 @@ var getSchoolParams = (params) => {
         phonres: params.phones,
         site: params.site,
         goverment_key: params.goverment_key,
+        schoolType: params.schoolType,
         addresses: []
     };
     params.addresses.forEach(adr => {

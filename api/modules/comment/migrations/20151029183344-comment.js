@@ -22,7 +22,8 @@ module.exports = {
       },
       user_type: {
         allowNull: false,
-        type: Sequelize.ENUM('Parent','Graduate','Scholar'),
+        type: Sequelize.ENUM,//('Parent','Graduate','Scholar'),
+        values: ['Parent','Graduate','Scholar']
       },
       score: {
         allowNull: false,

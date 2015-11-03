@@ -9,6 +9,13 @@ var colors = require('colors');
 var schoolServices =
     require.main.require('./api/modules/school/services').schoolServices;
 
+var replace = require('./parseConfig').replace;
+var ignore = require('./parseConfig').ignore;
+var exclusion = require('./parseConfig').exclusion;
+
+var async = require('asyncawait/async');
+var await = require('asyncawait/await');
+
 var NAME_INDEX = 6,
     DIRECTOR_INDEX = 13,
     PHONES_INDEX = 15,
@@ -16,6 +23,70 @@ var NAME_INDEX = 6,
     ADDRESSES_INDEX = 20,
     GOVERMENT_KEY_INDEX = 2;
 
+var getName = arr => {
+    return arr[0];
+};
+
+var getType = arr => {
+    if (arr.length > 1){
+        return arr[1];
+    } else {
+        return 'unknown';
+    }
+};
+
+var nameParse = item => {
+    var str = item;
+    var arr = [];
+    var flag = true;
+
+    for (var newName in replace) {
+        if (flag) {
+            replace[newName].forEach(oldName => {
+                if (~str.indexOf(oldName)) {
+                    str = str.replace(oldName, newName);
+                    arr[1] = newName;
+                    flag = false;
+                }
+            });
+        }
+    }
+
+    if( ~str.indexOf("»") && !(~str.indexOf("«")) ){
+        str = str.replace("»",'');
+    }
+    if(  (str.split("«").length) > (str.split("»").length) ){
+        str = str.replace("«",'');
+    }
+
+    for(var ex in exclusion){
+        str = str.replace(ex, exclusion[ex]);
+    }
+
+    for(var ignoreName in ignore){
+        ignore[ignoreName].forEach(name => {
+            if(~str.indexOf(name)) {
+                arr[1] = ignoreName;
+            }
+        });
+    }
+
+    arr[0] = str;
+
+    return arr;
+};
+
+var notIgnor = item => {
+    for(ignorName in ignore){
+        if( item == ignorName ){
+            return false;
+        }
+    }
+    if( item == 'unknown') {
+        return false;
+    }
+    return true;
+};
 
 var getArray = (row, index) => {
     return row[index] ?
@@ -26,8 +97,12 @@ var getArray = (row, index) => {
 };
 
 var rowToSchool = row => {
+    var nParse = nameParse(row[NAME_INDEX]);
+    var schoolName = getName(nParse);
+    var schoolType = getType(nParse);
     return {
-        name: row[NAME_INDEX],
+        name: schoolName,
+        schoolType: schoolType,
         director: row[DIRECTOR_INDEX],
         phones: getArray(row, PHONES_INDEX),
         site: row[SITE_INDEX],
@@ -36,6 +111,7 @@ var rowToSchool = row => {
         coords: []
     };
 };
+
 
 var parseSchool = async(schoolData => {
     //var School = modules.school.models.School;
@@ -59,7 +135,7 @@ var parse = async(path => {
         data = parsed[0].data;
 
     data.map(rowToSchool)
-        .filter((item, index) => (index>0))
+        .filter((item, index) => (index>0) && notIgnor(item.schoolType))
         .forEach(item => parseSchool(item));
 });
 
