@@ -39,9 +39,7 @@ app.use('/api-debug', express.static(path.join(__dirname, '/api-debug')));
 
 
 soy.init(__dirname, function() {
-    db.sync().then(function() {
-        app.listen(CONFIG.PORT, function() {
-            console.log('Running at port ' + CONFIG.PORT)
-        });
+    app.listen(CONFIG.PORT, function() {
+        console.log('Running at port ' + CONFIG.PORT)
     });
 });
