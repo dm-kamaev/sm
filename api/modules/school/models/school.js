@@ -24,11 +24,16 @@ var School = db.define('School', {
     classMethods: {
         associate: function (models) {
             School.hasMany(models.Address, {
-                as: 'addresses', foreignKey: 'school_id'
+                as: 'addresses',
+                foreignKey: 'school_id'
             });
             School.belongsTo(models.CommentGroup, {
                 foreignKey: 'comment_group_id'
             });
+            School.hasMany(models.Rating, {
+                as: 'ratings',
+                foreignKey: 'school_id'
+            })
         }
     }
 });

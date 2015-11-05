@@ -68,6 +68,10 @@ exports.update = async ((school, params) => {
         await(this.setAddresses(school,convertedParams.addresses))
 });
 
+exports.rate = async((school, comment, rating) => {
+
+})
+
 exports.getAllById = async((sch_id)=>{
     return await (models.School.findOne({
         where:{id: sch_id},
