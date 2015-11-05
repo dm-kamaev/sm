@@ -4,8 +4,10 @@ const commander = require('commander');
  * Require Command objects from cli scripts here. No need to assign them to a variable.
  */
 
-require('./console/parse.js');
-require('./console/metro.js');
+
+require('./console/geocord.js').Command;
+require('./console/parse.js').Command;
+require('./console/metro.js').Command;
 
 
 /*

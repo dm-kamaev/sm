@@ -1,5 +1,5 @@
-var school = require('./school');
-var debug = require('./debug');
+var school = require('./school'),
+    doc =  require('./doc');
 
 exports.school = school;
-exports.debug = debug;
+exports.doc = doc;

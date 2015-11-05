@@ -1,0 +1,29 @@
+.b-map-pin__balloon {
+    width: 176px;
+    margin: 0;
+    padding: 0;
+
+    background-color: #FFFFFF;
+}
+
+.b-map-pin__school-info {
+    padding: 8px;
+}
+
+.b-map-pin__school-info,
+.b-map-pin__school-type {
+    font-size: 16px;
+    font-family: serif;
+}
+
+.b-map-pin__school-name {
+    font-weight: bold;
+}
+
+.b-map-pin__rating {
+    display: inline-block;
+
+    margin: 10px 0;
+
+    color: #ee362c;
+}

@@ -1,0 +1,59 @@
+{namespace sm.lSchool.bRating.Template}
+
+/**
+ * rating view
+ * @param params {
+ *     marks: [],
+ *     averageMark
+ * }
+ */
+{template .base autoescape="strict" kind="html"}
+    <div class="b-rating">
+        <div class="b-rating__marks">
+            <div class="b-rating__section">
+                <div class="b-rating__mark b-rating__mark_average">
+                    {$params.averageMark > 0 ? round($params.averageMark, 1) : '—'}
+                </div>
+            </div>
+            {foreach $mark in $params.marks}
+                <div class="b-rating__section">
+                    <div class="b-rating__mark b-rating__mark_ordinary">
+                        {$mark > 0 ? round($mark, 1) : '—'}
+                    </div>
+                </div>
+            {/foreach}
+        </div>
+        {let $sectionNames: [
+            'Средний балл',
+            'Образование',
+            'Педагоги',
+            'Доступность',
+            'Атмосфера'
+        ] /}
+        <div class="b-rating__sections">
+            {foreach $sectionName in $sectionNames}
+                <div class="b-rating__section">
+                    <div class="b-rating__section-name">
+                        {$sectionName}
+                    </div>
+                </div>
+            {/foreach}
+        </div>
+        {call gorod.bBouton.BoutonTemplate.render}
+            {param params: [
+                'label': 'Оставить отзыв',
+                'customClasses': 'b-bouton_feedback-opener',
+                'state': ['pressed':'true'],
+                'style': [
+                    'theme': 'default',
+                    'color': 'red',
+                    'size': 'extralarge',
+                    'width': 'block',
+                    'borderWidth': 'l',
+                    'borderRadius': 'none',
+                    'uppercase': 'true'
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}

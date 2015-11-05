@@ -15,20 +15,7 @@ const CONFIG = {
     PORT: 3000
 };
 
-const DOC_TEMPLATE = {
-    template: 'sm.lDoc.Template.index',
-    arghs: {
-        list:[
-            "b-mark",
-            "b-stars",
-            "b-comments"
-        ]
-    }
-};
-
-
-
-app.set('views', path.join(__dirname, 'app/modules/debug/views'));
+app.set('views', path.join(__dirname, 'api-debug'));
 
 // template engines
 app.engine('html', require('ejs').renderFile);
@@ -40,41 +27,19 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '/public')));
 
 
-app.get('/doc', (req, res) => {
-    console.log('/doc: '+JSON.stringify(DOC_TEMPLATE));
-    res.end(
-        soy.render(DOC_TEMPLATE.template, DOC_TEMPLATE.arghs)
-    );
-});
-
-app.get('/doc/:id', (req, res) => {
-    var doc_item_template = JSON.parse(JSON.stringify(DOC_TEMPLATE));
-    doc_item_template.template = 'sm.lDoc.Template.item';
-    doc_item_template.arghs.name = req.params.id;
-    console.log('/doctest/' + req.params.id);
-    res.end(
-        soy.render(doc_item_template.template, doc_item_template.arghs)
-    );
-});
-
-app.get('/search', (req, res) => {
-    console.log('/search');
-    // res.send(html);
-});
-
-
 app.use('/', modules.school.router);
+app.use('/doc', modules.doc.router);
 app.use('/api', api.comment.router);
 app.use('/api', api.school.router);
-app.use('/', modules.debug);
+app.use('/', api.debug.router);
+
 app.use('/apidoc', express.static(path.join(__dirname, '/doc')));
+app.use('/api-debug', express.static(path.join(__dirname, '/api-debug')));
 
 
 
 soy.init(__dirname, function() {
-    db.sync().then(function() {
-        app.listen(CONFIG.PORT, function() {
-            console.log('Running at port ' + CONFIG.PORT)
-        });
+    app.listen(CONFIG.PORT, function() {
+        console.log('Running at port ' + CONFIG.PORT)
     });
 });

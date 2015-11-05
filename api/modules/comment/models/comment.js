@@ -5,11 +5,13 @@ var DataType = require('sequelize'),
 var Comment = db.define('Comment', {
     text: {
         type: DataType.TEXT,
-        allowNull: false
+        //allowNull: false
     },
     userType: {
-        type: DataType.ENUM('Parent','Graduate','Scholar'),
-        allowNull: false
+        field: "user_type",
+        type: DataType.ENUM,
+        values: ['Parent','Graduate','Scholar']
+       // allowNull: false
     },
     score: {
         type: DataType.ARRAY(DataType.INTEGER),
@@ -24,8 +26,8 @@ var Comment = db.define('Comment', {
                         throw new Error('Every number must be from 0 to 5');
             }
         },
-        allowNull: false
-    }
+        //allowNull: false
+    },
 }, {
     underscored: true,
     tableName: 'comment',
