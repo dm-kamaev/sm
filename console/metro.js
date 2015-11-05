@@ -1,20 +1,25 @@
 var commander = require('commander');
 var https = require('https');
 var fs = require('fs');
+var colors = require('colors');
 
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 
-var modules = require.main.require('./api/modules');
+//var modules = require.main.require('./api/modules');
+var addressServices =
+    require.main.require('./api/modules/school/services').addressServices;
+
 
 const PATH_TO_ERROR_FILE = 'metrolog.txt';
 const REQUEST_RETRY_COUNT = 2; //Количество попыток обращения к яндекс api
 const REVERSE_COORDS = true; //Менять ли местами координаты перед запросом
 
-const DEBUG_RESTRICTION = 3; //ограничение по количеству школ, 0 для отсутсвия
+const DEBUG_RESTRICTION = 0; //ограничение по количеству обрабатываемых адресов, 0 для отсутсвия
 const KM_RESTRIСTION = 3; //ограничение радиуса поиска в км, 0 для отсутствия
+const CACHING_ENABLED = true; //Работает ли кэширование
+const ADRESSES_IN_REQUEST = 30; //Количество адресов которые обрабатываются асинхронно
 
-var error_count = 0;
 
 var writeError = async(string => {
     var str = '\n'+string;
@@ -22,7 +27,6 @@ var writeError = async(string => {
         if (err)
             throw err;
     }));
-    error_count++;
 });
 
 var start = async(() => {
@@ -31,26 +35,70 @@ var start = async(() => {
             if (err)
                 console.log(err);
     }));
-    var School = modules.school.models.School;
-    await (School.sync());
-    var schools = await(School.findAll());
+    var test = await(addressServices.getTest());
+    var addresses = await(addressServices.getAllWithMetro())
     console.log('\nPatience, my friend');
-    var amount = DEBUG_RESTRICTION ? DEBUG_RESTRICTION : schools.length;
-    for (var i = 0; i < amount; i++){
-        var school = schools[i];
-        processSchool(school);
+    //var amount = DEBUG_RESTRICTION ? DEBUG_RESTRICTION : addresses.length;
+    var adrChunks = splitAddreses(addresses);
+    adrChunks.forEach(chunk => {
+        await(processChunk(chunk));
+        console.log(colors.blue('----------------'));
+    })
+});
+
+var splitAddreses = (addresses) => {
+    var amount = DEBUG_RESTRICTION ? DEBUG_RESTRICTION : addresses.length;
+    var chunks = [],
+        round = 0;
+    while (round * ADRESSES_IN_REQUEST < amount){
+        var start = round * ADRESSES_IN_REQUEST,
+            planned_end = (round + 1)  * ADRESSES_IN_REQUEST,
+            end = planned_end < addresses.length ?
+                planned_end :
+                addresses.length ;
+        chunks.push(addresses.slice(start,end));
+        round++;
+    }
+    return chunks;
+}
+var processChunk = async(adrChunk => {
+    await (adrChunk.forEach(address => {
+
+        if (!(CACHING_ENABLED && isCached(address)))
+            processAddress(address);
+        else
+            console.log('Metro stations for address '
+                + colors.green(address.name) + ' adlready cached');
+    }));
+})
+
+var isCached = (address) => {
+    if (address.metroStations.length == 0)
+        return false;
+    return true;
+};
+var processAddress = async(address => {
+    if (address.coords && address.coords.length == 2){
+        var metroArr = await(getMetro(address));
+        if (metroArr) {
+            if (metroArr.length == 0)
+                console.log('Found 0 stations for address '
+                    + colors.yellow(address.name) + ' in range '
+                    + colors.yellow(KM_RESTRIСTION+'KM'));
+            else
+                await (addressServices.setMetro(address, metroArr));
+        }
     }
 });
 
-
-
-var getMetro = async((pair, adr) => {
+var getMetro = async((adr) => {
     var metro = [],
-        tryNum = 0;
+        tryNum = 0,
+        pair = REVERSE_COORDS ? adr.coords.reverse() : adr.coords;
     do {
         var result = await(request(pair));
         if (result === 'not_found')
-            writeError('cant find metro for coordinats: ' + pair +', address: ' +adr);
+            writeError('cant find metro for coordinats: ' + pair +', address: ' +adr.name);
         else if (result === 'no_response')
             writeError('cant get any response for coordinats: ' + pair +
                 ' on ' + (tryNum + 1) + ' try');
@@ -59,30 +107,6 @@ var getMetro = async((pair, adr) => {
         tryNum++;
     } while (result === 'no_response' && tryNum<REQUEST_RETRY_COUNT)
     return metro;
-});
-
-var getMetroArr = async((cordArr, adrArr) => {
-    var metroArr = [];
-    for (var i = 0; i<adrArr.length; i++){
-        pair = cordArr[i];
-        truepair = REVERSE_COORDS ? pair.reverse() : pair;
-        metroArr.push(
-            await (getMetro(truepair,adrArr[i]))
-        );
-    }
-    return metroArr;
-});
-
-var processSchool = async(school => {
-    var cordArr = school.coords;
-    if (cordArr && cordArr.length != 0){
-        var metroArr = await(getMetroArr(cordArr,school.addresses));
-        if (cordArr.length == metroArr.length)
-            school.update({metro:metroArr})
-        else
-            writeError('Number of addreses and returned coords for ' +
-                'whatewer reason not even for school '+school.name);
-    }
 });
 
 var countRestriction = (lenKM, coords) => {
@@ -128,13 +152,20 @@ var request = async ((pair) => {
                     if (metroAnswersArray.length == 0)
                         resolve('not_found');
                     else{
-                        var metroNames = [];
+                        var metroObjects = [];
                         metroAnswersArray.forEach(answer => {
-                            metroNames.push(answer.GeoObject.name);
+                            var metroObject = {
+                                name: answer.GeoObject.name,
+                                coords: answer.GeoObject.Point.pos.split(" ")
+                            };
+                            metroObjects.push(metroObject);
                         })
-                        resolve(metroNames);
+                        resolve(metroObjects);
                     }
                 }
+            });
+            response.on('error', function (e) {
+                console.log(e);
             });
           }).end()
     });
@@ -148,3 +179,4 @@ commander
     .command('metro')
     .description('Retrives metro stations by coords in datebase')
     .action(()=> start());
+exports.Command;
