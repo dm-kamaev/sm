@@ -84,7 +84,7 @@ var getSchoolUsers = async ((school) => {
         school: schoolId,
         count: 1000
     }
-    for (var i = 2013; i <= 2013; i++) {
+    for (var i = 2013; i <= 2015; i++) {
         var yearParams = params;
         yearParams.school_year = i;
         var reqTry = 0;
@@ -93,21 +93,24 @@ var getSchoolUsers = async ((school) => {
             if (reqTry)
                 console.log(colors.red(reqTry+1) + ' try for school '
                     + school.title + ' year ' + colors.red(i));
-        } while (!answ)
-        if (answ.response.count>1000) {
-            //console.log(colors.yellow(JSON.stringify(yearParams)
-            //    + ' \n too many answers ('+answ.response.count
-            //    + '). Starting processing by birth month'));
-            //var monthRes = await(getSchoolUsersMonth(yearParams));
-            //console.log(colors.green(JSON.stringify(yearParams)
-            //    + 'got results by year:  '
-            //    + JSON.stringify(monthRes.length)));
-            //results = results.concat(monthRes);
-            console.log('There are too many results in school ' + colors.red(school.title)
-                + " year "+colors.red(i));
-        }
-        else {
-            results = results.concat(answ.response.items)
+            reqTry++;
+        } while (!answ && reqTry<3)
+        if (answ) {
+            if (answ.response.count > 1000) {
+                //console.log(colors.yellow(JSON.stringify(yearParams)
+                //    + ' \n too many answers ('+answ.response.count
+                //    + '). Starting processing by birth month'));
+                //var monthRes = await(getSchoolUsersMonth(yearParams));
+                //console.log(colors.green(JSON.stringify(yearParams)
+                //    + 'got results by year:  '
+                //    + JSON.stringify(monthRes.length)));
+                //results = results.concat(monthRes);
+                console.log('There are too many results in school ' + colors.red(school.title)
+                    + " year " + colors.red(i));
+            }
+            else {
+                results = results.concat(answ.response.items)
+            }
         }
     }
     return results;
@@ -128,6 +131,7 @@ var request = async ((methodName, params) => {
         path: apiString,
         method: 'GET',
     };
+    sleep.usleep(500000);
     var doRequest = new Promise( function(resolve, reject) {
         rqq = https.request(options);
         rqq.on('response', function (response) {
@@ -138,9 +142,9 @@ var request = async ((methodName, params) => {
             });
             response.on('end', function () {
                 if (params.school)
-                    console.log("got answer for school " +
+                    console.log("got an answer for school " +
                         colors.green(params.school));
-                sleep.usleep(210000);
+
                 resolve(JSON.parse(data));
                 //sleep.usleep(210000);
             });
@@ -161,10 +165,14 @@ var request = async ((methodName, params) => {
             sleep.sleep(10);
         }
     } while (res && res.error && res.error.error_code == 6)
-
+    if (!res){
+        console.log(colors.red('Didnt get any response'));
+        return null;
+    }
     if (!res.response || res.response.count == 0){
-        console.log(colors.red("Error on request:"));
-        console.log(colors.red(JSON.stringify(res)));
+        //console.log(colors.red("Error on request:"));
+        //console.log(colors.red(JSON.stringify(res)));
+        sleep.sleep(1);
         return null;;
         //throw new Error('');
     }
@@ -187,13 +195,31 @@ var getMatches = (vkSchools, ourSchools) => {
     return results;
 }
 
+function fileExists(filePath)
+{
+    try
+    {
+        return fs.statSync(filePath).isFile();
+    }
+    catch (err)
+    {
+        return false;
+    }
+}
+
 var saveToJson = (schools, name) => { //'vk_schools.json'
     var js = JSON.stringify(schools);
     fs.writeFileSync(name,js);
 }
 
 var loadFromJson = (name) => { //'vk_schools.json'
-    return require('../'+name);
+
+    if (!fileExists(name)) {
+        console.log('File ' + colors.yellow(name)
+            + ' is not found and will be created now');
+        fs.writeFileSync(name, '[]');
+    }
+    return require('../' + name);
 }
 
 var start = async(() => {
@@ -219,7 +245,7 @@ var start = async(() => {
         if (cached_match){
             console.log("Users for school "
                 + colors.green(cached_match.title) + " already cached");
-            processed_matches.push(match);
+            processed_matches.push(cached_match);
         } else {
             var local_match = match;
             var univArr = [];
@@ -243,7 +269,7 @@ var start = async(() => {
                             });
                     }
                 })
-                univArr.total = uniCountForSchool;
+                local_match.uniCount = uniCountForSchool;
                 local_match.universities = univArr;
                 processed_matches.push(local_match);
             } else {
