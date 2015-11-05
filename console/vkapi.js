@@ -26,21 +26,21 @@ var getSchools = async ((cityId) => {
     }));
 });
 
-var getSchoolUsersDay = async ((params)=> {
-    var res = []
-    for (var i = 1; i <= 31; i++) {
-        var dayParams =  params;
-        dayParams.birth_day = i;
-        var dayRes = await (request('users.search',dayParams));
-        if (dayRes.response.count>1000){
-            //throw new Error();
-            console.log(colors.red('по дню много людей: ' + dayRes.response.count));
-            res = res.concat(dayRes.response.items);
-        } else
-            res = res.concat(dayRes.response.items);
-    }
-    return res;
-});
+//var getSchoolUsersDay = async ((params)=> {
+//    var res = []
+//    for (var i = 1; i <= 31; i++) {
+//        var dayParams =  params;
+//        dayParams.birth_day = i;
+//        var dayRes = await (request('users.search',dayParams));
+//        if (dayRes.response.count>1000){
+//            //throw new Error();
+//            console.log(colors.red('по дню много людей: ' + dayRes.response.count));
+//            res = res.concat(dayRes.response.items);
+//        } else
+//            res = res.concat(dayRes.response.items);
+//    }
+//    return res;
+//});
 
 var getUserfulUsers = (users=>{
     console.log(colors.yellow('users found: '+users.length));
@@ -53,25 +53,25 @@ var getUserfulUsers = (users=>{
     return results;
 });
 
-var getSchoolUsersMonth = async ((params)=>{
-    var res = []
-    for (var i = 1; i <= 12; i++) {
-        var monthParams = params;
-        monthParams.birth_month = i;
-        var monthRes = await (request('users.search',monthParams));
-        if (monthRes.response.count>1000){
-            console.log(colors.red('по меесяцу много людей: ' + monthRes.response.count));
-            res = res.concat(getUserfulUsers(monthRes.response.items));
-        }
-        else {
-            console.log(colors.green(JSON.stringify(monthParams)));
-            var users = monthRes.response.items;
-            var userfull = getUserfulUsers(users);
-            res = res.concat(userfull);
-        }
-    }
-    return res;
-});
+//var getSchoolUsersMonth = async ((params)=>{
+//    var res = []
+//    for (var i = 1; i <= 12; i++) {
+//        var monthParams = params;
+//        monthParams.birth_month = i;
+//        var monthRes = await (request('users.search',monthParams));
+//        if (monthRes.response.count>1000){
+//            console.log(colors.red('по меесяцу много людей: ' + monthRes.response.count));
+//            res = res.concat(getUserfulUsers(monthRes.response.items));
+//        }
+//        else {
+//            console.log(colors.green(JSON.stringify(monthParams)));
+//            var users = monthRes.response.items;
+//            var userfull = getUserfulUsers(users);
+//            res = res.concat(userfull);
+//        }
+//    }
+//    return res;
+//});
 
 var getSchoolUsers = async ((school) => {
     schoolId = school.id;
@@ -97,19 +97,14 @@ var getSchoolUsers = async ((school) => {
         } while (!answ && reqTry<3)
         if (answ) {
             if (answ.response.count > 1000) {
-                //console.log(colors.yellow(JSON.stringify(yearParams)
-                //    + ' \n too many answers ('+answ.response.count
-                //    + '). Starting processing by birth month'));
-                //var monthRes = await(getSchoolUsersMonth(yearParams));
-                //console.log(colors.green(JSON.stringify(yearParams)
-                //    + 'got results by year:  '
-                //    + JSON.stringify(monthRes.length)));
-                //results = results.concat(monthRes);
                 console.log('There are too many results in school ' + colors.red(school.title)
                     + " year " + colors.red(i));
             }
             else {
-                results = results.concat(answ.response.items)
+                results.push({
+                    year:i,
+                    results: answ.response.items
+                });
             }
         }
     }
@@ -143,7 +138,8 @@ var request = async ((methodName, params) => {
             response.on('end', function () {
                 if (params.school)
                     console.log("got an answer for school " +
-                        colors.green(params.school));
+                        colors.green(params.school) + ' year ' +
+                        colors.green(params.school_year));
 
                 resolve(JSON.parse(data));
                 //sleep.usleep(210000);
@@ -170,8 +166,6 @@ var request = async ((methodName, params) => {
         return null;
     }
     if (!res.response || res.response.count == 0){
-        //console.log(colors.red("Error on request:"));
-        //console.log(colors.red(JSON.stringify(res)));
         sleep.sleep(1);
         return null;;
         //throw new Error('');
@@ -185,8 +179,6 @@ var getMatches = (vkSchools, ourSchools) => {
     var results = []
     for (var i = 0; i<ourSchools.length; i++ ){
         for (var j = 0; j<vkSchools.length; j++){
-            //console.log(colors.yellow(n)+') '+colors.green(ourSchools[i].name)+
-            //         ' '+colors.red(vkSchools[j].title));
             if (ourSchools[i].name == vkSchools[j].title)
                 results.push(vkSchools[j]);
             n++;
@@ -228,14 +220,14 @@ var start = async(() => {
     console.log('Школ вконтакте: ' + colors.yellow(schools.response.items.length));
     console.log('Наших школ: ' + colors.yellow(ourSchools.length));
     var matches = getMatches(schools.response.items, ourSchools);
+    saveToJson(matches, 'matches.json')
+    //proces
     console.log(('================================').yellow);
     console.log('Количество совпадений: ' + colors.yellow(matches.length));
-   // console.log(matches);
     console.log(('================================').yellow);
     console.log('Getting universities for schools. Patience');
     var processed_matches = [];
     var cached_matches = loadFromJson('pr_matches.json');
-//    console.log(JSON.stringify(cached_matches).blue);
 
     matches.forEach(match =>{
         var cached_match = cached_matches.find(school =>{
@@ -248,40 +240,43 @@ var start = async(() => {
             processed_matches.push(cached_match);
         } else {
             var local_match = match;
-            var univArr = [];
-            var uniCountForSchool = 0;
+            var resultsArr = [];
             var users = await(getSchoolUsers(local_match));
-            if (users || users.length != 0) {
-                users.forEach(user => {
-                    var uni = user.university_name
-                    if (uni) {
-                        uniCountForSchool++;
-                        var uniInArray = univArr.find(univ => {
-                            if (univ.name == uni)
-                                return true;
-                        });
-                        if (uniInArray)
-                            uniInArray.count++;
-                        else
-                            univArr.push({
-                                name: uni,
-                                count: 1
+            if (users || users.length != 0){
+                users.forEach(userYear => {
+                    var yearResults = {
+                        year: userYear.year,
+                        graduates: []
+                    };
+                    var uniCountForYear = 0;
+                    userYear.results.forEach(user => {
+                        var uni = user.university_name
+                        if (uni) {
+                            uniCountForYear++;
+                            var uniInArray = yearResults.graduates.find(univ => {
+                                if (univ.name == uni)
+                                    return true;
                             });
-                    }
-                })
-                local_match.uniCount = uniCountForSchool;
-                local_match.universities = univArr;
+                            if (uniInArray)
+                                uniInArray.count++;
+                            else
+                                yearResults.graduates.push({
+                                    name: uni,
+                                    count: 1
+                                });
+                        }
+                    });
+                    yearResults.total = uniCountForYear;
+                    resultsArr.push(yearResults);
+                });
+                local_match.universities = resultsArr;
                 processed_matches.push(local_match);
             } else {
                 console.log('Got nothing for ' + colors.red(match.title));
             }
-
         }
         saveToJson(processed_matches, 'pr_matches.json')
-        //console.log(JSON.stringify('Updated cached schools').green);
     });
-   // saveToJson(matches, 'school_matches.json')
-    //console.log(matches);
 
 })
 
