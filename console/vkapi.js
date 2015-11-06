@@ -26,21 +26,6 @@ var getSchools = async ((cityId) => {
     }));
 });
 
-//var getSchoolUsersDay = async ((params)=> {
-//    var res = []
-//    for (var i = 1; i <= 31; i++) {
-//        var dayParams =  params;
-//        dayParams.birth_day = i;
-//        var dayRes = await (request('users.search',dayParams));
-//        if (dayRes.response.count>1000){
-//            //throw new Error();
-//            console.log(colors.red('по дню много людей: ' + dayRes.response.count));
-//            res = res.concat(dayRes.response.items);
-//        } else
-//            res = res.concat(dayRes.response.items);
-//    }
-//    return res;
-//});
 
 var getUserfulUsers = (users=>{
     console.log(colors.yellow('users found: '+users.length));
@@ -53,25 +38,7 @@ var getUserfulUsers = (users=>{
     return results;
 });
 
-//var getSchoolUsersMonth = async ((params)=>{
-//    var res = []
-//    for (var i = 1; i <= 12; i++) {
-//        var monthParams = params;
-//        monthParams.birth_month = i;
-//        var monthRes = await (request('users.search',monthParams));
-//        if (monthRes.response.count>1000){
-//            console.log(colors.red('по меесяцу много людей: ' + monthRes.response.count));
-//            res = res.concat(getUserfulUsers(monthRes.response.items));
-//        }
-//        else {
-//            console.log(colors.green(JSON.stringify(monthParams)));
-//            var users = monthRes.response.items;
-//            var userfull = getUserfulUsers(users);
-//            res = res.concat(userfull);
-//        }
-//    }
-//    return res;
-//});
+
 
 var getSchoolUsers = async ((school) => {
     schoolId = school.id;
@@ -174,16 +141,71 @@ var request = async ((methodName, params) => {
 
 });
 
+var textSubstrings = (string1, string2) => {
+    var str1 = string1.replace( /^\d+/g, ''),
+        str2 = string2.replace( /^\d+/g, '');
+    if (str1.indexOf(str2) != -1 ||
+        str2.indexOf(str1) != -1)
+        return true;
+    return false;
+}
+
+var compareNumbers = (string1, string2) => {
+    var num1 = string1.replace( /^\D+/g, ''),
+        num2 = string2.replace( /^\D+/g, '');
+    if (num1 && num1 == num2)
+        return true;
+    return false;
+}
+
 var getMatches = (vkSchools, ourSchools) => {
-    var n = 0;
-    var results = []
+    var results = [],
+        extraResults = [];
     for (var i = 0; i<ourSchools.length; i++ ){
         for (var j = 0; j<vkSchools.length; j++){
-            if (ourSchools[i].name == vkSchools[j].title)
+
+
+            var firstSchool = ourSchools[i].name.toLowerCase(),
+                secondSchool = vkSchools[j].title.toLowerCase();
+            if (firstSchool == secondSchool)
                 results.push(vkSchools[j]);
-            n++;
+            else {
+                var outerMatch = results.find (res => {
+                      if(res.id == vkSchools[j])
+                        return true;
+                    })
+
+                if (!outerMatch &&
+                    //textSubstrings(firstSchool, secondSchool) ||
+                    compareNumbers(firstSchool, secondSchool)) {
+                    var match = extraResults.find(res => {
+                        if (res.ourSchool.our_id == ourSchools[i].id)
+                            return true
+                    })
+                    if (match) {
+                        var innerMatch = match.vkMatches.find(school => {
+                            if (school.id == vkSchools[j].id)
+                                return true;
+                        })
+                        if (!innerMatch)
+                            match.vkMatches.push(vkSchools[j])
+                    } else {
+                        var newMatch = {
+                            ourSchool: {
+                                our_id: ourSchools[i].id,
+                                name: ourSchools[i].name
+                            },
+                            vkMatches: []
+                        };
+                        newMatch.vkMatches.push(vkSchools[j]);
+                        extraResults.push(newMatch)
+                    }
+                }
+            }
+
         }
     }
+    saveToJson(extraResults, "extra.json");
     return results;
 }
 
@@ -214,6 +236,8 @@ var loadFromJson = (name) => { //'vk_schools.json'
     return require('../' + name);
 }
 
+
+
 var start = async(() => {
     var schools = await(getSchools());
     var ourSchools = await(schoolServices.list());
@@ -224,6 +248,8 @@ var start = async(() => {
     //proces
     console.log(('================================').yellow);
     console.log('Количество совпадений: ' + colors.yellow(matches.length));
+    saveToJson(matches, '1234.json');
+    process.exit();
     console.log(('================================').yellow);
     console.log('Getting universities for schools. Patience');
     var processed_matches = [];
@@ -277,7 +303,6 @@ var start = async(() => {
         }
         saveToJson(processed_matches, 'pr_matches.json')
     });
-
 })
 
 commander
