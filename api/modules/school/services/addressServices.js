@@ -44,25 +44,29 @@ exports.setMetro = async((address, metroArr) => {
             }
         }))
         if (ourMetro) {
-            var match = null;
-            console.log(address.metroStations);
-            if (address.metroStations && address.metroStations.length != 0){
-                match = address.metroStantions.find((metroStation) => {
-                    if (metroStation.name == metro.name){
-                        return true;
-                    }
-                });
-            }
-            if (!match)
-                address.addMetroStation(ourMetro);
-        } else {
-            //console.log('creating new metro');
-            var newMetro = await (models.Metro.create({
-                name: metro.name,
-                coords: metro.coords
-            }));
-            //console.log(newMetro);
             address.addMetroStation(newMetro);
+        } else {
+            try {
+                var newMetro = await(models.Metro.create({
+                    name: metro.name,
+                    coords: metro.coords
+                }));
+                address.addMetroStation(newMetro);
+            }
+            catch (e){
+                var ourMetro = await (models.Metro.findOne({
+                    where: {
+                        name: metro.name
+                    }
+                }))
+                if (!ourMetro)
+                    throw e;
+                else
+                    address.addMetroStation(ourMetro);
+            }
+
+            //console.log(newMetro);
+
         }
     })
 });
