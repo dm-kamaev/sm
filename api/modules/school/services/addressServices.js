@@ -11,4 +11,4 @@ exports.updateCoords = async((addresInst, coordsArr) => {
     for (var i=0; i< addresInst.length; i++){
         addresInst[i].update({coords:coordsArr[i]});
     }
-})
+});

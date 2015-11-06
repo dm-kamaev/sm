@@ -17,6 +17,7 @@ exports.getGroupId = async (function(schoolId) {
     return instance.comment_group_id;
 });
 
+
 var getSchoolParams = (params) => {
     var schoolParams = {
         name: params.name,
@@ -25,7 +26,8 @@ var getSchoolParams = (params) => {
         site: params.site,
         goverment_key: params.goverment_key,
         schoolType: params.schoolType,
-        addresses: []
+        addresses: [],
+        educationInterval: params.educationInterval
     };
     params.addresses.forEach(adr => {
         schoolParams.addresses.push({
@@ -34,8 +36,7 @@ var getSchoolParams = (params) => {
         })
     });
     return schoolParams;
-}
-
+};
 
 
 exports.getAddresses = async (school => {
@@ -61,11 +62,10 @@ exports.setAddresses = async ((school, addresses) => {
 
 exports.update = async ((school, params) => {
     var convertedParams = getSchoolParams(params);
-    await(school.update(
-        convertedParams
-    ));
-    if (convertedParams.addresses)
-        await(this.setAddresses(school,convertedParams.addresses))
+    await (school.update(convertedParams));
+    if (convertedParams.addresses) {
+        await (this.setAddresses(school,convertedParams.addresses))
+    }
 });
 
 exports.getAllById = async((sch_id)=>{
