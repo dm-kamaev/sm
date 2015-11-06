@@ -312,19 +312,22 @@
             href:string
         ]>
     }
-    <div class="l-school__content-block">
-        {call .contentTitle_}
-            {param image: '123.png' /}
-            {param text: 'Социальные сети' /}
-            {param buttonAlt: 'надпись' /}
-        {/call}
-        {foreach $record in $data}
-            <div class="l-school__link-record">
-                <a href="{$record.href}" class="l-school__link">{$record.name}</a>
-                <div class="l-school__link-image"></div>
-            </div>
-        {/foreach}
-    </div>
+    {if length($data) > 0}
+        <div class="l-school__content-block">
+            {call .contentTitle_}
+                {param image: '123.png' /}
+                {param text: 'Социальные сети' /}
+                {param buttonAlt: 'надпись' /}
+            {/call}
+            {foreach $record in $data}
+                <div class="l-school__link-record">
+                    <a href="{$record.href}" class="l-school__link">{$record.name}</a>
+                    <div class="l-school__link-image"></div>
+                </div>
+            {/foreach}
+
+        </div>
+    {/if}
 {/template}
 
 /**
