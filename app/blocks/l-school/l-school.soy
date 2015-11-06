@@ -174,7 +174,8 @@
 }
     <div class="l-school__middle-content">
         /*СЕКЦИЯ 1*/
-        <div class="l-school__content-column">
+        <div class="l-school__content-column
+                    l-school__content-column_small">
             /*тут должен ывзываться шаблон карты*/
             <div class="l-school__map-dummy">
                 {call sm.lSchool.bMap.Template.map}
@@ -364,7 +365,7 @@
         ]>
     }
     <div class="l-school__content-comments">
-        <div class="l-school__content-column">
+        <div class="l-school__content-column l-school__content-column_small">
             {call .contentTitle_}
                 {param image: '123.png' /}
                 {param text: 'комментарии и оценки' /}
