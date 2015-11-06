@@ -13,7 +13,7 @@ exports.createComment = async (function(req, res) {
     try {
         var schoolId = req.params.id,
             params = req.body;
-    result = await(schoolServices.comment(schoolId,params));
+        result = await(schoolServices.comment(schoolId,params));
     } catch (e) {
         console.log(e);
         result = JSON.stringify(e);
@@ -44,9 +44,10 @@ exports.list = async (function(req, res) {
 exports.view = async (function(req, res) {
     var school = await (schoolServices.getAllById(req.params.id));
     console.log(JSON.stringify(school).yellow);
+
     var commentGroup = school.CommentGroup ? school.CommentGroup.comments : [];
     console.log(JSON.stringify(commentGroup).blue);
-    //console.log(JSON.stringify(commentGroup).blue);
+
     var typeConvert = {
         'Parent': 'родитель',
         'Graduate': 'выпускник',
@@ -71,24 +72,22 @@ exports.view = async (function(req, res) {
             res: [0, 0, 0, 0]
         }).res;
 
+    function educationIntervalToString(interval) {
+        var begin = interval[0],
+            end = interval[1],
+            res = '';
 
-    var classFrontier = () => {
-        var frontierBegin = '',
-            frontierEnd = '';
-
-        if (school.edu_programm_begin !== '') {
-            frontierBegin = school.edu_programm_begin == '0' ?
-                'детского сада' :
-                school.edu_programm_begin;
-            frontierBegin = 'C ' + frontierBegin;
+        if (begin > -1) {
+            res += begin ? begin : 'Детский сад';
+            if (end > begin) {
+                res += '–';
+                res += end;
+                res += begin ? ' классы' : ' класс';
+            }
         }
 
-        if (school.edu_programm_end !== '') {
-            frontierEnd = ' по ' + school.edu_programm_end + ' класс';
-        }
-
-        return  frontierBegin + frontierEnd;
-    };
+        return res;
+    }
 
 
     var params = {
@@ -99,7 +98,7 @@ exports.view = async (function(req, res) {
             schoolDescr: school.name + " — школа, как школа. Обычная такая",
             directorName: school.director,
             schoolQuote : "Мел",
-            classes: classFrontier(),
+            classes: educationIntervalToString(school.educationInterval),
             social:[],
             sites:[{
                 name: "Перейти на сайт школы",
@@ -157,9 +156,6 @@ exports.view = async (function(req, res) {
     };
 
     console.log(params.data);
-
-    //console.log(JSON.stringify(t).blue);
-
 
     res.header("Content-Type", "text/html; charset=utf-8");
     res.end(

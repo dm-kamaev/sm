@@ -16,8 +16,6 @@ var School = db.define('School', {
         field: 'education_interval',
         type: DataType.ARRAY(DataType.INTEGER)
     },
-    addresses: DataType.ARRAY(DataType.STRING),
-    coords: DataType.ARRAY(DataType.ARRAY(DataType.FLOAT)),
     comment_group_id: DataType.INTEGER,
     goverment_key: {
         type: DataType.INTEGER,

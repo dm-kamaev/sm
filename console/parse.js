@@ -95,8 +95,9 @@ var getArray = (row, index) => {
         [];
 };
 
-var getEducationInterval = (programms) => {
-    var res = {
+var getEducationInterval = (opt_programms) => {
+    var programms = opt_programms || '',
+        res = {
             begin: -1,
             end: -1
         },
@@ -157,6 +158,7 @@ var parseSchool = async(schoolData => {
             goverment_key: schoolData.goverment_key
         }
     };
+
     var school = await(schoolServices.get(params, {count: 'one'}));
     if (school)
         schoolServices.update(school, schoolData);
