@@ -50,7 +50,7 @@ goog.scope(function() {
     * A path to icons directory
     * @const {String}
     */
-    MapPin.ICON_PATH = '/images/l-school/b-map/b-map-pin/icons/';
+    MapPin.ICON_PATH = '/images/l-school/b-map/b-map__pin/icons/';
 
     /**
     * Config for icons that mark coordinates of a school,
