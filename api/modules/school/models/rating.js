@@ -26,9 +26,10 @@ var Rating = db.define('Rating', {
             Rating.belongsTo(models.School, {
                 foreignKey: 'school_id'
             });
-            Rating.belongsTo(models.Comment, {
-                foreignKey: 'comment_id'
+            Rating.hasOne(models.Comment, {
+                foreignKey: 'rating_id'
             });
+
         }
     }
 });

@@ -27,13 +27,7 @@ module.exports = {
                 key: "id",
             }
         },
-        comment_id: {
-            type: Sequelize.INTEGER,
-            references: {
-                model:"comment",
-                key: "id",
-            }
-        }
+
     });
   },
   down: function (queryInterface, Sequelize) {

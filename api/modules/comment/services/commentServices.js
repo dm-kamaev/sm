@@ -8,35 +8,24 @@ var commentServices =
 exports.create = async (function(commentGroupId, params) {
     var result = '';
     try {
-        //var comment = await (models.Comment.create({
-        //    comment_group_id: commentGroupId,
-        //    text: params.text,
-        //    userType: params.userType,
-        //    rating: {
-        //        score: params["score[]"]
-        //    }
-        //}, {
-        //    include: [ models.Rating ]
-        //}));
-        var rt = await (models.Rating.create({
-            score: params["score[]"],
-            comment: {
-                comment_group_id: commentGroupId,
-                text: params.text,
-                userType: params.userType,
-                }
-            }, {
-            include: [ models.Comment ]
-        }))
-//        console.log(comment);
-//        var rating = await(models.Rating.create({
-//            score: params["score[]"]
-//        }));
-//        rating.addComment(comment);
+        var comment = await (models.Comment.create({
+            comment_group_id: commentGroupId,
+            text: params.text,
+            userType: params.userType,
+        }, {
+            include: [{
+                model: models.Rating
+            }]
+        }));
+        console.log(comment);
+        if (params.rating) {
+            //comment.setRating(params.rating)
+            params.rating.setComment(comment);
+        }
         result = 'success';
     } catch (e) {
         console.log(e);
-        result = JSON.stringify(e);
+        result = e.message;
     } finally {
         return result;
     }

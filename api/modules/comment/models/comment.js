@@ -21,8 +21,8 @@ var Comment = db.define('Comment', {
             Comment.belongsTo(models.CommentGroup, {
                 foreignKey: 'comment_group_id'
             });
-            Comment.hasOne(models.Rating, {
-                foreignKey: 'comment_id'
+            Comment.belongsTo(models.Rating, {
+                foreignKey: 'rating_id'
             })
         }
     }
