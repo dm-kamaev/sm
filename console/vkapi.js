@@ -160,52 +160,40 @@ var compareNumbers = (string1, string2) => {
 
 var getMatches = (vkSchools, ourSchools) => {
     var results = [],
-        extraResults = [];
+        extraResults = [],
+        notFound = [];
     for (var i = 0; i<ourSchools.length; i++ ){
-        for (var j = 0; j<vkSchools.length; j++){
-
-
-            var firstSchool = ourSchools[i].name.toLowerCase(),
-                secondSchool = vkSchools[j].title.toLowerCase();
+        firstSchool = ourSchools[i].name.toLowerCase();
+        var preciseMatch = vkSchools.find(vks => {
+            secondSchool = vks.title.toLowerCase();
             if (firstSchool == secondSchool)
-                results.push(vkSchools[j]);
-            else {
-                var outerMatch = results.find (res => {
-                      if(res.id == vkSchools[j])
-                        return true;
-                    })
-
-                if (!outerMatch &&
-                    //textSubstrings(firstSchool, secondSchool) ||
-                    compareNumbers(firstSchool, secondSchool)) {
-                    var match = extraResults.find(res => {
-                        if (res.ourSchool.our_id == ourSchools[i].id)
-                            return true
-                    })
-                    if (match) {
-                        var innerMatch = match.vkMatches.find(school => {
-                            if (school.id == vkSchools[j].id)
-                                return true;
-                        })
-                        if (!innerMatch)
-                            match.vkMatches.push(vkSchools[j])
-                    } else {
-                        var newMatch = {
-                            ourSchool: {
-                                our_id: ourSchools[i].id,
-                                name: ourSchools[i].name
-                            },
-                            vkMatches: []
-                        };
-                        newMatch.vkMatches.push(vkSchools[j]);
-                        extraResults.push(newMatch)
-                    }
-                }
-            }
-
+                return true;
+        })
+        if (preciseMatch)
+            results.push(preciseMatch)
+        else {
+            var roughMatches = vkSchools.filter(el => {
+                secondSchool = el.title.toLowerCase();
+                return compareNumbers(firstSchool, secondSchool);
+            })
+            if (roughMatches.length > 0)
+                extraResults.push({
+                    ourSchool: {
+                        our_id: ourSchools[i].id,
+                        name: ourSchools[i].name
+                    },
+                    vkMatches: roughMatches
+                });
+            else
+                notFound.push({
+                    our_id: ourSchools[i].id,
+                    name: ourSchools[i].name
+                })
         }
     }
     saveToJson(extraResults, "extra.json");
+    saveToJson(notFound, "notFound.json");
+    saveToJson(results, 'matches.json');
     return results;
 }
 
@@ -244,11 +232,9 @@ var start = async(() => {
     console.log('Школ вконтакте: ' + colors.yellow(schools.response.items.length));
     console.log('Наших школ: ' + colors.yellow(ourSchools.length));
     var matches = getMatches(schools.response.items, ourSchools);
-    saveToJson(matches, 'matches.json')
     //proces
     console.log(('================================').yellow);
     console.log('Количество совпадений: ' + colors.yellow(matches.length));
-    saveToJson(matches, '1234.json');
     process.exit();
     console.log(('================================').yellow);
     console.log('Getting universities for schools. Patience');
