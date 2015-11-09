@@ -103,6 +103,7 @@ goog.scope(function() {
             goog.object.extend(
                 pinData,
                 item, {
+                    rating: item.totalScore,
                     coords: coord,
                     isCurrent: (item.id === this.params_.id)
                 }
