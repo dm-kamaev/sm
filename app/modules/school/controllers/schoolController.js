@@ -95,7 +95,7 @@ exports.view = async (function(req, res) {
             id: school.id,
             schoolName: school.name,
             schoolType: '',
-            schoolDescr: school.name + " — школа, как школа. Обычная такая",
+            schoolDescr: '',
             directorName: school.director,
             schoolQuote : "Мел",
             classes: educationIntervalToString(school.educationInterval),

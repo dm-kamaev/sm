@@ -116,8 +116,10 @@
         <div class="l-school__content-column l-school__content-column_double_width">
             <div class="l-school__name">{$params.data.schoolName}</div>
             <div class="l-school__description">
-                <div class="l-school__description-text">{$params.data.schoolDescr + ' - '}</div>
-                <div class="l-school__description-quote">{$params.data.schoolQuote}</div>
+                {if $params.data.schoolDescr}
+                    <div class="l-school__description-text">{$params.data.schoolDescr + ' - '}</div>
+                    <div class="l-school__description-quote">{$params.data.schoolQuote}</div>
+                {/if}
             </div>
         </div>
         <div class="l-school__content-column l-school__content-column_last">
