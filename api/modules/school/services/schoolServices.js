@@ -19,6 +19,7 @@ exports.getGroupId = async (function(schoolId) {
 
 
 var getSchoolParams = (params) => {
+
     var schoolParams = {
         name: params.name,
         director: params.director,
@@ -29,21 +30,22 @@ var getSchoolParams = (params) => {
         addresses: [],
         educationInterval: params.educationInterval
     };
+
     params.addresses.forEach(adr => {
         schoolParams.addresses.push({
             name: adr,
             coords: []
         })
     });
+
     return schoolParams;
 };
-
 
 exports.getAddresses = async (school => {
     return await(models.Address.findAll({
         where:{school_id: school.id}
     }));
-})
+});
 
 exports.setAddresses = async ((school, addresses) => {
     var currentAddresses = await(this.getAddresses(school));
@@ -62,10 +64,13 @@ exports.setAddresses = async ((school, addresses) => {
 
 exports.update = async ((school, params) => {
     var convertedParams = getSchoolParams(params);
-    await (school.update(convertedParams));
-    if (convertedParams.addresses) {
-        await (this.setAddresses(school,convertedParams.addresses))
-    }
+
+    var instance = await(school.update(
+        convertedParams
+    ));
+    if (convertedParams.addresses)
+        await(this.setAddresses(school, convertedParams.addresses))
+    return instance;
 });
 
 exports.getAllById = async((sch_id)=>{
@@ -83,7 +88,7 @@ exports.get = async((sqlizeOptions, params) => {
     params.include = [{
         model: models.Address,
         as: 'addresses'
-    }]
+    }];
     if (params.count == 'one') {
         return await (models.School.findOne(sqlizeOptions));
     }
@@ -94,15 +99,17 @@ exports.get = async((sqlizeOptions, params) => {
 
 
 exports.create = async (params => {
-    await(models.School.create(
+    return await(models.School.create(
         getSchoolParams(params),
         {
-            include: [{
-                model: models.Address,
-                as: 'addresses'
-            }]
+            include: [
+                {
+                    model: models.Address,
+                    as: 'addresses'
+                }
+            ]
         }
-    ));
+    ))
 });
 
 exports.list = async (function() {

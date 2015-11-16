@@ -7,7 +7,7 @@ var School = db.define('School', {
         field: 'school_type',
         type: DataType.ENUM,
         values: ['Школа', 'Лицей', 'Гимназия', 'Центр образования', 'Коррекционная школа', 'Коррекционная школа-интернат', 'Кадетская школа-интернат', 'Кадетская школа'],
-        //allowNull: false
+        allowNull: false
     },
     director: DataType.STRING,
     phones: DataType.ARRAY(DataType.STRING),
@@ -28,6 +28,9 @@ var School = db.define('School', {
 
     classMethods: {
         associate: function (models) {
+            School.hasMany(models.GiaResult, {
+                as: 'giaResult', foreignKey: 'school_id'
+            });
             School.hasMany(models.Address, {
                 as: 'addresses', foreignKey: 'school_id'
             });

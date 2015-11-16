@@ -51,7 +51,7 @@ exports.create = function(req, res) {
 
 
 
-}
+};
 
 /**
  * @api {get} api/school Get school list
