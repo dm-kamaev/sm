@@ -4,7 +4,7 @@ goog.require('sm.lSchool.bFeedbackModal.FeedbackModal');
 
 goog.require('sm.lSchool.bComments.Comments');
 goog.require('sm.lSchool.bComment.Comment');
-goog.require('sm.lSchool.bRating.Rating');
+goog.require('sm.bRating.Rating');
 
 goog.require('goog.dom.classes');
 goog.require('goog.events');
@@ -147,7 +147,7 @@ goog.scope(function() {
         comments.decorate(this.elements_.comments);
 
         /** rating */
-        var rating = new sm.lSchool.bRating.Rating();
+        var rating = new sm.bRating.Rating();
         this.addChild(rating);
         rating.decorate(this.elements_.rating);
 
