@@ -5,7 +5,6 @@
  *
  */
 var schoolServices = require.main.require('./api/modules/school/services').schoolServices;
-
 var commander = require('commander');
 var https = require('https');
 var colors = require('colors');
@@ -33,7 +32,7 @@ var getUserfulUsers = (users=>{
     users.forEach(user => {
         if (user.university)
             results.push(user);
-    })
+    });
     //console.log(colors.yellow('usefull: '+results.length));
     return results;
 });
@@ -41,7 +40,7 @@ var getUserfulUsers = (users=>{
 
 
 var getSchoolUsers = async ((school) => {
-    schoolId = school.id;
+    var schoolId = school.id;
 
     console.log('Getting users for school ' + colors.yellow(school.id) +
     ' || ' + colors.yellow(school.title));
@@ -50,18 +49,19 @@ var getSchoolUsers = async ((school) => {
         fields:'education',
         school: schoolId,
         count: 1000
-    }
+    };
     for (var i = 2013; i <= 2015; i++) {
         var yearParams = params;
         yearParams.school_year = i;
-        var reqTry = 0;
+        var reqTry = 0,
+    		answ;
         do {
-            var answ = await(request('users.search', yearParams));
+            answ = await(request('users.search', yearParams));
             if (reqTry)
                 console.log(colors.red(reqTry+1) + ' try for school '
                     + school.title + ' year ' + colors.red(i));
             reqTry++;
-        } while (!answ && reqTry<3)
+        } while (!answ && reqTry<3);
         if (answ) {
             if (answ.response.count > 1000) {
                 console.log('There are too many results in school ' + colors.red(school.title)
@@ -82,7 +82,7 @@ var getSchoolUsers = async ((school) => {
 
 var request = async ((methodName, params) => {
     var paramsString = '';
-    for (prop in params){
+    for (var prop in params){
         paramsString += (prop + '=' + params[prop] + '&');
     }
     var apiString = '/method/' + methodName + '?' + paramsString
@@ -95,30 +95,30 @@ var request = async ((methodName, params) => {
     };
     sleep.usleep(500000);
     var doRequest = new Promise( function(resolve, reject) {
-        rqq = https.request(options);
+      	var rqq = https.request(options);
         rqq.on('response', function (response) {
             var data = '';
-            response.on("data", function (chunk) {
+            response.on('data', function (chunk) {
 
                 data += chunk;
             });
             response.on('end', function () {
                 if (params.school)
-                    console.log("got an answer for school " +
+                    console.log('got an answer for school ' +
                         colors.green(params.school) + ' year ' +
                         colors.green(params.school_year));
 
                 resolve(JSON.parse(data));
                 //sleep.usleep(210000);
             });
-        }).end()
+        }).end();
         rqq.on('error', function(e) {
             console.log('problem with request: ' + e.message);
             resolve(null);
         });
     });
 
-    var res
+    var res;
     do {
         res = await(doRequest);
         if (res && res.error) {
@@ -127,14 +127,14 @@ var request = async ((methodName, params) => {
             console.log(colors.yellow(JSON.stringify(params)));
             sleep.sleep(10);
         }
-    } while (res && res.error && res.error.error_code == 6)
+    } while (res && res.error && res.error.error_code == 6);
     if (!res){
         console.log(colors.red('Didnt get any response'));
         return null;
     }
-    if (!res.response || res.response.count == 0){
+    if (!res.response || res.response.count === 0){
         sleep.sleep(1);
-        return null;;
+        return null;
         //throw new Error('');
     }
     return res;
@@ -148,34 +148,41 @@ var textSubstrings = (string1, string2) => {
         str2.indexOf(str1) != -1)
         return true;
     return false;
-}
+};
 
 var compareNumbers = (string1, string2) => {
-    var num1 = string1.replace( /^\D+/g, ''),
-        num2 = string2.replace( /^\D+/g, '');
-    if (num1 && num1 == num2)
-        return true;
-    return false;
-}
+    var numArr1 = string1.match(/\d+/g) || [],
+        numArr2 = string2.match(/\d+/g) || [],
+	isFound = false;
+//    console.log(numArr1 + ' ' + numArr2);
+    numArr1.forEach(num1 => {
+	    numArr2.forEach(num2 => {
+		    if (num1 && num1 == num2){
+		    	isFound = true;
+		    }
+	    });
+    }); 
+    return isFound;
+};
 
 var getMatches = (vkSchools, ourSchools) => {
     var results = [],
         extraResults = [],
         notFound = [];
     for (var i = 0; i<ourSchools.length; i++ ){
-        firstSchool = ourSchools[i].name.toLowerCase();
+        var firstSchool = ourSchools[i].name.toLowerCase();
         var preciseMatch = vkSchools.find(vks => {
-            secondSchool = vks.title.toLowerCase();
+            var secondSchool = vks.title.toLowerCase();
             if (firstSchool == secondSchool)
                 return true;
-        })
+        });
         if (preciseMatch)
-            results.push(preciseMatch)
+            results.push(preciseMatch);
         else {
             var roughMatches = vkSchools.filter(el => {
-                secondSchool = el.title.toLowerCase();
+                var secondSchool = el.title.toLowerCase();
                 return compareNumbers(firstSchool, secondSchool);
-            })
+            });
             if (roughMatches.length > 0)
                 extraResults.push({
                     ourSchool: {
@@ -188,14 +195,17 @@ var getMatches = (vkSchools, ourSchools) => {
                 notFound.push({
                     our_id: ourSchools[i].id,
                     name: ourSchools[i].name
-                })
+                });
         }
     }
-    saveToJson(extraResults, "extra.json");
-    saveToJson(notFound, "notFound.json");
+    saveToJson(extraResults, 'extra.json');
+    saveToJson(notFound, 'notFound.json');
     saveToJson(results, 'matches.json');
+    console.log('Количество точных результатов:' + results.length);
+    console.log('Количество примерных результатов:' + extraResults.length);
+    console.log('Количество не найденых результатов:' + notFound.length);
     return results;
-}
+};
 
 function fileExists(filePath)
 {
@@ -212,7 +222,7 @@ function fileExists(filePath)
 var saveToJson = (schools, name) => { //'vk_schools.json'
     var js = JSON.stringify(schools);
     fs.writeFileSync(name,js);
-}
+};
 
 var loadFromJson = (name) => { //'vk_schools.json'
 
@@ -222,7 +232,7 @@ var loadFromJson = (name) => { //'vk_schools.json'
         fs.writeFileSync(name, '[]');
     }
     return require('../' + name);
-}
+};
 
 
 
@@ -245,10 +255,10 @@ var start = async(() => {
         var cached_match = cached_matches.find(school =>{
             if (school.id == match.id)
                 return true;
-        })
+        });
         if (cached_match){
-            console.log("Users for school "
-                + colors.green(cached_match.title) + " already cached");
+            console.log('Users for school '
+                + colors.green(cached_match.title) + ' already cached');
             processed_matches.push(cached_match);
         } else {
             var local_match = match;
@@ -262,7 +272,7 @@ var start = async(() => {
                     };
                     var uniCountForYear = 0;
                     userYear.results.forEach(user => {
-                        var uni = user.university_name
+                        var uni = user.university_name;
                         if (uni) {
                             uniCountForYear++;
                             var uniInArray = yearResults.graduates.find(univ => {
@@ -287,9 +297,9 @@ var start = async(() => {
                 console.log('Got nothing for ' + colors.red(match.title));
             }
         }
-        saveToJson(processed_matches, 'pr_matches.json')
+        saveToJson(processed_matches, 'pr_matches.json');
     });
-})
+});
 
 commander
     .command('vkapi')
