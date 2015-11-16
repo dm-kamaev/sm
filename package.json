@@ -49,7 +49,9 @@
     "soynode": "^1.1.0"
   },
   "dependencies": {
+    "colors": "^1.1.2",
     "express": "^4.13.3",
+    "fs-extra": "^0.26.0",
     "glob": "^5.0.15",
     "q": "^1.4.1",
     "reset.css": "^2.0.2"

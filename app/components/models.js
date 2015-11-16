@@ -1,5 +1,9 @@
 var path = require('path'),
     fs = require('fs');
+var colors = require('colors');
+var async = require('asyncawait/async');
+var await = require('asyncawait/await');
+
 //var school = require.main.require('./app/modules/school/models/school');
 
 var models = {};
@@ -24,12 +28,14 @@ exports.initModels = function(dirPath) {
 };
 
 
-exports.initAssociations = function() {
+
+exports.initAssociations = async(function() {
     Object.keys(models).forEach(function (name) {
         var model = models[name];
         if (model.associate) {
+            console.log(colors.yellow('Associating model ' + name));
             model.associate(models);
-            //model.sync();
+            console.log(colors.green('Model ' + name + ' associated'))
         }
     });
-};
+});

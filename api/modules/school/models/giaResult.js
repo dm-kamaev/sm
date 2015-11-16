@@ -1,7 +1,7 @@
 var DataType = require('sequelize'),
     db = require.main.require('./app/components/db');
 
-var GiaResults = db.define('GiaResults', {
+var GiaResult = db.define('GiaResult', {
     count: {
         type: DataType.INTEGER,
         allowNull: false
@@ -12,17 +12,17 @@ var GiaResults = db.define('GiaResults', {
     }
 }, {
     underscored: true,
-    tableName: 'gia_results',
+    tableName: 'gia_result',
     classMethods: {
         associate: function (models) {
-            GiaResults.belongsTo(models.School, {
+            GiaResult.belongsTo(models.School, {
                 foreignKey: 'school_id'
             });
-            GiaResults.belongsTo(models.Subject, {
+            GiaResult.belongsTo(models.Subject, {
                 foreignKey: 'subject_id'
             });
         }
     }
 });
 
-module.exports = GiaResults;
+module.exports = GiaResult;

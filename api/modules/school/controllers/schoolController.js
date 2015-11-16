@@ -74,7 +74,7 @@ exports.list = async (function(req, res) {
  * @apiSuccess {Object} schools Very userful documentation here.
  */
 exports.view = async (function(req, res) {
-    var school = await(schoolServices.get(req.params.id));
+    var school = await(schoolServices.getAllById(req.params.id));
     res.header("Content-Type", "text/html; charset=utf-8");
     res.end(JSON.stringify(school));
 });

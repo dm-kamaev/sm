@@ -42,9 +42,11 @@ exports.list = async (function(req, res) {
 });
 
 exports.view = async (function(req, res) {
-    var school = await (schoolServices.get(req.params.id));
+    var school = await (schoolServices.getAllById(req.params.id));
+    console.log(JSON.stringify(school).yellow);
     var commentGroup = school.CommentGroup ? school.CommentGroup.comments : [];
-
+    console.log(JSON.stringify(commentGroup).blue);
+    //console.log(JSON.stringify(commentGroup).blue);
     var typeConvert = {
         'Parent': 'родитель',
         'Graduate': 'выпускник',
@@ -88,10 +90,10 @@ exports.view = async (function(req, res) {
                 address: school.addresses.map(address => {
                     return {
                         title: '',
-                        description: address
+                        description: address.name
                     };
                 }),
-                phones: school.phones
+                phones: school.phones || ''
             },
             comments: commentGroup.map(comment => {
                 return {
@@ -112,10 +114,10 @@ exports.view = async (function(req, res) {
                     })
                 };
             }),
-            coords: school.coords.map(coords => {
+            coords: school.addresses.map(adr => {
                 return {
-                    lat: coords[0],
-                    lng: coords[1]
+                    lat: adr.coords[0],
+                    lng: adr.coords[1]
                 };
             }),
             score: sumScore,
@@ -136,10 +138,12 @@ exports.view = async (function(req, res) {
 
     console.log(params.data);
 
+    //console.log(JSON.stringify(t).blue);
+
+
     res.header("Content-Type", "text/html; charset=utf-8");
     res.end(
         soy.render('sm.lSchool.Template.base', {
-            params: params
-        })
-    );
+        params: params
+    }));
 });

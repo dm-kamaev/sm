@@ -9,7 +9,7 @@ const soynode = require('gulp-soynode');
 var glob = require("glob");
 var exec = require('child_process').exec;
 var Q = require('q');
-
+var fs = require('fs-extra');
 
 
 const production = !!util.env.production;
@@ -26,35 +26,34 @@ gulp.task('doc', function () {
 });
 
 gulp.task('migrate', function () {
-    var deferred = Q.defer();
+        var deferred = Q.defer();
 
-    var migrations = glob.sync('app/**/migrations/*.js', {
-        cwd: __dirname
-    });
-
-    migrations.forEach(function (file) {
-        var fileName = path.basename(file);
-        fs.copySync(file, path.resolve(__dirname, 'tmp/migrations', fileName));
-    });
-
-    var sequelizePath = path.resolve('node_modules/.bin/sequelize');
-
-    exec(
-        sequelizePath + ' db:migrate',
-        __dirname,
-        function (error, stdout) {
-            console.log(stdout);
-
-            if (error) {
-                console.log(error);
-            }
-
-            fs.remove(path.resolve(__dirname, 'tmp'));
-
-            deferred.resolve();
+        var migrations = glob.sync('api/**/migrations/*.js', {
+            cwd: __dirname
         });
 
-    return deferred.promise;
+
+        migrations.forEach(function (file) {
+            var fileName = path.basename(file);
+            fs.copySync(file, path.resolve(__dirname, 'tmp/migrations', fileName));
+        });
+
+        var sequelizePath = path.resolve(__dirname,'node_modules/.bin/sequelize');
+        exec(
+            sequelizePath + ' db:migrate', function (error, stdout, stderr) {
+                console.log(stdout);
+
+                if (error) {
+                    console.log(error);
+                }
+
+                fs.remove(path.resolve(__dirname, 'tmp/migrations'));
+
+                deferred.resolve();
+            });
+
+        return deferred.promise;
+
 });
 
 

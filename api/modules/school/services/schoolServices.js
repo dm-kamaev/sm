@@ -1,3 +1,4 @@
+var colors = require('colors');
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var models = require.main.require('./app/components/models').all;
@@ -16,9 +17,98 @@ exports.getGroupId = async (function(schoolId) {
     return instance.comment_group_id;
 });
 
-exports.create = async (function(params) {
-    var id = -1;
-    return id
+var getSchoolParams = (params) => {
+
+    var schoolParams = {
+        name: params.name,
+        director: params.director,
+        phonres: params.phones,
+        site: params.site,
+        goverment_key: params.goverment_key,
+        schoolType: params.schoolType,
+        addresses: []
+    };
+
+    params.addresses.forEach(adr => {
+        schoolParams.addresses.push({
+            name: adr,
+            coords: []
+        })
+    });
+
+    return schoolParams;
+};
+
+
+
+exports.getAddresses = async (school => {
+    return await(models.Address.findAll({
+        where:{school_id: school.id}
+    }));
+});
+
+exports.setAddresses = async ((school, addresses) => {
+    var currentAddresses = await(this.getAddresses(school));
+    addresses.forEach((adr)=>{
+        var sameAdr = currentAddresses.find(element => {
+         if (element.name == adr.name)
+            return true;
+        });
+        if (!sameAdr){
+            models.Address.create(adr).then(adrinst => {
+                school.addAddresses(adrinst)
+            });
+         }
+    })
+});
+
+exports.update = async ((school, params) => {
+    var convertedParams = getSchoolParams(params);
+    var instance = await(school.update(
+        convertedParams
+    ));
+    if (convertedParams.addresses)
+        await(this.setAddresses(school, convertedParams.addresses))
+    return instance;
+});
+
+exports.getAllById = async((sch_id)=>{
+    return await (models.School.findOne({
+        where:{id: sch_id},
+        include: [{
+            all:true,
+            nested: true
+        }]
+    }));
+});
+
+//TODO: переделать
+exports.get = async((sqlizeOptions, params) => {
+    params.include = [{
+        model: models.Address,
+        as: 'addresses'
+    }];
+    if (params.count == 'one') {
+        return await (models.School.findOne(sqlizeOptions));
+    }
+    else
+        return await (models.School.findAll(sqlizeOptions));
+});
+
+
+
+exports.create = async (params => {
+    return await(models.School.create(
+        getSchoolParams(params),
+        {
+            include: [
+                {
+                    model: models.Address,
+                    as: 'addresses'
+                }
+            ]
+        }
+    ))
 });
 
 exports.list = async (function() {
@@ -32,20 +122,22 @@ exports.list = async (function() {
     return schools;
 });
 
-exports.get = async (function(schoolId) {
-    var school =  await (models.School.findOne(
-        {
-            where: {
-                id: schoolId
-            },
-            include: [{
-                all: true,
-                nested: true
-            }]
-        }
-    ));
-    return school;
-});
+
+
+//exports.get = async (function(schoolId) {
+//    var school =  await (models.School.findOne(
+//        {
+//            where: {
+//                id: schoolId
+//            },
+//            include: [{
+//                all: true,
+//                nested: true
+//            }]
+//        }
+//    ));
+//    return school;
+//});
 
 // exports.getComments = async ( function(comment) {
 //

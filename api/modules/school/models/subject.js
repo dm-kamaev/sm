@@ -11,8 +11,8 @@ var Subject = db.define('Subject', {
     tableName: 'subject',
     classMethods: {
         associate: function (models) {
-            Subject.hasMany(models.GiaResults, {
-                as: 'gia_results', foreignKey: 'subject_id'
+            Subject.hasMany(models.GiaResult, {
+                as: 'giaResult', foreignKey: 'subject_id'
             });
         }
     }
