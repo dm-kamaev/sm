@@ -65,7 +65,7 @@ var getSchoolUsers = async ((school) => {
         if (answ) {
             if (answ.response.count > 1000) {
                 console.log('There are too many results in school ' + colors.red(school.title)
-                    + " year " + colors.red(i));
+                    + ' year ' + colors.red(i));
             }
             else {
                 results.push({
