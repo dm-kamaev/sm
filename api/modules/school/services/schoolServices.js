@@ -118,7 +118,7 @@ exports.search = async (params => {
 	}
 
 	return JSON.stringify(await (models.School.findAll({
-		   	where: whereParams
+		where: whereParams
 	})));
 });
 
