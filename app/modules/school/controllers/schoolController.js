@@ -32,11 +32,55 @@ exports.create = function(req, res) {
 exports.list = async (function(req, res) {
 
     var schools = await (schoolServices.list());
-    var html = '<h1>Список школ</h1>';
-    html += schools
-        .map(school => '<p><span>' + school.id + '. </span><a href="/school/' + school.id + '">' + school.name + '</a></p>')
-        .join('');
 
+    var schoolList =
+        schools.map(school => {
+            var commentGroup = school.CommentGroup ? school.CommentGroup.comments : [];
+            var sumScore = commentGroup
+                .map(comment => comment.score)
+                .reduce((context, coords) => {
+                    coords.forEach((value, index) => {
+                        if (value) {
+                            context.count[index]++;
+                            context.sum[index] += value;
+                            context.res[index] = context.sum[index] / context.count[index];
+                        }
+                    });
+
+                    return context;
+                }, {
+                    sum: [0, 0, 0, 0],
+                    count: [0, 0, 0, 0],
+                    res: [0, 0, 0, 0]
+                }).res;
+            var totalScore = sumScore.reduce((context, value) => {
+                if (value) {
+                    context.sum += value;
+                    context.count++;
+                    context.res = context.sum / context.count;
+                }
+                return context;
+            }, {
+                sum: 0,
+                count: 0,
+                res: 0
+            }).res;
+            return {
+                id: school.id,
+                name: school.name,
+                score: sumScore,
+                totalScore: totalScore,
+                description: ""
+            }
+        });
+
+    var html = soy.render('sm.lSearchResult.Template.base', {
+        params: {
+            data: {
+                schools: schoolList
+            }
+        }
+    });
     res.header("Content-Type", "text/html; charset=utf-8");
     res.end(html);
 });

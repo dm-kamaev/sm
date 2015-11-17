@@ -1,4 +1,4 @@
-{namespace sm.lSchoolList.bSchoolList.Template}
+{namespace sm.lSearchResult.bSchoolList.Template}
 
 /**
  * Schools List view
@@ -28,7 +28,7 @@
         </div>
 
         {foreach $school in $params.schools}
-            {call .school}
+            {call .school_}
                 {param params:[
                     'id': $school.id,
                     'name': $school.name,
@@ -38,7 +38,6 @@
                 ]/}
             {/call}
         {/foreach}
-
     </div>
 {/template}
 
@@ -52,11 +51,14 @@
  *     description: ?string
  * }
  */
-{template .school autoescape="strict" kind="html"}
-    <div class="b-school-list__school" data-id="{$params.id}">
+{template .school_ autoescape="strict" kind="html" private="true"}
+    <div class="b-school-list__school"
+         data-id="{$params.id}">
 
         <div class="b-school-list__school-name">
-            {$params.name}
+            <div class="b-school-list__school-name-wrap">
+                {$params.name}
+            </div>
         </div>
 
         <div class="b-school-list__school-rating">
@@ -70,21 +72,16 @@
             {/call}
         </div>
 
-        <div class="
-            b-school-list__school-data
-            b-school-list__school-data_no-margin
-        ">
+        <div class="b-school-list__school-data">
             <div class="b-school-list__school-data-item">
                 Станция метро, длинный адрес школы
             </div>
         </div>
 
-        <div class="
-            b-school-list__school-description
-            b-school-list__school-description_hidden
-        ">
-            {$params.description ? $params.description : ''}
-        </div>
-
+        {if $params.description}
+            <div class="b-school-list__school-description">
+                {$params.description}
+            </div>
+        {/if}
     </div>
 {/template}

@@ -17,7 +17,7 @@
     cursor: pointer;
 }
 
-.b-school-list__school_no-border {
+.b-school-list__school :last-child {
     border-bottom: none;
 }
 
@@ -26,13 +26,16 @@
 
     width: 40%;
     height: 100%;
-    padding-top: 1px;
-    margin-bottom: 25px;
 
     color: black;
     text-transform: uppercase;
     font-size: 21px;
     font-weight: bold;
+    line-height: 26px;
+}
+
+.b-school-list__school-name-wrap {
+    width: 90%;
 }
 
 .b-school-list__school-rating {
@@ -47,14 +50,10 @@
 
     width: 100%;
     height: auto;
-    margin-bottom: 25px;
+    margin-top: 20px;
 
     color: rgb(136, 136, 136);
     font-size: 13px;
-}
-
-.b-school-list__school-data_no-margin {
-    margin-bottom: 0;
 }
 
 .b-school-list__school-data-item {
@@ -69,6 +68,7 @@
 
     width: 100%;
     height: auto;
+    margin-top: 25px;
 }
 
 .b-school-list__school-description_hidden {
@@ -80,7 +80,7 @@
 
     width: 100%;
     height: auto;
-    margin-bottom: 25px;
+    margin-bottom: -25px;
 }
 
 .b-school-list__header-sections {

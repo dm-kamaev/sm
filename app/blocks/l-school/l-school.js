@@ -202,5 +202,5 @@ jQuery(function() {
         params = jQuery(root).data('params'),
         school = new sm.lSchool.School(params);
 
-    school.decorate(root);
+    if(root){school.decorate(root)}
 });
