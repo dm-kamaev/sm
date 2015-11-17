@@ -106,7 +106,7 @@ exports.search = async (params => {
 	if (searchParams.classes && searchParams.classes.length) {
 		whereParams.educationInterval = { 
 			$contains: searchParams.classes
-		}
+		};
 	}	
 	if (searchParams.schoolType && searchParams.schoolType.length) {
 		whereParams.schoolType = {
@@ -117,7 +117,8 @@ exports.search = async (params => {
 		});
 	}
 
-	return JSON.stringify(await (models.School.findAll({ where: whereParams
+	return JSON.stringify(await (models.School.findAll({
+		   	where: whereParams
 	})));
 });
 
