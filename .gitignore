@@ -9,5 +9,3 @@ doc/
 *.log
 deployment-config.json
 .remote-sync.json
-
-assets
