@@ -184,7 +184,7 @@ var rowToSchool = row => {
     var schoolType = getType(nParse);
 
     return {
-        name: schoolName,
+        name: schoolName.trim(),
         schoolType: schoolType,
         director: row[DIRECTOR_INDEX],
         phones: getArray(row, PHONES_INDEX),
