@@ -11,7 +11,7 @@ exports.getGroupId = async (function(schoolId) {
     var instance = await(models.School.findOne({where : {id: schoolId}}));
     if (instance.comment_group_id == null) {
         var newCommentGroup = await (models.CommentGroup.create());
-        await (instance.update({comment_group_id: newCommentGroup.id}))
+        await (instance.update({comment_group_id: newCommentGroup.id}));
         console.log('instance', instance);
     }
     return instance.comment_group_id;
@@ -35,7 +35,7 @@ var getSchoolParams = (params) => {
         schoolParams.addresses.push({
             name: adr,
             coords: []
-        })
+        });
     });
 
     return schoolParams;
@@ -56,10 +56,10 @@ exports.setAddresses = async ((school, addresses) => {
         });
         if (!sameAdr){
             models.Address.create(adr).then(adrinst => {
-                school.addAddresses(adrinst)
+                school.addAddresses(adrinst);
             });
          }
-    })
+    });
 });
 
 exports.update = async ((school, params) => {
@@ -69,7 +69,7 @@ exports.update = async ((school, params) => {
         convertedParams
     ));
     if (convertedParams.addresses)
-        await(this.setAddresses(school, convertedParams.addresses))
+        await(this.setAddresses(school, convertedParams.addresses));
     return instance;
 });
 
@@ -96,7 +96,31 @@ exports.get = async((sqlizeOptions, params) => {
         return await (models.School.findAll(sqlizeOptions));
 });
 
+exports.search = async (params => {
+	var searchParams = params.searchParams,
+		whereParams = {};
+	if (searchParams.name) //TODO: also search by long name
+		whereParams.name = {
+			$like: '%' + searchParams.name + '%' 
+		};
+	if (searchParams.classes && searchParams.classes.length) {
+		whereParams.educationInterval = { 
+			$contains: searchParams.classes
+		};
+	}	
+	if (searchParams.schoolType && searchParams.schoolType.length) {
+		whereParams.schoolType = {
+			$or:[]  
+		};
+		searchParams.schoolType.forEach((item) => { 
+			whereParams.schoolType.$or.push(item);
+		});
+	}
 
+	return JSON.stringify(await (models.School.findAll({
+		where: whereParams
+	})));
+});
 
 exports.create = async (params => {
     return await(models.School.create(
@@ -109,7 +133,7 @@ exports.create = async (params => {
                 }
             ]
         }
-    ))
+    ));
 });
 
 exports.list = async (function() {

@@ -36,6 +36,36 @@ exports.createComment = async (function(req, res) {
     }
 });
 
+/**
+ * @api {get} api/school/search Search school
+ * @apiVersion 0.0.0
+ * @apiGroup School
+ * @apiName Search
+ * @apiParam {Object} searchParams Search params.
+ * @apiParamExample {json} Request-Example:
+ *     {
+ *       "searchParams" : {
+ *       	"name": "123", 
+ *       	"classes": [1,2,3,4],
+ *       	"schoolType": ["Школа", "Лицей"]	
+ *       }
+ *     }
+ */
+exports.search = async (function(req, res) {
+    var result = '';
+    try {
+        var params = req.query;
+        result = await(schoolServices.search(params));
+    } catch (e) {
+        console.log(e);
+        result = JSON.stringify(e);
+    } finally {
+        res.header("Content-Type", "text/html; charset=utf-8");
+        res.end(result);
+    }
+});
+
+
 
 /**
  * @api {post} api/school/createschool Creates school (TODO)
