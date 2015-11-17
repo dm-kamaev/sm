@@ -1,6 +1,6 @@
-goog.provide('sm.lSchool.bRating.Rating');
+goog.provide('sm.bRating.Rating');
 
-goog.require('sm.lSchool.bRating.Template');
+goog.require('sm.bRating.Template');
 goog.require('goog.ui.Component');
 goog.require('goog.dom.classes');
 goog.require('goog.events');
@@ -12,7 +12,7 @@ goog.require('goog.soy');
  * @constructor
  * @extends {goog.ui.Component}
  */
-sm.lSchool.bRating.Rating = function(opt_params) {
+sm.bRating.Rating = function(opt_params) {
     goog.base(this);
 
     /**
@@ -45,10 +45,10 @@ sm.lSchool.bRating.Rating = function(opt_params) {
      */
     this.averageValue_ = 0;
 };
-goog.inherits(sm.lSchool.bRating.Rating, goog.ui.Component);
+goog.inherits(sm.bRating.Rating, goog.ui.Component);
 
 goog.scope(function() {
-    var Rating = sm.lSchool.bRating.Rating;
+    var Rating = sm.bRating.Rating;
 
     /**
      * CSS-class enum
@@ -60,11 +60,6 @@ goog.scope(function() {
         AVERAGE_MARK: 'b-rating__mark_average'
     };
 
-    Rating.soyRound = function(param) {
-        param.value = 3;
-        return "hello";
-    };
-
     /**
      * Template-based dom element creation.
      * @public
@@ -72,7 +67,7 @@ goog.scope(function() {
     Rating.prototype.createDom = function() {
         goog.base(this, 'createDom');
 
-        var el = goog.soy.renderAsElement(sm.lSchool.bRating.Template.base, {
+        var el = goog.soy.renderAsElement(sm.bRating.Template.base, {
             params: this.params_
         });
 

@@ -1,0 +1,91 @@
+{namespace sm.lDoc.nDemo.bBlockSchoolList.Template}
+
+/**
+* preview
+*/
+{template .preview}
+    {call sm.lSearchResult.bSchoolList.Template.base}
+        {param params: [
+            'schools': [
+                [
+                    'id': 1,
+                    'name': 'Школа №14',
+                    'score': [
+                        1,
+                        1,
+                        1,
+                        1
+                    ],
+                    'totalScore': 1,
+                ],
+                [
+                    'id': 2,
+                    'name': 'Школа №15',
+                    'score': [
+                        2,
+                        2,
+                        2,
+                        2
+                    ],
+                    'totalScore': 2,
+                ],
+                [
+                    'id': 3,
+                    'name': 'Школа №16',
+                    'score': [
+                        3,
+                        3,
+                        3,
+                        3
+                    ],
+                    'totalScore': 3,
+                ]
+            ]
+        ]/}
+    {/call}
+{/template}
+
+/**
+* doc
+*/
+{template .doc}
+    {call sm.lSearchResult.bSchoolList.Template.base}
+        {param params: [
+            'schools': [
+                [
+                    'id': 1,
+                    'name': 'Школа №14',
+                    'score': [
+                        1,
+                        1,
+                        1,
+                        1
+                    ],
+                    'totalScore': 1,
+                ],
+                [
+                    'id': 2,
+                    'name': 'Школа №15',
+                    'score': [
+                        2,
+                        2,
+                        2,
+                        2
+                    ],
+                    'totalScore': 2,
+                ],
+                [
+                    'id': 3,
+                    'name': 'Школа №16',
+                    'score': [
+                        3,
+                        3,
+                        3,
+                        3
+                    ],
+                    'totalScore': 3,
+                ]
+            ]
+        ]/}
+    {/call}
+{/template}

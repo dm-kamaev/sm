@@ -5,7 +5,8 @@ var docPages = [
         "b-stars",
         "b-comments",
         "b-rating",
-        "b-feedback-modal"
+        "b-feedback-modal",
+        "b-school-list"
     ];
 
 

@@ -117,7 +117,12 @@ exports.list = async (function() {
         {
             order: [
                 ['id', 'ASC']
-            ]
+            ],
+            // TODO: more specified include
+            include: [{
+                all:true,
+                nested: true
+            }]
         }
     ));
     return schools;
