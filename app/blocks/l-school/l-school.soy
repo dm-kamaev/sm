@@ -125,12 +125,29 @@
         <div class="l-school__content-column l-school__content-column_last">
              /*хрень*/
              <div class = "l-school__rating">
-            {call sm.lSchool.bRating.Template.base}
-             {param params: [
-                    'marks': $params.data.score,
-                    'averageMark': $params.data.totalScore
-             ]/}
-             {/call}
+                {call sm.bRating.Template.base}
+                     {param params: [
+                            'marks': $params.data.score,
+                            'averageMark': $params.data.totalScore
+                     ]/}
+                 {/call}
+                 {call gorod.bBouton.BoutonTemplate.render}
+                     {param params: [
+                         'label': 'Оставить отзыв',
+                         'customClasses': 'b-bouton_feedback-opener',
+                         'state': [
+                             'pressed': true
+                         ],
+                         'style': [
+                             'theme': 'default',
+                             'size': 'extralarge',
+                             'width': 'block',
+                             'color': 'red',
+                             'borderRadius': 'none',
+                             'borderWidth': 'l'
+                         ]
+                     ] /}
+                 {/call}
              </div>
         </div>
     </div>

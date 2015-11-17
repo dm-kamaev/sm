@@ -1,0 +1,114 @@
+{namespace sm.bRating.Template}
+
+/**
+ * rating view
+ * @param? params {
+ *     marks: ?list<number>,
+ *     averageMark: ?number,
+ *     theme: ?string,
+ *     noSectionNames: ?boolean,
+ *     noMarks: ?boolean
+ * }
+ */
+{template .base autoescape="strict" kind="html"}
+    <div class="b-rating">
+        {let $theme: $params.theme ? $params?.theme : false/}
+
+        {if not $params.noMarks}
+            {call .marks_}
+                {param params: [
+                    'marks': $params.marks,
+                    'averageMark': $params.averageMark,
+                    'theme': $theme
+                ]/}
+            {/call}
+        {/if}
+
+        {if not $params.noSectionNames}
+            {call .sectionNames_}
+                {param params: [
+                    'theme': $theme
+                ]/}
+            {/call}
+        {/if}
+    </div>
+{/template}
+
+/**
+ * Marks template
+ * @param params {
+ *     marks: ?list<number>,
+ *     averageMark: ?number,
+ *     theme: ?string
+ * }
+ */
+{template .marks_ autoescape="strict" kind="html" private="true"}
+    <div class="b-rating__marks">
+        <div class="b-rating__section">
+            <div class="
+                b-rating__mark
+                b-rating__mark_average
+                b-rating__mark_
+                    {$params?.theme ? $params.theme : 'default'}-theme
+                b-rating__mark_average-
+                    {$params?.theme ? $params.theme : 'default'}-theme
+            ">
+                {$params.averageMark > 0 ?
+                    round($params.averageMark, 1) : '—'}
+            </div>
+        </div>
+        {foreach $mark in $params.marks}
+            <div class="b-rating__section">
+                <div class="
+                    b-rating__mark
+                    b-rating__mark_ordinary
+                    b-rating__mark_
+                        {$params?.theme ? $params.theme : 'default'}-theme
+                    b-rating__mark_ordinary-
+                        {$params?.theme ? $params.theme : 'default'}-theme
+                ">
+                    {$mark > 0 ? round($mark, 1) : '—'}
+                </div>
+            </div>
+        {/foreach}
+    </div>
+{/template}
+
+/**
+ * Section names template
+ * @param? params {
+ *     theme: ?string
+ * }
+ */
+{template .sectionNames_ autoescape="strict" kind="html" private="true"}
+    {let $sectionNames: [
+        'Средний балл',
+        'Образование',
+        'Педагоги',
+        'Доступность',
+        'Атмосфера'
+    ] /}
+    <div class="
+        b-rating__sections
+        b-rating__sections_
+            {$params?.theme ? $params.theme : 'default'}-theme
+    ">
+        {foreach $sectionName in $sectionNames}
+            <div class="b-rating__section">
+                <div class="
+                    b-rating__section-name
+                    b-rating__section-name_
+                        {$params?.theme ? $params.theme : 'default'}-theme
+                    {if isFirst($sectionName)}
+                        {sp}
+                        b-rating__section-name_average
+                        b-rating__section-name_average-
+                            {$params?.theme ? $params.theme : 'default'}-theme
+                    {/if}
+                ">
+                    {$sectionName}
+                </div>
+            </div>
+        {/foreach}
+    </div>
+{/template}

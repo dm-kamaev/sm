@@ -1,3 +1,7 @@
+$markLargeFontSize: 32px;
+$markMiddleFontSize: 28px;
+$markSmallFontSize: 24px;
+
 .b-rating {
     display: inline-block;
 
@@ -53,11 +57,44 @@
 .b-rating__mark_average {
     color: red;
 
-    font-size: 32px;
+    font-size: $markLargeFontSize;
 }
 
 .b-rating__mark_ordinary {
     color: rgb(247, 173, 171);
 
-    font-size: 28px;
+    font-size: $markMiddleFontSize;
+}
+
+/*THEMES*/
+
+/*black-theme*/
+.b-rating__mark_black-theme {
+    color: black;
+}
+
+.b-rating__mark_ordinary-black-theme {
+    font-size: 14px;
+}
+
+.b-rating__mark_average-black-theme {
+    font-size: 19px;
+}
+
+.b-rating__sections_black-theme {
+    color: black;
+}
+
+.b-rating__section-name_black-theme {
+    color: black;
+    font-size: 11px;
+}
+
+.b-rating__section-name_average-black-theme {
+    color: black;
+    font-size: 13px;
+}
+
+.b-rating__mark_ordinary-black-theme {
+    margin-top: 5px;
 }

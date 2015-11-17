@@ -1,0 +1,99 @@
+.b-school-list {
+    display: inline-block;
+
+    width: 100%;
+    height: auto;
+}
+
+.b-school-list__school {
+    display: inline-block;
+
+    width: 100%;
+    height: auto;
+    padding: 30px 0;
+
+    border-bottom: 1px solid rgb(229, 229, 229);
+
+    cursor: pointer;
+}
+
+.b-school-list__school_no-border {
+    border-bottom: none;
+}
+
+.b-school-list__school-name {
+    float: left;
+
+    width: 40%;
+    height: 100%;
+    padding-top: 1px;
+    margin-bottom: 25px;
+
+    color: black;
+    text-transform: uppercase;
+    font-size: 21px;
+    font-weight: bold;
+}
+
+.b-school-list__school-rating {
+    float: left;
+
+    width: 60%;
+    height: auto;
+}
+
+.b-school-list__school-data {
+    display: inline-block;
+
+    width: 100%;
+    height: auto;
+    margin-bottom: 25px;
+
+    color: rgb(136, 136, 136);
+    font-size: 13px;
+}
+
+.b-school-list__school-data_no-margin {
+    margin-bottom: 0;
+}
+
+.b-school-list__school-data-item {
+    display: inline-block;
+
+    width: auto;
+    height: auto;
+}
+
+.b-school-list__school-description {
+    display: inline-block;
+
+    width: 100%;
+    height: auto;
+}
+
+.b-school-list__school-description_hidden {
+    display: none;
+}
+
+.b-school-list__header {
+    display: inline-block;
+
+    width: 100%;
+    height: auto;
+    margin-bottom: 25px;
+}
+
+.b-school-list__header-sections {
+    float: right;
+
+    width: 60%;
+
+    text-align: center;
+    font-weight: bold;
+}
+
+.b-school-list__header-section {
+    float: left;
+
+    width: 20%;
+}
