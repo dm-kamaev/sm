@@ -3,6 +3,7 @@ goog.provide('sm.bRating.Rating');
 goog.require('sm.bRating.Template');
 goog.require('goog.ui.Component');
 goog.require('goog.dom.classes');
+goog.require('goog.dom.classlist');
 goog.require('goog.events');
 goog.require('goog.soy');
 
@@ -57,7 +58,8 @@ goog.scope(function() {
     Rating.CssClass = {
         ROOT: 'b-rating',
         ORDINARY_MARK: 'b-rating__mark_ordinary',
-        AVERAGE_MARK: 'b-rating__mark_average'
+        AVERAGE_MARK: 'b-rating__mark_average',
+        NULL_AVERAGE_MARK: 'b-rating__mark_null-average'
     };
 
     /**
@@ -188,6 +190,17 @@ goog.scope(function() {
      */
     Rating.prototype.renderAverageValue_ = function(averageValue) {
         this.averageMark_.innerHTML = this.valueToString_(averageValue, 1);
+        if(this.valueToString_(averageValue, 1) == '—') {
+            /*goog.dom.classlist.add(
+                this.averageMark_,
+                Rating.CssClass.NULL_AVERAGE_MARK
+            );*/
+        } else {
+            goog.dom.classlist.remove(
+                this.averageMark_,
+                Rating.CssClass.NULL_AVERAGE_MARK
+            );
+        }
     };
 
     /**

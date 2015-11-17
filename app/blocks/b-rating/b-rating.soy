@@ -52,6 +52,10 @@
                     {$params?.theme ? $params.theme : 'default'}-theme
                 b-rating__mark_average-
                     {$params?.theme ? $params.theme : 'default'}-theme
+                {if not $params.averageMark > 0}
+                    {sp}
+                    b-rating__mark_null-average
+                {/if}
             ">
                 {$params.averageMark > 0 ?
                     round($params.averageMark, 1) : '—'}
