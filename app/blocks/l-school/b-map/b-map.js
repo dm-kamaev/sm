@@ -78,12 +78,16 @@ goog.scope(function() {
             var dataset = goog.dom.dataset.get(element, 'params');
             this.params_ = JSON.parse(dataset);
         }
-
+		var borderArr = this.calculateBorder_(this.params_.coords),
+			newCenter = {
+				lat: this.params_.coords[0].lat,
+				lon: this.params_.coords[0].lng
+			}; 
+		borderArr = this.correctBorder_(borderArr, newCenter);
         ymaps.ready(function() {
             this.ymaps_ = new ymaps.Map(
                 element, {
-                    'center': Map.defaultPosition.COORDS,
-                    'zoom': Map.defaultPosition.ZOOM,
+					'bounds': borderArr,
                     controls: []
                 }
             );
@@ -133,6 +137,68 @@ goog.scope(function() {
         );
     };
 
+
+    /**
+     * Calculate map border
+     * @param {Object} data
+	 * @return {Object}
+     * @private
+     */
+    Map.prototype.calculateBorder_ = function(coords) {
+		var south, west, east, north;
+		east = north = 0;
+		south = west = 90;
+		coords.forEach(
+			function(point) {
+				var latitude = point.lat,
+				longitude = point.lng;
+				north = latitude > north ? latitude : north;
+				south = latitude < south ? latitude : south;
+				east = longitude > east ? longitude : east;
+				west = longitude < west ? longitude : west;
+			}
+		);
+		return {
+			north: north,
+			west: west, 
+			south: south,
+			east: east
+		};
+    };
+
+	/**
+     * Recalculate map border 
+     * @param {Object} border
+	 * @param {Object} newCenter
+	 * @return {Array<Array<number>>}
+     * @private
+     */
+	Map.prototype.correctBorder_ = function(border, newCenter) {
+		var center = {
+			lat : (border.north + border.south) / 2,
+			lon : (border.west + border.east) / 2
+		};
+
+		if (newCenter.lat > center.lat)
+			border.north = border.south + (newCenter.lat - border.south) * 2;
+		else 
+			border.south = border.north - (border.north - newCenter.lat) * 2;
+		
+		if (newCenter.lon > center.lon)
+			border.east = border.west + (newCenter.lon - border.west) * 2;
+		else 
+			border.west = border.east - (border.east - newCenter.lon) * 2;
+
+		var correction = 0.5 * Math.abs(border.north - border.south);
+		border.north += correction;
+		border.south -= correction;
+		border.east += correction;
+		border.west -= correction;
+
+	   return [[border.north, border.west], [border.south, border.east]];	
+	};
+
+
     /**
      * Appends generated placemarks to the map
      * @param {Object}
@@ -150,5 +216,8 @@ goog.scope(function() {
         if (geoObject) {
             geoObject.balloon.open();
         }
+
+		
+
     };
 });
