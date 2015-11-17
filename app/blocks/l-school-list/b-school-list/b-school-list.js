@@ -4,6 +4,7 @@ goog.require('sm.lSchoolList.bSchoolList.Template');
 goog.require('sm.bRating.Rating');
 goog.require('goog.ui.Component');
 goog.require('goog.dom.classes');
+goog.require('goog.dom.classlist');
 goog.require('goog.events');
 goog.require('goog.soy');
 
@@ -29,6 +30,20 @@ sm.lSchoolList.bSchoolList.SchoolList = function(opt_params) {
      * @private
      */
     this.schoolElements_ = [];
+
+    /**
+     * School description elements
+     * @type {Array.<Element>}
+     * @private
+     */
+    this.schoolDescriptionElements_ = [];
+
+    /**
+     * School data elements
+     * @type {Array.<Element>}
+     * @private
+     */
+    this.schoolDataElements_ = [];
 };
 goog.inherits(sm.lSchoolList.bSchoolList.SchoolList, goog.ui.Component);
 
@@ -43,6 +58,11 @@ goog.scope(function() {
     SchoolList.CssClass = {
         ROOT: 'b-school-list',
         SCHOOL: 'b-school-list__school',
+        SCHOOL_NO_BORDER: 'b-school-list__school_no-border',
+        SCHOOL_DESCRIPTION: 'b-school-list__description',
+        SCHOOL_DESCRIPTION_HIDDEN: 'b-school-list__description_hidden',
+        SCHOOL_DATA: 'b-school-list__school-data',
+        SCHOOL_DATA_NO_MARGIN: 'b-school-list__school-data_no-margin',
         SCHOOL_RATING: Rating.CssClass.ROOT
     };
 
@@ -65,31 +85,49 @@ goog.scope(function() {
 
     /**
      * Internal decorates the DOM element
-     * @param {Node} element
+     * @param {Element} element
      */
     SchoolList.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
+        //school elements
         this.schoolElements_ = goog.dom.getElementsByClass(
             SchoolList.CssClass.SCHOOL,
             element
         );
 
-        //school rating
-        var schoolRatingElement,
-            schoolRating;
+        goog.dom.classlist.add(
+            this.schoolElements_[this.schoolElements_.length-1],
+            SchoolList.CssClass.SCHOOL_NO_BORDER
+        );
 
-        for(var i = 0; i < this.schoolElements_.length; i++) {
-            //dom elements
-            schoolRatingElement = goog.dom.getElementByClass(
-                SchoolList.CssClass.SCHOOL_RATING,
-                this.schoolElements_[i]
-            );
-            //rating
-            schoolRating = new Rating();
-            this.addChild(schoolRating);
-            schoolRating.decorate(schoolRatingElement);
+        //school data
+        this.schoolDataElements_ = goog.dom.getElementsByClass(
+            SchoolList.CssClass.SCHOOL_DATA,
+            element
+        );
+
+        //school description
+        this.schoolDescriptionElements_ = goog.dom.getElementsByClass(
+            SchoolList.CssClass.SCHOOL_DESCRIPTION,
+            element
+        );
+
+        for(var j = 0; j < this.schoolDescriptionElements_.length; j++) {
+            if(goog.dom.getTextContent(this.schoolDescriptionElements_[j])) {
+                goog.dom.classlist.remove(
+                    this.schoolDescriptionElements_[j],
+                    SchoolList.CssClass.SCHOOL_DESCRIPTION_HIDDEN
+                );
+                goog.dom.classlist.remove(
+                    this.schoolDataElements_[j],
+                    SchoolList.CssClass.SCHOOL_DATA_NO_MARGIN
+                );
+            }
         }
+
+        //school rating
+        this.initRating_();
     };
 
     /**
@@ -125,7 +163,29 @@ goog.scope(function() {
     };
 
     /**
+     * Rating initialization
+     * @private
+     */
+    SchoolList.prototype.initRating_ = function() {
+        var schoolRatingElement,
+            schoolRating;
+
+        for(var i = 0; i < this.schoolElements_.length; i++) {
+            //dom elements
+            schoolRatingElement = goog.dom.getElementByClass(
+                SchoolList.CssClass.SCHOOL_RATING,
+                this.schoolElements_[i]
+            );
+            //rating
+            schoolRating = new Rating();
+            this.addChild(schoolRating);
+            schoolRating.decorate(schoolRatingElement);
+        }
+    };
+
+    /**
      * Redirect handler
+     * @param {Object} event
      * @private
      */
     SchoolList.prototype.redirect_ = function(event) {
