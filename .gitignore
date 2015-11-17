@@ -7,6 +7,8 @@ tmp/
 doc/
 
 *.log
+*.swp
+.jshintrc
 deployment-config.json
 .remote-sync.json
 
