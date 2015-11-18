@@ -199,8 +199,10 @@ goog.scope(function() {
  */
 jQuery(function() {
     var root = goog.dom.getElementByClass(sm.lSchool.School.CssClass.ROOT),
-        params = jQuery(root).data('params'),
-        school = new sm.lSchool.School(params);
+        params = jQuery(root).data('params');
 
-    school.decorate(root);
+    if(root) {
+        var school = new sm.lSchool.School(params);
+        school.decorate(root)
+    }
 });

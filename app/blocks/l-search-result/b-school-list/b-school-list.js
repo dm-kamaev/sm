@@ -1,6 +1,6 @@
-goog.provide('sm.lSchoolList.bSchoolList.SchoolList');
+goog.provide('sm.lSearchResult.bSchoolList.SchoolList');
 
-goog.require('sm.lSchoolList.bSchoolList.Template');
+goog.require('sm.lSearchResult.bSchoolList.Template');
 goog.require('sm.bRating.Rating');
 goog.require('goog.ui.Component');
 goog.require('goog.dom.classes');
@@ -14,7 +14,7 @@ goog.require('goog.soy');
  * @constructor
  * @extends {goog.ui.Component}
  */
-sm.lSchoolList.bSchoolList.SchoolList = function(opt_params) {
+sm.lSearchResult.bSchoolList.SchoolList = function(opt_params) {
     goog.base(this);
 
     /**
@@ -30,25 +30,11 @@ sm.lSchoolList.bSchoolList.SchoolList = function(opt_params) {
      * @private
      */
     this.schoolElements_ = [];
-
-    /**
-     * School description elements
-     * @type {Array.<Element>}
-     * @private
-     */
-    this.schoolDescriptionElements_ = [];
-
-    /**
-     * School data elements
-     * @type {Array.<Element>}
-     * @private
-     */
-    this.schoolDataElements_ = [];
 };
-goog.inherits(sm.lSchoolList.bSchoolList.SchoolList, goog.ui.Component);
+goog.inherits(sm.lSearchResult.bSchoolList.SchoolList, goog.ui.Component);
 
 goog.scope(function() {
-    var SchoolList = sm.lSchoolList.bSchoolList.SchoolList,
+    var SchoolList = sm.lSearchResult.bSchoolList.SchoolList,
         Rating = sm.bRating.Rating;
 
     /**
@@ -58,11 +44,6 @@ goog.scope(function() {
     SchoolList.CssClass = {
         ROOT: 'b-school-list',
         SCHOOL: 'b-school-list__school',
-        SCHOOL_NO_BORDER: 'b-school-list__school_no-border',
-        SCHOOL_DESCRIPTION: 'b-school-list__description',
-        SCHOOL_DESCRIPTION_HIDDEN: 'b-school-list__description_hidden',
-        SCHOOL_DATA: 'b-school-list__school-data',
-        SCHOOL_DATA_NO_MARGIN: 'b-school-list__school-data_no-margin',
         SCHOOL_RATING: Rating.CssClass.ROOT
     };
 
@@ -74,7 +55,7 @@ goog.scope(function() {
         goog.base(this, 'createDom');
 
         var element = goog.soy.renderAsElement(
-            sm.lSchoolList.bSchoolList.Template.base,
+            sm.lSearchResult.bSchoolList.Template.base,
             {
                 params: this.params_
             }
@@ -95,36 +76,6 @@ goog.scope(function() {
             SchoolList.CssClass.SCHOOL,
             element
         );
-
-        goog.dom.classlist.add(
-            this.schoolElements_[this.schoolElements_.length-1],
-            SchoolList.CssClass.SCHOOL_NO_BORDER
-        );
-
-        //school data
-        this.schoolDataElements_ = goog.dom.getElementsByClass(
-            SchoolList.CssClass.SCHOOL_DATA,
-            element
-        );
-
-        //school description
-        this.schoolDescriptionElements_ = goog.dom.getElementsByClass(
-            SchoolList.CssClass.SCHOOL_DESCRIPTION,
-            element
-        );
-
-        for(var j = 0; j < this.schoolDescriptionElements_.length; j++) {
-            if(goog.dom.getTextContent(this.schoolDescriptionElements_[j])) {
-                goog.dom.classlist.remove(
-                    this.schoolDescriptionElements_[j],
-                    SchoolList.CssClass.SCHOOL_DESCRIPTION_HIDDEN
-                );
-                goog.dom.classlist.remove(
-                    this.schoolDataElements_[j],
-                    SchoolList.CssClass.SCHOOL_DATA_NO_MARGIN
-                );
-            }
-        }
 
         //school rating
         this.initRating_();
@@ -189,6 +140,7 @@ goog.scope(function() {
      * @private
      */
     SchoolList.prototype.redirect_ = function(event) {
-        document.location.href = '/school/'+event.currentTarget.getAttribute('data-id');
+        var id = event.currentTarget.getAttribute('data-id');
+        document.location.href = '/school/' + id;
     };
 });

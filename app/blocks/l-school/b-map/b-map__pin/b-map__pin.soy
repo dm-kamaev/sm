@@ -34,7 +34,7 @@
                 <br/>
                 <span class="b-map-pin__rating">
                     {if $params.rating > 0}
-                        {$params.rating}
+                        {round($params.rating, 1)}
                     {else}
                         Нет оценок
                     {/if}

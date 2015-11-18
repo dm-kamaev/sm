@@ -150,7 +150,13 @@ var getEducationInterval = (opt_programms) => {
         }
     });
 
-    return [res.begin, res.end];
+	var result = null;
+    if (!(res.begin == -1 && res.end == -1)) {	   	   
+		result = [];
+		for (i = res.begin; i<=res.end; i++)
+			result.push(i);
+	}
+	return result;
 };
 
 /**
@@ -178,7 +184,7 @@ var rowToSchool = row => {
     var schoolType = getType(nParse);
 
     return {
-        name: schoolName,
+        name: schoolName.trim(),
         schoolType: schoolType,
         director: row[DIRECTOR_INDEX],
         phones: getArray(row, PHONES_INDEX),
