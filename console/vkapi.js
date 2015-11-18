@@ -72,9 +72,12 @@ var getSchoolUsers = async ((school) => {
     		answ;
         do {
             answ = await(request('users.search', yearParams));
-            if (reqTry)
-                console.log(colors.red(reqTry+1) + ' try for school ' +
-					   school.title + ' year ' + colors.red(i));
+            if (!answ) {
+                console.log('Didnt get anything after ' + colors.red(reqTry+1) +
+					   ' try ' + school.title + ' year ' + colors.red(i));
+				if (!reqtry)
+					sleep.sleep(60); //sleep for 60 seconds
+			}
             reqTry++;
         } while (!answ && reqTry<3);
         if (answ) {
@@ -89,7 +92,7 @@ var getSchoolUsers = async ((school) => {
                 });
             }
         }
-    }
+	}
     return results;
 });
 
@@ -149,10 +152,15 @@ var request = async ((methodName, params) => {
         console.log(colors.red('Didnt get any response'));
         return null;
     }
-    if (!res.response || res.response.count === 0){
+    if (!res.response) { 
         sleep.sleep(1);
+        console.log(colors.red('Didnt get any res.response'));
         return null;
-    }
+    } 
+	if (res.response.count === 0) {
+        console.log(colors.red('Response count = 0. Is this true tho?'));
+		return null;
+	}
     return res;
 
 });
@@ -340,6 +348,6 @@ var start2 = async (()=>{
 commander
     .command('vkUpdate')
     .description('Updates vk skhools and writes them to json')
-    .action(() => start2());
+    .action(() => start());
 
 exports.Command;
