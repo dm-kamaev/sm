@@ -38,10 +38,10 @@ function getSummaryData_(pathBd) {
         if (data[c] !== undefined) {
             for (var ac = 0; ac < data[c].length; ac++) {
                 var addressData = data[c][ac];
-                if (addressData.length = 1) {
+                if (addressData.length == 1) {
                     compare.push(addressData[0]);
                 }
-                else {
+                else if (addressData.length > 1) {
                     for (var i = 0; i < addressData.length; i++) {
                         compare.push(addressData[i]);
                     }
