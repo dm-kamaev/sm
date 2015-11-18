@@ -4,45 +4,25 @@
  * Sort template
  */
 {template .base autoescape="strict" kind="html"}
+    {let $btn kind="html"}
+        {call .btn /}
+    {/let}
     <div class="b-sort">
-        {call gorod.bDropdown.DropdownTemplate.render}
+        {call gorod.bDropdown.DropdownCustomTemplate.render}
             {param params: [
-                'switcher': [
-                     'label': 'Сортировать по',
-                     'customClasses': 'b-bouton_dropdown-opener',
-                     'state': [
-                         'pressed': true
-                     ],
-                     'style': [
-                         'theme': 'default',
-                         'size': 'extralarge',
-                         'color': 'black',
-                         'borderRadius': 'none',
-                         'borderWidth': 'none',
-                         'uppercase': false
-                     ]
-                ],
-                'switchable': [
-                    'list': [
-                        [
-                            'text': 'Средняя оценка'
-                        ],
-                        [
-                            'text': 'Образование'
-                        ],
-                        [
-                            'text': 'Педагоги'
-                        ],
-                        [
-                            'text': 'Доступность'
-                        ],
-                        [
-                            'text': 'Атмосфера'
-                        ]
-                    ],
-                    'color': 'red'
-                ]
+                'switcher': $btn,
+                'switchable': '<div>ou</div>'
             ]/}
         {/call}
+    </div>
+{/template}
+
+
+/**
+ *
+ */
+{template .btn autoescape="strict" kind="html"}
+    <div>
+        !!!
     </div>
 {/template}
