@@ -114,7 +114,6 @@ var rowToSchool = row => {
 
 
 var parseSchool = async(schoolData => {
-    //var School = modules.school.models.School;
     var params = {
         where: {
             goverment_key: schoolData.goverment_key

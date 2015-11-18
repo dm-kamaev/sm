@@ -29,6 +29,9 @@ var School = db.define('School', {
             School.belongsTo(models.CommentGroup, {
                 foreignKey: 'comment_group_id'
             });
+			School.hasMany(models.SchoolUniversity, {
+				as: 'schoolUniversities', foreignKey: 'school_id'	
+			});
         }
     }
 });
