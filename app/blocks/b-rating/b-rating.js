@@ -189,12 +189,13 @@ goog.scope(function() {
      * @private
      */
     Rating.prototype.renderAverageValue_ = function(averageValue) {
-        this.averageMark_.innerHTML = this.valueToString_(averageValue, 1);
-        if(this.valueToString_(averageValue, 1) == '—') {
-            /*goog.dom.classlist.add(
+        var valueStr = this.valueToString_(averageValue, 1);
+        this.averageMark_.innerHTML = valueStr;
+        if (valueStr == '—') {
+            goog.dom.classlist.add(
                 this.averageMark_,
                 Rating.CssClass.NULL_AVERAGE_MARK
-            );*/
+            );
         } else {
             goog.dom.classlist.remove(
                 this.averageMark_,
