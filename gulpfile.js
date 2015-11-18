@@ -27,12 +27,15 @@ gulp.task('doc', function () {
 });
 
 gulp.task('lint', function() {
-    var pathArray = [].concat('./dev/blocks/**/*.js');
-    var ignore = config.lintIgnore;
+    var pathArray = ['./app/blocks/**/*.js'],
+        ignore = config.lintIgnore,
+        ignorePath;
 
     for (var i = 0; i < ignore.length; i++) {
-        var pathArray = pathArray.concat('!' + __dirname + ignore[i]);
+        ignorePath = '!' + path.resolve(__dirname, ignore[i]);
+        pathArray.push(ignorePath);
     }
+
     return gulpHelper.lint(pathArray, false);
 });
 
@@ -97,7 +100,7 @@ gulp.task('soy', function () {
 });
 
 
-gulp.task('scripts', ['soy'], function () {
+gulp.task('scripts', ['lint', 'soy'], function () {
     return gulpHelper.buildJs(
         [
             path.join(__dirname, BLOCKS_DIR, '/**/*.js')

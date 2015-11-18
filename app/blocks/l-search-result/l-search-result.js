@@ -20,7 +20,7 @@ sm.lSearchResult.SearchResult = function(opt_params) {
     /**
      * Parameters
      * @private
-     * @type{Object}
+     * @type {Object}
      */
     this.params_ = opt_params || {};
 };
@@ -39,6 +39,9 @@ goog.scope(function() {
         SCHOOL_LIST: SchoolList.CssClass.ROOT
     };
 
+    /**
+     * @override
+     */
     SearchResult.prototype.decorate = function(element) {
         goog.base(this, 'decorate', element);
 
