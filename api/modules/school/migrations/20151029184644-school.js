@@ -20,9 +20,9 @@ module.exports = {
         name: {
             type: Sequelize.STRING,
         },
-		full_name: {
-			type: Sequelize.STRING,
-		},
+        full_name: {
+            type: Sequelize.STRING,
+        },
         director: {
             type: Sequelize.STRING,
         },

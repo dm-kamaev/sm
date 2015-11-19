@@ -28,7 +28,7 @@ var getSchoolParams = (params) => {
 
     var schoolParams = {
         name: params.name,
-		fullName: params.fullName,
+        fullName: params.fullName,
         director: params.director,
         phonres: params.phones,
         site: params.site,
@@ -123,33 +123,33 @@ exports.get = async((sqlizeOptions, params) => {
 });
 
 exports.search = async (params => {
-	var searchParams = params.searchParams,
-		whereParams = {};
-	if (searchParams.name) //TODO: also search by long name
-		whereParams.$or = [
-			{
-				name: {$like: '%' + searchParams.name + '%'} 
-			}, {
-				fullName:{$like: '%' + searchParams.name + '%'} 
-			}
-		];
-	if (searchParams.classes && searchParams.classes.length) {
-		whereParams.educationInterval = { 
-			$contains: searchParams.classes
-		};
-	}	
-	if (searchParams.schoolType && searchParams.schoolType.length) {
-		whereParams.schoolType = {
-			$or:[]  
-		};
-		searchParams.schoolType.forEach((item) => { 
-			whereParams.schoolType.$or.push(item);
-		});
-	}
+    var searchParams = params.searchParams,
+	    whereParams = {};
+    if (searchParams.name) //TODO: also search by long name
+	    whereParams.$or = [
+		{
+			name: {$like: '%' + searchParams.name + '%'} 
+		}, {
+			fullName:{$like: '%' + searchParams.name + '%'} 
+		}
+    	];
+    if (searchParams.classes && searchParams.classes.length) {
+	    whereParams.educationInterval = { 
+		    $contains: searchParams.classes
+    	};
+    }	
+    if (searchParams.schoolType && searchParams.schoolType.length) {
+	    whereParams.schoolType = {
+		    $or:[]  
+    	};
+    searchParams.schoolType.forEach((item) => { 
+	    whereParams.schoolType.$or.push(item);
+   	});
+}
 
-	return JSON.stringify(await (models.School.findAll({
-		where: whereParams
-	})));
+return JSON.stringify(await (models.School.findAll({
+	where: whereParams
+})));
 });
 
 exports.create = async (params => {
