@@ -35,9 +35,8 @@ exports.list = async (function(req, res) {
 
     var schoolList =
         schools.map(school => {
-            var commentGroup = school.CommentGroup ? school.CommentGroup.comments : [];
-            var sumScore = commentGroup
-                .map(comment => comment.score)
+            var sumScore = school.ratings
+                .map(rating => rating.score)
                 .reduce((context, coords) => {
                     coords.forEach((value, index) => {
                         if (value) {
@@ -98,8 +97,8 @@ exports.view = async (function(req, res) {
         'Scholar': 'ученик'
     };
 
-    var sumScore = commentGroup
-        .map(comment => comment.score)
+    var sumScore = school.ratings
+        .map(rating => rating.score)
         .reduce((context, coords) => {
             coords.forEach((value, index) => {
                 if (value) {
@@ -163,7 +162,7 @@ exports.view = async (function(req, res) {
                     author: '',
                     rank: typeConvert[comment.userType],
                     text: comment.text,
-                    sections: comment.score.map((score, index) => {
+                    sections: comment.rating ? comment.rating.score.map((score, index) => {
                         var type = [
                             'Образование',
                             'Преподаватели',
@@ -174,7 +173,7 @@ exports.view = async (function(req, res) {
                             name: type[index],
                             rating: score
                         };
-                    })
+                    }) : []
                 };
             }),
             coords: school.addresses.map(adr => {

@@ -167,7 +167,7 @@ exports.create = async (params => {
 });
 
 
-exports.comment = async ( function(schoolId, params, t) {
+exports.comment = async (function(schoolId, params, t) {
     var school = await (this.getForComment(schoolId, t)),
         commentGroup = await(this.getGroupId(school, t));
     if (params.score)
@@ -179,11 +179,11 @@ exports.comment = async ( function(schoolId, params, t) {
 
 exports.rate = async ((school, params) => {
     var rt = await (models.Rating.create({
-        score: params.score,
+        score: params.score
     }));
     await (school.addRating(rt));
     return rt;
-})
+});
 
 exports.list = async (function() {
     var schools = await (models.School.findAll(
@@ -193,8 +193,8 @@ exports.list = async (function() {
             ],
             // TODO: more specified include
             include: [{
-                all:true,
-                nested: true
+                model: models.Rating,
+                as: 'ratings'
             }]
         }
     ));
