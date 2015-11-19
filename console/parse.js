@@ -15,6 +15,7 @@ var exclusion = require('./parseConfig').exclusion;
 
 var GOVERMENT_KEY_INDEX = 2,
     NAME_INDEX = 6,
+	FULL_NAME_INDEX = 5,
     DIRECTOR_INDEX = 13,
     PHONES_INDEX = 15,
     SITE_INDEX = 17,
@@ -185,6 +186,7 @@ var rowToSchool = row => {
 
     return {
         name: schoolName.trim(),
+		fullName: row[FULL_NAME_INDEX].trim(),
         schoolType: schoolType,
         director: row[DIRECTOR_INDEX],
         phones: getArray(row, PHONES_INDEX),

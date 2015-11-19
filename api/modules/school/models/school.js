@@ -3,6 +3,10 @@ var DataType = require('sequelize'),
 
 var School = db.define('School', {
     name:DataType.STRING,
+	fullName: {
+		field: 'full_name',
+		type: DataType.STRING
+	},
     schoolType: {
         field: 'school_type',
         type: DataType.ENUM,
@@ -41,7 +45,7 @@ var School = db.define('School', {
             School.hasMany(models.Rating, {
                 as: 'ratings',
                 foreignKey: 'school_id'
-            })
+            });
         }
     }
 });

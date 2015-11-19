@@ -20,6 +20,9 @@ module.exports = {
         name: {
             type: Sequelize.STRING,
         },
+		fullName: {
+			type: Sequelize.STRING,
+		},
         director: {
             type: Sequelize.STRING,
         },

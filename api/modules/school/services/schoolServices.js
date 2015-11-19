@@ -125,9 +125,13 @@ exports.search = async (params => {
 	var searchParams = params.searchParams,
 		whereParams = {};
 	if (searchParams.name) //TODO: also search by long name
-		whereParams.name = {
-			$like: '%' + searchParams.name + '%' 
-		};
+		whereParams.$or = [
+			{
+				name: {$like: '%' + searchParams.name + '%'} 
+			}, {
+				fullName:{$like: '%' + searchParams.name + '%'} 
+			}
+		];
 	if (searchParams.classes && searchParams.classes.length) {
 		whereParams.educationInterval = { 
 			$contains: searchParams.classes
