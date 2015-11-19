@@ -27,7 +27,7 @@ exports.createComment = async (function(req, res) {
         var schoolId = req.params.id,
             params = req.body;
         params.score = params['score[]']; //TODO придумать чтото с этим
-        result = await(schoolServices.comment(schoolId,params));
+        result = await(schoolServices.comment(schoolId, params));
     } catch (e) {
         console.log(e);
         result = JSON.stringify(e);

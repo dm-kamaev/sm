@@ -11,13 +11,14 @@ exports.create = async (function(commentGroupId, params) {
         var comment = await (models.Comment.create({
             comment_group_id: commentGroupId,
             text: params.text,
-            userType: params.userType,
+            userType: params.userType
         }, {
             include: [{
-                model: models.Rating
+                model: models.Rating,
+                as: 'rating'
             }]
         }));
-        console.log(comment);
+        console.log('comment', JSON.stringify(comment).blue);
         if (params.rating) {
             //comment.setRating(params.rating)
             params.rating.setComment(comment);

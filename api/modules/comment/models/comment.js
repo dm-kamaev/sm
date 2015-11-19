@@ -3,16 +3,12 @@ var DataType = require('sequelize'),
 
 
 var Comment = db.define('Comment', {
-    text: {
-        type: DataType.TEXT,
-        //allowNull: false
-    },
+    text: DataType.TEXT,
     userType: {
         field: "user_type",
         type: DataType.ENUM,
-        values: ['Parent','Graduate','Scholar']
-       // allowNull: false
-    },
+        values: ['Parent', 'Graduate', 'Scholar']
+    }
 }, {
     underscored: true,
     tableName: 'comment',
@@ -22,6 +18,7 @@ var Comment = db.define('Comment', {
                 foreignKey: 'comment_group_id'
             });
             Comment.belongsTo(models.Rating, {
+                as: 'rating',
                 foreignKey: 'rating_id'
             })
         }
