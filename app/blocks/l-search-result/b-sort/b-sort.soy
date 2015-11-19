@@ -8,28 +8,7 @@
         {call .switcher_ /}
     {/let}
     {let $switchable kind="html"}
-        {call gorod.bList.ListTemplate.render}
-            {param params:[
-                'list': [
-                    [
-                        'text': 'Средняя оценка'
-                    ],
-                    [
-                        'text': 'Образование'
-                    ],
-                    [
-                        'text': 'Преподаватели'
-                    ],
-                    [
-                        'text': 'Атмосфера'
-                    ],
-                    [
-                        'text': 'Инфраструктура'
-                    ]
-                ],
-                'color': 'red'
-            ]/}
-        {/call}
+        {call .switchable_ /}
     {/let}
     <div class="b-sort">
         {call gorod.bDropdown.DropdownCustomTemplate.render}
@@ -59,4 +38,32 @@
     </span>
     <img class="dropdown__switcher-image"
          src="/images/l-search-result/b-sort/downArrow.png">
+{/template}
+
+/**
+ * Switchable template
+ */
+{template .switchable_ autoescape="strict" kind="html" private="true"}
+    {call gorod.bList.ListTemplate.render}
+        {param params:[
+            'list': [
+                [
+                    'text': 'Средняя оценка'
+                ],
+                [
+                    'text': 'Образование'
+                ],
+                [
+                    'text': 'Преподаватели'
+                ],
+                [
+                    'text': 'Атмосфера'
+                ],
+                [
+                    'text': 'Инфраструктура'
+                ]
+            ],
+            'color': 'red'
+        ]/}
+    {/call}
 {/template}
