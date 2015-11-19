@@ -183,7 +183,6 @@ var rowToSchool = row => {
     var nParse = nameParse(row[NAME_INDEX]);
     var schoolName = getName(nParse);
     var schoolType = getType(nParse);
-
     return {
         name: schoolName.trim(),
 		fullName: row[FULL_NAME_INDEX].trim(),

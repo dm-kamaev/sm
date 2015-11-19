@@ -28,6 +28,7 @@ var getSchoolParams = (params) => {
 
     var schoolParams = {
         name: params.name,
+		fullName: params.fullName,
         director: params.director,
         phonres: params.phones,
         site: params.site,
