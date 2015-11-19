@@ -109,16 +109,15 @@ var upLetter = function (string, index) {
     return string.slice(0, index) + 
            string[index].toUpperCase() + 
            string.slice(index+1);
-}
+};
 var getEnteryPointFromName = function (name) {
     name = name.replace(/l-/g, ''); // Remove l-
     var slice = upLetter(name, 0); // doc => Doc
     var k;
     while ((k = slice.indexOf('-')) != -1){
-        console.log(slice, k);
         slice = upLetter(slice, k+1);
         slice = slice.slice(0, k) + slice.slice(k+1);
-    };
+    }
     return 'sm.l' + slice + '.' + slice;
 };
 
