@@ -1,0 +1,70 @@
+{namespace sm.lSearchResult.bFilter.Template}
+
+/**
+ * Filter template
+ */
+{template .base autoescape="strict" kind="html"}
+    {@param? params: [
+        header: [
+            title: string
+        ],
+        body: [
+            filters: list<[
+                name: string
+            ]>
+        ]
+    ]}
+
+    {call .init data="all"/}
+{/template}
+
+/**
+ * Filter init template
+ */
+{template .init autoescape="strict" kind="html"}
+    {@param? params: [
+        header: [
+            title: string
+        ],
+        body: [
+            filters: list<[
+                name: string
+            ]>
+        ]
+    ]}
+    <div class="b-filter">
+        {call .header data="all"/}
+        {call .body data="all"/}
+    </div>
+{/template}
+
+/**
+ * Header template
+ */
+{template .header autoescape="strict" kind="html"}
+    {@param? params: [
+        header: [
+            title: string
+        ]
+    ]}
+    <div class="b-filter__header">
+        {$params.header.title}
+    </div>
+{/template}
+
+/**
+ * Body template
+ */
+{template .body autoescape="strict" kind="html"}
+    {@param? params: [
+        body: [
+            filters: list<[
+                name: string
+            ]>
+        ]
+    ]}
+    <div class="b--filter__body">
+        {$params.body.filters}
+    </div>
+{/template}
+

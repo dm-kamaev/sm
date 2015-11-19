@@ -9,7 +9,10 @@ const soynode = require('gulp-soynode');
 var glob = require("glob");
 var exec = require('child_process').exec;
 var Q = require('q');
-var fs = require('fs-extra');
+var fs = require('fs-extra'),
+    foreach = require('gulp-foreach'),
+    SoyExtend = require('./soy-extend'),
+    clean = require('gulp-clean');
 const config = require('./config.json');
 
 
@@ -80,23 +83,61 @@ gulp.task('appES5', function () {
 });
 
 
-gulp.task('soy', function () {
+gulp.task('soy', ['preSoy'], function (cb) {
     //return gulpHelper.soy([
     //    path.join(__dirname, BLOCKS_DIR, '/**/*.soy')
     //]);
-
-    return gulp.src([
-            path.join(__dirname, BLOCKS_DIR, '/**/*.soy'),
+    gulp.task('_build', function(){
+        return gulp.src([
+            path.join('./build/soy/**/*.soy'),
             path.join(__dirname, '/node_modules/frobl/blocks', '/**/*.soy')
         ])
-        .pipe(soynode({
-            outputDir: path.join(__dirname, '/node_modules/frobl', '/tmp/soy'),
-            loadCompiledTemplates: false,
-            useClosureStyle: true,
-            contextJsPaths: [
-                path.join(__dirname, '/node_modules/google-closure-library/closure/goog/base.js')
-            ]
-        }));
+            .pipe(soynode({
+                outputDir: path.join(__dirname, '/node_modules/frobl', '/tmp/soy'),
+                loadCompiledTemplates: false,
+                useClosureStyle: true,
+                contextJsPaths: [
+                    path.join(__dirname, '/node_modules/google-closure-library/closure/goog/base.js')
+                ]
+            }));
+    });
+
+    gulp.task('_clean', function(){
+        return gulp.src('./build',{read: false})
+            .pipe(clean());
+    });
+
+    return gulpHelper.runSequence('_build', '_clean', cb);
+});
+
+
+
+gulp.task('preSoy', function(cb) {
+    var extender = new SoyExtend({
+        blocksDir: path.join(__dirname, BLOCKS_DIR)
+    });
+
+    gulp.task('_preClean', function(){
+        return gulp.src('./build',{read: false})
+            .pipe(clean());
+    });
+
+    gulp.task('_copy', function () {
+        return gulp.src(
+                path.join(__dirname, BLOCKS_DIR, '/**/*.soy')
+            )
+            .pipe(gulp.dest('./build/soy'));
+    });
+
+    gulp.task('_extend', function () {
+        return gulp.src('./build/soy/**/*.soy')
+            .pipe(foreach(function (stream, file) {
+                extender.proceed(file.path);
+                return stream;
+            }));
+    });
+
+    return gulpHelper.runSequence('_preClean', '_copy', '_extend', cb);
 });
 
 
