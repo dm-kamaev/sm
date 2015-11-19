@@ -10,6 +10,7 @@ var glob = require("glob");
 var exec = require('child_process').exec;
 var Q = require('q');
 var fs = require('fs-extra');
+const config = require('./config.json');
 
 
 const production = !!util.env.production;
@@ -24,6 +25,20 @@ gulp.task('doc', function () {
     }, function() {
     });
 });
+
+gulp.task('lint', function() {
+    var pathArray = ['./app/blocks/**/*.js'],
+        ignore = config.lintIgnore,
+        ignorePath;
+
+    for (var i = 0; i < ignore.length; i++) {
+        ignorePath = '!' + path.resolve(__dirname, ignore[i]);
+        pathArray.push(ignorePath);
+    }
+
+    return gulpHelper.lint(pathArray, false);
+});
+
 
 gulp.task('migrate', function () {
         var deferred = Q.defer();
@@ -57,7 +72,6 @@ gulp.task('migrate', function () {
 });
 
 
-
 gulp.task('appES5', function () {
     return gulp.src('app.js')
         .pipe(babel())
@@ -86,7 +100,7 @@ gulp.task('soy', function () {
 });
 
 
-gulp.task('scripts', ['soy'], function () {
+gulp.task('scripts', ['lint', 'soy'], function () {
     return gulpHelper.buildJs(
         [
             path.join(__dirname, BLOCKS_DIR, '/**/*.js')
@@ -110,8 +124,6 @@ gulp.task('styles', function () {
 });
 
 
-
-
 gulp.task('images', function () {
     return gulp.src(path.join(__dirname + BLOCKS_DIR + '/**/*.png'))
         .pipe(gulp.dest(path.join(__dirname + '/public/images')));
@@ -130,10 +142,16 @@ gulp.task('watch', function () {
 });
 
 
+gulp.task('fonts', function () {
+    return gulp.src(path.join(__dirname + '/assets/**/*.*'))
+        .pipe(gulp.dest(path.join(__dirname + '/public/fonts')));
+});
+
+
 const tasks = function (bool) {
     return bool ?
-        ['soy', 'scripts', 'images', 'styles'] :
-        ['watch', 'soy', 'scripts', 'images', 'styles'];
+        ['soy', 'scripts', 'images', 'fonts', 'styles'] :
+        ['watch', 'soy', 'scripts', 'images', 'fonts','styles'];
 };
 
 gulp.task('default', tasks(production));
