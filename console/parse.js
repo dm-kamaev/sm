@@ -70,7 +70,7 @@ var nameParse = item => {
             }
         });
     }
-    str = str.replace(/№ /g,'№')
+    str = str.replace(/№ /g,'№');
     arr[0] = str;
 
     return arr;

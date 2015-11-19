@@ -78,7 +78,7 @@ exports.getAllById = async((sch_id)=>{
     }));
 });
 
-//TODO: переделать
+//TODO: refactor
 exports.get = async((sqlizeOptions, params) => {
     params.include = [{
         model: models.Address,
@@ -91,7 +91,16 @@ exports.get = async((sqlizeOptions, params) => {
         return await (models.School.findAll(sqlizeOptions));
 });
 
-
+//TODO: refactor all of this
+exports.getOneNudeByName = async((name) => {
+	return await (models.School.findOne({
+		where: {
+			name : {
+				$like: '%' + name + '%'
+			}	
+		}
+	}));
+});
 
 exports.create = async (params => {
     await(models.School.create(

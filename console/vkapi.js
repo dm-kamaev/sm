@@ -13,10 +13,13 @@ var sleep = require('sleep');
 var fs = require('fs');
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
+var readlineSync = require('readline-sync');
+var xlsx = require('node-xlsx');
 
 const ACCESSS_TOKEN = require('./token.json').value;
 const START_YEAR = 2013;
 const END_YEAR = 2015;
+const RETRY_COUNT = 10;
 
 var start = async(() => {
     var schools = await(getSchools());
@@ -75,12 +78,14 @@ var getSchoolUsers = async ((school) => {
             if (!answ) {
                 console.log('Didnt get anything after ' + colors.red(reqTry+1) +
 					   ' try ' + school.title + ' year ' + colors.red(i));
-				if (!reqtry)
+				if (!reqTry) {
+					console.log('Going to sleep for 60 seconds');
 					sleep.sleep(60); //sleep for 60 seconds
+				}
 			}
             reqTry++;
-        } while (!answ && reqTry<3);
-        if (answ) {
+        } while (!answ && reqTry < RETRY_COUNT);
+        if (answ && !answ.skip) {
             if (answ.response.count > 1000) {
                 console.log('There are too many results in school ' + colors.red(school.title) +
                     ' year ' + colors.red(i));
@@ -158,8 +163,15 @@ var request = async ((methodName, params) => {
         return null;
     } 
 	if (res.response.count === 0) {
-        console.log(colors.red('Response count = 0. Is this true tho?'));
-		return null;
+		var answer='S';
+		console.log(colors.red('WARNING'));
+		while (answer!='S' && answer!='T')
+        	answer = readlineSync.question('Response count = 0. Type \'S\'' +
+						   'to skip school\\year or \'T\' to try again\n');
+		return answer == 'S'? 
+		{
+			skip: true
+		} : null;
 	}
     return res;
 
@@ -262,13 +274,15 @@ var loadFromJson = (name) => { //'vk_schools.json'
     return require('../' + name);
 };
 
-var processMatches = async((matches)=> {    
+var processMatches = async((matches, opt_outPath)=> {    
 	console.log('Getting universities for schools. Patience');
-    var cached_matches = loadFromJson('pr_matches.json');
+	var outPath = opt_outPath || 'pr_matches.json';
+    var cached_matches = loadFromJson(outPath);
     var processed_matches = [];
 	matches.forEach(match =>{
-        var cached_match = cached_matches.find(school =>{
-            if (school.id == match.id)
+        var cached_match = cached_matches.find(cachedMatch =>{
+            if (cachedMatch.id == match.id &&
+				cachedMatch.ourId == match.ourId)
                 return true;
         });
         if (cached_match){
@@ -313,7 +327,7 @@ var processMatches = async((matches)=> {
                 console.log('Got nothing for ' + colors.red(match.title));
             }
         }
-        saveToJson(processed_matches, 'pr_matches.json');
+        saveToJson(processed_matches, outPath);
     });
 });
 
@@ -333,7 +347,37 @@ var writeSchoolToBd = async ((school)=> {
 	univerServices.addSchoolResults(school);
 });
 
-var start2 = async (()=>{
+var processRow = async((row) => {
+	var schoolName = row[1].trim(),
+		rowResults = [],
+		school = await (schoolServices.getOneNudeByName(schoolName));
+	if (!school)
+		throw new Error('cant find ' + schoolName);
+	for (var i = 2; i <= 46; i+=2){
+		if (row[i])
+			rowResults.push({
+				id: row[i],
+				title: row[i+1],
+				ourId: school.id
+			});
+	}
+	return rowResults;
+});
+
+var parseExcel = async((path) => {
+	var parsed = xlsx.parse(path),
+        data = parsed[0].data,
+		matches = [];
+    await (data.forEach((row, index) => {
+		if (index) {	
+			rowResult = await(processRow(row));
+			matches = matches.concat(rowResult);
+		}
+	}));
+	await (processMatches(matches, 'pr_extra_matches.json'));
+});
+
+var start2 = async (() => {
 	console.log('here we go');
 	try {
 		await (writeResultsFromJsonToBd('pr_matches.json'));
@@ -344,10 +388,15 @@ var start2 = async (()=>{
 	console.log('done');
 });
 
+var start3 = async(() => {
+	var res = await(parseExcel('extraData.xlsx'));
+	console.log(res);
+});
+
 
 commander
     .command('vkUpdate')
     .description('Updates vk skhools and writes them to json')
-    .action(() => start());
+    .action(() => start3());
 
 exports.Command;
