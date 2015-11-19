@@ -380,7 +380,7 @@ var parseExcel = async((path) => {
 var start2 = async (() => {
 	console.log('here we go');
 	try {
-		await (writeResultsFromJsonToBd('pr_matches.json'));
+		await (writeResultsFromJsonToBd('pr_extra_matches.json'));
 	} catch (err) {
 		console.log(err.message);
 		process.exit();
@@ -397,6 +397,6 @@ var start3 = async(() => {
 commander
     .command('vkUpdate')
     .description('Updates vk skhools and writes them to json')
-    .action(() => start3());
+    .action(() => start2());
 
 exports.Command;
