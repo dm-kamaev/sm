@@ -1,0 +1,27 @@
+.b-search {
+    position: relative;
+}
+
+.b-search__input {
+    width: 80%;
+    height: 40px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 55px;
+
+    border-color: transparent;
+    background-color: #f4f4ec;
+
+    font-size: 15px;
+}
+
+.b-seach__icon {
+    position: absolute;
+    bottom: 22px;
+    left: 25px;
+
+    width: 20px;
+    height: 20px;
+
+    background: url(images/b-search/search.png) no-repeat left;
+}
