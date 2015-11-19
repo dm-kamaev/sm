@@ -15,7 +15,7 @@ var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var readlineSync = require('readline-sync');
 var xlsx = require('node-xlsx');
-
+var vkIgnore = require('./vkignore');
 const ACCESSS_TOKEN = require('./token.json').value;
 const START_YEAR = 2013;
 const END_YEAR = 2015;
@@ -69,32 +69,37 @@ var getSchoolUsers = async ((school) => {
         count: 1000
     };
     for (var i = START_YEAR; i <= END_YEAR; i++) {
-        var yearParams = params;
-        yearParams.school_year = i;
-        var reqTry = 0,
-    		answ;
-        do {
-            answ = await(request('users.search', yearParams));
-            if (!answ) {
-                console.log('Didnt get anything after ' + colors.red(reqTry+1) +
-					   ' try ' + school.title + ' year ' + colors.red(i));
-				if (!reqTry) {
-					console.log('Going to sleep for 60 seconds');
-					sleep.sleep(60); //sleep for 60 seconds
-				}
-			}
-            reqTry++;
-        } while (!answ && reqTry < RETRY_COUNT);
-        if (answ && !answ.skip) {
-            if (answ.response.count > 1000) {
-                console.log('There are too many results in school ' + colors.red(school.title) +
-                    ' year ' + colors.red(i));
-            }
-            else {
-                results.push({
-                    year:i,
-                    results: answ.response.items
-                });
+        if (vkIgnore.find(el => el.vkId == schoolId && el.year == i))
+            console.log('School ' + colors.red(school.title) + 
+                ' year ' + colors.red(i) + ' in ignore');
+        else {
+            var yearParams = params;
+            yearParams.school_year = i;
+            var reqTry = 0,
+                answ;
+            do {
+                answ = await(request('users.search', yearParams));
+                if (!answ) {
+                    console.log('Didnt get anything after ' + colors.red(reqTry+1) +
+                           ' try ' + school.title + ' year ' + colors.red(i));
+                    if (!reqTry) {
+                        console.log('Going to sleep for 60 seconds');
+                        sleep.sleep(60); //sleep for 60 seconds
+                    }
+                }
+                reqTry++;
+            } while (!answ && reqTry < RETRY_COUNT);
+            if (answ && !answ.skip) {
+                if (answ.response.count > 1000) {
+                    console.log('There are too many results in school ' + colors.red(school.title) +
+                        ' year ' + colors.red(i));
+                }
+                else {
+                    results.push({
+                        year:i,
+                        results: answ.response.items
+                    });
+                }
             }
         }
 	}
@@ -163,7 +168,7 @@ var request = async ((methodName, params) => {
         return null;
     } 
 	if (res.response.count === 0) {
-		var answer='S';
+		var answer;
 		console.log(colors.red('WARNING'));
 		while (answer!='S' && answer!='T')
         	answer = readlineSync.question('Response count = 0. Type \'S\'' +
@@ -274,6 +279,45 @@ var loadFromJson = (name) => { //'vk_schools.json'
     return require('../' + name);
 };
 
+var processMatch = async((match) => {
+    var local_match = match;
+    var resultsArr = [];
+    var users = await(getSchoolUsers(local_match));
+    if (users || users.length !== 0){
+        users.forEach(userYear => {
+            var yearResults = {
+                year: userYear.year,
+                universities: []
+                };
+            var uniCountForYear = 0;
+            userYear.results.forEach(user => {
+                var uni = user.university_name;
+                if (uni) {
+                    uniCountForYear++;
+                    var uniInArray = yearResults.universities.find(univ => {
+                    if (univ.name == uni)
+                        return true;
+                    });
+                    if (uniInArray)
+                        uniInArray.count++;
+                    else
+                        yearResults.universities.push({
+                            vkId: user.university,
+                            name: uni,
+                            count: 1
+                        });
+                }
+            });
+            yearResults.total = uniCountForYear;
+            resultsArr.push(yearResults);
+        });
+        local_match.years= resultsArr;
+    } else {
+        console.log('Got nothing for ' + colors.red(match.title));
+    }
+    return local_match;
+});
+
 var processMatches = async((matches, opt_outPath)=> {    
 	console.log('Getting universities for schools. Patience');
 	var outPath = opt_outPath || 'pr_matches.json';
@@ -282,7 +326,7 @@ var processMatches = async((matches, opt_outPath)=> {
 	matches.forEach(match =>{
         var cached_match = cached_matches.find(cachedMatch =>{
             if (cachedMatch.id == match.id &&
-				cachedMatch.ourId == match.ourId)
+                cachedMatch.ourId == match.ourId)
                 return true;
         });
         if (cached_match){
@@ -290,42 +334,8 @@ var processMatches = async((matches, opt_outPath)=> {
                 colors.green(cached_match.title) + ' already cached');
             processed_matches.push(cached_match);
         } else {
-            var local_match = match;
-            var resultsArr = [];
-            var users = await(getSchoolUsers(local_match));
-            if (users || users.length !== 0){
-                users.forEach(userYear => {
-                    var yearResults = {
-                        year: userYear.year,
-                        universities: []
-                    };
-                    var uniCountForYear = 0;
-                    userYear.results.forEach(user => {
-                        var uni = user.university_name;
-                        if (uni) {
-                            uniCountForYear++;
-                            var uniInArray = yearResults.universities.find(univ => {
-                                if (univ.name == uni)
-                                    return true;
-                            });
-                            if (uniInArray)
-                                uniInArray.count++;
-                            else
-                                yearResults.universities.push({
-									vkId: user.university,
-                                    name: uni,
-                                    count: 1
-                                });
-                        }
-                    });
-                    yearResults.total = uniCountForYear;
-                    resultsArr.push(yearResults);
-                });
-                local_match.years= resultsArr;
-                processed_matches.push(local_match);
-            } else {
-                console.log('Got nothing for ' + colors.red(match.title));
-            }
+            var processedMatch = await(processMatch(match));
+            processed_matches.push(processedMatch);    
         }
         saveToJson(processed_matches, outPath);
     });
@@ -397,6 +407,6 @@ var start3 = async(() => {
 commander
     .command('vkUpdate')
     .description('Updates vk skhools and writes them to json')
-    .action(() => start2());
+    .action(() => start());
 
 exports.Command;
