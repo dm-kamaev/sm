@@ -3,7 +3,6 @@ goog.provide('sm.lSearchResult.bSort.Sort');
 goog.require('sm.lSearchResult.bSort.Template');
 goog.require('gorod.iUIInstanceStorage.UIInstanceStorage');
 goog.require('gorod.dropdown.Dropdown');
-goog.require('gorod.bBouton.Bouton');
 goog.require('gorod.bList.List');
 goog.require('goog.ui.Component');
 goog.require('goog.dom.classes');
@@ -32,12 +31,18 @@ sm.lSearchResult.bSort.Sort = function(opt_params) {
      * @private
      */
     this.dropdownList_ = null;
+
+    /**
+     * Switcher custom text element
+     * @type {Element}
+     * @private
+     */
+    this.switcherCustomTextElement_ = null;
 };
 goog.inherits(sm.lSearchResult.bSort.Sort, goog.ui.Component);
 
 goog.scope(function() {
     var Sort = sm.lSearchResult.bSort.Sort,
-        Bouton = gorod.bBouton.Bouton,
         List = gorod.bList.List;
 
     /**
@@ -45,7 +50,8 @@ goog.scope(function() {
      * @enum {string}
      */
     Sort.CssClass = {
-        ROOT: 'b-sort'
+        ROOT: 'b-sort',
+        SWITCHER_CUSTOM_TEXT: 'b-dropdown__switcher-custom-text'
     };
 
     /**
@@ -54,6 +60,18 @@ goog.scope(function() {
      */
     Sort.Event = {
         ITEM_CLICK: 'itemClick'
+    };
+
+    /**
+     * Switcher text enum
+     * @enum {string}
+     */
+    Sort.SwitcherCustomText = {
+        AVERAGE_MARK: 'средней оценке',
+        EDUCATION: 'образованию',
+        TEACHERS: 'преподавателям',
+        ATMOSPHERE: 'атмосфере',
+        INFRASTRUCTURE: 'инфраструктуре'
     };
 
     Sort.prototype.decorate = function(element) {
@@ -85,6 +103,11 @@ goog.scope(function() {
      */
     Sort.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
+
+        this.switcherCustomTextElement_ = goog.dom.getElementByClass(
+            Sort.CssClass.SWITCHER_CUSTOM_TEXT,
+            element
+        );
 
         var dropdownListElement = goog.dom.getElementByClass(
             List.CSS_ROOT,
@@ -123,16 +146,58 @@ goog.scope(function() {
     };
 
     /**
+     * Set custom text content for switcher
+     * @param {String} text
+     * @private
+     */
+    Sort.prototype.setSwitcherCustomText_ = function(text) {
+        goog.dom.setTextContent(
+            this.switcherCustomTextElement_,
+            text
+        );
+    };
+
+    /**
      * Item click handler
      * @param {Object} event
      * @param {Object} data
      * @private
      */
     Sort.prototype.itemClickHandler_ = function(event, data) {
+        var itemId = data.itemID;
+
         this.dispatchEvent({
             type: Sort.Event.ITEM_CLICK,
-            itemId: data.itemID
+            itemId: itemId
         });
+
+        switch(itemId) {
+            case 1:
+                this.setSwitcherCustomText_(
+                    Sort.SwitcherCustomText.EDUCATION
+                );
+                break;
+            case 2:
+                this.setSwitcherCustomText_(
+                    Sort.SwitcherCustomText.TEACHERS
+                );
+                break;
+            case 3:
+                this.setSwitcherCustomText_(
+                    Sort.SwitcherCustomText.ATMOSPHERE
+                );
+                break;
+            case 4:
+                this.setSwitcherCustomText_(
+                    Sort.SwitcherCustomText.INFRASTRUCTURE
+                );
+                break;
+            default:
+                this.setSwitcherCustomText_(
+                    Sort.SwitcherCustomText.AVERAGE_MARK
+                );
+                break;
+        }
     };
 });
 
