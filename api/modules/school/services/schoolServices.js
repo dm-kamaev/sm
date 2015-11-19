@@ -4,15 +4,21 @@ var await = require('asyncawait/await');
 var models = require.main.require('./app/components/models').all;
 var commentServices =
     require.main.require('./api/modules/comment/services').commentServices;
+var sequelize  = require.main.require('./app/components/db');
 
 
-
-exports.getGroupId = async (function(schoolId) {
-    var instance = await(models.School.findOne({where : {id: schoolId}}));
+exports.getGroupId = async (function(school, t) {
+    var instance = school;
+    if (typeof school === 'number'){
+        var instance = await(models.School.findOne({
+            where : {id: school}
+        }));
+    }
     if (instance.comment_group_id == null) {
         var newCommentGroup = await (models.CommentGroup.create());
-        await (instance.update({comment_group_id: newCommentGroup.id}));
-        console.log('instance', instance);
+        await (instance.update({
+            comment_group_id: newCommentGroup.id
+        }))
     }
     return instance.comment_group_id;
 });
@@ -73,6 +79,10 @@ exports.update = async ((school, params) => {
     return instance;
 });
 
+exports.rate = async((school, comment, rating) => {
+
+})
+
 exports.getAllById = async((sch_id)=>{
     return await (models.School.findOne({
         where:{id: sch_id},
@@ -82,6 +92,21 @@ exports.getAllById = async((sch_id)=>{
         }]
     }));
 });
+
+exports.getForComment = async((sch_id) =>  {
+    return await (models.School.findOne({
+        where:{id: sch_id},
+        include: [
+            {
+                model: models.Rating,
+                as: 'ratings'
+            },
+            {
+                model: models.CommentGroup,
+            }
+        ]
+    }))
+})
 
 //TODO: переделать
 exports.get = async((sqlizeOptions, params) => {
@@ -136,6 +161,25 @@ exports.create = async (params => {
     ));
 });
 
+
+exports.comment = async ( function(schoolId, params, t) {
+    var school = await (this.getForComment(schoolId, t)),
+        commentGroup = await(this.getGroupId(school, t));
+    if (params.score)
+        params.rating = await(this.rate(school, params, t));
+    return await (commentServices.create(commentGroup, params, t));
+});
+
+
+
+exports.rate = async ((school, params) => {
+    var rt = await (models.Rating.create({
+        score: params.score,
+    }));
+    await (school.addRating(rt));
+    return rt;
+})
+
 exports.list = async (function() {
     var schools = await (models.School.findAll(
         {
@@ -150,30 +194,4 @@ exports.list = async (function() {
         }
     ));
     return schools;
-});
-
-
-
-//exports.get = async (function(schoolId) {
-//    var school =  await (models.School.findOne(
-//        {
-//            where: {
-//                id: schoolId
-//            },
-//            include: [{
-//                all: true,
-//                nested: true
-//            }]
-//        }
-//    ));
-//    return school;
-//});
-
-// exports.getComments = async ( function(comment) {
-//
-// });
-//
-exports.comment = async ( function(schoolId, params) {
-    var commentGroupId = await (this.getGroupId(schoolId));
-    return await (commentServices.create(commentGroupId, params));
 });

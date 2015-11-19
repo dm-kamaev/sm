@@ -32,11 +32,16 @@ var School = db.define('School', {
                 as: 'giaResult', foreignKey: 'school_id'
             });
             School.hasMany(models.Address, {
-                as: 'addresses', foreignKey: 'school_id'
+                as: 'addresses',
+                foreignKey: 'school_id'
             });
             School.belongsTo(models.CommentGroup, {
                 foreignKey: 'comment_group_id'
             });
+            School.hasMany(models.Rating, {
+                as: 'ratings',
+                foreignKey: 'school_id'
+            })
         }
     }
 });
