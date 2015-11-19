@@ -15,7 +15,7 @@ var exclusion = require('./parseConfig').exclusion;
 
 var GOVERMENT_KEY_INDEX = 2,
     NAME_INDEX = 6,
-	FULL_NAME_INDEX = 5,
+    FULL_NAME_INDEX = 5,
     DIRECTOR_INDEX = 13,
     PHONES_INDEX = 15,
     SITE_INDEX = 17,
