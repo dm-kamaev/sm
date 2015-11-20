@@ -21,16 +21,110 @@ const START_YEAR = 2013;
 const END_YEAR = 2015;
 const RETRY_COUNT = 10;
 
+
+
 var start = async(() => {
+    console.log('\nWhich script to launch?');
+    console.log('\t' + colors.green('1) ') + 'Get matches and write them to file');
+    console.log('\t' + colors.green('2) ') + 'Get matches from excel file');
+    console.log('\t' + colors.green('3) ') + 'Process matches file');
+    console.log('\t' + colors.green('4) ') + 'Write processed matches to db');
+    console.log('\t' + colors.green('5) ') + 'Count items in JSON file');
+    var answer;
+    while (!answer) {
+        answer = readlineSync.prompt();
+        switch (answer) {
+            case '1':
+                await(GetMatches());
+                break;
+            case '2':
+                await(ParseExcel());
+                break;
+            case '3':
+                await(ProcessMatches());
+                break;
+            case '4':
+                await(WriteDB());
+                break;
+            case '5':
+                await(CountJSON());
+                break;
+            default:
+                console.log('Type number from 1 to 5');
+                answer = null;   
+                break;
+        }
+    }
+});
+
+var CountJSON = async(() => { 
+    var answerPath = readlineSync.question('Type filename of json\n');
+    try {
+        var json = loadFromJson(answerPath);
+        console.log ('JSON length: ' + json.length);
+    } catch (e) {
+        console.log(e.message);
+    }
+}); 
+
+var GetMatches = async(() => {
     var schools = await(getSchools());
     var ourSchools = await(schoolServices.list());
     console.log('Школ вконтакте: ' + colors.yellow(schools.response.items.length));
     console.log('Наших школ: ' + colors.yellow(ourSchools.length));
-    var matches = getMatches(schools.response.items, ourSchools);
+    var matches = compareMatches(schools.response.items, ourSchools);
     console.log(('================================').yellow);
     console.log('Количество совпадений: ' + colors.yellow(matches.length));
     console.log(('================================').yellow);
-    await(processMatches(matches));
+    //await(processMatches(matches));
+});
+
+var WriteDB = async (() => {
+    var answerPath = readlineSync.question('Type filename of processed matches file. Default is \"pr_matches.json\"\n');
+    var path = answerPath ? answerPath : 'pr_matches.json';
+	console.log('Processing can take a while');
+	try {
+		await (writeResultsFromJsonToBd(path));
+	} catch (err) {
+		console.log(err.message);
+		process.exit();
+	}
+	console.log('done');
+});
+
+var ParseExcel = async(() => {
+    var answerPath = readlineSync.question('Type filename of excel file. Default is \"extraData.xlsx\"\n');
+    var path = answerPath ? answerPath : 'extraData.xlsx';
+    var answerOutPath = readlineSync.question('Type filename of output file. Default is \"matches.json\"\n');
+    var outPath = answerOutPath ? answerOutPath : 'matches.json';
+	await(parseExcel(path, outPath));
+});
+
+
+var parseExcel = async((path, outPath) => {
+	var parsed = xlsx.parse(path),
+        data = parsed[0].data,
+		matches = [];
+    await (data.forEach((row, index) => {
+		if (index) {	
+			rowResult = await(processRow(row));
+			matches = matches.concat(rowResult);
+		}
+	}));
+    saveToJson(matches, outPath);
+});
+
+var ProcessMatches = async(() => {
+    try {
+        var answerInPath = readlineSync.question('Type filename of matches file to process. Default is \"matches.json\"\n');
+        var inPath = answerInPath ? answerInPath : 'matches.json';
+        var matches = loadFromJson(inPath);
+        var answerOutPath = readlineSync.question('Type filename of output file. Default is \"pr_matches.json\"\n');
+        var outPath = answerOutPath ? answerOutPath : 'pr_matches.json';
+        await(processMatches(matches, outPath));
+    } catch (e) {
+        console.log(e.message);
+    }
 });
 
 var getSchools = async ((cityId) => {
@@ -42,21 +136,56 @@ var getSchools = async ((cityId) => {
 });
 
  
-//var getUserfulUsers = (users=>{
-//    console.log(colors.yellow('users found: '+users.length));
-//    var results = [];
-//    users.forEach(user => {
-//        if (user.university)
-//            results.push(user);
-//    });
-//    //console.log(colors.yellow('usefull: '+results.length));
-//    return results;
-//});
+var compareMatches = (vkSchools, ourSchools) => {
+    var results = [],
+        extraResults = [],
+        notFound = [];
+    for (var i = 0; i<ourSchools.length; i++ ){
+        var firstSchool = ourSchools[i].name.toLowerCase();
+        var preciseMatch = vkSchools.find(vks => {
+            var secondSchool = vks.title.toLowerCase();
+            if (firstSchool.trim() == secondSchool.trim())
+                return true;
+        });
+        if (preciseMatch) {
+			preciseMatch.ourId = ourSchools[i].id;
+            results.push(preciseMatch);
+		}
+        else {
+            var roughMatches = vkSchools.filter(el => {
+                var secondSchool = el.title.toLowerCase();
+                return compareNumbers(firstSchool, secondSchool);
+            });
+            if (roughMatches.length > 0)
+                extraResults.push({
+                    ourSchool: {
+                        our_id: ourSchools[i].id,
+                        name: ourSchools[i].name
+                    },
+                    vkMatches: roughMatches
+                });
+            else
+                notFound.push({
+                    our_id: ourSchools[i].id,
+                    name: ourSchools[i].name
+                });
+        }
+    }
+    saveToJson(extraResults, 'extra.json');
+    saveToJson(notFound, 'notFound.json');
+    saveToJson(results, 'matches.json');
+    console.log('Количество точных совпадений: ' + colors.yellow(results.length) +
+            '. Они записаны в файл ' + colors.yellow('matches.json'));
+    console.log('Количество примерных совпадений: ' + 
+            colors.yellow(extraResults.length) +
+            '. Они записаны в файл ' + colors.yellow('extra.json'));
+    console.log('Количество не найденых совпадений: ' + 
+            colors.yellow(notFound.length) +  
+            '. Они записаны в файл ' + colors.yellow('notFound.json'));
+    return results;
+};
 
 
-/**
- * Getting vk users who used to study at this school
- */
 var getSchoolUsers = async ((school) => {
     var schoolId = school.id;
 
@@ -182,14 +311,6 @@ var request = async ((methodName, params) => {
 
 });
 
-//var textSubstrings = (string1, string2) => {
-//    var str1 = string1.replace( /^\d+/g, ''),
-//        str2 = string2.replace( /^\d+/g, '');
-//    if (str1.indexOf(str2) != -1 ||
-//        str2.indexOf(str1) != -1)
-//        return true;
-//    return false;
-//};
 
 /**
  * trying to find all the numbers in both strings 
@@ -209,49 +330,6 @@ var compareNumbers = (string1, string2) => {
     return isFound;
 };
 
-var getMatches = (vkSchools, ourSchools) => {
-    var results = [],
-        extraResults = [],
-        notFound = [];
-    for (var i = 0; i<ourSchools.length; i++ ){
-        var firstSchool = ourSchools[i].name.toLowerCase();
-        var preciseMatch = vkSchools.find(vks => {
-            var secondSchool = vks.title.toLowerCase();
-            if (firstSchool.trim() == secondSchool.trim())
-                return true;
-        });
-        if (preciseMatch) {
-			preciseMatch.ourId = ourSchools[i].id;
-            results.push(preciseMatch);
-		}
-        else {
-            var roughMatches = vkSchools.filter(el => {
-                var secondSchool = el.title.toLowerCase();
-                return compareNumbers(firstSchool, secondSchool);
-            });
-            if (roughMatches.length > 0)
-                extraResults.push({
-                    ourSchool: {
-                        our_id: ourSchools[i].id,
-                        name: ourSchools[i].name
-                    },
-                    vkMatches: roughMatches
-                });
-            else
-                notFound.push({
-                    our_id: ourSchools[i].id,
-                    name: ourSchools[i].name
-                });
-        }
-    }
-    saveToJson(extraResults, 'extra.json');
-    saveToJson(notFound, 'notFound.json');
-    saveToJson(results, 'matches.json');
-    console.log('Количество точных результатов:' + results.length);
-    console.log('Количество примерных результатов:' + extraResults.length);
-    console.log('Количество не найденых результатов:' + notFound.length);
-    return results;
-};
 
 function fileExists(filePath)
 {
@@ -318,9 +396,8 @@ var processMatch = async((match) => {
     return local_match;
 });
 
-var processMatches = async((matches, opt_outPath)=> {    
+var processMatches = async((matches, outPath)=> {    
 	console.log('Getting universities for schools. Patience');
-	var outPath = opt_outPath || 'pr_matches.json';
     var cached_matches = loadFromJson(outPath);
     var processed_matches = [];
 	matches.forEach(match =>{
@@ -374,34 +451,7 @@ var processRow = async((row) => {
 	return rowResults;
 });
 
-var parseExcel = async((path) => {
-	var parsed = xlsx.parse(path),
-        data = parsed[0].data,
-		matches = [];
-    await (data.forEach((row, index) => {
-		if (index) {	
-			rowResult = await(processRow(row));
-			matches = matches.concat(rowResult);
-		}
-	}));
-	await (processMatches(matches, 'pr_extra_matches.json'));
-});
 
-var start2 = async (() => {
-	console.log('here we go');
-	try {
-		await (writeResultsFromJsonToBd('pr_extra_matches.json'));
-	} catch (err) {
-		console.log(err.message);
-		process.exit();
-	}
-	console.log('done');
-});
-
-var start3 = async(() => {
-	var res = await(parseExcel('extraData.xlsx'));
-	console.log(res);
-});
 
 
 commander
