@@ -151,11 +151,15 @@ var compileLayout = function(name)  {
 };
 
 gulp.task('scripts', ['soy'], function () {
-    var dirs = getDirectories(path.join(__dirname,'/app/blocks'));	
+    var promises = [],
+        dirs = getDirectories(path.join(__dirname,'/app/blocks'));	
     dirs = dirs.filter((dirname) => {
 	    return dirname.startsWith('l-');
     });
-    dirs.forEach(compileLayout);
+    for (var i = 0; i < dirs.length; i++) {
+        promises.push(compileLayout(dirs[i]));
+    }
+    return Q.all(promises);
 });
 
 
