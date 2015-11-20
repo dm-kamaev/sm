@@ -8,6 +8,7 @@
     color: #000;
 
     line-height: 1em;
+    font: 0 "WebSymbols", Arial, sans-serif;
 }
 
 .b-stars_clickable {
@@ -18,12 +19,12 @@
     display: none;
 }
 
-.b-stars_size_large {
-    font-size: 28px;
-}
-
 .b-stars__star {
     display: inline-block;
+
+    margin-right: 3px;
+
+    font-size: 12px;
 }
 
 .b-star__star_not-selected {
@@ -34,8 +35,15 @@
     color: rgb(154, 154, 154);
 }
 
-.b-stars__star_theme_colored {
+.b-stars_size_large {
+    .b-stars__star {
+        margin-right: 4px;
 
+        font-size: 22px;
+    }
+}
+
+.b-stars__star_theme_colored {
     .b-star__star_not-selected {
         color: #e6e6e6;
         display: inline-block;

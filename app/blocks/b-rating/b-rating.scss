@@ -23,13 +23,12 @@
     display: inline-block;
 
     width: 100%;
-    margin: 0 0 5px 0;
 
     font-family: 'Proxima', Arial, sans-serif;
 }
 
 .b-rating__section {
-    float: left;
+    display: inline-block;
 
     width: 20%;
 }
@@ -51,8 +50,9 @@
 }
 
 .b-rating__mark_average {
-    color: red;
+    color: #ee362c;
 
+    font-weight: 800;
     font-size: 32px;
 }
 

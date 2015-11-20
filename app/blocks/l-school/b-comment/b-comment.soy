@@ -15,13 +15,15 @@
 	}
     <div class="b-comment">
 
-		<div class="b-comment__header">
-			{foreach $section in $params.sections}
-    			{call sm.lSchool.bComment.Template.section_}
-    				{param params:['name': $section.name, 'rating': $section.rating]/}
-    			{/call}
-    		{/foreach}
-		</div>
+		{if length($params.sections)}
+			<div class="b-comment__header">
+				{foreach $section in $params.sections}
+					{call sm.lSchool.bComment.Template.section_}
+						{param params:['name': $section.name, 'rating': $section.rating]/}
+					{/call}
+				{/foreach}
+			</div>
+		{/if}
 
 		<div class="b-comment__wrap">
 			{if strLen($params.text) > 430}
