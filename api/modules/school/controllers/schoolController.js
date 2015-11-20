@@ -48,7 +48,8 @@ exports.createComment = async (function(req, res) {
  *       "searchParams" : {
  *       	"name": "123", 
  *       	"classes": [1,2,3,4],
- *       	"schoolType": ["Школа", "Лицей"]	
+ *       	"schoolType": ["Школа", "Лицей"],
+ *       	"ege": ["Математика", "Русский"]	
  *       }
  *     }
  */
