@@ -56,7 +56,7 @@ goog.scope(function() {
     */
     Map.defaultPosition = {
         COORDS: [55.755768, 37.617671],
-        ZOOM: 11
+        ZOOM: 16
     };
 
     /**
