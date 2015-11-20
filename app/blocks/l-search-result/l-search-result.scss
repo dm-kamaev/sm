@@ -23,9 +23,10 @@
 }
 
 .l-search-result__school-list {
-    float: left;
+    float: right;
 
-    width: 66%;
+    width: 62%;
+    margin: 0;
 }
 
 .l-search-result__search {
@@ -51,4 +52,10 @@
     height: 100%;
 
     text-align: right;
+}
+
+.l-search-result__filters {
+    display: inline-block;
+
+    width: 87%;
 }

@@ -1,0 +1,74 @@
+{namespace sm.lDoc.nDemo.bBlockFilter.Template}
+
+/**
+* preview
+*/
+{template .preview}
+    {call sm.lSearchResult.bFilter.Template.base}
+        {param params: [
+            'header': [
+                'title': 'Высокие результаты ЕГЭ'
+            ],
+            'body': [
+                'filters': [
+                    [
+                        'name': 'Математика'
+                    ],
+                    [
+                        'name': 'Русский'
+                    ],
+                    [
+                        'name': 'Физика'
+                    ],
+                    [
+                        'name': 'Литература'
+                    ],
+                    [
+                        'name': 'Химия'
+                    ],
+                    [
+                        'name': 'Английский язык'
+                    ],
+                ]
+            ],
+            'name': 'ege'
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+* doc
+*/
+{template .doc}
+    {call sm.lSearchResult.bFilter.Template.base}
+        {param params: [
+            'header': [
+                'title': 'Высокие результаты ЕГЭ'
+            ],
+            'body': [
+                'filters': [
+                    [
+                        'name': 'Математика'
+                    ],
+                    [
+                        'name': 'Русский'
+                    ],
+                    [
+                        'name': 'Физика'
+                    ],
+                    [
+                        'name': 'Литература'
+                    ],
+                    [
+                        'name': 'Химия'
+                    ],
+                    [
+                        'name': 'Английский язык'
+                    ],
+                ]
+            ],
+            'name': 'ege'
+        ]/}
+    {/call}
+{/template}

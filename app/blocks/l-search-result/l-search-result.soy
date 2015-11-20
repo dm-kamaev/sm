@@ -68,6 +68,55 @@
  */
 {template .leftMenu_ autoescape="strict" kind="html" private="true"}
     <div class="l-search-result__left-menu">
-        Меню слева
+        {call .filters_ /}
+    </div>
+{/template}
+
+/**
+ * Filter template
+ */
+{template .filters_ autoescape="strict" kind="html" private="true"}
+    <div class="l-search-result__filters">
+        {call sm.lSearchResult.bFilterClasses.Template.base}
+            {param params: [
+                'header': [
+                    'title': 'В какой класс хотите отдать ребенка?'
+                ],
+                'name': 'classes',
+                'modifier': 'classes'
+            ]/}
+        {/call}
+        {call sm.lSearchResult.bFilter.Template.base}
+            {param params: [
+                'header': [
+                    'title': 'Высокие результаты ЕГЭ'
+                ],
+                'body': [
+                    'filters': [
+                        [
+                            'name': 'Математика'
+                        ],
+                        [
+                            'name': 'Русский'
+                        ],
+                        [
+                            'name': 'Физика'
+                        ],
+                        [
+                            'name': 'Литература'
+                        ],
+                        [
+                            'name': 'Химия'
+                        ],
+                        [
+                            'name': 'Английский язык'
+                        ],
+                    ]
+                ],
+                'name': 'ege'
+            ]/}
+        {/call}
+
+        Показать все фильтры
     </div>
 {/template}

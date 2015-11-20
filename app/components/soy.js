@@ -9,7 +9,7 @@ global.CLOSURE_BASE_PATH = path.normalize('node_modules/closure-library/closure/
 soynode.setOptions({
     outputDir: os.tmpdir(),
     uniqueDir: true,
-    allowDynamicRecompile: true,
+    //allowDynamicRecompile: true,
     contextJsPaths: [
         path.join(__dirname, '../../node_modules/frobl/blocks/i-utils/i-utils.js')
     ]

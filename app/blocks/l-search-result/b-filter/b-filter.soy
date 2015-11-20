@@ -1,0 +1,138 @@
+{namespace sm.lSearchResult.bFilter.Template}
+
+/**
+ * Filter template
+ * @param? params {
+ *     header: ?{
+ *         title: ?string
+ *     },
+ *     body: ?{
+ *         filters: ?list<{
+ *             name: ?string
+ *             isEmpty: ?bool
+ *         }>,
+ *         hiddenFilters: ?list<{
+ *             name: ?string
+ *             isEmpty: ?bool
+ *         }>
+ *     },
+ *     name: ?string,
+ *     modifier: ?string
+ * }
+ */
+{template .base autoescape="strict" kind="html"}
+    {call .init data="all"/}
+{/template}
+
+/**
+ * Filter init template
+ * @param? params {
+ *     header: ?{
+ *         title: ?string
+ *     },
+ *     body: ?{
+ *         filters: ?list<{
+ *             name: ?string
+ *             isEmpty: ?bool
+ *         }>,
+ *         hiddenFilters: ?list<{
+ *             name: ?string
+ *             isEmpty: ?bool
+ *         }>
+ *     },
+ *     name: ?string
+ *     modifier: ?string
+ * }
+ */
+{template .init autoescape="strict" kind="html"}
+    <div class="b-filter
+        {$params?.modifier ? ' b-filter_'+$params.modifier : ''}"
+         data-filter-name="{$params?.name ? $params.name : ''}">
+        {call .header data="all"/}
+        {call .filters data="all"/}
+    </div>
+{/template}
+
+/**
+ * Header template
+ * @param? params {
+ *     header: ?{
+ *         title: ?string
+ *     }
+ * }
+ */
+{template .header autoescape="strict" kind="html"}
+    <div class="b-filter__header">
+        {$params.header.title}
+    </div>
+{/template}
+
+/**
+ * Body template
+ * @param? params {
+ *     body: ?{
+ *         filters: ?list<{
+ *             name: ?string
+ *             isEmpty: ?bool
+ *         }>,
+ *         hiddenFilters: ?list<{
+ *             name: ?string
+ *             isEmpty: ?bool
+ *         }>
+ *     },
+ *     name: ?string
+ * }
+ */
+{template .filters autoescape="strict" kind="html"}
+    <div class="b-filter__filters">
+        {for $i in range($params.body.filters.length)}
+            {call .filter}
+                {param params: [
+                    'filter': $params.body.filters[$i],
+                    'name': $params.name,
+                    'id': $i
+                ]/}
+            {/call}
+        {/for}
+    </div>
+    {if $params?.body?.hiddenFilters}
+        <div class="b-filter__filters b-filter__filters_hidden">
+            {for $i in range($params.body.hiddenFilters.length)}
+                {call .filter}
+                    {param params: [
+                        'filter': $params.body.hiddenFilters[$i],
+                        'name': $params.name,
+                        'id': $i
+                    ]/}
+                {/call}
+            {/for}
+        </div>
+    {/if}
+{/template}
+
+/**
+ * Filter template
+ * @param? params {
+ *     filter: ?{
+ *         name: ?string
+ *         isEmpty: ?bool
+ *     },
+ *     name: ?string,
+ *     id: int
+ * }
+ */
+{template .filter autoescape="strict" kind="html"}
+    {if not $params.filter.isEmpty}
+        <div class="b-filter__section">
+            <div class="b-filter__filter">
+                <input type="checkbox"
+                    id="{$params.name}-{$params.id}"
+                    name="{$params.name}"/>
+            <label for="{$params.name}-{$params.id}"
+                   class="b-filter__checkbox-label">
+                {$params.filter.name}
+            </label>
+            </div>
+        </div>
+    {/if}
+{/template}

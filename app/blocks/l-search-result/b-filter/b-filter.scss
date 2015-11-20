@@ -1,0 +1,88 @@
+.b-filter {
+    display: inline-block;
+
+    width: 100%;
+    padding: 27px 0 30px 0;
+
+    border-bottom: 1px solid #e5e5e5;
+
+    text-align: left;
+    color: #000000;
+}
+
+.b-filter__header {
+    display: inline-block;
+
+    width: 100%;
+    padding: 0 0 12px 12px;
+
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.b-filter__section {
+    display: inline-block;
+
+    width: 50%;
+    margin: 0;
+}
+
+.b-filter__filter {
+    display: inline-block;
+
+    padding: 12px;
+
+    font-size: 14px;
+}
+
+.b-filter__checkbox-label {
+    margin-left: 5px;
+}
+
+.b-filter_classes {
+    .b-filter__filter {
+        display: inline-block;
+
+        width: 100%;
+        padding: 0;
+
+        text-align: center;
+    }
+
+    .b-filter__filter-input {
+        display: none;
+    }
+
+    .b-filter__filter-input-label {
+        display: inline-block;
+
+        width: 20px;
+        height: 10px;
+        padding: 9px 4px;
+        margin-top: 10px;
+
+        border: 1px solid #e5e1c2;
+        background-color: #fffbd8;
+        font-size: 12px;
+        line-height: 11px;
+    }
+
+    .b-filter__filter-input-label_green-border {
+        border: 1px solid #d7e2bf;
+        background-color: #f0fbd5;
+    }
+
+    .b-filter__filter-input-label_no-fill {
+        border: 1px solid #dbe1e3;
+        background-color: rgba(255, 255, 255, 0);
+    }
+
+    .b-filter__filter-input:checked +
+    .b-filter__filter-input-label {
+        width: 20px;
+        height: 10px;
+        padding: 7px 2px;
+
+        border: 3px red solid;
+    }
+}

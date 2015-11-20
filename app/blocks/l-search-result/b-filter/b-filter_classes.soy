@@ -1,0 +1,35 @@
+{namespace sm.lSearchResult.bFilterClasses.Template}
+
+/**
+ * Filter template
+ * @extends '/l-search-result/b-filter/b-filter'
+ * @constructor
+ */
+{template .base autoescape="strict" kind="html"}
+    {call .init data="all" /}
+{/template}
+
+/**
+ * template
+ * @param? params
+ */
+{template .filters autoescape="strict" kind="html"}
+    <div class="b-filter__filter">
+        {for $i in range(11)}
+            <input type="checkbox"
+                id="{$params.name}-{$i}"
+                class="b-filter__filter-input"
+                name="{$params.name}"/>
+            <label for="{$params.name}-{$i}"
+                class="b-filter__filter-input-label
+                {sp}
+                {$i > 3 ?
+                    'b-filter__filter-input-label_green-border ' : ''}
+                {$i > 8 ?
+                    'b-filter__filter-input-label_no-fill' : ''}
+                ">
+                    {$i+1}
+            </label>
+        {/for}
+    </div>
+{/template}
