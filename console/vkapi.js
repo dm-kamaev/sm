@@ -297,20 +297,42 @@ var request = async ((methodName, params) => {
         return null;
     } 
 	if (res.response.count === 0) {
-		var answer;
+		var answer, command;
 		console.log(colors.red('WARNING'));
-		while (answer!='S' && answer!='T')
-        	answer = readlineSync.question('Response count = 0. Type \'S\'' +
-						   'to skip school\\year or \'T\' to try again\n');
-		return answer == 'S'? 
-		{
-			skip: true
-		} : null;
+		while (!answer) {
+            answer = readlineSync.question('Response count = 0. \n\tType \'S\'' +
+						   'to skip school\\year \n\tType \'T\' to try again' + 
+                           '\n\tType \'I\' to add in ignore and skip\n');
+            switch (answer){
+                case 'S':
+                    command = {skip: true};
+                    break;
+                case 'T':
+                    command = null;
+                    break;
+                case 'I':
+                    addToIgnore(params.school, params.school_year);
+                    command = {skip: true};
+                    break;
+                default: 
+                    answer = null;
+                    break;
+            }
+        }
+        return command;
 	}
     return res;
 
 });
 
+
+var addToIgnore = (id, year) => {
+    vkIgnore.push({
+        vkId: id,
+        year: year
+    });
+    saveToJson(vkIgnore, 'vkignore.json');
+};
 
 /**
  * trying to find all the numbers in both strings 
