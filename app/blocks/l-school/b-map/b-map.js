@@ -73,26 +73,55 @@ goog.scope(function() {
     */
     Map.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
-
         if (!this.params_) {
             var dataset = goog.dom.dataset.get(element, 'params');
             this.params_ = JSON.parse(dataset);
         }
-		var borderArr = this.calculateBorder_(this.params_.coords),
-			newCenter = {
-				lat: this.params_.coords[0].lat,
-				lon: this.params_.coords[0].lng
-			}; 
-		borderArr = this.correctBorder_(borderArr, newCenter);
+        var coords = this.params_.coords;
+        console.log(coords.length);
+        if (coords.length > 1) {
+            var borderArr = this.calculateBorder_(coords),
+                newCenter = {
+                    lat: coords[0].lat,
+                    lon: coords[0].lng
+                }; 
+            borderArr = this.correctBorder_(borderArr, newCenter);
+            var ymapsParams =
+            {
+                'bounds': borderArr,
+                controls: []
+            };
+        } else if (coords.length == 1) {
+            var ymapsParams = {
+                'center': this.coordToArray_(coords[0]),
+                'zoom': Map.defaultPosition.ZOOM,
+                controls: []
+            };
+        } else {
+            var ymapsParams = {
+                'center': Map.defaultPosition.CENTER,
+                'zoom': Map.defaultPosition.ZOOM,
+                controls: []
+            };
+        }
         ymaps.ready(function() {
-            this.ymaps_ = new ymaps.Map(
-                element, {
-					'bounds': borderArr,
-                    controls: []
-                }
-            );
+            this.ymaps_ = new ymaps.Map(element,ymapsParams);
             this.placePlacemarks_(this.params_);
         }.bind(this));
+
+    };
+
+    /**
+     * Converts coord object to array
+     * @param {Object}
+     * @return {Array<number>}
+     * @private
+     */
+    Map.prototype.coordToArray_ = function(coordObject) {
+        var coord = [];
+        coord.push(coordObject.lat);
+        coord.push(coordObject.lng);
+        return coord;
     };
 
     /**
@@ -206,6 +235,7 @@ goog.scope(function() {
      */
     Map.prototype.placePlacemarks_ = function(data) {
         var placemarks = this.dataToPlacemarks_(data);
+        console.log(placemarks);
         placemarks.forEach(
             function(item) {
                 this.ymaps_.geoObjects.add(item);
