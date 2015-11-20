@@ -62,6 +62,11 @@
     font-size: 28px;
 }
 
+.b-rating__mark_null-average {
+    position: relative;
+    top: -2px;
+}
+
 /*THEMES*/
 
 /*black-theme*/
@@ -93,6 +98,11 @@
     .b-rating__section-name_average {
         color: black;
         font-size: 13px;
+    }
+
+    .b-rating__mark_null-average {
+        position: relative;
+        top: 0;
     }
 }
 

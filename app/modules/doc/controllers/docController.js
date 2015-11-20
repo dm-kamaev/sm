@@ -6,7 +6,8 @@ var docPages = [
         "b-comments",
         "b-rating",
         "b-feedback-modal",
-        "b-school-list"
+        "b-school-list",
+        "b-sort"
     ];
 
 

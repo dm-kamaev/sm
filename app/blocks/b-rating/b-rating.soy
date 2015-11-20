@@ -44,7 +44,12 @@
 {template .marks_ autoescape="strict" kind="html" private="true"}
     <div class="b-rating__marks">
         <div class="b-rating__section">
-            <div class="b-rating__mark b-rating__mark_average">
+            <div class="b-rating__mark
+                        b-rating__mark_average
+                        {if not $params.averageMark > 0}
+                            {sp}
+                            b-rating__mark_null-average
+                        {/if}">
                 {$params.averageMark > 0 ?
                     round($params.averageMark, 1) : '—'}
             </div>
