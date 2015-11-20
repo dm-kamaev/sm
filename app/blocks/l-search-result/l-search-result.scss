@@ -44,7 +44,11 @@
     height: 100%;
 }
 
-.l-search-result__show-on-map__text {
+.l-search-result__map-link {
+    cursor: pointer;
+}
+
+.l-search-result__show-on-map-text {
     float: left;
 
     padding-top: 6%;
@@ -57,7 +61,7 @@
     font-size: 18px;
 }
 
-.l-search-result__show-on-map__icon {
+.l-search-result__show-on-map-icon {
     float: left;
 
     width: 20px;
