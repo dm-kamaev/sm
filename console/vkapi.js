@@ -331,7 +331,7 @@ var addToIgnore = (id, year) => {
         vkId: id,
         year: year
     });
-    saveToJson(vkIgnore, 'vkignore.json');
+    saveToJson(vkIgnore, './console/vkignore.json');
 };
 
 /**
