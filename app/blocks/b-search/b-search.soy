@@ -2,12 +2,13 @@
 /**
  * Search template
  * @param? params {
- *    placeholder: ?string
+ *    placeholder: ?string,
+ *    theme: ?string
  * }
  */
 {template .base autoescape="strict" kind="html"}
-    <div class="b-search">
-      <span class="b-seach__icon"></span>
-      <input class="b-search__input" placeholder="{$params.placeholder}"> </input>
+    <div class="b-search b-search_theme_{$params.theme}">
+        <span class="b-search__icon"></span>
+        <input class="b-search__input" placeholder="{$params.placeholder}" />
     </div>
 {/template}
