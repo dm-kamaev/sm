@@ -7,7 +7,8 @@ var docPages = [
         "b-rating",
         "b-feedback-modal",
         "b-school-list",
-        "b-sort"
+        "b-sort",
+        "b-search"
     ];
 
 
