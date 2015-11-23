@@ -2,10 +2,12 @@
 
 const path = require('path');
 const express = require('express');
+const morgan = require('morgan');
 
 var db = require('./app/components/db');
 var soy = require('./app/components/soy');
 var modules = require('./app/modules');
+var requestInfo = require('./app/components/requestInfo');
 var api = require('./api/modules');
 var bodyParser = require('body-parser');
 
@@ -23,6 +25,7 @@ app.set('view engine', 'html');
 app.set('view engine', 'jade');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(morgan('dev'));
 
 app.use(express.static(path.join(__dirname, '/public')));
 
