@@ -8,6 +8,31 @@ const readlineSync = require('readline-sync');
 const fs = require('fs');
 const DUMP_FOLDER = './assets/dump/';
 const PROJECT_NAME = 'BP';
+const common = require.main.require('./console/common');
+const SEPARATOR = ':';
+
+var start = function() {
+    var vars = [
+        'Create db dump file', 
+        'Create db dump file and write it to config as current', 
+        'Load db dump',
+        'Show current config'],
+    index = readlineSync.keyInSelect(vars, 'What to do?');
+    switch (index) {
+        case 0: 
+            dump();
+            break;
+        case 1:
+            dump({config:true});
+            break;
+        case 2: 
+            load();
+            break;
+        case 3:
+            check();
+            break;
+    }
+};
 
 var load = function(){
     var command = 'pg_restore -c -d ' + dbConfig.name + 
@@ -20,14 +45,37 @@ var load = function(){
         });
 };
 
+var leadZero = function (num) {
+    return ('0' + num).slice(-2); 
+};
+
+var getBranchName = function() {
+    var headstr = common.readText('./.git/HEAD');
+    return headstr
+        .replace(/ref: refs\/heads\//,'')
+        .trim();
+};
+
+var check = function() {
+    var dump = dbConfig.dump,
+        db = dbConfig.name,
+        branch = dump.split(SEPARATOR)[0],
+        time = dump.split(SEPARATOR)[1],
+        dumpStr = (branch && time) ? 
+            'Dump: ' + colors.green(branch) + SEPARATOR + time :
+            'Dump: ' + dump;
+   console.log (dumpStr);
+   console.log ('Database: ' + colors.yellow(db));
+};
+
 var dump = function(opt_params) {
     var params = opt_params || {};
     var time = new Date();
-    var timestring = time.getFullYear().toString() +
-        time.getMonth() + time.getDate() +
-        time.getHours() + time.getMinutes() +
-        time.getSeconds();
-    var dumpName = PROJECT_NAME + '-' + timestring + '.dump';
+    var timestring = leadZero(time.getFullYear()) +
+        leadZero(time.getMonth()) + leadZero(time.getDate()) +
+        leadZero(time.getHours()) + leadZero(time.getMinutes()) +
+        leadZero(time.getSeconds());
+    var dumpName = getBranchName() + SEPARATOR + timestring + '.dump';
     var command = 'pg_dump -Fc ' + dbConfig.name +
         ' > ' + DUMP_FOLDER + dumpName;
     exec(command, {maxBuffer: 1024 * 500},  
@@ -44,23 +92,8 @@ var dump = function(opt_params) {
         var js = JSON.stringify(newConfig);
             fs.writeFileSync('./api/config.json', js);
     }
-}
+};
 
-var start = function() {
-    var vars = ['Create db dump file', 'Create db dump file and write it to config as current', 'Load db dump'],
-    index = readlineSync.keyInSelect(vars, 'What to do?');
-    switch (index) {
-        case 0: 
-            dump();
-            break;
-        case 1:
-            dump({config:true});
-            break;
-        case 2: 
-            load();
-            break;
-    }
-}
 
 commander
     .command('dump')
