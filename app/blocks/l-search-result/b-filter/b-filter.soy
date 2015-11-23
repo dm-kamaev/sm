@@ -9,7 +9,7 @@
  *     },
  *     body: ?{
  *         filters: ?list<{
- *             name: ?string // + value, name -> label
+ *             label: ?string // + value, name -> label
  *         }>,
  *         filtersToShow: ?int
  *     },
@@ -36,7 +36,7 @@
  *     },
  *     body: ?{
  *         filters: ?list<{
- *             name: ?string
+ *             label: ?string
  *         }>,
  *         filtersToShow: ?int
  *     },
@@ -45,9 +45,7 @@
  * }
  */
 {template .init autoescape="strict" kind="html"}
-    <div class="b-filter
-        {$params?.modifier ? ' b-filter_'+$params.modifier : ''}" // ?
-        data-filter-name="{$params?.name ? $params.name : ''}"> // remove
+    <div class="{call .rootClassName/}">
         {call .header data="all"/}
         {call .filters data="all"/}
     </div>
@@ -68,8 +66,8 @@
             {$params.header.title}
         </span>
         {if $params.header.help}
-        <img src="/images/l-search-result/b-filter/b-filter__help.png"
-            class="b-filter__help">
+            <img src="/images/l-search-result/b-filter/b-filter__help.png"
+                class="b-filter__help">
         {/if}
     </div>
 {/template}
@@ -79,11 +77,9 @@
  * @param? params {
  *     body: ?{
  *         filters: ?list<{
- *             name: ?string
+ *             label: ?string
  *         }>,
- *         hiddenFilters: ?list<{
- *             name: ?string
- *         }>
+ *         filtersToShow: ?int
  *     },
  *     name: ?string
  * }
@@ -94,42 +90,33 @@
             {call .filter}
                 {param params: [
                     'filter': $params.body.filters[$i],
+                    'hidden': $i>(5) ? true : false,
                     'name': $params.name,
                     'id': $i
                 ]/}
             {/call}
         {/for}
+        {if $params.body.filters.length > 5}
+            <div class="b-filter__show-button">
+                 Еще 9 предметов
+            </div>
+        {/if}
     </div>
-    {if $params?.body?.hiddenFilters}
-        <div class="b-filter__show-button">
-            Еще {$params.body.hiddenFilters.length} предметов
-        </div>
-        <div class="b-filter__filters b-filter__filters_hidden">
-            {for $i in range($params.body.hiddenFilters.length)}
-                {call .filter}
-                    {param params: [
-                        'filter': $params.body.hiddenFilters[$i],
-                        'name': $params.name,
-                        'id': $i
-                    ]/}
-                {/call}
-            {/for}
-        </div>
-    {/if}
 {/template}
 
 /**
  * Filter template
  * @param? params {
  *     filter: ?{
- *         name: ?string
+ *         label: ?string
  *     },
+ *     hidden: ?bool
  *     name: ?string,
  *     id: int
  * }
  */
 {template .filter autoescape="strict" kind="html"}
-    <div class="b-filter__section">
+    <div class="b-filter__section {$params.hidden ? 'i-utils__hidden' : ''}">
         <div class="b-filter__filter">
             <input type="checkbox"
                 class="b-filter__input"
@@ -137,7 +124,7 @@
                 name="{$params.name}-{$params.id}"/>
             <label for="{$params.name}-{$params.id}"
                 class="b-filter__checkbox-label">
-                {$params.filter.name}
+                {$params.filter.label}
             </label>
         </div>
     </div>

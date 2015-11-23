@@ -87,40 +87,54 @@
         text-align: center;
     }
 
-    .b-filter__filter-input {
+    .b-filter__input {
         display: none;
     }
 
-    .b-filter__filter-input-label {
+    .b-filter__input_ordinary {
         display: inline-block;
 
-        width: 20px;
+        margin: 0;
+
+        vertical-align: bottom;
+    }
+
+    .b-filter__input-label {
+        display: inline-block;
+
+        width: 30px;
         height: 10px;
-        padding: 9px 4px;
+        padding: 10px 0;
         margin: 12px 0;
 
         border: 1px solid #e5e1c2;
+        border-right: none;
         background-color: #fffbd8;
         font-size: 12px;
+        text-align: center;
         line-height: 11px;
     }
 
-    .b-filter__filter-input-label_green-border {
+    .b-filter__input-label_green-border {
         border: 1px solid #d7e2bf;
+        border-right: none;
         background-color: #f0fbd5;
     }
 
-    .b-filter__filter-input-label_no-fill {
+    .b-filter__input-label_no-fill {
         border: 1px solid #dbe1e3;
         background-color: rgba(255, 255, 255, 0);
+
+        &:last-child {
+            border-left: none;
+        }
     }
 
-    .b-filter__filter-input:checked +
-    .b-filter__filter-input-label {
-        width: 20px;
-        height: 10px;
-        padding: 7px 2px;
+    .b-filter__input:checked +
+    .b-filter__input-label {
+        width: 23px;
+        padding: 6px 0;
 
-        border: 3px red solid;
+        border: 4px #ee362c solid;
     }
 }

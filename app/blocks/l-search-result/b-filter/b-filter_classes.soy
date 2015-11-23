@@ -9,12 +9,14 @@
  *         title: ?string
  *     },
  *     name: ?string
- * }
  */
 {template .base autoescape="strict" kind="html"}
-    {call .init /}
+    {call .init data="all"/}
 {/template}
 
+/**
+ * Root class name
+ */
 {template .rootClassName autoescape="strict" kind="html"}
     b-filter b-filter_classes
 {/template}
@@ -30,15 +32,15 @@
         {for $i in range(11)} // from 1
             <input type="checkbox"
                 id="{$params.name}-{$i}"
-                class="b-filter__filter-input"
+                class="b-filter__input"
                 name="{$params.name}"/>
             <label for="{$params.name}-{$i}"
-                class="b-filter__filter-input-label
+                class="b-filter__input-label
                 {sp}
                 {$i > 3 ?
-                    'b-filter__filter-input-label_green-border ' : ''} // green-border -> middle etc
+                    'b-filter__input-label_green-border ' : ''} // green-border -> middle etc
                 {$i > 8 ?
-                    'b-filter__filter-input-label_no-fill' : ''}
+                    'b-filter__input-label_no-fill' : ''}
                 ">
                     {$i+1}
             </label>
@@ -46,7 +48,7 @@
     </div>
     <div class="b-filter__filter">
         <input type="checkbox"
-            class="b-filter__input"
+            class="b-filter__input b-filter__input_ordinary"
             id="{$params.name}-after-school"
             name="{$params.name}-after-school"/>
         <label for="{$params.name}-after-school"

@@ -1,5 +1,6 @@
 goog.provide('sm.lSearchResult.bFilter.Filter');
 
+goog.require('gorod.iUtils');
 goog.require('goog.ui.Component');
 goog.require('goog.dom.classes');
 goog.require('goog.dom.classlist');
@@ -48,7 +49,7 @@ goog.scope(function() {
     Filter.CssClass = {
         ROOT: 'b-filter',
         SHOW_BUTTON: 'b-filter__show-button',
-        FILTERS_HIDDEN: 'b-filter__filters_hidden',
+        FILTERS_HIDDEN: gorod.iUtils.CssClass.HIDDEN,
         SHOW_BUTTON_HIDDEN: 'b-filter__show-button_hidden'
     };
 
@@ -81,7 +82,7 @@ goog.scope(function() {
             element
         );
 
-        this.hiddenFiltersElement_ = goog.dom.getElementByClass(
+        this.hiddenFiltersElements_ = goog.dom.getElementsByClass(
             Filter.CssClass.FILTERS_HIDDEN,
             element
         );
@@ -107,10 +108,13 @@ goog.scope(function() {
      * @private
      */
     Filter.prototype.showHiddenFilters_ = function() {
-        goog.dom.classlist.remove(
-            this.hiddenFiltersElement_,
-            Filter.CssClass.FILTERS_HIDDEN
-        );
+        for(var i = 0; i < this.hiddenFiltersElements_.length; i++) {
+            goog.dom.classlist.remove(
+                this.hiddenFiltersElements_[i],
+                Filter.CssClass.FILTERS_HIDDEN
+            );
+        }
+
         goog.dom.classlist.add(
             this.showButtonElement_,
             Filter.CssClass.SHOW_BUTTON_HIDDEN
