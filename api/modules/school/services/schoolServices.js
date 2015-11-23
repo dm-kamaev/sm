@@ -132,6 +132,7 @@ exports.getOneNudeByName = async((name) => {
 			}	
 		}
 	}));
+});
 exports.search = async (params => {
     var searchParams = params.searchParams,
 	    whereParams = {};
