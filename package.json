@@ -26,6 +26,7 @@
     "closure-library": "^1.43629075.2",
     "commander": "^2.9.0",
     "concat": "^1.0.0",
+    "colors": "^1.1.2",
     "ejs": "^2.3.4",
     "eslint": "^1.6.0",
     "frobl": "git+ssh://git@github.com:c7s/frobl.git#dev",
@@ -47,7 +48,8 @@
     "pg-hstore": "^2.3.2",
     "sequelize": "^3.8.0",
     "sequelize-cli": "^1.9.1",
-    "soynode": "^1.1.0"
+    "soynode": "^1.1.0",
+    "sleep": "^3.0.0"
   },
   "dependencies": {
     "colors": "^1.1.2",
@@ -55,6 +57,7 @@
     "fs-extra": "^0.26.0",
     "glob": "^5.0.15",
     "q": "^1.4.1",
-    "reset.css": "^2.0.2"
+    "reset.css": "^2.0.2",
+    "sleep": "^3.0.0"
   }
 }
