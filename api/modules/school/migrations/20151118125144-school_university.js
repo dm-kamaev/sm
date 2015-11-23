@@ -30,7 +30,7 @@ module.exports = {
             type: Sequelize.INTEGER,
 			references: {
                 model:"university",
-                key: "vk_id"
+                key: "id"
 			}
 		},
 		ppl_count: {
