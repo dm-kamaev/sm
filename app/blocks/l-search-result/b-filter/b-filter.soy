@@ -4,20 +4,16 @@
  * Filter template
  * @param? params {
  *     header: ?{
- *         title: ?string
+ *         title: ?string,
+ *         help: ?bool // string
  *     },
  *     body: ?{
  *         filters: ?list<{
- *             name: ?string
- *             isEmpty: ?bool
+ *             name: ?string // + value, name -> label
  *         }>,
- *         hiddenFilters: ?list<{
- *             name: ?string
- *             isEmpty: ?bool
- *         }>
+ *         filtersToShow: ?int
  *     },
- *     name: ?string,
- *     modifier: ?string
+ *     name: ?string
  * }
  */
 {template .base autoescape="strict" kind="html"}
@@ -25,20 +21,24 @@
 {/template}
 
 /**
+ * Root class name template
+ */
+{template .rootClassName autoescape="strict" kind="html"}
+    b-filter
+{/template}
+
+/**
  * Filter init template
  * @param? params {
  *     header: ?{
- *         title: ?string
+ *         title: ?string,
+ *         help: bool
  *     },
  *     body: ?{
  *         filters: ?list<{
  *             name: ?string
- *             isEmpty: ?bool
  *         }>,
- *         hiddenFilters: ?list<{
- *             name: ?string
- *             isEmpty: ?bool
- *         }>
+ *         filtersToShow: ?int
  *     },
  *     name: ?string
  *     modifier: ?string
@@ -46,8 +46,8 @@
  */
 {template .init autoescape="strict" kind="html"}
     <div class="b-filter
-        {$params?.modifier ? ' b-filter_'+$params.modifier : ''}"
-         data-filter-name="{$params?.name ? $params.name : ''}">
+        {$params?.modifier ? ' b-filter_'+$params.modifier : ''}" // ?
+        data-filter-name="{$params?.name ? $params.name : ''}"> // remove
         {call .header data="all"/}
         {call .filters data="all"/}
     </div>
@@ -57,13 +57,20 @@
  * Header template
  * @param? params {
  *     header: ?{
- *         title: ?string
+ *         title: ?string,
+ *         help: ?bool
  *     }
  * }
  */
 {template .header autoescape="strict" kind="html"}
     <div class="b-filter__header">
-        {$params.header.title}
+        <span class="b-filter__title">
+            {$params.header.title}
+        </span>
+        {if $params.header.help}
+        <img src="/images/l-search-result/b-filter/b-filter__help.png"
+            class="b-filter__help">
+        {/if}
     </div>
 {/template}
 
@@ -73,11 +80,9 @@
  *     body: ?{
  *         filters: ?list<{
  *             name: ?string
- *             isEmpty: ?bool
  *         }>,
  *         hiddenFilters: ?list<{
  *             name: ?string
- *             isEmpty: ?bool
  *         }>
  *     },
  *     name: ?string
@@ -96,6 +101,9 @@
         {/for}
     </div>
     {if $params?.body?.hiddenFilters}
+        <div class="b-filter__show-button">
+            Еще {$params.body.hiddenFilters.length} предметов
+        </div>
         <div class="b-filter__filters b-filter__filters_hidden">
             {for $i in range($params.body.hiddenFilters.length)}
                 {call .filter}
@@ -115,24 +123,22 @@
  * @param? params {
  *     filter: ?{
  *         name: ?string
- *         isEmpty: ?bool
  *     },
  *     name: ?string,
  *     id: int
  * }
  */
 {template .filter autoescape="strict" kind="html"}
-    {if not $params.filter.isEmpty}
-        <div class="b-filter__section">
-            <div class="b-filter__filter">
-                <input type="checkbox"
-                    id="{$params.name}-{$params.id}"
-                    name="{$params.name}"/>
+    <div class="b-filter__section">
+        <div class="b-filter__filter">
+            <input type="checkbox"
+                class="b-filter__input"
+                id="{$params.name}-{$params.id}"
+                name="{$params.name}-{$params.id}"/>
             <label for="{$params.name}-{$params.id}"
-                   class="b-filter__checkbox-label">
+                class="b-filter__checkbox-label">
                 {$params.filter.name}
             </label>
-            </div>
         </div>
-    {/if}
+    </div>
 {/template}

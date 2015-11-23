@@ -100,12 +100,12 @@ goog.scope(function() {
         this.addChild(this.sort_);
         this.sort_.decorate(sortElement);
 
-        var filters = goog.dom.getElementByClass(
+        //filters
+        var filters = goog.dom.getElementsByClass(
             Filter.CssClass.ROOT,
             element
         );
 
-        //filter
         for(var i = 0, filter; i < filters.length; i++) {
             filter = new Filter();
             this.addChild(filter);

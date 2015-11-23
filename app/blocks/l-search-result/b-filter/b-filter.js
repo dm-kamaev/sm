@@ -1,6 +1,8 @@
 goog.provide('sm.lSearchResult.bFilter.Filter');
 
 goog.require('goog.ui.Component');
+goog.require('goog.dom.classes');
+goog.require('goog.dom.classlist');
 goog.require('goog.events');
 goog.require('goog.soy');
 
@@ -19,6 +21,20 @@ sm.lSearchResult.bFilter.Filter = function(opt_params) {
      * @type{Object}
      */
     this.params_ = opt_params || {};
+
+    /**
+     * Show button element
+     * @type {Element}
+     * @private
+     */
+    this.showButtonElement_ = null;
+
+    /**
+     * Hidden filters element
+     * @type {Element}
+     * @private
+     */
+    this.hiddenFiltersElement_ = null;
 };
 goog.inherits(sm.lSearchResult.bFilter.Filter, goog.ui.Component);
 
@@ -30,7 +46,10 @@ goog.scope(function() {
      * @enum {string}
      */
     Filter.CssClass = {
-        ROOT: 'b-filter'
+        ROOT: 'b-filter',
+        SHOW_BUTTON: 'b-filter__show-button',
+        FILTERS_HIDDEN: 'b-filter__filters_hidden',
+        SHOW_BUTTON_HIDDEN: 'b-filter__show-button_hidden'
     };
 
     /**
@@ -51,14 +70,50 @@ goog.scope(function() {
     };
 
     /**
-     * Getter for form serialize array
-     * @returns {Array.<Object.<string, *>>|*}
-     * @public
+     * Internal decorates the DOM element
+     * @param {Element} element
      */
-    Filter.prototype.getFormSerializeArray = function() {
-        var form = jQuery(this.getElement()),
-            data = form.serializeArray();
+    Filter.prototype.decorateInternal = function(element) {
+        goog.base(this, 'decorateInternal', element);
 
-        return data;
+        this.showButtonElement_ = goog.dom.getElementByClass(
+            Filter.CssClass.SHOW_BUTTON,
+            element
+        );
+
+        this.hiddenFiltersElement_ = goog.dom.getElementByClass(
+            Filter.CssClass.FILTERS_HIDDEN,
+            element
+        );
+    };
+
+    /**
+     * Set up the Component.
+     */
+    Filter.prototype.enterDocument = function() {
+        goog.base(this, 'enterDocument');
+
+        if(this.showButtonElement_) {
+            this.getHandler().listen(
+                this.showButtonElement_,
+                goog.events.EventType.CLICK,
+                this.showHiddenFilters_
+            );
+        }
+    };
+
+    /**
+     * Show hidden filters
+     * @private
+     */
+    Filter.prototype.showHiddenFilters_ = function() {
+        goog.dom.classlist.remove(
+            this.hiddenFiltersElement_,
+            Filter.CssClass.FILTERS_HIDDEN
+        );
+        goog.dom.classlist.add(
+            this.showButtonElement_,
+            Filter.CssClass.SHOW_BUTTON_HIDDEN
+        );
     }
 });

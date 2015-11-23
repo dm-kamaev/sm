@@ -82,14 +82,39 @@
                 'header': [
                     'title': 'В какой класс хотите отдать ребенка?'
                 ],
-                'name': 'classes',
-                'modifier': 'classes'
+                'name': 'classes'
             ]/}
         {/call}
         {call sm.lSearchResult.bFilter.Template.base}
             {param params: [
                 'header': [
-                    'title': 'Высокие результаты ЕГЭ'
+                    'title': 'Тип школы',
+                    'help': true
+                ],
+                'body': [
+                    'filters': [
+                        [
+                            'name': 'Школы и центры образования'
+                        ],
+                        [
+                            'name': 'Лицеи и гимназии'
+                        ],
+                        [
+                            'name': 'Кадетские'
+                        ],
+                        [
+                            'name': 'Коррекционные'
+                        ],
+                    ]
+                ],
+                'name': 'schoolType'
+            ]/}
+        {/call}
+        {call sm.lSearchResult.bFilter.Template.base}
+            {param params: [
+                'header': [
+                    'title': 'Высокие результаты ЕГЭ',
+                    'help': true
                 ],
                 'body': [
                     'filters': [
@@ -109,14 +134,78 @@
                             'name': 'Химия'
                         ],
                         [
-                            'name': 'Английский язык'
+                            'name': 'Англ. язык'
                         ],
+                    ],
+                    'hiddenFilters': [
+                        [
+                            'name': 'Информатика'
+                        ],
+                        [
+                            'name': 'Информатика'
+                        ],
+                        [
+                            'name': 'Информатика'
+                        ],
+                        [
+                            'name': 'Информатика'
+                        ],
+                        [
+                            'name': 'Информатика'
+                        ]
                     ]
                 ],
                 'name': 'ege'
             ]/}
         {/call}
-
+        {call sm.lSearchResult.bFilter.Template.base}
+            {param params: [
+                'header': [
+                    'title': 'Есть победы в олимпиадах',
+                    'help': true
+                ],
+                'body': [
+                    'filters': [
+                        [
+                            'name': 'Математика'
+                        ],
+                        [
+                            'name': 'Русский'
+                        ],
+                        [
+                            'name': 'Физика'
+                        ],
+                        [
+                            'name': 'Литература'
+                        ],
+                        [
+                            'name': 'Химия'
+                        ],
+                        [
+                            'name': 'Англ. язык'
+                        ],
+                    ],
+                    'hiddenFilters': [
+                        [
+                            'name': 'Информатика'
+                        ],
+                        [
+                            'name': 'Информатика'
+                        ],
+                        [
+                            'name': 'Информатика'
+                        ],
+                        [
+                            'name': 'Информатика'
+                        ],
+                        [
+                            'name': 'Информатика'
+                        ]
+                    ]
+                ],
+                'name': 'olympiad'
+            ]/}
+        {/call}
         Показать все фильтры
     </div>
 {/template}

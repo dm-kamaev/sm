@@ -4,18 +4,30 @@
  * Filter template
  * @extends '/l-search-result/b-filter/b-filter'
  * @constructor
+ * @param? params {
+ *     header: ?{
+ *         title: ?string
+ *     },
+ *     name: ?string
+ * }
  */
 {template .base autoescape="strict" kind="html"}
-    {call .init data="all" /}
+    {call .init /}
+{/template}
+
+{template .rootClassName autoescape="strict" kind="html"}
+    b-filter b-filter_classes
 {/template}
 
 /**
  * template
- * @param? params
+ * @param? params {
+ *    name: ?string
+ * }
  */
 {template .filters autoescape="strict" kind="html"}
-    <div class="b-filter__filter">
-        {for $i in range(11)}
+    <div class="b-filter__filter b-filter__filter_center">
+        {for $i in range(11)} // from 1
             <input type="checkbox"
                 id="{$params.name}-{$i}"
                 class="b-filter__filter-input"
@@ -24,12 +36,22 @@
                 class="b-filter__filter-input-label
                 {sp}
                 {$i > 3 ?
-                    'b-filter__filter-input-label_green-border ' : ''}
+                    'b-filter__filter-input-label_green-border ' : ''} // green-border -> middle etc
                 {$i > 8 ?
                     'b-filter__filter-input-label_no-fill' : ''}
                 ">
                     {$i+1}
             </label>
         {/for}
+    </div>
+    <div class="b-filter__filter">
+        <input type="checkbox"
+            class="b-filter__input"
+            id="{$params.name}-after-school"
+            name="{$params.name}-after-school"/>
+        <label for="{$params.name}-after-school"
+            class="b-filter__checkbox-label">
+            Есть продленка
+        </label>
     </div>
 {/template}
