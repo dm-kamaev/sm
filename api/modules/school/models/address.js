@@ -12,8 +12,10 @@ var Address = db.define('Address', {
             Address.belongsTo(models.School, {
                 foreignKey: 'school_id'
             });
-            Address.hasMany(models.Metro, {
-                as: 'metro_stantions', foreignKey: 'address_id'
+            Address.belongsToMany(models.Metro, {
+                as: 'metroStations',
+                through: 'address_metro',
+                foreignKey: 'address_id'
             });
         }
     }
