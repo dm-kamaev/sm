@@ -1,7 +1,7 @@
 var MultiGeocoder = require('multi-geocoder');
 var modules = require.main.require('./api/modules');
 var commander = require('commander');
-var geocoder = new MultiGeocoder({ coordorder: 'latlong', lang: 'ru-RU' });
+var geocoder = new MultiGeocoder({ coordorder: 'latlong', lang: 'ru-RU'});
 var fs = require('fs');
 var colors = require('colors');
 
@@ -15,6 +15,7 @@ var await = require('asyncawait/await');
 
 const PATH_TO_ERROR_FILE = 'geoerrors.txt';
 const ADRESSES_IN_REQUEST = 30; //количетсов адресов в запросе
+const INITAL_ADDRESS = 'город Москва, ';
 
 var start = async(() => {
     await(fs.writeFile(PATH_TO_ERROR_FILE ,'------------\n', function (err) {
@@ -22,6 +23,7 @@ var start = async(() => {
             console.log(err);
     }));
     var addresses = await(addressServices.getAll());
+
     var notUpdated = [];
     addresses.forEach(adr => {
         if (!adr.coords || adr.coords.length != 2)
@@ -58,7 +60,7 @@ var splitAddresses = addresses => {
 
 var processAddressChunk = async(addressesChunk => {
     var adressArr = addressesChunk.map(adr => {
-        return adr.name;
+        return INITAL_ADDRESS + adr.name;
     }),
         cordArr = []
     res = await(geocoder.geocode(adressArr));
@@ -73,7 +75,7 @@ var processAddressChunk = async(addressesChunk => {
 
 var processAddresPrecisely = async(addressesChunk => {
     var adressArr = addressesChunk.map(adr => {
-            return adr.name;
+            return INITAL_ADDRESS + adr.name;
         }),
         cordArr = [],
         errorOccured = false;

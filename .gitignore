@@ -5,9 +5,13 @@ node_modules/
 public/
 tmp/
 doc/
+assets/dump/
 
 *.log
+*.swp
+.jshintrc
 deployment-config.json
 .remote-sync.json
+*.swp
+.jshintrc
 
-assets

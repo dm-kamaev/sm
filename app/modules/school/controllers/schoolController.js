@@ -13,7 +13,7 @@ exports.createComment = async (function(req, res) {
     try {
         var schoolId = req.params.id,
             params = req.body;
-    result = await(schoolServices.comment(schoolId,params));
+        result = await(schoolServices.comment(schoolId,params));
     } catch (e) {
         console.log(e);
         result = JSON.stringify(e);
@@ -32,11 +32,54 @@ exports.create = function(req, res) {
 exports.list = async (function(req, res) {
 
     var schools = await (schoolServices.list());
-    var html = '<h1>Список школ</h1>';
-    html += schools
-        .map(school => '<p><span>' + school.id + '. </span><a href="/school/' + school.id + '">' + school.name + '</a></p>')
-        .join('');
 
+    var schoolList =
+        schools.map(school => {
+            var sumScore = school.ratings
+                .map(rating => rating.score)
+                .reduce((context, coords) => {
+                    coords.forEach((value, index) => {
+                        if (value) {
+                            context.count[index]++;
+                            context.sum[index] += value;
+                            context.res[index] = context.sum[index] / context.count[index];
+                        }
+                    });
+
+                    return context;
+                }, {
+                    sum: [0, 0, 0, 0],
+                    count: [0, 0, 0, 0],
+                    res: [0, 0, 0, 0]
+                }).res;
+            var totalScore = sumScore.reduce((context, value) => {
+                if (value) {
+                    context.sum += value;
+                    context.count++;
+                    context.res = context.sum / context.count;
+                }
+                return context;
+            }, {
+                sum: 0,
+                count: 0,
+                res: 0
+            }).res;
+            return {
+                id: school.id,
+                name: school.name,
+                score: sumScore,
+                totalScore: totalScore,
+                description: ""
+            }
+        });
+
+    var html = soy.render('sm.lSearchResult.Template.base', {
+        params: {
+            data: {
+                schools: schoolList
+            }
+        }
+    });
     res.header("Content-Type", "text/html; charset=utf-8");
     res.end(html);
 });
@@ -44,17 +87,18 @@ exports.list = async (function(req, res) {
 exports.view = async (function(req, res) {
     var school = await (schoolServices.getAllById(req.params.id));
     console.log(JSON.stringify(school).yellow);
+
     var commentGroup = school.CommentGroup ? school.CommentGroup.comments : [];
     console.log(JSON.stringify(commentGroup).blue);
-    //console.log(JSON.stringify(commentGroup).blue);
+
     var typeConvert = {
         'Parent': 'родитель',
         'Graduate': 'выпускник',
         'Scholar': 'ученик'
     };
 
-    var sumScore = commentGroup
-        .map(comment => comment.score)
+    var sumScore = school.ratings
+        .map(rating => rating.score)
         .reduce((context, coords) => {
             coords.forEach((value, index) => {
                 if (value) {
@@ -71,15 +115,33 @@ exports.view = async (function(req, res) {
             res: [0, 0, 0, 0]
         }).res;
 
+    function educationIntervalToString(interval) {
+        var begin = interval[0],
+            end = interval[1],
+            res = '';
+
+        if (begin > -1) {
+            res += begin ? begin : 'Детский сад';
+            if (end > begin) {
+                res += '–';
+                res += end;
+                res += begin ? ' классы' : ' класс';
+            }
+        }
+
+        return res;
+    }
+
+
     var params = {
         data: {
             id: school.id,
             schoolName: school.name,
             schoolType: '',
-            schoolDescr: school.name + " — школа, как школа. Обычная такая",
+            schoolDescr: '',
             directorName: school.director,
             schoolQuote : "Мел",
-            classes: "с 1 по 11",
+            classes: educationIntervalToString(school.educationInterval),
             social:[],
             sites:[{
                 name: "Перейти на сайт школы",
@@ -100,7 +162,7 @@ exports.view = async (function(req, res) {
                     author: '',
                     rank: typeConvert[comment.userType],
                     text: comment.text,
-                    sections: comment.score.map((score, index) => {
+                    sections: comment.rating ? comment.rating.score.map((score, index) => {
                         var type = [
                             'Образование',
                             'Преподаватели',
@@ -111,7 +173,7 @@ exports.view = async (function(req, res) {
                             name: type[index],
                             rating: score
                         };
-                    })
+                    }) : []
                 };
             }),
             coords: school.addresses.map(adr => {
@@ -138,12 +200,20 @@ exports.view = async (function(req, res) {
 
     console.log(params.data);
 
-    //console.log(JSON.stringify(t).blue);
-
-
     res.header("Content-Type", "text/html; charset=utf-8");
     res.end(
         soy.render('sm.lSchool.Template.base', {
         params: params
     }));
+});
+
+exports.search = async(function(req, res) {
+    var exampleList = ['Поварская, 14', 'Школа 123', 'Савеловская', 'Лицей'];
+    var html = soy.render('sm.lSearch.Template.base', {
+      params: {
+          examples: exampleList
+      }
+    });
+    res.header("Content-Type", "text/html; charset=utf-8");
+    res.end(html);
 });

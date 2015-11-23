@@ -1,0 +1,14 @@
+{namespace sm.bSearch.Template}
+/**
+ * Search template
+ * @param? params {
+ *    placeholder: ?string,
+ *    theme: ?string
+ * }
+ */
+{template .base autoescape="strict" kind="html"}
+    <div class="b-search b-search_theme_{$params.theme}">
+        <span class="b-search__icon"></span>
+        <input class="b-search__input" placeholder="{$params.placeholder}" />
+    </div>
+{/template}
