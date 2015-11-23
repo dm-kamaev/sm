@@ -1,10 +1,10 @@
 goog.provide('sm.bStars.Stars');
 
-goog.require('sm.bStars.Template');
-goog.require('goog.ui.Component');
 goog.require('goog.dom.classes');
 goog.require('goog.events');
 goog.require('goog.soy');
+goog.require('goog.ui.Component');
+goog.require('sm.bStars.Template');
 
 
 /**
@@ -18,18 +18,18 @@ sm.bStars.Stars = function(opt_params) {
 
     /**
      * @private
-     * @type{object}
+     * @type {object}
      */
     this.params_ = opt_params || {data: {}};
 
     /**
      * @private
-     * @type{object}
+     * @type {object}
      */
-    this.config_ = this.params_.config ? this.params_.config : {} ;
+    this.config_ = this.params_.config ? this.params_.config : {};
     /**
      * @private
-     * @type{number}
+     * @type {number}
      */
     this.starsMark_ = this.params_.data.mark || 0;
 
@@ -69,6 +69,10 @@ goog.scope(function() {
         INPUT: 'b-stars__hidden-input'
     };
 
+    /**
+     * Event enum
+     * @enum {string}
+     */
     Stars.Event = {
         VALUE_CHANGED: 'VALUE_CHANGED'
     };
@@ -76,7 +80,6 @@ goog.scope(function() {
 
     /**
      * Template-based dom element creation.
-     * @return {!Node}
      * @public
      */
     Stars.prototype.createDom = function() {
@@ -139,7 +142,8 @@ goog.scope(function() {
 
     /**
      * star onclick handler
-     * @param {object}
+     * @param {number} index
+     * @param {string} event
      * @private
      */
     Stars.prototype.onClick_ = function(index, event) {
@@ -150,15 +154,15 @@ goog.scope(function() {
 
     /**
      * Change value
-     * @param {number}
+     * @param {number} newValue
      * @private
      */
-    Stars.prototype.changeValue_ = function (newValue) {
+    Stars.prototype.changeValue_ = function(newValue) {
         var oldValue = this.starsMark_;
         this.starsMark_ = newValue;
         goog.dom.setProperties(
             this.inputElem_,
-            {value:newValue}
+            {value: newValue}
         );
         var newEvent = new goog.events.Event(Stars.Event.VALUE_CHANGED, this);
         newEvent.newValue = newValue;
@@ -170,7 +174,7 @@ goog.scope(function() {
      * Clearing selection
      * @private
      */
-    Stars.prototype.clearSelection_ = function (){
+    Stars.prototype.clearSelection_ = function() {
         for (var i = 0, star; i < this.stars_.length; i++)
         {
             star = this.stars_[i];
@@ -185,9 +189,9 @@ goog.scope(function() {
 
     /**
      * Reselecting stars
-     * @param {number}
+     * @param {number} count
      */
-    Stars.prototype.selectStars = function (count) {
+    Stars.prototype.selectStars = function(count) {
         this.clearSelection_();
         var index = count - 1;
         for (var i = 0, star; i <= index; i++)

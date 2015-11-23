@@ -49,7 +49,7 @@
         {param title: $title /}
         {param html: $html /}
         {param css: ['/frobl.build.css', '/styles.css'] /}
-        {param js: ['/external.min.js', '/script.js'] /}
+        {param js: ['/external.min.js', '/l-doc.js'] /}
     {/call}
 {/template}
 
@@ -137,7 +137,7 @@
                 <h2 class="l-doc__h2">
                     <a href="/doc/{$item}">{$item}</a>
                 </h2>
-                <div class="l-doc__preview-content">
+                <div class="l-doc__preview-content l-doc__preview-{$item}">
                     {call .preview_}
                         {param name: $item /}
                     {/call}
@@ -164,6 +164,10 @@
             {call sm.lDoc.nDemo.bBlockComments.Template.preview/}
         {case 'b-rating'}
             {call sm.lDoc.nDemo.bBlockRating.Template.preview/}
+        {case 'b-school-list'}
+            {call sm.lDoc.nDemo.bBlockSchoolList.Template.preview/}
+        {case 'b-sort'}
+            {call sm.lDoc.nDemo.bBlockSort.Template.preview/}
     {/switch}
 {/template}
 
@@ -198,5 +202,9 @@
             {call sm.lDoc.nDemo.bBlockComments.Template.doc /}
         {case 'b-rating'}
             {call sm.lDoc.nDemo.bBlockRating.Template.doc /}
+        {case 'b-school-list'}
+            {call sm.lDoc.nDemo.bBlockSchoolList.Template.doc/}
+        {case 'b-sort'}
+            {call sm.lDoc.nDemo.bBlockSort.Template.doc/}
     {/switch}
 {/template}

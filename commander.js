@@ -7,6 +7,7 @@ const commander = require('commander');
 require('./console/parse.js').Command;
 require('./console/geocord.js').Command;
 require('./console/vkapi.js').Command;
+require('./console/dump.js').Command;
 
 /*
  * The line below initializes the interface on `node ./commander`

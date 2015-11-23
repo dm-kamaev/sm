@@ -35,6 +35,8 @@
 
 .b-feedback__comment {
     margin: 0 0 40px;
+
+    font-family: 'PTSerifRegular', serif;
 }
 
 .b-feedback__who-are-you {
@@ -59,7 +61,7 @@
 .b-feedback__user-type {
     display: inline-block;
 
-    font: 16px 'PTSerifRegular';
+    font: 16px 'PTSerifRegular', serif;
 }
 
 .b-feedback__radio {

@@ -18,16 +18,16 @@ module.exports = {
             type: Sequelize.DATE
         },
         name: {
-            type: Sequelize.STRING,
+            type: Sequelize.STRING
         },
         coords: {
-            type: Sequelize.ARRAY(Sequelize.ARRAY(Sequelize.FLOAT)),
+            type: Sequelize.ARRAY(Sequelize.ARRAY(Sequelize.FLOAT))
         },
         school_id: {
             type: Sequelize.INTEGER,
             references: {
                 model:"school",
-                key: "id",
+                key: "id"
             }
         }
     });

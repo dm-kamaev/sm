@@ -50,7 +50,7 @@ goog.scope(function() {
     * A path to icons directory
     * @const {String}
     */
-    MapPin.ICON_PATH = '/images/l-school/b-map/b-map-pin/icons/';
+    MapPin.ICON_PATH = '/images/l-school/b-map/b-map__pin/icons/';
 
     /**
     * Config for icons that mark coordinates of a school,
@@ -58,7 +58,7 @@ goog.scope(function() {
     * @type {Object}
     */
     MapPin.CurrentSchoolIcon = {
-        IMAGE_SIZE: [30, 30],
+        IMAGE_SIZE: [22, 32],
         IMAGE_OFFSET: [-15, -30],
         HIGH_RATING: 'map-pin-green-th.png',
         MEDIUM_RATING: 'map-pin-yellow-th.png',

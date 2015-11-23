@@ -1,10 +1,13 @@
-goog.provide('sm.lSchool.bRating.Rating');
+goog.provide('sm.bRating.Rating');
 
-goog.require('sm.lSchool.bRating.Template');
-goog.require('goog.ui.Component');
 goog.require('goog.dom.classes');
+goog.require('goog.dom.classlist');
 goog.require('goog.events');
 goog.require('goog.soy');
+goog.require('goog.ui.Component');
+goog.require('sm.bRating.Template');
+
+
 
 /**
  * Rating component
@@ -12,43 +15,43 @@ goog.require('goog.soy');
  * @constructor
  * @extends {goog.ui.Component}
  */
-sm.lSchool.bRating.Rating = function(opt_params) {
+sm.bRating.Rating = function(opt_params) {
     goog.base(this);
 
     /**
      * @private
-     * @type{object}
+     * @type {object}
      */
     this.params_ = opt_params || {};
 
     /**
      * @private
-     * @type{array.<element>}
+     * @type {array.<element>}
      */
     this.marks_ = [];
 
     /**
      * @private
-     * @type{?element}
+     * @type {?element}
      */
     this.averageMark_ = null;
 
     /**
      * @private
-     * @type{array.<number>}
+     * @type {array.<number>}
      */
     this.values_ = [];
 
     /**
      * @private
-     * @type{number}
+     * @type {number}
      */
     this.averageValue_ = 0;
 };
-goog.inherits(sm.lSchool.bRating.Rating, goog.ui.Component);
+goog.inherits(sm.bRating.Rating, goog.ui.Component);
 
 goog.scope(function() {
-    var Rating = sm.lSchool.bRating.Rating;
+    var Rating = sm.bRating.Rating;
 
     /**
      * CSS-class enum
@@ -57,12 +60,8 @@ goog.scope(function() {
     Rating.CssClass = {
         ROOT: 'b-rating',
         ORDINARY_MARK: 'b-rating__mark_ordinary',
-        AVERAGE_MARK: 'b-rating__mark_average'
-    };
-
-    Rating.soyRound = function(param) {
-        param.value = 3;
-        return "hello";
+        AVERAGE_MARK: 'b-rating__mark_average',
+        NULL_AVERAGE_MARK: 'b-rating__mark_null-average'
     };
 
     /**
@@ -72,7 +71,7 @@ goog.scope(function() {
     Rating.prototype.createDom = function() {
         goog.base(this, 'createDom');
 
-        var el = goog.soy.renderAsElement(sm.lSchool.bRating.Template.base, {
+        var el = goog.soy.renderAsElement(sm.bRating.Template.base, {
             params: this.params_
         });
 
@@ -117,7 +116,7 @@ goog.scope(function() {
             this.changeValues_(opt_values);
         }
 
-        for(var i = 0, value; i < this.values_.length; i++){
+        for (var i = 0, value; i < this.values_.length; i++) {
             value = this.values_[i];
             this.renderValue_(i, value);
         }
@@ -158,7 +157,7 @@ goog.scope(function() {
     Rating.prototype.averageRatingEvaluate_ = function() {
         var averageRating = 0;
 
-        for(var i = 0; i < this.values_.length; i++) {
+        for (var i = 0; i < this.values_.length; i++) {
             averageRating += this.values_[i];
         }
         averageRating /= this.values_.length;
@@ -173,10 +172,10 @@ goog.scope(function() {
     Rating.prototype.initValues_ = function() {
         var values = [];
 
-        if(this.params_.values) {
+        if (this.params_.values) {
             values = this.params_.values;
         } else {
-            for(var i = 0; i < this.marks_.length; i++){
+            for (var i = 0; i < this.marks_.length; i++) {
                 values.push(this.stringToValue_(this.marks_[i].innerHTML));
             }
         }
@@ -192,7 +191,19 @@ goog.scope(function() {
      * @private
      */
     Rating.prototype.renderAverageValue_ = function(averageValue) {
-        this.averageMark_.innerHTML = this.valueToString_(averageValue, 1);
+        var valueStr = this.valueToString_(averageValue, 1);
+        this.averageMark_.innerHTML = valueStr;
+        if (valueStr == '—') {
+            goog.dom.classlist.add(
+                this.averageMark_,
+                Rating.CssClass.NULL_AVERAGE_MARK
+            );
+        } else {
+            goog.dom.classlist.remove(
+                this.averageMark_,
+                Rating.CssClass.NULL_AVERAGE_MARK
+            );
+        }
     };
 
     /**
@@ -233,7 +244,7 @@ goog.scope(function() {
     Rating.prototype.changeValues_ = function(values) {
         var isChanged = false;
 
-        for(var i = 0; i < values.length; i++) {
+        for (var i = 0; i < values.length; i++) {
             if (this.changeValue_(i, values[i])) {
                 isChanged = true;
             }

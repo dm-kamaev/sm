@@ -15,6 +15,7 @@ var await = require('asyncawait/await');
 
 const PATH_TO_ERROR_FILE = 'geoerrors.txt';
 const ADRESSES_IN_REQUEST = 30; //количетсов адресов в запросе
+const INITAL_ADDRESS = 'Россия, Москва, ';
 
 var start = async(() => {
     await(fs.writeFile(PATH_TO_ERROR_FILE ,'------------\n', function (err) {
@@ -58,7 +59,7 @@ var splitAddresses = addresses => {
 
 var processAddressChunk = async(addressesChunk => {
     var adressArr = addressesChunk.map(adr => {
-        return adr.name;
+        return INITAL_ADDRESS + adr.name;
     }),
         cordArr = []
     res = await(geocoder.geocode(adressArr));

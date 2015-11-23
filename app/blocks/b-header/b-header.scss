@@ -5,10 +5,10 @@
     overflow: hidden;
 
     width: 100%;
-    height: 75px;
+    height: 70px;
 
     text-align: center;
-    font-family: Arial, sans-serif;
+    font-family: 'Proxima', Arial, sans-serif;
 
     box-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
 }
@@ -17,21 +17,25 @@
     margin: 0 auto;
 
     max-width: 1200px;
+    min-width: 420px;
+
     width: 100%;
     height: 100%;
 }
 
 .b-header__menu {
     display: inline-block;
+    float: left;
 
     width: 5%;
     height: 100%;
+    max-width: 62px;
 }
 
 .b-header__main {
     display: inline-block;
 
-    max-width: 1080px;
+    max-width: 1076px;
     width: 88%;
     height: 100%;
 
@@ -41,23 +45,25 @@
 
 .b-header__search {
     display: inline-block;
+    float: right;
 
     width: 5%;
     height: 100%;
+    max-width: 62px;
 }
 
 .b-header__menu-image {
     width: 100%;
     height: 100%;
 
-    background: url(images/b-header/menu.png) no-repeat center;
+    background: url(images/b-header/menu.png) no-repeat left;
 }
 
 .b-header__search-image{
     width: 100%;
     height: 100%;
 
-    background: url(images/b-header/search.png) no-repeat center;
+    background: url(images/b-header/search.png) no-repeat right;
 }
 
 .b-header__line {
@@ -72,12 +78,10 @@
 
 .b-header__line_right {
     float: right;
-    left: 44px;
 }
 
 .b-header__line_left {
     float: left;
-    right: 41px;
 }
 
 .b-header__wrap {
@@ -98,7 +102,7 @@
 .b-header__title {
     margin: -5px 0 0 0;
 
-    font-size: 21px;
+    font-size: 28px;
 }
 
 .b-header__city {
