@@ -106,7 +106,7 @@ goog.scope(function() {
         }
 
         ymaps.ready(jQuery.proxy(function() {
-            this.ymaps_ = new ymaps.Map(element,ymapsParams);
+            this.ymaps_ = new ymaps.Map(element, ymapsParams);
             this.placePlacemarks_(this.params_);
         }, this));
     };
@@ -241,9 +241,12 @@ goog.scope(function() {
             this.ymaps_.geoObjects.add(item);
         }
 
-        var geoObject = this.ymaps_.geoObjects.get(0);
-        if (geoObject) {
-            geoObject.balloon.open();
-        }
+        var i = 0;
+        this.ymaps_.geoObjects.each(function(obj) {
+            if (!i) {
+                obj.balloon.open();
+            }
+            i++;
+        });
     };
 });
