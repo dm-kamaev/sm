@@ -52,10 +52,19 @@
 {template .topMenu_ autoescape="strict" kind="html" private="true"}
     <div class="l-search-result__top-menu">
         <div class="l-search-result__search">
-            Поиск
+            {call sm.bSearch.Template.base}
+                {param params: [
+                    'placeholder': 'Поиск'
+                ]/}
+            {/call}
         </div>
         <div class="l-search-result__show-on-map">
-            Показать на карте
+            <div class="l-search-result__map-link">
+                <div class="l-search-result__show-on-map-icon"></div>
+                <div class="l-search-result__show-on-map-text">
+                    Показать на карте
+                </div>
+            </div>
         </div>
         <div class="l-search-result__sort">
             {call sm.lSearchResult.bSort.Template.base /}

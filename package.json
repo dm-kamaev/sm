@@ -24,6 +24,7 @@
     "body-parser": "~1.13.2",
     "closure": "^1.0.3",
     "closure-library": "^1.43629075.2",
+    "colors": "^1.1.2",
     "commander": "^2.9.0",
     "concat": "^1.0.0",
     "ejs": "^2.3.4",
@@ -46,8 +47,10 @@
     "node-xlsx": "^0.6.0",
     "pg": "^4.4.2",
     "pg-hstore": "^2.3.2",
+    "readline-sync": "^1.2.21",
     "sequelize": "^3.8.0",
     "sequelize-cli": "^1.9.1",
+    "sleep": "^3.0.0",
     "soynode": "^1.1.0"
   },
   "dependencies": {
