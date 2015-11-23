@@ -7,7 +7,6 @@ const morgan = require('morgan');
 var db = require('./app/components/db');
 var soy = require('./app/components/soy');
 var modules = require('./app/modules');
-var requestInfo = require('./app/components/requestInfo');
 var api = require('./api/modules');
 var bodyParser = require('body-parser');
 
