@@ -6,7 +6,7 @@ module.exports = {
         id: {
             allowNull: false,
             primaryKey: true,
-			autoIncrement: true,
+            autoIncrement: true,
             type: Sequelize.INTEGER
         },
         created_at: {
@@ -17,29 +17,29 @@ module.exports = {
             allowNull: false,
             type: Sequelize.DATE
         },	
-		school_id: {
-			allowNull: false,
+        school_id: {
+            allowNull: false,
             type: Sequelize.INTEGER,
-			references: {
+            references: {
                 model:"school",
                 key: "id"
-			}
-		},
-		university_id: {
-			allowNull: false,
+            }
+        },
+        university_id: {
+            allowNull: false,
             type: Sequelize.INTEGER,
-			references: {
+            references: {
                 model:"university",
-                key: "vk_id"
-			}
-		},
-		ppl_count: {
-			type: Sequelize.INTEGER	
-		},
-		year: {
-			type: Sequelize.INTEGER	
-		}
-	});
+                key: "id"
+            }
+        },
+        ppl_count: {
+            type: Sequelize.INTEGER	
+        },
+        year: {
+            type: Sequelize.INTEGER	
+        }
+    });
   },
   down: function (queryInterface, Sequelize) {
     return queryInterface.dropTable('school_university');
