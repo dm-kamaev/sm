@@ -104,11 +104,11 @@ goog.scope(function() {
                 controls: []
             };
         }
-        ymaps.ready(function() {
+
+        ymaps.ready(jQuery.proxy(function() {
             this.ymaps_ = new ymaps.Map(element,ymapsParams);
             this.placePlacemarks_(this.params_);
-        }.bind(this));
-
+        }, this));
     };
 
     /**
@@ -131,7 +131,7 @@ goog.scope(function() {
      * @private
      */
     Map.prototype.itemToPlacemarks_ = function(item) {
-        return item.coords.map(function(coord) {
+        return item.coords.map(jQuery.proxy(function(coord) {
             var pinData = {};
             goog.object.extend(
                 pinData,
@@ -144,7 +144,7 @@ goog.scope(function() {
 
             var pin = new sm.lSchool.bMap.MapPin(pinData);
             return pin.createPlacemark();
-        }.bind(this));
+        }, this));
     };
 
     /**
@@ -177,16 +177,17 @@ goog.scope(function() {
 		var south, west, east, north;
 		east = north = 0;
 		south = west = 90;
-		coords.forEach(
-			function(point) {
-				var latitude = point.lat,
-				longitude = point.lng;
-				north = latitude > north ? latitude : north;
-				south = latitude < south ? latitude : south;
-				east = longitude > east ? longitude : east;
-				west = longitude < west ? longitude : west;
-			}
-		);
+
+        for (var i = 0, point; point = coords[i]; i++) {
+            var latitude = point.lat,
+                longitude = point.lng;
+
+            north = latitude > north ? latitude : north;
+            south = latitude < south ? latitude : south;
+            east = longitude > east ? longitude : east;
+            west = longitude < west ? longitude : west;
+        }
+
 		return {
 			north: north,
 			west: west, 
@@ -235,19 +236,14 @@ goog.scope(function() {
      */
     Map.prototype.placePlacemarks_ = function(data) {
         var placemarks = this.dataToPlacemarks_(data);
-        console.log(placemarks);
-        placemarks.forEach(
-            function(item) {
-                this.ymaps_.geoObjects.add(item);
-            }.bind(this)
-        );
+
+        for (var i = 0, item; item = placemarks[i]; i++) {
+            this.ymaps_.geoObjects.add(item);
+        }
 
         var geoObject = this.ymaps_.geoObjects.get(0);
         if (geoObject) {
             geoObject.balloon.open();
         }
-
-		
-
     };
 });

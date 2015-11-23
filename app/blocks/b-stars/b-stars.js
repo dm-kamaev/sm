@@ -119,7 +119,7 @@ goog.scope(function() {
                 goog.events.listen(
                     star,
                     goog.events.EventType.CLICK,
-                    this.onClick_.bind(this, i)
+                    jQuery.proxy(this.onClick_, this, i)
                 );
             }
         }
