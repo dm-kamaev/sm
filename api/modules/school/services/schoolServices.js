@@ -22,6 +22,7 @@ var getSchoolParams = (params) => {
 
     var schoolParams = {
         name: params.name,
+        abbreviation: params.abbreviation,
         director: params.director,
         phonres: params.phones,
         site: params.site,
@@ -84,16 +85,21 @@ exports.getAllById = async((sch_id)=>{
 });
 
 //TODO: переделать
-exports.get = async((sqlizeOptions, params) => {
-    params.include = [{
+exports.get = async((opt_sqlizeOptions, opt_params) => {
+    var params = opt_params || {},
+        sqlizeOptions = opt_sqlizeOptions || {};
+
+    sqlizeOptions.include = [{
         model: models.Address,
         as: 'addresses'
     }];
+
     if (params.count == 'one') {
         return await (models.School.findOne(sqlizeOptions));
     }
-    else
+    else {
         return await (models.School.findAll(sqlizeOptions));
+    }
 });
 
 
