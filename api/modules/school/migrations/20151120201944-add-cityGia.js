@@ -1,6 +1,6 @@
 module.exports = {
     up: function (queryInterface, Sequelize) {
-        return queryInterface.createTable('gia_result', {
+        return queryInterface.createTable('city_gia', {
             id: { 
                 allowNull: false,
                 autoIncrement: true,
@@ -29,6 +29,6 @@ module.exports = {
         });
     },
     down: function (queryInterface, Sequelize) {
-        return queryInterface.dropTable('gia_result');
+        return queryInterface.dropTable('city_gia');
     }
 };
