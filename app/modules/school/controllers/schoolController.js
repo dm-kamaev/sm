@@ -211,6 +211,7 @@ exports.search = async(function(req, res) {
     var exampleList = ['Поварская, 14', 'Школа 123', 'Савеловская', 'Лицей'];
     var html = soy.render('sm.lSearch.Template.base', {
       params: {
+          currentCity: 'Москва',
           examples: exampleList
       }
     });
