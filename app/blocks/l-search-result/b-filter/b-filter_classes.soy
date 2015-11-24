@@ -29,17 +29,17 @@
  */
 {template .filters autoescape="strict" kind="html"}
     <div class="b-filter__filter b-filter__filter_center">
-        {for $i in range(11)} // from 1
+        {for $i in range(11)}
             <input type="radio"
                 id="{$params.name}-{$i+1}"
                 class="b-filter__input"
-                name="{$params.name}[]"
+                name="{$params.name}"
                 value="{$i+1}"/>
             <label for="{$params.name}-{$i+1}"
                 class="b-filter__input-label
                 {sp}
                 {$i > 3 ?
-                    'b-filter__input-label_middle ' : ''} // green-border -> middle etc
+                    'b-filter__input-label_middle ' : ''}
                 {$i > 8 ?
                     'b-filter__input-label_high' : ''}
                 ">
@@ -51,7 +51,7 @@
         <input type="checkbox"
             class="b-filter__input-ordinary"
             id="{$params.name}-after-school"
-            name="{$params.name}[]"
+            name="{$params.name}"
             value="after-school"/>
         <label for="{$params.name}-after-school"
             class="b-filter__input-label-ordinary">

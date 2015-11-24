@@ -1,12 +1,12 @@
 goog.provide('sm.lSearchResult.bSchoolList.SchoolList');
 
-goog.require('sm.lSearchResult.bSchoolList.Template');
-goog.require('sm.bRating.Rating');
-goog.require('goog.ui.Component');
 goog.require('goog.dom.classes');
 goog.require('goog.dom.classlist');
 goog.require('goog.events');
 goog.require('goog.soy');
+goog.require('goog.ui.Component');
+goog.require('sm.bRating.Rating');
+goog.require('sm.lSearchResult.bSchoolList.Template');
 
 /**
  * School list component
@@ -20,7 +20,7 @@ sm.lSearchResult.bSchoolList.SchoolList = function(opt_params) {
     /**
      * Parameters
      * @private
-     * @type{Object}
+     * @type {Object}
      */
     this.params_ = opt_params || {};
 
@@ -87,7 +87,7 @@ goog.scope(function() {
     SchoolList.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
 
-        for(var i = 0; i < this.schoolElements_.length; i++) {
+        for (var i = 0; i < this.schoolElements_.length; i++) {
             goog.events.listen(
                 this.schoolElements_[i],
                 goog.events.EventType.CLICK,
@@ -104,7 +104,7 @@ goog.scope(function() {
     SchoolList.prototype.exitDocument = function() {
         goog.base(this, 'exitDocument');
 
-        for(var i = 0; i < this.schoolElements_.length; i++) {
+        for (var i = 0; i < this.schoolElements_.length; i++) {
             goog.events.unlisten(
                 this.schoolElements_[i],
                 goog.events.EventType.CLICK,
@@ -121,7 +121,7 @@ goog.scope(function() {
         var schoolRatingElement,
             schoolRating;
 
-        for(var i = 0; i < this.schoolElements_.length; i++) {
+        for (var i = 0; i < this.schoolElements_.length; i++) {
             //dom elements
             schoolRatingElement = goog.dom.getElementByClass(
                 SchoolList.CssClass.SCHOOL_RATING,

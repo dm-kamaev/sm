@@ -50,6 +50,7 @@
 
     font-size: 14px;
     color: #ee362c;
+    cursor: pointer;
 }
 
 .b-filter__input {
@@ -148,7 +149,7 @@
     .b-filter__input-label_high {
         border: 1px solid #dbe1e3;
         border-right: none;
-        background-color: rgba(255, 255, 255, 1);
+        background-color: #f4fbfc;
 
         &:last-child {
             width: 28px;

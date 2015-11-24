@@ -1,11 +1,11 @@
 goog.provide('sm.lSearchResult.bFilter.Filter');
 
-goog.require('gorod.iUtils');
-goog.require('goog.ui.Component');
 goog.require('goog.dom.classes');
 goog.require('goog.dom.classlist');
 goog.require('goog.events');
 goog.require('goog.soy');
+goog.require('goog.ui.Component');
+goog.require('gorod.iUtils');
 
 /**
  * Filter component
@@ -19,7 +19,7 @@ sm.lSearchResult.bFilter.Filter = function(opt_params) {
     /**
      * Parameters
      * @private
-     * @type{Object}
+     * @type {Object}
      */
     this.params_ = opt_params || {};
 
@@ -94,7 +94,7 @@ goog.scope(function() {
     Filter.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
 
-        if(this.showButtonElement_) {
+        if (this.showButtonElement_) {
             this.getHandler().listen(
                 this.showButtonElement_,
                 goog.events.EventType.CLICK,
@@ -108,7 +108,7 @@ goog.scope(function() {
      * @private
      */
     Filter.prototype.showHiddenFilters_ = function() {
-        for(var i = 0; i < this.hiddenFiltersElements_.length; i++) {
+        for (var i = 0; i < this.hiddenFiltersElements_.length; i++) {
             goog.dom.classlist.remove(
                 this.hiddenFiltersElements_[i],
                 Filter.CssClass.FILTERS_HIDDEN
@@ -119,5 +119,5 @@ goog.scope(function() {
             this.showButtonElement_,
             Filter.CssClass.SHOW_BUTTON_HIDDEN
         );
-    }
+    };
 });
