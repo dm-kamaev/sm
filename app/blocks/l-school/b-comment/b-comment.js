@@ -73,7 +73,7 @@ goog.scope(function() {
         );
 
         /** stars decoration */
-        for(var i = 0, stars; i < this.stars_.length; i++) {
+        for (var i = 0, stars; i < this.stars_.length; i++) {
             stars = new sm.bStars.Stars();
             this.addChild(stars, false);
             stars.decorate(this.stars_[i]);

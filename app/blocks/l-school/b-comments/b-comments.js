@@ -24,7 +24,7 @@ sm.lSchool.bComments.Comments = function(opt_params) {
 
     /**
      * @private
-     * @type{NodeList}
+     * @type {Array.<Element>}
      */
     this.comments_ = [];
 };
