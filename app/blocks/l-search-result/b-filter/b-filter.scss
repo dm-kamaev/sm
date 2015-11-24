@@ -2,7 +2,7 @@
     display: inline-block;
 
     width: 100%;
-    padding: 30px 0 24px 0;
+    padding: 25px 0 18px 0;
 
     border-bottom: 1px solid #e5e5e5;
 
@@ -38,8 +38,10 @@
     font-size: 14px;
 }
 
-.b-filter__checkbox-label {
-    margin: 0 10px;
+.b-filter__input-label {
+    margin: 0 9px;
+
+    cursor: pointer;
 }
 
 .b-filter__show-button {
@@ -54,18 +56,33 @@
     margin: 0;
 
     vertical-align: bottom;
+    cursor: pointer;
 }
 
 .b-filter__help {
     position: relative;
     top: -2px;
 
-    margin-left: 10px;
+    display: inline-block;
+
+    margin-left: 7px;
 
     vertical-align: middle;
+    cursor: pointer;
 }
 
-.b-filter__filters_hidden,
+.b-filter__help:hover::after {
+    position: absolute;
+    top: -15px;
+    left: 35px;
+
+    width: 100px;
+    height: auto;
+    max-height: 10px;
+
+    content: attr(data-help);
+}
+
 .b-filter__show-button_hidden {
     display: none;
 }
@@ -83,58 +100,70 @@
 
         width: 100%;
         padding: 0;
-
-        text-align: center;
     }
 
     .b-filter__input {
         display: none;
     }
 
-    .b-filter__input_ordinary {
+    .b-filter__input-ordinary {
         display: inline-block;
 
         margin: 0;
 
         vertical-align: bottom;
+        cursor: pointer;
+    }
+
+    .b-filter__input-label-ordinary {
+        margin: 0 10px;
+
+        cursor: pointer;
     }
 
     .b-filter__input-label {
         display: inline-block;
 
-        width: 30px;
+        width: 28px;
         height: 10px;
-        padding: 10px 0;
+        padding: 9px 1px 9px 0;
         margin: 12px 0;
 
         border: 1px solid #e5e1c2;
         border-right: none;
+
         background-color: #fffbd8;
         font-size: 12px;
         text-align: center;
         line-height: 11px;
+        cursor: pointer;
     }
 
-    .b-filter__input-label_green-border {
+    .b-filter__input-label_middle {
         border: 1px solid #d7e2bf;
         border-right: none;
         background-color: #f0fbd5;
     }
 
-    .b-filter__input-label_no-fill {
+    .b-filter__input-label_high {
         border: 1px solid #dbe1e3;
-        background-color: rgba(255, 255, 255, 0);
+        border-right: none;
+        background-color: rgba(255, 255, 255, 1);
 
         &:last-child {
-            border-left: none;
+            width: 28px;
+            padding: 9px 0;
+
+            border: 1px solid #dbe1e3;
         }
     }
 
-    .b-filter__input:checked +
-    .b-filter__input-label {
-        width: 23px;
+    .b-filter__input:checked + .b-filter__input-label {
+        width: 22px;
         padding: 6px 0;
 
         border: 4px #ee362c solid;
+
+        box-shadow: inset 0 1px 0 0 #e3dfc0, 0 1px 0 0 #d9d9d2;
     }
 }

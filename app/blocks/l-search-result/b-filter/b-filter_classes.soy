@@ -30,17 +30,18 @@
 {template .filters autoescape="strict" kind="html"}
     <div class="b-filter__filter b-filter__filter_center">
         {for $i in range(11)} // from 1
-            <input type="checkbox"
-                id="{$params.name}-{$i}"
+            <input type="radio"
+                id="{$params.name}-{$i+1}"
                 class="b-filter__input"
-                name="{$params.name}"/>
-            <label for="{$params.name}-{$i}"
+                name="{$params.name}[]"
+                value="{$i+1}"/>
+            <label for="{$params.name}-{$i+1}"
                 class="b-filter__input-label
                 {sp}
                 {$i > 3 ?
-                    'b-filter__input-label_green-border ' : ''} // green-border -> middle etc
+                    'b-filter__input-label_middle ' : ''} // green-border -> middle etc
                 {$i > 8 ?
-                    'b-filter__input-label_no-fill' : ''}
+                    'b-filter__input-label_high' : ''}
                 ">
                     {$i+1}
             </label>
@@ -48,11 +49,12 @@
     </div>
     <div class="b-filter__filter">
         <input type="checkbox"
-            class="b-filter__input b-filter__input_ordinary"
+            class="b-filter__input-ordinary"
             id="{$params.name}-after-school"
-            name="{$params.name}-after-school"/>
+            name="{$params.name}[]"
+            value="after-school"/>
         <label for="{$params.name}-after-school"
-            class="b-filter__checkbox-label">
+            class="b-filter__input-label-ordinary">
             Есть продленка
         </label>
     </div>

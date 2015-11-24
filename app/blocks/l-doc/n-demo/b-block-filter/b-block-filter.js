@@ -1,9 +1,9 @@
-goog.provide('sm.lSearchResult.bBlockFilter.Filter');
+goog.provide('sm.lDoc.nDemo.bBlockFilter.Filter');
 
 goog.require('sm.lSearchResult.bFilter.Filter');
 goog.require('goog.dom');
 
-sm.lSearchResult.bBlockFilter.Filter = function() {
+sm.lDoc.nDemo.bBlockFilter.Filter = function() {
     var Class = sm.lSearchResult.bFilter.Filter;
 
     var elements = goog.dom.getElementsByClass(
@@ -20,6 +20,6 @@ sm.lSearchResult.bBlockFilter.Filter = function() {
 jQuery(function() {
     var doc = goog.dom.getElementByClass('l-doc');
     if (doc) {
-        new sm.lSearchResult.bBlockFilter.Filter();
+        new sm.lDoc.nDemo.bBlockFilter.Filter();
     }
 });

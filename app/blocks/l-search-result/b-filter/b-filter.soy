@@ -5,7 +5,7 @@
  * @param? params {
  *     header: ?{
  *         title: ?string,
- *         help: ?bool // string
+ *         help: ?string // string
  *     },
  *     body: ?{
  *         filters: ?list<{
@@ -32,7 +32,7 @@
  * @param? params {
  *     header: ?{
  *         title: ?string,
- *         help: bool
+ *         help: ?string
  *     },
  *     body: ?{
  *         filters: ?list<{
@@ -56,7 +56,7 @@
  * @param? params {
  *     header: ?{
  *         title: ?string,
- *         help: ?bool
+ *         help: ?string
  *     }
  * }
  */
@@ -66,8 +66,9 @@
             {$params.header.title}
         </span>
         {if $params.header.help}
-            <img src="/images/l-search-result/b-filter/b-filter__help.png"
-                class="b-filter__help">
+            <div class="b-filter__help" data-help="{$params.header.help}">
+                <img src="/images/l-search-result/b-filter/b-filter__help.png"/>
+            </div>
         {/if}
     </div>
 {/template}
@@ -85,20 +86,23 @@
  * }
  */
 {template .filters autoescape="strict" kind="html"}
+
+    {let $filToShow: $params.body.filtersToShow ?
+        ($params.body.filtersToShow - 1) : 5/}
     <div class="b-filter__filters">
         {for $i in range($params.body.filters.length)}
             {call .filter}
                 {param params: [
                     'filter': $params.body.filters[$i],
-                    'hidden': $i>(5) ? true : false,
+                    'hidden': $i > $filToShow ? true : false,
                     'name': $params.name,
                     'id': $i
                 ]/}
             {/call}
         {/for}
-        {if $params.body.filters.length > 5}
+        {if $params.body.filters.length > $filToShow}
             <div class="b-filter__show-button">
-                 Еще 9 предметов
+                 Еще {$params.body.filters.length - $filToShow - 1} предметов
             </div>
         {/if}
     </div>
@@ -121,9 +125,10 @@
             <input type="checkbox"
                 class="b-filter__input"
                 id="{$params.name}-{$params.id}"
-                name="{$params.name}-{$params.id}"/>
+                name="{$params.name}[]"
+                value="{$params.id}"/>
             <label for="{$params.name}-{$params.id}"
-                class="b-filter__checkbox-label">
+                class="b-filter__input-label">
                 {$params.filter.label}
             </label>
         </div>
