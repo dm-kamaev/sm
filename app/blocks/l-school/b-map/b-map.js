@@ -2,16 +2,14 @@
  * @fileoverview A constructor for a Yandex Maps map
  * @author Nikita Gubchenko
  */
-
-goog.provide('sm.lSchool.bMap.Map');
-
+goog.require('goog.array');
 goog.require('goog.dom');
 goog.require('goog.dom.dataset');
-goog.require('goog.ui.Component');
 goog.require('goog.object');
-goog.require('goog.array');
-goog.require('sm.lSchool.bMap.Template');
+goog.require('goog.ui.Component');
+goog.provide('sm.lSchool.bMap.Map');
 goog.require('sm.lSchool.bMap.MapPin');
+goog.require('sm.lSchool.bMap.Template');
 
 /**
  * @param {Object=} opt_params
@@ -84,7 +82,7 @@ goog.scope(function() {
                 newCenter = {
                     lat: coords[0].lat,
                     lon: coords[0].lng
-                }; 
+                };
             borderArr = this.correctBorder_(borderArr, newCenter);
             var ymapsParams =
             {
@@ -105,7 +103,7 @@ goog.scope(function() {
             };
         }
         ymaps.ready(function() {
-            this.ymaps_ = new ymaps.Map(element,ymapsParams);
+            this.ymaps_ = new ymaps.Map(element, ymapsParams);
             this.placePlacemarks_(this.params_);
         }.bind(this));
 
@@ -113,7 +111,7 @@ goog.scope(function() {
 
     /**
      * Converts coord object to array
-     * @param {Object}
+     * @param {Object} coordObject
      * @return {Array<number>}
      * @private
      */
@@ -126,7 +124,7 @@ goog.scope(function() {
 
     /**
      * Creates an array of placemark objects from provided data
-     * @param {Object}
+     * @param {Object} item
      * @return {Array<ymaps.Placemark>}
      * @private
      */
@@ -149,7 +147,7 @@ goog.scope(function() {
 
     /**
      * Initializes a placemark before placing on the map
-     * @param {(Object|Array<Object>)}
+     * @param {(Object|Array<Object>)} data
      * @return {Array<ymaps.Placemark>}
      * @private
      */
@@ -169,68 +167,68 @@ goog.scope(function() {
 
     /**
      * Calculate map border
-     * @param {Object} data
-	 * @return {Object}
+     * @param {Object} coords
+     * @return {Object}
      * @private
      */
     Map.prototype.calculateBorder_ = function(coords) {
-		var south, west, east, north;
-		east = north = 0;
-		south = west = 90;
-		coords.forEach(
-			function(point) {
-				var latitude = point.lat,
-				longitude = point.lng;
-				north = latitude > north ? latitude : north;
-				south = latitude < south ? latitude : south;
-				east = longitude > east ? longitude : east;
-				west = longitude < west ? longitude : west;
-			}
-		);
-		return {
-			north: north,
-			west: west, 
-			south: south,
-			east: east
-		};
+        var south, west, east, north;
+        east = north = 0;
+        south = west = 90;
+        coords.forEach(
+            function(point) {
+                var latitude = point.lat,
+                    longitude = point.lng;
+                north = latitude > north ? latitude : north;
+                south = latitude < south ? latitude : south;
+                east = longitude > east ? longitude : east;
+                west = longitude < west ? longitude : west;
+            }
+        );
+        return {
+            north: north,
+            west: west,
+            south: south,
+            east: east
+        };
     };
 
-	/**
-     * Recalculate map border 
+    /**
+     * Recalculate map border
      * @param {Object} border
-	 * @param {Object} newCenter
-	 * @return {Array<Array<number>>}
+     * @param {Object} newCenter
+     * @return {Array<Array<number>>}
      * @private
      */
-	Map.prototype.correctBorder_ = function(border, newCenter) {
-		var center = {
-			lat : (border.north + border.south) / 2,
-			lon : (border.west + border.east) / 2
-		};
+    Map.prototype.correctBorder_ = function(border, newCenter) {
+        var center = {
+            lat: (border.north + border.south) / 2,
+            lon: (border.west + border.east) / 2
+        };
 
-		if (newCenter.lat > center.lat)
-			border.north = border.south + (newCenter.lat - border.south) * 2;
-		else 
-			border.south = border.north - (border.north - newCenter.lat) * 2;
-		
-		if (newCenter.lon > center.lon)
-			border.east = border.west + (newCenter.lon - border.west) * 2;
-		else 
-			border.west = border.east - (border.east - newCenter.lon) * 2;
+        if (newCenter.lat > center.lat)
+            border.north = border.south + (newCenter.lat - border.south) * 2;
+        else
+            border.south = border.north - (border.north - newCenter.lat) * 2;
 
-		var correction = 0.5 * Math.abs(border.north - border.south);
-		border.north += correction;
-		border.south -= correction;
-		border.east += correction;
-		border.west -= correction;
+        if (newCenter.lon > center.lon)
+            border.east = border.west + (newCenter.lon - border.west) * 2;
+        else
+            border.west = border.east - (border.east - newCenter.lon) * 2;
 
-	   return [[border.north, border.west], [border.south, border.east]];	
-	};
+        var correction = 0.5 * Math.abs(border.north - border.south);
+        border.north += correction;
+        border.south -= correction;
+        border.east += correction;
+        border.west -= correction;
+
+        return [[border.north, border.west], [border.south, border.east]];
+    };
 
 
     /**
      * Appends generated placemarks to the map
-     * @param {Object}
+     * @param {Object} data
      * @private
      */
     Map.prototype.placePlacemarks_ = function(data) {
@@ -246,8 +244,5 @@ goog.scope(function() {
         if (geoObject) {
             geoObject.balloon.open();
         }
-
-		
-
     };
 });
