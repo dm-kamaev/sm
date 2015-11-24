@@ -9,7 +9,9 @@ const soynode = require('gulp-soynode');
 var glob = require("glob");
 var exec = require('child_process').exec;
 var Q = require('q');
-var fs = require('fs-extra');
+var fs = require('fs-extra'),
+    foreach = require('gulp-foreach'),
+    SoyExtend = require('./soy-extend');
 const config = require('./config.json');
 
 
@@ -80,13 +82,13 @@ gulp.task('appES5', function () {
 });
 
 
-gulp.task('soy', function () {
+gulp.task('soy', ['preSoy'], function (cb) {
     //return gulpHelper.soy([
     //    path.join(__dirname, BLOCKS_DIR, '/**/*.soy')
     //]);
 
     return gulp.src([
-            path.join(__dirname, BLOCKS_DIR, '/**/*.soy'),
+            path.join(__dirname, '/node_modules/frobl/tmp/**/*.soy'),
             path.join(__dirname, '/node_modules/frobl/blocks', '/**/*.soy')
         ])
         .pipe(soynode({
@@ -94,9 +96,40 @@ gulp.task('soy', function () {
             loadCompiledTemplates: false,
             useClosureStyle: true,
             contextJsPaths: [
-                path.join(__dirname, '/node_modules/google-closure-library/closure/goog/base.js')
+                path.join(
+                    __dirname,
+                    '/node_modules/google-closure-library/closure/goog/base.js'
+                )
             ]
         }));
+});
+
+
+
+gulp.task('preSoy', function(cb) {
+    var extender = new SoyExtend({
+        blocksDir: path.join(__dirname, BLOCKS_DIR)
+    });
+
+    gulp.task('_copy', function () {
+        return gulp.src(
+                path.join(__dirname, BLOCKS_DIR, '/**/*.soy')
+            )
+            .pipe(gulp.dest(path.join(__dirname, '/node_modules/frobl/tmp')));
+    });
+
+    gulp.task('_extend', function () {
+        return gulp.src(path.join(
+                __dirname,
+                '/node_modules/frobl/tmp/**/*.soy'
+            ))
+            .pipe(foreach(function (stream, file) {
+                extender.proceed(file.path);
+                return stream;
+            }));
+    });
+
+    return gulpHelper.runSequence('_copy', '_extend', cb);
 });
 
 var getDirectories = function(srcpath)  {

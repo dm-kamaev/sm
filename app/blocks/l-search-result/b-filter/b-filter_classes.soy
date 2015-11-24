@@ -1,0 +1,61 @@
+{namespace sm.lSearchResult.bFilterClasses.Template}
+
+/**
+ * Filter template
+ * @extends '/l-search-result/b-filter/b-filter'
+ * @constructor
+ * @param? params {
+ *     header: ?{
+ *         title: ?string
+ *     },
+ *     name: ?string
+ */
+{template .base autoescape="strict" kind="html"}
+    {call .init data="all"/}
+{/template}
+
+/**
+ * Root class name
+ */
+{template .rootClassName autoescape="strict" kind="html"}
+    b-filter b-filter_classes
+{/template}
+
+/**
+ * template
+ * @param? params {
+ *    name: ?string
+ * }
+ */
+{template .filters autoescape="strict" kind="html"}
+    <div class="b-filter__filter b-filter__filter_center">
+        {for $i in range(11)}
+            <input type="radio"
+                id="{$params.name}-{$i+1}"
+                class="b-filter__input"
+                name="{$params.name}"
+                value="{$i+1}"/>
+            <label for="{$params.name}-{$i+1}"
+                class="b-filter__input-label
+                {sp}
+                {$i > 3 ?
+                    'b-filter__input-label_middle ' : ''}
+                {$i > 8 ?
+                    'b-filter__input-label_high' : ''}
+                ">
+                    {$i+1}
+            </label>
+        {/for}
+    </div>
+    <div class="b-filter__filter">
+        <input type="checkbox"
+            class="b-filter__input-ordinary"
+            id="{$params.name}-after-school"
+            name="{$params.name}"
+            value="after-school"/>
+        <label for="{$params.name}-after-school"
+            class="b-filter__input-label-ordinary">
+            Есть продленка
+        </label>
+    </div>
+{/template}

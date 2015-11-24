@@ -41,7 +41,7 @@
             </div>
             <script type="text/javascript" src="/external.min.js"></script>
             <script type="text/javascript">var CLOSURE_NO_DEPS = true;</script>
-            <script type="text/javascript" src="/script.js"></script>
+            <script type="text/javascript" src="/l-search-result.js"></script>
         </body>
     </html>
 {/template}
@@ -68,7 +68,7 @@
             </div>
         </div>
         <div class="l-search-result__sort">
-            Сортировать по
+            {call sm.lSearchResult.bSort.Template.base /}
         </div>
     </div>
 {/template}
@@ -78,6 +78,168 @@
  */
 {template .leftMenu_ autoescape="strict" kind="html" private="true"}
     <div class="l-search-result__left-menu">
-        Меню слева
+        {call .filters_ /}
+    </div>
+{/template}
+
+/**
+ * Filter template
+ */
+{template .filters_ autoescape="strict" kind="html" private="true"}
+    <div class="l-search-result__filters">
+        {call sm.lSearchResult.bFilterClasses.Template.base}
+            {param params: [
+                'header': [
+                    'title': 'В какой класс хотите отдать ребенка?'
+                ],
+                'name': 'classes'
+            ]/}
+        {/call}
+        {call sm.lSearchResult.bFilter.Template.base}
+            {param params: [
+                'header': [
+                    'title': 'Тип школы',
+                    'help': 'help'
+                ],
+                'body': [
+                    'filters': [
+                        [
+                            'label': 'Школы и центры образования',
+                            'value': '1'
+                        ],
+                        [
+                            'label': 'Лицеи и гимназии',
+                            'value': '1'
+                        ],
+                        [
+                            'label': 'Кадетские',
+                            'value': '1'
+                        ],
+                        [
+                            'label': 'Коррекционные',
+                            'value': '1'
+                        ],
+                    ]
+                ],
+                'name': 'schoolType'
+            ]/}
+        {/call}
+        {call sm.lSearchResult.bFilter.Template.base}
+            {param params: [
+                'header': [
+                    'title': 'Высокие результаты ЕГЭ',
+                    'help': 'help'
+                ],
+                'body': [
+                    'filters': [
+                        [
+                            'label': 'Математика',
+                            'value': '1'
+                        ],
+                        [
+                            'label': 'Русский',
+                            'value': '1'
+                        ],
+                        [
+                            'label': 'Физика',
+                            'value': '1'
+                        ],
+                        [
+                            'label': 'Литература',
+                            'value': '1'
+                        ],
+                        [
+                            'label': 'Химия',
+                            'value': '1'
+                        ],
+                        [
+                            'label': 'Англ. язык',
+                            'value': '1'
+                        ],
+                        [
+                            'label': 'Информатика',
+                            'value': '1'
+                        ],
+                        [
+                            'label': 'Обществознание',
+                            'value': '1'
+                        ],
+                        [
+                            'label': 'История',
+                            'value': '1'
+                        ],
+                        [
+                            'label': 'Биология',
+                            'value': '1'
+                        ],
+                        [
+                            'label': 'Кибернетика',
+                            'value': '1'
+                        ]
+                    ],
+                    'filtersToShow': 6
+                ],
+                'name': 'ege'
+            ]/}
+        {/call}
+        {call sm.lSearchResult.bFilter.Template.base}
+            {param params: [
+                'header': [
+                    'title': 'Есть победы в олимпиадах',
+                    'help': 'Есть победы в олимпиадах'
+                ],
+                'body': [
+                    'filters': [
+                        [
+                            'label': 'Математика',
+                            'value': '1'
+                        ],
+                        [
+                            'label': 'Русский',
+                            'value': '1'
+                        ],
+                        [
+                            'label': 'Физика',
+                            'value': '1'
+                        ],
+                        [
+                            'label': 'Литература',
+                            'value': '1'
+                        ],
+                        [
+                            'label': 'Химия',
+                            'value': '1'
+                        ],
+                        [
+                            'label': 'Англ. язык',
+                            'value': '1'
+                        ],
+                        [
+                            'label': 'Информатика',
+                            'value': '1'
+                        ],
+                        [
+                            'label': 'Обществознание',
+                            'value': '1'
+                        ],
+                        [
+                            'label': 'История',
+                            'value': '1'
+                        ],
+                        [
+                            'label': 'Биология',
+                            'value': '1'
+                        ],
+                        [
+                            'label': 'Кибернетика',
+                            'value': '1'
+                        ]
+                    ],
+                    'filtersToShow': 6
+                ],
+                'name': 'olympiad'
+            ]/}
+        {/call}
+        Показать все фильтры
     </div>
 {/template}

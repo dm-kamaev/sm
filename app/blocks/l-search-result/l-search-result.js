@@ -1,13 +1,14 @@
 goog.provide('sm.lSearchResult.SearchResult');
 
-goog.require('sm.lSearchResult.Template');
-goog.require('sm.lSearchResult.bSchoolList.SchoolList');
-goog.require('sm.lSearchResult.bSort.Sort');
-goog.require('goog.ui.Component');
 goog.require('goog.dom.classes');
 goog.require('goog.dom.classlist');
 goog.require('goog.events');
 goog.require('goog.soy');
+goog.require('goog.ui.Component');
+goog.require('sm.lSearchResult.Template');
+goog.require('sm.lSearchResult.bFilter.Filter');
+goog.require('sm.lSearchResult.bSchoolList.SchoolList');
+goog.require('sm.lSearchResult.bSort.Sort');
 
 /**
  * Search result component
@@ -37,7 +38,8 @@ goog.inherits(sm.lSearchResult.SearchResult, goog.ui.Component);
 goog.scope(function() {
     var SearchResult = sm.lSearchResult.SearchResult,
         SchoolList = sm.lSearchResult.bSchoolList.SchoolList,
-        Sort = sm.lSearchResult.bSort.Sort;
+        Sort = sm.lSearchResult.bSort.Sort,
+        Filter = sm.lSearchResult.bFilter.Filter;
 
     /**
      * CSS-class enum
@@ -98,6 +100,17 @@ goog.scope(function() {
         this.addChild(this.sort_);
         this.sort_.decorate(sortElement);
 
+        //filters
+        var filters = goog.dom.getElementsByClass(
+            Filter.CssClass.ROOT,
+            element
+        );
+
+        for (var i = 0, filter; i < filters.length; i++) {
+            filter = new Filter();
+            this.addChild(filter);
+            filter.decorate(filters[i]);
+        }
     };
 
     /**
@@ -133,8 +146,8 @@ goog.scope(function() {
      * @private
      */
     SearchResult.prototype.onSortHandler_ = function(event) {
-        console.log('Sorting by item: '+ event.itemId);
-    }
+        console.log('Sorting by item: ' + event.itemId);
+    };
 });
 
 /**
@@ -145,8 +158,8 @@ jQuery(function() {
             sm.lSearchResult.SearchResult.CssClass.ROOT
         );
 
-    if(root) {
+    if (root) {
         var searchResult = new sm.lSearchResult.SearchResult();
-        searchResult.decorate(root)
+        searchResult.decorate(root);
     }
 });
