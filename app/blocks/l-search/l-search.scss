@@ -39,12 +39,8 @@
 .l-search__pin {
     float: left;
 
-    width: 17px;
-    height: 24px;
+    margin-top: 3px;
     margin-right: 18px;
-    padding-top: 10px;
-
-    background: url(images/l-search-result/pin.png) no-repeat left;
 }
 
 .l-search__city {
@@ -61,11 +57,7 @@
 .l-search__city-arrow {
     float: left;
 
-    width: 10px;
-    height: 7px;
-    padding-top: 24px;
-
-    background: url(images/l-search/arrow.png) no-repeat left;
+    margin-top: 12px;
 }
 
 .l-search__inscription {
