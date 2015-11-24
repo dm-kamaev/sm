@@ -1,10 +1,8 @@
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var models = require.main.require('./app/components/models').all;
-var commentServices =
-    require.main.require('./api/modules/comment/services').commentServices;
 
-
+exports.name = 'comment';
 exports.create = async (function(commentGroupId, params) {
     var result = '';
     try {

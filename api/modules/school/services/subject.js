@@ -2,6 +2,9 @@ var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var models = require.main.require('./app/components/models').all;
 
+
+exports.name = 'subject';
+
 /**
  * @param {{
  *     name?: string

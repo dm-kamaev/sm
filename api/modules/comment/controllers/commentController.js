@@ -1,4 +1,5 @@
-var commentServices = require('../services').commentServices;
+var services = require.main.require('./app/components/services').all,
+    commentServices = services.comment;
 
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');

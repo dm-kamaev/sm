@@ -3,6 +3,8 @@ var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var models = require.main.require('./app/components/models').all;
 
+exports.name = 'univer';
+
 exports.addSchoolResults = async((schoolRes) => {
 	await( 
 		schoolRes.years.forEach(yearRes => {

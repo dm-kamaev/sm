@@ -2,7 +2,7 @@ var colors = require('colors');
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var models = require.main.require('./app/components/models').all;
-
+exports.name = 'address';
 exports.getAll = async(() => {
     return await(models.Address.findAll());
 });

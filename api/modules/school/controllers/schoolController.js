@@ -1,5 +1,6 @@
-var schoolServices = require('../services').schoolServices;
-var commentServices = require('../../comment/services').commentServices;
+var services = require.main.require('./app/components/services').all,
+    schoolServices = services.school,
+    commentServices = services.comment;
 
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
