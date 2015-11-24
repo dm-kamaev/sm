@@ -3,6 +3,7 @@ var DataType = require('sequelize'),
 
 var School = db.define('School', {
     name:DataType.STRING,
+    abbreviation:DataType.STRING,
     schoolType: {
         field: 'school_type',
         type: DataType.ENUM,

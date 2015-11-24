@@ -179,6 +179,7 @@ var rowToSchool = row => {
 
     return {
         name: schoolName,
+        abbreviation: row[NAME_INDEX],
         schoolType: schoolType,
         director: row[DIRECTOR_INDEX],
         phones: getArray(row, PHONES_INDEX),
