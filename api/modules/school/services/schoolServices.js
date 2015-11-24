@@ -94,6 +94,7 @@ exports.getAllById = async((sch_id)=>{
     }));
 });
 
+//TODO: refactor
 exports.getForComment = async((sch_id) =>  {
     return await (models.School.findOne({
         where:{id: sch_id},
@@ -122,6 +123,16 @@ exports.get = async((sqlizeOptions, params) => {
         return await (models.School.findAll(sqlizeOptions));
 });
 
+//TODO: refactor all of this
+exports.getOneNudeByName = async((name) => {
+	return await (models.School.findOne({
+		where: {
+			name : {
+				$like: '%' + name + '%'
+			}	
+		}
+	}));
+});
 exports.search = async (params => {
     var searchParams = params.searchParams,
 	    whereParams = {};
