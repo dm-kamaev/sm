@@ -77,8 +77,8 @@ goog.scope(function() {
             var dataset = goog.dom.dataset.get(element, 'params');
             this.params_ = JSON.parse(dataset);
         }
+
         var coords = this.params_.coords;
-        console.log(coords.length);
         if (coords.length > 1) {
             var borderArr = this.calculateBorder_(coords),
                 newCenter = {
