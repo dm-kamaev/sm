@@ -4,8 +4,8 @@
  * и скопировать токен из адресной строки в файл token.json
  *
  */
-var schoolServices = require.main.require('./api/modules/school/services').schoolServices;
-var univerServices = require.main.require('./api/modules/school/services').univerServices;
+
+var services = require.main.require('./app/components/services').all;
 var commander = require('commander');
 var https = require('https');
 var colors = require('colors');
@@ -69,7 +69,7 @@ var CountJSON = async(() => {
 
 var GetMatches = async(() => {
     var schools = await(getSchools());
-    var ourSchools = await(schoolServices.list());
+    var ourSchools = await(services.school.list());
     console.log('Школ вконтакте: ' + colors.yellow(schools.response.items.length));
     console.log('Наших школ: ' + colors.yellow(ourSchools.length));
     var matches = compareMatches(schools.response.items, ourSchools);
@@ -453,13 +453,13 @@ var writeResultsFromJsonToBd = async ((path)=> {
  * 
  */
 var writeSchoolToBd = async ((school)=> {
-	univerServices.addSchoolResults(school);
+	services.univer.addSchoolResults(school);
 });
 
 var processRow = async((row) => {
 	var schoolName = row[1].trim(),
 		rowResults = [],
-		school = await (schoolServices.getOneNudeByName(schoolName));
+		school = await (services.school.getOneNudeByName(schoolName));
 	if (!school)
 		throw new Error('cant find ' + schoolName);
 	for (var i = 2; i <= 46; i+=2){
