@@ -2,10 +2,11 @@ var colors = require('colors');
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var models = require.main.require('./app/components/models').all;
-var commentServices =
-    require.main.require('./api/modules/comment/services').commentServices;
+var services = require.main.require('./app/components/services').all;
 var sequelize  = require.main.require('./app/components/db');
 
+
+exports.name = 'school';
 
 exports.getGroupId = async (function(school, t) {
     var instance = school;

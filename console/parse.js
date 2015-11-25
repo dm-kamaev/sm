@@ -6,8 +6,7 @@ var colors = require('colors');
 
 
 var modules = require.main.require('./api/modules');
-var services =
-    require.main.require('./api/modules/school/services');
+var services = require.main.require('./app/components/services').all;
 
 var replace = require('./parseConfig').replace;
 var ignore = require('./parseConfig').ignore;
@@ -253,23 +252,23 @@ var parseSchool = async((schoolData) => {
         }
     };
 
-    var school = await( services.schoolServices.get(params, {count: 'one'}) );
+    var school = await( services.school.get(params, {count: 'one'}) );
 
     return school ?
-        await (services.schoolServices.update(school, schoolData)) :
-        await (services.schoolServices.create(schoolData));
+        await (services.school.update(school, schoolData)) :
+        await (services.school.create(schoolData));
 });
 
 var initGiaResults = async (function (giaResults, schoolId) {
     giaResults.forEach(gia => {
-        var subject = await (services.subjectServices.get({
+        var subject = await (services.subject.get({
             name: gia.subject
         }, {
             count: 'one',
             createIfNotExists: true
         }));
 
-        services.giaResultServices.create({
+        services.giaResult.create({
             count: gia.count,
             result: gia.result,
             school_id: schoolId,

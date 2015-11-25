@@ -6,9 +6,8 @@ var colors = require('colors');
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 
+var services = require.main.require('./app/components/services').all;
 //var modules = require.main.require('./api/modules');
-var addressServices =
-    require.main.require('./api/modules/school/services').addressServices;
 
 
 const PATH_TO_ERROR_FILE = 'metrolog.txt';
@@ -35,8 +34,8 @@ var start = async(() => {
             if (err)
                 console.log(err);
     }));
-    var test = await(addressServices.getTest());
-    var addresses = await(addressServices.getAllWithMetro())
+    var test = await(services.address.getTest());
+    var addresses = await(services.address.getAllWithMetro())
     console.log('\nPatience, my friend');
     //var amount = DEBUG_RESTRICTION ? DEBUG_RESTRICTION : addresses.length;
     var adrChunks = splitAddreses(addresses);
@@ -86,7 +85,7 @@ var processAddress = async(address => {
                     + colors.yellow(address.name) + ' in range '
                     + colors.yellow(KM_RESTRIСTION+'KM'));
             else
-                await (addressServices.setMetro(address, metroArr));
+                await (services.address.setMetro(address, metroArr));
         }
     }
 });

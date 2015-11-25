@@ -1,7 +1,5 @@
 var soy = require.main.require('./app/components/soy');
-
-var schoolServices =
-    require.main.require('./api/modules/school/services').schoolServices;
+var services = require.main.require('./app/components/services').all;
 
 var fs = require('fs');
 var async = require('asyncawait/async');
@@ -13,7 +11,7 @@ exports.createComment = async (function(req, res) {
     try {
         var schoolId = req.params.id,
             params = req.body;
-        result = await(schoolServices.comment(schoolId,params));
+        result = await(services.school.comment(schoolId,params));
     } catch (e) {
         console.log(e);
         result = JSON.stringify(e);
@@ -31,7 +29,7 @@ exports.create = function(req, res) {
 
 exports.list = async (function(req, res) {
 
-    var schools = await (schoolServices.list());
+    var schools = await (services.school.list());
 
     var schoolList =
         schools.map(school => {
@@ -85,7 +83,7 @@ exports.list = async (function(req, res) {
 });
 
 exports.view = async (function(req, res) {
-    var school = await (schoolServices.getAllById(req.params.id));
+    var school = await (services.school.getAllById(req.params.id));
     console.log(JSON.stringify(school).yellow);
 
     var commentGroup = school.CommentGroup ? school.CommentGroup.comments : [];
