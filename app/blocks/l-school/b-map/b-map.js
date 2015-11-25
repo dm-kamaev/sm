@@ -131,7 +131,7 @@ goog.scope(function() {
      * @private
      */
     Map.prototype.itemToPlacemarks_ = function(item) {
-        return item.coords.map(jQuery.proxy(function(coord) {
+        return goog.array.map(item.coords, jQuery.proxy(function(coord) {
             var pinData = {};
             goog.object.extend(
                 pinData,
@@ -154,16 +154,20 @@ goog.scope(function() {
      * @private
      */
     Map.prototype.dataToPlacemarks_ = function(data) {
-        if (!Array.isArray(data)) {
+        if (!(data instanceof Array)) {
             data = [data];
         }
-        return goog.array.flatten(
-            data.map(
-                function(item) {
-                    return this.itemToPlacemarks_(item);
-                }.bind(this)
-            )
-        );
+
+        var res = [];
+
+        for (var i = 0, item, placemarks; item = data[i]; i++) {
+            placemarks = this.itemToPlacemarks_(item);
+            for (var j = 0, placemark; placemark = placemarks[j]; j++) {
+                res.push(placemark);
+            }
+        }
+
+        return res;
     };
 
 
