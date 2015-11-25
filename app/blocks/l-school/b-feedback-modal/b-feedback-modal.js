@@ -1,21 +1,18 @@
 goog.provide('sm.lSchool.bFeedbackModal.FeedbackModal');
 
-goog.require('goog.ui.Component');
 goog.require('goog.dom.classes');
-
-goog.require('sm.bStars.Stars');
-goog.require('sm.lSchool.bFeedbackModal.Template');
-
+goog.require('goog.ui.Component');
 goog.require('gorod.bModal.Modal');
 goog.require('gorod.bModal.Template');
 goog.require('gorod.bTextarea.Textarea');
-
+goog.require('sm.bStars.Stars');
+goog.require('sm.lSchool.bFeedbackModal.Template');
 
 /**
  * Feedback modal
- * @param opt_params
+ * @param {Object} opt_params
  * @constructor
- * @inherits goog.ui.Component
+ * @extends {goog.ui.Component}
  */
 sm.lSchool.bFeedbackModal.FeedbackModal = function(opt_params) {
     goog.base(this);
@@ -66,7 +63,7 @@ goog.scope(function() {
      * shows modal window
      * @public
      */
-    FeedbackModal.prototype.show = function () {
+    FeedbackModal.prototype.show = function() {
         this.modal_.show();
     };
 
@@ -74,7 +71,7 @@ goog.scope(function() {
      * hides modal window
      * @public
      */
-    FeedbackModal.prototype.hide = function () {
+    FeedbackModal.prototype.hide = function() {
         this.modal_.hide();
     };
 
@@ -96,7 +93,7 @@ goog.scope(function() {
      * Component render
      * @public
      */
-    FeedbackModal.prototype.render = function () {
+    FeedbackModal.prototype.render = function() {
         var modalDialog = this.modal_.getDialog()[0],
             modalDialogBody = goog.dom.getElementByClass(
                 FeedbackModal.CssClass.DIALOG_BODY,
@@ -110,7 +107,7 @@ goog.scope(function() {
      * Template-based dom element creation.
      * @public
      */
-    FeedbackModal.prototype.createDom = function () {
+    FeedbackModal.prototype.createDom = function() {
         var elem = goog.soy.renderAsElement(
             sm.lSchool.bFeedbackModal.Template.feedback, {
                 params: this.params_
@@ -124,7 +121,7 @@ goog.scope(function() {
      * @param {Element} element
      * @public
      */
-    FeedbackModal.prototype.decorateInternal = function (element) {
+    FeedbackModal.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
         goog.dom.getParentElement(element).style.display = 'none';
@@ -154,7 +151,7 @@ goog.scope(function() {
      * Sets up the Component.
      * @public
      */
-    FeedbackModal.prototype.enterDocument = function () {
+    FeedbackModal.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
 
         this.textarea_ = new gorod.bTextarea.Textarea(this.elements_.textarea);
@@ -172,7 +169,7 @@ goog.scope(function() {
      * Cleans up the Component.
      * @public
      */
-    FeedbackModal.prototype.exitDocument = function () {
+    FeedbackModal.prototype.exitDocument = function() {
         goog.base(this, 'exitDocument');
 
         goog.events.unlisten(
@@ -187,10 +184,10 @@ goog.scope(function() {
     /**
      * stars initialization
      * @param {Array.<Element>} elements
-     * @returns {Array}
+     * @return {Array}
      * @private
      */
-    FeedbackModal.prototype.initStars_ = function (elements) {
+    FeedbackModal.prototype.initStars_ = function(elements) {
         var res = [],
             elem,
             star;
@@ -217,7 +214,7 @@ goog.scope(function() {
      * @param {Function} event
      * @private
      */
-    FeedbackModal.prototype.onSubmit_ = function (event) {
+    FeedbackModal.prototype.onSubmit_ = function(event) {
         event.preventDefault();
 
         this.submit_();
@@ -229,19 +226,19 @@ goog.scope(function() {
      * @param {Function=} opt_callback
      * @private
      */
-    FeedbackModal.prototype.send_ = function (form, opt_callback) {
+    FeedbackModal.prototype.send_ = function(form, opt_callback) {
         jQuery.ajax({
             url: form.attr('action'),
             type: form.attr('method'),
             data: form.serialize(),
-            success: opt_callback || function () {}
+            success: opt_callback ? opt_callback : function() {}
         });
     };
 
     /**
      * data validation
      * @param {Array.<Object>} data
-     * @returns {boolean}
+     * @return {boolean}
      * @private
      */
     FeedbackModal.prototype.isValid_ = function(data) {
@@ -250,7 +247,7 @@ goog.scope(function() {
 
         /** list of parameters for validate */
         var validateList = {
-            'text': function (value) {
+            'text': function(value) {
                 if (value.trim()) {
                     isValidOpt = true;
                 }
@@ -284,10 +281,10 @@ goog.scope(function() {
      * @private
      */
     FeedbackModal.prototype.removeRadioCheck_ = function() {
-        for(var i = 0, radio; i < this.elements_.radio.length; i++) {
+        for (var i = 0, radio; i < this.elements_.radio.length; i++) {
             radio = this.elements_.radio[i];
 
-            if(radio.checked) {
+            if (radio.checked) {
                 radio.checked = false;
             }
         }
@@ -297,12 +294,12 @@ goog.scope(function() {
      * Submit form
      * @private
      */
-    FeedbackModal.prototype.submit_ = function () {
+    FeedbackModal.prototype.submit_ = function() {
         var form = jQuery(this.getElement()),
             data = form.serializeArray();
 
         if (this.isValid_(data)) {
-            this.send_(form, function(){
+            this.send_(form, function() {
                 location.reload();
             });
         } else {

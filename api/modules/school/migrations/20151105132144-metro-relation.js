@@ -2,12 +2,19 @@
 
 module.exports = {
   up: function (queryInterface, Sequelize) {
-    return queryInterface.createTable('metro', {
+    return queryInterface.createTable('address_metro', {
         id: {
             allowNull: false,
             autoIncrement: true,
             primaryKey: true,
             type: Sequelize.INTEGER
+        },
+        address_id: {
+            type: Sequelize.INTEGER,
+            references: {
+                model:"address",
+                key: "id",
+            }
         },
         created_at: {
             allowNull: false,
@@ -17,23 +24,16 @@ module.exports = {
             allowNull: false,
             type: Sequelize.DATE
         },
-        name: {
-            type: Sequelize.STRING,
-            unique: true,
-        },
-        coords: {
-            type: Sequelize.ARRAY(Sequelize.ARRAY(Sequelize.FLOAT)),
-        },
-        address_id: {
+        metro_id: {
             type: Sequelize.INTEGER,
             references: {
-                model:"address",
+                model:"metro",
                 key: "id",
             }
         }
     });
   },
-  down: function (queryInterface, Sequelize) {
-    return queryInterface.dropTable('metro');
-  }
+    down: function (queryInterface, Sequelize) {
+        return queryInterface.dropTable('address_metro');
+    }
 };

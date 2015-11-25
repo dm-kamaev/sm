@@ -1,13 +1,13 @@
 goog.provide('sm.lSearchResult.bSort.Sort');
 
-goog.require('sm.lSearchResult.bSort.Template');
-goog.require('gorod.iUIInstanceStorage.UIInstanceStorage');
-goog.require('gorod.dropdown.Dropdown');
-goog.require('gorod.bList.List');
-goog.require('goog.ui.Component');
 goog.require('goog.dom.classes');
 goog.require('goog.events');
 goog.require('goog.soy');
+goog.require('goog.ui.Component');
+goog.require('gorod.bList.List');
+goog.require('gorod.dropdown.Dropdown');
+goog.require('gorod.iUIInstanceStorage.UIInstanceStorage');
+goog.require('sm.lSearchResult.bSort.Template');
 
 /**
  * Sort component
@@ -21,7 +21,7 @@ sm.lSearchResult.bSort.Sort = function(opt_params) {
     /**
      * Parameters
      * @private
-     * @type{Object}
+     * @type {Object}
      */
     this.params_ = opt_params || {};
 
@@ -74,6 +74,10 @@ goog.scope(function() {
         INFRASTRUCTURE: 'инфраструктуре'
     };
 
+    /**
+     * Decorate
+     * @param {Element} element
+     */
     Sort.prototype.decorate = function(element) {
         goog.base(this, 'decorate', element);
 
@@ -171,7 +175,7 @@ goog.scope(function() {
             itemId: itemId
         });
 
-        switch(itemId) {
+        switch (itemId) {
             case 1:
                 this.setSwitcherCustomText_(
                     Sort.SwitcherCustomText.EDUCATION

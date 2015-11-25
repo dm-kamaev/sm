@@ -1,13 +1,13 @@
 goog.provide('sm.lSearchResult.SearchResult');
 
-goog.require('sm.lSearchResult.Template');
-goog.require('sm.lSearchResult.bSchoolList.SchoolList');
-goog.require('sm.lSearchResult.bSort.Sort');
-goog.require('goog.ui.Component');
 goog.require('goog.dom.classes');
 goog.require('goog.dom.classlist');
 goog.require('goog.events');
 goog.require('goog.soy');
+goog.require('goog.ui.Component');
+goog.require('sm.lSearchResult.Template');
+goog.require('sm.lSearchResult.bSchoolList.SchoolList');
+goog.require('sm.lSearchResult.bSort.Sort');
 
 /**
  * Search result component
@@ -144,8 +144,8 @@ jQuery(function() {
             sm.lSearchResult.SearchResult.CssClass.ROOT
         );
 
-    if(root) {
+    if (root) {
         var searchResult = new sm.lSearchResult.SearchResult();
-        searchResult.decorate(root)
+        searchResult.decorate(root);
     }
 });
