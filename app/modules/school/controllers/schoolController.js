@@ -206,3 +206,15 @@ exports.view = async (function(req, res) {
         params: params
     }));
 });
+
+exports.search = async(function(req, res) {
+    var exampleList = ['Поварская, 14', 'Школа 123', 'Савеловская', 'Лицей'];
+    var html = soy.render('sm.lSearch.Template.base', {
+      params: {
+          currentCity: 'Москва',
+          examples: exampleList
+      }
+    });
+    res.header("Content-Type", "text/html; charset=utf-8");
+    res.end(html);
+});
