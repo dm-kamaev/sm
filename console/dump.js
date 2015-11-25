@@ -10,13 +10,15 @@ const DUMP_FOLDER = './assets/dump/';
 const PROJECT_NAME = 'BP';
 const common = require.main.require('./console/common');
 const SEPARATOR = ':';
-
+const sequelize = require.main.require('./app/components/db');
+    
 var start = function() {
     var vars = [
         'Create db dump file', 
         'Create db dump file and write it to config as current', 
         'Load db dump',
-        'Show current config'],
+        'Show current config',
+        'Drop all tables'],
     index = readlineSync.keyInSelect(vars, 'What to do?');
     switch (index) {
         case 0: 
@@ -31,11 +33,19 @@ var start = function() {
         case 3:
             check();
             break;
+        case 4:
+            dropAll();
+            break;
     }
 };
 
-var load = function(){
-    var command = 'pg_restore -c -d ' + dbConfig.name + 
+var dropAll = async(()=>{
+    await(sequelize.queryInterface.dropAllTables());
+});
+
+var load = async(function(){
+    await(dropAll());
+    var command = 'pg_restore -d ' + dbConfig.name + 
         ' ' + DUMP_FOLDER + dbConfig.dump;
     exec(command, {maxBuffer: 1024 * 500},  
         function (error, stdout) {
@@ -43,7 +53,7 @@ var load = function(){
             if (error)
                 console.log(error);
         });
-};
+});
 
 var leadZero = function (num) {
     return ('0' + num).slice(-2); 

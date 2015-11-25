@@ -21,7 +21,8 @@ var CityGia = db.define('CityGia', {
     classMethods: {
         associate: function (models) {
             CityGia.belongsTo(models.Subject, {
-                foreignKey: 'subject_id'
+                foreignKey: 'subject_id',
+                as: 'subject'
             });
             CityGia.belongsTo(models.City, {
                 foreignKey: 'city_id'

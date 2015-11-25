@@ -1,19 +1,30 @@
 var modules = require.main.require('./api/modules');
 var models = require.main.require('./app/components/models').all;
 
-var dictionary = {
-  comment: models.Comment,
-  address: models.Address,
-  nearMetro: models.Metro,
-  univer: models.Univer,
-  school: models.School
-};
+
 
 var generate = function (includes) {
+    var dictionary = {
+      comment: models.Comment,
+      commentGroup: models.CommentGroup,
+      addresses: models.Address,
+      nearMetro: models.Metro,
+      univer: models.Univer,
+      school: models.School,
+      subject: models.Subject,
+      city: models.City,
+      cityGia: models.CityGia,
+      giaResults: models.GiaResult,
+      ratings: models.Rating
+    };
     var result = [];
-    for (var prop in includes) {
+    for (var prop in includes){ 
+        var modelInList = dictionary[prop] /*|| models[prop]*/;
+        if (!modelInList)
+            throw new Error('Cant find association for relation \'' + prop +
+                    '\' Check dictionary in sequelizeInclude.js');
         var node = {
-            model: dictionary[prop],
+            model: modelInList,
             as: prop
         };
         if (typeof includes[prop] != 'boolean')

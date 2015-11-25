@@ -13,7 +13,7 @@ var City = db.define('City', {
                 foreignKey: 'city_id'
             });
             City.hasMany(models.CityGia, {
-                as: 'giaResults',
+                as: 'cityGia',
                 foreignKey: 'city_id'
             });
         }
