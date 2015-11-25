@@ -9,6 +9,7 @@ var commander = require('commander');
 var modules = require.main.require('./api/modules');
 var services =
     require.main.require('./api/modules/school/services');
+
 var models = require.main.require('./app/components/models').all;
 
 
@@ -43,6 +44,7 @@ var departmentParse = async(path => {
 
         var departmentGroupByNameStage = setRelation(department);
         saveData(departmentGroupByNameStage);
+
     });
 });
 
@@ -146,12 +148,12 @@ var saveData = departmentData => {
             departmentAddressId.push(elem.addressId);
         });
 
-        var departmentList = await(models.Department.findAll({
-                where: departmentParams
-            }));
+        var departmentList = await(
+                services.departmentServices.getAllByParams(departmentParams));
 
         var isCreated = false;
         if (departmentList.length > 0) {
+
             departmentList.forEach(function(elem) {
                 var addressData = await(
                         services.departmentServices.getAddress(elem));
@@ -160,77 +162,20 @@ var saveData = departmentData => {
 
                 if (elemSchoolId === schoolId) {
                     isCreated = true;
-                    var hasAddress = false;
-
-                    departmentAddressId.forEach(function(addressId) {
-                        if (addressId === addressData[0].dataValues.id) {
-                            hasAddress = true;
-                        }
-                    });
-                    if (!hasAddress) {
-                        await(services.departmentServices.addAddressId(
-                            elem, addressId));
-                    }
                 }
             });
         }
         if (!isCreated) {
-            var departmentInstance = this.saveDepartmentData(deparmentData);
+            var departmentInstance = await(
+                    services.departmentServices.addDepartment(departmentParams));
 
-            departmentAddressId.forEach(function(addressId) {
-                this.saveDepartmentAddressData({
-                    address_id: addressId,
-                    department_id: departmentInstance.id
-                });
-            });
+            await(services.departmentServices.addAddressList(
+                departmentInstance.id, departmentAddressId));
         }
 
     }
-};
 
 
-/**
- * Save data into department tabel
- */
-var saveDepartmentData = params => {
-    return await(models.Department.create(params));
-};
-
-
-/**
- * Save data into department_address tabel
- */
-var saveDepartmentAddressData = params => {
-    return await(models.Department_address.create(params));
-};
-
-
-/**
- * Compare department existence
- */
-var hasDepartmentExistence = (params, schoolId) => {
-    var isExistence = false;
-
-    var departmentsList = await(models.Department.findAll({where: params}));
-    if (departmentsList.length > 0) {
-        departmentsList.forEach(function(departmentData) {
-            var departmentId = departmentData.dataValues.id;
-
-            var addressId =
-                    await(models.Department_address.findOne({
-                        where: {department_id: departmentId}
-                    })).dataValues.address_id;
-
-            var schoolIdByAddress = await(models.Address.findOne({
-                        where: {id: addressId}
-                    })).dataValues.school_id;
-
-            if (schoolIdByAddress == schoolId) {
-                isExistence = true;
-            }
-        });
-    }
-    return isExistence;
 };
 
 
