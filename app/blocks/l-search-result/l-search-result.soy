@@ -29,9 +29,11 @@
         <body>
             {call sm.bHeader.Template.base /}
             <div class="l-search-result__body">
+                /**
                 {call .topMenu_ /}
                 {call .leftMenu_ /}
-                <div class="l-search-result__school-list">
+                */
+                <div class="l-search-result__school-list" style="float: none; margin: 30px auto 0;">
                     {call sm.lSearchResult.bSchoolList.Template.base}
                         {param params: [
                             'schools': $params.data.schools
@@ -76,7 +78,7 @@
  * Left menu template
  */
 {template .leftMenu_ autoescape="strict" kind="html" private="true"}
-    <div class="l-search-result__left-menu">
+    <div class="l-search-result__left-menu" style="height:5px;">
         Меню слева
     </div>
 {/template}
