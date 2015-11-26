@@ -24,6 +24,13 @@ sm.lSearchResult.bFilter.Filter = function(opt_params) {
     this.params_ = opt_params || {};
 
     /**
+     * Handler
+     * @type {!goog.events.EventHandler.<T>}
+     * @private
+     */
+    this.handler_ = this.getHandler();
+
+    /**
      * Show button element
      * @type {Element}
      * @private
@@ -31,11 +38,31 @@ sm.lSearchResult.bFilter.Filter = function(opt_params) {
     this.showButtonElement_ = null;
 
     /**
-     * Hidden filters element
+     * Filters element
      * @type {Element}
      * @private
      */
-    this.hiddenFiltersElement_ = null;
+    this.filterSectionElements_ = null;
+
+    /**
+     * Reset button
+     * @type {Element}
+     * @private
+     */
+    this.filterResetElement_ = null;
+
+    /**
+     * Classes input
+     * @type {Element}
+     */
+    this.inputClassesElements_ = null;
+
+    /**
+     * Ordinary classes input
+     * @type {Element}
+     * @private
+     */
+    this.inputClassesOrdinaryElement_ = null;
 };
 goog.inherits(sm.lSearchResult.bFilter.Filter, goog.ui.Component);
 
@@ -49,8 +76,11 @@ goog.scope(function() {
     Filter.CssClass = {
         ROOT: 'b-filter',
         SHOW_BUTTON: 'b-filter__show-button',
-        FILTERS_HIDDEN: gorod.iUtils.CssClass.HIDDEN,
-        SHOW_BUTTON_HIDDEN: 'b-filter__show-button_hidden'
+        FILTER_SECTION: 'b-filter__section',
+        FILTER_RESET: 'b-filter__reset',
+        INPUT_CLASSES: 'b-filter__input',
+        INPUT_CLASSES_ORDINARY: 'b-filter__input-ordinary',
+        HIDDEN: gorod.iUtils.CssClass.HIDDEN
     };
 
     /**
@@ -82,8 +112,23 @@ goog.scope(function() {
             element
         );
 
-        this.hiddenFiltersElements_ = goog.dom.getElementsByClass(
-            Filter.CssClass.FILTERS_HIDDEN,
+        this.filterSectionElements_ = goog.dom.getElementsByClass(
+            Filter.CssClass.FILTER_SECTION,
+            element
+        );
+
+        this.filterResetElement_ = goog.dom.getElementByClass(
+            Filter.CssClass.FILTER_RESET,
+            element
+        );
+
+        this.inputClassesElements_ = goog.dom.getElementsByClass(
+            Filter.CssClass.INPUT_CLASSES,
+            element
+        );
+
+        this.inputClassesOrdinaryElement_ = goog.dom.getElementByClass(
+            Filter.CssClass.INPUT_CLASSES_ORDINARY,
             element
         );
     };
@@ -95,11 +140,37 @@ goog.scope(function() {
         goog.base(this, 'enterDocument');
 
         if (this.showButtonElement_) {
-            this.getHandler().listen(
+            this.handler_.listen(
                 this.showButtonElement_,
                 goog.events.EventType.CLICK,
                 this.showHiddenFilters_
             );
+        }
+
+        if (this.filterResetElement_) {
+            this.handler_.listen(
+                this.filterResetElement_,
+                goog.events.EventType.CLICK,
+                this.resetFilter_
+            );
+        }
+
+        if (this.inputClassesOrdinaryElement_) {
+            this.handler_.listen(
+                this.inputClassesOrdinaryElement_,
+                goog.events.EventType.CLICK,
+                this.showResetButton_
+            );
+        }
+
+        if (this.inputClassesElements_.length > 0) {
+            for (var i = 0; i < this.inputClassesElements_.length; i++) {
+                this.handler_.listen(
+                    this.inputClassesElements_[i],
+                    goog.events.EventType.CHANGE,
+                    this.showResetButton_
+                );
+            }
         }
     };
 
@@ -108,16 +179,56 @@ goog.scope(function() {
      * @private
      */
     Filter.prototype.showHiddenFilters_ = function() {
-        for (var i = 0; i < this.hiddenFiltersElements_.length; i++) {
+        for (var i = 0; i < this.filterSectionElements_.length; i++) {
             goog.dom.classlist.remove(
-                this.hiddenFiltersElements_[i],
-                Filter.CssClass.FILTERS_HIDDEN
+                this.filterSectionElements_[i],
+                Filter.CssClass.HIDDEN
             );
         }
 
         goog.dom.classlist.add(
             this.showButtonElement_,
-            Filter.CssClass.SHOW_BUTTON_HIDDEN
+            Filter.CssClass.HIDDEN
         );
+    };
+
+    /**
+     * Show reset button
+     * @private
+     */
+    Filter.prototype.showResetButton_ = function() {
+        if (this.filterResetElement_) {
+            if (goog.dom.classlist.contains(
+                    this.filterResetElement_,
+                    Filter.CssClass.HIDDEN
+                )) {
+                goog.dom.classlist.remove(
+                    this.filterResetElement_,
+                    Filter.CssClass.HIDDEN
+                );
+            }
+        }
+    };
+
+    /**
+     * Reset filter
+     * @private
+     */
+    Filter.prototype.resetFilter_ = function() {
+        if (this.inputClassesElements_.length > 0) {
+            for (var i = 0; i < this.inputClassesElements_.length; i++) {
+                this.inputClassesElements_[i].checked = false;
+            }
+        }
+        if (this.inputClassesOrdinaryElement_) {
+            this.inputClassesOrdinaryElement_.checked = false;
+        }
+
+        if (this.filterResetElement_) {
+            goog.dom.classlist.add(
+                this.filterResetElement_,
+                Filter.CssClass.HIDDEN
+            );
+        }
     };
 });
