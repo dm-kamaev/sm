@@ -148,6 +148,8 @@ var saveData = departmentData => {
             departmentAddressId.push(elem.addressId);
         });
 
+        var uniqueDepartmentAddressId = getUniqueArray(departmentAddressId);
+
         var departmentList = await(
                 services.departmentServices.getAllByParams(departmentParams));
 
@@ -170,7 +172,7 @@ var saveData = departmentData => {
                     services.departmentServices.addDepartment(departmentParams));
 
             await(services.departmentServices.addAddressList(
-                departmentInstance.id, departmentAddressId));
+                departmentInstance.id, uniqueDepartmentAddressId));
         }
 
     }
@@ -274,10 +276,30 @@ function convertTitle(title) {
             /^скош /ig, 'СКОШ ');
         updateTitle = updateTitle.replace(
             / скош /ig, ' СКОШ ');
+        updateTitle = updateTitle.replace(
+            /";/ig, '"');
 
         updateTitle = updateTitle[0].toUpperCase() + updateTitle.slice(1);
     }
     return updateTitle;
+}
+
+
+/**
+ * Get array with unique data
+ */
+function getUniqueArray(arr) {
+    var obj_unique = {};
+    var arr_unique = [];
+
+    arr.forEach(function(elem) {
+        obj_unique[elem] = elem;
+    });
+
+    for (var key in obj_unique) {
+        arr_unique.push(obj_unique[key]);
+    }
+    return arr_unique;
 }
 
 
