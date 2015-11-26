@@ -6,16 +6,13 @@ var colors = require('colors');
 var exclusion = require('./parseConfig').exclusion;
 var commander = require('commander');
 
-var modules = require.main.require('./api/modules');
-var services =
-    require.main.require('./api/modules/school/services');
-
-var models = require.main.require('./app/components/models').all;
+// var modules = require.main.require('./api/modules');
+var services = require.main.require('./app/components/services').all;
 
 
 var ADDRESS_MSK_INDEX = 0,
     DEPARTMENT_NAME_INDEX = 2,
-    ABBRIVIATION_INDEX = 3,
+    ABBREVIATION_INDEX = 3,
     STAGE_INDEX = 4;
 
 
@@ -54,11 +51,11 @@ var departmentParse = async(path => {
  */
 var mkobrRowToObject = row => {
     return {
-        abbreviation: row[ABBRIVIATION_INDEX],
+        abbreviation: row[ABBREVIATION_INDEX],
         address: row[ADDRESS_MSK_INDEX],
         departmentName: convertTitle(row[DEPARTMENT_NAME_INDEX]),
         stage: row[STAGE_INDEX]
-    }
+    };
 };
 
 
@@ -66,7 +63,7 @@ var mkobrRowToObject = row => {
  * Get schools from BD
  */
 var getSchoolList = () => {
-    return await(services.schoolServices.get());
+    return await(services.school.get());
 };
 
 
@@ -143,22 +140,15 @@ var saveData = departmentData => {
                 stage: stage
             };
 
-        var departmentAddressId = [];
-        data.forEach(function(elem) {
-            departmentAddressId.push(elem.addressId);
-        });
-
-        var uniqueDepartmentAddressId = getUniqueArray(departmentAddressId);
-
         var departmentList = await(
-                services.departmentServices.getAllByParams(departmentParams));
+                services.department.getAllByParams(departmentParams));
 
         var isCreated = false;
         if (departmentList.length > 0) {
 
             departmentList.forEach(function(elem) {
                 var addressData = await(
-                        services.departmentServices.getAddress(elem));
+                        services.department.getAddress(elem));
                 var elemSchoolId = addressData.length > 0 ?
                         addressData[0].dataValues.school_id : '';
 
@@ -168,10 +158,16 @@ var saveData = departmentData => {
             });
         }
         if (!isCreated) {
-            var departmentInstance = await(
-                    services.departmentServices.addDepartment(departmentParams));
+            var departmentAddressId = [];
+            data.forEach(function(elem) {
+                departmentAddressId.push(elem.addressId);
+            });
 
-            await(services.departmentServices.addAddressList(
+            var uniqueDepartmentAddressId = getUniqueArray(departmentAddressId);
+            var departmentInstance = await(
+                    services.department.addDepartment(departmentParams));
+
+            await(services.department.addAddressList(
                 departmentInstance.id, uniqueDepartmentAddressId));
         }
 
@@ -307,7 +303,7 @@ function getUniqueArray(arr) {
  * Settings for accessing this script using cli
  */
 commander
-    .command('department-parse <path>')
+    .command('department <path>')
     .description('Parses an .xlsx file from a given path')
     .action(file => departmentParse(file));
 
