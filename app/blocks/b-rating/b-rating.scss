@@ -61,3 +61,48 @@
 
     font-size: 28px;
 }
+
+.b-rating__mark_null-average {
+    position: relative;
+    top: -2px;
+}
+
+/*THEMES*/
+
+/*black-theme*/
+.b-rating_black-theme{
+
+    .b-rating__mark {
+        color: #000000;
+        font-weight: bold;
+    }
+
+    .b-rating__mark_ordinary {
+        font-size: 14px;
+        margin-top: 4px;
+    }
+
+    .b-rating__mark_average {
+        font-size: 19px;
+    }
+
+    .b-rating__sections {
+        color: black;
+    }
+
+    .b-rating__section-name {
+        color: black;
+        font-size: 11px;
+    }
+
+    .b-rating__section-name_average {
+        color: black;
+        font-size: 13px;
+    }
+
+    .b-rating__mark_null-average {
+        position: relative;
+        top: 0;
+    }
+}
+

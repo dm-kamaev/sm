@@ -6,8 +6,7 @@ var colors = require('colors');
 
 
 var modules = require.main.require('./api/modules');
-var services =
-    require.main.require('./api/modules/school/services');
+var services = require.main.require('./app/components/services').all;
 
 var replace = require('./parseConfig').replace;
 var ignore = require('./parseConfig').ignore;
@@ -15,6 +14,7 @@ var exclusion = require('./parseConfig').exclusion;
 
 var GOVERMENT_KEY_INDEX = 2,
     NAME_INDEX = 6,
+    FULL_NAME_INDEX = 5,
     DIRECTOR_INDEX = 13,
     PHONES_INDEX = 15,
     SITE_INDEX = 17,
@@ -86,7 +86,7 @@ var nameParse = item => {
             }
         });
     }
-
+    str = str.replace(/№ /g,'№');
     arr[0] = str;
 
     return arr;
@@ -150,7 +150,13 @@ var getEducationInterval = (opt_programms) => {
         }
     });
 
-    return [res.begin, res.end];
+	var result = null;
+    if (!(res.begin == -1 && res.end == -1)) {
+		result = [];
+		for (i = res.begin; i<=res.end; i++)
+			result.push(i);
+	}
+	return result;
 };
 
 /**
@@ -176,10 +182,9 @@ var rowToSchool = row => {
     var nParse = nameParse(row[NAME_INDEX]);
     var schoolName = getName(nParse);
     var schoolType = getType(nParse);
-
     return {
-        name: schoolName,
-        abbreviation: row[NAME_INDEX],
+        name: schoolName.trim(),
+		fullName: row[FULL_NAME_INDEX].trim(),
         schoolType: schoolType,
         director: row[DIRECTOR_INDEX],
         phones: getArray(row, PHONES_INDEX),
@@ -247,23 +252,23 @@ var parseSchool = async((schoolData) => {
         }
     };
 
-    var school = await( services.schoolServices.get(params, {count: 'one'}) );
+    var school = await( services.school.get(params, {count: 'one'}) );
 
     return school ?
-        await (services.schoolServices.update(school, schoolData)) :
-        await (services.schoolServices.create(schoolData));
+        await (services.school.update(school, schoolData)) :
+        await (services.school.create(schoolData));
 });
 
 var initGiaResults = async (function (giaResults, schoolId) {
     giaResults.forEach(gia => {
-        var subject = await (services.subjectServices.get({
+        var subject = await (services.subject.get({
             name: gia.subject
         }, {
             count: 'one',
             createIfNotExists: true
         }));
 
-        services.giaResultServices.create({
+        services.giaResult.create({
             count: gia.count,
             result: gia.result,
             school_id: schoolId,
@@ -306,3 +311,4 @@ commander
     .action(file => parse(file));
 
 exports.Command;
+

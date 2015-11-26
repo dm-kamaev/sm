@@ -1,11 +1,11 @@
 goog.provide('sm.lSchool.bComments.Comments');
 
-goog.require('sm.lSchool.bComments.Template');
-goog.require('sm.lSchool.bComment.Comment');
-goog.require('goog.ui.Component');
 goog.require('goog.dom.classes');
 goog.require('goog.events');
 goog.require('goog.soy');
+goog.require('goog.ui.Component');
+goog.require('sm.lSchool.bComment.Comment');
+goog.require('sm.lSchool.bComments.Template');
 
 /**
  * Comments component
@@ -13,35 +13,35 @@ goog.require('goog.soy');
  * @constructor
  * @extends {goog.ui.Component}
  */
-sm.lSchool.bComments.Comments = function(opt_params){
+sm.lSchool.bComments.Comments = function(opt_params) {
     goog.base(this);
 
     /**
      * @private
-     * @type{object}
+     * @type {object}
      */
     this.params_ = opt_params || {};
 
     /**
      * @private
-     * @type{NodeList}
+     * @type {Array.<Element>}
      */
     this.comments_ = [];
 };
 goog.inherits(sm.lSchool.bComments.Comments, goog.ui.Component);
 
 
-goog.scope(function(){
+goog.scope(function() {
     var Comments = sm.lSchool.bComments.Comments;
 
     /**
      * CSS-class enum
      * @enum {string}
      */
-    Comments.CssClass={
-        ROOT: "b-comments",
-        LINE: "b-comments__line",
-        COMMENT: "b-comment"
+    Comments.CssClass = {
+        ROOT: 'b-comments',
+        LINE: 'b-comments__line',
+        COMMENT: 'b-comment'
     };
 
     /**
@@ -75,6 +75,7 @@ goog.scope(function(){
             for (var i = 0; i < comments.length; i++) {
                 comment = comments[i];
                 commentInstance = new sm.lSchool.bComment.Comment();
+
                 this.addChild(commentInstance);
                 commentInstance.decorate(comment);
             }

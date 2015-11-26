@@ -1,11 +1,11 @@
 goog.provide('sm.lSchool.bComment.Comment');
 
-goog.require('sm.lSchool.bComment.Template');
-goog.require('sm.bStars.Stars');
-goog.require('goog.ui.Component');
 goog.require('goog.dom.classes');
 goog.require('goog.events');
 goog.require('goog.soy');
+goog.require('goog.ui.Component');
+goog.require('sm.bStars.Stars');
+goog.require('sm.lSchool.bComment.Template');
 
 /**
  * Comment component
@@ -13,26 +13,25 @@ goog.require('goog.soy');
  * @constructor
  * @extends {goog.ui.Component}
  */
-sm.lSchool.bComment.Comment = function(opt_params){
+sm.lSchool.bComment.Comment = function(opt_params) {
     goog.base(this);
 
     /**
      * @private
-     * @type{object}
+     * @type {object}
      */
     this.params_ = opt_params || {};
 };
-
 goog.inherits(sm.lSchool.bComment.Comment, goog.ui.Component);
 
-goog.scope(function(){
+goog.scope(function() {
     var Comment = sm.lSchool.bComment.Comment;
 
     /**
      * CSS-class enum
      * @enum {string}
      */
-    Comment.CssClass={
+    Comment.CssClass = {
         ROOT: 'b-comment',
         TEXT: 'b-comment__text',
         HIDDENTEXT: 'b-comment__text_hidden',
@@ -43,7 +42,6 @@ goog.scope(function(){
 
     /**
      * Template-based dom element creation.
-     * @return {!Node}
      * @public
      */
     Comment.prototype.createDom = function() {
@@ -75,7 +73,7 @@ goog.scope(function(){
         );
 
         /** stars decoration */
-        for(var i = 0, stars; i < this.stars_.length; i++) {
+        for (var i = 0, stars; i < this.stars_.length; i++) {
             stars = new sm.bStars.Stars();
             this.addChild(stars, false);
             stars.decorate(this.stars_[i]);
@@ -89,7 +87,7 @@ goog.scope(function(){
         goog.base(this, 'enterDocument');
 
         /** spoiler listeners */
-        if(!(this.spoiler_ == null)){
+        if (!(this.spoiler_ == null)) {
             goog.events.listen(
                 this.spoiler_,
                 goog.events.EventType.CLICK,
@@ -126,7 +124,7 @@ goog.scope(function(){
         goog.base(this, 'exitDocument');
 
         /** spoiler listeners */
-        if(!(this.spoiler_ == null)){
+        if (!(this.spoiler_ == null)) {
             goog.events.unlisten(
                 this.spoiler_,
                 goog.events.EventType.CLICK,

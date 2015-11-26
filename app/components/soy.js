@@ -2,9 +2,7 @@ var os = require('os'),
     path = require('path'),
     soynode = require('soynode');
 
-
 global.CLOSURE_BASE_PATH = path.normalize('node_modules/closure-library/closure/goog/');
-
 
 soynode.setOptions({
     outputDir: os.tmpdir(),
@@ -15,13 +13,15 @@ soynode.setOptions({
     ]
 });
 
-
 exports.init = function(dir, opt_callback) {
     var callback = opt_callback || function() {};
 
     soynode.compileTemplates(dir, function(err) {
         if (err) throw err;
         callback();
+        soynode.setOptions({
+            contextJsPaths: []
+        });
     });
 };
 

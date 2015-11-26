@@ -10,6 +10,7 @@ var glob = require("glob");
 var exec = require('child_process').exec;
 var Q = require('q');
 var fs = require('fs-extra');
+const config = require('./config.json');
 
 
 const production = !!util.env.production;
@@ -25,37 +26,50 @@ gulp.task('doc', function () {
     });
 });
 
-gulp.task('migrate', function () {
-        var deferred = Q.defer();
+gulp.task('lint', function() {
+    var pathArray = ['./app/blocks/**/*.js'],
+        ignore = config.lintIgnore,
+        ignorePath;
 
-        var migrations = glob.sync('api/**/migrations/*.js', {
-            cwd: __dirname
-        });
+    for (var i = 0; i < ignore.length; i++) {
+        ignorePath = '!' + path.resolve(__dirname, ignore[i]);
+        pathArray.push(ignorePath);
+    }
 
-
-        migrations.forEach(function (file) {
-            var fileName = path.basename(file);
-            fs.copySync(file, path.resolve(__dirname, 'tmp/migrations', fileName));
-        });
-
-        var sequelizePath = path.resolve(__dirname,'node_modules/.bin/sequelize');
-        exec(
-            sequelizePath + ' db:migrate', function (error, stdout, stderr) {
-                console.log(stdout);
-
-                if (error) {
-                    console.log(error);
-                }
-
-                fs.remove(path.resolve(__dirname, 'tmp/migrations'));
-
-                deferred.resolve();
-            });
-
-        return deferred.promise;
-
+    return gulpHelper.lint(pathArray, false);
 });
 
+
+gulp.task('migrate', function () {
+    var deferred = Q.defer();
+
+    var migrations = glob.sync('api/**/migrations/*.js', {
+        cwd: __dirname
+    });
+
+
+    migrations.forEach(function (file) {
+        var fileName = path.basename(file);
+        fs.copySync(file, path.resolve(__dirname, 'tmp/migrations', fileName));
+    });
+
+    var sequelizePath = path.resolve(__dirname,'node_modules/.bin/sequelize');
+    exec(
+        sequelizePath + ' db:migrate', function (error, stdout, stderr) {
+            console.log(stdout);
+
+            if (error) {
+                console.log(error);
+            }
+
+            fs.remove(path.resolve(__dirname, 'tmp/migrations'));
+
+            deferred.resolve();
+        });
+
+    return deferred.promise;
+
+});
 
 
 gulp.task('appES5', function () {
@@ -85,18 +99,69 @@ gulp.task('soy', function () {
         }));
 });
 
+var getDirectories = function(srcpath)  {
+    return fs.readdirSync(srcpath).filter(function(file) {
+        return fs.statSync(path.join(srcpath, file)).isDirectory();
+    });
+};
 
-gulp.task('scripts', ['soy'], function () {
+var upLetter = function (string, index) {
+    return string.slice(0, index) + 
+           string[index].toUpperCase() + 
+           string.slice(index+1);
+};
+var getEnteryPointFromName = function (name) {
+    name = name.replace(/l-/g, ''); // Remove l-
+    var slice = upLetter(name, 0); // doc => Doc
+    var k;
+    while ((k = slice.indexOf('-')) != -1){
+        slice = upLetter(slice, k+1);
+        slice = slice.slice(0, k) + slice.slice(k+1);
+    }
+    return 'sm.l' + slice + '.' + slice;
+};
+
+var isFileExists = function(path) {
+    try
+    {
+    	return fs.statSync(path).isFile();
+    }   	
+    catch (err)
+    {	
+    	return false;
+    }
+};
+
+var compileLayout = function(name)  {
+    var filePath = path.join(__dirname, BLOCKS_DIR, name, name)+'.js';
+    if (!isFileExists(filePath))
+    	return;
+    var output = name + '.js',
+    	enteryPoint = getEnteryPointFromName(name);
+    console.log('Building scripts for ' + name + ' [' + enteryPoint + ']'); 
     return gulpHelper.buildJs(
         [
-            path.join(__dirname, BLOCKS_DIR, '/**/*.js')
+            path.join(__dirname, BLOCKS_DIR, '/', '/**/*.js')
         ],
-        'script.js',
-        'sm.lDoc.Doc',
+        output,
+        enteryPoint,
         path.join(__dirname, '/public'),
         production
     );
+};
+
+gulp.task('scripts', ['soy'], function () {
+    var promises = [],
+        dirs = getDirectories(path.join(__dirname,'/app/blocks'));	
+    dirs = dirs.filter((dirname) => {
+	    return dirname.startsWith('l-');
+    });
+    for (var i = 0; i < dirs.length; i++) {
+        promises.push(compileLayout(dirs[i]));
+    }
+    return Q.all(promises);
 });
+
 
 
 gulp.task('styles', function () {
@@ -108,8 +173,6 @@ gulp.task('styles', function () {
         fileName: 'styles.css'
     }], production, path.join(__dirname, '/public'));
 });
-
-
 
 
 gulp.task('images', function () {
@@ -130,10 +193,16 @@ gulp.task('watch', function () {
 });
 
 
+gulp.task('fonts', function () {
+    return gulp.src(path.join(__dirname + '/assets/**/*.*'))
+        .pipe(gulp.dest(path.join(__dirname + '/public/fonts')));
+});
+
+
 const tasks = function (bool) {
     return bool ?
-        ['soy', 'scripts', 'images', 'styles'] :
-        ['watch', 'soy', 'scripts', 'images', 'styles'];
+        ['soy', 'scripts', 'images', 'fonts', 'styles'] :
+        ['watch', 'soy', 'scripts', 'images', 'fonts','styles'];
 };
 
 gulp.task('default', tasks(production));

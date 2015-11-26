@@ -1,20 +1,31 @@
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var models = require.main.require('./app/components/models').all;
+var services = require.main.require('./app/components/services').all;
 
+exports.name = 'comment';
 exports.create = async (function(commentGroupId, params) {
     var result = '';
     try {
-        await (models.Comment.create({
+        var comment = await (models.Comment.create({
             comment_group_id: commentGroupId,
             text: params.text,
-            score: params["score[]"],
             userType: params.userType
+        }, {
+            include: [{
+                model: models.Rating,
+                as: 'rating'
+            }]
         }));
+        console.log('comment', JSON.stringify(comment).blue);
+        if (params.rating) {
+            //comment.setRating(params.rating)
+            params.rating.setComment(comment);
+        }
         result = 'success';
     } catch (e) {
         console.log(e);
-        result = e;
+        result = e.message;
     } finally {
         return result;
     }

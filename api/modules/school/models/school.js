@@ -4,6 +4,10 @@ var DataType = require('sequelize'),
 var School = db.define('School', {
     name:DataType.STRING,
     abbreviation:DataType.STRING,
+    fullName: {
+        field: 'full_name',
+        type: DataType.STRING
+    },
     schoolType: {
         field: 'school_type',
         type: DataType.ENUM,
@@ -33,10 +37,18 @@ var School = db.define('School', {
                 as: 'giaResult', foreignKey: 'school_id'
             });
             School.hasMany(models.Address, {
-                as: 'addresses', foreignKey: 'school_id'
+                as: 'addresses',
+                foreignKey: 'school_id'
             });
             School.belongsTo(models.CommentGroup, {
                 foreignKey: 'comment_group_id'
+            });
+			School.hasMany(models.SchoolUniversity, {
+				as: 'schoolUniversities', foreignKey: 'school_id'
+			});
+            School.hasMany(models.Rating, {
+                as: 'ratings',
+                foreignKey: 'school_id'
             });
         }
     }

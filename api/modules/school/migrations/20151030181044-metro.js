@@ -19,6 +19,7 @@ module.exports = {
         },
         name: {
             type: Sequelize.STRING,
+            unique: true,
         },
         coords: {
             type: Sequelize.ARRAY(Sequelize.ARRAY(Sequelize.FLOAT)),

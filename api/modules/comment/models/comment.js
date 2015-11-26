@@ -3,31 +3,12 @@ var DataType = require('sequelize'),
 
 
 var Comment = db.define('Comment', {
-    text: {
-        type: DataType.TEXT,
-        //allowNull: false
-    },
+    text: DataType.TEXT,
     userType: {
         field: "user_type",
         type: DataType.ENUM,
-        values: ['Parent','Graduate','Scholar']
-       // allowNull: false
-    },
-    score: {
-        type: DataType.ARRAY(DataType.INTEGER),
-        validate: {
-            isRightCount: function(value) {
-                if (value.length != 4)
-                    throw new Error('Expected 4 numbers');
-            },
-            isRightFormat : function(value) {
-                for (var i = 0; i < value.length; i++)
-                    if (value[i] < 0 || value[i] > 5)
-                        throw new Error('Every number must be from 0 to 5');
-            }
-        },
-        //allowNull: false
-    },
+        values: ['Parent', 'Graduate', 'Scholar']
+    }
 }, {
     underscored: true,
     tableName: 'comment',
@@ -36,6 +17,10 @@ var Comment = db.define('Comment', {
             Comment.belongsTo(models.CommentGroup, {
                 foreignKey: 'comment_group_id'
             });
+            Comment.belongsTo(models.Rating, {
+                as: 'rating',
+                foreignKey: 'rating_id'
+            })
         }
     }
 });

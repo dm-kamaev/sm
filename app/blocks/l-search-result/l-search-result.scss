@@ -1,0 +1,85 @@
+.l-search-result__body {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.l-search-result__top-menu{
+    display: inline-block;
+
+    width: 100%;
+    padding: 50px 0;
+    margin-bottom: 30px;
+
+    border-bottom: 1px solid #e5e5e5;
+    text-align: center;
+}
+
+.l-search-result__left-menu {
+    float: left;
+
+    width: 34%;
+
+    text-align: center;
+}
+
+.l-search-result__school-list {
+    float: left;
+
+    width: 66%;
+}
+
+.l-search-result__search {
+    float: left;
+
+    width: 33%;
+    height: 100%;
+
+    text-align: left;
+}
+
+.l-search-result__show-on-map {
+    float: left;
+
+    width: 34%;
+    height: 100%;
+}
+
+.l-search-result__map-link {
+    cursor: pointer;
+}
+
+.l-search-result__show-on-map-text {
+    float: left;
+
+    padding-top: 6%;
+    padding-right: 0;
+    padding-bottom: 6%;
+    padding-left: 9px;
+
+    color: #ff0000;
+
+    font-size: 18px;
+}
+
+.l-search-result__show-on-map-icon {
+    float: left;
+
+    width: 20px;
+    height: 20px;
+    margin-left: 5%;
+    padding-top: 5%;
+    padding-bottom: 5%;
+
+    background: url(images/l-search-result/pin.png) no-repeat left;
+
+
+}
+
+.l-search-result__sort {
+    float: left;
+
+    width: 33%;
+    height: 100%;
+
+    text-align: right;
+}

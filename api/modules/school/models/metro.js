@@ -9,8 +9,10 @@ var Metro = db.define('Metro', {
     tableName: 'metro',
     classMethods: {
         associate: function (models) {
-            Metro.belongsTo(models.Address, {
-                foreignKey: 'address_id'
+            Metro.belongsToMany(models.Address, {
+                as: 'addressesNear',
+                through: 'address_metro',
+                foreignKey: 'metro_id'
             });
         }
     }

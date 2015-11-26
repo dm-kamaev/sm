@@ -8,7 +8,7 @@ goog.provide('sm.lSchool.bMap.MapPin');
 goog.require('sm.lSchool.bMap.PinTemplate');
 
 /**
- * @param {Object}
+ * @param {Object} data
  * @constructor
  */
 sm.lSchool.bMap.MapPin = function(data) {
@@ -58,7 +58,7 @@ goog.scope(function() {
     * @type {Object}
     */
     MapPin.CurrentSchoolIcon = {
-        IMAGE_SIZE: [30, 30],
+        IMAGE_SIZE: [22, 32],
         IMAGE_OFFSET: [-15, -30],
         HIGH_RATING: 'map-pin-green-th.png',
         MEDIUM_RATING: 'map-pin-yellow-th.png',
@@ -102,7 +102,7 @@ goog.scope(function() {
 
     /**
      * Sets a layout for the balloon, required by ymaps API
-     * @param {Object}
+     * @param {Object} data
      * @return {ymaps.Layout}
      * @private
      */
@@ -115,7 +115,7 @@ goog.scope(function() {
 
     /**
      * Sets settings for a custom placemark icon
-     * @param {Object}
+     * @param {Object} data
      * @return {Object}
      * @private
      */

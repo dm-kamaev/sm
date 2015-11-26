@@ -1,5 +1,3 @@
-exports.schoolServices = require('./schoolServices');
-exports.addressServices = require('./addressServices');
-exports.giaResultServices = require('./giaResultServices');
-exports.subjectServices = require('./subjectServices');
-exports.departmentServices = require('./departmentServices');
+var services = require.main.require('./app/components/services');
+
+module.exports = services.initServices(__dirname);
