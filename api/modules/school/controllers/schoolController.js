@@ -48,7 +48,7 @@ exports.createComment = async (function(req, res) {
  *       	"name": "123", 
  *       	"classes": [1,2,3,4],
  *       	"schoolType": ["Школа", "Лицей"],
- *       	"gia": ["Математика", "Русский"]	
+ *       	"gia": [1,2]	
  *       }
  *     }
  */
@@ -59,6 +59,7 @@ exports.search = async (function(req, res) {
         result = await(services.school.search(params));
     } catch (e) {
         console.log(e);
+        throw e;
         result = JSON.stringify(e);
     } finally {
         res.header("Content-Type", "text/html; charset=utf-8");

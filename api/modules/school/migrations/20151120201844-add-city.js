@@ -20,7 +20,11 @@ module.exports = {
         name: {
             type: Sequelize.STRING
         }
-    });
+    }).then(()=> { //TODO: make this work
+            queryInterface.insert(null,'city',{
+                name: 'Москва'
+            })
+    })
   },
   down: function (queryInterface, Sequelize) {
     return queryInterface.dropTable('city');

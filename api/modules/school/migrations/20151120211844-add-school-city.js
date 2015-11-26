@@ -8,7 +8,7 @@ module.exports = {
                  model: "city",
                  key: "id"
             }
-        });
+        }) 
     },
     down: function (db, DataType) {
         return db.dropColumn('school', 'city_id')

@@ -72,6 +72,9 @@ service.getForParse = async((govKeyId) => {
     }));
 });
 
+/**
+ * @public
+ */
 service.viewOne = function(id) {
     var includeParams = {
         addresses: true,
@@ -119,26 +122,34 @@ service.search = async (params => {
     if (searchParams.gia) {
        includeParams.city = {
             cityGia: {
-                subject: true
-            }
+                subject: {
+                    where: {
+                        id: {
+                            $and: [] 
+                        }
+                    }
+                }
+            },
         };
         includeParams.giaResults = {
-            subject: true
-        };
-        /*whereParams.giaResults = {$and:[] };
-        searchParams.gia.forEach(subjectId => {
-            whereParams.giaResults.$and.push({
-                subject: {
-                        id: subjectId
-                    },
+            subject: {
+               where: {
+                   id: {
+                      $and: [] 
+                   }
+               }
+            },
+            where: {
                 result: {
-                    $gte: 4
+                    $gte: sequelize.col("city.cityGia.gia_result") 
                 }
-            });        
-        }); */ 
-        whereParams.city = {
-            id: 2
-        }
+            }
+        };
+        searchParams.gia.forEach(subjectId => {
+            includeParams.city.cityGia.subject.where.id.$and.push(subjectId);
+            includeParams.giaResults.subject.where.id.$and.push(subjectId);
+        });
+
     }
 
     var params = {
@@ -146,8 +157,9 @@ service.search = async (params => {
     };
     if (Object.keys(includeParams))
         params.include = sequelizeInclude(includeParams);
-
-    return JSON.stringify(await (models.School.findAll(params)));
+    var results = await (models.School.findAll(params));
+    console.log('Found: ', colors.green(results.length));
+    return JSON.stringify(results);
 });
 
 service.create = async (params => {

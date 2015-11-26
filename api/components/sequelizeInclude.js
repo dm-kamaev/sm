@@ -19,17 +19,21 @@ var generate = function (includes) {
     };
     var result = [];
     for (var prop in includes){ 
-        var modelInList = dictionary[prop] /*|| models[prop]*/;
-        if (!modelInList)
-            throw new Error('Cant find association for relation \'' + prop +
-                    '\' Check dictionary in sequelizeInclude.js');
-        var node = {
-            model: modelInList,
-            as: prop
-        };
-        if (typeof includes[prop] != 'boolean')
-            node.include = generate(includes[prop]);
-        result.push(node);
+        if (prop != 'where') {
+            var modelInList = dictionary[prop] /*|| models[prop]*/;
+            if (!modelInList)
+                throw new Error('Cant find association for relation \'' + prop +
+                        '\' Check dictionary in sequelizeInclude.js');
+            var node = {
+                model: modelInList,
+                as: prop
+            };
+            if (includes[prop].where)
+                node.where = includes[prop].where;
+            if (typeof includes[prop] != 'boolean')
+                node.include = generate(includes[prop]);
+            result.push(node);
+        }
     }
     return result;
 };

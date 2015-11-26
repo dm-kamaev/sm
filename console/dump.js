@@ -41,6 +41,7 @@ var start = function() {
 
 var dropAll = async(()=>{
     await(sequelize.queryInterface.dropAllTables());
+    await(sequelize.queryInterface.dropAllEnums());
 });
 
 var load = async(function(){
