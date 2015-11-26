@@ -27,7 +27,7 @@ sm.lDoc.nDemo.bBlockComments.Comments = function() {
                     rating: 4
                 },
                 {
-                    name: 'Доступность',
+                    name: 'Инфраструктура',
                     'rating': 2
                 },
                 {
@@ -50,7 +50,7 @@ sm.lDoc.nDemo.bBlockComments.Comments = function() {
                     rating: 4
                 },
                 {
-                    name: 'Доступность',
+                    name: 'Инфраструктура',
                     'rating': 2
                 },
                 {
