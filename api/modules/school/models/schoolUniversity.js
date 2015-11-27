@@ -3,22 +3,22 @@ var DataType = require('sequelize'),
 
 var SchoolUniversity = db.define('SchoolUniversity', {
     schoolId: {
-		type: DataType.INTEGER,
-		field: 'school_id',
+        type: DataType.INTEGER,
+        field: 'school_id',
         allowNull: false
-	},
-	univerId: {
-		type: DataType.INTEGER,
-		field: 'university_id',
+    },
+    univerId: {
+        type: DataType.INTEGER,
+        field: 'university_id',
         allowNull: false
-	},
-	pplCount: {
-		type: DataType.INTEGER,
-		field: 'ppl_count'
-	},
-	year: {
-		type: DataType.INTEGER,
-	},
+    },
+    pplCount: {
+        type: DataType.INTEGER,
+        field: 'ppl_count'
+    },
+    year: {
+        type: DataType.INTEGER,
+    },
 }, {
     underscored: true,
     tableName: 'school_university',
@@ -26,7 +26,7 @@ var SchoolUniversity = db.define('SchoolUniversity', {
     classMethods: {
         associate: function (models) {
             SchoolUniversity.belongsTo(models.School, {
-				foreignKey: 'school_id'
+                foreignKey: 'school_id'
             });
             SchoolUniversity.belongsTo(models.University, {
                 foreignKey: 'university_id'

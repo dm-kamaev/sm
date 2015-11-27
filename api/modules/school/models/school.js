@@ -21,7 +21,8 @@ var School = db.define('School', {
         type: DataType.ARRAY(DataType.INTEGER)
     },
     comment_group_id: DataType.INTEGER,
-    goverment_key: {
+    govermentKey: {
+        field: 'goverment_key',
         type: DataType.INTEGER,
         unique: true,
         allowNull: false
@@ -33,14 +34,19 @@ var School = db.define('School', {
     classMethods: {
         associate: function (models) {
             School.hasMany(models.GiaResult, {
-                as: 'giaResult', foreignKey: 'school_id'
+                as: 'giaResults', foreignKey: 'school_id'
             });
             School.hasMany(models.Address, {
                 as: 'addresses',
                 foreignKey: 'school_id'
             });
             School.belongsTo(models.CommentGroup, {
-                foreignKey: 'comment_group_id'
+                foreignKey: 'comment_group_id',
+                as: 'commentGroup'
+            });
+            School.belongsTo(models.City, {
+                foreignKey: 'city_id',
+                as: 'city' 
             });
 			School.hasMany(models.SchoolUniversity, {
 				as: 'schoolUniversities', foreignKey: 'school_id'	
