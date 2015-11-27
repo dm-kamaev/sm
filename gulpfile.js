@@ -1,5 +1,8 @@
 const gulp = require('gulp');
-const gulpHelper = require('./node_modules/frobl/gulp-helper.js').use(gulp);
+const gulpHelper =
+        require('./node_modules/frobl/gulp-helper.js')
+        .use(gulp)
+        .setProjectDirectory(__dirname);
 const path = require('path');
 const concat = require('gulp-concat');
 const util = require('gulp-util');
@@ -106,8 +109,8 @@ var getDirectories = function(srcpath)  {
 };
 
 var upLetter = function (string, index) {
-    return string.slice(0, index) + 
-           string[index].toUpperCase() + 
+    return string.slice(0, index) +
+           string[index].toUpperCase() +
            string.slice(index+1);
 };
 var getEnteryPointFromName = function (name) {
@@ -125,9 +128,9 @@ var isFileExists = function(path) {
     try
     {
     	return fs.statSync(path).isFile();
-    }   	
+    }
     catch (err)
-    {	
+    {
     	return false;
     }
 };
@@ -138,7 +141,7 @@ var compileLayout = function(name)  {
     	return;
     var output = name + '.js',
     	enteryPoint = getEnteryPointFromName(name);
-    console.log('Building scripts for ' + name + ' [' + enteryPoint + ']'); 
+    console.log('Building scripts for ' + name + ' [' + enteryPoint + ']');
     return gulpHelper.buildJs(
         [
             path.join(__dirname, BLOCKS_DIR, '/', '/**/*.js')
@@ -152,7 +155,7 @@ var compileLayout = function(name)  {
 
 gulp.task('scripts', ['soy'], function () {
     var promises = [],
-        dirs = getDirectories(path.join(__dirname,'/app/blocks'));	
+        dirs = getDirectories(path.join(__dirname,'/app/blocks'));
     dirs = dirs.filter((dirname) => {
 	    return dirname.startsWith('l-');
     });
