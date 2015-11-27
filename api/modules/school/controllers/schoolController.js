@@ -26,7 +26,7 @@ exports.createComment = async (function(req, res) {
         var schoolId = req.params.id,
             params = req.body;
         params.score = params['score[]']; //TODO придумать чтото с этим
-        result = await(services.school.comment(schoolId, params));
+        result = await(services.school.commentTransaction(schoolId, params));
     } catch (e) {
         console.log(e);
         result = JSON.stringify(e);
@@ -47,7 +47,8 @@ exports.createComment = async (function(req, res) {
  *       "searchParams" : {
  *       	"name": "123", 
  *       	"classes": [1,2,3,4],
- *       	"schoolType": ["Школа", "Лицей"]	
+ *       	"schoolType": ["Школа", "Лицей"],
+ *       	"gia": [1,2]	
  *       }
  *     }
  */
@@ -58,6 +59,7 @@ exports.search = async (function(req, res) {
         result = await(services.school.search(params));
     } catch (e) {
         console.log(e);
+        throw e;
         result = JSON.stringify(e);
     } finally {
         res.header("Content-Type", "text/html; charset=utf-8");
@@ -104,7 +106,7 @@ exports.list = async (function(req, res) {
  * @apiSuccess {Object} schools Very userful documentation here.
  */
 exports.view = async (function(req, res) {
-    var school = await(services.school.getAllById(req.params.id));
+    var school = await(services.school.viewOne(req.params.id));
     res.header("Content-Type", "text/html; charset=utf-8");
     res.end(JSON.stringify(school));
 });

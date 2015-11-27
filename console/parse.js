@@ -189,10 +189,10 @@ var rowToSchool = row => {
         director: row[DIRECTOR_INDEX],
         phones: getArray(row, PHONES_INDEX),
         site: row[SITE_INDEX],
-        addresses: getArray(row, ADDRESSES_INDEX),
-        goverment_key: row[GOVERMENT_KEY_INDEX],
-        educationInterval: getEducationInterval(row[EDU_PROGRAMM_INDEX]),
-        coords: []
+        addresses: getArray(row, ADDRESSES_INDEX)
+            .map(address=>{return {name: address, coords: []}; }),
+        govermentKey: row[GOVERMENT_KEY_INDEX],
+        educationInterval: getEducationInterval(row[EDU_PROGRAMM_INDEX])
     };
 };
 
@@ -246,14 +246,8 @@ var rowToGIA = (row) => {
  * creates or updates school
  * */
 var parseSchool = async((schoolData) => {
-    var params = {
-        where: {
-            goverment_key: schoolData.goverment_key
-        }
-    };
-
-    var school = await( services.school.get(params, {count: 'one'}) );
-
+    var school = await(services.school.getForParse(
+             schoolData.goverment_key));
     return school ?
         await (services.school.update(school, schoolData)) :
         await (services.school.create(schoolData));

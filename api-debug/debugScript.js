@@ -7,7 +7,9 @@ jQuery(function() {
 
         jQuery[method](url, data)
             .done(function(data) {
-                jQuery('.output').text(JSON.stringify(data));
+               // jQuery('.output').text(JSON.stringify(data));
+               $('.output').empty();
+               $('.output').jsonView(data);
             })
             .error(function(data) {
                 jQuery('.output').text(data.responseText);

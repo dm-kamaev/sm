@@ -83,7 +83,7 @@ exports.list = async (function(req, res) {
 });
 
 exports.view = async (function(req, res) {
-    var school = await (services.school.getAllById(req.params.id));
+    var school = await (services.school.viewOne(req.params.id));
     console.log(JSON.stringify(school).yellow);
 
     var commentGroup = school.CommentGroup ? school.CommentGroup.comments : [];
