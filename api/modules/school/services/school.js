@@ -119,36 +119,36 @@ service.search = async (params => {
    	    });
     }
     
-    if (searchParams.gia) {
-       includeParams.city = {
-            cityGia: {
-                subject: {
-                    where: {
-                        id: {
-                            $and: [] 
-                        }
-                    }
-                }
-            },
-        };
-        includeParams.giaResults = {
-            subject: {
-               where: {
-                   id: {
-                      $and: [] 
-                   }
-               }
-            },
-            where: {
-                result: {
-                    $gte: sequelize.col("city.cityGia.gia_result") 
-                }
-            }
-        };
-        searchParams.gia.forEach(subjectId => {
-            includeParams.city.cityGia.subject.where.id.$and.push(subjectId);
-            includeParams.giaResults.subject.where.id.$and.push(subjectId);
-        });
+    //if (searchParams.gia) {
+      // includeParams.city = {
+      //      cityGia: {
+      //          subject: {
+      //              where: {
+      //                  id: {
+      //                      $or: [] 
+      //                  }
+      //              }
+      //          }
+      //      },
+      //  };
+      //  includeParams.giaResults = {
+      //      subject: {
+      //         where: {
+      //             id: {
+      //                $or: [] 
+      //             }
+      //         }
+      //      },
+      //      where: {
+      //          result: {
+      //              $gte: sequelize.col("city.cityGia.gia_result") 
+      //          }
+      //      }
+      //  };
+      //  searchParams.gia.forEach(subjectId => {
+      //      includeParams.city.cityGia.subject.where.id.$or.push(subjectId);
+      //      includeParams.giaResults.subject.where.id.$or.push(subjectId);
+      //  });
 
     }
 
