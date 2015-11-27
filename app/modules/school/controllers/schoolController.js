@@ -71,11 +71,14 @@ exports.list = async (function(req, res) {
             }
         });
 
+    var searchString = "{14: 'Вера', 76: 'Надежда', 829: 'Любовь'}";
+
     var html = soy.render('sm.lSearchResult.Template.base', {
         params: {
             data: {
                 schools: schoolList
-            }
+            },
+            search: searchString
         }
     });
     res.header("Content-Type", "text/html; charset=utf-8");
@@ -207,11 +210,13 @@ exports.view = async (function(req, res) {
 
 exports.search = async(function(req, res) {
     var exampleList = ['Поварская, 14', 'Школа 123', 'Савеловская', 'Лицей'];
+    var searchString = "'{14: 'Вера', 76: 'Надежда', 829: 'Любовь'}";
     var html = soy.render('sm.lSearch.Template.base', {
-      params: {
-          currentCity: 'Москва',
-          examples: exampleList
-      }
+          params: {
+              currentCity: 'Москва',
+              examples: exampleList,
+              search: searchString
+          }
     });
     res.header("Content-Type", "text/html; charset=utf-8");
     res.end(html);

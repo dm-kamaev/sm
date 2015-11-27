@@ -52,3 +52,14 @@
 
     background: url(images/b-search/search.png);
 }
+
+.b-search__list {
+    position: absolute;
+    left: 68px;
+
+    line-height: 19px;
+}
+
+.b-search__list_hidden {
+    display: none;
+}

@@ -13,7 +13,9 @@
                 totalScore: number,
                 description: string
             ]>
-        ]
+
+        ],
+        search: string
     ]}
 
     <!DOCTYPE html>
@@ -29,7 +31,11 @@
         <body>
             {call sm.bHeader.Template.base /}
             <div class="l-search-result__body">
-                {call .topMenu_ /}
+                {call .topMenu_}
+                    {param params: [
+                            'searchs': $params.search
+                    ]/}
+                {/call}
                 {call .leftMenu_ /}
                 <div class="l-search-result__school-list">
                     {call sm.lSearchResult.bSchoolList.Template.base}
@@ -41,7 +47,7 @@
             </div>
             <script type="text/javascript" src="/external.min.js"></script>
             <script type="text/javascript">var CLOSURE_NO_DEPS = true;</script>
-            <script type="text/javascript" src="/script.js"></script>
+            <script type="text/javascript" src="/l-search-result.js"></script>
         </body>
     </html>
 {/template}
@@ -50,12 +56,16 @@
  * Top menu template
  */
 {template .topMenu_ autoescape="strict" kind="html" private="true"}
+    {@param? params: [
+        searchs: string
+    ]}
     <div class="l-search-result__top-menu">
         <div class="l-search-result__search">
             {call sm.bSearch.Template.base}
                 {param params: [
                     'placeholder': 'Поиск',
-                    'theme': 'min'
+                    'theme': 'min',
+                    'search': $params.searchs
                 ]/}
             {/call}
         </div>

@@ -4,7 +4,8 @@
  * Search template
  * @param? params {
  *     currentCity: ?string,
- *     examples: ?list<string>
+ *     examples: ?list<string>,
+ *     search: ?object
  * }
  */
 {template .base autoescape="strict" kind="html"}
@@ -28,7 +29,8 @@
                     {/call}
                     {call sm.lSearch.Template.search_}
                         {param params: [
-                            'examples': $params.examples
+                            'examples': $params.examples,
+                            'search': $params.search
                         ]/}
                     {/call}
                     {call sm.lSearch.Template.banner_ /}
@@ -36,7 +38,7 @@
             </div>
             <script type="text/javascript" src="/external.min.js"></script>
             <script type="text/javascript">var CLOSURE_NO_DEPS = true;</script>
-            <script type="text/javascript" src="/script.js"></script>
+            <script type="text/javascript" src="/l-search.js"></script>
         </body>
     </html>
 {/template}
@@ -66,7 +68,8 @@
 /**
  * Search Template
  * @param? params {
- *     examples: ?list<string>
+ *     examples: ?list<string>,
+ *     search: ?object
  * }
  */
 {template .search_ autoescape="strict" kind="html" private="true"}
@@ -77,7 +80,8 @@
                 {call sm.bSearch.Template.base}
                     {param params: [
                         'placeholder': '',
-                        'theme': 'main'
+                        'theme': 'main',
+                        'search': $params.search
                     ]/}
                 {/call}
             </div>
