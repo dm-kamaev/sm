@@ -71,18 +71,25 @@ exports.list = async (function(req, res) {
             }
         });
 
-    var searchString = {
-                14: 'Вера',
-                76: 'Надежда',
-                829: 'Любовь'
-            };
+    var searchString =  [{"id":144,"name":"Школа № 1155","fullName":null,"schoolType":"Школа","director":"Гладкая Марина Викторовна","phones":null,"site":"sch1155sz.mskobr.ru","educationInterval":[0,1,2,3,4,5,6,7,8,9,10,11],"comment_group_id":null,"goverment_key":342,"created_at":"2015-11-18T17:12:23.979Z","updated_at":"2015-11-18T17:12:23.979Z"},{"id":204,"name":"Школа № 1151","fullName":null,"schoolType":"Школа","director":"Агапов Игорь Геннадьевич","phones":null,"site":"sch1151zg.mskobr.ru","educationInterval":[0,1,2,3,4,5,6,7,8,9,10,11],"comment_group_id":null,"goverment_key":512,"created_at":"2015-11-18T17:12:31.030Z","updated_at":"2015-11-18T17:12:31.030Z"},{"id":195,"name":"Школа № 1150 имени Героя Советского Союза К.К. Рокоссовского","fullName":null,"schoolType":"Школа","director":"Федотова Наталия Николаевна","phones":null,"site":"sch1150zg.mskobr.ru","educationInterval":[0,1,2,3,4,5,6,7,8,9,10,11],"comment_group_id":null,"goverment_key":487,"created_at":"2015-11-18T17:12:30.063Z","updated_at":"2015-11-18T17:12:30.063Z"},{"id":278,"name":"Лицей № 1158","fullName":null,"schoolType":"Лицей","director":"Киркова Татьяна Григорьевна","phones":null,"site":"sch1158.mskobr.ru","educationInterval":[0,1,2,3,4,5,6,7,8,9,10,11],"comment_group_id":null,"goverment_key":798,"created_at":"2015-11-18T17:12:39.702Z","updated_at":"2015-11-18T17:12:39.702Z"},{"id":359,"name":"Школа № 1159","fullName":null,"schoolType":"Школа","director":"Дубовицкая Людмила Николаевна","phones":null,"site":"sch1159s.mskobr.ru","educationInterval":[0,1,2,3,4,5,6,7,8,9,10,11],"comment_group_id":null,"goverment_key":956,"created_at":"2015-11-18T17:12:50.198Z","updated_at":"2015-11-18T17:12:50.198Z"},{"id":398,"name":"Школа № 2115","fullName":null,"schoolType":"Школа","director":"Семыкин Иван Петрович","phones":null,"site":"sch2115.mskobr.ru","educationInterval":[0,1,2,3,4,5,6,7,8,9,10,11],"comment_group_id":null,"goverment_key":1015,"created_at":"2015-11-18T17:12:54.922Z","updated_at":"2015-11-18T17:12:54.922Z"}];
+
+    var tSearch = '{{ name }}',
+        tItem = '{{ id }} {{ name }}',
+        tText = '{{ name }}',
+        tValue = '{{ id }}'
 
     var html = soy.render('sm.lSearchResult.Template.base', {
         params: {
             data: {
                 schools: schoolList
             },
-            search: searchString
+            search: searchString,
+            templates: {
+                search: tSearch,
+                item: tItem,
+                text: tText,
+                value: tValue
+            }
         }
     });
     res.header("Content-Type", "text/html; charset=utf-8");

@@ -4,24 +4,35 @@
  * @param? params {
  *    placeholder: ?string,
  *    theme: ?string,
- *    search: ?string
+ *    search: ?string,
+ *    templates: ?{
+ *        search: ?string,
+ *        item: ?string,
+ *        text: ?string,
+ *        value: ?string
+ *    }
  * }
  */
 {template .base autoescape="strict" kind="html"}
     <div class="b-search b-search_theme_{$params.theme}">
         <span class="b-search__icon"></span>
-        //<input class="b-search__input" placeholder="{$params.placeholder}" />
         {call gorod.gSuggest.SuggestTemplate.render}
             {param params: [
                 'data': [
-                    'name': '',
-                    'minLength': 1,
-                    'sourceArray': $params.search,
-                    'placeholder': 'Поиск'
+                    'minLength': 3,
+                    'placeholder': 'Поиск',
+                    'sourceUrl': 'http://www21.lan:3000/api/school/search',
+                    'argName': 'searchParams'
                 ],
                 'config': [
                     'customClasses': 'b-search__input',
-                    'visible': true
+                    'visible': true,
+                    'templates': [
+                        'search': $params.templates.search,
+                        'item': $params.templates.item,
+                        'text': $params.templates.text,
+                        'value': $params.templates.value
+                    ]
                 ]
             ]/}
         {/call}

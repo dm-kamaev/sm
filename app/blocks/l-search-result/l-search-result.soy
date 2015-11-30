@@ -14,7 +14,13 @@
                 description: string
             ]>
         ],
-        search: string
+        search: string,
+        templates: [
+            search: string,
+            item: string,
+            text: string,
+            value: string
+        ]
     ]}
 
     <!DOCTYPE html>
@@ -32,7 +38,13 @@
             <div class="l-search-result__body">
                 {call .topMenu_}
                     {param params: [
-                            'searchs': $params.search
+                            'searchs': $params.search,
+                            'templates': [
+                                'search': $params.templates.search,
+                                'item': $params.templates.item,
+                                'text': $params.templates.text,
+                                'value': $params.templates.value
+                            ]
                     ]/}
                 {/call}
                 {call .leftMenu_ /}
@@ -44,9 +56,15 @@
                     {/call}
                 </div>
             </div>
+            // <script type="text/javascript">
+            //     window.ctx.csrf.name = "APP_CSRF_TOKEN";
+            //     window.ctx.csrf.value = "dd9e99e34004492eeae2c3fd803a4cbb6aec85a1";
+            //     window.ctx.user.isGuest = 0;
+            // </script>
             <script type="text/javascript" src="/external.min.js"></script>
             <script type="text/javascript">var CLOSURE_NO_DEPS = true;</script>
             <script type="text/javascript" src="/l-search-result.js"></script>
+
         </body>
     </html>
 {/template}
@@ -56,7 +74,13 @@
  */
 {template .topMenu_ autoescape="strict" kind="html" private="true"}
     {@param? params: [
-        searchs: string
+        searchs: string,
+        templates: [
+            search: string,
+            item: string,
+            text: string,
+            value: string
+        ]
     ]}
     <div class="l-search-result__top-menu">
         <div class="l-search-result__search">
@@ -64,7 +88,13 @@
                 {param params: [
                     'placeholder': 'Поиск',
                     'theme': 'min',
-                    'search': $params.searchs
+                    'search': $params.searchs,
+                    'templates': [
+                        'search': $params.templates.search,
+                        'item': $params.templates.item,
+                        'text': $params.templates.text,
+                        'value': $params.templates.value
+                    ]
                 ]/}
             {/call}
         </div>
