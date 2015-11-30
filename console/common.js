@@ -3,7 +3,6 @@ const https = require('https');
 const colors = require('colors');
 const async = require('asyncawait/async');
 const await = require('asyncawait/await');
-const readlineSync = require('readline-sync');
 
 var Common = function() {};
 

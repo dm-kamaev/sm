@@ -17,14 +17,14 @@
             {param json: $params?.data /}
         {/call}
     {/let}
-    <section class="b-map" data-params="{$dataParams}">
-    </section>
+    <div class="b-map" data-params="{$dataParams}">
+    </div>
 {/template}
 
 /**
 * API request for ymaps
 */
 {template .api}
-    <script type="text/javascript" src="https://api-maps.yandex.ru/2.1/?mode=debug&lang=ru_RU">
+    <script type="text/javascript" src="http://api-maps.yandex.ru/2.0-stable/?load=package.standard&lang=ru-RU">
     </script>
 {/template}

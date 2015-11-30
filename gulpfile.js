@@ -197,7 +197,7 @@ gulp.task('watch', function () {
 
 
 gulp.task('fonts', function () {
-    return gulp.src(path.join(__dirname + '/assets/**/*.*'))
+    return gulp.src(path.join(__dirname + '/assets/fonts/**/*.*'))
         .pipe(gulp.dest(path.join(__dirname + '/public/fonts')));
 });
 

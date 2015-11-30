@@ -66,7 +66,7 @@ goog.scope(function() {
             Comments.CssClass.COMMENT, this.element_
         );
 
-        this.comments_ = [].slice.call(comments);
+        this.comments_ = comments;
 
         /** comments decoration */
         var comment,

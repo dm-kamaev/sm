@@ -9,7 +9,6 @@ goog.require('goog.dom');
  * @constructor
  */
 sm.lDoc.nDemo.bBlockStars.Stars = function() {
-    console.log('STARS DOC CONSTRUCTOR');
     var elements = goog.dom.getElementsByClass(
         sm.bStars.Stars.CssClass.ROOT
     );

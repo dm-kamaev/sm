@@ -113,13 +113,16 @@ exports.view = async (function(req, res) {
             res: [0, 0, 0, 0]
         }).res;
 
-    function educationIntervalToString(interval) {
-        var begin = interval[0],
-            end = interval[1],
-            res = '';
 
-        if (begin > -1) {
+    function educationIntervalToString(interval) {
+        var res = '';
+
+        if (interval) {
+            var begin = interval[0],
+                end = interval[interval.length - 1];
+
             res += begin ? begin : 'Детский сад';
+
             if (end > begin) {
                 res += '–';
                 res += end;
@@ -164,7 +167,7 @@ exports.view = async (function(req, res) {
                         var type = [
                             'Образование',
                             'Преподаватели',
-                            'Доступность',
+                            'Инфраструктура',
                             'Атмосфера'
                         ];
                         return {
