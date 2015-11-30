@@ -36,6 +36,9 @@ var School = db.define('School', {
             School.hasMany(models.GiaResult, {
                 as: 'giaResults', foreignKey: 'school_id'
             });
+            School.hasMany(models.EgeResult, {
+                as: 'egeResults', foreignKey: 'school_id'
+            });
             School.hasMany(models.Address, {
                 as: 'addresses',
                 foreignKey: 'school_id'
