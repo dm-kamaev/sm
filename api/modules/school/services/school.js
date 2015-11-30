@@ -150,7 +150,7 @@ service.search = async (params => {
       //      includeParams.giaResults.subject.where.id.$or.push(subjectId);
       //  });
 
-    }
+    //}
 
     var params = {
         where: whereParams

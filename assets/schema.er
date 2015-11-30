@@ -1,0 +1,104 @@
+# Entities are declared in '[' ... ']'. All attributes after the entity header
+# up until the end of the file (or the next entity declaration) correspond
+# to this entity.
+[school]
+  *id {label: "integer", color: "#006600",}
+  name {label: "string"}
+  full_name {label: "string"}
+  director {label: "string"}
+  phones {label: "string[]"}
+  site {label: "string"}
+  goverment_key {label: "integer"}
+  +comment_group_id {label: "integer", color: "#3366ff"}
+  school_type {label: "enum"}
+  education_interval {label: "integer[]"}
+  +city_id {label: "integer", color: "#3366ff"}
+  	
+
+[address]
+  *id {label: "integer", color: "#006600",}
+  name {label: "string"}
+  coords {label: "double[]"}
+  +school_id {label: "integer", color: "#3366ff"}
+
+
+[city]
+  *id {label: "integer", color: "#006600",}
+  name {label: "string"}
+
+[city_gia]
+  *id {label: "integer", color: "#006600",}
+  +city_id {label: "integer", color: "#3366ff"}
+  +subject_id {label: "integer", color: "#3366ff"}
+  gia_result {label: "double"}
+
+[comment]
+  *id {label: "integer", color: "#006600",}
+  +comment_group_id {label: "integer", color: "#3366ff"}
+  text {label: "text"}
+  user_type {label: "enum"}
+  +rating_id {label: "integer", color: "#3366ff"}
+
+[comment_group]
+  *id {label: "integer", color: "#006600",}
+
+[gia_result]
+  *id {label: "integer", color: "#006600",}
+  count {label: "integer"}
+  result {label: "double"}
+  +school_id {label: "integer", color: "#3366ff"}
+  +subject_id {label: "integer", color: "#3366ff"}
+
+[metro]
+  *id {label: "integer", color: "#006600",}
+  name {label: "string"}
+  coords {label: "double[]"}
+
+[subject]
+  *id {label: "integer", color: "#006600",}
+  name {label: "string"}
+
+[search]
+  *id {label: "integer", color: "#006600",}
+  values {label: "integer[]"}
+  type {label: "enum"}
+  +school_id {label: "integer", color: "#3366ff"}
+
+[rating]
+  *id {label: "integer", color: "#006600",}
+  score {label: "integer[]"}
+  +school_id {label: "integer", color: "#3366ff"}
+
+[school_university]
+  *id {label: "integer", color: "#006600",}
+  +school_id {label: "integer", color: "#3366ff"}
+  +university_id {label: "integer", color: "#3366ff"}
+  ppl_count {label: "integer"}
+  year {label: "integer"}
+
+[university]
+  *id {label: "integer", color: "#006600",}
+  name {label: "string"}
+# Each relationship must be between exactly two entities, which need not
+# be distinct. Each entity in the relationship has exactly one of four
+# possible cardinalities:
+#
+# Cardinality    Syntax
+# 0 or 1         ?
+# exactly 1      1
+# 0 or more      *
+# 1 or more      +
+school 1--* address
+school 1--* search 
+address 1--* metro
+school ?--? comment_group
+comment_group 1--* comment
+school 1--1 city
+city_gia *--1 city
+city_gia 1--1 subject
+comment 1--? rating
+school 1--* rating
+school 1--* gia_result
+gia_result 1--1 subject
+school_university *--1 school
+school_university *--1 university

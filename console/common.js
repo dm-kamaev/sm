@@ -25,6 +25,13 @@ Common.fileExists = function(filePath)
     }
 };
 
+Common.checkFunctions = function(instanse) {
+    for (var prop in instanse){
+        if (typeof instanse[prop] === 'function')
+            console.log(colors.magenta(prop));         
+    }
+}
+
 Common.saveJson = (json, path) => {
     var js = JSON.stringify(json);
     fs.writeFileSync(path, js);
