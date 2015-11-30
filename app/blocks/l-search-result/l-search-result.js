@@ -8,8 +8,8 @@ goog.require('goog.ui.Component');
 goog.require('sm.lSearchResult.Template');
 goog.require('sm.lSearchResult.bSchoolList.SchoolList');
 goog.require('sm.lSearchResult.bSort.Sort');
-goog.require('sm.bSearch.Search');
-//goog.require('gorod.gSuggest.SuggestInput');
+//goog.require('sm.bSearch.Search');
+goog.require('gorod.gSuggest.Suggest');
 
 /**
  * Search result component
@@ -39,8 +39,7 @@ goog.inherits(sm.lSearchResult.SearchResult, goog.ui.Component);
 goog.scope(function() {
     var SearchResult = sm.lSearchResult.SearchResult,
         SchoolList = sm.lSearchResult.bSchoolList.SchoolList,
-        Sort = sm.lSearchResult.bSort.Sort,
-        Search  = sm.bSearch.Search;
+        Sort = sm.lSearchResult.bSort.Sort;
 
     /**
      * CSS-class enum
@@ -101,24 +100,6 @@ goog.scope(function() {
         this.addChild(this.sort_);
         //this.sort_.decorate(sortElement);
         //TODO fix decorate
-
-        var bSearch = goog.dom.getElementByClass(
-            Search.CssClass.INPUT,
-            element
-        );
-
-        var bSearchInstance = new Search();
-        this.addChild(bSearchInstance);
-        bSearchInstance.decorate(bSearch);
-
-        /*var gSuggest = goog.dom.getElementByClass(
-            'g-suggest',
-            element
-        );
-
-        var gSuggestInstance = new gorod.gSuggest.SuggestInput();
-        this.addChild(gSuggestInstance);
-        gSuggestInstance.decorate(gSuggest);*/
     };
 
     /**

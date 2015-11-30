@@ -4,7 +4,7 @@ goog.require('goog.dom');
 goog.require('goog.events');
 goog.require('goog.ui.Component');
 goog.require('sm.bSearch.Template');
-goog.require('gorod.gSuggest.SuggestInput');
+//goog.require('gorod.gSuggest.SuggestInput');
 
 /**
  * Input suggest component

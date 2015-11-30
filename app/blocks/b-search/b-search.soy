@@ -10,24 +10,20 @@
 {template .base autoescape="strict" kind="html"}
     <div class="b-search b-search_theme_{$params.theme}">
         <span class="b-search__icon"></span>
-        <input class="b-search__input" placeholder="{$params.placeholder}" />
-        /**<ul class="b-search__list b-search__list_hidden">
-            <li>Школа</li>
-            <li>Лицей</li>
-            <li>Гимназия</li>
-            <li>Училище</li>
-        </ul>*/
+        //<input class="b-search__input" placeholder="{$params.placeholder}" />
+        {call gorod.gSuggest.SuggestTemplate.render}
+            {param params: [
+                'data': [
+                    'name': '',
+                    'minLength': 1,
+                    'sourceArray': $params.search,
+                    'placeholder': 'Поиск'
+                ],
+                'config': [
+                    'customClasses': 'b-search__input',
+                    'visible': true
+                ]
+            ]/}
+        {/call}
     </div>
-    {call gorod.gSuggest.SuggestTemplate.render}
-        {param params: [
-            'data': [
-                'minLength': 1,
-                'sourceArray': $params.search,
-                'placeholder': 'Поиск'
-            ],
-            'config': [
-                'customClasses': 'b-search__input b-search_theme_' + $params.theme
-            ]
-        ]/}
-    {/call}
 {/template}

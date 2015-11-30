@@ -71,7 +71,11 @@ exports.list = async (function(req, res) {
             }
         });
 
-    var searchString = "{14: 'Вера', 76: 'Надежда', 829: 'Любовь'}";
+    var searchString = {
+                14: 'Вера',
+                76: 'Надежда',
+                829: 'Любовь'
+            };
 
     var html = soy.render('sm.lSearchResult.Template.base', {
         params: {
@@ -210,7 +214,11 @@ exports.view = async (function(req, res) {
 
 exports.search = async(function(req, res) {
     var exampleList = ['Поварская, 14', 'Школа 123', 'Савеловская', 'Лицей'];
-    var searchString = "'{14: 'Вера', 76: 'Надежда', 829: 'Любовь'}";
+    var searchString = {
+                14: 'Вера',
+                76: 'Надежда',
+                829: 'Любовь'
+            };
     var html = soy.render('sm.lSearch.Template.base', {
           params: {
               currentCity: 'Москва',
