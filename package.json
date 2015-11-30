@@ -29,7 +29,7 @@
     "concat": "^1.0.0",
     "ejs": "^2.3.4",
     "eslint": "^1.6.0",
-    "frobl": "git+ssh://git@github.com:c7s/frobl.git#release-20151119",
+    "frobl": "git+ssh://git@github.com:c7s/frobl.git#dev",
     "gulp": "^3.9.0",
     "gulp-apidoc": "^0.2.0",
     "gulp-autoprefixer": "^3.0.2",
