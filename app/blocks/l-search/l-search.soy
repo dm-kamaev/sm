@@ -98,7 +98,8 @@
         </div>
         {call sm.lSearch.Template.button_}
             {param params: [
-                'text': 'Найти школу'
+                'text': 'Найти школу',
+                'theme': 'search'
             ]/}
         {/call}
     </div>
@@ -146,11 +147,14 @@
                 Поэтому мы разработали сертифицированный тест чтобы ваш ребёнок
                 сам рассказал о себе
             </div>
-            {call sm.lSearch.Template.button_}
-                {param params: [
-                    'text': 'Пройти тест'
-                ]/}
-            {/call}
+            <div class="l-search__content-button">
+                {call sm.lSearch.Template.button_}
+                    {param params: [
+                        'text': 'Пройти тест',
+                        'theme': 'content'
+                    ]/}
+                {/call}
+            </div>
         </div>
         <div class="l-search__item">
             <div class="l-search__content-title">
@@ -182,11 +186,12 @@
 /**
  * Button Template
  * @param? params {
- *     text: ?string
+ *     text: ?string,
+ *     theme: string
  * }
  */
 {template .button_ autoescape="strict" kind="html" private="true"}
-    <div class="l-search__button">
+    <div class="l-search__button l-search__button_{$params.theme}">
         <span class="l-search__button-text">{$params.text}</span>
     </div>
 {/template}
