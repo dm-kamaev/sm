@@ -110,5 +110,6 @@ school 1--* rating
 school 1--* gia_result
 school 1--* ege_result
 gia_result 1--1 subject
+ege_result 1--1 subject
 school_university *--1 school
 school_university *--1 university
