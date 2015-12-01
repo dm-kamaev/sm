@@ -15,7 +15,8 @@ var generate = function (includes) {
       cityGia: models.CityGia,
       giaResults: models.GiaResult,
       ratings: models.Rating,
-      searchData: models.SearchData
+      searchData: models.SearchData,
+      olimpResults: models.OlimpResult
     };
     var result = [];
     for (var prop in includes){ 
