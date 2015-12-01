@@ -19,6 +19,7 @@ exports.getSchoolRecords = async (function(id) {
  * @public
  */
 exports.searchSchool = async (params => {
+    var searchDataCount = 0;
     var searchParams = params.searchParams,
         includeParams = {
            searchData: {
@@ -53,19 +54,38 @@ exports.searchSchool = async (params => {
     }
     
     if (searchParams.gia) {
-        includeParams.searchData.where.$or.push({
-            type: 'gia',
-            values: {
-                $contains: searchParams.gia
-            }       
+        searchDataCount++;
+        includeParams.searchData.where.$or.push({ 
+            $and: {
+                type: 'gia',
+                values: {
+                    $contains: searchParams.gia
+                }
+            }
+        });
+    } 
+
+    if (searchParams.ege) {
+        searchDataCount++;
+        includeParams.searchData.where.$or.push({ 
+            $and: {
+                type: 'ege',
+                values: {
+                    $contains: searchParams.ege
+                }
+            }
         });
     } 
     
     var params = {
-        where: whereParams
+        where: whereParams,
+        include:  sequelizeInclude(includeParams, true)
     };
-    if (Object.keys(includeParams))
-        params.include = sequelizeInclude(includeParams);
+    if (searchDataCount){
+        params.group = '"School"."id"';
+        params.having = ['COUNT(?) = ?', '', searchDataCount];
+    }
+
     var results = await (models.School.findAll(params));
     console.log('Found: ', colors.green(results.length));
     return JSON.stringify(results);

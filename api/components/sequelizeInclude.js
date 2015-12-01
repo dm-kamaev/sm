@@ -1,8 +1,17 @@
 var modules = require.main.require('./api/modules');
 var models = require.main.require('./app/components/models').all;
 
+/**
+ * Generates sequelize include object by params object
+ *
+ * if emptyAttributes is passed results for joined models
+ * wouldnt contain any data. Need for 'group by'
+ *
+ */
 
-var generate = function (includes) {
+var generate = function (includes, emptyAttributes) {
+    emptyAttributes = emptyAttributes || false;
+
     var dictionary = {
       comment: models.Comment,
       commentGroup: models.CommentGroup,
@@ -12,11 +21,12 @@ var generate = function (includes) {
       school: models.School,
       subject: models.Subject,
       city: models.City,
-      cityGia: models.CityGia,
+      cityResult: models.CityResult,
       giaResults: models.GiaResult,
       ratings: models.Rating,
       searchData: models.SearchData
     };
+
     var result = [];
     for (var prop in includes){ 
         if (prop != 'where') {
@@ -28,10 +38,12 @@ var generate = function (includes) {
                 model: modelInList,
                 as: prop
             };
+            if (emptyAttributes)
+                node.attributes = [];
             if (includes[prop].where)
                 node.where = includes[prop].where;
             if (typeof includes[prop] != 'boolean')
-                node.include = generate(includes[prop]);
+                node.include = generate(includes[prop], emptyAttributes);
             result.push(node);
         }
     }

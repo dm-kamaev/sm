@@ -26,11 +26,13 @@
   *id {label: "integer", color: "#006600",}
   name {label: "string"}
 
-[city_gia]
+[city_result]
   *id {label: "integer", color: "#006600",}
   +city_id {label: "integer", color: "#3366ff"}
   +subject_id {label: "integer", color: "#3366ff"}
   gia_result {label: "double"}
+  ege_result {label: "double"}
+
 
 [comment]
   *id {label: "integer", color: "#006600",}
@@ -45,6 +47,13 @@
 [gia_result]
   *id {label: "integer", color: "#006600",}
   count {label: "integer"}
+  result {label: "double"}
+  +school_id {label: "integer", color: "#3366ff"}
+  +subject_id {label: "integer", color: "#3366ff"}
+
+[ege_result]
+  *id {label: "integer", color: "#006600",}
+  year {label: "integer"}
   result {label: "double"}
   +school_id {label: "integer", color: "#3366ff"}
   +subject_id {label: "integer", color: "#3366ff"}
@@ -94,11 +103,13 @@ address 1--* metro
 school ?--? comment_group
 comment_group 1--* comment
 school 1--1 city
-city_gia *--1 city
-city_gia 1--1 subject
+city_result *--1 city
+city_result 1--1 subject
 comment 1--? rating
 school 1--* rating
 school 1--* gia_result
+school 1--* ege_result
 gia_result 1--1 subject
+ege_result 1--1 subject
 school_university *--1 school
 school_university *--1 university

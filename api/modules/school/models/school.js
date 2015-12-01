@@ -10,7 +10,14 @@ var School = db.define('School', {
     schoolType: {
         field: 'school_type',
         type: DataType.ENUM,
-        values: ['Школа', 'Лицей', 'Гимназия', 'Центр образования', 'Коррекционная школа', 'Коррекционная школа-интернат', 'Кадетская школа-интернат', 'Кадетская школа'],
+        values: ['Школа', 
+                'Лицей', 
+                'Гимназия', 
+                'Центр образования', 
+                'Коррекционная школа', 
+                'Коррекционная школа-интернат', 
+                'Кадетская школа-интернат', 
+                'Кадетская школа'],
         allowNull: false
     },
     director: DataType.STRING,
@@ -36,6 +43,9 @@ var School = db.define('School', {
             School.hasMany(models.GiaResult, {
                 as: 'giaResults', foreignKey: 'school_id'
             });
+            School.hasMany(models.EgeResult, {
+                as: 'egeResults', foreignKey: 'school_id'
+            });
             School.hasMany(models.SearchData, {
                 as: 'searchData', foreignKey: 'school_id'
             });
@@ -51,9 +61,9 @@ var School = db.define('School', {
                 foreignKey: 'city_id',
                 as: 'city' 
             });
-			School.hasMany(models.SchoolUniversity, {
-				as: 'schoolUniversities', foreignKey: 'school_id'	
-			});
+            School.hasMany(models.SchoolUniversity, {
+                as: 'schoolUniversities', foreignKey: 'school_id'	
+            });
             School.hasMany(models.Rating, {
                 as: 'ratings',
                 foreignKey: 'school_id'
