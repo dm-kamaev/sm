@@ -14,7 +14,6 @@
                 description: string
             ]>
         ],
-        search: string,
         templates: [
             search: string,
             item: string,
@@ -38,7 +37,6 @@
             <div class="l-search-result__body">
                 {call .topMenu_}
                     {param params: [
-                            'searchs': $params.search,
                             'templates': [
                                 'search': $params.templates.search,
                                 'item': $params.templates.item,
@@ -74,7 +72,6 @@
  */
 {template .topMenu_ autoescape="strict" kind="html" private="true"}
     {@param? params: [
-        searchs: string,
         templates: [
             search: string,
             item: string,
@@ -88,7 +85,6 @@
                 {param params: [
                     'placeholder': 'Поиск',
                     'theme': 'min',
-                    'search': $params.searchs,
                     'templates': [
                         'search': $params.templates.search,
                         'item': $params.templates.item,

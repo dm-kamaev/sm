@@ -8,8 +8,7 @@ goog.require('goog.ui.Component');
 goog.require('sm.lSearchResult.Template');
 goog.require('sm.lSearchResult.bSchoolList.SchoolList');
 goog.require('sm.lSearchResult.bSort.Sort');
-//goog.require('sm.bSearch.Search');
-goog.require('gorod.gSuggest.Suggest');
+goog.require('sm.bSearch.Search');
 
 /**
  * Search result component
@@ -39,7 +38,8 @@ goog.inherits(sm.lSearchResult.SearchResult, goog.ui.Component);
 goog.scope(function() {
     var SearchResult = sm.lSearchResult.SearchResult,
         SchoolList = sm.lSearchResult.bSchoolList.SchoolList,
-        Sort = sm.lSearchResult.bSort.Sort;
+        Sort = sm.lSearchResult.bSort.Sort,
+        Search = sm.bSearch.Search;
 
     /**
      * CSS-class enum
@@ -100,6 +100,23 @@ goog.scope(function() {
         this.addChild(this.sort_);
         //this.sort_.decorate(sortElement);
         //TODO fix decorate
+
+        var bSearch = goog.dom.getElementByClass(
+            Search.CssClass.INPUT,
+            element
+        );
+
+        var bSearchInstance = new Search();
+        this.addChild(bSearchInstance);
+        bSearchInstance.decorate(bSearch);
+
+        // var sgst = goog.dom.getElementByClass('g-suggest');
+        // var suggest = new gorod.gSuggest.Suggest(sgst);
+        // suggest.init();
+        // suggest.setCallback('getData', function(elem) {
+        //     console.log('awd');
+        //     return elem;
+        // });
     };
 
     /**

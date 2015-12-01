@@ -4,7 +4,7 @@ goog.require('goog.dom');
 goog.require('goog.events');
 goog.require('goog.ui.Component');
 goog.require('sm.bSearch.Template');
-//goog.require('gorod.gSuggest.SuggestInput');
+goog.require('gorod.gSuggest.Suggest');
 
 /**
  * Input suggest component
@@ -34,7 +34,8 @@ goog.scope(function() {
         ROOT: 'b-search',
         INPUT: 'b-search__input',
         LIST: 'b-search__list',
-        LIST_HIDE: 'b-search__list_hidden'
+        LIST_HIDE: 'b-search__list_hidden',
+        SUGGEST: 'g-suggest'
     };
 
     /**
@@ -52,29 +53,36 @@ goog.scope(function() {
     Search.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
 
-        goog.events.listen(
-            goog.dom.getElementByClass(Search.CssClass.INPUT),
-            goog.events.EventType.KEYPRESS,
-            function() { console.log('pressed'); },
-            false,
-            this
-        );
+        // goog.events.listen(
+        //     goog.dom.getElementByClass(Search.CssClass.INPUT),
+        //     goog.events.EventType.KEYPRESS,
+        //     function() { console.log('pressed'); },
+        //     false,
+        //     this
+        // );
+        //
+        // goog.events.listen(
+        //     goog.dom.getElementByClass(Search.CssClass.INPUT),
+        //     goog.events.EventType.FOCUS,
+        //     this.showList_,
+        //     false,
+        //     this
+        // );
+        //
+        // goog.events.listen(
+        //     goog.dom.getElementByClass(Search.CssClass.INPUT),
+        //     goog.events.EventType.BLUR,
+        //     this.hideList_,
+        //     false,
+        //     this
+        // );
 
-        goog.events.listen(
-            goog.dom.getElementByClass(Search.CssClass.INPUT),
-            goog.events.EventType.FOCUS,
-            this.showList_,
-            false,
-            this
-        );
-
-        goog.events.listen(
-            goog.dom.getElementByClass(Search.CssClass.INPUT),
-            goog.events.EventType.BLUR,
-            this.hideList_,
-            false,
-            this
-        );
+        var ui = gorod.iUIInstanceStorage.UIInstanceStorage.getInstance();
+        var suggest = goog.dom.getElementByClass(gorod.gSuggest.Suggest.Css.ROOT);
+        var suggestInstance = ui.getInstanceByElement(suggest);
+        suggestInstance.setCallback('getData', function(elem) {
+            return JSON.parse(elem);
+        });
     };
 
     /**
@@ -83,30 +91,30 @@ goog.scope(function() {
     Search.prototype.exitDocument = function() {
         goog.base(this, 'exitDocument');
 
-        goog.events.unlisten(
-            goog.dom.getElementByClass(Search.CssClass.INPUT),
-            goog.events.EventType.KEYPRESS,
-            function() {
-                console.log('pressed');
-                this.search_;
-            }
-        );
-
-        goog.events.unlisten(
-            goog.dom.getElementByClass(Search.CssClass.INPUT),
-            goog.events.EventType.FOCUS,
-            this.showList_,
-            false,
-            this
-        );
-
-        goog.events.unlisten(
-            goog.dom.getElementByClass(Search.CssClass.INPUT),
-            goog.events.EventType.BLUR,
-            this.hideList_,
-            false,
-            this
-        );
+        // goog.events.unlisten(
+        //     goog.dom.getElementByClass(Search.CssClass.INPUT),
+        //     goog.events.EventType.KEYPRESS,
+        //     function() {
+        //         console.log('pressed');
+        //         this.search_;
+        //     }
+        // );
+        //
+        // goog.events.unlisten(
+        //     goog.dom.getElementByClass(Search.CssClass.INPUT),
+        //     goog.events.EventType.FOCUS,
+        //     this.showList_,
+        //     false,
+        //     this
+        // );
+        //
+        // goog.events.unlisten(
+        //     goog.dom.getElementByClass(Search.CssClass.INPUT),
+        //     goog.events.EventType.BLUR,
+        //     this.hideList_,
+        //     false,
+        //     this
+        // );
     };
 
     /**
