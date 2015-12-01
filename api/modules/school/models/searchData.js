@@ -11,7 +11,7 @@ var SearchData = db.define('SearchData', {
     },
     type: {
         type: DataType.ENUM,
-        values: ['gia','ege'] //TODO: move to separated module
+        values: ['gia','ege','olimp'] //TODO: move to separated module
     }
 }, {
     underscored: true,

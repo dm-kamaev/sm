@@ -76,6 +76,18 @@ exports.searchSchool = async (params => {
             }
         });
     } 
+
+    if (searchParams.olimp) {
+        searchDataCount++;
+        includeParams.searchData.where.$or.push({ 
+            $and: {
+                type: 'olimp',
+                values: {
+                    $contains: searchParams.olimp
+                }
+            }
+        });
+    } 
     
     var params = {
         where: whereParams,

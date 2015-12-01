@@ -22,7 +22,7 @@ module.exports = {
             },
             type: {
                 type: Sequelize.ENUM,
-                values: ['ege', 'gia'] //TODO: move enum values to separated module
+                values: ['ege', 'gia', 'olimp'] //TODO: move enum values to separated module
             },
             created_at: Sequelize.DATE,
             updated_at: Sequelize.DATE
