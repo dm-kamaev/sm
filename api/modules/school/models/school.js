@@ -36,8 +36,8 @@ var School = db.define('School', {
             School.hasMany(models.GiaResult, {
                 as: 'giaResults', foreignKey: 'school_id'
             });
-            School.hasMany(models.Search, {
-                as: 'searchTemplates', foreignKey: 'school_id'
+            School.hasMany(models.SearchData, {
+                as: 'searchData', foreignKey: 'school_id'
             });
             School.hasMany(models.Address, {
                 as: 'addresses',

@@ -58,7 +58,7 @@
   *id {label: "integer", color: "#006600",}
   name {label: "string"}
 
-[search]
+[search_data]
   *id {label: "integer", color: "#006600",}
   values {label: "integer[]"}
   type {label: "enum"}
@@ -89,7 +89,7 @@
 # 0 or more      *
 # 1 or more      +
 school 1--* address
-school 1--* search 
+school 1--* search_data 
 address 1--* metro
 school ?--? comment_group
 comment_group 1--* comment

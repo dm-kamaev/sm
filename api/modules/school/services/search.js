@@ -8,7 +8,7 @@ var colors = require('colors');
 exports.name = 'search';
 
 exports.getSchoolRecords = async (function(id) {
-    return await (models.Search.findAll({
+    return await (models.SearchData.findAll({
         where: {
             schoolId: id
         }
@@ -21,7 +21,7 @@ exports.getSchoolRecords = async (function(id) {
 exports.searchSchool = async (params => {
     var searchParams = params.searchParams,
         includeParams = {
-           searchTemplates: {
+           searchData: {
                where: {
                    $or: []
                }
@@ -54,7 +54,7 @@ exports.searchSchool = async (params => {
     }
     
     if (searchParams.gia) {
-        includeParams.searchTemplates.where.$or.push({
+        includeParams.searchData.where.$or.push({
                 type: 'gia',
                 values: {
                     $contains: searchParams.gia
@@ -73,7 +73,7 @@ exports.searchSchool = async (params => {
 });
 
 exports.addGia = async(function(schoolId, values) {
-    await (models.Search.create({
+    await (models.SearchData.create({
         schoolId: schoolId,
         type: 'gia',
         values: values

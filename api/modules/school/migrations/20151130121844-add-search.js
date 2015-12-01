@@ -3,7 +3,7 @@ var colors = require('colors');
 
 module.exports = {
     up: function (queryInterface, Sequelize) {
-        return queryInterface.createTable('search', {
+        return queryInterface.createTable('search_data', {
             id: { 
                 allowNull: false,
                 autoIncrement: true,
@@ -35,6 +35,6 @@ module.exports = {
         });
     },
     down: function (queryInterface, Sequelize) {
-        return queryInterface.dropTable('search');
+        return queryInterface.dropTable('search_data');
     }
 };
