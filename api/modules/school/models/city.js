@@ -12,8 +12,8 @@ var City = db.define('City', {
                 as: 'schools',
                 foreignKey: 'city_id'
             });
-            City.hasMany(models.CityGia, {
-                as: 'cityGia',
+            City.hasMany(models.CityResult, {
+                as: 'cityResult',
                 foreignKey: 'city_id'
             });
         }

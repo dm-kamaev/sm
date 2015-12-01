@@ -38,7 +38,7 @@ var launch = async (function(isRewriting) {
 var GiaUpdater = async(function(schools, isRewriting){
     this.isRewriting = isRewriting || false;
     this.schools = schools;   
-    this.citySubjects = await (services.subject.listGia());
+    this.citySubjects = await (services.subject.listCityResults());
     var bar = new ProgressBar('Processing :bar :current/:total', { 
         total: schools.length,
         width: 30 
@@ -79,7 +79,7 @@ function GiaSchool(school, citySubjects, isRewriting){
             var citySubject = this.citySubjects.find(
                 subj => subj.id == giaResult.subject_id);
             if (citySubject) {
-                var cityResult = citySubject.cityGia.find(
+                var cityResult = citySubject.cityResult.find(
                     res => (res.cityId == school.city_id));
                 if (cityResult && giaResult.result >= cityResult.giaResult)
                     this.resultSubjects.push(giaResult.subject_id);

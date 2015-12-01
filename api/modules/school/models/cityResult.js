@@ -1,10 +1,14 @@
 var DataType = require('sequelize'),
     db = require.main.require('./app/components/db');
 
-var CityGia = db.define('CityGia', {
+var CityResult = db.define('CityResult', {
     giaResult : {
         type: DataType.FLOAT,
         field: 'gia_result'
+    },
+    egeResult : {
+        type: DataType.FLOAT,
+        field: 'ege_result'
     },
     cityId : {
         type: DataType.INTEGER,
@@ -17,14 +21,14 @@ var CityGia = db.define('CityGia', {
         
 }, {
     underscored: true,
-    tableName: 'city_gia',
+    tableName: 'city_result',
     classMethods: {
         associate: function (models) {
-            CityGia.belongsTo(models.Subject, {
+            CityResult.belongsTo(models.Subject, {
                 foreignKey: 'subject_id',
                 as: 'subject'
             });
-            CityGia.belongsTo(models.City, {
+            CityResult.belongsTo(models.City, {
                 foreignKey: 'city_id'
             });
             
@@ -32,4 +36,4 @@ var CityGia = db.define('CityGia', {
     }
 });
 
-module.exports = CityGia;
+module.exports = CityResult;
