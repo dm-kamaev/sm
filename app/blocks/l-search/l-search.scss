@@ -37,9 +37,11 @@
 }
 
 .l-search__pin {
+    position: relative;
+    bottom: 5px;
+
     float: left;
 
-    margin-top: 3px;
     margin-right: 18px;
 }
 
@@ -55,6 +57,9 @@
 }
 
 .l-search__city-arrow {
+    position: relative;
+    bottom: 7px;
+
     float: left;
 
     margin-top: 12px;
