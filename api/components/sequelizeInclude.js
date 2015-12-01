@@ -2,7 +2,6 @@ var modules = require.main.require('./api/modules');
 var models = require.main.require('./app/components/models').all;
 
 
-
 var generate = function (includes) {
     var dictionary = {
       comment: models.Comment,
@@ -15,7 +14,8 @@ var generate = function (includes) {
       city: models.City,
       cityGia: models.CityGia,
       giaResults: models.GiaResult,
-      ratings: models.Rating
+      ratings: models.Rating,
+      searchData: models.SearchData
     };
     var result = [];
     for (var prop in includes){ 

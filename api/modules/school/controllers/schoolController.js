@@ -56,7 +56,7 @@ exports.search = async (function(req, res) {
     var result = '';
     try {
         var params = req.query;
-        result = await(services.school.search(params));
+        result = await(services.search.searchSchool(params));
     } catch (e) {
         console.log(e);
         throw e;
