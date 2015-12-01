@@ -55,6 +55,8 @@
 .b-header__menu-image {
     position: relative;
     top: 25px;
+
+    float: left;
 }
 
 .b-header__search-image{
@@ -67,6 +69,7 @@
 .b-header__line {
     width: 0;
     height: 50%;
+    margin-top: 16px;
 
     border: 1px solid rgba(0, 0, 0, 0.08);
 }
@@ -95,17 +98,18 @@
 }
 
 .b-header__title {
-    margin-top: 4px;
+    margin-top: 3px;
 }
 
 .b-header__header {
     display: inline-block;
 
+    margin: 0;
+
     text-transform: uppercase;
 
     font-weight: 900;
     font-size: 21px;
-    line-height: 1;
 }
 
 .b-header__link {
