@@ -51,9 +51,9 @@ exports.get = async ((subject, opt_option) => {
 /**
  * get all the subjects with city default gia results
  */
-exports.listGia = async (() => {
+exports.listCityResults = async (() => {
     var includeParams = {
-        cityGia: true 
+        cityResult: true 
     }
     return await (models.Subject.findAll({
         include: sequelizeInclude(includeParams) 

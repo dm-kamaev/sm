@@ -14,8 +14,8 @@ var Subject = db.define('Subject', {
             Subject.hasMany(models.GiaResult, {
                 as: 'giaResult', foreignKey: 'subject_id'
             });
-            Subject.hasMany(models.CityGia, {
-                as: 'cityGia', foreignKey: 'subject_id'
+            Subject.hasMany(models.CityResult, {
+                as: 'cityResult', foreignKey: 'subject_id'
             });
         }
 

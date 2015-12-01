@@ -1,6 +1,6 @@
 module.exports = {
     up: function (queryInterface, Sequelize) {
-        return queryInterface.createTable('city_gia', {
+        return queryInterface.createTable('city_result', {
             id: { 
                 allowNull: false,
                 autoIncrement: true,
@@ -24,11 +24,14 @@ module.exports = {
             gia_result: {
                 type: Sequelize.FLOAT,
             },        
+            ege_result: {
+                type: Sequelize.FLOAT,
+            },        
             created_at: Sequelize.DATE,
             updated_at: Sequelize.DATE
         });
     },
     down: function (queryInterface, Sequelize) {
-        return queryInterface.dropTable('city_gia');
+        return queryInterface.dropTable('city_result');
     }
 };

@@ -14,7 +14,7 @@ var generate = function (includes, emptyAtributes) {
       school: models.School,
       subject: models.Subject,
       city: models.City,
-      cityGia: models.CityGia,
+      cityResult: models.CityResult,
       giaResults: models.GiaResult,
       ratings: models.Rating,
       searchData: models.SearchData
