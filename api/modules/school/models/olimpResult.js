@@ -3,21 +3,21 @@ var DataType = require('sequelize'),
 
 var OlimpResult = db.define('OlimpResult', {
     type: {
-        type: Datatype.ENUM,
+        type: DataType.ENUM,
         values: ['всероссийская', 'московская'],
     },
     stage: {
-        type: Datatype.INTEGER
+        type: DataType.INTEGER
     },
     class: {
-        type: Datatype.INTEGER
+        type: DataType.INTEGER
     },
     status: {
-        type: Datatype.ENUM,
+        type: DataType.ENUM,
         values: ['победитель', 'призер']
     },
     year: {
-        type: Datatype.INTEGER
+        type: DataType.INTEGER
     },
 }, {
     underscored: true,
