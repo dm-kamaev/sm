@@ -8,7 +8,11 @@
  */
 {template .base autoescape="strict" kind="html"}
     <div class="b-search b-search_theme_{$params.theme}">
-        <span class="b-search__icon"></span>
+        {if $params.theme == 'main'}
+            <span class="b-icon_img_arrow b-search__icon"></span>
+        {else}
+            <span class="b-icon_img_search b-search__icon"></span>
+        {/if}
         <input class="b-search__input" placeholder="{$params.placeholder}" />
     </div>
 {/template}
