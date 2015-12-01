@@ -48,3 +48,7 @@ updateSearch - актуализация поисковой таблицы
 
 ## Дампы БД ##
 `node commander dump` позволяет создавать дампы бд привязаные к ветке к гите и переключаться между ними
+
+## Cхема БД ##
+https://wiki.cochanges.com/pages/viewpage.action?pageId=22085766
+При изменении структуры БД надо так же поменять assets/schema.er
