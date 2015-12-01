@@ -177,12 +177,20 @@ gulp.task('styles', function () {
     }], production, path.join(__dirname, '/public'));
 });
 
+gulp.task('sprite', function() {
+    var sctf = {
+        imgSrc: path.join(__dirname, BLOCKS_DIR, '/b-icon/b-icon_img/*'),
+        cssDest: path.join(__dirname, BLOCKS_DIR, '/b-icon'),
+        spriteDest: path.join(__dirname, '/public/images'),
+        cssPath: '/images/b-icon_auto-sprite.png'
+    };
+    return gulpHelper.buildSprites([sctf]);
+});
 
 gulp.task('images', function () {
     return gulp.src(path.join(__dirname + BLOCKS_DIR + '/**/*.png'))
         .pipe(gulp.dest(path.join(__dirname + '/public/images')));
 });
-
 
 gulp.task('watch', function () {
     gulp.watch([
@@ -204,8 +212,8 @@ gulp.task('fonts', function () {
 
 const tasks = function (bool) {
     return bool ?
-        ['soy', 'scripts', 'images', 'fonts', 'styles'] :
-        ['watch', 'soy', 'scripts', 'images', 'fonts','styles'];
+        ['soy', 'scripts', 'sprite', 'images', 'fonts', 'styles'] :
+        ['watch', 'soy', 'scripts', 'sprite', 'images', 'fonts','styles'];
 };
 
 gulp.task('default', tasks(production));
