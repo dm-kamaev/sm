@@ -1,11 +1,48 @@
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
+var colors = require('colors');
 var models = require.main.require('./app/components/models').all;
 var services = require.main.require('./app/components/services').all;
+const common = require.main.require('./console/common');
 
-exports.name = 'giaResult';
+exports.name = 'studyResult';
 
-exports.getAll = async(() => {
+
+const OLIMP_TYPES = [
+    {
+        name: 'Всероссийская олимпиада',
+        value: 'всероссийская'
+    }, {
+        name: 'Московская олимпиада',
+        value: 'московская'
+    }
+];
+
+exports.setSchoolOlimp = async((school, olimpResults) => {
+    await(models.OlimpResult.destroy({
+        where: {
+            schoolId: school.id
+        }
+    }));
+    await(olimpResults.forEach(olimp => {
+        var subject = await(services.subject.getOrCreate(olimp.subject)),
+            type = OLIMP_TYPES.find(tp => tp.name == olimp.type),
+            status = olimp.status || null;
+        if (!type) 
+            throw new Error('Undefined olimp type: '+ olimp.type);
+        await(models.OlimpResult.create({
+            schoolId: school.id,
+            subjectId: subject.id,
+            type: type.value,
+            stage: olimp.stage || null,
+            class: olimp.class || null,
+            status: status.replace('ё','е'), //TODO: craete an enum controller and refactor this
+            year: olimp.year || null
+        }));
+    }));
+});
+
+exports.getAllGia = async(() => {
     return await(models.GiaResult.findAll());
 });
 
@@ -24,7 +61,7 @@ exports.getAll = async(() => {
  *
  * @return {Promise} A promise that returns GiaResult model instance / instances
  */
-exports.get = async ((gia, opt_option) => {
+exports.getGia = async ((gia, opt_option) => {
     var option = opt_option || {};
 
     var searchTerms = {
@@ -65,12 +102,12 @@ exports.get = async ((gia, opt_option) => {
  * }} opt_option
  * @return {Promise} A promise that returns GiaResult model instance
  */
-exports.create = async((gia, opt_option) => {
+exports.createGia = async((gia, opt_option) => {
         var option = opt_option || {};
         var res;
 
         if (option.updateIfExists) {
-            var giaFound = await (this.get({
+            var giaFound = await (this.getGia({
                 school_id: gia.school_id,
                 subject_id: gia.subject_id
             }, {count: 'one'}));

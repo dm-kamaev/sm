@@ -2,6 +2,14 @@ var DataType = require('sequelize'),
     db = require.main.require('./app/components/db');
 
 var OlimpResult = db.define('OlimpResult', {
+    schoolId: {
+        type: DataType.INTEGER,
+        field: 'school_id'
+    },
+    subjectId: {
+        type: DataType.INTEGER,
+        field: 'subject_id'
+    },
     type: {
         type: DataType.ENUM,
         values: ['всероссийская', 'московская'],
@@ -21,7 +29,7 @@ var OlimpResult = db.define('OlimpResult', {
     },
 }, {
     underscored: true,
-    tableName: 'gia_result',
+    tableName: 'olimp_result',
     classMethods: {
         associate: function (models) {
             OlimpResult.belongsTo(models.School, {

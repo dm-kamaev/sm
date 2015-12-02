@@ -49,22 +49,68 @@ var GiaUpdater = async(function(schools, isRewriting){
             this.citySubjects,
             this.isRewriting));
         await (gs.process());
+        var os = await (new OlimpSchool(
+            school,
+            this.isRewriting));
+        await(os.process());
         bar.tick();
     }));
     console.log('Succses. Stopping script');
 });
 
+function OlimpSchool(school, isRewriting){
+    this.school = school;
+    this.isRewriting = isRewriting;
+    this.olimpResults = await (this.school.getOlimpResults());
+    this.dbOlimpRecord =
+            await(services.search.getSchoolRecords(this.school.id))
+                .find(rec => rec.type == 'olimp'); //TODO: enum controller
+    this.resultSubjects = [];
+    this.process = async(function() {
+        if (!this.dbGiaRecord || this.isRewriting){
+            await(this.getResults_());
+            if (this.resultSubjects.length)
+                await(this.updateDb_());
+        }
+    });
+
+    /**
+     * @private
+     */
+    this.getResults_ = async(function() {
+        this.olimpResults.forEach(olimpRes => {
+            if (!this.resultSubjects.find(
+                    subject => subject == olimpRes.subjectId))
+                this.resultSubjects.push(olimpRes.subjectId);
+        });
+    });
+
+    /**
+     * @private
+     */
+    this.updateDb_ = async(function() {
+        if (this.isRewriting && this.dbOlimpRecord) {
+            await(this.dbOlimpRecord.update({
+                values: this.resultSubjects
+            }));
+        } else {
+            await (services.search.addOlimp(
+                this.school.id,
+                this.resultSubjects));
+        }
+    });
+} 
 function GiaSchool(school, citySubjects, isRewriting){
     this.school = school;
     this.isRewriting = isRewriting;
     this.giaResults = await (this.school.getGiaResults());
     this.citySubjects = citySubjects;
-    this.dbRecord =
+    this.dbGiaRecord =
             await(services.search.getSchoolRecords(this.school.id))
-                .find(rec => rec.type == 'gia');
+                .find(rec => rec.type == 'gia'); //TODO: enum controller
     this.resultSubjects = [];
     this.process = async(function() {
-        if (!this.dbRecord || this.isRewriting){
+        if (!this.dbGiaRecord || this.isRewriting){
             await(this.getResults_());
             if (this.resultSubjects.length)
                 await(this.updateDb_());
@@ -91,8 +137,8 @@ function GiaSchool(school, citySubjects, isRewriting){
      * @private
      */
     this.updateDb_ = async(function() {
-        if (this.isRewriting && this.dbRecord) {
-            await(this.dbRecord.update({
+        if (this.isRewriting && this.dbGiaRecord) {
+            await(this.dbGiaRecord.update({
                 values: this.resultSubjects
             }));
         } else {

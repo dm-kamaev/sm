@@ -106,8 +106,15 @@ exports.searchSchool = async (params => {
 exports.addGia = async(function(schoolId, values) {
     await (models.SearchData.create({
         schoolId: schoolId,
-        type: 'gia',
+        type: 'gia', //TODO: enum controller
         values: values
     }));
 });
 
+exports.addOlimp = async(function(schoolId, values) {
+    await (models.SearchData.create({
+        schoolId: schoolId,
+        type: 'olimp', //TODO: enum controller
+        values: values
+    }));
+});
