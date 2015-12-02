@@ -1,5 +1,6 @@
 var DataType = require('sequelize'),
-    db = require.main.require('./app/components/db');
+    db = require.main.require('./app/components/db'),
+    enums = require('../enums');
 
 
 var Comment = db.define('Comment', {
@@ -7,7 +8,7 @@ var Comment = db.define('Comment', {
     userType: {
         field: "user_type",
         type: DataType.ENUM,
-        values: ['Parent', 'Graduate', 'Scholar']
+        values: enums.posterType.toArray()
     }
 }, {
     underscored: true,

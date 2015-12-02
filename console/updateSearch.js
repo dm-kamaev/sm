@@ -8,6 +8,7 @@ const fs = require('fs');
 const common = require.main.require('./console/common');
 const services = require.main.require('./app/components/services').all;
 const ProgressBar = require('progress');
+const enums = require.main.require('./app/components/enums').all;
 var sequelize = require.main.require('./app/components/db');
     
 var start = function() {
@@ -61,7 +62,7 @@ function GiaSchool(school, citySubjects, isRewriting){
     this.citySubjects = citySubjects;
     this.dbRecord =
             await(services.search.getSchoolRecords(this.school.id))
-                .find(rec => rec.type == 'gia');
+                .find(rec => rec.type == enums.searchType.GIA);
     this.resultSubjects = [];
     this.process = async(function() {
         if (!this.dbRecord || this.isRewriting){

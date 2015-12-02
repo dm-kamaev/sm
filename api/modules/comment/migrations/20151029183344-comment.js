@@ -1,5 +1,5 @@
 'use strict';
-
+var enums = require('../enums');
 module.exports = {
   up: function (queryInterface, Sequelize) {
     return queryInterface.createTable('comment', {
@@ -23,7 +23,7 @@ module.exports = {
       user_type: {
         allowNull: false,
         type: Sequelize.ENUM,//('Parent','Graduate','Scholar'),
-        values: ['Parent','Graduate','Scholar']
+        values: enums.posterType.toArray() 
       },
       score: {
         allowNull: false,
