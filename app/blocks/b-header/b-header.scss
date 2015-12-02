@@ -98,18 +98,17 @@
 }
 
 .b-header__title {
-    margin-top: 3px;
+    margin-top: 4px;
 }
 
 .b-header__header {
     display: inline-block;
 
-    margin: 0;
-
     text-transform: uppercase;
 
     font-weight: 900;
     font-size: 21px;
+    line-height: 1;
 }
 
 .b-header__link {
@@ -136,7 +135,6 @@
     vertical-align: top;
 
     font-family: "WebSymbols", Arial, sans-serif;
-    line-height: 20px
 }
 
 .b-header__star {
