@@ -38,6 +38,10 @@
                             'images': $params.images
                         ]/}
                     {/call}
+                    <div class="l-search__horisontal-line"></div>
+                    <div class="l-search__footer">
+                       {call sm.lSchool.bFooter.Template.base /}
+                    </div>
                 </div>
             </div>
             <script type="text/javascript" src="/external.min.js"></script>
@@ -56,7 +60,7 @@
 {template .header_ autoescape="strict" kind="html" private="true"}
     <div class="l-search__header">
         <div class="l-search__title">
-            Школы «Мела»
+            Школы <span class="l-search__title-space">«Мела»</span>
         </div>
         <div class="l-search__geoposition">
             <div class="b-icon_img_red-pin l-search__pin"></div>
@@ -136,12 +140,12 @@
                 Реклама
             </div>
         </div>
-        <div class="l-search__item">
+        <div class="l-search__item l-search__item_even">
             <div class="l-search__content-title">
                 Тест для школьника
             </div>
             <div class="l-search__content-text">
-                Часто родители думают, что хорошо знают своего ребёнка, но
+                Часто родители думают,<br> что хорошо знают своего ребёнка, но
                 не всегда это так.
                 <div class="l-search__content-emptyline"></div>
                 Поэтому мы разработали сертифицированный тест чтобы ваш ребёнок
@@ -170,13 +174,13 @@
                 <li>Новаторские школы</li>
             </ul>
         </div>
-        <div class="l-search__item l-search__item_last">
+        <div class="l-search__item l-search__item_even l-search__item_last">
             <img class="l-search__article-img" src="{$params.images[1]}" />
             <div class="l-search__article-quote">
-                «Цель школы - сломать волю ребенка»
+                «Цель школы — сломать волю ребенка»
             </div>
             <div class="l-search__article-title">
-                Антон Долин ‒ о школе с шести лет, подлинной свободе и
+                Антон Долин — о школе с шести лет, подлинной свободе и
                 учителях как невольных палачах
             </div>
         </div>

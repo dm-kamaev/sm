@@ -28,13 +28,17 @@
 
     font-family: proxima;
     font-weight: 900;
-    font-size: 30px;
+    font-size: 29px;
+}
+
+.l-search__title-space {
+    letter-spacing: 1px;
 }
 
 .l-search__geoposition {
     float: left;
 
-    margin-right: 48px;
+    margin-right: 50px;
 
     cursor: pointer;
 }
@@ -72,7 +76,9 @@
 .l-search__inscription {
     float: left;
 
-    font-family: serif;
+    letter-spacing: -0.1;
+
+    font-family: pt serif;
     font-size: 21px;
 }
 
@@ -90,10 +96,11 @@
 .l-search__left-text {
     float: left;
 
-    margin-top: 14px;
-    margin-left: 162px;
+    margin-top: 16px;
+    margin-left: 161px;
 
-    font-size: 17px;
+    font-family: pt serif;
+    font-size: 15.4px;
     font-weight: bold;
 }
 
@@ -114,7 +121,7 @@
 
     box-sizing: border-box;
     height: 47px;
-    padding-top: 13px;
+    padding-top: 12px;
 
     cursor: pointer;
     text-align: center;
@@ -132,6 +139,7 @@
 
 .l-search__button-text {
     text-transform: uppercase;
+    letter-spacing: 2;
 
     font-family: proxima;
     font-weight: 800;
@@ -147,7 +155,7 @@
 }
 
 .l-search__example {
-    margin-left: 19px;
+    margin-left: 18px;
 
     cursor: pointer;
 }
@@ -155,7 +163,7 @@
 .l-search__rating-img {
     width: 100%;
     height: 128px;
-    margin-bottom: 61px;
+    margin-bottom: 63px;
 
     background: url(images/l-search/rating.png) no-repeat left;
 }
@@ -165,25 +173,31 @@
 
     width: 100%;
 
-    font-family: serif;
+    margin-bottom: 97px;
+
+    font-family: pt serif;
 }
 
 .l-search__item {
     display: inline-block;
     float: left;
 
-    width: 23%;
+    width: 278px;
     margin-right: 30px;
+}
+
+.l-search__item_even {
+    width: 277px;
 }
 
 .l-search__item_last {
     margin-right: 0;
 
-    line-height: 1;
+    line-height: 1.2;
 }
 
 .l-search__content-title {
-    margin-bottom: 11px;
+    margin-bottom: 17px;
 
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -200,7 +214,7 @@
     height: 124px;
     margin-top: 11px;
     margin-right: 20px;
-    margin-bottom: 27px;
+    margin-bottom: 22px;
 }
 
 .l-search__advertising-address {
@@ -220,9 +234,9 @@
     float: left;
 
     width: 100%;
-    margin-bottom: 25px;
+    margin-bottom: 24px;
 
-    font-size: 17px;
+    font-size: 16px;
     line-height: 22px;
 }
 
@@ -233,6 +247,8 @@
 .l-search__advertising-footer {
     float: left;
 
+    margin-top: -6px;
+
     color: #888888;
 
     font-family: Arial;
@@ -241,43 +257,55 @@
 
 .l-search__list {
     margin-top: -5px;
-    padding-left: 12px;
+    padding-left: 10px;
 
     list-style-type: none;
 }
 
 .l-search__list li::before {
     position: relative;
-    left: -5px;
+    left: -4px;
 
-    content: '‒';
+    content: '—';
 }
 
 .l-search__list li {
-    text-indent: -5px;
+    text-indent: -7px;
 
-    font-size: 17px;
+    font-size: 16px;
     line-height: 37px;
 }
 
 .l-search__article-img {
-    margin-bottom: 25px;
+    margin-bottom: 21px;
 }
 
 .l-search__article-quote {
-    width: 85%;
+    width: 80%;
     margin: 0 auto;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
 
     text-align: center;
 
-    font-size: 20px;
+    font-size: 18px;
     font-weight: bold;
 }
 
 .l-search__article-title {
     text-align: center;
 
-    font-size: 17px;
+    font-size: 16px;
     font-style: italic;
+}
+
+.l-search__horisontal-line {
+    width: 100%;
+    height: 1px;
+    margin: 0;
+
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.l-search__footer {
+    margin-bottom: 30px;
 }
