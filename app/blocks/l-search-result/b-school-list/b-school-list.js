@@ -114,6 +114,15 @@ goog.scope(function() {
     };
 
     /**
+     * Sort handler
+     * @param {string} Sort key
+     * @public
+     */
+    SchoolList.prototype.sort = function(sortKey) {
+        console.log('Sort by key: \"' + sortKey + '\" released!');
+    };
+
+    /**
      * Rating initialization
      * @private
      */

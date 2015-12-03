@@ -31,6 +31,13 @@ sm.lSearchResult.SearchResult = function(opt_params) {
      * @private
      */
     this.sort_ = null;
+
+    /**
+     * SchoolList instance
+     * @type {sm.lSearchResult.bSchoolList.SchoolList}
+     * @private
+     */
+    this.schoolList_ = null;
 };
 goog.inherits(sm.lSearchResult.SearchResult, goog.ui.Component);
 
@@ -85,10 +92,15 @@ goog.scope(function() {
             SchoolList.CssClass.ROOT,
             element
         );
-        var bSchoolListInstance = new SchoolList();
+
+        this.schoolList_ = new SchoolList();
+        this.addChild(this.schoolList_);
+        this.schoolList_.decorate(bSchoolList);
+
+        /*var bSchoolListInstance = new SchoolList();
         this.addChild(bSchoolListInstance);
         bSchoolListInstance.decorate(bSchoolList);
-
+*/
         //sort
         var sortElement = goog.dom.getElementByClass(
             Sort.CssClass.ROOT,
@@ -112,7 +124,6 @@ goog.scope(function() {
             false,
             this
         );
-
     };
 
     /**
@@ -133,6 +144,9 @@ goog.scope(function() {
      * @private
      */
     SearchResult.prototype.onSortHandler_ = function(event) {
+        var key = event.currentTarget.getAttribute('type');
+
+        this.schoolList_.sort(key);
     }
 });
 
