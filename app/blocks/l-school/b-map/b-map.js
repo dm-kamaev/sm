@@ -105,6 +105,7 @@ goog.scope(function() {
 
         ymaps.ready(jQuery.proxy(function() {
             this.ymaps_ = new ymaps.Map(element, ymapsParams);
+            this.ymaps_.setZoom(Math.floor(this.ymaps_.getZoom())); //normalize zoom
             this.placePlacemarks_(this.params_);
         }, this));
     };
