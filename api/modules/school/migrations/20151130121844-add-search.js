@@ -1,6 +1,6 @@
 'use strict';
-var colors = require('colors');
-
+var colors = require('colors'),
+    enums = require('../enums');
 module.exports = {
     up: function (queryInterface, Sequelize) {
         return queryInterface.createTable('search_data', {
@@ -22,7 +22,7 @@ module.exports = {
             },
             type: {
                 type: Sequelize.ENUM,
-                values: ['ege', 'gia', 'olimp'] //TODO: move enum values to separated module
+                values: enums.searchType.toArray() 
             },
             created_at: Sequelize.DATE,
             updated_at: Sequelize.DATE

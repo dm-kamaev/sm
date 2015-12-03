@@ -261,13 +261,11 @@
 {template .contentTitle_ autoescape="strict" kind="html"}
     {@param image:string}
     {@param text:string}
-    //{@param buttonAlt:string}
+    {@param buttonAlt:string}
     <div class="l-school__content-header">
         {if $image != null}{/if}
         <div class="l-school__content-header-text">{$text}</div>
-        /**
-        <div class="l-school__content-header-button" alt="{$buttonAlt}"></div>
-        */
+        <div class="b-icon_img_school-button l-school__content-header-button" alt="{$buttonAlt}"></div>
     </div>
 {/template}
 
@@ -284,7 +282,7 @@
         {call .contentTitle_}
             {param image: '123.png' /}
             {param text: 'классы обучения' /}
-            //{param buttonAlt: 'надпись' /}
+            {param buttonAlt: 'надпись' /}
         {/call}
         {$classesStr}
     </div>
@@ -307,7 +305,7 @@
         {call .contentTitle_}
             {param image: '123.png' /}
             {param text: 'Сайты' /}
-            //{param buttonAlt: 'надпись' /}
+            {param buttonAlt: 'надпись' /}
         {/call}
         {foreach $record in $data}
             <div class="l-school__site-record">
@@ -339,7 +337,7 @@
             {call .contentTitle_}
                 {param image: '123.png' /}
                 {param text: 'Социальные сети' /}
-                //{param buttonAlt: 'надпись' /}
+                {param buttonAlt: 'надпись' /}
             {/call}
             {foreach $record in $data}
                 <div class="l-school__link-record">
@@ -364,7 +362,7 @@
         {call .contentTitle_}
             {param image: '123.png' /}
             {param text: 'ДИРЕКТОР' /}
-            //{param buttonAlt: 'надпись' /}
+            {param buttonAlt: 'надпись' /}
         {/call}
         <div class="l-school__director-name">
             {$dirName}
@@ -394,7 +392,7 @@
             {call .contentTitle_}
                 {param image: '123.png' /}
                 {param text: 'комментарии и оценки' /}
-                //{param buttonAlt: 'надпись2' /}
+                {param buttonAlt: 'надпись2' /}
             {/call}
             {call gorod.bBouton.BoutonTemplate.render}
                 {param params: [
@@ -443,7 +441,7 @@
         {call .contentTitle_}
             {param image: '123.png' /}
             {param text: 'контакты' /}
-            //{param buttonAlt: 'надпись2' /}
+            {param buttonAlt: 'надпись2' /}
         {/call}
         {foreach $adresRecord in $data.address}
             <div class="l-school__contacts-record">

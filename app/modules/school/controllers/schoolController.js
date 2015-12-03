@@ -210,10 +210,12 @@ exports.view = async (function(req, res) {
 
 exports.search = async(function(req, res) {
     var exampleList = ['Поварская, 14', 'Школа 123', 'Савеловская', 'Лицей'];
+    var imagesList = ['images/l-search/advertising_1.png', 'images/l-search/article.png'];
     var html = soy.render('sm.lSearch.Template.base', {
       params: {
           currentCity: 'Москва',
-          examples: exampleList
+          examples: exampleList,
+          images: imagesList
       }
     });
     res.header("Content-Type", "text/html; charset=utf-8");
