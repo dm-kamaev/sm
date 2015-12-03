@@ -19,9 +19,24 @@ exports.getSchoolRecords = async (function(id) {
 /**
  * Separate search string and remove symbols
  */
-var getSearchSybstrings = function (string) {
-    string = string.replace(/[^\wа-яА-Я[:space:]]/g,'') //remove everything except letters, numbers and spaces
-    return string.split(' ');
+var getSearchSubstrings = function (string) {
+    return string.toLowerCase()
+        .trim()
+        .replace(/[^\wа-яА-Я\s]/g,'') //remove everything except letters, numbers and spaces
+        .replace(/школа/,'')
+        .trim()
+        .split(' ');
+};
+
+var generateFilter = function(string){
+    var subStrings = getSearchSubstrings(string);
+    return {
+        $and: subStrings.map(substr => {
+            return {
+                $iLike: '%' + substr + '%'
+            };
+        })
+    }
 };
 
 
@@ -30,40 +45,28 @@ var getSearchSybstrings = function (string) {
  */
 exports.advancedSearch = async ((searchString) => {
     searchString = searchString.toLowerCase();
-    var resSchools = [],
-        resAddresses = [],
-        resMetro = [],
-        resYandex = [];
+    var filter = generateFilter(searchString);
 
     var yandexRequest = services.yapi.request(searchString);
 
     var schoolRequest = models.School.findAll({
         where: {
             $or: [{
-                name: {
-                    $like: '%' + searchString + '%'
-                }
-            }, {
-                fullName: {
-                    $like: '%' + searchString + '%'
-                }
+                name: filter,
+                fullName: filter  
             }]
         }
     });
 
     var addressRequest = models.Address.findAll({
         where: {
-            name: {
-                $like: '%' + searchString + '%'
-            }
+            name: filter
         }
     });
 
     var metroRequest = models.Metro.findAll({
         where: {
-            name: {
-                $like: '%' + searchString + '%'
-            }
+            name: filter 
         }
     });
     
@@ -77,7 +80,7 @@ exports.advancedSearch = async ((searchString) => {
         schools: results[1],
         address: results[2],
         metro: results[3]
-    }
+    };
 });
 
 
@@ -85,8 +88,8 @@ exports.advancedSearch = async ((searchString) => {
  * @public
  */
 exports.searchSchool = async (params => {
-    var searchDataCount = 0;
-    var searchParams = params.searchParams,
+    var searchDataCount = 0,
+        searchParams = params.searchParams,
         includeParams = {
            searchData: {
                where: {
@@ -94,15 +97,15 @@ exports.searchSchool = async (params => {
                }
            }   
         },
-    whereParams = {};
+        whereParams = {};
+
     if (searchParams.name) {
+        var nameFilter = generateFilter(searchParams.name);
         whereParams.$or = [
         {
-            name: {$like: '%' + searchParams.name + '%'} 
-        }, {
-            fullName:{$like: '%' + searchParams.name + '%'} 
-        }
-        ];
+            name: nameFilter,
+            fullName: nameFilter
+        }];
     }
     if (searchParams.classes && searchParams.classes.length) {
         whereParams.educationInterval = { 
