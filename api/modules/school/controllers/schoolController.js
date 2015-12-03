@@ -1,5 +1,4 @@
-var schoolServices = require('../services').schoolServices;
-var commentServices = require('../../comment/services').commentServices;
+var services = require.main.require('./app/components/services').all;
 
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
@@ -27,7 +26,7 @@ exports.createComment = async (function(req, res) {
         var schoolId = req.params.id,
             params = req.body;
         params.score = params['score[]']; //TODO придумать чтото с этим
-        result = await(schoolServices.comment(schoolId, params));
+        result = await(services.school.commentTransaction(schoolId, params));
     } catch (e) {
         console.log(e);
         result = JSON.stringify(e);
@@ -48,7 +47,10 @@ exports.createComment = async (function(req, res) {
  *       "searchParams" : {
  *       	"name": "123", 
  *       	"classes": [1,2,3,4],
- *       	"schoolType": ["Школа", "Лицей"]	
+ *       	"schoolType": ["Школа", "Лицей"],
+ *       	"gia": [1,2],
+ *       	"ege": [2,3],
+ *       	"olimp": [3,5]	
  *       }
  *     }
  */
@@ -56,9 +58,10 @@ exports.search = async (function(req, res) {
     var result = '';
     try {
         var params = req.query;
-        result = await(schoolServices.search(params));
+        result = await(services.search.searchSchool(params));
     } catch (e) {
         console.log(e);
+        throw e;
         result = JSON.stringify(e);
     } finally {
         res.header("Content-Type", "text/html; charset=utf-8");
@@ -92,7 +95,7 @@ exports.create = function(req, res) {
  * @apiSuccess {Object[]} schools Very userful documentation here.
  */
 exports.list = async (function(req, res) {
-    var schools = await (schoolServices.list());
+    var schools = await (services.school.list());
     res.header("Content-Type", "text/html; charset=utf-8");
     res.end(JSON.stringify(schools));
 });
@@ -105,7 +108,7 @@ exports.list = async (function(req, res) {
  * @apiSuccess {Object} schools Very userful documentation here.
  */
 exports.view = async (function(req, res) {
-    var school = await(schoolServices.getAllById(req.params.id));
+    var school = await(services.school.viewOne(req.params.id));
     res.header("Content-Type", "text/html; charset=utf-8");
     res.end(JSON.stringify(school));
 });

@@ -2,16 +2,14 @@
  * @fileoverview A constructor for a Yandex Maps map
  * @author Nikita Gubchenko
  */
-
-goog.provide('sm.lSchool.bMap.Map');
-
+goog.require('goog.array');
 goog.require('goog.dom');
 goog.require('goog.dom.dataset');
-goog.require('goog.ui.Component');
 goog.require('goog.object');
-goog.require('goog.array');
-goog.require('sm.lSchool.bMap.Template');
+goog.require('goog.ui.Component');
+goog.provide('sm.lSchool.bMap.Map');
 goog.require('sm.lSchool.bMap.MapPin');
+goog.require('sm.lSchool.bMap.Template');
 
 /**
  * @param {Object=} opt_params
@@ -77,14 +75,14 @@ goog.scope(function() {
             var dataset = goog.dom.dataset.get(element, 'params');
             this.params_ = JSON.parse(dataset);
         }
+
         var coords = this.params_.coords;
-        console.log(coords.length);
         if (coords.length > 1) {
             var borderArr = this.calculateBorder_(coords),
                 newCenter = {
                     lat: coords[0].lat,
                     lon: coords[0].lng
-                }; 
+                };
             borderArr = this.correctBorder_(borderArr, newCenter);
             var ymapsParams =
             {
@@ -104,16 +102,17 @@ goog.scope(function() {
                 controls: []
             };
         }
-        ymaps.ready(function() {
-            this.ymaps_ = new ymaps.Map(element,ymapsParams);
-            this.placePlacemarks_(this.params_);
-        }.bind(this));
 
+        ymaps.ready(jQuery.proxy(function() {
+            this.ymaps_ = new ymaps.Map(element, ymapsParams);
+            this.ymaps_.setZoom(Math.floor(this.ymaps_.getZoom())); //normalize zoom
+            this.placePlacemarks_(this.params_);
+        }, this));
     };
 
     /**
      * Converts coord object to array
-     * @param {Object}
+     * @param {Object} coordObject
      * @return {Array<number>}
      * @private
      */
@@ -126,12 +125,12 @@ goog.scope(function() {
 
     /**
      * Creates an array of placemark objects from provided data
-     * @param {Object}
+     * @param {Object} item
      * @return {Array<ymaps.Placemark>}
      * @private
      */
     Map.prototype.itemToPlacemarks_ = function(item) {
-        return item.coords.map(function(coord) {
+        return goog.array.map(item.coords, jQuery.proxy(function(coord) {
             var pinData = {};
             goog.object.extend(
                 pinData,
@@ -144,49 +143,54 @@ goog.scope(function() {
 
             var pin = new sm.lSchool.bMap.MapPin(pinData);
             return pin.createPlacemark();
-        }.bind(this));
+        }, this));
     };
 
     /**
      * Initializes a placemark before placing on the map
-     * @param {(Object|Array<Object>)}
+     * @param {(Object|Array<Object>)} data
      * @return {Array<ymaps.Placemark>}
      * @private
      */
     Map.prototype.dataToPlacemarks_ = function(data) {
-        if (!Array.isArray(data)) {
+        if (!(data instanceof Array)) {
             data = [data];
         }
-        return goog.array.flatten(
-            data.map(
-                function(item) {
-                    return this.itemToPlacemarks_(item);
-                }.bind(this)
-            )
-        );
+
+        var res = [];
+
+        for (var i = 0, item, placemarks; item = data[i]; i++) {
+            placemarks = this.itemToPlacemarks_(item);
+            for (var j = 0, placemark; placemark = placemarks[j]; j++) {
+                res.push(placemark);
+            }
+        }
+
+        return res;
     };
 
 
     /**
      * Calculate map border
-     * @param {Object} data
-	 * @return {Object}
+     * @param {Object} coords
+     * @return {Object}
      * @private
      */
     Map.prototype.calculateBorder_ = function(coords) {
 		var south, west, east, north;
 		east = north = 0;
 		south = west = 90;
-		coords.forEach(
-			function(point) {
-				var latitude = point.lat,
-				longitude = point.lng;
-				north = latitude > north ? latitude : north;
-				south = latitude < south ? latitude : south;
-				east = longitude > east ? longitude : east;
-				west = longitude < west ? longitude : west;
-			}
-		);
+
+        for (var i = 0, point; point = coords[i]; i++) {
+            var latitude = point.lat,
+                longitude = point.lng;
+
+            north = latitude > north ? latitude : north;
+            south = latitude < south ? latitude : south;
+            east = longitude > east ? longitude : east;
+            west = longitude < west ? longitude : west;
+        }
+
 		return {
 			north: north,
 			west: west, 
@@ -195,59 +199,57 @@ goog.scope(function() {
 		};
     };
 
-	/**
-     * Recalculate map border 
+    /**
+     * Recalculate map border
      * @param {Object} border
-	 * @param {Object} newCenter
-	 * @return {Array<Array<number>>}
+     * @param {Object} newCenter
+     * @return {Array<Array<number>>}
      * @private
      */
-	Map.prototype.correctBorder_ = function(border, newCenter) {
-		var center = {
-			lat : (border.north + border.south) / 2,
-			lon : (border.west + border.east) / 2
-		};
+    Map.prototype.correctBorder_ = function(border, newCenter) {
+        var center = {
+            lat: (border.north + border.south) / 2,
+            lon: (border.west + border.east) / 2
+        };
 
-		if (newCenter.lat > center.lat)
-			border.north = border.south + (newCenter.lat - border.south) * 2;
-		else 
-			border.south = border.north - (border.north - newCenter.lat) * 2;
-		
-		if (newCenter.lon > center.lon)
-			border.east = border.west + (newCenter.lon - border.west) * 2;
-		else 
-			border.west = border.east - (border.east - newCenter.lon) * 2;
+        if (newCenter.lat > center.lat)
+            border.north = border.south + (newCenter.lat - border.south) * 2;
+        else
+            border.south = border.north - (border.north - newCenter.lat) * 2;
 
-		var correction = 0.5 * Math.abs(border.north - border.south);
-		border.north += correction;
-		border.south -= correction;
-		border.east += correction;
-		border.west -= correction;
+        if (newCenter.lon > center.lon)
+            border.east = border.west + (newCenter.lon - border.west) * 2;
+        else
+            border.west = border.east - (border.east - newCenter.lon) * 2;
 
-	   return [[border.north, border.west], [border.south, border.east]];	
-	};
+        var correction = 0.5 * Math.abs(border.north - border.south);
+        border.north += correction;
+        border.south -= correction;
+        border.east += correction;
+        border.west -= correction;
+
+        return [[border.north, border.west], [border.south, border.east]];
+    };
 
 
     /**
      * Appends generated placemarks to the map
-     * @param {Object}
+     * @param {Object} data
      * @private
      */
     Map.prototype.placePlacemarks_ = function(data) {
         var placemarks = this.dataToPlacemarks_(data);
-        console.log(placemarks);
-        placemarks.forEach(
-            function(item) {
-                this.ymaps_.geoObjects.add(item);
-            }.bind(this)
-        );
 
-        var geoObject = this.ymaps_.geoObjects.get(0);
-        if (geoObject) {
-            geoObject.balloon.open();
+        for (var i = 0, item; item = placemarks[i]; i++) {
+            this.ymaps_.geoObjects.add(item);
         }
 
-		
-
+        var i = 0;
+        this.ymaps_.geoObjects.each(function(obj) {
+            if (!i) {
+                obj.balloon.open();
+            }
+            i++;
+        });
     };
 });

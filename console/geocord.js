@@ -5,10 +5,7 @@ var geocoder = new MultiGeocoder({ coordorder: 'latlong', lang: 'ru-RU'});
 var fs = require('fs');
 var colors = require('colors');
 
-var schoolServices =
-    require.main.require('./api/modules/school/services').schoolServices;
-var addressServices =
-    require.main.require('./api/modules/school/services').addressServices;
+var services = require.main.require('./app/components/services').all;
 
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
@@ -22,7 +19,7 @@ var start = async(() => {
         if (err)
             console.log(err);
     }));
-    var addresses = await(addressServices.getAll());
+    var addresses = await(services.address.getAll());
 
     var notUpdated = [];
     addresses.forEach(adr => {
@@ -70,7 +67,7 @@ var processAddressChunk = async(addressesChunk => {
         processAddresPrecisely(addressesChunk);
     }
     else
-        addressServices.updateCoords(addressesChunk, cordArr);
+        services.address.updateCoords(addressesChunk, cordArr);
 });
 
 var processAddresPrecisely = async(addressesChunk => {
@@ -92,7 +89,7 @@ var processAddresPrecisely = async(addressesChunk => {
         }
     }
     if (!errorOccured)
-        addressServices.updateCoords(addressesChunk, cordArr);
+        services.address.updateCoords(addressesChunk, cordArr);
 });
 
 

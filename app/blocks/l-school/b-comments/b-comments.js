@@ -24,7 +24,7 @@ sm.lSchool.bComments.Comments = function(opt_params) {
 
     /**
      * @private
-     * @type{NodeList}
+     * @type {Array.<Element>}
      */
     this.comments_ = [];
 };
@@ -66,7 +66,7 @@ goog.scope(function() {
             Comments.CssClass.COMMENT, this.element_
         );
 
-        this.comments_ = [].slice.call(comments);
+        this.comments_ = comments;
 
         /** comments decoration */
         var comment,

@@ -1,5 +1,8 @@
 const gulp = require('gulp');
-const gulpHelper = require('./node_modules/frobl/gulp-helper.js').use(gulp);
+const gulpHelper =
+        require('./node_modules/frobl/gulp-helper.js')
+        .use(gulp)
+        .setProjectDirectory(__dirname);
 const path = require('path');
 const concat = require('gulp-concat');
 const util = require('gulp-util');
@@ -139,8 +142,8 @@ var getDirectories = function(srcpath)  {
 };
 
 var upLetter = function (string, index) {
-    return string.slice(0, index) + 
-           string[index].toUpperCase() + 
+    return string.slice(0, index) +
+           string[index].toUpperCase() +
            string.slice(index+1);
 };
 var getEnteryPointFromName = function (name) {
@@ -158,9 +161,9 @@ var isFileExists = function(path) {
     try
     {
     	return fs.statSync(path).isFile();
-    }   	
+    }
     catch (err)
-    {	
+    {
     	return false;
     }
 };
@@ -171,7 +174,7 @@ var compileLayout = function(name)  {
     	return;
     var output = name + '.js',
     	enteryPoint = getEnteryPointFromName(name);
-    console.log('Building scripts for ' + name + ' [' + enteryPoint + ']'); 
+    console.log('Building scripts for ' + name + ' [' + enteryPoint + ']');
     return gulpHelper.buildJs(
         [
             path.join(__dirname, BLOCKS_DIR, '/', '/**/*.js')
@@ -185,7 +188,7 @@ var compileLayout = function(name)  {
 
 gulp.task('scripts', ['soy'], function () {
     var promises = [],
-        dirs = getDirectories(path.join(__dirname,'/app/blocks'));	
+        dirs = getDirectories(path.join(__dirname,'/app/blocks'));
     dirs = dirs.filter((dirname) => {
 	    return dirname.startsWith('l-');
     });
@@ -207,12 +210,20 @@ gulp.task('styles', function () {
     }], production, path.join(__dirname, '/public'));
 });
 
+gulp.task('sprite', function() {
+    var sctf = {
+        imgSrc: path.join(__dirname, BLOCKS_DIR, '/b-icon/b-icon_img/*'),
+        cssDest: path.join(__dirname, BLOCKS_DIR, '/b-icon'),
+        spriteDest: path.join(__dirname, '/public/images'),
+        cssPath: '/images/b-icon_auto-sprite.png'
+    };
+    return gulpHelper.buildSprites([sctf]);
+});
 
 gulp.task('images', function () {
     return gulp.src(path.join(__dirname + BLOCKS_DIR + '/**/*.png'))
         .pipe(gulp.dest(path.join(__dirname + '/public/images')));
 });
-
 
 gulp.task('watch', function () {
     gulp.watch([
@@ -227,15 +238,15 @@ gulp.task('watch', function () {
 
 
 gulp.task('fonts', function () {
-    return gulp.src(path.join(__dirname + '/assets/**/*.*'))
+    return gulp.src(path.join(__dirname + '/assets/fonts/**/*.*'))
         .pipe(gulp.dest(path.join(__dirname + '/public/fonts')));
 });
 
 
 const tasks = function (bool) {
     return bool ?
-        ['soy', 'scripts', 'images', 'fonts', 'styles'] :
-        ['watch', 'soy', 'scripts', 'images', 'fonts','styles'];
+        ['soy', 'scripts', 'sprite', 'images', 'fonts', 'styles'] :
+        ['watch', 'soy', 'scripts', 'sprite', 'images', 'fonts','styles'];
 };
 
 gulp.task('default', tasks(production));

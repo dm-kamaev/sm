@@ -73,22 +73,22 @@
                 {call .top_}
                    {param params: $params /}
                 {/call}
-                <hr class="l-school__horisontal-line">
+                <div class="l-school__horisontal-line"></div>
                 {call .middle_}
                    {param params: $params /}
                 {/call}
-                <hr class="l-school__horisontal-line">
+                <div class="l-school__horisontal-line"></div>
                 {call .comments_}
                     {param comments: $params?.data?.comments /}
                 {/call}
-                <hr class="l-school__horisontal-line">
+                <div class="l-school__horisontal-line"></div>
                 <div class="l-school__footer">
                    {call sm.lSchool.bFooter.Template.base /}
                 </div>
             </div>
         </div>
         {call sm.lSchool.bMap.Template.api}{/call}
-        <script type="text/javascript" src="/external.min.js"></script>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
         <script type="text/javascript">var CLOSURE_NO_DEPS = true;</script>
         <script type="text/javascript" src="/l-school.js"></script>
     </body>
@@ -265,7 +265,7 @@
     <div class="l-school__content-header">
         {if $image != null}{/if}
         <div class="l-school__content-header-text">{$text}</div>
-        <div class="l-school__content-header-button" alt="{$buttonAlt}"></div>
+        <div class="b-icon_img_school-button l-school__content-header-button" alt="{$buttonAlt}"></div>
     </div>
 {/template}
 

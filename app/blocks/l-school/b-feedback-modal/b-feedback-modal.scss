@@ -19,8 +19,7 @@
 
     text-transform: uppercase;
 
-    font-weight: 900;
-    font-size: 27px;
+    font: 900 27px 'Proxima', Arial, sans-serif;
 }
 
 .b-feedback__title_sub {
@@ -28,8 +27,9 @@
 }
 
 .b-feedback__title_subsub {
-    margin: 0 0 12px;
+    margin: 0 0 4px;
 
+    font-weight: 800;
     font-size: 13px;
 }
 
@@ -98,8 +98,7 @@
     text-transform: uppercase;
     background: #f4f4ec;
 
-    font-weight: 900;
-    font-size: 20px;
+    font: 800 20px 'Proxima', Arial, sans-serif;
 
     &:hover {
         background: #e3e3dc;

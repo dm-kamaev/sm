@@ -1,5 +1,4 @@
-var commentServices = require('../services').commentServices;
-
+var services = require.main.require('./app/components/services').all;
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 
@@ -14,7 +13,7 @@ var await = require('asyncawait/await');
  * @apiSuccess {Int} comment_group_id Comment group id
  */
 exports.view = async(function(req, res) {
-    var comment = await(commentServices.get(req.params.id));
+    var comment = await(services.comment.get(req.params.id));
     res.header('Content-Type', 'text/html; charset=utf-8');
     res.end(JSON.stringify(comment));
 });
@@ -35,7 +34,7 @@ exports.view = async(function(req, res) {
  */
 exports.list = async(function(req, res) {
     var groupID = req.params.id || null;
-    var comments = await(commentServices.list(groupID));
+    var comments = await(services.comment.list(groupID));
     res.header('Content-Type', 'text/html; charset=utf-8');
     res.end(JSON.stringify(comments));
 });
@@ -59,7 +58,7 @@ exports.list = async(function(req, res) {
 exports.create = async(function(req, res) {
     var groupID = req.params.id;
     var params = req.body;
-    var comment = await(commentServices.create(groupID, params));
+    var comment = await(services.comment.create(groupID, params));
     res.header('Content-Type', 'text/html; charset=utf-8');
     res.end(JSON.stringify(comment));
 });

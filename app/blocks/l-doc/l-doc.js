@@ -18,5 +18,5 @@ goog.require('sm.lSchool.bMap.Map');
 
 
 sm.lDoc.Doc = function() {
-    console.log('debug doc');
+
 };

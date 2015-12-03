@@ -146,8 +146,8 @@ goog.scope(function() {
      * @private
      */
     SearchResult.prototype.onSortHandler_ = function(event) {
-        console.log('Sorting by item: ' + event.itemId);
-    };
+        console.log('Sorting by item: '+ event.itemId);
+    }
 });
 
 /**
@@ -158,8 +158,8 @@ jQuery(function() {
             sm.lSearchResult.SearchResult.CssClass.ROOT
         );
 
-    if (root) {
+    if(root) {
         var searchResult = new sm.lSearchResult.SearchResult();
-        searchResult.decorate(root);
+        searchResult.decorate(root)
     }
 });
