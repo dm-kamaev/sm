@@ -51,6 +51,14 @@
   +school_id {label: "integer", color: "#3366ff"}
   +subject_id {label: "integer", color: "#3366ff"}
 
+[olimp_result]
+  *id {label: "integer", color: "#006600",}
+  type {label: "enum"}  
+  stage {label: "integer"}  
+  class {label: "integer"}  
+  status {label: "enum"}  
+  year {label: "integer"}  
+
 [ege_result]
   *id {label: "integer", color: "#006600",}
   year {label: "integer"}
@@ -108,7 +116,9 @@ city_result 1--1 subject
 comment 1--? rating
 school 1--* rating
 school 1--* gia_result
+school 1--* olimp_result
 school 1--* ege_result
+olimp_result 1--1 subject
 gia_result 1--1 subject
 ege_result 1--1 subject
 school_university *--1 school

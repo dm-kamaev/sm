@@ -77,6 +77,18 @@ exports.searchSchool = async (params => {
             }
         });
     } 
+
+    if (searchParams.olimp) {
+        searchDataCount++;
+        includeParams.searchData.where.$or.push({ 
+            $and: {
+                type: 'olimp',
+                values: {
+                    $contains: searchParams.olimp
+                }
+            }
+        });
+    } 
     
     var params = {
         where: whereParams,
@@ -100,3 +112,10 @@ exports.addGia = async(function(schoolId, values) {
     }));
 });
 
+exports.addOlimp = async(function(schoolId, values) {
+    await (models.SearchData.create({
+        schoolId: schoolId,
+        type: enums.searchTypes.OLIMPIAD,
+        values: values
+    }));
+});

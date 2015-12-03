@@ -24,7 +24,8 @@ var generate = function (includes, emptyAttributes) {
       cityResult: models.CityResult,
       giaResults: models.GiaResult,
       ratings: models.Rating,
-      searchData: models.SearchData
+      searchData: models.SearchData,
+      olimpResults: models.OlimpResult
     };
 
     var result = [];
