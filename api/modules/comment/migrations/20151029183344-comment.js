@@ -23,7 +23,7 @@ module.exports = {
       user_type: {
         allowNull: false,
         type: Sequelize.ENUM,//('Parent','Graduate','Scholar'),
-        values: enums.posterType.toArray() 
+        values: enums.authorType.toArray() 
       },
       score: {
         allowNull: false,

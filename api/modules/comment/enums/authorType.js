@@ -1,7 +1,8 @@
 var enums = require.main.require('./app/components/enums');
 module.exports = {
-    enumName: 'posterType',
+    enumName: 'authorType',
     __proto__: enums.enumPrototype,
+
     PARENT: 'Parent',
     SCHOLAR: 'Scholar',
     GRADUATE: 'Graduate'

@@ -6,9 +6,9 @@ var DataType = require('sequelize'),
 var Comment = db.define('Comment', {
     text: DataType.TEXT,
     userType: {
-        field: "user_type",
+        field: 'user_type',
         type: DataType.ENUM,
-        values: enums.posterType.toArray()
+        values: enums.authorType.toArray()
     }
 }, {
     underscored: true,
@@ -21,7 +21,7 @@ var Comment = db.define('Comment', {
             Comment.belongsTo(models.Rating, {
                 as: 'rating',
                 foreignKey: 'rating_id'
-            })
+            });
         }
     }
 });
