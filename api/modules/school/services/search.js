@@ -4,6 +4,7 @@ var models = require.main.require('./app/components/models').all;
 var services = require.main.require('./app/components/services').all;
 var sequelizeInclude = require.main.require('./api/components/sequelizeInclude');  
 var colors = require('colors');
+var enums = require.main.require('./app/components/enums').all;
 
 exports.name = 'search';
 
@@ -122,7 +123,7 @@ exports.searchSchool = async (params => {
         searchDataCount++;
         includeParams.searchData.where.$or.push({ 
             $and: {
-                type: 'gia',
+                type: enums.searchTypes.GIA,
                 values: {
                     $contains: searchParams.gia
                 }
@@ -134,9 +135,21 @@ exports.searchSchool = async (params => {
         searchDataCount++;
         includeParams.searchData.where.$or.push({ 
             $and: {
-                type: 'ege',
+                type: enums.searchTypes.EGE,
                 values: {
                     $contains: searchParams.ege
+                }
+            }
+        });
+    } 
+
+    if (searchParams.olimp) {
+        searchDataCount++;
+        includeParams.searchData.where.$or.push({ 
+            $and: {
+                type: 'olimp',
+                values: {
+                    $contains: searchParams.olimp
                 }
             }
         });
@@ -159,8 +172,15 @@ exports.searchSchool = async (params => {
 exports.addGia = async(function(schoolId, values) {
     await (models.SearchData.create({
         schoolId: schoolId,
-        type: 'gia',
+        type: enums.searchTypes.GIA,
         values: values
     }));
 });
 
+exports.addOlimp = async(function(schoolId, values) {
+    await (models.SearchData.create({
+        schoolId: schoolId,
+        type: enums.searchTypes.OLIMPIAD,
+        values: values
+    }));
+});

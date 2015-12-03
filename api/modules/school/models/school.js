@@ -1,5 +1,6 @@
 var DataType = require('sequelize'),
-    db = require.main.require('./app/components/db');
+    db = require.main.require('./app/components/db'),
+    enums = require('../enums');
 
 var School = db.define('School', {
     name:DataType.STRING,
@@ -10,15 +11,9 @@ var School = db.define('School', {
     schoolType: {
         field: 'school_type',
         type: DataType.ENUM,
-        values: ['Школа', 
-                'Лицей', 
-                'Гимназия', 
-                'Центр образования', 
-                'Коррекционная школа', 
-                'Коррекционная школа-интернат', 
-                'Кадетская школа-интернат', 
-                'Кадетская школа'],
+        values: enums.schoolType.toArray(),
         allowNull: false
+
     },
     director: DataType.STRING,
     phones: DataType.ARRAY(DataType.STRING),
@@ -42,6 +37,9 @@ var School = db.define('School', {
         associate: function (models) {
             School.hasMany(models.GiaResult, {
                 as: 'giaResults', foreignKey: 'school_id'
+            });
+            School.hasMany(models.OlimpResult, {
+                as: 'olimpResults', foreignKey: 'school_id'
             });
             School.hasMany(models.EgeResult, {
                 as: 'egeResults', foreignKey: 'school_id'
