@@ -71,21 +71,16 @@ exports.list = async (function(req, res) {
             }
         });
 
-    var tSearch = '{{ name }}',
-        tItem = '{{ name }}',
-        tText = '{{ name }}',
-        tValue = '{{ id }}';
-
     var html = soy.render('sm.lSearchResult.Template.base', {
         params: {
             data: {
                 schools: schoolList
             },
             templates: {
-                search: tSearch,
-                item: tItem,
-                text: tText,
-                value: tValue
+                search: '{{ name }}',
+                item: '{{ name }}',
+                text: '{{ name }}',
+                value: '{{ id }}'
             }
         }
     });
@@ -217,22 +212,17 @@ exports.view = async (function(req, res) {
 });
 
 exports.search = async(function(req, res) {
-    var exampleList = ['Поварская, 14', 'Школа 123', 'Савеловская', 'Лицей'],
-        tSearch = '{{ name }}',
-        tItem = '{{ name }}',
-        tText = '{{ name }}',
-        tValue = '{{ id }}';
-
+    var exampleList = ['Поварская, 14', 'Школа 123', 'Савеловская', 'Лицей'];
 
     var html = soy.render('sm.lSearch.Template.base', {
           params: {
               currentCity: 'Москва',
               examples: exampleList,
               templates: {
-                  search: tSearch,
-                  item: tItem,
-                  text: tText,
-                  value: tValue
+                  search: '{{ name }}',
+                  item: '{{ name }}',
+                  text: '{{ name }}',
+                  value: '{{ id }}'
               }
           }
     });

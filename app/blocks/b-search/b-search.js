@@ -34,8 +34,7 @@ goog.scope(function() {
         ROOT: 'b-search',
         INPUT: 'b-search__input',
         LIST: 'b-search__list',
-        LIST_HIDE: 'b-search__list_hidden',
-        SUGGEST: 'g-suggest'
+        LIST_HIDE: 'b-search__list_hidden'
     };
 
     /**
@@ -53,11 +52,15 @@ goog.scope(function() {
     Search.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
 
-
         var ui = gorod.iUIInstanceStorage.UIInstanceStorage.getInstance();
         var suggest = goog.dom.getElementByClass(gorod.gSuggest.Suggest.Css.ROOT);
-
         var suggestInstance = ui.getInstanceByElement(suggest);
+
+        suggestInstance.addEventListener(
+            gorod.gSuggest.Suggest.Events.SELECT,
+            this.redirect_
+        );
+
         suggestInstance.setCallback('getData', function(elem) {
             return JSON.parse(elem);
         });
@@ -71,29 +74,9 @@ goog.scope(function() {
     };
 
     /**
-     * Show list
-     * @private
+     *
      */
-    Search.prototype.showList_ = function() {
-        var list = goog.dom.getElementByClass(Search.CssClass.LIST);
-        goog.dom.classes.remove(list, Search.CssClass.LIST_HIDE);
-    };
-
-    /**
-     * Hide list
-     * @private
-     */
-    Search.prototype.hideList_ = function() {
-        var list = goog.dom.getElementByClass(Search.CssClass.LIST);
-        goog.dom.classes.add(list, Search.CssClass.LIST_HIDE);
-    };
-
-    /**
-     * Search function
-     * @private
-     */
-     Search.prototype.search_ = function() {
-        var list = goog.dom.getElementByClass(Search.CssClass.LIST);
-
-     }
+    Search.prototype.redirect_ = function(event, data) {
+        document.location.href = '/school/' + data.key;
+    }
 });
