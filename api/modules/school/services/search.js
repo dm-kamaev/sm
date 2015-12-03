@@ -16,6 +16,71 @@ exports.getSchoolRecords = async (function(id) {
 });
 
 /**
+ * Separate search string and remove symbols
+ */
+var getSearchSybstrings = function (string) {
+    string = string.replace(/[^\wа-яА-Я[:space:]]/g,'') //remove everything except letters, numbers and spaces
+    return string.split(' ');
+};
+
+
+/**
+ * @public
+ */
+exports.advancedSearch = async ((searchString) => {
+    searchString = searchString.toLowerCase();
+    var resSchools = [],
+        resAddresses = [],
+        resMetro = [],
+        resYandex = [];
+
+    var yandexRequest = services.yapi.request(searchString);
+
+    var schoolRequest = models.School.findAll({
+        where: {
+            $or: [{
+                name: {
+                    $like: '%' + searchString + '%'
+                }
+            }, {
+                fullName: {
+                    $like: '%' + searchString + '%'
+                }
+            }]
+        }
+    });
+
+    var addressRequest = models.Address.findAll({
+        where: {
+            name: {
+                $like: '%' + searchString + '%'
+            }
+        }
+    });
+
+    var metroRequest = models.Metro.findAll({
+        where: {
+            name: {
+                $like: '%' + searchString + '%'
+            }
+        }
+    });
+    
+    var results = await (yandexRequest,
+                        schoolRequest,
+                        addressRequest,
+                        metroRequest);
+
+    return {
+        geo: results[0],
+        schools: results[1],
+        address: results[2],
+        metro: results[3]
+    }
+});
+
+
+/**
  * @public
  */
 exports.searchSchool = async (params => {
