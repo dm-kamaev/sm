@@ -144,8 +144,7 @@ goog.scope(function() {
      * @private
      */
     SearchResult.prototype.onSortHandler_ = function(event) {
-        console.log('Sorting by item: ' + event.itemId);
-    };
+    }
 });
 
 /**

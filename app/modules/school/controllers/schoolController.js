@@ -89,7 +89,7 @@ exports.list = async (function(req, res) {
 });
 
 exports.view = async (function(req, res) {
-    var school = await (services.school.getAllById(req.params.id));
+    var school = await (services.school.viewOne(req.params.id));
     console.log(JSON.stringify(school).yellow);
 
     var commentGroup = school.CommentGroup ? school.CommentGroup.comments : [];
@@ -119,13 +119,16 @@ exports.view = async (function(req, res) {
             res: [0, 0, 0, 0]
         }).res;
 
-    function educationIntervalToString(interval) {
-        var begin = interval[0],
-            end = interval[1],
-            res = '';
 
-        if (begin > -1) {
+    function educationIntervalToString(interval) {
+        var res = '';
+
+        if (interval) {
+            var begin = interval[0],
+                end = interval[interval.length - 1];
+
             res += begin ? begin : 'Детский сад';
+
             if (end > begin) {
                 res += '–';
                 res += end;
@@ -170,7 +173,7 @@ exports.view = async (function(req, res) {
                         var type = [
                             'Образование',
                             'Преподаватели',
-                            'Доступность',
+                            'Инфраструктура',
                             'Атмосфера'
                         ];
                         return {
@@ -214,17 +217,21 @@ exports.view = async (function(req, res) {
 exports.search = async(function(req, res) {
     var exampleList = ['Поварская, 14', 'Школа 123', 'Савеловская', 'Лицей'];
 
+    var imagesList = ['images/l-search/advertising_1.png', 'images/l-search/article.png'];
+
     var html = soy.render('sm.lSearch.Template.base', {
           params: {
               currentCity: 'Москва',
               examples: exampleList,
-              templates: {
+              searchTemplates: {
                   search: '{{ name }}',
                   item: '{{ name }}',
                   text: '{{ name }}',
                   value: '{{ id }}'
-              }
+              },
+              images: imagesList
           }
+
     });
     res.header("Content-Type", "text/html; charset=utf-8");
     res.end(html);
