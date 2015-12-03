@@ -1,5 +1,6 @@
 var DataType = require('sequelize'),
-    db = require.main.require('./app/components/db');
+    db = require.main.require('./app/components/db'),
+    enums = require('../enums');
 
 var School = db.define('School', {
     name:DataType.STRING,
@@ -10,15 +11,9 @@ var School = db.define('School', {
     schoolType: {
         field: 'school_type',
         type: DataType.ENUM,
-        values: ['Школа', 
-                'Лицей', 
-                'Гимназия', 
-                'Центр образования', 
-                'Коррекционная школа', 
-                'Коррекционная школа-интернат', 
-                'Кадетская школа-интернат', 
-                'Кадетская школа'],
+        values: enums.schoolType.toArray(),
         allowNull: false
+
     },
     director: DataType.STRING,
     phones: DataType.ARRAY(DataType.STRING),

@@ -247,7 +247,7 @@ var rowToGIA = (row) => {
  * */
 var parseSchool = async((schoolData) => {
     var school = await(services.school.getForParse(
-             schoolData.goverment_key));
+             schoolData.govermentKey));
     return school ?
         await (services.school.update(school, schoolData)) :
         await (services.school.create(schoolData));
