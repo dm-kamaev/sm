@@ -74,7 +74,7 @@ exports.list = async (function(req, res) {
     var tSearch = '{{ name }}',
         tItem = '{{ name }}',
         tText = '{{ name }}',
-        tValue = '{{ id }}'
+        tValue = '{{ id }}';
 
     var html = soy.render('sm.lSearchResult.Template.base', {
         params: {
@@ -217,17 +217,23 @@ exports.view = async (function(req, res) {
 });
 
 exports.search = async(function(req, res) {
-    var exampleList = ['Поварская, 14', 'Школа 123', 'Савеловская', 'Лицей'];
-    var searchString = {
-                14: 'Вера',
-                76: 'Надежда',
-                829: 'Любовь'
-            };
+    var exampleList = ['Поварская, 14', 'Школа 123', 'Савеловская', 'Лицей'],
+        tSearch = '{{ name }}',
+        tItem = '{{ name }}',
+        tText = '{{ name }}',
+        tValue = '{{ id }}';
+
+
     var html = soy.render('sm.lSearch.Template.base', {
           params: {
               currentCity: 'Москва',
               examples: exampleList,
-              search: searchString
+              templates: {
+                  search: tSearch,
+                  item: tItem,
+                  text: tText,
+                  value: tValue
+              }
           }
     });
     res.header("Content-Type", "text/html; charset=utf-8");

@@ -109,14 +109,6 @@ goog.scope(function() {
         var bSearchInstance = new Search();
         this.addChild(bSearchInstance);
         bSearchInstance.decorate(bSearch);
-
-        // var sgst = goog.dom.getElementByClass('g-suggest');
-        // var suggest = new gorod.gSuggest.Suggest(sgst);
-        // suggest.init();
-        // suggest.setCallback('getData', function(elem) {
-        //     console.log('awd');
-        //     return elem;
-        // });
     };
 
     /**

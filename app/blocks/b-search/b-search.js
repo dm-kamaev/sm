@@ -53,32 +53,10 @@ goog.scope(function() {
     Search.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
 
-        // goog.events.listen(
-        //     goog.dom.getElementByClass(Search.CssClass.INPUT),
-        //     goog.events.EventType.KEYPRESS,
-        //     function() { console.log('pressed'); },
-        //     false,
-        //     this
-        // );
-        //
-        // goog.events.listen(
-        //     goog.dom.getElementByClass(Search.CssClass.INPUT),
-        //     goog.events.EventType.FOCUS,
-        //     this.showList_,
-        //     false,
-        //     this
-        // );
-        //
-        // goog.events.listen(
-        //     goog.dom.getElementByClass(Search.CssClass.INPUT),
-        //     goog.events.EventType.BLUR,
-        //     this.hideList_,
-        //     false,
-        //     this
-        // );
 
         var ui = gorod.iUIInstanceStorage.UIInstanceStorage.getInstance();
         var suggest = goog.dom.getElementByClass(gorod.gSuggest.Suggest.Css.ROOT);
+
         var suggestInstance = ui.getInstanceByElement(suggest);
         suggestInstance.setCallback('getData', function(elem) {
             return JSON.parse(elem);
@@ -90,31 +68,6 @@ goog.scope(function() {
      */
     Search.prototype.exitDocument = function() {
         goog.base(this, 'exitDocument');
-
-        // goog.events.unlisten(
-        //     goog.dom.getElementByClass(Search.CssClass.INPUT),
-        //     goog.events.EventType.KEYPRESS,
-        //     function() {
-        //         console.log('pressed');
-        //         this.search_;
-        //     }
-        // );
-        //
-        // goog.events.unlisten(
-        //     goog.dom.getElementByClass(Search.CssClass.INPUT),
-        //     goog.events.EventType.FOCUS,
-        //     this.showList_,
-        //     false,
-        //     this
-        // );
-        //
-        // goog.events.unlisten(
-        //     goog.dom.getElementByClass(Search.CssClass.INPUT),
-        //     goog.events.EventType.BLUR,
-        //     this.hideList_,
-        //     false,
-        //     this
-        // );
     };
 
     /**

@@ -5,7 +5,12 @@
  * @param? params {
  *     currentCity: ?string,
  *     examples: ?list<string>,
- *     search: ?object
+ *     templates: [
+ *         search: ?string,
+ *         item: ?string,
+ *         text: ?string,
+ *         value: ?string
+ *      ]
  * }
  */
 {template .base autoescape="strict" kind="html"}
@@ -30,7 +35,12 @@
                     {call sm.lSearch.Template.search_}
                         {param params: [
                             'examples': $params.examples,
-                            'search': $params.search
+                            'templates': [
+                                'search': $params.templates.search,
+                                    'item': $params.templates.item,
+                                    'text': $params.templates.text,
+                                    'value': $params.templates.value
+                            ]
                         ]/}
                     {/call}
                     {call sm.lSearch.Template.banner_ /}
@@ -69,7 +79,11 @@
  * Search Template
  * @param? params {
  *     examples: ?list<string>,
- *     search: ?object
+ *     templates: [
+ *         search: ?string,
+ *         item: ?string,
+ *         text: ?string,
+ *         value: ?string
  * }
  */
 {template .search_ autoescape="strict" kind="html" private="true"}
@@ -81,7 +95,12 @@
                     {param params: [
                         'placeholder': '',
                         'theme': 'main',
-                        'search': $params.search
+                        'templates': [
+                            'search': $params?.templates.search,
+                            'item': $params?.templates.item,
+                            'text': $params?.templates.text,
+                            'value': $params?.templates.value
+                        ]
                     ]/}
                 {/call}
             </div>
