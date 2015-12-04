@@ -3,7 +3,6 @@ const https = require('https');
 const colors = require('colors');
 const async = require('asyncawait/async');
 const await = require('asyncawait/await');
-const readlineSync = require('readline-sync');
 
 var Common = function() {};
 
@@ -24,6 +23,13 @@ Common.fileExists = function(filePath)
         return false;
     }
 };
+
+Common.checkFunctions = function(instanse) {
+    for (var prop in instanse){
+        if (typeof instanse[prop] === 'function')
+            console.log(colors.magenta(prop));         
+    }
+}
 
 Common.saveJson = (json, path) => {
     var js = JSON.stringify(json);

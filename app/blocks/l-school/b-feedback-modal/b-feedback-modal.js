@@ -81,9 +81,11 @@ goog.scope(function() {
      */
     FeedbackModal.prototype.clean = function() {
         this.textarea_.setValue('');
-        this.stars_.forEach(function(stars) {
+
+        for (var i = 0, stars; stars = this.stars_[i]; i++) {
             stars.setValue(0);
-        });
+        }
+
         this.removeRadioCheck_();
     };
 
@@ -263,12 +265,12 @@ goog.scope(function() {
         };
 
         /** checks parameters */
-        data.forEach(function(item) {
+        for (var i = 0, item; item = data[i]; i++) {
             var value = item.value,
                 name = item.name;
 
             validateList[name](value);
-        });
+        }
 
         return (isValid && isValidOpt);
     };

@@ -24,7 +24,9 @@ sm.lDoc.nDemo.bBlockFeedbackModal.BlockFeedbackModal = function(root) {
             goog.events.listen(
                 bouton,
                 goog.events.EventType.CLICK,
-                this.onClick_.bind(this)
+                this.onClick_,
+                false,
+                this
             );
         }
     }

@@ -17,10 +17,6 @@
     cursor: pointer;
 }
 
-.b-school-list__school:hover {
-    background-color: rgba(229, 229, 229, 0.58);
-}
-
 .b-school-list__school:last-child {
     border-bottom: none;
 }
@@ -40,6 +36,9 @@
 
 .b-school-list__school-name-wrap {
     width: 90%;
+
+    font-weight: 700;
+    font-family: 'Proxima', Arial, sans-serif;
 }
 
 .b-school-list__school-rating {
