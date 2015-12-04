@@ -6,7 +6,6 @@ var colors = require('colors');
 var exclusion = require('./parseConfig').exclusion;
 var commander = require('commander');
 
-// var modules = require.main.require('./api/modules');
 var services = require.main.require('./app/components/services').all;
 
 
@@ -25,7 +24,7 @@ var departmentParse = async(path => {
 
     schools.forEach(function(schoolElem) {
         console.log('PARSE SCHOOL'.magenta, schoolElem.abbreviation);
-        var addresses = schoolElem.addresses,
+        var addresses = await(schoolElem.getAddresses()),
             data = getMskobrData(schoolElem.abbreviation, mskobrData);
 
         var department = [];
@@ -63,7 +62,7 @@ var mkobrRowToObject = row => {
  * Get schools from BD
  */
 var getSchoolList = () => {
-    return await(services.school.get());
+    return await(services.school.list());
 };
 
 

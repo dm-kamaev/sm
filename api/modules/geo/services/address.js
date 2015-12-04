@@ -36,6 +36,10 @@ exports.getMetro = (address) => {
     return address.metroStations;
 };
 
+exports.getDepartment = (address) => {
+    return address.department;
+};
+
 exports.setMetro = async((address, metroArr) => {
     //console.log(address);
     metroArr.forEach(metro => {

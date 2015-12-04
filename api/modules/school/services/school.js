@@ -77,7 +77,9 @@ service.getForParse = async((govKeyId) => {
  */
 service.viewOne = function(id) {
     var includeParams = {
-        addresses: true,
+        addresses: {
+            department: true
+        },
         ratings: true
     };
     return await(models.School.findOne({

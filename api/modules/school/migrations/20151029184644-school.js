@@ -20,9 +20,6 @@ module.exports = {
         name: {
             type: Sequelize.STRING,
         },
-        abbreviation: {
-            type: Sequelize.STRING,
-        },
         full_name: {
             type: Sequelize.STRING,
         },
