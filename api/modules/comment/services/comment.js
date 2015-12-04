@@ -5,7 +5,6 @@ var services = require.main.require('./app/components/services').all;
 
 exports.name = 'comment';
 exports.create = async (function(commentGroupId, params) {
-    var result = '';
     try {
         var comment = await (models.Comment.create({
             comment_group_id: commentGroupId,
@@ -17,17 +16,14 @@ exports.create = async (function(commentGroupId, params) {
                 as: 'rating'
             }]
         }));
-        console.log('comment', JSON.stringify(comment).blue);
         if (params.rating) {
-            //comment.setRating(params.rating)
             params.rating.setComment(comment);
+            params.rating.setSchool(comment.school);
         }
-        result = 'success';
+        return {result: 'success'};
     } catch (e) {
-        console.log(e);
-        result = e.message;
-    } finally {
-        return result;
+        console.log(e.message);
+        throw e;
     }
 });
 

@@ -3,16 +3,42 @@
  * Search template
  * @param? params {
  *    placeholder: ?string,
- *    theme: ?string
+ *    theme: ?string,
+ *    templates: ?{
+ *        search: ?string,
+ *        item: ?string,
+ *        text: ?string,
+ *        value: ?string
+ *    }
  * }
  */
 {template .base autoescape="strict" kind="html"}
     <div class="b-search b-search_theme_{$params.theme}">
         {if $params.theme == 'main'}
-            <span class="b-icon_img_arrow b-search__icon"></span>
+            //TODO: uncomment
+            //<span class="b-icon_img_arrow b-search__icon"></span>
         {else}
             <span class="b-icon_img_search b-search__icon"></span>
         {/if}
-        <input class="b-search__input" placeholder="{$params.placeholder}" />
+        {call gorod.gSuggest.SuggestTemplate.render}
+            {param params: [
+                'data': [
+                    'minLength': 3,
+                    'placeholder': 'Поиск',
+                    'sourceUrl': '/api/school/search',
+                    'argName': 'searchParams[name]',
+                    'args': ['name']
+                ],
+                'config': [
+                    'customClasses': 'b-search__input',
+                    'templates': [
+                        'search': $params.templates.search,
+                        'item': $params.templates.item,
+                        'text': $params.templates.text,
+                        'value': $params.templates.value
+                    ]
+                ]
+            ]/}
+        {/call}
     </div>
 {/template}

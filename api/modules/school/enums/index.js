@@ -1,3 +1,3 @@
-var enums = require.main.require('./app/components/enums');
+var enums = require.main.require('./api/components/enums');
 
 module.exports = enums.initEnums(__dirname);

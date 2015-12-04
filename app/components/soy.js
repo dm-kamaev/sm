@@ -2,7 +2,7 @@ var os = require('os'),
     path = require('path'),
     soynode = require('soynode');
 
-global.CLOSURE_BASE_PATH = path.normalize('node_modules/closure-library/closure/goog/');
+global.CLOSURE_BASE_PATH = path.normalize('node_modules/google-closure-library/closure/goog/');
 
 soynode.setOptions({
     outputDir: os.tmpdir(),
