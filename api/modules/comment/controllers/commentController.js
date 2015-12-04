@@ -56,9 +56,17 @@ exports.list = async(function(req, res) {
  *     }
  */
 exports.create = async(function(req, res) {
-    var groupID = req.params.id;
-    var params = req.body;
-    var comment = await(services.comment.create(groupID, params));
-    res.header('Content-Type', 'text/html; charset=utf-8');
-    res.end(JSON.stringify(comment));
+    var result;
+    try {
+        var groupID = req.params.id;
+        var params = req.body;
+        result = JSON.stringify(
+            await(services.comment.create(groupID, params))
+            );
+    } catch(e) {
+        result = e.message;
+    } finally {
+        res.header('Content-Type', 'text/html; charset=utf-8');
+        res.end(result);
+    }
 });
