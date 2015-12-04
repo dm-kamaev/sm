@@ -140,6 +140,31 @@ exports.view = async (function(req, res) {
     }
 
 
+    function getAdressesHasStage(addressList) {
+        var adressesHasStage = [];
+
+        addressList.forEach(function(address) {
+            var department = await(services.address.getDepartment(address));
+            console.log('department'.yellow, department);
+            if (department.length > 0) {
+                var departmentStage = department[0].dataValues.stage;
+                console.log('departmentStage'.cyan, departmentStage);
+
+                if (departmentStage === 'Начальное образование') {
+                    adressesHasStage.push(address);
+                }
+
+                else if (departmentStage === 'Основное и среднее') {
+                    adressesHasStage.push(address);
+                }
+            }
+        });
+        // console.log('adressesHasStage'.magenta, adressesHasStage);
+        return adressesHasStage;
+    }
+
+
+    var adressesHasStage = getAdressesHasStage(school.addresses);
     var params = {
         data: {
             id: school.id,
@@ -156,7 +181,7 @@ exports.view = async (function(req, res) {
                 link: school.site
             }],
             contacts:{
-                address: school.addresses.map(address => {
+                address: adressesHasStage.map(address => {
                     return {
                         title: '',
                         description: address.name
@@ -205,7 +230,7 @@ exports.view = async (function(req, res) {
         }
     };
 
-    console.log(params.data);
+    // console.log(params.data);
 
     res.header("Content-Type", "text/html; charset=utf-8");
     res.end(
