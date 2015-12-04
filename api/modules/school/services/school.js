@@ -4,7 +4,7 @@ var await = require('asyncawait/await');
 var models = require.main.require('./app/components/models').all;
 var services = require.main.require('./app/components/services').all;
 var sequelize  = require.main.require('./app/components/db');
-var sequelizeInclude = require.main.require('./api/components/sequelizeInclude');  
+var sequelizeInclude = require.main.require('./api/components/sequelizeInclude');
 var transaction = require.main.require('./api/components/transaction.js');
 
 var service = {
@@ -26,7 +26,6 @@ service.getGroupId = async (function(school, t) {
     }
     return instance.comment_group_id;
 });
-
 
 
 service.getAddresses = async (school => {
@@ -66,26 +65,28 @@ service.getForParse = async((govKeyId) => {
     };
     return await(models.School.findOne({
         where: {
-            govermentKey: govKeyId       
-        }, 
+            govermentKey: govKeyId
+        },
         include: sequelizeInclude(includeParams)
     }));
 });
+
 
 /**
  * @public
  */
 service.viewOne = function(id) {
     var includeParams = {
-        addresses: true,
+        addresses: {
+            department: true
+        },
         ratings: true
     };
     return await(models.School.findOne({
         where: {id: id},
-        include: sequelizeInclude(includeParams) 
+        include: sequelizeInclude(includeParams)
     }));
 };
-
 
 
 service.create = async (params => {
@@ -120,7 +121,7 @@ service.comment = async (function(schoolId, params, t) {
         where: {id: schoolId},
         include: sequelizeInclude(includeParams)
     }, {transaction: t}));
-    
+
     console.log(school);
     var commentGroup = await(service.getGroupId(school, t));
     console.log(commentGroup);

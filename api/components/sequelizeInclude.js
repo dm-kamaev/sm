@@ -25,11 +25,12 @@ var generate = function (includes, emptyAttributes) {
       giaResults: models.GiaResult,
       ratings: models.Rating,
       searchData: models.SearchData,
-      olimpResults: models.OlimpResult
+      olimpResults: models.OlimpResult,
+      department: models.Department
     };
 
     var result = [];
-    for (var prop in includes){ 
+    for (var prop in includes){
         if (prop != 'where') {
             var modelInList = dictionary[prop] /*|| models[prop]*/;
             if (!modelInList)

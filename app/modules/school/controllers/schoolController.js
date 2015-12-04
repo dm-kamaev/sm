@@ -140,6 +140,8 @@ exports.view = async (function(req, res) {
     }
 
 
+    getAddresses(school.addresses);
+
     var params = {
         data: {
             id: school.id,
