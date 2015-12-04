@@ -4,7 +4,7 @@ var await = require('asyncawait/await');
 var models = require.main.require('./app/components/models').all;
 var services = require.main.require('./app/components/services').all;
 var sequelize  = require.main.require('./app/components/db');
-var sequelizeInclude = require.main.require('./api/components/sequelizeInclude');  
+var sequelizeInclude = require.main.require('./api/components/sequelizeInclude');
 var transaction = require.main.require('./api/components/transaction.js');
 
 var service = {
@@ -66,8 +66,8 @@ service.getForParse = async((govKeyId) => {
     };
     return await(models.School.findOne({
         where: {
-            govermentKey: govKeyId       
-        }, 
+            govermentKey: govKeyId
+        },
         include: sequelizeInclude(includeParams)
     }));
 });
@@ -82,7 +82,7 @@ service.viewOne = function(id) {
     };
     return await(models.School.findOne({
         where: {id: id},
-        include: sequelizeInclude(includeParams) 
+        include: sequelizeInclude(includeParams)
     }));
 };
 
@@ -120,7 +120,7 @@ service.comment = async (function(schoolId, params, t) {
         where: {id: schoolId},
         include: sequelizeInclude(includeParams)
     }, {transaction: t}));
-    
+
     console.log(school);
     var commentGroup = await(service.getGroupId(school, t));
     console.log(commentGroup);
@@ -148,12 +148,51 @@ service.list = async (function() {
     };
     var schools = await (models.School.findAll(
         {
+            // include: [{
+            //     model: models.Rating,
+            //     as: 'ratings',
+            //     attributes: {
+            //         include: [
+            //             [sequelize.fn('AVG',sequelize.col('"ratings"."score"[1]')),'score1']
+            //         ]
+            //     },
+            //
+            // }]
+
             order: [
                 ['id', 'ASC']
             ],
             include: sequelizeInclude(includeParams)
         }
     ));
+
+    var avgScore = function(scores) {
+        var length = scores.length,
+            result = 0;
+        for (var i = 0; i < length; i++) {
+            result += scores[i];
+        }
+        return (result / length);
+    }
+
+    var avgRating = function(ratings) {
+        var result = 0;
+        if (ratings.length > 0) {
+            length = ratings.length;
+        } else {
+            return 0;
+        }
+
+        for (var i = 0; i < length; i++) {
+            result += avgScore(ratings[i].score);
+        }
+        return (result / length);
+    }
+
+    schools.sort(function(a, b) {
+        return (avgRating(b.ratings) - avgRating(a.ratings));
+    });
+
     return schools;
 });
 
