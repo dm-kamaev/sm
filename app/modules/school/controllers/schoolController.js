@@ -75,6 +75,12 @@ exports.list = async (function(req, res) {
         params: {
             data: {
                 schools: schoolList
+            },
+            templates: {
+                search: '{{ name }}',
+                item: '{{ name }}',
+                text: '{{ name }}',
+                value: '{{ id }}'
             }
         }
     });
@@ -210,13 +216,22 @@ exports.view = async (function(req, res) {
 
 exports.search = async(function(req, res) {
     var exampleList = ['Поварская, 14', 'Школа 123', 'Савеловская', 'Лицей'];
+
     var imagesList = ['images/l-search/advertising_1.png', 'images/l-search/article.png'];
+
     var html = soy.render('sm.lSearch.Template.base', {
-      params: {
-          currentCity: 'Москва',
-          examples: exampleList,
-          images: imagesList
-      }
+          params: {
+              currentCity: 'Москва',
+              examples: exampleList,
+              searchTemplates: {
+                  search: '{{ name }}',
+                  item: '{{ name }}',
+                  text: '{{ name }}',
+                  value: '{{ id }}'
+              },
+              images: imagesList
+          }
+
     });
     res.header("Content-Type", "text/html; charset=utf-8");
     res.end(html);
