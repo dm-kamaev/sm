@@ -1,5 +1,5 @@
 'use strict';
-var enums = require('../enums');
+var authorType = require('../../api/modules/comment/enums/authorType');
 module.exports = {
   up: function (queryInterface, Sequelize) {
     return queryInterface.createTable('comment', {
@@ -23,7 +23,7 @@ module.exports = {
       user_type: {
         allowNull: false,
         type: Sequelize.ENUM,//('Parent','Graduate','Scholar'),
-        values: enums.authorType.toArray() 
+        values: authorType.toArray() 
       },
       score: {
         allowNull: false,

@@ -25,7 +25,7 @@ exports.enumPrototype = {
         var res = [];
         for (var prop in this) {
             if (prop != 'prototype' && 
-                typeof prop != 'function' &&
+                typeof this[prop] != 'function' &&
                 prop != 'enumName')
                 res.push(this[prop])
         }

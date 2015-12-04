@@ -8,7 +8,8 @@ const fs = require('fs');
 const common = require.main.require('./console/common');
 const services = require.main.require('./app/components/services').all;
 const ProgressBar = require('progress');
-const enums = require.main.require('./app/components/enums').all;
+const searchType = require.main.require('./api/modules/school/enums/searchType');
+console.log(searchType);
 var sequelize = require.main.require('./app/components/db');
     
 var start = function() {
@@ -65,7 +66,7 @@ function OlimpSchool(school, isRewriting){
     this.olimpResults = await (this.school.getOlimpResults());
     this.dbOlimpRecord =
             await(services.search.getSchoolRecords(this.school.id))
-                .find(rec => rec.type == 'olimp'); //TODO: enum controller
+                .find(rec => rec.type == searchType.OLIMPIAD); 
     this.resultSubjects = [];
     this.process = async(function() {
         if (!this.dbGiaRecord || this.isRewriting){
@@ -108,7 +109,7 @@ function GiaSchool(school, citySubjects, isRewriting){
     this.citySubjects = citySubjects;
     this.dbGiaRecord =
             await(services.search.getSchoolRecords(this.school.id))
-                .find(rec => rec.type == enums.searchType.GIA);
+                .find(rec => rec.type == searchType.GIA);
     this.resultSubjects = [];
     this.process = async(function() {
         if (!this.dbGiaRecord || this.isRewriting){
