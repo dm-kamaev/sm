@@ -17,30 +17,29 @@
 .l-search-result__left-menu {
     float: left;
 
-    width: 34%;
+    width: 380px;
 
     text-align: center;
 }
 
 .l-search-result__school-list {
-    float: left;
+    float: right;
 
-    width: 66%;
+    width: 762px;
 }
 
 .l-search-result__search {
     float: left;
 
-    width: 33%;
+    width: 380px;
     height: 100%;
-
-    text-align: left;
+    margin-right: 50px;
 }
 
 .l-search-result__show-on-map {
     float: left;
 
-    width: 34%;
+    width: 31%;
     height: 100%;
 }
 
@@ -65,7 +64,7 @@
     float: left;
 
     margin-top: 5%;
-    margin-left: 5%;
+    margin-left: 3%;
 }
 
 .l-search-result__sort {
@@ -73,6 +72,10 @@
 
     width: 33%;
     height: 100%;
+    padding-top: 26px;
 
     text-align: right;
+
+    font-family: arial;
+    font-size: 13px;
 }
