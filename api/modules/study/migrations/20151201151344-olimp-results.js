@@ -1,5 +1,7 @@
 'use strict';
 
+var olimpType = require('../../api/modules/study/enums/olimpType'),
+    olimpStatusType = require('../../api/modules/study/enums/olimpStatusType');
 module.exports = {
     up: function (queryInterface, Sequelize) {
         return queryInterface.createTable('olimp_result', {
@@ -25,7 +27,7 @@ module.exports = {
             },
             type: {
                 type: Sequelize.ENUM,
-                values: ['всероссийская', 'московская'],
+                values: olimpType.toArray()
             },
             stage: {
                 type: Sequelize.INTEGER
@@ -35,7 +37,7 @@ module.exports = {
             },
             status: {
                 type: Sequelize.ENUM,
-                values: ['победитель', 'призер']
+                values: olimpStatusType.toArray()
             },
             year: {
                 type: Sequelize.INTEGER

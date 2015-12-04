@@ -4,8 +4,7 @@ var models = require.main.require('./app/components/models').all;
 var services = require.main.require('./app/components/services').all;
 var sequelizeInclude = require.main.require('./api/components/sequelizeInclude');  
 var colors = require('colors');
-var enums = require.main.require('./app/components/enums').all;
-
+var searchTypes = require.main.require('./api/modules/school/enums/searchType');
 exports.name = 'search';
 
 exports.getSchoolRecords = async (function(id) {
@@ -58,7 +57,7 @@ exports.searchSchool = async (params => {
         searchDataCount++;
         includeParams.searchData.where.$or.push({ 
             $and: {
-                type: enums.searchTypes.GIA,
+                type: searchTypes.GIA,
                 values: {
                     $contains: searchParams.gia
                 }
@@ -70,7 +69,7 @@ exports.searchSchool = async (params => {
         searchDataCount++;
         includeParams.searchData.where.$or.push({ 
             $and: {
-                type: enums.searchTypes.EGE,
+                type: searchTypes.EGE,
                 values: {
                     $contains: searchParams.ege
                 }
@@ -82,7 +81,7 @@ exports.searchSchool = async (params => {
         searchDataCount++;
         includeParams.searchData.where.$or.push({ 
             $and: {
-                type: 'olimp',
+                type: searchTypes.OLIMP,
                 values: {
                     $contains: searchParams.olimp
                 }
@@ -107,7 +106,7 @@ exports.searchSchool = async (params => {
 exports.addGia = async(function(schoolId, values) {
     await (models.SearchData.create({
         schoolId: schoolId,
-        type: enums.searchTypes.GIA,
+        type: searchTypes.GIA,
         values: values
     }));
 });
@@ -115,7 +114,7 @@ exports.addGia = async(function(schoolId, values) {
 exports.addOlimp = async(function(schoolId, values) {
     await (models.SearchData.create({
         schoolId: schoolId,
-        type: enums.searchTypes.OLIMPIAD,
+        type: searchTypes.OLIMPIAD,
         values: values
     }));
 });
