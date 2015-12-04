@@ -1,12 +1,12 @@
 'use strict';
-var enums = require('../enums');
+var schoolType = require('../../api/modules/school/enums/schoolType');
 
 module.exports = {
   up: function (queryInterface, Sequelize) {
     return queryInterface.addColumn('school', 'school_type',
     {
         type: Sequelize.ENUM,
-        values: enums.schoolType.toArray(), 
+        values: schoolType.toArray(), 
         //allowNull: false
     });
   },

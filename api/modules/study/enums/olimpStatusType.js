@@ -1,10 +1,9 @@
 var enums = require('../../../components/enums');
 module.exports = {
-    enumName: 'searchType',
+    enumName: 'olimpStatusType',
     __proto__: enums.enumPrototype,
 
-    EGE: 'ege',
-    GIA: 'gia',
-    OLIMPIAD: 'olimp'
+    WINNER: 'победитель',
+    AWARDED: 'призер',
 };
 
