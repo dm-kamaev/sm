@@ -53,12 +53,11 @@
  */
 {template .school_ autoescape="strict" kind="html" private="true"}
     <div class="b-school-list__school"
-         data-id="{$params.id}"
-         data-params="
-         {call gorod.iUtils.stringify}
+        data-params="
+        {call gorod.iUtils.stringify}
             {param json: $params /}
-         {/call}
-         ">
+        {/call}
+        ">
 
         <div class="b-school-list__school-name">
             <div class="b-school-list__school-name-wrap">

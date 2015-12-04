@@ -99,10 +99,6 @@ goog.scope(function() {
         this.addChild(this.schoolList_);
         this.schoolList_.decorate(bSchoolList);
 
-        /*var bSchoolListInstance = new SchoolList();
-        this.addChild(bSchoolListInstance);
-        bSchoolListInstance.decorate(bSchoolList);
-*/
         //sort
         var sortElement = goog.dom.getElementByClass(
             Sort.CssClass.ROOT,
@@ -110,7 +106,7 @@ goog.scope(function() {
         );
         this.sort_ = new Sort();
         this.addChild(this.sort_);
-        //this.sort_.decorate(sortElement);
+        this.sort_.decorate(sortElement);
         //TODO fix decorate
 
         var bSearch = goog.dom.getElementByClass(
@@ -154,10 +150,9 @@ goog.scope(function() {
      * @param {Object} event
      * @private
      */
-    SearchResult.prototype.onSortHandler_ = function(event) {
-        var key = event.currentTarget.getAttribute('type');
+    SearchResult.prototype.onSortHandler_ = function(event, data) {
+        console.log(event.itemId);
 
-        this.schoolList_.sort(key);
     }
 });
 

@@ -6,6 +6,7 @@ goog.require('goog.events');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
 goog.require('sm.bRating.Rating');
+//goog.require('sm.lSearchResult.bSchoolList.ListElement');
 goog.require('sm.lSearchResult.bSchoolList.Template');
 
 /**
@@ -25,9 +26,9 @@ sm.lSearchResult.bSchoolList.SchoolList = function(opt_params) {
     this.params_ = opt_params || {};
 
     /**
-     * School elements
-     * @type {Array.<Element>}
+     * Array of instances of list elements
      * @private
+     * @type {Array.<sm.lSearchResult.bSchoolList.ListElement>}
      */
     this.schoolElements_ = [];
 };
@@ -115,7 +116,7 @@ goog.scope(function() {
 
     /**
      * Sort handler
-     * @param {string} Sort key
+     * @param {string} sortKey
      * @public
      */
     SchoolList.prototype.sort = function(sortKey) {
@@ -149,7 +150,9 @@ goog.scope(function() {
      * @private
      */
     SchoolList.prototype.redirect_ = function(event) {
-        var id = event.currentTarget.getAttribute('data-id');
-        document.location.href = '/school/' + id;
+        var params = event.currentTarget.getAttribute('data-params');
+        params = JSON.parse(params);
+        document.location.href = '/school/' + params.id;
+        //TODO refactor this - make something like generation events by list-items with data-id in event
     };
 });
