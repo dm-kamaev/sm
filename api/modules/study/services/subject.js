@@ -48,6 +48,22 @@ exports.get = async ((subject, opt_option) => {
     return res;
 });
 
+exports.getOrCreate = async(name => {
+    name = name.toLowerCase();
+    var res = await (models.Subject.findOne({
+        where: {
+            name: name
+        }
+    }));
+    if (!res) {
+        res = await(models.Subject.create({
+            name: name
+        }));
+    }
+    return res;
+
+});
+
 /**
  * get all the subjects with city default gia results
  */
