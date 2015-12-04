@@ -64,6 +64,9 @@ exports.getOrCreate = async(name => {
 
 });
 
+exports.list = async (function(){
+    return await (models.Subject.findAll());
+}); 
 /**
  * get all the subjects with city default gia results
  */
