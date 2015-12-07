@@ -24,6 +24,34 @@ exports.getAddress = (departmentInstance) => {
 
 
 /**
+ * Get address array for certain stages
+ */
+exports.getAdressesHasStage = (addressList) => {
+    var addresses = addressList
+        .filter(address => {
+            var res = false;
+            if (address.departments.length > 0) {
+                address.departments.forEach(department => {
+                    if (department.stage == 'Начальное образование' ||
+                        department.stage == 'Основное и среднее') {
+                        console.log('address'.yellow, address.name);
+                        console.log('department'.yellow, department.stage);
+                        res = true;
+                    }
+                });
+            }
+            return res;
+        });
+
+    if (addresses.length < 1) {
+        addresses = addressList;
+    }
+
+    return addresses;
+};
+
+
+/**
  * Add address id dy department instance
  */
 exports.addAddress = (departmentInstance, addressId) => {
@@ -36,11 +64,11 @@ exports.addAddress = (departmentInstance, addressId) => {
  */
 exports.addAddressList = (departmentId, addressIdList) => {
     addressIdList.forEach(function(addressId) {
-    var params = {
-            address_id: addressId,
-            department_id: departmentId
-        };
-    var test = await(models.Department_address.create(params));
+        var params = {
+                address_id: addressId,
+                department_id: departmentId
+            };
+        await(models.Department_address.create(params));
     });
 };
 

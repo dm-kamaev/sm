@@ -139,52 +139,8 @@ exports.view = async (function(req, res) {
         return res;
     }
 
-
-    /**
-     * Get address array for certain stages
-     */
-    function getAdressesHasStage(addressList) {
-        var adressesHasStage = [];
-        addressList.forEach(function(address) {
-            var departments = address.dataValues.department;
-
-            if (departments.length > 0) {
-                departments.forEach(function(department) {
-                    var stage = department.dataValues.stage;
-
-                    if (stage === 'Начальное образование') {
-                        adressesHasStage.push(address);
-                    }
-
-                    if (stage === 'Основное и среднее') {
-                        adressesHasStage.push(address);
-                    }
-                });
-            }
-        });
-        return getUniqueArray(adressesHasStage);
-    }
-
-
-    /**
-     * Get array with unique data
-     */
-    function getUniqueArray(array) {
-        var obj_unique = {};
-        var arr_unique = [];
-
-        array.forEach(function(elem) {
-            obj_unique[elem] = elem;
-        });
-
-        for (var key in obj_unique) {
-            arr_unique.push(obj_unique[key]);
-        }
-        return arr_unique;
-    }
-
-
-    var adressesHasStage = getAdressesHasStage(school.addresses);
+    var adressesHasStage =
+            services.department.getAdressesHasStage(school.addresses);
     var params = {
         data: {
             id: school.id,
