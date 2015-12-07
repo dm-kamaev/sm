@@ -131,8 +131,19 @@ gulp.task('preSoy', function(cb) {
                 return stream;
             }));
     });
+/*
+    gulp.task('_soyApp', function () {
+        return gulp.src([
+            path.join(__dirname, '/node_modules/frobl/tmp/**//*.soy'),
+            path.join(__dirname, '/node_modules/frobl/blocks', '/**//*.soy')
+        ])
+            .pipe(soynode({
+                outputDir: path.join(__dirname, '/node_modules/frobl', '/tmp/soyApp'),
+                loadCompiledTemplates: false
+            }));
+    });*/
 
-    return gulpHelper.runSequence('_copy', '_extend', cb);
+    return gulpHelper.runSequence('_copy', '_extend', /*'_soyApp',*/ cb);
 });
 
 var getDirectories = function(srcpath)  {

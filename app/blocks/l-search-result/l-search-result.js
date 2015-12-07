@@ -6,7 +6,7 @@ goog.require('goog.events');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
 goog.require('sm.lSearchResult.Template');
-goog.require('sm.lSearchResult.bFilter.Filter');
+goog.require('sm.lSearchResult.bFilters.Filters');
 goog.require('sm.lSearchResult.bSchoolList.SchoolList');
 goog.require('sm.lSearchResult.bSort.Sort');
 
@@ -39,14 +39,14 @@ goog.scope(function() {
     var SearchResult = sm.lSearchResult.SearchResult,
         SchoolList = sm.lSearchResult.bSchoolList.SchoolList,
         Sort = sm.lSearchResult.bSort.Sort,
-        Filter = sm.lSearchResult.bFilter.Filter;
+        Filters = sm.lSearchResult.bFilters.Filters;
 
     /**
      * CSS-class enum
      * @enum {string}
      */
     SearchResult.CssClass = {
-        ROOT: 'l-search-result__body'
+        ROOT: 'l-search-result'
     };
 
     /**
@@ -84,10 +84,11 @@ goog.scope(function() {
 
         //school list
         var bSchoolList = goog.dom.getElementByClass(
-            SchoolList.CssClass.ROOT,
-            element
-        );
-        var bSchoolListInstance = new SchoolList();
+                SchoolList.CssClass.ROOT,
+                element
+            ),
+            bSchoolListInstance = new SchoolList();
+
         this.addChild(bSchoolListInstance);
         bSchoolListInstance.decorate(bSchoolList);
 
@@ -101,16 +102,14 @@ goog.scope(function() {
         this.sort_.decorate(sortElement);
 
         //filters
-        var filters = goog.dom.getElementsByClass(
-            Filter.CssClass.ROOT,
-            element
-        );
+        var filtersElement = goog.dom.getElementByClass(
+                Filters.CssClass.ROOT,
+                element
+            ),
+            filters = new Filters();
 
-        for (var i = 0, filter; i < filters.length; i++) {
-            filter = new Filter();
-            this.addChild(filter);
-            filter.decorate(filters[i]);
-        }
+        this.addChild(filters);
+        filters.decorate(filtersElement);
     };
 
     /**
@@ -119,25 +118,12 @@ goog.scope(function() {
     SearchResult.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
 
-        this.sort_.listen(
-            Sort.Event.ITEM_CLICK,
-            this.onSortHandler_,
-            false,
-            this
-        );
-
-    };
-
-    /**
-     * Clean up the Component.
-     */
-    SearchResult.prototype.exitDocument = function() {
-        goog.base(this, 'exitDocument');
-
-        this.sort_.unlisten(
+        this.getHandler().listen(
+            this.sort_,
             Sort.Event.ITEM_CLICK,
             this.onSortHandler_
         );
+
     };
 
     /**

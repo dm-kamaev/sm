@@ -1,0 +1,162 @@
+{namespace sm.lSearchResult.bFilters.Template}
+
+/**
+ * Filter template
+ * @param? params {
+ *     data: {
+ *         url: ?string
+ *     },
+ *     name: ?string,
+ *     filters: list<{
+ *         header: ?{
+ *             title: ?string,
+ *             help: ?string
+ *         },
+ *         data: ?{
+ *             filters: ?list<{
+ *                 label: ?string,
+ *                 value: ?string
+ *             }>,
+ *             filtersToShow: ?number
+ *         },
+ *         name: ?string
+ *     }>
+ * }
+ */
+{template .base autoescape="strict" kind="html"}
+    <form class="b-filters"
+          method="GET"
+          action="{$params?.data?.url ? $params.data.url : ''}"
+          name="{$params?.name ? $params.name : 'filters'}">
+        {call sm.lSearchResult.bFilterClasses.Template.base}
+            {param params: [
+                'header': [
+                    'title': 'В какой класс хотите отдать ребенка?'
+                ],
+                'name': 'classes'
+            ]/}
+        {/call}
+        {foreach $filter in $params.filters}
+            {call sm.lSearchResult.bFilter.Template.base}
+                {param params: $filter/}
+            {/call}
+        {/foreach}
+        {call sm.lSearchResult.bFilter.Template.base}
+            {param params: [
+                'header': [
+                    'title': 'Высокие результаты ЕГЭ',
+                    'help': 'help'
+                ],
+                'data': [
+                    'filters': [
+                        [
+                            'label': 'Математика',
+                            'value': '1'
+                        ],
+                        [
+                            'label': 'Русский',
+                            'value': '1'
+                        ],
+                        [
+                            'label': 'Физика',
+                            'value': '1'
+                        ],
+                        [
+                            'label': 'Литература',
+                            'value': '1'
+                        ],
+                        [
+                            'label': 'Химия',
+                            'value': '1'
+                        ],
+                        [
+                            'label': 'Англ. язык',
+                            'value': '1'
+                        ],
+                        [
+                            'label': 'Информатика',
+                            'value': '1'
+                        ],
+                        [
+                            'label': 'Обществознание',
+                            'value': '1'
+                        ],
+                        [
+                            'label': 'История',
+                            'value': '1'
+                        ],
+                        [
+                            'label': 'Биология',
+                            'value': '1'
+                        ],
+                        [
+                            'label': 'Кибернетика',
+                            'value': '1'
+                        ]
+                    ],
+                    'filtersToShow': 6
+                ],
+                'name': 'ege'
+            ]/}
+        {/call}
+        {call sm.lSearchResult.bFilter.Template.base}
+            {param params: [
+                'header': [
+                    'title': 'Есть победы в олимпиадах',
+                    'help': 'Есть победы в олимпиадах'
+                ],
+                'data': [
+                    'filters': [
+                        [
+                            'label': 'Математика',
+                            'value': '1'
+                        ],
+                        [
+                            'label': 'Русский',
+                            'value': '1'
+                        ],
+                        [
+                            'label': 'Физика',
+                            'value': '1'
+                        ],
+                        [
+                            'label': 'Литература',
+                            'value': '1'
+                        ],
+                        [
+                            'label': 'Химия',
+                            'value': '1'
+                        ],
+                        [
+                            'label': 'Англ. язык',
+                            'value': '1'
+                        ],
+                        [
+                            'label': 'Информатика',
+                            'value': '1'
+                        ],
+                        [
+                            'label': 'Обществознание',
+                            'value': '1'
+                        ],
+                        [
+                            'label': 'История',
+                            'value': '1'
+                        ],
+                        [
+                            'label': 'Биология',
+                            'value': '1'
+                        ],
+                        [
+                            'label': 'Кибернетика',
+                            'value': '1'
+                        ]
+                    ],
+                    'filtersToShow': 6
+                ],
+                'name': 'olympiad'
+            ]/}
+        {/call}
+        <input type="submit" class="b-filters__submit-button" value="Подобрать">
+    </form>
+{/template}

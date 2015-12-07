@@ -27,22 +27,29 @@
             <link rel="stylesheet" href="/styles.css">
         </head>
         <body>
-            {call sm.bHeader.Template.base /}
-            <div class="l-search-result__body">
-                {call .topMenu_ /}
-                {call .leftMenu_ /}
-                <div class="l-search-result__school-list">
-                    {call sm.lSearchResult.bSchoolList.Template.base}
-                        {param params: [
-                            'schools': $params.data.schools
-                        ]/}
-                    {/call}
+            <div class="l-search-result">
+                {call sm.bHeader.Template.base /}
+                <div class="l-search-result__body">
+                    {call .topMenu_ /}
+                    {call .leftMenu_ /}
+                    <div class="l-search-result__school-list">
+                        {call sm.lSearchResult.bSchoolList.Template.base}
+                            {param params: [
+                                'schools': $params.data.schools
+                            ]/}
+                        {/call}
+                    </div>
                 </div>
+                <script type="text/javascript"
+                        src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js">
+                </script>
+                <script type="text/javascript" src="/external.min.js"></script>
+                <script type="text/javascript">
+                    var CLOSURE_NO_DEPS = true;
+                </script>
+                <script type="text/javascript" src="/l-search-result.js">
+                </script>
             </div>
-            <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-            <script type="text/javascript" src="/external.min.js"></script>
-            <script type="text/javascript">var CLOSURE_NO_DEPS = true;</script>
-            <script type="text/javascript" src="/l-search-result.js"></script>
         </body>
     </html>
 {/template}
@@ -62,7 +69,9 @@
         </div>
         <div class="l-search-result__show-on-map">
             <div class="l-search-result__map-link">
-                <div class="b-icon_img_red-pin l-search-result__show-on-map-icon"></div>
+                <div class="b-icon_img_red-pin
+                            l-search-result__show-on-map-icon">
+                </div>
                 <div class="l-search-result__show-on-map-text">
                     Показать на карте
                 </div>
@@ -88,159 +97,44 @@
  */
 {template .filters_ autoescape="strict" kind="html" private="true"}
     <div class="l-search-result__filters">
-        {call sm.lSearchResult.bFilterClasses.Template.base}
+        {call  sm.lSearchResult.bFilters.Template.base}
             {param params: [
-                'header': [
-                    'title': 'В какой класс хотите отдать ребенка?'
+                'data': [
+                    'url': '/'
                 ],
-                'name': 'classes'
-            ]/}
-        {/call}
-        {call sm.lSearchResult.bFilter.Template.base}
-            {param params: [
-                'header': [
-                    'title': 'Тип школы',
-                    'help': 'help'
-                ],
-                'body': [
-                    'filters': [
-                        [
-                            'label': 'Школы и центры образования',
-                            'value': '1'
+                'filters': [
+                    [
+                        'header': [
+                            'title': 'Тип школы',
+                            'help': 'help'
                         ],
-                        [
-                            'label': 'Лицеи и гимназии',
-                            'value': '1'
+                        'data': [
+                            'filters': [
+                                [
+                                    'label': 'Школы и центры образования',
+                                    'value': '1'
+                                ],
+                                [
+                                    'label': 'Лицеи и гимназии',
+                                    'value': '1'
+                                ],
+                                [
+                                    'label': 'Кадетские',
+                                    'value': '1'
+                                ],
+                                [
+                                    'label': 'Коррекционные',
+                                    'value': '1'
+                                ],
+                            ]
                         ],
-                        [
-                            'label': 'Кадетские',
-                            'value': '1'
+                        'config': [
+                            'cannotBeHidden': true
                         ],
-                        [
-                            'label': 'Коррекционные',
-                            'value': '1'
-                        ],
+                        'name': 'schoolType'
                     ]
-                ],
-                'name': 'schoolType'
+                ]
             ]/}
         {/call}
-        {call sm.lSearchResult.bFilter.Template.base}
-            {param params: [
-                'header': [
-                    'title': 'Высокие результаты ЕГЭ',
-                    'help': 'help'
-                ],
-                'body': [
-                    'filters': [
-                        [
-                            'label': 'Математика',
-                            'value': '1'
-                        ],
-                        [
-                            'label': 'Русский',
-                            'value': '1'
-                        ],
-                        [
-                            'label': 'Физика',
-                            'value': '1'
-                        ],
-                        [
-                            'label': 'Литература',
-                            'value': '1'
-                        ],
-                        [
-                            'label': 'Химия',
-                            'value': '1'
-                        ],
-                        [
-                            'label': 'Англ. язык',
-                            'value': '1'
-                        ],
-                        [
-                            'label': 'Информатика',
-                            'value': '1'
-                        ],
-                        [
-                            'label': 'Обществознание',
-                            'value': '1'
-                        ],
-                        [
-                            'label': 'История',
-                            'value': '1'
-                        ],
-                        [
-                            'label': 'Биология',
-                            'value': '1'
-                        ],
-                        [
-                            'label': 'Кибернетика',
-                            'value': '1'
-                        ]
-                    ],
-                    'filtersToShow': 6
-                ],
-                'name': 'ege'
-            ]/}
-        {/call}
-        {call sm.lSearchResult.bFilter.Template.base}
-            {param params: [
-                'header': [
-                    'title': 'Есть победы в олимпиадах',
-                    'help': 'Есть победы в олимпиадах'
-                ],
-                'body': [
-                    'filters': [
-                        [
-                            'label': 'Математика',
-                            'value': '1'
-                        ],
-                        [
-                            'label': 'Русский',
-                            'value': '1'
-                        ],
-                        [
-                            'label': 'Физика',
-                            'value': '1'
-                        ],
-                        [
-                            'label': 'Литература',
-                            'value': '1'
-                        ],
-                        [
-                            'label': 'Химия',
-                            'value': '1'
-                        ],
-                        [
-                            'label': 'Англ. язык',
-                            'value': '1'
-                        ],
-                        [
-                            'label': 'Информатика',
-                            'value': '1'
-                        ],
-                        [
-                            'label': 'Обществознание',
-                            'value': '1'
-                        ],
-                        [
-                            'label': 'История',
-                            'value': '1'
-                        ],
-                        [
-                            'label': 'Биология',
-                            'value': '1'
-                        ],
-                        [
-                            'label': 'Кибернетика',
-                            'value': '1'
-                        ]
-                    ],
-                    'filtersToShow': 6
-                ],
-                'name': 'olympiad'
-            ]/}
-        {/call}
-        Показать все фильтры
     </div>
 {/template}

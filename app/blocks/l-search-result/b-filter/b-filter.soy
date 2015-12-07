@@ -5,14 +5,17 @@
  * @param? params {
  *     header: ?{
  *         title: ?string,
- *         help: ?string // string
+ *         help: ?string
  *     },
- *     body: ?{
+ *     data: ?{
  *         filters: ?list<{
  *             label: ?string,
  *             value: ?string
  *         }>,
- *         filtersToShow: ?int
+ *         filtersToShow: ?number
+ *     },
+ *     config: ?{
+ *         cannotBeHidden: ?bool
  *     },
  *     name: ?string
  * }
@@ -35,7 +38,7 @@
  *         title: ?string,
  *         help: ?string
  *     },
- *     body: ?{
+ *     data: ?{
  *         filters: ?list<{
  *             label: ?string,
  *             value: ?string
@@ -60,6 +63,9 @@
  *         title: ?string,
  *         help: ?string
  *     }
+ *     config: ?{
+ *         cannotBeHidden: ?bool
+ *     }
  * }
  */
 {template .header autoescape="strict" kind="html"}
@@ -72,40 +78,47 @@
                 <img src="/images/l-search-result/b-filter/b-filter__help.png"/>
             </div>
         {/if}
+        {if not $params?.config?.cannotBeHidden}
+            {call .showFiltersButton/}
+        {/if}
     </div>
 {/template}
 
 /**
  * Body template
  * @param? params {
- *     body: ?{
+ *     data: ?{
  *         filters: ?list<{
  *             label: ?string
  *             value: ?string
  *         }>,
  *         filtersToShow: ?int
  *     },
+ *     config: ?{
+ *         cannotBeHidden: ?bool
+ *     },
  *     name: ?string
  * }
  */
 {template .filters autoescape="strict" kind="html"}
 
-    {let $filToShow: $params.body.filtersToShow ?
-        ($params.body.filtersToShow - 1) : 5/}
-    <div class="b-filter__filters">
-        {for $i in range($params.body.filters.length)}
+    {let $filToShow: $params.data.filtersToShow ?
+        ($params.data.filtersToShow - 1) : 5/}
+    <div class="b-filter__filters
+                {$params?.config?.cannotBeHidden ? '' : ' i-utils__hidden'}">
+        {for $i in range($params.data.filters.length)}
             {call .filter}
                 {param params: [
-                    'filter': $params.body.filters[$i],
+                    'filter': $params.data.filters[$i],
                     'hidden': $i > $filToShow ? true : false,
                     'name': $params.name,
                     'id': $i
                 ]/}
             {/call}
         {/for}
-        {if $params.body.filters.length > $filToShow}
+        {if $params.data.filters.length > $filToShow}
             <div class="b-filter__show-button">
-                 Еще {$params.body.filters.length - $filToShow - 1} предметов
+                 Еще {$params.data.filters.length - $filToShow - 1} предметов
             </div>
         {/if}
     </div>
@@ -135,6 +148,18 @@
                 class="b-filter__input-label">
                 {$params.filter.label}
             </label>
+        </div>
+    </div>
+{/template}
+
+
+/**
+ * Show filters button
+ */
+{template .showFiltersButton}
+    <div class="b-filter__show-filters-button">
+        <div class="b-filter__show-filters-icon
+                    b-icon_img_filter-arrow-down">
         </div>
     </div>
 {/template}

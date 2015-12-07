@@ -1,5 +1,11 @@
+.l-search-result {
+    width: 100%;
+
+    margin: 0;
+}
+
 .l-search-result__body {
-    max-width: 1200px;
+    width: 1200px;
     margin: 0 auto;
 }
 
@@ -83,5 +89,9 @@
 .l-search-result__filters {
     display: inline-block;
 
-    width: 81%;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 30px;
+
+    background-color: #f4f4ec;
 }
