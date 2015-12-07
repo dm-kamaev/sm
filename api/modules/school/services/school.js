@@ -78,7 +78,7 @@ service.getForParse = async((govKeyId) => {
 service.viewOne = function(id) {
     var includeParams = {
         addresses: {
-            department: true
+            departments: true
         },
         ratings: true
     };
