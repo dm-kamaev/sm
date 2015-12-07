@@ -4,6 +4,7 @@ var DataType = require('sequelize'),
 
 var School = db.define('School', {
     name:DataType.STRING,
+    abbreviation:DataType.STRING,
     fullName: {
         field: 'full_name',
         type: DataType.STRING
@@ -57,10 +58,10 @@ var School = db.define('School', {
             });
             School.belongsTo(models.City, {
                 foreignKey: 'city_id',
-                as: 'city' 
+                as: 'city'
             });
             School.hasMany(models.SchoolUniversity, {
-                as: 'schoolUniversities', foreignKey: 'school_id'	
+                as: 'schoolUniversities', foreignKey: 'school_id'
             });
             School.hasMany(models.Rating, {
                 as: 'ratings',

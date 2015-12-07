@@ -5,6 +5,10 @@ var DataType = require('sequelize'),
 
 var Comment = db.define('Comment', {
     text: DataType.TEXT,
+    ratingId: {
+        type: DataType.INTEGER,
+        field: 'rating_id'
+    },
     userType: {
         field: 'user_type',
         type: DataType.ENUM,

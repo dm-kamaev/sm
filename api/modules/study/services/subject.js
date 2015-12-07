@@ -64,6 +64,15 @@ exports.getOrCreate = async(name => {
 
 });
 
+exports.list = async (function(){
+    var subjects = await (models.Subject.findAll());
+    return subjects.map(subject => {
+        return {
+            label: subject.name,
+            value: subject.id
+        };
+    });
+}); 
 /**
  * get all the subjects with city default gia results
  */

@@ -6,6 +6,7 @@ const commander = require('commander');
 
 require('./console/metro.js').Command;
 require('./console/parse.js').Command;
+require('./console/department.js').Command;
 require('./console/geocord.js').Command;
 require('./console/vkapi.js').Command;
 require('./console/dump.js').Command;
