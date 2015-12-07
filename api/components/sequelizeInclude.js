@@ -13,7 +13,7 @@ var generate = function (includes, emptyAttributes) {
     emptyAttributes = emptyAttributes || false;
 
     var dictionary = {
-      comment: models.Comment,
+      comments: models.Comment,
       commentGroup: models.CommentGroup,
       addresses: models.Address,
       nearMetro: models.Metro,
@@ -24,6 +24,7 @@ var generate = function (includes, emptyAttributes) {
       cityResult: models.CityResult,
       giaResults: models.GiaResult,
       ratings: models.Rating,
+      rating: models.Rating,
       searchData: models.SearchData,
       olimpResults: models.OlimpResult,
       department: models.Department

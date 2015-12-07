@@ -168,7 +168,7 @@ exports.view = async (function(req, res) {
                 }),
                 phones: school.phones || ''
             },
-            comments: commentGroup.map(comment => {
+            comments: school.commentGroup.comments.map(comment => {
                 return {
                     author: '',
                     rank: typeConvert[comment.userType],

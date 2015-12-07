@@ -40,6 +40,30 @@ exports.createComment = async (function(req, res) {
 });
 
 /**
+ * @api {get} api/school/apitest api test
+ * @apiVersion 0.0.0
+ * @apiGroup School
+ * @apiName Apitest
+ * @apiParam {Object} searchParams Search params.
+ * @apiParamExample {json} Request-Example:
+ *     {
+ *       "text" : "test"
+ *     }
+ */
+exports.yapi = async (function(req, res) {
+    var result = '';
+    try {
+        var params = req.query;
+        result = JSON.stringify(await(services.search.advancedSearch(params.text)));
+    } catch (e) {
+        console.log(e);
+        result = JSON.stringify(e);
+    } finally {
+        res.header("Content-Type", "text/html; charset=utf-8");
+        res.end(result);
+    }
+});
+/**
  * @api {get} api/school/search Search school
  * @apiVersion 0.0.0
  * @apiGroup School
@@ -64,7 +88,6 @@ exports.search = async (function(req, res) {
         result = await(services.search.searchSchool(params));
     } catch (e) {
         console.log(e);
-        throw e;
         result = JSON.stringify(e);
     } finally {
         res.header("Content-Type", "text/html; charset=utf-8");
