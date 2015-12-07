@@ -2,6 +2,10 @@
     min-width: 1200px;
 }
 
+.l-search__head {
+    pointer-events: none;
+}
+
 .l-search__body {
     max-width: 1200px;
     min-height: 83%;
