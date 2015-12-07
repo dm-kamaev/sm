@@ -2,6 +2,10 @@ var DataType = require('sequelize'),
     db = require.main.require('./app/components/db');
 
 var Rating = db.define('Rating', {
+    schoolId: {
+        type: DataType.INTEGER,
+        field: 'school_id'
+    },
     score: {
         type: DataType.ARRAY(DataType.INTEGER),
         validate: {

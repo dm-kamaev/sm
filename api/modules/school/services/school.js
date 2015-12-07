@@ -15,14 +15,15 @@ service.getGroupId = async (function(school, t) {
     var instance = school;
     if (typeof school === 'number'){
         var instance = await(models.School.findOne({
-            where : {id: school}
+            where : {id: school},
+            transaction: t
         }));
     }
     if (instance.comment_group_id == null) {
-        var newCommentGroup = await (models.CommentGroup.create());
+        var newCommentGroup = await (models.CommentGroup.create({},{transaction: t}));
         await (instance.update({
             comment_group_id: newCommentGroup.id
-        }));
+        }, {transaction: t}));
     }
     return instance.comment_group_id;
 });
@@ -88,15 +89,44 @@ service.getForParse = async((govKeyId) => {
  * @public
  */
 service.viewOne = function(id) {
-    var includeParams = {
-        addresses: {
-            department: true
-        },
-        ratings: true
-    };
+    var includeParams = //TODO: which one: this
+        [{ 
+            model: models.Address,
+            as: 'addresses',
+            include: [{
+                model: models.Department,
+                as:'department' 
+            }]
+         }, {
+             model: models.Rating,
+             as: 'ratings'
+         }, {
+             model: models.CommentGroup,
+             as: 'commentGroup',
+             include: [{
+                 model: models.Comment,
+                 as: 'comments',
+                 include: [{
+                     model: models.Rating,
+                     as: 'rating'
+                 }]
+
+             }]
+         }];
+   // var includeParams = {//TODO: which one: or this
+   //     addresses: {
+   //         department: true
+   //     },
+   //     ratings: true,
+   //     commentGroup: {
+   //         comments: {
+   //             rating: true
+   //         }
+   //     }
+   // };
     return await(models.School.findOne({
         where: {id: id},
-        include: sequelizeInclude(includeParams)
+        include: includeParams
     }));
 };
 
@@ -131,8 +161,9 @@ service.comment = async (function(schoolId, params, t) {
     console.log(sequelizeInclude(includeParams));
     var school = await (models.School.findOne({
         where: {id: schoolId},
-        include: sequelizeInclude(includeParams)
-    }, {transaction: t}));
+        include: sequelizeInclude(includeParams),
+        transaction: t
+    }));
 
     console.log(school);
     var commentGroup = await(service.getGroupId(school, t));
@@ -146,9 +177,9 @@ service.comment = async (function(schoolId, params, t) {
 
 service.rate = async ((school, params, t) => {
     var rt = await (models.Rating.create({
-        score: params.score
+        score: params.score,
+        schoolId: school.id
     }, {transaction: t}));
-    await (school.addRating(rt));
     return rt;
 });
 
