@@ -39,7 +39,7 @@ service.listTypes = async (function(){
             };
         });
 
-}); 
+});
 
 service.getAddresses = async (school => {
     return await(models.Address.findAll({
@@ -90,12 +90,12 @@ service.getForParse = async((govKeyId) => {
  */
 service.viewOne = function(id) {
     var includeParams = //TODO: which one: this
-        [{ 
+        [{
             model: models.Address,
             as: 'addresses',
             include: [{
                 model: models.Department,
-                as:'department' 
+                as:'department'
             }]
          }, {
              model: models.Rating,
@@ -187,18 +187,70 @@ service.rate = async ((school, params, t) => {
  * @public
  */
 service.list = async (function() {
+
     var includeParams = {
         ratings: true
     };
-    var schools = await (models.School.findAll(
-        {
-            order: [
-                ['id', 'ASC']
-            ],
+
+    var schools = await (
+        models.School.findAll({
             include: sequelizeInclude(includeParams)
-        }
-    ));
+        })
+    );
+
+    schools
+        .map(school => service.calculateScore_(school))
+        .sort(function(a, b) {
+            return b.totalScore - a.totalScore;
+        });
+
     return schools;
 });
+
+/**
+ * @private
+ */
+service.calculateScore_ = function(school) {
+
+    school.score = service.avgScore_(school.ratings || []);
+    school.totalScore = service.avgRating_(school.score);
+
+    return school;
+}
+
+/**
+ * @private
+ */
+service.avgScore_ = function(ratings) {
+    var result = [0, 0, 0, 0];
+    var ratingLength = ratings.length;
+
+    for (var i = 0, score; i < ratingLength; i++) {
+        score = ratings[i].score;
+        for (var j = 0; j < result.length; j++) {
+            result[j] += score[j];
+        }
+    }
+
+    if (ratingLength) {
+        for (var j = 0; j < result.length; j++) {
+            result[j] /= ratingLength;
+        }
+    }
+
+    return result;
+};
+
+/**
+ * @private
+ */
+service.avgRating_ = function(totalScore) {
+    var length = totalScore.length,
+        result = 0;
+    for (var i = 0; i < length; i++) {
+        result += totalScore[i];
+    }
+    return result / length;
+};
 
 module.exports = service;
