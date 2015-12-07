@@ -1,28 +1,36 @@
 goog.provide('sm.lSearchResult.bSchoolList.ListElement');
 
+goog.require('goog.ui.Control');
 
 /**
  * School list element component
- * @param {object=} opt_params
+ * @param {object=} params
  * @constructor
- * @extends {goog.ui.Component}
+ * @extends {goog.ui.Control}
  */
 
-sm.lSearchResult.bSchoolList.ListElement = function(opt_params) {
+sm.lSearchResult.bSchoolList.ListElement = function(params) {
+
+    /**
+     * Parameters
+     * @private
+     * @type {Number}
+     */
+    this.id_ = params.id || 0;
 
     /**
      *  @private
      *  @type {Array}
      */
-    this.score_ = [];
+    this.score_ = params.score || [];
 
     /**
      *  @private
      *  @type {Number}
      */
-    this.totalScore_ = 0;
+    this.totalScore_ = params.totalScore || 0;
 };
-goog.inherits(sm.lSearchResult.bSchoolList.ListElement, goog.ui.Control);
+goog.inherits(sm.lSearchResult.bSchoolList.ListElement, goog.ui.Component);
 
 goog.scope(function() {
     var ListElement = sm.lSearchResult.bSchoolList.ListElement;
@@ -37,10 +45,20 @@ goog.scope(function() {
 
     /**
      * Returns total score
+     * @public
      * @return {Array.<String>}
      */
     ListElement.prototype.getScore = function() {
         return this.score_;
+    };
+
+    /**
+     * Sets score
+     * @public
+     * @param {Array} score
+     */
+    ListElement.prototype.setScore = function(score) {
+        this.score_ = score;
     };
 
     /**
@@ -52,13 +70,20 @@ goog.scope(function() {
     };
 
     /**
-     * Internal decorates the DOM element
-     * @param {Element} element
+     * Sets total score
+     * @public
+     * @param {Number} totalScore
      */
-    ListElement.prototype.decorateInternal = function() {
+    ListElement.prototype.setTotalScore = function(totalScore) {
+        this.score_ = totalScore;
     };
 
-
-
+    /**
+     * Returns params
+     * @return  {Object}
+     */
+    ListElement.prototype.getId = function() {
+        return this.id_;
+    };
 });
 

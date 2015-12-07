@@ -74,7 +74,10 @@ goog.scope(function() {
     };
 
     /**
-     *
+     * Redirect handler
+     * @private
+     * @param {Object} event
+     * @param {Object} data
      */
     Search.prototype.redirect_ = function(event, data) {
         document.location.href = '/school/' + data.key;

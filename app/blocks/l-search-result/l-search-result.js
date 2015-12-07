@@ -150,11 +150,13 @@ goog.scope(function() {
      * @param {Object} event
      * @private
      */
-    SearchResult.prototype.onSortHandler_ = function(event, data) {
-        console.log(event.itemId);
-
-    }
+    SearchResult.prototype.onSortHandler_ = function(event) {
+        this.schoolList_.sort(event.itemId);
+    };
 });
+
+
+var searchResult;
 
 /**
  * creates sm.lSearchResult.SearchResult instance
@@ -165,7 +167,7 @@ jQuery(function() {
         );
 
     if (root) {
-        var searchResult = new sm.lSearchResult.SearchResult();
+        searchResult = new sm.lSearchResult.SearchResult();
         searchResult.decorate(root);
     }
 });
