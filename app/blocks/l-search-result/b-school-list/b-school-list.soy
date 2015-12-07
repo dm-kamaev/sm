@@ -52,36 +52,37 @@
  * }
  */
 {template .school_ autoescape="strict" kind="html" private="true"}
-    <div class="b-school-list__school"
-         data-id="{$params.id}">
+    <a class="b-school-list__reference" href="/school/{$params.id}">
+        <div class="b-school-list__school">
 
-        <div class="b-school-list__school-name">
-            <div class="b-school-list__school-name-wrap">
-                {$params.name}
+            <div class="b-school-list__school-name">
+                <div class="b-school-list__school-name-wrap">
+                    {$params.name}
+                </div>
             </div>
-        </div>
 
-        <div class="b-school-list__school-rating">
-            {call sm.bRating.Template.base}
-                {param params:[
-                    'marks': $params.score,
-                    'averageMark': $params.totalScore,
-                    'theme': 'black',
-                    'noSectionNames': true
-                ]/}
-            {/call}
-        </div>
-
-//        <div class="b-school-list__school-data">
-//            <div class="b-school-list__school-data-item">
-//                Станция метро, длинный адрес школы
-//            </div>
-//        </div>
-
-        {if $params.description}
-            <div class="b-school-list__school-description">
-                {$params.description}
+            <div class="b-school-list__school-rating">
+                {call sm.bRating.Template.base}
+                    {param params:[
+                        'marks': $params.score,
+                        'averageMark': $params.totalScore,
+                        'theme': 'black',
+                        'noSectionNames': true
+                    ]/}
+                {/call}
             </div>
-        {/if}
-    </div>
+
+    //        <div class="b-school-list__school-data">
+    //            <div class="b-school-list__school-data-item">
+    //                Станция метро, длинный адрес школы
+    //            </div>
+    //        </div>
+
+            {if $params.description}
+                <div class="b-school-list__school-description">
+                    {$params.description}
+                </div>
+            {/if}
+        </div>
+    </a>
 {/template}
