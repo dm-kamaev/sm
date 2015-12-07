@@ -212,41 +212,45 @@ service.list = async (function() {
  */
 service.calculateScore_ = function(school) {
 
-    var avgScore = function(ratings) {
-        var result = [0, 0, 0, 0];
-
-        if (ratings.length > 0) {
-            var ratingLength = ratings.length;
-        } else {
-            return result;
-        }
-
-        for (var i = 0; i < ratingLength - 1; i++) {
-            for (var j = 0; j < result.length; j++) {
-                result[j] += ratings[i].score[j];
-            }
-        }
-
-        for (var j = 0; j < result.length; j++) {
-            result[j] += ratings[ratingLength - 1].score[j];
-            result[j] /= ratingLength;
-        }
-        return (result);
-    };
-
-    var avgRating = function(totalScore) {
-        var length = totalScore.length,
-            result = 0;
-        for (var i = 0; i < length; i++) {
-            result += totalScore[i];
-        }
-        return (result / length);
-    };
-
-    school.score = avgScore(school.ratings);
-    school.totalScore = avgRating(school.score);
+    school.score = service.avgScore_(school.ratings || []);
+    school.totalScore = service.avgRating_(school.score);
 
     return school;
 }
+
+/**
+ * @private
+ */
+service.avgScore_ = function(ratings) {
+    var result = [0, 0, 0, 0];
+    var ratingLength = ratings.length;
+
+    for (var i = 0, score; i < ratingLength; i++) {
+        score = ratings[i].score;
+        for (var j = 0; j < result.length; j++) {
+            result[j] += score[j];
+        }
+    }
+
+    if (ratingLength) {
+        for (var j = 0; j < result.length; j++) {
+            result[j] /= ratingLength;
+        }
+    }
+
+    return result;
+};
+
+/**
+ * @private
+ */
+service.avgRating_ = function(totalScore) {
+    var length = totalScore.length,
+        result = 0;
+    for (var i = 0; i < length; i++) {
+        result += totalScore[i];
+    }
+    return result / length;
+};
 
 module.exports = service;
