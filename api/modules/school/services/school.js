@@ -143,57 +143,66 @@ service.rate = async ((school, params, t) => {
  * @public
  */
 service.list = async (function() {
+
     var includeParams = {
         ratings: true
     };
-    var schools = await (models.School.findAll(
-        {
-            // include: [{
-            //     model: models.Rating,
-            //     as: 'ratings',
-            //     attributes: {
-            //         include: [
-            //             [sequelize.fn('AVG',sequelize.col('"ratings"."score"[1]')),'score1']
-            //         ]
-            //     },
-            //
-            // }]
 
-            order: [
-                ['id', 'ASC']
-            ],
+    var schools = await (
+        models.School.findAll({
             include: sequelizeInclude(includeParams)
-        }
-    ));
+        })
+    );
 
-    var avgScore = function(scores) {
-        var length = scores.length,
-            result = 0;
-        for (var i = 0; i < length; i++) {
-            result += scores[i];
-        }
-        return (result / length);
-    }
-
-    var avgRating = function(ratings) {
-        var result = 0;
-        if (ratings.length > 0) {
-            length = ratings.length;
-        } else {
-            return 0;
-        }
-
-        for (var i = 0; i < length; i++) {
-            result += avgScore(ratings[i].score);
-        }
-        return (result / length);
-    }
-
-    schools.sort(function(a, b) {
-        return (avgRating(b.ratings) - avgRating(a.ratings));
-    });
+    schools
+        .map(school => service.calculateScore_(school))
+        .sort(function(a, b) {
+            return b.totalScore - a.totalScore;
+        });
 
     return schools;
 });
+
+/**
+ * @private
+ */
+service.calculateScore_ = function(school) {
+
+    var avgScore = function(ratings) {
+        var result = [0, 0, 0, 0];
+
+        if (ratings.length > 0) {
+            var ratingLength = ratings.length;
+        } else {
+            return result;
+        }
+
+        for (var i = 0; i < ratingLength - 1; i++) {
+            for (var j = 0; j < result.length; j++) {
+                result[j] += ratings[i].score[j];
+            }
+        }
+
+        for (var j = 0; j < result.length; j++) {
+            result[j] += ratings[ratingLength - 1].score[j];
+            result[j] /= ratingLength;
+        }
+        return (result);
+    };
+
+    var avgRating = function(totalScore) {
+        var length = totalScore.length,
+            result = 0;
+        for (var i = 0; i < length; i++) {
+            result += totalScore[i];
+        }
+        return (result / length);
+    };
+
+    school.score = avgScore(school.ratings);
+    school.totalScore = avgRating(school.score);
+
+    return school;
+}
 
 module.exports = service;
