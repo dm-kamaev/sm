@@ -46,22 +46,6 @@ app.use('/api-debug', express.static(path.join(__dirname, '/api-debug')));
 soy.init(
     path.join(__dirname, '/node_modules/frobl'),
     function() {
-        /*var stream = fs.createReadStream(path.join(__dirname, '/node_modules/frobl/tmp/compiled.soy.concat.js'), {encoding: 'utf8'});
-        stream.on('readable', function() {
-            var buf;
-            var cut='';
-            var bArr;
-            while ((buf = stream.read()) !== null) {
-                bArr = buf.split("\r\n");
-                bArr[0]=cut+bArr[0];
-                cut = bArr[bArr.length-1];
-            }
-        });
-
-        var contents = fs.readFileSync(path.join(__dirname, '/node_modules/frobl/tmp/compiled.soy.concat.js'), 'utf8').toString();
-        vm.runInThisContext(contents);*/
-        //console.log(vm.runInThisContext('a(\'wow\')'));
-
         app.listen(CONFIG.PORT, function() {
             console.log('Running at port ' + CONFIG.PORT)
         });
