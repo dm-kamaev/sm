@@ -5,7 +5,7 @@
     height: auto;
 }
 
-.b-school-list__reference {
+.b-school-list__link {
     border-bottom: 1px solid #e5e5e5;
 }
 
@@ -19,7 +19,7 @@
     cursor: pointer;
 }
 
-.b-school-list__reference:last-child {
+.b-school-list__link:last-child {
     border-bottom: none;
 }
 
