@@ -1,7 +1,7 @@
 {namespace sm.lSearchResult.Template}
 
 /**
- * School-list template
+ * Search result template
  */
 {template .base autoescape="strict" kind="html"}
     {@param? params: [
@@ -14,6 +14,10 @@
                 description: string
             ]>
         ],
+        filters: list<[
+            label: string,
+            value: string
+        ]>,
         templates: [
             search: string,
             item: string,
@@ -46,7 +50,7 @@
                             ]
                         ]/}
                     {/call}
-                    {call .leftMenu_ /}
+                    {call .leftMenu_ data="all"/}
                     <div class="l-search-result__school-list">
                         {call sm.lSearchResult.bSchoolList.Template.base}
                             {param params: [
@@ -99,8 +103,6 @@
                 ]/}
             {/call}
         </div>
-        //TODO: uncomment
-        /*
         <div class="l-search-result__show-on-map">
             <div class="l-search-result__map-link">
                 <div class="b-icon_img_red-pin
@@ -114,7 +116,6 @@
         <div class="l-search-result__sort">
             {call sm.lSearchResult.bSort.Template.base /}
         </div>
-        */
     </div>
 {/template}
 
@@ -129,6 +130,12 @@
 
 /**
  * Filter template
+ * @param params {
+ *     filters: list<{
+ *         label: string,
+ *         value: string
+ *     }>
+ * }
  */
 {template .filters_ autoescape="strict" kind="html" private="true"}
     <div class="l-search-result__filters">

@@ -71,6 +71,10 @@ exports.list = async (function(req, res) {
             }
         });
 
+    var subjects = await(services.study.list());
+
+    console.log();
+
     var html = soy.render('sm.lSearchResult.Template.base', {
         params: {
             data: {
