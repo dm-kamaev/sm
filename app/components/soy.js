@@ -28,6 +28,5 @@ exports.init = function(dir, opt_callback) {
 };
 
 exports.render = function(template, data) {
-    //console.log(soynode._vmContexts.default._context.sm);
     return soynode.render(template, data);
 };
