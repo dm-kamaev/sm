@@ -250,7 +250,7 @@ exports.view = async (function(req, res) {
         }
     };
 
-    // console.log(params.data);
+    console.log(params.data);
 
     res.header("Content-Type", "text/html; charset=utf-8");
     res.end(
