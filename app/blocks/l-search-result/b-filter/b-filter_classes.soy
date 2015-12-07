@@ -4,11 +4,6 @@
  * Filter template
  * @extends '/l-search-result/b-filter/b-filter'
  * @constructor
- * @param? params {
- *     header: ?{
- *         title: ?string
- *     },
- *     name: ?string
  */
 {template .base autoescape="strict" kind="html"}
     {call .init data="all"/}
@@ -24,7 +19,9 @@
 /**
  * template
  * @param? params {
- *    name: ?string
+ *    data: {
+ *        name: ?string
+ *    }
  * }
  */
 {template .filters autoescape="strict" kind="html"}
@@ -32,11 +29,11 @@
         <div class="b-filter__filter b-filter__filter_center">
             {for $i in range(11)}
                 <input type="radio"
-                    id="{$params.name}-{$i+1}"
+                    id="{$params?.data?.name}-{$i+1}"
                     class="b-filter__input"
-                    name="{$params.name}"
+                    name="{$params?.data?.name}"
                     value="{$i+1}"/>
-                <label for="{$params.name}-{$i+1}"
+                <label for="{$params?.data?.name}-{$i+1}"
                     class="b-filter__input-label
                     {sp}
                     {$i > 3 ?
@@ -51,10 +48,10 @@
         <div class="b-filter__filter">
             <input type="checkbox"
                 class="b-filter__input-ordinary"
-                id="{$params.name}-after-school"
-                name="{$params.name}"
+                id="{$params?.data?.name}-after-school"
+                name="{$params?.data?.name}"
                 value="after-school"/>
-            <label for="{$params.name}-after-school"
+            <label for="{$params?.data?.name}-after-school"
                 class="b-filter__input-label-ordinary">
                 Есть продленка
             </label>

@@ -71,14 +71,63 @@ exports.list = async (function(req, res) {
             }
         });
 
-    var subjects = await(services.study.list());
+    var subjects = await (services.subject.list());
+    var schoolTypes = await (services.school.listTypes());
+    var filters = [];
 
-    console.log();
+    filters.push({
+        data: {
+            filters: schoolTypes,
+            header: {
+                title: 'Тип школы',
+                help: 'help'
+            },
+            name: 'schoolType'
+        },
+        config: {
+            filtersToShow: 15,
+            cannotBeHidden: true
+        }
+    });
+    filters.push({
+        data: {
+            filters: subjects,
+            header: {
+                title: 'Высокие результаты ЕГЭ',
+                help: 'help'
+            },
+            name: 'ege'
+        }
+    });
+    filters.push({
+        data: {
+            filters: subjects,
+            header: {
+                title: 'Высокие результаты ГИА',
+                help: 'help'
+            },
+            name: 'gia'
+        }
+    });
+    filters.push({
+        data: {
+            filters: subjects,
+            header: {
+                title: 'Есть победы в олимпиадах',
+                help: 'help'
+            },
+            name: 'olimp'
+        }
+    });
 
     var html = soy.render('sm.lSearchResult.Template.base', {
         params: {
             data: {
-                schools: schoolList
+                schools: schoolList,
+                filters: {
+                    filters: filters,
+                    url: '/api/school/search'
+                }
             },
             templates: {
                 search: '{{ name }}',

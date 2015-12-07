@@ -4,7 +4,7 @@
  * Search result template
  */
 {template .base autoescape="strict" kind="html"}
-    {@param? params: [
+    {@param params: [
         data: [
             schools: list<[
                 id: number,
@@ -12,12 +12,27 @@
                 score: list<number>,
                 totalScore: number,
                 description: string
-            ]>
+            ]>,
+            filters: [
+                filters: list<[
+                    data: [
+                        filters: list<[
+                            label: string,
+                            value: string
+                        ]>,
+                        header: [
+                            title: string,
+                            help: string
+                        ],
+                        name: string
+                    ],
+                    config:[
+                        cannotBeHidden: bool
+                    ]
+                ]>,
+                url: string
+            ]
         ],
-        filters: list<[
-            label: string,
-            value: string
-        ]>,
         templates: [
             search: string,
             item: string,
@@ -124,59 +139,40 @@
  */
 {template .leftMenu_ autoescape="strict" kind="html" private="true"}
     <div class="l-search-result__left-menu">
-        {call .filters_ /}
+        {call .filters_ data="all"/}
     </div>
 {/template}
 
 /**
  * Filter template
- * @param params {
- *     filters: list<{
- *         label: string,
- *         value: string
- *     }>
+ * @param? params {
+ *     data: {
+ *         filters: {
+ *             filters: list<{
+ *                 data: {
+ *                     filters: ?list<{
+ *                         label: ?string,
+ *                         value: ?string
+ *                     }>,
+ *                     header: {
+ *                         title: ?string,
+ *                         help: ?string
+ *                     },
+ *                     name: ?string
+ *                 },
+ *                 config:{
+ *                     cannotBeHidden: ?bool
+ *                 }
+ *             }>,
+ *             url: ?string
+ *         }
+ *     }
  * }
  */
 {template .filters_ autoescape="strict" kind="html" private="true"}
     <div class="l-search-result__filters">
         {call  sm.lSearchResult.bFilters.Template.base}
-            {param params: [
-                'data': [
-                    'url': '/'
-                ],
-                'filters': [
-                    [
-                        'header': [
-                            'title': 'Тип школы',
-                            'help': 'help'
-                        ],
-                        'data': [
-                            'filters': [
-                                [
-                                    'label': 'Школы и центры образования',
-                                    'value': '1'
-                                ],
-                                [
-                                    'label': 'Лицеи и гимназии',
-                                    'value': '1'
-                                ],
-                                [
-                                    'label': 'Кадетские',
-                                    'value': '1'
-                                ],
-                                [
-                                    'label': 'Коррекционные',
-                                    'value': '1'
-                                ],
-                            ]
-                        ],
-                        'config': [
-                            'cannotBeHidden': true
-                        ],
-                        'name': 'schoolType'
-                    ]
-                ]
-            ]/}
+            {param params: $params?.data?.filters/}
         {/call}
     </div>
 {/template}

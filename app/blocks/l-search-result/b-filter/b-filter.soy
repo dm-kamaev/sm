@@ -3,21 +3,21 @@
 /**
  * Filter template
  * @param? params {
- *     header: ?{
- *         title: ?string,
- *         help: ?string
- *     },
  *     data: ?{
  *         filters: ?list<{
  *             label: ?string,
  *             value: ?string
  *         }>,
- *         filtersToShow: ?number
+ *         header: ?{
+ *             title: ?string,
+ *             help: ?string
+ *         },
+ *         name: ?string
  *     },
  *     config: ?{
- *         cannotBeHidden: ?bool
- *     },
- *     name: ?string
+ *         cannotBeHidden: ?bool,
+ *         filtersToShow: ?number
+ *     }
  * }
  */
 {template .base autoescape="strict" kind="html"}
@@ -33,21 +33,6 @@
 
 /**
  * Filter init template
- * @param? params {
- *     header: ?{
- *         title: ?string,
- *         help: ?string
- *     },
- *     data: ?{
- *         filters: ?list<{
- *             label: ?string,
- *             value: ?string
- *         }>,
- *         filtersToShow: ?int
- *     },
- *     name: ?string
- *     modifier: ?string
- * }
  */
 {template .init autoescape="strict" kind="html"}
     <div class="{call .rootClassName/}">
@@ -59,10 +44,12 @@
 /**
  * Header template
  * @param? params {
- *     header: ?{
- *         title: ?string,
- *         help: ?string
- *     }
+ *     data: ?{
+ *         header: ?{
+ *             title: ?string,
+ *             help: ?string
+ *         }
+ *     },
  *     config: ?{
  *         cannotBeHidden: ?bool
  *     }
@@ -71,10 +58,10 @@
 {template .header autoescape="strict" kind="html"}
     <div class="b-filter__header">
         <span class="b-filter__title">
-            {$params.header.title}
+            {$params?.data?.header?.title}
         </span>
-        {if $params.header.help}
-            <div class="b-filter__help" data-help="{$params.header.help}">
+        {if $params?.header?.help}
+            <div class="b-filter__help" data-help="{$params?.data?.header?.help}">
                 <img src="/images/l-search-result/b-filter/b-filter__help.png"/>
             </div>
         {/if}
@@ -89,21 +76,20 @@
  * @param? params {
  *     data: ?{
  *         filters: ?list<{
- *             label: ?string
+ *             label: ?string,
  *             value: ?string
  *         }>,
- *         filtersToShow: ?int
+ *         name: ?string
  *     },
  *     config: ?{
- *         cannotBeHidden: ?bool
- *     },
- *     name: ?string
+ *         filtersToShow: ?number
+ *     }
  * }
  */
 {template .filters autoescape="strict" kind="html"}
 
-    {let $filToShow: $params.data.filtersToShow ?
-        ($params.data.filtersToShow - 1) : 5/}
+    {let $filToShow: $params?.config?.filtersToShow ?
+        ($params?.config?.filtersToShow - 1) : 5/}
     <div class="b-filter__filters
                 {$params?.config?.cannotBeHidden ? '' : ' i-utils__hidden'}">
         {for $i in range($params.data.filters.length)}
@@ -111,7 +97,7 @@
                 {param params: [
                     'filter': $params.data.filters[$i],
                     'hidden': $i > $filToShow ? true : false,
-                    'name': $params.name,
+                    'name': $params.data.name,
                     'id': $i
                 ]/}
             {/call}

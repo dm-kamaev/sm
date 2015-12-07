@@ -113,6 +113,28 @@ goog.scope(function() {
     };
 
     /**
+     * Processing serialize array
+     * @param {Array.<Object>} array
+     * @return {Object}
+     * @private
+     */
+    Filters.prototype.processingSerializeArray_ = function(array) {
+        var result = {};
+
+        for (var i = 0, a; i < array.length; i++) {
+            a = array[i];
+
+            if (!result[a.name]) {
+                result[a.name] = [];
+            }
+
+            result[a.name].push(a.value);
+        }
+
+        return result;
+    };
+
+    /**
      * Submit handler
      * @param {Object} event
      * @private
@@ -121,10 +143,12 @@ goog.scope(function() {
         event.preventDefault();
 
         var form = jQuery(this.getElement()),
-            data = form.serialize();
+            data = this.processingSerializeArray_(form.serializeArray());
 
         console.log(data);
 
-        this.send_(form);
+        this.send_(form, function(resp){
+            console.log(resp);
+        });
     };
 });
