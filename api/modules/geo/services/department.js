@@ -3,6 +3,7 @@ var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var models = require.main.require('./app/components/models').all;
 var services = require.main.require('./app/components/services').all;
+var enums = require('../enums');
 exports.name = 'department';
 
 exports.getAll = () => {
@@ -27,27 +28,19 @@ exports.getAddress = (departmentInstance) => {
  * Get address array for certain stages
  */
 exports.getAdressesHasStage = (addressList) => {
-    var addresses = addressList
+    return addressList
         .filter(address => {
-            var res = false;
+            var res = true;
             if (address.departments.length > 0) {
+                res = false;
                 address.departments.forEach(department => {
-                    if (department.stage == 'Начальное образование' ||
-                        department.stage == 'Основное и среднее') {
-                        console.log('address'.yellow, address.name);
-                        console.log('department'.yellow, department.stage);
+                    if (department.stage !== enums.departmentStage.PRESCHOOL) {
                         res = true;
                     }
                 });
             }
             return res;
         });
-
-    if (addresses.length < 1) {
-        addresses = addressList;
-    }
-
-    return addresses;
 };
 
 
