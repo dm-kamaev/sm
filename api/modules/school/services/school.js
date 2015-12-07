@@ -6,7 +6,7 @@ var services = require.main.require('./app/components/services').all;
 var sequelize  = require.main.require('./app/components/db');
 var sequelizeInclude = require.main.require('./api/components/sequelizeInclude');
 var transaction = require.main.require('./api/components/transaction.js');
-
+var enums = require.main.require('./api/components/enums').all;
 var service = {
     name : 'school'
 };
@@ -27,6 +27,18 @@ service.getGroupId = async (function(school, t) {
     return instance.comment_group_id;
 });
 
+
+service.listTypes = async (function(){
+    return enums.schoolType
+        .toArray()
+        .map(type => {
+            return {
+                label: type,
+                value: type
+            };
+        });
+
+}); 
 
 service.getAddresses = async (school => {
     return await(models.Address.findAll({
