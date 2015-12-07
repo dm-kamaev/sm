@@ -26,7 +26,10 @@ exports.createComment = async (function(req, res) {
         var schoolId = req.params.id,
             params = req.body;
         params.score = params['score[]']; //TODO придумать чтото с этим
-        result = await(services.school.commentTransaction(schoolId, params));
+        result = JSON.stringify(
+            await(services.school.commentTransaction(schoolId, params))
+            );
+        console.log(result);
     } catch (e) {
         console.log(e);
         result = JSON.stringify(e);
@@ -86,6 +89,25 @@ exports.create = function(req, res) {
 
 
 };
+
+/**
+ * @api {get} api/school/type Get school type list
+ * @apiVersion 0.0.0
+ * @apiGroup School
+ * @apiName ListSchoolTypes
+ */
+exports.listTypes = async (function(req, res) {
+    var result;
+    try {
+        result = await(services.school.listTypes());
+    } catch (e) {
+        console.log(e.message);
+        result = e;
+    } finally {
+        res.header("Content-Type", "text/html; charset=utf-8");
+        res.end(JSON.stringify(result));
+    }
+});
 
 /**
  * @api {get} api/school Get school list

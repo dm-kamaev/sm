@@ -9,6 +9,7 @@ goog.require('sm.lSearchResult.Template');
 goog.require('sm.lSearchResult.bFilters.Filters');
 goog.require('sm.lSearchResult.bSchoolList.SchoolList');
 goog.require('sm.lSearchResult.bSort.Sort');
+goog.require('sm.bSearch.Search');
 
 /**
  * Search result component
@@ -40,6 +41,7 @@ goog.scope(function() {
         SchoolList = sm.lSearchResult.bSchoolList.SchoolList,
         Sort = sm.lSearchResult.bSort.Sort,
         Filters = sm.lSearchResult.bFilters.Filters;
+        Search = sm.bSearch.Search;
 
     /**
      * CSS-class enum
@@ -110,6 +112,15 @@ goog.scope(function() {
 
         this.addChild(filters);
         filters.decorate(filtersElement);
+        
+        var bSearch = goog.dom.getElementByClass(
+            Search.CssClass.INPUT,
+            element
+        );
+
+        var bSearchInstance = new Search();
+        this.addChild(bSearchInstance);
+        bSearchInstance.decorate(bSearch);
     };
 
     /**
@@ -144,8 +155,8 @@ jQuery(function() {
             sm.lSearchResult.SearchResult.CssClass.ROOT
         );
 
-    if(root) {
+    if (root) {
         var searchResult = new sm.lSearchResult.SearchResult();
-        searchResult.decorate(root)
+        searchResult.decorate(root);
     }
 });

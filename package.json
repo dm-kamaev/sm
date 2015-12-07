@@ -23,7 +23,6 @@
     "asyncawait": "^1.0.1",
     "body-parser": "~1.13.2",
     "closure": "^1.0.3",
-    "closure-library": "^1.43629075.2",
     "closure-templates": "^20141017.0.1",
     "colors": "^1.1.2",
     "commander": "^2.9.0",

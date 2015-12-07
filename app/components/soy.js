@@ -4,7 +4,7 @@ var os = require('os'),
     soynode = require('soynode'),
     watch = require('node-watch');
 
-global.CLOSURE_BASE_PATH = path.normalize('node_modules/closure-library/closure/goog/');
+global.CLOSURE_BASE_PATH = path.normalize('node_modules/google-closure-library/closure/goog/');
 
 soynode.setOptions({
     outputDir: path.join(__dirname, '../../node_modules/frobl/tmp'),//os.tmpdir(),

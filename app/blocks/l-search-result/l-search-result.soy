@@ -13,6 +13,12 @@
                 totalScore: number,
                 description: string
             ]>
+        ],
+        templates: [
+            search: string,
+            item: string,
+            text: string,
+            value: string
         ]
     ]}
 
@@ -30,7 +36,16 @@
             <div class="l-search-result">
                 {call sm.bHeader.Template.base /}
                 <div class="l-search-result__body">
-                    {call .topMenu_ /}
+                    {call .topMenu_}
+                        {param params: [
+                            'templates': [
+                                'search': $params.templates.search,
+                                'item': $params.templates.item,
+                                'text': $params.templates.text,
+                                'value': $params.templates.value
+                            ]
+                        ]/}
+                    {/call}
                     {call .leftMenu_ /}
                     <div class="l-search-result__school-list">
                         {call sm.lSearchResult.bSchoolList.Template.base}
@@ -50,6 +65,9 @@
                 <script type="text/javascript" src="/l-search-result.js">
                 </script>
             </div>
+            <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+            <script type="text/javascript">var CLOSURE_NO_DEPS = true;</script>
+            <script type="text/javascript" src="/l-search-result.js"></script>
         </body>
     </html>
 {/template}
@@ -58,15 +76,31 @@
  * Top menu template
  */
 {template .topMenu_ autoescape="strict" kind="html" private="true"}
+    {@param? params: [
+        templates: [
+            search: string,
+            item: string,
+            text: string,
+            value: string
+        ]
+    ]}
     <div class="l-search-result__top-menu">
         <div class="l-search-result__search">
             {call sm.bSearch.Template.base}
                 {param params: [
                     'placeholder': 'Поиск',
-                    'theme': 'min'
+                    'theme': 'min',
+                    'templates': [
+                        'search': $params.templates.search,
+                        'item': $params.templates.item,
+                        'text': $params.templates.text,
+                        'value': $params.templates.value
+                    ]
                 ]/}
             {/call}
         </div>
+        //TODO: uncomment
+        /*
         <div class="l-search-result__show-on-map">
             <div class="l-search-result__map-link">
                 <div class="b-icon_img_red-pin
@@ -80,6 +114,7 @@
         <div class="l-search-result__sort">
             {call sm.lSearchResult.bSort.Template.base /}
         </div>
+        */
     </div>
 {/template}
 

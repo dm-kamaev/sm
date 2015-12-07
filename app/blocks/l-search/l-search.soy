@@ -5,6 +5,12 @@
  * @param? params {
  *     currentCity: ?string,
  *     examples: ?list<string>,
+ *     searchTemplates: [
+ *         search: ?string,
+ *         item: ?string,
+ *         text: ?string,
+ *         value: ?string
+ *     ],
  *     images: ?list<string>
  * }
  */
@@ -29,24 +35,33 @@
                     {/call}
                     {call sm.lSearch.Template.search_}
                         {param params: [
-                            'examples': $params.examples
+                            'examples': $params.examples,
+                            'templates': [
+                                'search': $params.searchTemplates.search,
+                                'item': $params.searchTemplates.item,
+                                'text': $params.searchTemplates.text,
+                                'value': $params.searchTemplates.value
+                            ]
                         ]/}
                     {/call}
+                    //TODO: uncomment
+                    /*
                     {call sm.lSearch.Template.banner_ /}
                     {call sm.lSearch.Template.content_}
                         {param params: [
                             'images': $params.images
                         ]/}
                     {/call}
+                    */
+                </div>
+                <div class="l-search__footer">
                     <div class="l-search__horisontal-line"></div>
-                    <div class="l-search__footer">
-                       {call sm.lSchool.bFooter.Template.base /}
-                    </div>
+                   {call sm.lSchool.bFooter.Template.base /}
                 </div>
             </div>
             <script type="text/javascript" src="/external.min.js"></script>
             <script type="text/javascript">var CLOSURE_NO_DEPS = true;</script>
-            <script type="text/javascript" src="/script.js"></script>
+            <script type="text/javascript" src="/l-search.js"></script>
         </body>
     </html>
 {/template}
@@ -65,7 +80,8 @@
         <div class="l-search__geoposition">
             <div class="b-icon_img_red-pin l-search__pin"></div>
             <div class="l-search__city">{$params.city}</div>
-            <div class="b-icon_img_arrow l-search__city-arrow"></div>
+            //TODO: uncomment
+            // <div class="b-icon_img_arrow l-search__city-arrow"></div>
         </div>
         <div class="l-search__inscription">
             Найдите школу, которая подходит вашему ребёнку
@@ -76,7 +92,12 @@
 /**
  * Search Template
  * @param? params {
- *     examples: ?list<string>
+ *     examples: ?list<string>,
+ *     templates: [
+ *         search: ?string,
+ *         item: ?string,
+ *         text: ?string,
+ *         value: ?string
  * }
  */
 {template .search_ autoescape="strict" kind="html" private="true"}
@@ -87,25 +108,34 @@
                 {call sm.bSearch.Template.base}
                     {param params: [
                         'placeholder': '',
-                        'theme': 'main'
+                        'theme': 'main',
+                        'templates': [
+                            'search': $params?.templates.search,
+                            'item': $params?.templates.item,
+                            'text': $params?.templates.text,
+                            'value': $params?.templates.value
+                        ]
                     ]/}
                 {/call}
             </div>
-            <div class="l-search__example-holder">
+            //TODO: uncomment
+            /*<div class="l-search__example-holder">
                 Например:
                 <span class="l-search__examples">
                     {foreach $example in $params.examples}
                         <span class="l-search__example">{$example}</span>
                     {/foreach}
                 </span>
-            </div>
+            </div>*/
         </div>
-        {call sm.lSearch.Template.button_}
-            {param params: [
-                'text': 'Найти школу',
-                'theme': 'search'
-            ]/}
-        {/call}
+        <a class="l-search__search-button" href='/search'>
+            {call sm.lSearch.Template.button_}
+                {param params: [
+                    'text': 'Найти школу',
+                    'theme': 'search'
+                ]/}
+            {/call}
+        </a>
     </div>
 {/template}
 

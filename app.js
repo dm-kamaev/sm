@@ -35,6 +35,7 @@ app.use('/', modules.school.router);
 app.use('/doc', modules.doc.router);
 app.use('/api', api.comment.router);
 app.use('/api', api.school.router);
+app.use('/api', api.study.router);
 app.use('/', api.debug.router);
 
 app.use('/apidoc', express.static(path.join(__dirname, '/doc')));
