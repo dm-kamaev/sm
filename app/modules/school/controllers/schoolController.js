@@ -140,27 +140,47 @@ exports.view = async (function(req, res) {
     }
 
 
+    /**
+     * Get address array for certain stages
+     */
     function getAdressesHasStage(addressList) {
         var adressesHasStage = [];
-
         addressList.forEach(function(address) {
-            var department = await(services.address.getDepartment(address));
-            console.log('department'.yellow, department);
-            if (department.length > 0) {
-                var departmentStage = department[0].dataValues.stage;
-                console.log('departmentStage'.cyan, departmentStage);
+            var departments = address.dataValues.department;
 
-                if (departmentStage === 'Начальное образование') {
-                    adressesHasStage.push(address);
-                }
+            if (departments.length > 0) {
+                departments.forEach(function(department) {
+                    var stage = department.dataValues.stage;
 
-                else if (departmentStage === 'Основное и среднее') {
-                    adressesHasStage.push(address);
-                }
+                    if (stage === 'Начальное образование') {
+                        adressesHasStage.push(address);
+                    }
+
+                    if (stage === 'Основное и среднее') {
+                        adressesHasStage.push(address);
+                    }
+                });
             }
         });
-        // console.log('adressesHasStage'.magenta, adressesHasStage);
-        return adressesHasStage;
+        return getUniqueArray(adressesHasStage);
+    }
+
+
+    /**
+     * Get array with unique data
+     */
+    function getUniqueArray(array) {
+        var obj_unique = {};
+        var arr_unique = [];
+
+        array.forEach(function(elem) {
+            obj_unique[elem] = elem;
+        });
+
+        for (var key in obj_unique) {
+            arr_unique.push(obj_unique[key]);
+        }
+        return arr_unique;
     }
 
 
