@@ -193,7 +193,7 @@ goog.scope(function() {
 
 		return {
 			north: north,
-			west: west, 
+			west: west,
 			south: south,
 			east: east
 		};
@@ -243,13 +243,5 @@ goog.scope(function() {
         for (var i = 0, item; item = placemarks[i]; i++) {
             this.ymaps_.geoObjects.add(item);
         }
-
-        var i = 0;
-        this.ymaps_.geoObjects.each(function(obj) {
-            if (!i) {
-                obj.balloon.open();
-            }
-            i++;
-        });
     };
 });
