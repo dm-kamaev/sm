@@ -112,6 +112,7 @@ exports.view = async (function(req, res) {
 
     var addresses =
             services.department.addressesFilter(school.addresses);
+    var commentGroup = school.CommentGroup ? school.CommentGroup.comments : [];
     var params = {
         data: {
             id: school.id,
@@ -136,7 +137,7 @@ exports.view = async (function(req, res) {
                 }),
                 phones: school.phones || ''
             },
-            comments: school.commentGroup.comments.map(comment => {
+            comments: commentGroup.map(comment => {
                 return {
                     author: '',
                     rank: typeConvert[comment.userType],

@@ -95,7 +95,7 @@ service.viewOne = function(id) {
             as: 'addresses',
             include: [{
                 model: models.Department,
-                as:'department'
+                as:'departments'
             }]
          }, {
              model: models.Rating,
