@@ -26,9 +26,11 @@
         </head>
         <body>
             <div class="l-search">
-                <div class="l-search__head">
-                    {call sm.bHeader.Template.base /}
-                </div>
+                {call sm.bHeader.Template.base}
+                    {param params: [
+                        'url': ''
+                    ]/}
+                {/call}
                 <div class="l-search__body">
                     {call sm.lSearch.Template.header_}
                         {param params: [
