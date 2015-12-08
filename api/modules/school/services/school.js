@@ -145,7 +145,10 @@ service.rate = async ((school, params, t) => {
  */
 service.list = async (function() {
     var includeParams = {
-        ratings: true
+        ratings: true,
+        addresses: {
+            departments: true
+        }
     };
     var schools = await (models.School.findAll(
         {
