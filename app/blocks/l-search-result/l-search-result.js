@@ -5,11 +5,11 @@ goog.require('goog.dom.classlist');
 goog.require('goog.events');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
+goog.require('sm.bSearch.Search');
 goog.require('sm.lSearchResult.Template');
 goog.require('sm.lSearchResult.bFilters.Filters');
 goog.require('sm.lSearchResult.bSchoolList.SchoolList');
 goog.require('sm.lSearchResult.bSort.Sort');
-goog.require('sm.bSearch.Search');
 
 /**
  * Search result component
@@ -33,6 +33,13 @@ sm.lSearchResult.SearchResult = function(opt_params) {
      * @private
      */
     this.sort_ = null;
+
+    /**
+     * SchoolList instance
+     * @type {sm.lSearchResult.bSchoolList.SchoolList}
+     * @private
+     */
+    this.schoolList_ = null;
 };
 goog.inherits(sm.lSearchResult.SearchResult, goog.ui.Component);
 
@@ -86,13 +93,13 @@ goog.scope(function() {
 
         //school list
         var bSchoolList = goog.dom.getElementByClass(
-                SchoolList.CssClass.ROOT,
-                element
-            ),
-            bSchoolListInstance = new SchoolList();
+            SchoolList.CssClass.ROOT,
+            element
+        );
 
-        this.addChild(bSchoolListInstance);
-        bSchoolListInstance.decorate(bSchoolList);
+        this.schoolList_ = new SchoolList();
+        this.addChild(this.schoolList_);
+        this.schoolList_.decorate(bSchoolList);
 
         //sort
         var sortElement = goog.dom.getElementByClass(
@@ -135,6 +142,12 @@ goog.scope(function() {
             this.onSortHandler_
         );
 
+        this.getHandler().listen(
+            this.schoolList_,
+            SchoolList.Event.ITEM_CLICK,
+            this.redirect_
+        );
+
     };
 
     /**
@@ -143,9 +156,20 @@ goog.scope(function() {
      * @private
      */
     SearchResult.prototype.onSortHandler_ = function(event) {
-        console.log('Sorting by item: '+ event.itemId);
-    }
+        this.schoolList_.sort(event.itemId);
+    };
+    /**
+     * Redirect item click handler
+     * @param {Object} event
+     * @private
+     */
+    SearchResult.prototype.redirect_ = function(event) {
+        document.location.href = '/school/' + event.itemId;
+    };
 });
+
+
+var searchResult;
 
 /**
  * creates sm.lSearchResult.SearchResult instance
@@ -156,7 +180,7 @@ jQuery(function() {
         );
 
     if (root) {
-        var searchResult = new sm.lSearchResult.SearchResult();
+        searchResult = new sm.lSearchResult.SearchResult();
         searchResult.decorate(root);
     }
 });

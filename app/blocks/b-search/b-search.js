@@ -3,8 +3,8 @@ goog.provide('sm.bSearch.Search');
 goog.require('goog.dom');
 goog.require('goog.events');
 goog.require('goog.ui.Component');
-goog.require('sm.bSearch.Template');
 goog.require('gorod.gSuggest.Suggest');
+goog.require('sm.bSearch.Template');
 
 /**
  * Input suggest component
@@ -53,12 +53,14 @@ goog.scope(function() {
         goog.base(this, 'enterDocument');
 
         var ui = gorod.iUIInstanceStorage.UIInstanceStorage.getInstance();
-        var suggest = goog.dom.getElementByClass(gorod.gSuggest.Suggest.Css.ROOT);
+        var suggest = goog.dom.getElementByClass(
+            gorod.gSuggest.Suggest.Css.ROOT
+        );
         var suggestInstance = ui.getInstanceByElement(suggest);
 
         suggestInstance.addEventListener(
             gorod.gSuggest.Suggest.Events.SELECT,
-            this.redirect_
+            this.itemClickHandler_
         );
 
         suggestInstance.setCallback('getData', function(elem) {
@@ -74,9 +76,12 @@ goog.scope(function() {
     };
 
     /**
-     *
+     * Redirect handler
+     * @private
+     * @param {Object} event
+     * @param {Object} data
      */
-    Search.prototype.redirect_ = function(event, data) {
+    Search.prototype.itemClickHandler_ = function(event, data) {
         document.location.href = '/school/' + data.key;
-    }
+    };
 });

@@ -1,0 +1,50 @@
+{namespace sm.lSearchResult.bSchoolListItem.Template}
+
+/**
+ * School template
+ * @param? params {
+ *     id: ?number,
+ *     name: ?string,
+ *     score: ?list<number>,
+ *     totalScore: ?number,
+ *     description: ?string
+ * }
+ */
+{template .base autoescape="strict" kind="html"}
+    <div class="b-school-list-item"
+        data-params="
+        {call gorod.iUtils.stringify}
+            {param json: $params /}
+        {/call}
+        ">
+
+        <div class="b-school-list-item__name">
+            <div class="b-school-list-item__name-wrap">
+                {$params.name}
+            </div>
+        </div>
+
+        <div class="b-school-list-item__rating">
+            {call sm.bRating.Template.base}
+                {param params:[
+                    'marks': $params.score,
+                    'averageMark': $params.totalScore,
+                    'theme': 'black',
+                    'noSectionNames': true
+                ]/}
+            {/call}
+        </div>
+
+//        <div class="b-school-list-item__data">
+//            <div class="b-school-list-item__data-item">
+//                Станция метро, длинный адрес школы
+//            </div>
+//        </div>
+
+        {if $params.description}
+            <div class="b-school-list-item__description">
+                {$params.description}
+            </div>
+        {/if}
+    </div>
+{/template}

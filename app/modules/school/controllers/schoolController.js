@@ -33,40 +33,11 @@ exports.list = async (function(req, res) {
 
     var schoolList =
         schools.map(school => {
-            var sumScore = school.ratings
-                .map(rating => rating.score)
-                .reduce((context, coords) => {
-                    coords.forEach((value, index) => {
-                        if (value) {
-                            context.count[index]++;
-                            context.sum[index] += value;
-                            context.res[index] = context.sum[index] / context.count[index];
-                        }
-                    });
-
-                    return context;
-                }, {
-                    sum: [0, 0, 0, 0],
-                    count: [0, 0, 0, 0],
-                    res: [0, 0, 0, 0]
-                }).res;
-            var totalScore = sumScore.reduce((context, value) => {
-                if (value) {
-                    context.sum += value;
-                    context.count++;
-                    context.res = context.sum / context.count;
-                }
-                return context;
-            }, {
-                sum: 0,
-                count: 0,
-                res: 0
-            }).res;
             return {
                 id: school.id,
                 name: school.name,
-                score: sumScore,
-                totalScore: totalScore,
+                score: school.score,
+                totalScore: school.totalScore,
                 description: ""
             }
         });
@@ -191,8 +162,10 @@ exports.view = async (function(req, res) {
 
         return res;
     }
-
-
+    //TODO fix comments
+    var comments = [];
+    if (school.commentGroup)
+        comments = school.commentGroup.comments;
     var params = {
         data: {
             id: school.id,
@@ -217,7 +190,7 @@ exports.view = async (function(req, res) {
                 }),
                 phones: school.phones || ''
             },
-            comments: school.commentGroup.comments.map(comment => {
+            comments: comments.map(comment => {
                 return {
                     author: '',
                     rank: typeConvert[comment.userType],

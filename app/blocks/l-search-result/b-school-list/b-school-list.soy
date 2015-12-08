@@ -1,5 +1,6 @@
 {namespace sm.lSearchResult.bSchoolList.Template}
 
+
 /**
  * Schools List view
  * @param? params {
@@ -26,62 +27,18 @@
             </div>
 
         </div>
-
-        {foreach $school in $params.schools}
-            {call .school_}
-                {param params:[
-                    'id': $school.id,
-                    'name': $school.name,
-                    'score': $school.score,
-                    'totalScore': $school.totalScore,
-                    'description': $school.description
-                ]/}
-            {/call}
-        {/foreach}
-    </div>
-{/template}
-
-/**
- * School template
- * @param? params {
- *     id: ?number,
- *     name: ?string,
- *     score: ?list<number>,
- *     totalScore: ?number,
- *     description: ?string
- * }
- */
-{template .school_ autoescape="strict" kind="html" private="true"}
-    <div class="b-school-list__school"
-         data-id="{$params.id}">
-
-        <div class="b-school-list__school-name">
-            <div class="b-school-list__school-name-wrap">
-                {$params.name}
-            </div>
+        <div class="b-school-list__body">
+            {foreach $school in $params.schools}
+                {call sm.lSearchResult.bSchoolListItem.Template.base}
+                    {param params:[
+                        'id': $school.id,
+                        'name': $school.name,
+                        'score': $school.score,
+                        'totalScore': $school.totalScore,
+                        'description': $school.description
+                    ]/}
+                {/call}
+            {/foreach}
         </div>
-
-        <div class="b-school-list__school-rating">
-            {call sm.bRating.Template.base}
-                {param params:[
-                    'marks': $params.score,
-                    'averageMark': $params.totalScore,
-                    'theme': 'black',
-                    'noSectionNames': true
-                ]/}
-            {/call}
-        </div>
-
-//        <div class="b-school-list__school-data">
-//            <div class="b-school-list__school-data-item">
-//                Станция метро, длинный адрес школы
-//            </div>
-//        </div>
-
-        {if $params.description}
-            <div class="b-school-list__school-description">
-                {$params.description}
-            </div>
-        {/if}
     </div>
 {/template}
