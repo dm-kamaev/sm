@@ -27,30 +27,32 @@ exports.getAddress = (departmentInstance) => {
 /**
  * Get address array for needed stages
  */
-exports.getAdressesHasStage = (addressList) => {
-    var addressesHasNeededStages = [];
-    var addressesWithoutStage = addressList
+exports.addressesFilter = (addressList) => {
+    var addressesWithoutStage = [];
+    var addressesWithNeededStages = addressList
         .filter(address => {
-            var res = true;
+            var res = false;
             if (address.departments.length > 0) {
-                res = false;
                 address.departments.forEach(department => {
-                    if (department.stage !== enums.departmentStage
-                        .PRESCHOOL &&
-                        department.stage !== enums.departmentStage
-                        .SUPPLEMENTARY &&
-                        department.stage !== enums.departmentStage
-                        .HIGHER_EDUCATION) {
-                        addressesHasNeededStages.push(address);
+                    if (department.stage !==
+                        enums.departmentStage.PRESCHOOL &&
+                        department.stage !==
+                        enums.departmentStage.SUPPLEMENTARY &&
+                        department.stage !==
+                        enums.departmentStage.HIGHER_EDUCATION) {
+                        res = true;
                     }
                 });
+            }
+            else {
+                addressesWithoutStage.push(address);
             }
             return res;
         });
 
     var addresses;
-    if (addressesHasNeededStages.length > 0) {
-        addresses = addressesHasNeededStages;
+    if (addressesWithNeededStages.length > 0) {
+        addresses = addressesWithNeededStages;
     }
     else {
         addresses = addressesWithoutStage;
