@@ -198,13 +198,11 @@ service.list = async (function() {
         })
     );
 
-    schools
+    return schools
         .map(school => service.calculateScore_(school))
         .sort(function(a, b) {
             return b.totalScore - a.totalScore;
         });
-
-    return schools;
 });
 
 /**
