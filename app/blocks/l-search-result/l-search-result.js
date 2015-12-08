@@ -132,7 +132,7 @@ goog.scope(function() {
 
         this.getHandler().listen(
             this.schoolList_,
-            SchoolList.event.ITEM_CLICK,
+            SchoolList.Event.ITEM_CLICK,
             this.redirect_
         );
 
@@ -153,7 +153,6 @@ goog.scope(function() {
      */
     SearchResult.prototype.redirect_ = function(event) {
         document.location.href = '/school/' + event.itemId;
-        console.log('/school/' + event.itemId);
     };
 });
 

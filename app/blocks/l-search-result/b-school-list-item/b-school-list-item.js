@@ -32,7 +32,8 @@ sm.lSearchResult.bSchoolListItem.SchoolListItem = function(params) {
     this.id_ = params.id || 0;
 
 };
-goog.inherits(sm.lSearchResult.bSchoolListItem.SchoolListItem, goog.ui.Component);
+goog.inherits(sm.lSearchResult.bSchoolListItem.SchoolListItem,
+    goog.ui.Component);
 
 goog.scope(function() {
     var ListItem = sm.lSearchResult.bSchoolListItem.SchoolListItem,
@@ -45,21 +46,25 @@ goog.scope(function() {
     ListItem.CssClass = {
         ROOT: 'b-school-list-item'
     };
+
     /**
      * Events enum
      * @enum {String}
      */
-    ListItem.event = {
+    ListItem.Event = {
         CLICK: 'click'
     };
 
     /**
-     * Returns total score
+     * Returns score
      * @public
-     * @return {Array.<String>}
+     * @param {Number=} opt_index
+     * @return {(Array.<Number>|Number)}
      */
-    ListItem.prototype.getScore = function() {
-        return this.score_;
+    ListItem.prototype.getScore = function(opt_index) {
+        return opt_index ?
+            this.score_[opt_index] :
+            this.score_;
     };
 
     /**
@@ -85,6 +90,7 @@ goog.scope(function() {
 
         this.decorateInternal(element);
     };
+
     /**
      * Internal decorates the DOM element
      * @param {Element} element
@@ -101,6 +107,7 @@ goog.scope(function() {
         this.addChild(schoolRatingInstance);
         schoolRatingInstance.decorate(schoolRatingElement);
     };
+
     /**
      * Set up the Component.
      * @public
@@ -113,15 +120,15 @@ goog.scope(function() {
             this.itemClickHandler_
         );
     };
+
     /**
      * Click handler
      * @private
      */
     ListItem.prototype.itemClickHandler_ = function() {
         this.dispatchEvent({
-            'type': ListItem.event.CLICK,
+            'type': ListItem.Event.CLICK,
             'itemId': this.id_
         });
     };
 });
-

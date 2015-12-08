@@ -1,12 +1,11 @@
 goog.provide('sm.lSearchResult.bSchoolList.SchoolList');
 
-goog.require('goog.dom.classes');
-goog.require('goog.dom.classlist');
-goog.require('goog.events');
+
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
-goog.require('sm.lSearchResult.bSchoolListItem.SchoolListItem');
 goog.require('sm.lSearchResult.bSchoolList.Template');
+goog.require('sm.lSearchResult.bSchoolListItem.SchoolListItem');
+
 
 /**
  * School list component
@@ -27,9 +26,16 @@ sm.lSearchResult.bSchoolList.SchoolList = function(opt_params) {
     /**
      * Array of instances of list elements
      * @private
-     * @type {Array.<sm.lSearchResult.bSchoolList.ListElement>}
+     * @type {Array.<sm.lSearchResult.bSchoolListItem.SchoolListItem>}
      */
     this.schoolListItems_ = [];
+
+    /**
+     *
+     * @type {?Element}
+     * @private
+     */
+    this.bodyElement_ = null;
 };
 goog.inherits(sm.lSearchResult.bSchoolList.SchoolList, goog.ui.Component);
 
@@ -50,8 +56,8 @@ goog.scope(function() {
      * Event enum
      * @enum
      */
-    SchoolList.event = {
-        'ITEM_CLICK': SchoolListItem.event.CLICK
+    SchoolList.Event = {
+        'ITEM_CLICK': SchoolListItem.Event.CLICK
     };
 
     /**
@@ -89,9 +95,11 @@ goog.scope(function() {
         );
 
         length = schoolListItemElements.length;
-        for (var i = 0; i < length; i++) {
+        for (var i = 0, item; i < length; i++) {
+            item = schoolListItemElements[i];
+
             params = JSON.parse(
-                schoolListItemElements[i].getAttribute('data-params')
+                item.getAttribute('data-params')
             );
 
             schoolListItemInstance = new SchoolListItem({
@@ -101,9 +109,13 @@ goog.scope(function() {
             });
 
             this.addChild(schoolListItemInstance);
-            this.schoolListItems_[i] = schoolListItemInstance;
-            schoolListItemInstance.decorate(schoolListItemElements[i]);
+            this.schoolListItems_.push(schoolListItemInstance);
+            schoolListItemInstance.decorate(item);
         }
+
+        this.bodyElement_ = this.getElementByClass(
+            SchoolList.CssClass.SCHOOL_LIST_BODY
+        );
     };
 
     /**
@@ -111,7 +123,7 @@ goog.scope(function() {
      */
     SchoolList.prototype.getContentElement = function() {
         goog.base(this, 'getContentElement');
-        return this.getElementByClass(SchoolList.CssClass.SCHOOL_LIST_BODY);
+        return this.bodyElement_;
     };
 
     /**
@@ -120,28 +132,18 @@ goog.scope(function() {
      * @public
      */
     SchoolList.prototype.sort = function(sortKey) {
-        var schoolListElements,
-            length;
-        schoolListElements = this.removeChildren();
+        var compareByTotalScore = function(a, b) {
+                return b.getTotalScore() - a.getTotalScore();
+            };
+        var compareByScore = function(a, b) {
+                return b.getScore(sortKey - 1) - a.getScore(sortKey - 1);
+            };
+        var compare = (sortKey > 0) ? compareByScore : compareByTotalScore;
 
-        if (sortKey == 0) {
-            schoolListElements.sort(
-                function(a, b) {
-                    return b.getTotalScore() - a.getTotalScore();
-                }
-            );
-        }
-        else {
-            schoolListElements.sort(
-                function(a, b) {
-                    return (
-                        b.getScore()[sortKey - 1] - a.getScore()[sortKey - 1]
-                    );
-                }
-            );
-        }
-        length = schoolListElements.length;
-        for (var i = 0; i < length; i++) {
+        var schoolListElements = this.removeChildren();
+        schoolListElements.sort(compare);
+
+        for (var i = 0; i < schoolListElements.length; i++) {
             this.addChild(schoolListElements[i]);
         }
     };
