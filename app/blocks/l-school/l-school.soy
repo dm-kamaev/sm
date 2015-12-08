@@ -67,8 +67,11 @@
         {/let}
         <div class="l-school" data-params="{$dataParams}">
             /*Тут должен вызываться шаблон хедера*/
-            {call sm.bHeader.Template.base /}
-
+            {call sm.bHeader.Template.base}
+                {param params: [
+                'url': '/'
+                ]/}
+            {/call}
             <div class="l-school__body">
                 {call .top_}
                    {param params: $params /}
