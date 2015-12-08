@@ -125,24 +125,18 @@ goog.scope(function() {
     SearchResult.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
 
-        this.sort_.listen(
-            Sort.Event.ITEM_CLICK,
-            this.onSortHandler_,
-            false,
-            this
-        );
-    };
-
-    /**
-     * Clean up the Component.
-     */
-    SearchResult.prototype.exitDocument = function() {
-        goog.base(this, 'exitDocument');
-
-        this.sort_.unlisten(
+        this.getHandler().listen(
+            this.sort_,
             Sort.Event.ITEM_CLICK,
             this.onSortHandler_
         );
+
+        this.getHandler().listen(
+            this.schoolList_,
+            SchoolList.event.ITEM_CLICK,
+            this.redirect_
+        );
+
     };
 
     /**
@@ -152,6 +146,15 @@ goog.scope(function() {
      */
     SearchResult.prototype.onSortHandler_ = function(event) {
         this.schoolList_.sort(event.itemId);
+    };
+    /**
+     * Redirect item click handler
+     * @param {Object} event
+     * @private
+     */
+    SearchResult.prototype.redirect_ = function(event) {
+        document.location.href = '/school/' + event.itemId;
+        console.log('/school/' + event.itemId);
     };
 });
 

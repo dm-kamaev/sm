@@ -58,7 +58,7 @@ goog.scope(function() {
 
         suggestInstance.addEventListener(
             gorod.gSuggest.Suggest.Events.SELECT,
-            this.redirect_
+            this.itemClickHandler_
         );
 
         suggestInstance.setCallback('getData', function(elem) {
@@ -79,7 +79,7 @@ goog.scope(function() {
      * @param {Object} event
      * @param {Object} data
      */
-    Search.prototype.redirect_ = function(event, data) {
+    Search.prototype.itemClickHandler_ = function(event, data) {
         document.location.href = '/school/' + data.key;
     }
 });
