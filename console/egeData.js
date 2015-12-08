@@ -29,7 +29,7 @@ var parse = async (function(path) {
     if (!common.fileExists(path))
         throw new Error('Cant find the file');
     var list = xlsx.parse(path)[LIST_INDEX];
-    progressBar.parseExcel(LAST_ROW-FIRST_ROW);
+    progressBar.parseExcel(LAST_ROW - FIRST_ROW);
     var parser = await( new MainParser(list));
     var results = parser.getSchoolResults();
     progressBar.dbWrite(results.length);

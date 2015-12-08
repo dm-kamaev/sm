@@ -9,7 +9,7 @@ const fs = require('fs');
 const DUMP_FOLDER = './assets/dump/';
 const PROJECT_NAME = 'BP';
 const common = require.main.require('./console/common');
-const SEPARATOR = ':';
+const SEPARATOR = '_';
 const sequelize = require.main.require('./app/components/db');
     
 var start = function() {
@@ -44,10 +44,13 @@ var dropAll = async(()=>{
     await(sequelize.queryInterface.dropAllEnums());
 });
 
-var load = async(function(){
+var load = async(function() {
+    var filepath = DUMP_FOLDER + dbConfig.dump;
+    if (!common.fileExists(filepath))
+        throw new Error('Can\'t find the dump file!');
     await(dropAll());
     var command = 'pg_restore -d ' + dbConfig.name + 
-        ' ' + DUMP_FOLDER + dbConfig.dump;
+        ' ' + filepath;
     exec(command, {maxBuffer: 1024 * 500},  
         function (error, stdout) {
             console.log(stdout);
