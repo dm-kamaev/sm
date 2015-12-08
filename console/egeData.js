@@ -25,24 +25,24 @@ const SITE_INDEX = 1;
 
 var parse = async (function(path) {
     sequelize.options.logging = false;
-    var progressBar = new PBar();
+    var progressBar = PBar.getInstance();
     if (!common.fileExists(path))
         throw new Error('Cant find the file');
-    var list = xlsx.parse(path)[LIST_INDEX
+    var list = xlsx.parse(path)[LIST_INDEX];
     progressBar.parseExcel(LAST_ROW-FIRST_ROW);
     var parser = await( new MainParser(list));
-    progressBar.dbWrite(100);
-    progressBar.tick(); //todo: fix this and write results to db
-    console.log(parser.getSchoolResults().length);
+    var results = parser.getSchoolResults();
+    progressBar.dbWrite(results.length);
+    var dbWriter = await(new DbWriter(results));
 });
+
 class PBar {
-    constructor() {
-        if (PBar.instance)
-            throw new Error('THERE CAN BE ONLY ONE');
-        PBar.instance = this;
-        this.pbar = null;
-    }
-    
+    constructor() {}
+    static getInstance() {
+        if (!PBar.instance)
+            PBar.instance = new PBar();
+        return PBar.instance;
+    } 
     parseExcel(length) {
         if (this.pbar)
             this.pbar.terminate();
@@ -60,9 +60,6 @@ class PBar {
             width: 30 
         });
     }
-    static tick() {
-        PBar.instance.tick();
-    }
 
     tick() {
         if (this.pbar)
@@ -71,7 +68,85 @@ class PBar {
 }
 
 
+class DbWriter {
+    /**
+     * @param {object} data JSON with parsed data from spreadsheet
+     */
+    constructor(data) {
+        this.data = data;
+        this.cachedSubjects = [];
+        this.start_();
+    }
+
+    /**
+     * @private
+     */
+    start_() {
+        await(
+           this.data.forEach(schoolNode => {
+               this.parseSchool_(schoolNode);
+           })
+         );
+    }
+    
+    /**
+     * @private
+     * @param {object} schoolNode JSON node with information about one school
+     */
+    parseSchool_(schoolNode) {
+        var school = schoolNode.school;
+        await (services.studyResult.dropEgeResults(school.id));
+        await (schoolNode.results.forEach(yearNode => {
+            this.parseYear_(yearNode, school);
+        }));
+        PBar.getInstance().tick();
+    }
+    
+    /**
+     * @private
+     * @prarm {string} subject Subject name
+     * @returns {object} subject instance
+     */
+    getSubject_(subjectName) {
+        subjectName = subjectName
+            .toLowerCase()
+            .trim();
+        var cachedSubject = 
+            this.cachedSubjects.find(subject => subject.name == subjectName);
+        if (!cachedSubject) {
+            cachedSubject = 
+                await(services.subject.getOrCreate(subjectName));
+            this.cachedSubjects.push(cachedSubject);
+        }
+        return cachedSubject;
+    }
+
+    /**
+     * @private
+     * @param {object} yearNode JSON node with information about year results
+     * @param {object} school School instance
+     */
+    parseYear_(yearNode, school) {
+        var year = yearNode.year;
+        yearNode.results.forEach(record => {
+            var subject = await(this.getSubject_(record.subject));
+            var ege = {
+                year: year,
+                schoolId: school.id,
+                subjectId: subject.id,
+                result: record.result
+            };
+            services.studyResult.createEge(ege);
+        });
+    }
+
+
+}
+
 class MainParser {
+    /**
+     * @param {object} sheet spreadsheet list object
+     */
     constructor(sheet) {
         this.sheet = sheet.data;
         this.schoolResults = [];
@@ -80,14 +155,18 @@ class MainParser {
         this.currentRow = this.sheet[this.currentRowIndex];
         this.isEmtyRow = true;
         while (this.currentRowIndex <= LAST_ROW)
-            this.parseSchool();
+            this.parseSchool_();
 
     }
     
     static getYear(string) {
         return string.replace(/\D/g, ''); //leave only digits
     }
-
+    
+    /**
+     * @param {string} site 
+     * @returns {object} instance School instance
+     */
     static getSchool(site) {
         site = site.replace(/http:\/\//g, ''); //remove 'http://'
         var instance = await(services.school.findBySite(site));
@@ -96,26 +175,38 @@ class MainParser {
         return instance;
     }
 
-    incrementRow() {
+    /**
+     * @private
+     */
+    incrementRow_() {
         this.currentRowIndex++;
         this.currentRow = this.sheet[this.currentRowIndex];
-        PBar.tick();
+        PBar.getInstance().tick();
     }
-    setRow(integer) {
-        var tickCount = Math.abs(integer - this.currentRowIndex);
-        this.currentRowIndex = integer;
+
+    /**
+     * @private
+     * @param {int} rowNumber
+     */
+    setRow_(rowNumber) {
+        var tickCount = Math.abs(rowNumber - this.currentRowIndex);
+        this.currentRowIndex = rowNumber;
         this.currentRow = this.sheet[this.currentRowIndex];
-        PBar.tick(tickCount);
+        PBar.getInstance().tick(tickCount);
     }
+    /**
+     * @public
+     * @returns JSON with parsed data
+     */
     getSchoolResults() {
         return this.schoolResults;
     }
-
     
     /**
+     * @private
      * @param {int} startColumn 
      */
-    parseYear(startColumn) {
+    parseYear_(startColumn) {
         var endColumn = startColumn + SUBJECT_COUNT; 
         var yearRes = {
             year: MainParser.getYear(this.sheet[YEAR_ROW][startColumn]),
@@ -137,10 +228,11 @@ class MainParser {
     }
     
     /**
+     * @private
      * @param {int} startColumn 
      * @prama {int} depCount Departament count
      */
-    parseDepartamYear(startColumn, depCount) {
+    parseDepartamYear_(startColumn, depCount) {
         var endColumn = startColumn + SUBJECT_COUNT; 
         var yearRes = {
             year: MainParser.getYear(this.sheet[YEAR_ROW][startColumn]),
@@ -153,7 +245,7 @@ class MainParser {
                 var depResult = this.sheet[this.currentRowIndex + n][i] || 0;
                 depResults.push(depResult);
             }
-            var depSum = depResults.reduce((a, b) => {return a + b}, 0);
+            var depSum = depResults.reduce((a, b) => {return a + b;}, 0);
             var result =  depSum / depCount;
             if (result) {
                 yearRes.results.push({
@@ -164,50 +256,55 @@ class MainParser {
         }
         return yearRes;
     }
-    
-    parseDepartaments() {
+
+    /**
+     * @private
+     */
+    parseDepartaments_() {
         var result = [];
         var depCount = 0;
         while (!this.sheet[this.currentRowIndex + 1 + depCount][SITE_INDEX]) {
             depCount++;
         }
         if (depCount) {
-            this.incrementRow(); //go to first departament
+            this.incrementRow_(); //go to first departament
             for (var i = 0; i< YEAR_COUNT; i++){
                 var column = FIRST_COL + (i * 2 * SUBJECT_COUNT);//2 to skip the gia 
-                var yearRes = this.parseDepartamYear(column, depCount);
+                var yearRes = this.parseDepartamYear_(column, depCount);
                 if (yearRes.results.length)
                     result.push(yearRes);
             }
-            this.setRow(this.currentRowIndex + depCount - 1) //-1 because row would be incrementade once after school parsing
+            this.setRow_(this.currentRowIndex + depCount - 1) //-1 because row would be incrementade once after school parsing
         }
         
         return result;
     }
 
-    parseSchool() {
+    /**
+     * @private
+     */
+    parseSchool_() {
         var site = this.currentRow[SITE_INDEX];
         var school;
         if (site) 
             school = await(MainParser.getSchool(site));
         if (school){
             var schoolResult = {results: []};
-            var column = FIRST_COL;
             schoolResult.school = school;
             this.isEmtyRow = true;
             
             for (var i = 0; i< YEAR_COUNT; i++){
                 var column = FIRST_COL + (i * 2 * SUBJECT_COUNT);//2 to skip the gia 
-                var yearRes = this.parseYear(column);
+                var yearRes = this.parseYear_(column);
                 if (yearRes.results.length)
                     schoolResult.results.push(yearRes);
             }
-            if (this.isEmtyRow == true) {
-                schoolResult.results = this.parseDepartaments();
+            if (this.isEmtyRow === true) {  //if there is no results for school try to parse departments
+                schoolResult.results = this.parseDepartaments_();
             }
             this.schoolResults.push(schoolResult);
         }
-        this.incrementRow();
+        this.incrementRow_();
     }
 }
 
