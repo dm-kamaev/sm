@@ -82,38 +82,6 @@ goog.scope(function() {
     };
 
     /**
-     * Set up the Component.
-     */
-    SchoolList.prototype.enterDocument = function() {
-        goog.base(this, 'enterDocument');
-
-        for (var i = 0; i < this.schoolElements_.length; i++) {
-            goog.events.listen(
-                this.schoolElements_[i],
-                goog.events.EventType.CLICK,
-                this.redirect_,
-                false,
-                this
-            );
-        }
-    };
-
-    /**
-     * Clean up the Component.
-     */
-    SchoolList.prototype.exitDocument = function() {
-        goog.base(this, 'exitDocument');
-
-        for (var i = 0; i < this.schoolElements_.length; i++) {
-            goog.events.unlisten(
-                this.schoolElements_[i],
-                goog.events.EventType.CLICK,
-                this.redirect_
-            );
-        }
-    };
-
-    /**
      * Rating initialization
      * @private
      */
@@ -132,15 +100,5 @@ goog.scope(function() {
             this.addChild(schoolRating);
             schoolRating.decorate(schoolRatingElement);
         }
-    };
-
-    /**
-     * Redirect handler
-     * @param {Object} event
-     * @private
-     */
-    SchoolList.prototype.redirect_ = function(event) {
-        var id = event.currentTarget.getAttribute('data-id');
-        document.location.href = '/school/' + id;
     };
 });
