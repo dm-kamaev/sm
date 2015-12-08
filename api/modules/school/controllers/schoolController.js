@@ -114,15 +114,15 @@ exports.create = function(req, res) {
 };
 
 /**
- * @api {get} api/school/type Get school type list
+ * @api {get} api/school/search/filters Get school type list
  * @apiVersion 0.0.0
  * @apiGroup School
- * @apiName ListSchoolTypes
+ * @apiName ListSearchFilters
  */
-exports.listTypes = async (function(req, res) {
+exports.listSearchFilters = async (function(req, res) {
     var result;
     try {
-        result = await(services.school.listTypes());
+        result = await(services.school.searchFilters());
     } catch (e) {
         console.log(e.message);
         result = e;

@@ -28,17 +28,30 @@ service.getGroupId = async (function(school, t) {
     return instance.comment_group_id;
 });
 
+/**
+ * @public
+ */
+service.searchFilters = async (function() {
+    var olympFilters = services.subject.olympFilters();
+    var egeFilters = services.subject.egeFilters();
+    var giaFilters = services.subject.giaFilters();
+    var typeFilters = service.typeFilters();
+    return await (olympFilters, egeFilters, giaFilters, typeFilters);
+});
 
-service.listTypes = async (function(){
-    return enums.schoolType
-        .toArray()
-        .map(type => {
-            return {
-                label: type,
-                value: type
-            };
-        });
-
+service.typeFilters = async (function() {
+    var schoolTypeFilters 
+        = await(services.search.getTypeFilters());
+    var formattedFilters = schoolTypeFilters.map(filter => {
+        return {
+            label: filter.name,
+            value: filter.id,
+        };
+    });
+    return {
+        filter: enums.searchType.SCHOOL_TYPE,
+        values: formattedFilters
+    };
 });
 
 service.getAddresses = async (school => {
