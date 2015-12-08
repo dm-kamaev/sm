@@ -85,13 +85,13 @@ gulp.task('appES5', function () {
 });
 
 
-gulp.task('soy', ['preSoy'], function (cb) {
+gulp.task('soy', ['soyExtend'], function (cb) {
     //return gulpHelper.soy([
     //    path.join(__dirname, BLOCKS_DIR, '/**/*.soy')
     //]);
 
     return gulp.src([
-            path.join(__dirname, '/node_modules/frobl/tmp/**/*.soy'),
+            path.join(__dirname, '/tmp/soy/**/*.soy'),
             path.join(__dirname, '/node_modules/frobl/blocks', '/**/*.soy')
         ])
         .pipe(soynode({
@@ -107,43 +107,60 @@ gulp.task('soy', ['preSoy'], function (cb) {
         }));
 });
 
+var extender = new SoyExtend({
+    blocksDir: path.join(__dirname, BLOCKS_DIR)
+});
 
+var soyCopy = function(src, dest) {
+    return gulp.src(src)
+        .pipe(gulp.dest(dest));
+};
 
-gulp.task('preSoy', function(cb) {
-    var extender = new SoyExtend({
-        blocksDir: path.join(__dirname, BLOCKS_DIR)
+var soyEx = function(src) {
+    return gulp.src(src)
+        .pipe(foreach(function (stream, file) {
+            extender.proceed(file.path);
+            return stream;
+        }));
+};
+
+gulp.task('appSoy', function (cb) {
+    gulp.task('_appSoyCopy', function () {
+        return soyCopy(
+            path.join(__dirname, BLOCKS_DIR, '/**/*.soy'),
+            path.join(__dirname, '/node_modules/frobl/tmp/appSoy')
+        );
     });
 
+    gulp.task('_appSoyExtend', function () {
+        return soyEx(
+            path.join(__dirname, '/node_modules/frobl/tmp/appSoy/**/*.soy')
+        );
+    });
+
+    return gulpHelper.runSequence(
+        '_appSoyCopy',
+        '_appSoyExtend',
+        cb
+    );
+});
+
+gulp.task('soyExtend', function(cb) {
     gulp.task('_copy', function () {
-        return gulp.src(
-                path.join(__dirname, BLOCKS_DIR, '/**/*.soy')
-            )
-            .pipe(gulp.dest(path.join(__dirname, '/node_modules/frobl/tmp')));
+        return soyCopy(
+            path.join(__dirname, BLOCKS_DIR, '/**/*.soy'),
+            path.join(__dirname, '/tmp/soy')
+        );
     });
 
     gulp.task('_extend', function () {
-        return gulp.src(path.join(
-                __dirname,
-                '/node_modules/frobl/tmp/**/*.soy'
-            ))
-            .pipe(foreach(function (stream, file) {
-                extender.proceed(file.path);
-                return stream;
-            }));
+        return soyEx(path.join(
+            __dirname,
+            '/tmp/soy/**/*.soy'
+        ));
     });
-/*
-    gulp.task('_soyApp', function () {
-        return gulp.src([
-            path.join(__dirname, '/node_modules/frobl/tmp/**//*.soy'),
-            path.join(__dirname, '/node_modules/frobl/blocks', '/**//*.soy')
-        ])
-            .pipe(soynode({
-                outputDir: path.join(__dirname, '/node_modules/frobl', '/tmp/soyApp'),
-                loadCompiledTemplates: false
-            }));
-    });*/
 
-    return gulpHelper.runSequence('_copy', '_extend', /*'_soyApp',*/ cb);
+    return gulpHelper.runSequence('_copy', '_extend', cb);
 });
 
 var getDirectories = function(srcpath)  {
@@ -245,6 +262,23 @@ gulp.task('watch', function () {
         path.join(__dirname + BLOCKS_DIR + '/**/*.scss'),
         path.join(__dirname + BLOCKS_DIR + '/**/*.css')
     ], ['styles']);
+
+    gulp.watch([path.join(__dirname + BLOCKS_DIR + '/**/*.soy')])
+    .on('change', function(file) {
+            return gulp.src(file.path)
+            .pipe(gulp.dest(
+                    path.join(__dirname, '/node_modules/frobl/tmp/appSoy')
+                ))
+            .pipe(foreach(function (stream, file) {
+                extender.proceed(file.path);
+                return stream;
+            }));
+            /*console.log(file);
+            soyCopy(
+                file.path,
+                path.join(__dirname, '/node_modules/frobl/tmp/appSoy')
+            )*/
+        });
 });
 
 
@@ -256,8 +290,8 @@ gulp.task('fonts', function () {
 
 const tasks = function (bool) {
     return bool ?
-        ['soy', 'scripts', 'sprite', 'images', 'fonts', 'styles'] :
-        ['watch', 'soy', 'scripts', 'sprite', 'images', 'fonts','styles'];
+        ['soy', 'appSoy', 'scripts', 'sprite', 'images', 'fonts', 'styles'] :
+        ['watch', 'soy', 'appSoy', 'scripts', 'sprite', 'images', 'fonts','styles'];
 };
 
 gulp.task('default', tasks(production));
