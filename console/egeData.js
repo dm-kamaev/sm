@@ -22,6 +22,7 @@ const YEAR_ROW = 3;
 const SUBJECT_ROW = 4;
 const SITE_INDEX = 1;
 const BASE_MATH_COLUMN_INDEX = 1; //base math results should be converted
+const BASE_MATH_YEAR = 2015;
 
 
 var parse = async (function(path) {
@@ -181,28 +182,29 @@ class MainParser {
      * @param {int} col number
      * @returns {number} normalized result
      */
-    static normalizeResult(result, col) {
+    static normalizeResult(result, col, year) {
         var subjectIndex  = (col - FIRST_COL) % (SUBJECT_COUNT * 2);
-        if (subjectIndex == BASE_MATH_COLUMN_INDEX 
-                && typeof result != 'string'
-                && result > 5) {
-            switch (true) {
-                case (result <= 6):
-                    result = 2;
-                    break;
-                case (result > 6 && result <= 11):
-                    result = 3;
-                    break;
-                case (result > 11 && result <= 16):
-                    result = 4;
-                    break;
-                case (result > 17 && result <= 20):
-                    result = 5;
-                    break;
-                default:
-                    throw new Error('Undexpected base math result: ' + result);
+        if (subjectIndex == BASE_MATH_COLUMN_INDEX) {
+            if (year != BASE_MATH_YEAR)
+                result =  '';
+            else if (typeof result != 'string' && result > 5) {
+                switch (true) {
+                    case (result <= 6):
+                        result = 2;
+                        break;
+                    case (result > 6 && result <= 11):
+                        result = 3;
+                        break;
+                    case (result > 11 && result <= 16):
+                        result = 4;
+                        break;
+                    case (result > 16 && result <= 20):
+                        result = 5;
+                        break;
+                    default:
+                        throw new Error('Undexpected base math result: ' + result);
+                }
             }
-            console.log(result);
         }
         return result;
     }
@@ -247,11 +249,12 @@ class MainParser {
         for (var i = startColumn; i<endColumn; i++) {
             var subject = this.sheet[SUBJECT_ROW][i];
             var result = this.currentRow[i]|| ''; 
+                result = MainParser.normalizeResult(result, i, yearRes.year);
             if (result && typeof result != 'string') {
                 this.isEmtyRow = false;
                 yearRes.results.push({
                     subject: subject,
-                    result: MainParser.normalizeResult(result, i)
+                    result: result
                 });
             }
         }
@@ -274,7 +277,7 @@ class MainParser {
             var depResults = [];
             for (var n = 0; n < depCount; n++ ){
                 var depResult = this.sheet[this.currentRowIndex + n][i] || 0;
-                depResult = MainParser.normalizeResult(depResult, i);
+                depResult = MainParser.normalizeResult(depResult, i, yearRes.year);
                 depResults.push(depResult);
             }
             var depSum = depResults.reduce((a, b) => {return a + b;}, 0);
