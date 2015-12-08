@@ -1,7 +1,7 @@
 {namespace sm.bHeader.Template}
 /**
 * Header
-* @param params ?{
+* @param params {
 *     url: ?string
 * }
 */
@@ -30,11 +30,11 @@
     						<span class="b-header__star b-header__star_fifth">t</span>
     					</span>
     					<h1 class="b-header__header">
-    						<a class="b-header__link"
                                 {if $params.url}
-                                    href="{$params.url}"
+    						        <a class="b-header__link" href="{$params.url}">школы мела</a>
+                                {else}
+                                    школы мела
                                 {/if}
-                            >школы мела</a>
     					</h1>
     					<span class="b-header__stars">
     						<span class="b-header__star b-header__star_fifth">t</span>
