@@ -12,6 +12,7 @@ const soynode = require('gulp-soynode');
 var glob = require("glob");
 var exec = require('child_process').exec;
 var Q = require('q');
+var watch = require('gulp-watch');
 var fs = require('fs-extra'),
     foreach = require('gulp-foreach'),
     SoyExtend = require('./soy-extend');
@@ -91,7 +92,7 @@ gulp.task('soy', ['soyExtend'], function (cb) {
     //]);
 
     return gulp.src([
-            path.join(__dirname, '/tmp/soy/**/*.soy'),
+            path.join(__dirname, '/node_modules/frobl/tmp/soy/**/*.soy'),
             path.join(__dirname, '/node_modules/frobl/blocks', '/**/*.soy')
         ])
         .pipe(soynode({
@@ -113,50 +114,75 @@ var extender = new SoyExtend({
 
 var soyCopy = function(src, dest) {
     return gulp.src(src)
+        //.pipe(watch(src))
         .pipe(gulp.dest(dest));
 };
 
 var soyEx = function(src) {
     return gulp.src(src)
+        //.pipe(watch(src))
         .pipe(foreach(function (stream, file) {
             extender.proceed(file.path);
             return stream;
         }));
 };
-
-gulp.task('appSoy', function (cb) {
-    gulp.task('_appSoyCopy', function () {
-        return soyCopy(
-            path.join(__dirname, BLOCKS_DIR, '/**/*.soy'),
-            path.join(__dirname, '/node_modules/frobl/tmp/appSoy')
-        );
-    });
-
-    gulp.task('_appSoyExtend', function () {
-        return soyEx(
-            path.join(__dirname, '/node_modules/frobl/tmp/appSoy/**/*.soy')
-        );
-    });
-
-    return gulpHelper.runSequence(
-        '_appSoyCopy',
-        '_appSoyExtend',
-        cb
-    );
-});
+//
+//gulp.task('appSoy', function (cb) {
+//    gulp.task('_appSoyCopy', function () {
+//        return soyCopy(
+//            path.join(__dirname, BLOCKS_DIR, '/**/*.soy'),
+//            path.join(__dirname, '/node_modules/frobl/tmp/appSoy')
+//        );
+//    });
+//
+//    gulp.task('_appSoyExtend', function () {
+//        return soyEx(
+//            path.join(__dirname, '/node_modules/frobl/tmp/appSoy/**/*.soy')
+//        );
+//    });
+//
+//    return gulpHelper.runSequence(
+//        '_appSoyCopy',
+//        '_appSoyExtend',
+//        cb
+//    );
+//});
+//
+//gulp.task('appSoyWatch', function (file, cb) {
+//    console.log('file ', file);
+//    console.log('cb ', cb);
+//    //gulp.task('_appSoyWatchCopy', function () {
+//    //    return soyCopy(
+//    //        path.join(__dirname, BLOCKS_DIR, '/**/*.soy'),
+//    //        path.join(__dirname, '/node_modules/frobl/tmp/appSoy')
+//    //    );
+//    //});
+//    //
+//    //gulp.task('_appSoyWatchExtend', function () {
+//    //    return soyEx(
+//    //        path.join(__dirname, '/node_modules/frobl/tmp/appSoy/**/*.soy')
+//    //    );
+//    //});
+//    //
+//    //return gulpHelper.runSequence(
+//    //    '_appSoyWatchCopy',
+//    //    '_appSoyWatchExtend',
+//    //    cb
+//    //);
+//});
 
 gulp.task('soyExtend', function(cb) {
     gulp.task('_copy', function () {
         return soyCopy(
             path.join(__dirname, BLOCKS_DIR, '/**/*.soy'),
-            path.join(__dirname, '/tmp/soy')
+            path.join(__dirname, '/node_modules/frobl/tmp/soy')
         );
     });
 
     gulp.task('_extend', function () {
         return soyEx(path.join(
             __dirname,
-            '/tmp/soy/**/*.soy'
+            '/node_modules/frobl/tmp/soy/**/*.soy'
         ));
     });
 
@@ -263,22 +289,23 @@ gulp.task('watch', function () {
         path.join(__dirname + BLOCKS_DIR + '/**/*.css')
     ], ['styles']);
 
-    gulp.watch([path.join(__dirname + BLOCKS_DIR + '/**/*.soy')])
-    .on('change', function(file) {
-            return gulp.src(file.path)
-            .pipe(gulp.dest(
-                    path.join(__dirname, '/node_modules/frobl/tmp/appSoy')
-                ))
-            .pipe(foreach(function (stream, file) {
-                extender.proceed(file.path);
-                return stream;
-            }));
-            /*console.log(file);
-            soyCopy(
-                file.path,
-                path.join(__dirname, '/node_modules/frobl/tmp/appSoy')
-            )*/
-        });
+    //gulp.watch([path.join(__dirname + BLOCKS_DIR + '/**/*.soy')], ['appSoyWatch']);
+    //.on('change', function(file) {
+    //        console.log(file);
+    //        return gulp.src(file.path)
+    //        .pipe(gulp.dest(
+    //                path.join(__dirname, '/node_modules/frobl/tmp/appSoy')
+    //            ))
+    //        .pipe(foreach(function (stream, file) {
+    //            extender.proceed(file.path);
+    //            return stream;
+    //        }));
+    //        /*console.log(file);
+    //        soyCopy(
+    //            file.path,
+    //            path.join(__dirname, '/node_modules/frobl/tmp/appSoy')
+    //        )*/
+    //    });
 });
 
 
@@ -290,8 +317,8 @@ gulp.task('fonts', function () {
 
 const tasks = function (bool) {
     return bool ?
-        ['soy', 'appSoy', 'scripts', 'sprite', 'images', 'fonts', 'styles'] :
-        ['watch', 'soy', 'appSoy', 'scripts', 'sprite', 'images', 'fonts','styles'];
+        ['soy', 'scripts', 'sprite', 'images', 'fonts', 'styles'] :
+        ['watch', 'soy', 'scripts', 'sprite', 'images', 'fonts','styles'];
 };
 
 gulp.task('default', tasks(production));
