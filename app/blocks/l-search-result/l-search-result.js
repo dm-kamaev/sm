@@ -40,6 +40,13 @@ sm.lSearchResult.SearchResult = function(opt_params) {
      * @private
      */
     this.schoolList_ = null;
+
+    /**
+     * Filters instance
+     * @type {sm.lSearchResult.bFilters.Filters}
+     * @private
+     */
+     this.filters_ = null;
 };
 goog.inherits(sm.lSearchResult.SearchResult, goog.ui.Component);
 
@@ -47,7 +54,7 @@ goog.scope(function() {
     var SearchResult = sm.lSearchResult.SearchResult,
         SchoolList = sm.lSearchResult.bSchoolList.SchoolList,
         Sort = sm.lSearchResult.bSort.Sort,
-        Filters = sm.lSearchResult.bFilters.Filters;
+        Filters = sm.lSearchResult.bFilters.Filters,
         Search = sm.bSearch.Search;
 
     /**
@@ -114,11 +121,11 @@ goog.scope(function() {
         var filtersElement = goog.dom.getElementByClass(
                 Filters.CssClass.ROOT,
                 element
-            ),
-            filters = new Filters();
+            );
 
-        this.addChild(filters);
-        filters.decorate(filtersElement);
+        this.filters_ = new Filters();
+        this.addChild(this.filters_);
+        this.filters_.decorate(filtersElement);
         
         var bSearch = goog.dom.getElementByClass(
             Search.CssClass.INPUT,
@@ -148,7 +155,46 @@ goog.scope(function() {
             this.redirect_
         );
 
+        this.getHandler().listen(
+            this.filters_,
+            Filters.event.SUBMIT,
+            this.filtersSubmitHandler_
+        );
+
     };
+
+    /**
+     * Sends form using jQuery.ajax
+     * @param {string} url
+     * @param {string} method
+     * @param {Object} data
+     * @param {Function=} opt_callback
+     * @private
+     */
+    SearchResult.prototype.send_ = function(url, method, data, opt_callback) {
+        jQuery.ajax({
+            url: url,
+            type: method,
+            data: data,
+            success: opt_callback ? opt_callback : function() {}
+        });
+    };
+
+    /**
+     * Filters submit callback
+     * @param {string} responseData
+     * @param {string} status
+     * @param {Object} response
+     * @private
+     */
+    SearchResult.prototype.filtersSubmitCallback_ =
+        function(responseData, status, response) {
+            if (response.status == 200 && status == 'success') {
+                console.log(status);
+                var data = JSON.parse(responseData);
+                this.schoolList_.setList(data);
+            }
+        };
 
     /**
      * Sort item click handler
@@ -158,6 +204,21 @@ goog.scope(function() {
     SearchResult.prototype.onSortHandler_ = function(event) {
         this.schoolList_.sort(event.itemId);
     };
+
+    /**
+     * Filters submit handler
+     * @param {Object} event
+     * @private
+     */
+    SearchResult.prototype.filtersSubmitHandler_ = function(event) {
+        this.send_(
+            event.url,
+            event.method,
+            event.data,
+            this.filtersSubmitCallback_.bind(this)
+        );
+    };
+
     /**
      * Redirect item click handler
      * @param {Object} event

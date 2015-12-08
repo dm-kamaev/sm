@@ -107,23 +107,23 @@ exports.searchSchool = async (params => {
         }];
     }
     if (searchParams.classes && searchParams.classes.length) {
-        whereParams.educationInterval = { 
+        whereParams.educationInterval = {
             $contains: searchParams.classes
         };
     }
 
     if (searchParams.schoolType && searchParams.schoolType.length) {
         whereParams.schoolType = {
-            $or:[]  
+            $or:[]
         };
-        searchParams.schoolType.forEach((item) => { 
+        searchParams.schoolType.forEach((item) => {
             whereParams.schoolType.$or.push(item);
         });
     }
-    
+
     if (searchParams.gia) {
         searchDataCount++;
-        includeParams.searchData.where.$or.push({ 
+        includeParams.searchData.where.$or.push({
             $and: {
                 type: searchTypes.GIA,
                 values: {
@@ -131,11 +131,11 @@ exports.searchSchool = async (params => {
                 }
             }
         });
-    } 
+    }
 
     if (searchParams.ege) {
         searchDataCount++;
-        includeParams.searchData.where.$or.push({ 
+        includeParams.searchData.where.$or.push({
             $and: {
                 type: searchTypes.EGE,
                 values: {
@@ -143,11 +143,11 @@ exports.searchSchool = async (params => {
                 }
             }
         });
-    } 
+    }
 
     if (searchParams.olimp) {
         searchDataCount++;
-        includeParams.searchData.where.$or.push({ 
+        includeParams.searchData.where.$or.push({
             $and: {
                 type: searchTypes.OLIMP,
                 values: {
@@ -155,8 +155,9 @@ exports.searchSchool = async (params => {
                 }
             }
         });
-    } 
-    
+    }
+
+
     var params = {
         where: whereParams,
         include:  sequelizeInclude(includeParams, true)

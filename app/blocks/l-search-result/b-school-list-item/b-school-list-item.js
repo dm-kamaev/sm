@@ -7,30 +7,37 @@ goog.require('sm.lSearchResult.bSchoolListItem.Template');
 
 /**
  * School list item component
- * @param {object=} params
+ * @param {object=} opt_params
  * @constructor
  * @extends {goog.ui.Component}
  */
-sm.lSearchResult.bSchoolListItem.SchoolListItem = function(params) {
+sm.lSearchResult.bSchoolListItem.SchoolListItem = function(opt_params) {
     goog.base(this);
+
+    /**
+     * Parameters
+     * @type {Object}
+     * @private
+     */
+    this.params_ = opt_params || {};
+
     /**
      *  @private
      *  @type {Array.<Number>}
      */
-    this.score_ = params.score || [];
+    this.score_ = this.params_.score;
 
     /**
      *  @private
      *  @type {Number}
      */
-    this.totalScore_ = params.totalScore || 0;
+    this.totalScore_ = this.params_.totalScore;
 
     /**
      *  @private
      *  @type {Number}
      */
-    this.id_ = params.id || 0;
-
+    this.id_ = this.params_.id;
 };
 goog.inherits(sm.lSearchResult.bSchoolListItem.SchoolListItem,
     goog.ui.Component);
@@ -80,6 +87,17 @@ goog.scope(function() {
      */
     ListItem.prototype.createDom = function() {
         goog.base(this, 'createDom');
+
+        /**
+         * TODO: remove this when backend will send score
+         */
+        if (!this.params_.totalScore) {
+            this.params_.totalScore = 0;
+        }
+
+        if (!this.params_.score) {
+            this.params_.score = [0,0,0,0];
+        }
 
         var element = goog.soy.renderAsElement(
             sm.lSearchResult.bSchoolListItem.Template.base,

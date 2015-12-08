@@ -39,6 +39,10 @@ goog.scope(function() {
         ROOT: 'b-filters'
     };
 
+    Filters.event = {
+        SUBMIT: 'filters-submit'
+    };
+
     /**
      * @override
      */
@@ -98,21 +102,6 @@ goog.scope(function() {
     };
 
     /**
-     * Sends form using jQuery.ajax
-     * @param {Element} form
-     * @param {Function=} opt_callback
-     * @private
-     */
-    Filters.prototype.send_ = function(form, opt_callback) {
-        jQuery.ajax({
-            url: form.attr('action'),
-            type: form.attr('method'),
-            data: form.serialize(),
-            success: opt_callback ? opt_callback : function() {}
-        });
-    };
-
-    /**
      * Processing serialize array
      * @param {Array.<Object>} array
      * @return {Object}
@@ -127,8 +116,9 @@ goog.scope(function() {
             if (!result[a.name]) {
                 result[a.name] = [];
             }
-
-            result[a.name].push(a.value);
+            if (! (a.value == 'after-school')) {
+                result[a.name].push(a.value);
+            }
         }
 
         return result;
@@ -143,12 +133,17 @@ goog.scope(function() {
         event.preventDefault();
 
         var form = jQuery(this.getElement()),
-            data = this.processingSerializeArray_(form.serializeArray());
+            data = {
+                'searchParams': this.processingSerializeArray_(
+                    form.serializeArray()
+                )
+            };
 
-        console.log(data);
-
-        this.send_(form, function(resp){
-            console.log(resp);
+        this.dispatchEvent({
+            type: Filters.event.SUBMIT,
+            data: data,
+            url: form.attr('action'),
+            method: form.attr('method')
         });
     };
 });

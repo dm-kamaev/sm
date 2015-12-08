@@ -65,21 +65,13 @@
                             ]
                     ]/}
                 {/call}
-                {call .leftMenu_ /}
+                {call .leftMenu_ data="all"/}
                 <div class="l-search-result__school-list">
                     {call sm.lSearchResult.bSchoolList.Template.base}
                         {param params: [
                             'schools': $params.data.schools
                         ]/}
                     {/call}
-                    {call .leftMenu_ data="all"/}
-                    <div class="l-search-result__school-list">
-                        {call sm.lSearchResult.bSchoolList.Template.base}
-                            {param params: [
-                                'schools': $params.data.schools
-                            ]/}
-                        {/call}
-                    </div>
                 </div>
             </div>
             <script type="text/javascript"

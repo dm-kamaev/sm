@@ -46,6 +46,8 @@ exports.list = async (function(req, res) {
     var schoolTypes = await (services.school.listTypes());
     var filters = [];
 
+    console.log(schoolTypes);
+
     filters.push({
         data: {
             filters: schoolTypes,

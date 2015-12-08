@@ -147,4 +147,22 @@ goog.scope(function() {
             this.addChild(schoolListElements[i]);
         }
     };
+
+    SchoolList.prototype.setList = function(listData) {
+        for (var i = this.schoolListItems_.length - 1; i >= 0; i--) {
+            this.removeChild(this.schoolListItems_[i], true);
+            this.schoolListItems_.splice(i, 1);
+        }
+
+        var schoolList = this;
+        var data = listData || [];
+
+        if (data.length) {
+            data.forEach(function (itemData) {
+                var item = new SchoolListItem(itemData);
+                schoolList.addChild(item, true);
+                schoolList.schoolListItems_.push(item);
+            });
+        }
+    }
 });
