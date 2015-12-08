@@ -58,6 +58,18 @@ goog.scope(function() {
     };
 
     /**
+     * Top position of zoom control
+     * @type {String}
+     */
+    Map.ZOOM_TOP = '20px';
+
+    /**
+     * Left position of zoom control
+     * @type {String}
+     */
+    Map.ZOOM_LEFT = '10px';
+
+    /**
     * @override
     */
     Map.prototype.createDom = function() {
@@ -107,7 +119,23 @@ goog.scope(function() {
             this.ymaps_ = new ymaps.Map(element, ymapsParams);
             this.ymaps_.setZoom(Math.floor(this.ymaps_.getZoom())); //normalize zoom
             this.placePlacemarks_(this.params_);
+            this.initControls_();
         }, this));
+    };
+
+    /**
+     * Control initialization
+     * @private
+     */
+    Map.prototype.initControls_ = function() {
+        this.ymaps_.behaviors.enable('scrollZoom');
+        this.ymaps_.controls.add(
+            new ymaps.control.ZoomControl(),
+            {
+                left: Map.ZOOM_LEFT,
+                top: Map.ZOOM_TOP
+            }
+        );
     };
 
     /**
