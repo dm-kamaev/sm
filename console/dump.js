@@ -1,4 +1,5 @@
 const dbConfig = require.main.require('./api/config').db;
+const scpConfig = require.main.require('./api/config').scp;
 const exec = require('child_process').exec;
 const async = require('asyncawait/async');
 const await = require('asyncawait/await');
@@ -9,14 +10,19 @@ const fs = require('fs');
 const DUMP_FOLDER = './assets/dump/';
 const PROJECT_NAME = 'BP';
 const common = require.main.require('./console/common');
-const SEPARATOR = ':';
+const SEPARATOR = '_';
 const sequelize = require.main.require('./app/components/db');
-    
+const scp = require('scp');    
+
+
 var start = function() {
     var vars = [
-        'Create db dump file', 
-        'Create db dump file and write it to config as current', 
-        'Load db dump',
+        'Create db dump file [local]', 
+        'Create db dump file [local] and write it to config as current', 
+        'Create db dump file [remote]',
+        'Create db dump file [remote] and write it to config as current', 
+        'Load db dump from the local storage',
+        'Load db dump from the remote storage',
         'Show current config',
         'Drop all tables'],
     index = readlineSync.keyInSelect(vars, 'What to do?');
@@ -28,12 +34,21 @@ var start = function() {
             dump({config:true});
             break;
         case 2: 
-            load();
+            dump({remote:true});
             break;
         case 3:
+            dump({config:true, remote:true});
+            break;
+        case 4: 
+            load();
+            break;
+        case 5: 
+            load({remote:true});
+            break;
+        case 6:
             check();
             break;
-        case 4:
+        case 7:
             dropAll();
             break;
     }
@@ -45,9 +60,13 @@ var dropAll = async(()=>{
 });
 
 var load = async(function(){
+    var filename = DUMP_FOLDER + dbConfig.dump;
+    if (!common.fileExists(filename)) {
+        throw new Error('Cant find the filename');
+    }
     await(dropAll());
     var command = 'pg_restore -d ' + dbConfig.name + 
-        ' ' + DUMP_FOLDER + dbConfig.dump;
+        ' ' + filename; 
     exec(command, {maxBuffer: 1024 * 500},  
         function (error, stdout) {
             console.log(stdout);
@@ -79,7 +98,7 @@ var check = function() {
    console.log ('Database: ' + colors.yellow(db));
 };
 
-var dump = function(opt_params) {
+var dump = async(function(opt_params) {
     var params = opt_params || {};
     var time = new Date();
     var timestring = leadZero(time.getFullYear()) +
@@ -87,23 +106,56 @@ var dump = function(opt_params) {
         leadZero(time.getHours()) + leadZero(time.getMinutes()) +
         leadZero(time.getSeconds());
     var dumpName = getBranchName() + SEPARATOR + timestring + '.dump';
+    var filename = DUMP_FOLDER + dumpName;
+    if (common.fileExists(filename)) {
+        throw new Error('File already exists');
+    }
     var command = 'pg_dump -Fc ' + dbConfig.name +
-        ' > ' + DUMP_FOLDER + dumpName;
+        ' > ' + filename;
     exec(command, {maxBuffer: 1024 * 500},  
         function (error, stdout) {
             console.log(stdout);
             if (error)
                 console.log(error);
-            else 
+            else {
                 console.log(colors.green(dumpName) + ' created');
+                if (params.remote){
+                    upload(filename);
+                }  
+                if (params.config){
+                    var newConfig = require.main.require('./api/config');
+                    newConfig.db.dump = dumpName;
+                    var js = JSON.stringify(newConfig);
+                        fs.writeFileSync('./api/config.json', js);
+                }
+            }
         });
-    if (params.config){
-        var newConfig = require.main.require('./api/config');
-        newConfig.db.dump = dumpName;
-        var js = JSON.stringify(newConfig);
-            fs.writeFileSync('./api/config.json', js);
+});
+
+
+/**
+ * @param {string} filename
+ */
+var upload = function(filename) {
+    var connectString = /*'sshpass -p \'' + scpConfig.pass + '\'' +*/
+            ' scp ' + filename + ' ' + scpConfig.login + '@' +
+            scpConfig.host + ':' + scpConfig.path;
+    console.log (connectString);
+    if (!common.fileExists(filename)) {
+        throw new Error('Cant find file');
     }
+    exec(connectString, function(error, stdout) {
+            console.log(stdout);
+            if (error)
+                console.log(error);
+            else 
+                console.log(colors.green('updated'));
+        });
 };
+
+
+
+
 
 
 commander
