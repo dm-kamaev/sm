@@ -1,11 +1,11 @@
 goog.provide('sm.lSearch.Search');
 
-goog.require('goog.ui.Component');
-goog.require('sm.bSearch.Search');
 goog.require('goog.dom.classes');
 goog.require('goog.dom.classlist');
 goog.require('goog.events');
 goog.require('goog.soy');
+goog.require('goog.ui.Component');
+goog.require('sm.bSearch.Search');
 
 /**
  * Search result component

@@ -5,10 +5,11 @@ goog.require('goog.dom.classlist');
 goog.require('goog.events');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
+goog.require('sm.bSearch.Search');
 goog.require('sm.lSearchResult.Template');
 goog.require('sm.lSearchResult.bSchoolList.SchoolList');
 goog.require('sm.lSearchResult.bSort.Sort');
-goog.require('sm.bSearch.Search');
+
 
 /**
  * Search result component

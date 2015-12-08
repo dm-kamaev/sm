@@ -3,8 +3,8 @@ goog.provide('sm.bSearch.Search');
 goog.require('goog.dom');
 goog.require('goog.events');
 goog.require('goog.ui.Component');
-goog.require('sm.bSearch.Template');
 goog.require('gorod.gSuggest.Suggest');
+goog.require('sm.bSearch.Template');
 
 /**
  * Input suggest component
@@ -53,7 +53,9 @@ goog.scope(function() {
         goog.base(this, 'enterDocument');
 
         var ui = gorod.iUIInstanceStorage.UIInstanceStorage.getInstance();
-        var suggest = goog.dom.getElementByClass(gorod.gSuggest.Suggest.Css.ROOT);
+        var suggest = goog.dom.getElementByClass(
+            gorod.gSuggest.Suggest.Css.ROOT
+        );
         var suggestInstance = ui.getInstanceByElement(suggest);
 
         suggestInstance.addEventListener(
@@ -81,5 +83,5 @@ goog.scope(function() {
      */
     Search.prototype.itemClickHandler_ = function(event, data) {
         document.location.href = '/school/' + data.key;
-    }
+    };
 });
