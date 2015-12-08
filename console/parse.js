@@ -158,7 +158,7 @@ var getEducationInterval = (opt_programms) => {
     });
 
 	var result = null;
-    if (!(res.begin == -1 && res.end == -1)) {	   	   
+    if (!(res.begin == -1 && res.end == -1)) {
         result = [];
         for (i = res.begin; i<=res.end; i++)
             result.push(i);
@@ -192,7 +192,8 @@ var rowToSchool = row => {
     var schoolType = getType(nParse);
     return {
         name: schoolName.trim(),
-	fullName: row[FULL_NAME_INDEX].trim(),
+		fullName: row[FULL_NAME_INDEX].trim(),
+        abbreviation: row[NAME_INDEX],
         schoolType: schoolType,
         director: row[DIRECTOR_INDEX],
         phones: getArray(row, PHONES_INDEX),
@@ -210,7 +211,7 @@ var rowToSchool = row => {
  * */
 var rowToOlimp = (row) => {
     var rType = row[OLIMP_TYPE_INDEX],
-        rStage = row[OLIMP_STAGE_INDEX] || '', 
+        rStage = row[OLIMP_STAGE_INDEX] || '',
         rClass = row[OLIMP_CLASS_INDEX] || '',
         rSubject = row[OLIMP_SUBJECT_INDEX] || '',
         rStatus = row[OLIMP_STATUS_INDEX] || '',
@@ -238,9 +239,9 @@ var rowToOlimp = (row) => {
                 status: statuses[index],
                 year: years[index]
 
-            }); 
+            });
         });
-    } 
+    }
     return results;
 };
 

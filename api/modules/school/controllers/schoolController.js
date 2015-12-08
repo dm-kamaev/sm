@@ -26,7 +26,10 @@ exports.createComment = async (function(req, res) {
         var schoolId = req.params.id,
             params = req.body;
         params.score = params['score[]']; //TODO придумать чтото с этим
-        result = await(services.school.commentTransaction(schoolId, params));
+        result = JSON.stringify(
+            await(services.school.commentTransaction(schoolId, params))
+            );
+        console.log(result);
     } catch (e) {
         console.log(e);
         result = JSON.stringify(e);
@@ -36,6 +39,30 @@ exports.createComment = async (function(req, res) {
     }
 });
 
+/**
+ * @api {get} api/school/apitest api test
+ * @apiVersion 0.0.0
+ * @apiGroup School
+ * @apiName Apitest
+ * @apiParam {Object} searchParams Search params.
+ * @apiParamExample {json} Request-Example:
+ *     {
+ *       "text" : "test"
+ *     }
+ */
+exports.yapi = async (function(req, res) {
+    var result = '';
+    try {
+        var params = req.query;
+        result = JSON.stringify(await(services.search.advancedSearch(params.text)));
+    } catch (e) {
+        console.log(e);
+        result = JSON.stringify(e);
+    } finally {
+        res.header("Content-Type", "text/html; charset=utf-8");
+        res.end(result);
+    }
+});
 /**
  * @api {get} api/school/search Search school
  * @apiVersion 0.0.0
@@ -61,7 +88,6 @@ exports.search = async (function(req, res) {
         result = await(services.search.searchSchool(params));
     } catch (e) {
         console.log(e);
-        throw e;
         result = JSON.stringify(e);
     } finally {
         res.header("Content-Type", "text/html; charset=utf-8");
@@ -86,6 +112,25 @@ exports.create = function(req, res) {
 
 
 };
+
+/**
+ * @api {get} api/school/type Get school type list
+ * @apiVersion 0.0.0
+ * @apiGroup School
+ * @apiName ListSchoolTypes
+ */
+exports.listTypes = async (function(req, res) {
+    var result;
+    try {
+        result = await(services.school.listTypes());
+    } catch (e) {
+        console.log(e.message);
+        result = e;
+    } finally {
+        res.header("Content-Type", "text/html; charset=utf-8");
+        res.end(JSON.stringify(result));
+    }
+});
 
 /**
  * @api {get} api/school Get school list

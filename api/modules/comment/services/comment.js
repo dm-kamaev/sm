@@ -4,30 +4,29 @@ var models = require.main.require('./app/components/models').all;
 var services = require.main.require('./app/components/services').all;
 
 exports.name = 'comment';
-exports.create = async (function(commentGroupId, params) {
-    var result = '';
+exports.create = async (function(commentGroupId, params, t) {
     try {
-        var comment = await (models.Comment.create({
-            comment_group_id: commentGroupId,
-            text: params.text,
-            userType: params.userType
-        }, {
-            include: [{
-                model: models.Rating,
-                as: 'rating'
-            }]
-        }));
-        console.log('comment', JSON.stringify(comment).blue);
-        if (params.rating) {
-            //comment.setRating(params.rating)
-            params.rating.setComment(comment);
-        }
-        result = 'success';
+        var createParams = {
+                comment_group_id: commentGroupId,
+                text: params.text,
+                userType: params.userType,
+            },
+            options = {
+                transaction: t,
+                include: [{
+                    model: models.Rating,
+                    as: 'rating'
+                }]
+             };
+        if (params.rating)
+            createParams.ratingId = params.rating.id;
+        var comment = await (models.Comment.create(
+            createParams, options        
+        ));
+        return comment;
     } catch (e) {
-        console.log(e);
-        result = e.message;
-    } finally {
-        return result;
+        console.log(e.message);
+        throw e;
     }
 });
 

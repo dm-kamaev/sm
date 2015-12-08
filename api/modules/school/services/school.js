@@ -4,9 +4,9 @@ var await = require('asyncawait/await');
 var models = require.main.require('./app/components/models').all;
 var services = require.main.require('./app/components/services').all;
 var sequelize  = require.main.require('./app/components/db');
-var sequelizeInclude = require.main.require('./api/components/sequelizeInclude');  
+var sequelizeInclude = require.main.require('./api/components/sequelizeInclude');
 var transaction = require.main.require('./api/components/transaction.js');
-
+var enums = require.main.require('./api/components/enums').all;
 var service = {
     name : 'school'
 };
@@ -15,19 +15,31 @@ service.getGroupId = async (function(school, t) {
     var instance = school;
     if (typeof school === 'number'){
         var instance = await(models.School.findOne({
-            where : {id: school}
+            where : {id: school},
+            transaction: t
         }));
     }
     if (instance.comment_group_id == null) {
-        var newCommentGroup = await (models.CommentGroup.create());
+        var newCommentGroup = await (models.CommentGroup.create({},{transaction: t}));
         await (instance.update({
             comment_group_id: newCommentGroup.id
-        }));
+        }, {transaction: t}));
     }
     return instance.comment_group_id;
 });
 
 
+service.listTypes = async (function(){
+    return enums.schoolType
+        .toArray()
+        .map(type => {
+            return {
+                label: type,
+                value: type
+            };
+        });
+
+});
 
 service.getAddresses = async (school => {
     return await(models.Address.findAll({
@@ -66,26 +78,57 @@ service.getForParse = async((govKeyId) => {
     };
     return await(models.School.findOne({
         where: {
-            govermentKey: govKeyId       
-        }, 
+            govermentKey: govKeyId
+        },
         include: sequelizeInclude(includeParams)
     }));
 });
+
 
 /**
  * @public
  */
 service.viewOne = function(id) {
-    var includeParams = {
-        addresses: true,
-        ratings: true
-    };
+    var includeParams = //TODO: which one: this
+        [{
+            model: models.Address,
+            as: 'addresses',
+            include: [{
+                model: models.Department,
+                as:'department'
+            }]
+         }, {
+             model: models.Rating,
+             as: 'ratings'
+         }, {
+             model: models.CommentGroup,
+             as: 'commentGroup',
+             include: [{
+                 model: models.Comment,
+                 as: 'comments',
+                 include: [{
+                     model: models.Rating,
+                     as: 'rating'
+                 }]
+
+             }]
+         }];
+   // var includeParams = {//TODO: which one: or this
+   //     addresses: {
+   //         department: true
+   //     },
+   //     ratings: true,
+   //     commentGroup: {
+   //         comments: {
+   //             rating: true
+   //         }
+   //     }
+   // };
     return await(models.School.findOne({
         where: {id: id},
-        include: sequelizeInclude(includeParams) 
+        include: includeParams
     }));
 };
-
 
 
 service.create = async (params => {
@@ -118,9 +161,10 @@ service.comment = async (function(schoolId, params, t) {
     console.log(sequelizeInclude(includeParams));
     var school = await (models.School.findOne({
         where: {id: schoolId},
-        include: sequelizeInclude(includeParams)
-    }, {transaction: t}));
-    
+        include: sequelizeInclude(includeParams),
+        transaction: t
+    }));
+
     console.log(school);
     var commentGroup = await(service.getGroupId(school, t));
     console.log(commentGroup);
@@ -133,9 +177,9 @@ service.comment = async (function(schoolId, params, t) {
 
 service.rate = async ((school, params, t) => {
     var rt = await (models.Rating.create({
-        score: params.score
+        score: params.score,
+        schoolId: school.id
     }, {transaction: t}));
-    await (school.addRating(rt));
     return rt;
 });
 
@@ -143,18 +187,70 @@ service.rate = async ((school, params, t) => {
  * @public
  */
 service.list = async (function() {
+
     var includeParams = {
         ratings: true
     };
-    var schools = await (models.School.findAll(
-        {
-            order: [
-                ['id', 'ASC']
-            ],
+
+    var schools = await (
+        models.School.findAll({
             include: sequelizeInclude(includeParams)
-        }
-    ));
+        })
+    );
+
+    schools
+        .map(school => service.calculateScore_(school))
+        .sort(function(a, b) {
+            return b.totalScore - a.totalScore;
+        });
+
     return schools;
 });
+
+/**
+ * @private
+ */
+service.calculateScore_ = function(school) {
+
+    school.score = service.avgScore_(school.ratings || []);
+    school.totalScore = service.avgRating_(school.score);
+
+    return school;
+}
+
+/**
+ * @private
+ */
+service.avgScore_ = function(ratings) {
+    var result = [0, 0, 0, 0];
+    var ratingLength = ratings.length;
+
+    for (var i = 0, score; i < ratingLength; i++) {
+        score = ratings[i].score;
+        for (var j = 0; j < result.length; j++) {
+            result[j] += score[j];
+        }
+    }
+
+    if (ratingLength) {
+        for (var j = 0; j < result.length; j++) {
+            result[j] /= ratingLength;
+        }
+    }
+
+    return result;
+};
+
+/**
+ * @private
+ */
+service.avgRating_ = function(totalScore) {
+    var length = totalScore.length,
+        result = 0;
+    for (var i = 0; i < length; i++) {
+        result += totalScore[i];
+    }
+    return result / length;
+};
 
 module.exports = service;
