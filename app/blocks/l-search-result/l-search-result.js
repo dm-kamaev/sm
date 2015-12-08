@@ -107,7 +107,6 @@ goog.scope(function() {
         this.sort_ = new Sort();
         this.addChild(this.sort_);
         this.sort_.decorate(sortElement);
-        //TODO fix decorate
 
         var bSearch = goog.dom.getElementByClass(
             Search.CssClass.INPUT,

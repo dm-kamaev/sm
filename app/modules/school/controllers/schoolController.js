@@ -109,8 +109,10 @@ exports.view = async (function(req, res) {
 
         return res;
     }
-
-
+    //TODO fix comments
+    var comments = [];
+    if (school.commentGroup)
+        comments = school.commentGroup.comments;
     var params = {
         data: {
             id: school.id,
@@ -135,7 +137,7 @@ exports.view = async (function(req, res) {
                 }),
                 phones: school.phones || ''
             },
-            comments: school.commentGroup.comments.map(comment => {
+            comments: comments.map(comment => {
                 return {
                     author: '',
                     rank: typeConvert[comment.userType],
