@@ -183,9 +183,23 @@ service.rate = async ((school, params, t) => {
     return rt;
 });
 
-
+/**
+ * usded in console/*. Can be a bit slow
+ */
 service.listInstances = async(function(){
-    return await(models.School.findAll());
+    return await(models.School.findAll({
+        inclde: [{
+                    model: models.Rating,
+                    as: 'ratings' 
+                }, {
+                    model: models.Address,
+                    as: 'addresses',
+                    include: [{
+                        model: models.Department,
+                        as: 'departments'
+                    }]
+                }]          
+    }));
 });
 
 /**
