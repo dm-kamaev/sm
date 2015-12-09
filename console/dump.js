@@ -16,6 +16,7 @@ const scp = require('scp');
 
 
 var start = function() {
+    checkDumpFolder();
     var vars = [
         'Create db dump file [local]', 
         'Create db dump file [local] and write it to config as current', 
@@ -52,6 +53,11 @@ var start = function() {
             dropAll();
             break;
     }
+};
+
+var checkDumpFolder = function() {
+    if (!common.fileExists(DUMP_FOLDER))
+        fs.mkdirSync(DUMP_FOLDER);
 };
 
 var dropAll = async(()=>{
@@ -117,7 +123,7 @@ var dump = async(function(opt_params) {
 
     var command = 'pg_dump -Fc ' + dbConfig.name +
         ' > ' + filename;
-    var execRes = await(exexAsync(command));
+    var execRes = await(execAsync(command));
     if (typeof execRes != 'Error' && execRes == 'succsess') {
         console.log('file ' + colors.green(filename) + 'created! ');
 
@@ -135,7 +141,7 @@ var dump = async(function(opt_params) {
     }
 });
 
-var exexAsync = async(function (execString) {
+var execAsync = async(function (execString) {
     var doExec = new Promise( function(resolve, reject) {
         exec(execString, {maxBuffer: 1024 * 500},  
             function (error, stdout) {
@@ -159,7 +165,7 @@ var download = async(function(filename) {
             scpConfig.host + ':' + scpConfig.path + '/' +
             filename + ' ' + DUMP_FOLDER;
     console.log(execString);
-    var execRes = await(exexAsync(execString));
+    var execRes = await(execAsync(execString));
     if (typeof execRes != 'Error' && execRes == 'succsess') {
         console.log('Download ' + colors.green('succsess!'));
     } else {
@@ -176,7 +182,7 @@ var upload = async(function(filename) {
     if (!common.fileExists(filename)) {
         throw new Error('Cant find the file');
     }
-    var execRes = await(exexAsync(execString));
+    var execRes = await(execAsync(execString));
     if (typeof execRes != 'Error' && execRes == 'succsess') {
         console.log('Upload ' + colors.green('succsess!'));
     } else {
