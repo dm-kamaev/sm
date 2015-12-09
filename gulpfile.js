@@ -13,8 +13,10 @@ var glob = require("glob");
 var exec = require('child_process').exec;
 var Q = require('q');
 var fs = require('fs-extra');
-const config = require('./config.json');
+var foreach = require('gulp-foreach');
+var SoyExtend = require('./soy-extend');
 
+const config = require('./config.json');
 
 const production = !!util.env.production;
 
@@ -82,8 +84,11 @@ gulp.task('appES5', function () {
         .pipe(gulp.dest(''));
 });
 
+var extender = new SoyExtend({
+    blocksDir: path.join(__dirname, BLOCKS_DIR)
+});
 
-gulp.task('soy', function () {
+gulp.task('soy', function (cb) {
     //return gulpHelper.soy([
     //    path.join(__dirname, BLOCKS_DIR, '/**/*.soy')
     //]);
@@ -92,15 +97,54 @@ gulp.task('soy', function () {
             path.join(__dirname, BLOCKS_DIR, '/**/*.soy'),
             path.join(__dirname, '/node_modules/frobl/blocks', '/**/*.soy')
         ])
+        .pipe(gulp.dest(path.join(__dirname, '/tmp/soy')))
+        .pipe(foreach(function (stream, file) {
+            extender.proceed(file.path);
+            return stream;
+        }))
         .pipe(soynode({
             outputDir: path.join(__dirname, '/node_modules/frobl', '/tmp/soy'),
             loadCompiledTemplates: false,
             useClosureStyle: true,
             contextJsPaths: [
-                path.join(__dirname, '/node_modules/google-closure-library/closure/goog/base.js')
+                path.join(
+                    __dirname,
+                    '/node_modules/google-closure-library/closure/goog/base.js'
+                )
             ]
         }));
 });
+
+var appWatch = function(event) {
+    //console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
+    var basename = path.basename(event.path);
+    var dest = path.normalize(
+        event.path
+            .replace('\\app\\blocks\\', '/node_modules/frobl/tmp/appSoy/')
+            .replace(basename, '')
+    );
+
+    //console.log(dest);
+
+    gulp.src(event.path)
+        .pipe(gulp.dest(dest))
+        .pipe(foreach(function (stream, file) {
+            extender.proceed(file.path);
+            return stream;
+        }));
+};
+
+gulp.task('appSoy', function (cb) {
+    return gulp.src([
+            path.join(__dirname, BLOCKS_DIR, '/**/*.soy')
+        ])
+        .pipe(gulp.dest(path.join(__dirname, '/node_modules/frobl/tmp/appSoy')))
+        .pipe(foreach(function (stream, file) {
+            extender.proceed(file.path);
+            return stream;
+        }));
+});
+
 
 var getDirectories = function(srcpath)  {
     return fs.readdirSync(srcpath).filter(function(file) {
@@ -153,7 +197,7 @@ var compileLayout = function(name)  {
     );
 };
 
-gulp.task('scripts', ['soy'], function () {
+gulp.task('scripts', ['soy', 'lint'], function () {
     var promises = [],
         dirs = getDirectories(path.join(__dirname,'/app/blocks'));
     dirs = dirs.filter((dirname) => {
@@ -193,14 +237,20 @@ gulp.task('images', function () {
 });
 
 gulp.task('watch', function () {
-    gulp.watch([
-        path.join(__dirname + BLOCKS_DIR + '/**/*.soy'),
-        path.join(__dirname + BLOCKS_DIR + '/**/*.js')
-    ], ['scripts']);
+    var soyWatcher = gulp.watch(
+        [path.join(__dirname + BLOCKS_DIR + '/**/*.soy')],
+        ['scripts']
+    );
+    gulp.watch(
+        [path.join(__dirname + BLOCKS_DIR + '/**/*.js')],
+        ['scripts']
+    );
     gulp.watch([
         path.join(__dirname + BLOCKS_DIR + '/**/*.scss'),
         path.join(__dirname + BLOCKS_DIR + '/**/*.css')
     ], ['styles']);
+
+    soyWatcher.on('change', appWatch);
 });
 
 
@@ -212,8 +262,8 @@ gulp.task('fonts', function () {
 
 const tasks = function (bool) {
     return bool ?
-        ['soy', 'scripts', 'sprite', 'images', 'fonts', 'styles'] :
-        ['watch', 'soy', 'scripts', 'sprite', 'images', 'fonts','styles'];
+        ['soy', 'appSoy', 'scripts', 'sprite', 'images', 'fonts', 'styles'] :
+        ['watch', 'soy', 'appSoy', 'scripts', 'sprite', 'images', 'fonts','styles'];
 };
 
 gulp.task('default', tasks(production));

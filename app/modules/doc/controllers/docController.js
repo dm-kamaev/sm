@@ -8,7 +8,8 @@ var docPages = [
         "b-feedback-modal",
         "b-school-list",
         "b-sort",
-        "b-search"
+        "b-search",
+        "b-filter"
     ];
 
 

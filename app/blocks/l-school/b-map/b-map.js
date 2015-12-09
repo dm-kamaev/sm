@@ -117,7 +117,8 @@ goog.scope(function() {
 
         ymaps.ready(jQuery.proxy(function() {
             this.ymaps_ = new ymaps.Map(element, ymapsParams);
-            this.ymaps_.setZoom(Math.floor(this.ymaps_.getZoom())); //normalize zoom
+            //normalize zoom
+            this.ymaps_.setZoom(Math.floor(this.ymaps_.getZoom()));
             this.placePlacemarks_(this.params_);
             this.initControls_();
         }, this));
@@ -205,9 +206,9 @@ goog.scope(function() {
      * @private
      */
     Map.prototype.calculateBorder_ = function(coords) {
-		var south, west, east, north;
-		east = north = 0;
-		south = west = 90;
+        var south, west, east, north;
+        east = north = 0;
+        south = west = 90;
 
         for (var i = 0, point; point = coords[i]; i++) {
             var latitude = point.lat,
@@ -219,12 +220,12 @@ goog.scope(function() {
             west = longitude < west ? longitude : west;
         }
 
-		return {
-			north: north,
-			west: west,
-			south: south,
-			east: east
-		};
+        return {
+            north: north,
+            west: west,
+            south: south,
+            east: east
+        };
     };
 
     /**

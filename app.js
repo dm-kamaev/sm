@@ -9,6 +9,8 @@ var soy = require('./app/components/soy');
 var modules = require('./app/modules');
 var api = require('./api/modules');
 var bodyParser = require('body-parser');
+var vm = require('vm');
+var fs = require('fs');
 
 const app = express();
 
@@ -41,8 +43,11 @@ app.use('/api-debug', express.static(path.join(__dirname, '/api-debug')));
 
 
 
-soy.init(__dirname, function() {
-    app.listen(CONFIG.PORT, function() {
-        console.log('Running at port ' + CONFIG.PORT)
-    });
-});
+soy.init(
+    path.join(__dirname, '/node_modules/frobl/'),
+    function() {
+        app.listen(CONFIG.PORT, function() {
+            console.log('Running at port ' + CONFIG.PORT)
+        });
+    }
+);

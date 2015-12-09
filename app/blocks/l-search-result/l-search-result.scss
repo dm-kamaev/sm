@@ -1,5 +1,11 @@
+.l-search-result {
+    width: 100%;
+
+    margin: 0;
+}
+
 .l-search-result__body {
-    max-width: 1200px;
+    width: 1200px;
     margin: 0 auto;
 }
 
@@ -7,7 +13,7 @@
     display: inline-block;
 
     width: 100%;
-    padding: 50px 0 30px;
+    padding: 50px 0;
     margin-bottom: 30px;
 
     border-bottom: 1px solid #e5e5e5;
@@ -64,11 +70,11 @@
     float: left;
 
     margin-top: 5%;
-    margin-left: 3%;
+    margin-left: 5%;
 }
 
 .l-search-result__sort {
-    float: left;
+    float: right;
 
     width: 33%;
     height: 100%;
@@ -78,4 +84,14 @@
 
     font-family: arial;
     font-size: 13px;
+}
+
+.l-search-result__filters {
+    display: inline-block;
+
+    box-sizing: border-box;
+    width: 100%;
+    padding: 30px 30px 30px 30px;
+
+    background-color: #f4f4ec;
 }

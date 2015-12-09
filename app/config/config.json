@@ -1,7 +1,7 @@
 {
     "db": {
         "name": "school_market",
-        "host": "localhost",
+        "host": "www8.lan",
         "port": "5432",
         "user": "gorod",
         "password": "123qwe",
