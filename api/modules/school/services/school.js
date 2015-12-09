@@ -183,6 +183,11 @@ service.rate = async ((school, params, t) => {
     return rt;
 });
 
+
+service.listInstances = async(function(){
+    return await(models.School.findAll());
+});
+
 /**
  * @public
  */
@@ -309,11 +314,11 @@ var updateSearchConfig = function(searchConfig, searchParams) {
     } 
 
     /*Write generated setting to config object*/   
-    var extraIncludesArr = [];
-    extraIncludesArr.push(extraIncludes.searchData);
     searchConfig.where = whereParams;
-    searchConfig.include = searchConfig.include.concat(extraIncludesArr);
     if (searchDataCount){
+        var extraIncludesArr = [];
+        extraIncludesArr.push(extraIncludes.searchData);
+        searchConfig.include = searchConfig.include.concat(extraIncludesArr);
         searchConfig.group = '"School"."id"';
         searchConfig.having = ['COUNT(?) = ?', '', searchDataCount];
     }

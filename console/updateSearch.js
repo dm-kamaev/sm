@@ -29,7 +29,7 @@ var start = function() {
 };
 
 var launch = async (function(isRewriting) {
-    var schools = await(services.school.list());
+    var schools = await(services.school.listInstances());
     await(new GiaUpdater(schools, isRewriting));
 });
 
