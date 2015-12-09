@@ -43,7 +43,7 @@ var start = function() {
             load();
             break;
         case 5: 
-            load({remote:true});
+            loadFromRemote();
             break;
         case 6:
             check();
@@ -58,11 +58,15 @@ var dropAll = async(()=>{
     await(sequelize.queryInterface.dropAllTables());
     await(sequelize.queryInterface.dropAllEnums());
 });
-
+var loadFromRemote = async(function() {
+    var filename = DUMP_FOLDER + dbConfig.dump;
+    await(download(dbConfig.dump));
+    await(load());
+});
 var load = async(function(){
     var filename = DUMP_FOLDER + dbConfig.dump;
     if (!common.fileExists(filename)) {
-        throw new Error('Cant find the filename');
+        throw new Error('Cant find the file');
     }
     await(dropAll());
     var command = 'pg_restore -d ' + dbConfig.name + 
@@ -110,48 +114,75 @@ var dump = async(function(opt_params) {
     if (common.fileExists(filename)) {
         throw new Error('File already exists');
     }
+
     var command = 'pg_dump -Fc ' + dbConfig.name +
         ' > ' + filename;
-    exec(command, {maxBuffer: 1024 * 500},  
-        function (error, stdout) {
-            console.log(stdout);
-            if (error)
-                console.log(error);
-            else {
-                console.log(colors.green(dumpName) + ' created');
-                if (params.remote){
-                    upload(filename);
-                }  
-                if (params.config){
-                    var newConfig = require.main.require('./api/config');
-                    newConfig.db.dump = dumpName;
-                    var js = JSON.stringify(newConfig);
-                        fs.writeFileSync('./api/config.json', js);
-                }
-            }
-        });
+    var execRes = await(exexAsync(command));
+    if (typeof execRes != 'Error' && execRes == 'succsess') {
+        console.log('file ' + colors.green(filename) + 'created! ');
+
+        if (params.remote) {
+            await(upload(filename));
+        }  
+        if (params.config) {
+            var newConfig = require.main.require('./api/config');
+            newConfig.db.dump = dumpName;
+            var js = JSON.stringify(newConfig);
+                fs.writeFileSync('./api/config.json', js);
+        }
+    } else {
+        throw execRes;
+    }
 });
 
+var exexAsync = async(function (execString) {
+    var doExec = new Promise( function(resolve, reject) {
+        exec(execString, {maxBuffer: 1024 * 500},  
+            function (error, stdout) {
+                console.log(stdout);
+                if (error) {
+                    console.log(error);
+                    reject(error);
+                } else {
+                    resolve('succsess');
+                }
+            });
+    });
+    return await(doExec);
+});
 
 /**
  * @param {string} filename
  */
-var upload = function(filename) {
-    var connectString = /*'sshpass -p \'' + scpConfig.pass + '\'' +*/
-            ' scp ' + filename + ' ' + scpConfig.login + '@' +
-            scpConfig.host + ':' + scpConfig.path;
-    console.log (connectString);
-    if (!common.fileExists(filename)) {
-        throw new Error('Cant find file');
+var download = async(function(filename) {
+    var execString = 'scp ' + scpConfig.login + '@' +
+            scpConfig.host + ':' + scpConfig.path + '/' +
+            filename + ' ' + DUMP_FOLDER;
+    console.log(execString);
+    var execRes = await(exexAsync(execString));
+    if (typeof execRes != 'Error' && execRes == 'succsess') {
+        console.log('Download ' + colors.green('succsess!'));
+    } else {
+        throw execRes;
     }
-    exec(connectString, function(error, stdout) {
-            console.log(stdout);
-            if (error)
-                console.log(error);
-            else 
-                console.log(colors.green('updated'));
-        });
-};
+});
+
+/**
+ * @param {string} filename
+ */
+var upload = async(function(filename) {
+    var execString = 'scp ' + filename + ' ' + scpConfig.login + '@' +
+            scpConfig.host + ':' + scpConfig.path;
+    if (!common.fileExists(filename)) {
+        throw new Error('Cant find the file');
+    }
+    var execRes = await(exexAsync(execString));
+    if (typeof execRes != 'Error' && execRes == 'succsess') {
+        console.log('Upload ' + colors.green('succsess!'));
+    } else {
+        throw execRes;
+    }
+});
 
 
 
