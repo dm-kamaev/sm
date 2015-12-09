@@ -42,6 +42,7 @@ sm.lSearchResult.bSort.Sort = function(opt_params) {
     /**
      * Current item id
      * @type {number}
+     * @private
      */
     this.currentItemId_ = 0;
 };
@@ -157,7 +158,7 @@ goog.scope(function() {
 
     /**
      * Getter for current item id
-     * @returns {number}
+     * @return {number}
      */
     Sort.prototype.getCurrentItemId = function() {
         return this.currentItemId_;

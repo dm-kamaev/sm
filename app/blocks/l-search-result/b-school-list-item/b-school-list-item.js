@@ -95,7 +95,7 @@ goog.scope(function() {
      * Compare by score
      * @param {sm.lSearchResult.bSchoolListItem.SchoolListItem} item
      * @param {number} index
-     * @returns {number}
+     * @return {number}
      */
     ListItem.prototype.compareByScore = function(item, index) {
         return item.getScore(index) - this.getScore(index);
@@ -115,7 +115,7 @@ goog.scope(function() {
         }
 
         if (!this.params_.score) {
-            this.params_.score = [0,0,0,0];
+            this.params_.score = [0, 0, 0, 0];
         }
 
         var element = goog.soy.renderAsElement(

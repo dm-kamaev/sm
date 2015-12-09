@@ -36,6 +36,12 @@ sm.lSearchResult.bSchoolList.SchoolList = function(opt_params) {
      * @private
      */
     this.bodyElement_ = null;
+
+    /**
+     * @type {number}
+     * @private
+     */
+    this.sortKey_ = null;
 };
 goog.inherits(sm.lSearchResult.bSchoolList.SchoolList, goog.ui.Component);
 
@@ -127,12 +133,26 @@ goog.scope(function() {
     };
 
     /**
-     * Schools sort maker
-     * @param {string} sortKey
+     * Setter for sort key
+     * @param {number} sortKey
+     * @param {bool} opt_sort
      * @public
      */
-    SchoolList.prototype.sort = function(sortKey) {
+    SchoolList.prototype.setSortKey = function(sortKey, opt_sort) {
+        this.sortKey_ = sortKey;
+
+        if (opt_sort) {
+            this.sort();
+        }
+    };
+
+    /**
+     * Schools sort maker
+     * @public
+     */
+    SchoolList.prototype.sort = function() {
         var schoolListItems = this.removeChildren();
+        var sortKey = this.sortKey_;
 
         schoolListItems.sort(function(item1, item2) {
             return (sortKey > 0) ?
@@ -148,9 +168,8 @@ goog.scope(function() {
     /**
      * Set school list
      * @param {Array.<Object>=} opt_listData
-     * @param {number} opt_sortKey
      */
-    SchoolList.prototype.setItems = function(opt_listData, opt_sortKey) {
+    SchoolList.prototype.setItems = function(opt_listData) {
         var that = this;
 
         this.schoolListItems_.forEach(function(item) {
@@ -160,14 +179,12 @@ goog.scope(function() {
 
         var data = opt_listData || [];
 
-        data.forEach(function (itemData) {
+        data.forEach(function(itemData) {
             var item = new SchoolListItem(itemData);
             that.addChild(item, true);
             that.schoolListItems_.push(item);
         });
 
-        if (opt_sortKey) {
-            this.sort(opt_sortKey);
-        }
-    }
+        this.sort();
+    };
 });

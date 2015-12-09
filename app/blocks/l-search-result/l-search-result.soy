@@ -53,7 +53,7 @@
         </head>
         <body>
             <div class="l-search-result">
-                {call sm.bHeader.Template.base /}
+                {call sm.bHeader.Template.base data="all"/}
                 <div class="l-search-result__body">
                     {call .topMenu_}
                         {param params: [
@@ -124,11 +124,11 @@
                 </div>
             </div>
         </div>
+        */
         <div class="l-search-result__sort">
             {call sm.lSearchResult.bSort.Template.base}
             {/call}
         </div>
-        */
     </div>
 {/template}
 

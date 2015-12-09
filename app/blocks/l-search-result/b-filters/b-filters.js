@@ -6,8 +6,8 @@ goog.require('goog.dom.forms');
 goog.require('goog.events');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
-goog.require('sm.lSearchResult.bFilters.Template');
 goog.require('sm.lSearchResult.bFilter.Filter');
+goog.require('sm.lSearchResult.bFilters.Template');
 
 /**
  * Filters component
@@ -39,6 +39,10 @@ goog.scope(function() {
         ROOT: 'b-filters'
     };
 
+    /**
+     * Event enum
+     * @enum {string}
+     */
     Filters.event = {
         SUBMIT: 'filters-submit'
     };

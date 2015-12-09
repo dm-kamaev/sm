@@ -51,6 +51,7 @@ sm.lSearchResult.SearchResult = function(opt_params) {
     /**
      * Search instance
      * @type {sm.bSearch.Search}
+     * @private
      */
     this.search_ = null;
 };
@@ -176,7 +177,7 @@ goog.scope(function() {
      */
     SearchResult.prototype.searchSuccess_ = function(responseData) {
         var data = JSON.parse(responseData);
-        this.schoolList_.setItems(data, this.sort_.getCurrentItemId());
+        this.schoolList_.setItems(data);
     };
 
     /**
@@ -185,7 +186,7 @@ goog.scope(function() {
      * @private
      */
     SearchResult.prototype.onSortHandler_ = function(event) {
-        this.schoolList_.sort(event.itemId);
+        this.schoolList_.setSortKey(event.itemId, true);
     };
 
     /**

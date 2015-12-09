@@ -75,6 +75,7 @@ sm.lSearchResult.bFilter.Filter = function(opt_params) {
     /**
      * Classes input
      * @type {Element}
+     * @private
      */
     this.inputClassesElements_ = null;
 
@@ -245,7 +246,7 @@ goog.scope(function() {
 
     /**
      * Checks for checked radio
-     * @returns {boolean}
+     * @return {boolean}
      * @private
      */
     Filter.prototype.hasCheckedInputClasses_ = function() {
