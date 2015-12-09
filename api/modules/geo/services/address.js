@@ -37,7 +37,7 @@ exports.getMetro = (address) => {
 };
 
 exports.getDepartment = (address) => {
-    return address.department;
+    return address.departments;
 };
 
 exports.setMetro = async((address, metroArr) => {

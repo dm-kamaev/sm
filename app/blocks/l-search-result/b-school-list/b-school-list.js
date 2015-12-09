@@ -25,8 +25,8 @@ sm.lSearchResult.bSchoolList.SchoolList = function(opt_params) {
 
     /**
      * Array of instances of list elements
-     * @private
      * @type {Array.<sm.lSearchResult.bSchoolListItem.SchoolListItem>}
+     * @private
      */
     this.schoolListItems_ = [];
 

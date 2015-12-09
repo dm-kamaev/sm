@@ -27,7 +27,7 @@ var generate = function (includes, emptyAttributes) {
       rating: models.Rating,
       searchData: models.SearchData,
       olimpResults: models.OlimpResult,
-      department: models.Department
+      departments: models.Department
     };
 
     var result = [];

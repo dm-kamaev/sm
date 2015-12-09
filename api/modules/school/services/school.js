@@ -95,7 +95,7 @@ service.viewOne = function(id) {
             as: 'addresses',
             include: [{
                 model: models.Department,
-                as:'department'
+                as:'departments'
             }]
          }, {
              model: models.Rating,
@@ -184,44 +184,165 @@ service.rate = async ((school, params, t) => {
 });
 
 /**
- * @public
+ * usded in console/*. Can be a bit slow
  */
-service.list = async (function() {
-
-    var includeParams = {
-        ratings: true
-    };
-
-    var schools = await (
-        models.School.findAll({
-            include: sequelizeInclude(includeParams)
-        })
-    );
-
-    schools
-        .map(school => service.calculateScore_(school))
-        .sort(function(a, b) {
-            return b.totalScore - a.totalScore;
-        });
-
-    return schools;
+service.listInstances = async(function(){
+    return await(models.School.findAll({
+        inclde: [{
+                    model: models.Rating,
+                    as: 'ratings' 
+                }, {
+                    model: models.Address,
+                    as: 'addresses',
+                    include: [{
+                        model: models.Department,
+                        as: 'departments'
+                    }]
+                }]          
+    }));
 });
 
 /**
- * @private
+ * @public
  */
-service.calculateScore_ = function(school) {
+service.list = async (function(opt_params) {
+    var params = opt_params || {},
+        searchParams = params.searchParams || null,
+        includeParams = [
+            {
+                model: models.Rating,
+                as: 'ratings',
+                attributes: ['score']
+            }
+        ];   
 
-    school.score = service.avgScore_(school.ratings || []);
-    school.totalScore = service.avgRating_(school.score);
+    var searchConfig = {
+        include: includeParams,
+        attributes: [
+            'id',
+            'name'
+        ]
+    };
 
-    return school;
+    if (searchParams)
+        updateSearchConfig(searchConfig, searchParams);
+    console.log(searchConfig);
+    var schools = await(models.School.findAll(searchConfig)); 
+    console.log('Found: ', colors.green(schools.length));
+    return schools
+        .map(school => {
+            var score = service.avgScore_(school.ratings || []);
+            return {
+                id: school.id,
+                name: school.name,
+                description: "",
+                totalScore: service.avgRating_(score),
+                score: score
+            };
+        }).sort((a, b) => b.totalScore - a.totalScore);
+});
+
+/**
+ * @param {object} searchConfig Existing search config to update
+ * @param {object} searchParams
+ * @param {?string} searchParams.name
+ * @param {?Array<number>} searchParams.classes
+ * @param {?number} searchParams.schoolType //TODO: use school_type_filter
+ * @param {?Array<number>} searchParams.gia Subjects with high hia results
+ * @param {?Array<number>} searchParams.ege
+ * @param {?Array<number>} searchParams.olimp
+ * TODO: develop criterias
+ */
+var updateSearchConfig = function(searchConfig, searchParams) {
+    var whereParams = {},
+        searchDataCount = 0;
+
+    var extraIncludes = {
+        searchData : {
+            model: models.SearchData,
+            as: 'searchData',
+            where: {
+                $or: []
+            }
+        }
+    }; 
+
+    if (searchParams.name) {
+        var nameFilter = services.search.generateFilter(searchParams.name);
+        whereParams.$or = [
+          { name: nameFilter },
+          { fullName: nameFilter},
+          { abbreviation: nameFilter}
+        ];
+    }
+
+    if (searchParams.classes && searchParams.classes.length) {
+        whereParams.educationInterval = { 
+            $contains: searchParams.classes
+        };
+    }
+
+    if (searchParams.schoolType && searchParams.schoolType.length) { //TODO: refactor with new filters
+        whereParams.schoolType = {
+            $or:[]  
+        };
+        searchParams.schoolType.forEach((item) => { 
+            whereParams.schoolType.$or.push(item);
+        });
+    }
+    
+    if (searchParams.gia) {
+        searchDataCount++;
+        extraIncludes.searchData.where.$or.push({ 
+            $and: {
+                type: searchTypes.GIA,
+                values: {
+                    $contains: searchParams.gia
+                }
+            }
+        });
+    } 
+
+    if (searchParams.ege) {
+        searchDataCount++;
+        extraIncludes.searchData.where.$or.push({ 
+            $and: {
+                type: searchTypes.EGE,
+                values: {
+                    $contains: searchParams.ege
+                }
+            }
+        });
+    } 
+
+    if (searchParams.olimp) {
+        searchDataCount++;
+        extraIncludes.searchData.where.$or.push({ 
+            $and: {
+                type: searchTypes.OLIMP,
+                values: {
+                    $contains: searchParams.olimp
+                }
+            }
+        });
+    } 
+
+    /*Write generated setting to config object*/   
+    searchConfig.where = whereParams;
+    if (searchDataCount){
+        var extraIncludesArr = [];
+        extraIncludesArr.push(extraIncludes.searchData);
+        searchConfig.include = searchConfig.include.concat(extraIncludesArr);
+        searchConfig.group = '"School"."id"';
+        searchConfig.having = ['COUNT(?) = ?', '', searchDataCount];
+    }
 }
 
 /**
  * @private
  */
 service.avgScore_ = function(ratings) {
+    ratings = ratings || [];
     var result = [0, 0, 0, 0];
     var ratingLength = ratings.length;
 

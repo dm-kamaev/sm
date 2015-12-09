@@ -3,6 +3,7 @@ var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var models = require.main.require('./app/components/models').all;
 var services = require.main.require('./app/components/services').all;
+var enums = require('../enums');
 exports.name = 'department';
 
 exports.getAll = () => {
@@ -24,6 +25,43 @@ exports.getAddress = (departmentInstance) => {
 
 
 /**
+ * Get address array for needed stages
+ */
+exports.addressesFilter = (addressList) => {
+    var addressesWithoutStage = [];
+    var addressesWithNeededStages = addressList
+        .filter(address => {
+            var res = false;
+            if (address.departments.length > 0) {
+                address.departments.forEach(department => {
+                    if (department.stage !==
+                        enums.departmentStage.PRESCHOOL &&
+                        department.stage !==
+                        enums.departmentStage.SUPPLEMENTARY &&
+                        department.stage !==
+                        enums.departmentStage.HIGHER_EDUCATION) {
+                        res = true;
+                    }
+                });
+            }
+            else {
+                addressesWithoutStage.push(address);
+            }
+            return res;
+        });
+
+    var addresses;
+    if (addressesWithNeededStages.length > 0) {
+        addresses = addressesWithNeededStages;
+    }
+    else {
+        addresses = addressesWithoutStage;
+    }
+    return addresses;
+};
+
+
+/**
  * Add address id dy department instance
  */
 exports.addAddress = (departmentInstance, addressId) => {
@@ -36,11 +74,11 @@ exports.addAddress = (departmentInstance, addressId) => {
  */
 exports.addAddressList = (departmentId, addressIdList) => {
     addressIdList.forEach(function(addressId) {
-    var params = {
-            address_id: addressId,
-            department_id: departmentId
-        };
-    var test = await(models.Department_address.create(params));
+        var params = {
+                address_id: addressId,
+                department_id: departmentId
+            };
+        await(models.Department_address.create(params));
     });
 };
 

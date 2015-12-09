@@ -104,7 +104,10 @@
 .b-header__header {
     display: inline-block;
 
+    text-decoration: none;
     text-transform: uppercase;
+
+    color: #000;
 
     font-weight: 900;
     font-size: 21px;
