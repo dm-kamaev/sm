@@ -8,7 +8,11 @@ global.CLOSURE_BASE_PATH = path.normalize('node_modules/google-closure-library/c
 soynode.setOptions({
     outputDir: os.tmpdir(),
     uniqueDir: true,
-    allowDynamicRecompile: true,
+    /**
+     * TODO: make watch
+     * In case of dynamic recompile, please don't restart gulp
+     */
+    //allowDynamicRecompile: true,
     contextJsPaths: [
         path.join(__dirname, '../../node_modules/frobl/blocks/i-utils/i-utils.js')
     ]
@@ -16,14 +20,6 @@ soynode.setOptions({
 
 exports.init = function(dir, opt_callback) {
     var callback = opt_callback || function() {};
-
-    //fs.readdir(dir, function(err, items) {
-    //    if (err) {
-    //        console.log('Error: ', err)
-    //    }
-    //
-    //    console.log(items);
-    //});
 
     soynode.compileTemplates(dir, function(err) {
         if (err) throw err;

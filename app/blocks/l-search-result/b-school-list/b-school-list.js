@@ -132,37 +132,42 @@ goog.scope(function() {
      * @public
      */
     SchoolList.prototype.sort = function(sortKey) {
-        var compareByTotalScore = function(a, b) {
-                return b.getTotalScore() - a.getTotalScore();
-            };
-        var compareByScore = function(a, b) {
-                return b.getScore(sortKey - 1) - a.getScore(sortKey - 1);
-            };
-        var compare = (sortKey > 0) ? compareByScore : compareByTotalScore;
+        var schoolListItems = this.removeChildren();
 
-        var schoolListElements = this.removeChildren();
-        schoolListElements.sort(compare);
+        schoolListItems.sort(function(item1, item2) {
+            return (sortKey > 0) ?
+                item1.compareByScore(item2, sortKey - 1) :
+                item1.compareByTotalScore(item2);
+        });
 
-        for (var i = 0; i < schoolListElements.length; i++) {
-            this.addChild(schoolListElements[i]);
+        for (var i = 0; i < schoolListItems.length; i++) {
+            this.addChild(schoolListItems[i]);
         }
     };
 
-    SchoolList.prototype.setList = function(listData) {
-        for (var i = this.schoolListItems_.length - 1; i >= 0; i--) {
-            this.removeChild(this.schoolListItems_[i], true);
-            this.schoolListItems_.splice(i, 1);
-        }
+    /**
+     * Set school list
+     * @param {Array.<Object>=} opt_listData
+     * @param {number} opt_sortKey
+     */
+    SchoolList.prototype.setItems = function(opt_listData, opt_sortKey) {
+        var that = this;
 
-        var schoolList = this;
-        var data = listData || [];
+        this.schoolListItems_.forEach(function(item) {
+            that.removeChild(item, true);
+        });
+        this.schoolListItems_ = [];
 
-        if (data.length) {
-            data.forEach(function (itemData) {
-                var item = new SchoolListItem(itemData);
-                schoolList.addChild(item, true);
-                schoolList.schoolListItems_.push(item);
-            });
+        var data = opt_listData || [];
+
+        data.forEach(function (itemData) {
+            var item = new SchoolListItem(itemData);
+            that.addChild(item, true);
+            that.schoolListItems_.push(item);
+        });
+
+        if (opt_sortKey) {
+            this.sort(opt_sortKey);
         }
     }
 });

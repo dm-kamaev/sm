@@ -32,7 +32,7 @@ goog.scope(function() {
      */
     Search.CssClass = {
         ROOT: 'b-search',
-        INPUT: 'b-search__input',
+        INPUT: 'b-input__input',
         LIST: 'b-search__list',
         LIST_HIDE: 'b-search__list_hidden'
     };
@@ -40,9 +40,9 @@ goog.scope(function() {
     /**
      * Get input value
      * @return {string} Input value
-     * @private
+     * @public
      */
-    Search.prototype.getValue_ = function() {
+    Search.prototype.getValue = function() {
         return goog.dom.getElementByClass(Search.CssClass.INPUT).value;
     };
 

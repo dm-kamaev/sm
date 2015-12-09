@@ -46,7 +46,13 @@ sm.lSearchResult.SearchResult = function(opt_params) {
      * @type {sm.lSearchResult.bFilters.Filters}
      * @private
      */
-     this.filters_ = null;
+    this.filters_ = null;
+
+    /**
+     * Search instance
+     * @type {sm.bSearch.Search}
+     */
+    this.search_ = null;
 };
 goog.inherits(sm.lSearchResult.SearchResult, goog.ui.Component);
 
@@ -75,8 +81,7 @@ goog.scope(function() {
     };
 
     /**
-     * Template-based dom element creation.
-     * @public
+     * @override
      */
     SearchResult.prototype.createDom = function() {
         goog.base(this, 'createDom');
@@ -92,7 +97,7 @@ goog.scope(function() {
     };
 
     /**
-     * Internal decorates the DOM element
+     * @override
      * @param {Element} element
      */
     SearchResult.prototype.decorateInternal = function(element) {
@@ -113,28 +118,30 @@ goog.scope(function() {
             Sort.CssClass.ROOT,
             element
         );
+
         this.sort_ = new Sort();
         this.addChild(this.sort_);
         this.sort_.decorate(sortElement);
 
         //filters
         var filtersElement = goog.dom.getElementByClass(
-                Filters.CssClass.ROOT,
-                element
-            );
+            Filters.CssClass.ROOT,
+            element
+        );
 
         this.filters_ = new Filters();
         this.addChild(this.filters_);
         this.filters_.decorate(filtersElement);
-        
+
+        //search
         var bSearch = goog.dom.getElementByClass(
             Search.CssClass.INPUT,
             element
         );
 
-        var bSearchInstance = new Search();
-        this.addChild(bSearchInstance);
-        bSearchInstance.decorate(bSearch);
+        this.search_ = new Search();
+        this.addChild(this.search_);
+        this.search_.decorate(bSearch);
     };
 
     /**
@@ -160,41 +167,17 @@ goog.scope(function() {
             Filters.event.SUBMIT,
             this.filtersSubmitHandler_
         );
-
-    };
-
-    /**
-     * Sends form using jQuery.ajax
-     * @param {string} url
-     * @param {string} method
-     * @param {Object} data
-     * @param {Function=} opt_callback
-     * @private
-     */
-    SearchResult.prototype.send_ = function(url, method, data, opt_callback) {
-        jQuery.ajax({
-            url: url,
-            type: method,
-            data: data,
-            success: opt_callback ? opt_callback : function() {}
-        });
     };
 
     /**
      * Filters submit callback
      * @param {string} responseData
-     * @param {string} status
-     * @param {Object} response
      * @private
      */
-    SearchResult.prototype.filtersSubmitCallback_ =
-        function(responseData, status, response) {
-            if (response.status == 200 && status == 'success') {
-                console.log(status);
-                var data = JSON.parse(responseData);
-                this.schoolList_.setList(data);
-            }
-        };
+    SearchResult.prototype.searchSuccess_ = function(responseData) {
+        var data = JSON.parse(responseData);
+        this.schoolList_.setItems(data, this.sort_.getCurrentItemId());
+    };
 
     /**
      * Sort item click handler
@@ -211,12 +194,16 @@ goog.scope(function() {
      * @private
      */
     SearchResult.prototype.filtersSubmitHandler_ = function(event) {
-        this.send_(
-            event.url,
-            event.method,
-            event.data,
-            this.filtersSubmitCallback_.bind(this)
-        );
+        var data = event.data;
+
+        data.searchParams.name = this.search_.getValue();
+
+        jQuery.ajax({
+            url: event.url,
+            type: event.method,
+            data: data,
+            success: this.searchSuccess_.bind(this)
+        });
     };
 
     /**

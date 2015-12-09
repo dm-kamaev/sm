@@ -118,7 +118,7 @@ goog.scope(function() {
         goog.base(this, 'createDom');
 
         var element = goog.soy.renderAsElement(
-            sm.lSearchResult.bSchoolList.Template.base,
+            sm.lSearchResult.bFilter.Template.base,
             {
                 params: this.params_
             }
@@ -176,7 +176,7 @@ goog.scope(function() {
     };
 
     /**
-     * Set up the Component.
+     * @override
      */
     Filter.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
@@ -244,16 +244,36 @@ goog.scope(function() {
     };
 
     /**
-     * Show reset button
+     * Checks for checked radio
+     * @returns {boolean}
      * @private
      */
-    Filter.prototype.showResetButton_ = function() {
+    Filter.prototype.hasCheckedInputClasses_ = function() {
+        var result = false;
+
+        for (var i = 0; i < this.inputClassesElements_.length; i++) {
+            if (this.inputClassesElements_[i].checked) {
+                result = true;
+            }
+        }
+
+        return result;
+    };
+
+    /**
+     * Show reset button
+     * @param {Object} event
+     * @private
+     */
+    Filter.prototype.showResetButton_ = function(event) {
         if (this.filterResetElement_) {
-            if (goog.dom.classlist.contains(
+            if (event.currentTarget.checked || this.hasCheckedInputClasses_()) {
+                goog.dom.classlist.remove(
                     this.filterResetElement_,
                     Filter.CssClass.HIDDEN
-                )) {
-                goog.dom.classlist.remove(
+                );
+            } else {
+                goog.dom.classlist.add(
                     this.filterResetElement_,
                     Filter.CssClass.HIDDEN
                 );

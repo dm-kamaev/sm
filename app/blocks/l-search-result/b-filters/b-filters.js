@@ -102,29 +102,6 @@ goog.scope(function() {
     };
 
     /**
-     * Processing serialize array
-     * @param {Array.<Object>} array
-     * @return {Object}
-     * @private
-     */
-    Filters.prototype.processingSerializeArray_ = function(array) {
-        var result = {};
-
-        for (var i = 0, a; i < array.length; i++) {
-            a = array[i];
-
-            if (!result[a.name]) {
-                result[a.name] = [];
-            }
-            if (! (a.value == 'after-school')) {
-                result[a.name].push(a.value);
-            }
-        }
-
-        return result;
-    };
-
-    /**
      * Submit handler
      * @param {Object} event
      * @private
@@ -145,5 +122,27 @@ goog.scope(function() {
             url: form.attr('action'),
             method: form.attr('method')
         });
+    };
+
+    /**
+     * Processing serialize array
+     * @param {Array.<Object>} array
+     * @return {Object}
+     * @private
+     */
+    Filters.prototype.processingSerializeArray_ = function(array) {
+        var result = {};
+
+        for (var i = 0, item; i < array.length; i++) {
+            item = array[i];
+
+            if (!result[item.name]) {
+                result[item.name] = [];
+            }
+
+            result[item.name].push(item.value);
+        }
+
+        return result;
     };
 });

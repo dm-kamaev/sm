@@ -69,7 +69,7 @@ goog.scope(function() {
      * @return {(Array.<Number>|Number)}
      */
     ListItem.prototype.getScore = function(opt_index) {
-        return opt_index ?
+        return (typeof opt_index != 'undefined') ?
             this.score_[opt_index] :
             this.score_;
     };
@@ -80,6 +80,25 @@ goog.scope(function() {
      */
     ListItem.prototype.getTotalScore = function() {
         return this.totalScore_;
+    };
+
+    /**
+     * Compare by total score
+     * @param {sm.lSearchResult.bSchoolListItem.SchoolListItem} item
+     * @return {number}
+     */
+    ListItem.prototype.compareByTotalScore = function(item) {
+        return item.getTotalScore() - this.getTotalScore();
+    };
+
+    /**
+     * Compare by score
+     * @param {sm.lSearchResult.bSchoolListItem.SchoolListItem} item
+     * @param {number} index
+     * @returns {number}
+     */
+    ListItem.prototype.compareByScore = function(item, index) {
+        return item.getScore(index) - this.getScore(index);
     };
 
     /**

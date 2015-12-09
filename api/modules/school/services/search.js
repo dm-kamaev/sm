@@ -167,16 +167,6 @@ exports.searchSchool = async (params => {
         params.having = ['COUNT(?) = ?', '', searchDataCount];
     }
 
-    var results = await (models.School.findAll(params));
-    results = results.map(item => {
-        return {
-            id: item.id,
-            name: item.name,
-            description: '',
-            score: [1, 2, 3, 4],
-            totalScore: 2.5
-        };
-    });
     console.log('Found: ', colors.green(results.length));
     return JSON.stringify(results);
 });

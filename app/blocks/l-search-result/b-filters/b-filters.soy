@@ -25,7 +25,7 @@
 {template .base autoescape="strict" kind="html"}
     <form class="b-filters"
           method="GET"
-          action="{$params?.url ? $params.url : ''}">
+          action="{$params?.url ?: ''}">
         {call sm.lSearchResult.bFilterClasses.Template.base}
             {param params: [
                 'data': [
