@@ -27,7 +27,10 @@ var getSearchSubstrings = function (string) {
         .split(' ');
 };
 
-var generateFilter = function(string){
+/**
+ *
+ */
+exports.generateFilter = function(string){
     var subStrings = getSearchSubstrings(string);
     return {
         $and: subStrings.map(substr => {
@@ -35,7 +38,7 @@ var generateFilter = function(string){
                 $iLike: '%' + substr + '%'
             };
         })
-    }
+    };
 };
 
 
@@ -80,95 +83,6 @@ exports.advancedSearch = async ((searchString) => {
         address: results[2],
         metro: results[3]
     };
-});
-
-
-/**
- * @public
- */
-exports.searchSchool = async (params => {
-    var searchDataCount = 0,
-        searchParams = params.searchParams,
-        includeParams = {
-           searchData: {
-               where: {
-                   $or: []
-               }
-           }   
-        },
-        whereParams = {};
-
-    if (searchParams.name) {
-        var nameFilter = generateFilter(searchParams.name);
-        whereParams.$or = [
-        {
-            name: nameFilter,
-            fullName: nameFilter
-        }];
-    }
-    if (searchParams.classes && searchParams.classes.length) {
-        whereParams.educationInterval = { 
-            $contains: searchParams.classes
-        };
-    }
-
-    if (searchParams.schoolType && searchParams.schoolType.length) {
-        whereParams.schoolType = {
-            $or:[]  
-        };
-        searchParams.schoolType.forEach((item) => { 
-            whereParams.schoolType.$or.push(item);
-        });
-    }
-    
-    if (searchParams.gia) {
-        searchDataCount++;
-        includeParams.searchData.where.$or.push({ 
-            $and: {
-                type: searchTypes.GIA,
-                values: {
-                    $contains: searchParams.gia
-                }
-            }
-        });
-    } 
-
-    if (searchParams.ege) {
-        searchDataCount++;
-        includeParams.searchData.where.$or.push({ 
-            $and: {
-                type: searchTypes.EGE,
-                values: {
-                    $contains: searchParams.ege
-                }
-            }
-        });
-    } 
-
-    if (searchParams.olimp) {
-        searchDataCount++;
-        includeParams.searchData.where.$or.push({ 
-            $and: {
-                type: searchTypes.OLIMP,
-                values: {
-                    $contains: searchParams.olimp
-                }
-            }
-        });
-    } 
-    
-    var params = {
-        where: whereParams,
-        include:  sequelizeInclude(includeParams, true)
-    };
-    if (searchDataCount){
-        params.group = '"School"."id"';
-        params.having = ['COUNT(?) = ?', '', searchDataCount];
-    }
-
-    var results = await (models.School.findAll(params));
-    console.log('Found: ', colors.green(results.length));
-    return JSON.stringify(results);
 });
 
 exports.addGia = async(function(schoolId, values) {
