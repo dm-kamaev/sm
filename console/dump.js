@@ -56,19 +56,22 @@ var start = function() {
 };
 
 var checkDumpFolder = function() {
-    if (!common.fileExists(DUMP_FOLDER))
+    if (!common.fileExists(DUMP_FOLDER)) {
         fs.mkdirSync(DUMP_FOLDER);
+    }
 };
 
-var dropAll = async(()=>{
+var dropAll = async(()=> {
     await(sequelize.queryInterface.dropAllTables());
     await(sequelize.queryInterface.dropAllEnums());
 });
+
 var loadFromRemote = async(function() {
     var filename = DUMP_FOLDER + dbConfig.dump;
     await(download(dbConfig.dump));
     await(load());
 });
+
 var load = async(function(){
     var filename = DUMP_FOLDER + dbConfig.dump;
     if (!common.fileExists(filename)) {

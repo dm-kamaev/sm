@@ -18,7 +18,8 @@ Common.readText = function(path) {
 Common.fileExists = function(filePath)
 {
     try {
-        return fs.statSync(filePath).isFile();
+        fs.statSync(filePath);
+        return true;
     } catch (err) {
         return false;
     }
