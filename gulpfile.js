@@ -197,7 +197,7 @@ var compileLayout = function(name)  {
     );
 };
 
-gulp.task('scripts', ['soy'], function () {
+gulp.task('scripts', ['soy', 'lint'], function () {
     var promises = [],
         dirs = getDirectories(path.join(__dirname,'/app/blocks'));
     dirs = dirs.filter((dirname) => {

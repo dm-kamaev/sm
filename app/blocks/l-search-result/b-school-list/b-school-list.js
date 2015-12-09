@@ -41,7 +41,7 @@ sm.lSearchResult.bSchoolList.SchoolList = function(opt_params) {
      * @type {number}
      * @private
      */
-    this.sortKey_ = null;
+    this.sortKey_ = 0;
 };
 goog.inherits(sm.lSearchResult.bSchoolList.SchoolList, goog.ui.Component);
 
@@ -133,26 +133,15 @@ goog.scope(function() {
     };
 
     /**
-     * Setter for sort key
-     * @param {number} sortKey
-     * @param {bool} opt_sort
-     * @public
-     */
-    SchoolList.prototype.setSortKey = function(sortKey, opt_sort) {
-        this.sortKey_ = sortKey;
-
-        if (opt_sort) {
-            this.sort();
-        }
-    };
-
-    /**
      * Schools sort maker
-     * @public
+     * @param {number=} opt_sortKey
      */
-    SchoolList.prototype.sort = function() {
+    SchoolList.prototype.sort = function(opt_sortKey) {
         var schoolListItems = this.removeChildren();
-        var sortKey = this.sortKey_;
+        var sortKey = (typeof opt_sortKey == 'undefined') ?
+            this.sortKey_ :
+            opt_sortKey;
+        this.sortKey_ = sortKey;
 
         schoolListItems.sort(function(item1, item2) {
             return (sortKey > 0) ?

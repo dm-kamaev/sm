@@ -186,7 +186,8 @@ goog.scope(function() {
      * @private
      */
     SearchResult.prototype.onSortHandler_ = function(event) {
-        this.schoolList_.setSortKey(event.itemId, true);
+        console.log(event.itemId);
+        this.schoolList_.sort(event.itemId);
     };
 
     /**
