@@ -91,7 +91,7 @@ goog.scope(function() {
             }, {
                 balloonContentLayout: this.balloonLayout_,
                 balloonPanelMaxMapArea: 0,
-                balloonCloseButton: false,
+                balloonCloseButton: true,
                 iconLayout: 'default#image',
                 iconImageHref: this.iconSettings_.iconHref,
                 iconImageSize: this.iconSettings_.iconSize,

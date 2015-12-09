@@ -110,7 +110,9 @@ exports.view = async (function(req, res) {
         return res;
     }
 
-
+    var addresses =
+            services.department.addressesFilter(school.addresses);
+    var commentGroup = school.CommentGroup ? school.CommentGroup.comments : [];
     var params = {
         data: {
             id: school.id,
@@ -127,7 +129,7 @@ exports.view = async (function(req, res) {
                 link: school.site
             }],
             contacts:{
-                address: school.addresses.map(address => {
+                address: addresses.map(address => {
                     return {
                         title: '',
                         description: address.name
@@ -135,7 +137,7 @@ exports.view = async (function(req, res) {
                 }),
                 phones: school.phones || ''
             },
-            comments: school.commentGroup.comments.map(comment => {
+            comments: commentGroup.map(comment => {
                 return {
                     author: '',
                     rank: typeConvert[comment.userType],
@@ -154,7 +156,7 @@ exports.view = async (function(req, res) {
                     }) : []
                 };
             }),
-            coords: school.addresses.map(adr => {
+            coords: addresses.map(adr => {
                 return {
                     lat: adr.coords[0],
                     lng: adr.coords[1]
