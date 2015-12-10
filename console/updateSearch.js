@@ -30,7 +30,7 @@ var start = function() {
 
 var launch = async (function(isRewriting) {
     var schools = await(services.school.listInstances());
-    await(new GiaUpdater(schools, isRewriting));
+    await(new SearchUpdater(schools, isRewriting));
 });
 
 var SearchUpdater = async(function(schools, isRewriting){

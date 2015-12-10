@@ -1,1 +1,4 @@
-{"db":{"dump":"BP-567_151108161046.dump","name":"school_market"}}
+{
+  "db":{"dump":"BP-567_151108161046.dump","name":"school_market"},
+  "scp":{"login":"uploader", "pass": "gTgCuHrHuEnNnacpxStR", "host":"repo.dfarm.lan", "path":"/home/uploader/shared", "port":"22"}
+}

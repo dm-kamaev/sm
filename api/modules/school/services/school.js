@@ -265,7 +265,7 @@ service.list = async (function(opt_params) {
                 score: score
             };
         })
-        .sort((school1, school2) => school1.totalScore - school2.totalScore);
+        .sort((school1, school2) => school2.totalScore - school1.totalScore);
 });
 
 /**
@@ -292,7 +292,9 @@ var updateSearchConfig = function(searchConfig, searchParams) {
             },
             attributes: []
         }
-    }; 
+    };
+
+    console.log(enums.searchType);
 
     if (searchParams.name) {
         var nameFilter = services.search.generateFilter(searchParams.name);
@@ -349,13 +351,13 @@ var updateSearchConfig = function(searchConfig, searchParams) {
         searchDataCount++;
         extraIncludes.searchData.where.$or.push({ 
             $and: {
-                type: enums.searchType.OLIMP,
+                type: enums.searchType.OLIMPIAD,
                 values: {
                     $contains: searchParams.olimp
                 }
             }
         });
-    } 
+    }
 
     /*Write generated setting to config object*/   
     searchConfig.where = whereParams;
