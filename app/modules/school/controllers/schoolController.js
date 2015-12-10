@@ -1,5 +1,6 @@
 var soy = require.main.require('./app/components/soy');
 var services = require.main.require('./app/components/services').all;
+var render = require('../renderers/schoolRenderer');
 
 var fs = require('fs');
 var async = require('asyncawait/async');
@@ -28,50 +29,15 @@ exports.create = function(req, res) {
 
 
 exports.list = async (function(req, res) {
-
     var schools = await (services.school.list());
-
-    var filters = await (services.school.searchFilters())
-        .map(item => {
-            var res = {
-                data: {
-                    filters: item.values,
-                    header: {
-                        help: ''
-                    },
-                    name: item.filter
-                },
-                config: {}
-            };
-
-            switch (item.filter) {
-                case 'school_type':
-                    res.data.header.title = 'Тип школы';
-                    res.config.filtersToShow = 15;
-                    res.config.cannotBeHidden = true;
-                    break;
-                case 'ege':
-                    res.data.header.title = 'Высокие результаты ЕГЭ';
-                    break;
-                case 'gia':
-                    res.data.header.title = 'Высокие результаты ГИА';
-                    break;
-                case 'olimp':
-                    res.data.header.title = 'Есть победы в олимпиадах';
-                    break;
-            }
-
-            return res;
-        });
-
-    console.log('filters', filters);
+    var filters = await (services.school.searchFilters());
 
     var html = soy.render('sm.lSearchResult.Template.base', {
         params: {
             data: {
                 schools: schools,
                 filters: {
-                    filters: filters,
+                    filters: render.filters(filters),
                     url: '/api/school/search'
                 }
             },
@@ -87,6 +53,7 @@ exports.list = async (function(req, res) {
     res.header("Content-Type", "text/html; charset=utf-8");
     res.end(html);
 });
+
 
 exports.view = async (function(req, res) {
     var school = await (services.school.viewOne(req.params.id));
