@@ -54,6 +54,15 @@ sm.lSearchResult.SearchResult = function(opt_params) {
      * @private
      */
     this.search_ = null;
+
+    /**
+     * Search data
+     * @type {Object}
+     * @private
+     */
+    this.searchData_ = {
+        offset: 10
+    };
 };
 goog.inherits(sm.lSearchResult.SearchResult, goog.ui.Component);
 
@@ -154,13 +163,19 @@ goog.scope(function() {
         this.getHandler().listen(
             this.sort_,
             Sort.Event.ITEM_CLICK,
-            this.onSortHandler_
+            this.sortHandler_
         );
 
         this.getHandler().listen(
             this.schoolList_,
             SchoolList.Event.ITEM_CLICK,
-            this.redirect_
+            this.redirectHandler_
+        );
+
+        this.getHandler().listen(
+            this.schoolList_,
+            SchoolList.Event.SHOW_MORE,
+            this.showMoreSchoolListItemsHandler_
         );
 
         this.getHandler().listen(
@@ -168,26 +183,8 @@ goog.scope(function() {
             Filters.event.SUBMIT,
             this.filtersSubmitHandler_
         );
-    };
 
-    /**
-     * Filters submit callback
-     * @param {string} responseData
-     * @private
-     */
-    SearchResult.prototype.searchSuccess_ = function(responseData) {
-        var data = JSON.parse(responseData);
-        this.schoolList_.setItems(data);
-    };
-
-    /**
-     * Sort item click handler
-     * @param {Object} event
-     * @private
-     */
-    SearchResult.prototype.onSortHandler_ = function(event) {
-        console.log(event.itemId);
-        this.schoolList_.sort(event.itemId);
+        this.addScrollListener_();
     };
 
     /**
@@ -199,6 +196,13 @@ goog.scope(function() {
         var data = event.data;
 
         data.searchParams.name = this.search_.getValue();
+        data.order = this.sort_.getCurrentItemId();
+        data.offset = 0;
+        data.limit = 10;
+
+        this.searchData_ = data;
+        this.schoolList_.showLoader();
+        this.removeScrollListener_();
 
         jQuery.ajax({
             url: event.url,
@@ -209,13 +213,132 @@ goog.scope(function() {
     };
 
     /**
+     * Filters submit callback
+     * @param {string} responseData
+     * @private
+     */
+    SearchResult.prototype.searchSuccess_ = function(responseData) {
+        var data = JSON.parse(responseData);
+        this.schoolList_.hideLoader();
+        this.schoolList_.setItems(data);
+        this.addScrollListener_();
+    };
+
+    /**
+     * Sort item click handler
+     * @param {Object} event
+     * @private
+     */
+    SearchResult.prototype.sortHandler_ = function(event) {
+        console.log(event.itemId);
+        this.schoolList_.sort(event.itemId);
+    };
+
+    /**
      * Redirect item click handler
      * @param {Object} event
      * @private
      */
-    SearchResult.prototype.redirect_ = function(event) {
+    SearchResult.prototype.redirectHandler_ = function(event) {
         document.location.href = '/school/' + event.itemId;
     };
+
+    /**
+     * Add listener for scroll
+     * @private
+     */
+    SearchResult.prototype.addScrollListener_ = function() {
+        this.getHandler().listen(
+            window,
+            goog.events.EventType.SCROLL,
+            this.scrollHandler_
+        );
+
+        this.scrollCheck_();
+    };
+
+    /**
+     * Remove listener for scroll
+     * @private
+     */
+    SearchResult.prototype.removeScrollListener_ = function() {
+        this.getHandler().unlisten(
+            window,
+            goog.events.EventType.SCROLL,
+            this.scrollHandler_
+        );
+    };
+
+    /**
+     * Scroll handler
+     * @private
+     */
+    SearchResult.prototype.scrollHandler_ = function() {
+        this.scrollCheck_();
+    };
+
+    /**
+     * Checks scroll
+     * @private
+     */
+    SearchResult.prototype.scrollCheck_ = function() {
+        var scrollHeight =
+            window.pageYOffset || document.documentElement.scrollTop;
+        var docHeight = document.documentElement.offsetHeight;
+        var clientHeight = document.documentElement.clientHeight;
+
+        if (scrollHeight + clientHeight >= docHeight) {
+            console.log('oh');
+            this.showMoreSchoolListItems_();
+        }
+    };
+
+    /**
+     * Handler for show more school list items
+     * @private
+     */
+    SearchResult.prototype.showMoreSchoolListItemsHandler_ = function() {
+        this.showMoreSchoolListItems_();
+    };
+
+    /**
+     * Shows more school list items
+     * @private
+     */
+    SearchResult.prototype.showMoreSchoolListItems_ = function() {
+        this.searchData_.order = this.sort_.getCurrentItemId();
+        this.searchData_.offset = this.searchData_.offset + 10;
+        this.searchData_.limit = 10;
+        console.log(this.searchData_.order);
+
+        this.schoolList_.showLoader();
+        this.removeScrollListener_();
+
+        jQuery.ajax({
+            url: this.filters_.getUrl(),
+            type: this.filters_.getMethod(),
+            data: this.searchData_,
+            success: this.showMoreSchoolListItemsSuccess_.bind(this)
+        });
+    };
+
+    /**
+     * Show more school list items callback
+     * @param {string} responseData
+     * @private
+     */
+    SearchResult.prototype.showMoreSchoolListItemsSuccess_ =
+        function(responseData) {
+            var data = JSON.parse(responseData) || [];
+            console.log(data);
+            this.schoolList_.hideLoader();
+            if (!data.length) {
+                this.schoolList_.hideShowMoreButton();
+            } else {
+                this.schoolList_.addItems(data);
+                this.addScrollListener_();
+            }
+        };
 });
 
 

@@ -188,7 +188,7 @@ service.rate = async ((school, params, t) => {
  */
 service.listInstances = async(function(){
     return await(models.School.findAll({
-        inclde: [{
+        include: [{
                     model: models.Rating,
                     as: 'ratings' 
                 }, {
@@ -221,14 +221,40 @@ service.list = async (function(opt_params) {
         attributes: [
             'id',
             'name'
-        ]
+        ],
+        order: ['id']
     };
+
+    var offset = params.offset || 0;
+    var limit = params.limit;
+
+    var order = params.order || 0;
+
+    console.log(order);
+
+    var orderParam;
+
+    if (parseFloat(order)) {
+        console.log('hey');
+        orderParam = function(item) {
+            return item.score[params.order - 1]
+        }
+    } else {
+        console.log('wow');
+        orderParam = function(item) {
+            return item.totalScore
+        };
+    }
+
+    console.log(JSON.stringify(orderParam));
 
     if (searchParams)
         updateSearchConfig(searchConfig, searchParams);
     console.log(searchConfig);
     var schools = await(models.School.findAll(searchConfig)); 
     console.log('Found: ', colors.green(schools.length));
+    console.log('Limit: ', colors.green(limit));
+    console.log('Offset: ', colors.green(offset));
     return schools
         .map(school => {
             var score = service.avgScore_(school.ratings || []);
@@ -239,7 +265,15 @@ service.list = async (function(opt_params) {
                 totalScore: service.avgRating_(score),
                 score: score
             };
-        }).sort((a, b) => b.totalScore - a.totalScore);
+        })
+        .sort((a, b) =>  orderParam(b) - orderParam(a))
+        .filter((item, index) => (
+            (index > offset) &&
+            (
+                (index < parseFloat(limit) + parseFloat(offset) + 1) ||
+                (!limit)
+            )
+        ));
 });
 
 /**

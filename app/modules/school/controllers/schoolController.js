@@ -29,7 +29,11 @@ exports.create = function(req, res) {
 
 exports.list = async (function(req, res) {
 
-    var schools = await (services.school.list());
+    var schools = await (services.school.list({
+        offset: 0,
+        limit: 10,
+        order: 0
+    }));
 
     var schoolList =
         schools.map(school => {
@@ -45,8 +49,6 @@ exports.list = async (function(req, res) {
     var subjects = await (services.subject.list());
     var schoolTypes = await (services.school.listTypes());
     var filters = [];
-
-    console.log(schoolTypes);
 
     filters.push({
         data: {

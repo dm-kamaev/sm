@@ -106,6 +106,22 @@ goog.scope(function() {
     };
 
     /**
+     * Getter for url
+     * @return {string}
+     */
+    Filters.prototype.getUrl = function() {
+        return jQuery(this.getElement()).attr('action');
+    };
+
+    /**
+     * Getter for method
+     * @return {string}
+     */
+    Filters.prototype.getMethod = function() {
+        return jQuery(this.getElement()).attr('method');
+    };
+
+    /**
      * Submit handler
      * @param {Object} event
      * @private

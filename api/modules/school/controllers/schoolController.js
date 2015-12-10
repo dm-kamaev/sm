@@ -78,7 +78,10 @@ exports.yapi = async (function(req, res) {
  *       	"gia": [1,2],
  *       	"ege": [2,3],
  *       	"olimp": [3,5]	
- *       }
+ *       },
+ *       "offset": 10,
+ *       "limit": 10,
+ *       "order": 0
  *     }
  */
 exports.search = async (function(req, res) {
