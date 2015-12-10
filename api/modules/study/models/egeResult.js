@@ -14,6 +14,10 @@ var EgeResult = db.define('EgeResult', {
         type: DataType.INTEGER,
         allowNull: false
     },
+    subjectId: {
+        type: DataType.INTEGER,
+        field: 'subject_id'
+    },
     result: {
         type: DataType.FLOAT,
         allowNull: false

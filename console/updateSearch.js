@@ -9,7 +9,7 @@ const common = require.main.require('./console/common');
 const services = require.main.require('./app/components/services').all;
 const ProgressBar = require('progress');
 const searchType = require.main.require('./api/modules/school/enums/searchType');
-console.log(searchType);
+const schoolType = require.main.require('./api/modules/school/enums/schoolType');
 var sequelize = require.main.require('./app/components/db');
     
 var start = function() {
@@ -33,24 +33,48 @@ var launch = async (function(isRewriting) {
     await(new GiaUpdater(schools, isRewriting));
 });
 
-
-
-
-
-var GiaUpdater = async(function(schools, isRewriting){
+var SearchUpdater = async(function(schools, isRewriting){
     this.isRewriting = isRewriting || false;
     this.schools = schools;   
     this.citySubjects = await (services.subject.listCityResults());
+    this.schoolTypeFilters = await (services.search.getTypeFilters());
+
+    /**
+     * @param {string} type School type 
+     * @returns {object} SchoolTypeFilter instance
+     */
+    this.getTypeFilter = function(type) {
+        var typeName = schoolType.getPropByValue(type);
+        if (!typeName)
+            throw new Error ('Cant find type \"'+ type + '\" in enum');
+        var instance = this.schoolTypeFilters.find(schoolTypeFilter => {
+            var index = schoolTypeFilter.values.indexOf(typeName);
+            return index == -1 ? false : true;
+        }
+
+        );
+        if (!instance)
+            throw new Error ('Cant find school_type_filter for school type: ' + typeName);
+        return instance;
+    };
+
     var bar = new ProgressBar('Processing :bar :current/:total', { 
         total: schools.length,
         width: 30 
     });
     await (this.schools.forEach(school => {
+        /*update type filters*/
+        var filterInstance = this.getTypeFilter(school.schoolType);
+        await(services.search.setSchoolType(school.id, filterInstance.id));
+
+        /*update gia filters*/
         var gs = await (new GiaSchool(
             school,
             this.citySubjects,
             this.isRewriting));
         await (gs.process());
+
+        /*update olimp filters*/
         var os = await (new OlimpSchool(
             school,
             this.isRewriting));
@@ -59,6 +83,7 @@ var GiaUpdater = async(function(schools, isRewriting){
     }));
     console.log('Succses. Stopping script');
 });
+
 
 function OlimpSchool(school, isRewriting){
     this.school = school;
@@ -102,6 +127,7 @@ function OlimpSchool(school, isRewriting){
         }
     });
 } 
+
 function GiaSchool(school, citySubjects, isRewriting){
     this.school = school;
     this.isRewriting = isRewriting;
