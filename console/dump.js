@@ -75,7 +75,7 @@ var loadFromRemote = async(function() {
 var load = async(function(){
     var filename = DUMP_FOLDER + dbConfig.dump;
     if (!common.fileExists(filename)) {
-        throw new Error('Cant find the file');
+        throw new Error('Can\'t find the file');
     }
     await(dropAll());
     var command = 'pg_restore -d ' + dbConfig.name + 

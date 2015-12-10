@@ -84,6 +84,13 @@ service.getForParse = async((govKeyId) => {
     }));
 });
 
+service.findBySite = async(function(site) {
+    return await(models.School.findOne({
+        where: {
+            site: site
+        }
+    }));
+});
 
 /**
  * @public

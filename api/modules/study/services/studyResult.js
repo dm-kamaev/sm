@@ -18,6 +18,17 @@ const OLIMP_TYPES = [
     }
 ];
 
+/**
+ * param {int} school_id
+ */
+exports.dropEgeResults = async(function(school_id) {
+    await(models.EgeResult.destroy({
+        where: {
+            schoolId: school_id
+        }
+    }));
+});
+
 exports.setSchoolOlimp = async((school, olimpResults) => {
     await(models.OlimpResult.destroy({
         where: {
@@ -122,3 +133,14 @@ exports.createGia = async((gia, opt_option) => {
         return res;
     }
 );
+/**
+ * @param {
+ *      year: int,
+ *      schoolId: int,
+ *      result: float,
+ *      subject_id: int
+ * } ege
+ */
+exports.createEge = async(function(ege){
+    await (models.EgeResult.create(ege));   
+});
