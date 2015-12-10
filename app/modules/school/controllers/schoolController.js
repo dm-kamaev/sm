@@ -31,72 +31,45 @@ exports.list = async (function(req, res) {
 
     var schools = await (services.school.list());
 
-    var schoolList =
-        schools.map(school => {
-            return {
-                id: school.id,
-                name: school.name,
-                score: school.score,
-                totalScore: school.totalScore,
-                description: ""
+    var filters = await (services.school.searchFilters())
+        .map(item => {
+            var res = {
+                data: {
+                    filters: item.values,
+                    header: {
+                        help: ''
+                    },
+                    name: item.filter
+                },
+                config: {}
+            };
+
+            switch (item.filter) {
+                case 'school_type':
+                    res.data.header.title = 'Тип школы';
+                    res.config.filtersToShow = 15;
+                    res.config.cannotBeHidden = true;
+                    break;
+                case 'ege':
+                    res.data.header.title = 'Высокие результаты ЕГЭ';
+                    break;
+                case 'gia':
+                    res.data.header.title = 'Высокие результаты ГИА';
+                    break;
+                case 'olimp':
+                    res.data.header.title = 'Есть победы в олимпиадах';
+                    break;
             }
+
+            return res;
         });
 
-    var subjects = await (services.subject.list());
-    var schoolTypes = await (services.school.listTypes());
-    var filters = [];
-
-    console.log(schoolTypes);
-
-    filters.push({
-        data: {
-            filters: schoolTypes,
-            header: {
-                title: 'Тип школы',
-                help: 'help'
-            },
-            name: 'schoolType'
-        },
-        config: {
-            filtersToShow: 15,
-            cannotBeHidden: true
-        }
-    });
-    filters.push({
-        data: {
-            filters: subjects,
-            header: {
-                title: 'Высокие результаты ЕГЭ',
-                help: 'help'
-            },
-            name: 'ege'
-        }
-    });
-    filters.push({
-        data: {
-            filters: subjects,
-            header: {
-                title: 'Высокие результаты ГИА',
-                help: 'help'
-            },
-            name: 'gia'
-        }
-    });
-    filters.push({
-        data: {
-            filters: subjects,
-            header: {
-                title: 'Есть победы в олимпиадах',
-                help: 'help'
-            },
-            name: 'olimp'
-        }
-    });
+    console.log('filters', filters);
 
     var html = soy.render('sm.lSearchResult.Template.base', {
         params: {
             data: {
-                schools: schoolList,
+                schools: schools,
                 filters: {
                     filters: filters,
                     url: '/api/school/search'
@@ -110,6 +83,7 @@ exports.list = async (function(req, res) {
             }
         }
     });
+
     res.header("Content-Type", "text/html; charset=utf-8");
     res.end(html);
 });

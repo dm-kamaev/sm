@@ -28,8 +28,7 @@ var getSearchSubstrings = function (string) {
 };
 
 
-
-var generateFilter = function(string){
+exports.generateFilter = function(string){
     var subStrings = getSearchSubstrings(string);
     return {
         $and: subStrings.map(substr => {
@@ -39,7 +38,6 @@ var generateFilter = function(string){
         })
     };
 };
-
 
 
 exports.getTypeFilters = async(function() {
@@ -109,7 +107,7 @@ exports.setSchoolType = async(function(schoolId, value) {
     await(models.SearchData.destroy({
         where: {
             schoolId: schoolId,
-            type: searchTypes.SCHOOL_TYPE,
+            type: searchTypes.SCHOOL_TYPE
         }
     })) 
     var values = [];

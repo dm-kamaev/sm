@@ -7,6 +7,7 @@ var sequelize  = require.main.require('./app/components/db');
 var sequelizeInclude = require.main.require('./api/components/sequelizeInclude');
 var transaction = require.main.require('./api/components/transaction.js');
 var enums = require.main.require('./api/components/enums').all;
+
 var service = {
     name : 'school'
 };
@@ -32,11 +33,11 @@ service.getGroupId = async (function(school, t) {
  * @public
  */
 service.searchFilters = async (function() {
-    var olympFilters = services.subject.olympFilters();
+    var typeFilters = service.typeFilters();
     var egeFilters = services.subject.egeFilters();
     var giaFilters = services.subject.giaFilters();
-    var typeFilters = service.typeFilters();
-    return await (olympFilters, egeFilters, giaFilters, typeFilters);
+    var olympFilters = services.subject.olympFilters();
+    return await (typeFilters, egeFilters, giaFilters, olympFilters);
 });
 
 service.typeFilters = async (function() {
@@ -45,7 +46,7 @@ service.typeFilters = async (function() {
     var formattedFilters = schoolTypeFilters.map(filter => {
         return {
             label: filter.name,
-            value: filter.id,
+            value: filter.id
         };
     });
     return {
@@ -209,16 +210,16 @@ service.rate = async ((school, params, t) => {
 service.listInstances = async(function(){
     return await(models.School.findAll({
         inclde: [{
-                    model: models.Rating,
-                    as: 'ratings' 
-                }, {
-                    model: models.Address,
-                    as: 'addresses',
-                    include: [{
-                        model: models.Department,
-                        as: 'departments'
-                    }]
-                }]          
+            model: models.Rating,
+            as: 'ratings'
+        }, {
+            model: models.Address,
+            as: 'addresses',
+            include: [{
+                model: models.Department,
+                as: 'departments'
+            }]
+        }]
     }));
 });
 
@@ -227,19 +228,16 @@ service.listInstances = async(function(){
  */
 service.list = async (function(opt_params) {
     var params = opt_params || {},
-        searchParams = params.searchParams || null,
-        includeParams = [
-            {
-                model: models.Rating,
-                as: 'ratings',
-                attributes: [
-                    'score'
-                ]
-            }
-        ];   
+        searchParams = params.searchParams || null;
 
     var searchConfig = {
-        include: includeParams,
+        include: [{
+            model: models.Rating,
+            as: 'ratings',
+            attributes: [
+                'score'
+            ]
+        }],
         attributes: [
             'id',
             'name'
@@ -291,7 +289,8 @@ var updateSearchConfig = function(searchConfig, searchParams) {
             as: 'searchData',
             where: {
                 $or: []
-            }
+            },
+            attributes: []
         }
     }; 
 
@@ -310,12 +309,15 @@ var updateSearchConfig = function(searchConfig, searchParams) {
         };
     }
 
-    if (searchParams.schoolType && searchParams.schoolType.length) { //TODO: refactor with new filters
-        whereParams.schoolType = {
-            $or:[]  
-        };
-        searchParams.schoolType.forEach((item) => { 
-            whereParams.schoolType.$or.push(item);
+    if (searchParams.school_type) {
+        searchDataCount++;
+        extraIncludes.searchData.where.$or.push({
+            $and: {
+                type: enums.searchType.SCHOOL_TYPE,
+                values: {
+                    $contains: searchParams.school_type
+                }
+            }
         });
     }
     
@@ -323,7 +325,7 @@ var updateSearchConfig = function(searchConfig, searchParams) {
         searchDataCount++;
         extraIncludes.searchData.where.$or.push({ 
             $and: {
-                type: searchTypes.GIA,
+                type: enums.searchType.GIA,
                 values: {
                     $contains: searchParams.gia
                 }
@@ -335,7 +337,7 @@ var updateSearchConfig = function(searchConfig, searchParams) {
         searchDataCount++;
         extraIncludes.searchData.where.$or.push({ 
             $and: {
-                type: searchTypes.EGE,
+                type: enums.searchType.EGE,
                 values: {
                     $contains: searchParams.ege
                 }
@@ -347,7 +349,7 @@ var updateSearchConfig = function(searchConfig, searchParams) {
         searchDataCount++;
         extraIncludes.searchData.where.$or.push({ 
             $and: {
-                type: searchTypes.OLIMP,
+                type: enums.searchType.OLIMP,
                 values: {
                     $contains: searchParams.olimp
                 }
@@ -361,10 +363,10 @@ var updateSearchConfig = function(searchConfig, searchParams) {
         var extraIncludesArr = [];
         extraIncludesArr.push(extraIncludes.searchData);
         searchConfig.include = searchConfig.include.concat(extraIncludesArr);
-        searchConfig.group = '"School"."id"';
+        searchConfig.group = '"School"."id", "ratings"."id"';
         searchConfig.having = ['COUNT(?) = ?', '', searchDataCount];
     }
-}
+};
 
 /**
  * @private
