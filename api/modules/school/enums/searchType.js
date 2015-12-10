@@ -5,6 +5,8 @@ module.exports = {
 
     EGE: 'ege',
     GIA: 'gia',
-    OLIMPIAD: 'olimp'
+    OLIMPIAD: 'olimp',
+    SCHOOL_TYPE: 'school_type'
+
 };
 

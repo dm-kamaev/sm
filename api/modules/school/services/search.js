@@ -27,10 +27,9 @@ var getSearchSubstrings = function (string) {
         .split(' ');
 };
 
-/**
- *
- */
-exports.generateFilter = function(string){
+
+
+var generateFilter = function(string){
     var subStrings = getSearchSubstrings(string);
     return {
         $and: subStrings.map(substr => {
@@ -41,6 +40,11 @@ exports.generateFilter = function(string){
     };
 };
 
+
+
+exports.getTypeFilters = async(function() {
+    return await(models.SchoolTypeFilter.findAll());
+});
 
 /**
  * @public
@@ -85,6 +89,10 @@ exports.advancedSearch = async ((searchString) => {
     };
 });
 
+/**
+ * @param {int} school_id
+ * @param {array<int>} values Subjects IDs
+ */
 exports.addGia = async(function(schoolId, values) {
     await (models.SearchData.create({
         schoolId: schoolId,
@@ -93,6 +101,30 @@ exports.addGia = async(function(schoolId, values) {
     }));
 });
 
+/**
+ * @param {int} school_id
+ * @param {int} value school_type_filter id
+ */
+exports.setSchoolType = async(function(schoolId, value) {
+    await(models.SearchData.destroy({
+        where: {
+            schoolId: schoolId,
+            type: searchTypes.SCHOOL_TYPE,
+        }
+    })) 
+    var values = [];
+    values.push(value);
+    await (models.SearchData.create({
+        schoolId: schoolId,
+        type: searchTypes.SCHOOL_TYPE,
+        values: values
+    }));
+});
+
+/**
+ * @param {int} school_id
+ * @param {array<int>} values Subjects IDs
+ */
 exports.addOlimp = async(function(schoolId, values) {
     await (models.SearchData.create({
         schoolId: schoolId,

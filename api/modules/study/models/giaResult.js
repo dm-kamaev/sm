@@ -6,6 +6,10 @@ var GiaResult = db.define('GiaResult', {
         type: DataType.INTEGER,
         allowNull: false
     },
+    subjectId: {
+        type: DataType.INTEGER,
+        field: 'subject_id'
+    },
     result: {
         type: DataType.FLOAT,
         allowNull: false
