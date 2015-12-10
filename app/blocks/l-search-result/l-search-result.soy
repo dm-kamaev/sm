@@ -53,7 +53,11 @@
         </head>
         <body>
             <div class="l-search-result">
-                {call sm.bHeader.Template.base data="all"/}
+                {call sm.bHeader.Template.base}
+                    {param params: [
+                        'url': '/'
+                    ]/}
+                {/call}
                 <div class="l-search-result__body">
                     {call .topMenu_}
                         {param params: [

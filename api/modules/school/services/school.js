@@ -212,7 +212,9 @@ service.list = async (function(opt_params) {
             {
                 model: models.Rating,
                 as: 'ratings',
-                attributes: ['score']
+                attributes: [
+                    'score'
+                ]
             }
         ];   
 
@@ -224,22 +226,28 @@ service.list = async (function(opt_params) {
         ]
     };
 
-    if (searchParams)
+    if (searchParams) {
         updateSearchConfig(searchConfig, searchParams);
-    console.log(searchConfig);
+    }
+
+    console.log('searchConfig', searchConfig);
     var schools = await(models.School.findAll(searchConfig)); 
     console.log('Found: ', colors.green(schools.length));
+
     return schools
         .map(school => {
-            var score = service.avgScore_(school.ratings || []);
+            var score = service.avgScore_(school.ratings || []),
+                totalScore = service.avgRating_(score);
+
             return {
                 id: school.id,
                 name: school.name,
                 description: "",
-                totalScore: service.avgRating_(score),
+                totalScore: totalScore,
                 score: score
             };
-        }).sort((a, b) => b.totalScore - a.totalScore);
+        })
+        .sort((school1, school2) => school1.totalScore - school2.totalScore);
 });
 
 /**
