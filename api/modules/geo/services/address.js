@@ -1,21 +1,11 @@
 var colors = require('colors');
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
+var sequelizeInclude = require.main.require('./api/components/sequelizeInclude');
 var models = require.main.require('./app/components/models').all;
 var services = require.main.require('./app/components/services').all;
 exports.name = 'address';
-exports.getAll = async(() => {
-    return await(models.Address.findAll());
-});
-exports.getAllWithMetro = async(() => {
-    return await(models.Address.findAll({
-        include:[{
-            model: models.Metro,
-            //through: 'address_metro',
-            as: 'metroStations'
-            }]
-    }));
-});
+
 
 exports.getTest = async(() => {
     return await(models.Address.findOne({
@@ -26,19 +16,83 @@ exports.getTest = async(() => {
     }));
 });
 
-exports.updateCoords = async((addresInst, coordsArr) => {
-    for (var i=0; i< addresInst.length; i++){
-        addresInst[i].update({coords:coordsArr[i]});
+
+/**
+ * Added new address row
+ * @param {Object} school instznce
+ * @param {Object} params
+ */
+exports.addAddress = async((school, params) => {
+    params.coords = await(exports.getCoords(params.name));
+    return await(models.Address.create(params).then(instance => {
+                return school.addAddresses(instance);
+            })).addresses;
+});
+
+
+exports.getAll = async(() => {
+    return await(models.Address.findAll());
+});
+
+
+exports.getAllWithMetro = async(() => {
+    return await(models.Address.findAll({
+        include:[{
+            model: models.Metro,
+            //through: 'address_metro',
+            as: 'metroStations'
+            }]
+    }));
+});
+
+
+exports.getAddress = async(params => {
+    var includeParams = {
+            departments: true
+        };
+    return await(models.Address.findOne({
+        where: params,
+        include: sequelizeInclude(includeParams)
+    }));
+});
+
+
+/**
+ * Get address coordinates
+ * @param  {string} addressName
+ */
+exports.getCoords = async((addressName) => {
+    var bdAddress = await(exports.getAddress({name: addressName}));
+    var result;
+    if (bdAddress) {
+        result = bdAddress.coords;
     }
-})
+    else {
+        result = await(services.yapi.getCoords('Москва, ' + addressName));
+    }
+    return result;
+});
+
 
 exports.getMetro = (address) => {
     return address.metroStations;
 };
 
-exports.getDepartment = (address) => {
-    return address.departments;
+/**
+ * Get address departments
+ * @param  {Object} address instance
+ */
+exports.getDepartments = (address) => {
+    return await(address.getDepartments());
 };
+
+
+exports.updateCoords = async((addresInst, coordsArr) => {
+    for (var i=0; i< addresInst.length; i++){
+        addresInst[i].update({coords:coordsArr[i]});
+    }
+});
+
 
 exports.setMetro = async((address, metroArr) => {
     //console.log(address);
