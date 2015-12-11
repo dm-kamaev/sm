@@ -56,9 +56,8 @@ var start = function() {
 };
 
 var checkDumpFolder = function() {
-    if (!common.fileExists(DUMP_FOLDER)) {
-        fs.mkdirSync(DUMP_FOLDER);
-    }
+   // if (!common.fileExists(DUMP_FOLDER))
+ //       fs.mkdirSync(DUMP_FOLDER);
 };
 
 var dropAll = async(()=> {

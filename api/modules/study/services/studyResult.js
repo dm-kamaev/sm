@@ -4,6 +4,7 @@ var colors = require('colors');
 var models = require.main.require('./app/components/models').all;
 var services = require.main.require('./app/components/services').all;
 const common = require.main.require('./console/common');
+var sequelize = require.main.require('./app/components/db');
 
 exports.name = 'studyResult';
 
@@ -55,6 +56,25 @@ exports.setSchoolOlimp = async((school, olimpResults) => {
 
 exports.getAllGia = async(() => {
     return await(models.GiaResult.findAll());
+});
+
+/**
+ * 
+ */
+exports.getGiaAverage = async(function () {
+    var params = {
+        attributes: {
+            include: [[sequelize.fn('AVG', sequelize.col('giaResult.result')),'average']]
+        },
+        group: '\"Subject\".id',
+        include: [{
+            model: models.GiaResult,
+            as: 'giaResult',
+            attributes: [],
+            required: true
+        }]
+    }
+    return await(models.Subject.findAll(params));
 });
 
 /**
