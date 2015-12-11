@@ -75,3 +75,12 @@ exports.setMetro = async((address, metroArr) => {
         }
     })
 });
+
+exports.setArea = async ((geoData) => {
+    var area = await(models.Area.findOne({
+        where: {
+            name: geoData.area
+        }
+    }));
+    return await(geoData.address.setArea(area));
+});

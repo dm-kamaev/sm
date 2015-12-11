@@ -13,12 +13,15 @@ var replace = require('./parseConfig').replace;
 var ignore = require('./parseConfig').ignore;
 var exclusion = require('./parseConfig').exclusion;
 
+var parseArea = require('./parse_area');
+
 var GOVERMENT_KEY_INDEX = 2,
     NAME_INDEX = 6,
     FULL_NAME_INDEX = 5,
     DIRECTOR_INDEX = 13,
     PHONES_INDEX = 15,
     SITE_INDEX = 17,
+    AREAS_INDEX = 19,
     ADDRESSES_INDEX = 20,
     EDU_PROGRAMM_INDEX = 21,
     SUBJECT_INDEX = 37,
@@ -199,7 +202,13 @@ var rowToSchool = row => {
         phones: getArray(row, PHONES_INDEX),
         site: row[SITE_INDEX],
         addresses: getArray(row, ADDRESSES_INDEX)
-            .map(address=>{return {name: address, coords: []}; }),
+            .map((address)=>{
+                return {
+                    name: address,
+                    coords: []
+                };
+            }),
+        areas: getArray(row, AREAS_INDEX),
         govermentKey: row[GOVERMENT_KEY_INDEX],
         educationInterval: getEducationInterval(row[EDU_PROGRAMM_INDEX])
     };
@@ -331,20 +340,26 @@ var parse = async(path => {
     var parsed = xlsx.parse(path),
         data = parsed[0].data;
 
+    await(parseArea.parse(path));
+
     data.map(rowParse)
         .filter((item, index) =>
             (index > 0) &&
             notIgnor(item.school.schoolType))
-        .forEach((item) => {
+        .forEach( async( (item) => {
+
             var school = await(parseSchool(item.school));
 
+            var addresses = await (school.getAddresses());
+
+            parseArea.associateAreas(addresses, item.school.areas);
             if(item.giaResult.length) {
                 initGiaResults(item.giaResult, school.id);
             }
             if (item.olimpResult.length) {
                 services.studyResult.setSchoolOlimp(school, item.olimpResult);
             }
-        });
+        }));
 });
 
 
