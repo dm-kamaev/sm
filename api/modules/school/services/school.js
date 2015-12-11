@@ -230,23 +230,17 @@ service.list = async (function(opt_params) {
 
     var order = params.order || 0;
 
-    console.log(order);
-
     var orderParam;
 
     if (parseFloat(order)) {
-        console.log('hey');
         orderParam = function(item) {
-            return item.score[params.order - 1]
+            return item.score[order - 1]
         }
     } else {
-        console.log('wow');
         orderParam = function(item) {
             return item.totalScore
         };
     }
-
-    console.log(JSON.stringify(orderParam));
 
     if (searchParams)
         updateSearchConfig(searchConfig, searchParams);
@@ -255,7 +249,7 @@ service.list = async (function(opt_params) {
     console.log('Found: ', colors.green(schools.length));
     console.log('Limit: ', colors.green(limit));
     console.log('Offset: ', colors.green(offset));
-    return schools
+    var result = schools
         .map(school => {
             var score = service.avgScore_(school.ratings || []);
             return {
@@ -266,14 +260,19 @@ service.list = async (function(opt_params) {
                 score: score
             };
         })
+        .sort((a, b) =>  b.totalScore - a.totalScore)
         .sort((a, b) =>  orderParam(b) - orderParam(a))
         .filter((item, index) => (
-            (index > offset) &&
+            (index >= offset) &&
             (
-                (index < parseFloat(limit) + parseFloat(offset) + 1) ||
+                (index < parseFloat(limit) + parseFloat(offset)) ||
                 (!limit)
             )
         ));
+
+    console.log('Send: ', colors.green(result.length));
+
+    return result;
 });
 
 /**

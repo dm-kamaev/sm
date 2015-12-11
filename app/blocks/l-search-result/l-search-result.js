@@ -61,7 +61,9 @@ sm.lSearchResult.SearchResult = function(opt_params) {
      * @private
      */
     this.searchData_ = {
-        offset: 10
+        offset: 10,
+        limit: 10,
+        order: 0
     };
 };
 goog.inherits(sm.lSearchResult.SearchResult, goog.ui.Component);
@@ -195,33 +197,10 @@ goog.scope(function() {
     SearchResult.prototype.filtersSubmitHandler_ = function(event) {
         var data = event.data;
 
-        data.searchParams.name = this.search_.getValue();
-        data.order = this.sort_.getCurrentItemId();
-        data.offset = 0;
-        data.limit = 10;
-
-        this.searchData_ = data;
-        this.schoolList_.showLoader();
-        this.removeScrollListener_();
-
-        jQuery.ajax({
-            url: event.url,
-            type: event.method,
-            data: data,
-            success: this.searchSuccess_.bind(this)
-        });
-    };
-
-    /**
-     * Filters submit callback
-     * @param {string} responseData
-     * @private
-     */
-    SearchResult.prototype.searchSuccess_ = function(responseData) {
-        var data = JSON.parse(responseData);
-        this.schoolList_.hideLoader();
-        this.schoolList_.setItems(data);
-        this.addScrollListener_();
+        this.searchData_.searchParams = data.searchParams || {};
+        this.searchData_.searchParams.name = this.search_.getValue();
+        this.initSchoolListSetItems_();
+        this.sendSearchData_();
     };
 
     /**
@@ -230,8 +209,18 @@ goog.scope(function() {
      * @private
      */
     SearchResult.prototype.sortHandler_ = function(event) {
-        console.log(event.itemId);
-        this.schoolList_.sort(event.itemId);
+        this.searchData_.order = event.itemId;
+        this.initSchoolListSetItems_();
+        this.sendSearchData_();
+    };
+
+    /**
+     * Setting of null offset and initialize school list add items
+     * @private
+     */
+    SearchResult.prototype.initSchoolListSetItems_ = function() {
+        this.searchData_.offset = 0;
+        this.initSchoolListAddItems_();
     };
 
     /**
@@ -288,7 +277,6 @@ goog.scope(function() {
         var clientHeight = document.documentElement.clientHeight;
 
         if (scrollHeight + clientHeight >= docHeight) {
-            console.log('oh');
             this.showMoreSchoolListItems_();
         }
     };
@@ -306,20 +294,37 @@ goog.scope(function() {
      * @private
      */
     SearchResult.prototype.showMoreSchoolListItems_ = function() {
-        this.searchData_.order = this.sort_.getCurrentItemId();
         this.searchData_.offset = this.searchData_.offset + 10;
-        this.searchData_.limit = 10;
-        console.log(this.searchData_.order);
+        this.initSchoolListAddItems_();
+        this.sendSearchData_(this.showMoreSchoolListItemsSuccess_);
+    };
 
-        this.schoolList_.showLoader();
-        this.removeScrollListener_();
+    /**
+     * Sending of search data
+     * @param {function=} opt_callback
+     * @private
+     */
+    SearchResult.prototype.sendSearchData_ = function(opt_callback) {
+        var callback = opt_callback || this.searchSuccess_;
 
         jQuery.ajax({
             url: this.filters_.getUrl(),
             type: this.filters_.getMethod(),
             data: this.searchData_,
-            success: this.showMoreSchoolListItemsSuccess_.bind(this)
+            success: callback.bind(this)
         });
+    };
+
+    /**
+     * Filters submit callback
+     * @param {string} responseData
+     * @private
+     */
+    SearchResult.prototype.searchSuccess_ = function(responseData) {
+        var data = JSON.parse(responseData);
+        this.schoolList_.hideLoader();
+        this.schoolList_.setItems(data);
+        this.addScrollListener_();
     };
 
     /**
@@ -330,8 +335,9 @@ goog.scope(function() {
     SearchResult.prototype.showMoreSchoolListItemsSuccess_ =
         function(responseData) {
             var data = JSON.parse(responseData) || [];
-            console.log(data);
+
             this.schoolList_.hideLoader();
+
             if (!data.length) {
                 this.schoolList_.hideShowMoreButton();
             } else {
@@ -339,6 +345,15 @@ goog.scope(function() {
                 this.addScrollListener_();
             }
         };
+
+    /**
+     * Initialization of school list add items
+     * @private
+     */
+    SearchResult.prototype.initSchoolListAddItems_ = function() {
+        this.schoolList_.showLoader();
+        this.removeScrollListener_();
+    };
 });
 
 

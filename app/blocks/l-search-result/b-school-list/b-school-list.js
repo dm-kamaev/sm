@@ -163,10 +163,7 @@ goog.scope(function() {
             this.loaderElement_,
             gorod.iUtils.CssClass.HIDDEN
         );
-        goog.dom.classlist.add(
-            this.showMoreButtonElement_,
-            gorod.iUtils.CssClass.HIDDEN
-        );
+        this.hideShowMoreButton();
     };
 
     /**
@@ -177,6 +174,13 @@ goog.scope(function() {
             this.loaderElement_,
             gorod.iUtils.CssClass.HIDDEN
         );
+        this.showShowMoreButton();
+    };
+
+    /**
+     * Show show more button
+     */
+    SchoolList.prototype.showShowMoreButton = function() {
         goog.dom.classlist.remove(
             this.showMoreButtonElement_,
             gorod.iUtils.CssClass.HIDDEN
@@ -200,6 +204,10 @@ goog.scope(function() {
         goog.base(this, 'getContentElement');
         return this.bodyElement_;
     };
+
+    /**
+     * TODO: remove or rewrite sort
+     */
 
     /**
      * Schools sort maker
@@ -243,17 +251,14 @@ goog.scope(function() {
 
         data.forEach(function(itemData) {
             var item = new SchoolListItem(itemData);
-            var id = item.getId();
-            if (that.getChild(id)) {
-                console.log(item);
-                console.log(that.getChild(id));
-                console.log(that.getChild(id).getElement());
-            }
             that.addChild(item, true);
             that.schoolListItems_.push(item);
         });
 
-        this.sort();
+        /**
+         * TODO: delete or uncomment
+         */
+        //this.sort();
     };
 
     /**

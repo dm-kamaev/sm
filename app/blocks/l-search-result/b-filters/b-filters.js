@@ -36,7 +36,8 @@ goog.scope(function() {
      * @enum {string}
      */
     Filters.CssClass = {
-        ROOT: 'b-filters'
+        ROOT: 'b-filters',
+        SUBMIT_BUTTON: 'b-filters__submit-button'
     };
 
     /**
@@ -99,8 +100,8 @@ goog.scope(function() {
         goog.base(this, 'enterDocument');
 
         this.getHandler().listen(
-            this.getElement(),
-            goog.events.EventType.SUBMIT,
+            this.getElementByClass(Filters.CssClass.SUBMIT_BUTTON),
+            goog.events.EventType.CLICK,
             this.onSubmit_
         );
     };
