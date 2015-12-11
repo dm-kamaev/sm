@@ -6,6 +6,25 @@ var services = require.main.require('./app/components/services').all;
 var enums = require('../enums');
 exports.name = 'department';
 
+
+/**
+ * Add new department
+ * @param {Object} address instance
+ * @param {Object} params
+ */
+exports.addDepartment = (address, params) => {
+    // TODO checked relate with address
+    return await(models.Department.create(params));
+    //     .then(instance => {
+    //             return address.addDepartment(instance);
+    //         }));
+};
+
+exports.addAddress = async((school, params) => {
+
+});
+
+
 exports.getAll = () => {
     return await(models.Department.findAll());
 };
@@ -19,7 +38,7 @@ exports.getAllByParams = (params) => {
 /**
  * Get address id dy department instance
  */
-exports.getAddress = (departmentInstance) => {
+exports.getAddresses = (departmentInstance) => {
     return await(departmentInstance.getAddress());
 };
 
@@ -63,7 +82,9 @@ exports.addressesFilter = (addressList) => {
 
 /**
  * Add address id dy department instance
+ * Used in parse/department.js
  */
+// TODO delete this methods (used in console/../department.js)
 exports.addAddress = (departmentInstance, addressId) => {
     return await(departmentInstance.addAddress({address_id: addressId}));
 };
@@ -72,6 +93,7 @@ exports.addAddress = (departmentInstance, addressId) => {
 /**
  * Add list of address id dy department instancefrom
  */
+// TODO delete this methods (used in ?)
 exports.addAddressList = (departmentId, addressIdList) => {
     addressIdList.forEach(function(addressId) {
         var params = {
@@ -80,12 +102,4 @@ exports.addAddressList = (departmentId, addressIdList) => {
             };
         await(models.Department_address.create(params));
     });
-};
-
-
-/**
- * Add new department
- */
-exports.addDepartment = (params) => {
-    return await(models.Department.create(params));
 };
