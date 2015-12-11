@@ -12,10 +12,108 @@ var service = {
 };
 
 /**
- * @param {object || number} school
- * @return {number}
+ * Create school
+ * @param {Object} params
  */
-service.getGroupId = async (function(school) {
+service.create = params => {
+    var includeParams = {
+        addresses: true
+    };
+    if (params.addresses) {
+        params.addresses = params.addresses.filter(address => {
+            return !service.hasAddress(address);
+
+        });
+        params.addresses.forEach(address => {
+            var coords =
+                    await(services.address.getCoords('Москва, ' + address.name));
+            address.coords = coords;
+        });
+    }
+    return await(models.School.create(
+        params,
+        {
+            include: sequelizeInclude(includeParams)
+        }
+    ));
+};
+
+
+/**
+ * Update school data
+ * @param {Object} school
+ * @param {Object} params for update
+ */
+service.update = (school, params) => {
+    if (params.addresses) {
+        await(service.address.setAddressesForSchool(school, params.addresses));
+    }
+    delete params.addresses;
+
+    return await(school.update(params));
+};
+
+
+/**
+ * Delete school
+ * @param {Object} school instance
+ */
+service.delete = async ((school) => {
+    models.School.destroy(school);
+});
+
+
+service.getAddresses = async (school => {
+    return await(models.Address.findAll({
+        where:{school_id: school.id}
+    }));
+});
+
+
+/**
+ * This method checks if address for bd is present
+ * @param {Object} school
+ * @param {Object} params for update
+ */
+service.hasAddress = (address) => {
+    var addressBD = await(services.address.getAddress({name: address.name}));
+    var result = false;
+    if (addressBD) {
+        console.log('Address:'.yellow, address.name);
+        console.log('is alredy binded to school '.yellow +
+            'with id:'.yellow, addressBD.school_id);
+        result = true;
+    }
+    return result;
+};
+
+
+/**
+ * Set addresses for needed school
+ * @param {Object} school instance
+ * @param {Object} addresses params
+ */
+service.setAddressesForSchool = async ((school, addressesList) => {
+    var currentAddresses = await(service.getAddresses(school));
+
+    addressesList.forEach((address)=>{
+        var sameAddress = currentAddresses.find(element => {
+        if (element.name == address.name)
+            return true;
+        });
+
+        if (!sameAddress && !service.hasAddress(address)){
+            address.coords =
+                await(services.address.getCoords('Москва, ' + address.name));
+
+            addressInstance = await(services.address.addAddress(address));
+            school.addAddress(addressInstance);
+         }
+    });
+});
+
+
+service.getGroupId = async (function(school, t) {
     var instance = school;
     if (typeof school === 'number'){
         instance = await(models.School.findOne({
@@ -179,19 +277,6 @@ service.viewOne = function(id) {
         include: includeParams
     }));
 };
-
-
-service.create = async (params => {
-    var includeParams = {
-        addresses: true
-    };
-    return await(models.School.create(
-        params,
-        {
-            include: sequelizeInclude(includeParams)
-        }
-    ));
-});
 
 
 /**
