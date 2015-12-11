@@ -2,7 +2,7 @@ var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var models = require.main.require('./app/components/models').all;
 var services = require.main.require('./app/components/services').all;
-var sequelizeInclude = require.main.require('./api/components/sequelizeInclude');  
+var sequelizeInclude = require.main.require('./api/components/sequelizeInclude');
 var colors = require('colors');
 var MultiGeocoder = require('multi-geocoder');
 var geocoder = new MultiGeocoder({ coordorder: 'latlong', lang: 'ru-RU'});
@@ -29,7 +29,7 @@ exports.request = async ((string) => {
     var getResults = new Promise( function(resolve, reject) {
         https.request(options).on('response', function (response) {
             response.setEncoding('utf8');
-            var data = '';           
+            var data = '';
             response.on("data", function (chunk) {
                 data += chunk;
             });
@@ -47,4 +47,21 @@ exports.request = async ((string) => {
     });
     var results = await (getResults);
     return results;
+});
+
+/**
+ * Get address coords
+ * @param  {string} addressName
+ */
+exports.getCoords = async ((addressName) => {
+    var geoData = await(exports.request(addressName));
+    geoData.featureMember = geoData.featureMember.find(function(data) {
+        if (/^москва/ig.test(data.GeoObject.description)) {
+            return true;
+        }
+    });
+    return geoData.featureMember.GeoObject.Point.pos.split(' ')
+               .map(function(coord) {
+                    return Number(coord);
+                });
 });
