@@ -6,6 +6,8 @@ var colors = require('colors');
 
 var sequelize = require.main.require('./app/components/db');
 
+var parseAreas = require('./parse_area');
+
 var modules = require.main.require('./api/modules');
 var services = require.main.require('./app/components/services').all;
 
@@ -13,19 +15,16 @@ var replace = require('./parseConfig').replace;
 var ignore = require('./parseConfig').ignore;
 var exclusion = require('./parseConfig').exclusion;
 
-var parseArea = require('./parse_area');
-
 var GOVERMENT_KEY_INDEX = 2,
     NAME_INDEX = 6,
     FULL_NAME_INDEX = 5,
     DIRECTOR_INDEX = 13,
     PHONES_INDEX = 15,
     SITE_INDEX = 17,
-    AREAS_INDEX = 19,
     ADDRESSES_INDEX = 20,
     EDU_PROGRAMM_INDEX = 21,
     SUBJECT_INDEX = 37,
-    GIA_COUNT_INDEX =38,
+    GIA_COUNT_INDEX = 38,
     GIA_RESULTS_INDEX = 39,
     OLIMP_TYPE_INDEX = 30,
     OLIMP_STAGE_INDEX = 31,
@@ -202,13 +201,7 @@ var rowToSchool = row => {
         phones: getArray(row, PHONES_INDEX),
         site: row[SITE_INDEX],
         addresses: getArray(row, ADDRESSES_INDEX)
-            .map((address)=>{
-                return {
-                    name: address,
-                    coords: []
-                };
-            }),
-        areas: getArray(row, AREAS_INDEX),
+            .map(address=>{return {name: address, coords: []}; }),
         govermentKey: row[GOVERMENT_KEY_INDEX],
         educationInterval: getEducationInterval(row[EDU_PROGRAMM_INDEX])
     };
@@ -340,19 +333,13 @@ var parse = async(path => {
     var parsed = xlsx.parse(path),
         data = parsed[0].data;
 
-    await(parseArea.parse(path));
-
-    data.map(rowParse)
+    await ( data.map(rowParse)
         .filter((item, index) =>
             (index > 0) &&
             notIgnor(item.school.schoolType))
-        .forEach( async( (item) => {
-
+        .forEach((item) => {
             var school = await(parseSchool(item.school));
 
-            var addresses = await (school.getAddresses());
-
-            parseArea.associateAreas(addresses, item.school.areas);
             if(item.giaResult.length) {
                 initGiaResults(item.giaResult, school.id);
             }
@@ -360,6 +347,8 @@ var parse = async(path => {
                 services.studyResult.setSchoolOlimp(school, item.olimpResult);
             }
         }));
+
+    parseAreas.parse(path);
 });
 
 

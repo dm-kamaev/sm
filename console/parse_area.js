@@ -15,33 +15,122 @@ var parse = require('./parse.js');
  * Parses an xlsx file and puts unique areas into db
  * @param {String} path path to xlsx file
  */
-exports.parse = async( (path) => {
-    var parsed = xlsx.parse(path),
-        data = parsed[0].data;
+var addAreaNamesToDB = async( (data) => {
+    var areaNames = concatAreaColumns(data);
 
-    data.forEach((row) => {
-        var areas = res.getArray(row, res.ColumnNames.AREAS_INDEX);
+    areaNames = makeUniqueArray(areaNames);
 
-        areas.forEach((area) => {
-            await(services.area.create({
-                name: area
-            }));
-        });
-    });
+    areaNames.forEach( async( (item)  => {
+       (services.area.create({name: item}));
+    }));
 });
 
 /**
- * associates school addresses and areas
- * @param
+ * Returns an array, which contains elements of all arrays
+ * @param {Array} arr
+ * @return {Array}
  */
-exports.associateAreas =  (addresses, areas) => {
-
-    addresses.forEach( async ((adress, index) => {
-
-        await( services.address.setArea({
-            address: adress,
-            area: areas[index]
-        }));
-
-    }));
+var concatAreaColumns = (arr) => {
+    var resultArray = [];
+    arr.forEach( (item) => {
+        resultArray.push(item.area);
+    });
+    return resultArray;
 };
+
+/**
+ * Returns array of unique values
+ * @param {Array} arr original array
+ * @return {Array} unique array
+ */
+var makeUniqueArray = (arr) => {
+    var unique = [],
+        tmp = {};
+    for (var i = 0, l = arr.length, item; i < l; i++) {
+        item = arr[i];
+        if (tmp.hasOwnProperty(item)) {
+            continue;
+        }
+        unique.push(item);
+        tmp[item] = 1;
+    }
+    return unique;
+};
+
+/**
+ * creates an array of objects with addresses and areas
+ * @param {Array} array
+ * @return {Array<Object>}
+ */
+var rowToGeoData = (array) => {
+    var tmpArray;
+
+    tmpArray = array.map( (item) => {
+        return {
+            addresses: res.getArray(item, res.ColumnNames.ADDRESSES_INDEX),
+            areas: res.getArray(item, res.ColumnNames.AREAS_INDEX)
+        };
+    });
+
+    var output = [];
+    tmpArray.forEach((item) => {
+        item.addresses.forEach((address, index) => {
+            output.push({
+                adress: address,
+                area: item.areas[index]
+            });
+        });
+    });
+    return output;
+};
+
+
+/**
+ * associates address and area
+ * @param {Array.<Object>} data
+ */
+var associateAreaAdress = (array) => {
+    array.forEach((item) => {
+        services.address.setArea(item);
+    });
+};
+
+/**
+ * main parse method for use from cli
+ * @param {String} path
+ */
+var parse = async( (path) => {
+    var data;
+
+    data = res.getDataFromFile(path, true);
+    data = rowToGeoData(data);
+
+    await( addAreaNamesToDB(data) );
+    associateAreaAdress(data);
+
+});
+
+/**
+* main parse method for exports into parse.js
+* @param {String} path
+*/
+exports.parse = async( (path) => {
+    var data;
+
+    data = res.getDataFromFile(path, true);
+    data = rowToGeoData(data);
+
+    await( addAreaNamesToDB(data) );
+    associateAreaAdress(data);
+
+});
+/**
+ * Settings for accessing this script using cli
+ *
+*/
+commander
+    .command('area <path>')
+    .description('Parses an areas .xlsx file from a given path')
+    .action(file => parse(file));
+
+exports.Command;

@@ -1,3 +1,5 @@
+var xlsx = require('node-xlsx');
+
 /**
  * @enum
  * {Number}
@@ -33,5 +35,19 @@ exports.getArray = (row, index) => {
             .split(';')
             .map(item => item.trim()) :
         [];
+};
+/**
+ * get data from .xlsx
+ * @param {String} path
+ * @param {Boolean} sliceHeader
+ * @return {Array}
+ */
+exports.getDataFromFile = (path, sliceHeader) => {
+    var parsed = xlsx.parse(path),
+        data = parsed[0].data;
+    if (sliceHeader) {
+        data = data.slice(1);
+    }
+    return data;
 };
 

@@ -82,5 +82,13 @@ exports.setArea = async ((geoData) => {
             name: geoData.area
         }
     }));
-    return await(geoData.address.setArea(area));
+    var address = await(models.Address.findAll({
+        where: {
+            name: geoData.adress
+        }
+    }));
+    address.forEach( (item) => {
+        item.setArea(area);
+    } );
+    //return await( address.setArea(area));
 });
