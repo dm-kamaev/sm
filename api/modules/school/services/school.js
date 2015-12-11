@@ -183,6 +183,14 @@ service.rate = async ((school, params, t) => {
     return rt;
 });
 
+service.createActivity = async(params => {
+    await (models.Activity.create(
+        params,
+        {
+            //include: models.Activity
+        }
+    ));
+});
 
 service.listInstances = async(function(){
     return await(models.School.findAll());
@@ -200,20 +208,21 @@ service.list = async (function(opt_params) {
                 as: 'ratings',
                 attributes: ['score']
             }
-        ];   
+        ];
 
     var searchConfig = {
         include: includeParams,
         attributes: [
             'id',
-            'name'
+            'name',
+            'fullName'
         ]
     };
 
     if (searchParams)
         updateSearchConfig(searchConfig, searchParams);
     console.log(searchConfig);
-    var schools = await(models.School.findAll(searchConfig)); 
+    var schools = await(models.School.findAll(searchConfig));
     console.log('Found: ', colors.green(schools.length));
     return schools
         .map(school => {
@@ -223,7 +232,8 @@ service.list = async (function(opt_params) {
                 name: school.name,
                 description: "",
                 totalScore: service.avgRating_(score),
-                score: score
+                score: score,
+                fullName: school.fullName
             };
         }).sort((a, b) => b.totalScore - a.totalScore);
 });
@@ -251,7 +261,7 @@ var updateSearchConfig = function(searchConfig, searchParams) {
                 $or: []
             }
         }
-    }; 
+    };
 
     if (searchParams.name) {
         var nameFilter = services.search.generateFilter(searchParams.name);
@@ -263,23 +273,23 @@ var updateSearchConfig = function(searchConfig, searchParams) {
     }
 
     if (searchParams.classes && searchParams.classes.length) {
-        whereParams.educationInterval = { 
+        whereParams.educationInterval = {
             $contains: searchParams.classes
         };
     }
 
     if (searchParams.schoolType && searchParams.schoolType.length) { //TODO: refactor with new filters
         whereParams.schoolType = {
-            $or:[]  
+            $or:[]
         };
-        searchParams.schoolType.forEach((item) => { 
+        searchParams.schoolType.forEach((item) => {
             whereParams.schoolType.$or.push(item);
         });
     }
-    
+
     if (searchParams.gia) {
         searchDataCount++;
-        extraIncludes.searchData.where.$or.push({ 
+        extraIncludes.searchData.where.$or.push({
             $and: {
                 type: searchTypes.GIA,
                 values: {
@@ -287,11 +297,11 @@ var updateSearchConfig = function(searchConfig, searchParams) {
                 }
             }
         });
-    } 
+    }
 
     if (searchParams.ege) {
         searchDataCount++;
-        extraIncludes.searchData.where.$or.push({ 
+        extraIncludes.searchData.where.$or.push({
             $and: {
                 type: searchTypes.EGE,
                 values: {
@@ -299,11 +309,11 @@ var updateSearchConfig = function(searchConfig, searchParams) {
                 }
             }
         });
-    } 
+    }
 
     if (searchParams.olimp) {
         searchDataCount++;
-        extraIncludes.searchData.where.$or.push({ 
+        extraIncludes.searchData.where.$or.push({
             $and: {
                 type: searchTypes.OLIMP,
                 values: {
@@ -311,9 +321,9 @@ var updateSearchConfig = function(searchConfig, searchParams) {
                 }
             }
         });
-    } 
+    }
 
-    /*Write generated setting to config object*/   
+    /*Write generated setting to config object*/
     searchConfig.where = whereParams;
     if (searchDataCount){
         var extraIncludesArr = [];
