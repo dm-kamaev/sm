@@ -62,7 +62,7 @@ var mkobrRowToObject = row => {
  * Get schools from BD
  */
 var getSchoolList = () => {
-    return await(services.school.list());
+    return await(services.school.listInstances());
 };
 
 

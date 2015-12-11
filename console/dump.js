@@ -1,4 +1,5 @@
 const dbConfig = require.main.require('./api/config').db;
+const scpConfig = require.main.require('./api/config').scp;
 const exec = require('child_process').exec;
 const async = require('asyncawait/async');
 const await = require('asyncawait/await');
@@ -9,14 +10,20 @@ const fs = require('fs');
 const DUMP_FOLDER = './assets/dump/';
 const PROJECT_NAME = 'BP';
 const common = require.main.require('./console/common');
-const SEPARATOR = ':';
+const SEPARATOR = '_';
 const sequelize = require.main.require('./app/components/db');
-    
+const scp = require('scp');    
+
+
 var start = function() {
+    checkDumpFolder();
     var vars = [
-        'Create db dump file', 
-        'Create db dump file and write it to config as current', 
-        'Load db dump',
+        'Create db dump file [local]', 
+        'Create db dump file [local] and write it to config as current', 
+        'Create db dump file [remote]',
+        'Create db dump file [remote] and write it to config as current', 
+        'Load db dump from the local storage',
+        'Load db dump from the remote storage',
         'Show current config',
         'Drop all tables'],
     index = readlineSync.keyInSelect(vars, 'What to do?');
@@ -28,26 +35,51 @@ var start = function() {
             dump({config:true});
             break;
         case 2: 
-            load();
+            dump({remote:true});
             break;
         case 3:
+            dump({config:true, remote:true});
+            break;
+        case 4: 
+            load();
+            break;
+        case 5: 
+            loadFromRemote();
+            break;
+        case 6:
             check();
             break;
-        case 4:
+        case 7:
             dropAll();
             break;
     }
 };
 
-var dropAll = async(()=>{
+var checkDumpFolder = function() {
+    if (!common.fileExists(DUMP_FOLDER)) {
+        fs.mkdirSync(DUMP_FOLDER);
+    }
+};
+
+var dropAll = async(()=> {
     await(sequelize.queryInterface.dropAllTables());
     await(sequelize.queryInterface.dropAllEnums());
 });
 
+var loadFromRemote = async(function() {
+    var filename = DUMP_FOLDER + dbConfig.dump;
+    await(download(dbConfig.dump));
+    await(load());
+});
+
 var load = async(function(){
+    var filename = DUMP_FOLDER + dbConfig.dump;
+    if (!common.fileExists(filename)) {
+        throw new Error('Can\'t find the file');
+    }
     await(dropAll());
     var command = 'pg_restore -d ' + dbConfig.name + 
-        ' ' + DUMP_FOLDER + dbConfig.dump;
+        ' ' + filename; 
     exec(command, {maxBuffer: 1024 * 500},  
         function (error, stdout) {
             console.log(stdout);
@@ -79,7 +111,7 @@ var check = function() {
    console.log ('Database: ' + colors.yellow(db));
 };
 
-var dump = function(opt_params) {
+var dump = async(function(opt_params) {
     var params = opt_params || {};
     var time = new Date();
     var timestring = leadZero(time.getFullYear()) +
@@ -87,23 +119,83 @@ var dump = function(opt_params) {
         leadZero(time.getHours()) + leadZero(time.getMinutes()) +
         leadZero(time.getSeconds());
     var dumpName = getBranchName() + SEPARATOR + timestring + '.dump';
-    var command = 'pg_dump -Fc ' + dbConfig.name +
-        ' > ' + DUMP_FOLDER + dumpName;
-    exec(command, {maxBuffer: 1024 * 500},  
-        function (error, stdout) {
-            console.log(stdout);
-            if (error)
-                console.log(error);
-            else 
-                console.log(colors.green(dumpName) + ' created');
-        });
-    if (params.config){
-        var newConfig = require.main.require('./api/config');
-        newConfig.db.dump = dumpName;
-        var js = JSON.stringify(newConfig);
-            fs.writeFileSync('./api/config.json', js);
+    var filename = DUMP_FOLDER + dumpName;
+    if (common.fileExists(filename)) {
+        throw new Error('File already exists');
     }
-};
+
+    var command = 'pg_dump -Fc ' + dbConfig.name +
+        ' > ' + filename;
+    var execRes = await(execAsync(command));
+    if (typeof execRes != 'Error' && execRes == 'succsess') {
+        console.log('file ' + colors.green(filename) + 'created! ');
+
+        if (params.remote) {
+            await(upload(filename));
+        }  
+        if (params.config) {
+            var newConfig = require.main.require('./api/config');
+            newConfig.db.dump = dumpName;
+            var js = JSON.stringify(newConfig);
+                fs.writeFileSync('./api/config.json', js);
+        }
+    } else {
+        throw execRes;
+    }
+});
+
+var execAsync = async(function (execString) {
+    var doExec = new Promise( function(resolve, reject) {
+        exec(execString, {maxBuffer: 1024 * 500},  
+            function (error, stdout) {
+                console.log(stdout);
+                if (error) {
+                    console.log(error);
+                    reject(error);
+                } else {
+                    resolve('succsess');
+                }
+            });
+    });
+    return await(doExec);
+});
+
+/**
+ * @param {string} filename
+ */
+var download = async(function(filename) {
+    var execString = 'scp ' + scpConfig.login + '@' +
+            scpConfig.host + ':' + scpConfig.path + '/' +
+            filename + ' ' + DUMP_FOLDER;
+    console.log(execString);
+    var execRes = await(execAsync(execString));
+    if (typeof execRes != 'Error' && execRes == 'succsess') {
+        console.log('Download ' + colors.green('succsess!'));
+    } else {
+        throw execRes;
+    }
+});
+
+/**
+ * @param {string} filename
+ */
+var upload = async(function(filename) {
+    var execString = 'scp ' + filename + ' ' + scpConfig.login + '@' +
+            scpConfig.host + ':' + scpConfig.path;
+    if (!common.fileExists(filename)) {
+        throw new Error('Cant find the file');
+    }
+    var execRes = await(execAsync(execString));
+    if (typeof execRes != 'Error' && execRes == 'succsess') {
+        console.log('Upload ' + colors.green('succsess!'));
+    } else {
+        throw execRes;
+    }
+});
+
+
+
+
 
 
 commander

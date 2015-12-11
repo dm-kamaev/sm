@@ -24,6 +24,7 @@
 `node commander -h` - список скриптов c описаниями  
 `node commander **scriptname**` - запуск скрипта  
 
+
 ## Список скриптов необходимых для работы фронтенда ##
 parse - парсинг экселевского файла с школами  
 geocord - получение координат для адресов школ  
@@ -46,8 +47,18 @@ updateSearch - актуализация поисковой таблицы
  Он влияет на очередность применения миграций к бд, т.е туда руками надо вбить время создания чтобы миграция была последней в списке.
   Инфа по миграциям: http://docs.sequelizejs.com/en/latest/docs/migrations/
 
-## Дампы БД ##
-`node commander dump` позволяет создавать дампы бд привязаные к ветке к гите и переключаться между ними
+## Управление дампами бд ##
+###### Запуск скрипта #####
+`node commander dump`
+###### Пароль от хоста ######
+    gTgCuHrHuEnNnacpxStR
+###### Как добавить свой ключ на хост и не вводить каждый раз пароль: ######
+1) Убедиться, что у вас есть rsa ключ. Если его нет, то создать: https://help.github.com/articles/generating-ssh-keys/  
+2) Забрать файл с допущенными ключами с хоста: 
+`scp uploader@repo.dfarm.lan:~/.ssh/authorized_keys ./`   
+3) Записать туда свой публичный ключ: `cat ~/.ssh/id_rsa.pub >> authorized_keys`  
+4) Закинуть файл с допущенными ключами обратно на сервер: `scp authorized_keys uploader@repo.dfarm.lan:~/.ssh/authorized_keys`  
+
 
 ## Cхема БД ##
 https://wiki.cochanges.com/pages/viewpage.action?pageId=22085766  

@@ -1,4 +1,5 @@
 var os = require('os'),
+    fs = require('fs'),
     path = require('path'),
     soynode = require('soynode');
 
@@ -7,7 +8,11 @@ global.CLOSURE_BASE_PATH = path.normalize('node_modules/google-closure-library/c
 soynode.setOptions({
     outputDir: os.tmpdir(),
     uniqueDir: true,
-    allowDynamicRecompile: true,
+    /**
+     * TODO: make watch
+     * In case of dynamic recompile, please don't restart gulp
+     */
+    //allowDynamicRecompile: true,
     contextJsPaths: [
         path.join(__dirname, '../../node_modules/frobl/blocks/i-utils/i-utils.js')
     ]

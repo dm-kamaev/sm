@@ -84,14 +84,14 @@ exports.yapi = async (function(req, res) {
 exports.search = async (function(req, res) {
     var result = '';
     try {
-        var params = req.query;
-        result = await(services.search.searchSchool(params));
+        var params = req.query || {};
+        result = await(services.school.list(params));
     } catch (e) {
         console.log(e);
-        result = JSON.stringify(e);
+        result = e.message;
     } finally {
         res.header("Content-Type", "text/html; charset=utf-8");
-        res.end(result);
+        res.end(JSON.stringify(result));
     }
 });
 
@@ -114,18 +114,18 @@ exports.create = function(req, res) {
 };
 
 /**
- * @api {get} api/school/type Get school type list
+ * @api {get} api/school/search/filters Get school type list
  * @apiVersion 0.0.0
  * @apiGroup School
- * @apiName ListSchoolTypes
+ * @apiName ListSearchFilters
  */
-exports.listTypes = async (function(req, res) {
+exports.listSearchFilters = async (function(req, res) {
     var result;
     try {
-        result = await(services.school.listTypes());
+        result = await(services.school.searchFilters());
     } catch (e) {
         console.log(e.message);
-        result = e;
+        result = e.message;
     } finally {
         res.header("Content-Type", "text/html; charset=utf-8");
         res.end(JSON.stringify(result));
@@ -139,10 +139,18 @@ exports.listTypes = async (function(req, res) {
  * @apiName List
  * @apiSuccess {Object[]} schools Very userful documentation here.
  */
+ 
 exports.list = async (function(req, res) {
-    var schools = await (services.school.list());
-    res.header("Content-Type", "text/html; charset=utf-8");
-    res.end(JSON.stringify(schools));
+    var result;
+    try {
+        result = await(services.school.list());
+    } catch (e) {
+        console.log(e);
+        result = e.message;
+    } finally {
+        res.header("Content-Type", "text/html; charset=utf-8");
+        res.end(JSON.stringify(result));
+    }
 });
 
 /**

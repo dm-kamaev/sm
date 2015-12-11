@@ -10,6 +10,7 @@ require('./console/department.js').Command;
 require('./console/geocord.js').Command;
 require('./console/vkapi.js').Command;
 require('./console/dump.js').Command;
+require('./console/egeData.js').Command;
 require('./console/updateSearch.js').Command;
 
 /*

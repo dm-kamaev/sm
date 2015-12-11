@@ -8,25 +8,7 @@ goog.require('goog.dom');
  * @constructor
  */
 sm.lDoc.nDemo.bBlockComment.Comment = function(){
-    var params={
-        'author': '����� ����',
-        'rank': '������',
-        'text': '��� ���� ����� ��������� � ����� 548 ���� ��������� �� ���������� �� 3 ����. ����� ������ ������� ������� ����� � �� ����� ��� �� ���� ����� �� ����� (������, ����, ������). ��� ����� �������: ���� �� �� ����� � 7 ���, �� ���, �� ������� ���������, ����� �������� �� 8 ��� � ����� �� ����� ��������. ������������, ������������ ����� ��� �������� ������������ �����, ������ ����� ��� �������� � ��� ���� ������� ���������� ����� ���-��-��',
-        'sections': [
-            {
-                'name': '�����������',
-                'rating': 3
-            },
-            {
-                'name': '��������',
-                'rating': 3
-            },
-            {
-                'name': '���������',
-                'rating': 2
-            }
-        ]
-    };
+    console.log('COMMENT DOC CONSTRUCTOR');
 
     var elements = goog.dom.getElementsByClass(
         sm.lSchool.bComment.Comment.CssClass.ROOT

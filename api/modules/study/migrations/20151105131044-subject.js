@@ -13,6 +13,9 @@ module.exports = {
                 type: Sequelize.STRING,
                 unique: true
             },
+            display_name: {
+                type: Sequelize.STRING
+            },
             created_at: Sequelize.DATE,
             updated_at: Sequelize.DATE
         });
