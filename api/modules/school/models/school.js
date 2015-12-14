@@ -19,6 +19,10 @@ var School = db.define('School', {
     director: DataType.STRING,
     phones: DataType.ARRAY(DataType.STRING),
     site: DataType.STRING,
+    cityId: {
+        field: 'city_id',
+        type: DataType.INTEGER,
+    },
     educationInterval: {
         field: 'education_interval',
         type: DataType.ARRAY(DataType.INTEGER)

@@ -13,7 +13,7 @@ const schoolType = require.main.require('./api/modules/school/enums/schoolType')
 var sequelize = require.main.require('./app/components/db');
     
 var start = function() {
-  sequelize.options.logging = false;
+ //   sequelize.options.logging = false;
     var vars = [
         'Start with updating old indexes', 
         'Start without updating old indexes'];
@@ -30,7 +30,7 @@ var start = function() {
 
 var launch = async (function(isRewriting) {
     var schools = await(services.school.listInstances());
-    await(new GiaUpdater(schools, isRewriting));
+    await(new SearchUpdater(schools, isRewriting));
 });
 
 var SearchUpdater = async(function(schools, isRewriting){
@@ -38,6 +38,12 @@ var SearchUpdater = async(function(schools, isRewriting){
     this.schools = schools;   
     this.citySubjects = await (services.subject.listCityResults());
     this.schoolTypeFilters = await (services.search.getTypeFilters());
+    this.updateAverageGia = async(function() {
+        var giaAvg = await(services.studyResult.getGiaAverage());
+        await(giaAvg.forEach(subject => {
+            await(services.subject.setCityAverage(subject));
+        }));
+    });
 
     /**
      * @param {string} type School type 
@@ -62,6 +68,7 @@ var SearchUpdater = async(function(schools, isRewriting){
         total: schools.length,
         width: 30 
     });
+    await (this.updateAverageGia());
     await (this.schools.forEach(school => {
         /*update type filters*/
         var filterInstance = this.getTypeFilter(school.schoolType);
