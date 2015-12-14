@@ -73,12 +73,7 @@ exports.getOrCreate = async(name => {
  */
 exports.setCityAverage = async(function(subject) {
     var average = subject.dataValues.average;
-    var city = await (models.City.findOrCreate({
-        where: {
-            name: 'Москва'
-        }
-    }));
-    city = city[0];
+    var city = await (services.city.getMoscow());
     var subjectAvg = await (models.CityResult.findOne({
         where: {
             cityId: city.id,
