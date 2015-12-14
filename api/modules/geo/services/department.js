@@ -9,44 +9,92 @@ exports.name = 'department';
 
 /**
  * Add new department
- * @param {Object} address instance
- * @param {Object} params
+ * @param {number} address_id
+ * @param {{
+ *     stage!: string,
+ *     name!: string
+ * }} data
+ * @return {Object} instance of Department model
  */
-exports.addDepartment = (address, params) => {
-    // TODO checked relate with address
-    return await(models.Department.create(params));
-    //     .then(instance => {
-    //             return address.addDepartment(instance);
-    //         }));
+exports.addDepartment = function(address_id, data) {
+    var address = await(services.address.getAddress({id: address_id}));
+    return await(models.Department.create(data)
+        .then(instance => {
+                address.addDepartment(instance);
+                return instance;
+            }));
 };
 
-exports.addAddress = async((school, params) => {
 
+/**
+ * Update department data
+ * @param {number} department_id
+ * @param {{
+ *     stage?: string,
+ *     name?: string
+ * }} data
+ * @return {Object} instance of Department model
+ */
+exports.update = async(function(department_id, data) {
+    var instance = exports.getOneBydata({id: department_id});
+    return await(instance.update(data));
 });
 
 
-exports.getAll = () => {
+/**
+ * Get all data from table
+ * @return {Object} instances of Department model
+ */
+exports.getAll = function() {
     return await(models.Department.findAll());
 };
 
 
-exports.getAllByParams = (params) => {
-    return await(models.Department.findAll({where: params}));
+/**
+ * Get all data from table by data
+ * @param {{
+ *     id?: nimber,
+ *     stage?: string,
+ *     name?: string
+ * }} data
+ * @return {Object} instances of Department model
+ */
+exports.getAllBydata = function(data) {
+    return await(models.Department.findAll({where: data}));
+};
+
+
+/**
+ * Get one data from table by data
+ * @param {{
+ *     id?: nimber,
+ *     stage?: string,
+ *     name?: string
+ * }} data
+ * @return {Object} instance of Department model
+ */
+exports.getOneBydata = function(data) {
+    return await(models.Department.findOne({where: data}));
 };
 
 
 /**
  * Get address id dy department instance
+ * @param {number} department_id
+ * @return {Object} instances of Address model
  */
-exports.getAddresses = (departmentInstance) => {
-    return await(departmentInstance.getAddress());
+exports.getAddresses = function(department_id) {
+    var instance = exports.getOneBydata({id: department_id});
+    return await(instance.getAddress());
 };
 
 
 /**
  * Get address array for needed stages
+ * @param {Array} addressList Array of addresses instance
+ * @return {Array} Array of filter addresses instance
  */
-exports.addressesFilter = (addressList) => {
+exports.addressesFilter = function(addressList) {
     var addressesWithoutStage = [];
     var addressesWithNeededStages = addressList
         .filter(address => {
@@ -85,7 +133,7 @@ exports.addressesFilter = (addressList) => {
  * Used in parse/department.js
  */
 // TODO delete this methods (used in console/../department.js)
-exports.addAddress = (departmentInstance, addressId) => {
+exports.addAddress = function(departmentInstance, addressId) {
     return await(departmentInstance.addAddress({address_id: addressId}));
 };
 
@@ -94,7 +142,7 @@ exports.addAddress = (departmentInstance, addressId) => {
  * Add list of address id dy department instancefrom
  */
 // TODO delete this methods (used in ?)
-exports.addAddressList = (departmentId, addressIdList) => {
+exports.addAddressList = function(departmentId, addressIdList) {
     addressIdList.forEach(function(addressId) {
         var params = {
                 address_id: addressId,

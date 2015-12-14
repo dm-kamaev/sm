@@ -11,38 +11,75 @@ var service = {
     name : 'rating'
 };
 
-/**
- * Add raiting row
- * @param {Object} params
- */
-service.addRating = async((school, params) => {
-    return await(models.Rating.create(params).then(instance => {
-                return school.addRatings(instance);
-            })).ratings;
-});
-
 
 /**
- * Get all data from table
+ * Add rating row
+ * @params {number} school_id
+ * @param {{
+ *     score?: Array [number]
+ * }} data
+ * @return {Object} instance of Rating model
  */
-service.getAll = async(() => {
-    return await(models.Rating.findAll());
+service.add = async(function(school_id, data) {
+    data.school_id = school_id;
+    return await(models.Rating.create(data));
 });
 
 
 /**
  * Update rating data
+ * @param {number} rating_id
+ * @param {{
+ *     schoolId?: number,
+ *     score?: Array [number]
+ * }} data
+ * @return {Object} instance of Rating model
  */
-service.update = async((school, params) => {
-    return await(rating.update(params));
+service.update = async(function(rating_id, data) {
+    var instance = await(service.getOneByData({id: rating_id}));
+    return await(instance.update(data));
 });
 
 
 /**
- * Get rating by school
+ * Get all data from table
+ * @return {Object} instances of Rating model
  */
-// service.getRating = async((school) => {
-//     return await(school.getRatings());
-// });
+service.getAll = async(function() {
+    return await(models.Rating.findAll());
+});
+
+
+/**
+ * Get all data from table by data
+ * @param {{
+ *     id?: nimber,
+ *     schoolId?: number,
+ *     score?: Array [number]
+ * }} data
+ * @return {Object} instances of Rating model
+ */
+service.getAllByData = async(function(data) {
+    return await(models.Rating.findAll({
+        where: data
+    }));
+});
+
+
+/**
+ * Get one data from table by data
+ * @param {{
+ *     id?: nimber,
+ *     schoolId?: number,
+ *     score?: Array [number]
+ * }} data
+ * @return {Object} instance of Rating model
+ */
+service.getOneByData = async(function(data) {
+    return await(models.Rating.findOne({
+        where: data
+    }));
+});
+
 
 module.exports = service;
