@@ -18,24 +18,59 @@ exports.getTest = async(() => {
 
 
 /**
- * Added new address row
- * @param {Object} school instznce
- * @param {Object} params
+ * Added new address
+ * @param {number} school_id
+ * @param {{
+ *     name: string,
+ *     coords?: array
+ * }} data
  */
-exports.addAddress = async((school, params) => {
-    params.coords = await(exports.getCoords(params.name));
-    return await(models.Address.create(params).then(instance => {
-                return school.addAddresses(instance);
-            })).addresses;
+exports.addAddress = async(function(school_id, data) {
+    var addressBD = await(services.address.getAddress({name: data.name}));
+    var address;
+
+    if (addressBD) {
+        console.log('Address:'.yellow, data.name);
+        console.log('is alredy binded to school '.yellow +
+            'with id:'.yellow, addressBD.school_id);
+        address = addressBD;
+    }
+    else {
+        data.school_id = school_id;
+        if (!data.coords) {
+            data.coords = await(
+                    services.yapi.getCoords('Москва, ' + data.name));
+        }
+        address = await(models.Address.create(data));
+    }
+    return address;
 });
 
 
-exports.getAll = async(() => {
+/**
+ * Update address data
+ * @param {number} address_id
+ * @param {{
+ *     name?: string,
+ *     coords?: array
+ * }} data
+ */
+exports.update = async(function(address_id, data) {
+    var address = await(services.address.getAddress({id: address_id}));
+    return await(address.update(data));
+});
+
+
+/**
+ * Get all data from table
+ * @return {Object} instances of Address model
+ */
+exports.getAll = async(function() {
     return await(models.Address.findAll());
 });
 
 
-exports.getAllWithMetro = async(() => {
+exports.getAllWithMetro = async(function() {
     return await(models.Address.findAll({
         include:[{
             model: models.Metro,
@@ -46,7 +81,7 @@ exports.getAllWithMetro = async(() => {
 });
 
 
-exports.getAddress = async(params => {
+exports.getAddress = async(function(params) {
     var includeParams = {
             departments: true
         };
@@ -58,43 +93,21 @@ exports.getAddress = async(params => {
 
 
 /**
- * Get address coordinates
- * @param  {string} addressName
- */
-exports.getCoords = async((addressName) => {
-    var bdAddress = await(exports.getAddress({name: addressName}));
-    var result;
-    if (bdAddress) {
-        result = bdAddress.coords;
-    }
-    else {
-        result = await(services.yapi.getCoords('Москва, ' + addressName));
-    }
-    return result;
-});
-
-
-exports.getMetro = (address) => {
-    return address.metroStations;
-};
-
-/**
  * Get address departments
  * @param  {Object} address instance
+ * @return {Array} department instances array
  */
-exports.getDepartments = (address) => {
+exports.getDepartments = function(address) {
     return await(address.getDepartments());
 };
 
 
-exports.updateCoords = async((addresInst, coordsArr) => {
-    for (var i=0; i< addresInst.length; i++){
-        addresInst[i].update({coords:coordsArr[i]});
-    }
-});
+exports.getMetro = function(address) {
+    return address.metroStations;
+};
 
 
-exports.setMetro = async((address, metroArr) => {
+exports.setMetro = async(function(address, metroArr) {
     //console.log(address);
     metroArr.forEach(metro => {
         var ourMetro = await (models.Metro.findOne({
