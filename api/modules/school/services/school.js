@@ -146,10 +146,10 @@ service.create = async (params => {
 /**
  *@public
  */
-
 service.commentTransaction = async (function(schoolId, params) {
     return await (transaction(service.comment, [schoolId, params]));
 });
+
 /**
  * @public
  */
@@ -214,8 +214,7 @@ service.list = async (function(opt_params) {
         include: includeParams,
         attributes: [
             'id',
-            'name',
-            'fullName'
+            'name'
         ]
     };
 
@@ -232,8 +231,7 @@ service.list = async (function(opt_params) {
                 name: school.name,
                 description: "",
                 totalScore: service.avgRating_(score),
-                score: score,
-                fullName: school.fullName
+                score: score
             };
         }).sort((a, b) => b.totalScore - a.totalScore);
 });

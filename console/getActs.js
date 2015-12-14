@@ -4,11 +4,13 @@ var await = require('asyncawait/await');
 var http = require('http');
 var services = require.main.require('./app/components/services').all;
 const fs = require('fs');
+var mkdirp = require("mkdirp");
 
-const host = 'api.data.mos.ru';
+const HOST = 'api.data.mos.ru';
+const REPORT_PATH = './console/reports/';
 
 var request = function(options) {
-    var request = new Promise( function(resolve) {
+    var request = new Promise(function(resolve) {
         var rqq = http.request(options);
         rqq.on('response', function (response) {
             var data = '';
@@ -29,53 +31,90 @@ var request = function(options) {
 
 var countActs = function() {
     var options = {
-        host: host,
+        host: HOST,
         path: '/v1/datasets/746/count',
         method: 'GET'
     };
     return request(options);
 };
 
-var getActs = function(params) {
+var getActivities = function(params) {
     var path = '/v1/datasets/746/rows?';
     for (var prop in params) {
         path += '$' + prop + '=' + params[prop] + '&';
     }
     var options = {
-        host: host,
+        host: HOST,
         path: path,
         method: 'GET'
     };
     return request(options);
 };
 
-var ourSchools = []; // test
-var foundActCount = 0;
-var notFoundActCount = 0;
-var theirSchools = [];
+var ourSchools = {}; // test
+var nameSchools = {}; // test
 
-var findMatches = function(schools, activities) {
-    activities.forEach(function(activity) {
-        var isFound = false,
-            activityNumber = activity.Cells.nomer.trim();
-        if (activity.Cells.name_grupp.length <= 255 && activityNumber > 0) {
-            schools.forEach(function(school) {
-                var schoolNumber = school.fullName
-                    .slice(school.fullName.lastIndexOf('№ ') + 2).match(/\d+/g) || NaN;
-                if (schoolNumber[0] === activityNumber) {
-                    //addActivity(activity, school);
-                    ourSchools.push(school.fullName); // test
-                    isFound = true;
+var fillActsDB = function(schools, activities) {
+    var foundCount = 0;
+    for (var i = 0, actsLength = activities.length; i < actsLength; i++) {
+
+        var activityNumber = activities[i].Cells.nomer.trim(),
+            parsedActivityName = activities[i].Cells.poln_name.match(/"(.*?)"/),
+            activityName = parsedActivityName ?
+                parsedActivityName[0].slice(1, -1).toLowerCase() :
+                null;
+
+        if (activities[i].Cells.name_grupp.length <= 255) {
+            for (var j = 0, schoolsLength = schools.length; j < schoolsLength; j++) {
+                // var parsedSchoolNumber = schools[j].fullName
+                //     .slice(schools[j].fullName.lastIndexOf('№ ') + 2)
+                //     .match(/\d+/g),
+                //     schoolNumber = parsedSchoolNumber ? parsedSchoolNumber[0] : NaN,
+                //     parsedSchoolName = schools[j].fullName.match(/(?!.*[«]).+(?=[»])/g),
+                //     schoolName = parsedSchoolName ? parsedSchoolName[0].toLowerCase() : null;
+                //
+                // if (schoolNumber === activityNumber) {
+                //     //addActivity(activity, school);
+                //     ourSchools.push(schools[j].fullName); // test
+                //     isFound = true;
+                // } else if (activityNumber === '0' && typeof schoolName === 'string' && schoolName === activityName) {
+                //     //addActivity(activity, school);
+                //     nameSchools.push(schools[j].fullName);
+                //     ourSchools.push(schools[j].fullName);
+                //     isFound = true;
+                // }
+                if (findMatch(schools[j], activityNumber, activityName)) {
+                    // addActivity(activities[i], schools[j]);
+                    foundCount++;
+                    break;
                 }
-            });
+            }
         }
-        if (isFound) {
-            foundActCount++;
-        } else {
-            notFoundActCount++;
-            theirSchools.push(activity.Cells.poln_name);
-        }
-    });
+    }
+    return foundCount;
+};
+
+var findMatch = function(school, actSchoolNum, actSchoolName) {
+    var parsedSchoolNumber = school.fullName
+        .slice(school.fullName.lastIndexOf('№ ') + 2)
+        .match(/\d+/g),
+        schoolNumber = parsedSchoolNumber ? parsedSchoolNumber[0] : NaN,
+        parsedSchoolName = school.fullName.match(/(?!.*[«]).+(?=[»])/g),
+        schoolName = parsedSchoolName ? parsedSchoolName[0].toLowerCase() : null;
+
+    if (schoolNumber === actSchoolNum) {
+        //ourSchools.push(school.fullName); // test
+        ourSchools[school.id] = school.fullName;
+        return true;
+    } else if (actSchoolNum === '0' && typeof schoolName === 'string' && schoolName === actSchoolName) {
+        // nameSchools.push(school.fullName);
+        nameSchools[school.id] = school.fullName;
+        //ourSchools.push(school.fullName);
+        ourSchools[school.id] = school.fullName;
+        return true;
+    } else {
+        return false;
+    }
 };
 
 var addActivity = function(activity, school) {
@@ -90,54 +129,104 @@ var addActivity = function(activity, school) {
 };
 
 var getUnique = function(array) {
-   var u = {}, a = [];
-   for(var i = 0, l = array.length; i < l; ++i){
-      if(u.hasOwnProperty(array[i])) {
-         continue;
-      }
-      a.push(array[i]);
-      u[array[i]] = 1;
-   }
-   return a;
+    var u = {},
+        a = [];
+    for(var i = 0, l = array.length; i < l; ++i) {
+        if(u.hasOwnProperty(array[i])) {
+            continue;
+        }
+        a.push(array[i]);
+        u[array[i]] = 1;
+    }
+    return a;
 };
 
-var start = async(function() {
-    var schools = await(services.school.list()),
-        params = {
-            top: 250,
-            skip: 0
-        },
-        actCount = await(countActs());
-    for(; params.skip <= actCount; params.skip += 250) {
-        var activities = await(getActs(params));
-        findMatches(schools, activities);
-        ourSchools = getUnique(ourSchools); // test
-        theirSchools = getUnique(theirSchools);
-        console.log('Our schools matched: ' + ourSchools.length); // test
-        console.log('Found act\'s: ' + foundActCount);
-        console.log('Not found act\'s: ' + notFoundActCount);
-        var totalActs = foundActCount + notFoundActCount;
-        console.log('Total № of act\'s: ' + totalActs);
-        console.log('Number of act\'s in set: ' + activities.length);
-        console.log('Number of not found schools: ' + theirSchools.length);
-    }
-    fs.writeFileSync('./console/notFindSchools.json', theirSchools);
-
-    var ourNotFoundSchools = [];
-
-    schools.forEach(function(school) {
-        var flag = false;
-        ourSchools.forEach(function(ourSchool) {
-            if (school.fullName === ourSchool) {
-                flag = true;
+var notFoundSchools = function(allSchools, findedSchools) {
+    var missingSchools = [];
+    allSchools.forEach(function(school) {
+        for (var id in findedSchools) {
+            if (findedSchools.hasOwnProperty[id]) {
+                if (school.fullName !== findedSchools[id]) {
+                    missingSchools.push({
+                        id: school.id,
+                        name: school.name,
+                        fullName: school.fullName
+                    });
+                }
             }
-        });
-        if (!flag) {
-            ourNotFoundSchools.push(school);
         }
     });
-    fs.writeFileSync('./console/notFindOurSchools.json', JSON.stringify(ourNotFoundSchools));
-    console.log('Our not: ' + ourNotFoundSchools.length);
+    return missingSchools;
+};
+
+var getAllActivities = async(function() {
+    var actCount = await(countActs()),
+        activities = [];
+    for(var top = 250, skip = 0; skip <= actCount; skip += 250) {
+        var actsSet = await(getActivities({
+            top: top,
+            skip: skip
+        }));
+        activities = activities.concat(actsSet);
+    }
+    return activities;
+});
+
+var start = async(function() {
+    var schools = await(services.school.listInstances()),
+        actCount = await(countActs()),
+        foundActsCount = 0,
+        ourNotFoundSchools = [],
+        activities = [];
+
+    for(var top = 250, skip = 0; skip <= actCount; skip += 250) {
+        var activities = await(getActivities({
+            top: top,
+            skip: skip
+        }));
+        foundActsCount += fillActsDB(schools, activities);
+        //ourSchools = getUnique(ourSchools); // test
+        //nameSchools = getUnique(nameSchools);
+        console.log('Set of data: ' + skip);
+        console.log('Our schools matched: ' + Object.keys(ourSchools).length); // test
+        console.log('Found act\'s: ' + foundActsCount);
+        console.log(nameSchools);
+    }
+
+    ourNotFoundSchools = notFoundSchools(schools, ourSchools);
+    // schools.forEach(function(school) {
+    //     for (var id in ourSchools) {
+    //         if (ourSchools.hasOwnProperty[id]) {
+    //             if (school.fullName !== ourSchools[id]) {
+    //                 ourNotFoundSchools.push({
+    //                     id: school.id,
+    //                     name: school.name,
+    //                     fullName: school.fullName
+    //                 });
+    //             }
+    //         }
+    //     }
+    //     // ourSchools.forEach(function(ourSchool) {
+    //     //     if (school.fullName === ourSchool) {
+    //     //         flag = true;
+    //     //     }
+    //     // });
+    //     // if (!flag) {
+    //     //     ourNotFoundSchools.push({
+    //     //         id: school.id,
+    //     //         name: school.name,
+    //     //         fullName: school.fullName
+    //     //     });
+    //     // }
+    // });
+    mkdirp(REPORT_PATH, function(err) {
+        if (err) {
+            return;
+        }
+        fs.writeFileSync(REPORT_PATH + 'notFindOurSchools.json', JSON.stringify(ourNotFoundSchools));
+    });
+    console.log('Schools\' count haven\'t been found: ' + ourNotFoundSchools.length);
+    //console.log(nameSchools);
 });
 
 commander
