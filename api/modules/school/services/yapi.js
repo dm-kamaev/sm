@@ -52,16 +52,15 @@ exports.request = async ((string) => {
 /**
  * Get address coords
  * @param  {string} addressName
+ * @return {number[]} array of adress coords
  */
-exports.getCoords = async ((addressName) => {
+exports.getCoords = async (function(addressName) {
     var geoData = await(exports.request(addressName));
-    geoData.featureMember = geoData.featureMember.find(function(data) {
+    geoData.featureMember = geoData.featureMember.find((data) => {
         if (/^москва/ig.test(data.GeoObject.description)) {
             return true;
         }
     });
     return geoData.featureMember.GeoObject.Point.pos.split(' ')
-               .map(function(coord) {
-                    return Number(coord);
-                });
+               .map(coord => Number(coord));
 });
