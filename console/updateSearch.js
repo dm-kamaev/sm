@@ -1,3 +1,4 @@
+'use strict'
 const exec = require('child_process').exec;
 const async = require('asyncawait/async');
 const await = require('asyncawait/await');
@@ -30,66 +31,108 @@ var start = function() {
 
 var launch = async (function(isRewriting) {
     var schools = await(services.school.listInstances());
-    await(new SearchUpdater(schools, isRewriting));
+    var searchUpdater = await(new SearchUpdater(schools, isRewriting));
+    searchUpdater.start();
 });
 
-var SearchUpdater = async(function(schools, isRewriting){
-    this.isRewriting = isRewriting || false;
-    this.schools = schools;   
-    this.citySubjects = await (services.subject.listCityResults());
-    this.schoolTypeFilters = await (services.search.getTypeFilters());
-    this.updateAverageGia = async(function() {
-        var giaAvg = await(services.studyResult.getGiaAverage());
-        await(giaAvg.forEach(subject => {
-            await(services.subject.setCityAverage(subject));
-        }));
-    });
+class SearchUpdater {
+    /**
+     * @public 
+     * @param {array<object>} schools 
+     * @param {bool} [isRewriting = false]
+     */
+    constructor(schools, isRewriting) {
+        this.schools_ = schools;
+        this.isRewriting_ = isRewriting;
+        this.citySubjects_ = await (services.subject.listCityResults());
+        this.schoolTypeFilters_ = await (services.search.getTypeFilters());
+    }
 
+    /**
+     * @public
+     * @async
+     */
+    start() {
+        var bar = new ProgressBar('Processing :bar :current/:total', { 
+            total: this.schools_.length,
+            width: 30 
+        });
+        await (this.updateAverage_());
+        await (this.schools_.forEach(school => {
+            /*update type filters*/
+            var filterInstance = this.getTypeFilter_(school.schoolType);
+            await(services.search.setSchoolType(school.id, filterInstance.id));
+
+            /*update gia filters*/
+            var gs = await (new GiaSchool(
+                school,
+                this.citySubjects_,
+                this.isRewriting_));
+            await (gs.process());
+
+            /*update olimp filters*/
+            var os = await (new OlimpSchool(
+                school,
+                this.isRewriting_));
+            await(os.process());
+            bar.tick();
+        }));
+        console.log('Succses. Stopping script');
+    }
+
+
+    /**
+     * @private 
+     * @async
+     */
+    updateAverage_() {
+        var giaAvg = await(services.studyResult.getGiaAverage());
+        var egeAvg = await(services.studyResult.getEgeAverage());
+        var data = [];
+        giaAvg.forEach(giaSubject => {
+            var subjInArr = data.find(dt => dt.subject.id == giaSubject.id);
+            if (subjInArr)
+                subjInArr.giaAvg = giaSubject.dataValues.average;
+            else
+                data.push({
+                    subject: giaSubject,
+                    giaAvg: giaSubject.dataValues.average
+                });
+        });
+        egeAvg.forEach(egeSubject => {
+            var subjInArr = data.find(dt => dt.subject.id == egeSubject.id);
+            if (subjInArr)
+                subjInArr.egeAvg = egeSubject.dataValues.average;
+            else
+                data.push({
+                    subject: egeSubject,
+                    egeAvg: egeSubject.dataValues.average
+                });
+        });
+        await(data.forEach(dataSubj => {
+            services.subject.setCityAverage(dataSubj);
+        }));
+        
+    }
+    
     /**
      * @param {string} type School type 
      * @returns {object} SchoolTypeFilter instance
      */
-    this.getTypeFilter = function(type) {
+    getTypeFilter_(type) {
         var typeName = schoolType.getPropByValue(type);
         if (!typeName)
             throw new Error ('Cant find type \"'+ type + '\" in enum');
-        var instance = this.schoolTypeFilters.find(schoolTypeFilter => {
+        var instance = this.schoolTypeFilters_.find(schoolTypeFilter => {
             var index = schoolTypeFilter.values.indexOf(typeName);
             return index == -1 ? false : true;
-        }
-
-        );
+        });
         if (!instance)
             throw new Error ('Cant find school_type_filter for school type: ' + typeName);
         return instance;
-    };
+    }
+}
 
-    var bar = new ProgressBar('Processing :bar :current/:total', { 
-        total: schools.length,
-        width: 30 
-    });
-    await (this.updateAverageGia());
-    await (this.schools.forEach(school => {
-        /*update type filters*/
-        var filterInstance = this.getTypeFilter(school.schoolType);
-        await(services.search.setSchoolType(school.id, filterInstance.id));
-
-        /*update gia filters*/
-        var gs = await (new GiaSchool(
-            school,
-            this.citySubjects,
-            this.isRewriting));
-        await (gs.process());
-
-        /*update olimp filters*/
-        var os = await (new OlimpSchool(
-            school,
-            this.isRewriting));
-        await(os.process());
-        bar.tick();
-    }));
-    console.log('Succses. Stopping script');
-});
 
 
 function OlimpSchool(school, isRewriting){

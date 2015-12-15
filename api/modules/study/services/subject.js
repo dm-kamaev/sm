@@ -67,12 +67,15 @@ exports.getOrCreate = async(name => {
 
 
 /**
- * @param {object} subject - subject instance with awerage
+ * @param {object} data
+ * @param {object} data.subject - subject instance 
+ * @param {number||null} data.giaAvg
+ * @param {number||null} data.egeAvh
  * @param {number} subject.dataValues.average
  * TODO: city filter
  */
-exports.setCityAverage = async(function(subject) {
-    var average = subject.dataValues.average;
+exports.setCityAverage = async(function(data) {
+    var subject = data.subject;
     var city = await (services.city.getMoscow());
     var subjectAvg = await (models.CityResult.findOne({
         where: {
@@ -82,14 +85,15 @@ exports.setCityAverage = async(function(subject) {
     }));
     if (subjectAvg) {
         await(subjectAvg.update({
-            giaResult: average
+            giaResult: data.giaAvg,
+            egeResult: data.egeAvg
         }));
     } else {
        await (models.CityResult.create({
             cityId: city.id,
             subjectId: subject.id,
-            giaResult: average
-
+            giaResult: data.giaAvg,
+            egeResult: data.egeAvg
        }));
     }
 });
