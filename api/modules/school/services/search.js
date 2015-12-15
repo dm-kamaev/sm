@@ -90,14 +90,18 @@ exports.advancedSearch = async ((searchString) => {
 /**
  * @param {int} school_id
  * @param {array<int>} values Subjects IDs
+ * @param {enums.searchTypes} searchType
+ * Used to add data in SearchData table
+ *
  */
-exports.addGia = async(function(schoolId, values) {
+exports.addSearchData = async(function(schoolId, values, searchType) {
     await (models.SearchData.create({
         schoolId: schoolId,
-        type: searchTypes.GIA,
+        type: searchType,
         values: values
     }));
 });
+
 
 /**
  * @param {int} school_id
@@ -109,7 +113,7 @@ exports.setSchoolType = async(function(schoolId, value) {
             schoolId: schoolId,
             type: searchTypes.SCHOOL_TYPE
         }
-    })) 
+    }));
     var values = [];
     values.push(value);
     await (models.SearchData.create({
@@ -119,14 +123,4 @@ exports.setSchoolType = async(function(schoolId, value) {
     }));
 });
 
-/**
- * @param {int} school_id
- * @param {array<int>} values Subjects IDs
- */
-exports.addOlimp = async(function(schoolId, values) {
-    await (models.SearchData.create({
-        schoolId: schoolId,
-        type: searchTypes.OLIMPIAD,
-        values: values
-    }));
-});
+
