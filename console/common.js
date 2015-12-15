@@ -2,10 +2,15 @@ const fs = require('fs');
 const https = require('https');
 const colors = require('colors');
 const async = require('asyncawait/async');
+const exec = require('child_process').exec;
 const await = require('asyncawait/await');
 
 var Common = function() {};
 
+/**
+ * @param {string} path
+ * @return {string}
+ */
 Common.readText = function(path) {
     if (Common.fileExists(path)) { 
         return fs.readFileSync(path).toString();
@@ -14,9 +19,11 @@ Common.readText = function(path) {
     }
 };
 
-
-Common.fileExists = function(filePath)
-{
+/**
+ * @param {string} filePath
+ * @retrun {bool}
+ */
+Common.fileExists = function(filePath) {
     try {
         fs.statSync(filePath);
         return true;
@@ -25,19 +32,62 @@ Common.fileExists = function(filePath)
     }
 };
 
+/**
+ * @param {object} instanse - Sequelise model instanse
+ */
 Common.checkFunctions = function(instanse) {
     for (var prop in instanse){
         if (typeof instanse[prop] === 'function')
             console.log(colors.magenta(prop));         
     }
+};
+
+/**
+ * Check if directory exiists. If not - create
+ * @param {string} path
+ */ 
+Common.checkDir = function(path) {
+    try {
+        fs.statSync(path);
+    } catch (e) { //TODO: only if ENOENT
+        fs.mkdirSync(path);
+    }
 }
 
+/**
+ * @param {object} json 
+ * @param {string} path
+ */
 Common.saveJson = (json, path) => {
     var js = JSON.stringify(json);
     fs.writeFileSync(path, js);
 };
 
-Common.loadJson = (path) => { 
+/**
+ * @param {string} execString - command to run in terminal
+ * @return {promise}
+ */
+Common.execAsync = async(function (execString) {
+    var doExec = new Promise( function(resolve, reject) {
+        exec(execString, {maxBuffer: 1024 * 500},  
+            function (error, stdout) {
+                console.log(stdout);
+                if (error) {
+                    console.log(error);
+                    reject(error);
+                } else {
+                    resolve({success:true});
+                }
+            });
+    });
+    return doExec;
+});
+
+/**
+ * @param {string} path
+ * @return {object}
+ */
+Common.loadJson = function (path) { 
     if (!Common.fileExists(path)) {
         console.log('File ' + colors.yellow(path) +
             ' is not found and will be created now');
