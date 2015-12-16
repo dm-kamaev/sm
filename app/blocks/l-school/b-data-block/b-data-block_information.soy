@@ -1,0 +1,36 @@
+{namespace sm.lSchool.bDataBlockInformation.Template}
+
+/**
+ * Addresses item
+ * @param params {
+ *     content: [
+ *        directorName: ?string
+ *        classes: ?string
+ *     ]
+ * }
+ * @extends '/l-school/b-data-block/b-data-block'
+ * @constructor
+ */
+{template .base}
+    {call .init}
+        {param params: $params /}
+    {/call}
+{/template}
+
+/**
+ * Content item
+ * @param params {
+ *     content: [
+ *        directorName: ?string
+ *        classes: ?string
+ *     ]
+ * }
+ */
+{template .content autoescape="strict" kind="html"}
+     <ul class="b-data-block__content">
+        <li class="b-data-block__item">{$params.content.classes}</li>
+        <li class="b-data-block__item">
+            Директор{sp}&mdash;{sp}{$params.content.directorName}
+        </li>
+    </ul>
+{/template}
