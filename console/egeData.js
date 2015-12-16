@@ -13,13 +13,13 @@ var modules = require.main.require('./api/modules');
 var services = require.main.require('./app/components/services').all;
 
 const LIST_INDEX = 1;
-const FIRST_ROW = 5;
-const LAST_ROW = 626;
+const FIRST_ROW = 4;
+const LAST_ROW = 633;
 const FIRST_COL = 4;
 const SUBJECT_COUNT = 15;
 const YEAR_COUNT = 7;
-const YEAR_ROW = 3;
-const SUBJECT_ROW = 4;
+const YEAR_ROW = 2;
+const SUBJECT_ROW = 3;
 const SITE_INDEX = 1;
 const BASE_MATH_COLUMN_INDEX = 1; //base math results should be converted
 const BASE_MATH_YEAR = 2015;

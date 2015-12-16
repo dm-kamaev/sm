@@ -59,7 +59,7 @@ exports.getAllGia = async(() => {
 });
 
 /**
- * 
+ * @return {array<object>} subjects with gia average
  */
 exports.getGiaAverage = async(function () {
     var params = {
@@ -73,7 +73,30 @@ exports.getGiaAverage = async(function () {
             attributes: [],
             required: true
         }]
-    }
+    };
+    return await(models.Subject.findAll(params));
+});
+
+/**
+ * @return {array<object>} subjects with ege average
+ */
+exports.getEgeAverage = async(function() {
+    var YEAR = 2015; //TODO: move somewhere maybe?
+    var params = {
+        attributes: {
+            include: [[sequelize.fn('AVG', sequelize.col('egeResult.result')),'average']]
+        },
+        group: '\"Subject\".id',
+        include: [{
+            model: models.EgeResult,
+            as: 'egeResult',
+            where: {
+                year: YEAR
+            },
+            attributes: [],
+            required: true
+        }]
+    };
     return await(models.Subject.findAll(params));
 });
 
