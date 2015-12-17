@@ -63,8 +63,57 @@ goog.scope(function() {
             this.itemClickHandler_
         );
 
-        suggestInstance.setCallback('getData', function(elem) {
-            return JSON.parse(elem);
+        suggestInstance.setCallbacks({
+            getData: function(elem) {
+                return JSON.parse(elem);
+            },
+
+            search: function(elem) {
+                //console.log(elem);
+                var result = elem.name + ' ' +
+                    elem.fullName + ' ' +
+                    elem.abbreviation;
+                return result;
+            },
+
+            renderItem: function(item, str) {
+                //todo: refactor this code
+                var regExp;
+
+                strs = str.replace(/[\.\?\+\*\(\)-]/g, ' ').split(' ');
+
+                var matchName = true,
+                    matchFullName = true,
+                    matchAbbreviation = true;
+
+                for (var i = 0, n = strs.length, subStr; i < n; i++) {
+                    subStr = strs[i].trim();
+                    regExp = new RegExp(subStr, 'i');
+
+                    if (!item.name.match(regExp)) {
+                        matchName = false;
+                    }
+
+                    if (!item.fullName.match(regExp)) {
+                        matchFullName = false;
+                    }
+
+                    if (!item.abbreviation.match(regExp)) {
+                        matchAbbreviation = false;
+                    }
+                }
+
+                if (matchName) {
+                    return item.name;
+                }
+                if (matchFullName) {
+                    return item.fullName;
+                }
+
+                if (matchAbbreviation) {
+                    return item.abbreviation;
+                }
+            }
         });
     };
 

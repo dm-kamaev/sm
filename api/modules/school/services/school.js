@@ -240,7 +240,9 @@ service.list = async (function(opt_params) {
         }],
         attributes: [
             'id',
-            'name'
+            'name',
+            'fullName',
+            'abbreviation'
         ]
     };
 
@@ -256,10 +258,12 @@ service.list = async (function(opt_params) {
         .map(school => {
             var score = service.avgScore_(school.ratings || []),
                 totalScore = service.avgRating_(score);
-
+            //console.log(school.fullName);
             return {
                 id: school.id,
                 name: school.name,
+                fullName: school.fullName,
+                abbreviation: school.abbreviation,
                 description: "",
                 totalScore: totalScore,
                 score: score

@@ -236,6 +236,8 @@ exports.search = async(function(req, res) {
           }
 
     });
+
+    console.log(html);
     res.header("Content-Type", "text/html; charset=utf-8");
     res.end(html);
 });
