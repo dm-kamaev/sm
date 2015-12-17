@@ -34,6 +34,34 @@ var GOVERMENT_KEY_INDEX = 2,
     OLIMP_YEAR_INDEX = 35;
 
 /**
+ * main parse method
+ */
+var parse = async(path => {
+    //sequelize.options.logging = false;
+    var parsed = xlsx.parse(path),
+        data = parsed[0].data;
+    var moscow = await(services.city.getMoscow());
+
+    data.map(rowParse)
+        .filter((item, index) =>
+            (index > 0) &&
+            notIgnor(item.school.schoolType))
+        .forEach((item) => {
+            item.school.cityId = moscow.id;
+            var school = await(parseSchool(item.school));
+
+            if(item.giaResult.length) {
+                initGiaResults(item.giaResult, school.id);
+            }
+            if (item.olimpResult.length) {
+                services.studyResult.setSchoolOlimp(school, item.olimpResult);
+            }
+        });
+
+    parseAreas.parseAreas(data);
+});
+
+/**
  * helper for nameParse - gets Name
  * @param {Array} arr
  * @returns {*}
@@ -323,34 +351,6 @@ var initGiaResults = async (function (giaResults, schoolId) {
         })
     });
 });
-
-
-/**
- * main parse method
- */
-var parse = async(path => {
-    //sequelize.options.logging = false;
-    var parsed = xlsx.parse(path),
-        data = parsed[0].data;
-
-    await ( data.map(rowParse)
-        .filter((item, index) =>
-            (index > 0) &&
-            notIgnor(item.school.schoolType))
-        .forEach((item) => {
-            var school = await(parseSchool(item.school));
-
-            if(item.giaResult.length) {
-                initGiaResults(item.giaResult, school.id);
-            }
-            if (item.olimpResult.length) {
-                services.studyResult.setSchoolOlimp(school, item.olimpResult);
-            }
-        }));
-
-    parseAreas.parse(path);
-});
-
 
 /**
  * Settings for accessing this script using cli

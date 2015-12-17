@@ -4,12 +4,45 @@ var commander = require('commander');
 var xlsx = require('node-xlsx');
 var colors = require('colors');
 
-var res = require('./resources/res');
 
 var modules = require.main.require('./api/modules');
 var services = require.main.require('./app/components/services').all;
 
-var parse = require('./parse.js');
+/**
+ * @enum
+ * {Number}
+ */
+var ColumnNames = {
+    AREAS_INDEX: 19,
+    ADDRESSES_INDEX: 20
+};
+
+/**
+ * returns array from table cell
+ * @param {Number} row
+ * @param {Number} index index of cell in row
+ */
+var getArray = (row, index) => {
+    return row[index] ?
+        row[index]
+            .split(';')
+            .map(item => item.trim()) :
+        [];
+};
+/**
+ * get data from .xlsx
+ * @param {String} path
+ * @param {Boolean} sliceHeader
+ * @return {Array}
+ */
+var getDataFromFile = (path, sliceHeader) => {
+    var parsed = xlsx.parse(path),
+        data = parsed[0].data;
+    if (sliceHeader) {
+        data = data.slice(1);
+    }
+    return data;
+};
 
 /**
  * Parses an xlsx file and puts unique areas into db
@@ -67,8 +100,8 @@ var rowToGeoData = (array) => {
 
     tmpArray = array.map( (item) => {
         return {
-            addresses: res.getArray(item, res.ColumnNames.ADDRESSES_INDEX),
-            areas: res.getArray(item, res.ColumnNames.AREAS_INDEX)
+            addresses: getArray(item, ColumnNames.ADDRESSES_INDEX),
+            areas: getArray(item, ColumnNames.AREAS_INDEX)
         };
     });
 
@@ -89,41 +122,26 @@ var rowToGeoData = (array) => {
  * associates address and area
  * @param {Array.<Object>} data
  */
-var associateAreaAdress = (array) => {
+var associateAreaAdress = async ( (array) => {
     array.forEach((item) => {
         services.address.setArea(item);
     });
-};
-
-/**
- * main parse method for use from cli
- * @param {String} path
- */
-var parse = async( (path) => {
-    var data;
-
-    data = res.getDataFromFile(path, true);
-    data = rowToGeoData(data);
-
-    await( addAreaNamesToDB(data) );
-    associateAreaAdress(data);
-
 });
+
 
 /**
 * main parse method for exports into parse.js
 * @param {String} path
 */
-exports.parse = async( (path) => {
-    var data;
+exports.parseAreas = async( (data) => {
 
-    data = res.getDataFromFile(path, true);
     data = rowToGeoData(data);
 
     await( addAreaNamesToDB(data) );
     associateAreaAdress(data);
 
 });
+
 /**
  * Settings for accessing this script using cli
  *

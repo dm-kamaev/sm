@@ -92,8 +92,7 @@ exports.view = async (function(req, res) {
     var school = await (services.school.viewOne(req.params.id));
     console.log(JSON.stringify(school).yellow);
 
-    var commentGroup = school.CommentGroup ? school.CommentGroup.comments : [];
-    console.log(JSON.stringify(commentGroup).blue);
+
 
     var typeConvert = {
         'Parent': 'родитель',
@@ -141,7 +140,7 @@ exports.view = async (function(req, res) {
 
     var addresses =
             services.department.addressesFilter(school.addresses);
-    var commentGroup = school.CommentGroup ? school.CommentGroup.comments : [];
+    var commentGroup = school.commentGroup ? school.commentGroup.comments : [];
     var params = {
         data: {
             id: school.id,
@@ -166,7 +165,9 @@ exports.view = async (function(req, res) {
                 }),
                 phones: school.phones || ''
             },
-            comments: commentGroup.map(comment => {
+            comments: commentGroup
+                .filter(comment => comment.text)
+                .map(comment => {
                 return {
                     author: '',
                     rank: typeConvert[comment.userType],
