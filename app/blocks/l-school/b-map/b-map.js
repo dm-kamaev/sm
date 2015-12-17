@@ -157,8 +157,8 @@ goog.scope(function() {
             {
                 iconImageHref: '/images/l-school/b-map/' +
                 'b-map__pin/icons/map-pin-th.png',
-                iconImageSize: [60, 50],
-                iconImageOffset: [-30, -45],
+                iconImageSize: [38, 40],
+                iconImageOffset: [-13, -39],
                 iconLayout: 'default#image',
                 zIndex: 230
             }
@@ -169,8 +169,8 @@ goog.scope(function() {
             {
                 iconImageHref: '/images/l-school/b-map/' +
                 'b-map__pin/icons/map-pin-green-th.png',
-                iconImageSize: [60, 50],
-                iconImageOffset: [-40, -50],
+                iconImageSize: [38, 40],
+                iconImageOffset: [-13, -39],
                 iconLayout: 'default#image',
                 zIndex: 230
             }
@@ -181,8 +181,8 @@ goog.scope(function() {
             {
                 iconImageHref: '/images/l-school/b-map/' +
                 'b-map__pin/icons/map-pin-yellow-th.png',
-                iconImageSize: [60, 50],
-                iconImageOffset: [-40, -50],
+                iconImageSize: [38, 40],
+                iconImageOffset: [-13, -39],
                 iconLayout: 'default#image',
                 zIndex: 230
             }
@@ -193,8 +193,8 @@ goog.scope(function() {
             {
                 iconImageHref: '/images/l-school/b-map/' +
                 'b-map__pin/icons/map-pin-red-th.png',
-                iconImageSize: [60, 50],
-                iconImageOffset: [-40, -50],
+                iconImageSize: [38, 40],
+                iconImageOffset: [-13, -39],
                 iconLayout: 'default#image',
                 zIndex: 230
             }
