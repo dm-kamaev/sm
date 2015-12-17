@@ -13,7 +13,7 @@ var service = {
 
 
 /**
- * Add olimpResult row
+ * Add olympResult row
  * @param {number} school_id
  * @param {number} subject_id
  * @param {{
@@ -33,11 +33,9 @@ service.add = async(function(school_id, subject_id, data) {
 
 
 /**
- * Uppdate olimpResult data
- * @param {number} olimp_id
+ * Uppdate olympResult data
+ * @param {number} olymp_id
  * @param {{
- *     school_id?: number,
- *     subject_id?: number,
  *     type?: 'всероссийская' || 'московская',
  *     stage?: number,
  *     class?: number,
@@ -46,8 +44,8 @@ service.add = async(function(school_id, subject_id, data) {
  * }} data
  * @return {Object} instance of OlimpResult model
  */
-service.update = async(function(olimp_id, data) {
-    var instance = await(service.getOneByData({id: olimp_id}));
+service.update = async(function(olymp_id, data) {
+    var instance = await(service.getById(olimp_id));
     return await(instance.update(data));
 });
 
@@ -84,22 +82,29 @@ service.getAllByData = async(function(data) {
 
 /**
  * Get one data from table by data
+ * @param {number} olymp_id
+ * @return {Object} instance of OlimpResult model
+ */
+service.getById = async(function(olymp_id) {
+    return await(models.OlimpResult.findOne({
+        where: {id: olymp_id}
+    }));
+});
+
+
+/**
+ * Delete olimpResult instance
  * @param {{
- *     id?: nimber,
- *     school_id?: number,
- *     subject_id?: number,
+ *     id?: number[],
  *     type?: 'всероссийская' || 'московская',
  *     stage?: number,
  *     class?: number,
  *     status?: 'победитель' || 'призер',
  *     year?: number
  * }} data
- * @return {Object} instance of OlimpResult model
  */
-service.getOneByData = async(function(data) {
-    return await(models.OlimpResult.findOne({
-        where: data
-    }));
+service.delete = async(function(data) {
+    await(models.OlimpResult.destroy({where: data}));
 });
 
 
