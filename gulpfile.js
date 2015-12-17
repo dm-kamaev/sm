@@ -94,8 +94,7 @@ gulp.task('soy', function (cb) {
     //]);
 
     return gulp.src([
-            path.join(__dirname, BLOCKS_DIR, '/**/*.soy'),
-            path.join(__dirname, '/node_modules/frobl/blocks', '/**/*.soy')
+            path.join(__dirname, BLOCKS_DIR, '/**/*.soy')
         ])
         .pipe(gulp.dest(path.join(__dirname, '/tmp/soy')))
         .pipe(foreach(function (stream, file) {
@@ -116,15 +115,12 @@ gulp.task('soy', function (cb) {
 });
 
 var appWatch = function(event) {
-    //console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
     var basename = path.basename(event.path);
     var dest = path.normalize(
         event.path
             .replace('\\app\\blocks\\', '/node_modules/frobl/tmp/appSoy/')
             .replace(basename, '')
     );
-
-    //console.log(dest);
 
     gulp.src(event.path)
         .pipe(gulp.dest(dest))
@@ -142,6 +138,23 @@ gulp.task('appSoy', function (cb) {
         .pipe(foreach(function (stream, file) {
             extender.proceed(file.path);
             return stream;
+        }));
+});
+
+gulp.task('froblSoy', function (cb) {
+    return gulp.src([
+            path.join(__dirname, '/node_modules/frobl/blocks', '/**/*.soy')
+        ])
+        .pipe(soynode({
+            outputDir: path.join(__dirname, '/node_modules/frobl', '/tmp/soy/frobl'),
+            loadCompiledTemplates: false,
+            useClosureStyle: true,
+            contextJsPaths: [
+                path.join(
+                    __dirname,
+                    '/node_modules/google-closure-library/closure/goog/base.js'
+                )
+            ]
         }));
 });
 
@@ -262,8 +275,8 @@ gulp.task('fonts', function () {
 
 const tasks = function (bool) {
     return bool ?
-        ['soy', 'appSoy', 'scripts', 'sprite', 'images', 'fonts', 'styles'] :
-        ['watch', 'soy', 'appSoy', 'scripts', 'sprite', 'images', 'fonts','styles'];
+        ['froblSoy', 'soy', 'appSoy', 'scripts', 'sprite', 'images', 'fonts', 'styles'] :
+        ['watch', 'froblSoy', 'soy', 'appSoy', 'scripts', 'sprite', 'images', 'fonts','styles'];
 };
 
 gulp.task('default', tasks(production));
