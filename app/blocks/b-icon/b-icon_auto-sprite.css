@@ -15,6 +15,12 @@ Icon classes can be used entirely standalone. They are named after their origina
   width: 10px;
   height: 7px;
 }
+.b-icon_img_close-balloon {
+  background-image: url(/images/b-icon_auto-sprite.png);
+  background-position: 0px -39px;
+  width: 10px;
+  height: 10px;
+}
 .b-icon_img_filter-arrow-down {
   background-image: url(/images/b-icon_auto-sprite.png);
   background-position: -17px -24px;
