@@ -16,3 +16,4 @@ deployment-config.json
 *.swp
 .jshintrc
 
+console/reports
