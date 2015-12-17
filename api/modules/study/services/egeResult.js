@@ -29,15 +29,13 @@ exports.add = async(function(school_id, subject_id, data) {
  * Uppdate egeResult data
  * @param {number} ege_id
  * @param {{
- *     school_id?: number,
- *     subject_id?: number,
- *     year?: number,
- *     result?: number
+ *     year: number,
+ *     result: number
  * }} data
  * @return {Object} instance of EgeResult model
  */
 exports.update = async(function(ege_id, data) {
-    var instance = await(exports.getOneByData({id: ege_id}));
+    var instance = await(exports.getById(ege_id));
     return await(instance.update(data));
 });
 
@@ -54,7 +52,7 @@ exports.getAll = async(function() {
 /**
  * Get all data from table by data
  * @param {{
- *     id?: nimber,
+ *     id?: number,
  *     school_id?: number,
  *     subject_id?: number,
  *     year?: number,
@@ -71,17 +69,24 @@ exports.getAllByData = async(function(data) {
 
 /**
  * Get one data from table by data
- * @param {{
- *     id?: nimber,
- *     school_id?: number,
- *     subject_id?: number,
- *     year?: number,
- *     result?: number
- * }} data
+ * @param {number} ege_id
  * @return {Object} instance of EgeResult model
  */
-exports.getOneByData = async(function(data) {
+exports.getById = async(function(ege_id) {
     return await(models.EgeResult.findOne({
-        where: data
+        where: {id: ege_id}
     }));
+});
+
+
+/**
+ * Delete egeResult instance
+ * @param {{
+ *     id?: number[],
+ *     year?: numder,
+ *     result?: number
+ * }} data
+ */
+exports.delete = async(function(data) {
+    await(models.EgeResult.destroy({where: data}));
 });
