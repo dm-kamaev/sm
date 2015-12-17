@@ -30,8 +30,7 @@ service.add = async(function(school_id, data) {
  * Update rating data
  * @param {number} rating_id
  * @param {{
- *     schoolId?: number,
- *     score?: Array [number]
+ *     score: Array [number]
  * }} data
  * @return {Object} instance of Rating model
  */
@@ -79,6 +78,18 @@ service.getOneByData = async(function(data) {
     return await(models.Rating.findOne({
         where: data
     }));
+});
+
+
+/**
+ * Delete rating instance
+ * @param {{
+ *     id?: number[],
+ *     score?: Array [number]
+ * }} data
+ */
+service.delete = async(function(data) {
+    await(models.Rating.destroy({where: data}));
 });
 
 
