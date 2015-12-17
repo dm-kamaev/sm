@@ -231,13 +231,19 @@ service.list = async (function(opt_params) {
         searchParams = params.searchParams || null;
 
     var searchConfig = {
-        include: [{
-            model: models.Rating,
-            as: 'ratings',
-            attributes: [
-                'score'
-            ]
-        }],
+        include: [
+            {
+                model: models.Rating,
+                as: 'ratings',
+                attributes: [
+                    'score'
+                ]
+            },
+            {
+                model: models.Address,
+                as: 'addresses'
+            }
+        ],
         attributes: [
             'id',
             'name'
@@ -262,7 +268,8 @@ service.list = async (function(opt_params) {
                 name: school.name,
                 description: "",
                 totalScore: totalScore,
-                score: score
+                score: score,
+                addresses: school.addresses
             };
         })
         .sort((school1, school2) => school1.totalScore - school2.totalScore);
@@ -292,7 +299,7 @@ var updateSearchConfig = function(searchConfig, searchParams) {
             },
             attributes: []
         }
-    }; 
+    };
 
     if (searchParams.name) {
         var nameFilter = services.search.generateFilter(searchParams.name);

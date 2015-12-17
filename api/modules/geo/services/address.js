@@ -75,3 +75,66 @@ exports.setMetro = async((address, metroArr) => {
         }
     })
 });
+
+exports.list = async (function(opt_params) {
+    var params = opt_params || {};
+
+    var searchConfig = {
+        include: [
+            {
+                model: models.Address,
+                as: 'addresses'
+            },
+            {
+                model: models.Rating,
+                as: 'ratings'
+            }
+        ]
+    };
+
+    var schools = await(models.School.findAll(searchConfig));
+
+    return schools.map(school => {
+        var sumScore = school.ratings
+            .map(rating => rating.score)
+            .reduce((context, coords) => {
+                coords.forEach((value, index) => {
+                    if (value) {
+                        context.count[index]++;
+                        context.sum[index] += value;
+                        context.res[index] = context.sum[index] / context.count[index];
+                    }
+                });
+
+                return context;
+            }, {
+                sum: [0, 0, 0, 0],
+                count: [0, 0, 0, 0],
+                res: [0, 0, 0, 0]
+            }).res;
+
+        return {
+            id: school.id,
+            coords: school.addresses.map(adr => {
+                return {
+                    lat: adr.coords[0],
+                    lng: adr.coords[1]
+                };
+            }),
+            type: '',
+            name: school.name,
+            totalScore: sumScore.reduce((context, value) => {
+                if (value) {
+                    context.sum += value;
+                    context.count++;
+                    context.res = context.sum / context.count;
+                }
+                return context;
+            }, {
+                sum: 0,
+                count: 0,
+                res: 0
+            }).res
+        }
+    });
+});
