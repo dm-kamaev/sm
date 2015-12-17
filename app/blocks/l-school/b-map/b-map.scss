@@ -3,3 +3,64 @@
     height: 350px;
     background-color: #f5f5f5;
 }
+
+.b-map__balloon {
+    position: relative;
+
+    width: 240px;
+    height: auto;
+    min-height: 100px;
+
+    background-color: #ffffff;
+    font-weight: 600;
+    font-size: 16px;
+    font-family: serif;
+}
+
+.b-map__balloon-name {
+    float: left;
+
+    max-width: 60%;
+    padding: 20px;
+
+    text-transform: uppercase;
+}
+
+.b-map__balloon-close {
+    float: right;
+
+    width: 50px;
+    height: 50px;
+
+    cursor: pointer;
+}
+
+.b-map__href{
+    color: #000000;
+    text-decoration: none;
+}
+
+.b-map__balloon-description {
+    display: inline-block;
+
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0 20px 20px;
+}
+
+.b-map__balloon-rating {
+    color: #ee362c;
+}
+
+.b-map__balloon-triangle {
+    position: absolute;
+    left: 50%;
+    bottom: -50px;
+
+    width: 0;
+    height: 0;
+    margin-left: -25px;
+
+    border: 25px solid transparent;
+    border-top-color: #fff;
+}
