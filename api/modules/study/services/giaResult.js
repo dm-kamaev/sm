@@ -28,18 +28,16 @@ exports.add = async(function(school_id, subject_id, data) {
  * Uppdate giaResult data
  * @param {number} gia_id
  * @param {{
- *     school_id?: number,
- *     subject_id?: number,
- *     count?: number,
- *     result?: number
+ *     count: number,
+ *     result: number
  * }} data
  * @return {Object} instance of GiaResult model
  */
 /**
- * Update rating data
+ * Update gia data
  */
 exports.update = async(function(gia_id, data) {
-    var instance = await(exports.getOneByData({id: gia_id}));
+    var instance = await(exports.getById(gia_id));
     return await(instance.update(data));
 });
 
@@ -73,17 +71,24 @@ exports.getAllByData = async(function(data) {
 
 /**
  * Get one data from table by data
+ * @param {number} gia_id
+ * @return {Object} instance of GiaResult model
+ */
+exports.getById = async(function(gia_id) {
+    return await(models.GiaResult.findOne({
+        where: {id: gia_id}
+    }));
+});
+
+
+/**
+ * Delete giaResult instance
  * @param {{
- *     id?: nimber,
- *     school_id?: number,
- *     subject_id?: number,
+ *     id?: number[],
  *     count?: number,
  *     result?: number
  * }} data
- * @return {Object} instance of GiaResult model
  */
-exports.getOneByData = async(function(data) {
-    return await(models.GiaResult.findOne({
-        where: data
-    }));
+exports.delete = async(function(data) {
+    await(models.GiaResult.destroy({where: data}));
 });
