@@ -168,6 +168,22 @@ goog.scope(function() {
             Filters.event.SUBMIT,
             this.filtersSubmitHandler_
         );
+
+        this.getHandler().listen(
+            this.search_,
+            sm.bSearch.Search.Event.SUBMIT,
+            this.onSubmit_
+        );
+    };
+
+    /**
+     * Input submit handler
+     * @param {Object} event
+     * @param {Object} data
+     * @private
+     */
+    SearchResult.prototype.onSubmit_ = function(event, data) {
+        this.filters_.submit(event);
     };
 
     /**
