@@ -19,6 +19,7 @@ var School = db.define('School', {
     director: DataType.STRING,
     phones: DataType.ARRAY(DataType.STRING),
     site: DataType.STRING,
+    score: DataType.ARRAY(DataType.FLOAT),
     cityId: {
         field: 'city_id',
         type: DataType.INTEGER,
@@ -27,7 +28,11 @@ var School = db.define('School', {
         field: 'education_interval',
         type: DataType.ARRAY(DataType.INTEGER)
     },
-    comment_group_id: DataType.INTEGER,
+    commentGroupId: {
+        type: DataType.INTEGER,
+        field: 'comment_group_id'
+
+    },
     govermentKey: {
         field: 'goverment_key',
         type: DataType.INTEGER,
