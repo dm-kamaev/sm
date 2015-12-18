@@ -13,25 +13,52 @@ var service = {
 
 /**
  * Create school
- * @param {Object} params
+ * @param {{
+ *     name: string,
+ *     abbreviation: string,
+ *     fullName: string,
+ *     schoolType: enum.school.school_type,
+ *     director: string,
+ *     phones?: strimg[],
+ *     site?: string,
+ *     educationInterval: number[],
+ *     govermentKey: number,
+ *     addresses?: Object[]
+ * }} data
+ * @return {Object} School model instance
  */
-service.create = params => {
+service.create = function(data) {
     var includeParams = {
         addresses: true
     };
-    if (params.addresses) {
-        params.addresses = params.addresses.filter(address => {
-            return !service.hasAddress(address);
 
+    if (data.addresses) {
+        data.addresses = data.addresses.filter(address => {
+            var result = false;
+            var addressBD =
+                    await(services.address.getAddress({name: address.name}));
+            if (!addressBD) {
+                result = true;
+            }
+            else {
+            console.log('Address:'.yellow, address.name);
+            console.log('is alredy binded to school '.yellow +
+                'with id:'.yellow, addressBD.school_id);
+            }
+
+            return result;
         });
-        params.addresses.forEach(address => {
-            var coords =
-                    await(services.address.getCoords('Москва, ' + address.name));
-            address.coords = coords;
+        data.addresses.forEach(address => {
+            if (!address.coords) {
+                var coords = await(
+                        services.yapi.getCoords('Москва, ' + address.name)
+                    );
+                address.coords = coords;
+            }
         });
     }
     return await(models.School.create(
-        params,
+        data,
         {
             include: sequelizeInclude(includeParams)
         }
@@ -41,50 +68,28 @@ service.create = params => {
 
 /**
  * Update school data
- * @param {Object} school
- * @param {Object} params for update
+ * @param {Object} school_id
+ * @param {{
+ *     name: string,
+ *     abbreviation: string,
+ *     fullName: string,
+ *     schoolType: enum.school.school_type,
+ *     director: string,
+ *     phones?: strimg[],
+ *     site?: string,
+ *     educationInterval: number[]
+ * }} data
+ * @return {Object} School model instance
  */
-service.update = (school, params) => {
-    if (params.addresses) {
-        await(service.address.setAddressesForSchool(school, params.addresses));
+service.update = function(school_id, data) {
+    var school = await(service.viewOne(school_id));
+    if (school) {
+        return await(school.update(data));
     }
-    delete params.addresses;
-
-    return await(school.update(params));
-};
-
-
-/**
- * Delete school
- * @param {Object} school instance
- */
-service.delete = async ((school) => {
-    models.School.destroy(school);
-});
-
-
-service.getAddresses = async (school => {
-    return await(models.Address.findAll({
-        where:{school_id: school.id}
-    }));
-});
-
-
-/**
- * This method checks if address for bd is present
- * @param {Object} school
- * @param {Object} params for update
- */
-service.hasAddress = (address) => {
-    var addressBD = await(services.address.getAddress({name: address.name}));
-    var result = false;
-    if (addressBD) {
-        console.log('Address:'.yellow, address.name);
-        console.log('is alredy binded to school '.yellow +
-            'with id:'.yellow, addressBD.school_id);
-        result = true;
+    else {
+        console.log('School not found.'.yellow);
+        console.log('School id is:', school_id);
     }
-    return result;
 };
 
 
@@ -93,23 +98,60 @@ service.hasAddress = (address) => {
  * @param {Object} school instance
  * @param {Object} addresses params
  */
-service.setAddressesForSchool = async ((school, addressesList) => {
-    var currentAddresses = await(service.getAddresses(school));
+// service.updateSchoolAddresses = async (function(school_id, addressesList) {
+//     var currentAddresses = await(service.getAddresses(school));
 
-    addressesList.forEach((address)=>{
-        var sameAddress = currentAddresses.find(element => {
-        if (element.name == address.name)
-            return true;
-        });
+//     addressesList.forEach((address)=>{
+//         var sameAddress = currentAddresses.find(element => {
+//         if (element.name == address.name)
+//             return true;
+//         });
 
-        if (!sameAddress && !service.hasAddress(address)){
-            address.coords =
-                await(services.address.getCoords('Москва, ' + address.name));
+//         if (!sameAddress && !service.hasAddress(address)){
+//             address.coords =
+//                 await(services.address.getCoords('Москва, ' + address.name));
 
-            addressInstance = await(services.address.addAddress(address));
-            school.addAddress(addressInstance);
-         }
-    });
+//             addressInstance = await(services.address.addAddress(address));
+//             school.addAddress(addressInstance);
+//          }
+//     });
+// });
+
+
+/**
+ * Delete school
+ * @param {Object} school_id
+ */
+service.delete = async (function(school_id) {
+    var school = await(service.viewOne(school_id));
+    models.School.destroy(school);
+});
+
+
+/**
+ * Get school addresses
+ * @param  {school_id} school_id
+ * @param  {address_id} address_id
+ * @return {[Object]} Address model instance or undefined
+ */
+service.getAddress = async(function(school_id, address_id) {
+    var address = await(services.address.getById(address_id));
+    console.log('address', address);
+    console.log('address.school_id', address.school_id);
+    if (address.school_id == school_id) {
+        return address;
+    }
+});
+
+
+/**
+ * Get school addresses
+ * @param  {school_id} school_id
+ * @return {[Object]} Address model instances list
+ */
+service.getAddresses = async(function(school_id) {
+    var school = await(service.viewOne(school_id));
+    return await(school.getAddresses());
 });
 
 
@@ -271,6 +313,9 @@ service.viewOne = function(id) {
                  }]
 
              }]
+         }, {
+             model: models.EgeResult,
+             as: 'egeResults'
          }];
     return await(models.School.findOne({
         where: {id: id},
