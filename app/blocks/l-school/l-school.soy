@@ -319,9 +319,11 @@
                     <a href="{$record.href}" target="_blank" class="l-school__link">{$record.name}</a>
                     <div class="l-school__link-image"></div>
                 </div>
-                <div class="l-school__site-name">
-                    {$record.link}
-                </div>
+                {if $record.link}
+                    <div class="l-school__site-name">
+                        {$record.link}
+                    </div>
+                {/if}
             </div>
         {/foreach}
     </div>

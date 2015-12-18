@@ -106,6 +106,14 @@ goog.scope(function() {
     };
 
     /**
+     * Submit data
+     * @param {Object} event
+     */
+    Filters.prototype.submit = function(event) {
+        this.sentForm_(event);
+    };
+
+    /**
      * Submit handler
      * @param {Object} event
      * @private
@@ -113,6 +121,15 @@ goog.scope(function() {
     Filters.prototype.onSubmit_ = function(event) {
         event.preventDefault();
 
+        this.sentForm_(event);
+    };
+
+    /**
+     * Sent form
+     * @param {Object} event
+     * @private
+     */
+    Filters.prototype.sentForm_ = function(event) {
         var form = jQuery(this.getElement()),
             data = {
                 'searchParams': this.processingSerializeArray_(

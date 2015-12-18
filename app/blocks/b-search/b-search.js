@@ -34,7 +34,16 @@ goog.scope(function() {
         ROOT: 'b-search',
         INPUT: 'b-input__input',
         LIST: 'b-search__list',
-        LIST_HIDE: 'b-search__list_hidden'
+        LIST_HIDE: 'b-search__list_hidden',
+        ICON: 'b-search__icon'
+    };
+
+    /**
+     * Event enum
+     * @enum {string}
+     */
+    Search.Event = {
+        SUBMIT: 'submit'
     };
 
     /**
@@ -47,64 +56,109 @@ goog.scope(function() {
     };
 
     /**
+     * Internal decorates the DOM element
+     * @param {element} element
+     */
+    Search.prototype.decorateInternal = function(element) {
+        goog.base(this, 'decorateInternal', element);
+
+        this.initElements_(element);
+
+    };
+
+    /**
      * Set up the Component.
      */
-    Search.prototype.enterDocument = function() {
-        goog.base(this, 'enterDocument');
+     Search.prototype.enterDocument = function() {
+         goog.base(this, 'enterDocument');
 
-        var ui = gorod.iUIInstanceStorage.UIInstanceStorage.getInstance();
-        var suggest = goog.dom.getElementByClass(
-            gorod.gSuggest.Suggest.Css.ROOT
-        );
-        var suggestInstance = ui.getInstanceByElement(suggest);
+         var ui = gorod.iUIInstanceStorage.UIInstanceStorage.getInstance(),
+             suggestInstance = ui.getInstanceByElement(this.elements_.suggest);
 
-        suggestInstance.addEventListener(
-            gorod.gSuggest.Suggest.Events.SELECT,
-            this.itemClickHandler_
-        );
+         suggestInstance.addEventListener(
+             gorod.gSuggest.Suggest.Events.SELECT,
+             this.itemClickHandler_
+         );
 
-        suggestInstance.setCallbacks({
-            getData: function(elem) {
-                return JSON.parse(elem);
-            },
+         suggestInstance.addEventListener(
+             gorod.gSuggest.Suggest.Events.SUBMIT,
+             this.onSubmit_.bind(this)
+         );
 
-            search: function(elem) {
-                var result = elem.name + ' ' +
-                    elem.fullName + ' ' +
-                    elem.abbreviation;
-                return result;
-            },
+         if (this.elements_.icon) {
+             this.getHandler().listen(
+                 this.elements_.icon,
+                 goog.events.EventType.CLICK,
+                 this.onIconClick_
+             );
+         }
 
-            renderItem: function(item, str) {
-                var matchName,
-                    Suggest = gorod.gSuggest.Suggest;
+         suggestInstance.setCallbacks({
+             getData: function(elem) {
+                 return JSON.parse(elem);
+             },
 
-                str = str || '';
+             search: function(elem) {
+                 var result = elem.name + ' ' +
+                     elem.fullName + ' ' +
+                     elem.abbreviation;
+                 return result;
+             },
 
-                matchName = Suggest.findEntry(item.name, str);
-                if (matchName) {
-                    return item.name;
-                }
+             renderItem: function(item, str) {
+                 var matchName,
+                     Suggest = gorod.gSuggest.Suggest;
 
-                var matchFullName = Suggest.findEntry(item.fullName, str);
-                if (matchFullName) {
-                    return item.fullName;
-                }
+                 str = str || '';
 
-                var matchAbbreviation = Suggest.findEntry(
-                    item.abbreviation, str);
-                if (matchAbbreviation) {
-                    return item.abbreviation;
-                }
-            }
-        });
-    };
+                 matchName = Suggest.findEntry(item.name, str);
+                 if (matchName) {
+                     return item.name;
+                 }
+
+                 var matchFullName = Suggest.findEntry(item.fullName, str);
+                 if (matchFullName) {
+                     return item.fullName;
+                 }
+
+                 var matchAbbreviation = Suggest.findEntry(
+                     item.abbreviation, str);
+                 if (matchAbbreviation) {
+                     return item.abbreviation;
+                 }
+             }
+         });
+     };
 
     /**
      * Clean up the Component.
      */
     Search.prototype.exitDocument = function() {
         goog.base(this, 'exitDocument');
+    };
+
+    /**
+     * gets DOM elements
+     * @param {Element} root
+     * @private
+     */
+    Search.prototype.initElements_ = function(root) {
+        this.elements_ = {
+            suggest: goog.dom.getElementByClass(
+                gorod.gSuggest.Suggest.Css.ROOT
+            ),
+            icon: goog.dom.getElementByClass(
+                Search.CssClass.ICON
+            )
+        };
+    };
+
+    /**
+     * Icon click handler
+     * @private
+     */
+    Search.prototype.onIconClick_ = function() {
+        this.dispatchEvent(gorod.gSuggest.Suggest.Events.SUBMIT);
     };
 
     /**
@@ -115,5 +169,18 @@ goog.scope(function() {
      */
     Search.prototype.itemClickHandler_ = function(event, data) {
         document.location.href = '/school/' + data.key;
+    };
+
+    /**
+     * Redirect handler
+     * @private
+     * @param {Object} event
+     * @param {Object} data
+     */
+    Search.prototype.onSubmit_ = function(event, data) {
+        this.dispatchEvent({
+            type: Search.Event.SUBMIT,
+            text: data.text
+        });
     };
 });

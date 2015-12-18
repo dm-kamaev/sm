@@ -216,13 +216,14 @@ var rowToSchool = row => {
     var nParse = nameParse(row[NAME_INDEX]);
     var schoolName = getName(nParse);
     var schoolType = getType(nParse);
+
     return {
         name: schoolName.trim(),
 		fullName: row[FULL_NAME_INDEX].trim(),
         abbreviation: row[NAME_INDEX],
         schoolType: schoolType,
         director: row[DIRECTOR_INDEX],
-        phones: getArray(row, PHONES_INDEX),
+        phones: getPhones(row),
         site: row[SITE_INDEX],
         addresses: getArray(row, ADDRESSES_INDEX)
             .map(address=>{return {name: address, coords: []}; }),
@@ -230,6 +231,21 @@ var rowToSchool = row => {
         educationInterval: getEducationInterval(row[EDU_PROGRAMM_INDEX])
     };
 };
+
+
+/**
+ * Get school phones
+ * @param {string[]} row School data row
+ * @return {string[]}
+ */
+var getPhones = function(row) {
+    var res =  getArray(row, PHONES_INDEX);
+    if (res[0] && res[0].match(/\(000\)/)) {
+        res = [];
+    }
+    return res;
+};
+
 
 /**
  * parses row to olimp object
