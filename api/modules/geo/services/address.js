@@ -70,13 +70,14 @@ exports.getAll = async(function() {
 });
 
 
-exports.getAllWithMetro = async(function() {
-    return await(models.Address.findAll({
-        include:[{
-            model: models.Metro,
-            //through: 'address_metro',
-            as: 'metroStations'
-            }]
+/**
+ * Get all data by data
+ * @param {number} address_id
+ * @return {Object} instances of Address model
+ */
+exports.getById = async(function(address_id) {
+    return await(models.Address.findOne({
+        where: {id: address_id}
     }));
 });
 
@@ -88,6 +89,17 @@ exports.getAddress = async(function(params) {
     return await(models.Address.findOne({
         where: params,
         include: sequelizeInclude(includeParams)
+    }));
+});
+
+
+exports.getAllWithMetro = async(function() {
+    return await(models.Address.findAll({
+        include:[{
+            model: models.Metro,
+            //through: 'address_metro',
+            as: 'metroStations'
+            }]
     }));
 });
 
