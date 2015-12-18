@@ -69,7 +69,6 @@ goog.scope(function() {
             },
 
             search: function(elem) {
-                //console.log(elem);
                 var result = elem.name + ' ' +
                     elem.fullName + ' ' +
                     elem.abbreviation;
@@ -77,39 +76,23 @@ goog.scope(function() {
             },
 
             renderItem: function(item, str) {
-                //todo: refactor this code
-                var regExp;
+                var matchName,
+                    Suggest = gorod.gSuggest.Suggest;
 
-                strs = str.replace(/[\.\?\+\*\(\)-]/g, ' ').split(' ');
+                str = str || '';
 
-                var matchName = true,
-                    matchFullName = true,
-                    matchAbbreviation = true;
-
-                for (var i = 0, n = strs.length, subStr; i < n; i++) {
-                    subStr = strs[i].trim();
-                    regExp = new RegExp(subStr, 'i');
-
-                    if (!item.name.match(regExp)) {
-                        matchName = false;
-                    }
-
-                    if (!item.fullName.match(regExp)) {
-                        matchFullName = false;
-                    }
-
-                    if (!item.abbreviation.match(regExp)) {
-                        matchAbbreviation = false;
-                    }
-                }
-
+                matchName = Suggest.findEntry(item.name, str);
                 if (matchName) {
                     return item.name;
                 }
+
+                var matchFullName = Suggest.findEntry(item.fullName, str);
                 if (matchFullName) {
                     return item.fullName;
                 }
 
+                var matchAbbreviation = Suggest.findEntry(
+                    item.abbreviation, str);
                 if (matchAbbreviation) {
                     return item.abbreviation;
                 }

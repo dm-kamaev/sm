@@ -22,7 +22,6 @@ var getSearchSubstrings = function (string) {
     return string.toLowerCase()
         .trim()
         .replace(/[^\wа-яА-Я\s]/g,'') //remove everything except letters, numbers and spaces
-        .replace(/школа/,'')
         .trim()
         .split(' ');
 };
