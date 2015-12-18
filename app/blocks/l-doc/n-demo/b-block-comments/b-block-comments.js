@@ -23,7 +23,7 @@ sm.lDoc.nDemo.bBlockComments.Comments = function() {
                     rating: 3
                 },
                 {
-                    name: 'Педагоги',
+                    name: 'Преподаватели',
                     rating: 4
                 },
                 {
@@ -46,7 +46,7 @@ sm.lDoc.nDemo.bBlockComments.Comments = function() {
                     rating: 3
                 },
                 {
-                    name: 'Педагоги',
+                    name: 'Преподаватели',
                     rating: 4
                 },
                 {
