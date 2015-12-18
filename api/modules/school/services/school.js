@@ -306,6 +306,8 @@ var updateSearchConfig = function(searchConfig, searchParams) {
         ];
     }
 
+    console.log(searchParams);
+
     if (searchParams.classes && searchParams.classes.length) {
         whereParams.educationInterval = { 
             $contains: searchParams.classes
@@ -352,7 +354,7 @@ var updateSearchConfig = function(searchConfig, searchParams) {
         searchDataCount++;
         extraIncludes.searchData.where.$or.push({ 
             $and: {
-                type: enums.searchType.OLIMP,
+                type: enums.searchType.OLIMPIAD,
                 values: {
                     $contains: searchParams.olimp
                 }
