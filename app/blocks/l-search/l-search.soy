@@ -132,14 +132,12 @@
                 </span>
             </div>*/
         </div>
-        <a class="l-search__search-button" href='/search'>
-            {call sm.lSearch.Template.button_}
-                {param params: [
-                    'text': 'Найти школу',
-                    'theme': 'search'
-                ]/}
-            {/call}
-        </a>
+        {call sm.lSearch.Template.button_}
+            {param params: [
+                'text': 'Найти школу',
+                'theme': 'search'
+            ]/}
+        {/call}
     </div>
 {/template}
 

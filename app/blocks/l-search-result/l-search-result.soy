@@ -33,6 +33,7 @@
                 url: string
             ]
         ],
+        searchText: string,
         templates: [
             search: string,
             item: string,
@@ -61,6 +62,7 @@
                 <div class="l-search-result__body">
                     {call .topMenu_}
                         {param params: [
+                            'searchText': $params.searchText,
                             'templates': [
                                 'search': $params.templates.search,
                                 'item': $params.templates.item,
@@ -96,6 +98,7 @@
  */
 {template .topMenu_ autoescape="strict" kind="html" private="true"}
     {@param? params: [
+        searchText: string,
         templates: [
             search: string,
             item: string,
@@ -108,6 +111,7 @@
             {call sm.bSearch.Template.base}
                 {param params: [
                     'placeholder': 'Поиск',
+                    'text': $params.searchText,
                     'theme': 'min',
                     'templates': [
                         'search': $params.templates.search,
