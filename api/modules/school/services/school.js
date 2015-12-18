@@ -238,10 +238,6 @@ service.list = async (function(opt_params) {
                 attributes: [
                     'score'
                 ]
-            },
-            {
-                model: models.Address,
-                as: 'addresses'
             }
         ],
         attributes: [
