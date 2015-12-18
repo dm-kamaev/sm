@@ -158,12 +158,6 @@ goog.scope(function() {
         );
 
         this.getHandler().listen(
-            this.schoolList_,
-            SchoolList.Event.ITEM_CLICK,
-            this.redirect_
-        );
-
-        this.getHandler().listen(
             this.filters_,
             Filters.event.SUBMIT,
             this.filtersSubmitHandler_
@@ -206,15 +200,6 @@ goog.scope(function() {
             data: data,
             success: this.searchSuccess_.bind(this)
         });
-    };
-
-    /**
-     * Redirect item click handler
-     * @param {Object} event
-     * @private
-     */
-    SearchResult.prototype.redirect_ = function(event) {
-        document.location.href = '/school/' + event.itemId;
     };
 });
 
