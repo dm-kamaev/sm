@@ -41,16 +41,31 @@ sm.lSchool.bMap.Map = function(opt_params) {
     this.objectManager_ = null;
 
     /**
-     * Current pin id
+     * Current placemark id
      * @type {number}
      * @private
      */
-    this.currentId_ = 0;
+    this.currentPlacemarkId_ = 0;
+
+    /**
+     * Current object id
+     * @type {number}
+     * @private
+     */
+    this.selectedPlacemarkId_ = null;
+
+    /**
+     * Current presets for placemarks
+     * @type {Object}
+     * @private
+     */
+    this.currentPlacemarkPresets_ = {};
 };
 goog.inherits(sm.lSchool.bMap.Map, goog.ui.Component);
 
 goog.scope(function() {
     var Map = sm.lSchool.bMap.Map;
+
 
     /**
      * A config object with DOM class names
@@ -59,9 +74,41 @@ goog.scope(function() {
     Map.CssClass = {
         ROOT: 'b-map',
         BALLOON: 'b-map__balloon',
-        BALLOON_ARROW: 'b-map__balloon-triangle',
         CLOSE_BALLOON: 'b-map__balloon-close'
     };
+
+
+    /**
+     * Map presets names enum
+     * @enum {string}
+     */
+    Map.PresetsNames = {
+        DEFAULT: 'default',
+        GREEN: 'green',
+        YELLOW: 'yellow',
+        RED: 'red'
+    };
+
+
+    /**
+     * Map presets types enum
+     * @enum {string}
+     */
+    Map.PresetsTypes = {
+        DEFAULT: '',
+        POINT: 'point'
+    };
+
+
+    /**
+     * Map presets states enum
+     * @enum {string}
+     */
+    Map.PresetsStates = {
+        DEFAULT: '',
+        ACTIVE: 'active'
+    };
+
 
     /**
     * These params are necessary for initializing ymaps,
@@ -72,6 +119,7 @@ goog.scope(function() {
         COORDS: [55.755768, 37.617671],
         ZOOM: 16
     };
+
 
     /**
      * Zoom
@@ -99,7 +147,7 @@ goog.scope(function() {
     Map.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
-        this.getParams_(element);
+        this.initParams_(element);
 
         var ymapsParams = this.getMapParams_(this.params_.coords);
 
@@ -113,22 +161,24 @@ goog.scope(function() {
             this.ymaps_.setZoom(Math.floor(this.ymaps_.getZoom()));
             this.initControls_();
 
-            //object manager initialize
+            //object manager initialization
             this.objectManager_ = new ymaps.ObjectManager({
                 geoObjectBalloonAutoPan: true,
-                geoObjectHideIconOnBalloonOpen: true,
+                geoObjectHideIconOnBalloonOpen: false,
                 geoObjectBalloonPanelMaxMapArea: 0,
                 geoObjectBalloonCloseButton: true,
-                geoObjectBalloonOffset: [0, 0],
                 geoObjectBalloonLayout:
                     this.generateBalloonLayout_(this.params_),
                 geoObjectPane: 'balloon',
-                geoObjectBalloonZIndex: 1000
+                geoObjectBalloonZIndex: 1040
             });
             this.ymaps_.geoObjects.add(this.objectManager_);
 
             //placemarks
-            this.addPlacemarkToMap_(this.params_);
+            this.setCurrentPresets_(Map.PresetsTypes.DEFAULT);
+            this.addPlacemarkToMap_(this.params_, true);
+
+            this.setCurrentPresets_(Map.PresetsTypes.POINT);
             this.getAllSchools_();
         }, this));
     };
@@ -139,7 +189,7 @@ goog.scope(function() {
      * @param {Element} element
      * @private
      */
-    Map.prototype.getParams_ = function(element) {
+    Map.prototype.initParams_ = function(element) {
         if (!this.params_) {
             var dataset = goog.dom.dataset.get(element, 'params');
             this.params_ = JSON.parse(dataset);
@@ -152,113 +202,75 @@ goog.scope(function() {
      * @private
      */
     Map.prototype.initPresets_ = function() {
-        ymaps.option.presetStorage.add(
-            'default#icon',
+        var path = '/images/l-school/b-map/b-map__pin/icons/';
+        var names = [
+            Map.PresetsNames.DEFAULT,
+            Map.PresetsNames.GREEN,
+            Map.PresetsNames.YELLOW,
+            Map.PresetsNames.RED
+        ];
+        var types = [
             {
-                iconImageHref: '/images/l-school/b-map/' +
-                'b-map__pin/icons/map-pin-th.png',
+                prefix: Map.PresetsTypes.DEFAULT,
                 iconImageSize: [38, 40],
-                iconImageOffset: [-13, -39],
-                iconLayout: 'default#image',
+                iconImageOffset: [-12, -39],
+                balloonOffset: [0, -30],
                 zIndex: 230
-            }
-        );
-
-        ymaps.option.presetStorage.add(
-            'green#icon',
+            },
             {
-                iconImageHref: '/images/l-school/b-map/' +
-                'b-map__pin/icons/map-pin-green-th.png',
-                iconImageSize: [38, 40],
-                iconImageOffset: [-13, -39],
-                iconLayout: 'default#image',
-                zIndex: 230
-            }
-        );
-
-        ymaps.option.presetStorage.add(
-            'yellow#icon',
-            {
-                iconImageHref: '/images/l-school/b-map/' +
-                'b-map__pin/icons/map-pin-yellow-th.png',
-                iconImageSize: [38, 40],
-                iconImageOffset: [-13, -39],
-                iconLayout: 'default#image',
-                zIndex: 230
-            }
-        );
-
-        ymaps.option.presetStorage.add(
-            'red#icon',
-            {
-                iconImageHref: '/images/l-school/b-map/' +
-                'b-map__pin/icons/map-pin-red-th.png',
-                iconImageSize: [38, 40],
-                iconImageOffset: [-13, -39],
-                iconLayout: 'default#image',
-                zIndex: 230
-            }
-        );
-
-        /*points*/
-
-        ymaps.option.presetStorage.add(
-            'point-default#icon',
-            {
-                iconImageHref: '/images/l-school/b-map/' +
-                'b-map__pin/icons/map-point-pin-th.png',
+                prefix: Map.PresetsTypes.POINT,
                 iconImageSize: [13, 13],
                 iconImageOffset: [-6, -6],
-                iconLayout: 'default#image',
+                balloonOffset: [0, -1],
                 zIndex: 210
             }
-        );
-
-        ymaps.option.presetStorage.add(
-            'point-green#icon',
+        ];
+        var states = [
             {
-                iconImageHref: '/images/l-school/b-map/' +
-                'b-map__pin/icons/map-point-pin-green-th.png',
-                iconImageSize: [13, 13],
-                iconImageOffset: [-6, -6],
-                iconLayout: 'default#image',
-                zIndex: 210
-            }
-        );
-
-        ymaps.option.presetStorage.add(
-            'point-yellow#icon',
+                postfix: Map.PresetsStates.DEFAULT,
+                zIndex: 0
+            },
             {
-                iconImageHref: '/images/l-school/b-map/' +
-                'b-map__pin/icons/map-point-pin-yellow-th.png',
-                iconImageSize: [13, 13],
-                iconImageOffset: [-6, -6],
-                iconLayout: 'default#image',
-                zIndex: 210
+                postfix: Map.PresetsStates.ACTIVE,
+                zIndex: 1200
             }
-        );
+        ];
 
-        ymaps.option.presetStorage.add(
-            'point-red#icon',
-            {
-                iconImageHref: '/images/l-school/b-map/' +
-                'b-map__pin/icons/map-point-pin-red-th.png',
-                iconImageSize: [13, 13],
-                iconImageOffset: [-6, -6],
-                iconLayout: 'default#image',
-                zIndex: 210
+        for (var j = 0, prefix; j < types.length; j++) {
+            prefix = types[j].prefix != '' ? types[j].prefix + '-' : '';
+            for (var k = 0, postfix; k < states.length; k++) {
+                postfix = states[k].postfix != '' ?
+                    '-' + states[k].postfix : '';
+                for (var i = 0; i < names.length; i++) {
+                    var hName = names[i] == 'default' ? '' : '-' + names[i];
+                    var href = path + 'map-' + prefix + 'pin' + hName +
+                        '-th.png';
+                    ymaps.option.presetStorage.add(
+                        prefix + names[i] + postfix,
+                        {
+                            balloonOffset: types[j].balloonOffset,
+                            iconImageHref: href,
+                            iconImageSize: types[j].iconImageSize,
+                            iconImageOffset: types[j].iconImageOffset,
+                            iconLayout: 'default#image',
+                            zIndex: types[j].zIndex + states[k].zIndex,
+                            zIndexHover:
+                                types[j].zIndex + 100 + states[k].zIndex
+                        }
+                    );
+                }
             }
-        );
+        }
     };
 
 
     /**
      * Sets a layout for the balloon, required by ymaps API
-     * @param {Object} data
      * @return {ymaps.Layout}
      * @private
      */
-    Map.prototype.generateBalloonLayout_ = function(data) {
+    Map.prototype.generateBalloonLayout_ = function() {
+        var that = this;
         var balloonContent = sm.lSchool.bMap.Template.balloon().content;
         var MyBalloonLayout = ymaps.templateLayoutFactory.createClass(
             balloonContent,
@@ -269,15 +281,11 @@ goog.scope(function() {
                         '.' + Map.CssClass.BALLOON,
                         this.getParentElement()
                     );
+                    this.applyElementOffset();
                     this.closeButton_ = jQuery(
                         '.' + Map.CssClass.CLOSE_BALLOON,
                         this._$element[0]
                     );
-                    this.arrow_ = jQuery(
-                        '.' + Map.CssClass.BALLOON_ARROW,
-                        this._$element[0]
-                    );
-                    this.applyElementOffset();
                     this.closeButton_.on(
                         'click',
                         jQuery.proxy(this.onCloseClick, this)
@@ -293,23 +301,20 @@ goog.scope(function() {
                         arguments
                     );
 
-                    if (!this._isElement(this._$element)) {
-                        return;
+                    if (this._isElement(this._$element)) {
+                        this.applyElementOffset();
+                        this.events.fire('shapechange');
                     }
-
-                    this.applyElementOffset();
-                    this.events.fire('shapechange');
                 },
                 applyElementOffset: function() {
                     this._$element.css({
                         left: -(this._$element[0].offsetWidth / 2),
-                        top: -(this._$element[0].offsetHeight +
-                            this.arrow_[0].offsetHeight / 2)
+                        top: -(this._$element[0].offsetHeight)
                     });
                 },
                 onCloseClick: function(e) {
                     e.preventDefault();
-
+                    that.removeActiveStateFromSelectedPlacemark_();
                     this.events.fire('userclose');
                 },
                 getShape: function() {
@@ -323,8 +328,7 @@ goog.scope(function() {
                         new ymaps.geometry.pixel.Rectangle([
                             [position.left, position.top], [
                                 position.left + this._$element[0].offsetWidth,
-                                (position.top + this._$element[0].offsetHeight +
-                                    this.arrow_[0].offsetHeight / 2)
+                                position.top + this._$element[0].offsetHeight
                             ]
                         ])
                     );
@@ -364,20 +368,83 @@ goog.scope(function() {
 
         data.forEach(function(item) {
             if (item.id != that.params_.id) {
-                that.addPointPlacemarkToMap_(item);
+                that.addPlacemarkToMap_(item);
             }
         });
+
+        this.objectManager_.objects.events.add(
+            'click',
+            this.onPlacemarkClick_,
+            this
+        );
     };
 
 
     /**
-     * Add point placemark to map
-     * @param {Object} data
+     * On placemark click actions
+     * @param {Object} event
      * @private
      */
-    Map.prototype.addPointPlacemarkToMap_ = function(data) {
-        for (var i = 0, id; i < data.coords.length; i++) {
-            id = this.currentId_++;
+    Map.prototype.onPlacemarkClick_ = function(event) {
+        var id = event.get('objectId');
+
+        if (this.selectedPlacemarkId_ != id) {
+            var currentSelectedPlacemarkPreset =
+                this.objectManager_.objects.getById(id).options.preset;
+
+            this.objectManager_.objects.setObjectOptions(id, {
+                preset: currentSelectedPlacemarkPreset + '-' +
+                    Map.PresetsStates.ACTIVE
+            });
+
+            if (this.selectedPlacemarkId_ != null) {
+                this.removeActiveStateFromSelectedPlacemark_();
+            }
+            this.selectedPlacemarkId_ = id;
+        }
+    };
+
+
+    /**
+     * Removing of active state from selected placemark
+     * @private
+     */
+    Map.prototype.removeActiveStateFromSelectedPlacemark_ = function() {
+        var lastSelectedPlacemarkPreset =
+            this.objectManager_.objects.getById(
+                this.selectedPlacemarkId_
+            ).options.preset;
+
+        this.objectManager_.objects.setObjectOptions(
+            this.selectedPlacemarkId_,
+            {
+                preset: lastSelectedPlacemarkPreset
+                        .replace('-' + Map.PresetsStates.ACTIVE, '')
+            }
+        );
+    };
+
+
+    /**
+     * Add placemark to map
+     * @param {Object} data
+     * @param {bool=} opt_isCurrent
+     * @private
+     */
+    Map.prototype.addPlacemarkToMap_ = function(data, opt_isCurrent) {
+        for (var i = 0, id, presetKey, totScore; i < data.coords.length; i++) {
+            id = this.currentPlacemarkId_++;
+            totScore = data.totalScore;
+
+            if (totScore >= 4) {
+                presetKey = Map.PresetsNames.GREEN;
+            } else if (totScore >= 3) {
+                presetKey = Map.PresetsNames.YELLOW;
+            } else if (totScore > 0) {
+                presetKey = Map.PresetsNames.RED;
+            } else {
+                presetKey = Map.PresetsNames.DEFAULT;
+            }
 
             this.objectManager_.add(JSON.stringify({
                 'type': 'Feature',
@@ -389,77 +456,32 @@ goog.scope(function() {
                 'properties': {
                     'id': data.id,
                     'name': data.name,
-                    'url': data.url,
+                    'notCurrent': !opt_isCurrent,
                     'totalScore': data.totalScore ?
                         parseFloat(data.totalScore).toFixed(1) : undefined
+                },
+                'options': {
+                    'preset': this.currentPlacemarkPresets_[presetKey]
                 }
             }));
-
-            if (data.totalScore >= 4) {
-                this.objectManager_.objects.setObjectOptions(id, {
-                    preset: 'point-green#icon'
-                });
-            } else if (data.totalScore >= 3) {
-                this.objectManager_.objects.setObjectOptions(id, {
-                    preset: 'point-yellow#icon'
-                });
-            } else if (data.totalScore > 0) {
-                this.objectManager_.objects.setObjectOptions(id, {
-                    preset: 'point-red#icon'
-                });
-            } else {
-                this.objectManager_.objects.setObjectOptions(id, {
-                    preset: 'point-default#icon'
-                });
-            }
         }
     };
 
+
     /**
-     * Add placemark to map
-     * @param {Object} data
+     * Setter for current presets
+     * @param {string} type
      * @private
      */
-    Map.prototype.addPlacemarkToMap_ = function(data) {
-        for (var i = 0, id; i < data.coords.length; i++) {
-            id = this.currentId_++;
+    Map.prototype.setCurrentPresets_ = function(type) {
+        var presets = {};
+        var prefix = type != '' ? type + '-' : '';
 
-            this.objectManager_.add(JSON.stringify({
-                'type': 'Feature',
-                'id': id,
-                'geometry': {
-                    'type': 'Point',
-                    'coordinates': [data.coords[i].lat, data.coords[i].lng]
-                },
-                'properties': {
-                    'name': data.name,
-                    'totalScore': data.totalScore ?
-                        parseFloat(data.totalScore).toFixed(1) : undefined
-                }
-            }));
-
-            if (data.totalScore >= 4) {
-                this.objectManager_.objects.setObjectOptions(id, {
-                    preset: 'green#icon'
-                });
-            } else if (data.totalScore >= 3) {
-                this.objectManager_.objects.setObjectOptions(id, {
-                    preset: 'yellow#icon'
-                });
-            } else if (data.totalScore > 0) {
-                this.objectManager_.objects.setObjectOptions(id, {
-                    preset: 'red#icon'
-                });
-            } else {
-                this.objectManager_.objects.setObjectOptions(id, {
-                    preset: 'default#icon',
-                    'options': {
-                        iconZIndexActive: 900,
-                        zIndexActive: 900
-                    }
-                });
-            }
+        for (var key in Map.PresetsNames) {
+            presets[Map.PresetsNames[key]] = prefix + Map.PresetsNames[key];
         }
+
+        this.currentPlacemarkPresets_ = presets;
     };
 
 
