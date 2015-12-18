@@ -110,7 +110,7 @@ goog.scope(function() {
      * @param {Object} event
      */
     Filters.prototype.submit = function(event) {
-        this.sentForm_(event);
+        this.sendForm_(event);
     };
 
     /**
@@ -121,7 +121,7 @@ goog.scope(function() {
     Filters.prototype.onSubmit_ = function(event) {
         event.preventDefault();
 
-        this.sentForm_(event);
+        this.sendForm_(event);
     };
 
     /**
@@ -129,7 +129,7 @@ goog.scope(function() {
      * @param {Object} event
      * @private
      */
-    Filters.prototype.sentForm_ = function(event) {
+    Filters.prototype.sendForm_ = function(event) {
         var form = jQuery(this.getElement()),
             data = {
                 'searchParams': this.processingSerializeArray_(
