@@ -29,24 +29,60 @@ exports.create = function(req, res) {
 
 exports.list = async (function(req, res) {
 
-    var schools = await (services.school.list());
-
-    var schoolList =
-        schools.map(school => {
-            return {
-                id: school.id,
-                name: school.name,
-                score: school.score,
-                totalScore: school.totalScore,
-                description: ""
+    var schools = await (services.school.list(
+        {
+            searchParams:
+            {
+                name: req.query.name
             }
+        }
+    ));
+
+    var filters = await (services.school.searchFilters())
+        .map(item => {
+            var res = {
+                data: {
+                    filters: item.values,
+                    header: {
+                        help: ''
+                    },
+                    name: item.filter
+                },
+                config: {}
+            };
+
+            switch (item.filter) {
+                case 'school_type':
+                    res.data.header.title = 'Тип школы';
+                    res.config.filtersToShow = 15;
+                    res.config.cannotBeHidden = true;
+                    break;
+                case 'ege':
+                    res.data.header.title = 'Высокие результаты ЕГЭ';
+                    break;
+                case 'gia':
+                    res.data.header.title = 'Высокие результаты ГИА';
+                    break;
+                case 'olimp':
+                    res.data.header.title = 'Есть победы в олимпиадах';
+                    break;
+            }
+
+            return res;
         });
+
+    console.log('filters', filters);
 
     var html = soy.render('sm.lSearchResult.Template.base', {
         params: {
             data: {
-                schools: schoolList
+                schools: schools,
+                filters: {
+                    filters: filters,
+                    url: '/api/school/search'
+                }
             },
+            searchText: req.query.name || '',
             templates: {
                 search: '{{ name }}',
                 item: '{{ name }}',
@@ -55,6 +91,7 @@ exports.list = async (function(req, res) {
             }
         }
     });
+
     res.header("Content-Type", "text/html; charset=utf-8");
     res.end(html);
 });
@@ -63,8 +100,7 @@ exports.view = async (function(req, res) {
     var school = await (services.school.viewOne(req.params.id));
     console.log(JSON.stringify(school).yellow);
 
-    var commentGroup = school.CommentGroup ? school.CommentGroup.comments : [];
-    console.log(JSON.stringify(commentGroup).blue);
+
 
     var typeConvert = {
         'Parent': 'родитель',
@@ -112,7 +148,7 @@ exports.view = async (function(req, res) {
 
     var addresses =
             services.department.addressesFilter(school.addresses);
-    var commentGroup = school.CommentGroup ? school.CommentGroup.comments : [];
+    var commentGroup = school.commentGroup ? school.commentGroup.comments : [];
     var params = {
         data: {
             id: school.id,
@@ -137,7 +173,9 @@ exports.view = async (function(req, res) {
                 }),
                 phones: school.phones || ''
             },
-            comments: commentGroup.map(comment => {
+            comments: commentGroup
+                .filter(comment => comment.text)
+                .map(comment => {
                 return {
                     author: '',
                     rank: typeConvert[comment.userType],

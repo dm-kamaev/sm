@@ -15,19 +15,38 @@ exports.initEnums = function(dirPath) {
            res[en.enumName] = en;
             return res;
         }, {});
-
     Object.assign(enums, localEnums);
     return localEnums;
 };
 
 exports.enumPrototype = {
-    toArray: function() {
-        var res = [];
+    getProps: function() {
+        var res = Object.assign(this);
         for (var prop in this) {
-            if (prop != 'prototype' && 
-                typeof this[prop] != 'function' &&
-                prop != 'enumName')
-                res.push(this[prop])
+            if (prop == 'prototype' || 
+                typeof this[prop] == 'function' ||
+                prop == 'enumName')
+                delete res[prop];
+        }
+        return res;
+    },
+    toArray: function() {
+        var res = [],
+            props = this.getProps();
+        for (var prop in props) {
+            if (typeof props[prop] != 'function') {
+                res.push(props[prop]);
+            }
+        }
+        return res;
+    },
+    getPropByValue: function(value) {
+        var res = null,
+            props = this.getProps();
+        for (var prop in props) {
+            if (props[prop] == value) {
+                return prop;
+            }
         }
         return res;
     }

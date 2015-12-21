@@ -69,7 +69,7 @@ var CountJSON = async(() => {
 
 var GetMatches = async(() => {
     var schools = await(getSchools());
-    var ourSchools = await(services.school.list());
+    var ourSchools = await(services.school.listInstances());
     console.log('Школ вконтакте: ' + colors.yellow(schools.response.items.length));
     console.log('Наших школ: ' + colors.yellow(ourSchools.length));
     var matches = compareMatches(schools.response.items, ourSchools);

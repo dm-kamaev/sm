@@ -5,10 +5,10 @@
 goog.require('goog.array');
 goog.require('goog.dom');
 goog.require('goog.dom.dataset');
+goog.require('goog.events');
 goog.require('goog.object');
 goog.require('goog.ui.Component');
 goog.provide('sm.lSchool.bMap.Map');
-goog.require('sm.lSchool.bMap.MapPin');
 goog.require('sm.lSchool.bMap.Template');
 
 /**
@@ -17,7 +17,6 @@ goog.require('sm.lSchool.bMap.Template');
  * @constructor
  */
 sm.lSchool.bMap.Map = function(opt_params) {
-
     goog.base(this);
 
     /**
@@ -33,6 +32,20 @@ sm.lSchool.bMap.Map = function(opt_params) {
      *   @private
      */
     this.params_ = opt_params;
+
+    /**
+     * Object manager of ymaps
+     * @type {Object}
+     * @private
+     */
+    this.objectManager_ = null;
+
+    /**
+     * Current pin id
+     * @type {number}
+     * @private
+     */
+    this.currentId_ = 0;
 };
 goog.inherits(sm.lSchool.bMap.Map, goog.ui.Component);
 
@@ -44,7 +57,10 @@ goog.scope(function() {
      * @enum {String}
      */
     Map.CssClass = {
-        ROOT: 'b-map'
+        ROOT: 'b-map',
+        BALLOON: 'b-map__balloon',
+        BALLOON_ARROW: 'b-map__balloon-triangle',
+        CLOSE_BALLOON: 'b-map__balloon-close'
     };
 
     /**
@@ -58,21 +74,20 @@ goog.scope(function() {
     };
 
     /**
-     * Top position of zoom control
-     * @type {String}
+     * Zoom
+     * @type {Object}
      */
-    Map.ZOOM_TOP = '20px';
+    Map.ZOOM = {
+        top: '20px',
+        left: '10px'
+    };
 
-    /**
-     * Left position of zoom control
-     * @type {String}
-     */
-    Map.ZOOM_LEFT = '10px';
 
     /**
     * @override
     */
     Map.prototype.createDom = function() {
+        goog.base(this, 'createDom');
         var element = sm.lSchool.bMap.Template();
         this.decorateInternal(element);
     };
@@ -83,60 +98,394 @@ goog.scope(function() {
     */
     Map.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
+
+        this.getParams_(element);
+
+        var ymapsParams = this.getMapParams_(this.params_.coords);
+
+        ymaps.ready(jQuery.proxy(function() {
+
+            //presets initialize
+            this.initPresets_();
+
+            //maps initialize
+            this.ymaps_ = new ymaps.Map(element, ymapsParams);
+            this.ymaps_.setZoom(Math.floor(this.ymaps_.getZoom()));
+            this.initControls_();
+
+            //object manager initialize
+            this.objectManager_ = new ymaps.ObjectManager({
+                geoObjectBalloonAutoPan: true,
+                geoObjectHideIconOnBalloonOpen: true,
+                geoObjectBalloonPanelMaxMapArea: 0,
+                geoObjectBalloonCloseButton: true,
+                geoObjectBalloonOffset: [0, 0],
+                geoObjectBalloonLayout:
+                    this.generateBalloonLayout_(this.params_),
+                geoObjectPane: 'balloon',
+                geoObjectBalloonZIndex: 1000
+            });
+            this.ymaps_.geoObjects.add(this.objectManager_);
+
+            //placemarks
+            this.addPlacemarkToMap_(this.params_);
+            this.getAllSchools_();
+        }, this));
+    };
+
+
+    /**
+     * Parameters initialization
+     * @param {Element} element
+     * @private
+     */
+    Map.prototype.getParams_ = function(element) {
         if (!this.params_) {
             var dataset = goog.dom.dataset.get(element, 'params');
             this.params_ = JSON.parse(dataset);
         }
-
-        var coords = this.params_.coords;
-        if (coords.length > 1) {
-            var borderArr = this.calculateBorder_(coords),
-                newCenter = {
-                    lat: coords[0].lat,
-                    lon: coords[0].lng
-                };
-            borderArr = this.correctBorder_(borderArr, newCenter);
-            var ymapsParams =
-            {
-                'bounds': borderArr,
-                controls: []
-            };
-        } else if (coords.length == 1) {
-            var ymapsParams = {
-                'center': this.coordToArray_(coords[0]),
-                'zoom': Map.defaultPosition.ZOOM,
-                controls: []
-            };
-        } else {
-            var ymapsParams = {
-                'center': Map.defaultPosition.CENTER,
-                'zoom': Map.defaultPosition.ZOOM,
-                controls: []
-            };
-        }
-
-        ymaps.ready(jQuery.proxy(function() {
-            this.ymaps_ = new ymaps.Map(element, ymapsParams);
-            this.ymaps_.setZoom(Math.floor(this.ymaps_.getZoom())); //normalize zoom
-            this.placePlacemarks_(this.params_);
-            this.initControls_();
-        }, this));
     };
 
+
     /**
-     * Control initialization
+     * Presets initialization
      * @private
      */
-    Map.prototype.initControls_ = function() {
-        this.ymaps_.behaviors.enable('scrollZoom');
-        this.ymaps_.controls.add(
-            new ymaps.control.ZoomControl(),
+    Map.prototype.initPresets_ = function() {
+        ymaps.option.presetStorage.add(
+            'default#icon',
             {
-                left: Map.ZOOM_LEFT,
-                top: Map.ZOOM_TOP
+                iconImageHref: '/images/l-school/b-map/' +
+                'b-map__pin/icons/map-pin-th.png',
+                iconImageSize: [38, 40],
+                iconImageOffset: [-13, -39],
+                iconLayout: 'default#image',
+                zIndex: 230
+            }
+        );
+
+        ymaps.option.presetStorage.add(
+            'green#icon',
+            {
+                iconImageHref: '/images/l-school/b-map/' +
+                'b-map__pin/icons/map-pin-green-th.png',
+                iconImageSize: [38, 40],
+                iconImageOffset: [-13, -39],
+                iconLayout: 'default#image',
+                zIndex: 230
+            }
+        );
+
+        ymaps.option.presetStorage.add(
+            'yellow#icon',
+            {
+                iconImageHref: '/images/l-school/b-map/' +
+                'b-map__pin/icons/map-pin-yellow-th.png',
+                iconImageSize: [38, 40],
+                iconImageOffset: [-13, -39],
+                iconLayout: 'default#image',
+                zIndex: 230
+            }
+        );
+
+        ymaps.option.presetStorage.add(
+            'red#icon',
+            {
+                iconImageHref: '/images/l-school/b-map/' +
+                'b-map__pin/icons/map-pin-red-th.png',
+                iconImageSize: [38, 40],
+                iconImageOffset: [-13, -39],
+                iconLayout: 'default#image',
+                zIndex: 230
+            }
+        );
+
+        /*points*/
+
+        ymaps.option.presetStorage.add(
+            'point-default#icon',
+            {
+                iconImageHref: '/images/l-school/b-map/' +
+                'b-map__pin/icons/map-point-pin-th.png',
+                iconImageSize: [13, 13],
+                iconImageOffset: [-6, -6],
+                iconLayout: 'default#image',
+                zIndex: 210
+            }
+        );
+
+        ymaps.option.presetStorage.add(
+            'point-green#icon',
+            {
+                iconImageHref: '/images/l-school/b-map/' +
+                'b-map__pin/icons/map-point-pin-green-th.png',
+                iconImageSize: [13, 13],
+                iconImageOffset: [-6, -6],
+                iconLayout: 'default#image',
+                zIndex: 210
+            }
+        );
+
+        ymaps.option.presetStorage.add(
+            'point-yellow#icon',
+            {
+                iconImageHref: '/images/l-school/b-map/' +
+                'b-map__pin/icons/map-point-pin-yellow-th.png',
+                iconImageSize: [13, 13],
+                iconImageOffset: [-6, -6],
+                iconLayout: 'default#image',
+                zIndex: 210
+            }
+        );
+
+        ymaps.option.presetStorage.add(
+            'point-red#icon',
+            {
+                iconImageHref: '/images/l-school/b-map/' +
+                'b-map__pin/icons/map-point-pin-red-th.png',
+                iconImageSize: [13, 13],
+                iconImageOffset: [-6, -6],
+                iconLayout: 'default#image',
+                zIndex: 210
             }
         );
     };
+
+
+    /**
+     * Sets a layout for the balloon, required by ymaps API
+     * @param {Object} data
+     * @return {ymaps.Layout}
+     * @private
+     */
+    Map.prototype.generateBalloonLayout_ = function(data) {
+        var balloonContent = sm.lSchool.bMap.Template.balloon().content;
+        var MyBalloonLayout = ymaps.templateLayoutFactory.createClass(
+            balloonContent,
+            {
+                build: function() {
+                    this.constructor.superclass.build.call(this);
+                    this._$element = jQuery(
+                        '.' + Map.CssClass.BALLOON,
+                        this.getParentElement()
+                    );
+                    this.closeButton_ = jQuery(
+                        '.' + Map.CssClass.CLOSE_BALLOON,
+                        this._$element[0]
+                    );
+                    this.arrow_ = jQuery(
+                        '.' + Map.CssClass.BALLOON_ARROW,
+                        this._$element[0]
+                    );
+                    this.applyElementOffset();
+                    this.closeButton_.on(
+                        'click',
+                        jQuery.proxy(this.onCloseClick, this)
+                    );
+                },
+                clear: function() {
+                    this.closeButton_.off('click');
+                    this.constructor.superclass.clear.call(this);
+                },
+                onSublayoutSizeChange: function() {
+                    MyBalloonLayout.superclass.onSublayoutSizeChange.apply(
+                        this,
+                        arguments
+                    );
+
+                    if (!this._isElement(this._$element)) {
+                        return;
+                    }
+
+                    this.applyElementOffset();
+                    this.events.fire('shapechange');
+                },
+                applyElementOffset: function() {
+                    this._$element.css({
+                        left: -(this._$element[0].offsetWidth / 2),
+                        top: -(this._$element[0].offsetHeight +
+                            this.arrow_[0].offsetHeight / 2)
+                    });
+                },
+                onCloseClick: function(e) {
+                    e.preventDefault();
+
+                    this.events.fire('userclose');
+                },
+                getShape: function() {
+                    if (!this._isElement(this._$element)) {
+                        return MyBalloonLayout.superclass.getShape.call(this);
+                    }
+
+                    var position = this._$element.position();
+
+                    return new ymaps.shape.Rectangle(
+                        new ymaps.geometry.pixel.Rectangle([
+                            [position.left, position.top], [
+                                position.left + this._$element[0].offsetWidth,
+                                (position.top + this._$element[0].offsetHeight +
+                                    this.arrow_[0].offsetHeight / 2)
+                            ]
+                        ])
+                    );
+                },
+                _isElement: function(element) {
+                    return element && element[0];
+                }
+            }
+        );
+
+        return MyBalloonLayout;
+    };
+
+
+    /**
+     * Get all schools
+     * @private
+     */
+    Map.prototype.getAllSchools_ = function() {
+        jQuery.ajax({
+            url: '/api/address/list',
+            type: 'POST',
+            data: '',
+            success: this.getAllSchoolsSuccess_.bind(this)
+        });
+    };
+
+
+    /**
+     * Success on getting all schools
+     * @param {Array.<Object>} responseData
+     * @private
+     */
+    Map.prototype.getAllSchoolsSuccess_ = function(responseData) {
+        var that = this;
+        var data = JSON.parse(responseData);
+
+        data.forEach(function(item) {
+            if (item.id != that.params_.id) {
+                that.addPointPlacemarkToMap_(item);
+            }
+        });
+    };
+
+
+    /**
+     * Add point placemark to map
+     * @param {Object} data
+     * @private
+     */
+    Map.prototype.addPointPlacemarkToMap_ = function(data) {
+        for (var i = 0, id; i < data.coords.length; i++) {
+            id = this.currentId_++;
+
+            this.objectManager_.add(JSON.stringify({
+                'type': 'Feature',
+                'id': id,
+                'geometry': {
+                    'type': 'Point',
+                    'coordinates': [data.coords[i].lat, data.coords[i].lng]
+                },
+                'properties': {
+                    'id': data.id,
+                    'name': data.name,
+                    'totalScore': data.totalScore ?
+                        parseFloat(data.totalScore).toFixed(1) : undefined
+                }
+            }));
+
+            if (data.totalScore >= 4) {
+                this.objectManager_.objects.setObjectOptions(id, {
+                    preset: 'point-green#icon'
+                });
+            } else if (data.totalScore >= 3) {
+                this.objectManager_.objects.setObjectOptions(id, {
+                    preset: 'point-yellow#icon'
+                });
+            } else if (data.totalScore > 0) {
+                this.objectManager_.objects.setObjectOptions(id, {
+                    preset: 'point-red#icon'
+                });
+            } else {
+                this.objectManager_.objects.setObjectOptions(id, {
+                    preset: 'point-default#icon'
+                });
+            }
+        }
+    };
+
+    /**
+     * Add placemark to map
+     * @param {Object} data
+     * @private
+     */
+    Map.prototype.addPlacemarkToMap_ = function(data) {
+        for (var i = 0, id; i < data.coords.length; i++) {
+            id = this.currentId_++;
+
+            this.objectManager_.add(JSON.stringify({
+                'type': 'Feature',
+                'id': id,
+                'geometry': {
+                    'type': 'Point',
+                    'coordinates': [data.coords[i].lat, data.coords[i].lng]
+                },
+                'properties': {
+                    'name': data.name,
+                    'totalScore': data.totalScore ?
+                        parseFloat(data.totalScore).toFixed(1) : undefined
+                }
+            }));
+
+            if (data.totalScore >= 4) {
+                this.objectManager_.objects.setObjectOptions(id, {
+                    preset: 'green#icon'
+                });
+            } else if (data.totalScore >= 3) {
+                this.objectManager_.objects.setObjectOptions(id, {
+                    preset: 'yellow#icon'
+                });
+            } else if (data.totalScore > 0) {
+                this.objectManager_.objects.setObjectOptions(id, {
+                    preset: 'red#icon'
+                });
+            } else {
+                this.objectManager_.objects.setObjectOptions(id, {
+                    preset: 'default#icon',
+                    'options': {
+                        iconZIndexActive: 900,
+                        zIndexActive: 900
+                    }
+                });
+            }
+        }
+    };
+
+
+    /**
+     * Getter for map parameters
+     * @param {Array.<Object>} coords
+     * @return {Object}
+     * @private
+     */
+    Map.prototype.getMapParams_ = function(coords) {
+        var ymapsParams = {
+            controls: []
+        };
+
+        if (coords.length > 1) {
+            ymapsParams['bounds'] = this.getBounds_(coords);
+        } else if (coords.length == 1) {
+            ymapsParams['center'] = this.coordToArray_(coords[0]);
+            ymapsParams['zoom'] = Map.defaultPosition.ZOOM;
+        } else {
+            ymapsParams['center'] = Map.defaultPosition.CENTER;
+            ymapsParams['zoom'] = Map.defaultPosition.ZOOM;
+        }
+
+        return ymapsParams;
+    };
+
 
     /**
      * Converts coord object to array
@@ -151,63 +500,44 @@ goog.scope(function() {
         return coord;
     };
 
-    /**
-     * Creates an array of placemark objects from provided data
-     * @param {Object} item
-     * @return {Array<ymaps.Placemark>}
-     * @private
-     */
-    Map.prototype.itemToPlacemarks_ = function(item) {
-        return goog.array.map(item.coords, jQuery.proxy(function(coord) {
-            var pinData = {};
-            goog.object.extend(
-                pinData,
-                item, {
-                    rating: item.totalScore,
-                    coords: coord,
-                    isCurrent: (item.id === this.params_.id)
-                }
-            );
-
-            var pin = new sm.lSchool.bMap.MapPin(pinData);
-            return pin.createPlacemark();
-        }, this));
-    };
 
     /**
-     * Initializes a placemark before placing on the map
-     * @param {(Object|Array<Object>)} data
-     * @return {Array<ymaps.Placemark>}
+     * Control initialization
      * @private
      */
-    Map.prototype.dataToPlacemarks_ = function(data) {
-        if (!(data instanceof Array)) {
-            data = [data];
-        }
-
-        var res = [];
-
-        for (var i = 0, item, placemarks; item = data[i]; i++) {
-            placemarks = this.itemToPlacemarks_(item);
-            for (var j = 0, placemark; placemark = placemarks[j]; j++) {
-                res.push(placemark);
-            }
-        }
-
-        return res;
+    Map.prototype.initControls_ = function() {
+        this.ymaps_.behaviors.enable('scrollZoom');
+        this.ymaps_.controls.add(
+            new ymaps.control.ZoomControl(),
+            Map.ZOOM
+        );
     };
 
 
     /**
-     * Calculate map border
+     * Setter for bounds
+     * @param {Object} coords
+     * @return {Array.<Array.<number>>}
+     * @private
+     */
+    Map.prototype.getBounds_ = function(coords) {
+        return this.correctBounds_(this.calculateBounds_(coords), {
+            lat: coords[0].lat,
+            lon: coords[0].lng
+        });
+    };
+
+
+    /**
+     * Calculate map bounds
      * @param {Object} coords
      * @return {Object}
      * @private
      */
-    Map.prototype.calculateBorder_ = function(coords) {
-		var south, west, east, north;
-		east = north = 0;
-		south = west = 90;
+    Map.prototype.calculateBounds_ = function(coords) {
+        var south, west, east, north;
+        east = north = 0;
+        south = west = 90;
 
         for (var i = 0, point; point = coords[i]; i++) {
             var latitude = point.lat,
@@ -219,22 +549,23 @@ goog.scope(function() {
             west = longitude < west ? longitude : west;
         }
 
-		return {
-			north: north,
-			west: west,
-			south: south,
-			east: east
-		};
+        return {
+            north: north,
+            west: west,
+            south: south,
+            east: east
+        };
     };
 
+
     /**
-     * Recalculate map border
+     * Recalculate map bounds
      * @param {Object} border
      * @param {Object} newCenter
      * @return {Array<Array<number>>}
      * @private
      */
-    Map.prototype.correctBorder_ = function(border, newCenter) {
+    Map.prototype.correctBounds_ = function(border, newCenter) {
         var center = {
             lat: (border.north + border.south) / 2,
             lon: (border.west + border.east) / 2
@@ -257,19 +588,5 @@ goog.scope(function() {
         border.west -= correction;
 
         return [[border.north, border.west], [border.south, border.east]];
-    };
-
-
-    /**
-     * Appends generated placemarks to the map
-     * @param {Object} data
-     * @private
-     */
-    Map.prototype.placePlacemarks_ = function(data) {
-        var placemarks = this.dataToPlacemarks_(data);
-
-        for (var i = 0, item; item = placemarks[i]; i++) {
-            this.ymaps_.geoObjects.add(item);
-        }
     };
 });

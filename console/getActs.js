@@ -174,14 +174,14 @@ var findActivityMatches = function(schools, activity, extraMatches) {
         extraMatch = {};
     for (var i = 0, schoolsLength = schools.length; i < schoolsLength; i++) {
         if (findMatch(schools[i], activity)) {
-            // addActivity(activity, schools[i]);
+            addActivity(activity, schools[i]);
             ourSchools[schools[i].id] = schools[i].fullName;
             break;
         }
     }
     extraMatch = findExtraMatch(extraMatches, activity);
     if (extraMatch.hasOwnProperty('id')) {
-        // addActivity(activity, extraMatch);
+        addActivity(activity, extraMatch);
         ourSchools[extraMatch.id] = extraMatch.fullName;
     }
     return ourSchools;

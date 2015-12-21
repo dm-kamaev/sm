@@ -1,10 +1,10 @@
 {namespace sm.lSearchResult.Template}
 
 /**
- * School-list template
+ * Search result template
  */
 {template .base autoescape="strict" kind="html"}
-    {@param? params: [
+    {@param params: [
         data: [
             schools: list<[
                 id: number,
@@ -12,8 +12,28 @@
                 score: list<number>,
                 totalScore: number,
                 description: string
-            ]>
+            ]>,
+            filters: [
+                filters: list<[
+                    data: [
+                        filters: list<[
+                            label: string,
+                            value: string
+                        ]>,
+                        header: [
+                            title: string,
+                            help: string
+                        ],
+                        name: string
+                    ],
+                    config:[
+                        cannotBeHidden: bool
+                    ]
+                ]>,
+                url: string
+            ]
         ],
+        searchText: string,
         templates: [
             search: string,
             item: string,
@@ -33,14 +53,16 @@
             <link rel="stylesheet" href="/styles.css">
         </head>
         <body>
-            {call sm.bHeader.Template.base}
-                {param params: [
-                    'url': '/'
-                ]/}
-            {/call}
-            <div class="l-search-result__body">
-                {call .topMenu_}
+            <div class="l-search-result">
+                {call sm.bHeader.Template.base}
                     {param params: [
+                        'url': '/'
+                    ]/}
+                {/call}
+                <div class="l-search-result__body">
+                    {call .topMenu_}
+                        {param params: [
+                            'searchText': $params.searchText,
                             'templates': [
                                 'search': $params.templates.search,
                                 'item': $params.templates.item,
@@ -49,7 +71,7 @@
                             ]
                     ]/}
                 {/call}
-                {call .leftMenu_ /}
+                {call .leftMenu_ data="all"/}
                 <div class="l-search-result__school-list">
                     {call sm.lSearchResult.bSchoolList.Template.base}
                         {param params: [
@@ -58,9 +80,15 @@
                     {/call}
                 </div>
             </div>
-            <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-            <script type="text/javascript">var CLOSURE_NO_DEPS = true;</script>
-            <script type="text/javascript" src="/l-search-result.js"></script>
+            <script type="text/javascript"
+                    src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js">
+            </script>
+            <script type="text/javascript" src="/external.min.js"></script>
+            <script type="text/javascript">
+                var CLOSURE_NO_DEPS = true;
+            </script>
+            <script type="text/javascript" src="/l-search-result.js">
+            </script>
         </body>
     </html>
 {/template}
@@ -70,6 +98,7 @@
  */
 {template .topMenu_ autoescape="strict" kind="html" private="true"}
     {@param? params: [
+        searchText: string,
         templates: [
             search: string,
             item: string,
@@ -82,6 +111,7 @@
             {call sm.bSearch.Template.base}
                 {param params: [
                     'placeholder': 'Поиск',
+                    'text': $params.searchText,
                     'theme': 'min',
                     'templates': [
                         'search': $params.templates.search,
@@ -102,10 +132,11 @@
                 </div>
             </div>
         </div>
-        <div class="l-search-result__sort">
-            Сортировать по
-        </div>
         */
+        <div class="l-search-result__sort">
+            {call sm.lSearchResult.bSort.Template.base}
+            {/call}
+        </div>
     </div>
 {/template}
 
@@ -114,6 +145,40 @@
  */
 {template .leftMenu_ autoescape="strict" kind="html" private="true"}
     <div class="l-search-result__left-menu">
-        Меню слева
+        {call .filters_ data="all"/}
+    </div>
+{/template}
+
+/**
+ * Filter template
+ * @param? params {
+ *     data: {
+ *         filters: {
+ *             filters: list<{
+ *                 data: {
+ *                     filters: ?list<{
+ *                         label: ?string,
+ *                         value: ?string
+ *                     }>,
+ *                     header: {
+ *                         title: ?string,
+ *                         help: ?string
+ *                     },
+ *                     name: ?string
+ *                 },
+ *                 config:{
+ *                     cannotBeHidden: ?bool
+ *                 }
+ *             }>,
+ *             url: ?string
+ *         }
+ *     }
+ * }
+ */
+{template .filters_ autoescape="strict" kind="html" private="true"}
+    <div class="l-search-result__filters">
+        {call  sm.lSearchResult.bFilters.Template.base}
+            {param params: $params?.data?.filters/}
+        {/call}
     </div>
 {/template}

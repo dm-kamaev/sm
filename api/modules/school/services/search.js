@@ -27,9 +27,7 @@ var getSearchSubstrings = function (string) {
         .split(' ');
 };
 
-/**
- *
- */
+
 exports.generateFilter = function(string){
     var subStrings = getSearchSubstrings(string);
     return {
@@ -41,6 +39,10 @@ exports.generateFilter = function(string){
     };
 };
 
+
+exports.getTypeFilters = async(function() {
+    return await(models.SchoolTypeFilter.findAll());
+});
 
 /**
  * @public
@@ -85,18 +87,40 @@ exports.advancedSearch = async ((searchString) => {
     };
 });
 
-exports.addGia = async(function(schoolId, values) {
+/**
+ * @param {int} school_id
+ * @param {array<int>} values Subjects IDs
+ * @param {enums.searchTypes} searchType
+ * Used to add data in SearchData table
+ *
+ */
+exports.addSearchData = async(function(schoolId, values, searchType) {
     await (models.SearchData.create({
         schoolId: schoolId,
-        type: searchTypes.GIA,
+        type: searchType,
         values: values
     }));
 });
 
-exports.addOlimp = async(function(schoolId, values) {
+
+/**
+ * @param {int} school_id
+ * @param {int} value school_type_filter id
+ */
+exports.setSchoolType = async(function(schoolId, value) {
+    await(models.SearchData.destroy({
+        where: {
+            schoolId: schoolId,
+            type: searchTypes.SCHOOL_TYPE
+        }
+    }));
+    var values = [];
+    values.push(value);
     await (models.SearchData.create({
         schoolId: schoolId,
-        type: searchTypes.OLIMPIAD,
+        type: searchTypes.SCHOOL_TYPE,
         values: values
     }));
 });
+
+

@@ -6,8 +6,10 @@ public/
 tmp/
 doc/
 assets/dump/
-parse/
-console/reports/*
+/parse/
+/console/reports
+/vkdata/
+/*.xlsx
 
 *.log
 *.swp

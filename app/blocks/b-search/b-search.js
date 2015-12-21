@@ -3,8 +3,8 @@ goog.provide('sm.bSearch.Search');
 goog.require('goog.dom');
 goog.require('goog.events');
 goog.require('goog.ui.Component');
-goog.require('sm.bSearch.Template');
 goog.require('gorod.gSuggest.Suggest');
+goog.require('sm.bSearch.Template');
 
 /**
  * Input suggest component
@@ -32,39 +32,69 @@ goog.scope(function() {
      */
     Search.CssClass = {
         ROOT: 'b-search',
-        INPUT: 'b-search__input',
+        INPUT: 'b-input__input',
         LIST: 'b-search__list',
-        LIST_HIDE: 'b-search__list_hidden'
+        ICON: 'b-search__icon'
+    };
+
+    /**
+     * Event enum
+     * @enum {string}
+     */
+    Search.Event = {
+        SUBMIT: 'submit'
     };
 
     /**
      * Get input value
      * @return {string} Input value
-     * @private
+     * @public
      */
-    Search.prototype.getValue_ = function() {
+    Search.prototype.getValue = function() {
         return goog.dom.getElementByClass(Search.CssClass.INPUT).value;
+    };
+
+    /**
+     * Internal decorates the DOM element
+     * @param {element} element
+     */
+    Search.prototype.decorateInternal = function(element) {
+        goog.base(this, 'decorateInternal', element);
+
+        this.initElements_(element);
     };
 
     /**
      * Set up the Component.
      */
-    Search.prototype.enterDocument = function() {
-        goog.base(this, 'enterDocument');
+     Search.prototype.enterDocument = function() {
+         goog.base(this, 'enterDocument');
 
-        var ui = gorod.iUIInstanceStorage.UIInstanceStorage.getInstance();
-        var suggest = goog.dom.getElementByClass(gorod.gSuggest.Suggest.Css.ROOT);
-        var suggestInstance = ui.getInstanceByElement(suggest);
+         var ui = gorod.iUIInstanceStorage.UIInstanceStorage.getInstance(),
+             suggestInstance = ui.getInstanceByElement(this.elements_.suggest);
 
-        suggestInstance.addEventListener(
-            gorod.gSuggest.Suggest.Events.SELECT,
-            this.redirect_
-        );
+         suggestInstance.addEventListener(
+             gorod.gSuggest.Suggest.Events.SELECT,
+             this.itemClickHandler_
+         );
 
-        suggestInstance.setCallback('getData', function(elem) {
-            return JSON.parse(elem);
-        });
-    };
+         suggestInstance.setCallback('getData', function(elem) {
+             return JSON.parse(elem);
+         });
+
+         suggestInstance.addEventListener(
+             gorod.gSuggest.Suggest.Events.SUBMIT,
+             this.onSubmit_.bind(this)
+         );
+
+         if (this.elements_.icon) {
+             this.getHandler().listen(
+                 this.elements_.icon,
+                 goog.events.EventType.CLICK,
+                 this.onIconClick_
+             );
+         }
+     };
 
     /**
      * Clean up the Component.
@@ -74,9 +104,49 @@ goog.scope(function() {
     };
 
     /**
-     *
+     * gets DOM elements
+     * @param {Element} root
+     * @private
      */
-    Search.prototype.redirect_ = function(event, data) {
+    Search.prototype.initElements_ = function(root) {
+        this.elements_ = {
+            suggest: goog.dom.getElementByClass(
+                gorod.gSuggest.Suggest.Css.ROOT
+            ),
+            icon: goog.dom.getElementByClass(
+                Search.CssClass.ICON
+            )
+        };
+    };
+
+    /**
+     * Icon click handler
+     * @private
+     */
+    Search.prototype.onIconClick_ = function() {
+        this.dispatchEvent(gorod.gSuggest.Suggest.Events.SUBMIT);
+    };
+
+    /**
+     * Redirect handler
+     * @private
+     * @param {Object} event
+     * @param {Object} data
+     */
+    Search.prototype.itemClickHandler_ = function(event, data) {
         document.location.href = '/school/' + data.key;
-    }
+    };
+
+    /**
+     * Redirect handler
+     * @private
+     * @param {Object} event
+     * @param {Object} data
+     */
+    Search.prototype.onSubmit_ = function(event, data) {
+        this.dispatchEvent({
+            type: Search.Event.SUBMIT,
+            text: data.text
+        });
+    };
 });

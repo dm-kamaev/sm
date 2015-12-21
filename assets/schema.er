@@ -20,7 +20,11 @@
   name {label: "string"}
   coords {label: "double[]"}
   +school_id {label: "integer", color: "#3366ff"}
+  +area_id {label: "integer", color: "#3366ff"}
 
+[area]
+*id {label: "integer", color: "#006600",}
+  name {label: "string"}
 
 [city]
   *id {label: "integer", color: "#006600",}
@@ -74,12 +78,18 @@
 [subject]
   *id {label: "integer", color: "#006600",}
   name {label: "string"}
+  display_name {label: "string"}
 
 [search_data]
   *id {label: "integer", color: "#006600",}
   values {label: "integer[]"}
   type {label: "enum"}
   +school_id {label: "integer", color: "#3366ff"}
+
+[school_type_filter]
+  *id {label: "integer", color: "#006600",}
+  name {label: "string"}
+  values {label: "integer[]"}
 
 [rating]
   *id {label: "integer", color: "#006600",}
@@ -116,6 +126,7 @@
 school 1--* address
 school 1--* search_data
 address 1--* metro
+address *--1 area
 school ?--? comment_group
 comment_group 1--* comment
 school 1--1 city

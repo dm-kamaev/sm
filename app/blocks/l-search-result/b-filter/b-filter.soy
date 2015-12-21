@@ -1,0 +1,151 @@
+{namespace sm.lSearchResult.bFilter.Template}
+
+/**
+ * Filter template
+ * @param? params {
+ *     data: ?{
+ *         filters: ?list<{
+ *             label: ?string,
+ *             value: ?string
+ *         }>,
+ *         header: ?{
+ *             title: ?string,
+ *             help: ?string
+ *         },
+ *         name: ?string
+ *     },
+ *     config: ?{
+ *         cannotBeHidden: ?bool,
+ *         filtersToShow: ?number
+ *     }
+ * }
+ */
+{template .base autoescape="strict" kind="html"}
+    {call .init data="all"/}
+{/template}
+
+/**
+ * Root class name template
+ */
+{template .rootClassName autoescape="strict" kind="html"}
+    b-filter
+{/template}
+
+/**
+ * Filter init template
+ */
+{template .init autoescape="strict" kind="html"}
+    <div class="{call .rootClassName/}">
+        {call .header data="all"/}
+        {call .filters data="all"/}
+    </div>
+{/template}
+
+/**
+ * Header template
+ * @param? params {
+ *     data: ?{
+ *         header: ?{
+ *             title: ?string,
+ *             help: ?string
+ *         }
+ *     },
+ *     config: ?{
+ *         cannotBeHidden: ?bool
+ *     }
+ * }
+ */
+{template .header autoescape="strict" kind="html"}
+    <div class="b-filter__header">
+        <span class="b-filter__title">
+            {$params?.data?.header?.title}
+        </span>
+        {if $params?.header?.help}
+            <div class="b-filter__help" data-help="{$params?.data?.header?.help}">
+                <img src="/images/l-search-result/b-filter/b-filter__help.png"/>
+            </div>
+        {/if}
+        {if not $params?.config?.cannotBeHidden}
+            {call .showFiltersButton/}
+        {/if}
+    </div>
+{/template}
+
+/**
+ * Body template
+ * @param? params {
+ *     data: ?{
+ *         filters: ?list<{
+ *             label: ?string,
+ *             value: ?string
+ *         }>,
+ *         name: ?string
+ *     },
+ *     config: ?{
+ *         filtersToShow: ?number
+ *     }
+ * }
+ */
+{template .filters autoescape="strict" kind="html"}
+
+    {let $filToShow: $params?.config?.filtersToShow ?
+        ($params?.config?.filtersToShow - 1) : 5/}
+    <div class="b-filter__filters
+                {$params?.config?.cannotBeHidden ? '' : ' i-utils__hidden'}">
+        {for $i in range($params.data.filters.length)}
+            {call .filter}
+                {param params: [
+                    'filter': $params.data.filters[$i],
+                    'hidden': $i > $filToShow ? true : false,
+                    'name': $params.data.name,
+                    'id': $i
+                ]/}
+            {/call}
+        {/for}
+        {if $params.data.filters.length > $filToShow}
+            <div class="b-filter__show-button">
+                 Еще {$params.data.filters.length - $filToShow - 1} предметов
+            </div>
+        {/if}
+    </div>
+{/template}
+
+/**
+ * Filter template
+ * @param? params {
+ *     filter: ?{
+ *         label: ?string,
+ *         value: ?string
+ *     },
+ *     hidden: ?bool
+ *     name: ?string,
+ *     id: number
+ * }
+ */
+{template .filter autoescape="strict" kind="html"}
+    <div class="b-filter__section {$params.hidden ? 'i-utils__hidden' : ''}">
+        <div class="b-filter__filter">
+            <input type="checkbox"
+                class="b-filter__input"
+                id="{$params.name}-{$params.id}"
+                name="{$params.name}"
+                value="{$params.filter.value}"/>
+            <label for="{$params.name}-{$params.id}"
+                class="b-filter__input-label">
+                {$params.filter.label}
+            </label>
+        </div>
+    </div>
+{/template} 
+
+
+/**
+ * Show filters button
+ */
+{template .showFiltersButton}
+    <div class="b-filter__show-filters-button">
+        <div class="b-filter__show-filters-icon
+                    b-icon_img_filter-arrow-down">
+        </div>
+    </div>
+{/template}

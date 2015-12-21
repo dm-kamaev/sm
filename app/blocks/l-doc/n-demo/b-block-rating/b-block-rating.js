@@ -20,11 +20,3 @@ sm.lDoc.nDemo.bBlockRating.Rating = function() {
         rating.decorate(elem);
     }
 };
-
-
-jQuery(function() {
-    var doc = goog.dom.getElementByClass('l-doc');
-    if (doc) {
-        new sm.lDoc.nDemo.bBlockRating.Rating();
-    }
-});

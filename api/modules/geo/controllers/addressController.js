@@ -4,21 +4,23 @@ var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 
 /**
- * @api {get} api/study/subject Get subject list
+ * @api {post} api/address/list Get addresses
  * @apiVersion 0.0.0
- * @apiGroup Study
- * @apiName ListSubjects
+ * @apiGroup Address
+ * @apiName List
+ * @apiSuccess {Object[]} addresses Very userful documentation here.
  */
-exports.listSubjects = async (function(req, res) {
+
+exports.list = async (function(req, res) {
     var result;
+
     try {
-        result = await(services.subject.list());
+        result = await(services.address.list());
     } catch (e) {
-        console.log(e.message);
-        result = e;
+        console.log(e);
+        result = e.message;
     } finally {
         res.header("Content-Type", "text/html; charset=utf-8");
         res.end(JSON.stringify(result));
     }
 });
-

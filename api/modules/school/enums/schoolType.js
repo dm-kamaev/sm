@@ -10,6 +10,7 @@ module.exports = {
     CADET_SCHOOL: 'Кадетская школа',
     CADET_SCHOOL_INTERNAT: 'Кадетская школа-интернат',
     CORRECTIONAL_SCHOOL: 'Коррекционная школа',    
-    CORRECTIONAL_SCHOOL_INTERNAT: 'Коррекционная школа-иниернат'    
+    CORRECTIONAL_SCHOOL_INTERNAT: 'Коррекционная школа-интернат'    
+
 };
 

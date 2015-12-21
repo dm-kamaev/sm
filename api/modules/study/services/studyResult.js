@@ -4,6 +4,7 @@ var colors = require('colors');
 var models = require.main.require('./app/components/models').all;
 var services = require.main.require('./app/components/services').all;
 const common = require.main.require('./console/common');
+var sequelize = require.main.require('./app/components/db');
 
 exports.name = 'studyResult';
 
@@ -17,6 +18,17 @@ const OLIMP_TYPES = [
         value: 'московская'
     }
 ];
+
+/**
+ * param {int} school_id
+ */
+exports.dropEgeResults = async(function(school_id) {
+    await(models.EgeResult.destroy({
+        where: {
+            schoolId: school_id
+        }
+    }));
+});
 
 exports.setSchoolOlimp = async((school, olimpResults) => {
     await(models.OlimpResult.destroy({
@@ -44,6 +56,48 @@ exports.setSchoolOlimp = async((school, olimpResults) => {
 
 exports.getAllGia = async(() => {
     return await(models.GiaResult.findAll());
+});
+
+/**
+ * @return {array<object>} subjects with gia average
+ */
+exports.getGiaAverage = async(function () {
+    var params = {
+        attributes: {
+            include: [[sequelize.fn('AVG', sequelize.col('giaResult.result')),'average']]
+        },
+        group: '\"Subject\".id',
+        include: [{
+            model: models.GiaResult,
+            as: 'giaResult',
+            attributes: [],
+            required: true
+        }]
+    };
+    return await(models.Subject.findAll(params));
+});
+
+/**
+ * @return {array<object>} subjects with ege average
+ */
+exports.getEgeAverage = async(function() {
+    var YEAR = 2015; //TODO: move somewhere maybe?
+    var params = {
+        attributes: {
+            include: [[sequelize.fn('AVG', sequelize.col('egeResult.result')),'average']]
+        },
+        group: '\"Subject\".id',
+        include: [{
+            model: models.EgeResult,
+            as: 'egeResult',
+            where: {
+                year: YEAR
+            },
+            attributes: [],
+            required: true
+        }]
+    };
+    return await(models.Subject.findAll(params));
 });
 
 /**
@@ -122,3 +176,14 @@ exports.createGia = async((gia, opt_option) => {
         return res;
     }
 );
+/**
+ * @param {
+ *      year: int,
+ *      schoolId: int,
+ *      result: float,
+ *      subject_id: int
+ * } ege
+ */
+exports.createEge = async(function(ege){
+    await (models.EgeResult.create(ege));   
+});
