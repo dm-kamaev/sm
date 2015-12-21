@@ -227,12 +227,6 @@ exports.view = async (function(req, res) {
 
     console.log(params.data);
 
-    console.log('metro+====================================================');
-
-    console.log(params.data.metroStations);
-
-    console.log('==========================================================');
-
     res.header("Content-Type", "text/html; charset=utf-8");
     res.end(
         soy.render('sm.lSchool.Template.base', {
