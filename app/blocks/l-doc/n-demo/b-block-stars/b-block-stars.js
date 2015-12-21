@@ -79,16 +79,4 @@ sm.lDoc.nDemo.bBlockStars.Stars = function() {
         }
     }
 
-}
-//     var params = {
-//         data:{
-//             mark:4
-//         },
-//         isClickable : true
-//     }
-//
-//     var stars = new sm.bStars.Stars(params);
-//     stars.render();
-// };
-//
- new sm.lDoc.nDemo.bBlockStars.Stars();
+};

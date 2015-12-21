@@ -4,76 +4,89 @@
 * doc
 */
 {template .preview}
-{call sm.bMark.Template.base}
-    {param params: [
-        'data': [
-                'stats': [
-                    [
-                        'value': 212,
-                        'mark': 5,
-                        'isMax': true
-                    ],
-                    [
-                        'value': 13,
-                        'mark': 4
-                    ],
-                    [
-                        'value': 18,
-                        'mark': 3
-                    ],
-                    [
-                        'value': 25,
-                        'mark': 2
-                    ],
-                    [
-                        'value': 71,
-                        'mark': 1
-                    ]
-                ],
-                'total': [
-                    'average': 4.2,
-                    'countValue': 330
-                ]
-            ]
-    ] /}
-{/call}
+    {call sm.bMark.Template.base}
+        {param params: [
+            'value': 4.4
+        ] /}
+    {/call}
 {/template}
 
 /**
 * doc
 */
 {template .doc}
-    {call sm.bMark.Template.base}
-        {param params: [
-            'data': [
-                    'stats': [
-                        [
-                            'value': 212,
-                            'mark': 5,
-                            'isMax': true
-                        ],
-                        [
-                            'value': 13,
-                            'mark': 4
-                        ],
-                        [
-                            'value': 18,
-                            'mark': 3
-                        ],
-                        [
-                            'value': 25,
-                            'mark': 2
-                        ],
-                        [
-                            'value': 71,
-                            'mark': 1
-                        ]
-                    ],
-                    'total': [
-                        'average': 4.2,
-                        'countValue': 330
-                    ]
-                ]
-        ] /}
-    {/call}
+    Template:
+    <br><br>
+    <div class="b-block-mark__code">
+        sm.bMark.Template.base
+    </div>
+    <br><br>
+    Params:
+    <br><br>
+    <div class="b-block-mark__code">
+        value: number <span class="b-block-mark__comment"> - mark value </span>
+        <br>
+        inline: bool {sp}
+        <span class="b-block-mark__comment">
+            - arrange in line or not (default: false)
+        </span>
+        <br>
+    </div>
+
+    <br><br><br>
+
+    Simple example:
+    <br>
+        {call sm.bMark.Template.base}
+            {param params: [
+                'value': 4.4
+            ] /}
+        {/call}
+        {call sm.bMark.Template.base}
+            {param params: [
+                'value': 3.2
+            ] /}
+        {/call}
+        {call sm.bMark.Template.base}
+            {param params: [
+                'value': 2.1
+            ] /}
+        {/call}
+        {call sm.bMark.Template.base}
+            {param params: [
+                'value': 0
+            ] /}
+        {/call}
+
+    <br><br>
+    Inline (for inline: true) example:
+    <br>
+        {call sm.bMark.Template.base}
+            {param params: [
+                'value': 4.4,
+                'inline': true
+            ] /}
+        {/call}
+        <br>
+        {call sm.bMark.Template.base}
+            {param params: [
+                'value': 3.2,
+                'inline': true
+            ] /}
+        {/call}
+        <br>
+        {call sm.bMark.Template.base}
+            {param params: [
+                'value': 2.1,
+                'inline': true
+            ] /}
+        {/call}
+        <br>
+        {call sm.bMark.Template.base}
+            {param params: [
+                'value': 0,
+                'inline': true
+            ] /}
+        {/call}
+        <br>
 {/template}
