@@ -1,0 +1,92 @@
+{namespace sm.lSchool.bDataBlockRatings.Template}
+
+/**
+ * Ratings item
+ * @param params {
+ *    header: ?string
+ *    content: [
+ *        melRating: ?number
+ *        depObrRating: ?number
+ *     ]
+ * }
+ * @extends '/l-school/b-data-block/b-data-block'
+ * @constructor
+ */
+{template .base}
+    {call .init}
+        {param params: $params /}
+    {/call}
+{/template}
+
+/**
+ * Content item
+ * @param params {
+ *     content: [
+ *        melRating: ?number
+ *        depObrRating: ?number
+ *     ]
+ * }
+ */
+{template .content autoescape="strict" kind="html"}
+     <ul class="b-data-block__content">
+        <li class="b-data-block__item">
+            {call .ratingItem_}
+                {param params:[
+                    'name': 'Рейтинг пользователей "Мела"',
+                    'place': $params.content.melRating,
+                    'href': '/search'
+                ] /}
+            {/call}
+        </li>
+
+        <li class="b-data-block__item">
+            {call .ratingItem_}
+                {{param params:[
+                    'name': 'Рейтинг департамента образования москвы',
+                    'place': $params.content.depObrRating
+                ] /}}
+            {/call}
+        </li>
+
+    </ul>
+{/template}
+
+/**
+ * Header section
+ * @param params {
+ *     header: ?string
+ * }
+ */
+{template .header autoescape="strict" kind="html"}
+     <div class="b-data-block__line"></div>
+     <h3 class="b-data-block__header">{$params.header}</h3>
+{/template}
+
+/**
+ * Rating element
+ * @param params {
+ *     name: ?string
+ *     place: ?number
+ *     href: ?string
+ * }
+ */
+{template .ratingItem_ autoescape="strict" kind="html"}
+    <div class="b-data-block__rating-circle">
+        <div class="b-data-block__rating-place">
+            {$params.place}
+        </div>
+    </div>
+
+    {if $params.href}
+        <a  class="b-data-block__rating-name
+                   b-data-block__rating-name_link"
+            href="{$params.href}">
+                {$params.name}
+         </a>
+    {else}
+        <div class="b-data-block__rating-name">
+            {$params.name}
+        </div>
+    {/if}
+
+{/template}

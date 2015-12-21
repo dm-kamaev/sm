@@ -303,11 +303,14 @@
         /*ratings*/
         <div class="l-school__item-container">
             {if $params.data.contacts}
-                {call sm.lSchool.bDataBlock.Template.base}
+                {call sm.lSchool.bDataBlockRatings.Template.base}
                     {param params: [
-                        'header': 'места в рейтингах'
-                        ]
-                    /}
+                        'header': 'места в рейтингах',
+                         'content': [
+                            'melRating': 5,
+                            'depObrRating': 6
+                         ]
+                    ]/}
                 {/call}
             {/if}
         </div>

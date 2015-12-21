@@ -1,0 +1,38 @@
+.b-data-block__rating-circle {
+	display: inline-block;
+
+	height: 38px;
+	width: 38px;
+
+	border-radius: 20px;
+
+	border: 1px solid #f0f0f0;
+
+	text-align: center;
+	vertical-align: middle;
+}
+
+.b-data-block__rating-place {
+	display: inline-block;
+
+	font-family: Proxima, arial, sans-serif;
+	font-weight: 600;
+	font-size: 16px;
+
+	margin-top: 13px;
+}
+
+.b-data-block__rating-name {
+	display: inline-block;
+
+	font-family: arial, sans-serif;
+	font-size: 14px;
+	line-height: 18px;
+
+	margin-left: 20px;
+
+	&.b-data-block__rating-name_link {
+		color: #ee362c;
+		text-decoration: none;
+	}
+}
