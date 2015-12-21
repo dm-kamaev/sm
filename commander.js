@@ -15,6 +15,7 @@ require('./console/egeData.js').Command;
 require('./console/updateSearch.js').Command;
 require('./console/getActs.js').Command;
 require('./console/rating').Command;
+require('./console/modelArchiver.js').Command;
 
 /*
  * The line below initializes the interface on `node ./commander
