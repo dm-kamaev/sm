@@ -6,6 +6,8 @@ var colors = require('colors');
 
 var sequelize = require.main.require('./app/components/db');
 
+var parseAreas = require('./parse_area');
+
 var modules = require.main.require('./api/modules');
 var services = require.main.require('./app/components/services').all;
 
@@ -22,7 +24,7 @@ var GOVERMENT_KEY_INDEX = 2,
     ADDRESSES_INDEX = 20,
     EDU_PROGRAMM_INDEX = 21,
     SUBJECT_INDEX = 37,
-    GIA_COUNT_INDEX =38,
+    GIA_COUNT_INDEX = 38,
     GIA_RESULTS_INDEX = 39,
     OLIMP_TYPE_INDEX = 30,
     OLIMP_STAGE_INDEX = 31,
@@ -55,6 +57,10 @@ var parse = async(path => {
                 services.studyResult.setSchoolOlimp(school, item.olimpResult);
             }
         });
+
+    data = data.slice(1);
+
+    parseAreas.parseAreas(data);
 });
 
 /**
@@ -363,8 +369,6 @@ var initGiaResults = async (function (giaResults, schoolId) {
         })
     });
 });
-
-
 
 /**
  * Settings for accessing this script using cli

@@ -12,7 +12,7 @@ var Common = function() {};
  * @return {string}
  */
 Common.readText = function(path) {
-    if (Common.fileExists(path)) { 
+    if (Common.fileExists(path)) {
         return fs.readFileSync(path).toString();
     } else {
         console.log('File ' + colors.red(path) + 'does not exists');
@@ -21,7 +21,7 @@ Common.readText = function(path) {
 
 /**
  * @param {string} filePath
- * @retrun {bool}
+ * @return {Boolean}
  */
 Common.fileExists = function(filePath) {
     try {
@@ -36,27 +36,27 @@ Common.fileExists = function(filePath) {
  * @param {object} instanse - Sequelise model instanse
  */
 Common.checkFunctions = function(instanse) {
-    for (var prop in instanse){
+    for (var prop in instanse) {
         if (typeof instanse[prop] === 'function')
-            console.log(colors.magenta(prop));         
+            console.log(colors.magenta(prop));
     }
 };
 
 /**
  * Check if directory exiists. If not - create
  * @param {string} path
- */ 
+ */
 Common.checkDir = function(path) {
     try {
         fs.statSync(path);
     } catch (e) { //TODO: only if ENOENT
         fs.mkdirSync(path);
     }
-}
+};
 
 /**
- * @param {object} json 
- * @param {string} path
+ * @param {Object} json
+ * @param {String} path
  */
 Common.saveJson = (json, path) => {
     var js = JSON.stringify(json);
