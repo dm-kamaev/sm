@@ -20,7 +20,9 @@
     <div class="b-block-mark__code">
         sm.bMark.Template.base
     </div>
+
     <br><br>
+
     Params:
     <br><br>
     <div class="b-block-mark__code">
@@ -31,62 +33,78 @@
             - arrange in line or not (default: false)
         </span>
         <br>
+    stars: bool {sp}
+        <span class="b-block-mark__comment">
+            - draw stars or not (default: false)
+        </span>
+        <br>
     </div>
 
     <br><br><br>
 
     Simple example:
     <br>
-        {call sm.bMark.Template.base}
-            {param params: [
-                'value': 4.4
-            ] /}
-        {/call}
-        {call sm.bMark.Template.base}
-            {param params: [
-                'value': 3.2
-            ] /}
-        {/call}
-        {call sm.bMark.Template.base}
-            {param params: [
-                'value': 2.1
-            ] /}
-        {/call}
-        {call sm.bMark.Template.base}
-            {param params: [
-                'value': 0
-            ] /}
-        {/call}
+    {call sm.bMark.Template.base}
+        {param params: [
+            'value': 4.4
+        ] /}
+    {/call}
+    {call sm.bMark.Template.base}
+        {param params: [
+            'value': 3.2
+        ] /}
+    {/call}
+    {call sm.bMark.Template.base}
+        {param params: [
+            'value': 2.1
+        ] /}
+    {/call}
+    {call sm.bMark.Template.base}
+        {param params: [
+            'value': 0
+        ] /}
+    {/call}
 
     <br><br>
+
     Inline (for inline: true) example:
     <br>
-        {call sm.bMark.Template.base}
-            {param params: [
-                'value': 4.4,
-                'inline': true
-            ] /}
-        {/call}
-        <br>
-        {call sm.bMark.Template.base}
-            {param params: [
-                'value': 3.2,
-                'inline': true
-            ] /}
-        {/call}
-        <br>
-        {call sm.bMark.Template.base}
-            {param params: [
-                'value': 2.1,
-                'inline': true
-            ] /}
-        {/call}
-        <br>
-        {call sm.bMark.Template.base}
-            {param params: [
-                'value': 0,
-                'inline': true
-            ] /}
-        {/call}
-        <br>
+    {call sm.bMark.Template.base}
+        {param params: [
+            'value': 4.4,
+            'inline': true
+        ] /}
+    {/call}
+    <br>
+    {call sm.bMark.Template.base}
+        {param params: [
+            'value': 3.2,
+            'inline': true
+        ] /}
+    {/call}
+    <br>
+    {call sm.bMark.Template.base}
+        {param params: [
+            'value': 2.1,
+            'inline': true
+        ] /}
+    {/call}
+    <br>
+    {call sm.bMark.Template.base}
+        {param params: [
+            'value': 0,
+            'inline': true
+        ] /}
+    {/call}
+
+    <br><br>
+
+    Stars (for stars: true) example:
+    <br>
+    {call sm.bMark.Template.base}
+        {param params: [
+            'value': 3,
+            'stars': true
+        ] /}
+    {/call}
 {/template}

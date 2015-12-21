@@ -4,7 +4,8 @@
  * The mark template
  * @param params {{
  *     value: number,
- *     inline: bool
+ *     inline: bool,
+ *     stars: bool
  * }}
  */
 {template .base}
@@ -20,10 +21,15 @@
         {/if}
     {/let}
     <div class="b-mark{sp}
-                b-mark_{$color}{sp}
+                b-mark_{$color}
+                {sp}
+                {$params.stars ? 'b-mark_stars' : ''}
+                {sp}
                 {$params.inline ? 'b-mark_inline' : ''}">
         {if $params.inline}
             {call .inline data="all"/}
+        {elseif $params.stars}
+            {call .stars data="all"/}
         {else}
             {call .simple data="all"/}
         {/if}
@@ -56,6 +62,22 @@
     <div class="b-mark__mark">
         {call .value data="all"/}
     </div>
+{/template}
+
+/**
+ * Stars template
+ * @param params {{
+ *     value: number
+ * }}
+ */
+{template .stars}
+    {call sm.bStars.Template.base}
+        {param params: [
+            'data': [
+                'mark': $params.value
+            ]
+        ]/}
+    {/call}
 {/template}
 
 /**
