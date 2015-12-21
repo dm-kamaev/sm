@@ -8,6 +8,7 @@ var mkdirp = require("mkdirp");
 
 const HOST = 'api.data.mos.ru';
 const REPORT_PATH = './console/reports/';
+const MODULES = './console/modules/activities/';
 
 var insertActs = async(function() {
     console.time("Matching");
@@ -32,11 +33,9 @@ var insertActs = async(function() {
     console.log('Our schools matched: ' + Object.keys(foundSchools).length);
 
     ourNotFoundSchools = notFoundSchools(schools, foundSchools);
-    fs.writeFileSync(REPORT_PATH + 'notFindOurSchools.json', JSON.stringify(ourNotFoundSchools));
+    fs.writeFileSync(REPORT_PATH + 'notFoundOurSchools.json', JSON.stringify(ourNotFoundSchools));
     console.log('Schools\' count haven\'t been found: ' + ourNotFoundSchools.length);
 
-    console.log('schools found with no number: ');
-    console.log(nameSchools);
     console.timeEnd("Matching");
 });
 
@@ -81,6 +80,7 @@ var createParsedActivities = function(activities) {
             parsedActivityName = activities[i].Cells.poln_name.match(/"(.*?)"/),
             activityName = parsedActivityName ?
                 parsedActivityName[0].slice(1, -1).toLowerCase() : null;
+
         parsedActivities.push({
             'number': activityNumber,
             'name': activityName,
@@ -92,11 +92,12 @@ var createParsedActivities = function(activities) {
 };
 
 var fillActsDB = function(schools, activities) {
-    var ourSchools = {};
+    var ourSchools = {},
+        extraMatches = getExtraMatches('extraMatches.json');
     for (var i = 0, actsLength = activities.length; i < actsLength; i++) {
         var ourSetSchools = {};
         if (activities[i].groupLength <= 255) {
-            ourSetSchools = findActivityMatches(schools, activities[i]);
+            ourSetSchools = findActivityMatches(schools, activities[i], extraMatches);
         }
     ourSchools = mergeObjects(ourSchools, ourSetSchools);
         console.log('Act\'s processing: ' + i);
@@ -168,18 +169,45 @@ var getActivitiesSet = function(params) {
     return request(options);
 };
 
-var nameSchools = {}; // test
-
-var findActivityMatches = function(schools, activity) {
-    var ourSchools = {};
+var findActivityMatches = function(schools, activity, extraMatches) {
+    var ourSchools = {},
+        extraMatch = {};
     for (var i = 0, schoolsLength = schools.length; i < schoolsLength; i++) {
         if (findMatch(schools[i], activity)) {
-            //addActivity(activity, schools[i]);
+            // addActivity(activity, schools[i]);
             ourSchools[schools[i].id] = schools[i].fullName;
             break;
         }
     }
+    extraMatch = findExtraMatch(extraMatches, activity);
+    if (extraMatch.hasOwnProperty('id')) {
+        // addActivity(activity, extraMatch);
+        ourSchools[extraMatch.id] = extraMatch.fullName;
+    }
     return ourSchools;
+};
+
+var findExtraMatch = function(extraMatches, activity) {
+    var school = {};
+    extraMatches.forEach(function(extraMatch) {
+        if (activity.info.kratk_name === extraMatch.kratk_name) {
+            school = extraMatch.school;
+        }
+    });
+    return school;
+};
+
+var getExtraMatches = function(fileName) {
+    var extraActs = [];
+    try {
+        fs.statSync(MODULES + fileName).isFile();
+        console.log('Loading extra matches from ' + MODULES + fileName);
+        extraActs = JSON.parse(fs.readFileSync(MODULES + fileName, 'utf8'));
+    } catch(err) {
+        console.log(MODULES + fileName + ' not found');
+    } finally {
+        return extraActs;
+    }
 };
 
 var mergeObjects = function (obj1,obj2) {
@@ -197,7 +225,6 @@ var findMatch = function(school, activity) {
     } else if (isNaN(school.number) &&
             typeof school.name === 'string' &&
             school.name === actSchoolName) {
-        nameSchools[school.id] = school.fullName;
         return true;
     } else {
         return false;
