@@ -2,9 +2,8 @@
 const path = require('path');
 const ModelArchiver = require('../../console/modules/modelArchiver/ModelArchiver.js') ;
 const University = require('../../api/modules/univer/models/university');
-const dataFolder = path.join(__dirname, '../../api/modules/school/migrations');
+const dataFolder = path.join(__dirname, '../../api/modules/univer/migrations');
 const async = require('asyncawait/async');
-const await = require('asyncawait/await');
 
 module.exports = {
     up: function (queryInterface, Sequelize) {
@@ -32,7 +31,7 @@ module.exports = {
             archiver.load();
         }));
   },
-  down: function (queryInterface, Sequelize) {
+  down: function (queryInterface) {
     return queryInterface.dropTable('university');
   }
 };

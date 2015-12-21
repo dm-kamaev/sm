@@ -35,14 +35,14 @@ class ModelArchiver {
         var csv = await(this.archiver_.decompress());
         var converter = new CsvConverter(csv);
         var data = converter.toJson();
-        await(this.loadData(data));
+        await(this.loadData_(data));
     }
 
     /**
      * @private
      * @param {array<object>} data
      */
-    loadData(data) {
+    loadData_(data) {
         await(this.model_.destroy({ where:{} }));
         await(this.model_.bulkCreate(data));
     }

@@ -1,4 +1,9 @@
 'use strict';
+const path = require('path');
+const ModelArchiver = require('../../console/modules/modelArchiver/ModelArchiver.js') ;
+const City = require('../../api/modules/geo/models/city');
+const dataFolder = path.join(__dirname, '../../api/modules/geo/migrations');
+const async = require('asyncawait/async');
 
 module.exports = {
   up: function (queryInterface, Sequelize) {
@@ -20,13 +25,12 @@ module.exports = {
         name: {
             type: Sequelize.STRING
         }
-    }).then(()=> { //TODO: make this work
-            queryInterface.insert(null,'city',{
-                name: 'Москва'
-            })
-    })
+    }).then(async(function() { 
+        var archiver = new ModelArchiver(City, dataFolder);
+        archiver.load();
+    }));
   },
-  down: function (queryInterface, Sequelize) {
+  down: function (queryInterface) {
     return queryInterface.dropTable('city');
   }
 };
