@@ -1,52 +1,50 @@
 {namespace sm.lSchool.Template}
 
-
 /**
  * Defaul school view
- *
+ * @param params {
+ *    data: [
+ *        id: number,
+ *        schoolName: string,
+ *        schoolType: string,
+ *        schoolDescr: string,
+ *        directorName: string,
+ *        schoolQuote: string,
+ *        classes: string,
+ *        social: list<[
+ *            name: string,
+ *            href: string
+ *        ]>,
+ *        sites: list<[
+ *            name: string,
+ *            href: string,
+ *            link: string
+ *        ]>,
+ *        contacts: [
+ *            address: list<[
+ *                title: string,
+ *                description: string
+ *            ]>,
+ *            phones: list<string>
+ *        ],
+ *        comments: list<[
+ *            author: string,
+ *            rank: string,
+ *            text: string,
+ *            sections: list<[
+ *                name: string,
+ *                rating: int
+ *            ]>
+ *        ]>,
+ *        coords: list<
+ *           list<number>
+ *        >,
+ *        score: list<number>,
+ *        totalScore: number
+ *     ]
+ * }
  */
 {template .base autoescape="strict" kind="html"}
-    {@param? params: [
-        data: [
-            id: number,
-            schoolName: string,
-            schoolType: string,
-            schoolDescr: string,
-            directorName: string,
-            schoolQuote: string,
-            classes: string,
-            social: list<[
-                name: string,
-                href: string
-            ]>,
-            sites: list<[
-                name: string,
-                href: string,
-                link: string
-            ]>,
-            contacts: [
-                address: list<[
-                    title: string,
-                    description: string
-                ]>,
-                phones: list<string>
-            ],
-            comments: list<[
-                author: string,
-                rank: string,
-                text: string,
-                sections: list<[
-                    name: string,
-                    rating: int
-                ]>
-            ]>,
-            coords: list<
-               list<number>
-            >,
-            score: list<number>,
-            totalScore: number
-        ]
-    ]}
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -66,26 +64,61 @@
             {/call}
         {/let}
         <div class="l-school" data-params="{$dataParams}">
-            {call sm.bHeader.Template.base}
-                {param params: [
-                    'url': '/'
-                ]/}
-            {/call}
-            <div class="l-school__body">
-                {call .top_}
-                   {param params: $params /}
+            <div class="l-school__section
+                        l-school__section__header">
+                {call sm.bHeader.Template.base}
+                    {param params: [
+                        'url': '/'
+                    ]/}
                 {/call}
+            </div>
+
+
+            <div class="l-school__section
+                        l-school__section__school-header">
+                <div class="l-school__container">
+                    {call .top_}
+                       {param params: $params /}
+                    {/call}
+                </div>
+            </div>
+
+            <div class="l-school__section
+                        l-school__section__school-information">
+                <div class="l-school__container">
+                    {call .middle_}
+                       {param params: $params /}
+                    {/call}
+                </div>
+            </div>
+
+            <div class="l-shool__section l-shool__section__results">
+                <div class="l-school__container">
+                    /*Results*/
+                </div>
+            </div>
+
+            <div class="l-school__section
+                       l-school__section__comments">
+                <div class="l-school__container">
+                    {call .comments_}
+                        {param comments: $params?.data?.comments /}
+                    {/call}
+                </div>
+            </div>
+
+            <div class="l-shool__section
+                        l-shool__section__popular-schools">
+                <div class="l-school__container">
+                /*Popular schools*/
+                </div>
+            </div>
+
+            <div class="l-school__section
+                        l-school__section__footer">
+                <div class="l-school__container">
                 <div class="l-school__horisontal-line"></div>
-                {call .middle_}
-                   {param params: $params /}
-                {/call}
-                <div class="l-school__horisontal-line"></div>
-                {call .comments_}
-                    {param comments: $params?.data?.comments /}
-                {/call}
-                <div class="l-school__horisontal-line"></div>
-                <div class="l-school__footer">
-                   {call sm.lSchool.bFooter.Template.base /}
+                    {call sm.lSchool.bFooter.Template.base /}
                 </div>
             </div>
         </div>
@@ -100,58 +133,57 @@
 /**
  * Content top
  * @private
+ * @param params {
+ *     data: [
+ *         schoolName: string,
+ *         schoolDescr: string,
+ *         schoolQuote: string,
+ *         score: list<number>,
+ *         totalScore: number
+ *     ]
+ * }
  */
 {template .top_ autoescape="strict" kind="html"}
-    {@param? params:
-     [
-         data:
-         [
-             schoolName: string,
-             schoolDescr: string,
-             schoolQuote: string,
-             score: list<number>,
-             totalScore: number
-         ]
-     ]
-    }
-    <div class="l-school__top-content">
-        <div class="l-school__content-column l-school__content-column_double_width">
-            <div class="l-school__name">{$params.data.schoolName}</div>
-            <div class="l-school__description">
-                {if $params.data.schoolDescr}
-                    <div class="l-school__description-text">{$params.data.schoolDescr + ' - '}</div>
-                    <div class="l-school__description-quote">{$params.data.schoolQuote}</div>
-                {/if}
-            </div>
+
+    <div class="l-school__content-column l-school__content-column_double-width">
+        <div class="l-school__name">{$params.data.schoolName}</div>
+        <div class="l-school__description">
+            {if $params.data.schoolDescr}
+                <div class="l-school__description-text">{$params.data.schoolDescr + ' - '}</div>
+                <div class="l-school__description-quote">{$params.data.schoolQuote}</div>
+            {/if}
         </div>
-        <div class="l-school__content-column l-school__content-column_last">
-             /*хрень*/
-             <div class = "l-school__rating">
-                {call sm.bRating.Template.base}
-                     {param params: [
-                            'marks': $params.data.score,
-                            'averageMark': $params.data.totalScore
-                     ]/}
-                 {/call}
-                 {call gorod.bBouton.BoutonTemplate.render}
-                     {param params: [
-                         'label': 'Оставить отзыв',
-                         'customClasses': 'b-bouton_feedback-opener',
-                         'state': [
-                             'pressed': true
-                         ],
-                         'style': [
-                             'theme': 'default',
-                             'size': 'extralarge',
-                             'width': 'block',
-                             'color': 'red',
-                             'borderRadius': 'none',
-                             'borderWidth': 'l',
-                             'uppercase': true
-                         ]
-                     ] /}
-                 {/call}
-             </div>
+    </div>
+    <div class="l-school__content-column l-school__content-column_last">
+         /*хрень*/
+        <div class = "l-school__rating">
+
+            {call sm.bRating.Template.base}
+                 {param params: [
+                        'marks': $params.data.score,
+                        'averageMark': $params.data.totalScore
+                 ]/}
+            {/call}
+
+            {call gorod.bBouton.BoutonTemplate.render}
+                {param params: [
+                    'label': 'Оставить отзыв',
+                    'customClasses': 'b-bouton_feedback-opener',
+                    'state': [
+                        'pressed': true
+                    ],
+                    'style': [
+                        'theme': 'default',
+                        'size': 'extralarge',
+                        'width': 'block',
+                        'color': 'red',
+                        'borderRadius': 'none',
+                        'borderWidth': 'l',
+                        'uppercase': true
+                    ]
+                ] /}
+            {/call}
+
         </div>
     </div>
 {/template}
@@ -159,94 +191,163 @@
 /**
  * Content middle
  * @private
+ * @param params {
+ *      data: {
+ *          id: number,
+ *          schoolName: string,
+ *          schoolType: string,
+ *          directorName: string,
+ *          classes: string,
+ *          social:list<{
+ *              name: string,
+ *              href: string
+ *          }>,
+ *          sites:list<[
+ *              name: string,
+ *              href: string,
+ *              link: string
+ *          ]>,
+ *          contacts:[
+ *
+ *              address:list<{
+ *                  title: string,
+ *                  description: string
+ *              }>,
+ *              phones:list<string>
+ *          ],
+ *          coords: ?list<
+ *              list<number>
+ *          >,
+ *          score: list<number>,
+ *          totalScore: number
+ *      }
+ *  }
  */
 {template .middle_ autoescape="strict" kind="html"}
-{@param? params:
- [
-     data:
-     [
-         id: number,
-         schoolName: string,
-         schoolType: string,
-         directorName: string,
-         classes: string,
-         social:list<[
-             name:string,
-             href:string
-         ]>,
-         sites:list<[
-             name:string,
-             href:string,
-             link:string
-         ]>,
-         contacts:[
-             address:list<[
-                 title:string,
-                 description:string
-             ]>,
-             phones:list<string>
-         ],
-         coords: list<
-            list<number>
-         >,
-         score: list<number>,
-         totalScore: number
-     ]
- ]
-}
-    <div class="l-school__middle-content">
-        /*СЕКЦИЯ 1*/
-        <div class="l-school__content-column
-                    l-school__content-column_small">
-            /*тут должен ывзываться шаблон карты*/
-            <div class="l-school__map-dummy">
-                {call sm.lSchool.bMap.Template.map}
-                    {param params: [
-                        'data': [
-                            'id': $params.data.id,
-                            'coords': $params.data.coords,
-                            'name': $params.data.schoolName,
-                            'type': $params.data.schoolType,
-                            'totalScore': $params.data.totalScore
-                        ]
-                    ] /}
-                {/call}
-            </div>
-        </div>
+/*map, information*/
+<div class="l-school__content-column
+            l-school__content-column_left">
 
-        /*СЕКЦИЯ 2*/
-        <div class="l-school__content-column">
-            {if $params.data.directorName}
-                 {call .director_}
-                     {param dirName: $params.data.directorName /}
-                 {/call}
-            {/if}
-            {if $params.data.classes}
-                 {call .classes_}
-                     {param classesStr: $params.data.classes /}
-                 {/call}
-            {/if}
+    /*rating template must be called here*/
+    <div class="l-school__rating"></div>
+
+    /*тут должен вызываться шаблон карты*/
+    <div class="l-school__item-container">
+        <div class="l-school__map-dummy">
+            {call sm.lSchool.bMap.Template.map}
+                {param params: [
+                    'data': [
+                        'id': $params.data.id,
+                        'coords': $params.data.coords,
+                        'name': $params.data.schoolName,
+                        'type': $params.data.schoolType,
+                        'totalScore': $params.data.totalScore
+                    ]
+                ] /}
+            {/call}
+        </div>
+    </div>
+
+    <div class="l-school__item-container">
+        {call  sm.lSchool.bDataBlockInformation.Template.base}
+            {param  params: [
+                'content': [
+                    'directorName': $params.data.directorName,
+                    'classes': $params.data.classes
+                    ]
+                ]
+            /}
+        {/call}
+    </div>
+</div>
+
+<div class="l-school__content-column
+            l-school__content-column_double-width
+            l-school__content-column_last">
+
+    /*Features section*/
+    <div class="l-school__item-container">
+        {call sm.lSchool.bDataBlock.Template.base}
+            {param params: [
+                'header': 'особенности'
+                ]
+            /}
+        {/call}
+    </div>
+
+    /*Address section*/
+    <div class="l-school__item-container">
+        {if $params.data.contacts}
+            {call sm.lSchool.bDataBlockAddresses.Template.base}
+                {param params: [
+                    'header': 'адреса и телефоны',
+                    'content': $params.data.contacts
+                    ]
+                /}
+            {/call}
+        {/if}
+    </div>
+
+    /*Links section*/
+    <div class="l-school__item-container">
+        {call sm.lSchool.bDataBlockLinks.Template.base}
+            {param params: [
+                'header': 'ссылки',
+                'content': $params.data.sites
+                ]
+            /}
+        {/call}
+    </div>
+
+    <div class="l-school__content-column">
+        /*ratings*/
+        <div class="l-school__item-container">
             {if $params.data.contacts}
-                 {call .contacts_}
-                     {param data: $params.data.contacts /}
-                 {/call}
+                {call sm.lSchool.bDataBlock.Template.base}
+                    {param params: [
+                        'header': 'места в рейтингах'
+                        ]
+                    /}
+                {/call}
             {/if}
         </div>
 
-        /*СЕКЦИЯ 3*/
-        <div class="l-school__content-column l-school__content-column_last">
-            {if $params.data.sites}
-                 {call .sites_}
-                     {param data:  $params.data.sites /}
-                 {/call}
-            {/if}
-            {if $params.data.social}
-                 {call .social_}
-                     {param data:  $params.data.social /}
-                 {/call}
+        /*high schools */
+        <div class="l-school__item-container">
+            {if $params.data.contacts}
+                {call sm.lSchool.bDataBlock.Template.base}
+                    {param params: [
+                        'header': 'куда поступают выпускники'
+                        ]
+                    /}
+                {/call}
             {/if}
         </div>
     </div>
+
+    <div class="l-school__content-column
+                l-school__content-column_last">
+        /*specialized classes*/
+        <div class="l-school__item-container">
+            {call sm.lSchool.bDataBlock.Template.base}
+                {param params: [
+                    'header': 'профильные классы'
+                    ]
+                /}
+            {/call}
+        </div>
+
+        /*additional classes*/
+        <div class="l-school__item-container">
+            {call sm.lSchool.bDataBlock.Template.base}
+                {param params: [
+                    'header': 'дополнительные занятия'
+                    ]
+                /}
+            {/call}
+        </div>
+
+</div>
 {/template}
 
 /**
@@ -277,11 +378,11 @@
 /**
  * Classes block
  * @private
+ * @param params {
+ *    classesStr:string
+ * }
  */
 {template .classes_ autoescape="strict" kind="html"}
-    {@param
-        classesStr:string
-    }
     <div class="l-school__content-block">
         {call .contentTitle_}
             {param image: '123.png' /}
@@ -289,7 +390,7 @@
             //TODO: uncomment
             //{param buttonAlt: 'надпись' /}
         {/call}
-        {$classesStr}
+        {$params.classesStr}
     </div>
 {/template}
 
@@ -360,6 +461,25 @@
 {/template}
 
 /**
+ * Information block
+ * @private
+ * @param params {
+  *    directorName: string,
+  *    classes: string
+  *  }
+ */
+{template .information_  autoescape="strict" kind="html"}
+<div class="b-data-block">
+    <div class="b-data-block b-data-block__content">
+        Обучение {$params.classes}
+    </div>
+    <div class="b-data-block b-data-block__content">
+        Директор - {$params.directorName}
+    </div>
+</div>
+{/template}
+
+/**
  * Director block
  * @private
  */
@@ -397,39 +517,43 @@
             ]>
         ]>
     }
-    <div class="l-school__content-comments">
-        <div class="l-school__content-column l-school__content-column_small">
-            {call .contentTitle_}
-                {param image: '123.png' /}
-                {param text: 'комментарии и оценки' /}
-                //TODO: uncomment
-                // {param buttonAlt: 'надпись2' /}
-            {/call}
-            {call gorod.bBouton.BoutonTemplate.render}
-                {param params: [
-                    'label': 'Оставить отзыв',
-                    'customClasses': 'b-bouton_feedback-opener',
-                    'state': [
-                        'pressed': true
-                    ],
-                    'style': [
-                        'theme': 'default',
-                        'size': 'extralarge',
-                        'width': 'block',
-                        'color': 'red',
-                        'borderRadius': 'none',
-                        'borderWidth': 'l',
-                        'uppercase': 'true'
-                    ]
-                ] /}
-            {/call}
-        </div>
-        <div class="l-school__content-column l-school__content-column_double_width l-school__content-column_last">
-            {call sm.lSchool.bComments.Template.base}
-                {param params: [
-                    'comments': $comments
-                ] /}
-            {/call}
+    <div class="l-school__section">
+        <div class="l-school__content-comments">
+            <div class="l-school__content-column l-school__content-column_small">
+                {call .contentTitle_}
+                    {param image: '123.png' /}
+                    {param text: 'комментарии и оценки' /}
+                    //TODO: uncomment
+                    // {param buttonAlt: 'надпись2' /}
+                {/call}
+                {call gorod.bBouton.BoutonTemplate.render}
+                    {param params: [
+                        'label': 'Оставить отзыв',
+                        'customClasses': 'b-bouton_feedback-opener',
+                        'state': [
+                            'pressed': true
+                        ],
+                        'style': [
+                            'theme': 'default',
+                            'size': 'extralarge',
+                            'width': 'block',
+                            'color': 'red',
+                            'borderRadius': 'none',
+                            'borderWidth': 'l',
+                            'uppercase': 'true'
+                        ]
+                    ] /}
+                {/call}
+            </div>
+            <div class="l-school__content-column
+                        l-school__content-column_double-width
+                        l-school__content-column_last">
+                {call sm.lSchool.bComments.Template.base}
+                    {param params: [
+                        'comments': $comments
+                    ] /}
+                {/call}
+            </div>
         </div>
     </div>
 {/template}
