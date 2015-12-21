@@ -29,7 +29,14 @@ exports.create = function(req, res) {
 
 exports.list = async (function(req, res) {
 
-    var schools = await (services.school.list());
+    var schools = await (services.school.list(
+        {
+            searchParams:
+            {
+                name: req.query.name
+            }
+        }
+    ));
 
     var filters = await (services.school.searchFilters())
         .map(item => {
@@ -75,6 +82,7 @@ exports.list = async (function(req, res) {
                     url: '/api/school/search'
                 }
             },
+            searchText: req.query.name || '',
             templates: {
                 search: '{{ name }}',
                 item: '{{ name }}',
