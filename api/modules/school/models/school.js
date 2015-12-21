@@ -28,6 +28,7 @@ var School = db.define('School', {
         type: DataType.ARRAY(DataType.INTEGER)
     },
     comment_group_id: DataType.INTEGER,
+    rank: DataType.INTEGER,
     govermentKey: {
         field: 'goverment_key',
         type: DataType.INTEGER,

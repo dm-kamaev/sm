@@ -61,6 +61,16 @@ service.getAddresses = async (school => {
     }));
 });
 
+/**
+ * @param {object} school - school instance
+ * @param {number} rank
+ */
+service.setRank = async(function(school, rank) {
+    await(school.update({
+        rank: rank
+    }));
+});
+
 service.setAddresses = async ((school, addresses) => {
     var currentAddresses = await(service.getAddresses(school));
     addresses.forEach((adr)=>{
