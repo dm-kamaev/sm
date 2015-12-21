@@ -40,8 +40,3 @@ goog.scope(function() {
         this.modal_.show();
     };
 });
-
-jQuery(function() {
-    var root = goog.dom.getElementByClass('l-doc');
-    new sm.lDoc.nDemo.bBlockFeedbackModal.BlockFeedbackModal(root);
-});

@@ -9,7 +9,7 @@ var docPages = [
         "b-school-list",
         "b-sort",
         "b-search",
-        "b-filter"
+        "b-filters"
     ];
 
 

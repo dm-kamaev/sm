@@ -11,7 +11,8 @@
  * }
  */
 {template .base autoescape="strict" kind="html"}
-    <div class="b-school-list-item"
+    <a class="b-school-list-item"
+        href="/school/{$params.id}"
         data-params="
         {call gorod.iUtils.stringify}
             {param json: $params /}
@@ -46,5 +47,5 @@
                 {$params.description}
             </div>
         {/if}
-    </div>
+    </a>
 {/template}

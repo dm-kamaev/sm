@@ -15,11 +15,3 @@ sm.lDoc.nDemo.bBlockSchoolList.SchoolList = function() {
         schoolList.decorate(elem);
     }
 };
-
-
-jQuery(function() {
-    var doc = goog.dom.getElementByClass('l-doc');
-    if (doc) {
-        new sm.lDoc.nDemo.bBlockSchoolList.SchoolList();
-    }
-});
