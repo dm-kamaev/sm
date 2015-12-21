@@ -28,21 +28,16 @@
     <div class="b-block-mark__code">
         value: number <span class="b-block-mark__comment"> - mark value </span>
         <br>
-        inline: bool {sp}
+        display: ?string | ['inline', 'stars', 'default'] {sp}
         <span class="b-block-mark__comment">
-            - arrange in line or not (default: false)
-        </span>
-        <br>
-    stars: bool {sp}
-        <span class="b-block-mark__comment">
-            - draw stars or not (default: false)
+            - display stylization
         </span>
         <br>
     </div>
 
     <br><br><br>
 
-    Simple example:
+    Simple example for default display:
     <br>
     {call sm.bMark.Template.base}
         {param params: [
@@ -67,44 +62,44 @@
 
     <br><br>
 
-    Inline (for inline: true) example:
+    Inline (for display: inline) example:
     <br>
     {call sm.bMark.Template.base}
         {param params: [
             'value': 4.4,
-            'inline': true
+            'display': 'inline'
         ] /}
     {/call}
     <br>
     {call sm.bMark.Template.base}
         {param params: [
             'value': 3.2,
-            'inline': true
+            'display': 'inline'
         ] /}
     {/call}
     <br>
     {call sm.bMark.Template.base}
         {param params: [
             'value': 2.1,
-            'inline': true
+            'display': 'inline'
         ] /}
     {/call}
     <br>
     {call sm.bMark.Template.base}
         {param params: [
             'value': 0,
-            'inline': true
+            'display': 'inline'
         ] /}
     {/call}
 
     <br><br>
 
-    Stars (for stars: true) example:
+    Stars (for display: stars) example:
     <br>
     {call sm.bMark.Template.base}
         {param params: [
             'value': 3,
-            'stars': true
+            'display': 'stars'
         ] /}
     {/call}
 {/template}
