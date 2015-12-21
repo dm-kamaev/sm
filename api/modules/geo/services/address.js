@@ -76,7 +76,30 @@ exports.setMetro = async((address, metroArr) => {
     })
 });
 
-exports.list = async (function(opt_params) {
+
+/**
+ * Associates existing are and and address
+ * @param {String} area
+ * @param {String} address
+ */
+exports.setArea = async ((area, address) => {
+    var area = await(models.Area.findOne({
+        where: {
+            name: area
+        }
+    }));
+    var address = await(models.Address.findAll({
+        where: {
+            name: address
+        }
+    }));
+
+    address.forEach( (item) => {
+        item.setArea(area);
+    } );
+});
+
+exports.list = async ( function(opt_params) {
     var params = opt_params || {};
 
     var searchConfig = {
