@@ -13,6 +13,7 @@ require('./console/vkapi.js').Command;
 require('./console/dump.js').Command;
 require('./console/egeData.js').Command;
 require('./console/updateSearch.js').Command;
+require('./console/getActs.js').Command;
 
 /*
  * The line below initializes the interface on `node ./commander

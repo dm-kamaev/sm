@@ -71,6 +71,10 @@ var School = db.define('School', {
                 as: 'ratings',
                 foreignKey: 'school_id'
             });
+            School.hasMany(models.Activity, {
+                as: 'activites',
+                foreignKey: 'school_id'
+            });
         }
     }
 });
