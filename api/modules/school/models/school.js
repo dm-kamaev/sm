@@ -3,8 +3,8 @@ var DataType = require('sequelize'),
     enums = require('../enums');
 
 var School = db.define('School', {
-    name:DataType.STRING,
-    abbreviation:DataType.STRING,
+    name: DataType.STRING,
+    abbreviation: DataType.STRING,
     fullName: {
         field: 'full_name',
         type: DataType.STRING
@@ -39,7 +39,7 @@ var School = db.define('School', {
     tableName: 'school',
 
     classMethods: {
-        associate: function (models) {
+        associate: function(models) {
             School.hasMany(models.GiaResult, {
                 as: 'giaResults', foreignKey: 'school_id'
             });
