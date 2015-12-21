@@ -231,13 +231,15 @@ service.list = async (function(opt_params) {
         searchParams = params.searchParams || null;
 
     var searchConfig = {
-        include: [{
-            model: models.Rating,
-            as: 'ratings',
-            attributes: [
-                'score'
-            ]
-        }],
+        include: [
+            {
+                model: models.Rating,
+                as: 'ratings',
+                attributes: [
+                    'score'
+                ]
+            }
+        ],
         attributes: [
             'id',
             'name'
@@ -262,7 +264,8 @@ service.list = async (function(opt_params) {
                 name: school.name,
                 description: "",
                 totalScore: totalScore,
-                score: score
+                score: score,
+                addresses: school.addresses
             };
         })
         .sort((school1, school2) => school1.totalScore - school2.totalScore);
@@ -292,7 +295,7 @@ var updateSearchConfig = function(searchConfig, searchParams) {
             },
             attributes: []
         }
-    }; 
+    };
 
     if (searchParams.name) {
         var nameFilter = services.search.generateFilter(searchParams.name);
@@ -302,6 +305,8 @@ var updateSearchConfig = function(searchConfig, searchParams) {
           { abbreviation: nameFilter}
         ];
     }
+
+    console.log(searchParams);
 
     if (searchParams.classes && searchParams.classes.length) {
         whereParams.educationInterval = { 
@@ -349,7 +354,7 @@ var updateSearchConfig = function(searchConfig, searchParams) {
         searchDataCount++;
         extraIncludes.searchData.where.$or.push({ 
             $and: {
-                type: enums.searchType.OLIMP,
+                type: enums.searchType.OLIMPIAD,
                 values: {
                     $contains: searchParams.olimp
                 }

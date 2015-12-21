@@ -1,4 +1,5 @@
 {namespace sm.lSchool.bMap.Template}
+
 /**
 * A layout for Yandex.Maps block
 * @param? params {{
@@ -25,6 +26,41 @@
 * API request for ymaps
 */
 {template .api}
-    <script type="text/javascript" src="http://api-maps.yandex.ru/2.0-stable/?load=package.standard&lang=ru-RU">
+    <script type="text/javascript" src="//api-maps.yandex.ru/2.1/?lang=ru_RU">
     </script>
+{/template}
+
+/**
+ * BalloonTemplate
+ */
+{template .balloon}
+    <div class="b-map__balloon">
+        <div class="b-map__balloon-name">
+            [if properties.id]
+            <a href="/school/$[properties.id]" class="b-map__href">
+                $[properties.name]
+            </a>
+            [else]
+                $[properties.name]
+            [endif]
+        </div>
+        <div class="b-map__balloon-close">
+            {call sm.bIcon.Template.base}
+                {param params: [
+                    'spriteCssClass': 'b-icon_img_close-balloon'
+                ]/}
+            {/call}
+        </div>
+        <div class="b-map__balloon-description">
+            [if properties.totalScore]
+                <span class="b-map__balloon-rating">
+                    $[properties.totalScore]
+                </span>
+            [else]
+            Нет оценок
+            [endif]
+        </div>
+        <div class="b-map__balloon-triangle">
+        </div>
+    </div>
 {/template}
