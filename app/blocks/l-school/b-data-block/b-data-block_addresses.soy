@@ -1,0 +1,64 @@
+{namespace sm.lSchool.bDataBlockAddresses.Template}
+/**
+ * Addresses item
+ * @param params {
+ *     header: ?string
+ *     content: [
+ *         address: list<{
+ *             title: string,
+ *             description: string
+ *         }>,
+ *         phones: list<string>
+ *     ]
+ * }
+ * @extends '/l-school/b-data-block/b-data-block'
+ * @constructor
+ */
+{template .base}
+    {call .init}
+        {param params: $params /}
+    {/call}
+{/template}
+
+/**
+ * Content item
+ * @param params {
+ *    header: ?string
+ *    content: [
+ *        address: list<{
+ *            title: string,
+ *            description: string
+ *        }>,
+ *        phones: list<string>
+ *    ]
+ * }
+ */
+{template .content autoescape="strict" kind="html"}
+
+    <ul class="b-data-block__content">
+        /*output addresses*/
+        {foreach $address in $params.content.address}
+            <li class="b-data-block__item">
+                <div class="b-data-block__title">
+                    {$address.title}
+                </div>
+                <div class="b-data-block__data">
+                    {$address.description}
+                </div>
+            </li>
+        {/foreach}
+
+        /*output phones*/
+            <li class="b-data-block__item">
+                Телефоны:{sp}
+                {foreach $phone in $params.content.phones}
+                    {$phone}
+
+                    {if not isLast($phone)}
+                        ,{sp}
+                    {/if}
+                {/foreach}
+            </li>
+    </ul>
+
+{/template}
