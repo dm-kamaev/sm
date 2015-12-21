@@ -34,7 +34,9 @@ exports.enumPrototype = {
         var res = [],
             props = this.getProps();
         for (var prop in props) {
-            res.push(props[prop]);
+            if (typeof props[prop] != 'function') {
+                res.push(props[prop]);
+            }
         }
         return res;
     },
@@ -49,4 +51,3 @@ exports.enumPrototype = {
         return res;
     }
 };
-

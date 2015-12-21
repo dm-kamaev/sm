@@ -63,10 +63,12 @@ goog.scope(function() {
         goog.base(this, 'decorateInternal', element);
 
         var comments = goog.dom.getElementsByClass(
-            Comments.CssClass.COMMENT, this.element_
+            Comments.CssClass.COMMENT, this.getElement()
         );
 
-        this.comments_ = comments;
+        for (var j = 0; j < comments.length; j++) {
+            this.comments_.push(comments[j]);
+        }
 
         /** comments decoration */
         var comment,
