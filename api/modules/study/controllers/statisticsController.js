@@ -9,7 +9,7 @@ var await = require('asyncawait/await');
  * @apiGroup Statistics
  * @apiName ListSubjects
  */
-exports.listSubjects = async (function(req, res) {
+exports.listSubjects = async(function(req, res) {
     var result;
     try {
         result = await(services.subject.list());
@@ -24,136 +24,16 @@ exports.listSubjects = async (function(req, res) {
 
 
 /**
- * @api {post} api/study/:id/addeducational Add educational data for school
+ * @api {get} api/school/:school_id/egeresult Get ege result
  * @apiVersion 0.0.0
  * @apiGroup Statistics
- * @apiName AddEducationalData
- * @apiParamExample {json} Request-Example:
- *     {
- *         "egeData": [
- *             {
- *                 "data": {
- *                     "year": 2015,
- *                     "result": 70.2
- *                 },
- *                 "subject_id": 3
- *             }
- *         ],
- *         "giaData": [
- *             {
- *                 "data": {
- *                     "count": 61,
- *                     "result": 3.605
- *                 },
- *                 "subject_id": 3
- *              }
- *         ],
- *         "olimpData": [
- *             {
- *                 "data": {
- *                     "type": "всероссийская",
- *                     "stage": 3,
- *                     "class": 9,
- *                     "status": "победитель",
- *                     "year": 2015
- *                 },
- *                 "subject_id": 3
- *             }
- *         ]
- *     }
+ * @apiName GetEgeResult
  */
-exports.addEducationalData = async(function(req, res) {
-    var result = {};
-    try {
-        var school_id = req.params.id,
-            egeData = JSON.parse(req.body.data).egeData,
-            giaData = JSON.parse(req.body.data).giaData,
-            olimpData = JSON.parse(req.body.data).olimpData;
-
-        if (egeData) {
-            result.ege = [];
-
-            egeData.forEach(ege => {
-                var subject_id = ege.subject_id;
-                var data = ege.data;
-                result.ege.push(
-                    await(services.egeResult.add(school_id, subject_id, data))
-                );
-            });
-        }
-
-        if (giaData) {
-            result.gia = [];
-
-            giaData.forEach(gia => {
-                var subject_id = gia.subject_id;
-                var data = gia.data;
-                result.gia.push(
-                    await(services.giaResult.add(school_id, subject_id, data))
-                );
-            });
-        }
-
-        if (olimpData) {
-            result.olimp = [];
-
-            olimpData.forEach(olimp => {
-                var subject_id = olimp.subject_id;
-                var data = olimp.data;
-                result.olimp.push(
-                    await(services.olimpResult.add(school_id, subject_id, data))
-                );
-            });
-        }
-
-    } catch (e) {
-        console.log(e);
-        result = JSON.stringify(e);
-    } finally {
-        res.header("Content-Type", "text/html; charset=utf-8");
-        res.end(JSON.stringify(result));
-    }
-});
-
-
-/**
- * @api {post} api/ege/:id Update ege result
- * @apiVersion 0.0.0
- * @apiGroup Statistics
- * @apiName UpdateEge
- * @apiParamExample {json} Request-Example:
- *     {
- *         "egeData" : {
- *              "year": 2015,
- *              "result": 70.2
- *         }
- *     }
- */
-exports.updateEge = async(function(req, res) {
+exports.getEgeResult = async(function(req, res) {
     var result = '';
     try {
-        var ege_id = req.params.id,
-            data = JSON.parse(req.body.data).egeData;
-        result = await(services.egeResult.update(ege_id, data));
-    } catch (e) {
-        console.log(e);
-        result = JSON.stringify(e);
-    } finally {
-        res.header("Content-Type", "text/html; charset=utf-8");
-        res.end(JSON.stringify(result));
-    }
-});
-
-
-/**
- * @api {get} api/ege Get ege result
- * @apiVersion 0.0.0
- * @apiGroup Statistics
- * @apiName GetEge
- */
-exports.getEge = async(function(req, res) {
-    var result = '';
-    try {
+        var school_id = req.params.school_id;
+        // school_id dont used
         result = await(services.egeResult.getAll());
     } catch (e) {
         console.log(e);
@@ -166,15 +46,17 @@ exports.getEge = async(function(req, res) {
 
 
 /**
- * @api {get} api/ege/:id Get ege result by id
+ * @api {get} api/school/:school_id/egeresult/:id Get ege result by id
  * @apiVersion 0.0.0
  * @apiGroup Statistics
  * @apiName GetEgeById
  */
-exports.getEgeById = async(function(req, res) {
+exports.getEgeResultById = async(function(req, res) {
     var result = '';
     try {
+        var school_id = req.params.school_id;
         var ege_id = req.params.id;
+        // school_id dont used
         result = await(services.egeResult.getById(ege_id));
     } catch (e) {
         console.log(e);
@@ -187,74 +69,16 @@ exports.getEgeById = async(function(req, res) {
 
 
 /**
- * @api {post} api/study/deleteege Delete ege result
+ * @api {get} api/school/:school_id/giaresult Get gia result
  * @apiVersion 0.0.0
  * @apiGroup Statistics
- * @apiName DeleteEge
- * @apiParamExample {json} Request-Example:
- *     {
- *         "egeData" : {
- *              "id": [10, 11],
- *              "year": 2015,
- *              "result": 70.2
- *         }
- *     }
+ * @apiName GetGiaResult
  */
-exports.deleteEge = async(function(req, res) {
+exports.getGiaResult = async(function(req, res) {
     var result = '';
     try {
-        data = JSON.parse(req.body.data).egeData;
-        result = await(services.egeResult.delete(data));
-    } catch (e) {
-        console.log(e);
-        result = JSON.stringify(e);
-    } finally {
-        res.header("Content-Type", "text/html; charset=utf-8");
-        res.end(JSON.stringify(result));
-    }
-});
-
-
-
-
-/**
- * @api {post} api/gia/:id Update gia result
- * @apiVersion 0.0.0
- * @apiGroup Statistics
- * @apiName UpdateGia
- * @apiParamExample {json} Request-Example:
- *     {
- *         "giaData" : {
- *              "count": 61,
- *              "result": 3.605
- *         }
- *     }
- */
-exports.updateGia = async(function(req, res) {
-    var result = '';
-    try {
-        var gia_id = req.params.id,
-            data = JSON.parse(req.body.data).giaData;
-        result = await(services.giaResult.update(gia_id, data));
-    } catch (e) {
-        console.log(e);
-        result = JSON.stringify(e);
-    } finally {
-        res.header("Content-Type", "text/html; charset=utf-8");
-        res.end(JSON.stringify(result));
-    }
-});
-
-
-/**
- * @api {get} api/gia Get gia result
- * @apiVersion 0.0.0
- * @apiGroup Statistics
- * @apiName GetGia
- */
-exports.getGia = async(function(req, res) {
-    var result = '';
-    try {
+        var school_id = req.params.school_id;
+        // school_id dont used
         result = await(services.giaResult.getAll());
     } catch (e) {
         console.log(e);
@@ -267,14 +91,16 @@ exports.getGia = async(function(req, res) {
 
 
 /**
- * @api {get} api/gia/:id Get gia result by id
+ * @api {get} api/school/:school_id/giaresult/:id Get gia result by id
  * @apiVersion 0.0.0
  * @apiGroup Statistics
  * @apiName GetGiaById
  */
-exports.getGiaById = async(function(req, res) {
+exports.getGiaResultById = async(function(req, res) {
     var result = '';
     try {
+        var school_id = req.params.school_id;
+        // school_id dont used
         var gia_id = req.params.id;
         result = await(services.giaResult.getById(gia_id));
     } catch (e) {
@@ -288,75 +114,16 @@ exports.getGiaById = async(function(req, res) {
 
 
 /**
- * @api {post} api/study/deletegia Delete gia result
- * @apiVersion 0.0.0
- * @apiGroup Statistics
- * @apiName DeleteGia
- * @apiParamExample {json} Request-Example:
- *     {
- *         "giaData" : {
- *              "id": [10, 11],
- *              "count": 61,
- *              "result": 3.605,
- *         }
- *     }
- */
-exports.deleteGia = async(function(req, res) {
-    var result = '';
-    try {
-        data = JSON.parse(req.body.data).giaData;
-        result = await(services.giaResult.delete(data));
-    } catch (e) {
-        console.log(e);
-        result = JSON.stringify(e);
-    } finally {
-        res.header("Content-Type", "text/html; charset=utf-8");
-        res.end(JSON.stringify(result));
-    }
-});
-
-
-/**
- * @api {post} api/olimp/:id Update olimp result
- * @apiVersion 0.0.0
- * @apiGroup Statistics
- * @apiName UpdateOlimp
- * @apiParamExample {json} Request-Example:
- *     {
- *         "olimpData" : {
- *              "type": "всероссийская",
- *              "stage": 3,
- *              "class": 9,
- *              "status": "победитель",
- *              "year": 2015
- *         }
- *     }
- */
-exports.updateOlimp = async(function(req, res) {
-    var result = '';
-    try {
-        var olimp_id = req.params.id,
-            data = JSON.parse(req.body.data).olimpData;
-        result = await(services.olimpResult.update(olimp_id, data));
-    } catch (e) {
-        console.log(e);
-        result = JSON.stringify(e);
-    } finally {
-        res.header("Content-Type", "text/html; charset=utf-8");
-        res.end(JSON.stringify(result));
-    }
-});
-
-
-/**
- * @api {get} api/olymp Get olimp result
+ * @api {get} api/school/:school_id/olympresult Get olimp result
  * @apiVersion 0.0.0
  * @apiGroup Statistics
  * @apiName GetOlymp
  */
-exports.getOlymp = async(function(req, res) {
+exports.getOlympResult = async(function(req, res) {
     var result = '';
     try {
+        var school_id = req.params.school_id;
+        // school_id dont used
         result = await(services.olimpResult.getAll());
     } catch (e) {
         console.log(e);
@@ -369,14 +136,16 @@ exports.getOlymp = async(function(req, res) {
 
 
 /**
- * @api {get} api/olymp/:id Get olimp result by id
+ * @api {get} api/school/:school_id/olympresult/:id Get olimp result by id
  * @apiVersion 0.0.0
  * @apiGroup Statistics
  * @apiName GetOlympById
  */
-exports.getOlympById = async(function(req, res) {
+exports.getOlympResultById = async(function(req, res) {
     var result = '';
     try {
+        var school_id = req.params.school_id;
+        // school_id dont used
         olimp_id = req.params.id;
         result = await(services.olimpResult.getById(olimp_id));
     } catch (e) {
@@ -389,25 +158,252 @@ exports.getOlympById = async(function(req, res) {
 });
 
 
+
 /**
- * @api {post} api/study/deleteolimp Delete olimp result
+ * @api {post} api/school/:school_id/subject/:id/egeresult Add ege_result data
  * @apiVersion 0.0.0
  * @apiGroup Statistics
- * @apiName DeleteOlimp
+ * @apiName AddEgeResult
  * @apiParamExample {json} Request-Example:
  *     {
- *         "olimpData" : {
- *              "id": [10, 11],
- *              "count": 61,
- *              "result": 3.605,
+ *         "egeData": {
+ *                 "year": 2015,
+ *                 "result": 70.2
+ *          }
+ *     }
+ */
+exports.addEgeResult = async(function(req, res) {
+    var result = {};
+    try {
+        var school_id = req.params.school_id;
+        var subject_id = req.params.id,
+            data = req.body.egeData;
+        result = await(services.egeResult.add(school_id, subject_id, data));
+    } catch (e) {
+        console.log(e);
+        result = JSON.stringify(e);
+    } finally {
+        res.header("Content-Type", "text/html; charset=utf-8");
+        res.end(JSON.stringify(result));
+    }
+});
+
+
+/**
+ * @api {post} api/school/:school_id/subject/:id/giaresult Add gia result
+ * @apiVersion 0.0.0
+ * @apiGroup Statistics
+ * @apiName AddGiaResult
+ * @apiParamExample {json} Request-Example:
+ *     {
+ *         "giaData": {
+ *             "count": 61,
+ *             "result": 3.605
  *         }
  *     }
  */
-exports.deleteOlimp = async(function(req, res) {
+exports.addGiaResult = async(function(req, res) {
+    var result = {};
+    try {
+        var school_id = req.params.school_id;
+        var subject_id = req.params.id;
+        var data = req.body.giaData;
+        result = await(services.giaResult.add(school_id, subject_id, data));
+    } catch (e) {
+        console.log(e);
+        result = JSON.stringify(e);
+    } finally {
+        res.header("Content-Type", "text/html; charset=utf-8");
+        res.end(JSON.stringify(result));
+    }
+});
+
+
+/**
+ * @api {post} api/school/:school_id/subject/:id/olympresult Add olymp result
+ * @apiVersion 0.0.0
+ * @apiGroup Statistics
+ * @apiName AddOlympResult
+ * @apiParamExample {json} Request-Example:
+ *     {
+ *         "olympData": {
+ *             "type": "всероссийская",
+ *             "stage": 3,
+ *             "class": 9,
+ *             "status": "победитель",
+ *             "year": 2015
+ *          }
+ *     }
+ */
+exports.addOlympResult = async(function(req, res) {
+    var result = {};
+    try {
+        var school_id = req.params.school_id;
+        var subject_id = req.params.id,
+        var data = req.body.olympData;
+        result = await(services.olimpResult.add(school_id, subject_id, data))
+    } catch (e) {
+        console.log(e);
+        result = JSON.stringify(e);
+    } finally {
+        res.header("Content-Type", "text/html; charset=utf-8");
+        res.end(JSON.stringify(result));
+    }
+});
+
+
+/**
+ * @api {put} api/school/:school_id/giaresult/:id Update ege result
+ * @apiVersion 0.0.0
+ * @apiGroup Statistics
+ * @apiName UpdateEgeResult
+ * @apiParamExample {json} Request-Example:
+ *     {
+ *         "egeData" : {
+ *              "year": 2015,
+ *              "result": 70.2
+ *         }
+ *     }
+ */
+exports.updateEgeResult = async(function(req, res) {
     var result = '';
     try {
-        data = JSON.parse(req.body.data).olimpData;
-        result = await(services.olimpResult.delete(data));
+        var school_id = req.params.id;
+        // school_id dont used
+        var ege_id = req.params.id;
+        var data = req.body.egeData;
+        result = await(services.egeResult.update(ege_id, data));
+    } catch (e) {
+        console.log(e);
+        result = JSON.stringify(e);
+    } finally {
+        res.header("Content-Type", "text/html; charset=utf-8");
+        res.end(JSON.stringify(result));
+    }
+});
+
+
+/**
+ * @api {put} api/school/:school_id/giaresult/:id Update gia result
+ * @apiVersion 0.0.0
+ * @apiGroup Statistics
+ * @apiName UpdateGiaResult
+ * @apiParamExample {json} Request-Example:
+ *     {
+ *         "giaData" : {
+ *              "count": 61,
+ *              "result": 3.605
+ *         }
+ *     }
+ */
+exports.updateGiaResult = async(function(req, res) {
+    var result = '';
+    try {
+        var school_id = req.params.id;
+        // school_id dont used
+        var gia_id = req.params.id;
+        var data = req.body.giaData;
+        result = await(services.giaResult.update(gia_id, data));
+    } catch (e) {
+        console.log(e);
+        result = JSON.stringify(e);
+    } finally {
+        res.header("Content-Type", "text/html; charset=utf-8");
+        res.end(JSON.stringify(result));
+    }
+});
+
+
+/**
+ * @api {put} api/school/:school_id/olimpresult/:id Update olimp result
+ * @apiVersion 0.0.0
+ * @apiGroup Statistics
+ * @apiName UpdateOlimpResult
+ * @apiParamExample {json} Request-Example:
+ *     {
+ *         "olimpData" : {
+ *              "type": "всероссийская",
+ *              "stage": 3,
+ *              "class": 9,
+ *              "status": "победитель",
+ *              "year": 2015
+ *         }
+ *     }
+ */
+exports.updateOlimpResult = async(function(req, res) {
+    var result = '';
+    try {
+        var school_id = req.params.id;
+        // school_id dont used
+        var olimp_id = req.params.id;
+        var data = req.body.olimpData;
+        result = await(services.olimpResult.update(olimp_id, data));
+    } catch (e) {
+        console.log(e);
+        result = JSON.stringify(e);
+    } finally {
+        res.header("Content-Type", "text/html; charset=utf-8");
+        res.end(JSON.stringify(result));
+    }
+});
+
+
+/**
+ * @api {delete} api/school/:school_id/egeresult/:id Delete ege result
+ * @apiVersion 0.0.0
+ * @apiGroup Statistics
+ * @apiName DeleteEgeResult
+ */
+exports.deleteEgeResult = async(function(req, res) {
+    var result = '';
+    try {
+        var school_id = req.params.school_id;
+        var ege_id = req.params.id;
+        result = await(services.egeResult.delete(school_id, ege_id));
+    } catch (e) {
+        console.log(e);
+        result = JSON.stringify(e);
+    } finally {
+        res.header("Content-Type", "text/html; charset=utf-8");
+        res.end(JSON.stringify(result));
+    }
+});
+
+
+/**
+ * @api {delete} api/school/:school_id/giaresult/:id Delete gia result
+ * @apiVersion 0.0.0
+ * @apiGroup Statistics
+ * @apiName DeleteGiaResult
+ */
+exports.deleteGiaResult = async(function(req, res) {
+    var result = '';
+    try {
+        var school_id = req.params.school_id;
+        var gia_id = req.params.id;
+        result = await(services.giaResult.delete(school_id, gia_id));
+    } catch (e) {
+        console.log(e);
+        result = JSON.stringify(e);
+    } finally {
+        res.header("Content-Type", "text/html; charset=utf-8");
+        res.end(JSON.stringify(result));
+    }
+});
+
+
+/**
+ * @api {delete} api/school/:school_id/olympresult/:id Delete olimp result
+ * @apiVersion 0.0.0
+ * @apiGroup Statistics
+ * @apiName DeleteOlimpResult
+ */
+exports.deleteOlympResult = async(function(req, res) {
+    var result = '';
+    try {
+        var school_id = req.params.school_id;
+        var olymp_id = req.params.id;
+        result = await(services.olimpResult.delete(school_id, olymp_id));
     } catch (e) {
         console.log(e);
         result = JSON.stringify(e);
