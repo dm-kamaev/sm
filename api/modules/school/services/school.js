@@ -319,7 +319,7 @@ service.list = async (function(opt_params) {
                 id: school.id,
                 name: school.name,
                 description: '',
-                score: school.score,
+                score: school.score || [0,0,0,0],
                 totalScore: getTotalScore(school.score),
                 addresses: school.addresses
             };
