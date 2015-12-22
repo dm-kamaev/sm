@@ -53,7 +53,7 @@ service.updateScore = async(function(schoolId) {
     var scores = await(queries).map(
         result => result[0][0].avg || 0
     );
-    var school = await(models.School.findOne({ 
+    var school = await(models.School.findOne({
         where: {id: schoolId}
     }));
     school.update({score: scores});
@@ -222,7 +222,7 @@ service.review = async(function(schoolId, params) {
             var commentGroup = await(service.getGroupId(school));
             await (services.comment.create(commentGroup, params));
             answer.commentCreated = true;
-        } 
+        }
         return answer;
     } catch (e) {
         throw e;
@@ -314,7 +314,6 @@ service.list = async (function(opt_params) {
 
     return schools
         .map(school => {
-            console.log(school);
             return {
                 id: school.id,
                 name: school.name,

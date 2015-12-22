@@ -166,8 +166,12 @@ exports.view = async (function(req, res) {
     }
 
     var addresses =
-            services.department.addressesFilter(school.addresses);
-    var commentGroup = school.commentGroup ? school.commentGroup.comments : [];
+            services.department.addressesFilter(school.addresses),
+        commentGroup = school.commentGroup ? school.commentGroup.comments : [],
+        metroStations = [];
+    addresses.forEach(address => {
+        metroStations.push(services.address.getMetro(address));
+    });
     var params = {
         data: {
             id: school.id,
@@ -176,8 +180,12 @@ exports.view = async (function(req, res) {
             schoolDescr: '',
             directorName: school.director,
             schoolQuote : "Мел",
+            features: [],
+            extendedDayCost: '',
+            dressCode: '',
             classes: educationIntervalToString(school.educationInterval),
             social:[],
+            metroStations: metroStations,
             sites:[{
                 name: "Перейти на сайт школы",
                 href: 'http://' + school.site,
@@ -187,7 +195,8 @@ exports.view = async (function(req, res) {
                 address: addresses.map(address => {
                     return {
                         title: '',
-                        description: address.name
+                        description: address.name,
+                        metro: services.address.getMetro(address)
                     };
                 }),
                 phones: school.phones || ''
