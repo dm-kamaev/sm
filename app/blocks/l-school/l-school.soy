@@ -39,6 +39,11 @@
  *        coords: list<
  *           list<number>
  *        >,
+ *        ratings: list<[
+ *            name<string>,
+ *            place<number>,
+ *            href<string>
+ *        ]>,
  *        score: list<number>,
  *        totalScore: number
  *     ]
@@ -220,6 +225,11 @@
  *          >,
  *          score: list<number>,
  *          totalScore: number
+ *          ratings: list<[
+ *              name<string>,
+ *              place<number>,
+ *              href<string>
+ *          ]>,
  *      }
  *  }
  */
@@ -276,8 +286,8 @@
     </div>
 
     /*Address section*/
-    <div class="l-school__item-container">
-        {if $params.data.contacts}
+    {if $params.data.contacts}
+        <div class="l-school__item-container">
             {call sm.lSchool.bDataBlockAddresses.Template.base}
                 {param params: [
                     'header': 'адреса и телефоны',
@@ -285,8 +295,8 @@
                     ]
                 /}
             {/call}
-        {/if}
-    </div>
+        </div>
+    {/if}
 
     /*Links section*/
     <div class="l-school__item-container">
@@ -301,30 +311,26 @@
 
     <div class="l-school__content-column">
         /*ratings*/
-        <div class="l-school__item-container">
-            {if $params.data.contacts}
+        {if length($params.data.ratings) > 0}
+            <div class="l-school__item-container">
                 {call sm.lSchool.bDataBlockRatings.Template.base}
                     {param params: [
                         'header': 'места в рейтингах',
-                         'content': [
-                            'melRating': 5,
-                            'depObrRating': 6
-                         ]
+                        'mod': 'b-data-block_ratings',
+                        'content': $params.data.ratings
                     ]/}
                 {/call}
-            {/if}
-        </div>
+            </div>
+        {/if}
 
         /*high schools */
         <div class="l-school__item-container">
-            {if $params.data.contacts}
-                {call sm.lSchool.bDataBlock.Template.base}
-                    {param params: [
-                        'header': 'куда поступают выпускники'
-                        ]
-                    /}
-                {/call}
-            {/if}
+            {call sm.lSchool.bDataBlock.Template.base}
+                {param params: [
+                    'header': 'куда поступают выпускники'
+                    ]
+                /}
+            {/call}
         </div>
     </div>
 

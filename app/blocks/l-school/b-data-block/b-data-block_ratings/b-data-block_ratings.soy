@@ -21,45 +21,25 @@
 /**
  * Content item
  * @param params {
- *     content: [
- *        melRating: ?number
- *        depObrRating: ?number
- *     ]
+ *     content: list<[
+ *        name<string>,
+ *        place<number>,
+ *        href<string>
+ *     ]>
  * }
  */
 {template .content autoescape="strict" kind="html"}
      <ul class="b-data-block__content">
-        <li class="b-data-block__item">
+        {foreach $rating in  $params.content}
             {call .ratingItem_}
-                {param params:[
-                    'name': 'Рейтинг пользователей "Мела"',
-                    'place': $params.content.melRating,
-                    'href': '/search'
+                {param params: [
+                    'name': $rating.name,
+                    'place': $rating.place,
+                    'href': $rating.href
                 ] /}
             {/call}
-        </li>
-
-        <li class="b-data-block__item">
-            {call .ratingItem_}
-                {{param params:[
-                    'name': 'Рейтинг департамента образования москвы',
-                    'place': $params.content.depObrRating
-                ] /}}
-            {/call}
-        </li>
-
+        {/foreach}
     </ul>
-{/template}
-
-/**
- * Header section
- * @param params {
- *     header: ?string
- * }
- */
-{template .header autoescape="strict" kind="html"}
-     <div class="b-data-block__line"></div>
-     <h3 class="b-data-block__header">{$params.header}</h3>
 {/template}
 
 /**
@@ -71,22 +51,34 @@
  * }
  */
 {template .ratingItem_ autoescape="strict" kind="html"}
-    <div class="b-data-block__rating-circle">
-        <div class="b-data-block__rating-place">
-            {$params.place}
+    <li class="b-data-block__item">
+        <div class="b-data-block__place-wrapper">
+            <div class="b-data-block__place-value">
+                {$params.place}
+            </div>
         </div>
-    </div>
 
-    {if $params.href}
-        <a  class="b-data-block__rating-name
-                   b-data-block__rating-name_link"
-            href="{$params.href}">
+        {if $params.href}
+            <a  class="b-data-block__item-content
+                       b-data-block__item-content_text-color_red"
+                href="{$params.href}">
+                    {$params.name}
+             </a>
+        {else}
+            <div class="b-data-block__item-content">
                 {$params.name}
-         </a>
-    {else}
-        <div class="b-data-block__rating-name">
-            {$params.name}
-        </div>
-    {/if}
+            </div>
+        {/if}
+    </li>
+{/template}
 
+/**
+ * Header section
+ * @param params {
+ *     header: ?string
+ * }
+ */
+{template .header autoescape="strict" kind="html"}
+     <div class="b-data-block__line"></div>
+     <h3 class="b-data-block__header">{$params.header}</h3>
 {/template}
