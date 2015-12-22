@@ -150,8 +150,8 @@ exports.view = async (function(req, res) {
             services.department.addressesFilter(school.addresses),
         commentGroup = school.commentGroup ? school.commentGroup.comments : [],
         metroStations = [];
-    addresses.forEach(address => {
-        metroStations.push(services.address.getMetro(address));
+    metroStations = addresses.map(address => {
+        return services.address.getMetro(address);
     });
     var params = {
         data: {
@@ -226,7 +226,7 @@ exports.view = async (function(req, res) {
     };
 
     console.log(params.data);
-
+    
     res.header("Content-Type", "text/html; charset=utf-8");
     res.end(
         soy.render('sm.lSchool.Template.base', {

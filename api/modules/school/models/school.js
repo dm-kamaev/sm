@@ -38,6 +38,30 @@ var School = db.define('School', {
         type: DataType.INTEGER,
         unique: true,
         allowNull: false
+    },
+    specializedClasses: {
+        field: 'specialized_classes',
+        type: DataType.ARRAY(DataType.STRING)
+    },
+    features: {
+        field: 'features',
+        type: DataType.ARRAY(DataType.STRING)
+    },
+    extendedDayCost: {
+        field: 'extended_day_cost',
+        type: DataType.FLOAT
+    },
+    dressCode: {
+        field: 'dress_code',
+        type: DataType.STRING
+    },
+    links: {
+        field: 'links',
+        type: DataType.ARRAY(DataType.ARRAY(DataType.STRING))
+    },
+    popularity: {
+        field: 'popularity',
+        type: DataType.INTEGER
     }
 }, {
     underscored: true,
