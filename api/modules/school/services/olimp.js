@@ -93,18 +93,12 @@ service.getById = async(function(olymp_id) {
 
 
 /**
- * Delete olimpResult instance
- * @param {{
- *     id?: number[],
- *     type?: 'всероссийская' || 'московская',
- *     stage?: number,
- *     class?: number,
- *     status?: 'победитель' || 'призер',
- *     year?: number
- * }} data
+ * Delete olympResult instance
+ * @param {number} olymp_id
  */
-service.delete = async(function(data) {
-    await(models.OlimpResult.destroy({where: data}));
+service.delete = async(function(olymp_id) {
+    var instance = await(service.getById(olymp_id));
+    await(instance.destroy());
 });
 
 

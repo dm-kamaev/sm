@@ -81,12 +81,9 @@ exports.getById = async(function(ege_id) {
 
 /**
  * Delete egeResult instance
- * @param {{
- *     id?: number[],
- *     year?: numder,
- *     result?: number
- * }} data
+ * @param {number} ege_id
  */
-exports.delete = async(function(data) {
-    await(models.EgeResult.destroy({where: data}));
+exports.delete = async(function(ege_id) {
+    var instance = await(exports.getById(ege_id));
+    await(instance.destroy());
 });

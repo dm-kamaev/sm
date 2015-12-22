@@ -83,12 +83,9 @@ exports.getById = async(function(gia_id) {
 
 /**
  * Delete giaResult instance
- * @param {{
- *     id?: number[],
- *     count?: number,
- *     result?: number
- * }} data
+ * @param {number} gia_id
  */
-exports.delete = async(function(data) {
-    await(models.GiaResult.destroy({where: data}));
+exports.delete = async(function(gia_id) {
+    var instance = await(exports.getById(gia_id));
+    await(instance.destroy());
 });

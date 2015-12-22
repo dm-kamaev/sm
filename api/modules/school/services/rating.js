@@ -66,30 +66,24 @@ service.getAllByData = async(function(data) {
 
 
 /**
- * Get one data from table by data
- * @param {{
- *     id?: nimber,
- *     schoolId?: number,
- *     score?: Array [number]
- * }} data
+ * Get one by id
+ * @param {number} rating_id
  * @return {Object} instance of Rating model
  */
-service.getOneByData = async(function(data) {
+service.getById = async(function(rating_id) {
     return await(models.Rating.findOne({
-        where: data
+        where: {id: rating_id}
     }));
 });
 
 
 /**
  * Delete rating instance
- * @param {{
- *     id?: number[],
- *     score?: Array [number]
- * }} data
+ * @param {number} rating_id
  */
-service.delete = async(function(data) {
-    await(models.Rating.destroy({where: data}));
+service.delete = async(function(rating_id) {
+    var instance = await(service.getById(rating_id));
+    await(instance.destroy());
 });
 
 
