@@ -76,8 +76,12 @@ exports.getAll = async(function() {
  * @return {Object} instances of Address model
  */
 exports.getById = async(function(address_id) {
+    var includeParams = {
+        departments: true
+    };
     return await(models.Address.findOne({
-        where: {id: address_id}
+        where: {id: address_id},
+        include: sequelizeInclude(includeParams)
     }));
 });
 

@@ -6,7 +6,7 @@ var services = require.main.require('./app/components/services').all;
 var sequelize  = require.main.require('./app/components/db');
 var sequelizeInclude = require.main.require('./api/components/sequelizeInclude');
 var enums = require.main.require('./api/components/enums').all;
-
+var common = require.main.require('./console/common');
 var service = {
     name : 'school'
 };
@@ -23,13 +23,21 @@ var service = {
  *     site?: string,
  *     educationInterval: number[],
  *     govermentKey: number,
- *     addresses?: Object[]
+ *     addresses?: {
+ *         departments: [{
+ *             stage: string,
+ *             name: string,
+ *             availability: [boolean]
+ *         }]
+ *     }
  * }} data
  * @return {Object} School model instance
  */
 service.create = function(data) {
     var includeParams = {
-        addresses: true
+        addresses: {
+            departments: true
+        }
     };
 
     if (data.addresses) {
@@ -94,37 +102,62 @@ service.update = function(school_id, data) {
 
 
 /**
- * Set addresses for needed school
- * @param {Object} school instance
- * @param {Object} addresses params
- */
-// service.updateSchoolAddresses = async (function(school_id, addressesList) {
-//     var currentAddresses = await(service.getAddresses(school));
-
-//     addressesList.forEach((address)=>{
-//         var sameAddress = currentAddresses.find(element => {
-//         if (element.name == address.name)
-//             return true;
-//         });
-
-//         if (!sameAddress && !service.hasAddress(address)){
-//             address.coords =
-//                 await(services.address.getCoords('Москва, ' + address.name));
-
-//             addressInstance = await(services.address.addAddress(address));
-//             school.addAddress(addressInstance);
-//          }
-//     });
-// });
-
-
-/**
  * Delete school
- * @param {Object} school_id
+ * @param {number} school_id
  */
 service.delete = async (function(school_id) {
     var school = await(service.viewOne(school_id));
-    models.School.destroy(school);
+    console.log(JSON.stringify(school));
+
+    if (school.addresses) {
+        await(school.addresses.forEach(address => {
+            if (address.departments) {
+                await(address.departments.forEach(department => {
+                    services.department.delete(department.id);
+                }));
+            }
+            address.removeDepartments(address.departments);
+            address.destroy();
+        }));
+    }
+
+    if (school.ratings) {
+        await(school.ratings.forEach(rating => {
+            services.rating.delete(rating.id);
+        school.removeRatings(school.ratings);
+        }));
+    }
+
+    if (school.egeResults) {
+        await(school.egeResults.forEach(egeResult => {
+            services.egeResult.delete(egeResult.id);
+        school.removeEgeResults(school.egeResults);
+        }));
+    }
+
+    if (school.giaResults) {
+        await(school.giaResults.forEach(giaResult => {
+            services.giaResult.delete(giaResult.id);
+        school.removeGiaResults(school.giaResults);
+        }));
+    }
+
+    if (school.olimpResults) {
+        await(school.olimpResults.forEach(olimpResult => {
+            services.olimpResult.delete(olimpResult.id);
+        school.removeOlimpResults(school.olimpResults);
+        }));
+    }
+
+    if (school.searchData) {
+        await(school.searchData.forEach(searchData => {
+            services.search.delete(searchData.id);
+        school.removeSearchDatum(school.searchData);
+        }));
+    }
+
+    await(school.destroy());
+    return school_id;
 });
 
 
@@ -136,8 +169,6 @@ service.delete = async (function(school_id) {
  */
 service.getAddress = async(function(school_id, address_id) {
     var address = await(services.address.getById(address_id));
-    console.log('address', address);
-    console.log('address.school_id', address.school_id);
     if (address.school_id == school_id) {
         return address;
     }
@@ -152,6 +183,35 @@ service.getAddress = async(function(school_id, address_id) {
 service.getAddresses = async(function(school_id) {
     var school = await(service.viewOne(school_id));
     return await(school.getAddresses());
+});
+
+
+/**
+ * Get department of school address
+ * @param  {school_id} school_id
+ * @param  {address_id} address_id
+ * @param  {department_id} department_id
+ * @return {[Object]} Department model instance or undefined
+ */
+service.getAddressDepartment = async(
+    function(school_id, address_id, department_id) {
+        var address = await(service.getAddress(school_id, address_id));
+        var department = await(address.getDepartments({where: {id: department_id}}));
+        return department;
+    }
+);
+
+
+/**
+ * Get department of school address
+ * @param  {school_id} school_id
+ * @param  {address_id} address_id
+ * @return {[Object]} Department model instances or undefined
+ */
+service.getAddressDepartments = async(function(school_id, address_id) {
+    var address = await(service.getAddress(school_id, address_id));
+    var department = address.getDepartments();
+    return department;
 });
 
 
@@ -198,6 +258,7 @@ service.updateScore = async(function(schoolId) {
     }));
     school.update({score: scores});
 });
+
 
 /**
  * @public
@@ -316,6 +377,12 @@ service.viewOne = function(id) {
          }, {
              model: models.EgeResult,
              as: 'egeResults'
+         }, {
+             model: models.GiaResult,
+             as: 'giaResults'
+         }, {
+             model: models.OlimpResult,
+             as: 'olimpResults'
          }];
     return await(models.School.findOne({
         where: {id: id},
@@ -397,7 +464,7 @@ service.deleteActivities = async(() => {
  */
 service.listInstances = async(function(){
     return await(models.School.findAll({
-        inclde: [{
+        include: [{
             model: models.Rating,
             as: 'ratings'
         }, {
