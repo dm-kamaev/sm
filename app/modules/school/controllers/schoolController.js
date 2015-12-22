@@ -11,7 +11,7 @@ exports.createComment = async (function(req, res) {
     try {
         var schoolId = req.params.id,
             params = req.body;
-        result = await(services.school.comment(schoolId,params));
+        result = await(services.school.review(schoolId, params));
     } catch (e) {
         console.log(e);
         result = JSON.stringify(e);
