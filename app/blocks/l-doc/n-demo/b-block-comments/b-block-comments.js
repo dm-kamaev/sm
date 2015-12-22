@@ -61,11 +61,3 @@ sm.lDoc.nDemo.bBlockComments.Comments = function() {
         });
     }
 };
-
-
-jQuery(function() {
-    var doc = goog.dom.getElementByClass('l-doc');
-    if (doc) {
-        new sm.lDoc.nDemo.bBlockComments.Comments();
-    }
-});

@@ -34,7 +34,6 @@ goog.scope(function() {
         ROOT: 'b-search',
         INPUT: 'b-input__input',
         LIST: 'b-search__list',
-        LIST_HIDE: 'b-search__list_hidden',
         ICON: 'b-search__icon'
     };
 
@@ -88,11 +87,13 @@ goog.scope(function() {
              this.onSubmit_.bind(this)
          );
 
-         this.getHandler().listen(
-             this.elements_.icon,
-             goog.events.EventType.CLICK,
-             this.onIconClick_
-         );
+         if (this.elements_.icon) {
+             this.getHandler().listen(
+                 this.elements_.icon,
+                 goog.events.EventType.CLICK,
+                 this.onIconClick_
+             );
+         }
      };
 
     /**

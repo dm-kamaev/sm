@@ -41,7 +41,7 @@ service.searchFilters = async (function() {
 });
 
 service.typeFilters = async (function() {
-    var schoolTypeFilters 
+    var schoolTypeFilters
         = await(services.search.getTypeFilters());
     var formattedFilters = schoolTypeFilters.map(filter => {
         return {
@@ -58,6 +58,16 @@ service.typeFilters = async (function() {
 service.getAddresses = async (school => {
     return await(models.Address.findAll({
         where:{school_id: school.id}
+    }));
+});
+
+/**
+ * @param {object} school - school instance
+ * @param {number} rank
+ */
+service.setRank = async(function(school, rank) {
+    await(school.update({
+        rank: rank
     }));
 });
 
@@ -167,10 +177,10 @@ service.create = async (params => {
 /**
  *@public
  */
-
 service.commentTransaction = async (function(schoolId, params) {
     return await (transaction(service.comment, [schoolId, params]));
 });
+
 /**
  * @public
  */
@@ -202,6 +212,15 @@ service.rate = async ((school, params, t) => {
         schoolId: school.id
     }, {transaction: t}));
     return rt;
+});
+
+service.createActivity = async(params => {
+    await (models.Activity.create(
+        params,
+        {
+            //include: models.Activity
+        }
+    ));
 });
 
 /**
@@ -251,7 +270,7 @@ service.list = async (function(opt_params) {
     }
 
     console.log('searchConfig', searchConfig);
-    var schools = await(models.School.findAll(searchConfig)); 
+    var schools = await(models.School.findAll(searchConfig));
     console.log('Found: ', colors.green(schools.length));
 
     return schools
@@ -309,7 +328,7 @@ var updateSearchConfig = function(searchConfig, searchParams) {
     console.log(searchParams);
 
     if (searchParams.classes && searchParams.classes.length) {
-        whereParams.educationInterval = { 
+        whereParams.educationInterval = {
             $contains: searchParams.classes
         };
     }
@@ -325,10 +344,10 @@ var updateSearchConfig = function(searchConfig, searchParams) {
             }
         });
     }
-    
+
     if (searchParams.gia) {
         searchDataCount++;
-        extraIncludes.searchData.where.$or.push({ 
+        extraIncludes.searchData.where.$or.push({
             $and: {
                 type: enums.searchType.GIA,
                 values: {
@@ -336,11 +355,11 @@ var updateSearchConfig = function(searchConfig, searchParams) {
                 }
             }
         });
-    } 
+    }
 
     if (searchParams.ege) {
         searchDataCount++;
-        extraIncludes.searchData.where.$or.push({ 
+        extraIncludes.searchData.where.$or.push({
             $and: {
                 type: enums.searchType.EGE,
                 values: {
@@ -348,11 +367,11 @@ var updateSearchConfig = function(searchConfig, searchParams) {
                 }
             }
         });
-    } 
+    }
 
     if (searchParams.olimp) {
         searchDataCount++;
-        extraIncludes.searchData.where.$or.push({ 
+        extraIncludes.searchData.where.$or.push({
             $and: {
                 type: enums.searchType.OLIMPIAD,
                 values: {
@@ -360,9 +379,9 @@ var updateSearchConfig = function(searchConfig, searchParams) {
                 }
             }
         });
-    } 
+    }
 
-    /*Write generated setting to config object*/   
+    /*Write generated setting to config object*/
     searchConfig.where = whereParams;
     if (searchDataCount){
         var extraIncludesArr = [];

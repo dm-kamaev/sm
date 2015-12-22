@@ -13,14 +13,18 @@
   school_type {label: "enum"}
   education_interval {label: "integer[]"}
   +city_id {label: "integer", color: "#3366ff"}
-  	
+
 
 [address]
   *id {label: "integer", color: "#006600",}
   name {label: "string"}
   coords {label: "double[]"}
   +school_id {label: "integer", color: "#3366ff"}
+  +area_id {label: "integer", color: "#3366ff"}
 
+[area]
+*id {label: "integer", color: "#006600",}
+  name {label: "string"}
 
 [city]
   *id {label: "integer", color: "#006600",}
@@ -53,11 +57,11 @@
 
 [olimp_result]
   *id {label: "integer", color: "#006600",}
-  type {label: "enum"}  
-  stage {label: "integer"}  
-  class {label: "integer"}  
-  status {label: "enum"}  
-  year {label: "integer"}  
+  type {label: "enum"}
+  stage {label: "integer"}
+  class {label: "integer"}
+  status {label: "enum"}
+  year {label: "integer"}
 
 [ege_result]
   *id {label: "integer", color: "#006600",}
@@ -102,6 +106,14 @@
 [university]
   *id {label: "integer", color: "#006600",}
   name {label: "string"}
+
+[activity]
+  *id {label: "integer", color: "#006600",}
+  direction {label: "string"}
+  profile {label: "string"}
+  type {label: "string"}
+  name {label: "string"}
+  +school_id {label: "integer", color: "#3366ff"}
 # Each relationship must be between exactly two entities, which need not
 # be distinct. Each entity in the relationship has exactly one of four
 # possible cardinalities:
@@ -112,8 +124,9 @@
 # 0 or more      *
 # 1 or more      +
 school 1--* address
-school 1--* search_data 
+school 1--* search_data
 address 1--* metro
+address *--1 area
 school ?--? comment_group
 comment_group 1--* comment
 school 1--1 city
@@ -124,6 +137,7 @@ school 1--* rating
 school 1--* gia_result
 school 1--* olimp_result
 school 1--* ege_result
+school 1--* activity
 olimp_result 1--1 subject
 gia_result 1--1 subject
 ege_result 1--1 subject
