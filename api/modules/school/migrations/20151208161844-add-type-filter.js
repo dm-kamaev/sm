@@ -1,6 +1,5 @@
 'use strict';
-const colors = require('colors'),
-      searchType = require('../../api/modules/school/enums/searchType');
+const searchType = require('../../api/modules/school/enums/searchType');
 
 const path = require('path');
 const ModelArchiver = require('../../console/modules/modelArchiver/ModelArchiver.js') ;
@@ -32,7 +31,7 @@ module.exports = {
             archiver.load();
         }));
     },
-    down: function (queryInterface, Sequelize) {
+    down: function (queryInterface) {
         return queryInterface.dropTable('school_type_filter');
     }
 };

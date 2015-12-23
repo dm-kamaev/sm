@@ -1,5 +1,5 @@
 var DataType = require('sequelize'),
-    db = require.main.require('./app/components/db');
+    db = require('../../../../app/components/db');
 
 var Address = db.define('Address', {
     name: DataType.STRING,
