@@ -15,11 +15,14 @@ class CsvConverter {
 
     /**
      * @public 
-     * @return {string};
+     * @return {object};
      */
     toJson() {
-        return await(this.jsonPromise_(this.input_));
+        var unstableJSON = await(this.jsonPromise_(this.input_));
+        this.stabilizeJSON_(unstableJSON);
+        return unstableJSON;
     }
+
     
     /**
      * @public
@@ -43,6 +46,29 @@ class CsvConverter {
         }
         return res;
     }
+
+    /**
+     * @private
+     * @prama {object} unstableJSON
+     * used to unflatten arrays
+     */
+    stabilizeJSON_(unstableJSON) {
+        for (var key in unstableJSON) {
+            var oldValue = unstableJSON[key];
+            try {
+                if (typeof oldValue == 'object') {
+                    var newValue = Object.assign({}, oldValue);
+                    this.stabilizeJSON_(newValue);
+                } else {
+                    var newValue = JSON.parse(oldValue);
+                }
+                unstableJSON[key] = newValue;
+            } catch (e) {
+                unstableJSON[key] = oldValue;
+            }
+        }
+    }
+    
 
     /**
      * @private
