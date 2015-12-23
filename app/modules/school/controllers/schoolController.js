@@ -178,6 +178,7 @@ exports.view = async (function(req, res) {
             schoolName: school.name,
             schoolType: '',
             schoolDescr: '',
+            features: '',
             directorName: school.director,
             schoolQuote : "Мел",
             features: [],
@@ -191,6 +192,8 @@ exports.view = async (function(req, res) {
                 href: 'http://' + school.site,
                 link: school.site
             }],
+            activities: [],
+            specializedClasses: [],
             contacts:{
                 address: addresses.map(address => {
                     return {
@@ -228,6 +231,7 @@ exports.view = async (function(req, res) {
                     lng: adr.coords[1]
                 };
             }),
+            ratings: ratings,
             score: sumScore,
             totalScore: sumScore.reduce((context, value) => {
                 if (value) {
@@ -240,8 +244,7 @@ exports.view = async (function(req, res) {
                 sum: 0,
                 count: 0,
                 res: 0
-            }).res,
-            ratings: ratings
+            }).res
         }
     };
 
