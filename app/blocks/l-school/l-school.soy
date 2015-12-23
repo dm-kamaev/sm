@@ -27,6 +27,14 @@
  *            ]>,
  *            phones: list<string>
  *        ],
+ *        specializedClasses: list<[
+ *            name: string
+ *            items: list<string>
+ *        ]>,
+ *        activities: list<[
+ *            name: string
+ *            items: list<string>
+ *        ]>,
  *        comments: list<[
  *            author: string,
  *            rank: string,
@@ -337,24 +345,37 @@
     <div class="l-school__content-column
                 l-school__content-column_last">
         /*specialized classes*/
-        <div class="l-school__item-container">
-            {call sm.lSchool.bDataBlock.Template.base}
-                {param params: [
-                    'header': 'профильные классы'
-                    ]
-                /}
-            {/call}
-        </div>
+        {if $params.data.specializedClasses and
+        length($params.data.specializedClasses) > 0}
+            <div class="l-school__item-container">
+                {call sm.lSchool.bDataBlockFoldList.Template.base}
+                    {param params: [
+                        'header': 'профильные классы',
+                        'mod': 'b-data-block_fold-list',
+                        'headerType': 2,
+                        'content': $params.data.specializedClasses
+                        ]
+                     /}
+                {/call}
+            </div>
+        {/if}
 
-        /*additional classes*/
-        <div class="l-school__item-container">
-            {call sm.lSchool.bDataBlock.Template.base}
-                {param params: [
-                    'header': 'дополнительные занятия'
-                    ]
-                /}
-            {/call}
-        </div>
+        /*activities*/
+         {if $params.data.activities and
+         length($params.data.activities) > 0}
+             <div class="l-school__item-container">
+                 {call sm.lSchool.bDataBlockFoldList.Template.base}
+                     {param params: [
+                         'header': 'дополнительные занятия',
+                         'mod': 'b-data-block_fold-list',
+                         'headerType': 2,
+                         'content': $params.data.activities
+                         ]
+                      /}
+                 {/call}
+             </div>
+        {/if}
+    </div>
 
 </div>
 {/template}

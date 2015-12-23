@@ -1,0 +1,28 @@
+.b-data-block_fold-list {
+	.b-data-block__item-content {
+		display: inline-block;
+
+		margin-right: 12px;
+
+		&.b-data-block__item-content_opened {
+			margin-bottom: 15px;
+
+			color: #000000;
+			font-weight: 600;
+		}
+	}
+}
+
+.b-data-block__number {
+	display: inline-block;
+}
+
+.b-data-block__list {
+	margin-left: 20px;
+	margin-bottom: 27px;
+}
+
+.b-data-block__list-item {
+	margin-bottom: 8px;
+}
+
