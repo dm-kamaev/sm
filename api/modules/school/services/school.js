@@ -252,6 +252,16 @@ service.createActivity = async(params => {
     ));
 });
 
+service.deleteActivities = async(() => {
+    models.Activity.destroy(
+        {
+            where: {}
+        }
+    ).then(function() {
+        console.log('All activities deleted');
+    });
+});
+
 /**
  * usded in console/*. Can be a bit slow
  */
