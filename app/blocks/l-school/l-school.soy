@@ -8,6 +8,7 @@
  *        schoolName: string,
  *        schoolType: string,
  *        schoolDescr: string,
+ *        features: string,
  *        directorName: string,
  *        schoolQuote: string,
  *        classes: string,
@@ -209,6 +210,8 @@
  *          id: number,
  *          schoolName: string,
  *          schoolType: string,
+ *          schoolDescr: string,
+ *          features: string,
  *          directorName: string,
  *          classes: string,
  *          social:list<{
@@ -228,6 +231,14 @@
  *              }>,
  *              phones:list<string>
  *          ],
+ *          specializedClasses: list<[
+ *              name: string
+ *              items: list<string>
+ *          ]>,
+ *          activities: list<[
+ *              name: string
+ *              items: list<string>
+ *          ]>,
  *          coords: ?list<
  *              list<number>
  *          >,
@@ -284,14 +295,17 @@
             l-school__content-column_last">
 
     /*Features section*/
-    <div class="l-school__item-container">
-        {call sm.lSchool.bDataBlock.Template.base}
-            {param params: [
-                'header': 'особенности'
-                ]
-            /}
-        {/call}
-    </div>
+    {$params.data.features}
+    {if $params.data.schoolDescr}
+        <div class="l-school__item-container">
+            {call sm.lSchool.bDataBlock.Template.base}
+                {param params: [
+                    'header': 'особенности'
+                    ]
+                /}
+            {/call}
+        </div>
+    {/if}
 
     /*Address section*/
     {if $params.data.contacts}
@@ -332,14 +346,16 @@
         {/if}
 
         /*high schools */
-        <div class="l-school__item-container">
-            {call sm.lSchool.bDataBlock.Template.base}
-                {param params: [
-                    'header': 'куда поступают выпускники'
-                    ]
-                /}
-            {/call}
-        </div>
+        {if $params.data.higthSchools}
+            <div class="l-school__item-container">
+                {call sm.lSchool.bDataBlock.Template.base}
+                    {param params: [
+                        'header': 'куда поступают выпускники'
+                        ]
+                    /}
+                {/call}
+            </div>
+        {/if}
     </div>
 
     <div class="l-school__content-column

@@ -178,6 +178,7 @@ exports.view = async (function(req, res) {
             schoolName: school.name,
             schoolType: '',
             schoolDescr: '',
+            features: '',
             directorName: school.director,
             schoolQuote : "Мел",
             features: [],
