@@ -20,7 +20,7 @@ var Address = db.define('Address', {
             Address.belongsToMany(models.Department, {
                 as: 'departments',
                 through: {
-                    model: 'DepartmentAddress',
+                    model: 'Department_address',
                     unique: false
                 },
                 foreignKey: 'address_id'
