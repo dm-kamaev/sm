@@ -8,7 +8,7 @@
 {/template}
 
 /**
- * item init
+ * Block init
  * @param params {
  *     header: ?string,
  *     mod: ?string
@@ -21,11 +21,17 @@
             {sp}{$params.mod}
         {/if}
     ">
+
+        //Header section
         {if $params.header}
-            <div class="b-data-block__line"></div>
-            <div class="b-data-block__header">{$params.header}</div>
+            {call .header}
+                {param params: [
+                    'header': $params.header
+                ] /}
+            {/call}
         {/if}
 
+        //Content  section
         {if $params.content}
             {call .content data="all" /}
         {/if}
@@ -33,7 +39,18 @@
 {/template}
 
 /**
- * Content item
+ * Header part
+ * @param params {
+ *     header: ?string
+ * }
+ */
+{template .header autoescape="strict" kind="html"}
+    <div class="b-data-block__line"></div>
+    <div class="b-data-block__header">{$params.header}</div>
+{/template}
+
+/**
+ * Content part
  * @param params {
  *     content: ?list
  * }
