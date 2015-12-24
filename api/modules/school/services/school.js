@@ -106,55 +106,13 @@ service.update = function(school_id, data) {
  * @param {number} school_id
  */
 service.delete = async (function(school_id) {
-    var school = await(service.viewOne(school_id));
-    console.log(JSON.stringify(school));
-
-    if (school.addresses) {
-        await(school.addresses.forEach(address => {
-            if (address.departments) {
-                await(address.departments.forEach(department => {
-                    services.department.delete(department.id);
-                }));
-            }
-            address.removeDepartments(address.departments);
-            address.destroy();
-        }));
-    }
-
-    if (school.ratings) {
-        await(school.ratings.forEach(rating => {
-            services.rating.delete(rating.id);
-        school.removeRatings(school.ratings);
-        }));
-    }
-
-    if (school.egeResults) {
-        await(school.egeResults.forEach(egeResult => {
-            services.egeResult.delete(egeResult.id);
-        school.removeEgeResults(school.egeResults);
-        }));
-    }
-
-    if (school.giaResults) {
-        await(school.giaResults.forEach(giaResult => {
-            services.giaResult.delete(giaResult.id);
-        school.removeGiaResults(school.giaResults);
-        }));
-    }
-
-    if (school.olimpResults) {
-        await(school.olimpResults.forEach(olimpResult => {
-            services.olimpResult.delete(olimpResult.id);
-        school.removeOlimpResults(school.olimpResults);
-        }));
-    }
-
-    if (school.searchData) {
-        await(school.searchData.forEach(searchData => {
-            services.search.delete(searchData.id);
-        school.removeSearchDatum(school.searchData);
-        }));
-    }
+    var school = await(models.School.findOne(
+        {
+            where: {id: school_id}
+        }
+    ));
+    if (!school)
+        throw new Error ('There is no school with id = ' + school_id);
 
     await(school.destroy());
     return school_id;
