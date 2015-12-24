@@ -35,6 +35,7 @@ module.exports = {
                 type: Sequelize.STRING,
             },
             school_id: {
+                onDelete: 'cascade',
                 type: Sequelize.INTEGER,
                 references: {
                     model: 'school',

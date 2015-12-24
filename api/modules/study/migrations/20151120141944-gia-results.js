@@ -23,6 +23,7 @@ module.exports = {
                 allowNull: false
             },
             school_id: {
+                onDelete: 'cascade',
                 type: Sequelize.INTEGER,
                 references: {
                     model: 'school',
