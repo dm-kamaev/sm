@@ -310,7 +310,10 @@ service.list = async (function(opt_params) {
         attributes: [
             'id',
             'name',
-            'score'
+            'score',
+            'name',
+            'fullName',
+            'abbreviation'
         ]
     };
 
@@ -328,8 +331,10 @@ service.list = async (function(opt_params) {
                 id: school.id,
                 name: school.name,
                 description: '',
+                abbreviation: school.abbreviation,
                 score: school.score || [0, 0, 0, 0],
                 totalScore: getTotalScore(school.score),
+                fullName: school.fullName,
                 addresses: school.addresses
             };
         })
