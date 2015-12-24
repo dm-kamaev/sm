@@ -12,7 +12,7 @@ var await = require('asyncawait/await');
  * @apiParam {Object} searchParams Search params.
  * @apiParamExample {json} Request-Example:
  *     {
- *       'text' : 'test'
+ *       "text" : "test"
  *     }
  */
 exports.yapi = async (function(req, res) {
@@ -37,23 +37,23 @@ exports.yapi = async (function(req, res) {
  * @apiName Create
  * @apiParamExample {json} Request-Example:
  *     {
- *         'schoolData' : {
- *             'name': 'Общеобразовательная школа',
- *             'abbreviation': 'ГОУ СКОШ № 00',
- *             'fullName': 'Государственное образовательное учреждение',
- *             'schoolType': 'Школа',
- *             'director': 'Любимов Олег Вадимович',
- *             'phones': ['(495) 223-32-23', '(499)322-23-33'],
- *             'site': 'school.ru',
- *             'educationInterval': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
- *             'govermentKey': 100,
- *             'addresses': [{
- *                 'name':  'ул. Веткина, 2',
- *                 'coords': [55.802275, 37.624876],
- *                 'departments': [{
- *                     'stage': 'Начальное образование',
- *                     'name': 'Начальное образование',
- *                     'availability': [1, 0, 0]
+ *         "schoolData" : {
+ *             "name": "Общеобразовательная школа",
+ *             "abbreviation": "ГОУ СКОШ № 00",
+ *             "fullName": "Государственное образовательное учреждение",
+ *             "schoolType": "Школа",
+ *             "director": "Любимов Олег Вадимович",
+ *             "phones": ["(495) 223-32-23", "(499)322-23-33"],
+ *             "site": "school.ru",
+ *             "educationInterval": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+ *             "govermentKey": 100,
+ *             "addresses": [{
+ *                 "name":  "ул. Веткина, 2",
+ *                 "coords": [55.802275, 37.624876],
+ *                 "departments": [{
+ *                     "stage": "Начальное образование",
+ *                     "name": "Начальное образование",
+ *                     "availability": [1, 0, 0]
  *                 }]
  *             }]
  *         }
@@ -82,15 +82,15 @@ exports.create = async (function(req, res) {
  * @apiName Update
  * @apiParamExample {json} Request-Example:
  *     {
- *         'schoolData' : {
- *             'name': 'Общеобразовательная школа',
- *             'abbreviation': 'ГОУ СКОШ № 00',
- *             'fullName': 'Государственное образовательное учреждение',
- *             'schoolType': 'Школа',
- *             'director': 'Любимов Олег Вадимович',
- *             'phones': ['(495) 223-32-23', '(499)322-23-33'],
- *             'site': 'school.ru',
- *             'educationInterval': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+ *         "schoolData" : {
+ *             "name": "Общеобразовательная школа",
+ *             "abbreviation": "ГОУ СКОШ № 00",
+ *             "fullName": "Государственное образовательное учреждение",
+ *             "schoolType": "Школа",
+ *             "director": "Любимов Олег Вадимович",
+ *             "phones": ["(495) 223-32-23", "(499)322-23-33"],
+ *             "site": "school.ru",
+ *             "educationInterval": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
  *         }
  *     }
  */
@@ -217,9 +217,9 @@ exports.getAddress = async (function(req, res) {
  * @apiName UpdateAddress
  * @apiParamExample {json} Request-Example:
  *     {
- *         'addressData' : {
- *             'name': 'ул. Веткина, 2',
- *             'coords': [55.802275, 37.624876]
+ *         "addressData" : {
+ *             "name": "ул. Веткина, 2",
+ *             "coords": [55.802275, 37.624876]
  *         }
  *     }
  */
@@ -248,16 +248,10 @@ exports.updateAddress = async (function(req, res) {
 
 
 /**
-=======
->>>>>>> BP-586 Change some methods in school controller
  * @api {get} api/school/search/filters Get school type list
  * @apiVersion 0.0.0
  * @apiGroup School
-<<<<<<< HEAD
  * @apiName ListSearchFilters
-=======
- * @apiName SchoolTypes
->>>>>>> BP-586 Added get/update methods in school service and controller
  */
 exports.listSearchFilters = async (function(req, res) {
     var result;
@@ -283,9 +277,9 @@ exports.listSearchFilters = async (function(req, res) {
  * @apiParam {Int[]} score Array[4] of scores.
  * @apiParamExample {json} Request-Example:
  *     {
- *       'text': 'test comment',
- *       'userType': 'Parent',
- *       'score': [3,2,1,5]
+ *       "text": "test comment",
+ *       "userType": "Parent",
+ *       "score": [3,2,1,5]
  *     }
  */
 exports.createComment = async (function(req, res) {
@@ -316,13 +310,13 @@ exports.createComment = async (function(req, res) {
  * @apiParam {Object} searchParams Search params.
  * @apiParamExample {json} Request-Example:
  *     {
- *       'searchParams' : {
- *          'name': '123',
- *          'classes': [1,2,3,4],
- *          'schoolType': ['Школа', 'Лицей'],
- *          'gia': [1,2],
- *          'ege': [2,3],
- *          'olimp': [3,5]
+ *       "searchParams" : {
+ *          "name": "123",
+ *          "classes": [1,2,3,4],
+ *          "schoolType": ["Школа", "Лицей"],
+ *          "gia": [1,2],
+ *          "ege": [2,3],
+ *          "olimp": [3,5]
  *       }
  *     }
  */
@@ -330,7 +324,7 @@ exports.search = async (function(req, res) {
     var result = '';
     try {
         var params = req.query;
-        result = await(services.search.searchSchool(params));
+        result = await(services.school.list(params));
     } catch (e) {
         console.log(e);
         result = JSON.stringify(e);

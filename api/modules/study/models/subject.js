@@ -19,7 +19,7 @@ var Subject = db.define('Subject', {
                 as: 'giaResult', foreignKey: 'subject_id'
             });
             Subject.hasMany(models.EgeResult, {
-                as: 'egeResults', foreignKey: 'subject_id'
+                as: 'egeResult', foreignKey: 'subject_id'
             });
             Subject.hasMany(models.OlimpResult, {
                 as: 'olimpResult', foreignKey: 'subject_id'

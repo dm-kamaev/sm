@@ -17,7 +17,7 @@ exports.listSubjects = async(function(req, res) {
         console.log(e.message);
         result = e;
     } finally {
-        res.header("Content-Type", "text/html; charset=utf-8");
+        res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(JSON.stringify(result));
     }
 });
@@ -32,14 +32,14 @@ exports.listSubjects = async(function(req, res) {
 exports.getEgeResult = async(function(req, res) {
     var result = '';
     try {
-        var school_id = req.params.school_id;
+        //var school_id = req.params.school_id;
         // school_id dont used
         result = await(services.egeResult.getAll());
     } catch (e) {
         console.log(e);
         result = JSON.stringify(e);
     } finally {
-        res.header("Content-Type", "text/html; charset=utf-8");
+        res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(JSON.stringify(result));
     }
 });
@@ -54,7 +54,7 @@ exports.getEgeResult = async(function(req, res) {
 exports.getEgeResultById = async(function(req, res) {
     var result = '';
     try {
-        var school_id = req.params.school_id;
+        //var school_id = req.params.school_id;
         var ege_id = req.params.id;
         // school_id dont used
         result = await(services.egeResult.getById(ege_id));
@@ -62,7 +62,7 @@ exports.getEgeResultById = async(function(req, res) {
         console.log(e);
         result = JSON.stringify(e);
     } finally {
-        res.header("Content-Type", "text/html; charset=utf-8");
+        res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(JSON.stringify(result));
     }
 });
@@ -77,14 +77,14 @@ exports.getEgeResultById = async(function(req, res) {
 exports.getGiaResult = async(function(req, res) {
     var result = '';
     try {
-        var school_id = req.params.school_id;
+        //var school_id = req.params.school_id;
         // school_id dont used
         result = await(services.giaResult.getAll());
     } catch (e) {
         console.log(e);
         result = JSON.stringify(e);
     } finally {
-        res.header("Content-Type", "text/html; charset=utf-8");
+        res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(JSON.stringify(result));
     }
 });
@@ -99,7 +99,7 @@ exports.getGiaResult = async(function(req, res) {
 exports.getGiaResultById = async(function(req, res) {
     var result = '';
     try {
-        var school_id = req.params.school_id;
+        //var school_id = req.params.school_id;
         // school_id dont used
         var gia_id = req.params.id;
         result = await(services.giaResult.getById(gia_id));
@@ -107,7 +107,7 @@ exports.getGiaResultById = async(function(req, res) {
         console.log(e);
         result = JSON.stringify(e);
     } finally {
-        res.header("Content-Type", "text/html; charset=utf-8");
+        res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(JSON.stringify(result));
     }
 });
@@ -122,14 +122,14 @@ exports.getGiaResultById = async(function(req, res) {
 exports.getOlympResult = async(function(req, res) {
     var result = '';
     try {
-        var school_id = req.params.school_id;
+        //var school_id = req.params.school_id;
         // school_id dont used
         result = await(services.olimpResult.getAll());
     } catch (e) {
         console.log(e);
         result = JSON.stringify(e);
     } finally {
-        res.header("Content-Type", "text/html; charset=utf-8");
+        res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(JSON.stringify(result));
     }
 });
@@ -144,15 +144,15 @@ exports.getOlympResult = async(function(req, res) {
 exports.getOlympResultById = async(function(req, res) {
     var result = '';
     try {
-        var school_id = req.params.school_id;
+        //var school_id = req.params.school_id;
         // school_id dont used
-        olimp_id = req.params.id;
+        var olimp_id = req.params.id;
         result = await(services.olimpResult.getById(olimp_id));
     } catch (e) {
         console.log(e);
         result = JSON.stringify(e);
     } finally {
-        res.header("Content-Type", "text/html; charset=utf-8");
+        res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(JSON.stringify(result));
     }
 });
@@ -183,7 +183,7 @@ exports.addEgeResult = async(function(req, res) {
         console.log(e);
         result = JSON.stringify(e);
     } finally {
-        res.header("Content-Type", "text/html; charset=utf-8");
+        res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(JSON.stringify(result));
     }
 });
@@ -213,7 +213,7 @@ exports.addGiaResult = async(function(req, res) {
         console.log(e);
         result = JSON.stringify(e);
     } finally {
-        res.header("Content-Type", "text/html; charset=utf-8");
+        res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(JSON.stringify(result));
     }
 });
@@ -239,14 +239,14 @@ exports.addOlympResult = async(function(req, res) {
     var result = {};
     try {
         var school_id = req.params.school_id;
-        var subject_id = req.params.id,
+        var subject_id = req.params.id;
         var data = req.body.olympData;
-        result = await(services.olimpResult.add(school_id, subject_id, data))
+        result = await(services.olimpResult.add(school_id, subject_id, data));
     } catch (e) {
         console.log(e);
         result = JSON.stringify(e);
     } finally {
-        res.header("Content-Type", "text/html; charset=utf-8");
+        res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(JSON.stringify(result));
     }
 });
@@ -268,7 +268,7 @@ exports.addOlympResult = async(function(req, res) {
 exports.updateEgeResult = async(function(req, res) {
     var result = '';
     try {
-        var school_id = req.params.id;
+        //var school_id = req.params.id;
         // school_id dont used
         var ege_id = req.params.id;
         var data = req.body.egeData;
@@ -277,7 +277,7 @@ exports.updateEgeResult = async(function(req, res) {
         console.log(e);
         result = JSON.stringify(e);
     } finally {
-        res.header("Content-Type", "text/html; charset=utf-8");
+        res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(JSON.stringify(result));
     }
 });
@@ -299,7 +299,7 @@ exports.updateEgeResult = async(function(req, res) {
 exports.updateGiaResult = async(function(req, res) {
     var result = '';
     try {
-        var school_id = req.params.id;
+        //var school_id = req.params.id;
         // school_id dont used
         var gia_id = req.params.id;
         var data = req.body.giaData;
@@ -308,7 +308,7 @@ exports.updateGiaResult = async(function(req, res) {
         console.log(e);
         result = JSON.stringify(e);
     } finally {
-        res.header("Content-Type", "text/html; charset=utf-8");
+        res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(JSON.stringify(result));
     }
 });
@@ -333,7 +333,7 @@ exports.updateGiaResult = async(function(req, res) {
 exports.updateOlimpResult = async(function(req, res) {
     var result = '';
     try {
-        var school_id = req.params.id;
+        //var school_id = req.params.id;
         // school_id dont used
         var olimp_id = req.params.id;
         var data = req.body.olimpData;
@@ -342,7 +342,7 @@ exports.updateOlimpResult = async(function(req, res) {
         console.log(e);
         result = JSON.stringify(e);
     } finally {
-        res.header("Content-Type", "text/html; charset=utf-8");
+        res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(JSON.stringify(result));
     }
 });
@@ -364,7 +364,7 @@ exports.deleteEgeResult = async(function(req, res) {
         console.log(e);
         result = JSON.stringify(e);
     } finally {
-        res.header("Content-Type", "text/html; charset=utf-8");
+        res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(JSON.stringify(result));
     }
 });
@@ -386,7 +386,7 @@ exports.deleteGiaResult = async(function(req, res) {
         console.log(e);
         result = JSON.stringify(e);
     } finally {
-        res.header("Content-Type", "text/html; charset=utf-8");
+        res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(JSON.stringify(result));
     }
 });
@@ -408,7 +408,7 @@ exports.deleteOlympResult = async(function(req, res) {
         console.log(e);
         result = JSON.stringify(e);
     } finally {
-        res.header("Content-Type", "text/html; charset=utf-8");
+        res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(JSON.stringify(result));
     }
 });
