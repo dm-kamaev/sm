@@ -496,7 +496,7 @@ service.list = async (function(opt_params) {
                 addresses: school.addresses
             };
         })
-        .sort((school1, school2) => school1.totalScore - school2.totalScore);
+        .sort((school1, school2) => school2.totalScore - school1.totalScore);
 });
 
 /**

@@ -190,7 +190,7 @@ exports.createComment = async (function(req, res) {
             params = req.body;
         params.score = params['score[]']; //TODO придумать чтото с этим
         result = JSON.stringify(
-            await(services.school.commentTransaction(schoolId, params))
+            await(services.school.review(schoolId, params))
             );
         console.log(result);
     } catch (e) {
