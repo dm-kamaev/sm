@@ -1,6 +1,6 @@
 var DataType = require('sequelize'),
-    db = require.main.require('./app/components/db'),
-    enums = require('../enums');
+    db = require('../../../../app/components/db');
+const schoolType = require('../enums/schoolType');
 
 var School = db.define('School', {
     name: DataType.STRING,
@@ -12,7 +12,7 @@ var School = db.define('School', {
     schoolType: {
         field: 'school_type',
         type: DataType.ENUM,
-        values: enums.schoolType.toArray(),
+        values: schoolType.toArray(),
         allowNull: false
 
     },
@@ -46,20 +46,24 @@ var School = db.define('School', {
     classMethods: {
         associate: function(models) {
             School.hasMany(models.GiaResult, {
-                as: 'giaResults', foreignKey: 'school_id'
+                as: 'giaResults', foreignKey: 'school_id',
+                onDelete: 'cascade'
             });
             School.hasMany(models.OlimpResult, {
-                as: 'olimpResults', foreignKey: 'school_id'
+                as: 'olimpResults', foreignKey: 'school_id',
+                onDelete: 'cascade'
             });
             School.hasMany(models.EgeResult, {
-                as: 'egeResults', foreignKey: 'school_id'
+                as: 'egeResults', foreignKey: 'school_id',
+                onDelete: 'cascade'
             });
             School.hasMany(models.SearchData, {
-                as: 'searchData', foreignKey: 'school_id'
+                as: 'searchData', foreignKey: 'school_id',
+                onDelete: 'cascade'
             });
             School.hasMany(models.Address, {
                 as: 'addresses',
-                foreignKey: 'school_id'
+                foreignKey: 'school_id',
             });
             School.belongsTo(models.CommentGroup, {
                 foreignKey: 'comment_group_id',
@@ -74,7 +78,8 @@ var School = db.define('School', {
             });
             School.hasMany(models.Rating, {
                 as: 'ratings',
-                foreignKey: 'school_id'
+                foreignKey: 'school_id',
+                onDelete: 'cascade'
             });
             School.hasMany(models.Activity, {
                 as: 'activites',

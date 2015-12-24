@@ -21,7 +21,7 @@ exports.initEnums = function(dirPath) {
 
 exports.enumPrototype = {
     getProps: function() {
-        var res = Object.assign(this);
+        var res = Object.assign({},this);
         for (var prop in this) {
             if (prop == 'prototype' || 
                 typeof this[prop] == 'function' ||

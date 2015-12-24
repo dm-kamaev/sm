@@ -3,24 +3,45 @@ jQuery(function() {
     function request(method) {
         var url = jQuery('.area-url').val();
         var value = jQuery('.area').val();
-        var data = value ? JSON.parse(value) : null;
+        var data = (method == 'get' && value) ?
+            JSON.parse(value) :
+            value;
 
-        jQuery[method](url, data)
+        var ajaxParams = {
+            url: url,
+            data: data,
+            method: method
+        };
+
+        if (method != 'get') {
+            ajaxParams.contentType = 'application/json';
+        }
+
+        jQuery.ajax(ajaxParams)
             .done(function(data) {
                // jQuery('.output').text(JSON.stringify(data));
                $('.output').empty();
                $('.output').jsonView(data);
             })
+
             .error(function(data) {
                 jQuery('.output').text(data.responseText);
             });
     }
 
     var sendButtonClickHandler = function() {
-        if ($(".get-rb").prop("checked"))
+        if ($(".get-rb").prop("checked")) {
             request('get');
-        else
+        }
+        if ($(".post-rb").prop("checked")) {
             request('post');
+        }
+        if ($(".put-rb").prop("checked")) {
+            request('put');
+        }
+        if ($(".delete-rb").prop("checked")) {
+            request('delete');
+        }
 
     };
 
@@ -36,10 +57,18 @@ jQuery(function() {
 
     var changeRb = function (type) {
         //$(".area-url").val('/'+string);
-        if (type == "get")
+        if (type == "get") {
             $(".get-rb").prop("checked", true)
-        else
+        }
+        if (type == "post") {
             $(".post-rb").prop("checked", true)
+        }
+        if (type == "put") {
+            $(".put-rb").prop("checked", true)
+        }
+        if (type == "delete") {
+            $(".delete-rb").prop("checked", true)
+        }
     }
 
     var changeText = function (json) {

@@ -8,9 +8,15 @@ var schoolView = {};
  */
 schoolView.default = function(schoolInstance) {
     var data = {},
-        sumScore = countSumScore(schoolInstance.ratings),
-        ratings = [];
+        sumScore = countSumScore(schoolInstance.ratings);
 
+    var typeConvert = {
+        'Parent': 'родитель',
+        'Graduate': 'выпускник',
+        'Scholar': 'ученик'
+    };
+
+    var ratings = [];
     /*Check that position in Mel's rating exists and less than 100*/
     if (schoolInstance.rating && schoolInstance.rating <= 100) {
         ratings.push({
@@ -40,22 +46,24 @@ schoolView.default = function(schoolInstance) {
         schoolName: schoolInstance.name,
         schoolType: '',
         schoolDescr: '',
+        features: '',
         directorName: schoolInstance.director,
-        schoolQuote : "Мел",
-        features: [],
+        schoolQuote : 'Мел',
         extendedDayCost: '',
         dressCode: '',
         classes: educationIntervalToString(schoolInstance.educationInterval),
-        social: [],
+        social:[],
         metroStations: Object.keys(metroStations)
             .map(function(key) {
                 return metroStations[key];
             }),
         sites:[{
-            name: "Перейти на сайт школы",
+            name: 'Перейти на сайт школы',
             href: 'http://' + schoolInstance.site,
             link: schoolInstance.site
         }],
+        activities: [],
+        specializedClasses: [],
         contacts:{
             address: addresses.map(address => {
                 return {
@@ -95,6 +103,7 @@ schoolView.default = function(schoolInstance) {
                 lng: adr.coords[1]
             };
         }),
+        ratings: ratings,
         score: sumScore,
         totalScore: sumScore.reduce((context, value) => {
             if (value) {
@@ -107,8 +116,7 @@ schoolView.default = function(schoolInstance) {
             sum: 0,
             count: 0,
             res: 0
-        }).res,
-        ratings: ratings
+        }).res
     };
 
     return data;
