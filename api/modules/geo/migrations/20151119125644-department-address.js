@@ -17,16 +17,18 @@ module.exports = {
         },
         address_id: {
             type: Sequelize.INTEGER,
+            onDelete: 'cascade',
             references: {
-                model: "address",
-                key: "id"
+                model: 'address',
+                key: 'id'
             }
         },
         department_id: {
             type: Sequelize.INTEGER,
+            onDelete: 'cascade',
             references: {
-                model: "department",
-                key: "id"
+                model: 'department',
+                key: 'id'
             }
         },
         created_at: Sequelize.DATE,

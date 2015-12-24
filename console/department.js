@@ -140,7 +140,7 @@ var saveData = departmentData => {
             };
 
         var departmentList = await(
-                services.department.getAllByParams(departmentParams));
+                services.department.getAllByData(departmentParams));
 
         var isCreated = false;
         if (departmentList.length > 0) {
@@ -163,16 +163,16 @@ var saveData = departmentData => {
             });
 
             var uniqueDepartmentAddressId = getUniqueArray(departmentAddressId);
-            var departmentInstance = await(
-                    services.department.addDepartment(departmentParams));
 
-            await(services.department.addAddressList(
-                departmentInstance.id, uniqueDepartmentAddressId));
+            uniqueDepartmentAddressId.forEach(addressId => {
+                await(services.department.addDepartment(
+                    schoolId,
+                    addressId,
+                    departmentParams
+                ));
+            });
         }
-
     }
-
-
 };
 
 

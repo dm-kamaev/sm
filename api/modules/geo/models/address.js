@@ -31,7 +31,8 @@ var Address = db.define('Address', {
                     model: 'Department_address',
                     unique: false
                 },
-                foreignKey: 'address_id'
+                foreignKey: 'address_id',
+                onDelete: 'cascade'
             });
             Address.belongsTo(models.Area, {
                 as: 'area',

@@ -19,18 +19,19 @@ module.exports = {
         },	
         school_id: {
             allowNull: false,
+            onDelete: 'cascade',
             type: Sequelize.INTEGER,
             references: {
-                model:"school",
-                key: "id"
+                model:'school',
+                key: 'id'
             }
         },
         university_id: {
             allowNull: false,
             type: Sequelize.INTEGER,
             references: {
-                model:"university",
-                key: "id"
+                model:'university',
+                key: 'id'
             }
         },
         ppl_count: {
@@ -41,7 +42,7 @@ module.exports = {
         }
     });
   },
-  down: function (queryInterface, Sequelize) {
+  down: function (queryInterface) {
     return queryInterface.dropTable('school_university');
   }
 };

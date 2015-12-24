@@ -15,11 +15,9 @@ module.exports = {
                     type: Sequelize.INTEGER
                 },
                 created_at: {
-                    allowNull: false,
                     type: Sequelize.DATE
                 },
                 updated_at: {
-                    allowNull: false,
                     type: Sequelize.DATE
                 },
                 name: {
@@ -30,7 +28,7 @@ module.exports = {
             archiver.load();
         }));
     },
-    down: function (queryInterface, Sequelize) {
+    down: function (queryInterface) {
         return queryInterface.dropTable(
             'area'
         );

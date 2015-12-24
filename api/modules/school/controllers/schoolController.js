@@ -6,111 +6,147 @@ var await = require('asyncawait/await');
 
 
 /**
- * @api {post} api/school/:id/comment Create new comment
+ * @api {post} api/school/createschool Creates school
  * @apiVersion 0.0.0
  * @apiGroup School
- * @apiName CreateComment
- * @apiParam {Text} text Comment text.
- * @apiParam {String = "Parent", "Graduate", "Scholar"} userType UserType.
- * @apiParam {Int[]} score Array[4] of scores.
+ * @apiName Create
  * @apiParamExample {json} Request-Example:
  *     {
- *       "text": "test comment",
- *       "userType": "Parent",
- *       "score": [3,2,1,5]
+ *         "schoolData" : {
+ *             "name": "Общеобразовательная школа",
+ *             "abbreviation": "ГОУ СКОШ № 00",
+ *             "fullName": "Государственное образовательное учреждение",
+ *             "schoolType": "Школа",
+ *             "director": "Любимов Олег Вадимович",
+ *             "phones": ["(495) 223-32-23", "(499)322-23-33"],
+ *             "site": "school.ru",
+ *             "educationInterval": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+ *             "govermentKey": 100,
+ *             "addresses": [{
+ *                 "name":  "ул. Веткина, 2",
+ *                 "coords": [55.802275, 37.624876],
+ *                 "departments": [{
+ *                     "stage": "Начальное образование",
+ *                     "name": "Начальное образование",
+ *                     "availability": [1, 0, 0]
+ *                 }]
+ *             }]
+ *         }
  *     }
  */
-exports.createComment = async (function(req, res) {
+exports.create = async (function(req, res) {
     var result = '';
     try {
-        var schoolId = req.params.id,
-            params = req.body;
-        params.score = params['score[]']; //TODO придумать чтото с этим
-        result = await(
-            services.school.review(schoolId, params)
-        );
-    } catch (e) {
-        console.log(e);
-        result = e.message;
-    } finally {
-        res.header("Content-Type", "text/html; charset=utf-8");
-        res.end(JSON.stringify(result));
-    }
-});
-
-/**
- * @api {get} api/school/apitest api test
- * @apiVersion 0.0.0
- * @apiGroup School
- * @apiName Apitest
- * @apiParam {Object} searchParams Search params.
- * @apiParamExample {json} Request-Example:
- *     {
- *       "text" : "test"
- *     }
- */
-exports.yapi = async (function(req, res) {
-    var result = '';
-    try {
-        var params = req.query;
-        result = JSON.stringify(await(services.search.advancedSearch(params.text)));
+        var data = req.body.schoolData;
+        console.log('data', data);
+        result = await(services.school.create(data));
     } catch (e) {
         console.log(e);
         result = JSON.stringify(e);
     } finally {
-        res.header("Content-Type", "text/html; charset=utf-8");
-        res.end(result);
+        res.header('Content-Type', 'text/html; charset=utf-8');
+        res.end(JSON.stringify(result));
     }
 });
+
+
 /**
- * @api {get} api/school/search Search school
+ * @api {put} api/school/:id/ Update school
  * @apiVersion 0.0.0
  * @apiGroup School
- * @apiName Search
- * @apiParam {Object} searchParams Search params.
+ * @apiName Update
  * @apiParamExample {json} Request-Example:
  *     {
- *       "searchParams" : {
- *       	"name": "123", 
- *       	"classes": [1,2,3,4],
- *       	"schoolType": ["Школа", "Лицей"],
- *       	"gia": [1,2],
- *       	"ege": [2,3],
- *       	"olimp": [3,5]	
- *       }
+ *         "schoolData" : {
+ *             "name": "Общеобразовательная школа",
+ *             "abbreviation": "ГОУ СКОШ № 00",
+ *             "fullName": "Государственное образовательное учреждение",
+ *             "schoolType": "Школа",
+ *             "director": "Любимов Олег Вадимович",
+ *             "phones": ["(495) 223-32-23", "(499)322-23-33"],
+ *             "site": "school.ru",
+ *             "educationInterval": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+ *         }
  *     }
  */
-exports.search = async (function(req, res) {
+exports.update = async (function(req, res) {
     var result = '';
     try {
-        var params = req.query || {};
-        result = await(services.school.list(params));
+        var school_id = req.params.id;
+        var data = req.body.schoolData;
+        result = await(services.school.update(school_id, data));
     } catch (e) {
         console.log(e);
         result = e.message;
     } finally {
-        res.header("Content-Type", "text/html; charset=utf-8");
+        res.header('Content-Type', 'text/html; charset=utf-8');
+        res.end(JSON.stringify(result));
+    }
+});
+
+
+/**
+ * @api {delete} api/school/:id Delete school
+ * @apiVersion 0.0.0
+ * @apiGroup School
+ * @apiName Delete
+ */
+exports.delete = async (function(req, res) {
+    var result = '';
+    try {
+        var school_id = req.params.id;
+        result = await(services.school.delete(school_id));
+    } catch (e) {
+        console.log(e);
+        result = e.message;
+    } finally {
+        res.header('Content-Type', 'text/html; charset=utf-8');
+        res.end(JSON.stringify(result));
+    }
+});
+
+
+/**
+ * @api {get} api/school Get school list
+ * @apiVersion 0.0.0
+ * @apiGroup School
+ * @apiName Schools
+ * @apiSuccess {Object[]} schools Very userful documentation here.
+ */
+exports.list = async (function(req, res) {
+    try {
+        var result = await (services.school.list());
+    } catch (e) {
+        console.log(e);
+        result = e.message;
+    } finally {
+        res.header('Content-Type', 'text/html; charset=utf-8');
+        res.end(JSON.stringify(result));
+    }
+});
+
+
+/**
+ * @api {get} api/school/:id Get school
+ * @apiVersion 0.0.0
+ * @apiGroup School
+ * @apiName School
+ * @apiSuccess {Object} schools Very userful documentation here.
+ */
+exports.view = async (function(req, res) {
+    try {
+        var result = await(services.school.viewOne(req.params.id));
+    } catch (e) {
+        console.log(e);
+        result = e.message;
+    } finally {
+        res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(JSON.stringify(result));
     }
 });
 
 
 
-/**
- * @api {post} api/school/createschool Creates school (TODO)
- * @apiVersion 0.0.0
- * @apiGroup School
- * @apiName CreateSchool
- * @apiParamExample {json} Request-Example:
- *     {
- *       "params": "would be here",
- *     }
- */
-exports.create = function(req, res) {
-
-
-
-};
 
 /**
  * @api {get} api/school/search/filters Get school type list
@@ -126,41 +162,75 @@ exports.listSearchFilters = async (function(req, res) {
         console.log(e.message);
         result = e.message;
     } finally {
-        res.header("Content-Type", "text/html; charset=utf-8");
+        res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(JSON.stringify(result));
     }
 });
 
+
 /**
- * @api {get} api/school Get school list
+ * @api {post} api/school/:id/comment Create new comment
  * @apiVersion 0.0.0
  * @apiGroup School
- * @apiName List
- * @apiSuccess {Object[]} schools Very userful documentation here.
+ * @apiName CreateComment
+ * @apiParam {Text} text Comment text.
+ * @apiParam {String = 'Parent', 'Graduate', 'Scholar'} userType UserType.
+ * @apiParam {Int[]} score Array[4] of scores.
+ * @apiParamExample {json} Request-Example:
+ *     {
+ *       "text": "test comment",
+ *       "userType": "Parent",
+ *       "score": [3,2,1,5]
+ *     }
  */
- 
-exports.list = async (function(req, res) {
-    var result;
+exports.createComment = async (function(req, res) {
+    var result = '';
     try {
-        result = await(services.school.list());
+        var schoolId = req.params.id,
+            params = req.body;
+        params.score = params['score[]']; //TODO придумать чтото с этим
+        result = JSON.stringify(
+            await(services.school.commentTransaction(schoolId, params))
+            );
+        console.log(result);
     } catch (e) {
         console.log(e);
-        result = e.message;
+        result = JSON.stringify(e);
     } finally {
-        res.header("Content-Type", "text/html; charset=utf-8");
+        res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(JSON.stringify(result));
     }
 });
 
+
 /**
- * @api {get} api/school/:id Get school
+ * @api {get} api/school/search Search school
  * @apiVersion 0.0.0
  * @apiGroup School
- * @apiName View
- * @apiSuccess {Object} schools Very userful documentation here.
+ * @apiName Search
+ * @apiParam {Object} searchParams Search params.
+ * @apiParamExample {json} Request-Example:
+ *     {
+ *       "searchParams" : {
+ *          "name": "123",
+ *          "classes": [1,2,3,4],
+ *          "schoolType": ["Школа", "Лицей"],
+ *          "gia": [1,2],
+ *          "ege": [2,3],
+ *          "olimp": [3,5]
+ *       }
+ *     }
  */
-exports.view = async (function(req, res) {
-    var school = await(services.school.viewOne(req.params.id));
-    res.header("Content-Type", "text/html; charset=utf-8");
-    res.end(JSON.stringify(school));
+exports.search = async (function(req, res) {
+    var result = '';
+    try {
+        var params = req.query;
+        result = await(services.school.list(params));
+    } catch (e) {
+        console.log(e);
+        result = JSON.stringify(e);
+    } finally {
+        res.header('Content-Type', 'text/html; charset=utf-8');
+        res.end(JSON.stringify(result));
+    }
 });

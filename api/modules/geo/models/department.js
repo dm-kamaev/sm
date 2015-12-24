@@ -8,7 +8,11 @@ var Department = db.define('Department', {
         type: DataType.ENUM,
         values: enums.departmentStage.toArray(),
         allowNull: false
-    }
+    },
+    availability: {
+        type: DataType.ARRAY(DataType.BOOLEAN),
+        allowNull: false
+    },
 }, {
     underscored: true,
     tableName: 'department',

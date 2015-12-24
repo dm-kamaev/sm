@@ -10,11 +10,9 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       created_at: {
-        allowNull: false,
         type: Sequelize.DATE
       },
       updated_at: {
-        allowNull: false,
         type: Sequelize.DATE
       },
       text: {
@@ -31,14 +29,15 @@ module.exports = {
       },
       comment_group_id: {
         type: Sequelize.INTEGER,
+        onDelete: 'cascade',
         references: {
-          model:"comment_group",
-          key: "id",
+          model:'comment_group',
+          key: 'id',
         }
       }
     });
   },
-  down: function (queryInterface, Sequelize) {
+  down: function (queryInterface) {
     return queryInterface.dropTable('comment');
   }
 };

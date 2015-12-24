@@ -39,7 +39,6 @@ class ModelArchiver {
      * @public
      */
     load() {
-
         var csv = await(this.archiver_.decompress());
         var converter = new CsvConverter(csv);
         var data = converter.toJson();
@@ -60,6 +59,26 @@ class ModelArchiver {
         await (chunks.forEach(chunk => {
             await(this.model_.bulkCreate(chunk));
         }));
+        await (this.actualizeSequence_());
+    }
+
+    /**
+     * @private
+     * fixes bug in auto incremented id
+     */
+    actualizeSequence_() {
+        var tableName = this.model_.tableName;
+        var sqlString = 'SELECT setval(\'' + tableName + 
+                '_id_seq\', (SELECT MAX(id) from ' +
+                tableName +'));';
+        try {
+            await(sequelize.query(
+                sqlString, 
+                {type: sequelize.QueryTypes.SELECT}
+            ));
+        } catch (e) {
+            throw e;
+        }
     }
 
     /**

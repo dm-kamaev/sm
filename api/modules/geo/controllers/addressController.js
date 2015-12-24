@@ -4,23 +4,51 @@ var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 
 /**
- * @api {post} api/address/list Get addresses
+ * @api {get} api/school/:id/address Get school addresses
  * @apiVersion 0.0.0
- * @apiGroup Address
- * @apiName List
- * @apiSuccess {Object[]} addresses Very userful documentation here.
+ * @apiGroup School
+ * @apiName Addresses
  */
-
-exports.list = async (function(req, res) {
-    var result;
-
+exports.getAddresses = async (function(req, res) {
+    var result = '';
     try {
-        result = await(services.address.list());
+        var schoolId = req.params.id;
+        result = await(services.school.getAddresses(schoolId));
     } catch (e) {
-        console.log(e);
-        result = e.message;
+        console.log(e.message);
+        result = e;
     } finally {
-        res.header("Content-Type", "text/html; charset=utf-8");
+        res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(JSON.stringify(result));
     }
 });
+
+
+/**
+ * @api {get} api/school/:school_id/address/:id Get school address
+ * @apiVersion 0.0.0
+ * @apiGroup School
+ * @apiName Address
+ */
+exports.getAddress = async (function(req, res) {
+    var result = '';
+    try {
+        var school_id = req.params.school_id;
+        var address_id = req.params.id;
+        var address =
+                await(services.school.getAddress(school_id, address_id));
+        if (address) {
+            result = address;
+        }
+        else {
+            result = 'School hasn\'t address with id ' + address_id;
+        }
+    } catch (e) {
+        console.log(e.message);
+        result = e;
+    } finally {
+        res.header('Content-Type', 'text/html; charset=utf-8');
+        res.end(JSON.stringify(result));
+    }
+});
+
