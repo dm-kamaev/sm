@@ -2,6 +2,14 @@ var DataType = require('sequelize'),
     db = require('../../../../app/components/db');
 
 var Address = db.define('Address', {
+    schoolId: {
+        type: DataType.INTEGER,
+        field: 'school_id'
+    },
+    areaId: {
+        type: DataType.INTEGER,
+        field: 'area_id'
+    },
     name: DataType.STRING,
     coords: DataType.ARRAY(DataType.FLOAT)
 }, {
