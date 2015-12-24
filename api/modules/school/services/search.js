@@ -2,7 +2,7 @@ var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var models = require.main.require('./app/components/models').all;
 var services = require.main.require('./app/components/services').all;
-var sequelizeInclude = require.main.require('./api/components/sequelizeInclude');  
+var sequelizeInclude = require.main.require('./api/components/sequelizeInclude');
 var colors = require('colors');
 var searchTypes = require.main.require('./api/modules/school/enums/searchType');
 exports.name = 'search';
@@ -22,7 +22,6 @@ var getSearchSubstrings = function (string) {
     return string.toLowerCase()
         .trim()
         .replace(/[^\wа-яА-Я\s]/g,'') //remove everything except letters, numbers and spaces
-        .replace(/школа/,'')
         .trim()
         .split(' ');
 };
@@ -49,7 +48,7 @@ exports.getTypeFilters = async(function() {
  */
 exports.advancedSearch = async ((searchString) => {
     searchString = searchString.toLowerCase();
-    var filter = generateFilter(searchString);
+    var filter = this.generateFilter(searchString);
 
     var yandexRequest = services.yapi.request(searchString);
 
@@ -57,7 +56,7 @@ exports.advancedSearch = async ((searchString) => {
         where: {
             $or: [{
                 name: filter,
-                fullName: filter  
+                fullName: filter
             }]
         }
     });
@@ -70,10 +69,10 @@ exports.advancedSearch = async ((searchString) => {
 
     var metroRequest = models.Metro.findAll({
         where: {
-            name: filter 
+            name: filter
         }
     });
-    
+
     var results = await (yandexRequest,
                         schoolRequest,
                         addressRequest,
@@ -90,14 +89,18 @@ exports.advancedSearch = async ((searchString) => {
 /**
  * @param {int} school_id
  * @param {array<int>} values Subjects IDs
+ * @param {enums.searchTypes} searchType
+ * Used to add data in SearchData table
+ *
  */
-exports.addGia = async(function(schoolId, values) {
+exports.addSearchData = async(function(schoolId, values, searchType) {
     await (models.SearchData.create({
         schoolId: schoolId,
-        type: searchTypes.GIA,
+        type: searchType,
         values: values
     }));
 });
+
 
 /**
  * @param {int} school_id
@@ -109,7 +112,7 @@ exports.setSchoolType = async(function(schoolId, value) {
             schoolId: schoolId,
             type: searchTypes.SCHOOL_TYPE
         }
-    })) 
+    }));
     var values = [];
     values.push(value);
     await (models.SearchData.create({
@@ -119,14 +122,24 @@ exports.setSchoolType = async(function(schoolId, value) {
     }));
 });
 
+
 /**
- * @param {int} school_id
- * @param {array<int>} values Subjects IDs
+ * Get one data
+ * @param {number} searh_data_id
+ * @return {Object} instance of SearhData model
  */
-exports.addOlimp = async(function(schoolId, values) {
-    await (models.SearchData.create({
-        schoolId: schoolId,
-        type: searchTypes.OLIMPIAD,
-        values: values
+exports.getById = async(function(searh_data_id) {
+    return await(models.Department.findOne({
+        where: {id: searh_data_id}
     }));
+});
+
+
+/**
+ * Delete searshData
+ * @param {int} searh_data_id
+ */
+exports.deleteSearchData = async(function(searh_data_id) {
+    var instance = await(exports.getById(searh_data_id));
+    instance.destroy();
 });

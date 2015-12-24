@@ -1,0 +1,66 @@
+{namespace sm.lSchool.bDataBlock.Template}
+
+/**
+ * Content item
+ */
+{template .base  autoescape="strict" kind="html"}
+    {call .init data="all" /}
+{/template}
+
+/**
+ * Block init
+ * @param params {
+ *     header: ?string,
+ *     mod: ?string
+ *     content: ?[]
+ * }
+ */
+{template .init autoescape="strict" kind="html"}
+    <div class="b-data-block
+        {if $params.mod}
+            {sp}{$params.mod}
+        {/if}
+    ">
+
+        //Header section
+        {if $params.header}
+            {call .header}
+                {param params: [
+                    'header': $params.header
+                ] /}
+            {/call}
+        {/if}
+
+        //Content  section
+        {if $params.content}
+            {call .content data="all" /}
+        {/if}
+    </div>
+{/template}
+
+/**
+ * Header part
+ * @param params {
+ *     header: ?string
+ * }
+ */
+{template .header autoescape="strict" kind="html"}
+    <div class="b-data-block__line"></div>
+    <div class="b-data-block__header">{$params.header}</div>
+{/template}
+
+/**
+ * Content part
+ * @param params {
+ *     content: ?list
+ * }
+ */
+{template .content autoescape="strict" kind="html"}
+    <ul class="b-data-block__content">
+    {foreach $item in $params.content}
+        <li class="b-data-block__item">
+            {$item}
+        </li>
+    {/foreach}
+    </ul>
+{/template}

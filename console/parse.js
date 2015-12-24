@@ -6,6 +6,8 @@ var colors = require('colors');
 
 var sequelize = require.main.require('./app/components/db');
 
+var parseAreas = require('./parse_area');
+
 var modules = require.main.require('./api/modules');
 var services = require.main.require('./app/components/services').all;
 
@@ -22,7 +24,7 @@ var GOVERMENT_KEY_INDEX = 2,
     ADDRESSES_INDEX = 20,
     EDU_PROGRAMM_INDEX = 21,
     SUBJECT_INDEX = 37,
-    GIA_COUNT_INDEX =38,
+    GIA_COUNT_INDEX = 38,
     GIA_RESULTS_INDEX = 39,
     OLIMP_TYPE_INDEX = 30,
     OLIMP_STAGE_INDEX = 31,
@@ -30,6 +32,36 @@ var GOVERMENT_KEY_INDEX = 2,
     OLIMP_SUBJECT_INDEX = 33,
     OLIMP_STATUS_INDEX = 34,
     OLIMP_YEAR_INDEX = 35;
+
+/**
+ * main parse method
+ */
+var parse = async(path => {
+    //sequelize.options.logging = false;
+    var parsed = xlsx.parse(path),
+        data = parsed[0].data;
+    var moscow = await(services.city.getMoscow());
+
+    data.map(rowParse)
+        .filter((item, index) =>
+            (index > 0) &&
+            notIgnor(item.school.schoolType))
+        .forEach((item) => {
+            item.school.cityId = moscow.id;
+            var school = await(parseSchool(item.school));
+
+            if(item.giaResult.length) {
+                initGiaResults(item.giaResult, school.id);
+            }
+            if (item.olimpResult.length) {
+                services.studyResult.setSchoolOlimp(school, item.olimpResult);
+            }
+        });
+
+    data = data.slice(1);
+
+    parseAreas.parseAreas(data);
+});
 
 /**
  * helper for nameParse - gets Name
@@ -190,13 +222,14 @@ var rowToSchool = row => {
     var nParse = nameParse(row[NAME_INDEX]);
     var schoolName = getName(nParse);
     var schoolType = getType(nParse);
+
     return {
         name: schoolName.trim(),
 		fullName: row[FULL_NAME_INDEX].trim(),
         abbreviation: row[NAME_INDEX],
         schoolType: schoolType,
         director: row[DIRECTOR_INDEX],
-        phones: getArray(row, PHONES_INDEX),
+        phones: getPhones(row),
         site: row[SITE_INDEX],
         addresses: getArray(row, ADDRESSES_INDEX)
             .map(address=>{return {name: address, coords: []}; }),
@@ -204,6 +237,21 @@ var rowToSchool = row => {
         educationInterval: getEducationInterval(row[EDU_PROGRAMM_INDEX])
     };
 };
+
+
+/**
+ * Get school phones
+ * @param {string[]} row School data row
+ * @return {string[]}
+ */
+var getPhones = function(row) {
+    var res =  getArray(row, PHONES_INDEX);
+    if (res[0] && res[0].match(/\(000\)/)) {
+        res = [];
+    }
+    return res;
+};
+
 
 /**
  * parses row to olimp object
@@ -321,32 +369,6 @@ var initGiaResults = async (function (giaResults, schoolId) {
         })
     });
 });
-
-
-/**
- * main parse method
- */
-var parse = async(path => {
-    //sequelize.options.logging = false;
-    var parsed = xlsx.parse(path),
-        data = parsed[0].data;
-
-    data.map(rowParse)
-        .filter((item, index) =>
-            (index > 0) &&
-            notIgnor(item.school.schoolType))
-        .forEach((item) => {
-            var school = await(parseSchool(item.school));
-
-            if(item.giaResult.length) {
-                initGiaResults(item.giaResult, school.id);
-            }
-            if (item.olimpResult.length) {
-                services.studyResult.setSchoolOlimp(school, item.olimpResult);
-            }
-        });
-});
-
 
 /**
  * Settings for accessing this script using cli

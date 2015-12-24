@@ -3,85 +3,94 @@
 /**
  * The mark template
  * @param params {{
- *     data: {
- *         stats: [{
- *             value: ?Number,
- *             mark: ?Number,
- *             isMax: ?Boolean
- *         }],
- *         total: {
- *             average: ?Number,
- *             countValue: ?Number
- *         }
- *     }
+ *     value: number,
+ *     display: ?string,
+ *     starsConfig: ?[]
  * }}
-*/
+ */
 {template .base}
-    <div class="b-mark">
-        {call .total_}
-            {param params: $params.data.total /}
-        {/call}
-        <div class="b-mark__stats">
-            {foreach $stat in $params.data.stats}
-                {call .stat_}
-                    {param params: $stat /}
-                {/call}
-            {/foreach}
+    {let $color kind="html"}
+        {if $params.value >= 4}
+            green
+        {elseif $params.value >= 3}
+            yellow
+        {elseif $params.value > 0}
+            red
+        {else}
+            grey
+        {/if}
+    {/let}
+    <div class="b-mark{sp}
+                b-mark_{$color}
+                {sp}
+                {$params?.display == 'inline' ? 'b-mark_inline' : ''}">
+        {if $params?.display == 'inline'}
+            {call .inline data="all"/}
+        {elseif $params?.display == 'stars'}
+            {call .stars data="all"/}
+        {else}
+            {call .simple data="all"/}
+        {/if}
+    </div>
+{/template}
+
+/**
+ * Simple
+ * @param params {{
+ *     value: number
+ * }}
+ */
+{template .simple}
+    <div class="b-mark__circle">
+        <div class="b-mark__mark">
+            {call .value data="all"/}
         </div>
     </div>
 {/template}
 
-
 /**
- * The total template
+ * Inline
  * @param params {{
- *    average: ?Number,
- *    countValue: ?Number
+ *     value: number
  * }}
  */
-{template .total_ private="true"}
-    <div class="b-mark__total">
-        <div class="b-mark__average">
-            {$params.average}
-        </div>
-        <div class="b-mark__count">
-            <div class="b-mark__count-value">
-                {$params.countValue}
-            </div>
-            <div class="b-mark__count-label">
-                голосов
-            </div>
-        </div>
+{template .inline}
+    <div class="b-mark__circle">
+    </div>
+    <div class="b-mark__mark">
+        {call .value data="all"/}
     </div>
 {/template}
 
-
 /**
- * The stat template
+ * Stars template
  * @param params {{
- *     value: ?Number,
- *     mark: ?Number,
- *     isMax: ?Boolean
+ *     value: number,
+ *     starsConfig: ?[]
  * }}
  */
-{template .stat_ private="true"}
-        <div class="b-mark__stat">
-            {call sm.bStars.Template.base}
-                {param params: [
-                    'data': [
-                        'mark': $params.mark
-                    ]
-                ] /}
-            {/call}
+{template .stars}
+    {call sm.bStars.Template.base}
+        {param params: [
+            'data': [
+                'mark': $params.value
+            ],
+            'config': $params.starsConfig
+        ]/}
+    {/call}
+{/template}
 
-            <div class="b-mark__bar
-                        {$params.isMax ? ' b-mark__bar_max' : ''}">
-                <div class="b-mark__bar-progress">
-                </div>
-            </div>
-
-            <div class="b-mark__count">
-                {$params.value}
-            </div>
-        </div>
+/**
+ * Value
+ * @param params {{
+ *     value: number
+ * }}
+ */
+{template .value}
+    {if $params.value > 0}
+        {let $val: round($params.value, 1)/}
+        {floor($val)},{round(($val - floor($val))*10, 0)}
+    {else}
+        —
+    {/if}
 {/template}

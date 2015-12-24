@@ -2,7 +2,6 @@ var soy = require.main.require('./app/components/soy');
 var services = require.main.require('./app/components/services').all;
 var render = require('../renderers/schoolRenderer');
 
-var fs = require('fs');
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 
@@ -17,22 +16,49 @@ exports.createComment = async (function(req, res) {
         console.log(e);
         result = JSON.stringify(e);
     } finally {
-        res.header("Content-Type", "text/html; charset=utf-8");
+        res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(result);
     }
 });
 
 
-exports.create = function(req, res) {
-
-};
-
-
 exports.list = async (function(req, res) {
     var schools = await (services.school.list());
-    var filters = await (services.school.searchFilters());
+    var filters = await (services.school.searchFilters())
+        .map(item => {
+            var res = {
+                data: {
+                    filters: item.values,
+                    header: {
+                        help: ''
+                    },
+                    name: item.filter
+                },
+                config: {}
+            };
 
-    var html = soy.render('sm.lSearchResult.Template.base', {
+            switch (item.filter) {
+                case 'school_type':
+                    res.data.header.title = 'Тип школы';
+                    res.config.filtersToShow = 15;
+                    res.config.cannotBeHidden = true;
+                    break;
+                case 'ege':
+                    res.data.header.title = 'Высокие результаты ЕГЭ';
+                    break;
+                case 'gia':
+                    res.data.header.title = 'Высокие результаты ГИА';
+                    break;
+                case 'olimp':
+                    res.data.header.title = 'Есть победы в олимпиадах';
+                    break;
+            }
+
+            return res;
+        });
+
+    console.log(filters);
+    var params = {
         params: {
             data: {
                 schools: schools,
@@ -41,6 +67,7 @@ exports.list = async (function(req, res) {
                     url: '/api/school/search'
                 }
             },
+            searchText: req.query.name || '',
             templates: {
                 search: '{{ name }}',
                 item: '{{ name }}',
@@ -48,19 +75,24 @@ exports.list = async (function(req, res) {
                 value: '{{ id }}'
             }
         }
-    });
+    };
 
-    res.header("Content-Type", "text/html; charset=utf-8");
+    var html = soy.render('sm.lSearchResult.Template.base', params);
+
+    res.header('Content-Type', 'text/html; charset=utf-8');
     res.end(html);
 });
 
 
 exports.view = async (function(req, res) {
     var school = await (services.school.viewOne(req.params.id));
-    console.log(JSON.stringify(school).yellow);
-
-    var commentGroup = school.CommentGroup ? school.CommentGroup.comments : [];
-    console.log(JSON.stringify(commentGroup).blue);
+    if (!school) {
+        res.header('Content-Type', 'text/html; charset=utf-8');
+        res.status(404);
+        res.end('404');
+        return; // I dont want to be in this method anymore
+    }
+        
 
     var typeConvert = {
         'Parent': 'родитель',
@@ -94,46 +126,78 @@ exports.view = async (function(req, res) {
             var begin = interval[0],
                 end = interval[interval.length - 1];
 
-            res += begin ? begin : 'Детский сад';
-
             if (end > begin) {
-                res += '–';
-                res += end;
-                res += begin ? ' классы' : ' класс';
+                res += 'Обучение с ';
+                res += begin ? begin : 'детского сада';
+                res += ' по ' + end + ' класс';
+            }
+            else {
+                res = 'Детский сад';
             }
         }
 
         return res;
     }
 
+    var ratings = [];
+    /*Check that position in Mel's rating exists and less than 100*/
+    if (school.rating && school.rating <= 100) {
+        ratings.push({
+            name: 'Рейтинг пользователей «Мела»',
+            place: school.rating,
+            href: '/search'
+        });
+    }
+    /*Check that position in Moscow education dept.
+      rating exists and less than 100*/
+    if (school.rank && school.rank <= 100) {
+        ratings.push({
+            name: 'Рейтинг Департамента образования Москвы',
+            place: school.rank
+        });
+    }
+
     var addresses =
-            services.department.addressesFilter(school.addresses);
-    var commentGroup = school.CommentGroup ? school.CommentGroup.comments : [];
+            services.department.addressesFilter(school.addresses),
+        commentGroup = school.commentGroup ? school.commentGroup.comments : [],
+        metroStations = [];
+    addresses.forEach(address => {
+        metroStations.push(services.address.getMetro(address));
+    });
     var params = {
         data: {
             id: school.id,
             schoolName: school.name,
             schoolType: '',
             schoolDescr: '',
+            features: '',
             directorName: school.director,
-            schoolQuote : "Мел",
+            schoolQuote : 'Мел',
+            extendedDayCost: '',
+            dressCode: '',
             classes: educationIntervalToString(school.educationInterval),
             social:[],
+            metroStations: metroStations,
             sites:[{
-                name: "Перейти на сайт школы",
+                name: 'Перейти на сайт школы',
                 href: 'http://' + school.site,
                 link: school.site
             }],
+            activities: [],
+            specializedClasses: [],
             contacts:{
                 address: addresses.map(address => {
                     return {
                         title: '',
-                        description: address.name
+                        description: address.name,
+                        metro: services.address.getMetro(address)
                     };
                 }),
                 phones: school.phones || ''
             },
-            comments: commentGroup.map(comment => {
+            comments: commentGroup
+                .filter(comment => comment.text)
+                .map(comment => {
                 return {
                     author: '',
                     rank: typeConvert[comment.userType],
@@ -158,6 +222,7 @@ exports.view = async (function(req, res) {
                     lng: adr.coords[1]
                 };
             }),
+            ratings: ratings,
             score: sumScore,
             totalScore: sumScore.reduce((context, value) => {
                 if (value) {
@@ -174,9 +239,9 @@ exports.view = async (function(req, res) {
         }
     };
 
-    console.log(params.data);
+    //console.log(params.data);
 
-    res.header("Content-Type", "text/html; charset=utf-8");
+    res.header('Content-Type', 'text/html; charset=utf-8');
     res.end(
         soy.render('sm.lSchool.Template.base', {
         params: params
@@ -202,6 +267,8 @@ exports.search = async(function(req, res) {
           }
 
     });
-    res.header("Content-Type", "text/html; charset=utf-8");
+
+    console.log(html);
+    res.header('Content-Type', 'text/html; charset=utf-8');
     res.end(html);
 });

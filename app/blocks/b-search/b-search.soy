@@ -3,6 +3,7 @@
  * Search template
  * @param? params {
  *    placeholder: ?string,
+ *    text: ?string,
  *    theme: ?string,
  *    templates: ?{
  *        search: ?string,
@@ -23,6 +24,7 @@
         {call gorod.gSuggest.SuggestTemplate.render}
             {param params: [
                 'data': [
+                    'text': $params.text,
                     'minLength': 3,
                     'placeholder': 'Поиск',
                     'sourceUrl': '/api/school/search',
@@ -31,12 +33,17 @@
                 ],
                 'config': [
                     'customClasses': 'b-search__input',
+                    'filtrationEnabled': false,
                     'templates': [
                         'search': $params.templates.search,
                         'item': $params.templates.item,
                         'text': $params.templates.text,
                         'value': $params.templates.value
                     ]
+                ],
+                'list': [
+                    'theme': 'stendhal',
+                    'color': 'sienna'
                 ]
             ]/}
         {/call}

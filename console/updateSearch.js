@@ -1,3 +1,4 @@
+'use strict'
 const exec = require('child_process').exec;
 const async = require('asyncawait/async');
 const await = require('asyncawait/await');
@@ -12,170 +13,339 @@ const searchType = require.main.require('./api/modules/school/enums/searchType')
 const schoolType = require.main.require('./api/modules/school/enums/schoolType');
 var sequelize = require.main.require('./app/components/db');
     
-var start = function() {
-  sequelize.options.logging = false;
-    var vars = [
-        'Start with updating old indexes', 
-        'Start without updating old indexes'];
-    var index = readlineSync.keyInSelect(vars, 'What to do?');
-    switch (index) {
-        case 0: 
-            launch(true);
-            break;
-        case 1:
-            launch();
-            break;
-    }
-};
-
-var launch = async (function(isRewriting) {
+var start = async(function() {
+    sequelize.options.logging = false;
     var schools = await(services.school.listInstances());
-    await(new SearchUpdater(schools, isRewriting));
+    var searchUpdater = await(new SearchUpdater(schools));
+    searchUpdater.start();
 });
 
-var SearchUpdater = async(function(schools, isRewriting){
-    this.isRewriting = isRewriting || false;
-    this.schools = schools;   
-    this.citySubjects = await (services.subject.listCityResults());
-    this.schoolTypeFilters = await (services.search.getTypeFilters());
+class SearchUpdater {
+    /**
+     * @public 
+     * @param {array<object>} schools 
+     * @param {bool} [isRewriting = false]
+     */
+    constructor(schools) {
+        this.schools_ = schools;
+        this.citySubjects_ = await (services.subject.listCityResults());
+        this.schoolTypeFilters_ = await (services.search.getTypeFilters());
+    }
 
+    /**
+     * @public
+     * @async
+     */
+    start() {
+        var bar = new ProgressBar('Processing :bar :current/:total', { 
+            total: this.schools_.length,
+            width: 30 
+        });
+        await (this.updateAverage_());
+        await (this.schools_.forEach(school => {
+            /*update type filters*/
+            var filterInstance = this.getTypeFilter_(school.schoolType);
+            await(services.search.setSchoolType(school.id, filterInstance.id));
+            
+            /*update ege filters*/
+            var egeActualizer = await(new EgeActualizer(school, this.citySubjects_));
+            await(egeActualizer.actualize());
+                
+            /*update gia filters*/
+            var giaActualizer = await (new GiaActualizer(school, this.citySubjects_));
+            await (giaActualizer.actualize());
+
+            /*update olymp filters*/
+            var olympActualizer = await (new OlympActualizer(school));
+            await(olympActualizer.actualize());
+            bar.tick();
+        }));
+        console.log('Succses. Stopping script');
+    }
+
+
+    /**
+     * @private 
+     * @async
+     */
+    updateAverage_() {
+        var giaAvg = await(services.studyResult.getGiaAverage());
+        var egeAvg = await(services.studyResult.getEgeAverage());
+        var data = [];
+        giaAvg.forEach(giaSubject => {
+            var subjInArr = data.find(dt => dt.subject.id == giaSubject.id);
+            if (subjInArr)
+                subjInArr.giaAvg = giaSubject.dataValues.average;
+            else
+                data.push({
+                    subject: giaSubject,
+                    giaAvg: giaSubject.dataValues.average
+                });
+        });
+        egeAvg.forEach(egeSubject => {
+            var subjInArr = data.find(dt => dt.subject.id == egeSubject.id);
+            if (subjInArr)
+                subjInArr.egeAvg = egeSubject.dataValues.average;
+            else
+                data.push({
+                    subject: egeSubject,
+                    egeAvg: egeSubject.dataValues.average
+                });
+        });
+        await(data.forEach(dataSubj => {
+            services.subject.setCityAverage(dataSubj);
+        }));
+        
+    }
+    
     /**
      * @param {string} type School type 
      * @returns {object} SchoolTypeFilter instance
      */
-    this.getTypeFilter = function(type) {
+    getTypeFilter_(type) {
         var typeName = schoolType.getPropByValue(type);
         if (!typeName)
             throw new Error ('Cant find type \"'+ type + '\" in enum');
-        var instance = this.schoolTypeFilters.find(schoolTypeFilter => {
+        var instance = this.schoolTypeFilters_.find(schoolTypeFilter => {
             var index = schoolTypeFilter.values.indexOf(typeName);
             return index == -1 ? false : true;
-        }
-
-        );
+        });
         if (!instance)
             throw new Error ('Cant find school_type_filter for school type: ' + typeName);
         return instance;
-    };
+    }
+}
 
-    var bar = new ProgressBar('Processing :bar :current/:total', { 
-        total: schools.length,
-        width: 30 
-    });
-    await (this.schools.forEach(school => {
-        /*update type filters*/
-        var filterInstance = this.getTypeFilter(school.schoolType);
-        await(services.search.setSchoolType(school.id, filterInstance.id));
+/**
+ * abstract class
+ */
+class SearchDataActualizer {
+    constructor(school) {
+        this.school_ = school;
+        this.currentSearcData_ = await(
+            services.search.getSchoolRecords(this.school_.id)
+        );
+    }
 
-        /*update gia filters*/
-        var gs = await (new GiaSchool(
-            school,
-            this.citySubjects,
-            this.isRewriting));
-        await (gs.process());
+    /**
+     * @public
+     * actualize olymp search data for school
+     */
+    actualize() {
+        this.getData_();
+        await(this.getResults_());
+        this.getSubjects_();
+        if (this.resultSubjects_.length)
+            await(this.updateDb_());
+    }
 
-        /*update olimp filters*/
-        var os = await (new OlimpSchool(
-            school,
-            this.isRewriting));
-        await(os.process());
-        bar.tick();
-    }));
-    console.log('Succses. Stopping script');
-});
-
-
-function OlimpSchool(school, isRewriting){
-    this.school = school;
-    this.isRewriting = isRewriting;
-    this.olimpResults = await (this.school.getOlimpResults());
-    this.dbOlimpRecord =
-            await(services.search.getSchoolRecords(this.school.id))
-                .find(rec => rec.type == searchType.OLIMPIAD); 
-    this.resultSubjects = [];
-    this.process = async(function() {
-        if (!this.dbGiaRecord || this.isRewriting){
-            await(this.getResults_());
-            if (this.resultSubjects.length)
-                await(this.updateDb_());
-        }
-    });
+    /**
+     * @private
+     * get current gia search data for school
+     */
+    getData_() {
+        this.typeData_ = this.currentSearcData_.find(
+            rec => rec.type == this.searchType_
+        ); 
+    }
 
     /**
      * @private
      */
-    this.getResults_ = async(function() {
-        this.olimpResults.forEach(olimpRes => {
-            if (!this.resultSubjects.find(
-                    subject => subject == olimpRes.subjectId))
-                this.resultSubjects.push(olimpRes.subjectId);
-        });
-    });
-
-    /**
-     * @private
-     */
-    this.updateDb_ = async(function() {
-        if (this.isRewriting && this.dbOlimpRecord) {
-            await(this.dbOlimpRecord.update({
-                values: this.resultSubjects
+    updateDb_() {
+        if (this.typeData_) {
+            await(this.typeData_.update({
+                values: this.resultSubjects_
             }));
         } else {
-            await (services.search.addOlimp(
-                this.school.id,
-                this.resultSubjects));
+            await (services.search.addSearchData(
+                this.school_.id,
+                this.resultSubjects_,
+                this.searchType_)
+            );
         }
-    });
-} 
+    }
+}
 
-function GiaSchool(school, citySubjects, isRewriting){
-    this.school = school;
-    this.isRewriting = isRewriting;
-    this.giaResults = await (this.school.getGiaResults());
-    this.citySubjects = citySubjects;
-    this.dbGiaRecord =
-            await(services.search.getSchoolRecords(this.school.id))
-                .find(rec => rec.type == searchType.GIA);
-    this.resultSubjects = [];
-    this.process = async(function() {
-        if (!this.dbGiaRecord || this.isRewriting){
-            await(this.getResults_());
-            if (this.resultSubjects.length)
-                await(this.updateDb_());
-        }
-    });
+/**
+ * Used to actualize ege search data for one school
+ */
+class EgeActualizer extends SearchDataActualizer {
+    /**
+     * @public
+     * @param {object} school
+     * @param {array<object>} citySubjects - subject instances with avg results for Moscow
+     */
+    constructor(school, citySubjects) {
+        await(super(school)); //call parent constructor
+        this.citySubjects_ = citySubjects;
+        this.resultSubjects_ = [];
+        this.searchType_ = searchType.EGE;
+    }
+
 
     /**
      * @private
+     * Try to get 'good' subjects for 2015 year, 
+     * then if there are no 2015 results for subject
+     * try to use 2014 results, etc
      */
-    this.getResults_ = async(function() {
-        await (this.giaResults.forEach(giaResult => {
-            var citySubject = this.citySubjects.find(
+    getSubjects_() {
+        var yearsResults = [],
+            processedSubjects = [];
+        //TODO: move years in constants
+        for (var year = 2015; year >= 2012; year--) {
+            var yearResults = this.getYearResults_(year);
+            yearsResults.push(
+                await(this.getYearSubjects_(yearResults))
+            );
+        }
+
+        yearsResults.forEach(subjectArr => {
+            subjectArr.forEach(subjectRec => {
+                var index = processedSubjects.indexOf(subjectRec.id),
+                    isProcessed = index == -1 ? false : true;
+                if (!isProcessed) {
+                    if (subjectRec.isPassed)
+                        this.resultSubjects_.push(subjectRec.id);
+                    processedSubjects.push(subjectRec.id);
+                }
+            });
+        }); 
+    }
+
+    /**
+     * @private
+     * @param {array<object>} yearResults
+     * @return {array<id, isPassed>} yearSubjects
+     * get array of subjects IDs where school ege result > city avg result for year
+     */
+    getYearSubjects_(yearResults) {
+        //TODO: refactor or comment this
+        var yearSubjects = [];
+        await (yearResults.forEach(egeResult => { 
+            var citySubject = this.citySubjects_.find(
+                subj => subj.id == egeResult.subject_id);
+            if (citySubject) {
+                var cityResult = citySubject.cityResult.find(
+                    res => (res.cityId == this.school_.city_id));
+                if (cityResult) {
+                    var isPassed;
+                    if (egeResult.result >= cityResult.egeResult)
+                        isPassed = true;
+                    else
+                        isPassed = false;
+                    yearSubjects.push({
+                        id: egeResult.subject_id,
+                        isPassed: isPassed
+                    });
+                } 
+            }
+        }));
+        return yearSubjects;
+    }
+
+    /**
+     * @private
+     * get ege results for school
+     */
+    getResults_() {
+        this.egeResults_ = await (this.school_.getEgeResults()); 
+    }
+
+    /**
+     * @private
+     * @param {number} year
+     * @return {array<object>}
+     * get year ege results for school
+     */
+    getYearResults_(year) {
+        return this.egeResults_.filter(res => res.year == year);
+    }
+}
+
+/**
+ * Used to actualize gia search data for one school
+ */
+class GiaActualizer extends SearchDataActualizer {
+    /**
+     * @public
+     * @param {object} school
+     * @param {array<object>} citySubjects - subject instances with avg results for Moscow
+     */
+    constructor(school, citySubjects) {
+        await(super(school, citySubjects)); //call parent constructor
+        this.citySubjects_ = citySubjects;
+        this.resultSubjects_ = [];
+        this.searchType_ = searchType.GIA;
+    }
+
+
+    /**
+     * @private
+     * get array of subjects IDs where school gia result > city avg result
+     * it works, I promise
+     */
+    getSubjects_() {
+        //TODO: refactor or comment this
+        await (this.giaResults_.forEach(giaResult => { 
+            var citySubject = this.citySubjects_.find(
                 subj => subj.id == giaResult.subject_id);
             if (citySubject) {
                 var cityResult = citySubject.cityResult.find(
-                    res => (res.cityId == school.city_id));
+                    res => (res.cityId == this.school_.city_id));
                 if (cityResult && giaResult.result >= cityResult.giaResult)
-                    this.resultSubjects.push(giaResult.subject_id);
+                    this.resultSubjects_.push(giaResult.subject_id);
             }
         }));
-    });
-    
+    }
+
     /**
      * @private
+     * get gia results for school
      */
-    this.updateDb_ = async(function() {
-        if (this.isRewriting && this.dbGiaRecord) {
-            await(this.dbGiaRecord.update({
-                values: this.resultSubjects
-            }));
-        } else {
-            await (services.search.addGia(
-                this.school.id,
-                this.resultSubjects));
-        }
-    });
-};
+    getResults_() {
+        this.giaResults_ = await (this.school_.getGiaResults()); 
+    }
+}
+
+/**
+ * Used to actualize olymp search data for one school
+ */
+class OlympActualizer extends SearchDataActualizer {
+    /**
+     * @public
+     * @param {object} school
+     */
+    constructor(school) {
+        await(super(school)); //call parent constructor
+        this.resultSubjects_ = [];
+        this.searchType_ = searchType.OLIMPIAD;
+    }
+
+    /**
+     * @private
+     * get array of subjects IDs for school olymp results
+     */
+    getSubjects_() {
+        this.olympResults_.forEach(olympRes => {
+            if (!this.resultSubjects_.find(
+                    subject => subject == olympRes.subjectId))
+                this.resultSubjects_.push(olympRes.subjectId);
+        });
+    }
+
+    /**
+     * @private
+     * get olymp results for school
+     */
+    getResults_() {
+        //TODO: to fix 'Olimp' typo model name must be fixed as well
+        this.olympResults_ = await (this.school_.getOlimpResults()); 
+    }
+}
+
+
 
 
 

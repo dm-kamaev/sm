@@ -1,3 +1,4 @@
+'use strict';
 var colors = require('colors');
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
@@ -5,29 +6,233 @@ var models = require.main.require('./app/components/models').all;
 var services = require.main.require('./app/components/services').all;
 var sequelize  = require.main.require('./app/components/db');
 var sequelizeInclude = require.main.require('./api/components/sequelizeInclude');
-var transaction = require.main.require('./api/components/transaction.js');
 var enums = require.main.require('./api/components/enums').all;
-
 var service = {
     name : 'school'
 };
 
-service.getGroupId = async (function(school, t) {
+class SchoolNotFoundError extends Error {
+    constructor(id) {
+        super('Cant find school with id = ' + id);
+    }
+}
+
+/**
+ * Create school
+ * @param {{
+ *     name: string,
+ *     abbreviation: string,
+ *     fullName: string,
+ *     schoolType: enum.school.school_type,
+ *     director: string,
+ *     phones?: strimg[],
+ *     site?: string,
+ *     educationInterval: number[],
+ *     govermentKey: number,
+ *     addresses?: {
+ *         departments: [{
+ *             stage: string,
+ *             name: string,
+ *             availability: [boolean]
+ *         }]
+ *     }
+ * }} data
+ * @return {Object} School model instance
+ */
+service.create = function(data) {
+    var includeParams = {
+        addresses: {
+            departments: true
+        }
+    };
+
+    if (data.addresses) {
+        data.addresses = data.addresses.filter(address => {
+            var result = false;
+            var addressBD =
+                    await(services.address.getAddress({name: address.name}));
+            if (!addressBD) {
+                result = true;
+            }
+            else {
+            console.log('Address:'.yellow, address.name);
+            console.log('is alredy binded to school '.yellow +
+                'with id:'.yellow, addressBD.school_id);
+            }
+
+            return result;
+        });
+        data.addresses.forEach(address => {
+            if (!address.coords) {
+                var coords = await(
+                        services.yapi.getCoords('Москва, ' + address.name)
+                    );
+                address.coords = coords;
+            }
+        });
+    }
+    return await(models.School.create(
+        data,
+        {
+            include: sequelizeInclude(includeParams)
+        }
+    ));
+};
+
+
+/**
+ * Update school data
+ * @param {Object} school_id
+ * @param {{
+ *     name: string,
+ *     abbreviation: string,
+ *     fullName: string,
+ *     schoolType: enum.school.school_type,
+ *     director: string,
+ *     phones?: strimg[],
+ *     site?: string,
+ *     educationInterval: number[]
+ * }} data
+ * @return {Object} School model instance
+ */
+service.update = async(function(school_id, data) {
+    var school = await(
+        models.School.findOne({
+            where: {id: school_id}
+        })
+    );
+    if (!school)
+        throw new SchoolNotFoundError(school_id);
+    return await(school.update(data));
+});
+
+
+/**
+ * Delete school
+ * @param {number} school_id
+ */
+service.delete = async (function(school_id) {
+    var school = await(models.School.findOne(
+        {
+            where: {id: school_id}
+        }
+    ));
+    if (!school)
+        throw new SchoolNotFoundError(school_id);
+
+    await(school.destroy());
+    return school_id;
+});
+
+
+/**
+ * Get school addresses
+ * @param  {school_id} school_id
+ * @param  {address_id} address_id
+ * @return {[Object]} Address model instance or undefined
+ */
+service.getAddress = async(function(school_id, address_id) {
+    var address = await(services.address.getById(address_id));
+    if (address.school_id == school_id) {
+        return address;
+    }
+});
+
+
+/**
+ * Get school addresses
+ * @param  {number} schoolId
+ * @return {[Object]} Address model instances list
+ */
+service.getAddresses = async(function(schoolId) {
+    console.log(schoolId);
+    return await(
+        models.Address.findAll({
+            where: {schoolId: schoolId},
+            include: [
+                {
+                    model: models.Department,
+                    as: 'departments'
+                }
+            ]
+        })
+    );
+});
+
+
+/**
+ * Get department of school address
+ * @param  {school_id} school_id
+ * @param  {address_id} address_id
+ * @param  {department_id} department_id
+ * @return {[Object]} Department model instance or undefined
+ */
+service.getAddressDepartment = async(
+    function(school_id, address_id, department_id) {
+        var address = await(service.getAddress(school_id, address_id));
+        var department = await(address.getDepartments({where: {id: department_id}}));
+        return department;
+    }
+);
+
+
+/**
+ * Get department of school address
+ * @param  {school_id} school_id
+ * @param  {address_id} address_id
+ * @return {[Object]} Department model instances or undefined
+ */
+service.getAddressDepartments = async(function(school_id, address_id) {
+    var address = await(service.getAddress(school_id, address_id));
+    var department = address.getDepartments();
+    return department;
+});
+
+
+service.getGroupId = async (function(school) {
     var instance = school;
     if (typeof school === 'number'){
-        var instance = await(models.School.findOne({
-            where : {id: school},
-            transaction: t
+        instance = await(models.School.findOne({
+            where : {id: school}
+        }));
+        if (!instance)
+            throw new Error('Can\'t find the school');
+    }
+    if (instance.commentGroupId === null) {
+        var newCommentGroup = await (
+            models.CommentGroup.create()
+        );
+        await (instance.update({
+            commentGroupId: newCommentGroup.id
         }));
     }
-    if (instance.comment_group_id == null) {
-        var newCommentGroup = await (models.CommentGroup.create({},{transaction: t}));
-        await (instance.update({
-            comment_group_id: newCommentGroup.id
-        }, {transaction: t}));
-    }
-    return instance.comment_group_id;
+    return instance.commentGroupId;
 });
+
+/**
+ * @param {number} schoolId
+ * used in Rating model hook
+ */
+service.updateScore = async(function(schoolId) {
+    var queries = [];
+    for (var i = 1; i <= 4; i++) {
+        var score = 'score[' + i + ']';
+        var queryPromise = sequelize.query(
+            'SELECT AVG(' + score + ') AS avg FROM rating ' +
+            'WHERE school_id = ' + schoolId + ' AND ' +
+             score + '<> 0'
+        );
+        queries.push(queryPromise);
+    }
+    var scores = await(queries).map(
+        result => result[0][0].avg || 0
+    );
+    var school = await(models.School.findOne({
+        where: {id: schoolId}
+    }));
+    school.update({score: scores});
+});
+
 
 /**
  * @public
@@ -41,7 +246,7 @@ service.searchFilters = async (function() {
 });
 
 service.typeFilters = async (function() {
-    var schoolTypeFilters 
+    var schoolTypeFilters
         = await(services.search.getTypeFilters());
     var formattedFilters = schoolTypeFilters.map(filter => {
         return {
@@ -55,14 +260,19 @@ service.typeFilters = async (function() {
     };
 });
 
-service.getAddresses = async (school => {
-    return await(models.Address.findAll({
-        where:{school_id: school.id}
+
+/**
+ * @param {object} school - school instance
+ * @param {number} rank
+ */
+service.setRank = async(function(school, rank) {
+    await(school.update({
+        rank: rank
     }));
 });
 
 service.setAddresses = async ((school, addresses) => {
-    var currentAddresses = await(service.getAddresses(school));
+    var currentAddresses = await(service.getAddresses(school.id));
     addresses.forEach((adr)=>{
         var sameAdr = currentAddresses.find(element => {
          if (element.name == adr.name)
@@ -74,15 +284,6 @@ service.setAddresses = async ((school, addresses) => {
             });
          }
     });
-});
-
-service.update = async ((school, params) => {
-    var instance = await(school.update(
-        params
-    ));
-    if (params.addresses)
-        await(service.setAddresses(school, params.addresses));
-    return instance;
 });
 
 
@@ -110,7 +311,7 @@ service.findBySite = async(function(site) {
  * @public
  */
 service.viewOne = function(id) {
-    var includeParams = //TODO: which one: this
+    var includeParams =
         [{
             model: models.Address,
             as: 'addresses',
@@ -118,90 +319,107 @@ service.viewOne = function(id) {
                 model: models.Department,
                 as:'departments'
             }]
-         }, {
-             model: models.Rating,
-             as: 'ratings'
-         }, {
-             model: models.CommentGroup,
-             as: 'commentGroup',
-             include: [{
-                 model: models.Comment,
-                 as: 'comments',
-                 include: [{
-                     model: models.Rating,
-                     as: 'rating'
-                 }]
+        }, {
+            model: models.Rating,
+            as: 'ratings'
+        }, {
+            model: models.CommentGroup,
+            as: 'commentGroup',
+            include: [{
+                model: models.Comment,
+                as: 'comments',
+                include: [{
+                    model: models.Rating,
+                    as: 'rating'
+                }]
+            }]
+        },
+            //{
+            //    model: models.EgeResult,
+            //    as: 'egeResults'
+            //}, {
+            //    model: models.GiaResult,
+            //    as: 'giaResults'
+            //}, {
+            //    model: models.OlimpResult,
+            //    as: 'olimpResults'
+            //}
+        ];
 
-             }]
-         }];
-   // var includeParams = {//TODO: which one: or this
-   //     addresses: {
-   //         department: true
-   //     },
-   //     ratings: true,
-   //     commentGroup: {
-   //         comments: {
-   //             rating: true
-   //         }
-   //     }
-   // };
-    return await(models.School.findOne({
+    var school = await(models.School.findOne({
         where: {id: id},
         include: includeParams
     }));
+    return school;
 };
 
 
-service.create = async (params => {
-    var includeParams = {
-        addresses: true
-    };
-    return await(models.School.create(
+/**
+ * @param {number} schoolId
+ * @raram {object} prarams
+ * @param {array<number> || null} params.score
+ * @param {string || null} params.text
+ * @return {object{bool ratingCreated, bool commentCreated}}
+ */
+service.review = async(function(schoolId, params) {
+    if (!params.text && !params.score)
+        throw new Error('Expected comment text or rating');
+    try {
+        console.log(params);
+        var answer = {
+            ratingCreated: false,
+            commentCreated: false
+        };
+        var school = await(models.School.findOne({
+            where: {id: schoolId}
+        }));
+
+        if (params.score) {
+            params.rating = await(service.rate(school, params));
+            answer.ratingCreated = true;
+        }
+        if (params.text) {
+            var commentGroup = await(service.getGroupId(school));
+            await (services.comment.create(commentGroup, params));
+            answer.commentCreated = true;
+        }
+        return answer;
+    } catch (e) {
+        throw e;
+    }
+});
+
+/**
+ * @private
+ * @param {object} school
+ * @param {array<number>} params.score
+ * @return {object}
+ */
+service.rate = async(function(school, params) {
+    var rt = await (models.Rating.create({
+        score: params.score,
+        schoolId: school.id
+    }));
+    return rt;
+});
+
+service.createActivity = async(params => {
+    await (models.Activity.create(
         params,
         {
-            include: sequelizeInclude(includeParams)
+            //include: models.Activity
         }
     ));
 });
 
-/**
- *@public
- */
-
-service.commentTransaction = async (function(schoolId, params) {
-    return await (transaction(service.comment, [schoolId, params]));
-});
-/**
- * @public
- */
-service.comment = async (function(schoolId, params, t) {
-    var includeParams = {
-        commentGroup: true,
-        ratings: true
-    };
-    console.log(sequelizeInclude(includeParams));
-    var school = await (models.School.findOne({
-        where: {id: schoolId},
-        include: sequelizeInclude(includeParams),
-        transaction: t
-    }));
-
-    console.log(school);
-    var commentGroup = await(service.getGroupId(school, t));
-    console.log(commentGroup);
-    if (params.score)
-        params.rating = await(service.rate(school, params, t));
-    return await (services.comment.create(commentGroup, params, t));
-});
-
-
-
-service.rate = async ((school, params, t) => {
-    var rt = await (models.Rating.create({
-        score: params.score,
-        schoolId: school.id
-    }, {transaction: t}));
-    return rt;
+service.deleteActivities = async(() => {
+    models.Activity.destroy(
+        {
+            where: {}
+        }
+    ).then(function() {
+        console.log('All activities deleted');
+    });
 });
 
 /**
@@ -209,7 +427,7 @@ service.rate = async ((school, params, t) => {
  */
 service.listInstances = async(function(){
     return await(models.School.findAll({
-        inclde: [{
+        include: [{
             model: models.Rating,
             as: 'ratings'
         }, {
@@ -224,6 +442,23 @@ service.listInstances = async(function(){
 });
 
 /**
+ *  @param {array<number>} score
+ *  @return {number}
+ */
+var getTotalScore = function(score) {
+    score = score || [];
+    var count = 0, sum = 0;
+    score.forEach(val => {
+        if (val) {
+            sum += val;
+            count++;
+        }
+    });
+    return count ? sum/count : 0;
+};
+
+
+/**
  * @public
  */
 service.list = async (function(opt_params) {
@@ -231,16 +466,14 @@ service.list = async (function(opt_params) {
         searchParams = params.searchParams || null;
 
     var searchConfig = {
-        include: [{
-            model: models.Rating,
-            as: 'ratings',
-            attributes: [
-                'score'
-            ]
-        }],
+        include: [],
         attributes: [
             'id',
-            'name'
+            'name',
+            'score',
+            'name',
+            'fullName',
+            'abbreviation'
         ]
     };
 
@@ -249,20 +482,20 @@ service.list = async (function(opt_params) {
     }
 
     console.log('searchConfig', searchConfig);
-    var schools = await(models.School.findAll(searchConfig)); 
+    var schools = await(models.School.findAll(searchConfig));
     console.log('Found: ', colors.green(schools.length));
 
     return schools
         .map(school => {
-            var score = service.avgScore_(school.ratings || []),
-                totalScore = service.avgRating_(score);
-
             return {
                 id: school.id,
                 name: school.name,
-                description: "",
-                totalScore: totalScore,
-                score: score
+                description: '',
+                abbreviation: school.abbreviation,
+                score: school.score || [0, 0, 0, 0],
+                totalScore: getTotalScore(school.score),
+                fullName: school.fullName,
+                addresses: school.addresses
             };
         })
         .sort((school1, school2) => school2.totalScore - school1.totalScore);
@@ -305,8 +538,9 @@ var updateSearchConfig = function(searchConfig, searchParams) {
         ];
     }
 
+
     if (searchParams.classes && searchParams.classes.length) {
-        whereParams.educationInterval = { 
+        whereParams.educationInterval = {
             $contains: searchParams.classes
         };
     }
@@ -322,10 +556,10 @@ var updateSearchConfig = function(searchConfig, searchParams) {
             }
         });
     }
-    
+
     if (searchParams.gia) {
         searchDataCount++;
-        extraIncludes.searchData.where.$or.push({ 
+        extraIncludes.searchData.where.$or.push({
             $and: {
                 type: enums.searchType.GIA,
                 values: {
@@ -333,11 +567,11 @@ var updateSearchConfig = function(searchConfig, searchParams) {
                 }
             }
         });
-    } 
+    }
 
     if (searchParams.ege) {
         searchDataCount++;
-        extraIncludes.searchData.where.$or.push({ 
+        extraIncludes.searchData.where.$or.push({
             $and: {
                 type: enums.searchType.EGE,
                 values: {
@@ -345,11 +579,11 @@ var updateSearchConfig = function(searchConfig, searchParams) {
                 }
             }
         });
-    } 
+    }
 
     if (searchParams.olimp) {
         searchDataCount++;
-        extraIncludes.searchData.where.$or.push({ 
+        extraIncludes.searchData.where.$or.push({
             $and: {
                 type: enums.searchType.OLIMPIAD,
                 values: {
@@ -359,7 +593,7 @@ var updateSearchConfig = function(searchConfig, searchParams) {
         });
     }
 
-    /*Write generated setting to config object*/   
+    /*Write generated setting to config object*/
     searchConfig.where = whereParams;
     if (searchDataCount){
         var extraIncludesArr = [];
@@ -368,42 +602,6 @@ var updateSearchConfig = function(searchConfig, searchParams) {
         searchConfig.group = '"School"."id", "ratings"."id"';
         searchConfig.having = ['COUNT(?) = ?', '', searchDataCount];
     }
-};
-
-/**
- * @private
- */
-service.avgScore_ = function(ratings) {
-    ratings = ratings || [];
-    var result = [0, 0, 0, 0];
-    var ratingLength = ratings.length;
-
-    for (var i = 0, score; i < ratingLength; i++) {
-        score = ratings[i].score;
-        for (var j = 0; j < result.length; j++) {
-            result[j] += score[j];
-        }
-    }
-
-    if (ratingLength) {
-        for (var j = 0; j < result.length; j++) {
-            result[j] /= ratingLength;
-        }
-    }
-
-    return result;
-};
-
-/**
- * @private
- */
-service.avgRating_ = function(totalScore) {
-    var length = totalScore.length,
-        result = 0;
-    for (var i = 0; i < length; i++) {
-        result += totalScore[i];
-    }
-    return result / length;
 };
 
 module.exports = service;

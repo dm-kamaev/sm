@@ -11,9 +11,10 @@ module.exports = {
         },
         address_id: {
             type: Sequelize.INTEGER,
+            onDelete: 'cascade',
             references: {
-                model:"address",
-                key: "id",
+                model:'address',
+                key: 'id',
             }
         },
         created_at: {
@@ -26,14 +27,15 @@ module.exports = {
         },
         metro_id: {
             type: Sequelize.INTEGER,
+            onDelete: 'cascade',
             references: {
-                model:"metro",
-                key: "id",
+                model:'metro',
+                key: 'id',
             }
         }
     });
   },
-    down: function (queryInterface, Sequelize) {
+    down: function (queryInterface) {
         return queryInterface.dropTable('address_metro');
     }
 };

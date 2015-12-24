@@ -6,13 +6,16 @@ public/
 tmp/
 doc/
 assets/dump/
-parse/
+/parse/
+/console/reports
+/vkdata/
+/*.xlsx
 
 *.log
 *.swp
 .jshintrc
 deployment-config.json
 .remote-sync.json
-*.swp
 .jshintrc
 
+console/reports
