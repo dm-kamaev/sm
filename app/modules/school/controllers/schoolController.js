@@ -125,12 +125,13 @@ exports.view = async (function(req, res) {
             var begin = interval[0],
                 end = interval[interval.length - 1];
 
-            res += begin ? begin : 'Детский сад';
-
             if (end > begin) {
-                res += '–';
-                res += end;
-                res += begin ? ' классы' : ' класс';
+                res += 'Обучение с ';
+                res += begin ? begin : 'детского сада';
+                res += ' по ' + end + ' класс';
+            }
+            else {
+                res = 'Детский сад';
             }
         }
 
