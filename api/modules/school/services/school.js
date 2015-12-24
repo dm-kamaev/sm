@@ -154,10 +154,16 @@ service.viewOne = function(id) {
         [{
             model: models.Address,
             as: 'addresses',
-            include: [{
-                model: models.Department,
-                as:'departments'
-            }]
+            include: [
+                {
+                    model: models.Department,
+                    as:'departments'
+                },
+                {
+                    model: models.Metro,
+                    as: 'metroStations'
+                }
+            ]
          }, {
              model: models.Rating,
              as: 'ratings'

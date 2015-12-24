@@ -1,6 +1,8 @@
 var soy = require.main.require('./app/components/soy');
 var services = require.main.require('./app/components/services').all;
 
+var schoolView = require('../../../../api/modules/school/views/schoolView.js');
+
 var fs = require('fs');
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
@@ -168,10 +170,14 @@ exports.view = async (function(req, res) {
     var addresses =
             services.department.addressesFilter(school.addresses),
         commentGroup = school.commentGroup ? school.commentGroup.comments : [],
-        metroStations = [];
-    addresses.forEach(address => {
-        metroStations.push(services.address.getMetro(address));
-    });
+        metroStations = {};
+
+        addresses.forEach(address => {
+            address.metroStations.forEach(metro => {
+                metroStations[metro.id] = metro.name;
+            })
+        });
+
     var params = {
         data: {
             id: school.id,
@@ -185,7 +191,10 @@ exports.view = async (function(req, res) {
             dressCode: '',
             classes: educationIntervalToString(school.educationInterval),
             social:[],
-            metroStations: metroStations,
+            metroStations: Object.keys(metroStations)
+                .map(function(key) {
+                    return metroStations[key];
+                }),
             sites:[{
                 name: "Перейти на сайт школы",
                 href: 'http://' + school.site,
@@ -196,7 +205,9 @@ exports.view = async (function(req, res) {
                     return {
                         title: '',
                         description: address.name,
-                        metro: services.address.getMetro(address)
+                        metro: address.metroStations.map(metro => {
+                            return metro.name;
+                        })
                     };
                 }),
                 phones: school.phones || ''
@@ -245,7 +256,9 @@ exports.view = async (function(req, res) {
         }
     };
 
-    //console.log(params.data);
+    var tsst = schoolView.default(school);
+
+    console.log(tsst.id);
 
     res.header("Content-Type", "text/html; charset=utf-8");
     res.end(
