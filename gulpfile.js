@@ -62,6 +62,7 @@ gulp.task('migrate', function () {
     exec(
         sequelizePath + ' db:migrate', function (error, stdout, stderr) {
             console.log(stdout);
+            console.log(stderr);
 
             if (error) {
                 console.log(error);

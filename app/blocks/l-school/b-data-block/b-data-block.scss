@@ -17,7 +17,7 @@
 .b-data-block__header {
 	display: inline-block;
 
-	margin-bottom: 30px;
+	margin-bottom: 27px;
 	padding-right: 20px;
 
 	letter-spacing: 0.06em;
@@ -31,10 +31,27 @@
 }
 
 .b-data-block__item {
-	margin-bottom: 17px;
+	margin-bottom: 10px;
 
 	&:last-child {
 		margin-bottom: 0;
+	}
+}
+
+.b-data-block__item-content {
+	font-family: arial, sans-serif;
+	font-size: 14px;
+	line-height: 20px;
+
+	&.b-data-block__item-content_text-color_red {
+		text-decoration: none;
+		cursor: pointer;
+
+		color: #ee362c;
+	}
+
+	&:first-letter {
+		text-transform: uppercase;
 	}
 }
 

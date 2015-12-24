@@ -29,7 +29,14 @@ exports.create = function(req, res) {
 
 exports.list = async (function(req, res) {
 
-    var schools = await (services.school.list());
+    var schools = await (services.school.list(
+        {
+            searchParams:
+            {
+                name: req.query.name
+            }
+        }
+    ));
 
     var filters = await (services.school.searchFilters())
         .map(item => {
@@ -64,9 +71,7 @@ exports.list = async (function(req, res) {
             return res;
         });
 
-    console.log('filters', filters);
-
-    var html = soy.render('sm.lSearchResult.Template.base', {
+    var params = {
         params: {
             data: {
                 schools: schools,
@@ -75,6 +80,7 @@ exports.list = async (function(req, res) {
                     url: '/api/school/search'
                 }
             },
+            searchText: req.query.name || '',
             templates: {
                 search: '{{ name }}',
                 item: '{{ name }}',
@@ -82,7 +88,10 @@ exports.list = async (function(req, res) {
                 value: '{{ id }}'
             }
         }
-    });
+    };
+    console.log(JSON.stringify(params));
+
+    var html = soy.render('sm.lSearchResult.Template.base', params);
 
     res.header("Content-Type", "text/html; charset=utf-8");
     res.end(html);
@@ -138,29 +147,59 @@ exports.view = async (function(req, res) {
         return res;
     }
 
+    var ratings = [];
+    /*Check that position in Mel's rating exists and less than 100*/
+    if (school.rating && school.rating <= 100) {
+        ratings.push({
+            name: 'Рейтинг пользователей «Мела»',
+            place: school.rating,
+            href: '/search'
+        });
+    }
+    /*Check that position in Moscow education dept.
+      rating exists and less than 100*/
+    if (school.rank && school.rank <= 100) {
+        ratings.push({
+            name: 'Рейтинг Департамента образования Москвы',
+            place: school.rank
+        });
+    }
+
     var addresses =
-            services.department.addressesFilter(school.addresses);
-    var commentGroup = school.commentGroup ? school.commentGroup.comments : [];
+            services.department.addressesFilter(school.addresses),
+        commentGroup = school.commentGroup ? school.commentGroup.comments : [],
+        metroStations = [];
+    addresses.forEach(address => {
+        metroStations.push(services.address.getMetro(address));
+    });
     var params = {
         data: {
             id: school.id,
             schoolName: school.name,
             schoolType: '',
             schoolDescr: '',
+            features: '',
             directorName: school.director,
             schoolQuote : "Мел",
+            features: [],
+            extendedDayCost: '',
+            dressCode: '',
             classes: educationIntervalToString(school.educationInterval),
             social:[],
+            metroStations: metroStations,
             sites:[{
                 name: "Перейти на сайт школы",
                 href: 'http://' + school.site,
                 link: school.site
             }],
+            activities: [],
+            specializedClasses: [],
             contacts:{
                 address: addresses.map(address => {
                     return {
                         title: '',
-                        description: address.name
+                        description: address.name,
+                        metro: services.address.getMetro(address)
                     };
                 }),
                 phones: school.phones || ''
@@ -192,6 +231,7 @@ exports.view = async (function(req, res) {
                     lng: adr.coords[1]
                 };
             }),
+            ratings: ratings,
             score: sumScore,
             totalScore: sumScore.reduce((context, value) => {
                 if (value) {
@@ -208,7 +248,7 @@ exports.view = async (function(req, res) {
         }
     };
 
-    console.log(params.data);
+    //console.log(params.data);
 
     res.header("Content-Type", "text/html; charset=utf-8");
     res.end(

@@ -1,6 +1,6 @@
 var Sequelize = require('sequelize');
 
-var config = require.main.require('./app/config'),
+var config = require('../config'),
     dbConfig = config.db;
 
 

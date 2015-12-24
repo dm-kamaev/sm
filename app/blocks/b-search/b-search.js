@@ -34,7 +34,6 @@ goog.scope(function() {
         ROOT: 'b-search',
         INPUT: 'b-input__input',
         LIST: 'b-search__list',
-        LIST_HIDE: 'b-search__list_hidden',
         ICON: 'b-search__icon'
     };
 
@@ -63,7 +62,6 @@ goog.scope(function() {
         goog.base(this, 'decorateInternal', element);
 
         this.initElements_(element);
-
     };
 
     /**

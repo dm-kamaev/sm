@@ -15,7 +15,7 @@ Common.readText = function(path) {
     if (Common.fileExists(path)) {
         return fs.readFileSync(path).toString();
     } else {
-        console.log('File ' + colors.red(path) + 'does not exists');
+        throw new Error('File ' + colors.red(path) + ' does not exists');
     }
 };
 

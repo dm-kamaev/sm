@@ -26,16 +26,15 @@ exports.createComment = async (function(req, res) {
         var schoolId = req.params.id,
             params = req.body;
         params.score = params['score[]']; //TODO придумать чтото с этим
-        result = JSON.stringify(
-            await(services.school.commentTransaction(schoolId, params))
-            );
-        console.log(result);
+        result = await(
+            services.school.review(schoolId, params)
+        );
     } catch (e) {
         console.log(e);
-        result = JSON.stringify(e);
+        result = e.message;
     } finally {
         res.header("Content-Type", "text/html; charset=utf-8");
-        res.end(result);
+        res.end(JSON.stringify(result));
     }
 });
 

@@ -2,8 +2,6 @@ var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var models = require.main.require('./app/components/models').all;
 var services = require.main.require('./app/components/services').all;
-var sequelizeInclude = require.main.require('./api/components/sequelizeInclude');  
-var colors = require('colors');
 var searchTypes = require.main.require('./api/modules/school/enums/searchType');
 exports.name = 'search';
 
@@ -48,7 +46,7 @@ exports.getTypeFilters = async(function() {
  */
 exports.advancedSearch = async ((searchString) => {
     searchString = searchString.toLowerCase();
-    var filter = generateFilter(searchString);
+    var filter = this.generateFilter(searchString);
 
     var yandexRequest = services.yapi.request(searchString);
 

@@ -1,5 +1,13 @@
 var DataType = require('sequelize'),
-    db = require.main.require('./app/components/db');
+    db = require.main.require('./app/components/db'),
+    services = require.main.require('./app/components/services').all;
+
+var async = require('asyncawait/async');
+var await = require('asyncawait/await');
+
+var onChangeHook = async(function(rating) {
+    await(services.school.updateScore(rating.schoolId));
+});
 
 var Rating = db.define('Rating', {
     schoolId: {
@@ -24,7 +32,11 @@ var Rating = db.define('Rating', {
 }, {
     underscored: true,
     tableName: 'rating',
-
+    hooks: {
+        afterUpdate: onChangeHook,
+        afterCreate: onChangeHook,
+        afterDestroy: onChangeHook
+    },
     classMethods: {
         associate: function (models) {
             Rating.belongsTo(models.School, {
