@@ -150,7 +150,7 @@ service.findBySite = async(function(site) {
  * @public
  */
 service.viewOne = function(id) {
-    var includeParams = //TODO: which one: this
+    var includeParams = 
         [{
             model: models.Address,
             as: 'addresses',
@@ -310,7 +310,10 @@ service.list = async (function(opt_params) {
         attributes: [
             'id',
             'name',
-            'score'
+            'score',
+            'name',
+            'fullName',
+            'abbreviation'
         ]
     };
 
@@ -328,8 +331,10 @@ service.list = async (function(opt_params) {
                 id: school.id,
                 name: school.name,
                 description: '',
-                score: school.score || [0,0,0,0],
+                abbreviation: school.abbreviation,
+                score: school.score || [0, 0, 0, 0],
                 totalScore: getTotalScore(school.score),
+                fullName: school.fullName,
                 addresses: school.addresses
             };
         })

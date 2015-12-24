@@ -181,7 +181,6 @@ exports.view = async (function(req, res) {
             features: '',
             directorName: school.director,
             schoolQuote : "Мел",
-            features: [],
             extendedDayCost: '',
             dressCode: '',
             classes: educationIntervalToString(school.educationInterval),
@@ -276,6 +275,8 @@ exports.search = async(function(req, res) {
           }
 
     });
+
+    console.log(html);
     res.header("Content-Type", "text/html; charset=utf-8");
     res.end(html);
 });
