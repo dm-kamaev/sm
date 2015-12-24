@@ -319,31 +319,33 @@ service.viewOne = function(id) {
                 model: models.Department,
                 as:'departments'
             }]
-         }, {
-             model: models.Rating,
-             as: 'ratings'
-         }, {
-             model: models.CommentGroup,
-             as: 'commentGroup',
-             include: [{
-                 model: models.Comment,
-                 as: 'comments',
-                 include: [{
-                     model: models.Rating,
-                     as: 'rating'
-                 }]
-
-             }]
-         }, {
-             model: models.EgeResult,
-             as: 'egeResults'
-         }, {
-             model: models.GiaResult,
-             as: 'giaResults'
-         }, {
-             model: models.OlimpResult,
-             as: 'olimpResults'
-         }];
+        }, {
+            model: models.Rating,
+            as: 'ratings'
+        }, {
+            model: models.CommentGroup,
+            as: 'commentGroup',
+            include: [{
+                model: models.Comment,
+                as: 'comments',
+                include: [{
+                    model: models.Rating,
+                    as: 'rating'
+                }]
+            }]
+        },
+            //{
+            //    model: models.EgeResult,
+            //    as: 'egeResults'
+            //}, {
+            //    model: models.GiaResult,
+            //    as: 'giaResults'
+            //}, {
+            //    model: models.OlimpResult,
+            //    as: 'olimpResults'
+            //}
+        ];
+    
     var school = await(models.School.findOne({
         where: {id: id},
         include: includeParams
