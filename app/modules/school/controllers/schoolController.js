@@ -181,7 +181,6 @@ exports.view = async (function(req, res) {
             features: '',
             directorName: school.director,
             schoolQuote : "Мел",
-            features: [],
             extendedDayCost: '',
             dressCode: '',
             classes: educationIntervalToString(school.educationInterval),
