@@ -4,31 +4,6 @@ var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 
 
-/**
- * @api {get} api/school/apitest api test
- * @apiVersion 0.0.0
- * @apiGroup School
- * @apiName Apitest
- * @apiParam {Object} searchParams Search params.
- * @apiParamExample {json} Request-Example:
- *     {
- *       "text" : "test"
- *     }
- */
-exports.yapi = async (function(req, res) {
-    var result = '';
-    try {
-        var params = req.query;
-        result = JSON.stringify(await(services.search.advancedSearch(params.text)));
-    } catch (e) {
-        console.log(e);
-        result = e.message;
-    } finally {
-        res.header('Content-Type', 'text/html; charset=utf-8');
-        res.end(JSON.stringify(result));
-    }
-});
-
 
 /**
  * @api {post} api/school/createschool Creates school
@@ -139,9 +114,15 @@ exports.delete = async (function(req, res) {
  * @apiSuccess {Object[]} schools Very userful documentation here.
  */
 exports.list = async (function(req, res) {
-    var schools = await (services.school.list());
-    res.header('Content-Type', 'text/html; charset=utf-8');
-    res.end(JSON.stringify(schools));
+    try {
+        var result = await (services.school.list());
+    } catch (e) {
+        console.log(e);
+        result = e.message;
+    } finally {
+        res.header('Content-Type', 'text/html; charset=utf-8');
+        res.end(JSON.stringify(result));
+    }
 });
 
 
@@ -153,26 +134,11 @@ exports.list = async (function(req, res) {
  * @apiSuccess {Object} schools Very userful documentation here.
  */
 exports.view = async (function(req, res) {
-    var school = await(services.school.viewOne(req.params.id));
-    res.header('Content-Type', 'text/html; charset=utf-8');
-    res.end(JSON.stringify(school));
-});
-
-
-/**
- * @api {get} api/school/:id/address Get school addresses
- * @apiVersion 0.0.0
- * @apiGroup School
- * @apiName Addresses
- */
-exports.getAddresses = async (function(req, res) {
-    var result = '';
     try {
-        var school_id = req.params.id;
-        result = await(services.school.getAddresses(school_id));
+        var result = await(services.school.viewOne(req.params.id));
     } catch (e) {
-        console.log(e.message);
-        result = e;
+        console.log(e);
+        result = e.message;
     } finally {
         res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(JSON.stringify(result));
@@ -180,71 +146,6 @@ exports.getAddresses = async (function(req, res) {
 });
 
 
-/**
- * @api {get} api/school/:school_id/address/:id Get school address
- * @apiVersion 0.0.0
- * @apiGroup School
- * @apiName Address
- */
-exports.getAddress = async (function(req, res) {
-    var result = '';
-    try {
-        var school_id = req.params.school_id;
-        var address_id = req.params.id;
-        var address =
-                await(services.school.getAddress(school_id, address_id));
-        if (address) {
-            result = address;
-        }
-        else {
-            result = 'School hasn\'t address with id ' + address_id;
-        }
-    } catch (e) {
-        console.log(e.message);
-        result = e;
-    } finally {
-        res.header('Content-Type', 'text/html; charset=utf-8');
-        res.end(JSON.stringify(result));
-    }
-});
-
-
-/**
-<<<<<<< HEAD
- * @api {post} api/school/:school_id/address/:id Update school address
- * @apiVersion 0.0.0
- * @apiGroup School
- * @apiName UpdateAddress
- * @apiParamExample {json} Request-Example:
- *     {
- *         "addressData" : {
- *             "name": "ул. Веткина, 2",
- *             "coords": [55.802275, 37.624876]
- *         }
- *     }
- */
-exports.updateAddress = async (function(req, res) {
-    var result = '';
-    try {
-        var school_id = req.params.school_id;
-        var address_id = req.params.id;
-        var data = JSON.parse(req.body.data).addressData;
-        var address =
-                await(services.school.getAddress(school_id, address_id));
-        if (address) {
-            result = await(address.update(data));
-        }
-        else {
-            result = 'School hasn\'t address with id ' + address_id;
-        }
-    } catch (e) {
-        console.log(e.message);
-        result = e;
-    } finally {
-        res.header('Content-Type', 'text/html; charset=utf-8');
-        res.end(JSON.stringify(result));
-    }
-});
 
 
 /**

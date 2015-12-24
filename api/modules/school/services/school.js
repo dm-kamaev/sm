@@ -1,3 +1,4 @@
+'use strict';
 var colors = require('colors');
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
@@ -6,10 +7,15 @@ var services = require.main.require('./app/components/services').all;
 var sequelize  = require.main.require('./app/components/db');
 var sequelizeInclude = require.main.require('./api/components/sequelizeInclude');
 var enums = require.main.require('./api/components/enums').all;
-var common = require.main.require('./console/common');
 var service = {
     name : 'school'
 };
+
+class SchoolNotFoundError extends Error {
+    constructor(id) {
+        super('Cant find school with id = ' + id);
+    }
+}
 
 /**
  * Create school
@@ -89,16 +95,16 @@ service.create = function(data) {
  * }} data
  * @return {Object} School model instance
  */
-service.update = function(school_id, data) {
-    var school = await(service.viewOne(school_id));
-    if (school) {
-        return await(school.update(data));
-    }
-    else {
-        console.log('School not found.'.yellow);
-        console.log('School id is:', school_id);
-    }
-};
+service.update = async(function(school_id, data) {
+    var school = await(
+        models.School.findOne({
+            where: {id: school_id}
+        })
+    );
+    if (!school)
+        throw new SchoolNotFoundError(school_id);
+    return await(school.update(data));
+});
 
 
 /**
@@ -112,7 +118,7 @@ service.delete = async (function(school_id) {
         }
     ));
     if (!school)
-        throw new Error ('There is no school with id = ' + school_id);
+        throw new SchoolNotFoundError(school_id);
 
     await(school.destroy());
     return school_id;
@@ -135,12 +141,22 @@ service.getAddress = async(function(school_id, address_id) {
 
 /**
  * Get school addresses
- * @param  {school_id} school_id
+ * @param  {number} schoolId
  * @return {[Object]} Address model instances list
  */
-service.getAddresses = async(function(school_id) {
-    var school = await(service.viewOne(school_id));
-    return await(school.getAddresses());
+service.getAddresses = async(function(schoolId) {
+    console.log(schoolId);
+    return await(
+        models.Address.findAll({
+            where: {schoolId: schoolId},
+            include: [
+                {       
+                    model: models.Department,
+                    as: 'departments'
+                }
+            ]
+        })
+    );
 });
 
 
@@ -173,7 +189,7 @@ service.getAddressDepartments = async(function(school_id, address_id) {
 });
 
 
-service.getGroupId = async (function(school, t) {
+service.getGroupId = async (function(school) {
     var instance = school;
     if (typeof school === 'number'){
         instance = await(models.School.findOne({
@@ -244,11 +260,6 @@ service.typeFilters = async (function() {
     };
 });
 
-service.getAddresses = async (school => {
-    return await(models.Address.findAll({
-        where:{school_id: school.id}
-    }));
-});
 
 /**
  * @param {object} school - school instance
@@ -261,7 +272,7 @@ service.setRank = async(function(school, rank) {
 });
 
 service.setAddresses = async ((school, addresses) => {
-    var currentAddresses = await(service.getAddresses(school));
+    var currentAddresses = await(service.getAddresses(school.id));
     addresses.forEach((adr)=>{
         var sameAdr = currentAddresses.find(element => {
          if (element.name == adr.name)
@@ -273,15 +284,6 @@ service.setAddresses = async ((school, addresses) => {
             });
          }
     });
-});
-
-service.update = async ((school, params) => {
-    var instance = await(school.update(
-        params
-    ));
-    if (params.addresses)
-        await(service.setAddresses(school, params.addresses));
-    return instance;
 });
 
 
@@ -342,10 +344,11 @@ service.viewOne = function(id) {
              model: models.OlimpResult,
              as: 'olimpResults'
          }];
-    return await(models.School.findOne({
+    var school = await(models.School.findOne({
         where: {id: id},
         include: includeParams
     }));
+    return school;
 };
 
 
@@ -531,7 +534,6 @@ var updateSearchConfig = function(searchConfig, searchParams) {
         ];
     }
 
-    console.log(searchParams);
 
     if (searchParams.classes && searchParams.classes.length) {
         whereParams.educationInterval = {

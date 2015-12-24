@@ -7,8 +7,6 @@ router.get('/school', schoolController.list);
 router.get('/school/search', schoolController.search);
 router.get('/school/search/filters', schoolController.listSearchFilters);
 router.get('/school/:id', schoolController.view);
-router.get('/school/:id/address', schoolController.getAddresses);
-router.get('/school/:school_id/address/:id', schoolController.getAddress);
 // router.get('/school/apitest', schoolController.yapi);
 // router.get('/school/search', schoolController.search);
 
