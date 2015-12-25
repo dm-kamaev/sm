@@ -9,12 +9,13 @@ const fs = require('fs');
 const common = require.main.require('./console/common');
 const services = require.main.require('./app/components/services').all;
 const ProgressBar = require('progress');
+const models = require.main.require('./app/components/models').all;
 const searchType = require.main.require('./api/modules/school/enums/searchType');
 const schoolType = require.main.require('./api/modules/school/enums/schoolType');
 var sequelize = require.main.require('./app/components/db');
     
 var start = async(function() {
-    sequelize.options.logging = false;
+    //sequelize.options.logging = false;
     var schools = await(services.school.listInstances());
     var searchUpdater = await(new SearchUpdater(schools));
     searchUpdater.start();
@@ -62,6 +63,29 @@ class SearchUpdater {
         }));
         console.log('Succses. Stopping script');
     }
+    /**
+     * @private
+     */
+    updateGiaAvg_(cityId) {
+        var giaAvg = await(services.studyResult.getGiaAverage(cityId));
+        await(models.CityResult.destroy({
+            where: {
+                type: 'gia'
+            }
+        }));
+        await(models.CityResult.bulkCreate(giaAvg));
+    }
+    
+    updateEgeAvg_(cityId) {
+        var egeAvg = await(services.studyResult.getEgeAverage(cityId));
+        await(models.CityResult.destroy({
+            where: {
+                type: 'ege'
+            }
+        }));
+        await(models.CityResult.bulkCreate(egeAvg));
+    }
+
 
 
     /**
@@ -69,33 +93,11 @@ class SearchUpdater {
      * @async
      */
     updateAverage_() {
-        var giaAvg = await(services.studyResult.getGiaAverage());
-        var egeAvg = await(services.studyResult.getEgeAverage());
-        var data = [];
-        giaAvg.forEach(giaSubject => {
-            var subjInArr = data.find(dt => dt.subject.id == giaSubject.id);
-            if (subjInArr)
-                subjInArr.giaAvg = giaSubject.dataValues.average;
-            else
-                data.push({
-                    subject: giaSubject,
-                    giaAvg: giaSubject.dataValues.average
-                });
-        });
-        egeAvg.forEach(egeSubject => {
-            var subjInArr = data.find(dt => dt.subject.id == egeSubject.id);
-            if (subjInArr)
-                subjInArr.egeAvg = egeSubject.dataValues.average;
-            else
-                data.push({
-                    subject: egeSubject,
-                    egeAvg: egeSubject.dataValues.average
-                });
-        });
-        await(data.forEach(dataSubj => {
-            services.subject.setCityAverage(dataSubj);
-        }));
-        
+        var msc = await(services.city.getMoscow());
+        await (
+            this.updateGiaAvg_(msc.id),
+            this.updateEgeAvg_(msc.id)
+       ); 
     }
     
     /**
