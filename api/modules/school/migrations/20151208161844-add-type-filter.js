@@ -1,6 +1,12 @@
 'use strict';
-var colors = require('colors'),
-    searchType = require('../../api/modules/school/enums/searchType');
+const searchType = require('../../api/modules/school/enums/searchType');
+
+const path = require('path');
+const ModelArchiver = require('../../console/modules/modelArchiver/ModelArchiver.js') ;
+const SchoolTypeFilter = require('../../api/modules/school/models/schoolTypeFilter');
+const dataFolder = path.join(__dirname, '../../api/modules/school/migrations');
+const async = require('asyncawait/async');
+
 module.exports = {
     up: function (queryInterface, Sequelize) {
         return queryInterface.createTable('school_type_filter', {
@@ -20,10 +26,12 @@ module.exports = {
             },
             created_at: Sequelize.DATE,
             updated_at: Sequelize.DATE
-        }).then(function() {
-        });
+        }).then(async(function() {
+            var archiver = new ModelArchiver(SchoolTypeFilter, dataFolder);
+            archiver.load();
+        }));
     },
-    down: function (queryInterface, Sequelize) {
+    down: function (queryInterface) {
         return queryInterface.dropTable('school_type_filter');
     }
 };

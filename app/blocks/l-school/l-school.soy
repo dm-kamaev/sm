@@ -8,6 +8,7 @@
  *        schoolName: string,
  *        schoolType: string,
  *        schoolDescr: string,
+ *        features: string,
  *        directorName: string,
  *        schoolQuote: string,
  *        classes: string,
@@ -27,6 +28,14 @@
  *            ]>,
  *            phones: list<string>
  *        ],
+ *        specializedClasses: list<[
+ *            name: string
+ *            items: list<string>
+ *        ]>,
+ *        activities: list<[
+ *            name: string
+ *            items: list<string>
+ *        ]>,
  *        comments: list<[
  *            author: string,
  *            rank: string,
@@ -39,6 +48,11 @@
  *        coords: list<
  *           list<number>
  *        >,
+ *        ratings: list<[
+ *            name<string>,
+ *            place<number>,
+ *            href<string>
+ *        ]>,
  *        score: list<number>,
  *        totalScore: number
  *     ]
@@ -196,6 +210,8 @@
  *          id: number,
  *          schoolName: string,
  *          schoolType: string,
+ *          schoolDescr: string,
+ *          features: string,
  *          directorName: string,
  *          classes: string,
  *          social:list<{
@@ -215,11 +231,24 @@
  *              }>,
  *              phones:list<string>
  *          ],
+ *          specializedClasses: list<[
+ *              name: string
+ *              items: list<string>
+ *          ]>,
+ *          activities: list<[
+ *              name: string
+ *              items: list<string>
+ *          ]>,
  *          coords: ?list<
  *              list<number>
  *          >,
  *          score: list<number>,
  *          totalScore: number
+ *          ratings: list<[
+ *              name<string>,
+ *              place<number>,
+ *              href<string>
+ *          ]>,
  *      }
  *  }
  */
@@ -266,18 +295,20 @@
             l-school__content-column_last">
 
     /*Features section*/
-    <div class="l-school__item-container">
-        {call sm.lSchool.bDataBlock.Template.base}
-            {param params: [
-                'header': 'особенности'
-                ]
-            /}
-        {/call}
-    </div>
+    {if $params.data.schoolDescr}
+        <div class="l-school__item-container">
+            {call sm.lSchool.bDataBlock.Template.base}
+                {param params: [
+                    'header': 'особенности'
+                    ]
+                /}
+            {/call}
+        </div>
+    {/if}
 
     /*Address section*/
-    <div class="l-school__item-container">
-        {if $params.data.contacts}
+    {if $params.data.contacts}
+        <div class="l-school__item-container">
             {call sm.lSchool.bDataBlockAddresses.Template.base}
                 {param params: [
                     'header': 'адреса и телефоны',
@@ -285,8 +316,8 @@
                     ]
                 /}
             {/call}
-        {/if}
-    </div>
+        </div>
+    {/if}
 
     /*Links section*/
     <div class="l-school__item-container">
@@ -301,51 +332,65 @@
 
     <div class="l-school__content-column">
         /*ratings*/
-        <div class="l-school__item-container">
-            {if $params.data.contacts}
-                {call sm.lSchool.bDataBlock.Template.base}
+        {if length($params.data.ratings) > 0}
+            <div class="l-school__item-container">
+                {call sm.lSchool.bDataBlockRatings.Template.base}
                     {param params: [
-                        'header': 'места в рейтингах'
-                        ]
-                    /}
+                        'header': 'места в рейтингах',
+                        'mod': 'b-data-block_ratings',
+                        'content': $params.data.ratings
+                    ]/}
                 {/call}
-            {/if}
-        </div>
+            </div>
+        {/if}
 
         /*high schools */
-        <div class="l-school__item-container">
-            {if $params.data.contacts}
+        {if $params.data.higthSchools}
+            <div class="l-school__item-container">
                 {call sm.lSchool.bDataBlock.Template.base}
                     {param params: [
                         'header': 'куда поступают выпускники'
                         ]
                     /}
                 {/call}
-            {/if}
-        </div>
+            </div>
+        {/if}
     </div>
 
     <div class="l-school__content-column
                 l-school__content-column_last">
         /*specialized classes*/
-        <div class="l-school__item-container">
-            {call sm.lSchool.bDataBlock.Template.base}
-                {param params: [
-                    'header': 'профильные классы'
-                    ]
-                /}
-            {/call}
-        </div>
+        {if $params.data.specializedClasses and
+        length($params.data.specializedClasses) > 0}
+            <div class="l-school__item-container">
+                {call sm.lSchool.bDataBlockFoldList.Template.base}
+                    {param params: [
+                        'header': 'профильные классы',
+                        'mod': 'b-data-block_fold-list',
+                        'headerType': 2,
+                        'content': $params.data.specializedClasses
+                        ]
+                     /}
+                {/call}
+            </div>
+        {/if}
 
-        /*additional classes*/
-        <div class="l-school__item-container">
-            {call sm.lSchool.bDataBlock.Template.base}
-                {param params: [
-                    'header': 'дополнительные занятия'
-                    ]
-                /}
-            {/call}
-        </div>
+        /*activities*/
+         {if $params.data.activities and
+         length($params.data.activities) > 0}
+             <div class="l-school__item-container">
+                 {call sm.lSchool.bDataBlockFoldList.Template.base}
+                     {param params: [
+                         'header': 'дополнительные занятия',
+                         'mod': 'b-data-block_fold-list',
+                         'headerType': 2,
+                         'content': $params.data.activities
+                         ]
+                      /}
+                 {/call}
+             </div>
+        {/if}
+    </div>
 
 </div>
 {/template}

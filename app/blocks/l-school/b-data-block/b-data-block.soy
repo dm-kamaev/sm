@@ -1,18 +1,21 @@
 {namespace sm.lSchool.bDataBlock.Template}
 
 /**
- * Content item
+ * @param params {
+ *     header: ?string,
+ *     mod: ?string
+ *     content: ?list<string>
  */
 {template .base  autoescape="strict" kind="html"}
     {call .init data="all" /}
 {/template}
 
 /**
- * item init
+ * Block init
  * @param params {
  *     header: ?string,
  *     mod: ?string
- *     content: ?[]
+ *     content: ?list<string>
  * }
  */
 {template .init autoescape="strict" kind="html"}
@@ -21,11 +24,17 @@
             {sp}{$params.mod}
         {/if}
     ">
+
+        //Header section
         {if $params.header}
-            <div class="b-data-block__line"></div>
-            <div class="b-data-block__header">{$params.header}</div>
+            {call .header}
+                {param params: [
+                    'header': $params.header
+                ] /}
+            {/call}
         {/if}
 
+        //Content  section
         {if $params.content}
             {call .content data="all" /}
         {/if}
@@ -33,9 +42,20 @@
 {/template}
 
 /**
- * Content item
+ * Header part
  * @param params {
- *     content: ?list
+ *     header: ?string
+ * }
+ */
+{template .header autoescape="strict" kind="html"}
+    <div class="b-data-block__line"></div>
+    <div class="b-data-block__header">{$params.header}</div>
+{/template}
+
+/**
+ * Content part
+ * @param params {
+ *     content: ?list<string>
  * }
  */
 {template .content autoescape="strict" kind="html"}

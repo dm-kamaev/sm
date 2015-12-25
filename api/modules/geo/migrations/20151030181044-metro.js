@@ -10,11 +10,9 @@ module.exports = {
             type: Sequelize.INTEGER
         },
         created_at: {
-            allowNull: false,
             type: Sequelize.DATE
         },
         updated_at: {
-            allowNull: false,
             type: Sequelize.DATE
         },
         name: {
@@ -27,13 +25,13 @@ module.exports = {
         address_id: {
             type: Sequelize.INTEGER,
             references: {
-                model:"address",
-                key: "id",
+                model:'address',
+                key: 'id',
             }
         }
     });
   },
-  down: function (queryInterface, Sequelize) {
+  down: function (queryInterface) {
     return queryInterface.dropTable('metro');
   }
 };

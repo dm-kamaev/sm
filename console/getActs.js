@@ -11,6 +11,7 @@ const REPORT_PATH = './console/reports/';
 const MODULES = './console/modules/activities/';
 
 var insertActs = async(function() {
+    await(services.school.deleteActivities());
     console.time("Matching");
 
     mkdirp(REPORT_PATH, function(err) {

@@ -1,5 +1,5 @@
 var DataType = require('sequelize'),
-    db = require.main.require('./app/components/db');
+    db = require('../../../../app/components/db');
 
 var GiaResult = db.define('GiaResult', {
     count: {
@@ -9,6 +9,10 @@ var GiaResult = db.define('GiaResult', {
     subjectId: {
         type: DataType.INTEGER,
         field: 'subject_id'
+    },
+    schoolId: {
+        type: DataType.INTEGER,
+        field: 'school_id'
     },
     result: {
         type: DataType.FLOAT,

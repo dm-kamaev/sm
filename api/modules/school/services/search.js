@@ -2,8 +2,6 @@ var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var models = require.main.require('./app/components/models').all;
 var services = require.main.require('./app/components/services').all;
-var sequelizeInclude = require.main.require('./api/components/sequelizeInclude');  
-var colors = require('colors');
 var searchTypes = require.main.require('./api/modules/school/enums/searchType');
 exports.name = 'search';
 
@@ -15,20 +13,68 @@ exports.getSchoolRecords = async (function(id) {
     }));
 });
 
+
 /**
  * Separate search string and remove symbols
+ * @param {string} string
+ * @return {array<string>}
  */
-var getSearchSubstrings = function (string) {
+var getSearchSubstrings = function(string) {
     return string.toLowerCase()
         .trim()
         .replace(/[^\wа-яА-Я\s]/g,'') //remove everything except letters, numbers and spaces
-        .replace(/школа/,'')
         .trim()
         .split(' ');
 };
 
 
-exports.generateFilter = function(string){
+/**
+ * @public
+ * @param {string} searchString
+ * @return {object}
+ */
+exports.suggestSearch = async(function(searchString) {
+    var promises = [
+        services.school.searchByText(searchString),
+        findAnyInModel(models.Area, searchString),
+        findAnyInModel(models.Metro, searchString),
+    ];
+    var results = await(promises);
+    return {
+        schools: results[0],
+        areas: results[1],
+        metros: results[2]
+    };
+});
+
+/**
+ * @param {object} model
+ * @param {string} searchString
+ * @return {promise<array<object>> || array<>}
+ */
+var findAnyInModel = function(model, searchString) {
+    var stringArr = getSearchSubstrings(searchString);
+    if (!stringArr)
+        return [];
+    
+    var params = {
+        where: {
+            name: {
+                $or: stringArr.map(str => {
+                    return {$iLike: '%' + str + '%'};
+                })
+            }
+        }
+    };
+    return model.findAll(params);
+};
+
+
+/**
+ * @params {string} string
+ * @return {object}
+ */
+exports.generateFilter = function(string) {
     var subStrings = getSearchSubstrings(string);
     return {
         $and: subStrings.map(substr => {
@@ -44,48 +90,6 @@ exports.getTypeFilters = async(function() {
     return await(models.SchoolTypeFilter.findAll());
 });
 
-/**
- * @public
- */
-exports.advancedSearch = async ((searchString) => {
-    searchString = searchString.toLowerCase();
-    var filter = generateFilter(searchString);
-
-    var yandexRequest = services.yapi.request(searchString);
-
-    var schoolRequest = models.School.findAll({
-        where: {
-            $or: [{
-                name: filter,
-                fullName: filter  
-            }]
-        }
-    });
-
-    var addressRequest = models.Address.findAll({
-        where: {
-            name: filter
-        }
-    });
-
-    var metroRequest = models.Metro.findAll({
-        where: {
-            name: filter 
-        }
-    });
-    
-    var results = await (yandexRequest,
-                        schoolRequest,
-                        addressRequest,
-                        metroRequest);
-
-    return {
-        geo: results[0],
-        schools: results[1],
-        address: results[2],
-        metro: results[3]
-    };
-});
 
 /**
  * @param {int} school_id
@@ -124,3 +128,23 @@ exports.setSchoolType = async(function(schoolId, value) {
 });
 
 
+/**
+ * Get one data
+ * @param {number} searh_data_id
+ * @return {Object} instance of SearhData model
+ */
+exports.getById = async(function(searh_data_id) {
+    return await(models.Department.findOne({
+        where: {id: searh_data_id}
+    }));
+});
+
+
+/**
+ * Delete searshData
+ * @param {int} searh_data_id
+ */
+exports.deleteSearchData = async(function(searh_data_id) {
+    var instance = await(exports.getById(searh_data_id));
+    instance.destroy();
+});

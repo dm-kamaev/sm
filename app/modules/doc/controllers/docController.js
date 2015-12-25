@@ -7,9 +7,12 @@ var docPages = [
         "b-rating",
         "b-feedback-modal",
         "b-school-list",
+        "b-school-list-item",
         "b-sort",
+        "b-data-block",
         "b-search",
-        "b-filters"
+        "b-filters",
+        "b-diagram"
     ];
 
 

@@ -78,10 +78,6 @@ goog.scope(function() {
              this.itemClickHandler_
          );
 
-         suggestInstance.setCallback('getData', function(elem) {
-             return JSON.parse(elem);
-         });
-
          suggestInstance.addEventListener(
              gorod.gSuggest.Suggest.Events.SUBMIT,
              this.onSubmit_.bind(this)
@@ -94,6 +90,42 @@ goog.scope(function() {
                  this.onIconClick_
              );
          }
+
+         suggestInstance.setCallbacks({
+             getData: function(elem) {
+                 return JSON.parse(elem);
+             },
+
+             search: function(elem) {
+                 var result = elem.name + ' ' +
+                     elem.fullName + ' ' +
+                     elem.abbreviation;
+                 return result;
+             },
+
+             renderItem: function(item, str) {
+                 var matchName,
+                     Suggest = gorod.gSuggest.Suggest;
+
+                 str = str || '';
+
+                 matchName = Suggest.findEntry(item.name, str);
+                 if (matchName) {
+                     return item.name;
+                 }
+
+                 var matchFullName = Suggest.findEntry(item.fullName, str);
+                 if (matchFullName) {
+                     return item.fullName;
+                 }
+
+                 var matchAbbreviation = Suggest.findEntry(
+                     item.abbreviation, str);
+                 if (matchAbbreviation) {
+                     return item.abbreviation;
+                 }
+             }
+         });
      };
 
     /**

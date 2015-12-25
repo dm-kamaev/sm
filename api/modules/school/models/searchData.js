@@ -1,6 +1,7 @@
 var DataType = require('sequelize'),
     db = require.main.require('./app/components/db'),
     enums = require('../enums');
+const searchType = require('../enums/searchType');
 
 var SearchData = db.define('SearchData', {
     schoolId: {
@@ -12,7 +13,7 @@ var SearchData = db.define('SearchData', {
     },
     type: {
         type: DataType.ENUM,
-        values: enums.searchType.toArray() 
+        values: searchType.toArray() 
     }
 }, {
     underscored: true,

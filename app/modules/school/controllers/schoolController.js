@@ -1,7 +1,7 @@
 var soy = require.main.require('./app/components/soy');
 var services = require.main.require('./app/components/services').all;
+const schoolView = require.main.require('./api/modules/school/views/schoolView');
 
-var fs = require('fs');
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 
@@ -11,69 +11,28 @@ exports.createComment = async (function(req, res) {
     try {
         var schoolId = req.params.id,
             params = req.body;
-        result = await(services.school.review(schoolId, params));
+        result = await(services.school.comment(schoolId,params));
     } catch (e) {
         console.log(e);
         result = JSON.stringify(e);
     } finally {
-        res.header("Content-Type", "text/html; charset=utf-8");
+        res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(result);
     }
 });
 
 
-exports.create = function(req, res) {
-
-};
-
-
 exports.list = async (function(req, res) {
+    var promises = [
+        services.school.list(),
+        services.school.searchFilters()
+    ];
+    var results = await(promises);
 
-    var schools = await (services.school.list(
-        {
-            searchParams:
-            {
-                name: req.query.name
-            }
-        }
-    ));
+    var schools = schoolView.list(results[0]);
+    var filters = schoolView.filters(results[1]);
 
-    var filters = await (services.school.searchFilters())
-        .map(item => {
-            var res = {
-                data: {
-                    filters: item.values,
-                    header: {
-                        help: ''
-                    },
-                    name: item.filter
-                },
-                config: {}
-            };
-
-            switch (item.filter) {
-                case 'school_type':
-                    res.data.header.title = 'Тип школы';
-                    res.config.filtersToShow = 15;
-                    res.config.cannotBeHidden = true;
-                    break;
-                case 'ege':
-                    res.data.header.title = 'Высокие результаты ЕГЭ';
-                    break;
-                case 'gia':
-                    res.data.header.title = 'Высокие результаты ГИА';
-                    break;
-                case 'olimp':
-                    res.data.header.title = 'Есть победы в олимпиадах';
-                    break;
-            }
-
-            return res;
-        });
-
-    console.log('filters', filters);
-
-    var html = soy.render('sm.lSearchResult.Template.base', {
+    var params = {
         params: {
             data: {
                 schools: schools,
@@ -90,147 +49,30 @@ exports.list = async (function(req, res) {
                 value: '{{ id }}'
             }
         }
-    });
+    };
 
-    res.header("Content-Type", "text/html; charset=utf-8");
+    var html = soy.render('sm.lSearchResult.Template.base', params);
+
+    res.header('Content-Type', 'text/html; charset=utf-8');
     res.end(html);
 });
 
 exports.view = async (function(req, res) {
     var school = await (services.school.viewOne(req.params.id));
-    console.log(JSON.stringify(school).yellow);
 
-
-
-    var typeConvert = {
-        'Parent': 'родитель',
-        'Graduate': 'выпускник',
-        'Scholar': 'ученик'
-    };
-
-    var sumScore = school.ratings
-        .map(rating => rating.score)
-        .reduce((context, coords) => {
-            coords.forEach((value, index) => {
-                if (value) {
-                    context.count[index]++;
-                    context.sum[index] += value;
-                    context.res[index] = context.sum[index] / context.count[index];
-                }
-            });
-
-            return context;
-        }, {
-            sum: [0, 0, 0, 0],
-            count: [0, 0, 0, 0],
-            res: [0, 0, 0, 0]
-        }).res;
-
-
-    function educationIntervalToString(interval) {
-        var res = '';
-
-        if (interval) {
-            var begin = interval[0],
-                end = interval[interval.length - 1];
-
-            res += begin ? begin : 'Детский сад';
-
-            if (end > begin) {
-                res += '–';
-                res += end;
-                res += begin ? ' классы' : ' класс';
-            }
-        }
-
-        return res;
+    if (!school) {
+        res.header('Content-Type', 'text/html; charset=utf-8');
+        res.status(404);
+        res.end('404');
+        return; // I dont want to be in this method anymore
     }
 
-    var addresses =
-            services.department.addressesFilter(school.addresses),
-        commentGroup = school.commentGroup ? school.commentGroup.comments : [],
-        metroStations = [];
-    metroStations = addresses.map(address => {
-        return services.address.getMetro(address);
-    });
-    var params = {
-        data: {
-            id: school.id,
-            schoolName: school.name,
-            schoolType: '',
-            schoolDescr: '',
-            directorName: school.director,
-            schoolQuote : "Мел",
-            features: [],
-            extendedDayCost: '',
-            dressCode: '',
-            classes: educationIntervalToString(school.educationInterval),
-            social:[],
-            metroStations: metroStations,
-            sites:[{
-                name: "Перейти на сайт школы",
-                href: 'http://' + school.site,
-                link: school.site
-            }],
-            contacts:{
-                address: addresses.map(address => {
-                    return {
-                        title: '',
-                        description: address.name,
-                        metro: services.address.getMetro(address)
-                    };
-                }),
-                phones: school.phones || ''
-            },
-            comments: commentGroup
-                .filter(comment => comment.text)
-                .map(comment => {
-                return {
-                    author: '',
-                    rank: typeConvert[comment.userType],
-                    text: comment.text,
-                    sections: comment.rating ? comment.rating.score.map((score, index) => {
-                        var type = [
-                            'Образование',
-                            'Преподаватели',
-                            'Инфраструктура',
-                            'Атмосфера'
-                        ];
-                        return {
-                            name: type[index],
-                            rating: score
-                        };
-                    }) : []
-                };
-            }),
-            coords: addresses.map(adr => {
-                return {
-                    lat: adr.coords[0],
-                    lng: adr.coords[1]
-                };
-            }),
-            score: sumScore,
-            totalScore: sumScore.reduce((context, value) => {
-                if (value) {
-                    context.sum += value;
-                    context.count++;
-                    context.res = context.sum / context.count;
-                }
-                return context;
-            }, {
-                sum: 0,
-                count: 0,
-                res: 0
-            }).res
-        }
-    };
-
-    console.log(params.data);
-    
-    res.header("Content-Type", "text/html; charset=utf-8");
+    res.header('Content-Type', 'text/html; charset=utf-8');
     res.end(
         soy.render('sm.lSchool.Template.base', {
-        params: params
+        params: {
+            data: schoolView.default(school)
+        }
     }));
 });
 
@@ -253,6 +95,8 @@ exports.search = async(function(req, res) {
           }
 
     });
-    res.header("Content-Type", "text/html; charset=utf-8");
+
+    //console.log(html);
+    res.header('Content-Type', 'text/html; charset=utf-8');
     res.end(html);
 });

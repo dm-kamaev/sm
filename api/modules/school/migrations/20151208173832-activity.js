@@ -1,4 +1,9 @@
 'use strict';
+const path = require('path');
+const ModelArchiver = require('../../console/modules/modelArchiver/ModelArchiver.js') ;
+const Activity = require('../../api/modules/school/models/activity');
+const dataFolder = path.join(__dirname, '../../api/modules/school/migrations');
+const async = require('asyncawait/async');
 
 module.exports = {
     up: function (queryInterface, Sequelize) {
@@ -30,15 +35,19 @@ module.exports = {
                 type: Sequelize.STRING,
             },
             school_id: {
+                onDelete: 'cascade',
                 type: Sequelize.INTEGER,
                 references: {
-                    model:"school",
-                    key: "id",
+                    model: 'school',
+                    key: 'id',
                 }
             },
-        });
+        }).then(async(function() {
+            var archiver = new ModelArchiver(Activity, dataFolder);
+            archiver.load();
+        }));
     },
-    down: function (queryInterface, Sequelize) {
+    down: function (queryInterface) {
         return queryInterface.dropTable('activity');
     }
 };
