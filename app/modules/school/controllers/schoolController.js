@@ -59,165 +59,20 @@ exports.list = async (function(req, res) {
 
 exports.view = async (function(req, res) {
     var school = await (services.school.viewOne(req.params.id));
+
     if (!school) {
         res.header('Content-Type', 'text/html; charset=utf-8');
         res.status(404);
         res.end('404');
         return; // I dont want to be in this method anymore
     }
-        
-
-    var typeConvert = {
-        'Parent': 'родитель',
-        'Graduate': 'выпускник',
-        'Scholar': 'ученик'
-    };
-
-    var sumScore = school.ratings
-        .map(rating => rating.score)
-        .reduce((context, coords) => {
-            coords.forEach((value, index) => {
-                if (value) {
-                    context.count[index]++;
-                    context.sum[index] += value;
-                    context.res[index] = context.sum[index] / context.count[index];
-                }
-            });
-
-            return context;
-        }, {
-            sum: [0, 0, 0, 0],
-            count: [0, 0, 0, 0],
-            res: [0, 0, 0, 0]
-        }).res;
-
-
-    function educationIntervalToString(interval) {
-        var res = '';
-
-        if (interval) {
-            var begin = interval[0],
-                end = interval[interval.length - 1];
-
-            if (end > begin) {
-                res += 'Обучение с ';
-                res += begin ? begin : 'детского сада';
-                res += ' по ' + end + ' класс';
-            }
-            else {
-                res = 'Детский сад';
-            }
-        }
-
-        return res;
-    }
-
-    var ratings = [];
-    /*Check that position in Mel's rating exists and less than 100*/
-    if (school.rating && school.rating <= 100) {
-        ratings.push({
-            name: 'Рейтинг пользователей «Мела»',
-            place: school.rating,
-            href: '/search'
-        });
-    }
-    /*Check that position in Moscow education dept.
-      rating exists and less than 100*/
-    if (school.rank && school.rank <= 100) {
-        ratings.push({
-            name: 'Рейтинг Департамента образования Москвы',
-            place: school.rank
-        });
-    }
-
-    var addresses =
-            services.department.addressesFilter(school.addresses),
-        commentGroup = school.commentGroup ? school.commentGroup.comments : [],
-        metroStations = [];
-    addresses.forEach(address => {
-        metroStations.push(services.address.getMetro(address));
-    });
-    var params = {
-        data: {
-            id: school.id,
-            schoolName: school.name,
-            schoolType: '',
-            schoolDescr: '',
-            features: '',
-            directorName: school.director,
-            schoolQuote : 'Мел',
-            extendedDayCost: '',
-            dressCode: '',
-            classes: educationIntervalToString(school.educationInterval),
-            social:[],
-            metroStations: metroStations,
-            sites:[{
-                name: 'Перейти на сайт школы',
-                href: 'http://' + school.site,
-                link: school.site
-            }],
-            activities: [],
-            specializedClasses: [],
-            contacts:{
-                address: addresses.map(address => {
-                    return {
-                        title: '',
-                        description: address.name,
-                        metro: services.address.getMetro(address)
-                    };
-                }),
-                phones: school.phones || ''
-            },
-            comments: commentGroup
-                .filter(comment => comment.text)
-                .map(comment => {
-                return {
-                    author: '',
-                    rank: typeConvert[comment.userType],
-                    text: comment.text,
-                    sections: comment.rating ? comment.rating.score.map((score, index) => {
-                        var type = [
-                            'Образование',
-                            'Преподаватели',
-                            'Атмосфера',
-                            'Инфраструктура'
-                        ];
-                        return {
-                            name: type[index],
-                            rating: score
-                        };
-                    }) : []
-                };
-            }),
-            coords: addresses.map(adr => {
-                return {
-                    lat: adr.coords[0],
-                    lng: adr.coords[1]
-                };
-            }),
-            ratings: ratings,
-            score: sumScore,
-            totalScore: sumScore.reduce((context, value) => {
-                if (value) {
-                    context.sum += value;
-                    context.count++;
-                    context.res = context.sum / context.count;
-                }
-                return context;
-            }, {
-                sum: 0,
-                count: 0,
-                res: 0
-            }).res
-        }
-    };
-
-    //console.log(params.data);
 
     res.header('Content-Type', 'text/html; charset=utf-8');
     res.end(
         soy.render('sm.lSchool.Template.base', {
-        params: params
+        params: {
+            data: schoolView.default(school)
+        }
     }));
 });
 

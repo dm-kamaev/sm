@@ -4,6 +4,7 @@ var await = require('asyncawait/await');
 var sequelizeInclude = require.main.require('./api/components/sequelizeInclude');
 var models = require.main.require('./app/components/models').all;
 var services = require.main.require('./app/components/services').all;
+var common = require.main.require('./console/common');
 exports.name = 'address';
 
 
@@ -119,9 +120,23 @@ exports.getDepartments = function(address) {
 
 
 exports.getMetro = function(address) {
-    return address.metroStations;
+    if (Array.isArray(address)) {
+        var metro = {};
+        address.forEach(adr => {
+            adr.metroStations.forEach(m => {
+                metro[m.id] = m.name;
+            });
+        });
+        return Object.keys(metro)
+            .map(id => {
+                return metro[id];
+            });
+    } else {
+        return address.metroStations.map(metro => {
+            return metro.name;
+        });
+    }
 };
-
 
 exports.setMetro = async(function(address, metroArr) {
     //console.log(address);
@@ -130,33 +145,16 @@ exports.setMetro = async(function(address, metroArr) {
             where: {
                 name: metro.name
             }
-        }))
+        }));
         if (ourMetro) {
-            address.addMetroStation(newMetro);
+            await(address.addMetroStation(ourMetro));
         } else {
-            try {
-                var newMetro = await(models.Metro.create({
-                    name: metro.name,
-                    coords: metro.coords
-                }));
-                address.addMetroStation(newMetro);
-            }
-            catch (e){
-                var ourMetro = await (models.Metro.findOne({
-                    where: {
-                        name: metro.name
-                    }
-                }))
-                if (!ourMetro)
-                    throw e;
-                else
-                    address.addMetroStation(ourMetro);
-            }
-
-            //console.log(newMetro);
-
+            await(address.createMetroStation({
+                name: metro.name,
+                coords: metro.coords
+            }));
         }
-    })
+    });
 });
 
 
@@ -181,6 +179,15 @@ exports.setArea = async ((area, address) => {
         item.setArea(area);
     } );
 });
+
+exports.getCoords = function(addresses) {
+    return addresses.map(adr => {
+        return {
+            lat: adr.coords[0],
+            lng: adr.coords[1]
+        };
+    });
+};
 
 exports.list = async ( function(opt_params) {
     var params = opt_params || {};

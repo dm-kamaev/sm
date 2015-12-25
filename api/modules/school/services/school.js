@@ -150,7 +150,7 @@ service.getAddresses = async(function(schoolId) {
         models.Address.findAll({
             where: {schoolId: schoolId},
             include: [
-                {       
+                {
                     model: models.Department,
                     as: 'departments'
                 }
@@ -311,29 +311,36 @@ service.findBySite = async(function(site) {
  * @public
  */
 service.viewOne = function(id) {
-    var includeParams = 
+    var includeParams =
         [{
             model: models.Address,
             as: 'addresses',
-            include: [{
-                model: models.Department,
-                as:'departments'
-            }]
-        }, {
-            model: models.Rating,
-            as: 'ratings'
-        }, {
-            model: models.CommentGroup,
-            as: 'commentGroup',
-            include: [{
-                model: models.Comment,
-                as: 'comments',
-                include: [{
-                    model: models.Rating,
-                    as: 'rating'
-                }]
-            }]
-        },
+            include: [
+                {
+                    model: models.Department,
+                    as:'departments'
+                },
+                {
+                    model: models.Metro,
+                    as: 'metroStations'
+                }
+            ]
+         }, {
+             model: models.Rating,
+             as: 'ratings'
+         }, {
+             model: models.CommentGroup,
+             as: 'commentGroup',
+             include: [{
+                 model: models.Comment,
+                 as: 'comments',
+                 include: [{
+                     model: models.Rating,
+                     as: 'rating'
+                 }]
+
+             }]
+         },
             //{
             //    model: models.EgeResult,
             //    as: 'egeResults'
@@ -345,7 +352,7 @@ service.viewOne = function(id) {
             //    as: 'olimpResults'
             //}
         ];
-    
+
     var school = await(models.School.findOne({
         where: {id: id},
         include: includeParams
@@ -488,7 +495,7 @@ service.searchByText = function(text) {
         whereParams = {
             $or: [
                 {
-                   name: nameFilter 
+                   name: nameFilter
                 }, {
                    fullName: nameFilter
                 }, {
@@ -506,7 +513,7 @@ service.searchByText = function(text) {
  * @param {object} searchParams
  * @param {?string} searchParams.name
  * @param {?Array<number>} searchParams.classes
- * @param {?number} searchParams.schoolType 
+ * @param {?number} searchParams.schoolType
  * @param {?Array<number>} searchParams.gia Subjects with high hia results
  * @param {?Array<number>} searchParams.ege
  * @param {?Array<number>} searchParams.olimp
