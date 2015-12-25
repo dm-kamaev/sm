@@ -205,8 +205,8 @@ exports.view = async (function(req, res) {
                         var type = [
                             'Образование',
                             'Преподаватели',
-                            'Инфраструктура',
-                            'Атмосфера'
+                            'Атмосфера',
+                            'Инфраструктура'
                         ];
                         return {
                             name: type[index],
@@ -267,7 +267,7 @@ exports.search = async(function(req, res) {
 
     });
 
-    console.log(html);
+    //console.log(html);
     res.header('Content-Type', 'text/html; charset=utf-8');
     res.end(html);
 });
