@@ -423,7 +423,7 @@ service.deleteActivities = async(() => {
 });
 
 /**
- * usded in console/*. Can be a bit slow
+ * usded in console. Can be a bit slow
  */
 service.listInstances = async(function(){
     return await(models.School.findAll({
@@ -536,7 +536,6 @@ var updateSearchConfig = function(searchConfig, searchParams) {
         ];
     }
 
-
     if (searchParams.classes && searchParams.classes.length) {
         whereParams.educationInterval = {
             $contains: searchParams.classes
@@ -549,7 +548,7 @@ var updateSearchConfig = function(searchConfig, searchParams) {
             $and: {
                 type: enums.searchType.SCHOOL_TYPE,
                 values: {
-                    $contains: searchParams.school_type
+                    $overlap: searchParams.school_type
                 }
             }
         });
@@ -597,7 +596,7 @@ var updateSearchConfig = function(searchConfig, searchParams) {
         var extraIncludesArr = [];
         extraIncludesArr.push(extraIncludes.searchData);
         searchConfig.include = searchConfig.include.concat(extraIncludesArr);
-        searchConfig.group = '"School"."id", "ratings"."id"';
+        searchConfig.group = '"School"."id"';
         searchConfig.having = ['COUNT(?) = ?', '', searchDataCount];
     }
 };
