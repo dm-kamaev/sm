@@ -1,7 +1,10 @@
 {namespace sm.lSchool.bDataBlock.Template}
 
 /**
- * Content item
+ * @param params {
+ *     header: ?string,
+ *     mod: ?string
+ *     content: ?list<string>
  */
 {template .base  autoescape="strict" kind="html"}
     {call .init data="all" /}
@@ -12,7 +15,7 @@
  * @param params {
  *     header: ?string,
  *     mod: ?string
- *     content: ?[]
+ *     content: ?list<string>
  * }
  */
 {template .init autoescape="strict" kind="html"}
@@ -52,7 +55,7 @@
 /**
  * Content part
  * @param params {
- *     content: ?list
+ *     content: ?list<string>
  * }
  */
 {template .content autoescape="strict" kind="html"}

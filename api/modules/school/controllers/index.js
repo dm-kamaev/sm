@@ -5,6 +5,7 @@ var schoolController = require('./schoolController');
 
 router.get('/school', schoolController.list);
 router.get('/school/search', schoolController.search);
+router.get('/school/search/suggest', schoolController.suggestSearch);
 router.get('/school/search/filters', schoolController.listSearchFilters);
 router.get('/school/:id', schoolController.view);
 // router.get('/school/apitest', schoolController.yapi);

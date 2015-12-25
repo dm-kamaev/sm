@@ -1,10 +1,14 @@
+
 var services = require.main.require('./app/components/services').all;
+
+const areaView = require.main.require('./api/modules/geo/views/areaView.js');
+const metroView = require.main.require('./api/modules/geo/views/metroView.js');
 
 var schoolView = {};
 
 /**
- * Default
- * @param {Object} schoolInstance
+ * @param {array<object>} schools - school instances
+ * @return {array<object>}
  */
 schoolView.default = function(schoolInstance) {
 
@@ -175,18 +179,84 @@ var getRatings = function(rating, rank) {
  *  @return {number}
  */
 var getTotalScore = function(score) {
-    return score.reduce((context, value) => {
-        if (value) {
-            context.sum += value;
-            context.count++;
-            context.res = context.sum / context.count;
+    score = score || [];
+    var count = 0, sum = 0;
+    score.forEach(val => {
+        if (val) {
+            sum += val;
+            count++;
         }
-        return context;
-    }, {
-        sum: 0,
-        count: 0,
-        res: 0
-    }).res;
+    });
+    return count ? sum/count : 0;
+};
+
+schoolView.list = function(schools) {
+    return schools
+        .map(school => {
+            return {
+                id: school.id,
+                name: school.name,
+                description: '',
+                abbreviation: school.abbreviation,
+                score: school.score || [0, 0, 0, 0],
+                totalScore: getTotalScore(school.score),
+                fullName: school.fullName,
+                addresses: school.addresses
+            };
+        })
+        .sort((school1, school2) => school2.totalScore - school1.totalScore);
+};
+
+/**
+ * @param {object} data
+ * @param {array<object>} data.schools - school instances
+ * @param {array<object>} data.areas - area instances
+ * @param {array<object>} data.metros - metro instances
+ * @return {array<object>}
+ */
+schoolView.suggest = function(data) {
+    return {
+        schools: this.list(data.schools),
+        areas: areaView.list(data.areas),
+        metro: metroView.list(data.metros)
+    }
+};
+
+/**
+ * @param {array<object>} filters
+ * @return {array<object>}
+ */
+schoolView.filters = function(filters) {
+   return filters.map(item => {
+       var res = {
+           data: {
+               filters: item.values,
+               header: {
+                   help: ''
+               },
+               name: item.filter
+           },
+           config: {}
+       };
+
+       switch (item.filter) {
+           case 'school_type':
+               res.data.header.title = 'Тип школы';
+               res.config.filtersToShow = 15;
+               res.config.cannotBeHidden = true;
+               break;
+           case 'ege':
+               res.data.header.title = 'Высокие результаты ЕГЭ';
+               break;
+           case 'gia':
+               res.data.header.title = 'Высокие результаты ГИА';
+               break;
+           case 'olimp':
+               res.data.header.title = 'Есть победы в олимпиадах';
+               break;
+       }
+       return res;
+   });
 };
 
 module.exports = schoolView;

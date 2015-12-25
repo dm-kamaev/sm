@@ -7,6 +7,7 @@ goog.require('sm.lDoc.nDemo.bBlockRating.Rating');
 goog.require('sm.lDoc.nDemo.bBlockSchoolList.SchoolList');
 goog.require('sm.lDoc.nDemo.bBlockSort.Sort');
 goog.require('sm.lDoc.nDemo.bBlockFilters.Filters');
+goog.require('sm.lDoc.nDemo.bBlockDataBlock.DataBlock');
 
 goog.require('gorod.bBouton.Bouton');
 goog.require('gorod.bBouton.BoutonTemplate');
@@ -32,5 +33,6 @@ jQuery(function() {
         new sm.lDoc.nDemo.bBlockRating.Rating();
         new sm.lDoc.nDemo.bBlockSchoolList.SchoolList();
         new sm.lDoc.nDemo.bBlockStars.Stars();
+        new sm.lDoc.nDemo.bBlockDataBlock.DataBlock();
     }
 });

@@ -340,16 +340,19 @@ service.viewOne = function(id) {
                  }]
 
              }]
-         }, {
-             model: models.EgeResult,
-             as: 'egeResults'
-         }, {
-             model: models.GiaResult,
-             as: 'giaResults'
-         }, {
-             model: models.OlimpResult,
-             as: 'olimpResults'
-         }];
+         },
+            //{
+            //    model: models.EgeResult,
+            //    as: 'egeResults'
+            //}, {
+            //    model: models.GiaResult,
+            //    as: 'giaResults'
+            //}, {
+            //    model: models.OlimpResult,
+            //    as: 'olimpResults'
+            //}
+        ];
+
     var school = await(models.School.findOne({
         where: {id: id},
         include: includeParams
@@ -427,7 +430,7 @@ service.deleteActivities = async(() => {
 });
 
 /**
- * usded in console/*. Can be a bit slow
+ * usded in console. Can be a bit slow
  */
 service.listInstances = async(function(){
     return await(models.School.findAll({
@@ -445,25 +448,18 @@ service.listInstances = async(function(){
     }));
 });
 
-/**
- *  @param {array<number>} score
- *  @return {number}
- */
-var getTotalScore = function(score) {
-    score = score || [];
-    var count = 0, sum = 0;
-    score.forEach(val => {
-        if (val) {
-            sum += val;
-            count++;
-        }
-    });
-    return count ? sum/count : 0;
-};
 
 
 /**
  * @public
+ * @param {object || null} opt_params
+ * @param {object || null} opt_params.searchParams
+ * @param {string || null} opt_params.searchParams.name
+ * @param {?Array<number>} opt_params.searchParams.schoolType
+ * @param {?Array<number>} opt_params.searchParams.gia
+ * @param {?Array<number>} opt_params.searchParams.ege
+ * @param {?Array<number>} opt_params.searchParams.olimp
+ * @return {promise<array<object>>}
  */
 service.list = async (function(opt_params) {
     var params = opt_params || {},
@@ -484,33 +480,40 @@ service.list = async (function(opt_params) {
     if (searchParams) {
         updateSearchConfig(searchConfig, searchParams);
     }
-
-    console.log('searchConfig', searchConfig);
-    var schools = await(models.School.findAll(searchConfig));
-    console.log('Found: ', colors.green(schools.length));
-
-    return schools
-        .map(school => {
-            return {
-                id: school.id,
-                name: school.name,
-                description: '',
-                abbreviation: school.abbreviation,
-                score: school.score || [0, 0, 0, 0],
-                totalScore: getTotalScore(school.score),
-                fullName: school.fullName,
-                addresses: school.addresses
-            };
-        })
-        .sort((school1, school2) => school1.totalScore - school2.totalScore);
+    return models.School.findAll(searchConfig).then(schools => {
+        console.log('Found: ', colors.green(schools.length)) ;
+        return schools;
+    });
 });
+
+/**
+ * @param {string} text
+ * @return {promise<array<object>>}
+ */
+service.searchByText = function(text) {
+    var nameFilter = services.search.generateFilter(text),
+        whereParams = {
+            $or: [
+                {
+                   name: nameFilter
+                }, {
+                   fullName: nameFilter
+                }, {
+                   abbreviation: nameFilter
+                }
+            ]
+        };
+    return models.School.findAll({
+        where: whereParams
+    });
+};
 
 /**
  * @param {object} searchConfig Existing search config to update
  * @param {object} searchParams
  * @param {?string} searchParams.name
  * @param {?Array<number>} searchParams.classes
- * @param {?number} searchParams.schoolType //TODO: use school_type_filter
+ * @param {?number} searchParams.schoolType
  * @param {?Array<number>} searchParams.gia Subjects with high hia results
  * @param {?Array<number>} searchParams.ege
  * @param {?Array<number>} searchParams.olimp
@@ -540,7 +543,6 @@ var updateSearchConfig = function(searchConfig, searchParams) {
         ];
     }
 
-
     if (searchParams.classes && searchParams.classes.length) {
         whereParams.educationInterval = {
             $contains: searchParams.classes
@@ -553,7 +555,7 @@ var updateSearchConfig = function(searchConfig, searchParams) {
             $and: {
                 type: enums.searchType.SCHOOL_TYPE,
                 values: {
-                    $contains: searchParams.school_type
+                    $overlap: searchParams.school_type
                 }
             }
         });
@@ -601,7 +603,7 @@ var updateSearchConfig = function(searchConfig, searchParams) {
         var extraIncludesArr = [];
         extraIncludesArr.push(extraIncludes.searchData);
         searchConfig.include = searchConfig.include.concat(extraIncludesArr);
-        searchConfig.group = '"School"."id", "ratings"."id"';
+        searchConfig.group = '"School"."id"';
         searchConfig.having = ['COUNT(?) = ?', '', searchDataCount];
     }
 };

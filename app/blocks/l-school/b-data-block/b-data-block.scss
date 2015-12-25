@@ -17,10 +17,10 @@
 .b-data-block__header {
 	display: inline-block;
 
-	margin-bottom: 27px;
+	margin-bottom: 28px;
 	padding-right: 20px;
 
-	letter-spacing: 0.06em;
+	letter-spacing: 0.05em;
 	text-transform: uppercase;
 
 	background-color: #fff;
@@ -59,3 +59,9 @@
 	font-family: arial, sans-serif;
 }
 
+.b-data-block__link {
+	text-decoration: none;
+	color: #ee362c;
+
+	font: 14px arial, sans-serif;
+}
