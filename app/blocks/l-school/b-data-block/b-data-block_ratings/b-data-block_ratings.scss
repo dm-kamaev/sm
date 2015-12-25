@@ -1,15 +1,18 @@
 .b-data-block_ratings {
-
-	.b-data-block__item-content {
-		width: 210px;
+	.b-data-block__item {
+		margin-bottom: 10px;
 	}
 
 	.b-data-block__item-content {
 		display: inline-block;
 
+		width: 210px;
+
 		margin-left: 19px;
 
 		vertical-align: middle;
+
+		line-height: 20px;
 	}
 }
 

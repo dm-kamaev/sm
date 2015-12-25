@@ -1,5 +1,5 @@
 var DataType = require('sequelize'),
-    db = require.main.require('./app/components/db');
+    db = require('../../../../app/components/db');
 
 var Subject = db.define('Subject', {
     name: {
@@ -18,11 +18,11 @@ var Subject = db.define('Subject', {
             Subject.hasMany(models.GiaResult, {
                 as: 'giaResult', foreignKey: 'subject_id'
             });
-            Subject.hasMany(models.OlimpResult, {
-                as: 'olimpResult', foreignKey: 'subject_id'
-            });
             Subject.hasMany(models.EgeResult, {
                 as: 'egeResult', foreignKey: 'subject_id'
+            });
+            Subject.hasMany(models.OlimpResult, {
+                as: 'olimpResult', foreignKey: 'subject_id'
             });
             Subject.hasMany(models.CityResult, {
                 as: 'cityResult', foreignKey: 'subject_id'

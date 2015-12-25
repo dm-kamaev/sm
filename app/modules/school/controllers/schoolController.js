@@ -1,7 +1,6 @@
 var soy = require.main.require('./app/components/soy');
 var services = require.main.require('./app/components/services').all;
 
-var fs = require('fs');
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 
@@ -16,28 +15,15 @@ exports.createComment = async (function(req, res) {
         console.log(e);
         result = JSON.stringify(e);
     } finally {
-        res.header("Content-Type", "text/html; charset=utf-8");
+        res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(result);
     }
 });
 
 
-exports.create = function(req, res) {
-
-};
-
-
 exports.list = async (function(req, res) {
 
-    var schools = await (services.school.list(
-        {
-            searchParams:
-            {
-                name: req.query.name
-            }
-        }
-    ));
-
+    var schools = await (services.school.list());
     var filters = await (services.school.searchFilters())
         .map(item => {
             var res = {
@@ -71,6 +57,7 @@ exports.list = async (function(req, res) {
             return res;
         });
 
+    console.log(filters);
     var params = {
         params: {
             data: {
@@ -89,19 +76,22 @@ exports.list = async (function(req, res) {
             }
         }
     };
-    console.log(JSON.stringify(params));
 
     var html = soy.render('sm.lSearchResult.Template.base', params);
 
-    res.header("Content-Type", "text/html; charset=utf-8");
+    res.header('Content-Type', 'text/html; charset=utf-8');
     res.end(html);
 });
 
 exports.view = async (function(req, res) {
     var school = await (services.school.viewOne(req.params.id));
-    console.log(JSON.stringify(school).yellow);
-
-
+    if (!school) {
+        res.header('Content-Type', 'text/html; charset=utf-8');
+        res.status(404);
+        res.end('404');
+        return; // I dont want to be in this method anymore
+    }
+        
 
     var typeConvert = {
         'Parent': 'родитель',
@@ -135,12 +125,13 @@ exports.view = async (function(req, res) {
             var begin = interval[0],
                 end = interval[interval.length - 1];
 
-            res += begin ? begin : 'Детский сад';
-
             if (end > begin) {
-                res += '–';
-                res += end;
-                res += begin ? ' классы' : ' класс';
+                res += 'Обучение с ';
+                res += begin ? begin : 'детского сада';
+                res += ' по ' + end + ' класс';
+            }
+            else {
+                res = 'Детский сад';
             }
         }
 
@@ -178,19 +169,21 @@ exports.view = async (function(req, res) {
             schoolName: school.name,
             schoolType: '',
             schoolDescr: '',
+            features: '',
             directorName: school.director,
-            schoolQuote : "Мел",
-            features: [],
+            schoolQuote : 'Мел',
             extendedDayCost: '',
             dressCode: '',
             classes: educationIntervalToString(school.educationInterval),
             social:[],
             metroStations: metroStations,
             sites:[{
-                name: "Перейти на сайт школы",
+                name: 'Перейти на сайт школы',
                 href: 'http://' + school.site,
                 link: school.site
             }],
+            activities: [],
+            specializedClasses: [],
             contacts:{
                 address: addresses.map(address => {
                     return {
@@ -228,6 +221,7 @@ exports.view = async (function(req, res) {
                     lng: adr.coords[1]
                 };
             }),
+            ratings: ratings,
             score: sumScore,
             totalScore: sumScore.reduce((context, value) => {
                 if (value) {
@@ -240,14 +234,13 @@ exports.view = async (function(req, res) {
                 sum: 0,
                 count: 0,
                 res: 0
-            }).res,
-            ratings: ratings
+            }).res
         }
     };
 
     //console.log(params.data);
 
-    res.header("Content-Type", "text/html; charset=utf-8");
+    res.header('Content-Type', 'text/html; charset=utf-8');
     res.end(
         soy.render('sm.lSchool.Template.base', {
         params: params
@@ -273,6 +266,8 @@ exports.search = async(function(req, res) {
           }
 
     });
-    res.header("Content-Type", "text/html; charset=utf-8");
+
+    console.log(html);
+    res.header('Content-Type', 'text/html; charset=utf-8');
     res.end(html);
 });

@@ -1,6 +1,6 @@
 var DataType = require('sequelize'),
-    db = require.main.require('./app/components/db'),
-    enums = require('../enums');
+    db = require('../../../../app/components/db');
+const searchType = require('../enums/searchType');
 
 var SchoolTypeFilter = db.define('SchoolTypeFilter', {
     name: {
@@ -8,7 +8,7 @@ var SchoolTypeFilter = db.define('SchoolTypeFilter', {
     },
     values: {
         type: DataType.ARRAY(DataType.STRING),
-        values: enums.searchType.toArray()
+        values: searchType.toArray()
     },
 }, {
     underscored: true,

@@ -1,4 +1,9 @@
 'use strict';
+const path = require('path');
+const ModelArchiver = require('../../console/modules/modelArchiver/ModelArchiver.js') ;
+const Area = require('../../api/modules/geo/models/area');
+const dataFolder = path.join(__dirname, '../../api/modules/geo/migrations');
+const async = require('asyncawait/async');
 
 module.exports = {
     up: function(queryInterface, Sequelize) {
@@ -10,31 +15,22 @@ module.exports = {
                     type: Sequelize.INTEGER
                 },
                 created_at: {
-                    allowNull: false,
                     type: Sequelize.DATE
                 },
                 updated_at: {
-                    allowNull: false,
                     type: Sequelize.DATE
                 },
                 name: {
                     type: Sequelize.STRING
                 }
-            }).then(() => {
-                queryInterface.addColumn('address', 'area_id', {
-                    type: Sequelize.INTEGER,
-                    references: {
-                        model: 'area',
-                        key: 'id'
-                    }
-                });
-            });
+            }).then(async(function() { 
+                var archiver = new ModelArchiver(Area, dataFolder);
+            archiver.load();
+        }));
     },
-    down: function (queryInterface, Sequelize) {
+    down: function (queryInterface) {
         return queryInterface.dropTable(
             'area'
-        ).then( () => {
-            queryInterface.removeColumn('address', 'area_id')
-        });
+        );
     }
 };

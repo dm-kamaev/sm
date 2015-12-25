@@ -4,7 +4,8 @@
  * The mark template
  * @param params {{
  *     value: number,
- *     display: ?string
+ *     display: ?string,
+ *     starsConfig: ?[]
  * }}
  */
 {template .base}
@@ -64,7 +65,8 @@
 /**
  * Stars template
  * @param params {{
- *     value: number
+ *     value: number,
+ *     starsConfig: ?[]
  * }}
  */
 {template .stars}
@@ -72,7 +74,8 @@
         {param params: [
             'data': [
                 'mark': $params.value
-            ]
+            ],
+            'config': $params.starsConfig
         ]/}
     {/call}
 {/template}
@@ -86,7 +89,7 @@
 {template .value}
     {if $params.value > 0}
         {let $val: round($params.value, 1)/}
-        {round($val, 0)},{round(($val - round($val, 0))*10, 0)}
+        {floor($val)},{round(($val - floor($val))*10, 0)}
     {else}
         —
     {/if}

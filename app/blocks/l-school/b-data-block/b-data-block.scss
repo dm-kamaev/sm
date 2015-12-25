@@ -31,7 +31,7 @@
 }
 
 .b-data-block__item {
-	margin-bottom: 20px;
+	margin-bottom: 10px;
 
 	&:last-child {
 		margin-bottom: 0;
@@ -41,11 +41,17 @@
 .b-data-block__item-content {
 	font-family: arial, sans-serif;
 	font-size: 14px;
-	line-height: 18px;
+	line-height: 20px;
 
 	&.b-data-block__item-content_text-color_red {
-		color: #ee362c;
 		text-decoration: none;
+		cursor: pointer;
+
+		color: #ee362c;
+	}
+
+	&:first-letter {
+		text-transform: uppercase;
 	}
 }
 
@@ -53,3 +59,9 @@
 	font-family: arial, sans-serif;
 }
 
+.b-data-block__link {
+	text-decoration: none;
+	color: #ee362c;
+
+	font: 14px arial, sans-serif;
+}

@@ -21,16 +21,17 @@ module.exports = {
             type: Sequelize.ARRAY(Sequelize.INTEGER),
         },
         school_id: {
+            onDelete: 'cascade',
             type: Sequelize.INTEGER,
             references: {
-                model:"school",
-                key: "id",
+                model:'school',
+                key: 'id',
             }
         },
 
     });
   },
-  down: function (queryInterface, Sequelize) {
+  down: function (queryInterface) {
     return queryInterface.dropTable('rating');
   }
 };

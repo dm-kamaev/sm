@@ -7,6 +7,7 @@ goog.require('goog.ui.Component');
 goog.require('sm.bRating.Rating');
 goog.require('sm.lSchool.bComment.Comment');
 goog.require('sm.lSchool.bComments.Comments');
+goog.require('sm.lSchool.bDataBlockFoldList.FoldList');
 goog.require('sm.lSchool.bFeedbackModal.FeedbackModal');
 goog.require('sm.lSchool.bMap.Map');
 
@@ -35,7 +36,9 @@ sm.lSchool.School = function(opt_params) {
 goog.inherits(sm.lSchool.School, goog.ui.Component);
 
 goog.scope(function() {
-    var School = sm.lSchool.School;
+    var School = sm.lSchool.School,
+        FoldList = sm.lSchool.bDataBlockFoldList.FoldList;
+
 
     /**
      * CSS-class enum
@@ -163,6 +166,14 @@ goog.scope(function() {
         });
         this.addChild(this.modal_);
         this.modal_.render();
+
+        var l = this.elements_.foldLists.length;
+        for (var i = 0, foldList; i < l; i++) {
+            foldList = this.elements_.foldLists[i];
+            var foldListInstance = new FoldList();
+            this.addChild(foldListInstance);
+            foldListInstance.decorate(foldList);
+        }
     };
 
     /**
@@ -187,6 +198,10 @@ goog.scope(function() {
             ),
             map: goog.dom.getElementByClass(
                 sm.lSchool.bMap.Map.CssClass.ROOT,
+                root
+            ),
+            foldLists: goog.dom.getElementsByClass(
+                sm.lSchool.bDataBlockFoldList.FoldList.CssClass.ROOT,
                 root
             )
         };

@@ -1,5 +1,5 @@
 var DataType = require('sequelize'),
-    db = require.main.require('./app/components/db'),
+    db = require('../../../../app/components/db'),
     enums = require('../enums');
 
 var Department = db.define('Department', {
@@ -8,7 +8,11 @@ var Department = db.define('Department', {
         type: DataType.ENUM,
         values: enums.departmentStage.toArray(),
         allowNull: false
-    }
+    },
+    availability: {
+        type: DataType.ARRAY(DataType.BOOLEAN),
+        allowNull: false
+    },
 }, {
     underscored: true,
     tableName: 'department',
