@@ -1,0 +1,133 @@
+{namespace sm.lDoc.nDemo.bBlockDataBlock.Template}
+
+/**
+* preview
+*/
+{template .preview}
+    {call sm.lSchool.bDataBlock.Template.base}
+        {param params: [
+            'header': 'адреса и телефоны',
+            'content': ['улица Крупской, дом 10',
+                        'улица Крупской, дом 12']
+        ]/}
+    {/call}
+{/template}
+
+/**
+* doc
+*/
+{template .doc}
+    Default view
+    <br /><br />
+    Template:
+    <div class="b-block-mark__code">
+        sm.lSchool.bDataBlock.Template.base
+    </div>
+    <br /><br />
+    Params:
+    <br /><br />
+    <div class="b-block-mark__code">
+        header: string,<br />
+        mod: string
+        <span class="b-block-mark__comment">- additional classes,</span><br />
+        content: list < string >
+    </div>
+    {call sm.lSchool.bDataBlock.Template.base}
+            {param params: [
+                'header': 'адреса и телефоны',
+                'content': ['улица Крупской, дом 10',
+                            'улица Крупской, дом 12']
+            ]/}
+    {/call}
+    <br /><br />
+
+    Ratings view
+    <br /><br />
+    Template:
+    <div class="b-block-mark__code">
+        sm.lSchool.bDataBlockRatings.Template.base
+    </div>
+    <br /><br />
+    Params:
+    <br /><br />
+    <div class="b-block-mark__code">
+        header: string,<br />
+        mod: string
+        <span class="b-block-mark__comment">- additional classes,</span><br />
+        content: list<[ <br />
+            <span class="b-block-diagram__code-indent">name: string</span>
+             <span class="b-block-mark__comment">- name of rating,</span>
+            <br />
+            <span class="b-block-diagram__code-indent">place: number</span>
+             <span class="b-block-mark__comment">- place in rating,</span>
+            <br />
+            <span class="b-block-diagram__code-indent">href:{sp}?string</span>
+            <span class="b-block-mark__comment">- link to rating</span><br />
+        ]>
+    </div>
+
+    {call sm.lSchool.bDataBlockRatings.Template.base}
+        {param params: [
+            'header': 'места в рейтингах',
+            'mod': 'b-data-block_ratings',
+            'content': [[
+                    'name': 'Рейтинг пользователей «Мела»',
+                    'place': 4,
+                    'href': '/school'
+                ],
+                [
+                    'name': 'Рейтинг Департамента образования Москвы',
+                    'place': 12
+                ]]
+        ]/}
+    {/call}
+    <br /><br />
+    Fold List view
+    <br /><br />
+    Template:
+    <div class="b-block-mark__code">
+        sm.lSchool.bDataBlockRatings.Template.base
+    </div>
+    <br /><br />
+    Params:
+    <br /><br />
+    <div class="b-block-mark__code">
+        header: string,<br />
+        mod: string
+        <span class="b-block-mark__comment">- additional classes,</span><br />
+        content: list<[ <br />
+            <span class="b-block-diagram__code-indent">name: string</span>
+             <span class="b-block-mark__comment">- name category,</span>
+            <br />
+            <span class="b-block-diagram__code-indent">items: list< string ></span>
+             <span class="b-block-mark__comment">- items in category</span><br />
+        ]>
+    </div>
+    {call  sm.lSchool.bDataBlockFoldList.Template.base}
+        {param params: [
+            'header': 'профильные классы',
+            'mod': 'b-data-block_fold-list',
+            'content': [[
+                    'name': 'Средняя школа',
+                    'items': ['Пение', 'Танцы', 'Чтение']
+                ],
+                [
+                    'name': 'Старшая школа',
+                    'items': ['Русский язык и литература',
+                              'Иностранный язык',
+                              'История',
+                              'География',
+                              'Экономика',
+                              'Право',
+                              'Алгебра и начала анализа',
+                              'Геометрия',
+                              'Информатика',
+                              'Физика',
+                              'Химия',
+                              'Биология']
+                ]]
+        ]/}
+    {/call}
+
+
+{/template}
