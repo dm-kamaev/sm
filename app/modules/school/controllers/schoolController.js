@@ -24,40 +24,8 @@ exports.createComment = async (function(req, res) {
 
 exports.list = async (function(req, res) {
     var schools = await (services.school.list());
-    var filters = await (services.school.searchFilters())
-        .map(item => {
-            var res = {
-                data: {
-                    filters: item.values,
-                    header: {
-                        help: ''
-                    },
-                    name: item.filter
-                },
-                config: {}
-            };
+    var filters = await (services.school.searchFilters());
 
-            switch (item.filter) {
-                case 'school_type':
-                    res.data.header.title = 'Тип школы';
-                    res.config.filtersToShow = 15;
-                    res.config.cannotBeHidden = true;
-                    break;
-                case 'ege':
-                    res.data.header.title = 'Высокие результаты ЕГЭ';
-                    break;
-                case 'gia':
-                    res.data.header.title = 'Высокие результаты ГИА';
-                    break;
-                case 'olimp':
-                    res.data.header.title = 'Есть победы в олимпиадах';
-                    break;
-            }
-
-            return res;
-        });
-
-    console.log(filters);
     var params = {
         params: {
             data: {
