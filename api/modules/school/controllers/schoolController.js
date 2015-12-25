@@ -2,7 +2,7 @@ var services = require.main.require('./app/components/services').all;
 
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
-
+var schoolView = require('../views/schoolView');
 
 
 /**
@@ -115,7 +115,33 @@ exports.delete = async (function(req, res) {
  */
 exports.list = async (function(req, res) {
     try {
-        var result = await (services.school.list());
+        var schools = await (services.school.list());
+        var result = schoolView.list(schools);
+    } catch (e) {
+        console.log(e);
+        result = e.message;
+    } finally {
+        res.header('Content-Type', 'text/html; charset=utf-8');
+        res.end(JSON.stringify(result));
+    }
+});
+
+/**
+ * @api {get} api/school/search/suggest Get school list
+ * @apiVersion 0.0.0
+ * @apiGroup School
+ * @apiName SuggestSearch
+ * @apiSuccess {Object[]} schools Very userful documentation here.
+ * @apiParamExample {json} Request-Example:
+ *     {
+ *       "searchString" : "123"
+ *     }
+ */
+exports.suggestSearch = async (function(req, res) {
+    try {
+        var searchString = req.query.searchString;
+        var data = await(services.search.suggestSearch(searchString));
+        var result = schoolView.suggest(data);
     } catch (e) {
         console.log(e);
         result = e.message;
@@ -225,7 +251,8 @@ exports.search = async (function(req, res) {
     var result = '';
     try {
         var params = req.query;
-        result = await(services.school.list(params));
+        var schools = await(services.school.list(params));
+        result = schoolView.list(schools);
     } catch (e) {
         console.log(e);
         result = JSON.stringify(e);

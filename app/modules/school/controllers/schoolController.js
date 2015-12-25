@@ -1,5 +1,6 @@
 var soy = require.main.require('./app/components/soy');
 var services = require.main.require('./app/components/services').all;
+const schoolView = require.main.require('./api/modules/school/views/schoolView');
 
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
@@ -22,42 +23,15 @@ exports.createComment = async (function(req, res) {
 
 
 exports.list = async (function(req, res) {
+    var promises = [
+        services.school.list(),
+        services.school.searchFilters()
+    ];
+    var results = await(promises);
 
-    var schools = await (services.school.list());
-    var filters = await (services.school.searchFilters())
-        .map(item => {
-            var res = {
-                data: {
-                    filters: item.values,
-                    header: {
-                        help: ''
-                    },
-                    name: item.filter
-                },
-                config: {}
-            };
+    var schools = schoolView.list(results[0]);
+    var filters = schoolView.filters(results[1]);
 
-            switch (item.filter) {
-                case 'school_type':
-                    res.data.header.title = 'Тип школы';
-                    res.config.filtersToShow = 15;
-                    res.config.cannotBeHidden = true;
-                    break;
-                case 'ege':
-                    res.data.header.title = 'Высокие результаты ЕГЭ';
-                    break;
-                case 'gia':
-                    res.data.header.title = 'Высокие результаты ГИА';
-                    break;
-                case 'olimp':
-                    res.data.header.title = 'Есть победы в олимпиадах';
-                    break;
-            }
-
-            return res;
-        });
-
-    console.log(filters);
     var params = {
         params: {
             data: {
