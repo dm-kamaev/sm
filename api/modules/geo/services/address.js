@@ -120,10 +120,23 @@ exports.getDepartments = function(address) {
 
 
 exports.getMetro = function(address) {
-    return address.metroStations;
+    if (Array.isArray(address)) {
+        var metro = {};
+        address.forEach(adr => {
+            adr.metroStations.forEach(m => {
+                metro[m.id] = m.name;
+            });
+        });
+        return Object.keys(metro)
+            .map(id => {
+                return metro[id];
+            });
+    } else {
+        return address.metroStations.map(metro => {
+            return metro.name;
+        });
+    }
 };
-
-
 
 exports.setMetro = async(function(address, metroArr) {
     //console.log(address);
@@ -166,6 +179,15 @@ exports.setArea = async ((area, address) => {
         item.setArea(area);
     } );
 });
+
+exports.getCoords = function(addresses) {
+    return addresses.map(adr => {
+        return {
+            lat: adr.coords[0],
+            lng: adr.coords[1]
+        };
+    });
+};
 
 exports.list = async ( function(opt_params) {
     var params = opt_params || {};

@@ -87,6 +87,7 @@ exports.list = async (function(req, res) {
 
 exports.view = async (function(req, res) {
     var school = await (services.school.viewOne(req.params.id));
+
     if (!school) {
         res.header('Content-Type', 'text/html; charset=utf-8');
         res.status(404);
@@ -94,14 +95,12 @@ exports.view = async (function(req, res) {
         return; // I dont want to be in this method anymore
     }
 
-    var params = {
-        data: schoolView.default(school)
-    };
-
     res.header('Content-Type', 'text/html; charset=utf-8');
     res.end(
         soy.render('sm.lSchool.Template.base', {
-        params: params
+        params: {
+            data: schoolView.default(school)
+        }
     }));
 });
 

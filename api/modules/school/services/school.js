@@ -150,7 +150,7 @@ service.getAddresses = async(function(schoolId) {
         models.Address.findAll({
             where: {schoolId: schoolId},
             include: [
-                {       
+                {
                     model: models.Department,
                     as: 'departments'
                 }
@@ -311,7 +311,7 @@ service.findBySite = async(function(site) {
  * @public
  */
 service.viewOne = function(id) {
-    var includeParams = 
+    var includeParams =
         [{
             model: models.Address,
             as: 'addresses',
