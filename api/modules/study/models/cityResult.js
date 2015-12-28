@@ -2,13 +2,16 @@ var DataType = require('sequelize'),
     db = require('../../../../app/components/db');
 
 var CityResult = db.define('CityResult', {
-    giaResult : {
+    result : {
         type: DataType.FLOAT,
-        field: 'gia_result'
+        field: 'result'
     },
-    egeResult : {
-        type: DataType.FLOAT,
-        field: 'ege_result'
+    type: {
+        type: DataType.ENUM,
+        values: ['gia', 'ege']
+    },
+    year: {
+        type: DataType.INTEGER
     },
     cityId : {
         type: DataType.INTEGER,
@@ -37,3 +40,4 @@ var CityResult = db.define('CityResult', {
 });
 
 module.exports = CityResult;
+

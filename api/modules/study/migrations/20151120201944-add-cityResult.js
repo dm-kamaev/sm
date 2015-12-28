@@ -36,8 +36,8 @@ module.exports = {
             created_at: Sequelize.DATE,
             updated_at: Sequelize.DATE
         }).then(async(function() {
-            var archiver = new ModelArchiver(CityResult, dataFolder);
-            archiver.load();
+            //var archiver = new ModelArchiver(CityResult, dataFolder);
+            //archiver.load(); //TODO: chained data load
         }));
     },
     down: function (queryInterface) {
