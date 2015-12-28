@@ -3,6 +3,10 @@ var DataType = require('sequelize'),
 const schoolType = require('../enums/schoolType');
 
 var School = db.define('School', {
+
+    /**
+     * School info
+     */
     name: DataType.STRING,
     abbreviation: DataType.STRING,
     fullName: {
@@ -19,7 +23,11 @@ var School = db.define('School', {
     director: DataType.STRING,
     phones: DataType.ARRAY(DataType.STRING),
     site: DataType.STRING,
-    score: DataType.ARRAY(DataType.FLOAT),
+    govermentKey: {
+        field: 'goverment_key',
+        type: DataType.INTEGER,
+        unique: true,
+    },
     cityId: {
         field: 'city_id',
         type: DataType.INTEGER,
@@ -28,17 +36,40 @@ var School = db.define('School', {
         field: 'education_interval',
         type: DataType.ARRAY(DataType.INTEGER)
     },
-    rank: DataType.INTEGER,
+
+    /**
+     * Scores, ratings, etc
+     */
+    score: {
+        type: DataType.ARRAY(DataType.FLOAT),
+    },
+    totalScore: {
+        type: DataType.FLOAT,
+        field: 'total_score'
+    },
+    rank: {
+        type: DataType.INTEGER,
+    },
+    rankDogm: {
+        type: DataType.INTEGER,
+        field: 'rank_dogm'
+    },
+    scoreCount: {
+        type: DataType.ARRAY(DataType.INTEGER),
+        field: 'score_count'
+    },
+    reviewCount: {
+        type: DataType.INTEGER,
+        field: 'review_count'
+    },
+
+    /**
+     * Meta
+     */
     commentGroupId: {
         type: DataType.INTEGER,
         field: 'comment_group_id'
     },
-    govermentKey: {
-        field: 'goverment_key',
-        type: DataType.INTEGER,
-        unique: true,
-        allowNull: false
-    }
 }, {
     underscored: true,
     tableName: 'school',
