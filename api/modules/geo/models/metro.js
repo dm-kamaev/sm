@@ -1,5 +1,6 @@
+
 var DataType = require('sequelize'),
-    db = require.main.require('./app/components/db');
+    db = require('../../../../app/components/db');
 
 var Metro = db.define('Metro', {
     name: DataType.STRING,

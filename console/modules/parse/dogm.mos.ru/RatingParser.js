@@ -66,7 +66,7 @@ class RatingParser {
         var site = siteNode.attr('href');
         if (site) {
             return {
-                rank: rating,
+                rankDogm: rating,
                 name: name
                     .trim()
                     .replace(/\s+/g,' '),

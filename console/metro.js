@@ -67,7 +67,7 @@ var processChunk = async(adrChunk => {
     await (adrChunk.forEach(address => {
 
         if (!(CACHING_ENABLED && isCached(address)))
-            processAddress(address);
+            await(processAddress(address));
         else
             console.log('Metro stations for address '
                 + colors.green(address.name) + ' adlready cached');

@@ -37,9 +37,9 @@ schoolView.default = function(schoolInstance) {
         contacts: getContacts(addresses,schoolInstance.phones),
         comments: getComments(comments),
         coords: services.address.getCoords(addresses),
-        ratings: getRatings(schoolInstance.rating, schoolInstance.rank),
+        ratings: getRatings(schoolInstance.rank, schoolInstance.rankDogm),
         score: score,
-        totalScore: getTotalScore(score)
+        totalScore: schoolInstance.totalScore
     };
 };
 
@@ -174,21 +174,6 @@ var getRatings = function(rating, rank) {
     return ratings;
 };
 
-/**
- *  @param {array<number>} score
- *  @return {number}
- */
-var getTotalScore = function(score) {
-    score = score || [];
-    var count = 0, sum = 0;
-    score.forEach(val => {
-        if (val) {
-            sum += val;
-            count++;
-        }
-    });
-    return count ? sum/count : 0;
-};
 
 schoolView.list = function(schools) {
     return schools
@@ -199,12 +184,11 @@ schoolView.list = function(schools) {
                 description: '',
                 abbreviation: school.abbreviation,
                 score: school.score || [0, 0, 0, 0],
-                totalScore: getTotalScore(school.score),
+                totalScore: school.totalScore || 0,
                 fullName: school.fullName,
                 addresses: school.addresses
             };
-        })
-        .sort((school1, school2) => school2.totalScore - school1.totalScore);
+        });
 };
 
 /**
@@ -219,7 +203,7 @@ schoolView.suggest = function(data) {
         schools: this.list(data.schools),
         areas: areaView.list(data.areas),
         metro: metroView.list(data.metros)
-    }
+    };
 };
 
 /**

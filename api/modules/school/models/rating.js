@@ -6,7 +6,7 @@ var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 
 var onChangeHook = async(function(rating) {
-    await(services.school.updateScore(rating.schoolId));
+    await(services.school.onRatingChange(rating.schoolId));
 });
 
 var Rating = db.define('Rating', {
