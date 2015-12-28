@@ -3,7 +3,9 @@
 module.exports = {
     up: function (queryInterface, Sequelize) {
         return queryInterface.addColumn('school', 'total_score', {
-            type: Sequelize.INTEGER 
+            type: Sequelize.FLOAT,
+            allowNull: false,
+            defaultValue: 0
         }).then(function() {
             return queryInterface.addColumn('school', 'score_count', {
                 type: Sequelize.ARRAY(Sequelize.INTEGER)

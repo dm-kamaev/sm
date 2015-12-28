@@ -39,7 +39,7 @@ var processRank = async(function(rank) {
         console.log(colors.red(rank.name) + ' | ' + colors.red(rank.site));
         notFound = true;
     } else {
-        services.school.setRank(school, rank.rank);
+        services.school.setRankDogm(school, rank.rankDogm);
     }
     return notFound;
 });

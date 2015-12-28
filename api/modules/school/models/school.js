@@ -45,7 +45,9 @@ var School = db.define('School', {
     },
     totalScore: {
         type: DataType.FLOAT,
-        field: 'total_score'
+        field: 'total_score',
+        allowNull: false,
+        defaultValue: 0
     },
     rank: {
         type: DataType.INTEGER,
