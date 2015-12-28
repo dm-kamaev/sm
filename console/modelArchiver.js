@@ -20,6 +20,7 @@ var modelModules = {
     Department: modules.GEO,
     Department_address: modules.GEO,
     Metro: modules.GEO,
+    AddressMetro: modules.GEO,
 
     Activity: modules.SCHOOL,
     School: modules.SCHOOL,

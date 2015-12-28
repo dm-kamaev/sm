@@ -4,7 +4,6 @@ const CsvConverter = require('./CsvConverter.js');
 const Archiver = require('./Archiver.js');
 const path = require('path');
 const sequelize = require('../../../app/components/db');
-const fs = require('fs');
 
 class ModelArchiver {
     /**
@@ -15,7 +14,6 @@ class ModelArchiver {
     constructor(model, folder) {
         this.initialLogiing_ = sequelize.options.logging;
         sequelize.options.logging = false;
-
         this.model_ = model;
         var archiveName = this.model_.name + '.tar.gz';
         var fullPath = path.join(folder, archiveName);
