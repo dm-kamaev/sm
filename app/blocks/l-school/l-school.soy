@@ -1,73 +1,18 @@
 {namespace sm.lSchool.Template}
-
 /**
- * Defaul school view
- * @param params {
- *    data: [
- *        id: number,
- *        schoolName: string,
- *        schoolType: string,
- *        schoolDescr: string,
- *        features: string,
- *        directorName: string,
- *        schoolQuote: string,
- *        classes: string,
- *        social: list<[
- *            name: string,
- *            href: string
- *        ]>,
- *        sites: list<[
- *            name: string,
- *            href: string,
- *            link: string
- *        ]>,
- *        contacts: [
- *            address: list<[
- *                title: string,
- *                description: string
- *            ]>,
- *            phones: list<string>
- *        ],
- *        specializedClasses: list<[
- *            name: string
- *            items: list<string>
- *        ]>,
- *        activities: list<[
- *            name: string
- *            items: list<string>
- *        ]>,
- *        comments: list<[
- *            author: string,
- *            rank: string,
- *            text: string,
- *            sections: list<[
- *                name: string,
- *                rating: int
- *            ]>
- *        ]>,
- *        coords: list<
- *           list<number>
- *        >,
- *        ratings: list<[
- *            name<string>,
- *            place<number>,
- *            href<string>
- *        ]>,
- *        score: list<number>,
- *        totalScore: number
- *     ]
- * }
- */
+* @param params
+*/
 {template .base autoescape="strict" kind="html"}
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Title</title>
+        <title>{ $params.data.schoolName }</title>
         <link href='https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700,700italic&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
         <link href='https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" href="/frobl.build.css">
         <link rel="stylesheet" href="/styles.css">
+        <link rel="shortcut icon" href="/images/favicon.png" type="image/png">
     </head>
     <body>
         {let $dataParams kind="html"}
@@ -143,20 +88,10 @@
     </body>
 </html>
 {/template}
-
 /**
- * Content top
- * @private
- * @param params {
- *     data: [
- *         schoolName: string,
- *         schoolDescr: string,
- *         schoolQuote: string,
- *         score: list<number>,
- *         totalScore: number
- *     ]
- * }
- */
+* @private
+* @param params
+*/
 {template .top_ autoescape="strict" kind="html"}
 
     <div class="l-school__content-column l-school__content-column_double-width">
@@ -201,57 +136,10 @@
         </div>
     </div>
 {/template}
-
 /**
- * Content middle
- * @private
- * @param params {
- *      data: {
- *          id: number,
- *          schoolName: string,
- *          schoolType: string,
- *          schoolDescr: string,
- *          features: string,
- *          directorName: string,
- *          classes: string,
- *          social:list<{
- *              name: string,
- *              href: string
- *          }>,
- *          sites:list<[
- *              name: string,
- *              href: string,
- *              link: string
- *          ]>,
- *          contacts:[
- *
- *              address:list<{
- *                  title: string,
- *                  description: string
- *              }>,
- *              phones:list<string>
- *          ],
- *          specializedClasses: list<[
- *              name: string
- *              items: list<string>
- *          ]>,
- *          activities: list<[
- *              name: string
- *              items: list<string>
- *          ]>,
- *          coords: ?list<
- *              list<number>
- *          >,
- *          score: list<number>,
- *          totalScore: number
- *          ratings: list<[
- *              name<string>,
- *              place<number>,
- *              href<string>
- *          ]>,
- *      }
- *  }
- */
+* @private
+* @param params
+*/
 {template .middle_ autoescape="strict" kind="html"}
 /*map, information*/
 <div class="l-school__content-column
@@ -394,18 +282,14 @@
 
 </div>
 {/template}
-
 /**
- * Content bottom
- * @private
- */
+* @private
+*/
 {template .bottom_ autoescape="strict" kind="html"}
 {/template}
-
 /**
- * Content title
- * @private
- */
+* @private
+*/
 {template .contentTitle_ autoescape="strict" kind="html"}
     {@param image:string}
     {@param text:string}
@@ -418,15 +302,10 @@
         //<div class="b-icon_img_school-button l-school__content-header-button"alt="{$buttonAlt}"></div>
     </div>
 {/template}
-
-
 /**
- * Classes block
- * @private
- * @param params {
- *    classesStr:string
- * }
- */
+* @private
+* @param params
+*/
 {template .classes_ autoescape="strict" kind="html"}
     <div class="l-school__content-block">
         {call .contentTitle_}
@@ -438,12 +317,9 @@
         {$params.classesStr}
     </div>
 {/template}
-
-
 /**
- * Sites links
- * @private
- */
+* @private
+*/
 {template .sites_ autoescape="strict" kind="html"}
     {@param data:
         list<[
@@ -474,11 +350,9 @@
         {/foreach}
     </div>
 {/template}
-
 /**
- * Social links
- * @private
- */
+* @private
+*/
 {template .social_ autoescape="strict" kind="html"}
     {@param data:
         list<[
@@ -504,15 +378,10 @@
         </div>
     {/if}
 {/template}
-
 /**
- * Information block
- * @private
- * @param params {
-  *    directorName: string,
-  *    classes: string
-  *  }
- */
+* @private
+* @param params
+*/
 {template .information_  autoescape="strict" kind="html"}
 <div class="b-data-block">
     <div class="b-data-block b-data-block__content">
@@ -523,11 +392,9 @@
     </div>
 </div>
 {/template}
-
 /**
- * Director block
- * @private
- */
+* @private
+*/
 {template .director_ autoescape="strict" kind="html"}
     {@param
         dirName:string
@@ -544,12 +411,9 @@
         </div>
     </div>
 {/template}
-
-
 /**
- * Comments block
- * @private
- */
+* @private
+*/
 {template .comments_ autoescape="strict" kind="html"}
     {@param
         comments: list<[
@@ -602,11 +466,9 @@
         </div>
     </div>
 {/template}
-
 /**
- * Contacts block
- * @private
- */
+* @private
+*/
 {template .contacts_ autoescape="strict" kind="html"}
     {@param
         data:[
