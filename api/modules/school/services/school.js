@@ -599,7 +599,7 @@ var updateSearchConfig = function(searchConfig, searchParams) {
         var extraIncludesArr = [];
         extraIncludesArr.push(extraIncludes.searchData);
         searchConfig.include = searchConfig.include.concat(extraIncludesArr);
-        searchConfig.group = '"School"."id", "ratings"."id"';
+        searchConfig.group = '"School"."id"';
         searchConfig.having = ['COUNT(?) = ?', '', searchDataCount];
     }
 };

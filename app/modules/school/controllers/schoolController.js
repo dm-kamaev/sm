@@ -23,7 +23,11 @@ exports.createComment = async (function(req, res) {
 
 
 exports.list = async (function(req, res) {
-    var schools = await (services.school.list());
+    var schools = await (services.school.list({
+        searchParams: {
+            name: req.query.name
+        }
+    }));
     var filters = await (services.school.searchFilters());
 
     var params = {

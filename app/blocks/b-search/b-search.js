@@ -93,7 +93,24 @@ goog.scope(function() {
 
          suggestInstance.setCallbacks({
              getData: function(elem) {
-                 return JSON.parse(elem);
+                 var data = JSON.parse(elem);
+                 data = data.sort(function(school1, school2) {
+                     var res = 0,
+                         matches1 = school1.name.match(/№(\d+)/),
+                         matches2 = school2.name.match(/№(\d+)/),
+                         num1 = matches1 && matches1[1] || 1000000,
+                         num2 = matches2 && matches2[1] || 1000000;
+
+                     if (num1 || num2) {
+                         res = num1 - num2;
+                     }
+                     else {
+                         res = (school1.name > school2.name) ? 1 : -1;
+                     }
+
+                     return res;
+                 });
+                 return data.slice(0, 10);
              },
 
              search: function(elem) {
