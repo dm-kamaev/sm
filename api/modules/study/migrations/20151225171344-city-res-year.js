@@ -51,6 +51,6 @@ module.exports = {
         });
     },
     down: function (queryInterface) {
-        return null //TODO: implement me
+        return null; //TODO: implement me
     }
 };

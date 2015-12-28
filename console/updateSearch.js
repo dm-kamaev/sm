@@ -1,12 +1,7 @@
-'use strict'
-const exec = require('child_process').exec;
+'use strict';
 const async = require('asyncawait/async');
 const await = require('asyncawait/await');
 const commander = require('commander');
-const colors = require('colors');
-const readlineSync = require('readline-sync');
-const fs = require('fs');
-const common = require.main.require('./console/common');
 const services = require.main.require('./app/components/services').all;
 const ProgressBar = require('progress');
 const models = require.main.require('./app/components/models').all;
@@ -15,7 +10,7 @@ const schoolType = require.main.require('./api/modules/school/enums/schoolType')
 var sequelize = require.main.require('./app/components/db');
     
 var start = async(function() {
-    //sequelize.options.logging = false;
+    sequelize.options.logging = false;
     var schools = await(services.school.listInstances());
     var searchUpdater = await(new SearchUpdater(schools));
     searchUpdater.start();
@@ -196,10 +191,10 @@ class EgeActualizer extends SearchDataActualizer {
         var yearsResults = [],
             processedSubjects = [];
         //TODO: move years in constants
-        for (var year = 2015; year >= 2012; year--) {
+        for (var year = 2015; year >= 2010; year--) {
             var yearResults = this.getYearResults_(year);
             yearsResults.push(
-                await(this.getYearSubjects_(yearResults))
+                await(this.getYearSubjects_(yearResults, year))
             );
         }
 
@@ -219,10 +214,11 @@ class EgeActualizer extends SearchDataActualizer {
     /**
      * @private
      * @param {array<object>} yearResults
+     * @param {number} year
      * @return {array<id, isPassed>} yearSubjects
      * get array of subjects IDs where school ege result > city avg result for year
      */
-    getYearSubjects_(yearResults) {
+    getYearSubjects_(yearResults, year) {
         //TODO: refactor or comment this
         var yearSubjects = [];
         await (yearResults.forEach(egeResult => { 
@@ -230,10 +226,14 @@ class EgeActualizer extends SearchDataActualizer {
                 subj => subj.id == egeResult.subject_id);
             if (citySubject) {
                 var cityResult = citySubject.cityResult.find(
-                    res => (res.cityId == this.school_.city_id));
+                    res => (
+                        res.cityId == this.school_.city_id &&
+                        res.year == year &&
+                        res.type == searchType.EGE
+                    ));
                 if (cityResult) {
                     var isPassed;
-                    if (egeResult.result >= cityResult.egeResult)
+                    if (egeResult.result >= cityResult.result)
                         isPassed = true;
                     else
                         isPassed = false;
@@ -295,8 +295,11 @@ class GiaActualizer extends SearchDataActualizer {
                 subj => subj.id == giaResult.subject_id);
             if (citySubject) {
                 var cityResult = citySubject.cityResult.find(
-                    res => (res.cityId == this.school_.city_id));
-                if (cityResult && giaResult.result >= cityResult.giaResult)
+                    res => (
+                        res.cityId == this.school_.city_id &&
+                        res.type == searchType.GIA
+                    ));
+                if (cityResult && giaResult.result >= cityResult.result)
                     this.resultSubjects_.push(giaResult.subject_id);
             }
         }));
