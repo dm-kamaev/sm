@@ -266,7 +266,7 @@ service.updateRanks = async(function() {
 
     //var loggingState = sequelize.options.logging;
     //sequelize.options.logging = false;
-   a//wait(schools.forEach(school => {
+    //wait(schools.forEach(school => {
     //    if (school.totalScore != previousScore)
     //        rankCounter++;
     //    school.update({
