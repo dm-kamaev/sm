@@ -4,6 +4,7 @@ const ModelArchiver = require('../../console/modules/modelArchiver/ModelArchiver
 const GiaResult = require('../../api/modules/study/models/giaResult');
 const dataFolder = path.join(__dirname, '../../api/modules/study/migrations');
 const async = require('asyncawait/async');
+const archiveName = ModelArchiver.migrationToArchive(__filename);
 
 module.exports = {
     up: function (queryInterface, Sequelize) {
@@ -40,7 +41,7 @@ module.exports = {
             created_at: Sequelize.DATE,
             updated_at: Sequelize.DATE
         }).then(async(function() {
-            var archiver = new ModelArchiver(GiaResult, dataFolder);
+            var archiver = new ModelArchiver(GiaResult, dataFolder, null, archiveName);
             archiver.load();
         }));
     },
