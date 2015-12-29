@@ -12,7 +12,8 @@ var docPages = [
         "b-data-block",
         "b-search",
         "b-filters",
-        "b-diagram"
+        "b-diagram",
+        "b-score"
     ];
 
 

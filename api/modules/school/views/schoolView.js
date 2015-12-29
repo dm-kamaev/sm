@@ -17,7 +17,8 @@ schoolView.default = function(schoolInstance) {
         comments = schoolInstance.commentGroup ?
             schoolInstance.commentGroup.comments : [],
         score = schoolInstance.score || [0, 0, 0, 0];
-
+        console.log('Instance');
+        console.log(JSON.stringify(schoolInstance));
     return {
         id: schoolInstance.id,
         schoolName: schoolInstance.name,
@@ -38,8 +39,9 @@ schoolView.default = function(schoolInstance) {
         comments: getComments(comments),
         coords: services.address.getCoords(addresses),
         ratings: getRatings(schoolInstance.rank, schoolInstance.rankDogm),
-        score: score,
-        totalScore: schoolInstance.totalScore
+        score: getSections(score),
+        totalScore: schoolInstance.totalScore,
+        reviewCount: schoolInstance.reviewCount
     };
 };
 
@@ -118,21 +120,24 @@ var getComments = function(comments) {
     return comments
         .filter(comment => comment.text)
         .map(comment => {
+            var sections = comment.rating ? 
+                getSections(comment.rating.score) :
+                getSections([0,0,0,0]);
             return {
                 author: '',
                 rank: typeConvert[comment.userType],
                 text: comment.text,
-                sections: getSections(comment.rating)
+                sections: sections
             };
         });
 };
 
 /**
- *  @param {array<object>} rating
+ *  @param {array<object>} Ratings array to convert
  *  @return {array<object>}
  */
-var getSections = function(rating) {
-    return rating ? rating.score.map((score, index) => {
+var getSections = function(array) {
+    return array ? array.map((item, index) => {
         var type = [
             'Образование',
             'Преподаватели',
@@ -141,7 +146,7 @@ var getSections = function(rating) {
         ];
         return {
             name: type[index],
-            rating: score
+            value: item
         };
     }) : [];
 };

@@ -69,6 +69,8 @@ exports.view = async (function(req, res) {
         return; // I dont want to be in this method anymore
     }
 
+    console.log(JSON.stringify(schoolView.default(school)));
+
     res.header('Content-Type', 'text/html; charset=utf-8');
     res.end(
         soy.render('sm.lSchool.Template.base', {
