@@ -67,11 +67,12 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Title</title>
+        <title>{ $params.data.schoolName }</title>
         <link href='https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700,700italic&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
         <link href='https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" href="/frobl.build.css">
         <link rel="stylesheet" href="/styles.css">
+        <link rel="shortcut icon" href="/images/favicon.png" type="image/png">
     </head>
     <body>
         {let $dataParams kind="html"}
@@ -147,7 +148,6 @@
     </body>
 </html>
 {/template}
-
 /**
  * Content top
  * @private
@@ -156,6 +156,7 @@
  *         schoolName: string,
  *         schoolDescr: string,
  *         schoolQuote: string,
+ *         score: list<number>,
  *         totalScore: number
  *     ]
  * }
@@ -434,7 +435,6 @@
     </div>
 {/template}
 
-
 /**
  * Classes block
  * @private
@@ -453,7 +453,6 @@
         {$params.classesStr}
     </div>
 {/template}
-
 
 /**
  * Sites links
@@ -559,7 +558,6 @@
         </div>
     </div>
 {/template}
-
 
 /**
  * Comments block

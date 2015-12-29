@@ -248,32 +248,34 @@ service.updateReviewCount = async(function(school) {
  * @return {Peromise}
  */
 service.updateRanks = async(function() {
+    //TODO : move to time-driven script in separated thread
+
     /* Disable logging for this method cause its sloving down the server */
-    console.log(colors.green('Updating ranks'));
+    //console.log(colors.green('Updating ranks'));
 
-    var rankCounter = 0;
-    var previousScore = -1;
+    //var rankCounter = 0;
+    //var previousScore = -1;
 
-    var schools = await(models.School.findAll({
-        attributes: [
-            'id',
-            ['total_score', 'totalScore']
-        ],
-        order: 'total_score DESC'
-    }));
+    //var schools = await(models.School.findAll({
+    //    attributes: [
+    //        'id',
+    //        ['total_score', 'totalScore']
+    //    ],
+    //    order: 'total_score DESC'
+    //}));
 
-    var loggingState = sequelize.options.logging;
-    sequelize.options.logging = false;
-   await(schools.forEach(school => {
-        if (school.totalScore != previousScore)
-            rankCounter++;
-        school.update({
-            rank: rankCounter
-        });
-        previousScore = school.totalScore;
-    }));
-    sequelize.options.logging = loggingState;
-    console.log(colors.green('Ranks updated'));
+    //var loggingState = sequelize.options.logging;
+    //sequelize.options.logging = false;
+    //wait(schools.forEach(school => {
+    //    if (school.totalScore != previousScore)
+    //        rankCounter++;
+    //    school.update({
+    //        rank: rankCounter
+    //    });
+    //    previousScore = school.totalScore;
+    //}));
+    //sequelize.options.logging = loggingState;
+    //console.log(colors.green('Ranks updated'));
 });
 
 /**
