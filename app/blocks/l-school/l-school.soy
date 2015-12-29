@@ -42,7 +42,7 @@
  *            text: string,
  *            sections: list<[
  *                name: string,
- *                rating: int
+ *                value: int
  *            ]>
  *        ]>,
  *        coords: list<
@@ -53,8 +53,12 @@
  *            place<number>,
  *            href<string>
  *        ]>,
- *        score: list<number>,
- *        totalScore: number
+ *        score: list<[
+ *            name: string,
+ *            value: number
+ *        ]>,
+ *        totalScore: number,
+ *        reviewCount: number
  *     ]
  * }
  */
@@ -152,7 +156,6 @@
  *         schoolName: string,
  *         schoolDescr: string,
  *         schoolQuote: string,
- *         score: list<number>,
  *         totalScore: number
  *     ]
  * }
@@ -172,12 +175,12 @@
          /*хрень*/
         <div class = "l-school__rating">
 
-            {call sm.bRating.Template.base}
-                 {param params: [
-                        'marks': $params.data.score,
-                        'averageMark': $params.data.totalScore
-                 ]/}
-            {/call}
+            // {call sm.bRating.Template.base}
+            //      {param params: [
+            //             'marks': $params.data.score,
+            //             'averageMark': $params.data.totalScore
+            //      ]/}
+            // {/call}
 
             {call gorod.bBouton.BoutonTemplate.render}
                 {param params: [
@@ -242,13 +245,17 @@
  *          coords: ?list<
  *              list<number>
  *          >,
- *          score: list<number>,
- *          totalScore: number
+ *          score: list<[
+ *              name: string,
+ *              value: number
+ *          ]>,
+ *          totalScore: number,
+ *          reviewCount: number,
  *          ratings: list<[
  *              name<string>,
  *              place<number>,
  *              href<string>
- *          ]>,
+ *          ]>
  *      }
  *  }
  */
@@ -258,7 +265,15 @@
             l-school__content-column_left">
 
     /*rating template must be called here*/
-    <div class="l-school__rating"></div>
+    <div class="l-school__score">
+        {call sm.bScore.Template.base}
+             {param params: [
+                    'reviewCount': $params.data.reviewCount,
+                    'score': $params.data.score,
+                    'totalScore': $params.data.totalScore
+             ]/}
+        {/call}
+    </div>
 
     /*тут должен вызываться шаблон карты*/
     <div class="l-school__item-container">
@@ -558,7 +573,7 @@
             text: string,
             sections: list<[
                 name: string,
-                rating: int
+                value: int
             ]>
         ]>
     }
