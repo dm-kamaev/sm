@@ -3,6 +3,9 @@ const path = require('path');
 const ModelArchiver = require('../../console/modules/modelArchiver/ModelArchiver.js') ;
 const Subject = require('../../api/modules/study/models/subject');
 const dataFolder = path.join(__dirname, '../../api/modules/study/migrations');
+const archiveName = ModelArchiver.migrationToArchive(__filename);
+
+
 const async = require('asyncawait/async');
 
 module.exports = {
@@ -24,7 +27,7 @@ module.exports = {
             created_at: Sequelize.DATE,
             updated_at: Sequelize.DATE
         }).then(async(function() {
-            var archiver = new ModelArchiver(Subject, dataFolder);
+            var archiver = new ModelArchiver(Subject, dataFolder, null, archiveName);
             archiver.load();
         }));
     },

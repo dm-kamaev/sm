@@ -5,6 +5,8 @@ const async = require('asyncawait/async');
 const models = require.main.require('./app/components/models').all;
 const path = require('path');
 const readlineSync = require('readline-sync');
+const colors = require('colors');
+const fs = require('fs-extra');
 
 var modules = {
     GEO: 'geo',
@@ -37,26 +39,87 @@ var modelModules = {
 };
 
 var start = async(function() {
+    var options = {};
     var modelKeys = Object.keys(modelModules);
     var index = readlineSync.keyInSelect(modelKeys, 'Choose model to archive');
     var selectedModel = modelKeys[index];
-    archiveModel(selectedModel);
+    options.model = models[selectedModel];
+    options.isCustomName = readlineSync.keyInYN('Would you like to name archive as one of migrations?');
+    if (options.isCustomName)
+        options.name = chooseName(modelModules[selectedModel]);
+    options.isAllAttributes = readlineSync.keyInYN('Save all attributes?');
+    if (!options.isAllAttributes)
+        options.attributes = chooseAttributes(options.model);
+    archiveModel(options);
 });
 
 /**
- * @param {string} modelName
+ * @param {string} module
+ * @return {string} 
  */
-var archiveModel = async(function(modelName) {
-    var fullPath = path.join(
-        __dirname, 
-        '../api/modules', 
-        modelModules[modelName], 
-        'migrations');
-    var archiver = new ModelArchiver(models[modelName], fullPath);
+var chooseName = function(module) {
+    var migrationPath = path.join(__dirname, '../api/modules',
+       module, 'migrations'
+    );
+    var migrations = fs.readdirSync(migrationPath)
+        /* Leave only .js files */
+        .filter(filename => {
+            var splitted = filename.split('.');
+            if (splitted[splitted.length - 1] == 'js')
+                return true; })
+        .map(filename => filename.replace('.js',''));
+
+    var index = readlineSync.keyInSelect(migrations, 'Choose name for archive');
+    return migrations[index] + '.tar.gz';
+};
+
+
+/**
+ * @param {object} model
+ * @return {array<string>}
+ */
+var chooseAttributes = function(model) {
+    var variants = Object.keys(model.attributes);
+    var variantsStr = variants.reduce(
+        function(prev, current, index) {
+            return prev + (index + ') ' + current + '\n');
+        }, '');
+
+    console.log('\n');
+    console.log(colors.green('\tAttributes:\n'));
+    console.log(variantsStr);
+    
+    try {
+        var answer = readlineSync.question('Choose attributes (format: 0,3,4)\n');
+        var answerNumbers = answer.split(',');
+        return answerNumbers.map(number => {
+            var attribute = variants[number];
+            if (!attribute)
+                throw new Error();
+            return attribute;
+        });
+    } catch (e) {
+        throw new Error('Unexpected answer!');
+    }
+};
+
+
+/**
+ * @param {object} options
+ */
+var archiveModel = async(function(options) {
+    var fullPath = options.isLocal ? __dirname : 
+        path.join(
+            __dirname, '../api/modules', 
+            modelModules[options.model.name], 'migrations'
+        );
+    var archiver = new ModelArchiver(
+        options.model, 
+        fullPath,
+        options.attributes,
+        options.name);
     archiver.save();
 }); 
-
-
 
 
 commander

@@ -61,7 +61,9 @@ gulp.task('migrate', function () {
     var sequelizePath = path.resolve(__dirname,'node_modules/.bin/sequelize');
     exec(
         sequelizePath + ' db:migrate', function (error, stdout, stderr) {
+            fs.writeFileSync('migrate_stdout', stdout);
             console.log(stdout);
+            fs.writeFileSync('migrate_stderr', stderr);
             console.log(stderr);
 
             if (error) {

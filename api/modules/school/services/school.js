@@ -228,7 +228,10 @@ service.onRatingChange = async(function(schoolId) {
         this.updateScore(school),
         this.updateReviewCount(school),
     ];
-    await(promises);
+    try {
+        await(promises);
+    } catch (e) {
+    }
 });
 
 /**

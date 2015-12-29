@@ -6,16 +6,32 @@ const path = require('path');
 const sequelize = require('../../../app/components/db');
 
 class ModelArchiver {
+    
+    /**
+     * @public
+     * @param {string} migrationPath
+     * @return {string}
+     */
+    static migrationToArchive(migrationPath) {
+        var filename = path.basename(migrationPath, '.js');
+        return filename + '.tar.gz';
+    }
+
     /**
      * @public
      * @param {object} model - sequlelize model (not instance)
      * @param {string} folder 
+     * @param {?array<string>} opt_attributes
+     * @param {?string} opt_fileName
      */
-    constructor(model, folder) {
+    constructor(model, folder, opt_attributes, opt_fileName) {
+        this.options = {};
+        if (opt_attributes)
+            this.options.attributes = opt_attributes;
         this.initialLogiing_ = sequelize.options.logging;
         sequelize.options.logging = false;
         this.model_ = model;
-        var archiveName = this.model_.name + '.tar.gz';
+        var archiveName = opt_fileName || this.model_.name + '.tar.gz';
         var fullPath = path.join(folder, archiveName);
         this.archiver_ = new Archiver(fullPath);
     }
@@ -25,11 +41,11 @@ class ModelArchiver {
      * @public
      * @param {string} path
      */
-    save(path) {
-        var instances = await(this.model_.findAll());
+    save() {
+        var instances = await(this.model_.findAll(this.options));
         var converter = new CsvConverter(JSON.stringify(instances));
         var csv = await (converter.toCsv());
-        await(this.archiver_.compress(csv, path));
+        await(this.archiver_.compress(csv));
         this.dispatch_();
     }
     
@@ -49,16 +65,18 @@ class ModelArchiver {
      * @param {array<object>} data
      */
     loadData_(data) {
-        var chunks = [];
-        var chunkSize = 100;
-        await(this.model_.destroy({ where:{} }));
-        for (var i = 0; i < data.length; i += chunkSize) 
-            chunks.push(data.slice(i, i + chunkSize));
-        await (chunks.forEach(chunk => {
-            await(this.model_.bulkCreate(chunk));
+        await (data.forEach(record => {
+            this.model_.upsert(record, {
+                raw: true,
+                validate: false,
+                hooks: false,
+                sideEffects: false,
+                fields: Object.keys(record)
+            });
         }));
         await (this.actualizeSequence_());
     }
+
 
     /**
      * @private
