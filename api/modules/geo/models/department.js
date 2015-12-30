@@ -9,23 +9,18 @@ var Department = db.define('Department', {
         values: enums.departmentStage.toArray(),
         allowNull: false
     },
-    availability: {
-        type: DataType.ARRAY(DataType.BOOLEAN),
-        allowNull: false
-    },
+    addressId: {
+        type: DataType.INTEGER,
+        field: 'address_id'
+    }
 }, {
     underscored: true,
     tableName: 'department',
 
     classMethods: {
         associate: function (models) {
-            Department.belongsToMany(models.Address, {
-                as: 'address',
-                through: {
-                    model: 'Department_address',
-                    unique: false
-                },
-                foreignKey: 'department_id'
+            Department.belongsTo(models.Address, {
+                foreignKey: 'address_id'
             });
         }
     }
