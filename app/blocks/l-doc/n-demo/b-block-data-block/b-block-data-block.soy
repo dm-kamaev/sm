@@ -28,7 +28,9 @@
     <br /><br />
     <div class="b-block-mark__code">
         header: string,<br />
-        mod: string
+        headerType: number
+            <span class="b-block-mark__comment">type of header [2, 3(default)],</span>
+        modifier: string,<br>
         <span class="b-block-mark__comment">- additional classes,</span><br />
         content: list < string >
     </div>
@@ -52,7 +54,9 @@
     <br /><br />
     <div class="b-block-mark__code">
         header: string,<br />
-        mod: string
+        headerType: number
+            <span class="b-block-mark__comment">type of header [2, 3(default)],</span>
+        modifier: string,<br>
         <span class="b-block-mark__comment">- additional classes,</span><br />
         content: list<[ <br />
             <span class="b-block-diagram__code-indent">name: string</span>
@@ -69,7 +73,6 @@
     {call sm.lSchool.bDataBlockRatings.Template.base}
         {param params: [
             'header': 'места в рейтингах',
-            'mod': 'b-data-block_ratings',
             'content': [[
                     'name': 'Рейтинг пользователей «Мела»',
                     'place': 4,
@@ -81,19 +84,22 @@
                 ]]
         ]/}
     {/call}
+
     <br /><br />
     Fold List view
     <br /><br />
     Template:
     <div class="b-block-mark__code">
-        sm.lSchool.bDataBlockRatings.Template.base
+        sm.lSchool.bDataBlockFoldList.Template.base
     </div>
     <br /><br />
     Params:
     <br /><br />
     <div class="b-block-mark__code">
         header: string,<br />
-        mod: string
+        headerType: number
+            <span class="b-block-mark__comment">type of header [2, 3(default)],</span>
+        modifier: string
         <span class="b-block-mark__comment">- additional classes,</span><br />
         content: list<[ <br />
             <span class="b-block-diagram__code-indent">name: string</span>
@@ -106,7 +112,6 @@
     {call  sm.lSchool.bDataBlockFoldList.Template.base}
         {param params: [
             'header': 'профильные классы',
-            'mod': 'b-data-block_fold-list',
             'content': [[
                     'name': 'Средняя школа',
                     'items': ['Пение', 'Танцы', 'Чтение']
@@ -128,6 +133,74 @@
                 ]]
         ]/}
     {/call}
+
+    <br /><br />
+    Features List view
+    <br /><br />
+    Template:
+    <div class="b-block-mark__code">
+        sm.lSchool.bDataBlockFeatures.Template.base
+    </div>
+    <br /><br />
+    Params:
+    <br /><br />
+    <div class="b-block-mark__code">
+        header: string,<br />
+        headerType: number
+            <span class="b-block-mark__comment">type of header [2, 3(default)],</span><br />
+        modifier: string,
+        <span class="b-block-mark__comment">- additional classes,</span><br />
+        content: list<[ string ]>
+    </div>
+    {call  sm.lSchool.bDataBlockFeatures.Template.base}
+        {param params: [
+            'header': 'особенности',
+            'content': [
+                'Большой выбор профильных дисциплин, в особенности, творческих и социально-гуманитарных',
+                'Программа профориентации в 8—9 классах',
+                'Школа китайского языка, художественная школа, инженерная школа',
+                'Есть теннисный клуб, секция кунг-фу'
+            ]
+        ]/}
+    {/call}
+
+
+    <br /><br />
+    Information view
+    <br /><br />
+    Template:
+    <div class="b-block-mark__code">
+        sm.lSchool.bDataBlockInformation.Template.base
+    </div>
+    <br /><br />
+    Params:
+    <br /><br />
+    <div class="b-block-mark__code">
+        content: list<[ <br />
+            <span class="b-block-diagram__code-indent">classes: string</span>,
+            <br />
+            <span class="b-block-diagram__code-indent">kindergarten: string</span>,
+            <br />
+            <span class="b-block-diagram__code-indent">extendedDayCost: string</span>,
+            <br />
+            <span class="b-block-diagram__code-indent">directorName: string</span>,
+            <br />
+            <span class="b-block-diagram__code-indent">dressCode: string</span>
+        ]>
+    </div>
+
+    {call  sm.lSchool.bDataBlockInformation.Template.base}
+        {param params: [
+            'content': [
+                'classes': 'Обучение с 1-10 класс',
+                'kindergarten': 'При школе есть детский сад',
+                'extendedDayCost': 'Есть продленка, 2 564 руб. в день',
+                'directorName': 'Ольга Михайловна Иванова',
+                'dressCode': 'Школьная форма обязательна'
+            ]
+        ]/}
+    {/call}
+
 
 
 {/template}

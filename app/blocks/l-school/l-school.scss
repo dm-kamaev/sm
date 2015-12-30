@@ -66,12 +66,13 @@ body {
 }
 
 .l-school__description{
+	font-family: 'PT Serif', serif;
+	line-height: 30px;
     font-size: 20px;
-    line-height: 1.5;
 }
 
 .l-school__description-text{
-    display: inline;;
+    display: inline;
 }
 
 .l-school__description-quote{
@@ -178,7 +179,7 @@ body {
 	display: inline-block;
 
 	width: 100%;
-	margin-bottom: 58px;
+	margin-bottom: 53px;
 
 	&.l-school__item-container_right {
 		margin-right: 0px;

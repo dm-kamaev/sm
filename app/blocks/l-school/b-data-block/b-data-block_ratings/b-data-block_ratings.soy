@@ -3,7 +3,9 @@
 /**
  * Ratings item
  * @param params {
- *    header: ?string
+ *    header: ?string,
+ *    headerType: ?number
+ *    modifier: ?string
  *    content: list<[
  *       name<string>,
  *       place<number>,
@@ -15,8 +17,17 @@
  */
 {template .base}
     {call .init}
-        {param params: $params /}
-    {/call}
+            {param params: [
+                'header': $params.header,
+                'headerType': $params.headerType ?
+                            $params.headerType :
+                            3,
+                'modifier': $params.modifier ?
+                            'b-data-block_ratings' + $params.modifier :
+                            'b-data-block_ratings',
+                'content': $params.content
+            ] /}
+        {/call}
 {/template}
 
 /**

@@ -3,8 +3,9 @@
 /**
  * Classes item
  * @param params {
- *    header: ?string
+ *    header: ?string,
  *    headerType: ?number
+ *    modifier: ?string
  *    content:list<[
  *        name: ?string
  *        items: ?list<string>
@@ -15,7 +16,16 @@
  */
 {template .base}
     {call .init}
-        {param params: $params /}
+        {param params: [
+            'header': $params.header,
+            'headerType': $params.headerType ?
+                        $params.headerType :
+                        3,
+            'modifier': $params.modifier ?
+                        'b-data-block_fold-list' + $params.modifier :
+                        'b-data-block_fold-list',
+            'content': $params.content
+        ] /}
     {/call}
 {/template}
 

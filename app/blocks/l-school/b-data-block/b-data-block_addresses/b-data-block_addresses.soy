@@ -2,7 +2,9 @@
 /**
  * Addresses item
  * @param params {
- *     header: ?string
+ *     header: ?string,
+ *     headerType: ?number
+ *     modifier: ?string
  *     content: [
  *         address: list<{
  *             title: string,
@@ -16,7 +18,16 @@
  */
 {template .base}
     {call .init}
-        {param params: $params /}
+        {param params: [
+            'header': $params.header,
+            'headerType': $params.headerType ?
+                        $params.headerType :
+                        3,
+            'modifier': $params.modifier ?
+                        'b-data-block_addresses' + $params.modifier :
+                        'b-data-block_addresses',
+            'content': $params.content
+        ] /}
     {/call}
 {/template}
 
