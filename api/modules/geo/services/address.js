@@ -164,28 +164,31 @@ exports.setMetro = async(function(address, metroArr) {
  * @param {String} address
  */
 exports.setArea = async ((area, address) => {
-    var area = await(models.Area.findOne({
+    var areaInstance = await(models.Area.findOne({
         where: {
             name: area
         }
     }));
-    var address = await(models.Address.findAll({
+    var addressInstance = await(models.Address.findAll({
         where: {
             name: address
         }
     }));
 
-    address.forEach( (item) => {
-        item.setArea(area);
+    addressInstance.forEach( (item) => {
+        item.setArea(areaInstance);
     } );
 });
 
 exports.getCoords = function(addresses) {
     return addresses.map(adr => {
+        if (adr.coords) {
         return {
             lat: adr.coords[0],
             lng: adr.coords[1]
         };
+        } else
+            return {lat:0,lng:0}; // TODO: fix coords
     });
 };
 

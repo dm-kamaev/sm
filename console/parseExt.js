@@ -10,16 +10,16 @@ var FULL_NAME_INDEX = 0,
     SITE_INDEX = 2,
     SOCIAL_INDEX = 3,
     SPECIALIZES_INDEX = 5,
-    DESCRIPTION_INDEX = 6+1,
-    FEATURES_INDEX = 7+1,
-    EXT_DAY_COST_INDEX = 8+1,
-    DRESS_CODE_INDEX = 9+1, // -> bool?
-    SCHOOL_TYPE_INDEX = 10+1,
-    BOARDING_INDEX = 11+1,
-    DIRECTOR_INDEX = 17+1,
+    DESCRIPTION_INDEX = 6,
+    FEATURES_INDEX = 7,
+    EXT_DAY_COST_INDEX = 8,
+    DRESS_CODE_INDEX = 9, // -> bool?
+    SCHOOL_TYPE_INDEX = 10,
+    BOARDING_INDEX = 11,
+    DIRECTOR_INDEX = 17,
 
-    AREA_INDEX = 13+1,
-    ADDRESS_INDEX = 14+1;
+    AREA_INDEX = 13,
+    ADDRESS_INDEX = 14;
     // remove double spaces
     // add educational_programms (db - stages)
     // create add phones
@@ -36,7 +36,7 @@ var parse = async(function(path) {
         parsedSchools = parseSchools(schools);
 
     var matches = findMatches(parsedSchools, parsedData);
-    console.log('count: ' + count);
+        console.log('count: ' + count);
     console.log(matches.length);
     matches.forEach(match => {
         var data = match[1];
@@ -161,8 +161,8 @@ var parseSchools = function(schools) {
         if (schools[i].links) {
             schools[i].links.forEach(link => {
                 var domain = extractDomain(link[1]);
-                if (!domain.indexOf('vk') > -1 &&
-                    !domain.indexOf('facebook') > -1)
+                if (!(domain.indexOf('vk') > -1) &&
+                    !(domain.indexOf('facebook') > -1))
                     {
                         domains.push(extractDomain(link[1]));
                     }
@@ -170,7 +170,6 @@ var parseSchools = function(schools) {
         }
         if (schools[i].site) {
             domains.push(extractDomain(schools[i].site));
-            console.log(extractDomain(schools[i].site));
         }
         parsedSchools.push({
             'domains': domains,
@@ -206,8 +205,7 @@ var findMatches = function(schools, data) {
         });
 
         if (!flag && data[i].areas) {
-            // await(createSchool(data[i]));
-            console.log(data[i]);
+            await(createSchool(data[i]));
             count++;
         }
     }
@@ -225,15 +223,26 @@ var createSchool = async(function(data) {
         dressCode: data.dressCode,
         boarding: data.boarding,
         schoolType: data.schoolType,
-        director: data.director
+        director: data.director,
+        educationInterval: [1,2,3,4,5,6,7,8,9,10,11] // TODO: need data
     }));
+
+    await(services.school.setAddresses(
+        school,
+        data.addresses
+        .map(address => {
+            return {
+                name: address
+            }
+        })
+    ));
+
     for (var i = 0, l = data.areas.length; i < l; i++) {
         var area = await(services.area.create({
             name: data.areas[i]
         }));
-        await(services.address.setArea(area.name, data.addresses[i]));
+        await(services.address.setArea(area[0].name, data.addresses[i]));
     };
-    await(services.school.setAddresses(school, data.addresses));
 });
 
 var parseSite = function(site) {
