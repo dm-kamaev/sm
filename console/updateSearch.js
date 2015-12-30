@@ -1,14 +1,10 @@
-'use strict'
-const exec = require('child_process').exec;
+'use strict';
 const async = require('asyncawait/async');
 const await = require('asyncawait/await');
 const commander = require('commander');
-const colors = require('colors');
-const readlineSync = require('readline-sync');
-const fs = require('fs');
-const common = require.main.require('./console/common');
 const services = require.main.require('./app/components/services').all;
 const ProgressBar = require('progress');
+const models = require.main.require('./app/components/models').all;
 const searchType = require.main.require('./api/modules/school/enums/searchType');
 const schoolType = require.main.require('./api/modules/school/enums/schoolType');
 var sequelize = require.main.require('./app/components/db');
@@ -62,6 +58,29 @@ class SearchUpdater {
         }));
         console.log('Succses. Stopping script');
     }
+    /**
+     * @private
+     */
+    updateGiaAvg_(cityId) {
+        var giaAvg = await(services.studyResult.getGiaAverage(cityId));
+        await(models.CityResult.destroy({
+            where: {
+                type: 'gia'
+            }
+        }));
+        await(models.CityResult.bulkCreate(giaAvg));
+    }
+    
+    updateEgeAvg_(cityId) {
+        var egeAvg = await(services.studyResult.getEgeAverage(cityId));
+        await(models.CityResult.destroy({
+            where: {
+                type: 'ege'
+            }
+        }));
+        await(models.CityResult.bulkCreate(egeAvg));
+    }
+
 
 
     /**
@@ -69,33 +88,11 @@ class SearchUpdater {
      * @async
      */
     updateAverage_() {
-        var giaAvg = await(services.studyResult.getGiaAverage());
-        var egeAvg = await(services.studyResult.getEgeAverage());
-        var data = [];
-        giaAvg.forEach(giaSubject => {
-            var subjInArr = data.find(dt => dt.subject.id == giaSubject.id);
-            if (subjInArr)
-                subjInArr.giaAvg = giaSubject.dataValues.average;
-            else
-                data.push({
-                    subject: giaSubject,
-                    giaAvg: giaSubject.dataValues.average
-                });
-        });
-        egeAvg.forEach(egeSubject => {
-            var subjInArr = data.find(dt => dt.subject.id == egeSubject.id);
-            if (subjInArr)
-                subjInArr.egeAvg = egeSubject.dataValues.average;
-            else
-                data.push({
-                    subject: egeSubject,
-                    egeAvg: egeSubject.dataValues.average
-                });
-        });
-        await(data.forEach(dataSubj => {
-            services.subject.setCityAverage(dataSubj);
-        }));
-        
+        var msc = await(services.city.getMoscow());
+        await (
+            this.updateGiaAvg_(msc.id),
+            this.updateEgeAvg_(msc.id)
+       ); 
     }
     
     /**
@@ -194,10 +191,10 @@ class EgeActualizer extends SearchDataActualizer {
         var yearsResults = [],
             processedSubjects = [];
         //TODO: move years in constants
-        for (var year = 2015; year >= 2012; year--) {
+        for (var year = 2015; year >= 2010; year--) {
             var yearResults = this.getYearResults_(year);
             yearsResults.push(
-                await(this.getYearSubjects_(yearResults))
+                await(this.getYearSubjects_(yearResults, year))
             );
         }
 
@@ -217,10 +214,11 @@ class EgeActualizer extends SearchDataActualizer {
     /**
      * @private
      * @param {array<object>} yearResults
+     * @param {number} year
      * @return {array<id, isPassed>} yearSubjects
      * get array of subjects IDs where school ege result > city avg result for year
      */
-    getYearSubjects_(yearResults) {
+    getYearSubjects_(yearResults, year) {
         //TODO: refactor or comment this
         var yearSubjects = [];
         await (yearResults.forEach(egeResult => { 
@@ -228,10 +226,14 @@ class EgeActualizer extends SearchDataActualizer {
                 subj => subj.id == egeResult.subject_id);
             if (citySubject) {
                 var cityResult = citySubject.cityResult.find(
-                    res => (res.cityId == this.school_.city_id));
+                    res => (
+                        res.cityId == this.school_.city_id &&
+                        res.year == year &&
+                        res.type == searchType.EGE
+                    ));
                 if (cityResult) {
                     var isPassed;
-                    if (egeResult.result >= cityResult.egeResult)
+                    if (egeResult.result >= cityResult.result)
                         isPassed = true;
                     else
                         isPassed = false;
@@ -293,8 +295,11 @@ class GiaActualizer extends SearchDataActualizer {
                 subj => subj.id == giaResult.subject_id);
             if (citySubject) {
                 var cityResult = citySubject.cityResult.find(
-                    res => (res.cityId == this.school_.city_id));
-                if (cityResult && giaResult.result >= cityResult.giaResult)
+                    res => (
+                        res.cityId == this.school_.city_id &&
+                        res.type == searchType.GIA
+                    ));
+                if (cityResult && giaResult.result >= cityResult.result)
                     this.resultSubjects_.push(giaResult.subject_id);
             }
         }));

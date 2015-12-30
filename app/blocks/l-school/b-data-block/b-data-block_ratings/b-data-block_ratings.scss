@@ -1,6 +1,15 @@
 .b-data-block_ratings {
+
+	.b-data-block__header {
+		margin-bottom: 28px;
+	}
+
 	.b-data-block__item {
-		margin-bottom: 10px;
+		margin-bottom: 20px;
+	}
+
+	.b-data-block__item:last-child {
+		margin-bottom: 0px;
 	}
 
 	.b-data-block__item-content {
@@ -12,7 +21,7 @@
 
 		vertical-align: middle;
 
-		line-height: 20px;
+		line-height: 18px;
 	}
 }
 
@@ -24,6 +33,8 @@
 
 	text-align: center;
 
+	vertical-align: middle;
+
 	border: 1px solid #f0f0f0;
 	border-radius: 20px;
 }
@@ -31,11 +42,11 @@
 .b-data-block__place-value {
 	display: inline-block;
 
-	margin-top: 13px;
-
 	letter-spacing: 0.06em;
 
 	font-family: Proxima, arial, sans-serif;
 	font-size: 16px;
 	font-weight: 600;
+
+	line-height: 38px;
 }

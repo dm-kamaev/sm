@@ -1,0 +1,38 @@
+{namespace sm.lDoc.nDemo.bBlockScore.Template}
+
+/**
+ * preview
+ */
+{template .preview}
+    {call sm.bScore.Template.base}
+        {param params: [
+            'reviewCount': 10,
+            'score': [
+                ['name':'Образование', 'value': 2.3],
+                ['name':'Преподаватели', 'value': 2.7],
+                ['name':'Инфраструктура', 'value': 3.5],
+                ['name':'Атмосфера', 'value':4]
+            ],
+            'totalScore': 4
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * doc
+ */
+{template .doc}
+    {call sm.bScore.Template.base}
+        {param params: [
+            'reviewCount': 10,
+            'score': [
+                ['name':'Образование','value': 2.3],
+                ['name':'Преподаватели','value': 2.7],
+                ['name':'Инфраструктура','value':3.5],
+                ['name':'Атмосфера','value':4]
+            ],
+                'totalScore':4
+        ]/}
+    {/call}
+{/template}

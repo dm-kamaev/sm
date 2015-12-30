@@ -1,4 +1,10 @@
 'use strict';
+const path = require('path');
+const ModelArchiver = require('../../console/modules/modelArchiver/ModelArchiver.js') ;
+const AddressMetro = require('../../api/modules/geo/models/addressMetro');
+const dataFolder = path.join(__dirname, '../../api/modules/geo/migrations');
+const async = require('asyncawait/async');
+const archiveName = ModelArchiver.migrationToArchive(__filename);
 
 module.exports = {
   up: function (queryInterface, Sequelize) {
@@ -11,9 +17,10 @@ module.exports = {
         },
         address_id: {
             type: Sequelize.INTEGER,
+            onDelete: 'cascade',
             references: {
-                model:"address",
-                key: "id",
+                model:'address',
+                key: 'id',
             }
         },
         created_at: {
@@ -26,14 +33,18 @@ module.exports = {
         },
         metro_id: {
             type: Sequelize.INTEGER,
+            onDelete: 'cascade',
             references: {
-                model:"metro",
-                key: "id",
+                model:'metro',
+                key: 'id',
             }
         }
-    });
+    }).then(async(function() {
+        var archiver = new ModelArchiver(AddressMetro, dataFolder, null, archiveName);
+        archiver.load();
+    }));
   },
-    down: function (queryInterface, Sequelize) {
+    down: function (queryInterface) {
         return queryInterface.dropTable('address_metro');
     }
 };

@@ -1,9 +1,7 @@
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
-var colors = require('colors');
 var models = require.main.require('./app/components/models').all;
 var services = require.main.require('./app/components/services').all;
-const common = require.main.require('./console/common');
 var sequelize = require.main.require('./app/components/db');
 
 exports.name = 'studyResult';
@@ -60,44 +58,49 @@ exports.getAllGia = async(() => {
 
 /**
  * @return {array<object>} subjects with gia average
+ * @param {integer} cityId
+ * TODO: count avg for city
  */
-exports.getGiaAverage = async(function () {
-    var params = {
-        attributes: {
-            include: [[sequelize.fn('AVG', sequelize.col('giaResult.result')),'average']]
-        },
-        group: '\"Subject\".id',
-        include: [{
-            model: models.GiaResult,
-            as: 'giaResult',
-            attributes: [],
-            required: true
-        }]
-    };
-    return await(models.Subject.findAll(params));
+exports.getGiaAverage = async(function (cityId) {
+    var sqlString = 'select subject_id, AVG(result) ' + 
+        'from gia_result group by subject_id';
+    var sqlRes = await(sequelize.query(
+            sqlString, 
+            { type: sequelize.QueryTypes.SELECT}
+        )
+    );
+    return sqlRes.map(res => { 
+        return {
+            subjectId: res.subject_id,
+            result: res.avg,
+            type: 'gia',
+            cityId: cityId
+        };
+    });
 });
 
 /**
  * @return {array<object>} subjects with ege average
+ * @param {integer} cityId
+ * TODO: count avg for city
  */
-exports.getEgeAverage = async(function() {
-    var YEAR = 2015; //TODO: move somewhere maybe?
-    var params = {
-        attributes: {
-            include: [[sequelize.fn('AVG', sequelize.col('egeResult.result')),'average']]
-        },
-        group: '\"Subject\".id',
-        include: [{
-            model: models.EgeResult,
-            as: 'egeResult',
-            where: {
-                year: YEAR
-            },
-            attributes: [],
-            required: true
-        }]
-    };
-    return await(models.Subject.findAll(params));
+exports.getEgeAverage = async(function(cityId) {
+    var sqlString = 'select subject_id, year, AVG(result) ' + 
+        'from ege_result group by year, subject_id';
+    var sqlRes = await(sequelize.query(
+            sqlString, 
+            { type: sequelize.QueryTypes.SELECT}
+        )
+    );
+    return sqlRes.map(res => { 
+        return {
+            subjectId: res.subject_id,
+            year: res.year,
+            result: res.avg,
+            type: 'ege',
+            cityId: cityId
+        };
+    });
 });
 
 /**

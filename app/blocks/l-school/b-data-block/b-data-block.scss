@@ -17,10 +17,10 @@
 .b-data-block__header {
 	display: inline-block;
 
-	margin-bottom: 27px;
+	margin-bottom: 28px;
 	padding-right: 20px;
 
-	letter-spacing: 0.06em;
+	letter-spacing: 0.05em;
 	text-transform: uppercase;
 
 	background-color: #fff;
@@ -39,10 +39,6 @@
 }
 
 .b-data-block__item-content {
-	font-family: arial, sans-serif;
-	font-size: 14px;
-	line-height: 20px;
-
 	&.b-data-block__item-content_text-color_red {
 		text-decoration: none;
 		cursor: pointer;
@@ -57,5 +53,6 @@
 
 .b-data-block__content {
 	font-family: arial, sans-serif;
+	font-size: 14px;
+	line-height: 20px;
 }
-

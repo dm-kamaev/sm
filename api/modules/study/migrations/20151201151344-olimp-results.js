@@ -7,6 +7,7 @@ const ModelArchiver = require('../../console/modules/modelArchiver/ModelArchiver
 const OlimpResult = require('../../api/modules/study/models/olimpResult');
 const dataFolder = path.join(__dirname, '../../api/modules/study/migrations');
 const async = require('asyncawait/async');
+const archiveName = ModelArchiver.migrationToArchive(__filename);
 
 module.exports = {
     up: function (queryInterface, Sequelize) {
@@ -18,6 +19,7 @@ module.exports = {
                 type: Sequelize.INTEGER
             },
             school_id: {
+                onDelete: 'cascade',
                 type: Sequelize.INTEGER,
                 references: {
                     model: 'school',
@@ -51,7 +53,7 @@ module.exports = {
             created_at: Sequelize.DATE,
             updated_at: Sequelize.DATE
         }).then(async(function() {
-            var archiver = new ModelArchiver(OlimpResult, dataFolder);
+            var archiver = new ModelArchiver(OlimpResult, dataFolder, null, archiveName);
             archiver.load();
         }));
     },

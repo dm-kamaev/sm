@@ -9,7 +9,7 @@
 			text: string,
 			sections: list<[
 				name: string,
-				rating: int
+				value: int
 			]>
 		]
 	}
@@ -19,7 +19,7 @@
 			<div class="b-comment__header">
 				{foreach $section in $params.sections}
 					{call sm.lSchool.bComment.Template.section_}
-						{param params:['name': $section.name, 'rating': $section.rating]/}
+						{param params:['name': $section.name, 'rating': $section.value]/}
 					{/call}
 				{/foreach}
 			</div>

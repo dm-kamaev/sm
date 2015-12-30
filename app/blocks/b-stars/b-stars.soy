@@ -26,7 +26,7 @@
                {$sizeClass}
                {$themeClass}
                {$pointerClass}">
-        <input class="b-stars__hidden-input" type="hidden" name="{$params?.data?.name ?: 'score[]'}" value="{$count}" />
+        <input class="b-stars__hidden-input" type="hidden" name="{$params?.data?.name ?: 'score'}" value="{$count}" />
         {for $i in range(5)}
             {let $class: 'b-stars__star '+ ($i < $count ? 'b-stars__star_selected' : 'b-star__star_not-selected')/}
             <div class={$class}>t</div>

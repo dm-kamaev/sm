@@ -1,4 +1,5 @@
 'use strict';
+const departmentStage = require('../../api/modules/geo/enums/departmentStage');
 
 module.exports = {
   up: function (queryInterface, Sequelize) {
@@ -10,13 +11,13 @@ module.exports = {
             type: Sequelize.INTEGER
         },
         name: Sequelize.STRING,
-        stage: { // 'Дошкольное образование', 'Начальное образование', 'Основное и среднее', 'Дополнительное  образование', 'Профессиональное образование'
+        stage: { 
             type: Sequelize.ENUM,
-            values: ['Дошкольное образование', 'Начальное образование', 'Основное и среднее', 'Дополнительное образование', 'Профессиональное образование']
+            values: departmentStage.toArray()
         },
         created_at: Sequelize.DATE,
         updated_at: Sequelize.DATE
-     });
+    });
   },
   down: function (queryInterface, Sequelize) {
     return queryInterface.dropTable('department');

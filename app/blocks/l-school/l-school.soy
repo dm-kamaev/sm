@@ -9,9 +9,12 @@
  *        schoolType: string,
  *        schoolDescr: string,
  *        features: string,
- *        directorName: string,
  *        schoolQuote: string,
+ *        directorName: string,
  *        classes: string,
+ *        kindergarten: bool,
+ *        extendedDayCost: number,
+ *        dressCode: bool,
  *        social: list<[
  *            name: string,
  *            href: string
@@ -42,7 +45,7 @@
  *            text: string,
  *            sections: list<[
  *                name: string,
- *                rating: int
+ *                value: int
  *            ]>
  *        ]>,
  *        coords: list<
@@ -53,8 +56,12 @@
  *            place<number>,
  *            href<string>
  *        ]>,
- *        score: list<number>,
- *        totalScore: number
+ *        score: list<[
+ *            name: string,
+ *            value: number
+ *        ]>,
+ *        totalScore: number,
+ *        reviewCount: number
  *     ]
  * }
  */
@@ -63,11 +70,12 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Title</title>
+        <title>{$params.data.schoolName}</title>
         <link href='https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700,700italic&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
         <link href='https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" href="/frobl.build.css">
         <link rel="stylesheet" href="/styles.css">
+        <link rel="shortcut icon" href="/images/favicon.png" type="image/png">
     </head>
     <body>
         {let $dataParams kind="html"}
@@ -108,7 +116,7 @@
 
             <div class="l-shool__section l-shool__section__results">
                 <div class="l-school__container">
-                    /*Results*/
+                    /*Results of ege, gia, olimpiads*/
                 </div>
             </div>
 
@@ -161,23 +169,22 @@
 
     <div class="l-school__content-column l-school__content-column_double-width">
         <div class="l-school__name">{$params.data.schoolName}</div>
-        <div class="l-school__description">
-            {if $params.data.schoolDescr}
-                <div class="l-school__description-text">{$params.data.schoolDescr + ' - '}</div>
-                <div class="l-school__description-quote">{$params.data.schoolQuote}</div>
-            {/if}
-        </div>
+        {if $params.data.schoolDescr}
+            <div class="l-school__description">
+                {$params.data.schoolDescr}
+            </div>
+        {/if}
     </div>
     <div class="l-school__content-column l-school__content-column_last">
          /*хрень*/
         <div class = "l-school__rating">
 
-            {call sm.bRating.Template.base}
-                 {param params: [
-                        'marks': $params.data.score,
-                        'averageMark': $params.data.totalScore
-                 ]/}
-            {/call}
+            // {call sm.bRating.Template.base}
+            //      {param params: [
+            //             'marks': $params.data.score,
+            //             'averageMark': $params.data.totalScore
+            //      ]/}
+            // {/call}
 
             {call gorod.bBouton.BoutonTemplate.render}
                 {param params: [
@@ -212,8 +219,11 @@
  *          schoolType: string,
  *          schoolDescr: string,
  *          features: string,
- *          directorName: string,
  *          classes: string,
+ *          kindergarten: bool,
+ *          extendedDayCost: number,
+ *          directorName: string,
+ *          dressCode: bool,
  *          social:list<{
  *              name: string,
  *              href: string
@@ -224,7 +234,6 @@
  *              link: string
  *          ]>,
  *          contacts:[
- *
  *              address:list<{
  *                  title: string,
  *                  description: string
@@ -242,13 +251,17 @@
  *          coords: ?list<
  *              list<number>
  *          >,
- *          score: list<number>,
- *          totalScore: number
+ *          score: list<[
+ *              name: string,
+ *              value: number
+ *          ]>,
+ *          totalScore: number,
+ *          reviewCount: number,
  *          ratings: list<[
  *              name<string>,
  *              place<number>,
  *              href<string>
- *          ]>,
+ *          ]>
  *      }
  *  }
  */
@@ -257,8 +270,16 @@
 <div class="l-school__content-column
             l-school__content-column_left">
 
-    /*rating template must be called here*/
-    <div class="l-school__rating"></div>
+    /*Score template*/
+    <div class="l-school__score">
+        {call sm.bScore.Template.base}
+             {param params: [
+                    'reviewCount': $params.data.reviewCount,
+                    'score': $params.data.score,
+                    'totalScore': $params.data.totalScore
+             ]/}
+        {/call}
+    </div>
 
     /*тут должен вызываться шаблон карты*/
     <div class="l-school__item-container">
@@ -281,8 +302,11 @@
         {call  sm.lSchool.bDataBlockInformation.Template.base}
             {param  params: [
                 'content': [
-                    'directorName': $params.data.directorName,
-                    'classes': $params.data.classes
+                    'classes': $params.data.classes,
+                    'kindergarten': $params.data.kindergarten,
+                    'extendedDayCost': $params.data.extendedDayCost,
+                    'dressCode': $params.data.dressCode,
+                    'directorName': $params.data.directorName
                     ]
                 ]
             /}
@@ -295,13 +319,14 @@
             l-school__content-column_last">
 
     /*Features section*/
-    {if $params.data.schoolDescr}
+    {if $params.data.features and
+        length($params.data.features) > 0}
         <div class="l-school__item-container">
-            {call sm.lSchool.bDataBlock.Template.base}
+            {call sm.lSchool.bDataBlockFeatures.Template.base}
                 {param params: [
-                    'header': 'особенности'
-                    ]
-                /}
+                    'header': 'особенности',
+                    'content': $params.data.features
+                ]/}
             {/call}
         </div>
     {/if}
@@ -337,7 +362,6 @@
                 {call sm.lSchool.bDataBlockRatings.Template.base}
                     {param params: [
                         'header': 'места в рейтингах',
-                        'mod': 'b-data-block_ratings',
                         'content': $params.data.ratings
                     ]/}
                 {/call}
@@ -366,8 +390,6 @@
                 {call sm.lSchool.bDataBlockFoldList.Template.base}
                     {param params: [
                         'header': 'профильные классы',
-                        'mod': 'b-data-block_fold-list',
-                        'headerType': 2,
                         'content': $params.data.specializedClasses
                         ]
                      /}
@@ -382,7 +404,6 @@
                  {call sm.lSchool.bDataBlockFoldList.Template.base}
                      {param params: [
                          'header': 'дополнительные занятия',
-                         'mod': 'b-data-block_fold-list',
                          'headerType': 2,
                          'content': $params.data.activities
                          ]
@@ -419,7 +440,6 @@
     </div>
 {/template}
 
-
 /**
  * Classes block
  * @private
@@ -438,7 +458,6 @@
         {$params.classesStr}
     </div>
 {/template}
-
 
 /**
  * Sites links
@@ -545,7 +564,6 @@
     </div>
 {/template}
 
-
 /**
  * Comments block
  * @private
@@ -558,7 +576,7 @@
             text: string,
             sections: list<[
                 name: string,
-                rating: int
+                value: int
             ]>
         ]>
     }

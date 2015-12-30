@@ -3,6 +3,10 @@ var DataType = require('sequelize'),
 const schoolType = require('../enums/schoolType');
 
 var School = db.define('School', {
+
+    /**
+     * School info
+     */
     name: DataType.STRING,
     abbreviation: DataType.STRING,
     fullName: {
@@ -19,7 +23,11 @@ var School = db.define('School', {
     director: DataType.STRING,
     phones: DataType.ARRAY(DataType.STRING),
     site: DataType.STRING,
-    score: DataType.ARRAY(DataType.FLOAT),
+    govermentKey: {
+        field: 'goverment_key',
+        type: DataType.INTEGER,
+        unique: true,
+    },
     cityId: {
         field: 'city_id',
         type: DataType.INTEGER,
@@ -28,17 +36,42 @@ var School = db.define('School', {
         field: 'education_interval',
         type: DataType.ARRAY(DataType.INTEGER)
     },
-    rank: DataType.INTEGER,
+
+    /**
+     * Scores, ratings, etc
+     */
+    score: {
+        type: DataType.ARRAY(DataType.FLOAT),
+    },
+    totalScore: {
+        type: DataType.FLOAT,
+        field: 'total_score',
+        notNull: false,
+        defaultValue: 0
+    },
+    rank: {
+        type: DataType.INTEGER,
+    },
+    rankDogm: {
+        type: DataType.INTEGER,
+        field: 'rank_dogm'
+    },
+    scoreCount: {
+        type: DataType.ARRAY(DataType.INTEGER),
+        field: 'score_count'
+    },
+    reviewCount: {
+        type: DataType.INTEGER,
+        field: 'review_count'
+    },
+
+    /**
+     * Meta
+     */
     commentGroupId: {
         type: DataType.INTEGER,
         field: 'comment_group_id'
     },
-    govermentKey: {
-        field: 'goverment_key',
-        type: DataType.INTEGER,
-        unique: true,
-        allowNull: false
-    }
 }, {
     underscored: true,
     tableName: 'school',
@@ -46,20 +79,24 @@ var School = db.define('School', {
     classMethods: {
         associate: function(models) {
             School.hasMany(models.GiaResult, {
-                as: 'giaResults', foreignKey: 'school_id'
+                as: 'giaResults', foreignKey: 'school_id',
+                onDelete: 'cascade'
             });
             School.hasMany(models.OlimpResult, {
-                as: 'olimpResults', foreignKey: 'school_id'
+                as: 'olimpResults', foreignKey: 'school_id',
+                onDelete: 'cascade'
             });
             School.hasMany(models.EgeResult, {
-                as: 'egeResults', foreignKey: 'school_id'
+                as: 'egeResults', foreignKey: 'school_id',
+                onDelete: 'cascade'
             });
             School.hasMany(models.SearchData, {
-                as: 'searchData', foreignKey: 'school_id'
+                as: 'searchData', foreignKey: 'school_id',
+                onDelete: 'cascade'
             });
             School.hasMany(models.Address, {
                 as: 'addresses',
-                foreignKey: 'school_id'
+                foreignKey: 'school_id',
             });
             School.belongsTo(models.CommentGroup, {
                 foreignKey: 'comment_group_id',
@@ -74,7 +111,8 @@ var School = db.define('School', {
             });
             School.hasMany(models.Rating, {
                 as: 'ratings',
-                foreignKey: 'school_id'
+                foreignKey: 'school_id',
+                onDelete: 'cascade'
             });
             School.hasMany(models.Activity, {
                 as: 'activites',

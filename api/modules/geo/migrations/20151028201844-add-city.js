@@ -3,6 +3,7 @@ const path = require('path');
 const ModelArchiver = require('../../console/modules/modelArchiver/ModelArchiver.js') ;
 const City = require('../../api/modules/geo/models/city');
 const dataFolder = path.join(__dirname, '../../api/modules/geo/migrations');
+const archiveName = ModelArchiver.migrationToArchive(__filename);
 const async = require('asyncawait/async');
 const await = require('asyncawait/await');
 
@@ -16,18 +17,16 @@ module.exports = {
             type: Sequelize.INTEGER
         },
         created_at: {
-            allowNull: false,
             type: Sequelize.DATE
         },
         updated_at: {
-            allowNull: false,
             type: Sequelize.DATE
         },
         name: {
             type: Sequelize.STRING
         }
     }).then(async(function() { 
-        var archiver = new ModelArchiver(City, dataFolder);
+        var archiver = new ModelArchiver(City, dataFolder, null, archiveName);
         await(archiver.load());
     }));
   },

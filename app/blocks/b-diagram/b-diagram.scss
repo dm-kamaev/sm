@@ -57,8 +57,19 @@
 
 .b-diagram_marks {
     .b-diagram__label {
+        width: 150px;
+
         font-size: 15px;
         font-weight: 600;
+    }
+
+    .b-diagram__value {
+        width: auto;
+    }
+
+    .b-diagram__item {
+        padding: 0;
+        margin-bottom: 8px;
     }
 }
 

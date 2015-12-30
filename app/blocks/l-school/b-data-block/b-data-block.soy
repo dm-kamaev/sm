@@ -1,7 +1,11 @@
 {namespace sm.lSchool.bDataBlock.Template}
 
 /**
- * Content item
+ * @param params {
+ *     header: ?string,
+ *     headerType: ?number
+ *     modifier: ?string
+ *     content: ?list<string>
  */
 {template .base  autoescape="strict" kind="html"}
     {call .init data="all" /}
@@ -11,14 +15,15 @@
  * Block init
  * @param params {
  *     header: ?string,
- *     mod: ?string
- *     content: ?[]
+ *     headerType: ?number,
+ *     modifier: ?string
+ *     content: ?list<string>
  * }
  */
 {template .init autoescape="strict" kind="html"}
     <div class="b-data-block
-        {if $params.mod}
-            {sp}{$params.mod}
+        {if $params.modifier}
+            {sp}{$params.modifier}
         {/if}
     ">
 
@@ -42,17 +47,22 @@
  * Header part
  * @param params {
  *     header: ?string
+ *     headerType: ?number
  * }
  */
 {template .header autoescape="strict" kind="html"}
     <div class="b-data-block__line"></div>
-    <div class="b-data-block__header">{$params.header}</div>
+    {if $params.headerType == 2}
+        <h2 class="b-data-block__header">{$params.header}</h2>
+    {else}
+        <h3 class="b-data-block__header">{$params.header}</h3>
+    {/if}
 {/template}
 
 /**
  * Content part
  * @param params {
- *     content: ?list
+ *     content: ?list<string>
  * }
  */
 {template .content autoescape="strict" kind="html"}

@@ -6,6 +6,7 @@ const ModelArchiver = require('../../console/modules/modelArchiver/ModelArchiver
 const SchoolTypeFilter = require('../../api/modules/school/models/schoolTypeFilter');
 const dataFolder = path.join(__dirname, '../../api/modules/school/migrations');
 const async = require('asyncawait/async');
+const archiveName = ModelArchiver.migrationToArchive(__filename);
 
 module.exports = {
     up: function (queryInterface, Sequelize) {
@@ -27,7 +28,7 @@ module.exports = {
             created_at: Sequelize.DATE,
             updated_at: Sequelize.DATE
         }).then(async(function() {
-            var archiver = new ModelArchiver(SchoolTypeFilter, dataFolder);
+            var archiver = new ModelArchiver(SchoolTypeFilter, dataFolder, null, archiveName);
             archiver.load();
         }));
     },

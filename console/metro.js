@@ -19,7 +19,6 @@ const KM_RESTRIСTION = 3; //ограничение радиуса поиска 
 const CACHING_ENABLED = true; //Работает ли кэширование
 const ADRESSES_IN_REQUEST = 30; //Количество адресов которые обрабатываются асинхронно
 
-
 var writeError = async(string => {
     var str = '\n'+string;
     await (fs.appendFile(PATH_TO_ERROR_FILE ,str, function (err) {
@@ -34,11 +33,14 @@ var start = async(() => {
             if (err)
                 console.log(err);
     }));
-    var test = await(services.address.getTest());
-    var addresses = await(services.address.getAllWithMetro())
+    // var test = await(services.address.getTest());
+    var addresses = await(services.address.getAllWithMetro());
     console.log('\nPatience, my friend');
+    // addresses = addresses.slice(0, 1);
     //var amount = DEBUG_RESTRICTION ? DEBUG_RESTRICTION : addresses.length;
     var adrChunks = splitAddreses(addresses);
+    console.log(adrChunks.length);
+
     adrChunks.forEach(chunk => {
         await(processChunk(chunk));
         console.log(colors.blue('----------------'));
@@ -49,7 +51,7 @@ var splitAddreses = (addresses) => {
     var amount = DEBUG_RESTRICTION ? DEBUG_RESTRICTION : addresses.length;
     var chunks = [],
         round = 0;
-    while (round * ADRESSES_IN_REQUEST < amount){
+    while (round * ADRESSES_IN_REQUEST < amount) {
         var start = round * ADRESSES_IN_REQUEST,
             planned_end = (round + 1)  * ADRESSES_IN_REQUEST,
             end = planned_end < addresses.length ?
@@ -59,17 +61,18 @@ var splitAddreses = (addresses) => {
         round++;
     }
     return chunks;
-}
+};
+
 var processChunk = async(adrChunk => {
     await (adrChunk.forEach(address => {
 
         if (!(CACHING_ENABLED && isCached(address)))
-            processAddress(address);
+            await(processAddress(address));
         else
             console.log('Metro stations for address '
                 + colors.green(address.name) + ' adlready cached');
     }));
-})
+});
 
 var isCached = (address) => {
     if (address.metroStations.length == 0)
@@ -77,15 +80,16 @@ var isCached = (address) => {
     return true;
 };
 var processAddress = async(address => {
-    if (address.coords && address.coords.length == 2){
+    if (address.coords && address.coords.length == 2) {
         var metroArr = await(getMetro(address));
         if (metroArr) {
-            if (metroArr.length == 0)
+            if (metroArr.length === 0) {
                 console.log('Found 0 stations for address '
                     + colors.yellow(address.name) + ' in range '
-                    + colors.yellow(KM_RESTRIСTION+'KM'));
-            else
+                    + colors.yellow(KM_RESTRIСTION + 'KM'));
+            } else {
                 await (services.address.setMetro(address, metroArr));
+            }
         }
     }
 });
@@ -104,7 +108,7 @@ var getMetro = async((adr) => {
         else
             metro = result;
         tryNum++;
-    } while (result === 'no_response' && tryNum<REQUEST_RETRY_COUNT)
+    } while (result === 'no_response' && tryNum<REQUEST_RETRY_COUNT);
     return metro;
 });
 
@@ -138,7 +142,7 @@ var request = async ((pair) => {
     var getMetro = new Promise( function(resolve, reject) {
         https.request(options).on('response', function (response) {
             var data = '';
-            response.on("data", function (chunk) {
+            response.on('data', function (chunk) {
                 data += chunk;
             });
             response.on('end', function () {
@@ -158,7 +162,7 @@ var request = async ((pair) => {
                                 coords: answer.GeoObject.Point.pos.split(" ")
                             };
                             metroObjects.push(metroObject);
-                        })
+                        });
                         resolve(metroObjects);
                     }
                 }

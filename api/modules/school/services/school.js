@@ -1,3 +1,4 @@
+'use strict';
 var colors = require('colors');
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
@@ -6,15 +7,188 @@ var services = require.main.require('./app/components/services').all;
 var sequelize  = require.main.require('./app/components/db');
 var sequelizeInclude = require.main.require('./api/components/sequelizeInclude');
 var enums = require.main.require('./api/components/enums').all;
-
 var service = {
     name : 'school'
 };
 
+class SchoolNotFoundError extends Error {
+    constructor(id) {
+        super('Cant find school with id = ' + id);
+    }
+}
+
 /**
- * @param {object || number} school
- * @return {number}
+ * Create school
+ * @param {{
+ *     name: string,
+ *     abbreviation: string,
+ *     fullName: string,
+ *     schoolType: enum.school.school_type,
+ *     director: string,
+ *     phones?: strimg[],
+ *     site?: string,
+ *     educationInterval: number[],
+ *     govermentKey: number,
+ *     addresses?: {
+ *         departments: [{
+ *             stage: string,
+ *             name: string,
+ *             availability: [boolean]
+ *         }]
+ *     }
+ * }} data
+ * @return {Object} School model instance
  */
+service.create = function(data) {
+    var includeParams = {
+        addresses: {
+            departments: true
+        }
+    };
+
+    if (data.addresses) {
+        data.addresses = data.addresses.filter(address => {
+            var result = false;
+            var addressBD =
+                    await(services.address.getAddress({name: address.name}));
+            if (!addressBD) {
+                result = true;
+            }
+            else {
+            console.log('Address:'.yellow, address.name);
+            console.log('is alredy binded to school '.yellow +
+                'with id:'.yellow, addressBD.school_id);
+            }
+
+            return result;
+        });
+        data.addresses.forEach(address => {
+            if (!address.coords) {
+                var coords = await(
+                        services.yapi.getCoords('Москва, ' + address.name)
+                    );
+                address.coords = coords;
+            }
+        });
+    }
+    return await(models.School.create(
+        data,
+        {
+            include: sequelizeInclude(includeParams)
+        }
+    ));
+};
+
+
+/**
+ * Update school data
+ * @param {Object} school_id
+ * @param {{
+ *     name: string,
+ *     abbreviation: string,
+ *     fullName: string,
+ *     schoolType: enum.school.school_type,
+ *     director: string,
+ *     phones?: strimg[],
+ *     site?: string,
+ *     educationInterval: number[]
+ * }} data
+ * @return {Object} School model instance
+ */
+service.update = async(function(school_id, data) {
+    var school = await(
+        models.School.findOne({
+            where: {id: school_id}
+        })
+    );
+    if (!school)
+        throw new SchoolNotFoundError(school_id);
+    return await(school.update(data));
+});
+
+
+/**
+ * Delete school
+ * @param {number} school_id
+ */
+service.delete = async (function(school_id) {
+    var school = await(models.School.findOne(
+        {
+            where: {id: school_id}
+        }
+    ));
+    if (!school)
+        throw new SchoolNotFoundError(school_id);
+
+    await(school.destroy());
+    return school_id;
+});
+
+
+/**
+ * Get school addresses
+ * @param  {school_id} school_id
+ * @param  {address_id} address_id
+ * @return {[Object]} Address model instance or undefined
+ */
+service.getAddress = async(function(school_id, address_id) {
+    var address = await(services.address.getById(address_id));
+    if (address.school_id == school_id) {
+        return address;
+    }
+});
+
+
+/**
+ * Get school addresses
+ * @param  {number} schoolId
+ * @return {[Object]} Address model instances list
+ */
+service.getAddresses = async(function(schoolId) {
+    console.log(schoolId);
+    return await(
+        models.Address.findAll({
+            where: {schoolId: schoolId},
+            include: [
+                {
+                    model: models.Department,
+                    as: 'departments'
+                }
+            ]
+        })
+    );
+});
+
+
+/**
+ * Get department of school address
+ * @param  {school_id} school_id
+ * @param  {address_id} address_id
+ * @param  {department_id} department_id
+ * @return {[Object]} Department model instance or undefined
+ */
+service.getAddressDepartment = async(
+    function(school_id, address_id, department_id) {
+        var address = await(service.getAddress(school_id, address_id));
+        var department = await(address.getDepartments({where: {id: department_id}}));
+        return department;
+    }
+);
+
+
+/**
+ * Get department of school address
+ * @param  {school_id} school_id
+ * @param  {address_id} address_id
+ * @return {[Object]} Department model instances or undefined
+ */
+service.getAddressDepartments = async(function(school_id, address_id) {
+    var address = await(service.getAddress(school_id, address_id));
+    var department = address.getDepartments();
+    return department;
+});
+
+
 service.getGroupId = async (function(school) {
     var instance = school;
     if (typeof school === 'number'){
@@ -35,29 +209,127 @@ service.getGroupId = async (function(school) {
     return instance.commentGroupId;
 });
 
+
 /**
  * @param {number} schoolId
  * used in Rating model hook
  */
-service.updateScore = async(function(schoolId) {
+service.onRatingChange = async(function(schoolId) {
+    var school = await(models.School.findOne({
+        where: {
+            id: schoolId
+        }
+    }));
+
+    if (!school) 
+        throw new SchoolNotFoundError(schoolId);
+    
+    var promises = [
+        this.updateScore(school),
+        this.updateReviewCount(school),
+    ];
+    try {
+        await(promises);
+    } catch (e) {
+    }
+});
+
+/**
+ * @param {object} school - School instance
+ * @return {Promise}
+ */
+service.updateReviewCount = async(function(school) {
+    var count = await(models.Rating.count({
+        where: {
+            schoolId: school.id
+        }
+    }));
+    school.update({reviewCount: count});
+});
+
+/**
+ * @return {Peromise}
+ */
+service.updateRanks = async(function() {
+    //TODO : move to time-driven script in separated thread
+
+    /* Disable logging for this method cause its sloving down the server */
+    //console.log(colors.green('Updating ranks'));
+
+    //var rankCounter = 0;
+    //var previousScore = -1;
+
+    //var schools = await(models.School.findAll({
+    //    attributes: [
+    //        'id',
+    //        ['total_score', 'totalScore']
+    //    ],
+    //    order: 'total_score DESC'
+    //}));
+
+    //var loggingState = sequelize.options.logging;
+    //sequelize.options.logging = false;
+    //wait(schools.forEach(school => {
+    //    if (school.totalScore != previousScore)
+    //        rankCounter++;
+    //    school.update({
+    //        rank: rankCounter
+    //    });
+    //    previousScore = school.totalScore;
+    //}));
+    //sequelize.options.logging = loggingState;
+    //console.log(colors.green('Ranks updated'));
+});
+
+/**
+ * @param {object} school - School instance
+ * @return {Promise}
+ */
+service.updateScore = async(function(school) {
     var queries = [];
     for (var i = 1; i <= 4; i++) {
         var score = 'score[' + i + ']';
         var queryPromise = sequelize.query(
-            'SELECT AVG(' + score + ') AS avg FROM rating ' +
-            'WHERE school_id = ' + schoolId + ' AND ' +
+            'SELECT AVG(' + score + ') AS avg, ' + 
+            'count(' + score + ') AS count FROM rating ' +
+            'WHERE school_id = ' + school.id + ' AND ' +
              score + '<> 0'
         );
         queries.push(queryPromise);
     }
-    var scores = await(queries).map(
-        result => result[0][0].avg || 0
+    var scores = [],
+        counts = [];
+    await(queries).forEach(
+        result => {
+            scores.push(result[0][0].avg || 0);
+            counts.push(result[0][0].count || 0);
+        }
     );
-    var school = await(models.School.findOne({
-        where: {id: schoolId}
-    }));
-    school.update({score: scores});
+    var totalScore = getTotalScore(scores);
+    school.update({
+        score: scores,
+        totalScore: totalScore,
+        scoreCount: counts
+    });
 });
+
+/**
+ *  @param {array<number>} score
+ *  @return {number}
+ */
+var getTotalScore = function(score) {
+    score = score || [];
+    var count = 0, sum = 0;
+    score.forEach(val => {
+        val = parseFloat(val);
+        if (val) {
+            sum += val;
+            count++;
+        }
+    });
+    return count ? sum/count : 0;
+};
+
 
 /**
  * @public
@@ -85,24 +357,19 @@ service.typeFilters = async (function() {
     };
 });
 
-service.getAddresses = async (school => {
-    return await(models.Address.findAll({
-        where:{school_id: school.id}
-    }));
-});
 
 /**
  * @param {object} school - school instance
  * @param {number} rank
  */
-service.setRank = async(function(school, rank) {
+service.setRankDogm = async(function(school, rank) {
     await(school.update({
-        rank: rank
+        rankDogm: rank
     }));
 });
 
 service.setAddresses = async ((school, addresses) => {
-    var currentAddresses = await(service.getAddresses(school));
+    var currentAddresses = await(service.getAddresses(school.id));
     addresses.forEach((adr)=>{
         var sameAdr = currentAddresses.find(element => {
          if (element.name == adr.name)
@@ -114,15 +381,6 @@ service.setAddresses = async ((school, addresses) => {
             });
          }
     });
-});
-
-service.update = async ((school, params) => {
-    var instance = await(school.update(
-        params
-    ));
-    if (params.addresses)
-        await(service.setAddresses(school, params.addresses));
-    return instance;
 });
 
 
@@ -150,14 +408,20 @@ service.findBySite = async(function(site) {
  * @public
  */
 service.viewOne = function(id) {
-    var includeParams = 
+    var includeParams =
         [{
             model: models.Address,
             as: 'addresses',
-            include: [{
-                model: models.Department,
-                as:'departments'
-            }]
+            include: [
+                {
+                    model: models.Department,
+                    as:'departments'
+                },
+                {
+                    model: models.Metro,
+                    as: 'metroStations'
+                }
+            ]
          }, {
              model: models.Rating,
              as: 'ratings'
@@ -173,25 +437,25 @@ service.viewOne = function(id) {
                  }]
 
              }]
-         }];
-    return await(models.School.findOne({
+         },
+            //{
+            //    model: models.EgeResult,
+            //    as: 'egeResults'
+            //}, {
+            //    model: models.GiaResult,
+            //    as: 'giaResults'
+            //}, {
+            //    model: models.OlimpResult,
+            //    as: 'olimpResults'
+            //}
+        ];
+
+    var school = await(models.School.findOne({
         where: {id: id},
         include: includeParams
     }));
+    return school;
 };
-
-
-service.create = async (params => {
-    var includeParams = {
-        addresses: true
-    };
-    return await(models.School.create(
-        params,
-        {
-            include: sequelizeInclude(includeParams)
-        }
-    ));
-});
 
 
 /**
@@ -263,11 +527,11 @@ service.deleteActivities = async(() => {
 });
 
 /**
- * usded in console/*. Can be a bit slow
+ * usded in console. Can be a bit slow
  */
 service.listInstances = async(function(){
     return await(models.School.findAll({
-        inclde: [{
+        include: [{
             model: models.Rating,
             as: 'ratings'
         }, {
@@ -281,25 +545,18 @@ service.listInstances = async(function(){
     }));
 });
 
-/**
- *  @param {array<number>} score
- *  @return {number}
- */
-var getTotalScore = function(score) {
-    score = score || [];
-    var count = 0, sum = 0;
-    score.forEach(val => {
-        if (val) {
-            sum += val;
-            count++;
-        }
-    });
-    return count ? sum/count : 0;
-};
 
 
 /**
  * @public
+ * @param {object || null} opt_params
+ * @param {object || null} opt_params.searchParams
+ * @param {string || null} opt_params.searchParams.name
+ * @param {?Array<number>} opt_params.searchParams.schoolType
+ * @param {?Array<number>} opt_params.searchParams.gia
+ * @param {?Array<number>} opt_params.searchParams.ege
+ * @param {?Array<number>} opt_params.searchParams.olimp
+ * @return {promise<array<object>>}
  */
 service.list = async (function(opt_params) {
     var params = opt_params || {},
@@ -313,40 +570,49 @@ service.list = async (function(opt_params) {
             'score',
             'name',
             'fullName',
-            'abbreviation'
-        ]
+            'abbreviation',
+            'totalScore'
+        ],
+        order: '"totalScore" DESC'
     };
 
     if (searchParams) {
         updateSearchConfig(searchConfig, searchParams);
     }
-
-    console.log('searchConfig', searchConfig);
-    var schools = await(models.School.findAll(searchConfig));
-    console.log('Found: ', colors.green(schools.length));
-
-    return schools
-        .map(school => {
-            return {
-                id: school.id,
-                name: school.name,
-                description: '',
-                abbreviation: school.abbreviation,
-                score: school.score || [0, 0, 0, 0],
-                totalScore: getTotalScore(school.score),
-                fullName: school.fullName,
-                addresses: school.addresses
-            };
-        })
-        .sort((school1, school2) => school1.totalScore - school2.totalScore);
+    return models.School.findAll(searchConfig).then(schools => {
+        console.log('Found: ', colors.green(schools.length)) ;
+        return schools;
+    });
 });
+
+/**
+ * @param {string} text
+ * @return {promise<array<object>>}
+ */
+service.searchByText = function(text) {
+    var nameFilter = services.search.generateFilter(text),
+        whereParams = {
+            $or: [
+                {
+                   name: nameFilter
+                }, {
+                   fullName: nameFilter
+                }, {
+                   abbreviation: nameFilter
+                }
+            ]
+        };
+    return models.School.findAll({
+        where: whereParams
+    });
+};
 
 /**
  * @param {object} searchConfig Existing search config to update
  * @param {object} searchParams
  * @param {?string} searchParams.name
  * @param {?Array<number>} searchParams.classes
- * @param {?number} searchParams.schoolType //TODO: use school_type_filter
+ * @param {?number} searchParams.schoolType
  * @param {?Array<number>} searchParams.gia Subjects with high hia results
  * @param {?Array<number>} searchParams.ege
  * @param {?Array<number>} searchParams.olimp
@@ -376,8 +642,6 @@ var updateSearchConfig = function(searchConfig, searchParams) {
         ];
     }
 
-    console.log(searchParams);
-
     if (searchParams.classes && searchParams.classes.length) {
         whereParams.educationInterval = {
             $contains: searchParams.classes
@@ -390,7 +654,7 @@ var updateSearchConfig = function(searchConfig, searchParams) {
             $and: {
                 type: enums.searchType.SCHOOL_TYPE,
                 values: {
-                    $contains: searchParams.school_type
+                    $overlap: searchParams.school_type
                 }
             }
         });
@@ -438,7 +702,7 @@ var updateSearchConfig = function(searchConfig, searchParams) {
         var extraIncludesArr = [];
         extraIncludesArr.push(extraIncludes.searchData);
         searchConfig.include = searchConfig.include.concat(extraIncludesArr);
-        searchConfig.group = '"School"."id", "ratings"."id"';
+        searchConfig.group = '"School"."id"';
         searchConfig.having = ['COUNT(?) = ?', '', searchDataCount];
     }
 };

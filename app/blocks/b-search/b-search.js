@@ -97,33 +97,36 @@ goog.scope(function() {
              },
 
              search: function(elem) {
-                 var result = elem.name + ' ' +
+                 return elem.name + ' ' +
                      elem.fullName + ' ' +
                      elem.abbreviation;
-                 return result;
              },
 
              renderItem: function(item, str) {
                  var matchName,
+                     result,
                      Suggest = gorod.gSuggest.Suggest;
 
                  str = str || '';
+                 result = '';
 
                  matchName = Suggest.findEntry(item.name, str);
                  if (matchName) {
-                     return item.name;
+                     result = item.name;
                  }
 
                  var matchFullName = Suggest.findEntry(item.fullName, str);
                  if (matchFullName) {
-                     return item.fullName;
+                     result = item.fullName;
                  }
 
                  var matchAbbreviation = Suggest.findEntry(
                      item.abbreviation, str);
                  if (matchAbbreviation) {
-                     return item.abbreviation;
+                     result = item.abbreviation;
                  }
+
+                 return result;
              }
          });
      };

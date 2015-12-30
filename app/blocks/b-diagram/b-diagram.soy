@@ -4,7 +4,7 @@
  * Diagram template
  * @param params {{
  *     data: list<{
- *             label: string,
+ *             name: string,
  *             value: string,
  *             description: ?string
  *             averageValue: ?string
@@ -21,7 +21,7 @@
         {foreach $item in $params.data}
             <div class="b-diagram__item">
                 <div class="b-diagram__label">
-                    {$item.label}
+                    {$item.name}
                     {if $item.description}
                         <div class="b-diagram__description">
                             {$item.description}

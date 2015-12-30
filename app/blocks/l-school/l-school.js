@@ -149,9 +149,9 @@ goog.scope(function() {
         comments.decorate(this.elements_.comments);
 
         /** rating */
-        var rating = new sm.bRating.Rating();
-        this.addChild(rating);
-        rating.decorate(this.elements_.rating);
+        // var rating = new sm.bRating.Rating();
+        // this.addChild(rating);
+        // rating.decorate(this.elements_.rating);
 
         /** map */
         var map = new sm.lSchool.bMap.Map();

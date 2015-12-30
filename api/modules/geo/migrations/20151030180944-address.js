@@ -4,6 +4,7 @@ const ModelArchiver = require('../../console/modules/modelArchiver/ModelArchiver
 const Address = require('../../api/modules/geo/models/address');
 const dataFolder = path.join(__dirname, '../../api/modules/geo/migrations');
 const async = require('asyncawait/async');
+const archiveName = ModelArchiver.migrationToArchive(__filename);
 
 module.exports = {
   up: function (queryInterface, Sequelize) {
@@ -15,11 +16,9 @@ module.exports = {
             type: Sequelize.INTEGER
         },
         created_at: {
-            allowNull: false,
             type: Sequelize.DATE
         },
         updated_at: {
-            allowNull: false,
             type: Sequelize.DATE
         },
         name: {
@@ -30,6 +29,7 @@ module.exports = {
         },
         school_id: {
             type: Sequelize.INTEGER,
+            onDelete: 'cascade',
             references: {
                 model: 'school',
                 key: 'id'
@@ -43,7 +43,7 @@ module.exports = {
             }
         }
     }).then(async(function() {
-        var archiver = new ModelArchiver(Address, dataFolder);
+        var archiver = new ModelArchiver(Address, dataFolder, null, archiveName);
         archiver.load();
     }));
   },
