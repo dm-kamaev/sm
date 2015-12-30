@@ -40,31 +40,31 @@ var parse = async(function(path) {
     console.log(matches.length);
     matches.forEach(match => {
         var data = match[1];
-        // services.school.update(match[0], {
-        //     links: data.site,
-        //     description: data.description,
-        //     features: data.features,
-        //     extendedDayCost: data.extDayCost,
-        //     dressCode: data.dressCode,
-        //     boarding: data.boarding
-        // });
-        //
-        // if (data.name) {
-        //     services.school.update(match[0], {
-        //         name: data.name
-        //     });
-        // }
-        //
-        // if (data.schoolType) {
-        //     services.school.update(match[0], {
-        //         schoolType: data.schoolType
-        //     });
-        // }
-        // if (data.director) {
-        //     services.school.update(match[0], {
-        //         director: data.director
-        //     });
-        // }
+        services.school.update(match[0], {
+            links: data.site,
+            description: data.description,
+            features: data.features,
+            extendedDayCost: data.extDayCost,
+            dressCode: data.dressCode,
+            boarding: data.boarding
+        });
+
+        if (data.name) {
+            services.school.update(match[0], {
+                name: data.name
+            });
+        }
+
+        if (data.schoolType) {
+            services.school.update(match[0], {
+                schoolType: data.schoolType
+            });
+        }
+        if (data.director) {
+            services.school.update(match[0], {
+                director: data.director
+            });
+        }
         // console.log({
         //     name: data.name,
         //     links: data.site,
