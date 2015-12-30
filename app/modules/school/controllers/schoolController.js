@@ -43,7 +43,8 @@ exports.list = async (function(req, res) {
                     url: '/api/school/search'
                 }
             },
-            searchText: req.query.name || '',
+            searchText: req.query.name ?
+                services.school.convertWinToUnicode(req.query.name) : '',
             templates: {
                 search: '{{ name }}',
                 item: '{{ name }}',
