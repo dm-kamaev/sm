@@ -36,8 +36,8 @@ var School = db.define('School', {
     govermentKey: {
         field: 'goverment_key',
         type: DataType.INTEGER,
-        unique: true,
-        allowNull: false
+        unique: false,
+        allowNull: true
     },
     specializedClasses: {
         field: 'specialized_classes',
@@ -49,7 +49,7 @@ var School = db.define('School', {
     },
     extendedDayCost: {
         field: 'extended_day_cost',
-        type: DataType.FLOAT
+        type: DataType.STRING
     },
     dressCode: {
         field: 'dress_code',
@@ -58,6 +58,14 @@ var School = db.define('School', {
     links: {
         field: 'links',
         type: DataType.ARRAY(DataType.ARRAY(DataType.STRING))
+    },
+    description: {
+        field: 'description',
+        type: DataType.STRING
+    },
+    boarding: {
+        field: 'boarding',
+        type: DataType.BOOLEAN
     },
     popularity: {
         field: 'popularity',
