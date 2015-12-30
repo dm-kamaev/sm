@@ -1,4 +1,4 @@
-var db = require.main.require('./app/components/db');
+var db = require('../../../../app/components/db');
 
 var CommentGroup = db.define('CommentGroup', {}, {
     underscored: true,

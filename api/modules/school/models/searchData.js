@@ -1,6 +1,5 @@
-var DataType = require('sequelize'),
-    db = require.main.require('./app/components/db'),
-    enums = require('../enums');
+var DataType = require('sequelize');
+var db = require('../../../../app/components/db');
 const searchType = require('../enums/searchType');
 
 var SearchData = db.define('SearchData', {

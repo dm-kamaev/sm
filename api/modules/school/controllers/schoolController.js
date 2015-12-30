@@ -215,8 +215,6 @@ exports.createComment = async (function(req, res) {
         var schoolId = req.params.id,
             params = req.body;
         result = await(services.school.review(schoolId, params));
-        if (params.score)
-            services.school.updateRanks();
         console.log(result);
     } catch (e) {
         console.log(e);
