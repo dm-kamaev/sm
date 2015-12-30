@@ -27,7 +27,7 @@
 ## Обновление места школы в рейтинге и поисковой таблицы ##
 `node commander search`  
 `node commander ranks`  
-Чтобы добавить автоматическое обновление нужно в терминале виртуалки набрать `crontab -e` и дописать в конце файла  
+Чтобы добавить автоматическое обновление, нужно в терминале виртуалки набрать `crontab -e` и дописать в конец файла  
 `PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin`  
 `* */12 * * * cd /home/gorod/l3_school-market/ && ./console/cron/updateSearch.sh`  
 `* */12 * * * cd /home/gorod/l3_school-market/ && ./console/cron/updateRank.sh`  
