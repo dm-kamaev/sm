@@ -3,6 +3,7 @@ var services = require.main.require('./app/components/services').all;
 
 const areaView = require.main.require('./api/modules/geo/views/areaView.js');
 const metroView = require.main.require('./api/modules/geo/views/metroView.js');
+const addressView = require.main.require('./api/modules/geo/views/addressView.js');
 
 var schoolView = {};
 
@@ -103,23 +104,11 @@ var getSites = function(site) {
  */
 var getContacts = function(addresses, phones) {
     return {
-        address: getAddress(addresses),
+        address: addressView.list(addresses, {
+            filterByDepartment: true
+        }),
         phones: phones || ''
     };
-};
-
-/**
- *  @param {array<object>} addresses
- *  @return {array<object>}
- */
-var getAddress = function(addresses) {
-    return addresses.map(address => {
-        return {
-            title: '',
-            description: address.name,
-            metro: services.address.getMetro(address)
-        };
-    });
 };
 
 /**

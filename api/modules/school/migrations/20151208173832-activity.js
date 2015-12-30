@@ -3,6 +3,7 @@ const path = require('path');
 const ModelArchiver = require('../../console/modules/modelArchiver/ModelArchiver.js') ;
 const Activity = require('../../api/modules/school/models/activity');
 const dataFolder = path.join(__dirname, '../../api/modules/school/migrations');
+const archiveName = ModelArchiver.migrationToArchive(__filename);
 const async = require('asyncawait/async');
 
 module.exports = {
@@ -43,7 +44,7 @@ module.exports = {
                 }
             },
         }).then(async(function() {
-            var archiver = new ModelArchiver(Activity, dataFolder);
+            var archiver = new ModelArchiver(Activity, dataFolder, null, archiveName);
             archiver.load();
         }));
     },

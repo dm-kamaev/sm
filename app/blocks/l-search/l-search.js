@@ -142,7 +142,7 @@ goog.scope(function() {
     Search.prototype.searchRequest_ = function(searchString) {
         var url = '/school';
         if (searchString) {
-            url += '?name=' + searchString;
+            url += '?name=' + encodeURIComponent(searchString);
         }
         document.location.href = url;
     };
