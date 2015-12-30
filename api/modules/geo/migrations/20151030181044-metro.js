@@ -1,4 +1,10 @@
 'use strict';
+const path = require('path');
+const ModelArchiver = require('../../console/modules/modelArchiver/ModelArchiver.js') ;
+const archiveName = ModelArchiver.migrationToArchive(__filename);
+const Metro = require('../../api/modules/geo/models/metro.js');
+const dataFolder = path.join(__dirname, '../../api/modules/geo/migrations');
+const async = require('asyncawait/async');
 
 module.exports = {
   up: function (queryInterface, Sequelize) {
@@ -29,7 +35,10 @@ module.exports = {
                 key: 'id',
             }
         }
-    });
+    }).then(async(function() {
+        var archiver = new ModelArchiver(Metro, dataFolder, null, archiveName);
+        archiver.load();
+    }));
   },
   down: function (queryInterface) {
     return queryInterface.dropTable('metro');

@@ -1,0 +1,39 @@
+.b-score__section {
+	display: inline-block;
+
+	&.b-score__section_left {
+		width: 118px;
+		margin-top: 4px;
+		margin-right: 10px;
+
+		text-align: center;
+	}
+
+	&.b-score__section_right {
+		width: 220px;
+
+		vertical-align: top;
+	}
+}
+
+.b-score__average {
+	margin: 0 auto 8px;
+}
+
+.b-score__delimiter {
+	width: 0;
+	height: 14px;
+	margin: 0 auto 5px;
+
+	border: 1px solid #dcdcd7;
+}
+
+.b-score__comments-amount {
+	width: 75px;
+	margin: 0 auto;
+
+	text-align: center;
+
+	font-family: arial, sans-serif;
+	font-size: 11px;
+}

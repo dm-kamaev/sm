@@ -17,6 +17,7 @@ require('./console/getActs.js').Command;
 require('./console/rating').Command;
 require('./console/modelArchiver.js').Command;
 require('./console/parseExt.js').Command;
+require('./console/updateSchoolNames.js').Command;
 
 /*
  * The line below initializes the interface on `node ./commander

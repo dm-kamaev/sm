@@ -209,29 +209,126 @@ service.getGroupId = async (function(school) {
     return instance.commentGroupId;
 });
 
+
 /**
  * @param {number} schoolId
  * used in Rating model hook
  */
-service.updateScore = async(function(schoolId) {
+service.onRatingChange = async(function(schoolId) {
+    var school = await(models.School.findOne({
+        where: {
+            id: schoolId
+        }
+    }));
+
+    if (!school) 
+        throw new SchoolNotFoundError(schoolId);
+    
+    var promises = [
+        this.updateScore(school),
+        this.updateReviewCount(school),
+    ];
+    try {
+        await(promises);
+    } catch (e) {
+    }
+});
+
+/**
+ * @param {object} school - School instance
+ * @return {Promise}
+ */
+service.updateReviewCount = async(function(school) {
+    var count = await(models.Rating.count({
+        where: {
+            schoolId: school.id
+        }
+    }));
+    school.update({reviewCount: count});
+});
+
+/**
+ * @return {Peromise}
+ */
+service.updateRanks = async(function() {
+    //TODO : move to time-driven script in separated thread
+
+    /* Disable logging for this method cause its sloving down the server */
+    //console.log(colors.green('Updating ranks'));
+
+    //var rankCounter = 0;
+    //var previousScore = -1;
+
+    //var schools = await(models.School.findAll({
+    //    attributes: [
+    //        'id',
+    //        ['total_score', 'totalScore']
+    //    ],
+    //    order: 'total_score DESC'
+    //}));
+
+    //var loggingState = sequelize.options.logging;
+    //sequelize.options.logging = false;
+    //wait(schools.forEach(school => {
+    //    if (school.totalScore != previousScore)
+    //        rankCounter++;
+    //    school.update({
+    //        rank: rankCounter
+    //    });
+    //    previousScore = school.totalScore;
+    //}));
+    //sequelize.options.logging = loggingState;
+    //console.log(colors.green('Ranks updated'));
+});
+
+/**
+ * @param {object} school - School instance
+ * @return {Promise}
+ */
+service.updateScore = async(function(school) {
     var queries = [];
     for (var i = 1; i <= 4; i++) {
         var score = 'score[' + i + ']';
         var queryPromise = sequelize.query(
-            'SELECT AVG(' + score + ') AS avg FROM rating ' +
-            'WHERE school_id = ' + schoolId + ' AND ' +
+            'SELECT AVG(' + score + ') AS avg, ' + 
+            'count(' + score + ') AS count FROM rating ' +
+            'WHERE school_id = ' + school.id + ' AND ' +
              score + '<> 0'
         );
         queries.push(queryPromise);
     }
-    var scores = await(queries).map(
-        result => result[0][0].avg || 0
+    var scores = [],
+        counts = [];
+    await(queries).forEach(
+        result => {
+            scores.push(result[0][0].avg || 0);
+            counts.push(result[0][0].count || 0);
+        }
     );
-    var school = await(models.School.findOne({
-        where: {id: schoolId}
-    }));
-    school.update({score: scores});
+    var totalScore = getTotalScore(scores);
+    school.update({
+        score: scores,
+        totalScore: totalScore,
+        scoreCount: counts
+    });
 });
+
+/**
+ *  @param {array<number>} score
+ *  @return {number}
+ */
+var getTotalScore = function(score) {
+    score = score || [];
+    var count = 0, sum = 0;
+    score.forEach(val => {
+        val = parseFloat(val);
+        if (val) {
+            sum += val;
+            count++;
+        }
+    });
+    return count ? sum/count : 0;
+};
 
 
 /**
@@ -265,9 +362,9 @@ service.typeFilters = async (function() {
  * @param {object} school - school instance
  * @param {number} rank
  */
-service.setRank = async(function(school, rank) {
+service.setRankDogm = async(function(school, rank) {
     await(school.update({
-        rank: rank
+        rankDogm: rank
     }));
 });
 
@@ -473,8 +570,10 @@ service.list = async (function(opt_params) {
             'score',
             'name',
             'fullName',
-            'abbreviation'
-        ]
+            'abbreviation',
+            'totalScore'
+        ],
+        order: '"totalScore" DESC'
     };
 
     if (searchParams) {

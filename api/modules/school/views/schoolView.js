@@ -3,12 +3,13 @@ var services = require.main.require('./app/components/services').all;
 
 const areaView = require.main.require('./api/modules/geo/views/areaView.js');
 const metroView = require.main.require('./api/modules/geo/views/metroView.js');
+const addressView = require.main.require('./api/modules/geo/views/addressView.js');
 
 var schoolView = {};
 
 /**
- * @param {array<object>} schools - school instances
- * @return {array<object>}
+ * @param {array<object>} schoolInstance - school instances
+ * @return {object}
  */
 schoolView.default = function(schoolInstance) {
 
@@ -17,52 +18,70 @@ schoolView.default = function(schoolInstance) {
         comments = schoolInstance.commentGroup ?
             schoolInstance.commentGroup.comments : [],
         score = schoolInstance.score || [0, 0, 0, 0];
-
     return {
         id: schoolInstance.id,
         schoolName: schoolInstance.name,
         schoolType: schoolInstance.schoolType,
         schoolDescr: '',
         features: [],
-        directorName: schoolInstance.director,
-        schoolQuote : 'Мел',
+        directorName: getDirectorName(schoolInstance.director),
         extendedDayCost: '',
         dressCode: '',
-        classes: getEducationInterval(schoolInstance.educationInterval),
+        classes: getEducationInterval(
+            schoolInstance.educationInterval,
+            'classes'),
+        kindergarten: getEducationInterval(
+            schoolInstance.educationInterval,
+            'kindergarten'),
         social: [],
         metroStations: services.address.getMetro(addresses),
         sites: getSites(schoolInstance.site),
         activities: [],
         specializedClasses: [],
-        contacts: getContacts(addresses,schoolInstance.phones),
+        contacts: getContacts(addresses, schoolInstance.phones),
         comments: getComments(comments),
         coords: services.address.getCoords(addresses),
-        ratings: getRatings(schoolInstance.rating, schoolInstance.rank),
-        score: score,
-        totalScore: getTotalScore(score)
+        ratings: getRatings(schoolInstance.rank, schoolInstance.rankDogm),
+        score: getSections(score),
+        totalScore: schoolInstance.totalScore,
+        reviewCount: schoolInstance.reviewCount
     };
 };
 
 /**
  *  @param {array<number>} interval
+ *  @param {string} type ['classes'|'kindergarten']
  *  @return {string}
  */
-var getEducationInterval = function(interval) {
+var getEducationInterval = function(interval, type) {
     var res = '';
+    switch (type) {
+        case 'classes':
+            if (interval)
+            {
+                var begin = interval[0],
+                    end = interval[interval.length - 1];
 
-    if (interval) {
-        var begin = interval[0],
-            end = interval[interval.length - 1];
+                if (begin === 0) {
+                    begin = interval[1];
+                }
 
-        res += begin ? begin : 'Детский сад';
+                res += begin;
 
-        if (end > begin) {
-            res += '–';
-            res += end;
-            res += begin ? ' классы' : ' класс';
-        }
+                if (end > begin) {
+                    res += '–';
+                    res += end;
+                    res += ' классы';
+                }
+            }
+            break;
+
+        case 'kindergarten':
+            if (interval[0] === 0) {
+                res = 'При школе есть детский сад';
+            }
+            break;
     }
-
     return res;
 };
 
@@ -85,23 +104,11 @@ var getSites = function(site) {
  */
 var getContacts = function(addresses, phones) {
     return {
-        address: getAddress(addresses),
+        address: addressView.list(addresses, {
+            filterByDepartment: true
+        }),
         phones: phones || ''
     };
-};
-
-/**
- *  @param {array<object>} addresses
- *  @return {array<object>}
- */
-var getAddress = function(addresses) {
-    return addresses.map(address => {
-        return {
-            title: '',
-            description: address.name,
-            metro: services.address.getMetro(address)
-        };
-    });
 };
 
 /**
@@ -118,30 +125,33 @@ var getComments = function(comments) {
     return comments
         .filter(comment => comment.text)
         .map(comment => {
+            var sections = comment.rating ?
+                getSections(comment.rating.score) :
+                getSections([0,0,0,0]);
             return {
                 author: '',
                 rank: typeConvert[comment.userType],
                 text: comment.text,
-                sections: getSections(comment.rating)
+                sections: sections
             };
         });
 };
 
 /**
- *  @param {array<object>} rating
+ *  @param {array<object>} Ratings array to convert
  *  @return {array<object>}
  */
-var getSections = function(rating) {
-    return rating ? rating.score.map((score, index) => {
+var getSections = function(array) {
+    return array ? array.map((item, index) => {
         var type = [
             'Образование',
             'Преподаватели',
-            'Инфраструктура',
-            'Атмосфера'
+            'Атмосфера',
+            'Инфраструктура'
         ];
         return {
             name: type[index],
-            rating: score
+            value: item
         };
     }) : [];
 };
@@ -175,20 +185,18 @@ var getRatings = function(rating, rank) {
 };
 
 /**
- *  @param {array<number>} score
- *  @return {number}
+ * translates director name to right output format
+ * @param name string
+ * @return string
  */
-var getTotalScore = function(score) {
-    score = score || [];
-    var count = 0, sum = 0;
-    score.forEach(val => {
-        if (val) {
-            sum += val;
-            count++;
-        }
-    });
-    return count ? sum/count : 0;
-};
+var getDirectorName = function(name) {
+    var nameWords = [],
+        result = '';
+    name = name.trim();
+    nameWords = name.split(' ');
+    result = nameWords[1] + ' ' + nameWords[2] + ' ' + nameWords[0];
+    return result;
+}
 
 schoolView.list = function(schools) {
     return schools
@@ -199,12 +207,11 @@ schoolView.list = function(schools) {
                 description: '',
                 abbreviation: school.abbreviation,
                 score: school.score || [0, 0, 0, 0],
-                totalScore: getTotalScore(school.score),
+                totalScore: school.totalScore || 0,
                 fullName: school.fullName,
                 addresses: school.addresses
             };
-        })
-        .sort((school1, school2) => school2.totalScore - school1.totalScore);
+        });
 };
 
 /**
@@ -219,7 +226,7 @@ schoolView.suggest = function(data) {
         schools: this.list(data.schools),
         areas: areaView.list(data.areas),
         metro: metroView.list(data.metros)
-    }
+    };
 };
 
 /**

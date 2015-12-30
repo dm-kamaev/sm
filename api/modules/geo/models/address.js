@@ -25,14 +25,9 @@ var Address = db.define('Address', {
                 through: 'address_metro',
                 foreignKey: 'address_id'
             });
-            Address.belongsToMany(models.Department, {
+            Address.hasMany(models.Department, {
                 as: 'departments',
-                through: {
-                    model: 'Department_address',
-                    unique: false
-                },
                 foreignKey: 'address_id',
-                onDelete: 'cascade'
             });
             Address.belongsTo(models.Area, {
                 as: 'area',
