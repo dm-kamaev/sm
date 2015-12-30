@@ -25,12 +25,12 @@
 `node commander **scriptname**` - запуск скрипта  
 
 ## Обновление места школы и поисковой таблицы  ##  
-'node commander search'  
-'node commander ranks'  
-Чтобы добавить автоматическое обновление нужно в терминале виртуалки набрать 'crontab -e' и дописать в конце файла  
-'PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin'
-'* */12 * * * cd /home/gorod/l3_school-market/ && ./console/cron/updateSearch.sh'  
-'* */12 * * * cd /home/gorod/l3_school-market/ && ./console/cron/updateRank.sh'  
+`node commander search`  
+`node commander ranks`  
+Чтобы добавить автоматическое обновление нужно в терминале виртуалки набрать `crontab -e` и дописать в конце файла  
+`PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin`
+`* */12 * * * cd /home/gorod/l3_school-market/ && ./console/cron/updateSearch.sh`  
+`* */12 * * * cd /home/gorod/l3_school-market/ && ./console/cron/updateRank.sh`  
 где **/home/gorod/l3_school-market/** - путь к проекту на виртуалке  
 
 ## Список скриптов необходимых для работы фронтенда ##
