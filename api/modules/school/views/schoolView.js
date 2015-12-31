@@ -23,7 +23,6 @@ schoolView.default = function(schoolInstance) {
         score = schoolInstance.score || [0, 0, 0, 0],
         scoreCount = schoolInstance.scoreCount || [0, 0, 0, 0];
 
-        console.log(JSON.stringify(scoreCount));
     return {
         id: schoolInstance.id,
         schoolName: schoolInstance.name,
