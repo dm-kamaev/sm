@@ -2,7 +2,7 @@ var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var models = require.main.require('./app/components/models').all;
 var services = require.main.require('./app/components/services').all;
-var searchTypes = require.main.require('./api/modules/school/enums/searchType');
+var searchTypeEnum = require('../enums/searchType');
 exports.name = 'search';
 
 exports.getSchoolRecords = async (function(id) {
@@ -69,6 +69,150 @@ var findAnyInModel = function(model, searchString) {
     return model.findAll(params);
 };
 
+/**
+ * @param {array<number>}
+ * @return {string}
+ */
+var intArrayToSql = function(arr) {
+    return 'ARRAY [' + arr.map(number => '\'' + number + '\'') + ']::INTEGER[]';
+};
+
+/**
+ * @params {string} field
+ * @params {string} string
+ * @params {string} [type = 'and']
+ * @return {string} 
+ */
+var generateSqlFilter = function(field, string, type) {
+    var subStrings = getSearchSubstrings(string);
+    return subStrings
+        .map(substring => field + ' ILIKE \'%' +substring + '%\'')
+        .join(' ' + type + ' ');
+};
+
+/**
+ * @param {object} sqlOptions Existing search config to update
+ * @param {object} searchParams
+ * @param {?string} searchParams.name - search string
+ * @param {?Array<number>} searchParams.classes
+ * @param {?number} searchParams.schoolType
+ * @param {?Array<number>} searchParams.gia Subjects with high hia results
+ * @param {?Array<number>} searchParams.ege
+ * @param {?Array<number>} searchParams.olimp
+ * TODO: develop criterias
+ */
+exports.updateSqlOptions = function(sqlOptions, searchParams) {
+    var searchDataCount = 0;
+
+    if (searchParams.name) {
+        sqlOptions.where.push({
+            type: 'or',
+            values: [
+                generateSqlFilter('school.name', searchParams.name, 'AND'),
+                generateSqlFilter('school.full_name', searchParams.name, 'AND'),
+                generateSqlFilter('school.abbreviation', searchParams.name, 'AND'),
+            ]
+        });
+    }
+
+    if (searchParams.classes && searchParams.classes.length) {
+        var classArr = intArrayToSql(searchParams.classes);
+        sqlOptions.where.push('school.education_interval @> ' + classArr);
+    }
+
+    if (searchParams.schoolType) {
+        searchDataCount++;
+        sqlOptions.where.push({
+            type: 'AND',
+            values: [
+                'search_data.type = \'' + searchTypeEnum.SCHOOL_TYPE + '\'',
+                'search_data.values && ' + intArrayToSql(searchParams.schoolType)
+            ]
+        });
+    }
+
+    if (searchParams.gia) {
+        searchDataCount++;
+        sqlOptions.where.push({
+            type: 'AND',
+            values: [
+                'search_data.type = \'' + searchTypeEnum.GIA + '\'',
+                'search_data.values @> ' + intArrayToSql(searchParams.gia)
+            ]
+        });
+    }
+
+    if (searchParams.ege) {
+        searchDataCount++;
+        sqlOptions.where.push({
+            type: 'AND',
+            values: [
+                'search_data.type = \'' + searchTypeEnum.EGE + '\'',
+                'search_data.values @> ' + intArrayToSql(searchParams.ege)
+            ]
+        });
+    }
+
+    if (searchParams.olimp) {
+        searchDataCount++;
+        sqlOptions.where.push({
+            type: 'AND',
+            values: [
+                'search_data.type = \'' + searchTypeEnum.OLIMPIAD+ '\'',
+                'search_data.values @> ' + intArrayToSql(searchParams.olimp)
+            ]
+        });
+    }
+
+    if (searchDataCount) {
+        sqlOptions.from.push('search_data');
+        sqlOptions.where.push('school.id = search_data.school_id');
+        sqlOptions.having.push(['COUNT(\'\') ', ' = ', searchDataCount]);
+    }
+};
+
+/**
+ * @param {array} where
+ * @param {string} [opt_type = AND]
+ * @return {string} 
+ */
+var generateWhereSql = function(where, opt_type) {
+    var type = opt_type || 'AND';
+    return where.map(record => {
+        if (typeof record == 'string') {
+            return record;
+        } else if (typeof record == 'object') {
+            return '(' + generateWhereSql(record.values, record.type) + ')';
+        } else {
+            throw new Error('Unexpected type on WHERE parsing');
+        }
+
+    }).join(' ' + type + ' ');
+};
+
+/**
+ * @params {object} sqlOptions
+ * @return {string}
+ */
+exports.generateSearchSql = function(options) {
+    var selectStr = 'SELECT ' + options.select.join(', ');
+    var fromStr = ' FROM ' + options.from.join(', ');
+    var whereStr = '';
+    if (options.where.length)
+        whereStr = ' WHERE ' + generateWhereSql(options.where);
+    var groupStr = '';
+    if (options.group.length)
+        groupStr = ' GROUP BY ' + options.group.join(', ');
+    var orderStr = '';
+    if (options.order.length)
+        orderStr = ' ORDER BY ' + options.order.join(', ');
+    var havingStr = '';
+    if (options.having.length)
+        havingStr = ' HAVING ' + options.having  
+            .map(rec => rec[0] + rec[1] + rec[2])
+            .join(' AND ');
+    return selectStr + fromStr + whereStr + groupStr + havingStr + orderStr + ';';
+};
 
 /**
  * @params {string} string
@@ -84,6 +228,7 @@ exports.generateFilter = function(string) {
         })
     };
 };
+
 
 
 exports.getTypeFilters = async(function() {
@@ -115,14 +260,14 @@ exports.setSchoolType = async(function(schoolId, value) {
     await(models.SearchData.destroy({
         where: {
             schoolId: schoolId,
-            type: searchTypes.SCHOOL_TYPE
+            type: searchTypeEnum.SCHOOL_TYPE
         }
     }));
     var values = [];
     values.push(value);
     await (models.SearchData.create({
         schoolId: schoolId,
-        type: searchTypes.SCHOOL_TYPE,
+        type: searchTypeEnum.SCHOOL_TYPE,
         values: values
     }));
 });
