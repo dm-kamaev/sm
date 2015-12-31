@@ -20,8 +20,9 @@ schoolView.default = function(schoolInstance) {
             services.department.addressesFilter(schoolInstance.addresses),
         comments = schoolInstance.commentGroup ?
             schoolInstance.commentGroup.comments : [],
-        score = schoolInstance.score || [0, 0, 0, 0];
-        
+        score = schoolInstance.score || [0, 0, 0, 0],
+        scoreCount = schoolInstance.scoreCount || [0, 0, 0, 0];
+
     return {
         id: schoolInstance.id,
         schoolName: schoolInstance.name,
@@ -46,9 +47,9 @@ schoolView.default = function(schoolInstance) {
         comments: getComments(comments),
         coords: services.address.getCoords(addresses),
         ratings: getRatings(schoolInstance.rank, schoolInstance.rankDogm),
-        score: getSections(score),
-        totalScore: schoolInstance.totalScore,
-        reviewCount: schoolInstance.reviewCount
+        score: getScore(score, scoreCount),
+        totalScore: checkScoreCount(schoolInstance.totalScore, scoreCount),
+        reviewCount: checkScoreCount(schoolInstance.reviewCount, scoreCount)
     };
 };
 
@@ -187,6 +188,43 @@ var getRatings = function(rating, rank) {
 
     return ratings;
 };
+
+/**
+ *  make from score and scoreCount array for template
+ *  @param {array} score
+ *  @param {array} scoreCount
+ *  @return {array}
+ */
+var getScore = function(score, scoreCount) {
+    var result = [];
+
+    result = getSections(score);
+
+    return result.map( (item, index) => {
+        if (scoreCount[index] < 5) {
+            item.value = 0;
+        }
+        return item;
+    } );
+};
+
+/**
+ *  checks amount of ratings for each score item and return 0 or param
+ *  @param {number} param
+ *  @param {array} scoreCount
+ *  @return {number}
+ */
+var checkScoreCount = function(param, scoreCount) {
+    var ratingsLack = false;
+
+    scoreCount.forEach( (item) => {
+        if (item < 5) {
+            ratingsLack = true;
+        }
+    } );
+    return ratingsLack ? 0 : param;
+};
+
 
 /**
  * translates director name to right output format
