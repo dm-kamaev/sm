@@ -107,7 +107,7 @@ goog.scope(function() {
                      Suggest = gorod.gSuggest.Suggest;
 
                  str = str || '';
-                 
+
                  /**
                   * Finds entry
                   * @param {string} name
