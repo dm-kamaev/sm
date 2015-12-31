@@ -33,14 +33,11 @@ activityView.list = function(activities) {
                 'items': []
             });
             index += 1;
-            console.log('Index is ' + index);
         }
 
         result[index].items.push(activity.name);
     }
 
-    console.log('Result activities');
-    console.log(JSON.stringify(result));
     return result;
 };
 
