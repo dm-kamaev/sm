@@ -2,6 +2,9 @@
 /**
  * Addresses item
  * @param params {
+ *     header: ?string,
+ *     headerType: ?number
+ *     modifier: ?string
  *     content: ?list<[
  *         name: string,
  *         href: string,
@@ -13,7 +16,14 @@
  */
 {template .base}
     {call .init}
-        {param params: $params /}
+        {param params: [
+            'modifier': $params.modifier ?
+                'b-data-block_links' + $params.modifier :
+                'b-data-block_links',
+            'headerType': $params.headerType,
+            'header': $params.header,
+            'content': $params.content
+        ] /}
     {/call}
 {/template}
 
@@ -31,7 +41,10 @@
     <ul class="b-data-block__content">
     {foreach $linkItem in $params.content}
         <li class="b-data-block__item">
-            <a class="b-data-block__link" href="{$linkItem.href}">{$linkItem.name}</a>
+            <a class="b-data-block__item-content_text-color_red
+                      b-data-block__item-content" href="{$linkItem.href}">
+                {$linkItem.name}
+             </a>
         </li>
     {/foreach}
 {/template}

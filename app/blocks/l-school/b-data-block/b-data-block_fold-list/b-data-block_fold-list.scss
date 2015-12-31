@@ -1,11 +1,18 @@
 .b-data-block_fold-list {
+	.b-data-block__header {
+		margin-bottom: 25px;
+	}
+	.b-data-block__item {
+		margin-bottom: 12px;
+	}
+
 	.b-data-block__item-content {
 		display: inline-block;
 
-		margin-right: 12px;
+		margin-right: 10px;
 
 		&.b-data-block__item-content_opened {
-			margin-bottom: 15px;
+			margin-bottom: 11px;
 
 			color: #000000;
 			font-weight: 600;
@@ -19,10 +26,15 @@
 
 .b-data-block__list {
 	margin-left: 20px;
-	margin-bottom: 27px;
+	margin-bottom: 20px;
+}
+
+.b-data-block__item:last-child {
+	.b-data-block__list {
+		margin-bottom: 0;
+	}
 }
 
 .b-data-block__list-item {
-	margin-bottom: 8px;
+	line-height: 22px;
 }
-

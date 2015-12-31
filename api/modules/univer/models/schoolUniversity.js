@@ -1,5 +1,5 @@
-var DataType = require('sequelize'),
-    db = require.main.require('./app/components/db');
+var DataType = require('sequelize');
+var db = require('../../../../app/components/db');
 
 var SchoolUniversity = db.define('SchoolUniversity', {
     schoolId: {

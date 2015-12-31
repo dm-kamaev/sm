@@ -4,6 +4,7 @@ const ModelArchiver = require('../../console/modules/modelArchiver/ModelArchiver
 const AddressMetro = require('../../api/modules/geo/models/addressMetro');
 const dataFolder = path.join(__dirname, '../../api/modules/geo/migrations');
 const async = require('asyncawait/async');
+const archiveName = ModelArchiver.migrationToArchive(__filename);
 
 module.exports = {
   up: function (queryInterface, Sequelize) {
@@ -39,7 +40,7 @@ module.exports = {
             }
         }
     }).then(async(function() {
-        var archiver = new ModelArchiver(AddressMetro, dataFolder);
+        var archiver = new ModelArchiver(AddressMetro, dataFolder, null, archiveName);
         archiver.load();
     }));
   },

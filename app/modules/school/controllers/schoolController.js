@@ -12,8 +12,6 @@ exports.createComment = async (function(req, res) {
         var schoolId = req.params.id,
             params = req.body;
         result = await(services.school.comment(schoolId,params));
-        if (params.score)
-            services.school.updateRanks();
     } catch (e) {
         console.log(e);
         result = JSON.stringify(e);
@@ -33,6 +31,13 @@ exports.list = async (function(req, res) {
 
     var schools = schoolView.list(results[0]);
     var filters = schoolView.filters(results[1]);
+    var searchText;
+
+    try{
+        searchText = decodeURIComponent(req.query.name);
+    } catch(e) {
+        searchText = req.query.name;
+    }
 
     var params = {
         params: {
@@ -43,7 +48,8 @@ exports.list = async (function(req, res) {
                     url: '/api/school/search'
                 }
             },
-            searchText: req.query.name || '',
+            searchText: req.query.name ?
+                searchText : '',
             templates: {
                 search: '{{ name }}',
                 item: '{{ name }}',

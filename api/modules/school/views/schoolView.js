@@ -3,12 +3,16 @@ var services = require.main.require('./app/components/services').all;
 
 const areaView = require.main.require('./api/modules/geo/views/areaView.js');
 const metroView = require.main.require('./api/modules/geo/views/metroView.js');
+const addressView = require.main.require(
+    './api/modules/geo/views/addressView.js');
+const activityView = require.main.require(
+    './api/modules/school/views/activityView.js');
 
 var schoolView = {};
 
 /**
- * @param {array<object>} schools - school instances
- * @return {array<object>}
+ * @param {array<object>} schoolInstance - school instances
+ * @return {object}
  */
 schoolView.default = function(schoolInstance) {
 
@@ -17,25 +21,28 @@ schoolView.default = function(schoolInstance) {
         comments = schoolInstance.commentGroup ?
             schoolInstance.commentGroup.comments : [],
         score = schoolInstance.score || [0, 0, 0, 0];
-        console.log('Instance');
-        console.log(JSON.stringify(schoolInstance));
+        
     return {
         id: schoolInstance.id,
         schoolName: schoolInstance.name,
         schoolType: schoolInstance.schoolType,
         schoolDescr: '',
         features: [],
-        directorName: schoolInstance.director,
-        schoolQuote : 'Мел',
+        directorName: getDirectorName(schoolInstance.director),
         extendedDayCost: '',
         dressCode: '',
-        classes: getEducationInterval(schoolInstance.educationInterval),
+        classes: getEducationInterval(
+            schoolInstance.educationInterval,
+            'classes'),
+        kindergarten: getEducationInterval(
+            schoolInstance.educationInterval,
+            'kindergarten'),
         social: [],
         metroStations: services.address.getMetro(addresses),
         sites: getSites(schoolInstance.site),
-        activities: [],
+        activities: getActivities(schoolInstance.activites),
         specializedClasses: [],
-        contacts: getContacts(addresses,schoolInstance.phones),
+        contacts: getContacts(addresses, schoolInstance.phones),
         comments: getComments(comments),
         coords: services.address.getCoords(addresses),
         ratings: getRatings(schoolInstance.rank, schoolInstance.rankDogm),
@@ -47,24 +54,38 @@ schoolView.default = function(schoolInstance) {
 
 /**
  *  @param {array<number>} interval
+ *  @param {string} type ['classes'|'kindergarten']
  *  @return {string}
  */
-var getEducationInterval = function(interval) {
+var getEducationInterval = function(interval, type) {
     var res = '';
+    switch (type) {
+        case 'classes':
+            if (interval)
+            {
+                var begin = interval[0],
+                    end = interval[interval.length - 1];
 
-    if (interval) {
-        var begin = interval[0],
-            end = interval[interval.length - 1];
+                if (begin === 0) {
+                    begin = interval[1];
+                }
 
-        res += begin ? begin : 'Детский сад';
+                res += begin;
 
-        if (end > begin) {
-            res += '–';
-            res += end;
-            res += begin ? ' классы' : ' класс';
-        }
+                if (end > begin) {
+                    res += '–';
+                    res += end;
+                    res += ' классы';
+                }
+            }
+            break;
+
+        case 'kindergarten':
+            if (interval[0] === 0) {
+                res = 'При школе есть детский сад';
+            }
+            break;
     }
-
     return res;
 };
 
@@ -87,23 +108,11 @@ var getSites = function(site) {
  */
 var getContacts = function(addresses, phones) {
     return {
-        address: getAddress(addresses),
+        address: addressView.list(addresses, {
+            filterByDepartment: true
+        }),
         phones: phones || ''
     };
-};
-
-/**
- *  @param {array<object>} addresses
- *  @return {array<object>}
- */
-var getAddress = function(addresses) {
-    return addresses.map(address => {
-        return {
-            title: '',
-            description: address.name,
-            metro: services.address.getMetro(address)
-        };
-    });
 };
 
 /**
@@ -120,9 +129,9 @@ var getComments = function(comments) {
     return comments
         .filter(comment => comment.text)
         .map(comment => {
-            var sections = comment.rating ? 
+            var sections = comment.rating ?
                 getSections(comment.rating.score) :
-                getSections([0,0,0,0]);
+                getSections([0, 0, 0, 0]);
             return {
                 author: '',
                 rank: typeConvert[comment.userType],
@@ -141,8 +150,8 @@ var getSections = function(array) {
         var type = [
             'Образование',
             'Преподаватели',
-            'Инфраструктура',
-            'Атмосфера'
+            'Атмосфера',
+            'Инфраструктура'
         ];
         return {
             name: type[index],
@@ -179,6 +188,27 @@ var getRatings = function(rating, rank) {
     return ratings;
 };
 
+/**
+ * translates director name to right output format
+ * @param name string
+ * @return string
+ */
+var getDirectorName = function(name) {
+    var nameWords = [],
+        result = '';
+    name = name.trim();
+    nameWords = name.split(' ');
+    result = nameWords[1] + ' ' + nameWords[2] + ' ' + nameWords[0];
+    return result;
+};
+
+/**
+ *  @param {object} activity
+ *  @return {array}
+ */
+var getActivities = function(activities) {
+    return activityView.list(activities);
+};
 
 schoolView.list = function(schools) {
     return schools

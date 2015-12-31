@@ -5,10 +5,9 @@ var await = require('asyncawait/await');
 var models = require.main.require('./app/components/models').all;
 var services = require.main.require('./app/components/services').all;
 var sequelize  = require.main.require('./app/components/db');
-var sequelizeInclude = require.main.require('./api/components/sequelizeInclude');
-var enums = require.main.require('./api/components/enums').all;
+var searchTypeEnum = require('../enums/searchType');
 var service = {
-    name : 'school'
+    name: 'school'
 };
 
 class SchoolNotFoundError extends Error {
@@ -228,7 +227,10 @@ service.onRatingChange = async(function(schoolId) {
         this.updateScore(school),
         this.updateReviewCount(school),
     ];
-    await(promises);
+    try {
+        await(promises);
+    } catch (e) {
+    }
 });
 
 /**
@@ -245,37 +247,36 @@ service.updateReviewCount = async(function(school) {
 });
 
 /**
- * @return {Peromise}
+ * @return {Promise}
+ * used in cron script
  */
 service.updateRanks = async(function() {
-    //TODO : move to time-driven script in separated thread
-
     /* Disable logging for this method cause its sloving down the server */
-    //console.log(colors.green('Updating ranks'));
+    console.log(colors.green('Updating ranks'));
 
-    //var rankCounter = 0;
-    //var previousScore = -1;
+    var rankCounter = 0;
+    var previousScore = -1;
 
-    //var schools = await(models.School.findAll({
-    //    attributes: [
-    //        'id',
-    //        ['total_score', 'totalScore']
-    //    ],
-    //    order: 'total_score DESC'
-    //}));
+    var schools = await(models.School.findAll({
+        attributes: [
+            'id',
+            ['total_score', 'totalScore']
+        ],
+        order: 'total_score DESC'
+    }));
 
-    //var loggingState = sequelize.options.logging;
-    //sequelize.options.logging = false;
-    //wait(schools.forEach(school => {
-    //    if (school.totalScore != previousScore)
-    //        rankCounter++;
-    //    school.update({
-    //        rank: rankCounter
-    //    });
-    //    previousScore = school.totalScore;
-    //}));
-    //sequelize.options.logging = loggingState;
-    //console.log(colors.green('Ranks updated'));
+    var loggingState = sequelize.options.logging;
+    sequelize.options.logging = false;
+    await(schools.forEach(school => {
+        if (school.totalScore != previousScore)
+            rankCounter++;
+        school.update({
+            rank: rankCounter
+        });
+        previousScore = school.totalScore;
+    }));
+    sequelize.options.logging = loggingState;
+    console.log(colors.green('Ranks updated'));
 });
 
 /**
@@ -349,7 +350,7 @@ service.typeFilters = async (function() {
         };
     });
     return {
-        filter: enums.searchType.SCHOOL_TYPE,
+        filter: searchTypeEnum.SCHOOL_TYPE,
         values: formattedFilters
     };
 });
@@ -419,22 +420,28 @@ service.viewOne = function(id) {
                     as: 'metroStations'
                 }
             ]
-         }, {
+        }, {
              model: models.Rating,
              as: 'ratings'
-         }, {
-             model: models.CommentGroup,
-             as: 'commentGroup',
-             include: [{
-                 model: models.Comment,
-                 as: 'comments',
-                 include: [{
-                     model: models.Rating,
-                     as: 'rating'
-                 }]
-
+        }, {
+            model: models.CommentGroup,
+            as: 'commentGroup',
+            include: [{
+                model: models.Comment,
+                as: 'comments',
+                include: [{
+                    model: models.Rating,
+                    as: 'rating'
+                }]
              }]
-         },
+        }, {
+            model: models.Activity,
+            as: 'activites',
+            attributes: [
+                'type',
+                'name'
+            ]
+        }
             //{
             //    model: models.EgeResult,
             //    as: 'egeResults'
@@ -604,6 +611,8 @@ service.searchByText = function(text) {
     });
 };
 
+
+
 /**
  * @param {object} searchConfig Existing search config to update
  * @param {object} searchParams
@@ -645,13 +654,13 @@ var updateSearchConfig = function(searchConfig, searchParams) {
         };
     }
 
-    if (searchParams.school_type) {
+    if (searchParams.schoolType) {
         searchDataCount++;
         extraIncludes.searchData.where.$or.push({
             $and: {
-                type: enums.searchType.SCHOOL_TYPE,
+                type: searchTypeEnum.SCHOOL_TYPE,
                 values: {
-                    $overlap: searchParams.school_type
+                    $overlap: searchParams.schoolType
                 }
             }
         });
@@ -661,7 +670,7 @@ var updateSearchConfig = function(searchConfig, searchParams) {
         searchDataCount++;
         extraIncludes.searchData.where.$or.push({
             $and: {
-                type: enums.searchType.GIA,
+                type: searchTypeEnum.GIA,
                 values: {
                     $contains: searchParams.gia
                 }
@@ -673,7 +682,7 @@ var updateSearchConfig = function(searchConfig, searchParams) {
         searchDataCount++;
         extraIncludes.searchData.where.$or.push({
             $and: {
-                type: enums.searchType.EGE,
+                type: searchTypeEnum.EGE,
                 values: {
                     $contains: searchParams.ege
                 }
@@ -685,7 +694,7 @@ var updateSearchConfig = function(searchConfig, searchParams) {
         searchDataCount++;
         extraIncludes.searchData.where.$or.push({
             $and: {
-                type: enums.searchType.OLIMPIAD,
+                type: searchTypeEnum.OLIMPIAD,
                 values: {
                     $contains: searchParams.olimp
                 }
