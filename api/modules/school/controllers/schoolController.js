@@ -215,8 +215,6 @@ exports.createComment = async (function(req, res) {
         var schoolId = req.params.id,
             params = req.body;
         result = await(services.school.review(schoolId, params));
-        if (params.score)
-            services.school.updateRanks();
         console.log(result);
     } catch (e) {
         console.log(e);
@@ -239,7 +237,7 @@ exports.createComment = async (function(req, res) {
  *       "searchParams" : {
  *          "name": "123",
  *          "classes": [1,2,3,4],
- *          "schoolType": ["Школа", "Лицей"],
+ *          "schoolType": [1,2],
  *          "gia": [1,2],
  *          "ege": [2,3],
  *          "olimp": [3,5]
