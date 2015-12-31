@@ -4,11 +4,11 @@ var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var models = require.main.require('./app/components/models').all;
 var services = require.main.require('./app/components/services').all;
-var sequelize  = require.main.require('./app/components/db');
+var sequelize = require.main.require('./app/components/db');
 var sequelizeInclude = require.main.require('./api/components/sequelizeInclude');
 var enums = require.main.require('./api/components/enums').all;
 var service = {
-    name : 'school'
+    name: 'school'
 };
 
 class SchoolNotFoundError extends Error {
@@ -221,9 +221,9 @@ service.onRatingChange = async(function(schoolId) {
         }
     }));
 
-    if (!school) 
+    if (!school)
         throw new SchoolNotFoundError(schoolId);
-    
+
     var promises = [
         this.updateScore(school),
         this.updateReviewCount(school),
@@ -290,7 +290,7 @@ service.updateScore = async(function(school) {
     for (var i = 1; i <= 4; i++) {
         var score = 'score[' + i + ']';
         var queryPromise = sequelize.query(
-            'SELECT AVG(' + score + ') AS avg, ' + 
+            'SELECT AVG(' + score + ') AS avg, ' +
             'count(' + score + ') AS count FROM rating ' +
             'WHERE school_id = ' + school.id + ' AND ' +
              score + '<> 0'
@@ -422,22 +422,28 @@ service.viewOne = function(id) {
                     as: 'metroStations'
                 }
             ]
-         }, {
+        }, {
              model: models.Rating,
              as: 'ratings'
-         }, {
-             model: models.CommentGroup,
-             as: 'commentGroup',
-             include: [{
-                 model: models.Comment,
-                 as: 'comments',
-                 include: [{
-                     model: models.Rating,
-                     as: 'rating'
-                 }]
-
+        }, {
+            model: models.CommentGroup,
+            as: 'commentGroup',
+            include: [{
+                model: models.Comment,
+                as: 'comments',
+                include: [{
+                    model: models.Rating,
+                    as: 'rating'
+                }]
              }]
-         },
+        }, {
+            model: models.Activity,
+            as: 'activites',
+            attributes: [
+                'type',
+                'name'
+            ]
+        }
             //{
             //    model: models.EgeResult,
             //    as: 'egeResults'
