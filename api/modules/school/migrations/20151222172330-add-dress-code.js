@@ -5,7 +5,7 @@ module.exports = {
     return db.addColumn(
         'school',
         'dress_code',
-        DataType.STRING
+        DataType.BOOLEAN
     );
   },
 

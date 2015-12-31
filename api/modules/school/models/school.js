@@ -87,7 +87,7 @@ var School = db.define('School', {
     },
     dressCode: {
         field: 'dress_code',
-        type: DataType.STRING
+        type: DataType.BOOLEAN
     },
     links: {
         field: 'links',

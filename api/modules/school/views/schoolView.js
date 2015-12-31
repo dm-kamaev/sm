@@ -18,6 +18,11 @@ schoolView.default = function(schoolInstance) {
         comments = schoolInstance.commentGroup ?
             schoolInstance.commentGroup.comments : [],
         score = schoolInstance.score || [0, 0, 0, 0];
+
+    console.log('ASDWODJPOJWO!K@DPOK@!POKDO@!KDPO@!KDOP@!DK');
+    console.log(getSites(schoolInstance.links));
+    console.log(schoolInstance.links);
+
     return {
         id: schoolInstance.id,
         schoolName: schoolInstance.name,
@@ -25,8 +30,8 @@ schoolView.default = function(schoolInstance) {
         schoolDescr: '',
         features: [],
         directorName: getDirectorName(schoolInstance.director),
-        extendedDayCost: '',
-        dressCode: '',
+        extendedDayCost: schoolInstance.extendedDayCost || '',
+        dressCode: schoolInstance.dressCode || false,
         classes: getEducationInterval(
             schoolInstance.educationInterval,
             'classes'),
@@ -35,7 +40,9 @@ schoolView.default = function(schoolInstance) {
             'kindergarten'),
         social: [],
         metroStations: services.address.getMetro(addresses),
-        sites: getSites(schoolInstance.site),
+        sites: schoolInstance.links ?
+            getSites(schoolInstance.links) :
+            getSites(schoolInstance.site),
         activities: [],
         specializedClasses: [],
         contacts: getContacts(addresses, schoolInstance.phones),
@@ -89,12 +96,24 @@ var getEducationInterval = function(interval, type) {
  *  @param {string} site
  *  @return {array<object>}
  */
-var getSites = function(site) {
-    return [{
-        name: 'Перейти на сайт школы',
-        href: 'http://' + site,
-        link: site
-    }];
+var getSites = function(sites) {
+    if (Array.isArray(sites)) {
+        return sites.map(site => {
+            return {
+                name: site[0],
+                href: site[1].indexOf('http') > -1 ?
+                    site[1] :
+                    'http://' + site[1],
+                link: site[1]
+            };
+        });
+    } else {
+        return [{
+                name: 'Сайт школы',
+                href: 'http://' + sites,
+                link: sites
+        }];
+    }
 };
 
 /**
@@ -180,7 +199,6 @@ var getRatings = function(rating, rank) {
             place: rank
         });
     }
-
     return ratings;
 };
 

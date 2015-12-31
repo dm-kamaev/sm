@@ -182,13 +182,10 @@ exports.setArea = async ((area, address) => {
 
 exports.getCoords = function(addresses) {
     return addresses.map(adr => {
-        if (adr.coords) {
         return {
             lat: adr.coords[0],
             lng: adr.coords[1]
         };
-        } else
-            return {lat:0,lng:0}; // TODO: fix coords
     });
 };
 

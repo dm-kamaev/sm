@@ -2,27 +2,30 @@ var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var commander = require('commander');
 var xlsx = require('node-xlsx');
+var fs = require('fs');
+var mkdirp = require("mkdirp");
 
 var services = require.main.require('./app/components/services').all;
 
+const REPORT_PATH = './console/reports/';
+
 var FULL_NAME_INDEX = 0,
-    NAME_INDEX = 1, //--
+    NAME_INDEX = 1,
     SITE_INDEX = 2,
     SOCIAL_INDEX = 3,
-    SPECIALIZES_INDEX = 5,
+    SPECIALIZED_INDEX = 5,
     DESCRIPTION_INDEX = 6,
     FEATURES_INDEX = 7,
     EXT_DAY_COST_INDEX = 8,
-    DRESS_CODE_INDEX = 9, // -> bool?
+    DRESS_CODE_INDEX = 9,
     SCHOOL_TYPE_INDEX = 10,
     BOARDING_INDEX = 11,
     DIRECTOR_INDEX = 17,
 
     AREA_INDEX = 13,
-    ADDRESS_INDEX = 14;
-    // remove double spaces
+    ADDRESS_INDEX = 14,
+    PHONE_INDEX = 16;
     // add educational_programms (db - stages)
-    // create add phones
 
 /**
  * main parse method
@@ -36,47 +39,54 @@ var parse = async(function(path) {
         parsedSchools = parseSchools(schools);
 
     var matches = findMatches(parsedSchools, parsedData);
-        console.log('count: ' + count);
+
+    var specializedStat = [];
+
     console.log(matches.length);
+
     matches.forEach(match => {
         var data = match[1];
-        services.school.update(match[0], {
+        var schoolData = {
             links: data.site,
             description: data.description,
             features: data.features,
             extendedDayCost: data.extDayCost,
             dressCode: data.dressCode,
-            boarding: data.boarding
-        });
-
-        if (data.name) {
-            services.school.update(match[0], {
-                name: data.name
-            });
-        }
+            boarding: data.boarding,
+            specializedClasses: data.specialized,
+        };
 
         if (data.schoolType) {
-            services.school.update(match[0], {
-                schoolType: data.schoolType
-            });
+            schoolData.schoolType = data.schoolType;
         }
         if (data.director) {
-            services.school.update(match[0], {
-                director: data.director
-            });
+            schoolData.director = data.director;
         }
-        // console.log({
-        //     name: data.name,
-        //     links: data.site,
-        //     description: data.description,
-        //     features: data.features,
-        //     extendedDayCost: data.extDayCost,
-        //     dressCode: data.dressCode,
-        //     boarding: data.boarding,
-        //     schoolType: data.schoolType,
-        //     director: data.director
-        // });
+
+        services.school.update(match[0], schoolData);
+        
+        if (schoolData.specializedClasses) {
+            specializedStat.push(
+                schoolData.specializedClasses.map(set => {
+                    return set[1].map(aClass => {
+                        return [set[0], aClass];
+                    });
+                })
+                .reduce((prev, curr) => {
+                    return prev.concat(curr);
+                }, [])
+            );
+        }
     });
+    mkdirp(REPORT_PATH, function(err) {
+        if (err) {
+            return;
+        }
+    });
+    fs.writeFileSync(
+        REPORT_PATH + 'specializedClasses.json',
+        JSON.stringify(specializedStat)
+    );
 });
 
 var parseData = function(data) {
@@ -109,8 +119,8 @@ var parseData = function(data) {
                 row.site.push(parseSocial(data[i][SOCIAL_INDEX]));
             }
 
-            if (data[i][SPECIALIZES_INDEX]) {
-                // TODO: need data
+            if (data[i][SPECIALIZED_INDEX]) {
+                row.specialized = parseSpecialized(data[i][SPECIALIZED_INDEX]);
             }
 
             row.description = data[i][DESCRIPTION_INDEX] || '';
@@ -121,16 +131,13 @@ var parseData = function(data) {
 
             row.extDayCost = data[i][EXT_DAY_COST_INDEX] || '';
 
-            row.dressCode = data[i][DRESS_CODE_INDEX] || '';
+            row.dressCode = stringToBool(data[i][DRESS_CODE_INDEX]);
 
             row.schoolType = capitalizeFirstChar(
                 data[i][SCHOOL_TYPE_INDEX]
             ) || '';
 
-            if (data[i][BOARDING_INDEX] !== 'нет')
-                row.boarding = true;
-            else
-                row.boarding = false;
+            row.boarding = stringToBool(data[i][BOARDING_INDEX]);
 
             row.director = data[i][DIRECTOR_INDEX] || '';
 
@@ -139,6 +146,8 @@ var parseData = function(data) {
             row.areas = parseAddressOrArea(data[i][AREA_INDEX]);
 
             row.addresses = parseAddressOrArea(data[i][ADDRESS_INDEX]);
+
+            row.phone = data[i][PHONE_INDEX] || '';
 
         } else if (typeof data[i][SITE_INDEX] !== 'undefined') {
 
@@ -179,8 +188,6 @@ var parseSchools = function(schools) {
     return parsedSchools;
 };
 
-var count = 0;
-
 var findMatches = function(schools, data) {
     var matches = [],
         dataLength = data.length,
@@ -206,7 +213,6 @@ var findMatches = function(schools, data) {
 
         if (!flag && data[i].areas) {
             await(createSchool(data[i]));
-            count++;
         }
     }
     return matches;
@@ -218,12 +224,14 @@ var createSchool = async(function(data) {
         name: data.name,
         links: data.site,
         description: data.description,
+        specializedClasses: data.specialized,
         features: data.features,
         extendedDayCost: data.extDayCost,
         dressCode: data.dressCode,
         boarding: data.boarding,
         schoolType: data.schoolType,
         director: data.director,
+        phones: [data.phone],
         educationInterval: [1,2,3,4,5,6,7,8,9,10,11] // TODO: need data
     }));
 
@@ -278,6 +286,20 @@ var parseSocial = function(social) {
     return parsed;
 };
 
+var parseSpecialized = function(specialized) {
+    specialized = specialized.split('\n');
+    var result = [];
+    for (var i = 0, l = specialized.length; i < l; i += 2) {
+        result.push([
+            specialized[i + 1],
+            specialized[i].split(';').map(item => {
+                return capitalizeFirstChar(item.trim());
+            })
+        ]);
+    }
+    return result;
+};
+
 var parseFeatures = function(features) {
     var splitted = features.split(';');
 
@@ -292,6 +314,14 @@ var parseFeatures = function(features) {
     return splitted.map(item => {
         return capitalizeFirstChar(item);
     });
+};
+
+var stringToBool = function(string) {
+    if (string) {
+        return string.trim() !== 'нет';
+    } else {
+        return false;
+    }
 };
 
 var capitalizeFirstChar = function(string) {
