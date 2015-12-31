@@ -3,7 +3,10 @@ var services = require.main.require('./app/components/services').all;
 
 const areaView = require.main.require('./api/modules/geo/views/areaView.js');
 const metroView = require.main.require('./api/modules/geo/views/metroView.js');
-const addressView = require.main.require('./api/modules/geo/views/addressView.js');
+const addressView = require.main.require(
+    './api/modules/geo/views/addressView.js');
+const activityView = require.main.require(
+    './api/modules/school/views/activityView.js');
 
 var schoolView = {};
 
@@ -18,6 +21,7 @@ schoolView.default = function(schoolInstance) {
         comments = schoolInstance.commentGroup ?
             schoolInstance.commentGroup.comments : [],
         score = schoolInstance.score || [0, 0, 0, 0];
+        
     return {
         id: schoolInstance.id,
         schoolName: schoolInstance.name,
@@ -36,7 +40,7 @@ schoolView.default = function(schoolInstance) {
         social: [],
         metroStations: services.address.getMetro(addresses),
         sites: getSites(schoolInstance.site),
-        activities: [],
+        activities: getActivities(schoolInstance.activites),
         specializedClasses: [],
         contacts: getContacts(addresses, schoolInstance.phones),
         comments: getComments(comments),
@@ -127,7 +131,7 @@ var getComments = function(comments) {
         .map(comment => {
             var sections = comment.rating ?
                 getSections(comment.rating.score) :
-                getSections([0,0,0,0]);
+                getSections([0, 0, 0, 0]);
             return {
                 author: '',
                 rank: typeConvert[comment.userType],
@@ -196,7 +200,15 @@ var getDirectorName = function(name) {
     nameWords = name.split(' ');
     result = nameWords[1] + ' ' + nameWords[2] + ' ' + nameWords[0];
     return result;
-}
+};
+
+/**
+ *  @param {object} activity
+ *  @return {array}
+ */
+var getActivities = function(activities) {
+    return activityView.list(activities);
+};
 
 schoolView.list = function(schools) {
     return schools

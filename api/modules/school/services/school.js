@@ -7,7 +7,7 @@ var services = require.main.require('./app/components/services').all;
 var sequelize  = require.main.require('./app/components/db');
 var searchTypeEnum = require('../enums/searchType');
 var service = {
-    name : 'school'
+    name: 'school'
 };
 
 class SchoolNotFoundError extends Error {
@@ -247,7 +247,7 @@ service.updateReviewCount = async(function(school) {
 });
 
 /**
- * @return {Peromise}
+ * @return {Promise}
  * used in cron script
  */
 service.updateRanks = async(function() {
@@ -420,22 +420,28 @@ service.viewOne = function(id) {
                     as: 'metroStations'
                 }
             ]
-         }, {
+        }, {
              model: models.Rating,
              as: 'ratings'
-         }, {
-             model: models.CommentGroup,
-             as: 'commentGroup',
-             include: [{
-                 model: models.Comment,
-                 as: 'comments',
-                 include: [{
-                     model: models.Rating,
-                     as: 'rating'
-                 }]
-
+        }, {
+            model: models.CommentGroup,
+            as: 'commentGroup',
+            include: [{
+                model: models.Comment,
+                as: 'comments',
+                include: [{
+                    model: models.Rating,
+                    as: 'rating'
+                }]
              }]
-         },
+        }, {
+            model: models.Activity,
+            as: 'activites',
+            attributes: [
+                'type',
+                'name'
+            ]
+        }
             //{
             //    model: models.EgeResult,
             //    as: 'egeResults'

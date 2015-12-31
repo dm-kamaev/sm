@@ -16,7 +16,9 @@ assets/dump/
 .jshintrc
 deployment-config.json
 .remote-sync.json
+.tern-project
 .jshintrc
+.tags*
 
 console/reports
 migrate_stderr
