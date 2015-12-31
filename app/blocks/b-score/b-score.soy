@@ -27,7 +27,7 @@
             <div class="b-score__delimiter"></div>
 
             <div class="b-score__comments-amount">
-                {if not $params.reviewCount or $params.reviewCount == 0}
+                {if not $params.reviewCount or $params.reviewCount < 5}
                     Недостаточно
                 {else}
                     {$params.reviewCount}
