@@ -5,8 +5,7 @@ var await = require('asyncawait/await');
 var models = require.main.require('./app/components/models').all;
 var services = require.main.require('./app/components/services').all;
 var sequelize  = require.main.require('./app/components/db');
-var sequelizeInclude = require.main.require('./api/components/sequelizeInclude');
-var enums = require.main.require('./api/components/enums').all;
+var searchTypeEnum = require('../enums/searchType');
 var service = {
     name : 'school'
 };
@@ -249,10 +248,9 @@ service.updateReviewCount = async(function(school) {
 
 /**
  * @return {Peromise}
+ * used in cron script
  */
 service.updateRanks = async(function() {
-    //TODO : move to time-driven script in separated thread
-
     /* Disable logging for this method cause its sloving down the server */
     console.log(colors.green('Updating ranks'));
 
@@ -352,7 +350,7 @@ service.typeFilters = async (function() {
         };
     });
     return {
-        filter: enums.searchType.SCHOOL_TYPE,
+        filter: searchTypeEnum.SCHOOL_TYPE,
         values: formattedFilters
     };
 });
@@ -607,6 +605,8 @@ service.searchByText = function(text) {
     });
 };
 
+
+
 /**
  * @param {object} searchConfig Existing search config to update
  * @param {object} searchParams
@@ -648,13 +648,13 @@ var updateSearchConfig = function(searchConfig, searchParams) {
         };
     }
 
-    if (searchParams.school_type) {
+    if (searchParams.schoolType) {
         searchDataCount++;
         extraIncludes.searchData.where.$or.push({
             $and: {
-                type: enums.searchType.SCHOOL_TYPE,
+                type: searchTypeEnum.SCHOOL_TYPE,
                 values: {
-                    $overlap: searchParams.school_type
+                    $overlap: searchParams.schoolType
                 }
             }
         });
@@ -664,7 +664,7 @@ var updateSearchConfig = function(searchConfig, searchParams) {
         searchDataCount++;
         extraIncludes.searchData.where.$or.push({
             $and: {
-                type: enums.searchType.GIA,
+                type: searchTypeEnum.GIA,
                 values: {
                     $contains: searchParams.gia
                 }
@@ -676,7 +676,7 @@ var updateSearchConfig = function(searchConfig, searchParams) {
         searchDataCount++;
         extraIncludes.searchData.where.$or.push({
             $and: {
-                type: enums.searchType.EGE,
+                type: searchTypeEnum.EGE,
                 values: {
                     $contains: searchParams.ege
                 }
@@ -688,7 +688,7 @@ var updateSearchConfig = function(searchConfig, searchParams) {
         searchDataCount++;
         extraIncludes.searchData.where.$or.push({
             $and: {
-                type: enums.searchType.OLIMPIAD,
+                type: searchTypeEnum.OLIMPIAD,
                 values: {
                     $contains: searchParams.olimp
                 }
