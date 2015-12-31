@@ -84,6 +84,7 @@ var intArrayToSql = function(arr) {
  * @return {string} 
  */
 var generateSqlFilter = function(field, string, type) {
+    type = type || 'AND';
     var subStrings = getSearchSubstrings(string);
     return subStrings
         .map(substring => field + ' ILIKE \'%' +substring + '%\'')
