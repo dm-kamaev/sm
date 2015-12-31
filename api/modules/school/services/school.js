@@ -566,27 +566,35 @@ service.list = async (function(opt_params) {
     var params = opt_params || {},
         searchParams = params.searchParams || null;
 
-    var searchConfig = {
-        include: [],
-        attributes: [
-            'id',
-            'name',
-            'score',
-            'name',
-            'fullName',
-            'abbreviation',
-            'totalScore'
+    var sqlConfig = {
+        select: [
+            'school.id',
+            'school.name',
+            'school.score',
+            'school.full_name',
+            'school.abbreviation',
+            'school.total_score' ],
+        from:  [
+            'school',
         ],
-        order: '"totalScore" DESC'
+        where: [], 
+        group: [
+            'school.id'
+        ],
+        order: [
+            'school.total_score DESC'
+        ],
+        having: []
     };
-
     if (searchParams) {
-        updateSearchConfig(searchConfig, searchParams);
+        services.search.updateSqlOptions(sqlConfig, searchParams);
     }
-    return models.School.findAll(searchConfig).then(schools => {
-        console.log('Found: ', colors.green(schools.length)) ;
-        return schools;
-    });
+    var sqlString = services.search.generateSearchSql(sqlConfig);
+    return sequelize.query(sqlString, {model: models.School})
+        .then(schools => {
+            console.log('Found: ', colors.green(schools.length)) ;
+            return schools;
+        });
 });
 
 /**
