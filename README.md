@@ -29,8 +29,8 @@
 `node commander ranks`  
 Чтобы добавить автоматическое обновление, нужно в терминале виртуалки набрать `crontab -e` и дописать в конец файла  
 `PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin`  
-`* */12 * * * cd /home/gorod/l3_school-market/ && ./console/cron/updateSearch.sh`  
-`* */12 * * * cd /home/gorod/l3_school-market/ && ./console/cron/updateRank.sh`  
+`0 */12 * * * cd /home/gorod/l3_school-market/ && ./console/cron/updateSearch.sh`  
+`0 */12 * * * cd /home/gorod/l3_school-market/ && ./console/cron/updateRank.sh`  
 где **/home/gorod/l3_school-market/** - путь к проекту на виртуалке  
 
 ## Список скриптов необходимых для работы фронтенда ##
@@ -67,6 +67,8 @@ updateSearch - актуализация поисковой таблицы
 `node commander dump`
 ###### Пароль от хоста ######
     gTgCuHrHuEnNnacpxStR
+###### Дампы по http ######
+http://repo.dfarm.lan/db/  
 ###### Как добавить свой ключ на хост и не вводить каждый раз пароль: ######
 1) Убедиться, что у вас есть rsa ключ. Если его нет, то создать: https://help.github.com/articles/generating-ssh-keys/  
 2) Забрать файл с допущенными ключами с хоста: 
