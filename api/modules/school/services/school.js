@@ -578,6 +578,7 @@ service.list = async (function(opt_params) {
             'school',
         ],
         where: [], 
+        join: [],
         group: [
             'school.id'
         ],

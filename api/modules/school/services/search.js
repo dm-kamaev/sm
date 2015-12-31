@@ -106,19 +106,32 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
     var searchDataCount = 0;
 
     if (searchParams.name) {
+        searchDataCount++;
         sqlOptions.where.push({
-            type: 'or',
+            type: 'OR',
             values: [
                 generateSqlFilter('school.name', searchParams.name, 'AND'),
                 generateSqlFilter('school.full_name', searchParams.name, 'AND'),
-                generateSqlFilter('school.abbreviation', searchParams.name, 'AND'),
+                generateSqlFilter('metro.name', searchParams.name, 'AND'),
+                generateSqlFilter('area.name', searchParams.name, 'AND'),
             ]
         });
+        sqlOptions.join.push({
+            type: 'LEFT OUTER',
+            values: [
+                'address on address.school_id = school.id',
+                'area on area.id = address.area_id',
+                'address_metro on address_metro.address_id = address.id',
+                'metro on metro.id = address_metro.metro_id'
+            ]
+        });
+        sqlOptions.from.push('address' ,'area', 'metro', 'address_metro');
     }
 
     if (searchParams.classes && searchParams.classes.length) {
         var classArr = intArrayToSql(searchParams.classes);
         sqlOptions.where.push('school.education_interval @> ' + classArr);
+
     }
 
     if (searchParams.schoolType) {
@@ -191,6 +204,12 @@ var generateWhereSql = function(where, opt_type) {
     }).join(' ' + type + ' ');
 };
 
+var generateJoin = function(join) {
+    return join.values
+        .map(value => ' ' + join.type + ' JOIN ' + value)
+        .join('');
+};
+
 /**
  * @params {object} sqlOptions
  * @return {string}
@@ -212,7 +231,12 @@ exports.generateSearchSql = function(options) {
         havingStr = ' HAVING ' + options.having  
             .map(rec => rec[0] + rec[1] + rec[2])
             .join(' AND ');
-    return selectStr + fromStr + whereStr + groupStr + havingStr + orderStr + ';';
+    var joinStr = '';
+    if (options.join.length)
+        joinStr = options.join
+            .map(onejoin => generateJoin(onejoin))
+            .join(', ');
+    return selectStr + fromStr + joinStr + whereStr + groupStr + havingStr + orderStr + ';';
 };
 
 /**
