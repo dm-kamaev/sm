@@ -383,7 +383,7 @@ service.typeFilters = async (function() {
         };
     });
     return {
-        filter: searchTypeEnum.SCHOOL_TYPE,
+        filter: searchTypeEnum.fields.SCHOOL_TYPE,
         values: formattedFilters
     };
 });
@@ -700,7 +700,7 @@ var updateSearchConfig = function(searchConfig, searchParams) {
         searchDataCount++;
         extraIncludes.searchData.where.$or.push({
             $and: {
-                type: searchTypeEnum.SCHOOL_TYPE,
+                type: searchTypeEnum.fields.SCHOOL_TYPE,
                 values: {
                     $overlap: searchParams.schoolType
                 }
@@ -712,7 +712,7 @@ var updateSearchConfig = function(searchConfig, searchParams) {
         searchDataCount++;
         extraIncludes.searchData.where.$or.push({
             $and: {
-                type: searchTypeEnum.GIA,
+                type: searchTypeEnum.fields.GIA,
                 values: {
                     $contains: searchParams.gia
                 }
@@ -724,7 +724,7 @@ var updateSearchConfig = function(searchConfig, searchParams) {
         searchDataCount++;
         extraIncludes.searchData.where.$or.push({
             $and: {
-                type: searchTypeEnum.EGE,
+                type: searchTypeEnum.fields.EGE,
                 values: {
                     $contains: searchParams.ege
                 }
@@ -736,7 +736,7 @@ var updateSearchConfig = function(searchConfig, searchParams) {
         searchDataCount++;
         extraIncludes.searchData.where.$or.push({
             $and: {
-                type: searchTypeEnum.OLIMPIAD,
+                type: searchTypeEnum.fields.OLIMPIAD,
                 values: {
                     $contains: searchParams.olimp
                 }

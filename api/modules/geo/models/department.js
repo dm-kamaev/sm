@@ -1,12 +1,12 @@
 var DataType = require('sequelize'),
     db = require('../../../../app/components/db'),
-    enums = require('../enums');
+    departmentStage = require('../enums/departmentStage');
 
 var Department = db.define('Department', {
     name: DataType.STRING,
     stage: {
         type: DataType.ENUM,
-        values: enums.departmentStage.toArray(),
+        values: departmentStage.toArray(),
         allowNull: false
     },
     addressId: {
