@@ -104,9 +104,12 @@ var generateSqlFilter = function(field, string, type) {
  */
 exports.updateSqlOptions = function(sqlOptions, searchParams) {
     var searchDataCount = 0;
+    var searchDataWhere = {
+        type: 'OR',
+        values: []
+    };
 
     if (searchParams.name) {
-        searchDataCount++;
         sqlOptions.where.push({
             type: 'OR',
             values: [
@@ -125,18 +128,16 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
                 'metro on metro.id = address_metro.metro_id'
             ]
         });
-        sqlOptions.from.push('address' ,'area', 'metro', 'address_metro');
     }
 
     if (searchParams.classes && searchParams.classes.length) {
         var classArr = intArrayToSql(searchParams.classes);
         sqlOptions.where.push('school.education_interval @> ' + classArr);
-
     }
 
     if (searchParams.schoolType) {
         searchDataCount++;
-        sqlOptions.where.push({
+        searchDataWhere.values.push({
             type: 'AND',
             values: [
                 'search_data.type = \'' + searchTypeEnum.SCHOOL_TYPE + '\'',
@@ -147,7 +148,7 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
 
     if (searchParams.gia) {
         searchDataCount++;
-        sqlOptions.where.push({
+        searchDataWhere.values.push({
             type: 'AND',
             values: [
                 'search_data.type = \'' + searchTypeEnum.GIA + '\'',
@@ -158,7 +159,7 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
 
     if (searchParams.ege) {
         searchDataCount++;
-        sqlOptions.where.push({
+        searchDataWhere.values.push({
             type: 'AND',
             values: [
                 'search_data.type = \'' + searchTypeEnum.EGE + '\'',
@@ -169,7 +170,7 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
 
     if (searchParams.olimp) {
         searchDataCount++;
-        sqlOptions.where.push({
+        searchDataWhere.values.push({
             type: 'AND',
             values: [
                 'search_data.type = \'' + searchTypeEnum.OLIMPIAD+ '\'',
@@ -179,9 +180,11 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
     }
 
     if (searchDataCount) {
-        sqlOptions.from.push('search_data');
+        //search_data must be first in the from clause
+        sqlOptions.from.unshift('search_data'); 
+        sqlOptions.where.push(searchDataWhere);
         sqlOptions.where.push('school.id = search_data.school_id');
-        sqlOptions.having.push(['COUNT(\'\') ', ' = ', searchDataCount]);
+        sqlOptions.having.push(['COUNT(DISTINCT search_data.id) ', ' = ', searchDataCount]);
     }
 };
 
