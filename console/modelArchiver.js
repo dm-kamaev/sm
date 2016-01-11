@@ -25,6 +25,7 @@ var modelModules = {
 
     Activity: modules.SCHOOL,
     School: modules.SCHOOL,
+    SchoolUrl: modules.SCHOOL,
     SchoolTypeFilter: modules.SCHOOL,
 
     CityResult: modules.STUDY,
