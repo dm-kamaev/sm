@@ -11,10 +11,11 @@ const activityView = require.main.require(
 var schoolView = {};
 
 /**
- * @param {array<object>} schoolInstance - school instances
+ * @param {object} schoolInstance - school instance
+ * @param {?array<object>} opt_popularSchools - school instances
  * @return {object}
  */
-schoolView.default = function(schoolInstance) {
+schoolView.default = function(schoolInstance, opt_popularSchools) {
 
     var addresses =
             services.department.addressesFilter(schoolInstance.addresses),
@@ -23,7 +24,7 @@ schoolView.default = function(schoolInstance) {
         score = schoolInstance.score || [0, 0, 0, 0],
         scoreCount = schoolInstance.scoreCount || [0, 0, 0, 0];
 
-    return {
+    var result = {
         id: schoolInstance.id,
         schoolName: schoolInstance.name,
         schoolType: schoolInstance.schoolType,
@@ -51,6 +52,24 @@ schoolView.default = function(schoolInstance) {
         totalScore: checkScoreCount(schoolInstance.totalScore, scoreCount),
         reviewCount: checkScoreCount(schoolInstance.reviewCount, scoreCount)
     };
+    if (opt_popularSchools)
+        result.popularSchools = this.popular(opt_popularSchools);
+    return result;
+};
+
+/**
+ * @param {array<object>} - school instances
+ * @return {array<object>}
+ */
+schoolView.popular = function(popularSchools) {
+    return popularSchools.map(school => {
+        return {
+            id: school.id,
+            name: school.name,
+            description: school.description || '',
+            metroStations: services.address.getMetro(school.addresses)
+        };
+    });
 };
 
 /**

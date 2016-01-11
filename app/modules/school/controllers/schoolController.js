@@ -67,28 +67,30 @@ exports.list = async (function(req, res) {
 
 exports.view = async (function(req, res) {
     var school = await (services.school.viewOne(req.params.id));
+    services.school.incrementViews(school.id);
 
     if (!school) {
         res.header('Content-Type', 'text/html; charset=utf-8');
         res.status(404);
         res.end('404');
-        return; // I dont want to be in this method anymore
+        return; 
     }
 
-    console.log(JSON.stringify(schoolView.default(school)));
+    var popularSchools = await (services.school.getPopularSchools());
+
 
     res.header('Content-Type', 'text/html; charset=utf-8');
     res.end(
         soy.render('sm.lSchool.Template.base', {
         params: {
-            data: schoolView.default(school)
+            data: schoolView.default(school, popularSchools)
         }
     }));
 });
 
 exports.search = async(function(req, res) {
     var exampleList = ['Поварская, 14', 'Школа 123', 'Савеловская', 'Лицей'];
-
+    var popularSchools = await (services.school.getPopularSchools());
     var imagesList = ['images/l-search/advertising_1.png', 'images/l-search/article.png'];
 
     var html = soy.render('sm.lSearch.Template.base', {
@@ -101,7 +103,8 @@ exports.search = async(function(req, res) {
                   text: '{{ name }}',
                   value: '{{ id }}'
               },
-              images: imagesList
+              images: imagesList,
+              popularSchools: schoolView.popular(popularSchools)
           }
 
     });
