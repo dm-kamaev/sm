@@ -104,14 +104,28 @@ var generateSqlFilter = function(field, string, type) {
  */
 exports.updateSqlOptions = function(sqlOptions, searchParams) {
     var searchDataCount = 0;
+    var searchDataWhere = {
+        type: 'OR',
+        values: []
+    };
 
     if (searchParams.name) {
         sqlOptions.where.push({
-            type: 'or',
+            type: 'OR',
             values: [
                 generateSqlFilter('school.name', searchParams.name, 'AND'),
                 generateSqlFilter('school.full_name', searchParams.name, 'AND'),
-                generateSqlFilter('school.abbreviation', searchParams.name, 'AND'),
+                generateSqlFilter('metro.name', searchParams.name, 'AND'),
+                generateSqlFilter('area.name', searchParams.name, 'AND'),
+            ]
+        });
+        sqlOptions.join.push({
+            type: 'LEFT OUTER',
+            values: [
+                'address on address.school_id = school.id',
+                'area on area.id = address.area_id',
+                'address_metro on address_metro.address_id = address.id',
+                'metro on metro.id = address_metro.metro_id'
             ]
         });
     }
@@ -123,7 +137,7 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
 
     if (searchParams.schoolType) {
         searchDataCount++;
-        sqlOptions.where.push({
+        searchDataWhere.values.push({
             type: 'AND',
             values: [
                 'search_data.type = \'' + searchTypeEnum.SCHOOL_TYPE + '\'',
@@ -134,7 +148,7 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
 
     if (searchParams.gia) {
         searchDataCount++;
-        sqlOptions.where.push({
+        searchDataWhere.values.push({
             type: 'AND',
             values: [
                 'search_data.type = \'' + searchTypeEnum.GIA + '\'',
@@ -145,7 +159,7 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
 
     if (searchParams.ege) {
         searchDataCount++;
-        sqlOptions.where.push({
+        searchDataWhere.values.push({
             type: 'AND',
             values: [
                 'search_data.type = \'' + searchTypeEnum.EGE + '\'',
@@ -156,7 +170,7 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
 
     if (searchParams.olimp) {
         searchDataCount++;
-        sqlOptions.where.push({
+        searchDataWhere.values.push({
             type: 'AND',
             values: [
                 'search_data.type = \'' + searchTypeEnum.OLIMPIAD+ '\'',
@@ -166,9 +180,11 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
     }
 
     if (searchDataCount) {
-        sqlOptions.from.push('search_data');
+        //search_data must be first in the from clause
+        sqlOptions.from.unshift('search_data'); 
+        sqlOptions.where.push(searchDataWhere);
         sqlOptions.where.push('school.id = search_data.school_id');
-        sqlOptions.having.push(['COUNT(\'\') ', ' = ', searchDataCount]);
+        sqlOptions.having.push(['COUNT(DISTINCT search_data.id) ', ' = ', searchDataCount]);
     }
 };
 
@@ -189,6 +205,12 @@ var generateWhereSql = function(where, opt_type) {
         }
 
     }).join(' ' + type + ' ');
+};
+
+var generateJoin = function(join) {
+    return join.values
+        .map(value => ' ' + join.type + ' JOIN ' + value)
+        .join('');
 };
 
 /**
@@ -212,7 +234,12 @@ exports.generateSearchSql = function(options) {
         havingStr = ' HAVING ' + options.having  
             .map(rec => rec[0] + rec[1] + rec[2])
             .join(' AND ');
-    return selectStr + fromStr + whereStr + groupStr + havingStr + orderStr + ';';
+    var joinStr = '';
+    if (options.join.length)
+        joinStr = options.join
+            .map(onejoin => generateJoin(onejoin))
+            .join(', ');
+    return selectStr + fromStr + joinStr + whereStr + groupStr + havingStr + orderStr + ';';
 };
 
 /**
