@@ -16,7 +16,7 @@ class GiaActualizer extends SearchDataActualizer {
         await(super(school, citySubjects)); //call parent constructor
         this.citySubjects_ = citySubjects;
         this.resultSubjects_ = [];
-        this.searchType_ = searchType.GIA;
+        this.searchType_ = searchType.fields.GIA;
     }
 
 
@@ -34,7 +34,7 @@ class GiaActualizer extends SearchDataActualizer {
                 var cityResult = citySubject.cityResult.find(
                     res => (
                         res.cityId == this.school_.city_id &&
-                        res.type == searchType.GIA
+                        res.type == this.searchType_
                     ));
                 if (cityResult && giaResult.result >= cityResult.result)
                     this.resultSubjects_.push(giaResult.subject_id);

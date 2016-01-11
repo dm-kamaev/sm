@@ -6,7 +6,7 @@ var services = require.main.require('./app/components/services').all;
 var sequelize  = require.main.require('./app/components/db');
 var sequelizeInclude = require.main.require('./api/components/sequelizeInclude');
 var transaction = require.main.require('./api/components/transaction.js');
-var enums = require.main.require('./api/components/enums').all;
+var Enum = require.main.require('./api/components/enum').all;
 var service = {
     name : 'rating'
 };

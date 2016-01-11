@@ -1,9 +1,5 @@
-var enums = require('../../../components/enums');
-module.exports = {
-    enumName: 'olimpStatusType',
-    __proto__: enums.enumPrototype,
-
+var Enum = require('../../../components/enum');
+module.exports = new Enum('olimpStatusType', {
     WINNER: 'победитель',
     AWARDED: 'призер',
-};
-
+});

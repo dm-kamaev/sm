@@ -140,7 +140,7 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
         searchDataWhere.values.push({
             type: 'AND',
             values: [
-                'search_data.type = \'' + searchTypeEnum.SCHOOL_TYPE + '\'',
+                'search_data.type = \'' + searchTypeEnum.fields.SCHOOL_TYPE + '\'',
                 'search_data.values && ' + intArrayToSql(searchParams.schoolType)
             ]
         });
@@ -151,7 +151,7 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
         searchDataWhere.values.push({
             type: 'AND',
             values: [
-                'search_data.type = \'' + searchTypeEnum.GIA + '\'',
+                'search_data.type = \'' + searchTypeEnum.fields.GIA + '\'',
                 'search_data.values @> ' + intArrayToSql(searchParams.gia)
             ]
         });
@@ -162,7 +162,7 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
         searchDataWhere.values.push({
             type: 'AND',
             values: [
-                'search_data.type = \'' + searchTypeEnum.EGE + '\'',
+                'search_data.type = \'' + searchTypeEnum.fields.EGE + '\'',
                 'search_data.values @> ' + intArrayToSql(searchParams.ege)
             ]
         });
@@ -173,7 +173,7 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
         searchDataWhere.values.push({
             type: 'AND',
             values: [
-                'search_data.type = \'' + searchTypeEnum.OLIMPIAD+ '\'',
+                'search_data.type = \'' + searchTypeEnum.fields.OLIMPIAD+ '\'',
                 'search_data.values @> ' + intArrayToSql(searchParams.olimp)
             ]
         });
@@ -288,14 +288,14 @@ exports.setSchoolType = async(function(schoolId, value) {
     await(models.SearchData.destroy({
         where: {
             schoolId: schoolId,
-            type: searchTypeEnum.SCHOOL_TYPE
+            type: searchTypeEnum.fields.SCHOOL_TYPE
         }
     }));
     var values = [];
     values.push(value);
     await (models.SearchData.create({
         schoolId: schoolId,
-        type: searchTypeEnum.SCHOOL_TYPE,
+        type: searchTypeEnum.fields.SCHOOL_TYPE,
         values: values
     }));
 });

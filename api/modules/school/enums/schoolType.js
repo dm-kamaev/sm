@@ -1,8 +1,5 @@
-var enums = require('../../../components/enums');
-module.exports = {
-    enumName: 'schoolType',
-    __proto__: enums.enumPrototype,
-
+var Enum = require('../../../components/enum');
+module.exports = new Enum('schoolType', {
     SCHOOL: 'Школа',
     LYCEUM: 'Лицей',
     GYMNASIUM: 'Гимназия',
@@ -11,6 +8,4 @@ module.exports = {
     CADET_SCHOOL_INTERNAT: 'Кадетская школа-интернат',
     CORRECTIONAL_SCHOOL: 'Коррекционная школа',    
     CORRECTIONAL_SCHOOL_INTERNAT: 'Коррекционная школа-интернат'    
-
-};
-
+});

@@ -3,7 +3,7 @@ var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var models = require.main.require('./app/components/models').all;
 var services = require.main.require('./app/components/services').all;
-var enums = require('../enums');
+var departmentStage = require('../enums/departmentStage');
 exports.name = 'department';
 
 
@@ -22,7 +22,7 @@ exports.addDepartment = function(school_id, address_id, data) {
     var addresses = await(services.school.getAddresses(school_id));
     var address = addresses.find(address => {
         var result = false;
-        if (address.id = address_id) {
+        if (address.id == address_id) {
             result = true;
         }
         return result;
@@ -133,11 +133,11 @@ exports.addressesFilter = function(addressList) {
             if (address.departments.length > 0) {
                 address.departments.forEach(department => {
                     if (department.stage !==
-                        enums.departmentStage.PRESCHOOL &&
+                        departmentStage.fields.PRESCHOOL &&
                         department.stage !==
-                        enums.departmentStage.SUPPLEMENTARY &&
+                        departmentStage.fields.SUPPLEMENTARY &&
                         department.stage !==
-                        enums.departmentStage.HIGHER_EDUCATION) {
+                        departmentStage.fields.HIGHER_EDUCATION) {
                         res = true;
                     }
                 });
