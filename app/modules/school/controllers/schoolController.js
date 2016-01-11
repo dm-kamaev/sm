@@ -66,26 +66,32 @@ exports.list = async (function(req, res) {
 });
 
 exports.view = async (function(req, res) {
-    var school = await (services.school.viewOne(req.params.id));
-    services.school.incrementViews(school.id);
-
-    if (!school) {
-        res.header('Content-Type', 'text/html; charset=utf-8');
-        res.status(404);
-        res.end('404');
-        return; 
-    }
-
-    var popularSchools = await (services.school.getPopularSchools());
-
-
-    res.header('Content-Type', 'text/html; charset=utf-8');
-    res.end(
-        soy.render('sm.lSchool.Template.base', {
-        params: {
-            data: schoolView.default(school, popularSchools)
+    try {
+        var url = encodeURIComponent(req.params.name);
+        var schoolInstance = await(services.urls.getSchoolByUrl(url));
+        if (!schoolInstance) {
+            res.header('Content-Type', 'text/html; charset=utf-8');
+            res.status(404);
+            res.end('404');
+        } else if (url != schoolInstance.url) {
+            res.redirect(schoolInstance.url);
+        } else {
+            var school = await (services.school.viewOne(schoolInstance.id));
+            services.school.incrementViews(school.id);
+            var popularSchools = await (services.school.getPopularSchools());
+            res.header('Content-Type', 'text/html; charset=utf-8');
+            res.end(
+                soy.render('sm.lSchool.Template.base', {
+                params: {
+                    data: schoolView.default(school, popularSchools)
+                }
+            }));
         }
-    }));
+    } catch (e) {
+        console.log(e);
+        res.status(500);
+        res.end('500 Internal Server Error');
+    }
 });
 
 exports.search = async(function(req, res) {

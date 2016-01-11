@@ -1,5 +1,6 @@
 var DataType = require('sequelize'),
     db = require('../../../../app/components/db');
+var urlService = require('../services/urls');
 const schoolType = require('../enums/schoolType');
 
 var School = db.define('School', {
@@ -64,11 +65,6 @@ var School = db.define('School', {
         type: DataType.INTEGER,
         field: 'review_count'
     },
-    views: {
-        type: DataType.INTEGER,
-        notNull: false,
-        defaultValue: 0
-    },
 
     /**
      * Meta
@@ -77,9 +73,22 @@ var School = db.define('School', {
         type: DataType.INTEGER,
         field: 'comment_group_id'
     },
+    views: {
+        type: DataType.INTEGER,
+        notNull: false,
+        defaultValue: 0
+    },
+    url: {
+        type: DataType.STRING,
+        unique: true
+    }
 }, {
     underscored: true,
     tableName: 'school',
+    hooks: {
+        afterCreate: urlService.generateUrl,
+        afterUpdate: urlService.generateUrl,
+    },
 
     classMethods: {
         associate: function(models) {
@@ -97,6 +106,10 @@ var School = db.define('School', {
             });
             School.hasMany(models.SearchData, {
                 as: 'searchData', foreignKey: 'school_id',
+                onDelete: 'cascade'
+            });
+            School.hasMany(models.SchoolUrl, {
+                as: 'urls', foreignKey: 'school_id',
                 onDelete: 'cascade'
             });
             School.hasMany(models.Address, {
