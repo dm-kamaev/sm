@@ -64,6 +64,11 @@ var School = db.define('School', {
         type: DataType.INTEGER,
         field: 'review_count'
     },
+    views: {
+        type: DataType.INTEGER,
+        notNull: false,
+        defaultValue: 0
+    },
 
     /**
      * Meta

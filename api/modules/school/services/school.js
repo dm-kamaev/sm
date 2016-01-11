@@ -137,6 +137,39 @@ service.getAddress = async(function(school_id, address_id) {
     }
 });
 
+/**
+ * @param {number} schoolId
+ */
+service.incrementViews = async(function(schoolId) {
+    var sqlString = 'UPDATE school SET views = views + 1 where id = ' + schoolId;
+    await(sequelize.query(sqlString));
+});
+
+/**
+ * @return {array<object>} school instances
+ */
+service.getPopularSchools = async(function() {
+    return await(models.School.findAll({
+        where: {
+             $not: {
+                 views: 0
+             }
+        },
+        order: 'views DESC',
+        limit: 6, //TODO: move '6' somewhere maybe?
+        include: [{
+            model: models.Address,
+            as: 'addresses',
+            include: [
+                {
+                    model: models.Metro,
+                    as: 'metroStations'
+                }
+            ]
+        }]
+    }));
+});
+
 
 /**
  * Get school addresses
