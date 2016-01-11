@@ -5,7 +5,7 @@ module.exports = {
     return db.addColumn(
         'school',
         'specialized_classes',
-        DataType.ARRAY(DataType.STRING)
+        DataType.ARRAY(DataType.ARRAY(DataType.STRING))
     );
   },
 

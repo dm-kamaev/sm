@@ -19,16 +19,12 @@ schoolView.default = function(schoolInstance) {
             schoolInstance.commentGroup.comments : [],
         score = schoolInstance.score || [0, 0, 0, 0];
 
-    console.log('ASDWODJPOJWO!K@DPOK@!POKDO@!KDPO@!KDOP@!DK');
-    console.log(getSites(schoolInstance.links));
-    console.log(schoolInstance.links);
-
     return {
         id: schoolInstance.id,
         schoolName: schoolInstance.name,
         schoolType: schoolInstance.schoolType,
-        schoolDescr: '',
-        features: [],
+        schoolDescr: schoolInstance.description,
+        features: schoolInstance.features,
         directorName: getDirectorName(schoolInstance.director),
         extendedDayCost: schoolInstance.extendedDayCost || '',
         dressCode: schoolInstance.dressCode || false,
@@ -44,7 +40,7 @@ schoolView.default = function(schoolInstance) {
             getSites(schoolInstance.links) :
             getSites(schoolInstance.site),
         activities: [],
-        specializedClasses: [],
+        specializedClasses: schoolInstance.specializedClasses,
         contacts: getContacts(addresses, schoolInstance.phones),
         comments: getComments(comments),
         coords: services.address.getCoords(addresses),

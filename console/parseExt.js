@@ -64,17 +64,10 @@ var parse = async(function(path) {
         }
 
         services.school.update(match[0], schoolData);
-        
+
         if (schoolData.specializedClasses) {
             specializedStat.push(
-                schoolData.specializedClasses.map(set => {
-                    return set[1].map(aClass => {
-                        return [set[0], aClass];
-                    });
-                })
-                .reduce((prev, curr) => {
-                    return prev.concat(curr);
-                }, [])
+                schoolData.specializedClasses
             );
         }
     });
@@ -297,7 +290,18 @@ var parseSpecialized = function(specialized) {
             })
         ]);
     }
-    return result;
+    return formatSpecialized(result);
+};
+
+var formatSpecialized = function(specialized) {
+    return specialized.map(set => {
+        return set[1].map(aClass => {
+            return [set[0], aClass];
+        });
+    })
+    .reduce((prev, curr) => {
+        return prev.concat(curr);
+    }, []);
 };
 
 var parseFeatures = function(features) {
