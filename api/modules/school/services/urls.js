@@ -2,20 +2,38 @@ var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var models = require('../../../../app/components/models').all;
 var translit = require('translitit-cyrillic-russian-to-latin');
-exports.name = 'urls';
+
+var service = {
+    name: 'urls'
+}
+
+/**
+ * @param {string} string
+ * @return {string}
+ */
+service.stringToURL = function(string) {
+    string = string.toLowerCase()
+        .replace(/и/g,'i')
+        .replace(/\ /g, '-')
+        .replace(/\./g, '-')
+        .replace(/(--)/g, '-')
+        .replace(/(\№|«|»|%|(|))/g, '');
+    var latin = translit(string);
+    return encodeURIComponent(latin);
+};
 
 /**
  * @param {object} school - school instance
  */
-exports.generateUrl = async(function(school) {
-    var url = encodeURIComponent(translit(school.name));
+service.generateUrl = async(function(school) {
+    var url = service.stringToURL(school.name);
     try {
         await(school.update(
             {url: url},
             {hooks: false})
         );
     } catch (e) {
-        /*if url in use generate different*/
+        /*if url in use then generate different url*/
         url = url + '_';
         await(school.update(
             {url: url},
@@ -29,7 +47,10 @@ exports.generateUrl = async(function(school) {
     }
 });
 
-exports.createIdUrls = async(function() {
+/**
+ * Used once to generate urls by school id
+ */
+service.createIdUrls = async(function() {
     var schools = await(models.School.findAll());
     await(schools.forEach(school => {
         models.SchoolUrl.create({
@@ -39,7 +60,10 @@ exports.createIdUrls = async(function() {
     }));
 });
 
-exports.updateAll = async(function() {
+/**
+ * Used in console script to initialise urls 
+ */
+service.updateAll = async(function() {
     var schools = await(models.School.findAll());
     await(schools.forEach(school => this.generateUrl(school)));
 });
@@ -49,15 +73,15 @@ exports.updateAll = async(function() {
  * @param {string} url
  * @return {id || null} school
  */
-exports.getSchoolByUrl = async(function(url){
+service.getSchoolByUrl = async(function(url){
     var school = await(models.School.findOne({
         where: {
             url: url
         },
         attributes: ['id', 'url']
-    }))    
+    }));
     if (!school) {
-        record = await(models.SchoolUrl.findOne({
+        var record = await(models.SchoolUrl.findOne({
             where: {
                 url: url
             }
@@ -68,3 +92,6 @@ exports.getSchoolByUrl = async(function(url){
     }
     return school;
 });
+
+module.exports = service;
+

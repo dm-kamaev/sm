@@ -67,7 +67,7 @@ exports.list = async (function(req, res) {
 
 exports.view = async (function(req, res) {
     try {
-        var url = encodeURIComponent(req.params.name);
+        var url = services.urls.stringToURL(req.params.name);
         var schoolInstance = await(services.urls.getSchoolByUrl(url));
         if (!schoolInstance) {
             res.header('Content-Type', 'text/html; charset=utf-8');
