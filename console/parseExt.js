@@ -4,6 +4,8 @@ var commander = require('commander');
 var xlsx = require('node-xlsx');
 var fs = require('fs');
 var mkdirp = require("mkdirp");
+var stageEnum = require('../api/modules/geo/enums');
+var models = require.main.require('./app/components/models').all;
 
 var services = require.main.require('./app/components/services').all;
 
@@ -24,8 +26,8 @@ var FULL_NAME_INDEX = 0,
 
     AREA_INDEX = 13,
     ADDRESS_INDEX = 14,
+    DEPARTMENT_INDEX = 15;
     PHONE_INDEX = 16;
-    // add educational_programms (db - stages)
 
 /**
  * main parse method
@@ -63,7 +65,11 @@ var parse = async(function(path) {
             schoolData.director = data.director;
         }
 
-        services.school.update(match[0], schoolData);
+        await(services.school.update(match[0], schoolData));
+
+        if (data.departments && data.departments.length === data.addresses.length) {
+            await(updateDepartments(match[0], data.addresses, data.departments));
+        }
 
         if (schoolData.specializedClasses) {
             specializedStat.push(
@@ -81,6 +87,117 @@ var parse = async(function(path) {
         JSON.stringify(specializedStat)
     );
 });
+
+var updateDepartments = function(school_id, addresses, departments) {
+
+    var parsedDepartments = splitStages(departments);
+
+    parsedDepartments.forEach((department, i) => {
+        var addressId = await(services.address.getAddress(
+            {
+                name: addresses[i]
+            }
+        )).id,
+            name = department[1] || '';
+        department[0].forEach(stage => {
+            departmentInstances = await(services.department.getAllByData({
+                name: name,
+                stage: stage
+            }));
+            var isFound = false;
+            departmentInstances.forEach(dep => {
+                if (dep.addressId === addressId) {
+                    isFound = true;
+                }
+            });
+            if (!isFound) {
+                await(services.department.addDepartment(
+                    school_id,
+                    addressId,
+                    {
+                        name: name,
+                        stage: stage
+                    }
+                ));
+            }
+        });
+    });
+};
+
+var createDepartments = function(school_id, addresses, departments) {
+
+    var parsedDepartments = splitStages(departments);
+
+    parsedDepartments.forEach((department, i) => {
+        var addressId = await(services.address.getAddress(
+            {
+                name: addresses[i]
+            }
+        )).id,
+            name = department[1] || '';
+        department[0].forEach(stage => {
+            await(services.department.addDepartment(
+                school_id,
+                addressId,
+                {
+                    name: name,
+                    stage: stage
+                }
+            ));
+        });
+    });
+};
+
+var addDepartment = function(school_id, address_id, data) {
+    var addresses = await(services.school.getAddresses(school_id));
+    var address = addresses.find(address => {
+        var result = false;
+        if (address.id = address_id) {
+            result = true;
+        }
+        return result;
+    });
+    await(models.Department.findOrCreate({
+            where: {
+                name: data.name,
+                stage: data.stage,
+                addressId: address_id
+            }
+        })
+        .spread((department, created) => {
+            if (created) {
+                address.addDepartment(department)
+            }
+        })
+    );
+};
+
+var splitStages = function(departments) {
+    var parsedDepartments = departments.map(department => {
+        var stages = [];
+        var stage = department[0];
+        if (stage.toLowerCase().indexOf('дошкольное') > -1) {
+            stages.push(stageEnum.departmentStage.PRESCHOOL);
+        }
+        if (stage.toLowerCase().indexOf('начальное') > -1) {
+            stages.push(stageEnum.departmentStage.ELEMENTARY);
+        }
+        if (stage.toLowerCase().indexOf('среднее') > -1) {
+            stages.push(stageEnum.departmentStage.MIDDLE_HIDE);
+        }
+        if (stage.toLowerCase().indexOf('дополнительное') > -1) {
+            stages.push(stageEnum.departmentStage.SUPPLEMENTARY);
+        }
+        if (stage.toLowerCase().indexOf('профессиональное') > -1) {
+            stages.push(stageEnum.departmentStage.HIGHER_EDUCATION);
+        }
+
+        department[0] = stages;
+        return department;
+    });
+
+    return parsedDepartments;
+};
 
 var parseData = function(data) {
     var parsed = [],
@@ -131,6 +248,10 @@ var parseData = function(data) {
             ) || '';
 
             row.boarding = stringToBool(data[i][BOARDING_INDEX]);
+
+            if(data[i][DEPARTMENT_INDEX]) {
+                row.departments = parseDepartments(data[i][DEPARTMENT_INDEX]);
+            }
 
             row.director = data[i][DIRECTOR_INDEX] || '';
 
@@ -187,9 +308,11 @@ var findMatches = function(schools, data) {
         schoolsLength = schools.length;
     for (var i = 0; i < dataLength; i++) {
         var flag = false;
-        data[i].site.forEach(row => {
+        schoolLoop:
+        for (var siteI = 0, siteL = data[i].site.length; siteI < siteL; siteI++)
+        {
+            var row = data[i].site[siteI];
             domain = extractDomain(row[1]);
-            schoolLoop:
             for (var j = 0; j < schoolsLength; j++) {
                 for (var k = 0, domainLength = schools[j].domains.length;
                     k < domainLength; k++) {
@@ -202,7 +325,7 @@ var findMatches = function(schools, data) {
                     }
                 }
             }
-        });
+        }
 
         if (!flag && data[i].areas) {
             await(createSchool(data[i]));
@@ -244,6 +367,10 @@ var createSchool = async(function(data) {
         }));
         await(services.address.setArea(area[0].name, data.addresses[i]));
     };
+
+    if (data.departments && data.departments.length === data.addresses.length) {
+        await(createDepartments(school.id, data.addresses, data.departments));
+    }
 });
 
 var parseSite = function(site) {
@@ -347,6 +474,19 @@ var parseAddressOrArea = function(addresses) {
                 .trim();
         });
    }
+};
+
+var parseDepartments = function(departments) {
+    return departments
+        .replace(/\r/g, '')
+        .split('\n')
+        .map(department => {
+            return department
+                .split(':')
+                .map(data => {
+                    return capitalizeFirstChar(data.trim());
+                });
+        });
 };
 
 var extractDomain = function(url) {
