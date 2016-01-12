@@ -39,11 +39,14 @@ class SchoolNotFoundError extends Error {
  * @return {Object} School model instance
  */
 service.create = function(data) {
-    var includeParams = {
-        addresses: {
-            departments: true
-        }
-    };
+    var includeParams = [{
+        model: models.Address,
+        as: 'addresses',
+        include: [{
+            model: models.Department,
+            as: 'departments'
+        }]
+    }];
 
     if (data.addresses) {
         data.addresses = data.addresses.filter(address => {
@@ -73,7 +76,7 @@ service.create = function(data) {
     return await(models.School.create(
         data,
         {
-            include: sequelizeInclude(includeParams)
+            include: includeParams
         }
     ));
 };
