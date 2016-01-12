@@ -5,10 +5,9 @@ var await = require('asyncawait/await');
 var models = require.main.require('./app/components/models').all;
 var services = require.main.require('./app/components/services').all;
 var sequelize  = require.main.require('./app/components/db');
-var sequelizeInclude = require.main.require('./api/components/sequelizeInclude');
-var enums = require.main.require('./api/components/enums').all;
+var searchTypeEnum = require('../enums/searchType');
 var service = {
-    name : 'school'
+    name: 'school'
 };
 
 class SchoolNotFoundError extends Error {
@@ -40,11 +39,14 @@ class SchoolNotFoundError extends Error {
  * @return {Object} School model instance
  */
 service.create = function(data) {
-    var includeParams = {
-        addresses: {
-            departments: true
-        }
-    };
+    var includeParams = [{
+        model: models.Address,
+        as: 'addresses',
+        include: [{
+            model: models.Department,
+            as: 'departments'
+        }]
+    }];
 
     if (data.addresses) {
         data.addresses = data.addresses.filter(address => {
@@ -74,7 +76,7 @@ service.create = function(data) {
     return await(models.School.create(
         data,
         {
-            include: sequelizeInclude(includeParams)
+            include: includeParams
         }
     ));
 };
@@ -136,6 +138,39 @@ service.getAddress = async(function(school_id, address_id) {
     if (address.school_id == school_id) {
         return address;
     }
+});
+
+/**
+ * @param {number} schoolId
+ */
+service.incrementViews = async(function(schoolId) {
+    var sqlString = 'UPDATE school SET views = views + 1 where id = ' + schoolId;
+    await(sequelize.query(sqlString));
+});
+
+/**
+ * @return {array<object>} school instances
+ */
+service.getPopularSchools = async(function() {
+    return await(models.School.findAll({
+        where: {
+             $not: {
+                 views: 0
+             }
+        },
+        order: 'views DESC',
+        limit: 6, //TODO: move '6' somewhere maybe?
+        include: [{
+            model: models.Address,
+            as: 'addresses',
+            include: [
+                {
+                    model: models.Metro,
+                    as: 'metroStations'
+                }
+            ]
+        }]
+    }));
 });
 
 
@@ -248,37 +283,36 @@ service.updateReviewCount = async(function(school) {
 });
 
 /**
- * @return {Peromise}
+ * @return {Promise}
+ * used in cron script
  */
 service.updateRanks = async(function() {
-    //TODO : move to time-driven script in separated thread
-
     /* Disable logging for this method cause its sloving down the server */
-    //console.log(colors.green('Updating ranks'));
+    console.log(colors.green('Updating ranks'));
 
-    //var rankCounter = 0;
-    //var previousScore = -1;
+    var rankCounter = 0;
+    var previousScore = -1;
 
-    //var schools = await(models.School.findAll({
-    //    attributes: [
-    //        'id',
-    //        ['total_score', 'totalScore']
-    //    ],
-    //    order: 'total_score DESC'
-    //}));
+    var schools = await(models.School.findAll({
+        attributes: [
+            'id',
+            ['total_score', 'totalScore']
+        ],
+        order: 'total_score DESC'
+    }));
 
-    //var loggingState = sequelize.options.logging;
-    //sequelize.options.logging = false;
-    //wait(schools.forEach(school => {
-    //    if (school.totalScore != previousScore)
-    //        rankCounter++;
-    //    school.update({
-    //        rank: rankCounter
-    //    });
-    //    previousScore = school.totalScore;
-    //}));
-    //sequelize.options.logging = loggingState;
-    //console.log(colors.green('Ranks updated'));
+    var loggingState = sequelize.options.logging;
+    sequelize.options.logging = false;
+    await(schools.forEach(school => {
+        if (school.totalScore != previousScore)
+            rankCounter++;
+        school.update({
+            rank: rankCounter
+        });
+        previousScore = school.totalScore;
+    }));
+    sequelize.options.logging = loggingState;
+    console.log(colors.green('Ranks updated'));
 });
 
 /**
@@ -352,7 +386,7 @@ service.typeFilters = async (function() {
         };
     });
     return {
-        filter: enums.searchType.SCHOOL_TYPE,
+        filter: searchTypeEnum.fields.SCHOOL_TYPE,
         values: formattedFilters
     };
 });
@@ -422,22 +456,28 @@ service.viewOne = function(id) {
                     as: 'metroStations'
                 }
             ]
-         }, {
+        }, {
              model: models.Rating,
              as: 'ratings'
-         }, {
-             model: models.CommentGroup,
-             as: 'commentGroup',
-             include: [{
-                 model: models.Comment,
-                 as: 'comments',
-                 include: [{
-                     model: models.Rating,
-                     as: 'rating'
-                 }]
-
+        }, {
+            model: models.CommentGroup,
+            as: 'commentGroup',
+            include: [{
+                model: models.Comment,
+                as: 'comments',
+                include: [{
+                    model: models.Rating,
+                    as: 'rating'
+                }]
              }]
-         },
+        }, {
+            model: models.Activity,
+            as: 'activites',
+            attributes: [
+                'type',
+                'name'
+            ]
+        }
             //{
             //    model: models.EgeResult,
             //    as: 'egeResults'
@@ -562,27 +602,36 @@ service.list = async (function(opt_params) {
     var params = opt_params || {},
         searchParams = params.searchParams || null;
 
-    var searchConfig = {
-        include: [],
-        attributes: [
-            'id',
-            'name',
-            'score',
-            'name',
-            'fullName',
-            'abbreviation',
-            'totalScore'
+    var sqlConfig = {
+        select: [
+            'school.id',
+            'school.name',
+            'school.score',
+            'school.full_name',
+            'school.abbreviation',
+            'school.total_score' ],
+        from:  [
+            'school',
         ],
-        order: '"totalScore" DESC'
+        where: [], 
+        join: [],
+        group: [
+            'school.id'
+        ],
+        order: [
+            'school.total_score DESC'
+        ],
+        having: []
     };
-
     if (searchParams) {
-        updateSearchConfig(searchConfig, searchParams);
+        services.search.updateSqlOptions(sqlConfig, searchParams);
     }
-    return models.School.findAll(searchConfig).then(schools => {
-        console.log('Found: ', colors.green(schools.length)) ;
-        return schools;
-    });
+    var sqlString = services.search.generateSearchSql(sqlConfig);
+    return sequelize.query(sqlString, {model: models.School})
+        .then(schools => {
+            console.log('Found: ', colors.green(schools.length)) ;
+            return schools;
+        });
 });
 
 /**
@@ -606,6 +655,8 @@ service.searchByText = function(text) {
         where: whereParams
     });
 };
+
+
 
 /**
  * @param {object} searchConfig Existing search config to update
@@ -648,13 +699,13 @@ var updateSearchConfig = function(searchConfig, searchParams) {
         };
     }
 
-    if (searchParams.school_type) {
+    if (searchParams.schoolType) {
         searchDataCount++;
         extraIncludes.searchData.where.$or.push({
             $and: {
-                type: enums.searchType.SCHOOL_TYPE,
+                type: searchTypeEnum.fields.SCHOOL_TYPE,
                 values: {
-                    $overlap: searchParams.school_type
+                    $overlap: searchParams.schoolType
                 }
             }
         });
@@ -664,7 +715,7 @@ var updateSearchConfig = function(searchConfig, searchParams) {
         searchDataCount++;
         extraIncludes.searchData.where.$or.push({
             $and: {
-                type: enums.searchType.GIA,
+                type: searchTypeEnum.fields.GIA,
                 values: {
                     $contains: searchParams.gia
                 }
@@ -676,7 +727,7 @@ var updateSearchConfig = function(searchConfig, searchParams) {
         searchDataCount++;
         extraIncludes.searchData.where.$or.push({
             $and: {
-                type: enums.searchType.EGE,
+                type: searchTypeEnum.fields.EGE,
                 values: {
                     $contains: searchParams.ege
                 }
@@ -688,7 +739,7 @@ var updateSearchConfig = function(searchConfig, searchParams) {
         searchDataCount++;
         extraIncludes.searchData.where.$or.push({
             $and: {
-                type: enums.searchType.OLIMPIAD,
+                type: searchTypeEnum.fields.OLIMPIAD,
                 values: {
                     $contains: searchParams.olimp
                 }

@@ -1,10 +1,7 @@
-var enums = require('../../../components/enums');
-module.exports = {
-    enumName: 'authorType',
-    __proto__: enums.enumPrototype,
-
+var Enum = require('../../../components/enum');
+module.exports = new Enum('authorTypea', {
     PARENT: 'Parent',
     SCHOLAR: 'Scholar',
     GRADUATE: 'Graduate'
-};
+});
 

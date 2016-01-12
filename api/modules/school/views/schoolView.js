@@ -3,23 +3,29 @@ var services = require.main.require('./app/components/services').all;
 
 const areaView = require.main.require('./api/modules/geo/views/areaView.js');
 const metroView = require.main.require('./api/modules/geo/views/metroView.js');
-const addressView = require.main.require('./api/modules/geo/views/addressView.js');
+const addressView = require.main.require(
+    './api/modules/geo/views/addressView.js');
+const activityView = require.main.require(
+    './api/modules/school/views/activityView.js');
 
 var schoolView = {};
 
 /**
- * @param {array<object>} schoolInstance - school instances
+ * @param {object} schoolInstance - school instance
+ * @param {?array<object>} opt_popularSchools - school instances
  * @return {object}
  */
-schoolView.default = function(schoolInstance) {
+schoolView.default = function(schoolInstance, opt_popularSchools) {
 
     var addresses =
             services.department.addressesFilter(schoolInstance.addresses),
         comments = schoolInstance.commentGroup ?
             schoolInstance.commentGroup.comments : [],
-        score = schoolInstance.score || [0, 0, 0, 0];
 
-    return {
+        score = schoolInstance.score || [0, 0, 0, 0],
+        scoreCount = schoolInstance.scoreCount || [0, 0, 0, 0];
+
+    var result = {
         id: schoolInstance.id,
         schoolName: schoolInstance.name,
         schoolType: schoolInstance.schoolType,
@@ -39,16 +45,34 @@ schoolView.default = function(schoolInstance) {
         sites: schoolInstance.links ?
             getSites(schoolInstance.links) :
             getSites(schoolInstance.site),
-        activities: [],
         specializedClasses: schoolInstance.specializedClasses,
+        activities: getActivities(schoolInstance.activites),
         contacts: getContacts(addresses, schoolInstance.phones),
         comments: getComments(comments),
         coords: services.address.getCoords(addresses),
         ratings: getRatings(schoolInstance.rank, schoolInstance.rankDogm),
-        score: getSections(score),
-        totalScore: schoolInstance.totalScore,
-        reviewCount: schoolInstance.reviewCount
+        score: getScore(score, scoreCount),
+        totalScore: checkScoreCount(schoolInstance.totalScore, scoreCount),
+        reviewCount: checkScoreCount(schoolInstance.reviewCount, scoreCount)
     };
+    if (opt_popularSchools)
+        result.popularSchools = this.popular(opt_popularSchools);
+    return result;
+};
+
+/**
+ * @param {array<object>} - school instances
+ * @return {array<object>}
+ */
+schoolView.popular = function(popularSchools) {
+    return popularSchools.map(school => {
+        return {
+            id: school.id,
+            name: school.name,
+            description: school.description || '',
+            metroStations: services.address.getMetro(school.addresses)
+        };
+    });
 };
 
 /**
@@ -142,7 +166,7 @@ var getComments = function(comments) {
         .map(comment => {
             var sections = comment.rating ?
                 getSections(comment.rating.score) :
-                getSections([0,0,0,0]);
+                getSections([0, 0, 0, 0]);
             return {
                 author: '',
                 rank: typeConvert[comment.userType],
@@ -199,6 +223,43 @@ var getRatings = function(rating, rank) {
 };
 
 /**
+ *  make from score and scoreCount array for template
+ *  @param {array} score
+ *  @param {array} scoreCount
+ *  @return {array}
+ */
+var getScore = function(score, scoreCount) {
+    var result = [];
+
+    result = getSections(score);
+
+    return result.map( (item, index) => {
+        if (scoreCount[index] < 5) {
+            item.value = 0;
+        }
+        return item;
+    } );
+};
+
+/**
+ *  checks amount of ratings for each score item and return 0 or param
+ *  @param {number} param
+ *  @param {array} scoreCount
+ *  @return {number}
+ */
+var checkScoreCount = function(param, scoreCount) {
+    var ratingsLack = false;
+
+    scoreCount.forEach( (item) => {
+        if (item < 5) {
+            ratingsLack = true;
+        }
+    } );
+    return ratingsLack ? 0 : param;
+};
+
+
+/**
  * translates director name to right output format
  * @param name string
  * @return string
@@ -210,7 +271,15 @@ var getDirectorName = function(name) {
     nameWords = name.split(' ');
     result = nameWords[1] + ' ' + nameWords[2] + ' ' + nameWords[0];
     return result;
-}
+};
+
+/**
+ *  @param {object} activity
+ *  @return {array}
+ */
+var getActivities = function(activities) {
+    return activityView.list(activities);
+};
 
 schoolView.list = function(schools) {
     return schools

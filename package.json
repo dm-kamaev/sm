@@ -68,7 +68,8 @@
     "sleep": "^3.0.0",
     "soynode": "^1.1.0",
     "soyparser": "^0.2.2",
-    "tar.gz": "^1.0.2"
+    "tar.gz": "^1.0.2",
+    "translitit-cyrillic-russian-to-latin": "^0.1.0"
   },
   "dependencies": {
     "express": "^4.13.3",

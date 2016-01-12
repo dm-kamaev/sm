@@ -2,8 +2,8 @@ var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var models = require.main.require('./app/components/models').all;
 var services = require.main.require('./app/components/services').all;
-var sequelizeInclude = require.main.require('./api/components/sequelizeInclude');  
-var enums = require.main.require('./api/components/enums').all;
+var sequelizeInclude = require.main.require('./api/components/sequelizeInclude');
+var searchTypeEnum = require('../../school/enums/searchType');
 
 exports.name = 'subject';
 
@@ -68,7 +68,7 @@ exports.getOrCreate = async(name => {
 
 /**
  * @param {object} data
- * @param {object} data.subject - subject instance 
+ * @param {object} data.subject - subject instance
  * @param {number||null} data.giaAvg
  * @param {number||null} data.egeAvh
  * @param {number} subject.dataValues.average
@@ -113,8 +113,8 @@ var generateFilters = async(function(params) {
     }));
 
     var formatedSubjects = subjects
-        .filter(subject => 
-            filters.find(filter => 
+        .filter(subject =>
+            filters.find(filter =>
                 filter.subject_id == subject.id))
         .map(subject => {
             return {
@@ -136,10 +136,10 @@ exports.egeFilters = async (function() {
     var params = {
         model: models.EgeResult,
         modelAs: 'egeResult',
-        filterName: enums.searchType.EGE
+        filterName: searchTypeEnum.fields.EGE
     };
     return await (generateFilters(params));
-}); 
+});
 
 /**
  * @private
@@ -148,10 +148,10 @@ exports.giaFilters = async (function() {
     var params = {
         model: models.GiaResult,
         modelAs: 'giaResult',
-        filterName: enums.searchType.GIA
+        filterName: searchTypeEnum.fields.GIA
     };
     return await (generateFilters(params));
-}); 
+});
 
 /**
  * @private
@@ -160,19 +160,19 @@ exports.olympFilters = async (function() {
     var params = {
         model: models.OlimpResult,
         modelAs: 'olimpResult',
-        filterName: enums.searchType.OLIMPIAD
+        filterName: searchTypeEnum.fields.OLIMPIAD
     };
     return await (generateFilters(params));
-}); 
+});
 
 /**
  * get all the subjects with city default gia results
  */
 exports.listCityResults = async (() => {
     var includeParams = {
-        cityResult: true 
+        cityResult: true
     }
     return await (models.Subject.findAll({
-        include: sequelizeInclude(includeParams) 
+        include: sequelizeInclude(includeParams)
     }));
 });

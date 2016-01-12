@@ -6,7 +6,7 @@ const path = require('path');
 const sequelize = require('../../../app/components/db');
 
 class ModelArchiver {
-    
+
     /**
      * @public
      * @param {string} migrationPath
@@ -20,7 +20,7 @@ class ModelArchiver {
     /**
      * @public
      * @param {object} model - sequlelize model (not instance)
-     * @param {string} folder 
+     * @param {string} folder
      * @param {?array<string>} opt_attributes
      * @param {?string} opt_fileName
      */
@@ -36,7 +36,7 @@ class ModelArchiver {
         this.archiver_ = new Archiver(fullPath);
     }
 
-    
+
     /**
      * @public
      * @param {string} path
@@ -48,7 +48,7 @@ class ModelArchiver {
         await(this.archiver_.compress(csv));
         this.dispatch_();
     }
-    
+
     /**
      * @public
      */
@@ -65,8 +65,8 @@ class ModelArchiver {
      * @param {array<object>} data
      */
     loadData_(data) {
-        await (data.forEach(record => {
-            this.model_.upsert(record, {
+        await (data.map(record => {
+            return this.model_.upsert(record, {
                 raw: true,
                 validate: false,
                 hooks: false,
@@ -84,12 +84,12 @@ class ModelArchiver {
      */
     actualizeSequence_() {
         var tableName = this.model_.tableName;
-        var sqlString = 'SELECT setval(\'' + tableName + 
+        var sqlString = 'SELECT setval(\'' + tableName +
                 '_id_seq\', (SELECT MAX(id) from ' +
                 tableName +'));';
         try {
             await(sequelize.query(
-                sqlString, 
+                sqlString,
                 {type: sequelize.QueryTypes.SELECT}
             ));
         } catch (e) {
@@ -107,4 +107,3 @@ class ModelArchiver {
 }
 
 module.exports = ModelArchiver;
-

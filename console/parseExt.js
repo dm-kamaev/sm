@@ -4,7 +4,7 @@ var commander = require('commander');
 var xlsx = require('node-xlsx');
 var fs = require('fs');
 var mkdirp = require("mkdirp");
-var stageEnum = require('../api/modules/geo/enums');
+var departmentStage = require('../api/modules/geo/enums/departmentStage');
 var models = require.main.require('./app/components/models').all;
 
 var services = require.main.require('./app/components/services').all;
@@ -65,10 +65,37 @@ var parse = async(function(path) {
             schoolData.director = data.director;
         }
 
-        await(services.school.update(match[0], schoolData));
+        var schoolInstance =
+            await(services.school.update(match[0], schoolData));
 
-        if (data.departments && data.departments.length === data.addresses.length) {
-            await(updateDepartments(match[0], data.addresses, data.departments));
+        if (data.departments) {
+            if (!isAddressesUpdated(data.addresses, match[2]))
+            {
+                match[2].forEach(address => {
+                    await(models.Address.destroy({
+                        where: {
+                            name: address.name
+                    }}));
+                });
+                await(services.school.setAddresses(
+                    schoolInstance,
+                    data.addresses
+                    .map(address => {
+                        return {
+                            name: address
+                        }
+                    })
+                ));
+
+                setAddresses(data.areas, data.addresses);
+
+                if (data.departments.length === data.addresses.length) {
+                    await(createDepartments(match[0], data.addresses, data.departments));
+                }
+    
+            } else if (data.departments.length === data.addresses.length) {
+                await(updateDepartments(match[0], data.addresses, data.departments));
+            }
         }
 
         if (schoolData.specializedClasses) {
@@ -87,6 +114,22 @@ var parse = async(function(path) {
         JSON.stringify(specializedStat)
     );
 });
+
+var isAddressesUpdated = function(dataAddresses, schoolAddresses) {
+    var matches = 0;
+    dataAddresses.forEach(dataAddress => {
+        schoolAddresses.forEach(schoolAddress => {
+            if (dataAddress === schoolAddress.name) {
+                matches++;
+            }
+        });
+    });
+    if (matches === dataAddresses.length) {
+        return true;
+    } else {
+        return false;
+    }
+};
 
 var updateDepartments = function(school_id, addresses, departments) {
 
@@ -148,48 +191,24 @@ var createDepartments = function(school_id, addresses, departments) {
     });
 };
 
-var addDepartment = function(school_id, address_id, data) {
-    var addresses = await(services.school.getAddresses(school_id));
-    var address = addresses.find(address => {
-        var result = false;
-        if (address.id = address_id) {
-            result = true;
-        }
-        return result;
-    });
-    await(models.Department.findOrCreate({
-            where: {
-                name: data.name,
-                stage: data.stage,
-                addressId: address_id
-            }
-        })
-        .spread((department, created) => {
-            if (created) {
-                address.addDepartment(department)
-            }
-        })
-    );
-};
-
 var splitStages = function(departments) {
     var parsedDepartments = departments.map(department => {
         var stages = [];
         var stage = department[0];
         if (stage.toLowerCase().indexOf('дошкольное') > -1) {
-            stages.push(stageEnum.departmentStage.PRESCHOOL);
+            stages.push(departmentStage.fields.PRESCHOOL);
         }
         if (stage.toLowerCase().indexOf('начальное') > -1) {
-            stages.push(stageEnum.departmentStage.ELEMENTARY);
+            stages.push(departmentStage.fields.ELEMENTARY);
         }
         if (stage.toLowerCase().indexOf('среднее') > -1) {
-            stages.push(stageEnum.departmentStage.MIDDLE_HIDE);
+            stages.push(departmentStage.fields.MIDDLE_HIDE);
         }
         if (stage.toLowerCase().indexOf('дополнительное') > -1) {
-            stages.push(stageEnum.departmentStage.SUPPLEMENTARY);
+            stages.push(departmentStage.fields.SUPPLEMENTARY);
         }
         if (stage.toLowerCase().indexOf('профессиональное') > -1) {
-            stages.push(stageEnum.departmentStage.HIGHER_EDUCATION);
+            stages.push(departmentStage.fields.HIGHER_EDUCATION);
         }
 
         department[0] = stages;
@@ -297,6 +316,7 @@ var parseSchools = function(schools) {
         parsedSchools.push({
             'domains': domains,
             'id': schools[i].id,
+            'addresses': schools[i].addresses
         });
     }
     return parsedSchools;
@@ -320,7 +340,8 @@ var findMatches = function(schools, data) {
                     if (domain && schools[j].domains[k] === domain) {
                         flag = true;
 
-                        matches.push([schools[j].id, data[i]]);
+                        var adrLen = schools[j].addresses.length || 0;
+                        matches.push([schools[j].id, data[i], schools[j].addresses]);
                         break schoolLoop;
                     }
                 }
@@ -361,17 +382,21 @@ var createSchool = async(function(data) {
         })
     ));
 
-    for (var i = 0, l = data.areas.length; i < l; i++) {
-        var area = await(services.area.create({
-            name: data.areas[i]
-        }));
-        await(services.address.setArea(area[0].name, data.addresses[i]));
-    };
+    setAddresses(data.areas, data.addresses);
 
     if (data.departments && data.departments.length === data.addresses.length) {
         await(createDepartments(school.id, data.addresses, data.departments));
     }
 });
+
+var setAddresses = function(areas, addresses) {
+    for (var i = 0, l = areas.length; i < l; i++) {
+        var area = await(services.area.create({
+            name: areas[i]
+        }));
+        await(services.address.setArea(area[0].name, addresses[i]));
+    };
+};
 
 var parseSite = function(site) {
     var parsed = [],

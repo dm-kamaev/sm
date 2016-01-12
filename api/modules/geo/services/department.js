@@ -3,7 +3,7 @@ var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var models = require.main.require('./app/components/models').all;
 var services = require.main.require('./app/components/services').all;
-var enums = require('../enums');
+var departmentStage = require('../enums/departmentStage');
 exports.name = 'department';
 
 
@@ -133,11 +133,11 @@ exports.addressesFilter = function(addressList) {
             if (address.departments.length > 0) {
                 address.departments.forEach(department => {
                     if (department.stage !==
-                        enums.departmentStage.PRESCHOOL &&
+                        departmentStage.fields.PRESCHOOL &&
                         department.stage !==
-                        enums.departmentStage.SUPPLEMENTARY &&
+                        departmentStage.fields.SUPPLEMENTARY &&
                         department.stage !==
-                        enums.departmentStage.HIGHER_EDUCATION) {
+                        departmentStage.fields.HIGHER_EDUCATION) {
                         res = true;
                     }
                 });

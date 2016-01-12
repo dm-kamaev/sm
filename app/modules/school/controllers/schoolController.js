@@ -12,8 +12,6 @@ exports.createComment = async (function(req, res) {
         var schoolId = req.params.id,
             params = req.body;
         result = await(services.school.comment(schoolId,params));
-        if (params.score)
-            services.school.updateRanks();
     } catch (e) {
         console.log(e);
         result = JSON.stringify(e);
@@ -68,29 +66,37 @@ exports.list = async (function(req, res) {
 });
 
 exports.view = async (function(req, res) {
-    var school = await (services.school.viewOne(req.params.id));
-
-    if (!school) {
-        res.header('Content-Type', 'text/html; charset=utf-8');
-        res.status(404);
-        res.end('404');
-        return; // I dont want to be in this method anymore
-    }
-
-    console.log(JSON.stringify(schoolView.default(school)));
-
-    res.header('Content-Type', 'text/html; charset=utf-8');
-    res.end(
-        soy.render('sm.lSchool.Template.base', {
-        params: {
-            data: schoolView.default(school)
+    try {
+        var url = services.urls.stringToURL(req.params.name);
+        var schoolInstance = await(services.urls.getSchoolByUrl(url));
+        if (!schoolInstance) {
+            res.header('Content-Type', 'text/html; charset=utf-8');
+            res.status(404);
+            res.end('404');
+        } else if (url != schoolInstance.url) {
+            res.redirect(schoolInstance.url);
+        } else {
+            var school = await (services.school.viewOne(schoolInstance.id));
+            services.school.incrementViews(school.id);
+            var popularSchools = await (services.school.getPopularSchools());
+            res.header('Content-Type', 'text/html; charset=utf-8');
+            res.end(
+                soy.render('sm.lSchool.Template.base', {
+                params: {
+                    data: schoolView.default(school, popularSchools)
+                }
+            }));
         }
-    }));
+    } catch (e) {
+        console.log(e);
+        res.status(500);
+        res.end('500 Internal Server Error');
+    }
 });
 
 exports.search = async(function(req, res) {
     var exampleList = ['Поварская, 14', 'Школа 123', 'Савеловская', 'Лицей'];
-
+    var popularSchools = await (services.school.getPopularSchools());
     var imagesList = ['images/l-search/advertising_1.png', 'images/l-search/article.png'];
 
     var html = soy.render('sm.lSearch.Template.base', {
@@ -103,7 +109,8 @@ exports.search = async(function(req, res) {
                   text: '{{ name }}',
                   value: '{{ id }}'
               },
-              images: imagesList
+              images: imagesList,
+              popularSchools: schoolView.popular(popularSchools)
           }
 
     });

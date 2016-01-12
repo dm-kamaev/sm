@@ -5,6 +5,7 @@ const Activity = require('../../api/modules/school/models/activity');
 const dataFolder = path.join(__dirname, '../../api/modules/school/migrations');
 const archiveName = ModelArchiver.migrationToArchive(__filename);
 const async = require('asyncawait/async');
+const await = require('asyncawait/await');
 
 module.exports = {
     up: function (queryInterface, Sequelize) {
@@ -45,7 +46,7 @@ module.exports = {
             },
         }).then(async(function() {
             var archiver = new ModelArchiver(Activity, dataFolder, null, archiveName);
-            archiver.load();
+            await(archiver.load());
         }));
     },
     down: function (queryInterface) {

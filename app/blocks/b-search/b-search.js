@@ -103,27 +103,27 @@ goog.scope(function() {
              },
 
              renderItem: function(item, str) {
-                 var matchName,
-                     result,
+                 var result,
                      Suggest = gorod.gSuggest.Suggest;
 
                  str = str || '';
-                 result = '';
 
-                 matchName = Suggest.findEntry(item.name, str);
-                 if (matchName) {
+                 /**
+                  * Finds entry
+                  * @param {string} name
+                  */
+                 var findEntry = function(name) {
+                     Suggest.findEntry(name, str);
+                 };
+
+                 if (findEntry(item.name)) {
                      result = item.name;
-                 }
-
-                 var matchFullName = Suggest.findEntry(item.fullName, str);
-                 if (matchFullName) {
+                 } else if (findEntry(item.fullName)) {
                      result = item.fullName;
-                 }
-
-                 var matchAbbreviation = Suggest.findEntry(
-                     item.abbreviation, str);
-                 if (matchAbbreviation) {
+                 } else if (findEntry(item.abbreviation)) {
                      result = item.abbreviation;
+                 } else {
+                     result = '';
                  }
 
                  return result;

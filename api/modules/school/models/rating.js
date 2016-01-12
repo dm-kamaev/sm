@@ -1,12 +1,12 @@
 var DataType = require('sequelize'),
-    db = require.main.require('./app/components/db'),
-    services = require.main.require('./app/components/services').all;
+    schoolService = require('../services/school');
+var db = require('../../../../app/components/db');
 
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 
 var onChangeHook = async(function(rating) {
-    await(services.school.onRatingChange(rating.schoolId));
+    await(schoolService.onRatingChange(rating.schoolId));
 });
 
 var Rating = db.define('Rating', {

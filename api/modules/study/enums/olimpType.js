@@ -1,9 +1,5 @@
-var enums = require('../../../components/enums');
-module.exports = {
-    enumName: 'olimpType',
-    __proto__: enums.enumPrototype,
-
+var Enum = require('../../../components/enum');
+module.exports = new Enum('olimpType', {
     RUSSIA: 'всероссийская',
     MOSCOW: 'московская'
-};
-
+});

@@ -4,6 +4,7 @@ const ModelArchiver = require('../../console/modules/modelArchiver/ModelArchiver
 const Department = require('../../api/modules/geo/models/department');
 const dataFolder = path.join(__dirname, '../../api/modules/geo/migrations');
 const async = require('asyncawait/async');
+const await = require('asyncawait/await');
 const archiveName = ModelArchiver.migrationToArchive(__filename);
 
 module.exports = {
@@ -23,7 +24,7 @@ module.exports = {
                     });
             }).then(async(function() {
                 var archiver = new ModelArchiver(Department, dataFolder, null, archiveName);
-                archiver.load();
+                await(archiver.load());
             }));
     },
     down: function (queryInterface, Sequelize) {
