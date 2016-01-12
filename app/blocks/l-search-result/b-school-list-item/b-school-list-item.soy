@@ -5,6 +5,7 @@
  * @param? params {
  *     id: ?number,
  *     name: ?string,
+ *     url: ?string,
  *     score: ?list<number>,
  *     totalScore: ?number,
  *     description: ?string
@@ -12,7 +13,7 @@
  */
 {template .base autoescape="strict" kind="html"}
     <a class="b-school-list-item"
-        href="/school/{$params.id}"
+        href="/school/{$params.url}"
         data-params="
         {call gorod.iUtils.stringify}
             {param json: $params /}

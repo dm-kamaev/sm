@@ -8,6 +8,7 @@
 *         coords: ?number[][],
 *         type: ?string,
 *         name: ?string,
+*         url: ?string,
 *         totalScore: ?number
 *     }
 * }}
@@ -37,7 +38,7 @@
     <div class="b-map__balloon">
         <div class="b-map__balloon-name">
             [if properties.id]
-            <a href="/school/$[properties.id]" class="b-map__href">
+            <a href="/school/$[properties.url]" class="b-map__href">
                 $[properties.name]
             </a>
             [else]

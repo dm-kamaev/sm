@@ -169,7 +169,7 @@ goog.scope(function() {
      * @param {Object} data
      */
     Search.prototype.itemClickHandler_ = function(event, data) {
-        document.location.href = '/school/' + data.key;
+        document.location.href = '/school/' + data.item.url;
     };
 
     /**

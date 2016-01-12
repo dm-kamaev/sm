@@ -26,6 +26,7 @@ schoolView.default = function(schoolInstance, opt_popularSchools) {
 
     var result = {
         id: schoolInstance.id,
+        url: schoolInstance.url,
         schoolName: schoolInstance.name,
         schoolType: schoolInstance.schoolType,
         schoolDescr: '',
@@ -65,6 +66,7 @@ schoolView.popular = function(popularSchools) {
     return popularSchools.map(school => {
         return {
             id: school.id,
+            url: school.url,
             name: school.name,
             description: school.description || '',
             metroStations: services.address.getMetro(school.addresses)
@@ -272,6 +274,7 @@ schoolView.list = function(schools) {
         .map(school => {
             return {
                 id: school.id,
+                url: school.url,
                 name: school.name,
                 description: '',
                 abbreviation: school.abbreviation,

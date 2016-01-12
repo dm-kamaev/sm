@@ -419,14 +419,15 @@ service.setAddresses = async ((school, addresses) => {
 
 
 service.getForParse = async((govKeyId) => {
-    var includeParams = {
-        addresses: true
-    };
+    var includeParams = [{
+        model: models.Address,
+        as: 'addresses'
+    }];
     return await(models.School.findOne({
         where: {
             govermentKey: govKeyId
         },
-        include: sequelizeInclude(includeParams)
+        include: includeParams
     }));
 });
 
@@ -609,7 +610,8 @@ service.list = async (function(opt_params) {
             'school.score',
             'school.full_name',
             'school.abbreviation',
-            'school.total_score' ],
+            'school.total_score',
+            'school.url' ],
         from:  [
             'school',
         ],
@@ -656,106 +658,5 @@ service.searchByText = function(text) {
     });
 };
 
-
-
-/**
- * @param {object} searchConfig Existing search config to update
- * @param {object} searchParams
- * @param {?string} searchParams.name
- * @param {?Array<number>} searchParams.classes
- * @param {?number} searchParams.schoolType
- * @param {?Array<number>} searchParams.gia Subjects with high hia results
- * @param {?Array<number>} searchParams.ege
- * @param {?Array<number>} searchParams.olimp
- * TODO: develop criterias
- */
-var updateSearchConfig = function(searchConfig, searchParams) {
-    var whereParams = {},
-        searchDataCount = 0;
-
-    var extraIncludes = {
-        searchData : {
-            model: models.SearchData,
-            as: 'searchData',
-            where: {
-                $or: []
-            },
-            attributes: []
-        }
-    };
-
-    if (searchParams.name) {
-        var nameFilter = services.search.generateFilter(searchParams.name);
-        whereParams.$or = [
-          { name: nameFilter },
-          { fullName: nameFilter},
-          { abbreviation: nameFilter}
-        ];
-    }
-
-    if (searchParams.classes && searchParams.classes.length) {
-        whereParams.educationInterval = {
-            $contains: searchParams.classes
-        };
-    }
-
-    if (searchParams.schoolType) {
-        searchDataCount++;
-        extraIncludes.searchData.where.$or.push({
-            $and: {
-                type: searchTypeEnum.fields.SCHOOL_TYPE,
-                values: {
-                    $overlap: searchParams.schoolType
-                }
-            }
-        });
-    }
-
-    if (searchParams.gia) {
-        searchDataCount++;
-        extraIncludes.searchData.where.$or.push({
-            $and: {
-                type: searchTypeEnum.fields.GIA,
-                values: {
-                    $contains: searchParams.gia
-                }
-            }
-        });
-    }
-
-    if (searchParams.ege) {
-        searchDataCount++;
-        extraIncludes.searchData.where.$or.push({
-            $and: {
-                type: searchTypeEnum.fields.EGE,
-                values: {
-                    $contains: searchParams.ege
-                }
-            }
-        });
-    }
-
-    if (searchParams.olimp) {
-        searchDataCount++;
-        extraIncludes.searchData.where.$or.push({
-            $and: {
-                type: searchTypeEnum.fields.OLIMPIAD,
-                values: {
-                    $contains: searchParams.olimp
-                }
-            }
-        });
-    }
-
-    /*Write generated setting to config object*/
-    searchConfig.where = whereParams;
-    if (searchDataCount){
-        var extraIncludesArr = [];
-        extraIncludesArr.push(extraIncludes.searchData);
-        searchConfig.include = searchConfig.include.concat(extraIncludesArr);
-        searchConfig.group = '"School"."id"';
-        searchConfig.having = ['COUNT(?) = ?', '', searchDataCount];
-    }
-};
 
 module.exports = service;
