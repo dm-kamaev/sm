@@ -269,6 +269,10 @@ var getActivities = function(activities) {
     return activityView.list(activities);
 };
 
+/**
+ * @param {array<object>} schools - schoolInstances
+ * @return {array<object>}
+ */
 schoolView.list = function(schools) {
     return schools
         .map(school => {
@@ -282,6 +286,29 @@ schoolView.list = function(schools) {
                 totalScore: school.totalScore || 0,
                 fullName: school.fullName,
                 addresses: school.addresses
+            };
+        });
+};
+
+/**
+ * @param {array<object>} schools - schoolInstances
+ * @return {array<object>}
+ */
+schoolView.listMapPoints = function(schools) {
+    return schools
+        .map(school => {
+            return {
+                id: school.id,
+                url: school.url,
+                name: school.name,
+                type: school.schoolType,
+                totalScore: school.totalScore || 0,
+                coords: school.addresses.map(adr => {
+                    return {
+                        lat: adr.coords[0],
+                        lng: adr.coords[1]
+                    };
+                }),
             };
         });
 };
