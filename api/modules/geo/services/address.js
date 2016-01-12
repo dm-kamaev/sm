@@ -236,6 +236,7 @@ exports.list = async ( function(opt_params) {
             }),
             type: '',
             name: school.name,
+            url: school.url,
             totalScore: sumScore.reduce((context, value) => {
                 if (value) {
                     context.sum += value;
