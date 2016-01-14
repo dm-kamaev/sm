@@ -1,5 +1,5 @@
 {
-  "name": "schools-admin",
+  "name": "l3_school-market",
   "version": "1.0.0",
   "description": "",
   "main": "./server/app.js",
@@ -11,14 +11,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/c7s/shools-admin.git"
+    "url": "git+https://github.com/c7s/l3_school-market.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/c7s/shools-admin/issues"
+    "url": "https://github.com/c7s/l3_school-market/issues"
   },
-  "homepage": "https://github.com/c7s/shools-admin#readme",
+  "homepage": "https://github.com/c7s/l3_school-market#readme",
   "devDependencies": {
     "archiver": "^0.20.0",
     "asyncawait": "^1.0.1",
