@@ -136,7 +136,7 @@ goog.scope(function() {
 
         //search
         var bSearch = goog.dom.getElementByClass(
-            Search.CssClass.INPUT,
+            Search.CssClass.ROOT,
             element
         );
 

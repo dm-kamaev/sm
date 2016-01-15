@@ -66,6 +66,12 @@
     background: url(images/b-search/search.png);*/
 }
 
+.b-search__icon_disabled {
+    opacity: 0.3;
+
+    cursor: default;
+}
+
 .b-search__list {
     position: absolute;
     left: 68px;

@@ -73,7 +73,7 @@ goog.scope(function() {
         this.initElements_(element);
 
         var bSearch = goog.dom.getElementByClass(
-            BlockSearch.CssClass.INPUT,
+            BlockSearch.CssClass.ROOT,
             element
         );
 
