@@ -475,8 +475,8 @@ service.viewOne = function(id) {
             model: models.Activity,
             as: 'activites',
             attributes: [
-                'type',
-                'name'
+                'profile',
+                'type'
             ]
         }
             //{
