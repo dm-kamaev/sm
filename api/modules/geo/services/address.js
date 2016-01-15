@@ -122,7 +122,7 @@ exports.getMetro = function(address) {
         var metro = {};
         address.forEach(adr => {
             adr.metroStations.forEach(m => {
-                metro[m.id] = m.name;
+                metro[m.id] = m.name.replace('метро ', '');
             });
         });
         return Object.keys(metro)
@@ -131,7 +131,7 @@ exports.getMetro = function(address) {
             });
     } else {
         return address.metroStations.map(metro => {
-            return metro.name;
+            return metro.name.replace('метро ', '');
         });
     }
 };
