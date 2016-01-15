@@ -366,32 +366,32 @@
             /}
         {/call}
     </div>
-
-    <div class="l-school__content-column">
-        /*ratings*/
-        {if length($params.data.ratings) > 0}
-            <div class="l-school__item-container">
-                {call sm.lSchool.bDataBlockRatings.Template.base}
-                    {param params: [
-                        'header': 'места в рейтингах',
-                        'content': $params.data.ratings
-                    ]/}
-                {/call}
-            </div>
-        {/if}
-
-        /*high schools */
-        {if $params.data.higthSchools}
-            <div class="l-school__item-container">
-                {call sm.lSchool.bDataBlock.Template.base}
-                    {param params: [
-                        'header': 'куда поступают выпускники'
-                        ]
-                    /}
-                {/call}
-            </div>
-        {/if}
-    </div>
+    // TODO: uncomment
+    // <div class="l-school__content-column">
+    //     /*ratings*/
+    //     {if length($params.data.ratings) > 0}
+    //         <div class="l-school__item-container">
+    //             {call sm.lSchool.bDataBlockRatings.Template.base}
+    //                 {param params: [
+    //                     'header': 'места в рейтингах',
+    //                     'content': $params.data.ratings
+    //                 ]/}
+    //             {/call}
+    //         </div>
+    //     {/if}
+    //
+    //     /*high schools */
+    //     {if $params.data.higthSchools}
+    //         <div class="l-school__item-container">
+    //             {call sm.lSchool.bDataBlock.Template.base}
+    //                 {param params: [
+    //                     'header': 'куда поступают выпускники'
+    //                     ]
+    //                 /}
+    //             {/call}
+    //         </div>
+    //     {/if}
+    // </div>
 
     <div class="l-school__content-column
                 l-school__content-column_last">
