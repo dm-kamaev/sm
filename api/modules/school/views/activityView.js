@@ -8,34 +8,36 @@ activityView.list = function(activities) {
     var result = [];
 
     activities = activities.sort(function(a, b) {
-        if (a.type > b.type) {
+        if (a.profile > b.profile) {
             return 1;
         }
 
-        if (a.type < b.type) {
+        if (a.profile < b.profile) {
             return -1;
         }
 
         return 0;
     });
 
-    var type = '',
+    var profile = '',
         index = -1;
 
     for (var i = 0, l = activities.length, activity; i < l; i++) {
         activity = activities[i];
 
-        if (type !== activity.type) {
-            type = activity.type;
+        if (profile !== activity.profile) {
+            profile = activity.profile;
 
             result.push({
-                'name': type,
+                'name': profile,
                 'items': []
             });
             index += 1;
         }
 
-        result[index].items.push(activity.name);
+        if (result[index].items.indexOf(activity.type) === -1) {
+            result[index].items.push(activity.type);
+        }
     }
 
     return result;
