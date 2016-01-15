@@ -20,6 +20,10 @@ sm.bSearch.Search = function(opt_params) {
      * @type {object}
      */
     this.params_ = opt_params || {};
+
+    this.elements_ = {};
+
+    this.suggest_ = null;
 };
 goog.inherits(sm.bSearch.Search, goog.ui.Component);
 
@@ -42,7 +46,8 @@ goog.scope(function() {
      * @enum {string}
      */
     Search.Event = {
-        SUBMIT: 'submit'
+        SUBMIT: 'submit',
+        ITEM_SELECT: 'itemSelect'
     };
 
     /**
@@ -70,15 +75,16 @@ goog.scope(function() {
      Search.prototype.enterDocument = function() {
          goog.base(this, 'enterDocument');
 
-         var ui = gorod.iUIInstanceStorage.UIInstanceStorage.getInstance(),
-             suggestInstance = ui.getInstanceByElement(this.elements_.suggest);
+         var ui = gorod.iUIInstanceStorage.UIInstanceStorage.getInstance();
 
-         suggestInstance.addEventListener(
+         this.suggest_ = ui.getInstanceByElement(this.elements_.suggest);
+
+         this.suggest_.addEventListener(
              gorod.gSuggest.Suggest.Events.SELECT,
-             this.itemClickHandler_
+             this.itemClickHandler_.bind(this)
          );
 
-         suggestInstance.addEventListener(
+         this.suggest_.addEventListener(
              gorod.gSuggest.Suggest.Events.SUBMIT,
              this.onSubmit_.bind(this)
          );
@@ -91,44 +97,81 @@ goog.scope(function() {
              );
          }
 
-         suggestInstance.setCallbacks({
-             getData: function(elem) {
-                 return JSON.parse(elem);
-             },
+        this.suggest_.setCallbacks({
+            getData: function(elem) {
+                elem = JSON.parse(elem);
+                var result = [];
+                for (prop in elem) {
+                    var type;
+                    switch (prop) {
+                        case 'schools':
+                            type = 'school';
+                            break;
+                        case 'areas':
+                            type = 'area';
+                            break;
+                        case 'metro':
+                            type = 'metro';
+                            break;
+                    }
+                    elem[prop].forEach(function(item) {
+                        item.type = type;
+                        result.push(item);
+                    });
+                }
+                return result;
+            },
 
-             search: function(elem) {
-                 return elem.name + ' ' +
-                     elem.fullName + ' ' +
-                     elem.abbreviation;
-             },
+            search: function(elem) {
+                return elem.name + ' ' +
+                    elem.fullName + ' ' +
+                    elem.abbreviation;
+            },
 
-             renderItem: function(item, str) {
-                 var result,
-                     Suggest = gorod.gSuggest.Suggest;
+            renderItem: function(item, str) {
+                var result,
+                    Suggest = gorod.gSuggest.Suggest;
 
-                 str = str || '';
+                str = str || '';
 
-                 /**
-                  * Finds entry
-                  * @param {string} name
-                  */
-                 var findEntry = function(name) {
-                     Suggest.findEntry(name, str);
-                 };
+                /**
+                 * Finds entry
+                 * @param {string} name
+                 */
+                var findEntry = function(name) {
+                    return Suggest.findEntry(name, str);
+                };
 
-                 if (findEntry(item.name)) {
-                     result = item.name;
-                 } else if (findEntry(item.fullName)) {
-                     result = item.fullName;
-                 } else if (findEntry(item.abbreviation)) {
-                     result = item.abbreviation;
-                 } else {
-                     result = '';
-                 }
+                if (findEntry(item.name)) {
+                    result = item.name;
+                } else if (findEntry(item.fullName)) {
+                    result = item.fullName;
+                } else if (findEntry(item.abbreviation)) {
+                    result = item.abbreviation;
+                } else {
+                    result = '';
+                }
 
-                 return result;
-             }
-         });
+                result = '<span class="b-search__list-name">' +
+                    result +
+                    '</span>';
+
+                if (item.hasOwnProperty('addresses')) {
+                    result += ' <span class="b-search__list-area">' +
+                        item.addresses
+                        .map(function(address) {
+                            return address.area.name;
+                        })
+                        .reduce(function(prev, curr) {
+                            return (prev.indexOf(' ' + curr) < 0) ?
+                                prev.concat([' ' + curr]) : prev;
+                        }, []) +
+                        '</span>';
+                }
+
+                return result;
+            }
+        });
      };
 
     /**
@@ -145,6 +188,9 @@ goog.scope(function() {
      */
     Search.prototype.initElements_ = function(root) {
         this.elements_ = {
+            root: goog.dom.getElementByClass(
+                Search.CssClass.ROOT
+            ),
             suggest: goog.dom.getElementByClass(
                 gorod.gSuggest.Suggest.Css.ROOT
             ),
@@ -159,7 +205,10 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.onIconClick_ = function() {
-        this.dispatchEvent(gorod.gSuggest.Suggest.Events.SUBMIT);
+        this.dispatchEvent({
+            type: Search.Event.SUBMIT,
+            text: this.suggest_.getText()
+        });
     };
 
     /**
@@ -169,7 +218,17 @@ goog.scope(function() {
      * @param {Object} data
      */
     Search.prototype.itemClickHandler_ = function(event, data) {
-        document.location.href = '/school/' + data.item.url;
+        if (data.item.type === 'school') {
+            document.location.href = '/school/' + data.item.url;
+        } else {
+            this.dispatchEvent({
+                type: Search.Event.ITEM_SELECT,
+                data: {
+                    id: data.item.id,
+                    type: data.item.type
+                }
+            });
+        }
     };
 
     /**

@@ -2,7 +2,6 @@
     z-index: auto;
 
     display: inline-block;
-    overflow: hidden;
 
     width: 100%;
     height: 70px;
@@ -36,7 +35,6 @@
     display: inline-block;
 
     max-width: 1076px;
-    width: 88%;
     height: 100%;
 
     vertical-align: top;
@@ -44,12 +42,16 @@
 }
 
 .b-header__search {
+    position: relative;
+    top: 20px;
+
     display: inline-block;
     float: right;
 
-    width: 5%;
-    height: 100%;
-    max-width: 62px;
+    box-sizing: border-box;
+    width: 275px;
+
+    border: 1px solid #CCC;
 }
 
 .b-header__menu-image {
@@ -91,10 +93,15 @@
 .b-header__before {
     display: inline-block;
 
+    width: 0px;
     height: 100%;
 
     vertical-align: middle;
     content: "";
+}
+
+.b-header__before_search {
+    width: 275px;
 }
 
 .b-header__title {

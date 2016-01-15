@@ -256,9 +256,9 @@ service.onRatingChange = async(function(schoolId) {
         }
     }));
 
-    if (!school) 
+    if (!school)
         throw new SchoolNotFoundError(schoolId);
-    
+
     var promises = [
         this.updateScore(school),
         this.updateReviewCount(school),
@@ -324,7 +324,7 @@ service.updateScore = async(function(school) {
     for (var i = 1; i <= 4; i++) {
         var score = 'score[' + i + ']';
         var queryPromise = sequelize.query(
-            'SELECT AVG(' + score + ') AS avg, ' + 
+            'SELECT AVG(' + score + ') AS avg, ' +
             'count(' + score + ') AS count FROM rating ' +
             'WHERE school_id = ' + school.id + ' AND ' +
              score + '<> 0'
@@ -615,7 +615,7 @@ service.list = async (function(opt_params) {
         from:  [
             'school',
         ],
-        where: [], 
+        where: [],
         join: [],
         group: [
             'school.id'
@@ -654,7 +654,22 @@ service.searchByText = function(text) {
             ]
         };
     return models.School.findAll({
-        where: whereParams
+        where: whereParams,
+        include: [{
+            model: models.Address,
+            as: 'addresses',
+            attributes: [
+                'id'
+            ],
+            include: [{
+                model: models.Area,
+                as: 'area',
+                attributes: [
+                    'id',
+                    'name'
+                ]
+            }]
+        }]
     });
 };
 

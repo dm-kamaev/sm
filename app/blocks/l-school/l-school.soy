@@ -63,6 +63,12 @@
  *        totalScore: number,
  *        reviewCount: number
  *     ]
+ *     searchTemplates: [
+ *         search: ?string,
+ *         item: ?string,
+ *         text: ?string,
+ *         value: ?string
+ *     ]
  * }
  */
 {template .base autoescape="strict" kind="html"}
@@ -90,7 +96,14 @@
                         l-school__section__header">
                 {call sm.bHeader.Template.base}
                     {param params: [
-                        'url': '/'
+                        'url': '/',
+                        'searchText': '',
+                        'templates': [
+                            'search': $params.searchTemplates.search,
+                            'item': $params.searchTemplates.item,
+                            'text': $params.searchTemplates.text,
+                            'value': $params.searchTemplates.value
+                        ]
                     ]/}
                 {/call}
             </div>
