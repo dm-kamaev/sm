@@ -42,7 +42,7 @@ schoolView.default = function(schoolInstance, opt_popularSchools) {
             'kindergarten'),
         social: [],
         metroStations: services.address.getMetro(addresses),
-        sites: getSites(schoolInstance.site),
+        sites: getSites(schoolInstance.site) || [],
         activities: getActivities(schoolInstance.activites),
         specializedClasses: [],
         contacts: getContacts(addresses, schoolInstance.phones),
@@ -53,6 +53,7 @@ schoolView.default = function(schoolInstance, opt_popularSchools) {
         totalScore: checkScoreCount(schoolInstance.totalScore, scoreCount),
         reviewCount: checkScoreCount(schoolInstance.reviewCount, scoreCount)
     };
+    
     if (opt_popularSchools)
         result.popularSchools = this.popular(opt_popularSchools);
     return result;
@@ -116,11 +117,13 @@ var getEducationInterval = function(interval, type) {
  *  @return {array<object>}
  */
 var getSites = function(site) {
-    return [{
-        name: 'Перейти на сайт школы',
-        href: 'http://' + site,
-        link: site
-    }];
+    if (site) {
+        return [{
+            name: 'Перейти на сайт школы',
+            href: 'http://' + site,
+            link: site
+        }];
+    }
 };
 
 /**

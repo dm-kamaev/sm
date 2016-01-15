@@ -357,15 +357,17 @@
     {/if}
 
     /*Links section*/
-    <div class="l-school__item-container">
-        {call sm.lSchool.bDataBlockLinks.Template.base}
-            {param params: [
-                'header': 'ссылки',
-                'content': $params.data.sites
-                ]
-            /}
-        {/call}
-    </div>
+    {if $params.data.sites.length > 0}
+        <div class="l-school__item-container">
+            {call sm.lSchool.bDataBlockLinks.Template.base}
+                {param params: [
+                    'header': 'ссылки',
+                    'content': $params.data.sites
+                    ]
+                /}
+            {/call}
+        </div>
+    {/if}
     // TODO: uncomment
     // <div class="l-school__content-column">
     //     /*ratings*/
