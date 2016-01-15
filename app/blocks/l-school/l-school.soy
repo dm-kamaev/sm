@@ -345,10 +345,17 @@
 
     /*Address section*/
     {if $params.data.contacts}
+        {let $contactHeader kind="text"}
+            {if length($params.data.contacts.phones) < 1}
+                адреса
+            {else}
+                адреса и телефоны
+            {/if}
+        {/let}
         <div class="l-school__item-container">
             {call sm.lSchool.bDataBlockAddresses.Template.base}
                 {param params: [
-                    'header': 'адреса и телефоны',
+                    'header': $contactHeader,
                     'content': $params.data.contacts
                     ]
                 /}
