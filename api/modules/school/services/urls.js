@@ -13,12 +13,11 @@ var service = {
  */
 service.stringToURL = function(string) {
     string = string.toLowerCase()
-        .replace(/и/g,'i')
         .replace(/\ /g, '-')
         .replace(/\./g, '-')
-        .replace(/(--)/g, '-')
         .replace(/(\№|«|»|%|(|))/g, '');
-    var latin = translit(string);
+    var latin = translit(string)
+        .replace(/(--)/g, '-');
     return encodeURIComponent(latin);
 };
 
@@ -27,23 +26,26 @@ service.stringToURL = function(string) {
  */
 service.generateUrl = async(function(school) {
     var url = service.stringToURL(school.name);
-    try {
-        await(school.update(
-            {url: url},
-            {hooks: false})
-        );
-    } catch (e) {
-        /*if url in use then generate different url*/
-        url = url + '_';
-        await(school.update(
-            {url: url},
-            {hooks: false})
-        );
-    } finally {
-        await(models.SchoolUrl.create({
-            schoolId: school.id,
-            url: url
-        }));
+    if (url != school.url) {
+        try {
+            await(school.update(
+                {url: url},
+                {hooks: false})
+            );
+        } catch (e) {
+            /*if url in use then generate different url*/
+            console.log(e);
+            url = url + '_';
+            await(school.update(
+                {url: url},
+                {hooks: false})
+            );
+        } finally {
+            await(models.SchoolUrl.create({
+                schoolId: school.id,
+                url: url
+            }));
+        }
     }
 });
 

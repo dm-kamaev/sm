@@ -8,7 +8,10 @@ var School = db.define('School', {
     /**
      * School info
      */
-    name: DataType.STRING,
+    name: { 
+        type: DataType.STRING,
+        unique: true
+    },
     abbreviation: DataType.STRING,
     fullName: {
         field: 'full_name',
@@ -26,8 +29,7 @@ var School = db.define('School', {
     site: DataType.STRING,
     govermentKey: {
         field: 'goverment_key',
-        type: DataType.INTEGER,
-        unique: true,
+        type: DataType.INTEGER
     },
     cityId: {
         field: 'city_id',

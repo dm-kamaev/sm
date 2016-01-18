@@ -1,6 +1,7 @@
 goog.provide('sm.bSearch.Search');
 
 goog.require('goog.dom');
+goog.require('goog.dom.classlist');
 goog.require('goog.events');
 goog.require('goog.ui.Component');
 goog.require('gorod.gSuggest.Suggest');
@@ -21,8 +22,16 @@ sm.bSearch.Search = function(opt_params) {
      */
     this.params_ = opt_params || {};
 
+    /**
+     * @private
+     * @type {object}
+     */
     this.elements_ = {};
 
+    /**
+     * @private
+     * @type {object}
+     */
     this.suggest_ = null;
 };
 goog.inherits(sm.bSearch.Search, goog.ui.Component);
@@ -36,7 +45,6 @@ goog.scope(function() {
      */
     Search.CssClass = {
         ROOT: 'b-search',
-        INPUT: 'b-input__input',
         LIST: 'b-search__list',
         ICON: 'b-search__icon'
     };
@@ -56,7 +64,7 @@ goog.scope(function() {
      * @public
      */
     Search.prototype.getValue = function() {
-        return goog.dom.getElementByClass(Search.CssClass.INPUT).value;
+        return this.suggest_.getText();
     };
 
     /**
@@ -94,6 +102,11 @@ goog.scope(function() {
                  this.elements_.icon,
                  goog.events.EventType.CLICK,
                  this.onIconClick_
+             );
+             this.getHandler().listen(
+                 this.elements_.suggest,
+                 goog.events.EventType.INPUT,
+                 this.onTextChange_
              );
          }
 
@@ -249,5 +262,23 @@ goog.scope(function() {
             type: Search.Event.SUBMIT,
             text: data.text
         });
+    };
+
+    /**
+     * Redirect handler
+     * @private
+     */
+    Search.prototype.onTextChange_ = function() {
+        if (this.getValue().length > 0) {
+            goog.dom.classlist.remove(
+                this.elements_.icon,
+                'b-search__icon_disabled'
+            );
+        } else {
+            goog.dom.classlist.add(
+                this.elements_.icon,
+                'b-search__icon_disabled'
+            );
+        }
     };
 });

@@ -19,7 +19,10 @@
             //TODO: uncomment
             //<span class="b-icon_img_arrow b-search__icon"></span>
         {else}
-            <span class="b-icon_img_search b-search__icon"></span>
+            <span class="b-icon_img_search b-search__icon
+                {if not $params.text}
+                    {sp}b-search__icon_disabled
+                {/if}"></span>
         {/if}
         {call gorod.gSuggest.SuggestTemplate.render}
             {param params: [
