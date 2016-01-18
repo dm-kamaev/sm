@@ -101,7 +101,7 @@ jQuery(function() {
     };
 
     var loadData = function () {
-        $.get( "debugdata", function( data ) {
+        $.post( "debugdata", function( data ) {
             $( ".result" ).html( data );
             BIGJSON = data;
             var catArray = [];

@@ -44,7 +44,7 @@ exports.list = async (function(req, res) {
             data: {
                 schools: schools,
                 filters: {
-                    filters: render.filters(filters),
+                    filters: filters,
                     url: '/api/school/search'
                 }
             },

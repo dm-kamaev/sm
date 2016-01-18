@@ -234,15 +234,15 @@ exports.createComment = async (function(req, res) {
  * @apiParam {Object} searchParams Search params.
  * @apiParamExample {json} Request-Example:
  *     {
- *       "searchParams" : {
- *          "name": "123",
- *          "classes": [1,2,3,4],
- *          "schoolType": [1,2],
- *          "gia": [1,2],
- *          "ege": [2,3],
- *          "olimp": [3,5],
- *          "metroId": 1,
- *          "areaId": 1
+ *       "searchParams": {
+ *         "name": "123",
+ *         "classes": [1,2,3,4],
+ *         "schoolType": [1,2],
+ *         "gia": [1,2],
+ *         "ege": [2,3],
+ *         "olimp": [3,5],
+ *         "metroId": 1,
+ *         "areaId": 1
  *       }
  *     }
  */

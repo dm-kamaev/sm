@@ -113,12 +113,15 @@ goog.scope(function() {
         this.suggest_.setCallbacks({
             getData: function(elem) {
                 var data = JSON.parse(elem);
-                console.log(data);
                 var res = [];
                 var types = ['schools', 'areas', 'metro'],
                     items;
+
                 for (var i = 0, type; type = types[i]; i++) {
                     items = data[type];
+                    for (var j = 0, item; item = items[j]; j++) {
+                        item.type = type;
+                    }
                     if (type == 'schools') {
                         items = items.sort(function(school1, school2) {
                             var res = 0,
@@ -238,7 +241,9 @@ goog.scope(function() {
      * @param {Object} data
      */
     Search.prototype.itemClickHandler_ = function(event, data) {
-        if (data.item.type === 'school') {
+        console.log(data);
+
+        if (data.item.type === 'schools') {
             document.location.href = '/school/' + data.item.url;
         } else {
             this.dispatchEvent({
