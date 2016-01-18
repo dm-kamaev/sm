@@ -57,7 +57,8 @@ goog.scope(function() {
         'ROOT': 'l-school',
         'FEEDBACK_BUTTON': 'b-bouton_feedback-opener',
         'RATING': 'b-rating',
-        'COMMENTS': 'b-comments'
+        'COMMENTS': 'b-comments',
+        'FEEDBACK_LINK': 'l-school__comments-placeholder-link'
     };
 
     /**
@@ -107,6 +108,15 @@ goog.scope(function() {
                 this.onClick_,
                 false,
                 this
+            );
+        }
+
+        /** feedback link listener */
+        if (this.elements_.feedbackLink) {
+            this.getHandler().listen(
+                this.elements_.feedbackLink,
+                goog.events.EventType.CLICK,
+                this.onClick_
             );
         }
 
@@ -203,9 +213,11 @@ goog.scope(function() {
      */
     School.prototype.initChildren_ = function() {
         /** comments */
-        var comments = new sm.lSchool.bComments.Comments();
-        this.addChild(comments);
-        comments.decorate(this.elements_.comments);
+        if (comments) {
+            var comments = new sm.lSchool.bComments.Comments();
+            this.addChild(comments);
+            comments.decorate(this.elements_.comments);
+        }
 
         /** rating */
         // var rating = new sm.bRating.Rating();
@@ -249,6 +261,10 @@ goog.scope(function() {
             root: root,
             boutons: goog.dom.getElementsByClass(
                 sm.lSchool.School.CssClass.FEEDBACK_BUTTON,
+                root
+            ),
+            feedbackLink: goog.dom.getElementByClass(
+                sm.lSchool.School.CssClass.FEEDBACK_LINK,
                 root
             ),
             rating: goog.dom.getElementByClass(

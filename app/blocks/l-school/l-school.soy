@@ -135,11 +135,13 @@
                 </div>
             </div>
 
-            <div class="l-shool__section l-shool__section__results">
+            /*
+            <div class="l-school__section l-school__section__results">
                 <div class="l-school__container">
-                    /*Results of ege, gia, olimpiads*/
+                    // Results of ege, gia, olimpiads
                 </div>
             </div>
+            */
 
             <div class="l-school__section
                        l-school__section__comments">
@@ -150,8 +152,8 @@
                 </div>
             </div>
 
-            <div class="l-shool__section
-                        l-shool__section__popular-schools">
+            <div class="l-school__section
+                        l-school__section__popular-schools">
                 <div class="l-school__container">
                     {call .popularSchools_}
                         {param params: [
@@ -614,43 +616,57 @@
         ]>
     }
     <div class="l-school__section">
-        <div class="l-school__content-comments">
-            <div class="l-school__content-column l-school__content-column_small">
-                {call .contentTitle_}
-                    {param image: '123.png' /}
-                    {param text: 'комментарии и оценки' /}
+        {if length($comments) > 0}
+            <div class="l-school__content-comments">
+                <div class="l-school__content-column l-school__content-column_small">
+                    {call .contentTitle_}
+                        {param image: '123.png' /}
+                        {param text: 'комментарии и оценки' /}
+                        //TODO: uncomment
+                        // {param buttonAlt: 'надпись2' /}
+                    {/call}
                     //TODO: uncomment
-                    // {param buttonAlt: 'надпись2' /}
-                {/call}
-                {call gorod.bBouton.BoutonTemplate.render}
-                    {param params: [
-                        'label': 'Оставить отзыв',
-                        'customClasses': 'b-bouton_feedback-opener',
-                        'state': [
-                            'pressed': true
-                        ],
-                        'style': [
-                            'theme': 'default',
-                            'size': 'extralarge',
-                            'width': 'block',
-                            'color': 'red',
-                            'borderRadius': 'none',
-                            'borderWidth': 'l',
-                            'uppercase': 'true'
-                        ]
-                    ] /}
-                {/call}
+                    /*
+                    {call gorod.bBouton.BoutonTemplate.render}
+                        {param params: [
+                            'label': 'Оставить отзыв',
+                            'customClasses': 'b-bouton_feedback-opener',
+                            'state': [
+                                'pressed': true
+                            ],
+                            'style': [
+                                'theme': 'default',
+                                'size': 'extralarge',
+                                'width': 'block',
+                                'color': 'red',
+                                'borderRadius': 'none',
+                                'borderWidth': 'l',
+                                'uppercase': 'true'
+                            ]
+                        ] /}
+                    {/call}
+                    */
+                </div>
+                <div class="l-school__content-column
+                            l-school__content-column_double-width
+                            l-school__content-column_last">
+                    {call sm.lSchool.bComments.Template.base}
+                        {param params: [
+                            'comments': $comments
+                        ] /}
+                    {/call}
+                </div>
             </div>
-            <div class="l-school__content-column
-                        l-school__content-column_double-width
-                        l-school__content-column_last">
-                {call sm.lSchool.bComments.Template.base}
-                    {param params: [
-                        'comments': $comments
-                    ] /}
-                {/call}
+        {else}
+            <div class="l-school__horisontal-line"></div>
+            <div class="l-school__comments-placeholder">
+                Никто пока не оставил отзыв об этой школе.{sp}
+                <span class="l-school__comments-placeholder-link">
+                    Станьте первым!
+                </span>
             </div>
-        </div>
+        {/if}
+        <div class="l-school__horisontal-line"></div>
     </div>
 {/template}
 

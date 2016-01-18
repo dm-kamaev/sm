@@ -205,6 +205,21 @@ body {
     font-size: 0;
 }
 
+.l-school__comments-placeholder {
+    margin: 55px 0;
+
+    text-align: center;
+
+    font-family: 'PT Serif';
+    font-size: 16px;
+}
+
+.l-school__comments-placeholder-link {
+    cursor: pointer;
+
+    color: #ed635a;
+}
+
 .l-school__content-block{
     margin-bottom: 36px;
 
@@ -254,6 +269,10 @@ body {
 .b-bouton_feedback-opener {
     font-family: 'Proxima', Arial, sans-serif;
     font-weight: 800;
+}
+
+.l-school__section__popular-schools {
+    margin-top: -19px;
 }
 
 .l-school__popular-school {
