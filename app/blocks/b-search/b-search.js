@@ -99,27 +99,33 @@ goog.scope(function() {
 
         this.suggest_.setCallbacks({
             getData: function(elem) {
-                elem = JSON.parse(elem);
-                var result = [];
-                for (prop in elem) {
-                    var type;
-                    switch (prop) {
-                        case 'schools':
-                            type = 'school';
-                            break;
-                        case 'areas':
-                            type = 'area';
-                            break;
-                        case 'metro':
-                            type = 'metro';
-                            break;
+                var data = JSON.parse(elem);
+                var res = [];
+                var types = ['schools', 'area', 'metro'],
+                    items;
+                for (var i = 0, type; type = types[i]; i++) {
+                    items = data[type];
+                    if (type == 'schools') {
+                        items = items.sort(function(school1, school2) {
+                            var res = 0,
+                                matches1 = school1.name.match(/№(\d+)/),
+                                matches2 = school2.name.match(/№(\d+)/),
+                                num1 = matches1 && matches1[1] || 1000000,
+                                num2 = matches2 && matches2[1] || 1000000;
+
+                            if (num1 || num2) {
+                                res = num1 - num2;
+                            }
+                            else {
+                                res = (school1.name > school2.name) ? 1 : -1;
+                            }
+
+                            return res;
+                        });
                     }
-                    elem[prop].forEach(function(item) {
-                        item.type = type;
-                        result.push(item);
-                    });
+                    res = res.concat(items);
                 }
-                return result;
+                return res.slice(0, 10);
             },
 
             search: function(elem) {
