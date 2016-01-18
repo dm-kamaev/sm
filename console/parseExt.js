@@ -42,7 +42,8 @@ var parse = async(function(path) {
 
     var matches = findMatches(parsedSchools, parsedData);
 
-    var specializedStat = [];
+    var specializedStat = [],
+        debug = [];
 
     console.log(matches.length);
 
@@ -69,6 +70,12 @@ var parse = async(function(path) {
             await(services.school.update(match[0], schoolData));
 
         if (data.departments) {
+            var newDepsAdrs = deleteMissingDepartments(
+                data.addresses,
+                data.departments
+            );
+            data.addresses = newDepsAdrs.addresses;
+            data.departments = newDepsAdrs.departments;
             if (!isAddressesUpdated(data.addresses, match[2]))
             {
                 match[2].forEach(address => {
@@ -77,6 +84,7 @@ var parse = async(function(path) {
                             name: address.name
                     }}));
                 });
+
                 await(services.school.setAddresses(
                     schoolInstance,
                     data.addresses
@@ -87,12 +95,15 @@ var parse = async(function(path) {
                     })
                 ));
 
-                setAddresses(data.areas, data.addresses);
+                await(setAddresses(data.areas, data.addresses));
 
                 if (data.departments.length === data.addresses.length) {
-                    await(createDepartments(match[0], data.addresses, data.departments));
+                    await(createDepartments(
+                        match[0],
+                        data.addresses,
+                        data.departments));
                 }
-    
+
             } else if (data.departments.length === data.addresses.length) {
                 await(updateDepartments(match[0], data.addresses, data.departments));
             }
@@ -124,12 +135,26 @@ var isAddressesUpdated = function(dataAddresses, schoolAddresses) {
             }
         });
     });
-    if (matches === dataAddresses.length) {
+    if (matches === schoolAddresses.length &&
+        matches === dataAddresses.length) {
         return true;
     } else {
         return false;
     }
 };
+
+var deleteMissingDepartments = function(addresses, departments) {
+    departments.forEach((department, i) => {
+        if (department[0] === '-') {
+            departments.splice(i, 1);
+            addresses.splice(i, 1);
+        }
+    });
+    return {
+        addresses: addresses,
+        departments: departments
+    }
+}
 
 var updateDepartments = function(school_id, addresses, departments) {
 
@@ -372,6 +397,13 @@ var createSchool = async(function(data) {
         educationInterval: [1,2,3,4,5,6,7,8,9,10,11] // TODO: need data
     }));
 
+    var newDepsAdrs = deleteMissingDepartments(
+        data.addresses,
+        data.departments
+    );
+    data.addresses = newDepsAdrs.addresses;
+    data.departments = newDepsAdrs.departments;
+
     await(services.school.setAddresses(
         school,
         data.addresses
@@ -493,10 +525,12 @@ var capitalizeFirstChar = function(string) {
 var parseAddressOrArea = function(addresses) {
     if (addresses) {
         return addresses.split(';').map(adr => {
-            return adr
-                .replace(/(\r\n|\n|\r)/g,"")
-                .replace('район',"")
-                .trim();
+            if (adr) {
+                return adr
+                    .replace(/(\r\n|\n|\r)/g,"")
+                    .replace('район',"")
+                    .trim();
+            }
         });
    }
 };
@@ -506,11 +540,16 @@ var parseDepartments = function(departments) {
         .replace(/\r/g, '')
         .split('\n')
         .map(department => {
-            return department
-                .split(':')
-                .map(data => {
-                    return capitalizeFirstChar(data.trim());
-                });
+                return department
+                    .split(':')
+                    .map(data => {
+                        return capitalizeFirstChar(data.trim());
+                    });
+        })
+        .filter(dep => {
+            if (dep[0]) {
+                return dep;
+            }
         });
 };
 

@@ -121,7 +121,6 @@ var getEducationInterval = function(interval, type) {
  *  @param {string} site
  *  @return {array<object>}
  */
-<<<<<<< HEAD
 var getSites = function(sites) {
     if (Array.isArray(sites)) {
         return sites.map(site => {
@@ -138,14 +137,6 @@ var getSites = function(sites) {
                 name: 'Сайт школы',
                 href: 'http://' + sites,
                 link: sites
-=======
-var getSites = function(site) {
-    if (site) {
-        return [{
-            name: 'Перейти на сайт школы',
-            href: 'http://' + site,
-            link: site
->>>>>>> 362aa87f61aa4966373c6f4c2c87fc0cff51ee07
         }];
     }
 };
