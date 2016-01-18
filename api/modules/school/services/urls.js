@@ -13,12 +13,11 @@ var service = {
  */
 service.stringToURL = function(string) {
     string = string.toLowerCase()
-        .replace(/и/g,'i')
         .replace(/\ /g, '-')
         .replace(/\./g, '-')
-        .replace(/(--)/g, '-')
         .replace(/(\№|«|»|%|(|))/g, '');
-    var latin = translit(string);
+    var latin = translit(string)
+        .replace(/(--)/g, '-');
     return encodeURIComponent(latin);
 };
 
