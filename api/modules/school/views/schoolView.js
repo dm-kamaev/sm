@@ -53,9 +53,10 @@ schoolView.default = function(schoolInstance, opt_popularSchools) {
         totalScore: checkScoreCount(schoolInstance.totalScore, scoreCount),
         reviewCount: checkScoreCount(schoolInstance.reviewCount, scoreCount)
     };
-    
-    if (opt_popularSchools)
+
+    if (opt_popularSchools) {
         result.popularSchools = this.popular(opt_popularSchools);
+    }
     return result;
 };
 
@@ -70,7 +71,8 @@ schoolView.popular = function(popularSchools) {
             url: school.url,
             name: school.name,
             description: school.description || '',
-            metroStations: services.address.getMetro(school.addresses)
+            metro: services.address.getMetro(school.addresses),
+            totalScore: school.totalScore
         };
     });
 };
