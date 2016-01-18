@@ -25,7 +25,7 @@ sm.lSearch.Search = function(opt_params) {
 
     /**
      * Search instance
-     * @type {sm.bSearch.Search}
+     * @type {?sm.bSearch.Search}
      * @private
      */
     this.search_ = null;
@@ -73,7 +73,7 @@ goog.scope(function() {
         this.initElements_(element);
 
         var bSearch = goog.dom.getElementByClass(
-            BlockSearch.CssClass.INPUT,
+            BlockSearch.CssClass.ROOT,
             element
         );
 
@@ -99,6 +99,12 @@ goog.scope(function() {
             goog.events.EventType.CLICK,
             this.onButtonClick_
         );
+
+        this.getHandler().listen(
+            this.search_,
+            BlockSearch.Event.ITEM_SELECT,
+            this.onNotSchoolSelect_
+        );
     };
 
     /**
@@ -110,11 +116,20 @@ goog.scope(function() {
         this.elements_ = {
             searchButton: goog.dom.getElementByClass(
                 Search.CssClass.SEARCH_BUTTON
-            ),
-            input: goog.dom.getElementByClass(
-                BlockSearch.CssClass.INPUT
             )
         };
+    };
+
+    /**
+     * Area/metro redirect handler
+     * @param {Object} event
+     * @private
+     */
+    Search.prototype.onNotSchoolSelect_ = function(event) {
+        var url = '/school' +
+            '?id=' + event.data.id + '&type=' + event.data.type +
+                '&name=' + this.search_.getValue();
+        document.location.href = url;
     };
 
     /**

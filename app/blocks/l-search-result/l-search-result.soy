@@ -8,6 +8,7 @@
         data: [
             schools: list<[
                 id: number,
+                url: string,
                 name: string,
                 score: list<number>,
                 totalScore: number,
@@ -57,28 +58,27 @@
             <div class="l-search-result">
                 {call sm.bHeader.Template.base}
                     {param params: [
-                        'url': '/'
+                        'url': '/',
+                        'searchText': $params.searchText,
+                        'templates': [
+                            'search': $params.templates.search,
+                            'item': $params.templates.item,
+                            'text': $params.templates.text,
+                            'value': $params.templates.value
+                        ]
                     ]/}
                 {/call}
                 <div class="l-search-result__body">
                     {call .topMenu_}
-                        {param params: [
-                            'searchText': $params.searchText,
-                            'templates': [
-                                'search': $params.templates.search,
-                                'item': $params.templates.item,
-                                'text': $params.templates.text,
-                                'value': $params.templates.value
-                            ]
-                    ]/}
-                {/call}
-                {call .leftMenu_ data="all"/}
-                <div class="l-search-result__school-list">
-                    {call sm.lSearchResult.bSchoolList.Template.base}
-                        {param params: [
-                            'schools': $params.data.schools
-                        ]/}
                     {/call}
+                    {call .leftMenu_ data="all"/}
+                    <div class="l-search-result__school-list">
+                        {call sm.lSearchResult.bSchoolList.Template.base}
+                            {param params: [
+                                'schools': $params.data.schools
+                            ]/}
+                        {/call}
+                    </div>
                 </div>
             </div>
             <script type="text/javascript"
@@ -98,31 +98,22 @@
  * Top menu template
  */
 {template .topMenu_ autoescape="strict" kind="html" private="true"}
-    {@param? params: [
-        searchText: string,
-        templates: [
-            search: string,
-            item: string,
-            text: string,
-            value: string
-        ]
-    ]}
     <div class="l-search-result__top-menu">
-        <div class="l-search-result__search">
-            {call sm.bSearch.Template.base}
-                {param params: [
-                    'placeholder': 'Поиск',
-                    'text': $params.searchText,
-                    'theme': 'min',
-                    'templates': [
-                        'search': $params.templates.search,
-                        'item': $params.templates.item,
-                        'text': $params.templates.text,
-                        'value': $params.templates.value
-                    ]
-                ]/}
-            {/call}
-        </div>
+        // <div class="l-search-result__search">
+        //     {call sm.bSearch.Template.base}
+        //         {param params: [
+        //             'placeholder': 'Поиск',
+        //             'text': $params.searchText,
+        //             'theme': 'min',
+        //             'templates': [
+        //                 'search': $params.templates.search,
+        //                 'item': $params.templates.item,
+        //                 'text': $params.templates.text,
+        //                 'value': $params.templates.value
+        //             ]
+        //         ]/}
+        //     {/call}
+        // </div>
         //TODO: uncomment
         /*
         <div class="l-search-result__show-on-map">

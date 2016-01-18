@@ -1,10 +1,8 @@
-var colors = require('colors');
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var sequelizeInclude = require.main.require('./api/components/sequelizeInclude');
 var models = require.main.require('./app/components/models').all;
 var services = require.main.require('./app/components/services').all;
-var common = require.main.require('./console/common');
 exports.name = 'address';
 
 
@@ -124,7 +122,7 @@ exports.getMetro = function(address) {
         var metro = {};
         address.forEach(adr => {
             adr.metroStations.forEach(m => {
-                metro[m.id] = m.name;
+                metro[m.id] = m.name.replace('метро ', '');
             });
         });
         return Object.keys(metro)
@@ -133,7 +131,7 @@ exports.getMetro = function(address) {
             });
     } else {
         return address.metroStations.map(metro => {
-            return metro.name;
+            return metro.name.replace('метро ', '');
         });
     }
 };
@@ -189,65 +187,25 @@ exports.getCoords = function(addresses) {
     });
 };
 
-exports.list = async ( function(opt_params) {
-    var params = opt_params || {};
-
+exports.listMapPoints = async (function() {
     var searchConfig = {
-        include: [
-            {
-                model: models.Address,
-                as: 'addresses'
-            },
-            {
-                model: models.Rating,
-                as: 'ratings'
-            }
+        include: [{
+            model: models.Address,
+            as: 'addresses',
+            attributes: [
+                'name',
+                'coords'
+            ]
+        }],
+        attributes: [
+            'id',
+            'name',
+            'schoolType',
+            'url',
+            'totalScore'
         ]
     };
 
     var schools = await(models.School.findAll(searchConfig));
-
-    return schools.map(school => {
-        var sumScore = school.ratings
-            .map(rating => rating.score)
-            .reduce((context, coords) => {
-                coords.forEach((value, index) => {
-                    if (value) {
-                        context.count[index]++;
-                        context.sum[index] += value;
-                        context.res[index] = context.sum[index] / context.count[index];
-                    }
-                });
-
-                return context;
-            }, {
-                sum: [0, 0, 0, 0],
-                count: [0, 0, 0, 0],
-                res: [0, 0, 0, 0]
-            }).res;
-
-        return {
-            id: school.id,
-            coords: school.addresses.map(adr => {
-                return {
-                    lat: adr.coords[0],
-                    lng: adr.coords[1]
-                };
-            }),
-            type: '',
-            name: school.name,
-            totalScore: sumScore.reduce((context, value) => {
-                if (value) {
-                    context.sum += value;
-                    context.count++;
-                    context.res = context.sum / context.count;
-                }
-                return context;
-            }, {
-                sum: 0,
-                count: 0,
-                res: 0
-            }).res
-        }
-    });
+    return schools;
 });

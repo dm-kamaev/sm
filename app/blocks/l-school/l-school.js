@@ -5,6 +5,7 @@ goog.require('goog.events');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
 goog.require('sm.bRating.Rating');
+goog.require('sm.bSearch.Search');
 goog.require('sm.lSchool.bComment.Comment');
 goog.require('sm.lSchool.bComments.Comments');
 goog.require('sm.lSchool.bDataBlockFoldList.FoldList');
@@ -18,6 +19,7 @@ goog.require('sm.lSchool.bMap.Map');
  */
 
 sm.lSchool.School = function(opt_params) {
+    goog.base(this);
 
     /**
      * params
@@ -32,6 +34,13 @@ sm.lSchool.School = function(opt_params) {
      * @private
      */
     this.modal_ = null;
+
+    /**
+     * Search instance
+     * @type {?sm.bSearch.Search}
+     * @private
+     */
+    this.search_ = null;
 };
 goog.inherits(sm.lSchool.School, goog.ui.Component);
 
@@ -48,7 +57,8 @@ goog.scope(function() {
         'ROOT': 'l-school',
         'FEEDBACK_BUTTON': 'b-bouton_feedback-opener',
         'RATING': 'b-rating',
-        'COMMENTS': 'b-comments'
+        'COMMENTS': 'b-comments',
+        'FEEDBACK_LINK': 'l-school__comments-placeholder-link'
     };
 
     /**
@@ -64,6 +74,8 @@ goog.scope(function() {
      * @public
      */
     School.prototype.createDom = function() {
+        goog.base(this, 'createDom');
+
         var element = goog.soy.renderAsElement(sm.lSchool.Template.base, {
             params: this.params_
         });
@@ -98,6 +110,29 @@ goog.scope(function() {
                 this
             );
         }
+
+        /** feedback link listener */
+        if (this.elements_.feedbackLink) {
+            this.getHandler().listen(
+                this.elements_.feedbackLink,
+                goog.events.EventType.CLICK,
+                this.onClick_
+            );
+        }
+
+        /** search submit listener */
+        this.getHandler().listen(
+            this.search_,
+            sm.bSearch.Search.Event.SUBMIT,
+            this.onSubmit_
+        );
+
+        /** Area/Metro selectcion */
+        this.getHandler().listen(
+            this.search_,
+            sm.bSearch.Search.Event.ITEM_SELECT,
+            this.onNotSchoolSelect_
+        );
     };
 
     /**
@@ -116,6 +151,40 @@ goog.scope(function() {
                 this
             );
         }
+    };
+
+    /**
+     * Input submit handler
+     * @param {Object} event
+     * @private
+     */
+    School.prototype.onSubmit_ = function(event) {
+        this.searchRequest_(event.text);
+    };
+
+    /**
+     * Area/metro redirect handler
+     * @param {Object} event
+     * @private
+     */
+    School.prototype.onNotSchoolSelect_ = function(event) {
+        var url = '/school' +
+            '?id=' + event.data.id + '&type=' + event.data.type +
+                '&name=' + this.search_.getValue();
+        document.location.href = url;
+    };
+
+    /**
+     * Search redirect
+     * @param {string} searchString
+     * @private
+     */
+    School.prototype.searchRequest_ = function(searchString) {
+        var url = '/school';
+        if (searchString) {
+            url += '?name=' + encodeURIComponent(searchString);
+        }
+        document.location.href = url;
     };
 
     /**
@@ -144,9 +213,11 @@ goog.scope(function() {
      */
     School.prototype.initChildren_ = function() {
         /** comments */
-        var comments = new sm.lSchool.bComments.Comments();
-        this.addChild(comments);
-        comments.decorate(this.elements_.comments);
+        if (comments) {
+            var comments = new sm.lSchool.bComments.Comments();
+            this.addChild(comments);
+            comments.decorate(this.elements_.comments);
+        }
 
         /** rating */
         // var rating = new sm.bRating.Rating();
@@ -174,6 +245,10 @@ goog.scope(function() {
             this.addChild(foldListInstance);
             foldListInstance.decorate(foldList);
         }
+
+        this.search_ = new sm.bSearch.Search();
+        this.addChild(this.search_);
+        this.search_.decorate(this.elements_.search);
     };
 
     /**
@@ -186,6 +261,10 @@ goog.scope(function() {
             root: root,
             boutons: goog.dom.getElementsByClass(
                 sm.lSchool.School.CssClass.FEEDBACK_BUTTON,
+                root
+            ),
+            feedbackLink: goog.dom.getElementByClass(
+                sm.lSchool.School.CssClass.FEEDBACK_LINK,
                 root
             ),
             rating: goog.dom.getElementByClass(
@@ -202,6 +281,10 @@ goog.scope(function() {
             ),
             foldLists: goog.dom.getElementsByClass(
                 sm.lSchool.bDataBlockFoldList.FoldList.CssClass.ROOT,
+                root
+            ),
+            search: goog.dom.getElementByClass(
+                sm.bSearch.Search.CssClass.ROOT,
                 root
             )
         };

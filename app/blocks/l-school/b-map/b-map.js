@@ -389,6 +389,7 @@ goog.scope(function() {
                 'properties': {
                     'id': data.id,
                     'name': data.name,
+                    'url': data.url,
                     'totalScore': data.totalScore ?
                         parseFloat(data.totalScore).toFixed(1) : undefined
                 }

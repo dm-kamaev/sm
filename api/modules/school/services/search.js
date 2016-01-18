@@ -104,6 +104,7 @@ var generateSqlFilter = function(field, string, type) {
  */
 exports.updateSqlOptions = function(sqlOptions, searchParams) {
     var searchDataCount = 0;
+    var isGeoDataJoined = false;
     var searchDataWhere = {
         type: 'OR',
         values: []
@@ -119,15 +120,7 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
                 generateSqlFilter('area.name', searchParams.name, 'AND'),
             ]
         });
-        sqlOptions.join.push({
-            type: 'LEFT OUTER',
-            values: [
-                'address on address.school_id = school.id',
-                'area on area.id = address.area_id',
-                'address_metro on address_metro.address_id = address.id',
-                'metro on metro.id = address_metro.metro_id'
-            ]
-        });
+        isGeoDataJoined = true;
     }
 
     if (searchParams.classes && searchParams.classes.length) {
@@ -179,12 +172,33 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
         });
     }
 
+    if (searchParams.areaId) {
+        isGeoDataJoined = true;
+        sqlOptions.where.push('area.id = ' + searchParams.areaId);
+    }
+        
+    if (searchParams.metroId) {
+        isGeoDataJoined = true;
+        sqlOptions.where.push('metro.id = ' + searchParams.metroId);
+    }
+
     if (searchDataCount) {
         //search_data must be first in the from clause
         sqlOptions.from.unshift('search_data'); 
         sqlOptions.where.push(searchDataWhere);
         sqlOptions.where.push('school.id = search_data.school_id');
         sqlOptions.having.push(['COUNT(DISTINCT search_data.id) ', ' = ', searchDataCount]);
+    }
+    if (isGeoDataJoined) {
+        sqlOptions.join.push({
+            type: 'LEFT OUTER',
+            values: [
+                'address on address.school_id = school.id',
+                'area on area.id = address.area_id',
+                'address_metro on address_metro.address_id = address.id',
+                'metro on metro.id = address_metro.metro_id'
+            ]
+        });
     }
 };
 

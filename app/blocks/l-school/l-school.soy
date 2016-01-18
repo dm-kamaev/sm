@@ -61,8 +61,22 @@
  *            value: number
  *        ]>,
  *        totalScore: number,
- *        reviewCount: number
+ *        reviewCount: number,
+ *        popularSchools: ?list<[
+ *            id: ?number,
+ *            url: ?string,
+ *            name: ?string,
+ *            description: ?string,
+ *            metro: ?list<string>,
+ *            totalScore: ?number
+ *        ]>
  *     ]
+ *     searchTemplates: [
+ *         search: ?string,
+ *         item: ?string,
+ *         text: ?string,
+ *         value: ?string
+ *     ],
  * }
  */
 {template .base autoescape="strict" kind="html"}
@@ -90,7 +104,14 @@
                         l-school__section__header">
                 {call sm.bHeader.Template.base}
                     {param params: [
-                        'url': '/'
+                        'url': '/',
+                        'searchText': '',
+                        'templates': [
+                            'search': $params.searchTemplates.search,
+                            'item': $params.searchTemplates.item,
+                            'text': $params.searchTemplates.text,
+                            'value': $params.searchTemplates.value
+                        ]
                     ]/}
                 {/call}
             </div>
@@ -114,11 +135,13 @@
                 </div>
             </div>
 
-            <div class="l-shool__section l-shool__section__results">
+            /*
+            <div class="l-school__section l-school__section__results">
                 <div class="l-school__container">
-                    /*Results of ege, gia, olimpiads*/
+                    // Results of ege, gia, olimpiads
                 </div>
             </div>
+            */
 
             <div class="l-school__section
                        l-school__section__comments">
@@ -129,10 +152,14 @@
                 </div>
             </div>
 
-            <div class="l-shool__section
-                        l-shool__section__popular-schools">
+            <div class="l-school__section
+                        l-school__section__popular-schools">
                 <div class="l-school__container">
-                /*Popular schools*/
+                    {call .popularSchools_}
+                        {param params: [
+                            'popularSchools': $params?.data?.popularSchools
+                        ]/}
+                    {/call}
                 </div>
             </div>
 
@@ -332,10 +359,17 @@
 
     /*Address section*/
     {if $params.data.contacts}
+        {let $contactHeader kind="text"}
+            {if length($params.data.contacts.phones) < 1}
+                адреса
+            {else}
+                адреса и телефоны
+            {/if}
+        {/let}
         <div class="l-school__item-container">
             {call sm.lSchool.bDataBlockAddresses.Template.base}
                 {param params: [
-                    'header': 'адреса и телефоны',
+                    'header': $contactHeader,
                     'content': $params.data.contacts
                     ]
                 /}
@@ -344,41 +378,43 @@
     {/if}
 
     /*Links section*/
-    <div class="l-school__item-container">
-        {call sm.lSchool.bDataBlockLinks.Template.base}
-            {param params: [
-                'header': 'ссылки',
-                'content': $params.data.sites
-                ]
-            /}
-        {/call}
-    </div>
-
-    <div class="l-school__content-column">
-        /*ratings*/
-        {if length($params.data.ratings) > 0}
-            <div class="l-school__item-container">
-                {call sm.lSchool.bDataBlockRatings.Template.base}
-                    {param params: [
-                        'header': 'места в рейтингах',
-                        'content': $params.data.ratings
-                    ]/}
-                {/call}
-            </div>
-        {/if}
-
-        /*high schools */
-        {if $params.data.higthSchools}
-            <div class="l-school__item-container">
-                {call sm.lSchool.bDataBlock.Template.base}
-                    {param params: [
-                        'header': 'куда поступают выпускники'
-                        ]
-                    /}
-                {/call}
-            </div>
-        {/if}
-    </div>
+    {if $params.data.sites.length > 0}
+        <div class="l-school__item-container">
+            {call sm.lSchool.bDataBlockLinks.Template.base}
+                {param params: [
+                    'header': 'ссылки',
+                    'content': $params.data.sites
+                    ]
+                /}
+            {/call}
+        </div>
+    {/if}
+    // TODO: uncomment
+    // <div class="l-school__content-column">
+    //     /*ratings*/
+    //     {if length($params.data.ratings) > 0}
+    //         <div class="l-school__item-container">
+    //             {call sm.lSchool.bDataBlockRatings.Template.base}
+    //                 {param params: [
+    //                     'header': 'места в рейтингах',
+    //                     'content': $params.data.ratings
+    //                 ]/}
+    //             {/call}
+    //         </div>
+    //     {/if}
+    //
+    //     /*high schools */
+    //     {if $params.data.higthSchools}
+    //         <div class="l-school__item-container">
+    //             {call sm.lSchool.bDataBlock.Template.base}
+    //                 {param params: [
+    //                     'header': 'куда поступают выпускники'
+    //                     ]
+    //                 /}
+    //             {/call}
+    //         </div>
+    //     {/if}
+    // </div>
 
     <div class="l-school__content-column
                 l-school__content-column_last">
@@ -527,9 +563,9 @@
  * Information block
  * @private
  * @param params {
-  *    directorName: string,
-  *    classes: string
-  *  }
+ *    directorName: string,
+ *    classes: string
+ *  }
  */
 {template .information_  autoescape="strict" kind="html"}
 <div class="b-data-block">
@@ -580,43 +616,57 @@
         ]>
     }
     <div class="l-school__section">
-        <div class="l-school__content-comments">
-            <div class="l-school__content-column l-school__content-column_small">
-                {call .contentTitle_}
-                    {param image: '123.png' /}
-                    {param text: 'комментарии и оценки' /}
+        {if length($comments) > 0}
+            <div class="l-school__content-comments">
+                <div class="l-school__content-column l-school__content-column_small">
+                    {call .contentTitle_}
+                        {param image: '123.png' /}
+                        {param text: 'комментарии и оценки' /}
+                        //TODO: uncomment
+                        // {param buttonAlt: 'надпись2' /}
+                    {/call}
                     //TODO: uncomment
-                    // {param buttonAlt: 'надпись2' /}
-                {/call}
-                {call gorod.bBouton.BoutonTemplate.render}
-                    {param params: [
-                        'label': 'Оставить отзыв',
-                        'customClasses': 'b-bouton_feedback-opener',
-                        'state': [
-                            'pressed': true
-                        ],
-                        'style': [
-                            'theme': 'default',
-                            'size': 'extralarge',
-                            'width': 'block',
-                            'color': 'red',
-                            'borderRadius': 'none',
-                            'borderWidth': 'l',
-                            'uppercase': 'true'
-                        ]
-                    ] /}
-                {/call}
+                    /*
+                    {call gorod.bBouton.BoutonTemplate.render}
+                        {param params: [
+                            'label': 'Оставить отзыв',
+                            'customClasses': 'b-bouton_feedback-opener',
+                            'state': [
+                                'pressed': true
+                            ],
+                            'style': [
+                                'theme': 'default',
+                                'size': 'extralarge',
+                                'width': 'block',
+                                'color': 'red',
+                                'borderRadius': 'none',
+                                'borderWidth': 'l',
+                                'uppercase': 'true'
+                            ]
+                        ] /}
+                    {/call}
+                    */
+                </div>
+                <div class="l-school__content-column
+                            l-school__content-column_double-width
+                            l-school__content-column_last">
+                    {call sm.lSchool.bComments.Template.base}
+                        {param params: [
+                            'comments': $comments
+                        ] /}
+                    {/call}
+                </div>
             </div>
-            <div class="l-school__content-column
-                        l-school__content-column_double-width
-                        l-school__content-column_last">
-                {call sm.lSchool.bComments.Template.base}
-                    {param params: [
-                        'comments': $comments
-                    ] /}
-                {/call}
+        {else}
+            <div class="l-school__horisontal-line"></div>
+            <div class="l-school__comments-placeholder">
+                Никто пока не оставил отзыв об этой школе.{sp}
+                <span class="l-school__comments-placeholder-link">
+                    Станьте первым!
+                </span>
             </div>
-        </div>
+        {/if}
+        <div class="l-school__horisontal-line"></div>
     </div>
 {/template}
 
@@ -658,4 +708,52 @@
             {/if}
         {/foreach}
     </div>
+{/template}
+
+/**
+ * PopularSchool block
+ * @private
+ * @param params {
+ *     popularSchools: ?list<[
+ *         id: ?number,
+ *         url: ?string,
+ *         name: ?string,
+ *         description: ?string,
+ *         metro: ?list<string>,
+ *         totalScore: ?number
+ *     ]>
+ * }
+ */
+{template .popularSchools_ autoescape="strict" kind="html"}
+    <div class="l-school__popular-title">популярные школы</div>
+    {foreach $school in $params?.popularSchools}
+        <div class="l-school__popular-school
+        {if isLast($school)}{sp}l-school__popular-school_last{/if}">
+            <div class="l-school__popular-rating">
+                {call sm.bMark.Template.base}
+                    {param params: [
+                        'value': $school.totalScore
+                        ]
+                     /}
+                {/call}
+            </div>
+            <div class="l-school__popular-name">{$school.name}</div>
+            {if $school.description}
+                <div class="l-school__popular-description">{$school.description}</div>
+            {/if}
+            {if length($school?.metro) > 0}
+                <div class="l-school__popular-metro">
+                    <div class="l-school__popular-metro-icon b-icon_img_metro"></div>
+                    {foreach $metroStation in $school?.metro}
+                        <span class="l-school__popular-metro-stations">
+                            {$metroStation}
+                            {if not isLast($metroStation)}
+                                ,{sp}
+                            {/if}
+                        </span>
+                    {/foreach}
+                </div>
+            {/if}
+        </div>
+    {/foreach}
 {/template}

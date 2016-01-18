@@ -60,6 +60,7 @@
         {/foreach}
 
         /*output phones*/
+        {if length($params.content.phones) > 0}
             <li class="b-data-block__item">
                 Телефоны:{sp}
                 {foreach $phone in $params.content.phones}
@@ -70,6 +71,7 @@
                     {/if}
                 {/foreach}
             </li>
+        {/if}
     </ul>
 
 {/template}

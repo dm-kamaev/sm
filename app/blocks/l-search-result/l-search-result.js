@@ -50,7 +50,7 @@ sm.lSearchResult.SearchResult = function(opt_params) {
 
     /**
      * Search instance
-     * @type {sm.bSearch.Search}
+     * @type {?sm.bSearch.Search}
      * @private
      */
     this.search_ = null;
@@ -136,7 +136,7 @@ goog.scope(function() {
 
         //search
         var bSearch = goog.dom.getElementByClass(
-            Search.CssClass.INPUT,
+            Search.CssClass.ROOT,
             element
         );
 
@@ -167,6 +167,14 @@ goog.scope(function() {
             this.search_,
             sm.bSearch.Search.Event.SUBMIT,
             this.onSubmit_
+        );
+
+        this.getHandler().listen(
+            this.search_,
+            sm.bSearch.Search.Event.ITEM_SELECT,
+            function(event) {
+                console.log(event.data);
+            }
         );
     };
 

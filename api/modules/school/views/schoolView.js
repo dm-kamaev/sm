@@ -27,6 +27,7 @@ schoolView.default = function(schoolInstance, opt_popularSchools) {
 
     var result = {
         id: schoolInstance.id,
+        url: schoolInstance.url,
         schoolName: schoolInstance.name,
         schoolType: schoolInstance.schoolType,
         schoolDescr: schoolInstance.description,
@@ -55,8 +56,10 @@ schoolView.default = function(schoolInstance, opt_popularSchools) {
         totalScore: checkScoreCount(schoolInstance.totalScore, scoreCount),
         reviewCount: checkScoreCount(schoolInstance.reviewCount, scoreCount)
     };
-    if (opt_popularSchools)
+
+    if (opt_popularSchools) {
         result.popularSchools = this.popular(opt_popularSchools);
+    }
     return result;
 };
 
@@ -68,9 +71,11 @@ schoolView.popular = function(popularSchools) {
     return popularSchools.map(school => {
         return {
             id: school.id,
+            url: school.url,
             name: school.name,
             description: school.description || '',
-            metroStations: services.address.getMetro(school.addresses)
+            metro: services.address.getMetro(school.addresses),
+            totalScore: school.totalScore
         };
     });
 };
@@ -116,6 +121,7 @@ var getEducationInterval = function(interval, type) {
  *  @param {string} site
  *  @return {array<object>}
  */
+<<<<<<< HEAD
 var getSites = function(sites) {
     if (Array.isArray(sites)) {
         return sites.map(site => {
@@ -132,6 +138,14 @@ var getSites = function(sites) {
                 name: 'Сайт школы',
                 href: 'http://' + sites,
                 link: sites
+=======
+var getSites = function(site) {
+    if (site) {
+        return [{
+            name: 'Перейти на сайт школы',
+            href: 'http://' + site,
+            link: site
+>>>>>>> 362aa87f61aa4966373c6f4c2c87fc0cff51ee07
         }];
     }
 };
@@ -281,11 +295,16 @@ var getActivities = function(activities) {
     return activityView.list(activities);
 };
 
+/**
+ * @param {array<object>} schools - schoolInstances
+ * @return {array<object>}
+ */
 schoolView.list = function(schools) {
     return schools
         .map(school => {
             return {
                 id: school.id,
+                url: school.url,
                 name: school.name,
                 description: '',
                 abbreviation: school.abbreviation,
@@ -293,6 +312,29 @@ schoolView.list = function(schools) {
                 totalScore: school.totalScore || 0,
                 fullName: school.fullName,
                 addresses: school.addresses
+            };
+        });
+};
+
+/**
+ * @param {array<object>} schools - schoolInstances
+ * @return {array<object>}
+ */
+schoolView.listMapPoints = function(schools) {
+    return schools
+        .map(school => {
+            return {
+                id: school.id,
+                url: school.url,
+                name: school.name,
+                type: school.schoolType,
+                totalScore: school.totalScore || 0,
+                coords: school.addresses.map(adr => {
+                    return {
+                        lat: adr.coords[0],
+                        lng: adr.coords[1]
+                    };
+                }),
             };
         });
 };

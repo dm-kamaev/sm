@@ -19,26 +19,28 @@
             //TODO: uncomment
             //<span class="b-icon_img_arrow b-search__icon"></span>
         {else}
-            <span class="b-icon_img_search b-search__icon"></span>
+            <span class="b-icon_img_search b-search__icon
+                {if not $params.text}
+                    {sp}b-search__icon_disabled
+                {/if}"></span>
         {/if}
         {call gorod.gSuggest.SuggestTemplate.render}
             {param params: [
                 'data': [
-                    'text': $params.text,
+                    'text': $params?.text,
                     'minLength': 3,
-                    'placeholder': 'Поиск',
-                    'sourceUrl': '/api/school/search',
-                    'argName': 'searchParams[name]',
-                    'args': ['name']
+                    'placeholder': $params?.placeholder,
+                    'sourceUrl': '/api/school/search/suggest',
+                    'argName': 'searchString'
                 ],
                 'config': [
                     'customClasses': 'b-search__input',
                     'filtrationEnabled': false,
                     'templates': [
-                        'search': $params.templates.search,
-                        'item': $params.templates.item,
-                        'text': $params.templates.text,
-                        'value': $params.templates.value
+                        'search': $params?.templates.search,
+                        'item': $params?.templates.item,
+                        'text': $params?.templates.text,
+                        'value': $params?.templates.value
                     ]
                 ],
                 'list': [

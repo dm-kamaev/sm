@@ -8,7 +8,10 @@ var School = db.define('School', {
     /**
      * School info
      */
-    name: DataType.STRING,
+    name: {
+        type: DataType.STRING,
+        unique: true
+    },
     abbreviation: DataType.STRING,
     fullName: {
         field: 'full_name',
@@ -24,6 +27,10 @@ var School = db.define('School', {
     director: DataType.STRING,
     phones: DataType.ARRAY(DataType.STRING),
     site: DataType.STRING,
+    govermentKey: {
+        field: 'goverment_key',
+        type: DataType.INTEGER
+    },
     cityId: {
         field: 'city_id',
         type: DataType.INTEGER,
@@ -31,11 +38,6 @@ var School = db.define('School', {
     educationInterval: {
         field: 'education_interval',
         type: DataType.ARRAY(DataType.INTEGER)
-    },
-    govermentKey: {
-        field: 'goverment_key',
-        type: DataType.INTEGER,
-        allowNull: true
     },
     specializedClasses: {
         field: 'specialized_classes',

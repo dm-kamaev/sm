@@ -83,7 +83,13 @@ exports.view = async (function(req, res) {
             res.end(
                 soy.render('sm.lSchool.Template.base', {
                 params: {
-                    data: schoolView.default(school, popularSchools)
+                    data: schoolView.default(school, popularSchools),
+                    searchTemplates: {
+                        search: '{{ name }}',
+                        item: '{{ name }}',
+                        text: '{{ name }}',
+                        value: '{{ id }}'
+                    }
                 }
             }));
         }
