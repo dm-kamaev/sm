@@ -66,8 +66,15 @@ var processAddressChunk = async(addressesChunk => {
         console.log(('cordArr.length != adressArr.length. Starting deep search').yellow);
         processAddresPrecisely(addressesChunk);
     }
-    else
-        services.address.updateCoords(addressesChunk, cordArr);
+    else {
+
+        //services.address.updateCoords(addressesChunk, cordArr);
+        for (var i = 0, l = addressesChunk.length; i < l; i++) {
+            services.address.update(addressesChunk[i].id, {
+                coords: cordArr[i]
+            });
+        }
+    }
 });
 
 var processAddresPrecisely = async(addressesChunk => {
@@ -89,7 +96,12 @@ var processAddresPrecisely = async(addressesChunk => {
         }
     }
     if (!errorOccured)
-        services.address.updateCoords(addressesChunk, cordArr);
+        //services.address.updateCoords(addressesChunk, cordArr);
+        for (var i = 0, l = addressesChunk.length; i < l; i++) {
+            services.address.update(addressesChunk[i].id, {
+                coords: cordArr[i]
+            });
+        }
 });
 
 

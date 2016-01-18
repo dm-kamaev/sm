@@ -162,19 +162,19 @@ exports.setMetro = async(function(address, metroArr) {
  * @param {String} address
  */
 exports.setArea = async ((area, address) => {
-    var area = await(models.Area.findOne({
+    var areaInstance = await(models.Area.findOne({
         where: {
             name: area
         }
     }));
-    var address = await(models.Address.findAll({
+    var addressInstance = await(models.Address.findAll({
         where: {
             name: address
         }
     }));
 
-    address.forEach( (item) => {
-        item.setArea(area);
+    addressInstance.forEach( (item) => {
+        item.setArea(areaInstance);
     } );
 });
 

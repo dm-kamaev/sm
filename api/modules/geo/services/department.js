@@ -22,16 +22,16 @@ exports.addDepartment = function(school_id, address_id, data) {
     var addresses = await(services.school.getAddresses(school_id));
     var address = addresses.find(address => {
         var result = false;
-        if (address.id == address_id) {
+        if (address.id === address_id) {
             result = true;
         }
         return result;
     });
     return await(models.Department.create(data)
         .then(instance => {
-                address.addDepartment(instance);
-                return instance;
-            }));
+            address.addDepartment(instance);
+            return instance;
+    }));
 };
 
 

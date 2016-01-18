@@ -21,6 +21,7 @@ schoolView.default = function(schoolInstance, opt_popularSchools) {
             services.department.addressesFilter(schoolInstance.addresses),
         comments = schoolInstance.commentGroup ?
             schoolInstance.commentGroup.comments : [],
+
         score = schoolInstance.score || [0, 0, 0, 0],
         scoreCount = schoolInstance.scoreCount || [0, 0, 0, 0];
 
@@ -29,11 +30,11 @@ schoolView.default = function(schoolInstance, opt_popularSchools) {
         url: schoolInstance.url,
         schoolName: schoolInstance.name,
         schoolType: schoolInstance.schoolType,
-        schoolDescr: '',
-        features: [],
+        schoolDescr: schoolInstance.description,
+        features: schoolInstance.features,
         directorName: getDirectorName(schoolInstance.director),
-        extendedDayCost: '',
-        dressCode: '',
+        extendedDayCost: schoolInstance.extendedDayCost || '',
+        dressCode: schoolInstance.dressCode || false,
         classes: getEducationInterval(
             schoolInstance.educationInterval,
             'classes'),
@@ -42,9 +43,11 @@ schoolView.default = function(schoolInstance, opt_popularSchools) {
             'kindergarten'),
         social: [],
         metroStations: services.address.getMetro(addresses),
-        sites: getSites(schoolInstance.site) || [],
+        sites: schoolInstance.links ?
+            getSites(schoolInstance.links) :
+            getSites(schoolInstance.site),
+        specializedClasses: schoolInstance.specializedClasses,
         activities: getActivities(schoolInstance.activites),
-        specializedClasses: [],
         contacts: getContacts(addresses, schoolInstance.phones),
         comments: getComments(comments),
         coords: services.address.getCoords(addresses),
@@ -118,12 +121,22 @@ var getEducationInterval = function(interval, type) {
  *  @param {string} site
  *  @return {array<object>}
  */
-var getSites = function(site) {
-    if (site) {
+var getSites = function(sites) {
+    if (Array.isArray(sites)) {
+        return sites.map(site => {
+            return {
+                name: site[0],
+                href: site[1].indexOf('http') > -1 ?
+                    site[1] :
+                    'http://' + site[1],
+                link: site[1]
+            };
+        });
+    } else {
         return [{
-            name: 'Перейти на сайт школы',
-            href: 'http://' + site,
-            link: site
+                name: 'Сайт школы',
+                href: 'http://' + sites,
+                link: sites
         }];
     }
 };
@@ -211,7 +224,6 @@ var getRatings = function(rating, rank) {
             place: rank
         });
     }
-
     return ratings;
 };
 

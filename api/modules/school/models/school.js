@@ -8,7 +8,7 @@ var School = db.define('School', {
     /**
      * School info
      */
-    name: { 
+    name: {
         type: DataType.STRING,
         unique: true
     },
@@ -38,6 +38,38 @@ var School = db.define('School', {
     educationInterval: {
         field: 'education_interval',
         type: DataType.ARRAY(DataType.INTEGER)
+    },
+    specializedClasses: {
+        field: 'specialized_classes',
+        type: DataType.ARRAY(DataType.STRING)
+    },
+    features: {
+        field: 'features',
+        type: DataType.ARRAY(DataType.STRING)
+    },
+    extendedDayCost: {
+        field: 'extended_day_cost',
+        type: DataType.STRING
+    },
+    dressCode: {
+        field: 'dress_code',
+        type: DataType.BOOLEAN
+    },
+    links: {
+        field: 'links',
+        type: DataType.ARRAY(DataType.ARRAY(DataType.STRING))
+    },
+    description: {
+        field: 'description',
+        type: DataType.STRING
+    },
+    boarding: {
+        field: 'boarding',
+        type: DataType.BOOLEAN
+    },
+    popularity: {
+        field: 'popularity',
+        type: DataType.INTEGER
     },
 
     /**
