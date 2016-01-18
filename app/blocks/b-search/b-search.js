@@ -100,8 +100,9 @@ goog.scope(function() {
         this.suggest_.setCallbacks({
             getData: function(elem) {
                 var data = JSON.parse(elem);
+                console.log(data);
                 var res = [];
-                var types = ['schools', 'area', 'metro'],
+                var types = ['schools', 'areas', 'metro'],
                     items;
                 for (var i = 0, type; type = types[i]; i++) {
                     items = data[type];
