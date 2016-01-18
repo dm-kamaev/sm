@@ -364,6 +364,7 @@ schoolView.filters = function(filters) {
 
        switch (item.filter) {
            case 'school_type':
+               res.data.name = 'schoolType';
                res.data.header.title = 'Тип школы';
                res.config.filtersToShow = 15;
                res.config.cannotBeHidden = true;

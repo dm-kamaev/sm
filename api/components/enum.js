@@ -11,6 +11,8 @@ class Enum {
     constructor (name, fields) {
         this.name_ = name;
         this.fields_ = fields;
+
+        Object.assign(this, fields);
     }
 
     /**

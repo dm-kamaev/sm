@@ -155,6 +155,7 @@ exports.addressesFilter = function(addressList) {
     else {
         addresses = addressesWithoutStage;
     }
+
     return addresses;
 };
 
