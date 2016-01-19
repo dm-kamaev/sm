@@ -21,6 +21,7 @@ var start = async(function() {
         'Create db dump file [remote] and write it to config as current', 
         'Load db dump from the local storage',
         'Load db dump from the remote storage',
+        'Load db dump from the remote storage by name',
         'Show current config',
         'Drop all tables'],
     index = readlineSync.keyInSelect(vars, 'What to do?');
@@ -58,10 +59,17 @@ var start = async(function() {
             });
             dumpLoader.load();
             break;
-        case 6:
-            DumpHelper.checkConfig();
+        case 6: 
+            var dumpLoader = new DumpLoader({
+                remote: true,
+                askName: true
+            });
+            dumpLoader.load();
             break;
         case 7:
+            DumpHelper.checkConfig();
+            break;
+        case 8:
             DumpHelper.dropAll();
             break;
     }
@@ -230,7 +238,10 @@ class DumpLoader {
     constructor(opt_params) {
         opt_params = opt_params || {};
         this.isFromRemote_ = opt_params.remote || false;
-        this.filename_ = dbConfig.dump;
+        if (opt_params.askName) 
+            this.filename_ = readlineSync.question('Please type dump filename from http://repo.dfarm.lan/db/ :');
+        else 
+            this.filename_ = dbConfig.dump;
     }
 
     /**

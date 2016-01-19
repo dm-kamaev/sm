@@ -44,12 +44,13 @@ class CsvConverter {
         } else {
             res = JSON.parse(this.input_);
         }
+        this.cureQuotes_(res);
         return res;
     }
 
     /**
      * @private
-     * @prama {object} unstableJSON
+     * @param {object} unstableJSON
      * used to unflatten arrays
      */
     stabilizeJSON_(unstableJSON) {
@@ -68,7 +69,62 @@ class CsvConverter {
             }
         }
     }
+
+    /**
+     * @private
+     * @param {string}
+     * @return {string}
+     * Thank you javascript for userfull string functions
+     */
+    replaceQuotes_(str) {
+        var result;
+        var first = str.indexOf('"');
+        var last = str.lastIndexOf('"');
+        if (first > -1 && last > -1) {
+            result = str;
+            var innerSubstring = result.substr(first + 1, last - first - 1);
+            result = result.substr(0, first) + '«' + 
+                this.replaceQuotes_(innerSubstring) + '»' + result.substr(last + 1);
+        } else {
+            result = str.replace(/\"/g,'«');
+        }
+        return result;
+    }
     
+    
+    /**
+     * @private
+     * @param {object} 
+     * used to fix double quotes
+     */
+    cureQuotes_(JSON) {
+        for (var key in JSON) {
+            var oldValue = JSON[key];
+            try {
+                var newValue;
+                if (oldValue === null || typeof oldValue === 'undefined') {
+                    newValue = null;
+                } else if (typeof oldValue == 'object') {
+                    if (Array.isArray(oldValue)) {
+                        newValue = oldValue.slice(0);
+                    } else {
+                        newValue = Object.assign({}, oldValue);
+                    }
+                    if (newValue)
+                        this.cureQuotes_(newValue);
+                } else if (typeof oldValue == 'string') {
+                    newValue = this.replaceQuotes_(oldValue);
+                } else {
+                    newValue = oldValue;
+                }
+                JSON[key] = newValue;
+            } catch (e) {
+                console.log(e);
+                throw e;
+                JSON[key] = oldValue;
+            }
+        }
+    }
 
     /**
      * @private
