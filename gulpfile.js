@@ -282,4 +282,5 @@ const tasks = function (bool) {
         ['watch', 'froblSoy', 'soy', 'appSoy', 'scripts', 'sprite', 'images', 'fonts','styles'];
 };
 
+gulp.task('build', tasks(true)); 
 gulp.task('default', tasks(production));
