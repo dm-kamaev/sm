@@ -3,6 +3,7 @@ var await = require('asyncawait/await');
 var sequelizeInclude = require.main.require('./api/components/sequelizeInclude');
 var models = require.main.require('./app/components/models').all;
 var services = require.main.require('./app/components/services').all;
+var departmentStage = require('../enums/departmentStage');
 exports.name = 'address';
 
 
@@ -195,7 +196,21 @@ exports.listMapPoints = async (function() {
             attributes: [
                 'name',
                 'coords'
-            ]
+            ],
+            include: [{
+                model: models.Department,
+                as: 'departments',
+                attributes: [
+                    'stage'
+                ],
+                where: {
+                    $or: [
+                        {stage: departmentStage.fields.ELEMENTARY},
+                        {stage: departmentStage.fields.MIDDLE_HIDE}
+                    ]
+                }
+            }],
+            having: ['COUNT(?) > ?', '`departments`.`id`', 0]
         }],
         attributes: [
             'id',

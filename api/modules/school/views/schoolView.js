@@ -374,7 +374,7 @@ schoolView.listMapPoints = function(schools) {
                         lat: adr.coords[0],
                         lng: adr.coords[1]
                     };
-                }),
+                })
             };
         });
 };
