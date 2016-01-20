@@ -46,7 +46,9 @@ schoolView.default = function(schoolInstance, opt_popularSchools) {
         sites: schoolInstance.links ?
             getSites(schoolInstance.links) :
             getSites(schoolInstance.site),
-        specializedClasses: schoolInstance.specializedClasses,
+        specializedClasses: getSpecializedClasses(
+            schoolInstance.specializedClasses
+        ),
         activities: getActivities(schoolInstance.activites),
         contacts: getContacts(addresses, schoolInstance.phones),
         comments: getComments(comments),
@@ -277,6 +279,53 @@ var getDirectorName = function(name) {
     result = nameWords[1] + ' ' + nameWords[2] + ' ' + nameWords[0];
     return result;
 };
+
+var getSpecializedClasses = function(specializedClasses) {
+    var result = [],
+        grade = '',
+        index = -1;
+    if (specializedClasses) {
+        for (var i = 0,
+                l = specializedClasses.length,
+                specializedClass, specialLevel; i < l; i++) {
+            specializedClass = specializedClasses[i];
+            specialLevel = schoolGradeToLevel(specializedClass[0])
+
+
+
+            if (grade !== specialLevel) {
+                grade = specialLevel;
+
+                result.push({
+                    'name': grade,
+                    'items': []
+                });
+                index += 1;
+            }
+
+            if (result[index].items.indexOf(specializedClass[1]) === -1) {
+                result[index].items.push(specializedClass[1]);
+            }
+        }
+    }
+
+    return result;
+};
+
+ /**
+  * @param {number} grade
+  * @return {string}
+  */
+var schoolGradeToLevel = function(grade) {
+    console.log(grade);
+    if (grade < 5) {
+        return 'Начальная школа';
+    } else if (grade < 9) {
+        return 'Средняя школа';
+    } else {
+        return 'Старшая школа'
+    }
+}
 
 /**
  *  @param {object} activity
