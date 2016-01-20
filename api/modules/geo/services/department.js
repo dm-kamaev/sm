@@ -154,10 +154,6 @@ exports.addressesFilter = function(addressList) {
         addresses = addressesWithoutStage;
     }
 
-    console.log(addresses.map(adr => {
-        return adr.name;
-    }));
-
     return addresses;
 };
 
