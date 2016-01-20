@@ -132,12 +132,10 @@ exports.addressesFilter = function(addressList) {
             var res = false;
             if (address.departments.length > 0) {
                 address.departments.forEach(department => {
-                    if (department.stage !==
-                        departmentStage.fields.PRESCHOOL &&
-                        department.stage !==
-                        departmentStage.fields.SUPPLEMENTARY &&
-                        department.stage !==
-                        departmentStage.fields.HIGHER_EDUCATION) {
+                    if (department.stage ===
+                        departmentStage.fields.ELEMENTARY ||
+                        department.stage ===
+                        departmentStage.fields.MIDDLE_HIDE) {
                         res = true;
                     }
                 });
@@ -155,6 +153,10 @@ exports.addressesFilter = function(addressList) {
     else {
         addresses = addressesWithoutStage;
     }
+
+    console.log(addresses.map(adr => {
+        return adr.name;
+    }));
 
     return addresses;
 };
