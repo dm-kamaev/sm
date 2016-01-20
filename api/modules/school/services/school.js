@@ -6,6 +6,7 @@ var models = require.main.require('./app/components/models').all;
 var services = require.main.require('./app/components/services').all;
 var sequelize  = require.main.require('./app/components/db');
 var searchTypeEnum = require('../enums/searchType');
+var CsvConverter = require('../../../../console/modules/modelArchiver/CsvConverter');
 var service = {
     name: 'school'
 };
@@ -39,6 +40,7 @@ class SchoolNotFoundError extends Error {
  * @return {Object} School model instance
  */
 service.create = function(data) {
+    CsvConverter.cureQuotes(data);
     var includeParams = [{
         model: models.Address,
         as: 'addresses',
@@ -98,6 +100,7 @@ service.create = function(data) {
  * @return {Object} School model instance
  */
 service.update = async(function(school_id, data) {
+    CsvConverter.cureQuotes(data);
     var school = await(
         models.School.findOne({
             where: {id: school_id}
@@ -549,6 +552,7 @@ service.rate = async(function(school, params) {
 });
 
 service.createActivity = async(params => {
+    CsvConverter.cureQuotes(params);
     await (models.Activity.create(
         params,
         {
