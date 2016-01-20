@@ -115,6 +115,19 @@ goog.scope(function() {
     Search.prototype.onButtonClick_ = function() {
         this.searchRequest_(this.search_.getValue());
     };
+
+    /**
+     * Search redirect
+     * @param {string} searchString
+     * @private
+     */
+    Search.prototype.searchRequest_ = function(searchString) {
+        var url = '/search';
+        if (searchString) {
+            url += '?name=' + encodeURIComponent(searchString);
+        }
+        document.location.href = url;
+    };
 });
 
 /**
