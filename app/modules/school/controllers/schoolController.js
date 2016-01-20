@@ -23,21 +23,42 @@ exports.createComment = async (function(req, res) {
 
 
 exports.list = async (function(req, res) {
+    var searchText,
+        areaId,
+        metroId,
+        searchParams = {};
+
+    try{
+        searchText = req.query.name ?
+            decodeURIComponent(req.query.name) : '';
+        areaId = req.query.areaId ?
+            decodeURIComponent(req.query.areaId) : '';
+        metroId = req.query.metroId ?
+            decodeURIComponent(req.query.metroId) : '';
+    } catch(e) {
+        searchText = req.query.name || '';
+        areaId = req.query.areaId || '';
+        metroId = req.query.metroId || '';
+    }
+
+    if (areaId) {
+        searchParams.areaId = areaId;
+    } else if (metroId) {
+        searchParams.metroId = metroId;
+    } else if (searchText) {
+        searchParams.name = searchText;
+    }
+
     var promises = [
-        services.school.list(),
+        services.school.list({
+            searchParams: searchParams
+        }),
         services.school.searchFilters()
     ];
     var results = await(promises);
 
     var schools = schoolView.list(results[0]);
     var filters = schoolView.filters(results[1]);
-    var searchText;
-
-    try{
-        searchText = decodeURIComponent(req.query.name);
-    } catch(e) {
-        searchText = req.query.name;
-    }
 
     var params = {
         params: {

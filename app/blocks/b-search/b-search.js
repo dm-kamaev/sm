@@ -33,6 +33,12 @@ sm.bSearch.Search = function(opt_params) {
      * @type {object}
      */
     this.suggest_ = null;
+
+    /**
+     * @private
+     * @type {?object}
+     */
+    this.dataParams_ = {};
 };
 goog.inherits(sm.bSearch.Search, goog.ui.Component);
 
@@ -81,34 +87,38 @@ goog.scope(function() {
      * Set up the Component.
      */
      Search.prototype.enterDocument = function() {
-         goog.base(this, 'enterDocument');
+        goog.base(this, 'enterDocument');
 
-         var ui = gorod.iUIInstanceStorage.UIInstanceStorage.getInstance();
+        this.dataParams_ = JSON.parse(
+            this.getElement().getAttribute('data-params')
+        );
 
-         this.suggest_ = ui.getInstanceByElement(this.elements_.suggest);
+        var ui = gorod.iUIInstanceStorage.UIInstanceStorage.getInstance();
 
-         this.suggest_.addEventListener(
-             gorod.gSuggest.Suggest.Events.SELECT,
-             this.itemClickHandler_.bind(this)
-         );
+        this.suggest_ = ui.getInstanceByElement(this.elements_.suggest);
 
-         this.suggest_.addEventListener(
-             gorod.gSuggest.Suggest.Events.SUBMIT,
-             this.onSubmit_.bind(this)
-         );
+        this.suggest_.addEventListener(
+            gorod.gSuggest.Suggest.Events.SELECT,
+            this.itemClickHandler_.bind(this)
+        );
 
-         if (this.elements_.icon) {
-             this.getHandler().listen(
-                 this.elements_.icon,
-                 goog.events.EventType.CLICK,
-                 this.onIconClick_
-             );
-             this.getHandler().listen(
-                 this.elements_.suggest,
-                 goog.events.EventType.INPUT,
-                 this.onTextChange_
-             );
-         }
+        this.suggest_.addEventListener(
+            gorod.gSuggest.Suggest.Events.SUBMIT,
+            this.onSubmit_.bind(this)
+        );
+
+        if (this.elements_.icon) {
+            this.getHandler().listen(
+                this.elements_.icon,
+                goog.events.EventType.CLICK,
+                this.onIconClick_
+            );
+            this.getHandler().listen(
+                this.elements_.suggest,
+                goog.events.EventType.INPUT,
+                this.onTextChange_
+            );
+        }
 
         this.suggest_.setCallbacks({
             getData: function(elem) {
@@ -202,6 +212,16 @@ goog.scope(function() {
      */
     Search.prototype.exitDocument = function() {
         goog.base(this, 'exitDocument');
+
+        this.suggest_.removeEventListener(
+            gorod.gSuggest.Suggest.Events.SELECT,
+            this.itemClickHandler_.bind(this)
+        );
+
+        this.suggest_.removeEventListener(
+            gorod.gSuggest.Suggest.Events.SUBMIT,
+            this.onSubmit_.bind(this)
+        );
     };
 
     /**
@@ -241,10 +261,10 @@ goog.scope(function() {
      * @param {Object} data
      */
     Search.prototype.itemClickHandler_ = function(event, data) {
-        console.log(data);
-
         if (data.item.type === 'schools') {
             document.location.href = '/school/' + data.item.url;
+        } else if (this.dataParams_.redirect) {
+            this.onNotSchoolSelect_(event, data);
         } else {
             this.dispatchEvent({
                 type: Search.Event.ITEM_SELECT,
@@ -263,10 +283,27 @@ goog.scope(function() {
      * @param {Object} data
      */
     Search.prototype.onSubmit_ = function(event, data) {
-        this.dispatchEvent({
-            type: Search.Event.SUBMIT,
-            text: data.text
-        });
+        if (this.dataParams_.redirect) {
+            this.searchRequest_(data.text);
+        } else {
+            this.dispatchEvent({
+                type: Search.Event.SUBMIT,
+                text: data.text
+            });
+        }
+    };
+
+    /**
+     * Search redirect
+     * @param {string} searchString
+     * @private
+     */
+    Search.prototype.searchRequest_ = function(searchString) {
+        var url = '/search';
+        if (searchString) {
+            url += '?name=' + encodeURIComponent(searchString);
+        }
+        document.location.href = url;
     };
 
     /**
@@ -285,5 +322,22 @@ goog.scope(function() {
                 'b-search__icon_disabled'
             );
         }
+    };
+
+    /**
+     * Area/metro redirect handler
+     * @param {Object} event
+     * @param {Object} data
+     * @private
+     */
+    Search.prototype.onNotSchoolSelect_ = function(event, data) {
+        var url = '/search' +
+                '?name=' + this.getValue();
+        if (data.item.type === 'metro') {
+            url += '&metroId=' + data.item.id;
+        } else if (data.item.type === 'areas') {
+            url += '&areaId=' + data.item.id;
+        }
+        document.location.href = url;
     };
 });

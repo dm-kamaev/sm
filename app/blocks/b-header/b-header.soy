@@ -4,12 +4,13 @@
  * @param params {
  *    url: ?string,
  *    searchtext: ?string,
+ *    searchRedirect: ?bool
  *    templates: ?{
  *        search: ?string,
  *        item: ?string,
  *        text: ?string,
  *        value: ?string
- *    }
+ *    },
  * }
  */
 {template .base autoescape="strict" kind="html"}
@@ -65,6 +66,7 @@
                             'placeholder': 'Найти школу',
                             'text': $params?.searchText,
                             'theme': 'min',
+                            'redirect': $params?.searchRedirect,
                             'templates': [
                                 'search': $params?.templates.search,
                                 'item': $params?.templates.item,

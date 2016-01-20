@@ -89,21 +89,9 @@ goog.scope(function() {
         goog.base(this, 'enterDocument');
 
         this.getHandler().listen(
-            this.search_,
-            BlockSearch.Event.SUBMIT,
-            this.onSubmit_
-        );
-
-        this.getHandler().listen(
             this.elements_.searchButton,
             goog.events.EventType.CLICK,
             this.onButtonClick_
-        );
-
-        this.getHandler().listen(
-            this.search_,
-            BlockSearch.Event.ITEM_SELECT,
-            this.onNotSchoolSelect_
         );
     };
 
@@ -121,27 +109,6 @@ goog.scope(function() {
     };
 
     /**
-     * Area/metro redirect handler
-     * @param {Object} event
-     * @private
-     */
-    Search.prototype.onNotSchoolSelect_ = function(event) {
-        var url = '/school' +
-            '?id=' + event.data.id + '&type=' + event.data.type +
-                '&name=' + this.search_.getValue();
-        document.location.href = url;
-    };
-
-    /**
-     * Input submit handler
-     * @param {Object} event
-     * @private
-     */
-    Search.prototype.onSubmit_ = function(event) {
-        this.searchRequest_(event.text);
-    };
-
-    /**
      * Button click handler
      * @private
      */
@@ -155,7 +122,7 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.searchRequest_ = function(searchString) {
-        var url = '/school';
+        var url = '/search';
         if (searchString) {
             url += '?name=' + encodeURIComponent(searchString);
         }

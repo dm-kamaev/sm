@@ -5,6 +5,7 @@
  *    placeholder: ?string,
  *    text: ?string,
  *    theme: ?string,
+ *    redirect: ?bool,
  *    templates: ?{
  *        search: ?string,
  *        item: ?string,
@@ -14,7 +15,9 @@
  * }
  */
 {template .base autoescape="strict" kind="html"}
-    <div class="b-search b-search_theme_{$params.theme}">
+    <div class="b-search b-search_theme_{$params.theme}"
+        data-params="{lb}&quot;redirect&quot;:{$params.redirect}{rb}"
+    >
         {if $params.theme == 'main'}
             //TODO: uncomment
             //<span class="b-icon_img_arrow b-search__icon"></span>
