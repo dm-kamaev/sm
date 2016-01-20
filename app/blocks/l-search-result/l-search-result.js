@@ -5,6 +5,7 @@ goog.require('goog.dom.classlist');
 goog.require('goog.events');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
+goog.require('gorod.gSuggest.Suggest');
 goog.require('sm.bSearch.Search');
 goog.require('sm.lSearchResult.Template');
 goog.require('sm.lSearchResult.bFilters.Filters');
@@ -172,19 +173,16 @@ goog.scope(function() {
         this.getHandler().listen(
             this.search_,
             sm.bSearch.Search.Event.ITEM_SELECT,
-            function(event) {
-                console.log(event.data);
-            }
+            this.onSubmit_
         );
     };
 
     /**
      * Input submit handler
      * @param {Object} event
-     * @param {Object} data
      * @private
      */
-    SearchResult.prototype.onSubmit_ = function(event, data) {
+    SearchResult.prototype.onSubmit_ = function(event) {
         this.filters_.submit(event);
     };
 
@@ -204,7 +202,6 @@ goog.scope(function() {
      * @private
      */
     SearchResult.prototype.onSortHandler_ = function(event) {
-        console.log(event.itemId);
         this.schoolList_.sort(event.itemId);
     };
 
@@ -214,9 +211,13 @@ goog.scope(function() {
      * @private
      */
     SearchResult.prototype.filtersSubmitHandler_ = function(event) {
-        var data = event.data;
+        var data = event.data,
+            isSchool = (data.searchParams.areaId ||
+                data.searchParams.metroId) ? false : true;
 
-        data.searchParams.name = this.search_.getValue();
+        data.searchParams.name = isSchool ?
+            this.search_.getValue() :
+            undefined;
 
         jQuery.ajax({
             url: event.url,
