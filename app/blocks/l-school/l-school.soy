@@ -77,6 +77,7 @@
  *         text: ?string,
  *         value: ?string
  *     ],
+ *     searchText: ?string
  * }
  */
 {template .base autoescape="strict" kind="html"}
@@ -105,7 +106,8 @@
                 {call sm.bHeader.Template.base}
                     {param params: [
                         'url': '/',
-                        'searchText': '',
+                        'searchText': $params?.searchText,
+                        'searchRedirect': true,
                         'templates': [
                             'search': $params.searchTemplates.search,
                             'item': $params.searchTemplates.item,

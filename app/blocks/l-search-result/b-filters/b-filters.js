@@ -125,7 +125,7 @@ goog.scope(function() {
     };
 
     /**
-     * Sent form
+     * Send form
      * @param {Object} event
      * @private
      */
@@ -134,8 +134,15 @@ goog.scope(function() {
             data = {
                 'searchParams': this.processingSerializeArray_(
                     form.serializeArray()
-                )
-            };
+                ),
+            },
+            type = event.data ? event.data.type : '';
+
+        if (type === 'metro') {
+            data.searchParams.metroId = event.data.id;
+        } else if (type === 'areas') {
+            data.searchParams.areaId = event.data.id;
+        }
 
         this.dispatchEvent({
             type: Filters.event.SUBMIT,

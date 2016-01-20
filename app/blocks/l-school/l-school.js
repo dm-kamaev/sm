@@ -119,20 +119,6 @@ goog.scope(function() {
                 this.onClick_
             );
         }
-
-        /** search submit listener */
-        this.getHandler().listen(
-            this.search_,
-            sm.bSearch.Search.Event.SUBMIT,
-            this.onSubmit_
-        );
-
-        /** Area/Metro selectcion */
-        this.getHandler().listen(
-            this.search_,
-            sm.bSearch.Search.Event.ITEM_SELECT,
-            this.onNotSchoolSelect_
-        );
     };
 
     /**
@@ -151,40 +137,6 @@ goog.scope(function() {
                 this
             );
         }
-    };
-
-    /**
-     * Input submit handler
-     * @param {Object} event
-     * @private
-     */
-    School.prototype.onSubmit_ = function(event) {
-        this.searchRequest_(event.text);
-    };
-
-    /**
-     * Area/metro redirect handler
-     * @param {Object} event
-     * @private
-     */
-    School.prototype.onNotSchoolSelect_ = function(event) {
-        var url = '/school' +
-            '?id=' + event.data.id + '&type=' + event.data.type +
-                '&name=' + this.search_.getValue();
-        document.location.href = url;
-    };
-
-    /**
-     * Search redirect
-     * @param {string} searchString
-     * @private
-     */
-    School.prototype.searchRequest_ = function(searchString) {
-        var url = '/school';
-        if (searchString) {
-            url += '?name=' + encodeURIComponent(searchString);
-        }
-        document.location.href = url;
     };
 
     /**
