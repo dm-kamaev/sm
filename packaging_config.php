@@ -24,10 +24,9 @@ $filemapping = [
 
         // files and folders to exclude from package
         '- /packaging',
-        '- deployment/make-deb',
-        '- deployment/deploy',
-        '- /node_modules/deployment',
-        '- packaging_config.php',
+        '- /bin/make-deb',
+        '- /bin/deploy',
+        '- /packaging_config.php',
     ],
     'etc/init.d/@PACKAGENAME@-node' => 'templates/@PACKAGENAME@-node',
     'etc/nginx/sites-available/schools.mel.fm' => 'environment/nginx/schools_mel_fm.conf',
