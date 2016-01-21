@@ -1,5 +1,5 @@
 {
- "minimum-stability": "dev",
+    "minimum-stability": "dev",
     "repositories": [
         {
             "type": "vcs",
@@ -7,6 +7,6 @@
         }
     ],
     "require": {
-        "c7s/frobl": "dev-dev"
+        "c7s/frobl": "dev-release-20160120"
     }
 }

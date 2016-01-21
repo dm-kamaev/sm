@@ -15,6 +15,7 @@ var schoolView = {};
  * @param {?array<object>} opt_popularSchools - school instances
  * @return {object}
  */
+
 schoolView.default = function(schoolInstance, opt_popularSchools) {
 
     var addresses =
@@ -33,7 +34,7 @@ schoolView.default = function(schoolInstance, opt_popularSchools) {
         schoolDescr: schoolInstance.description,
         features: schoolInstance.features,
         directorName: getDirectorName(schoolInstance.director),
-        extendedDayCost: schoolInstance.extendedDayCost || '',
+        extendedDayCost: getExtendedDayCost(schoolInstance.extendedDayCost),
         dressCode: schoolInstance.dressCode || false,
         classes: getEducationInterval(
             schoolInstance.educationInterval,
@@ -66,7 +67,7 @@ schoolView.default = function(schoolInstance, opt_popularSchools) {
 };
 
 /**
- * @param {array<object>} - school instances
+ * @param {array<object>} popularSchools school instances
  * @return {array<object>}
  */
 schoolView.popular = function(popularSchools) {
@@ -80,6 +81,34 @@ schoolView.popular = function(popularSchools) {
             totalScore: school.totalScore
         };
     });
+};
+
+/**
+ * @param cost
+ * @return {string}
+ */
+var getExtendedDayCost = function(cost) {
+    var res = '';
+
+    switch (cost) {
+        case 'нет':
+        case '-':
+        case null:
+            break;
+
+        case 'есть':
+            res = 'Есть продлёнка';
+            break;
+
+        case 'бесплатно':
+            res = 'Есть бесплатная продлёнка';
+            break;
+
+        default:
+            res = 'Есть продлёнка, ' + cost;
+    }
+
+    return res;
 };
 
 /**
