@@ -50,9 +50,11 @@
 }
 
 .b-map__description-item {
+    margin-top: -8px;
+    margin-bottom: 8px;
+
     font-family: arial, sans-serif;
-
     font-size: 14px;
-
+    line-height: 20px;
     color: #666666;
 }

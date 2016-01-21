@@ -453,8 +453,6 @@ goog.scope(function() {
         data.forEach(function(item) {
             if (item.id != that.params_.id) {
                 that.addPlacemarksToMap_(item);
-            } else {
-                console.log(item);
             }
         });
 
@@ -581,7 +579,6 @@ goog.scope(function() {
      * @private
      */
     Map.prototype.initMap_ = function() {
-        console.log(this.params_);
         this.ymaps_ = new ymaps.Map(
             this.getElement(),
             this.getMapParams_(this.params_.addresses)
