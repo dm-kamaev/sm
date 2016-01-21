@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<project name="school-market" basedir=".">
+    <property name="initd_script" value="${ant.project.name}-node"/>
+
+    <import file="${basedir}/node_modules/deployment/build.xml"/>
+    <import file="${basedir}/node_modules/deployment/node.xml"/>
+
+    <!-- Packaging tune -->
+    <target name="setup-folders" depends="shared-folders-create, shared-set-permissions, setup-folders-logs, setup-folders-logs"/>
+    <target name="shared-folders-create" depends="shared-folders-create-logs"/>
+    <target name="shared-set-permissions" depends="shared-set-permissions-logs"/>
+
+    <!-- Switch to new release -->
+    <target name="packaging-switch-release"
+            depends="packaging-switch-release-before, setup-folders, migrate-database, switch-release-folder, node-start, initd-install, packaging-switch-release-after"/>
+
+    <!-- Stop previous release -->
+    <target name="packaging-stop-release" depends="packaging-stop-release-before, node-stop, initd-remove, remove-release-folder, packaging-stop-release-after"/>
+
+    <target name="migrate-database">
+        <exec executable="${gulp}" dir="${basedir}" failonerror="on">
+            <arg line="migrate"/>
+        </exec>
+    </target>
+
+</project>

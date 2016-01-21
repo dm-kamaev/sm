@@ -31,5 +31,5 @@ $filemapping = [
     ],
     'etc/init.d/@PACKAGENAME@-node' => 'templates/@PACKAGENAME@-node',
     'etc/nginx/sites-available/schools.mel.fm' => 'environment/nginx/schools_mel_fm.conf',
-    'etc/nginx/sites-available/schools' => 'environment/nginx/schools.qa.conf',
+    'etc/nginx/sites-available/schools' => 'environment/nginx/school-market.qa.conf',
 ];
