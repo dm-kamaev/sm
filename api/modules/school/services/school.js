@@ -617,7 +617,7 @@ service.list = async (function(opt_params) {
             'school.total_score',
             'school.url' ],
         from:  [
-            'school',
+            'school'
         ],
         where: [],
         join: [],
