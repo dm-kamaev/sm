@@ -3,6 +3,7 @@ var await = require('asyncawait/await');
 var sequelizeInclude = require.main.require('./api/components/sequelizeInclude');
 var models = require.main.require('./app/components/models').all;
 var services = require.main.require('./app/components/services').all;
+var sequelize = require('../../../../app/components/db');
 exports.name = 'address';
 
 
@@ -195,7 +196,21 @@ exports.listMapPoints = async (function() {
             attributes: [
                 'name',
                 'coords'
-            ]
+            ],
+            include: [{
+                model: models.Department,
+                as: 'departments',
+                attributes: [
+                    'stage'
+                ],
+                where: {
+                    $or: [
+                        {stage: 'Основное и среднее'},
+                        {stage: 'Начальное образование'}
+                    ]
+                }
+            }],
+            having: ['COUNT(?) > ?', '`departments`.`id`', 0]
         }],
         attributes: [
             'id',
@@ -206,6 +221,22 @@ exports.listMapPoints = async (function() {
         ]
     };
 
-    var schools = await(models.School.findAll(searchConfig));
+    var schoolz = await(models.School.findAll(searchConfig));
+    var sqlQuery = "SELECT school.id, school.name, school.url, \
+        school.school_type, school.total_score, address.coords, \
+        department.stage FROM school \
+        INNER JOIN address ON school.id = address.school_id \
+        INNER JOIN department ON address.id = department.address_id \
+        WHERE department.stage IN ('Основное и среднее', \
+        'Начальное образование')",
+        schools = sequelize.query(sqlQuery,{model: models.School}
+        ).then(schools => {
+            schools.forEach(sc => {
+                if (sc.name == 'Школа №1474')
+                    console.log(sc.dataValues);
+            });
+            console.log(schoolz[0].dataValues);
+            return schools;
+        });
     return schools;
 });
