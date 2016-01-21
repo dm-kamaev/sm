@@ -13,7 +13,7 @@
 
     <!-- Switch to new release -->
     <target name="packaging-switch-release"
-            depends="packaging-switch-release-before, setup-folders, migrate-database, switch-release-folder, node-start, initd-install, packaging-switch-release-after"/>
+            depends="packaging-switch-release-before, setup-folders, migrate-database, update-search-cache, switch-release-folder, node-start, initd-install, packaging-switch-release-after"/>
 
     <!-- Stop previous release -->
     <target name="packaging-stop-release" depends="packaging-stop-release-before, node-stop, initd-remove, remove-release-folder, packaging-stop-release-after"/>
@@ -21,6 +21,12 @@
     <target name="migrate-database">
         <exec executable="${gulp}" dir="${basedir}" failonerror="on">
             <arg line="migrate"/>
+        </exec>
+    </target>
+
+    <target name="update-search-cache">
+        <exec executable="${node}" dir="${basedir}">
+            <arg line="commander search"/>
         </exec>
     </target>
 
