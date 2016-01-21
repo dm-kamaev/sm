@@ -15,6 +15,7 @@ var schoolView = {};
  * @param {?array<object>} opt_popularSchools - school instances
  * @return {object}
  */
+
 schoolView.default = function(schoolInstance, opt_popularSchools) {
 
     var addresses =
@@ -33,7 +34,7 @@ schoolView.default = function(schoolInstance, opt_popularSchools) {
         schoolDescr: schoolInstance.description,
         features: schoolInstance.features,
         directorName: getDirectorName(schoolInstance.director),
-        extendedDayCost: schoolInstance.extendedDayCost || '',
+        extendedDayCost: getExtendedDayCost(schoolInstance.extendedDayCost),
         dressCode: schoolInstance.dressCode || false,
         classes: getEducationInterval(
             schoolInstance.educationInterval,
@@ -46,7 +47,9 @@ schoolView.default = function(schoolInstance, opt_popularSchools) {
         sites: schoolInstance.links ?
             getSites(schoolInstance.links) :
             getSites(schoolInstance.site),
-        specializedClasses: schoolInstance.specializedClasses,
+        specializedClasses: getSpecializedClasses(
+            schoolInstance.specializedClasses
+        ),
         activities: getActivities(schoolInstance.activites),
         contacts: getContacts(addresses, schoolInstance.phones),
         comments: getComments(comments),
@@ -64,7 +67,7 @@ schoolView.default = function(schoolInstance, opt_popularSchools) {
 };
 
 /**
- * @param {array<object>} - school instances
+ * @param {array<object>} popularSchools school instances
  * @return {array<object>}
  */
 schoolView.popular = function(popularSchools) {
@@ -78,6 +81,34 @@ schoolView.popular = function(popularSchools) {
             totalScore: school.totalScore
         };
     });
+};
+
+/**
+ * @param cost
+ * @return {string}
+ */
+var getExtendedDayCost = function(cost) {
+    var res = '';
+
+    switch (cost) {
+        case 'нет':
+        case '-':
+        case null:
+            break;
+
+        case 'есть':
+            res = 'Есть продлёнка';
+            break;
+
+        case 'бесплатно':
+            res = 'Есть бесплатная продлёнка';
+            break;
+
+        default:
+            res = 'Есть продлёнка, ' + cost;
+    }
+
+    return res;
 };
 
 /**
@@ -278,6 +309,53 @@ var getDirectorName = function(name) {
     return result;
 };
 
+var getSpecializedClasses = function(specializedClasses) {
+    var result = [],
+        grade = '',
+        index = -1;
+    if (specializedClasses) {
+        for (var i = 0,
+                l = specializedClasses.length,
+                specializedClass, specialLevel; i < l; i++) {
+            specializedClass = specializedClasses[i];
+            specialLevel = schoolGradeToLevel(specializedClass[0])
+
+
+
+            if (grade !== specialLevel) {
+                grade = specialLevel;
+
+                result.push({
+                    'name': grade,
+                    'items': []
+                });
+                index += 1;
+            }
+
+            if (result[index].items.indexOf(specializedClass[1]) === -1) {
+                result[index].items.push(specializedClass[1]);
+            }
+        }
+    }
+
+    return result;
+};
+
+ /**
+  * @param {number} grade
+  * @return {string}
+  */
+var schoolGradeToLevel = function(grade) {
+    console.log(grade);
+    if (grade < 5) {
+        return 'Начальная школа';
+    } else if (grade < 9) {
+        return 'Средняя школа';
+    } else {
+        return 'Старшая школа'
+    }
+}
+
 /**
  *  @param {object} activity
  *  @return {array}
@@ -325,7 +403,7 @@ schoolView.listMapPoints = function(schools) {
                         lat: adr.coords[0],
                         lng: adr.coords[1]
                     };
-                }),
+                })
             };
         });
 };
