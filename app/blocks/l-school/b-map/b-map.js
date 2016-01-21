@@ -59,12 +59,19 @@ sm.lSchool.bMap.Map = function(opt_params) {
      * @type {Object}
      * @private
      */
-    this.currentPlacemarkPresets_ = {};
+    this.currentPlacemarkPresetOptions_ = {};
 };
 goog.inherits(sm.lSchool.bMap.Map, goog.ui.Component);
 
 goog.scope(function() {
     var Map = sm.lSchool.bMap.Map;
+
+
+    /**
+     * Icon directory
+     * @type {string}
+     */
+    Map.ICON_DIR = '/images/l-school/b-map/b-map__pin/icons/';
 
 
     /**
@@ -82,7 +89,7 @@ goog.scope(function() {
      * Map presets names enum
      * @enum {string}
      */
-    Map.PresetsNames = {
+    Map.PresetName = {
         DEFAULT: 'default',
         GREEN: 'green',
         YELLOW: 'yellow',
@@ -94,9 +101,31 @@ goog.scope(function() {
      * Map presets types enum
      * @enum {string}
      */
-    Map.PresetsTypes = {
+    Map.PresetType = {
         DEFAULT: '',
         POINT: 'point'
+    };
+
+
+    /**
+     * Preset type options
+     * @enum {Object}
+     */
+    Map.PresetTypeOptions = {
+        DEFAULT: {
+            prefix: Map.PresetType.DEFAULT,
+            iconImageSize: [38, 40],
+            iconImageOffset: [-12, -39],
+            balloonOffset: [0, -30],
+            zIndex: 230
+        },
+        POINT: {
+            prefix: Map.PresetType.POINT,
+            iconImageSize: [13, 13],
+            iconImageOffset: [-6, -6],
+            balloonOffset: [0, -1],
+            zIndex: 210
+        }
     };
 
 
@@ -104,11 +133,26 @@ goog.scope(function() {
      * Map presets states enum
      * @enum {string}
      */
-    Map.PresetsStates = {
+    Map.PresetState = {
         DEFAULT: '',
         ACTIVE: 'active'
     };
 
+
+    /**
+     * Preset state options
+     * @enum {Object}
+     */
+    Map.PresetStateOptions = {
+        DEFAULT: {
+            postfix: Map.PresetState.DEFAULT,
+            zIndex: 0
+        },
+        ACTIVE: {
+            postfix: Map.PresetState.ACTIVE,
+            zIndex: 1200
+        }
+    };
 
     /**
     * These params are necessary for initializing ymaps,
@@ -149,38 +193,45 @@ goog.scope(function() {
 
         this.initParams_(element);
 
-        var ymapsParams = this.getMapParams_(this.params_.coords);
-
         ymaps.ready(jQuery.proxy(function() {
 
             //presets initialize
             this.initPresets_();
 
-            //maps initialize
-            this.ymaps_ = new ymaps.Map(element, ymapsParams);
-            this.ymaps_.setZoom(Math.floor(this.ymaps_.getZoom()));
-            this.initControls_();
+            //maps initialization
+            this.initMap_();
 
             //object manager initialization
-            this.objectManager_ = new ymaps.ObjectManager({
-                geoObjectBalloonAutoPan: true,
-                geoObjectHideIconOnBalloonOpen: false,
-                geoObjectBalloonPanelMaxMapArea: 0,
-                geoObjectBalloonCloseButton: true,
-                geoObjectBalloonLayout:
-                    this.generateBalloonLayout_(this.params_),
-                geoObjectPane: 'balloon',
-                geoObjectBalloonZIndex: 1040
-            });
-            this.ymaps_.geoObjects.add(this.objectManager_);
+            this.initObjectManager_();
 
             //placemarks
-            this.setCurrentPresets_(Map.PresetsTypes.DEFAULT);
-            this.addPlacemarkToMap_(this.params_, true);
+            //default placemarks
+            this.setCurrentPresets_(Map.PresetType.DEFAULT);
+            this.addPlacemarksToMap_(this.params_);
 
-            this.setCurrentPresets_(Map.PresetsTypes.POINT);
+            //point placemarks
+            this.setCurrentPresets_(Map.PresetType.POINT);
             this.getAllSchools_();
         }, this));
+    };
+
+
+    /**
+     * Object manager initialization
+     * @private
+     */
+    Map.prototype.initObjectManager_ = function() {
+        this.objectManager_ = new ymaps.ObjectManager({
+            geoObjectBalloonAutoPan: true,
+            geoObjectHideIconOnBalloonOpen: false,
+            geoObjectBalloonPanelMaxMapArea: 0,
+            geoObjectBalloonCloseButton: true,
+            geoObjectBalloonLayout:
+                this.generateBalloonLayout_(this.params_),
+            geoObjectPane: 'balloon',
+            geoObjectBalloonZIndex: 1040
+        });
+        this.ymaps_.geoObjects.add(this.objectManager_);
     };
 
 
@@ -202,66 +253,99 @@ goog.scope(function() {
      * @private
      */
     Map.prototype.initPresets_ = function() {
-        var path = '/images/l-school/b-map/b-map__pin/icons/';
         var names = [
-            Map.PresetsNames.DEFAULT,
-            Map.PresetsNames.GREEN,
-            Map.PresetsNames.YELLOW,
-            Map.PresetsNames.RED
+            Map.PresetName.DEFAULT,
+            Map.PresetName.GREEN,
+            Map.PresetName.YELLOW,
+            Map.PresetName.RED
         ];
-        var types = [
-            {
-                prefix: Map.PresetsTypes.DEFAULT,
-                iconImageSize: [38, 40],
-                iconImageOffset: [-12, -39],
-                balloonOffset: [0, -30],
-                zIndex: 230
-            },
-            {
-                prefix: Map.PresetsTypes.POINT,
-                iconImageSize: [13, 13],
-                iconImageOffset: [-6, -6],
-                balloonOffset: [0, -1],
-                zIndex: 210
-            }
+        var typeOptions = [
+            Map.PresetTypeOptions.DEFAULT,
+            Map.PresetTypeOptions.POINT
         ];
-        var states = [
-            {
-                postfix: Map.PresetsStates.DEFAULT,
-                zIndex: 0
-            },
-            {
-                postfix: Map.PresetsStates.ACTIVE,
-                zIndex: 1200
-            }
+        var stateOptions = [
+            Map.PresetStateOptions.DEFAULT,
+            Map.PresetStateOptions.ACTIVE
         ];
+        var typeOptionsLength = typeOptions.length;
+        var stateOptionsLength = stateOptions.length;
+        var namesLength = names.length;
 
-        for (var j = 0, prefix; j < types.length; j++) {
-            prefix = types[j].prefix != '' ? types[j].prefix + '-' : '';
-            for (var k = 0, postfix; k < states.length; k++) {
-                postfix = states[k].postfix != '' ?
-                    '-' + states[k].postfix : '';
-                for (var i = 0; i < names.length; i++) {
-                    var hName = names[i] == 'default' ? '' : '-' + names[i];
-                    var href = path + 'map-' + prefix + 'pin' + hName +
-                        '-th.png';
+        for (var j = 0, prefix, typeOption; j < typeOptionsLength; j++) {
+            typeOption = typeOptions[j];
+            prefix = typeOption.prefix;
+
+            for (var k = 0, postfix, stateOption; k < stateOptionsLength; k++) {
+                stateOption = stateOptions[k];
+                postfix = stateOption.postfix;
+
+                for (var i = 0, name, href; i < namesLength; i++) {
+                    name = names[i];
+                    href = this.getPresetImageHref_(name, prefix);
+
                     ymaps.option.presetStorage.add(
-                        prefix + names[i] + postfix,
-                        {
-                            balloonOffset: types[j].balloonOffset,
-                            iconImageHref: href,
-                            iconImageSize: types[j].iconImageSize,
-                            iconImageOffset: types[j].iconImageOffset,
-                            iconLayout: 'default#image',
-                            zIndex: types[j].zIndex + states[k].zIndex,
-                            zIndexHover:
-                                types[j].zIndex + 100 + states[k].zIndex
-                        }
+                        this.getPresetName_(name, prefix, postfix),
+                        this.getPresetOptions_(href, typeOption, stateOption)
                     );
                 }
             }
         }
     };
+
+
+    /**
+     * Getter for preset image href
+     * @param {string} name
+     * @param {string} prefix
+     * @return {string}
+     * @private
+     */
+    Map.prototype.getPresetImageHref_ = function(name, prefix) {
+        var hrefPrefix = prefix != '' ? prefix + '-' : '',
+            hrefName = name == 'default' ? '' : '-' + name;
+
+        return Map.ICON_DIR + 'map-' + hrefPrefix + 'pin' + hrefName +
+            '-th.png';
+    };
+
+
+    /**
+     * Getter for preset name
+     * @param {string} name
+     * @param {string} prefix
+     * @param {string} postfix
+     * @return {string}
+     * @private
+     */
+    Map.prototype.getPresetName_ = function(name, prefix, postfix) {
+        var namePrefix = prefix != '' ? prefix + '-' : '',
+            namePostfix = postfix != '' ? '-' + postfix : '';
+
+        return namePrefix + name + namePostfix;
+    };
+
+
+    /**
+     *
+     * @param {string} imageHref
+     * @param {Object} typeOption
+     * @param {Object} stateOption
+     * @return {Object}
+     * @private
+     */
+    Map.prototype.getPresetOptions_ =
+        function(imageHref, typeOption, stateOption) {
+            return {
+                balloonOffset: typeOption.balloonOffset,
+                iconImageHref: imageHref,
+                iconImageSize: typeOption.iconImageSize,
+                iconImageOffset: typeOption.iconImageOffset,
+                iconLayout: 'default#image',
+                zIndex: typeOption.zIndex + stateOption.zIndex,
+                zIndexHover: typeOption.zIndex + 100 +
+                    stateOption.zIndex
+            };
+        };
 
 
     /**
@@ -368,7 +452,9 @@ goog.scope(function() {
 
         data.forEach(function(item) {
             if (item.id != that.params_.id) {
-                that.addPlacemarkToMap_(item);
+                that.addPlacemarksToMap_(item);
+            } else {
+                console.log(item);
             }
         });
 
@@ -394,7 +480,7 @@ goog.scope(function() {
 
             this.objectManager_.objects.setObjectOptions(id, {
                 preset: currentSelectedPlacemarkPreset + '-' +
-                    Map.PresetsStates.ACTIVE
+                    Map.PresetState.ACTIVE
             });
 
             if (this.selectedPlacemarkId_ != null) {
@@ -419,31 +505,35 @@ goog.scope(function() {
             this.selectedPlacemarkId_,
             {
                 preset: lastSelectedPlacemarkPreset
-                        .replace('-' + Map.PresetsStates.ACTIVE, '')
+                        .replace('-' + Map.PresetState.ACTIVE, '')
             }
         );
     };
 
 
     /**
-     * Add placemark to map
+     * Add placemarks to map
      * @param {Object} data
-     * @param {bool=} opt_isCurrent
      * @private
      */
-    Map.prototype.addPlacemarkToMap_ = function(data, opt_isCurrent) {
-        for (var i = 0, id, presetKey, totScore; i < data.coords.length; i++) {
+    Map.prototype.addPlacemarksToMap_ = function(data) {
+        var totScore,
+            presetKey,
+            addressLength = data.addresses.length;
+
+        for (var i = 0, id, address; i < addressLength; i++) {
             id = this.currentPlacemarkId_++;
             totScore = data.totalScore;
+            address = data.addresses[i];
 
             if (totScore >= 4) {
-                presetKey = Map.PresetsNames.GREEN;
+                presetKey = Map.PresetName.GREEN;
             } else if (totScore >= 3) {
-                presetKey = Map.PresetsNames.YELLOW;
+                presetKey = Map.PresetName.YELLOW;
             } else if (totScore > 0) {
-                presetKey = Map.PresetsNames.RED;
+                presetKey = Map.PresetName.RED;
             } else {
-                presetKey = Map.PresetsNames.DEFAULT;
+                presetKey = Map.PresetName.DEFAULT;
             }
 
             this.objectManager_.add(JSON.stringify({
@@ -451,17 +541,18 @@ goog.scope(function() {
                 'id': id,
                 'geometry': {
                     'type': 'Point',
-                    'coordinates': [data.coords[i].lat, data.coords[i].lng]
+                    'coordinates': [address.lat, address.lng]
                 },
                 'properties': {
                     'id': data.id,
                     'name': data.name,
-                    'notCurrent': !opt_isCurrent,
-                    'totalScore': data.totalScore ?
-                        parseFloat(data.totalScore).toFixed(1) : undefined
+                    'address': {
+                        'name': address.name,
+                        'stages': address.stages
+                    }
                 },
                 'options': {
-                    'preset': this.currentPlacemarkPresets_[presetKey]
+                    'preset': this.currentPlacemarkPresetOptions_[presetKey]
                 }
             }));
         }
@@ -477,11 +568,30 @@ goog.scope(function() {
         var presets = {};
         var prefix = type != '' ? type + '-' : '';
 
-        for (var key in Map.PresetsNames) {
-            presets[Map.PresetsNames[key]] = prefix + Map.PresetsNames[key];
+        for (var key in Map.PresetName) {
+            presets[Map.PresetName[key]] = prefix + Map.PresetName[key];
         }
 
-        this.currentPlacemarkPresets_ = presets;
+        this.currentPlacemarkPresetOptions_ = presets;
+    };
+
+
+    /**
+     * Map initialization
+     * @private
+     */
+    Map.prototype.initMap_ = function() {
+        console.log(this.params_);
+        this.ymaps_ = new ymaps.Map(
+            this.getElement(),
+            this.getMapParams_(this.params_.addresses)
+        );
+        this.ymaps_.setZoom(Math.floor(this.ymaps_.getZoom()));
+        this.ymaps_.behaviors.enable('scrollZoom');
+        this.ymaps_.controls.add(
+            new ymaps.control.ZoomControl(),
+            Map.ZOOM
+        );
     };
 
 
@@ -521,19 +631,6 @@ goog.scope(function() {
         coord.push(coordObject.lat);
         coord.push(coordObject.lng);
         return coord;
-    };
-
-
-    /**
-     * Control initialization
-     * @private
-     */
-    Map.prototype.initControls_ = function() {
-        this.ymaps_.behaviors.enable('scrollZoom');
-        this.ymaps_.controls.add(
-            new ymaps.control.ZoomControl(),
-            Map.ZOOM
-        );
     };
 
 

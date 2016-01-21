@@ -12,9 +12,7 @@
     min-height: 100px;
 
     background-color: #ffffff;
-    font-weight: 600;
-    font-size: 16px;
-    font-family: serif;
+    font-size: 13px;
 
     box-shadow: 0 0 15px 1px rgba(40, 40, 40, 0.2);
 }
@@ -23,8 +21,9 @@
     float: left;
 
     max-width: 60%;
-    padding: 20px;
+    padding: 17px 20px 13px;
 
+    font-weight: 800;
     text-transform: uppercase;
 }
 
@@ -50,6 +49,10 @@
     padding: 0 20px 20px;
 }
 
-.b-map__balloon-rating {
-    color: #ee362c;
+.b-map__description-item {
+    font-family: arial, sans-serif;
+
+    font-size: 14px;
+
+    color: #666666;
 }

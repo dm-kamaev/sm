@@ -48,7 +48,7 @@
  *                value: int
  *            ]>
  *        ]>,
- *        coords: list<
+ *        addresses: list<
  *           list<number>
  *        >,
  *        ratings: list<[
@@ -276,9 +276,10 @@
  *              name: string
  *              items: list<string>
  *          ]>,
- *          coords: ?list<
- *              list<number>
- *          >,
+ *          addresses: ?list<[{
+ *              lat: number,
+ *              lng: number
+ *          }]>,
  *          score: list<[
  *              name: string,
  *              value: number
@@ -316,10 +317,9 @@
                 {param params: [
                     'data': [
                         'id': $params.data.id,
-                        'coords': $params.data.coords,
+                        'addresses': $params.data.addresses,
                         'name': $params.data.schoolName,
-                        'type': $params.data.schoolType,
-                        'totalScore': $params.data.totalScore
+                        'totalScore': $params.totalScore
                     ]
                 ] /}
             {/call}
