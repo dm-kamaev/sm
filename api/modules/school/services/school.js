@@ -609,23 +609,23 @@ service.list = async (function(opt_params) {
 
     var sqlConfig = {
         select: [
-            'id',
-            'name',
-            'score',
-            'full_name',
-            'abbreviation',
-            'total_score',
-            'url' ],
+            'school.id',
+            'school.name',
+            'school.score',
+            'school.full_name',
+            'school.abbreviation',
+            'school.total_score',
+            'school.url' ],
         from:  [
             'school'
         ],
         where: [],
         join: [],
         group: [
-            'id'
+            'school.id'
         ],
         order: [
-            'total_score DESC, id ASC'
+            'school.total_score DESC, school.id ASC'
         ],
         having: []
     };
