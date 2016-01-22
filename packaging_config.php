@@ -21,6 +21,7 @@ $configure = [
 $filemapping = [
     'opt/@PACKAGENAME@/@VERSION@' => [
         '*',
+        '.sequelizerc',
 
         // files and folders to exclude from package
         '- /packaging',
