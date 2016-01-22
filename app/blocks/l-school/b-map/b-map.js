@@ -186,35 +186,49 @@ goog.scope(function() {
 
 
     /**
-    * @override
-    */
+     * @override
+     */
     Map.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
         this.initParams_(element);
 
-        ymaps.ready(jQuery.proxy(function() {
+        var promiseSchools = this.getAllSchools_();
 
-            //presets initialize
-            this.initPresets_();
-
-            //maps initialization
-            this.initMap_();
-
-            //object manager initialization
-            this.initObjectManager_();
-
-            //placemarks
-            //default placemarks
-            this.setCurrentPresets_(Map.PresetType.DEFAULT);
-            this.addPlacemarksToMap_(this.params_);
-
-            //point placemarks
-            this.setCurrentPresets_(Map.PresetType.POINT);
-            this.getAllSchools_();
-        }, this));
+        ymaps.ready(this.onReady_.bind(this, promiseSchools));
     };
 
+    /**
+     * ymaps callback
+     * @param {array<object>} promiseSchools
+     * @private
+     */
+    Map.prototype.onReady_ = function(promiseSchools) {
+        //presets initialize
+        this.initPresets_();
+
+        //maps initialization
+        this.initMap_();
+
+        //object manager initialization
+        this.initObjectManager_();
+
+        //placemarks
+        //default placemarks
+        this.setCurrentPresets_(Map.PresetType.DEFAULT);
+        this.objectManager_.add(
+            this.getSchoolPlacemarks_(this.params_)
+        );
+
+        var that = this;
+        //point placemarks
+        this.setCurrentPresets_(Map.PresetType.POINT);
+        promiseSchools.done(function(responseData) {
+            that.objectManager_.add(
+                that.getAllPlacemarkCollection_(responseData)
+            );
+        });
+    };
 
     /**
      * Object manager initialization
@@ -430,13 +444,13 @@ goog.scope(function() {
     /**
      * Get all schools
      * @private
+     * @return {promise}
      */
     Map.prototype.getAllSchools_ = function() {
-        jQuery.ajax({
+        return jQuery.ajax({
             url: '/api/address/list',
             type: 'POST',
-            data: '',
-            success: this.getAllSchoolsSuccess_.bind(this)
+            data: ''
         });
     };
 
@@ -444,15 +458,20 @@ goog.scope(function() {
     /**
      * Success on getting all schools
      * @param {Array.<Object>} responseData
+     * @return {Array<Object>}
      * @private
      */
-    Map.prototype.getAllSchoolsSuccess_ = function(responseData) {
-        var that = this;
-        var data = JSON.parse(responseData);
+    Map.prototype.getAllPlacemarkCollection_ = function(responseData) {
+        var that = this,
+            data = JSON.parse(responseData),
+            result = [];
 
         data.forEach(function(item) {
             if (item.id != that.params_.id) {
-                that.addPlacemarksToMap_(item);
+                result.push.apply(
+                    result,
+                    that.getSchoolPlacemarks_(item)
+                );
             }
         });
 
@@ -461,6 +480,7 @@ goog.scope(function() {
             this.onPlacemarkClick_,
             this
         );
+        return result;
     };
 
 
@@ -512,12 +532,14 @@ goog.scope(function() {
     /**
      * Add placemarks to map
      * @param {Object} data
+     * @return {Array<Object>}
      * @private
      */
-    Map.prototype.addPlacemarksToMap_ = function(data) {
+    Map.prototype.getSchoolPlacemarks_ = function(data) {
         var totScore,
             presetKey,
-            addressLength = data.addresses.length;
+            addressLength = data.addresses.length,
+            result = [];
 
         for (var i = 0, id, address; i < addressLength; i++) {
             id = this.currentPlacemarkId_++;
@@ -534,7 +556,7 @@ goog.scope(function() {
                 presetKey = Map.PresetName.DEFAULT;
             }
 
-            this.objectManager_.add(JSON.stringify({
+            result.push({
                 'type': 'Feature',
                 'id': id,
                 'geometry': {
@@ -552,8 +574,9 @@ goog.scope(function() {
                 'options': {
                     'preset': this.currentPlacemarkPresetOptions_[presetKey]
                 }
-            }));
+            });
         }
+        return result;
     };
 
 

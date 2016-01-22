@@ -346,7 +346,6 @@ var getSpecializedClasses = function(specializedClasses) {
   * @return {string}
   */
 var schoolGradeToLevel = function(grade) {
-    console.log(grade);
     if (grade < 5) {
         return 'Начальная школа';
     } else if (grade < 9) {
@@ -408,12 +407,18 @@ schoolView.list = function(schools) {
 schoolView.listMapPoints = function(schools) {
     return schools
         .map(school => {
+            school = school.dataValues;
             return {
                 id: school.id,
                 url: school.url,
                 name: school.name,
                 totalScore: school.totalScore || 0,
-                addresses: services.address.getAddress(school.addresses)
+                addresses: [{
+                    lat: school.coords[0],
+                    lng: school.coords[1],
+                    name: school.adrName,
+                    stage: [school.stage]
+                }]
             };
         });
 };
