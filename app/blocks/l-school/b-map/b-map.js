@@ -200,7 +200,6 @@ goog.scope(function() {
 
     /**
      * ymaps callback
-     * @param {object} map
      * @param {array<object>} promiseSchools
      * @private
      */
