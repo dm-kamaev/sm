@@ -212,52 +212,48 @@ exports.getAddress = function(addresses) {
 };
 
 exports.listMapPoints = async (function() {
-    var searchConfig = {
-        include: [{
-            model: models.Address,
-            as: 'addresses',
-            attributes: [
-                'name',
-                'coords'
-            ],
-            include: [{
-                model: models.Department,
-                as: 'departments',
-                attributes: [
-                    'stage'
-                ],
-                where: {
-                    $or: [
-                        {stage: 'Основное и среднее'},
-                        {stage: 'Начальное образование'}
-                    ]
-                }
-            }],
-            having: ['COUNT(?) > ?', '`departments`.`id`', 0]
-        }],
-        attributes: [
-            'id',
-            'name',
-            'url'
-        ]
-    };
-
-    var schoolz = await(models.School.findAll(searchConfig));
-    var sqlQuery = "SELECT school.id, school.name, school.url, \
-        school.school_type, school.total_score, address.coords, \
-        department.stage FROM school \
-        INNER JOIN address ON school.id = address.school_id \
-        INNER JOIN department ON address.id = department.address_id \
-        WHERE department.stage IN ('Основное и среднее', \
-        'Начальное образование')",
-        schools = sequelize.query(sqlQuery,{model: models.School}
-        ).then(schools => {
-            schools.forEach(sc => {
-                if (sc.name == 'Школа №1474')
-                    console.log(sc.dataValues);
-            });
-            console.log(schoolz[0].dataValues);
-            return schools;
-        });
-    return schools;
+    // var searchConfig = {
+    //     include: [{
+    //         model: models.Address,
+    //         as: 'addresses',
+    //         attributes: [
+    //             'name',
+    //             'coords'
+    //         ],
+    //         include: [{
+    //             model: models.Department,
+    //             as: 'departments',
+    //             attributes: [
+    //                 'stage'
+    //             ],
+    //             where: {
+    //                 $or: [
+    //                     {stage: 'Основное и среднее'},
+    //                     {stage: 'Начальное образование'}
+    //                 ]
+    //             }
+    //         }],
+    //         having: ['COUNT(?) > ?', '`departments`.`id`', 0]
+    //     }],
+    //     attributes: [
+    //         'id',
+    //         'name',
+    //         'url'
+    //     ]
+    // };
+    //
+    // var schoolz = await(models.School.findAll(searchConfig));
+    var sqlQuery = "SELECT school.id, school.name, school.url, " +
+        "school.total_score AS \"totalScore\", address.name AS \"adrName\"," +
+        "address.coords, department.stage FROM school " +
+        "INNER JOIN address ON school.id = address.school_id " +
+        "INNER JOIN department ON address.id = department.address_id " +
+        "WHERE department.stage IN ('Основное и среднее', " +
+        "'Начальное образование')",
+        schools = sequelize.query(sqlQuery, { model: models.School });
+        // .then(schools => {
+        //     return schools;
+        // });
+        return schools;
+    // return schools;
 });
