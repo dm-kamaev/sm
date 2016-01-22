@@ -2,6 +2,7 @@
 
 <project name="school-market" basedir=".">
     <property name="initd_script" value="${ant.project.name}-node"/>
+    <property name="project.frontend.path" value="${basedir}"/>
 
     <import file="${basedir}/node_modules/deployment/packaging.xml"/>
     <import file="${basedir}/node_modules/deployment/node.xml"/>
