@@ -4,7 +4,7 @@ var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var models = require.main.require('./app/components/models').all;
 var services = require.main.require('./app/components/services').all;
-var sequelize  = require.main.require('./app/components/db');
+var sequelize = require.main.require('./app/components/db');
 var searchTypeEnum = require('../enums/searchType');
 var CsvConverter = require('../../../../console/modules/modelArchiver/CsvConverter');
 var service = {
@@ -625,17 +625,25 @@ service.list = async (function(opt_params) {
             'school.id'
         ],
         order: [
-            'school.total_score DESC'
+            'school.total_score DESC, school.id ASC'
         ],
         having: []
     };
+
     if (searchParams) {
         services.search.updateSqlOptions(sqlConfig, searchParams);
     }
+
     var sqlString = services.search.generateSearchSql(sqlConfig);
-    return sequelize.query(sqlString, {model: models.School})
-        .then(schools => {
-            console.log('Found: ', colors.green(schools.length)) ;
+
+    var options = {
+        model: models.School,
+        mapToModel: true
+    };
+
+    return sequelize.query(sqlString, options)
+    .then(schools => {
+            console.log('Found: ', colors.green(schools.length));
             return schools;
         });
 });

@@ -83,22 +83,55 @@ goog.scope(function() {
     };
 
     /**
-     * Compare by total score
+     * Returns item id
+     * @return {Number}
+     */
+    ListItem.prototype.getId = function() {
+        return this.id_;
+    };
+
+    /**
+     * Compare by total score descending then by id asc
      * @param {sm.lSearchResult.bSchoolListItem.SchoolListItem} item
      * @return {number}
      */
     ListItem.prototype.compareByTotalScore = function(item) {
-        return item.getTotalScore() - this.getTotalScore();
+        var result;
+
+        result = item.getTotalScore() - this.getTotalScore();
+
+        if (result === 0) {
+            result = this.compareById(item);
+        }
+
+        return result;
     };
 
     /**
-     * Compare by score
+     * Compare by score desc then by total score desc then by id asc
      * @param {sm.lSearchResult.bSchoolListItem.SchoolListItem} item
      * @param {number} index
      * @return {number}
      */
     ListItem.prototype.compareByScore = function(item, index) {
-        return item.getScore(index) - this.getScore(index);
+        var result;
+
+        result = item.getScore(index) - this.getScore(index);
+
+        if (result === 0) {
+            result = this.compareByTotalScore(item);
+        }
+
+        return result;
+    };
+
+    /**
+     * Compare by id ascending
+     * @param {sm.lSearchResult.bSchoolListItem.SchoolListItem} item
+     * @return {number}
+     */
+    ListItem.prototype.compareById = function(item) {
+        return this.getId() - item.getId();
     };
 
     /**
@@ -106,17 +139,6 @@ goog.scope(function() {
      */
     ListItem.prototype.createDom = function() {
         goog.base(this, 'createDom');
-
-        /**
-         * TODO: remove this when backend will send score
-         */
-        if (!this.params_.totalScore) {
-            this.params_.totalScore = 0;
-        }
-
-        if (!this.params_.score) {
-            this.params_.score = [0, 0, 0, 0];
-        }
 
         var element = goog.soy.renderAsElement(
             sm.lSearchResult.bSchoolListItem.Template.base,
