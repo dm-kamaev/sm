@@ -53,7 +53,7 @@ schoolView.default = function(schoolInstance, opt_popularSchools) {
         activities: getActivities(schoolInstance.activites),
         contacts: getContacts(addresses, schoolInstance.phones),
         comments: getComments(comments),
-        coords: services.address.getCoords(addresses),
+        addresses: services.address.getAddress(addresses),
         ratings: getRatings(schoolInstance.rank, schoolInstance.rankDogm),
         score: getScore(score, scoreCount),
         totalScore: checkScoreCount(schoolInstance.totalScore, scoreCount),
@@ -357,11 +357,27 @@ var schoolGradeToLevel = function(grade) {
 }
 
 /**
- *  @param {object} activity
+ *  @param {object} activities
  *  @return {array}
  */
 var getActivities = function(activities) {
     return activityView.list(activities);
+};
+
+var getStages = function(departments) {
+    var result = [];
+    var unical = {};
+    var deps = departments || [];
+
+    for (var i = 0, n = deps.length, dep; i < n; i++) {
+        dep = deps[i];
+        if (dep != undefined && dep.stage && !unical[dep.stage]) {
+            unical[dep.stage] = true;
+            result.push(dep.stage);
+        }
+    }
+
+    return result;
 };
 
 /**
@@ -396,14 +412,8 @@ schoolView.listMapPoints = function(schools) {
                 id: school.id,
                 url: school.url,
                 name: school.name,
-                type: school.schoolType,
                 totalScore: school.totalScore || 0,
-                coords: school.addresses.map(adr => {
-                    return {
-                        lat: adr.coords[0],
-                        lng: adr.coords[1]
-                    };
-                })
+                addresses: services.address.getAddress(school.addresses)
             };
         });
 };

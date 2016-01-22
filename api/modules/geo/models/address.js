@@ -27,7 +27,7 @@ var Address = db.define('Address', {
             });
             Address.hasMany(models.Department, {
                 as: 'departments',
-                foreignKey: 'address_id',
+                foreignKey: 'address_id'
             });
             Address.belongsTo(models.Area, {
                 as: 'area',

@@ -178,31 +178,61 @@ exports.setArea = async ((area, address) => {
     } );
 });
 
-exports.getCoords = function(addresses) {
+/**
+ * Getter for school address for map
+ * @param {Array.<Object>} addresses
+ * @return {Object}
+ */
+exports.getAddress = function(addresses) {
+    var getStages = function(departments) {
+        var result = [];
+        var unical = {};
+        var deps = departments || [];
+
+        for (var i = 0, n = deps.length, dep; i < n; i++) {
+            dep = deps[i];
+            if (dep != undefined && dep.stage && !unical[dep.stage]) {
+                unical[dep.stage] = true;
+                result.push(dep.stage);
+            }
+        }
+
+        return result;
+    };
+
     return addresses.map(adr => {
         return {
             lat: adr.coords[0],
-            lng: adr.coords[1]
-        };
+            lng: adr.coords[1],
+            name: adr.name,
+            stages: getStages(adr.departments)
+        }
     });
 };
 
 exports.listMapPoints = async (function() {
     var searchConfig = {
-        include: [{
-            model: models.Address,
-            as: 'addresses',
-            attributes: [
-                'name',
-                'coords'
-            ]
-        }],
+        include: [
+            {
+                model: models.Address,
+                as: 'addresses',
+                attributes: [
+                    'name',
+                    'coords'
+                ],
+                include: [{
+                    model: models.Department,
+                    as: 'departments',
+                    attributes: [
+                        'stage'
+                    ]
+                }]
+            }
+        ],
         attributes: [
             'id',
             'name',
-            'schoolType',
-            'url',
-            'totalScore'
+            'url'
         ]
     };
 
