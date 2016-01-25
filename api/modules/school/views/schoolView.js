@@ -393,7 +393,9 @@ schoolView.list = function(schools) {
                 name: school.name,
                 description: '',
                 abbreviation: school.abbreviation,
-                score: school.score || [0, 0, 0, 0],
+                score: school.score ?
+                    getSections(school.score) :
+                    getSections([0,0,0,0]),
                 totalScore: school.totalScore || 0,
                 fullName: school.fullName,
                 addresses: school.addresses

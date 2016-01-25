@@ -5,7 +5,11 @@
  * @param params {{
  *     value: number,
  *     display: ?string,
- *     starsConfig: ?[]
+ *     starsConfig: ?[],
+ *     config: [
+ *         bigText: bool,
+ *         notShowDashes: bool
+ *     ]
  * }}
  */
 {template .base}
@@ -21,13 +25,18 @@
         {/if}
     {/let}
     <div class="b-mark{sp}
-                b-mark_{$color}
-                {sp}
-                {$params?.display == 'inline' ? 'b-mark_inline' : ''}">
+                b-mark_{$color}{sp}
+                {$params?.display == 'inline' ? 'b-mark_inline' : ''}{sp}
+                {$params?.display == 'number' ? 'b-mark_number' : ''}{sp}
+                {if $params.config}
+                    {$params?.config.bigText ? 'b-mark_bigText' : ''}
+                {/if}">
         {if $params?.display == 'inline'}
             {call .inline data="all"/}
         {elseif $params?.display == 'stars'}
             {call .stars data="all"/}
+        {elseif $params?.display == 'number'}
+            {call .number data="all" /}
         {else}
             {call .simple data="all"/}
         {/if}
@@ -52,6 +61,9 @@
  * Inline
  * @param params {{
  *     value: number
+ *     config: [
+ *         showDashes: bool
+ *     ]
  * }}
  */
 {template .inline}
@@ -81,9 +93,28 @@
 {/template}
 
 /**
+ * Number template
+ * @param params {{
+ *     value: number
+ * }}
+ */
+{template .number}
+    <div class="b-mark__mark">
+        {call .value}
+            {param params: [
+                'value': $params.value
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+/**
  * Value
  * @param params {{
  *     value: number
+ *     config: [
+ *         notShowDashes: bool
+ *     ]
  * }}
  */
 {template .value}
@@ -91,6 +122,13 @@
         {let $val: round($params.value, 1)/}
         {floor($val)},{round(($val - floor($val))*10, 0)}
     {else}
-        —
+        {if $params.config}
+            {if $params.config.notShowDashes}
+            {else}
+                —
+            {/if}
+        {else}
+            —
+        {/if}
     {/if}
 {/template}

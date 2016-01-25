@@ -37,6 +37,13 @@
         <span class="b-block-mark__comment">
             - config for stars
         </span>
+        <br>
+        config: [<br>
+            bigText: ?bool
+            <span class="b-block-mark__comment">
+                 - Make font size marks bigger
+            </span>
+        ]
     </div>
 
     <br><br><br>
@@ -65,36 +72,78 @@
     {/call}
 
     <br><br>
+    <div class="b-block-mark__inline">
+        Inline (for display: inline) example:
+        <br>
+        {call sm.bMark.Template.base}
+            {param params: [
+                'value': 4.4,
+                'display': 'inline'
+            ] /}
+        {/call}
+        <br>
+        {call sm.bMark.Template.base}
+            {param params: [
+                'value': 3.2,
+                'display': 'inline'
+            ] /}
+        {/call}
+        <br>
+        {call sm.bMark.Template.base}
+            {param params: [
+                'value': 2.1,
+                'display': 'inline'
+            ] /}
+        {/call}
+        <br>
+        {call sm.bMark.Template.base}
+            {param params: [
+                'value': 0,
+                'display': 'inline'
+            ] /}
+        {/call}
+    </div>
 
-    Inline (for display: inline) example:
-    <br>
-    {call sm.bMark.Template.base}
-        {param params: [
-            'value': 4.4,
-            'display': 'inline'
-        ] /}
-    {/call}
-    <br>
-    {call sm.bMark.Template.base}
-        {param params: [
-            'value': 3.2,
-            'display': 'inline'
-        ] /}
-    {/call}
-    <br>
-    {call sm.bMark.Template.base}
-        {param params: [
-            'value': 2.1,
-            'display': 'inline'
-        ] /}
-    {/call}
-    <br>
-    {call sm.bMark.Template.base}
-        {param params: [
-            'value': 0,
-            'display': 'inline'
-        ] /}
-    {/call}
+    <div class="b-block-mark__inline">
+        Inline (for display: inline and bigText = true) example:
+        <br>
+        {call sm.bMark.Template.base}
+            {param params: [
+                'value': 4.4,
+                'display': 'inline',
+                'config': [
+                    'bigText': true
+                ]
+            ] /}
+        {/call}
+        <br>
+        {call sm.bMark.Template.base}
+            {param params: [
+                'value': 3.2,
+                'display': 'inline',
+                'config': [
+                    'bigText': true
+                ]
+            ] /}
+        {/call}
+        <br>
+        {call sm.bMark.Template.base}
+            {param params: [
+                'value': 2.1,
+                'display': 'inline',
+                'config': [
+                    'bigText': true
+                ]
+            ] /}
+        {/call}
+        <br>
+        {call sm.bMark.Template.base}
+            {param params: [
+                'value': 0,
+                'display': 'inline'
+            ] /}
+        {/call}
+    </div>
 
     <br><br>
 
