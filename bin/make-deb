@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+lib_dir=node_modules/deployment
+scriptpath=$(dirname $0)
+cd $scriptpath/../
+
+if [ ! -e packaging ]; then
+    ln -sf $lib_dir/php-liip-packaging packaging
+fi
+
+mkdir -p templates/
+cp environment/init.d/* templates/
+
+packaging_release_number=$packaging_release_number env=$env lib_dir=$lib_dir source $lib_dir/bin/make-deb

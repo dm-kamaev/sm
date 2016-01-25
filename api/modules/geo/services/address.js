@@ -212,37 +212,6 @@ exports.getAddress = function(addresses) {
 };
 
 exports.listMapPoints = async (function() {
-    // var searchConfig = {
-    //     include: [{
-    //         model: models.Address,
-    //         as: 'addresses',
-    //         attributes: [
-    //             'name',
-    //             'coords'
-    //         ],
-    //         include: [{
-    //             model: models.Department,
-    //             as: 'departments',
-    //             attributes: [
-    //                 'stage'
-    //             ],
-    //             where: {
-    //                 $or: [
-    //                     {stage: 'Основное и среднее'},
-    //                     {stage: 'Начальное образование'}
-    //                 ]
-    //             }
-    //         }],
-    //         having: ['COUNT(?) > ?', '`departments`.`id`', 0]
-    //     }],
-    //     attributes: [
-    //         'id',
-    //         'name',
-    //         'url'
-    //     ]
-    // };
-    //
-    // var schoolz = await(models.School.findAll(searchConfig));
     var sqlQuery = "SELECT school.id, school.name, school.url, " +
         "school.total_score AS \"totalScore\", address.name AS \"adrName\"," +
         "address.coords, department.stage FROM school " +
@@ -251,9 +220,6 @@ exports.listMapPoints = async (function() {
         "WHERE department.stage IN ('Основное и среднее', " +
         "'Начальное образование')",
         schools = sequelize.query(sqlQuery, { model: models.School });
-        // .then(schools => {
-        //     return schools;
-        // });
+
         return schools;
-    // return schools;
 });
