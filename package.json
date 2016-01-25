@@ -70,7 +70,8 @@
     "soynode": "^1.1.0",
     "soyparser": "^0.2.2",
     "tar.gz": "^1.0.2",
-    "translitit-cyrillic-russian-to-latin": "git+ssh://git@github.com:c7s-bot/translitit-cyrillic-russian-to-latin.git#master"
+    "translitit-cyrillic-russian-to-latin": "git+ssh://git@github.com:c7s-bot/translitit-cyrillic-russian-to-latin.git#master",
+    "deployment": "git+ssh://git@github.com:c7s/deployment.git#dev"
   },
   "dependencies": {
     "express": "^4.13.3",

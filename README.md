@@ -80,3 +80,23 @@ http://repo.dfarm.lan/db/
 ## Cхема БД ##
 https://wiki.cochanges.com/pages/viewpage.action?pageId=22085766  
 При изменении структуры БД надо так же поменять assets/schema.er  
+
+
+# Деплоймент на QA и продакшен
+
+# Инициализация после установки пакета
+QA:
+```sh
+sudo ln -s /etc/nginx/sites-available/schools /etc/nginx/sites-enabled/schools
+```
+Продакшен:
+```sh
+sudo ln -s /etc/nginx/sites-available/schools.mel.fm /etc/nginx/sites-enabled/schools.mel.fm
+```
+
+## Логи ошибок
+Forever пишет такие логи:
+* /opt/school-market/current/runtime/node.forever.log - Forever output
+* /opt/school-market/current/runtime/node.out.log - stdout from app.js
+* /opt/school-market/current/runtime/node.error.log - stderr from app.js
+

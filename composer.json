@@ -7,6 +7,6 @@
         }
     ],
     "require": {
-        "c7s/frobl": "dev-release-20160120"
+        "c7s/frobl": "dev-dev"
     }
 }
