@@ -8,7 +8,11 @@ scriptpath=$(dirname $0)
 cd $scriptpath/../
 
 echo "Prepare for packaging"
-npm install
+if [ ! -d node_modules/ ]; then
+    npm install
+else
+    npm update
+fi
 $gulp build
 
 echo "Run packaging"
