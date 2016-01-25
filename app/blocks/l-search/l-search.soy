@@ -11,7 +11,15 @@
  *         text: ?string,
  *         value: ?string
  *     ],
- *     images: ?list<string>
+ *     images: ?list<string>,
+ *     popularSchools: ?list<[
+ *         id: ?number,
+ *         url: ?string,
+ *         name: ?string,
+ *         description: ?string,
+ *         metro: ?list<string>,
+ *         totalScore: ?number
+ *     ]>
  * }
  */
 {template .base autoescape="strict" kind="html"}
@@ -58,6 +66,11 @@
                         ]/}
                     {/call}
                     */
+                    {call sm.bPopularSchools.Template.base}
+                        {param params: [
+                            'popularSchools': $params.popularSchools
+                        ]/}
+                    {/call}
                 </div>
                 <div class="l-search__footer">
                     <div class="l-search__horisontal-line"></div>
