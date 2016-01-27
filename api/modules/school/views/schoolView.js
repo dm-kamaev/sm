@@ -460,7 +460,6 @@ schoolView.filters = function(filters) {
                res.data.name = 'schoolType';
                res.data.header.title = 'Тип школы';
                res.config.filtersToShow = 15;
-               // res.config.cannotBeHidden = true;
                break;
            case 'ege':
                res.data.header.title = 'Высокие результаты ЕГЭ';
