@@ -73,7 +73,7 @@ goog.scope(function() {
      * Returns score
      * @public
      * @param {Number=} opt_index
-     * @return {(Array.<Object>|Number)}
+     * @return {(Array.<Number>|Number)}
      */
     ListItem.prototype.getScore = function(opt_index) {
         var res;
@@ -149,6 +149,16 @@ goog.scope(function() {
     };
 
     /**
+     * Change criterion of sort
+     * @param {Number} newCriterion
+     */
+    ListItem.prototype.changeSorCriterion = function(newCriterion) {
+        var scoreInstance = this.getChildAt(0);
+
+        scoreInstance.changeCriterion(newCriterion);
+    };
+
+    /**
      * @override
      */
     ListItem.prototype.createDom = function() {
@@ -196,12 +206,6 @@ goog.scope(function() {
             goog.events.EventType.CLICK,
             this.itemClickHandler_
         );
-
-        // handler.listen(
-        //     this.scoreInstance_,
-        //     Score.Event.CLICK,
-        //     this.scoreClickHandler_
-        // );
     };
 
     /**

@@ -148,6 +148,10 @@ goog.scope(function() {
                 item1.compareByTotalScore(item2);
         });
 
+        schoolListItems.forEach(function(item) {
+            item.changeSorCriterion(sortKey);
+        });
+
         for (var i = 0; i < schoolListItems.length; i++) {
             this.addChild(schoolListItems[i]);
         }
