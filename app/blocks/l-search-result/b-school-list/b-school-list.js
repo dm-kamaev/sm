@@ -107,7 +107,6 @@ goog.scope(function() {
             params = JSON.parse(
                 item.getAttribute('data-params')
             );
-
             schoolListItemInstance = new SchoolListItem({
                 'id': params.id,
                 'score': params.score,

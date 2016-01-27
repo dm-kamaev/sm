@@ -3,7 +3,7 @@ goog.provide('sm.lSearchResult.bSchoolListItem.SchoolListItem');
 goog.require('goog.events');
 goog.require('goog.ui.Component');
 goog.require('sm.bRating.Rating');
-goog.require('sm.lSearchResult.bSchoolListItem.Template');
+goog.require('sm.bScoreSchoolList.ScoreSchoolList');
 
 /**
  * School list item component
@@ -23,7 +23,7 @@ sm.lSearchResult.bSchoolListItem.SchoolListItem = function(opt_params) {
 
     /**
      *  @private
-     *  @type {Array.<Number>}
+     *  @type {Array.<Object>}
      */
     this.score_ = this.params_.score;
 
@@ -38,13 +38,20 @@ sm.lSearchResult.bSchoolListItem.SchoolListItem = function(opt_params) {
      *  @type {Number}
      */
     this.id_ = this.params_.id;
+
+    /**
+     * scoreInstance
+     * @private
+     * @type {sm.bScoreSchoolList.Template}
+     */
+    this.scoreInstance_ = null;
 };
 goog.inherits(sm.lSearchResult.bSchoolListItem.SchoolListItem,
     goog.ui.Component);
 
 goog.scope(function() {
     var ListItem = sm.lSearchResult.bSchoolListItem.SchoolListItem,
-        Rating = sm.bRating.Rating;
+        Score = sm.bScoreSchoolList.ScoreSchoolList;
 
     /**
      *  Css class enum
@@ -66,12 +73,19 @@ goog.scope(function() {
      * Returns score
      * @public
      * @param {Number=} opt_index
-     * @return {(Array.<Number>|Number)}
+     * @return {(Array.<Object>|Number)}
      */
     ListItem.prototype.getScore = function(opt_index) {
-        return (typeof opt_index != 'undefined') ?
-            this.score_[opt_index] :
-            this.score_;
+        var res;
+        if (typeof opt_index != 'undefined') {
+            res = this.score_[opt_index].value;
+        }
+        else {
+            res = this.score_.map(function(item) {
+                return item.value;
+            });
+        }
+        return res;
     };
 
     /**
@@ -157,14 +171,15 @@ goog.scope(function() {
     ListItem.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
-        var schoolRatingElement,
-            schoolRatingInstance;
+        var scoreElement;
 
-        schoolRatingElement = this.getElementByClass(Rating.CssClass.ROOT);
-
-        schoolRatingInstance = new Rating();
-        this.addChild(schoolRatingInstance);
-        schoolRatingInstance.decorate(schoolRatingElement);
+        scoreElement = this.getElementByClass(Score.CssClass.ROOT);
+        this.scoreInstance_ = new Score({
+            'score': this.score_,
+            'totalScore': this.totalScore_
+        });
+        this.addChild(this.scoreInstance_);
+        this.scoreInstance_.decorate(scoreElement);
     };
 
     /**
@@ -173,11 +188,20 @@ goog.scope(function() {
      */
     ListItem.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
-        this.getHandler().listen(
+
+        var handler = this.getHandler();
+
+        handler.listen(
             this.getElement(),
             goog.events.EventType.CLICK,
             this.itemClickHandler_
         );
+
+        // handler.listen(
+        //     this.scoreInstance_,
+        //     Score.Event.CLICK,
+        //     this.scoreClickHandler_
+        // );
     };
 
     /**
