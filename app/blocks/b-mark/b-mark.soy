@@ -29,8 +29,10 @@
                 {$params?.display == 'inline' ? 'b-mark_inline' : ''}{sp}
                 {$params?.display == 'number' ? 'b-mark_number' : ''}{sp}
                 {if $params.config}
-                    {$params?.config.bigText ? 'b-mark_bigText' : ''}
-                {/if}">
+                    {$params?.config.bigText ? 'b-mark_bigText' : ''}{sp}
+                    {$params?.config.bigText ? 'b-mark_no-dash' : ''}
+                {/if}
+                ">
         {if $params?.display == 'inline'}
             {call .inline data="all"/}
         {elseif $params?.display == 'stars'}
@@ -123,10 +125,7 @@
         {floor($val)},{round(($val - floor($val))*10, 0)}
     {else}
         {if $params.config}
-            {if $params.config.notShowDashes}
-            {else}
-                —
-            {/if}
+            {$params?.config.notShowDashes ? '' : '—'}
         {else}
             —
         {/if}

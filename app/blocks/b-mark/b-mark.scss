@@ -131,3 +131,9 @@
         line-height: 20px;
     }
 }
+
+.b-mark.b-mark_no-dash.b-mark_empty {
+    .b-mark__mark {
+        display: none;
+    }
+}
