@@ -409,19 +409,22 @@
         </div>
     {/if}
     // TODO: uncomment
-    // <div class="l-school__content-column">
-    //     /*ratings*/
-    //     {if length($params.data.ratings) > 0}
-    //         <div class="l-school__item-container">
-    //             {call sm.lSchool.bDataBlockRatings.Template.base}
-    //                 {param params: [
-    //                     'header': 'места в рейтингах',
-    //                     'content': $params.data.ratings
-    //                 ]/}
-    //             {/call}
-    //         </div>
-    //     {/if}
-    //
+    <div class="l-school__content-column">
+        // if for only goverment rating
+        {if length($params.data.ratings) > 1}
+        /*ratings*/
+            {if length($params.data.ratings) > 0}
+                <div class="l-school__item-container">
+                    {call sm.lSchool.bDataBlockRatings.Template.base}
+                        {param params: [
+                            'header': 'места в рейтингах',
+                            'content': $params.data.ratings
+                        ]/}
+                    {/call}
+                </div>
+            {/if}
+        {/if}
+
     //     /*high schools */
     //     {if $params.data.higthSchools}
     //         <div class="l-school__item-container">
@@ -433,7 +436,7 @@
     //             {/call}
     //         </div>
     //     {/if}
-    // </div>
+    </div>
 
     <div class="l-school__content-column
                 l-school__content-column_last">
