@@ -189,7 +189,6 @@ goog.scope(function() {
 
         if (this.checkScoreValues_()) {
             var handler = this.getHandler();
-
             handler.listen(
                 this.criterionValueElement_,
                 goog.events.EventType.MOUSEENTER,

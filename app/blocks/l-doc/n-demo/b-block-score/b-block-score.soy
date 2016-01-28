@@ -51,7 +51,7 @@ Default view
                 ['name':'Инфраструктура','value':3.5],
                 ['name':'Атмосфера','value':4]
             ],
-                'totalScore':4
+            'totalScore': 4
         ]/}
     {/call}
     <br><br>
@@ -69,7 +69,10 @@ Default view
                 <div class="l-doc__code-indent">name: ?string,</div>
                 <div class="l-doc__code-indent">value: ?number</div>
             ]>,<br>
-            totalScore: ?number
+            sortCriteria: [<br>
+                <div class="l-doc__code-indent">name: ?string,</div>
+                <div class="l-doc__code-indent">value: ?number</div>
+            ]
         </div>
 
         <br><br>
@@ -81,7 +84,7 @@ Default view
                     ['name':'Инфраструктура','value':3.5],
                     ['name':'Атмосфера','value':4]
                 ],
-                'totalScore':4
+                'sortCriteria': ['name': 'Средняя оценка', 'value': 2.3]
             ]/}
         {/call}
 {/template}

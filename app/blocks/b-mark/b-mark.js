@@ -41,13 +41,6 @@ sm.bMark.bMark = function(opt_params) {
      * @private
      */
     this.valueElement_ = null;
-
-    /**
-     * Dom element with colored circle
-     * @type {Node}
-     * @private
-     */
-    this.circleElement_ = null;
 };
 goog.inherits(sm.bMark.bMark, goog.ui.Component);
 
@@ -61,7 +54,6 @@ goog.scope(function() {
     Mark.CssClass = {
         ROOT: 'b-mark',
         VALUE: 'b-mark__mark',
-        CIRCLE: 'b-mark__circle',
         MODIFIER_RED: 'b-mark_red',
         MODIFIER_YELLOW: 'b-mark_yellow',
         MODIFIER_GREEN: 'b-mark_green',
@@ -116,11 +108,6 @@ goog.scope(function() {
         goog.base(this, 'decorateInternal', element);
         this.valueElement_ = goog.dom.getElementByClass(
             Mark.CssClass.VALUE,
-            element
-        );
-
-        this.circleElement_ = goog.dom.getElementByClass(
-            Mark.CssClass.CIRCLE,
             element
         );
 
