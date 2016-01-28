@@ -385,23 +385,93 @@ var getStages = function(departments) {
  * @return {array<object>}
  */
 schoolView.list = function(schools) {
-    return schools
+    var res = [];
+    res = schools
         .map(school => {
+            var scoreCount = school.scoreCount ?
+                    school.scoreCount :
+                    [0,0,0,0],
+                score = school.score ?
+                    school.score :
+                    [0,0,0,0];
+
             return {
                 id: school.id,
                 url: school.url,
                 name: school.name,
                 description: '',
                 abbreviation: school.abbreviation,
-                score: school.score ?
-                    getSections(school.score) :
-                    getSections([0,0,0,0]),
-                totalScore: school.totalScore || 0,
+                score: getScore(
+                    score,
+                    scoreCount
+                ),
+                totalScore: checkScoreCount(
+                    school.totalScore,
+                    scoreCount
+                ),
                 fullName: school.fullName,
                 addresses: school.addresses
             };
         });
+
+    res.sort(function (item1, item2) {
+        return compareItems(item1, item2);
+    });
+
+    return res;
 };
+
+/**
+ * Compare two items for sort result array in school list
+ * @param {Object} item1
+ * @param {Object} item2
+ * @return {number}
+ */
+var compareItems = function (item1, item2) {
+    var result;
+
+    result = item2.totalScore - item1.totalScore;
+
+    if (result === 0) {
+        var itemZeroScore,
+            thisZeroScore;
+
+        firstZeroScore = checkScore(item1.score);
+        secondZeroScore = checkScore(item2.score);
+
+        if (firstZeroScore && !secondZeroScore) {
+            result = 1;
+        }
+        else if (!firstZeroScore && secondZeroScore) {
+            result = -1;
+        }
+        else {
+            result = item1.id - item2.id;
+        }
+    }
+
+    return result;
+};
+
+/**
+ * Compare input array with null score:[0, 0, 0, 0]
+ * and return true if they equals
+ * @param {Array} score
+ * @return {boolean}
+ * @private
+ */
+var checkScore = function(score) {
+    var nullScore = [0, 0, 0, 0],
+        result = true;
+
+    for (var i = 0, l = score.length; i < l; i++) {
+        if (score[i].value != nullScore[i]) {
+            result = false;
+        }
+    }
+    return result;
+};
+
 
 /**
  * @param {array<object>} schools - schoolInstances

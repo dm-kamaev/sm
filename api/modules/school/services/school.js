@@ -615,6 +615,7 @@ service.list = async (function(opt_params) {
             'school.full_name',
             'school.abbreviation',
             'school.total_score',
+            'school.score_count',
             'school.url' ],
         from:  [
             'school'

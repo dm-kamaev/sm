@@ -105,7 +105,9 @@ goog.scope(function() {
     };
 
     /**
-     * Compare by total score descending then by id asc
+     * Compare by total score descending
+     * then by presence of score
+     * then by id asc
      * @param {sm.lSearchResult.bSchoolListItem.SchoolListItem} item
      * @return {number}
      */
@@ -115,9 +117,22 @@ goog.scope(function() {
         result = item.getTotalScore() - this.getTotalScore();
 
         if (result === 0) {
-            result = this.compareById(item);
-        }
+            var itemZeroScore,
+                thisZeroScore;
 
+            itemZeroScore = this.checkScore_(item.getScore());
+            thisZeroScore = this.checkScore_(this.getScore());
+
+            if (itemZeroScore && !thisZeroScore) {
+                result = -1;
+            }
+            else if (!itemZeroScore && thisZeroScore) {
+                result = 1;
+            }
+            else {
+                result = this.compareById(item);
+            }
+        }
         return result;
     };
 
@@ -217,5 +232,24 @@ goog.scope(function() {
             'type': ListItem.Event.CLICK,
             'itemId': this.id_
         });
+    };
+
+    /**
+     * Compare input array with null score:[0, 0, 0, 0]
+     * and return true if they equals
+     * @param {Array} score
+     * @return {boolean}
+     * @private
+     */
+    ListItem.prototype.checkScore_ = function(score) {
+        var nullScore = [0, 0, 0, 0],
+            result = true;
+
+        for (var i = 0, l = score.length; i < l; i++) {
+            if (score[i] != nullScore[i]) {
+                result = false;
+            }
+        }
+        return result;
     };
 });
