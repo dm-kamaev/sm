@@ -346,7 +346,6 @@ var getSpecializedClasses = function(specializedClasses) {
   * @return {string}
   */
 var schoolGradeToLevel = function(grade) {
-    console.log(grade);
     if (grade < 5) {
         return 'Начальная школа';
     } else if (grade < 9) {
@@ -480,12 +479,18 @@ var checkScore = function(score) {
 schoolView.listMapPoints = function(schools) {
     return schools
         .map(school => {
+            school = school.dataValues;
             return {
                 id: school.id,
                 url: school.url,
                 name: school.name,
                 totalScore: school.totalScore || 0,
-                addresses: services.address.getAddress(school.addresses)
+                addresses: [{
+                    lat: school.coords[0],
+                    lng: school.coords[1],
+                    name: school.adrName,
+                    stage: [school.stage]
+                }]
             };
         });
 };
@@ -527,7 +532,6 @@ schoolView.filters = function(filters) {
                res.data.name = 'schoolType';
                res.data.header.title = 'Тип школы';
                res.config.filtersToShow = 15;
-               res.config.cannotBeHidden = true;
                break;
            case 'ege':
                res.data.header.title = 'Высокие результаты ЕГЭ';

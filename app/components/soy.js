@@ -18,15 +18,33 @@ soynode.setOptions({
     ]
 });
 
-exports.init = function(dir, opt_callback) {
+exports.init = function(file, opt_callback) {
     var callback = opt_callback || function() {};
 
-    soynode.compileTemplates(dir, function(err) {
+    soynode.loadCompiledTemplateFiles(file, function(err) {
         if (err) throw err;
         callback();
         soynode.setOptions({
             contextJsPaths: []
         });
+
+        fs.watchFile(
+            file,
+            function() {
+                console.log('Recompiling templates...');
+
+                soynode.loadCompiledTemplateFiles(
+                    file,
+                    function (err) {
+                        if (err) {
+                            throw err;
+                        } else {
+                            console.log('Successfully!');
+                        }
+                    }
+                );
+            }
+        );
     });
 };
 

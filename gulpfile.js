@@ -12,6 +12,7 @@ const soynode = require('gulp-soynode');
 var glob = require("glob");
 var exec = require('child_process').exec;
 var Q = require('q');
+var es = require('event-stream');
 var fs = require('fs-extra');
 var foreach = require('gulp-foreach');
 var SoyExtend = require('./soy-extend');
@@ -92,73 +93,73 @@ var extender = new SoyExtend({
 });
 
 gulp.task('soy', function (cb) {
-    //return gulpHelper.soy([
-    //    path.join(__dirname, BLOCKS_DIR, '/**/*.soy')
-    //]);
+    var extend = function(params) {
+        var src = [].concat(params.src),
+            dest = params.dest;
 
-    return gulp.src([
-            path.join(__dirname, BLOCKS_DIR, '/**/*.soy')
-        ])
-        .pipe(gulp.dest(path.join(__dirname, '/tmp/soy')))
-        .pipe(foreach(function (stream, file) {
-            extender.proceed(file.path);
-            return stream;
-        }))
-        .pipe(soynode({
-            outputDir: path.join(__dirname, '/node_modules/frobl', '/tmp/soy'),
-            loadCompiledTemplates: false,
-            useClosureStyle: true,
-            contextJsPaths: [
-                path.join(
-                    __dirname,
-                    '/node_modules/google-closure-library/closure/goog/base.js'
-                )
-            ]
-        }));
-});
+        return gulp.src(src)
+            .pipe(gulp.dest(dest))
+            .pipe(foreach(function (stream, file) {
+                extender.proceed(file.path);
+                return stream;
+            }))
+            .pipe(es.through(
+                function write() {
 
-var appWatch = function(event) {
-    var basename = path.basename(event.path);
-    var dest = path.normalize(
-        event.path
-            .replace('\\app\\blocks\\', '/node_modules/frobl/tmp/appSoy/')
-            .replace(basename, '')
-    );
+                },
+                function end () {
+                    this.emit('end');
+                }
+            ));
+    };
 
-    gulp.src(event.path)
-        .pipe(gulp.dest(dest))
-        .pipe(foreach(function (stream, file) {
-            extender.proceed(file.path);
-            return stream;
-        }));
-};
+    var compile = function(params) {
+        var options = params.soynodeOptions || {},
+            deferred = Q.defer(),
+            src = params.src;
 
-gulp.task('appSoy', function (cb) {
-    return gulp.src([
-            path.join(__dirname, BLOCKS_DIR, '/**/*.soy')
-        ])
-        .pipe(gulp.dest(path.join(__dirname, '/node_modules/frobl/tmp/appSoy')))
-        .pipe(foreach(function (stream, file) {
-            extender.proceed(file.path);
-            return stream;
-        }));
-});
+        if(options.useClosureStyle == undefined) {
+            options.useClosureStyle = true;
+        }
 
-gulp.task('froblSoy', function (cb) {
-    return gulp.src([
-            path.join(__dirname, '/node_modules/frobl/blocks', '/**/*.soy')
-        ])
-        .pipe(soynode({
-            outputDir: path.join(__dirname, '/node_modules/frobl', '/tmp/soy/frobl'),
-            loadCompiledTemplates: false,
-            useClosureStyle: true,
-            contextJsPaths: [
-                path.join(
-                    __dirname,
-                    '/node_modules/google-closure-library/closure/goog/base.js'
-                )
-            ]
-        }));
+        return gulp.src(src)
+            .pipe(soynode({
+                outputDir: params.dest,
+                loadCompiledTemplates: false,
+                useClosureStyle: !!options.useClosureStyle,
+                concatOutput: !!options.concatOutput,
+                concatFileName: options.concatFileName
+            }));
+    };
+
+    var serverSoynodeOptions = {
+        concatOutput: true,
+        useClosureStyle: false,
+        concatFileName: 'server'
+    };
+
+    return extend({
+            src: path.join(__dirname, 'app/blocks/**/*.soy'),
+            dest: path.join(__dirname, 'tmp/extendedSoy')
+        })
+        .on('end', function() {
+            compile({
+                src: [
+                    path.join(__dirname, 'tmp/extendedSoy/**/*.soy'),
+                    path.join(__dirname, '/node_modules/frobl/blocks/**/*.soy')
+                ],
+                dest: path.join(__dirname, '/node_modules/frobl/tmp/soy')
+            }).on('end', function() {
+                compile({
+                    src: [
+                        path.join(__dirname, 'tmp/extendedSoy/**/*.soy'),
+                        path.join(__dirname, '/node_modules/frobl/blocks/**/*.soy')
+                    ],
+                    dest: path.join(__dirname, 'tmp/compiledServerSoy'),
+                    soynodeOptions: serverSoynodeOptions
+                });
+            });
+        });
 });
 
 
@@ -231,7 +232,8 @@ gulp.task('styles', function () {
     return gulpHelper.buildCss([{
         src: [
             path.join(__dirname, BLOCKS_DIR, '/**/*.scss'),
-            path.join(__dirname, BLOCKS_DIR, '/**/*.css')
+            path.join(__dirname, BLOCKS_DIR, '/**/*.css'),
+            path.join(__dirname, '/node_modules/css-reset/reset.css')
         ],
         fileName: 'styles.css'
     }], production, path.join(__dirname, '/public'));
@@ -253,7 +255,7 @@ gulp.task('images', function () {
 });
 
 gulp.task('watch', function () {
-    var soyWatcher = gulp.watch(
+    gulp.watch(
         [path.join(__dirname + BLOCKS_DIR + '/**/*.soy')],
         ['scripts']
     );
@@ -265,8 +267,6 @@ gulp.task('watch', function () {
         path.join(__dirname + BLOCKS_DIR + '/**/*.scss'),
         path.join(__dirname + BLOCKS_DIR + '/**/*.css')
     ], ['styles']);
-
-    soyWatcher.on('change', appWatch);
 });
 
 
@@ -278,8 +278,8 @@ gulp.task('fonts', function () {
 
 const tasks = function (bool) {
     return bool ?
-        ['froblSoy', 'soy', 'appSoy', 'scripts', 'sprite', 'images', 'fonts', 'styles'] :
-        ['watch', 'froblSoy', 'soy', 'appSoy', 'scripts', 'sprite', 'images', 'fonts','styles'];
+        ['soy', 'scripts', 'sprite', 'images', 'fonts', 'styles'] :
+        ['watch', 'soy', 'scripts', 'sprite', 'images', 'fonts','styles'];
 };
 
 gulp.task('build', tasks(true)); 
