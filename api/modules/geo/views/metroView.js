@@ -9,7 +9,7 @@ metroView.list = function(metros) {
         .map(metro => {
             return {
                 id: metro.id,
-                name: metro.name,
+                name: metro.name.replace('метро ', '')
             };
         });
 };

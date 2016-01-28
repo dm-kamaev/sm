@@ -59,7 +59,6 @@ schoolView.default = function(schoolInstance, opt_popularSchools) {
         totalScore: checkScoreCount(schoolInstance.totalScore, scoreCount),
         reviewCount: checkScoreCount(schoolInstance.reviewCount, scoreCount)
     };
-
     if (opt_popularSchools) {
         result.popularSchools = this.popular(opt_popularSchools);
     }
@@ -397,7 +396,9 @@ schoolView.list = function(schools) {
                 fullName: school.fullName,
                 addresses: school.addresses
             };
+
         });
+
 };
 
 /**

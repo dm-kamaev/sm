@@ -1,4 +1,5 @@
 const metroView = require.main.require('./api/modules/geo/views/metroView.js');
+const departmentView = require.main.require('./api/modules/geo/views/departmentView.js');
 const stages = require('../enums/departmentStage');
 
 var addressView = {};
@@ -28,7 +29,7 @@ addressView.list = function(addresses, opt_options) {
 
     return addresses
         .map(address => {
-            address.metro = address.metro || [];
+            address.metroStations = address.dataValues.metroStations || [];
             address.departments = address.departments || [];
             return address;
         })
@@ -36,7 +37,8 @@ addressView.list = function(addresses, opt_options) {
             return {
                 title: '',
                 description: address.name,
-                metro: metroView.list(address.metro)
+                metroStations: metroView.list(address.metroStations),
+                departments: departmentView.list(address.departments)
             };
         });
 };
