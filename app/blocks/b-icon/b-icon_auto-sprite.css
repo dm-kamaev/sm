@@ -28,6 +28,7 @@ Icon classes can be used entirely standalone. They are named after their origina
   height: 8px;
 }
 .b-icon_img_filter-arrow-up {
+  opacity: 0.4;
   background-image: url(/images/b-icon_auto-sprite.png);
   background-position: -15px -24px;
   width: 13px;

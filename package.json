@@ -32,8 +32,10 @@
     "css-reset": "0.0.1",
     "csvtojson": "^0.5.0",
     "decompress": "^3.0.0",
+    "deployment": "git+ssh://git@github.com:c7s/deployment.git#dev",
     "ejs": "^2.3.4",
     "eslint": "^1.6.0",
+    "event-stream": "^3.3.2",
     "frobl": "git+ssh://git@github.com:c7s/frobl.git#release-20151210",
     "fs-extra": "^0.26.3",
     "google-closure-library": "^20150609.0.0",
@@ -70,8 +72,8 @@
     "soynode": "^1.1.0",
     "soyparser": "^0.2.2",
     "tar.gz": "^1.0.2",
-    "translitit-cyrillic-russian-to-latin": "git+ssh://git@github.com:c7s-bot/translitit-cyrillic-russian-to-latin.git#master",
-    "deployment": "git+ssh://git@github.com:c7s/deployment.git#dev"
+    "tipograph": "^0.3.3",
+    "translitit-cyrillic-russian-to-latin": "git+ssh://git@github.com:c7s-bot/translitit-cyrillic-russian-to-latin.git#master"
   },
   "dependencies": {
     "express": "^4.13.3",
