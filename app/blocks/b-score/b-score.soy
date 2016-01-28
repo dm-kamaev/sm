@@ -2,7 +2,7 @@
 
 /**
  * Score view
- * @param? params {
+ * @param params {
  *     reviewCount: ?number,
  *     score: list<[
  *         name: ?string,
@@ -12,6 +12,21 @@
  * }
  */
 {template .base autoescape="strict" kind="html"}
+    {call .init data="all" /}
+{/template}
+
+/**
+ * Block init
+ * @param params {
+ *     reviewCount: ?number,
+ *     score: list<[
+ *         name: ?string,
+ *         value: ?number
+ *     ]>,
+ *     totalScore: ?number
+ * }
+ */
+{template .init autoescape="strict" kind="html"}
     <div class="b-score">
         <div class="b-score__section
                     b-score__section_left">

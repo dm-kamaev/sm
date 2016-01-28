@@ -109,3 +109,31 @@
         top: -2px;
     }
 }
+.b-mark.b-mark_inline.b-mark_bigText {
+    .b-mark__mark {
+        font-size: 19px;
+    }
+
+    .b-mark__circle {
+        top: -1px;
+    }
+}
+.b-mark.b-mark_number {
+    .b-mark__mark {
+        position: static;
+
+
+        font-family: Arial, sans-serif;
+        font-size: 13px;
+        font-weight: normal;
+        letter-spacing: normal;
+        color: #808080;
+        line-height: 20px;
+    }
+}
+
+.b-mark.b-mark_no-dash.b-mark_empty {
+    .b-mark__mark {
+        display: none;
+    }
+}
