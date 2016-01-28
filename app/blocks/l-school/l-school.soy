@@ -1,7 +1,93 @@
 {namespace sm.lSchool.Template}
+
 /**
-* @param params
-*/
+ * Defaul school view
+ * @param params {
+ *    data: [
+ *        id: number,
+ *        schoolName: string,
+ *        schoolType: string,
+ *        schoolDescr: string,
+ *        features: string,
+ *        schoolQuote: string,
+ *        directorName: string,
+ *        classes: string,
+ *        kindergarten: bool,
+ *        extendedDayCost: string,
+ *        dressCode: bool,
+ *        social: list<[
+ *            name: string,
+ *            href: string
+ *        ]>,
+ *        sites: list<[
+ *            name: string,
+ *            href: string,
+ *            link: string
+ *        ]>,
+ *        contacts: [
+ *            address: list<[
+ *                title: string,
+ *                description: string,
+ *                metroStations: list<[
+ *                    id: number,
+ *                    name: string
+ *                ]>,
+ *                departments: list<[
+ *                    name: string,
+ *                    stage: string
+ *                ]>
+ *            ]>,
+ *            phones: list<string>
+ *        ],
+ *        specializedClasses: list<[
+ *            name: string
+ *            items: list<string>
+ *        ]>,
+ *        activities: list<[
+ *            name: string
+ *            items: list<string>
+ *        ]>,
+ *        comments: list<[
+ *            author: string,
+ *            rank: string,
+ *            text: string,
+ *            sections: list<[
+ *                name: string,
+ *                value: int
+ *            ]>
+ *        ]>,
+ *        addresses: list<
+ *           list<number>
+ *        >,
+ *        ratings: list<[
+ *            name<string>,
+ *            place<number>,
+ *            href<string>
+ *        ]>,
+ *        score: list<[
+ *            name: string,
+ *            value: number
+ *        ]>,
+ *        totalScore: number,
+ *        reviewCount: number,
+ *        popularSchools: ?list<[
+ *            id: ?number,
+ *            url: ?string,
+ *            name: ?string,
+ *            description: ?string,
+ *            metro: ?list<string>,
+ *            totalScore: ?number
+ *        ]>
+ *     ]
+ *     searchTemplates: [
+ *         search: ?string,
+ *         item: ?string,
+ *         text: ?string,
+ *         value: ?string
+ *     ],
+ *     searchText: ?string
+ * }
+ */
 {template .base autoescape="strict" kind="html"}
 <!DOCTYPE html>
 <html lang="en">
@@ -102,10 +188,20 @@
     </body>
 </html>
 {/template}
+
 /**
-* @private
-* @param params
-*/
+ * Content top
+ * @private
+ * @param params {
+ *     data: [
+ *         schoolName: string,
+ *         schoolDescr: string,
+ *         schoolQuote: string,
+ *         score: list<number>,
+ *         totalScore: number
+ *     ]
+ * }
+ */
 {template .top_ autoescape="strict" kind="html"}
 
     <div class="l-school__content-column l-school__content-column_double-width">
@@ -149,10 +245,72 @@
         </div>
     </div>
 {/template}
+
 /**
-* @private
-* @param params
-*/
+ * Content middle
+ * @private
+ * @param params {
+ *      data: {
+ *          id: number,
+ *          schoolName: string,
+ *          schoolType: string,
+ *          schoolDescr: string,
+ *          features: string,
+ *          classes: string,
+ *          kindergarten: bool,
+ *          extendedDayCost: string,
+ *          directorName: string,
+ *          dressCode: bool,
+ *          social:list<{
+ *              name: string,
+ *              href: string
+ *          }>,
+ *          sites:list<[
+ *              name: string,
+ *              href: string,
+ *              link: string
+ *          ]>,
+ *          contacts: [
+ *              address: list<[
+ *                  title: string,
+ *                  description: string,
+ *                  metroStations: list<[
+ *                      id: number,
+ *                      name: string
+ *                  ]>,
+ *                  departments: list<[
+ *                      name: string,
+ *                      stage: string
+ *                  ]>
+ *              ]>,
+ *              phones: list<string>
+ *          ],
+ *          specializedClasses: list<[
+ *              name: string
+ *              items: list<string>
+ *          ]>,
+ *          activities: list<[
+ *              name: string
+ *              items: list<string>
+ *          ]>,
+ *          addresses: ?list<[{
+ *              lat: number,
+ *              lng: number
+ *          }]>,
+ *          score: list<[
+ *              name: string,
+ *              value: number
+ *          ]>,
+ *          totalScore: number,
+ *          reviewCount: number,
+ *          ratings: list<[
+ *              name<string>,
+ *              place<number>,
+ *              href<string>
+ *          ]>
+ *      }
+ *  }
+ */
 {template .middle_ autoescape="strict" kind="html"}
 /*map, information*/
 <div class="l-school__content-column
@@ -311,14 +469,18 @@
 
 </div>
 {/template}
+
 /**
-* @private
-*/
+ * Content bottom
+ * @private
+ */
 {template .bottom_ autoescape="strict" kind="html"}
 {/template}
+
 /**
-* @private
-*/
+ * Content title
+ * @private
+ */
 {template .contentTitle_ autoescape="strict" kind="html"}
     {@param image:string}
     {@param text:string}
@@ -331,10 +493,14 @@
         //<div class="b-icon_img_school-button l-school__content-header-button"alt="{$buttonAlt}"></div>
     </div>
 {/template}
+
 /**
-* @private
-* @param params
-*/
+ * Classes block
+ * @private
+ * @param params {
+ *    classesStr:string
+ * }
+ */
 {template .classes_ autoescape="strict" kind="html"}
     <div class="l-school__content-block">
         {call .contentTitle_}
@@ -346,9 +512,11 @@
         {$params.classesStr}
     </div>
 {/template}
+
 /**
-* @private
-*/
+ * Sites links
+ * @private
+ */
 {template .sites_ autoescape="strict" kind="html"}
     {@param data:
         list<[
@@ -379,9 +547,11 @@
         {/foreach}
     </div>
 {/template}
+
 /**
-* @private
-*/
+ * Social links
+ * @private
+ */
 {template .social_ autoescape="strict" kind="html"}
     {@param data:
         list<[
@@ -407,10 +577,15 @@
         </div>
     {/if}
 {/template}
+
 /**
-* @private
-* @param params
-*/
+ * Information block
+ * @private
+ * @param params {
+ *    directorName: string,
+ *    classes: string
+ *  }
+ */
 {template .information_  autoescape="strict" kind="html"}
 <div class="b-data-block">
     <div class="b-data-block b-data-block__content">
@@ -421,9 +596,11 @@
     </div>
 </div>
 {/template}
+
 /**
-* @private
-*/
+ * Director block
+ * @private
+ */
 {template .director_ autoescape="strict" kind="html"}
     {@param
         dirName:string
@@ -440,9 +617,11 @@
         </div>
     </div>
 {/template}
+
 /**
-* @private
-*/
+ * Comments block
+ * @private
+ */
 {template .comments_ autoescape="strict" kind="html"}
     {@param
         comments: list<[
@@ -509,9 +688,11 @@
         <div class="l-school__horisontal-line"></div>
     </div>
 {/template}
+
 /**
-* @private
-*/
+ * Contacts block
+ * @private
+ */
 {template .contacts_ autoescape="strict" kind="html"}
     {@param
         data:[
