@@ -595,6 +595,7 @@ service.listInstances = async(function(){
 /**
  * @public
  * @param {object || null} opt_params
+ * @param {number || null} opt.params.page
  * @param {object || null} opt_params.searchParams
  * @param {string || null} opt_params.searchParams.name
  * @param {?Array<number>} opt_params.searchParams.schoolType
@@ -628,7 +629,9 @@ service.list = async (function(opt_params) {
         order: [
             'school.total_score DESC, school.id ASC'
         ],
-        having: []
+        having: [],
+        limit: 10,
+        offset: opt_params.page * 10
     };
 
     if (searchParams) {

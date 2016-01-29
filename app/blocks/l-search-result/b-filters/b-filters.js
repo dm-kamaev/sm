@@ -135,7 +135,7 @@ goog.scope(function() {
             data = {
                 'searchParams': this.processingSerializeArray_(
                     form.serializeArray()
-                ),
+                )
             },
             type = event.data ? event.data.type : '';
 
@@ -143,6 +143,10 @@ goog.scope(function() {
             data.searchParams.metroId = event.data.id;
         } else if (type === 'areas') {
             data.searchParams.areaId = event.data.id;
+        }
+
+        if (event.data) {
+            data.page = event.data.page;
         }
 
         this.dispatchEvent({

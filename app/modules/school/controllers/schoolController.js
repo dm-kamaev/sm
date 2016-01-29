@@ -51,7 +51,8 @@ exports.list = async (function(req, res) {
 
     var promises = [
         services.school.list({
-            searchParams: searchParams
+            searchParams: searchParams,
+            page: 0
         }),
         services.school.searchFilters()
     ];

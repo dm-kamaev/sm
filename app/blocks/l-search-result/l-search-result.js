@@ -57,15 +57,11 @@ sm.lSearchResult.SearchResult = function(opt_params) {
     this.search_ = null;
 
     /**
-     * Search data
-     * @type {Object}
+     * Page number
+     * @type {number}
      * @private
      */
-    this.searchData_ = {
-        offset: 10,
-        limit: 10,
-        order: 0
-    };
+    this.currentPage_ = 0;
 };
 goog.inherits(sm.lSearchResult.SearchResult, goog.ui.Component);
 
@@ -186,6 +182,12 @@ goog.scope(function() {
             sm.bSearch.Search.Event.ITEM_SELECT,
             this.onSubmit_
         );
+
+        this.getHandler().listen(
+            this.schoolList_,
+            SchoolList.Event.SHOW_MORE,
+            this.showMoreSchoolListItemsHandler_
+        );
     };
 
     /**
@@ -203,12 +205,22 @@ goog.scope(function() {
      * @private
      */
     SearchResult.prototype.filtersSubmitHandler_ = function(event) {
-        var data = event.data;
+        var data = event.data,
+            isSchool = (data.searchParams.areaId ||
+                data.searchParams.metroId) ? false : true;
 
-        this.searchData_.searchParams = data.searchParams || {};
-        this.searchData_.searchParams.name = this.search_.getValue();
-        this.initSchoolListSetItems_();
-        this.sendSearchData_();
+        data.searchParams.name = isSchool ?
+            this.search_.getValue() :
+            undefined;
+
+        var callback = data.page ? this.addItems_ : this.searchSuccess_;
+
+        jQuery.ajax({
+            url: event.url,
+            type: event.method,
+            data: data,
+            success: callback.bind(this)
+        });
     };
 
     /**
@@ -221,34 +233,36 @@ goog.scope(function() {
     };
 
     /**
-     * Setting of null offset and initialize school list add items
+     * Filters submit callback
+     * @param {string} responseData
      * @private
      */
-    SearchResult.prototype.initSchoolListSetItems_ = function() {
-        this.searchData_.offset = 0;
-        this.initSchoolListAddItems_();
+    SearchResult.prototype.searchSuccess_ = function(responseData) {
+        var data = JSON.parse(responseData);
+        this.schoolList_.setItems(data);
     };
 
     /**
-     * Redirect item click handler
+     * Filters submit callback
+     * @param {string} responseData
+     * @private
+     */
+    SearchResult.prototype.addItems_ = function(responseData) {
+        var data = JSON.parse(responseData);
+        this.schoolList_.addItems(data);
+    };
+
+    /**
+     * Handler for show more school list items
      * @param {Object} event
      * @private
      */
-    SearchResult.prototype.filtersSubmitHandler_ = function(event) {
-        var data = event.data,
-            isSchool = (data.searchParams.areaId ||
-                data.searchParams.metroId) ? false : true;
-
-        data.searchParams.name = isSchool ?
-            this.search_.getValue() :
-            undefined;
-
-        jQuery.ajax({
-            url: this.filters_.getUrl(),
-            type: this.filters_.getMethod(),
-            data: this.searchData_,
-            success: callback.bind(this)
-        });
+    SearchResult.prototype.showMoreSchoolListItemsHandler_ = function(event) {
+        this.currentPage_ += 1;
+        // this.initSchoolListAddItems_();
+        event.data = event.data || {};
+        event.data.page = this.currentPage_;
+        this.filters_.submit(event);
     };
 });
 
