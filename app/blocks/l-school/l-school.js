@@ -5,8 +5,10 @@ goog.require('goog.events');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
 goog.require('sm.bRating.Rating');
+goog.require('sm.bSearch.Search');
 goog.require('sm.lSchool.bComment.Comment');
 goog.require('sm.lSchool.bComments.Comments');
+goog.require('sm.lSchool.bDataBlockFoldList.FoldList');
 goog.require('sm.lSchool.bFeedbackModal.FeedbackModal');
 goog.require('sm.lSchool.bMap.Map');
 
@@ -17,6 +19,7 @@ goog.require('sm.lSchool.bMap.Map');
  */
 
 sm.lSchool.School = function(opt_params) {
+    goog.base(this);
 
     /**
      * params
@@ -31,11 +34,20 @@ sm.lSchool.School = function(opt_params) {
      * @private
      */
     this.modal_ = null;
+
+    /**
+     * Search instance
+     * @type {?sm.bSearch.Search}
+     * @private
+     */
+    this.search_ = null;
 };
 goog.inherits(sm.lSchool.School, goog.ui.Component);
 
 goog.scope(function() {
-    var School = sm.lSchool.School;
+    var School = sm.lSchool.School,
+        FoldList = sm.lSchool.bDataBlockFoldList.FoldList;
+
 
     /**
      * CSS-class enum
@@ -45,7 +57,8 @@ goog.scope(function() {
         'ROOT': 'l-school',
         'FEEDBACK_BUTTON': 'b-bouton_feedback-opener',
         'RATING': 'b-rating',
-        'COMMENTS': 'b-comments'
+        'COMMENTS': 'b-comments',
+        'FEEDBACK_LINK': 'l-school__comments-placeholder-link'
     };
 
     /**
@@ -61,6 +74,8 @@ goog.scope(function() {
      * @public
      */
     School.prototype.createDom = function() {
+        goog.base(this, 'createDom');
+
         var element = goog.soy.renderAsElement(sm.lSchool.Template.base, {
             params: this.params_
         });
@@ -93,6 +108,15 @@ goog.scope(function() {
                 this.onClick_,
                 false,
                 this
+            );
+        }
+
+        /** feedback link listener */
+        if (this.elements_.feedbackLink) {
+            this.getHandler().listen(
+                this.elements_.feedbackLink,
+                goog.events.EventType.CLICK,
+                this.onClick_
             );
         }
     };
@@ -141,14 +165,16 @@ goog.scope(function() {
      */
     School.prototype.initChildren_ = function() {
         /** comments */
-        var comments = new sm.lSchool.bComments.Comments();
-        this.addChild(comments);
-        comments.decorate(this.elements_.comments);
+        if (comments) {
+            var comments = new sm.lSchool.bComments.Comments();
+            this.addChild(comments);
+            comments.decorate(this.elements_.comments);
+        }
 
         /** rating */
-        var rating = new sm.bRating.Rating();
-        this.addChild(rating);
-        rating.decorate(this.elements_.rating);
+        // var rating = new sm.bRating.Rating();
+        // this.addChild(rating);
+        // rating.decorate(this.elements_.rating);
 
         /** map */
         var map = new sm.lSchool.bMap.Map();
@@ -163,6 +189,18 @@ goog.scope(function() {
         });
         this.addChild(this.modal_);
         this.modal_.render();
+
+        var l = this.elements_.foldLists.length;
+        for (var i = 0, foldList; i < l; i++) {
+            foldList = this.elements_.foldLists[i];
+            var foldListInstance = new FoldList();
+            this.addChild(foldListInstance);
+            foldListInstance.decorate(foldList);
+        }
+
+        this.search_ = new sm.bSearch.Search();
+        this.addChild(this.search_);
+        this.search_.decorate(this.elements_.search);
     };
 
     /**
@@ -177,6 +215,10 @@ goog.scope(function() {
                 sm.lSchool.School.CssClass.FEEDBACK_BUTTON,
                 root
             ),
+            feedbackLink: goog.dom.getElementByClass(
+                sm.lSchool.School.CssClass.FEEDBACK_LINK,
+                root
+            ),
             rating: goog.dom.getElementByClass(
                 sm.lSchool.School.CssClass.RATING,
                 root
@@ -187,6 +229,14 @@ goog.scope(function() {
             ),
             map: goog.dom.getElementByClass(
                 sm.lSchool.bMap.Map.CssClass.ROOT,
+                root
+            ),
+            foldLists: goog.dom.getElementsByClass(
+                sm.lSchool.bDataBlockFoldList.FoldList.CssClass.ROOT,
+                root
+            ),
+            search: goog.dom.getElementByClass(
+                sm.bSearch.Search.CssClass.ROOT,
                 root
             )
         };

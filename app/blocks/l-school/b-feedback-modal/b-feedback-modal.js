@@ -252,7 +252,7 @@ goog.scope(function() {
                     isValidOpt = true;
                 }
             },
-            'score[]': function(value) {
+            'score': function(value) {
                 if (parseInt(value)) {
                     isValidOpt = true;
                 }

@@ -117,7 +117,6 @@ goog.scope(function() {
             params = JSON.parse(
                 item.getAttribute('data-params')
             );
-
             schoolListItemInstance = new SchoolListItem({
                 'id': params.id,
                 'score': params.score,
@@ -224,6 +223,10 @@ goog.scope(function() {
             return (sortKey > 0) ?
                 item1.compareByScore(item2, sortKey - 1) :
                 item1.compareByTotalScore(item2);
+        });
+
+        schoolListItems.forEach(function(item) {
+            item.changeSorCriterion(sortKey);
         });
 
         for (var i = 0; i < schoolListItems.length; i++) {

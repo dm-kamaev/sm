@@ -4,7 +4,7 @@ var express = require('express'),
 var debugController = require('./debugController');
 
 router.get('/debug', debugController.view);
-router.get('/debugdata', debugController.getData);
+router.post('/debugdata', debugController.getData);
 
 
 module.exports = router;

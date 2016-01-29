@@ -1,0 +1,169 @@
+{namespace sm.bDiagram.Template}
+
+/**
+ * Diagram template
+ * @param params {{
+ *     data: list<{
+ *             name: string,
+ *             value: string,
+ *             description: ?string
+ *             averageValue: ?string
+ *         }>
+ *     display: ?string,
+ *     maxValue: ?number,
+ *     starsConfig: ?[]
+ * }}
+ */
+{template .base}
+    <div class="b-diagram {$params.display ? 'b-diagram_' + $params.display
+        : ''}"
+        data-max-value="{$params.maxValue ?: 1}">
+        {foreach $item in $params.data}
+            <div class="b-diagram__item">
+                <div class="b-diagram__label">
+                    {$item.name}
+                    {if $item.description}
+                        <div class="b-diagram__description">
+                            {$item.description}
+                        </div>
+                    {/if}
+                </div>
+                <div class="b-diagram__value">
+                    {if $params?.display == 'marks'}
+                        {call sm.bMark.Template.base}
+                            {param params: [
+                                'value': $item.value,
+                                'display': 'inline'
+                            ]/}
+                        {/call}
+                    {elseif $params?.display == 'stars'}
+                        {call sm.bMark.Template.base}
+                            {param params: [
+                                'value': $item.value,
+                                'display': 'stars',
+                                'starsConfig': $params.starsConfig ?: [
+                                    'style': [
+                                        'size': 'large'
+                                    ]
+                                ]
+                            ]/}
+                        {/call}
+                    {elseif $params?.display == 'text'}
+                        {$item.value}
+                    {elseif $params?.display == 'bars'}
+                        {call .bars}
+                            {param params: [
+                                'value': round($item.value, 0),
+                                'averageValue': $item.averageValue,
+                                'description': $item.description,
+                                'maxValue': $params.maxValue
+                            ]/}
+                        {/call}
+                    {else}
+                        {call .default}
+                            {param params: [
+                                'value': $item.value,
+                                'maxValue': $params.maxValue
+                            ]/}
+                        {/call}
+                    {/if}
+                </div>
+            </div>
+        {/foreach}
+    </div>
+{/template}
+
+/**
+ * Default template
+ * @param params {{
+ *     value: number,
+ *     maxValue: ?number
+ * }}
+ */
+{template .default}
+    <div class="b-diagram__bar-filled"
+         data-value="{$params.value}"
+         style="width: {$params.value * 100 / $params.maxValue + '%'};">
+    </div>
+    <div class="b-diagram__bar"
+         style="width: {($params.maxValue - $params.value) * 100 /
+             $params.maxValue + '%'};">
+    </div>
+{/template}
+
+/**
+ * Bars template
+ * @param params {{
+ *     value: number,
+ *     averageValue: ?number
+ *     maxValue: ?number
+ * }}
+ */
+{template .bars}
+    <div class="b-diagram__bar-filled
+                {$params.value < $params.averageValue ?
+                    ' b-diagram__bar-filled_red' : ''}"
+         data-value="{$params.value}"
+         style="width: {$params.value * 100 / $params.maxValue + '%'};">
+    </div>
+    <div class="b-diagram__bar"
+         style="width: {($params.maxValue - $params.value) * 100 /
+             $params.maxValue + '%'};">
+    </div>
+    <div class="b-diagram__under-bar"
+         style="width: {$params.averageValue * 100 / $params.maxValue + '%'};">
+    </div>
+    <div class="b-diagram__circle">
+    </div>
+    <div class="b-diagram__tooltip"
+         style="left: {$params.value * 100 / $params.maxValue + '%'};">
+        <div class="b-diagram__tooltip-arrow">
+        </div>
+        <div class="b-diagram__tooltip-description">
+
+            <div class="b-diagram__tooltip-arrow-shadow">
+            </div>
+            <div class="b-diagram__tooltip-content">
+                <div class="b-diagram__tooltip-mark">
+                    {$params.value}
+                    <br>
+                    <span class="b-diagram__tooltip-bold-text">
+                        {let $lastDigit:
+                            (($params.value / 10) - floor($params.value / 10))/}
+                        {let $tenDigit:
+                            ($params.value / 100 - floor($params.value / 100))/}
+                        {if $tenDigit*100 - $lastDigit*10 == 1 or
+                            $lastDigit*10 > 4}
+                            баллов
+                        {elseif $lastDigit*10 > 1}
+                            балла
+                        {else}
+                            балл
+                        {/if}
+                    </span>
+                </div>
+                <div class="b-diagram__tooltip-average-mark">
+                    В среднем по Москве —
+                    <br>
+                    <span class="b-diagram__tooltip-bold-text">
+                        {$params.averageValue}
+                        {sp}
+                        {let $lDigit:
+                            (($params.averageValue / 10) -
+                                floor($params.averageValue / 10))/}
+                        {let $tDigit:
+                            ($params.averageValue / 100 -
+                                floor($params.averageValue / 100))/}
+                        {if $tDigit*100 - $lDigit*10 == 1 or $lDigit*10 > 4}
+                            баллов
+                        {elseif $lDigit*10 > 1}
+                            балла
+                        {else}
+                            балл
+                        {/if}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+{/template}

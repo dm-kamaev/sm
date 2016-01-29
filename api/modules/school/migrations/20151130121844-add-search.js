@@ -12,9 +12,10 @@ module.exports = {
             },
             school_id: {
                 type: Sequelize.INTEGER,
+                onDelete: 'cascade',
                 references: {
-                    model:"school",
-                    key: "id",
+                    model:'school',
+                    key: 'id',
                 }
             },
             values: {
@@ -34,7 +35,7 @@ module.exports = {
             console.log('*****************');
         });
     },
-    down: function (queryInterface, Sequelize) {
+    down: function (queryInterface) {
         return queryInterface.dropTable('search_data');
     }
 };

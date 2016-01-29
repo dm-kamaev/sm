@@ -5,6 +5,7 @@ goog.require('goog.dom.classlist');
 goog.require('goog.events');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
+goog.require('gorod.gSuggest.Suggest');
 goog.require('sm.bSearch.Search');
 goog.require('sm.lSearchResult.Template');
 goog.require('sm.lSearchResult.bFilters.Filters');
@@ -50,7 +51,7 @@ sm.lSearchResult.SearchResult = function(opt_params) {
 
     /**
      * Search instance
-     * @type {sm.bSearch.Search}
+     * @type {?sm.bSearch.Search}
      * @private
      */
     this.search_ = null;
@@ -147,7 +148,7 @@ goog.scope(function() {
 
         //search
         var bSearch = goog.dom.getElementByClass(
-            Search.CssClass.INPUT,
+            Search.CssClass.ROOT,
             element
         );
 
@@ -169,24 +170,31 @@ goog.scope(function() {
         );
 
         this.getHandler().listen(
-            this.schoolList_,
-            SchoolList.Event.ITEM_CLICK,
-            this.redirectHandler_
-        );
-
-        this.getHandler().listen(
-            this.schoolList_,
-            SchoolList.Event.SHOW_MORE,
-            this.showMoreSchoolListItemsHandler_
-        );
-
-        this.getHandler().listen(
             this.filters_,
             Filters.event.SUBMIT,
             this.filtersSubmitHandler_
         );
 
-        this.addScrollListener_();
+        this.getHandler().listen(
+            this.search_,
+            sm.bSearch.Search.Event.SUBMIT,
+            this.onSubmit_
+        );
+
+        this.getHandler().listen(
+            this.search_,
+            sm.bSearch.Search.Event.ITEM_SELECT,
+            this.onSubmit_
+        );
+    };
+
+    /**
+     * Input submit handler
+     * @param {Object} event
+     * @private
+     */
+    SearchResult.prototype.onSubmit_ = function(event) {
+        this.filters_.submit(event);
     };
 
     /**
@@ -208,10 +216,8 @@ goog.scope(function() {
      * @param {Object} event
      * @private
      */
-    SearchResult.prototype.sortHandler_ = function(event) {
-        this.searchData_.order = event.itemId;
-        this.initSchoolListSetItems_();
-        this.sendSearchData_();
+    SearchResult.prototype.onSortHandler_ = function(event) {
+        this.schoolList_.sort(event.itemId);
     };
 
     /**
@@ -228,84 +234,14 @@ goog.scope(function() {
      * @param {Object} event
      * @private
      */
-    SearchResult.prototype.redirectHandler_ = function(event) {
-        document.location.href = '/school/' + event.itemId;
-    };
+    SearchResult.prototype.filtersSubmitHandler_ = function(event) {
+        var data = event.data,
+            isSchool = (data.searchParams.areaId ||
+                data.searchParams.metroId) ? false : true;
 
-    /**
-     * Add listener for scroll
-     * @private
-     */
-    SearchResult.prototype.addScrollListener_ = function() {
-        this.getHandler().listen(
-            window,
-            goog.events.EventType.SCROLL,
-            this.scrollHandler_
-        );
-
-        this.scrollCheck_();
-    };
-
-    /**
-     * Remove listener for scroll
-     * @private
-     */
-    SearchResult.prototype.removeScrollListener_ = function() {
-        this.getHandler().unlisten(
-            window,
-            goog.events.EventType.SCROLL,
-            this.scrollHandler_
-        );
-    };
-
-    /**
-     * Scroll handler
-     * @private
-     */
-    SearchResult.prototype.scrollHandler_ = function() {
-        this.scrollCheck_();
-    };
-
-    /**
-     * Checks scroll
-     * @private
-     */
-    SearchResult.prototype.scrollCheck_ = function() {
-        var scrollHeight =
-            window.pageYOffset || document.documentElement.scrollTop;
-        var docHeight = document.documentElement.offsetHeight;
-        var clientHeight = document.documentElement.clientHeight;
-
-        if (scrollHeight + clientHeight >= docHeight) {
-            this.showMoreSchoolListItems_();
-        }
-    };
-
-    /**
-     * Handler for show more school list items
-     * @private
-     */
-    SearchResult.prototype.showMoreSchoolListItemsHandler_ = function() {
-        this.showMoreSchoolListItems_();
-    };
-
-    /**
-     * Shows more school list items
-     * @private
-     */
-    SearchResult.prototype.showMoreSchoolListItems_ = function() {
-        this.searchData_.offset = this.searchData_.offset + 10;
-        this.initSchoolListAddItems_();
-        this.sendSearchData_(this.showMoreSchoolListItemsSuccess_);
-    };
-
-    /**
-     * Sending of search data
-     * @param {function=} opt_callback
-     * @private
-     */
-    SearchResult.prototype.sendSearchData_ = function(opt_callback) {
-        var callback = opt_callback || this.searchSuccess_;
+        data.searchParams.name = isSchool ?
+            this.search_.getValue() :
+            undefined;
 
         jQuery.ajax({
             url: this.filters_.getUrl(),
@@ -313,46 +249,6 @@ goog.scope(function() {
             data: this.searchData_,
             success: callback.bind(this)
         });
-    };
-
-    /**
-     * Filters submit callback
-     * @param {string} responseData
-     * @private
-     */
-    SearchResult.prototype.searchSuccess_ = function(responseData) {
-        var data = JSON.parse(responseData);
-        this.schoolList_.hideLoader();
-        this.schoolList_.setItems(data);
-        this.addScrollListener_();
-    };
-
-    /**
-     * Show more school list items callback
-     * @param {string} responseData
-     * @private
-     */
-    SearchResult.prototype.showMoreSchoolListItemsSuccess_ =
-        function(responseData) {
-            var data = JSON.parse(responseData) || [];
-
-            this.schoolList_.hideLoader();
-
-            if (!data.length) {
-                this.schoolList_.hideShowMoreButton();
-            } else {
-                this.schoolList_.addItems(data);
-                this.addScrollListener_();
-            }
-        };
-
-    /**
-     * Initialization of school list add items
-     * @private
-     */
-    SearchResult.prototype.initSchoolListAddItems_ = function() {
-        this.schoolList_.showLoader();
-        this.removeScrollListener_();
     };
 });
 

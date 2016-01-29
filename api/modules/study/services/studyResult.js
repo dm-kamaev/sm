@@ -1,9 +1,8 @@
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
-var colors = require('colors');
 var models = require.main.require('./app/components/models').all;
 var services = require.main.require('./app/components/services').all;
-const common = require.main.require('./console/common');
+var sequelize = require.main.require('./app/components/db');
 
 exports.name = 'studyResult';
 
@@ -17,6 +16,17 @@ const OLIMP_TYPES = [
         value: 'московская'
     }
 ];
+
+/**
+ * param {int} school_id
+ */
+exports.dropEgeResults = async(function(school_id) {
+    await(models.EgeResult.destroy({
+        where: {
+            schoolId: school_id
+        }
+    }));
+});
 
 exports.setSchoolOlimp = async((school, olimpResults) => {
     await(models.OlimpResult.destroy({
@@ -44,6 +54,53 @@ exports.setSchoolOlimp = async((school, olimpResults) => {
 
 exports.getAllGia = async(() => {
     return await(models.GiaResult.findAll());
+});
+
+/**
+ * @return {array<object>} subjects with gia average
+ * @param {integer} cityId
+ * TODO: count avg for city
+ */
+exports.getGiaAverage = async(function (cityId) {
+    var sqlString = 'select subject_id, AVG(result) ' + 
+        'from gia_result group by subject_id';
+    var sqlRes = await(sequelize.query(
+            sqlString, 
+            { type: sequelize.QueryTypes.SELECT}
+        )
+    );
+    return sqlRes.map(res => { 
+        return {
+            subjectId: res.subject_id,
+            result: res.avg,
+            type: 'gia',
+            cityId: cityId
+        };
+    });
+});
+
+/**
+ * @return {array<object>} subjects with ege average
+ * @param {integer} cityId
+ * TODO: count avg for city
+ */
+exports.getEgeAverage = async(function(cityId) {
+    var sqlString = 'select subject_id, year, AVG(result) ' + 
+        'from ege_result group by year, subject_id';
+    var sqlRes = await(sequelize.query(
+            sqlString, 
+            { type: sequelize.QueryTypes.SELECT}
+        )
+    );
+    return sqlRes.map(res => { 
+        return {
+            subjectId: res.subject_id,
+            year: res.year,
+            result: res.avg,
+            type: 'ege',
+            cityId: cityId
+        };
+    });
 });
 
 /**
@@ -122,3 +179,14 @@ exports.createGia = async((gia, opt_option) => {
         return res;
     }
 );
+/**
+ * @param {
+ *      year: int,
+ *      schoolId: int,
+ *      result: float,
+ *      subject_id: int
+ * } ege
+ */
+exports.createEge = async(function(ege){
+    await (models.EgeResult.create(ege));   
+});

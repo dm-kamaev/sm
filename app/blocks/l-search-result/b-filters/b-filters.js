@@ -107,19 +107,11 @@ goog.scope(function() {
     };
 
     /**
-     * Getter for url
-     * @return {string}
+     * Submit data
+     * @param {Object} event
      */
-    Filters.prototype.getUrl = function() {
-        return jQuery(this.getElement()).attr('action');
-    };
-
-    /**
-     * Getter for method
-     * @return {string}
-     */
-    Filters.prototype.getMethod = function() {
-        return jQuery(this.getElement()).attr('method');
+    Filters.prototype.submit = function(event) {
+        this.sendForm_(event);
     };
 
     /**
@@ -130,12 +122,28 @@ goog.scope(function() {
     Filters.prototype.onSubmit_ = function(event) {
         event.preventDefault();
 
+        this.sendForm_(event);
+    };
+
+    /**
+     * Send form
+     * @param {Object} event
+     * @private
+     */
+    Filters.prototype.sendForm_ = function(event) {
         var form = jQuery(this.getElement()),
             data = {
                 'searchParams': this.processingSerializeArray_(
                     form.serializeArray()
-                )
-            };
+                ),
+            },
+            type = event.data ? event.data.type : '';
+
+        if (type === 'metro') {
+            data.searchParams.metroId = event.data.id;
+        } else if (type === 'areas') {
+            data.searchParams.areaId = event.data.id;
+        }
 
         this.dispatchEvent({
             type: Filters.event.SUBMIT,

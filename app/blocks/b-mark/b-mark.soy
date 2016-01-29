@@ -3,85 +3,131 @@
 /**
  * The mark template
  * @param params {{
- *     data: {
- *         stats: [{
- *             value: ?Number,
- *             mark: ?Number,
- *             isMax: ?Boolean
- *         }],
- *         total: {
- *             average: ?Number,
- *             countValue: ?Number
- *         }
- *     }
+ *     value: number,
+ *     display: ?string,
+ *     starsConfig: ?[],
+ *     config: [
+ *         bigText: bool,
+ *         notShowDashes: bool
+ *     ]
  * }}
-*/
+ */
 {template .base}
-    <div class="b-mark">
-        {call .total_}
-            {param params: $params.data.total /}
+    {let $color kind="html"}
+        {if $params.value >= 4}
+            green
+        {elseif $params.value >= 3}
+            yellow
+        {elseif $params.value > 0}
+            red
+        {else}
+            grey
+        {/if}
+    {/let}
+    <div class="b-mark{sp}
+                b-mark_{$color}{sp}
+                {$params?.display == 'inline' ? 'b-mark_inline' : ''}{sp}
+                {$params?.display == 'number' ? 'b-mark_number' : ''}{sp}
+                {if $params.config}
+                    {$params?.config.bigText ? 'b-mark_bigText' : ''}{sp}
+                    {$params?.config.bigText ? 'b-mark_no-dash' : ''}
+                {/if}
+                ">
+        {if $params?.display == 'inline'}
+            {call .inline data="all"/}
+        {elseif $params?.display == 'stars'}
+            {call .stars data="all"/}
+        {elseif $params?.display == 'number'}
+            {call .number data="all" /}
+        {else}
+            {call .simple data="all"/}
+        {/if}
+    </div>
+{/template}
+
+/**
+ * Simple
+ * @param params {{
+ *     value: number
+ * }}
+ */
+{template .simple}
+    <div class="b-mark__circle">
+        <div class="b-mark__mark">
+            {call .value data="all"/}
+        </div>
+    </div>
+{/template}
+
+/**
+ * Inline
+ * @param params {{
+ *     value: number
+ *     config: [
+ *         showDashes: bool
+ *     ]
+ * }}
+ */
+{template .inline}
+    <div class="b-mark__circle">
+    </div>
+    <div class="b-mark__mark">
+        {call .value data="all"/}
+    </div>
+{/template}
+
+/**
+ * Stars template
+ * @param params {{
+ *     value: number,
+ *     starsConfig: ?[]
+ * }}
+ */
+{template .stars}
+    {call sm.bStars.Template.base}
+        {param params: [
+            'data': [
+                'mark': $params.value
+            ],
+            'config': $params.starsConfig
+        ]/}
+    {/call}
+{/template}
+
+/**
+ * Number template
+ * @param params {{
+ *     value: number
+ * }}
+ */
+{template .number}
+    <div class="b-mark__mark">
+        {call .value}
+            {param params: [
+                'value': $params.value
+            ]/}
         {/call}
-        <div class="b-mark__stats">
-            {foreach $stat in $params.data.stats}
-                {call .stat_}
-                    {param params: $stat /}
-                {/call}
-            {/foreach}
-        </div>
     </div>
 {/template}
 
-
 /**
- * The total template
+ * Value
  * @param params {{
- *    average: ?Number,
- *    countValue: ?Number
+ *     value: number
+ *     config: [
+ *         notShowDashes: bool
+ *     ]
  * }}
  */
-{template .total_ private="true"}
-    <div class="b-mark__total">
-        <div class="b-mark__average">
-            {$params.average}
-        </div>
-        <div class="b-mark__count">
-            <div class="b-mark__count-value">
-                {$params.countValue}
-            </div>
-            <div class="b-mark__count-label">
-                голосов
-            </div>
-        </div>
-    </div>
-{/template}
-
-
-/**
- * The stat template
- * @param params {{
- *     value: ?Number,
- *     mark: ?Number,
- *     isMax: ?Boolean
- * }}
- */
-{template .stat_ private="true"}
-        <div class="b-mark__stat">
-            {call sm.bStars.Template.base}
-                {param params: [
-                    'data': [
-                        'mark': $params.mark
-                    ]
-                ] /}
-            {/call}
-
-            <div class="b-mark__bar
-                        {$params.isMax ? ' b-mark__bar_max' : ''}">
-                <div class="b-mark__bar-progress">
-                </div>
-            </div>
-
-            <div class="b-mark__count">
-                {$params.value}
-            </div>
-        </div>
+{template .value}
+    {if $params.value > 0}
+        {let $val: round($params.value, 1)/}
+        {floor($val)},{round(($val - floor($val))*10, 0)}
+    {else}
+        {if $params.config}
+            {$params?.config.notShowDashes ? '' : '—'}
+        {else}
+            —
+        {/if}
+    {/if}
 {/template}

@@ -1,0 +1,74 @@
+{namespace sm.lSchool.bDataBlockInformation.Template}
+
+/**
+ * Addresses item
+ * @param params {
+ *     modifier: ?string
+ *     content: [
+ *         classes: string,
+ *         kindergarten: bool,
+ *         extendedDayCost: string,
+ *         directorName: string,
+ *         dressCode: bool
+ *     ]
+ * }
+ * @extends '/l-school/b-data-block/b-data-block'
+ * @constructor
+ */
+{template .base}
+    {call .init}
+        {param params: [
+            'modifier': $params.modifier ?
+                        'b-data-block_information' + $params.modifier :
+                        'b-data-block_information',
+            'content': $params.content
+        ] /}
+    {/call}
+{/template}
+
+/**
+ * Content item
+ * @param params {
+ *     content: [
+ *         classes: ?string,
+ *         kindergarten: ?string,
+ *         extendedDayCost: ?string,
+ *         directorName: ?string,
+ *         dressCode: ?string
+ *     ]
+ * }
+ */
+{template .content autoescape="strict" kind="html"}
+     <ul class="b-data-block__content">
+        {if $params.content.classes != ''}
+            <li class="b-data-block__item">
+                {$params.content.classes}
+            </li>
+        {/if}
+
+        {if $params.content.kindergarten != ''}
+            <li class="b-data-block__item">
+                {$params.content.kindergarten}
+            </li>
+        {/if}
+
+        {if $params.content.extendedDayCost != ''}
+            <li class="b-data-block__item">
+                {$params.content.extendedDayCost}
+            </li>
+        {/if}
+
+        {if $params.content.dressCode == true}
+            <li class="b-data-block__item">
+                Школьная форма обязательна
+            </li>
+        {/if}
+
+        {if $params.content.directorName != ''}
+            <li class="b-data-block__item">
+                Директор{sp}&mdash;{sp}
+                {$params.content.directorName}
+            </li>
+        {/if}
+    </ul>
+{/template}

@@ -5,7 +5,11 @@
  * @param? params {
  *     id: ?number,
  *     name: ?string,
- *     score: ?list<number>,
+ *     url: ?string,
+ *     score: ?list<[
+ *         name: ?string,
+ *         value: ?number
+ *     ]]>,
  *     totalScore: ?number,
  *     description: ?string
  * }
@@ -18,33 +22,34 @@
         {/call}
         ">
 
-        <div class="b-school-list-item__name">
+        <a href="/school/{$params.url}"
+            class="b-school-list-item__name">
             <div class="b-school-list-item__name-wrap">
                 {$params.name}
             </div>
-        </div>
+        </a>
 
-        <div class="b-school-list-item__rating">
-            {call sm.bRating.Template.base}
-                {param params:[
-                    'marks': $params.score,
-                    'averageMark': $params.totalScore,
-                    'theme': 'black',
-                    'noSectionNames': true
-                ]/}
-            {/call}
+        <div class="b-school-list-item__data">
+            <div class="b-school-list-item__data-item">
+              
+            </div>
         </div>
-
-//        <div class="b-school-list-item__data">
-//            <div class="b-school-list-item__data-item">
-//                Станция метро, длинный адрес школы
-//            </div>
-//        </div>
 
         {if $params.description}
             <div class="b-school-list-item__description">
                 {$params.description}
             </div>
         {/if}
+        <div class="b-school-list-item__score">
+            {call sm.bScoreSchoolList.Template.base}
+                {param params:[
+                    'score': $params.score,
+                    'sortCriteria': [
+                        'name': 'Средняя оценка',
+                        'value': $params.totalScore
+                    ]
+                ]/}
+            {/call}
+        </div>
     </div>
 {/template}

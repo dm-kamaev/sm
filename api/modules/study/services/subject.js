@@ -2,7 +2,8 @@ var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var models = require.main.require('./app/components/models').all;
 var services = require.main.require('./app/components/services').all;
-var sequelizeInclude = require.main.require('./api/components/sequelizeInclude');  
+var sequelizeInclude = require.main.require('./api/components/sequelizeInclude');
+var searchTypeEnum = require('../../school/enums/searchType');
 
 exports.name = 'subject';
 
@@ -64,23 +65,114 @@ exports.getOrCreate = async(name => {
 
 });
 
-exports.list = async (function(){
+
+/**
+ * @param {object} data
+ * @param {object} data.subject - subject instance
+ * @param {number||null} data.giaAvg
+ * @param {number||null} data.egeAvh
+ * @param {number} subject.dataValues.average
+ * TODO: city filter
+ */
+exports.setCityAverage = async(function(data) {
+    var subject = data.subject;
+    var city = await (services.city.getMoscow());
+    var subjectAvg = await (models.CityResult.findOne({
+        where: {
+            cityId: city.id,
+            subjectId: subject.id
+        }
+    }));
+    if (subjectAvg) {
+        await(subjectAvg.update({
+            giaResult: data.giaAvg,
+            egeResult: data.egeAvg
+        }));
+    } else {
+       await (models.CityResult.create({
+            cityId: city.id,
+            subjectId: subject.id,
+            giaResult: data.giaAvg,
+            egeResult: data.egeAvg
+       }));
+    }
+});
+
+/**
+ * @param params {{
+ *     model: {object},
+ *     modelAs: {string},
+ *     filterName: {string}
+ * }}
+ */
+var generateFilters = async(function(params) {
     var subjects = await (models.Subject.findAll());
-    return subjects.map(subject => {
-        return {
-            label: subject.name,
-            value: subject.id
-        };
-    });
-}); 
+    var filters = await (params.model.findAll({
+        attributes: ['subject_id'],
+        group: 'subject_id'
+    }));
+
+    var formatedSubjects = subjects
+        .filter(subject =>
+            filters.find(filter =>
+                filter.subject_id == subject.id))
+        .map(subject => {
+            return {
+                label: subject.displayName,
+                value: subject.id
+            };
+        });
+
+    return {
+        filter: params.filterName,
+        values: formatedSubjects
+    };
+});
+
+/**
+ * @private
+ */
+exports.egeFilters = async (function() {
+    var params = {
+        model: models.EgeResult,
+        modelAs: 'egeResult',
+        filterName: searchTypeEnum.fields.EGE
+    };
+    return await (generateFilters(params));
+});
+
+/**
+ * @private
+ */
+exports.giaFilters = async (function() {
+    var params = {
+        model: models.GiaResult,
+        modelAs: 'giaResult',
+        filterName: searchTypeEnum.fields.GIA
+    };
+    return await (generateFilters(params));
+});
+
+/**
+ * @private
+ */
+exports.olympFilters = async (function() {
+    var params = {
+        model: models.OlimpResult,
+        modelAs: 'olimpResult',
+        filterName: searchTypeEnum.fields.OLIMPIAD
+    };
+    return await (generateFilters(params));
+});
+
 /**
  * get all the subjects with city default gia results
  */
 exports.listCityResults = async (() => {
     var includeParams = {
-        cityResult: true 
+        cityResult: true
     }
     return await (models.Subject.findAll({
-        include: sequelizeInclude(includeParams) 
+        include: sequelizeInclude(includeParams)
     }));
 });

@@ -1,10 +1,18 @@
 {namespace sm.bHeader.Template}
 /**
-* Header
-* @param params {
-*     url: ?string
-* }
-*/
+ * Header
+ * @param params {
+ *    url: ?string,
+ *    searchtext: ?string,
+ *    searchRedirect: ?bool
+ *    templates: ?{
+ *        search: ?string,
+ *        item: ?string,
+ *        text: ?string,
+ *        value: ?string
+ *    },
+ * }
+ */
 {template .base autoescape="strict" kind="html"}
     <div class="b-header">
         <div class="b-header__body">
@@ -18,8 +26,13 @@
     		</div>
             */
     		<div class="b-header__main">
-    			<div class="b-header__before">
-    			</div>
+                {if $params.url}
+                    <div class="b-header__before b-header__before_search">
+                    </div>
+                {else}
+    			    <div class="b-header__before">
+        			</div>
+                {/if}
     			<div class="b-header__wrap">
     				<div class="b-header__title">
     					<span class="b-header__stars">
@@ -46,6 +59,25 @@
     				</div>
     			</div>
     		</div>
+            {if $params.url}
+        		<div class="b-header__search">
+                    {call sm.bSearch.Template.base}
+                        {param params: [
+                            'placeholder': 'Найти школу',
+                            'text': $params?.searchText,
+                            'theme': 'min',
+                            'redirect': $params?.searchRedirect,
+                            'templates': [
+                                'search': $params?.templates.search,
+                                'item': $params?.templates.item,
+                                'text': $params?.templates.text,
+                                'value': $params?.templates.value
+                            ]
+                        ]/}
+                    {/call}
+                </div>
+            {else}
+            {/if}
             //TODO: uncomment
             /*
     		<div class="b-header__search">

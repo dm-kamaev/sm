@@ -1,0 +1,98 @@
+{namespace sm.lSchool.bDataBlockAddresses.Template}
+/**
+ * Addresses item
+ * @param params {
+ *      header: ?string,
+ *      headerType: ?number
+ *      modifier: ?string
+ *      content: [
+ *          address: list<[
+ *              title: string,
+ *              description: string,
+ *              metroStations: list<[
+ *                  id: number,
+ *                  name: string
+ *              ]>,
+ *              departments: list<[
+ *                  id: number,
+ *                  name: string,
+ *                  stage: string
+ *              ]>
+ *          ]>,
+ *          phones: list<string>
+ *      ]
+ * }
+ * @extends '/l-school/b-data-block/b-data-block'
+ * @constructor
+ */
+{template .base}
+    {call .init}
+        {param params: [
+            'header': $params.header,
+            'headerType': $params.headerType ?
+                        $params.headerType :
+                        3,
+            'modifier': $params.modifier ?
+                        'b-data-block_addresses' + $params.modifier :
+                        'b-data-block_addresses',
+            'content': $params.content
+        ] /}
+    {/call}
+{/template}
+
+/**
+ * Content item
+ * @param params {
+ *    header: ?string
+ *    content: [
+ *        address: list<[
+ *            title: string,
+ *            description: string,
+ *            metroStations: list<[
+ *                id: number,
+ *                name: string
+ *            ]>,
+ *            departments: list<[
+ *                name: string,
+ *                stage: string
+ *            ]>
+ *        ]>,
+ *        phones: list<string>
+ *    ]
+ * }
+ */
+{template .content autoescape="strict" kind="html"}
+
+    <ul class="b-data-block__content">
+        /*output addresses*/
+        {foreach $address in $params.content.address}
+            <li class="b-data-block__item">
+                <div class="b-data-block__item-title">
+                    {$address.title}
+                </div>
+                <div class="b-data-block__item-content">
+                    {if $address.metroStations.length > 0}
+                        <div class="b-data-block__metro-icon b-icon_img_metro"></div>
+                        {$address.metroStations[0].name},{sp}
+                    {/if}
+                    {$address.description}
+                </div>
+            </li>
+        {/foreach}
+
+        /*output phones*/
+        {if length($params.content.phones) > 0}
+            <li class="b-data-block__item-phones">
+                Телефоны:{sp}
+                {foreach $phone in $params.content.phones}
+                    {$phone}
+
+                    {if not isLast($phone)}
+                        ,{sp}
+                    {/if}
+                {/foreach}
+            </li>
+        {/if}
+    </ul>
+
+{/template}

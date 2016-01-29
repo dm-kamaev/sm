@@ -1,88 +1,139 @@
 .b-mark {
-    width: auto;
-}
-
-.b-mark__total {
-    margin-right: 30px;
-
-    min-width: 60px;
-
     display: inline-block;
-    float: left;
 
+    font-family: 'Proxima', Arial, sans-serif;
+    font-size: 22px;
     text-align: center;
+    font-weight: 600;
+    color: #000000;
 }
 
-.b-mark__average {
-    color: #fd3424;
-
-    font-size: 24px;
-    font-weight: bold;
-}
-
-.b-mark__count {
-    color: #a1a1a1;
-    font-size: 10px;
-}
-
-.b-mark__count-value {
-    display: inline-block;
-}
-
-.b-mark__count-label {
-    display: inline-block;
-
-    margin-left: 5px;
-}
-
-
-.b-mark__stats {
-    display: inline-block;
-
-    padding-left: 30px;
-
-    border-left: 1px solid #a1a1a1;
-
-    font-size: 11px;
-}
-
-.b-mark__stat {
-    padding: 5px 0;
-}
-
-.b-mark__bar {
+.b-mark__circle {
     position: relative;
 
-    margin: 0 30px 0 27px;
     display: inline-block;
 
-    width: 100px;
-    height: 5px;
+    width: 52px;
+    height: 52px;
 
-    background-color: #e7e7e7;
+    border: 4px solid #c6c6c1;
+    border-radius: 50px;
+
+    font-weight: 800;
 }
 
-.b-mark__bar-progress {
+.b-mark__mark {
     position: absolute;
     top: 0;
+    bottom: 0;
     left: 0;
+    right: 0;
 
-    display: inline-block;
-
-    width: 40%;
-    height: 5px;
-
-    background-color: #000000;
-}
-
-
-.b-mark__bar_max .b-mark__bar-progress {
-    background-color: #fd3424;
-}
-
-.b-mark__count {
     width: auto;
+    height: 22px;
+    margin: auto;
+
+    letter-spacing: 0.06em;
+
+    line-height: 24px;
+}
+
+.b-mark.b-mark_green{
+    .b-mark__circle {
+        border-color: #00aa00;
+    }
+}
+
+.b-mark.b-mark_yellow{
+    .b-mark__circle {
+        border-color: #ffaa00;
+    }
+}
+
+.b-mark.b-mark_red{
+    .b-mark__circle {
+        border-color: #ee362c;
+    }
+}
+
+.b-mark.b-mark_grey{
+    .b-mark__mark {
+        line-height: 22px;
+    }
+}
+
+.b-mark.b-mark_inline {
     display: inline-block;
 
-    vertical-align: middle;
+    .b-mark__circle {
+        top: 1px;
+
+        display: inline-block;
+
+        width: 3px;
+        height: 3px;
+        margin-right: 11px;
+
+        background-color: #c6c6c1;
+    }
+
+    .b-mark__mark{
+        position: relative;
+
+        display: inline-block;
+
+        font-size: 13px;
+    }
+}
+
+.b-mark.b-mark_inline.b-mark_green{
+    .b-mark__circle {
+        background-color: #00aa00;
+    }
+}
+
+.b-mark.b-mark_inline.b-mark_yellow{
+    .b-mark__circle {
+        background-color: #ffaa00;
+    }
+}
+
+.b-mark.b-mark_inline.b-mark_red{
+    .b-mark__circle {
+        background-color: #ee362c;
+    }
+}
+
+.b-mark.b-mark_inline.b-mark_grey{
+    .b-mark__mark {
+        top: -2px;
+    }
+}
+.b-mark.b-mark_inline.b-mark_bigText {
+    .b-mark__mark {
+        font-size: 19px;
+    }
+
+    .b-mark__circle {
+        top: -1px;
+    }
+}
+.b-mark.b-mark_number {
+    .b-mark__mark {
+        position: static;
+
+
+        font-family: Arial, sans-serif;
+        font-size: 13px;
+        font-weight: normal;
+        letter-spacing: normal;
+        color: #808080;
+        line-height: 20px;
+    }
+}
+
+.b-mark.b-mark_no-dash.b-mark_empty {
+    .b-mark__mark {
+        display: none;
+    }
 }

@@ -6,8 +6,12 @@
  * @param? params {
  *     schools: ?list<[
  *         id: ?number,
+ *         url: ?string,
  *         name: ?string,
- *         score: ?list<number>,
+ *         score: ?list<[
+ *             name: ?string,
+ *             value: ?number
+ *         ]>,
  *         totalScore: ?number,
  *         description: ?string
  *     ]>
@@ -15,23 +19,12 @@
  */
 {template .base autoescape="strict" kind="html"}
     <div class="b-school-list">
-        <div class="b-school-list__header">
-
-            <div class="b-school-list__header-sections">
-                {call sm.bRating.Template.base}
-                    {param params:[
-                        'theme': 'black',
-                        'noMarks': true
-                    ]/}
-                {/call}
-            </div>
-
-        </div>
         <div class="b-school-list__body">
             {foreach $school in $params.schools}
                 {call sm.lSearchResult.bSchoolListItem.Template.base}
                     {param params:[
                         'id': $school.id,
+                        'url': $school.url,
                         'name': $school.name,
                         'score': $school.score,
                         'totalScore': $school.totalScore,

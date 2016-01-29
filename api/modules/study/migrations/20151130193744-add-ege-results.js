@@ -1,4 +1,10 @@
 'use strict';
+const path = require('path');
+const ModelArchiver = require('../../console/modules/modelArchiver/ModelArchiver.js') ;
+const EgeResult = require('../../api/modules/study/models/egeResult');
+const dataFolder = path.join(__dirname, '../../api/modules/study/migrations');
+const async = require('asyncawait/async');
+const archiveName = ModelArchiver.migrationToArchive(__filename);
 
 module.exports = {
     up: function (queryInterface, Sequelize) {
@@ -18,24 +24,28 @@ module.exports = {
                 allowNull: false
             },
             school_id: {
+                onDelete: 'cascade',
                 type: Sequelize.INTEGER,
                 references: {
-                    model: "school",
-                    key: "id"
+                    model: 'school',
+                    key: 'id'
                 }
             },
             subject_id: {
                 type: Sequelize.INTEGER,
                 references: {
-                    model: "subject",
-                    key: "id"
+                    model: 'subject',
+                    key: 'id'
                 }
             },
             created_at: Sequelize.DATE,
             updated_at: Sequelize.DATE
-        });
+        }).then(async(function() {
+            var archiver = new ModelArchiver(EgeResult, dataFolder, null, archiveName);
+            archiver.load();
+        }));
     },
-    down: function (queryInterface, Sequelize) {
+    down: function (queryInterface) {
         return queryInterface.dropTable('ege_result');
     }
 };

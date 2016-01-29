@@ -35,7 +35,7 @@ app.use('/', modules.school.router);
 app.use('/doc', modules.doc.router);
 app.use('/api', api.comment.router);
 app.use('/api', api.school.router);
-app.use('/api', api.study.router);
+app.use('/api', api.geo.router);
 app.use('/', api.debug.router);
 
 app.use('/apidoc', express.static(path.join(__dirname, '/doc')));
@@ -44,7 +44,7 @@ app.use('/api-debug', express.static(path.join(__dirname, '/api-debug')));
 
 
 soy.init(
-    path.join(__dirname, '/node_modules/frobl/'),
+    path.join(__dirname, '/tmp/compiledServerSoy/server.soy.concat.js'),
     function() {
         app.listen(CONFIG.PORT, function() {
             console.log('Running at port ' + CONFIG.PORT)

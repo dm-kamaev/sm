@@ -1,0 +1,52 @@
+.b-data-block_ratings {
+
+	.b-data-block__header {
+		margin-bottom: 28px;
+	}
+
+	.b-data-block__item {
+		margin-bottom: 20px;
+	}
+
+	.b-data-block__item:last-child {
+		margin-bottom: 0px;
+	}
+
+	.b-data-block__item-content {
+		display: inline-block;
+
+		width: 210px;
+
+		margin-left: 19px;
+
+		vertical-align: middle;
+
+		line-height: 18px;
+	}
+}
+
+.b-data-block__place-wrapper {
+	display: inline-block;
+
+	width: 38px;
+	height: 38px;
+
+	text-align: center;
+
+	vertical-align: middle;
+
+	border: 1px solid #f0f0f0;
+	border-radius: 20px;
+}
+
+.b-data-block__place-value {
+	display: inline-block;
+
+	letter-spacing: 0.06em;
+
+	font-family: Proxima, arial, sans-serif;
+	font-size: 16px;
+	font-weight: 600;
+
+	line-height: 38px;
+}

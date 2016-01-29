@@ -11,17 +11,27 @@
  *         text: ?string,
  *         value: ?string
  *     ],
- *     images: ?list<string>
+ *     images: ?list<string>,
+ *     popularSchools: ?list<[
+ *         id: ?number,
+ *         url: ?string,
+ *         name: ?string,
+ *         description: ?string,
+ *         metro: ?list<string>,
+ *         totalScore: ?number
+ *     ]>
  * }
  */
 {template .base autoescape="strict" kind="html"}
+<!DOCTYPE html>
     <html lang="en">
         <head>
             <meta charset="UTF-8">
-            <title>Title</title>
+            <title>Школы Мела</title>
             <link href='https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700,700italic&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
             <link href='https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
             <link rel="stylesheet" href="/frobl.build.css">
+            <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
             <link rel="stylesheet" href="/styles.css">
         </head>
         <body>
@@ -57,6 +67,11 @@
                         ]/}
                     {/call}
                     */
+                    {call sm.bPopularSchools.Template.base}
+                        {param params: [
+                            'popularSchools': $params.popularSchools
+                        ]/}
+                    {/call}
                 </div>
                 <div class="l-search__footer">
                     <div class="l-search__horisontal-line"></div>
@@ -113,6 +128,7 @@
                     {param params: [
                         'placeholder': '',
                         'theme': 'main',
+                        'redirect': true,
                         'templates': [
                             'search': $params?.templates.search,
                             'item': $params?.templates.item,
@@ -132,14 +148,12 @@
                 </span>
             </div>*/
         </div>
-        <a class="l-search__search-button" href='/search'>
-            {call sm.lSearch.Template.button_}
-                {param params: [
-                    'text': 'Найти школу',
-                    'theme': 'search'
-                ]/}
-            {/call}
-        </a>
+        {call sm.lSearch.Template.button_}
+            {param params: [
+                'text': 'Найти школу',
+                'theme': 'search'
+            ]/}
+        {/call}
     </div>
 {/template}
 

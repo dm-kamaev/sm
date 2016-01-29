@@ -1,0 +1,50 @@
+{namespace sm.lSchool.bDataBlockLinks.Template}
+/**
+ * Addresses item
+ * @param params {
+ *     header: ?string,
+ *     headerType: ?number
+ *     modifier: ?string
+ *     content: ?list<[
+ *         name: string,
+ *         href: string,
+ *         link: string
+ *     ]>
+ * }
+ * @extends '/l-school/b-data-block/b-data-block'
+ * @constructor
+ */
+{template .base}
+    {call .init}
+        {param params: [
+            'modifier': $params.modifier ?
+                'b-data-block_links' + $params.modifier :
+                'b-data-block_links',
+            'headerType': $params.headerType,
+            'header': $params.header,
+            'content': $params.content
+        ] /}
+    {/call}
+{/template}
+
+/**
+ * Content item
+ * @param params {
+ *     content: ?list<[
+ *         name: string,
+ *         href: string,
+ *         link: string
+ *     ]>
+ * }
+ */
+{template .content autoescape="strict" kind="html"}
+    <ul class="b-data-block__content">
+    {foreach $linkItem in $params.content}
+        <li class="b-data-block__item">
+            <a class="b-data-block__item-content_text-color_red
+                      b-data-block__item-content" href="{$linkItem.href}">
+                {$linkItem.name}
+             </a>
+        </li>
+    {/foreach}
+{/template}

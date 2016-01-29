@@ -1,0 +1,76 @@
+{namespace sm.lSchool.bDataBlock.Template}
+
+/**
+ * @param params {
+ *     header: ?string,
+ *     headerType: ?number
+ *     modifier: ?string
+ *     content: ?list<string>
+ */
+{template .base  autoescape="strict" kind="html"}
+    {call .init data="all" /}
+{/template}
+
+/**
+ * Block init
+ * @param params {
+ *     header: ?string,
+ *     headerType: ?number,
+ *     modifier: ?string
+ *     content: ?list<string>
+ * }
+ */
+{template .init autoescape="strict" kind="html"}
+    <div class="b-data-block
+        {if $params.modifier}
+            {sp}{$params.modifier}
+        {/if}
+    ">
+
+        //Header section
+        {if $params.header}
+            {call .header}
+                {param params: [
+                    'header': $params.header
+                ] /}
+            {/call}
+        {/if}
+
+        //Content  section
+        {if $params.content}
+            {call .content data="all" /}
+        {/if}
+    </div>
+{/template}
+
+/**
+ * Header part
+ * @param params {
+ *     header: ?string
+ *     headerType: ?number
+ * }
+ */
+{template .header autoescape="strict" kind="html"}
+    <div class="b-data-block__line"></div>
+    {if $params.headerType == 2}
+        <h2 class="b-data-block__header">{$params.header}</h2>
+    {else}
+        <h3 class="b-data-block__header">{$params.header}</h3>
+    {/if}
+{/template}
+
+/**
+ * Content part
+ * @param params {
+ *     content: ?list<string>
+ * }
+ */
+{template .content autoescape="strict" kind="html"}
+    <ul class="b-data-block__content">
+    {foreach $item in $params.content}
+        <li class="b-data-block__item">
+            {$item}
+        </li>
+    {/foreach}
+    </ul>
+{/template}

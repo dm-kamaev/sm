@@ -23,6 +23,13 @@ sm.lSearch.Search = function(opt_params) {
      */
     this.params_ = opt_params || {};
 
+    /**
+     * Search instance
+     * @type {?sm.bSearch.Search}
+     * @private
+     */
+    this.search_ = null;
+
 };
 goog.inherits(sm.lSearch.Search, goog.ui.Component);
 
@@ -35,7 +42,8 @@ goog.scope(function() {
      * @enum {string}
      */
     Search.CssClass = {
-        ROOT: 'l-search__body'
+        ROOT: 'l-search__body',
+        SEARCH_BUTTON: 'l-search__button_search'
     };
 
     /**
@@ -62,14 +70,63 @@ goog.scope(function() {
     Search.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
+        this.initElements_(element);
+
         var bSearch = goog.dom.getElementByClass(
-            BlockSearch.CssClass.INPUT,
+            BlockSearch.CssClass.ROOT,
             element
         );
 
-        var bSearchInstance = new BlockSearch();
-        this.addChild(bSearchInstance);
-        bSearchInstance.decorate(bSearch);
+        this.search_ = new BlockSearch();
+        this.addChild(this.search_);
+        this.search_.decorate(bSearch);
+    };
+
+    /**
+     * Set up the Component
+     */
+    Search.prototype.enterDocument = function() {
+        goog.base(this, 'enterDocument');
+
+        this.getHandler().listen(
+            this.elements_.searchButton,
+            goog.events.EventType.CLICK,
+            this.onButtonClick_
+        );
+    };
+
+    /**
+     * gets DOM elements
+     * @param {Element} root
+     * @private
+     */
+    Search.prototype.initElements_ = function(root) {
+        this.elements_ = {
+            searchButton: goog.dom.getElementByClass(
+                Search.CssClass.SEARCH_BUTTON
+            )
+        };
+    };
+
+    /**
+     * Button click handler
+     * @private
+     */
+    Search.prototype.onButtonClick_ = function() {
+        this.searchRequest_(this.search_.getValue());
+    };
+
+    /**
+     * Search redirect
+     * @param {string} searchString
+     * @private
+     */
+    Search.prototype.searchRequest_ = function(searchString) {
+        var url = '/search';
+        if (searchString) {
+            url += '?name=' + encodeURIComponent(searchString);
+        }
+        document.location.href = url;
     };
 });
 

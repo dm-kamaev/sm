@@ -24,13 +24,28 @@
 `node commander -h` - список скриптов c описаниями  
 `node commander **scriptname**` - запуск скрипта  
 
+## Обновление места школы в рейтинге и поисковой таблицы ##
+`node commander search`  
+`node commander ranks`  
+Чтобы добавить автоматическое обновление, нужно в терминале виртуалки набрать `crontab -e` и дописать в конец файла  
+`PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin`  
+`0 */12 * * * cd /home/gorod/l3_school-market/ && ./console/cron/updateSearch.sh`  
+`0 */12 * * * cd /home/gorod/l3_school-market/ && ./console/cron/updateRank.sh`  
+где **/home/gorod/l3_school-market/** - путь к проекту на виртуалке  
 
 ## Список скриптов необходимых для работы фронтенда ##
 parse - парсинг экселевского файла с школами  
 geocord - получение координат для адресов школ  
-~~metro - получение ближайших станций метро для адресов~~  
+metro - получение ближайших станций метро для адресов~~  
 updateSearch - актуализация поисковой таблицы  
 
+## Именование рейтингов у школы ##
+**rank** - 1, 2, 3, 4, 4, 4, 4 - "Рейтинг пользователей мела", вычисляется по средним оценкам  
+**score** - [1,3,4,2], [2,4,5,1], [1,2.3,3,0] - средние оценки по группам. Нули не считаются. Если стоит 0 - нет оценок  
+**totalScore** - 3.2, 2.1, 0, 5 - Средняя оценка школы. ( avg(score) )  
+**scoreCount** - [100, 0, 25, 80], [20, 40, 40, 81] - Количество оценок в каждой категории. Нули не считаются  
+**reviewCount** - 0, 92, 302 - Количество пользователей, давших оценку  
+**rankDogm** - Ранк на сайте dogm.mos.ru  
 
 ## Тулзы ##
 /apidoc - доки по запросам к бэкэнду  
@@ -52,6 +67,8 @@ updateSearch - актуализация поисковой таблицы
 `node commander dump`
 ###### Пароль от хоста ######
     gTgCuHrHuEnNnacpxStR
+###### Дампы по http ######
+http://repo.dfarm.lan/db/  
 ###### Как добавить свой ключ на хост и не вводить каждый раз пароль: ######
 1) Убедиться, что у вас есть rsa ключ. Если его нет, то создать: https://help.github.com/articles/generating-ssh-keys/  
 2) Забрать файл с допущенными ключами с хоста: 
@@ -63,3 +80,23 @@ updateSearch - актуализация поисковой таблицы
 ## Cхема БД ##
 https://wiki.cochanges.com/pages/viewpage.action?pageId=22085766  
 При изменении структуры БД надо так же поменять assets/schema.er  
+
+
+# Деплоймент на QA и продакшен
+
+# Инициализация после установки пакета
+QA:
+```sh
+sudo ln -s /etc/nginx/sites-available/schools /etc/nginx/sites-enabled/schools
+```
+Продакшен:
+```sh
+sudo ln -s /etc/nginx/sites-available/schools.mel.fm /etc/nginx/sites-enabled/schools.mel.fm
+```
+
+## Логи ошибок
+Forever пишет такие логи:
+* /opt/school-market/current/runtime/node.forever.log - Forever output
+* /opt/school-market/current/runtime/node.out.log - stdout from app.js
+* /opt/school-market/current/runtime/node.error.log - stderr from app.js
+

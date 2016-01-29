@@ -2,8 +2,9 @@ var modules = require.main.require('./api/modules');
 var models = require.main.require('./app/components/models').all;
 
 /**
- * Generates sequelize include object by params object
  *
+ * @deprecated
+ * Generates sequelize include object by params object
  * if emptyAttributes is passed results for joined models
  * wouldnt contain any data. Need for 'group by'
  *

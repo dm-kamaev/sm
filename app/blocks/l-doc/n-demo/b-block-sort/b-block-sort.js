@@ -20,10 +20,3 @@ sm.lDoc.nDemo.bBlockSort.Sort = function() {
         instance.decorate(elem);
     }
 };
-
-jQuery(function() {
-    var doc = goog.dom.getElementByClass('l-doc');
-    if (doc) {
-        new sm.lDoc.nDemo.bBlockSort.Sort();
-    }
-});

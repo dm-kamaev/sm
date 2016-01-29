@@ -1,7 +1,15 @@
 var DataType = require('sequelize'),
-    db = require.main.require('./app/components/db');
+    db = require('../../../../app/components/db');
 
 var Address = db.define('Address', {
+    schoolId: {
+        type: DataType.INTEGER,
+        field: 'school_id'
+    },
+    areaId: {
+        type: DataType.INTEGER,
+        field: 'area_id'
+    },
     name: DataType.STRING,
     coords: DataType.ARRAY(DataType.FLOAT)
 }, {
@@ -17,13 +25,13 @@ var Address = db.define('Address', {
                 through: 'address_metro',
                 foreignKey: 'address_id'
             });
-            Address.belongsToMany(models.Department, {
+            Address.hasMany(models.Department, {
                 as: 'departments',
-                through: {
-                    model: 'Department_address',
-                    unique: false
-                },
                 foreignKey: 'address_id'
+            });
+            Address.belongsTo(models.Area, {
+                as: 'area',
+                foreignKey: 'area_id'
             });
         }
     }

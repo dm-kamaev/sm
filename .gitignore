@@ -6,13 +6,25 @@ public/
 tmp/
 doc/
 assets/dump/
-parse/
+/parse/
+/console/reports
+/vkdata/
+/*.xlsx
 
 *.log
 *.swp
 .jshintrc
 deployment-config.json
 .remote-sync.json
-*.swp
+.tern-project
 .jshintrc
+.tags*
 
+console/reports
+migrate_stderr
+migrate_stdout
+
+**/b-icon_auto-sprite.css
+**/b-icon_auto-sprite.png
+/app/blocks/b-icon/b-icon_auto-sprite.css
+app/blocks/b-icon/b-icon_auto-sprite.png

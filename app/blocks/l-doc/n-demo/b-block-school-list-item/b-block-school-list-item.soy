@@ -1,0 +1,41 @@
+{namespace sm.lDoc.nDemo.bBlockSchoolListItem.Template}
+
+/**
+* preview
+*/
+{template .preview}
+    {call sm.lSearchResult.bSchoolListItem.Template.base}
+        {param params: [
+            'id': 10,
+            'name': 'ШКОЛА №806',
+            'score': [
+                ['name':'Образование', 'value': 2.3],
+                ['name':'Преподаватели', 'value': 2.7],
+                ['name':'Инфраструктура', 'value': 3.5],
+                ['name':'Атмосфера', 'value':4]
+            ],
+            'totalScore': 4,
+            'description': 'Это самая замечательная школа в мире'
+        ]/}
+    {/call}
+{/template}
+
+/**
+* doc
+*/
+{template .doc}
+    {call sm.lSearchResult.bSchoolListItem.Template.base}
+            {param params: [
+                'id': 10,
+                'name': 'ШКОЛА №806',
+                'score': [
+                    ['name':'Образование', 'value': 2.3],
+                    ['name':'Преподаватели', 'value': 2.7],
+                    ['name':'Инфраструктура', 'value': 3.5],
+                    ['name':'Атмосфера', 'value':4]
+                ],
+                'totalScore': 4,
+                'description': 'Это самая замечательная школа в мире'
+            ]/}
+        {/call}
+{/template}
