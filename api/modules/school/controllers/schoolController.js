@@ -243,11 +243,13 @@ exports.createComment = async (function(req, res) {
  *         "olimp": [3,5],
  *         "metroId": 1,
  *         "areaId": 1
- *       }
+ *       },
+ *       "page": 0
  *     }
  */
 exports.search = async (function(req, res) {
     var result = '';
+    console.log(req.query);
     try {
         var params = req.query;
         var schools = await(services.school.list(params));
