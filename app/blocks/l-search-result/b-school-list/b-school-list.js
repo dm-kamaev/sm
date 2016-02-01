@@ -152,6 +152,33 @@ goog.scope(function() {
             goog.events.EventType.CLICK,
             this.showMoreHandler_
         );
+
+        this.getHandler().listen(
+            goog.dom.getWindow(),
+            goog.events.EventType.SCROLL,
+            this.scrollHandler_
+        );
+    };
+
+    /**
+     * Show more items handler
+     * @private
+     */
+    SchoolList.prototype.showMoreHandler_ = function() {
+        this.dispatchEvent(SchoolList.Event.SHOW_MORE);
+    };
+
+    /**
+     * Checks is bottom of the page
+     * @private
+     */
+    SchoolList.prototype.scrollHandler_ = function() {
+        if (goog.dom.getViewportSize().height +
+                goog.dom.getDocumentScroll().y ==
+                goog.dom.getDocumentHeight()) {
+
+            this.showMoreHandler_();
+        }
     };
 
     /**
@@ -162,24 +189,26 @@ goog.scope(function() {
             this.loaderElement_,
             gorod.iUtils.CssClass.HIDDEN
         );
-        this.hideShowMoreButton();
+        this.hideShowMoreButton_();
     };
 
     /**
      * Hides loader
+     * @private
      */
-    SchoolList.prototype.hideLoader = function() {
+    SchoolList.prototype.hideLoader_ = function() {
         goog.dom.classlist.add(
             this.loaderElement_,
             gorod.iUtils.CssClass.HIDDEN
         );
-        this.showShowMoreButton();
+        this.showShowMoreButton_();
     };
 
     /**
      * Show show more button
+     * @private
      */
-    SchoolList.prototype.showShowMoreButton = function() {
+    SchoolList.prototype.showShowMoreButton_ = function() {
         goog.dom.classlist.remove(
             this.showMoreButtonElement_,
             gorod.iUtils.CssClass.HIDDEN
@@ -188,8 +217,9 @@ goog.scope(function() {
 
     /**
      * Hides show more button
+     * @private
      */
-    SchoolList.prototype.hideShowMoreButton = function() {
+    SchoolList.prototype.hideShowMoreButton_ = function() {
         goog.dom.classlist.add(
             this.showMoreButtonElement_,
             gorod.iUtils.CssClass.HIDDEN
@@ -202,36 +232,6 @@ goog.scope(function() {
     SchoolList.prototype.getContentElement = function() {
         goog.base(this, 'getContentElement');
         return this.bodyElement_;
-    };
-
-    /**
-     * TODO: remove or rewrite sort
-     */
-
-    /**
-     * Schools sort maker
-     * @param {number=} opt_sortKey
-     */
-    SchoolList.prototype.sort = function(opt_sortKey) {
-        var schoolListItems = this.removeItemChildren_();
-        var sortKey = (typeof opt_sortKey == 'undefined') ?
-            this.sortKey_ :
-            opt_sortKey;
-        this.sortKey_ = sortKey;
-
-        schoolListItems.sort(function(item1, item2) {
-            return (sortKey > 0) ?
-                item1.compareByScore(item2, sortKey - 1) :
-                item1.compareByTotalScore(item2);
-        });
-
-        schoolListItems.forEach(function(item) {
-            item.changeSorCriterion(sortKey);
-        });
-
-        for (var i = 0; i < schoolListItems.length; i++) {
-            this.addChild(schoolListItems[i]);
-        }
     };
 
     /**
@@ -258,18 +258,7 @@ goog.scope(function() {
             that.schoolListItems_.push(item);
         });
 
-        /**
-         * TODO: delete or uncomment
-         */
-        //this.sort();
-    };
-
-    /**
-     * Show more items handler
-     * @private
-     */
-    SchoolList.prototype.showMoreHandler_ = function() {
-        this.dispatchEvent(SchoolList.Event.SHOW_MORE);
+        this.hideLoader_();
     };
 
     /**

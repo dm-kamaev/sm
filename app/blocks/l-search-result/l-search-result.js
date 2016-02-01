@@ -213,7 +213,7 @@ goog.scope(function() {
             this.search_.getValue() :
             undefined;
 
-        var callback = data.page ? this.addItems_ : this.searchSuccess_;
+        var callback = data.page ? this.addItems_ : this.setItems_;
 
         jQuery.ajax({
             url: event.url,
@@ -237,7 +237,7 @@ goog.scope(function() {
      * @param {string} responseData
      * @private
      */
-    SearchResult.prototype.searchSuccess_ = function(responseData) {
+    SearchResult.prototype.setItems_ = function(responseData) {
         var data = JSON.parse(responseData);
         this.schoolList_.setItems(data);
     };
@@ -259,7 +259,7 @@ goog.scope(function() {
      */
     SearchResult.prototype.showMoreSchoolListItemsHandler_ = function(event) {
         this.currentPage_ += 1;
-        // this.initSchoolListAddItems_();
+        this.schoolList_.showLoader();
         event.data = event.data || {};
         event.data.page = this.currentPage_;
         this.filters_.submit(event);
