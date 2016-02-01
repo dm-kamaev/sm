@@ -40,8 +40,12 @@
                 Загружаем список...
             </div>
         </div>
+
         <div class="b-school-list__footer">
-            <div class="b-school-list__show-more-button">
+            <div class="b-school-list__show-more-button{sp}
+                {if length($params.schools) < 10}
+                    i-utils__hidden
+                {/if}">
                 Показать ещё
             </div>
         </div>
