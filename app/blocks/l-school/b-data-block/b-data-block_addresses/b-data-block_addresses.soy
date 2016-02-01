@@ -2,16 +2,25 @@
 /**
  * Addresses item
  * @param params {
- *     header: ?string,
- *     headerType: ?number
- *     modifier: ?string
- *     content: [
- *         address: list<{
- *             title: string,
- *             description: string
- *         }>,
- *         phones: list<string>
- *     ]
+ *      header: ?string,
+ *      headerType: ?number
+ *      modifier: ?string
+ *      content: [
+ *          address: list<[
+ *              title: string,
+ *              description: string,
+ *              metroStations: list<[
+ *                  id: number,
+ *                  name: string
+ *              ]>,
+ *              departments: list<[
+ *                  id: number,
+ *                  name: string,
+ *                  stage: string
+ *              ]>
+ *          ]>,
+ *          phones: list<string>
+ *      ]
  * }
  * @extends '/l-school/b-data-block/b-data-block'
  * @constructor
@@ -36,10 +45,18 @@
  * @param params {
  *    header: ?string
  *    content: [
- *        address: list<{
+ *        address: list<[
  *            title: string,
- *            description: string
- *        }>,
+ *            description: string,
+ *            metroStations: list<[
+ *                id: number,
+ *                name: string
+ *            ]>,
+ *            departments: list<[
+ *                name: string,
+ *                stage: string
+ *            ]>
+ *        ]>,
  *        phones: list<string>
  *    ]
  * }
@@ -54,6 +71,10 @@
                     {$address.title}
                 </div>
                 <div class="b-data-block__item-content">
+                    {if $address.metroStations.length > 0}
+                        <div class="b-data-block__metro-icon b-icon_img_metro"></div>
+                        {$address.metroStations[0].name},{sp}
+                    {/if}
                     {$address.description}
                 </div>
             </li>
@@ -61,7 +82,7 @@
 
         /*output phones*/
         {if length($params.content.phones) > 0}
-            <li class="b-data-block__item">
+            <li class="b-data-block__item-phones">
                 Телефоны:{sp}
                 {foreach $phone in $params.content.phones}
                     {$phone}
