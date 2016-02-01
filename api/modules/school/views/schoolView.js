@@ -1,5 +1,6 @@
 
 var services = require.main.require('./app/components/services').all;
+var lodash = require('lodash');
 
 const areaView = require.main.require('./api/modules/geo/views/areaView.js');
 const metroView = require.main.require('./api/modules/geo/views/metroView.js');
@@ -385,6 +386,9 @@ var getStages = function(departments) {
  */
 schoolView.list = function(schools) {
     var res = [];
+
+    schools = groupSchools(schools);
+
     res = schools
         .map(school => {
             var scoreCount = school.scoreCount ?
@@ -397,8 +401,8 @@ schoolView.list = function(schools) {
             return {
                 id: school.id,
                 url: school.url,
-                name: school.name,
-                description: '',
+                name: getName(school.name),
+                description: school.description,
                 abbreviation: school.abbreviation,
                 score: getScore(
                     score,
@@ -409,7 +413,7 @@ schoolView.list = function(schools) {
                     scoreCount
                 ),
                 fullName: school.fullName,
-                addresses: school.addresses
+                metroStations: getMetro(school.addresses)
             };
         });
 
@@ -419,6 +423,54 @@ schoolView.list = function(schools) {
 
     return res;
 };
+
+/**
+ * Groups school objects to one object with addresses and metro arrays
+ * @param {Array<Object>} schools
+ * @return {Array}
+ */
+var groupSchools = function(schools) {
+    var result,
+        temp;
+
+    result = lodash.groupBy(schools, 'id');
+
+    result = lodash.map(result, function(grouppedById) {
+            var resultItem = {};
+
+            lodash.forOwn(grouppedById[0], (value, key) => {
+                if (key !== 'addressId'
+                    && key !== 'metroId'
+                    && key !== 'metroName') {
+                    resultItem[key] = value;
+                }
+            });
+
+            var grouppedByAddress = lodash.groupBy(grouppedById, 'addressId');
+
+            resultItem.addresses = [];
+            lodash.forEach(grouppedByAddress, (schools, key) => {
+                resultItem.addresses.push({
+                    id: key,
+                    metroStations: []
+                });
+
+
+                lodash.forEach(schools, (school) => {
+                    resultItem
+                        .addresses[resultItem.addresses.length - 1]
+                        .metroStations
+                        .push({
+                            id: school.metroId,
+                            name: school.metroName
+                        });
+                });
+            });
+            return resultItem;
+    });
+    return result;
+};
+
 
 /**
  * Compare two items for sort result array in school list
@@ -453,11 +505,37 @@ var compareItems = function (item1, item2) {
 };
 
 /**
+ * Makes name object from name string
+ * @param {string} name
+ * @return {Object}
+ */
+var getName = function (name) {
+    var result = {
+            'light': '',
+            'bold': ''
+        },
+        char,
+        numberFounded = false;
+
+    for(i = 0, l = name.length; i < l; i++) {
+        char = name.charAt(i);
+
+        if(char === '№') {
+            numberFounded = true;
+        }
+
+        numberFounded ?
+            result.bold += char :
+            result.light += char;
+    }
+    return result;
+};
+
+/**
  * Compare input array with null score:[0, 0, 0, 0]
  * and return true if they equals
  * @param {Array} score
  * @return {boolean}
- * @private
  */
 var checkScore = function(score) {
     var nullScore = [0, 0, 0, 0],
@@ -468,6 +546,27 @@ var checkScore = function(score) {
             result = false;
         }
     }
+    return result;
+};
+
+/**
+ * Make metro names array from addresses array of each school
+ * @param {Array} addresses
+ * @return {Array}
+ */
+var getMetro = function(addresses) {
+    var result = [];
+
+    addresses.forEach( item => {
+        var stationName = item.metroStations[0].name ?
+            item.metroStations[0].name.substr(5) :
+            '';
+
+        if (stationName && result.indexOf(stationName) == -1) {
+            result.push(stationName);
+        }
+    });
+
     return result;
 };
 

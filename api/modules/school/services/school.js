@@ -611,19 +611,36 @@ service.list = async (function(opt_params) {
         select: [
             'school.id',
             'school.name',
-            'school.score',
-            'school.full_name',
+            'school.full_name AS "fullName"',
             'school.abbreviation',
-            'school.total_score',
-            'school.score_count',
-            'school.url' ],
+            'school.description',
+            'school.url',
+            'school.score',
+            'school.total_score AS "totalScore"',
+            'school.score_count AS "scoreCount"',
+            'address.id AS "addressId"',
+            'metro.id AS "metroId"',
+            'metro.name AS "metroName"'
+        ],
         from:  [
             'school'
         ],
         where: [],
-        join: [],
+        join: [
+            {
+                'type': 'LEFT',
+                'values': ['address ON school.id = address.school_id']
+            },
+            {
+                'type': 'LEFT',
+                'values': ['address_metro ON address.id = address_metro.address_id']
+            },
+            {
+                'type': 'LEFT',
+                'values': ['metro ON metro.id = address_metro.metro_id']
+            }
+        ],
         group: [
-            'school.id'
         ],
         order: [
             'school.total_score DESC, school.id ASC'
@@ -638,8 +655,7 @@ service.list = async (function(opt_params) {
     var sqlString = services.search.generateSearchSql(sqlConfig);
 
     var options = {
-        model: models.School,
-        mapToModel: true
+        type: sequelize.QueryTypes.SELECT
     };
 
     return sequelize.query(sqlString, options)

@@ -4,14 +4,19 @@
  * School template
  * @param? params {
  *     id: ?number,
- *     name: ?string,
+ *     name: [
+ *         light: ?string,
+ *         bold: ?string
+ *     ],
  *     url: ?string,
  *     score: ?list<[
  *         name: ?string,
  *         value: ?number
  *     ]]>,
  *     totalScore: ?number,
- *     description: ?string
+ *     description: ?string,
+ *     metroStations: list<string>,
+ *     ratings: list<string>
  * }
  */
 {template .base autoescape="strict" kind="html"}
@@ -22,34 +27,64 @@
         {/call}
         ">
 
-        <a href="/school/{$params.url}"
-            class="b-school-list-item__name">
-            <div class="b-school-list-item__name-wrap">
-                {$params.name}
+        <div class="b-school-list-item__section">
+            <a href="/school/{$params.url}"
+                class="b-school-list-item__name">
+                {$params.name.light}
+                {if $params.name.bold}
+                    <span class="b-school-list-item__name_bold">
+                        {$params.name.bold}
+                    </span>
+                {/if}
+            </a>
+
+            <div class="b-school-list-item__score">
+                {call sm.bScoreSchoolList.Template.base}
+                    {param params:[
+                        'score': $params.score,
+                        'sortCriteria': [
+                            'name': 'Средняя оценка',
+                            'value': $params.totalScore
+                        ]
+                    ]/}
+                {/call}
             </div>
-        </a>
+        </div>
 
-//        <div class="b-school-list-item__data">
-//            <div class="b-school-list-item__data-item">
-//                Станция метро, длинный адрес школы
-//            </div>
-//        </div>
+        {if length($params.metroStations) > 0 or $params.ratings}
+            <div class="b-school-list-item__section
+                        b-school-list-item__section_badges">
+                {if $params.metroStations}
+                    <div class="b-school-list-item__metro-stations">
+                        {call sm.bBadge.Template.base}
+                        {param params:[
+                            'data': $params.metroStations,
+                            'display': 'metro'
+                        ]/}
+                        {/call}
+                    </div>
+                {/if}
 
-        {if $params.description}
-            <div class="b-school-list-item__description">
-                {$params.description}
+                {if $params.ratings}
+                    <div class="b-school-list-item__ratings">
+
+                            {call sm.bBadge.Template.base}
+                            {param params:[
+                                'data': $params.ratings
+                                ]/}
+                            {/call}
+
+                    </div>
+                {/if}
             </div>
         {/if}
-        <div class="b-school-list-item__score">
-            {call sm.bScoreSchoolList.Template.base}
-                {param params:[
-                    'score': $params.score,
-                    'sortCriteria': [
-                        'name': 'Средняя оценка',
-                        'value': $params.totalScore
-                    ]
-                ]/}
-            {/call}
-        </div>
+
+        {if $params.description}
+            <div class="b-school-list-item__section">
+                <div class="b-school-list-item__description">
+                    {$params.description}
+                </div>
+            </div>
+        {/if}
     </div>
 {/template}

@@ -182,10 +182,13 @@ goog.scope(function() {
      * @private
      */
     Mark.prototype.formatValue_ = function(value) {
-        var res = '';
+        var res = '',
+            rounded;
 
-        if (value > 0) {
-            res = value.toFixed(1);
+        rounded = Math.ceil(value * 10) / 10;
+
+        if (rounded > 0) {
+            res = rounded.toString();
             res = res.replace('.', ',');
         }
         else {
