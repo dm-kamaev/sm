@@ -682,7 +682,8 @@ service.searchByText = function(text) {
                         'name'
                     ]
                 }]
-            }]
+            }],
+            limit: 10
         }) :
         [];
 };
