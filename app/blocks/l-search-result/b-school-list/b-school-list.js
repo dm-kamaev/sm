@@ -147,17 +147,7 @@ goog.scope(function() {
     SchoolList.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
 
-        this.getHandler().listen(
-            this.showMoreButtonElement_,
-            goog.events.EventType.CLICK,
-            this.showMoreHandler_
-        );
-
-        this.getHandler().listen(
-            goog.dom.getWindow(),
-            goog.events.EventType.SCROLL,
-            this.scrollHandler_
-        );
+        this.initListeners_();
     };
 
     /**
@@ -177,7 +167,7 @@ goog.scope(function() {
                 goog.dom.getDocumentScroll().y ==
                 goog.dom.getDocumentHeight()) {
 
-            this.showMoreHandler_();
+            this.dispatchEvent(SchoolList.Event.SHOW_MORE);
         }
     };
 
@@ -227,6 +217,21 @@ goog.scope(function() {
     };
 
     /**
+     * Hides loader and more button
+     * @private
+     */
+    SchoolList.prototype.hideLoaderAndButton_ = function() {
+        goog.dom.classlist.add(
+            this.showMoreButtonElement_,
+            gorod.iUtils.CssClass.HIDDEN
+        );
+        goog.dom.classlist.add(
+            this.loaderElement_,
+            gorod.iUtils.CssClass.HIDDEN
+        );
+    };
+
+    /**
      * @override
      */
     SchoolList.prototype.getContentElement = function() {
@@ -258,7 +263,52 @@ goog.scope(function() {
             that.schoolListItems_.push(item);
         });
 
+        if (opt_listData.length < 10) {
+            this.disable_();
+        } else {
+            this.hideLoader_();
+        }
+    };
+
+    /**
+     * Listen events
+     * @private
+     */
+    SchoolList.prototype.initListeners_ = function() {
+        this.getHandler().listen(
+            this.showMoreButtonElement_,
+            goog.events.EventType.CLICK,
+            this.showMoreHandler_
+        );
+
+        if (!goog.dom.classes.has(
+                this.showMoreButtonElement_,
+                gorod.iUtils.CssClass.HIDDEN
+        )) {
+
+            this.getHandler().listen(
+                goog.dom.getWindow(),
+                goog.events.EventType.SCROLL,
+                this.scrollHandler_
+            );
+        }
+    };
+
+    /**
+     * Reset uploading controlls
+     */
+    SchoolList.prototype.reset = function() {
         this.hideLoader_();
+        this.initListeners_();
+    };
+
+    /**
+     * Turn off uploading controlls
+     * @private
+     */
+    SchoolList.prototype.disable_ = function() {
+        this.getHandler().removeAll();
+        this.hideLoaderAndButton_();
     };
 
     /**

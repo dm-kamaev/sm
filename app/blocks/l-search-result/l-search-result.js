@@ -239,6 +239,7 @@ goog.scope(function() {
      */
     SearchResult.prototype.setItems_ = function(responseData) {
         var data = JSON.parse(responseData);
+        this.schoolList_.reset();
         this.schoolList_.setItems(data);
     };
 
