@@ -269,7 +269,11 @@ exports.generateSearchSql = function(options) {
 exports.generateFilter = function(string) {
     var subStrings = getSearchSubstrings(string);
     return {
-        $and: subStrings.map(substr => {
+        $and: subStrings.filter(substr => {
+            if (substr)
+                return substr;
+        })
+        .map(substr => {
             return {
                 $iLike: '%' + substr + '%'
             };

@@ -182,7 +182,7 @@ goog.scope(function() {
                 } else if (findEntry(item.abbreviation)) {
                     result = item.abbreviation;
                 } else {
-                    result = '';
+                    return '';
                 }
 
                 result = result ? '<span class="b-search__list-name">' +
