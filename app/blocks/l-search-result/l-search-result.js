@@ -55,6 +55,13 @@ sm.lSearchResult.SearchResult = function(opt_params) {
      * @private
      */
     this.search_ = null;
+
+    /**
+     * Page number
+     * @type {number}
+     * @private
+     */
+    this.currentPage_ = 0;
 };
 goog.inherits(sm.lSearchResult.SearchResult, goog.ui.Component);
 
@@ -155,7 +162,7 @@ goog.scope(function() {
         this.getHandler().listen(
             this.sort_,
             Sort.Event.ITEM_CLICK,
-            this.onSortHandler_
+            this.sortHandler_
         );
 
         this.getHandler().listen(
@@ -175,6 +182,12 @@ goog.scope(function() {
             sm.bSearch.Search.Event.ITEM_SELECT,
             this.onSubmit_
         );
+
+        this.getHandler().listen(
+            this.schoolList_,
+            SchoolList.Event.SHOW_MORE,
+            this.showMoreSchoolListItemsHandler_
+        );
     };
 
     /**
@@ -184,25 +197,6 @@ goog.scope(function() {
      */
     SearchResult.prototype.onSubmit_ = function(event) {
         this.filters_.submit(event);
-    };
-
-    /**
-     * Filters submit callback
-     * @param {string} responseData
-     * @private
-     */
-    SearchResult.prototype.searchSuccess_ = function(responseData) {
-        var data = JSON.parse(responseData);
-        this.schoolList_.setItems(data);
-    };
-
-    /**
-     * Sort item click handler
-     * @param {Object} event
-     * @private
-     */
-    SearchResult.prototype.onSortHandler_ = function(event) {
-        this.schoolList_.sort(event.itemId);
     };
 
     /**
@@ -219,12 +213,57 @@ goog.scope(function() {
             this.search_.getValue() :
             undefined;
 
+        var callback = data.page ? this.addItems_ : this.setItems_;
+
         jQuery.ajax({
             url: event.url,
             type: event.method,
             data: data,
-            success: this.searchSuccess_.bind(this)
+            success: callback.bind(this)
         });
+    };
+
+    /**
+     * Sort item click handler
+     * @param {Object} event
+     * @private
+     */
+    SearchResult.prototype.onSortHandler_ = function(event) {
+        this.schoolList_.sort(event.itemId);
+    };
+
+    /**
+     * Filters submit callback
+     * @param {string} responseData
+     * @private
+     */
+    SearchResult.prototype.setItems_ = function(responseData) {
+        var data = JSON.parse(responseData);
+        this.schoolList_.reset();
+        this.schoolList_.setItems(data);
+    };
+
+    /**
+     * Filters submit callback
+     * @param {string} responseData
+     * @private
+     */
+    SearchResult.prototype.addItems_ = function(responseData) {
+        var data = JSON.parse(responseData);
+        this.schoolList_.addItems(data);
+    };
+
+    /**
+     * Handler for show more school list items
+     * @param {Object} event
+     * @private
+     */
+    SearchResult.prototype.showMoreSchoolListItemsHandler_ = function(event) {
+        this.currentPage_ += 1;
+        this.schoolList_.showLoader();
+        event.data = event.data || {};
+        event.data.page = this.currentPage_;
+        this.filters_.submit(event);
     };
 });
 

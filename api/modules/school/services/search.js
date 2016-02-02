@@ -56,7 +56,7 @@ var findAnyInModel = function(model, searchString) {
     var stringArr = getSearchSubstrings(searchString);
     if (!stringArr)
         return [];
-
+    
     var params = {
         where: {
             name: {
@@ -252,8 +252,14 @@ exports.generateSearchSql = function(options) {
     if (options.join.length)
         joinStr = options.join
             .map(onejoin => generateJoin(onejoin))
-            .join(' ');
-    return selectStr + fromStr + joinStr + whereStr + groupStr + havingStr + orderStr + ';';
+            .join(', ');
+    var limitStr = '';
+    if (options.limit)
+        limitStr = ' LIMIT ' + options.limit;
+    var offsetStr = '';
+    if (options.offset)
+        offsetStr = ' OFFSET ' + options.offset;
+    return selectStr + fromStr + joinStr + whereStr + groupStr + havingStr + orderStr + limitStr + offsetStr + ';';
 };
 
 /**
@@ -263,7 +269,11 @@ exports.generateSearchSql = function(options) {
 exports.generateFilter = function(string) {
     var subStrings = getSearchSubstrings(string);
     return {
-        $and: subStrings.map(substr => {
+        $and: subStrings.filter(substr => {
+            if (substr)
+                return substr;
+        })
+        .map(substr => {
             return {
                 $iLike: '%' + substr + '%'
             };

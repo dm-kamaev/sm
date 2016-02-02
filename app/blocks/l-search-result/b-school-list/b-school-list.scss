@@ -3,6 +3,8 @@
 
     width: 100%;
     height: auto;
+
+    margin-bottom: 40px;
 }
 
 .b-school-list__header {
@@ -27,4 +29,55 @@
     float: left;
 
     width: 20%;
+}
+
+.b-school-list__footer {
+    display: inline-block;
+
+    width: 100%;
+}
+
+.b-school-list__loader {
+    display: inline-block;
+
+    width: 100%;
+    margin: 30px 0 30px 0;
+}
+
+.b-school-list__loader-text {
+    display: inline-block;
+
+    width: 210px;
+    padding: 18px 0 18px 0;
+
+    vertical-align: bottom;
+    text-align: center;
+    text-transform: uppercase;
+    color: #000000;
+    font-weight: 800;
+    font-size: 13px;
+}
+
+.b-school-list__loader-image {
+    display: inline-block;
+
+    width: 48px;
+    height: 48px;
+
+    background: url(images/l-search-result/b-school-list/search-spinner.gif) no-repeat left;
+}
+
+.b-school-list__show-more-button {
+    width: 240px;
+    padding: 14px 0 15px 0;
+
+    border: 1px solid #e5e5e5;
+
+    font-weight: 800;
+    font-size: 13px;
+    color: #000000;
+    text-align: center;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }

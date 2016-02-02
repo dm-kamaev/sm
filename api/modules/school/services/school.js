@@ -595,6 +595,7 @@ service.listInstances = async(function(){
 /**
  * @public
  * @param {object || null} opt_params
+ * @param {number || null} opt.params.page
  * @param {object || null} opt_params.searchParams
  * @param {string || null} opt_params.searchParams.name
  * @param {?Array<number>} opt_params.searchParams.schoolType
@@ -640,7 +641,9 @@ service.list = async (function(opt_params) {
         order: [
             'school.id DESC, address.id DESC'
         ],
-        having: []
+        having: [],
+        limit: 10,
+        offset: opt_params.page * 10
     };
 
     if (searchParams) {
@@ -676,24 +679,27 @@ service.searchByText = function(text) {
                 }
             ]
         };
-    return models.School.findAll({
-        where: whereParams,
-        include: [{
-            model: models.Address,
-            as: 'addresses',
-            attributes: [
-                'id'
-            ],
+    return nameFilter['$and'].length ?
+        models.School.findAll({
+            where: whereParams,
             include: [{
-                model: models.Area,
-                as: 'area',
+                model: models.Address,
+                as: 'addresses',
                 attributes: [
-                    'id',
-                    'name'
-                ]
-            }]
-        }]
-    });
+                    'id'
+                ],
+                include: [{
+                    model: models.Area,
+                    as: 'area',
+                    attributes: [
+                        'id',
+                        'name'
+                    ]
+                }]
+            }],
+            limit: 10
+        }) :
+        [];
 };
 
 
