@@ -15,13 +15,12 @@ var schoolView = {};
  * @param {?array<object>} opt_popularSchools - school instances
  * @return {object}
  */
-
 schoolView.default = function(schoolInstance, opt_popularSchools) {
 
     var addresses =
-            services.department.addressesFilter(schoolInstance.addresses),
+        services.department.addressesFilter(schoolInstance.addresses),
         comments = schoolInstance.commentGroup ?
-            schoolInstance.commentGroup.comments : [],
+        schoolInstance.commentGroup.comments : [],
 
         score = schoolInstance.score || [0, 0, 0, 0],
         scoreCount = schoolInstance.scoreCount || [0, 0, 0, 0];
@@ -45,19 +44,18 @@ schoolView.default = function(schoolInstance, opt_popularSchools) {
         social: [],
         metroStations: services.address.getMetro(addresses),
         sites: schoolInstance.links ?
-            getSites(schoolInstance.links) :
-            getSites(schoolInstance.site),
+            getSites(schoolInstance.links) : getSites(schoolInstance.site),
         specializedClasses: getSpecializedClasses(
-            schoolInstance.specializedClasses
-        ),
+            schoolInstance.specializedClasses),
         activities: getActivities(schoolInstance.activites),
         contacts: getContacts(addresses, schoolInstance.phones),
         comments: getComments(comments),
         addresses: services.address.getAddress(addresses),
         ratings: getRatings(schoolInstance.rank, schoolInstance.rankDogm),
-        score: getScore(score, scoreCount),
-        totalScore: checkScoreCount(schoolInstance.totalScore, scoreCount),
-        reviewCount: checkScoreCount(schoolInstance.reviewCount, scoreCount)
+        score: getSections(score),
+        totalScore: schoolInstance.totalScore,
+        reviewCount: schoolInstance.totalScore ?
+            schoolInstance.reviewCount : 0
     };
     if (opt_popularSchools) {
         result.popularSchools = this.popular(opt_popularSchools);
@@ -258,43 +256,6 @@ var getRatings = function(rating, rank) {
 };
 
 /**
- *  make from score and scoreCount array for template
- *  @param {array} score
- *  @param {array} scoreCount
- *  @return {array}
- */
-var getScore = function(score, scoreCount) {
-    var result = [];
-
-    result = getSections(score);
-
-    return result.map( (item, index) => {
-        if (scoreCount[index] < 5) {
-            item.value = 0;
-        }
-        return item;
-    } );
-};
-
-/**
- *  checks amount of ratings for each score item and return 0 or param
- *  @param {number} param
- *  @param {array} scoreCount
- *  @return {number}
- */
-var checkScoreCount = function(param, scoreCount) {
-    var ratingsLack = false;
-
-    scoreCount.forEach( (item) => {
-        if (item < 5) {
-            ratingsLack = true;
-        }
-    } );
-    return ratingsLack ? 0 : param;
-};
-
-
-/**
  * translates director name to right output format
  * @param name string
  * @return string
@@ -386,33 +347,18 @@ schoolView.list = function(schools) {
     var res = [];
     res = schools
         .map(school => {
-            var scoreCount = school.scoreCount ?
-                    school.scoreCount :
-                    [0,0,0,0],
-                score = school.score ?
-                    school.score :
-                    [0,0,0,0];
-
             return {
                 id: school.id,
                 url: school.url,
                 name: school.name,
                 description: '',
                 abbreviation: school.abbreviation,
-                score: getScore(
-                    score,
-                    scoreCount
-                ),
-                totalScore: checkScoreCount(
-                    school.totalScore,
-                    scoreCount
-                ),
+                score: getSections(school.score || [0, 0, 0, 0]),
+                totalScore: school.totalScore,
                 fullName: school.fullName,
                 addresses: school.addresses
             };
-
         });
-
     res.sort(function (item1, item2) {
         return compareItems(item1, item2);
     });
