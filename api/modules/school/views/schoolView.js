@@ -178,7 +178,7 @@ var getSites = function(sites) {
  */
 var getContacts = function(addresses, phones) {
     return {
-        address: addressView.list(addresses, {
+        stages: addressView.stageList(addresses, {
             filterByDepartment: true
         }),
         phones: phones || ''
