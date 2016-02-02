@@ -626,24 +626,19 @@ service.list = async (function(opt_params) {
             'school'
         ],
         where: [],
-        join: [
-            {
-                'type': 'LEFT',
-                'values': ['address ON school.id = address.school_id']
-            },
-            {
-                'type': 'LEFT',
-                'values': ['address_metro ON address.id = address_metro.address_id']
-            },
-            {
-                'type': 'LEFT',
-                'values': ['metro ON metro.id = address_metro.metro_id']
-            }
-        ],
+        join: [{
+            type: 'LEFT OUTER',
+            values: [
+                'address on address.school_id = school.id',
+                'area on area.id = address.area_id',
+                'address_metro on address_metro.address_id = address.id',
+                'metro on metro.id = address_metro.metro_id'
+            ]
+        }],
         group: [
         ],
         order: [
-            'school.total_score DESC, school.id ASC'
+            'school.id DESC, address.id DESC'
         ],
         having: []
     };
@@ -653,7 +648,6 @@ service.list = async (function(opt_params) {
     }
 
     var sqlString = services.search.generateSearchSql(sqlConfig);
-
     var options = {
         type: sequelize.QueryTypes.SELECT
     };
