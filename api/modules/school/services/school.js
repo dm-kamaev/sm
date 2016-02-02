@@ -665,24 +665,27 @@ service.searchByText = function(text) {
                 }
             ]
         };
-    return models.School.findAll({
-        where: whereParams,
-        include: [{
-            model: models.Address,
-            as: 'addresses',
-            attributes: [
-                'id'
-            ],
+    return nameFilter['$and'].length ?
+        models.School.findAll({
+            where: whereParams,
             include: [{
-                model: models.Area,
-                as: 'area',
+                model: models.Address,
+                as: 'addresses',
                 attributes: [
-                    'id',
-                    'name'
-                ]
-            }]
-        }]
-    });
+                    'id'
+                ],
+                include: [{
+                    model: models.Area,
+                    as: 'area',
+                    attributes: [
+                        'id',
+                        'name'
+                    ]
+                }]
+            }],
+            limit: 10
+        }) :
+        [];
 };
 
 
