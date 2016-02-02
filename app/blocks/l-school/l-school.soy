@@ -25,16 +25,15 @@
  *            link: string
  *        ]>,
  *        contacts: [
- *            address: list<[
- *                title: string,
- *                description: string,
- *                metroStations: list<[
- *                    id: number,
- *                    name: string
- *                ]>,
- *                departments: list<[
- *                    name: string,
- *                    stage: string
+ *            stages: list<[
+ *                name: string,
+ *                addresses: list<[
+ *                    title: string,
+ *                    description: string,
+ *                    metroStations: list<[
+ *                        id: number,
+ *                        name: string
+ *                    ]>
  *                ]>
  *            ]>,
  *            phones: list<string>
@@ -271,16 +270,15 @@
  *              link: string
  *          ]>,
  *          contacts: [
- *              address: list<[
- *                  title: string,
- *                  description: string,
- *                  metroStations: list<[
- *                      id: number,
- *                      name: string
- *                  ]>,
- *                  departments: list<[
- *                      name: string,
- *                      stage: string
+ *              stage: list<[
+ *                  name: string,
+ *                  addresses: list<[
+ *                      title: string,
+ *                      description: string,
+ *                      metroStations: list<[
+ *                          id: number,
+ *                          name: string
+ *                      ]>
  *                  ]>
  *              ]>,
  *              phones: list<string>
@@ -699,11 +697,18 @@
 {template .contacts_ autoescape="strict" kind="html"}
     {@param
         data:[
-            address:list<[
-                title:string,
-                description:string
+            stages: list<[
+                name: string,
+                addresses: list<[
+                    title: string,
+                    description: string,
+                    metroStations: list<[
+                        id: number,
+                        name: string
+                    ]>
+                ]>
             ]>,
-            phones:list<string>
+            phones: list<string>
         ]
     }
     <div class="l-school__content-block">
@@ -713,15 +718,17 @@
             //TODO: uncomment
             //{param buttonAlt: 'надпись2' /}
         {/call}
-        {foreach $adresRecord in $data.address}
-            <div class="l-school__contacts-record">
-                {if $adresRecord.title}
-                <div class="l-school__contacts-subtitle">
-                    {$adresRecord.title}
+        {foreach $stageRecord in $data.stages}
+            {foreach $address in $stageRecord.addresses}
+                <div class="l-school__contacts-record">
+                    {if $address.title}
+                        <div class="l-school__contacts-subtitle">
+                            {$address.title}
+                        </div>
+                    {/if}
+                    {$address.description}
                 </div>
-                {/if}
-                {$adresRecord.description}
-            </div>
+            {/foreach}
         {/foreach}
         {foreach $phone in $data.phones}
             {$phone}

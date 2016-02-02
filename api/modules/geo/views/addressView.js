@@ -12,7 +12,6 @@ var addressView = {};
 
 addressView.list = function(addresses, opt_options) {
     var options = opt_options || {};
-
     if (options.filterByDepartment) {
         addresses = addresses.filter(address => {
             if (!address.departments || !address.departments.length)
@@ -26,7 +25,6 @@ addressView.list = function(addresses, opt_options) {
                 return true;
         });
     }
-
     return addresses
         .map(address => {
             address.metroStations = address.dataValues.metroStations || [];
@@ -38,9 +36,53 @@ addressView.list = function(addresses, opt_options) {
                 title: '',
                 description: address.name,
                 metroStations: metroView.list(address.metroStations),
-                departments: departmentView.list(address.departments)
+                stage: departmentView.classes(address.departments)
             };
         });
+};
+
+/**
+ * @param {array<object>} addresses - address instances
+ * @param {?object} opt_options
+ * @param {?bool} opt_options.filterByDepartment
+ * @return {array<object>}
+ */
+addressView.stageList = function (addresses, opt_options) {
+    var addresses = this.list(addresses, opt_options),
+        stagesEnum = [
+            'Начальные классы',
+            'Старшие и средние классы',
+            '1 — 11 классы'
+        ],
+        stages = [],
+        temp = [],
+        addressAdded = false;
+    for (var i = 0; i < stagesEnum.length; i++) {
+        addressAdded = false;
+        for (var j = 0; j < addresses.length; j++) {
+            if (addresses[j].stage === stagesEnum[i]) {
+                temp.push(
+                    {
+                        title: addresses[j].title,
+                        description: addresses[j].description,
+                        metroStations: addresses[j].metroStations
+                      }
+                );
+                addressAdded = true;
+            }
+        }
+        if (addressAdded) {
+            stages.push(
+                {
+                    name: stagesEnum[i],
+                    addresses: temp
+                }
+            );
+        }
+        temp = [];
+    }
+    return stages;
+
 };
 
 module.exports = addressView;
