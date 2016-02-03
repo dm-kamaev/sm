@@ -1,5 +1,6 @@
 
 var services = require.main.require('./app/components/services').all;
+var lodash = require('lodash');
 
 const areaView = require.main.require('./api/modules/geo/views/areaView.js');
 const metroView = require.main.require('./api/modules/geo/views/metroView.js');
@@ -345,18 +346,20 @@ var getStages = function(departments) {
  */
 schoolView.list = function(schools) {
     var res = [];
+
+    schools = groupSchools(schools);
     res = schools
         .map(school => {
             return {
                 id: school.id,
                 url: school.url,
-                name: school.name,
-                description: '',
+                name: getName(school.name),
+                description: school.description,
                 abbreviation: school.abbreviation,
                 score: getSections(school.score || [0, 0, 0, 0]),
                 totalScore: school.totalScore,
                 fullName: school.fullName,
-                addresses: school.addresses
+                metroStations: addressView.getMetro(school.addresses)
             };
         });
     res.sort(function (item1, item2) {
@@ -365,6 +368,78 @@ schoolView.list = function(schools) {
 
     return res;
 };
+
+/**
+ * Groups school objects to one object with addresses and metro arrays
+ * @param {Array<Object>} schools
+ * @return {Array}
+ */
+var groupSchools = function(schools) {
+    var result;
+
+    result = lodash.groupBy(schools, 'id');
+
+    result = lodash.map(result, function(grouppedById) {
+            var resultItem = {};
+
+            lodash.forOwn(grouppedById[0], (value, key) => {
+                if (key !== 'addressId'
+                    && key !== 'metroId'
+                    && key !== 'metroName'
+                    && key !== 'departmentStage') {
+                    resultItem[key] = value;
+                }
+            });
+
+            var grouppedByAddress = lodash.groupBy(grouppedById, 'addressId');
+
+            resultItem.addresses = [];
+            lodash.forEach(grouppedByAddress, (schools, key) => {
+                resultItem.addresses.push({
+                    id: key,
+                    metroStations: [],
+                    departments: []
+                });
+
+
+                lodash.forEach(schools, (school) => {
+                    var currentAddress = resultItem
+                        .addresses[resultItem.addresses.length - 1];
+
+                    var isNewMetro = true;
+                    lodash.forEach(currentAddress.metroStations, (station)=>{
+                        if(station.id === school.metroId) {
+                            isNewMetro = false;
+                        }
+                    });
+                    if(isNewMetro && school.metroId !== null) {
+                        currentAddress.metroStations
+                            .push({
+                                id: school.metroId,
+                                name: school.metroName
+                            });
+                    }
+
+                    var isNewDepartment = true;
+                    lodash.forEach(currentAddress.departments, (department) => {
+                        if(department.stage === school.departmentStage) {
+                            isNewDepartment = false;
+                        }
+                    });
+
+                    if (isNewDepartment  && school.departmentStage !== null) {
+                        currentAddress.departments.push({
+                            stage: school.departmentStage
+                        });
+                    }
+
+                });
+            });
+            return resultItem;
+    });
+    return result;
+};
+
 
 /**
  * Compare two items for sort result array in school list
@@ -399,11 +474,37 @@ var compareItems = function (item1, item2) {
 };
 
 /**
+ * Makes name object from name string
+ * @param {string} name
+ * @return {Object}
+ */
+var getName = function (name) {
+    var result = {
+            'light': '',
+            'bold': ''
+        },
+        char,
+        numberFounded = false;
+
+    for(i = 0, l = name.length; i < l; i++) {
+        char = name.charAt(i);
+
+        if(char === '№') {
+            numberFounded = true;
+        }
+
+        numberFounded ?
+            result.bold += char :
+            result.light += char;
+    }
+    return result;
+};
+
+/**
  * Compare input array with null score:[0, 0, 0, 0]
  * and return true if they equals
  * @param {Array} score
  * @return {boolean}
- * @private
  */
 var checkScore = function(score) {
     var nullScore = [0, 0, 0, 0],
@@ -416,7 +517,6 @@ var checkScore = function(score) {
     }
     return result;
 };
-
 
 /**
  * @param {array<object>} schools - schoolInstances

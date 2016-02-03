@@ -7,13 +7,18 @@
  *     schools: ?list<[
  *         id: ?number,
  *         url: ?string,
- *         name: ?string,
+ *         name: [
+ *             light: ?string,
+ *             bold: ?string
+ *         ],
  *         score: ?list<[
  *             name: ?string,
  *             value: ?number
  *         ]>,
  *         totalScore: ?number,
- *         description: ?string
+ *         description: ?string,
+ *         metroStations: list<string>,
+ *         ratings: list<string>
  *     ]>
  * }
  */
@@ -28,7 +33,9 @@
                         'name': $school.name,
                         'score': $school.score,
                         'totalScore': $school.totalScore,
-                        'description': $school.description
+                        'description': $school.description,
+                        'metroStations': $school.metroStations,
+                        'ratings': $school.ratings
                     ]/}
                 {/call}
             {/foreach}

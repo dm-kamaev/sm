@@ -122,7 +122,10 @@
 {template .value}
     {if $params.value > 0}
         {let $val: round($params.value, 1)/}
-        {floor($val)},{round(($val - floor($val))*10, 0)}
+        {floor($val)}
+        {if $val != $params.value}
+            ,{round(($val - floor($val))*10, 0)}
+        {/if}
     {else}
         {if $params.config}
             {$params?.config.notShowDashes ? '' : '—'}

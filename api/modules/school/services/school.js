@@ -6,6 +6,7 @@ var models = require.main.require('./app/components/models').all;
 var services = require.main.require('./app/components/services').all;
 var sequelize = require.main.require('./app/components/db');
 var searchTypeEnum = require('../enums/searchType');
+var schoolTypeEnum = require('../enums/schoolType');
 var CsvConverter = require('../../../../console/modules/modelArchiver/CsvConverter');
 var service = {
     name: 'school'
@@ -631,42 +632,81 @@ service.listInstances = async(function(){
 service.list = async (function(opt_params) {
     var params = opt_params || {},
         searchParams = params.searchParams || null;
-
     var sqlConfig = {
         select: [
             'school.id',
             'school.name',
+            'school.full_name AS "fullName"',
+            'school.description',
+            'school.url',
             'school.score',
-            'school.full_name',
-            'school.abbreviation',
-            'school.total_score',
-            'school.score_count',
-            'school.url' ],
+            'school.total_score AS "totalScore"',
+            'school.score_count AS "scoreCount"',
+            'address.id AS "addressId"',
+            'department.stage AS "departmentStage"',
+            'metro.id AS "metroId"',
+            'metro.name AS "metroName"'
+        ],
         from:  [
-            'school'
+            {
+                select: [
+                    'school.id',
+                    'school.name',
+                    'school.full_name',
+                    'school.description',
+                    'school.url',
+                    'school.score',
+                    'school.total_score',
+                    'school.score_count'
+                ],
+                from: ['school'],
+                where: [
+                    '(school.school_type = \'' + schoolTypeEnum.SCHOOL + '\' OR ' +
+                    'school.school_type = \'' + schoolTypeEnum.LYCEUM + '\' OR ' +
+                    'school.school_type = \'' + schoolTypeEnum.GYMNASIUM + '\' OR ' +
+                    'school.school_type = \'' + schoolTypeEnum.EDUCATION_CENTER + '\' OR ' +
+                    'school.school_type = \'' + schoolTypeEnum.CADET_SCHOOL + '\' OR ' +
+                    'school.school_type = \'' + schoolTypeEnum.CADET_SCHOOL_INTERNAT + '\' OR ' +
+                    'school.school_type = \'' + schoolTypeEnum.CORRECTIONAL_SCHOOL + '\' OR ' +
+                    'school.school_type = \'' + schoolTypeEnum.CORRECTIONAL_SCHOOL_INTERNAT + '\')'
+                ],
+                as: 'school',
+                join: [],
+                group: ['school.id'],
+                order: ['school.id ASC'],
+                having : [],
+                limit: 10,
+                offset: opt_params.page * 10
+            }
         ],
         where: [],
-        join: [],
+        join: [{
+            type: 'LEFT OUTER',
+            values: [
+                'address on address.school_id = school.id',
+                'area on area.id = address.area_id',
+                'department on department.address_id = address.id',
+                'address_metro on address_metro.address_id = address.id',
+                'metro on metro.id = address_metro.metro_id'
+            ]
+        }],
         group: [
-            'school.id'
         ],
         order: [
-            'school.total_score DESC, school.id ASC'
+            'school.id ASC, address.id DESC'
         ],
-        having: [],
-        limit: 10,
-        offset: opt_params.page * 10
+        having: []
     };
 
+
     if (searchParams) {
-        services.search.updateSqlOptions(sqlConfig, searchParams);
+        services.search.updateSqlOptions(sqlConfig.from[0], searchParams);
     }
 
     var sqlString = services.search.generateSearchSql(sqlConfig);
 
     var options = {
-        model: models.School,
-        mapToModel: true
+        type: sequelize.QueryTypes.SELECT
     };
 
     return sequelize.query(sqlString, options)

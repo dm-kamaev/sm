@@ -56,7 +56,7 @@ var findAnyInModel = function(model, searchString) {
     var stringArr = getSearchSubstrings(searchString);
     if (!stringArr)
         return [];
-
+    
     var params = {
         where: {
             name: {
@@ -190,15 +190,15 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
         sqlOptions.having.push(['COUNT(DISTINCT search_data.id) ', ' = ', searchDataCount]);
     }
     if (isGeoDataJoined) {
-        sqlOptions.join.push({
-            type: 'LEFT OUTER',
-            values: [
-                'address on address.school_id = school.id',
-                'area on area.id = address.area_id',
-                'address_metro on address_metro.address_id = address.id',
-                'metro on metro.id = address_metro.metro_id'
-            ]
-        });
+         sqlOptions.join.push({
+             type: 'LEFT OUTER',
+             values: [
+                 'address on address.school_id = school.id',
+                 'area on area.id = address.area_id',
+                 'address_metro on address_metro.address_id = address.id',
+                 'metro on metro.id = address_metro.metro_id'
+             ]
+         });
     }
 };
 
@@ -229,11 +229,22 @@ var generateJoin = function(join) {
 
 /**
  * @params {object} sqlOptions
+ * @params {bool} opt_notUseDelimiter - if true not add ';' symbol
+ * at the end of sqlstring, for inner from query
  * @return {string}
  */
-exports.generateSearchSql = function(options) {
+exports.generateSearchSql = function(options, opt_notUseDelimiter) {
     var selectStr = 'SELECT ' + options.select.join(', ');
-    var fromStr = ' FROM ' + options.from.join(', ');
+    var fromStr = ' FROM ';
+
+    if(typeof options.from[0] == 'object') {
+         fromStr += '(' + this.generateSearchSql(options.from[0], true)
+                + ') AS "' + options.from[0].as + '"';
+        innerFrom = true;
+    } else {
+        fromStr +=  options.from.join(', ');
+    }
+
     var whereStr = '';
     if (options.where.length)
         whereStr = ' WHERE ' + generateWhereSql(options.where);
@@ -259,7 +270,12 @@ exports.generateSearchSql = function(options) {
     var offsetStr = '';
     if (options.offset)
         offsetStr = ' OFFSET ' + options.offset;
-    return selectStr + fromStr + joinStr + whereStr + groupStr + havingStr + orderStr + limitStr + offsetStr + ';';
+
+    var result = selectStr + fromStr + joinStr + whereStr + groupStr + havingStr + orderStr + limitStr + offsetStr;
+    if (!opt_notUseDelimiter) {
+        result += ';';
+    }
+    return result;
 };
 
 /**

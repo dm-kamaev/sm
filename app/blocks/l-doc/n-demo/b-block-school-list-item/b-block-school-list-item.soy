@@ -7,7 +7,10 @@
     {call sm.lSearchResult.bSchoolListItem.Template.base}
         {param params: [
             'id': 10,
-            'name': 'ШКОЛА №806',
+            'name': [
+                'light': 'Центр образования ',
+                'bold': '№ 548 «Царицыно»'
+            ],
             'score': [
                 ['name':'Образование', 'value': 2.3],
                 ['name':'Преподаватели', 'value': 2.7],
@@ -15,7 +18,9 @@
                 ['name':'Атмосфера', 'value':4]
             ],
             'totalScore': 4,
-            'description': 'Это самая замечательная школа в мире'
+            'description': 'Одна из лучших школ города, ежегодно занимающая верхние строчки в рейтингах московского депертамента образования',
+            'metroStations': ['Домодедовская','Орехово'],
+            'ratings': ['100 лучших школ России']
         ]/}
     {/call}
 {/template}
@@ -24,10 +29,42 @@
 * doc
 */
 {template .doc}
+    Template:
+    <br><br>
+    <div class="l-doc__code">
+        sm.lSearchResult.bSchoolListItem.Template
+    </div>
+    Params:
+    <br><br>
+    <div class="l-doc__code">
+            id: number,
+            url: string,<
+            name: [
+                <div class="l-doc__code-indent">
+                    ligth: string,<br>
+                    bold: string
+                    <span class="l-doc__comment">- bolded part of name</span>
+                    <br>
+                </div>],<br>
+            score: list<[<br>
+                <div class="l-doc__code-indent">
+                    name: string,<br>
+                    value: string
+                    <br>
+                </div>
+            ]>,<br>
+            totalScore: number,<br>
+            description: string,<br>
+            metroStations:{sp}list < string >,<br>
+            ratings:{sp}list < string >
+    </div>
     {call sm.lSearchResult.bSchoolListItem.Template.base}
             {param params: [
                 'id': 10,
-                'name': 'ШКОЛА №806',
+                'name': [
+                    'light': 'Центр образования ',
+                    'bold': '№ 548 «Царицыно»'
+                ],
                 'score': [
                     ['name':'Образование', 'value': 2.3],
                     ['name':'Преподаватели', 'value': 2.7],
@@ -35,7 +72,9 @@
                     ['name':'Атмосфера', 'value':4]
                 ],
                 'totalScore': 4,
-                'description': 'Это самая замечательная школа в мире'
+                'description': 'Одна из лучших школ города, ежегодно занимающая верхние строчки в рейтингах московского депертамента образования',
+                'metroStations': ['Домодедовская','Орехово'],
+                'ratings': ['100 лучших школ России']
             ]/}
         {/call}
 {/template}
