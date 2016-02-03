@@ -162,7 +162,9 @@ service.getPopularSchools = async(function() {
                  views: 0
              }
         },
-        order: 'views DESC',
+        order: [
+            ['views', 'DESC']
+        ],
         limit: 6, //TODO: move '6' somewhere maybe?
         include: [{
             model: models.Address,
