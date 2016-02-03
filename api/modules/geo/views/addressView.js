@@ -14,17 +14,7 @@ addressView.list = function(addresses, opt_options) {
     var options = opt_options || {};
 
     if (options.filterByDepartment) {
-        addresses = addresses.filter(address => {
-            if (!address.departments || !address.departments.length)
-                return true; //show addresses with no departments
-            var neededStage = address.departments.find(department => {
-                if (department.stage == stages.ELEMENTARY ||
-                    department.stage == stages.MIDDLE_HIDE)
-                    return true;
-            });
-            if (neededStage)
-                return true;
-        });
+        addresses = filterBydepartment(addresses);
     }
 
     return addresses
@@ -42,5 +32,61 @@ addressView.list = function(addresses, opt_options) {
             };
         });
 };
+
+/**
+ * returns metro names for departments from addresses array
+ * @param {array<object>} addresses
+ * @return {array<string>}
+ */
+addressView.getMetro = function(addresses) {
+    metroStations = [];
+
+    addresses = filterBydepartment(addresses);
+    addresses.forEach(address => {
+        if (address.metroStations.length > 0) {
+            address.metroStations = metroView.list(address.metroStations);
+
+            var isNewMetro = true;
+            metroStations.forEach(metro => {
+                if (metro === address.metroStations[0].name) {
+                    isNewMetro = false;
+                }
+            });
+
+            if (isNewMetro && address.metroStations[0].name !== null) {
+                metroStations.push(address.metroStations[0].name);
+            }
+        }
+    });
+    return metroStations;
+};
+
+/**
+ * return filtered array with empty departments or with needed stages
+ * @param {array<object>} addresses
+ * @return {array<object>}
+ */
+var filterBydepartment = function(addresses) {
+    return addresses.filter(address => {
+        var result = false;
+        if (!address.departments || !address.departments.length) {
+            result = true; //show addresses with no departments
+        }
+        else {
+            var neededStage = address.departments.find(department => {
+                if (department.stage == stages.ELEMENTARY ||
+                    department.stage == stages.MIDDLE_HIDE)
+                    return true;
+            });
+
+            if (neededStage) {
+                result = true;
+            }
+        }
+        return result;
+    });
+
+};
+
 
 module.exports = addressView;

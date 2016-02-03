@@ -387,7 +387,6 @@ schoolView.list = function(schools) {
     var res = [];
 
     schools = groupSchools(schools);
-
     res = schools
         .map(school => {
             var scoreCount = school.scoreCount ?
@@ -412,7 +411,7 @@ schoolView.list = function(schools) {
                     scoreCount
                 ),
                 fullName: school.fullName,
-                metroStations: getMetro(school.addresses)
+                metroStations: addressView.getMetro(school.addresses)
             };
 
         });
@@ -430,8 +429,7 @@ schoolView.list = function(schools) {
  * @return {Array}
  */
 var groupSchools = function(schools) {
-    var result,
-        temp;
+    var result;
 
     result = lodash.groupBy(schools, 'id');
 
@@ -441,7 +439,8 @@ var groupSchools = function(schools) {
             lodash.forOwn(grouppedById[0], (value, key) => {
                 if (key !== 'addressId'
                     && key !== 'metroId'
-                    && key !== 'metroName') {
+                    && key !== 'metroName'
+                    && key !== 'departmentStage') {
                     resultItem[key] = value;
                 }
             });
@@ -452,18 +451,42 @@ var groupSchools = function(schools) {
             lodash.forEach(grouppedByAddress, (schools, key) => {
                 resultItem.addresses.push({
                     id: key,
-                    metroStations: []
+                    metroStations: [],
+                    departments: []
                 });
 
 
                 lodash.forEach(schools, (school) => {
-                    resultItem
-                        .addresses[resultItem.addresses.length - 1]
-                        .metroStations
-                        .push({
-                            id: school.metroId,
-                            name: school.metroName
+                    var currentAddress = resultItem
+                        .addresses[resultItem.addresses.length - 1];
+
+                    var isNewMetro = true;
+                    lodash.forEach(currentAddress.metroStations, (station)=>{
+                        if(station.id === school.metroId) {
+                            isNewMetro = false;
+                        }
+                    });
+                    if(isNewMetro && school.metroId !== null) {
+                        currentAddress.metroStations
+                            .push({
+                                id: school.metroId,
+                                name: school.metroName
+                            });
+                    }
+
+                    var isNewDepartment = true;
+                    lodash.forEach(currentAddress.departments, (department) => {
+                        if(department.stage === school.departmentStage) {
+                            isNewDepartment = false;
+                        }
+                    });
+
+                    if (isNewDepartment  && school.departmentStage !== null) {
+                        currentAddress.departments.push({
+                            stage: school.departmentStage
                         });
+                    }
+
                 });
             });
             return resultItem;
@@ -548,28 +571,6 @@ var checkScore = function(score) {
     }
     return result;
 };
-
-/**
- * Make metro names array from addresses array of each school
- * @param {Array} addresses
- * @return {Array}
- */
-var getMetro = function(addresses) {
-    var result = [];
-
-    addresses.forEach( item => {
-        var stationName = item.metroStations[0].name ?
-            item.metroStations[0].name.substr(5) :
-            '';
-
-        if (stationName && result.indexOf(stationName) == -1) {
-            result.push(stationName);
-        }
-    });
-
-    return result;
-};
-
 
 /**
  * @param {array<object>} schools - schoolInstances
