@@ -54,7 +54,7 @@
         {if length($params.metroStations) > 0 or $params.ratings}
             <div class="b-school-list-item__section
                         b-school-list-item__section_badges">
-                {if $params.metroStations}
+                {if length($params.metroStations) > 0}
                     <div class="b-school-list-item__metro-stations">
                         {call sm.bBadge.Template.base}
                         {param params:[

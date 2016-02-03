@@ -8,6 +8,8 @@ const addressView = require.main.require(
     './api/modules/geo/views/addressView.js');
 const activityView = require.main.require(
     './api/modules/school/views/activityView.js');
+const ratingView = require.main.require(
+    './api/modules/school/views/ratingView.js');
 
 var schoolView = {};
 
@@ -52,7 +54,8 @@ schoolView.default = function(schoolInstance, opt_popularSchools) {
         contacts: getContacts(addresses, schoolInstance.phones),
         comments: getComments(comments),
         addresses: services.address.getAddress(addresses),
-        ratings: getRatings(schoolInstance.rank, schoolInstance.rankDogm),
+        ratings: ratingView.ratingSchoolView(
+            schoolInstance.rank, schoolInstance.rankDogm),
         score: getSections(score),
         totalScore: schoolInstance.totalScore,
         reviewCount: schoolInstance.totalScore ?
@@ -229,32 +232,6 @@ var getSections = function(array) {
     }) : [];
 };
 
-/**
- *  @param {number} rating
- *  @param {number} rank
- *  @return {array<object>}
- */
-var getRatings = function(rating, rank) {
-    var ratings = [];
-    /*Check that position in Mel's rating exists and less than 100*/
-    if (rating && rating <= 100) {
-        ratings.push({
-            name: 'Рейтинг пользователей «Мела»',
-            place: rating,
-            href: '/search'
-        });
-    }
-
-    /*Check that position in Moscow education dept.
-      rating exists and less than 100*/
-    if (rank && rank <= 100) {
-        ratings.push({
-            name: 'Рейтинг Департамента образования Москвы',
-            place: rank
-        });
-    }
-    return ratings;
-};
 
 /**
  * translates director name to right output format
@@ -359,6 +336,7 @@ schoolView.list = function(schools) {
                 score: getSections(school.score || [0, 0, 0, 0]),
                 totalScore: school.totalScore,
                 fullName: school.fullName,
+                ratings: ratingView.ratingResultView(school.rankDogm),
                 metroStations: addressView.getMetro(school.addresses)
             };
         });
