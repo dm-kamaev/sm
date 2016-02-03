@@ -5,8 +5,37 @@
     font-size: 14px;
 }
 
+.b-data-block__contact {
+    margin-bottom: 0px;
+}
+
 .b-data-block__item-content {
     display: inline-block;
+}
+
+.b-data-block__item-content-left {
+    display: inline-block;
+    vertical-align: top;
+    width: 270px;
+}
+
+.b-data-block__item-content-right {
+    display: inline-block;
+    vertical-align: top;
+    width: 520px;
+}
+
+.b-data-block__item-content-address {
+    display: inline-block;
+    vertical-align: top;
+    width: 275px;
+    margin-bottom: 15px;
+}
+
+.b-data-block__item-content-metroStation {
+    display: inline-block;
+    vertical-align: top;
+    margin-bottom: 15px;
 }
 
 .b-data-block__metro-icon {
@@ -15,7 +44,18 @@
     margin-right: 7px;
 }
 
+.horisontal-line {
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.b-data-block__item-phones-caption {
+    display: inline-block;
+    width: 270px;
+}
+
 .b-data-block__item-phones{
+    margin-top: 15px;
     font-family: Arial;
     font-size: 14px;
     color: #808080;
