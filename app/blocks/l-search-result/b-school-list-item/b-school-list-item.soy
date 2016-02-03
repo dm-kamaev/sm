@@ -51,7 +51,7 @@
             </div>
         </div>
 
-        {if length($params.metroStations) > 0 or $params.ratings}
+        {if length($params.metroStations) > 0 or length($params.ratings) > 0}
             <div class="b-school-list-item__section
                         b-school-list-item__section_badges">
                 {if length($params.metroStations) > 0}
@@ -65,7 +65,7 @@
                     </div>
                 {/if}
 
-                {if $params.ratings}
+                {if length($params.ratings) > 0}
                     <div class="b-school-list-item__ratings">
 
                             {call sm.bBadge.Template.base}
