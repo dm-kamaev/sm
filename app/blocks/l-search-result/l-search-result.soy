@@ -9,10 +9,15 @@
             schools: list<[
                 id: number,
                 url: string,
-                name: string,
+                name: [
+                    light: string,
+                    bold: string
+                ],
                 score: list<number>,
                 totalScore: number,
-                description: string
+                description: string,
+                ratings: list<string>,
+                metroStations: list<string>
             ]>,
             filters: [
                 filters: list<[
