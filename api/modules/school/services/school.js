@@ -161,7 +161,9 @@ service.getPopularSchools = async(function() {
                  views: 0
              }
         },
-        order: 'views DESC',
+        order: [
+            ['views', 'DESC']
+        ],
         limit: 6, //TODO: move '6' somewhere maybe?
         include: [{
             model: models.Address,
@@ -343,11 +345,17 @@ service.updateScore = async(function(school) {
         }
     );
     var totalScore = getTotalScore(scores);
-    school.update({
-        score: scores,
-        totalScore: totalScore,
-        scoreCount: counts
-    });
+    if (!isFeedbackLack(counts, school.reviewCount)) {
+        school.update({
+            score: scores,
+            totalScore: totalScore,
+            scoreCount: counts
+        });
+    } else {
+        school.update({
+            scoreCount: counts
+        });
+    }
 });
 
 /**
@@ -367,6 +375,24 @@ var getTotalScore = function(score) {
     return count ? sum/count : 0;
 };
 
+/**
+ * Checks amount of ratings
+ * @param {array} scoreCount
+ * @param {number} reviewCount
+ * @return {bool}
+ */
+var isFeedbackLack = function(scoreCount, reviewCount) {
+    var ratingsLack = reviewCount >= 5 ? false : true,
+        i = scoreCount && scoreCount.length || 0;
+
+    while (i-- && !ratingsLack) {
+        if (scoreCount[i] < 3) {
+            ratingsLack = true;
+        }
+    }
+
+    return ratingsLack;
+};
 
 /**
  * @public
