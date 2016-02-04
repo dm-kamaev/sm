@@ -52,7 +52,8 @@ addressView.stageList = function (addresses, opt_options) {
         stagesEnum = [
             'Начальные классы',
             'Старшие и средние классы',
-            '1 — 11 классы'
+            '1 — 11 классы',
+            'Другие адреса'
         ],
         stages = [],
         temp = [],
