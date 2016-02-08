@@ -2,12 +2,18 @@
     display: inline-block;
 
     width: 100%;
+
+    color: #000;
+
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    line-height: 20px;
 }
 
-.dropdown__switcher-image {
+.b-dropdown__switcher-image {
     display: inline;
 
-    margin: 0 8px;
+    margin-left: 12px;
 
     vertical-align: middle;
 }
