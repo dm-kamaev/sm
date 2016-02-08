@@ -5,6 +5,7 @@ goog.require('goog.soy');
 goog.require('goog.ui.Component');
 goog.require('sm.lSearchResult.bSchoolList.Template');
 goog.require('sm.lSearchResult.bSchoolListItem.SchoolListItem');
+goog.require('sm.lSearchResult.bSort.Sort');
 
 
 /**
@@ -45,6 +46,13 @@ sm.lSearchResult.bSchoolList.SchoolList = function(opt_params) {
     this.loaderElement_ = null;
 
     /**
+     * Instance
+     * @type {sm.lSearchResult.bSort.Sort}
+     * @private
+     */
+    this.sort_ = null;
+
+    /**
      * @type {number}
      * @private
      */
@@ -54,6 +62,7 @@ goog.inherits(sm.lSearchResult.bSchoolList.SchoolList, goog.ui.Component);
 
 goog.scope(function() {
     var SchoolList = sm.lSearchResult.bSchoolList.SchoolList,
+        Sort = sm.lSearchResult.bSort.Sort,
         SchoolListItem = sm.lSearchResult.bSchoolListItem.SchoolListItem;
 
     /**
@@ -73,6 +82,7 @@ goog.scope(function() {
      */
     SchoolList.Event = {
         'ITEM_CLICK': SchoolListItem.Event.CLICK,
+        'SORT_CLICK': Sort.Event.ITEM_CLICK,
         'SHOW_MORE': 'show-more-items'
     };
 
@@ -139,6 +149,16 @@ goog.scope(function() {
         this.showMoreButtonElement_ = this.getElementByClass(
             SchoolList.CssClass.SHOW_MORE_BUTTON
         );
+
+        //sort
+        var sortElement = goog.dom.getElementByClass(
+            Sort.CssClass.ROOT,
+            element
+        );
+
+        this.sort_ = new Sort();
+        this.addChild(this.sort_);
+        this.sort_.decorate(sortElement);
     };
 
     /**
@@ -327,4 +347,5 @@ goog.scope(function() {
 
         return res;
     };
+
 });
