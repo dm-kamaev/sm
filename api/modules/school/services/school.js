@@ -162,7 +162,9 @@ service.getPopularSchools = async(function() {
                  views: 0
              }
         },
-        order: 'views DESC',
+        order: [
+            ['views', 'DESC']
+        ],
         limit: 6, //TODO: move '6' somewhere maybe?
         include: [{
             model: models.Address,
@@ -263,12 +265,9 @@ service.onRatingChange = async(function(schoolId) {
     if (!school)
         throw new SchoolNotFoundError(schoolId);
 
-    var promises = [
-        this.updateScore(school),
-        this.updateReviewCount(school),
-    ];
     try {
-        await(promises);
+        await(this.updateReviewCount(school));
+        await(this.updateScore(school));
     } catch (e) {
     }
 });
@@ -339,20 +338,25 @@ service.updateScore = async(function(school) {
         counts = [];
     await(queries).forEach(
         result => {
-            scores.push(result[0][0].avg || 0);
-            counts.push(result[0][0].count || 0);
+            var count = result[0][0].count || 0;
+            counts.push(count);
+            if (count >= 3) {
+                scores.push(result[0][0].avg || 0);
+            } else {
+                scores.push(0);
+            }
         }
     );
-    var totalScore = getTotalScore(scores);
     if (!isFeedbackLack(counts, school.reviewCount)) {
         school.update({
             score: scores,
-            totalScore: totalScore,
+            totalScore: getTotalScore(scores),
             scoreCount: counts
         });
     } else {
         school.update({
-            scoreCount: counts
+            scoreCount: counts,
+            score: scores
         });
     }
 });
