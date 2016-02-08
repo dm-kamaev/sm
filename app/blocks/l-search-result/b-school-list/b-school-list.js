@@ -151,6 +151,33 @@ goog.scope(function() {
     };
 
     /**
+     * TODO: repair
+     * Schools sort maker
+     * @param {number=} opt_sortKey
+     */
+    SchoolList.prototype.sort = function(opt_sortKey) {
+        var schoolListItems = this.removeItemChildren_();
+        var sortKey = (typeof opt_sortKey == 'undefined') ?
+            this.sortKey_ :
+            opt_sortKey;
+        this.sortKey_ = sortKey;
+
+        schoolListItems.sort(function(item1, item2) {
+            return (sortKey > 0) ?
+                item1.compareByScore(item2, sortKey - 1) :
+                item1.compareByTotalScore(item2);
+        });
+
+        schoolListItems.forEach(function(item) {
+            item.changeSorCriterion(sortKey);
+        });
+
+        for (var i = 0; i < schoolListItems.length; i++) {
+            this.addChild(schoolListItems[i]);
+        }
+    };
+
+    /**
      * Show more items handler
      * @private
      */

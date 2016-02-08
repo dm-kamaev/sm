@@ -228,7 +228,7 @@ goog.scope(function() {
      * @param {Object} event
      * @private
      */
-    SearchResult.prototype.onSortHandler_ = function(event) {
+    SearchResult.prototype.sortHandler_ = function(event) {
         this.schoolList_.sort(event.itemId);
     };
 

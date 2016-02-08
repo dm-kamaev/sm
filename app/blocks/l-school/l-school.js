@@ -55,7 +55,7 @@ goog.scope(function() {
      */
     School.CssClass = {
         'ROOT': 'l-school',
-        'FEEDBACK_BUTTON': 'b-bouton_feedback-opener',
+        'FEEDBACK_BUTTON': 'g-button_feedback-opener',
         'RATING': 'b-rating',
         'COMMENTS': 'b-comments',
         'FEEDBACK_LINK': 'l-school__comments-placeholder-link'
@@ -100,20 +100,20 @@ goog.scope(function() {
     School.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
 
+        var handler = this.getHandler();
+
         /** bouton listener */
         for (var i = 0; i < this.elements_.boutons.length; i++) {
-            goog.events.listen(
+            handler.listen(
                 this.elements_.boutons[i],
                 goog.events.EventType.CLICK,
-                this.onClick_,
-                false,
-                this
+                this.onClick_
             );
         }
 
         /** feedback link listener */
         if (this.elements_.feedbackLink) {
-            this.getHandler().listen(
+            handler.listen(
                 this.elements_.feedbackLink,
                 goog.events.EventType.CLICK,
                 this.onClick_
@@ -121,23 +121,6 @@ goog.scope(function() {
         }
     };
 
-    /**
-     * Cleans up the Component.
-     */
-    School.prototype.exitDocument = function() {
-        goog.base(this, 'exitDocument');
-
-        /** bouton listener */
-        for (var i = 0; i < this.elements_.boutons.length; i++) {
-            goog.events.unlisten(
-                this.elements_.boutons[i],
-                goog.events.EventType.CLICK,
-                this.onClick_,
-                false,
-                this
-            );
-        }
-    };
 
     /**
      * creates comment url
@@ -171,11 +154,6 @@ goog.scope(function() {
             comments.decorate(this.elements_.comments);
         }
 
-        /** rating */
-        // var rating = new sm.bRating.Rating();
-        // this.addChild(rating);
-        // rating.decorate(this.elements_.rating);
-
         /** map */
         var map = new sm.lSchool.bMap.Map();
         this.addChild(map);
@@ -188,7 +166,7 @@ goog.scope(function() {
             }
         });
         this.addChild(this.modal_);
-        this.modal_.render();
+        this.modal_.render(this.getElement());
 
         var l = this.elements_.foldLists.length;
         for (var i = 0, foldList; i < l; i++) {
@@ -211,33 +189,26 @@ goog.scope(function() {
     School.prototype.initElements_ = function(root) {
         this.elements_ = {
             root: root,
-            boutons: goog.dom.getElementsByClass(
-                sm.lSchool.School.CssClass.FEEDBACK_BUTTON,
-                root
+            boutons: this.getElementsByClass(
+                sm.lSchool.School.CssClass.FEEDBACK_BUTTON
             ),
-            feedbackLink: goog.dom.getElementByClass(
-                sm.lSchool.School.CssClass.FEEDBACK_LINK,
-                root
+            feedbackLink: this.getElementByClass(
+                sm.lSchool.School.CssClass.FEEDBACK_LINK
             ),
-            rating: goog.dom.getElementByClass(
-                sm.lSchool.School.CssClass.RATING,
-                root
+            rating: this.getElementByClass(
+                sm.lSchool.School.CssClass.RATING
             ),
-            comments: goog.dom.getElementByClass(
-                sm.lSchool.School.CssClass.COMMENTS,
-                root
+            comments: this.getElementByClass(
+                sm.lSchool.School.CssClass.COMMENTS
             ),
-            map: goog.dom.getElementByClass(
-                sm.lSchool.bMap.Map.CssClass.ROOT,
-                root
+            map: this.getElementByClass(
+                sm.lSchool.bMap.Map.CssClass.ROOT
             ),
-            foldLists: goog.dom.getElementsByClass(
-                sm.lSchool.bDataBlockFoldList.FoldList.CssClass.ROOT,
-                root
+            foldLists: this.getElementsByClass(
+                sm.lSchool.bDataBlockFoldList.FoldList.CssClass.ROOT
             ),
-            search: goog.dom.getElementByClass(
-                sm.bSearch.Search.CssClass.ROOT,
-                root
+            search: this.getElementByClass(
+                sm.bSearch.Search.CssClass.ROOT
             )
         };
     };

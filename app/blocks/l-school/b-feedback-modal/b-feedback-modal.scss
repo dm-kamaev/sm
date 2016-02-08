@@ -1,4 +1,4 @@
-.b-modal_feedback{
+.g-modal_feedback{
     .b-dialog {
         padding: 0;
     }
@@ -8,6 +8,11 @@
     width: 700px;
 
     color: #000;
+    text-align: left;
+}
+
+.b-feedback__form {
+    text-align: left;
 }
 
 .b-feedback__content {

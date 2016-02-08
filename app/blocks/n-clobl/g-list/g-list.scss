@@ -1,0 +1,21 @@
+.g-list.g-list_stendhal {
+    border: solid 1px #faddd7;
+    box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+
+    .g-list__item {
+        padding: 8px 10px 9px 10px;
+
+        white-space: nowrap;
+        font: 11px/11px Arial, sans-serif;
+        text-align: left;
+        color: #666666;
+        cursor: pointer;
+    }
+
+    .g-list__item:hover {
+        background-color: #ffebeb;
+    }
+
+
+}
