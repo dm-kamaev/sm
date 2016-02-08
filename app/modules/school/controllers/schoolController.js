@@ -76,7 +76,7 @@ exports.list = async (function(req, res) {
             searchText: req.query.name ?
                 searchText : '',
             searchSettings: {
-                url: 'api/school/search',
+                url: '/api/school/search',
                 method: 'GET',
                 data: {
                     searchParams: searchParams,

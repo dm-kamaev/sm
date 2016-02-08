@@ -27,7 +27,7 @@
     right: 2px;
 
     width: 150px;
-    margin-top: 14px;
+    margin-top: 15px;
     padding: 23px 30px 14px 30px;
 
     color: #808080;
@@ -64,7 +64,7 @@
 
 .b-score__mark-item {
     margin-bottom: 9px;
-    padding-bottom: 10px;
+    padding-bottom: 8px;
 
     border-bottom: 1px solid #e5e5e5;
 
@@ -76,10 +76,8 @@
 }
 .b-score__mark-name {
     display: inline-block;
+    width: 122px;
 }
 .b-score__mark-value {
     display: inline-block;
-    float: right;
-
-    margin-right: 10px;
 }
