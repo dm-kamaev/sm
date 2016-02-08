@@ -155,7 +155,7 @@ goog.scope(function() {
             type: Sort.Event.ITEM_CLICK,
             itemId: itemId
         });
-        this.dropdownList_.select(itemId, 0);
+
         switch (itemId) {
             case 1:
                 this.setSwitcherCustomText_(
