@@ -1,11 +1,10 @@
 goog.provide('sm.lSchool.bFeedbackModal.FeedbackModal');
 
+goog.require('cl.iUtils.Utils');
 goog.require('goog.dom.classes');
 goog.require('goog.ui.Component');
-goog.require('gorod.bModal.Modal');
-goog.require('gorod.bModal.Template');
-goog.require('gorod.bTextarea.Textarea');
 goog.require('sm.bStars.Stars');
+goog.require('sm.iFactory.FactoryStendhal');
 goog.require('sm.lSchool.bFeedbackModal.Template');
 
 /**
@@ -32,15 +31,25 @@ sm.lSchool.bFeedbackModal.FeedbackModal = function(opt_params) {
     this.elements_ = {};
 
     /**
-     * modal
-     * @type {gorod.bModal.Modal}
+     * Textarea instance
+     * @type {cl.gTextarea.Textarea}
      * @private
      */
-    this.modal_ = gorod.bModal.Modal.create('', {
-        config: {
-            customClasses: 'b-modal_feedback'
-        }
-    });
+    this.textarea_ = null;
+
+    /**
+     * modal
+     * @type {cl.gModal.Modal}
+     * @private
+     */
+    this.modal_ = null;
+
+    /**
+     * Stars instances
+     * @type {Array.<sm.bStars.Stars>}
+     * @private
+     */
+    this.stars_ = [];
 };
 goog.inherits(sm.lSchool.bFeedbackModal.FeedbackModal, goog.ui.Component);
 
@@ -52,11 +61,10 @@ goog.scope(function() {
      * @enum {string}
      */
     FeedbackModal.CssClass = {
-        'FEEDBACK': 'b-feedback',
-        'MODAL': 'b-modal_feedback',
+        'ROOT': 'b-feedback',
+        'FORM': 'b-feedback__form',
         'BUTTON': 'b-feedback__button',
-        'RADIO': 'b-feedback__radio',
-        'DIALOG_BODY': 'b-dialog__body'
+        'RADIO': 'b-feedback__radio'
     };
 
     /**
@@ -80,7 +88,7 @@ goog.scope(function() {
      * @public
      */
     FeedbackModal.prototype.clean = function() {
-        this.textarea_.setValue('');
+        this.textarea_.clean();
 
         for (var i = 0, stars; stars = this.stars_[i]; i++) {
             stars.setValue(0);
@@ -89,19 +97,6 @@ goog.scope(function() {
         this.removeRadioCheck_();
     };
 
-    /**
-     * Component render
-     * @public
-     */
-    FeedbackModal.prototype.render = function() {
-        var modalDialog = this.modal_.getDialog()[0],
-            modalDialogBody = goog.dom.getElementByClass(
-                FeedbackModal.CssClass.DIALOG_BODY,
-                modalDialog
-            );
-
-        goog.base(this, 'render', modalDialogBody);
-    };
 
     /**
      * Template-based dom element creation.
@@ -124,27 +119,28 @@ goog.scope(function() {
     FeedbackModal.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
-        goog.dom.getParentElement(element).style.display = 'none';
+        var factory = sm.iFactory.FactoryStendhal.getInstance();
 
         this.elements_ = {
-            stars: goog.dom.getElementsByClass(
-                sm.bStars.Stars.CssClass.ROOT,
-                element
-            ),
-            /**
-             * TODO: Add 'b-textarea' to gorod.bTextarea.Textarea.Classes.ROOT
-             */
-            textarea: goog.dom.getElementByClass(
-                'b-textarea', element
-            ),
-
-            radio: goog.dom.getElementsByClass(
-                FeedbackModal.CssClass.RADIO,
-                element
-            )
+            radio: this.getElementsByClass(FeedbackModal.CssClass.RADIO),
+            form: this.getElementByClass(FeedbackModal.CssClass.FORM)
         };
 
-        this.stars_ = this.initStars_(this.elements_.stars);
+        this.textarea_ = factory.decorate(
+            'textarea',
+            this.getElementByClass(cl.gTextarea.View.CssClass.ROOT),
+            this
+        );
+
+        this.stars_ = this.initStars_(
+            this.getElementsByClass(sm.bStars.Stars.CssClass.ROOT)
+        );
+
+        this.modal_ = factory.decorate(
+            'modal',
+            this.getElementByClass(cl.gModal.View.CssClass.ROOT),
+            this
+        );
     };
 
     /**
@@ -154,30 +150,10 @@ goog.scope(function() {
     FeedbackModal.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
 
-        this.textarea_ = new gorod.bTextarea.Textarea(this.elements_.textarea);
-
-        goog.events.listen(
-            this.getElement(),
+        this.getHandler().listen(
+            this.elements_.form,
             goog.events.EventType.SUBMIT,
-            this.onSubmit_,
-            false,
-            this
-        );
-    };
-
-    /**
-     * Cleans up the Component.
-     * @public
-     */
-    FeedbackModal.prototype.exitDocument = function() {
-        goog.base(this, 'exitDocument');
-
-        goog.events.unlisten(
-            this.getElement(),
-            goog.events.EventType.SUBMIT,
-            this.onSubmit_,
-            false,
-            this
+            this.onSubmit_
         );
     };
 
@@ -202,6 +178,7 @@ goog.scope(function() {
                     isClickable: true
                 }
             });
+            this.addChild(star);
             star.decorate(elem);
             res.push(star);
         }
@@ -295,7 +272,7 @@ goog.scope(function() {
      * @private
      */
     FeedbackModal.prototype.submit_ = function() {
-        var form = jQuery(this.getElement()),
+        var form = jQuery(this.elements_.form),
             data = form.serializeArray();
 
         if (this.isValid_(data)) {
@@ -304,10 +281,6 @@ goog.scope(function() {
             });
         } else {
             this.hide();
-            /**
-             * TODO: remove scroll bug
-             */
-            location.reload();
         }
 
         this.clean();

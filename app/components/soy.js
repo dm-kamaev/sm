@@ -12,10 +12,7 @@ soynode.setOptions({
      * TODO: make watch
      * In case of dynamic recompile, please don't restart gulp
      */
-    allowDynamicRecompile: true,
-    contextJsPaths: [
-        path.join(__dirname, '../../node_modules/frobl/blocks/i-utils/i-utils.js')
-    ]
+    allowDynamicRecompile: true
 });
 
 exports.init = function(file, opt_callback) {

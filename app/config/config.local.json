@@ -1,5 +1,5 @@
 {
-    "host": "localhost",
+    "host": "www21.lan",
     "port": "5432",
     "username": "gorod",
     "password": "123qwe",

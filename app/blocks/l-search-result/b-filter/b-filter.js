@@ -1,11 +1,11 @@
 goog.provide('sm.lSearchResult.bFilter.Filter');
 
+goog.require('cl.iUtils.Utils');
 goog.require('goog.dom.classes');
 goog.require('goog.dom.classlist');
 goog.require('goog.events');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
-goog.require('gorod.iUtils');
 
 /**
  * Filter component
@@ -108,7 +108,7 @@ goog.scope(function() {
         FILTER_RESET: 'b-filter__reset',
         INPUT_CLASSES: 'b-filter__input',
         INPUT_CLASSES_ORDINARY: 'b-filter__input-ordinary',
-        HIDDEN: gorod.iUtils.CssClass.HIDDEN
+        HIDDEN: cl.iUtils.Utils.CssClass.HIDDEN
     };
 
     /**
@@ -182,8 +182,10 @@ goog.scope(function() {
     Filter.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
 
+        var handler = this.getHandler();
+
         if (this.showHiddenFiltersButtonElement_) {
-            this.handler_.listen(
+            handler.listen(
                 this.showHiddenFiltersButtonElement_,
                 goog.events.EventType.CLICK,
                 this.showHiddenFilters_
@@ -192,7 +194,7 @@ goog.scope(function() {
 
         if (this.showFiltersButtonElement_) {
             var header = this.getElementByClass(Filter.CssClass.HEADER);
-            this.handler_.listen(
+            handler.listen(
                 header,
                 goog.events.EventType.CLICK,
                 this.toggleFiltersVisibility_
@@ -200,7 +202,7 @@ goog.scope(function() {
         }
 
         if (this.filterResetElement_) {
-            this.handler_.listen(
+            handler.listen(
                 this.filterResetElement_,
                 goog.events.EventType.CLICK,
                 this.resetFilter_
@@ -208,7 +210,7 @@ goog.scope(function() {
         }
 
         if (this.inputClassesOrdinaryElement_) {
-            this.handler_.listen(
+            handler.listen(
                 this.inputClassesOrdinaryElement_,
                 goog.events.EventType.CLICK,
                 this.showResetButton_
@@ -217,7 +219,7 @@ goog.scope(function() {
 
         if (this.inputClassesElements_.length > 0) {
             for (var i = 0; i < this.inputClassesElements_.length; i++) {
-                this.handler_.listen(
+                handler.listen(
                     this.inputClassesElements_[i],
                     goog.events.EventType.CHANGE,
                     this.showResetButton_

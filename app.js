@@ -5,7 +5,20 @@ const express = require('express');
 const morgan = require('morgan');
 
 var db = require('./app/components/db');
-var soy = require('./app/components/soy');
+const soy = require('./node_modules/clobl/soy').setOptions({
+    templateFactory: path.join(
+        __dirname,
+        'app/blocks/n-clobl/i-factory/i-template-factory_stendhal.js'
+    ),
+    closureLibrary: path.join(
+        __dirname,
+        'node_modules/google-closure-library'
+    ),
+    closureTemplates: path.join(
+        __dirname,
+        'node_modules/closure-templates'
+    )
+});
 var modules = require('./app/modules');
 var api = require('./api/modules');
 var bodyParser = require('body-parser');
@@ -46,8 +59,11 @@ app.use('/api-debug', express.static(path.join(__dirname, '/api-debug')));
 
 
 
-soy.init(
-    path.join(__dirname, '/tmp/compiledServerSoy/server.soy.concat.js'),
+soy.loadFiles(
+    [path.join(__dirname, '/tmp/compiledServerSoy/server.soy.concat.js'),
+        path.join(__dirname, 'node_modules/clobl/blocks/i-utils/i-utils.js'),
+        path.join(__dirname, 'node_modules/clobl/blocks/i-utils_frobl/i-utils.js'),
+        path.join(__dirname, 'node_modules/clobl/blocks/i-factory/i-template-factory.js')],
     function() {
         app.listen(CONFIG.PORT, function() {
             console.log('Running at port ' + CONFIG.PORT)
