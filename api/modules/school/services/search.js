@@ -81,7 +81,7 @@ var intArrayToSql = function(arr) {
  * @params {string} field
  * @params {string} string
  * @params {string} [type = 'and']
- * @return {string} 
+ * @return {string}
  */
 var generateSqlFilter = function(field, string, type) {
     type = type || 'AND';
@@ -109,103 +109,129 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
         type: 'OR',
         values: []
     };
-
-    if (searchParams.name) {
-        sqlOptions.where.push({
-            type: 'OR',
-            values: [
-                generateSqlFilter('school.name', searchParams.name, 'AND'),
-                generateSqlFilter('school.full_name', searchParams.name, 'AND'),
-                generateSqlFilter('metro.name', searchParams.name, 'AND'),
-                generateSqlFilter('area.name', searchParams.name, 'AND'),
-            ]
-        });
-        isGeoDataJoined = true;
-    }
-
-    if (searchParams.classes && searchParams.classes.length) {
-        var classArr = intArrayToSql(searchParams.classes);
-        sqlOptions.where.push('school.education_interval @> ' + classArr);
-    }
-
-    if (searchParams.schoolType) {
-        searchDataCount++;
-        searchDataWhere.values.push({
-            type: 'AND',
-            values: [
-                'search_data.type = \'' + searchTypeEnum.fields.SCHOOL_TYPE + '\'',
-                'search_data.values && ' + intArrayToSql(searchParams.schoolType)
-            ]
-        });
-    }
-
-    if (searchParams.gia) {
-        searchDataCount++;
-        searchDataWhere.values.push({
-            type: 'AND',
-            values: [
-                'search_data.type = \'' + searchTypeEnum.fields.GIA + '\'',
-                'search_data.values @> ' + intArrayToSql(searchParams.gia)
-            ]
-        });
-    }
-
-    if (searchParams.ege) {
-        searchDataCount++;
-        searchDataWhere.values.push({
-            type: 'AND',
-            values: [
-                'search_data.type = \'' + searchTypeEnum.fields.EGE + '\'',
-                'search_data.values @> ' + intArrayToSql(searchParams.ege)
-            ]
-        });
-    }
-
-    if (searchParams.olimp) {
-        searchDataCount++;
-        searchDataWhere.values.push({
-            type: 'AND',
-            values: [
-                'search_data.type = \'' + searchTypeEnum.fields.OLIMPIAD+ '\'',
-                'search_data.values @> ' + intArrayToSql(searchParams.olimp)
-            ]
-        });
-    }
-
-    if (searchParams.areaId) {
-        isGeoDataJoined = true;
-        sqlOptions.where.push('area.id = ' + searchParams.areaId);
-    }
+    console.log('searchParams: ' + Array.isArray(sqlOptions.from));
+    if (!Array.isArray(sqlOptions.from)) {
+        this.updateSqlOptions(sqlOptions.from, searchParams);
         
-    if (searchParams.metroId) {
-        isGeoDataJoined = true;
-        sqlOptions.where.push('metro.id = ' + searchParams.metroId);
+        if (searchParams.sortType) {
+            sqlOptions.order.unshift(
+                generateOrder(searchParams.sortType)
+            );
+        }
     }
+    else {
+        if (searchParams.name) {
+            sqlOptions.where.push({
+                type: 'OR',
+                values: [
+                    generateSqlFilter('school.name', searchParams.name, 'AND'),
+                    generateSqlFilter('school.full_name', searchParams.name, 'AND'),
+                    generateSqlFilter('metro.name', searchParams.name, 'AND'),
+                    generateSqlFilter('area.name', searchParams.name, 'AND'),
+                ]
+            });
+            isGeoDataJoined = true;
+        }
 
-    if (searchDataCount) {
-        //search_data must be first in the from clause
-        sqlOptions.from.unshift('search_data'); 
-        sqlOptions.where.push(searchDataWhere);
-        sqlOptions.where.push('school.id = search_data.school_id');
-        sqlOptions.having.push(['COUNT(DISTINCT search_data.id) ', ' = ', searchDataCount]);
+        if (searchParams.classes && searchParams.classes.length) {
+            var classArr = intArrayToSql(searchParams.classes);
+            sqlOptions.where.push('school.education_interval @> ' + classArr);
+        }
+
+         if (searchParams.sortType) {
+            sqlOptions.order.unshift(
+                generateOrder(searchParams.sortType)
+            );
+        }
+
+        if (searchParams.schoolType) {
+            searchDataCount++;
+            searchDataWhere.values.push({
+                type: 'AND',
+                values: [
+                    'search_data.type = \'' + searchTypeEnum.fields.SCHOOL_TYPE + '\'',
+                    'search_data.values && ' + intArrayToSql(searchParams.schoolType)
+                ]
+            });
+        }
+
+        if (searchParams.gia) {
+            searchDataCount++;
+            searchDataWhere.values.push({
+                type: 'AND',
+                values: [
+                    'search_data.type = \'' + searchTypeEnum.fields.GIA + '\'',
+                    'search_data.values @> ' + intArrayToSql(searchParams.gia)
+                ]
+            });
+        }
+
+        if (searchParams.ege) {
+            searchDataCount++;
+            searchDataWhere.values.push({
+                type: 'AND',
+                values: [
+                    'search_data.type = \'' + searchTypeEnum.fields.EGE + '\'',
+                    'search_data.values @> ' + intArrayToSql(searchParams.ege)
+                ]
+            });
+        }
+
+        if (searchParams.olimp) {
+            searchDataCount++;
+            searchDataWhere.values.push({
+                type: 'AND',
+                values: [
+                    'search_data.type = \'' + searchTypeEnum.fields.OLIMPIAD+ '\'',
+                    'search_data.values @> ' + intArrayToSql(searchParams.olimp)
+                ]
+            });
+        }
+
+        if (searchParams.areaId) {
+            isGeoDataJoined = true;
+            sqlOptions.where.push('area.id = ' + searchParams.areaId);
+        }
+
+        if (searchParams.metroId) {
+            isGeoDataJoined = true;
+            sqlOptions.where.push('metro.id = ' + searchParams.metroId);
+        }
+
+        if (searchDataCount) {
+            //search_data must be first in the from clause
+            sqlOptions.from.unshift('search_data');
+            sqlOptions.where.push(searchDataWhere);
+            sqlOptions.where.push('school.id = search_data.school_id');
+            sqlOptions.having.push(['COUNT(DISTINCT search_data.id) ', ' = ', searchDataCount]);
+        }
+        if (isGeoDataJoined) {
+             sqlOptions.join.push({
+                 type: 'LEFT OUTER',
+                 values: [
+                     'address on address.school_id = school.id',
+                     'area on area.id = address.area_id',
+                     'address_metro on address_metro.address_id = address.id',
+                     'metro on metro.id = address_metro.metro_id'
+                 ]
+             });
+        }
     }
-    if (isGeoDataJoined) {
-        sqlOptions.join.push({
-            type: 'LEFT OUTER',
-            values: [
-                'address on address.school_id = school.id',
-                'area on area.id = address.area_id',
-                'address_metro on address_metro.address_id = address.id',
-                'metro on metro.id = address_metro.metro_id'
-            ]
-        });
-    }
+};
+
+/**
+ * @param {number} sortType
+ * @return {array<string>}
+ */
+var generateOrder = function(sortType) {
+    var result = 'school.score[' + sortType + '] DESC NULLS LAST';
+    return result;
 };
 
 /**
  * @param {array} where
  * @param {string} [opt_type = AND]
- * @return {string} 
+ * @return {string}
  */
 var generateWhereSql = function(where, opt_type) {
     var type = opt_type || 'AND';
@@ -229,11 +255,22 @@ var generateJoin = function(join) {
 
 /**
  * @params {object} sqlOptions
+ * @params {bool} opt_notUseDelimiter - if true not add ';' symbol
+ * at the end of sqlstring, for inner from query
  * @return {string}
  */
-exports.generateSearchSql = function(options) {
+exports.generateSearchSql = function(options, opt_notUseDelimiter) {
     var selectStr = 'SELECT ' + options.select.join(', ');
-    var fromStr = ' FROM ' + options.from.join(', ');
+    var fromStr = ' FROM ';
+
+    if(!Array.isArray(options.from)) {
+         fromStr += '(' + this.generateSearchSql(options.from, true)
+                + ') AS "' + options.from.as + '"';
+        innerFrom = true;
+    } else {
+        fromStr +=  options.from.join(', ');
+    }
+
     var whereStr = '';
     if (options.where.length)
         whereStr = ' WHERE ' + generateWhereSql(options.where);
@@ -245,7 +282,7 @@ exports.generateSearchSql = function(options) {
         orderStr = ' ORDER BY ' + options.order.join(', ');
     var havingStr = '';
     if (options.having.length)
-        havingStr = ' HAVING ' + options.having  
+        havingStr = ' HAVING ' + options.having
             .map(rec => rec[0] + rec[1] + rec[2])
             .join(' AND ');
     var joinStr = '';
@@ -253,7 +290,18 @@ exports.generateSearchSql = function(options) {
         joinStr = options.join
             .map(onejoin => generateJoin(onejoin))
             .join(', ');
-    return selectStr + fromStr + joinStr + whereStr + groupStr + havingStr + orderStr + ';';
+    var limitStr = '';
+    if (options.limit)
+        limitStr = ' LIMIT ' + options.limit;
+    var offsetStr = '';
+    if (options.offset)
+        offsetStr = ' OFFSET ' + options.offset;
+
+    var result = selectStr + fromStr + joinStr + whereStr + groupStr + havingStr + orderStr + limitStr + offsetStr;
+    if (!opt_notUseDelimiter) {
+        result += ';';
+    }
+    return result;
 };
 
 /**
@@ -263,7 +311,11 @@ exports.generateSearchSql = function(options) {
 exports.generateFilter = function(string) {
     var subStrings = getSearchSubstrings(string);
     return {
-        $and: subStrings.map(substr => {
+        $and: subStrings.filter(substr => {
+            if (substr)
+                return substr;
+        })
+        .map(substr => {
             return {
                 $iLike: '%' + substr + '%'
             };

@@ -250,7 +250,11 @@ gulp.task('sprite', function() {
 });
 
 gulp.task('images', function () {
-    return gulp.src(path.join(__dirname + BLOCKS_DIR + '/**/*.png'))
+    return gulp.src([
+            path.join(__dirname + BLOCKS_DIR + '/**/*.png'),
+            path.join(__dirname + BLOCKS_DIR + '/**/*.ico'),
+            path.join(__dirname + BLOCKS_DIR + '/**/*.gif')
+        ])
         .pipe(gulp.dest(path.join(__dirname + '/public/images')));
 });
 
@@ -282,5 +286,5 @@ const tasks = function (bool) {
         ['watch', 'soy', 'scripts', 'sprite', 'images', 'fonts','styles'];
 };
 
-gulp.task('build', tasks(true)); 
+gulp.task('build', tasks(true));
 gulp.task('default', tasks(production));

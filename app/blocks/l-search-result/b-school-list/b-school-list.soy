@@ -7,18 +7,34 @@
  *     schools: ?list<[
  *         id: ?number,
  *         url: ?string,
- *         name: ?string,
+ *         name: [
+ *             light: ?string,
+ *             bold: ?string
+ *         ],
  *         score: ?list<[
  *             name: ?string,
  *             value: ?number
  *         ]>,
- *         totalScore: ?number,
- *         description: ?string
+ *         currentCriterion: [
+ *             name: ?string,
+ *             value: ?number
+ *         ],
+ *         description: ?string,
+ *         metroStations: list<string>,
+ *         ratings: list<string>
  *     ]>
  * }
  */
 {template .base autoescape="strict" kind="html"}
     <div class="b-school-list">
+        <div class="b-school-list__header">
+            <div class="b-school-list__line">
+            </div>
+            <div class="b-school-list__sort">
+                {call sm.lSearchResult.bSort.Template.base}
+                {/call}
+            </div>
+        </div>
         <div class="b-school-list__body">
             {foreach $school in $params.schools}
                 {call sm.lSearchResult.bSchoolListItem.Template.base}
@@ -27,11 +43,29 @@
                         'url': $school.url,
                         'name': $school.name,
                         'score': $school.score,
-                        'totalScore': $school.totalScore,
-                        'description': $school.description
+                        'currentCriterion': $school.currentCriterion,
+                        'description': $school.description,
+                        'metroStations': $school.metroStations,
+                        'ratings': $school.ratings
                     ]/}
                 {/call}
             {/foreach}
+        </div>
+        <div class="b-school-list__loader i-utils__hidden">
+            <div class="b-school-list__loader-image">
+            </div>
+            <div class="b-school-list__loader-text">
+                Загружаем список...
+            </div>
+        </div>
+
+        <div class="b-school-list__footer">
+            <div class="b-school-list__show-more-button{sp}
+                {if length($params.schools) < 10}
+                    i-utils__hidden
+                {/if}">
+                Показать ещё
+            </div>
         </div>
     </div>
 {/template}

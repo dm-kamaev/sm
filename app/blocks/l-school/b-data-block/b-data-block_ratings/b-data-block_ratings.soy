@@ -63,25 +63,28 @@
  * }
  */
 {template .ratingItem_ autoescape="strict" kind="html"}
-    <li class="b-data-block__item">
-        <div class="b-data-block__place-wrapper">
-            <div class="b-data-block__place-value">
-                {$params.place}
+    // if for only goverment rating
+    {if $params?.name != 'Рейтинг пользователей «Мела»'}
+        <li class="b-data-block__item">
+            <div class="b-data-block__place-wrapper">
+                <div class="b-data-block__place-value">
+                    {$params.place}
+                </div>
             </div>
-        </div>
 
-        {if $params.href}
-            <a  class="b-data-block__item-content
-                       b-data-block__item-content_text-color_red"
-                href="{$params.href}">
+            {if $params.href}
+                <a  class="b-data-block__item-content
+                           b-data-block__item-content_text-color_red"
+                    href="{$params.href}">
+                        {$params.name}
+                 </a>
+            {else}
+                <div class="b-data-block__item-content">
                     {$params.name}
-             </a>
-        {else}
-            <div class="b-data-block__item-content">
-                {$params.name}
-            </div>
-        {/if}
-    </li>
+                </div>
+            {/if}
+        </li>
+    {/if}
 {/template}
 
 /**

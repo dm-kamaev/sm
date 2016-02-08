@@ -182,12 +182,13 @@ goog.scope(function() {
                 } else if (findEntry(item.abbreviation)) {
                     result = item.abbreviation;
                 } else {
-                    result = '';
+                    return '';
                 }
 
-                result = '<span class="b-search__list-name">' +
+                result = result ? '<span class="b-search__list-name">' +
                     result +
-                    '</span>';
+                    '</span>' :
+                    '';
 
                 if (item.hasOwnProperty('addresses')) {
                     result += ' <span class="b-search__list-area">' +

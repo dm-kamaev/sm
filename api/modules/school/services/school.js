@@ -6,6 +6,7 @@ var models = require.main.require('./app/components/models').all;
 var services = require.main.require('./app/components/services').all;
 var sequelize = require.main.require('./app/components/db');
 var searchTypeEnum = require('../enums/searchType');
+var schoolTypeEnum = require('../enums/schoolType');
 var CsvConverter = require('../../../../console/modules/modelArchiver/CsvConverter');
 var service = {
     name: 'school'
@@ -161,7 +162,9 @@ service.getPopularSchools = async(function() {
                  views: 0
              }
         },
-        order: 'views DESC',
+        order: [
+            ['views', 'DESC']
+        ],
         limit: 6, //TODO: move '6' somewhere maybe?
         include: [{
             model: models.Address,
@@ -262,12 +265,9 @@ service.onRatingChange = async(function(schoolId) {
     if (!school)
         throw new SchoolNotFoundError(schoolId);
 
-    var promises = [
-        this.updateScore(school),
-        this.updateReviewCount(school),
-    ];
     try {
-        await(promises);
+        await(this.updateReviewCount(school));
+        await(this.updateScore(school));
     } catch (e) {
     }
 });
@@ -338,16 +338,27 @@ service.updateScore = async(function(school) {
         counts = [];
     await(queries).forEach(
         result => {
-            scores.push(result[0][0].avg || 0);
-            counts.push(result[0][0].count || 0);
+            var count = result[0][0].count || 0;
+            counts.push(count);
+            if (count >= 3) {
+                scores.push(result[0][0].avg || 0);
+            } else {
+                scores.push(0);
+            }
         }
     );
-    var totalScore = getTotalScore(scores);
-    school.update({
-        score: scores,
-        totalScore: totalScore,
-        scoreCount: counts
-    });
+    if (!isFeedbackLack(counts, school.reviewCount)) {
+        school.update({
+            score: scores,
+            totalScore: getTotalScore(scores),
+            scoreCount: counts
+        });
+    } else {
+        school.update({
+            scoreCount: counts,
+            score: scores
+        });
+    }
 });
 
 /**
@@ -367,6 +378,24 @@ var getTotalScore = function(score) {
     return count ? sum/count : 0;
 };
 
+/**
+ * Checks amount of ratings
+ * @param {array} scoreCount
+ * @param {number} reviewCount
+ * @return {bool}
+ */
+var isFeedbackLack = function(scoreCount, reviewCount) {
+    var ratingsLack = reviewCount >= 5 ? false : true,
+        i = scoreCount && scoreCount.length || 0;
+
+    while (i-- && !ratingsLack) {
+        if (scoreCount[i] < 3) {
+            ratingsLack = true;
+        }
+    }
+
+    return ratingsLack;
+};
 
 /**
  * @public
@@ -595,6 +624,7 @@ service.listInstances = async(function(){
 /**
  * @public
  * @param {object || null} opt_params
+ * @param {number || null} opt.params.page
  * @param {object || null} opt_params.searchParams
  * @param {string || null} opt_params.searchParams.name
  * @param {?Array<number>} opt_params.searchParams.schoolType
@@ -606,27 +636,75 @@ service.listInstances = async(function(){
 service.list = async (function(opt_params) {
     var params = opt_params || {},
         searchParams = params.searchParams || null;
-
     var sqlConfig = {
         select: [
             'school.id',
             'school.name',
+            'school.full_name AS "fullName"',
+            'school.rank_dogm AS "rankDogm"',
+            'school.description',
+            'school.url',
             'school.score',
-            'school.full_name',
-            'school.abbreviation',
-            'school.total_score',
-            'school.score_count',
-            'school.url' ],
-        from:  [
-            'school'
+            'school.total_score AS "totalScore"',
+            'school.score_count AS "scoreCount"',
+            'address.id AS "addressId"',
+            'department.stage AS "departmentStage"',
+            'metro.id AS "metroId"',
+            'metro.name AS "metroName"'
         ],
+        from: {
+                select: [
+                    'school.id',
+                    'school.name',
+                    'school.full_name',
+                    'school.rank_dogm',
+                    'school.description',
+                    'school.url',
+                    'school.score',
+                    'school.total_score',
+                    'school.score_count'
+                ],
+                from: ['school'],
+                where: [
+                    '(school.school_type = \'' + schoolTypeEnum.SCHOOL + '\' OR ' +
+                    'school.school_type = \'' + schoolTypeEnum.LYCEUM + '\' OR ' +
+                    'school.school_type = \'' + schoolTypeEnum.GYMNASIUM + '\' OR ' +
+                    'school.school_type = \'' + schoolTypeEnum.EDUCATION_CENTER + '\' OR ' +
+                    'school.school_type = \'' + schoolTypeEnum.CADET_SCHOOL + '\' OR ' +
+                    'school.school_type = \'' + schoolTypeEnum.CADET_SCHOOL_INTERNAT + '\' OR ' +
+                    'school.school_type = \'' + schoolTypeEnum.CORRECTIONAL_SCHOOL + '\' OR ' +
+                    'school.school_type = \'' + schoolTypeEnum.CORRECTIONAL_SCHOOL_INTERNAT + '\')'
+                ],
+                as: 'school',
+                join: [],
+                group: ['school.id'],
+                order: [
+                    'school.total_score DESC',
+                    'school.score DESC',
+                    'school.id ASC'
+                ],
+                having : [],
+                limit: 10,
+                offset: params.page * 10
+        },
         where: [],
-        join: [],
+        join: [
+            {
+                type: 'LEFT OUTER',
+                values: [
+                    'address on address.school_id = school.id',
+                    'department on department.address_id = address.id',
+                    'address_metro on address_metro.address_id = address.id',
+                    'metro on metro.id = address_metro.metro_id'
+                ]
+            }
+        ],
         group: [
-            'school.id'
         ],
         order: [
-            'school.total_score DESC, school.id ASC'
+            'school.total_score DESC',
+            'school.score DESC',
+            'school.id ASC'
         ],
         having: []
     };
@@ -638,10 +716,8 @@ service.list = async (function(opt_params) {
     var sqlString = services.search.generateSearchSql(sqlConfig);
 
     var options = {
-        model: models.School,
-        mapToModel: true
+        type: sequelize.QueryTypes.SELECT
     };
-
     return sequelize.query(sqlString, options)
     .then(schools => {
             console.log('Found: ', colors.green(schools.length));
@@ -666,24 +742,27 @@ service.searchByText = function(text) {
                 }
             ]
         };
-    return models.School.findAll({
-        where: whereParams,
-        include: [{
-            model: models.Address,
-            as: 'addresses',
-            attributes: [
-                'id'
-            ],
+    return nameFilter['$and'].length ?
+        models.School.findAll({
+            where: whereParams,
             include: [{
-                model: models.Area,
-                as: 'area',
+                model: models.Address,
+                as: 'addresses',
                 attributes: [
-                    'id',
-                    'name'
-                ]
-            }]
-        }]
-    });
+                    'id'
+                ],
+                include: [{
+                    model: models.Area,
+                    as: 'area',
+                    attributes: [
+                        'id',
+                        'name'
+                    ]
+                }]
+            }],
+            limit: 10
+        }) :
+        [];
 };
 
 

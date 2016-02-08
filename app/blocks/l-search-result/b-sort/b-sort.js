@@ -38,13 +38,6 @@ sm.lSearchResult.bSort.Sort = function(opt_params) {
      * @private
      */
     this.switcherCustomTextElement_ = null;
-
-    /**
-     * Current item id
-     * @type {number}
-     * @private
-     */
-    this.currentItemId_ = 0;
 };
 goog.inherits(sm.lSearchResult.bSort.Sort, goog.ui.Component);
 
@@ -157,14 +150,6 @@ goog.scope(function() {
     };
 
     /**
-     * Getter for current item id
-     * @return {number}
-     */
-    Sort.prototype.getCurrentItemId = function() {
-        return this.currentItemId_;
-    };
-
-    /**
      * Set custom text content for switcher
      * @param {String} text
      * @private
@@ -189,9 +174,7 @@ goog.scope(function() {
             type: Sort.Event.ITEM_CLICK,
             itemId: itemId
         });
-
-        this.currentItemId_ = itemId;
-
+        this.dropdownList_.select(itemId, 0);
         switch (itemId) {
             case 1:
                 this.setSwitcherCustomText_(

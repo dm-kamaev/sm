@@ -36,7 +36,8 @@ goog.scope(function() {
      * @enum {string}
      */
     Filters.CssClass = {
-        ROOT: 'b-filters'
+        ROOT: 'b-filters',
+        SUBMIT_BUTTON: 'b-filters__submit-button'
     };
 
     /**
@@ -99,8 +100,8 @@ goog.scope(function() {
         goog.base(this, 'enterDocument');
 
         this.getHandler().listen(
-            this.getElement(),
-            goog.events.EventType.SUBMIT,
+            this.getElementByClass(Filters.CssClass.SUBMIT_BUTTON),
+            goog.events.EventType.CLICK,
             this.onSubmit_
         );
     };
@@ -134,14 +135,25 @@ goog.scope(function() {
             data = {
                 'searchParams': this.processingSerializeArray_(
                     form.serializeArray()
-                ),
+                )
             },
             type = event.data ? event.data.type : '';
+
+            console.log(event);
 
         if (type === 'metro') {
             data.searchParams.metroId = event.data.id;
         } else if (type === 'areas') {
             data.searchParams.areaId = event.data.id;
+        }
+
+        if (event.data) {
+            if (event.data.page) {
+                data.page = event.data.page;
+            }
+            if (event.data.sortType) {
+                data.searchParams.sortType = event.data.sortType;
+            }
         }
 
         this.dispatchEvent({
