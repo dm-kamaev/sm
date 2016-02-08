@@ -12,6 +12,9 @@ var bodyParser = require('body-parser');
 var vm = require('vm');
 var fs = require('fs');
 
+const await = require('asyncawait/await');
+const async = require('asyncawait/async');
+
 const app = express();
 
 const CONFIG = {

@@ -156,9 +156,9 @@ class MainParser {
         this.currentRowIndex = FIRST_ROW;
         this.currentRow = this.sheet[this.currentRowIndex];
         this.isEmtyRow = true;
-        while (this.currentRowIndex <= LAST_ROW)
+        while (this.currentRowIndex <= LAST_ROW) {
             this.parseSchool_();
-
+        }
     }
     
     static getYear(string) {
@@ -241,7 +241,7 @@ class MainParser {
      * @param {int} startColumn 
      */
     parseYear_(startColumn) {
-        var endColumn = startColumn + SUBJECT_COUNT; 
+        var endColumn = startColumn + SUBJECT_COUNT;
         var yearRes = {
             year: MainParser.getYear(this.sheet[YEAR_ROW][startColumn]),
             results: []
@@ -321,14 +321,15 @@ class MainParser {
     parseSchool_() {
         var site = this.currentRow[SITE_INDEX];
         var school;
-        if (site) 
+        if (site) {
             school = await(MainParser.getSchool(site));
+        }
         if (school){
             var schoolResult = {results: []};
             schoolResult.school = school;
             this.isEmtyRow = true;
             
-            for (var i = 0; i< YEAR_COUNT; i++){
+            for (var i = 0; i < YEAR_COUNT; i++){
                 var column = FIRST_COL + (i * 2 * SUBJECT_COUNT);//2 to skip the gia 
                 var yearRes = this.parseYear_(column);
                 if (yearRes.results.length)
