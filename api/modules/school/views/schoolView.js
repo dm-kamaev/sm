@@ -1,4 +1,3 @@
-
 var services = require.main.require('./app/components/services').all;
 
 const areaView = require.main.require('./api/modules/geo/views/areaView.js');
@@ -9,6 +8,7 @@ const activityView = require.main.require(
     './api/modules/school/views/activityView.js');
 
 var schoolView = {};
+
 
 /**
  * @param {object} schoolInstance - school instance
@@ -50,7 +50,7 @@ schoolView.default = function(schoolInstance, opt_popularSchools) {
         activities: getActivities(schoolInstance.activites),
         contacts: getContacts(addresses, schoolInstance.phones),
         comments: getComments(comments),
-        addresses: services.address.getAddress(addresses),
+        addresses: addressView.default(addresses),
         ratings: getRatings(schoolInstance.rank, schoolInstance.rankDogm),
         score: getSections(score),
         totalScore: schoolInstance.totalScore,
@@ -60,8 +60,10 @@ schoolView.default = function(schoolInstance, opt_popularSchools) {
     if (opt_popularSchools) {
         result.popularSchools = this.popular(opt_popularSchools);
     }
+
     return result;
 };
+
 
 /**
  * @param {array<object>} popularSchools school instances

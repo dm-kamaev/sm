@@ -43,9 +43,7 @@ exports.initAssociations = async(function() {
     Object.keys(models).forEach(function (name) {
         var model = models[name];
         if (model.associate) {
-            console.log(colors.yellow('Associating model ' + name));
             model.associate(models);
-            console.log(colors.green('Model ' + name + ' associated'));
         }
     });
 });

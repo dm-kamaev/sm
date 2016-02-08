@@ -1,4 +1,5 @@
 'use strict';
+
 var colors = require('colors');
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
@@ -59,9 +60,16 @@ service.create = function(data) {
                 result = true;
             }
             else {
-            console.log('Address:'.yellow, address.name);
-            console.log('is alredy binded to school '.yellow +
-                'with id:'.yellow, addressBD.school_id);
+                console.log('Address:'.yellow, address.name);
+
+                var oldSchool = services.school.viewOne(addressBD.school_id);
+
+                console.log('Schools:'.yellow);
+                console.log(oldSchool.fullName);
+                console.log('govermentKey: ' + oldSchool.govermentKey);
+                console.log(data.fullName);
+                console.log('govermentKey: ' + data.govermentKey);
+                console.log();
             }
 
             return result;
@@ -101,13 +109,16 @@ service.create = function(data) {
  */
 service.update = async(function(school_id, data) {
     CsvConverter.cureQuotes(data);
+
     var school = await(
         models.School.findOne({
             where: {id: school_id}
         })
     );
+
     if (!school)
         throw new SchoolNotFoundError(school_id);
+
     return await(school.update(data));
 });
 

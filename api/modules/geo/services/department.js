@@ -27,6 +27,7 @@ exports.addDepartment = function(school_id, address_id, data) {
         }
         return result;
     });
+
     return await(models.Department.create(data)
         .then(instance => {
             address.addDepartment(instance);
