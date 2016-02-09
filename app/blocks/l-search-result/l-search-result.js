@@ -331,15 +331,26 @@ goog.scope(function() {
     SearchResult.prototype.updateList_ = function(responseData) {
         var data = JSON.parse(responseData);
 
-       goog.soy.renderElement(
+        goog.soy.renderElement(
            this.textChangeElement_,
            sm.lSearchResult.Template.generateHeaderText,
            {params: {
                countResults: data.countResults
            }}
-       );
-       this.schoolList_.reset();
-       this.schoolList_.setItems(data.schools);
+        );
+
+        data.countResults ?
+            goog.dom.classes.remove(
+                this.schoolList_.getElement(),
+                SearchResult.CssClass.HIDDEN
+            ) :
+            goog.dom.classes.add(
+                this.schoolList_.getElement(),
+                SearchResult.CssClass.HIDDEN
+            );
+
+        this.schoolList_.reset();
+        this.schoolList_.setItems(data.schools);
     };
 });
 

@@ -105,7 +105,10 @@
                         <div class="l-search-result__list-header">
                             {call .listHeader_ data="all" /}
                         </div>
-                        <div class="l-search-result__list-body">
+
+                        <div class="l-search-result__list-body
+                            {$params.countResults ? '' : ' i-utils__hidden'}
+                        ">
                             {call sm.lSearchResult.bSchoolList.Template.base}
                                 {param params: [
                                     'schools': $params.data.schools
@@ -139,16 +142,17 @@
     <div class="l-search-result__list-header">
         <span class="l-search-result__list-header-text">
             {if length($params.searchText)}
-            По запросу мы{sp}
+            По запросу{sp}
             <span class="l-search-result__list-header-text
                         l-search-result__list-header-text_strong">
                 «{$params.searchText}»
-            </span>
+            </span>{sp}
             {else}
-            По вашему запросу мы{sp}
+            По вашему запросу{sp}
             {/if}
+            мы{sp}
             <span class="l-search-result__list-header-text
-                                    l-search-result__list-header-text_change">
+                         l-search-result__list-header-text_change">
                 {call .generateHeaderText}
                     {param params: [
                         'countResults': $params.countResults
