@@ -1,21 +1,24 @@
 .g-list.g-list_stendhal {
-    border: solid 1px #faddd7;
+	padding: 12.5px 0 12.5px 0;
+
     box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.1);
     border-radius: 3px;
 
     .g-list__item {
-        padding: 8px 10px 9px 10px;
-
-        white-space: nowrap;
-        font: 11px/11px Arial, sans-serif;
-        text-align: left;
-        color: #666666;
-        cursor: pointer;
+	    width: 100px;
+	    padding: 2.5px 20px 2.5px 20px;
+	    color: #ee362c;
+	    font-family: Arial, sans-serif;
+	    font-size: 13px;
+	    line-height: 20px;
     }
+
+	.g-list__item_selected {
+		color: #000;
+		background-color: #fff;
+	}
 
     .g-list__item:hover {
-        background-color: #ffebeb;
+	    background-color: #f7f7f1;
     }
-
-
 }
