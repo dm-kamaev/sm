@@ -113,13 +113,13 @@ goog.scope(function() {
     Stars.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
         if (this.isClickable_) {
+            var handler = this.getHandler();
             for (var i = 0; i < this.stars_.length; i++)
             {
-                var star = this.stars_[i];
-                goog.events.listen(
-                    star,
+                handler.listen(
+                    this.stars_[i],
                     goog.events.EventType.CLICK,
-                    jQuery.proxy(this.onClick_, this, i)
+                    this.onClick_.bind(this, i)
                 );
             }
         }
@@ -143,10 +143,9 @@ goog.scope(function() {
     /**
      * star onclick handler
      * @param {number} index
-     * @param {string} event
      * @private
      */
-    Stars.prototype.onClick_ = function(index, event) {
+    Stars.prototype.onClick_ = function(index) {
         var starNumber = index + 1;
         if (this.starsMark_ != starNumber)
             this.selectStars(starNumber);
@@ -197,30 +196,9 @@ goog.scope(function() {
         for (var i = 0, star; i <= index; i++)
         {
             star = this.stars_[i];
-            if (!goog.dom.classes.has(star, Stars.CssClass.STAR_SELECTED)) {
-                goog.dom.classes.add(star, Stars.CssClass.STAR_SELECTED);
-            }
-            if (goog.dom.classes.has(star, Stars.CssClass.STAR_NOT_SELECTED)) {
-                goog.dom.classes.remove(star, Stars.CssClass.STAR_NOT_SELECTED);
-            }
+            goog.dom.classes.add(star, Stars.CssClass.STAR_SELECTED);
+            goog.dom.classes.remove(star, Stars.CssClass.STAR_NOT_SELECTED);
         }
         this.changeValue_(count);
-    };
-
-    /**
-     * Cleans up the Component.
-     * @inheritDoc
-     */
-    Stars.prototype.exitDocument = function() {
-        goog.base(this, 'exitDocument');
-    };
-
-
-    /**
-     * Delete labal component and dom elements
-     */
-    Stars.prototype.dispose = function() {
-        goog.base(this, 'dispose');
-        this.exitDocument.bind(this);
     };
 });

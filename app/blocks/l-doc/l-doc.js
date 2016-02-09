@@ -10,9 +10,6 @@ goog.require('sm.lDoc.nDemo.bBlockSort.Sort');
 goog.require('sm.lDoc.nDemo.bBlockFilters.Filters');
 goog.require('sm.lDoc.nDemo.bBlockDataBlock.DataBlock');
 
-goog.require('gorod.bBouton.Bouton');
-goog.require('gorod.bBouton.BoutonTemplate');
-
 goog.require('sm.lSchool.School');
 goog.require('sm.lSearchResult.SearchResult');
 

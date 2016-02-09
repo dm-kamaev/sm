@@ -61,13 +61,14 @@ exports.list = async (function(req, res) {
     ];
     var results = await(promises);
 
-    var schools = schoolView.list(results[0]);
+    var data = schoolView.list(results[0]);
+
     var filters = schoolView.filters(results[1]);
 
     var params = {
         params: {
             data: {
-                schools: schools,
+                schools: data.schools,
                 filters: {
                     filters: filters,
                     url: '/api/school/search'
@@ -75,8 +76,9 @@ exports.list = async (function(req, res) {
             },
             searchText: req.query.name ?
                 searchText : '',
+            countResults: data.countResults,
             searchSettings: {
-                url: 'api/school/search',
+                url: '/api/school/search',
                 method: 'GET',
                 data: {
                     searchParams: searchParams,
