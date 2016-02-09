@@ -37,7 +37,7 @@
     "ejs": "^2.3.4",
     "eslint": "^1.6.0",
     "fs-extra": "^0.26.3",
-    "google-closure-library": "^20150609.0.0",
+    "google-closure-library": "^20160125.0.0",
     "gulp": "^3.9.0",
     "gulp-apidoc": "^0.2.0",
     "gulp-autoprefixer": "^3.0.2",

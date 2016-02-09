@@ -14,18 +14,15 @@ sm.iFactory.TemplateFactoryStendhal = function() {
 goog.inherits(sm.iFactory.TemplateFactoryStendhal, cl.iFactory.TemplateFactory);
 goog.addSingletonGetter(sm.iFactory.TemplateFactoryStendhal);
 
-/**
- * Instance
- */
-sm.iFactory.TemplateFactoryStendhal.INSTANCE =
-    sm.iFactory.TemplateFactoryStendhal.getInstance();
+goog.scope(function() {
+    var TemplateFactory = sm.iFactory.TemplateFactoryStendhal;
+    /**
+     * Instance
+     */
+    TemplateFactory.INSTANCE = TemplateFactory.getInstance();
 
-/**
- * IMPORTANT !
- */
-sm.iFactory.TemplateFactoryStendhal.getInstance()
-    .getFactoryManager()
-    .addTemplateFactory(
-    sm.iFactory.TemplateFactoryStendhal.getInstance().getStylization(),
-    sm.iFactory.TemplateFactoryStendhal.getInstance()
-);
+    /**
+     * Important!
+     */
+    TemplateFactory.getInstance().attachToManager();
+});
