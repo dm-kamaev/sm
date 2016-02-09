@@ -10,24 +10,62 @@
 * }}
 */
 {template .feedback}
-    <form class="b-feedback" method="POST" action="{$params?.data?.url ?: ''}">
+    <div class="b-feedback i-utils__hidden">
+        {let $html kind="html"}
+            {call .modal data="all"/}
+        {/let}
+
+        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+            {param params: [
+                'type': 'modal',
+                'renderParams': [
+                    'data': $html
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+/**
+* feedback modal
+* @param params {?{
+*     data: ?{
+*         url: ?string
+*     }
+* }}
+*/
+{template .modal}
+    <form class="b-feedback__form" method="POST" action="{$params?.data?.url ?: ''}">
         <div class="b-feedback__content">
             <div class="b-feedback__title">Ваш отзыв</div>
-            {call gorod.bTextarea.TextareaTemplate.render}
+            {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
                 {param params: [
-                    'name': 'text',
-                    'autoheight': true,
-                    'placeholder': 'Ваш комментарий',
-                    'customClasses': 'b-feedback__comment',
-                    'style': [
-                        'size': 'extralarge'
+                    'type': 'textarea',
+                    'renderParams': [
+                        'data': [
+                            'placeholder': 'Ваш комментарий',
+                            'name': 'text'
+                        ],
+                        'config': [
+                            'autoHeight': true
+                        ]
                     ]
-                ] /}
+                ]/}
             {/call}
             {call .whoAreYou_ /}
             {call .score_ /}
         </div>
-        <input type="submit" class="b-feedback__button" value="Отправить" />
+        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+            {param params: [
+                'type': 'button',
+                'renderParams': [
+                    'data': 'Оставить отзыв',
+                    'config': [
+                        'theme': 'sienna'
+                    ]
+                ]
+            ]/}
+        {/call}
     </form>
 {/template}
 

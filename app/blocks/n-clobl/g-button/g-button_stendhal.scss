@@ -1,0 +1,39 @@
+.g-button.g-button_stendhal {
+    box-sizing: border-box;
+    width: 100%;
+    height: 48px;
+    padding: 13px;
+
+    border: 4px solid #e62424;
+    color: #e62424;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 800;
+    font-family: 'Proxima', Arial, sans-serif;
+    text-transform: uppercase;
+
+    &:focus {
+        outline: none;
+    }
+
+    &:hover {
+        background-color: #ffebeb;
+    }
+}
+
+.g-button.g-button_stendhal.g-button_sienna {
+    width: 100%;
+    height: auto;
+    padding: 30px;
+
+    color: black;
+    border: none;
+    text-transform: uppercase;
+    background: #f4f4ec;
+
+    font: 800 20px 'Proxima', Arial, sans-serif;
+
+    &:hover {
+        background: #e3e3dc;
+    }
+}

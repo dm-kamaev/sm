@@ -88,12 +88,12 @@ goog.scope(function() {
 
         /** spoiler listeners */
         if (!(this.spoiler_ == null)) {
-            goog.events.listen(
+            var handler = this.getHandler();
+
+            handler.listen(
                 this.spoiler_,
                 goog.events.EventType.CLICK,
-                this.showText_,
-                false,
-                this
+                this.showText_
             );
         }
     };
@@ -115,21 +115,5 @@ goog.scope(function() {
             this.hiddenText_,
             Comment.CssClass.HIDDENTEXT
         );
-    };
-
-    /**
-     * Cleans up the Component.
-     */
-    Comment.prototype.exitDocument = function() {
-        goog.base(this, 'exitDocument');
-
-        /** spoiler listeners */
-        if (!(this.spoiler_ == null)) {
-            goog.events.unlisten(
-                this.spoiler_,
-                goog.events.EventType.CLICK,
-                this.showText_
-            );
-        }
     };
 });

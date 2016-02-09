@@ -1,0 +1,26 @@
+.g-textarea.g-textarea_stendhal {
+    margin: 0 0 40px;
+
+    .g-textarea__textarea,
+    .g-textarea__text-container {
+        box-shadow: inset 3.064px 2.571px 4px 0 rgba(0, 0, 0, 0.09);
+        min-height: 90px;
+        padding: 15px;
+
+        border: 1px solid #cccccc;
+        background: #fafafa;
+        font-size: 16px;
+        line-height: 1.4;
+        font-family: 'PTSerifRegular', serif;
+    }
+
+    .g-textarea__textarea::-webkit-input-placeholder,
+    .g-textarea__textarea::-moz-placeholder,
+    .g-textarea__textarea:-moz-placeholder,
+    .g-textarea__textarea:-ms-input-placeholder {
+        padding: 15px;
+
+        color: #cccccc;
+        font-size: 16px;
+    }
+}

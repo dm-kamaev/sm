@@ -35,10 +35,13 @@ exports.list = async (function(req, res) {
             decodeURIComponent(req.query.areaId) : '';
         metroId = req.query.metroId ?
             decodeURIComponent(req.query.metroId) : '';
+        sortType = req.query.sortType ?
+            decodeURIComponent(req.query.sortType) : '';
     } catch(e) {
         searchText = req.query.name || '';
         areaId = req.query.areaId || '';
         metroId = req.query.metroId || '';
+        sortType = req.query.sortType || '';
     }
 
     if (areaId) {
@@ -58,13 +61,14 @@ exports.list = async (function(req, res) {
     ];
     var results = await(promises);
 
-    var schools = schoolView.list(results[0]);
+    var data = schoolView.list(results[0]);
+
     var filters = schoolView.filters(results[1]);
 
     var params = {
         params: {
             data: {
-                schools: schools,
+                schools: data.schools,
                 filters: {
                     filters: filters,
                     url: '/api/school/search'
@@ -72,6 +76,15 @@ exports.list = async (function(req, res) {
             },
             searchText: req.query.name ?
                 searchText : '',
+            countResults: data.countResults,
+            searchSettings: {
+                url: '/api/school/search',
+                method: 'GET',
+                data: {
+                    searchParams: searchParams,
+                    page: 0
+                }
+            },
             templates: {
                 search: '{{ name }}',
                 item: '{{ name }}',

@@ -95,13 +95,13 @@
         <title>{$params.data.schoolName} на Школах Мела</title>
         <link href='https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700,700italic&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
         <link href='https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
-        <link rel="stylesheet" href="/frobl.build.css">
+        <link rel="stylesheet" href="/clobl.build.css">
         <link rel="stylesheet" href="/styles.css">
         <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
     </head>
     <body>
         {let $dataParams kind="html"}
-            {call gorod.iUtils.stringify}
+            {call cl.iUtils.Utils.stringify}
                 {param json: [
                     'id': $params?.data?.id
                 ] /}
@@ -202,7 +202,6 @@
  * }
  */
 {template .top_ autoescape="strict" kind="html"}
-
     <div class="l-school__content-column l-school__content-column_double-width">
         <div class="l-school__name">{$params.data.schoolName}</div>
         {if $params.data.schoolDescr}
@@ -211,36 +210,20 @@
             </div>
         {/if}
     </div>
+
     <div class="l-school__content-column l-school__content-column_last">
-         /*хрень*/
         <div class = "l-school__rating">
-
-            // {call sm.bRating.Template.base}
-            //      {param params: [
-            //             'marks': $params.data.score,
-            //             'averageMark': $params.data.totalScore
-            //      ]/}
-            // {/call}
-
-            {call gorod.bBouton.BoutonTemplate.render}
+            {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
                 {param params: [
-                    'label': 'Оставить отзыв',
-                    'customClasses': 'b-bouton_feedback-opener',
-                    'state': [
-                        'pressed': true
-                    ],
-                    'style': [
-                        'theme': 'default',
-                        'size': 'extralarge',
-                        'width': 'block',
-                        'color': 'red',
-                        'borderRadius': 'none',
-                        'borderWidth': 'l',
-                        'uppercase': true
+                    'type': 'button',
+                    'renderParams': [
+                        'data': 'Оставить отзыв',
+                        'config': [
+                            'customClasses': ['g-button_feedback-opener']
+                        ]
                     ]
-                ] /}
+                ]/}
             {/call}
-
         </div>
     </div>
 {/template}
@@ -645,27 +628,6 @@
                         //TODO: uncomment
                         // {param buttonAlt: 'надпись2' /}
                     {/call}
-                    //TODO: uncomment
-                    /*
-                    {call gorod.bBouton.BoutonTemplate.render}
-                        {param params: [
-                            'label': 'Оставить отзыв',
-                            'customClasses': 'b-bouton_feedback-opener',
-                            'state': [
-                                'pressed': true
-                            ],
-                            'style': [
-                                'theme': 'default',
-                                'size': 'extralarge',
-                                'width': 'block',
-                                'color': 'red',
-                                'borderRadius': 'none',
-                                'borderWidth': 'l',
-                                'uppercase': 'true'
-                            ]
-                        ] /}
-                    {/call}
-                    */
                 </div>
                 <div class="l-school__content-column
                             l-school__content-column_double-width

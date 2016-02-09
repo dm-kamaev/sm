@@ -139,14 +139,12 @@ goog.scope(function() {
             },
             type = event.data ? event.data.type : '';
 
+            console.log(event);
+
         if (type === 'metro') {
             data.searchParams.metroId = event.data.id;
         } else if (type === 'areas') {
             data.searchParams.areaId = event.data.id;
-        }
-
-        if (event.data) {
-            data.page = event.data.page;
         }
 
         this.dispatchEvent({

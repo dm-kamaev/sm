@@ -12,8 +12,11 @@
  *     score: ?list<[
  *         name: ?string,
  *         value: ?number
- *     ]]>,
- *     totalScore: ?number,
+ *     ]>,
+ *     currentCriterion: [
+ *         name: ?string,
+ *         value: ?number
+ *     ],
  *     description: ?string,
  *     metroStations: list<string>,
  *     ratings: list<string>
@@ -22,7 +25,7 @@
 {template .base autoescape="strict" kind="html"}
     <div class="b-school-list-item"
         data-params="
-        {call gorod.iUtils.stringify}
+        {call cl.iUtils.Utils.stringify}
             {param json: $params /}
         {/call}
         ">
@@ -42,19 +45,16 @@
                 {call sm.bScoreSchoolList.Template.base}
                     {param params:[
                         'score': $params.score,
-                        'sortCriteria': [
-                            'name': 'Средняя оценка',
-                            'value': $params.totalScore
-                        ]
+                        'sortCriteria': $params.currentCriterion
                     ]/}
                 {/call}
             </div>
         </div>
 
-        {if length($params.metroStations) > 0 or $params.ratings}
+        {if length($params.metroStations) > 0 or length($params.ratings) > 0}
             <div class="b-school-list-item__section
                         b-school-list-item__section_badges">
-                {if $params.metroStations}
+                {if length($params.metroStations) > 0}
                     <div class="b-school-list-item__metro-stations">
                         {call sm.bBadge.Template.base}
                         {param params:[
@@ -65,7 +65,7 @@
                     </div>
                 {/if}
 
-                {if $params.ratings}
+                {if length($params.ratings) > 0}
                     <div class="b-school-list-item__ratings">
 
                             {call sm.bBadge.Template.base}
