@@ -31,6 +31,13 @@ sm.lSearchResult.bSort.Sort = function(opt_params) {
     this.dropdown_ = null;
 
     /**
+     * Instance
+     * @type {cl.gList.View}
+     * @private
+     */
+    this.list_ = null;
+
+    /**
      * Switcher custom text element
      * @type {Element}
      * @private
@@ -116,6 +123,12 @@ goog.scope(function() {
             this.getElementByClass(DropdownView.CssClass.ROOT),
             this
         );
+
+        this.list_ = sm.iFactory.FactoryStendhal.getInstance().decorate(
+            'list',
+            this.getElementByClass(cl.gList.View.CssClass.ROOT),
+            this
+        );
     };
 
     /**
@@ -125,7 +138,7 @@ goog.scope(function() {
         goog.base(this, 'enterDocument');
 
         this.getHandler().listen(
-            this.dropdown_,
+            this.list_,
             List.Event.ITEM_SELECT,
             this.itemClickHandler_
         );
