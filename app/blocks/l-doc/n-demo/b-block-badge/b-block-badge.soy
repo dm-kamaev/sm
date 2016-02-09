@@ -1,0 +1,55 @@
+{namespace sm.lDoc.nDemo.bBlockBadge.Template}
+
+/**
+* doc
+*/
+{template .preview}
+    {call sm.bBadge.Template.base}
+        {param params: [
+            'data': ['Сто лучших школ Москвы', '250 лучших школ Подмосковья']
+        ] /}
+    {/call}
+{/template}
+
+/**
+* doc
+*/
+{template .doc}
+Default view
+    Template:
+    <br><br>
+    <div class="l-doc__code">
+        sm.bBadge.Template.base
+    </div>
+    <br><br>
+    Params:
+    <br><br>
+    <div class="l-doc__code">
+        data: list< string >,{sp}
+        <span class="l-doc__comment">
+            - array of values (metros or ratings for example)
+        </span><br>
+        display: ?string | ['metro']{sp}
+        <span class="l-doc__comment">
+            - type of display
+        </span>
+    </div>
+
+    <br><br>
+    Ratings view:
+    <br><br>
+    {call sm.bBadge.Template.base}
+        {param params: [
+            'data': ['Сто лучших школ Москвы', '250 лучших школ Подмосковья']
+        ] /}
+    {/call}
+    <br><br>
+    Metro view:
+    <br><br>
+    {call sm.bBadge.Template.base}
+        {param params: [
+            'data': ['Арбатская', 'Крылатское'],
+            'display': 'metro'
+        ] /}
+    {/call}
+{/template}
