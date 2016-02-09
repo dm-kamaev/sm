@@ -20,9 +20,7 @@ goog.scope(function() {
     var Factory = sm.iFactory.FactoryStendhal;
 
     /**
-     * IMPORTANT !
+     * Important!
      */
-    Factory.getInstance().getFactoryManager()
-        .factories[Factory.getInstance().getStylization()] =
-            Factory.getInstance();
+    Factory.getInstance().attachToManager();
 });
