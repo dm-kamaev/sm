@@ -58,7 +58,6 @@ app.use('/apidoc', express.static(path.join(__dirname, '/doc')));
 app.use('/api-debug', express.static(path.join(__dirname, '/api-debug')));
 
 
-
 soy.loadFiles(
     [path.join(__dirname, '/tmp/compiledServerSoy/server.soy.concat.js'),
         path.join(__dirname, 'node_modules/clobl/blocks/i-utils/i-utils.js'),

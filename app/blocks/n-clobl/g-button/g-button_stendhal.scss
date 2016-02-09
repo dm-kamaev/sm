@@ -21,21 +21,19 @@
     }
 }
 
-.g-button_stendhal.g-button_stendhal_grey {
+.g-button.g-button_stendhal.g-button_sienna {
     width: 100%;
-    height: 80px;
+    height: auto;
+    padding: 30px;
 
-    cursor: pointer;
+    color: black;
     border: none;
     text-transform: uppercase;
     background: #f4f4ec;
 
-    font-weight: 900;
-    font-size: 20px;
+    font: 800 20px 'Proxima', Arial, sans-serif;
 
     &:hover {
-        height: 80px;
         background: #e3e3dc;
-        color: #000000;
     }
 }
