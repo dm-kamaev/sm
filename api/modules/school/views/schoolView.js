@@ -322,32 +322,41 @@ var getStages = function(departments) {
 /**
  * @param {array<object>} schools - schoolInstances
  * @param {number} opt_criterion
- * @return {array<object>}
+ * @return {object} contains results count and schools array
  */
 schoolView.list = function(schools, opt_criterion) {
-    var res = [];
+    var res = {};
     if (schools.length !== 0) {
         schools = groupSchools(schools);
-    }
-    res = schools
-        .map(school => {
-            
-            var score = getScore(school.score, school.totalScore, opt_criterion);
-            var sortCriterion = score.shift();
 
-            return {
-                id: school.id,
-                url: school.url,
-                name: getName(school.name),
-                description: school.description,
-                abbreviation: school.abbreviation,
-                score: score,
-                currentCriterion: sortCriterion,
-                fullName: school.fullName,
-                ratings: ratingView.ratingResultView(school.rankDogm),
-                metroStations: addressView.getMetro(school.addresses)
-            };
-        });
+        res.countResults = schools[0].countResults;
+        res.schools = schools
+            .map(school => {
+
+                var score = getScore(school.score, school.totalScore, opt_criterion);
+                var sortCriterion = score.shift();
+
+                return {
+                    id: school.id,
+                    url: school.url,
+                    name: getName(school.name),
+                    description: school.description,
+                    abbreviation: school.abbreviation,
+                    score: score,
+                    currentCriterion: sortCriterion,
+                    fullName: school.fullName,
+                    ratings: ratingView.ratingResultView(school.rankDogm),
+                    metroStations: addressView.getMetro(school.addresses)
+                };
+            });
+
+
+    } else {
+        res = {
+            countResults: 0,
+            schools: []
+        };
+    }
 
     return res;
 };
@@ -355,7 +364,7 @@ schoolView.list = function(schools, opt_criterion) {
 /**
  * Groups school objects to one object with addresses and metro arrays
  * @param {Array<Object>} schools
- * @return {Array}
+ * @return {Array<Object>}
  */
 var groupSchools = function(schools) {
     var result = [],
@@ -438,7 +447,6 @@ var groupSchools = function(schools) {
         }
         grouppedById.push(schoolItem);
     }
-    console.log(result.length);
     return result;
 };
 

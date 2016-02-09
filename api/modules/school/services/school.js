@@ -658,6 +658,7 @@ service.list = async (function(opt_params) {
             'school.score',
             'school.total_score AS "totalScore"',
             'school.score_count AS "scoreCount"',
+            'school.count_results AS "countResults"',
             'address.id AS "addressId"',
             'department.stage AS "departmentStage"',
             'metro.id AS "metroId"',
@@ -673,7 +674,8 @@ service.list = async (function(opt_params) {
                     'school.url',
                     'school.score',
                     'school.total_score',
-                    'school.score_count'
+                    'school.score_count',
+                    'count(*) OVER() AS count_results'
                 ],
                 from: ['school'],
                 where: [
