@@ -147,15 +147,6 @@ goog.scope(function() {
             data.searchParams.areaId = event.data.id;
         }
 
-        if (event.data) {
-            if (event.data.page) {
-                data.page = event.data.page;
-            }
-            if (event.data.sortType) {
-                data.searchParams.sortType = event.data.sortType;
-            }
-        }
-
         this.dispatchEvent({
             type: Filters.event.SUBMIT,
             data: data,
