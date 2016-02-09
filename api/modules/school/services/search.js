@@ -109,97 +109,123 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
         type: 'OR',
         values: []
     };
+    console.log('searchParams: ' + Array.isArray(sqlOptions.from));
+    if (!Array.isArray(sqlOptions.from)) {
+        this.updateSqlOptions(sqlOptions.from, searchParams);
+        
+        if (searchParams.sortType) {
+            sqlOptions.order.unshift(
+                generateOrder(searchParams.sortType)
+            );
+        }
+    }
+    else {
+        if (searchParams.name) {
+            sqlOptions.where.push({
+                type: 'OR',
+                values: [
+                    generateSqlFilter('school.name', searchParams.name, 'AND'),
+                    generateSqlFilter('school.full_name', searchParams.name, 'AND'),
+                    generateSqlFilter('metro.name', searchParams.name, 'AND'),
+                    generateSqlFilter('area.name', searchParams.name, 'AND'),
+                ]
+            });
+            isGeoDataJoined = true;
+        }
 
-    if (searchParams.name) {
-        sqlOptions.where.push({
-            type: 'OR',
-            values: [
-                generateSqlFilter('school.name', searchParams.name, 'AND'),
-                generateSqlFilter('school.full_name', searchParams.name, 'AND'),
-                generateSqlFilter('metro.name', searchParams.name, 'AND'),
-                generateSqlFilter('area.name', searchParams.name, 'AND'),
-            ]
-        });
-        isGeoDataJoined = true;
-    }
+        if (searchParams.classes && searchParams.classes.length) {
+            var classArr = intArrayToSql(searchParams.classes);
+            sqlOptions.where.push('school.education_interval @> ' + classArr);
+        }
 
-    if (searchParams.classes && searchParams.classes.length) {
-        var classArr = intArrayToSql(searchParams.classes);
-        sqlOptions.where.push('school.education_interval @> ' + classArr);
-    }
+         if (searchParams.sortType) {
+            sqlOptions.order.unshift(
+                generateOrder(searchParams.sortType)
+            );
+        }
 
-    if (searchParams.schoolType) {
-        searchDataCount++;
-        searchDataWhere.values.push({
-            type: 'AND',
-            values: [
-                'search_data.type = \'' + searchTypeEnum.fields.SCHOOL_TYPE + '\'',
-                'search_data.values && ' + intArrayToSql(searchParams.schoolType)
-            ]
-        });
-    }
+        if (searchParams.schoolType) {
+            searchDataCount++;
+            searchDataWhere.values.push({
+                type: 'AND',
+                values: [
+                    'search_data.type = \'' + searchTypeEnum.fields.SCHOOL_TYPE + '\'',
+                    'search_data.values && ' + intArrayToSql(searchParams.schoolType)
+                ]
+            });
+        }
 
-    if (searchParams.gia) {
-        searchDataCount++;
-        searchDataWhere.values.push({
-            type: 'AND',
-            values: [
-                'search_data.type = \'' + searchTypeEnum.fields.GIA + '\'',
-                'search_data.values @> ' + intArrayToSql(searchParams.gia)
-            ]
-        });
-    }
+        if (searchParams.gia) {
+            searchDataCount++;
+            searchDataWhere.values.push({
+                type: 'AND',
+                values: [
+                    'search_data.type = \'' + searchTypeEnum.fields.GIA + '\'',
+                    'search_data.values @> ' + intArrayToSql(searchParams.gia)
+                ]
+            });
+        }
 
-    if (searchParams.ege) {
-        searchDataCount++;
-        searchDataWhere.values.push({
-            type: 'AND',
-            values: [
-                'search_data.type = \'' + searchTypeEnum.fields.EGE + '\'',
-                'search_data.values @> ' + intArrayToSql(searchParams.ege)
-            ]
-        });
-    }
+        if (searchParams.ege) {
+            searchDataCount++;
+            searchDataWhere.values.push({
+                type: 'AND',
+                values: [
+                    'search_data.type = \'' + searchTypeEnum.fields.EGE + '\'',
+                    'search_data.values @> ' + intArrayToSql(searchParams.ege)
+                ]
+            });
+        }
 
-    if (searchParams.olimp) {
-        searchDataCount++;
-        searchDataWhere.values.push({
-            type: 'AND',
-            values: [
-                'search_data.type = \'' + searchTypeEnum.fields.OLIMPIAD+ '\'',
-                'search_data.values @> ' + intArrayToSql(searchParams.olimp)
-            ]
-        });
-    }
+        if (searchParams.olimp) {
+            searchDataCount++;
+            searchDataWhere.values.push({
+                type: 'AND',
+                values: [
+                    'search_data.type = \'' + searchTypeEnum.fields.OLIMPIAD+ '\'',
+                    'search_data.values @> ' + intArrayToSql(searchParams.olimp)
+                ]
+            });
+        }
 
-    if (searchParams.areaId) {
-        isGeoDataJoined = true;
-        sqlOptions.where.push('area.id = ' + searchParams.areaId);
-    }
+        if (searchParams.areaId) {
+            isGeoDataJoined = true;
+            sqlOptions.where.push('area.id = ' + searchParams.areaId);
+        }
 
-    if (searchParams.metroId) {
-        isGeoDataJoined = true;
-        sqlOptions.where.push('metro.id = ' + searchParams.metroId);
-    }
+        if (searchParams.metroId) {
+            isGeoDataJoined = true;
+            sqlOptions.where.push('metro.id = ' + searchParams.metroId);
+        }
 
-    if (searchDataCount) {
-        //search_data must be first in the from clause
-        sqlOptions.from.unshift('search_data');
-        sqlOptions.where.push(searchDataWhere);
-        sqlOptions.where.push('school.id = search_data.school_id');
-        sqlOptions.having.push(['COUNT(DISTINCT search_data.id) ', ' = ', searchDataCount]);
+        if (searchDataCount) {
+            //search_data must be first in the from clause
+            sqlOptions.from.unshift('search_data');
+            sqlOptions.where.push(searchDataWhere);
+            sqlOptions.where.push('school.id = search_data.school_id');
+            sqlOptions.having.push(['COUNT(DISTINCT search_data.id) ', ' = ', searchDataCount]);
+        }
+        if (isGeoDataJoined) {
+             sqlOptions.join.push({
+                 type: 'LEFT OUTER',
+                 values: [
+                     'address on address.school_id = school.id',
+                     'area on area.id = address.area_id',
+                     'address_metro on address_metro.address_id = address.id',
+                     'metro on metro.id = address_metro.metro_id'
+                 ]
+             });
+        }
     }
-    if (isGeoDataJoined) {
-         sqlOptions.join.push({
-             type: 'LEFT OUTER',
-             values: [
-                 'address on address.school_id = school.id',
-                 'area on area.id = address.area_id',
-                 'address_metro on address_metro.address_id = address.id',
-                 'metro on metro.id = address_metro.metro_id'
-             ]
-         });
-    }
+};
+
+/**
+ * @param {number} sortType
+ * @return {array<string>}
+ */
+var generateOrder = function(sortType) {
+    var result = 'school.score[' + sortType + '] DESC NULLS LAST';
+    return result;
 };
 
 /**
@@ -237,9 +263,9 @@ exports.generateSearchSql = function(options, opt_notUseDelimiter) {
     var selectStr = 'SELECT ' + options.select.join(', ');
     var fromStr = ' FROM ';
 
-    if(typeof options.from[0] == 'object') {
-         fromStr += '(' + this.generateSearchSql(options.from[0], true)
-                + ') AS "' + options.from[0].as + '"';
+    if(!Array.isArray(options.from)) {
+         fromStr += '(' + this.generateSearchSql(options.from, true)
+                + ') AS "' + options.from.as + '"';
         innerFrom = true;
     } else {
         fromStr +=  options.from.join(', ');

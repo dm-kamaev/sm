@@ -3,13 +3,14 @@ const departmentView = require.main.require('./api/modules/geo/views/departmentV
 const stages = require('../enums/departmentStage');
 
 var addressView = {};
+
+
 /**
  * @param {array<object>} addresses - address instances
  * @param {?object} opt_options
  * @param {?bool} opt_options.filterByDepartment
  * @return {array<object>}
  */
-
 addressView.list = function(addresses, opt_options) {
     var options = opt_options || {};
 
@@ -44,7 +45,8 @@ addressView.stageList = function (addresses, opt_options) {
         stagesEnum = [
             'Начальные классы',
             'Старшие и средние классы',
-            '1 — 11 классы'
+            '1 — 11 классы',
+            'Другие адреса'
         ],
         stages = [],
         temp = [],
@@ -76,6 +78,40 @@ addressView.stageList = function (addresses, opt_options) {
     return stages;
 
 };
+
+
+/**
+ * Getter for school address for map
+ * @param {Array.<Object>} addresses
+ * @return {Array.<Object>}
+ */
+addressView.default = function(addresses) {
+    var getStages = function(departments) {
+        var result = [];
+        var unical = {};
+        var deps = departments || [];
+
+        for (var i = 0, n = deps.length, dep; i < n; i++) {
+            dep = deps[i];
+            if (dep != undefined && dep.stage && !unical[dep.stage]) {
+                unical[dep.stage] = true;
+                result.push(dep.stage);
+            }
+        }
+
+        return result;
+    };
+
+    return addresses.map(adr => {
+        return {
+            lat: adr.coords[0],
+            lng: adr.coords[1],
+            name: adr.name,
+            stages: getStages(adr.departments)
+        }
+    });
+};
+
 
 /**
  * returns metro names for departments from addresses array

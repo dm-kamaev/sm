@@ -1,4 +1,5 @@
 'use strict';
+
 var colors = require('colors');
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
@@ -60,9 +61,16 @@ service.create = function(data) {
                 result = true;
             }
             else {
-            console.log('Address:'.yellow, address.name);
-            console.log('is alredy binded to school '.yellow +
-                'with id:'.yellow, addressBD.school_id);
+                console.log('Address:'.yellow, address.name);
+
+                var oldSchool = services.school.viewOne(addressBD.school_id);
+
+                console.log('Schools:'.yellow);
+                console.log(oldSchool.fullName);
+                console.log('govermentKey: ' + oldSchool.govermentKey);
+                console.log(data.fullName);
+                console.log('govermentKey: ' + data.govermentKey);
+                console.log();
             }
 
             return result;
@@ -102,13 +110,16 @@ service.create = function(data) {
  */
 service.update = async(function(school_id, data) {
     CsvConverter.cureQuotes(data);
+
     var school = await(
         models.School.findOne({
             where: {id: school_id}
         })
     );
+
     if (!school)
         throw new SchoolNotFoundError(school_id);
+
     return await(school.update(data));
 });
 
@@ -265,12 +276,9 @@ service.onRatingChange = async(function(schoolId) {
     if (!school)
         throw new SchoolNotFoundError(schoolId);
 
-    var promises = [
-        this.updateScore(school),
-        this.updateReviewCount(school),
-    ];
     try {
-        await(promises);
+        await(this.updateReviewCount(school));
+        await(this.updateScore(school));
     } catch (e) {
     }
 });
@@ -341,20 +349,25 @@ service.updateScore = async(function(school) {
         counts = [];
     await(queries).forEach(
         result => {
-            scores.push(result[0][0].avg || 0);
-            counts.push(result[0][0].count || 0);
+            var count = result[0][0].count || 0;
+            counts.push(count);
+            if (count >= 3) {
+                scores.push(result[0][0].avg || 0);
+            } else {
+                scores.push(0);
+            }
         }
     );
-    var totalScore = getTotalScore(scores);
     if (!isFeedbackLack(counts, school.reviewCount)) {
         school.update({
             score: scores,
-            totalScore: totalScore,
+            totalScore: getTotalScore(scores),
             scoreCount: counts
         });
     } else {
         school.update({
-            scoreCount: counts
+            scoreCount: counts,
+            score: scores
         });
     }
 });
@@ -650,8 +663,7 @@ service.list = async (function(opt_params) {
             'metro.id AS "metroId"',
             'metro.name AS "metroName"'
         ],
-        from:  [
-            {
+        from: {
                 select: [
                     'school.id',
                     'school.name',
@@ -677,34 +689,39 @@ service.list = async (function(opt_params) {
                 as: 'school',
                 join: [],
                 group: ['school.id'],
-                order: ['school.id ASC'],
+                order: [
+                    'school.total_score DESC',
+                    'school.score DESC',
+                    'school.id ASC'
+                ],
                 having : [],
                 limit: 10,
-                offset: opt_params.page * 10
+                offset: params.page * 10
+        },
+        where: [],
+        join: [
+            {
+                type: 'LEFT OUTER',
+                values: [
+                    'address on address.school_id = school.id',
+                    'department on department.address_id = address.id',
+                    'address_metro on address_metro.address_id = address.id',
+                    'metro on metro.id = address_metro.metro_id'
+                ]
             }
         ],
-        where: [],
-        join: [{
-            type: 'LEFT OUTER',
-            values: [
-                'address on address.school_id = school.id',
-                'area on area.id = address.area_id',
-                'department on department.address_id = address.id',
-                'address_metro on address_metro.address_id = address.id',
-                'metro on metro.id = address_metro.metro_id'
-            ]
-        }],
         group: [
         ],
         order: [
-            'school.id ASC, address.id DESC'
+            'school.total_score DESC',
+            'school.score DESC',
+            'school.id ASC'
         ],
         having: []
     };
 
-
     if (searchParams) {
-        services.search.updateSqlOptions(sqlConfig.from[0], searchParams);
+        services.search.updateSqlOptions(sqlConfig, searchParams);
     }
 
     var sqlString = services.search.generateSearchSql(sqlConfig);
@@ -712,7 +729,6 @@ service.list = async (function(opt_params) {
     var options = {
         type: sequelize.QueryTypes.SELECT
     };
-
     return sequelize.query(sqlString, options)
     .then(schools => {
             console.log('Found: ', colors.green(schools.length));

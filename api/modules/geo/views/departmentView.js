@@ -30,8 +30,10 @@ departmentView.classes = function(departments) {
         stage = '1 — 11 классы';
     } else if (elementary != -1) {
         stage = 'Начальные классы';
-    } else {
+    } else if (middle_hide != -1) {
         stage = 'Старшие и средние классы';
+    } else {
+        stage = 'Другие адреса';
     }
     return stage;
 }

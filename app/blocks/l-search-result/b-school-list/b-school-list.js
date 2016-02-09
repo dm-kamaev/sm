@@ -5,6 +5,7 @@ goog.require('goog.soy');
 goog.require('goog.ui.Component');
 goog.require('sm.lSearchResult.bSchoolList.Template');
 goog.require('sm.lSearchResult.bSchoolListItem.SchoolListItem');
+goog.require('sm.lSearchResult.bSort.Sort');
 
 
 /**
@@ -45,6 +46,13 @@ sm.lSearchResult.bSchoolList.SchoolList = function(opt_params) {
     this.loaderElement_ = null;
 
     /**
+     * Instance
+     * @type {sm.lSearchResult.bSort.Sort}
+     * @private
+     */
+    this.sort_ = null;
+
+    /**
      * @type {number}
      * @private
      */
@@ -54,6 +62,7 @@ goog.inherits(sm.lSearchResult.bSchoolList.SchoolList, goog.ui.Component);
 
 goog.scope(function() {
     var SchoolList = sm.lSearchResult.bSchoolList.SchoolList,
+        Sort = sm.lSearchResult.bSort.Sort,
         SchoolListItem = sm.lSearchResult.bSchoolListItem.SchoolListItem;
 
     /**
@@ -73,6 +82,7 @@ goog.scope(function() {
      */
     SchoolList.Event = {
         'ITEM_CLICK': SchoolListItem.Event.CLICK,
+        'SORT_CLICK': Sort.Event.ITEM_CLICK,
         'SHOW_MORE': 'show-more-items'
     };
 
@@ -105,8 +115,9 @@ goog.scope(function() {
             length;
 
         //dom elements of schools
-        schoolListItemElements = this.getElementsByClass(
-            SchoolListItem.CssClass.ROOT
+        schoolListItemElements = goog.dom.getElementsByClass(
+            SchoolListItem.CssClass.ROOT,
+            element
         );
 
         length = schoolListItemElements.length;
@@ -140,7 +151,10 @@ goog.scope(function() {
         );
 
         //sort
-        var sortElement = this.getElementByClass(Sort.CssClass.ROOT);
+        var sortElement = goog.dom.getElementByClass(
+            Sort.CssClass.ROOT,
+            element
+        );
 
         this.sort_ = new Sort();
         this.addChild(this.sort_);
@@ -154,6 +168,33 @@ goog.scope(function() {
         goog.base(this, 'enterDocument');
 
         this.initListeners_();
+    };
+
+    /**
+     * TODO: repair
+     * Schools sort maker
+     * @param {number=} opt_sortKey
+     */
+    SchoolList.prototype.sort = function(opt_sortKey) {
+        var schoolListItems = this.removeItemChildren_();
+        var sortKey = (typeof opt_sortKey == 'undefined') ?
+            this.sortKey_ :
+            opt_sortKey;
+        this.sortKey_ = sortKey;
+
+        schoolListItems.sort(function(item1, item2) {
+            return (sortKey > 0) ?
+                item1.compareByScore(item2, sortKey - 1) :
+                item1.compareByTotalScore(item2);
+        });
+
+        schoolListItems.forEach(function(item) {
+            item.changeSorCriterion(sortKey);
+        });
+
+        for (var i = 0; i < schoolListItems.length; i++) {
+            this.addChild(schoolListItems[i]);
+        }
     };
 
     /**
@@ -333,4 +374,5 @@ goog.scope(function() {
 
         return res;
     };
+
 });

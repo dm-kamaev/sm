@@ -15,7 +15,10 @@
  *             name: ?string,
  *             value: ?number
  *         ]>,
- *         totalScore: ?number,
+ *         currentCriterion: [
+ *             name: ?string,
+ *             value: ?number
+ *         ],
  *         description: ?string,
  *         metroStations: list<string>,
  *         ratings: list<string>
@@ -24,6 +27,14 @@
  */
 {template .base autoescape="strict" kind="html"}
     <div class="b-school-list">
+        <div class="b-school-list__header">
+            <div class="b-school-list__line">
+            </div>
+            <div class="b-school-list__sort">
+                {call sm.lSearchResult.bSort.Template.base}
+                {/call}
+            </div>
+        </div>
         <div class="b-school-list__body">
             {foreach $school in $params.schools}
                 {call sm.lSearchResult.bSchoolListItem.Template.base}
@@ -32,7 +43,7 @@
                         'url': $school.url,
                         'name': $school.name,
                         'score': $school.score,
-                        'totalScore': $school.totalScore,
+                        'currentCriterion': $school.currentCriterion,
                         'description': $school.description,
                         'metroStations': $school.metroStations,
                         'ratings': $school.ratings

@@ -4,6 +4,10 @@
     margin: 0;
 }
 
+.l-search-result__header {
+    margin-bottom: 40px;
+}
+
 .l-search-result__body {
     width: 1200px;
     margin: 0 auto;
@@ -32,6 +36,8 @@
     float: right;
 
     width: 762px;
+
+    margin-top: 35px;
 }
 
 .l-search-result__search {

@@ -1,4 +1,3 @@
-
 var services = require.main.require('./app/components/services').all;
 var lodash = require('lodash');
 
@@ -12,6 +11,7 @@ const ratingView = require.main.require(
     './api/modules/school/views/ratingView.js');
 
 var schoolView = {};
+
 
 /**
  * @param {object} schoolInstance - school instance
@@ -53,7 +53,7 @@ schoolView.default = function(schoolInstance, opt_popularSchools) {
         activities: getActivities(schoolInstance.activites),
         contacts: getContacts(addresses, schoolInstance.phones),
         comments: getComments(comments),
-        addresses: services.address.getAddress(addresses),
+        addresses: addressView.default(addresses),
         ratings: ratingView.ratingSchoolView(
             schoolInstance.rank, schoolInstance.rankDogm),
         score: getSections(score),
@@ -64,8 +64,10 @@ schoolView.default = function(schoolInstance, opt_popularSchools) {
     if (opt_popularSchools) {
         result.popularSchools = this.popular(opt_popularSchools);
     }
+
     return result;
 };
+
 
 /**
  * @param {array<object>} popularSchools school instances
@@ -319,30 +321,33 @@ var getStages = function(departments) {
 
 /**
  * @param {array<object>} schools - schoolInstances
+ * @param {number} opt_criterion
  * @return {array<object>}
  */
-schoolView.list = function(schools) {
+schoolView.list = function(schools, opt_criterion) {
     var res = [];
-
-    schools = groupSchools(schools);
+    if (schools.length !== 0) {
+        schools = groupSchools(schools);
+    }
     res = schools
         .map(school => {
+            
+            var score = getScore(school.score, school.totalScore, opt_criterion);
+            var sortCriterion = score.shift();
+
             return {
                 id: school.id,
                 url: school.url,
                 name: getName(school.name),
                 description: school.description,
                 abbreviation: school.abbreviation,
-                score: getSections(school.score || [0, 0, 0, 0]),
-                totalScore: school.totalScore,
+                score: score,
+                currentCriterion: sortCriterion,
                 fullName: school.fullName,
                 ratings: ratingView.ratingResultView(school.rankDogm),
                 metroStations: addressView.getMetro(school.addresses)
             };
         });
-    res.sort(function (item1, item2) {
-        return compareItems(item1, item2);
-    });
 
     return res;
 };
@@ -353,25 +358,31 @@ schoolView.list = function(schools) {
  * @return {Array}
  */
 var groupSchools = function(schools) {
-    var result;
+    var result = [],
+        currentSchoolId = schools[0].id,
+        grouppedById = [];
 
-    result = lodash.groupBy(schools, 'id');
-
-    result = lodash.map(result, function(grouppedById) {
+    //iterates l+1 times for last address of last school
+    for(var i = 0, l = schools.length; i <= l; i++) {
+        var schoolItem = schools[i];
+        if (!schoolItem || schoolItem.id !== currentSchoolId) {
+            
             var resultItem = {};
 
+            //Copy fiels from one school to result school that not changes
             lodash.forOwn(grouppedById[0], (value, key) => {
-                if (key !== 'addressId'
-                    && key !== 'metroId'
-                    && key !== 'metroName'
-                    && key !== 'departmentStage') {
-                    resultItem[key] = value;
-                }
-            });
+                    if (key !== 'addressId'
+                        && key !== 'metroId'
+                        && key !== 'metroName'
+                        && key !== 'departmentStage') {
+                        resultItem[key] = value;
+                    }
+                });
 
             var grouppedByAddress = lodash.groupBy(grouppedById, 'addressId');
-
             resultItem.addresses = [];
+
+            //iterates over schools with same address  
             lodash.forEach(grouppedByAddress, (schools, key) => {
                 resultItem.addresses.push({
                     id: key,
@@ -379,17 +390,18 @@ var groupSchools = function(schools) {
                     departments: []
                 });
 
-
                 lodash.forEach(schools, (school) => {
                     var currentAddress = resultItem
                         .addresses[resultItem.addresses.length - 1];
 
                     var isNewMetro = true;
+                    //checks that current metro is not in metro array already
                     lodash.forEach(currentAddress.metroStations, (station)=>{
                         if(station.id === school.metroId) {
                             isNewMetro = false;
                         }
                     });
+                    //if this is new mero than push it into metro array
                     if(isNewMetro && school.metroId !== null) {
                         currentAddress.metroStations
                             .push({
@@ -398,57 +410,56 @@ var groupSchools = function(schools) {
                             });
                     }
 
+
                     var isNewDepartment = true;
+                    //checks that current department is not in metro array already
                     lodash.forEach(currentAddress.departments, (department) => {
                         if(department.stage === school.departmentStage) {
                             isNewDepartment = false;
                         }
                     });
 
+                    //if this is new department than push it into metro array
                     if (isNewDepartment  && school.departmentStage !== null) {
                         currentAddress.departments.push({
                             stage: school.departmentStage
                         });
                     }
-
                 });
             });
-            return resultItem;
-    });
+
+            result.push(resultItem);
+
+            if(schoolItem) {
+                currentSchoolId = schoolItem.id;
+            }
+
+            grouppedById = [];
+        }
+        grouppedById.push(schoolItem);
+    }
+    console.log(result.length);
     return result;
 };
 
-
 /**
- * Compare two items for sort result array in school list
- * @param {Object} item1
- * @param {Object} item2
- * @return {number}
+ * Return array like [criterion, otherScore]
+ * @param {array} score
+ * @param {number} totalScore
+ * @param {number} opt_criterion
+ * @return {Array<Object>}
  */
-var compareItems = function (item1, item2) {
-    var result;
+var getScore = function(score, totalScore, opt_criterion) {
+    var scoreItems = getSections(score || [0,0,0,0]),
+        sortCriterionIndex = opt_criterion ? opt_criterion : 0;
 
-    result = item2.totalScore - item1.totalScore;
+    scoreItems.unshift({
+        name: 'Средняя оценка',
+        value: totalScore
+    });
 
-    if (result === 0) {
-        var itemZeroScore,
-            thisZeroScore;
-
-        firstZeroScore = checkScore(item1.score);
-        secondZeroScore = checkScore(item2.score);
-
-        if (firstZeroScore && !secondZeroScore) {
-            result = 1;
-        }
-        else if (!firstZeroScore && secondZeroScore) {
-            result = -1;
-        }
-        else {
-            result = item1.id - item2.id;
-        }
-    }
-
-    return result;
+    scoreItems.unshift(scoreItems.splice(sortCriterionIndex, 1)[0]); 
+    return scoreItems;
 };
 
 /**
@@ -474,24 +485,6 @@ var getName = function (name) {
         numberFounded ?
             result.bold += char :
             result.light += char;
-    }
-    return result;
-};
-
-/**
- * Compare input array with null score:[0, 0, 0, 0]
- * and return true if they equals
- * @param {Array} score
- * @return {boolean}
- */
-var checkScore = function(score) {
-    var nullScore = [0, 0, 0, 0],
-        result = true;
-
-    for (var i = 0, l = score.length; i < l; i++) {
-        if (score[i].value != nullScore[i]) {
-            result = false;
-        }
     }
     return result;
 };

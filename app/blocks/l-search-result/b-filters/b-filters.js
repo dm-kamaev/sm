@@ -139,6 +139,8 @@ goog.scope(function() {
             },
             type = event.data ? event.data.type : '';
 
+            console.log(event);
+
         if (type === 'metro') {
             data.searchParams.metroId = event.data.id;
         } else if (type === 'areas') {
@@ -146,7 +148,12 @@ goog.scope(function() {
         }
 
         if (event.data) {
-            data.page = event.data.page;
+            if (event.data.page) {
+                data.page = event.data.page;
+            }
+            if (event.data.sortType) {
+                data.searchParams.sortType = event.data.sortType;
+            }
         }
 
         this.dispatchEvent({
