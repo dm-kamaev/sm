@@ -5,7 +5,7 @@
 }
 
 .l-search-result__header {
-    margin-bottom: 40px;
+    margin-bottom: 38px;
 }
 
 .l-search-result__body {
@@ -32,12 +32,25 @@
     text-align: center;
 }
 
-.l-search-result__school-list {
+.l-search-result__results-section {
     float: right;
 
     width: 762px;
 
-    margin-top: 35px;
+    margin-top: 27px;
+}
+
+.l-search-result__list-header {
+	margin-bottom: 7px;
+	color: #000;
+	font-family: Proxima, arial, sans-serif;
+	font-size: 19px;
+	font-weight: 600;
+	line-height: 35px;
+}
+
+.l-search-result__list-header-text_strong {
+	font-weight: 800;
 }
 
 .l-search-result__search {

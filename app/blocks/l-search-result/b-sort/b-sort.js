@@ -50,7 +50,7 @@ goog.scope(function() {
      */
     Sort.CssClass = {
         ROOT: 'b-sort',
-        SWITCHER_CUSTOM_TEXT: 'b-dropdown__switcher-custom-text'
+        SWITCHER_CUSTOM_TEXT: 'g-dropdown__switcher-custom-text'
     };
 
     /**

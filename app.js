@@ -19,6 +19,9 @@ const soy = require('./node_modules/clobl/soy').setOptions({
         'node_modules/closure-templates'
     )
 });
+
+const StartupControl = require('./app/components/startupControl/startupControl');
+
 var modules = require('./app/modules');
 var api = require('./api/modules');
 var bodyParser = require('body-parser');
@@ -58,14 +61,21 @@ app.use('/apidoc', express.static(path.join(__dirname, '/doc')));
 app.use('/api-debug', express.static(path.join(__dirname, '/api-debug')));
 
 
-soy.loadFiles(
-    [path.join(__dirname, '/tmp/compiledServerSoy/server.soy.concat.js'),
-        path.join(__dirname, 'node_modules/clobl/blocks/i-utils/i-utils.js'),
-        path.join(__dirname, 'node_modules/clobl/blocks/i-utils_frobl/i-utils.js'),
-        path.join(__dirname, 'node_modules/clobl/blocks/i-factory/i-template-factory.js')],
-    function() {
-        app.listen(CONFIG.PORT, function() {
-            console.log('Running at port ' + CONFIG.PORT)
-        });
-    }
-);
+async(function() {
+    var startupControl = new StartupControl({
+        'checkMigrations': true
+    });
+    await(startupControl.check());
+
+    soy.loadFiles(
+        [path.join(__dirname, '/tmp/compiledServerSoy/server.soy.concat.js'),
+            path.join(__dirname, 'node_modules/clobl/blocks/i-utils/i-utils.js'),
+            path.join(__dirname, 'node_modules/clobl/blocks/i-utils_frobl/i-utils.js'),
+            path.join(__dirname, 'node_modules/clobl/blocks/i-factory/i-template-factory.js')],
+        function() {
+            app.listen(CONFIG.PORT, function() {
+                console.log('Running at port ' + CONFIG.PORT)
+            });
+        }
+    );
+})();
