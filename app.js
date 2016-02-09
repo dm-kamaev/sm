@@ -6,6 +6,8 @@ const morgan = require('morgan');
 
 var db = require('./app/components/db');
 var soy = require('./app/components/soy');
+const StartupControl = require('./app/components/startupControl/startupControl');
+
 var modules = require('./app/modules');
 var api = require('./api/modules');
 var bodyParser = require('body-parser');
@@ -45,12 +47,19 @@ app.use('/apidoc', express.static(path.join(__dirname, '/doc')));
 app.use('/api-debug', express.static(path.join(__dirname, '/api-debug')));
 
 
+async(function() {
+    var startupControl = new StartupControl({
+        'checkMigrations': true
+    });
+    await(startupControl.check());
 
-soy.init(
-    path.join(__dirname, '/tmp/compiledServerSoy/server.soy.concat.js'),
-    function() {
-        app.listen(CONFIG.PORT, function() {
-            console.log('Running at port ' + CONFIG.PORT)
-        });
-    }
-);
+    var compiledTemplatesPath = path.join(
+        __dirname,
+        '/tmp/compiledServerSoy/server.soy.concat.js'
+    );
+    await(soy.init(compiledTemplatesPath));
+
+    app.listen(CONFIG.PORT, function() {
+        console.log('Running at port ' + CONFIG.PORT)
+    });
+})();
