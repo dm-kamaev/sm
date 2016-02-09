@@ -58,7 +58,18 @@
             {call .whoAreYou_ /}
             {call .score_ /}
         </div>
-        <input type="submit" class="b-feedback__button" value="Отправить" />
+        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+            {param params: [
+                'type': 'button',
+                'renderParams': [
+                    'data': 'Оставить отзыв',
+                    'config': [
+                        'theme': 'sienna'
+                    ]
+                ]
+            ]/}
+        {/call}
+        /*<input type="submit" class="b-feedback__button" value="Отправить" />*/
     </form>
 {/template}
 

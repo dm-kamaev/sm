@@ -110,6 +110,7 @@ gulp.task('styles', function () {
 gulp.task('sprite', function() {
     return gulpHelper.sprite.build([{
         src: path.join(__dirname, BLOCKS_DIR, '/b-icon/b-icon_img/*'),
+        name: 'b-icon_auto-sprite',
         imgPath: '/images/b-icon_auto-sprite.png',
         cssDest: path.join(__dirname, BLOCKS_DIR, '/b-icon'),
         pngDest: path.join(__dirname, '/public/images')

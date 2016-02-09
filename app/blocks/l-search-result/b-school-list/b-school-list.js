@@ -105,9 +105,8 @@ goog.scope(function() {
             length;
 
         //dom elements of schools
-        schoolListItemElements = goog.dom.getElementsByClass(
-            SchoolListItem.CssClass.ROOT,
-            element
+        schoolListItemElements = this.getElementsByClass(
+            SchoolListItem.CssClass.ROOT
         );
 
         length = schoolListItemElements.length;
@@ -139,6 +138,13 @@ goog.scope(function() {
         this.showMoreButtonElement_ = this.getElementByClass(
             SchoolList.CssClass.SHOW_MORE_BUTTON
         );
+
+        //sort
+        var sortElement = this.getElementByClass(Sort.CssClass.ROOT);
+
+        this.sort_ = new Sort();
+        this.addChild(this.sort_);
+        this.sort_.decorate(sortElement);
     };
 
     /**
@@ -148,33 +154,6 @@ goog.scope(function() {
         goog.base(this, 'enterDocument');
 
         this.initListeners_();
-    };
-
-    /**
-     * TODO: repair
-     * Schools sort maker
-     * @param {number=} opt_sortKey
-     */
-    SchoolList.prototype.sort = function(opt_sortKey) {
-        var schoolListItems = this.removeItemChildren_();
-        var sortKey = (typeof opt_sortKey == 'undefined') ?
-            this.sortKey_ :
-            opt_sortKey;
-        this.sortKey_ = sortKey;
-
-        schoolListItems.sort(function(item1, item2) {
-            return (sortKey > 0) ?
-                item1.compareByScore(item2, sortKey - 1) :
-                item1.compareByTotalScore(item2);
-        });
-
-        schoolListItems.forEach(function(item) {
-            item.changeSorCriterion(sortKey);
-        });
-
-        for (var i = 0; i < schoolListItems.length; i++) {
-            this.addChild(schoolListItems[i]);
-        }
     };
 
     /**

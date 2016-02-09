@@ -63,7 +63,6 @@ goog.scope(function() {
     FeedbackModal.CssClass = {
         'ROOT': 'b-feedback',
         'FORM': 'b-feedback__form',
-        'BUTTON': 'b-feedback__button',
         'RADIO': 'b-feedback__radio'
     };
 
@@ -123,6 +122,7 @@ goog.scope(function() {
 
         this.elements_ = {
             radio: this.getElementsByClass(FeedbackModal.CssClass.RADIO),
+            button: this.getElementByClass(cl.gButton.View.CssClass.ROOT),
             form: this.getElementByClass(FeedbackModal.CssClass.FORM)
         };
 
@@ -151,9 +151,9 @@ goog.scope(function() {
         goog.base(this, 'enterDocument');
 
         this.getHandler().listen(
-            this.elements_.form,
-            goog.events.EventType.SUBMIT,
-            this.onSubmit_
+            this.elements_.button,
+            goog.events.EventType.CLICK,
+            this.formSubmit_
         );
     };
 
@@ -188,13 +188,21 @@ goog.scope(function() {
 
     /**
      * Submit event handler
-     * @param {Function} event
      * @private
      */
-    FeedbackModal.prototype.onSubmit_ = function(event) {
-        event.preventDefault();
+    FeedbackModal.prototype.formSubmit_ = function() {
+        var form = jQuery(this.elements_.form),
+            data = form.serializeArray();
 
-        this.submit_();
+        if (this.isValid_(data)) {
+            this.send_(form, function() {
+                location.reload();
+            });
+        } else {
+            this.hide();
+        }
+
+        this.clean();
     };
 
     /**
@@ -265,24 +273,5 @@ goog.scope(function() {
                 radio.checked = false;
             }
         }
-    };
-
-    /**
-     * Submit form
-     * @private
-     */
-    FeedbackModal.prototype.submit_ = function() {
-        var form = jQuery(this.elements_.form),
-            data = form.serializeArray();
-
-        if (this.isValid_(data)) {
-            this.send_(form, function() {
-                location.reload();
-            });
-        } else {
-            this.hide();
-        }
-
-        this.clean();
     };
 });
