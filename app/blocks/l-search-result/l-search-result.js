@@ -115,7 +115,6 @@ goog.scope(function() {
         this.searchSettings_ = JSON.parse(
             element.getAttribute('data-params')
         );
-        console.log(this.searchSettings_);
 
         //school list
         var bSchoolList = goog.dom.getElementByClass(

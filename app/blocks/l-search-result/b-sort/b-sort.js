@@ -4,9 +4,7 @@ goog.require('goog.dom.classes');
 goog.require('goog.events');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
-goog.require('gorod.bList.List');
-goog.require('gorod.dropdown.Dropdown');
-goog.require('gorod.iUIInstanceStorage.UIInstanceStorage');
+goog.require('sm.iFactory.FactoryStendhal');
 goog.require('sm.lSearchResult.bSort.Template');
 
 /**
@@ -27,10 +25,10 @@ sm.lSearchResult.bSort.Sort = function(opt_params) {
 
     /**
      * Instance
-     * @type {gorod.bList.List}
+     * @type {cl.gDropdown.Dropdown}
      * @private
      */
-    this.dropdownList_ = null;
+    this.dropdown_ = null;
 
     /**
      * Switcher custom text element
@@ -43,7 +41,8 @@ goog.inherits(sm.lSearchResult.bSort.Sort, goog.ui.Component);
 
 goog.scope(function() {
     var Sort = sm.lSearchResult.bSort.Sort,
-        List = gorod.bList.List;
+        DropdownView = cl.gDropdown.View,
+        List = cl.gList.List;
 
     /**
      * CSS-class enum
@@ -108,19 +107,15 @@ goog.scope(function() {
     Sort.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
-        this.switcherCustomTextElement_ = goog.dom.getElementByClass(
-            Sort.CssClass.SWITCHER_CUSTOM_TEXT,
-            element
+        this.switcherCustomTextElement_ = this.getElementByClass(
+            Sort.CssClass.SWITCHER_CUSTOM_TEXT
         );
 
-        var dropdownListElement = goog.dom.getElementByClass(
-            List.CSS_ROOT,
-            element
+        this.dropdown_ = sm.iFactory.FactoryStendhal.getInstance().decorate(
+            'dropdown',
+            this.getElementByClass(DropdownView.CssClass.ROOT),
+            this
         );
-
-        var storage = gorod.iUIInstanceStorage.UIInstanceStorage.getInstance();
-
-        this.dropdownList_ = storage.getInstanceByElement(dropdownListElement);
     };
 
     /**
@@ -129,22 +124,9 @@ goog.scope(function() {
     Sort.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
 
-        this.dropdownList_.addEventListener(
-            List.Event.ITEM_CLICK,
-            this.itemClickHandler_,
-            false,
-            this
-        );
-    };
-
-    /**
-     * Clean up the Component.
-     */
-    Sort.prototype.exitDocument = function() {
-        goog.base(this, 'exitDocument');
-
-        this.dropdownList_.removeEventListener(
-            List.Event.ITEM_CLICK,
+        this.getHandler().listen(
+            this.dropdown_,
+            List.Event.ITEM_SELECT,
             this.itemClickHandler_
         );
     };
@@ -164,17 +146,16 @@ goog.scope(function() {
     /**
      * Item click handler
      * @param {Object} event
-     * @param {Object} data
      * @private
      */
-    Sort.prototype.itemClickHandler_ = function(event, data) {
-        var itemId = data.itemID;
+    Sort.prototype.itemClickHandler_ = function(event) {
+        var itemId = event.itemId;
 
         this.dispatchEvent({
             type: Sort.Event.ITEM_CLICK,
             itemId: itemId
         });
-        this.dropdownList_.select(itemId, 0);
+
         switch (itemId) {
             case 1:
                 this.setSwitcherCustomText_(
