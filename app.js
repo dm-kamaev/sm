@@ -68,10 +68,24 @@ async(function() {
     await(startupControl.check());
 
     soy.loadFiles(
-        [path.join(__dirname, '/tmp/compiledServerSoy/server.soy.concat.js'),
-            path.join(__dirname, 'node_modules/clobl/blocks/i-utils/i-utils.js'),
-            path.join(__dirname, 'node_modules/clobl/blocks/i-utils_frobl/i-utils.js'),
-            path.join(__dirname, 'node_modules/clobl/blocks/i-factory/i-template-factory.js')],
+        [
+            path.join(
+                __dirname,
+                '/tmp/compiledServerSoy/server.soy.concat.js'
+            ),
+            path.join(
+                __dirname,
+                'node_modules/clobl/blocks/i-utils/i-utils.js'
+            ),
+            path.join(
+                __dirname,
+                'node_modules/clobl/blocks/i-utils-legacy/i-utils.js'
+            ),
+            path.join(
+                __dirname,
+                'node_modules/clobl/blocks/i-factory/i-template-factory.js'
+            )
+        ],
         function() {
             app.listen(CONFIG.PORT, function() {
                 console.log('Running at port ' + CONFIG.PORT)
