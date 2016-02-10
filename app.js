@@ -67,25 +67,14 @@ async(function() {
     });
     await(startupControl.check());
 
+    var paths = [
+        'build/server.soy.concat.js',
+        'node_modules/clobl/blocks/i-utils/i-utils.js',
+        'node_modules/clobl/blocks/i-utils-legacy/i-utils.js',
+        'node_modules/clobl/blocks/i-factory/i-template-factory.js'
+    ];
     soy.loadFiles(
-        [
-            path.join(
-                __dirname,
-                '/tmp/compiledServerSoy/server.soy.concat.js'
-            ),
-            path.join(
-                __dirname,
-                'node_modules/clobl/blocks/i-utils/i-utils.js'
-            ),
-            path.join(
-                __dirname,
-                'node_modules/clobl/blocks/i-utils-legacy/i-utils.js'
-            ),
-            path.join(
-                __dirname,
-                'node_modules/clobl/blocks/i-factory/i-template-factory.js'
-            )
-        ],
+        paths.map(item => path.join(__dirname, item)),
         function() {
             app.listen(CONFIG.PORT, function() {
                 console.log('Running at port ' + CONFIG.PORT)
