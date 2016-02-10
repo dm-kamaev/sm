@@ -13,7 +13,8 @@ var docPages = [
         "b-search",
         "b-filters",
         "b-diagram",
-        "b-score"
+        "b-score",
+        "b-badge"
     ];
 
 

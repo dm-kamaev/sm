@@ -8,14 +8,13 @@
         {call .switcher_ /}
     {/let}
 
-    <div class="b-sort">
+    {let $content kind="html"}
         {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
             {param params: [
-                'type': 'dropdown',
+                'type': 'list',
                 'renderParams': [
                     'data': [
-                        'opener': $switcher,
-                        'content': [
+                        'items': [
                             [
                                 'label': 'Средняя оценка'
                             ],
@@ -32,9 +31,20 @@
                                 'label': 'Инфраструктура'
                             ]
                         ]
-                    ],
-                    'config': [
-                        'modifiers': ['increased-margin']
+                    ]
+                ]
+            ]/}
+        {/call}
+    {/let}
+
+    <div class="b-sort">
+        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+            {param params: [
+                'type': 'dropdown',
+                'renderParams': [
+                    'data': [
+                        'opener': $switcher,
+                        'content': $content
                     ]
                 ]
             ]/}
