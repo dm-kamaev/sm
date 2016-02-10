@@ -12,6 +12,13 @@ const gulpHelper =
         .setPath({
             root: __dirname,
             blocks: path.join(__dirname, '/app/blocks')
+        })
+        .setSoyPath({
+            root: 'build',
+            compiled: {
+                server: 'build/compiledSeverSoy',
+                client: 'build/compiledClientSoy'
+            }
         });
 
 const config = require('./config.json');
@@ -50,7 +57,7 @@ gulp.task('appES5', function () {
 });
 
 gulp.task('soy', function () {
-    return gulpHelper.soy.build({});
+    return gulpHelper.soy.build();
 });
 
 gulp.task('scripts', ['soy', 'lint'], function () {
