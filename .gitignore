@@ -5,6 +5,7 @@ node_modules/
 public/
 tmp/
 doc/
+build/
 assets/dump/
 /parse/
 /console/reports
