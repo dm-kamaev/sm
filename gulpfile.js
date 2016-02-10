@@ -155,7 +155,7 @@ gulp.task('soy', function (cb) {
                         path.join(__dirname, 'tmp/extendedSoy/**/*.soy'),
                         path.join(__dirname, '/node_modules/frobl/blocks/**/*.soy')
                     ],
-                    dest: path.join(__dirname, 'tmp/compiledServerSoy'),
+                    dest: path.join(__dirname, 'build'),
                     soynodeOptions: serverSoynodeOptions
                 });
             });

@@ -55,7 +55,7 @@ async(function() {
 
     var compiledTemplatesPath = path.join(
         __dirname,
-        '/tmp/compiledServerSoy/server.soy.concat.js'
+        '/build/server.soy.concat.js'
     );
     await(soy.init(compiledTemplatesPath));
 
