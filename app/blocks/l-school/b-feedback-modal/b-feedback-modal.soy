@@ -37,6 +37,10 @@
 {template .modal}
     <form class="b-feedback__form" method="POST" action="{$params?.data?.url ?: ''}">
         <div class="b-feedback__content">
+            <div class="b-feedback__close-control
+                        b-icon_img_close-dialog">
+
+            </div>
             <div class="b-feedback__title">Ваш отзыв</div>
             {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
                 {param params: [
@@ -54,18 +58,19 @@
             {/call}
             {call .whoAreYou_ /}
             {call .score_ /}
-        </div>
-        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
-            {param params: [
-                'type': 'button',
-                'renderParams': [
-                    'data': 'Отправить',
-                    'config': [
-                        'theme': 'sienna'
+
+            {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+                {param params: [
+                    'type': 'button',
+                    'renderParams': [
+                        'data': 'Оставить отзыв',
+                        'config': [
+                            'theme': 'sienna'
+                        ]
                     ]
-                ]
-            ]/}
-        {/call}
+                ]/}
+            {/call}
+        </div>
     </form>
 {/template}
 
