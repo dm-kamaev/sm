@@ -101,6 +101,7 @@ exports.view = async (function(req, res) {
             var school = await (services.school.viewOne(schoolInstance.id));
             services.school.incrementViews(school.id);
             var popularSchools = await (services.school.getPopularSchools());
+
             res.header('Content-Type', 'text/html; charset=utf-8');
             res.end(
                 soy.render('sm.lSchool.Template.base', {
