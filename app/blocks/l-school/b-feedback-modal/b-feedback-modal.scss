@@ -13,6 +13,7 @@
 
 .b-feedback__form {
 	width: 800px;
+
     text-align: left;
 }
 
@@ -37,24 +38,9 @@
     font-size: 16px;
 }
 
-.b-feedback__title_subsub {
-    margin: 0 0 4px;
-
-    font-weight: 800;
-    font-size: 13px;
-}
-
-.b-feedback__comment {
-    margin: 0 0 40px;
-
-    font-family: 'PTSerifRegular', serif;
-}
-
 .b-feedback__who-are-you {
     margin: 0 0 30px;
     padding: 0 0 40px;
-
-    border-bottom: 1px solid #e5e5e5;
 }
 
 .b-feedback__title_who-are-you {
@@ -88,16 +74,50 @@
     cursor: pointer;
 }
 
+.b-feedback__title-scores {
+    margin: 0 0 11px;
+
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+
+    font: 800 16px 'Proxima', Arial, sans-serif;
+}
+
 .b-feedback__scores {
-    margin: 0 0 40px;
+    margin: 0 0 24px;
 
     font-size: 0;
+}
+
+.b-feedback__title-score {
+    display: inline-block;
+
+    margin: 0 17px 12px 0;
+
+    letter-spacing: 0.03em;
+
+    font: 17px 'PTSerifRegular', serif;
 }
 
 .b-feedback__score {
     display: inline-block;
 
-    width: 150px;
+    width: 330px;
+    margin: 0 0 9px;
+
+    vertical-align: top;
+
+    &:nth-child(odd) {
+        margin-right: 35px;
+    }
+}
+
+.b-feedback__description {
+    font: 12px Arial, sans-serif;
+
+    color:#9a9a9a;
+
+    line-height: 20px;
 }
 
 .b-feedback__button {
