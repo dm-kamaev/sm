@@ -57,8 +57,10 @@
                 ]/}
             {/call}
             {call .whoAreYou_ /}
+            <div class="b-feedback__title-scores">
+                Ваши оценки
+            </div>
             {call .score_ /}
-
             {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
                 {param params: [
                     'type': 'button',
@@ -115,7 +117,6 @@
     </div>
 {/template}
 
-
 /**
 * score_
 */
@@ -123,22 +124,34 @@
     {let $scores: [
         [
             'name': 'score[]',
-            'title': 'Образование'
+            'title': 'Образование',
+            'description': 
+            'Достигают ли ученики этой школы достигают высоких 
+            результатов на экзаменах?'
         ], [
             'name': 'score[]',
-            'title': 'Преподаватели'
+            'title': 'Преподаватели',
+            'description': 
+            'Действительно ли учителя этой школы — квалифицированные 
+            специалисты, которые любят свою работу, хорошо общаются с 
+            детьмии помогают им получать отличные знания?'
         ], [
             'name': 'score[]',
-            'title': 'Атмосфера'
+            'title': 'Атмосфера',
+            'description': 'Атмосфера в школе, отношения между учениками, 
+            учителями, родителями и администрацией создают комфортную 
+            для получения знаний среду?'
         ], [
             'name': 'score[]',
-            'title': 'Инфраструктура'
+            'title': 'Инфраструктура',
+            'description': 'Эта школа отлично оборудована, в ней есть всё для 
+            комфортного обучения и всестороннего развития детей?'
         ]
     ] /}
     <ul class="b-feedback__scores">
         {foreach $score in $scores}
             <li class="b-feedback__score">
-                <div class="b-feedback__title b-feedback__title_subsub">
+                <div class="b-feedback__title-score">
                     {$score.title}
                 </div>
                 {call sm.bStars.Template.base}
@@ -155,6 +168,7 @@
                         ]
                     ] /}
                 {/call}
+                <div class="b-feedback__description">{$score.description}</div>
             </li>
         {/foreach}
     </ul>
