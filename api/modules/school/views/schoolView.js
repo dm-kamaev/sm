@@ -325,6 +325,7 @@ var getStages = function(departments) {
  * @return {object} contains results count and schools array
  */
 schoolView.list = function(schools, opt_criterion) {
+    console.log(schools[0]);
     var res = {};
     if (schools.length !== 0) {
         schools = groupSchools(schools);
@@ -362,6 +363,27 @@ schoolView.list = function(schools, opt_criterion) {
 };
 
 /**
+ * @param {array<object>} schools - schoolInstances
+ * @return {array<object>}
+ */
+schoolView.suggestList = function(schools) {
+    return schools
+        .map(school => {
+            return {
+                id: school.id,
+                url: school.url,
+                name: school.name,
+                description: '',
+                abbreviation: school.abbreviation,
+                score: school.score || [0, 0, 0, 0],
+                totalScore: school.totalScore || 0,
+                fullName: school.fullName,
+                addresses: school.addresses
+            };
+    });
+};
+
+/**
  * Groups school objects to one object with addresses and metro arrays
  * @param {Array<Object>} schools
  * @return {Array<Object>}
@@ -375,7 +397,7 @@ var groupSchools = function(schools) {
     for(var i = 0, l = schools.length; i <= l; i++) {
         var schoolItem = schools[i];
         if (!schoolItem || schoolItem.id !== currentSchoolId) {
-            
+
             var resultItem = {};
 
             //Copy fiels from one school to result school that not changes
@@ -391,7 +413,7 @@ var groupSchools = function(schools) {
             var grouppedByAddress = lodash.groupBy(grouppedById, 'addressId');
             resultItem.addresses = [];
 
-            //iterates over schools with same address  
+            //iterates over schools with same address
             lodash.forEach(grouppedByAddress, (schools, key) => {
                 resultItem.addresses.push({
                     id: key,
@@ -466,7 +488,7 @@ var getScore = function(score, totalScore, opt_criterion) {
         value: totalScore
     });
 
-    scoreItems.unshift(scoreItems.splice(sortCriterionIndex, 1)[0]); 
+    scoreItems.unshift(scoreItems.splice(sortCriterionIndex, 1)[0]);
     return scoreItems;
 };
 
@@ -529,7 +551,7 @@ schoolView.listMapPoints = function(schools) {
  */
 schoolView.suggest = function(data) {
     return {
-        schools: this.list(data.schools),
+        schools: this.suggestList(data.schools),
         areas: areaView.list(data.areas),
         metro: metroView.list(data.metros)
     };

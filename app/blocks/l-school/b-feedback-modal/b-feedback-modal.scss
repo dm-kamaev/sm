@@ -12,19 +12,25 @@
 }
 
 .b-feedback__form {
+	width: 800px;
     text-align: left;
 }
 
 .b-feedback__content {
-    padding: 50px 50px 0;
+    margin: 43px 50px 50px;
 }
 
 .b-feedback__title {
     margin: 0 0 40px;
 
-    text-transform: uppercase;
+    font: 800 27px 'Proxima', Arial, sans-serif;
+}
 
-    font: 900 27px 'Proxima', Arial, sans-serif;
+.b-feedback__close-control {
+	float: right;
+	margin-top: 9px;
+
+	cursor: pointer;
 }
 
 .b-feedback__title_sub {
