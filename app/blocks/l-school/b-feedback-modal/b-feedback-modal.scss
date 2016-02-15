@@ -20,10 +20,22 @@
     margin: 43px 50px 50px;
 }
 
-.b-feedback__title {
-    margin: 0 0 40px;
+.b-feedback__text {
 
-    font: 800 27px 'Proxima', Arial, sans-serif;
+	margin-right: 20px;
+	font-family: 'PT Serif', serif;
+	font-size: 16px;
+
+	&_modal-title {
+		font: 800 27px 'Proxima', Arial, sans-serif;
+	}
+
+	&_header {
+		margin-right: 18px;
+		font: 800 16px 'Proxima', Arial, sans-serif;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+	}
 }
 
 .b-feedback__close-control {
@@ -47,7 +59,7 @@
 .b-feedback__comment {
     margin: 0 0 40px;
 
-    font-family: 'PTSerifRegular', serif;
+    font-family: 'PT Serif', serif;
 }
 
 .b-feedback__who-are-you {
@@ -64,16 +76,27 @@
 }
 
 .b-feedback__user-type {
-    width: 125px;
+    width: 230px;
 
-    font-size: 0;
-}
-
-.b-feedback__user-type {
     display: inline-block;
+
+	margin-right: 40px;
 
     font: 16px 'PTSerifRegular', serif;
 }
+
+.b-feedback__class-select {
+	display: inline-block;
+}
+
+.b-feedback__class-type {
+	display: inline-block;
+
+	width: 70px;
+
+	margin-right: 20px;
+}
+
 
 .b-feedback__radio {
     margin: 0 13px 0 0;
@@ -114,4 +137,20 @@
     &:hover {
         background: #e3e3dc;
     }
+}
+
+.b-feedback__section {
+	margin-bottom: 40px;
+
+	&_header {
+		margin-bottom: 32px;
+	}
+
+	&_whoAreYou {
+		margin-bottom: 30px;
+	}
+
+	&:last-child {
+		margin-bottom: 0;
+	}
 }

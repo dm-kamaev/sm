@@ -52,6 +52,13 @@ sm.lSchool.bFeedbackModal.FeedbackModal = function(opt_params) {
     this.stars_ = [];
 
     /**
+     * Instances of dropdowns with type of user
+     * @type {Object}
+     * @private
+     */
+    this.dropdownInstances_ = {};
+
+    /**
      * Close control element
      * @type {element}
      * @private
@@ -62,7 +69,6 @@ goog.inherits(sm.lSchool.bFeedbackModal.FeedbackModal, goog.ui.Component);
 
 goog.scope(function() {
     var FeedbackModal = sm.lSchool.bFeedbackModal.FeedbackModal;
-
     /**
      * CSS-class enum
      * @enum {string}
@@ -71,10 +77,12 @@ goog.scope(function() {
         'ROOT': 'b-feedback',
         'FORM': 'b-feedback__form',
         'RADIO': 'b-feedback__radio',
+        'USER_TYPE_SELECT': 'b-feedback__user-type',
+        'CLASS_TYPE_SELECT': 'b-feedback__class-select',
+        'GRADUATION_YEAR': 'b-feedback__graduation-year',
         'CLOSE_CONTROL': 'b-feedback__close-control',
         'CLOSE_CONTROL_IMG_HOVERED': 'b-icon_img_close-dialog-hovered',
         'CLOSE_CONTROL_IMG': 'b-icon_img_close-dialog'
-
     };
 
     /**
@@ -142,6 +150,7 @@ goog.scope(function() {
             this.getElementByClass(cl.gModal.View.CssClass.ROOT),
             this
         );
+
         this.textarea_ = factory.decorate(
             'textarea',
             goog.dom.getElementByClass(
@@ -161,6 +170,31 @@ goog.scope(function() {
         this.closeElement_ = goog.dom.getElementByClass(
             FeedbackModal.CssClass.CLOSE_CONTROL,
             this.modal_.getElement()
+        );
+
+        var userTypeElement = goog.dom.getElementByClass(
+            cl.gDropdown.View.CssClass.ROOT,
+            this.modal_.getElementByClass(
+                FeedbackModal.CssClass.USER_TYPE_SELECT
+            )
+        );
+        this.dropdownInstances_.userType = factory.decorate(
+            'dropdown-select',
+            userTypeElement,
+              this
+        );
+
+        var classTypeElement = goog.dom.getElementByClass(
+            cl.gDropdown.View.CssClass.ROOT,
+            this.modal_.getElementByClass(
+                FeedbackModal.CssClass.CLASS_TYPE_SELECT
+            )
+        );
+
+        this.dropdownInstances_.userType = factory.decorate(
+            'dropdown-select',
+            classTypeElement,
+            this
         );
     };
 

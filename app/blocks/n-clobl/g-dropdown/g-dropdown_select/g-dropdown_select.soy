@@ -1,0 +1,90 @@
+{namespace cl.gDropdownSelect.Template}
+
+/**
+ * Select template
+ * @param? params {{
+ *     data: {
+ *        defaultOpenerText: string - default selected item name or placeholder
+ *        staticText: string - text in opener, which not changes
+ *        listItems: list<[
+ *            label: <string>,
+ *            openerText: <string>
+ *        ]>
+ *     }
+ *     config: {
+ *        usePlaceholder: boolean
+ *     }
+ * }}
+ * @extends cl.gDropdown.Template
+ * @constructor
+ * @doc
+ */
+{template .dropdown}
+    {call .init data="all" /}
+{/template}
+
+/**
+ * Control
+ * @param? params {{
+ *     data: {
+ *        defaultCustomText: string - default selected item name or placeholder
+ *        staticText: string - text in opener, which not changes
+ *     }
+ *     config: {
+ *        usePlaceholder: boolean
+ *     }
+ * }}
+ * @override
+ */
+{template .opener  kind="html"}
+     <div class="{call .rootClass/}__opener-text">
+            {if $params?.data?.staticText}
+                {$params?.data?.staticText}{sp}
+            {/if}
+            <span class="{call .rootClass/}__opener-custom-text
+                         {if $params?.config?.usePlaceholder}
+                            {sp}{call .rootClass/}__opener-text_placeholder
+                         {/if}">
+                {if $params?.data?.defaultCustomText}
+                    {$params?.data?.defaultCustomText}
+                {/if}
+            </span>
+     </div>
+     <div class="{call .rootClass/}__opener-arrow">
+         {call sm.bIcon.Template.base}
+             {param params: [
+                 'spriteCssClass': 'b-icon_img_opener-arrow'
+             ] /}
+         {/call}
+     </div>
+{/template}
+
+/**
+ * List template
+ * @param? params {{
+ *     data: {
+ *        listItems: list<string>
+ *     }
+ * }}
+ */
+{template .content kind="html"}
+    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+        {param params: [
+            'factory': $params.config.stylizationModifier,
+            'type': 'list-select',
+            'renderParams': [
+                'data': [
+                    'items': $params.data.listItems
+                ]
+            ]
+        ]/}
+    {/call}
+{/template}
+
+/**
+ * Css classes
+ * @override
+ */
+{template .additionalClasses}
+    g-dropdown_select
+{/template}
