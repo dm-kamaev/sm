@@ -75,29 +75,37 @@ var createParsedSchools = function(schools) {
 };
 
 var createParsedActivities = function(activities) {
-    var parsedActivities = [];
-    for (var i = 0, actLength = activities.length; i < actLength; i++) {
-        var activityNumber = activities[i].Cells.nomer.trim(),
-            parsedActivityName = activities[i].Cells.poln_name.match(/"(.*?)"/),
-            activityName = parsedActivityName ?
-                parsedActivityName[0].slice(1, -1).toLowerCase() : null;
+    var parsedActivities = [],
+        activity;
 
-        parsedActivities.push({
-            'number': activityNumber,
-            'name': activityName,
-            'groupLength': activities[i].Cells.name_grupp.length,
-            'info': activities[i].Cells
-        });
+    for (var i = 0, actLength = activities.length; i < actLength; i++) {
+        activity = activities[i] ? activities[i].Cells : null;
+        if (activity) {
+            var activityNumber = activity.nomer.trim(),
+                parsedActivityName = activity.poln_name.match(/"(.*?)"/),
+                activityName = parsedActivityName ?
+                    parsedActivityName[0].slice(1, -1).toLowerCase() : null;
+
+            parsedActivities.push({
+                'number': activityNumber,
+                'name': activityName,
+                'groupLength': activity.name_grupp.length,
+                'info': activity
+            });
+        }
     }
+
     return parsedActivities;
 };
 
 var fillActsDB = function(schools, activities) {
     var ourSchools = {},
-        extraMatches = getExtraMatches('extraMatches.json');
+        extraMatches = getExtraMatches('extraMatches.json'),
+        activity;
     for (var i = 0, actsLength = activities.length; i < actsLength; i++) {
+        activity = activities[i];
         var ourSetSchools = {};
-        if (activities[i].groupLength <= 255) {
+        if (!isStrangeActivity(activity)) {
             ourSetSchools = findActivityMatches(schools, activities[i], extraMatches);
         }
     ourSchools = mergeObjects(ourSchools, ourSetSchools);
@@ -105,6 +113,13 @@ var fillActsDB = function(schools, activities) {
         console.log('Our schools found: ' + Object.keys(ourSchools).length);
     }
     return ourSchools;
+};
+
+var isStrangeActivity = function(activity) {
+    return activity.groupLength > 255 ||
+        activity.info.name_grupp.match(/\\t/) ||
+        activity.info.profil.match(/другое/i) ||
+        activity.info.tipe_zanyat.match(/другое/i);
 };
 
 var notFoundSchools = function(allSchools, findedSchools) {
@@ -142,7 +157,7 @@ var request = function(options) {
         }).end();
         rqq.on('error', function(e) {
             console.log('problem with request: ' + e.message);
-            resolve(null);
+            resolve([]);
         });
     });
     return request;
@@ -252,10 +267,47 @@ var getAllActivities = async(function() {
             top: top,
             skip: skip
         }));
+        await(activitiesCorrection(actsSet, skip));
         activities = activities.concat(actsSet);
     }
     return activities;
 });
+
+var activitiesCorrection = async(function(activities, skip) {
+    activities.forEach((activity, index) => {
+        var newActivities;
+        var i;
+        for (i = 0; i < 5 && isActivityBroken(activity); i++) {
+            newActivities = await(getActivitiesSet({
+                top: 1,
+                skip: skip + index
+            }));
+            activity = newActivities[0];
+        }
+
+        if (i == 5) {
+            delete activities[index];
+        }
+        else {
+            activities[index] = activity;
+        }
+    });
+});
+
+var isActivityBroken = function(activity) {
+    var res = false;
+
+    if (activity) {
+        var data = activity.Cells;
+
+        res = data.profil.match('�') ||
+            data.napravlen.match('�') ||
+            data.tipe_zanyat.match('�') ||
+            data.name_grupp.match('�');
+    }
+
+    return res;
+};
 
 var downloadActivities = async(function(fileName) {
     var acts = await(getAllActivities());

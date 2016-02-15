@@ -37,10 +37,6 @@
       "fileName": "20160125174600-all-data-department.tar.gz"
     },
     {
-      "pathToModel":"../../api/modules/school/models/activity",
-      "fileName": "20160125174600-all-data-activity.tar.gz"
-    },
-    {
       "pathToModel":"../../api/modules/study/models/egeResult",
       "fileName": "20160125174600-all-data-ege-result.tar.gz"
     },
