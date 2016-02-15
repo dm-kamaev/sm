@@ -1,7 +1,3 @@
-.l-search {
-    min-width: 1200px;
-}
-
 .l-search__body {
     max-width: 1200px;
     min-height: 83%;
@@ -318,4 +314,11 @@
 
     margin: 0 auto;
     margin-bottom: 30px;
+}
+
+@media screen and (min-width: 1200px), (max-device-width: 1200px) 
+{
+    .l-search {
+        min-width: 1200px;
+    }
 }
