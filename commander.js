@@ -5,6 +5,7 @@ const commander = require('commander');
  */
 
 require('./console/metro.js').Command;
+require('./console/metro_closest.js').Command;
 require('./console/parse.js').Command;
 require('./console/parse_area.js').Command;
 require('./console/department.js').Command;
