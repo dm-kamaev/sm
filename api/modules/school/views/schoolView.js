@@ -19,11 +19,12 @@ var schoolView = {};
  * @return {object}
  */
 schoolView.default = function(schoolInstance, opt_popularSchools) {
+    addressView.transformSchoolAddress(schoolInstance);
 
-    var addresses =
-        services.department.addressesFilter(schoolInstance.addresses),
+    var addresses = services.department.addressesFilter(schoolInstance.addresses),
         comments = schoolInstance.commentGroup ?
-        schoolInstance.commentGroup.comments : [],
+            schoolInstance.commentGroup.comments :
+            [],
 
         score = schoolInstance.score || [0, 0, 0, 0],
         scoreCount = schoolInstance.scoreCount || [0, 0, 0, 0];

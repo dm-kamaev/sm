@@ -7,6 +7,7 @@ var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 
 var services = require.main.require('./app/components/services').all;
+var geoTools = require('./modules/geoTools/geoTools');
 //var modules = require.main.require('./api/modules');
 
 
@@ -112,23 +113,10 @@ var getMetro = async((adr) => {
     return metro;
 });
 
-var countRestriction = (lenKM, coords) => {
-    const lt = 110.574;
-    const lo = 111.320;
-    var Latitude = coords[0], // северная широта
-        Longitude = coords[1]; //западная долгота
-    var resLatitude = 1 / lt * lenKM;
-    var resLongitude = 1 / (lo * Math.cos(Latitude)) * lenKM;
-    return {
-        latitude: resLatitude,
-        longitude: resLongitude
-    }
-}
-
 var request = async ((pair) => {
     var restrictionString = '';
     if (KM_RESTRIСTION) {
-        var restriction = countRestriction(KM_RESTRIСTION, pair);
+        var restriction = geoTools.restriction(KM_RESTRIСTION, pair);
         restrictionString += "&spn=" + restriction.longitude + ','
             + restriction.latitude;
     }

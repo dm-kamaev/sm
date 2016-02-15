@@ -25,6 +25,10 @@ var Address = db.define('Address', {
                 through: 'address_metro',
                 foreignKey: 'address_id'
             });
+            Address.hasMany(models.AddressMetro, {
+                as: 'addressMetroes',
+                foreignKey: 'address_id'
+            });
             Address.hasMany(models.Department, {
                 as: 'departments',
                 foreignKey: 'address_id'

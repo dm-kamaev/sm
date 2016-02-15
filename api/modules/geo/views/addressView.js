@@ -142,6 +142,20 @@ addressView.getMetro = function(addresses) {
 };
 
 /**
+ * Transforms school address for metro stations
+ * @param {Object} school - school instance from sequalize
+ */
+addressView.transformSchoolAddress = function(school) {
+    school.addresses = school.addresses.map(address => {
+        address.metroStations = address.addressMetroes
+            .map(item => item.metroStation);
+        address.dataValues.metroStations = address.metroStations;
+
+        return address;
+    });
+};
+
+/**
  * return filtered array with empty departments or with needed stages
  * @param {array<object>} addresses
  * @return {array<object>}

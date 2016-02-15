@@ -112,9 +112,9 @@ exports.view = async (function(req, res) {
         } else if (url != schoolInstance.url) {
             res.redirect(schoolInstance.url);
         } else {
-            var school = await (services.school.viewOne(schoolInstance.id));
+            var school = await(services.school.viewOne(schoolInstance.id));
             services.school.incrementViews(school.id);
-            var popularSchools = await (services.school.getPopularSchools());
+            var popularSchools = await(services.school.getPopularSchools());
 
             res.header('Content-Type', 'text/html; charset=utf-8');
             res.end(
