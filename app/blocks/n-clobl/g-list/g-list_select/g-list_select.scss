@@ -2,14 +2,15 @@
 	padding: 10px 0;
 
 	.g-list__item {
-		font-family: 'PTSerif, Times, serif';
-		letter-spacing: 0.03em;
-		font-size: 16px;
-		line-height: 30px;
-		color: #000;
-
 		padding: 0 18px;
 
+		color: #000;
+
+		letter-spacing: 0.03em;
+
+		font-family: 'PTSerif', serif;
+		font-size: 16px;
+		line-height: 30px;
 		&:hover {
 			background-color: #f2f2f2;
 		}

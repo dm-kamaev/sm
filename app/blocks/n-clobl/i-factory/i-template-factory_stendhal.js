@@ -1,10 +1,10 @@
 goog.provide('sm.iFactory.TemplateFactoryStendhal');
 goog.provide('sm.iFactory.TemplateFactoryStendhal.INSTANCE');
 
-goog.require('cl.gDropdownSelect.Template');
-goog.require('cl.gListSelect.Template');
-
 goog.require('cl.iFactory.TemplateFactory');
+
+goog.require('sm.gDropdownSelect.Template');
+goog.require('sm.gListSelect.Template');
 
 /**
  * Template factory
@@ -15,12 +15,12 @@ sm.iFactory.TemplateFactoryStendhal = function() {
 
     this.setTemplateListItem(
         'dropdown-select',
-        cl.gDropdownSelect.Template.dropdown
+        sm.gDropdownSelect.Template.dropdown
     );
 
     this.setTemplateListItem(
         'list-select',
-        cl.gListSelect.Template.list
+        sm.gListSelect.Template.list
     );
 };
 goog.inherits(sm.iFactory.TemplateFactoryStendhal, cl.iFactory.TemplateFactory);

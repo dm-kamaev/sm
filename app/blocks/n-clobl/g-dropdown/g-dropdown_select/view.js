@@ -1,4 +1,4 @@
-goog.provide('cl.gDropdownSelect.View');
+goog.provide('sm.gDropdownSelect.View');
 
 goog.require('cl.gDropdown.View');
 
@@ -10,13 +10,13 @@ goog.require('cl.gDropdown.View');
  * @constructor
  * @extends {cl.gDropdown.View}
  */
-cl.gDropdownSelect.View = function(opt_params, opt_template, opt_modifier) {
+sm.gDropdownSelect.View = function(opt_params, opt_template, opt_modifier) {
     goog.base(this, opt_params, opt_template, opt_modifier);
 };
-goog.inherits(cl.gDropdownSelect.View, cl.gDropdown.View);
+goog.inherits(sm.gDropdownSelect.View, cl.gDropdown.View);
 
 goog.scope(function() {
-    var View = cl.gDropdownSelect.View,
+    var View = sm.gDropdownSelect.View,
         ListView = cl.gList.View;
 
     /**
@@ -27,6 +27,13 @@ goog.scope(function() {
         CUSTOM_TEXT: 'g-dropdown__opener-custom-text',
         PLACEHOLDER: 'g-dropdown__opener-text_placeholder',
         ROOT: 'g-dropdown_select'
+    };
+
+    /**
+     * Event enum
+     */
+    View.Event = {
+        CONTROL_CLICK: 'control-click'
     };
 
     /**
@@ -61,6 +68,21 @@ goog.scope(function() {
             this.dom.customText,
             View.CssClass.PLACEHOLDER
         );
+    };
+
+    /**
+     * Dropdown onclick handler
+     * @protected
+     * @override
+     */
+    View.prototype.onControlClick = function() {
+        this.toggle();
+        console.log({
+            'type': View.Event.CONTROL_CLICK
+        });
+        this.dispatchEvent({
+            type: View.Event.CONTROL_CLICK
+        });
     };
 });
 

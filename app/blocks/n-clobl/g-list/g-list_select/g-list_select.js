@@ -1,4 +1,4 @@
-goog.provide('cl.gListSelect.List');
+goog.provide('sm.gListSelect.List');
 
 goog.require('cl.gList.List');
 
@@ -10,7 +10,7 @@ goog.require('cl.gList.List');
  * @constructor
  * @extends {cl.gList.List}
  */
-cl.gListSelect.List = function(view, opt_params, opt_domHelper) {
+sm.gListSelect.List = function(view, opt_params, opt_domHelper) {
     goog.base(this, view, opt_params, opt_domHelper);
 
 
@@ -21,10 +21,10 @@ cl.gListSelect.List = function(view, opt_params, opt_domHelper) {
      */
     this.openerTexts_ = [];
 };
-goog.inherits(cl.gListSelect.List, cl.gList.List);
+goog.inherits(sm.gListSelect.List, cl.gList.List);
 
 goog.scope(function() {
-    var List = cl.gListSelect.List;
+    var List = sm.gListSelect.List;
 
     /**
      * @param {Element} element

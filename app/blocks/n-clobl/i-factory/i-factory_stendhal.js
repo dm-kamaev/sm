@@ -1,10 +1,10 @@
 goog.provide('sm.iFactory.FactoryStendhal');
 
-goog.require('cl.gDropdownSelect.DropdownSelect');
-goog.require('cl.gDropdownSelect.View');
-goog.require('cl.gListSelect.List');
-goog.require('cl.gListSelect.View');
 goog.require('cl.iFactory.Factory');
+goog.require('sm.gDropdownSelect.DropdownSelect');
+goog.require('sm.gDropdownSelect.View');
+goog.require('sm.gListSelect.List');
+goog.require('sm.gListSelect.View');
 
 /**
  * FactoryStendhal
@@ -17,13 +17,13 @@ sm.iFactory.FactoryStendhal = function() {
     goog.base(this, templateFactory, 'stendhal');
 
     this.setControlListItem('dropdown-select', {
-        control: cl.gDropdownSelect.DropdownSelect,
-        view: cl.gDropdownSelect.View
+        control: sm.gDropdownSelect.DropdownSelect,
+        view: sm.gDropdownSelect.View
     });
 
     this.setControlListItem('list-select', {
-        control: cl.gListSelect.List,
-        view: cl.gListSelect.View
+        control: sm.gListSelect.List,
+        view: sm.gListSelect.View
     });
 
 };

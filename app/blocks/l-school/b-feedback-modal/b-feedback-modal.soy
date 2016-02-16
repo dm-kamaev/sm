@@ -105,7 +105,8 @@
 {template .whoAreYou_ private="true"}
     <span class="b-feedback__text
                 b-feedback__text_header">Кто Вы?</span>
-    <div class="b-feedback__user-type">
+    <div class="b-feedback__control
+                b-feedback__control_user-type">
         {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
             {param params: [
                 'type': 'dropdown-select',
@@ -125,11 +126,20 @@
             ]/}
         {/call}
     </div>
-    <div class="b-feedback__class-select">
-        <span class="b-feedback__text">
-            Учусь в
+    <div class="b-feedback__class-select
+                i-utils__hidden">
+        <span class="b-feedback__text
+                    b-feedback__text_student
+                    i-utils__hidden">
+            Учусь здесь в
         </span>
-        <div class="b-feedback__class-type">
+        <span class="b-feedback__text
+                    b-feedback__text_parent
+                    i-utils__hidden">
+            Ребёнок учится в
+        </span>
+        <div class="b-feedback__control
+                    b-feedback__control_class-type">
             {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
                 {param params: [
                     'type': 'dropdown-select',
@@ -162,7 +172,8 @@
         <span class="b-feedback__text">
             Окончил эту школу в
         </span>
-        <div class="b-feedback__graduation-year-input">
+        <div class="b-feedback__control
+                    b-feedback__control_graduation-year">
             {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
                 {param params: [
                     'type': 'input'

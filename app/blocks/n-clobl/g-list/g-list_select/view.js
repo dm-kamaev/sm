@@ -1,4 +1,4 @@
-goog.provide('cl.gListSelect.View');
+goog.provide('sm.gListSelect.View');
 
 goog.require('cl.gList.View');
 
@@ -11,14 +11,14 @@ goog.require('cl.gList.View');
  * @constructor
  * @extends {cl.gList.View}
  */
-cl.gListSelect.View =
+sm.gListSelect.View =
     function(opt_params, opt_template, opt_domHelper) {
     goog.base(this, opt_params, opt_template, opt_domHelper);
 };
-goog.inherits(cl.gListSelect.View, cl.gList.View);
+goog.inherits(sm.gListSelect.View, cl.gList.View);
 
 goog.scope(function() {
-    var View = cl.gListSelect.View;
+    var View = sm.gListSelect.View;
 
     /**
      * Get data params object from element

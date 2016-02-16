@@ -79,8 +79,10 @@ goog.scope(function() {
         'RADIO': 'b-feedback__radio',
         'USER_TYPE_SELECT': 'b-feedback__user-type',
         'CLASS_TYPE_SELECT': 'b-feedback__class-select',
+        'TEXT_STUDENT': 'b-feedback__text_student',
+        'TEXT_PARENT': 'b-feedback__text_parent',
         'GRADUATION_YEAR': 'b-feedback__graduation-year',
-        'CLOSE_CONTROL': 'b-feedback__close-control',
+        'CLOSE_CONTROL': 'b-icon__content',
         'CLOSE_CONTROL_IMG_HOVERED': 'b-icon_img_close-dialog-hovered',
         'CLOSE_CONTROL_IMG': 'b-icon_img_close-dialog'
     };
@@ -117,6 +119,56 @@ goog.scope(function() {
 
 
     /**
+     * Sets up the Component.
+     * @public
+     */
+    FeedbackModal.prototype.enterDocument = function() {
+        goog.base(this, 'enterDocument');
+
+        this.getHandler().listen(
+            this.elements_.button,
+            goog.events.EventType.CLICK,
+            this.formSubmit_
+        );
+
+        this.getHandler().listen(
+            this.closeElement_,
+            goog.events.EventType.MOUSEOVER,
+            this.onCrossHover_
+        );
+
+        this.getHandler().listen(
+            this.closeElement_,
+            goog.events.EventType.MOUSEOUT,
+            this.onCrossHover_
+        );
+
+        this.getHandler().listen(
+            this.closeElement_,
+            goog.events.EventType.CLICK,
+            this.onCrossClick_
+        );
+
+        this.getHandler().listen(
+            this.dropdownInstances_.userType,
+            sm.gDropdownSelect.DropdownSelect.Event.ITEM_SELECT,
+            this.onUserTypeClick_
+        );
+
+        this.getHandler().listen(
+            this.dropdownInstances_.classType,
+            sm.gDropdownSelect.DropdownSelect.Event.CONTROL_CLICK,
+            this.hideUserType_
+        );
+
+        this.getHandler().listen(
+            this.dropdownInstances_.userType,
+            sm.gDropdownSelect.DropdownSelect.Event.CONTROL_CLICK,
+            this.hideClassType_
+        );
+    };
+
+    /**
      * Template-based dom element creation.
      * @public
      */
@@ -142,7 +194,20 @@ goog.scope(function() {
         this.elements_ = {
             radio: this.getElementsByClass(FeedbackModal.CssClass.RADIO),
             button: this.getElementByClass(cl.gButton.View.CssClass.ROOT),
-            form: this.getElementByClass(FeedbackModal.CssClass.FORM)
+            form: this.getElementByClass(FeedbackModal.CssClass.FORM),
+            close: this.getElementByClass(FeedbackModal.CssClass.CLOSE_CONTROL),
+            classSelect: this.getElementByClass(
+                FeedbackModal.CssClass.CLASS_TYPE_SELECT
+            ),
+            graduationYear: this.getElementByClass(
+                FeedbackModal.CssClass.GRADUATION_YEAR
+            ),
+            parentText: this.getElementByClass(
+                FeedbackModal.CssClass.TEXT_PARENT
+            ),
+            studentText: this.getElementByClass(
+                FeedbackModal.CssClass.TEXT_STUDENT
+            )
         };
 
         this.modal_ = factory.decorate(
@@ -172,6 +237,15 @@ goog.scope(function() {
             this.modal_.getElement()
         );
 
+        this.initDropdowns_(factory);
+    };
+
+    /**
+     * dropdowns initialization
+     * @param {sm.iFactory.FactoryStendhal} factory
+     * @private
+     */
+    FeedbackModal.prototype.initDropdowns_ = function(factory) {
         var userTypeElement = goog.dom.getElementByClass(
             cl.gDropdown.View.CssClass.ROOT,
             this.modal_.getElementByClass(
@@ -181,7 +255,7 @@ goog.scope(function() {
         this.dropdownInstances_.userType = factory.decorate(
             'dropdown-select',
             userTypeElement,
-              this
+            this
         );
 
         var classTypeElement = goog.dom.getElementByClass(
@@ -191,42 +265,10 @@ goog.scope(function() {
             )
         );
 
-        this.dropdownInstances_.userType = factory.decorate(
+        this.dropdownInstances_.classType = factory.decorate(
             'dropdown-select',
             classTypeElement,
             this
-        );
-    };
-
-    /**
-     * Sets up the Component.
-     * @public
-     */
-    FeedbackModal.prototype.enterDocument = function() {
-        goog.base(this, 'enterDocument');
-
-        this.getHandler().listen(
-            this.elements_.button,
-            goog.events.EventType.CLICK,
-            this.formSubmit_
-        );
-
-        this.getHandler().listen(
-            this.closeElement_,
-            goog.events.EventType.MOUSEOVER,
-            this.onCrossHover_
-        );
-
-        this.getHandler().listen(
-            this.closeElement_,
-            goog.events.EventType.MOUSEOUT,
-            this.onCrossHover_
-        );
-
-        this.getHandler().listen(
-            this.closeElement_,
-            goog.events.EventType.CLICK,
-            this.onCrossClick_
         );
     };
 
@@ -284,11 +326,11 @@ goog.scope(function() {
      */
     FeedbackModal.prototype.onCrossHover_ = function() {
         goog.dom.classes.toggle(
-            this.closeElement_,
+            this.elements_.close,
             FeedbackModal.CssClass.CLOSE_CONTROL_IMG
         );
         goog.dom.classes.toggle(
-            this.closeElement_,
+            this.elements_.close,
             FeedbackModal.CssClass.CLOSE_CONTROL_IMG_HOVERED
         );
     };
@@ -300,6 +342,121 @@ goog.scope(function() {
     FeedbackModal.prototype.onCrossClick_ = function() {
         this.hide();
     };
+
+    /**
+     * Handler for click on user type select
+     * @param {Object} event
+     * @private
+     */
+    FeedbackModal.prototype.onUserTypeClick_ = function(event) {
+        var itemId = event.itemId;
+
+        switch (itemId) {
+            case 0:
+                this.showClassSelect_(true);
+                this.showGraduationYear_();
+                break;
+            case 1:
+                this.showClassSelect_();
+                this.showGraduationYear_(true);
+                break;
+            case 2:
+                this.showClassSelect_(true, true);
+                this.showGraduationYear_();
+                break;
+        }
+    };
+
+    /**
+     * Close all opened dropdowns
+     * @private
+     */
+    FeedbackModal.prototype.closeDropdowns_ = function() {
+        this.hideClassType_();
+        this.hideUserType_();
+    };
+
+    /**
+     * Close user type dropdown
+     * @private
+     */
+    FeedbackModal.prototype.hideUserType_ = function() {
+        console.log('User type closes');
+        this.dropdownInstances_.userType.close();
+    };
+
+    /**
+     * Close class type dropdown
+     * @private
+     */
+    FeedbackModal.prototype.hideClassType_ = function() {
+        console.log('Class type closes');
+        this.dropdownInstances_.classType.close();
+    };
+
+    /**
+     * Show or hide Class select element
+     * @param {boolean} opt_showClasses - show element if true
+     * and hide if false or undefined
+     * @param {boolean} opt_showStudentText - show student text if true
+     * and parent if false or not defined
+     * @private
+     */
+    FeedbackModal.prototype.showClassSelect_ = function(
+        opt_showClasses, opt_showStudentText) {
+        if (opt_showClasses) {
+            goog.dom.classes.remove(
+                this.elements_.classSelect,
+                cl.iUtils.Utils.CssClass.HIDDEN
+            );
+            if (opt_showStudentText) {
+                goog.dom.classes.remove(
+                    this.elements_.studentText,
+                    cl.iUtils.Utils.CssClass.HIDDEN
+                );
+                goog.dom.classes.add(
+                    this.elements_.parentText,
+                    cl.iUtils.Utils.CssClass.HIDDEN
+                );
+            } else {
+                goog.dom.classes.add(
+                    this.elements_.studentText,
+                    cl.iUtils.Utils.CssClass.HIDDEN
+                );
+                goog.dom.classes.remove(
+                    this.elements_.parentText,
+                    cl.iUtils.Utils.CssClass.HIDDEN
+                );
+            }
+        } else {
+            goog.dom.classes.add(
+                this.elements_.classSelect,
+                cl.iUtils.Utils.CssClass.HIDDEN
+            );
+            this.dropdownInstances_.classType.close();
+        }
+
+    };
+    /**
+     * Show or hide Graduation input block
+     * @param {boolean} opt_showInput - if 'show' show element,
+     * if false or undefined - hide
+     * @private
+     */
+    FeedbackModal.prototype.showGraduationYear_ = function(opt_showInput) {
+        if (opt_showInput) {
+            goog.dom.classes.remove(
+                this.elements_.graduationYear,
+                cl.iUtils.Utils.CssClass.HIDDEN
+            );
+        } else {
+            goog.dom.classes.add(
+                this.elements_.graduationYear,
+                cl.iUtils.Utils.CssClass.HIDDEN
+            );
+        }
+    };
+
 
     /**
      * Sends form using jQuery.ajax
