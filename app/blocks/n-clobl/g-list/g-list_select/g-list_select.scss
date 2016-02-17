@@ -1,0 +1,19 @@
+.g-list.g-list_select {
+	padding: 10px 0;
+
+	.g-list__item {
+		padding: 0 18px;
+
+		color: #000;
+
+		letter-spacing: 0.03em;
+
+		font-family: 'PTSerif', serif;
+		font-size: 16px;
+		line-height: 30px;
+		&:hover {
+			background-color: #f2f2f2;
+		}
+	}
+
+}
