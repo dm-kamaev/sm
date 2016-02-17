@@ -77,7 +77,7 @@ goog.scope(function() {
         'ROOT': 'b-feedback',
         'FORM': 'b-feedback__form',
         'RADIO': 'b-feedback__radio',
-        'USER_TYPE_SELECT': 'b-feedback__user-type',
+        'USER_TYPE_SELECT': 'b-feedback__control',
         'CLASS_TYPE_SELECT': 'b-feedback__class-select',
         'TEXT_STUDENT': 'b-feedback__text_student',
         'TEXT_PARENT': 'b-feedback__text_parent',
@@ -497,25 +497,24 @@ goog.scope(function() {
      * @private
      */
     FeedbackModal.prototype.send_ = function(form, opt_callback) {
-        var data = form.serialize;
+        var data = form.serialize();
         switch (this.dropdowns_.userType.getValue()) {
             case 0:
-                data.userType = 'Parent';
+                data += '&userType=Parent';
                 break;
             case 1:
-                data.class = this.dropdowns_.classType.getValue() ?
-                    this.dropdowns_.classType.getValue() :
-                    0;
-                data.userType = 'Graduate';
+                data += this.dropdowns_.classType.getValue() ?
+                    '&class=' + this.dropdowns_.classType.getValue() :
+                    '&class=0';
+                data += '&userType=Graduate';
                 break;
             case 2:
-                data.class = this.dropdowns_.classType.getValue() ?
-                    this.dropdowns_.classType.getValue() :
-                    0;
-                data.userType = 'Scholar';
+                data += this.dropdowns_.classType.getValue() ?
+                    '&class=' + this.dropdowns_.classType.getValue() :
+                    '&class=0';
+                data += '&userType=Scholar';
                 break;
         }
-
         jQuery.ajax({
             url: form.attr('action'),
             type: form.attr('method'),
@@ -554,6 +553,8 @@ goog.scope(function() {
                 'year-graduate': function(value, that) {
                     if (userType == 1) {
                         isValidYear = that.validateGraduateInput_();
+                    } else {
+                        isValidYear = true;
                     }
                 }
             };
@@ -565,7 +566,6 @@ goog.scope(function() {
 
                 validateList[name](value, this);
             }
-
             isValidOpt = (isValidOpt && isValidYear);
         } else {
             this.dropdowns_.userType.getView().addNotSelectedModifier();
