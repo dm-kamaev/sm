@@ -116,7 +116,9 @@
     }
 
     .b-mark__circle {
-        top: -1px;
+        top: 5px;
+
+        vertical-align: top;
     }
 }
 .b-mark.b-mark_number {
