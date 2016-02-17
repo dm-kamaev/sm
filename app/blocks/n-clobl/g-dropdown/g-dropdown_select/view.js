@@ -37,7 +37,6 @@ goog.scope(function() {
      */
     View.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
-        console.log(this.dom);
         this.dom.customText = this.getElementByClass(View.CssClass.CUSTOM_TEXT);
         this.dom.selectList = this.getElementByClass(ListView.CssClass.ROOT);
     };

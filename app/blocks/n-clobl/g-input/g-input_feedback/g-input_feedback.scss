@@ -1,3 +1,5 @@
-.g-iput.g-iput_feedback.g-input_not-valid {
-	outline: 4px solid #e2332a;
+.g-input.g-input_feedback.g-input_not-valid {
+	.g-input__input {
+		outline: 4px solid #e2332a;
+	}
 }

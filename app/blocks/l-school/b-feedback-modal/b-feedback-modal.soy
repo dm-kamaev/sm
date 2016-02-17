@@ -176,7 +176,13 @@
                     b-feedback__control_graduation-year">
             {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
                 {param params: [
-                    'type': 'input'
+                    'type': 'input-feedback',
+                    'renderParams': [
+                        'data': [
+                            'name': 'year-graduate',
+                            'maxLength': 4
+                        ]
+                    ]
                 ]/}
             {/call}
         </div>
