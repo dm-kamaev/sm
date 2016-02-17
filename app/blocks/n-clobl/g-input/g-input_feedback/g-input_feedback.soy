@@ -1,0 +1,57 @@
+{namespace sm.gInputFeedback.Template}
+
+/**
+ * Constructor
+ * @param? params {{
+ *     data: {
+ *         placeholder: ?string,
+ *         value: ?string,
+ *         name: ?string,
+ *         maxLength: ?number
+ *     }
+ * }}
+ * @doc
+ * @extends cl.gInput.Template
+ * @constructor
+ */
+{template .input}
+    {call .init data="all"/}
+{/template}
+
+/**
+ * Input template
+ * @param? params {{
+ *     data: {
+ *         placeholder: ?string,
+ *         value: ?string,
+ *         name: ?string,
+ *         maxLength: ?number
+ *     }
+ * }}
+ */
+{template .inputTemplate}
+    <input class="{call .rootClass/}__input"
+        {if $params?.data?.placeholder}
+            {sp}
+            placeholder="{$params?.data?.placeholder}"
+        {/if}
+        {if $params?.data?.name}
+            {sp}
+            name="{$params?.data?.name}"
+        {/if}
+        {if $params?.data?.maxLength}
+            {sp}
+            maxlength="{$params?.data?.maxLength}"
+        {/if}
+        {sp}
+        value="{$params?.data?.value ? $params?.data?.value : ''}">
+    </input>
+{/template}
+
+/**
+ * Css classes
+ * @override
+ */
+{template .additionalClasses}
+    {call .rootClass/}_feedback
+{/template}

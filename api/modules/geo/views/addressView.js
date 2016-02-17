@@ -3,13 +3,14 @@ const departmentView = require.main.require('./api/modules/geo/views/departmentV
 const stages = require('../enums/departmentStage');
 
 var addressView = {};
+
+
 /**
  * @param {array<object>} addresses - address instances
  * @param {?object} opt_options
  * @param {?bool} opt_options.filterByDepartment
  * @return {array<object>}
  */
-
 addressView.list = function(addresses, opt_options) {
     var options = opt_options || {};
 
@@ -78,6 +79,40 @@ addressView.stageList = function (addresses, opt_options) {
 
 };
 
+
+/**
+ * Getter for school address for map
+ * @param {Array.<Object>} addresses
+ * @return {Array.<Object>}
+ */
+addressView.default = function(addresses) {
+    var getStages = function(departments) {
+        var result = [];
+        var unical = {};
+        var deps = departments || [];
+
+        for (var i = 0, n = deps.length, dep; i < n; i++) {
+            dep = deps[i];
+            if (dep != undefined && dep.stage && !unical[dep.stage]) {
+                unical[dep.stage] = true;
+                result.push(dep.stage);
+            }
+        }
+
+        return result;
+    };
+
+    return addresses.map(adr => {
+        return {
+            lat: adr.coords[0],
+            lng: adr.coords[1],
+            name: adr.name,
+            stages: getStages(adr.departments)
+        }
+    });
+};
+
+
 /**
  * returns metro names for departments from addresses array
  * @param {array<object>} addresses
@@ -104,6 +139,20 @@ addressView.getMetro = function(addresses) {
         }
     });
     return metroStations;
+};
+
+/**
+ * Transforms school address for metro stations
+ * @param {Object} school - school instance from sequalize
+ */
+addressView.transformSchoolAddress = function(school) {
+    school.addresses = school.addresses.map(address => {
+        address.metroStations = address.addressMetroes
+            .map(item => item.metroStation);
+        address.dataValues.metroStations = address.metroStations;
+
+        return address;
+    });
 };
 
 /**

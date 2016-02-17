@@ -1,4 +1,5 @@
 'use strict';
+
 var colors = require('colors');
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
@@ -60,9 +61,16 @@ service.create = function(data) {
                 result = true;
             }
             else {
-            console.log('Address:'.yellow, address.name);
-            console.log('is alredy binded to school '.yellow +
-                'with id:'.yellow, addressBD.school_id);
+                console.log('Address:'.yellow, address.name);
+
+                var oldSchool = services.school.viewOne(addressBD.school_id);
+
+                console.log('Schools:'.yellow);
+                console.log(oldSchool.fullName);
+                console.log('govermentKey: ' + oldSchool.govermentKey);
+                console.log(data.fullName);
+                console.log('govermentKey: ' + data.govermentKey);
+                console.log();
             }
 
             return result;
@@ -102,13 +110,16 @@ service.create = function(data) {
  */
 service.update = async(function(school_id, data) {
     CsvConverter.cureQuotes(data);
+
     var school = await(
         models.School.findOne({
             where: {id: school_id}
         })
     );
+
     if (!school)
         throw new SchoolNotFoundError(school_id);
+
     return await(school.update(data));
 });
 
@@ -326,6 +337,9 @@ service.updateScore = async(function(school) {
     var queries = [];
     for (var i = 1; i <= 4; i++) {
         var score = 'score[' + i + ']';
+        /**
+         * TODO: add query type
+         */
         var queryPromise = sequelize.query(
             'SELECT AVG(' + score + ') AS avg, ' +
             'count(' + score + ') AS count FROM rating ' +
@@ -475,23 +489,29 @@ service.findBySite = async(function(site) {
  * @public
  */
 service.viewOne = function(id) {
-    var includeParams =
+    var include =
         [{
             model: models.Address,
             as: 'addresses',
             include: [
                 {
                     model: models.Department,
-                    as:'departments'
+                    as: 'departments'
                 },
                 {
-                    model: models.Metro,
-                    as: 'metroStations'
+                    model: models.AddressMetro,
+                    as: 'addressMetroes',
+                    include: [
+                        {
+                            model: models.Metro,
+                            as: 'metroStation'
+                        }
+                    ]
                 }
             ]
         }, {
-             model: models.Rating,
-             as: 'ratings'
+            model: models.Rating,
+            as: 'ratings'
         }, {
             model: models.CommentGroup,
             as: 'commentGroup',
@@ -502,7 +522,7 @@ service.viewOne = function(id) {
                     model: models.Rating,
                     as: 'rating'
                 }]
-             }]
+            }]
         }, {
             model: models.Activity,
             as: 'activites',
@@ -510,23 +530,27 @@ service.viewOne = function(id) {
                 'profile',
                 'type'
             ]
-        }
-            //{
-            //    model: models.EgeResult,
-            //    as: 'egeResults'
-            //}, {
-            //    model: models.GiaResult,
-            //    as: 'giaResults'
-            //}, {
-            //    model: models.OlimpResult,
-            //    as: 'olimpResults'
-            //}
-        ];
+        }];
 
     var school = await(models.School.findOne({
         where: {id: id},
-        include: includeParams
+        include: include,
+        order: [
+            [
+                {
+                    model: models.Address,
+                    as: 'addresses'
+                },
+                {
+                    model: models.AddressMetro,
+                    as: 'addressMetroes'
+                },
+                'distance',
+                'ASC'
+            ]
+        ]
     }));
+
     return school;
 };
 
@@ -647,6 +671,7 @@ service.list = async (function(opt_params) {
             'school.score',
             'school.total_score AS "totalScore"',
             'school.score_count AS "scoreCount"',
+            'school.count_results AS "countResults"',
             'address.id AS "addressId"',
             'department.stage AS "departmentStage"',
             'metro.id AS "metroId"',
@@ -662,7 +687,8 @@ service.list = async (function(opt_params) {
                     'school.url',
                     'school.score',
                     'school.total_score',
-                    'school.score_count'
+                    'school.score_count',
+                    'count(*) OVER() AS count_results'
                 ],
                 from: ['school'],
                 where: [

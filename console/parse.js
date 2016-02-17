@@ -1,3 +1,4 @@
+var lodash = require('lodash');
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var commander = require('commander');
@@ -37,9 +38,10 @@ var GOVERMENT_KEY_INDEX = 2,
  * main parse method
  */
 var parse = async(path => {
-    //sequelize.options.logging = false;
+    sequelize.options.logging = false;
     var parsed = xlsx.parse(path),
         data = parsed[0].data;
+
     var moscow = await(services.city.getMoscow());
 
     data.map(rowParse)
@@ -249,6 +251,9 @@ var getPhones = function(row) {
     if (res[0] && res[0].match(/\(000\)/)) {
         res = [];
     }
+
+    res = lodash.uniq(res);
+
     return res;
 };
 
@@ -265,19 +270,30 @@ var rowToOlimp = (row) => {
         rStatus = row[OLIMP_STATUS_INDEX] || '',
         rYear = row[OLIMP_YEAR_INDEX] || '',
         results = [];
+
     if (rType) {
-        var types = rType.split(';\r\r\n'),
+        var types = rType
+                .replace(/[\r\n]/g, '')
+                .split(';'),
             stages =  rStage
                 .toString()
-                .split(';\r\r\n'),
+                .replace(/[\r\n]/g, '')
+                .split(';'),
             classes = rClass
-                   .toString()
-                   .split(';\r\r\n'),
-            subjects = rSubject.split(';\r\r\n'),
-            statuses = rStatus.split(';\r\r\n'),
+                .toString()
+                .replace(/[\r\n]/g, '')
+                .split(';'),
+            subjects = rSubject
+                .replace(/[\r\n]/g, '')
+                .split(';'),
+            statuses = rStatus
+                .replace(/[\r\n]/g, '')
+                .split(';'),
             years = rYear
                 .toString()
-                .split(';\r\r\n');
+                .replace(/[\r\n]/g, '')
+                .split(';');
+
         types.forEach((type, index) => {
             results.push({
                 type: types[index],
@@ -290,6 +306,7 @@ var rowToOlimp = (row) => {
             });
         });
     }
+
     return results;
 };
 
@@ -345,8 +362,11 @@ var rowToGIA = (row) => {
 var parseSchool = async((schoolData) => {
     var school = await(services.school.getForParse(
              schoolData.govermentKey));
+
+    console.log('Parse school: ' + schoolData.name);
+
     return school ?
-        await (services.school.update(school, schoolData)) :
+        await (services.school.update(school.id, schoolData)) :
         await (services.school.create(schoolData));
 });
 

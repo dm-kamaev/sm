@@ -1,4 +1,3 @@
-
 var services = require.main.require('./app/components/services').all;
 var lodash = require('lodash');
 
@@ -13,17 +12,19 @@ const ratingView = require.main.require(
 
 var schoolView = {};
 
+
 /**
  * @param {object} schoolInstance - school instance
  * @param {?array<object>} opt_popularSchools - school instances
  * @return {object}
  */
 schoolView.default = function(schoolInstance, opt_popularSchools) {
+    addressView.transformSchoolAddress(schoolInstance);
 
-    var addresses =
-        services.department.addressesFilter(schoolInstance.addresses),
+    var addresses = services.department.addressesFilter(schoolInstance.addresses),
         comments = schoolInstance.commentGroup ?
-        schoolInstance.commentGroup.comments : [],
+            schoolInstance.commentGroup.comments :
+            [],
 
         score = schoolInstance.score || [0, 0, 0, 0],
         scoreCount = schoolInstance.scoreCount || [0, 0, 0, 0];
@@ -53,7 +54,7 @@ schoolView.default = function(schoolInstance, opt_popularSchools) {
         activities: getActivities(schoolInstance.activites),
         contacts: getContacts(addresses, schoolInstance.phones),
         comments: getComments(comments),
-        addresses: services.address.getAddress(addresses),
+        addresses: addressView.default(addresses),
         ratings: ratingView.ratingSchoolView(
             schoolInstance.rank, schoolInstance.rankDogm),
         score: getSections(score),
@@ -64,8 +65,10 @@ schoolView.default = function(schoolInstance, opt_popularSchools) {
     if (opt_popularSchools) {
         result.popularSchools = this.popular(opt_popularSchools);
     }
+
     return result;
 };
+
 
 /**
  * @param {array<object>} popularSchools school instances
@@ -320,40 +323,71 @@ var getStages = function(departments) {
 /**
  * @param {array<object>} schools - schoolInstances
  * @param {number} opt_criterion
- * @return {array<object>}
+ * @return {object} contains results count and schools array
  */
 schoolView.list = function(schools, opt_criterion) {
-    var res = [];
+    console.log(schools[0]);
+    var res = {};
     if (schools.length !== 0) {
         schools = groupSchools(schools);
-    }
-    res = schools
-        .map(school => {
-            
-            var score = getScore(school.score, school.totalScore, opt_criterion);
-            var sortCriterion = score.shift();
 
-            return {
-                id: school.id,
-                url: school.url,
-                name: getName(school.name),
-                description: school.description,
-                abbreviation: school.abbreviation,
-                score: score,
-                currentCriterion: sortCriterion,
-                fullName: school.fullName,
-                ratings: ratingView.ratingResultView(school.rankDogm),
-                metroStations: addressView.getMetro(school.addresses)
-            };
-        });
+        res.countResults = schools[0].countResults;
+        res.schools = schools
+            .map(school => {
+
+                var score = getScore(school.score, school.totalScore, opt_criterion);
+                var sortCriterion = score.shift();
+
+                return {
+                    id: school.id,
+                    url: school.url,
+                    name: getName(school.name),
+                    description: school.description,
+                    abbreviation: school.abbreviation,
+                    score: score,
+                    currentCriterion: sortCriterion,
+                    fullName: school.fullName,
+                    ratings: ratingView.ratingResultView(school.rankDogm),
+                    metroStations: addressView.getMetro(school.addresses)
+                };
+            });
+
+
+    } else {
+        res = {
+            countResults: 0,
+            schools: []
+        };
+    }
 
     return res;
 };
 
 /**
+ * @param {array<object>} schools - schoolInstances
+ * @return {array<object>}
+ */
+schoolView.suggestList = function(schools) {
+    return schools
+        .map(school => {
+            return {
+                id: school.id,
+                url: school.url,
+                name: school.name,
+                description: '',
+                abbreviation: school.abbreviation,
+                score: school.score || [0, 0, 0, 0],
+                totalScore: school.totalScore || 0,
+                fullName: school.fullName,
+                addresses: school.addresses
+            };
+    });
+};
+
+/**
  * Groups school objects to one object with addresses and metro arrays
  * @param {Array<Object>} schools
- * @return {Array}
+ * @return {Array<Object>}
  */
 var groupSchools = function(schools) {
     var result = [],
@@ -364,7 +398,7 @@ var groupSchools = function(schools) {
     for(var i = 0, l = schools.length; i <= l; i++) {
         var schoolItem = schools[i];
         if (!schoolItem || schoolItem.id !== currentSchoolId) {
-            
+
             var resultItem = {};
 
             //Copy fiels from one school to result school that not changes
@@ -380,7 +414,7 @@ var groupSchools = function(schools) {
             var grouppedByAddress = lodash.groupBy(grouppedById, 'addressId');
             resultItem.addresses = [];
 
-            //iterates over schools with same address  
+            //iterates over schools with same address
             lodash.forEach(grouppedByAddress, (schools, key) => {
                 resultItem.addresses.push({
                     id: key,
@@ -436,7 +470,6 @@ var groupSchools = function(schools) {
         }
         grouppedById.push(schoolItem);
     }
-    console.log(result.length);
     return result;
 };
 
@@ -456,7 +489,7 @@ var getScore = function(score, totalScore, opt_criterion) {
         value: totalScore
     });
 
-    scoreItems.unshift(scoreItems.splice(sortCriterionIndex, 1)[0]); 
+    scoreItems.unshift(scoreItems.splice(sortCriterionIndex, 1)[0]);
     return scoreItems;
 };
 
@@ -519,7 +552,7 @@ schoolView.listMapPoints = function(schools) {
  */
 schoolView.suggest = function(data) {
     return {
-        schools: this.list(data.schools),
+        schools: this.suggestList(data.schools),
         areas: areaView.list(data.areas),
         metro: metroView.list(data.metros)
     };

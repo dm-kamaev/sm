@@ -1,4 +1,4 @@
-var soy = require.main.require('./app/components/soy');
+var soy = require.main.require('./node_modules/clobl/soy');
 
 var docPages = [
         "b-mark",
@@ -13,7 +13,8 @@ var docPages = [
         "b-search",
         "b-filters",
         "b-diagram",
-        "b-score"
+        "b-score",
+        "b-badge"
     ];
 
 

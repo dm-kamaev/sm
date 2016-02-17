@@ -61,13 +61,14 @@ exports.list = async (function(req, res) {
     ];
     var results = await(promises);
 
-    var schools = schoolView.list(results[0]);
+    var data = schoolView.list(results[0]);
+
     var filters = schoolView.filters(results[1]);
 
     var params = {
         params: {
             data: {
-                schools: schools,
+                schools: data.schools,
                 filters: {
                     filters: filters,
                     url: '/api/school/search'
@@ -75,6 +76,7 @@ exports.list = async (function(req, res) {
             },
             searchText: req.query.name ?
                 searchText : '',
+            countResults: data.countResults,
             searchSettings: {
                 url: '/api/school/search',
                 method: 'GET',
@@ -110,9 +112,10 @@ exports.view = async (function(req, res) {
         } else if (url != schoolInstance.url) {
             res.redirect(schoolInstance.url);
         } else {
-            var school = await (services.school.viewOne(schoolInstance.id));
+            var school = await(services.school.viewOne(schoolInstance.id));
             services.school.incrementViews(school.id);
-            var popularSchools = await (services.school.getPopularSchools());
+            var popularSchools = await(services.school.getPopularSchools());
+
             res.header('Content-Type', 'text/html; charset=utf-8');
             res.end(
                 soy.render('sm.lSchool.Template.base', {

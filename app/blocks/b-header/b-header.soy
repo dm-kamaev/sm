@@ -11,56 +11,62 @@
  *        text: ?string,
  *        value: ?string
  *    },
+ *    notShowLink: ?boolean
  * }
  */
 {template .base autoescape="strict" kind="html"}
     <div class="b-header">
         <div class="b-header__body">
+        {if not ($params.notShowLink)}
+                <div class="b-header__link-search">
+                    {call sm.bLink.Template.base}
+                        {param params: [
+                            'data': [
+                                'name': 'Полный список школ',
+                                'url': '/search'
+                            ]
+                        ]/}
+                    {/call}
+                </div>
+            {/if}
             //TODO: uncomment
             /*
             <div class="b-header__menu">
-    			<div class="b-header__menu-image b-icon_img_menu">
-    			</div>
-  				<div class="b-header__line b-header__line_right">
-  				</div>
-    		</div>
+                <div class="b-header__menu-image b-icon_img_menu">
+                </div>
+                  <div class="b-header__line b-header__line_right">
+                  </div>
+            </div>
             */
-    		<div class="b-header__main">
-                {if $params.url}
-                    <div class="b-header__before b-header__before_search">
-                    </div>
-                {else}
-    			    <div class="b-header__before">
-        			</div>
-                {/if}
-    			<div class="b-header__wrap">
-    				<div class="b-header__title">
-    					<span class="b-header__stars">
-    						<span class="b-header__star b-header__star_first">t</span>
-    						<span class="b-header__star b-header__star_second">t</span>
-    						<span class="b-header__star b-header__star_third">t</span>
-    						<span class="b-header__star b-header__star_forth">t</span>
-    						<span class="b-header__star b-header__star_fifth">t</span>
-    					</span>
-    					<h1 class="b-header__header">
+            <div class="b-header__main">
+                <div class="b-header__wrap">
+                    <div class="b-header__title">
+                        <span class="b-header__stars">
+                            <span class="b-header__star b-header__star_first">t</span>
+                            <span class="b-header__star b-header__star_second">t</span>
+                            <span class="b-header__star b-header__star_third">t</span>
+                            <span class="b-header__star b-header__star_forth">t</span>
+                            <span class="b-header__star b-header__star_fifth">t</span>
+                        </span>
+                        <h1 class="b-header__header">
                                 {if $params.url}
-    						        <a class="b-header__link" href="{$params.url}">школы мела</a>
+                                    <a class="b-header__link" href="{$params.url}">школы «мела»</a>
                                 {else}
-                                    школы мела
+                                    школы «мела»
                                 {/if}
-    					</h1>
-    					<span class="b-header__stars">
-    						<span class="b-header__star b-header__star_fifth">t</span>
-    						<span class="b-header__star b-header__star_forth">t</span>
-    						<span class="b-header__star b-header__star_third">t</span>
-    						<span class="b-header__star b-header__star_second">t</span>
-    						<span class="b-header__star b-header__star_first">t</span>
-    					</span>
-    				</div>
-    			</div>
-    		</div>
+                        </h1>
+                        <span class="b-header__stars">
+                            <span class="b-header__star b-header__star_fifth">t</span>
+                            <span class="b-header__star b-header__star_forth">t</span>
+                            <span class="b-header__star b-header__star_third">t</span>
+                            <span class="b-header__star b-header__star_second">t</span>
+                            <span class="b-header__star b-header__star_first">t</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
             {if $params.url}
-        		<div class="b-header__search">
+                <div class="b-header__search">
                     {call sm.bSearch.Template.base}
                         {param params: [
                             'placeholder': 'Найти школу',
@@ -80,13 +86,13 @@
             {/if}
             //TODO: uncomment
             /*
-    		<div class="b-header__search">
-    			<div class="b-header__search-image">
-    				<div class="b-header__line b-header__line_left">
-    				</div>
-    			</div>
-    		</div>
+            <div class="b-header__search">
+                <div class="b-header__search-image">
+                    <div class="b-header__line b-header__line_left">
+                    </div>
+                </div>
+            </div>
             */
         </div>
-	</div>
+    </div>
 {/template}

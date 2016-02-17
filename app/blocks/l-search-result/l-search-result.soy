@@ -46,6 +46,7 @@
             ]
         ],
         searchText: string,
+        countResults: number,
         searchSettings: [
             url: string,
             method: string,
@@ -73,7 +74,7 @@
             <title>Результаты поиска на Школах Мела</title>
             <link href='https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700,700italic&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
             <link href='https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
-            <link rel="stylesheet" href="/frobl.build.css">
+            <link rel="stylesheet" href="/clobl.build.css">
             <link rel="stylesheet" href="/styles.css">
             <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
         </head>
@@ -94,20 +95,27 @@
                                 'item': $params.templates.item,
                                 'text': $params.templates.text,
                                 'value': $params.templates.value
-                            ]
+                            ],
+                            'notShowLink': 'true'
                         ]/}
                     {/call}
                 </div>
                 <div class="l-search-result__body">
-                    {call .topMenu_}
-                    {/call}
-                    {call .leftMenu_ data="all"/}
-                    <div class="l-search-result__school-list">
-                        {call sm.lSearchResult.bSchoolList.Template.base}
-                            {param params: [
-                                'schools': $params.data.schools
-                            ]/}
-                        {/call}
+                    {call .leftMenu_ data="all" /}
+                    <div class="l-search-result__results-section">
+                        <div class="l-search-result__list-header">
+                            {call .listHeader_ data="all" /}
+                        </div>
+
+                        <div class="l-search-result__list-body
+                            {$params.countResults ? '' : ' i-utils__hidden'}
+                        ">
+                            {call sm.lSearchResult.bSchoolList.Template.base}
+                                {param params: [
+                                    'schools': $params.data.schools
+                                ]/}
+                            {/call}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -125,41 +133,88 @@
 {/template}
 
 /**
- * Top menu template
+ * Header for list of schools
+ * @param? params {
+ *     countResults: ?number,
+ *     searchText: ?string
+ * }
  */
-{template .topMenu_ autoescape="strict" kind="html" private="true"}
-    // <div class="l-search-result__top-menu">
-    //     // <div class="l-search-result__search">
-    //     //     {call sm.bSearch.Template.base}
-    //     //         {param params: [
-    //     //             'placeholder': 'Поиск',
-    //     //             'text': $params.searchText,
-    //     //             'theme': 'min',
-    //     //             'templates': [
-    //     //                 'search': $params.templates.search,
-    //     //                 'item': $params.templates.item,
-    //     //                 'text': $params.templates.text,
-    //     //                 'value': $params.templates.value
-    //     //             ]
-    //     //         ]/}
-    //     //     {/call}
-    //     // </div>
-    //     //TODO: uncomment
-    //     /*
-    //     <div class="l-search-result__show-on-map">
-    //         <div class="l-search-result__map-link">
-    //             <div class="b-icon_img_red-pin l-search-result__show-on-map-icon"></div>
-    //             <div class="l-search-result__show-on-map-text">
-    //                 Показать на карте
-    //             </div>
-    //         </div>
-    //     </div>
-    //     */
-    //     // <div class="l-search-result__sort">
-    //     //     {call sm.lSearchResult.bSort.Template.base}
-    //     //     {/call}
-    //     // </div>
-    // </div>
+{template .listHeader_}
+    <div class="l-search-result__list-header">
+        <span class="l-search-result__list-header-text">
+            {if length($params.searchText)}
+            По запросу{sp}
+            <span class="l-search-result__list-header-text
+                        l-search-result__list-header-text_strong">
+                «{$params.searchText}»
+            </span>{sp}
+            {else}
+            По вашему запросу{sp}
+            {/if}
+            мы{sp}
+            <span class="l-search-result__list-header-text
+                         l-search-result__list-header-text_change">
+                {call .generateHeaderText}
+                    {param params: [
+                        'countResults': $params.countResults
+                    ] /}
+                {/call}
+            </span>
+        </span>
+    </div>
+{/template}
+
+/**
+ * Generates header text for school list
+ * @param? params {
+ *     countResults: number
+ * }
+ */
+{template .generateHeaderText}
+        {if $params.countResults == 0}
+            не нашли ничего.
+        {else}
+            нашли <span class="l-search-result__list-header-text
+                               l-search-result__list-header-text_strong
+                               l-search-result__list-header-text_amount">
+                {$params.countResults}{sp}
+                {if $params.countResults > 100}
+                    {let $lastTwoNumbers: $params.countResults % 100 /}
+                    {call .getEnding_}
+                        {param params: [
+                            'number': $lastTwoNumbers
+                        ]/}
+                    {/call}
+                {else}
+                    {call .getEnding_}
+                        {param params: [
+                            'number': $params.countResults
+                        ]/}
+                    {/call}
+                {/if}
+            </span>
+        {/if}
+{/template}
+
+/**
+ * makes word's 'школа' ending depends of incoming number
+ * @param? params {
+ *     number: number
+ * }
+ */
+{template .getEnding_}
+    {if $params.number >= 11 and $params.number <= 19}
+        школ
+    {else}
+        {let $lastNumber: $params.number % 10 /}
+        {if $lastNumber == 1}
+            школу
+        {elseif $lastNumber >= 2 and $lastNumber <= 4}
+            школы
+        {else}
+            школ
+        {/if}
+    {/if}
 {/template}
 
 /**

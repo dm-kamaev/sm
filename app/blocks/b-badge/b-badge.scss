@@ -5,7 +5,9 @@
     font-family: Arial, sans-serif;
 }
 .b-badge__item {
-    text-decoration: inherit;
+    display: inline-block;
+
+	text-decoration: inherit;
     color: inherit;
 
     &_active:hover {

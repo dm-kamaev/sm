@@ -85,13 +85,6 @@ goog.scope(function() {
     };
 
     /**
-     * Sets up the Component.
-     */
-    Comments.prototype.enterDocument = function() {
-        goog.base(this, 'enterDocument');
-    };
-
-    /**
      * creates and returns comment
      * @param {object} params
      * @return {Element}
@@ -109,12 +102,5 @@ goog.scope(function() {
         this.comments_.push(commentInstance.getElement());
 
         return comment;
-    };
-
-    /**
-     * Cleans up the Component.
-     */
-    Comments.prototype.exitDocument = function() {
-        goog.base(this, 'exitDocument');
     };
 });

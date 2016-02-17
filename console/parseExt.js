@@ -4,10 +4,12 @@ var commander = require('commander');
 var xlsx = require('node-xlsx');
 var fs = require('fs');
 var mkdirp = require("mkdirp");
+
+var sequelize = require.main.require('./app/components/db');
 var departmentStage = require('../api/modules/geo/enums/departmentStage');
 var models = require.main.require('./app/components/models').all;
-
 var services = require.main.require('./app/components/services').all;
+var Format = require('./modules/utils/format');
 
 const REPORT_PATH = './console/reports/';
 
@@ -26,7 +28,7 @@ var FULL_NAME_INDEX = 0,
 
     AREA_INDEX = 13,
     ADDRESS_INDEX = 14,
-    DEPARTMENT_INDEX = 15;
+    DEPARTMENT_INDEX = 15,
     PHONE_INDEX = 16;
 
 /**
@@ -34,18 +36,18 @@ var FULL_NAME_INDEX = 0,
  * @param {string} path
  */
 var parse = async(function(path) {
+    sequelize.options.logging = false;
+
     var rows = xlsx.parse(path)[0]['data'],
         schools = await(services.school.listInstances()),
-
         parsedData = parseData(rows),
         parsedSchools = parseSchools(schools);
+
 
     var matches = findMatches(parsedSchools, parsedData);
 
     var specializedStat = [],
         debug = [];
-
-    console.log(matches.length);
 
     matches.forEach(match => {
         var data = match[1];
@@ -57,6 +59,7 @@ var parse = async(function(path) {
             dressCode: data.dressCode,
             boarding: data.boarding,
             specializedClasses: data.specialized,
+            phones: data.phones
         };
 
         if (data.schoolType) {
@@ -156,28 +159,51 @@ var deleteMissingDepartments = function(addresses, departments) {
     }
 }
 
+var checkAdresses = function(schoolId, addresses) {
+    addresses.map(address => {
+            return await(models.Address.findAll({
+                    where: {
+                        name: address
+                    }
+                }));
+        })
+        .forEach(sqlResult => {
+            sqlResult.forEach(address => {
+                if (address.school_id != schoolId) {
+                    console.log('WARN: Address already belongs to another school'.yellow);
+                    console.log('Address:', address.name);
+                    console.log('School id:', schoolId);
+                    console.log('Another school id:', address.school_id);
+                }
+            })
+        });
+};
+
 var updateDepartments = function(school_id, addresses, departments) {
+    checkAdresses(school_id, addresses);
 
     var parsedDepartments = splitStages(departments);
 
     parsedDepartments.forEach((department, i) => {
-        var addressId = await(services.address.getAddress(
-            {
-                name: addresses[i]
-            }
-        )).id,
+        var addressId = await(services.address.getAddress({
+                name: addresses[i],
+                schoolId: school_id
+            })).id,
             name = department[1] || '';
+
         department[0].forEach(stage => {
-            departmentInstances = await(services.department.getAllByData({
+            var departmentInstances = await(services.department.getAllByData({
                 name: name,
                 stage: stage
             }));
+
             var isFound = false;
             departmentInstances.forEach(dep => {
                 if (dep.addressId === addressId) {
                     isFound = true;
                 }
             });
+
             if (!isFound) {
                 await(services.department.addDepartment(
                     school_id,
@@ -193,13 +219,15 @@ var updateDepartments = function(school_id, addresses, departments) {
 };
 
 var createDepartments = function(school_id, addresses, departments) {
+    checkAdresses(school_id, addresses);
 
     var parsedDepartments = splitStages(departments);
 
     parsedDepartments.forEach((department, i) => {
         var addressId = await(services.address.getAddress(
             {
-                name: addresses[i]
+                name: addresses[i],
+                schoolId: school_id
             }
         )).id,
             name = department[1] || '';
@@ -287,9 +315,10 @@ var parseData = function(data) {
 
             row.dressCode = stringToBool(data[i][DRESS_CODE_INDEX]);
 
-            row.schoolType = capitalizeFirstChar(
-                data[i][SCHOOL_TYPE_INDEX]
-            ) || '';
+            row.schoolType = Format.normalizeStr(data[i][SCHOOL_TYPE_INDEX], {
+                capitalize: true,
+                collapseSpaces: true
+            });
 
             row.boarding = stringToBool(data[i][BOARDING_INDEX]);
 
@@ -305,7 +334,7 @@ var parseData = function(data) {
 
             row.addresses = parseAddressOrArea(data[i][ADDRESS_INDEX]);
 
-            row.phone = data[i][PHONE_INDEX] || '';
+            row.phones = parsePhones(data[i][PHONE_INDEX]);
 
         } else if (typeof data[i][SITE_INDEX] !== 'undefined') {
 
@@ -319,6 +348,14 @@ var parseData = function(data) {
     parsed.push(row);
 
     return parsed;
+};
+
+var parsePhones = function(phonesStr) {
+    return phonesStr
+        .replace(/\r/g, '')
+        .split('\n')
+        .filter(str => str)
+        .map(phone => Format.phone(phone));
 };
 
 var parseSchools = function(schools) {
@@ -344,6 +381,7 @@ var parseSchools = function(schools) {
             'addresses': schools[i].addresses
         });
     }
+
     return parsedSchools;
 };
 
@@ -358,6 +396,7 @@ var findMatches = function(schools, data) {
         {
             var row = data[i].site[siteI];
             domain = extractDomain(row[1]);
+
             for (var j = 0; j < schoolsLength; j++) {
                 for (var k = 0, domainLength = schools[j].domains.length;
                     k < domainLength; k++) {
@@ -367,6 +406,7 @@ var findMatches = function(schools, data) {
 
                         var adrLen = schools[j].addresses.length || 0;
                         matches.push([schools[j].id, data[i], schools[j].addresses]);
+
                         break schoolLoop;
                     }
                 }
@@ -393,7 +433,7 @@ var createSchool = async(function(data) {
         boarding: data.boarding,
         schoolType: data.schoolType,
         director: data.director,
-        phones: [data.phone],
+        phones: data.phones,
         educationInterval: [1,2,3,4,5,6,7,8,9,10,11] // TODO: need data
     }));
 
@@ -431,36 +471,35 @@ var setAddresses = function(areas, addresses) {
 };
 
 var parseSite = function(site) {
-    var parsed = [],
-        url = site.replace(/(\r\n|\n|\r)/g,"");
-    if (url.indexOf('mskobr') > -1) {
-        parsed = [
-            'Школа на сайте Департамента образования Москвы',
-            url
-        ]
+    var str = site.replace(/(\r\n|\n|\r)/, ""),
+        strs = str.split(','),
+        url = Format.url(strs[0]),
+        name = Format.normalizeStr(strs[1]);
+
+    if (strs.length > 2) {
+        console.log('WARN: ', strs);
     }
-    else {
-        parsed = [
-            'Сайт школы',
-            url
-        ];
+
+    if (!name) {
+        name = (url.indexOf('mskobr') > -1) ?
+            'Школа на сайте Департамента образования Москвы':
+            'Сайт школы';
     }
-    return parsed;
+
+    return [name, url];
 };
 
 var parseSocial = function(social) {
-    var parsed = [],
-        social = social,
-        split = social.lastIndexOf('-'),
-        splitted = [
-            social.slice(0, split),
-            social.slice(split + 1)
-        ];
-    parsed = [
-        social.slice(split + 1).trim(),
-        social.slice(0, split).trim()
-    ];
-    return parsed;
+    var str = social.replace(/(\r\n|\n|\r)/g, ""),
+        strs = str.split(','),
+        url = Format.url(strs[0]),
+        name = Format.normalizeStr(strs[1]);
+
+    if (strs.length > 2) {
+        console.log('WARN: ', strs);
+    }
+
+    return [name, url];
 };
 
 var parseSpecialized = function(specialized) {
@@ -470,7 +509,10 @@ var parseSpecialized = function(specialized) {
         result.push([
             specialized[i + 1],
             specialized[i].split(';').map(item => {
-                return capitalizeFirstChar(item.trim());
+                return Format.normalizeStr(item, {
+                    capitalize: true,
+                    collapseSpaces: true
+                });
             })
         ]);
     }
@@ -500,7 +542,10 @@ var parseFeatures = function(features) {
     }
 
     return splitted.map(item => {
-        return capitalizeFirstChar(item);
+        return Format.normalizeStr(item, {
+            capitalize: true,
+            collapseSpaces: true
+        });
     });
 };
 
@@ -509,16 +554,6 @@ var stringToBool = function(string) {
         return string.trim() !== 'нет';
     } else {
         return false;
-    }
-};
-
-var capitalizeFirstChar = function(string) {
-    if (string)
-    {
-        string = string.trim();
-        return string.charAt(0).toUpperCase() + string.slice(1);
-    } else {
-        return '';
     }
 };
 
@@ -540,11 +575,12 @@ var parseDepartments = function(departments) {
         .replace(/\r/g, '')
         .split('\n')
         .map(department => {
-                return department
-                    .split(':')
-                    .map(data => {
-                        return capitalizeFirstChar(data.trim());
-                    });
+            return department
+                .split(':')
+                .map(data => Format.normalizeStr(data, {
+                    capitalize: true,
+                    collapseSpaces: true
+                }));
         })
         .filter(dep => {
             if (dep[0]) {

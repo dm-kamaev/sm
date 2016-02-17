@@ -1,4 +1,4 @@
-.b-modal_feedback{
+.g-modal_feedback{
     .b-dialog {
         padding: 0;
     }
@@ -8,42 +8,56 @@
     width: 700px;
 
     color: #000;
+    text-align: left;
+}
+
+.b-feedback__form {
+	width: 800px;
+
+    text-align: left;
 }
 
 .b-feedback__content {
-    padding: 50px 50px 0;
+    margin: 42px 50px 50px;
 }
 
-.b-feedback__title {
-    margin: 0 0 40px;
+.b-feedback__text {
+	margin-right: 20px;
 
-    text-transform: uppercase;
+	font-family: 'PT Serif', serif;
+	font-size: 16px;
 
-    font: 900 27px 'Proxima', Arial, sans-serif;
+	&_modal-title {
+		font: 800 27px 'Proxima', Arial, sans-serif;
+	}
+
+	&_header {
+		margin-right: 18px;
+
+		text-transform: uppercase;
+
+		letter-spacing: 0.06em;
+
+		font: 800 16px 'Proxima', Arial, sans-serif;
+	}
+}
+
+.b-feedback__close-control {
+	float: right;
+
+	margin-top: 8px;
+	margin-right: 18px;
+
+	cursor: pointer;
 }
 
 .b-feedback__title_sub {
     font-size: 16px;
 }
 
-.b-feedback__title_subsub {
-    margin: 0 0 4px;
-
-    font-weight: 800;
-    font-size: 13px;
-}
-
-.b-feedback__comment {
-    margin: 0 0 40px;
-
-    font-family: 'PTSerifRegular', serif;
-}
-
 .b-feedback__who-are-you {
     margin: 0 0 30px;
     padding: 0 0 40px;
-
-    border-bottom: 1px solid #e5e5e5;
 }
 
 .b-feedback__title_who-are-you {
@@ -52,16 +66,38 @@
     width: 146px;
 }
 
-.b-feedback__user-type {
-    width: 125px;
-
-    font-size: 0;
+.b-feedback__class-select {
+	display: inline-block;
 }
 
-.b-feedback__user-type {
-    display: inline-block;
+.b-feedback__control {
+	display: inline-block;
 
-    font: 16px 'PTSerifRegular', serif;
+	font-family: 'PT Serif', serif;
+	font-size: 16px;
+	line-height: normal;
+
+	&_class-type {
+		width: 70px;
+
+		margin-right: 20px;
+	}
+
+	&_user-type {
+		width: 230px;
+
+		margin-right: 42px;
+	}
+
+	&_graduation-year {
+		width: 70px;
+
+		margin-right: 21px;
+	}
+}
+
+.b-feedback__graduation-year {
+	display: inline-block;
 }
 
 .b-feedback__radio {
@@ -77,16 +113,50 @@
     cursor: pointer;
 }
 
+.b-feedback__title-scores {
+    margin: 0 0 11px;
+
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+
+    font: 800 16px 'Proxima', Arial, sans-serif;
+}
+
 .b-feedback__scores {
-    margin: 0 0 40px;
+    margin: 0 0 24px;
 
     font-size: 0;
+}
+
+.b-feedback__title-score {
+    display: inline-block;
+
+    margin: 0 17px 12px 0;
+
+    letter-spacing: 0.03em;
+
+    font: 17px 'PTSerifRegular', serif;
 }
 
 .b-feedback__score {
     display: inline-block;
 
-    width: 150px;
+    width: 330px;
+    margin: 0 0 9px;
+
+    vertical-align: top;
+
+    &:nth-child(odd) {
+        margin-right: 35px;
+    }
+}
+
+.b-feedback__description {
+    font: 12px Arial, sans-serif;
+
+    color:#9a9a9a;
+
+    line-height: 20px;
 }
 
 .b-feedback__button {
@@ -103,4 +173,20 @@
     &:hover {
         background: #e3e3dc;
     }
+}
+
+.b-feedback__section {
+	margin-bottom: 40px;
+
+	&_header {
+		margin-bottom: 32px;
+	}
+
+	&_whoAreYou {
+		margin-bottom: 30px;
+	}
+
+	&:last-child {
+		margin-bottom: 0;
+	}
 }

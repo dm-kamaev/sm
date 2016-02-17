@@ -14,7 +14,12 @@ class CsvConverter {
      */
     static beautyfySybmols(str) {
         replace.configure(languages.russian);
-        return replace.all(str);
+        var res = replace.all(str);
+
+        // TODO: find a normal way to do it
+        res = res.replace(/−/g, '-');
+
+        return res;
     }
 
     /**
@@ -66,6 +71,10 @@ class CsvConverter {
     toJson() {
         var unstableJSON = await(this.jsonPromise_(this.input_));
         this.stabilizeJSON_(unstableJSON);
+
+        // TODO: find a normal way to do it
+        CsvConverter.cureQuotes(unstableJSON);
+
         return unstableJSON;
     }
 
@@ -84,13 +93,12 @@ class CsvConverter {
      * @return {object}
      */
     getJson_() {
-        var res;
-        if (this.type_ == 'object') {
-            res = this.input_;
-        } else {
-            res = JSON.parse(this.input_);
-        }
+        var res = (this.type_ == 'object') ?
+            this.input_ :
+            JSON.parse(this.input_);
+
         CsvConverter.cureQuotes(res);
+
         return res;
     }
 

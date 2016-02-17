@@ -12,39 +12,40 @@ soynode.setOptions({
      * TODO: make watch
      * In case of dynamic recompile, please don't restart gulp
      */
-    allowDynamicRecompile: true,
-    contextJsPaths: [
-        path.join(__dirname, '../../node_modules/frobl/blocks/i-utils/i-utils.js')
-    ]
+    allowDynamicRecompile: true
 });
 
-exports.init = function(file, opt_callback) {
-    var callback = opt_callback || function() {};
-
-    soynode.loadCompiledTemplateFiles(file, function(err) {
-        if (err) throw err;
-        callback();
-        soynode.setOptions({
-            contextJsPaths: []
-        });
-
-        fs.watchFile(
-            file,
-            function() {
-                console.log('Recompiling templates...');
-
-                soynode.loadCompiledTemplateFiles(
-                    file,
-                    function (err) {
-                        if (err) {
-                            throw err;
-                        } else {
-                            console.log('Successfully!');
-                        }
-                    }
-                );
+exports.init = function(file) {
+    return new Promise((resolve, reject) => {
+        soynode.loadCompiledTemplateFiles(file, function(err) {
+            if (err) {
+                reject(err);
             }
-        );
+
+            soynode.setOptions({
+                contextJsPaths: []
+            });
+
+            resolve();
+
+            fs.watchFile(
+                file,
+                function() {
+                    console.log('Recompiling templates...');
+
+                    soynode.loadCompiledTemplateFiles(
+                        file,
+                        function (err) {
+                            if (err) {
+                                throw err;
+                            } else {
+                                console.log('Successfully!');
+                            }
+                        }
+                    );
+                }
+            );
+        });
     });
 };
 
