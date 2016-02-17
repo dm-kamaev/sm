@@ -21,7 +21,8 @@
  *         ],
  *         description: ?string,
  *         metroStations: list<string>,
- *         ratings: list<string>
+ *         ratings: list<string>,
+ *         isScoreClickable: ?boolean
  *     ]>
  * }
  */
@@ -31,7 +32,45 @@
             <div class="b-school-list__line">
             </div>
             <div class="b-school-list__sort">
-                {call sm.lSearchResult.bSort.Template.base}
+
+                /*{call sm.lSearchResult.bSort.Template.base}
+                {/call}*/
+                {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+                    {param params: [
+                        'type': 'dropdown-select',
+                        'renderParams': [
+                            'data': [
+                                'listItems': [
+                                    [
+                                        'label': 'Средняя оценка',
+                                        'openerText': 'средней оценке'
+                                    ],
+                                    [
+                                        'label': 'Образование',
+                                        'openerText': 'образованию'
+                                    ],
+                                    [
+                                        'label': 'Преподаватели',
+                                        'openerText': 'преподавателям'
+                                    ],
+                                    [
+                                        'label': 'Атмосфера',
+                                        'openerText': 'атмосфере'
+                                    ],
+                                    [
+                                        'label': 'Инфраструктура',
+                                        'openerText': 'инфраструктуре'
+                                    ]
+                                ],
+                                'staticText': 'Сортировать по ',
+                                'defaultOpenerText': 'средней оценке'
+                            ],
+                            'config': [
+                                'iconSprite': 'sort-arrow',
+                                'theme': 'sort'
+                            ]
+                        ]
+                    ]/}
                 {/call}
             </div>
         </div>
@@ -46,7 +85,8 @@
                         'currentCriterion': $school.currentCriterion,
                         'description': $school.description,
                         'metroStations': $school.metroStations,
-                        'ratings': $school.ratings
+                        'ratings': $school.ratings,
+                        'isScoreClickable': $school.isScoreClickable
                     ]/}
                 {/call}
             {/foreach}
