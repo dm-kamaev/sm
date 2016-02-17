@@ -12,10 +12,14 @@ var modules = {
     GEO: 'geo',
     SCHOOL: 'school',
     STUDY: 'study',
-    UNIVER: 'univer'
+    UNIVER: 'univer',
+    COMMENT: 'comment'
 };
 /*List of models to update data*/
 var modelModules = {
+    Comment: modules.COMMENT,
+    CommentGroup: modules.COMMENT,
+
     Address: modules.GEO,
     Area: modules.GEO,
     City: modules.GEO,
@@ -24,6 +28,7 @@ var modelModules = {
     AddressMetro: modules.GEO,
 
     Activity: modules.SCHOOL,
+    Rating: modules.SCHOOL,
     School: modules.SCHOOL,
     SchoolUrl: modules.SCHOOL,
     SchoolTypeFilter: modules.SCHOOL,
@@ -55,7 +60,7 @@ var start = async(function() {
 
 /**
  * @param {string} module
- * @return {string} 
+ * @return {string}
  */
 var chooseName = function(module) {
     var migrationPath = path.join(__dirname, '../api/modules',
@@ -88,7 +93,7 @@ var chooseAttributes = function(model) {
     console.log('\n');
     console.log(colors.green('\tAttributes:\n'));
     console.log(variantsStr);
-    
+
     try {
         var answer = readlineSync.question('Choose attributes (format: 0,3,4)\n');
         var answerNumbers = answer.split(',');
@@ -108,18 +113,18 @@ var chooseAttributes = function(model) {
  * @param {object} options
  */
 var archiveModel = async(function(options) {
-    var fullPath = options.isLocal ? __dirname : 
+    var fullPath = options.isLocal ? __dirname :
         path.join(
-            __dirname, '../api/modules', 
+            __dirname, '../api/modules',
             modelModules[options.model.name], 'migrations'
         );
     var archiver = new ModelArchiver(
-        options.model, 
+        options.model,
         fullPath,
         options.attributes,
         options.name);
     archiver.save();
-}); 
+});
 
 
 commander

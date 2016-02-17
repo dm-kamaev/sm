@@ -148,7 +148,7 @@ goog.scope(function() {
      */
     School.prototype.initChildren_ = function() {
         /** comments */
-        if (comments) {
+        if (this.elements_.comments) {
             var comments = new sm.lSchool.bComments.Comments();
             this.addChild(comments);
             comments.decorate(this.elements_.comments);

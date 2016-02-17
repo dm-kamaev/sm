@@ -5,7 +5,7 @@ const CsvConverter = require('./CsvConverter.js');
 const Archiver = require('./Archiver.js');
 const path = require('path');
 const sequelize = require('../../../app/components/db');
-
+const SqlHelper = require('../sqlHelper/SqlHelper.js');
 
 class ModelArchiver {
     /**
@@ -90,7 +90,7 @@ class ModelArchiver {
             this.bulkInsertLoad_(data) :
             this.upsertLoad_(data);
 
-        await (this.actualizeSequence_());
+        await (SqlHelper.actualizeSequence(this.model_.tableName));
     }
 
 
@@ -128,26 +128,6 @@ class ModelArchiver {
             await(this.model_.bulkCreate(chunk));
         }));
     };
-
-
-    /**
-     * @private
-     * fixes bug in auto incremented id
-     */
-    actualizeSequence_() {
-        var tableName = this.model_.tableName;
-        var sqlString = 'SELECT setval(\'' + tableName +
-                '_id_seq\', (SELECT MAX(id) from ' +
-                tableName +'));';
-        try {
-            await(sequelize.query(
-                sqlString,
-                {type: sequelize.QueryTypes.SELECT}
-            ));
-        } catch (e) {
-            throw e;
-        }
-    }
 
     /**
      * @privare

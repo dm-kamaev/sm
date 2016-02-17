@@ -3,9 +3,9 @@
 var colors = require('colors');
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
-var models = require.main.require('./app/components/models').all;
-var services = require.main.require('./app/components/services').all;
-var sequelize = require.main.require('./app/components/db');
+var models = require('../../../../app/components/models').all;
+var services = require('../../../../app/components/services').all;
+var sequelize = require('../../../../app/components/db');
 var searchTypeEnum = require('../enums/searchType');
 var schoolTypeEnum = require('../enums/schoolType');
 var CsvConverter = require('../../../../console/modules/modelArchiver/CsvConverter');
@@ -280,6 +280,7 @@ service.onRatingChange = async(function(schoolId) {
         await(this.updateReviewCount(school));
         await(this.updateScore(school));
     } catch (e) {
+        console.log(e);
     }
 });
 
@@ -547,13 +548,13 @@ service.viewOne = function(id) {
  * @raram {object} prarams
  * @param {array<number> || null} params.score
  * @param {string || null} params.text
+ * @param {string || null} params.username
  * @return {object{bool ratingCreated, bool commentCreated}}
  */
 service.review = async(function(schoolId, params) {
     if (!params.text && !params.score)
         throw new Error('Expected comment text or rating');
     try {
-        console.log(params);
         var answer = {
             ratingCreated: false,
             commentCreated: false

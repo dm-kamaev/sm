@@ -13,6 +13,11 @@ var Comment = db.define('Comment', {
         field: 'user_type',
         type: DataType.ENUM,
         values: authorType.toArray()
+    },
+    username: DataType.STRING,
+    commentGroupId: {
+        type: DataType.INTEGER,
+        field: 'comment_group_id'
     }
 }, {
     underscored: true,
