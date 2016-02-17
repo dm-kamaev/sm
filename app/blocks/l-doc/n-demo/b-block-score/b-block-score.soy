@@ -23,6 +23,25 @@
  * doc
  */
 {template .doc}
+Default view
+    Template:
+    <br><br>
+    <div class="l-doc__code">
+        sm.bScore.Template.base
+    </div>
+    <br><br>
+    Params:
+    <br><br>
+    <div class="l-doc__code">
+        reviewCount: ?number,<br>
+        score: list<[<br>
+            <div class="l-doc__code-indent">name: ?string,</div>
+            <div class="l-doc__code-indent">value: ?number</div>
+        ]>,<br>
+        totalScore: ?number
+    </div>
+
+    <br><br>
     {call sm.bScore.Template.base}
         {param params: [
             'reviewCount': 10,
@@ -32,7 +51,40 @@
                 ['name':'Инфраструктура','value':3.5],
                 ['name':'Атмосфера','value':4]
             ],
-                'totalScore':4
+            'totalScore': 4
         ]/}
     {/call}
+    <br><br>
+    School list view
+        Template:
+        <br><br>
+        <div class="l-doc__code">
+            sm.bScoreSchoolList.Template.base
+        </div>
+        <br><br>
+        Params:
+        <br><br>
+        <div class="l-doc__code">
+            score: list<[<br>
+                <div class="l-doc__code-indent">name: ?string,</div>
+                <div class="l-doc__code-indent">value: ?number</div>
+            ]>,<br>
+            sortCriteria: [<br>
+                <div class="l-doc__code-indent">name: ?string,</div>
+                <div class="l-doc__code-indent">value: ?number</div>
+            ]
+        </div>
+
+        <br><br>
+        {call sm.bScoreSchoolList.Template.base}
+            {param params: [
+                'score': [
+                    ['name':'Образование','value': 2.3],
+                    ['name':'Преподаватели','value': 2.7],
+                    ['name':'Инфраструктура','value':3.5],
+                    ['name':'Атмосфера','value':4]
+                ],
+                'sortCriteria': ['name': 'Средняя оценка', 'value': 2.3]
+            ]/}
+        {/call}
 {/template}

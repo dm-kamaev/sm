@@ -1,0 +1,83 @@
+.b-score_school-list {
+    position: relative;
+
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    line-height: 20px;
+}
+
+.b-score__current-criterion-name {
+    display: inline-block;
+
+    margin-right: 22px;
+}
+
+.b-score__current-criterion-value {
+    display: inline-block;
+
+    width: 54px;
+    margin: 0;
+
+    cursor: pointer;
+}
+
+.b-score__other-marks {
+    position: absolute;
+    z-index: 10;
+    right: 2px;
+
+    width: 150px;
+    margin-top: 15px;
+    padding: 23px 30px 14px 30px;
+
+    color: #808080;
+    background: #fff;
+    box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.25);
+}
+
+.b-score__arrow {
+    position: absolute;
+    top: -9px;
+    left: 140px;
+
+    height: 9px;
+    width: 16px;
+
+    overflow: hidden;
+}
+
+.b-score__arrow-shadow {
+    position: absolute;
+    top: 5px;
+    left: 4px;
+
+    height: 8px;
+    width: 8px;
+
+    background: white;
+    box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.25);
+
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+.b-score__mark-item {
+    margin-bottom: 9px;
+    padding-bottom: 8px;
+
+    border-bottom: 1px solid #e5e5e5;
+
+    &:last-child {
+        margin-bottom: 0;
+
+        border-bottom: none;
+    }
+}
+.b-score__mark-name {
+    display: inline-block;
+    width: 122px;
+}
+.b-score__mark-value {
+    display: inline-block;
+}

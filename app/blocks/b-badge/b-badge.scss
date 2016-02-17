@@ -1,0 +1,31 @@
+.b-badge {
+    font-size: 13px;
+    line-height: 18px;
+
+    font-family: Arial, sans-serif;
+}
+.b-badge__item {
+    display: inline-block;
+
+	text-decoration: inherit;
+    color: inherit;
+
+    &_active:hover {
+        color: #ee362c;
+    }
+}
+
+.b-badge__icon {
+    display: inline-block;
+
+    margin-right: 8px;
+}
+.b-badge__content {
+    display: inline-block;
+    text-decoration: none;
+    color: #808080;
+}
+.b-badge_star {
+    font-family: "WebSymbols", Arial, sans-serif;
+    color: #ee362c;
+}

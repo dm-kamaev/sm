@@ -1,0 +1,232 @@
+{namespace gorod.bInput.InputTemplate autoescape="strict" }
+/**
+* @param? params
+*/
+{template .render}
+
+    {let $modifier :quoteKeysIfJs([
+            'email': 'mail',
+            'phone': 'phone',
+            'password': 'key',
+            'name': 'user',
+            'lastname': 'user'
+        ])
+    /}
+    {let $stateInput : quoteKeysIfJs([
+            'default': 'gray',
+            'active': 'blue',
+            'filled': 'black',
+            'error': 'red',
+            'disabled': $params?.value ? 'black' : 'gray'
+        ])
+    /}
+    {let $paramsType: $params?.type ? $params : augmentMap($params, [ 'type': 'text'])/}
+    {let $paramsTypeState : $paramsType?.autofocus ?
+            augmentMap($paramsType, [ 'state': 'active']):
+            $paramsType/}
+    {let $paramsTypeStateToo : $paramsTypeState?.state ?
+            $paramsTypeState :
+                $paramsTypeState.value ?
+                    augmentMap($paramsTypeState, [ 'state': 'filled']) :
+                    augmentMap($paramsTypeState, [ 'state': 'default'])
+    /}
+    {let $paramsEx :
+        [
+            'params': $paramsTypeStateToo,
+            'modifier': $modifier,
+            'state': $stateInput
+        ]
+    /}
+    {let $hash kind="text"}
+        {if $paramsEx?.params?.hash}
+            {$paramsEx?.params?.hash}
+        {else}
+            {call gorod.iUtils.ext_generateId/}
+        {/if}
+    {/let}
+    {let $theme: ' b-input_theme_'+ ($params.style?.theme ?: 'default') /}
+    {let $size : ' b-input_size_'+ ($params.style?.size  ?: 'medium') /}
+    {let $placeholder_alias:
+            (not ($params?.type == 'text') and not ($params?.placeholder)) ?
+            (($params?.type == 'email') ? 'Ваш e-mail' :
+            ($params?.type == 'phone') ? 'Ваш мобильный телефон' :
+            ($params?.type == 'password') ? 'Ваш пароль' :
+            ($params?.type == 'name') ? 'Ваше имя' :
+            ($params?.type == 'lastname') ?: 'Ваша фамилия') : ''
+    /}
+
+    {let $placeholder_alias_two: $params?.placeholder ?: $placeholder_alias /}
+    {let $errorPlaceholder: $paramsEx?.params?.errorPlaceholder ?: null /}
+    {let $errorMessage: $paramsEx?.params?.errors ?: null /}
+    {let $validateData: $paramsEx?.params?.validate ?: null /}
+    {let $showCnt : $paramsEx?.params?.showCounter == true /}
+    {let $placeholder kind="text"}
+        {if ( $paramsEx?.params?.state == 'error' and  $paramsEx?.params?.errorPlaceholder) }
+            {$paramsEx?.params?.errorPlaceholder}
+        {else}
+            {if $params?.placeholder}
+                {$params?.placeholder}
+            {else}
+                {$placeholder_alias_two}
+            {/if}
+        {/if}
+    {/let}
+    {let  $params_customDataParams kind="html"}
+        {if  $paramsEx?.params?.customData }
+            {foreach $custom in $paramsEx.params?.customData}
+                {sp}data-{$custom.key}={$custom.item}
+            {/foreach}
+        {/if}
+    {/let}
+    {let $customDataParams kind="html"}
+        {if $paramsEx?.params?.customDataString}
+            {$params_customDataParams} + ' ' + {$params?.customDataString}
+        {/if}
+    {/let}
+    {let $classList kind="html"}
+        { $theme }
+        { $size }
+        { $paramsEx?.params?.autofocus ? ' b-input_focus ' : '' }
+        { $paramsEx?.params?.state == 'error' ? ' b-input_error ' : '' }
+        { $paramsEx?.params?.showCounter ? ' b-input__margin-bottom ' : '' }
+        {sp}
+        { $paramsEx?.params?.customClasses ? $paramsEx.params?.customClasses : '' }
+        { $paramsEx?.params?.type == 'hidden' ? ' i-utils__hidden ' : '' }
+    {/let}
+
+    {let $inputSize: $paramsEx?.params?.style?.size ?
+        ' b-input__input_size_'+ $paramsEx.params?.style.size
+        : ' b-input__input_size_medium' /}
+    {let $inputPadding kind="text"}
+        {if not($paramsEx?.params?.type == 'text') or $paramsEx?.params?.iconLeft?.type}
+            {' b-input__input_padding-left'}
+        {/if}
+        {if ($paramsEx?.params?.type== 'password' or
+            (($paramsEx?.params?.type == 'text') and $paramsEx?.params?.iconRight?.type))}
+            {' b-input__input_padding-right'}
+        {/if}
+    {/let}
+    {let $valueInput: $paramsEx?.params?.value ? $paramsEx.params?.value : '' /}
+    {let $validateParam:
+            quoteKeysIfJs([
+                'hash': $hash,
+                'message': $paramsEx?.params?.errors
+            ])
+    /}
+    {if $paramsEx?.params?.type == 'hidden'}
+        <input type="hidden"
+        name="{$paramsEx?.params?.name}"
+        value="{$valueInput}"
+        class="b-input__input  { $classList }"
+        >
+    {else}
+        <div class="b-input { $classList }" data-params='
+            {call gorod.iUtils.stringify}
+                {param json:
+                    quoteKeysIfJs([
+                        'type': $paramsEx?.params?.type,
+                        'validate': $validateData,
+                        'placeholder': $placeholder_alias_two,
+                        'errorPlaceholder': $errorPlaceholder,
+                        'errorMessage': $errorMessage,
+                        'showCounter': $showCnt,
+                        'maxCount': $paramsEx?.params?.maxlength,
+                        'theme': $theme
+                    ])
+                /}
+            {/call}
+        ' { $customDataParams }>
+        {if  not ($paramsEx?.params?.type == 'text') }
+            <span class="b-input__icon-position b-input__icon-position_left ">
+            {call .bInputNativeIcons_}
+                {param paramsEx: $paramsEx/}
+            {/call}
+            </span>
+            {elseif $paramsEx?.params?.iconLeft?.type }
+                <span class="b-input__icon-position b-input__icon-position_left">
+                {call gorod.bIcon.IconTemplate.render }
+                    {param params: $paramsEx?.params?.iconLeft /}
+                {/call}
+                </span>
+            {/if}
+            {let $type :  $paramsEx?.params?.type == 'password' ? 'password' : 'text' /}
+                <input type="{$type}"
+                    name="{$paramsEx?.params?.name ?: '' }"
+                    value="{$valueInput }"
+                    placeholder="{$placeholder}"
+                    class="b-input__input{$inputSize } {$inputPadding }
+                         {$paramsEx?.params?.showCounter ? ' i-countdown-field' : '' }"
+                    {if $hash } data-validate-hash="{$hash}" {/if}
+                    {if $paramsEx?.params?.autofocus} autofocus="true" {/if}
+                    {if  ($paramsEx?.params?.autocomplete == false) or not($paramsEx?.params?.autocomplete)}
+                          autocomplete="off"
+                    {/if}
+                    {if $paramsEx?.params?.maxlength}
+                          maxlength="{$paramsEx?.params?.maxlength}"
+                    {/if}
+                    {if $paramsEx?.params?.state == 'disabled'}
+                          disabled="disabled"
+                    {/if}
+                />
+                {if $paramsEx?.params?.type == 'password'}
+                    <span class="b-input__icon-position b-input__icon-position_right">
+                        {call .bInputTypePasswordIcons_}
+                        {/call}
+                    </span>
+                {elseif (($paramsEx?.params?.type == 'text') and ( $params?.iconRight?.type) )}
+                    <span class="b-input__icon-position b-input__icon-position_right">
+                        {call gorod.bIcon.IconTemplate.render}
+                            {param params: $paramsEx?.params?.iconRight/}
+                        {/call}
+                    </span>
+                {/if}
+                {if $paramsEx?.params?.showCounter}
+                    <div class='i-countdown-text b-input__counter b-input__counter-color'>
+                        {$paramsEx?.params?.maxlength}
+                    </div>
+                {/if}
+                <div class="b-input__errors ">
+                    {call gorod.ValidateTemplate.render}
+                        {param params: $validateParam /}
+                    {/call}
+                </div>
+            </div>
+    {/if}
+{/template}
+/**
+*/
+{template .bInputNativeIcons_}
+    {@param paramsEx: ?}
+
+    {let $modifier :  $paramsEx?.modifier[$paramsEx?.params?.type]/}
+    {foreach $state in keys($paramsEx?.state) }
+        <div class="b-input__icon
+            {sp}b-input__icon-{$state}
+            {sp}{$paramsEx.params.state != $state ? 'i-utils__hidden' : ''}">
+            {call gorod.bIcon.IconTemplate.render}
+                {param params:
+                     quoteKeysIfJs([
+                         'type': $modifier + '_' + $paramsEx?.state[$state]
+                    ])
+                /}
+            {/call}
+        </div>
+    {/foreach}
+{/template}
+/**
+*/
+{template .bInputTypePasswordIcons_}
+   {let $states:['default', 'active']/}
+   {let $gray: quoteKeysIfJs(['type': 'eye_gray']) /}
+   {let $black: quoteKeysIfJs(['type': 'eye_black']) /}
+    <div class="b-input__icon-pswd b-input__icon-pswd-default">
+        {call gorod.bIcon.IconTemplate.render}
+            {param params: $gray /}
+        {/call}
+    </div>
+    <div class="b-input__icon-pswd b-input__icon-pswd-bold i-utils__hidden">
+        {call gorod.bIcon.IconTemplate.render}
+            {param params: $black /}
+        {/call}
+    </div>
+{/template}

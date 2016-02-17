@@ -7,10 +7,12 @@ var metroView = {};
 metroView.list = function(metros) {
     return metros
         .map(metro => {
-            return {
-                id: metro.id,
-                name: metro.name,
-            };
+            if(metro.name) {
+                return {
+                    id: metro.id,
+                    name: metro.name.replace('метро ', '')
+                };
+            }
         });
 };
 

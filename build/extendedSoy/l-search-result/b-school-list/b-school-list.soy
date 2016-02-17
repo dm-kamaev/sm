@@ -1,0 +1,48 @@
+{namespace sm.lSearchResult.bSchoolList.Template}
+/**
+* @param? params
+*/
+{template .base autoescape="strict" kind="html"}
+    <div class="b-school-list">
+        <div class="b-school-list__header">
+            <div class="b-school-list__line">
+            </div>
+            <div class="b-school-list__sort">
+                {call sm.lSearchResult.bSort.Template.base}
+                {/call}
+            </div>
+        </div>
+        <div class="b-school-list__body">
+            {foreach $school in $params.schools}
+                {call sm.lSearchResult.bSchoolListItem.Template.base}
+                    {param params:[
+                        'id': $school.id,
+                        'url': $school.url,
+                        'name': $school.name,
+                        'score': $school.score,
+                        'currentCriterion': $school.currentCriterion,
+                        'description': $school.description,
+                        'metroStations': $school.metroStations,
+                        'ratings': $school.ratings
+                    ]/}
+                {/call}
+            {/foreach}
+        </div>
+        <div class="b-school-list__loader i-utils__hidden">
+            <div class="b-school-list__loader-image">
+            </div>
+            <div class="b-school-list__loader-text">
+                Загружаем список...
+            </div>
+        </div>
+
+        <div class="b-school-list__footer">
+            <div class="b-school-list__show-more-button{sp}
+                {if length($params.schools) < 10}
+                    i-utils__hidden
+                {/if}">
+                Показать ещё
+            </div>
+        </div>
+    </div>
+{/template}

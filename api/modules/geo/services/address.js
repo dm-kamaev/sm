@@ -3,7 +3,7 @@ var await = require('asyncawait/await');
 var sequelizeInclude = require.main.require('./api/components/sequelizeInclude');
 var models = require.main.require('./app/components/models').all;
 var services = require.main.require('./app/components/services').all;
-var departmentStage = require('../enums/departmentStage');
+var sequelize = require('../../../../app/components/db');
 exports.name = 'address';
 
 
@@ -26,7 +26,9 @@ exports.getTest = async(() => {
  * }} data
  */
 exports.addAddress = async(function(school_id, data) {
-    var addressBD = await(services.address.getAddress({name: data.name}));
+    var addressBD = await(services.address.getAddress({
+        name: data.name
+    }));
     var address;
 
     if (addressBD) {
@@ -179,48 +181,16 @@ exports.setArea = async ((area, address) => {
     } );
 });
 
-exports.getCoords = function(addresses) {
-    return addresses.map(adr => {
-        return {
-            lat: adr.coords[0],
-            lng: adr.coords[1]
-        };
-    });
-};
 
 exports.listMapPoints = async (function() {
-    var searchConfig = {
-        include: [{
-            model: models.Address,
-            as: 'addresses',
-            attributes: [
-                'name',
-                'coords'
-            ],
-            include: [{
-                model: models.Department,
-                as: 'departments',
-                attributes: [
-                    'stage'
-                ],
-                where: {
-                    $or: [
-                        {stage: departmentStage.fields.ELEMENTARY},
-                        {stage: departmentStage.fields.MIDDLE_HIDE}
-                    ]
-                }
-            }],
-            having: ['COUNT(?) > ?', '`departments`.`id`', 0]
-        }],
-        attributes: [
-            'id',
-            'name',
-            'schoolType',
-            'url',
-            'totalScore'
-        ]
-    };
+    var sqlQuery = "SELECT school.id, school.name, school.url, " +
+        "school.total_score AS \"totalScore\", address.name AS \"adrName\"," +
+        "address.coords, department.stage FROM school " +
+        "INNER JOIN address ON school.id = address.school_id " +
+        "INNER JOIN department ON address.id = department.address_id " +
+        "WHERE department.stage IN ('Основное и среднее', " +
+        "'Начальное образование')",
+        schools = sequelize.query(sqlQuery, { model: models.School });
 
-    var schools = await(models.School.findAll(searchConfig));
-    return schools;
+        return schools;
 });

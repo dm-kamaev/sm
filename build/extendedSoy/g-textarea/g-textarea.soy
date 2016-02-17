@@ -1,0 +1,110 @@
+{namespace cl.gTextarea.Template}
+/**
+* @param? params
+* @extends cl.iControl.Template
+* @constructor
+* @doc
+*/
+{template .textarea}
+    {call .init data="all"/}
+{/template}
+/**
+* @param? params
+*/
+{template .body}
+    <textarea class="{call .rootClass/}__textarea"
+        placeholder="{$params?.data?.placeholder}"
+        name="{$params?.data?.name}"
+        spellcheck="false">
+             {$params?.data?.value ? $params?.data?.value : ''}
+    </textarea>
+    {if $params?.config?.autoHeight}
+        <div class="{call .rootClass/}__text-container">
+            {$params?.data?.value ? $params?.data?.value : ''|changeNewlineToBr}
+        </div>
+    {/if}
+{/template}
+/**
+* @override
+*/
+{template .rootClass}
+    g-textarea
+{/template}
+/**
+* @override
+* @param? params
+*/
+{template .additionalClasses}
+    {if $params?.config?.autoHeight}
+        {sp}
+        g-textarea_auto-height
+    {/if}
+{/template}
+/**
+* @param params
+* @doc
+*/
+{template .base}
+    {call .init data="all"/}
+{/template}
+/**
+* @param params
+*/
+{template .init}
+    <{call .tag data="all"/} class="{call .classes data="all"/}"
+        {sp}
+        {if $params?.includes}
+            data-include="{lb}
+                {foreach $item in $params?.includes}
+                    &quot;{$item.type}&quot;:{$item.data}
+                {/foreach}
+            {rb}"{sp}
+        {/if}
+        {call .attributes data="all"/}/>
+        {call .body data="all"/}
+    </{call .tag data="all"/}>
+{/template}
+/**
+* @param params
+*/
+{template .classes}
+    i-control
+    {sp}
+    {call .rootClass/}
+    {sp}
+    {call .stylizationModifierClass data="all"/}
+    {if $params?.config?.theme}
+        {sp}{call .rootClass/}_{$params.config.theme}-theme
+    {/if}
+    {if $params?.config?.customClasses}
+        {foreach $class in $params.config.customClasses}
+            {sp}{$class}
+        {/foreach}
+    {/if}
+    {sp}
+    {call .additionalClasses data="all"/}
+{/template}
+/**
+* @param params
+*/
+{template .stylizationModifierClass}
+    {if $params?.config?.stylizationModifier}
+        {call .rootClass/}_
+        {call .stylizationModifier data="all"/}
+    {/if}
+{/template}
+/**
+* @param params
+*/
+{template .stylizationModifier}
+    {$params.config.stylizationModifier}
+{/template}
+/**
+*/
+{template .attributes kind="attributes"}
+{/template}
+/**
+*/
+{template .tag}
+    div
+{/template}

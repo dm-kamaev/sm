@@ -1,0 +1,162 @@
+{namespace sm.lDoc.nDemo.bBlockDiagram.Template}
+/**
+*/
+{template .preview}
+    {call sm.bDiagram.Template.base}
+        {param params: [
+            'data': [
+                [
+                    'name': 'Name1',
+                    'value': 7
+                ],
+                [
+                    'name': 'Name2',
+                    'value': 3
+                ]
+            ],
+            'maxValue': 10
+        ]/}
+    {/call}
+{/template}
+/**
+*/
+{template .doc}
+    Template:
+    <br><br>
+    <div class="b-block-mark__code">
+        sm.bDiagram.Template.base
+    </div>
+
+    <br><br>
+
+    Params:
+    <br><br>
+    <div class="b-block-mark__code">
+        data: list<[ <br>
+            <span class="b-block-diagram__code-indent">name: string,</span>
+            <br>
+            <span class="b-block-diagram__code-indent">value: string</span>
+            <br>
+            <span class="b-block-diagram__code-indent">averageValue: {sp}
+                ?string
+            </span>
+            <br>
+            <span class="b-block-diagram__code-indent">description: {sp}
+                ?string
+            </span>
+            <br>
+        ]>,
+        <br>
+        display: ?string | ['text', 'stars', 'marks', 'bars', 'default'] {sp}
+        <span class="b-block-mark__comment">
+            - display stylization
+        </span>
+        <br>
+        maxValue: ?number {sp}
+        <span class="b-block-mark__comment">
+            - maximal value
+        </span>
+        <br>
+        starsConfig: ?[] {sp}
+        <span class="b-block-mark__comment">
+            - config for stars
+        </span>
+    </div>
+
+    <br><br><br>
+
+    Simple example for default display:
+    <br>
+    {call sm.bDiagram.Template.base}
+        {param params: [
+            'data': [
+                [
+                    'Name': 'Name1',
+                    'value': 7
+                ],
+                [
+                    'name': 'Name2',
+                    'value': 3
+                ]
+            ],
+            'maxValue': 10
+        ]/}
+    {/call}
+
+    <br><br>
+    Text(display: 'text') example:
+    <br>
+    {call sm.bDiagram.Template.base}
+        {param params: [
+            'data': [
+                [
+                    'name': 'name1',
+                    'value': 'Что-то с чем-то 1'
+                ],
+                [
+                    'name': 'name2',
+                    'value': 'Что-то без чего-то 2'
+                ]
+            ],
+            'display': 'text'
+        ]/}
+    {/call}
+    <br><br>
+    Marks(display: 'marks') example:
+    <br>
+    {call sm.bDiagram.Template.base}
+        {param params: [
+            'data': [
+                [
+                    'name': 'name1',
+                    'value': 4.5
+                ],
+                [
+                    'name': 'name2',
+                    'value': 1.3
+                ]
+            ],
+            'display': 'marks'
+        ]/}
+    {/call}
+    <br><br>
+    Stars(display: 'stars') example:
+    <br>
+    {call sm.bDiagram.Template.base}
+        {param params: [
+            'data': [
+                [
+                    'name': 'name1',
+                    'value': 4.5
+                ],
+                [
+                    'name': 'name2',
+                    'value': 1.3
+                ]
+            ],
+            'display': 'stars'
+        ]/}
+    {/call}
+    <br><br>
+    Bars(display: 'bars') example:
+    <br>
+    {call sm.bDiagram.Template.base}
+        {param params: [
+            'data': [
+                [
+                    'name': 'name1',
+                    'value': 4.5,
+                    'averageValue': 4,
+                    'description': 'description'
+                ],
+                [
+                    'name': 'name2',
+                    'value': 1.3,
+                    'averageValue': 2
+                ]
+            ],
+            'display': 'bars',
+            'maxValue': 10
+        ]/}
+    {/call}
+{/template}

@@ -1,0 +1,46 @@
+{namespace sm.bScore.Template}
+/**
+* @param params
+*/
+{template .base autoescape="strict" kind="html"}
+    {call .init data="all" /}
+{/template}
+/**
+* @param params
+*/
+{template .init autoescape="strict" kind="html"}
+    <div class="b-score">
+        <div class="b-score__section
+                    b-score__section_left">
+            <div class="b-score__average">
+                {call sm.bMark.Template.base}
+                    {param params: [
+                        'value': $params.totalScore
+                        ]
+                     /}
+                {/call}
+            </div>
+
+            <div class="b-score__delimiter"></div>
+
+            <div class="b-score__comments-amount">
+                {if not $params.reviewCount or $params.reviewCount < 5}
+                    Недостаточно
+                {else}
+                    {$params.reviewCount}
+                {/if}
+                {sp}оценок
+            </div>
+        </div>
+
+        <div class="b-score__section
+                    b-score__section_right">
+            {call sm.bDiagram.Template.base}
+                {param params: [
+                    'data': $params.score,
+                    'display': 'marks'
+                ]/}
+            {/call}
+        </div>
+    </div>
+{/template}

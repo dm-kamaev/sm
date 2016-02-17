@@ -5,31 +5,61 @@
  * @param params {{
  *     value: number,
  *     display: ?string,
- *     starsConfig: ?[]
+ *     starsConfig: ?[],
+ *     config: [
+ *         bigText: bool,
+ *         notShowDashes: bool
+ *     ]
  * }}
  */
 {template .base}
+    {let $value: round($params.value, 1)/}
     {let $color kind="html"}
-        {if $params.value >= 4}
+        {if $value >= 4}
             green
-        {elseif $params.value >= 3}
+        {elseif $value >= 3}
             yellow
-        {elseif $params.value > 0}
+        {elseif $value > 0}
             red
         {else}
             grey
         {/if}
     {/let}
     <div class="b-mark{sp}
-                b-mark_{$color}
-                {sp}
-                {$params?.display == 'inline' ? 'b-mark_inline' : ''}">
+                b-mark_{$color}{sp}
+                {$params?.display == 'inline' ? 'b-mark_inline' : ''}{sp}
+                {$params?.display == 'number' ? 'b-mark_number' : ''}{sp}
+                {if $params.config}
+                    {$params?.config.bigText ? 'b-mark_bigText' : ''}{sp}
+                    {$params?.config.bigText ? 'b-mark_no-dash' : ''}
+                {/if}
+                ">
         {if $params?.display == 'inline'}
-            {call .inline data="all"/}
+            {call .inline}
+                {param params: [
+                    'value': $value,
+                    'config': $params.config
+                ]/}
+            {/call}
         {elseif $params?.display == 'stars'}
-            {call .stars data="all"/}
+            {call .stars}
+                {param params: [
+                    'value': $value,
+                    'starsConfig': $params.starsConfig
+                ]/}
+            {/call}
+        {elseif $params?.display == 'number'}
+            {call .number}
+                {param params: [
+                    'value': $value
+                ]/}
+            {/call}
         {else}
-            {call .simple data="all"/}
+            {call .simple}
+                {param params: [
+                    'value': $value
+                ]/}
+            {/call}
         {/if}
     </div>
 {/template}
@@ -52,6 +82,9 @@
  * Inline
  * @param params {{
  *     value: number
+ *     config: [
+ *         showDashes: bool
+ *     ]
  * }}
  */
 {template .inline}
@@ -81,16 +114,41 @@
 {/template}
 
 /**
- * Value
+ * Number template
  * @param params {{
  *     value: number
  * }}
  */
+{template .number}
+    <div class="b-mark__mark">
+        {call .value}
+            {param params: [
+                'value': $params.value
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+/**
+ * Value
+ * @param params {{
+ *     value: number
+ *     config: [
+ *         notShowDashes: bool
+ *     ]
+ * }}
+ */
 {template .value}
     {if $params.value > 0}
-        {let $val: round($params.value, 1)/}
-        {floor($val)},{round(($val - floor($val))*10, 0)}
+        {floor($params.value)}
+        {if floor($params.value) != $params.value}
+            ,{round(($params.value - floor($params.value))*10, 0)}
+        {/if}
     {else}
-        —
+        {if $params.config}
+            {$params?.config.notShowDashes ? '' : '—'}
+        {else}
+            —
+        {/if}
     {/if}
 {/template}

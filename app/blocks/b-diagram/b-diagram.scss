@@ -89,6 +89,7 @@
 
 .b-diagram_bars {
     .b-diagram__item {
+        width: 33%;
         padding: 13px 0 14px;
     }
 
@@ -96,17 +97,41 @@
         background-color: #eaeae5;
     }
 
+    .b-diagram__number-value {
+        display: inline-block;
+
+        box-sizing: border-box;
+        width: 14%;
+        padding: 0 15px;
+
+        text-align: center;
+        font-size: 14px;
+        font-family: Arial;
+        color: #6f6f6d;
+        vertical-align: middle;
+    }
+
+    .b-diagram__bar-filled {
+        cursor: pointer;
+        background-color: #757573;
+    }
+
     .b-diagram__bar-filled_red {
-        background-color: #ed635a;
+        background-color: #ef655e;
+    }
+
+    .b-diagram__bar-filled_green {
+        background-color: #5cce81;
     }
 
     .b-diagram__label {
         position: relative;
 
         box-sizing: border-box;
-        padding-right: 30px;
+        width: 43%;
 
-        font-size: 16px;
+        font-size: 14px;
+        font-family: Arial;
         vertical-align: middle;
         text-align: right;
     }
@@ -114,6 +139,7 @@
     .b-diagram__value {
         position: relative;
 
+        width: 43%;
         height: 22px;
 
         vertical-align: middle;
@@ -139,10 +165,6 @@
         display: inline-block;
 
         height: 1px;
-    }
-
-    .b-diagram__bar-filled {
-        cursor: pointer;
     }
 
     .b-diagram__bar-filled:hover {
@@ -255,18 +277,17 @@
         background-color: #ffffff;
     }
 
-    .b-diagram__description {
+    .b-diagram__item-description {
         position: absolute;
         top: 22px;
         left: 0;
 
         box-sizing: border-box;
         width: 100%;
-        padding-right: 30px;
 
         font-size: 12px;
         font-weight: 400;
-        color: #7b7b78;
+        color: #6f6f6d;
         text-align: right;
     }
 }

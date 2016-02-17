@@ -1,0 +1,56 @@
+{namespace sm.bBadge.Template}
+/**
+* @param params
+*/
+{template .base}
+    <div class="b-badge">
+
+        <div class="b-badge__icon{sp}
+            {$params.display == 'metro' ?
+            'b-icon_img_metro' :
+            'b-badge_star'}
+        ">
+            {$params.display == 'metro' ? '' : 't'}
+        </div>
+
+        <div class="b-badge__content">
+            {foreach $dataItem in $params.data}
+                {if $params?.display == 'metro'}
+                    {call .metroItem_}
+                        {param params:[
+                            'station': $dataItem
+                        ] /}
+                    {/call}
+                {else}
+                    {call .ratingItem_}
+                        {param params:[
+                            'ratingName': $dataItem
+                        ] /}
+                    {/call}
+                {/if}
+
+                {if not isLast($dataItem)}
+                    ,{sp}
+                {/if}
+            {/foreach}
+        </div>
+    </div>
+{/template}
+/**
+* @param params
+*/
+{template .metroItem_}
+    <a href="/search?name=метро%20{$params.station}"
+        class="b-badge__item
+            b-badge__item_active">
+        {$params.station}
+    </a>
+{/template}
+/**
+* @param params
+*/
+{template .ratingItem_}
+    <div class="b-badge__item">
+        {$params.ratingName}
+    </div>
+{/template}

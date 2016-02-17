@@ -1,0 +1,109 @@
+{namespace cl.gModal.Template}
+/**
+* @param? params
+* @extends cl.iControl.Template
+* @constructor
+* @doc
+*/
+{template .modal}
+    {call .init data="all" /}
+{/template}
+/**
+* @override
+*/
+{template .body}
+    <div class="{call .rootClass/}__fader">
+    </div>
+    <div class="i-utils__vertical-align-helper">
+    </div>
+    <div class="{call .rootClass/}__content">
+        {call .content data="all"/}
+    </div>
+{/template}
+/**
+* @param? params
+* @override
+*/
+{template .content}
+    {$params.data}
+{/template}
+/**
+* @override
+*/
+{template .rootClass}
+    g-modal
+{/template}
+/**
+* @override
+*/
+{template .additionalClasses}
+    i-utils__hidden
+{/template}
+/**
+* @param params
+* @doc
+*/
+{template .base}
+    {call .init data="all"/}
+{/template}
+/**
+* @param params
+*/
+{template .init}
+    <{call .tag data="all"/} class="{call .classes data="all"/}"
+        {sp}
+        {if $params?.includes}
+            data-include="{lb}
+                {foreach $item in $params?.includes}
+                    &quot;{$item.type}&quot;:{$item.data}
+                {/foreach}
+            {rb}"{sp}
+        {/if}
+        {call .attributes data="all"/}/>
+        {call .body data="all"/}
+    </{call .tag data="all"/}>
+{/template}
+/**
+* @param params
+*/
+{template .classes}
+    i-control
+    {sp}
+    {call .rootClass/}
+    {sp}
+    {call .stylizationModifierClass data="all"/}
+    {if $params?.config?.theme}
+        {sp}{call .rootClass/}_{$params.config.theme}-theme
+    {/if}
+    {if $params?.config?.customClasses}
+        {foreach $class in $params.config.customClasses}
+            {sp}{$class}
+        {/foreach}
+    {/if}
+    {sp}
+    {call .additionalClasses data="all"/}
+{/template}
+/**
+* @param params
+*/
+{template .stylizationModifierClass}
+    {if $params?.config?.stylizationModifier}
+        {call .rootClass/}_
+        {call .stylizationModifier data="all"/}
+    {/if}
+{/template}
+/**
+* @param params
+*/
+{template .stylizationModifier}
+    {$params.config.stylizationModifier}
+{/template}
+/**
+*/
+{template .attributes kind="attributes"}
+{/template}
+/**
+*/
+{template .tag}
+    div
+{/template}

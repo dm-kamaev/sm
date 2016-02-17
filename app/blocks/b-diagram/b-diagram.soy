@@ -6,9 +6,10 @@
  *     data: list<{
  *             name: string,
  *             value: string,
- *             description: ?string
+ *             description: ?string,
  *             averageValue: ?string
  *         }>
+ *     range: ?number,
  *     display: ?string,
  *     maxValue: ?number,
  *     starsConfig: ?[]
@@ -23,11 +24,16 @@
                 <div class="b-diagram__label">
                     {$item.name}
                     {if $item.description}
-                        <div class="b-diagram__description">
+                        <div class="b-diagram__item-description">
                             {$item.description}
                         </div>
                     {/if}
                 </div>
+                {if $params?.display == 'bars'}
+                    <div class="b-diagram__number-value">
+                        {round($item.value, 0)}
+                    </div>
+                {/if}
                 <div class="b-diagram__value">
                     {if $params?.display == 'marks'}
                         {call sm.bMark.Template.base}
@@ -56,7 +62,8 @@
                                 'value': round($item.value, 0),
                                 'averageValue': $item.averageValue,
                                 'description': $item.description,
-                                'maxValue': $params.maxValue
+                                'maxValue': $params.maxValue,
+                                'range': $params.range
                             ]/}
                         {/call}
                     {else}
@@ -95,15 +102,19 @@
  * Bars template
  * @param params {{
  *     value: number,
- *     averageValue: ?number
- *     maxValue: ?number
+ *     averageValue: ?number,
+ *     maxValue: ?number,
+ *     range: ?number
  * }}
  */
 {template .bars}
+    {let $range: $params?.range ?: 0/}
     <div class="b-diagram__bar-filled
-                {$params.value < $params.averageValue ?
-                    ' b-diagram__bar-filled_red' : ''}"
-         data-value="{$params.value}"
+                {$params.value < ($params.averageValue - $range) ?
+                    ' b-diagram__bar-filled_red' :
+                    $params.value > ($params.averageValue + $range) ?
+                        ' b-diagram__bar-filled_green' : ''}"{sp}
+         data-value="{$params.value}"{sp}
          style="width: {$params.value * 100 / $params.maxValue + '%'};">
     </div>
     <div class="b-diagram__bar"
@@ -133,12 +144,13 @@
                         {let $tenDigit:
                             ($params.value / 100 - floor($params.value / 100))/}
                         {if $tenDigit*100 - $lastDigit*10 == 1 or
-                            $lastDigit*10 > 4}
+                            $lastDigit*10 > 4 or
+                            $lastDigit == 0}
                             баллов
                         {elseif $lastDigit*10 > 1}
                             балла
                         {else}
-                            балл
+                            балл {$lastDigit}
                         {/if}
                     </span>
                 </div>

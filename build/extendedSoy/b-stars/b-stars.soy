@@ -1,0 +1,21 @@
+{namespace sm.bStars.Template}
+/**
+* @param params
+*/
+{template .base}
+    {let $sizeClass: $params?.config?.style?.size ? ' b-stars_size_'+$params?.config?.style?.size : ''/}
+    {let $themeClass: $params?.config?.style?.theme ? ' b-stars__star_theme_'+$params?.config?.style?.theme : ''/}
+    {let $pointerClass: $params?.config?.isClickable ? ' b-stars_clickable' : ''/}
+    {let $count: $params.data.mark > 5 ? 5 : $params.data.mark /}
+
+    <div class="b-stars
+               {$sizeClass}
+               {$themeClass}
+               {$pointerClass}">
+        <input class="b-stars__hidden-input" type="hidden" name="{$params?.data?.name ?: 'score'}" value="{$count}" />
+        {for $i in range(5)}
+            {let $class: 'b-stars__star '+ ($i < $count ? 'b-stars__star_selected' : 'b-star__star_not-selected')/}
+            <div class={$class}>t</div>
+        {/for}
+    </div>
+{/template}

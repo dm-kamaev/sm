@@ -1,11 +1,10 @@
 goog.provide('sm.lSchool.bFeedbackModal.FeedbackModal');
 
+goog.require('cl.iUtils.Utils');
 goog.require('goog.dom.classes');
 goog.require('goog.ui.Component');
-goog.require('gorod.bModal.Modal');
-goog.require('gorod.bModal.Template');
-goog.require('gorod.bTextarea.Textarea');
 goog.require('sm.bStars.Stars');
+goog.require('sm.iFactory.FactoryStendhal');
 goog.require('sm.lSchool.bFeedbackModal.Template');
 
 /**
@@ -32,15 +31,32 @@ sm.lSchool.bFeedbackModal.FeedbackModal = function(opt_params) {
     this.elements_ = {};
 
     /**
-     * modal
-     * @type {gorod.bModal.Modal}
+     * Textarea instance
+     * @type {cl.gTextarea.Textarea}
      * @private
      */
-    this.modal_ = gorod.bModal.Modal.create('', {
-        config: {
-            customClasses: 'b-modal_feedback'
-        }
-    });
+    this.textarea_ = null;
+
+    /**
+     * modal
+     * @type {cl.gModal.Modal}
+     * @private
+     */
+    this.modal_ = null;
+
+    /**
+     * Stars instances
+     * @type {Array.<sm.bStars.Stars>}
+     * @private
+     */
+    this.stars_ = [];
+
+    /**
+     * Close control element
+     * @type {element}
+     * @private
+     */
+    this.closeElement_ = null;
 };
 goog.inherits(sm.lSchool.bFeedbackModal.FeedbackModal, goog.ui.Component);
 
@@ -52,11 +68,13 @@ goog.scope(function() {
      * @enum {string}
      */
     FeedbackModal.CssClass = {
-        'FEEDBACK': 'b-feedback',
-        'MODAL': 'b-modal_feedback',
-        'BUTTON': 'b-feedback__button',
+        'ROOT': 'b-feedback',
+        'FORM': 'b-feedback__form',
         'RADIO': 'b-feedback__radio',
-        'DIALOG_BODY': 'b-dialog__body'
+        'CLOSE_CONTROL': 'b-feedback__close-control',
+        'CLOSE_CONTROL_IMG_HOVERED': 'b-icon_img_close-dialog-hovered',
+        'CLOSE_CONTROL_IMG': 'b-icon_img_close-dialog'
+
     };
 
     /**
@@ -80,7 +98,7 @@ goog.scope(function() {
      * @public
      */
     FeedbackModal.prototype.clean = function() {
-        this.textarea_.setValue('');
+        this.textarea_.clean();
 
         for (var i = 0, stars; stars = this.stars_[i]; i++) {
             stars.setValue(0);
@@ -89,19 +107,6 @@ goog.scope(function() {
         this.removeRadioCheck_();
     };
 
-    /**
-     * Component render
-     * @public
-     */
-    FeedbackModal.prototype.render = function() {
-        var modalDialog = this.modal_.getDialog()[0],
-            modalDialogBody = goog.dom.getElementByClass(
-                FeedbackModal.CssClass.DIALOG_BODY,
-                modalDialog
-            );
-
-        goog.base(this, 'render', modalDialogBody);
-    };
 
     /**
      * Template-based dom element creation.
@@ -124,27 +129,39 @@ goog.scope(function() {
     FeedbackModal.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
-        goog.dom.getParentElement(element).style.display = 'none';
+        var factory = sm.iFactory.FactoryStendhal.getInstance();
 
         this.elements_ = {
-            stars: goog.dom.getElementsByClass(
-                sm.bStars.Stars.CssClass.ROOT,
-                element
-            ),
-            /**
-             * TODO: Add 'b-textarea' to gorod.bTextarea.Textarea.Classes.ROOT
-             */
-            textarea: goog.dom.getElementByClass(
-                'b-textarea', element
-            ),
-
-            radio: goog.dom.getElementsByClass(
-                FeedbackModal.CssClass.RADIO,
-                element
-            )
+            radio: this.getElementsByClass(FeedbackModal.CssClass.RADIO),
+            button: this.getElementByClass(cl.gButton.View.CssClass.ROOT),
+            form: this.getElementByClass(FeedbackModal.CssClass.FORM)
         };
 
-        this.stars_ = this.initStars_(this.elements_.stars);
+        this.modal_ = factory.decorate(
+            'modal',
+            this.getElementByClass(cl.gModal.View.CssClass.ROOT),
+            this
+        );
+        this.textarea_ = factory.decorate(
+            'textarea',
+            goog.dom.getElementByClass(
+                cl.gTextarea.View.CssClass.ROOT,
+                this.modal_.getElement()
+            ),
+            this
+        );
+
+        this.stars_ = this.initStars_(
+            goog.dom.getElementsByClass(
+                sm.bStars.Stars.CssClass.ROOT,
+                this.modal_.getElement()
+            )
+        );
+
+        this.closeElement_ = goog.dom.getElementByClass(
+            FeedbackModal.CssClass.CLOSE_CONTROL,
+            this.modal_.getElement()
+        );
     };
 
     /**
@@ -154,30 +171,28 @@ goog.scope(function() {
     FeedbackModal.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
 
-        this.textarea_ = new gorod.bTextarea.Textarea(this.elements_.textarea);
-
-        goog.events.listen(
-            this.getElement(),
-            goog.events.EventType.SUBMIT,
-            this.onSubmit_,
-            false,
-            this
+        this.getHandler().listen(
+            this.elements_.button,
+            goog.events.EventType.CLICK,
+            this.formSubmit_
         );
-    };
 
-    /**
-     * Cleans up the Component.
-     * @public
-     */
-    FeedbackModal.prototype.exitDocument = function() {
-        goog.base(this, 'exitDocument');
+        this.getHandler().listen(
+            this.closeElement_,
+            goog.events.EventType.MOUSEOVER,
+            this.onCrossHover_
+        );
 
-        goog.events.unlisten(
-            this.getElement(),
-            goog.events.EventType.SUBMIT,
-            this.onSubmit_,
-            false,
-            this
+        this.getHandler().listen(
+            this.closeElement_,
+            goog.events.EventType.MOUSEOUT,
+            this.onCrossHover_
+        );
+
+        this.getHandler().listen(
+            this.closeElement_,
+            goog.events.EventType.CLICK,
+            this.onCrossClick_
         );
     };
 
@@ -202,6 +217,7 @@ goog.scope(function() {
                     isClickable: true
                 }
             });
+            this.addChild(star);
             star.decorate(elem);
             res.push(star);
         }
@@ -211,13 +227,44 @@ goog.scope(function() {
 
     /**
      * Submit event handler
-     * @param {Function} event
      * @private
      */
-    FeedbackModal.prototype.onSubmit_ = function(event) {
-        event.preventDefault();
+    FeedbackModal.prototype.formSubmit_ = function() {
+        var form = jQuery(this.elements_.form),
+            data = form.serializeArray();
 
-        this.submit_();
+        if (this.isValid_(data)) {
+            this.send_(form, function() {
+                location.reload();
+            });
+        } else {
+            this.hide();
+        }
+
+        this.clean();
+    };
+
+    /**
+     * Handler for hover over close element
+     * @private
+     */
+    FeedbackModal.prototype.onCrossHover_ = function() {
+        goog.dom.classes.toggle(
+            this.closeElement_,
+            FeedbackModal.CssClass.CLOSE_CONTROL_IMG
+        );
+        goog.dom.classes.toggle(
+            this.closeElement_,
+            FeedbackModal.CssClass.CLOSE_CONTROL_IMG_HOVERED
+        );
+    };
+
+    /**
+     * Handler for click over close element
+     * @private
+     */
+    FeedbackModal.prototype.onCrossClick_ = function() {
+        this.hide();
     };
 
     /**
@@ -288,28 +335,5 @@ goog.scope(function() {
                 radio.checked = false;
             }
         }
-    };
-
-    /**
-     * Submit form
-     * @private
-     */
-    FeedbackModal.prototype.submit_ = function() {
-        var form = jQuery(this.getElement()),
-            data = form.serializeArray();
-
-        if (this.isValid_(data)) {
-            this.send_(form, function() {
-                location.reload();
-            });
-        } else {
-            this.hide();
-            /**
-             * TODO: remove scroll bug
-             */
-            location.reload();
-        }
-
-        this.clean();
     };
 });

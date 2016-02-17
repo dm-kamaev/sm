@@ -1,0 +1,90 @@
+{namespace gorod.bList.ListTemplate autoescape="strict"}
+/**
+* @param? params
+*/
+{template .render}
+
+    <ul class="b-list
+        {sp}
+        b-list_{$params?.theme ? $params.theme : 'default'}-theme
+        {sp}
+        b-list_color_{$params?.color ?: 'blue'}
+        {sp}
+        {$params?.extraClasses ?: ''}
+        {sp}
+        {$params?.customClassesForMaxHeight ?: ''}
+        {sp}
+        {$params?.customClassesForMaxHeight ? 'b-list_max-height' : ''}
+        {sp}
+        {$params?.uppercase ? 'b-bouton_uppercase' : ''}
+        {sp}
+        b-list_hover_{$params?.selectOnHover ? 'off' : 'on'}
+        " data-params="
+            {call gorod.iUtils.stringify}
+                {param json: quoteKeysIfJs([
+                        'initialSelectedIndex': $params?.initialSelectedIndex ?
+                            floor($params?.initialSelectedIndex) :
+                            null,
+                        'selectOnHover': $params?.selectOnHover ?: null,
+                        'selectOnClick': $params?.selectOnClick ?: null
+                    ])
+                /}
+            {/call}
+        ">
+        {call .init_}
+            {param params: $params /}
+        {/call}
+    </ul>
+{/template}
+/**
+*/
+{template .init_ }
+    {@param params: ?}
+
+    {foreach $item in $params?.list}
+        {if $item?.href}
+            {call .drawLink_}
+                {param item: $item /}
+                {param isSelected: ($params?.initialSelectedIndex == 0 and (index($item) == 0)) ? true :
+                        (($params?.initialSelectedIndex + 1) == index($item)) ? true : false /}
+            {/call}
+        {else}
+            {if $item?.text}
+                {call .drawControl_}
+                    {param item: $item /}
+                    {param isSelected: ($params?.initialSelectedIndex == 0 and (index($item) == 0)) ? true:
+                            (($params?.initialSelectedIndex + 1) == index($item)) ? true : false /}
+                {/call}
+            {else}
+                {call .drawHR_ /}
+            {/if}
+        {/if}
+    {/foreach}
+{/template}
+/**
+*/
+{template .drawHR_ }
+    <li class="b-list__hr"></li>
+{/template}
+/**
+*/
+{template .drawLink_ }
+    {@param item: ?}
+    {@param isSelected: bool}
+
+    <li class="b-list__item b-list__item_link {$item?.extraClasses ?: ''} {$isSelected == true ? 'b-list__item_selected' : ''}">
+        <a class="b-list__link" href="{$item?.href}">{$item?.text}</a>
+    </li>
+{/template}
+/**
+*/
+{template .drawControl_}
+    {@param item: ?}
+    {@param isSelected: bool}
+
+    <li class="b-list__item {$item?.extraClasses ?: ''} {$isSelected == true ? 'b-list__item_selected' : '' }">
+        {if $item?.text}
+           {$item.text}
+        {/if}
+    </li>
+{/template}

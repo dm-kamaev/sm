@@ -1,0 +1,157 @@
+{namespace sm.lSchool.bFeedbackModal.Template}
+/**
+* @param params
+*/
+{template .feedback}
+    <div class="b-feedback i-utils__hidden">
+        {let $html kind="html"}
+            {call .modal data="all"/}
+        {/let}
+
+        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+            {param params: [
+                'type': 'modal',
+                'renderParams': [
+                    'data': $html
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+/**
+* @param params
+*/
+{template .modal}
+    <form class="b-feedback__form" method="POST" action="{$params?.data?.url ?: ''}">
+        <div class="b-feedback__content">
+            <div class="b-feedback__close-control
+                        b-icon_img_close-dialog">
+
+            </div>
+            <div class="b-feedback__title">Ваш отзыв</div>
+            {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+                {param params: [
+                    'type': 'textarea',
+                    'renderParams': [
+                        'data': [
+                            'placeholder': 'Ваш комментарий',
+                            'name': 'text'
+                        ],
+                        'config': [
+                            'autoHeight': true
+                        ]
+                    ]
+                ]/}
+            {/call}
+            {call .whoAreYou_ /}
+            <div class="b-feedback__title-scores">
+                Ваши оценки
+            </div>
+            {call .score_ /}
+            {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+                {param params: [
+                    'type': 'button',
+                    'renderParams': [
+                        'data': 'Оставить отзыв',
+                        'config': [
+                            'theme': 'sienna'
+                        ]
+                    ]
+                ]/}
+            {/call}
+        </div>
+    </form>
+{/template}
+/**
+*/
+{template .whoAreYou_ private="true"}
+    {let $userTypes: [
+        [
+            'title': 'Родитель',
+            'value': 'Parent'
+        ], [
+            'title': 'Выпускник',
+            'value': 'Graduate'
+        ], [
+            'title': 'Ученик',
+            'value': 'Scholar'
+        ]
+    ] /}
+
+    <div class="b-feedback__who-are-you">
+        <div class="b-feedback__title b-feedback__title_sub b-feedback__title_who-are-you">
+            Кто вы?
+        </div>
+        <ul class="b-feedback__user-types">
+            {foreach $userType in $userTypes}
+                <li class="b-feedback__user-type">
+                    <input class="b-feedback__radio"
+                           id="b-feedback__user-type-{index($userType)}"
+                           type="radio"
+                           name="userType"
+                           value="{$userType.value}"
+                    />
+                    <label class="b-feedback__radio-label"
+                           for="b-feedback__user-type-{index($userType)}">
+                           {$userType.title}
+                    </label>
+                </li>
+            {/foreach}
+        </ul>
+    </div>
+{/template}
+/**
+*/
+{template .score_ private="true"}
+    {let $scores: [
+        [
+            'name': 'score[]',
+            'title': 'Образование',
+            'description': 
+            'Достигают ли ученики этой школы достигают высоких 
+            результатов на экзаменах?'
+        ], [
+            'name': 'score[]',
+            'title': 'Преподаватели',
+            'description': 
+            'Действительно ли учителя этой школы — квалифицированные 
+            специалисты, которые любят свою работу, хорошо общаются с 
+            детьмии помогают им получать отличные знания?'
+        ], [
+            'name': 'score[]',
+            'title': 'Атмосфера',
+            'description': 'Атмосфера в школе, отношения между учениками, 
+            учителями, родителями и администрацией создают комфортную 
+            для получения знаний среду?'
+        ], [
+            'name': 'score[]',
+            'title': 'Инфраструктура',
+            'description': 'Эта школа отлично оборудована, в ней есть всё для 
+            комфортного обучения и всестороннего развития детей?'
+        ]
+    ] /}
+    <ul class="b-feedback__scores">
+        {foreach $score in $scores}
+            <li class="b-feedback__score">
+                <div class="b-feedback__title-score">
+                    {$score.title}
+                </div>
+                {call sm.bStars.Template.base}
+                    {param params: [
+                        'data': [
+                            'mark': 0
+                        ],
+                        'config': [
+                            'style': [
+                                'theme': 'colored',
+                                'size': 'large'
+                            ],
+                            'isClickable': true
+                        ]
+                    ] /}
+                {/call}
+                <div class="b-feedback__description">{$score.description}</div>
+            </li>
+        {/foreach}
+    </ul>
+{/template}

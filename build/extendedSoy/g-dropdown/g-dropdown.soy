@@ -1,0 +1,113 @@
+{namespace cl.gDropdown.Template}
+/**
+* @param? params
+* @extends cl.iControl.Template
+* @constructor
+* @doc
+*/
+{template .dropdown}
+    {call .init data="all" /}
+{/template}
+/**
+* @override
+*/
+{template .body}
+    <div class="{call .rootClass/}__opener">
+        {call .opener data="all"/}
+    </div>
+
+    <div class="{call .rootClass/}__content i-utils__hidden">
+        {call .content data="all"/}
+    </div>
+{/template}
+/**
+* @param? params
+* @override
+*/
+{template .opener}
+    {$params?.data?.opener}
+{/template}
+/**
+* @param? params
+*/
+{template .content}
+    {$params.data?.content}
+{/template}
+/**
+* @override
+*/
+{template .rootClass}
+    g-dropdown
+{/template}
+/**
+* @param params
+* @doc
+*/
+{template .base}
+    {call .init data="all"/}
+{/template}
+/**
+* @param params
+*/
+{template .init}
+    <{call .tag data="all"/} class="{call .classes data="all"/}"
+        {sp}
+        {if $params?.includes}
+            data-include="{lb}
+                {foreach $item in $params?.includes}
+                    &quot;{$item.type}&quot;:{$item.data}
+                {/foreach}
+            {rb}"{sp}
+        {/if}
+        {call .attributes data="all"/}/>
+        {call .body data="all"/}
+    </{call .tag data="all"/}>
+{/template}
+/**
+* @param params
+*/
+{template .classes}
+    i-control
+    {sp}
+    {call .rootClass/}
+    {sp}
+    {call .stylizationModifierClass data="all"/}
+    {if $params?.config?.theme}
+        {sp}{call .rootClass/}_{$params.config.theme}-theme
+    {/if}
+    {if $params?.config?.customClasses}
+        {foreach $class in $params.config.customClasses}
+            {sp}{$class}
+        {/foreach}
+    {/if}
+    {sp}
+    {call .additionalClasses data="all"/}
+{/template}
+/**
+*/
+{template .additionalClasses}
+{/template}
+/**
+* @param params
+*/
+{template .stylizationModifierClass}
+    {if $params?.config?.stylizationModifier}
+        {call .rootClass/}_
+        {call .stylizationModifier data="all"/}
+    {/if}
+{/template}
+/**
+* @param params
+*/
+{template .stylizationModifier}
+    {$params.config.stylizationModifier}
+{/template}
+/**
+*/
+{template .attributes kind="attributes"}
+{/template}
+/**
+*/
+{template .tag}
+    div
+{/template}

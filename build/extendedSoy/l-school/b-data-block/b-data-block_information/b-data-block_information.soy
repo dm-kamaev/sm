@@ -1,0 +1,89 @@
+{namespace sm.lSchool.bDataBlockInformation.Template}
+/**
+* @param params
+* @extends sm.lSchool.bDataBlock.Template
+* @constructor
+*/
+{template .base}
+    {call .init}
+        {param params: [
+            'modifier': $params.modifier ?
+                        'b-data-block_information' + $params.modifier :
+                        'b-data-block_information',
+            'content': $params.content
+        ] /}
+    {/call}
+{/template}
+/**
+* @param params
+*/
+{template .content autoescape="strict" kind="html"}
+     <ul class="b-data-block__content">
+        {if $params.content.classes != ''}
+            <li class="b-data-block__item">
+                {$params.content.classes}
+            </li>
+        {/if}
+
+        {if $params.content.kindergarten != ''}
+            <li class="b-data-block__item">
+                {$params.content.kindergarten}
+            </li>
+        {/if}
+
+        {if $params.content.extendedDayCost != ''}
+            <li class="b-data-block__item">
+                {$params.content.extendedDayCost}
+            </li>
+        {/if}
+
+        {if $params.content.dressCode == true}
+            <li class="b-data-block__item">
+                Школьная форма обязательна
+            </li>
+        {/if}
+
+        {if $params.content.directorName != ''}
+            <li class="b-data-block__item">
+                Директор{sp}&mdash;{sp}
+                {$params.content.directorName}
+            </li>
+        {/if}
+    </ul>
+{/template}
+/**
+* @param params
+*/
+{template .init autoescape="strict" kind="html"}
+    <div class="b-data-block
+        {if $params.modifier}
+            {sp}{$params.modifier}
+        {/if}
+    ">
+
+        //Header section
+        {if $params.header}
+            {call .header}
+                {param params: [
+                    'header': $params.header
+                ] /}
+            {/call}
+        {/if}
+
+        //Content  section
+        {if $params.content}
+            {call .content data="all" /}
+        {/if}
+    </div>
+{/template}
+/**
+* @param params
+*/
+{template .header autoescape="strict" kind="html"}
+    <div class="b-data-block__line"></div>
+    {if $params.headerType == 2}
+        <h2 class="b-data-block__header">{$params.header}</h2>
+    {else}
+        <h3 class="b-data-block__header">{$params.header}</h3>
+    {/if}
+{/template}

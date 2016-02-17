@@ -1,0 +1,117 @@
+{namespace sm.bMark.Template}
+/**
+* @param params
+*/
+{template .base}
+    {let $value: round($params.value, 1)/}
+    {let $color kind="html"}
+        {if $value >= 4}
+            green
+        {elseif $value >= 3}
+            yellow
+        {elseif $value > 0}
+            red
+        {else}
+            grey
+        {/if}
+    {/let}
+    <div class="b-mark{sp}
+                b-mark_{$color}{sp}
+                {$params?.display == 'inline' ? 'b-mark_inline' : ''}{sp}
+                {$params?.display == 'number' ? 'b-mark_number' : ''}{sp}
+                {if $params.config}
+                    {$params?.config.bigText ? 'b-mark_bigText' : ''}{sp}
+                    {$params?.config.bigText ? 'b-mark_no-dash' : ''}
+                {/if}
+                ">
+        {if $params?.display == 'inline'}
+            {call .inline}
+                {param params: [
+                    'value': $value,
+                    'config': $params.config
+                ]/}
+            {/call}
+        {elseif $params?.display == 'stars'}
+            {call .stars}
+                {param params: [
+                    'value': $value,
+                    'starsConfig': $params.starsConfig
+                ]/}
+            {/call}
+        {elseif $params?.display == 'number'}
+            {call .number}
+                {param params: [
+                    'value': $value
+                ]/}
+            {/call}
+        {else}
+            {call .simple}
+                {param params: [
+                    'value': $value
+                ]/}
+            {/call}
+        {/if}
+    </div>
+{/template}
+/**
+* @param params
+*/
+{template .simple}
+    <div class="b-mark__circle">
+        <div class="b-mark__mark">
+            {call .value data="all"/}
+        </div>
+    </div>
+{/template}
+/**
+* @param params
+*/
+{template .inline}
+    <div class="b-mark__circle">
+    </div>
+    <div class="b-mark__mark">
+        {call .value data="all"/}
+    </div>
+{/template}
+/**
+* @param params
+*/
+{template .stars}
+    {call sm.bStars.Template.base}
+        {param params: [
+            'data': [
+                'mark': $params.value
+            ],
+            'config': $params.starsConfig
+        ]/}
+    {/call}
+{/template}
+/**
+* @param params
+*/
+{template .number}
+    <div class="b-mark__mark">
+        {call .value}
+            {param params: [
+                'value': $params.value
+            ]/}
+        {/call}
+    </div>
+{/template}
+/**
+* @param params
+*/
+{template .value}
+    {if $params.value > 0}
+        {floor($params.value)}
+        {if floor($params.value) != $params.value}
+            ,{round(($params.value - floor($params.value))*10, 0)}
+        {/if}
+    {else}
+        {if $params.config}
+            {$params?.config.notShowDashes ? '' : '—'}
+        {else}
+            —
+        {/if}
+    {/if}
+{/template}

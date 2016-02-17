@@ -1,0 +1,177 @@
+{namespace sm.lSchool.bResults.Template}
+/**
+* @param params
+*/
+{template .results}
+    {let $ege kind="html"}
+        {call .label_}
+            {param params: [
+                'label': 'ЕГЭ'
+            ]/}
+        {/call}
+    {/let}
+    {let $gia kind="html"}
+        {call .label_}
+            {param params: [
+                'label': 'ГИА'
+            ]/}
+        {/call}
+    {/let}
+    {let $olymp kind="html"}
+        {call .label_}
+            {param params: [
+                'label': 'ОЛИМПИАДЫ'
+            ]/}
+        {/call}
+    {/let}
+    {let $egeContent kind="html"}
+        {call .content_}
+            {param params: [
+                'data': $params?.data?.ege,
+                'config': [
+                    'type': 'ege'
+                ]
+            ]/}
+        {/call}
+    {/let}
+    {let $giaContent kind="html"}
+        {call .content_}
+            {param params: [
+                'data': $params?.data?.gia,
+                'config': [
+                    'type': 'gia'
+                ]
+            ]/}
+        {/call}
+    {/let}
+
+    <div class="b-results">
+        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+            {param params: [
+                'type': 'tab',
+                'renderParams': [
+                    'data': [
+                        'tabs': [
+                            [
+                                'label': $ege,
+                                'content': $egeContent
+                            ],
+                            [
+                                'label': $gia,
+                                'content': $giaContent
+                            ],
+                            [
+                                'label': $olymp,
+                                'content': $olymp
+                            ]
+                        ]
+                    ],
+                    'config': [
+                        'theme': 'red'
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+/**
+* @param params
+*/
+{template .label_ private="true"}
+    <h3 class="b-results__label">{$params.label}</h3>
+{/template}
+/**
+* @param params
+*/
+{template .content_ private="true"}
+    {let $content kind="html"}
+        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+            {param params: [
+                'type': 'list',
+                'renderParams': [
+                    'data': [
+                        'items': $params.data?.years
+                    ]
+                ]
+            ]/}
+        {/call}
+    {/let}
+
+    {if $params.data}
+
+    {let $maxValue: ($params.config.type == 'ege') ? 100 : 5 /}
+
+    <div class="b-results__content">
+        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+            {param params: [
+                'type': 'dropdown',
+                'renderParams': [
+                    'data': [
+                        'opener': '2015',
+                        'content': $content
+                    ],
+                    'config': [
+                        'customClasses': ['b-results__dropdown']
+                    ]
+                ]
+            ]/}
+        {/call}
+
+        {foreach $yearResults in $params.data?.results}
+            <div class="b-results__inner-content">
+                {if $yearResults.top}
+                    <div class="b-results__content-item">
+                        <div class="b-results__item-label">
+                            Выше среднего по москве
+                        </div>
+                        <div class="b-results__item-data">
+                            {call sm.bDiagram.Template.base}
+                                {param params: [
+                                    'data': $yearResults.top,
+                                    'maxValue': $maxValue,
+                                    'display': 'bars',
+                                    'range': $params.data?.range
+                                ]/}
+                            {/call}
+                        </div>
+                    </div>
+                {/if}
+                {if $yearResults.middle}
+                    <div class="b-results__content-item">
+                        <div class="b-results__item-label">
+                            Средний уровень
+                        </div>
+                        <div class="b-results__item-data">
+                            {call sm.bDiagram.Template.base}
+                                {param params: [
+                                    'data': $yearResults.middle,
+                                    'maxValue': $maxValue,
+                                    'display': 'bars',
+                                    'range': $params.data?.range
+                                ]/}
+                            {/call}
+                        </div>
+                    </div>
+                {/if}
+                {if $yearResults.bottom}
+                    <div class="b-results__content-item">
+                        <div class="b-results__item-label">
+                            Ниже среднего
+                        </div>
+                        <div class="b-results__item-data">
+                            {call sm.bDiagram.Template.base}
+                                {param params: [
+                                    'data': $yearResults.bottom,
+                                    'maxValue': $maxValue,
+                                    'display': 'bars',
+                                    'range': $params.data?.range
+                                ]/}
+                            {/call}
+                        </div>
+                    </div>
+                {/if}
+            </div>
+        {/foreach}
+    </div>
+    {/if}
+{/template}

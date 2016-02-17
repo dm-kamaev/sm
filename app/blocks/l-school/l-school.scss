@@ -148,6 +148,12 @@ body {
 	display: inline-block;
 }
 
+.l-school__section_grey {
+    margin-top: 60px;
+
+    background-color: #f7f6f1;
+}
+
 .l-school__content-column {
     display: inline-block;
 
@@ -273,62 +279,6 @@ body {
 
 .l-school__section__popular-schools {
     margin-top: -19px;
-}
-
-.l-school__popular-school {
-    display: inline-block;
-
-    width: 175px;
-    margin-right: 30px;
-
-    vertical-align: top;
-}
-
-.l-school__popular-title {
-    margin-bottom: 27px;
-
-    text-transform: uppercase;
-    font-family: 'Proxima';
-    font-size: 16px;
-    font-weight: 800;
-    letter-spacing: 0.8px;
-}
-
-.l-school__popular-school_last {
-    margin-right: 0px;
-}
-
-.l-school__popular-rating {
-    margin-bottom: 19px;
-}
-
-.l-school__popular-metro-icon {
-    display: inline-block;
-
-    margin-right: 7px;
-}
-
-.l-school__popular-metro-stations {
-    display: inline-block;
-
-    color: #808080;
-
-    font-family: arial;
-    font-size: 13px;
-}
-
-.l-school__popular-name {
-    margin-bottom: 12px;
-
-    line-height: 21px;
-
-    font-family: 'PT Serif';
-    font-weight: 800;
-    font-size: 16px;
-}
-
-.l-school__popular-description {
-    margin-bottom: 18px;
 }
 
 .l-school__footer {

@@ -1,0 +1,103 @@
+{namespace sm.lSearchResult.bFilterClasses.Template}
+/**
+* @extends sm.lSearchResult.bFilter.Template
+* @constructor
+*/
+{template .base autoescape="strict" kind="html"}
+    {call .init data="all"/}
+{/template}
+/**
+*/
+{template .rootClassName autoescape="strict" kind="html"}
+    b-filter b-filter_classes
+{/template}
+/**
+* @param? params
+*/
+{template .filters autoescape="strict" kind="html"}
+    <div class="b-filter__filters">
+        <div class="b-filter__filter b-filter__filter_center">
+            {for $i in range(11)}
+                <input type="radio"
+                    id="{$params?.data?.name}-{$i+1}"
+                    class="b-filter__input"
+                    name="{$params?.data?.name}"
+                    value="{$i+1}"/>
+                <label for="{$params?.data?.name}-{$i+1}"
+                    class="b-filter__input-label
+                    {sp}
+                    {$i > 3 ?
+                        'b-filter__input-label_middle ' : ''}
+                    {$i > 8 ?
+                        'b-filter__input-label_high' : ''}
+                    ">
+                        {$i+1}
+                </label>
+            {/for}
+        </div>
+        <div class="b-filter__filter">
+            <input type="checkbox"
+                class="b-filter__input-ordinary"
+                id="{$params?.data?.name}-after-school"
+                name="{$params?.data?.name}"
+                value="0"/>
+            <label for="{$params?.data?.name}-after-school"
+                class="b-filter__input-label-ordinary">
+                Детский сад при школе
+            </label>
+        </div>
+        <div class="b-filter__reset i-utils__hidden">
+            Сбросить фильтр
+        </div>
+    </div>
+{/template}
+/**
+* @override
+*/
+{template .showFiltersButton}
+
+{/template}
+/**
+*/
+{template .init autoescape="strict" kind="html"}
+    <div class="{call .rootClassName/}">
+        {call .header data="all"/}
+        {call .filters data="all"/}
+    </div>
+{/template}
+/**
+* @param? params
+*/
+{template .header autoescape="strict" kind="html"}
+    <div class="b-filter__header">
+        <span class="b-filter__title">
+            {$params?.data?.header?.title}
+        </span>
+        {if $params?.header?.help}
+            <div class="b-filter__help" data-help="{$params?.data?.header?.help}">
+                <img src="/images/l-search-result/b-filter/b-filter__help.png"/>
+            </div>
+        {/if}
+        {if not $params?.config?.cannotBeHidden}
+            {call .showFiltersButton/}
+        {/if}
+    </div>
+{/template}
+/**
+* @param? params
+*/
+{template .filter autoescape="strict" kind="html"}
+    <div class="b-filter__section {$params.hidden ? 'i-utils__hidden' : ''}">
+        <div class="b-filter__filter">
+            <input type="checkbox"
+                class="b-filter__input"
+                id="{$params.name}-{$params.id}"
+                name="{$params.name}"
+                value="{$params.filter.value}"/>
+            <label for="{$params.name}-{$params.id}"
+                class="b-filter__input-label">
+                {$params.filter.label}
+            </label>
+        </div>
+    </div>
+{/template} 

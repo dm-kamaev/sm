@@ -242,16 +242,23 @@ exports.createComment = async (function(req, res) {
  *         "ege": [2,3],
  *         "olimp": [3,5],
  *         "metroId": 1,
- *         "areaId": 1
- *       }
+ *         "areaId": 1,
+ *         "sortType": 1
+ *       },
+ *       "page": 0
  *     }
  */
 exports.search = async (function(req, res) {
     var result = '';
     try {
         var params = req.query;
+        
+        if(params.searchParams) {
+            var criterion = params.searchParams.sortType;
+        }
+
         var schools = await(services.school.list(params));
-        result = schoolView.list(schools);
+        result = schoolView.list(schools, criterion);
     } catch (e) {
         console.log(e);
         result = JSON.stringify(e);

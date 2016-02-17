@@ -1,0 +1,61 @@
+{namespace sm.lBase.Template}
+/**
+* @param? title
+* @param? html
+* @param? css
+* @param? js
+*/
+{template .index autoescape="strict" kind="html"}
+    {let $layoutTitle: $title ?: 'School Market' /}
+    <!DOCTYPE html>
+    <html>
+        <head>
+            <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+            <title>{$title}</title>
+            {call .css_}
+                {param css: $css /}
+            {/call}
+        </head>
+        <body>
+            {if $html}
+                {$html}
+            {else}
+                {call .html_}
+                      {param title: $layoutTitle /}
+                {/call}
+            {/if}
+            {call .js_}
+                {param js: $js /}
+            {/call}
+        </body>
+    </html>
+{/template}
+/**
+* @param title
+*/
+{template .html_ private="true" autoescape="strict" kind="html"}
+    <div class="l-base">
+        <h1>{$title}</h1>
+        <p>Welcome to {$title}!!!</p>
+    </div>
+{/template}
+/**
+* @param? css
+*/
+{template .css_ private="true" autoescape="strict" kind="html"}
+    {if $css}
+        {foreach $item in $css}
+            <link rel='stylesheet' href='{$item}' />
+        {/foreach}
+    {/if}
+{/template}
+/**
+* @param? js
+*/
+{template .js_ private="true" autoescape="strict" kind="html"}
+    {if $js}
+        {foreach $item in $js}
+            <script type="text/javascript" src="{$item}"></script>
+        {/foreach}
+    {/if}
+{/template}

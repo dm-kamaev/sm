@@ -1,0 +1,15 @@
+{namespace gorod.ValidateTemplate autoescape="strict"}
+/**
+* @param? params
+*/
+{template .render }
+    <div class="b-validate" data-error-hash="{$params?.hash ?: ''}">
+        <div class="b-validate__message {$params?.message ? '' : 'i-utils__hidden'}">
+            {if $params?.message}
+                {foreach $message in $params?.message}
+                    {$message}<br/>
+                {/foreach}
+            {/if}
+        </div>
+    </div>
+{/template}
