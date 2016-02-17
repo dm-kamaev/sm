@@ -6,10 +6,11 @@
  *         name: ?string,
  *         value: ?number
  *     ]>,
- *     sortCriteria: [
+ *     sortCriterion: [
  *         name: ?string,
  *         value: ?number
- *     ]
+ *     ],
+ *     isClickable: ?boolean
  * }
  * @extends sm.bScore.Template
  * @constructor
@@ -25,25 +26,29 @@
  *         name: ?string,
  *         value: ?number
  *     ]>,
- *     sortCriteria: [
+ *     sortCriterion: [
  *         name: ?string,
  *         value: ?number
- *     ]
+ *     ],
+ *     isClickable: ?boolean
  * }
  */
 {template .init autoescape="strict" kind="html"}
     <div class="b-score
-                b-score_school-list">
+                b-score_school-list
+                {$params?.isClickable ?
+                ' b-score_active' :
+                ''}">
 
         <div class="b-score__current-criterion-name
             i-utils__hidden">
-            {$params.sortCriteria.name}
+            {$params?.sortCriterion?.name}
         </div>
 
         <div class="b-score__current-criterion-value">
             {call sm.bMark.Template.base}
                 {param params: [
-                    'value': $params.sortCriteria.value,
+                    'value': $params?.sortCriterion?.value,
                     'display': 'inline',
                     'config': [
                         'bigText': true,

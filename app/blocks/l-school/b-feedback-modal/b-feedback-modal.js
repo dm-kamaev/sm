@@ -82,7 +82,7 @@ goog.scope(function() {
         'TEXT_STUDENT': 'b-feedback__text_student',
         'TEXT_PARENT': 'b-feedback__text_parent',
         'GRADUATION_YEAR': 'b-feedback__graduation-year',
-        'CLOSE_CONTROL': 'b-icon__content',
+        'CLOSE_CONTROL': 'b-icon',
         'CLOSE_CONTROL_IMG_HOVERED': 'b-icon_img_close-dialog-hovered',
         'CLOSE_CONTROL_IMG': 'b-icon_img_close-dialog'
     };

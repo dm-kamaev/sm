@@ -14,7 +14,7 @@
  *     config: {
  *        usePlaceholder: boolean,
  *        iconSprite: ?string,
- *        listTheme: ?string
+ *        theme: ?string
  *     }
  * }}
  * @extends cl.gDropdown.Template
@@ -29,7 +29,7 @@
  * Control
  * @param? params {{
  *     data: {
- *        defaultCustomText: string - default selected item name or placeholder
+ *        defaultOpenerText: string - default selected item name or placeholder
  *        staticText: string - text in opener, which not changes
  *     }
  *     config: {
@@ -48,16 +48,16 @@
                          {if $params?.config?.usePlaceholder}
                             {sp}{call .rootClass/}__opener-text_placeholder
                          {/if}">
-                {if $params?.data?.defaultCustomText}
-                    {$params?.data?.defaultCustomText}
+                {if $params?.data?.defaultOpenerText}
+                    {$params?.data?.defaultOpenerText}
                 {/if}
             </span>
      </div>
      {if $params?.config?.iconSprite}
          <div class="{call .rootClass/}__opener-arrow">
-             {call sm.bIcon.Template.base}
+             {call sm.bIcon.Template.icon}
                  {param params: [
-                     'spriteCssClass': $params?.config?.iconSprite
+                     'type': $params?.config?.iconSprite
                  ] /}
              {/call}
          </div>
@@ -71,7 +71,7 @@
  *        listItems: list<string>
  *     }
  *     config: {
- *       listTheme: ?string
+ *       theme: ?string
  *     }
  * }}
  */
@@ -85,7 +85,7 @@
                     'items': $params.data.listItems
                 ],
                 'config': [
-                    'theme': $params?.config?.listTheme
+                    'theme': $params?.config?.theme
                 ]
             ]
         ]/}

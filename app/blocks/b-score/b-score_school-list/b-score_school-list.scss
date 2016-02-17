@@ -17,8 +17,6 @@
 
     width: 54px;
     margin: 0;
-
-    cursor: pointer;
 }
 
 .b-score__other-marks {
@@ -80,4 +78,10 @@
 }
 .b-score__mark-value {
     display: inline-block;
+}
+
+.b-score_active {
+	.b-score__current-criterion-value {
+		cursor: pointer;
+	}
 }
