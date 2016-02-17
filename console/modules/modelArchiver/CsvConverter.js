@@ -2,6 +2,8 @@
 const csv2json = require('csvtojson').Converter;
 const json2csv = require('json2csv');
 const await = require('asyncawait/await');
+var replace = require('tipograph').Replace;
+const languages = require('tipograph').Languages;
 
 class CsvConverter {
     /**
@@ -10,24 +12,19 @@ class CsvConverter {
      * @return {string}
      * Thank you javascript for userfull string functions
      */
-    static replaceQuotes(str) {
-        var result;
-        var first = str.indexOf('"');
-        var last = str.lastIndexOf('"');
-        if (first > -1 && last > -1) {
-            result = str;
-            var innerSubstring = result.substr(first + 1, last - first - 1);
-            result = result.substr(0, first) + '«' + 
-                this.replaceQuotes(innerSubstring) + '»' + result.substr(last + 1);
-        } else {
-            result = str.replace(/\"/g,'«');
-        }
-        return result;
+    static beautyfySybmols(str) {
+        replace.configure(languages.russian);
+        var res = replace.all(str);
+
+        // TODO: find a normal way to do it
+        res = res.replace(/−/g, '-');
+
+        return res;
     }
-    
+
     /**
      * @param
-     * @param {object} 
+     * @param {object}
      * used to fix double quotes
      */
     static cureQuotes(JSON) {
@@ -46,7 +43,7 @@ class CsvConverter {
                     if (newValue)
                         this.cureQuotes(newValue);
                 } else if (typeof oldValue == 'string') {
-                    newValue = this.replaceQuotes(oldValue);
+                    newValue = this.beautyfySybmols(oldValue);
                 } else {
                     newValue = oldValue;
                 }
@@ -68,16 +65,20 @@ class CsvConverter {
     }
 
     /**
-     * @public 
+     * @public
      * @return {object};
      */
     toJson() {
         var unstableJSON = await(this.jsonPromise_(this.input_));
         this.stabilizeJSON_(unstableJSON);
+
+        // TODO: find a normal way to do it
+        CsvConverter.cureQuotes(unstableJSON);
+
         return unstableJSON;
     }
 
-    
+
     /**
      * @public
      * @return {string}
@@ -92,13 +93,12 @@ class CsvConverter {
      * @return {object}
      */
     getJson_() {
-        var res;
-        if (this.type_ == 'object') {
-            res = this.input_;
-        } else {
-            res = JSON.parse(this.input_);
-        }
+        var res = (this.type_ == 'object') ?
+            this.input_ :
+            JSON.parse(this.input_);
+
         CsvConverter.cureQuotes(res);
+
         return res;
     }
 
@@ -124,7 +124,7 @@ class CsvConverter {
         }
     }
 
-    
+
 
     /**
      * @private
@@ -150,10 +150,10 @@ class CsvConverter {
      */
     csvPromise_(json) {
         return new Promise (function(resolve, reject) {
-            json2csv({ 
+            json2csv({
                 data: json,
             }, function(err, csv) {
-                if (err) 
+                if (err)
                     reject(err);
                 resolve(csv);
             });
@@ -163,4 +163,3 @@ class CsvConverter {
 }
 
 module.exports = CsvConverter;
-

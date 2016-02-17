@@ -5,6 +5,7 @@ node_modules/
 public/
 tmp/
 doc/
+build/
 assets/dump/
 /parse/
 /console/reports
@@ -14,6 +15,7 @@ assets/dump/
 *.log
 *.swp
 .jshintrc
+sftp-config.json
 deployment-config.json
 .remote-sync.json
 .tern-project
