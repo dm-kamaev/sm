@@ -12,7 +12,9 @@
  *        ]>
  *     }
  *     config: {
- *        usePlaceholder: boolean
+ *        usePlaceholder: boolean,
+ *        iconSprite: ?string,
+ *        listTheme: ?string
  *     }
  * }}
  * @extends cl.gDropdown.Template
@@ -32,6 +34,7 @@
  *     }
  *     config: {
  *        usePlaceholder: boolean
+ *        iconSprite: ?string
  *     }
  * }}
  * @override
@@ -50,13 +53,15 @@
                 {/if}
             </span>
      </div>
-     <div class="{call .rootClass/}__opener-arrow">
-         {call sm.bIcon.Template.base}
-             {param params: [
-                 'spriteCssClass': 'b-icon_img_opener-arrow'
-             ] /}
-         {/call}
-     </div>
+     {if $params?.config?.iconSprite}
+         <div class="{call .rootClass/}__opener-arrow">
+             {call sm.bIcon.Template.base}
+                 {param params: [
+                     'spriteCssClass': $params?.config?.iconSprite
+                 ] /}
+             {/call}
+         </div>
+     {/if}
 {/template}
 
 /**
@@ -64,6 +69,9 @@
  * @param? params {{
  *     data: {
  *        listItems: list<string>
+ *     }
+ *     config: {
+ *       listTheme: ?string
  *     }
  * }}
  */
@@ -75,6 +83,9 @@
             'renderParams': [
                 'data': [
                     'items': $params.data.listItems
+                ],
+                'config': [
+                    'theme': $params?.config?.listTheme
                 ]
             ]
         ]/}
