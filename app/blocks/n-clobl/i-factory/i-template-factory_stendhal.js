@@ -4,6 +4,7 @@ goog.provide('sm.iFactory.TemplateFactoryStendhal.INSTANCE');
 goog.require('cl.iFactory.TemplateFactory');
 
 goog.require('sm.gDropdownSelect.Template');
+goog.require('sm.gInputFeedback.Template');
 goog.require('sm.gListSelect.Template');
 
 /**
@@ -21,6 +22,11 @@ sm.iFactory.TemplateFactoryStendhal = function() {
     this.setTemplateListItem(
         'list-select',
         sm.gListSelect.Template.list
+    );
+
+    this.setTemplateListItem(
+        'input-feedback',
+        sm.gInputFeedback.Template.input
     );
 };
 goog.inherits(sm.iFactory.TemplateFactoryStendhal, cl.iFactory.TemplateFactory);

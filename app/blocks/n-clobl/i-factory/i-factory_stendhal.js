@@ -3,6 +3,8 @@ goog.provide('sm.iFactory.FactoryStendhal');
 goog.require('cl.iFactory.Factory');
 goog.require('sm.gDropdownSelect.DropdownSelect');
 goog.require('sm.gDropdownSelect.View');
+goog.require('sm.gInputFeedback.InputFeedback');
+goog.require('sm.gInputFeedback.View');
 goog.require('sm.gListSelect.List');
 goog.require('sm.gListSelect.View');
 
@@ -24,6 +26,11 @@ sm.iFactory.FactoryStendhal = function() {
     this.setControlListItem('list-select', {
         control: sm.gListSelect.List,
         view: sm.gListSelect.View
+    });
+
+    this.setControlListItem('input-feedback', {
+        control: sm.gInputFeedback.InputFeedback,
+        view: sm.gInputFeedback.View
     });
 
 };

@@ -4,11 +4,11 @@
  * Select template
  * @param? params {{
  *     data: {
- *        defaultOpenerText: string - default selected item name or placeholder
+ *        defaultOpenerText: - string default selected item name or placeholder
  *        staticText: string - text in opener, which not changes
  *        listItems: list<[
- *            label: <string>,
- *            openerText: <string>
+ *            label: ?<string>,
+ *            openerText: ?<string> - optional field
  *        ]>
  *     }
  *     config: {
@@ -86,5 +86,5 @@
  * @override
  */
 {template .additionalClasses}
-    g-dropdown_select
+    {call .rootClass/}_select
 {/template}

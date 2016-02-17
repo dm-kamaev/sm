@@ -20,26 +20,32 @@ sm.gDropdownSelect.DropdownSelect = function(view, opt_params, opt_domHelper) {
      * @private
      */
     this.listInstance_ = null;
+
+    /**
+     * Selected value
+     * @type {number}
+     * @private
+     */
+    this.value_ = null;
 };
 goog.inherits(sm.gDropdownSelect.DropdownSelect, cl.gDropdown.Dropdown);
 
 goog.scope(function() {
-    var Select = sm.gDropdownSelect.DropdownSelect;
+    var DropdownSelect = sm.gDropdownSelect.DropdownSelect;
 
     /**
      * Event enum
      * @enum
      */
-    Select.Event = {
-        ITEM_SELECT: cl.gList.List.Event.ITEM_SELECT,
-        CONTROL_CLICK: sm.gDropdownSelect.View.Event.CONTROL_CLICK
+    DropdownSelect.Event = {
+        ITEM_SELECT: cl.gList.List.Event.ITEM_SELECT
     };
 
     /**
      * @param {Element} element
      * @override
      */
-    Select.prototype.decorateInternal = function(element) {
+    DropdownSelect.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
         var factoryManager = cl.iFactory.FactoryManager.getInstance();
@@ -54,15 +60,13 @@ goog.scope(function() {
     /**
      * @override
      */
-    Select.prototype.enterDocument = function() {
+    DropdownSelect.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
         this.getHandler().listen(
             this.listInstance_,
             cl.gList.List.Event.ITEM_SELECT,
             this.onListItemSelect_
         );
-
-        this.autoDispatch(sm.gDropdownSelect.View.Event.CONTROL_CLICK);
     };
 
     /**
@@ -70,13 +74,24 @@ goog.scope(function() {
      * @param {Object} event
      * @private
      */
-    Select.prototype.onListItemSelect_ = function(event) {
+    DropdownSelect.prototype.onListItemSelect_ = function(event) {
         var openerText = this
             .listInstance_
             .getOpenerText(event.itemId);
 
+        this.value_ = event.itemId;
+
         var view = this.getView();
         view.removePlaceholderModifier();
         view.setOpenerCustomText(openerText);
+    };
+
+    /**
+     * Get current selected value
+     * @public
+     * @return {number}
+     */
+    DropdownSelect.prototype.getValue = function() {
+        return this.value_;
     };
 });

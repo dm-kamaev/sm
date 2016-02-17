@@ -26,15 +26,10 @@ goog.scope(function() {
     View.CssClass = {
         CUSTOM_TEXT: 'g-dropdown__opener-custom-text',
         PLACEHOLDER: 'g-dropdown__opener-text_placeholder',
-        ROOT: 'g-dropdown_select'
+        ROOT: 'g-dropdown_select',
+        NOT_SELECTED: 'g-dropdown_not-selected'
     };
 
-    /**
-     * Event enum
-     */
-    View.Event = {
-        CONTROL_CLICK: 'control-click'
-    };
 
     /**
      * @override
@@ -42,7 +37,7 @@ goog.scope(function() {
      */
     View.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
-
+        console.log(this.dom);
         this.dom.customText = this.getElementByClass(View.CssClass.CUSTOM_TEXT);
         this.dom.selectList = this.getElementByClass(ListView.CssClass.ROOT);
     };
@@ -71,18 +66,36 @@ goog.scope(function() {
     };
 
     /**
-     * Dropdown onclick handler
+     * Adds placeholder modifier from element with custom text
      * @protected
-     * @override
      */
-    View.prototype.onControlClick = function() {
-        this.toggle();
-        console.log({
-            'type': View.Event.CONTROL_CLICK
-        });
-        this.dispatchEvent({
-            type: View.Event.CONTROL_CLICK
-        });
+    View.prototype.addPlaceholderModifier = function() {
+        goog.dom.classes.add(
+            this.dom.customText,
+            View.CssClass.PLACEHOLDER
+        );
+    };
+
+    /**
+     * Add not selected modifier
+     * @public
+     */
+    View.prototype.addNotSelectedModifier = function() {
+        goog.dom.classes.add(
+            this.getElement(),
+            View.CssClass.NOT_SELECTED
+        );
+    };
+
+    /**
+     * Remove not selected modifier
+     * @public
+     */
+    View.prototype.removeNotSelectedModifier = function() {
+        goog.dom.classes.remove(
+            this.getElement(),
+            View.CssClass.NOT_SELECTED
+        );
     };
 });
 

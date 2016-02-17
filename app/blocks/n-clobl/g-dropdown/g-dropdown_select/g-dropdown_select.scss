@@ -28,3 +28,9 @@
 		margin-top: 0px;
 	}
 }
+
+.g-dropdown.g-dropdown_select.g-dropdown_not-selected {
+	.g-dropdown__opener {
+		outline: 4px solid #e2332a;
+	}
+}
