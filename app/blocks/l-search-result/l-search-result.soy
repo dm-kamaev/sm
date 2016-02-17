@@ -71,6 +71,7 @@
     <html lang="en">
         <head>
             <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Результаты поиска на Школах Мела</title>
             <link href='https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700,700italic&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
             <link href='https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
@@ -101,12 +102,9 @@
                     {/call}
                 </div>
                 <div class="l-search-result__body">
+                    {call .listHeader_ data="all" /}
                     {call .leftMenu_ data="all" /}
                     <div class="l-search-result__results-section">
-                        <div class="l-search-result__list-header">
-                            {call .listHeader_ data="all" /}
-                        </div>
-
                         <div class="l-search-result__list-body
                             {$params.countResults ? '' : ' i-utils__hidden'}
                         ">
@@ -145,7 +143,7 @@
             {if length($params.searchText)}
             По запросу{sp}
             <span class="l-search-result__list-header-text
-                        l-search-result__list-header-text_strong">
+                         l-search-result__list-header-text_strong">
                 «{$params.searchText}»
             </span>{sp}
             {else}
