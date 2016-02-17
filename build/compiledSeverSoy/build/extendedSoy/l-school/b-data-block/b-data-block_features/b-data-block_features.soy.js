@@ -35,11 +35,11 @@ if (goog.DEBUG) {
  */
 sm.lSchool.bDataBlockFeatures.Template.content = function(opt_data, opt_ignored, opt_ijData) {
   var output = '<ul class="b-data-block__content">';
-  var featureList3755 = opt_data.params.content;
-  var featureListLen3755 = featureList3755.length;
-  for (var featureIndex3755 = 0; featureIndex3755 < featureListLen3755; featureIndex3755++) {
-    var featureData3755 = featureList3755[featureIndex3755];
-    output += '<li class="b-data-block__item"><div class="b-data-block__dash">\u2014</div>' + soy.$$escapeHtml(featureData3755) + '</li>';
+  var featureList3756 = opt_data.params.content;
+  var featureListLen3756 = featureList3756.length;
+  for (var featureIndex3756 = 0; featureIndex3756 < featureListLen3756; featureIndex3756++) {
+    var featureData3756 = featureList3756[featureIndex3756];
+    output += '<li class="b-data-block__item"><div class="b-data-block__dash">\u2014</div>' + soy.$$escapeHtml(featureData3756) + '</li>';
   }
   return soydata.VERY_UNSAFE.ordainSanitizedHtml(output);
 };

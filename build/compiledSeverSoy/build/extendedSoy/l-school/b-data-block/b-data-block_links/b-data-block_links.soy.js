@@ -35,11 +35,11 @@ if (goog.DEBUG) {
  */
 sm.lSchool.bDataBlockLinks.Template.content = function(opt_data, opt_ignored, opt_ijData) {
   var output = '<ul class="b-data-block__content">';
-  var linkItemList3906 = opt_data.params.content;
-  var linkItemListLen3906 = linkItemList3906.length;
-  for (var linkItemIndex3906 = 0; linkItemIndex3906 < linkItemListLen3906; linkItemIndex3906++) {
-    var linkItemData3906 = linkItemList3906[linkItemIndex3906];
-    output += '<li class="b-data-block__item"><a class="b-data-block__item-content_text-color_red b-data-block__item-content" href="' + soy.$$escapeHtmlAttribute(soy.$$filterNormalizeUri(linkItemData3906.href)) + '">' + soy.$$escapeHtml(linkItemData3906.name) + '</a></li>';
+  var linkItemList3907 = opt_data.params.content;
+  var linkItemListLen3907 = linkItemList3907.length;
+  for (var linkItemIndex3907 = 0; linkItemIndex3907 < linkItemListLen3907; linkItemIndex3907++) {
+    var linkItemData3907 = linkItemList3907[linkItemIndex3907];
+    output += '<li class="b-data-block__item"><a class="b-data-block__item-content_text-color_red b-data-block__item-content" href="' + soy.$$escapeHtmlAttribute(soy.$$filterNormalizeUri(linkItemData3907.href)) + '">' + soy.$$escapeHtml(linkItemData3907.name) + '</a></li>';
   }
   return soydata.VERY_UNSAFE.ordainSanitizedHtml(output);
 };

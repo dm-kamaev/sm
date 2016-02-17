@@ -35,11 +35,11 @@ if (goog.DEBUG) {
  */
 sm.lSchool.bDataBlockFoldList.Template.content = function(opt_data, opt_ignored, opt_ijData) {
   var output = '<ul class="b-data-block__content">';
-  var classList3792 = opt_data.params.content;
-  var classListLen3792 = classList3792.length;
-  for (var classIndex3792 = 0; classIndex3792 < classListLen3792; classIndex3792++) {
-    var classData3792 = classList3792[classIndex3792];
-    output += (classData3792.items && classData3792.items.length > 0) ? sm.lSchool.bDataBlockFoldList.Template.ratingItem_({params: {name: classData3792.name, items: classData3792.items}}, null, opt_ijData) : '';
+  var classList3793 = opt_data.params.content;
+  var classListLen3793 = classList3793.length;
+  for (var classIndex3793 = 0; classIndex3793 < classListLen3793; classIndex3793++) {
+    var classData3793 = classList3793[classIndex3793];
+    output += (classData3793.items && classData3793.items.length > 0) ? sm.lSchool.bDataBlockFoldList.Template.ratingItem_({params: {name: classData3793.name, items: classData3793.items}}, null, opt_ijData) : '';
   }
   output += '</ul>';
   return soydata.VERY_UNSAFE.ordainSanitizedHtml(output);
@@ -60,11 +60,11 @@ sm.lSchool.bDataBlockFoldList.Template.ratingItem_ = function(opt_data, opt_igno
   var output = '<li class="b-data-block__item"><a  class="b-data-block__item-content b-data-block__item-content_text-color_red">' + soy.$$escapeHtml(opt_data.params.name) + '</a>' + ((opt_data.params.items) ? '<div class="b-data-block__number">' + soy.$$escapeHtml(opt_data.params.items.length) + '</div>' : '');
   if (opt_data.params.items) {
     output += '<ul class="b-data-block__list i-utils__hidden">';
-    var itemList3811 = opt_data.params.items;
-    var itemListLen3811 = itemList3811.length;
-    for (var itemIndex3811 = 0; itemIndex3811 < itemListLen3811; itemIndex3811++) {
-      var itemData3811 = itemList3811[itemIndex3811];
-      output += '<li class="b-data-block__list-item">&mdash; ' + soy.$$escapeHtml(itemData3811) + '</li>';
+    var itemList3812 = opt_data.params.items;
+    var itemListLen3812 = itemList3812.length;
+    for (var itemIndex3812 = 0; itemIndex3812 < itemListLen3812; itemIndex3812++) {
+      var itemData3812 = itemList3812[itemIndex3812];
+      output += '<li class="b-data-block__list-item">&mdash; ' + soy.$$escapeHtml(itemData3812) + '</li>';
     }
     output += '</ul>';
   }

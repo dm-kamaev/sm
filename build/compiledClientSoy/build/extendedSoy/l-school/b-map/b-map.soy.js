@@ -23,9 +23,9 @@ goog.require('sm.bIcon.Template');
 sm.lSchool.bMap.Template.map = function(opt_data, opt_ignored, opt_ijData) {
   opt_data = opt_data || {};
   var output = '';
-  var dataParams__soy2112 = '' + soy.$$escapeHtml(cl.iUtils.Utils.stringify({json: (opt_data.params == null) ? null : opt_data.params.data}, null, opt_ijData));
-  dataParams__soy2112 = soydata.VERY_UNSAFE.$$ordainSanitizedHtmlForInternalBlocks(dataParams__soy2112);
-  output += '<div class="b-map" data-params="' + soy.$$escapeHtmlAttribute(dataParams__soy2112) + '"></div>';
+  var dataParams__soy2113 = '' + soy.$$escapeHtml(cl.iUtils.Utils.stringify({json: (opt_data.params == null) ? null : opt_data.params.data}, null, opt_ijData));
+  dataParams__soy2113 = soydata.VERY_UNSAFE.$$ordainSanitizedHtmlForInternalBlocks(dataParams__soy2113);
+  output += '<div class="b-map" data-params="' + soy.$$escapeHtmlAttribute(dataParams__soy2113) + '"></div>';
   return soydata.VERY_UNSAFE.ordainSanitizedHtml(output);
 };
 if (goog.DEBUG) {

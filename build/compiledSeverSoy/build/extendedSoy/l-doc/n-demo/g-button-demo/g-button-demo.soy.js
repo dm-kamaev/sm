@@ -51,18 +51,18 @@ if (goog.DEBUG) {
  */
 cl.lDoc.nDemo.gButtonDemo.Template.demo = function(opt_data, opt_ignored, opt_ijData) {
   var output = ((opt_data.params.namespace) ? cl.lDoc.nDemo.gButtonDemo.Template.soydoc(opt_data, null, opt_ijData) : '') + '<div class="l-doc__decorate-demo">';
-  var itemList2597 = opt_data.params.data;
-  var itemListLen2597 = itemList2597.length;
-  for (var itemIndex2597 = 0; itemIndex2597 < itemListLen2597; itemIndex2597++) {
-    var itemData2597 = itemList2597[itemIndex2597];
-    output += ((itemData2597.description) ? '<h2 class="l-doc__h2">' + soy.$$escapeHtml(itemData2597.description) + '</h2>' : '') + ((itemData2597.showParams) ? cl.lDoc.nDemo.gButtonDemo.Template.params({stringifyParams: itemData2597.stringifyParams}, null, opt_ijData) : '') + ((opt_data.params.helper) ? '<div class="l-doc-element" data-type="' + soy.$$escapeHtmlAttribute(opt_data.params.type) + '">' + soy.$$escapeHtml(opt_data.params.type) + '-test' + cl.lDoc.nDemo.gButtonDemo.Template.template({params: itemData2597.params}, null, opt_ijData) + '</div>' : cl.lDoc.nDemo.gButtonDemo.Template.template({params: itemData2597.params}, null, opt_ijData));
+  var itemList2598 = opt_data.params.data;
+  var itemListLen2598 = itemList2598.length;
+  for (var itemIndex2598 = 0; itemIndex2598 < itemListLen2598; itemIndex2598++) {
+    var itemData2598 = itemList2598[itemIndex2598];
+    output += ((itemData2598.description) ? '<h2 class="l-doc__h2">' + soy.$$escapeHtml(itemData2598.description) + '</h2>' : '') + ((itemData2598.showParams) ? cl.lDoc.nDemo.gButtonDemo.Template.params({stringifyParams: itemData2598.stringifyParams}, null, opt_ijData) : '') + ((opt_data.params.helper) ? '<div class="l-doc-element" data-type="' + soy.$$escapeHtmlAttribute(opt_data.params.type) + '">' + soy.$$escapeHtml(opt_data.params.type) + '-test' + cl.lDoc.nDemo.gButtonDemo.Template.template({params: itemData2598.params}, null, opt_ijData) + '</div>' : cl.lDoc.nDemo.gButtonDemo.Template.template({params: itemData2598.params}, null, opt_ijData));
   }
   output += cl.lDoc.nDemo.gButtonDemo.Template.custom(opt_data, null, opt_ijData) + '</div><div class="l-doc__render-demo">';
-  var itemList2623 = opt_data.params.data;
-  var itemListLen2623 = itemList2623.length;
-  for (var itemIndex2623 = 0; itemIndex2623 < itemListLen2623; itemIndex2623++) {
-    var itemData2623 = itemList2623[itemIndex2623];
-    output += ((itemData2623.description) ? '<h2 class="l-doc__h2">' + soy.$$escapeHtml(itemData2623.description) + '</h2>' : '') + ((itemData2623.showParams) ? cl.lDoc.nDemo.gButtonDemo.Template.params({stringifyParams: itemData2623.stringifyParams}, null, opt_ijData) : '') + ((opt_data.params.helper) ? '<div class="l-doc-element" data-type="' + soy.$$escapeHtmlAttribute(opt_data.params.type) + '">' + soy.$$escapeHtml(opt_data.params.type) + '-test<div class="l-doc__dummy" data-type="' + soy.$$escapeHtmlAttribute(opt_data.params.type) + '" data-params="' + soy.$$escapeHtmlAttribute(itemData2623.stringifyParams) + '"></div></div>' : '<div class="l-doc__dummy" data-type="' + soy.$$escapeHtmlAttribute(opt_data.params.type) + '" data-params="' + soy.$$escapeHtmlAttribute(itemData2623.stringifyParams) + '"></div>');
+  var itemList2624 = opt_data.params.data;
+  var itemListLen2624 = itemList2624.length;
+  for (var itemIndex2624 = 0; itemIndex2624 < itemListLen2624; itemIndex2624++) {
+    var itemData2624 = itemList2624[itemIndex2624];
+    output += ((itemData2624.description) ? '<h2 class="l-doc__h2">' + soy.$$escapeHtml(itemData2624.description) + '</h2>' : '') + ((itemData2624.showParams) ? cl.lDoc.nDemo.gButtonDemo.Template.params({stringifyParams: itemData2624.stringifyParams}, null, opt_ijData) : '') + ((opt_data.params.helper) ? '<div class="l-doc-element" data-type="' + soy.$$escapeHtmlAttribute(opt_data.params.type) + '">' + soy.$$escapeHtml(opt_data.params.type) + '-test<div class="l-doc__dummy" data-type="' + soy.$$escapeHtmlAttribute(opt_data.params.type) + '" data-params="' + soy.$$escapeHtmlAttribute(itemData2624.stringifyParams) + '"></div></div>' : '<div class="l-doc__dummy" data-type="' + soy.$$escapeHtmlAttribute(opt_data.params.type) + '" data-params="' + soy.$$escapeHtmlAttribute(itemData2624.stringifyParams) + '"></div>');
   }
   output += cl.lDoc.nDemo.gButtonDemo.Template.custom(opt_data, null, opt_ijData) + '</div>';
   return soydata.VERY_UNSAFE.ordainSanitizedHtml(output);
@@ -96,11 +96,11 @@ if (goog.DEBUG) {
  */
 cl.lDoc.nDemo.gButtonDemo.Template.soydoc = function(opt_data, opt_ignored, opt_ijData) {
   var output = '<h2 class="l-doc__h2">Template namespace: ' + soy.$$escapeHtml(opt_data.params.namespace) + '</h2>';
-  var docParamList2658 = opt_data.params.soydoc.docParams;
-  var docParamListLen2658 = docParamList2658.length;
-  for (var docParamIndex2658 = 0; docParamIndex2658 < docParamListLen2658; docParamIndex2658++) {
-    var docParamData2658 = docParamList2658[docParamIndex2658];
-    output += cl.lDoc.nDemo.gButtonDemo.Template.docParams({stringifyParams: docParamData2658.description}, null, opt_ijData);
+  var docParamList2659 = opt_data.params.soydoc.docParams;
+  var docParamListLen2659 = docParamList2659.length;
+  for (var docParamIndex2659 = 0; docParamIndex2659 < docParamListLen2659; docParamIndex2659++) {
+    var docParamData2659 = docParamList2659[docParamIndex2659];
+    output += cl.lDoc.nDemo.gButtonDemo.Template.docParams({stringifyParams: docParamData2659.description}, null, opt_ijData);
   }
   output += '<br>';
   return soydata.VERY_UNSAFE.ordainSanitizedHtml(output);
@@ -119,13 +119,13 @@ if (goog.DEBUG) {
  */
 cl.lDoc.nDemo.gButtonDemo.Template.params = function(opt_data, opt_ignored, opt_ijData) {
   var output = '<div class="l-doc__contract">params:  ';
-  var lb__soy2665 = '{';
-  lb__soy2665 = soydata.$$markUnsanitizedTextForInternalBlocks(lb__soy2665);
-  var rb__soy2667 = '}';
-  rb__soy2667 = soydata.$$markUnsanitizedTextForInternalBlocks(rb__soy2667);
-  var iLimit2669 = opt_data.stringifyParams.length;
-  for (var i2669 = 0; i2669 < iLimit2669; i2669++) {
-    output += (opt_data.stringifyParams[i2669] == lb__soy2665) ? soy.$$escapeHtml(opt_data.stringifyParams[i2669]) + '<br><div class="l-doc__indent-block">' : (opt_data.stringifyParams[i2669] == rb__soy2667) ? '</div><br>' + soy.$$escapeHtml(opt_data.stringifyParams[i2669]) + ((i2669 != opt_data.stringifyParams.length && opt_data.stringifyParams[i2669 + 1] == ',') ? ',' : '') + '<br>' : (opt_data.stringifyParams[i2669] == '[') ? soy.$$escapeHtml(opt_data.stringifyParams[i2669]) + '<br><div class="l-doc__indent-block">' : (opt_data.stringifyParams[i2669] == ']') ? '</div><br>' + soy.$$escapeHtml(opt_data.stringifyParams[i2669]) + ((i2669 != opt_data.stringifyParams.length && opt_data.stringifyParams[i2669 + 1] == ',') ? ',' : '') + '<br>' : (opt_data.stringifyParams[i2669] == ',') ? (opt_data.stringifyParams[i2669 - 1] == rb__soy2667 || opt_data.stringifyParams[i2669 - 1] == ']') ? '' : soy.$$escapeHtml(opt_data.stringifyParams[i2669]) + '<br>' : (opt_data.stringifyParams[i2669] == ':') ? soy.$$escapeHtml(opt_data.stringifyParams[i2669]) + ' ' : (opt_data.stringifyParams[i2669] == '"') ? '\'' : soy.$$escapeHtml(opt_data.stringifyParams[i2669]);
+  var lb__soy2666 = '{';
+  lb__soy2666 = soydata.$$markUnsanitizedTextForInternalBlocks(lb__soy2666);
+  var rb__soy2668 = '}';
+  rb__soy2668 = soydata.$$markUnsanitizedTextForInternalBlocks(rb__soy2668);
+  var iLimit2670 = opt_data.stringifyParams.length;
+  for (var i2670 = 0; i2670 < iLimit2670; i2670++) {
+    output += (opt_data.stringifyParams[i2670] == lb__soy2666) ? soy.$$escapeHtml(opt_data.stringifyParams[i2670]) + '<br><div class="l-doc__indent-block">' : (opt_data.stringifyParams[i2670] == rb__soy2668) ? '</div><br>' + soy.$$escapeHtml(opt_data.stringifyParams[i2670]) + ((i2670 != opt_data.stringifyParams.length && opt_data.stringifyParams[i2670 + 1] == ',') ? ',' : '') + '<br>' : (opt_data.stringifyParams[i2670] == '[') ? soy.$$escapeHtml(opt_data.stringifyParams[i2670]) + '<br><div class="l-doc__indent-block">' : (opt_data.stringifyParams[i2670] == ']') ? '</div><br>' + soy.$$escapeHtml(opt_data.stringifyParams[i2670]) + ((i2670 != opt_data.stringifyParams.length && opt_data.stringifyParams[i2670 + 1] == ',') ? ',' : '') + '<br>' : (opt_data.stringifyParams[i2670] == ',') ? (opt_data.stringifyParams[i2670 - 1] == rb__soy2668 || opt_data.stringifyParams[i2670 - 1] == ']') ? '' : soy.$$escapeHtml(opt_data.stringifyParams[i2670]) + '<br>' : (opt_data.stringifyParams[i2670] == ':') ? soy.$$escapeHtml(opt_data.stringifyParams[i2670]) + ' ' : (opt_data.stringifyParams[i2670] == '"') ? '\'' : soy.$$escapeHtml(opt_data.stringifyParams[i2670]);
   }
   output += '</div><br>';
   return soydata.VERY_UNSAFE.ordainSanitizedHtml(output);

@@ -35,11 +35,11 @@ if (goog.DEBUG) {
  */
 sm.lSchool.bDataBlockRatings.Template.content = function(opt_data, opt_ignored, opt_ijData) {
   var output = '<ul class="b-data-block__content">';
-  var ratingList3945 = opt_data.params.content;
-  var ratingListLen3945 = ratingList3945.length;
-  for (var ratingIndex3945 = 0; ratingIndex3945 < ratingListLen3945; ratingIndex3945++) {
-    var ratingData3945 = ratingList3945[ratingIndex3945];
-    output += sm.lSchool.bDataBlockRatings.Template.ratingItem_({params: {name: ratingData3945.name, place: ratingData3945.place, href: ratingData3945.href}}, null, opt_ijData);
+  var ratingList3946 = opt_data.params.content;
+  var ratingListLen3946 = ratingList3946.length;
+  for (var ratingIndex3946 = 0; ratingIndex3946 < ratingListLen3946; ratingIndex3946++) {
+    var ratingData3946 = ratingList3946[ratingIndex3946];
+    output += sm.lSchool.bDataBlockRatings.Template.ratingItem_({params: {name: ratingData3946.name, place: ratingData3946.place, href: ratingData3946.href}}, null, opt_ijData);
   }
   output += '</ul>';
   return soydata.VERY_UNSAFE.ordainSanitizedHtml(output);

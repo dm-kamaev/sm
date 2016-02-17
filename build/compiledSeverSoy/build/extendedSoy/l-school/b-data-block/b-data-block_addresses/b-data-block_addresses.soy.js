@@ -35,26 +35,26 @@ if (goog.DEBUG) {
  */
 sm.lSchool.bDataBlockAddresses.Template.content = function(opt_data, opt_ignored, opt_ijData) {
   var output = '<ul class="b-data-block__content">';
-  var stageList3692 = opt_data.params.content.stages;
-  var stageListLen3692 = stageList3692.length;
-  for (var stageIndex3692 = 0; stageIndex3692 < stageListLen3692; stageIndex3692++) {
-    var stageData3692 = stageList3692[stageIndex3692];
-    output += '<li class="b-data-block__item b-data-block__contact"><div class="b-data-block__item-content"><div class="b-data-block__item-content-left">' + soy.$$escapeHtml(stageData3692.name) + '</div><div class="b-data-block__item-content-right">';
-    var addressList3696 = stageData3692.addresses;
-    var addressListLen3696 = addressList3696.length;
-    for (var addressIndex3696 = 0; addressIndex3696 < addressListLen3696; addressIndex3696++) {
-      var addressData3696 = addressList3696[addressIndex3696];
-      output += '<div class="b-data-block__item-content-address">' + soy.$$escapeHtml(addressData3696.description) + '</div><div class="b-data-block__item-content-metroStation">' + ((addressData3696.metroStations.length > 0) ? '<div class="b-data-block__metro-icon b-icon_img_metro"></div>' + soy.$$escapeHtml(addressData3696.metroStations[0].name) : '') + '</div>';
+  var stageList3693 = opt_data.params.content.stages;
+  var stageListLen3693 = stageList3693.length;
+  for (var stageIndex3693 = 0; stageIndex3693 < stageListLen3693; stageIndex3693++) {
+    var stageData3693 = stageList3693[stageIndex3693];
+    output += '<li class="b-data-block__item b-data-block__contact"><div class="b-data-block__item-content"><div class="b-data-block__item-content-left">' + soy.$$escapeHtml(stageData3693.name) + '</div><div class="b-data-block__item-content-right">';
+    var addressList3697 = stageData3693.addresses;
+    var addressListLen3697 = addressList3697.length;
+    for (var addressIndex3697 = 0; addressIndex3697 < addressListLen3697; addressIndex3697++) {
+      var addressData3697 = addressList3697[addressIndex3697];
+      output += '<div class="b-data-block__item-content-address">' + soy.$$escapeHtml(addressData3697.description) + '</div><div class="b-data-block__item-content-metroStation">' + ((addressData3697.metroStations.length > 0) ? '<div class="b-data-block__metro-icon b-icon_img_metro"></div>' + soy.$$escapeHtml(addressData3697.metroStations[0].name) : '') + '</div>';
     }
-    output += '</div>' + ((! (stageIndex3692 == stageListLen3692 - 1)) ? '<div class="b-data-block__line horisontal-line"></div>' : '') + '</div></li>';
+    output += '</div>' + ((! (stageIndex3693 == stageListLen3693 - 1)) ? '<div class="b-data-block__line horisontal-line"></div>' : '') + '</div></li>';
   }
   if (opt_data.params.content.phones.length > 0) {
     output += '<li class="b-data-block__item-phones"><div class="b-data-block__item-phones-caption">\u0422\u0435\u043B\u0435\u0444\u043E\u043D\u044B </div>';
-    var phoneList3715 = opt_data.params.content.phones;
-    var phoneListLen3715 = phoneList3715.length;
-    for (var phoneIndex3715 = 0; phoneIndex3715 < phoneListLen3715; phoneIndex3715++) {
-      var phoneData3715 = phoneList3715[phoneIndex3715];
-      output += soy.$$escapeHtml(phoneData3715) + ((! (phoneIndex3715 == phoneListLen3715 - 1)) ? ', ' : '');
+    var phoneList3716 = opt_data.params.content.phones;
+    var phoneListLen3716 = phoneList3716.length;
+    for (var phoneIndex3716 = 0; phoneIndex3716 < phoneListLen3716; phoneIndex3716++) {
+      var phoneData3716 = phoneList3716[phoneIndex3716];
+      output += soy.$$escapeHtml(phoneData3716) + ((! (phoneIndex3716 == phoneListLen3716 - 1)) ? ', ' : '');
     }
     output += '</li>';
   }

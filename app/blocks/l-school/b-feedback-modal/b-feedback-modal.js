@@ -185,7 +185,7 @@ goog.scope(function() {
             studentText: this.getElementByClass(
                 FeedbackModal.CssClass.TEXT_STUDENT
             )
-        );
+        };
 
         this.modal_ = factory.decorate(
             'modal',

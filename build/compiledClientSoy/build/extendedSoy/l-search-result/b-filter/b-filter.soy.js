@@ -82,13 +82,13 @@ if (goog.DEBUG) {
 sm.lSearchResult.bFilter.Template.filters = function(opt_data, opt_ignored, opt_ijData) {
   opt_data = opt_data || {};
   var output = '';
-  var filToShow__soy2209 = ((opt_data.params == null) ? null : (opt_data.params.config == null) ? null : opt_data.params.config.filtersToShow) ? ((opt_data.params == null) ? null : (opt_data.params.config == null) ? null : opt_data.params.config.filtersToShow) - 1 : 5;
+  var filToShow__soy2210 = ((opt_data.params == null) ? null : (opt_data.params.config == null) ? null : opt_data.params.config.filtersToShow) ? ((opt_data.params == null) ? null : (opt_data.params.config == null) ? null : opt_data.params.config.filtersToShow) - 1 : 5;
   output += '<div class="b-filter__filters' + soy.$$escapeHtmlAttribute(((opt_data.params == null) ? null : (opt_data.params.config == null) ? null : opt_data.params.config.cannotBeHidden) ? '' : ' i-utils__hidden') + '">';
-  var iLimit2213 = opt_data.params.data.filters.length;
-  for (var i2213 = 0; i2213 < iLimit2213; i2213++) {
-    output += sm.lSearchResult.bFilter.Template.filter({params: {filter: opt_data.params.data.filters[i2213], hidden: i2213 > filToShow__soy2209 ? true : false, name: opt_data.params.data.name, id: i2213}}, null, opt_ijData);
+  var iLimit2214 = opt_data.params.data.filters.length;
+  for (var i2214 = 0; i2214 < iLimit2214; i2214++) {
+    output += sm.lSearchResult.bFilter.Template.filter({params: {filter: opt_data.params.data.filters[i2214], hidden: i2214 > filToShow__soy2210 ? true : false, name: opt_data.params.data.name, id: i2214}}, null, opt_ijData);
   }
-  output += ((opt_data.params.data.filters.length > filToShow__soy2209) ? '<div class="b-filter__show-button">\u0415\u0449\u0435 ' + soy.$$escapeHtml(opt_data.params.data.filters.length - filToShow__soy2209 - 1) + ' \u043F\u0440\u0435\u0434\u043C\u0435\u0442\u043E\u0432</div>' : '') + '</div>';
+  output += ((opt_data.params.data.filters.length > filToShow__soy2210) ? '<div class="b-filter__show-button">\u0415\u0449\u0435 ' + soy.$$escapeHtml(opt_data.params.data.filters.length - filToShow__soy2210 - 1) + ' \u043F\u0440\u0435\u0434\u043C\u0435\u0442\u043E\u0432</div>' : '') + '</div>';
   return soydata.VERY_UNSAFE.ordainSanitizedHtml(output);
 };
 if (goog.DEBUG) {

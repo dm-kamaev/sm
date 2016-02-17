@@ -51,18 +51,18 @@ if (goog.DEBUG) {
  */
 cl.lDoc.nDemo.gHintDemo.Template.demo = function(opt_data, opt_ignored, opt_ijData) {
   var output = ((opt_data.params.namespace) ? cl.lDoc.nDemo.gHintDemo.Template.soydoc(opt_data, null, opt_ijData) : '') + '<div class="l-doc__decorate-demo">';
-  var itemList2844 = opt_data.params.data;
-  var itemListLen2844 = itemList2844.length;
-  for (var itemIndex2844 = 0; itemIndex2844 < itemListLen2844; itemIndex2844++) {
-    var itemData2844 = itemList2844[itemIndex2844];
-    output += ((itemData2844.description) ? '<h2 class="l-doc__h2">' + soy.$$escapeHtml(itemData2844.description) + '</h2>' : '') + ((itemData2844.showParams) ? cl.lDoc.nDemo.gHintDemo.Template.params({stringifyParams: itemData2844.stringifyParams}, null, opt_ijData) : '') + ((opt_data.params.helper) ? '<div class="l-doc-element" data-type="' + soy.$$escapeHtmlAttribute(opt_data.params.type) + '">' + soy.$$escapeHtml(opt_data.params.type) + '-test' + cl.lDoc.nDemo.gHintDemo.Template.template({params: itemData2844.params}, null, opt_ijData) + '</div>' : cl.lDoc.nDemo.gHintDemo.Template.template({params: itemData2844.params}, null, opt_ijData));
+  var itemList2845 = opt_data.params.data;
+  var itemListLen2845 = itemList2845.length;
+  for (var itemIndex2845 = 0; itemIndex2845 < itemListLen2845; itemIndex2845++) {
+    var itemData2845 = itemList2845[itemIndex2845];
+    output += ((itemData2845.description) ? '<h2 class="l-doc__h2">' + soy.$$escapeHtml(itemData2845.description) + '</h2>' : '') + ((itemData2845.showParams) ? cl.lDoc.nDemo.gHintDemo.Template.params({stringifyParams: itemData2845.stringifyParams}, null, opt_ijData) : '') + ((opt_data.params.helper) ? '<div class="l-doc-element" data-type="' + soy.$$escapeHtmlAttribute(opt_data.params.type) + '">' + soy.$$escapeHtml(opt_data.params.type) + '-test' + cl.lDoc.nDemo.gHintDemo.Template.template({params: itemData2845.params}, null, opt_ijData) + '</div>' : cl.lDoc.nDemo.gHintDemo.Template.template({params: itemData2845.params}, null, opt_ijData));
   }
   output += cl.lDoc.nDemo.gHintDemo.Template.custom(opt_data, null, opt_ijData) + '</div><div class="l-doc__render-demo">';
-  var itemList2870 = opt_data.params.data;
-  var itemListLen2870 = itemList2870.length;
-  for (var itemIndex2870 = 0; itemIndex2870 < itemListLen2870; itemIndex2870++) {
-    var itemData2870 = itemList2870[itemIndex2870];
-    output += ((itemData2870.description) ? '<h2 class="l-doc__h2">' + soy.$$escapeHtml(itemData2870.description) + '</h2>' : '') + ((itemData2870.showParams) ? cl.lDoc.nDemo.gHintDemo.Template.params({stringifyParams: itemData2870.stringifyParams}, null, opt_ijData) : '') + ((opt_data.params.helper) ? '<div class="l-doc-element" data-type="' + soy.$$escapeHtmlAttribute(opt_data.params.type) + '">' + soy.$$escapeHtml(opt_data.params.type) + '-test<div class="l-doc__dummy" data-type="' + soy.$$escapeHtmlAttribute(opt_data.params.type) + '" data-params="' + soy.$$escapeHtmlAttribute(itemData2870.stringifyParams) + '"></div></div>' : '<div class="l-doc__dummy" data-type="' + soy.$$escapeHtmlAttribute(opt_data.params.type) + '" data-params="' + soy.$$escapeHtmlAttribute(itemData2870.stringifyParams) + '"></div>');
+  var itemList2871 = opt_data.params.data;
+  var itemListLen2871 = itemList2871.length;
+  for (var itemIndex2871 = 0; itemIndex2871 < itemListLen2871; itemIndex2871++) {
+    var itemData2871 = itemList2871[itemIndex2871];
+    output += ((itemData2871.description) ? '<h2 class="l-doc__h2">' + soy.$$escapeHtml(itemData2871.description) + '</h2>' : '') + ((itemData2871.showParams) ? cl.lDoc.nDemo.gHintDemo.Template.params({stringifyParams: itemData2871.stringifyParams}, null, opt_ijData) : '') + ((opt_data.params.helper) ? '<div class="l-doc-element" data-type="' + soy.$$escapeHtmlAttribute(opt_data.params.type) + '">' + soy.$$escapeHtml(opt_data.params.type) + '-test<div class="l-doc__dummy" data-type="' + soy.$$escapeHtmlAttribute(opt_data.params.type) + '" data-params="' + soy.$$escapeHtmlAttribute(itemData2871.stringifyParams) + '"></div></div>' : '<div class="l-doc__dummy" data-type="' + soy.$$escapeHtmlAttribute(opt_data.params.type) + '" data-params="' + soy.$$escapeHtmlAttribute(itemData2871.stringifyParams) + '"></div>');
   }
   output += cl.lDoc.nDemo.gHintDemo.Template.custom(opt_data, null, opt_ijData) + '</div>';
   return soydata.VERY_UNSAFE.ordainSanitizedHtml(output);
@@ -96,11 +96,11 @@ if (goog.DEBUG) {
  */
 cl.lDoc.nDemo.gHintDemo.Template.soydoc = function(opt_data, opt_ignored, opt_ijData) {
   var output = '<h2 class="l-doc__h2">Template namespace: ' + soy.$$escapeHtml(opt_data.params.namespace) + '</h2>';
-  var docParamList2905 = opt_data.params.soydoc.docParams;
-  var docParamListLen2905 = docParamList2905.length;
-  for (var docParamIndex2905 = 0; docParamIndex2905 < docParamListLen2905; docParamIndex2905++) {
-    var docParamData2905 = docParamList2905[docParamIndex2905];
-    output += cl.lDoc.nDemo.gHintDemo.Template.docParams({stringifyParams: docParamData2905.description}, null, opt_ijData);
+  var docParamList2906 = opt_data.params.soydoc.docParams;
+  var docParamListLen2906 = docParamList2906.length;
+  for (var docParamIndex2906 = 0; docParamIndex2906 < docParamListLen2906; docParamIndex2906++) {
+    var docParamData2906 = docParamList2906[docParamIndex2906];
+    output += cl.lDoc.nDemo.gHintDemo.Template.docParams({stringifyParams: docParamData2906.description}, null, opt_ijData);
   }
   output += '<br>';
   return soydata.VERY_UNSAFE.ordainSanitizedHtml(output);
@@ -119,13 +119,13 @@ if (goog.DEBUG) {
  */
 cl.lDoc.nDemo.gHintDemo.Template.params = function(opt_data, opt_ignored, opt_ijData) {
   var output = '<div class="l-doc__contract">params:  ';
-  var lb__soy2912 = '{';
-  lb__soy2912 = soydata.$$markUnsanitizedTextForInternalBlocks(lb__soy2912);
-  var rb__soy2914 = '}';
-  rb__soy2914 = soydata.$$markUnsanitizedTextForInternalBlocks(rb__soy2914);
-  var iLimit2916 = opt_data.stringifyParams.length;
-  for (var i2916 = 0; i2916 < iLimit2916; i2916++) {
-    output += (opt_data.stringifyParams[i2916] == lb__soy2912) ? soy.$$escapeHtml(opt_data.stringifyParams[i2916]) + '<br><div class="l-doc__indent-block">' : (opt_data.stringifyParams[i2916] == rb__soy2914) ? '</div><br>' + soy.$$escapeHtml(opt_data.stringifyParams[i2916]) + ((i2916 != opt_data.stringifyParams.length && opt_data.stringifyParams[i2916 + 1] == ',') ? ',' : '') + '<br>' : (opt_data.stringifyParams[i2916] == '[') ? soy.$$escapeHtml(opt_data.stringifyParams[i2916]) + '<br><div class="l-doc__indent-block">' : (opt_data.stringifyParams[i2916] == ']') ? '</div><br>' + soy.$$escapeHtml(opt_data.stringifyParams[i2916]) + ((i2916 != opt_data.stringifyParams.length && opt_data.stringifyParams[i2916 + 1] == ',') ? ',' : '') + '<br>' : (opt_data.stringifyParams[i2916] == ',') ? (opt_data.stringifyParams[i2916 - 1] == rb__soy2914 || opt_data.stringifyParams[i2916 - 1] == ']') ? '' : soy.$$escapeHtml(opt_data.stringifyParams[i2916]) + '<br>' : (opt_data.stringifyParams[i2916] == ':') ? soy.$$escapeHtml(opt_data.stringifyParams[i2916]) + ' ' : (opt_data.stringifyParams[i2916] == '"') ? '\'' : soy.$$escapeHtml(opt_data.stringifyParams[i2916]);
+  var lb__soy2913 = '{';
+  lb__soy2913 = soydata.$$markUnsanitizedTextForInternalBlocks(lb__soy2913);
+  var rb__soy2915 = '}';
+  rb__soy2915 = soydata.$$markUnsanitizedTextForInternalBlocks(rb__soy2915);
+  var iLimit2917 = opt_data.stringifyParams.length;
+  for (var i2917 = 0; i2917 < iLimit2917; i2917++) {
+    output += (opt_data.stringifyParams[i2917] == lb__soy2913) ? soy.$$escapeHtml(opt_data.stringifyParams[i2917]) + '<br><div class="l-doc__indent-block">' : (opt_data.stringifyParams[i2917] == rb__soy2915) ? '</div><br>' + soy.$$escapeHtml(opt_data.stringifyParams[i2917]) + ((i2917 != opt_data.stringifyParams.length && opt_data.stringifyParams[i2917 + 1] == ',') ? ',' : '') + '<br>' : (opt_data.stringifyParams[i2917] == '[') ? soy.$$escapeHtml(opt_data.stringifyParams[i2917]) + '<br><div class="l-doc__indent-block">' : (opt_data.stringifyParams[i2917] == ']') ? '</div><br>' + soy.$$escapeHtml(opt_data.stringifyParams[i2917]) + ((i2917 != opt_data.stringifyParams.length && opt_data.stringifyParams[i2917 + 1] == ',') ? ',' : '') + '<br>' : (opt_data.stringifyParams[i2917] == ',') ? (opt_data.stringifyParams[i2917 - 1] == rb__soy2915 || opt_data.stringifyParams[i2917 - 1] == ']') ? '' : soy.$$escapeHtml(opt_data.stringifyParams[i2917]) + '<br>' : (opt_data.stringifyParams[i2917] == ':') ? soy.$$escapeHtml(opt_data.stringifyParams[i2917]) + ' ' : (opt_data.stringifyParams[i2917] == '"') ? '\'' : soy.$$escapeHtml(opt_data.stringifyParams[i2917]);
   }
   output += '</div><br>';
   return soydata.VERY_UNSAFE.ordainSanitizedHtml(output);

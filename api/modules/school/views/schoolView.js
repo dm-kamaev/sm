@@ -13,8 +13,6 @@ const egeResultView = require.main.require(
     './api/modules/study/views/egeResultView.js');
 const giaResultView = require.main.require(
     './api/modules/study/views/giaResultView.js');
-const ratingView = require.main.require(
-    './api/modules/school/views/ratingView.js');
 
 var schoolView = {};
 
