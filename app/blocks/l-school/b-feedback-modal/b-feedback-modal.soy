@@ -40,9 +40,9 @@
             <div class="b-feedback__section
                         b-feedback__section_header">
                 <div class="b-feedback__close-control">
-                    {call sm.bIcon.Template.base}
+                    {call sm.bIcon.Template.icon}
                         {param params: [
-                            'spriteCssClass': 'b-icon_img_close-dialog'
+                            'type': 'close-dialog'
                         ] /}
                     {/call}
                 </div>
@@ -115,7 +115,7 @@
                 'type': 'dropdown-select',
                 'renderParams': [
                     'data': [
-                        'defaultCustomText': 'Выберите из списка',
+                        'defaultOpenerText': 'Выберите из списка',
                         'listItems': [
                             ['label': 'Родитель ученика'],
                             ['label': 'Выпускник'],
@@ -124,7 +124,7 @@
                     ],
                     'config': [
                         'usePlaceholder': true,
-                        'iconSprite': 'b-icon_img_opener-arrow'
+                        'iconSprite': 'opener-arrow'
                     ]
                 ]
             ]/}
@@ -164,7 +164,7 @@
                             ]
                         ],
                         'config': [
-                            'iconSprite': 'b-icon_img_opener-arrow'
+                            'iconSprite': 'opener-arrow'
                         ]
                     ]
                 ]/}
