@@ -326,7 +326,6 @@ var getStages = function(departments) {
  * @return {object} contains results count and schools array
  */
 schoolView.list = function(schools, opt_criterion) {
-    console.log(schools[0]);
     var res = {};
     if (schools.length !== 0) {
         schools = groupSchools(schools);
@@ -348,7 +347,8 @@ schoolView.list = function(schools, opt_criterion) {
                     currentCriterion: sortCriterion,
                     fullName: school.fullName,
                     ratings: ratingView.ratingResultView(school.rankDogm),
-                    metroStations: addressView.getMetro(school.addresses)
+                    metroStations: addressView.getMetro(school.addresses),
+                    isScoreClickable: checkScoreValues(score, sortCriterion)
                 };
             });
 
@@ -382,6 +382,28 @@ schoolView.suggestList = function(schools) {
                 addresses: school.addresses
             };
     });
+};
+
+/**
+ * Check if all scores of item is 0
+ * @param {Array<Object>} score
+ * @param {Object} sortCriterion
+ * @return {boolean}
+ * @private
+ */
+var checkScoreValues = function(score, sortCriterion) {
+    var result = false;
+
+    if (sortCriterion.value !== 0) {
+        result = true;
+    }
+
+    score.forEach(function(item) {
+        if (item.value !== 0) {
+            result = true;
+        }
+    });
+    return result;
 };
 
 /**
