@@ -53,7 +53,7 @@
             </div>
 
             <div class="b-feedback__section
-                        b-feedback__section_whoAreYou">
+                        b-feedback__section_who-are-you">
                 {call .whoAreYou_ /}
             </div>
 
@@ -135,12 +135,26 @@
         <span class="b-feedback__text
                     b-feedback__text_student
                     i-utils__hidden">
-            Учусь здесь в
+            <span class="b-feedback__form-item
+                         b-feedback__form-item_detailed">
+                Учусь здесь в
+            </span>
+            <span class="b-feedback__form-item
+                         b-feedback__form-item_brief">
+                Класс
+            </span>
         </span>
         <span class="b-feedback__text
                     b-feedback__text_parent
                     i-utils__hidden">
-            Ребёнок учится в
+            <span class="b-feedback__form-item
+                         b-feedback__form-item_detailed">
+                Ребёнок учится в
+            </span>
+            <span class="b-feedback__form-item
+                         b-feedback__form-item_brief">
+                Класс
+            </span>
         </span>
         <div class="b-feedback__control
                     b-feedback__control_class-type">
@@ -170,14 +184,24 @@
                 ]/}
             {/call}
         </div>
-        <span class="b-feedback__text">
-            классе
+        <span class="b-feedback__form-item
+                     b-feedback__form-item_detailed">
+            <span class="b-feedback__text">
+                классе
+            </span>
         </span>
     </div>
     <div class="b-feedback__graduation-year
                 i-utils__hidden">
         <span class="b-feedback__text">
-            Окончил эту школу в
+            <span class="b-feedback__form-item
+                         b-feedback__form-item_detailed">
+                Окончил эту школу в
+            </span>
+            <span class="b-feedback__form-item
+                         b-feedback__form-item_brief">
+                Год выпуска
+            </span>
         </span>
         <div class="b-feedback__control
                     b-feedback__control_graduation-year">
@@ -193,8 +217,12 @@
                 ]/}
             {/call}
         </div>
-        <span class="b-feedback__text">
-            году
+        <span class="b-feedback__form-item
+                     b-feedback__form-item_detailed">
+            <span class="b-feedback__text
+                        b-feedback__text">
+                году
+            </span>
         </span>
     </div>
 {/template}
