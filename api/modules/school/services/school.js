@@ -700,10 +700,7 @@ service.list = async (function(opt_params) {
                     'school.school_type = \'' + schoolTypeEnum.CADET_SCHOOL + '\' OR ' +
                     'school.school_type = \'' + schoolTypeEnum.CADET_SCHOOL_INTERNAT + '\' OR ' +
                     'school.school_type = \'' + schoolTypeEnum.CORRECTIONAL_SCHOOL + '\' OR ' +
-                    'school.school_type = \'' + schoolTypeEnum.CORRECTIONAL_SCHOOL_INTERNAT + '\')',
-
-                    'department.stage IN (\'' + departmentTypeEnum.ELEMENTARY +
-                    '\', \'' + departmentTypeEnum.MIDDLE_HIDE + '\')'
+                    'school.school_type = \'' + schoolTypeEnum.CORRECTIONAL_SCHOOL_INTERNAT + '\')'
                 ],
                 as: 'school',
                 join: [],

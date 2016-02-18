@@ -128,7 +128,7 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
                     generateSqlFilter('school.name', searchParams.name, 'AND'),
                     generateSqlFilter('school.full_name', searchParams.name, 'AND'),
                     generateSqlFilter('metro.name', searchParams.name, 'AND'),
-                    generateSqlFilter('area.name', searchParams.name, 'AND'),
+                    generateSqlFilter('area.name', searchParams.name, 'AND')
                 ]
             });
             isGeoDataJoined = true;
@@ -189,6 +189,8 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
             });
         }
 
+
+
         if (searchParams.areaId) {
             isGeoDataJoined = true;
             sqlOptions.where.push('area.id = ' + searchParams.areaId);
@@ -216,7 +218,10 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
                      'metro on metro.id = address_metro.metro_id',
                      'department on address.id = department.address_id'
                  ]
-             });
+             });             
+             sqlOptions.where.push('department.stage IN (\'' +
+                 departmentTypeEnum.ELEMENTARY + '\', \'' +
+                 departmentTypeEnum.MIDDLE_HIDE + '\')');
         }
     }
 };
