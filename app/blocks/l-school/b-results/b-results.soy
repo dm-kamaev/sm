@@ -48,6 +48,13 @@
             ]/}
         {/call}
     {/let}
+    {let $olympContent kind="html"}
+        {call .olympContent_}
+            {param params: [
+                'data': $params?.data?.olymp
+            ]/}
+        {/call}
+    {/let}
 
     <div class="b-results">
         {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
@@ -66,7 +73,7 @@
                             ],
                             [
                                 'label': $olymp,
-                                'content': $olymp
+                                'content': $olympContent
                             ]
                         ]
                     ],
@@ -90,33 +97,26 @@
 {/template}
 
 /**
- * Content template
+ * Olymp content
  * @param params {
- *     data: [],
- *     config: {
- *         type: ?string
- *     }
+ *     data: []
  * }
  */
-{template .content_ private="true"}
-    {let $content kind="html"}
-        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
-            {param params: [
-                'type': 'list',
-                'renderParams': [
-                    'data': [
-                        'items': $params.data?.years
+{template .olympContent_ private="true"}
+    {if $params.data?.years?.length > 0}
+        {let $content kind="html"}
+            {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+                {param params: [
+                    'type': 'list',
+                    'renderParams': [
+                        'data': [
+                            'items': $params.data?.years
+                        ]
                     ]
-                ]
-            ]/}
-        {/call}
-    {/let}
+                ]/}
+            {/call}
+        {/let}
 
-    {if $params.data}
-
-    {let $maxValue: ($params.config.type == 'ege') ? 100 : 5 /}
-
-    <div class="b-results__content">
         {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
             {param params: [
                 'type': 'dropdown',
@@ -137,15 +137,12 @@
                 {if $yearResults.top}
                     <div class="b-results__content-item">
                         <div class="b-results__item-label">
-                            Выше среднего по москве
+                            Старшие классы
                         </div>
                         <div class="b-results__item-data">
-                            {call sm.bDiagram.Template.base}
+                            {call .olympDiagram_}
                                 {param params: [
-                                    'data': $yearResults.top,
-                                    'maxValue': $maxValue,
-                                    'display': 'bars',
-                                    'range': $params.data?.range
+                                    'data': $yearResults.top
                                 ]/}
                             {/call}
                         </div>
@@ -154,15 +151,12 @@
                 {if $yearResults.middle}
                     <div class="b-results__content-item">
                         <div class="b-results__item-label">
-                            Средний уровень
+                            Средние классы
                         </div>
                         <div class="b-results__item-data">
-                            {call sm.bDiagram.Template.base}
+                            {call .olympDiagram_}
                                 {param params: [
-                                    'data': $yearResults.middle,
-                                    'maxValue': $maxValue,
-                                    'display': 'bars',
-                                    'range': $params.data?.range
+                                    'data': $yearResults.middle
                                 ]/}
                             {/call}
                         </div>
@@ -171,15 +165,12 @@
                 {if $yearResults.bottom}
                     <div class="b-results__content-item">
                         <div class="b-results__item-label">
-                            Ниже среднего
+                            Младшие классы
                         </div>
                         <div class="b-results__item-data">
-                            {call sm.bDiagram.Template.base}
+                            {call .olympDiagram_}
                                 {param params: [
-                                    'data': $yearResults.bottom,
-                                    'maxValue': $maxValue,
-                                    'display': 'bars',
-                                    'range': $params.data?.range
+                                    'data': $yearResults.bottom
                                 ]/}
                             {/call}
                         </div>
@@ -187,6 +178,151 @@
                 {/if}
             </div>
         {/foreach}
+    {else}
+        Нет результатов
+    {/if}
+{/template}
+
+/**
+ * Olympiad diagram
+ * @param params {
+ *     data: []
+ * }
+ */
+{template .olympDiagram_ private="true"}
+    <div class="b-results__olymp-diagram">
+        {foreach $item in $params.data}
+            <div class="b-results__olymp-item">
+                {$item.name} —
+                {if $item.winners}
+                    {sp} {$item.winners}
+                    {call cl.iUtils.Utils.declensionPrint}
+                        {param params: [
+                            'num': $item.winners,
+                            'nom': ' победитель',
+                            'gen': ' победителя',
+                            'plu': ' победителей'
+                        ]/}
+                    {/call}
+                    {if $item.awardees}
+                        ,
+                    {/if}
+                {/if}
+                {if $item.awardees}
+                    {sp} {$item.awardees}
+                    {call cl.iUtils.Utils.declensionPrint}
+                        {param params: [
+                            'num': $item.awardees,
+                            'nom': ' призер',
+                            'gen': ' призера',
+                            'plu': ' призеров'
+                        ]/}
+                    {/call}
+                {/if}
+            </div>
+        {/foreach}
     </div>
+{/template}
+
+/**
+ * Content template
+ * @param params {
+ *     data: [],
+ *     config: {
+ *         type: ?string
+ *     }
+ * }
+ */
+{template .content_ private="true"}
+    {if $params.data?.years?.length > 0}
+        {let $content kind="html"}
+            {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+                {param params: [
+                    'type': 'list',
+                    'renderParams': [
+                        'data': [
+                            'items': $params.data?.years
+                        ]
+                    ]
+                ]/}
+            {/call}
+        {/let}
+
+        {let $maxValue: ($params.config.type == 'ege') ? 100 : 5 /}
+
+        <div class="b-results__content">
+            {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+                {param params: [
+                    'type': 'dropdown',
+                    'renderParams': [
+                        'data': [
+                            'opener': '2015',
+                            'content': $content
+                        ],
+                        'config': [
+                            'customClasses': ['b-results__dropdown']
+                        ]
+                    ]
+                ]/}
+            {/call}
+
+            {foreach $yearResults in $params.data?.results}
+                <div class="b-results__inner-content">
+                    {if $yearResults.top}
+                        <div class="b-results__content-item">
+                            <div class="b-results__item-label">
+                                Выше среднего по Москве
+                            </div>
+                            <div class="b-results__item-data">
+                                {call sm.bDiagram.Template.base}
+                                    {param params: [
+                                        'data': $yearResults.top,
+                                        'maxValue': $maxValue,
+                                        'display': 'bars',
+                                        'range': $params.data?.range
+                                    ]/}
+                                {/call}
+                            </div>
+                        </div>
+                    {/if}
+                    {if $yearResults.middle}
+                        <div class="b-results__content-item">
+                            <div class="b-results__item-label">
+                                Средний уровень
+                            </div>
+                            <div class="b-results__item-data">
+                                {call sm.bDiagram.Template.base}
+                                    {param params: [
+                                        'data': $yearResults.middle,
+                                        'maxValue': $maxValue,
+                                        'display': 'bars',
+                                        'range': $params.data?.range
+                                    ]/}
+                                {/call}
+                            </div>
+                        </div>
+                    {/if}
+                    {if $yearResults.bottom}
+                        <div class="b-results__content-item">
+                            <div class="b-results__item-label">
+                                Ниже среднего
+                            </div>
+                            <div class="b-results__item-data">
+                                {call sm.bDiagram.Template.base}
+                                    {param params: [
+                                        'data': $yearResults.bottom,
+                                        'maxValue': $maxValue,
+                                        'display': 'bars',
+                                        'range': $params.data?.range
+                                    ]/}
+                                {/call}
+                            </div>
+                        </div>
+                    {/if}
+                </div>
+            {/foreach}
+        </div>
+    {else}
+        Нет результатов
     {/if}
 {/template}

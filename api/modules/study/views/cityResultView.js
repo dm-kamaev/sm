@@ -1,12 +1,16 @@
+/**
+ * CityResultView
+ * @constructor
+ */
 var CityResultView = function() {
 };
 
 /**
  * Getter for one result
- * @param result
- * @param subjectId
- * @param type
- * @param opt_year
+ * @param {Array<Object>} result
+ * @param {number} subjectId
+ * @param {string} type
+ * @param {(string|number)} opt_year
  * @return {*}
  */
 CityResultView.prototype.getResult =

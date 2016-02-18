@@ -77,8 +77,8 @@ goog.scope(function() {
         'ROOT': 'b-feedback',
         'FORM': 'b-feedback__form',
         'RADIO': 'b-feedback__radio',
-        'USER_TYPE_SELECT': 'b-feedback__user-type',
-        'CLASS_TYPE_SELECT': 'b-feedback__class-select',
+        'USER_TYPE_SELECT': 'b-feedback__control_user-type',
+        'CLASS_TYPE_SELECT': 'b-feedback__control_class-type',
         'TEXT_STUDENT': 'b-feedback__text_student',
         'TEXT_PARENT': 'b-feedback__text_parent',
         'GRADUATION_YEAR': 'b-feedback__graduation-year',
@@ -232,6 +232,7 @@ goog.scope(function() {
                 FeedbackModal.CssClass.USER_TYPE_SELECT
             )
         );
+
         this.dropdowns_.userType = factory.decorate(
             'dropdown-select',
             userTypeElement,

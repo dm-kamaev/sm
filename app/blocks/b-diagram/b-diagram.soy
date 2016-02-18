@@ -31,7 +31,7 @@
                 </div>
                 {if $params?.display == 'bars'}
                     <div class="b-diagram__number-value">
-                        {round($item.value, 0)}
+                        {round($item.value, 1)}
                     </div>
                 {/if}
                 <div class="b-diagram__value">
@@ -59,7 +59,7 @@
                     {elseif $params?.display == 'bars'}
                         {call .bars}
                             {param params: [
-                                'value': round($item.value, 0),
+                                'value': $item.value,
                                 'averageValue': $item.averageValue,
                                 'description': $item.description,
                                 'maxValue': $params.maxValue,
@@ -110,10 +110,10 @@
 {template .bars}
     {let $range: $params?.range ?: 0/}
     <div class="b-diagram__bar-filled
-                {$params.value < ($params.averageValue - $range) ?
-                    ' b-diagram__bar-filled_red' :
-                    $params.value > ($params.averageValue + $range) ?
-                        ' b-diagram__bar-filled_green' : ''}"{sp}
+                {$params.value > ($params.averageValue + $range) ?
+                    ' b-diagram__bar-filled_green' :
+                    ($params.value > ($params.averageValue - $range) ?
+                        '' : ' b-diagram__bar-filled_red')}"{sp}
          data-value="{$params.value}"{sp}
          style="width: {$params.value * 100 / $params.maxValue + '%'};">
     </div>

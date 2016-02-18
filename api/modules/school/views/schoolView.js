@@ -13,24 +13,24 @@ const egeResultView = require.main.require(
     './api/modules/study/views/egeResultView.js');
 const giaResultView = require.main.require(
     './api/modules/study/views/giaResultView.js');
+const olimpResultView = require.main.require(
+    './api/modules/study/views/olimpResultView.js');
 
 var schoolView = {};
 
 
 /**
  * @param {object} schoolInstance - school instance
- * @param {array<object>} cityResults
+ * @param {object} results
  * @param {?array<object>} opt_popularSchools - school instances
  * @return {object}
  */
-schoolView.default = function(schoolInstance, cityResults, opt_popularSchools) {
+schoolView.default = function(schoolInstance, results, opt_popularSchools) {
     addressView.transformSchoolAddress(schoolInstance);
 
     var addresses = services.department.addressesFilter(schoolInstance.addresses),
         comments = schoolInstance.commentGroup ?
-            schoolInstance.commentGroup.comments :
-            [],
-
+            schoolInstance.commentGroup.comments : [],
         score = schoolInstance.score || [0, 0, 0, 0],
         scoreCount = schoolInstance.scoreCount || [0, 0, 0, 0];
 
@@ -66,13 +66,14 @@ schoolView.default = function(schoolInstance, cityResults, opt_popularSchools) {
         totalScore: schoolInstance.totalScore,
         results: {
             ege: egeResultView.transformResults(
-                schoolInstance.egeResults,
-                cityResults
+                results.ege,
+                results.city
             ),
             gia: giaResultView.transformResults(
-                schoolInstance.giaResults,
-                cityResults
-            )
+                results.gia,
+                results.city
+            ),
+            olymp: olimpResultView.transformResults(results.olymp)
         },
         reviewCount: schoolInstance.totalScore ?
             schoolInstance.reviewCount : 0

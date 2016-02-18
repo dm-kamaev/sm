@@ -112,7 +112,18 @@ exports.view = async (function(req, res) {
         } else if (url != schoolInstance.url) {
             res.redirect(schoolInstance.url);
         } else {
-            var cityResult = await(services.cityResult.getAll());
+            var results = {
+                ege: await(
+                    services.egeResult.getAllBySchoolId(schoolInstance.id)
+                ),
+                gia: await(
+                    services.giaResult.getAllBySchoolId(schoolInstance.id)
+                ),
+                olymp: await(
+                    services.olimpResult.getAllBySchoolId(schoolInstance.id)
+                ),
+                city: await(services.cityResult.getAll())
+            };
             var school = await(services.school.viewOne(schoolInstance.id));
             services.school.incrementViews(school.id);
             var popularSchools = await(services.school.getPopularSchools());
@@ -122,7 +133,7 @@ exports.view = async (function(req, res) {
                 soy.render('sm.lSchool.Template.base', {
                 params: {
                     data:
-                        schoolView.default(school, cityResult, popularSchools),
+                        schoolView.default(school, results, popularSchools),
                     searchTemplates: {
                         search: '{{ name }}',
                         item: '{{ name }}',

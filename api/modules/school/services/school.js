@@ -534,22 +534,6 @@ service.viewOne = function(id) {
                     'profile',
                     'type'
                 ]
-            },
-            {
-                model: models.EgeResult,
-                as: 'egeResults',
-                include: [{
-                    model: models.Subject,
-                    as: 'subject'
-                }]
-            },
-            {
-                model: models.GiaResult,
-                as: 'giaResults',
-                include: [{
-                    model: models.Subject,
-                    as: 'subject'
-                }]
             }
         ];
 
@@ -567,14 +551,6 @@ service.viewOne = function(id) {
                     as: 'addressMetroes'
                 },
                 'distance',
-                'ASC'
-            ],
-            [
-                {
-                    model: models.EgeResult,
-                    as: 'egeResults'
-                },
-                'year',
                 'ASC'
             ]
         ]
