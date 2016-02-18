@@ -3,6 +3,7 @@ var await = require('asyncawait/await');
 var models = require.main.require('./app/components/models').all;
 var services = require.main.require('./app/components/services').all;
 var searchTypeEnum = require('../enums/searchType');
+var departmentTypeEnum = require('../../geo/enums/departmentStage');
 exports.name = 'search';
 
 exports.getSchoolRecords = async (function(id) {
@@ -56,7 +57,7 @@ var findAnyInModel = function(model, searchString) {
     var stringArr = getSearchSubstrings(searchString);
     if (!stringArr)
         return [];
-    
+
     var params = {
         where: {
             name: {
@@ -112,7 +113,7 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
     console.log('searchParams: ' + Array.isArray(sqlOptions.from));
     if (!Array.isArray(sqlOptions.from)) {
         this.updateSqlOptions(sqlOptions.from, searchParams);
-        
+
         if (searchParams.sortType) {
             sqlOptions.order.unshift(
                 generateOrder(searchParams.sortType)
@@ -212,7 +213,8 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
                      'address on address.school_id = school.id',
                      'area on area.id = address.area_id',
                      'address_metro on address_metro.address_id = address.id',
-                     'metro on metro.id = address_metro.metro_id'
+                     'metro on metro.id = address_metro.metro_id',
+                     'department on address.id = department.address_id'
                  ]
              });
         }
