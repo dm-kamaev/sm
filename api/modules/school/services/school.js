@@ -8,6 +8,7 @@ var services = require.main.require('./app/components/services').all;
 var sequelize = require.main.require('./app/components/db');
 var searchTypeEnum = require('../enums/searchType');
 var schoolTypeEnum = require('../enums/schoolType');
+var departmentTypeEnum = require('../../geo/enums/departmentStage');
 var CsvConverter = require('../../../../console/modules/modelArchiver/CsvConverter');
 var service = {
     name: 'school'
