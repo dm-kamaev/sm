@@ -12,7 +12,9 @@
  *        ]>
  *     }
  *     config: {
- *        usePlaceholder: boolean
+ *        usePlaceholder: boolean,
+ *        iconSprite: ?string,
+ *        theme: ?string
  *     }
  * }}
  * @extends cl.gDropdown.Template
@@ -27,11 +29,12 @@
  * Control
  * @param? params {{
  *     data: {
- *        defaultCustomText: string - default selected item name or placeholder
+ *        defaultOpenerText: string - default selected item name or placeholder
  *        staticText: string - text in opener, which not changes
  *     }
  *     config: {
  *        usePlaceholder: boolean
+ *        iconSprite: ?string
  *     }
  * }}
  * @override
@@ -45,18 +48,20 @@
                          {if $params?.config?.usePlaceholder}
                             {sp}{call .rootClass/}__opener-text_placeholder
                          {/if}">
-                {if $params?.data?.defaultCustomText}
-                    {$params?.data?.defaultCustomText}
+                {if $params?.data?.defaultOpenerText}
+                    {$params?.data?.defaultOpenerText}
                 {/if}
             </span>
      </div>
-     <div class="{call .rootClass/}__opener-arrow">
-         {call sm.bIcon.Template.base}
-             {param params: [
-                 'spriteCssClass': 'b-icon_img_opener-arrow'
-             ] /}
-         {/call}
-     </div>
+     {if $params?.config?.iconSprite}
+         <div class="{call .rootClass/}__opener-arrow">
+             {call sm.bIcon.Template.icon}
+                 {param params: [
+                     'type': $params?.config?.iconSprite
+                 ] /}
+             {/call}
+         </div>
+     {/if}
 {/template}
 
 /**
@@ -64,6 +69,9 @@
  * @param? params {{
  *     data: {
  *        listItems: list<string>
+ *     }
+ *     config: {
+ *       theme: ?string
  *     }
  * }}
  */
@@ -75,6 +83,9 @@
             'renderParams': [
                 'data': [
                     'items': $params.data.listItems
+                ],
+                'config': [
+                    'theme': $params?.config?.theme
                 ]
             ]
         ]/}

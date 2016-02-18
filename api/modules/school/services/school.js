@@ -711,7 +711,7 @@ service.list = async (function(opt_params) {
                 group: ['school.id'],
                 order: [
                     'school.total_score DESC',
-                    'school.score DESC',
+                    'school.score DESC NULLS LAST',
                     'school.id ASC'
                 ],
                 having : [],
@@ -734,7 +734,7 @@ service.list = async (function(opt_params) {
         ],
         order: [
             'school.total_score DESC',
-            'school.score DESC',
+            'school.score DESC NULLS LAST',
             'school.id ASC'
         ],
         having: []

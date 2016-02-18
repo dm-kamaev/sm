@@ -15,5 +15,24 @@
 			background-color: #f2f2f2;
 		}
 	}
+}
 
+.g-list.g-list_select.g-list_sort-theme {
+	.g-list__item {
+		letter-spacing: 0.01em;
+
+		color: #ee362c;
+
+		font-family: Arial, sans-serif;
+		font-size: 13px;
+		line-height: 25px;
+
+		&:hover {
+			background-color: #f7f7f1;
+		}
+	}
+
+	.g-list__item_selected {
+		color: #000;
+	}
 }

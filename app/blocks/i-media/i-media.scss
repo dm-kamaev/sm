@@ -1,0 +1,32 @@
+@mixin media-xs {
+    @media screen and (max-width: 320px) {
+        @content;
+    }
+}
+
+
+@mixin media-s {
+    @media screen and (max-width: 640px) {
+        @content;
+    }
+}
+
+
+@mixin media-m {
+    @media screen and (max-width: 800px) {
+        @content;
+    }
+}
+
+
+@mixin media-l {
+    @media screen and (max-width: 1024px) {
+        @content;
+    }
+}
+
+@mixin media-xl {
+    @media screen and (max-width: 1280px) {
+        @content;
+    }
+}

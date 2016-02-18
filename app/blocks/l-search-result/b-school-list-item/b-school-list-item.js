@@ -31,7 +31,7 @@ sm.lSearchResult.bSchoolListItem.SchoolListItem = function(opt_params) {
      *  @private
      *  @type {Number}
      */
-    this.totalScore_ = this.params_.totalScore;
+    this.currentCriterion_ = this.params_.currentCriterion;
 
     /**
      *  @private
@@ -42,9 +42,16 @@ sm.lSearchResult.bSchoolListItem.SchoolListItem = function(opt_params) {
     /**
      * scoreInstance
      * @private
-     * @type {sm.bScoreSchoolList.Template}
+     * @type {sm.bScoreSchoolList.ScoreSchoolList}
      */
     this.scoreInstance_ = null;
+
+    /**
+     * defines whether score is clickable
+     * @private
+     * @type boolean
+     */
+    this.isScoreClickable_ = this.params_.isScoreClickable;
 };
 goog.inherits(sm.lSearchResult.bSchoolListItem.SchoolListItem,
     goog.ui.Component);
@@ -93,7 +100,7 @@ goog.scope(function() {
      * @return  {Number}
      */
     ListItem.prototype.getTotalScore = function() {
-        return this.totalScore_;
+        return this.currentCriterion_;
     };
 
     /**
@@ -201,7 +208,8 @@ goog.scope(function() {
         scoreElement = this.getElementByClass(Score.CssClass.ROOT);
         this.scoreInstance_ = new Score({
             'score': this.score_,
-            'totalScore': this.totalScore_
+            'currentCriterion': this.currentCriterion_,
+            'isClickable': this.isScoreClickable_
         });
         this.addChild(this.scoreInstance_);
         this.scoreInstance_.decorate(scoreElement);
