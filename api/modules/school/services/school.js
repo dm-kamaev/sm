@@ -8,6 +8,7 @@ var services = require.main.require('./app/components/services').all;
 var sequelize = require.main.require('./app/components/db');
 var searchTypeEnum = require('../enums/searchType');
 var schoolTypeEnum = require('../enums/schoolType');
+var departmentTypeEnum = require('../../geo/enums/departmentStage');
 var CsvConverter = require('../../../../console/modules/modelArchiver/CsvConverter');
 var service = {
     name: 'school'
@@ -699,7 +700,10 @@ service.list = async (function(opt_params) {
                     'school.school_type = \'' + schoolTypeEnum.CADET_SCHOOL + '\' OR ' +
                     'school.school_type = \'' + schoolTypeEnum.CADET_SCHOOL_INTERNAT + '\' OR ' +
                     'school.school_type = \'' + schoolTypeEnum.CORRECTIONAL_SCHOOL + '\' OR ' +
-                    'school.school_type = \'' + schoolTypeEnum.CORRECTIONAL_SCHOOL_INTERNAT + '\')'
+                    'school.school_type = \'' + schoolTypeEnum.CORRECTIONAL_SCHOOL_INTERNAT + '\')',
+
+                    'department.stage IN (\'' + departmentTypeEnum.ELEMENTARY +
+                    '\', \'' + departmentTypeEnum.MIDDLE_HIDE + '\')'
                 ],
                 as: 'school',
                 join: [],
