@@ -197,10 +197,6 @@ goog.scope(function() {
     Score.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
 
-        console.log(this.isClickable_);
-
-        //this.isClickable_ = true;
-
         if (this.isClickable_) {
             var handler = this.getHandler();
 
