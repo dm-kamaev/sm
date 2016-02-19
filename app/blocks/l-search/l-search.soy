@@ -19,6 +19,10 @@
  *         description: ?string,
  *         metro: ?list<string>,
  *         totalScore: ?number
+ *     ]>,
+ *     dataLinks: ?list<[
+ *         name: ?string,
+ *         url: ?string
  *     ]>
  * }
  */
@@ -27,6 +31,7 @@
     <html lang="en">
         <head>
             <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Школы Мела</title>
             <link href='https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700,700italic&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
             <link href='https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
@@ -55,7 +60,8 @@
                                 'item': $params.searchTemplates.item,
                                 'text': $params.searchTemplates.text,
                                 'value': $params.searchTemplates.value
-                            ]
+                            ],
+                            'dataLinks' : $params.dataLinks
                         ]/}
                     {/call}
                     //TODO: uncomment
@@ -93,17 +99,39 @@
  */
 {template .header_ autoescape="strict" kind="html" private="true"}
     <div class="l-search__header">
-        <div class="l-search__title">
-            Школы <span class="l-search__title-space">«Мела»</span>
-        </div>
-        <div class="l-search__geoposition">
-            <div class="b-icon_img_red-pin l-search__pin"></div>
-            <div class="l-search__city">{$params.city}</div>
-            //TODO: uncomment
-            // <div class="b-icon_img_arrow l-search__city-arrow"></div>
-        </div>
-        <div class="l-search__inscription">
-            Найдите школу, которая подходит вашему ребёнку
+        <div class="l-search__header-wrap">
+            <div class="l-search__header-image">
+            </div>
+            <div class="l-search__header-content">
+                <div class="l-search__geoposition">
+                    <div class="l-search__pointer">u</div>
+                    <div class="l-search__city">{$params.city}</div>
+                </div>
+                <div class="l-search__title">
+                    Найдите школу, которая подходит вашему&nbsp;ребёнку
+                </div>
+                <ul class="l-search__title-list">
+                    <li class="l-search__title-list-item">
+                        <div class="l-search__title-list-dash"> — </div>
+                        <div class="l-search__title-list-text">
+                            Поиск по номерам школ, станциям метро и&nbsp;районам
+                        </div>
+                    </li>
+                    <li class="l-search__title-list-item">
+                        <div class="l-search__title-list-dash"> — </div>
+                        <div class="l-search__title-list-text">
+                            Узнайте результаты экзаменов ГИА и ЕГЭ в&nbsp;
+                            выбранной&nbsp;школе
+                        </div>
+                    </li>
+                    <li class="l-search__title-list-item">
+                        <div class="l-search__title-list-dash"> — </div>
+                        <div class="l-search__title-list-text">
+                            Сравнивайте школы
+                        </div>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 {/template}
@@ -117,43 +145,76 @@
  *         item: ?string,
  *         text: ?string,
  *         value: ?string
+ *     ],
+ *     dataLinks: ?list<[
+ *         name: ?string,
+ *         url: ?string
+ *     ]>
  * }
  */
 {template .search_ autoescape="strict" kind="html" private="true"}
     <div class="l-search__top-menu">
-        <div class="l-search__left-text">Что вы ищете?</div>
-        <div class="l-search__search">
-            <div class="l-search__search-field">
-                {call sm.bSearch.Template.base}
+        <div class="l-search__top-menu-wrap">
+            <div class="l-search__left-text">Что вы ищете?</div>
+            <div class="l-search__search">
+                <div class="l-search__search-field">
+                    {call sm.bSearch.Template.base}
+                        {param params: [
+                            'autofocus': true,
+                            'placeholder': 'Номер школы, метро, район',
+                            'theme': 'main',
+                            'redirect': true,
+                            'templates': [
+                                'search': $params?.templates.search,
+                                'item': $params?.templates.item,
+                                'text': $params?.templates.text,
+                                'value': $params?.templates.value
+                            ]
+                        ]/}
+                    {/call}
+                </div>
+                <div class="l-search__search-links">
+                    {foreach $link in $params.dataLinks}
+                        <div class="l-search__search-link">
+                            {call sm.bLink.Template.base}
+                                {param params: [
+                                    'data': [
+                                        'name': $link.name,
+                                        'url': $link.url
+                                    ]
+                                ]/}
+                            {/call}
+                        </div>
+                    {/foreach}
+                </div>
+                //TODO: uncomment
+                /*<div class="l-search__example-holder">
+                    Например:
+                    <span class="l-search__examples">
+                        {foreach $example in $params.examples}
+                            <span class="l-search__example">{$example}</span>
+                        {/foreach}
+                    </span>
+                </div>*/
+            </div>
+            <div class="l-search__button-wrap">
+                {call sm.lSearch.Template.button_}
                     {param params: [
-                        'placeholder': '',
-                        'theme': 'main',
-                        'redirect': true,
-                        'templates': [
-                            'search': $params?.templates.search,
-                            'item': $params?.templates.item,
-                            'text': $params?.templates.text,
-                            'value': $params?.templates.value
-                        ]
+                        'mainText': 'Найти',
+                        'desctiptionText': 'школу',
+                        'theme': 'search'
                     ]/}
                 {/call}
+                {call sm.bLink.Template.base}
+                        {param params: [
+                            'data': [
+                                'name': 'Расширенный поиск',
+                                'url': '/search'
+                            ]
+                        ]/}
+                {/call}
             </div>
-            //TODO: uncomment
-            /*<div class="l-search__example-holder">
-                Например:
-                <span class="l-search__examples">
-                    {foreach $example in $params.examples}
-                        <span class="l-search__example">{$example}</span>
-                    {/foreach}
-                </span>
-            </div>*/
         </div>
-        {call sm.lSearch.Template.button_}
-            {param params: [
-                'text': 'Найти школу',
-                'theme': 'search'
-            ]/}
-        {/call}
     </div>
 {/template}
 
@@ -238,12 +299,18 @@
 /**
  * Button Template
  * @param? params {
- *     text: ?string,
+ *     mainText: ?string,
+ *     desctiptionText: ?string,
  *     theme: string
  * }
  */
 {template .button_ autoescape="strict" kind="html" private="true"}
     <div class="l-search__button l-search__button_{$params.theme}">
-        <span class="l-search__button-text">{$params.text}</span>
+        <span class="l-search__button-text">
+            {$params.mainText}
+            <span class="l-search__button-text-desctiption">
+                {sp}{$params.desctiptionText}
+            </span>
+        </span>
     </div>
 {/template}
