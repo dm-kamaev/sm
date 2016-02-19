@@ -1,5 +1,4 @@
 .l-search__body {
-    max-width: 1200px;
     min-height: 83%;
     margin: 0 auto 60px;
 
@@ -7,117 +6,167 @@
 }
 
 .l-search__header {
-    display: inline-block;
-
-    box-sizing: border-box;
     width: 100%;
-    height: 116px;
-    padding-top: 59px;
+    height: 321px;
+
+    color: #ffffff;
+    background-color: #3c5a97;
 }
 
-.l-search__title {
-    float: left;
+.l-search__header-wrap {
+    position: relative;
 
-    width: 278px;
-    margin-right: 21px;
-
-    text-transform: uppercase;
-
-    font-family: proxima;
-    font-weight: 900;
-    font-size: 29px;
+    max-width: 1200px;
+    height: 100%;
+    margin: 0 auto;
 }
 
-.l-search__title-space {
-    letter-spacing: 1px;
+.l-search__header-image {
+    position: absolute;
+    top: 0;
+    right: 110px;
+
+    width: 512px;
+    height: 100%;
+
+    background-image: url(images/l-search/header-banner.png);
+    background-repeat: no-repeat;
+    background-position: 0 28px;
+    background-size: 512px;
+}
+
+.l-search__header-content {
+    max-width: 570px;
+    padding-top: 40px;
 }
 
 .l-search__geoposition {
-    float: left;
+    margin-bottom: 22px;
 
-    margin-right: 50px;
-
-    cursor: pointer;
+    // cursor: pointer;
 }
 
-.l-search__pin {
-    position: relative;
-    bottom: 8px;
+.l-search__pointer {
+    display: inline-block;
 
-    float: left;
+    margin-right: 20px;
 
-    margin-right: 18px;
+    font: 30px "WebSymbols", Arial, sans-serif;
 }
 
 .l-search__city {
-    float: left;
+    display: inline-block;
 
-    margin-right: 13px;
-
+    letter-spacing: 0.06em;
     text-transform: uppercase;
-    letter-spacing: 2px;
 
-    font-family: proxima;
-    font-size: 30px;
+    font: 30px 'Proxima', Arial, sans-serif;
+    line-height: 50px;
 }
 
-.l-search__city-arrow {
+.l-search__title {
+    margin-bottom: 39px;
+
+    letter-spacing: 0.018em;
+
+    font: 20px 'PT Serif', Arial, sans-serif;
+    line-height: 30px;
+}
+
+.l-search__title-list {
+    list-style: none;
+}
+
+.l-search__title-list-item {
     position: relative;
-    bottom: 11px;
 
-    float: left;
+    margin-bottom: 10px;
 
-    margin-top: 13px;
+    font: 14px Arial, sans-serif;
+    line-height: 18px;
+
+    &:last-chaild {
+        margin-bottom: 0;
+    }
 }
 
-.l-search__inscription {
-    float: left;
+.l-search__title-list-dash {
+    position: absolute;
+    left: 0;
+}
 
-    letter-spacing: -0.1;
+.l-search__title-list-text {
+    display: inline-block;
 
-    font-family: pt serif;
-    font-size: 21px;
+    margin-left: 18px;
 }
 
 .l-search__top-menu {
-    display: inline-block;
-
-    box-sizing: border-box;
-    width: 100%;
-    padding: 30px 0 13px;
-    margin-bottom: 60px;
+    height: 155px;
 
     background-color: #f4f4ec;
 }
 
+.l-search__top-menu-wrap {
+    position: relative;
+
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-top: 40px;
+}
+
 .l-search__left-text {
-    float: left;
+    position: absolute;
+    left: 0;
+    top: 54px;
 
-    margin-top: 16px;
-    margin-left: 161px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
 
-    font-family: pt serif;
-    font-size: 15.4px;
-    font-weight: bold;
+    font: 16px 'Proxima', Arial, sans-serif;
+    font-weight: 800;
 }
 
 .l-search__search {
-    float: left;
+    display: block;
 
-    width: 585px;
-    margin-right: 30px;
-    margin-left: 31px;
+    width: 690px;
+    margin-right: 308px;
+    margin-left: 206px;
 }
 
 .l-search__search-field {
-    margin-bottom: 17px;
+    margin-bottom: 14px;
+}
+
+.l-search__search-links {
+    overflow: hidden;
+
+    height: 18px;
+}
+
+.l-search__search-link {
+    display: inline-block;
+
+    margin-right: 18px;
+
+    &:last-child {
+        margin-right: 0;
+    }
+}
+
+.l-search__button-wrap {
+    position: absolute;
+    right: 2px;
+    top: 40px;
+
+    text-align: center;
 }
 
 .l-search__button {
-    float: left;
-
     box-sizing: border-box;
     height: 47px;
+    margin-bottom: 14px;
     padding-top: 12px;
 
     cursor: pointer;
@@ -135,7 +184,7 @@
 }
 
 .l-search__button_search {
-    width: 247px;
+    width: 275px;
 }
 
 .l-search__button-text {
@@ -175,7 +224,6 @@
     display: inline-block;
 
     width: 100%;
-
     margin-bottom: 97px;
 
     font-family: pt serif;
@@ -311,14 +359,136 @@
 
 .l-search__footer {
     width: 1200px;
-
     margin: 0 auto;
     margin-bottom: 30px;
 }
 
-@media screen and (min-width: 1200px), (max-device-width: 1200px) 
+@media screen and (max-width: 1260px) // for desktop and tablet
 {
-    .l-search {
-        min-width: 1200px;
+    .l-search__header-wrap {
+        max-width: 893px;
+    }
+
+    .l-search__header-image {
+        right: -13px;
+    }
+
+    .l-search__header-content {
+        max-width: 390px;
+        padding-top: 29px;
+    }
+
+    .l-search__title {
+        margin-bottom: 27px;
+    }
+
+    .l-search__top-menu-wrap {
+        max-width: 893px;
+    }
+
+    .l-search__search  {
+        width: 379px;
     }
 }
+
+@media screen and (max-width: 953px) // for desktop and tablet
+{
+    .l-search__header {
+        height: 240px;
+    }
+
+    .l-search__header-wrap {
+        max-width: 585px;
+    }
+
+    .l-search__header-image {
+        right: 2px;
+
+        width: 272px;
+
+        background-position: 0 30px;
+        background-size: 272px;
+    }
+
+    .l-search__header-content {
+        width: 278px;
+        padding-top: 50px;
+    }
+
+    .l-search__title-list {
+        display: none;
+    }
+
+    .l-search__top-menu-wrap {
+        max-width: 585px;
+    }
+
+    .l-search__left-text {
+        display: none;
+    }
+
+    .l-search__search {
+        margin-left: 0;
+    }
+
+    .l-search__button {
+        width: 175px;
+    }
+
+    .l-search__button-text-desctiption {
+        display: none;
+    }
+}
+
+@media screen and (max-device-width: 645px) // for phone
+and (orientation: portrait),
+screen and (max-width: 645px) // for desktop
+{
+    .l-search__header {
+        background: #334184;
+    }
+
+    .l-search__header-wrap {
+        max-width: 260px;
+    }
+
+    .l-search__header-image {
+        display: none;
+    }
+
+    .l-search__header {
+        height: 171px;
+    }
+
+    .l-search__header-content {
+        width: 100%;
+        padding-top: 26px;
+    }
+
+    .l-search__geoposition {
+        margin-bottom: 2px;
+    }
+
+    .l-search__title-list {
+        display: none;
+    }
+
+    .l-search__top-menu-wrap {
+        width: 260px;
+    }
+
+    .l-search__search {
+        width: 260px;
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+    .l-search__search-links {
+        width: 260px;
+    }
+
+    .l-search__button-wrap {
+        display: none;
+    }
+}
+

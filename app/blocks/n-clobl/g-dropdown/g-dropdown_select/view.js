@@ -1,4 +1,4 @@
-goog.provide('sm.gDropdownSelect.View');
+goog.provide('sm.gDropdown.DropdownSelectView');
 
 goog.require('cl.gDropdown.View');
 
@@ -10,20 +10,20 @@ goog.require('cl.gDropdown.View');
  * @constructor
  * @extends {cl.gDropdown.View}
  */
-sm.gDropdownSelect.View = function(opt_params, opt_template, opt_modifier) {
+sm.gDropdown.DropdownSelectView =
+    function(opt_params, opt_template, opt_modifier) {
     goog.base(this, opt_params, opt_template, opt_modifier);
 };
-goog.inherits(sm.gDropdownSelect.View, cl.gDropdown.View);
+goog.inherits(sm.gDropdown.DropdownSelectView, cl.gDropdown.View);
 
 goog.scope(function() {
-    var View = sm.gDropdownSelect.View,
-        ListView = cl.gList.View;
+    var DropdownSelectView = sm.gDropdown.DropdownSelectView;
 
     /**
      * Css class enum
      * @enum {string}
      */
-    View.CssClass = {
+    DropdownSelectView.CssClass = {
         CUSTOM_TEXT: 'g-dropdown__opener-custom-text',
         PLACEHOLDER: 'g-dropdown__opener-text_placeholder',
         ROOT: 'g-dropdown_select',
@@ -35,10 +35,14 @@ goog.scope(function() {
      * @override
      * @param {Element} element
      */
-    View.prototype.decorateInternal = function(element) {
+    DropdownSelectView.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
-        this.dom.customText = this.getElementByClass(View.CssClass.CUSTOM_TEXT);
-        this.dom.selectList = this.getElementByClass(ListView.CssClass.ROOT);
+        this.dom.customText = this.getElementByClass(
+            DropdownSelectView.CssClass.CUSTOM_TEXT
+        );
+        this.dom.selectList = this.getElementByClass(
+            cl.gList.View.CssClass.ROOT
+        );
     };
 
     /**
@@ -46,7 +50,7 @@ goog.scope(function() {
      * @param {string} text
      * @protected
      */
-    View.prototype.setOpenerCustomText = function(text) {
+    DropdownSelectView.prototype.setOpenerCustomText = function(text) {
         goog.dom.setTextContent(
             this.dom.customText,
             text
@@ -57,10 +61,10 @@ goog.scope(function() {
      * Removes placeholder modifier from element with custom text
      * @protected
      */
-    View.prototype.removePlaceholderModifier = function() {
+    DropdownSelectView.prototype.removePlaceholderModifier = function() {
         goog.dom.classes.remove(
             this.dom.customText,
-            View.CssClass.PLACEHOLDER
+            DropdownSelectView.CssClass.PLACEHOLDER
         );
     };
 
@@ -68,10 +72,10 @@ goog.scope(function() {
      * Adds placeholder modifier from element with custom text
      * @protected
      */
-    View.prototype.addPlaceholderModifier = function() {
+    DropdownSelectView.prototype.addPlaceholderModifier = function() {
         goog.dom.classes.add(
             this.dom.customText,
-            View.CssClass.PLACEHOLDER
+            DropdownSelectView.CssClass.PLACEHOLDER
         );
     };
 
@@ -79,10 +83,10 @@ goog.scope(function() {
      * Add not selected modifier
      * @public
      */
-    View.prototype.addNotSelectedModifier = function() {
+    DropdownSelectView.prototype.addNotSelectedModifier = function() {
         goog.dom.classes.add(
             this.getElement(),
-            View.CssClass.NOT_SELECTED
+            DropdownSelectView.CssClass.NOT_SELECTED
         );
     };
 
@@ -90,10 +94,10 @@ goog.scope(function() {
      * Remove not selected modifier
      * @public
      */
-    View.prototype.removeNotSelectedModifier = function() {
+    DropdownSelectView.prototype.removeNotSelectedModifier = function() {
         goog.dom.classes.remove(
             this.getElement(),
-            View.CssClass.NOT_SELECTED
+            DropdownSelectView.CssClass.NOT_SELECTED
         );
     };
 });
