@@ -209,7 +209,7 @@ goog.scope(function() {
         );
 
         this.textarea_ = factory.decorate(
-            'textarea',
+            'textarea-check',
             goog.dom.getElementByClass(
                 cl.gTextarea.View.CssClass.ROOT,
                 this.modal_.getElement()
@@ -602,9 +602,11 @@ goog.scope(function() {
 
         if (commentText.trim()) {
             if (commentText.length <= 300) {
+                this.textarea_.getView().removeNotValidModifier();
                 isValid = this.validateGraduateInput_(formData.yearGraduate);
             } else {
                 this.showValidationError_(FeedbackModal.Error.COMMENT_TOO_LONG);
+                this.textarea_.getView().addNotValidModifier();
             }
         } else {
             isValid = this.validateScore_(formData);

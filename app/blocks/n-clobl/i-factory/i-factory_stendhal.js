@@ -7,6 +7,7 @@ goog.require('sm.gInput.DigitInput');
 goog.require('sm.gInput.DigitInputView');
 goog.require('sm.gList.SelectList');
 goog.require('sm.gList.SelectListView');
+goog.require('sm.gTextarea.TextareaCheckView');
 
 /**
  * FactoryStendhal
@@ -31,6 +32,11 @@ sm.iFactory.FactoryStendhal = function() {
     this.setControlListItem('digit-input', {
         control: sm.gInput.DigitInput,
         view: sm.gInput.DigitInputView
+    });
+
+    this.setControlListItem('textarea-check', {
+        control: cl.gTextarea.Textarea,
+        view: sm.gTextarea.TextareaCheckView
     });
 
 };
