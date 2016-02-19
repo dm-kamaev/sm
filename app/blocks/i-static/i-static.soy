@@ -1,0 +1,23 @@
+{namespace cl.iStatic.Template}
+
+
+/**
+ * Static style
+ * @param path
+ * @param? staticVersion
+ */
+{template .style autoescape="strict" kind="html"}
+    {let $postfix: $staticVersion ? '?' + $staticVersion : '' /}
+    <link href="{$path}?{$postfix}" rel="stylesheet" type="text/css">
+{/template}
+
+
+/**
+ * Static script
+ * @param path
+ * @param? staticVersion
+ */
+{template .script autoescape="strict" kind="html"}
+    {let $postfix: $staticVersion ? '?' + $staticVersion : '' /}
+    <script type="text/javascript" src="{$path}{$postfix}"></script>
+{/template}
