@@ -1,4 +1,4 @@
-goog.provide('sm.gInputFeedback.View');
+goog.provide('sm.gInput.DigitInputView');
 
 goog.require('cl.gInput.View');
 
@@ -10,19 +10,19 @@ goog.require('cl.gInput.View');
  * @constructor
  * @extends {cl.gInput.View}
  */
-sm.gInputFeedback.View = function(opt_params, opt_template, opt_domHelper) {
+sm.gInput.DigitInputView = function(opt_params, opt_template, opt_domHelper) {
     goog.base(this, opt_params, opt_template, opt_domHelper);
 };
-goog.inherits(sm.gInputFeedback.View, cl.gInput.View);
+goog.inherits(sm.gInput.DigitInputView, cl.gInput.View);
 
 
 goog.scope(function() {
-    var View = sm.gInputFeedback.View;
+    var DigitInputView = sm.gInput.DigitInputView;
     /**
      * Css class enum
      * @enum {string}
      */
-    View.CssClass = {
+    DigitInputView.CssClass = {
         NOT_VALID: 'g-input_not-valid'
     };
 
@@ -30,14 +30,14 @@ goog.scope(function() {
      * Event enum
      * @enum {string}
      */
-    View.Event = {
+    DigitInputView.Event = {
         FOCUS: 'input-focus'
     };
 
     /**
      * @override
      */
-    View.prototype.enterDocument = function() {
+    DigitInputView.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
 
         this.getHandler().listen(
@@ -50,9 +50,9 @@ goog.scope(function() {
     /**
      * Focus handler
      */
-    View.prototype.onFocus = function() {
+    DigitInputView.prototype.onFocus = function() {
         this.dispatchEvent({
-            type: View.Event.FOCUS
+            type: DigitInputView.Event.FOCUS
         });
     };
 
@@ -60,10 +60,10 @@ goog.scope(function() {
      * Add modifier, which mean that value in input is not valid
      * @public
      */
-    View.prototype.addNotValidModifier = function() {
+    DigitInputView.prototype.addNotValidModifier = function() {
         goog.dom.classes.add(
             this.getElement(),
-                View.CssClass.NOT_VALID
+                DigitInputView.CssClass.NOT_VALID
             );
     };
 
@@ -71,10 +71,10 @@ goog.scope(function() {
      * Remove modifier, which mean that value in input is not valid
      * @public
      */
-    View.prototype.removeNotValidModifier = function() {
+    DigitInputView.prototype.removeNotValidModifier = function() {
         goog.dom.classes.remove(
             this.getElement(),
-            View.CssClass.NOT_VALID
+            DigitInputView.CssClass.NOT_VALID
         );
     };
 });

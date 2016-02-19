@@ -60,7 +60,7 @@ sm.lSchool.bFeedbackModal.FeedbackModal = function(opt_params) {
 
     /**
      * Input instance
-     * @type {sm.gInputFeedback.InputFeedback}
+     * @type {sm.gInput.DigitInput}
      * @private
      */
     this.yearGraduate_ = null;
@@ -136,7 +136,7 @@ goog.scope(function() {
 
         handler.listen(
             this.yearGraduate_,
-            sm.gInputFeedback.InputFeedback.Event.FOCUS,
+            sm.gInput.DigitInput.Event.FOCUS,
             this.onFocusInput_
         );
 
@@ -210,7 +210,7 @@ goog.scope(function() {
         );
 
         this.yearGraduate_ = factory.decorate(
-            'input-feedback',
+            'digit-input',
             goog.dom.getElementByClass(
                 cl.gInput.View.CssClass.ROOT,
                 this.modal_.getElement()
@@ -314,7 +314,7 @@ goog.scope(function() {
     FeedbackModal.prototype.initDropdownListeners_ = function(handler) {
         handler.listen(
             this.dropdowns_.userType,
-            sm.gDropdownSelect.DropdownSelect.Event.ITEM_SELECT,
+            sm.gDropdown.DropdownSelect.Event.ITEM_SELECT,
             this.onUserTypeClick_
         );
 
