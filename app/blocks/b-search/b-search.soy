@@ -2,6 +2,7 @@
 /**
  * Search template
  * @param? params {
+ *    autofocus: ?bool,
  *    placeholder: ?string,
  *    text: ?string,
  *    theme: ?string,
@@ -32,6 +33,7 @@
                 'data': [
                     'text': $params?.text,
                     'minLength': 3,
+                    'autofocus': $params?.autofocus,
                     'placeholder': $params?.placeholder,
                     'sourceUrl': '/api/school/search/suggest',
                     'argName': 'searchString'
@@ -49,6 +51,11 @@
                 'list': [
                     'theme': 'stendhal',
                     'color': 'sienna'
+                ],
+                'input': [
+                    'style': [
+                        'theme': 'stendhal'
+                    ]
                 ]
             ]/}
         {/call}

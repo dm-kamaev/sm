@@ -153,7 +153,25 @@ exports.search = async(function(req, res) {
                   value: '{{ id }}'
               },
               images: imagesList,
-              popularSchools: schoolView.popular(popularSchools)
+              popularSchools: schoolView.popular(popularSchools),
+              dataLinks : [
+                  {
+                      name: 'Школа 123',
+                      url: '/search?name=школа 123'
+                  },
+                  {
+                      name: 'Тургеневская',
+                      url: '/search?name=Тургеневская'
+                  },
+                  {
+                      name: 'Лицей',
+                      url: '/search?name=Лицей'
+                  },
+                  {
+                      name: 'Замоскворечье',
+                      url: '/search?name=Замоскворечье'
+                  }
+              ]
           }
 
     });
