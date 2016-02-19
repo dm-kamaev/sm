@@ -26,21 +26,32 @@
     <form class="b-filters"
           method="GET"
           action="{$params?.url ?: ''}">
-        {call sm.lSearchResult.bFilterClasses.Template.base}
-            {param params: [
-                'data': [
-                    'header': [
-                        'title': 'В какой класс хотите отдать ребенка?'
-                    ],
-                    'name': 'classes'
-                ]
-            ]/}
-        {/call}
-        {foreach $filter in $params.filters}
-            {call sm.lSearchResult.bFilter.Template.base}
-                {param params: $filter/}
-            {/call}
-        {/foreach}
+        <div class="b-filters__filters">
+            <div class="b-filters__group b-filters__group_1">
+                {call sm.lSearchResult.bFilterClasses.Template.base}
+                    {param params: [
+                        'data': [
+                            'header': [
+                                'title': 'В какой класс хотите отдать ребенка?'
+                            ],
+                            'name': 'classes'
+                        ]
+                    ]/}
+                {/call}
+
+                {let $middle: floor(length($params.filters) / 2) /}
+
+                {foreach $filter in $params.filters}
+                    {if index($filter) + 1 == $middle}
+                        </div>
+                        <div class="b-filters__group b-filters__group_2">
+                    {/if}
+                    {call sm.lSearchResult.bFilter.Template.base}
+                        {param params: $filter/}
+                    {/call}
+                {/foreach}
+            </div>
+        </div>
         <div class="b-filters__submit-button">
             Подобрать
         </div>

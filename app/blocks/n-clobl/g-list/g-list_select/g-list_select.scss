@@ -1,0 +1,38 @@
+.g-list.g-list_select {
+	padding: 10px 0;
+
+	.g-list__item {
+		padding: 0 18px;
+
+		color: #000;
+
+		letter-spacing: 0.03em;
+
+		font-family: 'PTSerif', serif;
+		font-size: 16px;
+		line-height: 30px;
+		&:hover {
+			background-color: #f2f2f2;
+		}
+	}
+}
+
+.g-list.g-list_select.g-list_sort-theme {
+	.g-list__item {
+		letter-spacing: 0.01em;
+
+		color: #ee362c;
+
+		font-family: Arial, sans-serif;
+		font-size: 13px;
+		line-height: 25px;
+
+		&:hover {
+			background-color: #f7f7f1;
+		}
+	}
+
+	.g-list__item_selected {
+		color: #000;
+	}
+}
