@@ -1,3 +1,5 @@
+@import "../../i-media/i-media";
+
 .g-modal_feedback{
     .b-dialog {
         padding: 0;
@@ -12,7 +14,7 @@
 }
 
 .b-feedback__form {
-	width: 800px;
+	max-width: 800px;
 
     text-align: left;
 }
@@ -42,6 +44,14 @@
 	}
 }
 
+.b-feedback__form-item_detailed {
+	display: inline-block;
+}
+
+.b-feedback__form-item_brief {
+	display: none;
+}
+
 .b-feedback__close-control {
 	float: right;
 
@@ -52,17 +62,6 @@
 
 .b-feedback__title_sub {
     font-size: 16px;
-}
-
-.b-feedback__who-are-you {
-    margin: 0 0 30px;
-    padding: 0 0 40px;
-}
-
-.b-feedback__title_who-are-you {
-    float: left;
-
-    width: 146px;
 }
 
 .b-feedback__class-select {
@@ -83,9 +82,10 @@
 	}
 
 	&_user-type {
-		width: 230px;
+		width: 33%;
+		min-width: 200px;
 
-		margin-right: 42px;
+		margin-right: 6%;
 	}
 
 	&_graduation-year {
@@ -140,13 +140,13 @@
 .b-feedback__score {
     display: inline-block;
 
-    width: 330px;
+    width: 47%;
     margin: 0 0 9px;
 
     vertical-align: top;
 
     &:nth-child(odd) {
-        margin-right: 35px;
+        margin-right: 5%;
     }
 }
 
@@ -181,11 +181,64 @@
 		margin-bottom: 32px;
 	}
 
-	&_whoAreYou {
+	&_who-are-you {
 		margin-bottom: 30px;
 	}
 
 	&:last-child {
 		margin-bottom: 0;
+	}
+}
+
+@include media-m {
+	.b-feedback__content {
+		margin: 24px 30px 45px;
+	}
+
+	.b-feedback__section_header {
+		margin-bottom: 22px;
+	}
+
+	.b-feedback__text_header {
+		display: none;
+	}
+
+	.b-feedback__form-item_detailed {
+		display: none;
+	}
+
+	.b-feedback__form-item_brief {
+		display: inline-block;
+	}
+
+	.b-feedback__section {
+		&_who-are-you {
+			margin-bottom: 20px;
+		}
+
+		&_textarea {
+			margin-bottom: 25px;
+		}
+	}
+
+	.b-feedback__control {
+		margin-right: 0;
+
+		&_user-type {
+			width: 100%;
+			margin-bottom: 20px;
+		}
+
+		&_class-type {
+			width: 80px;
+		}
+	}
+
+	.b-feedback__score {
+		width: 100%;
+	}
+
+	.b-feedback__title-score {
+		letter-spacing: normal;
 	}
 }
