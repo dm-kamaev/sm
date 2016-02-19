@@ -174,11 +174,28 @@
     }
 }
 
+.b-feedback__validation-errors {
+	margin-top: 24px;
+
+	display: inline-block;
+
+	width: 100%;
+
+	text-align: center;
+
+	font: 14px Arial, sans-serif;
+	color: #e2332a;
+}
+
 .b-feedback__section {
 	margin-bottom: 40px;
 
 	&_header {
 		margin-bottom: 32px;
+	}
+
+	&_textarea {
+		margin-bottom: 33px;
 	}
 
 	&_who-are-you {
