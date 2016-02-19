@@ -8,6 +8,7 @@ var services = require.main.require('./app/components/services').all;
 var sequelize = require.main.require('./app/components/db');
 var searchTypeEnum = require('../enums/searchType');
 var schoolTypeEnum = require('../enums/schoolType');
+var departmentTypeEnum = require('../../geo/enums/departmentStage');
 var CsvConverter = require('../../../../console/modules/modelArchiver/CsvConverter');
 var service = {
     name: 'school'
@@ -337,6 +338,9 @@ service.updateScore = async(function(school) {
     var queries = [];
     for (var i = 1; i <= 4; i++) {
         var score = 'score[' + i + ']';
+        /**
+         * TODO: add query type
+         */
         var queryPromise = sequelize.query(
             'SELECT AVG(' + score + ') AS avg, ' +
             'count(' + score + ') AS count FROM rating ' +
@@ -486,23 +490,29 @@ service.findBySite = async(function(site) {
  * @public
  */
 service.viewOne = function(id) {
-    var includeParams =
+    var include =
         [{
             model: models.Address,
             as: 'addresses',
             include: [
                 {
                     model: models.Department,
-                    as:'departments'
+                    as: 'departments'
                 },
                 {
-                    model: models.Metro,
-                    as: 'metroStations'
+                    model: models.AddressMetro,
+                    as: 'addressMetroes',
+                    include: [
+                        {
+                            model: models.Metro,
+                            as: 'metroStation'
+                        }
+                    ]
                 }
             ]
         }, {
-             model: models.Rating,
-             as: 'ratings'
+            model: models.Rating,
+            as: 'ratings'
         }, {
             model: models.CommentGroup,
             as: 'commentGroup',
@@ -513,7 +523,7 @@ service.viewOne = function(id) {
                     model: models.Rating,
                     as: 'rating'
                 }]
-             }]
+            }]
         }, {
             model: models.Activity,
             as: 'activites',
@@ -521,23 +531,27 @@ service.viewOne = function(id) {
                 'profile',
                 'type'
             ]
-        }
-            //{
-            //    model: models.EgeResult,
-            //    as: 'egeResults'
-            //}, {
-            //    model: models.GiaResult,
-            //    as: 'giaResults'
-            //}, {
-            //    model: models.OlimpResult,
-            //    as: 'olimpResults'
-            //}
-        ];
+        }];
 
     var school = await(models.School.findOne({
         where: {id: id},
-        include: includeParams
+        include: include,
+        order: [
+            [
+                {
+                    model: models.Address,
+                    as: 'addresses'
+                },
+                {
+                    model: models.AddressMetro,
+                    as: 'addressMetroes'
+                },
+                'distance',
+                'ASC'
+            ]
+        ]
     }));
+
     return school;
 };
 
@@ -693,7 +707,7 @@ service.list = async (function(opt_params) {
                 group: ['school.id'],
                 order: [
                     'school.total_score DESC',
-                    'school.score DESC',
+                    'school.score DESC NULLS LAST',
                     'school.id ASC'
                 ],
                 having : [],
@@ -716,7 +730,7 @@ service.list = async (function(opt_params) {
         ],
         order: [
             'school.total_score DESC',
-            'school.score DESC',
+            'school.score DESC NULLS LAST',
             'school.id ASC'
         ],
         having: []

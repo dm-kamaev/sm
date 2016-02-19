@@ -4,10 +4,12 @@ goog.require('goog.dom');
 goog.require('goog.dom.classes');
 goog.require('goog.dom.classlist');
 goog.require('goog.events');
+goog.require('goog.labs.userAgent.device');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
 goog.require('sm.bMark.bMark');
 goog.require('sm.bScoreSchoolList.Template');
+
 
 /**
  * Score component in school list view
@@ -34,7 +36,15 @@ sm.bScoreSchoolList.ScoreSchoolList = function(opt_params) {
      * @private
      * @type {Number}
      */
-    this.totalScore_ = this.params_.totalScore ? this.params_.totalScore : 0;
+    this.currentCriterion_ = this.params_.currentCriterion.value ?
+        this.params_.currentCriterion.value :
+        0;
+    /**
+     * Defines clickable or not
+     * @type {boolean}
+     * @private
+     */
+    this.isClickable_ = this.params_.isClickable;
 
     /**
      * Tooltip dom element
@@ -103,7 +113,7 @@ goog.scope(function() {
      * @enum {String}
      */
     Score.Event = {
-        CLICK: 'bScoreClick'
+        CLICK: 'b-score-click'
     };
 
     /**
@@ -158,7 +168,7 @@ goog.scope(function() {
 
         content.push({
             'name': 'Средняя оценка',
-            'value': this.totalScore_
+            'value': this.currentCriterion_
         });
         content = content.concat(this.score_);
 
@@ -187,19 +197,22 @@ goog.scope(function() {
     Score.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
 
-        if (this.checkScoreValues_()) {
+        if (this.isClickable_) {
             var handler = this.getHandler();
-            handler.listen(
-                this.criterionValueElement_,
-                goog.events.EventType.MOUSEENTER,
-                this.showCriterion_
-            );
 
-            handler.listen(
-                this.criterionValueElement_,
-                goog.events.EventType.MOUSELEAVE,
-                this.hideCriterion_
-            );
+            if (goog.labs.userAgent.device.isDesktop()) {
+                handler.listen(
+                    this.getElement(),
+                    goog.events.EventType.MOUSEENTER,
+                    this.showCriterion_
+                );
+
+                handler.listen(
+                    this.criterionValueElement_,
+                    goog.events.EventType.MOUSELEAVE,
+                    this.hideCriterion_
+                );
+            }
 
             handler.listen(
                 this.criterionValueElement_,
@@ -242,30 +255,10 @@ goog.scope(function() {
     };
 
     /**
-     * Check if all scores of item is 0
-     * @return {boolean}
+     * Handles a click over criteria value element
+     * @param {Object} event
      * @private
      */
-    Score.prototype.checkScoreValues_ = function() {
-        var result = false;
-
-        if (this.totalScore_ !== 0) {
-            result = true;
-        }
-
-        this.score_.forEach(function(item) {
-            if (item.value !== 0) {
-                result = true;
-            }
-        });
-        return result;
-    };
-
-    /**
-    * Handles a click over criteria value element
-    * @param {Object} event
-    * @private
-    */
     Score.prototype.criterionClickHandler_ = function(event) {
         this.dispatchEvent({
             'type': Score.Event.CLICK
@@ -280,10 +273,10 @@ goog.scope(function() {
     };
 
     /**
-    * Handles a click over a document
-    * @param {Object} event
-    * @private
-    */
+     * Handles a click over a document
+     * @param {Object} event
+     * @private
+     */
     Score.prototype.documentClickHandler_ = function(event) {
         var domHelper = this.getDomHelper(),
 

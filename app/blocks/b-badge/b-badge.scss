@@ -4,8 +4,9 @@
 
     font-family: Arial, sans-serif;
 }
+
 .b-badge__item {
-    display: inline-block;
+    display: inline;
 
 	text-decoration: inherit;
     color: inherit;
@@ -20,11 +21,13 @@
 
     margin-right: 8px;
 }
+
 .b-badge__content {
-    display: inline-block;
+    display: inline;
     text-decoration: none;
     color: #808080;
 }
+
 .b-badge_star {
     font-family: "WebSymbols", Arial, sans-serif;
     color: #ee362c;

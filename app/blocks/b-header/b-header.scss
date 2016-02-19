@@ -1,4 +1,6 @@
-﻿.b-header {
+﻿@import "../i-media/i-media";
+
+.b-header {
     z-index: auto;
 
     display: inline-block;
@@ -180,14 +182,14 @@
 }
 
 @media screen and (max-width: 600px) // for desktop
-{ 
+{
     .b-header__link-search {
         display: none;
     }
 }
 
 @media screen and (max-device-width: 470px) // for phone
-{ 
+{
     .b-header {
         height: 262px;
 
@@ -212,3 +214,14 @@
 }
 
 
+@include media-xl {
+    .b-header__body {
+        display: none;
+    }
+}
+
+@include media-m {
+    .b-header {
+        height: 70px;
+    }
+}
