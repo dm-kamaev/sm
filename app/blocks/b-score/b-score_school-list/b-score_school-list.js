@@ -144,18 +144,18 @@ goog.scope(function() {
             element
         );
 
-        var markElements = goog.dom.getElementsByClass(
-            Mark.CssClass.ROOT,
-            element
-        );
-        for (var i = 0, l = markElements.length; i < l; i++) {
-            item = markElements[i];
-            var instance = new Mark();
-
-            this.addChild(instance);
-            this.markInstances_.push(instance);
-            instance.decorate(item);
-        }
+        // var markElements = goog.dom.getElementsByClass(
+        //     Mark.CssClass.ROOT,
+        //     element
+        // );
+        // for (var i = 0, l = markElements.length; i < l; i++) {
+        //     item = markElements[i];
+        //     var instance = new Mark();
+        //
+        //     this.addChild(instance);
+        //     this.markInstances_.push(instance);
+        //     instance.decorate(item);
+        // }
     };
 
     /**
@@ -163,33 +163,33 @@ goog.scope(function() {
      * @param {Number} criterionIndex
      * @public
      */
-    Score.prototype.changeCriterion = function(criterionIndex) {
-        var content = [];
-
-        content.push({
-            'name': 'Средняя оценка',
-            'value': this.currentCriterion_
-        });
-        content = content.concat(this.score_);
-
-        var newCriterion = content.splice(criterionIndex, 1);
-        newCriterion = newCriterion[0];
-
-        /*Current criterion mark at 0 index*/
-        this.markInstances_[0].setValue(newCriterion.value);
-        this.criterionNameElement_.innerHTML = newCriterion.name;
-
-        var tooltipMarks = this.markInstances_.slice(1);
-        for (i = 0, l = tooltipMarks.length; i < l; i++) {
-            var item = tooltipMarks[i],
-                tooltipNameElement = this.tooltipNameElements_[i],
-                contentItem = content[i];
-
-            contentItem = content[i];
-            tooltipNameElement.innerHTML = contentItem.name;
-            item.setValue(contentItem.value);
-        }
-    };
+    // Score.prototype.changeCriterion = function(criterionIndex) {
+    //     var content = [];
+    //
+    //     content.push({
+    //         'name': 'Средняя оценка',
+    //         'value': this.currentCriterion_
+    //     });
+    //     content = content.concat(this.score_);
+    //
+    //     var newCriterion = content.splice(criterionIndex, 1);
+    //     newCriterion = newCriterion[0];
+    //
+    //     /*Current criterion mark at 0 index*/
+    //     this.markInstances_[0].setValue(newCriterion.value);
+    //     this.criterionNameElement_.innerHTML = newCriterion.name;
+    //
+    //     var tooltipMarks = this.markInstances_.slice(1);
+    //     for (i = 0, l = tooltipMarks.length; i < l; i++) {
+    //         var item = tooltipMarks[i],
+    //             tooltipNameElement = this.tooltipNameElements_[i],
+    //             contentItem = content[i];
+    //
+    //         contentItem = content[i];
+    //         tooltipNameElement.innerHTML = contentItem.name;
+    //         item.setValue(contentItem.value);
+    //     }
+    // };
 
     /**
      * Sets up the component
