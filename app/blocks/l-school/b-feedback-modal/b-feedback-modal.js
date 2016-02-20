@@ -511,11 +511,11 @@ goog.scope(function() {
      */
     FeedbackModal.prototype.onCrossHover_ = function() {
         goog.dom.classes.toggle(
-            this.closeElement_,
+            this.elements_.close,
             FeedbackModal.CssClass.CLOSE_CONTROL_IMG
         );
         goog.dom.classes.toggle(
-            this.closeElement_,
+            this.elements_.close,
             FeedbackModal.CssClass.CLOSE_CONTROL_IMG_HOVERED
         );
     };
@@ -673,11 +673,10 @@ goog.scope(function() {
      * @return {boolean}
      */
     FeedbackModal.prototype.validateGraduateInput_ = function(value) {
-        console.log('Validate input started!');
         var userType = this.dropdowns_.userType.getValue(),
             isValid = false,
             yearRegex = /[\d][\d][\d][\d]/;
-        console.log(userType);
+
         if (userType == 1) {
             if (value) {
                 if (yearRegex.test(value)) {

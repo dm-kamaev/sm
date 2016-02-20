@@ -117,6 +117,18 @@
     width: 164px;
 }
 
+.b-results__olymp-tooltip {
+    position: absolute;
+    left: auto;
+    right: 0;
+    top: 30px;
+
+    color: #b8b8b8;
+    font-size: 11px;
+    letter-spacing: 0.02em;
+    font-family: Arial, sans-serif;
+}
+
 .b-results__item-data {
     display: inline-block;
 
@@ -128,12 +140,18 @@
     position: absolute;
     left: auto;
     right: 0;
-    top: -50px;
+    top: -38px;
     z-index: 10;
 
-    width: 140px;
+    font-family: Proxima, arial, sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    letter-spacing: 0.05em;
 }
 
-.b-results__hint {
-    left: 30px;
+.b-results__dropdown-holder {
+    position: relative;
+    top: -1px;
+
+    width: 140px;
 }

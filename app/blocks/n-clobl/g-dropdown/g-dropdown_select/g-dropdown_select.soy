@@ -30,17 +30,17 @@
  * Control
  * @param? params {{
  *     data: {
- *        defaultOpenerText: string,
- *        staticText: string,
- *        listItems: list<[
- *            label: ?<string>,
- *            openerText: ?<string> - optional field
- *        ]>,
- *        selectedItemId: number
+ *         defaultOpenerText: string,
+ *         staticText: string,
+ *         listItems: list<[
+ *             label: ?<string>,
+ *             openerText: ?<string> - optional field
+ *         ]>,
+ *         selectedItemId: number
  *     }
  *     config: {
- *        usePlaceholder: boolean
- *        iconSprite: ?string
+ *         usePlaceholder: boolean
+ *         iconSprite: ?string
  *     }
  * }}
  * @override
@@ -77,11 +77,12 @@
  * List template
  * @param? params {{
  *     data: {
- *        listItems: list<string>,
- *        selectedItemId: number
+ *         listItems: list<string>,
+ *         selectedItemId: number
  *     }
  *     config: {
- *       theme: ?string
+ *         theme: ?string,
+ *         color: ?string
  *     }
  * }}
  */
@@ -96,7 +97,8 @@
                     'selectedItemId': $params.data.selectedItemId
                 ],
                 'config': [
-                    'theme': $params?.config?.theme
+                    'theme': $params?.config?.theme,
+                    'color': $params?.config?.color
                 ]
             ]
         ]/}
@@ -105,8 +107,18 @@
 
 /**
  * Css classes
+ * @param params ?{}
  * @override
  */
 {template .additionalClasses}
     {call .rootClass/}_select
+    {if $params?.config?.color}
+        {sp}{call .rootClass/}_{$params.config.color}-color
+    {/if}
+    {if $params?.config?.textSize}
+        {sp}{call .rootClass/}_text-{$params.config.textSize}
+    {/if}
+    {if $params?.config?.iconOffset}
+            {sp}{call .rootClass/}_{$params.config.iconOffset}-icon-offset
+        {/if}
 {/template}

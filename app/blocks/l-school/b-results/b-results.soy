@@ -123,22 +123,30 @@
  */
 {template .olympContent_ private="true"}
     <div class="b-results__content">
+        <div class="b-results__olymp-tooltip">
+            Данные предоставлены Открытым Правительством
+        </div>
         <div class="b-results__dropdown">
             {if $params.data?.years.length > 1}
-                {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
-                    {param params: [
-                        'type': 'dropdown-select',
-                        'renderParams': [
-                            'data': [
-                                'listItems': $params.data?.years,
-                                'selectedItemId': $params.data?.years.length - 1
-                            ],
-                            'config': [
-                                'iconSprite': 'opener-arrow'
+                <div class="b-results__dropdown-holder">
+                    {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+                        {param params: [
+                            'type': 'dropdown-select',
+                            'renderParams': [
+                                'data': [
+                                    'listItems': $params.data?.years,
+                                    'selectedItemId': $params.data?.years.length - 1
+                                ],
+                                'config': [
+                                    'iconSprite': 'sort-arrow',
+                                    'theme': 'sort',
+                                    'textSize': 'large',
+                                    'iconOffset': 'small'
+                                ]
                             ]
-                        ]
-                    ]/}
-                {/call}
+                        ]/}
+                    {/call}
+                </div>
             {else}
                 {$params.data.years[$params.data?.years.length - 1]?.label}
             {/if}
@@ -272,20 +280,25 @@
     <div class="b-results__content">
         <div class="b-results__dropdown">
         {if $params.data?.years.length > 1}
-            {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
-                {param params: [
-                    'type': 'dropdown-select',
-                    'renderParams': [
-                        'data': [
-                            'listItems': $params.data?.years,
-                            'selectedItemId': $params.data?.years.length - 1
-                        ],
-                        'config': [
-                            'iconSprite': 'opener-arrow'
+            <div class="b-results__dropdown-holder">
+                {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+                    {param params: [
+                        'type': 'dropdown-select',
+                        'renderParams': [
+                            'data': [
+                                'listItems': $params.data?.years,
+                                'selectedItemId': $params.data?.years.length - 1
+                            ],
+                            'config': [
+                                'iconSprite': 'sort-arrow',
+                                'theme': 'sort',
+                                'textSize': 'large',
+                                'iconOffset': 'small'
+                            ]
                         ]
-                    ]
-                ]/}
-            {/call}
+                    ]/}
+                {/call}
+            </div>
         {else}
             {$params.data.years[$params.data?.years.length - 1]?.label}
         {/if}

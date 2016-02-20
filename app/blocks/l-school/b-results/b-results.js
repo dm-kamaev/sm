@@ -7,7 +7,7 @@ goog.require('sm.lSchool.bResults.Template');
 
 /**
  * sm.lSchool.bResults.Results component
- * @param {Object=} [opt_params = {}]
+ * @param {Object=} opt_params
  * @constructor
  * @extends {goog.ui.Component}
  */
@@ -50,7 +50,7 @@ goog.scope(function() {
         Factory = sm.iFactory.FactoryStendhal,
         TabView = cl.gTab.View,
         DropdownView = cl.gDropdown.View,
-        DropdownSelect = sm.gDropdownSelect.DropdownSelect,
+        DropdownSelect = sm.gDropdown.DropdownSelect,
         Utils = cl.iUtils.Utils;
 
     /**
