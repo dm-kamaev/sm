@@ -568,7 +568,6 @@ service.review = async(function(schoolId, params) {
     if (!params.text && !params.score)
         throw new Error('Expected comment text or rating');
     try {
-        console.log(params);
         var answer = {
             ratingCreated: false,
             commentCreated: false

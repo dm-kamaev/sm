@@ -45,7 +45,10 @@ var Rating = db.define('Rating', {
             Rating.hasOne(models.Comment, {
                 foreignKey: 'rating_id'
             });
-
+            Rating.hasOne(models.UserData, {
+                as: 'userData',
+                foreignKey: 'user_data_id'
+            });
         }
     }
 });
