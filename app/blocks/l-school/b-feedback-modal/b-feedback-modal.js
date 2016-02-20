@@ -567,7 +567,7 @@ goog.scope(function() {
                     case 'text':
                         dataToValidate.textArea = value;
                         break;
-                    case 'year-graduate':
+                    case 'yearGraduate':
                         dataToValidate.yearGraduate = value;
                         break;
                     case 'score':
