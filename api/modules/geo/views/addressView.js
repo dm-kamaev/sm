@@ -59,8 +59,8 @@ addressView.stageList = function (addresses, opt_options) {
                     {
                         title: addresses[j].title,
                         description: addresses[j].description,
-                        metroStations: addresses[j].metroStations
-                      }
+                        metroStation: addresses[j].metroStations[0]
+                    }
                 );
                 addressAdded = true;
             }
