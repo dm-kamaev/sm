@@ -141,6 +141,7 @@ exports.search = async(function(req, res) {
     var exampleList = ['Поварская, 14', 'Школа 123', 'Савеловская', 'Лицей'];
     var popularSchools = await (services.school.getPopularSchools(3));
     var imagesList = ['images/l-search/advertising_1.png', 'images/l-search/article.png'];
+    var amountSchools = await (services.school.getSchoolsCount());
 
     var html = soy.render('sm.lSearch.Template.base', {
           params: {
@@ -171,7 +172,8 @@ exports.search = async(function(req, res) {
                       name: 'Замоскворечье',
                       url: '/search?name=Замоскворечье'
                   }
-              ]
+              ],
+              amountSchools: amountSchools
           }
 
     });

@@ -23,7 +23,8 @@
  *     dataLinks: ?list<[
  *         name: ?string,
  *         url: ?string
- *     ]>
+ *     ]>,
+ *     amountSchools: ?number
  * }
  */
 {template .base autoescape="strict" kind="html"}
@@ -81,12 +82,19 @@
                                 ]/}
                             {/call}
                         </div>
+                        <div class="l-search__information-schools">
+                            {call sm.lSearch.Template.informationSchools_}
+                                {param params: [
+                                    'amountSchools': $params.amountSchools
+                                ]/}
+                            {/call}
+                        </div>
                     </div>
                 </div>
-                <div class="l-search__footer">
-                    <div class="l-search__horisontal-line"></div>
-                   {call sm.lSchool.bFooter.Template.base /}
-                </div>
+                // <div class="l-search__footer">
+                //     <div class="l-search__horisontal-line"></div>
+                //    {call sm.lSchool.bFooter.Template.base /}
+                // </div>
             </div>
             <script type="text/javascript" src="/external.min.js"></script>
             <script type="text/javascript">var CLOSURE_NO_DEPS = true;</script>
@@ -317,4 +325,71 @@
             </span>
         </span>
     </div>
+{/template}
+
+
+/**
+ * Information schools Template
+ * @param? params {
+ *     amountSchools: ?string
+ * }
+ */
+{template .informationSchools_ autoescape="strict" kind="html" private="true"}
+    <div class="l-search__image_list">
+        {for $i in range(3)}
+            {call sm.lSearch.Template.informationSchoolsImage_ /}
+        {/for}
+    </div>
+    <div class="l-search__information-text">
+        <div class="l-search__text-amount-schools">
+            Мы составили полный каталог школ Москвы — в&nbsp;нём сейчас{sp}
+            <span class="l-search__amount-schools">
+            {$params.amountSchools}
+            </span>{sp}
+            {call .getEnding_}
+                {param params: [
+                    'number': $params.amountSchools
+                ]/}
+            {/call}
+        </div>
+        {call sm.bLink.Template.base}
+            {param params: [
+                'data': [
+                    'name': 'Полный список',
+                    'url': '/search'
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+/**
+ * Information schools Image Template
+ */
+{template .informationSchoolsImage_ autoescape="strict" kind="html" private="true"}
+        <div class="l-search__item-list">
+            <span class="l-search__image_point"></span>
+            <span class="l-search__image_dash"></span>
+        </div>
+{/template}
+
+/**
+ * makes word's 'школа' ending depends of incoming number
+ * @param? params {
+ *     number: number
+ * }
+ */
+{template .getEnding_}
+    {if $params.number >= 11 and $params.number <= 19}
+        школ
+    {else}
+        {let $lastNumber: $params.number % 10 /}
+        {if $lastNumber == 1}
+            школу
+        {elseif $lastNumber >= 2 and $lastNumber <= 4}
+            школы
+        {else}
+            школ
+        {/if}
+    {/if}
 {/template}
