@@ -152,8 +152,9 @@ exports.view = async (function(req, res) {
 
 exports.search = async(function(req, res) {
     var exampleList = ['Поварская, 14', 'Школа 123', 'Савеловская', 'Лицей'];
-    var popularSchools = await (services.school.getPopularSchools());
+    var popularSchools = await (services.school.getPopularSchools(3));
     var imagesList = ['images/l-search/advertising_1.png', 'images/l-search/article.png'];
+    var amountSchools = await (services.school.getSchoolsCount());
 
     var html = soy.render('sm.lSearch.Template.base', {
           params: {
@@ -166,7 +167,26 @@ exports.search = async(function(req, res) {
                   value: '{{ id }}'
               },
               images: imagesList,
-              popularSchools: schoolView.popular(popularSchools)
+              popularSchools: schoolView.popular(popularSchools),
+              dataLinks : [
+                  {
+                      name: 'Школа 123',
+                      url: '/search?name=школа 123'
+                  },
+                  {
+                      name: 'Тургеневская',
+                      url: '/search?name=Тургеневская'
+                  },
+                  {
+                      name: 'Лицей',
+                      url: '/search?name=Лицей'
+                  },
+                  {
+                      name: 'Замоскворечье',
+                      url: '/search?name=Замоскворечье'
+                  }
+              ],
+              amountSchools: amountSchools
           }
 
     });

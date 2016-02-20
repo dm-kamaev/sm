@@ -8,6 +8,7 @@ var services = require.main.require('./app/components/services').all;
 var sequelize = require.main.require('./app/components/db');
 var searchTypeEnum = require('../enums/searchType');
 var schoolTypeEnum = require('../enums/schoolType');
+var departmentTypeEnum = require('../../geo/enums/departmentStage');
 var CsvConverter = require('../../../../console/modules/modelArchiver/CsvConverter');
 var service = {
     name: 'school'
@@ -164,9 +165,10 @@ service.incrementViews = async(function(schoolId) {
 });
 
 /**
+ * @param {number} opt_amount
  * @return {array<object>} school instances
  */
-service.getPopularSchools = async(function() {
+service.getPopularSchools = async(function(opt_amount) {
     return await(models.School.findAll({
         where: {
              $not: {
@@ -176,17 +178,40 @@ service.getPopularSchools = async(function() {
         order: [
             ['views', 'DESC']
         ],
-        limit: 6, //TODO: move '6' somewhere maybe?
+        limit: opt_amount || 6, //TODO: move '6' somewhere maybe?
         include: [{
             model: models.Address,
             as: 'addresses',
+            where: {
+                isSchool: true
+            },
             include: [
                 {
-                    model: models.Metro,
-                    as: 'metroStations'
+                    model: models.AddressMetro,
+                    as: 'addressMetroes',
+                    include: [
+                        {
+                            model: models.Metro,
+                            as: 'metroStation'
+                        }
+                    ]
                 }
             ]
-        }]
+        }],
+        order: [
+            [
+                {
+                    model: models.Address,
+                    as: 'addresses'
+                },
+                {
+                    model: models.AddressMetro,
+                    as: 'addressMetroes'
+                },
+                'distance',
+                'ASC'
+            ]
+        ]
     }));
 });
 
@@ -209,6 +234,16 @@ service.getAddresses = async(function(schoolId) {
             ]
         })
     );
+});
+
+
+/**
+ * Get amount schools
+ * @return {number} schoolsCount
+ */
+service.getSchoolsCount = async(function() {
+    var schoolsCount = await(models.School.count());
+    return schoolsCount;
 });
 
 

@@ -1,5 +1,4 @@
 .l-search__body {
-    max-width: 1200px;
     min-height: 83%;
     margin: 0 auto 60px;
 
@@ -7,117 +6,168 @@
 }
 
 .l-search__header {
-    display: inline-block;
-
-    box-sizing: border-box;
     width: 100%;
-    height: 116px;
-    padding-top: 59px;
+    height: 321px;
+
+    color: #ffffff;
+    background-color: #3c5a97;
 }
 
-.l-search__title {
-    float: left;
+.l-search__header-wrap {
+    position: relative;
 
-    width: 278px;
-    margin-right: 21px;
-
-    text-transform: uppercase;
-
-    font-family: proxima;
-    font-weight: 900;
-    font-size: 29px;
+    max-width: 1200px;
+    height: 100%;
+    margin: 0 auto;
 }
 
-.l-search__title-space {
-    letter-spacing: 1px;
+.l-search__header-image {
+    position: absolute;
+    top: 0;
+    right: 110px;
+
+    width: 512px;
+    height: 100%;
+
+    background-image: url(images/l-search/header-banner.png);
+    background-repeat: no-repeat;
+    background-position: 0 28px;
+    background-size: 512px;
+}
+
+.l-search__header-content {
+    max-width: 570px;
+    padding-top: 40px;
 }
 
 .l-search__geoposition {
-    float: left;
+    margin-bottom: 22px;
 
-    margin-right: 50px;
-
-    cursor: pointer;
+    // cursor: pointer;
 }
 
-.l-search__pin {
-    position: relative;
-    bottom: 8px;
+.l-search__pointer {
+    display: inline-block;
 
-    float: left;
+    margin-right: 20px;
 
-    margin-right: 18px;
+    font: 30px "WebSymbols", Arial, sans-serif;
 }
 
 .l-search__city {
-    float: left;
+    display: inline-block;
 
-    margin-right: 13px;
-
+    letter-spacing: 0.06em;
     text-transform: uppercase;
-    letter-spacing: 2px;
 
-    font-family: proxima;
-    font-size: 30px;
+    font: 30px 'Proxima', Arial, sans-serif;
+    line-height: 50px;
 }
 
-.l-search__city-arrow {
+.l-search__title {
+    margin-bottom: 39px;
+
+    letter-spacing: 0.018em;
+
+    font: 20px 'PT Serif', Arial, sans-serif;
+    line-height: 30px;
+}
+
+.l-search__title-list {
+    list-style: none;
+}
+
+.l-search__title-list-item {
     position: relative;
-    bottom: 11px;
 
-    float: left;
+    margin-bottom: 10px;
 
-    margin-top: 13px;
+    font: 14px Arial, sans-serif;
+    line-height: 18px;
+
+    &:last-chaild {
+        margin-bottom: 0;
+    }
 }
 
-.l-search__inscription {
-    float: left;
+.l-search__title-list-dash {
+    position: absolute;
+    left: 0;
+}
 
-    letter-spacing: -0.1;
+.l-search__title-list-text {
+    display: inline-block;
 
-    font-family: pt serif;
-    font-size: 21px;
+    margin-left: 18px;
 }
 
 .l-search__top-menu {
-    display: inline-block;
-
-    box-sizing: border-box;
-    width: 100%;
-    padding: 30px 0 13px;
-    margin-bottom: 60px;
+    height: 155px;
+    margin-bottom: 38px;
 
     background-color: #f4f4ec;
 }
 
+.l-search__top-menu-wrap {
+    position: relative;
+
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-top: 40px;
+}
+
 .l-search__left-text {
-    float: left;
+    position: absolute;
+    left: 0;
+    top: 54px;
 
-    margin-top: 16px;
-    margin-left: 161px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
 
-    font-family: pt serif;
-    font-size: 15.4px;
-    font-weight: bold;
+    font: 16px 'Proxima', Arial, sans-serif;
+    font-weight: 800;
 }
 
 .l-search__search {
-    float: left;
+    display: block;
 
-    width: 585px;
-    margin-right: 30px;
-    margin-left: 31px;
+    width: 690px;
+    margin-right: 308px;
+    margin-left: 206px;
 }
 
 .l-search__search-field {
-    margin-bottom: 17px;
+    margin-bottom: 14px;
+}
+
+.l-search__search-links {
+    overflow: hidden;
+
+    height: 18px;
+}
+
+.l-search__search-link {
+    display: inline-block;
+
+    margin-right: 18px;
+
+    &:last-child {
+        margin-right: 0;
+    }
+}
+
+.l-search__button-wrap {
+    position: absolute;
+    right: 2px;
+    top: 40px;
+
+    text-align: center;
 }
 
 .l-search__button {
-    float: left;
-
     box-sizing: border-box;
     height: 47px;
+    margin-bottom: 14px;
     padding-top: 12px;
 
     cursor: pointer;
@@ -135,7 +185,7 @@
 }
 
 .l-search__button_search {
-    width: 247px;
+    width: 275px;
 }
 
 .l-search__button-text {
@@ -148,158 +198,234 @@
     line-height: 1em;
 }
 
-.l-search__example-holder {
-    font-family: Arial;
-    font-size: 13px;
-}
-
-.l-search__examples {
-    color: #ff0000;
-}
-
-.l-search__example {
-    margin-left: 18px;
-
-    cursor: pointer;
-}
-
-.l-search__rating-img {
-    width: 100%;
-    height: 128px;
-    margin-bottom: 63px;
-
-    background: url(images/l-search/rating.png) no-repeat left;
-}
-
-.l-search__content {
-    display: inline-block;
-
-    width: 100%;
-
-    margin-bottom: 97px;
-
-    font-family: pt serif;
-}
-
-.l-search__item {
-    display: inline-block;
-    float: left;
-
-    width: 278px;
-    margin-right: 30px;
-}
-
-.l-search__item_even {
-    width: 277px;
-}
-
-.l-search__item_last {
-    margin-right: 0;
-
-    line-height: 1.2;
-}
-
-.l-search__content-title {
-    margin-bottom: 17px;
-
-    text-transform: uppercase;
-    letter-spacing: 1px;
-
-    font-family: 'Proxima';
-    font-size: 21px;
-    font-weight: 800;
-}
-
-.l-search__advertising-img {
-    float: left;
-
-    width: 124px;
-    height: 124px;
-    margin-top: 11px;
-    margin-right: 20px;
-    margin-bottom: 22px;
-}
-
-.l-search__advertising-address {
-    float: left;
-
-    width: 43%;
-    margin-top: 8px;
-
-    color: #808080;
-
-    font-family: Arial;
-    font-size: 11px;
-    line-height: 17px;
-}
-
-.l-search__content-text {
-    float: left;
-
-    width: 100%;
-    margin-bottom: 24px;
-
-    font-size: 16px;
-    line-height: 22px;
-}
-
-.l-search__content-emptyline {
-    height: 10px;
-}
-
-.l-search__advertising-footer {
-    float: left;
-
-    margin-top: -6px;
-
-    color: #888888;
-
-    font-family: Arial;
-    font-size: 13px;
-}
-
-.l-search__list {
-    margin-top: -5px;
-    padding-left: 10px;
-
-    list-style-type: none;
-}
-
-.l-search__list li::before {
-    position: relative;
-    left: -4px;
-
-    content: '—';
-}
-
-.l-search__list li {
-    text-indent: -7px;
-
-    font-size: 16px;
-    line-height: 37px;
-}
-
-.l-search__article-img {
-    margin-bottom: 21px;
-}
-
-.l-search__article-quote {
-    width: 80%;
+.l-search__information-links {
+    max-width: 1200px;
     margin: 0 auto;
-    margin-bottom: 12px;
+}
+
+.l-search__popular-schools {
+    display: inline-block;
+
+    max-width: 615px;
+}
+
+.l-search__information-schools {
+    display: inline-block;
+
+    max-width: 270px;
+    margin-top: 42px;
+    margin-left: 30px;
+
+    vertical-align: top;
+}
+
+.l-search__image_list {
+    box-sizing: border-box;
+
+    width: 60px;
+    height: 60px;
+    margin-bottom: 27px;
+    padding: 10px 0;
 
     text-align: center;
 
-    font-size: 18px;
-    font-weight: bold;
+    border: 4px solid #000;
 }
 
-.l-search__article-title {
-    text-align: center;
-
-    font-size: 16px;
-    font-style: italic;
+.l-search__item-list {
+    line-height: 8px;
 }
+
+.l-search__image_point {
+    display: inline-block;
+    box-sizing: border-box;
+
+    width: 2px;
+    height: 2px;
+    margin-right: 4px;
+
+    border: 2px solid #000;
+
+    border-radius: 50%;
+}
+
+.l-search__image_dash {
+    display: inline-block;
+    box-sizing: border-box;
+
+    width: 20px;
+    height: 2px;
+
+    border: 2px solid #000;
+
+    border-radius: 2px;
+}
+
+.l-search__text-amount-schools {
+    margin-bottom: 10px;
+
+    font: 13px Arial, sans-serif;
+    line-height: 18px;
+}
+// .l-search__popular-schools-wrap {
+//     position: absolute;
+//     top: 0;
+//     left: 0;
+
+//     max-width: 615px;
+// }
+
+// .l-search__example-holder {
+//     font-family: Arial;
+//     font-size: 13px;
+// }
+
+// .l-search__examples {
+//     color: #ff0000;
+// }
+
+// .l-search__example {
+//     margin-left: 18px;
+
+//     cursor: pointer;
+// }
+
+// .l-search__rating-img {
+//     width: 100%;
+//     height: 128px;
+//     margin-bottom: 63px;
+
+//     background: url(images/l-search/rating.png) no-repeat left;
+// }
+
+// .l-search__content {
+//     display: inline-block;
+
+//     width: 100%;
+//     margin-bottom: 97px;
+
+//     font-family: pt serif;
+// }
+
+// .l-search__item {
+//     display: inline-block;
+//     float: left;
+
+//     width: 278px;
+//     margin-right: 30px;
+// }
+
+// .l-search__item_even {
+//     width: 277px;
+// }
+
+// .l-search__item_last {
+//     margin-right: 0;
+
+//     line-height: 1.2;
+// }
+
+// .l-search__content-title {
+//     margin-bottom: 17px;
+
+//     text-transform: uppercase;
+//     letter-spacing: 1px;
+
+//     font-family: 'Proxima';
+//     font-size: 21px;
+//     font-weight: 800;
+// }
+
+// .l-search__advertising-img {
+//     float: left;
+
+//     width: 124px;
+//     height: 124px;
+//     margin-top: 11px;
+//     margin-right: 20px;
+//     margin-bottom: 22px;
+// }
+
+// .l-search__advertising-address {
+//     float: left;
+
+//     width: 43%;
+//     margin-top: 8px;
+
+//     color: #808080;
+
+//     font-family: Arial;
+//     font-size: 11px;
+//     line-height: 17px;
+// }
+
+// .l-search__content-text {
+//     float: left;
+
+//     width: 100%;
+//     margin-bottom: 24px;
+
+//     font-size: 16px;
+//     line-height: 22px;
+// }
+
+// .l-search__content-emptyline {
+//     height: 10px;
+// }
+
+// .l-search__advertising-footer {
+//     float: left;
+
+//     margin-top: -6px;
+
+//     color: #888888;
+
+//     font-family: Arial;
+//     font-size: 13px;
+// }
+
+// .l-search__list {
+//     margin-top: -5px;
+//     padding-left: 10px;
+
+//     list-style-type: none;
+// }
+
+// .l-search__list li::before {
+//     position: relative;
+//     left: -4px;
+
+//     content: '—';
+// }
+
+// .l-search__list li {
+//     text-indent: -7px;
+
+//     font-size: 16px;
+//     line-height: 37px;
+// }
+
+// .l-search__article-img {
+//     margin-bottom: 21px;
+// }
+
+// .l-search__article-quote {
+//     width: 80%;
+//     margin: 0 auto;
+//     margin-bottom: 12px;
+
+//     text-align: center;
+
+//     font-size: 18px;
+//     font-weight: bold;
+// }
+
+// .l-search__article-title {
+//     text-align: center;
+
+//     font-size: 16px;
+//     font-style: italic;
+// }
 
 .l-search__horisontal-line {
     width: 100%;
@@ -311,14 +437,188 @@
 
 .l-search__footer {
     width: 1200px;
-
     margin: 0 auto;
     margin-bottom: 30px;
 }
 
-@media screen and (min-width: 1200px), (max-device-width: 1200px) 
+@media screen and (max-width: 1260px) // for desktop and tablet
 {
-    .l-search {
-        min-width: 1200px;
+    .l-search__header-wrap {
+        max-width: 893px;
+    }
+
+    .l-search__header-image {
+        right: -13px;
+    }
+
+    .l-search__header-content {
+        max-width: 390px;
+        padding-top: 29px;
+    }
+
+    .l-search__title {
+        margin-bottom: 27px;
+    }
+
+    .l-search__top-menu-wrap {
+        max-width: 893px;
+    }
+
+    .l-search__search  {
+        width: 379px;
+    }
+
+    .l-search__information-links {
+        max-width: 893px;
+    }
+
+    .l-search__popular-schools {
+        white-space: nowrap;
+        overflow: hidden;
+
+        max-width: 410px;
+    }
+
+    .l-search__information-schools {
+        max-width: 175px;
+        margin-left: 0px;
     }
 }
+
+@media screen and (max-width: 953px) // for desktop and tablet
+{
+    .l-search__header {
+        height: 240px;
+    }
+
+    .l-search__header-wrap {
+        max-width: 585px;
+    }
+
+    .l-search__header-image {
+        right: 2px;
+
+        width: 272px;
+
+        background-position: 0 30px;
+        background-size: 272px;
+    }
+
+    .l-search__header-content {
+        width: 278px;
+        padding-top: 50px;
+    }
+
+    .l-search__title-list {
+        display: none;
+    }
+
+    .l-search__top-menu-wrap {
+        max-width: 585px;
+    }
+
+    .l-search__left-text {
+        display: none;
+    }
+
+    .l-search__search {
+        margin-left: 0;
+    }
+
+    .l-search__button {
+        width: 175px;
+    }
+
+    .l-search__button-text-desctiption {
+        display: none;
+    }
+
+    .l-search__information-links {
+        max-width: 585px;
+    }
+}
+
+@media screen and (max-device-width: 645px) // for phone
+and (orientation: portrait),
+screen and (max-width: 645px) // for desktop
+{
+    .l-search__header {
+        background: #334184;
+    }
+
+    .l-search__header-wrap {
+        max-width: 260px;
+    }
+
+    .l-search__header-image {
+        display: none;
+    }
+
+    .l-search__header {
+        height: 171px;
+    }
+
+    .l-search__header-content {
+        width: 100%;
+        padding-top: 26px;
+    }
+
+    .l-search__geoposition {
+        margin-bottom: 2px;
+    }
+
+    .l-search__title-list {
+        display: none;
+    }
+
+    .l-search__top-menu-wrap {
+        width: 260px;
+    }
+
+    .l-search__search {
+        width: 260px;
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+    .l-search__search-links {
+        width: 260px;
+    }
+
+    .l-search__button-wrap {
+        display: none;
+    }
+
+    .l-search__information-links {
+        max-width: 260px;
+    }
+
+    .l-search__popular-schools {
+        white-space: normal;
+
+        max-width: 100%;
+    }
+
+    .l-search__information-schools {
+        display: block;
+
+        max-width: 100%;
+        margin-top: 0;
+    }
+
+    .l-search__image_list {
+        display: inline-block;
+
+        margin-right: 28px;
+
+        vertical-align: top;
+    }
+
+    .l-search__information-text {
+        display: inline-block;
+
+        width: calc(100% - 88px);
+        margin-top: -3px;
+    }
+}
+

@@ -4,10 +4,12 @@ goog.require('goog.dom');
 goog.require('goog.dom.classes');
 goog.require('goog.dom.classlist');
 goog.require('goog.events');
+goog.require('goog.labs.userAgent.device');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
 goog.require('sm.bMark.bMark');
 goog.require('sm.bScoreSchoolList.Template');
+
 
 /**
  * Score component in school list view
@@ -197,17 +199,20 @@ goog.scope(function() {
 
         if (this.isClickable_) {
             var handler = this.getHandler();
-            handler.listen(
-                this.criterionValueElement_,
-                goog.events.EventType.MOUSEENTER,
-                this.showCriterion_
-            );
 
-            handler.listen(
-                this.criterionValueElement_,
-                goog.events.EventType.MOUSELEAVE,
-                this.hideCriterion_
-            );
+            if (goog.labs.userAgent.device.isDesktop()) {
+                handler.listen(
+                    this.getElement(),
+                    goog.events.EventType.MOUSEENTER,
+                    this.showCriterion_
+                );
+
+                handler.listen(
+                    this.criterionValueElement_,
+                    goog.events.EventType.MOUSELEAVE,
+                    this.hideCriterion_
+                );
+            }
 
             handler.listen(
                 this.criterionValueElement_,

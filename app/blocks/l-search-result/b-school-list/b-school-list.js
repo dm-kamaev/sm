@@ -83,7 +83,7 @@ goog.scope(function() {
      */
     SchoolList.Event = {
         'ITEM_CLICK': SchoolListItem.Event.CLICK,
-        'SORT_CLICK': sm.gDropdownSelect.DropdownSelect.Event.ITEM_SELECT,
+        'SORT_CLICK': sm.gDropdown.DropdownSelect.Event.ITEM_SELECT,
         'SHOW_MORE': 'show-more-items'
     };
 

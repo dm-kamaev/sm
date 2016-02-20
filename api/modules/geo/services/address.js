@@ -54,7 +54,8 @@ exports.addAddress = async(function(school_id, data) {
  * @param {number} address_id
  * @param {{
  *     name?: string,
- *     coords?: array
+ *     coords?: array,
+ *     isSchool?: bool
  * }} data
  */
 exports.update = async(function(address_id, data) {
@@ -119,7 +120,11 @@ exports.getDepartments = function(address) {
     return await(address.getDepartments());
 };
 
-
+/**
+ * Returns metro from array<address>/address
+ * @param {array<object> || object} address
+ * @return {array<string>}
+ */
 exports.getMetro = function(address) {
     if (Array.isArray(address)) {
         var metro = {};
