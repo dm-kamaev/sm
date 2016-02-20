@@ -52,7 +52,7 @@ schoolView.default = function(schoolInstance, opt_popularSchools) {
         specializedClasses: getSpecializedClasses(
             schoolInstance.specializedClasses),
         activities: getActivities(schoolInstance.activites),
-        contacts: getContacts(addresses, schoolInstance.phones),
+        contacts: getContacts(schoolInstance.addresses, schoolInstance.phones),
         comments: getComments(comments),
         addresses: addressView.default(addresses),
         ratings: ratingView.ratingSchoolView(
