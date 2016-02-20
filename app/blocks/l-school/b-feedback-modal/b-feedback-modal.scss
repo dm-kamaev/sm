@@ -23,6 +23,16 @@
     margin: 42px 50px 50px;
 }
 
+.b-feedback__column {
+	display: inline-block;
+	
+	width: 47%;
+
+	&:nth-child(odd) {
+		margin-right: 5%;
+	}
+}
+
 .b-feedback__text {
 	margin-right: 20px;
 
@@ -43,13 +53,15 @@
 		font: 800 16px 'Proxima', Arial, sans-serif;
 	}
 }
+.b-feedback__item {
 
-.b-feedback__form-item_detailed {
-	display: inline-block;
-}
+	&_m {
+		display: inline-block;
+	}
 
-.b-feedback__form-item_brief {
-	display: none;
+	&_s {
+		display: none;
+	}
 }
 
 .b-feedback__close-control {
@@ -82,16 +94,11 @@
 	}
 
 	&_user-type {
-		width: 33%;
-		min-width: 200px;
-
-		margin-right: 6%;
+		width: calc(100% - 95px);
 	}
 
 	&_graduation-year {
 		width: 70px;
-
-		margin-right: 21px;
 	}
 }
 
@@ -146,8 +153,12 @@
     vertical-align: top;
 
     &:nth-child(odd) {
-        margin-right: 5%;
+        margin-right: 3%;
     }
+}
+
+.b-feedback__stars {
+	display: inline-block;
 }
 
 .b-feedback__description {
@@ -207,25 +218,67 @@
 	}
 }
 
-@include media-m {
+@media screen and (max-width: 770px) {
+	.b-feedback__item_l {
+		display: none;
+	}
+}
+
+@media screen and (max-width: 670px) {
+	.b-feedback__text_header {
+		display: none;
+	}
+
+	.b-feedback__item_m {
+		display: none;
+	}
+
+	.b-feedback__item_s {
+		display: inline-block;
+	}
+
+	.b-feedback__control {
+		&_user-type {
+			width: 100%;
+		}
+
+		&_class-type {
+			margin-right: 0;
+		}
+	}
+
+	.b-feedback__title-scores {
+		margin-bottom: 18px;
+	}
+
+	.b-feedback__stars {
+		margin-bottom: 15px;
+	}
+
+	.b-feedback__title-score {
+		display: block;
+
+		margin-bottom: 7px;
+
+		letter-spacing: normal;
+	}
+}
+
+@media screen and (max-width: 569px) {
+	.b-feedback__column {
+		display: block;
+
+		width: 100%;
+
+		margin-right: 0;
+	}
+
 	.b-feedback__content {
 		margin: 24px 30px 45px;
 	}
 
 	.b-feedback__section_header {
 		margin-bottom: 22px;
-	}
-
-	.b-feedback__text_header {
-		display: none;
-	}
-
-	.b-feedback__form-item_detailed {
-		display: none;
-	}
-
-	.b-feedback__form-item_brief {
-		display: inline-block;
 	}
 
 	.b-feedback__section {
@@ -239,10 +292,7 @@
 	}
 
 	.b-feedback__control {
-		margin-right: 0;
-
 		&_user-type {
-			width: 100%;
 			margin-bottom: 20px;
 		}
 
@@ -250,7 +300,11 @@
 			width: 80px;
 		}
 	}
-
+	
+	.b-feedback__title-score {
+		display: inline-block;
+	}
+	
 	.b-feedback__score {
 		width: 100%;
 	}
