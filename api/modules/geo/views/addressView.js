@@ -66,14 +66,15 @@ addressView.stageList = function (addresses, opt_options) {
             }
         }
         if (addressAdded) {
-            stages.push(
-                {
-                    name: stagesEnum[i],
-                    addresses: temp
-                }
-            );
+            stages.push({
+                name: stagesEnum[i],
+                addresses: temp
+            });
         }
         temp = [];
+    }
+    if (stages.length == 1 && stages[0].name === 'Другие адреса') {
+        stages[0].name = 'Адреса';
     }
     return stages;
 
