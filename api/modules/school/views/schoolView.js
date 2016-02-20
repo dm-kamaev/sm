@@ -46,7 +46,7 @@ schoolView.default = function(schoolInstance, opt_popularSchools) {
             schoolInstance.educationInterval,
             'kindergarten'),
         social: [],
-        metroStations: services.address.getMetro(addresses),
+        // metroStations: services.address.getMetro(addresses),
         sites: schoolInstance.links ?
             getSites(schoolInstance.links) : getSites(schoolInstance.site),
         specializedClasses: getSpecializedClasses(
@@ -81,10 +81,22 @@ schoolView.popular = function(popularSchools) {
             url: school.url,
             name: school.name,
             description: school.description || '',
-            metro: services.address.getMetro(school.addresses),
+            metro: nearestMetro(school.addresses),
             totalScore: school.totalScore
         };
     });
+};
+
+/**
+ * @param {array<object>} addresses
+ * @return {array<string>}
+ */
+var nearestMetro = function(addresses) {
+    return lodash.uniq(addresses.map(address => {
+        return address.addressMetroes[0] &&
+            address.addressMetroes[0].metroStation.name
+                .replace('метро ', '');
+    }));
 };
 
 /**

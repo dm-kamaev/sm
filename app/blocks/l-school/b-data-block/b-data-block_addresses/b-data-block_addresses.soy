@@ -9,7 +9,7 @@
  *          address: list<[
  *              title: string,
  *              description: string,
- *              metroStations: list<[
+ *              metroStation: list<[
  *                  id: number,
  *                  name: string
  *              ]>,
@@ -46,7 +46,7 @@
  *            addresses: list<[
  *                title: string,
  *                description: string,
- *                metroStations: list<[
+ *                metroStation: list<[
  *                    id: number,
  *                    name: string
  *                ]>
@@ -73,9 +73,9 @@
                             </div>
 
                             <div class="b-data-block__item-content-metroStation">
-                                {if $address.metroStations.length > 0}
+                                {if $address.metroStation}
                                     <div class="b-data-block__metro-icon b-icon_img_metro"></div>
-                                    {$address.metroStations[0].name}
+                                    {$address.metroStation.name}
                                 {/if}
                             </div>
                         {/foreach}
