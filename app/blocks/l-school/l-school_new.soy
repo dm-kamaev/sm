@@ -472,8 +472,7 @@
  * }}
  */
 {template .ratings_ autoescape="strict" kind="html"}
-    {if $params.data.ratings and
-        length($params.data.ratings) > 0}
+    {if length($params.data.ratings) > 1}
         <div class="l-school__section l-school__section_ratings">
             {call sm.lSchool.bDataBlockRatings.Template.base}
                 {param params: [
