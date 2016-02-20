@@ -139,7 +139,7 @@ exports.view = async (function(req, res) {
 
 exports.search = async(function(req, res) {
     var exampleList = ['Поварская, 14', 'Школа 123', 'Савеловская', 'Лицей'];
-    var popularSchools = await (services.school.getPopularSchools());
+    var popularSchools = await (services.school.getPopularSchools(3));
     var imagesList = ['images/l-search/advertising_1.png', 'images/l-search/article.png'];
 
     var html = soy.render('sm.lSearch.Template.base', {
