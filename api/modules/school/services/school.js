@@ -215,6 +215,16 @@ service.getAddresses = async(function(schoolId) {
 
 
 /**
+ * Get amount schools
+ * @return {number} schoolsCount
+ */
+service.getSchoolsCount = async(function() {
+    var schoolsCount = await(models.School.count());
+    return schoolsCount;
+});
+
+
+/**
  * Get department of school address
  * @param  {school_id} school_id
  * @param  {address_id} address_id
