@@ -514,18 +514,16 @@ goog.scope(function() {
         var data = form.serialize();
         switch (this.dropdowns_.userType.getValue()) {
             case 0:
+                data += this.dropdowns_.classType.getValue() ?
+                    '&classType=' + this.dropdowns_.classType.getValue() : '';
                 data += '&userType=Parent';
                 break;
             case 1:
-                data += this.dropdowns_.classType.getValue() ?
-                    '&class=' + this.dropdowns_.classType.getValue() :
-                    '&class=0';
                 data += '&userType=Graduate';
                 break;
             case 2:
                 data += this.dropdowns_.classType.getValue() ?
-                    '&class=' + this.dropdowns_.classType.getValue() :
-                    '&class=0';
+                    '&classType=' + this.dropdowns_.classType.getValue() : '';
                 data += '&userType=Scholar';
                 break;
         }
@@ -649,11 +647,9 @@ goog.scope(function() {
      * @return {boolean}
      */
     FeedbackModal.prototype.validateGraduateInput_ = function(value) {
-        console.log('Validate input started!');
         var userType = this.dropdowns_.userType.getValue(),
             isValid = false,
             yearRegex = /[\d][\d][\d][\d]/;
-        console.log(userType);
         if (userType == 1) {
             if (value) {
                 if (yearRegex.test(value)) {

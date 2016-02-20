@@ -196,9 +196,9 @@ var getContacts = function(addresses, phones) {
  */
 var getComments = function(comments) {
     var typeConvert = {
-        'Parent': 'родитель',
-        'Graduate': 'выпускник',
-        'Scholar': 'ученик'
+        'Parent': 'Родитель',
+        'Graduate': 'Выпускник',
+        'Scholar': 'Ученик'
     };
 
     return comments
