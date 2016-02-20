@@ -3,9 +3,12 @@ body {
 }
 
 .l-school {
-    text-align: center;
+    margin-top: 60px;
+
+    color: #000;
+    text-align: left;
+
     font-family: 'PT Serif', Arial, sans-serif;
-    color: #000000;
 }
 
 .l-school__body {
@@ -108,14 +111,6 @@ body {
     background-color: #c80018;
 }
 
-.l-school__score {
-	padding-top: 28px;
-	padding-bottom: 24px;
-
-	border-bottom: 1px solid #deded8;
-	background-color: #f7f7f1;
-}
-
 .l-school__information {
     padding-top: 38px;
 }
@@ -148,29 +143,23 @@ body {
 	display: inline-block;
 }
 
-.l-school__content-column {
+.l-school__column {
     display: inline-block;
 
-    width: 380px;
+    margin-right: 30px;
 
     vertical-align: top;
+
     font-size: 16px;
 
-	margin-right: 30px;
-
-	&.l-school__content-column_left {
+	&.l-school__column_left {
 		width: 350px;
 		margin-right: 60px;
 	}
 
-	&.l-school__content-column_last {
-		//float: right;
-
+	&.l-school__column_right {
+        width: 790px;
 		margin-right: 0;
-	}
-
-	&.l-school__content-column_double-width {
-		width: 790px;
 	}
 }
 
@@ -271,10 +260,55 @@ body {
     font-weight: 800;
 }
 
-.l-school__section__popular-schools {
-    margin-top: -19px;
-}
 
 .l-school__footer {
     margin-bottom: 30px;
+}
+
+
+
+.l-school__section_description {
+    width: 790px;
+    margin: -6px 30px 60px 0;
+
+    font-size: 16px;
+}
+
+.l-school__section_feedback {
+    float: right;
+
+    width: 380px;
+}
+
+.l-school__section_score {
+    padding-top: 28px;
+    padding-bottom: 24px;
+
+    border-bottom: 1px solid #deded8;
+    background-color: #f7f7f1;
+}
+
+.l-school__section_map {
+    margin-bottom: 55px;
+}
+
+.l-school__additional-info-group {
+    display: inline-block;
+
+    width: 380px;
+    margin-right: 30px;
+
+    vertical-align: top;
+
+    &:last-child {
+        margin-right: 0;
+    }
+}
+
+.l-school__section_comments {
+    margin-bottom: 40px;
+}
+
+.l-school__section_popular-schools {
+    margin: 0 0 80px;
 }

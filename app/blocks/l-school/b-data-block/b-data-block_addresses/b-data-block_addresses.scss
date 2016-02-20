@@ -44,11 +44,6 @@
     margin-right: 7px;
 }
 
-.horisontal-line {
-    margin-top: 0;
-    margin-bottom: 20px;
-}
-
 .b-data-block__item-phones-caption {
     display: inline-block;
     width: 270px;
@@ -59,4 +54,19 @@
     font-family: Arial;
     font-size: 14px;
     color: #808080;
+}
+
+.b-data-block_addresses {
+    .b-data-block__line {
+        display: none;
+    }
+
+    .b-data-block__line_horisontal-line {
+        position: static;
+
+        display: block;
+
+        margin-top: 0;
+        margin-bottom: 15px;
+    }
 }

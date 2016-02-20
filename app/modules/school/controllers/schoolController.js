@@ -94,7 +94,7 @@ exports.list = async (function(req, res) {
         }
     };
 
-    var html = soy.render('sm.lSearchResult.Template.base', params);
+    var html = soy.render('sm.lSearchResult.NewTemplate.layout', params);
 
     res.header('Content-Type', 'text/html; charset=utf-8');
     res.end(html);
@@ -118,7 +118,7 @@ exports.view = async (function(req, res) {
 
             res.header('Content-Type', 'text/html; charset=utf-8');
             res.end(
-                soy.render('sm.lSchool.Template.base', {
+                soy.render('sm.lSchool.NewTemplate.school', {
                 params: {
                     data: schoolView.default(school, popularSchools),
                     searchTemplates: {

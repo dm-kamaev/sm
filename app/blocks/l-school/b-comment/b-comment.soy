@@ -1,25 +1,29 @@
 {namespace sm.lSchool.bComment.Template autoescape="strict"}
+
+
 /**
  * Comment Template
+ * @param params {{
+ *     author: string,
+ *     rank: string,
+ *     text: string,
+ *     sections: [{
+ *         name: string,
+ *         value: number
+ *     }]
+ * }}
  */
 {template .base kind="html"}
-	{@param params:[
-			author: string,
-			rank: string,
-			text: string,
-			sections: list<[
-				name: string,
-				value: int
-			]>
-		]
-	}
     <div class="b-comment">
 
 		{if length($params.sections)}
 			<div class="b-comment__header">
 				{foreach $section in $params.sections}
 					{call sm.lSchool.bComment.Template.section_}
-						{param params:['name': $section.name, 'rating': $section.value]/}
+						{param params:[
+							'name': $section.name,
+							'rating': $section.value
+						]/}
 					{/call}
 				{/foreach}
 			</div>
@@ -55,15 +59,15 @@
     </div>
 {/template}
 
+
 /**
  * Comment Section Template
+ * @param params {{
+ *     name: string,
+ *     rating: number
+ * }}
  */
 {template .section_ kind="html" private="true"}
-	{@param params:[
-			name: string,
-			rating: int
-		]
-	}
     {if $params.rating > 0}
         <div class="b-comment__header-section">
 		    <div class="b-comment__header-section-name">
