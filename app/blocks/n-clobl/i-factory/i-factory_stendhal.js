@@ -1,12 +1,13 @@
 goog.provide('sm.iFactory.FactoryStendhal');
 
 goog.require('cl.iFactory.Factory');
-goog.require('sm.gDropdownSelect.DropdownSelect');
-goog.require('sm.gDropdownSelect.View');
-goog.require('sm.gInputFeedback.InputFeedback');
-goog.require('sm.gInputFeedback.View');
-goog.require('sm.gListSelect.List');
-goog.require('sm.gListSelect.View');
+goog.require('sm.gDropdown.DropdownSelect');
+goog.require('sm.gDropdown.DropdownSelectView');
+goog.require('sm.gInput.DigitInput');
+goog.require('sm.gInput.DigitInputView');
+goog.require('sm.gList.SelectList');
+goog.require('sm.gList.SelectListView');
+goog.require('sm.gTextarea.TextareaCheckView');
 
 /**
  * FactoryStendhal
@@ -19,18 +20,23 @@ sm.iFactory.FactoryStendhal = function() {
     goog.base(this, templateFactory, 'stendhal');
 
     this.setControlListItem('dropdown-select', {
-        control: sm.gDropdownSelect.DropdownSelect,
-        view: sm.gDropdownSelect.View
+        control: sm.gDropdown.DropdownSelect,
+        view: sm.gDropdown.DropdownSelectView
     });
 
     this.setControlListItem('list-select', {
-        control: sm.gListSelect.List,
-        view: sm.gListSelect.View
+        control: sm.gList.SelectList,
+        view: sm.gList.SelectListView
     });
 
-    this.setControlListItem('input-feedback', {
-        control: sm.gInputFeedback.InputFeedback,
-        view: sm.gInputFeedback.View
+    this.setControlListItem('digit-input', {
+        control: sm.gInput.DigitInput,
+        view: sm.gInput.DigitInputView
+    });
+
+    this.setControlListItem('textarea-check', {
+        control: cl.gTextarea.Textarea,
+        view: sm.gTextarea.TextareaCheckView
     });
 
 };

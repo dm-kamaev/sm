@@ -1,4 +1,4 @@
-goog.provide('sm.gListSelect.List');
+goog.provide('sm.gList.SelectList');
 
 goog.require('cl.gList.List');
 
@@ -10,7 +10,7 @@ goog.require('cl.gList.List');
  * @constructor
  * @extends {cl.gList.List}
  */
-sm.gListSelect.List = function(view, opt_params, opt_domHelper) {
+sm.gList.SelectList = function(view, opt_params, opt_domHelper) {
     goog.base(this, view, opt_params, opt_domHelper);
 
 
@@ -21,16 +21,16 @@ sm.gListSelect.List = function(view, opt_params, opt_domHelper) {
      */
     this.openerTexts_ = [];
 };
-goog.inherits(sm.gListSelect.List, cl.gList.List);
+goog.inherits(sm.gList.SelectList, cl.gList.List);
 
 goog.scope(function() {
-    var List = sm.gListSelect.List;
+    var SelectList = sm.gList.SelectList;
 
     /**
      * @param {Element} element
      * @override
      */
-    List.prototype.decorateInternal = function(element) {
+    SelectList.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
         var dataParams = this.getView().getDataParams(element);
@@ -52,7 +52,7 @@ goog.scope(function() {
      * @param {number} opt_index
      * @return {Array<string>|string}
      */
-    List.prototype.getOpenerText = function(opt_index) {
+    SelectList.prototype.getOpenerText = function(opt_index) {
         return (opt_index >= 0) ?
             this.openerTexts_[opt_index] :
             this.openerTexts_;

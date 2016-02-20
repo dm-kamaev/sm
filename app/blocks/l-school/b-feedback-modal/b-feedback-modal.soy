@@ -84,7 +84,7 @@
             </div>
 
             <div class="b-feedback__section
-                        b-feedback__section_header">
+                        b-feedback__section_submit">
                 {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
                     {param params: [
                         'type': 'button',
@@ -96,6 +96,10 @@
                         ]
                     ]/}
                 {/call}
+
+                <div class="b-feedback__validation-errors
+                            i-utils__hidden">
+                </div>
             </div>
         </div>
     </form>
@@ -207,7 +211,7 @@
                     b-feedback__control_graduation-year">
             {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
                 {param params: [
-                    'type': 'input-feedback',
+                    'type': 'digit-input',
                     'renderParams': [
                         'data': [
                             'name': 'year-graduate',
