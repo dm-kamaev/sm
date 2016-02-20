@@ -1,8 +1,12 @@
+@import "../i-media/i-media";
+
 body {
     margin: 0;
 }
 
 .l-school {
+    position: relative;
+
     margin-top: 60px;
 
     color: #000;
@@ -118,11 +122,12 @@ body {
 
 .l-school__top-content {
     display: inline-block;
+
+    width: 100%;
     margin-bottom: 32px;
 
-    width:100%;
-
     text-align: left;
+
     font-size: 25px;
 }
 
@@ -135,7 +140,7 @@ body {
 
 	text-align: left;
 
-	width: 1200px;
+	max-width: 1200px;
 }
 
 .l-school__section {
@@ -144,22 +149,20 @@ body {
 }
 
 .l-school__column {
-    display: inline-block;
-
-    margin-right: 30px;
-
     vertical-align: top;
+    box-sizing: border-box;
 
     font-size: 16px;
 
 	&.l-school__column_left {
+        float: left;
+
 		width: 350px;
-		margin-right: 60px;
 	}
 
 	&.l-school__column_right {
-        width: 790px;
-		margin-right: 0;
+        width: 100%;
+		padding-left: 410px;
 	}
 }
 
@@ -183,7 +186,7 @@ body {
 
 }
 
-.l-school__content-comments {
+.l-school__section_comments {
     display: inline-block;
     margin-top: 24px;
 
@@ -192,6 +195,27 @@ body {
 
     text-align: left;
     font-size: 0;
+}
+
+.l-school__comments-title {
+    display: inline-block;
+
+    width: 33.33%;
+    padding-right: 10px;
+
+    vertical-align: top;
+    box-sizing: border-box;
+
+    font-size: 16px;
+}
+
+.l-school__comments-content {
+    display: inline-block;
+
+    width: 66.66%;
+    padding-left: 20px;
+
+    box-sizing: border-box;
 }
 
 .l-school__comments-placeholder {
@@ -268,8 +292,14 @@ body {
 
 
 .l-school__section_description {
-    width: 790px;
-    margin: -6px 30px 60px 0;
+    display: inline-block;
+
+    width: 65%;
+    width: calc(50% + 440px);
+    margin: -6px -440px 60px 0;
+    padding-right: 250px;
+
+    box-sizing: border-box;
 
     font-size: 16px;
 }
@@ -277,7 +307,10 @@ body {
 .l-school__section_feedback {
     float: right;
 
-    width: 380px;
+    width: 50%;
+    padding-left: 220px;
+
+    box-sizing: border-box;
 }
 
 .l-school__section_score {
@@ -295,13 +328,14 @@ body {
 .l-school__additional-info-group {
     display: inline-block;
 
-    width: 380px;
-    margin-right: 30px;
+    width: 50%;
+    padding-right: 15px;
 
+    box-sizing: border-box;
     vertical-align: top;
 
     &:last-child {
-        margin-right: 0;
+        padding: 0 0 0 15px;
     }
 }
 
@@ -311,4 +345,14 @@ body {
 
 .l-school__section_popular-schools {
     margin: 0 0 80px;
+}
+
+
+@include media-xl {
+
+}
+
+
+@include media-l {
+
 }

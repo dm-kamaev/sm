@@ -194,7 +194,9 @@
                 'renderParams': [
                     'data': 'Оставить отзыв',
                     'config': [
-                        'customClasses': ['g-button_feedback-opener']
+                        'customClasses': [
+                            'g-button_feedback-opener'
+                        ]
                     ]
                 ]
             ]/}
@@ -617,24 +619,20 @@
 
     <div class="l-school__section l-school__section_comments">
         {if $comments and length($comments) > 0}
-            <div class="l-school__content-comments">
-                <div class="l-school__content-column l-school__content-column_small">
-                    {call .contentTitle_}
-                        {param image: '123.png' /}
-                        {param text: 'Комментарии и оценки' /}
-                        //TODO: uncomment
-                        // {param buttonAlt: 'надпись2' /}
-                    {/call}
-                </div>
-                <div class="l-school__content-column
-                            l-school__content-column_double-width
-                            l-school__content-column_last">
-                    {call sm.lSchool.bComments.Template.base}
-                        {param params: [
-                            'comments': $comments
-                        ] /}
-                    {/call}
-                </div>
+            <div class="l-school__comments-title">
+                {call .contentTitle_}
+                    {param image: '123.png' /}
+                    {param text: 'Комментарии и оценки' /}
+                    //TODO: uncomment
+                    // {param buttonAlt: 'надпись2' /}
+                {/call}
+            </div>
+            <div class="l-school__comments-content">
+                {call sm.lSchool.bComments.Template.base}
+                    {param params: [
+                        'comments': $comments
+                    ] /}
+                {/call}
             </div>
         {else}
             <div class="l-school__horisontal-line"></div>

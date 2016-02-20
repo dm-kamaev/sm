@@ -1,5 +1,16 @@
+@import "../i-media/i-media";
+
 .i-layout_modifier_stendhal .i-layout__wrapper {
     width: 1200px;
     margin: auto;
 }
 
+
+@include media-xl {
+    .i-layout_page_school.i-layout_modifier_stendhal .i-layout__wrapper {
+        width: 100%;
+        padding: 0 40px;
+
+        box-sizing: border-box;
+    }
+}
