@@ -165,9 +165,10 @@ service.incrementViews = async(function(schoolId) {
 });
 
 /**
+ * @param {number} opt_amount
  * @return {array<object>} school instances
  */
-service.getPopularSchools = async(function() {
+service.getPopularSchools = async(function(opt_amount) {
     return await(models.School.findAll({
         where: {
              $not: {
@@ -177,7 +178,7 @@ service.getPopularSchools = async(function() {
         order: [
             ['views', 'DESC']
         ],
-        limit: 6, //TODO: move '6' somewhere maybe?
+        limit: opt_amount || 6, //TODO: move '6' somewhere maybe?
         include: [{
             model: models.Address,
             as: 'addresses',
