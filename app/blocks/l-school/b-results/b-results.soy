@@ -7,83 +7,102 @@
  * }
  */
 {template .results}
-    {let $ege kind="html"}
-        {call .label_}
-            {param params: [
-                'label': 'ЕГЭ'
-            ]/}
-        {/call}
-    {/let}
-    {let $gia kind="html"}
-        {call .label_}
-            {param params: [
-                'label': 'ГИА'
-            ]/}
-        {/call}
-    {/let}
-    {let $olymp kind="html"}
-        {call .label_}
-            {param params: [
-                'label': 'ОЛИМПИАДЫ'
-            ]/}
-        {/call}
-    {/let}
-    {let $egeContent kind="html"}
-        {call .content_}
-            {param params: [
-                'data': $params?.data?.ege,
-                'config': [
-                    'type': 'ege'
-                ]
-            ]/}
-        {/call}
-    {/let}
-    {let $giaContent kind="html"}
-        {call .content_}
-            {param params: [
-                'data': $params?.data?.gia,
-                'config': [
-                    'type': 'gia'
-                ]
-            ]/}
-        {/call}
-    {/let}
-    {let $olympContent kind="html"}
-        {call .olympContent_}
-            {param params: [
-                'data': $params?.data?.olymp
-            ]/}
-        {/call}
-    {/let}
+    {if
+        $params?.data?.ege?.years?.length or
+        $params?.data?.gia?.years?.length or
+        $params?.data?.olymp?.years?.length
+    }
+        {let $ege kind="html"}
+            {call .label_}
+                {param params: [
+                    'label': 'ЕГЭ'
+                ]/}
+            {/call}
+        {/let}
+        {let $gia kind="html"}
+            {call .label_}
+                {param params: [
+                    'label': 'ГИА'
+                ]/}
+            {/call}
+        {/let}
+        {let $olymp kind="html"}
+            {call .label_}
+                {param params: [
+                    'label': 'ОЛИМПИАДЫ'
+                ]/}
+            {/call}
+        {/let}
+        {let $egeContent kind="html"}
+            {call .examContent_}
+                {param params: [
+                    'data': $params?.data?.ege,
+                    'config': [
+                        'type': 'ege'
+                    ]
+                ]/}
+            {/call}
+        {/let}
+        {let $giaContent kind="html"}
+            {call .examContent_}
+                {param params: [
+                    'data': $params?.data?.gia,
+                    'config': [
+                        'type': 'gia'
+                    ]
+                ]/}
+            {/call}
+        {/let}
+        {let $olympContent kind="html"}
+            {call .olympContent_}
+                {param params: [
+                    'data': $params?.data?.olymp
+                ]/}
+            {/call}
+        {/let}
 
-    <div class="b-results">
-        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
-            {param params: [
-                'type': 'tab',
-                'renderParams': [
-                    'data': [
-                        'tabs': [
-                            [
-                                'label': $ege,
-                                'content': $egeContent
+        <div class="b-results">
+            <div class="b-results__wrap">
+                {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+                    {param params: [
+                        'type': 'tab',
+                        'renderParams': [
+                            'data': [
+                                'tabs': [
+                                    [
+                                        'label': $ege,
+                                        'content': $egeContent,
+                                        'isEmpty': not
+                                            $params?.data?.ege?.years?.length
+                                    ],
+                                    [
+                                        'label': $gia,
+                                        'content': $giaContent,
+                                        'isEmpty': not
+                                            $params?.data?.gia?.years?.length
+                                    ],
+                                    [
+                                        'label': $olymp,
+                                        'content': $olympContent,
+                                        'isEmpty': not
+                                            $params?.data?.olymp?.years?.length
+                                    ]
+                                ],
+                                'selectedTabId':
+                                    $params?.data?.ege?.years?.length ?
+                                        0 :
+                                        $params?.data?.gia?.years?.length ?
+                                            1 : 2
                             ],
-                            [
-                                'label': $gia,
-                                'content': $giaContent
-                            ],
-                            [
-                                'label': $olymp,
-                                'content': $olympContent
+                            'config': [
+                                'theme': 'red'
                             ]
                         ]
-                    ],
-                    'config': [
-                        'theme': 'red'
-                    ]
-                ]
-            ]/}
-        {/call}
-    </div>
+                    ]/}
+               {/call}
+           </div>
+        </div>
+    {/if}
 {/template}
 
 /**
@@ -103,37 +122,45 @@
  * }
  */
 {template .olympContent_ private="true"}
-    {if $params.data?.years?.length > 0}
-        {let $content kind="html"}
-            {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
-                {param params: [
-                    'type': 'list',
-                    'renderParams': [
-                        'data': [
-                            'items': $params.data?.years
+    <div class="b-results__content">
+        <div class="b-results__dropdown">
+            {if $params.data?.years.length > 1}
+                {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+                    {param params: [
+                        'type': 'dropdown-select',
+                        'renderParams': [
+                            'data': [
+                                'listItems': $params.data?.years,
+                                'selectedItemId': $params.data?.years.length - 1
+                            ],
+                            'config': [
+                                'iconSprite': 'opener-arrow'
+                            ]
                         ]
-                    ]
-                ]/}
-            {/call}
-        {/let}
+                    ]/}
+                {/call}
+            {else}
+                {$params.data.years[$params.data?.years.length - 1]?.label}
+            {/if}
+        </div>
 
-        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+        {call .olympYearResults_}
             {param params: [
-                'type': 'dropdown',
-                'renderParams': [
-                    'data': [
-                        'opener': '2015',
-                        'content': $content
-                    ],
-                    'config': [
-                        'customClasses': ['b-results__dropdown']
-                    ]
-                ]
+                'yearResults': $params.data?.results
             ]/}
         {/call}
+    </div>
+{/template}
 
-        {foreach $yearResults in $params.data?.results}
-            <div class="b-results__inner-content">
+/**
+ * @param params {
+ *     yearResults: []
+ * }
+ */
+{template .olympYearResults_ private="true"}
+        {foreach $yearResults in $params.yearResults}
+            <div class="b-results__inner-content
+                {isLast($yearResults) ? '' : ' i-utils__hidden'}">
                 {if $yearResults.top}
                     <div class="b-results__content-item">
                         <div class="b-results__item-label">
@@ -178,9 +205,6 @@
                 {/if}
             </div>
         {/foreach}
-    {else}
-        Нет результатов
-    {/if}
 {/template}
 
 /**
@@ -190,29 +214,38 @@
  * }
  */
 {template .olympDiagram_ private="true"}
+    {let $shown: 3/}
     <div class="b-results__olymp-diagram">
-        {foreach $item in $params.data}
-            <div class="b-results__olymp-item">
-                {$item.name} —
-                {if $item.winners}
-                    {sp} {$item.winners}
+        {for $i in range($params.data.length)}
+            {if $i == $shown}
+                <div class="b-results__show-more-button{sp}
+                    b-results__show-more-button_active">
+                    Развернуть полный список{sp}{sp}
+                    <span class="b-results__count">
+                        {$params.data.length - $shown}
+                    </span>
+                </div>
+            {/if}
+            <div class="b-results__olymp-item
+                /*{$i > $shown - 1 ? ' i-utils__hidden' : ''}*/">
+                {$params.data[$i].name} —
+                {if $params.data[$i].winners}
+                    {sp} {$params.data[$i].winners}
                     {call cl.iUtils.Utils.declensionPrint}
                         {param params: [
-                            'num': $item.winners,
+                            'num': $params.data[$i].winners,
                             'nom': ' победитель',
                             'gen': ' победителя',
                             'plu': ' победителей'
                         ]/}
                     {/call}
-                    {if $item.awardees}
-                        ,
-                    {/if}
+                    {$params.data[$i].awardees ? ', ' : ''}
                 {/if}
-                {if $item.awardees}
-                    {sp} {$item.awardees}
+                {if $params.data[$i].awardees}
+                    {$params.data[$i].awardees}
                     {call cl.iUtils.Utils.declensionPrint}
                         {param params: [
-                            'num': $item.awardees,
+                            'num': $params.data[$i].awardees,
                             'nom': ' призер',
                             'gen': ' призера',
                             'plu': ' призеров'
@@ -220,7 +253,7 @@
                     {/call}
                 {/if}
             </div>
-        {/foreach}
+        {/for}
     </div>
 {/template}
 
@@ -233,96 +266,136 @@
  *     }
  * }
  */
-{template .content_ private="true"}
-    {if $params.data?.years?.length > 0}
-        {let $content kind="html"}
+{template .examContent_ private="true"}
+    {let $maxValue: ($params.config.type == 'ege') ? 100 : 5 /}
+
+    <div class="b-results__content">
+        <div class="b-results__dropdown">
+        {if $params.data?.years.length > 1}
             {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
                 {param params: [
-                    'type': 'list',
+                    'type': 'dropdown-select',
                     'renderParams': [
                         'data': [
-                            'items': $params.data?.years
-                        ]
-                    ]
-                ]/}
-            {/call}
-        {/let}
-
-        {let $maxValue: ($params.config.type == 'ege') ? 100 : 5 /}
-
-        <div class="b-results__content">
-            {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
-                {param params: [
-                    'type': 'dropdown',
-                    'renderParams': [
-                        'data': [
-                            'opener': '2015',
-                            'content': $content
+                            'listItems': $params.data?.years,
+                            'selectedItemId': $params.data?.years.length - 1
                         ],
                         'config': [
-                            'customClasses': ['b-results__dropdown']
+                            'iconSprite': 'opener-arrow'
                         ]
                     ]
                 ]/}
             {/call}
-
-            {foreach $yearResults in $params.data?.results}
-                <div class="b-results__inner-content">
-                    {if $yearResults.top}
-                        <div class="b-results__content-item">
-                            <div class="b-results__item-label">
-                                Выше среднего по Москве
-                            </div>
-                            <div class="b-results__item-data">
-                                {call sm.bDiagram.Template.base}
-                                    {param params: [
-                                        'data': $yearResults.top,
-                                        'maxValue': $maxValue,
-                                        'display': 'bars',
-                                        'range': $params.data?.range
-                                    ]/}
-                                {/call}
-                            </div>
-                        </div>
-                    {/if}
-                    {if $yearResults.middle}
-                        <div class="b-results__content-item">
-                            <div class="b-results__item-label">
-                                Средний уровень
-                            </div>
-                            <div class="b-results__item-data">
-                                {call sm.bDiagram.Template.base}
-                                    {param params: [
-                                        'data': $yearResults.middle,
-                                        'maxValue': $maxValue,
-                                        'display': 'bars',
-                                        'range': $params.data?.range
-                                    ]/}
-                                {/call}
-                            </div>
-                        </div>
-                    {/if}
-                    {if $yearResults.bottom}
-                        <div class="b-results__content-item">
-                            <div class="b-results__item-label">
-                                Ниже среднего
-                            </div>
-                            <div class="b-results__item-data">
-                                {call sm.bDiagram.Template.base}
-                                    {param params: [
-                                        'data': $yearResults.bottom,
-                                        'maxValue': $maxValue,
-                                        'display': 'bars',
-                                        'range': $params.data?.range
-                                    ]/}
-                                {/call}
-                            </div>
-                        </div>
-                    {/if}
-                </div>
-            {/foreach}
+        {else}
+            {$params.data.years[$params.data?.years.length - 1]?.label}
+        {/if}
         </div>
-    {else}
-        Нет результатов
-    {/if}
+
+        {call .examYearResults_}
+            {param params: [
+                'yearResults': $params.data?.results,
+                'maxValue': $maxValue,
+                'range': $params?.data?.range
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+/**
+ * @param params {
+ *     yearResults: [],
+ *     maxValue: ?number,
+ *     range: ?number
+ * }
+ */
+{template .examYearResults_ private="true"}
+    {let $upperMoscow kind="html"}
+        Выше среднего <br> по Москве
+    {/let}
+    {foreach $yearResults in $params?.yearResults}
+        <div class="b-results__inner-content
+            {isLast($yearResults) ? '' : ' i-utils__hidden'}">
+            {if $yearResults.top}
+                {call .examContentItem_}
+                    {param params: [
+                        'diagramData': $yearResults.top,
+                        'maxValue': $params?.maxValue,
+                        'label': $upperMoscow,
+                        'range': $params?.range
+                    ]/}
+                {/call}
+            {/if}
+            {if $yearResults.middle}
+                {call .examContentItem_}
+                    {param params: [
+                        'diagramData': $yearResults.middle,
+                        'maxValue': $params?.maxValue,
+                        'label': 'Средний уровень',
+                        'range': $params?.range
+                    ]/}
+                {/call}
+            {/if}
+            {if $yearResults.bottom}
+                {call .examContentItem_}
+                    {param params: [
+                        'diagramData': $yearResults.bottom,
+                        'maxValue': $params?.maxValue,
+                        'label': 'Ниже среднего',
+                        'range': $params.data?.range
+                    ]/}
+                {/call}
+            {/if}
+        </div>
+    {/foreach}
+{/template}
+
+/**
+ * @param params {
+ *     label: ?string,
+ *     diagramData: ?string,
+ *     maxValue: ?string,
+ *     range: ?string
+ * }
+ */
+{template .examContentItem_ private="true"}
+    {let $tooltip kind="html"}
+        <div class=b-results__tooltip>
+            По данным Открытого Правительства
+        </div>
+    {/let}
+    <div class="b-results__content-item">
+        <div class="b-results__item-label">
+            <div class="b-results__item-label-text">
+                {$params.label}
+            </div>
+            <div class="b-results__help-icon i-hint">
+                {call sm.bIcon.Template.icon}
+                    {param params: [
+                        'type': 'school-button',
+                    ]/}
+                {/call}
+                {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+                    {param params: [
+                        'type': 'hint',
+                        'renderParams': [
+                            'data': $tooltip,
+                            'config': [
+                                'customClasses': ['b-results__hint']
+                            ]
+                        ]
+                    ]/}
+                {/call}
+            </div>
+        </div>
+        <div class="b-results__item-data">
+            {call sm.bDiagram.Template.base}
+                {param params: [
+                    'data': $params?.diagramData,
+                    'maxValue': $params?.maxValue,
+                    'display': 'bars',
+                    'range': $params?.range
+                ]/}
+            {/call}
+        </div>
+    </div>
 {/template}

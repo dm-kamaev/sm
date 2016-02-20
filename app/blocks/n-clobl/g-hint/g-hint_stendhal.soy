@@ -1,0 +1,27 @@
+{namespace sm.nClobl.gHint.TemplateStendhal}
+
+/**
+ * @constructor
+ * @extends cl.gHint.Template
+ */
+{template .hint}
+    {call .init data="all"/}
+{/template}
+
+/**
+ * Body
+ * @param? params {{
+ *     data: ?string
+ * }}
+ * @override
+ * @doc
+ */
+{template .body}
+    <div class="{call .rootClass/}__arrow">
+    </div>
+    <div class="{call .rootClass/}__arrow-shadow">
+    </div>
+    <div class="{call .rootClass/}__content">
+        {$params.data}
+    </div>
+{/template}

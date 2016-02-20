@@ -4,12 +4,13 @@
  * Select template
  * @param? params {{
  *     data: {
- *        defaultOpenerText: - string default selected item name or placeholder
- *        staticText: string - text in opener, which not changes
+ *        defaultOpenerText: string, - default selected item name or placeholder
+ *        staticText: string, - text in opener, which not changes
  *        listItems: list<[
  *            label: ?<string>,
  *            openerText: ?<string> - optional field
- *        ]>
+ *        ]>,
+ *        selectedItemId: number
  *     }
  *     config: {
  *        usePlaceholder: boolean,
@@ -29,8 +30,13 @@
  * Control
  * @param? params {{
  *     data: {
- *        defaultOpenerText: string - default selected item name or placeholder
- *        staticText: string - text in opener, which not changes
+ *        defaultOpenerText: string,
+ *        staticText: string,
+ *        listItems: list<[
+ *            label: ?<string>,
+ *            openerText: ?<string> - optional field
+ *        ]>,
+ *        selectedItemId: number
  *     }
  *     config: {
  *        usePlaceholder: boolean
@@ -51,6 +57,9 @@
                 {if $params?.data?.defaultOpenerText}
                     {$params?.data?.defaultOpenerText}
                 {/if}
+                {if $params?.data?.selectedItemId}
+                    {$params?.data?.listItems[$params?.data?.selectedItemId].label}
+                {/if}
             </span>
      </div>
      {if $params?.config?.iconSprite}
@@ -68,7 +77,8 @@
  * List template
  * @param? params {{
  *     data: {
- *        listItems: list<string>
+ *        listItems: list<string>,
+ *        selectedItemId: number
  *     }
  *     config: {
  *       theme: ?string
@@ -82,7 +92,8 @@
             'type': 'list-select',
             'renderParams': [
                 'data': [
-                    'items': $params.data.listItems
+                    'items': $params.data.listItems,
+                    'selectedItemId': $params.data.selectedItemId
                 ],
                 'config': [
                     'theme': $params?.config?.theme

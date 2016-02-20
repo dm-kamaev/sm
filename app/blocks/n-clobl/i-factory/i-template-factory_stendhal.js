@@ -6,6 +6,8 @@ goog.require('cl.iFactory.TemplateFactory');
 goog.require('sm.gDropdownSelect.Template');
 goog.require('sm.gInputFeedback.Template');
 goog.require('sm.gListSelect.Template');
+goog.require('sm.nClobl.gHint.TemplateStendhal');
+goog.require('sm.nClobl.gTab.TemplateStendhal');
 
 /**
  * Template factory
@@ -13,6 +15,16 @@ goog.require('sm.gListSelect.Template');
  */
 sm.iFactory.TemplateFactoryStendhal = function() {
     goog.base(this, 'stendhal');
+
+    this.setTemplateListItem(
+        'tab',
+        sm.nClobl.gTab.TemplateStendhal.tab
+    );
+
+    this.setTemplateListItem(
+        'hint',
+        sm.nClobl.gHint.TemplateStendhal.hint
+    );
 
     this.setTemplateListItem(
         'dropdown-select',

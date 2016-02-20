@@ -35,13 +35,13 @@ Icon classes can be used entirely standalone. They are named after their origina
 }
 .b-icon_img_filter-arrow-down {
   background-image: url(/images/b-icon_auto-sprite.png);
-  background-position: -13px -42px;
+  background-position: 0px -42px;
   width: 13px;
   height: 8px;
 }
 .b-icon_img_filter-arrow-up {
   background-image: url(/images/b-icon_auto-sprite.png);
-  background-position: 0px -42px;
+  background-position: -13px -42px;
   width: 13px;
   height: 8px;
 }
@@ -50,12 +50,6 @@ Icon classes can be used entirely standalone. They are named after their origina
   background-position: -18px -24px;
   width: 17px;
   height: 15px;
-}
-.b-icon_img_metro {
-  background-image: url(/images/b-icon_auto-sprite.png);
-  background-position: -26px -42px;
-  width: 11px;
-  height: 8px;
 }
 .b-icon_img_opener-arrow {
   background-image: url(/images/b-icon_auto-sprite.png);
@@ -80,4 +74,10 @@ Icon classes can be used entirely standalone. They are named after their origina
   background-position: -35px -24px;
   width: 15px;
   height: 15px;
+}
+.b-icon_img_sort-arrow {
+  background-image: url(/images/b-icon_auto-sprite.png);
+  background-position: -55px -17px;
+  width: 9px;
+  height: 4px;
 }

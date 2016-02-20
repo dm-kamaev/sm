@@ -1,0 +1,88 @@
+{namespace sm.nClobl.gTab.TemplateStendhal}
+
+/**
+ * Constructor
+ * @extends cl.gTab.Template
+ * @constructor
+ * @param? params {{
+ *     data: {
+ *         tabs: list<{
+ *             label: ?string,
+ *             content: ?string,
+ *             isEmpty: boolean
+ *         }>,
+ *         selectedTabId: ?number
+ *     },
+ *     config: {
+ *         noDefaultTab: ?bool
+ *     }
+ * }}
+ */
+{template .tab}
+    {call .init data="all"/}
+{/template}
+
+/**
+ * Body
+ * @param? params {{
+ *     data: {
+ *         tabs: list<{
+ *             label: ?string,
+ *             content: ?string
+ *         }>,
+ *         selectedTabId: ?number
+ *     },
+ *     config: {
+ *         noDefaultTab: ?bool
+ *     }
+ * }}
+ * @override
+ */
+{template .body}
+    {let $selectedTabId: $params.data?.selectedTabId ?:
+        $params.config?.noDefaultTab ? (-1) : 0 /}
+    {call .tabs data="all"/}
+    {for $i in range($params?.data?.tabs?.length)}
+        {if not $params.data.tabs[$i].isEmpty}
+            {call .content}
+                {param params: [
+                    'content': $params.data.tabs[$i].content,
+                    'hidden': not($i == $selectedTabId)
+                ]/}
+            {/call}
+        {/if}
+    {/for}
+    {call .placeholder data="all"/}
+{/template}
+
+/**
+ * tabs
+ * @param? params {{
+ *     data: {
+ *         tabs: list<{
+ *             label: ?string
+ *         }>,
+ *         selectedTabId: ?number
+ *     },
+ *     config: {
+ *         noDefaultTab: ?bool
+ *     }
+ * }}
+ * @override
+ */
+{template .tabs}
+    {let $selectedTabId: $params.data?.selectedTabId ?:
+        $params.config?.noDefaultTab ? (-1) : 0 /}
+    <div class="{call .rootClass/}__tabs">
+        {for $i in range($params.data?.tabs?.length)}
+            {if not $params.data.tabs[$i].isEmpty}
+                {call .label}
+                    {param params: [
+                        'label': $params.data.tabs[$i].label,
+                        'selected': $i == $selectedTabId
+                    ]/}
+                {/call}
+            {/if}
+        {/for}
+    </div>
+{/template}

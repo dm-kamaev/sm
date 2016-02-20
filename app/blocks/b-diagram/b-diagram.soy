@@ -22,7 +22,19 @@
         {foreach $item in $params.data}
             <div class="b-diagram__item">
                 <div class="b-diagram__label">
-                    {$item.name}
+                    {if $item.name == 'Математика (базовая)'}
+                        Математика
+                        <div class="b-diagram__item-description">
+                            базовая
+                        </div>
+                    {elseif $item.name == 'Математика (профильная)'}
+                        Математика
+                        <div class="b-diagram__item-description">
+                            профильная
+                        </div>
+                    {else}
+                        {$item.name}
+                    {/if}
                     {if $item.description}
                         <div class="b-diagram__item-description">
                             {$item.description}
@@ -126,8 +138,25 @@
     </div>
     <div class="b-diagram__circle">
     </div>
+    /*TODO: replace to factory hint*/
+    {call .tooltip_}
+        {param params: [
+            'left': $params.averageValue * 100 / $params.maxValue + '%',
+            'value': $params.averageValue
+        ]/}
+    {/call}
+{/template}
+
+/**
+ * Tooltip
+ * @param params {
+ *     left: ?number,
+ *     value: ?number
+ * }
+ */
+{template .tooltip_ private="true"}
     <div class="b-diagram__tooltip"
-         style="left: {$params.value * 100 / $params.maxValue + '%'};">
+         style="left: {$params.left};">
         <div class="b-diagram__tooltip-arrow">
         </div>
         <div class="b-diagram__tooltip-description">
@@ -135,44 +164,19 @@
             <div class="b-diagram__tooltip-arrow-shadow">
             </div>
             <div class="b-diagram__tooltip-content">
-                <div class="b-diagram__tooltip-mark">
-                    {$params.value}
-                    <br>
-                    <span class="b-diagram__tooltip-bold-text">
-                        {let $lastDigit:
-                            (($params.value / 10) - floor($params.value / 10))/}
-                        {let $tenDigit:
-                            ($params.value / 100 - floor($params.value / 100))/}
-                        {if $tenDigit*100 - $lastDigit*10 == 1 or
-                            $lastDigit*10 > 4 or
-                            $lastDigit == 0}
-                            баллов
-                        {elseif $lastDigit*10 > 1}
-                            балла
-                        {else}
-                            балл {$lastDigit}
-                        {/if}
-                    </span>
-                </div>
                 <div class="b-diagram__tooltip-average-mark">
                     В среднем по Москве —
                     <br>
                     <span class="b-diagram__tooltip-bold-text">
-                        {$params.averageValue}
-                        {sp}
-                        {let $lDigit:
-                            (($params.averageValue / 10) -
-                                floor($params.averageValue / 10))/}
-                        {let $tDigit:
-                            ($params.averageValue / 100 -
-                                floor($params.averageValue / 100))/}
-                        {if $tDigit*100 - $lDigit*10 == 1 or $lDigit*10 > 4}
-                            баллов
-                        {elseif $lDigit*10 > 1}
-                            балла
-                        {else}
-                            балл
-                        {/if}
+                        {$params.value}
+                        {call cl.iUtils.Utils.declensionPrint}
+                            {param params: [
+                                'num': $params.value,
+                                'nom': ' балл',
+                                'gen': ' балла',
+                                'plu': ' баллов'
+                            ]/}
+                        {/call}
                     </span>
                 </div>
             </div>
