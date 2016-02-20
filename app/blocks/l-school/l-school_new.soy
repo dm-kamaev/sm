@@ -505,8 +505,7 @@
                 {param params: [
                     'header': 'Профильные классы',
                     'content': $params.data.specializedClasses
-                    ]
-                 /}
+                ] /}
             {/call}
         </div>
     {/if}
@@ -532,7 +531,12 @@
                 {param params: [
                     'header': 'Дополнительные занятия',
                     'headerType': 2,
-                    'content': $params.data.activities
+                    'content': [
+                        [
+                            'name': 'Показать список',
+                            'items': $params.data.activities
+                        ]
+                    ]
                 ] /}
             {/call}
         </div>
