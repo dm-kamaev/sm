@@ -92,11 +92,14 @@ schoolView.popular = function(popularSchools) {
  * @return {array<string>}
  */
 var nearestMetro = function(addresses) {
-    return lodash.uniq(addresses.map(address => {
-        return address.addressMetroes[0] &&
-            address.addressMetroes[0].metroStation.name
-                .replace('метро ', '');
-    }));
+    return lodash.uniq(addresses
+        .map(address => {
+            return address.addressMetroes[0] &&
+                address.addressMetroes[0].metroStation.name
+                    .replace('метро ', '');
+        })
+        .filter(address => address)
+    );
 };
 
 /**
