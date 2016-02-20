@@ -21,10 +21,12 @@ var UserData = db.define('UserData', {
     tableName: 'user_data',
     classMethods: {
         associate: function (models) {
-            UserData.belongsTo(models.Comment, {
+            UserData.hasOne(models.Comment, {
+                as: 'userData',
                 foreignKey: 'user_data_id'
             });
-            UserData.belongsTo(models.Rating, {
+            UserData.hasOne(models.Rating, {
+                as: 'userData',
                 foreignKey: 'user_data_id'
             });
         }

@@ -9,10 +9,9 @@ var Comment = db.define('Comment', {
         type: DataType.INTEGER,
         field: 'rating_id'
     },
-    userType: {
-        field: 'user_type',
-        type: DataType.ENUM,
-        values: authorType.toArray()
+    userDataId: {
+        type: DataType.INTEGER,
+        field: 'user_data_id'
     }
 }, {
     underscored: true,
@@ -26,7 +25,7 @@ var Comment = db.define('Comment', {
                 as: 'rating',
                 foreignKey: 'rating_id'
             });
-            Comment.hasOne(models.UserData, {
+            Comment.belongsTo(models.UserData, {
                 as: 'userData',
                 foreignKey: 'user_data_id'
             });

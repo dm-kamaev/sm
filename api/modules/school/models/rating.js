@@ -26,8 +26,12 @@ var Rating = db.define('Rating', {
                     if (value[i] < 0 || value[i] > 5)
                         throw new Error('Every number must be from 0 to 5');
             }
-        },
+        }
         //allowNull: false
+    },
+    userDataId: {
+        type: DataType.INTEGER,
+        field: 'user_data_id'
     }
 }, {
     underscored: true,
@@ -45,7 +49,7 @@ var Rating = db.define('Rating', {
             Rating.hasOne(models.Comment, {
                 foreignKey: 'rating_id'
             });
-            Rating.hasOne(models.UserData, {
+            Rating.belongsTo(models.UserData, {
                 as: 'userData',
                 foreignKey: 'user_data_id'
             });

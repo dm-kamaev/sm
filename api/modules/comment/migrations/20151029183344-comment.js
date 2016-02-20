@@ -1,5 +1,5 @@
 'use strict';
-var authorType = require('../../api/modules/comment/enums/userType');
+var authorType = require('../../api/modules/comment/enums/authorType');
 module.exports = {
   up: function (queryInterface, Sequelize) {
     return queryInterface.createTable('comment', {

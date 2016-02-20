@@ -523,6 +523,9 @@ service.viewOne = function(id) {
                 include: [{
                     model: models.Rating,
                     as: 'rating'
+                }, {
+                    model: models.UserData,
+                    as: 'userData'
                 }]
             }]
         }, {
@@ -533,7 +536,6 @@ service.viewOne = function(id) {
                 'type'
             ]
         }];
-
     var school = await(models.School.findOne({
         where: {id: id},
         include: include,
@@ -559,7 +561,7 @@ service.viewOne = function(id) {
 
 /**
  * @param {number} schoolId
- * @raram {object} prarams
+ * @param {object} params
  * @param {array<number> || null} params.score
  * @param {string || null} params.text
  * @return {object{bool ratingCreated, bool commentCreated}}
@@ -575,6 +577,16 @@ service.review = async(function(schoolId, params) {
         var school = await(models.School.findOne({
             where: {id: schoolId}
         }));
+
+        var userData = {
+            userType: params.userType,
+            yearGraduate: params.yearGraduate,
+            classType: params.classType
+        };
+
+        var userDataInstance = await(services.userData.create(userData));
+
+        params.userDataId = userDataInstance.id;
 
         if (params.score) {
             params.rating = await(service.rate(school, params));
@@ -598,10 +610,15 @@ service.review = async(function(schoolId, params) {
  * @return {object}
  */
 service.rate = async(function(school, params) {
-    var rt = await (models.Rating.create({
+    console.log(params.userDataId);
+    var p = {
         score: params.score,
-        schoolId: school.id
-    }));
+        schoolId: school.id,
+        userDataId: params.userDataId
+    };
+
+    console.log(p);
+    var rt = await (models.Rating.create(p));
     return rt;
 });
 

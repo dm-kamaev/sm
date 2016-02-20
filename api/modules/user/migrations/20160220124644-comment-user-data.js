@@ -18,7 +18,7 @@ module.exports = {
                         type: Sequelize.ENUM,
                         values: userType.toArray()
                     },
-                    class_Type: {
+                    class_type: {
                         type: Sequelize.INTEGER
                     },
                     year_graduate: {
@@ -29,7 +29,6 @@ module.exports = {
                 }).then(function () {
                     return queryInterface.addColumn('comment', 'user_data_id', {
                         type: Sequelize.INTEGER,
-                        allowNull: false,
                         references: {
                             model: 'user_data',
                             key: 'id'
@@ -38,7 +37,6 @@ module.exports = {
                 }).then(function () {
                     return queryInterface.addColumn('rating', 'user_data_id', {
                         type: Sequelize.INTEGER,
-                        allowNull: false,
                         references: {
                             model: 'user_data',
                             key: 'id'

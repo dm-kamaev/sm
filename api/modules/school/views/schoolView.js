@@ -204,12 +204,15 @@ var getComments = function(comments) {
     return comments
         .filter(comment => comment.text)
         .map(comment => {
+
+            console.log(comment);
+
             var sections = comment.rating ?
                 getSections(comment.rating.score) :
                 getSections([0, 0, 0, 0]);
             return {
                 author: '',
-                rank: typeConvert[comment.userType],
+                rank: typeConvert[comment.userData.userType],
                 text: comment.text,
                 sections: sections
             };
