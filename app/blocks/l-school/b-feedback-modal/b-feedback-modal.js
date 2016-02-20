@@ -247,6 +247,7 @@ goog.scope(function() {
                 FeedbackModal.CssClass.USER_TYPE_SELECT
             )
         );
+
         this.dropdowns_.userType = factory.decorate(
             'dropdown-select',
             userTypeElement,
@@ -505,6 +506,29 @@ goog.scope(function() {
     };
 
     /**
+     * Handler for hover over close element
+     * @private
+     */
+    FeedbackModal.prototype.onCrossHover_ = function() {
+        goog.dom.classes.toggle(
+            this.elements_.close,
+            FeedbackModal.CssClass.CLOSE_CONTROL_IMG
+        );
+        goog.dom.classes.toggle(
+            this.elements_.close,
+            FeedbackModal.CssClass.CLOSE_CONTROL_IMG_HOVERED
+        );
+    };
+
+    /**
+     * Handler for click over close element
+     * @private
+     */
+    FeedbackModal.prototype.onCrossClick_ = function() {
+        this.hide();
+    };
+
+    /**
      * Sends form using jQuery.ajax
      * @param {Element} form
      * @param {Function=} opt_callback
@@ -649,11 +673,10 @@ goog.scope(function() {
      * @return {boolean}
      */
     FeedbackModal.prototype.validateGraduateInput_ = function(value) {
-        console.log('Validate input started!');
         var userType = this.dropdowns_.userType.getValue(),
             isValid = false,
             yearRegex = /[\d][\d][\d][\d]/;
-        console.log(userType);
+
         if (userType == 1) {
             if (value) {
                 if (yearRegex.test(value)) {

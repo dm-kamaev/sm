@@ -68,7 +68,7 @@ async(function() {
     await(startupControl.check());
 
     var paths = [
-        'build/compiledSeverSoy/server.soy.concat.js',
+        'build/compiledServerSoy/server.soy.concat.js',
         'node_modules/clobl/blocks/i-utils/i-utils.js',
         'node_modules/clobl/blocks/i-utils-legacy/i-utils.js',
         'node_modules/clobl/blocks/i-factory/i-template-factory.js'

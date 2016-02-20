@@ -58,6 +58,25 @@
  *        addresses: list<
  *           list<number>
  *        >,
+ *        results: [
+ *            ege: [
+ *                years: ?list<number>,
+ *                data: [
+ *                    top:  ?list<[
+ *                        label: ?string,
+ *                        value: ?string
+ *                    ]>,
+ *                    middle:  ?list<[
+ *                        label: ?string,
+ *                        value: ?string
+ *                    ]>,
+ *                    bottom:  ?list<[
+ *                        label: ?string,
+ *                        value: ?string
+ *                    ]>,
+ *                ]
+ *            ]
+ *        ]
  *        ratings: list<[
  *            name<string>,
  *            place<number>,
@@ -152,6 +171,14 @@
                 </div>
             </div>
             */
+
+            <div class="l-school__section l-school__section_grey">
+                {call sm.lSchool.bResults.Template.results}
+                    {param params: [
+                        'data': $params.data.results
+                    ]/}
+                {/call}
+            </div>
 
             <div class="l-school__section
                        l-school__section__comments">

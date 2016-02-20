@@ -1,0 +1,55 @@
+.g-hint.g-hint_stendhal {
+    top: auto;
+    left: 50%;
+
+    width: auto;
+    padding: 0;
+
+    background-color: transparent;
+
+    .g-hint__content {
+        position: relative;
+        top: 10px;
+        left: -20px;
+        z-index: 2;
+
+        box-sizing: border-box;
+        padding: 18px;
+
+        background-color: #ffffff;
+        box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.25);
+
+        font-size: 13px;
+        font-weight: 500;
+        letter-spacing: -0.01em;
+    }
+
+    .g-hint__arrow {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 3;
+
+        width: 10px;
+        height: 10px;
+
+        border-left: 10px solid #ffffff;
+        border-top: 10px solid transparent;
+    }
+
+    .g-hint__arrow-shadow {
+        position: absolute;
+        top: 10px;
+        left: 0;
+        z-index: 1;
+
+        width: 20px;
+        height: 10px;
+        -webkit-transform: skewX(-125deg) rotate(-215deg) translate(0px, 0px);
+        -ms-transform: skewX(-125deg) rotate(-215deg) translate(0px, 0px);
+        transform: skewY(45deg) rotate(0deg) translate(0px, 0px);
+
+        box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.25);
+        background-color: #ffffff;
+    }
+}

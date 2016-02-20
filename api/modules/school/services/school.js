@@ -525,47 +525,52 @@ service.findBySite = async(function(site) {
  */
 service.viewOne = function(id) {
     var include =
-        [{
-            model: models.Address,
-            as: 'addresses',
-            include: [
-                {
-                    model: models.Department,
-                    as: 'departments'
-                },
-                {
-                    model: models.AddressMetro,
-                    as: 'addressMetroes',
-                    include: [
-                        {
-                            model: models.Metro,
-                            as: 'metroStation'
-                        }
-                    ]
-                }
-            ]
-        }, {
-            model: models.Rating,
-            as: 'ratings'
-        }, {
-            model: models.CommentGroup,
-            as: 'commentGroup',
-            include: [{
-                model: models.Comment,
-                as: 'comments',
+        [
+            {
+                model: models.Address,
+                as: 'addresses',
+                include: [
+                    {
+                        model: models.Department,
+                        as: 'departments'
+                    },
+                    {
+                        model: models.AddressMetro,
+                        as: 'addressMetroes',
+                        include: [
+                            {
+                                model: models.Metro,
+                                as: 'metroStation'
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                model: models.Rating,
+                as: 'ratings'
+            },
+            {
+                model: models.CommentGroup,
+                as: 'commentGroup',
                 include: [{
-                    model: models.Rating,
-                    as: 'rating'
+                    model: models.Comment,
+                    as: 'comments',
+                    include: [{
+                        model: models.Rating,
+                        as: 'rating'
+                    }]
                 }]
-            }]
-        }, {
-            model: models.Activity,
-            as: 'activites',
-            attributes: [
-                'profile',
-                'type'
-            ]
-        }];
+            },
+            {
+                model: models.Activity,
+                as: 'activites',
+                attributes: [
+                    'profile',
+                    'type'
+                ]
+            }
+        ];
 
     var school = await(models.School.findOne({
         where: {id: id},

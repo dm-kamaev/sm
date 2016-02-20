@@ -77,13 +77,18 @@ goog.scope(function() {
     DropdownSelect.prototype.onListItemSelect_ = function(event) {
         var openerText = this
             .listInstance_
-            .getOpenerText(event.itemId);
+            .getOpenerText(event['itemId']);
 
         this.value_ = event.itemId;
 
         var view = this.getView();
         view.removePlaceholderModifier();
         view.setOpenerCustomText(openerText);
+
+        this.dispatchEvent({
+            'type': DropdownSelect.Event.ITEM_SELECT,
+            'itemId': event['itemId']
+        });
     };
 
     /**
