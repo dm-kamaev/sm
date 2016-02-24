@@ -153,7 +153,7 @@ exports.view = async (function(req, res) {
 exports.search = async(function(req, res) {
     var exampleList = ['Поварская, 14', 'Школа 123', 'Савеловская', 'Лицей'];
     var popularSchools = await (services.school.getPopularSchools(3));
-    var imagesList = ['images/l-search/advertising_1.png', 'images/l-search/article.png'];
+    // var imagesList = ['images/l-search/advertising_1.png', 'images/l-search/article.png'];
     var amountSchools = await (services.school.getSchoolsCount());
 
     var html = soy.render('sm.lSearch.Template.base', {
@@ -166,7 +166,7 @@ exports.search = async(function(req, res) {
                   text: '{{ name }}',
                   value: '{{ id }}'
               },
-              images: imagesList,
+              // images: imagesList,
               popularSchools: schoolView.popular(popularSchools),
               dataLinks : [
                   {
@@ -186,9 +186,14 @@ exports.search = async(function(req, res) {
                       url: '/search?name=Замоскворечье'
                   }
               ],
-              amountSchools: amountSchools
+              amountSchools: amountSchools,
+              dataArticle : {
+                  urlArticle: 'http://mel.fm/2016/01/09/innovators',
+                  urlImg: 'images/l-search/b-link-article/article.png',
+                  title: '«Мы не знаем, что лучше для наших детей, это известно только им самим»',
+                  subtitle: '10 высказываний новаторов в сфере образования и воспитания'
+              }
           }
-
     });
 
     //console.log(html);
