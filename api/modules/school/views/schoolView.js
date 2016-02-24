@@ -227,9 +227,9 @@ var getContacts = function(addresses, phones) {
  */
 var getComments = function(comments) {
     var typeConvert = {
-        'Parent': 'родитель',
-        'Graduate': 'выпускник',
-        'Scholar': 'ученик'
+        'Parent': 'Родитель',
+        'Graduate': 'Выпускник',
+        'Scholar': 'Ученик'
     };
 
     return comments
@@ -240,7 +240,7 @@ var getComments = function(comments) {
                 getSections([0, 0, 0, 0]);
             return {
                 author: '',
-                rank: typeConvert[comment.userType],
+                rank: typeConvert[comment.userData.userType],
                 text: comment.text,
                 sections: sections
             };

@@ -538,18 +538,16 @@ goog.scope(function() {
         var data = form.serialize();
         switch (this.dropdowns_.userType.getValue()) {
             case 0:
+                data += this.dropdowns_.classType.getValue() ?
+                    '&classType=' + this.dropdowns_.classType.getValue() : '';
                 data += '&userType=Parent';
                 break;
             case 1:
-                data += this.dropdowns_.classType.getValue() ?
-                    '&class=' + this.dropdowns_.classType.getValue() :
-                    '&class=0';
                 data += '&userType=Graduate';
                 break;
             case 2:
                 data += this.dropdowns_.classType.getValue() ?
-                    '&class=' + this.dropdowns_.classType.getValue() :
-                    '&class=0';
+                    '&classType=' + this.dropdowns_.classType.getValue() : '';
                 data += '&userType=Scholar';
                 break;
         }
@@ -593,7 +591,7 @@ goog.scope(function() {
                     case 'text':
                         dataToValidate.textArea = value;
                         break;
-                    case 'year-graduate':
+                    case 'yearGraduate':
                         dataToValidate.yearGraduate = value;
                         break;
                     case 'score':

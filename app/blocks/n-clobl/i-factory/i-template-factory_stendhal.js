@@ -5,7 +5,6 @@ goog.require('cl.iFactory.TemplateFactory');
 goog.require('sm.gDropdown.DropdownSelectTemplate');
 goog.require('sm.gHint.TemplateStendhal');
 goog.require('sm.gInput.DigitInputTemplate');
-goog.require('sm.gInputFeedback.Template');
 goog.require('sm.gList.SelectTemplate');
 goog.require('sm.gTab.TemplateStendhal');
 
