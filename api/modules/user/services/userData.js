@@ -17,7 +17,6 @@ var service = {
  * @param {number} data.classType
  */
 service.create = async(function(data) {
-    console.log(data);
     var params = {
         userType: data.userType,
         yearGraduate: data.yearGraduate ? data.yearGraduate : null,
