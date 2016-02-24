@@ -50,13 +50,13 @@ GiaResultView.prototype.transformResults = function(results, cityResults) {
         item.year = item.year || '2015';
 
         res[item.year] = res[item.year] || {};
-        examRes = item.result.toFixed(1);
+        examRes = Math.round(item.result * 10) / 10;
         averageResult =  cityResultView.getResult(
             cityResults,
             item.subjectId,
             'gia'
         );
-        average = averageResult ? averageResult.toFixed(1) : 3.5;
+        average = averageResult ? Math.round(averageResult * 10) / 10 : 3.5;
 
         if (examRes > average + range) {
             res[item.year].top = res[item.year].top || [];
