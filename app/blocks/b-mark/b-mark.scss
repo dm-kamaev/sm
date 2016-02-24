@@ -57,14 +57,10 @@
     }
 }
 
-.b-mark.b-mark_grey{
-    .b-mark__mark {
-        line-height: 22px;
-    }
-}
-
 .b-mark.b-mark_inline {
     display: inline-block;
+
+	vertical-align: middle;
 
     .b-mark__circle {
         top: 1px;
@@ -105,12 +101,7 @@
     }
 }
 
-.b-mark.b-mark_inline.b-mark_grey{
-    .b-mark__mark {
-        top: -2px;
-    }
-}
-.b-mark.b-mark_inline.b-mark_bigText {
+.b-mark.b-mark_inline.b-mark_big-text {
     .b-mark__mark {
         font-size: 19px;
     }
