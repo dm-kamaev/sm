@@ -122,9 +122,9 @@
  * }
  */
 {template .olympContent_ private="true"}
-    <div class="b-results__content">
+    <div class="b-results__content b-results__content_olymp">
         <div class="b-results__olymp-tooltip">
-            Данные предоставлены Открытым Правительством
+            Данные предоставлены Открытым Правительством!
         </div>
         <div class="b-results__dropdown">
             {if $params.data?.years.length > 1}
@@ -172,7 +172,7 @@
                 {if $yearResults.top}
                     <div class="b-results__content-item">
                         <div class="b-results__item-label">
-                            Старшие классы
+                            Младшие классы
                         </div>
                         <div class="b-results__item-data">
                             {call .olympDiagram_}
@@ -200,7 +200,7 @@
                 {if $yearResults.bottom}
                     <div class="b-results__content-item">
                         <div class="b-results__item-label">
-                            Младшие классы
+                            Старшие классы
                         </div>
                         <div class="b-results__item-data">
                             {call .olympDiagram_}
