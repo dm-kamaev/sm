@@ -187,6 +187,12 @@ goog.scope(function() {
             SchoolList.Event.SHOW_MORE,
             this.showMoreSchoolListItemsHandler_
         );
+
+        this.getHandler().listen(
+            goog.dom.getWindow(),
+            goog.events.EventType.PAGESHOW,
+            this.onShowPage_
+        );
     };
 
     /**
@@ -241,6 +247,17 @@ goog.scope(function() {
         this.searchSettings_.data.page += 1;
         this.schoolList_.showLoader();
         this.sendQuery_();
+    };
+
+    /**
+     * Handler for page show
+     * @private
+     * @param {object} event
+     */
+    SearchResult.prototype.onShowPage_ = function(event) {
+        if (event.event_.persisted) {
+            window.location.reload();
+        }
     };
 
     /**
