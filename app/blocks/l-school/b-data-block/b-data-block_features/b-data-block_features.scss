@@ -8,9 +8,13 @@
 		font-size: 16px;
 		line-height: 22px;
 	}
-}
-.b-data-block__dash {
-	display: inline-block;
 
-	margin-right: 6px;
+    .b-data-block__dash {
+        position: absolute;
+        z-index: 0;
+    }
+
+    .b-data-block__text {
+        margin-left: 20px;
+    }
 }
