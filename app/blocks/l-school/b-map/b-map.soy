@@ -8,9 +8,8 @@
 *         address: ?list{
 *
 *         },
-*         type: ?string,
 *         name: ?string,
-*         url: ?string
+*         totalScore: ?number
 *     }
 * }}
 */
@@ -49,7 +48,8 @@
         <div class="b-map__balloon-close">
             {call sm.bIcon.Template.icon}
                 {param params: [
-                    'type': 'close-balloon'
+                    'type': 'close-balloon',
+                    'verticalAlign': 'top'
                 ]/}
             {/call}
         </div>
