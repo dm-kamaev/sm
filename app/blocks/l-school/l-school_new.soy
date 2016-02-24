@@ -570,11 +570,16 @@
 {template .popular_ autoescape="strict" kind="html"}
     <div class="l-school__section
                 l-school__section_popular-schools">
-          {call sm.bPopularSchools.Template.base}
-              {param params: [
-                  'popularSchools': $params.data.popularSchools
-              ]/}
-          {/call}
+        {call sm.bPopularSchools.Template.base}
+            {param params: [
+                'popularSchools': $params.data.popularSchools,
+                'config': [
+                    'popularSchool': [
+                        'customClasses': 'l-school__popular'
+                    ]
+                ]
+            ]/}
+        {/call}
     </div>
 {/template}
 
