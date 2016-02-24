@@ -1,0 +1,25 @@
+{namespace sm.lSearch.bLinkArticle.Template}
+
+/**
+ * Link to article
+ * @param params {
+ *     urlImg: ?string,
+ *     title: ?string,
+ *     subtitle: ?string
+ * }
+ */
+
+{template .base autoescape="strict" kind="html"}
+    <div class="b-link-article">
+        <div class="b-link-article__header">
+            Читайте на «меле»
+        </div>
+        <a class="b-link-article__link" href="#">
+            <div class="b-link-article__image b-link-article__image_hover">
+                <img src="{$params.urlImg}">
+            </div>
+            <div class="b-link-article__title">{$params.title}</div>
+            <div class="b-link-article__subtitle">{$params.subtitle}</div>
+        </a>
+    </div>
+{/template}

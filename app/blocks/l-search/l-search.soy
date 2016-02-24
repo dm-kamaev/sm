@@ -24,7 +24,12 @@
  *         name: ?string,
  *         url: ?string
  *     ]>,
- *     amountSchools: ?number
+ *     amountSchools: ?number,
+ *     dataArticle : [
+ *         urlImg: ?string,
+ *         title: ?string,
+ *         subtitle: ?string
+ *     ]
  * }
  */
 {template .base autoescape="strict" kind="html"}
@@ -82,13 +87,18 @@
                                 ]/}
                             {/call}
                         </div>
-                        <div class="l-search__information-schools">
-                            {call sm.lSearch.Template.informationSchools_}
-                                {param params: [
-                                    'amountSchools': $params.amountSchools
-                                ]/}
-                            {/call}
-                        </div>
+                        {call sm.lSearch.Template.informationSchools_}
+                            {param params: [
+                                'amountSchools': $params.amountSchools
+                            ]/}
+                        {/call}
+                        {call sm.lSearch.bLinkArticle.Template.base}
+                            {param params: [
+                                'urlImg': $params.dataArticle.urlImg,
+                                'title': $params.dataArticle.title,
+                                'subtitle': $params.dataArticle.subtitle
+                            ]/}
+                        {/call}
                     </div>
                 </div>
                 // <div class="l-search__footer">
@@ -335,31 +345,33 @@
  * }
  */
 {template .informationSchools_ autoescape="strict" kind="html" private="true"}
-    <div class="l-search__image_list">
-        {for $i in range(3)}
-            {call sm.lSearch.Template.informationSchoolsImage_ /}
-        {/for}
-    </div>
-    <div class="l-search__information-text">
-        <div class="l-search__text-amount-schools">
-            Мы составили полный каталог школ Москвы — в&nbsp;нём сейчас{sp}
-            <span class="l-search__amount-schools">
-            {$params.amountSchools}
-            </span>{sp}
-            {call .getEnding_}
+    <div class="l-search__information-schools">
+        <div class="l-search__image_list">
+            {for $i in range(3)}
+                {call sm.lSearch.Template.informationSchoolsImage_ /}
+            {/for}
+        </div>
+        <div class="l-search__information-text">
+            <div class="l-search__text-amount-schools">
+                Мы составили полный каталог школ Москвы — в&nbsp;нём сейчас{sp}
+                <span class="l-search__amount-schools">
+                {$params.amountSchools}
+                </span>{sp}
+                {call .getEnding_}
+                    {param params: [
+                        'number': $params.amountSchools
+                    ]/}
+                {/call}
+            </div>
+            {call sm.bLink.Template.base}
                 {param params: [
-                    'number': $params.amountSchools
+                    'data': [
+                        'name': 'Полный список',
+                        'url': '/search'
+                    ]
                 ]/}
             {/call}
         </div>
-        {call sm.bLink.Template.base}
-            {param params: [
-                'data': [
-                    'name': 'Полный список',
-                    'url': '/search'
-                ]
-            ]/}
-        {/call}
     </div>
 {/template}
 
