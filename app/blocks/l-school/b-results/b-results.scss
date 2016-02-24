@@ -58,7 +58,7 @@
 }
 
 .b-results__content-item:first-child {
-    padding-top: 10px;
+    padding-top: 12px;
 }
 
 .b-results__content-item:last-child {
@@ -76,7 +76,8 @@
 }
 
 .b-results__olymp-item {
-    padding-bottom: 20px;
+    padding-bottom: 16px;
+    letter-spacing: -0.003em;
 }
 
 .b-results__olymp-item:last-Child,
@@ -121,11 +122,11 @@
     position: absolute;
     left: auto;
     right: 0;
-    top: 30px;
+    top: 36px;
 
     color: #b8b8b8;
-    font-size: 11px;
-    letter-spacing: 0.02em;
+    font-size: 11.5px;
+    letter-spacing: 0.04em;
     font-family: Arial, sans-serif;
 }
 
@@ -154,4 +155,10 @@
     top: -1px;
 
     width: 140px;
+}
+
+.b-results__content_olymp {
+    .b-results__item-label {
+        margin-right: 3%;
+    }
 }
