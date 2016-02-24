@@ -176,9 +176,11 @@ goog.scope(function() {
             foldListInstance.decorate(foldList);
         }
 
-        this.search_ = new sm.bSearch.Search();
-        this.addChild(this.search_);
-        this.search_.decorate(this.elements_.search);
+        if (this.elements_.search) {
+            this.search_ = new sm.bSearch.Search();
+            this.addChild(this.search_);
+            this.search_.decorate(this.elements_.search);
+        }
     };
 
     /**

@@ -48,10 +48,13 @@ body {
 .l-school__content-header-text {
     display: inline-block;
 
+    max-width: 250px;
+
     letter-spacing: 0.5px;
     text-transform: uppercase;
 
     font-size: 16px;
+    line-height: 1.2;
     font-weight: 800;
 }
 
@@ -64,6 +67,8 @@ body {
 }
 
 .l-school__name{
+    position: relative;
+
     margin-bottom: 9px;
 
     letter-spacing: 1px;
@@ -72,9 +77,9 @@ body {
 }
 
 .l-school__description{
-	font-family: 'PT Serif', serif;
-	line-height: 30px;
-    font-size: 20px;
+    position: relative;
+
+    font: 20px/30px 'PT Serif', serif;
 }
 
 .l-school__description-text{
@@ -305,6 +310,8 @@ body {
 }
 
 .l-school__section_feedback {
+    position: relative;
+
     float: right;
 
     width: 50%;
@@ -354,5 +361,105 @@ body {
 
 
 @include media-l {
+    .l-school__comments-title {
+        width: 25%;
+        padding-right: 7.5px;
+    }
 
+    .l-school__comments-content {
+        width: 75%;
+        padding-left: 22.5px;
+    }
+}
+
+@include media-m {
+    .l-school__column.l-school__column_left {
+        width: 50%;
+        padding-right: 15px;
+        margin-bottom: 55px;
+    }
+
+    .l-school__column.l-school__column_right {
+        width: 100%;
+        padding: 0;
+    }
+
+    .l-school__section_description {
+        width: 100%;
+        margin-right: 0;
+        padding: 0;
+    }
+
+    .l-school__section_feedback {
+        padding-left: 15px;
+    }
+
+    .l-school__section_map {
+        display: none;
+    }
+
+    .l-school__section_extra {
+        display: none;
+    }
+
+    .l-school__comments-title {
+        margin-bottom: 9px;
+    }
+
+    .l-school__comments-title,
+    .l-school__comments-content {
+        width: 100%;
+        padding: 0;
+    }
+
+    .l-school__content-header-text {
+        max-width: none;
+    }
+}
+
+@include media-s {
+    .l-school {
+        margin-top: 30px;
+    }
+
+    .l-school__name {
+        margin-bottom: 13px;
+
+        letter-spacing: 0;
+        font-weight: 800;
+        font-size: 22px;
+    }
+
+    .l-school__description {
+        font-size: 16px;
+        line-height: 22px;
+    }
+
+    .l-school__column.l-school__column_left {
+        width: 100%;
+        padding: 0;
+        margin-bottom: 25px;
+    }
+
+    .l-school__section_feedback {
+        width: 100%;
+        margin-bottom: 30px;
+        padding: 0;
+    }
+
+    .l-school__section_description {
+        margin-bottom: 25px;
+    }
+
+    .l-school__section_score {
+        margin-left: -30px;
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+
+    .l-school__additional-info-group,
+    .l-school__additional-info-group:last-child {
+        width: 100%;
+        padding: 0;
+    }
 }

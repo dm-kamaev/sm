@@ -41,7 +41,6 @@
  * }
  */
 {template .content autoescape="strict" kind="html"}
-    {call goog.json.serialize data="$params" /}
      <ul class="b-data-block__content">
         {foreach $rating in  $params.content}
             {call .ratingItem_}

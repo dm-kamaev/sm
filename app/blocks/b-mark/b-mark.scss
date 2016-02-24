@@ -1,3 +1,5 @@
+@import "../i-media/i-media";
+
 .b-mark {
     display: inline-block;
 
@@ -137,6 +139,12 @@
 
 .b-mark.b-mark_no-dash.b-mark_empty {
     .b-mark__mark {
+        display: none;
+    }
+}
+
+@include media-xs {
+    .b-mark.b-mark_inline .b-mark__circle {
         display: none;
     }
 }

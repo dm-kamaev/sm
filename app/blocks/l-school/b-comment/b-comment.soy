@@ -17,15 +17,21 @@
     <div class="b-comment">
 
 		{if length($params.sections)}
+			{let $middle: floor((length($params.sections) + 1) / 2) /}
 			<div class="b-comment__header">
-				{foreach $section in $params.sections}
-					{call sm.lSchool.bComment.Template.section_}
-						{param params:[
-							'name': $section.name,
-							'rating': $section.value
-						]/}
-					{/call}
-				{/foreach}
+				<div class="b-comment__rating-group">
+					{foreach $section in $params.sections}
+						{if index($section) == $middle}
+							</div><div class="b-comment__rating-group">
+						{/if}
+						{call sm.lSchool.bComment.Template.section_}
+							{param params:[
+								'name': $section.name,
+								'rating': $section.value
+							]/}
+						{/call}
+					{/foreach}
+				</div>
 			</div>
 		{/if}
 

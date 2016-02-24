@@ -2,7 +2,10 @@
 
 .i-layout_modifier_stendhal .i-layout__wrapper {
     width: 1200px;
+    min-width: 315px;
     margin: auto;
+
+    overflow: hidden;
 }
 
 
@@ -12,5 +15,11 @@
         padding: 0 40px;
 
         box-sizing: border-box;
+    }
+}
+
+@include media-s {
+    .i-layout_page_school.i-layout_modifier_stendhal .i-layout__wrapper {
+        padding: 0 30px;
     }
 }
