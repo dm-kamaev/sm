@@ -30,7 +30,7 @@
  *                addresses: list<[
  *                    title: string,
  *                    description: string,
- *                    metroStations: list<[
+ *                    metroStation: list<[
  *                        id: number,
  *                        name: string
  *                    ]>
@@ -58,6 +58,25 @@
  *        addresses: list<
  *           list<number>
  *        >,
+ *        results: [
+ *            ege: [
+ *                years: ?list<number>,
+ *                data: [
+ *                    top:  ?list<[
+ *                        label: ?string,
+ *                        value: ?string
+ *                    ]>,
+ *                    middle:  ?list<[
+ *                        label: ?string,
+ *                        value: ?string
+ *                    ]>,
+ *                    bottom:  ?list<[
+ *                        label: ?string,
+ *                        value: ?string
+ *                    ]>,
+ *                ]
+ *            ]
+ *        ]
  *        ratings: list<[
  *            name<string>,
  *            place<number>,
@@ -152,6 +171,14 @@
                 </div>
             </div>
             */
+
+            <div class="l-school__section l-school__section_grey">
+                {call sm.lSchool.bResults.Template.results}
+                    {param params: [
+                        'data': $params.data.results
+                    ]/}
+                {/call}
+            </div>
 
             <div class="l-school__section
                        l-school__section__comments">
@@ -259,7 +286,7 @@
  *                  addresses: list<[
  *                      title: string,
  *                      description: string,
- *                      metroStations: list<[
+ *                      metroStation: list<[
  *                          id: number,
  *                          name: string
  *                      ]>
@@ -361,11 +388,7 @@
     /*Address section*/
     {if $params.data.contacts}
         {let $contactHeader kind="text"}
-            {if length($params.data.contacts.phones) < 1}
-                адреса
-            {else}
-                адреса и телефоны
-            {/if}
+            контакты
         {/let}
         <div class="l-school__item-container">
             {call sm.lSchool.bDataBlockAddresses.Template.base}
@@ -665,7 +688,7 @@
                 addresses: list<[
                     title: string,
                     description: string,
-                    metroStations: list<[
+                    metroStation: list<[
                         id: number,
                         name: string
                     ]>

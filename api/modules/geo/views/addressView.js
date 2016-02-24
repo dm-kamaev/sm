@@ -59,21 +59,22 @@ addressView.stageList = function (addresses, opt_options) {
                     {
                         title: addresses[j].title,
                         description: addresses[j].description,
-                        metroStations: addresses[j].metroStations
-                      }
+                        metroStation: addresses[j].metroStations[0]
+                    }
                 );
                 addressAdded = true;
             }
         }
         if (addressAdded) {
-            stages.push(
-                {
-                    name: stagesEnum[i],
-                    addresses: temp
-                }
-            );
+            stages.push({
+                name: stagesEnum[i],
+                addresses: temp
+            });
         }
         temp = [];
+    }
+    if (stages.length == 1 && stages[0].name === 'Другие адреса') {
+        stages[0].name = 'Адреса';
     }
     return stages;
 

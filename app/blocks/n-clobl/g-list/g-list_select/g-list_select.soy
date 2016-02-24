@@ -8,7 +8,10 @@
  *             label: ?string,
  *             openerText: ?string
  *         }>,
- *         selectedItemId: ?number
+ *         selectedItemId: ?number,
+ *         config: [
+ *              color: ?string
+ *         ]
  *     }
  * }}
  * @extends cl.gList.Template
@@ -16,7 +19,7 @@
  * @doc
  */
 {template .list}
-{call .init data="all"/}
+    {call .init data="all"/}
 {/template}
 
 /**
@@ -40,7 +43,11 @@
 /**
  * Css classes
  * @override
+ * @param params ?{}
  */
 {template .additionalClasses}
     {call .rootClass/}_select
+    {if $params?.config?.color}
+        {sp}{call .rootClass/}_{$params.config.color}-color
+    {/if}
 {/template}
