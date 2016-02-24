@@ -122,7 +122,7 @@
  * }
  */
 {template .olympContent_ private="true"}
-    <div class="b-results__content">
+    <div class="b-results__content b-results__content_olymp">
         <div class="b-results__olymp-tooltip">
             Данные предоставлены Открытым Правительством
         </div>
@@ -172,7 +172,7 @@
                 {if $yearResults.top}
                     <div class="b-results__content-item">
                         <div class="b-results__item-label">
-                            Старшие классы
+                            Младшие классы
                         </div>
                         <div class="b-results__item-data">
                             {call .olympDiagram_}
@@ -200,7 +200,7 @@
                 {if $yearResults.bottom}
                     <div class="b-results__content-item">
                         <div class="b-results__item-label">
-                            Младшие классы
+                            Старшие классы
                         </div>
                         <div class="b-results__item-data">
                             {call .olympDiagram_}
@@ -229,13 +229,12 @@
                 <div class="b-results__show-more-button{sp}
                     b-results__show-more-button_active">
                     Развернуть полный список{sp}{sp}
-                    <span class="b-results__count">
+                    <span class="b-results__olymp-count">
                         {$params.data.length - $shown}
                     </span>
                 </div>
             {/if}
-            <div class="b-results__olymp-item
-                /*{$i > $shown - 1 ? ' i-utils__hidden' : ''}*/">
+            <div class="b-results__olymp-item">
                 {$params.data[$i].name} —
                 {if $params.data[$i].winners}
                     {sp} {$params.data[$i].winners}
