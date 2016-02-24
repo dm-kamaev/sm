@@ -26,6 +26,7 @@
  *     ]>,
  *     amountSchools: ?number,
  *     dataArticle : [
+ *         urlArticle: ?string,
  *         urlImg: ?string,
  *         title: ?string,
  *         subtitle: ?string
@@ -94,6 +95,7 @@
                         {/call}
                         {call sm.lSearch.bLinkArticle.Template.base}
                             {param params: [
+                                'urlArticle': $params.dataArticle.urlArticle,
                                 'urlImg': $params.dataArticle.urlImg,
                                 'title': $params.dataArticle.title,
                                 'subtitle': $params.dataArticle.subtitle

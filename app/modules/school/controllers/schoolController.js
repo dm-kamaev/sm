@@ -188,6 +188,7 @@ exports.search = async(function(req, res) {
               ],
               amountSchools: amountSchools,
               dataArticle : {
+                  urlArticle: 'http://mel.fm/2016/01/09/innovators',
                   urlImg: 'images/l-search/b-link-article/article.png',
                   title: '«Мы не знаем, что лучше для наших детей, это известно только им самим»',
                   subtitle: '10 высказываний новаторов в сфере образования и воспитания'

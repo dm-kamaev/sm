@@ -3,6 +3,7 @@
 /**
  * Link to article
  * @param params {
+ *     urlArticle: ?string,
  *     urlImg: ?string,
  *     title: ?string,
  *     subtitle: ?string
@@ -14,7 +15,7 @@
         <div class="b-link-article__header">
             Читайте на «меле»
         </div>
-        <a class="b-link-article__link" href="#">
+        <a class="b-link-article__link" href="{$params.urlArticle}" target="_blank">
             <div class="b-link-article__image b-link-article__image_hover">
                 <img src="{$params.urlImg}">
             </div>
