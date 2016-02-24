@@ -4,12 +4,13 @@
  * Select template
  * @param? params {{
  *     data: {
- *        defaultOpenerText: - string default selected item name or placeholder
- *        staticText: string - text in opener, which not changes
+ *        defaultOpenerText: string, - default selected item name or placeholder
+ *        staticText: string, - text in opener, which not changes
  *        listItems: list<[
  *            label: ?<string>,
  *            openerText: ?<string> - optional field
- *        ]>
+ *        ]>,
+ *        selectedItemId: number
  *     }
  *     config: {
  *        usePlaceholder: boolean,
@@ -29,12 +30,17 @@
  * Control
  * @param? params {{
  *     data: {
- *        defaultOpenerText: string - default selected item name or placeholder
- *        staticText: string - text in opener, which not changes
+ *         defaultOpenerText: string,
+ *         staticText: string,
+ *         listItems: list<[
+ *             label: ?<string>,
+ *             openerText: ?<string> - optional field
+ *         ]>,
+ *         selectedItemId: number
  *     }
  *     config: {
- *        usePlaceholder: boolean
- *        iconSprite: ?string
+ *         usePlaceholder: boolean
+ *         iconSprite: ?string
  *     }
  * }}
  * @override
@@ -50,6 +56,9 @@
                          {/if}">
                 {if $params?.data?.defaultOpenerText}
                     {$params?.data?.defaultOpenerText}
+                {/if}
+                {if $params?.data?.selectedItemId}
+                    {$params?.data?.listItems[$params?.data?.selectedItemId].label}
                 {/if}
             </span>
      </div>
@@ -68,10 +77,12 @@
  * List template
  * @param? params {{
  *     data: {
- *        listItems: list<string>
+ *         listItems: list<string>,
+ *         selectedItemId: number
  *     }
  *     config: {
- *       theme: ?string
+ *         theme: ?string,
+ *         color: ?string
  *     }
  * }}
  */
@@ -82,10 +93,12 @@
             'type': 'list-select',
             'renderParams': [
                 'data': [
-                    'items': $params.data.listItems
+                    'items': $params.data.listItems,
+                    'selectedItemId': $params.data.selectedItemId
                 ],
                 'config': [
-                    'theme': $params?.config?.theme
+                    'theme': $params?.config?.theme,
+                    'color': $params?.config?.color
                 ]
             ]
         ]/}
@@ -94,8 +107,18 @@
 
 /**
  * Css classes
+ * @param params ?{}
  * @override
  */
 {template .additionalClasses}
     {call .rootClass/}_select
+    {if $params?.config?.color}
+        {sp}{call .rootClass/}_{$params.config.color}-color
+    {/if}
+    {if $params?.config?.textSize}
+        {sp}{call .rootClass/}_text-{$params.config.textSize}
+    {/if}
+    {if $params?.config?.iconOffset}
+            {sp}{call .rootClass/}_{$params.config.iconOffset}-icon-offset
+        {/if}
 {/template}

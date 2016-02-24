@@ -66,6 +66,24 @@ exports.getAllByData = async(function(data) {
     }));
 });
 
+/**
+ * Get one data from table by school id
+ * @param {number} schoolId
+ * @return {Object} instance of EgeResult model
+ */
+exports.getAllBySchoolId = async(function(schoolId) {
+    return await(models.EgeResult.findAll({
+        where: {schoolId: schoolId},
+        include: [
+            {
+                model: models.Subject,
+                as: 'subject'
+            }
+        ],
+        order: [['year', 'ASC']]
+    }));
+});
+
 
 /**
  * Get one data from table by data

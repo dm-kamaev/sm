@@ -9,23 +9,28 @@ const activityView = require.main.require(
     './api/modules/school/views/activityView.js');
 const ratingView = require.main.require(
     './api/modules/school/views/ratingView.js');
+const egeResultView = require.main.require(
+    './api/modules/study/views/egeResultView.js');
+const giaResultView = require.main.require(
+    './api/modules/study/views/giaResultView.js');
+const olimpResultView = require.main.require(
+    './api/modules/study/views/olimpResultView.js');
 
 var schoolView = {};
 
 
 /**
  * @param {object} schoolInstance - school instance
+ * @param {object} results
  * @param {?array<object>} opt_popularSchools - school instances
  * @return {object}
  */
-schoolView.default = function(schoolInstance, opt_popularSchools) {
+schoolView.default = function(schoolInstance, results, opt_popularSchools) {
     addressView.transformSchoolAddress(schoolInstance);
 
     var addresses = services.department.addressesFilter(schoolInstance.addresses),
         comments = schoolInstance.commentGroup ?
-            schoolInstance.commentGroup.comments :
-            [],
-
+            schoolInstance.commentGroup.comments : [],
         score = schoolInstance.score || [0, 0, 0, 0],
         scoreCount = schoolInstance.scoreCount || [0, 0, 0, 0];
 
@@ -59,6 +64,17 @@ schoolView.default = function(schoolInstance, opt_popularSchools) {
             schoolInstance.rank, schoolInstance.rankDogm),
         score: getSections(score),
         totalScore: schoolInstance.totalScore,
+        results: {
+            ege: egeResultView.transformResults(
+                results.ege,
+                results.city
+            ),
+            gia: giaResultView.transformResults(
+                results.gia,
+                results.city
+            ),
+            olymp: olimpResultView.transformResults(results.olymp)
+        },
         reviewCount: schoolInstance.totalScore ?
             schoolInstance.reviewCount : 0
     };
@@ -216,9 +232,6 @@ var getComments = function(comments) {
     return comments
         .filter(comment => comment.text)
         .map(comment => {
-
-            console.log(comment);
-
             var sections = comment.rating ?
                 getSections(comment.rating.score) :
                 getSections([0, 0, 0, 0]);

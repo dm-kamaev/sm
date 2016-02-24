@@ -643,15 +643,12 @@ service.review = async(function(schoolId, params) {
  * @return {object}
  */
 service.rate = async(function(school, params) {
-    console.log(params.userDataId);
-    var p = {
+
+    var rt = await (models.Rating.create({
         score: params.score,
         schoolId: school.id,
         userDataId: params.userDataId
-    };
-
-    console.log(p);
-    var rt = await (models.Rating.create(p));
+    }));
     return rt;
 });
 
