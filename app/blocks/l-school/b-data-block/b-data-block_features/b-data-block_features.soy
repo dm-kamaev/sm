@@ -35,7 +35,8 @@
     <ul class="b-data-block__content">
     {foreach $feature in $params.content}
         <li class="b-data-block__item">
-            <div class="b-data-block__dash">—</div>{$feature}
+            <div class="b-data-block__dash">—</div>
+            <div class="b-data-block__text">{$feature}</div>
         </li>
     {/foreach}
 {/template}
