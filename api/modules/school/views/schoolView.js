@@ -175,7 +175,7 @@ var getEducationInterval = function(interval, type) {
             break;
 
         case 'kindergarten':
-            if (interval[0] === 0) {
+            if (interval && interval[0] === 0) {
                 res = 'При школе есть детский сад';
             }
             break;
