@@ -258,7 +258,7 @@ goog.scope(function() {
         if (event.event_.persisted) {
             window.location.reload();
         }
-    }
+    };
 
     /**
      * @param {Object} newSettings
