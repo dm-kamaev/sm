@@ -9,23 +9,28 @@ const activityView = require.main.require(
     './api/modules/school/views/activityView.js');
 const ratingView = require.main.require(
     './api/modules/school/views/ratingView.js');
+const egeResultView = require.main.require(
+    './api/modules/study/views/egeResultView.js');
+const giaResultView = require.main.require(
+    './api/modules/study/views/giaResultView.js');
+const olimpResultView = require.main.require(
+    './api/modules/study/views/olimpResultView.js');
 
 var schoolView = {};
 
 
 /**
  * @param {object} schoolInstance - school instance
+ * @param {object} results
  * @param {?array<object>} opt_popularSchools - school instances
  * @return {object}
  */
-schoolView.default = function(schoolInstance, opt_popularSchools) {
+schoolView.default = function(schoolInstance, results, opt_popularSchools) {
     addressView.transformSchoolAddress(schoolInstance);
 
     var addresses = services.department.addressesFilter(schoolInstance.addresses),
         comments = schoolInstance.commentGroup ?
-            schoolInstance.commentGroup.comments :
-            [],
-
+            schoolInstance.commentGroup.comments : [],
         score = schoolInstance.score || [0, 0, 0, 0],
         scoreCount = schoolInstance.scoreCount || [0, 0, 0, 0];
 
@@ -46,19 +51,30 @@ schoolView.default = function(schoolInstance, opt_popularSchools) {
             schoolInstance.educationInterval,
             'kindergarten'),
         social: [],
-        metroStations: services.address.getMetro(addresses),
+        // metroStations: services.address.getMetro(addresses),
         sites: schoolInstance.links ?
             getSites(schoolInstance.links) : getSites(schoolInstance.site),
         specializedClasses: getSpecializedClasses(
             schoolInstance.specializedClasses),
         activities: getActivities(schoolInstance.activites),
-        contacts: getContacts(addresses, schoolInstance.phones),
+        contacts: getContacts(schoolInstance.addresses, schoolInstance.phones),
         comments: getComments(comments),
         addresses: addressView.default(addresses),
         ratings: ratingView.ratingSchoolView(
             schoolInstance.rank, schoolInstance.rankDogm),
         score: getSections(score),
         totalScore: schoolInstance.totalScore,
+        results: {
+            ege: egeResultView.transformResults(
+                results.ege,
+                results.city
+            ),
+            gia: giaResultView.transformResults(
+                results.gia,
+                results.city
+            ),
+            olymp: olimpResultView.transformResults(results.olymp)
+        },
         reviewCount: schoolInstance.totalScore ?
             schoolInstance.reviewCount : 0
     };
@@ -81,10 +97,25 @@ schoolView.popular = function(popularSchools) {
             url: school.url,
             name: school.name,
             description: school.description || '',
-            metro: services.address.getMetro(school.addresses),
+            metro: nearestMetro(school.addresses),
             totalScore: school.totalScore
         };
     });
+};
+
+/**
+ * @param {array<object>} addresses
+ * @return {array<string>}
+ */
+var nearestMetro = function(addresses) {
+    return lodash.uniq(addresses
+        .map(address => {
+            return address.addressMetroes[0] &&
+                address.addressMetroes[0].metroStation.name
+                    .replace('метро ', '');
+        })
+        .filter(address => address)
+    );
 };
 
 /**
@@ -144,7 +175,7 @@ var getEducationInterval = function(interval, type) {
             break;
 
         case 'kindergarten':
-            if (interval[0] === 0) {
+            if (interval && interval[0] === 0) {
                 res = 'При школе есть детский сад';
             }
             break;
@@ -196,9 +227,9 @@ var getContacts = function(addresses, phones) {
  */
 var getComments = function(comments) {
     var typeConvert = {
-        'Parent': 'родитель',
-        'Graduate': 'выпускник',
-        'Scholar': 'ученик'
+        'Parent': 'Родитель',
+        'Graduate': 'Выпускник',
+        'Scholar': 'Ученик'
     };
 
     return comments
@@ -209,7 +240,7 @@ var getComments = function(comments) {
                 getSections([0, 0, 0, 0]);
             return {
                 author: '',
-                rank: typeConvert[comment.userType],
+                rank: typeConvert[comment.userData.userType],
                 text: comment.text,
                 sections: sections
             };

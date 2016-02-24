@@ -59,7 +59,10 @@
 		<div class="b-comment__footer">
 			<img class="b-comment__avatar" align="top" src="/images/l-school/b-comment/person.png">
             <div class="b-comment__author">
-                {$params.author}, {$params.rank}
+                {if $params?.author}
+                    {$params.author},
+                {/if}{sp}
+                {$params.rank}
             </div>
 		</div>
     </div>
