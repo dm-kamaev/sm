@@ -108,11 +108,14 @@ schoolView.popular = function(popularSchools) {
  * @return {array<string>}
  */
 var nearestMetro = function(addresses) {
-    return lodash.uniq(addresses.map(address => {
-        return address.addressMetroes[0] &&
-            address.addressMetroes[0].metroStation.name
-                .replace('метро ', '');
-    }));
+    return lodash.uniq(addresses
+        .map(address => {
+            return address.addressMetroes[0] &&
+                address.addressMetroes[0].metroStation.name
+                    .replace('метро ', '');
+        })
+        .filter(address => address)
+    );
 };
 
 /**
@@ -224,9 +227,9 @@ var getContacts = function(addresses, phones) {
  */
 var getComments = function(comments) {
     var typeConvert = {
-        'Parent': 'родитель',
-        'Graduate': 'выпускник',
-        'Scholar': 'ученик'
+        'Parent': 'Родитель',
+        'Graduate': 'Выпускник',
+        'Scholar': 'Ученик'
     };
 
     return comments
@@ -237,7 +240,7 @@ var getComments = function(comments) {
                 getSections([0, 0, 0, 0]);
             return {
                 author: '',
-                rank: typeConvert[comment.userType],
+                rank: typeConvert[comment.userData.userType],
                 text: comment.text,
                 sections: sections
             };

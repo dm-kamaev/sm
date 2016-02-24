@@ -60,6 +60,8 @@ exports.create = async(function(req, res) {
     try {
         var groupID = req.params.id;
         var params = req.body;
+        var userData = await(services.userData.create(params));
+        params.userDataId = userData.id;
         result = JSON.stringify(
             await(services.comment.create(groupID, params))
             );

@@ -566,6 +566,7 @@ goog.scope(function() {
                 'properties': {
                     'id': data.id,
                     'name': data.name,
+                    'url': data.url,
                     'address': {
                         'name': address.name,
                         'stages': address.stages

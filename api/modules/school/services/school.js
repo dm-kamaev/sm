@@ -525,53 +525,50 @@ service.findBySite = async(function(site) {
  */
 service.viewOne = function(id) {
     var include =
-        [
-            {
-                model: models.Address,
-                as: 'addresses',
-                include: [
-                    {
-                        model: models.Department,
-                        as: 'departments'
-                    },
-                    {
-                        model: models.AddressMetro,
-                        as: 'addressMetroes',
-                        include: [
-                            {
-                                model: models.Metro,
-                                as: 'metroStation'
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                model: models.Rating,
-                as: 'ratings'
-            },
-            {
-                model: models.CommentGroup,
-                as: 'commentGroup',
+        [{
+            model: models.Address,
+            as: 'addresses',
+            include: [
+                {
+                    model: models.Department,
+                    as: 'departments'
+                },
+                {
+                    model: models.AddressMetro,
+                    as: 'addressMetroes',
+                    include: [
+                        {
+                            model: models.Metro,
+                            as: 'metroStation'
+                        }
+                    ]
+                }
+            ]
+        }, {
+            model: models.Rating,
+            as: 'ratings'
+        }, {
+            model: models.CommentGroup,
+            as: 'commentGroup',
+            include: [{
+                model: models.Comment,
+                as: 'comments',
                 include: [{
-                    model: models.Comment,
-                    as: 'comments',
-                    include: [{
-                        model: models.Rating,
-                        as: 'rating'
-                    }]
+                    model: models.Rating,
+                    as: 'rating'
+                }, {
+                    model: models.UserData,
+                    as: 'userData'
                 }]
-            },
-            {
-                model: models.Activity,
-                as: 'activites',
-                attributes: [
-                    'profile',
-                    'type'
-                ]
-            }
-        ];
-
+            }]
+        }, {
+            model: models.Activity,
+            as: 'activites',
+            attributes: [
+                'profile',
+                'type'
+            ]
+        }];
     var school = await(models.School.findOne({
         where: {id: id},
         include: include,
@@ -597,7 +594,7 @@ service.viewOne = function(id) {
 
 /**
  * @param {number} schoolId
- * @raram {object} prarams
+ * @param {object} params
  * @param {array<number> || null} params.score
  * @param {string || null} params.text
  * @return {object{bool ratingCreated, bool commentCreated}}
@@ -606,7 +603,6 @@ service.review = async(function(schoolId, params) {
     if (!params.text && !params.score)
         throw new Error('Expected comment text or rating');
     try {
-        console.log(params);
         var answer = {
             ratingCreated: false,
             commentCreated: false
@@ -614,6 +610,16 @@ service.review = async(function(schoolId, params) {
         var school = await(models.School.findOne({
             where: {id: schoolId}
         }));
+
+        var userData = {
+            userType: params.userType,
+            yearGraduate: params.yearGraduate,
+            classType: params.classType
+        };
+
+        var userDataInstance = await(services.userData.create(userData));
+
+        params.userDataId = userDataInstance.id;
 
         if (params.score) {
             params.rating = await(service.rate(school, params));
@@ -637,9 +643,11 @@ service.review = async(function(schoolId, params) {
  * @return {object}
  */
 service.rate = async(function(school, params) {
+
     var rt = await (models.Rating.create({
         score: params.score,
-        schoolId: school.id
+        schoolId: school.id,
+        userDataId: params.userDataId
     }));
     return rt;
 });
