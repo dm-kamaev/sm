@@ -4,12 +4,17 @@
  * Icon template
  * @param? params {{
  *     type: ?string,
- *     customClasses: ?string
+ *     customClasses: ?string,
+ *     verticalAlign: ?string
  * }}
  */
 {template .icon}
     <div class="b-icon
                 b-icon_img_{$params?.type ?: ''}{sp}
-                {$params?.customClasses ?: ''}">
+                {$params?.customClasses ?: ''}
+                {$params?.verticalAlign ?
+                    ' b-icon_' + $params.verticalAlign + '-align' :
+                    ''}
+                ">
     </div>
 {/template}
