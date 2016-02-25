@@ -1,3 +1,5 @@
+@import "../../i-media/i-media";
+
 .b-score_school-list {
     position: relative;
 
@@ -22,7 +24,7 @@
 .b-score__other-marks {
     position: absolute;
     z-index: 10;
-    right: 2px;
+    right: -14px;
 
     width: 150px;
     margin-top: 15px;
@@ -84,4 +86,10 @@
 	.b-score__current-criterion-value {
 		cursor: pointer;
 	}
+}
+
+@include media-s {
+    .b-score__current-criterion-name {
+        display: none;
+    }
 }

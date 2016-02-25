@@ -1,3 +1,5 @@
+@import "../../i-media/i-media";
+
 .b-school-list-item {
     display: inline-block;
 
@@ -40,7 +42,7 @@
 .b-school-list-item__name {
     display: inline-block;
     height: 100%;
-    padding-right: 80px;
+    padding-right: 175px;
 
     color: black;
 
@@ -99,4 +101,10 @@
     color: #000;
 
     font: 16px/22px 'PT Serif', Arial, sans-serif;
+}
+
+@include media-s {
+    .b-school-list-item__name {
+        padding-right: 65px;
+    }
 }
