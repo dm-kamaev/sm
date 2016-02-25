@@ -24,12 +24,27 @@
 }
 
 .b-feedback__column {
-	display: inline-block;
-	
-	width: 47%;
+	position: relative;
 
-	&:nth-child(odd) {
-		margin-right: 5%;
+	display: inline-block;
+
+	box-sizing: border-box;
+	width: 50%;
+	padding-right: 15px;
+
+	vertical-align: top;
+
+	&_score {
+		margin-bottom: 9px;
+
+		&:nth-child(3), &:nth-child(4) {
+			margin-bottom: 0px;
+		}
+	}
+
+	&:nth-child(even) {
+		padding-right: 0;
+		padding-left: 15px;
 	}
 }
 
@@ -44,13 +59,19 @@
 	}
 
 	&_header {
-		margin-right: 18px;
+		position: absolute;
+		top: 50%;
+		left: 0;
+
+		margin-top: -10px;
+		margin-right: 0;
 
 		text-transform: uppercase;
 
 		letter-spacing: 0.06em;
 
 		font: 800 16px 'Proxima', Arial, sans-serif;
+		line-height: 41px;
 	}
 }
 .b-feedback__item {
@@ -85,6 +106,7 @@
 
 	font-family: 'PT Serif', serif;
 	font-size: 16px;
+
 	line-height: normal;
 
 	&_class-type {
@@ -94,7 +116,13 @@
 	}
 
 	&_user-type {
-		width: calc(100% - 95px);
+		box-sizing: border-box;
+
+		left: 0px;
+
+		padding-left: 95px;
+
+		width: 100%;
 	}
 
 	&_graduation-year {
@@ -126,12 +154,6 @@
     text-transform: uppercase;
 
     font: 800 16px 'Proxima', Arial, sans-serif;
-}
-
-.b-feedback__scores {
-    margin: 0 0 24px;
-
-    font-size: 0;
 }
 
 .b-feedback__title-score {
@@ -213,6 +235,10 @@
 		margin-bottom: 30px;
 	}
 
+	&_score {
+		margin-bottom: 35px;
+	}
+
 	&:last-child {
 		margin-bottom: 0;
 	}
@@ -240,6 +266,8 @@
 	.b-feedback__control {
 		&_user-type {
 			width: 100%;
+
+			padding-left: 0;
 		}
 
 		&_class-type {
@@ -262,6 +290,12 @@
 
 		letter-spacing: normal;
 	}
+
+	.b-feedback__column {
+		&_score {
+			margin-bottom: 18px;
+		}
+	}
 }
 
 @media screen and (max-width: 569px) {
@@ -271,6 +305,13 @@
 		width: 100%;
 
 		margin-right: 0;
+		margin-bottom: 20px;
+
+		padding: 0;
+
+		&:nth-child(even) {
+			padding: 0;
+		}
 	}
 
 	.b-feedback__content {
@@ -287,15 +328,11 @@
 		}
 
 		&_textarea {
-			margin-bottom: 25px;
+			margin-bottom: 23px;
 		}
 	}
 
 	.b-feedback__control {
-		&_user-type {
-			margin-bottom: 20px;
-		}
-
 		&_class-type {
 			width: 80px;
 		}
@@ -304,7 +341,11 @@
 	.b-feedback__title-score {
 		display: inline-block;
 	}
-	
+
+	.b-feedback__title-scores {
+		margin-bottom: 11px;
+	}
+
 	.b-feedback__score {
 		width: 100%;
 	}

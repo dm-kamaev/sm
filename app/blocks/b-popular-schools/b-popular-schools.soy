@@ -10,14 +10,21 @@
  *         description: ?string,
  *         metro: ?list<string>,
  *         totalScore: ?number
- *     ]>
+ *     ]>,
+ *     config: ?{
+ *         popularSchool: {
+ *             customClasses: ?string
+ *         }
+ *     }
  * }
  */
 {template .base autoescape="strict" kind="html"}
     <div class="b-popular-schools">
 		    <div class="b-popular-schools__title">популярные школы</div>
         {foreach $school in $params?.popularSchools}
-            <a class="b-popular-schools__school-link" href="/school/{$school.url}">
+            <a class="b-popular-schools__school-link{sp}
+                      {$params?.config?.popularSchool?.customClasses ?: ''}"
+               href="/school/{$school.url}">
                 <div class="b-popular-schools__school
                         {if isLast($school)}{sp}b-popular-schools__school_last{/if}">
                     <div class="b-popular-schools__school-rating">
