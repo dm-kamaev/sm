@@ -41,34 +41,24 @@
 {template .content autoescape="strict" kind="html"}
      <ul class="b-data-block__content">
         {if $params.content.classes != ''}
-            <li class="b-data-block__item">
-                {$params.content.classes}
-            </li>
+            {$params.content.classes}
         {/if}
 
         {if $params.content.kindergarten != ''}
-            <li class="b-data-block__item">
-                {$params.content.kindergarten}
-            </li>
+            ,{sp}{$params.content.kindergarten}
         {/if}
 
         {if $params.content.extendedDayCost != ''}
-            <li class="b-data-block__item">
-                {$params.content.extendedDayCost}
-            </li>
+            ,{sp}{$params.content.extendedDayCost}
         {/if}
 
         {if $params.content.dressCode == true}
-            <li class="b-data-block__item">
-                Школьная форма обязательна
-            </li>
+            ,{sp}школьная форма обязательна
         {/if}
 
         {if $params.content.directorName != ''}
-            <li class="b-data-block__item">
-                Директор{sp}&mdash;{sp}
-                {$params.content.directorName}
-            </li>
+            .{sp}Директор{sp}&mdash;{sp}
+            {$params.content.directorName}
         {/if}
     </ul>
 {/template}

@@ -239,6 +239,11 @@
                 </a>
             {/if}
         </div>
+
+        // A necessary measure due to the adaptability
+        {call .extra_ data="all"}
+            {param clone: true /}
+        {/call}
     </div>
 {/template}
 
@@ -310,17 +315,19 @@
  *         dressCode: bool
  *     }
  * }}
+ * @param clone {boolean}
  */
 {template .extra_ autoescape="strict" kind="html"}
-    <div class="l-school__section l-school__section_extra">
+    <div class="l-school__section l-school__section_extra{sp}
+                {$clone ? 'l-school__section l-school__section_extra_clone' : ''}">
         {call  sm.lSchool.bDataBlockInformation.Template.base}
             {param  params: [
-                'content': [
-                    'classes': $params.data.classes,
-                    'kindergarten': $params.data.kindergarten,
-                    'extendedDayCost': $params.data.extendedDayCost,
-                    'dressCode': $params.data.dressCode,
-                    'directorName': $params.data.directorName
+                    'content': [
+                        'classes': $params.data.classes,
+                        'kindergarten': $params.data.kindergarten,
+                        'extendedDayCost': $params.data.extendedDayCost,
+                        'dressCode': $params.data.dressCode,
+                        'directorName': $params.data.directorName
                     ]
                 ]
             /}

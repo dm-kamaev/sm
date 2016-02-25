@@ -357,7 +357,7 @@ body {
 }
 
 .l-school__section_map {
-    margin-bottom: 55px;
+    margin-bottom: 30px;
 }
 
 .l-school__additional-info-group {
@@ -396,6 +396,12 @@ body {
 .l-school__section_comments {
     margin-bottom: 40px;
 }
+
+
+.l-school__section_extra_clone {
+    display: none;
+}
+
 
 .l-school__section_popular-schools {
     overflow: hidden;
@@ -473,6 +479,12 @@ body {
         display: none;
     }
 
+    .l-school__section_extra_clone {
+        display: block;
+
+        margin-top: 30px;
+    }
+
     .l-school__comments-title {
         margin-bottom: 9px;
     }
@@ -524,6 +536,10 @@ body {
         width: 100%;
         margin-bottom: 30px;
         padding: 0;
+    }
+
+    .l-school__section_extra_clone {
+        display: none;
     }
 
     .l-school__section_description {
