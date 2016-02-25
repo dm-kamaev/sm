@@ -578,22 +578,83 @@ var getName = function (name) {
  * @return {array<object>}
  */
 schoolView.listMapPoints = function(schools) {
-    return schools
-        .map(school => {
-            school = school.dataValues;
-            return {
-                id: school.id,
-                url: school.url,
-                name: school.name,
-                totalScore: school.totalScore || 0,
+    return schools.reduce((prev, curr) => {
+        curr = curr.dataValues;
+
+        prev = prev.length > 0 ? prev : [{
+            id: curr.id,
+            url: curr.url,
+            name: curr.name,
+            description: curr.description,
+            totalScore: curr.totalScore || 0,
+            addresses: [{
+                id: curr.addressId,
+                lat: curr.coords[0],
+                lng: curr.coords[1],
+                name: curr.adrName,
+                stages: [curr.stage]
+            }]
+        }];
+
+        var concated,
+            added,
+            cond;
+
+        for (var j = prev.length - 1, item; j >= 0; j--) {
+            item = prev[j];
+            if (curr.id == item.id) {
+                for (var i = item.addresses.length - 1, address; i >= 0; i--) {
+                    address = item.addresses[i];
+
+                    if (address.id == curr.addressId) {
+                        concated = true;
+                        cond = !(
+                            address.stages[0] == curr.stage ||
+                            address.stages[1] == curr.stage
+                        );
+
+                        if (cond) {
+                            address.stages.push(curr.stage);
+                        }
+
+                        break;
+                    }
+                }
+
+                if (!concated) {
+                    item.addresses.push({
+                        id: curr.addressId,
+                        lat: curr.coords[0],
+                        lng: curr.coords[1],
+                        name: curr.adrName,
+                        stages: [curr.stage]
+                    })
+                }
+
+                added = true;
+                break;
+            }
+        }
+
+        if (!added) {
+            prev.push({
+                id: curr.id,
+                url: curr.url,
+                name: curr.name,
+                description: curr.description,
+                totalScore: curr.totalScore || 0,
                 addresses: [{
-                    lat: school.coords[0],
-                    lng: school.coords[1],
-                    name: school.adrName,
-                    stage: [school.stage]
+                    id: curr.addressId,
+                    lat: curr.coords[0],
+                    lng: curr.coords[1],
+                    name: curr.adrName,
+                    stages: [curr.stage]
                 }]
-            };
-        });
+             })
+        }
+
+        return prev;
+    }, []);
 };
 
 /**

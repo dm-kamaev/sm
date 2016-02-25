@@ -181,20 +181,21 @@ exports.setArea = async ((area, address) => {
         }
     }));
 
-    addressInstance.forEach( (item) => {
+    addressInstance.forEach((item) => {
         item.setArea(areaInstance);
-    } );
+    });
 });
 
 
 exports.listMapPoints = async (function() {
     var sqlQuery = "SELECT school.id, school.name, school.url, " +
-        "school.total_score AS \"totalScore\", address.name AS \"adrName\"," +
+        "school.total_score AS \"totalScore\", address.id AS \"addressId\", " +
+        "address.name AS \"adrName\", school.description, " +
         "address.coords, department.stage FROM school " +
         "INNER JOIN address ON school.id = address.school_id " +
         "INNER JOIN department ON address.id = department.address_id " +
         "WHERE department.stage IN ('Основное и среднее', " +
-        "'Начальное образование')",
+        "'Начальное образование') ORDER BY school.id",
         schools = sequelize.query(sqlQuery, { model: models.School });
 
         return schools;
