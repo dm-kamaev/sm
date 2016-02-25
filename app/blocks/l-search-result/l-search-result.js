@@ -256,7 +256,7 @@ goog.scope(function() {
      */
     SearchResult.prototype.onShowPage_ = function(event) {
         if (event.event_.persisted) {
-            window.location.reload();
+            this.schoolList_.reset();
         }
     };
 
