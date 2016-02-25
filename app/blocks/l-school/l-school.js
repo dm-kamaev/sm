@@ -14,12 +14,12 @@ goog.require('sm.lSchool.bFeedbackModal.FeedbackModal');
 goog.require('sm.lSchool.bMap.Map');
 goog.require('sm.lSchool.bResults.Results');
 
+
 /**
  * School page
  * @param {Object=} opt_params
  * @constructor
  */
-
 sm.lSchool.School = function(opt_params) {
     goog.base(this);
 
