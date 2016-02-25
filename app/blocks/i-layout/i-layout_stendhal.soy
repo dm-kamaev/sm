@@ -1,6 +1,14 @@
 {namespace sm.iLayout.Template}
 
 /**
+ * @typedef {object} sm.iLayout.Template.Params.Config
+ * @property {?string} modifier
+ * @property {?string} page
+ * @property {?string} staticVersion
+ * @property {?number} year
+ */
+
+/**
  * Base landing for School Market pages
  * @param? params {{
  *     data: {
@@ -9,7 +17,7 @@
  *         header: sm.bHeader.Params,
  *         landingScript: string
  *     },
- *     config: ?cl.iLayout.Template.Params.Config
+ *     config: ?sm.iLayout.Template.Params.Config
  * }}
  * @extends cl.iLayout.Template
  * @constructor
@@ -75,7 +83,7 @@
         <div class="i-layout__content">
             {$params.data.content}
         </div>
-        {call .footer_ /}
+        {call .footer_ data="all" /}
     </div>
 {/template}
 
@@ -94,9 +102,20 @@
 
 /**
  * Footer
+ * @param? params {
+ *     config: ?{
+ *         year: ?number
+ *     }
+ * }
  */
 {template .footer_ autoescape="strict" kind="html"}
     <div class="i-layout__footer">
-        {call sm.lSchool.bFooter.Template.base /}
+        {call sm.lSchool.bFooter.Template.base}
+            {param params: [
+                'data': [
+                    'year': $params?.config?.year
+                ]
+            ] /}
+        {/call}
     </div>
 {/template}

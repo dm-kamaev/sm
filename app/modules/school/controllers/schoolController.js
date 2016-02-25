@@ -130,7 +130,7 @@ exports.view = async (function(req, res) {
 
             res.header('Content-Type', 'text/html; charset=utf-8');
             res.end(
-                soy.render('sm.lSchool.NewTemplate.school', {
+                soy.render('sm.lSchool.Template.school', {
                 params: {
                     data:
                         schoolView.default(school, results, popularSchools),

@@ -194,7 +194,6 @@ body {
 
 .l-school__section_comments {
     display: inline-block;
-    margin-top: 24px;
 
     width: 100%;
     min-height: 150px;
@@ -346,6 +345,25 @@ body {
     }
 }
 
+.l-school__section_results {
+    position: relative;
+
+    margin-bottom: 60px;
+
+    &:before {
+        position: absolute;
+        top: 0;
+        right: -100%;
+        bottom: 0;
+        left: -100%;
+
+        display: block;
+
+        content: '';
+        background: #f7f6f1;
+    }
+}
+
 .l-school__section_comments {
     margin-bottom: 40px;
 }
@@ -366,7 +384,9 @@ body {
 
 
 @include media-xl {
-
+    .l-school__section_results {
+        display: none;
+    }
 }
 
 
@@ -478,6 +498,8 @@ body {
     }
 
     .l-school__section_score {
+        overflow: hidden;
+
         margin-left: -30px;
         padding-left: 30px;
         padding-right: 30px;
