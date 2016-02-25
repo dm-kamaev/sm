@@ -6,6 +6,7 @@ goog.require('goog.soy');
 goog.require('goog.ui.Component');
 goog.require('sm.bRating.Rating');
 goog.require('sm.bSearch.Search');
+goog.require('sm.iEvercookie.Evercookie');
 goog.require('sm.lSchool.bComment.Comment');
 goog.require('sm.lSchool.bComments.Comments');
 goog.require('sm.lSchool.bDataBlockFoldList.FoldList');
@@ -42,6 +43,12 @@ sm.lSchool.School = function(opt_params) {
      * @private
      */
     this.search_ = null;
+
+    /**
+     * @private
+     * @type {object} Evercookie instance
+     */
+    this.evercookie_ = sm.iEvercookie.Evercookie.getInstance();
 };
 goog.inherits(sm.lSchool.School, goog.ui.Component);
 
@@ -90,6 +97,8 @@ goog.scope(function() {
      */
     School.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
+
+        this.evercookie_.getClientId();
 
         this.initElements_(element);
 
