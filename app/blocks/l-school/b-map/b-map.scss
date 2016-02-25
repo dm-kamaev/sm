@@ -9,7 +9,6 @@
 
     width: 240px;
     height: auto;
-    min-height: 100px;
 
     background-color: #ffffff;
     font-size: 13px;
@@ -43,7 +42,7 @@
     text-decoration: none;
 }
 
-.b-map__balloon-description {
+.b-map__balloon-content {
     display: inline-block;
 
     box-sizing: border-box;
@@ -52,7 +51,7 @@
     padding: 0 20px 20px;
 }
 
-.b-map__description-item {
+.b-map__content-item {
     margin-top: -8px;
     margin-bottom: 8px;
 
@@ -60,4 +59,10 @@
     font-size: 14px;
     line-height: 20px;
     color: #666666;
+}
+
+.b-map__content-item_school-descr {
+    margin-top: 5px;
+
+    color: #000000;
 }
