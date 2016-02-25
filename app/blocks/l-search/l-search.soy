@@ -80,28 +80,28 @@
                         ]/}
                     {/call}
                     */
-                    <div class="l-search__information-links">
-                        <div class="l-search__popular-schools">
-                            {call sm.bPopularSchools.Template.base}
-                                {param params: [
-                                    'popularSchools': $params.popularSchools
-                                ]/}
-                            {/call}
-                        </div>
-                        {call sm.lSearch.Template.informationSchools_}
-                            {param params: [
-                                'amountSchools': $params.amountSchools
-                            ]/}
-                        {/call}
-                        {call sm.lSearch.bLinkArticle.Template.base}
-                            {param params: [
-                                'urlArticle': $params.dataArticle.urlArticle,
-                                'urlImg': $params.dataArticle.urlImg,
-                                'title': $params.dataArticle.title,
-                                'subtitle': $params.dataArticle.subtitle
-                            ]/}
-                        {/call}
-                    </div>
+                    // <div class="l-search__information-links">
+                    //     <div class="l-search__popular-schools">
+                    //         {call sm.bPopularSchools.Template.base}
+                    //             {param params: [
+                    //                 'popularSchools': $params.popularSchools
+                    //             ]/}
+                    //         {/call}
+                    //     </div>
+                    //     {call sm.lSearch.Template.informationSchools_}
+                    //         {param params: [
+                    //             'amountSchools': $params.amountSchools
+                    //         ]/}
+                    //     {/call}
+                    //     {call sm.lSearch.bLinkArticle.Template.base}
+                    //         {param params: [
+                    //             'urlArticle': $params.dataArticle.urlArticle,
+                    //             'urlImg': $params.dataArticle.urlImg,
+                    //             'title': $params.dataArticle.title,
+                    //             'subtitle': $params.dataArticle.subtitle
+                    //         ]/}
+                    //     {/call}
+                    // </div>
                 </div>
                 // <div class="l-search__footer">
                 //     <div class="l-search__horisontal-line"></div>
@@ -179,8 +179,8 @@
  * }
  */
 {template .search_ autoescape="strict" kind="html" private="true"}
-    <div class="l-search__top-menu">
-        <div class="l-search__top-menu-wrap">
+    <div class="l-search__top-menu-wrap">
+        <div class="l-search__top-menu">
             <div class="l-search__left-text">Что вы ищете?</div>
             <div class="l-search__search">
                 <div class="l-search__search-field">
@@ -223,23 +223,21 @@
                     </span>
                 </div>*/
             </div>
-            <div class="l-search__button-wrap">
-                {call sm.lSearch.Template.button_}
+        <div class="l-search__button-wrap">
+            {call sm.lSearch.Template.button_}
+                {param params: [
+                    'text': 'Найти школу',
+                    'theme': 'search'
+                ]/}
+            {/call}
+            {call sm.bLink.Template.base}
                     {param params: [
-                        'mainText': 'Найти',
-                        'desctiptionText': 'школу',
-                        'theme': 'search'
+                        'data': [
+                            'name': 'Расширенный поиск',
+                            'url': '/search'
+                        ]
                     ]/}
-                {/call}
-                {call sm.bLink.Template.base}
-                        {param params: [
-                            'data': [
-                                'name': 'Расширенный поиск',
-                                'url': '/search'
-                            ]
-                        ]/}
-                {/call}
-            </div>
+            {/call}
         </div>
     </div>
 {/template}
@@ -325,18 +323,14 @@
 /**
  * Button Template
  * @param? params {
- *     mainText: ?string,
- *     desctiptionText: ?string,
+ *     text: ?string,
  *     theme: string
  * }
  */
 {template .button_ autoescape="strict" kind="html" private="true"}
     <div class="l-search__button l-search__button_{$params.theme}">
         <span class="l-search__button-text">
-            {$params.mainText}
-            <span class="l-search__button-text-desctiption">
-                {sp}{$params.desctiptionText}
-            </span>
+            {$params.text}
         </span>
     </div>
 {/template}

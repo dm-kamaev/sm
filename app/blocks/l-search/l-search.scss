@@ -24,12 +24,11 @@
     left: 36px;
 
     display: inline-block;
+    overflow: hidden;
 
     width: 55%;
     max-width: 512px;
     height: 100%;
-
-    overflow: hidden;
 }
 
 .l-search__header-image {
@@ -50,6 +49,7 @@
 
     width: 45%;
     padding-top: 40px;
+
     vertical-align: top;
 }
 
@@ -114,14 +114,14 @@
     margin-left: 18px;
 }
 
-.l-search__top-menu {
+.l-search__top-menu-wrap {
     height: 155px;
     margin-bottom: 38px;
 
     background-color: #f4f4ec;
 }
 
-.l-search__top-menu-wrap {
+.l-search__top-menu {
     position: relative;
 
     max-width: 1200px;
@@ -130,10 +130,14 @@
 }
 
 .l-search__left-text {
-    position: absolute;
-    left: 0;
-    top: 54px;
+    display: inline-block;
 
+    box-sizing: border-box;
+    width: 16.67%;
+    margin-top: 14px;
+    padding-right: 30px;
+
+    vertical-align: top;
     letter-spacing: 0.06em;
     text-transform: uppercase;
 
@@ -142,11 +146,16 @@
 }
 
 .l-search__search {
-    display: block;
+    // display: block;
+    display: inline-block;
 
-    width: 690px;
-    margin-right: 308px;
-    margin-left: 206px;
+    box-sizing: border-box;
+    width: 83.33%;
+    padding-right: 307px;
+
+    // width: auto;
+    // margin-right: 308px;
+    // margin-left: 206px;
 }
 
 .l-search__search-field {
@@ -170,15 +179,28 @@
 }
 
 .l-search__button-wrap {
+    // display: inline-block;
+    // float: right;
     position: absolute;
     right: 2px;
     top: 40px;
 
+    width: 275px;
+
     text-align: center;
+    vertical-align: top;
+
+    &:after {
+        display: block;
+        clear: both;
+
+        content: '';
+    }
 }
 
 .l-search__button {
     box-sizing: border-box;
+    width: 100%;
     height: 47px;
     margin-bottom: 14px;
     padding-top: 12px;
@@ -195,10 +217,6 @@
 
 .l-search__button_content {
     width: 100%;
-}
-
-.l-search__button_search {
-    width: 275px;
 }
 
 .l-search__button-text {
@@ -299,9 +317,8 @@
 @media screen and (max-width: 1280px) // for desktop and tablet 1260
 {
     .l-search__header {
-        padding: 0 40px;
-
         box-sizing: border-box;
+        padding: 0 40px;
     }
 
     .l-search__header-wrap {
@@ -315,14 +332,30 @@
     .l-search__title {
         margin-bottom: 27px;
     }
-
+    
     .l-search__top-menu-wrap {
-        max-width: 893px;
+        box-sizing: border-box;
+        padding: 0 40px;
     }
 
-    .l-search__search  {
-        width: 379px;
+    .l-search__top-menu {
+        width: 100%;
     }
+
+    // .l-search__left-text {
+    //     width: 22.9%;
+    //     padding-right: 30px;
+    //     box-sizing: border-box;
+    // }
+    // .l-search__search-wrap {
+    //     margin-right: 308px;
+    // }
+
+    // .l-search__search  {
+    //     // width: auto;
+        
+    //     width: 77.1%;
+    // }
 
     .l-search__information-links {
         max-width: 893px;
@@ -369,25 +402,35 @@
         display: none;
     }
 
-    .l-search__top-menu-wrap {
-        max-width: 585px;
-    }
-
     .l-search__left-text {
         display: none;
     }
 
     .l-search__search {
-        margin-left: 0;
+        width: 66.66%;
+        padding-right: 10px;
     }
 
-    .l-search__button {
-        width: 175px;
-    }
+    .l-search__button-wrap {
+        position: static;
+        display: inline-block;
 
-    .l-search__button-text-desctiption {
-        display: none;
+        box-sizing: border-box;
+        width: 33.33%;
+        padding-left: 20px;
     }
+    
+    // .l-search__button {
+    //     width: 100%;
+    // }
+
+    // .l-search__search {
+    //     margin-left: 0;
+    // }
+
+    // .l-search__button {
+    //     width: 175px;
+    // }
 
     .l-search__information-links {
         max-width: 585px;
@@ -419,17 +462,12 @@ screen and (max-width: 600px) // for desktop
     }
 
     .l-search__top-menu-wrap {
-        width: 260px;
+        padding: 0 30px;
     }
 
     .l-search__search {
-        width: 260px;
-        margin-right: auto;
-        margin-left: auto;
-    }
-
-    .l-search__search-links {
-        width: 260px;
+        width: 100%;
+        padding-right: 0;
     }
 
     .l-search__button-wrap {
