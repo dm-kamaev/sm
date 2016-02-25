@@ -1,11 +1,17 @@
 {namespace sm.lSchool.bFooter.Template}
+
 /**
 * base footer template
+* @param? params {
+*     data: ?{
+*         year: ?number
+*     }
+* }
 */
 {template .base autoescape="strict" kind="html"}
     <div class="b-schools-footer">
         <div class="b-schools-footer__left-block">
-            <div class="b-schools-footer__link">© Мел, 2015</div>
+            <div class="b-schools-footer__link">© Мел, {$params?.data?.year ?: 2016}</div>
             //TODO: uncomment
             /*
             <a href="#" class="b-schools-footer__link">О проекте</a>

@@ -1,9 +1,13 @@
-.b-schools-footer{
-    padding: 30px 0 17px;
-    box-sizing: border-box;
+.b-schools-footer {
     width:100%;
-    font-family: 'Roboto';
+    padding: 30px 0 17px;
+    margin-bottom: 30px;
+
     text-align: left;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+
+    font-family: 'Roboto';
 }
 
 .b-schools-footer__left-block{
