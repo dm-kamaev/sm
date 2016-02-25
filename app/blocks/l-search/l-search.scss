@@ -14,30 +14,43 @@
 }
 
 .l-search__header-wrap {
-    position: relative;
-
     max-width: 1200px;
     height: 100%;
     margin: 0 auto;
 }
 
+.l-search__header-image-wrap {
+    position: relative;
+    left: 36px;
+
+    display: inline-block;
+
+    width: 55%;
+    max-width: 512px;
+    height: 100%;
+
+    overflow: hidden;
+}
+
 .l-search__header-image {
     position: absolute;
-    top: 0;
-    right: 110px;
+    bottom: -28px;
 
-    width: 512px;
+    width: 100%;
     height: 100%;
+    margin: 0 auto;
 
     background-image: url(images/l-search/header-banner.png);
     background-repeat: no-repeat;
-    background-position: 0 28px;
-    background-size: 512px;
+    background-size: 100%;
 }
 
 .l-search__header-content {
-    max-width: 570px;
+    display: inline-block;
+
+    width: 45%;
     padding-top: 40px;
+    vertical-align: top;
 }
 
 .l-search__geoposition {
@@ -283,18 +296,19 @@
     margin-bottom: 30px;
 }
 
-@media screen and (max-width: 1260px) // for desktop and tablet
+@media screen and (max-width: 1280px) // for desktop and tablet 1260
 {
-    .l-search__header-wrap {
-        max-width: 893px;
+    .l-search__header {
+        padding: 0 40px;
+
+        box-sizing: border-box;
     }
 
-    .l-search__header-image {
-        right: -13px;
+    .l-search__header-wrap {
+        width: 100%;
     }
 
     .l-search__header-content {
-        max-width: 390px;
         padding-top: 29px;
     }
 
@@ -327,27 +341,27 @@
     }
 }
 
-@media screen and (max-width: 953px) // for desktop and tablet
+@media screen and (max-width: 1100px) // for desktop and tablet
+{
+    .l-search__header-image-wrap {
+        left: 0;
+    }
+}
+
+@media screen and (max-width: 1000px) // for desktop and tablet
 {
     .l-search__header {
         height: 240px;
     }
 
-    .l-search__header-wrap {
-        max-width: 585px;
-    }
-
     .l-search__header-image {
-        right: 2px;
+        left: 0;
+        right: 0;
 
-        width: 272px;
-
-        background-position: 0 30px;
-        background-size: 272px;
+        max-width: 300px;
     }
 
     .l-search__header-content {
-        width: 278px;
         padding-top: 50px;
     }
 
@@ -380,24 +394,19 @@
     }
 }
 
-@media screen and (max-device-width: 645px) // for phone
+@media screen and (max-device-width: 600px) // for phone
 and (orientation: portrait),
-screen and (max-width: 645px) // for desktop
+screen and (max-width: 600px) // for desktop
 {
     .l-search__header {
+        height: 171px;
+        padding: 0 30px;
+
         background: #334184;
     }
 
-    .l-search__header-wrap {
-        max-width: 260px;
-    }
-
-    .l-search__header-image {
+    .l-search__header-image-wrap {
         display: none;
-    }
-
-    .l-search__header {
-        height: 171px;
     }
 
     .l-search__header-content {
@@ -407,10 +416,6 @@ screen and (max-width: 645px) // for desktop
 
     .l-search__geoposition {
         margin-bottom: 2px;
-    }
-
-    .l-search__title-list {
-        display: none;
     }
 
     .l-search__top-menu-wrap {
