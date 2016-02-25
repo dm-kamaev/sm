@@ -190,6 +190,24 @@
 
 /**
  * Feedback button
+ * @param? params {
+ *     data: {
+ *         comments: ?[{
+ *             author: string,
+ *             rank: string,
+ *             text: string,
+ *             sections: [{
+ *                 name: string,
+ *                 value: int
+ *             }]
+ *         }],
+ *         ratings: ?[{
+ *             name: string,
+ *             place: number,
+ *             href: string
+ *         }],
+ *     }
+ * }
  */
 {template .feedback_ autoescape="strict" kind="html"}
     <div class="l-school__section l-school__section_feedback">
@@ -206,6 +224,21 @@
                 ]
             ]/}
         {/call}
+        <div class="l-school__anchors">
+            {if $params.data.comments and length($params.data.comments) > 0}
+                <a class="l-school__anchor" href="#comments">
+                    Комментарии
+                    <spna class="l-school__anchor-value">
+                        {length($params.data.comments)}
+                    </span>
+                </a>
+            {/if}
+            {if $params.data.ratings and length($params.data.ratings) > 0}
+                <a class="l-school__anchor" href="#results">
+                    Результаты олимпиад и экзаменов
+                </a>
+            {/if}
+        </div>
     </div>
 {/template}
 
@@ -555,7 +588,7 @@
  * @param params {?}
  */
 {template .results_ autoescape="strict" kind="html"}
-    <div class="l-school__section l-school__section_results">
+    <div id="results" class="l-school__section l-school__section_results">
         {call sm.lSchool.bResults.Template.results}
             {param params: [
                 'data': $params.data.results
@@ -635,7 +668,7 @@
 {template .comments_ autoescape="strict" kind="html"}
     {let $comments: $params.data.comments /}
 
-    <div class="l-school__section l-school__section_comments">
+    <div id="comments" class="l-school__section l-school__section_comments">
         {if $comments and length($comments) > 0}
             <div class="l-school__comments-title">
                 {call .contentTitle_}
