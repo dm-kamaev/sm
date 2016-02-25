@@ -6,5 +6,9 @@
         "user": "gorod",
         "password": "123qwe",
         "dialect": "postgres"
+    },
+    "emailNotifier": {
+      "email": "sabina@mel.fm",
+      "domain": "http://schools.mel.fm/"
     }
 }

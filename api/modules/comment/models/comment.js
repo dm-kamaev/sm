@@ -12,6 +12,14 @@ var Comment = db.define('Comment', {
     userDataId: {
         type: DataType.INTEGER,
         field: 'user_data_id'
+    },
+    isNoticeSend: {
+        type: DataType.BOOLEAN,
+        field: 'is_notice_send'
+    },
+    groupId: {
+        type: DataType.INTEGER,
+        field: 'comment_group_id'
     }
 }, {
     underscored: true,

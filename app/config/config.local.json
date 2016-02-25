@@ -1,8 +1,14 @@
 {
+  "db": {
+    "name": "school_market",
     "host": "localhost",
     "port": "5432",
-    "username": "gorod",
+    "user": "gorod",
     "password": "123qwe",
-    "database": "school_market",
     "dialect": "postgres"
+  },
+  "emailNotifier": {
+    "email": "sabina@mel.fm",
+    "domain": "http://schools1.qa.lan/"
+  }
 }
