@@ -249,10 +249,14 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.onIconClick_ = function() {
-        this.dispatchEvent({
-            type: Search.Event.SUBMIT,
-            text: this.suggest_.getText()
-        });
+        if (this.dataParams_.redirect) {
+            this.searchRequest_(this.suggest_.getText());
+        } else {
+            this.dispatchEvent({
+                type: Search.Event.SUBMIT,
+                text: this.suggest_.getText()
+            });
+        }
     };
 
     /**

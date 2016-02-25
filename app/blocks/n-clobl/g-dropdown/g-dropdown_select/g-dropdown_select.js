@@ -1,4 +1,4 @@
-goog.provide('sm.gDropdownSelect.DropdownSelect');
+goog.provide('sm.gDropdown.DropdownSelect');
 
 goog.require('cl.gDropdown.Dropdown');
 goog.require('cl.gList.List');
@@ -11,7 +11,7 @@ goog.require('cl.gList.List');
  * @constructor
  * @extends {cl.gDropdown.Dropdown}
  */
-sm.gDropdownSelect.DropdownSelect = function(view, opt_params, opt_domHelper) {
+sm.gDropdown.DropdownSelect = function(view, opt_params, opt_domHelper) {
     goog.base(this, view, opt_params, opt_domHelper);
 
     /**
@@ -28,10 +28,10 @@ sm.gDropdownSelect.DropdownSelect = function(view, opt_params, opt_domHelper) {
      */
     this.value_ = null;
 };
-goog.inherits(sm.gDropdownSelect.DropdownSelect, cl.gDropdown.Dropdown);
+goog.inherits(sm.gDropdown.DropdownSelect, cl.gDropdown.Dropdown);
 
 goog.scope(function() {
-    var DropdownSelect = sm.gDropdownSelect.DropdownSelect;
+    var DropdownSelect = sm.gDropdown.DropdownSelect;
 
     /**
      * Event enum
@@ -77,13 +77,18 @@ goog.scope(function() {
     DropdownSelect.prototype.onListItemSelect_ = function(event) {
         var openerText = this
             .listInstance_
-            .getOpenerText(event.itemId);
+            .getOpenerText(event['itemId']);
 
         this.value_ = event.itemId;
 
         var view = this.getView();
         view.removePlaceholderModifier();
         view.setOpenerCustomText(openerText);
+
+        this.dispatchEvent({
+            'type': DropdownSelect.Event.ITEM_SELECT,
+            'itemId': event['itemId']
+        });
     };
 
     /**

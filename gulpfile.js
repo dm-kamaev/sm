@@ -14,11 +14,7 @@ const gulpHelper =
             blocks: path.join(__dirname, '/app/blocks')
         })
         .setSoyPath({
-            root: 'build',
-            compiled: {
-                server: 'build/compiledSeverSoy',
-                client: 'build/compiledClientSoy'
-            }
+            root: 'build'
         });
 
 const config = require('./config.json');

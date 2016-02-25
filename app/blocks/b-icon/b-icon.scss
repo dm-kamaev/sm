@@ -7,8 +7,13 @@
     vertical-align: middle;
 }
 
+.b-icon_top-align {
+    vertical-align: top;
+}
 
-.b-icon_img_metro {
+
+.b-icon_img_metro,
+.b-icon.b-icon_img_metro {
     width: 11px;
     height: 8px;
 

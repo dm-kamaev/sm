@@ -1,18 +1,24 @@
 {namespace sm.bHeader.Template}
+
+
+/**
+ * Header parameters
+ * @typedef {object} sm.bHeader.Params
+ * @property {?string} url
+ * @property {?string} searchtext
+ * @property {?boolean} searchRedirect
+ * @property {?object} templates
+ * @property {?string} templates.search
+ * @property {?string} templates.item
+ * @property {?string} templates.text
+ * @property {?string} templates.value
+ * @property {?boolean} notShowLink
+ */
+
+
 /**
  * Header
- * @param params {
- *    url: ?string,
- *    searchtext: ?string,
- *    searchRedirect: ?bool
- *    templates: ?{
- *        search: ?string,
- *        item: ?string,
- *        text: ?string,
- *        value: ?string
- *    },
- *    notShowLink: ?boolean
- * }
+ * @param params {sm.bHeader.Params}
  */
 {template .base autoescape="strict" kind="html"}
     <div class="b-header">

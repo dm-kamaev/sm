@@ -11,6 +11,7 @@ exports.name = 'comment';
  * @param {string} params.text
  * @param {string} params.userType
  * @param {object||null} params.rating
+ * @param {number} params.userDataId
  * @return {object|| Error} - comment instance or error
  */
 exports.create = async (function(commentGroupId, params) {
@@ -18,7 +19,7 @@ exports.create = async (function(commentGroupId, params) {
         var createParams = {
                 comment_group_id: commentGroupId,
                 text: params.text,
-                userType: params.userType,
+                userDataId: params.userDataId
             };
         if (params.rating)
             createParams.ratingId = params.rating.id;

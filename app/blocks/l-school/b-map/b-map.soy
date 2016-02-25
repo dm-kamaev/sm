@@ -8,9 +8,8 @@
 *         address: ?list{
 *
 *         },
-*         type: ?string,
 *         name: ?string,
-*         url: ?string
+*         totalScore: ?number
 *     }
 * }}
 */
@@ -49,20 +48,36 @@
         <div class="b-map__balloon-close">
             {call sm.bIcon.Template.icon}
                 {param params: [
-                    'type': 'close-balloon'
+                    'type': 'close-balloon',
+                    'verticalAlign': 'top'
                 ]/}
             {/call}
         </div>
-        <div class="b-map__balloon-description">
-            {lb}% for stage in properties.address.stages %{rb}
-                <div class="b-map__description-item">
-                    {lb}{lb} stage {rb}{rb}
-                </div>
-            {lb}% endfor %{rb}
+        <div class="b-map__balloon-content">
+            [if properties.address.stages]
+                [if properties.address.stages.length > 1]
+                    <div class="b-map__content-item">
+                        1-11 классы
+                    </div>
+                [else]
+                    {lb}% for stage in properties.address.stages %{rb}
+                        <div class="b-map__content-item">
+                            {lb}{lb} stage {rb}{rb}
+                        </div>
+                    {lb}% endfor %{rb}
+                [endif]
+            [endif]
 
-            <div class="b-map__description-item">
+            <div class="b-map__content-item">
                 $[properties.address.name]
             </div>
+
+            [if properties.description]
+                <div class="b-map__content-item
+                            b-map__content-item_school-descr">
+                    $[properties.description]
+                </div>
+            [endif]
         </div>
     </div>
 {/template}

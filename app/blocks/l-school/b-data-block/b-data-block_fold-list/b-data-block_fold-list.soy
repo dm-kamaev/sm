@@ -1,16 +1,21 @@
 {namespace sm.lSchool.bDataBlockFoldList.Template}
 
+
+/**
+ * @typedef {object} sm.lSchool.bDataBlockFoldList.Template.Node
+ * @property {string} name
+ * @property {?sm.lSchool.bDataBlockFoldList.Template.Node} items
+ */
+
+
 /**
  * Classes item
- * @param params {
+ * @param params {{
  *    header: ?string,
  *    headerType: ?number
  *    modifier: ?string
- *    content:list<[
- *        name: ?string
- *        items: ?list<string>
- *     ]>
- * }
+ *    content: [sm.lSchool.bDataBlockFoldList.Template.Node]
+ * }}
  * @extends sm.lSchool.bDataBlock.Template
  * @constructor
  */
@@ -18,10 +23,12 @@
     {call .init}
         {param params: [
             'header': $params.header,
-            'headerType': $params.headerType ?
+            'headerType':
+                $params.headerType ?
                         $params.headerType :
                         3,
-            'modifier': $params.modifier ?
+            'modifier':
+                $params.modifier ?
                         'b-data-block_fold-list' + $params.modifier :
                         'b-data-block_fold-list',
             'content': $params.content
@@ -31,57 +38,61 @@
 
 /**
  * Content item
- * @param params {
- *    content:list<[
-  *        name: ?string
-  *        items: ?list<string>
-  *     ]>
- * }
+ * @param params {{
+ *    content: [sm.lSchool.bDataBlockFoldList.Template.Node]
+ * }}
  */
 {template .content autoescape="strict" kind="html"}
-     <ul class="b-data-block__content">
-        {foreach $class in  $params.content}
-            {if $class.items and
-             length($class.items) > 0}
-                {call .ratingItem_}
-                    {param params: [
-                        'name': $class.name,
-                        'items': $class.items
-                    ] /}
-                {/call}
-            {/if}
-        {/foreach}
+    <ul class="b-data-block__content">
+        {call .ratingList_}
+            {param params: [
+                'content': $params.content
+            ] /}
+        {/call}
     </ul>
 {/template}
 
+
+/**
+ * Rating elements
+ * @param params {{
+ *    content: [sm.lSchool.bDataBlockFoldList.Template.Node]
+ * }}
+ */
+{template .ratingList_ autoescape="strict" kind="html"}
+    {foreach $item in $params.content}
+        {call .ratingItem_}
+            {param params: $item /}
+        {/call}
+    {/foreach}
+{/template}
+
+
 /**
  * Rating element
- * @param params {
- *     name: ?string
- *     items: ?list<string>
- * }
+ * @param params {sm.lSchool.bDataBlockFoldList.Template.Node}
  */
 {template .ratingItem_ autoescape="strict" kind="html"}
-    <li class="b-data-block__item">
-        <a  class="b-data-block__item-content
-                   b-data-block__item-content_text-color_red">
-            {$params.name}
-        </a>
-        {if $params.items}
+    {if $params.items}
+        <li class="b-data-block__item">
+            <a class="b-data-block__item-content
+                      b-data-block__item-content_text-color_red">
+                {$params.name}
+            </a>
             <div class="b-data-block__number">
                 {length($params.items)}
             </div>
-        {/if}
-
-        {if $params.items}
-            <ul class="b-data-block__list
-                       i-utils__hidden">
-                {foreach $item in $params.items}
-                <li class="b-data-block__list-item">&mdash; {$item}</li>
-                {/foreach}
+            <ul class="b-data-block__list i-utils__hidden">
+                {call .content}
+                    {param params: [
+                        'content': $params.items
+                    ] /}
+                {/call}
             </ul>
-        {/if}
-    </li>
+        </li>
+    {else}
+        <li class="b-data-block__list-item">&mdash; {$params.name ?: $params}</li>
+    {/if}
 {/template}
 
 /**

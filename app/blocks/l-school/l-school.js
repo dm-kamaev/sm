@@ -11,6 +11,7 @@ goog.require('sm.lSchool.bComments.Comments');
 goog.require('sm.lSchool.bDataBlockFoldList.FoldList');
 goog.require('sm.lSchool.bFeedbackModal.FeedbackModal');
 goog.require('sm.lSchool.bMap.Map');
+goog.require('sm.lSchool.bResults.Results');
 
 /**
  * School page
@@ -46,7 +47,8 @@ goog.inherits(sm.lSchool.School, goog.ui.Component);
 
 goog.scope(function() {
     var School = sm.lSchool.School,
-        FoldList = sm.lSchool.bDataBlockFoldList.FoldList;
+        FoldList = sm.lSchool.bDataBlockFoldList.FoldList,
+        Results = sm.lSchool.bResults.Results;
 
 
     /**
@@ -148,7 +150,7 @@ goog.scope(function() {
      */
     School.prototype.initChildren_ = function() {
         /** comments */
-        if (comments) {
+        if (this.elements_.comments) {
             var comments = new sm.lSchool.bComments.Comments();
             this.addChild(comments);
             comments.decorate(this.elements_.comments);
@@ -176,9 +178,18 @@ goog.scope(function() {
             foldListInstance.decorate(foldList);
         }
 
-        this.search_ = new sm.bSearch.Search();
-        this.addChild(this.search_);
-        this.search_.decorate(this.elements_.search);
+        if (this.elements_.search) {
+            this.search_ = new sm.bSearch.Search();
+            this.addChild(this.search_);
+            this.search_.decorate(this.elements_.search);
+        }
+
+        /**
+         * results
+         */
+        var results = new Results();
+        this.addChild(results);
+        results.decorate(this.getElementByClass(Results.CssClass.ROOT));
     };
 
     /**

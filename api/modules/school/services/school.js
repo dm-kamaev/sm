@@ -165,9 +165,10 @@ service.incrementViews = async(function(schoolId) {
 });
 
 /**
+ * @param {number} opt_amount
  * @return {array<object>} school instances
  */
-service.getPopularSchools = async(function() {
+service.getPopularSchools = async(function(opt_amount) {
     return await(models.School.findAll({
         where: {
              $not: {
@@ -177,17 +178,40 @@ service.getPopularSchools = async(function() {
         order: [
             ['views', 'DESC']
         ],
-        limit: 6, //TODO: move '6' somewhere maybe?
+        limit: opt_amount || 6, //TODO: move '6' somewhere maybe?
         include: [{
             model: models.Address,
             as: 'addresses',
+            where: {
+                isSchool: true
+            },
             include: [
                 {
-                    model: models.Metro,
-                    as: 'metroStations'
+                    model: models.AddressMetro,
+                    as: 'addressMetroes',
+                    include: [
+                        {
+                            model: models.Metro,
+                            as: 'metroStation'
+                        }
+                    ]
                 }
             ]
-        }]
+        }],
+        order: [
+            [
+                {
+                    model: models.Address,
+                    as: 'addresses'
+                },
+                {
+                    model: models.AddressMetro,
+                    as: 'addressMetroes'
+                },
+                'distance',
+                'ASC'
+            ]
+        ]
     }));
 });
 
@@ -210,6 +234,16 @@ service.getAddresses = async(function(schoolId) {
             ]
         })
     );
+});
+
+
+/**
+ * Get amount schools
+ * @return {number} schoolsCount
+ */
+service.getSchoolsCount = async(function() {
+    var schoolsCount = await(models.School.count());
+    return schoolsCount;
 });
 
 
@@ -522,6 +556,9 @@ service.viewOne = function(id) {
                 include: [{
                     model: models.Rating,
                     as: 'rating'
+                }, {
+                    model: models.UserData,
+                    as: 'userData'
                 }]
             }]
         }, {
@@ -532,7 +569,6 @@ service.viewOne = function(id) {
                 'type'
             ]
         }];
-
     var school = await(models.School.findOne({
         where: {id: id},
         include: include,
@@ -558,7 +594,7 @@ service.viewOne = function(id) {
 
 /**
  * @param {number} schoolId
- * @raram {object} prarams
+ * @param {object} params
  * @param {array<number> || null} params.score
  * @param {string || null} params.text
  * @return {object{bool ratingCreated, bool commentCreated}}
@@ -567,7 +603,6 @@ service.review = async(function(schoolId, params) {
     if (!params.text && !params.score)
         throw new Error('Expected comment text or rating');
     try {
-        console.log(params);
         var answer = {
             ratingCreated: false,
             commentCreated: false
@@ -575,6 +610,16 @@ service.review = async(function(schoolId, params) {
         var school = await(models.School.findOne({
             where: {id: schoolId}
         }));
+
+        var userData = {
+            userType: params.userType,
+            yearGraduate: params.yearGraduate,
+            classType: params.classType
+        };
+
+        var userDataInstance = await(services.userData.create(userData));
+
+        params.userDataId = userDataInstance.id;
 
         if (params.score) {
             params.rating = await(service.rate(school, params));
@@ -598,9 +643,11 @@ service.review = async(function(schoolId, params) {
  * @return {object}
  */
 service.rate = async(function(school, params) {
+
     var rt = await (models.Rating.create({
         score: params.score,
-        schoolId: school.id
+        schoolId: school.id,
+        userDataId: params.userDataId
     }));
     return rt;
 });

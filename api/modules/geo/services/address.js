@@ -54,7 +54,8 @@ exports.addAddress = async(function(school_id, data) {
  * @param {number} address_id
  * @param {{
  *     name?: string,
- *     coords?: array
+ *     coords?: array,
+ *     isSchool?: bool
  * }} data
  */
 exports.update = async(function(address_id, data) {
@@ -119,7 +120,11 @@ exports.getDepartments = function(address) {
     return await(address.getDepartments());
 };
 
-
+/**
+ * Returns metro from array<address>/address
+ * @param {array<object> || object} address
+ * @return {array<string>}
+ */
 exports.getMetro = function(address) {
     if (Array.isArray(address)) {
         var metro = {};
@@ -176,20 +181,21 @@ exports.setArea = async ((area, address) => {
         }
     }));
 
-    addressInstance.forEach( (item) => {
+    addressInstance.forEach((item) => {
         item.setArea(areaInstance);
-    } );
+    });
 });
 
 
 exports.listMapPoints = async (function() {
     var sqlQuery = "SELECT school.id, school.name, school.url, " +
-        "school.total_score AS \"totalScore\", address.name AS \"adrName\"," +
+        "school.total_score AS \"totalScore\", address.id AS \"addressId\", " +
+        "address.name AS \"adrName\", school.description, " +
         "address.coords, department.stage FROM school " +
         "INNER JOIN address ON school.id = address.school_id " +
         "INNER JOIN department ON address.id = department.address_id " +
         "WHERE department.stage IN ('Основное и среднее', " +
-        "'Начальное образование')",
+        "'Начальное образование') ORDER BY school.id",
         schools = sequelize.query(sqlQuery, { model: models.School });
 
         return schools;
