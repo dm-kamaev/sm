@@ -105,6 +105,11 @@ body {
 }
 
 
+.l-school__cleaner {
+    clear: both;
+}
+
+
 .l-school__comment-dummy {
     display: inline-block;
     margin: 5px;
@@ -354,7 +359,7 @@ body {
     float: right;
 
     width: 50%;
-    margin-bottom: 60px;
+    margin-bottom: 30px;
     padding-left: 220px;
 
     box-sizing: border-box;
@@ -462,6 +467,10 @@ body {
 }
 
 @include media-m {
+    .l-school__cleaner {
+        display: none;
+    }
+
     .l-school__column.l-school__column_left {
         width: 50%;
         padding-right: 15px;

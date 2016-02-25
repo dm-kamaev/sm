@@ -115,7 +115,8 @@
 
 @include media-s {
     .b-data-block__item-content-address {
-        width: auto;
+        display: inline;
+
         margin-right: 5px;
     }
 

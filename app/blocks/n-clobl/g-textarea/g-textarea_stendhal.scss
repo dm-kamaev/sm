@@ -1,4 +1,6 @@
 .g-textarea.g-textarea_stendhal {
+    border: none;
+
     .g-textarea__textarea,
     .g-textarea__text-container {
         box-shadow: inset 0px 0px 5px 0 rgba(0, 0, 0, 0.2);
@@ -10,9 +12,9 @@
         line-height: 20px;
         font-family: 'Arial', sans-serif;
 
-	    -webkit-appearance: none;
+        -webkit-appearance: none;
     }
-
+    
     .g-textarea__textarea::-webkit-input-placeholder,
     .g-textarea__textarea::-moz-placeholder,
     .g-textarea__textarea:-moz-placeholder,
