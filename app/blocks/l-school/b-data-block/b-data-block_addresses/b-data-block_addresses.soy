@@ -68,14 +68,16 @@
                     </div>
                     <div class="b-data-block__item-content-right">
                         {foreach $address in $stage.addresses}
-                            <div class="b-data-block__item-content-address">
-                                {$address.description}
-                            </div>
+                            <div class="b-data-block__address">
+                                <div class="b-data-block__item-content-address">
+                                    {$address.description}
+                                </div>
 
-                            <div class="b-data-block__item-content-metroStation">
                                 {if $address.metroStation}
-                                    <div class="b-data-block__metro-icon b-icon_img_metro"></div>
-                                    {$address.metroStation.name}
+                                    <div class="b-data-block__item-content-metroStation">
+                                        <div class="b-data-block__metro-icon b-icon_img_metro"></div>
+                                        {$address.metroStation.name}
+                                    </div>
                                 {/if}
                             </div>
                         {/foreach}
