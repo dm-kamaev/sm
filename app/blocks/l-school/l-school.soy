@@ -179,6 +179,20 @@
         <div class="l-school__name">
             {$params.data.schoolName}
         </div>
+        {if $params.data.metroStations}
+            <div class="l-school__metro-stations">
+                {call sm.bIcon.Template.icon}
+                    {param params:[
+                        'type': 'metro',
+                        'customClasses': 'l-school__metro-icon'
+                    ] /}
+                {/call}
+                {foreach $metro in $params.data.metroStations}
+                    {$metro}
+                    {if not isLast($metro)},{sp}{/if}
+                {/foreach}
+            </div>
+        {/if}
         {if $params.data.schoolDescr}
             <div class="l-school__description">
                 {$params.data.schoolDescr}

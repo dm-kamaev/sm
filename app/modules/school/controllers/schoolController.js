@@ -128,6 +128,8 @@ exports.view = async (function(req, res) {
             services.school.incrementViews(school.id);
             var popularSchools = await(services.school.getPopularSchools());
 
+            var date = new Date();
+
             res.header('Content-Type', 'text/html; charset=utf-8');
             res.end(
                 soy.render('sm.lSchool.Template.school', {
@@ -139,6 +141,9 @@ exports.view = async (function(req, res) {
                         item: '{{ name }}',
                         text: '{{ name }}',
                         value: '{{ id }}'
+                    },
+                    config: {
+                        year: date.getFullYear()
                     }
                 }
             }));

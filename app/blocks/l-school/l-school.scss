@@ -66,30 +66,42 @@ body {
     background-color: #c80018;
 }
 
-.l-school__name{
+.l-school__name {
     position: relative;
 
-    margin-bottom: 9px;
+    margin-bottom: 10px;
 
     letter-spacing: 1px;
 
     font: 900 29px/1.3 'Proxima', Arial, sans-serif;
 }
 
-.l-school__description{
+.l-school__description {
     position: relative;
 
     font: 20px/30px 'PT Serif', serif;
 }
 
-.l-school__description-text{
+.l-school__description-text {
     display: inline;
 }
 
-.l-school__description-quote{
+.l-school__description-quote {
     display: inline;
 
     font-style: italic;
+}
+
+.l-school__metro-stations {
+    margin-bottom: 15px;
+
+    color: #808080;
+
+    font-size: 13px;
+}
+
+.l-school__metro-icon {
+    margin-right: 8px;
 }
 
 
@@ -289,7 +301,7 @@ body {
 }
 
 .l-school__anchors {
-    margin-top: 25px;
+    margin-top: 22px;
 }
 
 .l-school__anchor {
@@ -301,7 +313,7 @@ body {
     cursor: pointer;
     color: #ee362c;
 
-    font: 13px/1.2 arial, sans-serif;
+    font: 13px/1.5 arial, sans-serif;
 
     &:last-child {
         margin-right: 0;
@@ -419,10 +431,6 @@ body {
 
 
 @include media-xl {
-    .l-school__anchors {
-        display: none;
-    }
-
     .l-school__section_results {
         display: none;
     }
@@ -430,6 +438,10 @@ body {
 
 
 @include media-l {
+    .l-school__anchors {
+        display: none;
+    }
+
     .l-school__comments-title {
         width: 25%;
         padding-right: 22.5px;

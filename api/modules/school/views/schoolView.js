@@ -47,7 +47,7 @@ schoolView.default = function(schoolInstance, results, opt_popularSchools) {
         classes: getEducationInterval(schoolInstance.educationInterval),
         kindergarten: getKindergardenAvailability(schoolInstance.educationInterval),
         social: [],
-        // metroStations: services.address.getMetro(addresses),
+        //metroStations: addressView.getMetro(addresses),
         sites: schoolInstance.links ?
             getSites(schoolInstance.links) : getSites(schoolInstance.site),
         specializedClasses: getSpecializedClasses(
