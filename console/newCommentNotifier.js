@@ -7,7 +7,7 @@ var MailSender = require('../node_modules/nodules/mail').MailSender;
 var Letter = require('../node_modules/nodules/mail').Letter;
 var transporterGenerator =
     require('../node_modules/nodules/mail').TransporterGenerator;
-var config = require('../app/config');
+var config = require('../app/config').config;
 var emailConfig = config.emailNotifier;
 
 var services = require('../app/components/services').all;
