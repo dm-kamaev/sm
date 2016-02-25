@@ -1,3 +1,5 @@
+@import "../i-media/i-media";
+
 .b-score__section {
 	display: inline-block;
 
@@ -10,7 +12,7 @@
 	}
 
 	&.b-score__section_right {
-		width: 220px;
+		width: 200px;
 
 		vertical-align: top;
 	}
@@ -36,4 +38,20 @@
 
 	font-family: arial, sans-serif;
 	font-size: 11px;
+}
+
+
+@include media-s {
+  	.b-score__section.b-score__section_left {
+	  	width: 64px;
+	  	margin-right: 33px;
+	}
+
+	.b-score__section_right {
+	  	margin-right: -60px;
+	}
+
+	.b-score__comments-amount {
+		width: 64px;
+  	}
 }
