@@ -1,0 +1,118 @@
+.b-popular-schools__title {
+    margin-bottom: 27px;
+
+    text-transform: uppercase;
+    font-family: 'Proxima';
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+}
+
+.b-popular-schools__school {
+    display: inline-block;
+
+    width: 100%;
+
+    white-space: normal;
+    vertical-align: top;
+}
+
+.b-popular-schools__school_last {
+    margin-right: 0px;
+}
+
+.b-popular-schools__school-rating {
+    margin-bottom: 21px;
+}
+
+.b-popular-schools__school-name {
+    margin-bottom: 11px;
+
+    line-height: 21px;
+
+    font-family: 'PT Serif';
+    font-weight: 800;
+    font-size: 16px;
+}
+
+.b-popular-schools__school-link {
+    display: inline-block;
+
+    width: 175px;
+    margin-right: 30px;
+
+    color: #000000;
+    text-decoration: none;
+
+    &:last-child {
+        margin-right: 0;
+    }
+}
+
+.b-popular-schools__school-link:hover {
+  color: #FF0000;
+}
+
+.b-popular-schools__school-description {
+    margin-bottom: 18px;
+
+    font-family: arial;
+    font-size: 13px;
+    line-height: 18px;
+}
+
+.b-popular-schools__school-link:hover .b-popular-schools__school-description {
+  color: #000000;
+}
+
+.b-popular-schools__metro-icon {
+    display: inline-block;
+
+    margin-right: 7px;
+}
+
+.b-popular-schools__metro-stations {
+    display: inline-block;
+
+    color: #808080;
+
+    font-family: arial;
+    font-size: 13px;
+    font-weight: 400;
+}
+
+@media screen and (max-width: 1260px) // for desktop and tablet
+{
+    .b-popular-schools__school {
+        white-space: normal;
+    }
+}
+
+@media screen and (max-device-width: 645px) // for phone
+and (orientation: portrait),
+screen and (max-width: 645px) // for desktop
+{
+    .b-popular-schools__school {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 36px;
+    }
+
+    .b-popular-schools__school-rating {
+        display: inline-block;
+    }
+
+    .b-popular-schools__school-information {
+        display: inline-block;
+        float:right;
+
+        width: 171px;
+        margin-top: -7px;
+
+        &:after{
+            content:'';
+            display:table;
+            clear:both;
+        }
+    }
+}

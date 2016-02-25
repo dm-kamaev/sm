@@ -25,7 +25,7 @@ sm.lSearch.Search = function(opt_params) {
 
     /**
      * Search instance
-     * @type {sm.bSearch.Search}
+     * @type {?sm.bSearch.Search}
      * @private
      */
     this.search_ = null;
@@ -73,7 +73,7 @@ goog.scope(function() {
         this.initElements_(element);
 
         var bSearch = goog.dom.getElementByClass(
-            BlockSearch.CssClass.INPUT,
+            BlockSearch.CssClass.ROOT,
             element
         );
 
@@ -87,12 +87,6 @@ goog.scope(function() {
      */
     Search.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
-
-        this.getHandler().listen(
-            this.search_,
-            BlockSearch.Event.SUBMIT,
-            this.onSubmit_
-        );
 
         this.getHandler().listen(
             this.elements_.searchButton,
@@ -110,20 +104,8 @@ goog.scope(function() {
         this.elements_ = {
             searchButton: goog.dom.getElementByClass(
                 Search.CssClass.SEARCH_BUTTON
-            ),
-            input: goog.dom.getElementByClass(
-                BlockSearch.CssClass.INPUT
             )
         };
-    };
-
-    /**
-     * Input submit handler
-     * @param {Object} event
-     * @private
-     */
-    Search.prototype.onSubmit_ = function(event) {
-        this.searchRequest_(event.text);
     };
 
     /**
@@ -140,7 +122,7 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.searchRequest_ = function(searchString) {
-        var url = '/school';
+        var url = '/search';
         if (searchString) {
             url += '?name=' + encodeURIComponent(searchString);
         }

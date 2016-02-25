@@ -1,10 +1,9 @@
-var colors = require('colors');
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var sequelizeInclude = require.main.require('./api/components/sequelizeInclude');
 var models = require.main.require('./app/components/models').all;
 var services = require.main.require('./app/components/services').all;
-var common = require.main.require('./console/common');
+var sequelize = require('../../../../app/components/db');
 exports.name = 'address';
 
 
@@ -27,7 +26,9 @@ exports.getTest = async(() => {
  * }} data
  */
 exports.addAddress = async(function(school_id, data) {
-    var addressBD = await(services.address.getAddress({name: data.name}));
+    var addressBD = await(services.address.getAddress({
+        name: data.name
+    }));
     var address;
 
     if (addressBD) {
@@ -53,7 +54,8 @@ exports.addAddress = async(function(school_id, data) {
  * @param {number} address_id
  * @param {{
  *     name?: string,
- *     coords?: array
+ *     coords?: array,
+ *     isSchool?: bool
  * }} data
  */
 exports.update = async(function(address_id, data) {
@@ -118,13 +120,17 @@ exports.getDepartments = function(address) {
     return await(address.getDepartments());
 };
 
-
+/**
+ * Returns metro from array<address>/address
+ * @param {array<object> || object} address
+ * @return {array<string>}
+ */
 exports.getMetro = function(address) {
     if (Array.isArray(address)) {
         var metro = {};
         address.forEach(adr => {
             adr.metroStations.forEach(m => {
-                metro[m.id] = m.name;
+                metro[m.id] = m.name.replace('метро ', '');
             });
         });
         return Object.keys(metro)
@@ -133,7 +139,7 @@ exports.getMetro = function(address) {
             });
     } else {
         return address.metroStations.map(metro => {
-            return metro.name;
+            return metro.name.replace('метро ', '');
         });
     }
 };
@@ -164,90 +170,33 @@ exports.setMetro = async(function(address, metroArr) {
  * @param {String} address
  */
 exports.setArea = async ((area, address) => {
-    var area = await(models.Area.findOne({
+    var areaInstance = await(models.Area.findOne({
         where: {
             name: area
         }
     }));
-    var address = await(models.Address.findAll({
+    var addressInstance = await(models.Address.findAll({
         where: {
             name: address
         }
     }));
 
-    address.forEach( (item) => {
-        item.setArea(area);
-    } );
+    addressInstance.forEach((item) => {
+        item.setArea(areaInstance);
+    });
 });
 
-exports.getCoords = function(addresses) {
-    return addresses.map(adr => {
-        return {
-            lat: adr.coords[0],
-            lng: adr.coords[1]
-        };
-    });
-};
 
-exports.list = async ( function(opt_params) {
-    var params = opt_params || {};
+exports.listMapPoints = async (function() {
+    var sqlQuery = "SELECT school.id, school.name, school.url, " +
+        "school.total_score AS \"totalScore\", address.id AS \"addressId\", " +
+        "address.name AS \"adrName\", school.description, " +
+        "address.coords, department.stage FROM school " +
+        "INNER JOIN address ON school.id = address.school_id " +
+        "INNER JOIN department ON address.id = department.address_id " +
+        "WHERE department.stage IN ('Основное и среднее', " +
+        "'Начальное образование') ORDER BY school.id",
+        schools = sequelize.query(sqlQuery, { model: models.School });
 
-    var searchConfig = {
-        include: [
-            {
-                model: models.Address,
-                as: 'addresses'
-            },
-            {
-                model: models.Rating,
-                as: 'ratings'
-            }
-        ]
-    };
-
-    var schools = await(models.School.findAll(searchConfig));
-
-    return schools.map(school => {
-        var sumScore = school.ratings
-            .map(rating => rating.score)
-            .reduce((context, coords) => {
-                coords.forEach((value, index) => {
-                    if (value) {
-                        context.count[index]++;
-                        context.sum[index] += value;
-                        context.res[index] = context.sum[index] / context.count[index];
-                    }
-                });
-
-                return context;
-            }, {
-                sum: [0, 0, 0, 0],
-                count: [0, 0, 0, 0],
-                res: [0, 0, 0, 0]
-            }).res;
-
-        return {
-            id: school.id,
-            coords: school.addresses.map(adr => {
-                return {
-                    lat: adr.coords[0],
-                    lng: adr.coords[1]
-                };
-            }),
-            type: '',
-            name: school.name,
-            totalScore: sumScore.reduce((context, value) => {
-                if (value) {
-                    context.sum += value;
-                    context.count++;
-                    context.res = context.sum / context.count;
-                }
-                return context;
-            }, {
-                sum: 0,
-                count: 0,
-                res: 0
-            }).res
-        }
-    });
+        return schools;
 });

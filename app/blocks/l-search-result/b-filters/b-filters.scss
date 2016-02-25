@@ -1,16 +1,18 @@
+@import "../../i-media/i-media";
+
 .b-filters {
     width: 100%;
     margin: 0;
 }
 
 .b-filters__submit-button {
-    height: 47px;
     width: 75%;
     margin: 40px auto 10px auto;
+    padding: 12px 0 13px 0;
 
     border: 4px solid #000000;
     text-align: center;
-    font-size: 15px;
+    font-size: 13px;
     font-weight: 800;
     text-transform: uppercase;
     color: #000000;
@@ -25,4 +27,21 @@
 .b-filters__submit-button:hover {
     color: #ee362c;
     border: 4px solid #ee362c;
+}
+
+
+@include media-xl {
+    .b-filters__group {
+        display: inline-block;
+
+        width: 45%;
+        margin: 0 17px;
+
+        vertical-align: top;
+    }
+
+    .b-filters__submit-button {
+        width: 240px;
+        margin-top: 30px;
+    }
 }

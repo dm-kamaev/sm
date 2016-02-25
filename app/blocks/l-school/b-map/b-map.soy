@@ -5,8 +5,9 @@
 * @param? params {{
 *     data: ?{
 *         id: ?number,
-*         coords: ?number[][],
-*         type: ?string,
+*         address: ?list{
+*
+*         },
 *         name: ?string,
 *         totalScore: ?number
 *     }
@@ -14,7 +15,7 @@
 */
 {template .map}
     {let $dataParams kind="html"}
-        {call gorod.iUtils.stringify}
+        {call cl.iUtils.Utils.stringify}
             {param json: $params?.data /}
         {/call}
     {/let}
@@ -37,7 +38,7 @@
     <div class="b-map__balloon">
         <div class="b-map__balloon-name">
             [if properties.id]
-            <a href="/school/$[properties.id]" class="b-map__href">
+            <a href="/school/$[properties.url]" class="b-map__href">
                 $[properties.name]
             </a>
             [else]
@@ -45,22 +46,38 @@
             [endif]
         </div>
         <div class="b-map__balloon-close">
-            {call sm.bIcon.Template.base}
+            {call sm.bIcon.Template.icon}
                 {param params: [
-                    'spriteCssClass': 'b-icon_img_close-balloon'
+                    'type': 'close-balloon',
+                    'verticalAlign': 'top'
                 ]/}
             {/call}
         </div>
-        <div class="b-map__balloon-description">
-            [if properties.totalScore]
-                <span class="b-map__balloon-rating">
-                    $[properties.totalScore]
-                </span>
-            [else]
-            Нет оценок
+        <div class="b-map__balloon-content">
+            [if properties.address.stages]
+                [if properties.address.stages.length > 1]
+                    <div class="b-map__content-item">
+                        1-11 классы
+                    </div>
+                [else]
+                    {lb}% for stage in properties.address.stages %{rb}
+                        <div class="b-map__content-item">
+                            {lb}{lb} stage {rb}{rb}
+                        </div>
+                    {lb}% endfor %{rb}
+                [endif]
             [endif]
-        </div>
-        <div class="b-map__balloon-triangle">
+
+            <div class="b-map__content-item">
+                $[properties.address.name]
+            </div>
+
+            [if properties.description]
+                <div class="b-map__content-item
+                            b-map__content-item_school-descr">
+                    $[properties.description]
+                </div>
+            [endif]
         </div>
     </div>
 {/template}

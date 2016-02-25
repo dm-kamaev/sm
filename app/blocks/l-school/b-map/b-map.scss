@@ -9,28 +9,30 @@
 
     width: 240px;
     height: auto;
-    min-height: 100px;
 
     background-color: #ffffff;
-    font-weight: 600;
-    font-size: 16px;
-    font-family: serif;
+    font-size: 13px;
+
+    box-shadow: 0 0 15px 1px rgba(40, 40, 40, 0.2);
 }
 
 .b-map__balloon-name {
     float: left;
 
     max-width: 60%;
-    padding: 20px;
+    padding: 17px 20px 13px;
 
+    font-weight: 800;
     text-transform: uppercase;
 }
 
 .b-map__balloon-close {
     float: right;
 
+    box-sizing: border-box;
     width: 50px;
     height: 50px;
+    padding: 20px;
 
     cursor: pointer;
 }
@@ -40,27 +42,27 @@
     text-decoration: none;
 }
 
-.b-map__balloon-description {
+.b-map__balloon-content {
     display: inline-block;
 
     box-sizing: border-box;
     width: 100%;
+    margin-bottom: -10px;
     padding: 0 20px 20px;
 }
 
-.b-map__balloon-rating {
-    color: #ee362c;
+.b-map__content-item {
+    margin-top: -8px;
+    margin-bottom: 8px;
+
+    font-family: arial, sans-serif;
+    font-size: 14px;
+    line-height: 20px;
+    color: #666666;
 }
 
-.b-map__balloon-triangle {
-    position: absolute;
-    left: 50%;
-    bottom: -50px;
+.b-map__content-item_school-descr {
+    margin-top: 5px;
 
-    width: 0;
-    height: 0;
-    margin-left: -25px;
-
-    border: 25px solid transparent;
-    border-top-color: #fff;
+    color: #000000;
 }

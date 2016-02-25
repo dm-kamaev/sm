@@ -28,6 +28,7 @@
     bottom: 0;
     left: 0;
     right: 0;
+    z-index: 0;
 
     width: auto;
     height: 22px;
@@ -56,14 +57,10 @@
     }
 }
 
-.b-mark.b-mark_grey{
-    .b-mark__mark {
-        line-height: 22px;
-    }
-}
-
 .b-mark.b-mark_inline {
     display: inline-block;
+
+	vertical-align: middle;
 
     .b-mark__circle {
         top: 1px;
@@ -104,8 +101,33 @@
     }
 }
 
-.b-mark.b-mark_inline.b-mark_grey{
+.b-mark.b-mark_inline.b-mark_big-text {
     .b-mark__mark {
-        top: -2px;
+        font-size: 19px;
+    }
+
+    .b-mark__circle {
+        top: 5px;
+
+        vertical-align: top;
+    }
+}
+.b-mark.b-mark_number {
+    .b-mark__mark {
+        position: static;
+
+
+        font-family: Arial, sans-serif;
+        font-size: 13px;
+        font-weight: normal;
+        letter-spacing: normal;
+        color: #808080;
+        line-height: 20px;
+    }
+}
+
+.b-mark.b-mark_no-dash.b-mark_empty {
+    .b-mark__mark {
+        display: none;
     }
 }

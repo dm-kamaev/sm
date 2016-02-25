@@ -3,7 +3,7 @@ goog.provide('sm.lSearchResult.bSchoolListItem.SchoolListItem');
 goog.require('goog.events');
 goog.require('goog.ui.Component');
 goog.require('sm.bRating.Rating');
-goog.require('sm.lSearchResult.bSchoolListItem.Template');
+goog.require('sm.bScoreSchoolList.ScoreSchoolList');
 
 /**
  * School list item component
@@ -23,7 +23,7 @@ sm.lSearchResult.bSchoolListItem.SchoolListItem = function(opt_params) {
 
     /**
      *  @private
-     *  @type {Array.<Number>}
+     *  @type {Array.<Object>}
      */
     this.score_ = this.params_.score;
 
@@ -31,20 +31,34 @@ sm.lSearchResult.bSchoolListItem.SchoolListItem = function(opt_params) {
      *  @private
      *  @type {Number}
      */
-    this.totalScore_ = this.params_.totalScore;
+    this.currentCriterion_ = this.params_.currentCriterion;
 
     /**
      *  @private
      *  @type {Number}
      */
     this.id_ = this.params_.id;
+
+    /**
+     * scoreInstance
+     * @private
+     * @type {sm.bScoreSchoolList.ScoreSchoolList}
+     */
+    this.scoreInstance_ = null;
+
+    /**
+     * defines whether score is clickable
+     * @private
+     * @type boolean
+     */
+    this.isScoreClickable_ = this.params_.isScoreClickable;
 };
 goog.inherits(sm.lSearchResult.bSchoolListItem.SchoolListItem,
     goog.ui.Component);
 
 goog.scope(function() {
     var ListItem = sm.lSearchResult.bSchoolListItem.SchoolListItem,
-        Rating = sm.bRating.Rating;
+        Score = sm.bScoreSchoolList.ScoreSchoolList;
 
     /**
      *  Css class enum
@@ -69,9 +83,16 @@ goog.scope(function() {
      * @return {(Array.<Number>|Number)}
      */
     ListItem.prototype.getScore = function(opt_index) {
-        return (typeof opt_index != 'undefined') ?
-            this.score_[opt_index] :
-            this.score_;
+        var res;
+        if (typeof opt_index != 'undefined') {
+            res = this.score_[opt_index].value;
+        }
+        else {
+            res = this.score_.map(function(item) {
+                return item.value;
+            });
+        }
+        return res;
     };
 
     /**
@@ -79,26 +100,84 @@ goog.scope(function() {
      * @return  {Number}
      */
     ListItem.prototype.getTotalScore = function() {
-        return this.totalScore_;
+        return this.currentCriterion_;
     };
 
     /**
-     * Compare by total score
+     * Returns item id
+     * @return {Number}
+     */
+    ListItem.prototype.getId = function() {
+        return this.id_;
+    };
+
+    /**
+     * Compare by total score descending
+     * then by presence of score
+     * then by id asc
      * @param {sm.lSearchResult.bSchoolListItem.SchoolListItem} item
      * @return {number}
      */
     ListItem.prototype.compareByTotalScore = function(item) {
-        return item.getTotalScore() - this.getTotalScore();
+        var result;
+
+        result = item.getTotalScore() - this.getTotalScore();
+
+        if (result === 0) {
+            var itemZeroScore,
+                thisZeroScore;
+
+            itemZeroScore = this.checkScore_(item.getScore());
+            thisZeroScore = this.checkScore_(this.getScore());
+
+            if (itemZeroScore && !thisZeroScore) {
+                result = -1;
+            }
+            else if (!itemZeroScore && thisZeroScore) {
+                result = 1;
+            }
+            else {
+                result = this.compareById(item);
+            }
+        }
+        return result;
     };
 
     /**
-     * Compare by score
+     * Compare by score desc then by total score desc then by id asc
      * @param {sm.lSearchResult.bSchoolListItem.SchoolListItem} item
      * @param {number} index
      * @return {number}
      */
     ListItem.prototype.compareByScore = function(item, index) {
-        return item.getScore(index) - this.getScore(index);
+        var result;
+
+        result = item.getScore(index) - this.getScore(index);
+
+        if (result === 0) {
+            result = this.compareByTotalScore(item);
+        }
+
+        return result;
+    };
+
+    /**
+     * Compare by id ascending
+     * @param {sm.lSearchResult.bSchoolListItem.SchoolListItem} item
+     * @return {number}
+     */
+    ListItem.prototype.compareById = function(item) {
+        return this.getId() - item.getId();
+    };
+
+    /**
+     * Change criterion of sort
+     * @param {Number} newCriterion
+     */
+    ListItem.prototype.changeSorCriterion = function(newCriterion) {
+        var scoreInstance = this.getChildAt(0);
+
+        scoreInstance.changeCriterion(newCriterion);
     };
 
     /**
@@ -106,17 +185,6 @@ goog.scope(function() {
      */
     ListItem.prototype.createDom = function() {
         goog.base(this, 'createDom');
-
-        /**
-         * TODO: remove this when backend will send score
-         */
-        if (!this.params_.totalScore) {
-            this.params_.totalScore = 0;
-        }
-
-        if (!this.params_.score) {
-            this.params_.score = [0, 0, 0, 0];
-        }
 
         var element = goog.soy.renderAsElement(
             sm.lSearchResult.bSchoolListItem.Template.base,
@@ -135,14 +203,16 @@ goog.scope(function() {
     ListItem.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
-        var schoolRatingElement,
-            schoolRatingInstance;
+        var scoreElement;
 
-        schoolRatingElement = this.getElementByClass(Rating.CssClass.ROOT);
-
-        schoolRatingInstance = new Rating();
-        this.addChild(schoolRatingInstance);
-        schoolRatingInstance.decorate(schoolRatingElement);
+        scoreElement = this.getElementByClass(Score.CssClass.ROOT);
+        this.scoreInstance_ = new Score({
+            'score': this.score_,
+            'currentCriterion': this.currentCriterion_,
+            'isClickable': this.isScoreClickable_
+        });
+        this.addChild(this.scoreInstance_);
+        this.scoreInstance_.decorate(scoreElement);
     };
 
     /**
@@ -151,7 +221,10 @@ goog.scope(function() {
      */
     ListItem.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
-        this.getHandler().listen(
+
+        var handler = this.getHandler();
+
+        handler.listen(
             this.getElement(),
             goog.events.EventType.CLICK,
             this.itemClickHandler_
@@ -167,5 +240,24 @@ goog.scope(function() {
             'type': ListItem.Event.CLICK,
             'itemId': this.id_
         });
+    };
+
+    /**
+     * Compare input array with null score:[0, 0, 0, 0]
+     * and return true if they equals
+     * @param {Array} score
+     * @return {boolean}
+     * @private
+     */
+    ListItem.prototype.checkScore_ = function(score) {
+        var nullScore = [0, 0, 0, 0],
+            result = true;
+
+        for (var i = 0, l = score.length; i < l; i++) {
+            if (score[i] != nullScore[i]) {
+                result = false;
+            }
+        }
+        return result;
     };
 });

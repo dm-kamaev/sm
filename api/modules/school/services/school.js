@@ -1,11 +1,15 @@
 'use strict';
+
 var colors = require('colors');
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var models = require.main.require('./app/components/models').all;
 var services = require.main.require('./app/components/services').all;
-var sequelize  = require.main.require('./app/components/db');
+var sequelize = require.main.require('./app/components/db');
 var searchTypeEnum = require('../enums/searchType');
+var schoolTypeEnum = require('../enums/schoolType');
+var departmentTypeEnum = require('../../geo/enums/departmentStage');
+var CsvConverter = require('../../../../console/modules/modelArchiver/CsvConverter');
 var service = {
     name: 'school'
 };
@@ -39,11 +43,15 @@ class SchoolNotFoundError extends Error {
  * @return {Object} School model instance
  */
 service.create = function(data) {
-    var includeParams = {
-        addresses: {
-            departments: true
-        }
-    };
+    CsvConverter.cureQuotes(data);
+    var includeParams = [{
+        model: models.Address,
+        as: 'addresses',
+        include: [{
+            model: models.Department,
+            as: 'departments'
+        }]
+    }];
 
     if (data.addresses) {
         data.addresses = data.addresses.filter(address => {
@@ -54,9 +62,16 @@ service.create = function(data) {
                 result = true;
             }
             else {
-            console.log('Address:'.yellow, address.name);
-            console.log('is alredy binded to school '.yellow +
-                'with id:'.yellow, addressBD.school_id);
+                console.log('Address:'.yellow, address.name);
+
+                var oldSchool = services.school.viewOne(addressBD.school_id);
+
+                console.log('Schools:'.yellow);
+                console.log(oldSchool.fullName);
+                console.log('govermentKey: ' + oldSchool.govermentKey);
+                console.log(data.fullName);
+                console.log('govermentKey: ' + data.govermentKey);
+                console.log();
             }
 
             return result;
@@ -73,7 +88,7 @@ service.create = function(data) {
     return await(models.School.create(
         data,
         {
-            include: sequelizeInclude(includeParams)
+            include: includeParams
         }
     ));
 };
@@ -95,13 +110,17 @@ service.create = function(data) {
  * @return {Object} School model instance
  */
 service.update = async(function(school_id, data) {
+    CsvConverter.cureQuotes(data);
+
     var school = await(
         models.School.findOne({
             where: {id: school_id}
         })
     );
+
     if (!school)
         throw new SchoolNotFoundError(school_id);
+
     return await(school.update(data));
 });
 
@@ -137,6 +156,65 @@ service.getAddress = async(function(school_id, address_id) {
     }
 });
 
+/**
+ * @param {number} schoolId
+ */
+service.incrementViews = async(function(schoolId) {
+    var sqlString = 'UPDATE school SET views = views + 1 where id = ' + schoolId;
+    await(sequelize.query(sqlString));
+});
+
+/**
+ * @param {number} opt_amount
+ * @return {array<object>} school instances
+ */
+service.getPopularSchools = async(function(opt_amount) {
+    return await(models.School.findAll({
+        where: {
+             $not: {
+                 views: 0
+             }
+        },
+        order: [
+            ['views', 'DESC']
+        ],
+        limit: opt_amount || 6, //TODO: move '6' somewhere maybe?
+        include: [{
+            model: models.Address,
+            as: 'addresses',
+            where: {
+                isSchool: true
+            },
+            include: [
+                {
+                    model: models.AddressMetro,
+                    as: 'addressMetroes',
+                    include: [
+                        {
+                            model: models.Metro,
+                            as: 'metroStation'
+                        }
+                    ]
+                }
+            ]
+        }],
+        order: [
+            [
+                {
+                    model: models.Address,
+                    as: 'addresses'
+                },
+                {
+                    model: models.AddressMetro,
+                    as: 'addressMetroes'
+                },
+                'distance',
+                'ASC'
+            ]
+        ]
+    }));
+});
+
 
 /**
  * Get school addresses
@@ -156,6 +234,16 @@ service.getAddresses = async(function(schoolId) {
             ]
         })
     );
+});
+
+
+/**
+ * Get amount schools
+ * @return {number} schoolsCount
+ */
+service.getSchoolsCount = async(function() {
+    var schoolsCount = await(models.School.count());
+    return schoolsCount;
 });
 
 
@@ -220,15 +308,12 @@ service.onRatingChange = async(function(schoolId) {
         }
     }));
 
-    if (!school) 
+    if (!school)
         throw new SchoolNotFoundError(schoolId);
-    
-    var promises = [
-        this.updateScore(school),
-        this.updateReviewCount(school),
-    ];
+
     try {
-        await(promises);
+        await(this.updateReviewCount(school));
+        await(this.updateScore(school));
     } catch (e) {
     }
 });
@@ -287,8 +372,11 @@ service.updateScore = async(function(school) {
     var queries = [];
     for (var i = 1; i <= 4; i++) {
         var score = 'score[' + i + ']';
+        /**
+         * TODO: add query type
+         */
         var queryPromise = sequelize.query(
-            'SELECT AVG(' + score + ') AS avg, ' + 
+            'SELECT AVG(' + score + ') AS avg, ' +
             'count(' + score + ') AS count FROM rating ' +
             'WHERE school_id = ' + school.id + ' AND ' +
              score + '<> 0'
@@ -299,16 +387,27 @@ service.updateScore = async(function(school) {
         counts = [];
     await(queries).forEach(
         result => {
-            scores.push(result[0][0].avg || 0);
-            counts.push(result[0][0].count || 0);
+            var count = result[0][0].count || 0;
+            counts.push(count);
+            if (count >= 3) {
+                scores.push(result[0][0].avg || 0);
+            } else {
+                scores.push(0);
+            }
         }
     );
-    var totalScore = getTotalScore(scores);
-    school.update({
-        score: scores,
-        totalScore: totalScore,
-        scoreCount: counts
-    });
+    if (!isFeedbackLack(counts, school.reviewCount)) {
+        school.update({
+            score: scores,
+            totalScore: getTotalScore(scores),
+            scoreCount: counts
+        });
+    } else {
+        school.update({
+            scoreCount: counts,
+            score: scores
+        });
+    }
 });
 
 /**
@@ -328,6 +427,24 @@ var getTotalScore = function(score) {
     return count ? sum/count : 0;
 };
 
+/**
+ * Checks amount of ratings
+ * @param {array} scoreCount
+ * @param {number} reviewCount
+ * @return {bool}
+ */
+var isFeedbackLack = function(scoreCount, reviewCount) {
+    var ratingsLack = reviewCount >= 5 ? false : true,
+        i = scoreCount && scoreCount.length || 0;
+
+    while (i-- && !ratingsLack) {
+        if (scoreCount[i] < 3) {
+            ratingsLack = true;
+        }
+    }
+
+    return ratingsLack;
+};
 
 /**
  * @public
@@ -350,7 +467,7 @@ service.typeFilters = async (function() {
         };
     });
     return {
-        filter: searchTypeEnum.SCHOOL_TYPE,
+        filter: searchTypeEnum.fields.SCHOOL_TYPE,
         values: formattedFilters
     };
 });
@@ -383,14 +500,15 @@ service.setAddresses = async ((school, addresses) => {
 
 
 service.getForParse = async((govKeyId) => {
-    var includeParams = {
-        addresses: true
-    };
+    var includeParams = [{
+        model: models.Address,
+        as: 'addresses'
+    }];
     return await(models.School.findOne({
         where: {
             govermentKey: govKeyId
         },
-        include: sequelizeInclude(includeParams)
+        include: includeParams
     }));
 });
 
@@ -406,23 +524,29 @@ service.findBySite = async(function(site) {
  * @public
  */
 service.viewOne = function(id) {
-    var includeParams =
+    var include =
         [{
             model: models.Address,
             as: 'addresses',
             include: [
                 {
                     model: models.Department,
-                    as:'departments'
+                    as: 'departments'
                 },
                 {
-                    model: models.Metro,
-                    as: 'metroStations'
+                    model: models.AddressMetro,
+                    as: 'addressMetroes',
+                    include: [
+                        {
+                            model: models.Metro,
+                            as: 'metroStation'
+                        }
+                    ]
                 }
             ]
         }, {
-             model: models.Rating,
-             as: 'ratings'
+            model: models.Rating,
+            as: 'ratings'
         }, {
             model: models.CommentGroup,
             as: 'commentGroup',
@@ -432,39 +556,45 @@ service.viewOne = function(id) {
                 include: [{
                     model: models.Rating,
                     as: 'rating'
+                }, {
+                    model: models.UserData,
+                    as: 'userData'
                 }]
-             }]
+            }]
         }, {
             model: models.Activity,
             as: 'activites',
             attributes: [
-                'type',
-                'name'
+                'profile',
+                'type'
             ]
-        }
-            //{
-            //    model: models.EgeResult,
-            //    as: 'egeResults'
-            //}, {
-            //    model: models.GiaResult,
-            //    as: 'giaResults'
-            //}, {
-            //    model: models.OlimpResult,
-            //    as: 'olimpResults'
-            //}
-        ];
-
+        }];
     var school = await(models.School.findOne({
         where: {id: id},
-        include: includeParams
+        include: include,
+        order: [
+            [
+                {
+                    model: models.Address,
+                    as: 'addresses'
+                },
+                {
+                    model: models.AddressMetro,
+                    as: 'addressMetroes'
+                },
+                'distance',
+                'ASC'
+            ]
+        ]
     }));
+
     return school;
 };
 
 
 /**
  * @param {number} schoolId
- * @raram {object} prarams
+ * @param {object} params
  * @param {array<number> || null} params.score
  * @param {string || null} params.text
  * @return {object{bool ratingCreated, bool commentCreated}}
@@ -473,7 +603,6 @@ service.review = async(function(schoolId, params) {
     if (!params.text && !params.score)
         throw new Error('Expected comment text or rating');
     try {
-        console.log(params);
         var answer = {
             ratingCreated: false,
             commentCreated: false
@@ -481,6 +610,16 @@ service.review = async(function(schoolId, params) {
         var school = await(models.School.findOne({
             where: {id: schoolId}
         }));
+
+        var userData = {
+            userType: params.userType,
+            yearGraduate: params.yearGraduate,
+            classType: params.classType
+        };
+
+        var userDataInstance = await(services.userData.create(userData));
+
+        params.userDataId = userDataInstance.id;
 
         if (params.score) {
             params.rating = await(service.rate(school, params));
@@ -504,14 +643,17 @@ service.review = async(function(schoolId, params) {
  * @return {object}
  */
 service.rate = async(function(school, params) {
+
     var rt = await (models.Rating.create({
         score: params.score,
-        schoolId: school.id
+        schoolId: school.id,
+        userDataId: params.userDataId
     }));
     return rt;
 });
 
 service.createActivity = async(params => {
+    CsvConverter.cureQuotes(params);
     await (models.Activity.create(
         params,
         {
@@ -554,6 +696,7 @@ service.listInstances = async(function(){
 /**
  * @public
  * @param {object || null} opt_params
+ * @param {number || null} opt.params.page
  * @param {object || null} opt_params.searchParams
  * @param {string || null} opt_params.searchParams.name
  * @param {?Array<number>} opt_params.searchParams.schoolType
@@ -565,28 +708,95 @@ service.listInstances = async(function(){
 service.list = async (function(opt_params) {
     var params = opt_params || {},
         searchParams = params.searchParams || null;
-
-    var searchConfig = {
-        include: [],
-        attributes: [
-            'id',
-            'name',
-            'score',
-            'name',
-            'fullName',
-            'abbreviation',
-            'totalScore'
+    var sqlConfig = {
+        select: [
+            'school.id',
+            'school.name',
+            'school.full_name AS "fullName"',
+            'school.rank_dogm AS "rankDogm"',
+            'school.description',
+            'school.url',
+            'school.score',
+            'school.total_score AS "totalScore"',
+            'school.score_count AS "scoreCount"',
+            'school.count_results AS "countResults"',
+            'address.id AS "addressId"',
+            'department.stage AS "departmentStage"',
+            'metro.id AS "metroId"',
+            'metro.name AS "metroName"'
         ],
-        order: '"totalScore" DESC'
+        from: {
+                select: [
+                    'school.id',
+                    'school.name',
+                    'school.full_name',
+                    'school.rank_dogm',
+                    'school.description',
+                    'school.url',
+                    'school.score',
+                    'school.total_score',
+                    'school.score_count',
+                    'count(*) OVER() AS count_results'
+                ],
+                from: ['school'],
+                where: [
+                    '(school.school_type = \'' + schoolTypeEnum.SCHOOL + '\' OR ' +
+                    'school.school_type = \'' + schoolTypeEnum.LYCEUM + '\' OR ' +
+                    'school.school_type = \'' + schoolTypeEnum.GYMNASIUM + '\' OR ' +
+                    'school.school_type = \'' + schoolTypeEnum.EDUCATION_CENTER + '\' OR ' +
+                    'school.school_type = \'' + schoolTypeEnum.CADET_SCHOOL + '\' OR ' +
+                    'school.school_type = \'' + schoolTypeEnum.CADET_SCHOOL_INTERNAT + '\' OR ' +
+                    'school.school_type = \'' + schoolTypeEnum.CORRECTIONAL_SCHOOL + '\' OR ' +
+                    'school.school_type = \'' + schoolTypeEnum.CORRECTIONAL_SCHOOL_INTERNAT + '\')'
+                ],
+                as: 'school',
+                join: [],
+                group: ['school.id'],
+                order: [
+                    'school.total_score DESC',
+                    'school.score DESC NULLS LAST',
+                    'school.id ASC'
+                ],
+                having : [],
+                limit: 10,
+                offset: params.page * 10
+        },
+        where: [],
+        join: [
+            {
+                type: 'LEFT OUTER',
+                values: [
+                    'address on address.school_id = school.id',
+                    'department on department.address_id = address.id',
+                    'address_metro on address_metro.address_id = address.id',
+                    'metro on metro.id = address_metro.metro_id'
+                ]
+            }
+        ],
+        group: [
+        ],
+        order: [
+            'school.total_score DESC',
+            'school.score DESC NULLS LAST',
+            'school.id ASC'
+        ],
+        having: []
     };
 
     if (searchParams) {
-        updateSearchConfig(searchConfig, searchParams);
+        services.search.updateSqlOptions(sqlConfig, searchParams);
     }
-    return models.School.findAll(searchConfig).then(schools => {
-        console.log('Found: ', colors.green(schools.length)) ;
-        return schools;
-    });
+
+    var sqlString = services.search.generateSearchSql(sqlConfig);
+
+    var options = {
+        type: sequelize.QueryTypes.SELECT
+    };
+    return sequelize.query(sqlString, options)
+    .then(schools => {
+            console.log('Found: ', colors.green(schools.length));
+            return schools;
+        });
 });
 
 /**
@@ -606,111 +816,28 @@ service.searchByText = function(text) {
                 }
             ]
         };
-    return models.School.findAll({
-        where: whereParams
-    });
+    return nameFilter['$and'].length ?
+        models.School.findAll({
+            where: whereParams,
+            include: [{
+                model: models.Address,
+                as: 'addresses',
+                attributes: [
+                    'id'
+                ],
+                include: [{
+                    model: models.Area,
+                    as: 'area',
+                    attributes: [
+                        'id',
+                        'name'
+                    ]
+                }]
+            }],
+            limit: 10
+        }) :
+        [];
 };
 
-
-
-/**
- * @param {object} searchConfig Existing search config to update
- * @param {object} searchParams
- * @param {?string} searchParams.name
- * @param {?Array<number>} searchParams.classes
- * @param {?number} searchParams.schoolType
- * @param {?Array<number>} searchParams.gia Subjects with high hia results
- * @param {?Array<number>} searchParams.ege
- * @param {?Array<number>} searchParams.olimp
- * TODO: develop criterias
- */
-var updateSearchConfig = function(searchConfig, searchParams) {
-    var whereParams = {},
-        searchDataCount = 0;
-
-    var extraIncludes = {
-        searchData : {
-            model: models.SearchData,
-            as: 'searchData',
-            where: {
-                $or: []
-            },
-            attributes: []
-        }
-    };
-
-    if (searchParams.name) {
-        var nameFilter = services.search.generateFilter(searchParams.name);
-        whereParams.$or = [
-          { name: nameFilter },
-          { fullName: nameFilter},
-          { abbreviation: nameFilter}
-        ];
-    }
-
-    if (searchParams.classes && searchParams.classes.length) {
-        whereParams.educationInterval = {
-            $contains: searchParams.classes
-        };
-    }
-
-    if (searchParams.schoolType) {
-        searchDataCount++;
-        extraIncludes.searchData.where.$or.push({
-            $and: {
-                type: searchTypeEnum.SCHOOL_TYPE,
-                values: {
-                    $overlap: searchParams.schoolType
-                }
-            }
-        });
-    }
-
-    if (searchParams.gia) {
-        searchDataCount++;
-        extraIncludes.searchData.where.$or.push({
-            $and: {
-                type: searchTypeEnum.GIA,
-                values: {
-                    $contains: searchParams.gia
-                }
-            }
-        });
-    }
-
-    if (searchParams.ege) {
-        searchDataCount++;
-        extraIncludes.searchData.where.$or.push({
-            $and: {
-                type: searchTypeEnum.EGE,
-                values: {
-                    $contains: searchParams.ege
-                }
-            }
-        });
-    }
-
-    if (searchParams.olimp) {
-        searchDataCount++;
-        extraIncludes.searchData.where.$or.push({
-            $and: {
-                type: searchTypeEnum.OLIMPIAD,
-                values: {
-                    $contains: searchParams.olimp
-                }
-            }
-        });
-    }
-
-    /*Write generated setting to config object*/
-    searchConfig.where = whereParams;
-    if (searchDataCount){
-        var extraIncludesArr = [];
-        extraIncludesArr.push(extraIncludes.searchData);
-        searchConfig.include = searchConfig.include.concat(extraIncludesArr);
-        searchConfig.group = '"School"."id"';
-        searchConfig.having = ['COUNT(?) = ?', '', searchDataCount];
-    }
-};
 
 module.exports = service;

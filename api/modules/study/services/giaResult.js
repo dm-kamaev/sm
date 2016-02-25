@@ -68,6 +68,22 @@ exports.getAllByData = async(function(data) {
     }));
 });
 
+/**
+ * Get one data from table by school id
+ * @param {number} schoolId
+ * @return {Object} instance of GiaResult model
+ */
+exports.getAllBySchoolId = async(function(schoolId) {
+    return await(models.GiaResult.findAll({
+        where: {schoolId: schoolId},
+        include: [
+            {
+                model: models.Subject,
+                as: 'subject'
+            }
+        ]
+    }));
+});
 
 /**
  * Get one data from table by data

@@ -3,42 +3,73 @@
 
     width: 100%;
     height: auto;
-    padding: 30px 0;
+    padding: 25px 0;
 
     border-bottom: 1px solid #e5e5e5;
-
-    cursor: pointer;
 }
 
 .b-school-list-item:last-child {
     border-bottom: none;
 }
 
-.b-school-list-item__name {
-    float: left;
+.b-school-list-item__section {
+    position: relative;
 
-    width: 40%;
+    margin-bottom: 12px;
+
+    &_badges {
+        margin-bottom: 10px;
+    }
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+
+}
+
+.b-school-list-item__metro-stations {
+    display: inline-block;
+
+    margin-right: 18px;
+}
+
+.b-school-list-item__ratings {
+    display: inline-block;
+}
+
+.b-school-list-item__name {
+    display: inline-block;
     height: 100%;
+    padding-right: 80px;
 
     color: black;
-    text-transform: uppercase;
+
     font-size: 21px;
-    font-weight: bold;
+    font-weight: 700;
     line-height: 26px;
+    font-family: 'Proxima';
+
+    text-decoration: none;
+
+    &_bold {
+        font-weight: 800;
+    }
+
+    &:hover {
+        color: #ee362c;
+    }
 }
 
 .b-school-list-item__name-wrap {
-    width: 90%;
-
     font-weight: 700;
     font-family: 'Proxima', Arial, sans-serif;
 }
 
-.b-school-list-item__rating {
-    float: left;
+.b-school-list-item__score {
+    position: absolute;
 
-    width: 60%;
-    height: auto;
+    top: 2px;
+    right: 0;
 }
 
 .b-school-list-item__data {
@@ -62,11 +93,10 @@
 .b-school-list-item__description {
     display: inline-block;
 
-    width: 100%;
-    height: auto;
-    margin-top: 25px;
+    max-width: 705px;
+    padding-right: 80px;
 
-	font-family: 'PT Serif', Arial, sans-serif;
-	font-size: 16px;
-	line-height: 22px;
+    color: #000;
+
+    font: 16px/22px 'PT Serif', Arial, sans-serif;
 }

@@ -14,7 +14,7 @@ class OlympActualizer extends SearchDataActualizer {
     constructor(school) {
         await(super(school)); //call parent constructor
         this.resultSubjects_ = [];
-        this.searchType_ = searchType.OLIMPIAD;
+        this.searchType_ = searchType.fields.OLIMPIAD;
     }
 
     /**

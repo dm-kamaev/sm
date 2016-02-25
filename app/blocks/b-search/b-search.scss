@@ -3,7 +3,11 @@
 }
 
 .b-search_theme_main {
+    box-sizing: border-box;
+
+    border: 1px solid #dbdbd4;
     background-color: #ffffff;
+    box-shadow: inset 0 1px 6px #dbdbd4;
 }
 
 .b-search__input {
@@ -12,8 +16,19 @@
 
     border-color: transparent;
     outline: 0;
+    background-color: transparent;
 
     font-size: 15px;
+}
+
+.b-search ul {
+    width: 100%;
+}
+
+.b-search li {
+    overflow: hidden;
+
+    text-overflow: ellipsis;
 }
 
 .b-search__icon {
@@ -43,13 +58,12 @@
     height: 100%;
 
     background-color: transparent;
-
     box-shadow: none;
 }
 
 .b-search_theme_min .b-search__icon {
-    bottom: 22px;
-    left: 30px;
+    bottom: 8px;
+    right: 8px;
 
     /*width: 20px;
     height: 20px;
@@ -57,11 +71,25 @@
     background: url(images/b-search/search.png);*/
 }
 
+.b-search__icon_disabled {
+    opacity: 0.3;
+
+    cursor: default;
+}
+
 .b-search__list {
     position: absolute;
     left: 68px;
 
     line-height: 19px;
+}
+
+.b-search__list-name {
+    margin-right: 7px;
+}
+
+.b-search__list-area {
+    color: #999999;
 }
 
 .b-search__list_hidden {
@@ -74,13 +102,13 @@
 }
 
 .b-search_theme_min .g-suggest {
-    height: 60px;
-    padding-left: 67px;
-    background-color: #f4f4ec;
+    height: 30px;
+    padding-right: 31px;
+    padding-left: 5px;
 }
 
 .b-search_theme_main .g-suggest {
-    height: 47px;
-    padding-right: 50px;
-    padding-left: 20px;
+    height: 45px;
+    padding-right: 37px;
+    padding-left: 12px;
 }

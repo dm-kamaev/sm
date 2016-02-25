@@ -15,7 +15,7 @@ class EgeActualizer extends SearchDataActualizer {
         await(super(school)); //call parent constructor
         this.citySubjects_ = citySubjects;
         this.resultSubjects_ = [];
-        this.searchType_ = searchType.EGE;
+        this.searchType_ = searchType.fields.EGE;
     }
 
 
@@ -67,7 +67,7 @@ class EgeActualizer extends SearchDataActualizer {
                     res => (
                         res.cityId == this.school_.city_id &&
                         res.year == year &&
-                        res.type == searchType.EGE
+                        res.type == this.searchType_
                     ));
                 if (cityResult) {
                     var isPassed;

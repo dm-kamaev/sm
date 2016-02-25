@@ -6,39 +6,106 @@
  * @param? params {
  *     schools: ?list<[
  *         id: ?number,
- *         name: ?string,
- *         score: ?list<number>,
- *         totalScore: ?number,
- *         description: ?string
+ *         url: ?string,
+ *         name: [
+ *             light: ?string,
+ *             bold: ?string
+ *         ],
+ *         score: ?list<[
+ *             name: ?string,
+ *             value: ?number
+ *         ]>,
+ *         currentCriterion: [
+ *             name: ?string,
+ *             value: ?number
+ *         ],
+ *         description: ?string,
+ *         metroStations: list<string>,
+ *         ratings: list<string>,
+ *         isScoreClickable: ?boolean
  *     ]>
  * }
  */
 {template .base autoescape="strict" kind="html"}
     <div class="b-school-list">
         <div class="b-school-list__header">
+            <div class="b-school-list__line">
+            </div>
+            <div class="b-school-list__sort">
 
-            <div class="b-school-list__header-sections">
-                {call sm.bRating.Template.base}
-                    {param params:[
-                        'theme': 'black',
-                        'noMarks': true
+                /*{call sm.lSearchResult.bSort.Template.base}
+                {/call}*/
+                {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+                    {param params: [
+                        'type': 'dropdown-select',
+                        'renderParams': [
+                            'data': [
+                                'listItems': [
+                                    [
+                                        'label': 'Средняя оценка',
+                                        'openerText': 'средней оценке'
+                                    ],
+                                    [
+                                        'label': 'Образование',
+                                        'openerText': 'образованию'
+                                    ],
+                                    [
+                                        'label': 'Преподаватели',
+                                        'openerText': 'преподавателям'
+                                    ],
+                                    [
+                                        'label': 'Атмосфера',
+                                        'openerText': 'атмосфере'
+                                    ],
+                                    [
+                                        'label': 'Инфраструктура',
+                                        'openerText': 'инфраструктуре'
+                                    ]
+                                ],
+                                'staticText': 'Сортировать по ',
+                                'defaultOpenerText': 'средней оценке'
+                            ],
+                            'config': [
+                                'iconSprite': 'sort-arrow',
+                                'theme': 'sort'
+                            ]
+                        ]
                     ]/}
                 {/call}
             </div>
-
         </div>
         <div class="b-school-list__body">
             {foreach $school in $params.schools}
                 {call sm.lSearchResult.bSchoolListItem.Template.base}
                     {param params:[
                         'id': $school.id,
+                        'url': $school.url,
                         'name': $school.name,
                         'score': $school.score,
-                        'totalScore': $school.totalScore,
-                        'description': $school.description
+                        'currentCriterion': $school.currentCriterion,
+                        'description': $school.description,
+                        'metroStations': $school.metroStations,
+                        'ratings': $school.ratings,
+                        'isScoreClickable': $school.isScoreClickable
                     ]/}
                 {/call}
             {/foreach}
+        </div>
+        <div class="b-school-list__loader i-utils__hidden">
+            <div class="b-school-list__loader-image">
+            </div>
+            <div class="b-school-list__loader-text">
+                Загружаем список...
+            </div>
+        </div>
+
+        <div class="b-school-list__footer">
+            <div class="b-school-list__show-more-button{sp}
+                {if length($params.schools) < 10}
+                    i-utils__hidden
+                {/if}">
+                Показать ещё
+            </div>
         </div>
     </div>
 {/template}

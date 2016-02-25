@@ -1,0 +1,105 @@
+{namespace sm.bScoreSchoolList.Template}
+/**
+ * Score in school list view
+ * @param params {
+ *     score: list<[
+ *         name: ?string,
+ *         value: ?number
+ *     ]>,
+ *     sortCriterion: [
+ *         name: ?string,
+ *         value: ?number
+ *     ],
+ *     isClickable: ?boolean
+ * }
+ * @extends sm.bScore.Template
+ * @constructor
+ */
+{template .base autoescape="strict" kind="html"}
+    {call .init data="all" /}
+{/template}
+
+/**
+ * Block init
+ * @param params {
+ *     score: list<[
+ *         name: ?string,
+ *         value: ?number
+ *     ]>,
+ *     sortCriterion: [
+ *         name: ?string,
+ *         value: ?number
+ *     ],
+ *     isClickable: ?boolean
+ * }
+ */
+{template .init autoescape="strict" kind="html"}
+    <div class="b-score
+                b-score_school-list
+                {$params?.isClickable ?
+                ' b-score_active' :
+                ''}">
+
+        <div class="b-score__current-criterion-name
+            i-utils__hidden">
+            {$params?.sortCriterion?.name}
+        </div>
+
+        <div class="b-score__current-criterion-value">
+            {call sm.bMark.Template.base}
+                {param params: [
+                    'value': $params?.sortCriterion?.value,
+                    'display': 'inline',
+                    'config': [
+                        'bigText': true,
+                        'notShowDashes': true
+                    ]
+                ]/}
+            {/call}
+        </div>
+
+        <div class="b-score__other-marks
+            i-utils__hidden">
+            <div class="b-score__arrow">
+                <div class="b-score__arrow-shadow"></div>
+            </div>
+            {if length($params.score) > 0}
+                {call sm.bScoreSchoolList.Template.scoreItems}
+                    {param params: [
+                        'data': $params.score
+                    ]/}
+                {/call}
+            {/if}
+        </div>
+    </div>
+{/template}
+
+/**
+ * Score items template
+ * @param params {
+ *     data: list<[
+ *         name: ?string,
+ *         value: ?number
+ *     ]>
+ * }
+ */
+{template .scoreItems autoescape="strict" kind="html"}
+    <ul>
+        <li class="b-score__mark-item">Оценки, поставленные пользователями</li>
+        {foreach $item in $params.data}
+            <li class="b-score__mark-item">
+                <div class="b-score__mark-name">
+                    {$item.name}
+                </div>
+                <div class="b-score__mark-value">
+                    {call sm.bMark.Template.base}
+                        {param params: [
+                            'value': $item.value,
+                            'display': 'number'
+                        ]/}
+                    {/call}
+                </div>
+            </li>
+        {/foreach}
+    </ul>
+{/template}

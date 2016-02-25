@@ -136,7 +136,7 @@ exports.egeFilters = async (function() {
     var params = {
         model: models.EgeResult,
         modelAs: 'egeResult',
-        filterName: searchTypeEnum.EGE
+        filterName: searchTypeEnum.fields.EGE
     };
     return await (generateFilters(params));
 });
@@ -148,7 +148,7 @@ exports.giaFilters = async (function() {
     var params = {
         model: models.GiaResult,
         modelAs: 'giaResult',
-        filterName: searchTypeEnum.GIA
+        filterName: searchTypeEnum.fields.GIA
     };
     return await (generateFilters(params));
 });
@@ -160,7 +160,7 @@ exports.olympFilters = async (function() {
     var params = {
         model: models.OlimpResult,
         modelAs: 'olimpResult',
-        filterName: searchTypeEnum.OLIMPIAD
+        filterName: searchTypeEnum.fields.OLIMPIAD
     };
     return await (generateFilters(params));
 });

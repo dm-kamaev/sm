@@ -1,0 +1,3 @@
+basePath=/home/gorod
+0 */12 * * * cd $basePath && ./console/cron/updateSearch.sh
+0 */12 * * * cd $basePath && ./console/cron/updateRank.sh

@@ -7,12 +7,12 @@
  *     content: [
  *         classes: string,
  *         kindergarten: bool,
- *         extendedDayCost: number,
+ *         extendedDayCost: string,
  *         directorName: string,
  *         dressCode: bool
  *     ]
  * }
- * @extends '/l-school/b-data-block/b-data-block'
+ * @extends sm.lSchool.bDataBlock.Template
  * @constructor
  */
 {template .base}
@@ -58,9 +58,9 @@
             </li>
         {/if}
 
-        {if $params.content.dressCode != ''}
+        {if $params.content.dressCode == true}
             <li class="b-data-block__item">
-                {$params.content.dressCode}
+                Школьная форма обязательна
             </li>
         {/if}
 

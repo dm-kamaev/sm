@@ -1,10 +1,12 @@
 goog.provide('sm.lSearchResult.bSchoolList.SchoolList');
 
-
+goog.require('goog.dom.classlist');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
+goog.require('sm.iFactory.FactoryStendhal');
 goog.require('sm.lSearchResult.bSchoolList.Template');
 goog.require('sm.lSearchResult.bSchoolListItem.SchoolListItem');
+goog.require('sm.lSearchResult.bSort.Sort');
 
 
 /**
@@ -31,11 +33,25 @@ sm.lSearchResult.bSchoolList.SchoolList = function(opt_params) {
     this.schoolListItems_ = [];
 
     /**
-     *
+     * Body element
      * @type {?Element}
      * @private
      */
     this.bodyElement_ = null;
+
+    /**
+     * Loader element
+     * @type {?Element}
+     * @private
+     */
+    this.loaderElement_ = null;
+
+    /**
+     * Instance
+     * @type {sm.lSearchResult.bSort.Sort}
+     * @private
+     */
+    this.sort_ = null;
 
     /**
      * @type {number}
@@ -47,6 +63,7 @@ goog.inherits(sm.lSearchResult.bSchoolList.SchoolList, goog.ui.Component);
 
 goog.scope(function() {
     var SchoolList = sm.lSearchResult.bSchoolList.SchoolList,
+        Sort = sm.lSearchResult.bSort.Sort,
         SchoolListItem = sm.lSearchResult.bSchoolListItem.SchoolListItem;
 
     /**
@@ -55,7 +72,9 @@ goog.scope(function() {
      */
     SchoolList.CssClass = {
         ROOT: 'b-school-list',
-        SCHOOL_LIST_BODY: 'b-school-list__body'
+        SCHOOL_LIST_BODY: 'b-school-list__body',
+        SHOW_MORE_BUTTON: 'b-school-list__show-more-button',
+        LOADER: 'b-school-list__loader'
     };
 
     /**
@@ -63,7 +82,9 @@ goog.scope(function() {
      * @enum
      */
     SchoolList.Event = {
-        'ITEM_CLICK': SchoolListItem.Event.CLICK
+        'ITEM_CLICK': SchoolListItem.Event.CLICK,
+        'SORT_CLICK': sm.gDropdown.DropdownSelect.Event.ITEM_SELECT,
+        'SHOW_MORE': 'show-more-items'
     };
 
     /**
@@ -111,8 +132,10 @@ goog.scope(function() {
             schoolListItemInstance = new SchoolListItem({
                 'id': params.id,
                 'score': params.score,
-                'totalScore': params.totalScore
+                'currentCriterion': params.currentCriterion,
+                'isScoreClickable': params.isScoreClickable
             });
+
 
             this.addChild(schoolListItemInstance);
             this.schoolListItems_.push(schoolListItemInstance);
@@ -121,6 +144,143 @@ goog.scope(function() {
 
         this.bodyElement_ = this.getElementByClass(
             SchoolList.CssClass.SCHOOL_LIST_BODY
+        );
+
+        this.loaderElement_ = this.getElementByClass(
+            SchoolList.CssClass.LOADER
+        );
+
+        this.showMoreButtonElement_ = this.getElementByClass(
+            SchoolList.CssClass.SHOW_MORE_BUTTON
+        );
+
+        //sort
+        var sortElement = goog.dom.getElementByClass(
+            cl.gDropdown.View.CssClass.ROOT,
+            element
+        );
+
+        this.sort_ = sm.iFactory.FactoryStendhal.getInstance().decorate(
+            'dropdown-select',
+            sortElement,
+            this
+        );
+    };
+
+    /**
+     * @override
+     */
+    SchoolList.prototype.enterDocument = function() {
+        goog.base(this, 'enterDocument');
+
+        this.initListeners_();
+    };
+
+    /**
+     * TODO: repair
+     * Schools sort maker
+     * @param {number=} opt_sortKey
+     */
+    SchoolList.prototype.sort = function(opt_sortKey) {
+        var schoolListItems = this.removeItemChildren_();
+        var sortKey = (typeof opt_sortKey == 'undefined') ?
+            this.sortKey_ :
+            opt_sortKey;
+        this.sortKey_ = sortKey;
+
+        schoolListItems.sort(function(item1, item2) {
+            return (sortKey > 0) ?
+                item1.compareByScore(item2, sortKey - 1) :
+                item1.compareByTotalScore(item2);
+        });
+
+        schoolListItems.forEach(function(item) {
+            item.changeSorCriterion(sortKey);
+        });
+
+        for (var i = 0; i < schoolListItems.length; i++) {
+            this.addChild(schoolListItems[i]);
+        }
+    };
+
+    /**
+     * Show more items handler
+     * @private
+     */
+    SchoolList.prototype.showMoreHandler_ = function() {
+        this.dispatchEvent(SchoolList.Event.SHOW_MORE);
+    };
+
+    /**
+     * Checks is bottom of the page
+     * @private
+     */
+    SchoolList.prototype.scrollHandler_ = function() {
+        if (goog.dom.getViewportSize().height +
+                goog.dom.getDocumentScroll().y >=
+                goog.dom.getDocumentHeight()) {
+
+            this.dispatchEvent(SchoolList.Event.SHOW_MORE);
+        }
+    };
+
+    /**
+     * Shows loader
+     */
+    SchoolList.prototype.showLoader = function() {
+        goog.dom.classlist.remove(
+            this.loaderElement_,
+            gorod.iUtils.CssClass.HIDDEN
+        );
+        this.hideShowMoreButton_();
+    };
+
+    /**
+     * Hides loader
+     * @private
+     */
+    SchoolList.prototype.hideLoader_ = function() {
+        goog.dom.classlist.add(
+            this.loaderElement_,
+            gorod.iUtils.CssClass.HIDDEN
+        );
+        this.showShowMoreButton_();
+    };
+
+    /**
+     * Show show more button
+     * @private
+     */
+    SchoolList.prototype.showShowMoreButton_ = function() {
+        goog.dom.classlist.remove(
+            this.showMoreButtonElement_,
+            gorod.iUtils.CssClass.HIDDEN
+        );
+    };
+
+    /**
+     * Hides show more button
+     * @private
+     */
+    SchoolList.prototype.hideShowMoreButton_ = function() {
+        goog.dom.classlist.add(
+            this.showMoreButtonElement_,
+            gorod.iUtils.CssClass.HIDDEN
+        );
+    };
+
+    /**
+     * Hides loader and more button
+     * @private
+     */
+    SchoolList.prototype.hideLoaderAndButton_ = function() {
+        goog.dom.classlist.add(
+            this.showMoreButtonElement_,
+            gorod.iUtils.CssClass.HIDDEN
+        );
+        goog.dom.classlist.add(
+            this.loaderElement_,
+            gorod.iUtils.CssClass.HIDDEN
         );
     };
 
@@ -133,39 +293,21 @@ goog.scope(function() {
     };
 
     /**
-     * Schools sort maker
-     * @param {number=} opt_sortKey
-     */
-    SchoolList.prototype.sort = function(opt_sortKey) {
-        var schoolListItems = this.removeChildren();
-        var sortKey = (typeof opt_sortKey == 'undefined') ?
-            this.sortKey_ :
-            opt_sortKey;
-        this.sortKey_ = sortKey;
-
-        schoolListItems.sort(function(item1, item2) {
-            return (sortKey > 0) ?
-                item1.compareByScore(item2, sortKey - 1) :
-                item1.compareByTotalScore(item2);
-        });
-
-        for (var i = 0; i < schoolListItems.length; i++) {
-            this.addChild(schoolListItems[i]);
-        }
-    };
-
-    /**
      * Set school list
      * @param {Array.<Object>=} opt_listData
      */
     SchoolList.prototype.setItems = function(opt_listData) {
-        var that = this;
-
-        this.schoolListItems_.forEach(function(item) {
-            that.removeChild(item, true);
-        });
+        this.removeItemChildren_(true);
         this.schoolListItems_ = [];
+        this.addItems(opt_listData);
+    };
 
+    /**
+     * Add school list items
+     * @param {Array.<Object>=} opt_listData
+     */
+    SchoolList.prototype.addItems = function(opt_listData) {
+        var that = this;
         var data = opt_listData || [];
 
         data.forEach(function(itemData) {
@@ -174,6 +316,69 @@ goog.scope(function() {
             that.schoolListItems_.push(item);
         });
 
-        this.sort();
+        if (opt_listData.length < 10) {
+            this.disable_();
+        } else {
+            this.hideLoader_();
+        }
     };
+
+    /**
+     * Listen events
+     * @private
+     */
+    SchoolList.prototype.initListeners_ = function() {
+        this.getHandler().listen(
+            this.showMoreButtonElement_,
+            goog.events.EventType.CLICK,
+            this.showMoreHandler_
+        );
+
+        if (!goog.dom.classes.has(
+                this.showMoreButtonElement_,
+                gorod.iUtils.CssClass.HIDDEN
+        )) {
+
+            this.getHandler().listen(
+                goog.dom.getWindow(),
+                goog.events.EventType.SCROLL,
+                this.scrollHandler_
+            );
+        }
+    };
+
+    /**
+     * Reset uploading controlls
+     */
+    SchoolList.prototype.reset = function() {
+        this.hideLoader_();
+        this.initListeners_();
+    };
+
+    /**
+     * Turn off uploading controlls
+     * @private
+     */
+    SchoolList.prototype.disable_ = function() {
+        this.getHandler().removeAll();
+        this.hideLoaderAndButton_();
+    };
+
+    /**
+     * Remove school list item children
+     * @param {bool=} opt_unrender
+     * @return {Array.<sm.lSearchResult.bSchoolListItem.SchoolListItem>}
+     * @private
+     */
+    SchoolList.prototype.removeItemChildren_ = function(opt_unrender) {
+        var that = this;
+        var res = [];
+
+        this.schoolListItems_.forEach(function(item) {
+            res.push(that.removeChild(item, opt_unrender));
+        });
+
+        return res;
+    };
+
 });

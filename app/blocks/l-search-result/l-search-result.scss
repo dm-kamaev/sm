@@ -1,7 +1,17 @@
+@import "../i-media/i-media";
+
+html, body {
+	height: 100%;
+}
+
 .l-search-result {
     width: 100%;
 
     margin: 0;
+}
+
+.l-search-result__header {
+    margin-bottom: 38px;
 }
 
 .l-search-result__body {
@@ -28,10 +38,25 @@
     text-align: center;
 }
 
-.l-search-result__school-list {
+.l-search-result__results-section {
     float: right;
 
     width: 762px;
+}
+
+.l-search-result__list-header {
+    float: right;
+
+	width: 762px;
+    margin: 27px 0 7px;
+
+	color: #000;
+
+	font: 600 19px/35px Proxima, arial, sans-serif;
+}
+
+.l-search-result__list-header-text_strong {
+	font-weight: 800;
 }
 
 .l-search-result__search {
@@ -94,4 +119,46 @@
     padding: 30px 30px 30px 30px;
 
     background-color: #f4f4ec;
+}
+
+
+@include media-xl {
+    .l-search-result__body {
+        position: relative;
+
+        width: 790px;
+    }
+
+    .l-search-result__left-menu {
+        width: 100%;
+        margin-bottom: 50px;
+    }
+
+    .l-search-result__filters {
+        padding: 10px 10px 20px;
+    }
+
+    .l-search-result__results-section {
+        width: 100%;
+    }
+
+    .l-search-result__list-header {
+        width: 100%;
+        margin: 9px 0 18px;
+    }
+}
+
+
+@include media-m {
+    .l-search-result__body {
+        width: 88%;
+    }
+
+    .l-search-result__left-menu {
+        display: none;
+    }
+
+    .l-search-result__list-header {
+        margin-bottom: 27px;
+    }
 }

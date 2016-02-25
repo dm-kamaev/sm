@@ -1,5 +1,6 @@
 var DataType = require('sequelize'),
     db = require('../../../../app/components/db');
+var urlService = require('../services/urls');
 const schoolType = require('../enums/schoolType');
 
 var School = db.define('School', {
@@ -7,7 +8,10 @@ var School = db.define('School', {
     /**
      * School info
      */
-    name: DataType.STRING,
+    name: {
+        type: DataType.STRING,
+        unique: true
+    },
     abbreviation: DataType.STRING,
     fullName: {
         field: 'full_name',
@@ -25,8 +29,7 @@ var School = db.define('School', {
     site: DataType.STRING,
     govermentKey: {
         field: 'goverment_key',
-        type: DataType.INTEGER,
-        unique: true,
+        type: DataType.INTEGER
     },
     cityId: {
         field: 'city_id',
@@ -35,6 +38,38 @@ var School = db.define('School', {
     educationInterval: {
         field: 'education_interval',
         type: DataType.ARRAY(DataType.INTEGER)
+    },
+    specializedClasses: {
+        field: 'specialized_classes',
+        type: DataType.ARRAY(DataType.STRING)
+    },
+    features: {
+        field: 'features',
+        type: DataType.ARRAY(DataType.STRING)
+    },
+    extendedDayCost: {
+        field: 'extended_day_cost',
+        type: DataType.STRING
+    },
+    dressCode: {
+        field: 'dress_code',
+        type: DataType.BOOLEAN
+    },
+    links: {
+        field: 'links',
+        type: DataType.ARRAY(DataType.ARRAY(DataType.STRING))
+    },
+    description: {
+        field: 'description',
+        type: DataType.STRING
+    },
+    boarding: {
+        field: 'boarding',
+        type: DataType.BOOLEAN
+    },
+    popularity: {
+        field: 'popularity',
+        type: DataType.INTEGER
     },
 
     /**
@@ -72,9 +107,22 @@ var School = db.define('School', {
         type: DataType.INTEGER,
         field: 'comment_group_id'
     },
+    views: {
+        type: DataType.INTEGER,
+        notNull: false,
+        defaultValue: 0
+    },
+    url: {
+        type: DataType.STRING,
+        unique: true
+    }
 }, {
     underscored: true,
     tableName: 'school',
+    hooks: {
+        afterCreate: urlService.generateUrl,
+        afterUpdate: urlService.generateUrl,
+    },
 
     classMethods: {
         associate: function(models) {
@@ -92,6 +140,10 @@ var School = db.define('School', {
             });
             School.hasMany(models.SearchData, {
                 as: 'searchData', foreignKey: 'school_id',
+                onDelete: 'cascade'
+            });
+            School.hasMany(models.SchoolUrl, {
+                as: 'urls', foreignKey: 'school_id',
                 onDelete: 'cascade'
             });
             School.hasMany(models.Address, {

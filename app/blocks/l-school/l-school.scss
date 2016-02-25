@@ -144,8 +144,9 @@ body {
 }
 
 .l-school__section {
+    display: inline-block;
+
 	width: 100%;
-	display: inline-block;
 }
 
 .l-school__content-column {
@@ -164,7 +165,7 @@ body {
 	}
 
 	&.l-school__content-column_last {
-		float: right;
+		//float: right;
 
 		margin-right: 0;
 	}
@@ -203,6 +204,21 @@ body {
 
     text-align: left;
     font-size: 0;
+}
+
+.l-school__comments-placeholder {
+    margin: 55px 0;
+
+    text-align: center;
+
+    font-family: 'PT Serif';
+    font-size: 16px;
+}
+
+.l-school__comments-placeholder-link {
+    cursor: pointer;
+
+    color: #ed635a;
 }
 
 .l-school__content-block{
@@ -254,6 +270,10 @@ body {
 .b-bouton_feedback-opener {
     font-family: 'Proxima', Arial, sans-serif;
     font-weight: 800;
+}
+
+.l-school__section__popular-schools {
+    margin-top: -19px;
 }
 
 .l-school__footer {

@@ -7,17 +7,44 @@
     {let $switcher kind="html"}
         {call .switcher_ /}
     {/let}
-    {let $switchable kind="html"}
-        {call .switchable_ /}
-    {/let}
-    <div class="b-sort">
-        {call gorod.bDropdown.DropdownCustomTemplate.render}
+
+    {let $content kind="html"}
+        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
             {param params: [
-                'switcher': $switcher,
-                'switchable': $switchable,
-                'dropdown': [
-                    'style': [
-                        'isRight': true
+                'type': 'list',
+                'renderParams': [
+                    'data': [
+                        'items': [
+                            [
+                                'label': 'Средняя оценка'
+                            ],
+                            [
+                                'label': 'Образование'
+                            ],
+                            [
+                                'label': 'Преподаватели'
+                            ],
+                            [
+                                'label': 'Атмосфера'
+                            ],
+                            [
+                                'label': 'Инфраструктура'
+                            ]
+                        ]
+                    ]
+                ]
+            ]/}
+        {/call}
+    {/let}
+
+    <div class="b-sort">
+        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+            {param params: [
+                'type': 'dropdown',
+                'renderParams': [
+                    'data': [
+                        'opener': $switcher,
+                        'content': $content
                     ]
                 ]
             ]/}
@@ -30,40 +57,12 @@
  * Switcher template
  */
 {template .switcher_ autoescape="strict" kind="html" private="true"}
-    <span class="b-dropdown__switcher-text">
+    <span class="g-dropdown__switcher-text">
         Сортировать по {sp}
-        <span class="b-dropdown__switcher-custom-text">
+        <span class="g-dropdown__switcher-custom-text">
             средней оценке
         </span>
     </span>
-    <img class="dropdown__switcher-image"
+    <img class="g-dropdown__switcher-image"
          src="/images/l-search-result/b-sort/downArrow.png">
-{/template}
-
-/**
- * Switchable template
- */
-{template .switchable_ autoescape="strict" kind="html" private="true"}
-    {call gorod.bList.ListTemplate.render}
-        {param params:[
-            'list': [
-                [
-                    'text': 'Средняя оценка'
-                ],
-                [
-                    'text': 'Образование'
-                ],
-                [
-                    'text': 'Преподаватели'
-                ],
-                [
-                    'text': 'Атмосфера'
-                ],
-                [
-                    'text': 'Инфраструктура'
-                ]
-            ],
-            'color': 'red'
-        ]/}
-    {/call}
 {/template}

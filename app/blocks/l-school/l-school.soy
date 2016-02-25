@@ -13,7 +13,7 @@
  *        directorName: string,
  *        classes: string,
  *        kindergarten: bool,
- *        extendedDayCost: number,
+ *        extendedDayCost: string,
  *        dressCode: bool,
  *        social: list<[
  *            name: string,
@@ -25,9 +25,16 @@
  *            link: string
  *        ]>,
  *        contacts: [
- *            address: list<[
- *                title: string,
- *                description: string
+ *            stages: list<[
+ *                name: string,
+ *                addresses: list<[
+ *                    title: string,
+ *                    description: string,
+ *                    metroStation: list<[
+ *                        id: number,
+ *                        name: string
+ *                    ]>
+ *                ]>
  *            ]>,
  *            phones: list<string>
  *        ],
@@ -48,9 +55,28 @@
  *                value: int
  *            ]>
  *        ]>,
- *        coords: list<
+ *        addresses: list<
  *           list<number>
  *        >,
+ *        results: [
+ *            ege: [
+ *                years: ?list<number>,
+ *                data: [
+ *                    top:  ?list<[
+ *                        label: ?string,
+ *                        value: ?string
+ *                    ]>,
+ *                    middle:  ?list<[
+ *                        label: ?string,
+ *                        value: ?string
+ *                    ]>,
+ *                    bottom:  ?list<[
+ *                        label: ?string,
+ *                        value: ?string
+ *                    ]>,
+ *                ]
+ *            ]
+ *        ]
  *        ratings: list<[
  *            name<string>,
  *            place<number>,
@@ -61,8 +87,23 @@
  *            value: number
  *        ]>,
  *        totalScore: number,
- *        reviewCount: number
+ *        reviewCount: number,
+ *        popularSchools: ?list<[
+ *            id: ?number,
+ *            url: ?string,
+ *            name: ?string,
+ *            description: ?string,
+ *            metro: ?list<string>,
+ *            totalScore: ?number
+ *        ]>
  *     ]
+ *     searchTemplates: [
+ *         search: ?string,
+ *         item: ?string,
+ *         text: ?string,
+ *         value: ?string
+ *     ],
+ *     searchText: ?string
  * }
  */
 {template .base autoescape="strict" kind="html"}
@@ -70,16 +111,17 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>{$params.data.schoolName}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{$params.data.schoolName} на Школах Мела</title>
         <link href='https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700,700italic&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
         <link href='https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
-        <link rel="stylesheet" href="/frobl.build.css">
+        <link rel="stylesheet" href="/clobl.build.css">
         <link rel="stylesheet" href="/styles.css">
-        <link rel="shortcut icon" href="/images/favicon.png" type="image/png">
+        <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
     </head>
     <body>
         {let $dataParams kind="html"}
-            {call gorod.iUtils.stringify}
+            {call cl.iUtils.Utils.stringify}
                 {param json: [
                     'id': $params?.data?.id
                 ] /}
@@ -90,7 +132,15 @@
                         l-school__section__header">
                 {call sm.bHeader.Template.base}
                     {param params: [
-                        'url': '/'
+                        'url': '/',
+                        'searchText': $params?.searchText,
+                        'searchRedirect': true,
+                        'templates': [
+                            'search': $params.searchTemplates.search,
+                            'item': $params.searchTemplates.item,
+                            'text': $params.searchTemplates.text,
+                            'value': $params.searchTemplates.value
+                        ]
                     ]/}
                 {/call}
             </div>
@@ -114,10 +164,20 @@
                 </div>
             </div>
 
-            <div class="l-shool__section l-shool__section__results">
+            /*
+            <div class="l-school__section l-school__section__results">
                 <div class="l-school__container">
-                    /*Results of ege, gia, olimpiads*/
+                    // Results of ege, gia, olimpiads
                 </div>
+            </div>
+            */
+
+            <div class="l-school__section l-school__section_grey">
+                {call sm.lSchool.bResults.Template.results}
+                    {param params: [
+                        'data': $params.data.results
+                    ]/}
+                {/call}
             </div>
 
             <div class="l-school__section
@@ -129,10 +189,14 @@
                 </div>
             </div>
 
-            <div class="l-shool__section
-                        l-shool__section__popular-schools">
+            <div class="l-school__section
+                        l-school__section__popular-schools">
                 <div class="l-school__container">
-                /*Popular schools*/
+                  {call sm.bPopularSchools.Template.base}
+                      {param params: [
+                          'popularSchools': $params?.data?.popularSchools
+                      ]/}
+                  {/call}
                 </div>
             </div>
 
@@ -166,7 +230,6 @@
  * }
  */
 {template .top_ autoescape="strict" kind="html"}
-
     <div class="l-school__content-column l-school__content-column_double-width">
         <div class="l-school__name">{$params.data.schoolName}</div>
         {if $params.data.schoolDescr}
@@ -175,36 +238,20 @@
             </div>
         {/if}
     </div>
+
     <div class="l-school__content-column l-school__content-column_last">
-         /*хрень*/
         <div class = "l-school__rating">
-
-            // {call sm.bRating.Template.base}
-            //      {param params: [
-            //             'marks': $params.data.score,
-            //             'averageMark': $params.data.totalScore
-            //      ]/}
-            // {/call}
-
-            {call gorod.bBouton.BoutonTemplate.render}
+            {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
                 {param params: [
-                    'label': 'Оставить отзыв',
-                    'customClasses': 'b-bouton_feedback-opener',
-                    'state': [
-                        'pressed': true
-                    ],
-                    'style': [
-                        'theme': 'default',
-                        'size': 'extralarge',
-                        'width': 'block',
-                        'color': 'red',
-                        'borderRadius': 'none',
-                        'borderWidth': 'l',
-                        'uppercase': true
+                    'type': 'button',
+                    'renderParams': [
+                        'data': 'Оставить отзыв',
+                        'config': [
+                            'customClasses': ['g-button_feedback-opener']
+                        ]
                     ]
-                ] /}
+                ]/}
             {/call}
-
         </div>
     </div>
 {/template}
@@ -221,7 +268,7 @@
  *          features: string,
  *          classes: string,
  *          kindergarten: bool,
- *          extendedDayCost: number,
+ *          extendedDayCost: string,
  *          directorName: string,
  *          dressCode: bool,
  *          social:list<{
@@ -233,12 +280,19 @@
  *              href: string,
  *              link: string
  *          ]>,
- *          contacts:[
- *              address:list<{
- *                  title: string,
- *                  description: string
- *              }>,
- *              phones:list<string>
+ *          contacts: [
+ *              stage: list<[
+ *                  name: string,
+ *                  addresses: list<[
+ *                      title: string,
+ *                      description: string,
+ *                      metroStation: list<[
+ *                          id: number,
+ *                          name: string
+ *                      ]>
+ *                  ]>
+ *              ]>,
+ *              phones: list<string>
  *          ],
  *          specializedClasses: list<[
  *              name: string
@@ -248,9 +302,10 @@
  *              name: string
  *              items: list<string>
  *          ]>,
- *          coords: ?list<
- *              list<number>
- *          >,
+ *          addresses: ?list<[{
+ *              lat: number,
+ *              lng: number
+ *          }]>,
  *          score: list<[
  *              name: string,
  *              value: number
@@ -288,9 +343,9 @@
                 {param params: [
                     'data': [
                         'id': $params.data.id,
-                        'coords': $params.data.coords,
+                        'addresses': $params.data.addresses,
                         'name': $params.data.schoolName,
-                        'type': $params.data.schoolType,
+                        'description': $params.data.schoolDescr,
                         'totalScore': $params.data.totalScore
                     ]
                 ] /}
@@ -333,10 +388,13 @@
 
     /*Address section*/
     {if $params.data.contacts}
+        {let $contactHeader kind="text"}
+            контакты
+        {/let}
         <div class="l-school__item-container">
             {call sm.lSchool.bDataBlockAddresses.Template.base}
                 {param params: [
-                    'header': 'адреса и телефоны',
+                    'header': $contactHeader,
                     'content': $params.data.contacts
                     ]
                 /}
@@ -345,40 +403,45 @@
     {/if}
 
     /*Links section*/
-    <div class="l-school__item-container">
-        {call sm.lSchool.bDataBlockLinks.Template.base}
-            {param params: [
-                'header': 'ссылки',
-                'content': $params.data.sites
-                ]
-            /}
-        {/call}
-    </div>
-
+    {if $params.data.sites.length > 0}
+        <div class="l-school__item-container">
+            {call sm.lSchool.bDataBlockLinks.Template.base}
+                {param params: [
+                    'header': 'ссылки',
+                    'content': $params.data.sites
+                    ]
+                /}
+            {/call}
+        </div>
+    {/if}
+    // TODO: uncomment
     <div class="l-school__content-column">
+        // if for only goverment rating
+        {if length($params.data.ratings) > 1}
         /*ratings*/
-        {if length($params.data.ratings) > 0}
-            <div class="l-school__item-container">
-                {call sm.lSchool.bDataBlockRatings.Template.base}
-                    {param params: [
-                        'header': 'места в рейтингах',
-                        'content': $params.data.ratings
-                    ]/}
-                {/call}
-            </div>
+            {if length($params.data.ratings) > 0}
+                <div class="l-school__item-container">
+                    {call sm.lSchool.bDataBlockRatings.Template.base}
+                        {param params: [
+                            'header': 'места в рейтингах',
+                            'content': $params.data.ratings
+                        ]/}
+                    {/call}
+                </div>
+            {/if}
         {/if}
 
-        /*high schools */
-        {if $params.data.higthSchools}
-            <div class="l-school__item-container">
-                {call sm.lSchool.bDataBlock.Template.base}
-                    {param params: [
-                        'header': 'куда поступают выпускники'
-                        ]
-                    /}
-                {/call}
-            </div>
-        {/if}
+    //     /*high schools */
+    //     {if $params.data.higthSchools}
+    //         <div class="l-school__item-container">
+    //             {call sm.lSchool.bDataBlock.Template.base}
+    //                 {param params: [
+    //                     'header': 'куда поступают выпускники'
+    //                     ]
+    //                 /}
+    //             {/call}
+    //         </div>
+    //     {/if}
     </div>
 
     <div class="l-school__content-column
@@ -528,9 +591,9 @@
  * Information block
  * @private
  * @param params {
-  *    directorName: string,
-  *    classes: string
-  *  }
+ *    directorName: string,
+ *    classes: string
+ *  }
  */
 {template .information_  autoescape="strict" kind="html"}
 <div class="b-data-block">
@@ -581,43 +644,36 @@
         ]>
     }
     <div class="l-school__section">
-        <div class="l-school__content-comments">
-            <div class="l-school__content-column l-school__content-column_small">
-                {call .contentTitle_}
-                    {param image: '123.png' /}
-                    {param text: 'комментарии и оценки' /}
-                    //TODO: uncomment
-                    // {param buttonAlt: 'надпись2' /}
-                {/call}
-                {call gorod.bBouton.BoutonTemplate.render}
-                    {param params: [
-                        'label': 'Оставить отзыв',
-                        'customClasses': 'b-bouton_feedback-opener',
-                        'state': [
-                            'pressed': true
-                        ],
-                        'style': [
-                            'theme': 'default',
-                            'size': 'extralarge',
-                            'width': 'block',
-                            'color': 'red',
-                            'borderRadius': 'none',
-                            'borderWidth': 'l',
-                            'uppercase': 'true'
-                        ]
-                    ] /}
-                {/call}
+        {if length($comments) > 0}
+            <div class="l-school__content-comments">
+                <div class="l-school__content-column l-school__content-column_small">
+                    {call .contentTitle_}
+                        {param image: '123.png' /}
+                        {param text: 'комментарии и оценки' /}
+                        //TODO: uncomment
+                        // {param buttonAlt: 'надпись2' /}
+                    {/call}
+                </div>
+                <div class="l-school__content-column
+                            l-school__content-column_double-width
+                            l-school__content-column_last">
+                    {call sm.lSchool.bComments.Template.base}
+                        {param params: [
+                            'comments': $comments
+                        ] /}
+                    {/call}
+                </div>
             </div>
-            <div class="l-school__content-column
-                        l-school__content-column_double-width
-                        l-school__content-column_last">
-                {call sm.lSchool.bComments.Template.base}
-                    {param params: [
-                        'comments': $comments
-                    ] /}
-                {/call}
+        {else}
+            <div class="l-school__horisontal-line"></div>
+            <div class="l-school__comments-placeholder">
+                Никто пока не оставил отзыв об этой школе.{sp}
+                <span class="l-school__comments-placeholder-link">
+                    Станьте первым!
+                </span>
             </div>
-        </div>
+        {/if}
+        <div class="l-school__horisontal-line"></div>
     </div>
 {/template}
 
@@ -628,11 +684,18 @@
 {template .contacts_ autoescape="strict" kind="html"}
     {@param
         data:[
-            address:list<[
-                title:string,
-                description:string
+            stages: list<[
+                name: string,
+                addresses: list<[
+                    title: string,
+                    description: string,
+                    metroStation: list<[
+                        id: number,
+                        name: string
+                    ]>
+                ]>
             ]>,
-            phones:list<string>
+            phones: list<string>
         ]
     }
     <div class="l-school__content-block">
@@ -642,15 +705,17 @@
             //TODO: uncomment
             //{param buttonAlt: 'надпись2' /}
         {/call}
-        {foreach $adresRecord in $data.address}
-            <div class="l-school__contacts-record">
-                {if $adresRecord.title}
-                <div class="l-school__contacts-subtitle">
-                    {$adresRecord.title}
+        {foreach $stageRecord in $data.stages}
+            {foreach $address in $stageRecord.addresses}
+                <div class="l-school__contacts-record">
+                    {if $address.title}
+                        <div class="l-school__contacts-subtitle">
+                            {$address.title}
+                        </div>
+                    {/if}
+                    {$address.description}
                 </div>
-                {/if}
-                {$adresRecord.description}
-            </div>
+            {/foreach}
         {/foreach}
         {foreach $phone in $data.phones}
             {$phone}

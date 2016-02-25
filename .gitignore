@@ -5,6 +5,7 @@ node_modules/
 public/
 tmp/
 doc/
+build/
 assets/dump/
 /parse/
 /console/reports
@@ -14,6 +15,7 @@ assets/dump/
 *.log
 *.swp
 .jshintrc
+sftp-config.json
 deployment-config.json
 .remote-sync.json
 .tern-project
@@ -23,3 +25,8 @@ deployment-config.json
 console/reports
 migrate_stderr
 migrate_stdout
+
+**/b-icon_auto-sprite.css
+**/b-icon_auto-sprite.png
+/app/blocks/b-icon/b-icon_auto-sprite.css
+app/blocks/b-icon/b-icon_auto-sprite.png
