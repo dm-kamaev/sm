@@ -94,7 +94,7 @@ exports.list = async (function(req, res) {
         }
     };
 
-    var html = soy.render('sm.lSearchResult.Template.base', params);
+    var html = soy.render('sm.lSearchResult.NewTemplate.layout', params);
 
     res.header('Content-Type', 'text/html; charset=utf-8');
     res.end(html);
@@ -128,9 +128,11 @@ exports.view = async (function(req, res) {
             services.school.incrementViews(school.id);
             var popularSchools = await(services.school.getPopularSchools());
 
+            var date = new Date();
+
             res.header('Content-Type', 'text/html; charset=utf-8');
             res.end(
-                soy.render('sm.lSchool.Template.base', {
+                soy.render('sm.lSchool.Template.school', {
                 params: {
                     data:
                         schoolView.default(school, results, popularSchools),
@@ -139,6 +141,9 @@ exports.view = async (function(req, res) {
                         item: '{{ name }}',
                         text: '{{ name }}',
                         value: '{{ id }}'
+                    },
+                    config: {
+                        year: date.getFullYear()
                     }
                 }
             }));

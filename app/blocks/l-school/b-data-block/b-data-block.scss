@@ -1,20 +1,26 @@
 .b-data-block {
+  	position: relative;
+
 	width: 100%;
+  	margin-bottom: 55px;
 
 	font-size: 14px;
 }
+
 .b-data-block__line {
-	float: left;
+	position: absolute;
+  	top: 8px;
+  	left: 0;
 
 	width: 100%;
 	height: 1px;
-
-	margin: 7px 0 -7px;
 
 	background: rgba(0, 0, 0, 0.1);
 }
 
 .b-data-block__header {
+  	position: relative;
+
 	display: inline-block;
 
 	margin-bottom: 28px;
@@ -22,12 +28,9 @@
 
 	letter-spacing: 0.05em;
 	text-transform: uppercase;
-
 	background-color: #fff;
 
-	font-family: Proxima, arial, sans-serif;
-	font-size: 16px;
-	font-weight: 800;
+	font: 800 16px Proxima, arial, sans-serif;
 }
 
 .b-data-block__item {
