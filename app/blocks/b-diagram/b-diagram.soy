@@ -41,11 +41,6 @@
                         </div>
                     {/if}
                 </div>
-                {if $params?.display == 'bars'}
-                    <div class="b-diagram__number-value">
-                        {round($item.value, 1)}
-                    </div>
-                {/if}
                 <div class="b-diagram__value">
                     {if $params?.display == 'marks'}
                         {call sm.bMark.Template.base}
@@ -121,30 +116,36 @@
  */
 {template .bars}
     {let $range: $params?.range ?: 0/}
-    <div class="b-diagram__bar-filled
-                {$params.value > ($params.averageValue + $range) ?
-                    ' b-diagram__bar-filled_green' :
-                    ($params.value > ($params.averageValue - $range) ?
-                        '' : ' b-diagram__bar-filled_red')}"{sp}
-         data-value="{$params.value}"{sp}
-         style="width: {$params.value * 100 / $params.maxValue + '%'};">
+    <div class="b-diagram__bar-wrap">
+        <div class="b-diagram__bar-filled
+                    {$params.value > ($params.averageValue + $range) ?
+                        ' b-diagram__bar-filled_green' :
+                        ($params.value > ($params.averageValue - $range) ?
+                            '' : ' b-diagram__bar-filled_red')}"{sp}
+             data-value="{$params.value}"{sp}
+             style="width: {$params.value * 100 / $params.maxValue + '%'};">
+        </div>
+        <div class="b-diagram__bar"
+             style="width: {($params.maxValue - $params.value) * 100 /
+                 $params.maxValue + '%'};">
+        </div>
+        <div class="b-diagram__under-bar"
+             style="width:{sp}
+                {$params.averageValue * 100 / $params.maxValue + '%'};">
+        </div>
+        <div class="b-diagram__circle">
+        </div>
+        /*TODO: replace to factory hint*/
+        {call .tooltip_}
+            {param params: [
+                'left': $params.averageValue * 100 / $params.maxValue + '%',
+                'value': $params.averageValue
+            ]/}
+        {/call}
     </div>
-    <div class="b-diagram__bar"
-         style="width: {($params.maxValue - $params.value) * 100 /
-             $params.maxValue + '%'};">
+    <div class="b-diagram__number-value">
+        {round($params.value, 1)}
     </div>
-    <div class="b-diagram__under-bar"
-         style="width: {$params.averageValue * 100 / $params.maxValue + '%'};">
-    </div>
-    <div class="b-diagram__circle">
-    </div>
-    /*TODO: replace to factory hint*/
-    {call .tooltip_}
-        {param params: [
-            'left': $params.averageValue * 100 / $params.maxValue + '%',
-            'value': $params.averageValue
-        ]/}
-    {/call}
 {/template}
 
 /**

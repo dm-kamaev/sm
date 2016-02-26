@@ -1,3 +1,5 @@
+@import "../../i-media/i-media";
+
 .b-results {
     display: inline-block;
 
@@ -86,9 +88,8 @@
 .b-results__item-label {
     display: inline-block;
 
-    width: 14%;
+    width: 17%;
     margin-bottom: 23px;
-    margin-right: 6%;
 
     font-size: 16px;
     line-height: 20px;
@@ -126,7 +127,7 @@
 .b-results__item-data {
     display: inline-block;
 
-    width: 77.5%;
+    width: 73%;
     padding-top: 4px;
 }
 
@@ -158,5 +159,65 @@
 
     .b-results__content-item {
         padding: 32px 0 20px 0;
+    }
+}
+
+@include media-xl {
+    .b-results__wrap {
+        width: 1024px;
+    }
+
+    .b-results__item-label {
+        width: 25%;
+    }
+
+    .b-results__item-data {
+        width: 75%;
+    }
+}
+
+@include media-l {
+    .b-results__wrap {
+        width: 850px;
+    }
+
+    .b-results__item-label {
+        width: 33%;
+    }
+
+    .b-results__item-data {
+        width: 67%;
+    }
+}
+
+@include media-m {
+    .b-results__wrap {
+        width: 640px;
+    }
+}
+
+@include media-s {
+    .b-results__wrap {
+        width: 320px;
+    }
+
+    .b-results__item-label {
+        width: 100%;
+    }
+
+    .b-results__item-data {
+        width: 100%;
+    }
+}
+
+@include media-xs {
+    .b-results {
+        box-sizing: border-box;
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+
+    .b-results__wrap {
+        width: 100%;
     }
 }

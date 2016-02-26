@@ -1,3 +1,5 @@
+@import "../i-media/i-media";
+
 .b-diagram {
     display: inline-block;
 
@@ -89,9 +91,15 @@
 
 .b-diagram_bars {
     .b-diagram__item {
-        width: 33%;
+        width: 20%;
         padding: 0;
         margin-bottom: 23px;
+    }
+
+    .b-diagram__bar-wrap {
+        display: inline-block;
+
+        width: 100px;
     }
 
     .b-diagram__bar {
@@ -103,7 +111,7 @@
         display: inline-block;
 
         box-sizing: border-box;
-        width: 16%;
+        width: 60px;
 
         text-align: center;
         font-size: 14px;
@@ -130,18 +138,18 @@
         position: relative;
 
         box-sizing: border-box;
-        width: 40%;
+        width: 100%;
 
         font-size: 14px;
         font-family: Arial;
         vertical-align: top;
-        text-align: right;
+        text-align: left;
     }
 
     .b-diagram__value {
         position: relative;
 
-        width: 32%;
+        width: 100%;
         height: 22px;
 
         vertical-align: top;
@@ -270,5 +278,41 @@
         font-weight: 400;
         color: #6f6f6d;
         text-align: right;
+    }
+}
+
+@include media-xl {
+    .b-diagram_bars {
+        .b-diagram__item {
+            width: 33%;
+        }
+    }
+}
+
+@include media-l {
+    .b-diagram_bars {
+        .b-diagram__item {
+            width: 50%;
+        }
+    }
+}
+
+@include media-s {
+    .b-diagram_bars {
+        .b-diagram__label {
+            font-size: 13px;
+        }
+
+        .b-diagram__number-value {
+            font-size: 13px;
+        }
+    }
+}
+
+@include media-xs {
+    .b-diagram_bars {
+        .b-diagram__bar-wrap {
+            width: 85px;
+        }
     }
 }
