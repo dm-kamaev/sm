@@ -30,7 +30,9 @@
 Чтобы добавить автоматическое обновление, нужно в терминале виртуалки набрать `crontab -e` и дописать в конец файла  
 `PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin`  
 `0 */12 * * * cd /home/gorod/l3_school-market/ && ./console/cron/updateSearch.sh`  
-`0 */12 * * * cd /home/gorod/l3_school-market/ && ./console/cron/updateRank.sh`  
+`0 */12 * * * cd /home/gorod/l3_school-market/ && ./console/cron/updateRank.sh`
+Для того, чтобы добавить автоматическую отправку уведомлений о новых комментариях необходимо дописать:
+`*/15 * * * * cd /home/gorod/l3_school-market/ && ./console/cron/sendNotifications.sh`
 где **/home/gorod/l3_school-market/** - путь к проекту на виртуалке  
 
 ## Список скриптов необходимых для работы фронтенда ##

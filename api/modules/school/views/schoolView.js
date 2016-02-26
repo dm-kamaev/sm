@@ -44,14 +44,10 @@ schoolView.default = function(schoolInstance, results, opt_popularSchools) {
         directorName: getDirectorName(schoolInstance.director),
         extendedDayCost: getExtendedDayCost(schoolInstance.extendedDayCost),
         dressCode: schoolInstance.dressCode || false,
-        classes: getEducationInterval(
-            schoolInstance.educationInterval,
-            'classes'),
-        kindergarten: getEducationInterval(
-            schoolInstance.educationInterval,
-            'kindergarten'),
+        classes: getEducationInterval(schoolInstance.educationInterval),
+        kindergarten: getKindergardenAvailability(schoolInstance.educationInterval),
         social: [],
-        // metroStations: services.address.getMetro(addresses),
+        //metroStations: addressView.getMetro(addresses),
         sites: schoolInstance.links ?
             getSites(schoolInstance.links) : getSites(schoolInstance.site),
         specializedClasses: getSpecializedClasses(
@@ -132,56 +128,59 @@ var getExtendedDayCost = function(cost) {
             break;
 
         case 'есть':
-            res = 'Есть продлёнка';
+            res = 'есть продлёнка';
             break;
 
         case 'бесплатно':
-            res = 'Есть бесплатная продлёнка';
+            res = 'есть бесплатная продлёнка';
             break;
 
         default:
-            res = 'Есть продлёнка, ' + cost;
+            res = 'есть продлёнка (' + cost + ')';
     }
 
     return res;
 };
+
 
 /**
  *  @param {array<number>} interval
- *  @param {string} type ['classes'|'kindergarten']
  *  @return {string}
  */
 var getEducationInterval = function(interval, type) {
-    var res = '';
-    switch (type) {
-        case 'classes':
-            if (interval)
-            {
-                var begin = interval[0],
-                    end = interval[interval.length - 1];
+    var res = 'Обучение с ';
 
-                if (begin === 0) {
-                    begin = interval[1];
-                }
+    if (interval)
+    {
+        var begin = interval[0],
+            end = interval[interval.length - 1];
 
-                res += begin;
+        if (begin === 0) {
+            begin = interval[1];
+        }
 
-                if (end > begin) {
-                    res += '–';
-                    res += end;
-                    res += ' классы';
-                }
-            }
-            break;
-
-        case 'kindergarten':
-            if (interval && interval[0] === 0) {
-                res = 'При школе есть детский сад';
-            }
-            break;
+        res += begin;
+        res += ' по ';
+        res += end;
+        res += ' класс';
     }
+    else {
+        res += '1 по 11 класс'
+    }
+
     return res;
 };
+
+
+/**
+ *  @param {array<number>} interval
+ *  @return {string}
+ */
+var getKindergardenAvailability = function(interval) {
+    return (interval && interval[0] === 0) ?
+        'при школе есть детский сад' : '';
+};
+
 
 /**
  *  @param {string} site

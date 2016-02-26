@@ -72,13 +72,9 @@
 }
 
 .b-popular-schools__metro-stations {
-    display: inline-block;
-
     color: #808080;
 
-    font-family: arial;
-    font-size: 13px;
-    font-weight: 400;
+    font: 400 13px arial, sans-serif;
 }
 
 @media screen and (max-device-width: 600px) // for phone
