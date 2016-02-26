@@ -33,32 +33,44 @@
             <div class="b-score__average">
                 {call sm.bMark.Template.base}
                     {param params: [
-                        'value': $params.totalScore
+                        'value': $params.totalScore,
+                        'config': [
+                            'zeroSign': 'question-mark'
                         ]
-                     /}
+                    ]/}
                 {/call}
             </div>
+            {if $params.score}
+                <div class="b-score__delimiter"></div>
 
-            <div class="b-score__delimiter"></div>
-
-            <div class="b-score__comments-amount">
-                {if not $params.reviewCount or $params.reviewCount < 5}
-                    Недостаточно
-                {else}
-                    {$params.reviewCount}
-                {/if}
-                {sp}оценок
-            </div>
+                <div class="b-score__comments-amount">
+                    {if not $params.reviewCount or $params.reviewCount < 5}
+                        Недостаточно
+                    {else}
+                        {$params.reviewCount}
+                    {/if}
+                    {sp}оценок
+                </div>
+            {/if}
         </div>
-
         <div class="b-score__section
                     b-score__section_right">
-            {call sm.bDiagram.Template.base}
-                {param params: [
-                    'data': $params.score,
-                    'display': 'marks'
-                ]/}
-            {/call}
+            {if $params.score}
+                {call sm.bDiagram.Template.base}
+                    {param params: [
+                        'data': $params.score,
+                        'display': 'marks'
+                    ]/}
+                {/call}
+            {else}
+                <div class="b-score__inform">
+                    Недостаточно оценок
+                </div>
+                <div class="b-score__inform
+                            b-score__inform_place-comment">
+                    Оставить отзыв
+                </div>
+            {/if}
         </div>
     </div>
 {/template}
