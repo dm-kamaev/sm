@@ -1,6 +1,5 @@
 {
   "production": {
-    "name": "school_market",
     "host": "localhost",
     "port": "5432",
     "username": "gorod",
@@ -9,7 +8,6 @@
     "dialect": "postgres"
   },
   "development": {
-    "name": "school_market",
     "host": "localhost",
     "port": "5432",
     "username": "gorod",
