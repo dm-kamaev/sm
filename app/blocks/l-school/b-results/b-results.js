@@ -338,6 +338,7 @@ goog.scope(function() {
 
     /**
      * Diagrams initialization
+     * @param {Array.<Element>} elements
      * @private
      */
     Results.prototype.initDiagrams_ = function(elements) {

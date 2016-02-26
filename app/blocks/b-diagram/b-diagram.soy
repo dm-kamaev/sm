@@ -22,7 +22,8 @@
         {foreach $item in $params.data}
             <div class="b-diagram__item">
                 <div class="b-diagram__label">
-                    {if $item.name == 'Математика (базовая)'}
+                    {let $cond:  $item.name == 'Математика (базовая)'/}
+                    {if $cond}
                         Математика
                         <div class="b-diagram__item-description">
                             базовая
@@ -69,7 +70,7 @@
                                 'value': $item.value,
                                 'averageValue': $item.averageValue,
                                 'description': $item.description,
-                                'maxValue': $params.maxValue,
+                                'maxValue': $cond ? 5 : $params.maxValue,
                                 'range': $params.range
                             ]/}
                         {/call}

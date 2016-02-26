@@ -154,6 +154,7 @@
         font-size: 13px;
         letter-spacing: 0.03em;
         font-family: Arial;
+        font-weight: 500;
         vertical-align: top;
         text-align: left;
     }
@@ -314,12 +315,6 @@
             margin-top: 5px;
             margin-left: 0;
         }
-
-        .b-diagram__item:nth-child(even) {
-            .b-diagram__tooltip-content {
-                left: -96px;
-            }
-        }
     }
 }
 
@@ -336,7 +331,7 @@
 
         .b-diagram__item:nth-child(even) {
             .b-diagram__tooltip-content {
-                left: -106px;
+                left: -124px;
             }
         }
     }
