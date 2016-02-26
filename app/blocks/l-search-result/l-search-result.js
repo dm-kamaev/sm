@@ -263,7 +263,9 @@ goog.scope(function() {
      * @param {Object} event
      */
     SearchResult.prototype.redirect_ = function(event) {
-        window.location.href = 'school/' + event.url;
+        var url = 'school/' + event.url,
+            win = window.open(url, '_blank');
+        win.focus();
     };
 
     /**
