@@ -29,9 +29,8 @@ schoolView.default = function(schoolInstance, results, opt_popularSchools) {
     addressView.transformSchoolAddress(schoolInstance);
 
     var addresses = services.department.addressesFilter(schoolInstance.addresses),
-        comments = schoolInstance.commentGroup ?
-            schoolInstance.commentGroup.comments : [],
-        score = schoolInstance.score || [0, 0, 0, 0],
+        comments = schoolInstance.comments,
+        score = getSections(schoolInstance.score || [0, 0, 0, 0]),
         scoreCount = schoolInstance.scoreCount || [0, 0, 0, 0];
 
     var result = {
@@ -52,13 +51,13 @@ schoolView.default = function(schoolInstance, results, opt_popularSchools) {
             getSites(schoolInstance.links) : getSites(schoolInstance.site),
         specializedClasses: getSpecializedClasses(
             schoolInstance.specializedClasses),
-        activities: getActivities(schoolInstance.activites),
+        activities: getActivities(schoolInstance.activities),
         contacts: getContacts(schoolInstance.addresses, schoolInstance.phones),
         comments: getComments(comments),
         addresses: addressView.default(addresses),
         ratings: ratingView.ratingSchoolView(
             schoolInstance.rank, schoolInstance.rankDogm),
-        score: getSections(score),
+        score: checkScoreValues(score) ? score : false,
         totalScore: schoolInstance.totalScore,
         results: {
             ege: egeResultView.transformResults(
@@ -262,7 +261,7 @@ var getSections = function(array) {
             name: type[index],
             value: item
         };
-    }) : [];
+    }).filter(item => item.value) : [];
 };
 
 
@@ -417,14 +416,14 @@ schoolView.suggestList = function(schools) {
 /**
  * Check if all scores of item is 0
  * @param {Array<Object>} score
- * @param {Object} sortCriterion
+ * @param {Object} opt_sortCriterion
  * @return {boolean}
  * @private
  */
-var checkScoreValues = function(score, sortCriterion) {
+var checkScoreValues = function(score, opt_sortCriterion) {
     var result = false;
 
-    if (sortCriterion.value !== 0) {
+    if (opt_sortCriterion && opt_sortCriterion.value !== 0) {
         result = true;
     }
 

@@ -13,8 +13,16 @@ goog.require('cl.gDropdown.View');
 sm.gDropdown.DropdownSelectView =
     function(opt_params, opt_template, opt_modifier) {
     goog.base(this, opt_params, opt_template, opt_modifier);
+
+    /**
+     * Dropdown params
+     * @type {Object}
+     * @private
+     */
+    this.params_ = {};
 };
 goog.inherits(sm.gDropdown.DropdownSelectView, cl.gDropdown.View);
+
 
 goog.scope(function() {
     var DropdownSelectView = sm.gDropdown.DropdownSelectView;
@@ -30,19 +38,22 @@ goog.scope(function() {
         NOT_SELECTED: 'g-dropdown_not-selected'
     };
 
-
     /**
      * @override
      * @param {Element} element
      */
     DropdownSelectView.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
+
         this.dom.customText = this.getElementByClass(
             DropdownSelectView.CssClass.CUSTOM_TEXT
         );
+
         this.dom.selectList = this.getElementByClass(
             cl.gList.View.CssClass.ROOT
         );
+
+        this.params_ = jQuery(this.dom.customText).data('params') || {};
     };
 
     /**
@@ -100,5 +111,14 @@ goog.scope(function() {
             DropdownSelectView.CssClass.NOT_SELECTED
         );
     };
-});
 
+    /**
+     * Clear selection
+     */
+    DropdownSelectView.prototype.clear = function() {
+        if (this.params_.usePlaceholder) {
+            this.addPlaceholderModifier();
+        }
+        this.setOpenerCustomText(this.params_.defaultOpenerText || '');
+    };
+});

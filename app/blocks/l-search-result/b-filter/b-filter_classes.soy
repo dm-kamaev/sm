@@ -26,6 +26,36 @@
  */
 {template .filters autoescape="strict" kind="html"}
     <div class="b-filter__filters">
+        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+            {param params: [
+                'type': 'dropdown-select',
+                'renderParams': [
+                    'data': [
+                        'defaultOpenerText': 'Выберите',
+                        'listItems': [
+                            ['label': 'Первый класс'],
+                            ['label': 'Второй класс'],
+                            ['label': 'Третий класс'],
+                            ['label': 'Четвертый класс'],
+                            ['label': 'Пятый класс'],
+                            ['label': 'Шестой класс'],
+                            ['label': 'Седьмой класс'],
+                            ['label': 'Восьмой класс'],
+                            ['label': 'Девятый класс'],
+                            ['label': 'Десятый класс'],
+                            ['label': 'Одиннадцатый класс']
+                        ]
+                    ],
+                    'config': [
+                        'usePlaceholder': true,
+                        'iconSprite': 'opener-arrow',
+                        'customClasses': [
+                            'b-filter__classes-dropdown'
+                        ]
+                    ]
+                ]
+            ] /}
+        {/call}
         <div class="b-filter__filter b-filter__filter_center">
             {for $i in range(11)}
                 <input type="radio"

@@ -15,9 +15,8 @@
  */
 {template .base kind="html"}
     <div class="b-comment">
-
 		{if length($params.sections)}
-			{let $middle: floor((length($params.sections) + 1) / 2) /}
+			{let $middle: ceiling((length($params.sections)) / 2) /}
 			<div class="b-comment__header">
 				<div class="b-comment__rating-group">
 					{foreach $section in $params.sections}

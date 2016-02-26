@@ -42,7 +42,9 @@
     {foreach $linkItem in $params.content}
         <li class="b-data-block__item">
             <a class="b-data-block__item-content_text-color_red
-                      b-data-block__item-content" href="{$linkItem.href}">
+                      b-data-block__item-content"
+               href="{$linkItem.href}"
+               target="_blank">
                 {$linkItem.name}
              </a>
         </li>
