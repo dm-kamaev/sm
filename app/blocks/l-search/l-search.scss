@@ -146,17 +146,12 @@
 }
 
 .l-search__search {
-    // display: block;
     display: inline-block;
 
     box-sizing: border-box;
     width: 83.33%;
     padding-right: 307px;
     padding-left: 10px;
-
-    // width: auto;
-    // margin-right: 308px;
-    // margin-left: 206px;
 }
 
 .l-search__search-field {
@@ -180,8 +175,6 @@
 }
 
 .l-search__button-wrap {
-    // display: inline-block;
-    // float: right;
     position: absolute;
     right: 0;
     top: 40px;
@@ -229,7 +222,7 @@
     font-weight: 800;
     line-height: 1em;
 }
-//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 .l-search__information-links {
     position: relative;
 
@@ -246,8 +239,6 @@
     padding-right: 15px;
 }
 
-//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//b-popular-schools__school-link 
 .l-search__popular-school {
     box-sizing: border-box;
 
@@ -369,21 +360,6 @@
         width: 100%;
     }
 
-    // .l-search__left-text {
-    //     width: 22.9%;
-    //     padding-right: 30px;
-    //     box-sizing: border-box;
-    // }
-    // .l-search__search-wrap {
-    //     margin-right: 308px;
-    // }
-
-    // .l-search__search  {
-    //     // width: auto;
-        
-    //     width: 77.1%;
-    // }
-
     .l-search__information-links-wrap {
         box-sizing: border-box;
         padding: 0 40px;
@@ -392,27 +368,29 @@
     .l-search__information-links {
         width: 100%;
     }
-    // .l-search__information-links {
-    //     max-width: 893px;
-    // }
-
-    // .l-search__popular-schools {
-    //     white-space: nowrap;
-    //     overflow: hidden;
-
-    //     max-width: 410px;
-    // }
-
-    // .l-search__information-schools {
-    //     max-width: 175px;
-    //     margin-left: 0px;
-    // }
 }
 
 @media screen and (max-width: 1100px) // for desktop and tablet
 {
     .l-search__header-image-wrap {
         left: 0;
+    }
+
+    .l-search__search-wrap {
+        display: inline-block;
+
+        box-sizing: border-box;
+        width: 100%;
+        padding-right: 307px;
+    }
+
+    .l-search__left-text {
+        width: 33.33%;
+    }
+
+    .l-search__search {
+        width: 66.66%;
+        padding-right: 0;
     }
 
     .l-search__schools {
@@ -461,14 +439,18 @@
         display: none;
     }
 
-    .l-search__left-text {
-        display: none;
+    .l-search__search-wrap {
+        width: 66.66%;
+        padding-right: 10px;
     }
 
     .l-search__search {
-        
-        width: 66.66%;
-        padding-right: 10px;
+        width: 100%;
+        padding: 0;
+    }
+
+    .l-search__left-text {
+        display: none;
     }
 
     .l-search__button-wrap {
@@ -515,7 +497,7 @@ screen and (max-width: 600px) // for desktop
         padding: 0 30px;
     }
 
-    .l-search__search {
+    .l-search__search-wrap {
         width: 100%;
         padding-right: 0;
     }
@@ -565,6 +547,10 @@ screen and (max-width: 600px) // for desktop
 
         width: calc(100% - 88px);
         margin-top: -3px;
+    }
+
+    .l-search__information-links-wrap {
+        display: none;
     }
 }
 
