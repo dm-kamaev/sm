@@ -46,31 +46,37 @@
  * @override
  */
 {template .opener  kind="html"}
-     <div class="{call .rootClass/}__opener-text">
-            {if $params?.data?.staticText}
-                {$params?.data?.staticText}{sp}
+    {let $data: [
+        'defaultOpenerText': $params?.data?.defaultOpenerText,
+        'usePlaceholder': $params?.config?.usePlaceholder
+    ] /}
+
+    <div class="{call .rootClass/}__opener-text">
+        {if $params?.data?.staticText}
+            {$params?.data?.staticText}{sp}
+        {/if}
+        <span class="{call .rootClass/}__opener-custom-text
+                     {if $params?.config?.usePlaceholder}
+                        {sp}{call .rootClass/}__opener-text_placeholder
+                     {/if}"
+              data-params="{call goog.json.serialize data="$data" /}">
+            {if $params?.data?.defaultOpenerText}
+                {$params?.data?.defaultOpenerText}
             {/if}
-            <span class="{call .rootClass/}__opener-custom-text
-                         {if $params?.config?.usePlaceholder}
-                            {sp}{call .rootClass/}__opener-text_placeholder
-                         {/if}">
-                {if $params?.data?.defaultOpenerText}
-                    {$params?.data?.defaultOpenerText}
-                {/if}
-                {if $params?.data?.selectedItemId}
-                    {$params?.data?.listItems[$params?.data?.selectedItemId].label}
-                {/if}
-            </span>
-     </div>
-     {if $params?.config?.iconSprite}
-         <div class="{call .rootClass/}__opener-arrow">
-             {call sm.bIcon.Template.icon}
-                 {param params: [
-                     'type': $params?.config?.iconSprite
-                 ] /}
-             {/call}
-         </div>
-     {/if}
+            {if $params?.data?.selectedItemId}
+                {$params?.data?.listItems[$params?.data?.selectedItemId].label}
+            {/if}
+        </span>
+    </div>
+    {if $params?.config?.iconSprite}
+        <div class="{call .rootClass/}__opener-arrow">
+            {call sm.bIcon.Template.icon}
+                {param params: [
+                    'type': $params?.config?.iconSprite
+                ] /}
+            {/call}
+        </div>
+    {/if}
 {/template}
 
 /**
@@ -119,6 +125,6 @@
         {sp}{call .rootClass/}_text-{$params.config.textSize}
     {/if}
     {if $params?.config?.iconOffset}
-            {sp}{call .rootClass/}_{$params.config.iconOffset}-icon-offset
-        {/if}
+        {sp}{call .rootClass/}_{$params.config.iconOffset}-icon-offset
+    {/if}
 {/template}

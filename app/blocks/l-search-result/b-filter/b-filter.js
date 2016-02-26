@@ -68,16 +68,16 @@ sm.lSearchResult.bFilter.Filter = function(opt_params) {
     /**
      * Reset button
      * @type {Element}
-     * @private
+     * @protected
      */
-    this.filterResetElement_ = null;
+    this.filterResetElement = null;
 
     /**
      * Classes input
      * @type {Element}
-     * @private
+     * @protected
      */
-    this.inputClassesElements_ = null;
+    this.inputClassesElements = null;
 
     /**
      * Ordinary classes input
@@ -160,12 +160,12 @@ goog.scope(function() {
             element
         );
 
-        this.filterResetElement_ = goog.dom.getElementByClass(
+        this.filterResetElement = goog.dom.getElementByClass(
             Filter.CssClass.FILTER_RESET,
             element
         );
 
-        this.inputClassesElements_ = goog.dom.getElementsByClass(
+        this.inputClassesElements = goog.dom.getElementsByClass(
             Filter.CssClass.INPUT_CLASSES,
             element
         );
@@ -201,9 +201,9 @@ goog.scope(function() {
             );
         }
 
-        if (this.filterResetElement_) {
+        if (this.filterResetElement) {
             handler.listen(
-                this.filterResetElement_,
+                this.filterResetElement,
                 goog.events.EventType.CLICK,
                 this.resetFilter_
             );
@@ -217,10 +217,10 @@ goog.scope(function() {
             );
         }
 
-        if (this.inputClassesElements_.length > 0) {
-            for (var i = 0; i < this.inputClassesElements_.length; i++) {
+        if (this.inputClassesElements.length > 0) {
+            for (var i = 0; i < this.inputClassesElements.length; i++) {
                 handler.listen(
-                    this.inputClassesElements_[i],
+                    this.inputClassesElements[i],
                     goog.events.EventType.CHANGE,
                     this.showResetButton_
                 );
@@ -254,8 +254,8 @@ goog.scope(function() {
     Filter.prototype.hasCheckedInputClasses_ = function() {
         var result = false;
 
-        for (var i = 0; i < this.inputClassesElements_.length; i++) {
-            if (this.inputClassesElements_[i].checked) {
+        for (var i = 0; i < this.inputClassesElements.length; i++) {
+            if (this.inputClassesElements[i].checked) {
                 result = true;
             }
         }
@@ -269,15 +269,15 @@ goog.scope(function() {
      * @private
      */
     Filter.prototype.showResetButton_ = function(event) {
-        if (this.filterResetElement_) {
+        if (this.filterResetElement) {
             if (event.currentTarget.checked || this.hasCheckedInputClasses_()) {
                 goog.dom.classlist.remove(
-                    this.filterResetElement_,
+                    this.filterResetElement,
                     Filter.CssClass.HIDDEN
                 );
             } else {
                 goog.dom.classlist.add(
-                    this.filterResetElement_,
+                    this.filterResetElement,
                     Filter.CssClass.HIDDEN
                 );
             }
@@ -310,18 +310,18 @@ goog.scope(function() {
      * @private
      */
     Filter.prototype.resetFilter_ = function() {
-        if (this.inputClassesElements_.length > 0) {
-            for (var i = 0; i < this.inputClassesElements_.length; i++) {
-                this.inputClassesElements_[i].checked = false;
+        if (this.inputClassesElements.length > 0) {
+            for (var i = 0; i < this.inputClassesElements.length; i++) {
+                this.inputClassesElements[i].checked = false;
             }
         }
         if (this.inputClassesOrdinaryElement_) {
             this.inputClassesOrdinaryElement_.checked = false;
         }
 
-        if (this.filterResetElement_) {
+        if (this.filterResetElement) {
             goog.dom.classlist.add(
-                this.filterResetElement_,
+                this.filterResetElement,
                 Filter.CssClass.HIDDEN
             );
         }

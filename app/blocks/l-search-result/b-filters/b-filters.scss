@@ -51,6 +51,15 @@
 }
 
 
+.b-filter__classes-dropdown {
+    display: none;
+
+    margin: 12px 0;
+
+    background: #fff;
+}
+
+
 @include media-xl {
     .b-filters__group {
         display: inline-block;
@@ -97,8 +106,28 @@
 
 
 @include media-s {
+    .b-filter__classes-dropdown {
+        display: block;
+    }
+
     .b-filter__section {
         width: 50%;
+    }
+
+    .b-filter_classes .b-filter__filter_center {
+        display: none;
+    }
+
+    .b-filter_classes .b-filter__filters {
+        padding-right: 0;
+    }
+
+    .b-filter_classes .b-filter__reset {
+        position: static;
+
+        float: none;
+
+        margin-top: 10px;
     }
 }
 

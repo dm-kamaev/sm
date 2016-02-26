@@ -8,6 +8,7 @@ goog.require('goog.soy');
 goog.require('goog.style');
 goog.require('goog.ui.Component');
 goog.require('sm.lSearchResult.bFilter.Filter');
+goog.require('sm.lSearchResult.bFilter.FilterClasses');
 goog.require('sm.lSearchResult.bFilters.Template');
 
 /**
@@ -26,14 +27,19 @@ sm.lSearchResult.bFilters.Filters = function(opt_params) {
      */
     this.params_ = opt_params || {};
 
-
+    /**
+     * Dom elements
+     * @type {Object}
+     * @private
+     */
     this.elements_ = {};
 };
 goog.inherits(sm.lSearchResult.bFilters.Filters, goog.ui.Component);
 
 goog.scope(function() {
     var Filters = sm.lSearchResult.bFilters.Filters,
-        Filter = sm.lSearchResult.bFilter.Filter;
+        Filter = sm.lSearchResult.bFilter.Filter,
+        FilterClasses = sm.lSearchResult.bFilter.FilterClasses;
 
     /**
      * CSS-class enum
@@ -88,11 +94,19 @@ goog.scope(function() {
 
         this.initElements_();
 
-        var filters = this.elements_.filters;
-        for (var i = 0, filter; i < filters.length; i++) {
-            filter = new Filter();
+        var filters = this.elements_.filters,
+            elem,
+            filter;
+
+        for (var i = 0; i < filters.length; i++) {
+            elem = filters[i];
+
+            filter = goog.dom.classes.has(elem, FilterClasses.CssClass.ROOT) ?
+                new FilterClasses() :
+                new Filter();
+
             this.addChild(filter);
-            filter.decorate(filters[i]);
+            filter.decorate(elem);
         }
     };
 
@@ -115,6 +129,10 @@ goog.scope(function() {
         );
     };
 
+    /**
+     * Init elements
+     * @private
+     */
     Filters.prototype.initElements_ = function() {
         var element = this.getElement();
 
@@ -148,6 +166,9 @@ goog.scope(function() {
     };
 
 
+    /**
+     * Expand filters
+     */
     Filters.prototype.expand = function() {
         goog.style.setStyle(this.elements_.expander, 'display', 'none');
         goog.style.setStyle(this.elements_.content, 'display', 'block');
