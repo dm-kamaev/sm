@@ -103,8 +103,31 @@
     font: 16px/22px 'PT Serif', Arial, sans-serif;
 }
 
+
+@include media-xl {
+    .b-school-list-item__name {
+        padding-right: 75px;
+    }
+}
+
+
+@include media-l {
+    .b-school-list-item__name {
+        padding-right: 160px;
+    }
+}
+
+
+@include media-m {
+
+}
+
 @include media-s {
     .b-school-list-item__name {
-        padding-right: 65px;
+        padding-right: 75px;
+    }
+
+    .b-school-list-item__description {
+        padding-right: 0;
     }
 }

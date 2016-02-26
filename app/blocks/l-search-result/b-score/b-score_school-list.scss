@@ -1,4 +1,4 @@
-@import "../../i-media/i-media";
+@import "../i-media/i-media";
 
 .b-score_school-list {
     position: relative;
@@ -86,6 +86,22 @@
 	.b-score__current-criterion-value {
 		cursor: pointer;
 	}
+}
+
+@include media-xl {
+    .b-score__current-criterion-name {
+        display: none;
+    }
+}
+
+@include media-l {
+    .b-score__current-criterion-name {
+        display: inline-block;
+    }
+}
+
+@include media-m {
+
 }
 
 @include media-s {
