@@ -186,6 +186,10 @@ goog.scope(function() {
             this.schoolList_,
             SchoolList.Event.SHOW_MORE,
             this.showMoreSchoolListItemsHandler_
+        ).listen(
+            this.schoolList_,
+            SchoolList.Event.ITEM_CLICK,
+            this.redirect_
         );
 
         this.getHandler().listen(
@@ -247,6 +251,15 @@ goog.scope(function() {
         this.searchSettings_.data.page += 1;
         this.schoolList_.showLoader();
         this.sendQuery_();
+    };
+
+    /**
+     * Handler for redirect
+     * @private
+     * @param {Object} event
+     */
+    SearchResult.prototype.redirect_ = function(event) {
+        window.location.href = 'school/' + event.url;
     };
 
     /**

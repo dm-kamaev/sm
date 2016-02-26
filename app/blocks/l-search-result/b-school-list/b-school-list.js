@@ -133,7 +133,8 @@ goog.scope(function() {
                 'id': params.id,
                 'score': params.score,
                 'currentCriterion': params.currentCriterion,
-                'isScoreClickable': params.isScoreClickable
+                'isScoreClickable': params.isScoreClickable,
+                'url': params.url
             });
 
 

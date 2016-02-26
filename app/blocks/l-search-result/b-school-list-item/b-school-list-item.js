@@ -40,6 +40,12 @@ sm.lSearchResult.bSchoolListItem.SchoolListItem = function(opt_params) {
     this.id_ = this.params_.id;
 
     /**
+     * @private
+     * @type {string}
+     */
+    this.url_ = this.params_.url;
+
+    /**
      * scoreInstance
      * @private
      * @type {sm.bScoreSchoolList.ScoreSchoolList}
@@ -233,13 +239,23 @@ goog.scope(function() {
 
     /**
      * Click handler
+     * @param {Object} event
      * @private
      */
-    ListItem.prototype.itemClickHandler_ = function() {
-        this.dispatchEvent({
-            'type': ListItem.Event.CLICK,
-            'itemId': this.id_
-        });
+    ListItem.prototype.itemClickHandler_ = function(event) {
+        var tag = event.target.tagName,
+            isScore = this.getDomHelper().getAncestorByClass(
+                event.target,
+                Score.CssClass.ROOT
+            );
+
+        if (tag !== goog.dom.TagName.A && !isScore) {
+            this.dispatchEvent({
+                'type': ListItem.Event.CLICK,
+                'itemId': this.id_,
+                'url': this.url_
+            });
+        }
     };
 
     /**
