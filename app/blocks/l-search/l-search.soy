@@ -71,6 +71,7 @@
                             'dataLinks' : $params.dataLinks
                         ]/}
                     {/call}
+                </div>
                     //TODO: uncomment
                     /*
                     {call sm.lSearch.Template.banner_ /}
@@ -80,28 +81,37 @@
                         ]/}
                     {/call}
                     */
-                    // <div class="l-search__information-links">
-                    //     <div class="l-search__popular-schools">
-                    //         {call sm.bPopularSchools.Template.base}
-                    //             {param params: [
-                    //                 'popularSchools': $params.popularSchools
-                    //             ]/}
-                    //         {/call}
-                    //     </div>
-                    //     {call sm.lSearch.Template.informationSchools_}
-                    //         {param params: [
-                    //             'amountSchools': $params.amountSchools
-                    //         ]/}
-                    //     {/call}
-                    //     {call sm.lSearch.bLinkArticle.Template.base}
-                    //         {param params: [
-                    //             'urlArticle': $params.dataArticle.urlArticle,
-                    //             'urlImg': $params.dataArticle.urlImg,
-                    //             'title': $params.dataArticle.title,
-                    //             'subtitle': $params.dataArticle.subtitle
-                    //         ]/}
-                    //     {/call}
-                    // </div>
+                <div class="l-search__information-links-wrap">
+                    <div class="l-search__information-links">
+                        <div class="l-search__schools">
+                            <div class="l-search__popular-schools">
+                                {call sm.bPopularSchools.Template.base}
+                                    {param params: [
+                                        'popularSchools': $params.popularSchools,
+                                        'config': [
+                                            'popularSchool': [
+                                                'customClasses': 
+                                                'l-search__popular-school'
+                                            ]
+                                        ]
+                                    ]/}
+                                {/call}
+                            </div>
+                            {call sm.lSearch.Template.informationSchools_}
+                                {param params: [
+                                    'amountSchools': $params.amountSchools
+                                ]/}
+                            {/call}
+                            {call sm.lSearch.bLinkArticle.Template.base}
+                                {param params: [
+                                    'urlArticle': $params.dataArticle.urlArticle,
+                                    'urlImg': $params.dataArticle.urlImg,
+                                    'title': $params.dataArticle.title,
+                                    'subtitle': $params.dataArticle.subtitle
+                                ]/}
+                            {/call}
+                        </div>
+                    </div>
                 </div>
                 // <div class="l-search__footer">
                 //     <div class="l-search__horisontal-line"></div>
