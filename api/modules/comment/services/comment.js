@@ -37,12 +37,36 @@ exports.list = async (function (commentGroupId) {
     var params = commentGroupId ?
         {
             where: {
-                comment_group_id: commentGroupId
+                id: commentGroupId
             }
         } : {};
         console.log(params);
     var comments = await (models.Comment.findAll(params));
     return comments;
+});
+
+/**
+ * @param {number} commentGroupId
+ * @return {object} commentGroup with comments with rating and userData
+ */
+exports.getComments = async(function(commentGroupId) {
+    var include =  [
+        {
+            model: models.Rating,
+            as: 'rating'
+        },
+        {
+            model: models.UserData,
+            as: 'userData'
+        }
+    ];
+
+    return models.Comment.findAll({
+        where: {
+            'comment_group_id': commentGroupId
+        },
+        include: include
+    });
 });
 
 exports.get = async (function (commentId) {
