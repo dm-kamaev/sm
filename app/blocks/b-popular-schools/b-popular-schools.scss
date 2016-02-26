@@ -62,7 +62,7 @@
 }
 
 .b-popular-schools__school-link:hover .b-popular-schools__school-description {
-  color: #000000;
+    color: #000000;
 }
 
 .b-popular-schools__metro-icon {
@@ -81,30 +81,23 @@
 and (orientation: portrait),
 screen and (max-width: 600px) // for desktop
 {
+    .b-popular-schools__title {
+        margin-bottom: 20px;
+    }
+
     .b-popular-schools__school {
-        width: 100%;
-        margin-right: 0;
-        margin-bottom: 36px;
+        position: relative;
     }
 
     .b-popular-schools__school-rating {
-        display: inline-block;
-        margin-right: 0;
+        position: absolute;
+        top: 8px;
+        left: 0;
     }
 
     .b-popular-schools__school-information {
-        display: inline-block;
-        float:right;
-
-        // width: 250px;
-
-        // width: 171px;
-        // margin-top: -7px;
-
-        &:after{
-            content:'';
-            display:table;
-            clear:both;
-        }
+        box-sizing: border-box;
+        width: 100%;
+        padding-left: 90px;
     }
 }
