@@ -275,6 +275,20 @@ service.getAddressDepartments = async(function(school_id, address_id) {
     return department;
 });
 
+/**
+ * Get school by comment group id
+ * @param {number} groupId
+ * @return {Object} School instance or undefined
+ */
+service.getSchoolByGrouId = async( function(groupId) {
+    var school = await (models.School.findOne({
+        where: {
+            commentGroupId: groupId
+        }
+    }));
+    return school;
+});
+
 
 service.getGroupId = async (function(school) {
     var instance = school;

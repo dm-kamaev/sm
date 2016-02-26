@@ -1,11 +1,9 @@
 var Sequelize = require('sequelize');
 
-var config = require('../config'),
-    dbConfig = config.db;
-
+var dbConfig = require('../config').db;
 
 module.exports = new Sequelize(
-    dbConfig.name,
+    dbConfig.database,
     dbConfig.user,
     dbConfig.password, {
         dialect: 'postgres',

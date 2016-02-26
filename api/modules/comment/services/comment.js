@@ -19,7 +19,8 @@ exports.create = async (function(commentGroupId, params) {
         var createParams = {
                 comment_group_id: commentGroupId,
                 text: params.text,
-                userDataId: params.userDataId
+                userDataId: params.userDataId,
+                isNoticeSend: false
             };
         if (params.rating)
             createParams.ratingId = params.rating.id;
@@ -52,4 +53,44 @@ exports.get = async (function (commentId) {
         }
     }));
     return comment;
+});
+
+
+/**
+ * Return all comments with not send notification state
+ * @return {Array<Object>}
+ */
+exports.getNotSended = async (function () {
+    var comments = await (models.Comment.findAll({
+        where: {
+            isNoticeSend: false
+        }
+    }));
+
+    return comments;
+});
+
+/**
+ * Update instance with data
+ * @param {Object||number} comment
+ * @param {{
+ *     text: string,
+ *     isNoticeSend: boolean
+ * }}
+ */
+exports.update = async(function (comment, data) {
+    var instance = comment;
+    if(typeof comment === 'number') {
+        instance = await( models.Comment.findOne({
+            where: {id: comment}
+        }) );
+    }
+
+    if (!instance) {
+        throw new Error('Can\'t find comment');
+    }
+
+    instance.update(data);
+
+    return instance;
 });
