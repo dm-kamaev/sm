@@ -44,14 +44,10 @@ schoolView.default = function(schoolInstance, results, opt_popularSchools) {
         directorName: getDirectorName(schoolInstance.director),
         extendedDayCost: getExtendedDayCost(schoolInstance.extendedDayCost),
         dressCode: schoolInstance.dressCode || false,
-        classes: getEducationInterval(
-            schoolInstance.educationInterval,
-            'classes'),
-        kindergarten: getEducationInterval(
-            schoolInstance.educationInterval,
-            'kindergarten'),
+        classes: getEducationInterval(schoolInstance.educationInterval),
+        kindergarten: getKindergardenAvailability(schoolInstance.educationInterval),
         social: [],
-        // metroStations: services.address.getMetro(addresses),
+        //metroStations: addressView.getMetro(addresses),
         sites: schoolInstance.links ?
             getSites(schoolInstance.links) : getSites(schoolInstance.site),
         specializedClasses: getSpecializedClasses(
@@ -108,11 +104,14 @@ schoolView.popular = function(popularSchools) {
  * @return {array<string>}
  */
 var nearestMetro = function(addresses) {
-    return lodash.uniq(addresses.map(address => {
-        return address.addressMetroes[0] &&
-            address.addressMetroes[0].metroStation.name
-                .replace('метро ', '');
-    }));
+    return lodash.uniq(addresses
+        .map(address => {
+            return address.addressMetroes[0] &&
+                address.addressMetroes[0].metroStation.name
+                    .replace('метро ', '');
+        })
+        .filter(address => address)
+    );
 };
 
 /**
@@ -129,56 +128,59 @@ var getExtendedDayCost = function(cost) {
             break;
 
         case 'есть':
-            res = 'Есть продлёнка';
+            res = 'есть продлёнка';
             break;
 
         case 'бесплатно':
-            res = 'Есть бесплатная продлёнка';
+            res = 'есть бесплатная продлёнка';
             break;
 
         default:
-            res = 'Есть продлёнка, ' + cost;
+            res = 'есть продлёнка (' + cost + ')';
     }
 
     return res;
 };
+
 
 /**
  *  @param {array<number>} interval
- *  @param {string} type ['classes'|'kindergarten']
  *  @return {string}
  */
 var getEducationInterval = function(interval, type) {
-    var res = '';
-    switch (type) {
-        case 'classes':
-            if (interval)
-            {
-                var begin = interval[0],
-                    end = interval[interval.length - 1];
+    var res = 'Обучение с ';
 
-                if (begin === 0) {
-                    begin = interval[1];
-                }
+    if (interval)
+    {
+        var begin = interval[0],
+            end = interval[interval.length - 1];
 
-                res += begin;
+        if (begin === 0) {
+            begin = interval[1];
+        }
 
-                if (end > begin) {
-                    res += '–';
-                    res += end;
-                    res += ' классы';
-                }
-            }
-            break;
-
-        case 'kindergarten':
-            if (interval[0] === 0) {
-                res = 'При школе есть детский сад';
-            }
-            break;
+        res += begin;
+        res += ' по ';
+        res += end;
+        res += ' класс';
     }
+    else {
+        res += '1 по 11 класс'
+    }
+
     return res;
 };
+
+
+/**
+ *  @param {array<number>} interval
+ *  @return {string}
+ */
+var getKindergardenAvailability = function(interval) {
+    return (interval && interval[0] === 0) ?
+        'при школе есть детский сад' : '';
+};
+
 
 /**
  *  @param {string} site
@@ -575,22 +577,83 @@ var getName = function (name) {
  * @return {array<object>}
  */
 schoolView.listMapPoints = function(schools) {
-    return schools
-        .map(school => {
-            school = school.dataValues;
-            return {
-                id: school.id,
-                url: school.url,
-                name: school.name,
-                totalScore: school.totalScore || 0,
+    return schools.reduce((prev, curr) => {
+        curr = curr.dataValues;
+
+        prev = prev.length > 0 ? prev : [{
+            id: curr.id,
+            url: curr.url,
+            name: curr.name,
+            description: curr.description,
+            totalScore: curr.totalScore || 0,
+            addresses: [{
+                id: curr.addressId,
+                lat: curr.coords[0],
+                lng: curr.coords[1],
+                name: curr.adrName,
+                stages: [curr.stage]
+            }]
+        }];
+
+        var concated,
+            added,
+            cond;
+
+        for (var j = prev.length - 1, item; j >= 0; j--) {
+            item = prev[j];
+            if (curr.id == item.id) {
+                for (var i = item.addresses.length - 1, address; i >= 0; i--) {
+                    address = item.addresses[i];
+
+                    if (address.id == curr.addressId) {
+                        concated = true;
+                        cond = !(
+                            address.stages[0] == curr.stage ||
+                            address.stages[1] == curr.stage
+                        );
+
+                        if (cond) {
+                            address.stages.push(curr.stage);
+                        }
+
+                        break;
+                    }
+                }
+
+                if (!concated) {
+                    item.addresses.push({
+                        id: curr.addressId,
+                        lat: curr.coords[0],
+                        lng: curr.coords[1],
+                        name: curr.adrName,
+                        stages: [curr.stage]
+                    })
+                }
+
+                added = true;
+                break;
+            }
+        }
+
+        if (!added) {
+            prev.push({
+                id: curr.id,
+                url: curr.url,
+                name: curr.name,
+                description: curr.description,
+                totalScore: curr.totalScore || 0,
                 addresses: [{
-                    lat: school.coords[0],
-                    lng: school.coords[1],
-                    name: school.adrName,
-                    stage: [school.stage]
+                    id: curr.addressId,
+                    lat: curr.coords[0],
+                    lng: curr.coords[1],
+                    name: curr.adrName,
+                    stages: [curr.stage]
                 }]
-            };
-        });
+             })
+        }
+
+        return prev;
+    }, []);
 };
 
 /**

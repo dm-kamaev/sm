@@ -30,7 +30,7 @@
                 {$params?.display == 'inline' ? 'b-mark_inline' : ''}{sp}
                 {$params?.display == 'number' ? 'b-mark_number' : ''}{sp}
                 {if $params.config}
-                    {$params?.config.bigText ? 'b-mark_bigText' : ''}{sp}
+                    {$params?.config.bigText ? 'b-mark_big-text' : ''}{sp}
                     {$params?.config.bigText ? 'b-mark_no-dash' : ''}
                 {/if}
                 ">
@@ -145,10 +145,6 @@
             ,{round(($params.value - floor($params.value))*10, 0)}
         {/if}
     {else}
-        {if $params.config}
-            {$params?.config.notShowDashes ? '' : '—'}
-        {else}
-            —
-        {/if}
+        {$params?.config?.notShowDashes ? '' : '—'}
     {/if}
 {/template}
