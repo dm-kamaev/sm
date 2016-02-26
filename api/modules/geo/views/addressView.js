@@ -129,13 +129,16 @@ addressView.getMetro = function(addresses) {
 
             var isNewMetro = true;
             metroStations.forEach(metro => {
-                if (metro === address.metroStations[0].name) {
+                if (metro.name === address.metroStations[0].name) {
                     isNewMetro = false;
                 }
             });
 
             if (isNewMetro && address.metroStations[0].name !== null) {
-                metroStations.push(address.metroStations[0].name);
+                metroStations.push({
+                    id: address.metroStations[0].id,
+                    name: address.metroStations[0].name
+                });
             }
         }
     });

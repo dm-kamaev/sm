@@ -29,11 +29,9 @@ schoolView.default = function(schoolInstance, results, opt_popularSchools) {
     addressView.transformSchoolAddress(schoolInstance);
 
     var addresses = services.department.addressesFilter(schoolInstance.addresses),
-        comments = schoolInstance.commentGroup ?
-            schoolInstance.commentGroup.comments : [],
+        comments = schoolInstance.comments,
         score = getSections(schoolInstance.score || [0, 0, 0, 0]),
         scoreCount = schoolInstance.scoreCount || [0, 0, 0, 0];
-
 
     var result = {
         id: schoolInstance.id,
@@ -53,7 +51,7 @@ schoolView.default = function(schoolInstance, results, opt_popularSchools) {
             getSites(schoolInstance.links) : getSites(schoolInstance.site),
         specializedClasses: getSpecializedClasses(
             schoolInstance.specializedClasses),
-        activities: getActivities(schoolInstance.activites),
+        activities: getActivities(schoolInstance.activities),
         contacts: getContacts(schoolInstance.addresses, schoolInstance.phones),
         comments: getComments(comments),
         addresses: addressView.default(addresses),
@@ -263,7 +261,7 @@ var getSections = function(array) {
             name: type[index],
             value: item
         };
-    }) : [];
+    }).filter(item => item.value) : [];
 };
 
 
