@@ -60,6 +60,7 @@
     "multi-geocoder": "^0.1.4",
     "node-sass": "^3.3.3",
     "node-xlsx": "^0.6.0",
+    "nodules": "git+ssh://git@github.com:c7s/nodules.git#dev",
     "pg": "^4.4.2",
     "pg-hstore": "^2.3.2",
     "progress": "^1.1.8",
