@@ -1,6 +1,6 @@
 .l-search__body {
     min-height: 83%;
-    margin: 0 auto 60px;
+    margin: 0 auto 35px;
 
     color: #000000;
 }
@@ -98,7 +98,7 @@
     font: 14px Arial, sans-serif;
     line-height: 18px;
 
-    &:last-chaild {
+    &:last-child {
         margin-bottom: 0;
     }
 }
@@ -116,7 +116,6 @@
 
 .l-search__top-menu-wrap {
     height: 155px;
-    margin-bottom: 35px;
 
     background-color: #f4f4ec;
 }
@@ -183,13 +182,6 @@
 
     text-align: center;
     vertical-align: top;
-
-    &:after {
-        display: block;
-        clear: both;
-
-        content: '';
-    }
 }
 
 .l-search__button {
@@ -228,6 +220,15 @@
 
     max-width: 1200px;
     margin: 0 auto;
+
+    color: #000;
+
+    &:after {
+        display: block;
+        clear: both;
+
+        content:'';
+    }
 }
 
 .l-search__popular-schools {
@@ -263,6 +264,7 @@
     box-sizing: border-box;
     width: 50%;
     margin-top: 45px;
+    margin-right: -307px;
     padding-right: 307px;
     padding-left: 15px;
 
@@ -467,6 +469,10 @@
         padding-right: 0;
     }
 
+    .l-search__information-schools {
+        margin-right: 0;
+    }
+
 }
 
 @media screen and (max-device-width: 600px) // for phone
@@ -510,47 +516,46 @@ screen and (max-width: 600px) // for desktop
         padding: 0 30px;
     }
 
-    // .l-search__information-links {
-    //     max-width: 260px;
-    // }
-// .l-search__popular-schools
     .l-search__popular-schools {
         white-space: normal;
 
         width: 100%;
-        padding: 0;
     }
 
     .l-search__popular-school {
         width: 100%;
+        min-height: 70px;
+        margin-bottom: 30px;
         padding: 0;
+
+        &:first-of-type {
+            padding: 0;
+        }
+
+        &:last-child {
+            padding: 0;
+        }
     }
 
     .l-search__information-schools {
-        display: block;
+        position: relative;
 
-        max-width: 100%;
+        width: 100%;
         margin-top: 0;
-        margin-bottom: 51px;
+        margin-bottom: 50px;
+        padding: 0;
     }
 
     .l-search__image_list {
-        display: inline-block;
-
-        margin-right: 28px;
-
-        vertical-align: top;
+        position: absolute;
+        top: 3px;
+        left: 0;
     }
 
     .l-search__information-text {
-        display: inline-block;
-
-        width: calc(100% - 88px);
-        margin-top: -3px;
-    }
-
-    .l-search__information-links-wrap {
-        display: none;
+        box-sizing: border-box;
+        width: 100%;
+        padding-left: 90px;
     }
 }
 
