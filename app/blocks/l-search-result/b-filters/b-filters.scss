@@ -26,6 +26,19 @@
     margin-top: -4px;
 }
 
+.b-filters__collapser {
+    display: none;
+
+    color: #ee362c;
+    cursor: pointer;
+
+    font-size: 14px;
+}
+
+.b-filters__content {
+    position: relative;
+}
+
 .b-filters__submit-button {
     width: 75%;
     margin: 40px auto 10px auto;
@@ -82,6 +95,14 @@
         display: block;
     }
 
+    .b-filters__collapser {
+        position: absolute;
+        right: 0;
+        bottom: 17px;
+
+        display: block;
+    }
+
     .b-filters__content {
         display: none;
     }
@@ -96,6 +117,12 @@
 
 
 @include media-m {
+    .b-filters__collapser {
+        position: static;
+
+        margin: -10px 0 30px;
+    }
+
     .b-filter__section {
         width: 33.33%;
         min-width: unset;

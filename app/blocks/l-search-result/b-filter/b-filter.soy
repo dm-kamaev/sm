@@ -98,8 +98,11 @@
             {/call}
         {/for}
         {if $params.data.filters.length > $filToShow}
-            <div class="b-filter__show-button">
+            <div class="b-filter__button b-filter__button_show">
                  Еще {$params.data.filters.length - $filToShow - 1} предметов
+            </div>
+            <div class="b-filter__button b-filter__button_hide i-utils__hidden">
+                 Свернуть список
             </div>
         {/if}
     </div>

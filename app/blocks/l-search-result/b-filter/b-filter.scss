@@ -65,13 +65,19 @@
     cursor: pointer;
 }
 
-.b-filter__show-button {
-    margin-top: 12px;
-    margin-bottom: 12px;
-
-    font-size: 14px;
+.b-filter__button {
+    display: inline-block;
+    
     color: #ee362c;
     cursor: pointer;
+
+    font-size: 14px;
+}
+
+.b-filter__button_show,
+.b-filter__button_hide {
+    margin-top: 12px;
+    margin-bottom: 12px;
 }
 
 .b-filter__input {

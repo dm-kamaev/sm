@@ -48,6 +48,7 @@ goog.scope(function() {
     Filters.CssClass = {
         ROOT: 'b-filters',
         EXPANDER: 'b-filters__expander',
+        COLLAPSER: 'b-filters__collapser',
         CONTENT: 'b-filters__content',
         SUBMIT_BUTTON: 'b-filters__submit-button'
     };
@@ -127,6 +128,12 @@ goog.scope(function() {
             goog.events.EventType.CLICK,
             this.onExpanderClick_
         );
+
+        this.getHandler().listen(
+            this.elements_.collapser,
+            goog.events.EventType.CLICK,
+            this.onCollapserClick_
+        );
     };
 
     /**
@@ -148,6 +155,11 @@ goog.scope(function() {
 
         this.elements_.expander = goog.dom.getElementByClass(
             Filters.CssClass.EXPANDER,
+            element
+        );
+
+        this.elements_.collapser = goog.dom.getElementByClass(
+            Filters.CssClass.COLLAPSER,
             element
         );
 
@@ -175,6 +187,14 @@ goog.scope(function() {
     };
 
     /**
+     * Collapse filters
+     */
+    Filters.prototype.collapse = function() {
+        goog.style.setStyle(this.elements_.expander, 'display', 'block');
+        goog.style.setStyle(this.elements_.content, 'display', 'none');
+    };
+
+    /**
      * Submit handler
      * @param {Object} event
      * @private
@@ -195,6 +215,15 @@ goog.scope(function() {
     };
 
     /**
+     * Collapse handler
+     * @param {Object} event
+     * @private
+     */
+    Filters.prototype.onCollapserClick_ = function(event) {
+        this.collapse();
+    };
+
+    /**
      * Send form
      * @param {Object} event
      * @private
@@ -207,8 +236,6 @@ goog.scope(function() {
                 )
             },
             type = event.data ? event.data.type : '';
-
-            console.log(event);
 
         if (type === 'metro') {
             data.searchParams.metroId = event.data.id;
