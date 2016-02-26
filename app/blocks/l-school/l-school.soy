@@ -103,6 +103,7 @@
                 'content': $content,
                 'header': [
                     'searchText': $params.searchText,
+                    'url': '/',
                     'templates': [
                         'search': $params.searchTemplates?.search,
                         'item': $params.searchTemplates?.item,
@@ -110,7 +111,8 @@
                         'value': $params.searchTemplates?.value,
                     ]
                 ],
-                'landingScript': '/l-school.js'
+                'landingScript': '/l-school.js',
+                'evercookie': true
             ],
             'config': [
                 'modifier': 'stendhal',
@@ -146,6 +148,8 @@
 {template .innerContent_ autoescape="strict" kind="html"}
     {call .description_ data="all" /}
     {call .feedback_ data="all" /}
+
+    <div class="l-school__cleaner"></div>
 
     <div class="l-school__column l-school__column_left">
         {call .score_ data="all" /}

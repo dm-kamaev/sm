@@ -150,10 +150,19 @@ gulp.task('fonts', function () {
         .pipe(gulp.dest(path.join(__dirname + '/public/fonts')));
 });
 
+gulp.task('evercookie', function() {
+    return gulp.src([
+            path.join(__dirname + '/app/evercookie/**/*.*'),
+            path.join('!' + __dirname + '/app/evercookie/css/**/*.*'),
+            path.join('!' + __dirname + '/app/evercookie/*.*')
+    ])
+    .pipe(gulp.dest(path.join(__dirname + '/public/evercookie/')));;
+});
+
 const tasks = function (bool) {
     return bool ?
-        ['soy', 'scripts', 'sprite', 'images', 'fonts', 'styles'] :
-        ['watch', 'soy', 'scripts', 'sprite', 'images', 'fonts','styles'];
+        ['soy', 'scripts', 'sprite', 'images', 'fonts', 'styles', 'evercookie'] :
+        ['watch', 'soy', 'scripts', 'sprite', 'images', 'fonts','styles', 'evercookie'];
 };
 
 gulp.task('build', tasks(true));

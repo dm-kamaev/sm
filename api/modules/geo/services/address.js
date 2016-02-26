@@ -200,3 +200,48 @@ exports.listMapPoints = async (function() {
 
         return schools;
 });
+
+/**
+ * @param {number} schoolId
+ * @param {bool} isSchool
+ * @param {bool} order - order by distance
+ */
+exports.getWithDepartmentsWithMetro = async(function(
+    schoolId,
+    isSchool,
+    order
+) {
+    var params = {
+        include: [{
+            model: models.Department,
+            as: 'departments'
+        }, {
+            model: models.AddressMetro,
+            as: 'addressMetroes',
+            include: [{
+                model: models.Metro,
+                as: 'metroStation'
+            }]
+        }],
+        where: {
+            schoolId: schoolId
+        }
+    };
+
+    if (isSchool) {
+        params.where.isSchool = isSchool;
+    }
+
+    if (order) {
+        params.order = [[
+            {
+                model: models.AddressMetro,
+                as: 'addressMetroes'
+            },
+            'distance',
+            'ASC'
+        ]];
+    }
+
+    return models.Address.findAll(params);
+});
