@@ -1,10 +1,10 @@
-@import "../../i-media/i-media";
+@import "../i-media/i-media";
 
 .b-filter {
     display: inline-block;
 
     width: 100%;
-    padding: 30px 0 30px 0;
+    padding: 18px 0;
 
     border-bottom: 1px solid #e5e5e5;
 
@@ -16,6 +16,7 @@
     display: inline-block;
 
     width: 100%;
+    padding: 10px 0;
 
     cursor: pointer;
 }
@@ -26,6 +27,8 @@
 }
 
 .b-filter__section {
+    position: relative;
+
     display: inline-block;
 
     min-width: 50%;
@@ -33,7 +36,6 @@
 }
 
 .b-filter__filters {
-    margin-top: 10px;
     margin-bottom: -6px;
 }
 
@@ -47,7 +49,10 @@
 }
 
 .b-filter__input-label {
+    display: inline-block;
+
     margin: 0 9px;
+    padding-left: 13px;
 
     cursor: pointer;
 }
@@ -70,6 +75,10 @@
 }
 
 .b-filter__input {
+    position: absolute;
+    top: 12px;
+    left: 0;
+
     margin: 0;
 
     vertical-align: bottom;
@@ -198,20 +207,27 @@
 }
 
 
-@include media-xl {
-    .b-filter {
-        display: block;
-
-        padding: 28px 0;
-    }
-
+@include media-l {
     .b-filter_classes {
-        padding: 28px 0 17px;
+        .b-filter__filters {
+            position: relative;
 
-        border-bottom: 1px solid #e5e5e5;
-    }
+            padding-right: 125px;
+        }
 
-    .b-filter__filters  {
-        margin: 6px 0 -2px;
+        .b-filter__filter_center {
+            width: auto;
+            margin-right: 40px;
+
+            white-space: nowrap;
+        }
+
+        .b-filter__reset {
+            position: absolute;
+            top: 14px;
+            right: 0;
+
+            line-height: 14px;
+        }
     }
 }

@@ -1,4 +1,4 @@
-@import "../../i-media/i-media";
+@import "../i-media/i-media";
 
 .b-school-list {
     display: inline-block;
@@ -79,18 +79,20 @@
 }
 
 @include media-xl {
-    .b-school-list__loader {
-        text-align: center;
-    }
 
-    .b-school-list__show-more-button {
-        margin: 0 auto;
-    }
 }
 
 
 @include media-m {
     .b-school-list__header {
         margin-bottom: 0;
+    }
+
+    .b-school-list__loader {
+        text-align: center;
+    }
+
+    .b-school-list__show-more-button {
+        margin: 0 auto;
     }
 }

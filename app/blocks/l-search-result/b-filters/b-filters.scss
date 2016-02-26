@@ -1,8 +1,29 @@
-@import "../../i-media/i-media";
+@import "../i-media/i-media";
 
 .b-filters {
     width: 100%;
     margin: 0;
+}
+
+.b-filters__expander {
+    position: relative;
+
+    display: none;
+    padding: 15px 0;
+
+    cursor: pointer;
+    color: #000;
+    text-align: left;
+
+    font-weight: 700;
+}
+
+.b-filters__expander-icon {
+    position: absolute;
+    top: 50%;
+    right: 0;
+
+    margin-top: -4px;
 }
 
 .b-filters__submit-button {
@@ -42,6 +63,48 @@
 
     .b-filters__submit-button {
         width: 240px;
-        margin-top: 30px;
+        margin: 30px auto 40px;
+    }
+}
+
+
+@include media-l {
+    .b-filters__expander {
+        display: block;
+    }
+
+    .b-filters__content {
+        display: none;
+    }
+
+    .b-filter__section {
+        width: 25%;
+        min-width: unset;
+
+        vertical-align: top;
+    }
+}
+
+
+@include media-m {
+    .b-filter__section {
+        width: 33.33%;
+        min-width: unset;
+
+        vertical-align: top;
+    }
+}
+
+
+@include media-s {
+    .b-filter__section {
+        width: 50%;
+    }
+}
+
+
+@include media-xs {
+    .b-filter__section {
+        width: 100%;
     }
 }

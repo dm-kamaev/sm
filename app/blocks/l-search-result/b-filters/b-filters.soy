@@ -3,22 +3,7 @@
 /**
  * Filter template
  * @param? params {
- *      filters: ?list<{
- *          data: {
- *              filters: ?list<{
- *                  label: ?string,
- *                  value: ?string
- *              }>,
- *              header: {
- *                  title: ?string,
- *                  help: ?string
- *              },
- *              name: ?string
- *          }
- *          config:{
- *              cannotBeHidden: ?bool
- *          }
- *      }>,
+ *      filters: ?list<sm.lSearchResult.bFilter.Template.Params>,
  *      url: ?string
  * }
  */
@@ -26,34 +11,51 @@
     <form class="b-filters"
           method="GET"
           action="{$params?.url ?: ''}">
-        <div class="b-filters__filters">
-            <div class="b-filters__group b-filters__group_1">
-                {call sm.lSearchResult.bFilterClasses.Template.base}
-                    {param params: [
-                        'data': [
-                            'header': [
-                                'title': 'В какой класс хотите отдать ребенка?'
-                            ],
-                            'name': 'classes'
-                        ]
-                    ]/}
-                {/call}
 
-                {let $middle: floor(length($params.filters) / 2) /}
+        <div class="b-filters__expander">
+            Показать фильтры
+            {call sm.bIcon.Template.icon}
+                {param params: [
+                    'type': 'filter-arrow-down',
+                    'customClasses': 'b-filters__expander-icon'
+                ] /}
+            {/call}
+        </div>
 
-                {foreach $filter in $params.filters}
-                    {if index($filter) + 1 == $middle}
-                        </div>
-                        <div class="b-filters__group b-filters__group_2">
-                    {/if}
-                    {call sm.lSearchResult.bFilter.Template.base}
-                        {param params: $filter/}
-                    {/call}
-                {/foreach}
+        <div class="b-filters__content">
+            <div class="b-filters__filters">
+                {call .filters_ data="all" /}
+            </div>
+
+            <div class="b-filters__submit-button">
+                Подобрать
             </div>
         </div>
-        <div class="b-filters__submit-button">
-            Подобрать
-        </div>
     </form>
+{/template}
+
+
+/**
+ * Filter groups
+ * @param? params {
+ *      filters: ?list<sm.lSearchResult.bFilter.Template.Params>
+ * }
+ */
+{template .filters_ autoescape="strict" kind="html" private="true"}
+    {call sm.lSearchResult.bFilterClasses.Template.base}
+        {param params: [
+            'data': [
+                'header': [
+                    'title': 'В какой класс хотите отдать ребенка?'
+                ],
+                'name': 'classes'
+            ]
+        ]/}
+    {/call}
+
+    {foreach $filter in $params.filters}
+        {call sm.lSearchResult.bFilter.Template.base}
+            {param params: $filter/}
+        {/call}
+    {/foreach}
 {/template}

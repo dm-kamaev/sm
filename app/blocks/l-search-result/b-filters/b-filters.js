@@ -5,6 +5,7 @@ goog.require('goog.dom.classlist');
 goog.require('goog.dom.forms');
 goog.require('goog.events');
 goog.require('goog.soy');
+goog.require('goog.style');
 goog.require('goog.ui.Component');
 goog.require('sm.lSearchResult.bFilter.Filter');
 goog.require('sm.lSearchResult.bFilters.Template');
@@ -24,6 +25,9 @@ sm.lSearchResult.bFilters.Filters = function(opt_params) {
      * @type {Object}
      */
     this.params_ = opt_params || {};
+
+
+    this.elements_ = {};
 };
 goog.inherits(sm.lSearchResult.bFilters.Filters, goog.ui.Component);
 
@@ -37,6 +41,8 @@ goog.scope(function() {
      */
     Filters.CssClass = {
         ROOT: 'b-filters',
+        EXPANDER: 'b-filters__expander',
+        CONTENT: 'b-filters__content',
         SUBMIT_BUTTON: 'b-filters__submit-button'
     };
 
@@ -80,12 +86,9 @@ goog.scope(function() {
     Filters.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
-        //filters
-        var filters = goog.dom.getElementsByClass(
-            Filter.CssClass.ROOT,
-            element
-        );
+        this.initElements_();
 
+        var filters = this.elements_.filters;
         for (var i = 0, filter; i < filters.length; i++) {
             filter = new Filter();
             this.addChild(filter);
@@ -100,9 +103,39 @@ goog.scope(function() {
         goog.base(this, 'enterDocument');
 
         this.getHandler().listen(
-            this.getElementByClass(Filters.CssClass.SUBMIT_BUTTON),
+            this.elements_.submit,
             goog.events.EventType.CLICK,
             this.onSubmit_
+        );
+
+        this.getHandler().listen(
+            this.elements_.expander,
+            goog.events.EventType.CLICK,
+            this.onExpanderClick_
+        );
+    };
+
+    Filters.prototype.initElements_ = function() {
+        var element = this.getElement();
+
+        this.elements_.filters = goog.dom.getElementsByClass(
+            Filter.CssClass.ROOT,
+            element
+        );
+
+        this.elements_.content = goog.dom.getElementByClass(
+            Filters.CssClass.CONTENT,
+            element
+        );
+
+        this.elements_.expander = goog.dom.getElementByClass(
+            Filters.CssClass.EXPANDER,
+            element
+        );
+
+        this.elements_.submit = goog.dom.getElementByClass(
+            Filters.CssClass.SUBMIT_BUTTON,
+            element
         );
     };
 
@@ -114,6 +147,12 @@ goog.scope(function() {
         this.sendForm_(event);
     };
 
+
+    Filters.prototype.expand = function() {
+        goog.style.setStyle(this.elements_.expander, 'display', 'none');
+        goog.style.setStyle(this.elements_.content, 'display', 'block');
+    };
+
     /**
      * Submit handler
      * @param {Object} event
@@ -123,6 +162,15 @@ goog.scope(function() {
         event.preventDefault();
 
         this.sendForm_(event);
+    };
+
+    /**
+     * Expand handler
+     * @param {Object} event
+     * @private
+     */
+    Filters.prototype.onExpanderClick_ = function(event) {
+        this.expand();
     };
 
     /**
