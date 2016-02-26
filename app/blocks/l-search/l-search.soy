@@ -191,63 +191,66 @@
 {template .search_ autoescape="strict" kind="html" private="true"}
     <div class="l-search__top-menu-wrap">
         <div class="l-search__top-menu">
-            <div class="l-search__left-text">Что вы ищете?</div>
-            <div class="l-search__search">
-                <div class="l-search__search-field">
-                    {call sm.bSearch.Template.base}
+            <div class="l-search__search-wrap">
+                <div class="l-search__left-text">Что вы ищете?</div>
+                <div class="l-search__search">
+                    <div class="l-search__search-field">
+                        {call sm.bSearch.Template.base}
+                            {param params: [
+                                'autofocus': true,
+                                'placeholder': 'Номер школы, метро, район',
+                                'theme': 'main',
+                                'redirect': true,
+                                'templates': [
+                                    'search': $params?.templates.search,
+                                    'item': $params?.templates.item,
+                                    'text': $params?.templates.text,
+                                    'value': $params?.templates.value
+                                ]
+                            ]/}
+                        {/call}
+                    </div>
+                    <div class="l-search__search-links">
+                        {foreach $link in $params.dataLinks}
+                            <div class="l-search__search-link">
+                                {call sm.bLink.Template.base}
+                                    {param params: [
+                                        'data': [
+                                            'name': $link.name,
+                                            'url': $link.url
+                                        ]
+                                    ]/}
+                                {/call}
+                            </div>
+                        {/foreach}
+                    </div>
+                    //TODO: uncomment
+                    /*<div class="l-search__example-holder">
+                        Например:
+                        <span class="l-search__examples">
+                            {foreach $example in $params.examples}
+                                <span class="l-search__example">{$example}</span>
+                            {/foreach}
+                        </span>
+                    </div>*/
+                </div>
+            </div>
+            <div class="l-search__button-wrap">
+                {call sm.lSearch.Template.button_}
+                    {param params: [
+                        'text': 'Найти школу',
+                        'theme': 'search'
+                    ]/}
+                {/call}
+                {call sm.bLink.Template.base}
                         {param params: [
-                            'autofocus': true,
-                            'placeholder': 'Номер школы, метро, район',
-                            'theme': 'main',
-                            'redirect': true,
-                            'templates': [
-                                'search': $params?.templates.search,
-                                'item': $params?.templates.item,
-                                'text': $params?.templates.text,
-                                'value': $params?.templates.value
+                            'data': [
+                                'name': 'Расширенный поиск',
+                                'url': '/search'
                             ]
                         ]/}
-                    {/call}
-                </div>
-                <div class="l-search__search-links">
-                    {foreach $link in $params.dataLinks}
-                        <div class="l-search__search-link">
-                            {call sm.bLink.Template.base}
-                                {param params: [
-                                    'data': [
-                                        'name': $link.name,
-                                        'url': $link.url
-                                    ]
-                                ]/}
-                            {/call}
-                        </div>
-                    {/foreach}
-                </div>
-                //TODO: uncomment
-                /*<div class="l-search__example-holder">
-                    Например:
-                    <span class="l-search__examples">
-                        {foreach $example in $params.examples}
-                            <span class="l-search__example">{$example}</span>
-                        {/foreach}
-                    </span>
-                </div>*/
+                {/call}
             </div>
-        <div class="l-search__button-wrap">
-            {call sm.lSearch.Template.button_}
-                {param params: [
-                    'text': 'Найти школу',
-                    'theme': 'search'
-                ]/}
-            {/call}
-            {call sm.bLink.Template.base}
-                    {param params: [
-                        'data': [
-                            'name': 'Расширенный поиск',
-                            'url': '/search'
-                        ]
-                    ]/}
-            {/call}
         </div>
     </div>
 {/template}
