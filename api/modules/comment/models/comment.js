@@ -9,12 +9,15 @@ var Comment = db.define('Comment', {
         type: DataType.INTEGER,
         field: 'rating_id'
     },
-    userType: {
-        field: 'user_type',
-        type: DataType.ENUM,
-        values: authorType.toArray()
+    userDataId: {
+        type: DataType.INTEGER,
+        field: 'user_data_id'
     },
-    commentGroupId: {
+    isNoticeSend: {
+        type: DataType.BOOLEAN,
+        field: 'is_notice_send'
+    },
+    groupId: {
         type: DataType.INTEGER,
         field: 'comment_group_id'
     }
@@ -29,6 +32,10 @@ var Comment = db.define('Comment', {
             Comment.belongsTo(models.Rating, {
                 as: 'rating',
                 foreignKey: 'rating_id'
+            });
+            Comment.belongsTo(models.UserData, {
+                as: 'userData',
+                foreignKey: 'user_data_id'
             });
         }
     }

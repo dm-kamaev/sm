@@ -1,3 +1,5 @@
+@import "../i-media/i-media";
+
 .b-school-list-item {
     display: inline-block;
 
@@ -13,6 +15,8 @@
 }
 
 .b-school-list-item__section {
+    position: relative;
+
     margin-bottom: 12px;
 
     &_badges {
@@ -36,17 +40,15 @@
 }
 
 .b-school-list-item__name {
+    display: inline-block;
+
     height: 100%;
-    width: 580px;
+    padding-right: 160px;
 
     color: black;
-
-    font-size: 21px;
-    font-weight: 700;
-    line-height: 26px;
-    font-family: 'Proxima';
-
     text-decoration: none;
+
+    font: 700 21px/26px 'Proxima', Arial, sans-serif;
 
     &_bold {
         font-weight: 800;
@@ -63,9 +65,10 @@
 }
 
 .b-school-list-item__score {
-    float: right;
+    position: absolute;
 
-    margin-top: 2px;
+    top: 2px;
+    right: 0;
 }
 
 .b-school-list-item__data {
@@ -89,10 +92,39 @@
 .b-school-list-item__description {
     display: inline-block;
 
-	font-family: 'PT Serif', Arial, sans-serif;
-	font-size: 16px;
-	line-height: 22px;
+    max-width: 705px;
+    padding-right: 80px;
+
     color: #000;
 
-    width: 705px;
+    font: 16px/22px 'PT Serif', Arial, sans-serif;
+}
+
+
+@include media-xl {
+    .b-school-list-item__name {
+        padding-right: 75px;
+    }
+}
+
+
+@include media-l {
+    .b-school-list-item__name {
+        padding-right: 160px;
+    }
+}
+
+
+@include media-m {
+
+}
+
+@include media-s {
+    .b-school-list-item__name {
+        padding-right: 75px;
+    }
+
+    .b-school-list-item__description {
+        padding-right: 0;
+    }
 }

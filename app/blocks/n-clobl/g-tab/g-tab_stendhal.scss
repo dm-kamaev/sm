@@ -1,0 +1,34 @@
+.g-tab.g-tab_stendhal {
+    .g-tab__tab {
+        padding: 0 0 22px 0;
+
+        margin: 0 17px;
+
+        border: none;
+    }
+
+    .g-tab__content {
+        border: none;
+
+        padding: 0;
+    }
+
+    .g-tab__tabs {
+        border-bottom: solid 1px #deddd8;
+    }
+
+    .g-tab__tab_selected {
+        margin-bottom: -1px;
+        padding-bottom: 19px;
+
+        border-bottom: solid #ee382d 4px;
+    }
+
+    .g-tab__tab:first-child {
+        margin-left: 0;
+    }
+
+    .g-tab__tab:last-child {
+        margin-right: 0;
+    }
+}

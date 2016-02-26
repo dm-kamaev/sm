@@ -3,7 +3,11 @@
 }
 
 .b-search_theme_main {
+    box-sizing: border-box;
+
+    border: 1px solid #dbdbd4;
     background-color: #ffffff;
+    box-shadow: inset 0 1px 6px #dbdbd4;
 }
 
 .b-search__input {
@@ -12,6 +16,7 @@
 
     border-color: transparent;
     outline: 0;
+    background-color: transparent;
 
     font-size: 15px;
 }
@@ -21,8 +26,9 @@
 }
 
 .b-search li {
-    text-overflow: ellipsis;
     overflow: hidden;
+
+    text-overflow: ellipsis;
 }
 
 .b-search__icon {
@@ -52,7 +58,6 @@
     height: 100%;
 
     background-color: transparent;
-
     box-shadow: none;
 }
 
@@ -103,7 +108,7 @@
 }
 
 .b-search_theme_main .g-suggest {
-    height: 47px;
-    padding-right: 50px;
-    padding-left: 20px;
+    height: 45px;
+    padding-right: 30px;
+    padding-left: 12px;
 }

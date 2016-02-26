@@ -11,7 +11,11 @@ var Address = db.define('Address', {
         field: 'area_id'
     },
     name: DataType.STRING,
-    coords: DataType.ARRAY(DataType.FLOAT)
+    coords: DataType.ARRAY(DataType.FLOAT),
+    isSchool: {
+        type: DataType.BOOLEAN,
+        field: 'is_school'
+    }
 }, {
     underscored: true,
     tableName: 'address',
@@ -23,6 +27,10 @@ var Address = db.define('Address', {
             Address.belongsToMany(models.Metro, {
                 as: 'metroStations',
                 through: 'address_metro',
+                foreignKey: 'address_id'
+            });
+            Address.hasMany(models.AddressMetro, {
+                as: 'addressMetroes',
                 foreignKey: 'address_id'
             });
             Address.hasMany(models.Department, {

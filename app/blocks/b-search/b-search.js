@@ -249,10 +249,14 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.onIconClick_ = function() {
-        this.dispatchEvent({
-            type: Search.Event.SUBMIT,
-            text: this.suggest_.getText()
-        });
+        if (this.dataParams_.redirect) {
+            this.searchRequest_(this.suggest_.getText());
+        } else {
+            this.dispatchEvent({
+                type: Search.Event.SUBMIT,
+                text: this.suggest_.getText()
+            });
+        }
     };
 
     /**
@@ -333,7 +337,7 @@ goog.scope(function() {
      */
     Search.prototype.onNotSchoolSelect_ = function(event, data) {
         var url = '/search' +
-                '?name=' + this.getValue();
+                '?name=' + data.text;
         if (data.item.type === 'metro') {
             url += '&metroId=' + data.item.id;
         } else if (data.item.type === 'areas') {

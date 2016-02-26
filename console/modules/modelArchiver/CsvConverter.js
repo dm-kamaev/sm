@@ -17,7 +17,7 @@ class CsvConverter {
         var res = replace.all(str);
 
         // TODO: find a normal way to do it
-        res = res.replace('−', '-');
+        res = res.replace(/−/g, '-');
 
         return res;
     }

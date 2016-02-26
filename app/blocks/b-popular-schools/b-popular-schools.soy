@@ -10,41 +10,53 @@
  *         description: ?string,
  *         metro: ?list<string>,
  *         totalScore: ?number
- *     ]>
+ *     ]>,
+ *     config: ?{
+ *         popularSchool: {
+ *             customClasses: ?string
+ *         }
+ *     }
  * }
  */
 {template .base autoescape="strict" kind="html"}
     <div class="b-popular-schools">
 		    <div class="b-popular-schools__title">популярные школы</div>
         {foreach $school in $params?.popularSchools}
-            <a class="b-popular-schools__school-link" href="/school/{$school.url}">
+            <a class="b-popular-schools__school-link{sp}
+                      {$params?.config?.popularSchool?.customClasses ?: ''}"
+               href="/school/{$school.url}"
+               target="_blank">
                 <div class="b-popular-schools__school
                         {if isLast($school)}{sp}b-popular-schools__school_last{/if}">
                     <div class="b-popular-schools__school-rating">
                         {call sm.bMark.Template.base}
                             {param params: [
-                                'value': $school.totalScore
+                                'value': $school.totalScore,
+                                'config': [
+                                    'zeroSign': 'question-mark'
                                 ]
-                            /}
+                            ]/}
                         {/call}
                     </div>
-                    <div class="b-popular-schools__school-name">{$school.name}</div>
-                    {if $school.description}
-                        <div class="b-popular-schools__school-description">{$school.description}</div>
-                    {/if}
-                    {if length($school?.metro) > 0}
-                        <div class="b-popular-schools__metro">
-                            <div class="b-popular-schools__metro-icon b-icon_img_metro"></div>
-                            {foreach $metroStation in $school?.metro}
-                                <span class="b-popular-schools__metro-stations">
-                                    {$metroStation}
-                                    {if not isLast($metroStation)}
-                                        ,
-                                    {/if}
-                                </span>{sp}
-                            {/foreach}
-                        </div>
-                    {/if}
+                    <div class="b-popular-schools__school-information">
+                        <div class="b-popular-schools__school-name">{$school.name}</div>
+                        {if $school.description}
+                            <div class="b-popular-schools__school-description">{$school.description}</div>
+                        {/if}
+                        {if length($school?.metro) > 0}
+                            <div class="b-popular-schools__metro">
+                                <div class="b-popular-schools__metro-icon b-icon_img_metro"></div>
+                                {foreach $metroStation in $school?.metro}
+                                    <span class="b-popular-schools__metro-stations">
+                                        {$metroStation}
+                                        {if not isLast($metroStation)}
+                                            ,
+                                        {/if}
+                                    </span>{sp}
+                                {/foreach}
+                            </div>
+                        {/if}
+                    </div>
                 </div>
             </a>
         {/foreach}

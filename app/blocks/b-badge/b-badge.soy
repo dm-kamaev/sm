@@ -3,28 +3,30 @@
 /**
  * Badge template
  * @param params {{
- *     data: list<?string]>,
+ *     data: ?list<[
+ *         id: number,
+ *         name: string
+ *     ]>,
  *     display: ?string
  * }}
  */
 
 {template .base}
     <div class="b-badge">
-
-        <div class="b-badge__icon{sp}
-            {$params.display == 'metro' ?
-            'b-icon_img_metro' :
-            'b-badge_star'}
-        ">
-            {$params.display == 'metro' ? '' : 't'}
-        </div>
+        {call sm.bIcon.Template.icon}
+            {param params:[
+                'type': $params.display ?: 'test',
+                'customClasses': 'b-badge__icon'
+            ] /}
+        {/call}
 
         <div class="b-badge__content">
             {foreach $dataItem in $params.data}
                 {if $params?.display == 'metro'}
                     {call .metroItem_}
                         {param params:[
-                            'station': $dataItem
+                            'station': $dataItem.name,
+                            'id': $dataItem.id
                         ] /}
                     {/call}
                 {else}
@@ -48,11 +50,12 @@
 /**
  * Metro item template
  * @param params {{
- *     station: ?string
+ *     station: string
+ *     id: number
  * }}
  */
 {template .metroItem_}
-    <a href="/search?name=метро%20{$params.station}"
+    <a href="/search?name=метро%20{$params.station}&metroId={$params.id}"
         class="b-badge__item
             b-badge__item_active">
         {$params.station}

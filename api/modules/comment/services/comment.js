@@ -11,6 +11,7 @@ exports.name = 'comment';
  * @param {string} params.text
  * @param {string} params.userType
  * @param {object||null} params.rating
+ * @param {number} params.userDataId
  * @return {object|| Error} - comment instance or error
  */
 exports.create = async (function(commentGroupId, params) {
@@ -18,7 +19,8 @@ exports.create = async (function(commentGroupId, params) {
         var createParams = {
                 comment_group_id: commentGroupId,
                 text: params.text,
-                userType: params.userType
+                userDataId: params.userDataId,
+                isNoticeSend: false
             };
         if (params.rating)
             createParams.ratingId = params.rating.id;
@@ -36,12 +38,36 @@ exports.list = async (function (commentGroupId) {
     var params = commentGroupId ?
         {
             where: {
-                comment_group_id: commentGroupId
+                id: commentGroupId
             }
         } : {};
         console.log(params);
     var comments = await (models.Comment.findAll(params));
     return comments;
+});
+
+/**
+ * @param {number} commentGroupId
+ * @return {object} commentGroup with comments with rating and userData
+ */
+exports.getComments = async(function(commentGroupId) {
+    var include =  [
+        {
+            model: models.Rating,
+            as: 'rating'
+        },
+        {
+            model: models.UserData,
+            as: 'userData'
+        }
+    ];
+
+    return models.Comment.findAll({
+        where: {
+            'comment_group_id': commentGroupId
+        },
+        include: include
+    });
 });
 
 exports.get = async (function (commentId) {
@@ -51,4 +77,44 @@ exports.get = async (function (commentId) {
         }
     }));
     return comment;
+});
+
+
+/**
+ * Return all comments with not send notification state
+ * @return {Array<Object>}
+ */
+exports.getNotSended = async (function () {
+    var comments = await (models.Comment.findAll({
+        where: {
+            isNoticeSend: false
+        }
+    }));
+
+    return comments;
+});
+
+/**
+ * Update instance with data
+ * @param {Object||number} comment
+ * @param {{
+ *     text: string,
+ *     isNoticeSend: boolean
+ * }}
+ */
+exports.update = async(function (comment, data) {
+    var instance = comment;
+    if(typeof comment === 'number') {
+        instance = await( models.Comment.findOne({
+            where: {id: comment}
+        }) );
+    }
+
+    if (!instance) {
+        throw new Error('Can\'t find comment');
+    }
+
+    instance.update(data);
+
+    return instance;
 });

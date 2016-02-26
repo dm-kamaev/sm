@@ -1,8 +1,10 @@
+@import "../i-media/i-media";
+
 .b-filter {
     display: inline-block;
 
     width: 100%;
-    padding: 30px 0 30px 0;
+    padding: 18px 0;
 
     border-bottom: 1px solid #e5e5e5;
 
@@ -14,6 +16,7 @@
     display: inline-block;
 
     width: 100%;
+    padding: 10px 0;
 
     cursor: pointer;
 }
@@ -24,6 +27,8 @@
 }
 
 .b-filter__section {
+    position: relative;
+
     display: inline-block;
 
     min-width: 50%;
@@ -31,7 +36,6 @@
 }
 
 .b-filter__filters {
-    margin-top: 10px;
     margin-bottom: -6px;
 }
 
@@ -45,7 +49,10 @@
 }
 
 .b-filter__input-label {
+    display: inline-block;
+
     margin: 0 9px;
+    padding-left: 13px;
 
     cursor: pointer;
 }
@@ -58,16 +65,26 @@
     cursor: pointer;
 }
 
-.b-filter__show-button {
-    margin-top: 12px;
-    margin-bottom: 12px;
+.b-filter__button {
+    display: inline-block;
 
-    font-size: 14px;
     color: #ee362c;
     cursor: pointer;
+
+    font-size: 14px;
+}
+
+.b-filter__button_show,
+.b-filter__button_hide {
+    margin-top: 12px;
+    margin-bottom: 12px;
 }
 
 .b-filter__input {
+    position: absolute;
+    top: 12px;
+    left: 0;
+
     margin: 0;
 
     vertical-align: bottom;
@@ -192,5 +209,31 @@
 
         color: #ee362c;
         cursor: pointer;
+    }
+}
+
+
+@include media-l {
+    .b-filter_classes {
+        .b-filter__filters {
+            position: relative;
+
+            padding-right: 125px;
+        }
+
+        .b-filter__filter_center {
+            width: auto;
+            margin-right: 40px;
+
+            white-space: nowrap;
+        }
+
+        .b-filter__reset {
+            position: absolute;
+            top: 14px;
+            right: 0;
+
+            line-height: 14px;
+        }
     }
 }

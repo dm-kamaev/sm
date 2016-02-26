@@ -1,3 +1,5 @@
+@import "../i-media/i-media";
+
 .b-diagram {
     display: inline-block;
 
@@ -17,9 +19,10 @@
 
     width: 40%;
 
+	font-family: 'Proxima', Arial, sans-serif;
     color: #000000;
-    font-weight: 500;
-    font-size: 14px;
+    font-weight: 700;
+    font-size: 15px;
 }
 
 .b-diagram__value {
@@ -89,34 +92,80 @@
 
 .b-diagram_bars {
     .b-diagram__item {
-        padding: 13px 0 14px;
+        width: 20%;
+        padding: 0;
+        margin-bottom: 23px;
+
+        vertical-align: top;
+    }
+
+    .b-diagram__bar-wrap {
+        position: relative;
+
+        display: inline-block;
+
+        width: 100px;
+
+        cursor: pointer;
     }
 
     .b-diagram__bar {
+        vertical-align: middle;
         background-color: #eaeae5;
     }
 
+    .b-diagram__number-value {
+        position: relative;
+        top: 2px;
+
+        display: inline-block;
+
+        box-sizing: border-box;
+        width: 50px;
+
+        text-align: center;
+        font-size: 11.5px;
+        font-family: Arial;
+        color: #6f6f6d;
+        vertical-align: top;
+    }
+
+    .b-diagram__bar-filled {
+        vertical-align: middle;
+        cursor: pointer;
+        background-color: #757573;
+    }
+
     .b-diagram__bar-filled_red {
-        background-color: #ed635a;
+        background-color: #ef655e;
+    }
+
+    .b-diagram__bar-filled_green {
+        background-color: #5cce81;
     }
 
     .b-diagram__label {
         position: relative;
 
         box-sizing: border-box;
-        padding-right: 30px;
+        width: 100%;
+        margin-bottom: 6px;
 
-        font-size: 16px;
-        vertical-align: middle;
-        text-align: right;
+        font-size: 13px;
+        letter-spacing: 0.03em;
+        font-family: Arial;
+        font-weight: 500;
+        vertical-align: top;
+        text-align: left;
     }
 
     .b-diagram__value {
         position: relative;
 
-        height: 22px;
+        width: 100%;
+        height: 24px;
 
-        vertical-align: middle;
+        vertical-align: top;
     }
 
     .b-diagram__circle {
@@ -141,109 +190,78 @@
         height: 1px;
     }
 
-    .b-diagram__bar-filled {
-        cursor: pointer;
-    }
-
-    .b-diagram__bar-filled:hover {
-        position: relative;
-        top: 2px;
-
+    .b-diagram__bar-wrap:hover .b-diagram__bar-filled {
         height: 9px;
     }
 
-    .b-diagram__bar-filled:hover ~ .b-diagram__circle {
+    .b-diagram__bar-wrap:hover .b-diagram__circle {
         top: 4px;
     }
 
     .b-diagram__tooltip {
         position: absolute;
-        top: 40px;
+        top: 35px;
         left: 0;
         z-index: 10;
 
         display: none;
     }
 
-    .b-diagram__bar-filled:hover ~ .b-diagram__tooltip {
+    .b-diagram__bar-wrap:hover .b-diagram__tooltip,
+    .b-diagram__tooltip_shown {
         display: inline-block;
-    }
-
-    .b-diagram__tooltip-description {
-        position: relative;
-        left: -90px;
-        top: 0;
-        z-index: 2;
-
-        width: 274px;
-        height: 62px;
-
-        color: #000000;
-        background-color: #ffffff;
-        font-family: Arial;
-        box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.3);
     }
 
     .b-diagram__tooltip-content {
         position: relative;
-        z-index: 5;
+        top: 10px;
+        left: -20px;
+        z-index: 2;
 
-        width: 100%;
-        height: 100%;
+        width: 186px;
+        height: 62px;
 
         background-color: #ffffff;
-    }
+        box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.25);
 
-    .b-diagram__tooltip-mark {
-        display: inline-block;
-
-        box-sizing: border-box;
-        width: 90px;
-        margin: 15px 0;
-
-        border-right: 1px solid #e5e5e5;
-        text-align: center;
-        font-weight: 800;
-        font-size: 21px;
+        font-size: 13px;
+        font-weight: 500;
+        font-family: Arial;
+        letter-spacing: -0.01em;
     }
 
     .b-diagram__tooltip-average-mark {
-        display: inline-block;
-
         box-sizing: border-box;
-        width: 184px;
-        margin: 15px 0;
-        padding-left: 15px;
+        padding: 18px;
 
         font-size: 13px;
-        font-weight: 600;
-        vertical-align: top;
+        font-weight: 500;
+        letter-spacing: -0.01em;
     }
 
     .b-diagram__tooltip-bold-text {
-        font-weight: 800;
+        font-weight: 700;
         font-size: 13px;
     }
 
     .b-diagram__tooltip-arrow {
         position: absolute;
-        top: -10px;
+        top: 0;
         left: 0;
-        z-index: 1;
+        z-index: 3;
 
         width: 10px;
         height: 10px;
 
         border-left: 10px solid #ffffff;
         border-top: 10px solid transparent;
-        background-color: #ffffff;
     }
 
     .b-diagram__tooltip-arrow-shadow {
         position: absolute;
-        top: 0;
-        left: 90px;
-        z-index: 3;
+        top: 10px;
+        left: 0;
+        z-index: 1;
 
         width: 20px;
         height: 10px;
@@ -251,22 +269,70 @@
         -ms-transform: skewX(-125deg) rotate(-215deg) translate(0px, 0px);
         transform: skewY(45deg) rotate(0deg) translate(0px, 0px);
 
-        box-shadow: 0 0 5px 1px rgba(0,0,0,0.3);
+        box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.25);
         background-color: #ffffff;
     }
 
-    .b-diagram__description {
-        position: absolute;
-        top: 22px;
-        left: 0;
+    .b-diagram__item-description {
+        display: inline-block;
 
-        box-sizing: border-box;
-        width: 100%;
-        padding-right: 30px;
+        margin-left: 14px;
 
         font-size: 12px;
         font-weight: 400;
-        color: #7b7b78;
-        text-align: right;
+        color: #6f6f6d;
+    }
+}
+
+@include media-xl {
+    .b-diagram_bars {
+        .b-diagram__item {
+            width: 33%;
+        }
+    }
+}
+
+@include media-l {
+    .b-diagram_bars {
+        .b-diagram__item {
+            width: 50%;
+        }
+    }
+}
+
+@include media-s {
+    .b-diagram_bars {
+        .b-diagram__number-value {
+            width: 26px;
+
+            font-size: 12px;
+            text-align: right;
+        }
+
+        .b-diagram__item-description {
+            display: block;
+
+            margin-top: 5px;
+            margin-left: 0;
+        }
+    }
+}
+
+@include media-xs {
+    .b-diagram_bars {
+        .b-diagram__bar-wrap {
+            width: 85px;
+        }
+
+        .b-diagram__item:nth-child(even) {
+            box-sizing: border-box;
+            padding-left: 13px;
+        }
+
+        .b-diagram__item:nth-child(even) {
+            .b-diagram__tooltip-content {
+                left: -124px;
+            }
+        }
     }
 }

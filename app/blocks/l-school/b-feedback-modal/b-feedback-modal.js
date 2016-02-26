@@ -4,6 +4,7 @@ goog.require('cl.iUtils.Utils');
 goog.require('goog.dom.classes');
 goog.require('goog.ui.Component');
 goog.require('sm.bStars.Stars');
+goog.require('sm.iEvercookie.Evercookie');
 goog.require('sm.iFactory.FactoryStendhal');
 goog.require('sm.lSchool.bFeedbackModal.Template');
 
@@ -52,17 +53,35 @@ sm.lSchool.bFeedbackModal.FeedbackModal = function(opt_params) {
     this.stars_ = [];
 
     /**
-     * Close control element
-     * @type {element}
+     * Instances of dropdowns with type of user
+     * @type {Object}
      * @private
      */
-    this.closeElement_ = null;
+    this.dropdowns_ = {};
+
+    /**
+     * Input instance
+     * @type {sm.gInput.DigitInput}
+     * @private
+     */
+    this.yearGraduate_ = null;
+
+    /**
+     * @type {object}
+     * @private
+     */
+    this.evercookie_ = sm.iEvercookie.Evercookie.getInstance();
+
+    /**
+     * @type {?string}
+     * @private
+     */
+    this.clientIdPromise_ = null;
 };
 goog.inherits(sm.lSchool.bFeedbackModal.FeedbackModal, goog.ui.Component);
 
 goog.scope(function() {
     var FeedbackModal = sm.lSchool.bFeedbackModal.FeedbackModal;
-
     /**
      * CSS-class enum
      * @enum {string}
@@ -71,10 +90,26 @@ goog.scope(function() {
         'ROOT': 'b-feedback',
         'FORM': 'b-feedback__form',
         'RADIO': 'b-feedback__radio',
-        'CLOSE_CONTROL': 'b-feedback__close-control',
+        'USER_TYPE_SELECT': 'b-feedback__control',
+        'CLASS_TYPE_SELECT': 'b-feedback__class-select',
+        'TEXT_STUDENT': 'b-feedback__text_student',
+        'TEXT_PARENT': 'b-feedback__text_parent',
+        'GRADUATION_YEAR': 'b-feedback__graduation-year',
+        'CLOSE_CONTROL': 'b-icon',
         'CLOSE_CONTROL_IMG_HOVERED': 'b-icon_img_close-dialog-hovered',
-        'CLOSE_CONTROL_IMG': 'b-icon_img_close-dialog'
+        'CLOSE_CONTROL_IMG': 'b-icon_img_close-dialog',
+        'VALIDATION_ERRORS': 'b-feedback__validation-errors'
+    };
 
+    /**
+     * Validation error texts
+     * @enum {string}
+     */
+    FeedbackModal.Error = {
+        'TYPE_REQUIRED': 'Выберите, кто вы по отношению к школе.',
+        'RATING_REQUIRED': 'Оставьте оценку или комментарий.',
+        'COMMENT_TOO_LONG': 'Комментарий не должен превышать 300 символов.',
+        'WRONG_GRADUATION_YEAR': ' Укажите год выпуска в формате ХХХХ.'
     };
 
     /**
@@ -99,6 +134,7 @@ goog.scope(function() {
      */
     FeedbackModal.prototype.clean = function() {
         this.textarea_.clean();
+        this.yearGraduate_.clean();
 
         for (var i = 0, stars; stars = this.stars_[i]; i++) {
             stars.setValue(0);
@@ -107,6 +143,32 @@ goog.scope(function() {
         this.removeRadioCheck_();
     };
 
+
+    /**
+     * Sets up the Component.
+     * @public
+     */
+    FeedbackModal.prototype.enterDocument = function() {
+        goog.base(this, 'enterDocument');
+
+        var handler = this.getHandler();
+
+        handler.listen(
+            this.elements_.button,
+            goog.events.EventType.CLICK,
+            this.formSubmit_
+        );
+
+        handler.listen(
+            this.yearGraduate_,
+            sm.gInput.DigitInput.Event.FOCUS,
+            this.onFocusInput_
+        );
+
+        this.initCLoseControlListeners_(handler);
+
+        this.initDropdownListeners_(handler);
+    };
 
     /**
      * Template-based dom element creation.
@@ -134,7 +196,23 @@ goog.scope(function() {
         this.elements_ = {
             radio: this.getElementsByClass(FeedbackModal.CssClass.RADIO),
             button: this.getElementByClass(cl.gButton.View.CssClass.ROOT),
-            form: this.getElementByClass(FeedbackModal.CssClass.FORM)
+            form: this.getElementByClass(FeedbackModal.CssClass.FORM),
+            close: this.getElementByClass(FeedbackModal.CssClass.CLOSE_CONTROL),
+            classSelect: this.getElementByClass(
+                FeedbackModal.CssClass.CLASS_TYPE_SELECT
+            ),
+            graduationYear: this.getElementByClass(
+                FeedbackModal.CssClass.GRADUATION_YEAR
+            ),
+            parentText: this.getElementByClass(
+                FeedbackModal.CssClass.TEXT_PARENT
+            ),
+            studentText: this.getElementByClass(
+                FeedbackModal.CssClass.TEXT_STUDENT
+            ),
+            errors: this.getElementByClass(
+                FeedbackModal.CssClass.VALIDATION_ERRORS
+            )
         };
 
         this.modal_ = factory.decorate(
@@ -142,8 +220,9 @@ goog.scope(function() {
             this.getElementByClass(cl.gModal.View.CssClass.ROOT),
             this
         );
+
         this.textarea_ = factory.decorate(
-            'textarea',
+            'textarea-check',
             goog.dom.getElementByClass(
                 cl.gTextarea.View.CssClass.ROOT,
                 this.modal_.getElement()
@@ -158,41 +237,61 @@ goog.scope(function() {
             )
         );
 
-        this.closeElement_ = goog.dom.getElementByClass(
-            FeedbackModal.CssClass.CLOSE_CONTROL,
-            this.modal_.getElement()
+        this.yearGraduate_ = factory.decorate(
+            'digit-input',
+            goog.dom.getElementByClass(
+                cl.gInput.View.CssClass.ROOT,
+                this.modal_.getElement()
+            )
         );
+
+        this.initDropdowns_(factory);
+
+        this.awaitClientId_();
     };
 
     /**
-     * Sets up the Component.
-     * @public
+     * await for cookie value
+     * @private
      */
-    FeedbackModal.prototype.enterDocument = function() {
-        goog.base(this, 'enterDocument');
+    FeedbackModal.prototype.awaitClientId_ = function() {
+        this.clientIdPromise_ = new goog.Promise(function(resolve, reject) {
+            this.evercookie_.getClientId(function(clientId) {
+                resolve(clientId);
+            });
+        }, this);
+    };
 
-        this.getHandler().listen(
-            this.elements_.button,
-            goog.events.EventType.CLICK,
-            this.formSubmit_
+    /**
+     * dropdowns initialization
+     * @param {sm.iFactory.FactoryStendhal} factory
+     * @private
+     */
+    FeedbackModal.prototype.initDropdowns_ = function(factory) {
+        var userTypeElement = goog.dom.getElementByClass(
+            cl.gDropdown.View.CssClass.ROOT,
+            this.modal_.getElementByClass(
+                FeedbackModal.CssClass.USER_TYPE_SELECT
+            )
         );
 
-        this.getHandler().listen(
-            this.closeElement_,
-            goog.events.EventType.MOUSEOVER,
-            this.onCrossHover_
+        this.dropdowns_.userType = factory.decorate(
+            'dropdown-select',
+            userTypeElement,
+            this
         );
 
-        this.getHandler().listen(
-            this.closeElement_,
-            goog.events.EventType.MOUSEOUT,
-            this.onCrossHover_
+        var classTypeElement = goog.dom.getElementByClass(
+            cl.gDropdown.View.CssClass.ROOT,
+            this.modal_.getElementByClass(
+                FeedbackModal.CssClass.CLASS_TYPE_SELECT
+            )
         );
 
-        this.getHandler().listen(
-            this.closeElement_,
-            goog.events.EventType.CLICK,
-            this.onCrossClick_
+        this.dropdowns_.classType = factory.decorate(
+            'dropdown-select',
+            classTypeElement,
+            this
         );
     };
 
@@ -226,22 +325,53 @@ goog.scope(function() {
     };
 
     /**
-     * Submit event handler
+     * Listeners for close control initialization
+     * @param {Object=} handler
      * @private
      */
-    FeedbackModal.prototype.formSubmit_ = function() {
-        var form = jQuery(this.elements_.form),
-            data = form.serializeArray();
+    FeedbackModal.prototype.initCLoseControlListeners_ = function(handler) {
+        handler.listen(
+            this.elements_.close,
+            goog.events.EventType.MOUSEOVER,
+            this.onCrossHover_
+        );
 
-        if (this.isValid_(data)) {
-            this.send_(form, function() {
-                location.reload();
-            });
-        } else {
-            this.hide();
-        }
+        handler.listen(
+            this.elements_.close,
+            goog.events.EventType.MOUSEOUT,
+            this.onCrossHover_
+        );
 
-        this.clean();
+        handler.listen(
+            this.elements_.close,
+            goog.events.EventType.CLICK,
+            this.onCrossClick_
+        );
+    };
+
+    /**
+     * Listeners for close control initialization
+     * @param {Object=} handler
+     * @private
+     */
+    FeedbackModal.prototype.initDropdownListeners_ = function(handler) {
+        handler.listen(
+            this.dropdowns_.userType,
+            sm.gDropdown.DropdownSelect.Event.ITEM_SELECT,
+            this.onUserTypeClick_
+        );
+
+        handler.listen(
+            this.dropdowns_.classType,
+            cl.gDropdown.Dropdown.Event.OPENER_CLICK,
+            this.hideUserType_
+        );
+
+        handler.listen(
+            this.dropdowns_.userType,
+            cl.gDropdown.Dropdown.Event.OPENER_CLICK,
+            this.hideClassType_
+        );
     };
 
     /**
@@ -250,11 +380,173 @@ goog.scope(function() {
      */
     FeedbackModal.prototype.onCrossHover_ = function() {
         goog.dom.classes.toggle(
-            this.closeElement_,
+            this.elements_.close,
             FeedbackModal.CssClass.CLOSE_CONTROL_IMG
         );
         goog.dom.classes.toggle(
-            this.closeElement_,
+            this.elements_.close,
+            FeedbackModal.CssClass.CLOSE_CONTROL_IMG_HOVERED
+        );
+    };
+
+    /**
+     * Handler for click over close element
+     * @private
+     */
+    FeedbackModal.prototype.onCrossClick_ = function() {
+        this.hide();
+    };
+
+    /**
+     * Handler for click on user type select
+     * @param {Object} event
+     * @private
+     */
+    FeedbackModal.prototype.onUserTypeClick_ = function(event) {
+        var itemId = event.itemId;
+
+        switch (itemId) {
+            case 0:
+                this.showHideClassSelect_(true);
+                this.showHideGraduationYear_();
+                break;
+            case 1:
+                this.showHideClassSelect_();
+                this.showHideGraduationYear_(true);
+                break;
+            case 2:
+                this.showHideClassSelect_(true, true);
+                this.showHideGraduationYear_();
+                break;
+        }
+    };
+
+    /**
+     * Input focus handler
+     * @private
+     */
+    FeedbackModal.prototype.onFocusInput_ = function() {
+        this.closeDropdowns_();
+    };
+
+    /**
+     * Close all opened dropdowns
+     * @private
+     */
+    FeedbackModal.prototype.closeDropdowns_ = function() {
+        this.hideClassType_();
+        this.hideUserType_();
+    };
+
+    /**
+     * Close user type dropdown
+     * @private
+     */
+    FeedbackModal.prototype.hideUserType_ = function() {
+        this.dropdowns_.userType.close();
+    };
+
+    /**
+     * Close class type dropdown
+     * @private
+     */
+    FeedbackModal.prototype.hideClassType_ = function() {
+        this.dropdowns_.classType.close();
+    };
+
+    /**
+     * Show or hide Class select element
+     * @param {boolean} opt_showClasses - show element if true
+     * and hide if false or undefined
+     * @param {boolean} opt_showStudentText - show student text if true
+     * and parent if false or not defined
+     * @private
+     */
+    FeedbackModal.prototype.showHideClassSelect_ =
+        function(opt_showClasses, opt_showStudentText) {
+        if (opt_showClasses) {
+            goog.dom.classes.remove(
+                this.elements_.classSelect,
+                cl.iUtils.Utils.CssClass.HIDDEN
+            );
+            if (opt_showStudentText) {
+                goog.dom.classes.remove(
+                    this.elements_.studentText,
+                    cl.iUtils.Utils.CssClass.HIDDEN
+                );
+                goog.dom.classes.add(
+                    this.elements_.parentText,
+                    cl.iUtils.Utils.CssClass.HIDDEN
+                );
+            } else {
+                goog.dom.classes.add(
+                    this.elements_.studentText,
+                    cl.iUtils.Utils.CssClass.HIDDEN
+                );
+                goog.dom.classes.remove(
+                    this.elements_.parentText,
+                    cl.iUtils.Utils.CssClass.HIDDEN
+                );
+            }
+        } else {
+            goog.dom.classes.add(
+                this.elements_.classSelect,
+                cl.iUtils.Utils.CssClass.HIDDEN
+            );
+            this.dropdowns_.classType.close();
+        }
+    };
+
+    /**
+     * Show or hide Graduation input block
+     * @param {boolean} opt_showInput - if true show element,
+     * if false or undefined - hide
+     * @private
+     */
+    FeedbackModal.prototype.showHideGraduationYear_ = function(opt_showInput) {
+        if (opt_showInput) {
+            goog.dom.classes.remove(
+                this.elements_.graduationYear,
+                cl.iUtils.Utils.CssClass.HIDDEN
+            );
+        } else {
+            this.yearGraduate_.clear();
+            goog.dom.classes.add(
+                this.elements_.graduationYear,
+                cl.iUtils.Utils.CssClass.HIDDEN
+            );
+        }
+    };
+
+    /**
+     * Submit event handler
+     * @private
+     */
+    FeedbackModal.prototype.formSubmit_ = function() {
+        var form = jQuery(this.elements_.form),
+            data = form.serializeArray();
+
+        if (this.isValid_(data)) {
+            var that = this;
+            this.clientIdPromise_.then(function(clientId) {
+                that.send_(form, clientId, function() {
+                    location.reload();
+                });
+            });
+        }
+    };
+
+    /**
+     * Handler for hover over close element
+     * @private
+     */
+    FeedbackModal.prototype.onCrossHover_ = function() {
+        goog.dom.classes.toggle(
+            this.elements_.close,
+            FeedbackModal.CssClass.CLOSE_CONTROL_IMG
+        );
+        goog.dom.classes.toggle(
+            this.elements_.close,
             FeedbackModal.CssClass.CLOSE_CONTROL_IMG_HOVERED
         );
     };
@@ -270,58 +562,182 @@ goog.scope(function() {
     /**
      * Sends form using jQuery.ajax
      * @param {Element} form
+     * @param {string} clientId
      * @param {Function=} opt_callback
      * @private
      */
-    FeedbackModal.prototype.send_ = function(form, opt_callback) {
+    FeedbackModal.prototype.send_ = function(form, clientId, opt_callback) {
+        var data = form.serialize();
+        switch (this.dropdowns_.userType.getValue()) {
+            case 0:
+                data += this.dropdowns_.classType.getValue() ?
+                    '&classType=' + this.dropdowns_.classType.getValue() : '';
+                data += '&userType=Parent';
+                break;
+            case 1:
+                data += '&userType=Graduate';
+                break;
+            case 2:
+                data += this.dropdowns_.classType.getValue() ?
+                    '&classType=' + this.dropdowns_.classType.getValue() : '';
+                data += '&userType=Scholar';
+                break;
+        }
+        data += '&key=' + clientId;
         jQuery.ajax({
             url: form.attr('action'),
             type: form.attr('method'),
-            data: form.serialize(),
-            success: opt_callback ? opt_callback : function() {}
+            data: data,
+            success: opt_callback ? opt_callback : function() {},
+            error: this.onError_.bind(this)
         });
     };
 
     /**
-     * data validation
+     * ajax error handler
+     * @param {object} response
+     * @private
+     */
+    FeedbackModal.prototype.onError_ = function(response) {
+        this.showValidationError_(JSON.parse(response.responseText)[0].message);
+    };
+
+    /**
+     * Modal data validation
      * @param {Array.<Object>} data
      * @return {boolean}
      * @private
      */
     FeedbackModal.prototype.isValid_ = function(data) {
         var isValid = false,
-            isValidOpt = false;
+            isValidOpt = false,
+            userType = this.dropdowns_.userType.getValue();
+            this.dropdowns_.userType.getView().removeNotSelectedModifier();
 
-        /** list of parameters for validate */
-        var validateList = {
-            'text': function(value) {
-                if (value.trim()) {
-                    isValidOpt = true;
-                }
-            },
-            'score': function(value) {
-                if (parseInt(value)) {
-                    isValidOpt = true;
-                }
-            },
-            'userType': function(value) {
-                if (value.trim()) {
-                    isValid = true;
+        this.hideValidationError_();
+
+        if (userType != null) {
+            isValid = true;
+
+            var dataToValidate = {
+                    'textArea': '',
+                    'yearGraduate': '',
+                    'score': []
+                };
+
+            for (var i = 0, item; item = data[i]; i++) {
+                var value = item.value,
+                    name = item.name;
+
+                /** Take values for each check criterion  **/
+                switch (name) {
+                    case 'text':
+                        dataToValidate.textArea = value;
+                        break;
+                    case 'yearGraduate':
+                        dataToValidate.yearGraduate = value;
+                        break;
+                    case 'score':
+                        dataToValidate.score.push(value);
+                        break;
                 }
             }
-        };
 
-        /** checks parameters */
-        for (var i = 0, item; item = data[i]; i++) {
-            var value = item.value,
-                name = item.name;
+            isValidOpt = this.validateComment_(dataToValidate);
 
-            validateList[name](value);
+        } else {
+            this.dropdowns_.userType.getView().addNotSelectedModifier();
+            this.showValidationError_(FeedbackModal.Error.TYPE_REQUIRED);
         }
-
         return (isValid && isValidOpt);
     };
 
+
+
+    /**
+     * Validate text in textarea,
+     * then call next validate function or return false
+     * @param {Object} formData
+     * @return {boolean}
+     * @private
+     */
+    FeedbackModal.prototype.validateComment_ = function(formData) {
+        var isValid = false,
+            commentText = formData.textArea;
+
+        if (commentText.trim()) {
+            if (commentText.length <= 300) {
+                this.textarea_.getView().removeNotValidModifier();
+                isValid = this.validateGraduateInput_(formData.yearGraduate);
+            } else {
+                this.showValidationError_(FeedbackModal.Error.COMMENT_TOO_LONG);
+                this.textarea_.getView().addNotValidModifier();
+            }
+        } else {
+            isValid = this.validateScore_(formData);
+        }
+
+        return isValid;
+    };
+
+    /**
+     * Validate score item
+     * @param {Object} formData
+     * @return {boolean}
+     * @private
+     */
+    FeedbackModal.prototype.validateScore_ = function(formData) {
+        var isValid = false;
+
+        for (var i = 0, l = formData.score.length, scoreItem;
+            i < l, scoreItem = formData.score[i]; i++) {
+            if (parseInt(scoreItem)) {
+                isValid = true;
+            }
+        }
+
+        if (!isValid) {
+            this.showValidationError_(
+                FeedbackModal.Error.RATING_REQUIRED
+            );
+        } else {
+            isValid = this.validateGraduateInput_(formData.yearGraduate);
+        }
+
+        return isValid;
+    };
+
+    /**
+     * Validate input with year of graduate
+     * @param {number} value
+     * @private
+     * @return {boolean}
+     */
+    FeedbackModal.prototype.validateGraduateInput_ = function(value) {
+        var userType = this.dropdowns_.userType.getValue(),
+            isValid = false,
+            yearRegex = /[\d][\d][\d][\d]/;
+
+        if (userType == 1) {
+            if (value) {
+                if (yearRegex.test(value)) {
+                    isValid = true;
+                    this.yearGraduate_.getView().removeNotValidModifier();
+                } else {
+                    this.yearGraduate_.getView().addNotValidModifier();
+                    this.showValidationError_(
+                        FeedbackModal.Error.WRONG_GRADUATION_YEAR
+                    );
+                }
+            } else {
+                isValid = true;
+            }
+        } else {
+            isValid = true;
+        }
+
+        return isValid;
+    };
 
     /**
      * removes 'checked' attribute from radio
@@ -335,5 +751,38 @@ goog.scope(function() {
                 radio.checked = false;
             }
         }
+    };
+
+    /**
+     * Show error
+     * @param {string} error
+     * @private
+     */
+    FeedbackModal.prototype.showValidationError_ = function(error) {
+        this.getDomHelper().setTextContent(
+            this.elements_.errors,
+            error
+        );
+
+        goog.dom.classes.remove(
+            this.elements_.errors,
+            cl.iUtils.Utils.CssClass.HIDDEN
+        );
+
+    };
+
+    /**
+     * Hide errors
+     * @private
+     */
+    FeedbackModal.prototype.hideValidationError_ = function() {
+        this.getDomHelper().setTextContent(
+            this.elements_.errors,
+            ''
+        );
+        goog.dom.classes.add(
+            this.elements_.errors,
+            cl.iUtils.Utils.CssClass.HIDDEN
+        );
     };
 });

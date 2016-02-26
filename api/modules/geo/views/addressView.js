@@ -59,21 +59,22 @@ addressView.stageList = function (addresses, opt_options) {
                     {
                         title: addresses[j].title,
                         description: addresses[j].description,
-                        metroStations: addresses[j].metroStations
-                      }
+                        metroStation: addresses[j].metroStations[0]
+                    }
                 );
                 addressAdded = true;
             }
         }
         if (addressAdded) {
-            stages.push(
-                {
-                    name: stagesEnum[i],
-                    addresses: temp
-                }
-            );
+            stages.push({
+                name: stagesEnum[i],
+                addresses: temp
+            });
         }
         temp = [];
+    }
+    if (stages.length == 1 && stages[0].name === 'Другие адреса') {
+        stages[0].name = 'Адреса';
     }
     return stages;
 
@@ -128,17 +129,34 @@ addressView.getMetro = function(addresses) {
 
             var isNewMetro = true;
             metroStations.forEach(metro => {
-                if (metro === address.metroStations[0].name) {
+                if (metro.name === address.metroStations[0].name) {
                     isNewMetro = false;
                 }
             });
 
             if (isNewMetro && address.metroStations[0].name !== null) {
-                metroStations.push(address.metroStations[0].name);
+                metroStations.push({
+                    id: address.metroStations[0].id,
+                    name: address.metroStations[0].name
+                });
             }
         }
     });
     return metroStations;
+};
+
+/**
+ * Transforms school address for metro stations
+ * @param {Object} school - school instance from sequalize
+ */
+addressView.transformSchoolAddress = function(school) {
+    school.addresses = school.addresses.map(address => {
+        address.metroStations = address.addressMetroes
+            .map(item => item.metroStation);
+        address.dataValues.metroStations = address.metroStations;
+
+        return address;
+    });
 };
 
 /**

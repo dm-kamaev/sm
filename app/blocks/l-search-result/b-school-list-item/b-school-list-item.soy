@@ -18,8 +18,12 @@
  *         value: ?number
  *     ],
  *     description: ?string,
- *     metroStations: list<string>,
- *     ratings: list<string>
+ *     metroStations: ?list<[
+ *         id: number,
+ *         name: string
+ *     ]>,
+ *     ratings: ?list<string>,
+ *     isScoreClickable: ?boolean
  * }
  */
 {template .base autoescape="strict" kind="html"}
@@ -32,7 +36,8 @@
 
         <div class="b-school-list-item__section">
             <a href="/school/{$params.url}"
-                class="b-school-list-item__name">
+               class="b-school-list-item__name"
+               target="_blank">
                 {$params.name.light}
                 {if $params.name.bold}
                     <span class="b-school-list-item__name_bold">
@@ -45,7 +50,8 @@
                 {call sm.bScoreSchoolList.Template.base}
                     {param params:[
                         'score': $params.score,
-                        'sortCriteria': $params.currentCriterion
+                        'sortCriterion': $params.currentCriterion,
+                        'isClickable': $params?.isScoreClickable
                     ]/}
                 {/call}
             </div>

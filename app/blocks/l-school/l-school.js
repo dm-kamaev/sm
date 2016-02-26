@@ -5,19 +5,21 @@ goog.require('goog.events');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
 goog.require('sm.bRating.Rating');
+goog.require('sm.bScore.Score');
 goog.require('sm.bSearch.Search');
 goog.require('sm.lSchool.bComment.Comment');
 goog.require('sm.lSchool.bComments.Comments');
 goog.require('sm.lSchool.bDataBlockFoldList.FoldList');
 goog.require('sm.lSchool.bFeedbackModal.FeedbackModal');
 goog.require('sm.lSchool.bMap.Map');
+goog.require('sm.lSchool.bResults.Results');
+
 
 /**
  * School page
  * @param {Object=} opt_params
  * @constructor
  */
-
 sm.lSchool.School = function(opt_params) {
     goog.base(this);
 
@@ -41,12 +43,21 @@ sm.lSchool.School = function(opt_params) {
      * @private
      */
     this.search_ = null;
+
+    /**
+     * Score instance
+     * @type {sm.bScore.Score}
+     * @private
+     */
+    this.score_ = null;
 };
 goog.inherits(sm.lSchool.School, goog.ui.Component);
 
 goog.scope(function() {
     var School = sm.lSchool.School,
-        FoldList = sm.lSchool.bDataBlockFoldList.FoldList;
+        FoldList = sm.lSchool.bDataBlockFoldList.FoldList,
+        Results = sm.lSchool.bResults.Results,
+        Score = sm.bScore.Score;
 
 
     /**
@@ -119,6 +130,12 @@ goog.scope(function() {
                 this.onClick_
             );
         }
+
+        handler.listen(
+            this.score_,
+            Score.Event.PLACE_COMMENT_CLICK,
+            this.onClick_
+        );
     };
 
 
@@ -176,9 +193,29 @@ goog.scope(function() {
             foldListInstance.decorate(foldList);
         }
 
-        this.search_ = new sm.bSearch.Search();
-        this.addChild(this.search_);
-        this.search_.decorate(this.elements_.search);
+        if (this.elements_.search) {
+            this.search_ = new sm.bSearch.Search();
+            this.addChild(this.search_);
+            this.search_.decorate(this.elements_.search);
+        }
+
+        /**
+         * results
+         */
+        var resultElement = this.getElementByClass(Results.CssClass.ROOT);
+
+        if (resultElement) {
+            var results = new Results();
+            this.addChild(results);
+            results.decorate(resultElement);
+        }
+
+        /**
+         * score
+         */
+        this.score_ = new Score();
+        this.addChild(this.score_);
+        this.score_.decorate(this.getElementByClass(Score.CssClass.ROOT));
     };
 
     /**

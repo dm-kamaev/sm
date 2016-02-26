@@ -3,6 +3,7 @@ goog.provide('sm.lSearchResult.bSchoolList.SchoolList');
 goog.require('goog.dom.classlist');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
+goog.require('sm.iFactory.FactoryStendhal');
 goog.require('sm.lSearchResult.bSchoolList.Template');
 goog.require('sm.lSearchResult.bSchoolListItem.SchoolListItem');
 goog.require('sm.lSearchResult.bSort.Sort');
@@ -82,7 +83,7 @@ goog.scope(function() {
      */
     SchoolList.Event = {
         'ITEM_CLICK': SchoolListItem.Event.CLICK,
-        'SORT_CLICK': Sort.Event.ITEM_CLICK,
+        'SORT_CLICK': sm.gDropdown.DropdownSelect.Event.ITEM_SELECT,
         'SHOW_MORE': 'show-more-items'
     };
 
@@ -127,11 +128,15 @@ goog.scope(function() {
             params = JSON.parse(
                 item.getAttribute('data-params')
             );
+
             schoolListItemInstance = new SchoolListItem({
                 'id': params.id,
                 'score': params.score,
-                'totalScore': params.totalScore
+                'currentCriterion': params.currentCriterion,
+                'isScoreClickable': params.isScoreClickable,
+                'url': params.url
             });
+
 
             this.addChild(schoolListItemInstance);
             this.schoolListItems_.push(schoolListItemInstance);
@@ -152,13 +157,15 @@ goog.scope(function() {
 
         //sort
         var sortElement = goog.dom.getElementByClass(
-            Sort.CssClass.ROOT,
+            cl.gDropdown.View.CssClass.ROOT,
             element
         );
 
-        this.sort_ = new Sort();
-        this.addChild(this.sort_);
-        this.sort_.decorate(sortElement);
+        this.sort_ = sm.iFactory.FactoryStendhal.getInstance().decorate(
+            'dropdown-select',
+            sortElement,
+            this
+        );
     };
 
     /**
@@ -211,7 +218,7 @@ goog.scope(function() {
      */
     SchoolList.prototype.scrollHandler_ = function() {
         if (goog.dom.getViewportSize().height +
-                goog.dom.getDocumentScroll().y ==
+                goog.dom.getDocumentScroll().y >=
                 goog.dom.getDocumentHeight()) {
 
             this.dispatchEvent(SchoolList.Event.SHOW_MORE);

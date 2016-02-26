@@ -142,9 +142,11 @@ goog.scope(function() {
             element
         );
 
-        this.search_ = new Search();
-        this.addChild(this.search_);
-        this.search_.decorate(bSearch);
+        if (bSearch) {
+            this.search_ = new Search();
+            this.addChild(this.search_);
+            this.search_.decorate(bSearch);
+        }
 
         this.textChangeElement_ = goog.dom.getElementByClass(
             SearchResult.CssClass.TEXT_CHANGE,
@@ -170,22 +172,34 @@ goog.scope(function() {
             this.filtersSubmitHandler_
         );
 
-        this.getHandler().listen(
-            this.search_,
-            sm.bSearch.Search.Event.SUBMIT,
-            this.onSubmit_
-        );
+        if (this.search_) {
+            this.getHandler().listen(
+                this.search_,
+                sm.bSearch.Search.Event.SUBMIT,
+                this.onSubmit_
+            );
 
-        this.getHandler().listen(
-            this.search_,
-            sm.bSearch.Search.Event.ITEM_SELECT,
-            this.onSubmit_
-        );
+            this.getHandler().listen(
+                this.search_,
+                sm.bSearch.Search.Event.ITEM_SELECT,
+                this.onSubmit_
+            );
+        }
 
         this.getHandler().listen(
             this.schoolList_,
             SchoolList.Event.SHOW_MORE,
             this.showMoreSchoolListItemsHandler_
+        ).listen(
+            this.schoolList_,
+            SchoolList.Event.ITEM_CLICK,
+            this.redirect_
+        );
+
+        this.getHandler().listen(
+            goog.dom.getWindow(),
+            goog.events.EventType.PAGESHOW,
+            this.onShowPage_
         );
     };
 
@@ -241,6 +255,28 @@ goog.scope(function() {
         this.searchSettings_.data.page += 1;
         this.schoolList_.showLoader();
         this.sendQuery_();
+    };
+
+    /**
+     * Handler for redirect
+     * @private
+     * @param {Object} event
+     */
+    SearchResult.prototype.redirect_ = function(event) {
+        var url = 'school/' + event.url,
+            win = window.open(url, '_blank');
+        win.focus();
+    };
+
+    /**
+     * Handler for page show
+     * @private
+     * @param {object} event
+     */
+    SearchResult.prototype.onShowPage_ = function(event) {
+        if (event.event_.persisted) {
+            this.schoolList_.reset();
+        }
     };
 
     /**

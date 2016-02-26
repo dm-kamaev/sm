@@ -120,7 +120,6 @@ class ModelArchiver {
     bulkInsertLoad_(data) {
         var chunks = [];
         var chunkSize = 100;
-        await(this.model_.destroy({ where:{} }));
         for (var i = 0; i < data.length; i += chunkSize) {
             chunks.push(data.slice(i, i + chunkSize));
         }

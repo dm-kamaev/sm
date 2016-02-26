@@ -12,6 +12,9 @@ const gulpHelper =
         .setPath({
             root: __dirname,
             blocks: path.join(__dirname, '/app/blocks')
+        })
+        .setSoyPath({
+            root: 'build'
         });
 
 const config = require('./config.json');
@@ -50,7 +53,7 @@ gulp.task('appES5', function () {
 });
 
 gulp.task('soy', function () {
-    return gulpHelper.soy.build({});
+    return gulpHelper.soy.build();
 });
 
 gulp.task('scripts', ['soy', 'lint'], function () {
@@ -109,7 +112,7 @@ gulp.task('styles', function () {
 
 gulp.task('sprite', function() {
     return gulpHelper.sprite.build([{
-        src: path.join(__dirname, BLOCKS_DIR, '/b-icon/b-icon_img/*'),
+        src: path.join(__dirname, BLOCKS_DIR, '/b-icon/b-icon_img/*.png'),
         name: 'b-icon_auto-sprite',
         imgPath: '/images/b-icon_auto-sprite.png',
         cssDest: path.join(__dirname, BLOCKS_DIR, '/b-icon'),
@@ -118,12 +121,13 @@ gulp.task('sprite', function() {
 });
 
 gulp.task('images', function () {
-    return gulp.src([
-            path.join(__dirname + BLOCKS_DIR + '/**/*.png'),
-            path.join(__dirname + BLOCKS_DIR + '/**/*.ico'),
-            path.join(__dirname + BLOCKS_DIR + '/**/*.gif')
-        ])
-        .pipe(gulp.dest(path.join(__dirname + '/public/images')));
+    var src = ['png', 'ico', 'svg', 'gif']
+            .map(ext => '**/*.' + ext)
+            .map(mask => path.join(__dirname, BLOCKS_DIR, mask)),
+        dest = path.join(__dirname, 'public/images');
+
+    return gulp.src(src)
+        .pipe(gulp.dest(dest));
 });
 
 gulp.task('watch', function () {
@@ -146,10 +150,19 @@ gulp.task('fonts', function () {
         .pipe(gulp.dest(path.join(__dirname + '/public/fonts')));
 });
 
+gulp.task('evercookie', function() {
+    return gulp.src([
+            path.join(__dirname + '/app/evercookie/**/*.*'),
+            path.join('!' + __dirname + '/app/evercookie/css/**/*.*'),
+            path.join('!' + __dirname + '/app/evercookie/*.*')
+    ])
+    .pipe(gulp.dest(path.join(__dirname + '/public/evercookie/')));;
+});
+
 const tasks = function (bool) {
     return bool ?
-        ['soy', 'scripts', 'sprite', 'images', 'fonts', 'styles'] :
-        ['watch', 'soy', 'scripts', 'sprite', 'images', 'fonts','styles'];
+        ['soy', 'scripts', 'sprite', 'images', 'fonts', 'styles', 'evercookie'] :
+        ['watch', 'soy', 'scripts', 'sprite', 'images', 'fonts','styles', 'evercookie'];
 };
 
 gulp.task('build', tasks(true));

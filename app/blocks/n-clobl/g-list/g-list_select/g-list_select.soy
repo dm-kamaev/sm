@@ -1,0 +1,53 @@
+{namespace sm.gList.SelectTemplate}
+
+/**
+ * Constructor
+ * @param? params {{
+ *     data: {
+ *         items: list<{
+ *             label: ?string,
+ *             openerText: ?string
+ *         }>,
+ *         selectedItemId: ?number,
+ *         config: [
+ *              color: ?string
+ *         ]
+ *     }
+ * }}
+ * @extends cl.gList.Template
+ * @constructor
+ * @doc
+ */
+{template .list}
+    {call .init data="all"/}
+{/template}
+
+/**
+ * Attributes
+ * @param? params {{
+ *     data: {
+ *         items: list<{
+ *             label: ?string,
+ *             selectedName: ?string
+ *         }>
+ * }}
+ * @override
+ */
+{template .attributes kind="attributes"}
+    data-params="
+    {call cl.iUtils.Utils.stringify}
+        {param json: $params?.data?.items /}
+    {/call}"
+{/template}
+
+/**
+ * Css classes
+ * @override
+ * @param params ?{}
+ */
+{template .additionalClasses}
+    {call .rootClass/}_select
+    {if $params?.config?.color}
+        {sp}{call .rootClass/}_{$params.config.color}-color
+    {/if}
+{/template}

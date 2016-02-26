@@ -3,6 +3,8 @@
 const path = require('path');
 const express = require('express');
 const morgan = require('morgan');
+const cookieParser = require('cookie-parser');
+const evercookie = require('evercookie');
 
 var db = require('./app/components/db');
 const soy = require('./node_modules/clobl/soy').setOptions({
@@ -47,6 +49,16 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(morgan('dev'));
 
+app.use(cookieParser());
+app.use(evercookie.backend({
+    pngCookieName: 'evercookie_png',
+    etagCookieName: 'evercookie_etag',
+    cacheCookieName: 'evercookie_cache',
+    pngPath: '/evercookie/png',
+    etagPath: '/evercookie/etag',
+    cachePath: '/evercookie/cache'
+}));
+
 app.use(express.static(path.join(__dirname, '/public')));
 
 
@@ -67,25 +79,14 @@ async(function() {
     });
     await(startupControl.check());
 
+    var paths = [
+        'build/compiledServerSoy/server.soy.concat.js',
+        'node_modules/clobl/blocks/i-utils/i-utils.js',
+        'node_modules/clobl/blocks/i-utils-legacy/i-utils.js',
+        'node_modules/clobl/blocks/i-factory/i-template-factory.js'
+    ];
     soy.loadFiles(
-        [
-            path.join(
-                __dirname,
-                '/tmp/compiledServerSoy/server.soy.concat.js'
-            ),
-            path.join(
-                __dirname,
-                'node_modules/clobl/blocks/i-utils/i-utils.js'
-            ),
-            path.join(
-                __dirname,
-                'node_modules/clobl/blocks/i-utils-legacy/i-utils.js'
-            ),
-            path.join(
-                __dirname,
-                'node_modules/clobl/blocks/i-factory/i-template-factory.js'
-            )
-        ],
+        paths.map(item => path.join(__dirname, item)),
         function() {
             app.listen(CONFIG.PORT, function() {
                 console.log('Running at port ' + CONFIG.PORT)

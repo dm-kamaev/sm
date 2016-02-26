@@ -8,6 +8,7 @@ var services = require('../../../../app/components/services').all;
 var sequelize = require('../../../../app/components/db');
 var searchTypeEnum = require('../enums/searchType');
 var schoolTypeEnum = require('../enums/schoolType');
+var departmentTypeEnum = require('../../geo/enums/departmentStage');
 var CsvConverter = require('../../../../console/modules/modelArchiver/CsvConverter');
 var service = {
     name: 'school'
@@ -164,9 +165,10 @@ service.incrementViews = async(function(schoolId) {
 });
 
 /**
+ * @param {number} opt_amount
  * @return {array<object>} school instances
  */
-service.getPopularSchools = async(function() {
+service.getPopularSchools = async(function(opt_amount) {
     return await(models.School.findAll({
         where: {
              $not: {
@@ -176,17 +178,40 @@ service.getPopularSchools = async(function() {
         order: [
             ['views', 'DESC']
         ],
-        limit: 6, //TODO: move '6' somewhere maybe?
+        limit: opt_amount || 6, //TODO: move '6' somewhere maybe?
         include: [{
             model: models.Address,
             as: 'addresses',
+            where: {
+                isSchool: true
+            },
             include: [
                 {
-                    model: models.Metro,
-                    as: 'metroStations'
+                    model: models.AddressMetro,
+                    as: 'addressMetroes',
+                    include: [
+                        {
+                            model: models.Metro,
+                            as: 'metroStation'
+                        }
+                    ]
                 }
             ]
-        }]
+        }],
+        order: [
+            [
+                {
+                    model: models.Address,
+                    as: 'addresses'
+                },
+                {
+                    model: models.AddressMetro,
+                    as: 'addressMetroes'
+                },
+                'distance',
+                'ASC'
+            ]
+        ]
     }));
 });
 
@@ -209,6 +234,16 @@ service.getAddresses = async(function(schoolId) {
             ]
         })
     );
+});
+
+
+/**
+ * Get amount schools
+ * @return {number} schoolsCount
+ */
+service.getSchoolsCount = async(function() {
+    var schoolsCount = await(models.School.count());
+    return schoolsCount;
 });
 
 
@@ -238,6 +273,20 @@ service.getAddressDepartments = async(function(school_id, address_id) {
     var address = await(service.getAddress(school_id, address_id));
     var department = address.getDepartments();
     return department;
+});
+
+/**
+ * Get school by comment group id
+ * @param {number} groupId
+ * @return {Object} School instance or undefined
+ */
+service.getSchoolByGrouId = async( function(groupId) {
+    var school = await (models.School.findOne({
+        where: {
+            commentGroupId: groupId
+        }
+    }));
+    return school;
 });
 
 
@@ -338,6 +387,9 @@ service.updateScore = async(function(school) {
     var queries = [];
     for (var i = 1; i <= 4; i++) {
         var score = 'score[' + i + ']';
+        /**
+         * TODO: add query type
+         */
         var queryPromise = sequelize.query(
             'SELECT AVG(' + score + ') AS avg, ' +
             'count(' + score + ') AS count FROM rating ' +
@@ -487,65 +539,29 @@ service.findBySite = async(function(site) {
  * @public
  */
 service.viewOne = function(id) {
-    var includeParams =
-        [{
-            model: models.Address,
-            as: 'addresses',
-            include: [
-                {
-                    model: models.Department,
-                    as:'departments'
-                },
-                {
-                    model: models.Metro,
-                    as: 'metroStations'
-                }
-            ]
-        }, {
-             model: models.Rating,
-             as: 'ratings'
-        }, {
-            model: models.CommentGroup,
-            as: 'commentGroup',
-            include: [{
-                model: models.Comment,
-                as: 'comments',
-                include: [{
-                    model: models.Rating,
-                    as: 'rating'
-                }]
-             }]
-        }, {
-            model: models.Activity,
-            as: 'activites',
-            attributes: [
-                'profile',
-                'type'
-            ]
-        }
-            //{
-            //    model: models.EgeResult,
-            //    as: 'egeResults'
-            //}, {
-            //    model: models.GiaResult,
-            //    as: 'giaResults'
-            //}, {
-            //    model: models.OlimpResult,
-            //    as: 'olimpResults'
-            //}
-        ];
-
     var school = await(models.School.findOne({
-        where: {id: id},
-        include: includeParams
+        where: { id: id }
     }));
+
+    var resultPromises = {
+        activities: services.activity.getActivities(id),
+        comments: services.comment.getComments(school.commentGroupId),
+        addresses: services.address.getWithDepartmentsWithMetro(id, true, true)
+    };
+
+    var result = await(resultPromises);
+
+    school.comments = result.comments;
+    school.activities = result.activities;
+    school.addresses = result.addresses;
+
     return school;
 };
 
 
 /**
  * @param {number} schoolId
- * @raram {object} prarams
+ * @param {object} params
  * @param {array<number> || null} params.score
  * @param {string || null} params.text
  * @return {object{bool ratingCreated, bool commentCreated}}
@@ -561,6 +577,17 @@ service.review = async(function(schoolId, params) {
         var school = await(models.School.findOne({
             where: {id: schoolId}
         }));
+
+        var userData = {
+            userType: params.userType,
+            yearGraduate: params.yearGraduate,
+            classType: params.classType,
+            key: params.key
+        };
+
+        var userDataInstance = await(services.userData.create(userData));
+
+        params.userDataId = userDataInstance.id;
 
         if (params.score) {
             params.rating = await(service.rate(school, params));
@@ -584,9 +611,11 @@ service.review = async(function(schoolId, params) {
  * @return {object}
  */
 service.rate = async(function(school, params) {
+
     var rt = await (models.Rating.create({
         score: params.score,
-        schoolId: school.id
+        schoolId: school.id,
+        userDataId: params.userDataId
     }));
     return rt;
 });
@@ -693,7 +722,7 @@ service.list = async (function(opt_params) {
                 group: ['school.id'],
                 order: [
                     'school.total_score DESC',
-                    'school.score DESC',
+                    'school.score DESC NULLS LAST',
                     'school.id ASC'
                 ],
                 having : [],
@@ -716,7 +745,7 @@ service.list = async (function(opt_params) {
         ],
         order: [
             'school.total_score DESC',
-            'school.score DESC',
+            'school.score DESC NULLS LAST',
             'school.id ASC'
         ],
         having: []
