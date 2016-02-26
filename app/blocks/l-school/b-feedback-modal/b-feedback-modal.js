@@ -4,6 +4,7 @@ goog.require('cl.iUtils.Utils');
 goog.require('goog.dom.classes');
 goog.require('goog.ui.Component');
 goog.require('sm.bStars.Stars');
+goog.require('sm.iEvercookie.Evercookie');
 goog.require('sm.iFactory.FactoryStendhal');
 goog.require('sm.lSchool.bFeedbackModal.Template');
 
@@ -64,6 +65,18 @@ sm.lSchool.bFeedbackModal.FeedbackModal = function(opt_params) {
      * @private
      */
     this.yearGraduate_ = null;
+
+    /**
+     * @type {object}
+     * @private
+     */
+    this.evercookie_ = sm.iEvercookie.Evercookie.getInstance();
+
+    /**
+     * @type {string}
+     * @private
+     */
+    this.clientIdPromise_ = null;
 };
 goog.inherits(sm.lSchool.bFeedbackModal.FeedbackModal, goog.ui.Component);
 
@@ -233,6 +246,20 @@ goog.scope(function() {
         );
 
         this.initDropdowns_(factory);
+
+        this.awaitClientId_();
+    };
+
+    /**
+     * await for cookie value
+     * @private
+     */
+    FeedbackModal.prototype.awaitClientId_ = function() {
+        this.clientIdPromise_ = new goog.Promise(function(resolve, reject) {
+            this.evercookie_.getClientId(function(clientId) {
+                resolve(clientId);
+            });
+        }, this);
     };
 
     /**
@@ -319,6 +346,7 @@ goog.scope(function() {
             this.elements_.close,
             goog.events.EventType.CLICK,
             this.onCrossClick_
+
         );
     };
 
@@ -468,8 +496,8 @@ goog.scope(function() {
             );
             this.dropdowns_.classType.close();
         }
-
     };
+
     /**
      * Show or hide Graduation input block
      * @param {boolean} opt_showInput - if true show element,
@@ -498,9 +526,13 @@ goog.scope(function() {
     FeedbackModal.prototype.formSubmit_ = function() {
         var form = jQuery(this.elements_.form),
             data = form.serializeArray();
+
         if (this.isValid_(data)) {
-            this.send_(form, function() {
-                location.reload();
+            var that = this;
+            this.clientIdPromise_.then(function(clientId) {
+                that.send_(form, clientId, function() {
+                    location.reload();
+                });
             });
         }
     };
@@ -531,10 +563,11 @@ goog.scope(function() {
     /**
      * Sends form using jQuery.ajax
      * @param {Element} form
+     * @param {string} clientId
      * @param {Function=} opt_callback
      * @private
      */
-    FeedbackModal.prototype.send_ = function(form, opt_callback) {
+    FeedbackModal.prototype.send_ = function(form, clientId, opt_callback) {
         var data = form.serialize();
         switch (this.dropdowns_.userType.getValue()) {
             case 0:
@@ -551,12 +584,23 @@ goog.scope(function() {
                 data += '&userType=Scholar';
                 break;
         }
+        data += '&key=' + clientId;
         jQuery.ajax({
             url: form.attr('action'),
             type: form.attr('method'),
             data: data,
-            success: opt_callback ? opt_callback : function() {}
+            success: opt_callback ? opt_callback : function() {},
+            error: this.onError_.bind(this)
         });
+    };
+
+    /**
+     * ajax error handler
+     * @param {object} response
+     * @private
+     */
+    FeedbackModal.prototype.onError_ = function(response) {
+        this.showValidationError_(JSON.parse(response.responseText)[0].message);
     };
 
     /**
