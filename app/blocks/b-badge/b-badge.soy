@@ -3,7 +3,10 @@
 /**
  * Badge template
  * @param params {{
- *     data: list<?string]>,
+ *     data: ?list<[
+ *         id: number,
+ *         name: string
+ *     ]>,
  *     display: ?string
  * }}
  */
@@ -22,7 +25,8 @@
                 {if $params?.display == 'metro'}
                     {call .metroItem_}
                         {param params:[
-                            'station': $dataItem
+                            'station': $dataItem.name,
+                            'id': $dataItem.id
                         ] /}
                     {/call}
                 {else}
@@ -46,11 +50,12 @@
 /**
  * Metro item template
  * @param params {{
- *     station: ?string
+ *     station: string
+ *     id: number
  * }}
  */
 {template .metroItem_}
-    <a href="/search?name=метро%20{$params.station}"
+    <a href="/search?name=метро%20{$params.station}&metroId={$params.id}"
         class="b-badge__item
             b-badge__item_active">
         {$params.station}

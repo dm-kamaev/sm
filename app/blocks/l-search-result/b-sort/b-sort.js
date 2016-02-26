@@ -129,8 +129,6 @@ goog.scope(function() {
             this.getElementByClass(cl.gList.View.CssClass.ROOT),
             this
         );
-
-        console.log(this.list_.getView());
     };
 
     /**

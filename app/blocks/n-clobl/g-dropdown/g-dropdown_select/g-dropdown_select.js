@@ -70,33 +70,47 @@ goog.scope(function() {
     };
 
     /**
-     * Handler for click on list items
-     * @param {Object} event
-     * @private
-     */
-    DropdownSelect.prototype.onListItemSelect_ = function(event) {
-        var openerText = this
-            .listInstance_
-            .getOpenerText(event['itemId']);
-
-        this.value_ = event.itemId;
-
-        var view = this.getView();
-        view.removePlaceholderModifier();
-        view.setOpenerCustomText(openerText);
-
-        this.dispatchEvent({
-            'type': DropdownSelect.Event.ITEM_SELECT,
-            'itemId': event['itemId']
-        });
-    };
-
-    /**
      * Get current selected value
      * @public
      * @return {number}
      */
     DropdownSelect.prototype.getValue = function() {
         return this.value_;
+    };
+
+    /**
+     * Clear selection
+     */
+    DropdownSelect.prototype.clear = function() {
+        this.value_ = null;
+        this.getView().clear();
+    };
+
+    /**
+     * Select item by index
+     * @param {number} index
+     */
+    DropdownSelect.prototype.selectByIndex = function(index) {
+        var openerText = this.listInstance_.getOpenerText(index);
+
+        this.value_ = index;
+
+        var view = this.getView();
+        view.removePlaceholderModifier();
+        view.setOpenerCustomText(openerText);
+    };
+
+    /**
+     * Handler for click on list items
+     * @param {Object} event
+     * @private
+     */
+    DropdownSelect.prototype.onListItemSelect_ = function(event) {
+        this.selectByIndex(event['itemId']);
+
+        this.dispatchEvent({
+            'type': DropdownSelect.Event.ITEM_SELECT,
+            'itemId': event['itemId']
+        });
     };
 });

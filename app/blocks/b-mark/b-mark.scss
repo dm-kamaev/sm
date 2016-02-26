@@ -134,6 +134,14 @@
     }
 }
 
+.b-mark.b-mark_question {
+	.b-mark__mark {
+		font-size: 28px;
+
+		color: #c6c6c1;
+	}
+}
+
 @include media-xs {
     .b-mark.b-mark_inline .b-mark__circle {
         display: none;

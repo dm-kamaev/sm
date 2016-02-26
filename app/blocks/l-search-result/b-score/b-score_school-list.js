@@ -8,6 +8,7 @@ goog.require('goog.labs.userAgent.device');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
 goog.require('sm.bMark.bMark');
+goog.require('sm.bScore.Score');
 goog.require('sm.bScoreSchoolList.Template');
 
 
@@ -15,7 +16,7 @@ goog.require('sm.bScoreSchoolList.Template');
  * Score component in school list view
  * @param {object} opt_params
  * @constructor
- * @extends {goog.ui.Component}
+ * @extends {sm.bScore.Score}
  */
 sm.bScoreSchoolList.ScoreSchoolList = function(opt_params) {
     goog.base(this);
@@ -88,7 +89,7 @@ sm.bScoreSchoolList.ScoreSchoolList = function(opt_params) {
      */
     this.markInstances_ = [];
 };
-goog.inherits(sm.bScoreSchoolList.ScoreSchoolList, goog.ui.Component);
+goog.inherits(sm.bScoreSchoolList.ScoreSchoolList, sm.bScore.Score);
 
 goog.scope(function() {
     var Score = sm.bScoreSchoolList.ScoreSchoolList,
