@@ -1,7 +1,13 @@
-var path = require('path');
+var path = require('path'),
+    fs = require('fs'),
+    config = path.resolve('app/config/config.db.json');
+
+if (fs.existsSync('app/config/config.local.db.json')) {
+    config = path.resolve('app/config/config.local.db.json');
+}
 
 module.exports = {
-  'config': path.resolve('app/config/config.local.json'),
+  'config': config,
   'migrations-path': path.resolve('tmp/migrations'),
   'models-path': path.resolve('api/modules')
 }

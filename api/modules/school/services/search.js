@@ -55,7 +55,7 @@ exports.suggestSearch = async(function(searchString) {
  */
 var findAnyInModel = function(model, searchString) {
     var stringArr = getSearchSubstrings(searchString);
-    if (!stringArr)
+    if (!stringArr || stringArr=='')
         return [];
 
     var params = {
@@ -218,7 +218,7 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
                      'metro on metro.id = address_metro.metro_id',
                      'department on address.id = department.address_id'
                  ]
-             });             
+             });
              sqlOptions.where.push('department.stage IN (\'' +
                  departmentTypeEnum.ELEMENTARY + '\', \'' +
                  departmentTypeEnum.MIDDLE_HIDE + '\')');

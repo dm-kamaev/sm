@@ -2,14 +2,19 @@
  * @fileoverview A constructor for a Yandex Maps map
  * @author Nikita Gubchenko
  */
+goog.provide('sm.lSchool.bMap.Map');
+
+goog.require('goog.Promise');
 goog.require('goog.array');
 goog.require('goog.dom');
 goog.require('goog.dom.dataset');
 goog.require('goog.events');
 goog.require('goog.object');
+goog.require('goog.style');
 goog.require('goog.ui.Component');
-goog.provide('sm.lSchool.bMap.Map');
 goog.require('sm.lSchool.bMap.Template');
+goog.require('sm.lSchool.iViewport.Viewport');
+
 
 /**
  * @param {Object=} opt_params
@@ -60,11 +65,20 @@ sm.lSchool.bMap.Map = function(opt_params) {
      * @private
      */
     this.currentPlacemarkPresetOptions_ = {};
+
+
+    /**
+     * Placemarks of all schools
+     * @type {Array}
+     * @private
+     */
+    this.placemarks_ = [];
 };
 goog.inherits(sm.lSchool.bMap.Map, goog.ui.Component);
 
 goog.scope(function() {
     var Map = sm.lSchool.bMap.Map;
+    var Viewport = sm.lSchool.iViewport.Viewport;
 
 
     /**
@@ -193,17 +207,104 @@ goog.scope(function() {
 
         this.initParams_(element);
 
-        var promiseSchools = this.getAllSchools_();
+        var viewportPromise = this.getViewportPromise_(),
+            dataPromise = this.getDataPromise_(),
+            ymapsPromise = this.getYmapsPromise_();
 
-        ymaps.ready(this.onReady_.bind(this, promiseSchools));
+        dataPromise.then(this.onDataLoaded_.bind(this));
+
+        viewportPromise.then(this.onShown_.bind(this));
+
+        goog.Promise.all([
+            viewportPromise,
+            dataPromise,
+            ymapsPromise
+        ]).then(this.onReady_.bind(this));
+    };
+
+
+    /**
+     * Waiting for right viewport size
+     * @return {goog.Promise}
+     * @private
+     */
+    Map.prototype.getViewportPromise_ = function() {
+        return new goog.Promise(function(resolve, reject) {
+            this.onResize_.call(this, resolve);
+
+            this.resizeListenerKey_ = Viewport.getInstance().listen(
+                Viewport.Event.RESIZE,
+                this.onResize_.bind(this, resolve)
+            );
+        }, this);
     };
 
     /**
-     * ymaps callback
-     * @param {array<object>} promiseSchools
+     * Waitng for schools data
+     * @return {goog.Promise}
      * @private
      */
-    Map.prototype.onReady_ = function(promiseSchools) {
+    Map.prototype.getDataPromise_ = function() {
+        return new goog.Promise(function(resolve, reject) {
+            return jQuery.ajax({
+                url: '/api/address/list',
+                type: 'POST',
+                data: '',
+                success: resolve,
+                error: reject
+            });
+        }, this);
+    };
+
+
+    /**
+     * Waitong for yandex-map readiness
+     * @return {goog.Promise}
+     * @private
+     */
+    Map.prototype.getYmapsPromise_ = function() {
+        return new goog.Promise(function(resolve, reject) {
+            ymaps.ready(resolve);
+        }, this);
+    };
+
+    /**
+     * Handling viewport resizing
+     * @param {function} callback
+     * @private
+     */
+    Map.prototype.onResize_ = function(callback) {
+        if (Viewport.getInstance().getSize() > Viewport.Size.M) {
+            callback();
+        }
+    };
+
+
+    /**
+     * Handling map appearance
+     * @private
+     */
+    Map.prototype.onShown_ = function() {
+        Viewport.getInstance().unlistenByKey(this.resizeListenerKey_);
+    };
+
+
+    /**
+     * Handling schools data
+     * @param {string} data
+     * @private
+     */
+    Map.prototype.onDataLoaded_ = function(data) {
+        this.setCurrentPresets_(Map.PresetType.POINT);
+        this.placemarks_ = this.getAllPlacemarkCollection_(data);
+    };
+
+
+    /**
+     * Handling all conditions readiness
+     * @private
+     */
+    Map.prototype.onReady_ = function() {
         //presets initialize
         this.initPresets_();
 
@@ -220,14 +321,15 @@ goog.scope(function() {
             this.getSchoolPlacemarks_(this.params_)
         );
 
-        var that = this;
         //point placemarks
-        this.setCurrentPresets_(Map.PresetType.POINT);
-        promiseSchools.done(function(responseData) {
-            that.objectManager_.add(
-                that.getAllPlacemarkCollection_(responseData)
-            );
-        });
+        this.objectManager_.add(this.placemarks_);
+
+        // click event handling
+        this.objectManager_.objects.events.add(
+            'click',
+            this.onPlacemarkClick_,
+            this
+        );
     };
 
     /**
@@ -442,20 +544,6 @@ goog.scope(function() {
 
 
     /**
-     * Get all schools
-     * @private
-     * @return {promise}
-     */
-    Map.prototype.getAllSchools_ = function() {
-        return jQuery.ajax({
-            url: '/api/address/list',
-            type: 'POST',
-            data: ''
-        });
-    };
-
-
-    /**
      * Success on getting all schools
      * @param {Array.<Object>} responseData
      * @return {Array<Object>}
@@ -475,11 +563,6 @@ goog.scope(function() {
             }
         });
 
-        this.objectManager_.objects.events.add(
-            'click',
-            this.onPlacemarkClick_,
-            this
-        );
         return result;
     };
 
@@ -536,25 +619,24 @@ goog.scope(function() {
      * @private
      */
     Map.prototype.getSchoolPlacemarks_ = function(data) {
-        var totScore,
-            presetKey,
+        var totalScore = data.totalScore,
+            presetKey = Map.PresetName.DEFAULT,
             addressLength = data.addresses.length,
             result = [];
 
+        if (totalScore >= 4) {
+            presetKey = Map.PresetName.GREEN;
+        } else if (totalScore >= 3) {
+            presetKey = Map.PresetName.YELLOW;
+        } else if (totalScore > 0) {
+            presetKey = Map.PresetName.RED;
+        }
+
+        var preset = this.currentPlacemarkPresetOptions_[presetKey];
+
         for (var i = 0, id, address; i < addressLength; i++) {
             id = this.currentPlacemarkId_++;
-            totScore = data.totalScore;
             address = data.addresses[i];
-
-            if (totScore >= 4) {
-                presetKey = Map.PresetName.GREEN;
-            } else if (totScore >= 3) {
-                presetKey = Map.PresetName.YELLOW;
-            } else if (totScore > 0) {
-                presetKey = Map.PresetName.RED;
-            } else {
-                presetKey = Map.PresetName.DEFAULT;
-            }
 
             result.push({
                 'type': 'Feature',
@@ -567,13 +649,14 @@ goog.scope(function() {
                     'id': data.id,
                     'name': data.name,
                     'url': data.url,
+                    'description': data.description,
                     'address': {
                         'name': address.name,
                         'stages': address.stages
                     }
                 },
                 'options': {
-                    'preset': this.currentPlacemarkPresetOptions_[presetKey]
+                    'preset': preset
                 }
             });
         }
@@ -610,7 +693,14 @@ goog.scope(function() {
         this.ymaps_.setZoom(Math.floor(this.ymaps_.getZoom()));
         this.ymaps_.behaviors.enable('scrollZoom');
         this.ymaps_.controls.add(
-            new ymaps.control.ZoomControl(),
+            new ymaps.control.ZoomControl({
+                options: {
+                    position: {
+                        left: 10,
+                        top: 15
+                    }
+                }
+            }),
             Map.ZOOM
         );
     };
