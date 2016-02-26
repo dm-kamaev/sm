@@ -1,24 +1,19 @@
 {namespace sm.lSearchResult.bFilter.Template}
 
 /**
+ * @typedef {object} sm.lSearchResult.bFilter.Template.Params
+ * @property {?object} data
+ * @property {?{label: ?string, value: ?string}[]} data.list
+ * @property {?{title: ?string, help: ?string}} data.header
+ * @property {?string} data.name
+ * @property {?object} config
+ * @property {?boolean} config.cannotBeHidden
+ * @property {?number} config.filtersToShow
+ */
+
+/**
  * Filter template
- * @param? params {
- *     data: ?{
- *         filters: ?list<{
- *             label: ?string,
- *             value: ?string
- *         }>,
- *         header: ?{
- *             title: ?string,
- *             help: ?string
- *         },
- *         name: ?string
- *     },
- *     config: ?{
- *         cannotBeHidden: ?bool,
- *         filtersToShow: ?number
- *     }
- * }
+ * @param? params {sm.lSearchResult.bFilter.Template.Params}
  */
 {template .base autoescape="strict" kind="html"}
     {call .init data="all"/}
@@ -103,8 +98,11 @@
             {/call}
         {/for}
         {if $params.data.filters.length > $filToShow}
-            <div class="b-filter__show-button">
+            <div class="b-filter__button b-filter__button_show">
                  Еще {$params.data.filters.length - $filToShow - 1} предметов
+            </div>
+            <div class="b-filter__button b-filter__button_hide i-utils__hidden">
+                 Свернуть список
             </div>
         {/if}
     </div>

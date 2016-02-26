@@ -94,7 +94,7 @@ exports.list = async (function(req, res) {
         }
     };
 
-    var html = soy.render('sm.lSearchResult.NewTemplate.layout', params);
+    var html = soy.render('sm.lSearchResult.Template.list', params);
 
     res.header('Content-Type', 'text/html; charset=utf-8');
     res.end(html);
