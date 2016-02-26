@@ -262,7 +262,7 @@ var getSections = function(array) {
             name: type[index],
             value: item
         };
-    }) : [];
+    }).filter(item => item.value) : [];
 };
 
 

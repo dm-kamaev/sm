@@ -49,6 +49,6 @@ ratingView.ratingResultView = function(rankDogm) {
 */
 var checkPlace = function(rank) {
     return (rank <= 100 && rank) ? true : false;
-}
+};
 
 module.exports = ratingView;
