@@ -36,7 +36,7 @@ ratingView.ratingSchoolView = function(rankMel, rankDogm) {
 ratingView.ratingResultView = function(rankDogm) {
     var ratings = [];
     if (checkPlace(rankDogm)) {
-        ratings.push('100 лучших школ России');
+        ratings.push('100 лучших школ Москвы');
     }
     return ratings;
 };
