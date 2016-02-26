@@ -49,14 +49,14 @@ EgeResultView.prototype.transformResults = function(results, cityResults) {
 
     results.forEach(item => {
         res[item.year] = res[item.year] || {};
-        examRes = Math.round(item.result * 100) / 100;
+        examRes = Math.round(item.result);
         averageResult = cityResultView.getResult(
             cityResults,
             item.subjectId,
             'ege',
             item.year
         );
-        average = averageResult ? Math.round(averageResult * 100) / 100 : 50;
+        average = averageResult ? Math.round(averageResult) : 50;
 
         if (examRes > average + range) {
             res[item.year].top = res[item.year].top || [];

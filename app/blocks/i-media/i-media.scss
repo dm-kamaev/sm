@@ -1,5 +1,12 @@
-@mixin media-xs {
+@mixin media-xxs {
     @media screen and (max-width: 350px) {
+        @content; 
+    }
+}
+
+
+@mixin media-xs {
+    @media screen and (max-width: 510px) {
         @content;
     }
 }
@@ -24,6 +31,7 @@
         @content;
     }
 }
+
 
 @mixin media-xl {
     @media screen and (max-width: 1280px) {

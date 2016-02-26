@@ -211,9 +211,13 @@ goog.scope(function() {
         /**
          * results
          */
-        var results = new Results();
-        this.addChild(results);
-        results.decorate(this.getElementByClass(Results.CssClass.ROOT));
+        var resultElement = this.getElementByClass(Results.CssClass.ROOT);
+
+        if (resultElement) {
+            var results = new Results();
+            this.addChild(results);
+            results.decorate(resultElement);
+        }
 
         /**
          * score
