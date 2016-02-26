@@ -14,7 +14,6 @@ var Comment = db.define('Comment', {
         type: DataType.ENUM,
         values: authorType.toArray()
     },
-    username: DataType.STRING,
     commentGroupId: {
         type: DataType.INTEGER,
         field: 'comment_group_id'

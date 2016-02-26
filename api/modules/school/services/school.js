@@ -548,7 +548,6 @@ service.viewOne = function(id) {
  * @raram {object} prarams
  * @param {array<number> || null} params.score
  * @param {string || null} params.text
- * @param {string || null} params.username
  * @return {object{bool ratingCreated, bool commentCreated}}
  */
 service.review = async(function(schoolId, params) {
