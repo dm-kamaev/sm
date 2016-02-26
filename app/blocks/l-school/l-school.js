@@ -5,6 +5,7 @@ goog.require('goog.events');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
 goog.require('sm.bRating.Rating');
+goog.require('sm.bScore.Score');
 goog.require('sm.bSearch.Search');
 goog.require('sm.iEvercookie.Evercookie');
 goog.require('sm.lSchool.bComment.Comment');
@@ -45,6 +46,13 @@ sm.lSchool.School = function(opt_params) {
     this.search_ = null;
 
     /**
+     * Score instance
+     * @type {sm.bScore.Score}
+     * @private
+     */
+    this.score_ = null;
+
+    /**
      * @private
      * @type {object} Evercookie instance
      */
@@ -55,7 +63,8 @@ goog.inherits(sm.lSchool.School, goog.ui.Component);
 goog.scope(function() {
     var School = sm.lSchool.School,
         FoldList = sm.lSchool.bDataBlockFoldList.FoldList,
-        Results = sm.lSchool.bResults.Results;
+        Results = sm.lSchool.bResults.Results,
+        Score = sm.bScore.Score;
 
 
     /**
@@ -130,6 +139,12 @@ goog.scope(function() {
                 this.onClick_
             );
         }
+
+        handler.listen(
+            this.score_,
+            Score.Event.PLACE_COMMENT_CLICK,
+            this.onClick_
+        );
     };
 
 
@@ -199,6 +214,13 @@ goog.scope(function() {
         var results = new Results();
         this.addChild(results);
         results.decorate(this.getElementByClass(Results.CssClass.ROOT));
+
+        /**
+         * score
+         */
+        this.score_ = new Score();
+        this.addChild(this.score_);
+        this.score_.decorate(this.getElementByClass(Score.CssClass.ROOT));
     };
 
     /**

@@ -31,8 +31,9 @@ schoolView.default = function(schoolInstance, results, opt_popularSchools) {
     var addresses = services.department.addressesFilter(schoolInstance.addresses),
         comments = schoolInstance.commentGroup ?
             schoolInstance.commentGroup.comments : [],
-        score = schoolInstance.score || [0, 0, 0, 0],
+        score = getSections(schoolInstance.score || [0, 0, 0, 0]),
         scoreCount = schoolInstance.scoreCount || [0, 0, 0, 0];
+
 
     var result = {
         id: schoolInstance.id,
@@ -58,7 +59,7 @@ schoolView.default = function(schoolInstance, results, opt_popularSchools) {
         addresses: addressView.default(addresses),
         ratings: ratingView.ratingSchoolView(
             schoolInstance.rank, schoolInstance.rankDogm),
-        score: getSections(score),
+        score: checkScoreValues(score) ? score : false,
         totalScore: schoolInstance.totalScore,
         results: {
             ege: egeResultView.transformResults(
@@ -417,14 +418,14 @@ schoolView.suggestList = function(schools) {
 /**
  * Check if all scores of item is 0
  * @param {Array<Object>} score
- * @param {Object} sortCriterion
+ * @param {Object} opt_sortCriterion
  * @return {boolean}
  * @private
  */
-var checkScoreValues = function(score, sortCriterion) {
+var checkScoreValues = function(score, opt_sortCriterion) {
     var result = false;
 
-    if (sortCriterion.value !== 0) {
+    if (opt_sortCriterion && opt_sortCriterion.value !== 0) {
         result = true;
     }
 

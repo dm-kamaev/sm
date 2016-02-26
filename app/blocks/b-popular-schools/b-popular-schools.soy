@@ -30,9 +30,11 @@
                     <div class="b-popular-schools__school-rating">
                         {call sm.bMark.Template.base}
                             {param params: [
-                                'value': $school.totalScore
+                                'value': $school.totalScore,
+                                'config': [
+                                    'zeroSign': 'question-mark'
                                 ]
-                            /}
+                            ]/}
                         {/call}
                     </div>
                     <div class="b-popular-schools__school-information">
