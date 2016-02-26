@@ -2,6 +2,7 @@ goog.provide('sm.lSchool.bResults.Results');
 
 goog.require('cl.gTab.View');
 goog.require('goog.ui.Component');
+goog.require('sm.bDiagram.Diagram');
 goog.require('sm.iFactory.FactoryStendhal');
 goog.require('sm.lSchool.bResults.Template');
 
@@ -51,7 +52,8 @@ goog.scope(function() {
         TabView = cl.gTab.View,
         DropdownView = cl.gDropdown.View,
         DropdownSelect = sm.gDropdown.DropdownSelect,
-        Utils = cl.iUtils.Utils;
+        Utils = cl.iUtils.Utils,
+        Diagram = sm.bDiagram.Diagram;
 
     /**
      * Css class enum
@@ -130,12 +132,14 @@ goog.scope(function() {
 
         var factory = Factory.getInstance(),
             contentElements = this.getElementsByClass(Results.CssClass.CONTENT),
-            tabElement = this.getElementByClass(TabView.CssClass.ROOT);
+            tabElement = this.getElementByClass(TabView.CssClass.ROOT),
+            diagramElements = this.getElementsByClass(Diagram.CssClass.ROOT);
 
         this.tab_ = factory.decorate('tab', tabElement, this);
 
         this.initContents_(contentElements);
 
+        this.initDiagrams_(diagramElements);
     };
 
     /**
@@ -330,5 +334,17 @@ goog.scope(function() {
         }
 
         return innerContents;
+    };
+
+    /**
+     * Diagrams initialization
+     * @private
+     */
+    Results.prototype.initDiagrams_ = function(elements) {
+        for (var i = 0, instance; i < elements.length; i++) {
+            instance = new Diagram();
+            this.addChild(instance);
+            instance.decorate(elements[i]);
+        }
     };
 });

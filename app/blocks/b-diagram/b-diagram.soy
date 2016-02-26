@@ -160,26 +160,23 @@
          style="left: {$params.left};">
         <div class="b-diagram__tooltip-arrow">
         </div>
-        <div class="b-diagram__tooltip-description">
-
-            <div class="b-diagram__tooltip-arrow-shadow">
-            </div>
-            <div class="b-diagram__tooltip-content">
-                <div class="b-diagram__tooltip-average-mark">
-                    В среднем по Москве —
-                    <br>
-                    <span class="b-diagram__tooltip-bold-text">
-                        {$params.value}
-                        {call cl.iUtils.Utils.declensionPrint}
-                            {param params: [
-                                'num': $params.value,
-                                'nom': ' балл',
-                                'gen': ' балла',
-                                'plu': ' баллов'
-                            ]/}
-                        {/call}
-                    </span>
-                </div>
+        <div class="b-diagram__tooltip-arrow-shadow">
+        </div>
+        <div class="b-diagram__tooltip-content">
+            <div class="b-diagram__tooltip-average-mark">
+                В среднем по Москве —
+                <br>
+                <span class="b-diagram__tooltip-bold-text">
+                    {$params.value}
+                    {call cl.iUtils.Utils.declensionPrint}
+                        {param params: [
+                            'num': $params.value,
+                            'nom': ' балл',
+                            'gen': ' балла',
+                            'plu': ' баллов'
+                        ]/}
+                    {/call}
+                </span>
             </div>
         </div>
     </div>
