@@ -41,17 +41,14 @@
 
 .b-school-list-item__name {
     display: inline-block;
+
     height: 100%;
     padding-right: 160px;
 
     color: black;
-
-    font-size: 21px;
-    font-weight: 700;
-    line-height: 26px;
-    font-family: 'Proxima';
-
     text-decoration: none;
+
+    font: 700 21px/26px 'Proxima', Arial, sans-serif;
 
     &_bold {
         font-weight: 800;
