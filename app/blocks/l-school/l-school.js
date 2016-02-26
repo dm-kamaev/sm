@@ -6,18 +6,20 @@ goog.require('goog.soy');
 goog.require('goog.ui.Component');
 goog.require('sm.bRating.Rating');
 goog.require('sm.bSearch.Search');
+goog.require('sm.iEvercookie.Evercookie');
 goog.require('sm.lSchool.bComment.Comment');
 goog.require('sm.lSchool.bComments.Comments');
 goog.require('sm.lSchool.bDataBlockFoldList.FoldList');
 goog.require('sm.lSchool.bFeedbackModal.FeedbackModal');
 goog.require('sm.lSchool.bMap.Map');
+goog.require('sm.lSchool.bResults.Results');
+
 
 /**
  * School page
  * @param {Object=} opt_params
  * @constructor
  */
-
 sm.lSchool.School = function(opt_params) {
     goog.base(this);
 
@@ -41,12 +43,19 @@ sm.lSchool.School = function(opt_params) {
      * @private
      */
     this.search_ = null;
+
+    /**
+     * @private
+     * @type {object} Evercookie instance
+     */
+    this.evercookie_ = sm.iEvercookie.Evercookie.getInstance();
 };
 goog.inherits(sm.lSchool.School, goog.ui.Component);
 
 goog.scope(function() {
     var School = sm.lSchool.School,
-        FoldList = sm.lSchool.bDataBlockFoldList.FoldList;
+        FoldList = sm.lSchool.bDataBlockFoldList.FoldList,
+        Results = sm.lSchool.bResults.Results;
 
 
     /**
@@ -88,6 +97,8 @@ goog.scope(function() {
      */
     School.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
+
+        this.evercookie_.getClientId();
 
         this.initElements_(element);
 
@@ -148,7 +159,7 @@ goog.scope(function() {
      */
     School.prototype.initChildren_ = function() {
         /** comments */
-        if (comments) {
+        if (this.elements_.comments) {
             var comments = new sm.lSchool.bComments.Comments();
             this.addChild(comments);
             comments.decorate(this.elements_.comments);
@@ -176,9 +187,18 @@ goog.scope(function() {
             foldListInstance.decorate(foldList);
         }
 
-        this.search_ = new sm.bSearch.Search();
-        this.addChild(this.search_);
-        this.search_.decorate(this.elements_.search);
+        if (this.elements_.search) {
+            this.search_ = new sm.bSearch.Search();
+            this.addChild(this.search_);
+            this.search_.decorate(this.elements_.search);
+        }
+
+        /**
+         * results
+         */
+        var results = new Results();
+        this.addChild(results);
+        results.decorate(this.getElementByClass(Results.CssClass.ROOT));
     };
 
     /**

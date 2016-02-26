@@ -18,8 +18,9 @@
  *         value: ?number
  *     ],
  *     description: ?string,
- *     metroStations: list<string>,
- *     ratings: list<string>
+ *     metroStations: ?list<string>,
+ *     ratings: ?list<string>,
+ *     isScoreClickable: ?boolean
  * }
  */
 {template .base autoescape="strict" kind="html"}
@@ -45,7 +46,8 @@
                 {call sm.bScoreSchoolList.Template.base}
                     {param params:[
                         'score': $params.score,
-                        'sortCriteria': $params.currentCriterion
+                        'sortCriterion': $params.currentCriterion,
+                        'isClickable': $params?.isScoreClickable
                     ]/}
                 {/call}
             </div>

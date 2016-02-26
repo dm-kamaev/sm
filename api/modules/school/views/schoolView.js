@@ -9,22 +9,27 @@ const activityView = require.main.require(
     './api/modules/school/views/activityView.js');
 const ratingView = require.main.require(
     './api/modules/school/views/ratingView.js');
+const egeResultView = require.main.require(
+    './api/modules/study/views/egeResultView.js');
+const giaResultView = require.main.require(
+    './api/modules/study/views/giaResultView.js');
+const olimpResultView = require.main.require(
+    './api/modules/study/views/olimpResultView.js');
 
 var schoolView = {};
 
 
 /**
  * @param {object} schoolInstance - school instance
+ * @param {object} results
  * @param {?array<object>} opt_popularSchools - school instances
  * @return {object}
  */
-schoolView.default = function(schoolInstance, opt_popularSchools) {
+schoolView.default = function(schoolInstance, results, opt_popularSchools) {
+    addressView.transformSchoolAddress(schoolInstance);
 
-    var addresses =
-        services.department.addressesFilter(schoolInstance.addresses),
-        comments = schoolInstance.commentGroup ?
-        schoolInstance.commentGroup.comments : [],
-
+    var addresses = services.department.addressesFilter(schoolInstance.addresses),
+        comments = schoolInstance.comments,
         score = schoolInstance.score || [0, 0, 0, 0],
         scoreCount = schoolInstance.scoreCount || [0, 0, 0, 0];
 
@@ -38,26 +43,33 @@ schoolView.default = function(schoolInstance, opt_popularSchools) {
         directorName: getDirectorName(schoolInstance.director),
         extendedDayCost: getExtendedDayCost(schoolInstance.extendedDayCost),
         dressCode: schoolInstance.dressCode || false,
-        classes: getEducationInterval(
-            schoolInstance.educationInterval,
-            'classes'),
-        kindergarten: getEducationInterval(
-            schoolInstance.educationInterval,
-            'kindergarten'),
+        classes: getEducationInterval(schoolInstance.educationInterval),
+        kindergarten: getKindergardenAvailability(schoolInstance.educationInterval),
         social: [],
-        metroStations: services.address.getMetro(addresses),
+        //metroStations: addressView.getMetro(addresses),
         sites: schoolInstance.links ?
             getSites(schoolInstance.links) : getSites(schoolInstance.site),
         specializedClasses: getSpecializedClasses(
             schoolInstance.specializedClasses),
-        activities: getActivities(schoolInstance.activites),
-        contacts: getContacts(addresses, schoolInstance.phones),
+        activities: getActivities(schoolInstance.activities),
+        contacts: getContacts(schoolInstance.addresses, schoolInstance.phones),
         comments: getComments(comments),
         addresses: addressView.default(addresses),
         ratings: ratingView.ratingSchoolView(
             schoolInstance.rank, schoolInstance.rankDogm),
         score: getSections(score),
         totalScore: schoolInstance.totalScore,
+        results: {
+            ege: egeResultView.transformResults(
+                results.ege,
+                results.city
+            ),
+            gia: giaResultView.transformResults(
+                results.gia,
+                results.city
+            ),
+            olymp: olimpResultView.transformResults(results.olymp)
+        },
         reviewCount: schoolInstance.totalScore ?
             schoolInstance.reviewCount : 0
     };
@@ -80,10 +92,25 @@ schoolView.popular = function(popularSchools) {
             url: school.url,
             name: school.name,
             description: school.description || '',
-            metro: services.address.getMetro(school.addresses),
+            metro: nearestMetro(school.addresses),
             totalScore: school.totalScore
         };
     });
+};
+
+/**
+ * @param {array<object>} addresses
+ * @return {array<string>}
+ */
+var nearestMetro = function(addresses) {
+    return lodash.uniq(addresses
+        .map(address => {
+            return address.addressMetroes[0] &&
+                address.addressMetroes[0].metroStation.name
+                    .replace('метро ', '');
+        })
+        .filter(address => address)
+    );
 };
 
 /**
@@ -100,56 +127,59 @@ var getExtendedDayCost = function(cost) {
             break;
 
         case 'есть':
-            res = 'Есть продлёнка';
+            res = 'есть продлёнка';
             break;
 
         case 'бесплатно':
-            res = 'Есть бесплатная продлёнка';
+            res = 'есть бесплатная продлёнка';
             break;
 
         default:
-            res = 'Есть продлёнка, ' + cost;
+            res = 'есть продлёнка (' + cost + ')';
     }
 
     return res;
 };
+
 
 /**
  *  @param {array<number>} interval
- *  @param {string} type ['classes'|'kindergarten']
  *  @return {string}
  */
 var getEducationInterval = function(interval, type) {
-    var res = '';
-    switch (type) {
-        case 'classes':
-            if (interval)
-            {
-                var begin = interval[0],
-                    end = interval[interval.length - 1];
+    var res = 'Обучение с ';
 
-                if (begin === 0) {
-                    begin = interval[1];
-                }
+    if (interval)
+    {
+        var begin = interval[0],
+            end = interval[interval.length - 1];
 
-                res += begin;
+        if (begin === 0) {
+            begin = interval[1];
+        }
 
-                if (end > begin) {
-                    res += '–';
-                    res += end;
-                    res += ' классы';
-                }
-            }
-            break;
-
-        case 'kindergarten':
-            if (interval[0] === 0) {
-                res = 'При школе есть детский сад';
-            }
-            break;
+        res += begin;
+        res += ' по ';
+        res += end;
+        res += ' класс';
     }
+    else {
+        res += '1 по 11 класс'
+    }
+
     return res;
 };
+
+
+/**
+ *  @param {array<number>} interval
+ *  @return {string}
+ */
+var getKindergardenAvailability = function(interval) {
+    return (interval && interval[0] === 0) ?
+        'при школе есть детский сад' : '';
+};
+
 
 /**
  *  @param {string} site
@@ -195,9 +225,9 @@ var getContacts = function(addresses, phones) {
  */
 var getComments = function(comments) {
     var typeConvert = {
-        'Parent': 'родитель',
-        'Graduate': 'выпускник',
-        'Scholar': 'ученик'
+        'Parent': 'Родитель',
+        'Graduate': 'Выпускник',
+        'Scholar': 'Ученик'
     };
 
     return comments
@@ -208,7 +238,7 @@ var getComments = function(comments) {
                 getSections([0, 0, 0, 0]);
             return {
                 author: '',
-                rank: typeConvert[comment.userType],
+                rank: typeConvert[comment.userData.userType],
                 text: comment.text,
                 sections: sections
             };
@@ -346,7 +376,8 @@ schoolView.list = function(schools, opt_criterion) {
                     currentCriterion: sortCriterion,
                     fullName: school.fullName,
                     ratings: ratingView.ratingResultView(school.rankDogm),
-                    metroStations: addressView.getMetro(school.addresses)
+                    metroStations: addressView.getMetro(school.addresses),
+                    isScoreClickable: checkScoreValues(score, sortCriterion)
                 };
             });
 
@@ -359,6 +390,49 @@ schoolView.list = function(schools, opt_criterion) {
     }
 
     return res;
+};
+
+/**
+ * @param {array<object>} schools - schoolInstances
+ * @return {array<object>}
+ */
+schoolView.suggestList = function(schools) {
+    return schools
+        .map(school => {
+            return {
+                id: school.id,
+                url: school.url,
+                name: school.name,
+                description: '',
+                abbreviation: school.abbreviation,
+                score: school.score || [0, 0, 0, 0],
+                totalScore: school.totalScore || 0,
+                fullName: school.fullName,
+                addresses: school.addresses
+            };
+    });
+};
+
+/**
+ * Check if all scores of item is 0
+ * @param {Array<Object>} score
+ * @param {Object} sortCriterion
+ * @return {boolean}
+ * @private
+ */
+var checkScoreValues = function(score, sortCriterion) {
+    var result = false;
+
+    if (sortCriterion.value !== 0) {
+        result = true;
+    }
+
+    score.forEach(function(item) {
+        if (item.value !== 0) {
+            result = true;
+        }
+    });
+    return result;
 };
 
 /**
@@ -375,7 +449,7 @@ var groupSchools = function(schools) {
     for(var i = 0, l = schools.length; i <= l; i++) {
         var schoolItem = schools[i];
         if (!schoolItem || schoolItem.id !== currentSchoolId) {
-            
+
             var resultItem = {};
 
             //Copy fiels from one school to result school that not changes
@@ -391,7 +465,7 @@ var groupSchools = function(schools) {
             var grouppedByAddress = lodash.groupBy(grouppedById, 'addressId');
             resultItem.addresses = [];
 
-            //iterates over schools with same address  
+            //iterates over schools with same address
             lodash.forEach(grouppedByAddress, (schools, key) => {
                 resultItem.addresses.push({
                     id: key,
@@ -466,7 +540,7 @@ var getScore = function(score, totalScore, opt_criterion) {
         value: totalScore
     });
 
-    scoreItems.unshift(scoreItems.splice(sortCriterionIndex, 1)[0]); 
+    scoreItems.unshift(scoreItems.splice(sortCriterionIndex, 1)[0]);
     return scoreItems;
 };
 
@@ -502,22 +576,83 @@ var getName = function (name) {
  * @return {array<object>}
  */
 schoolView.listMapPoints = function(schools) {
-    return schools
-        .map(school => {
-            school = school.dataValues;
-            return {
-                id: school.id,
-                url: school.url,
-                name: school.name,
-                totalScore: school.totalScore || 0,
+    return schools.reduce((prev, curr) => {
+        curr = curr.dataValues;
+
+        prev = prev.length > 0 ? prev : [{
+            id: curr.id,
+            url: curr.url,
+            name: curr.name,
+            description: curr.description,
+            totalScore: curr.totalScore || 0,
+            addresses: [{
+                id: curr.addressId,
+                lat: curr.coords[0],
+                lng: curr.coords[1],
+                name: curr.adrName,
+                stages: [curr.stage]
+            }]
+        }];
+
+        var concated,
+            added,
+            cond;
+
+        for (var j = prev.length - 1, item; j >= 0; j--) {
+            item = prev[j];
+            if (curr.id == item.id) {
+                for (var i = item.addresses.length - 1, address; i >= 0; i--) {
+                    address = item.addresses[i];
+
+                    if (address.id == curr.addressId) {
+                        concated = true;
+                        cond = !(
+                            address.stages[0] == curr.stage ||
+                            address.stages[1] == curr.stage
+                        );
+
+                        if (cond) {
+                            address.stages.push(curr.stage);
+                        }
+
+                        break;
+                    }
+                }
+
+                if (!concated) {
+                    item.addresses.push({
+                        id: curr.addressId,
+                        lat: curr.coords[0],
+                        lng: curr.coords[1],
+                        name: curr.adrName,
+                        stages: [curr.stage]
+                    })
+                }
+
+                added = true;
+                break;
+            }
+        }
+
+        if (!added) {
+            prev.push({
+                id: curr.id,
+                url: curr.url,
+                name: curr.name,
+                description: curr.description,
+                totalScore: curr.totalScore || 0,
                 addresses: [{
-                    lat: school.coords[0],
-                    lng: school.coords[1],
-                    name: school.adrName,
-                    stage: [school.stage]
+                    id: curr.addressId,
+                    lat: curr.coords[0],
+                    lng: curr.coords[1],
+                    name: curr.adrName,
+                    stages: [curr.stage]
                 }]
-            };
-        });
+             })
+        }
+
+        return prev;
+    }, []);
 };
 
 /**
@@ -529,7 +664,7 @@ schoolView.listMapPoints = function(schools) {
  */
 schoolView.suggest = function(data) {
     return {
-        schools: this.list(data.schools),
+        schools: this.suggestList(data.schools),
         areas: areaView.list(data.areas),
         metro: metroView.list(data.metros)
     };

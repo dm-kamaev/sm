@@ -1,3 +1,5 @@
+@import "../i-media/i-media";
+
 .b-mark {
     display: inline-block;
 
@@ -57,14 +59,10 @@
     }
 }
 
-.b-mark.b-mark_grey{
-    .b-mark__mark {
-        line-height: 22px;
-    }
-}
-
 .b-mark.b-mark_inline {
     display: inline-block;
+
+	vertical-align: middle;
 
     .b-mark__circle {
         top: 1px;
@@ -105,18 +103,15 @@
     }
 }
 
-.b-mark.b-mark_inline.b-mark_grey{
-    .b-mark__mark {
-        top: -2px;
-    }
-}
-.b-mark.b-mark_inline.b-mark_bigText {
+.b-mark.b-mark_inline.b-mark_big-text {
     .b-mark__mark {
         font-size: 19px;
     }
 
     .b-mark__circle {
-        top: -1px;
+        top: 5px;
+
+        vertical-align: top;
     }
 }
 .b-mark.b-mark_number {
@@ -135,6 +130,12 @@
 
 .b-mark.b-mark_no-dash.b-mark_empty {
     .b-mark__mark {
+        display: none;
+    }
+}
+
+@include media-xs {
+    .b-mark.b-mark_inline .b-mark__circle {
         display: none;
     }
 }

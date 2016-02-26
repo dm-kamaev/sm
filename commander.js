@@ -5,6 +5,7 @@ const commander = require('commander');
  */
 
 require('./console/metro.js').Command;
+require('./console/metro_closest.js').Command;
 require('./console/parse.js').Command;
 require('./console/parse_area.js').Command;
 require('./console/department.js').Command;
@@ -21,6 +22,8 @@ require('./console/updateSchoolNames.js').Command;
 require('./console/updateRanks.js').Command;
 require('./console/updateUrls.js').Command;
 require('./console/beautifySchoolData.js').Command;
+require('./console/isAddressIsSchool.js').Command;
+require('./console/newCommentNotifier.js').Command;
 
 /*
  * The line below initializes the interface on `node ./commander

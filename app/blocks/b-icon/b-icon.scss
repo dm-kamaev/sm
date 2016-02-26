@@ -1,21 +1,40 @@
 .b-icon {
-    position: relative;
-
     display: inline-block;
 
-    width: 100%;
-    height: 100%;
+    width: 10px;
+    height: 10px;
 
     vertical-align: middle;
 }
 
-.b-icon__content {
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-
-    margin: auto;
+.b-icon_top-align {
+    vertical-align: top;
 }
 
+
+.b-icon_img_metro,
+.b-icon.b-icon_img_metro {
+    width: 11px;
+    height: 8px;
+
+    vertical-align: baseline;
+
+    background-image: url(/images/b-icon/b-icon_img/b-icon_img_metro.svg);
+    background-size: contain;
+}
+
+
+.b-icon.b-icon_img_test {
+    height: auto;
+    width: auto;
+
+    vertical-align: baseline;
+
+    &:before {
+        content: 't';
+        cursor: default;
+        color: #ee362c;
+
+        font-family: "WebSymbols", Arial, sans-serif;
+    }
+}

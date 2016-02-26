@@ -31,7 +31,7 @@ sm.lSearchResult.bSchoolListItem.SchoolListItem = function(opt_params) {
      *  @private
      *  @type {Number}
      */
-    this.totalScore_ = this.params_.totalScore;
+    this.currentCriterion_ = this.params_.currentCriterion;
 
     /**
      *  @private
@@ -40,11 +40,24 @@ sm.lSearchResult.bSchoolListItem.SchoolListItem = function(opt_params) {
     this.id_ = this.params_.id;
 
     /**
+     * @private
+     * @type {string}
+     */
+    this.url_ = this.params_.url;
+
+    /**
      * scoreInstance
      * @private
-     * @type {sm.bScoreSchoolList.Template}
+     * @type {sm.bScoreSchoolList.ScoreSchoolList}
      */
     this.scoreInstance_ = null;
+
+    /**
+     * defines whether score is clickable
+     * @private
+     * @type boolean
+     */
+    this.isScoreClickable_ = this.params_.isScoreClickable;
 };
 goog.inherits(sm.lSearchResult.bSchoolListItem.SchoolListItem,
     goog.ui.Component);
@@ -93,7 +106,7 @@ goog.scope(function() {
      * @return  {Number}
      */
     ListItem.prototype.getTotalScore = function() {
-        return this.totalScore_;
+        return this.currentCriterion_;
     };
 
     /**
@@ -201,7 +214,8 @@ goog.scope(function() {
         scoreElement = this.getElementByClass(Score.CssClass.ROOT);
         this.scoreInstance_ = new Score({
             'score': this.score_,
-            'totalScore': this.totalScore_
+            'currentCriterion': this.currentCriterion_,
+            'isClickable': this.isScoreClickable_
         });
         this.addChild(this.scoreInstance_);
         this.scoreInstance_.decorate(scoreElement);
@@ -225,13 +239,23 @@ goog.scope(function() {
 
     /**
      * Click handler
+     * @param {Object} event
      * @private
      */
-    ListItem.prototype.itemClickHandler_ = function() {
-        this.dispatchEvent({
-            'type': ListItem.Event.CLICK,
-            'itemId': this.id_
-        });
+    ListItem.prototype.itemClickHandler_ = function(event) {
+        var tag = event.target.tagName,
+            isScore = this.getDomHelper().getAncestorByClass(
+                event.target,
+                Score.CssClass.ROOT
+            );
+
+        if (tag !== goog.dom.TagName.A && !isScore) {
+            this.dispatchEvent({
+                'type': ListItem.Event.CLICK,
+                'itemId': this.id_,
+                'url': this.url_
+            });
+        }
     };
 
     /**

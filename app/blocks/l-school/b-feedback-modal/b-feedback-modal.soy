@@ -37,41 +37,70 @@
 {template .modal}
     <form class="b-feedback__form" method="POST" action="{$params?.data?.url ?: ''}">
         <div class="b-feedback__content">
-            <div class="b-feedback__close-control
-                        b-icon_img_close-dialog">
+            <div class="b-feedback__section
+                        b-feedback__section_header">
+                <div class="b-feedback__close-control">
+                    {call sm.bIcon.Template.icon}
+                        {param params: [
+                            'type': 'close-dialog'
+                        ] /}
+                    {/call}
+                </div>
+                <div class="b-feedback__text
+                            b-feedback__text_modal-title">
+                    Ваш отзыв
+                </div>
+            </div>
 
+            <div class="b-feedback__section
+                        b-feedback__section_who-are-you">
+                {call .whoAreYou_ /}
             </div>
-            <div class="b-feedback__title">Ваш отзыв</div>
-            {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
-                {param params: [
-                    'type': 'textarea',
-                    'renderParams': [
-                        'data': [
-                            'placeholder': 'Ваш комментарий',
-                            'name': 'text'
-                        ],
-                        'config': [
-                            'autoHeight': true
+
+            <div class="b-feedback__section
+                        b-feedback__section_textarea">
+                {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+                    {param params: [
+                        'type': 'textarea',
+                        'renderParams': [
+                            'data': [
+                                'placeholder': 'Ваш комментарий',
+                                'name': 'text'
+                            ],
+                            'config': [
+                                'autoHeight': true
+                            ]
                         ]
-                    ]
-                ]/}
-            {/call}
-            {call .whoAreYou_ /}
-            <div class="b-feedback__title-scores">
-                Ваши оценки
+                    ]/}
+                {/call}
             </div>
-            {call .score_ /}
-            {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
-                {param params: [
-                    'type': 'button',
-                    'renderParams': [
-                        'data': 'Оставить отзыв',
-                        'config': [
-                            'theme': 'sienna'
+
+            <div class="b-feedback__section
+                        b-feedback__section_score">
+                <div class="b-feedback__title-scores">
+                                Ваши оценки
+                </div>
+                {call .score_ /}
+            </div>
+
+            <div class="b-feedback__section
+                        b-feedback__section_submit">
+                {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+                    {param params: [
+                        'type': 'button',
+                        'renderParams': [
+                            'data': 'Оставить отзыв',
+                            'config': [
+                                'theme': 'sienna'
+                            ]
                         ]
-                    ]
-                ]/}
-            {/call}
+                    ]/}
+                {/call}
+
+                <div class="b-feedback__validation-errors
+                            i-utils__hidden">
+                </div>
+            </div>
         </div>
     </form>
 {/template}
@@ -81,39 +110,124 @@
 * whoAreYou_
 */
 {template .whoAreYou_ private="true"}
-    {let $userTypes: [
-        [
-            'title': 'Родитель',
-            'value': 'Parent'
-        ], [
-            'title': 'Выпускник',
-            'value': 'Graduate'
-        ], [
-            'title': 'Ученик',
-            'value': 'Scholar'
-        ]
-    ] /}
-
-    <div class="b-feedback__who-are-you">
-        <div class="b-feedback__title b-feedback__title_sub b-feedback__title_who-are-you">
-            Кто вы?
+    <div class="b-feedback__column">
+        <span class="b-feedback__text
+                    b-feedback__text_header">Кто Вы?</span>
+        <div class="b-feedback__control
+                    b-feedback__control_user-type">
+            {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+                {param params: [
+                    'type': 'dropdown-select',
+                    'renderParams': [
+                        'data': [
+                            'defaultOpenerText': 'Выберите',
+                            'listItems': [
+                                ['label': 'Родитель ученика'],
+                                ['label': 'Выпускник'],
+                                ['label': 'Ученик']
+                            ]
+                        ],
+                        'config': [
+                            'usePlaceholder': true,
+                            'iconSprite': 'opener-arrow'
+                        ]
+                    ]
+                ]/}
+            {/call}
         </div>
-        <ul class="b-feedback__user-types">
-            {foreach $userType in $userTypes}
-                <li class="b-feedback__user-type">
-                    <input class="b-feedback__radio"
-                           id="b-feedback__user-type-{index($userType)}"
-                           type="radio"
-                           name="userType"
-                           value="{$userType.value}"
-                    />
-                    <label class="b-feedback__radio-label"
-                           for="b-feedback__user-type-{index($userType)}">
-                           {$userType.title}
-                    </label>
-                </li>
-            {/foreach}
-        </ul>
+    </div>
+    <div class="b-feedback__column">
+        <div class="b-feedback__class-select
+                    i-utils__hidden">
+            <span class="b-feedback__text
+                        b-feedback__text_student
+                        i-utils__hidden">
+                <span class="b-feedback__item
+                             b-feedback__item_m">
+                    Учусь{sp}
+                        <span class="b-feedback__item
+                                     b-feedback__item_l">
+                            здесь{sp}
+                        </span>
+                        в
+                </span>
+                <span class="b-feedback__item
+                             b-feedback__item_s">
+                    Класс
+                </span>
+            </span>
+            <span class="b-feedback__text
+                        b-feedback__text_parent
+                        i-utils__hidden">
+                <span class="b-feedback__item
+                             b-feedback__item_m">
+                    Ребёнок{sp}
+                        <span class="b-feedback__item
+                                     b-feedback__item_l">
+                            учится{sp}
+                        </span>
+                    в
+                </span>
+                <span class="b-feedback__item
+                             b-feedback__item_s">
+                    Класс
+                </span>
+            </span>
+            <div class="b-feedback__control
+                        b-feedback__control_class-type">
+                {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+                    {param params: [
+                        'type': 'dropdown-select',
+                        'renderParams': [
+                            'data': [
+                                'listItems': [
+                                    ['label': '1'],
+                                    ['label': '2'],
+                                    ['label': '3'],
+                                    ['label': '4'],
+                                    ['label': '5'],
+                                    ['label': '6'],
+                                    ['label': '7'],
+                                    ['label': '8'],
+                                    ['label': '9'],
+                                    ['label': '10'],
+                                    ['label': '11']
+                                ]
+                            ],
+                            'config': [
+                                'iconSprite': 'opener-arrow'
+                            ]
+                        ]
+                    ]/}
+                {/call}
+            </div>
+            <span class="b-feedback__item
+                         b-feedback__item_m">
+                <span class="b-feedback__text">
+                    классе
+                </span>
+            </span>
+        </div>
+        <div class="b-feedback__graduation-year
+                    i-utils__hidden">
+            <span class="b-feedback__text">
+                Год выпуска
+            </span>
+            <div class="b-feedback__control
+                        b-feedback__control_graduation-year">
+                {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+                    {param params: [
+                        'type': 'digit-input',
+                        'renderParams': [
+                            'data': [
+                                'name': 'yearGraduate',
+                                'maxLength': 4
+                            ]
+                        ]
+                    ]/}
+                {/call}
+            </div>
+        </div>
     </div>
 {/template}
 
@@ -126,48 +240,45 @@
             'name': 'score[]',
             'title': 'Образование',
             'description': 
-            'Достигают ли ученики этой школы достигают высоких 
-            результатов на экзаменах?'
+            'Достигают ли ученики этой школы достигают высоких результатов на экзаменах?'
         ], [
             'name': 'score[]',
             'title': 'Преподаватели',
             'description': 
-            'Действительно ли учителя этой школы — квалифицированные 
-            специалисты, которые любят свою работу, хорошо общаются с 
-            детьмии помогают им получать отличные знания?'
+            'Действительно ли учителя этой школы — квалифицированные специалисты, которые любят свою работу, хорошо общаются с детьмии помогают им получать отличные знания?'
         ], [
             'name': 'score[]',
             'title': 'Атмосфера',
-            'description': 'Атмосфера в школе, отношения между учениками, 
-            учителями, родителями и администрацией создают комфортную 
-            для получения знаний среду?'
+            'description': 'Атмосфера в школе, отношения между учениками, учителями, родителями и администрацией создают комфортную для получения знаний среду?'
         ], [
             'name': 'score[]',
             'title': 'Инфраструктура',
-            'description': 'Эта школа отлично оборудована, в ней есть всё для 
-            комфортного обучения и всестороннего развития детей?'
+            'description': 'Эта школа отлично оборудована, в ней есть всё для комфортного обучения и всестороннего развития детей?'
         ]
     ] /}
     <ul class="b-feedback__scores">
         {foreach $score in $scores}
-            <li class="b-feedback__score">
+            <li class="b-feedback__column
+                       b-feedback__column_score">
                 <div class="b-feedback__title-score">
                     {$score.title}
                 </div>
-                {call sm.bStars.Template.base}
-                    {param params: [
-                        'data': [
-                            'mark': 0
-                        ],
-                        'config': [
-                            'style': [
-                                'theme': 'colored',
-                                'size': 'large'
+                <div class="b-feedback__stars">
+                    {call sm.bStars.Template.base}
+                        {param params: [
+                            'data': [
+                                'mark': 0
                             ],
-                            'isClickable': true
-                        ]
-                    ] /}
-                {/call}
+                            'config': [
+                                'style': [
+                                    'theme': 'colored',
+                                    'size': 'large'
+                                ],
+                                'isClickable': true
+                            ]
+                        ] /}
+                    {/call}
+                </div>
                 <div class="b-feedback__description">{$score.description}</div>
             </li>
         {/foreach}

@@ -1,3 +1,5 @@
+@import "../../i-media/i-media";
+
 .b-filter {
     display: inline-block;
 
@@ -192,5 +194,24 @@
 
         color: #ee362c;
         cursor: pointer;
+    }
+}
+
+
+@include media-xl {
+    .b-filter {
+        display: block;
+
+        padding: 28px 0;
+    }
+
+    .b-filter_classes {
+        padding: 28px 0 17px;
+
+        border-bottom: 1px solid #e5e5e5;
+    }
+
+    .b-filter__filters  {
+        margin: 6px 0 -2px;
     }
 }

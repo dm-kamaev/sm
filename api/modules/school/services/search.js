@@ -3,6 +3,7 @@ var await = require('asyncawait/await');
 var models = require.main.require('./app/components/models').all;
 var services = require.main.require('./app/components/services').all;
 var searchTypeEnum = require('../enums/searchType');
+var departmentTypeEnum = require('../../geo/enums/departmentStage');
 exports.name = 'search';
 
 exports.getSchoolRecords = async (function(id) {
@@ -54,9 +55,9 @@ exports.suggestSearch = async(function(searchString) {
  */
 var findAnyInModel = function(model, searchString) {
     var stringArr = getSearchSubstrings(searchString);
-    if (!stringArr)
+    if (!stringArr || stringArr=='')
         return [];
-    
+
     var params = {
         where: {
             name: {
@@ -112,7 +113,7 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
     console.log('searchParams: ' + Array.isArray(sqlOptions.from));
     if (!Array.isArray(sqlOptions.from)) {
         this.updateSqlOptions(sqlOptions.from, searchParams);
-        
+
         if (searchParams.sortType) {
             sqlOptions.order.unshift(
                 generateOrder(searchParams.sortType)
@@ -127,7 +128,7 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
                     generateSqlFilter('school.name', searchParams.name, 'AND'),
                     generateSqlFilter('school.full_name', searchParams.name, 'AND'),
                     generateSqlFilter('metro.name', searchParams.name, 'AND'),
-                    generateSqlFilter('area.name', searchParams.name, 'AND'),
+                    generateSqlFilter('area.name', searchParams.name, 'AND')
                 ]
             });
             isGeoDataJoined = true;
@@ -188,6 +189,8 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
             });
         }
 
+
+
         if (searchParams.areaId) {
             isGeoDataJoined = true;
             sqlOptions.where.push('area.id = ' + searchParams.areaId);
@@ -212,9 +215,13 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
                      'address on address.school_id = school.id',
                      'area on area.id = address.area_id',
                      'address_metro on address_metro.address_id = address.id',
-                     'metro on metro.id = address_metro.metro_id'
+                     'metro on metro.id = address_metro.metro_id',
+                     'department on address.id = department.address_id'
                  ]
              });
+             sqlOptions.where.push('department.stage IN (\'' +
+                 departmentTypeEnum.ELEMENTARY + '\', \'' +
+                 departmentTypeEnum.MIDDLE_HIDE + '\')');
         }
     }
 };

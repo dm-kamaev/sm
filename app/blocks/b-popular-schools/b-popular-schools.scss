@@ -11,9 +11,9 @@
 .b-popular-schools__school {
     display: inline-block;
 
-    width: 175px;
-    margin-right: 30px;
+    width: 100%;
 
+    white-space: normal;
     vertical-align: top;
 }
 
@@ -22,11 +22,11 @@
 }
 
 .b-popular-schools__school-rating {
-    margin-bottom: 19px;
+    margin-bottom: 21px;
 }
 
 .b-popular-schools__school-name {
-    margin-bottom: 12px;
+    margin-bottom: 11px;
 
     line-height: 21px;
 
@@ -36,8 +36,17 @@
 }
 
 .b-popular-schools__school-link {
+    display: inline-block;
+
+    width: 175px;
+    margin-right: 30px;
+
     color: #000000;
     text-decoration: none;
+
+    &:last-child {
+        margin-right: 0;
+    }
 }
 
 .b-popular-schools__school-link:hover {
@@ -53,7 +62,7 @@
 }
 
 .b-popular-schools__school-link:hover .b-popular-schools__school-description {
-  color: #000000;
+    color: #000000;
 }
 
 .b-popular-schools__metro-icon {
@@ -63,11 +72,32 @@
 }
 
 .b-popular-schools__metro-stations {
-    display: inline-block;
-
     color: #808080;
 
-    font-family: arial;
-    font-size: 13px;
-    font-weight: 400;
+    font: 400 13px arial, sans-serif;
+}
+
+@media screen and (max-device-width: 600px) // for phone
+and (orientation: portrait),
+screen and (max-width: 600px) // for desktop
+{
+    .b-popular-schools__title {
+        margin-bottom: 20px;
+    }
+
+    .b-popular-schools__school {
+        position: relative;
+    }
+
+    .b-popular-schools__school-rating {
+        position: absolute;
+        top: 8px;
+        left: 0;
+    }
+
+    .b-popular-schools__school-information {
+        box-sizing: border-box;
+        width: 100%;
+        padding-left: 90px;
+    }
 }

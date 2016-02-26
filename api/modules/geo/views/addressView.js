@@ -59,21 +59,22 @@ addressView.stageList = function (addresses, opt_options) {
                     {
                         title: addresses[j].title,
                         description: addresses[j].description,
-                        metroStations: addresses[j].metroStations
-                      }
+                        metroStation: addresses[j].metroStations[0]
+                    }
                 );
                 addressAdded = true;
             }
         }
         if (addressAdded) {
-            stages.push(
-                {
-                    name: stagesEnum[i],
-                    addresses: temp
-                }
-            );
+            stages.push({
+                name: stagesEnum[i],
+                addresses: temp
+            });
         }
         temp = [];
+    }
+    if (stages.length == 1 && stages[0].name === 'Другие адреса') {
+        stages[0].name = 'Адреса';
     }
     return stages;
 
@@ -139,6 +140,20 @@ addressView.getMetro = function(addresses) {
         }
     });
     return metroStations;
+};
+
+/**
+ * Transforms school address for metro stations
+ * @param {Object} school - school instance from sequalize
+ */
+addressView.transformSchoolAddress = function(school) {
+    school.addresses = school.addresses.map(address => {
+        address.metroStations = address.addressMetroes
+            .map(item => item.metroStation);
+        address.dataValues.metroStations = address.metroStations;
+
+        return address;
+    });
 };
 
 /**

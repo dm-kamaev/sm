@@ -9,7 +9,7 @@ var sequelize = require.main.require('./app/components/db');
 var departmentStage = require('../api/modules/geo/enums/departmentStage');
 var models = require.main.require('./app/components/models').all;
 var services = require.main.require('./app/components/services').all;
-var Format = require('./modules/utils/Format');
+var Format = require('./modules/utils/format');
 
 const REPORT_PATH = './console/reports/';
 
