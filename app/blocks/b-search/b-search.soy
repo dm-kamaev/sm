@@ -69,3 +69,88 @@
         {/call}
     </div>
 {/template}
+
+
+/**
+ * Search suggest item
+ * @param? params {{
+ *     type: string,
+ *     name: string,
+ *     areas: ?string,
+ *     totalScore: ?number
+ * }}
+ */
+{template .item autoescape="strict" kind="html"}
+    <span class="b-search__item b-search__item_type_{$params.type}">
+        {call .itemIcon_ data="all" /}
+        <span class="b-search__list-name">{$params.name}</span>
+        {if $params.areas}
+            <span class="b-search__list-area">{$params.areas}</span>
+        {/if}
+    </span>
+{/template}
+
+
+/**
+ * Search suggest item icon
+ * @param? params {{
+ *     type: string,
+ *     totalScore: ?number
+ * }}
+ */
+{template .itemIcon_ private="true" autoescape="strict" kind="html"}
+    {switch $params.type}
+        {case 'schools'}
+            {call .itemIconSchool_ data="all" /}
+        {case 'metro'}
+            {call .itemIconMetro_ /}
+        {case 'areas'}
+            {call .itemIconArea_ /}
+    {/switch}
+{/template}
+
+
+/**
+ * Search suggest school icon
+ * @param? params {{
+ *     totalScore: ?number
+ * }}
+ */
+{template .itemIconSchool_ private="true" autoescape="strict" kind="html"}
+    {call sm.bMark.Template.base}
+        {param params: [
+            'value': $params.totalScore,
+            'display': 'inline',
+            'config': [
+                'size': 's',
+                'customClasses': 'b-search__item-icon'
+            ]
+        ] /}
+    {/call}
+{/template}
+
+
+/**
+ * Search suggest metro icon
+ */
+{template .itemIconMetro_ private="true" autoescape="strict" kind="html"}
+    {call sm.bIcon.Template.icon}
+        {param params: [
+            'type': 'metro',
+            'customClasses': ['b-search__item-icon']
+        ] /}
+    {/call}
+{/template}
+
+
+/**
+ * Search suggest area icon
+ */
+{template .itemIconArea_ private="true" autoescape="strict" kind="html"}
+    {call sm.bIcon.Template.icon}
+        {param params: [
+            'type': 'location',
+            'customClasses': ['b-search__item-icon']
+        ] /}
+    {/call}
+{/template}

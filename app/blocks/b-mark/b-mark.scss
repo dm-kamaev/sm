@@ -41,25 +41,25 @@
     line-height: 24px;
 }
 
-.b-mark.b-mark_green{
+.b-mark_green{
     .b-mark__circle {
         border-color: #00aa00;
     }
 }
 
-.b-mark.b-mark_yellow{
+.b-mark_yellow{
     .b-mark__circle {
         border-color: #ffaa00;
     }
 }
 
-.b-mark.b-mark_red{
+.b-mark_red{
     .b-mark__circle {
         border-color: #ee362c;
     }
 }
 
-.b-mark.b-mark_inline {
+.b-mark_inline {
     display: inline-block;
 
 	vertical-align: middle;
@@ -85,25 +85,25 @@
     }
 }
 
-.b-mark.b-mark_inline.b-mark_green{
+.b-mark_inline.b-mark_green{
     .b-mark__circle {
         background-color: #00aa00;
     }
 }
 
-.b-mark.b-mark_inline.b-mark_yellow{
+.b-mark_inline.b-mark_yellow{
     .b-mark__circle {
         background-color: #ffaa00;
     }
 }
 
-.b-mark.b-mark_inline.b-mark_red{
+.b-mark_inline.b-mark_red{
     .b-mark__circle {
         background-color: #ee362c;
     }
 }
 
-.b-mark.b-mark_inline.b-mark_big-text {
+.b-mark_inline.b-mark_size_l {
     .b-mark__mark {
         font-size: 19px;
     }
@@ -114,7 +114,19 @@
         vertical-align: top;
     }
 }
-.b-mark.b-mark_number {
+
+.b-mark_inline.b-mark_size_s {
+    .b-mark__mark {
+        display: none;
+    }
+
+    .b-mark__circle {
+        height: 1px;
+        width: 1px;
+    }
+}
+
+.b-mark_number {
     .b-mark__mark {
         position: static;
 
@@ -128,13 +140,13 @@
     }
 }
 
-.b-mark.b-mark_no-dash.b-mark_empty {
+.b-mark_no-dash.b-mark_empty {
     .b-mark__mark {
         display: none;
     }
 }
 
-.b-mark.b-mark_question {
+.b-mark_question {
 	.b-mark__mark {
 		font-size: 28px;
 
@@ -143,7 +155,7 @@
 }
 
 @include media-xxs {
-    .b-mark.b-mark_inline .b-mark__circle {
+    .b-mark_inline .b-mark__circle {
         display: none;
     }
 }

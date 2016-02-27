@@ -116,3 +116,44 @@
     padding-right: 30px;
     padding-left: 12px;
 }
+
+.b-search__item {
+    position: relative;
+
+    display: inline-block;
+    overflow: hidden;
+
+    width: 100%;
+    padding-left: 23px;
+
+    box-sizing: border-box;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+
+    line-height: 17px;
+}
+
+.b-search__item-icon {
+    position: absolute;
+    left: 0;
+    top: 50%;
+}
+
+.b-search__item_type_schools
+.b-search__item-icon {
+    left: 1px;
+
+    margin-top: -13px;
+}
+
+.b-search__item_type_metro
+.b-search__item-icon {
+    margin-top: -4px;
+}
+
+.b-search__item_type_areas
+.b-search__item-icon {
+    left: 1px;
+
+    margin-top: -7px;
+}

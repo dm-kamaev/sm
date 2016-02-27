@@ -5,11 +5,12 @@
  * @param params {{
  *     value: number,
  *     display: ?string,
- *     starsConfig: ?[],
- *     config: [
- *         bigText: bool,
- *         zeroSign: string
- *     ]
+ *     starsConfig: ?{},
+ *     config: ?{
+ *         customClasses: ?string,
+ *         size: ?string | ['l', 'm', 's'],
+ *         zeroSign: ?string
+ *     }
  * }}
  */
 {template .base}
@@ -27,15 +28,17 @@
     {/let}
     <div class="b-mark{sp}
                 b-mark_{$color}{sp}
-                {$params?.display == 'inline' ? 'b-mark_inline ' : ''}
-                {$params?.display == 'number' ? 'b-mark_number ' : ''}
-
-                {$params?.config?.bigText ? 'b-mark_big-text ' : ''}
-                {if $params.value == 0}
-                    {$params?.config?.zeroSign == 'question-mark' ?
-                        'b-mark_question' :
-                        ''}
+                {if $params?.display}
+                    b-mark_{$params?.display}{sp}
                 {/if}
+                {if $params?.config?.size}
+                    b-mark_size_{$params?.config?.size}{sp}
+                {/if}
+                {if $params.value == 0 and
+                    $params?.config?.zeroSign == 'question-mark'}
+                    b-mark_question{sp}
+                {/if}
+                {$params?.config?.customClasses ?: ''}
                 ">
         {if $params?.display == 'inline'}
             {call .inline data="all" /}
