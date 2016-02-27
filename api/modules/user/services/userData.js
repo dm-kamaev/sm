@@ -5,6 +5,7 @@ var services = require.main.require('./app/components/services').all;
 var sequelize  = require.main.require('./app/components/db');
 var sequelizeInclude = require.main.require('./api/components/sequelizeInclude');
 var Enum = require.main.require('./api/components/enum').all;
+var lodash = require('lodash');
 var service = {
     name: 'userData'
 };
@@ -16,13 +17,15 @@ var service = {
  * @param {number} data.yearGraduate
  * @param {number} data.classType
  * @param {string} data.key
+ * @param {string} data.username
  */
 service.create = async(function(data) {
     var params = {
         userType: data.userType,
         yearGraduate: data.yearGraduate ? data.yearGraduate : null,
         classType: data.classType ? data.classType : null,
-        key: data.key ? data.key : null
+        key: data.key ? data.key : null,
+        username: data.username ? data.username : null
     };
     return await(models.UserData.create(params));
 });
@@ -34,10 +37,24 @@ service.create = async(function(data) {
  * @return {bool}
  */
 service.checkKey = async(function(schoolId, key) {
-    var foundKeyOnRating = await(models.Rating.findOne({
-        where: { schoolId: schoolId }
+    var commented = false;
+    var relatedRating = await(models.Rating.findAll({
+        where: {
+            schoolId: schoolId
+        }
     }));
-    return foundKeyOnRating ? true : false;
+    var relatedUserData = await(models.UserData.findAll({
+        where: {
+            key: key
+        }
+    }));
+    var i = relatedRating.length;
+    while (--i && !commented) {
+        commented = lodash.some(relatedUserData, function(userData) {
+            return userData.id === relatedRating[i].userDataId;
+        });
+    }
+    return commented;
 });
 
 module.exports = service;
