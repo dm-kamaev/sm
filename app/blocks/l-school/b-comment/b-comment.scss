@@ -39,6 +39,10 @@
     word-wrap: break-word;
 }
 
+.b-comment__text{
+    white-space: pre-line;
+}
+
 .b-comment__text_hidden{
     display: none;
 }

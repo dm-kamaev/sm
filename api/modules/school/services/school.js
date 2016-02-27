@@ -3,9 +3,9 @@
 var colors = require('colors');
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
-var models = require.main.require('./app/components/models').all;
-var services = require.main.require('./app/components/services').all;
-var sequelize = require.main.require('./app/components/db');
+var models = require('../../../../app/components/models').all;
+var services = require('../../../../app/components/services').all;
+var sequelize = require('../../../../app/components/db');
 var searchTypeEnum = require('../enums/searchType');
 var schoolTypeEnum = require('../enums/schoolType');
 var departmentTypeEnum = require('../../geo/enums/departmentStage');
@@ -329,6 +329,7 @@ service.onRatingChange = async(function(schoolId) {
         await(this.updateReviewCount(school));
         await(this.updateScore(school));
     } catch (e) {
+        console.log(e);
     }
 });
 
@@ -581,7 +582,8 @@ service.review = async(function(schoolId, params) {
             userType: params.userType,
             yearGraduate: params.yearGraduate,
             classType: params.classType,
-            key: params.key
+            key: params.key,
+            username: params.username
         };
 
         var userDataInstance = await(services.userData.create(userData));

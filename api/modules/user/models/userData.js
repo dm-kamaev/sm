@@ -23,6 +23,10 @@ var UserData = db.define('UserData', {
     key: {
         field: 'key',
         type: DataType.STRING
+    },
+    username: {
+        field: 'username',
+        type: DataType.STRING
     }
 }, {
     underscored: true,

@@ -75,7 +75,7 @@ class CsvConverter {
         // TODO: find a normal way to do it
         CsvConverter.cureQuotes(unstableJSON);
 
-        return unstableJSON;
+        return this.replaceEscape_(unstableJSON);
     }
 
 
@@ -160,6 +160,20 @@ class CsvConverter {
         });
     }
 
+    /**
+     * @private
+     * @param {array<object>} json
+     * @return {array<object>}
+     */
+    replaceEscape_(json) {
+        for (var elem in json) {
+            for (var prop in json[elem]) {
+                json[elem][prop] = typeof json[elem][prop] === 'string' ?
+                    json[elem][prop].replace(/\\n/g, '\n') : json[elem][prop];
+            }
+        }
+        return json;
+    }
 }
 
 module.exports = CsvConverter;
