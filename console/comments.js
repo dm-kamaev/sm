@@ -4,7 +4,7 @@ var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var Converter = require('csvtojson').Converter;
 var headers = require('./commentsConfig.json').headers;
-var authorType = require('../api/modules/comment/enums/authorType');
+var userTypeEnum = require('../api/modules/user/enums/userType');
 var services = require.main.require('./app/components/services').all;
 var SchoolSearcher = require('./modules/parse/SchoolSearcher.js');
 var SqlHelper = require('./modules/sqlHelper/SqlHelper.js');
@@ -106,6 +106,7 @@ class Comments {
             }
         ));
         await(SqlHelper.resetTable(models.CommentGroup.tableName));
+        await(SqlHelper.resetTable(models.UserData.tableName));
     }
 
     /**
@@ -118,12 +119,15 @@ class Comments {
 
         parsedComment.username = comment.name;
         parsedComment.userType = this.getUserType_(comment.type);
+        parsedComment.key = comment.hash;
+        parsedComment.yearGraduate = comment.year;
+
         var edu = comment.education || 0,
             teach = comment.teacher || 0,
             atm = comment.atmosphere || 0,
             infrastr = comment.infrastructure || 0;
-
         parsedComment.score = [edu, teach, atm, infrastr];
+
         var text = comment.eduComment && 'Образование\n' +
             comment.eduComment + '\n' || '';
         text += comment.teacherComment && 'Учителя\n' +
@@ -158,25 +162,25 @@ class Comments {
         var result;
         switch (userType) {
             case 'Окончил(а) школу менее 3 лет назад':
-                result = authorType.GRADUATE;
+                result = userTypeEnum.GRADUATE;
                 break;
             case 'Окончил(а) школу 3 или более лет назад':
-                result = authorType.GRADUATE;
+                result = userTypeEnum.GRADUATE;
                 break;
             case 'Сейчас учусь в школе':
-                result = authorType.SCHOLAR;
+                result = userTypeEnum.SCHOLAR;
                 break;
             case 'Мои дети ходят в школу':
-                result = authorType.PARENT;
+                result = userTypeEnum.PARENT;
                 break;
             case 'Выпускник':
-                result = authorType.GRADUATE;
+                result = userTypeEnum.GRADUATE;
                 break;
             case 'Ученик':
-                result = authorType.SCHOLAR;
+                result = userTypeEnum.SCHOLAR;
                 break;
             case 'Родитель':
-                result = authorType.PARENT;
+                result = userTypeEnum.PARENT;
                 break;
             default:
                 result = '';

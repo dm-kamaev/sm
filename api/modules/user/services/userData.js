@@ -16,13 +16,15 @@ var service = {
  * @param {number} data.yearGraduate
  * @param {number} data.classType
  * @param {string} data.key
+ * @param {string} data.username
  */
 service.create = async(function(data) {
     var params = {
         userType: data.userType,
         yearGraduate: data.yearGraduate ? data.yearGraduate : null,
         classType: data.classType ? data.classType : null,
-        key: data.key ? data.key : null
+        key: data.key ? data.key : null,
+        username: data.username ? data.username : null
     };
     return await(models.UserData.create(params));
 });

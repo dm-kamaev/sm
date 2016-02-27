@@ -582,7 +582,8 @@ service.review = async(function(schoolId, params) {
             userType: params.userType,
             yearGraduate: params.yearGraduate,
             classType: params.classType,
-            key: params.key
+            key: params.key,
+            username: params.username
         };
 
         var userDataInstance = await(services.userData.create(userData));

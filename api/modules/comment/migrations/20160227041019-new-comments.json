@@ -1,0 +1,24 @@
+{
+    "data": [
+        {
+            "pathToModel": "../../api/modules/user/models/userData",
+            "fileName": "20160227041019-new-comments-user-data.tar.gz"
+        },
+        {
+            "pathToModel": "../../api/modules/comment/models/commentGroup",
+            "fileName": "20160227041019-new-comments-comment-group.tar.gz"
+        },
+        {
+            "pathToModel": "../../api/modules/school/models/rating",
+            "fileName": "20160227041019-new-comments-rating.tar.gz"
+        },
+        {
+            "pathToModel": "../../api/modules/comment/models/comment",
+            "fileName": "20160227041019-new-comments-comment.tar.gz"
+        },
+        {
+            "pathToModel": "../../api/modules/school/models/school",
+            "fileName": "20160227041019-new-comments-school.tar.gz"
+        }
+    ]
+}

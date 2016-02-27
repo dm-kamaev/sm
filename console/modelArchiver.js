@@ -13,7 +13,8 @@ var modules = {
     SCHOOL: 'school',
     STUDY: 'study',
     UNIVER: 'univer',
-    COMMENT: 'comment'
+    COMMENT: 'comment',
+    USER: 'user'
 };
 /*List of models to update data*/
 var modelModules = {
@@ -41,6 +42,8 @@ var modelModules = {
 
     University: modules.UNIVER,
     SchoolUniversity: modules.UNIVER,
+
+    UserData: modules.USER
 };
 
 var start = async(function() {
