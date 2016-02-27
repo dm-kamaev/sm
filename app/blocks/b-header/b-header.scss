@@ -1,4 +1,7 @@
-﻿.b-header {
+﻿@import "../i-media/i-media";
+
+/* layout */
+.b-header {
     z-index: auto;
 
     display: inline-block;
@@ -21,22 +24,13 @@
     margin: 0 auto;
 }
 
-.b-header__link-search {
-    position: absolute;
-    top: 27px; //28
-    left: 0;
-
+.b-header__wrap {
     display: inline-block;
+
+    margin-top: 21px; //20
+
+    vertical-align: middle;
 }
-
-// .b-header__menu {
-//     display: inline-block;
-//     float: left;
-
-//     width: 5%;
-//     height: 100%;
-//     max-width: 62px;
-// }
 
 .b-header__main {
     display: inline-block;
@@ -48,7 +42,19 @@
 
     font-weight: bold;
 }
+/* layout end */
 
+/* advanced search link */
+.b-header__link-search {
+    position: absolute;
+    top: 27px; //28
+    left: 0;
+
+    display: inline-block;
+}
+/* advanced search link end */
+
+/* search */
 .b-header__search {
     position: absolute;
     top: 20px;
@@ -61,45 +67,9 @@
 
     border: 1px solid #CCC;
 }
+/* search end */
 
-.b-header__menu-image {
-    position: relative;
-    top: 25px;
-
-    float: left;
-}
-
-.b-header__search-image{
-    width: 100%;
-    height: 100%;
-
-    background: url(images/b-header/search.png) no-repeat right;
-}
-
-.b-header__line {
-    width: 0;
-    height: 50%;
-    margin-top: 16px;
-
-    border: 1px solid rgba(0, 0, 0, 0.08);
-}
-
-.b-header__line_right {
-    float: right;
-}
-
-.b-header__line_left {
-    float: left;
-}
-
-.b-header__wrap {
-    display: inline-block;
-
-    margin-top: 21px; //20
-
-    vertical-align: middle;
-}
-
+/* logo */
 .b-header__title {
     margin-top: 4px;
 }
@@ -170,9 +140,9 @@
 .b-header__star_fifth {
     font-size: 15px;
 }
+/* logo end */
 
-@media screen and (max-width: 1280px) // for desktop and tablet
-{
+@include media-xl {
     .b-header {
         padding: 0 40px;
 
@@ -184,27 +154,27 @@
     }
 }
 
-@media screen and (max-width: 1000px) // for desktop and tablet
-{
+
+@include media-l {
     .b-header__stars {
         display: none;
     }
 }
 
-@media screen and (max-device-width: 600px) // for phone
-and (orientation: portrait),
-screen and (max-width: 600px) // for desktop
-{
+@include media-m {
+    .b-header__search {
+        display: none;
+    }
+}
+
+@include media-s {
+    .b-header__link-search {
+        display: none;
+    }
+
     .b-header {
         padding: 0 30px;
 
         text-align: left;
     }
-
-    .b-header__link-search {
-        display: none;
-    }
 }
-
-
-
