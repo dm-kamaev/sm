@@ -193,11 +193,9 @@ goog.scope(function() {
             foldListInstance.decorate(foldList);
         }
 
-        if (this.elements_.search) {
-            this.search_ = new sm.bSearch.Search();
-            this.addChild(this.search_);
-            this.search_.decorate(this.elements_.search);
-        }
+        this.search_ = new sm.bSearch.Search();
+        this.addChild(this.search_);
+        this.search_.decorate(this.elements_.search);
 
         /**
          * results
@@ -244,7 +242,7 @@ goog.scope(function() {
             foldLists: this.getElementsByClass(
                 sm.lSchool.bDataBlockFoldList.FoldList.CssClass.ROOT
             ),
-            search: this.getElementByClass(
+            search: goog.dom.getElementByClass(
                 sm.bSearch.Search.CssClass.ROOT
             )
         };

@@ -266,6 +266,9 @@ goog.scope(function() {
      * @param {Object} data
      */
     Search.prototype.itemClickHandler_ = function(event, data) {
+        this.suggest_.setText(data.item.name);
+        this.suggest_.blur();
+
         if (data.item.type === 'schools') {
             document.location.href = '/school/' + data.item.url;
         } else if (this.dataParams_.redirect) {
@@ -275,7 +278,8 @@ goog.scope(function() {
                 type: Search.Event.ITEM_SELECT,
                 data: {
                     id: data.item.id,
-                    type: data.item.type
+                    type: data.item.type,
+                    text: data.item.name
                 }
             });
         }

@@ -120,12 +120,12 @@
  */
 {template .innerContent_ autoescape="strict" kind="html"}
     <div class="l-search-result__body">
-        {call .listHeader_ data="all"}
+        {call .listHeader data="all"}
             {param clone: true /}
         {/call}
         {call .leftMenu_ data="all" /}
         <div class="l-search-result__results-section">
-            {call .listHeader_ data="all" /}
+            {call .listHeader data="all" /}
             <div class="l-search-result__list-body
                 {$params.countResults ? '' : ' i-utils__hidden'}
             ">
@@ -148,18 +148,18 @@
  * }
  * @param? clone {boolean}
  */
-{template .listHeader_}
+{template .listHeader}
     <div class="l-search-result__list-header{sp}
                 {$clone ? 'l-search-result__list-header_clone' : ''}">
         <span class="l-search-result__list-header-text">
             {if length($params.searchText)}
-            По запросу{sp}
-            <span class="l-search-result__list-header-text
-                         l-search-result__list-header-text_strong">
-                «{$params.searchText}»
-            </span>{sp}
+                По запросу{sp}
+                <span class="l-search-result__list-header-text
+                             l-search-result__list-header-text_strong">
+                    «{$params.searchText}»
+                </span>{sp}
             {else}
-            По вашему запросу{sp}
+                По вашему запросу{sp}
             {/if}
             мы{sp}
             <span class="l-search-result__list-header-text

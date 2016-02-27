@@ -1,23 +1,31 @@
 {namespace sm.bSearch.Template}
+
+/**
+ * Search parameters
+ * @typedef {object} sm.bSearch.Template.Params
+ * @property {?string} text
+ * @property {?string} placeholder
+ * @property {?string} theme
+ * @property {?boolean} autofocus
+ * @property {?boolean} redirect
+ * @property {?object} templates
+ * @property {?string} templates.search
+ * @property {?string} templates.item
+ * @property {?string} templates.text
+ * @property {?string} templates.value
+ */
+
 /**
  * Search template
- * @param? params {
- *    autofocus: ?bool,
- *    placeholder: ?string,
- *    text: ?string,
- *    theme: ?string,
- *    redirect: ?bool,
- *    templates: ?{
- *        search: ?string,
- *        item: ?string,
- *        text: ?string,
- *        value: ?string
- *    }
- * }
+ * @param? params {sm.bSearch.Template.Params}
  */
 {template .base autoescape="strict" kind="html"}
+    {let $data: [
+        'redirect': $params?.redirect
+    ] /}
+
     <div class="b-search b-search_theme_{$params.theme}"
-        data-params="{lb}&quot;redirect&quot;:{$params.redirect}{rb}"
+        data-params="{call goog.json.serialize data="$data" /}"
     >
         {if $params.theme == 'main'}
             //TODO: uncomment
