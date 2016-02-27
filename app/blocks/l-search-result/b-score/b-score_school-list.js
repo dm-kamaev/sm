@@ -215,6 +215,8 @@ goog.scope(function() {
      * @private
      */
     Score.prototype.criterionClickHandler_ = function(event) {
+        event.preventDefault();
+
         this.dispatchEvent({
             'type': Score.Event.CLICK
         });
