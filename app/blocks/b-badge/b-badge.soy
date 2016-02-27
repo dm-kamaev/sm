@@ -55,11 +55,14 @@
  * }}
  */
 {template .metroItem_}
-    <a href="/search?name=метро%20{$params.station}&metroId={$params.id}"
-        class="b-badge__item
-            b-badge__item_active">
+    {let $data: [
+        'id': $params.id
+    ] /}
+
+    <div class="b-badge__item b-badge__item_active"
+         data-params="{call goog.json.serialize data="$data" /}">
         {$params.station}
-    </a>
+    </div>
 {/template}
 
 /**
