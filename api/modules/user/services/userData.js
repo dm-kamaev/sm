@@ -49,7 +49,7 @@ service.checkKey = async(function(schoolId, key) {
         }
     }));
     var i = relatedRating.length;
-    while (--i && !commented) {
+    while (i-- && !commented) {
         commented = lodash.some(relatedUserData, function(userData) {
             return userData.id === relatedRating[i].userDataId;
         });
