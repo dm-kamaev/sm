@@ -1,7 +1,7 @@
 goog.provide('sm.bHeader.Header');
 
-goog.require('goog.dom');
 goog.require('cl.iControl.Control');
+goog.require('goog.dom');
 goog.require('sm.bHeader.View');
 
 

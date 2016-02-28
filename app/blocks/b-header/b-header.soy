@@ -17,7 +17,9 @@
  */
 {template .base autoescape="strict" kind="html"}
     <div class="b-header">
-        <div class="b-header__fader"></div>
+        <div class="b-header__fader i-animate"></div>
+
+        <div class="b-header__bg"></div>
 
         <div class="b-header__body">
             {call .advancedSearchLink_ data="all" /}
@@ -42,7 +44,7 @@
  */
 {template .advancedSearchLink_ private="true" autoescape="strict" kind="html"}
     {if not ($params.notShowLink)}
-        <div class="b-header__link-search">
+        <div class="b-header__link-search i-animate">
             {call sm.bLink.Template.base}
                 {param params: [
                     'data': [
@@ -63,7 +65,7 @@
  * }}
  */
 {template .logo_ private="true" autoescape="strict" kind="html"}
-    <div class="b-header__title">
+    <div class="b-header__title i-animate">
         <span class="b-header__stars">
             <span class="b-header__star b-header__star_first">t</span>
             <span class="b-header__star b-header__star_second">t</span>
@@ -100,34 +102,40 @@
  */
 {template .search_ private="true" autoescape="strict" kind="html"}
     {if $params.url}
-        {call sm.bIcon.Template.icon}
-            {param params: [
-                'type': 'search',
-                'customClasses': 'b-header__button b-header__button_search'
-            ] /}
-        {/call}
+        <div class="b-header__button-search-holder i-animate">
+            {call sm.bIcon.Template.icon}
+                {param params: [
+                    'type': 'search',
+                    'customClasses': 'b-header__button b-header__button_search'
+                ] /}
+            {/call}
+        </div>
 
-        {call sm.bSearch.Template.base}
-            {param params: [
-                'placeholder': 'Найти школу',
-                'text': $params?.searchText,
-                'theme': 'min',
-                'redirect': $params?.searchRedirect,
-                'templates': [
-                    'search': $params?.templates.search,
-                    'item': $params?.templates.item,
-                    'text': $params?.templates.text,
-                    'value': $params?.templates.value
-                ],
-                'customClasses': 'b-header__search'
-            ]/}
-        {/call}
+        <div class="b-header__search-holder i-animate">
+            {call sm.bSearch.Template.base}
+                {param params: [
+                    'placeholder': 'Найти школу',
+                    'text': $params?.searchText,
+                    'theme': 'min',
+                    'redirect': $params?.searchRedirect,
+                    'templates': [
+                        'search': $params?.templates.search,
+                        'item': $params?.templates.item,
+                        'text': $params?.templates.text,
+                        'value': $params?.templates.value
+                    ],
+                    'customClasses': 'b-header__search'
+                ]/}
+            {/call}
+        </div>
 
-        {call sm.bIcon.Template.icon}
-            {param params: [
-                'type': 'close-15x15',
-                'customClasses': 'b-header__button b-header__button_close'
-            ] /}
-        {/call}
+        <div class="b-header__button-close-holder">
+            {call sm.bIcon.Template.icon}
+                {param params: [
+                    'type': 'close-15x15',
+                    'customClasses': 'b-header__button b-header__button_close i-animate'
+                ] /}
+            {/call}
+        </div>
     {/if}
 {/template}

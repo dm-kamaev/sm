@@ -2,12 +2,12 @@ goog.provide('sm.iFactory.TemplateFactoryStendhal');
 goog.provide('sm.iFactory.TemplateFactoryStendhal.INSTANCE');
 
 goog.require('cl.iFactory.TemplateFactory');
+goog.require('sm.bHeader.Template');
 goog.require('sm.gDropdown.DropdownSelectTemplate');
 goog.require('sm.gHint.TemplateStendhal');
 goog.require('sm.gInput.DigitInputTemplate');
 goog.require('sm.gList.SelectTemplate');
 goog.require('sm.gTab.TemplateStendhal');
-goog.require('sm.bHeader.Template');
 
 /**
  * Template factory

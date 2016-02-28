@@ -2,8 +2,8 @@ goog.provide('sm.bHeader.View');
 
 goog.require('cl.iControl.View');
 
-goog.require('goog.dom.classes');
 goog.require('cl.iUtils.Utils');
+goog.require('goog.dom.classes');
 
 
 /**
@@ -31,6 +31,7 @@ goog.scope(function() {
     View.CssClass = {
         ROOT: 'b-header',
         SEARCH_MODE: 'b-header_mode_search',
+        DEFAULT_MODE: 'b-header_mode_default',
         SEARCH_BUTTON: 'b-header__button_search',
         CLOSE_BUTTON: 'b-header__button_close',
         FADER: 'b-header__fader'
@@ -74,10 +75,19 @@ goog.scope(function() {
     };
 
 
-    View.prototype.searchButtonClick_ = function() {
+    /**
+     * Search button click handler
+     * @param {object} event
+     * @private
+     */
+    View.prototype.searchButtonClick_ = function(event) {
         goog.dom.classes.add(
             this.getElement(),
             View.CssClass.SEARCH_MODE
+        );
+        goog.dom.classes.remove(
+            this.getElement(),
+            View.CssClass.DEFAULT_MODE
         );
 
         goog.dom.classes.add(
@@ -87,10 +97,19 @@ goog.scope(function() {
     };
 
 
-    View.prototype.closeButtonClick_ = function() {
+    /**
+     * Close button click handler
+     * @param {object} event
+     * @private
+     */
+    View.prototype.closeButtonClick_ = function(event) {
         goog.dom.classes.remove(
             this.getElement(),
             View.CssClass.SEARCH_MODE
+        );
+        goog.dom.classes.add(
+            this.getElement(),
+            View.CssClass.DEFAULT_MODE
         );
 
         goog.dom.classes.remove(
