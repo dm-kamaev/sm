@@ -44,6 +44,7 @@ goog.inherits(sm.bSearch.Search, goog.ui.Component);
 
 goog.scope(function() {
     var Search = sm.bSearch.Search;
+    var Suggest = gorod.gSuggest.Suggest;
 
     /**
      * CSS-class enum
@@ -161,50 +162,7 @@ goog.scope(function() {
                     elem.abbreviation;
             },
 
-            renderItem: function(item, str) {
-                var result,
-                    Suggest = gorod.gSuggest.Suggest;
-
-                str = str || '';
-
-                /**
-                 * Finds entry
-                 * @param {string} name
-                 */
-                var findEntry = function(name) {
-                    return Suggest.findEntry(name, str);
-                };
-
-                if (findEntry(item.name)) {
-                    result = item.name;
-                } else if (findEntry(item.fullName)) {
-                    result = item.fullName;
-                } else if (findEntry(item.abbreviation)) {
-                    result = item.abbreviation;
-                } else {
-                    return '';
-                }
-
-                result = result ? '<span class="b-search__list-name">' +
-                    result +
-                    '</span>' :
-                    '';
-
-                if (item.hasOwnProperty('addresses')) {
-                    result += ' <span class="b-search__list-area">' +
-                        item.addresses
-                        .map(function(address) {
-                            return address.area.name;
-                        })
-                        .reduce(function(prev, curr) {
-                            return (prev.indexOf(' ' + curr) < 0) ?
-                                prev.concat([' ' + curr]) : prev;
-                        }, []) +
-                        '</span>';
-                }
-
-                return result;
-            }
+            renderItem: this.renderItem_.bind(this)
         });
      };
 
@@ -224,6 +182,75 @@ goog.scope(function() {
             this.onSubmit_.bind(this)
         );
     };
+
+
+    /**
+     * Render suggest item
+     * @param {object} item - School or metro or area item
+     * @param {string} str - Search str
+     * @return {string}
+     * @private
+     */
+    Search.prototype.renderItem_ = function(item, str) {
+        var res = '';
+
+        var name = this.renderItemName_(item, str);
+        if (name) {
+            res = sm.bSearch.Template.item({
+                params: {
+                    type: item.type,
+                    name: name,
+                    areas: this.renderItemAreas_(item),
+                    totalScore: item.totalScore
+                }
+            });
+        }
+
+        return res;
+    };
+
+
+    /**
+     * Render suggest item name
+     * @param {object} item - School or metro or area item
+     * @param {string} str - Search str
+     * @return {string}
+     * @private
+     */
+    Search.prototype.renderItemName_ = function(item, str) {
+        var res = '';
+
+        if (Suggest.findEntry(item.name, str)) {
+            res = item.name;
+        } else if (Suggest.findEntry(item.fullName, str)) {
+            res = item.fullName;
+        } else if (Suggest.findEntry(item.abbreviation, str)) {
+            res = item.abbreviation;
+        }
+
+        return res;
+    };
+
+
+    /**
+     * Render suggest item areas
+     * @param {object} item - School or metro or area item
+     * @return {string}
+     * @private
+     */
+    Search.prototype.renderItemAreas_ = function(item) {
+        var addresses = item.addresses || [],
+            areas = addresses
+                .map(function(address) {
+                    return address.area.name;
+                })
+                .filter(function(area, index, areas) {
+                    return areas.indexOf(area) == index;
+                });
+
+        return areas.join(', ');
+    };
+
 
     /**
      * gets DOM elements
@@ -266,6 +293,9 @@ goog.scope(function() {
      * @param {Object} data
      */
     Search.prototype.itemClickHandler_ = function(event, data) {
+        this.suggest_.setText(data.item.name);
+        this.suggest_.blur();
+
         if (data.item.type === 'schools') {
             document.location.href = '/school/' + data.item.url;
         } else if (this.dataParams_.redirect) {
@@ -275,7 +305,8 @@ goog.scope(function() {
                 type: Search.Event.ITEM_SELECT,
                 data: {
                     id: data.item.id,
-                    type: data.item.type
+                    type: data.item.type,
+                    text: data.item.name
                 }
             });
         }
@@ -337,7 +368,7 @@ goog.scope(function() {
      */
     Search.prototype.onNotSchoolSelect_ = function(event, data) {
         var url = '/search' +
-                '?name=' + this.getValue();
+                '?name=' + data.text;
         if (data.item.type === 'metro') {
             url += '&metroId=' + data.item.id;
         } else if (data.item.type === 'areas') {

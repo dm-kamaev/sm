@@ -39,9 +39,9 @@
         </span>
         <br>
         config: [<br>
-            <div class="b-block-mark__code-indent">bigText: ?boolean
+            <div class="b-block-mark__code-indent">size: ?string | ['l', 'm', 's']
                 <span class="b-block-mark__comment">
-                     - Make font size marks bigger
+                     - Block size (currently works only for display: inline)
                 </span>
             </div>
             <div class="b-block-mark__code-indent">notShowDashes: ?boolean
@@ -113,14 +113,14 @@
 
 
         <div class="b-block-mark__inline">
-            Inline (for display: inline and bigText = true) example:
+            Inline (for display: inline and size = 'l') example:
             <br>
             {call sm.bMark.Template.base}
                 {param params: [
                     'value': 4.4,
                     'display': 'inline',
                     'config': [
-                        'bigText': true
+                        'size': 'l'
                     ]
                 ] /}
             {/call}
@@ -130,7 +130,7 @@
                     'value': 3.2,
                     'display': 'inline',
                     'config': [
-                        'bigText': true
+                        'size': 'l'
                     ]
                 ] /}
             {/call}
@@ -140,7 +140,7 @@
                     'value': 2.1,
                     'display': 'inline',
                     'config': [
-                        'bigText': true
+                        'size': 'l'
                     ]
                 ] /}
             {/call}
@@ -148,7 +148,53 @@
             {call sm.bMark.Template.base}
                 {param params: [
                     'value': 0,
-                    'display': 'inline'
+                    'display': 'inline',
+                    'config': [
+                        'size': 'l'
+                    ]
+                ] /}
+            {/call}
+        </div>
+
+        <div class="b-block-mark__inline">
+            Inline (for display: inline and size = 's') example:<br>
+            {call sm.bMark.Template.base}
+                {param params: [
+                    'value': 4.4,
+                    'display': 'inline',
+                    'config': [
+                        'size': 's'
+                    ]
+                ] /}
+            {/call}
+            <br>
+            {call sm.bMark.Template.base}
+                {param params: [
+                    'value': 3.2,
+                    'display': 'inline',
+                    'config': [
+                        'size': 's'
+                    ]
+                ] /}
+            {/call}
+            <br>
+            {call sm.bMark.Template.base}
+                {param params: [
+                    'value': 2.1,
+                    'display': 'inline',
+                    'config': [
+                        'size': 's'
+                    ]
+                ] /}
+            {/call}
+            <br>
+            {call sm.bMark.Template.base}
+                {param params: [
+                    'value': 0,
+                    'display': 'inline',
+                    'config': [
+                        'size': 's'
+                    ]
                 ] /}
             {/call}
         </div>

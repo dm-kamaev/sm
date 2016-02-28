@@ -1,3 +1,5 @@
+@import "../i-media/i-media";
+
 .b-diagram {
     display: inline-block;
 
@@ -17,9 +19,10 @@
 
     width: 40%;
 
+	font-family: 'Proxima', Arial, sans-serif;
     color: #000000;
-    font-weight: 500;
-    font-size: 14px;
+    font-weight: 700;
+    font-size: 15px;
 }
 
 .b-diagram__value {
@@ -89,9 +92,21 @@
 
 .b-diagram_bars {
     .b-diagram__item {
-        width: 33.33%;
+        width: 20%;
         padding: 0;
         margin-bottom: 23px;
+
+        vertical-align: top;
+    }
+
+    .b-diagram__bar-wrap {
+        position: relative;
+
+        display: inline-block;
+
+        width: 100px;
+
+        cursor: pointer;
     }
 
     .b-diagram__bar {
@@ -100,13 +115,16 @@
     }
 
     .b-diagram__number-value {
+        position: relative;
+        top: 2px;
+
         display: inline-block;
 
         box-sizing: border-box;
-        width: 16%;
+        width: 50px;
 
         text-align: center;
-        font-size: 14px;
+        font-size: 11.5px;
         font-family: Arial;
         color: #6f6f6d;
         vertical-align: top;
@@ -130,19 +148,22 @@
         position: relative;
 
         box-sizing: border-box;
-        width: 40%;
+        width: 100%;
+        margin-bottom: 6px;
 
-        font-size: 14px;
+        font-size: 13px;
+        letter-spacing: 0.03em;
         font-family: Arial;
+        font-weight: 500;
         vertical-align: top;
-        text-align: right;
+        text-align: left;
     }
 
     .b-diagram__value {
         position: relative;
 
-        width: 32%;
-        height: 22px;
+        width: 100%;
+        height: 24px;
 
         vertical-align: top;
     }
@@ -169,11 +190,11 @@
         height: 1px;
     }
 
-    .b-diagram__bar-filled:hover {
+    .b-diagram__bar-wrap:hover .b-diagram__bar-filled {
         height: 9px;
     }
 
-    .b-diagram__bar-filled:hover ~ .b-diagram__circle {
+    .b-diagram__bar-wrap:hover .b-diagram__circle {
         top: 4px;
     }
 
@@ -186,33 +207,27 @@
         display: none;
     }
 
-    .b-diagram__bar-filled:hover ~ .b-diagram__tooltip {
+    .b-diagram__bar-wrap:hover .b-diagram__tooltip,
+    .b-diagram__tooltip_shown {
         display: inline-block;
     }
 
-    .b-diagram__tooltip-description {
+    .b-diagram__tooltip-content {
         position: relative;
+        top: 10px;
         left: -20px;
-        top: 0;
         z-index: 2;
 
         width: 186px;
         height: 62px;
 
-        color: #000000;
         background-color: #ffffff;
-        font-family: Arial;
         box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.25);
-    }
 
-    .b-diagram__tooltip-content {
-        position: relative;
-        z-index: 5;
-
-        width: 100%;
-        height: 100%;
-
-        background-color: #ffffff;
+        font-size: 13px;
+        font-weight: 500;
+        font-family: Arial;
+        letter-spacing: -0.01em;
     }
 
     .b-diagram__tooltip-average-mark {
@@ -231,9 +246,9 @@
 
     .b-diagram__tooltip-arrow {
         position: absolute;
-        top: -10px;
+        top: 0;
         left: 0;
-        z-index: 1;
+        z-index: 3;
 
         width: 10px;
         height: 10px;
@@ -244,9 +259,9 @@
 
     .b-diagram__tooltip-arrow-shadow {
         position: absolute;
-        top: 0;
-        left: 20px;
-        z-index: 3;
+        top: 10px;
+        left: 0;
+        z-index: 1;
 
         width: 20px;
         height: 10px;
@@ -259,16 +274,65 @@
     }
 
     .b-diagram__item-description {
-        position: relative;
-        top: 5px;
-        left: 0;
+        display: inline-block;
 
-        box-sizing: border-box;
-        width: 100%;
+        margin-left: 14px;
 
         font-size: 12px;
         font-weight: 400;
         color: #6f6f6d;
-        text-align: right;
+    }
+}
+
+@include media-xl {
+    .b-diagram_bars {
+        .b-diagram__item {
+            width: 33%;
+        }
+    }
+}
+
+@include media-l {
+    .b-diagram_bars {
+        .b-diagram__item {
+            width: 50%;
+        }
+    }
+}
+
+@include media-s {
+    .b-diagram_bars {
+        .b-diagram__number-value {
+            width: 26px;
+
+            font-size: 12px;
+            text-align: right;
+        }
+
+        .b-diagram__item-description {
+            display: block;
+
+            margin-top: 5px;
+            margin-left: 0;
+        }
+    }
+}
+
+@include media-xs {
+    .b-diagram_bars {
+        .b-diagram__bar-wrap {
+            width: 85px;
+        }
+
+        .b-diagram__item:nth-child(even) {
+            box-sizing: border-box;
+            padding-left: 13px;
+        }
+
+        .b-diagram__item:nth-child(even) {
+            .b-diagram__tooltip-content {
+                left: -124px;
+            }
+        }
     }
 }

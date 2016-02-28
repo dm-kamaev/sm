@@ -40,6 +40,24 @@
 	font-size: 11px;
 }
 
+.b-score__inform {
+	margin-top: 5px;
+	margin-bottom: 12px;
+
+	font-family: Proxima, arial, sans-serif;
+	font-weight: 700;
+	font-size: 15px;
+	color: #000;
+
+	&.b-score__inform_place-comment {
+		color: #ee362c;
+		cursor: pointer;
+	}
+
+	&:last-child {
+		margin-bottom: 0;
+	}
+}
 
 @include media-s {
   	.b-score__section.b-score__section_left {

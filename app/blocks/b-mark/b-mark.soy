@@ -5,11 +5,12 @@
  * @param params {{
  *     value: number,
  *     display: ?string,
- *     starsConfig: ?[],
- *     config: [
- *         bigText: bool,
- *         notShowDashes: bool
- *     ]
+ *     starsConfig: ?{},
+ *     config: ?{
+ *         customClasses: ?string,
+ *         size: ?string | ['l', 'm', 's'],
+ *         zeroSign: ?string
+ *     }
  * }}
  */
 {template .base}
@@ -27,20 +28,20 @@
     {/let}
     <div class="b-mark{sp}
                 b-mark_{$color}{sp}
-                {$params?.display == 'inline' ? 'b-mark_inline' : ''}{sp}
-                {$params?.display == 'number' ? 'b-mark_number' : ''}{sp}
-                {if $params.config}
-                    {$params?.config.bigText ? 'b-mark_big-text' : ''}{sp}
-                    {$params?.config.bigText ? 'b-mark_no-dash' : ''}
+                {if $params?.display}
+                    b-mark_{$params?.display}{sp}
                 {/if}
+                {if $params?.config?.size}
+                    b-mark_size_{$params?.config?.size}{sp}
+                {/if}
+                {if $params.value == 0 and
+                    $params?.config?.zeroSign == 'question-mark'}
+                    b-mark_question{sp}
+                {/if}
+                {$params?.config?.customClasses ?: ''}
                 ">
         {if $params?.display == 'inline'}
-            {call .inline}
-                {param params: [
-                    'value': $value,
-                    'config': $params.config
-                ]/}
-            {/call}
+            {call .inline data="all" /}
         {elseif $params?.display == 'stars'}
             {call .stars}
                 {param params: [
@@ -55,11 +56,7 @@
                 ]/}
             {/call}
         {else}
-            {call .simple}
-                {param params: [
-                    'value': $value
-                ]/}
-            {/call}
+            {call .simple data="all" /}
         {/if}
     </div>
 {/template}
@@ -68,6 +65,9 @@
  * Simple
  * @param params {{
  *     value: number
+ *     config: [
+ *         zeroSign: string
+ *     ]
  * }}
  */
 {template .simple}
@@ -83,7 +83,7 @@
  * @param params {{
  *     value: number
  *     config: [
- *         showDashes: bool
+ *         zeroSign: string
  *     ]
  * }}
  */
@@ -134,7 +134,7 @@
  * @param params {{
  *     value: number
  *     config: [
- *         notShowDashes: bool
+ *         zeroSign: string
  *     ]
  * }}
  */
@@ -145,6 +145,11 @@
             ,{round(($params.value - floor($params.value))*10, 0)}
         {/if}
     {else}
-        {$params?.config?.notShowDashes ? '' : '—'}
+        {if $params?.config?.zeroSign == 'nothing'}
+        {elseif $params?.config?.zeroSign == 'question-mark'}
+            ?
+        {else}
+            —
+        {/if}
     {/if}
 {/template}

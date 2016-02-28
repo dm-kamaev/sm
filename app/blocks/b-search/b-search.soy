@@ -1,23 +1,34 @@
 {namespace sm.bSearch.Template}
+
+/**
+ * Search parameters
+ * @typedef {object} sm.bSearch.Template.Params
+ * @property {?string} text
+ * @property {?string} placeholder
+ * @property {?string} theme
+ * @property {?boolean} autofocus
+ * @property {?boolean} redirect
+ * @property {?object} templates
+ * @property {?string} templates.search
+ * @property {?string} templates.item
+ * @property {?string} templates.text
+ * @property {?string} templates.value
+ * @property {?string} customClasses
+ */
+
 /**
  * Search template
- * @param? params {
- *    autofocus: ?bool,
- *    placeholder: ?string,
- *    text: ?string,
- *    theme: ?string,
- *    redirect: ?bool,
- *    templates: ?{
- *        search: ?string,
- *        item: ?string,
- *        text: ?string,
- *        value: ?string
- *    }
- * }
+ * @param? params {sm.bSearch.Template.Params}
  */
 {template .base autoescape="strict" kind="html"}
-    <div class="b-search b-search_theme_{$params.theme}"
-        data-params="{lb}&quot;redirect&quot;:{$params.redirect}{rb}"
+    {let $data: [
+        'redirect': $params?.redirect
+    ] /}
+
+    <div class="b-search
+                b-search_theme_{$params.theme}{sp}
+                {$params.customClasses}"
+        data-params="{call goog.json.serialize data="$data" /}"
     >
         {if $params.theme == 'main'}
             //TODO: uncomment
@@ -39,7 +50,7 @@
                     'argName': 'searchString'
                 ],
                 'config': [
-                    'customClasses': 'b-search__input',
+                    'customClasses': 'b-search__suggest',
                     'filtrationEnabled': false,
                     'templates': [
                         'search': $params?.templates.search,
@@ -49,10 +60,12 @@
                     ]
                 ],
                 'list': [
+                    'extraClasses': 'b-search__list',
                     'theme': 'stendhal',
                     'color': 'sienna'
                 ],
                 'input': [
+                    'customClasses': 'b-search__input',
                     'style': [
                         'theme': 'stendhal'
                     ]
@@ -60,4 +73,89 @@
             ]/}
         {/call}
     </div>
+{/template}
+
+
+/**
+ * Search suggest item
+ * @param? params {{
+ *     type: string,
+ *     name: string,
+ *     areas: ?string,
+ *     totalScore: ?number
+ * }}
+ */
+{template .item autoescape="strict" kind="html"}
+    <span class="b-search__item b-search__item_type_{$params.type}">
+        {call .itemIcon_ data="all" /}
+        <span class="b-search__list-name">{$params.name}</span>
+        {if $params.areas}
+            <span class="b-search__list-area">{$params.areas}</span>
+        {/if}
+    </span>
+{/template}
+
+
+/**
+ * Search suggest item icon
+ * @param? params {{
+ *     type: string,
+ *     totalScore: ?number
+ * }}
+ */
+{template .itemIcon_ private="true" autoescape="strict" kind="html"}
+    {switch $params.type}
+        {case 'schools'}
+            {call .itemIconSchool_ data="all" /}
+        {case 'metro'}
+            {call .itemIconMetro_ /}
+        {case 'areas'}
+            {call .itemIconArea_ /}
+    {/switch}
+{/template}
+
+
+/**
+ * Search suggest school icon
+ * @param? params {{
+ *     totalScore: ?number
+ * }}
+ */
+{template .itemIconSchool_ private="true" autoescape="strict" kind="html"}
+    {call sm.bMark.Template.base}
+        {param params: [
+            'value': $params.totalScore,
+            'display': 'inline',
+            'config': [
+                'size': 's',
+                'customClasses': 'b-search__item-icon'
+            ]
+        ] /}
+    {/call}
+{/template}
+
+
+/**
+ * Search suggest metro icon
+ */
+{template .itemIconMetro_ private="true" autoescape="strict" kind="html"}
+    {call sm.bIcon.Template.icon}
+        {param params: [
+            'type': 'metro',
+            'customClasses': ['b-search__item-icon']
+        ] /}
+    {/call}
+{/template}
+
+
+/**
+ * Search suggest area icon
+ */
+{template .itemIconArea_ private="true" autoescape="strict" kind="html"}
+    {call sm.bIcon.Template.icon}
+        {param params: [
+            'type': 'location',
+            'customClasses': ['b-search__item-icon']
+        ] /}
+    {/call}
 {/template}

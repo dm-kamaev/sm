@@ -5,8 +5,8 @@ goog.require('goog.events');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
 goog.require('sm.bRating.Rating');
+goog.require('sm.bScore.Score');
 goog.require('sm.bSearch.Search');
-goog.require('sm.iEvercookie.Evercookie');
 goog.require('sm.lSchool.bComment.Comment');
 goog.require('sm.lSchool.bComments.Comments');
 goog.require('sm.lSchool.bDataBlockFoldList.FoldList');
@@ -45,17 +45,19 @@ sm.lSchool.School = function(opt_params) {
     this.search_ = null;
 
     /**
+     * Score instance
+     * @type {sm.bScore.Score}
      * @private
-     * @type {object} Evercookie instance
      */
-    this.evercookie_ = sm.iEvercookie.Evercookie.getInstance();
+    this.score_ = null;
 };
 goog.inherits(sm.lSchool.School, goog.ui.Component);
 
 goog.scope(function() {
     var School = sm.lSchool.School,
         FoldList = sm.lSchool.bDataBlockFoldList.FoldList,
-        Results = sm.lSchool.bResults.Results;
+        Results = sm.lSchool.bResults.Results,
+        Score = sm.bScore.Score;
 
 
     /**
@@ -98,8 +100,6 @@ goog.scope(function() {
     School.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
-        this.evercookie_.getClientId();
-
         this.initElements_(element);
 
         this.initChildren_();
@@ -130,6 +130,12 @@ goog.scope(function() {
                 this.onClick_
             );
         }
+
+        handler.listen(
+            this.score_,
+            Score.Event.PLACE_COMMENT_CLICK,
+            this.onClick_
+        );
     };
 
 
@@ -187,18 +193,27 @@ goog.scope(function() {
             foldListInstance.decorate(foldList);
         }
 
-        if (this.elements_.search) {
-            this.search_ = new sm.bSearch.Search();
-            this.addChild(this.search_);
-            this.search_.decorate(this.elements_.search);
-        }
+        this.search_ = new sm.bSearch.Search();
+        this.addChild(this.search_);
+        this.search_.decorate(this.elements_.search);
 
         /**
          * results
          */
-        var results = new Results();
-        this.addChild(results);
-        results.decorate(this.getElementByClass(Results.CssClass.ROOT));
+        var resultElement = this.getElementByClass(Results.CssClass.ROOT);
+
+        if (resultElement) {
+            var results = new Results();
+            this.addChild(results);
+            results.decorate(resultElement);
+        }
+
+        /**
+         * score
+         */
+        this.score_ = new Score();
+        this.addChild(this.score_);
+        this.score_.decorate(this.getElementByClass(Score.CssClass.ROOT));
     };
 
     /**
@@ -227,7 +242,7 @@ goog.scope(function() {
             foldLists: this.getElementsByClass(
                 sm.lSchool.bDataBlockFoldList.FoldList.CssClass.ROOT
             ),
-            search: this.getElementByClass(
+            search: goog.dom.getElementByClass(
                 sm.bSearch.Search.CssClass.ROOT
             )
         };

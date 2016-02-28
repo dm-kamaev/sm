@@ -151,28 +151,41 @@
 {template .listHeader_}
     <div class="l-search-result__list-header{sp}
                 {$clone ? 'l-search-result__list-header_clone' : ''}">
-        <span class="l-search-result__list-header-text">
-            {if length($params.searchText)}
+        {call .listHeaderText data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Text of header for list of schools
+ * @param? params {
+ *     countResults: ?number,
+ *     searchText: ?string
+ * }
+ */
+{template .listHeaderText}
+    <span class="l-search-result__list-header-text">
+        {if length($params.searchText)}
             По запросу{sp}
             <span class="l-search-result__list-header-text
                          l-search-result__list-header-text_strong">
                 «{$params.searchText}»
             </span>{sp}
-            {else}
+        {else}
             По вашему запросу{sp}
-            {/if}
-            мы{sp}
-            <span class="l-search-result__list-header-text
-                         l-search-result__list-header-text_change">
-                {call .generateHeaderText}
-                    {param params: [
-                        'countResults': $params.countResults
-                    ] /}
-                {/call}
-            </span>
+        {/if}
+        мы{sp}
+        <span class="l-search-result__list-header-text
+                     l-search-result__list-header-text_change">
+            {call .generateHeaderText}
+                {param params: [
+                    'countResults': $params.countResults
+                ] /}
+            {/call}
         </span>
-    </div>
+    </span>
 {/template}
+
 
 /**
  * Generates header text for school list

@@ -104,6 +104,7 @@
                 'header': [
                     'searchText': $params.searchText,
                     'url': '/',
+                    'searchRedirect': true,
                     'templates': [
                         'search': $params.searchTemplates?.search,
                         'item': $params.searchTemplates?.item,
@@ -614,13 +615,19 @@
  * @param params {?}
  */
 {template .results_ autoescape="strict" kind="html"}
-    <div id="results" class="l-school__section l-school__section_results">
-        {call sm.lSchool.bResults.Template.results}
-            {param params: [
-                'data': $params.data.results
-            ]/}
-        {/call}
-    </div>
+    {if
+        $params?.data?.results?.ege?.years?.length or
+        $params?.data?.results?.gia?.years?.length or
+        $params?.data?.results?.olymp?.years?.length
+    }
+        <div id="results" class="l-school__section l-school__section_results">
+            {call sm.lSchool.bResults.Template.results}
+                {param params: [
+                    'data': $params.data.results
+                ]/}
+            {/call}
+        </div>
+    {/if}
 {/template}
 
 

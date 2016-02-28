@@ -28,6 +28,12 @@
 
 .b-comment__rating-group {
     display: inline-block;
+
+    margin-right: 30px;
+
+    &:last-child {
+        margin-right: 0;
+    }
 }
 
 .b-comment__wrap{
@@ -37,6 +43,10 @@
     margin: 0 0 10px 0;
 
     word-wrap: break-word;
+}
+
+.b-comment__text{
+    white-space: pre-line;
 }
 
 .b-comment__text_hidden{

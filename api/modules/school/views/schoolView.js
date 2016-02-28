@@ -30,7 +30,7 @@ schoolView.default = function(schoolInstance, results, opt_popularSchools) {
 
     var addresses = services.department.addressesFilter(schoolInstance.addresses),
         comments = schoolInstance.comments,
-        score = schoolInstance.score || [0, 0, 0, 0],
+        score = getSections(schoolInstance.score, true),
         scoreCount = schoolInstance.scoreCount || [0, 0, 0, 0];
 
     var result = {
@@ -57,7 +57,7 @@ schoolView.default = function(schoolInstance, results, opt_popularSchools) {
         addresses: addressView.default(addresses),
         ratings: ratingView.ratingSchoolView(
             schoolInstance.rank, schoolInstance.rankDogm),
-        score: getSections(score),
+        score: checkScoreValues(score) ? score : false,
         totalScore: schoolInstance.totalScore,
         results: {
             ege: egeResultView.transformResults(
@@ -207,20 +207,23 @@ var getSites = function(sites) {
 
 /**
  *  @param {array<object>} addresses
- *  @param {array<string>} phones
+ *  @param {array<string>} opt_phones
  *  @return {object}
  */
-var getContacts = function(addresses, phones) {
+var getContacts = function(addresses, opt_phones) {
+    var phones = opt_phones || [];
+
     return {
         stages: addressView.stageList(addresses, {
             filterByDepartment: true
         }),
-        phones: phones || ''
+        phones: phones
+            .map(phone => '8 ' + phone) // TODO: move to db
     };
 };
 
 /**
- *  @param {array<object>} comments
+ *  @param {array<object>=} comments
  *  @return {array<object>}
  */
 var getComments = function(comments) {
@@ -246,11 +249,14 @@ var getComments = function(comments) {
 };
 
 /**
- *  @param {array<object>} Ratings array to convert
+ *  @param {array<object>=} opt_array Ratings to convert
+ *  @param {boolean=} opt_withoutEmptySections
  *  @return {array<object>}
  */
-var getSections = function(array) {
-    return array ? array.map((item, index) => {
+var getSections = function(opt_array, opt_withoutEmptySections) {
+    var array = opt_array || [0, 0, 0, 0];
+
+    var sections = array.map((item, index) => {
         var type = [
             'Образование',
             'Преподаватели',
@@ -261,7 +267,11 @@ var getSections = function(array) {
             name: type[index],
             value: item
         };
-    }).filter(item => item.value) : [];
+    });
+
+    return opt_withoutEmptySections ?
+        sections.filter(item => item.value) :
+        sections;
 };
 
 
@@ -416,14 +426,14 @@ schoolView.suggestList = function(schools) {
 /**
  * Check if all scores of item is 0
  * @param {Array<Object>} score
- * @param {Object} sortCriterion
+ * @param {Object} opt_sortCriterion
  * @return {boolean}
  * @private
  */
-var checkScoreValues = function(score, sortCriterion) {
+var checkScoreValues = function(score, opt_sortCriterion) {
     var result = false;
 
-    if (sortCriterion.value !== 0) {
+    if (opt_sortCriterion && opt_sortCriterion.value !== 0) {
         result = true;
     }
 
@@ -532,7 +542,7 @@ var groupSchools = function(schools) {
  * @return {Array<Object>}
  */
 var getScore = function(score, totalScore, opt_criterion) {
-    var scoreItems = getSections(score || [0,0,0,0]),
+    var scoreItems = getSections(score),
         sortCriterionIndex = opt_criterion ? opt_criterion : 0;
 
     scoreItems.unshift({

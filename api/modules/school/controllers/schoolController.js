@@ -214,8 +214,21 @@ exports.createComment = async (function(req, res) {
     try {
         var schoolId = req.params.id,
             params = req.body;
-        result = await(services.school.review(schoolId, params));
-        console.log(result);
+
+        var isCommented = await(services.userData.checkKey(
+            schoolId, params.key
+        ));
+
+        if (isCommented) {
+            result = [{
+                code: 1,
+                message: 'Вы уже оставляли отзыв у этой школы.'
+            }];
+            res.statusCode = 400;
+        } else {
+            result = await(services.school.review(schoolId, params));
+        }
+
     } catch (e) {
         console.log(e);
         result = JSON.stringify(e);
@@ -252,7 +265,7 @@ exports.search = async (function(req, res) {
     var result = '';
     try {
         var params = req.query;
-        
+
         if(params.searchParams) {
             var criterion = params.searchParams.sortType;
         }

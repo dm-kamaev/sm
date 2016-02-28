@@ -1,95 +1,41 @@
-﻿.b-header {
-    z-index: auto;
+﻿@import "../i-media/i-media";
+@import "../i-animate/i-animate";
 
-    display: inline-block;
+/* layout */
+.b-header {
+    z-index: auto;
 
     width: 100%;
     height: 70px;
 
     text-align: center;
-
+    background: #fff;
     box-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
 
     font-family: 'Proxima', Arial, sans-serif;
 }
 
+.b-header__bg {
+    position: absolute;
+    z-index: 10;
+    top: 0;
+    left: 0;
+
+    display: block;
+
+    height: 70px;
+    width: 100%;
+
+    background: #fff;
+}
+
 .b-header__body {
     position: relative;
+    z-index: 15;
 
     max-width: 1200px;
     height: 100%;
     margin: 0 auto;
-}
-
-.b-header__link-search {
-    position: absolute;
-    top: 27px; //28
-    left: 0;
-
-    display: inline-block;
-}
-
-// .b-header__menu {
-//     display: inline-block;
-//     float: left;
-
-//     width: 5%;
-//     height: 100%;
-//     max-width: 62px;
-// }
-
-.b-header__main {
-    display: inline-block;
-
-    height: 100%;
-    margin: 0 auto;
-
-    vertical-align: top;
-
-    font-weight: bold;
-}
-
-.b-header__search {
-    position: absolute;
-    top: 20px;
-    right: 0;
-
-    display: inline-block;
-
-    box-sizing: border-box;
-    width: 275px;
-
-    border: 1px solid #CCC;
-}
-
-.b-header__menu-image {
-    position: relative;
-    top: 25px;
-
-    float: left;
-}
-
-.b-header__search-image{
-    width: 100%;
-    height: 100%;
-
-    background: url(images/b-header/search.png) no-repeat right;
-}
-
-.b-header__line {
-    width: 0;
-    height: 50%;
-    margin-top: 16px;
-
-    border: 1px solid rgba(0, 0, 0, 0.08);
-}
-
-.b-header__line_right {
-    float: right;
-}
-
-.b-header__line_left {
-    float: left;
 }
 
 .b-header__wrap {
@@ -100,6 +46,47 @@
     vertical-align: middle;
 }
 
+.b-header__main {
+    position: absolute;
+    left: 0;
+
+    display: inline-block;
+
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+
+    vertical-align: top;
+
+    font-weight: bold;
+}
+
+.b-header__fader {
+    position: fixed;
+    z-index: 10;
+    top: 0;
+    left: 0;
+
+    visibility: hidden;
+
+    width: 100%;
+    height: 100%;
+
+    background: rgba(0, 0, 0, 0.5);
+}
+/* layout end */
+
+/* advanced search link */
+.b-header__link-search {
+    position: absolute;
+    top: 27px; //28
+    left: 0;
+
+    display: inline-block;
+}
+/* advanced search link end */
+
+/* logo */
 .b-header__title {
     margin-top: 4px;
 }
@@ -170,9 +157,48 @@
 .b-header__star_fifth {
     font-size: 15px;
 }
+/* logo end */
 
-@media screen and (max-width: 1280px) // for desktop and tablet
-{
+/* search */
+.b-header__search {
+    position: absolute !important;
+    top: 20px;
+    right: 0;
+
+    display: inline-block;
+
+    box-sizing: border-box;
+    width: 275px;
+
+    border: 1px solid #ccc;
+}
+
+.b-header__button {
+    position: absolute;
+    z-index: 10;
+    top: 50%;
+
+    margin-top: -9px;
+
+    cursor: pointer;
+
+    &.b-header__button_search,
+    &.b-header__button_close {
+        right: -7px;
+
+        visibility: hidden;
+    }
+}
+
+/* TODO: clean up */
+.b-header .b-list.b-list_stendhal-theme .b-list__item {
+    padding: 0;
+}
+/* clean up end */
+
+/* search end */
+
+@include media-xl {
     .b-header {
         padding: 0 40px;
 
@@ -184,27 +210,189 @@
     }
 }
 
-@media screen and (max-width: 1000px) // for desktop and tablet
-{
+
+@include media-l {
     .b-header__stars {
         display: none;
     }
 }
 
-@media screen and (max-device-width: 600px) // for phone
-and (orientation: portrait),
-screen and (max-width: 600px) // for desktop
-{
+@include media-m {
+    .b-header__search {
+        display: none;
+    }
+
+    .b-header__button.b-header__button_search {
+        visibility: visible;
+    }
+
+    .b-header__button-search-holder {
+        height: 100%;
+    }
+
+    .b-header_mode_search,
+    .b-header_mode_default {
+        /* TODO: clean up */
+        .b-header__search {
+            top: 0;
+            bottom: 0;
+            left: -40px;
+
+            display: block;
+
+            width: 100%;
+            height: 100%;
+            padding: 0 40px;
+
+            box-sizing: content-box;
+            border: none;
+        }
+
+        .b-search_theme_min .b-search__suggest {
+            position: absolute;
+            left: 0;
+
+            padding-left: 53px;
+        }
+
+        .b-search__item {
+            border-top: 1px solid #e5e5e5;
+
+            line-height: 70px;
+        }
+
+        .b-search__item-icon {
+            left: 31px;
+        }
+
+        .b-search__item {
+            padding: 0 60px;
+        }
+
+        .b-search__icon {
+            display: none;
+        }
+
+        .b-list.b-list_stendhal-theme,
+        .b-list.b-list_stendhal-theme .b-list__item {
+            padding: 0;
+
+            box-shadow: none;
+            border: none;
+            border-radius: 0;
+        }
+
+        .b-input__input_size_medium {
+            font-size: 14px;
+        }
+        /* clean up end */
+    }
+
+    .b-header_mode_search {
+        .b-header__title,
+        .b-header__link-search {
+            visibility: hidden;
+        }
+
+        .b-header__button_close {
+            visibility: visible;
+        }
+
+        .b-header__button.b-header__button_search {
+            right: auto;
+            left: -7px;
+        }
+    }
+
+    .b-header_mode_search.b-header_animation_on {
+        /* animations begin */
+        .b-header__button-search-holder {
+            animation-delay: 0.5s;
+            animation-name: slideInRight;
+        }
+
+        .b-header__title,
+        .b-header__link-search {
+            animation-name: fadeOut;
+        }
+
+        .b-header__button_close {
+            animation-delay: 0.5s;
+            animation-name: zoomIn;
+        }
+
+        .b-header__fader {
+            animation-name: fadeIn;
+        }
+
+        .b-header__search-holder {
+            animation-delay: 0.5s;
+            animation-name: fadeIn;
+        }
+        /* animations end */
+    }
+
+    .b-header_mode_default {
+        .b-header__search {
+            display: none;
+        }
+
+        .b-header__search {
+            visibility: visible;
+        }
+    }
+
+    .b-header_mode_default.b-header_animation_on {
+        .b-header__button-search-holder {
+            animation-name: slideInLeft;
+        }
+
+        .b-header__button_close {
+            animation-name: zoomOut;
+        }
+
+        .b-header__title,
+        .b-header__link-search {
+            animation-name: fadeIn;
+        }
+
+        .b-header__fader {
+            animation-name: fadeOut;
+        }
+    }
+}
+
+@include media-s {
+    .b-header,
+    .b-header__bg {
+        height: 55px;
+    }
+
+    .b-header__wrap {
+        margin-top: 12px;
+    }
+
+    .b-header__link-search {
+        display: none;
+    }
+
     .b-header {
         padding: 0 30px;
 
         text-align: left;
     }
 
-    .b-header__link-search {
-        display: none;
+    .b-header_mode_search .b-header__search,
+    .b-header_mode_default .b-header__search {
+        left: -30px;
+
+        padding: 0 30px;
     }
+
+    /* TODO: clean up */
+    .b-header_mode_search .b-search__item,
+    .b-header_mode_default .b-search__item {
+        line-height: 55px;
+    }
+    /* clean up end */
 }
-
-
-

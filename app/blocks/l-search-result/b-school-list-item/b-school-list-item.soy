@@ -18,30 +18,30 @@
  *         value: ?number
  *     ],
  *     description: ?string,
- *     metroStations: ?list<string>,
+ *     metroStations: ?list<[
+ *         id: number,
+ *         name: string
+ *     ]>,
  *     ratings: ?list<string>,
  *     isScoreClickable: ?boolean
  * }
  */
 {template .base autoescape="strict" kind="html"}
-    <div class="b-school-list-item"
-        data-params="
+    <a href="/school/{$params.url}" data-params="
         {call cl.iUtils.Utils.stringify}
             {param json: $params /}
         {/call}
-        ">
+        " target="_blank" class="b-school-list-item">
 
         <div class="b-school-list-item__section">
-            <a href="/school/{$params.url}"
-               class="b-school-list-item__name"
-               target="_blank">
+            <div class="b-school-list-item__name">
                 {$params.name.light}
                 {if $params.name.bold}
                     <span class="b-school-list-item__name_bold">
                         {$params.name.bold}
                     </span>
                 {/if}
-            </a>
+            </div>
 
             <div class="b-school-list-item__score">
                 {call sm.bScoreSchoolList.Template.base}
@@ -60,10 +60,10 @@
                 {if length($params.metroStations) > 0}
                     <div class="b-school-list-item__metro-stations">
                         {call sm.bBadge.Template.base}
-                        {param params:[
-                            'data': $params.metroStations,
-                            'display': 'metro'
-                        ]/}
+                            {param params:[
+                                'data': $params.metroStations,
+                                'display': 'metro'
+                            ]/}
                         {/call}
                     </div>
                 {/if}
@@ -89,5 +89,5 @@
                 </div>
             </div>
         {/if}
-    </div>
+    </a>
 {/template}
