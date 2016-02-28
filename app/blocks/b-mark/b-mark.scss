@@ -158,4 +158,8 @@
     .b-mark_inline .b-mark__circle {
         display: none;
     }
+
+    .b-mark_inline.b-mark_size_s .b-mark__circle {
+        display: inline-block;
+    }
 }

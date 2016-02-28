@@ -3,6 +3,8 @@ goog.provide('sm.iFactory.FactoryStendhal');
 goog.require('cl.iFactory.Factory');
 goog.require('sm.gDropdown.DropdownSelect');
 goog.require('sm.gDropdown.DropdownSelectView');
+goog.require('sm.bHeader.Header');
+goog.require('sm.bHeader.View');
 goog.require('sm.gInput.DigitInput');
 goog.require('sm.gInput.DigitInputView');
 goog.require('sm.gList.SelectList');
@@ -37,6 +39,11 @@ sm.iFactory.FactoryStendhal = function() {
     this.setControlListItem('textarea-check', {
         control: cl.gTextarea.Textarea,
         view: sm.gTextarea.TextareaCheckView
+    });
+
+    this.setControlListItem('header', {
+        control: sm.bHeader.Header,
+        view: sm.bHeader.View
     });
 
 };

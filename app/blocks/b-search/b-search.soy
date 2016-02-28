@@ -13,6 +13,7 @@
  * @property {?string} templates.item
  * @property {?string} templates.text
  * @property {?string} templates.value
+ * @property {?string} customClasses
  */
 
 /**
@@ -24,7 +25,9 @@
         'redirect': $params?.redirect
     ] /}
 
-    <div class="b-search b-search_theme_{$params.theme}"
+    <div class="b-search
+                b-search_theme_{$params.theme}{sp}
+                {$params.customClasses}"
         data-params="{call goog.json.serialize data="$data" /}"
     >
         {if $params.theme == 'main'}
@@ -47,7 +50,7 @@
                     'argName': 'searchString'
                 ],
                 'config': [
-                    'customClasses': 'b-search__input',
+                    'customClasses': 'b-search__suggest',
                     'filtrationEnabled': false,
                     'templates': [
                         'search': $params?.templates.search,
@@ -57,10 +60,12 @@
                     ]
                 ],
                 'list': [
+                    'extraClasses': 'b-search__list',
                     'theme': 'stendhal',
                     'color': 'sienna'
                 ],
                 'input': [
+                    'customClasses': 'b-search__input',
                     'style': [
                         'theme': 'stendhal'
                     ]

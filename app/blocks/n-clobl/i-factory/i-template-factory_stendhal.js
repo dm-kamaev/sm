@@ -7,6 +7,7 @@ goog.require('sm.gHint.TemplateStendhal');
 goog.require('sm.gInput.DigitInputTemplate');
 goog.require('sm.gList.SelectTemplate');
 goog.require('sm.gTab.TemplateStendhal');
+goog.require('sm.bHeader.Template');
 
 /**
  * Template factory
@@ -38,6 +39,11 @@ sm.iFactory.TemplateFactoryStendhal = function() {
     this.setTemplateListItem(
         'digit-input',
         sm.gInput.DigitInputTemplate.input
+    );
+
+    this.setTemplateListItem(
+        'header',
+        sm.bHeader.Template.base
     );
 };
 goog.inherits(sm.iFactory.TemplateFactoryStendhal, cl.iFactory.TemplateFactory);
