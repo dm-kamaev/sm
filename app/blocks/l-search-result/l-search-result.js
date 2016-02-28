@@ -223,14 +223,12 @@ goog.scope(function() {
             type: event.method
         };
 
-        var isSchool = (params.data.searchParams.areaId ||
-                params.data.searchParams.metroId) ?
-                    false :
-                    true;
-
         this.updateSearchSettings_(params);
         this.searchSettings_.data.page = 0;
         this.sendQuery_(true);
+
+        this.filters_.collapse();
+        window.scrollTo(0, 0);
     };
 
     /**
@@ -352,7 +350,7 @@ goog.scope(function() {
         for (var i = 0, elem; elem = this.textChangeElements_[i]; i++) {
             goog.soy.renderElement(
                 elem,
-                sm.lSearchResult.Template.listHeader, {
+                sm.lSearchResult.Template.listHeaderText, {
                     params: {
                         countResults: data.countResults,
                         searchText: this.search_.getValue()

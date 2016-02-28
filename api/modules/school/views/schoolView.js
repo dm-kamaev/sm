@@ -207,15 +207,18 @@ var getSites = function(sites) {
 
 /**
  *  @param {array<object>} addresses
- *  @param {array<string>} phones
+ *  @param {array<string>} opt_phones
  *  @return {object}
  */
-var getContacts = function(addresses, phones) {
+var getContacts = function(addresses, opt_phones) {
+    var phones = opt_phones || [];
+
     return {
         stages: addressView.stageList(addresses, {
             filterByDepartment: true
         }),
-        phones: phones || ''
+        phones: phones
+            .map(phone => '8 ' + phone) // TODO: move to db
     };
 };
 
