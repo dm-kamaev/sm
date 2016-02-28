@@ -28,6 +28,12 @@
 
 .b-comment__rating-group {
     display: inline-block;
+
+    margin-right: 30px;
+
+    &:last-child {
+        margin-right: 0;
+    }
 }
 
 .b-comment__wrap{

@@ -30,7 +30,7 @@ schoolView.default = function(schoolInstance, results, opt_popularSchools) {
 
     var addresses = services.department.addressesFilter(schoolInstance.addresses),
         comments = schoolInstance.comments,
-        score = getSections(schoolInstance.score || [0, 0, 0, 0]),
+        score = getSections(schoolInstance.score, true),
         scoreCount = schoolInstance.scoreCount || [0, 0, 0, 0];
 
     var result = {
@@ -220,7 +220,7 @@ var getContacts = function(addresses, phones) {
 };
 
 /**
- *  @param {array<object>} comments
+ *  @param {array<object>=} comments
  *  @return {array<object>}
  */
 var getComments = function(comments) {
@@ -246,11 +246,14 @@ var getComments = function(comments) {
 };
 
 /**
- *  @param {array<object>} Ratings array to convert
+ *  @param {array<object>=} opt_array Ratings to convert
+ *  @param {boolean=} opt_withoutEmptySections
  *  @return {array<object>}
  */
-var getSections = function(array) {
-    return array ? array.map((item, index) => {
+var getSections = function(opt_array, opt_withoutEmptySections) {
+    var array = opt_array || [0, 0, 0, 0];
+
+    var sections = array.map((item, index) => {
         var type = [
             'Образование',
             'Преподаватели',
@@ -261,7 +264,11 @@ var getSections = function(array) {
             name: type[index],
             value: item
         };
-    }).filter(item => item.value) : [];
+    });
+
+    return opt_withoutEmptySections ?
+        sections.filter(item => item.value) :
+        sections;
 };
 
 
@@ -532,7 +539,7 @@ var groupSchools = function(schools) {
  * @return {Array<Object>}
  */
 var getScore = function(score, totalScore, opt_criterion) {
-    var scoreItems = getSections(score || [0,0,0,0]),
+    var scoreItems = getSections(score),
         sortCriterionIndex = opt_criterion ? opt_criterion : 0;
 
     scoreItems.unshift({
