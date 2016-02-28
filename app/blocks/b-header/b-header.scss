@@ -67,7 +67,7 @@
     top: 0;
     left: 0;
 
-    display: none;
+    visibility: hidden;
 
     width: 100%;
     height: 100%;
@@ -186,7 +186,7 @@
     &.b-header__button_close {
         right: -7px;
 
-        display: none;
+        visibility: hidden;
     }
 }
 
@@ -223,7 +223,7 @@
     }
 
     .b-header__button.b-header__button_search {
-        display: block;
+        visibility: visible;
     }
 
     .b-header__button-search-holder {
@@ -232,11 +232,6 @@
 
     .b-header_mode_search,
     .b-header_mode_default {
-        .b-header__fader,
-        .b-header__button.b-header__button_close {
-            display: block;
-        }
-
         /* TODO: clean up */
         .b-header__search {
             top: 0;
@@ -296,18 +291,24 @@
     .b-header_mode_search {
         .b-header__title,
         .b-header__link-search {
-            opacity: 0;
+            visibility: hidden;
+        }
+
+        .b-header__button_close {
+            visibility: visible;
         }
 
         .b-header__button.b-header__button_search {
             right: auto;
             left: -7px;
         }
+    }
 
+    .b-header_mode_search.b-header_animation_on {
         /* animations begin */
         .b-header__button-search-holder {
             animation-delay: 0.5s;
-            animation-name: widthBounceInLeft;
+            animation-name: slideInRight;
         }
 
         .b-header__title,
@@ -336,9 +337,14 @@
             display: none;
         }
 
-        /* animations begin */
+        .b-header__search {
+            visibility: visible;
+        }
+    }
+
+    .b-header_mode_default.b-header_animation_on {
         .b-header__button-search-holder {
-            animation-name: widthBounceInRight;
+            animation-name: slideInLeft;
         }
 
         .b-header__button_close {
@@ -353,11 +359,19 @@
         .b-header__fader {
             animation-name: fadeOut;
         }
-        /* animations end */
     }
 }
 
 @include media-s {
+    .b-header,
+    .b-header__bg {
+        height: 55px;
+    }
+
+    .b-header__wrap {
+        margin-top: 12px;
+    }
+
     .b-header__link-search {
         display: none;
     }
@@ -367,4 +381,18 @@
 
         text-align: left;
     }
+
+    .b-header_mode_search .b-header__search,
+    .b-header_mode_default .b-header__search {
+        left: -30px;
+
+        padding: 0 30px;
+    }
+
+    /* TODO: clean up */
+    .b-header_mode_search .b-search__item,
+    .b-header_mode_default .b-search__item {
+        line-height: 55px;
+    }
+    /* clean up end */
 }

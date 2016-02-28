@@ -4,6 +4,7 @@ goog.require('cl.iControl.View');
 
 goog.require('cl.iUtils.Utils');
 goog.require('goog.dom.classes');
+goog.require('sm.iAnimate.Animate');
 
 
 /**
@@ -30,6 +31,8 @@ goog.scope(function() {
      */
     View.CssClass = {
         ROOT: 'b-header',
+        ANIMATION_ON: 'b-header_animation_on',
+        ANIMATION_OFF: 'b-header_animation_off',
         SEARCH_MODE: 'b-header_mode_search',
         DEFAULT_MODE: 'b-header_mode_default',
         SEARCH_BUTTON: 'b-header__button_search',
@@ -51,6 +54,8 @@ goog.scope(function() {
 
         this.dom.fader =
             this.getElementByClass(View.CssClass.FADER);
+
+        this.detectAnimationSupportion_();
     };
 
     /**
@@ -71,6 +76,19 @@ goog.scope(function() {
             this.dom.fader,
             goog.events.EventType.CLICK,
             this.closeButtonClick_
+        );
+    };
+
+
+    /**
+     * Turn on animation if it is supported
+     * @private
+     */
+    View.prototype.detectAnimationSupportion_ = function() {
+        this.addCssClass(
+            sm.iAnimate.Animate.isSupported() ?
+                View.CssClass.ANIMATION_ON :
+                View.CssClass.ANIMATION_OFF
         );
     };
 
