@@ -690,7 +690,6 @@ service.list = async (function(opt_params) {
             'school.score_count AS "scoreCount"',
             'school.count_results AS "countResults"',
             'address.id AS "addressId"',
-            'department.stage AS "departmentStage"',
             'metro.id AS "metroId"',
             'metro.name AS "metroName"'
         ],
@@ -730,13 +729,14 @@ service.list = async (function(opt_params) {
                 limit: 10,
                 offset: params.page * 10
         },
-        where: [],
+        where: [
+            'address.is_school = true'
+        ],
         join: [
             {
                 type: 'LEFT OUTER',
                 values: [
                     'address on address.school_id = school.id',
-                    'department on department.address_id = address.id',
                     'address_metro on address_metro.address_id = address.id',
                     'metro on metro.id = address_metro.metro_id'
                 ]
@@ -747,7 +747,8 @@ service.list = async (function(opt_params) {
         order: [
             'school.total_score DESC',
             'school.score DESC NULLS LAST',
-            'school.id ASC'
+            'school.id ASC',
+            'address_metro.distance ASC'
         ],
         having: []
     };
