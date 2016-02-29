@@ -194,6 +194,8 @@ goog.scope(function() {
     Search.prototype.renderItem_ = function(item, str) {
         var res = '';
 
+        str = str || '';
+
         var name = this.renderItemName_(item, str);
         if (name) {
             res = sm.bSearch.Template.item({
