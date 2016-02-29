@@ -40,6 +40,17 @@ goog.scope(function() {
         FADER: 'b-header__fader'
     };
 
+
+    /**
+     * Header view events
+     * @enum {string}
+     */
+    View.Event = {
+        'DEFAULT_MODE_INITED': 'defaultModeInited',
+        'SEARCH_MODE_INITED': 'searchModeInited'
+    };
+
+
     /**
      * @override
      */
@@ -81,6 +92,46 @@ goog.scope(function() {
 
 
     /**
+     * Switch view to default mode
+     */
+    View.prototype.switchToDefaultMode = function() {
+        goog.dom.classes.remove(
+            this.getElement(),
+            View.CssClass.SEARCH_MODE
+        );
+        goog.dom.classes.add(
+            this.getElement(),
+            View.CssClass.DEFAULT_MODE
+        );
+
+        goog.dom.classes.remove(
+            document.documentElement,
+            Utils.CssClass.OVERFLOW_HIDDEN
+        );
+    };
+
+
+    /**
+     * Switch view to search mode
+     */
+    View.prototype.switchToSearchMode = function() {
+        goog.dom.classes.add(
+            this.getElement(),
+            View.CssClass.SEARCH_MODE
+        );
+        goog.dom.classes.remove(
+            this.getElement(),
+            View.CssClass.DEFAULT_MODE
+        );
+
+        goog.dom.classes.add(
+            document.documentElement,
+            Utils.CssClass.OVERFLOW_HIDDEN
+        );
+    };
+
+
+    /**
      * Turn on animation if it is supported
      * @private
      */
@@ -99,19 +150,7 @@ goog.scope(function() {
      * @private
      */
     View.prototype.searchButtonClick_ = function(event) {
-        goog.dom.classes.add(
-            this.getElement(),
-            View.CssClass.SEARCH_MODE
-        );
-        goog.dom.classes.remove(
-            this.getElement(),
-            View.CssClass.DEFAULT_MODE
-        );
-
-        goog.dom.classes.add(
-            document.documentElement,
-            Utils.CssClass.OVERFLOW_HIDDEN
-        );
+        this.dispatchEvent(View.Event.SEARCH_MODE_INITED);
     };
 
 
@@ -121,18 +160,6 @@ goog.scope(function() {
      * @private
      */
     View.prototype.closeButtonClick_ = function(event) {
-        goog.dom.classes.remove(
-            this.getElement(),
-            View.CssClass.SEARCH_MODE
-        );
-        goog.dom.classes.add(
-            this.getElement(),
-            View.CssClass.DEFAULT_MODE
-        );
-
-        goog.dom.classes.remove(
-            document.documentElement,
-            Utils.CssClass.OVERFLOW_HIDDEN
-        );
+        this.dispatchEvent(View.Event.DEFAULT_MODE_INITED);
     };
 });
