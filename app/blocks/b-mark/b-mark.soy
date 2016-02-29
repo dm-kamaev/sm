@@ -140,9 +140,10 @@
  */
 {template .value}
     {if $params.value > 0}
-        {floor($params.value)}
-        {if floor($params.value) != $params.value}
-            ,{round(($params.value - floor($params.value))*10, 0)}
+        {let $value: round($params.value, 1) /}
+        {floor($value)}
+        {if $value*10 % 10 != 0}
+            ,{$value*10 % 10}
         {/if}
     {else}
         {if $params?.config?.zeroSign == 'nothing'}
