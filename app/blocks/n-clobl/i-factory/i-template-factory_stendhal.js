@@ -8,6 +8,7 @@ goog.require('sm.gHint.TemplateStendhal');
 goog.require('sm.gInput.DigitInputTemplate');
 goog.require('sm.gList.SelectTemplate');
 goog.require('sm.gTab.TemplateStendhal');
+goog.require('sm.gTextarea.TemplateStendhal');
 
 /**
  * Template factory
@@ -19,6 +20,11 @@ sm.iFactory.TemplateFactoryStendhal = function() {
     this.setTemplateListItem(
         'tab',
         sm.gTab.TemplateStendhal.tab
+    );
+
+    this.setTemplateListItem(
+        'textarea',
+        sm.gTextarea.TemplateStendhal.textarea
     );
 
     this.setTemplateListItem(

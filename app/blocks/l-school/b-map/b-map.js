@@ -213,12 +213,11 @@ goog.scope(function() {
             ymapsPromise = this.getYmapsPromise_();
 
         viewportPromise.then(this.onShown_.bind(this));
+
         goog.Promise.all([
             viewportPromise,
             ymapsPromise
-        ]).then(this.onReady_.bind(this));
-
-        dataPromise.then(this.onDataLoaded_.bind(this));
+        ]).then(this.onReady_.bind(this, dataPromise));
     };
 
 
@@ -291,10 +290,9 @@ goog.scope(function() {
      */
     Map.prototype.onDataLoaded_ = function(data) {
         this.setCurrentPresets_(Map.PresetType.POINT);
-        this.placemarks_ = this.getAllPlacemarkCollection_(data);
-
-        //point placemarks
-        this.objectManager_.add(this.placemarks_);
+        this.objectManager_.add(
+            this.getAllPlacemarkCollection_(data)
+        );
     };
 
 
@@ -326,6 +324,9 @@ goog.scope(function() {
             this.onPlacemarkClick_,
             this
         );
+
+        //point placemarks
+        dataPromise.done(this.onDataLoaded_.bind(this));
     };
 
     /**
