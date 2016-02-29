@@ -1,4 +1,4 @@
-.g-textarea.g-textarea_stendhal {
+.g-textarea.g-textarea_stendhal.g-textarea_auto-height {
     .g-textarea__textarea,
     .g-textarea__text-container {
         box-shadow: inset 0 0 5px 0 rgba(0, 0, 0, 0.2);
@@ -12,7 +12,7 @@
 
         -webkit-appearance: none;
     }
-    
+
     .g-textarea__textarea::-webkit-input-placeholder,
     .g-textarea__textarea::-moz-placeholder,
     .g-textarea__textarea:-moz-placeholder,
@@ -22,4 +22,28 @@
         color: #cccccc;
         font-size: 16px;
     }
+
+    .g-textarea__counter {
+        text-align: right;
+        font-size: 12px;
+        margin-top: 15px;
+        color: #cccccc;
+    }
+
+    .g-textarea__counter_warning {
+        color: #e2332a;
+    }
+
+    .g-textarea__count,
+    .g-textarea__counter-custom-text-symbols,
+    .g-textarea__counter-custom-text-left {
+        display: inline;
+    }
+}
+
+.g-textarea.g-textarea_stendhal.g-textarea_not-valid {
+	.g-textarea__textarea,
+	.g-textarea__text-container {
+		outline: 4px solid #e2332a;
+	}
 }

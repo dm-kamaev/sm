@@ -222,7 +222,7 @@ goog.scope(function() {
         );
 
         this.textarea_ = factory.decorate(
-            'textarea-check',
+            'textarea',
             goog.dom.getElementByClass(
                 cl.gTextarea.View.CssClass.ROOT,
                 this.modal_.getElement()
