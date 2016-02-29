@@ -18,6 +18,11 @@
 }
 
 .b-link-article__link {
+    position: relative;
+    z-index: 1;
+
+    display: inline-block;
+
     text-decoration: none;
     color: #000;
 }
@@ -26,6 +31,9 @@
     width: 100%;
     margin-bottom: 17px;
 
+    -webkit-transition: all .3s ease;
+    -moz-transition: all .3s ease;
+    -o-transition: all .3s ease;
     transition: all .3s ease;
 }
 
