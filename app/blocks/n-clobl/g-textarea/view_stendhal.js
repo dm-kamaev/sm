@@ -32,6 +32,10 @@ goog.scope(function() {
         COUNTER_CUSTOM_TEXT_LEFT: 'g-textarea__counter-custom-text-left'
     };
 
+    /**
+     * @override
+     * @param {Element} element
+     */
     View.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
@@ -44,7 +48,11 @@ goog.scope(function() {
         );
     };
 
-    View.prototype.updateCounter = function (count) {
+    /**
+     * @override
+     * @param {number} count
+     */
+    View.prototype.updateCounter = function(count) {
         goog.base(this, 'updateCounter', count);
 
         this.dom.counterCustomTextSymbols.innerHTML = Utils.declensionPrint({
