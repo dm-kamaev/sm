@@ -114,6 +114,11 @@ gulp.task('sprite', function() {
     return gulpHelper.sprite.build([{
         src: path.join(__dirname, BLOCKS_DIR, '/b-icon/b-icon_img/*.png'),
         name: 'b-icon_auto-sprite',
+        retina: {
+            name: 'b-icon_auto-sprite@2x',
+            filters: [path.join(__dirname, BLOCKS_DIR, '/b-icon/b-icon_img/*@2x.png')],
+            imgPath: '/images/b-icon_auto-sprite@2x.png'
+        },
         imgPath: '/images/b-icon_auto-sprite.png',
         cssDest: path.join(__dirname, BLOCKS_DIR, '/b-icon'),
         pngDest: path.join(__dirname, '/public/images')

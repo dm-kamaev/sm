@@ -223,6 +223,8 @@ goog.scope(function() {
             type: event.method
         };
 
+        params.data.searchParams.name = this.search_.getValue();
+
         this.updateSearchSettings_(params);
         this.searchSettings_.data.page = 0;
         this.sendQuery_(true);
