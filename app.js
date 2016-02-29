@@ -63,15 +63,18 @@ app.use(express.static(path.join(__dirname, '/public')));
 
 
 app.use('/', modules.school.router);
-app.use('/doc', modules.doc.router);
 app.use('/api', api.comment.router);
 app.use('/api', api.school.router);
 app.use('/api', api.geo.router);
-app.use('/', api.debug.router);
 
-app.use('/apidoc', express.static(path.join(__dirname, '/doc')));
-app.use('/api-debug', express.static(path.join(__dirname, '/api-debug')));
+var env = process.env.NODE_ENV;
 
+if ( !(env === 'production' || env === 'prod') ) {
+    app.use('/doc', modules.doc.router);
+    app.use('/', api.debug.router);
+    app.use('/apidoc', express.static(path.join(__dirname, '/doc')));
+    app.use('/api-debug', express.static(path.join(__dirname, '/api-debug')));
+}
 
 async(function() {
     var startupControl = new StartupControl({
