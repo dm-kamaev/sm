@@ -47,6 +47,8 @@ goog.scope(function() {
      */
     Filters.CssClass = {
         ROOT: 'b-filters',
+        STATE_EXPANDED: 'b-filters_state_expanded',
+        STATE_COLLAPSED: 'b-filters_state_collapsed',
         EXPANDER: 'b-filters__expander',
         COLLAPSER: 'b-filters__collapser',
         CONTENT: 'b-filters__content',
@@ -182,16 +184,22 @@ goog.scope(function() {
      * Expand filters
      */
     Filters.prototype.expand = function() {
-        goog.style.setStyle(this.elements_.expander, 'display', 'none');
-        goog.style.setStyle(this.elements_.content, 'display', 'block');
+        goog.dom.classes.swap(
+            this.getElement(),
+            Filters.CssClass.STATE_COLLAPSED,
+            Filters.CssClass.STATE_EXPANDED
+        );
     };
 
     /**
      * Collapse filters
      */
     Filters.prototype.collapse = function() {
-        goog.style.setStyle(this.elements_.expander, 'display', 'block');
-        goog.style.setStyle(this.elements_.content, 'display', 'none');
+        goog.dom.classes.swap(
+            this.getElement(),
+            Filters.CssClass.STATE_EXPANDED,
+            Filters.CssClass.STATE_COLLAPSED
+        );
     };
 
     /**
