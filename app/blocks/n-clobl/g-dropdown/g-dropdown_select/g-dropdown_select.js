@@ -62,10 +62,17 @@ goog.scope(function() {
      */
     DropdownSelect.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
+
         this.getHandler().listen(
             this.listInstance_,
             cl.gList.List.Event.ITEM_SELECT,
             this.onListItemSelect_
+        );
+
+        this.getHandler().listen(
+            document.body,
+            goog.events.EventType.CLICK,
+            this.onOutsideClick_
         );
     };
 
@@ -112,5 +119,16 @@ goog.scope(function() {
             'type': DropdownSelect.Event.ITEM_SELECT,
             'itemId': event['itemId']
         });
+    };
+
+    /**
+     * Handler for click on dropdown
+     * @param {Object} event
+     * @private
+     */
+    DropdownSelect.prototype.onOutsideClick_ = function(event) {
+        if (!goog.dom.getAncestorByClass(event.target, 'g-dropdown__opener')) {
+            this.close();
+        }
     };
 });
