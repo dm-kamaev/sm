@@ -44,7 +44,8 @@
 }
 
 .b-search_theme_main .b-search__input {
-    height: 100%;
+    height: auto;
+    margin-top: 7px; 
 
     box-shadow: none;
 }
