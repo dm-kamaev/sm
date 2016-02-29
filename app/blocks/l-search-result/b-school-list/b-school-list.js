@@ -133,7 +133,8 @@ goog.scope(function() {
                 'id': params.id,
                 'score': params.score,
                 'currentCriterion': params.currentCriterion,
-                'isScoreClickable': params.isScoreClickable
+                'isScoreClickable': params.isScoreClickable,
+                'url': params.url
             });
 
 
@@ -217,7 +218,7 @@ goog.scope(function() {
      */
     SchoolList.prototype.scrollHandler_ = function() {
         if (goog.dom.getViewportSize().height +
-                goog.dom.getDocumentScroll().y ==
+                goog.dom.getDocumentScroll().y >=
                 goog.dom.getDocumentHeight()) {
 
             this.dispatchEvent(SchoolList.Event.SHOW_MORE);

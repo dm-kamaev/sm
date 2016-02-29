@@ -3,9 +3,9 @@
 var colors = require('colors');
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
-var models = require.main.require('./app/components/models').all;
-var services = require.main.require('./app/components/services').all;
-var sequelize = require.main.require('./app/components/db');
+var models = require('../../../../app/components/models').all;
+var services = require('../../../../app/components/services').all;
+var sequelize = require('../../../../app/components/db');
 var searchTypeEnum = require('../enums/searchType');
 var schoolTypeEnum = require('../enums/schoolType');
 var departmentTypeEnum = require('../../geo/enums/departmentStage');
@@ -275,6 +275,20 @@ service.getAddressDepartments = async(function(school_id, address_id) {
     return department;
 });
 
+/**
+ * Get school by comment group id
+ * @param {number} groupId
+ * @return {Object} School instance or undefined
+ */
+service.getSchoolByGrouId = async( function(groupId) {
+    var school = await (models.School.findOne({
+        where: {
+            commentGroupId: groupId
+        }
+    }));
+    return school;
+});
+
 
 service.getGroupId = async (function(school) {
     var instance = school;
@@ -315,6 +329,7 @@ service.onRatingChange = async(function(schoolId) {
         await(this.updateReviewCount(school));
         await(this.updateScore(school));
     } catch (e) {
+        console.log(e);
     }
 });
 
@@ -524,69 +539,21 @@ service.findBySite = async(function(site) {
  * @public
  */
 service.viewOne = function(id) {
-    var include =
-        [{
-            model: models.Address,
-            as: 'addresses',
-            include: [
-                {
-                    model: models.Department,
-                    as: 'departments'
-                },
-                {
-                    model: models.AddressMetro,
-                    as: 'addressMetroes',
-                    include: [
-                        {
-                            model: models.Metro,
-                            as: 'metroStation'
-                        }
-                    ]
-                }
-            ]
-        }, {
-            model: models.Rating,
-            as: 'ratings'
-        }, {
-            model: models.CommentGroup,
-            as: 'commentGroup',
-            include: [{
-                model: models.Comment,
-                as: 'comments',
-                include: [{
-                    model: models.Rating,
-                    as: 'rating'
-                }, {
-                    model: models.UserData,
-                    as: 'userData'
-                }]
-            }]
-        }, {
-            model: models.Activity,
-            as: 'activites',
-            attributes: [
-                'profile',
-                'type'
-            ]
-        }];
     var school = await(models.School.findOne({
-        where: {id: id},
-        include: include,
-        order: [
-            [
-                {
-                    model: models.Address,
-                    as: 'addresses'
-                },
-                {
-                    model: models.AddressMetro,
-                    as: 'addressMetroes'
-                },
-                'distance',
-                'ASC'
-            ]
-        ]
+        where: { id: id }
     }));
+
+    var resultPromises = {
+        activities: services.activity.getActivities(id),
+        comments: services.comment.getComments(school.commentGroupId),
+        addresses: services.address.getWithDepartmentsWithMetro(id, true, true)
+    };
+
+    var result = await(resultPromises);
+
+    school.comments = result.comments;
+    school.activities = result.activities;
+    school.addresses = result.addresses;
 
     return school;
 };
@@ -614,7 +581,9 @@ service.review = async(function(schoolId, params) {
         var userData = {
             userType: params.userType,
             yearGraduate: params.yearGraduate,
-            classType: params.classType
+            classType: params.classType,
+            key: params.key,
+            username: params.username
         };
 
         var userDataInstance = await(services.userData.create(userData));

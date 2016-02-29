@@ -1,5 +1,6 @@
 goog.provide('sm.lSearchResult.bSchoolListItem.SchoolListItem');
 
+goog.require('goog.dom.dataset');
 goog.require('goog.events');
 goog.require('goog.ui.Component');
 goog.require('sm.bRating.Rating');
@@ -40,6 +41,12 @@ sm.lSearchResult.bSchoolListItem.SchoolListItem = function(opt_params) {
     this.id_ = this.params_.id;
 
     /**
+     * @private
+     * @type {string}
+     */
+    this.url_ = this.params_.url;
+
+    /**
      * scoreInstance
      * @private
      * @type {sm.bScoreSchoolList.ScoreSchoolList}
@@ -49,9 +56,15 @@ sm.lSearchResult.bSchoolListItem.SchoolListItem = function(opt_params) {
     /**
      * defines whether score is clickable
      * @private
-     * @type boolean
+     * @type {boolean}
      */
     this.isScoreClickable_ = this.params_.isScoreClickable;
+
+    /**
+     * @private
+     * @type {?array<object>}
+     */
+    this.metro_ = [];
 };
 goog.inherits(sm.lSearchResult.bSchoolListItem.SchoolListItem,
     goog.ui.Component);
@@ -65,7 +78,8 @@ goog.scope(function() {
      *  @enum {String}
      */
     ListItem.CssClass = {
-        ROOT: 'b-school-list-item'
+        ROOT: 'b-school-list-item',
+        LINK_NAME: 'b-school-list-item__name_bold'
     };
 
     /**
@@ -213,6 +227,8 @@ goog.scope(function() {
         });
         this.addChild(this.scoreInstance_);
         this.scoreInstance_.decorate(scoreElement);
+
+        this.metro_ = this.getElementsByClass('b-badge__item_active');
     };
 
     /**
@@ -224,22 +240,28 @@ goog.scope(function() {
 
         var handler = this.getHandler();
 
-        handler.listen(
-            this.getElement(),
-            goog.events.EventType.CLICK,
-            this.itemClickHandler_
-        );
+        for (var i = 0; i < this.metro_.length; i++) {
+            handler.listen(
+                this.metro_[i],
+                goog.events.EventType.CLICK,
+                this.metroClickHandler_
+            );
+        }
     };
 
     /**
-     * Click handler
+     * Metro click handler
+     * @param {Object} event
      * @private
      */
-    ListItem.prototype.itemClickHandler_ = function() {
-        this.dispatchEvent({
-            'type': ListItem.Event.CLICK,
-            'itemId': this.id_
-        });
+    ListItem.prototype.metroClickHandler_ = function(event) {
+        event.preventDefault();
+        var params = JSON.parse(
+            goog.dom.dataset.get(event.currentTarget, 'params')
+        );
+
+        document.location.href = '/search?name=' + event.target.textContent +
+            '&metroId=' + params['id'];
     };
 
     /**

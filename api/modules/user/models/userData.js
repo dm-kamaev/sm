@@ -15,6 +15,18 @@ var UserData = db.define('UserData', {
     yearGraduate: {
         type: DataType.INTEGER,
         field: 'year_graduate'
+    },
+    userId: {
+        field: 'user_id',
+        type: DataType.INTEGER
+    },
+    key: {
+        field: 'key',
+        type: DataType.STRING
+    },
+    username: {
+        field: 'username',
+        type: DataType.STRING
     }
 }, {
     underscored: true,
@@ -34,4 +46,3 @@ var UserData = db.define('UserData', {
 });
 
 module.exports = UserData;
-

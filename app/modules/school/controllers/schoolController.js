@@ -94,7 +94,7 @@ exports.list = async (function(req, res) {
         }
     };
 
-    var html = soy.render('sm.lSearchResult.Template.base', params);
+    var html = soy.render('sm.lSearchResult.Template.list', params);
 
     res.header('Content-Type', 'text/html; charset=utf-8');
     res.end(html);
@@ -112,25 +112,24 @@ exports.view = async (function(req, res) {
         } else if (url != schoolInstance.url) {
             res.redirect(schoolInstance.url);
         } else {
-            var results = {
-                ege: await(
-                    services.egeResult.getAllBySchoolId(schoolInstance.id)
-                ),
-                gia: await(
-                    services.giaResult.getAllBySchoolId(schoolInstance.id)
-                ),
-                olymp: await(
-                    services.olimpResult.getAllBySchoolId(schoolInstance.id)
-                ),
-                city: await(services.cityResult.getAll())
-            };
+            var resPromises = {
+                    ege: services.egeResult.getAllBySchoolId(schoolInstance.id),
+                    gia: services.giaResult.getAllBySchoolId(schoolInstance.id),
+                    olymp: services.olimpResult.getAllBySchoolId(
+                        schoolInstance.id
+                    ),
+                    city: services.cityResult.getAll()
+                },
+                results = await(resPromises);
             var school = await(services.school.viewOne(schoolInstance.id));
             services.school.incrementViews(school.id);
             var popularSchools = await(services.school.getPopularSchools());
 
+            var date = new Date();
+
             res.header('Content-Type', 'text/html; charset=utf-8');
             res.end(
-                soy.render('sm.lSchool.Template.base', {
+                soy.render('sm.lSchool.Template.school', {
                 params: {
                     data:
                         schoolView.default(school, results, popularSchools),
@@ -139,6 +138,9 @@ exports.view = async (function(req, res) {
                         item: '{{ name }}',
                         text: '{{ name }}',
                         value: '{{ id }}'
+                    },
+                    config: {
+                        year: date.getFullYear()
                     }
                 }
             }));

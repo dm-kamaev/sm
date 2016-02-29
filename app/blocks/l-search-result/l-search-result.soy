@@ -1,134 +1,144 @@
 {namespace sm.lSearchResult.Template}
 
-/**
- * Search result template
- */
-{template .base autoescape="strict" kind="html"}
-    {@param params: [
-        data: [
-            schools: list<[
-                id: number,
-                url: string,
-                name: [
-                    light: string,
-                    bold: string
-                ],
-                score: list<[
-                    name: string,
-                    value: number
-                ]>,
-                currentCriterion: [
-                    name: string,
-                    value: number
-                ],
-                description: string,
-                ratings: list<string>,
-                metroStations: list<string>
-            ]>,
-            filters: [
-                filters: list<[
-                    data: [
-                        filters: list<[
-                            label: string,
-                            value: string
-                        ]>,
-                        header: [
-                            title: string,
-                            help: string
-                        ],
-                        name: string
-                    ],
-                    config:[
-                        cannotBeHidden: bool
-                    ]
-                ]>,
-                url: string
-            ]
-        ],
-        searchText: string,
-        countResults: number,
-        searchSettings: [
-            url: string,
-            method: string,
-            data: [
-                searcParams: [
-                    name: string,
-                    metroId: number,
-                    areaId: number
-                ],
-                page: number
-            ]
-        ],
-        templates: [
-            search: string,
-            item: string,
-            text: string,
-            value: string
-        ]
-    ]}
 
-    <!DOCTYPE html>
-    <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Результаты поиска на Школах Мела</title>
-            <link href='https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700,700italic&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
-            <link href='https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
-            <link rel="stylesheet" href="/clobl.build.css">
-            <link rel="stylesheet" href="/styles.css">
-            <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
-        </head>
-        <body>
-            <div class="l-search-result" data-params="
-                {call gorod.iUtils.stringify}
-                    {param json: $params.searchSettings /}
-                {/call}
-            ">
-                <div class="l-search-result__header">
-                    {call sm.bHeader.Template.base}
-                        {param params: [
-                            'url': '/',
-                            'searchText': $params.searchText,
-                            'searchRedirect': true,
-                            'templates': [
-                                'search': $params.templates.search,
-                                'item': $params.templates.item,
-                                'text': $params.templates.text,
-                                'value': $params.templates.value
-                            ],
-                            'notShowLink': 'true'
-                        ]/}
-                    {/call}
-                </div>
-                <div class="l-search-result__body">
-                    {call .listHeader_ data="all" /}
-                    {call .leftMenu_ data="all" /}
-                    <div class="l-search-result__results-section">
-                        <div class="l-search-result__list-body
-                            {$params.countResults ? '' : ' i-utils__hidden'}
-                        ">
-                            {call sm.lSearchResult.bSchoolList.Template.base}
-                                {param params: [
-                                    'schools': $params.data.schools
-                                ]/}
-                            {/call}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <script type="text/javascript"
-                    src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js">
-            </script>
-            <script type="text/javascript" src="/external.min.js"></script>
-            <script type="text/javascript">
-                var CLOSURE_NO_DEPS = true;
-            </script>
-            <script type="text/javascript" src="/l-search-result.js">
-            </script>
-        </body>
-    </html>
+/**
+ * Schools result list
+ * @param? params {{
+ *     data: {
+ *         schools: [{
+ *             id: number,
+ *             url: string,
+ *             name: {
+ *                 light: string,
+ *                 bold: string
+ *             },
+ *             score: [{
+ *                 name: string,
+ *                 value: number
+ *             }],
+ *             currentCriterion: {
+ *                 name: string,
+ *                 value: number
+ *             },
+ *             description: string,
+ *             ratings: string[],
+ *             metroStations: string[]
+ *         }],
+ *         filters: {
+ *             filters: [{
+ *                 data: {
+ *                     filters: [{
+ *                         label: string,
+ *                         value: string
+ *                     }],
+ *                      header: {
+ *                          title: string,
+ *                          help: string
+ *                      },
+ *                      name: string
+ *                  },
+ *                  config: {
+ *                      cannotBeHidden: bool
+ *                  }
+ *             }],
+ *             url: string
+ *         }
+ *     },
+ *     searchText: string,
+ *     countResults: number,
+ *     searchSettings: {
+ *         url: string,
+ *         method: string,
+ *         data: {
+ *             searcParams: {
+ *                 name: string,
+ *                 metroId: number,
+ *                 areaId: number
+ *             },
+ *             page: number
+ *         }
+ *     },
+ *     templates: {
+ *         search: string,
+ *         item: string,
+ *         text: string,
+ *         value: string
+ *     },
+ *     config: {
+ *         staticVersion: ?string
+ *     }
+ * }}
+ */
+{template .list autoescape="strict" kind="html"}
+    {let $content kind="html"}
+        {call .content_ data="all" /}
+    {/let}
+
+    {call sm.iLayout.Template.layout}
+        {param params: [
+            'data': [
+                'title': 'Результаты поиска на Школах Мела',
+                'content': $content,
+                'header': [
+                    'searchText': $params.searchText,
+                    'url': '/',
+                    'templates': [
+                        'search': $params.searchTemplates?.search,
+                        'item': $params.searchTemplates?.item,
+                        'text': $params.searchTemplates?.text,
+                        'value': $params.searchTemplates?.value,
+                    ]
+                ],
+                'landingScript': '/l-search-result.js',
+                'evercookie': false
+            ],
+            'config': [
+                'modifier': 'stendhal',
+                'page': 'search-result',
+                'staticVersion': $params.config?.staticVersion,
+                'year':  $params.config?.year,
+            ]
+        ] /}
+    {/call}
 {/template}
+
+
+/**
+ * @param? params {?}
+ * @override
+ */
+{template .content_ autoescape="strict" kind="html"}
+    <div class="l-search-result"
+         data-params="{call goog.json.serialize data="$params.searchSettings" /}">
+         {call .innerContent_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * @param? params {?}
+ */
+{template .innerContent_ autoescape="strict" kind="html"}
+    <div class="l-search-result__body">
+        {call .listHeader_ data="all"}
+            {param clone: true /}
+        {/call}
+        {call .leftMenu_ data="all" /}
+        <div class="l-search-result__results-section">
+            {call .listHeader_ data="all" /}
+            <div class="l-search-result__list-body
+                {$params.countResults ? '' : ' i-utils__hidden'}
+            ">
+                {call sm.lSearchResult.bSchoolList.Template.base}
+                    {param params: [
+                        'schools': $params.data.schools
+                    ]/}
+                {/call}
+            </div>
+        </div>
+    </div>
+{/template}
+
 
 /**
  * Header for list of schools
@@ -136,31 +146,46 @@
  *     countResults: ?number,
  *     searchText: ?string
  * }
+ * @param? clone {boolean}
  */
 {template .listHeader_}
-    <div class="l-search-result__list-header">
-        <span class="l-search-result__list-header-text">
-            {if length($params.searchText)}
+    <div class="l-search-result__list-header{sp}
+                {$clone ? 'l-search-result__list-header_clone' : ''}">
+        {call .listHeaderText data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Text of header for list of schools
+ * @param? params {
+ *     countResults: ?number,
+ *     searchText: ?string
+ * }
+ */
+{template .listHeaderText}
+    <span class="l-search-result__list-header-text">
+        {if length($params.searchText)}
             По запросу{sp}
             <span class="l-search-result__list-header-text
                          l-search-result__list-header-text_strong">
                 «{$params.searchText}»
             </span>{sp}
-            {else}
+        {else}
             По вашему запросу{sp}
-            {/if}
-            мы{sp}
-            <span class="l-search-result__list-header-text
-                         l-search-result__list-header-text_change">
-                {call .generateHeaderText}
-                    {param params: [
-                        'countResults': $params.countResults
-                    ] /}
-                {/call}
-            </span>
+        {/if}
+        мы{sp}
+        <span class="l-search-result__list-header-text
+                     l-search-result__list-header-text_change">
+            {call .generateHeaderText}
+                {param params: [
+                    'countResults': $params.countResults
+                ] /}
+            {/call}
         </span>
-    </div>
+    </span>
 {/template}
+
 
 /**
  * Generates header text for school list

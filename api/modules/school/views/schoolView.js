@@ -29,9 +29,8 @@ schoolView.default = function(schoolInstance, results, opt_popularSchools) {
     addressView.transformSchoolAddress(schoolInstance);
 
     var addresses = services.department.addressesFilter(schoolInstance.addresses),
-        comments = schoolInstance.commentGroup ?
-            schoolInstance.commentGroup.comments : [],
-        score = schoolInstance.score || [0, 0, 0, 0],
+        comments = schoolInstance.comments,
+        score = getSections(schoolInstance.score, true),
         scoreCount = schoolInstance.scoreCount || [0, 0, 0, 0];
 
     var result = {
@@ -44,25 +43,21 @@ schoolView.default = function(schoolInstance, results, opt_popularSchools) {
         directorName: getDirectorName(schoolInstance.director),
         extendedDayCost: getExtendedDayCost(schoolInstance.extendedDayCost),
         dressCode: schoolInstance.dressCode || false,
-        classes: getEducationInterval(
-            schoolInstance.educationInterval,
-            'classes'),
-        kindergarten: getEducationInterval(
-            schoolInstance.educationInterval,
-            'kindergarten'),
+        classes: getEducationInterval(schoolInstance.educationInterval),
+        kindergarten: getKindergardenAvailability(schoolInstance.educationInterval),
         social: [],
-        // metroStations: services.address.getMetro(addresses),
+        //metroStations: addressView.getMetro(addresses),
         sites: schoolInstance.links ?
             getSites(schoolInstance.links) : getSites(schoolInstance.site),
         specializedClasses: getSpecializedClasses(
             schoolInstance.specializedClasses),
-        activities: getActivities(schoolInstance.activites),
+        activities: getActivities(schoolInstance.activities),
         contacts: getContacts(schoolInstance.addresses, schoolInstance.phones),
         comments: getComments(comments),
         addresses: addressView.default(addresses),
         ratings: ratingView.ratingSchoolView(
             schoolInstance.rank, schoolInstance.rankDogm),
-        score: getSections(score),
+        score: checkScoreValues(score) ? score : false,
         totalScore: schoolInstance.totalScore,
         results: {
             ege: egeResultView.transformResults(
@@ -132,56 +127,59 @@ var getExtendedDayCost = function(cost) {
             break;
 
         case 'есть':
-            res = 'Есть продлёнка';
+            res = 'есть продлёнка';
             break;
 
         case 'бесплатно':
-            res = 'Есть бесплатная продлёнка';
+            res = 'есть бесплатная продлёнка';
             break;
 
         default:
-            res = 'Есть продлёнка, ' + cost;
+            res = 'есть продлёнка (' + cost + ')';
     }
 
     return res;
 };
+
 
 /**
  *  @param {array<number>} interval
- *  @param {string} type ['classes'|'kindergarten']
  *  @return {string}
  */
 var getEducationInterval = function(interval, type) {
-    var res = '';
-    switch (type) {
-        case 'classes':
-            if (interval)
-            {
-                var begin = interval[0],
-                    end = interval[interval.length - 1];
+    var res = 'Обучение с ';
 
-                if (begin === 0) {
-                    begin = interval[1];
-                }
+    if (interval)
+    {
+        var begin = interval[0],
+            end = interval[interval.length - 1];
 
-                res += begin;
+        if (begin === 0) {
+            begin = interval[1];
+        }
 
-                if (end > begin) {
-                    res += '–';
-                    res += end;
-                    res += ' классы';
-                }
-            }
-            break;
-
-        case 'kindergarten':
-            if (interval[0] === 0) {
-                res = 'При школе есть детский сад';
-            }
-            break;
+        res += begin;
+        res += ' по ';
+        res += end;
+        res += ' класс';
     }
+    else {
+        res += '1 по 11 класс'
+    }
+
     return res;
 };
+
+
+/**
+ *  @param {array<number>} interval
+ *  @return {string}
+ */
+var getKindergardenAvailability = function(interval) {
+    return (interval && interval[0] === 0) ?
+        'при школе есть детский сад' : '';
+};
+
 
 /**
  *  @param {string} site
@@ -209,20 +207,23 @@ var getSites = function(sites) {
 
 /**
  *  @param {array<object>} addresses
- *  @param {array<string>} phones
+ *  @param {array<string>} opt_phones
  *  @return {object}
  */
-var getContacts = function(addresses, phones) {
+var getContacts = function(addresses, opt_phones) {
+    var phones = opt_phones || [];
+
     return {
         stages: addressView.stageList(addresses, {
             filterByDepartment: true
         }),
-        phones: phones || ''
+        phones: phones
+            .map(phone => '8 ' + phone) // TODO: move to db
     };
 };
 
 /**
- *  @param {array<object>} comments
+ *  @param {array<object>=} comments
  *  @return {array<object>}
  */
 var getComments = function(comments) {
@@ -248,11 +249,14 @@ var getComments = function(comments) {
 };
 
 /**
- *  @param {array<object>} Ratings array to convert
+ *  @param {array<object>=} opt_array Ratings to convert
+ *  @param {boolean=} opt_withoutEmptySections
  *  @return {array<object>}
  */
-var getSections = function(array) {
-    return array ? array.map((item, index) => {
+var getSections = function(opt_array, opt_withoutEmptySections) {
+    var array = opt_array || [0, 0, 0, 0];
+
+    var sections = array.map((item, index) => {
         var type = [
             'Образование',
             'Преподаватели',
@@ -263,7 +267,11 @@ var getSections = function(array) {
             name: type[index],
             value: item
         };
-    }) : [];
+    });
+
+    return opt_withoutEmptySections ?
+        sections.filter(item => item.value) :
+        sections;
 };
 
 
@@ -418,14 +426,14 @@ schoolView.suggestList = function(schools) {
 /**
  * Check if all scores of item is 0
  * @param {Array<Object>} score
- * @param {Object} sortCriterion
+ * @param {Object} opt_sortCriterion
  * @return {boolean}
  * @private
  */
-var checkScoreValues = function(score, sortCriterion) {
+var checkScoreValues = function(score, opt_sortCriterion) {
     var result = false;
 
-    if (sortCriterion.value !== 0) {
+    if (opt_sortCriterion && opt_sortCriterion.value !== 0) {
         result = true;
     }
 
@@ -534,7 +542,7 @@ var groupSchools = function(schools) {
  * @return {Array<Object>}
  */
 var getScore = function(score, totalScore, opt_criterion) {
-    var scoreItems = getSections(score || [0,0,0,0]),
+    var scoreItems = getSections(score),
         sortCriterionIndex = opt_criterion ? opt_criterion : 0;
 
     scoreItems.unshift({
@@ -578,22 +586,83 @@ var getName = function (name) {
  * @return {array<object>}
  */
 schoolView.listMapPoints = function(schools) {
-    return schools
-        .map(school => {
-            school = school.dataValues;
-            return {
-                id: school.id,
-                url: school.url,
-                name: school.name,
-                totalScore: school.totalScore || 0,
+    return schools.reduce((prev, curr) => {
+        curr = curr.dataValues;
+
+        prev = prev.length > 0 ? prev : [{
+            id: curr.id,
+            url: curr.url,
+            name: curr.name,
+            description: curr.description,
+            totalScore: curr.totalScore || 0,
+            addresses: [{
+                id: curr.addressId,
+                lat: curr.coords[0],
+                lng: curr.coords[1],
+                name: curr.adrName,
+                stages: [curr.stage]
+            }]
+        }];
+
+        var concated,
+            added,
+            cond;
+
+        for (var j = prev.length - 1, item; j >= 0; j--) {
+            item = prev[j];
+            if (curr.id == item.id) {
+                for (var i = item.addresses.length - 1, address; i >= 0; i--) {
+                    address = item.addresses[i];
+
+                    if (address.id == curr.addressId) {
+                        concated = true;
+                        cond = !(
+                            address.stages[0] == curr.stage ||
+                            address.stages[1] == curr.stage
+                        );
+
+                        if (cond) {
+                            address.stages.push(curr.stage);
+                        }
+
+                        break;
+                    }
+                }
+
+                if (!concated) {
+                    item.addresses.push({
+                        id: curr.addressId,
+                        lat: curr.coords[0],
+                        lng: curr.coords[1],
+                        name: curr.adrName,
+                        stages: [curr.stage]
+                    })
+                }
+
+                added = true;
+                break;
+            }
+        }
+
+        if (!added) {
+            prev.push({
+                id: curr.id,
+                url: curr.url,
+                name: curr.name,
+                description: curr.description,
+                totalScore: curr.totalScore || 0,
                 addresses: [{
-                    lat: school.coords[0],
-                    lng: school.coords[1],
-                    name: school.adrName,
-                    stage: [school.stage]
+                    id: curr.addressId,
+                    lat: curr.coords[0],
+                    lng: curr.coords[1],
+                    name: curr.adrName,
+                    stages: [curr.stage]
                 }]
-            };
-        });
+             })
+        }
+
+        return prev;
+    }, []);
 };
 
 /**

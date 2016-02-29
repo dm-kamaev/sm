@@ -22,7 +22,8 @@
         {foreach $item in $params.data}
             <div class="b-diagram__item">
                 <div class="b-diagram__label">
-                    {if $item.name == 'Математика (базовая)'}
+                    {let $cond:  $item.name == 'Математика (базовая)'/}
+                    {if $cond}
                         Математика
                         <div class="b-diagram__item-description">
                             базовая
@@ -41,11 +42,6 @@
                         </div>
                     {/if}
                 </div>
-                {if $params?.display == 'bars'}
-                    <div class="b-diagram__number-value">
-                        {round($item.value, 1)}
-                    </div>
-                {/if}
                 <div class="b-diagram__value">
                     {if $params?.display == 'marks'}
                         {call sm.bMark.Template.base}
@@ -74,7 +70,7 @@
                                 'value': $item.value,
                                 'averageValue': $item.averageValue,
                                 'description': $item.description,
-                                'maxValue': $params.maxValue,
+                                'maxValue': $cond ? 5 : $params.maxValue,
                                 'range': $params.range
                             ]/}
                         {/call}
@@ -121,30 +117,36 @@
  */
 {template .bars}
     {let $range: $params?.range ?: 0/}
-    <div class="b-diagram__bar-filled
-                {$params.value > ($params.averageValue + $range) ?
-                    ' b-diagram__bar-filled_green' :
-                    ($params.value > ($params.averageValue - $range) ?
-                        '' : ' b-diagram__bar-filled_red')}"{sp}
-         data-value="{$params.value}"{sp}
-         style="width: {$params.value * 100 / $params.maxValue + '%'};">
+    <div class="b-diagram__bar-wrap">
+        <div class="b-diagram__bar-filled
+                    {$params.value > ($params.averageValue + $range) ?
+                        ' b-diagram__bar-filled_green' :
+                        ($params.value > ($params.averageValue - $range) ?
+                            '' : ' b-diagram__bar-filled_red')}"{sp}
+             data-value="{$params.value}"{sp}
+             style="width: {$params.value * 100 / $params.maxValue + '%'};">
+        </div>
+        <div class="b-diagram__bar"
+             style="width: {($params.maxValue - $params.value) * 100 /
+                 $params.maxValue + '%'};">
+        </div>
+        <div class="b-diagram__under-bar"
+             style="width:{sp}
+                {$params.averageValue * 100 / $params.maxValue + '%'};">
+        </div>
+        <div class="b-diagram__circle">
+        </div>
+        /*TODO: replace to factory hint*/
+        {call .tooltip_}
+            {param params: [
+                'left': $params.averageValue * 100 / $params.maxValue + '%',
+                'value': $params.averageValue
+            ]/}
+        {/call}
     </div>
-    <div class="b-diagram__bar"
-         style="width: {($params.maxValue - $params.value) * 100 /
-             $params.maxValue + '%'};">
+    <div class="b-diagram__number-value">
+        {round($params.value, 1)}
     </div>
-    <div class="b-diagram__under-bar"
-         style="width: {$params.averageValue * 100 / $params.maxValue + '%'};">
-    </div>
-    <div class="b-diagram__circle">
-    </div>
-    /*TODO: replace to factory hint*/
-    {call .tooltip_}
-        {param params: [
-            'left': $params.averageValue * 100 / $params.maxValue + '%',
-            'value': $params.averageValue
-        ]/}
-    {/call}
 {/template}
 
 /**
@@ -159,26 +161,23 @@
          style="left: {$params.left};">
         <div class="b-diagram__tooltip-arrow">
         </div>
-        <div class="b-diagram__tooltip-description">
-
-            <div class="b-diagram__tooltip-arrow-shadow">
-            </div>
-            <div class="b-diagram__tooltip-content">
-                <div class="b-diagram__tooltip-average-mark">
-                    В среднем по Москве —
-                    <br>
-                    <span class="b-diagram__tooltip-bold-text">
-                        {$params.value}
-                        {call cl.iUtils.Utils.declensionPrint}
-                            {param params: [
-                                'num': $params.value,
-                                'nom': ' балл',
-                                'gen': ' балла',
-                                'plu': ' баллов'
-                            ]/}
-                        {/call}
-                    </span>
-                </div>
+        <div class="b-diagram__tooltip-arrow-shadow">
+        </div>
+        <div class="b-diagram__tooltip-content">
+            <div class="b-diagram__tooltip-average-mark">
+                В среднем по Москве —
+                <br>
+                <span class="b-diagram__tooltip-bold-text">
+                    {$params.value}
+                    {call cl.iUtils.Utils.declensionPrint}
+                        {param params: [
+                            'num': $params.value,
+                            'nom': ' балл',
+                            'gen': ' балла',
+                            'plu': ' баллов'
+                        ]/}
+                    {/call}
+                </span>
             </div>
         </div>
     </div>

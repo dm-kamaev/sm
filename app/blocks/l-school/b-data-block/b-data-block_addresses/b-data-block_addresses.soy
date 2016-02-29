@@ -68,20 +68,22 @@
                     </div>
                     <div class="b-data-block__item-content-right">
                         {foreach $address in $stage.addresses}
-                            <div class="b-data-block__item-content-address">
-                                {$address.description}
-                            </div>
+                            <div class="b-data-block__address">
+                                <div class="b-data-block__item-content-address">
+                                    {$address.description}
+                                </div>
 
-                            <div class="b-data-block__item-content-metroStation">
                                 {if $address.metroStation}
-                                    <div class="b-data-block__metro-icon b-icon_img_metro"></div>
-                                    {$address.metroStation.name}
+                                    <div class="b-data-block__item-content-metroStation">
+                                        <div class="b-data-block__metro-icon b-icon_img_metro"></div>
+                                        {$address.metroStation.name}
+                                    </div>
                                 {/if}
                             </div>
                         {/foreach}
                     </div>
                     {if not isLast($stage)}
-                        <div class="b-data-block__line horisontal-line"></div>
+                        <div class="b-data-block__line b-data-block__line_horisontal-line"></div>
                     {/if}
                 </div>
             </li>
@@ -91,7 +93,7 @@
         {if length($params.content.phones) > 0}
             <li class="b-data-block__item-phones">
                 <div class="b-data-block__item-phones-caption">
-                    Телефоны{sp}
+                    Телефоны
                 </div>
                 {foreach $phone in $params.content.phones}
                     {$phone}

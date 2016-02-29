@@ -62,45 +62,40 @@
         {/let}
 
         <div class="b-results">
-            <div class="b-results__wrap">
-                {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
-                    {param params: [
-                        'type': 'tab',
-                        'renderParams': [
-                            'data': [
-                                'tabs': [
-                                    [
-                                        'label': $ege,
-                                        'content': $egeContent,
-                                        'isEmpty': not
-                                            $params?.data?.ege?.years?.length
-                                    ],
-                                    [
-                                        'label': $gia,
-                                        'content': $giaContent,
-                                        'isEmpty': not
-                                            $params?.data?.gia?.years?.length
-                                    ],
-                                    [
-                                        'label': $olymp,
-                                        'content': $olympContent,
-                                        'isEmpty': not
-                                            $params?.data?.olymp?.years?.length
-                                    ]
+            {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+                {param params: [
+                    'type': 'tab',
+                    'renderParams': [
+                        'data': [
+                            'tabs': [
+                                [
+                                    'label': $ege,
+                                    'content': $egeContent,
+                                    'isEmpty': not
+                                        $params?.data?.ege?.years?.length
                                 ],
-                                'selectedTabId':
-                                    $params?.data?.ege?.years?.length ?
-                                        0 :
-                                        $params?.data?.gia?.years?.length ?
-                                            1 : 2
+                                [
+                                    'label': $gia,
+                                    'content': $giaContent,
+                                    'isEmpty': not
+                                        $params?.data?.gia?.years?.length
+                                ],
+                                [
+                                    'label': $olymp,
+                                    'content': $olympContent,
+                                    'isEmpty': not
+                                        $params?.data?.olymp?.years?.length
+                                ]
                             ],
-                            'config': [
-                                'theme': 'red'
-                            ]
+                            'selectedTabId':
+                                $params?.data?.ege?.years?.length ?
+                                    0 :
+                                    $params?.data?.gia?.years?.length ?
+                                        1 : 2
                         ]
-                    ]/}
-               {/call}
-           </div>
+                    ]
+                ]/}
+           {/call}
         </div>
     {/if}
 {/template}
@@ -237,7 +232,8 @@
             <div class="b-results__olymp-item">
                 {$params.data[$i].name} —
                 {if $params.data[$i].winners}
-                    {sp} {$params.data[$i].winners}
+                    {sp}
+                    {$params.data[$i].winners}
                     {call cl.iUtils.Utils.declensionPrint}
                         {param params: [
                             'num': $params.data[$i].winners,
@@ -249,6 +245,7 @@
                     {$params.data[$i].awardees ? ', ' : ''}
                 {/if}
                 {if $params.data[$i].awardees}
+                    {sp}
                     {$params.data[$i].awardees}
                     {call cl.iUtils.Utils.declensionPrint}
                         {param params: [
@@ -322,7 +319,7 @@
  */
 {template .examYearResults_ private="true"}
     {let $upperMoscow kind="html"}
-        Выше среднего <br> по Москве
+        Выше среднего <br class="b-results__item-label-br"> по Москве
     {/let}
     {foreach $yearResults in $params?.yearResults}
         <div class="b-results__inner-content

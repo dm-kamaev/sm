@@ -3,6 +3,8 @@
 const path = require('path');
 const express = require('express');
 const morgan = require('morgan');
+const cookieParser = require('cookie-parser');
+const evercookie = require('evercookie');
 
 var db = require('./app/components/db');
 const soy = require('./node_modules/clobl/soy').setOptions({
@@ -46,6 +48,16 @@ app.set('view engine', 'jade');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(morgan('dev'));
+
+app.use(cookieParser());
+app.use(evercookie.backend({
+    pngCookieName: 'evercookie_png',
+    etagCookieName: 'evercookie_etag',
+    cacheCookieName: 'evercookie_cache',
+    pngPath: '/evercookie/png',
+    etagPath: '/evercookie/etag',
+    cachePath: '/evercookie/cache'
+}));
 
 app.use(express.static(path.join(__dirname, '/public')));
 

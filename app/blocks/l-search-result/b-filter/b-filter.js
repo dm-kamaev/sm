@@ -68,16 +68,16 @@ sm.lSearchResult.bFilter.Filter = function(opt_params) {
     /**
      * Reset button
      * @type {Element}
-     * @private
+     * @protected
      */
-    this.filterResetElement_ = null;
+    this.filterResetElement = null;
 
     /**
      * Classes input
      * @type {Element}
-     * @private
+     * @protected
      */
-    this.inputClassesElements_ = null;
+    this.inputClassesElements = null;
 
     /**
      * Ordinary classes input
@@ -99,7 +99,8 @@ goog.scope(function() {
         ROOT: 'b-filter',
         HEADER: 'b-filter__header',
         FILTERS: 'b-filter__filters',
-        SHOW_HIDDEN_FILTERS_BUTTON: 'b-filter__show-button',
+        SHOW_HIDDEN_FILTERS_BUTTON: 'b-filter__button_show',
+        HIDE_SHOWN_FILTERS_BUTTON: 'b-filter__button_hide',
         SHOW_FILTERS_BUTTON: 'b-filter__show-filters-button',
         SHOW_FILTERS_ICON: 'b-filter__show-filters-icon',
         ICON_ARROW_DOWN: 'b-icon_img_filter-arrow-down',
@@ -155,17 +156,29 @@ goog.scope(function() {
             element
         );
 
+        this.hideShownFiltersButtonElement_ = goog.dom.getElementByClass(
+            Filter.CssClass.HIDE_SHOWN_FILTERS_BUTTON,
+            element
+        );
+
         this.filterSectionElements_ = goog.dom.getElementsByClass(
             Filter.CssClass.FILTER_SECTION,
             element
         );
 
-        this.filterResetElement_ = goog.dom.getElementByClass(
+        this.filterSectionHiddenElements_ = [];
+        for (var i = 0, elem; elem = this.filterSectionElements_[i]; i++) {
+            if (goog.dom.classes.has(elem, Filter.CssClass.HIDDEN)) {
+                this.filterSectionHiddenElements_.push(elem);
+            }
+        }
+
+        this.filterResetElement = goog.dom.getElementByClass(
             Filter.CssClass.FILTER_RESET,
             element
         );
 
-        this.inputClassesElements_ = goog.dom.getElementsByClass(
+        this.inputClassesElements = goog.dom.getElementsByClass(
             Filter.CssClass.INPUT_CLASSES,
             element
         );
@@ -192,6 +205,14 @@ goog.scope(function() {
             );
         }
 
+        if (this.hideShownFiltersButtonElement_) {
+            handler.listen(
+                this.hideShownFiltersButtonElement_,
+                goog.events.EventType.CLICK,
+                this.hideShownFilters_
+            );
+        }
+
         if (this.showFiltersButtonElement_) {
             var header = this.getElementByClass(Filter.CssClass.HEADER);
             handler.listen(
@@ -201,9 +222,9 @@ goog.scope(function() {
             );
         }
 
-        if (this.filterResetElement_) {
+        if (this.filterResetElement) {
             handler.listen(
-                this.filterResetElement_,
+                this.filterResetElement,
                 goog.events.EventType.CLICK,
                 this.resetFilter_
             );
@@ -217,10 +238,10 @@ goog.scope(function() {
             );
         }
 
-        if (this.inputClassesElements_.length > 0) {
-            for (var i = 0; i < this.inputClassesElements_.length; i++) {
+        if (this.inputClassesElements.length > 0) {
+            for (var i = 0; i < this.inputClassesElements.length; i++) {
                 handler.listen(
-                    this.inputClassesElements_[i],
+                    this.inputClassesElements[i],
                     goog.events.EventType.CHANGE,
                     this.showResetButton_
                 );
@@ -233,14 +254,40 @@ goog.scope(function() {
      * @private
      */
     Filter.prototype.showHiddenFilters_ = function() {
-        for (var i = 0; i < this.filterSectionElements_.length; i++) {
+        for (var i = 0; i < this.filterSectionHiddenElements_.length; i++) {
             goog.dom.classlist.remove(
-                this.filterSectionElements_[i],
+                this.filterSectionHiddenElements_[i],
                 Filter.CssClass.HIDDEN
             );
         }
 
         goog.dom.classlist.add(
+            this.showHiddenFiltersButtonElement_,
+            Filter.CssClass.HIDDEN
+        );
+        goog.dom.classlist.remove(
+            this.hideShownFiltersButtonElement_,
+            Filter.CssClass.HIDDEN
+        );
+    };
+
+    /**
+     * Hide shown filters
+     * @private
+     */
+    Filter.prototype.hideShownFilters_ = function() {
+        for (var i = 0; i < this.filterSectionHiddenElements_.length; i++) {
+            goog.dom.classlist.add(
+                this.filterSectionHiddenElements_[i],
+                Filter.CssClass.HIDDEN
+            );
+        }
+
+        goog.dom.classlist.add(
+            this.hideShownFiltersButtonElement_,
+            Filter.CssClass.HIDDEN
+        );
+        goog.dom.classlist.remove(
             this.showHiddenFiltersButtonElement_,
             Filter.CssClass.HIDDEN
         );
@@ -254,8 +301,8 @@ goog.scope(function() {
     Filter.prototype.hasCheckedInputClasses_ = function() {
         var result = false;
 
-        for (var i = 0; i < this.inputClassesElements_.length; i++) {
-            if (this.inputClassesElements_[i].checked) {
+        for (var i = 0; i < this.inputClassesElements.length; i++) {
+            if (this.inputClassesElements[i].checked) {
                 result = true;
             }
         }
@@ -269,15 +316,15 @@ goog.scope(function() {
      * @private
      */
     Filter.prototype.showResetButton_ = function(event) {
-        if (this.filterResetElement_) {
+        if (this.filterResetElement) {
             if (event.currentTarget.checked || this.hasCheckedInputClasses_()) {
                 goog.dom.classlist.remove(
-                    this.filterResetElement_,
+                    this.filterResetElement,
                     Filter.CssClass.HIDDEN
                 );
             } else {
                 goog.dom.classlist.add(
-                    this.filterResetElement_,
+                    this.filterResetElement,
                     Filter.CssClass.HIDDEN
                 );
             }
@@ -310,18 +357,18 @@ goog.scope(function() {
      * @private
      */
     Filter.prototype.resetFilter_ = function() {
-        if (this.inputClassesElements_.length > 0) {
-            for (var i = 0; i < this.inputClassesElements_.length; i++) {
-                this.inputClassesElements_[i].checked = false;
+        if (this.inputClassesElements.length > 0) {
+            for (var i = 0; i < this.inputClassesElements.length; i++) {
+                this.inputClassesElements[i].checked = false;
             }
         }
         if (this.inputClassesOrdinaryElement_) {
             this.inputClassesOrdinaryElement_.checked = false;
         }
 
-        if (this.filterResetElement_) {
+        if (this.filterResetElement) {
             goog.dom.classlist.add(
-                this.filterResetElement_,
+                this.filterResetElement,
                 Filter.CssClass.HIDDEN
             );
         }

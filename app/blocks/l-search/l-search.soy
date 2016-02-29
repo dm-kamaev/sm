@@ -71,6 +71,7 @@
                             'dataLinks' : $params.dataLinks
                         ]/}
                     {/call}
+                </div>
                     //TODO: uncomment
                     /*
                     {call sm.lSearch.Template.banner_ /}
@@ -80,27 +81,36 @@
                         ]/}
                     {/call}
                     */
+                <div class="l-search__information-links-wrap">
                     <div class="l-search__information-links">
-                        <div class="l-search__popular-schools">
-                            {call sm.bPopularSchools.Template.base}
+                        <div class="l-search__schools">
+                            <div class="l-search__popular-schools">
+                                {call sm.bPopularSchools.Template.base}
+                                    {param params: [
+                                        'popularSchools': $params.popularSchools,
+                                        'config': [
+                                            'popularSchool': [
+                                                'customClasses': 
+                                                'l-search__popular-school'
+                                            ]
+                                        ]
+                                    ]/}
+                                {/call}
+                            </div>
+                            {call sm.lSearch.Template.informationSchools_}
                                 {param params: [
-                                    'popularSchools': $params.popularSchools
+                                    'amountSchools': $params.amountSchools
+                                ]/}
+                            {/call}
+                            {call sm.lSearch.bLinkArticle.Template.base}
+                                {param params: [
+                                    'urlArticle': $params.dataArticle.urlArticle,
+                                    'urlImg': $params.dataArticle.urlImg,
+                                    'title': $params.dataArticle.title,
+                                    'subtitle': $params.dataArticle.subtitle
                                 ]/}
                             {/call}
                         </div>
-                        {call sm.lSearch.Template.informationSchools_}
-                            {param params: [
-                                'amountSchools': $params.amountSchools
-                            ]/}
-                        {/call}
-                        {call sm.lSearch.bLinkArticle.Template.base}
-                            {param params: [
-                                'urlArticle': $params.dataArticle.urlArticle,
-                                'urlImg': $params.dataArticle.urlImg,
-                                'title': $params.dataArticle.title,
-                                'subtitle': $params.dataArticle.subtitle
-                            ]/}
-                        {/call}
                     </div>
                 </div>
                 // <div class="l-search__footer">
@@ -124,8 +134,6 @@
 {template .header_ autoescape="strict" kind="html" private="true"}
     <div class="l-search__header">
         <div class="l-search__header-wrap">
-            <div class="l-search__header-image">
-            </div>
             <div class="l-search__header-content">
                 <div class="l-search__geoposition">
                     <div class="l-search__pointer">u</div>
@@ -156,6 +164,10 @@
                     </li>
                 </ul>
             </div>
+            <div class="l-search__header-image-wrap">
+                <div class="l-search__header-image">
+                </div>
+            </div>
         </div>
     </div>
 {/template}
@@ -177,55 +189,56 @@
  * }
  */
 {template .search_ autoescape="strict" kind="html" private="true"}
-    <div class="l-search__top-menu">
-        <div class="l-search__top-menu-wrap">
-            <div class="l-search__left-text">Что вы ищете?</div>
-            <div class="l-search__search">
-                <div class="l-search__search-field">
-                    {call sm.bSearch.Template.base}
-                        {param params: [
-                            'autofocus': true,
-                            'placeholder': 'Номер школы, метро, район',
-                            'theme': 'main',
-                            'redirect': true,
-                            'templates': [
-                                'search': $params?.templates.search,
-                                'item': $params?.templates.item,
-                                'text': $params?.templates.text,
-                                'value': $params?.templates.value
-                            ]
-                        ]/}
-                    {/call}
-                </div>
-                <div class="l-search__search-links">
-                    {foreach $link in $params.dataLinks}
-                        <div class="l-search__search-link">
-                            {call sm.bLink.Template.base}
-                                {param params: [
-                                    'data': [
-                                        'name': $link.name,
-                                        'url': $link.url
-                                    ]
-                                ]/}
-                            {/call}
-                        </div>
-                    {/foreach}
-                </div>
-                //TODO: uncomment
-                /*<div class="l-search__example-holder">
-                    Например:
-                    <span class="l-search__examples">
-                        {foreach $example in $params.examples}
-                            <span class="l-search__example">{$example}</span>
+    <div class="l-search__top-menu-wrap">
+        <div class="l-search__top-menu">
+            <div class="l-search__search-wrap">
+                <div class="l-search__left-text">Что вы ищете?</div>
+                <div class="l-search__search">
+                    <div class="l-search__search-field">
+                        {call sm.bSearch.Template.base}
+                            {param params: [
+                                'autofocus': true,
+                                'placeholder': 'Номер школы, метро, район',
+                                'theme': 'main',
+                                'redirect': true,
+                                'templates': [
+                                    'search': $params?.templates.search,
+                                    'item': $params?.templates.item,
+                                    'text': $params?.templates.text,
+                                    'value': $params?.templates.value
+                                ]
+                            ]/}
+                        {/call}
+                    </div>
+                    <div class="l-search__search-links">
+                        {foreach $link in $params.dataLinks}
+                            <div class="l-search__search-link">
+                                {call sm.bLink.Template.base}
+                                    {param params: [
+                                        'data': [
+                                            'name': $link.name,
+                                            'url': $link.url
+                                        ]
+                                    ]/}
+                                {/call}
+                            </div>
                         {/foreach}
-                    </span>
-                </div>*/
+                    </div>
+                    //TODO: uncomment
+                    /*<div class="l-search__example-holder">
+                        Например:
+                        <span class="l-search__examples">
+                            {foreach $example in $params.examples}
+                                <span class="l-search__example">{$example}</span>
+                            {/foreach}
+                        </span>
+                    </div>*/
+                </div>
             </div>
             <div class="l-search__button-wrap">
                 {call sm.lSearch.Template.button_}
                     {param params: [
-                        'mainText': 'Найти',
-                        'desctiptionText': 'школу',
+                        'text': 'Найти школу',
                         'theme': 'search'
                     ]/}
                 {/call}
@@ -323,18 +336,14 @@
 /**
  * Button Template
  * @param? params {
- *     mainText: ?string,
- *     desctiptionText: ?string,
+ *     text: ?string,
  *     theme: string
  * }
  */
 {template .button_ autoescape="strict" kind="html" private="true"}
     <div class="l-search__button l-search__button_{$params.theme}">
         <span class="l-search__button-text">
-            {$params.mainText}
-            <span class="l-search__button-text-desctiption">
-                {sp}{$params.desctiptionText}
-            </span>
+            {$params.text}
         </span>
     </div>
 {/template}

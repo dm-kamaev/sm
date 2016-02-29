@@ -1,9 +1,13 @@
+@import "../i-media/i-media";
+
 .b-school-list-item {
     display: inline-block;
 
     width: 100%;
     height: auto;
     padding: 25px 0;
+
+    cursor: default;
 
     border-bottom: 1px solid #e5e5e5;
 }
@@ -39,17 +43,16 @@
 
 .b-school-list-item__name {
     display: inline-block;
+
     height: 100%;
-    padding-right: 80px;
+    padding-right: 160px;
+
+    cursor: pointer;
 
     color: black;
-
-    font-size: 21px;
-    font-weight: 700;
-    line-height: 26px;
-    font-family: 'Proxima';
-
     text-decoration: none;
+
+    font: 700 21px/26px 'Proxima', Arial, sans-serif;
 
     &_bold {
         font-weight: 800;
@@ -99,4 +102,33 @@
     color: #000;
 
     font: 16px/22px 'PT Serif', Arial, sans-serif;
+}
+
+
+@include media-xl {
+    .b-school-list-item__name {
+        padding-right: 75px;
+    }
+}
+
+
+@include media-l {
+    .b-school-list-item__name {
+        padding-right: 160px;
+    }
+}
+
+
+@include media-m {
+
+}
+
+@include media-s {
+    .b-school-list-item__name {
+        padding-right: 75px;
+    }
+
+    .b-school-list-item__description {
+        padding-right: 0;
+    }
 }
