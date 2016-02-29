@@ -13,7 +13,7 @@
 
 /**
  * Header
- * @param params {sm.bHeader.Template.Params}
+ * @param params {?sm.bHeader.Template.Params}
  */
 {template .base autoescape="strict" kind="html"}
     <div class="b-header">
@@ -43,7 +43,7 @@
  * }}
  */
 {template .advancedSearchLink_ private="true" autoescape="strict" kind="html"}
-    {if not ($params.notShowLink)}
+    {if not ($params?.notShowLink)}
         <div class="b-header__link-search i-animate">
             {call sm.bLink.Template.base}
                 {param params: [
@@ -74,7 +74,7 @@
             <span class="b-header__star b-header__star_fifth">t</span>
         </span>
         <h1 class="b-header__header">
-            {if $params.url}
+            {if $params?.url}
                 <a class="b-header__link" href="{$params.url}">
                     Школы «мела»
                 </a>
@@ -101,7 +101,7 @@
  * }}
  */
 {template .search_ private="true" autoescape="strict" kind="html"}
-    {if $params.url}
+    {if $params?.url}
         <div class="b-header__button-search-holder i-animate">
             {call sm.bIcon.Template.icon}
                 {param params: [
@@ -118,12 +118,6 @@
                     'text': $params?.searchText,
                     'theme': 'min',
                     'redirect': $params?.searchRedirect,
-                    'templates': [
-                        'search': $params?.templates.search,
-                        'item': $params?.templates.item,
-                        'text': $params?.templates.text,
-                        'value': $params?.templates.value
-                    ],
                     'customClasses': 'b-header__search'
                 ]/}
             {/call}

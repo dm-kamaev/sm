@@ -85,11 +85,8 @@ exports.list = async (function(req, res) {
                     page: 0
                 }
             },
-            templates: {
-                search: '{{ name }}',
-                item: '{{ name }}',
-                text: '{{ name }}',
-                value: '{{ id }}'
+            config: {
+                year: new Date().getFullYear()
             }
         }
     };
@@ -121,11 +118,10 @@ exports.view = async (function(req, res) {
                     city: services.cityResult.getAll()
                 },
                 results = await(resPromises);
+
             var school = await(services.school.viewOne(schoolInstance.id));
             services.school.incrementViews(school.id);
             var popularSchools = await(services.school.getPopularSchools());
-
-            var date = new Date();
 
             res.header('Content-Type', 'text/html; charset=utf-8');
             res.end(
@@ -133,14 +129,8 @@ exports.view = async (function(req, res) {
                 params: {
                     data:
                         schoolView.default(school, results, popularSchools),
-                    searchTemplates: {
-                        search: '{{ name }}',
-                        item: '{{ name }}',
-                        text: '{{ name }}',
-                        value: '{{ id }}'
-                    },
                     config: {
-                        year: date.getFullYear()
+                        year: new Date().getFullYear()
                     }
                 }
             }));
@@ -155,20 +145,12 @@ exports.view = async (function(req, res) {
 exports.search = async(function(req, res) {
     var exampleList = ['Поварская, 14', 'Школа 123', 'Савеловская', 'Лицей'];
     var popularSchools = await (services.school.getPopularSchools(3));
-    // var imagesList = ['images/l-search/advertising_1.png', 'images/l-search/article.png'];
     var amountSchools = await (services.school.getSchoolsCount());
 
     var html = soy.render('sm.lSearch.Template.base', {
           params: {
               currentCity: 'Москва',
               examples: exampleList,
-              searchTemplates: {
-                  search: '{{ name }}',
-                  item: '{{ name }}',
-                  text: '{{ name }}',
-                  value: '{{ id }}'
-              },
-              // images: imagesList,
               popularSchools: schoolView.popular(popularSchools),
               dataLinks : [
                   {
@@ -194,11 +176,13 @@ exports.search = async(function(req, res) {
                   urlImg: 'images/l-search/b-link-article/article.png',
                   title: '«Мы не знаем, что лучше для наших детей, это известно только им самим»',
                   subtitle: '10 высказываний новаторов в сфере образования и воспитания'
+              },
+              config: {
+                  year: new Date().getFullYear()
               }
           }
     });
 
-    //console.log(html);
     res.header('Content-Type', 'text/html; charset=utf-8');
     res.end(html);
 });

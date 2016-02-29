@@ -8,11 +8,6 @@
  * @property {?string} theme
  * @property {?boolean} autofocus
  * @property {?boolean} redirect
- * @property {?object} templates
- * @property {?string} templates.search
- * @property {?string} templates.item
- * @property {?string} templates.text
- * @property {?string} templates.value
  * @property {?string} customClasses
  */
 
@@ -52,12 +47,6 @@
                 'config': [
                     'customClasses': 'b-search__suggest',
                     'filtrationEnabled': false,
-                    'templates': [
-                        'search': $params?.templates.search,
-                        'item': $params?.templates.item,
-                        'text': $params?.templates.text,
-                        'value': $params?.templates.value
-                    ]
                 ],
                 'list': [
                     'extraClasses': 'b-search__list',
