@@ -122,7 +122,6 @@ addressView.default = function(addresses) {
 addressView.getMetro = function(addresses) {
     metroStations = [];
 
-    addresses = filterBydepartment(addresses);
     addresses.forEach(address => {
         if (address.metroStations.length > 0) {
             address.metroStations = metroView.list(address.metroStations);
@@ -142,6 +141,7 @@ addressView.getMetro = function(addresses) {
             }
         }
     });
+
     return metroStations;
 };
 

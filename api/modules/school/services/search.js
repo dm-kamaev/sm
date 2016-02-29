@@ -215,13 +215,9 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
                      'address on address.school_id = school.id',
                      'area on area.id = address.area_id',
                      'address_metro on address_metro.address_id = address.id',
-                     'metro on metro.id = address_metro.metro_id',
-                     'department on address.id = department.address_id'
+                     'metro on metro.id = address_metro.metro_id'
                  ]
              });
-             sqlOptions.where.push('department.stage IN (\'' +
-                 departmentTypeEnum.ELEMENTARY + '\', \'' +
-                 departmentTypeEnum.MIDDLE_HIDE + '\')');
         }
     }
 };
