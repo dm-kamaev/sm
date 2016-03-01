@@ -563,8 +563,6 @@ goog.scope(function() {
             userType = this.dropdowns_.userType.getValue();
             this.dropdowns_.userType.getView().removeNotSelectedModifier();
 
-        //this.hideValidationError_();
-
         if (userType != null) {
             isValid = true;
 
@@ -615,13 +613,7 @@ goog.scope(function() {
             commentText = formData.textArea;
 
         if (commentText.trim()) {
-            if (commentText.length <= 300) {
-                this.textarea_.getView().removeNotValidModifier();
-                isValid = this.validateGraduateInput_(formData.yearGraduate);
-            } else {
-                this.showValidationError_(FeedbackModal.Error.COMMENT_TOO_LONG);
-                this.textarea_.getView().addNotValidModifier();
-            }
+            isValid = this.validateGraduateInput_(formData.yearGraduate);
         } else {
             isValid = this.validateScore_(formData);
         }
