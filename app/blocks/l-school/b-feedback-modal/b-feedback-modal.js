@@ -614,7 +614,7 @@ goog.scope(function() {
             userType = this.dropdowns_.userType.getValue();
             this.dropdowns_.userType.getView().removeNotSelectedModifier();
 
-        this.hideValidationError_();
+        //this.hideValidationError_();
 
         if (userType != null) {
             isValid = true;
