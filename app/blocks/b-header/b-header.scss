@@ -196,13 +196,6 @@
         visibility: hidden;
     }
 }
-
-/* TODO: clean up */
-.b-header .b-list.b-list_stendhal-theme .b-list__item {
-    padding: 0;
-}
-/* clean up end */
-
 /* search end */
 
 @include media-xl {
@@ -244,7 +237,6 @@
 
     .b-header_mode_search,
     .b-header_mode_default {
-        /* TODO: clean up */
         .b-header__search {
             top: 0;
             bottom: 0;
@@ -259,45 +251,6 @@
             box-sizing: content-box;
             border: none;
         }
-
-        .b-search_theme_min .b-search__suggest {
-            position: absolute;
-            left: 0;
-
-            padding-left: 53px;
-        }
-
-        .b-search__item {
-            border-top: 1px solid #e5e5e5;
-
-            line-height: 70px;
-        }
-
-        .b-search__item-icon {
-            left: 31px;
-        }
-
-        .b-search__item {
-            padding: 0 60px;
-        }
-
-        .b-search__icon {
-            display: none;
-        }
-
-        .b-list.b-list_stendhal-theme,
-        .b-list.b-list_stendhal-theme .b-list__item {
-            padding: 0;
-
-            box-shadow: none;
-            border: none;
-            border-radius: 0;
-        }
-
-        .b-input__input_size_medium {
-            font-size: 14px;
-        }
-        /* clean up end */
     }
 
     .b-header_mode_search {
@@ -400,11 +353,4 @@
 
         padding: 0 30px;
     }
-
-    /* TODO: clean up */
-    .b-header_mode_search .b-search__item,
-    .b-header_mode_default .b-search__item {
-        line-height: 55px;
-    }
-    /* clean up end */
 }

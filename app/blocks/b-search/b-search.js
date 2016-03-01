@@ -162,7 +162,14 @@ goog.scope(function() {
                     elem.abbreviation;
             },
 
-            renderItem: this.renderItem_.bind(this)
+            renderItem: this.renderItem_.bind(this),
+
+            select: function(item) {
+                return {
+                    text: item.name,
+                    value: item.id
+                }
+            }
         });
      };
 

@@ -2,33 +2,16 @@ const cityResultView = require.main.require(
     './api/modules/study/views/cityResultView.js'
 );
 
+const subjectView = require.main.require(
+    './api/modules/study/views/subjectView.js'
+);
+
 /**
  * GiaResultView
  * @constructor
  */
 var GiaResultView = function() {
 };
-
-/**
- * Sort list
- * @type {string[]}
- */
-GiaResultView.SORT_LIST = [
-    'математика',
-    'русский',
-    'обществознание',
-    'английский',
-    'информатика',
-    'физика',
-    'биология',
-    'химия',
-    'география',
-    'литература',
-    'история',
-    'французский',
-    'немецкий',
-    'испанский'
-];
 
 /**
  * Transforms results
@@ -96,49 +79,17 @@ GiaResultView.prototype.transformResults = function(results, cityResults) {
         }),
         results: keys.map(key => {
             var item = res[key];
-
             return {
                 top: item.top ?
-                    item.top.sort((a, b) => that.sorter_(a,b)) : undefined,
+                    item.top.sort((a, b) => subjectView.sorter(a.order, b.order, 'GIA')) : undefined,
                 middle: item.middle ?
-                    item.middle.sort((a, b) => that.sorter_(a,b)) : undefined,
+                    item.middle.sort((a, b) => subjectView.sorter(a.order, b.order, 'GIA')) : undefined,
                 bottom: item.bottom ?
-                    item.bottom.sort((a, b) => that.sorter_(a,b)) : undefined
+                    item.bottom.sort((a, b) => subjectView.sorter(a.order, b.order, 'GIA')) : undefined
             }
         }),
         range: range
     };
-};
-
-/**
- * Sorter
- * @param {Object} a
- * @param {Object} b
- * @return {number}
- * @private
- */
-GiaResultView.prototype.sorter_ = function(a, b) {
-    var length = GiaResultView.SORT_LIST.length,
-        orderA = length,
-        orderB = length;
-
-    for (var i = 0, item; i < length; i++) {
-        item = GiaResultView.SORT_LIST[i];
-
-        if (a.order == item) {
-            orderA = i;
-        }
-
-        if (b.order == item) {
-            orderB = i;
-        }
-
-        if (orderA < length && orderB < length) {
-            break;
-        }
-    }
-
-    return orderA - orderB;
 };
 
 /**
