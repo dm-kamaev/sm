@@ -36,6 +36,16 @@
     max-width: 1200px;
     height: 100%;
     margin: 0 auto;
+
+    &:before {
+        display: inline-block;
+
+        width: 0;
+        height: 100%;
+
+        content: '';
+        vertical-align: middle;
+    }
 }
 
 .b-header__wrap {
@@ -47,18 +57,12 @@
 }
 
 .b-header__main {
-    position: absolute;
-    left: 0;
+    position: relative;
+    z-index: 1;
 
     display: inline-block;
 
-    width: 100%;
-    height: 100%;
-    margin: 0 auto;
-
-    vertical-align: top;
-
-    font-weight: bold;
+    vertical-align: middle;
 }
 
 .b-header__fader {
@@ -79,6 +83,7 @@
 /* advanced search link */
 .b-header__link-search {
     position: absolute;
+    z-index: 1;
     top: 27px; //28
     left: 0;
 
@@ -87,10 +92,6 @@
 /* advanced search link end */
 
 /* logo */
-.b-header__title {
-    margin-top: 4px;
-}
-
 .b-header__header {
     display: inline-block;
 
@@ -178,7 +179,7 @@
     z-index: 10;
     top: 50%;
 
-    margin-top: -9px;
+    margin-top: -8px;
 
     cursor: pointer;
 
@@ -227,6 +228,11 @@
     }
 
     .b-header__button-search-holder {
+        position: absolute;
+        top: 0;
+        right: 0;
+
+        width: 100%;
         height: 100%;
     }
 
@@ -289,7 +295,7 @@
     }
 
     .b-header_mode_search {
-        .b-header__title,
+        .b-header__main,
         .b-header__link-search {
             visibility: hidden;
         }
@@ -311,7 +317,7 @@
             animation-name: slideInRight;
         }
 
-        .b-header__title,
+        .b-header__main,
         .b-header__link-search {
             animation-name: fadeOut;
         }
@@ -351,7 +357,7 @@
             animation-name: zoomOut;
         }
 
-        .b-header__title,
+        .b-header__main,
         .b-header__link-search {
             animation-name: fadeIn;
         }

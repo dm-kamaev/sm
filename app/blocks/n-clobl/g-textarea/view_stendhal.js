@@ -33,6 +33,15 @@ goog.scope(function() {
     };
 
     /**
+     * CustomText enum
+     * @enum {String}
+     */
+    View.CustomText = {
+        MAX_LENGTH: 'Максимальная длина комментария —',
+        SYMBOLS: 'символов'
+    };
+
+    /**
      * @override
      * @param {Element} element
      */
@@ -55,23 +64,33 @@ goog.scope(function() {
     View.prototype.updateCounter = function(count) {
         goog.base(this, 'updateCounter', count);
 
-        this.dom.counterCustomTextSymbols.innerHTML = Utils.declensionPrint({
-            params: {
-                num: count,
-                nom: 'символ',
-                gen: 'символа',
-                plu: 'символов'
-            }
-        });
+        if (count > 0) {
+            this.dom.counterCustomTextSymbols.innerHTML =
+                Utils.declensionPrint({
+                    params: {
+                        num: count,
+                        nom: 'символ',
+                        gen: 'символа',
+                        plu: 'символов'
+                    }
+                });
+            this.dom.counterCustomTextLeft.innerHTML = Utils.declensionPrint({
+                params: {
+                    num: count,
+                    nom: 'Остался',
+                    gen: 'Осталось',
+                    plu: 'Осталось'
+                }
+            });
+        } else {
+            this.dom.counterCustomTextLeft.innerHTML =
+                View.CustomText.MAX_LENGTH;
 
-        this.dom.counterCustomTextLeft.innerHTML = Utils.declensionPrint({
-            params: {
-                num: count,
-                nom: 'Остался',
-                gen: 'Осталось',
-                plu: 'Осталось'
-            }
-        });
+            this.dom.counterCustomTextSymbols.innerHTML =
+                View.CustomText.SYMBOLS;
+
+            this.dom.count.innerHTML = this.params.maxLength;
+        }
     };
 
     /**
