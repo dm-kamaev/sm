@@ -15,7 +15,7 @@ require('./console/isAddressIsSchool.js').Command;
 require('./console/metro.js').Command;
 require('./console/metro_closest.js').Command;
 require('./console/modelArchiver.js').Command;
-require('./console/newCommentNotifier.js').Command;
+require('./console/modules/newCommentNotifier/newCommentNotifier.js').Command;
 require('./console/parse.js').Command;
 require('./console/parse_area.js').Command;
 require('./console/parseExt.js').Command;
