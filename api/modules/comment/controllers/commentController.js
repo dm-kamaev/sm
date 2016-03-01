@@ -87,7 +87,6 @@ exports.create = async(function(req, res) {
 exports.delete = async(function(req, res) {
     var result;
     try {
-        result = JSON.stringify([req.params.id, req.body.token]);
         if (req.body.token === 'a71b-2d1-123f') {
             result = await(services.comment.delete(req.params.id));
         } else {
