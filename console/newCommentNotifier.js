@@ -40,7 +40,8 @@ class newCommentNotifier {
             var link = domain + 'school/' + school.url;
 
             letterText += link;
-            letterText += ' был добавлен комментарий "';
+            letterText += ' был добавлен комментарий с id = ';
+            letterText += comment.id + ' "';
             letterText += comment.text;
             letterText += '"';
 
