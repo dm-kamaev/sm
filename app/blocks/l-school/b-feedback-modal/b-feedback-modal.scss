@@ -6,21 +6,12 @@
     }
 }
 
-.b-feedback {
-    width: 700px;
-
-    color: #000;
-    text-align: left;
-}
-
 .b-feedback__form {
-	max-width: 800px;
-
     text-align: left;
 }
 
 .b-feedback__content {
-    margin: 42px 50px 50px;
+	margin: 42px 50px 50px;
 }
 
 .b-feedback__column {
@@ -51,7 +42,7 @@
 .b-feedback__text {
 	margin-right: 20px;
 
-	font-family: 'PT Serif', serif;
+	font-family:  'PT Serif', Times, serif;
 	font-size: 16px;
 
 	&_modal-title {
@@ -160,9 +151,9 @@
 
     margin: 0 17px 12px 0;
 
-    letter-spacing: 0.03em;
+    letter-spacing: 0.01em;
 
-    font: 17px 'PTSerifRegular', serif;
+    font: 16px 'PT Serif', Times, serif;
 }
 
 .b-feedback__score {
