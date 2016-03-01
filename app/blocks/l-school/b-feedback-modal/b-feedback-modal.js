@@ -159,12 +159,6 @@ goog.scope(function() {
             this.formSubmit_
         );
 
-        handler.listen(
-            this.yearGraduate_,
-            sm.gInput.DigitInput.Event.FOCUS,
-            this.onFocusInput_
-        );
-
         this.initCLoseControlListeners_(handler);
 
         this.initDropdownListeners_(handler);
@@ -360,18 +354,6 @@ goog.scope(function() {
             sm.gDropdown.DropdownSelect.Event.ITEM_SELECT,
             this.onUserTypeClick_
         );
-
-        handler.listen(
-            this.dropdowns_.classType,
-            cl.gDropdown.Dropdown.Event.OPENER_CLICK,
-            this.hideUserType_
-        );
-
-        handler.listen(
-            this.dropdowns_.userType,
-            cl.gDropdown.Dropdown.Event.OPENER_CLICK,
-            this.hideClassType_
-        );
     };
 
     /**
@@ -419,39 +401,6 @@ goog.scope(function() {
                 this.showHideGraduationYear_();
                 break;
         }
-    };
-
-    /**
-     * Input focus handler
-     * @private
-     */
-    FeedbackModal.prototype.onFocusInput_ = function() {
-        this.closeDropdowns_();
-    };
-
-    /**
-     * Close all opened dropdowns
-     * @private
-     */
-    FeedbackModal.prototype.closeDropdowns_ = function() {
-        this.hideClassType_();
-        this.hideUserType_();
-    };
-
-    /**
-     * Close user type dropdown
-     * @private
-     */
-    FeedbackModal.prototype.hideUserType_ = function() {
-        this.dropdowns_.userType.close();
-    };
-
-    /**
-     * Close class type dropdown
-     * @private
-     */
-    FeedbackModal.prototype.hideClassType_ = function() {
-        this.dropdowns_.classType.close();
     };
 
     /**
