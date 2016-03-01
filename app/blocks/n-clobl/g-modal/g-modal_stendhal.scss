@@ -3,7 +3,12 @@
 
     color: #000000;
 
+	box-sizing: border-box;
+
     .g-modal__content {
         padding: 0;
+	    box-sizing: border-box;
+
+	    max-width: 800px;
     }
 }
