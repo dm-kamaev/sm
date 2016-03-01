@@ -37,7 +37,7 @@ goog.scope(function() {
      * @enum {String}
      */
     View.CustomText = {
-        MAX_LENGTH: 'Максимальная длинна комментария —',
+        MAX_LENGTH: 'Максимальная длина комментария —',
         SYMBOLS: 'символов'
     };
 
