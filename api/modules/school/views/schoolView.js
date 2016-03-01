@@ -30,7 +30,7 @@ schoolView.default = function(schoolInstance, results, opt_popularSchools) {
 
     var addresses = services.department.addressesFilter(schoolInstance.addresses),
         comments = schoolInstance.comments,
-        score = getSections(schoolInstance.score, true),
+        score = getSections(schoolInstance.score),
         scoreCount = schoolInstance.scoreCount || [0, 0, 0, 0];
 
     var result = {
@@ -236,9 +236,7 @@ var getComments = function(comments) {
     return comments
         .filter(comment => comment.text)
         .map(comment => {
-            var sections = comment.rating ?
-                getSections(comment.rating.score) :
-                getSections([0, 0, 0, 0]);
+            var sections = getSections(comment.rating.score, true);
             return {
                 author: '',
                 rank: typeConvert[comment.userData.userType],

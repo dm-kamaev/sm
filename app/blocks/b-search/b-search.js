@@ -194,6 +194,8 @@ goog.scope(function() {
     Search.prototype.renderItem_ = function(item, str) {
         var res = '';
 
+        str = str || '';
+
         var name = this.renderItemName_(item, str);
         if (name) {
             res = sm.bSearch.Template.item({
@@ -368,7 +370,7 @@ goog.scope(function() {
      */
     Search.prototype.onNotSchoolSelect_ = function(event, data) {
         var url = '/search' +
-                '?name=' + data.text;
+                '?name=' + encodeURIComponent(data.text);
         if (data.item.type === 'metro') {
             url += '&metroId=' + data.item.id;
         } else if (data.item.type === 'areas') {

@@ -34,96 +34,96 @@
  * }
  */
 {template .base autoescape="strict" kind="html"}
-<!DOCTYPE html>
-    <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Школы Мела</title>
-            <link href='https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700,700italic&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
-            <link href='https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
-            <link rel="stylesheet" href="/clobl.build.css">
-            <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
-            <link rel="stylesheet" href="/styles.css">
-        </head>
-        <body>
-            <div class="l-search">
-                {call sm.bHeader.Template.base}
-                    {param params: [
-                        'url': ''
-                    ]/}
-                {/call}
-                <div class="l-search__body">
-                    {call sm.lSearch.Template.header_}
-                        {param params: [
-                            'city': $params.currentCity
-                        ]/}
-                    {/call}
-                    {call sm.lSearch.Template.search_}
-                        {param params: [
-                            'examples': $params.examples,
-                            'templates': [
-                                'search': $params.searchTemplates.search,
-                                'item': $params.searchTemplates.item,
-                                'text': $params.searchTemplates.text,
-                                'value': $params.searchTemplates.value
-                            ],
-                            'dataLinks' : $params.dataLinks
-                        ]/}
-                    {/call}
-                </div>
-                    //TODO: uncomment
-                    /*
-                    {call sm.lSearch.Template.banner_ /}
-                    {call sm.lSearch.Template.content_}
-                        {param params: [
-                            'images': $params.images
-                        ]/}
-                    {/call}
-                    */
-                <div class="l-search__information-links-wrap">
-                    <div class="l-search__information-links">
-                        <div class="l-search__schools">
-                            <div class="l-search__popular-schools">
-                                {call sm.bPopularSchools.Template.base}
-                                    {param params: [
-                                        'popularSchools': $params.popularSchools,
-                                        'config': [
-                                            'popularSchool': [
-                                                'customClasses': 
-                                                'l-search__popular-school'
-                                            ]
-                                        ]
-                                    ]/}
-                                {/call}
-                            </div>
-                            {call sm.lSearch.Template.informationSchools_}
-                                {param params: [
-                                    'amountSchools': $params.amountSchools
-                                ]/}
-                            {/call}
-                            {call sm.lSearch.bLinkArticle.Template.base}
-                                {param params: [
-                                    'urlArticle': $params.dataArticle.urlArticle,
-                                    'urlImg': $params.dataArticle.urlImg,
-                                    'title': $params.dataArticle.title,
-                                    'subtitle': $params.dataArticle.subtitle
-                                ]/}
-                            {/call}
-                        </div>
-                    </div>
-                </div>
-                // <div class="l-search__footer">
-                //     <div class="l-search__horisontal-line"></div>
-                //    {call sm.lSchool.bFooter.Template.base /}
-                // </div>
-            </div>
-            <script type="text/javascript" src="/external.min.js"></script>
-            <script type="text/javascript">var CLOSURE_NO_DEPS = true;</script>
-            <script type="text/javascript" src="/l-search.js"></script>
-        </body>
-    </html>
+    {let $content kind="html"}
+        {call .layoutContent_ data="all" /}
+    {/let}
+
+    {call sm.iLayout.Template.layout}
+        {param params: [
+            'data': [
+                'title': 'Школы Мела',
+                'content': $content,
+                'landingScript': '/l-search.js'
+            ],
+            'config': [
+                'modifier': 'stendhal',
+                'page': 'search',
+                'staticVersion': $params.config?.staticVersion,
+                'year':  $params.config?.year,
+            ]
+        ] /}
+    {/call}
 {/template}
+
+
+/**
+ * @param? params {?}
+ */
+{template .layoutContent_ autoescape="strict" kind="html"}
+    <div class="l-search">
+        <div class="l-search__body">
+            {call sm.lSearch.Template.header_}
+                {param params: [
+                    'city': $params.currentCity
+                ]/}
+            {/call}
+            {call sm.lSearch.Template.search_}
+                {param params: [
+                    'examples': $params.examples,
+                    'templates': [
+                        'search': $params.searchTemplates.search,
+                        'item': $params.searchTemplates.item,
+                        'text': $params.searchTemplates.text,
+                        'value': $params.searchTemplates.value
+                    ],
+                    'dataLinks' : $params.dataLinks
+                ]/}
+            {/call}
+        </div>
+            //TODO: uncomment
+            /*
+            {call sm.lSearch.Template.banner_ /}
+            {call sm.lSearch.Template.content_}
+                {param params: [
+                    'images': $params.images
+                ]/}
+            {/call}
+            */
+        <div class="l-search__information-links-wrap">
+            <div class="l-search__information-links">
+                <div class="l-search__schools">
+                    <div class="l-search__popular-schools">
+                        {call sm.bPopularSchools.Template.base}
+                            {param params: [
+                                'popularSchools': $params.popularSchools,
+                                'config': [
+                                    'popularSchool': [
+                                        'customClasses':
+                                        'l-search__popular-school'
+                                    ]
+                                ]
+                            ]/}
+                        {/call}
+                    </div>
+                    {call sm.lSearch.Template.informationSchools_}
+                        {param params: [
+                            'amountSchools': $params.amountSchools
+                        ]/}
+                    {/call}
+                    {call sm.lSearch.bLinkArticle.Template.base}
+                        {param params: [
+                            'urlArticle': $params.dataArticle.urlArticle,
+                            'urlImg': $params.dataArticle.urlImg,
+                            'title': $params.dataArticle.title,
+                            'subtitle': $params.dataArticle.subtitle
+                        ]/}
+                    {/call}
+                </div>
+            </div>
+        </div>
+    </div>
+{/template}
+
 
 /**
  * Title template

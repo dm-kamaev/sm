@@ -12,6 +12,11 @@
 }
 
 
+.i-layout_page_search .i-layout__content {
+    width: auto;
+}
+
+
 @include media-xl {
     .i-layout_page_school.i-layout_modifier_stendhal .i-layout__content,
     .i-layout_page_school.i-layout_modifier_stendhal .i-layout__footer {

@@ -9,6 +9,7 @@ goog.require('goog.array');
 goog.require('goog.dom');
 goog.require('goog.dom.dataset');
 goog.require('goog.events');
+goog.require('goog.net.XhrIo');
 goog.require('goog.object');
 goog.require('goog.style');
 goog.require('goog.ui.Component');
@@ -211,15 +212,12 @@ goog.scope(function() {
             dataPromise = this.getDataPromise_(),
             ymapsPromise = this.getYmapsPromise_();
 
-        dataPromise.then(this.onDataLoaded_.bind(this));
-
         viewportPromise.then(this.onShown_.bind(this));
 
         goog.Promise.all([
             viewportPromise,
-            dataPromise,
             ymapsPromise
-        ]).then(this.onReady_.bind(this));
+        ]).then(this.onReady_.bind(this, dataPromise));
     };
 
 
@@ -241,19 +239,15 @@ goog.scope(function() {
 
     /**
      * Waitng for schools data
-     * @return {goog.Promise}
+     * @return {Promise}
      * @private
      */
     Map.prototype.getDataPromise_ = function() {
-        return new goog.Promise(function(resolve, reject) {
-            return jQuery.ajax({
-                url: '/api/address/list',
-                type: 'POST',
-                data: '',
-                success: resolve,
-                error: reject
-            });
-        }, this);
+        return jQuery.ajax({
+            url: '/api/address/list',
+            type: 'POST',
+            data: ''
+        });
     };
 
 
@@ -296,15 +290,18 @@ goog.scope(function() {
      */
     Map.prototype.onDataLoaded_ = function(data) {
         this.setCurrentPresets_(Map.PresetType.POINT);
-        this.placemarks_ = this.getAllPlacemarkCollection_(data);
+        this.objectManager_.add(
+            this.getAllPlacemarkCollection_(data)
+        );
     };
 
 
     /**
      * Handling all conditions readiness
+     * @param {goog.Promise} dataPromise
      * @private
      */
-    Map.prototype.onReady_ = function() {
+    Map.prototype.onReady_ = function(dataPromise) {
         //presets initialize
         this.initPresets_();
 
@@ -321,15 +318,15 @@ goog.scope(function() {
             this.getSchoolPlacemarks_(this.params_)
         );
 
-        //point placemarks
-        this.objectManager_.add(this.placemarks_);
-
         // click event handling
         this.objectManager_.objects.events.add(
             'click',
             this.onPlacemarkClick_,
             this
         );
+
+        //point placemarks
+        dataPromise.done(this.onDataLoaded_.bind(this));
     };
 
     /**

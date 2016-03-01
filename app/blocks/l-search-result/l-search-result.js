@@ -6,6 +6,7 @@ goog.require('goog.events');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
 goog.require('gorod.gSuggest.Suggest');
+goog.require('sm.bHeader.Header');
 goog.require('sm.bSearch.Search');
 goog.require('sm.lSearchResult.Template');
 goog.require('sm.lSearchResult.bFilters.Filters');
@@ -68,7 +69,8 @@ goog.scope(function() {
     var SearchResult = sm.lSearchResult.SearchResult,
         SchoolList = sm.lSearchResult.bSchoolList.SchoolList,
         Filters = sm.lSearchResult.bFilters.Filters,
-        Search = sm.bSearch.Search;
+        Search = sm.bSearch.Search,
+        Header = sm.bHeader.Header;
 
     /**
      * CSS-class enum
@@ -209,6 +211,10 @@ goog.scope(function() {
      */
     SearchResult.prototype.onSubmit_ = function(event) {
         this.filters_.submit(event);
+
+        Header.getInstance().setMode(Header.Mode.DEFAULT);
+
+        console.log('submit');
     };
 
     /**
@@ -223,12 +229,16 @@ goog.scope(function() {
             type: event.method
         };
 
+        params.data.searchParams.name = this.search_.getValue();
+
         this.updateSearchSettings_(params);
         this.searchSettings_.data.page = 0;
         this.sendQuery_(true);
 
         this.filters_.collapse();
         window.scrollTo(0, 0);
+
+
     };
 
     /**
