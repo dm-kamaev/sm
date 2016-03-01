@@ -295,7 +295,7 @@
     }
 
     .b-header_mode_search {
-        .b-header__title,
+        .b-header__main,
         .b-header__link-search {
             visibility: hidden;
         }
@@ -317,7 +317,7 @@
             animation-name: slideInRight;
         }
 
-        .b-header__title,
+        .b-header__main,
         .b-header__link-search {
             animation-name: fadeOut;
         }
@@ -357,7 +357,7 @@
             animation-name: zoomOut;
         }
 
-        .b-header__title,
+        .b-header__main,
         .b-header__link-search {
             animation-name: fadeIn;
         }

@@ -171,11 +171,6 @@ goog.scope(function() {
             comments.decorate(this.elements_.comments);
         }
 
-        /** map */
-        var map = new sm.lSchool.bMap.Map();
-        this.addChild(map);
-        map.decorate(this.elements_.map);
-
         /** modal */
         this.modal_ = new sm.lSchool.bFeedbackModal.FeedbackModal({
             data: {
@@ -214,6 +209,11 @@ goog.scope(function() {
         this.score_ = new Score();
         this.addChild(this.score_);
         this.score_.decorate(this.getElementByClass(Score.CssClass.ROOT));
+
+        /** map */
+        var map = new sm.lSchool.bMap.Map();
+        this.addChild(map);
+        map.decorate(this.elements_.map);
     };
 
     /**
