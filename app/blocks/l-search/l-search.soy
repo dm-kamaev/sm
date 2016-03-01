@@ -5,12 +5,6 @@
  * @param? params {
  *     currentCity: ?string,
  *     examples: ?list<string>,
- *     searchTemplates: [
- *         search: ?string,
- *         item: ?string,
- *         text: ?string,
- *         value: ?string
- *     ],
  *     images: ?list<string>,
  *     popularSchools: ?list<[
  *         id: ?number,
@@ -70,12 +64,6 @@
             {call sm.lSearch.Template.search_}
                 {param params: [
                     'examples': $params.examples,
-                    'templates': [
-                        'search': $params.searchTemplates.search,
-                        'item': $params.searchTemplates.item,
-                        'text': $params.searchTemplates.text,
-                        'value': $params.searchTemplates.value
-                    ],
                     'dataLinks' : $params.dataLinks
                 ]/}
             {/call}
@@ -176,12 +164,6 @@
  * Search Template
  * @param? params {
  *     examples: ?list<string>,
- *     templates: [
- *         search: ?string,
- *         item: ?string,
- *         text: ?string,
- *         value: ?string
- *     ],
  *     dataLinks: ?list<[
  *         name: ?string,
  *         url: ?string
@@ -200,13 +182,7 @@
                                 'autofocus': true,
                                 'placeholder': 'Номер школы, метро, район',
                                 'theme': 'main',
-                                'redirect': true,
-                                'templates': [
-                                    'search': $params?.templates.search,
-                                    'item': $params?.templates.item,
-                                    'text': $params?.templates.text,
-                                    'value': $params?.templates.value
-                                ]
+                                'redirect': true
                             ]/}
                         {/call}
                     </div>
