@@ -31,7 +31,8 @@ sm.gDropdown.DropdownSelect = function(view, opt_params, opt_domHelper) {
 goog.inherits(sm.gDropdown.DropdownSelect, cl.gDropdown.Dropdown);
 
 goog.scope(function() {
-    var DropdownSelect = sm.gDropdown.DropdownSelect;
+    var DropdownSelect = sm.gDropdown.DropdownSelect,
+        DropdownView = cl.gDropdown.View;
 
     /**
      * Event enum
@@ -127,7 +128,12 @@ goog.scope(function() {
      * @private
      */
     DropdownSelect.prototype.onOutsideClick_ = function(event) {
-        if (!goog.dom.getAncestorByClass(event.target, 'g-dropdown__opener')) {
+        if (goog.dom.getAncestorByClass(
+                event.target,
+                DropdownView.CssClass.OPENER
+            ) !==
+            this.getElementByClass(DropdownView.CssClass.OPENER)) {
+
             this.close();
         }
     };
