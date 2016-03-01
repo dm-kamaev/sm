@@ -4,7 +4,6 @@
  * Search template
  * @param? params {
  *     currentCity: ?string,
- *     examples: ?list<string>,
  *     images: ?list<string>,
  *     popularSchools: ?list<[
  *         id: ?number,
@@ -63,7 +62,6 @@
             {/call}
             {call sm.lSearch.Template.search_}
                 {param params: [
-                    'examples': $params.examples,
                     'dataLinks' : $params.dataLinks
                 ]/}
             {/call}

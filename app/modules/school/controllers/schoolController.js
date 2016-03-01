@@ -143,34 +143,41 @@ exports.view = async (function(req, res) {
 });
 
 exports.search = async(function(req, res) {
-    var exampleList = ['Поварская, 14', 'Школа 123', 'Савеловская', 'Лицей'];
-    var popularSchools = await (services.school.getPopularSchools(3));
-    var amountSchools = await (services.school.getSchoolsCount());
+    var dataPromises = {
+        popularSchools: services.school.getPopularSchools(3),
+        amountSchools: services.school.getSchoolsCount()
+    };
+
+    var data = await(dataPromises),
+        searchUrl = '/search?name=';
 
     var html = soy.render('sm.lSearch.Template.base', {
           params: {
               currentCity: 'Москва',
-              examples: exampleList,
-              popularSchools: schoolView.popular(popularSchools),
+              popularSchools: schoolView.popular(data.popularSchools),
               dataLinks : [
                   {
                       name: 'Школа 123',
-                      url: '/search?name=школа 123'
+                      url: searchUrl +
+                        encodeURIComponent('школа 123')
                   },
                   {
                       name: 'Тургеневская',
-                      url: '/search?name=Тургеневская'
+                      url: searchUrl +
+                        encodeURIComponent('Тургеневская')
                   },
                   {
                       name: 'Лицей',
-                      url: '/search?name=Лицей'
+                      url: searchUrl +
+                        encodeURIComponent('Лицей')
                   },
                   {
                       name: 'Замоскворечье',
-                      url: '/search?name=Замоскворечье'
+                      url: searchUrl +
+                        encodeURIComponent('Замоскворечье')
                   }
               ],
-              amountSchools: amountSchools,
+              amountSchools: data.amountSchools,
               dataArticle : {
                   urlArticle: 'http://mel.fm/2016/01/09/innovators',
                   urlImg: 'images/l-search/b-link-article/article.png',
