@@ -168,7 +168,7 @@ goog.scope(function() {
                 return {
                     text: item.name,
                     value: item.id
-                }
+                };
             }
         });
      };
