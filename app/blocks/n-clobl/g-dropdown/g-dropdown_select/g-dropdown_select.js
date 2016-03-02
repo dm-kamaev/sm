@@ -31,7 +31,8 @@ sm.gDropdown.DropdownSelect = function(view, opt_params, opt_domHelper) {
 goog.inherits(sm.gDropdown.DropdownSelect, cl.gDropdown.Dropdown);
 
 goog.scope(function() {
-    var DropdownSelect = sm.gDropdown.DropdownSelect;
+    var DropdownSelect = sm.gDropdown.DropdownSelect,
+        DropdownView = cl.gDropdown.View;
 
     /**
      * Event enum
@@ -62,10 +63,17 @@ goog.scope(function() {
      */
     DropdownSelect.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
+
         this.getHandler().listen(
             this.listInstance_,
             cl.gList.List.Event.ITEM_SELECT,
             this.onListItemSelect_
+        );
+
+        this.getHandler().listen(
+            document.body,
+            goog.events.EventType.CLICK,
+            this.onOutsideClick_
         );
     };
 
@@ -112,5 +120,21 @@ goog.scope(function() {
             'type': DropdownSelect.Event.ITEM_SELECT,
             'itemId': event['itemId']
         });
+    };
+
+    /**
+     * Handler for click on dropdown
+     * @param {Object} event
+     * @private
+     */
+    DropdownSelect.prototype.onOutsideClick_ = function(event) {
+        if (goog.dom.getAncestorByClass(
+                event.target,
+                DropdownView.CssClass.OPENER
+            ) !==
+            this.getElementByClass(DropdownView.CssClass.OPENER)) {
+
+            this.close();
+        }
     };
 });

@@ -36,6 +36,16 @@
     max-width: 1200px;
     height: 100%;
     margin: 0 auto;
+
+    &:before {
+        display: inline-block;
+
+        width: 0;
+        height: 100%;
+
+        content: '';
+        vertical-align: middle;
+    }
 }
 
 .b-header__wrap {
@@ -47,18 +57,12 @@
 }
 
 .b-header__main {
-    position: absolute;
-    left: 0;
+    position: relative;
+    z-index: 1;
 
     display: inline-block;
 
-    width: 100%;
-    height: 100%;
-    margin: 0 auto;
-
-    vertical-align: top;
-
-    font-weight: bold;
+    vertical-align: middle;
 }
 
 .b-header__fader {
@@ -79,6 +83,7 @@
 /* advanced search link */
 .b-header__link-search {
     position: absolute;
+    z-index: 1;
     top: 27px; //28
     left: 0;
 
@@ -87,10 +92,6 @@
 /* advanced search link end */
 
 /* logo */
-.b-header__title {
-    margin-top: 4px;
-}
-
 .b-header__header {
     display: inline-block;
 
@@ -178,24 +179,23 @@
     z-index: 10;
     top: 50%;
 
-    margin-top: -9px;
+    margin-top: -23px;
 
     cursor: pointer;
+    border: 13px solid white;
+
+    -webkit-touch-callout: none;
+    -webkit-text-size-adjust: none;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    user-select: none;
 
     &.b-header__button_search,
     &.b-header__button_close {
-        right: -7px;
+        right: -23px;
 
         visibility: hidden;
     }
 }
-
-/* TODO: clean up */
-.b-header .b-list.b-list_stendhal-theme .b-list__item {
-    padding: 0;
-}
-/* clean up end */
-
 /* search end */
 
 @include media-xl {
@@ -227,12 +227,16 @@
     }
 
     .b-header__button-search-holder {
+        position: absolute;
+        top: 0;
+        right: 0;
+
+        width: 100%;
         height: 100%;
     }
 
     .b-header_mode_search,
     .b-header_mode_default {
-        /* TODO: clean up */
         .b-header__search {
             top: 0;
             bottom: 0;
@@ -247,49 +251,10 @@
             box-sizing: content-box;
             border: none;
         }
-
-        .b-search_theme_min .b-search__suggest {
-            position: absolute;
-            left: 0;
-
-            padding-left: 53px;
-        }
-
-        .b-search__item {
-            border-top: 1px solid #e5e5e5;
-
-            line-height: 70px;
-        }
-
-        .b-search__item-icon {
-            left: 31px;
-        }
-
-        .b-search__item {
-            padding: 0 60px;
-        }
-
-        .b-search__icon {
-            display: none;
-        }
-
-        .b-list.b-list_stendhal-theme,
-        .b-list.b-list_stendhal-theme .b-list__item {
-            padding: 0;
-
-            box-shadow: none;
-            border: none;
-            border-radius: 0;
-        }
-
-        .b-input__input_size_medium {
-            font-size: 14px;
-        }
-        /* clean up end */
     }
 
     .b-header_mode_search {
-        .b-header__title,
+        .b-header__main,
         .b-header__link-search {
             visibility: hidden;
         }
@@ -300,24 +265,24 @@
 
         .b-header__button.b-header__button_search {
             right: auto;
-            left: -7px;
+            left: -23px;
         }
     }
 
     .b-header_mode_search.b-header_animation_on {
         /* animations begin */
         .b-header__button-search-holder {
-            animation-delay: 0.5s;
+            //animation-delay: 0.5s;
             animation-name: slideInRight;
         }
 
-        .b-header__title,
+        .b-header__main,
         .b-header__link-search {
             animation-name: fadeOut;
         }
 
         .b-header__button_close {
-            animation-delay: 0.5s;
+            //animation-delay: 0.5s;
             animation-name: zoomIn;
         }
 
@@ -326,7 +291,7 @@
         }
 
         .b-header__search-holder {
-            animation-delay: 0.5s;
+            //animation-delay: 0.5s;
             animation-name: fadeIn;
         }
         /* animations end */
@@ -351,7 +316,7 @@
             animation-name: zoomOut;
         }
 
-        .b-header__title,
+        .b-header__main,
         .b-header__link-search {
             animation-name: fadeIn;
         }
@@ -388,11 +353,4 @@
 
         padding: 0 30px;
     }
-
-    /* TODO: clean up */
-    .b-header_mode_search .b-search__item,
-    .b-header_mode_default .b-search__item {
-        line-height: 55px;
-    }
-    /* clean up end */
 }

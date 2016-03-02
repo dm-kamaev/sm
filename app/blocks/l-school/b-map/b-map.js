@@ -318,6 +318,15 @@ goog.scope(function() {
             this.getSchoolPlacemarks_(this.params_)
         );
 
+        //Center map in accordance of default placemarks
+        this.ymaps_.setBounds(
+            this.objectManager_.getBounds(),
+            {
+                checkZoomRange: true,
+                zoomMargin: 35
+            }
+        ).then(this.checkZoom_.bind(this));
+
         // click event handling
         this.objectManager_.objects.events.add(
             'click',
@@ -405,6 +414,15 @@ goog.scope(function() {
         }
     };
 
+    /**
+     * Check if the zoom of map is too small, the increase zoom
+     * @private
+     */
+    Map.prototype.checkZoom_ = function() {
+        if (this.ymaps_.getZoom() > 16) {
+            this.ymaps_.setZoom(16);
+        }
+    };
 
     /**
      * Getter for preset image href
@@ -705,116 +723,17 @@ goog.scope(function() {
 
     /**
      * Getter for map parameters
-     * @param {Array.<Object>} coords
      * @return {Object}
      * @private
      */
-    Map.prototype.getMapParams_ = function(coords) {
+    Map.prototype.getMapParams_ = function() {
         var ymapsParams = {
             controls: []
         };
 
-        if (coords.length > 1) {
-            ymapsParams['bounds'] = this.getBounds_(coords);
-        } else if (coords.length == 1) {
-            ymapsParams['center'] = this.coordToArray_(coords[0]);
-            ymapsParams['zoom'] = Map.defaultPosition.ZOOM;
-        } else {
-            ymapsParams['center'] = Map.defaultPosition.CENTER;
-            ymapsParams['zoom'] = Map.defaultPosition.ZOOM;
-        }
+        ymapsParams['center'] = Map.defaultPosition.COORDS;
+        ymapsParams['zoom'] = Map.defaultPosition.ZOOM;
 
         return ymapsParams;
-    };
-
-
-    /**
-     * Converts coord object to array
-     * @param {Object} coordObject
-     * @return {Array<number>}
-     * @private
-     */
-    Map.prototype.coordToArray_ = function(coordObject) {
-        var coord = [];
-        coord.push(coordObject.lat);
-        coord.push(coordObject.lng);
-        return coord;
-    };
-
-
-    /**
-     * Setter for bounds
-     * @param {Object} coords
-     * @return {Array.<Array.<number>>}
-     * @private
-     */
-    Map.prototype.getBounds_ = function(coords) {
-        return this.correctBounds_(this.calculateBounds_(coords), {
-            lat: coords[0].lat,
-            lon: coords[0].lng
-        });
-    };
-
-
-    /**
-     * Calculate map bounds
-     * @param {Object} coords
-     * @return {Object}
-     * @private
-     */
-    Map.prototype.calculateBounds_ = function(coords) {
-        var south, west, east, north;
-        east = north = 0;
-        south = west = 90;
-
-        for (var i = 0, point; point = coords[i]; i++) {
-            var latitude = point.lat,
-                longitude = point.lng;
-
-            north = latitude > north ? latitude : north;
-            south = latitude < south ? latitude : south;
-            east = longitude > east ? longitude : east;
-            west = longitude < west ? longitude : west;
-        }
-
-        return {
-            north: north,
-            west: west,
-            south: south,
-            east: east
-        };
-    };
-
-
-    /**
-     * Recalculate map bounds
-     * @param {Object} border
-     * @param {Object} newCenter
-     * @return {Array<Array<number>>}
-     * @private
-     */
-    Map.prototype.correctBounds_ = function(border, newCenter) {
-        var center = {
-            lat: (border.north + border.south) / 2,
-            lon: (border.west + border.east) / 2
-        };
-
-        if (newCenter.lat > center.lat)
-            border.north = border.south + (newCenter.lat - border.south) * 2;
-        else
-            border.south = border.north - (border.north - newCenter.lat) * 2;
-
-        if (newCenter.lon > center.lon)
-            border.east = border.west + (newCenter.lon - border.west) * 2;
-        else
-            border.west = border.east - (border.east - newCenter.lon) * 2;
-
-        var correction = 0.5 * Math.abs(border.north - border.south);
-        border.north += correction;
-        border.south -= correction;
-        border.east += correction;
-        border.west -= correction;
-
-        return [[border.north, border.west], [border.south, border.east]];
     };
 });

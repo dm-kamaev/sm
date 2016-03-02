@@ -2,35 +2,16 @@ const cityResultView = require.main.require(
     './api/modules/study/views/cityResultView.js'
 );
 
+const subjectView = require.main.require(
+    './api/modules/study/views/subjectView.js'
+);
+
 /**
  * EgeResultView
  * @constructor
  */
 var EgeResultView = function() {
 };
-
-/**
- * Sort list
- * @type {string[]}
- */
-EgeResultView.SORT_LIST = [
-    'математика (профильная)',
-    'русский язык',
-    'обществознание',
-    'физика',
-    'история',
-    'биология',
-    'математика (базовая)',
-    'химия',
-    'английский',
-    'информатика',
-    'информатика и икт',
-    'география',
-    'литература',
-    'французский',
-    'немецкий',
-    'испанский'
-];
 
 /**
  * Results transformation
@@ -96,49 +77,17 @@ EgeResultView.prototype.transformResults = function(results, cityResults) {
         }),
         results: keys.map(key => {
             var item = res[key];
-
             return {
                 top: item.top ?
-                    item.top.sort((a, b) => that.sorter_(a,b)) : undefined,
+                    item.top.sort((a, b) => subjectView.sorter(a.order, b.order, 'EGE')) : undefined,
                 middle: item.middle ?
-                    item.middle.sort((a, b) => that.sorter_(a,b)) : undefined,
+                    item.middle.sort((a, b) => subjectView.sorter(a.order, b.order, 'EGE')) : undefined,
                 bottom: item.bottom ?
-                    item.bottom.sort((a, b) => that.sorter_(a,b)) : undefined
+                    item.bottom.sort((a, b) => subjectView.sorter(a.order, b.order, 'EGE')) : undefined
             }
         }),
         range: range
     };
-};
-
-/**
- * Sorter
- * @param {Object} a
- * @param {Object} b
- * @return {number}
- * @private
- */
-EgeResultView.prototype.sorter_ = function(a, b) {
-    var length = EgeResultView.SORT_LIST.length,
-        orderA = length,
-        orderB = length;
-
-    for (var i = 0, item; i < length; i++) {
-        item = EgeResultView.SORT_LIST[i];
-
-        if (a.order == item) {
-            orderA = i;
-        }
-
-        if (b.order == item) {
-            orderB = i;
-        }
-
-        if (orderA < length && orderB < length) {
-            break;
-        }
-    }
-
-    return orderA - orderB;
 };
 
 /**
