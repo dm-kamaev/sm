@@ -3,6 +3,7 @@ goog.provide('sm.lSearchResult.bSchoolListItem.SchoolListItem');
 goog.require('goog.dom.dataset');
 goog.require('goog.events');
 goog.require('goog.ui.Component');
+goog.require('sm.bBadge.Badge');
 goog.require('sm.bRating.Rating');
 goog.require('sm.bScoreSchoolList.ScoreSchoolList');
 
@@ -61,17 +62,19 @@ sm.lSearchResult.bSchoolListItem.SchoolListItem = function(opt_params) {
     this.isScoreClickable_ = this.params_.isScoreClickable;
 
     /**
+     * DOM elements
+     * @type {Object}
      * @private
-     * @type {?array<object>}
      */
-    this.metro_ = [];
+    this.elements_ = {};
 };
 goog.inherits(sm.lSearchResult.bSchoolListItem.SchoolListItem,
     goog.ui.Component);
 
 goog.scope(function() {
     var ListItem = sm.lSearchResult.bSchoolListItem.SchoolListItem,
-        Score = sm.bScoreSchoolList.ScoreSchoolList;
+        Score = sm.bScoreSchoolList.ScoreSchoolList,
+        Badge = sm.bBadge.Badge;
 
     /**
      *  Css class enum
@@ -79,15 +82,8 @@ goog.scope(function() {
      */
     ListItem.CssClass = {
         ROOT: 'b-school-list-item',
-        LINK_NAME: 'b-school-list-item__name_bold'
-    };
-
-    /**
-     * Events enum
-     * @enum {String}
-     */
-    ListItem.Event = {
-        CLICK: 'click'
+        LINK_NAME: 'b-school-list-item__name_bold',
+        SECTION_BADGES: 'b-school-list-item__section_badges'
     };
 
     /**
@@ -189,9 +185,7 @@ goog.scope(function() {
      * @param {Number} newCriterion
      */
     ListItem.prototype.changeSorCriterion = function(newCriterion) {
-        var scoreInstance = this.getChildAt(0);
-
-        scoreInstance.changeCriterion(newCriterion);
+        this.scoreInstance_.changeCriterion(newCriterion);
     };
 
     /**
@@ -228,7 +222,21 @@ goog.scope(function() {
         this.addChild(this.scoreInstance_);
         this.scoreInstance_.decorate(scoreElement);
 
-        this.metro_ = this.getElementsByClass('b-badge__item_active');
+        this.elements_.sectionBadges = this.getElementByClass(
+            ListItem.CssClass.SECTION_BADGES
+        );
+
+        var badgeElements = this.getElementsByClass(
+            Badge.CssClass.ROOT
+        );
+
+        if (badgeElements) {
+            for (var i = 0, instance; i < badgeElements.length; i++) {
+                instance = new Badge();
+                this.addChild(instance);
+                instance.decorate(badgeElements[i]);
+            }
+        }
     };
 
     /**
@@ -240,28 +248,22 @@ goog.scope(function() {
 
         var handler = this.getHandler();
 
-        for (var i = 0; i < this.metro_.length; i++) {
+        if (this.elements_.sectionBadges) {
             handler.listen(
-                this.metro_[i],
+                this.elements_.sectionBadges,
                 goog.events.EventType.CLICK,
-                this.metroClickHandler_
+                this.onSectionBadgesClick_
             );
         }
     };
 
     /**
-     * Metro click handler
+     * On section badges click
      * @param {Object} event
      * @private
      */
-    ListItem.prototype.metroClickHandler_ = function(event) {
+    ListItem.prototype.onSectionBadgesClick_ = function(event) {
         event.preventDefault();
-        var params = JSON.parse(
-            goog.dom.dataset.get(event.currentTarget, 'params')
-        );
-
-        document.location.href = '/search?name=' + event.target.textContent +
-            '&metroId=' + params['id'];
     };
 
     /**

@@ -1,6 +1,12 @@
 {namespace sm.gHint.TemplateStendhal}
 
 /**
+ * Hint template
+ * @param params {
+ *     config: {
+ *         align: ?string
+ *     }
+ * }
  * @constructor
  * @extends cl.gHint.Template
  */
@@ -24,4 +30,18 @@
     <div class="{call .rootClass/}__content">
         {$params.data}
     </div>
+{/template}
+
+/**
+ * @override
+ * @param params {
+ *     config: {
+ *         align: ?string
+ *     }
+ * }
+ */
+{template .additionalClasses}
+    {if $params?.config?.align}
+        {call .rootClass/}_{$params.config.align}-align
+    {/if}
 {/template}
