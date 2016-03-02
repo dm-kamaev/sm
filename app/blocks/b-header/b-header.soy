@@ -24,10 +24,8 @@
         <div class="b-header__body">
             {call .advancedSearchLink_ data="all" /}
 
-            <div class="b-header__main">
-                <div class="b-header__wrap">
-                    {call .logo_ data="all" /}
-                </div>
+            <div class="b-header__main i-animate">
+                {call .logo_ data="all" /}
             </div>
 
             {call .search_ data="all" /}
@@ -65,7 +63,7 @@
  * }}
  */
 {template .logo_ private="true" autoescape="strict" kind="html"}
-    <div class="b-header__title i-animate">
+    <div class="b-header__title">
         <span class="b-header__stars">
             <span class="b-header__star b-header__star_first">t</span>
             <span class="b-header__star b-header__star_second">t</span>
@@ -103,12 +101,13 @@
 {template .search_ private="true" autoescape="strict" kind="html"}
     {if $params?.url}
         <div class="b-header__button-search-holder i-animate">
-            {call sm.bIcon.Template.icon}
-                {param params: [
-                    'type': 'search',
-                    'customClasses': 'b-header__button b-header__button_search'
-                ] /}
-            {/call}
+            <div class="b-header__button b-header__button_search">
+                {call sm.bIcon.Template.icon}
+                    {param params: [
+                        'type': 'search'
+                    ] /}
+                {/call}
+            </div>
         </div>
 
         <div class="b-header__search-holder i-animate">
@@ -124,12 +123,13 @@
         </div>
 
         <div class="b-header__button-close-holder">
-            {call sm.bIcon.Template.icon}
-                {param params: [
-                    'type': 'clear',
-                    'customClasses': 'b-header__button b-header__button_close i-animate'
-                ] /}
-            {/call}
+            <div class="b-header__button b-header__button_close i-animate">
+                {call sm.bIcon.Template.icon}
+                    {param params: [
+                        'type': 'clear'
+                    ] /}
+                {/call}
+            </div>
         </div>
     {/if}
 {/template}

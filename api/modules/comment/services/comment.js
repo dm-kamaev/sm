@@ -118,3 +118,31 @@ exports.update = async(function (comment, data) {
 
     return instance;
 });
+
+/**
+ * Delete comment by id
+ * Deletes comment, related rating, related userData
+ * @param {number} id - comment id
+ * @return {bool} was deleted
+ */
+exports.delete = async(function (commentId) {
+    var comment = await(models.Comment.findOne({
+        where: { id: commentId }
+    }));
+
+    var dataPromises = {
+        rating: models.Rating.findOne({
+            where: { id: comment.ratingId }
+        }),
+        userData: models.UserData.findOne({
+            where: { id: comment.userDataId }
+        })
+    };
+    var data = await(dataPromises);
+
+    comment.destroy();
+    data.rating.destroy();
+    data.userData.destroy();
+
+    return commentId;
+});

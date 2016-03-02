@@ -15,6 +15,9 @@ const giaResultView = require.main.require(
     './api/modules/study/views/giaResultView.js');
 const olimpResultView = require.main.require(
     './api/modules/study/views/olimpResultView.js');
+const subjectView = require.main.require(
+    './api/modules/study/views/subjectView.js'
+);
 
 var schoolView = {};
 
@@ -703,9 +706,11 @@ schoolView.filters = function(filters) {
                break;
            case 'ege':
                res.data.header.title = 'Высокие результаты ЕГЭ';
+               res.data.filters.sort((a, b) => subjectView.sorter(a.label, b.label, 'EGE'));
                break;
            case 'gia':
                res.data.header.title = 'Высокие результаты ГИА';
+               res.data.filters.sort((a, b) => subjectView.sorter(a.label, b.label, 'GIA'));
                break;
            case 'olimp':
                res.data.header.title = 'Есть победы в олимпиадах';
