@@ -12,7 +12,7 @@
  */
 
 {template .base}
-    <div class="b-badge">
+    <div class="b-badge{not($params?.display) ? ' b-badge_rating' : ''}">
         {call sm.bIcon.Template.icon}
             {param params:[
                 'type': $params.display ?: 'test',
@@ -20,28 +20,56 @@
             ] /}
         {/call}
 
-        <div class="b-badge__content">
-            {foreach $dataItem in $params.data}
-                {if $params?.display == 'metro'}
-                    {call .metroItem_}
-                        {param params:[
-                            'station': $dataItem.name,
-                            'id': $dataItem.id
-                        ] /}
-                    {/call}
-                {else}
-                    {call .ratingItem_}
-                        {param params:[
-                            'ratingName': $dataItem
-                        ] /}
-                    {/call}
-                {/if}
+        {foreach $dataItem in $params.data}
+            {if $params?.display == 'metro'}
+                {call .metroItem_}
+                    {param params:[
+                        'station': $dataItem.name,
+                        'id': $dataItem.id
+                    ] /}
+                {/call}
+            {else}
+                {let $hintData kind="html"}
+                    <div class="b-badge__hint-content">
+                    Рейтинг составлен Департаментом образования{sp}
+                    Москвы по итогам 2014—2015 учебного года
+                    <br>
+                    <div class="b-badge__hint-href">
+                        Подробнее
+                        <div class="b-badge__hint-href-icon">
+                            {call sm.bIcon.Template.icon}
+                                {param params: [
+                                    'type': 'window-href'
+                                ] /}
+                            {/call}
+                        </div>
+                    </div>
+                    </div>
+                {/let}
 
-                {if not isLast($dataItem)}
-                    ,{sp}
-                {/if}
-            {/foreach}
-        </div>
+                {call .ratingItem_}
+                    {param params:[
+                        'ratingName': $dataItem
+                    ] /}
+                {/call}
+
+                {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+                    {param params: [
+                        'type': 'hint',
+                        'renderParams': [
+                            'data': $hintData,
+                            'config': [
+                                'align': 'left'
+                            ]
+                        ]
+                    ]/}
+                {/call}
+            {/if}
+
+            {if not isLast($dataItem)}
+                ,{sp}
+            {/if}
+        {/foreach}
     </div>
 {/template}
 
@@ -59,7 +87,7 @@
         'id': $params.id
     ] /}
 
-    <div class="b-badge__item b-badge__item_active"
+    <div class="b-badge__item"
          data-params="{call goog.json.serialize data="$data" /}">
         {$params.station}
     </div>

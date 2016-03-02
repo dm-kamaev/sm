@@ -8,15 +8,15 @@
 .b-badge__item {
     display: inline;
 
-	text-decoration: inherit;
-    color: inherit;
+    text-decoration: none;
+    color: #808080;
 
-    &_active:hover {
+    &:hover {
         color: #ee362c;
     }
 }
 
-.b-badge__item_active {
+.b-badge__item {
     cursor: pointer;
 }
 
@@ -26,13 +26,39 @@
     margin-right: 8px;
 }
 
-.b-badge__content {
-    display: inline;
-    text-decoration: none;
+.b-badge__hint-href {
+    display: inline-block;
+
+    margin-top: 7px;
+
+    color: #356fc4;
+    cursor: pointer;
+}
+
+.b-badge__hint-href-icon {
+    display: inline-block;
+
+    margin-left: 10px;
+
+    vertical-align: text-bottom;
+}
+
+.b-badge__hint-content {
+    width: 212px;
+    margin-right: 8px;
+
+    font-family: Arial;
+    font-size: 13px;
+    font-weight: 400;
     color: #808080;
+    cursor: default;
 }
 
 .b-badge_star {
     font-family: "WebSymbols", Arial, sans-serif;
     color: #ee362c;
+}
+
+.b-badge.b-badge_rating {
+    cursor: pointer;
 }
