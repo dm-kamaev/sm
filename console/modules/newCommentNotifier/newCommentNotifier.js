@@ -20,15 +20,14 @@ class newCommentNotifier {
 
     start() {
         var email = emailConfig.email,
-            domain = emailConfig.domain,
-            theme = 'Новый комментарий на Школах Мела';
+            domain = emailConfig.domain;
 
         var transporter = transporterGenerator.createSMTPTransporter({
             debug: true,
             name: 'cochanges.com'
         });
         var mailSender = new MailSender(
-            transporter, 'schools.mel.fm <sender@schools.mel.fm>'
+            transporter, 'schools.mel.fm <sender@mel.fm>'
         );
 
         var notSended = await(services.comment.getNotSended());
