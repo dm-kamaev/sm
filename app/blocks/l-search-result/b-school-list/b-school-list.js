@@ -82,7 +82,6 @@ goog.scope(function() {
      * @enum
      */
     SchoolList.Event = {
-        'ITEM_CLICK': SchoolListItem.Event.CLICK,
         'SORT_CLICK': sm.gDropdown.DropdownSelect.Event.ITEM_SELECT,
         'SHOW_MORE': 'show-more-items'
     };
@@ -339,7 +338,6 @@ goog.scope(function() {
                 this.showMoreButtonElement_,
                 gorod.iUtils.CssClass.HIDDEN
         )) {
-
             this.getHandler().listen(
                 goog.dom.getWindow(),
                 goog.events.EventType.SCROLL,
