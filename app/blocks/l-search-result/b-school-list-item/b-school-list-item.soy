@@ -22,6 +22,10 @@
  *         id: number,
  *         name: string
  *     ]>,
+ *     area: ?[
+ *         id: number,
+ *         name: string
+ *     ],
  *     ratings: ?list<string>,
  *     isScoreClickable: ?boolean
  * }
@@ -54,7 +58,10 @@
             </div>
         </div>
 
-        {if length($params.metroStations) > 0 or length($params.ratings) > 0}
+        {if length($params.metroStations) > 0 or 
+            length($params.ratings) > 0 or
+            $params.area.name
+        }
             <div class="b-school-list-item__section
                         b-school-list-item__section_badges">
                 {if length($params.metroStations) > 0}
@@ -63,6 +70,15 @@
                             {param params:[
                                 'data': $params.metroStations,
                                 'display': 'metro'
+                            ]/}
+                        {/call}
+                    </div>
+                {else}
+                    <div class="b-school-list-item__area">
+                        {call sm.bBadge.Template.base}
+                            {param params:[
+                                'data': $params.area,
+                                'display': 'location'
                             ]/}
                         {/call}
                     </div>

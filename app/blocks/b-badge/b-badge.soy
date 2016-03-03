@@ -21,26 +21,35 @@
         {/call}
 
         <div class="b-badge__content">
-            {foreach $dataItem in $params.data}
-                {if $params?.display == 'metro'}
-                    {call .metroItem_}
-                        {param params:[
-                            'station': $dataItem.name,
-                            'id': $dataItem.id
-                        ] /}
-                    {/call}
-                {else}
-                    {call .ratingItem_}
-                        {param params:[
-                            'ratingName': $dataItem
-                        ] /}
-                    {/call}
-                {/if}
+            {if length($params.data) > 0}
+                {foreach $dataItem in $params.data}
+                    {if $params?.display}
+                        {call .clickableItem_}
+                            {param params:[
+                                'name': $dataItem.name,
+                                'id': $dataItem.id
+                            ] /}
+                        {/call}
+                    {else}
+                        {call .ratingItem_}
+                            {param params:[
+                                'ratingName': $dataItem
+                            ] /}
+                        {/call}
+                    {/if}
 
-                {if not isLast($dataItem)}
-                    ,{sp}
-                {/if}
-            {/foreach}
+                    {if not isLast($dataItem)}
+                        ,{sp}
+                    {/if}
+                {/foreach}
+            {else}
+                {call .clickableItem_}
+                    {param params:[
+                        'name': $params.data.name,
+                        'id': $params.data.id
+                    ] /}
+                {/call}
+            {/if}
         </div>
     </div>
 {/template}
@@ -48,20 +57,20 @@
 
 
 /**
- * Metro item template
+ * Clickable item template
  * @param params {{
- *     station: string
+ *     name: string
  *     id: number
  * }}
  */
-{template .metroItem_}
+{template .clickableItem_}
     {let $data: [
         'id': $params.id
     ] /}
 
     <div class="b-badge__item b-badge__item_active"
          data-params="{call goog.json.serialize data="$data" /}">
-        {$params.station}
+        {$params.name}
     </div>
 {/template}
 
