@@ -1,14 +1,30 @@
 {
   "production": {
     "emailNotifier": {
-      "email": "sabina@mel.fm",
-      "domain": "http://schools.mel.fm/"
+      "email": "sabina@mel.fm"
+    },
+    "url": {
+        "protocol": "http",
+        "host": "schools.mel.fm"
+    },
+    "deleteMailbox": {
+        "email": "delete@mel.fm",
+        "host": "imap.gmail.com",
+        "port": 993
     }
   },
   "development": {
     "emailNotifier": {
-      "email": "sabina@mel.fm",
-      "domain": "http://schools1.qa.lan/"
+      "email": "sabina@mel.fm"
+    },
+    "url": {
+        "protocol": "http",
+        "host": "schools1.qa.lan"
+    },
+    "deleteMailbox": {
+        "email": "delete_test@mel.fm",
+        "host": "imap.gmail.com",
+        "port": 993
     }
   }
 }
