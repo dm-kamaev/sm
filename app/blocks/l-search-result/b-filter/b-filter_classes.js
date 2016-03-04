@@ -1,7 +1,10 @@
 goog.provide('sm.lSearchResult.bFilter.FilterClasses');
 
-goog.require('sm.lSearchResult.bFilter.Filter');
+goog.require('cl.iUtils.Utils');
+goog.require('goog.dom.classlist');
+goog.require('goog.events');
 
+goog.require('sm.lSearchResult.bFilter.Filter');
 
 /**
  * TODO: move all classes logic from b-filter to b-filter_classes
@@ -11,6 +14,27 @@ goog.require('sm.lSearchResult.bFilter.Filter');
  */
 sm.lSearchResult.bFilter.FilterClasses = function(opt_params) {
     goog.base(this);
+
+    /**
+     * Reset button
+     * @type {Element}
+     * @protected
+     */
+    this.filterResetElement = null;
+
+    /**
+     * Classes input
+     * @type {Element}
+     * @protected
+     */
+    this.inputClassesElements = null;
+
+    /**
+     * Input label
+     * @type {Element}
+     * @private
+     */
+    this.inputLabelElements_ = null;
 };
 goog.inherits(
     sm.lSearchResult.bFilter.FilterClasses,
@@ -28,7 +52,13 @@ goog.scope(function() {
      */
     FilterClasses.CssClass = {
         'ROOT': 'b-filter_classes',
-        'DROPDOWN': 'b-filter__classes-dropdown'
+        'DROPDOWN': 'b-filter__classes-dropdown',
+        'INPUT_LABEL': 'b-filter__input-label',
+        'INPUT_LABEL_INACTIVE': 'b-filter__input-label_inactive',
+        'FILTER_RESET': 'b-filter__reset',
+        'FILTER_RESET_ACTIVE': 'b-filter__reset_active',
+        'INPUT_CLASSES': 'b-filter__input',
+        'HIDDEN': cl.iUtils.Utils.CssClass.HIDDEN
     };
 
 
@@ -51,6 +81,21 @@ goog.scope(function() {
             this.dropdownElement_,
             this
         );
+
+        this.filterResetElement = goog.dom.getElementByClass(
+            FilterClasses.CssClass.FILTER_RESET,
+            element
+        );
+
+        this.inputClassesElements = goog.dom.getElementsByClass(
+            FilterClasses.CssClass.INPUT_CLASSES,
+            element
+        );
+
+        this.inputLabelElements_ = goog.dom.getElementsByClass(
+            FilterClasses.CssClass.INPUT_LABEL,
+            element
+        );
     };
 
     /**
@@ -67,6 +112,18 @@ goog.scope(function() {
             this.filterResetElement,
             Filter.CssClass.HIDDEN
         );
+
+        for (var i = 0; i < this.inputLabelElements_.length; i++) {
+            goog.dom.classlist.add(
+                this.inputLabelElements_[i],
+                FilterClasses.CssClass.INPUT_LABEL_INACTIVE
+            );
+
+            goog.dom.classlist.remove(
+                this.inputLabelElements_[index],
+                FilterClasses.CssClass.INPUT_LABEL_INACTIVE
+            );
+        }
     };
 
     /**
@@ -100,6 +157,27 @@ goog.scope(function() {
                 this
             );
         }
+
+        if (this.filterResetElement) {
+            this.getHandler().listen(
+                this.filterResetElement,
+                goog.events.EventType.CLICK,
+                this.onClickResetButton_,
+                false,
+                this
+            );
+        }
+
+        for (var i = 0; i < this.inputClassesElements.length; i++) {
+            this.getHandler().listen(
+                this.inputClassesElements[i],
+                goog.events.EventType.CHANGE,
+                this.onCheckClasses_,
+                false,
+                this
+            );
+        }
+
     };
 
     /**
@@ -126,6 +204,75 @@ goog.scope(function() {
      * @private
      */
     FilterClasses.prototype.onInputClassesClick_ = function(event) {
-        this.dropdown_.selectByIndex(event.currentTarget.value - 1);
+        var index = event.currentTarget.value - 1;
+        this.dropdown_.selectByIndex(index);
+        this.selectClass(index);
+    };
+
+    /**
+     * Checks for checked radio
+     * @return {boolean}
+     * @private
+     */
+    FilterClasses.prototype.hasCheckedInputClasses_ = function() {
+        var result = false;
+
+        for (var i = 0; i < this.inputClassesElements.length; i++) {
+            if (this.inputClassesElements[i].checked) {
+                result = true;
+            }
+        }
+
+        return result;
+    };
+
+    /**
+     * Show reset button
+     * @param {Object} event
+     * @private
+     */
+    FilterClasses.prototype.onCheckClasses_ = function(event) {
+        if (this.filterResetElement) {
+            if (event.currentTarget.checked || this.hasCheckedInputClasses_()) {
+                goog.dom.classlist.remove(
+                    this.filterResetElement,
+                    FilterClasses.CssClass.HIDDEN
+                );
+            }
+            else {
+                goog.dom.classlist.add(
+                    this.filterResetElement,
+                    FilterClasses.CssClass.HIDDEN
+                );
+            }
+        }
+    };
+
+    /**
+     * Reset filter
+     * @private
+     */
+    FilterClasses.prototype.onClickResetButton_ = function() {
+        if (this.inputClassesElements.length > 0) {
+            for (var i = 0; i < this.inputClassesElements.length; i++) {
+                this.inputClassesElements[i].checked = false;
+            }
+        }
+
+        if (this.inputLabelElements_.length > 0) {
+            for (var i = 0; i < this.inputLabelElements_.length; i++) {
+                goog.dom.classlist.remove(
+                    this.inputLabelElements_[i],
+                    FilterClasses.CssClass.INPUT_LABEL_INACTIVE
+                );
+            }
+        }
+
+        if (this.filterResetElement) {
+            goog.dom.classlist.add(
+                this.filterResetElement,
+                FilterClasses.CssClass.HIDDEN
+            );
+        }
     };
 });
