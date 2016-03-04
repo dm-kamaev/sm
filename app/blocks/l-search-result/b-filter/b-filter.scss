@@ -16,7 +16,7 @@
     display: inline-block;
 
     width: 100%;
-    padding: 10px 0;
+    padding: 10px 0 20px 0;
 
     cursor: pointer;
 }
@@ -33,10 +33,6 @@
 
     min-width: 50%;
     margin: 0;
-}
-
-.b-filter__filters {
-    margin-bottom: -6px;
 }
 
 .b-filter__filter {
@@ -60,7 +56,7 @@
 .b-filter__show-filters-button {
     float: right;
 
-    padding: 4px 12px 0 6px;
+    padding: 4px 0 0 6px;
 
     cursor: pointer;
 }
@@ -132,7 +128,8 @@
     .b-filter__filter_center {
         display: inline-block;
 
-        width: 100%;
+        width: auto;
+        margin-bottom: 10px;
         padding: 0;
     }
 
@@ -158,10 +155,10 @@
     .b-filter__input-label {
         display: inline-block;
 
-        width: 27px;
-        height: 10px;
-        padding: 9px 1px 9px 0;
-        margin: 12px 0;
+        margin: 0;
+        padding: 0;
+        width: 25px;
+        height: 29px;
 
         border: 1px solid #e5e1c2;
         border-right: none;
@@ -169,7 +166,7 @@
         background-color: #fffbd8;
         font-size: 12px;
         text-align: center;
-        line-height: 11px;
+        line-height: 29px;
         cursor: pointer;
     }
 
@@ -185,30 +182,37 @@
         background-color: #f4fbfc;
 
         &:last-child {
-            width: 27px;
-            padding: 9px 0;
-
             border: 1px solid #dbe1e3;
         }
     }
 
+    .b-filter__input-label_inactive {
+        opacity: 0.4;
+    }
+
     .b-filter__input:checked + .b-filter__input-label,
     .b-filter__input-label:hover {
-        width: 21px;
-        padding: 6px 0;
+        border-color:  #9da6a9;
+        box-shadow: inset 0px 0px 0 2px #9da6a9, inset -2px 0px 0 1px #9da6a9;
 
-        border: 4px #ee362c solid;
-
-        box-shadow: inset 0 1px 0 0 #e3dfc0, 0 1px 0 0 #d9d9d2;
+        &:last-child {
+            box-shadow: inset 0px 0px 0 2px #9da6a9;
+        }
     }
 
     .b-filter__reset {
         float: right;
 
-        margin-top: 5px;
+        margin-top: 7px;
+        margin-right: 2px;
 
-        color: #ee362c;
         cursor: pointer;
+
+        opacity: 0.25;
+        
+        &:hover {
+            opacity: 1;
+        }
     }
 }
 
@@ -230,10 +234,14 @@
 
         .b-filter__reset {
             position: absolute;
-            top: 14px;
+            top: 0;
             right: 0;
-
-            line-height: 14px;
         }
+    }
+}
+
+@include media-s {
+    .b-filter__reset {
+        display: none;
     }
 }
