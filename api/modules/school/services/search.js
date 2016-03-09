@@ -23,7 +23,7 @@ exports.getSchoolRecords = async (function(id) {
 var getSearchSubstrings = function(string) {
     return string.toLowerCase()
         .trim()
-        .replace(/[^\wа-яА-Я\s]/g,'') //remove everything except letters, numbers and spaces
+        .replace(/[^\wа-яА-ЯёЁ\-\s]/g,'') //remove everything except letters, numbers and spaces
         .trim()
         .split(' ');
 };
