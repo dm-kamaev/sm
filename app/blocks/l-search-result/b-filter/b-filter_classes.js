@@ -23,18 +23,18 @@ sm.lSearchResult.bFilter.FilterClasses = function(opt_params) {
     this.filterResetElement = null;
 
     /**
-     * Classes input
-     * @type {Element}
-     * @protected
-     */
-    this.inputClassesElements = null;
-
-    /**
      * Input label
      * @type {Element}
      * @private
      */
     this.inputLabelElements_ = null;
+
+    /**
+     * Ordinary classes input
+     * @type {Element}
+     * @private
+     */
+    this.inputClassesOrdinaryElement_ = null;
 };
 goog.inherits(
     sm.lSearchResult.bFilter.FilterClasses,
@@ -57,7 +57,7 @@ goog.scope(function() {
         'INPUT_LABEL_INACTIVE': 'b-filter__input-label_inactive',
         'FILTER_RESET': 'b-filter__reset',
         'FILTER_RESET_ACTIVE': 'b-filter__reset_active',
-        'INPUT_CLASSES': 'b-filter__input',
+        'INPUT_CLASSES_ORDINARY': 'b-filter__input-ordinary',
         'HIDDEN': cl.iUtils.Utils.CssClass.HIDDEN
     };
 
@@ -87,13 +87,13 @@ goog.scope(function() {
             element
         );
 
-        this.inputClassesElements = goog.dom.getElementsByClass(
-            FilterClasses.CssClass.INPUT_CLASSES,
+        this.inputLabelElements_ = goog.dom.getElementsByClass(
+            FilterClasses.CssClass.INPUT_LABEL,
             element
         );
 
-        this.inputLabelElements_ = goog.dom.getElementsByClass(
-            FilterClasses.CssClass.INPUT_LABEL,
+        this.inputClassesOrdinaryElement_ = goog.dom.getElementByClass(
+            FilterClasses.CssClass.INPUT_CLASSES_ORDINARY,
             element
         );
     };
@@ -103,10 +103,10 @@ goog.scope(function() {
      * @param {number} index
      */
     FilterClasses.prototype.selectClass = function(index) {
-        for (var i = 0; i < this.inputClassesElements.length; i++) {
-            this.inputClassesElements[i].checked = false;
+        for (var i = 0; i < this.inputElements.length; i++) {
+            this.inputElements[i].checked = false;
         }
-        this.inputClassesElements[index].checked = true;
+        this.inputElements[index].checked = true;
 
         goog.dom.classlist.remove(
             this.filterResetElement,
@@ -124,6 +124,7 @@ goog.scope(function() {
                 FilterClasses.CssClass.INPUT_LABEL_INACTIVE
             );
         }
+
     };
 
     /**
@@ -148,7 +149,7 @@ goog.scope(function() {
             this
         );
 
-        for (var i = 0, input; input = this.inputClassesElements[i]; i++) {
+        for (var i = 0, input; input = this.inputElements[i]; i++) {
             this.getHandler().listen(
                 input,
                 goog.events.EventType.CLICK,
@@ -162,19 +163,27 @@ goog.scope(function() {
             this.getHandler().listen(
                 this.filterResetElement,
                 goog.events.EventType.CLICK,
-                this.onClickResetButton_,
+                this.reset,
                 false,
                 this
             );
         }
 
-        for (var i = 0; i < this.inputClassesElements.length; i++) {
+        for (var i = 0; i < this.inputElements.length; i++) {
             this.getHandler().listen(
-                this.inputClassesElements[i],
+                this.inputElements[i],
                 goog.events.EventType.CHANGE,
                 this.onCheckClasses_,
                 false,
                 this
+            );
+        }
+
+        if (this.inputClassesOrdinaryElement_) {
+            this.getHandler().listen(
+                this.inputClassesOrdinaryElement_,
+                goog.events.EventType.CLICK,
+                this.hasCheckedInputClasses_
             );
         }
 
@@ -217,8 +226,8 @@ goog.scope(function() {
     FilterClasses.prototype.hasCheckedInputClasses_ = function() {
         var result = false;
 
-        for (var i = 0; i < this.inputClassesElements.length; i++) {
-            if (this.inputClassesElements[i].checked) {
+        for (var i = 0; i < this.inputElements.length; i++) {
+            if (this.inputElements[i].checked) {
                 result = true;
             }
         }
@@ -249,15 +258,11 @@ goog.scope(function() {
     };
 
     /**
-     * Reset filter
-     * @private
+     * Reset filter and hide cross
+     * @override
      */
-    FilterClasses.prototype.onClickResetButton_ = function() {
-        if (this.inputClassesElements.length > 0) {
-            for (var i = 0; i < this.inputClassesElements.length; i++) {
-                this.inputClassesElements[i].checked = false;
-            }
-        }
+    FilterClasses.prototype.reset = function() {
+        this.onClickResetButton();
 
         if (this.inputLabelElements_.length > 0) {
             for (var i = 0; i < this.inputLabelElements_.length; i++) {
@@ -274,5 +279,15 @@ goog.scope(function() {
                 FilterClasses.CssClass.HIDDEN
             );
         }
+    };
+
+    /**
+     * Reset filter Oridinary
+     * @override
+     */
+    FilterClasses.prototype.resetOridinary = function() {
+       if (this.inputClassesOrdinaryElement_) {
+           this.inputClassesOrdinaryElement_.checked = false;
+       }
     };
 });

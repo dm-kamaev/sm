@@ -33,6 +33,21 @@ sm.lSearchResult.bFilters.Filters = function(opt_params) {
      * @private
      */
     this.elements_ = {};
+
+    /**
+     * Instance filter classes
+     * @type {sm.lSearchResult.bFilter.FilterClasses}
+     * @private
+     */
+     this.filterClasses_ = null;
+
+     /**
+     * Array instances filters
+     * @type Array {sm.lSearchResult.bFilter.Filter}
+     * @private
+     */
+     this.filters_ = [];
+
 };
 goog.inherits(sm.lSearchResult.bFilters.Filters, goog.ui.Component);
 
@@ -52,7 +67,8 @@ goog.scope(function() {
         EXPANDER: 'b-filters__expander',
         COLLAPSER: 'b-filters__collapser',
         CONTENT: 'b-filters__content',
-        SUBMIT_BUTTON: 'b-filters__submit-button'
+        SUBMIT_BUTTON: 'b-filters__submit-button',
+        RESET_FILTER: 'b-filters__reset'
     };
 
     /**
@@ -104,13 +120,23 @@ goog.scope(function() {
         for (var i = 0; i < filters.length; i++) {
             elem = filters[i];
 
-            filter = goog.dom.classes.has(elem, FilterClasses.CssClass.ROOT) ?
-                new FilterClasses() :
-                new Filter();
+            if (goog.dom.classes.has(elem, FilterClasses.CssClass.ROOT)) {
 
-            this.addChild(filter);
-            filter.decorate(elem);
+                //filter Classes
+                this.filterClasses_ = new FilterClasses();
+                this.addChild(this.filterClasses_);
+                this.filterClasses_.decorate(elem);
+            }
+            else {
+
+                //filters
+                filter = new Filter();
+                this.addChild(filter);
+                filter.decorate(elem);
+                this.filters_.push(filter);
+            }
         }
+
     };
 
     /**
@@ -135,6 +161,12 @@ goog.scope(function() {
             this.elements_.collapser,
             goog.events.EventType.CLICK,
             this.onCollapserClick_
+        );
+
+        this.getHandler().listen(
+            this.elements_.reset,
+            goog.events.EventType.CLICK,
+            this.onResetFiltersClick_
         );
     };
 
@@ -169,6 +201,11 @@ goog.scope(function() {
             Filters.CssClass.SUBMIT_BUTTON,
             element
         );
+
+        this.elements_.reset = goog.dom.getElementByClass(
+            Filters.CssClass.RESET_FILTER,
+            element
+        );
     };
 
     /**
@@ -200,6 +237,19 @@ goog.scope(function() {
             Filters.CssClass.STATE_EXPANDED,
             Filters.CssClass.STATE_COLLAPSED
         );
+    };
+
+    /**
+     * Reset filters
+     * @private
+     */
+    Filters.prototype.onResetFiltersClick_ = function() {
+       this.filterClasses_.reset();
+       this.filterClasses_.resetOridinary();
+
+       for (var i = 0; i < this.filters_.length; i++) {
+           this.filters_[i].reset();
+       }
     };
 
     /**

@@ -64,6 +64,13 @@ sm.lSearchResult.bFilter.Filter = function(opt_params) {
      * @private
      */
     this.filterSectionElements_ = null;
+
+    /**
+     * Classes input
+     * @type {Element}
+     * @protected
+     */
+    this.inputElements = null;
 };
 goog.inherits(sm.lSearchResult.bFilter.Filter, goog.ui.Component);
 
@@ -85,6 +92,7 @@ goog.scope(function() {
         ICON_ARROW_DOWN: 'b-icon_img_filter-arrow-down',
         ICON_ARROW_UP: 'b-icon_img_filter-arrow-up',
         FILTER_SECTION: 'b-filter__section',
+        INPUT: 'b-filter__input',
         HIDDEN: cl.iUtils.Utils.CssClass.HIDDEN
     };
 
@@ -148,6 +156,12 @@ goog.scope(function() {
                 this.filterSectionHiddenElements_.push(elem);
             }
         }
+
+        this.inputElements = goog.dom.getElementsByClass(
+            Filter.CssClass.INPUT,
+            element
+        );
+
     };
 
     /**
@@ -182,6 +196,40 @@ goog.scope(function() {
                 this.toggleFiltersVisibility_
             );
         }
+    };
+
+
+    /**
+     * Reset filter
+     */
+    Filter.prototype.onClickResetButton = function() {
+        if (this.inputElements.length > 0) {
+            for (var i = 0; i < this.inputElements.length; i++) {
+                this.inputElements[i].checked = false;
+            }
+        }
+    };
+
+    /**
+     * Reset filter and collapse filters
+     */
+    Filter.prototype.reset = function() {
+        this.onClickResetButton();
+
+        goog.dom.classlist.add(
+            this.filtersElement_,
+            Filter.CssClass.HIDDEN
+        );
+
+        goog.dom.classlist.remove(
+            this.showFiltersIconElement_,
+            Filter.CssClass.ICON_ARROW_UP
+        );
+
+        goog.dom.classlist.add(
+            this.showFiltersIconElement_,
+            Filter.CssClass.ICON_ARROW_DOWN
+        );
     };
 
     /**

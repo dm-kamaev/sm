@@ -72,6 +72,21 @@
     background: #fff;
 }
 
+.b-filters__reset {
+    height: 52px;
+    margin-top: 14px;
+
+    text-align: left;
+    cursor: pointer;
+
+    color: #356fc4;
+
+    text-decoration: none;
+
+    font: 13px Arial, sans-serif;
+    line-height: 18px;
+}
+
 
 @include media-xl {
     .b-filters__group {
