@@ -8,6 +8,7 @@ goog.require('goog.ui.Component');
 goog.require('gorod.gSuggest.Suggest');
 goog.require('sm.bHeader.Header');
 goog.require('sm.bSearch.Search');
+goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.lSearchResult.Template');
 goog.require('sm.lSearchResult.bFilters.Filters');
 goog.require('sm.lSearchResult.bSchoolList.SchoolList');
