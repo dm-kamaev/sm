@@ -5,10 +5,11 @@
  * @typedef {object} sm.bSearch.Template.Params
  * @property {?string} text
  * @property {?string} placeholder
- * @property {?string} theme
  * @property {?boolean} autofocus
  * @property {?boolean} redirect
+ * @property {?string} theme
  * @property {?string} customClasses
+ * @property {?string} inputSize
  */
 
 /**
@@ -22,7 +23,7 @@
 
     <div class="b-search
                 b-search_theme_{$params.theme}{sp}
-                {$params.customClasses}"
+                {$params?.customClasses ? $params?.customClasses : ''}"{sp}
         data-params="{call goog.json.serialize data="$data" /}"
     >
         {if $params.theme == 'main'}
@@ -49,14 +50,13 @@
                     'filtrationEnabled': false,
                 ],
                 'list': [
-                    'extraClasses': 'b-search__list',
                     'theme': 'stendhal',
                     'color': 'sienna'
                 ],
                 'input': [
-                    'customClasses': 'b-search__input',
                     'style': [
-                        'theme': 'stendhal'
+                        'theme': 'stendhal',
+                        'size': $params?.inputSize
                     ]
                 ]
             ]/}
