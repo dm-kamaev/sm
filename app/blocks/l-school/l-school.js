@@ -7,6 +7,7 @@ goog.require('goog.ui.Component');
 goog.require('sm.bRating.Rating');
 goog.require('sm.bScore.Score');
 goog.require('sm.bSearch.Search');
+goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.lSchool.bComment.Comment');
 goog.require('sm.lSchool.bComments.Comments');
 goog.require('sm.lSchool.bDataBlockFoldList.FoldList');
