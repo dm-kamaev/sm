@@ -4,11 +4,11 @@ goog.require('goog.dom.classes');
 goog.require('goog.events');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
-goog.require('sm.iFactory.FactoryStendhal');
 goog.require('sm.bRating.Rating');
 goog.require('sm.bScore.Score');
 goog.require('sm.bSearch.Search');
 goog.require('sm.iAnalytics.Analytics');
+goog.require('sm.iFactory.FactoryStendhal');
 goog.require('sm.lSchool.bComment.Comment');
 goog.require('sm.lSchool.bComments.Comments');
 goog.require('sm.lSchool.bDataBlockFoldList.FoldList');
@@ -190,7 +190,7 @@ goog.scope(function() {
             .initComponents_(Map)
             .initComponents_(Search)
             .initComponents_(Comments)
-            .initComponents_(Results)
+            .initComponents_(Results);
     };
 
     /**
