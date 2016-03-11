@@ -13,19 +13,7 @@
 
 {template .base}
     <div class="b-badge{not($params?.display) ? ' b-badge_rating' : ''}">
-        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
-            {param params: [
-                'type': 'icon',
-                'renderParams': [
-                    'data': [
-                        'type': $params.display ?: 'test'
-                    ],
-                    'config': [
-                        'customClasses': ['b-badge__icon']
-                    ]
-                ]
-            ]/}
-        {/call}
+        {call .icon_ data="all"/}
         {if length($params.data) > 0}
             {foreach $dataItem in $params.data}
                 {if $params?.display == 'metro'}
@@ -36,43 +24,12 @@
                         ] /}
                     {/call}
                 {else}
-                    {let $hintData kind="html"}
-                        <div class="b-badge__hint-content">
-                        Рейтинг составлен Департаментом образования{sp}
-                        Москвы по итогам 2014—2015 учебного года
-                        <br>
-                        <div class="b-badge__hint-href">
-                            Подробнее
-                            <div class="b-badge__hint-href-icon">
-                                {call sm.bIcon.Template.icon}
-                                    {param params: [
-                                        'type': 'window-href'
-                                    ] /}
-                                {/call}
-                            </div>
-                        </div>
-                        </div>
-                    {/let}
-
                     {call .ratingItem_}
                         {param params:[
                             'ratingName': $dataItem
                         ] /}
                     {/call}
-
-                    {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
-                        {param params: [
-                            'type': 'hint',
-                            'renderParams': [
-                                'data': $hintData,
-                                'config': [
-                                    'align': 'left'
-                                ]
-                            ]
-                        ]/}
-                    {/call}
                 {/if}
-
                 {if not isLast($dataItem)}
                     ,{sp}
                 {/if}
@@ -88,6 +45,27 @@
     </div>
 {/template}
 
+/**
+ * @param params {
+ *     display: ?string
+ * }
+ */
+{template .icon_ private="true"}
+    {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+        {param params: [
+            'type': 'icon',
+            'renderParams': [
+                'data': [
+                    'type': $params.display ?: 'test'
+                ],
+                'config': [
+                    'customClasses': ['b-badge__icon']
+                ]
+            ]
+        ]/}
+    {/call}
+{/template}
+
 
 /**
  * Clickable item template
@@ -96,7 +74,7 @@
  *     id: number
  * }}
  */
-{template .clickableItem_}
+{template .clickableItem_ private="true"}
     {let $data: [
         'id': $params.id
     ] /}
@@ -113,8 +91,48 @@
  *     ratingName: ?string
  * }}
  */
-{template .ratingItem_}
+{template .ratingItem_ private="true"}
     <div class="b-badge__item">
         {$params.ratingName}
     </div>
+    {call .hint_/}
+{/template}
+
+/**
+ * Hint template
+ */
+{template .hint_ private="true"}
+    {let $hintData kind="html"}
+        <div class="b-badge__hint-content">
+            Рейтинг составлен Департаментом образования{sp}
+            Москвы по итогам 2014—2015 учебного года
+            <br>
+            <div class="b-badge__hint-href">
+                Подробнее
+                <div class="b-badge__hint-href-icon">
+                    {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+                        {param params: [
+                            'type': 'icon',
+                            'renderParams': [
+                                'data': [
+                                    'type': 'window-href'
+                                ]
+                            ]
+                        ]/}
+                    {/call}
+                </div>
+            </div>
+        </div>
+    {/let}
+    {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+        {param params: [
+            'type': 'hint',
+            'renderParams': [
+                'data': $hintData,
+                'config': [
+                    'align': 'left'
+                ]
+            ]
+        ]/}
+    {/call}
 {/template}

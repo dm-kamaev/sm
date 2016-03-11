@@ -38,6 +38,40 @@
 
 		line-height: 18px;
 	}
+
+    .b-data-block__content-wrap {
+        position: relative;
+
+        display: inline-block;
+
+        cursor: pointer;
+    }
+
+    .b-data-block__hint-href {
+        display: inline-block;
+
+        margin-top: 7px;
+
+        color: #356fc4;
+        cursor: pointer;
+    }
+
+    .b-data-block__hint-href-icon {
+        display: inline-block;
+
+        margin-left: 10px;
+    }
+
+    .b-data-block__hint-content {
+        width: 212px;
+        margin-right: 8px;
+
+        font-family: Arial;
+        font-size: 13px;
+        font-weight: 400;
+        color: #808080;
+        cursor: default;
+    }
 }
 
 .b-data-block__place-wrapper {

@@ -36,12 +36,16 @@
  * @override
  * @param params {
  *     config: {
- *         align: ?string
+ *         align: ?string,
+ *         offset: ?string
  *     }
  * }
  */
 {template .additionalClasses}
     {if $params?.config?.align}
-        {call .rootClass/}_{$params.config.align}-align
+        {call .rootClass/}_{$params.config.align}-align{sp}
+    {/if}
+    {if $params?.config?.offset}
+        {call .rootClass/}_offset-{$params.config.offset}
     {/if}
 {/template}
