@@ -13,11 +13,18 @@
 
 {template .base}
     <div class="b-badge{not($params?.display) ? ' b-badge_rating' : ''}">
-        {call sm.bIcon.Template.icon}
-            {param params:[
-                'type': $params.display ?: 'test',
-                'customClasses': 'b-badge__icon'
-            ] /}
+        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+            {param params: [
+                'type': 'icon',
+                'renderParams': [
+                    'data': [
+                        'type': $params.display ?: 'test'
+                    ],
+                    'config': [
+                        'customClasses': ['b-badge__icon']
+                    ]
+                ]
+            ]/}
         {/call}
 
         {foreach $dataItem in $params.data}
@@ -37,10 +44,15 @@
                     <div class="b-badge__hint-href">
                         Подробнее
                         <div class="b-badge__hint-href-icon">
-                            {call sm.bIcon.Template.icon}
+                            {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
                                 {param params: [
-                                    'type': 'window-href'
-                                ] /}
+                                    'type': 'icon',
+                                    'renderParams': [
+                                        'data': [
+                                            'type': 'window-href'
+                                        ]
+                                    ]
+                                ]/}
                             {/call}
                         </div>
                     </div>

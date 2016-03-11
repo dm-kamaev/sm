@@ -4,6 +4,7 @@ goog.require('goog.dom.classes');
 goog.require('goog.events');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
+goog.require('sm.iFactory.FactoryStendhal');
 goog.require('sm.bRating.Rating');
 goog.require('sm.bScore.Score');
 goog.require('sm.bSearch.Search');
@@ -38,11 +39,11 @@ sm.lSchool.School = function(opt_params) {
     this.modal_ = null;
 
     /**
-     * Search instance
-     * @type {?sm.bSearch.Search}
+     * Auth modal window
+     * @type {sm.gModal.ModalAuth}
      * @private
      */
-    this.search_ = null;
+    this.authSocial_ = null;
 
     /**
      * Score instance
@@ -50,6 +51,13 @@ sm.lSchool.School = function(opt_params) {
      * @private
      */
     this.score_ = null;
+
+    /**
+     * TODO: repair
+     * @type {Boolean}
+     * @private
+     */
+    this.isRegistrated_ = false;
 };
 goog.inherits(sm.lSchool.School, goog.ui.Component);
 
@@ -57,7 +65,13 @@ goog.scope(function() {
     var School = sm.lSchool.School,
         FoldList = sm.lSchool.bDataBlockFoldList.FoldList,
         Results = sm.lSchool.bResults.Results,
-        Score = sm.bScore.Score;
+        Score = sm.bScore.Score,
+        Map = sm.lSchool.bMap.Map,
+        Search = sm.bSearch.Search,
+        Comments = sm.lSchool.bComments.Comments,
+        FeedbackModal = sm.lSchool.bFeedbackModal.FeedbackModal,
+        AuthSocialModalView = cl.gAuthSocialModal.View,
+        factory = sm.iFactory.FactoryStendhal.getInstance();
 
 
     /**
@@ -138,7 +152,6 @@ goog.scope(function() {
         );
     };
 
-
     /**
      * creates comment url
      * @return {string}
@@ -156,7 +169,12 @@ goog.scope(function() {
      * @private
      */
     School.prototype.onClick_ = function() {
-        this.modal_.show();
+        if (this.isRegistrated_) {
+            this.modal_.show();
+        } else {
+            this.authSocial_.show();
+            this.isRegistrated_ = true;
+        }
     };
 
     /**
@@ -164,15 +182,56 @@ goog.scope(function() {
      * @private
      */
     School.prototype.initChildren_ = function() {
-        /** comments */
-        if (this.elements_.comments) {
-            var comments = new sm.lSchool.bComments.Comments();
-            this.addChild(comments);
-            comments.decorate(this.elements_.comments);
+        this.initModal_()
+            .initScore_()
+            .initAuthSocial_()
+            .initComponents_(FoldList)
+            .initComponents_(Map)
+            .initComponents_(Search)
+            .initComponents_(Comments)
+            .initComponents_(Results)
+    };
+
+    /**
+     * Components initialization
+     * @param  {Function} component
+     * @param  {string=} opt_cssClass
+     * @return {sm.lSchool.School}
+     * @private
+     */
+    School.prototype.initComponents_ = function(component, opt_cssClass) {
+        var cssClass = opt_cssClass || component.CssClass.ROOT,
+            elements = this.getElementsByClass(cssClass);
+
+        if (elements) {
+            for (var i = 0; i < elements.length; i++) {
+                this.initComponent_(component, elements[i]);
+            }
         }
 
-        /** modal */
-        this.modal_ = new sm.lSchool.bFeedbackModal.FeedbackModal({
+        return this;
+    };
+
+    /**
+     * Score initialization
+     * @return {sm.lSchool.School}
+     * @private
+     */
+    School.prototype.initScore_ = function() {
+        this.score_ = this.initComponent_(
+            Score, this.getElementByClass(Score.CssClass.ROOT)
+        );
+
+        return this;
+    };
+
+    /**
+     * Modal initialization
+     * @return {sm.lSchool.School}
+     * @private
+     */
+    School.prototype.initModal_ = function() {
+        this.modal_ = new FeedbackModal({
             data: {
                 url: this.createCommentUrl_()
             }
@@ -180,40 +239,38 @@ goog.scope(function() {
         this.addChild(this.modal_);
         this.modal_.render(this.getElement());
 
-        var l = this.elements_.foldLists.length;
-        for (var i = 0, foldList; i < l; i++) {
-            foldList = this.elements_.foldLists[i];
-            var foldListInstance = new FoldList();
-            this.addChild(foldListInstance);
-            foldListInstance.decorate(foldList);
-        }
+        return this;
+    };
 
-        this.search_ = new sm.bSearch.Search();
-        this.addChild(this.search_);
-        this.search_.decorate(this.elements_.search);
+    /**
+     * Modal auth initialization
+     * @return {sm.lSchool.School}
+     * @private
+     */
+    School.prototype.initAuthSocial_ = function() {
+        this.authSocial_ = factory.decorate(
+            'auth-social-modal',
+            this.getElementByClass(AuthSocialModalView.CssClass.ROOT),
+            this
+        );
 
-        /**
-         * results
-         */
-        var resultElement = this.getElementByClass(Results.CssClass.ROOT);
+        return this;
+    };
 
-        if (resultElement) {
-            var results = new Results();
-            this.addChild(results);
-            results.decorate(resultElement);
-        }
+    /**
+     * Component initialization
+     * @param {Function} component
+     * @param {Element} element
+     * @param {Object=} opt_params
+     * @return {Object}
+     * @private
+     */
+    School.prototype.initComponent_ = function(component, element, opt_params) {
+        var instance = new component(opt_params);
+        this.addChild(instance);
+        instance.decorate(element);
 
-        /**
-         * score
-         */
-        this.score_ = new Score();
-        this.addChild(this.score_);
-        this.score_.decorate(this.getElementByClass(Score.CssClass.ROOT));
-
-        /** map */
-        var map = new sm.lSchool.bMap.Map();
-        this.addChild(map);
-        map.decorate(this.elements_.map);
+        return instance;
     };
 
     /**
@@ -232,18 +289,6 @@ goog.scope(function() {
             ),
             rating: this.getElementByClass(
                 sm.lSchool.School.CssClass.RATING
-            ),
-            comments: this.getElementByClass(
-                sm.lSchool.School.CssClass.COMMENTS
-            ),
-            map: this.getElementByClass(
-                sm.lSchool.bMap.Map.CssClass.ROOT
-            ),
-            foldLists: this.getElementsByClass(
-                sm.lSchool.bDataBlockFoldList.FoldList.CssClass.ROOT
-            ),
-            search: goog.dom.getElementByClass(
-                sm.bSearch.Search.CssClass.ROOT
             )
         };
     };

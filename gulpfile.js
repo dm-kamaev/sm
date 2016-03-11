@@ -96,7 +96,7 @@ gulp.task('scripts', ['soy', 'lint'], function () {
     });
 });
 
-gulp.task('styles', function () {
+gulp.task('styles', ['sprite'], function () {
     return gulpHelper.css.build({
         outputFiles: [{
             src: [
@@ -112,16 +112,10 @@ gulp.task('styles', function () {
 
 gulp.task('sprite', function() {
     return gulpHelper.sprite.build([{
-        src: path.join(__dirname, BLOCKS_DIR, '/b-icon/b-icon_img/*.png'),
-        name: 'b-icon_auto-sprite',
+        src: path.join(__dirname, BLOCKS_DIR, '/n-clobl/g-icon/g-icon_img/*.png'),
         retina: {
-            name: 'b-icon_auto-sprite@2x',
-            filters: [path.join(__dirname, BLOCKS_DIR, '/b-icon/b-icon_img/*@2x.png')],
-            imgPath: '/images/b-icon_auto-sprite@2x.png'
-        },
-        imgPath: '/images/b-icon_auto-sprite.png',
-        cssDest: path.join(__dirname, BLOCKS_DIR, '/b-icon'),
-        pngDest: path.join(__dirname, '/public/images')
+            filters: [path.join(__dirname, BLOCKS_DIR, '/n-clobl/g-icon/g-icon_img/*@2x.png')],
+        }
     }]);
 });
 
