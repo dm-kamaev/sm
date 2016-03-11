@@ -1,10 +1,10 @@
-{namespace sm.lSchool.bDataBlockFoldList.Template}
+{namespace sm.lSchool.bDataBlock.TemplateFoldList}
 
 
 /**
- * @typedef {object} sm.lSchool.bDataBlockFoldList.Template.Node
+ * @typedef {object} sm.lSchool.bDataBlock.TemplateFoldList.Node
  * @property {string} name
- * @property {?sm.lSchool.bDataBlockFoldList.Template.Node} items
+ * @property {?sm.lSchool.bDataBlock.TemplateFoldList.Node} items
  */
 
 
@@ -14,7 +14,7 @@
  *    header: ?string,
  *    headerType: ?number
  *    modifier: ?string
- *    content: [sm.lSchool.bDataBlockFoldList.Template.Node]
+ *    content: [sm.lSchool.bDataBlock.TemplateFoldList.Node]
  * }}
  * @extends sm.lSchool.bDataBlock.Template
  * @constructor
@@ -39,7 +39,7 @@
 /**
  * Content item
  * @param params {{
- *    content: [sm.lSchool.bDataBlockFoldList.Template.Node]
+ *    content: [sm.lSchool.bDataBlock.TemplateFoldList.Node]
  * }}
  */
 {template .content autoescape="strict" kind="html"}
@@ -56,7 +56,7 @@
 /**
  * Rating elements
  * @param params {{
- *    content: [sm.lSchool.bDataBlockFoldList.Template.Node]
+ *    content: [sm.lSchool.bDataBlock.TemplateFoldList.Node]
  * }}
  */
 {template .ratingList_ autoescape="strict" kind="html"}
@@ -70,7 +70,7 @@
 
 /**
  * Rating element
- * @param params {sm.lSchool.bDataBlockFoldList.Template.Node}
+ * @param params {sm.lSchool.bDataBlock.TemplateFoldList.Node}
  */
 {template .ratingItem_ autoescape="strict" kind="html"}
     {if $params.items}
