@@ -70,6 +70,7 @@
     "scp": "0.0.3",
     "sequelize": "^3.8.0",
     "sequelize-cli": "^1.9.1",
+    "services": "git+ssh://git@github.com:c7s/services.git#dev",
     "squel": "^4.3.0",
     "sleep": "^3.0.0",
     "soynode": "^1.1.0",

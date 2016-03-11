@@ -14,7 +14,7 @@
 
     <!-- Switch to new release -->
     <target name="packaging-switch-release"
-            depends="packaging-switch-release-before, setup-folders, migrate-database, update-search-cache, switch-release-folder, node-start, initd-install, init-crontab, packaging-switch-release-after"/>
+            depends="packaging-switch-release-before, setup-folders, migrate-database, update-search-cache, switch-release-folder, deploy-authorization-config, node-start, initd-install, init-crontab, packaging-switch-release-after"/>
 
     <!-- Stop previous release -->
     <target name="packaging-stop-release" depends="packaging-stop-release-before, remove-crontab, node-stop, initd-remove, remove-release-folder, packaging-stop-release-after"/>
@@ -29,6 +29,11 @@
         <exec executable="${node}" dir="${basedir}">
             <arg line="commander search"/>
         </exec>
+    </target>
+
+    <target name="deploy-authorization-config">
+        <copy file="${basedir}/environment/config/authorization.json"
+              tofile="${basedir}/node_modules/services/config/config.json" />
     </target>
 
 </project>
