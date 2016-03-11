@@ -55,7 +55,7 @@ sm.lSchool.School = function(opt_params) {
     this.score_ = null;
 
     /**
-     * TODO: repair
+     * TODO: for authSocial example
      * @type {Boolean}
      * @private
      */
@@ -172,12 +172,17 @@ goog.scope(function() {
      * @private
      */
     School.prototype.onClick_ = function() {
+        this.modal_.show();
+        /**
+         * TODO: authSocial example
+         */
+        /*
         if (this.isRegistrated_) {
             this.modal_.show();
         } else {
             this.authSocial_.show();
             this.isRegistrated_ = true;
-        }
+        }*/
     };
 
     /**
