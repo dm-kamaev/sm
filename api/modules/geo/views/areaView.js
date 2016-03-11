@@ -1,3 +1,5 @@
+const lodash = require('lodash');
+
 var areaView = {};
 
 /**
@@ -5,7 +7,9 @@ var areaView = {};
  * @return {array<object>}
  */
 areaView.list = function(areas) {
-    return areas
+    var uniqAreas = lodash.uniq(areas, 'id');
+
+    return uniqAreas
         .map(area => {
             return {
                 id: area.id,
@@ -13,5 +17,6 @@ areaView.list = function(areas) {
             };
         });
 };
+
 
 module.exports = areaView;

@@ -64,27 +64,6 @@ sm.lSearchResult.bFilter.Filter = function(opt_params) {
      * @private
      */
     this.filterSectionElements_ = null;
-
-    /**
-     * Reset button
-     * @type {Element}
-     * @protected
-     */
-    this.filterResetElement = null;
-
-    /**
-     * Classes input
-     * @type {Element}
-     * @protected
-     */
-    this.inputClassesElements = null;
-
-    /**
-     * Ordinary classes input
-     * @type {Element}
-     * @private
-     */
-    this.inputClassesOrdinaryElement_ = null;
 };
 goog.inherits(sm.lSearchResult.bFilter.Filter, goog.ui.Component);
 
@@ -103,12 +82,9 @@ goog.scope(function() {
         HIDE_SHOWN_FILTERS_BUTTON: 'b-filter__button_hide',
         SHOW_FILTERS_BUTTON: 'b-filter__show-filters-button',
         SHOW_FILTERS_ICON: 'b-filter__show-filters-icon',
-        ICON_ARROW_DOWN: 'b-icon_img_filter-arrow-down',
-        ICON_ARROW_UP: 'b-icon_img_filter-arrow-up',
+        ICON_ARROW_DOWN: 'g-icon_img_filter-arrow-down',
+        ICON_ARROW_UP: 'g-icon_img_filter-arrow-up',
         FILTER_SECTION: 'b-filter__section',
-        FILTER_RESET: 'b-filter__reset',
-        INPUT_CLASSES: 'b-filter__input',
-        INPUT_CLASSES_ORDINARY: 'b-filter__input-ordinary',
         HIDDEN: cl.iUtils.Utils.CssClass.HIDDEN
     };
 
@@ -172,21 +148,6 @@ goog.scope(function() {
                 this.filterSectionHiddenElements_.push(elem);
             }
         }
-
-        this.filterResetElement = goog.dom.getElementByClass(
-            Filter.CssClass.FILTER_RESET,
-            element
-        );
-
-        this.inputClassesElements = goog.dom.getElementsByClass(
-            Filter.CssClass.INPUT_CLASSES,
-            element
-        );
-
-        this.inputClassesOrdinaryElement_ = goog.dom.getElementByClass(
-            Filter.CssClass.INPUT_CLASSES_ORDINARY,
-            element
-        );
     };
 
     /**
@@ -220,32 +181,6 @@ goog.scope(function() {
                 goog.events.EventType.CLICK,
                 this.toggleFiltersVisibility_
             );
-        }
-
-        if (this.filterResetElement) {
-            handler.listen(
-                this.filterResetElement,
-                goog.events.EventType.CLICK,
-                this.resetFilter_
-            );
-        }
-
-        if (this.inputClassesOrdinaryElement_) {
-            handler.listen(
-                this.inputClassesOrdinaryElement_,
-                goog.events.EventType.CLICK,
-                this.showResetButton_
-            );
-        }
-
-        if (this.inputClassesElements.length > 0) {
-            for (var i = 0; i < this.inputClassesElements.length; i++) {
-                handler.listen(
-                    this.inputClassesElements[i],
-                    goog.events.EventType.CHANGE,
-                    this.showResetButton_
-                );
-            }
         }
     };
 
@@ -294,44 +229,6 @@ goog.scope(function() {
     };
 
     /**
-     * Checks for checked radio
-     * @return {boolean}
-     * @private
-     */
-    Filter.prototype.hasCheckedInputClasses_ = function() {
-        var result = false;
-
-        for (var i = 0; i < this.inputClassesElements.length; i++) {
-            if (this.inputClassesElements[i].checked) {
-                result = true;
-            }
-        }
-
-        return result;
-    };
-
-    /**
-     * Show reset button
-     * @param {Object} event
-     * @private
-     */
-    Filter.prototype.showResetButton_ = function(event) {
-        if (this.filterResetElement) {
-            if (event.currentTarget.checked || this.hasCheckedInputClasses_()) {
-                goog.dom.classlist.remove(
-                    this.filterResetElement,
-                    Filter.CssClass.HIDDEN
-                );
-            } else {
-                goog.dom.classlist.add(
-                    this.filterResetElement,
-                    Filter.CssClass.HIDDEN
-                );
-            }
-        }
-    };
-
-    /**
      * Reset filter
      * @private
      */
@@ -350,27 +247,5 @@ goog.scope(function() {
             this.showFiltersIconElement_,
             Filter.CssClass.ICON_ARROW_DOWN
         );
-    };
-
-    /**
-     * Reset filter
-     * @private
-     */
-    Filter.prototype.resetFilter_ = function() {
-        if (this.inputClassesElements.length > 0) {
-            for (var i = 0; i < this.inputClassesElements.length; i++) {
-                this.inputClassesElements[i].checked = false;
-            }
-        }
-        if (this.inputClassesOrdinaryElement_) {
-            this.inputClassesOrdinaryElement_.checked = false;
-        }
-
-        if (this.filterResetElement) {
-            goog.dom.classlist.add(
-                this.filterResetElement,
-                Filter.CssClass.HIDDEN
-            );
-        }
     };
 });

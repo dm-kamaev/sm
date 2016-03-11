@@ -69,25 +69,6 @@ goog.scope(function() {
     Badge.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
-        if (this.elements_.itemActive && !this.params_.data) {
-            this.params_.data = [];
-            this.elements_.itemActive = this.getElementsByClass(
-                Badge.CssClass.ITEM
-            );
-
-            var itemActiveLength = this.elements_.itemActive.length;
-
-            for (var i = 0, id, elem; i < itemActiveLength; i++) {
-                elem = this.elements_.itemActive[i];
-                id = JSON.parse(goog.dom.dataset.get(elem, 'params'))['id'];
-
-                this.params_.data.push({
-                    id: id,
-                    name: elem.textContent
-                });
-            }
-        }
-
         if (this.isRating_()) {
             this.elements_.item = this.getElementByClass(
                 Badge.CssClass.ITEM
@@ -95,6 +76,12 @@ goog.scope(function() {
             this.elements_.hintHref = this.getElementByClass(
                 Badge.CssClass.HINT_HREF
             );
+        } else {
+            this.elements_.itemActive = this.getElementsByClass(
+                Badge.CssClass.ITEM
+            );
+
+            this.initMetroDataParams_();
         }
     };
 
@@ -139,6 +126,28 @@ goog.scope(function() {
 
         this.params_ = null;
         this.elements_ = null;
+    };
+
+    /**
+     * Metro data-params initialization
+     * @private
+     */
+    Badge.prototype.initMetroDataParams_ = function() {
+        if (!this.params_.data) {
+            this.params_.data = [];
+
+            var itemActiveLength = this.elements_.itemActive.length;
+
+            for (var i = 0, id, elem; i < itemActiveLength; i++) {
+                elem = this.elements_.itemActive[i];
+                id = JSON.parse(goog.dom.dataset.get(elem, 'params'))['id'];
+
+                this.params_.data.push({
+                    id: id,
+                    name: elem.textContent
+                });
+            }
+        }
     };
 
     /**

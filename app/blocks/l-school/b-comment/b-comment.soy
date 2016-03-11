@@ -56,12 +56,19 @@
         </div>
 
 		<div class="b-comment__footer">
-			{call sm.bIcon.Template.icon}
-				{param params: [
-					'type': 'person',
-					'customClasses': 'b-comment__avatar'
-				] /}
-			{/call}
+            {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+                {param params: [
+                    'type': 'icon',
+                    'renderParams': [
+                        'data': [
+                            'type': 'person'
+                        ],
+                        'config': [
+                            'customClasses': ['b-comment__avatar']
+                        ]
+                    ]
+                ]/}
+            {/call}
             <div class="b-comment__author">
                 {if $params?.author}
                     {$params.author},

@@ -3,10 +3,14 @@ goog.provide('sm.iFactory.TemplateFactoryStendhal.INSTANCE');
 
 goog.require('cl.iFactory.TemplateFactory');
 goog.require('sm.bHeader.Template');
+goog.require('sm.gAuthSocial.TemplateStendhal');
+goog.require('sm.gAuthSocialModal.TemplateStendhal');
+goog.require('sm.gButton.TemplateSocialStendhal');
 goog.require('sm.gDropdown.DropdownSelectTemplate');
 goog.require('sm.gHint.TemplateStendhal');
 goog.require('sm.gInput.DigitInputTemplate');
 goog.require('sm.gList.SelectTemplate');
+goog.require('sm.gModal.TemplateStendhal');
 goog.require('sm.gTab.TemplateStendhal');
 goog.require('sm.gTextarea.TemplateStendhal');
 
@@ -18,39 +22,49 @@ sm.iFactory.TemplateFactoryStendhal = function() {
     goog.base(this, 'stendhal');
 
     this.setTemplateListItem(
-        'tab',
-        sm.gTab.TemplateStendhal.tab
-    );
-
-    this.setTemplateListItem(
-        'textarea',
-        sm.gTextarea.TemplateStendhal.textarea
-    );
-
-    this.setTemplateListItem(
-        'hint',
-        sm.gHint.TemplateStendhal.hint
-    );
-
-    this.setTemplateListItem(
-        'dropdown-select',
-        sm.gDropdown.DropdownSelectTemplate.dropdown
-    );
-
-    this.setTemplateListItem(
-        'list-select',
-        sm.gList.SelectTemplate.list
-    );
-
-    this.setTemplateListItem(
-        'digit-input',
-        sm.gInput.DigitInputTemplate.input
-    );
-
-    this.setTemplateListItem(
-        'header',
-        sm.bHeader.Template.base
-    );
+            'tab',
+            sm.gTab.TemplateStendhal.tab
+        )
+        .setTemplateListItem(
+            'textarea',
+            sm.gTextarea.TemplateStendhal.textarea
+        )
+        .setTemplateListItem(
+            'hint',
+            sm.gHint.TemplateStendhal.hint
+        )
+        .setTemplateListItem(
+            'modal',
+            sm.gModal.TemplateStendhal.modal
+        )
+        .setTemplateListItem(
+            'dropdown-select',
+            sm.gDropdown.DropdownSelectTemplate.dropdown
+        )
+        .setTemplateListItem(
+            'list-select',
+            sm.gList.SelectTemplate.list
+        )
+        .setTemplateListItem(
+            'digit-input',
+            sm.gInput.DigitInputTemplate.input
+        )
+        .setTemplateListItem(
+            'button-social',
+            sm.gButton.TemplateSocialStendhal.button
+        )
+        .setTemplateListItem(
+            'auth-social',
+            sm.gAuthSocial.TemplateStendhal.authSocial
+        )
+        .setTemplateListItem(
+            'auth-social-modal',
+            sm.gAuthSocialModal.TemplateStendhal.authSocialModal
+        )
+        .setTemplateListItem(
+            'header',
+            sm.bHeader.Template.base
+        );
 };
 goog.inherits(sm.iFactory.TemplateFactoryStendhal, cl.iFactory.TemplateFactory);
 goog.addSingletonGetter(sm.iFactory.TemplateFactoryStendhal);

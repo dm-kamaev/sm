@@ -31,7 +31,7 @@
                 'type': 'dropdown-select',
                 'renderParams': [
                     'data': [
-                        'defaultOpenerText': 'Выберите',
+                        'defaultOpenerText': 'Не выбран',
                         'listItems': [
                             ['label': 'Первый класс'],
                             ['label': 'Второй класс'],
@@ -43,11 +43,11 @@
                             ['label': 'Восьмой класс'],
                             ['label': 'Девятый класс'],
                             ['label': 'Десятый класс'],
-                            ['label': 'Одиннадцатый класс']
+                            ['label': 'Одиннадцатый класс'],
+                            ['label': 'Не выбран']
                         ]
                     ],
                     'config': [
-                        'usePlaceholder': true,
                         'iconSprite': 'opener-arrow',
                         'customClasses': [
                             'b-filter__classes-dropdown'
@@ -75,6 +75,13 @@
                 </label>
             {/for}
         </div>
+        <div class="b-filter__reset i-utils__hidden">
+            {call sm.bIcon.Template.icon}
+            {param params:[
+                'type': 'reset'
+            ] /}
+        {/call}
+        </div>
         <div class="b-filter__filter">
             <input type="checkbox"
                 class="b-filter__input-ordinary"
@@ -83,11 +90,8 @@
                 value="0"/>
             <label for="{$params?.data?.name}-after-school"
                 class="b-filter__input-label-ordinary">
-                Детский сад при школе
+                При школе есть детский сад
             </label>
-        </div>
-        <div class="b-filter__reset i-utils__hidden">
-            Сбросить фильтр
         </div>
     </div>
 {/template}
