@@ -29,7 +29,7 @@
             //TODO: uncomment
             //<span class="b-icon_img_arrow b-search__icon"></span>
         {else}
-            <span class="b-icon_img_search b-search__icon
+            <span class="g-icon_img_search b-search__icon
                 {if not $params.text}
                     {sp}b-search__icon_disabled
                 {/if}"></span>
@@ -128,11 +128,19 @@
  * Search suggest metro icon
  */
 {template .itemIconMetro_ private="true" autoescape="strict" kind="html"}
-    {call sm.bIcon.Template.icon}
+    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
         {param params: [
-            'type': 'metro',
-            'customClasses': ['b-search__item-icon']
-        ] /}
+            'factory': 'stendhal',
+            'type': 'icon',
+            'renderParams': [
+                'data': [
+                    'type': 'metro'
+                ],
+                'config': [
+                    'customClasses': ['b-search__item-icon']
+                ]
+            ]
+        ]/}
     {/call}
 {/template}
 
@@ -141,10 +149,18 @@
  * Search suggest area icon
  */
 {template .itemIconArea_ private="true" autoescape="strict" kind="html"}
-    {call sm.bIcon.Template.icon}
+    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
         {param params: [
-            'type': 'location',
-            'customClasses': ['b-search__item-icon']
-        ] /}
+            'factory': 'stendhal',
+            'type': 'icon',
+            'renderParams': [
+                'data': [
+                    'type': 'location'
+                ],
+                'config': [
+                    'customClasses': ['b-search__item-icon']
+                ]
+            ]
+        ]/}
     {/call}
 {/template}

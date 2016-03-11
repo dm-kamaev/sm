@@ -1,5 +1,5 @@
-var soynode = require('soynode');
+var soy = require('./../../node_modules/clobl/soy');
 
 exports.render = function(template, data) {
-    return soynode.render(template, data);
+    return soy.render(template, data);
 };

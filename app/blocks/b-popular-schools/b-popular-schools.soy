@@ -45,7 +45,16 @@
                         {/if}
                         {if length($school?.metro) > 0}
                             <div class="b-popular-schools__metro">
-                                <div class="b-popular-schools__metro-icon b-icon_img_metro"></div>
+                                {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+                                    {param params: [
+                                        'type': 'icon',
+                                        'renderParams': [
+                                            'data': [
+                                                'type': 'metro'
+                                            ]
+                                        ]
+                                    ]/}
+                                {/call}
                                 {foreach $metroStation in $school?.metro}
                                     <span class="b-popular-schools__metro-stations">
                                         {$metroStation}

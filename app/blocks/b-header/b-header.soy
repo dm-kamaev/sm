@@ -102,10 +102,16 @@
     {if $params?.url}
         <div class="b-header__button-search-holder i-animate">
             <div class="b-header__button b-header__button_search">
-                {call sm.bIcon.Template.icon}
+                {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
                     {param params: [
-                        'type': 'search'
-                    ] /}
+                        'factory': 'stendhal',
+                        'type': 'icon',
+                        'renderParams': [
+                            'data': [
+                                'type': 'search'
+                            ]
+                        ]
+                    ]/}
                 {/call}
             </div>
         </div>
@@ -124,10 +130,16 @@
 
         <div class="b-header__button-close-holder">
             <div class="b-header__button b-header__button_close i-animate">
-                {call sm.bIcon.Template.icon}
+                {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
                     {param params: [
-                        'type': 'clear'
-                    ] /}
+                        'factory': 'stendhal',
+                        'type': 'icon',
+                        'renderParams': [
+                            'data': [
+                                'type': 'clear'
+                            ]
+                        ]
+                    ]/}
                 {/call}
             </div>
         </div>

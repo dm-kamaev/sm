@@ -13,13 +13,19 @@
 
 {template .base}
     <div class="b-badge{not($params?.display) ? ' b-badge_rating' : ''}">
-        {call sm.bIcon.Template.icon}
-            {param params:[
-                'type': $params.display ?: 'test',
-                'customClasses': 'b-badge__icon'
-            ] /}
+        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+            {param params: [
+                'type': 'icon',
+                'renderParams': [
+                    'data': [
+                        'type': $params.display ?: 'test'
+                    ],
+                    'config': [
+                        'customClasses': ['b-badge__icon']
+                    ]
+                ]
+            ]/}
         {/call}
-
         {if length($params.data) > 0}
             {foreach $dataItem in $params.data}
                 {if $params?.display == 'metro'}
