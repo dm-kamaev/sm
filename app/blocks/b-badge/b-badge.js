@@ -167,7 +167,7 @@ goog.scope(function() {
      * @private
      */
     Badge.prototype.onHintHrefClick_ = function() {
-        window.open('http://dogm.mos.ru/rating/');
+        document.location.href = 'http://dogm.mos.ru/rating/';
     };
 
     /**
