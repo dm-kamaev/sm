@@ -82,8 +82,8 @@ goog.scope(function() {
         HIDE_SHOWN_FILTERS_BUTTON: 'b-filter__button_hide',
         SHOW_FILTERS_BUTTON: 'b-filter__show-filters-button',
         SHOW_FILTERS_ICON: 'b-filter__show-filters-icon',
-        ICON_ARROW_DOWN: 'b-icon_img_filter-arrow-down',
-        ICON_ARROW_UP: 'b-icon_img_filter-arrow-up',
+        ICON_ARROW_DOWN: 'g-icon_img_filter-arrow-down',
+        ICON_ARROW_UP: 'g-icon_img_filter-arrow-up',
         FILTER_SECTION: 'b-filter__section',
         HIDDEN: cl.iUtils.Utils.CssClass.HIDDEN
     };

@@ -1,0 +1,62 @@
+{namespace sm.gAuthSocial.TemplateStendhal}
+
+/**
+ * Auth social template
+ * @param params {
+ *     data: {
+ *         socials: list<{
+ *             type: string, - [vk, fb, gp]
+ *             url: string
+ *         }>
+ *     },
+ *     config: {
+ *         stylizationModifier: ?string
+ *     }
+ * }
+ * @extends cl.gAuthSocial.Template
+ * @constructor
+ * @doc
+ */
+{template .authSocial}
+    {call .init data="all" /}
+{/template}
+
+/**
+ * Before template
+ * @param params {
+ *     config: {
+ *         stylizationModifier: ?string
+ *     }
+ * }
+ */
+{template .before}
+    <h3 class="{call .rootClass/}__title">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': $params.config.stylizationModifier,
+                'type': 'icon',
+                'renderParams': [
+                    'data': [
+                        'type': 'mel-logo'
+                    ]
+                ]
+            ]/}
+        {/call}
+    </h3>
+    <div class="{call .rootClass/}__text">
+        Войти на сайт
+    </div>
+{/template}
+
+/**
+ * After template
+ */
+{template .after}
+    <div class="{call .rootClass/}__text">
+        Входя на сайт, вы принимаете условия
+        {sp}
+        <div class="{call .rootClass/}__href">
+            пользовательского соглашения
+        </div>
+    </div>
+{/template}

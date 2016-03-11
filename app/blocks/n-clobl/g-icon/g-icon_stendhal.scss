@@ -1,30 +1,18 @@
-.b-icon {
-    display: inline-block;
-
-    width: 10px;
-    height: 10px;
-
-    vertical-align: middle;
+.g-icon.g-icon_stendhal.g-icon_img_close-balloon {
+    display: block;
 }
 
-.b-icon.b-icon_top-align {
-    vertical-align: top;
-}
-
-
-.b-icon_img_metro,
-.b-icon.b-icon_img_metro {
+.g-icon.g-icon_stendhal.g-icon_img_metro {
     width: 11px;
     height: 8px;
 
     vertical-align: baseline;
 
-    background-image: url(/images/b-icon/b-icon_img/b-icon_img_metro.svg);
+    background-image: url(/images/n-clobl/g-icon/g-icon_img/g-icon_img_metro.svg);
     background-size: contain;
 }
 
-
-.b-icon.b-icon_img_test {
+.g-icon.g-icon_stendhal.g-icon_img_test {
     height: auto;
     width: auto;
 

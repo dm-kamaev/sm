@@ -1,4 +1,4 @@
-{namespace sm.lSchool.bDataBlockRatings.Template}
+{namespace sm.lSchool.bDataBlock.TemplateRatings}
 
 /**
  * Ratings item
@@ -66,25 +66,68 @@
     // if for only goverment rating
     {if $params?.name != 'Рейтинг пользователей «Мела»'}
         <li class="b-data-block__item">
-            <div class="b-data-block__place-wrapper">
-                <div class="b-data-block__place-value">
-                    {$params.place}
+            <div class="b-data-block__content-wrap">
+                <div class="b-data-block__place-wrapper">
+                    <div class="b-data-block__place-value">
+                        {$params.place}
+                    </div>
                 </div>
-            </div>
 
-            {if $params.href}
-                <a  class="b-data-block__item-content
-                           b-data-block__item-content_text-color_red"
-                    href="{$params.href}">
+                {if $params.href}
+                    <a  class="b-data-block__item-content
+                               b-data-block__item-content_text-color_red"
+                        href="{$params.href}">
+                            {$params.name}
+                     </a>
+                {else}
+                    <div class="b-data-block__item-content">
                         {$params.name}
-                 </a>
-            {else}
-                <div class="b-data-block__item-content">
-                    {$params.name}
-                </div>
-            {/if}
+                    </div>
+                {/if}
+                {call .hint_/}
+            </div>
         </li>
     {/if}
+{/template}
+
+/**
+ * Hint template
+ */
+{template .hint_ private="true"}
+    {let $hintData kind="html"}
+        <div class="b-data-block__hint-content">
+            Рейтинг составлен Департаментом образования{sp}
+            Москвы по итогам 2014—2015 учебного года
+            <br>
+            <div class="b-data-block__hint-href">
+                Подробнее
+                <div class="b-data-block__hint-href-icon">
+                    {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+                        {param params: [
+                            'type': 'icon',
+                            'renderParams': [
+                                'data': [
+                                    'type': 'window-href'
+                                ]
+                            ]
+                        ]/}
+                    {/call}
+                </div>
+            </div>
+        </div>
+    {/let}
+    {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+        {param params: [
+            'type': 'hint',
+            'renderParams': [
+                'data': $hintData,
+                'config': [
+                    'align': 'left',
+                    'offset': 's'
+                ]
+            ]
+        ]/}
+    {/call}
 {/template}
 
 /**

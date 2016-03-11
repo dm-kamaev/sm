@@ -136,7 +136,7 @@
             </label>
         </div>
     </div>
-{/template} 
+{/template}
 
 
 /**
@@ -145,7 +145,7 @@
 {template .showFiltersButton}
     <div class="b-filter__show-filters-button">
         <div class="b-filter__show-filters-icon
-                    b-icon_img_filter-arrow-down">
+                    g-icon_img_filter-arrow-down">
         </div>
     </div>
 {/template}
@@ -160,10 +160,15 @@
 {template .tooltip}
     <div class="b-filter__tooltip i-hint">
         <div class="b-filter__tooltip-icon">
-            {call sm.bIcon.Template.icon}
-                {param params:[
-                    'type': 'school-button',
-                ] /}
+            {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+                {param params: [
+                    'type': 'icon',
+                    'renderParams': [
+                        'data': [
+                            'type': 'school-button'
+                        ]
+                    ]
+                ]/}
             {/call}
         </div>
 

@@ -40,7 +40,8 @@
  *     }
  *     config: {
  *         usePlaceholder: boolean
- *         iconSprite: ?string
+ *         iconSprite: ?string,
+ *         stylizationModifier: ?string
  *     }
  * }}
  * @override
@@ -70,10 +71,16 @@
     </div>
     {if $params?.config?.iconSprite}
         <div class="{call .rootClass/}__opener-arrow">
-            {call sm.bIcon.Template.icon}
+            {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
                 {param params: [
-                    'type': $params?.config?.iconSprite
-                ] /}
+                    'factory': $params.config.stylizationModifier,
+                    'type': 'icon',
+                    'renderParams': [
+                        'data': [
+                            'type': $params?.config?.iconSprite
+                        ]
+                    ]
+                ]/}
             {/call}
         </div>
     {/if}

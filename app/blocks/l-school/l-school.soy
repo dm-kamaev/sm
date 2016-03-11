@@ -174,11 +174,18 @@
         </div>
         {if $params.data.metroStations}
             <div class="l-school__metro-stations">
-                {call sm.bIcon.Template.icon}
-                    {param params:[
-                        'type': 'metro',
-                        'customClasses': 'l-school__metro-icon'
-                    ] /}
+                {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+                    {param params: [
+                        'type': 'icon',
+                        'renderParams': [
+                            'data': [
+                                'type': 'metro'
+                            ],
+                            'config': [
+                                'customClasses':  'l-school__metro-icon'
+                            ]
+                        ]
+                    ]/}
                 {/call}
                 {foreach $metro in $params.data.metroStations}
                     {$metro}
@@ -222,7 +229,9 @@
             {param params: [
                 'type': 'button',
                 'renderParams': [
-                    'data': 'Оставить отзыв',
+                    'data': [
+                        'content': 'Оставить отзыв'
+                    ],
                     'config': [
                         'customClasses': [
                             'g-button_feedback-opener'
@@ -231,27 +240,79 @@
                 ]
             ]/}
         {/call}
-        <div class="l-school__anchors">
-            {if $params.data.comments and length($params.data.comments) > 0}
-                <a class="l-school__anchor" href="#comments">
-                    Комментарии
-                    <spna class="l-school__anchor-value">
-                        {length($params.data.comments)}
-                    </span>
-                </a>
-            {/if}
-            {if $params.data.ratings and length($params.data.ratings) > 0}
-                <a class="l-school__anchor" href="#results">
-                    Результаты олимпиад и экзаменов
-                </a>
-            {/if}
-        </div>
+
+        {call .schoolAnchors_}
+            {param params: [
+                'data': [
+                    'comments': $params?.data?.comments,
+                    'ratings': $params?.data?.ratings
+                ]
+            ]/}
+        {/call}
+
+        {call .authSocial_/}
 
         // A necessary measure due to the adaptability
         {call .extra_ data="all"}
             {param clone: true /}
         {/call}
     </div>
+{/template}
+
+/**
+ * schoolAnchors
+ * @param params {
+ *     data: {
+ *         comments: list<{}>,
+ *         ratings: list <{}>
+ *     }
+ * }
+ */
+{template .schoolAnchors_ private="true"}
+    <div class="l-school__anchors">
+        {if $params?.data?.comments?.length > 0}
+            <a class="l-school__anchor" href="#comments">
+                Комментарии
+                <spna class="l-school__anchor-value">
+                    {$params.data.comments.length}
+                </span>
+            </a>
+        {/if}
+        {if $params?.data?.ratings?.length > 0}
+            <a class="l-school__anchor" href="#results">
+                Результаты олимпиад и экзаменов
+            </a>
+        {/if}
+    </div>
+{/template}
+
+/**
+ * Auth modal
+ */
+{template .authSocial_ private="true"}
+    {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+        {param params: [
+            'type': 'auth-social-modal',
+            'renderParams': [
+                'data': [
+                    'socials': [
+                        [
+                            'type': 'fb',
+                            'url': 'http://localhost:1992/test/social'
+                        ],
+                        [
+                            'type': 'vk',
+                            'url': 'http://localhost:1992/test/social'
+                        ],
+                        [
+                            'type': 'gp',
+                            'url': 'http://localhost:1992/test/social'
+                        ]
+                    ]
+                ]
+            ]
+        ]/}
+    {/call}
 {/template}
 
 
@@ -328,7 +389,7 @@
 {template .extra_ autoescape="strict" kind="html"}
     <div class="l-school__section l-school__section_extra{sp}
                 {$clone ? 'l-school__section l-school__section_extra_clone' : ''}">
-        {call  sm.lSchool.bDataBlockInformation.Template.base}
+        {call  sm.lSchool.bDataBlock.TemplateInformation.base}
             {param  params: [
                     'content': [
                         'classes': $params.data.classes,
@@ -355,7 +416,7 @@
 {template .features_ autoescape="strict" kind="html"}
     {if $params.data.features and length($params.data.features) > 0}
         <div class="l-school__section l-school__section_features">
-            {call sm.lSchool.bDataBlockFeatures.Template.base}
+            {call sm.lSchool.bDataBlock.TemplateFeatures.base}
                 {param params: [
                     'header': 'Особенности',
                     'content': $params.data.features
@@ -397,7 +458,7 @@
             /}
 
             <div class="l-school__item-container">
-                {call sm.lSchool.bDataBlockAddresses.Template.base}
+                {call sm.lSchool.bDataBlock.TemplateAddresses.base}
                     {param params: [
                         'header': $contactHeader,
                         'content': $params.data.contacts
@@ -503,7 +564,7 @@
     {if $params.data.sites and
         length($params.data.sites) > 0}
         <div class="l-school__section l-school__section_links">
-            {call sm.lSchool.bDataBlockLinks.Template.base}
+            {call sm.lSchool.bDataBlock.TemplateLinks.base}
                 {param params: [
                     'header': 'Ссылки',
                     'content': $params.data.sites
@@ -529,7 +590,7 @@
 {template .ratings_ autoescape="strict" kind="html"}
     {if length($params.data.ratings) > 1}
         <div class="l-school__section l-school__section_ratings">
-            {call sm.lSchool.bDataBlockRatings.Template.base}
+            {call sm.lSchool.bDataBlock.TemplateRatings.base}
                 {param params: [
                     'header': 'Места в рейтингах',
                     'content': $params.data.ratings
@@ -555,7 +616,7 @@
     {if $params.data.specializedClasses and
         length($params.data.specializedClasses) > 0}
         <div class="l-school__section l-school__section_specialized-classes">
-            {call sm.lSchool.bDataBlockFoldList.Template.base}
+            {call sm.lSchool.bDataBlock.TemplateFoldList.base}
                 {param params: [
                     'header': 'Профильные классы',
                     'content': $params.data.specializedClasses
@@ -581,7 +642,7 @@
     {if $params.data.activities and
         length($params.data.activities) > 0}
         <div class="l-school__section l-school__section_activities">
-            {call sm.lSchool.bDataBlockFoldList.Template.base}
+            {call sm.lSchool.bDataBlock.TemplateFoldList.base}
                 {param params: [
                     'header': 'Дополнительные занятия',
                     'headerType': 2,
