@@ -1,4 +1,7 @@
+const lodash = require('lodash');
+
 const metroView = require.main.require('./api/modules/geo/views/metroView.js');
+const areaView = require.main.require('./api/modules/geo/views/areaView.js');
 const departmentView = require.main.require('./api/modules/geo/views/departmentView.js');
 const stages = require('../enums/departmentStage');
 
@@ -120,30 +123,26 @@ addressView.default = function(addresses) {
  * @return {array<string>}
  */
 addressView.getMetro = function(addresses) {
-    metroStations = [];
+    var metroStations =
+        addresses
+            .map(address => address.metroStations)
+            .filter(metroStations => metroStations.length > 0)
+            .map(metroStations => metroStations[0]);
 
-    addresses.forEach(address => {
-        if (address.metroStations.length > 0) {
-            address.metroStations = metroView.list(address.metroStations);
-
-            var isNewMetro = true;
-            metroStations.forEach(metro => {
-                if (metro.name === address.metroStations[0].name) {
-                    isNewMetro = false;
-                }
-            });
-
-            if (isNewMetro && address.metroStations[0].name !== null) {
-                metroStations.push({
-                    id: address.metroStations[0].id,
-                    name: address.metroStations[0].name
-                });
-            }
-        }
-    });
-
-    return metroStations;
+    return metroView.list(metroStations);
 };
+
+/**
+ * returns area names and id for departments from addresses array
+ * @param {array<object>} addresses
+ * @return {object}
+ */
+addressView.getAreas = function(addresses) {
+    var areas = addresses.map(address => address.area);
+
+    return areaView.list(areas)[0];
+};
+
 
 /**
  * Transforms school address for metro stations

@@ -691,7 +691,9 @@ service.list = async (function(opt_params) {
             'school.count_results AS "countResults"',
             'address.id AS "addressId"',
             'metro.id AS "metroId"',
-            'metro.name AS "metroName"'
+            'metro.name AS "metroName"',
+            'area.id AS "areaId"',
+            'area.name AS "areaName"'
         ],
         from: {
                 select: [
@@ -738,7 +740,8 @@ service.list = async (function(opt_params) {
                 values: [
                     'address on address.school_id = school.id',
                     'address_metro on address_metro.address_id = address.id',
-                    'metro on metro.id = address_metro.metro_id'
+                    'metro on metro.id = address_metro.metro_id',
+                    'area on address.area_id = area.id'
                 ]
             }
         ],

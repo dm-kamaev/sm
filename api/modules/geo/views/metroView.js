@@ -1,3 +1,5 @@
+const lodash = require('lodash');
+
 var metroView = {};
 
 /**
@@ -5,7 +7,9 @@ var metroView = {};
  * @return {array<object>}
  */
 metroView.list = function(metros) {
-    return metros
+    var uniqMetros = lodash.uniq(metros, 'id')
+
+    return uniqMetros
         .map(metro => {
             if(metro.name) {
                 return {

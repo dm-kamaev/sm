@@ -42,7 +42,7 @@
  *     data: ?{
  *         header: ?{
  *             title: ?string,
- *             help: ?string
+ *             tooltip: ?string
  *         }
  *     },
  *     config: ?{
@@ -55,10 +55,12 @@
         <span class="b-filter__title">
             {$params?.data?.header?.title}
         </span>
-        {if $params?.header?.help}
-            <div class="b-filter__help" data-help="{$params?.data?.header?.help}">
-                <img src="/images/l-search-result/b-filter/b-filter__help.png"/>
-            </div>
+        {if $params?.data?.header?.tooltip}
+            {call .tooltip}
+                {param params: [
+                    'text': $params?.data?.header?.tooltip
+                ]/}
+            {/call}
         {/if}
         {if not $params?.config?.cannotBeHidden}
             {call .showFiltersButton/}
@@ -145,5 +147,43 @@
         <div class="b-filter__show-filters-icon
                     g-icon_img_filter-arrow-down">
         </div>
+    </div>
+{/template}
+
+
+/**
+ * Template tooltip
+ * @param? params {
+ *     text: ?string
+ * }
+ */
+{template .tooltip}
+    <div class="b-filter__tooltip i-hint">
+        <div class="b-filter__tooltip-icon">
+            {call sm.bIcon.Template.icon}
+                {param params:[
+                    'type': 'school-button',
+                ] /}
+            {/call}
+        </div>
+
+        {let $tooltipData kind="html"}
+            <div class="b-filter__hint-content">
+                {$params?.text}
+            </div>
+        {/let}
+
+        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+            {param params: [
+                'type': 'hint',
+                'renderParams': [
+                    'data': $tooltipData,
+                    'config': [
+                        'align': 'arrow',
+                        'customClasses': ['b-filter__hint']
+                    ]
+                ]
+            ]/}
+        {/call}
     </div>
 {/template}

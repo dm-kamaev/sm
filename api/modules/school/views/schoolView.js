@@ -366,9 +366,9 @@ var getStages = function(departments) {
  * @return {object} contains results count and schools array
  */
 schoolView.list = function(schools, opt_criterion) {
-    var res = {};
+    var res = {}; 
     if (schools.length !== 0) {
-        schools = groupSchools(schools);
+        schools = groupSchools(schools); 
 
         res.countResults = schools[0].countResults;
         res.schools = schools
@@ -388,10 +388,10 @@ schoolView.list = function(schools, opt_criterion) {
                     fullName: school.fullName,
                     ratings: ratingView.ratingResultView(school.rankDogm),
                     metroStations: addressView.getMetro(school.addresses),
+                    area: addressView.getAreas(school.addresses),
                     isScoreClickable: checkScoreValues(score, sortCriterion)
                 };
             });
-
 
     } else {
         res = {
@@ -481,6 +481,7 @@ var groupSchools = function(schools) {
                 resultItem.addresses.push({
                     id: key,
                     metroStations: [],
+                    area: {},
                     departments: []
                 });
 
@@ -504,7 +505,6 @@ var groupSchools = function(schools) {
                             });
                     }
 
-
                     var isNewDepartment = true;
                     //checks that current department is not in metro array already
                     lodash.forEach(currentAddress.departments, (department) => {
@@ -519,6 +519,9 @@ var groupSchools = function(schools) {
                             stage: school.departmentStage
                         });
                     }
+
+                    currentAddress.area.id = school.areaId;
+                    currentAddress.area.name = school.areaName;
                 });
             });
 
@@ -691,7 +694,7 @@ schoolView.filters = function(filters) {
            data: {
                filters: item.values,
                header: {
-                   help: ''
+                   tooltip: ''
                },
                name: item.filter
            },
@@ -707,10 +710,14 @@ schoolView.filters = function(filters) {
            case 'ege':
                res.data.header.title = 'Высокие результаты ЕГЭ';
                res.data.filters.sort((a, b) => subjectView.sorter(a.label, b.label, 'EGE'));
+               res.data.header.tooltip = 'Выше среднего значения по нашей базе.' +
+               ' Учитываются результаты московских школ за последний год.'
                break;
            case 'gia':
                res.data.header.title = 'Высокие результаты ГИА';
                res.data.filters.sort((a, b) => subjectView.sorter(a.label, b.label, 'GIA'));
+               res.data.header.tooltip = 'Выше среднего значения по нашей базе.' +
+               ' Учитываются результаты московских школ за последний год.'
                break;
            case 'olimp':
                res.data.header.title = 'Есть победы в олимпиадах';

@@ -22,7 +22,8 @@
  *             },
  *             description: string,
  *             ratings: string[],
- *             metroStations: string[]
+ *             metroStations: string[],
+ *             area: []
  *         }],
  *         filters: {
  *             filters: [{
@@ -112,6 +113,7 @@
             {param clone: true /}
         {/call}
         {call .leftMenu_ data="all" /}
+
         <div class="l-search-result__results-section">
             {call .listHeader_ data="all" /}
             <div class="l-search-result__list-body

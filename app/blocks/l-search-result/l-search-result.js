@@ -8,6 +8,7 @@ goog.require('goog.ui.Component');
 goog.require('gorod.gSuggest.Suggest');
 goog.require('sm.bHeader.Header');
 goog.require('sm.bSearch.Search');
+goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.lSearchResult.Template');
 goog.require('sm.lSearchResult.bFilters.Filters');
 goog.require('sm.lSearchResult.bSchoolList.SchoolList');
@@ -191,10 +192,6 @@ goog.scope(function() {
             this.schoolList_,
             SchoolList.Event.SHOW_MORE,
             this.showMoreSchoolListItemsHandler_
-        ).listen(
-            this.schoolList_,
-            SchoolList.Event.ITEM_CLICK,
-            this.redirect_
         );
 
         this.getHandler().listen(
@@ -213,8 +210,6 @@ goog.scope(function() {
         this.filters_.submit(event);
 
         Header.getInstance().setMode(Header.Mode.DEFAULT);
-
-        console.log('submit');
     };
 
     /**
@@ -237,8 +232,6 @@ goog.scope(function() {
 
         this.filters_.collapse();
         window.scrollTo(0, 0);
-
-
     };
 
     /**
@@ -262,17 +255,6 @@ goog.scope(function() {
         this.searchSettings_.data.page += 1;
         this.schoolList_.showLoader();
         this.sendQuery_();
-    };
-
-    /**
-     * Handler for redirect
-     * @private
-     * @param {Object} event
-     */
-    SearchResult.prototype.redirect_ = function(event) {
-        var url = 'school/' + event.url,
-            win = window.open(url, '_blank');
-        win.focus();
     };
 
     /**
