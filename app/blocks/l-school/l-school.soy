@@ -389,7 +389,7 @@
 {template .extra_ autoescape="strict" kind="html"}
     <div class="l-school__section l-school__section_extra{sp}
                 {$clone ? 'l-school__section l-school__section_extra_clone' : ''}">
-        {call  sm.lSchool.bDataBlockInformation.Template.base}
+        {call  sm.lSchool.bDataBlock.TemplateInformation.base}
             {param  params: [
                     'content': [
                         'classes': $params.data.classes,
@@ -416,7 +416,7 @@
 {template .features_ autoescape="strict" kind="html"}
     {if $params.data.features and length($params.data.features) > 0}
         <div class="l-school__section l-school__section_features">
-            {call sm.lSchool.bDataBlockFeatures.Template.base}
+            {call sm.lSchool.bDataBlock.TemplateFeatures.base}
                 {param params: [
                     'header': 'Особенности',
                     'content': $params.data.features
@@ -458,7 +458,7 @@
             /}
 
             <div class="l-school__item-container">
-                {call sm.lSchool.bDataBlockAddresses.Template.base}
+                {call sm.lSchool.bDataBlock.TemplateAddresses.base}
                     {param params: [
                         'header': $contactHeader,
                         'content': $params.data.contacts
@@ -564,7 +564,7 @@
     {if $params.data.sites and
         length($params.data.sites) > 0}
         <div class="l-school__section l-school__section_links">
-            {call sm.lSchool.bDataBlockLinks.Template.base}
+            {call sm.lSchool.bDataBlock.TemplateLinks.base}
                 {param params: [
                     'header': 'Ссылки',
                     'content': $params.data.sites
@@ -590,7 +590,7 @@
 {template .ratings_ autoescape="strict" kind="html"}
     {if length($params.data.ratings) > 1}
         <div class="l-school__section l-school__section_ratings">
-            {call sm.lSchool.bDataBlockRatings.Template.base}
+            {call sm.lSchool.bDataBlock.TemplateRatings.base}
                 {param params: [
                     'header': 'Места в рейтингах',
                     'content': $params.data.ratings
@@ -616,7 +616,7 @@
     {if $params.data.specializedClasses and
         length($params.data.specializedClasses) > 0}
         <div class="l-school__section l-school__section_specialized-classes">
-            {call sm.lSchool.bDataBlockFoldList.Template.base}
+            {call sm.lSchool.bDataBlock.TemplateFoldList.base}
                 {param params: [
                     'header': 'Профильные классы',
                     'content': $params.data.specializedClasses
@@ -642,7 +642,7 @@
     {if $params.data.activities and
         length($params.data.activities) > 0}
         <div class="l-school__section l-school__section_activities">
-            {call sm.lSchool.bDataBlockFoldList.Template.base}
+            {call sm.lSchool.bDataBlock.TemplateFoldList.base}
                 {param params: [
                     'header': 'Дополнительные занятия',
                     'headerType': 2,
