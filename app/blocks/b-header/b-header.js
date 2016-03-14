@@ -3,6 +3,7 @@ goog.provide('sm.bHeader.Header');
 goog.require('cl.iControl.Control');
 goog.require('goog.dom');
 goog.require('sm.bHeader.View');
+goog.require('sm.bSearch.Search');
 
 
 /**
@@ -18,7 +19,19 @@ sm.bHeader.Header = function(view, opt_params, opt_domHelper) {
 
     this.setSupportedState(goog.ui.Component.State.FOCUSED, false);
 
+    /**
+     * Current mode
+     * @type {Header.Mode|string}
+     * @private
+     */
     this.mode_ = sm.bHeader.Header.Mode.DEFAULT;
+
+    /**
+     * Search instance
+     * @type {sm.bSearch.Search}
+     * @private
+     */
+    this.search_ = null;
 };
 goog.inherits(sm.bHeader.Header, cl.iControl.Control);
 
@@ -26,6 +39,7 @@ goog.inherits(sm.bHeader.Header, cl.iControl.Control);
 goog.scope(function() {
     var Header = sm.bHeader.Header,
         View = sm.bHeader.View,
+        Search = sm.bSearch.Search,
         FactoryManager = cl.iFactory.FactoryManager;
 
 
@@ -55,6 +69,15 @@ goog.scope(function() {
         return Header.instance_;
     };
 
+    /**
+     * @override
+     */
+    Header.prototype.decorateInternal = function(element) {
+        goog.base(this, 'decorateInternal', element);
+
+        this.search_ = new Search();
+        this.search_.decorate(this.getView().getDom().search);
+    };
 
     /**
      * @override
@@ -63,12 +86,12 @@ goog.scope(function() {
         goog.base(this, 'enterDocument');
 
         this.getHandler().listen(
-            this.getView(),
-            View.Event.DEFAULT_MODE_INITED,
+            this.search_,
+            Search.Event.DEFAULT_MODE_INITED,
             this.onDefaultModeInited_
         ).listen(
-            this.getView(),
-            View.Event.SEARCH_MODE_INITED,
+            this.search_,
+            Search.Event.SEARCH_MODE_INITED,
             this.onSearchModeInited_
         );
     };
@@ -123,10 +146,12 @@ goog.scope(function() {
         switch (mode) {
             case Header.Mode.DEFAULT:
                 this.getView().switchToDefaultMode();
+                this.search_.setMode(Search.Mode.DEFAULT);
                 break;
 
             case Header.Mode.SEARCH:
                 this.getView().switchToSearchMode();
+                this.search_.setMode(Search.Mode.SEARCH);
                 break;
         }
     };

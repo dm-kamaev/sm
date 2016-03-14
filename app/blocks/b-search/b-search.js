@@ -1,5 +1,6 @@
 goog.provide('sm.bSearch.Search');
 
+goog.require('cl.iUtils.Utils');
 goog.require('goog.dom');
 goog.require('goog.dom.classlist');
 goog.require('goog.events');
@@ -39,12 +40,20 @@ sm.bSearch.Search = function(opt_params) {
      * @type {?object}
      */
     this.dataParams_ = {};
+
+    /**
+     * Current mode
+     * @type {Search.Mode|string}
+     * @private
+     */
+    this.mode_ = sm.bSearch.Search.Mode.DEFAULT;
 };
 goog.inherits(sm.bSearch.Search, goog.ui.Component);
 
 goog.scope(function() {
-    var Search = sm.bSearch.Search;
-    var Suggest = gorod.gSuggest.Suggest;
+    var Search = sm.bSearch.Search,
+        Suggest = gorod.gSuggest.Suggest,
+        Utils = cl.iUtils.Utils;
 
     /**
      * CSS-class enum
@@ -53,7 +62,10 @@ goog.scope(function() {
     Search.CssClass = {
         ROOT: 'b-search',
         LIST: 'b-search__list',
-        ICON: 'b-search__icon'
+        CONTROL_SEARCH: 'b-search__control_search',
+        CONTROL_CLEAR: 'b-search__control_clear',
+        SEARCH_MODE: 'b-search_mode_search',
+        DEFAULT_MODE: 'b-search_mode_default'
     };
 
     /**
@@ -62,7 +74,18 @@ goog.scope(function() {
      */
     Search.Event = {
         SUBMIT: 'submit',
-        ITEM_SELECT: 'itemSelect'
+        ITEM_SELECT: 'itemSelect',
+        DEFAULT_MODE_INITED: 'defaultModeInited',
+        SEARCH_MODE_INITED: 'searchModeInited'
+    };
+
+    /**
+     * Search modes
+     * @enum {string}
+     */
+    Search.Mode = {
+        DEFAULT: 'default',
+        SEARCH: 'search'
     };
 
     /**
@@ -72,6 +95,62 @@ goog.scope(function() {
      */
     Search.prototype.getValue = function() {
         return this.suggest_.getText();
+    };
+
+
+    /**
+     * Switch to search mode
+     * @public
+     */
+    Search.prototype.switchToSearchMode = function() {
+        goog.dom.classes.add(
+            this.getElement(),
+            Search.CssClass.SEARCH_MODE
+        );
+        goog.dom.classes.remove(
+            this.getElement(),
+            Search.CssClass.DEFAULT_MODE
+        );
+        goog.dom.classes.add(
+            document.documentElement,
+            Utils.CssClass.OVERFLOW_HIDDEN
+        );
+        this.suggest_.focus();
+    };
+
+    /**
+     * Switch to default mode
+     * @public
+     */
+    Search.prototype.switchToDefaultMode = function() {
+        goog.dom.classes.remove(
+            this.getElement(),
+            Search.CssClass.SEARCH_MODE
+        );
+        goog.dom.classes.add(
+            this.getElement(),
+            Search.CssClass.DEFAULT_MODE
+        );
+        goog.dom.classes.remove(
+            document.documentElement,
+            Utils.CssClass.OVERFLOW_HIDDEN
+        );
+    };
+
+    /**
+     * Set header mode
+     * @param {sm.bHeader.Header.Mode} mode
+     * @return {boolean}
+     */
+    Search.prototype.setMode = function(mode) {
+        var res = (this.isCorrectMode_(mode) && !this.isCurrentMode_(mode));
+
+        if (res) {
+            this.mode_ = mode;
+            this.switchViewMode_(mode);
+        }
+
+        return res;
     };
 
     /**
@@ -87,8 +166,10 @@ goog.scope(function() {
     /**
      * Set up the Component.
      */
-     Search.prototype.enterDocument = function() {
+    Search.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
+
+        var handler = this.getHandler();
 
         this.dataParams_ = JSON.parse(
             this.getElement().getAttribute('data-params')
@@ -108,16 +189,19 @@ goog.scope(function() {
             this.onSubmit_.bind(this)
         );
 
-        if (this.elements_.icon) {
-            this.getHandler().listen(
-                this.elements_.icon,
+        if (this.elements_.searchButton) {
+            handler.listen(
+                this.elements_.searchButton,
                 goog.events.EventType.CLICK,
-                this.onIconClick_
+                this.onSearchClick_
             );
-            this.getHandler().listen(
-                this.elements_.suggest,
-                goog.events.EventType.INPUT,
-                this.onTextChange_
+        }
+
+        if (this.elements_.clearButton) {
+            handler.listen(
+                this.elements_.clearButton,
+                goog.events.EventType.CLICK,
+                this.onClearClick_
             );
         }
 
@@ -274,25 +358,71 @@ goog.scope(function() {
             suggest: goog.dom.getElementByClass(
                 gorod.gSuggest.Suggest.Css.ROOT
             ),
-            icon: goog.dom.getElementByClass(
-                Search.CssClass.ICON
+            searchButton: goog.dom.getElementByClass(
+                Search.CssClass.CONTROL_SEARCH
+            ),
+            clearButton: goog.dom.getElementByClass(
+                Search.CssClass.CONTROL_CLEAR
             )
         };
     };
 
     /**
-     * Icon click handler
+     * Search button click handler
      * @private
      */
-    Search.prototype.onIconClick_ = function() {
-        if (this.dataParams_.redirect) {
-            this.searchRequest_(this.suggest_.getText());
-        } else {
-            this.dispatchEvent({
-                type: Search.Event.SUBMIT,
-                text: this.suggest_.getText()
-            });
+    Search.prototype.onSearchClick_ = function() {
+        this.dispatchEvent({
+            'type': Search.Event.SEARCH_MODE_INITED
+        });
+    };
+
+    /**
+     * Search button click handler
+     * @private
+     */
+    Search.prototype.onClearClick_ = function() {
+        this.dispatchEvent({
+            'type': Search.Event.DEFAULT_MODE_INITED
+        });
+    };
+
+    /**
+     * Switch mode of view
+     * @param {sm.bHeader.Header.Mode} mode
+     * @private
+     */
+    Search.prototype.switchViewMode_ = function(mode) {
+        switch (mode) {
+            case Search.Mode.DEFAULT:
+                this.switchToDefaultMode();
+                break;
+
+            case Search.Mode.SEARCH:
+                this.switchToSearchMode();
+                break;
         }
+    };
+
+    /**
+     * Is mode correct
+     * @param {sm.bHeader.Header.Mode} mode
+     * @return {boolean}
+     * @private
+     */
+    Search.prototype.isCorrectMode_ = function(mode) {
+        return mode == Search.Mode.DEFAULT ||
+            mode == Search.Mode.SEARCH;
+    };
+
+    /**
+     * Is mode already selected
+     * @param {sm.bHeader.Header.Mode} mode
+     * @return {boolean}
+     * @private
+     */
+    Search.prototype.isCurrentMode_ = function(mode) {
+        return this.mode_ == mode;
     };
 
     /**
@@ -352,7 +482,7 @@ goog.scope(function() {
     };
 
     /**
-     * Redirect handler
+     * Handler for input data
      * @private
      */
     Search.prototype.onTextChange_ = function() {
