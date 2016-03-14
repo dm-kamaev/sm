@@ -23,44 +23,64 @@
 
     <div class="b-search
                 b-search_theme_{$params.theme}{sp}
-                {$params?.customClasses ? $params?.customClasses : ''}"{sp}
+                {$params?.customClasses ? $params?.customClasses + ' ' : ''}
+                {$params?.theme == 'collapsed' ? 'i-animate ' : ''}"
         data-params="{call goog.json.serialize data="$data" /}"
     >
-        {if $params.theme == 'main'}
-            //TODO: uncomment
-            //<span class="b-icon_img_arrow b-search__icon"></span>
-        {else}
-            <span class="b-icon_img_search b-search__icon
-                {if not $params.text}
-                    {sp}b-search__icon_disabled
-                {/if}"></span>
+        {if $params?.theme == 'collapsed'}
+            <div class="b-search__fader i-animate"></div>
         {/if}
-        {call gorod.gSuggest.SuggestTemplate.render}
-            {param params: [
-                'data': [
-                    'text': $params?.text,
-                    'minLength': 3,
-                    'autofocus': $params?.autofocus,
-                    'placeholder': $params?.placeholder,
-                    'sourceUrl': '/api/school/search/suggest',
-                    'argName': 'searchString'
-                ],
-                'config': [
-                    'customClasses': 'b-search__suggest',
-                    'filtrationEnabled': false,
-                ],
-                'list': [
-                    'theme': 'stendhal',
-                    'color': 'sienna'
-                ],
-                'input': [
-                    'style': [
-                        'theme': 'stendhal',
-                        'size': $params?.inputSize
-                    ]
-                ]
-            ]/}
-        {/call}
+        <div class="b-search__body">
+            <div class="b-search__bg i-animate"></div>
+            {if $params?.theme == 'collapsed'}
+                <div class="b-search__open-button-holder
+                            i-animate">
+                    {call sm.bIcon.Template.icon}
+                        {param params: [
+                            'type': 'search',
+                            'customClasses':  'b-search__control b-search__control_search'
+                        ] /}
+                    {/call}
+                </div>
+            {/if}
+            <div class="b-search__suggest-holder i-animate">
+                {call gorod.gSuggest.SuggestTemplate.render}
+                    {param params: [
+                        'data': [
+                            'text': $params?.text,
+                            'minLength': 3,
+                            'autofocus': $params?.autofocus,
+                            'placeholder': $params?.placeholder,
+                            'sourceUrl': '/api/school/search/suggest',
+                            'argName': 'searchString'
+                        ],
+                        'config': [
+                            'customClasses': 'b-search__suggest',
+                            'filtrationEnabled': false,
+                        ],
+                        'list': [
+                            'theme': 'stendhal',
+                            'color': 'sienna'
+                        ],
+                        'input': [
+                            'style': [
+                                'theme': 'stendhal',
+                                'size': $params?.inputSize
+                            ]
+                        ]
+                    ]/}
+                {/call}
+            </div>
+
+            {if $params?.theme == 'collapsed'}
+                {call sm.bIcon.Template.icon}
+                    {param params: [
+                        'type': 'clear',
+                        'customClasses': 'b-search__control b-search__control_clear i-animate'
+                    ] /}
+                {/call}
+            {/if}
+        </div>
     </div>
 {/template}
 
