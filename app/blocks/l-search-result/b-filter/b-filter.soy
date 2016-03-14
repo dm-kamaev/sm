@@ -160,10 +160,15 @@
 {template .tooltip}
     <div class="b-filter__tooltip i-hint">
         <div class="b-filter__tooltip-icon">
-            {call sm.bIcon.Template.icon}
-                {param params:[
-                    'type': 'school-button',
-                ] /}
+            {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+                {param params: [
+                    'type': 'icon',
+                    'renderParams': [
+                        'data': [
+                            'type': 'school-button'
+                        ]
+                    ]
+                ]/}
             {/call}
         </div>
 

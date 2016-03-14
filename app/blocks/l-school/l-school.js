@@ -11,7 +11,8 @@ goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.iFactory.FactoryStendhal');
 goog.require('sm.lSchool.bComment.Comment');
 goog.require('sm.lSchool.bComments.Comments');
-goog.require('sm.lSchool.bDataBlockFoldList.FoldList');
+goog.require('sm.lSchool.bDataBlock.DataBlockFoldList');
+goog.require('sm.lSchool.bDataBlock.DataBlockRatings');
 goog.require('sm.lSchool.bFeedbackModal.FeedbackModal');
 goog.require('sm.lSchool.bMap.Map');
 goog.require('sm.lSchool.bResults.Results');
@@ -64,7 +65,8 @@ goog.inherits(sm.lSchool.School, goog.ui.Component);
 
 goog.scope(function() {
     var School = sm.lSchool.School,
-        FoldList = sm.lSchool.bDataBlockFoldList.FoldList,
+        FoldList = sm.lSchool.bDataBlock.DataBlockFoldList,
+        DBlockRatings = sm.lSchool.bDataBlock.DataBlockRatings,
         Results = sm.lSchool.bResults.Results,
         Score = sm.bScore.Score,
         Map = sm.lSchool.bMap.Map,
@@ -187,6 +189,7 @@ goog.scope(function() {
             .initScore_()
             .initAuthSocial_()
             .initComponents_(FoldList)
+            .initComponents_(DBlockRatings)
             .initComponents_(Map)
             .initComponents_(Search)
             .initComponents_(Comments)

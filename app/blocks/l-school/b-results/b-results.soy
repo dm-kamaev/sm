@@ -378,9 +378,14 @@
                 {$params.label}
             </div>
             <div class="b-results__help-icon i-hint">
-                {call sm.bIcon.Template.icon}
+                {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
                     {param params: [
-                        'type': 'school-button',
+                        'type': 'icon',
+                        'renderParams': [
+                            'data': [
+                                'type': 'school-button'
+                            ]
+                        ]
                     ]/}
                 {/call}
                 {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
