@@ -65,6 +65,7 @@ goog.scope(function() {
         LIST: 'b-search__list',
         CONTROL_SEARCH: 'b-search__control_search',
         CONTROL_CLEAR: 'b-search__control_clear',
+        FADER: 'b-search__fader',
         SEARCH_MODE: 'b-search_mode_search',
         DEFAULT_MODE: 'b-search_mode_default',
         ANIMATION_ON: 'b-search_animation_on',
@@ -101,6 +102,15 @@ goog.scope(function() {
         return this.suggest_.getText();
     };
 
+    /**
+     * Sets input value
+     * @param {string} value
+     * @public
+     */
+    Search.prototype.setValue = function(value) {
+        this.suggest_.setText(value);
+        this.suggest_.setValue(value);
+    };
 
     /**
      * Switch to search mode
@@ -126,6 +136,7 @@ goog.scope(function() {
      * @public
      */
     Search.prototype.switchToDefaultMode = function() {
+        this.setValue('');
         goog.dom.classes.remove(
             this.getElement(),
             Search.CssClass.SEARCH_MODE
@@ -150,7 +161,7 @@ goog.scope(function() {
 
         if (res) {
             this.mode_ = mode;
-            this.switchViewMode_(mode);
+            this.switchMode_(mode);
         }
 
         return res;
@@ -205,6 +216,14 @@ goog.scope(function() {
         if (this.elements_.clearButton) {
             handler.listen(
                 this.elements_.clearButton,
+                goog.events.EventType.CLICK,
+                this.onClearClick_
+            );
+        }
+
+        if (this.elements_.fader) {
+            handler.listen(
+                this.elements_.fader,
                 goog.events.EventType.CLICK,
                 this.onClearClick_
             );
@@ -358,16 +377,24 @@ goog.scope(function() {
     Search.prototype.initElements_ = function(root) {
         this.elements_ = {
             root: goog.dom.getElementByClass(
-                Search.CssClass.ROOT
+                Search.CssClass.ROOT,
+                root
             ),
             suggest: goog.dom.getElementByClass(
-                gorod.gSuggest.Suggest.Css.ROOT
+                gorod.gSuggest.Suggest.Css.ROOT,
+                root
             ),
             searchButton: goog.dom.getElementByClass(
-                Search.CssClass.CONTROL_SEARCH
+                Search.CssClass.CONTROL_SEARCH,
+                root
             ),
             clearButton: goog.dom.getElementByClass(
-                Search.CssClass.CONTROL_CLEAR
+                Search.CssClass.CONTROL_CLEAR,
+                root
+            ),
+            fader: goog.dom.getElementByClass(
+                Search.CssClass.FADER,
+                root
             )
         };
     };
@@ -399,7 +426,7 @@ goog.scope(function() {
      * @param {sm.bHeader.Header.Mode} mode
      * @private
      */
-    Search.prototype.switchViewMode_ = function(mode) {
+    Search.prototype.switchMode_ = function(mode) {
         switch (mode) {
             case Search.Mode.DEFAULT:
                 this.switchToDefaultMode();

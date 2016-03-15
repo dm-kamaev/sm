@@ -17,8 +17,9 @@
 {template .base autoescape="strict" kind="html"}
     <div class="b-header">
         <div class="b-header__body">
-            {call .search_ data="all" /}
-
+            {if $params?.url}
+                {call .search_ data="all" /}
+            {/if}
             {call .advancedSearchLink_ data="all" /}
 
             <div class="b-header__main i-animate">
@@ -94,16 +95,14 @@
  * }}
  */
 {template .search_ private="true" autoescape="strict" kind="html"}
-    {if $params?.url}
-        {call sm.bSearch.Template.base}
-            {param params: [
-                'placeholder': 'Найти школу',
-                'text': $params?.searchText,
-                'theme': 'foldable',
-                'redirect': $params?.searchRedirect,
-                'customClasses': 'b-header__search',
-                'inputSize': 'min'
-            ]/}
-        {/call}
-    {/if}
+    {call sm.bSearch.Template.base}
+        {param params: [
+            'placeholder': 'Номер школы, метро, район',
+            'text': $params?.searchText,
+            'theme': 'foldable',
+            'redirect': $params?.searchRedirect,
+            'customClasses': 'b-header__search',
+            'inputSize': 'min'
+        ]/}
+    {/call}
 {/template}
