@@ -7,6 +7,7 @@ goog.require('goog.events');
 goog.require('goog.ui.Component');
 goog.require('gorod.gSuggest.Suggest');
 goog.require('sm.bSearch.Template');
+goog.require('sm.iAnimate.Animate');
 
 /**
  * Input suggest component
@@ -65,7 +66,10 @@ goog.scope(function() {
         CONTROL_SEARCH: 'b-search__control_search',
         CONTROL_CLEAR: 'b-search__control_clear',
         SEARCH_MODE: 'b-search_mode_search',
-        DEFAULT_MODE: 'b-search_mode_default'
+        DEFAULT_MODE: 'b-search_mode_default',
+        ANIMATION_ON: 'b-search_animation_on',
+        ANIMATION_OFF: 'b-search_animation_off'
+
     };
 
     /**
@@ -115,7 +119,6 @@ goog.scope(function() {
             document.documentElement,
             Utils.CssClass.OVERFLOW_HIDDEN
         );
-        this.suggest_.focus();
     };
 
     /**
@@ -159,6 +162,8 @@ goog.scope(function() {
      */
     Search.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
+
+        this.detectAnimationSupportion_();
 
         this.initElements_(element);
     };
@@ -375,6 +380,7 @@ goog.scope(function() {
         this.dispatchEvent({
             'type': Search.Event.SEARCH_MODE_INITED
         });
+        this.setMode(Search.Mode.SEARCH);
     };
 
     /**
@@ -385,6 +391,7 @@ goog.scope(function() {
         this.dispatchEvent({
             'type': Search.Event.DEFAULT_MODE_INITED
         });
+        this.setMode(Search.Mode.DEFAULT);
     };
 
     /**
@@ -514,5 +521,20 @@ goog.scope(function() {
             url += '&areaId=' + data.item.id;
         }
         document.location.href = url;
+    };
+
+    /**
+     * Turn on animation if it is supported
+     * @private
+     */
+    Search.prototype.detectAnimationSupportion_ = function() {
+        var animationSupportClass = sm.iAnimate.Animate.isSupported() ?
+            Search.CssClass.ANIMATION_ON :
+            Search.CssClass.ANIMATION_OFF;
+
+        goog.dom.classlist.add(
+            this.getElement(),
+            animationSupportClass
+        );
     };
 });
