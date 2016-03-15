@@ -3,12 +3,12 @@
         "vk": {
             "clientId": 5334553,
             "clientSecret": "6OA9JUBAlABYSm6iRFKb",
-            "redirectUri": "http://schools1.qa.lan/vklogin"
+            "redirectUri": "http://www21.lan:3000/authorize/fb"
         },
         "fb": {
             "clientId": 525358880980041,
             "clientSecret": "db1931569be7e254a87ab8aae5ae03db",
-            "redirectUri": "http://schools1.qa.lan/fblogin"
+            "redirectUri": "http://www21.lan:3000/authorize/fb"
         }
     },
     "db": {

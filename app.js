@@ -63,6 +63,7 @@ app.use(express.static(path.join(__dirname, '/public')));
 
 
 app.use('/', modules.school.router);
+app.use('/', api.user.router);
 app.use('/api', api.comment.router);
 app.use('/api', api.school.router);
 app.use('/api', api.geo.router);
