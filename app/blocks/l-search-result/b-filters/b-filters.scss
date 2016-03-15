@@ -26,22 +26,13 @@
     margin-top: -4px;
 }
 
-.b-filters__collapser {
-    display: none;
-
-    color: #ee362c;
-    cursor: pointer;
-
-    font-size: 14px;
-}
-
 .b-filters__content {
     position: relative;
 }
 
 .b-filters__submit-button {
-    width: 75%;
-    margin: 40px auto 10px auto;
+    width: 100%;
+    margin: 40px auto 14px auto;
     padding: 12px 0 13px 0;
 
     border: 4px solid #000000;
@@ -72,21 +63,27 @@
     background: #fff;
 }
 
-.b-filters__reset {
-    height: 52px;
-    margin-top: 14px;
+.b-filters__control-buttons {
+    height: 18px;
+    margin-bottom: 34px;
 
-    text-align: left;
-    cursor: pointer;
+    &:after {
+        display: block;
+        clear:both;
 
-    color: #356fc4;
-
-    text-decoration: none;
-
-    font: 13px Arial, sans-serif;
-    line-height: 18px;
+        content: '';
+    }
 }
 
+.b-filters__reset {
+    display: inline-block;
+
+    float: left;
+}
+
+.b-filters__collapser {
+    display: none;
+}
 
 @include media-xl {
     .b-filters__group {
@@ -98,10 +95,6 @@
         vertical-align: top;
     }
 
-    .b-filters__submit-button {
-        width: 240px;
-        margin: 30px auto 40px;
-    }
 }
 
 
@@ -127,11 +120,9 @@
     }
 
     .b-filters__collapser {
-        position: absolute;
-        right: 0;
-        bottom: 17px;
+        display: inline-block;
 
-        display: block;
+        float: right;
     }
 
     .b-filter__section {
@@ -144,11 +135,6 @@
 
 
 @include media-m {
-    .b-filters__collapser {
-        position: static;
-
-        margin: -10px 0 30px;
-    }
 
     .b-filter__section {
         width: 33.33%;

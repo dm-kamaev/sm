@@ -97,6 +97,15 @@ goog.scope(function() {
     };
 
     /**
+     * Event enum
+     * @enum {String}
+     */
+    Filter.Event = {
+       CHECKED_FILTER: 'checked-filter',
+       UNCHECKED_FILTER: 'unchecked-filter'
+    };
+
+    /**
      * Template-based dom element creation.
      * @public
      */
@@ -196,26 +205,89 @@ goog.scope(function() {
                 this.toggleFiltersVisibility_
             );
         }
-    };
+
+        for (var i = 0; i < this.inputElements.length; i++) {
+            handler.listen(
+                this.inputElements[i],
+                goog.events.EventType.CLICK,
+                this.onCheckedFilter
+            );
+        }
 
 
-    /**
-     * Reset filter
-     */
-    Filter.prototype.onClickResetButton = function() {
-        if (this.inputElements.length > 0) {
-            for (var i = 0; i < this.inputElements.length; i++) {
-                this.inputElements[i].checked = false;
-            }
+        for (var i = 0; i < this.inputElements.length; i++) {
+            handler.listen(
+                this.inputElements[i],
+                goog.events.EventType.CLICK,
+                this.onUnCheckedFilter
+            );
         }
     };
 
     /**
-     * Reset filter and collapse filters
+     * Reset and hide filter
      */
-    Filter.prototype.reset = function() {
-        this.onClickResetButton();
+    Filter.prototype.resetFilter = function() {
+        this.resetInputs();
+        this.hideFilter_();
+    };
 
+
+    /**
+     * Handler checked the filter
+     * @protected
+     */
+    Filter.prototype.onCheckedFilter = function() {
+        this.dispatchEvent({
+            'type': Filter.Event.CHECKED_FILTER
+        });
+    };
+
+    /**
+     * Handler unchecked the filter
+     * @protected
+     */
+    Filter.prototype.onUnCheckedFilter = function() {
+        if (this.isCheckedInput() == false) {
+            this.dispatchEvent({
+                'type': Filter.Event.UNCHECKED_FILTER
+            });
+        }
+    };
+
+     /**
+     * Checks for checked radio
+     * @return {boolean}
+     * @protected
+     */
+    Filter.prototype.isCheckedInput = function() {
+        var result = false;
+
+        for (var i = 0; i < this.inputElements.length; i++) {
+            if (this.inputElements[i].checked) {
+                result = true;
+            }
+        }
+
+        return result;
+    };
+
+    /**
+     * Reset filter
+     * @protected
+     */
+    Filter.prototype.resetInputs = function() {
+        for (var i = 0; i < this.inputElements.length; i++) {
+            this.inputElements[i].checked = false;
+        }
+    };
+
+
+    /**
+     * Hide filter
+     * @private
+     */
+    Filter.prototype.hideFilter_ = function() {
         goog.dom.classlist.add(
             this.filtersElement_,
             Filter.CssClass.HIDDEN
@@ -231,6 +303,7 @@ goog.scope(function() {
             Filter.CssClass.ICON_ARROW_DOWN
         );
     };
+
 
     /**
      * Show hidden filters

@@ -163,7 +163,7 @@ goog.scope(function() {
             this.getHandler().listen(
                 this.filterResetElement,
                 goog.events.EventType.CLICK,
-                this.reset,
+                this.onClickResetButton_,
                 false,
                 this
             );
@@ -179,14 +179,76 @@ goog.scope(function() {
             );
         }
 
-        if (this.inputClassesOrdinaryElement_) {
-            this.getHandler().listen(
-                this.inputClassesOrdinaryElement_,
-                goog.events.EventType.CLICK,
-                this.hasCheckedInputClasses_
-            );
-        }
+        this.getHandler().listen(
+            this.filterResetElement,
+            goog.events.EventType.CLICK,
+            this.onUnCheckedFilter
+        );
 
+        this.getHandler().listen(
+            this.inputClassesOrdinaryElement_,
+            goog.events.EventType.CLICK,
+            this.onCheckedFilter
+        );
+
+        this.getHandler().listen(
+            this.inputClassesOrdinaryElement_,
+            goog.events.EventType.CLICK,
+            this.onUnCheckedFilter
+        );
+    };
+
+    /**
+     * Reset filter and hide cross
+     */
+    FilterClasses.prototype.resetFilterClasses = function() {
+        this.resetInputs();
+        this.hideCross_();
+        this.setLabelActive_();
+    };
+
+    /**
+     * Reset filter Oridinary
+     */
+    FilterClasses.prototype.resetOridinary = function() {
+       if (this.inputClassesOrdinaryElement_) {
+           this.inputClassesOrdinaryElement_.checked = false;
+       }
+    };
+
+    /**
+     * Checks for checked radio
+     * @return {boolean}
+     * @override
+     */
+    FilterClasses.prototype.isCheckedInput = function(opt_params) {
+        var res = false;
+            // isClassesChecked = goog.base(this, 'isCheckedInput'),
+            // isOrdinaryChecked = goog.base(this, 'isCheckedInput'),
+            // params = opt_params || {};
+
+        if (this.inputClassesOrdinaryElement_.checked == true) {
+            var res = true;
+        }
+        // if (opt_params.classesOnly) {
+        //     res = isClassesChecked;
+        // }
+        // else if (opt_params.ordinaryOnly) {
+        //     res = isOrdinaryChecked;
+        // }
+        // else {
+        //     res = isClassesChecked || isOrdinaryChecked;
+        // }
+
+        return res;
+    };
+
+    /**
+     * Reset filter click event handling
+     * @private
+     */
+    FilterClasses.prototype.onClickResetButton_ = function() {
+        this.resetFilterClasses();
     };
 
     /**
@@ -219,51 +281,48 @@ goog.scope(function() {
     };
 
     /**
-     * Checks for checked radio
-     * @return {boolean}
-     * @private
-     */
-    FilterClasses.prototype.hasCheckedInputClasses_ = function() {
-        var result = false;
-
-        for (var i = 0; i < this.inputElements.length; i++) {
-            if (this.inputElements[i].checked) {
-                result = true;
-            }
-        }
-
-        return result;
-    };
-
-    /**
      * Show reset button
      * @param {Object} event
      * @private
      */
     FilterClasses.prototype.onCheckClasses_ = function(event) {
         if (this.filterResetElement) {
-            if (event.currentTarget.checked || this.hasCheckedInputClasses_()) {
-                goog.dom.classlist.remove(
-                    this.filterResetElement,
-                    FilterClasses.CssClass.HIDDEN
-                );
+            if (event.currentTarget.checked || this.isCheckedInput()) {
+                this.showCross_();
             }
             else {
-                goog.dom.classlist.add(
-                    this.filterResetElement,
-                    FilterClasses.CssClass.HIDDEN
-                );
+                this.hideCross_();
             }
         }
     };
 
-    /**
-     * Reset filter and hide cross
-     * @override
+     /**
+     * Hide filter classes cross
+     * @private
      */
-    FilterClasses.prototype.reset = function() {
-        this.onClickResetButton();
+    FilterClasses.prototype.hideCross_ = function() {
+        goog.dom.classlist.add(
+            this.filterResetElement,
+            FilterClasses.CssClass.HIDDEN
+        );
+    };
 
+     /**
+     * Show filter classes cross
+     * @private
+     */
+    FilterClasses.prototype.showCross_ = function() {
+        goog.dom.classlist.remove(
+            this.filterResetElement,
+            FilterClasses.CssClass.HIDDEN
+        );
+    };
+
+    /**
+     * Set active filter classes
+     * @private
+     */
+    FilterClasses.prototype.setLabelActive_ = function() {
         if (this.inputLabelElements_.length > 0) {
             for (var i = 0; i < this.inputLabelElements_.length; i++) {
                 goog.dom.classlist.remove(
@@ -272,22 +331,5 @@ goog.scope(function() {
                 );
             }
         }
-
-        if (this.filterResetElement) {
-            goog.dom.classlist.add(
-                this.filterResetElement,
-                FilterClasses.CssClass.HIDDEN
-            );
-        }
-    };
-
-    /**
-     * Reset filter Oridinary
-     * @override
-     */
-    FilterClasses.prototype.resetOridinary = function() {
-       if (this.inputClassesOrdinaryElement_) {
-           this.inputClassesOrdinaryElement_.checked = false;
-       }
     };
 });

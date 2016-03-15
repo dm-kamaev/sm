@@ -68,7 +68,8 @@ goog.scope(function() {
         COLLAPSER: 'b-filters__collapser',
         CONTENT: 'b-filters__content',
         SUBMIT_BUTTON: 'b-filters__submit-button',
-        RESET_FILTER: 'b-filters__reset'
+        RESET_FILTER: 'b-filters__reset',
+        HIDDEN: cl.iUtils.Utils.CssClass.HIDDEN
     };
 
     /**
@@ -121,15 +122,11 @@ goog.scope(function() {
             elem = filters[i];
 
             if (goog.dom.classes.has(elem, FilterClasses.CssClass.ROOT)) {
-
-                //filter Classes
                 this.filterClasses_ = new FilterClasses();
                 this.addChild(this.filterClasses_);
                 this.filterClasses_.decorate(elem);
             }
             else {
-
-                //filters
                 filter = new Filter();
                 this.addChild(filter);
                 filter.decorate(elem);
@@ -167,6 +164,157 @@ goog.scope(function() {
             this.elements_.reset,
             goog.events.EventType.CLICK,
             this.onResetFiltersClick_
+        );
+
+        this.getHandler().listen(
+            this.filterClasses_,
+            Filter.Event.CHECKED_FILTER, // FilterClasses
+            this.onCheckedFilter_
+        );
+
+        this.getHandler().listen(
+            this.filterClasses_,
+            Filter.Event.UNCHECKED_FILTER, // FilterClasses
+            this.onUnCheckedFilter_
+        );
+
+        for (var i = 0; i < this.filters_.length; i++) {
+            this.getHandler().listen(
+                this.filters_[i],
+                Filter.Event.CHECKED_FILTER,
+                this.onCheckedFilter_
+            );
+        }
+
+        for (var i = 0; i < this.filters_.length; i++) {
+            this.getHandler().listen(
+                this.filters_[i],
+                Filter.Event.UNCHECKED_FILTER,
+                this.onUnCheckedFilter_
+            );
+        }
+    };
+
+    /**
+     * Submit data
+     * @param {Object} event
+     */
+    Filters.prototype.submit = function(event) {
+        this.sendForm_(event);
+    };
+
+    /**
+     * Expand filters
+     */
+    Filters.prototype.expand = function() {
+        goog.dom.classes.swap(
+            this.getElement(),
+            Filters.CssClass.STATE_COLLAPSED,
+            Filters.CssClass.STATE_EXPANDED
+        );
+    };
+
+    /**
+     * Collapse filters
+     */
+    Filters.prototype.collapse = function() {
+        goog.dom.classes.swap(
+            this.getElement(),
+            Filters.CssClass.STATE_EXPANDED,
+            Filters.CssClass.STATE_COLLAPSED
+        );
+    };
+
+    /**
+     * shows the button Reset filters
+     * @private
+     */
+    Filters.prototype.onCheckedFilter_ = function() {
+        this.showButtonReset_();
+    };
+
+    /**
+     * shows the button Reset filters
+     * @private
+     */
+    Filters.prototype.onUnCheckedFilter_ = function() {
+        var res = false;
+
+        for (var i = 0; i < this.filters_.length; i++) {
+            if (this.filters_[i].isCheckedInput()) {
+                res = true;
+            }
+        }
+
+        if (res == false) {
+            this.hideButtonReset_();
+        }
+    };
+
+    /**
+     * Reset filters
+     * @param {Object} event
+     * @private
+     */
+    Filters.prototype.onResetFiltersClick_ = function(event) {
+        this.filterClasses_.resetFilterClasses();
+        this.filterClasses_.resetOridinary();
+
+        for (var i = 0; i < this.filters_.length; i++) {
+            this.filters_[i].resetFilter();
+        }
+
+        this.hideButtonReset_();
+    };
+
+    /**
+     * Submit handler
+     * @param {Object} event
+     * @private
+     */
+    Filters.prototype.onSubmit_ = function(event) {
+        event.preventDefault();
+
+        this.sendForm_(event);
+    };
+
+    /**
+     * Expand handler
+     * @param {Object} event
+     * @private
+     */
+    Filters.prototype.onExpanderClick_ = function(event) {
+        this.expand();
+    };
+
+    /**
+     * Collapse handler
+     * @param {Object} event
+     * @private
+     */
+    Filters.prototype.onCollapserClick_ = function(event) {
+        this.collapse();
+    };
+
+    /**
+     * Hide button reset
+     * @private
+     */
+    Filters.prototype.hideButtonReset_ = function() {
+        goog.dom.classlist.add(
+            this.elements_.reset,
+            Filter.CssClass.HIDDEN
+        );
+    };
+
+    /**
+     * Show button reset
+     * @private
+     */
+    Filters.prototype.showButtonReset_ = function() {
+        goog.dom.classlist.remove(
+            this.elements_.reset,
+            Filter.CssClass.HIDDEN
         );
     };
 
@@ -206,79 +354,6 @@ goog.scope(function() {
             Filters.CssClass.RESET_FILTER,
             element
         );
-    };
-
-    /**
-     * Submit data
-     * @param {Object} event
-     */
-    Filters.prototype.submit = function(event) {
-        this.sendForm_(event);
-    };
-
-
-    /**
-     * Expand filters
-     */
-    Filters.prototype.expand = function() {
-        goog.dom.classes.swap(
-            this.getElement(),
-            Filters.CssClass.STATE_COLLAPSED,
-            Filters.CssClass.STATE_EXPANDED
-        );
-    };
-
-    /**
-     * Collapse filters
-     */
-    Filters.prototype.collapse = function() {
-        goog.dom.classes.swap(
-            this.getElement(),
-            Filters.CssClass.STATE_EXPANDED,
-            Filters.CssClass.STATE_COLLAPSED
-        );
-    };
-
-    /**
-     * Reset filters
-     * @private
-     */
-    Filters.prototype.onResetFiltersClick_ = function() {
-       this.filterClasses_.reset();
-       this.filterClasses_.resetOridinary();
-
-       for (var i = 0; i < this.filters_.length; i++) {
-           this.filters_[i].reset();
-       }
-    };
-
-    /**
-     * Submit handler
-     * @param {Object} event
-     * @private
-     */
-    Filters.prototype.onSubmit_ = function(event) {
-        event.preventDefault();
-
-        this.sendForm_(event);
-    };
-
-    /**
-     * Expand handler
-     * @param {Object} event
-     * @private
-     */
-    Filters.prototype.onExpanderClick_ = function(event) {
-        this.expand();
-    };
-
-    /**
-     * Collapse handler
-     * @param {Object} event
-     * @private
-     */
-    Filters.prototype.onCollapserClick_ = function(event) {
-        this.collapse();
     };
 
     /**

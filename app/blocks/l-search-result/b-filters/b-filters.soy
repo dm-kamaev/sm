@@ -31,12 +31,27 @@
                 Подобрать
             </div>
 
-            <div class="b-filters__collapser">
-                Свернуть фильтр
-            </div>
+            <div class="b-filters__control-buttons">
+                <div class="b-filters__collapser">
+                    {call sm.bLink.Template.base}
+                        {param params: [
+                            'data': [
+                                'name': 'Свернуть фильтр'
+                            ]
+                        ]/}
+                    {/call}
+                </div>
 
-            <div class="b-filters__reset">
-                Сбросить фильтр
+                <div class="b-filters__reset i-utils__hidden">
+                    {call sm.bLink.Template.base}
+                        {param params: [
+                            'data': [
+                                'name': 'Сбросить фильтр'
+                            ],
+                            'theme': 'attention'
+                        ]/}
+                    {/call}
+                </div>
             </div>
         </div>
     </form>
