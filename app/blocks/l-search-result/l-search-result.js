@@ -58,11 +58,11 @@ sm.lSearchResult.SearchResult = function(opt_params) {
     this.searchSettings_ = {};
 
     /**
-     * Element with amount of finded results
+     * Dom elements
      * @type {Element}
      * @private
      */
-    this.textChangeElements_ = null;
+    this.elements_ = {};
 };
 goog.inherits(sm.lSearchResult.SearchResult, goog.ui.Component);
 
@@ -80,6 +80,7 @@ goog.scope(function() {
     SearchResult.CssClass = {
         ROOT: 'l-search-result',
         TEXT_CHANGE: 'l-search-result__list-header',
+        LIST_CONTAINER: 'l-search-result__list-body',
         HIDDEN: 'i-utils__hidden'
     };
 
@@ -150,10 +151,7 @@ goog.scope(function() {
             this.search_.decorate(bSearch);
         }
 
-        this.textChangeElements_ = goog.dom.getElementsByClass(
-            SearchResult.CssClass.TEXT_CHANGE,
-            element
-        );
+        this.initElements_(element);
     };
 
     /**
@@ -198,6 +196,23 @@ goog.scope(function() {
             goog.dom.getWindow(),
             goog.events.EventType.PAGESHOW,
             this.onShowPage_
+        );
+    };
+
+    /**
+     * Init dom elements
+     * @param {Node} element
+     * @private
+     */
+    SearchResult.prototype.initElements_ = function(element) {
+        this.elements_.textChangeElements = goog.dom.getElementsByClass(
+            SearchResult.CssClass.TEXT_CHANGE,
+            element
+        );
+
+        this.elements_.listContainer = goog.dom.getElementByClass(
+            SearchResult.CssClass.LIST_CONTAINER,
+            element
         );
     };
 
@@ -339,7 +354,9 @@ goog.scope(function() {
     SearchResult.prototype.updateList_ = function(responseData) {
         var data = JSON.parse(responseData);
 
-        for (var i = 0, elem; elem = this.textChangeElements_[i]; i++) {
+        for (var i = 0, elem;
+            elem = this.elements_.textChangeElements[i];
+            i++) {
             goog.soy.renderElement(
                 elem,
                 sm.lSearchResult.Template.listHeaderText, {
@@ -353,11 +370,11 @@ goog.scope(function() {
 
         data.countResults ?
             goog.dom.classes.remove(
-                this.schoolList_.getElement(),
+                this.elements_.listContainer,
                 SearchResult.CssClass.HIDDEN
             ) :
             goog.dom.classes.add(
-                this.schoolList_.getElement(),
+                this.elements_.listContainer,
                 SearchResult.CssClass.HIDDEN
             );
 
