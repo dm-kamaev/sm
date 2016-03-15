@@ -95,9 +95,6 @@ goog.scope(function() {
         'TEXT_STUDENT': 'b-feedback__text_student',
         'TEXT_PARENT': 'b-feedback__text_parent',
         'GRADUATION_YEAR': 'b-feedback__graduation-year',
-        'CLOSE_CONTROL': 'b-icon',
-        'CLOSE_CONTROL_IMG_HOVERED': 'b-icon_img_close-dialog-hovered',
-        'CLOSE_CONTROL_IMG': 'b-icon_img_close-dialog',
         'VALIDATION_ERRORS': 'b-feedback__validation-errors'
     };
 
@@ -159,8 +156,6 @@ goog.scope(function() {
             this.formSubmit_
         );
 
-        this.initCLoseControlListeners_(handler);
-
         this.initDropdownListeners_(handler);
     };
 
@@ -191,7 +186,6 @@ goog.scope(function() {
             radio: this.getElementsByClass(FeedbackModal.CssClass.RADIO),
             button: this.getElementByClass(cl.gButton.View.CssClass.ROOT),
             form: this.getElementByClass(FeedbackModal.CssClass.FORM),
-            close: this.getElementByClass(FeedbackModal.CssClass.CLOSE_CONTROL),
             classSelect: this.getElementByClass(
                 FeedbackModal.CssClass.CLASS_TYPE_SELECT
             ),
@@ -323,60 +317,12 @@ goog.scope(function() {
      * @param {Object=} handler
      * @private
      */
-    FeedbackModal.prototype.initCLoseControlListeners_ = function(handler) {
-        handler.listen(
-            this.elements_.close,
-            goog.events.EventType.MOUSEOVER,
-            this.onCrossHover_
-        );
-
-        handler.listen(
-            this.elements_.close,
-            goog.events.EventType.MOUSEOUT,
-            this.onCrossHover_
-        );
-
-        handler.listen(
-            this.elements_.close,
-            goog.events.EventType.CLICK,
-            this.onCrossClick_
-        );
-    };
-
-    /**
-     * Listeners for close control initialization
-     * @param {Object=} handler
-     * @private
-     */
     FeedbackModal.prototype.initDropdownListeners_ = function(handler) {
         handler.listen(
             this.dropdowns_.userType,
             sm.gDropdown.DropdownSelect.Event.ITEM_SELECT,
             this.onUserTypeClick_
         );
-    };
-
-    /**
-     * Handler for hover over close element
-     * @private
-     */
-    FeedbackModal.prototype.onCrossHover_ = function() {
-        goog.dom.classes.toggle(
-            this.elements_.close,
-            FeedbackModal.CssClass.CLOSE_CONTROL_IMG
-        );
-        goog.dom.classes.toggle(
-            this.elements_.close,
-            FeedbackModal.CssClass.CLOSE_CONTROL_IMG_HOVERED
-        );
-    };
-
-    /**
-     * Handler for click over close element
-     * @private
-     */
-    FeedbackModal.prototype.onCrossClick_ = function() {
-        this.hide();
     };
 
     /**
@@ -483,29 +429,6 @@ goog.scope(function() {
                 });
             });
         }
-    };
-
-    /**
-     * Handler for hover over close element
-     * @private
-     */
-    FeedbackModal.prototype.onCrossHover_ = function() {
-        goog.dom.classes.toggle(
-            this.elements_.close,
-            FeedbackModal.CssClass.CLOSE_CONTROL_IMG
-        );
-        goog.dom.classes.toggle(
-            this.elements_.close,
-            FeedbackModal.CssClass.CLOSE_CONTROL_IMG_HOVERED
-        );
-    };
-
-    /**
-     * Handler for click over close element
-     * @private
-     */
-    FeedbackModal.prototype.onCrossClick_ = function() {
-        this.hide();
     };
 
     /**

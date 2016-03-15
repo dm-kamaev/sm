@@ -150,11 +150,19 @@
  * Search suggest metro icon
  */
 {template .itemIconMetro_ private="true" autoescape="strict" kind="html"}
-    {call sm.bIcon.Template.icon}
+    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
         {param params: [
-            'type': 'metro',
-            'customClasses': ['b-search__item-icon']
-        ] /}
+            'factory': 'stendhal',
+            'type': 'icon',
+            'renderParams': [
+                'data': [
+                    'type': 'metro'
+                ],
+                'config': [
+                    'customClasses': ['b-search__item-icon']
+                ]
+            ]
+        ]/}
     {/call}
 {/template}
 
@@ -163,10 +171,18 @@
  * Search suggest area icon
  */
 {template .itemIconArea_ private="true" autoescape="strict" kind="html"}
-    {call sm.bIcon.Template.icon}
+    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
         {param params: [
-            'type': 'location',
-            'customClasses': ['b-search__item-icon']
-        ] /}
+            'factory': 'stendhal',
+            'type': 'icon',
+            'renderParams': [
+                'data': [
+                    'type': 'location'
+                ],
+                'config': [
+                    'customClasses': ['b-search__item-icon']
+                ]
+            ]
+        ]/}
     {/call}
 {/template}

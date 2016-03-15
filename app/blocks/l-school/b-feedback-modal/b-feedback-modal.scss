@@ -286,10 +286,14 @@
 			margin-bottom: 18px;
 		}
 	}
+
+    .b-feedback__text {
+        margin-right: 19px;
+    }
 }
 
-@media screen and (max-width: 569px) {
-	.b-feedback__column {
+@include media-xs {
+    .b-feedback__column {
 		display: block;
 
 		width: 100%;
@@ -303,6 +307,10 @@
 			padding: 0;
 		}
 	}
+
+    .b-feedback__text {
+        margin-right: 20px;
+    }
 
 	.b-feedback__content {
 		margin: 24px 30px 45px;
@@ -327,7 +335,7 @@
 			width: 80px;
 		}
 	}
-	
+
 	.b-feedback__title-score {
 		display: inline-block;
 	}

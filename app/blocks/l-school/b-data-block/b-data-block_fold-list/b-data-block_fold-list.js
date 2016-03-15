@@ -1,4 +1,4 @@
-goog.provide('sm.lSchool.bDataBlockFoldList.FoldList');
+goog.provide('sm.lSchool.bDataBlock.DataBlockFoldList');
 
 goog.require('goog.dom.classes');
 goog.require('goog.dom.classlist');
@@ -10,7 +10,7 @@ goog.require('goog.ui.Component');
  * @constructor
  * @extends {goog.ui.Component}
  */
-sm.lSchool.bDataBlockFoldList.FoldList = function() {
+sm.lSchool.bDataBlock.DataBlockFoldList = function() {
     goog.base(this);
 
     /**
@@ -20,11 +20,11 @@ sm.lSchool.bDataBlockFoldList.FoldList = function() {
     this.listControls_;
 
 };
-goog.inherits(sm.lSchool.bDataBlockFoldList.FoldList, goog.ui.Component);
+goog.inherits(sm.lSchool.bDataBlock.DataBlockFoldList, goog.ui.Component);
 
 
 goog.scope(function() {
-    var FoldList = sm.lSchool.bDataBlockFoldList.FoldList;
+    var FoldList = sm.lSchool.bDataBlock.DataBlockFoldList;
 
     /**
      * CSS-class enum
