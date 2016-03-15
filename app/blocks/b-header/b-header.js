@@ -75,8 +75,10 @@ goog.scope(function() {
     Header.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
-        this.search_ = new Search();
-        this.search_.decorate(this.getView().getDom().search);
+        if (this.getView().getDom().search) {
+            this.search_ = new Search();
+            this.search_.decorate(this.getView().getDom().search);
+        }
     };
 
     /**
@@ -84,16 +86,17 @@ goog.scope(function() {
      */
     Header.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
-
-        this.getHandler().listen(
-            this.search_,
-            Search.Event.DEFAULT_MODE_INITED,
-            this.onDefaultModeInited_
-        ).listen(
-            this.search_,
-            Search.Event.SEARCH_MODE_INITED,
-            this.onSearchModeInited_
-        );
+        if (this.search_) {
+            this.getHandler().listen(
+                this.search_,
+                Search.Event.DEFAULT_MODE_INITED,
+                this.onDefaultModeInited_
+            ).listen(
+                this.search_,
+                Search.Event.SEARCH_MODE_INITED,
+                this.onSearchModeInited_
+            );
+        }
     };
 
 
@@ -146,12 +149,16 @@ goog.scope(function() {
         switch (mode) {
             case Header.Mode.DEFAULT:
                 this.getView().switchToDefaultMode();
-                this.search_.setMode(Search.Mode.DEFAULT);
+                if (this.search_) {
+                    this.search_.setMode(Search.Mode.DEFAULT);
+                }
                 break;
 
             case Header.Mode.SEARCH:
                 this.getView().switchToSearchMode();
-                this.search_.setMode(Search.Mode.SEARCH);
+                if (this.search_) {
+                    this.search_.setMode(Search.Mode.SEARCH);
+                }
                 break;
         }
     };
