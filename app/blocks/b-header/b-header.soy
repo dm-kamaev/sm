@@ -10,25 +10,20 @@
  * @property {?boolean} notShowLink
  */
 
-
 /**
  * Header
  * @param params {?sm.bHeader.Template.Params}
  */
 {template .base autoescape="strict" kind="html"}
     <div class="b-header">
-        <div class="b-header__fader i-animate"></div>
-
-        <div class="b-header__bg"></div>
-
         <div class="b-header__body">
+            {call .search_ data="all" /}
+
             {call .advancedSearchLink_ data="all" /}
 
             <div class="b-header__main i-animate">
                 {call .logo_ data="all" /}
             </div>
-
-            {call .search_ data="all" /}
         </div>
     </div>
 {/template}
@@ -100,48 +95,15 @@
  */
 {template .search_ private="true" autoescape="strict" kind="html"}
     {if $params?.url}
-        <div class="b-header__button-search-holder i-animate">
-            <div class="b-header__button b-header__button_search">
-                {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-                    {param params: [
-                        'factory': 'stendhal',
-                        'type': 'icon',
-                        'renderParams': [
-                            'data': [
-                                'type': 'search'
-                            ]
-                        ]
-                    ]/}
-                {/call}
-            </div>
-        </div>
-
-        <div class="b-header__search-holder i-animate">
-            {call sm.bSearch.Template.base}
-                {param params: [
-                    'placeholder': 'Найти школу',
-                    'text': $params?.searchText,
-                    'theme': 'min',
-                    'redirect': $params?.searchRedirect,
-                    'customClasses': 'b-header__search'
-                ]/}
-            {/call}
-        </div>
-
-        <div class="b-header__button-close-holder">
-            <div class="b-header__button b-header__button_close i-animate">
-                {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-                    {param params: [
-                        'factory': 'stendhal',
-                        'type': 'icon',
-                        'renderParams': [
-                            'data': [
-                                'type': 'clear'
-                            ]
-                        ]
-                    ]/}
-                {/call}
-            </div>
-        </div>
+        {call sm.bSearch.Template.base}
+            {param params: [
+                'placeholder': 'Найти школу',
+                'text': $params?.searchText,
+                'theme': 'foldable',
+                'redirect': $params?.searchRedirect,
+                'customClasses': 'b-header__search',
+                'inputSize': 'min'
+            ]/}
+        {/call}
     {/if}
 {/template}

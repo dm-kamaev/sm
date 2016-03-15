@@ -7,6 +7,8 @@ goog.require('goog.soy');
 goog.require('goog.ui.Component');
 goog.require('sm.bSearch.Search');
 goog.require('sm.iAnalytics.Analytics');
+goog.require('sm.iFactory.FactoryStendhal');
+goog.require('sm.iFactory.TemplateFactoryStendhal');
 
 /**
  * Search result component
