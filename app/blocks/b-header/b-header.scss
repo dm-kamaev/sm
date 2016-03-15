@@ -129,7 +129,7 @@
 .b-header__search {
     position: absolute !important;
 	z-index: 1;
-	top: 0px;
+	top: 0;
     right: 0;
 
     display: inline-block;
@@ -138,6 +138,22 @@
     width: 100%;
 }
 /* search end */
+
+.b-header_mode_search.b-header_animation_off {
+	/* animations begin */
+	.b-header__main,
+	.b-header__link-search {
+		visibility: hidden;
+	}
+	/* animations end */
+}
+
+.b-header_mode_default.b-header_animation_off {
+	.b-header__main,
+	.b-header__link-search {
+		visibility: visible;
+	}
+}
 
 .b-header_mode_search.b-header_animation_on {
 	/* animations begin */

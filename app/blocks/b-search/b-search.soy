@@ -24,15 +24,17 @@
     <div class="b-search
                 b-search_theme_{$params.theme}{sp}
                 {$params?.customClasses ? $params?.customClasses + ' ' : ''}
-                {$params?.theme == 'collapsed' ? 'i-animate ' : ''}"
+                {$params?.theme == 'foldable' ? 'i-animate ' : ''}"
         data-params="{call goog.json.serialize data="$data" /}"
     >
-        {if $params?.theme == 'collapsed'}
+        {if $params?.theme == 'foldable'}
             <div class="b-search__fader i-animate"></div>
         {/if}
         <div class="b-search__body">
-            <div class="b-search__bg i-animate"></div>
-            {if $params?.theme == 'collapsed'}
+            {if $params?.theme == 'foldable'}
+                <div class="b-search__bg i-animate"></div>
+            {/if}
+            {if $params?.theme == 'foldable'}
                 <div class="b-search__open-button-holder
                             i-animate">
                     {call sm.bIcon.Template.icon}
@@ -72,7 +74,7 @@
                 {/call}
             </div>
 
-            {if $params?.theme == 'collapsed'}
+            {if $params?.theme == 'foldable'}
                 {call sm.bIcon.Template.icon}
                     {param params: [
                         'type': 'clear',

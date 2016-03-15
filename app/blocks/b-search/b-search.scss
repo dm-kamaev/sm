@@ -1,5 +1,5 @@
 @import "../i-media/i-media";
-
+/* layout */
 .b-search {
     position: relative;
 }
@@ -35,7 +35,9 @@
 
 	background-color: #fff;
 }
+/* layout  end*/
 
+/* controls */
 .b-search__control {
 	position: absolute;
 	top: 50%;
@@ -64,6 +66,24 @@
 	height: 100%;
 }
 
+.b-search__icon {
+	position: absolute;
+	z-index: 2;
+
+	cursor: pointer;
+
+	background-repeat: no-repeat;
+	background-position: left;
+
+	.b-search__icon_disabled {
+		cursor: default;
+
+		opacity: 0.3;
+	}
+}
+/* controls end */
+
+/* suggest */
 .b-search__suggest {
 	position: initial;
 
@@ -76,16 +96,59 @@
 	background-color: #ffffff;
 	box-shadow: inset 0 1px 6px #dbdbd4;
 }
+/* suggest end*/
 
+/* list items in suggest */
+.b-search__list-name {
+	margin-right: 7px;
+}
 
-.b-search__icon {
+.b-search__list-area {
+	color: #999999;
+}
+
+.b-search__list_hidden {
+	display: none;
+}
+
+.b-search__item {
+	position: relative;
+
+	display: inline-block;
+	overflow: hidden;
+
+	box-sizing: border-box;
+	width: 100%;
+	padding: 0 24px;
+
+	vertical-align: middle;
+	text-overflow: ellipsis;
+
+	line-height: 17px;
+}
+
+.b-search__item-icon {
 	position: absolute;
-	z-index: 2;
+	top: 50%;
+	left: 1px;
+}
 
-	cursor: pointer;
+.b-search__item_type_schools
+.b-search__item-icon {
+	top: 0;
 
-	background-repeat: no-repeat;
-	background-position: left;
+	margin-top: -4px;
+}
+
+.b-search__item_type_metro
+.b-search__item-icon {
+	margin-top: -4px;
+	margin-left: -1px;
+}
+
+.b-search__item_type_areas
+.b-search__item-icon {
+	margin-top: -7px;
 }
 
 .b-search_theme_main {
@@ -104,6 +167,7 @@
 		padding-left: 12px;
 	}
 }
+/* list items in suggest end*/
 
 .b-search_theme_min {
 	height: 30px;
@@ -122,7 +186,7 @@
 	}
 }
 
-.b-search_theme_collapsed {
+.b-search_theme_foldable {
 	height: 100%;
 
 	.b-search__suggest-holder {
@@ -142,66 +206,42 @@
 	}
 }
 
-.b-search__icon_disabled {
-	cursor: default;
+.b-search_mode_search.b-search_animation_off {
+	.b-search__control {
+		&.b-search__control_search {
+			right: auto;
+			left: 0px;
+		}
 
-	opacity: 0.3;
+		&.b-search__control_clear {
+			visibility: visible;
+		}
+	}
+
+	.b-search__bg,
+	.b-search__suggest-holder,
+	.b-search__fader {
+		visibility: visible;
+	}
 }
 
-.b-search__list-name {
-	margin-right: 7px;
+.b-search_mode_default.b-search_animation_off {
+	.b-search__control {
+		&.b-search__control_clear {
+			visibility: hidden;
+		}
+	}
+
+	.b-search__bg,
+	.b-search__suggest-holder,
+	.b-search__fader {
+		visibility: hidden;
+	}
 }
 
-.b-search__list-area {
-	color: #999999;
-}
-
-.b-search__list_hidden {
-	display: none;
-}
-
-.b-search__item {
-    position: relative;
-
-    display: inline-block;
-    overflow: hidden;
-
-    box-sizing: border-box;
-    width: 100%;
-    padding: 0 24px;
-
-    vertical-align: middle;
-    text-overflow: ellipsis;
-
-    line-height: 17px;
-}
-
-.b-search__item-icon {
-    position: absolute;
-    top: 50%;
-    left: 1px;
-}
-
-.b-search__item_type_schools
-.b-search__item-icon {
-    top: 0;
-
-    margin-top: -4px;
-}
-
-.b-search__item_type_metro
-.b-search__item-icon {
-    margin-top: -4px;
-    margin-left: -1px;
-}
-
-.b-search__item_type_areas
-.b-search__item-icon {
-    margin-top: -7px;
-}
 
 /* animations begin */
-.b-search_mode_search {
+.b-search_mode_search.b-search_animation_on {
 	.b-search__control {
 		&.b-search__control_search {
 			right: auto;
@@ -214,21 +254,18 @@
 	}
 
 	.b-search__open-button-holder {
-		//animation-delay: 0.5s;
 		animation-name: slideInRight;
 	}
 
 	.b-search__bg,
 	.b-search__suggest-holder,
 	.b-search__fader {
-		//animation-delay: 0.5s;
 		animation-name: fadeIn;
 	}
 }
 
-.b-search_mode_default {
+.b-search_mode_default.b-search_animation_on {
 	.b-search__open-button-holder {
-		//animation-delay: 0.5s;
 		animation-name: slideInLeft;
 	}
 
@@ -241,7 +278,6 @@
 	.b-search__bg,
 	.b-search__suggest-holder,
 	.b-search__fader {
-		//animation-delay: 0.5s;
 		animation-name: fadeOut;
 	}
 }
@@ -255,10 +291,17 @@
 		padding: 0 31px 0 53px;
 	}
 
-	.b-search_mode_search {
+	.b-search_mode_search.b-search_animation_off {
 		.b-search__control {
 			&.b-search__control_search {
-				right: auto;
+				left: 30px;
+			}
+		}
+	}
+
+	.b-search_mode_search.b-search_animation_on {
+		.b-search__control {
+			&.b-search__control_search {
 				left: 30px;
 			}
 
@@ -271,7 +314,7 @@
 
 @include media-m {
     .b-search_theme_min,
-    .b-search_theme_collapsed {
+    .b-search_theme_foldable {
         .b-search__suggest {
             position: absolute;
             left: 0;
@@ -297,10 +340,9 @@
     }
 }
 
-
 @include media-s {
     .b-search_theme_min,
-    .b-search_theme_collapsed {
+    .b-search_theme_foldable {
         .b-search__item {
             line-height: 55px;
         }
