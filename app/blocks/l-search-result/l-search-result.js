@@ -48,7 +48,14 @@ sm.lSearchResult.SearchResult = function(opt_params) {
      * @type {?sm.bSearch.Search}
      * @private
      */
-    this.search_ = null;
+    this.menuSearch_ = null;
+
+    /**
+     * Header instance
+     * @type {?sm.bHeader.Header}
+     * @private
+     */
+    this.header_ = null;
 
     /**
      * Current search settings
@@ -81,7 +88,8 @@ goog.scope(function() {
         ROOT: 'l-search-result',
         TEXT_CHANGE: 'l-search-result__list-header',
         LIST_CONTAINER: 'l-search-result__list-body',
-        HIDDEN: 'i-utils__hidden'
+        HIDDEN: 'i-utils__hidden',
+        LEFT_MENU: 'l-search-result__left-menu'
     };
 
     /**
@@ -140,17 +148,22 @@ goog.scope(function() {
         this.addChild(this.filters_);
         this.filters_.decorate(filtersElement);
 
-        //search
-        var bSearch = goog.dom.getElementByClass(
-            Search.CssClass.ROOT
+        //header
+        this.header_ = Header.getInstance();
+
+        var leftMenu = goog.dom.getElementByClass(
+            SearchResult.CssClass.ROOT
+        );
+        var menuSearch = goog.dom.getElementByClass(
+            Search.CssClass.ROOT,
+            leftMenu
         );
 
-        if (bSearch) {
-            this.search_ = new Search();
-            this.addChild(this.search_);
-            this.search_.decorate(bSearch);
+        if (menuSearch) {
+            this.menuSearch_ = new Search();
+            this.addChild(this.menuSearch_);
+            this.menuSearch_.decorate(menuSearch);
         }
-
         this.initElements_(element);
     };
 
@@ -164,27 +177,15 @@ goog.scope(function() {
             this.schoolList_,
             SchoolList.Event.SORT_CLICK,
             this.onSortHandler_
-        );
-
-        this.getHandler().listen(
+        ).listen(
             this.filters_,
             Filters.event.SUBMIT,
             this.filtersSubmitHandler_
         );
 
-        if (this.search_) {
-            this.getHandler().listen(
-                this.search_,
-                sm.bSearch.Search.Event.SUBMIT,
-                this.onSubmit_
-            );
+        this.initSearchListeners_();
 
-            this.getHandler().listen(
-                this.search_,
-                sm.bSearch.Search.Event.ITEM_SELECT,
-                this.onSubmit_
-            );
-        }
+        this.initHeaderListeners_();
 
         this.getHandler().listen(
             this.schoolList_,
@@ -217,14 +218,55 @@ goog.scope(function() {
     };
 
     /**
+     * Init listeners for search in menu
+     * @private
+     */
+    SearchResult.prototype.initSearchListeners_ = function() {
+        this.getHandler().listen(
+            this.menuSearch_,
+            Search.Event.SUBMIT,
+            this.onSubmit_
+        ).listen(
+            this.menuSearch_,
+            Search.Event.ITEM_SELECT,
+            this.onSubmit_
+        );
+    };
+
+    /**
+     * Init listeners for header
+     * @private
+     */
+    SearchResult.prototype.initHeaderListeners_ = function() {
+        this.getHandler().listen(
+            this.header_,
+            Header.Event.SUBMIT,
+            this.onHeaderSubmit_
+        ).listen(
+            this.header_,
+            Header.Event.ITEM_SELECT,
+            this.onHeaderSubmit_
+        );
+    };
+
+    /**
+     * Header submit handler
+     * @param {Object} event
+     * @private
+     */
+    SearchResult.prototype.onHeaderSubmit_ = function(event) {
+        this.menuSearch_.setValue(event.text);
+        this.header_.setMode(Header.Mode.DEFAULT);
+        this.onSubmit_(event);
+    };
+
+    /**
      * Input submit handler
      * @param {Object} event
      * @private
      */
     SearchResult.prototype.onSubmit_ = function(event) {
         this.filters_.submit(event);
-
-        Header.getInstance().setMode(Header.Mode.DEFAULT);
     };
 
     /**
@@ -239,7 +281,7 @@ goog.scope(function() {
             type: event.method
         };
 
-        params.data.searchParams.name = this.search_.getValue();
+        params.data.searchParams.name = this.menuSearch_.getValue();
 
         this.updateSearchSettings_(params);
         this.searchSettings_.data.page = 0;
@@ -362,7 +404,7 @@ goog.scope(function() {
                 sm.lSearchResult.Template.listHeaderText, {
                     params: {
                         countResults: data.countResults,
-                        searchText: this.search_.getValue()
+                        searchText: this.menuSearch_.getValue()
                     }
                 }
             );

@@ -19,7 +19,6 @@
 }
 .b-search__body {
 	position: relative;
-	z-index: 15;
 
 	width: 100%;
 	height: 100%;
@@ -170,7 +169,11 @@
 /* list items in suggest end*/
 
 .b-search_theme_min {
-	height: 30px;
+	height: 40px;
+
+	.b-search__suggest-holder {
+		height: 100%;
+	}
 
 	.b-search__icon {
 		right: 7px;
@@ -188,6 +191,10 @@
 
 .b-search_theme_foldable {
 	height: 100%;
+
+	.b-search__body {
+		z-index: 15;
+	}
 
 	.b-search__suggest-holder {
 		visibility: hidden;

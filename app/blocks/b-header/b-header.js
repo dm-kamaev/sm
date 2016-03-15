@@ -52,6 +52,14 @@ goog.scope(function() {
         'SEARCH': 'search'
     };
 
+    /**
+     * Event enum
+     * @enum {string}
+     */
+    Header.Event = {
+        'SUBMIT': Search.Event.SUBMIT,
+        'ITEM_SELECT': Search.Event.ITEM_SELECT
+    };
 
     /**
      * Singleton getter
@@ -77,6 +85,7 @@ goog.scope(function() {
 
         if (this.getView().getDom().search) {
             this.search_ = new Search();
+            this.addChild(this.search_);
             this.search_.decorate(this.getView().getDom().search);
         }
     };
@@ -110,7 +119,7 @@ goog.scope(function() {
 
         if (res) {
             this.mode_ = mode;
-            this.switchViewMode_(mode);
+            this.switchMode_(mode);
         }
 
         return res;
@@ -141,11 +150,11 @@ goog.scope(function() {
 
 
     /**
-     * Switch mode of view
+     * Switch mode of view of header and search
      * @param {sm.bHeader.Header.Mode} mode
      * @private
      */
-    Header.prototype.switchViewMode_ = function(mode) {
+    Header.prototype.switchMode_ = function(mode) {
         switch (mode) {
             case Header.Mode.DEFAULT:
                 this.getView().switchToDefaultMode();

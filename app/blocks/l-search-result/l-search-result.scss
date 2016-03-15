@@ -67,11 +67,14 @@ html, body {
 }
 
 .l-search-result__search {
-    float: left;
+	padding: 30px;
+	width: 100%;
 
-    width: 380px;
-    height: 100%;
-    margin-right: 50px;
+	border-bottom: 1px solid #e5e5e5;
+
+	box-sizing: border-box;
+
+	background: #f4f4ec;
 }
 
 .l-search-result__show-on-map {
@@ -125,14 +128,8 @@ html, body {
     width: 100%;
     padding: 20px 30px 0 30px;
 
-    background-color: #f4f4ec;
+	background: #f4f4ec;
 }
-
-
-@include media-xl {
-
-}
-
 
 @include media-l {
     .l-search-result__body {
@@ -164,6 +161,14 @@ html, body {
 
         box-sizing: content-box;
     }
+
+	.l-search-result__search {
+		margin-left: -40px;
+		padding-right: 40px;
+		padding-left: 40px;
+
+		box-sizing: content-box;
+	}
 }
 
 

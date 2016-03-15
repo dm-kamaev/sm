@@ -51,7 +51,7 @@
  *         url: string,
  *         method: string,
  *         data: {
- *             searcParams: {
+ *             searchParams: {
  *                 name: string,
  *                 metroId: number,
  *                 areaId: number
@@ -76,7 +76,6 @@
                 'content': $content,
                 'header': [
                     'notShowLink': true,
-                    'searchText': $params.searchText,
                     'url': '/'
                 ],
                 'landingScript': '/l-search-result.js'
@@ -232,9 +231,20 @@
 
 /**
  * Left menu template
+ * @param? params {
+ *     searchText: string
+ * }
  */
 {template .leftMenu_ autoescape="strict" kind="html" private="true"}
     <div class="l-search-result__left-menu">
+        <div class="l-search-result__search">
+            {call .search_}
+                {param params: [
+                     'searchText': $params?.searchText,
+                     'redirect': false
+                ]/}
+            {/call}
+        </div>
         {call .filters_ data="all"/}
     </div>
 {/template}
@@ -272,3 +282,23 @@
         {/call}
     </div>
 {/template}
+
+/**
+ * Search
+ * @param params {{
+ *     searchText: ?string,
+ *     redirect: ?boolean
+ * }}
+ */
+{template .search_ private="true" autoescape="strict" kind="html"}
+    {call sm.bSearch.Template.base}
+        {param params: [
+            'placeholder': 'Номер школы, метро, район',
+            'text': $params?.searchText,
+            'theme': 'min',
+            'redirect': $params?.searchRedirect,
+            'inputSize': 'min'
+        ]/}
+    {/call}
+{/template}
+
