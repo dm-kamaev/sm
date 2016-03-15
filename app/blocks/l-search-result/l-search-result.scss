@@ -6,7 +6,6 @@ html, body {
 
 .l-search-result {
     width: 100%;
-
     margin: 30px 0;
 }
 
@@ -16,20 +15,21 @@ html, body {
 
 .l-search-result__body:after {
     display: block;
+    clear: both;
 
     content: '';
-    clear: both;
 }
 
 .l-search-result__top-menu{
     display: inline-block;
 
     width: 100%;
-    padding: 50px 0;
     margin-bottom: 30px;
+    padding: 50px 0;
+
+    text-align: center;
 
     border-bottom: 1px solid #e5e5e5;
-    text-align: center;
 }
 
 .l-search-result__left-menu {
@@ -41,10 +41,10 @@ html, body {
 }
 
 .l-search-result__results-section {
+    box-sizing: border-box;
     width: 100%;
     padding-left: 440px;
 
-    box-sizing: border-box;
     border-top: 1px solid transparent;
 }
 
@@ -67,13 +67,11 @@ html, body {
 }
 
 .l-search-result__search {
-	padding: 30px;
+	box-sizing: border-box;
 	width: 100%;
+	padding: 30px;
 
 	border-bottom: 1px solid #e5e5e5;
-
-	box-sizing: border-box;
-
 	background: #f4f4ec;
 }
 
@@ -156,18 +154,16 @@ html, body {
     }
 
     .l-search-result__filters {
+        box-sizing: content-box;
         margin-left: -40px;
         padding: 0 40px;
-
-        box-sizing: content-box;
     }
 
 	.l-search-result__search {
+		box-sizing: content-box;
 		margin-left: -40px;
 		padding-right: 40px;
 		padding-left: 40px;
-
-		box-sizing: content-box;
 	}
 }
 
