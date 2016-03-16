@@ -60,11 +60,11 @@
             {for $i in range(11)}
                 <input type="radio"
                     id="{$params?.data?.name}-{$i+1}"
-                    class="b-filter__input"
+                    class="b-filter__input b-filter__input_class"
                     name="{$params?.data?.name}"
                     value="{$i+1}"/>
                 <label for="{$params?.data?.name}-{$i+1}"
-                    class="b-filter__input-label
+                    class="b-filter__input-label b-filter__input-label_class
                     {sp}
                     {$i > 3 ?
                         'b-filter__input-label_middle ' : ''}
@@ -82,14 +82,14 @@
             ] /}
         {/call}
         </div>
-        <div class="b-filter__filter">
+        <div class="b-filter__filter b-filter__filter_kindergarten">
             <input type="checkbox"
-                class="b-filter__input-ordinary"
+                class="b-filter__input b-filter__input_kindergarten"
                 id="{$params?.data?.name}-after-school"
                 name="{$params?.data?.name}"
                 value="0"/>
             <label for="{$params?.data?.name}-after-school"
-                class="b-filter__input-label-ordinary">
+                class="b-filter__input-label b-filter__input-label_kindergarten">
                 При школе есть детский сад
             </label>
         </div>

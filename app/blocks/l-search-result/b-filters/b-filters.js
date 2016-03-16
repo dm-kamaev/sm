@@ -133,7 +133,44 @@ goog.scope(function() {
                 this.filters_.push(filter);
             }
         }
+    };
 
+    /**
+     * Init elements
+     * @private
+     */
+    Filters.prototype.initElements_ = function() {
+        var element = this.getElement();
+
+        this.elements_.filters = goog.dom.getElementsByClass(
+            Filter.CssClass.ROOT,
+            element
+        );
+
+        this.elements_.content = goog.dom.getElementByClass(
+            Filters.CssClass.CONTENT,
+            element
+        );
+
+        this.elements_.expander = goog.dom.getElementByClass(
+            Filters.CssClass.EXPANDER,
+            element
+        );
+
+        this.elements_.collapser = goog.dom.getElementByClass(
+            Filters.CssClass.COLLAPSER,
+            element
+        );
+
+        this.elements_.submit = goog.dom.getElementByClass(
+            Filters.CssClass.SUBMIT_BUTTON,
+            element
+        );
+
+        this.elements_.reset = goog.dom.getElementByClass(
+            Filters.CssClass.RESET_FILTER,
+            element
+        );
     };
 
     /**
@@ -168,14 +205,14 @@ goog.scope(function() {
 
         this.getHandler().listen(
             this.filterClasses_,
-            Filter.Event.CHECKED_FILTER, // FilterClasses
+            Filter.Event.CHECKED_FILTER,
             this.onCheckedFilter_
         );
 
         this.getHandler().listen(
             this.filterClasses_,
-            Filter.Event.UNCHECKED_FILTER, // FilterClasses
-            this.onUnCheckedFilter_
+            Filter.Event.UNCHECKED_FILTER,
+            this.onUncheckedFilter_
         );
 
         for (var i = 0; i < this.filters_.length; i++) {
@@ -190,7 +227,7 @@ goog.scope(function() {
             this.getHandler().listen(
                 this.filters_[i],
                 Filter.Event.UNCHECKED_FILTER,
-                this.onUnCheckedFilter_
+                this.onUncheckedFilter_
             );
         }
     };
@@ -226,6 +263,25 @@ goog.scope(function() {
     };
 
     /**
+     * Is checked input
+     * @return {boolean}
+     */
+    Filters.prototype.isChecked = function() {
+        var res = false;
+
+        for (var i = 0; i < this.filters_.length; i++) {
+            if (this.filters_[i].isCheckedInput()) {
+                res = true;
+            }
+        }
+
+        if (this.filterClasses_.isCheckedInput()) {
+            res = true;
+        }
+        return res;
+    };
+
+    /**
      * shows the button Reset filters
      * @private
      */
@@ -237,16 +293,8 @@ goog.scope(function() {
      * shows the button Reset filters
      * @private
      */
-    Filters.prototype.onUnCheckedFilter_ = function() {
-        var res = false;
-
-        for (var i = 0; i < this.filters_.length; i++) {
-            if (this.filters_[i].isCheckedInput()) {
-                res = true;
-            }
-        }
-
-        if (res == false) {
+    Filters.prototype.onUncheckedFilter_ = function() {
+        if (!this.isChecked()) {
             this.hideButtonReset_();
         }
     };
@@ -257,11 +305,11 @@ goog.scope(function() {
      * @private
      */
     Filters.prototype.onResetFiltersClick_ = function(event) {
-        this.filterClasses_.resetFilterClasses();
-        this.filterClasses_.resetOridinary();
+        this.filterClasses_.reset();
 
         for (var i = 0; i < this.filters_.length; i++) {
-            this.filters_[i].resetFilter();
+            this.filters_[i].reset();
+            this.filters_[i].hideFilter_();
         }
 
         this.hideButtonReset_();
@@ -315,44 +363,6 @@ goog.scope(function() {
         goog.dom.classlist.remove(
             this.elements_.reset,
             Filter.CssClass.HIDDEN
-        );
-    };
-
-    /**
-     * Init elements
-     * @private
-     */
-    Filters.prototype.initElements_ = function() {
-        var element = this.getElement();
-
-        this.elements_.filters = goog.dom.getElementsByClass(
-            Filter.CssClass.ROOT,
-            element
-        );
-
-        this.elements_.content = goog.dom.getElementByClass(
-            Filters.CssClass.CONTENT,
-            element
-        );
-
-        this.elements_.expander = goog.dom.getElementByClass(
-            Filters.CssClass.EXPANDER,
-            element
-        );
-
-        this.elements_.collapser = goog.dom.getElementByClass(
-            Filters.CssClass.COLLAPSER,
-            element
-        );
-
-        this.elements_.submit = goog.dom.getElementByClass(
-            Filters.CssClass.SUBMIT_BUTTON,
-            element
-        );
-
-        this.elements_.reset = goog.dom.getElementByClass(
-            Filters.CssClass.RESET_FILTER,
-            element
         );
     };
 

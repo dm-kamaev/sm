@@ -210,52 +210,22 @@ goog.scope(function() {
             handler.listen(
                 this.inputElements[i],
                 goog.events.EventType.CLICK,
-                this.onCheckedFilter
+                this.onChangeFilterItem
             );
         }
+    };
 
-
+    /**
+     * Reset filter
+     * @protected
+     */
+    Filter.prototype.reset = function() {
         for (var i = 0; i < this.inputElements.length; i++) {
-            handler.listen(
-                this.inputElements[i],
-                goog.events.EventType.CLICK,
-                this.onUnCheckedFilter
-            );
+            this.inputElements[i].checked = false;
         }
     };
 
     /**
-     * Reset and hide filter
-     */
-    Filter.prototype.resetFilter = function() {
-        this.resetInputs();
-        this.hideFilter_();
-    };
-
-
-    /**
-     * Handler checked the filter
-     * @protected
-     */
-    Filter.prototype.onCheckedFilter = function() {
-        this.dispatchEvent({
-            'type': Filter.Event.CHECKED_FILTER
-        });
-    };
-
-    /**
-     * Handler unchecked the filter
-     * @protected
-     */
-    Filter.prototype.onUnCheckedFilter = function() {
-        if (this.isCheckedInput() == false) {
-            this.dispatchEvent({
-                'type': Filter.Event.UNCHECKED_FILTER
-            });
-        }
-    };
-
-     /**
      * Checks for checked radio
      * @return {boolean}
      * @protected
@@ -268,20 +238,21 @@ goog.scope(function() {
                 result = true;
             }
         }
-
         return result;
     };
 
     /**
-     * Reset filter
+     * Handler change the filter
      * @protected
      */
-    Filter.prototype.resetInputs = function() {
-        for (var i = 0; i < this.inputElements.length; i++) {
-            this.inputElements[i].checked = false;
-        }
-    };
+    Filter.prototype.onChangeFilterItem = function() {
+        var type = this.isCheckedInput() ? Filter.Event.CHECKED_FILTER :
+            Filter.Event.UNCHECKED_FILTER;
 
+        this.dispatchEvent({
+            'type': type
+        });
+    };
 
     /**
      * Hide filter
