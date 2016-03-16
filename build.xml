@@ -34,6 +34,9 @@
     </target>
 
     <target name="deploy-authorization-config">
+        <exec executable="${node}" dir="${basedir}/console/">
+            <arg line="ensureLocalConfig ${env}"/>
+        </exec>
         <copy file="${basedir}/environment/config/authorization.json"
               tofile="${basedir}/node_modules/services/config/config.json" />
     </target>
