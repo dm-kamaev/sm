@@ -81,7 +81,8 @@
  *     searchText: ?string,
  *     config: ?{
  *         staticVersion: ?string,
- *         year: ?number
+ *         year: ?number,
+ *         authUrl: ?string
  *     }
  * }
  */
@@ -251,7 +252,11 @@
             ]/}
         {/call}
 
-        {call .authSocial_/}
+        {call .authSocial_}
+            {param params: [
+                'authUrl': $params?.config?.authUrl
+            ]/}
+        {/call}
 
         // A necessary measure due to the adaptability
         {call .extra_ data="all"}
@@ -289,6 +294,9 @@
 
 /**
  * Auth modal
+ * @param params {
+ *     authUrl: ?string
+ * }
  */
 {template .authSocial_ private="true"}
     {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
@@ -299,15 +307,11 @@
                     'socials': [
                         [
                             'type': 'fb',
-                            'url': 'http://localhost:1992/test/social'
+                            'url': $params?.authUrl + '?type=fb'
                         ],
                         [
                             'type': 'vk',
-                            'url': 'http://localhost:1992/test/social'
-                        ],
-                        [
-                            'type': 'gp',
-                            'url': 'http://localhost:1992/test/social'
+                            'url': $params?.authUrl + '?type=vk'
                         ]
                     ]
                 ]
