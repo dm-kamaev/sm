@@ -20,6 +20,7 @@ deployment-config.json
 .remote-sync.json
 .tern-project
 .jshintrc
+.csscomb*
 .tags*
 
 console/reports

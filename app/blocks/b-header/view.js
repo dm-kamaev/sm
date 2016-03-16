@@ -4,6 +4,7 @@ goog.require('cl.iControl.View');
 
 goog.require('cl.iUtils.Utils');
 goog.require('goog.dom.classes');
+goog.require('sm.bSearch.Search');
 goog.require('sm.iAnimate.Animate');
 
 
@@ -23,7 +24,7 @@ goog.inherits(sm.bHeader.View, cl.iControl.View);
 
 goog.scope(function() {
     var View = sm.bHeader.View,
-        Utils = cl.iUtils.Utils;
+        Search = sm.bSearch.Search;
 
     /**
      * Css class enum
@@ -31,23 +32,10 @@ goog.scope(function() {
      */
     View.CssClass = {
         ROOT: 'b-header',
-        ANIMATION_ON: 'b-header_animation_on',
-        ANIMATION_OFF: 'b-header_animation_off',
         SEARCH_MODE: 'b-header_mode_search',
         DEFAULT_MODE: 'b-header_mode_default',
-        SEARCH_BUTTON: 'b-header__button_search',
-        CLOSE_BUTTON: 'b-header__button_close',
-        FADER: 'b-header__fader'
-    };
-
-
-    /**
-     * Header view events
-     * @enum {string}
-     */
-    View.Event = {
-        'DEFAULT_MODE_INITED': 'defaultModeInited',
-        'SEARCH_MODE_INITED': 'searchModeInited'
+        ANIMATION_ON: 'b-header_animation_on',
+        ANIMATION_OFF: 'b-header_animation_off'
     };
 
 
@@ -57,39 +45,12 @@ goog.scope(function() {
     View.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
-        this.dom.searchButton =
-            this.getElementByClass(View.CssClass.SEARCH_BUTTON);
-
-        this.dom.closeButton =
-            this.getElementByClass(View.CssClass.CLOSE_BUTTON);
-
-        this.dom.fader =
-            this.getElementByClass(View.CssClass.FADER);
+        this.dom.search = this.getElementByClass(
+            Search.CssClass.ROOT
+        );
 
         this.detectAnimationSupportion_();
     };
-
-    /**
-     * @override
-     */
-    View.prototype.enterDocument = function() {
-        goog.base(this, 'enterDocument');
-
-        this.getHandler().listen(
-            this.dom.searchButton,
-            goog.events.EventType.CLICK,
-            this.searchButtonClick_
-        ).listen(
-            this.dom.closeButton,
-            goog.events.EventType.CLICK,
-            this.closeButtonClick_
-        ).listen(
-            this.dom.fader,
-            goog.events.EventType.CLICK,
-            this.closeButtonClick_
-        );
-    };
-
 
     /**
      * Switch view to default mode
@@ -102,11 +63,6 @@ goog.scope(function() {
         goog.dom.classes.add(
             this.getElement(),
             View.CssClass.DEFAULT_MODE
-        );
-
-        goog.dom.classes.remove(
-            document.documentElement,
-            Utils.CssClass.OVERFLOW_HIDDEN
         );
     };
 
@@ -123,11 +79,6 @@ goog.scope(function() {
             this.getElement(),
             View.CssClass.DEFAULT_MODE
         );
-
-        goog.dom.classes.add(
-            document.documentElement,
-            Utils.CssClass.OVERFLOW_HIDDEN
-        );
     };
 
 
@@ -141,25 +92,5 @@ goog.scope(function() {
                 View.CssClass.ANIMATION_ON :
                 View.CssClass.ANIMATION_OFF
         );
-    };
-
-
-    /**
-     * Search button click handler
-     * @param {object} event
-     * @private
-     */
-    View.prototype.searchButtonClick_ = function(event) {
-        this.dispatchEvent(View.Event.SEARCH_MODE_INITED);
-    };
-
-
-    /**
-     * Close button click handler
-     * @param {object} event
-     * @private
-     */
-    View.prototype.closeButtonClick_ = function(event) {
-        this.dispatchEvent(View.Event.DEFAULT_MODE_INITED);
     };
 });

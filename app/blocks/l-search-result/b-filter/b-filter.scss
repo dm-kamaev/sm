@@ -142,26 +142,25 @@
         padding: 0;
     }
 
-    .b-filter__input {
+    .b-filter__input_class {
         display: none;
     }
 
-    .b-filter__input-ordinary {
-        display: inline-block;
-
-        margin: 0;
-
-        vertical-align: bottom;
-        cursor: pointer;
+    .b-filter__filter_kindergarten {
+        position: relative;
     }
 
-    .b-filter__input-label-ordinary {
+    .b-filter__input_kindergarten {
+        top: 6px;
+    }
+
+    .b-filter__input-label_kindergarten {
         margin: 0 10px;
 
         cursor: pointer;
     }
 
-    .b-filter__input-label {
+    .b-filter__input-label_class {
         display: inline-block;
 
         margin: 0;
@@ -199,8 +198,8 @@
         opacity: 0.4;
     }
 
-    .b-filter__input:checked + .b-filter__input-label,
-    .b-filter__input-label:hover {
+    .b-filter__input_class:checked + .b-filter__input-label_class,
+    .b-filter__input-label_class:hover {
         border-color:  #9da6a9;
         box-shadow: inset 0px 0px 0 2px #9da6a9, inset -2px 0px 0 1px #9da6a9;
 

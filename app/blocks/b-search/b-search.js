@@ -1,11 +1,13 @@
 goog.provide('sm.bSearch.Search');
 
+goog.require('cl.iUtils.Utils');
 goog.require('goog.dom');
 goog.require('goog.dom.classlist');
 goog.require('goog.events');
 goog.require('goog.ui.Component');
 goog.require('gorod.gSuggest.Suggest');
 goog.require('sm.bSearch.Template');
+goog.require('sm.iAnimate.Animate');
 
 /**
  * Input suggest component
@@ -39,12 +41,20 @@ sm.bSearch.Search = function(opt_params) {
      * @type {?object}
      */
     this.dataParams_ = {};
+
+    /**
+     * Current mode
+     * @type {Search.Mode|string}
+     * @private
+     */
+    this.mode_ = sm.bSearch.Search.Mode.DEFAULT;
 };
 goog.inherits(sm.bSearch.Search, goog.ui.Component);
 
 goog.scope(function() {
-    var Search = sm.bSearch.Search;
-    var Suggest = gorod.gSuggest.Suggest;
+    var Search = sm.bSearch.Search,
+        Suggest = gorod.gSuggest.Suggest,
+        Utils = cl.iUtils.Utils;
 
     /**
      * CSS-class enum
@@ -53,7 +63,14 @@ goog.scope(function() {
     Search.CssClass = {
         ROOT: 'b-search',
         LIST: 'b-search__list',
-        ICON: 'b-search__icon'
+        CONTROL_SEARCH: 'b-search__control_search',
+        CONTROL_CLEAR: 'b-search__control_clear',
+        FADER: 'b-search__fader',
+        SEARCH_MODE: 'b-search_mode_search',
+        DEFAULT_MODE: 'b-search_mode_default',
+        ANIMATION_ON: 'b-search_animation_on',
+        ANIMATION_OFF: 'b-search_animation_off'
+
     };
 
     /**
@@ -62,7 +79,18 @@ goog.scope(function() {
      */
     Search.Event = {
         SUBMIT: 'submit',
-        ITEM_SELECT: 'itemSelect'
+        ITEM_SELECT: 'itemSelect',
+        DEFAULT_MODE_INITED: 'defaultModeInited',
+        SEARCH_MODE_INITED: 'searchModeInited'
+    };
+
+    /**
+     * Search modes
+     * @enum {string}
+     */
+    Search.Mode = {
+        DEFAULT: 'default',
+        SEARCH: 'search'
     };
 
     /**
@@ -75,11 +103,78 @@ goog.scope(function() {
     };
 
     /**
+     * Sets input value
+     * @param {string} value
+     * @public
+     */
+    Search.prototype.setValue = function(value) {
+        this.suggest_.setText(value);
+        this.suggest_.setValue(value);
+    };
+
+    /**
+     * Switch to search mode
+     * @public
+     */
+    Search.prototype.switchToSearchMode = function() {
+        goog.dom.classes.add(
+            this.getElement(),
+            Search.CssClass.SEARCH_MODE
+        );
+        goog.dom.classes.remove(
+            this.getElement(),
+            Search.CssClass.DEFAULT_MODE
+        );
+        goog.dom.classes.add(
+            document.documentElement,
+            Utils.CssClass.OVERFLOW_HIDDEN
+        );
+    };
+
+    /**
+     * Switch to default mode
+     * @public
+     */
+    Search.prototype.switchToDefaultMode = function() {
+        this.setValue('');
+        goog.dom.classes.remove(
+            this.getElement(),
+            Search.CssClass.SEARCH_MODE
+        );
+        goog.dom.classes.add(
+            this.getElement(),
+            Search.CssClass.DEFAULT_MODE
+        );
+        goog.dom.classes.remove(
+            document.documentElement,
+            Utils.CssClass.OVERFLOW_HIDDEN
+        );
+    };
+
+    /**
+     * Set header mode
+     * @param {sm.bHeader.Header.Mode} mode
+     * @return {boolean}
+     */
+    Search.prototype.setMode = function(mode) {
+        var res = (this.isCorrectMode_(mode) && !this.isCurrentMode_(mode));
+
+        if (res) {
+            this.mode_ = mode;
+            this.switchMode_(mode);
+        }
+
+        return res;
+    };
+
+    /**
      * Internal decorates the DOM element
      * @param {element} element
      */
     Search.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
+
+        this.detectAnimationSupportion_();
 
         this.initElements_(element);
     };
@@ -87,8 +182,10 @@ goog.scope(function() {
     /**
      * Set up the Component.
      */
-     Search.prototype.enterDocument = function() {
+    Search.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
+
+        var handler = this.getHandler();
 
         this.dataParams_ = JSON.parse(
             this.getElement().getAttribute('data-params')
@@ -108,16 +205,27 @@ goog.scope(function() {
             this.onSubmit_.bind(this)
         );
 
-        if (this.elements_.icon) {
-            this.getHandler().listen(
-                this.elements_.icon,
+        if (this.elements_.searchButton) {
+            handler.listen(
+                this.elements_.searchButton,
                 goog.events.EventType.CLICK,
-                this.onIconClick_
+                this.onSearchClick_
             );
-            this.getHandler().listen(
-                this.elements_.suggest,
-                goog.events.EventType.INPUT,
-                this.onTextChange_
+        }
+
+        if (this.elements_.clearButton) {
+            handler.listen(
+                this.elements_.clearButton,
+                goog.events.EventType.CLICK,
+                this.onClearClick_
+            );
+        }
+
+        if (this.elements_.fader) {
+            handler.listen(
+                this.elements_.fader,
+                goog.events.EventType.CLICK,
+                this.onClearClick_
             );
         }
 
@@ -269,30 +377,86 @@ goog.scope(function() {
     Search.prototype.initElements_ = function(root) {
         this.elements_ = {
             root: goog.dom.getElementByClass(
-                Search.CssClass.ROOT
+                Search.CssClass.ROOT,
+                root
             ),
             suggest: goog.dom.getElementByClass(
-                gorod.gSuggest.Suggest.Css.ROOT
+                gorod.gSuggest.Suggest.Css.ROOT,
+                root
             ),
-            icon: goog.dom.getElementByClass(
-                Search.CssClass.ICON
+            searchButton: goog.dom.getElementByClass(
+                Search.CssClass.CONTROL_SEARCH,
+                root
+            ),
+            clearButton: goog.dom.getElementByClass(
+                Search.CssClass.CONTROL_CLEAR,
+                root
+            ),
+            fader: goog.dom.getElementByClass(
+                Search.CssClass.FADER,
+                root
             )
         };
     };
 
     /**
-     * Icon click handler
+     * Search button click handler
      * @private
      */
-    Search.prototype.onIconClick_ = function() {
-        if (this.dataParams_.redirect) {
-            this.searchRequest_(this.suggest_.getText());
-        } else {
-            this.dispatchEvent({
-                type: Search.Event.SUBMIT,
-                text: this.suggest_.getText()
-            });
+    Search.prototype.onSearchClick_ = function() {
+        this.dispatchEvent({
+            'type': Search.Event.SEARCH_MODE_INITED
+        });
+        this.setMode(Search.Mode.SEARCH);
+    };
+
+    /**
+     * Search button click handler
+     * @private
+     */
+    Search.prototype.onClearClick_ = function() {
+        this.dispatchEvent({
+            'type': Search.Event.DEFAULT_MODE_INITED
+        });
+        this.setMode(Search.Mode.DEFAULT);
+    };
+
+    /**
+     * Switch mode of view
+     * @param {sm.bHeader.Header.Mode} mode
+     * @private
+     */
+    Search.prototype.switchMode_ = function(mode) {
+        switch (mode) {
+            case Search.Mode.DEFAULT:
+                this.switchToDefaultMode();
+                break;
+
+            case Search.Mode.SEARCH:
+                this.switchToSearchMode();
+                break;
         }
+    };
+
+    /**
+     * Is mode correct
+     * @param {sm.bHeader.Header.Mode} mode
+     * @return {boolean}
+     * @private
+     */
+    Search.prototype.isCorrectMode_ = function(mode) {
+        return mode == Search.Mode.DEFAULT ||
+            mode == Search.Mode.SEARCH;
+    };
+
+    /**
+     * Is mode already selected
+     * @param {sm.bHeader.Header.Mode} mode
+     * @return {boolean}
+     * @private
+     */
+    Search.prototype.isCurrentMode_ = function(mode) {
+        return this.mode_ == mode;
     };
 
     /**
@@ -352,7 +516,7 @@ goog.scope(function() {
     };
 
     /**
-     * Redirect handler
+     * Handler for input data
      * @private
      */
     Search.prototype.onTextChange_ = function() {
@@ -384,5 +548,20 @@ goog.scope(function() {
             url += '&areaId=' + data.item.id;
         }
         document.location.href = url;
+    };
+
+    /**
+     * Turn on animation if it is supported
+     * @private
+     */
+    Search.prototype.detectAnimationSupportion_ = function() {
+        var animationSupportClass = sm.iAnimate.Animate.isSupported() ?
+            Search.CssClass.ANIMATION_ON :
+            Search.CssClass.ANIMATION_OFF;
+
+        goog.dom.classlist.add(
+            this.getElement(),
+            animationSupportClass
+        );
     };
 });

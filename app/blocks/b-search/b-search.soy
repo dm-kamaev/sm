@@ -5,10 +5,11 @@
  * @typedef {object} sm.bSearch.Template.Params
  * @property {?string} text
  * @property {?string} placeholder
- * @property {?string} theme
  * @property {?boolean} autofocus
  * @property {?boolean} redirect
+ * @property {?string} theme
  * @property {?string} customClasses
+ * @property {?string} inputSize
  */
 
 /**
@@ -22,45 +23,51 @@
 
     <div class="b-search
                 b-search_theme_{$params.theme}{sp}
-                {$params.customClasses}"
+                {$params?.customClasses ? $params?.customClasses + ' ' : ''}
+                {$params?.theme == 'foldable' ? 'i-animate ' : ''}"
         data-params="{call goog.json.serialize data="$data" /}"
     >
-        {if $params.theme == 'main'}
-            //TODO: uncomment
-            //<span class="b-icon_img_arrow b-search__icon"></span>
-        {else}
-            <span class="g-icon_img_search b-search__icon
-                {if not $params.text}
-                    {sp}b-search__icon_disabled
-                {/if}"></span>
+        {if $params?.theme == 'foldable'}
+            <div class="b-search__fader i-animate"></div>
         {/if}
-        {call gorod.gSuggest.SuggestTemplate.render}
-            {param params: [
-                'data': [
-                    'text': $params?.text,
-                    'minLength': 3,
-                    'autofocus': $params?.autofocus,
-                    'placeholder': $params?.placeholder,
-                    'sourceUrl': '/api/school/search/suggest',
-                    'argName': 'searchString'
-                ],
-                'config': [
-                    'customClasses': 'b-search__suggest',
-                    'filtrationEnabled': false,
-                ],
-                'list': [
-                    'extraClasses': 'b-search__list',
-                    'theme': 'stendhal',
-                    'color': 'sienna'
-                ],
-                'input': [
-                    'customClasses': 'b-search__input',
-                    'style': [
-                        'theme': 'stendhal'
-                    ]
-                ]
-            ]/}
-        {/call}
+        <div class="b-search__body">
+            {if $params?.theme == 'foldable'}
+                <div class="b-search__bg i-animate"></div>
+                {call .searchButton_ /}
+            {/if}
+            <div class="b-search__suggest-holder i-animate">
+                {call gorod.gSuggest.SuggestTemplate.render}
+                    {param params: [
+                        'data': [
+                            'text': $params?.text,
+                            'minLength': 3,
+                            'autofocus': $params?.autofocus,
+                            'placeholder': $params?.placeholder,
+                            'sourceUrl': '/api/school/search/suggest',
+                            'argName': 'searchString'
+                        ],
+                        'config': [
+                            'customClasses': 'b-search__suggest',
+                            'filtrationEnabled': false,
+                        ],
+                        'list': [
+                            'theme': 'stendhal',
+                            'color': 'sienna'
+                        ],
+                        'input': [
+                            'style': [
+                                'theme': 'stendhal',
+                                'size': $params?.inputSize
+                            ]
+                        ]
+                    ]/}
+                {/call}
+            </div>
+
+            {if $params?.theme == 'foldable'}
+                {call .clearButton_ /}
+            {/if}
+        </div>
     </div>
 {/template}
 
@@ -163,4 +170,54 @@
             ]
         ]/}
     {/call}
+{/template}
+
+/**
+ * Clear button template
+ */
+{template .clearButton_ kind="html"}
+    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+        {param params: [
+            'factory': 'stendhal',
+            'type': 'icon',
+            'renderParams': [
+                'data': [
+                    'type': 'clear'
+                ],
+                'config': [
+                    'customClasses': [
+                        'b-search__control', 'b-search__control_clear',
+                        'i-animate'
+                    ]
+                ]
+            ]
+        ]/}
+    {/call}
+{/template}
+
+/**
+ * Open button template
+ */
+{template .searchButton_ kind="html"}
+    <div class="b-search__open-button-holder
+                i-animate">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': 'stendhal',
+                'type': 'icon',
+                'renderParams': [
+                    'data': [
+                        'type': 'search'
+                    ],
+                    'config': [
+                        'customClasses': [
+                            'b-search__control',
+                            'b-search__control_search',
+                            'i-animate'
+                        ]
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
 {/template}
