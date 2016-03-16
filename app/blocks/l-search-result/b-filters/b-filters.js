@@ -33,6 +33,21 @@ sm.lSearchResult.bFilters.Filters = function(opt_params) {
      * @private
      */
     this.elements_ = {};
+
+    /**
+     * Instance filter classes
+     * @type {sm.lSearchResult.bFilter.FilterClasses}
+     * @private
+     */
+     this.filterClasses_ = null;
+
+     /**
+     * Array instances filters
+     * @type Array {sm.lSearchResult.bFilter.Filter}
+     * @private
+     */
+     this.filters_ = [];
+
 };
 goog.inherits(sm.lSearchResult.bFilters.Filters, goog.ui.Component);
 
@@ -52,7 +67,9 @@ goog.scope(function() {
         EXPANDER: 'b-filters__expander',
         COLLAPSER: 'b-filters__collapser',
         CONTENT: 'b-filters__content',
-        SUBMIT_BUTTON: 'b-filters__submit-button'
+        SUBMIT_BUTTON: 'b-filters__submit-button',
+        RESET_FILTER: 'b-filters__reset',
+        HIDDEN: cl.iUtils.Utils.CssClass.HIDDEN
     };
 
     /**
@@ -104,38 +121,18 @@ goog.scope(function() {
         for (var i = 0; i < filters.length; i++) {
             elem = filters[i];
 
-            filter = goog.dom.classes.has(elem, FilterClasses.CssClass.ROOT) ?
-                new FilterClasses() :
-                new Filter();
-
-            this.addChild(filter);
-            filter.decorate(elem);
+            if (goog.dom.classes.has(elem, FilterClasses.CssClass.ROOT)) {
+                this.filterClasses_ = new FilterClasses();
+                this.addChild(this.filterClasses_);
+                this.filterClasses_.decorate(elem);
+            }
+            else {
+                filter = new Filter();
+                this.addChild(filter);
+                filter.decorate(elem);
+                this.filters_.push(filter);
+            }
         }
-    };
-
-    /**
-     * @override
-     */
-    Filters.prototype.enterDocument = function() {
-        goog.base(this, 'enterDocument');
-
-        this.getHandler().listen(
-            this.elements_.submit,
-            goog.events.EventType.CLICK,
-            this.onSubmit_
-        );
-
-        this.getHandler().listen(
-            this.elements_.expander,
-            goog.events.EventType.CLICK,
-            this.onExpanderClick_
-        );
-
-        this.getHandler().listen(
-            this.elements_.collapser,
-            goog.events.EventType.CLICK,
-            this.onCollapserClick_
-        );
     };
 
     /**
@@ -169,6 +166,70 @@ goog.scope(function() {
             Filters.CssClass.SUBMIT_BUTTON,
             element
         );
+
+        this.elements_.reset = goog.dom.getElementByClass(
+            Filters.CssClass.RESET_FILTER,
+            element
+        );
+    };
+
+    /**
+     * @override
+     */
+    Filters.prototype.enterDocument = function() {
+        goog.base(this, 'enterDocument');
+
+        this.getHandler().listen(
+            this.elements_.submit,
+            goog.events.EventType.CLICK,
+            this.onSubmit_
+        );
+
+        this.getHandler().listen(
+            this.elements_.expander,
+            goog.events.EventType.CLICK,
+            this.onExpanderClick_
+        );
+
+        this.getHandler().listen(
+            this.elements_.collapser,
+            goog.events.EventType.CLICK,
+            this.onCollapserClick_
+        );
+
+        this.getHandler().listen(
+            this.elements_.reset,
+            goog.events.EventType.CLICK,
+            this.onResetFiltersClick_
+        );
+
+        this.getHandler().listen(
+            this.filterClasses_,
+            Filter.Event.CHECKED_FILTER,
+            this.onCheckedFilter_
+        );
+
+        this.getHandler().listen(
+            this.filterClasses_,
+            Filter.Event.UNCHECKED_FILTER,
+            this.onUncheckedFilter_
+        );
+
+        for (var i = 0; i < this.filters_.length; i++) {
+            this.getHandler().listen(
+                this.filters_[i],
+                Filter.Event.CHECKED_FILTER,
+                this.onCheckedFilter_
+            );
+        }
+
+        for (var i = 0; i < this.filters_.length; i++) {
+            this.getHandler().listen(
+                this.filters_[i],
+                Filter.Event.UNCHECKED_FILTER,
+                this.onUncheckedFilter_
+            );
+        }
     };
 
     /**
@@ -178,7 +239,6 @@ goog.scope(function() {
     Filters.prototype.submit = function(event) {
         this.sendForm_(event);
     };
-
 
     /**
      * Expand filters
@@ -200,6 +260,59 @@ goog.scope(function() {
             Filters.CssClass.STATE_EXPANDED,
             Filters.CssClass.STATE_COLLAPSED
         );
+    };
+
+    /**
+     * Is checked input
+     * @return {boolean}
+     */
+    Filters.prototype.isChecked = function() {
+        var res = false;
+
+        for (var i = 0; i < this.filters_.length; i++) {
+            if (this.filters_[i].isCheckedInput()) {
+                res = true;
+            }
+        }
+
+        if (this.filterClasses_.isCheckedInput()) {
+            res = true;
+        }
+        return res;
+    };
+
+    /**
+     * shows the button Reset filters
+     * @private
+     */
+    Filters.prototype.onCheckedFilter_ = function() {
+        this.showButtonReset_();
+    };
+
+    /**
+     * shows the button Reset filters
+     * @private
+     */
+    Filters.prototype.onUncheckedFilter_ = function() {
+        if (!this.isChecked()) {
+            this.hideButtonReset_();
+        }
+    };
+
+    /**
+     * Reset filters
+     * @param {Object} event
+     * @private
+     */
+    Filters.prototype.onResetFiltersClick_ = function(event) {
+        this.filterClasses_.reset();
+
+        for (var i = 0; i < this.filters_.length; i++) {
+            this.filters_[i].reset();
+            this.filters_[i].hideFilter_();
+        }
+
+        this.hideButtonReset_();
     };
 
     /**
@@ -229,6 +342,28 @@ goog.scope(function() {
      */
     Filters.prototype.onCollapserClick_ = function(event) {
         this.collapse();
+    };
+
+    /**
+     * Hide button reset
+     * @private
+     */
+    Filters.prototype.hideButtonReset_ = function() {
+        goog.dom.classlist.add(
+            this.elements_.reset,
+            Filter.CssClass.HIDDEN
+        );
+    };
+
+    /**
+     * Show button reset
+     * @private
+     */
+    Filters.prototype.showButtonReset_ = function() {
+        goog.dom.classlist.remove(
+            this.elements_.reset,
+            Filter.CssClass.HIDDEN
+        );
     };
 
     /**
