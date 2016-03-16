@@ -122,6 +122,10 @@ exports.view = async (function(req, res) {
             var school = await(services.school.viewOne(schoolInstance.id));
             services.school.incrementViews(school.id);
             var popularSchools = await(services.school.getPopularSchools());
+            var authUrl = process.env.NODE_ENV === 'prod' ?
+                'http://schools.mel.fm:3001/oauth' :
+                'http://schools1.qa.lan:3001/oauth'; 
+            console.log(authUrl);
 
             res.header('Content-Type', 'text/html; charset=utf-8');
             res.end(
@@ -130,7 +134,8 @@ exports.view = async (function(req, res) {
                     data:
                         schoolView.default(school, results, popularSchools),
                     config: {
-                        year: new Date().getFullYear()
+                        year: new Date().getFullYear(),
+                        authUrl: authUrl
                     }
                 }
             }));
