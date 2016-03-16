@@ -26,6 +26,15 @@
     font-size: 15px;
 }
 
+.b-filter__tooltip {
+    position: relative;
+    top: -2px;
+
+    display: inline-block;
+
+    margin-left: 8px;
+}
+
 .b-filter__section {
     position: relative;
 

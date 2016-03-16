@@ -46,10 +46,14 @@
             [endif]
         </div>
         <div class="b-map__balloon-close">
-            {call sm.bIcon.Template.icon}
+            {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
                 {param params: [
-                    'type': 'close-balloon',
-                    'verticalAlign': 'top'
+                    'type': 'icon',
+                    'renderParams': [
+                        'data': [
+                            'type': 'close-balloon'
+                        ]
+                    ]
                 ]/}
             {/call}
         </div>

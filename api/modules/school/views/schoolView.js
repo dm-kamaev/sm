@@ -694,7 +694,7 @@ schoolView.filters = function(filters) {
            data: {
                filters: item.values,
                header: {
-                   help: ''
+                   tooltip: ''
                },
                name: item.filter
            },
@@ -710,10 +710,14 @@ schoolView.filters = function(filters) {
            case 'ege':
                res.data.header.title = 'Высокие результаты ЕГЭ';
                res.data.filters.sort((a, b) => subjectView.sorter(a.label, b.label, 'EGE'));
+               res.data.header.tooltip = 'Выше среднего значения по нашей базе.' +
+               ' Учитываются результаты московских школ за последний год.'
                break;
            case 'gia':
                res.data.header.title = 'Высокие результаты ГИА';
                res.data.filters.sort((a, b) => subjectView.sorter(a.label, b.label, 'GIA'));
+               res.data.header.tooltip = 'Выше среднего значения по нашей базе.' +
+               ' Учитываются результаты московских школ за последний год.'
                break;
            case 'olimp':
                res.data.header.title = 'Есть победы в олимпиадах';

@@ -76,11 +76,16 @@
             {/for}
         </div>
         <div class="b-filter__reset i-utils__hidden">
-            {call sm.bIcon.Template.icon}
-            {param params:[
-                'type': 'reset'
-            ] /}
-        {/call}
+            {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+                {param params: [
+                    'type': 'icon',
+                    'renderParams': [
+                        'data': [
+                            'type': 'reset'
+                        ]
+                    ]
+                ]/}
+            {/call}
         </div>
         <div class="b-filter__filter b-filter__filter_kindergarten">
             <input type="checkbox"

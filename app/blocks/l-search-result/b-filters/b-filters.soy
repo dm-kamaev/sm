@@ -14,11 +14,18 @@
 
         <div class="b-filters__expander">
             Показать фильтры
-            {call sm.bIcon.Template.icon}
+            {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
                 {param params: [
-                    'type': 'filter-arrow-down',
-                    'customClasses': 'b-filters__expander-icon'
-                ] /}
+                    'type': 'icon',
+                    'renderParams': [
+                        'data': [
+                            'type': 'filter-arrow-down'
+                        ],
+                        'config': [
+                            'customClasses': ['b-filters__expander-icon']
+                        ]
+                    ]
+                ]/}
             {/call}
         </div>
 

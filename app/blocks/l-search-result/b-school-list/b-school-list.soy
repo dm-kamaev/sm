@@ -35,9 +35,6 @@
             <div class="b-school-list__line">
             </div>
             <div class="b-school-list__sort">
-
-                /*{call sm.lSearchResult.bSort.Template.base}
-                {/call}*/
                 {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
                     {param params: [
                         'type': 'dropdown-select',
@@ -88,6 +85,7 @@
                         'currentCriterion': $school.currentCriterion,
                         'description': $school.description,
                         'metroStations': $school.metroStations,
+                        'area': $school.area,
                         'ratings': $school.ratings,
                         'isScoreClickable': $school.isScoreClickable
                     ]/}

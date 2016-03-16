@@ -19,7 +19,9 @@
             {param params: [
                 'type': 'modal',
                 'renderParams': [
-                    'data': $html
+                    'data': [
+                        'content': $html
+                    ]
                 ]
             ]/}
         {/call}
@@ -39,13 +41,6 @@
         <div class="b-feedback__content">
             <div class="b-feedback__section
                         b-feedback__section_header">
-                <div class="b-feedback__close-control">
-                    {call sm.bIcon.Template.icon}
-                        {param params: [
-                            'type': 'close-dialog'
-                        ] /}
-                    {/call}
-                </div>
                 <div class="b-feedback__text
                             b-feedback__text_modal-title">
                     Ваш отзыв
@@ -91,7 +86,9 @@
                     {param params: [
                         'type': 'button',
                         'renderParams': [
-                            'data': 'Оставить отзыв',
+                            'data': [
+                                'content': 'Оставить отзыв'
+                            ],
                             'config': [
                                 'theme': 'sienna'
                             ]

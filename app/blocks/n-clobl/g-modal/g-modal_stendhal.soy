@@ -1,0 +1,119 @@
+{namespace sm.gModal.TemplateStendhal}
+
+/**
+ * Modal template
+ * @param? params {{
+ *     data: {
+ *         content: ?string
+ *     }
+ * }}
+ * @extends cl.gModal.Template
+ * @constructor
+ * @doc
+ */
+{template .modal}
+    {call .init data="all" /}
+{/template}
+
+/**
+ * Content
+ * @param? params {{
+ *     data: {
+ *         content: ?string
+ *     }
+ * }}
+ * @override
+ */
+{template .content}
+    {call .closer data="all"/}
+    {$params?.data?.content}
+{/template}
+
+/**
+ * @param params {
+ *     config: {
+ *         stylizationModifier: ?string
+ *     }
+ * }
+ */
+{template .closer}
+    <div class="{call .rootClass/}__close-button">
+        {if $params.config?.size == 's'}
+            {call .smallIcon data="all"/}
+        {else}
+            {call .defaultIcons data="all"/}
+        {/if}
+    </div>
+{/template}
+
+/**
+ * @param params {
+ *     config: {
+ *         stylizationModifier: ?string
+ *     }
+ * }
+ */
+{template .defaultIcons}
+    <div class="{call .rootClass/}__close-icon">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': $params.config.stylizationModifier,
+                'type': 'icon',
+                'renderParams': [
+                    'data': [
+                        'type': 'close-dialog'
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+    <div class="{call .rootClass/}__close-icon-hover">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': $params.config.stylizationModifier,
+                'type': 'icon',
+                'renderParams': [
+                    'data': [
+                        'type': 'close-dialog-hovered'
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+/**
+ * @param params {
+ *     config: {
+ *         stylizationModifier: ?string
+ *     }
+ * }
+ */
+{template .smallIcon}
+    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+        {param params: [
+            'factory': $params.config.stylizationModifier,
+            'type': 'icon',
+            'renderParams': [
+                'data': [
+                    'type': 'light-grey-close'
+                ]
+            ]
+        ]/}
+    {/call}
+{/template}
+
+/**
+ * Css classes
+ * @param params {
+ *     config: {
+ *         size: ?string
+ *     }
+ * }
+ */
+{template .additionalClasses}
+    i-utils__hidden
+    {if $params?.config?.size}
+        {sp}{call .rootClass/}_size-{$params.config.size}
+    {/if}
+{/template}
