@@ -10,6 +10,7 @@ goog.require('sm.gDropdown.DropdownSelectTemplate');
 goog.require('sm.gHint.TemplateStendhal');
 goog.require('sm.gInput.DigitInputTemplate');
 goog.require('sm.gList.SelectTemplate');
+goog.require('sm.gModal.TemplateFeedback');
 goog.require('sm.gModal.TemplateStendhal');
 goog.require('sm.gTab.TemplateStendhal');
 goog.require('sm.gTextarea.TemplateStendhal');
@@ -36,6 +37,10 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'modal',
             sm.gModal.TemplateStendhal.modal
+        ).
+        setTemplateListItem(
+            'feedback-modal',
+            sm.gModal.TemplateFeedback.modal
         )
         .setTemplateListItem(
             'dropdown-select',

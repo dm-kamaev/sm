@@ -4,13 +4,13 @@
 	.g-list__item {
 		padding: 0 18px;
 
-		color: #000;
-
 		letter-spacing: 0.03em;
 
-		font-family:  'PT Serif', Times, serif;;
+		color: #000;
+
+		font-family:  'PT Serif', Times, serif;
 		font-size: 16px;
-		line-height: 30px;
+		line-height: 30px;;
 		&:hover {
 			background-color: #f2f2f2;
 		}
@@ -34,5 +34,24 @@
 
 	.g-list__item_selected {
 		color: #000;
+	}
+}
+
+.g-list.g-list_select.g-list_text-small {
+	.g-list__item {
+		letter-spacing: 0.01em;
+
+		font-family: Arial, sans-serif;
+		font-size: 14px;
+		&:hover {
+			background-color: #f7f7f1;
+		}
+	}
+}
+
+.g-list.g-list_select.g-list_indent-small {
+	padding: 3px 0;
+	.g-list__item {
+		padding: 0 13px;
 	}
 }

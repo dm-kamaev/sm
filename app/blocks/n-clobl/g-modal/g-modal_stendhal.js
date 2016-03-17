@@ -32,7 +32,6 @@ goog.scope(function() {
      */
     Modal.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
-
         this.getHandler().listen(
             this.getView().getDom().closer,
             goog.events.EventType.CLICK,
