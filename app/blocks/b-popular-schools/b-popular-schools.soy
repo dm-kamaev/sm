@@ -20,7 +20,7 @@
  */
 {template .base autoescape="strict" kind="html"}
     <div class="b-popular-schools">
-		    <div class="b-popular-schools__title">популярные школы</div>
+        <div class="b-popular-schools__title">популярные школы</div>
         {foreach $school in $params?.popularSchools}
             <a class="b-popular-schools__school-link{sp}
                       {$params?.config?.popularSchool?.customClasses ?: ''}"
@@ -51,6 +51,9 @@
                                         'renderParams': [
                                             'data': [
                                                 'type': 'metro'
+                                            ],
+                                            'config': [
+                                                'customClasses': ['b-popular-schools__metro-icon']
                                             ]
                                         ]
                                     ]/}
@@ -69,5 +72,5 @@
                 </div>
             </a>
         {/foreach}
-	  </div>
+    </div>
 {/template}

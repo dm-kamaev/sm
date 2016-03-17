@@ -1,14 +1,17 @@
 .g-dropdown.g-dropdown_stendhal {
-    .g-dropdown__content {
-        margin-top: 6px;
+	height: 100%;
+	width: 100%;
+
+	.g-dropdown__content {
+	    margin-top: 6px;
     }
 
 	.g-dropdown__opener {
+		height: 100%;
 		width: 100%;
 	}
 
 	.g-dropdown__content {
 		width: 100%;
 	}
-	width: 100%;
 }
