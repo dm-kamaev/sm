@@ -242,7 +242,8 @@ goog.scope(function() {
     School.prototype.initModal_ = function() {
         this.modal_ = new FeedbackModal({
             data: {
-                url: this.createCommentUrl_()
+                url: this.createCommentUrl_(),
+                schoolName: this.params_.schoolName
             }
         });
         this.addChild(this.modal_);

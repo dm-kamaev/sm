@@ -18,23 +18,30 @@ sm.lSearchResult.bFilter.FilterClasses = function(opt_params) {
     /**
      * Reset button
      * @type {Element}
-     * @protected
+     * @private
      */
-    this.filterResetElement = null;
+    this.filterResetElement_ = null;
 
     /**
-     * Classes input
-     * @type {Element}
-     * @protected
-     */
-    this.inputClassesElements = null;
-
-    /**
-     * Input label
+     * Input label class
      * @type {Element}
      * @private
      */
-    this.inputLabelElements_ = null;
+    this.inputLabelClassElements_ = null;
+
+    /**
+     * Input class
+     * @type {Element}
+     * @private
+     */
+    this.inputClassElements_ = null;
+
+    /**
+     * Kindergarten classes input
+     * @type {Element}
+     * @private
+     */
+    this.inputClassesKindergartenElement_ = null;
 };
 goog.inherits(
     sm.lSearchResult.bFilter.FilterClasses,
@@ -53,11 +60,12 @@ goog.scope(function() {
     FilterClasses.CssClass = {
         'ROOT': 'b-filter_classes',
         'DROPDOWN': 'b-filter__classes-dropdown',
-        'INPUT_LABEL': 'b-filter__input-label',
+        'INPUT_LABEL_CLASS': 'b-filter__input-label_class',
+        'INPUT_CLASS': 'b-filter__input_class',
         'INPUT_LABEL_INACTIVE': 'b-filter__input-label_inactive',
         'FILTER_RESET': 'b-filter__reset',
         'FILTER_RESET_ACTIVE': 'b-filter__reset_active',
-        'INPUT_CLASSES': 'b-filter__input',
+        'INPUT_CLASSES_KINDERGARTEN': 'b-filter__input_kindergarten',
         'HIDDEN': cl.iUtils.Utils.CssClass.HIDDEN
     };
 
@@ -82,48 +90,25 @@ goog.scope(function() {
             this
         );
 
-        this.filterResetElement = goog.dom.getElementByClass(
+        this.filterResetElement_ = goog.dom.getElementByClass(
             FilterClasses.CssClass.FILTER_RESET,
             element
         );
 
-        this.inputClassesElements = goog.dom.getElementsByClass(
-            FilterClasses.CssClass.INPUT_CLASSES,
+        this.inputLabelClassElements_ = goog.dom.getElementsByClass(
+            FilterClasses.CssClass.INPUT_LABEL_CLASS,
             element
         );
 
-        this.inputLabelElements_ = goog.dom.getElementsByClass(
-            FilterClasses.CssClass.INPUT_LABEL,
+        this.inputClassElements_ = goog.dom.getElementsByClass(
+            FilterClasses.CssClass.INPUT_CLASS,
             element
         );
-    };
 
-    /**
-     * Select class by index
-     * @param {number} index
-     */
-    FilterClasses.prototype.selectClass = function(index) {
-        for (var i = 0; i < this.inputClassesElements.length; i++) {
-            this.inputClassesElements[i].checked = false;
-        }
-        this.inputClassesElements[index].checked = true;
-
-        goog.dom.classlist.remove(
-            this.filterResetElement,
-            Filter.CssClass.HIDDEN
+        this.inputClassesKindergartenElement_ = goog.dom.getElementByClass(
+            FilterClasses.CssClass.INPUT_CLASSES_KINDERGARTEN,
+            element
         );
-
-        for (var i = 0; i < this.inputLabelElements_.length; i++) {
-            goog.dom.classlist.add(
-                this.inputLabelElements_[i],
-                FilterClasses.CssClass.INPUT_LABEL_INACTIVE
-            );
-
-            goog.dom.classlist.remove(
-                this.inputLabelElements_[index],
-                FilterClasses.CssClass.INPUT_LABEL_INACTIVE
-            );
-        }
     };
 
     /**
@@ -141,26 +126,34 @@ goog.scope(function() {
         );
 
         this.getHandler().listen(
-            this.filterResetElement,
-            goog.events.EventType.CLICK,
-            this.onResetClick_,
+            this.dropdown_,
+            sm.gDropdown.DropdownSelect.Event.ITEM_SELECT,
+            this.onChangeFilterItem,
             false,
             this
         );
 
-        for (var i = 0, input; input = this.inputClassesElements[i]; i++) {
+        this.getHandler().listen(
+            this.filterResetElement_,
+            goog.events.EventType.CLICK,
+            this.onClickReset_,
+            false,
+            this
+        );
+
+        for (var i = 0, input; input = this.inputClassElements_[i]; i++) {
             this.getHandler().listen(
                 input,
                 goog.events.EventType.CLICK,
-                this.onInputClassesClick_,
+                this.onClickInputClasses_,
                 false,
                 this
             );
         }
 
-        if (this.filterResetElement) {
+        if (this.filterResetElement_) {
             this.getHandler().listen(
-                this.filterResetElement,
+                this.filterResetElement_,
                 goog.events.EventType.CLICK,
                 this.onClickResetButton_,
                 false,
@@ -168,16 +161,76 @@ goog.scope(function() {
             );
         }
 
-        for (var i = 0; i < this.inputClassesElements.length; i++) {
+        if (this.filterResetElement_) {
             this.getHandler().listen(
-                this.inputClassesElements[i],
+                this.filterResetElement_,
+                goog.events.EventType.CLICK,
+                this.onChangeFilterItem,
+                false,
+                this
+            );
+        }
+
+        for (var i = 0; i < this.inputClassElements_.length; i++) {
+            this.getHandler().listen(
+                this.inputClassElements_[i],
                 goog.events.EventType.CHANGE,
                 this.onCheckClasses_,
                 false,
                 this
             );
         }
+    };
 
+    /**
+     * Select class by index
+     * @param {number} index
+     */
+    FilterClasses.prototype.selectClass = function(index) {
+        var idDefaultElementDropdown = this.inputClassElements_.length;
+
+        for (var i = 0; i < this.inputClassElements_.length; i++) {
+            this.inputClassElements_[i].checked = false;
+        }
+        if (index < idDefaultElementDropdown) {
+            this.inputClassElements_[index].checked = true;
+
+            this.showCross_();
+            this.selectLabel_(index);
+        }
+    };
+
+    /**
+     * Reset filter and hide cross
+     * @override
+     */
+    FilterClasses.prototype.reset = function() {
+        goog.base(this, 'reset');
+
+        this.resetKindergarten_();
+        this.resetClasses_();
+    };
+
+    /**
+     * Checks for checked radio
+     * @return {boolean}
+     * @override
+     */
+    FilterClasses.prototype.isCheckedInput = function() {
+        var result = goog.base(this, 'isCheckedInput');
+
+        if (this.inputClassesKindergartenElement_.checked == true) {
+            result = true;
+        }
+        return result;
+    };
+
+    /**
+     * Reset filter click event handling
+     * @private
+     */
+    FilterClasses.prototype.onClickResetButton_ = function() {
+        this.resetClasses_();
     };
 
     /**
@@ -194,7 +247,7 @@ goog.scope(function() {
      * @param {object} event
      * @private
      */
-    FilterClasses.prototype.onResetClick_ = function(event) {
+    FilterClasses.prototype.onClickReset_ = function(event) {
         this.dropdown_.clear();
     };
 
@@ -203,27 +256,10 @@ goog.scope(function() {
      * @param {object} event
      * @private
      */
-    FilterClasses.prototype.onInputClassesClick_ = function(event) {
+    FilterClasses.prototype.onClickInputClasses_ = function(event) {
         var index = event.currentTarget.value - 1;
         this.dropdown_.selectByIndex(index);
         this.selectClass(index);
-    };
-
-    /**
-     * Checks for checked radio
-     * @return {boolean}
-     * @private
-     */
-    FilterClasses.prototype.hasCheckedInputClasses_ = function() {
-        var result = false;
-
-        for (var i = 0; i < this.inputClassesElements.length; i++) {
-            if (this.inputClassesElements[i].checked) {
-                result = true;
-            }
-        }
-
-        return result;
     };
 
     /**
@@ -232,47 +268,101 @@ goog.scope(function() {
      * @private
      */
     FilterClasses.prototype.onCheckClasses_ = function(event) {
-        if (this.filterResetElement) {
-            if (event.currentTarget.checked || this.hasCheckedInputClasses_()) {
-                goog.dom.classlist.remove(
-                    this.filterResetElement,
-                    FilterClasses.CssClass.HIDDEN
-                );
+        if (this.filterResetElement_) {
+            if (event.currentTarget.checked) {
+                this.showCross_();
             }
             else {
-                goog.dom.classlist.add(
-                    this.filterResetElement,
-                    FilterClasses.CssClass.HIDDEN
-                );
+                this.hideCross_();
             }
         }
     };
 
     /**
-     * Reset filter
+     * Reset filter and hide cross
      * @private
      */
-    FilterClasses.prototype.onClickResetButton_ = function() {
-        if (this.inputClassesElements.length > 0) {
-            for (var i = 0; i < this.inputClassesElements.length; i++) {
-                this.inputClassesElements[i].checked = false;
-            }
+    FilterClasses.prototype.resetClasses_ = function() {
+        for (var i = 0; i < this.inputClassElements_.length; i++) {
+            this.inputClassElements_[i].checked = false;
         }
 
-        if (this.inputLabelElements_.length > 0) {
-            for (var i = 0; i < this.inputLabelElements_.length; i++) {
+        this.hideCross_();
+        this.resetLabels_();
+        this.selectDropdownDefaultElement_();
+    };
+
+    /**
+     * select the default element
+     * @private
+     */
+    FilterClasses.prototype.selectDropdownDefaultElement_ = function() {
+        var idDefaultElement = this.inputClassElements_.length;
+
+        this.dropdown_.selectByIndex(idDefaultElement);
+    };
+
+    /**
+     * Reset filter Kindergarten
+     * @private
+     */
+    FilterClasses.prototype.resetKindergarten_ = function() {
+        this.inputClassesKindergartenElement_.checked = false;
+    };
+
+     /**
+     * Hide filter classes cross
+     * @private
+     */
+    FilterClasses.prototype.hideCross_ = function() {
+        goog.dom.classlist.add(
+            this.filterResetElement_,
+            FilterClasses.CssClass.HIDDEN
+        );
+    };
+
+     /**
+     * Show filter classes cross
+     * @private
+     */
+    FilterClasses.prototype.showCross_ = function() {
+        goog.dom.classlist.remove(
+            this.filterResetElement_,
+            FilterClasses.CssClass.HIDDEN
+        );
+    };
+
+    /**
+     * Select label by index
+     * @param {number} index
+     * @private
+     */
+    FilterClasses.prototype.selectLabel_ = function(index) {
+        for (var i = 0; i < this.inputLabelClassElements_.length; i++) {
+            goog.dom.classlist.add(
+                this.inputLabelClassElements_[i],
+                FilterClasses.CssClass.INPUT_LABEL_INACTIVE
+            );
+        }
+
+        goog.dom.classlist.remove(
+            this.inputLabelClassElements_[index],
+            FilterClasses.CssClass.INPUT_LABEL_INACTIVE
+        );
+    };
+
+    /**
+     * Set active filter classes
+     * @private
+     */
+    FilterClasses.prototype.resetLabels_ = function() {
+        if (this.inputLabelClassElements_.length > 0) {
+            for (var i = 0; i < this.inputLabelClassElements_.length; i++) {
                 goog.dom.classlist.remove(
-                    this.inputLabelElements_[i],
+                    this.inputLabelClassElements_[i],
                     FilterClasses.CssClass.INPUT_LABEL_INACTIVE
                 );
             }
-        }
-
-        if (this.filterResetElement) {
-            goog.dom.classlist.add(
-                this.filterResetElement,
-                FilterClasses.CssClass.HIDDEN
-            );
         }
     };
 });

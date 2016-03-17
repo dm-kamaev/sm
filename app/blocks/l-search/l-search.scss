@@ -9,12 +9,13 @@
     width: 100%;
     height: 321px;
 
-    color: #ffffff;
-    background-color: #3c5a97;
+    color: #000;
+    background-color: #f4f4ec;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .l-search__header-wrap {
-    max-width: 1200px;
+    width: 1200px;
     height: 100%;
     margin: 0 auto;
 }
@@ -39,7 +40,7 @@
     height: 100%;
     margin: 0 auto;
 
-    background-image: url(images/l-search/header-banner.png);
+    background-image: url(images/l-search/header-banner.svg);
     background-repeat: no-repeat;
     background-size: 100%;
 }
@@ -63,6 +64,8 @@
     display: inline-block;
 
     margin-right: 20px;
+
+    color: #ee362c;
 
     font: 30px "WebSymbols", Arial, sans-serif;
 }
@@ -487,7 +490,7 @@ screen and (max-width: 600px) // for desktop
         height: 171px;
         padding: 0 30px;
 
-        background: #334184;
+        background: #f4f4ec;
     }
 
     .l-search__header-image-wrap {
