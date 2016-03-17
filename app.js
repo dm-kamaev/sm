@@ -67,6 +67,7 @@ app.use('/', api.user.router);
 app.use('/api', api.comment.router);
 app.use('/api', api.school.router);
 app.use('/api', api.geo.router);
+app.use('/api', api.feedback.router);
 
 var env = process.env.NODE_ENV;
 

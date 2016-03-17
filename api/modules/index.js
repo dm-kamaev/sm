@@ -1,6 +1,7 @@
 var school = require('./school');
 var comment = require('./comment');
 var debug = require('./debug');
+var feedback = require('./feedback');
 var study = require('./study');
 var univer = require('./univer');
 var geo = require('./geo');
@@ -14,6 +15,7 @@ exports.school = school;
 exports.comment = comment;
 exports.debug = debug;
 exports.geo = geo;
-exports.univer = univer;
+exports.feedback = feedback;
 exports.study = study;
 exports.user = user;
+exports.univer = univer;
