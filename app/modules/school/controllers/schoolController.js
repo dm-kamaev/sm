@@ -184,10 +184,11 @@ exports.search = async(function(req, res) {
               ],
               amountSchools: data.amountSchools,
               dataArticle : {
-                  urlArticle: 'http://mel.fm/2016/01/09/innovators',
+                  urlArticle: 'http://mel.fm/2015/12/08/change_school/',
                   urlImg: 'images/l-search/b-link-article/article.png',
-                  title: '«Мы не знаем, что лучше для наших детей, это известно только им самим»',
-                  subtitle: '10 высказываний новаторов в сфере образования и воспитания'
+                  title: '7\u00A0причин, чтобы сменить\u00A0школу',
+                  subtitle: 'Как понять, что вы\u00A0просчитались' + 
+                            ' с\u00A0выбором учебного\u00A0заведения'
               },
               config: {
                   year: new Date().getFullYear()
