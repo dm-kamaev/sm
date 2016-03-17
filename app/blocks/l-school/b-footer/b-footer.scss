@@ -1,6 +1,8 @@
+@import "../../i-media/i-media";
+
 .b-schools-footer {
     width:100%;
-    padding: 30px 0 17px;
+    padding: 25px 0;
     margin-bottom: 30px;
 
     text-align: left;
@@ -10,28 +12,48 @@
     font-family: 'Roboto';
 }
 
-.b-schools-footer__left-block{
+.b-schools-footer__left-block {
     display: inline-block;
-    font-size: 12px;
+    font-size: 13px;
 }
 
-.b-schools-footer__right-block{
+.b-schools-footer__right-block {
     text-align: right;
     display: inline-block;
     float:right;
 }
 
-.b-schools-footer__link{
-    display: inline;
+.b-schools-footer__link {
+    display: inline-block;
     margin-right: 20px;
-    color: black;
-    text-decoration: none;
+
+    &:last-child {
+        margin-right: 0;
+    }
 }
 
-.b-schools-footer__help{
+.b-schools-footer__link_copyright {
+    color: black;
+}
+
+.b-schools-footer__help {
     font-size: 12px;
     color: #a3a3a3;
 }
-.b-schools-footer__help_key{
+.b-schools-footer__help_key {
     font-weight: bold;
+}
+
+@include media-xs {
+    .b-schools-footer {
+        padding-bottom: 10px;
+    }
+
+    .b-schools-footer__link_copyright {
+        display: block;
+    }
+
+    .b-schools-footer__link {
+        margin-bottom: 15px;
+    }
 }
