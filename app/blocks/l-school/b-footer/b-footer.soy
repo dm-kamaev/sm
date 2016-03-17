@@ -5,18 +5,22 @@
 * @param? params {
 *     data: ?{
 *         year: ?number
-*     }
+*     },
+*     dataLinks: ?list<[
+*         name: ?string,
+*         url: ?string
+*     ]>
 * }
 */
 {template .base autoescape="strict" kind="html"}
     <div class="b-schools-footer">
         <div class="b-schools-footer__left-block">
-            <div class="b-schools-footer__link">© Мел, {$params?.data?.year ?: 2016}</div>
-            //TODO: uncomment
-            /*
-            <a href="#" class="b-schools-footer__link">О проекте</a>
-            <a href="#" class="b-schools-footer__link">Соглашения и правила</a>
-            */
+            <div class="b-schools-footer__link b-schools-footer__link_copyright">
+                © Мел, {$params?.data?.year ?: 2016}
+            </div>
+            {if $params?.dataLinks}
+                {call .links_ data="all" /}
+            {/if}
         </div>
         //TODO: uncomment
         /*
@@ -27,4 +31,29 @@
         </div>
         */
     </div>
+{/template}
+
+
+/**
+* Links template
+* @param? params {
+*     dataLinks: ?list<[
+*         name: ?string,
+*         url: ?string
+*     ]>
+* }
+*/
+{template .links_ autoescape="strict" kind="html"}
+    {foreach $link in $params?.dataLinks}
+        <div class="b-schools-footer__link">
+            {call sm.bLink.Template.base}
+                {param params: [
+                    'data': [
+                        'name': $link?.name,
+                        'url': $link?.url
+                    ]
+                ]/}
+            {/call}
+        </div>
+    {/foreach}
 {/template}
