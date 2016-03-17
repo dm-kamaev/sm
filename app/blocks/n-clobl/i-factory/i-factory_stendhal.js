@@ -10,7 +10,9 @@ goog.require('sm.gInput.DigitInput');
 goog.require('sm.gInput.DigitInputView');
 goog.require('sm.gList.SelectList');
 goog.require('sm.gList.SelectListView');
+goog.require('sm.gModal.ModalFeedback');
 goog.require('sm.gModal.ModalStendhal');
+goog.require('sm.gModal.ViewFeedback');
 goog.require('sm.gModal.ViewStendhal');
 goog.require('sm.gTextarea.ViewStendhal');
 
@@ -42,6 +44,10 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('modal', {
             control: sm.gModal.ModalStendhal,
             view: sm.gModal.ViewStendhal
+        })
+        .setControlListItem('feedback-modal', {
+            control: sm.gModal.ModalFeedback,
+            view: sm.gModal.ViewFeedback
         })
         .setControlListItem('auth-social', {
             view: sm.gAuthSocial.ViewStendhal
