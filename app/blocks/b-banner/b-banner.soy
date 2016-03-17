@@ -1,0 +1,25 @@
+{namespace sm.bBanner.Template}
+
+
+/**
+ * Template Banner
+ * @param params ?{
+ *     data: ?[
+ *         textXl: ?string,
+ *         textS: ?string
+ *     ]
+ * }
+ */
+
+{template .base autoescape="strict" kind="html"}
+    <div class="b-banner">
+        <div class="b-banner__body">
+            <div class="b-banner__text b-banner__text_size-xl">
+                {$params?.data?.textXl}
+            </div>
+            <div class="b-banner__text b-banner__text_size-s">
+                {$params?.data?.textS}
+            </div>
+        </div>
+    </div>
+{/template}

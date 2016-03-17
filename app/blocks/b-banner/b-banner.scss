@@ -1,0 +1,52 @@
+@import "../i-media/i-media";
+
+.b-banner {
+    width: 100%;
+    height: 50px;
+
+    color: #fff;
+    background-color: #0c6b2c;
+
+    font-family: Arial;
+    font-size: 13px;
+
+    &:hover {
+        background-color: #08401b;
+    }
+}
+
+.b-banner__body {
+    width: 1200px;
+    height: 100%;
+    margin: 0 auto;
+}
+
+.b-banner__text {
+    line-height: 50px;
+}
+
+.b-banner__text_size-s {
+    display: none;
+}
+
+@include media-xl {
+    .b-banner__body {
+        box-sizing: border-box;
+        width: 100%;
+        padding: 0 40px;
+    }
+}
+
+@include media-s {
+    .b-banner__body {
+        padding: 0 30px;
+    }
+
+    .b-banner__text_size-xl {
+        display: none;
+    }
+
+    .b-banner__text_size-s {
+        display: block;
+    }
+}
