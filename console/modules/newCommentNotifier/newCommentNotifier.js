@@ -50,7 +50,7 @@ class newCommentNotifier {
             letterText += '"';
 
             var letter = new Letter (theme, letterText, 'html');
-            mailSender.sendMail('dmedvedev_1@yopolis.ru', letter);
+            mailSender.sendMail(email, letter);
 
             await (services.comment.update(comment, {
                 isNoticeSend: true
