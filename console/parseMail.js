@@ -24,7 +24,7 @@ class ParseMail {
         var mailConfig = {
             imap: {
                 user: config.deleteMailbox.email,
-                password: '123qweAdj209DJ><@23',
+                password: config.deleteMailbox.password,
                 host: config.deleteMailbox.host,
                 port: config.deleteMailbox.port,
                 tls: true,
@@ -35,7 +35,8 @@ class ParseMail {
         try {
             var connection = await(imap.connect(mailConfig));
             var letters = this.getLetters_(connection, config);
-            this.processLetters_(letters);
+            var commentIdsToDelete = this.processLetters_(letters);
+            this.deleteLetters_(connection, commentIdsToDelete);
         } catch(e) {
             console.log(e);
         } finally {
@@ -60,9 +61,6 @@ class ParseMail {
         var letters = await(connection.search(['ALL'], fetchOptions));
 
         return letters.map(letter => {
-                await(connection.moveMessage(
-                    letter.attributes.uid, '[Gmail]/Trash')
-                );
                 return {
                     uid: letter.attributes.uid,
                     from: letter.parts[1].body.from[0]
@@ -77,14 +75,33 @@ class ParseMail {
      * @private
      */
     processLetters_(letters) {
+        var deletedComments = [];
         letters.forEach(letter => {
-            if (letter.from === letter.from) {//config.emailNotifier.email) {
+            if (letter.from === config.emailNotifier.email) {
                 var text = letter.body;
-                if (text && text.indexOf('id = ') > -1) {
-                    var commentId = text.match(/(?:id = )(\d+)/)[1];
+
+                var commentId = text.match(/(?:id = )(\d+)/) &&
+                        text.match(/(?:id = )(\d+)/)[1],
+                    commentHost = text.match(/(?:http:\/\/)([\w.]+)/) &&
+                        text.match(/(?:http:\/\/)([\w.]+)/)[1];
+
+                if (commentHost === config.url.host) {
                     this.sendDeleteReq_(commentId);
+                    deletedComments.push(commentId);
                 }
             }
+        });
+        return deletedComments;
+    }
+
+    /**
+     * @param {object} connection
+     * @param {array<number>} letterIds - letter's ids
+     * @private
+     */
+    deleteLetters_(connection, letterIds) {
+        letterIds.forEach(id => {
+            connection.moveMessage(id, '[Gmail]/Trash');
         });
     }
 
@@ -98,8 +115,7 @@ class ParseMail {
                 'token': TOKEN
             }),
             options = {
-                host: 'www21.lan', //config.url.host, - real host
-                port: 3000, // delete
+                host: config.url.host,
                 method: 'DELETE',
                 path: '/api/comment/delete/' + id,
                 headers: {
