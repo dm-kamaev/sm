@@ -27,6 +27,14 @@ var UserData = db.define('UserData', {
     username: {
         field: 'username',
         type: DataType.STRING
+    },
+    kidGrade: {
+        field: 'kid_grade',
+        type: DataType.INTEGER
+    },
+    pupilGrade: {
+        field: 'pupil_grade',
+        type: DataType.INTEGER
     }
 }, {
     underscored: true,
