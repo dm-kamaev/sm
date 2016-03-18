@@ -1,0 +1,30 @@
+{
+    "headers":[
+        "hash",
+        "name",
+        "type",
+        "year",
+        "kidGrade",
+        "pupilGrade",
+        "school",
+        "altSchool",
+        "education",
+        "eduComment",
+        "teacher",
+        "teacherComment",
+        "infrastructure",
+        "infrastrComment",
+        "atmosphere",
+        "atmComment",
+        "individualization",
+        "individComment",
+        "inclusive",
+        "inclusiveComment",
+        "overallComment",
+        "permission",
+        "email",
+        "startDate",
+        "submitDate",
+        "networkId"
+    ]
+}
