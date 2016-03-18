@@ -95,7 +95,6 @@
  * @override
  */
 {template .content autoescape="strict" kind="html"}
-    {call .banner_ /}
     {call .header_ data="all" /}
     <div class="i-layout__wrapper">
         <div class="i-layout__content">
@@ -105,22 +104,6 @@
     </div>
 {/template}
 
-/**
- * Banner
- */
-{template .banner_ autoescape="strict" kind="html"}
-    <div class="i-layout__banner">
-        {call sm.bBanner.Template.base}
-            {param params: [
-                'data': [
-                    'textXl': 'Мы хотим создать самый полезный сервис для выбора
-                                школы. Как думаете, у нас получилось?',
-                    'textS': 'Мы помогли вам выбрать школу?'
-                ]
-            ] /}
-        {/call}
-    </div>
-{/template}
 
 /**
  * @param? params {?}

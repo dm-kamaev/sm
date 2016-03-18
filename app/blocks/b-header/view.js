@@ -4,6 +4,7 @@ goog.require('cl.iControl.View');
 
 goog.require('cl.iUtils.Utils');
 goog.require('goog.dom.classes');
+goog.require('sm.bBanner.Banner');
 goog.require('sm.bSearch.Search');
 goog.require('sm.iAnimate.Animate');
 
@@ -47,6 +48,10 @@ goog.scope(function() {
 
         this.dom.search = this.getElementByClass(
             Search.CssClass.ROOT
+        );
+
+        this.dom.banner = this.getElementByClass(
+            sm.bBanner.View.CssClass.ROOT
         );
 
         this.detectAnimationSupportion_();
