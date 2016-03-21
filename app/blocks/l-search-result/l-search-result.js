@@ -255,7 +255,7 @@ goog.scope(function() {
      * @private
      */
     SearchResult.prototype.onHeaderSubmit_ = function(event) {
-        this.menuSearch_.setValue(event.text);
+        this.menuSearch_.setValue(event.data.text);
         this.header_.setMode(Header.Mode.DEFAULT);
         this.onSubmit_(event);
     };

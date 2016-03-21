@@ -239,25 +239,25 @@
  * }}
  */
 {template .themeDropdown_}
-    {let $themes:
-        [
+
+    {let $themes: [
+        'opinion': [
             ['label': 'Мнение о сервисе'],
             ['label': 'Не могу найти свою школу'],
             ['label': 'Ошибка на сайте'],
             ['label': 'Неточные данные']
+        ],
+        'mistake': [
+            ['label': 'Описание и особенности'],
+            ['label': 'Другие данные'],
+            ['label': 'Контактные данные'],
+            ['label': 'Результаты экзаменов и олимпиад'],
+            ['label': 'Дополнительные занятия и профили']
         ]
-    /}
-    {if $params?.config?.type == 'mistake'}
-        {let $themes:
-            [
-                ['label': 'Описание и особенности'],
-                ['label': 'Другие данные'],
-                ['label': 'Контактные данные'],
-                ['label': 'Результаты экзаменов и олимпиад'],
-                ['label': 'Дополнительные занятия и профили']
-            ]
-        /}
-    {/if}
+    ]/}
+
+
+
     <div class="{call .rootClass/}__input-field{sp}
                 {call .rootClass/}__input-field_theme">
         <div class="{call .rootClass/}__control-name">Выберите тему</div>
@@ -268,7 +268,9 @@
                     'type': 'dropdown-select',
                     'renderParams': [
                         'data': [
-                            'listItems': $themes,
+                            'listItems': $params.config.type  == 'mistake'  ?
+                            $themes.mistake :
+                            $themes.opinion,
                             'defaultOpenerText': 'Выберите тему'
                         ],
                         'config': [
