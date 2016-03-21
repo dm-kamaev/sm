@@ -24,8 +24,7 @@
         {foreach $school in $params?.popularSchools}
             <a class="b-popular-schools__school-link{sp}
                       {$params?.config?.popularSchool?.customClasses ?: ''}"
-               href="/school/{$school.url}"
-               target="_blank">
+               href="/school/{$school.url}">
                 <div class="b-popular-schools__school
                         {if isLast($school)}{sp}b-popular-schools__school_last{/if}">
                     <div class="b-popular-schools__school-rating">
