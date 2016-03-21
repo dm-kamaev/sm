@@ -6,7 +6,7 @@
  *     data: {
  *     }
  *     config: {
- *        viewType: ?string,
+ *        type: ?string,
  *        url: ?string
  *     }
  * }}
@@ -24,7 +24,7 @@
  *     data: {
  *     }
  *     config: {
- *        viewType: string
+ *        type: string
  *     }
  * }}
  * @override
@@ -34,7 +34,14 @@
 
     <form class="{call .rootClass/}__form-content"
          method="POST"
-         action="{$params?.config?.url ?: ''}">
+         action="{if $params?.config?.url}
+                {$params?.config?.url}
+                {$params?.config?.type ?
+                '?type=' + $params?.config?.type :
+                '?type=opinion'}
+         {else}
+            ''
+         {/if}">
 
         {call .feedbackHeader_ data="all" /}
 
@@ -52,13 +59,13 @@
  * Feedback header template
  * @param? params {{
  *     config: {
- *        viewType: string
+ *        type: string
  *     }
  * }}
  */
 {template .feedbackHeader_}
     {let $headerContent kind="html"}
-        {if $params?.config?.viewType == 'inaccurancyReport'}
+        {if $params?.config?.type == 'mistake'}
             Сообщить о&nbsp;неточности
         {else}
             Ваше мнение
@@ -77,13 +84,13 @@
  * Feedback description template
  * @param? params {{
  *     config: {
- *        viewType: string
+ *        type: string
  *     }
  * }}
  */
 {template .description_}
     {let $descriptionContent kind="html"}
-        {if $params?.config?.viewType == 'inaccurancyReport'}
+        {if $params?.config?.type == 'mistake'}
             С&nbsp;помощью этой формы вы&nbsp;можете предложить редакторам Школ Мела изменить или дополнить информацию о&nbsp;школе
         {else}
             Расскажите, помогли&nbsp;ли Школы Мела найти хорошую школу для вашего ребёнка или по-новому посмотреть на&nbsp;школу, где он&nbsp;учится сейчас.
@@ -102,7 +109,7 @@
   * Submit button template
   * @param? params {{
   *     config: {
-  *        viewType: string
+  *        type: string
   *     }
   * }}
   */
@@ -226,7 +233,7 @@
  * Dropdown field template
  * @param? params {{
  *     config: {
- *        viewType: string,
+ *        type: string,
  *        stylizationModifier: string
  *     }
  * }}
@@ -240,7 +247,7 @@
             ['label': 'Неточные данные']
         ]
     /}
-    {if $params?.config?.viewType == 'inaccurancyReport'}
+    {if $params?.config?.type == 'mistake'}
         {let $themes:
             [
                 ['label': 'Описание и особенности'],
@@ -318,3 +325,19 @@
     i-utils__hidden{sp}
     {call .rootClass/}_feedback
 {/template}
+
+/**
+ * @override
+ * @param? params {{
+ *     config: {
+ *         type: ?string
+ *     }
+ * }}
+ */
+{template .attributes kind="attributes"}
+    {let $data: [
+        'type': $params?.config?.type ?: 'opinion'
+    ]/}
+    data-params="{call goog.json.serialize data="$data" /}"
+{/template}
+

@@ -71,6 +71,17 @@ goog.scope(function() {
     };
 
     /**
+     * Clear input fields in form
+     */
+    ModalFeedback.prototype.clear = function() {
+        this.elements_.textarea.clean();
+        this.elements_.dropdown.clear();
+        this.elements_.inputs.forEach(function(input) {
+            input.clear();
+        });
+    };
+
+    /**
      * Check that error is valid
      * @param {string} error
      * @return {boolean}
@@ -97,6 +108,40 @@ goog.scope(function() {
      * @private
      */
     ModalFeedback.prototype.sendData_ = function() {
+        var form = jQuery(this.getView().getDom().form);
+
+        var data = form.serialize();
+
+        data += '&theme=' + this.elements_.dropdown.getSelectedValue();
+
+        if (this.params.type == 'mistake') {
+            data += '&url=' + document.location.href;
+        }
+
+        jQuery.ajax({
+            url: form.attr('action'),
+            type: form.attr('method'),
+            data: data,
+            success: this.onSuccessQuery_.bind(this),
+            error: this.onErrorQuery_.bind(this)
+        });
+    };
+
+    /**
+     * Success query callback
+     * @private
+     */
+    ModalFeedback.prototype.onSuccessQuery_ = function() {
+        this.clear();
+        this.hide();
+    };
+
+    /**
+     * Error query callback
+     * @private
+     */
+    ModalFeedback.prototype.onErrorQuery_ = function() {
+        this.showError(ModalFeedback.Error.FILL_REQUIRED_FIELDS);
     };
 
     /**
