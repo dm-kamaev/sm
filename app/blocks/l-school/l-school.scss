@@ -292,14 +292,6 @@ body {
     font-size: 16px;
 }
 
-.l-school__link{
-    text-decoration: none;
-    color:#ee362c;
-}
-
-.l-school__link-image{
-}
-
 .b-bouton_feedback-opener {
     font-family: 'Proxima', Arial, sans-serif;
     font-weight: 800;
@@ -325,10 +317,6 @@ body {
     }
 }
 
-.l-school__link {
-    margin-top: 12px;
-}
-
 .l-school__anchor-value {
     display: inline-block;
 
@@ -337,12 +325,13 @@ body {
     color: #000;
 }
 
+.l-school__link{
+    margin-top: 12px;
+}
 
 .l-school__footer {
     margin-bottom: 30px;
 }
-
-
 
 .l-school__section_description {
     display: inline-block;

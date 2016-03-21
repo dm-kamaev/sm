@@ -94,7 +94,7 @@ goog.scope(function() {
         'RATING': 'b-rating',
         'COMMENTS': 'b-comments',
         'FEEDBACK_LINK': 'l-school__comments-placeholder-link',
-        'FEEDBACK_INACCURACY_LINK': 'l-school__link_feedback'
+        'INACCURACY_LINK': 'l-school__link_inaccuracy'
     };
 
     /**
@@ -157,9 +157,9 @@ goog.scope(function() {
         }
 
         handler.listen(
-            this.elements_.feedbackInaccuracyLink,
+            this.elements_.inaccuracyLink,
                 goog.events.EventType.CLICK,
-                this.onClickFeedbackInaccuracyLink_
+                this.onClickInaccuracyLink_
             );
 
         handler.listen(
@@ -203,7 +203,7 @@ goog.scope(function() {
      * onClick event
      * @private
      */
-    School.prototype.onClickFeedbackInaccuracyLink_ = function() {
+    School.prototype.onClickInaccuracyLink_ = function() {
         this.modalInaccuracy_.show();
     };
 
@@ -338,8 +338,8 @@ goog.scope(function() {
             rating: this.getElementByClass(
                 sm.lSchool.School.CssClass.RATING
             ),
-            feedbackInaccuracyLink: this.getElementByClass(
-                sm.lSchool.School.CssClass.FEEDBACK_INACCURACY_LINK
+            inaccuracyLink: this.getElementByClass(
+                sm.lSchool.School.CssClass.INACCURACY_LINK
             )
         };
     };
