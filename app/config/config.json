@@ -1,5 +1,7 @@
 {
   "production": {
+    "port": 3000,
+    "environment": "production",
     "emailNotifier": {
       "email": "sabina@mel.fm"
     },
@@ -15,6 +17,8 @@
     }
   },
   "development": {
+    "port": 3000,
+    "environment": "development",
     "emailNotifier": {
       "email": "sabina@mel.fm"
     },

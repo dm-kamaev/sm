@@ -35,9 +35,7 @@ const async = require('asyncawait/async');
 
 const app = express();
 
-const CONFIG = {
-    PORT: 3000
-};
+const config = require('./app/config').config;
 
 app.set('views', path.join(__dirname, 'api-debug'));
 
@@ -69,9 +67,7 @@ app.use('/api', api.school.router);
 app.use('/api', api.geo.router);
 app.use('/api', api.feedback.router);
 
-var env = process.env.NODE_ENV;
-
-if ( !(env === 'production' || env === 'prod') ) {
+if (config.environment == 'development') {
     app.use('/doc', modules.doc.router);
     app.use('/', api.debug.router);
     app.use('/apidoc', express.static(path.join(__dirname, '/doc')));
@@ -92,8 +88,8 @@ async(function() {
     soy.loadFiles(
         paths.map(item => path.join(__dirname, item)),
         function() {
-            app.listen(CONFIG.PORT, function() {
-                console.log('Running at port ' + CONFIG.PORT)
+            app.listen(config.port, function() {
+                console.log('Running at port ' + config.port)
             });
         }
     );
