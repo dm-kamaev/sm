@@ -21,6 +21,18 @@
 		&.g-modal__section_description {
 			margin-bottom: 26px;
 		}
+
+		&.g-modal__section_submit {
+			margin-bottom: 0;
+		}
+
+		&.g-modal__section_validation-errors {
+			margin-top: 16px;
+			margin-bottom: -12px;
+
+			text-align: center;
+			color: #ee362c;
+		}
 	}
 
 	.g-modal__close-button {
