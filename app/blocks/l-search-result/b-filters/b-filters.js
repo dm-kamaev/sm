@@ -263,6 +263,20 @@ goog.scope(function() {
     };
 
     /**
+     * Reset filters
+     */
+    Filters.prototype.reset = function() {
+        this.filterClasses_.reset();
+
+        for (var i = 0; i < this.filters_.length; i++) {
+            this.filters_[i].reset();
+            this.filters_[i].hideFilter_();
+        }
+
+        this.hideButtonReset_();
+    };
+
+    /**
      * Is checked input
      * @return {boolean}
      */
@@ -301,18 +315,10 @@ goog.scope(function() {
 
     /**
      * Reset filters
-     * @param {Object} event
      * @private
      */
-    Filters.prototype.onResetFiltersClick_ = function(event) {
-        this.filterClasses_.reset();
-
-        for (var i = 0; i < this.filters_.length; i++) {
-            this.filters_[i].reset();
-            this.filters_[i].hideFilter_();
-        }
-
-        this.hideButtonReset_();
+    Filters.prototype.onResetFiltersClick_ = function() {
+        this.reset();
     };
 
     /**
