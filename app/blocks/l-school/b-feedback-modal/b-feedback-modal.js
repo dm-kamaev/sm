@@ -502,7 +502,7 @@ goog.scope(function() {
         var isValid = false,
             isValidOpt = false,
             userType = this.dropdowns_.userType.getValue();
-            this.dropdowns_.userType.getView().removeNotSelectedModifier();
+            this.dropdowns_.userType.getView().unsetNotValidState();
 
         if (userType != null) {
             isValid = true;
@@ -534,7 +534,7 @@ goog.scope(function() {
             isValidOpt = this.validateComment_(dataToValidate);
 
         } else {
-            this.dropdowns_.userType.getView().addNotSelectedModifier();
+            this.dropdowns_.userType.getView().setNotValidState();
             this.showValidationError_(FeedbackModal.Error.TYPE_REQUIRED);
         }
         return (isValid && isValidOpt);

@@ -14,6 +14,7 @@ goog.require('sm.gModal.ModalFeedback');
 goog.require('sm.gModal.ModalStendhal');
 goog.require('sm.gModal.ViewFeedback');
 goog.require('sm.gModal.ViewStendhal');
+goog.require('sm.gTextarea.TextareaStendhal');
 goog.require('sm.gTextarea.ViewStendhal');
 
 /**
@@ -39,6 +40,7 @@ sm.iFactory.FactoryStendhal = function() {
             view: sm.gInput.DigitInputView
         })
         .setControlListItem('textarea', {
+            control: sm.gTextarea.TextareaStendhal,
             view: sm.gTextarea.ViewStendhal
         })
         .setControlListItem('modal', {

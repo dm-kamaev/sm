@@ -6,7 +6,8 @@
  *     data: {
  *     }
  *     config: {
- *        viewType: string
+ *        viewType: ?string,
+ *        url: ?string
  *     }
  * }}
  * @extends sm.gModal.TemplateStendhal
@@ -30,27 +31,17 @@
  */
 {template .content}
     {call .closer data="all"/}
-    <form class="{call .rootClass/}__form-content">
+    <form class="{call .rootClass/}__form-content"
+         method="POST"
+         action="{$params?.config?.url ?: ''}>
+
         {call .feedbackHeader_ data="all" /}
 
         {call .description_ data="all" /}
 
         {call .inputFields_ data="all" /}
 
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': $params.config.stylizationModifier,
-                'type': 'button',
-                'renderParams': [
-                    'data': [
-                        'content': 'Оставить отзыв'
-                    ],
-                    'config': [
-                        'theme': 'sienna'
-                    ]
-                ]
-            ]/}
-        {/call}
+        {call .submitButton_ /}
     </form>
 {/template}
 
@@ -65,7 +56,7 @@
 {template .feedbackHeader_}
     {let $headerContent kind="html"}
         {if $params?.config?.viewType == 'inaccurancyReport'}
-            Сообщить о неточности
+            Сообщить о&nbsp;неточности
         {else}
             Ваше мнение
         {/if}
@@ -90,9 +81,9 @@
 {template .description_}
     {let $descriptionContent kind="html"}
         {if $params?.config?.viewType == 'inaccurancyReport'}
-            С помощью этой формы вы можете предложить редакторам Школ Мела изменить или дополнить информацию о школе
+            С&nbsp;помощью этой формы вы&nbsp;можете предложить редакторам Школ Мела изменить или дополнить информацию о&nbsp;школе
         {else}
-            Расскажите, помоги ли Школы Мела найти хорошую школу для вашего ребёнка или по-новому посмотреть на школу, где он учится сейчас.
+            Расскажите, помоги&nbsp;ли Школы Мела найти хорошую школу для вашего ребёнка или по-новому посмотреть на&nbsp;школу, где он&nbsp;учится сейчас.
         {/if}
     {/let}
 
@@ -105,17 +96,54 @@
 {/template}
 
 /**
- * Feedback input fields template
- * @param? params {{
- *     config: {
- *        viewType: string
- *     }
- * }}
- */
+  * Submit button template
+  * @param? params {{
+  *     config: {
+  *        viewType: string
+  *     }
+  * }}
+  */
+{template .submitButton_}
+    <div class="{call .rootClass/}__section
+        {call .rootClass/}__section_submit">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': $params?.config?.stylizationModifier,
+                'type': 'button',
+                'renderParams': [
+                    'data': [
+                        'content': 'Оставить отзыв'
+                    ],
+                    'config': [
+                        'theme': 'sienna'
+                    ]
+                ]
+            ]/}
+        {/call}
+</div>
+{/template}
+
+/**
+  * Validation error area template
+  */
+{template .submitButton_}
+    <div class="{call .rootClass/}__section
+        {call .rootClass/}__section_valiadtion-errors">
+    </div>
+{/template}
+
+
+ /**
+  * Feedback input fields template
+  * @param? params {{
+  *     config: {
+  *        stylizationModifier: string
+  *     }
+  * }}
+  */
 {template .inputFields_}
     <div class="{call .rootClass/}__section{sp}
                 {call .rootClass/}__section_input-fields">
-
 
         {call .nameInput_ data="all" /}
 
@@ -129,7 +157,11 @@
 
 /**
  * Name input template
- * @param? params {}
+ * @param? params {{
+ *     config: {
+ *        stylizationModifier: string
+ *     }
+ * }}
  */
 {template .nameInput_}
      <div class="{call .rootClass/}__input-field{sp}
@@ -157,7 +189,11 @@
 
 /**
  * Email input template
- * @param? params {}
+ * @param? params {{
+ *     config: {
+ *        stylizationModifier: string
+ *     }
+ * }}
  */
 {template .emailInput_}
     <div class="{call .rootClass/}__input-field{sp}
@@ -166,7 +202,7 @@
         <div class="{call .rootClass/}__control">
             {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
                 {param params: [
-                    'factory': $params.config.stylizationModifier,
+                    'factory': $params?.config?.stylizationModifier,
                     'type': 'input',
                     'renderParams': [
                         'data': [
@@ -187,7 +223,8 @@
  * Dropdown field template
  * @param? params {{
  *     config: {
- *        viewType: string
+ *        viewType: string,
+ *        stylizationModifier: string
  *     }
  * }}
  */
@@ -217,7 +254,7 @@
         <div class="{call .rootClass/}__control">
             {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
                 {param params: [
-                    'factory': $params.config.stylizationModifier,
+                    'factory': $params?.config?.stylizationModifier,
                     'type': 'dropdown-select',
                     'renderParams': [
                         'data': [
@@ -241,6 +278,9 @@
 /**
  * Textarea template
  * @param? params {{
+ *     config: {
+ *        stylizationModifier: ?string
+ *     }
  * }}
  */
 {template .textArea_}
@@ -248,7 +288,7 @@
                 {call .rootClass/}__input-field_text">
         {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
-                'factory': $params.config.stylizationModifier,
+                'factory': $params?.config?.stylizationModifier,
                 'type': 'textarea',
                 'renderParams': [
                     'data': [

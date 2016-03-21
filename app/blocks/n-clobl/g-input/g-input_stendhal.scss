@@ -20,4 +20,13 @@
 			outline: none;
 		}
 	}
+
+	&.g-input_not-valid {
+		.g-input__input {
+			padding-left: 17px;
+
+			box-sizing: border-box;
+			border: 2px solid #ee362c;
+		}
+	}
 }
