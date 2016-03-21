@@ -243,6 +243,11 @@
             ]/}
         {/call}
 
+        // A necessary measure due to the adaptability
+        {call .extra_ data="all"}
+            {param clone: true /}
+        {/call}
+
         {call .schoolAnchors_}
             {param params: [
                 'data': [
@@ -258,10 +263,8 @@
             ]/}
         {/call}
 
-        // A necessary measure due to the adaptability
-        {call .extra_ data="all"}
-            {param clone: true /}
-        {/call}
+        {call .modalInaccuracy_ data="all" /}
+
     </div>
 {/template}
 
@@ -290,6 +293,34 @@
             </a>
         {/if}
     </div>
+    <div class="l-school__link l-school__link_inaccuracy">
+        {call sm.bLink.Template.base}
+            {param params: [
+                'data': [
+                    'name': 'Сообщить о неточности'
+                ],
+                'theme': 'attention'
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+/**
+ * Template feedback modal
+ */
+{template .modalInaccuracy_ private="true"}
+    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+        {param params: [
+            'factory': 'stendhal',
+            'type': 'feedback-modal',
+            'renderParams': [
+                'config': [
+                    'viewType': 'inaccurancyReport', 
+                    'url': '/api/user-feedback'
+                ]
+            ]
+        ]/}
+    {/call}
 {/template}
 
 /**
