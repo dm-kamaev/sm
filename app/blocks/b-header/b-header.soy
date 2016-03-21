@@ -61,29 +61,13 @@
  */
 {template .logo_ private="true" autoescape="strict" kind="html"}
     <div class="b-header__title">
-        <span class="b-header__stars">
-            <span class="b-header__star b-header__star_first">t</span>
-            <span class="b-header__star b-header__star_second">t</span>
-            <span class="b-header__star b-header__star_third">t</span>
-            <span class="b-header__star b-header__star_forth">t</span>
-            <span class="b-header__star b-header__star_fifth">t</span>
-        </span>
-        <h1 class="b-header__header">
-            {if $params?.url}
-                <a class="b-header__link" href="{$params.url}">
-                    Школы «мела»
-                </a>
-            {else}
-                Школы «мела»
-            {/if}
-        </h1>
-        <span class="b-header__stars">
-            <span class="b-header__star b-header__star_fifth">t</span>
-            <span class="b-header__star b-header__star_forth">t</span>
-            <span class="b-header__star b-header__star_third">t</span>
-            <span class="b-header__star b-header__star_second">t</span>
-            <span class="b-header__star b-header__star_first">t</span>
-        </span>
+        {if $params?.url}
+            <a class="b-header__link" href="{$params.url}">
+                <img class="b-header__logo" src="images/b-header/logo.svg">
+            </a>
+        {else}
+            <img class="b-header__logo" src="images/b-header/logo.svg">
+        {/if}
     </div>
 {/template}
 
