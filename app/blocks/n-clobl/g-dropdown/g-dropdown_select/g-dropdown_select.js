@@ -87,6 +87,31 @@ goog.scope(function() {
     };
 
     /**
+     * Return true if dropdown has value,
+     * and set or unset not valid state depends have it value or not
+     * @public
+     * @return {boolean}
+     */
+    DropdownSelect.prototype.validate = function() {
+        var isValid = false,
+            value = this.getValue();
+
+        if (value !== null) {
+            isValid = true;
+        }
+
+        var view = this.getView();
+
+        if (isValid) {
+            view.unsetNotValidState();
+        } else {
+            view.setNotValidState();
+        }
+
+        return isValid;
+    };
+
+    /**
      * Clear selection
      */
     DropdownSelect.prototype.clear = function() {
@@ -115,6 +140,8 @@ goog.scope(function() {
      */
     DropdownSelect.prototype.onListItemSelect_ = function(event) {
         this.selectByIndex(event['itemId']);
+
+        this.validate();
 
         this.dispatchEvent({
             'type': DropdownSelect.Event.ITEM_SELECT,

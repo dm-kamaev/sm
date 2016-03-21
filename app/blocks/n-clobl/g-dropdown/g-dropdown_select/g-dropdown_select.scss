@@ -60,7 +60,16 @@
 
 .g-dropdown.g-dropdown_select.g-dropdown_indent-small {
 	.g-dropdown__opener {
-		padding: 10px 14px 14px 13px;
+		padding: 10px 14px 14px 17px;
+	}
+
+	&.g-dropdown_not-selected {
+		.g-dropdown__opener {
+			box-sizing: border-box;
+
+			border: 2px solid #e2332a;
+			outline: none;
+		}
 	}
 }
 

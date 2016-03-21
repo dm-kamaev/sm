@@ -97,7 +97,7 @@ goog.scope(function() {
      * Add not valid modifier
      * @public
      */
-    View.prototype.addNotValidModifier = function() {
+    View.prototype.setNotValidState = function() {
         goog.dom.classes.add(
             this.getElement(),
             View.CssClass.NOT_VALID
@@ -108,7 +108,7 @@ goog.scope(function() {
      * Remove not valid modifier
      * @public
      */
-    View.prototype.removeNotValidModifier = function() {
+    View.prototype.unsetNotValidState = function() {
         goog.dom.classes.remove(
             this.getElement(),
             View.CssClass.NOT_VALID

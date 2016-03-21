@@ -21,6 +21,15 @@ goog.scope(function() {
     var ViewFeedback = sm.gModal.ViewFeedback;
 
     /**
+     * Css class enum
+     * @enum {string}
+     */
+    ViewFeedback.CssClass = {
+        VALIDATION_ERRORS: 'g-modal__section_validation-errors',
+        FORM: 'g-modal__form-content'
+    };
+
+    /**
      * @param {Element} element
      * @override
      */
@@ -46,5 +55,33 @@ goog.scope(function() {
             cl.gTextarea.View.CssClass.ROOT,
             element
         );
+
+        this.dom.form = goog.dom.getElementByClass(
+            ViewFeedback.CssClass.FORM,
+            element
+        );
+
+        this.dom.errors = goog.dom.getElementByClass(
+            ViewFeedback.CssClass.VALIDATION_ERRORS,
+            element
+        );
+    };
+
+    /**
+     * Show error
+     * @param {string} error
+     * @public
+     */
+    ViewFeedback.prototype.showValidationError = function(error) {
+        goog.dom.getDomHelper().setTextContent(
+            this.dom.errors,
+            error
+        );
+
+        goog.dom.classes.remove(
+            this.dom.errors,
+            cl.iUtils.Utils.CssClass.HIDDEN
+        );
+
     };
 });
