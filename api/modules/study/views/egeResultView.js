@@ -72,7 +72,7 @@ EgeResultView.prototype.transformResults = function(results, cityResults) {
         years: keys.map(key => {
             return {
                 label: key,
-                openerText: key
+                text: key
             }
         }),
         results: keys.map(key => {
