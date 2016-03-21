@@ -60,6 +60,13 @@ sm.lSchool.School = function(opt_params) {
      * @private
      */
     this.isRegistrated_ = false;
+
+    /**
+     * Modal inaccuracy instance
+     * @type {sm.gModal.ModalFeedback}
+     * @private
+     */
+    this.modalInaccuracy_ = null;
 };
 goog.inherits(sm.lSchool.School, goog.ui.Component);
 
@@ -86,7 +93,8 @@ goog.scope(function() {
         'FEEDBACK_BUTTON': 'g-button_feedback-opener',
         'RATING': 'b-rating',
         'COMMENTS': 'b-comments',
-        'FEEDBACK_LINK': 'l-school__comments-placeholder-link'
+        'FEEDBACK_LINK': 'l-school__comments-placeholder-link',
+        'FEEDBACK_INACCURACY_LINK': 'l-school__link_feedback'
     };
 
     /**
@@ -149,6 +157,12 @@ goog.scope(function() {
         }
 
         handler.listen(
+            this.elements_.feedbackInaccuracyLink,
+                goog.events.EventType.CLICK,
+                this.onClickFeedbackInaccuracyLink_
+            );
+
+        handler.listen(
             this.score_,
             Score.Event.PLACE_COMMENT_CLICK,
             this.onClick_
@@ -186,6 +200,14 @@ goog.scope(function() {
     };
 
     /**
+     * onClick event
+     * @private
+     */
+    School.prototype.onClickFeedbackInaccuracyLink_ = function() {
+        this.modalInaccuracy_.show();
+    };
+
+    /**
      * adds children
      * @private
      */
@@ -193,6 +215,7 @@ goog.scope(function() {
         this.initModal_()
             .initScore_()
             .initAuthSocial_()
+            .initModalInaccuracy_()
             .initComponents_(FoldList)
             .initComponents_(DBlockRatings)
             .initComponents_(Map)
@@ -268,6 +291,21 @@ goog.scope(function() {
     };
 
     /**
+     * Modal inaccuracy initialization
+     * @return {sm.lSchool.School}
+     * @private
+     */
+    School.prototype.initModalInaccuracy_ = function() {
+        this.modalInaccuracy_ = factory.decorate(
+            'feedback-modal',
+            this.getElementByClass(cl.gModal.View.CssClass.ROOT),
+            this
+        );
+
+        return this;
+    };
+
+    /**
      * Component initialization
      * @param {Function} component
      * @param {Element} element
@@ -299,6 +337,9 @@ goog.scope(function() {
             ),
             rating: this.getElementByClass(
                 sm.lSchool.School.CssClass.RATING
+            ),
+            feedbackInaccuracyLink: this.getElementByClass(
+                sm.lSchool.School.CssClass.FEEDBACK_INACCURACY_LINK
             )
         };
     };
