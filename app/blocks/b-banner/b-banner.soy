@@ -49,7 +49,12 @@
     {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
         {param params: [
             'factory': $params.config.stylizationModifier,
-            'type': 'feedback-modal'
+            'type': 'feedback-modal',
+            'renderParams': [
+                'config': [
+                    'url': '/api/user-feedback'
+                ]
+            ]
         ]/}
     {/call}
 {/template}

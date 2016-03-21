@@ -19,7 +19,7 @@ sm.gList.SelectList = function(view, opt_params, opt_domHelper) {
      * @type {Array<string>}
      * @private
      */
-    this.openerTexts_ = [];
+    this.itemValues_ = [];
 };
 goog.inherits(sm.gList.SelectList, cl.gList.List);
 
@@ -38,24 +38,24 @@ goog.scope(function() {
         for (var i = 0, l = dataParams.length; i < l; i++) {
             var item = dataParams[i];
 
-            if (item.openerText || item.openerText === 0) {
-                this.openerTexts_.push(item.openerText);
+            if (item.text || item.text === 0) {
+                this.itemValues_.push(item.text);
             }
             else {
-                this.openerTexts_.push(item.label);
+                this.itemValues_.push(item.label);
             }
         }
     };
 
     /**
-     * get opener texts array or text on index
+     * get values array or value on opt_index
      * @param {number} opt_index
      * @return {Array<string>|string}
      */
-    SelectList.prototype.getOpenerText = function(opt_index) {
+    SelectList.prototype.getItemValue = function(opt_index) {
         return (opt_index >= 0) ?
-            this.openerTexts_[opt_index] :
-            this.openerTexts_;
+            this.itemValues_[opt_index] :
+            this.itemValues_;
     };
 });
 

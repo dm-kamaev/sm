@@ -25,6 +25,7 @@ goog.scope(function() {
      * @enum {string}
      */
     ViewFeedback.CssClass = {
+        ROOT: 'g-modal_feedback',
         VALIDATION_ERRORS: 'g-modal__section_validation-errors',
         FORM: 'g-modal__form-content'
     };
@@ -36,6 +37,52 @@ goog.scope(function() {
     ViewFeedback.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
+        this.initDom_(element)
+            .getDataParams_(element);
+
+    };
+
+    /**
+     * Show error
+     * @param {string} error
+     * @public
+     */
+    ViewFeedback.prototype.showValidationError = function(error) {
+        goog.dom.getDomHelper().setTextContent(
+            this.dom.errors,
+            error
+        );
+
+        goog.dom.classes.remove(
+            this.dom.errors,
+            cl.iUtils.Utils.CssClass.HIDDEN
+        );
+
+    };
+
+    /**
+     * Get data params
+     * @param {Element} element dom element
+     * @return {sm.gModal.ViewFeedback}
+     * @private
+     */
+    ViewFeedback.prototype.getDataParams_ = function(element) {
+        var params = JSON.parse(goog.dom.dataset.get(element, 'params'));
+
+        for (var paramName in params) {
+            this.params[paramName] = params[paramName];
+        }
+
+        return this;
+    };
+
+    /**
+     * Initializes dom elements
+     * @param {Element} element
+     * @return {sm.gModal.ViewFeedback}
+     * @private
+     */
+    ViewFeedback.prototype.initDom_ = function(element) {
         this.dom.inputs = goog.dom.getElementsByClass(
             cl.gInput.View.CssClass.ROOT,
             element
@@ -65,23 +112,7 @@ goog.scope(function() {
             ViewFeedback.CssClass.VALIDATION_ERRORS,
             element
         );
-    };
 
-    /**
-     * Show error
-     * @param {string} error
-     * @public
-     */
-    ViewFeedback.prototype.showValidationError = function(error) {
-        goog.dom.getDomHelper().setTextContent(
-            this.dom.errors,
-            error
-        );
-
-        goog.dom.classes.remove(
-            this.dom.errors,
-            cl.iUtils.Utils.CssClass.HIDDEN
-        );
-
+        return this;
     };
 });

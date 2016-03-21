@@ -45,7 +45,7 @@ goog.scope(function() {
         goog.base(this, 'decorateInternal', element);
 
         this.dom.modalFeedback = this.getElementByClass(
-            cl.gModal.View.CssClass.ROOT
+            sm.gModal.ViewFeedback.CssClass.ROOT
         );
     };
 
