@@ -5,15 +5,13 @@
 		height: 100%;
 
 		padding: 6px 0 11px 18px;
+		box-sizing: border-box;
 
-		font: inherit;
 
 		border: 1px solid rgba(0, 0, 0, 0.1);
 		box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
 
-		box-sizing: border-box;
-
-
+		font: inherit;
 		-webkit-appearance: none;
 
 		&:focus {
@@ -24,8 +22,8 @@
 	&.g-input_not-valid {
 		.g-input__input {
 			padding-left: 17px;
-
 			box-sizing: border-box;
+
 			border: 2px solid #ee362c;
 		}
 	}

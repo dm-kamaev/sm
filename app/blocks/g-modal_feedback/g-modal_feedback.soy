@@ -31,9 +31,10 @@
  */
 {template .content}
     {call .closer data="all"/}
+
     <form class="{call .rootClass/}__form-content"
          method="POST"
-         action="{$params?.config?.url ?: ''}>
+         action="{$params?.config?.url ?: ''}">
 
         {call .feedbackHeader_ data="all" /}
 
@@ -41,7 +42,9 @@
 
         {call .inputFields_ data="all" /}
 
-        {call .submitButton_ /}
+        {call .submitButton_ data="all" /}
+
+        {call .errorArea_ /}
     </form>
 {/template}
 
@@ -83,7 +86,7 @@
         {if $params?.config?.viewType == 'inaccurancyReport'}
             С&nbsp;помощью этой формы вы&nbsp;можете предложить редакторам Школ Мела изменить или дополнить информацию о&nbsp;школе
         {else}
-            Расскажите, помоги&nbsp;ли Школы Мела найти хорошую школу для вашего ребёнка или по-новому посмотреть на&nbsp;школу, где он&nbsp;учится сейчас.
+            Расскажите, помогли&nbsp;ли Школы Мела найти хорошую школу для вашего ребёнка или по-новому посмотреть на&nbsp;школу, где он&nbsp;учится сейчас.
         {/if}
     {/let}
 
@@ -104,7 +107,7 @@
   * }}
   */
 {template .submitButton_}
-    <div class="{call .rootClass/}__section
+    <div class="{call .rootClass/}__section{sp}
         {call .rootClass/}__section_submit">
         {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
@@ -112,7 +115,7 @@
                 'type': 'button',
                 'renderParams': [
                     'data': [
-                        'content': 'Оставить отзыв'
+                        'content': 'Отправить'
                     ],
                     'config': [
                         'theme': 'sienna'
@@ -126,9 +129,9 @@
 /**
   * Validation error area template
   */
-{template .submitButton_}
-    <div class="{call .rootClass/}__section
-        {call .rootClass/}__section_valiadtion-errors">
+{template .errorArea_}
+    <div class="{call .rootClass/}__section{sp}
+        {call .rootClass/}__section_validation-errors">
     </div>
 {/template}
 
@@ -143,7 +146,7 @@
   */
 {template .inputFields_}
     <div class="{call .rootClass/}__section{sp}
-                {call .rootClass/}__section_input-fields">
+        {call .rootClass/}__section_input-fields">
 
         {call .nameInput_ data="all" /}
 
@@ -165,7 +168,7 @@
  */
 {template .nameInput_}
      <div class="{call .rootClass/}__input-field{sp}
-                        {call .rootClass/}__input-field_name">
+         {call .rootClass/}__input-field_name">
          <div class="{call .rootClass/}__control-name">Ваше имя</div>
          <div class="{call .rootClass/}__control">
              {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
@@ -178,7 +181,7 @@
                              'name': 'name'
                          ],
                          'config': [
-                             'valiadationType': 'not-empty'
+                             'validations': ['notEmpty']
                          ]
                      ]
                  ]/}
@@ -210,7 +213,7 @@
                             'name': 'email'
                         ],
                         'config': [
-                            'valiadationType':  'email'
+                            'validations':  ['email', 'notEmpty']
                         ]
                     ]
                 ]/}
