@@ -63,12 +63,20 @@
     <div class="b-header__title">
         {if $params?.url}
             <a class="b-header__link" href="{$params.url}">
-                <img class="b-header__logo" src="/images/b-header/logo.svg">
+                {call .logoImg_ /}
             </a>
         {else}
-            <img class="b-header__logo" src="/images/b-header/logo.svg">
+            {call .logoImg_ /}
         {/if}
     </div>
+{/template}
+
+/**
+ * Logo img
+ */
+{template .logoImg_ private="true" autoescape="strict" kind="html"}
+    <img class="b-header__logo" src="/images/b-header/logo.svg"
+        alt="Школы Мела - индивидуальный рейтинг школ">
 {/template}
 
 
