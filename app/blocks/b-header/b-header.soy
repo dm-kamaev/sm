@@ -16,6 +16,7 @@
  */
 {template .base autoescape="strict" kind="html"}
     <div class="b-header">
+        {call .banner_ /}
         <div class="b-header__body">
             {if $params?.url}
                 {call .search_ data="all" /}
@@ -105,4 +106,26 @@
             'inputSize': 'min'
         ]/}
     {/call}
+{/template}
+
+
+/**
+ * Banner
+ */
+{template .banner_ autoescape="strict" kind="html"}
+    <div class="i-layout__banner">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': 'stendhal',
+                'type': 'banner',
+                'renderParams': [
+                    'data': [
+                        'textXl': 'Мы\u00A0хотим создать самый полезный сервис 
+                        для выбора школы. Как думаете, у\u00A0нас\u00A0получилось?',
+                        'textS': 'Мы\u00A0помогли вам выбрать\u00A0школу?'
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
 {/template}

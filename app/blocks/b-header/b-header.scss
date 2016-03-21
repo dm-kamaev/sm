@@ -6,7 +6,7 @@
     z-index: auto;
 
     width: 100%;
-    height: 70px;
+    height: auto;
 
     text-align: center;
 
@@ -21,7 +21,7 @@
     z-index: 15;
 
     width: 1200px;
-    height: 100%;
+    height: 70px;
     margin: 0 auto;
 
     &:before {
@@ -128,8 +128,8 @@
 /* search */
 .b-header__search {
     position: absolute !important;
-	z-index: 1;
-	top: 0;
+    z-index: 1;
+    top: 0;
     right: 0;
 
     display: inline-block;
@@ -140,47 +140,47 @@
 /* search end */
 
 .b-header_mode_search.b-header_animation_off {
-	/* animations begin */
-	.b-header__main,
-	.b-header__link-search {
-		visibility: hidden;
-	}
-	/* animations end */
+    /* animations begin */
+    .b-header__main,
+    .b-header__link-search {
+        visibility: hidden;
+    }
+    /* animations end */
 }
 
 .b-header_mode_default.b-header_animation_off {
-	.b-header__main,
-	.b-header__link-search {
-		visibility: visible;
-	}
+    .b-header__main,
+    .b-header__link-search {
+        visibility: visible;
+    }
 }
 
 .b-header_mode_search.b-header_animation_on {
-	/* animations begin */
-	.b-header__main,
-	.b-header__link-search {
-		animation-name: fadeOut;
-	}
-	/* animations end */
+    /* animations begin */
+    .b-header__main,
+    .b-header__link-search {
+        animation-name: fadeOut;
+    }
+    /* animations end */
 }
 
 .b-header_mode_default.b-header_animation_on {
-	.b-header__main,
-	.b-header__link-search {
-		animation-name: fadeIn;
-	}
+    .b-header__main,
+    .b-header__link-search {
+        animation-name: fadeIn;
+    }
 }
 
 @include media-xl {
     .b-header__body {
-	    box-sizing: border-box;
+        box-sizing: border-box;
         width: 100%;
-	    padding: 0 40px;
+        padding: 0 40px;
     }
 
-	.b-header__link-search {
-		left: 40px;
-	}
+    .b-header__link-search {
+        left: 40px;
+    }
 }
 
 @include media-l {
@@ -191,12 +191,14 @@
 
 @include media-s {
 
-	.b-header {
-        height: 55px;
-
-		text-align: left;
+    .b-header {
+        text-align: left;
     }
 
+    .b-header__body {
+        height: 55px;
+    }
+    
     .b-header__wrap {
         margin-top: 12px;
     }

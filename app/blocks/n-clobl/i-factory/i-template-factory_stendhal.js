@@ -2,6 +2,7 @@ goog.provide('sm.iFactory.TemplateFactoryStendhal');
 goog.provide('sm.iFactory.TemplateFactoryStendhal.INSTANCE');
 
 goog.require('cl.iFactory.TemplateFactory');
+goog.require('sm.bBanner.Template');
 goog.require('sm.bHeader.Template');
 goog.require('sm.gAuthSocial.TemplateStendhal');
 goog.require('sm.gAuthSocialModal.TemplateStendhal');
@@ -69,6 +70,10 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'header',
             sm.bHeader.Template.base
+        )
+        .setTemplateListItem(
+            'banner',
+            sm.bBanner.Template.banner
         );
 };
 goog.inherits(sm.iFactory.TemplateFactoryStendhal, cl.iFactory.TemplateFactory);
