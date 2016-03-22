@@ -1,6 +1,7 @@
 goog.provide('sm.gModal.ViewStendhal');
 
 goog.require('cl.gModal.View');
+goog.require('goog.events');
 
 
 /**
@@ -29,6 +30,14 @@ goog.scope(function() {
     };
 
     /**
+     * Event enum
+     * @enum {string}
+     */
+    View.Event = {
+        CLOSE: 'close'
+    };
+
+    /**
      * @override
      * @param {Element} element
      */
@@ -36,5 +45,59 @@ goog.scope(function() {
         goog.base(this, 'decorateInternal', element);
 
         this.dom.closer = this.getElementByClass(View.CssClass.CLOSER);
+    };
+
+    /**
+     * @override
+     */
+    View.prototype.enterDocument = function() {
+        goog.base(this, 'enterDocument');
+
+        goog.events.listen(
+            this.dom.closer,
+            goog.events.EventType.CLICK,
+            this.onCloserClick_,
+            false,
+            this
+        );
+
+        goog.events.listen(
+            this.dom.closer,
+            goog.events.EventType.TOUCHEND,
+            this.onCloserClick_,
+            false,
+            this
+        );
+    };
+
+    /**
+     * @override
+     */
+    View.prototype.exitDocument = function() {
+        oog.base(this, 'exitDocument');
+
+        goog.events.unlisten(
+            this.dom.closer,
+            goog.events.EventType.CLICK,
+            this.onCloserClick_,
+            false,
+            this
+        );
+
+        goog.events.unlisten(
+            this.dom.closer,
+            goog.events.EventType.TOUCHEND,
+            this.onCloserClick_,
+            false,
+            this
+        );
+    };
+
+    /**
+     * Closer click handler
+     * @private
+     */
+    View.prototype.onCloserClick_ = function() {
+        this.dispatchEvent(View.Event.CLOSE);
     };
 });

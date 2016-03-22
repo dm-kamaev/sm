@@ -1,6 +1,7 @@
 goog.provide('sm.gModal.ModalStendhal');
 
 goog.require('cl.gModal.Modal');
+goog.require('sm.gModal.ViewStendhal');
 
 
 /**
@@ -25,7 +26,8 @@ goog.inherits(sm.gModal.ModalStendhal, cl.gModal.Modal);
 
 
 goog.scope(function() {
-    var Modal = sm.gModal.ModalStendhal;
+    var Modal = sm.gModal.ModalStendhal,
+        View = sm.gModal.ViewStendhal;
 
     /**
      * @override
@@ -33,8 +35,8 @@ goog.scope(function() {
     Modal.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
         this.getHandler().listen(
-            this.getView().getDom().closer,
-            goog.events.EventType.CLICK,
+            this.getView(),
+            View.Event.CLOSE,
             this.hide
         );
     };
