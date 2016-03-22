@@ -53,25 +53,13 @@ goog.scope(function() {
     View.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
 
-        goog.events.listen(
-            this.dom.closer,
-            goog.events.EventType.CLICK,
-            this.onCloserClick_,
-            false,
-            this
-        );
+        var clickEvent = document.ontouchstart ?
+            goog.events.EventType.TOUCHSTART :
+            goog.events.EventType.CLICK;
 
         goog.events.listen(
             this.dom.closer,
-            goog.events.EventType.TOUCHSTART,
-            this.onCloserClick_,
-            false,
-            this
-        );
-
-        goog.events.listen(
-            this.dom.closer,
-            goog.events.EventType.TOUCHEND,
+            clickEvent,
             this.onCloserClick_,
             false,
             this
@@ -82,27 +70,15 @@ goog.scope(function() {
      * @override
      */
     View.prototype.exitDocument = function() {
-        oog.base(this, 'exitDocument');
+        goog.base(this, 'exitDocument');
+
+        var clickEvent = document.ontouchstart ?
+            goog.events.EventType.TOUCHSTART :
+            goog.events.EventType.CLICK;
 
         goog.events.unlisten(
             this.dom.closer,
-            goog.events.EventType.CLICK,
-            this.onCloserClick_,
-            false,
-            this
-        );
-
-        goog.events.unlisten(
-            this.dom.closer,
-            goog.events.EventType.TOUCHSTART,
-            this.onCloserClick_,
-            false,
-            this
-        );
-
-        goog.events.unlisten(
-            this.dom.closer,
-            goog.events.EventType.TOUCHEND,
+            clickEvent,
             this.onCloserClick_,
             false,
             this
