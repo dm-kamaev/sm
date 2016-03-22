@@ -1,7 +1,10 @@
 goog.provide('sm.gModal.ViewStendhal');
 
 goog.require('cl.gModal.View');
+goog.require('goog.dom.classes');
 goog.require('goog.events');
+goog.require('goog.labs.userAgent.device');
+
 
 
 /**
@@ -26,7 +29,8 @@ goog.scope(function() {
      * @enum {string}
      */
     View.CssClass = {
-        CLOSER: 'g-modal__close-button'
+        CLOSER: 'g-modal__close-button',
+        CLOSER_HOVER_ENABLE: 'g-modal__close-button_hover_enable'
     };
 
     /**
@@ -45,6 +49,13 @@ goog.scope(function() {
         goog.base(this, 'decorateInternal', element);
 
         this.dom.closer = this.getElementByClass(View.CssClass.CLOSER);
+
+        if (goog.labs.userAgent.device.isDesktop()) {
+            goog.dom.classes.add(
+                this.dom.closer,
+                View.CssClass.CLOSER_HOVER_ENABLE
+            );
+        }
     };
 
     /**
@@ -53,13 +64,9 @@ goog.scope(function() {
     View.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
 
-        var clickEvent = document.ontouchstart ?
-            goog.events.EventType.TOUCHSTART :
-            goog.events.EventType.CLICK;
-
         goog.events.listen(
             this.dom.closer,
-            clickEvent,
+            goog.events.EventType.CLICK,
             this.onCloserClick_,
             false,
             this
@@ -72,13 +79,9 @@ goog.scope(function() {
     View.prototype.exitDocument = function() {
         goog.base(this, 'exitDocument');
 
-        var clickEvent = document.ontouchstart ?
-            goog.events.EventType.TOUCHSTART :
-            goog.events.EventType.CLICK;
-
         goog.events.unlisten(
             this.dom.closer,
-            clickEvent,
+            goog.events.EventType.CLICK,
             this.onCloserClick_,
             false,
             this
