@@ -20,12 +20,11 @@
  */
 {template .base autoescape="strict" kind="html"}
     <div class="b-popular-schools">
-		    <div class="b-popular-schools__title">популярные школы</div>
+        <div class="b-popular-schools__title">популярные школы</div>
         {foreach $school in $params?.popularSchools}
             <a class="b-popular-schools__school-link{sp}
                       {$params?.config?.popularSchool?.customClasses ?: ''}"
-               href="/school/{$school.url}"
-               target="_blank">
+               href="/school/{$school.url}">
                 <div class="b-popular-schools__school
                         {if isLast($school)}{sp}b-popular-schools__school_last{/if}">
                     <div class="b-popular-schools__school-rating">
@@ -51,6 +50,9 @@
                                         'renderParams': [
                                             'data': [
                                                 'type': 'metro'
+                                            ],
+                                            'config': [
+                                                'customClasses': ['b-popular-schools__metro-icon']
                                             ]
                                         ]
                                     ]/}
@@ -69,5 +71,5 @@
                 </div>
             </a>
         {/foreach}
-	  </div>
+    </div>
 {/template}

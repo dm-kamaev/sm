@@ -45,6 +45,15 @@
 .g-textarea.g-textarea_stendhal.g-textarea_not-valid {
 	.g-textarea__textarea,
 	.g-textarea__text-container {
-		outline: 4px solid #e2332a;
+		box-sizing: border-box;
+
+		border: 2px solid #e2332a;
+	}
+}
+
+.g-textarea.g-textarea_stendhal.g-textarea_min-height_small {
+	.g-textarea__textarea,
+	.g-textarea__text-container {
+		min-height: 60px;
 	}
 }

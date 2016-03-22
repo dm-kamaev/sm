@@ -1,0 +1,68 @@
+{namespace sm.bBanner.Template}
+
+
+/**
+ * Constructor
+ * @param params ?{
+ *     data: ?{
+ *         textXl: ?string,
+ *         textS: ?string
+ *     }
+ * }
+ * @extends cl.iControl.Template
+ * @constructor
+ */
+{template .banner}
+    {call .init data="all"/}
+{/template}
+
+/**
+ * Body
+ * @param params ?{
+ *     data: ?{
+ *         textXl: ?string,
+ *         textS: ?string
+ *     }
+ * }
+ * @override
+ */
+{template .body autoescape="strict" kind="html"}
+    <div class="{call .rootClass/}">
+        <div class="{call .rootClass/}__body">
+            <div class="{call .rootClass/}__text {call .rootClass/}__text_size-xl">
+                {$params?.data?.textXl}
+            </div>
+            <div class="{call .rootClass/}__text {call .rootClass/}__text_size-s">
+                {$params?.data?.textS}
+            </div>
+        </div>
+    </div>
+    {call .modal data="all" /}
+{/template}
+
+
+/**
+ * Template feedback modal
+ * @param params {?}
+ */
+{template .modal autoescape="strict" kind="html"}
+    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+        {param params: [
+            'factory': $params.config.stylizationModifier,
+            'type': 'feedback-modal',
+            'renderParams': [
+                'config': [
+                    'url': '/api/user-feedback'
+                ]
+            ]
+        ]/}
+    {/call}
+{/template}
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-banner
+{/template}

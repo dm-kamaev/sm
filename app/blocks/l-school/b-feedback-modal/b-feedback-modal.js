@@ -81,7 +81,8 @@ sm.lSchool.bFeedbackModal.FeedbackModal = function(opt_params) {
 goog.inherits(sm.lSchool.bFeedbackModal.FeedbackModal, goog.ui.Component);
 
 goog.scope(function() {
-    var FeedbackModal = sm.lSchool.bFeedbackModal.FeedbackModal;
+    var FeedbackModal = sm.lSchool.bFeedbackModal.FeedbackModal,
+        Analytics = sm.iAnalytics.Analytics.getInstance();
     /**
      * CSS-class enum
      * @enum {string}
@@ -423,12 +424,29 @@ goog.scope(function() {
 
         if (this.isValid_(data)) {
             var that = this;
+
+            this.setAnalyticsAccountingComments_();
+
             this.clientIdPromise_.then(function(clientId) {
                 that.send_(form, clientId, function() {
                     location.reload();
                 });
             });
         }
+    };
+
+    /**
+     * Set analytics accounting comments
+     * @private
+     */
+    FeedbackModal.prototype.setAnalyticsAccountingComments_ = function() {
+        Analytics.send({
+            'hitType': 'event',
+            'eventCategory': 'review',
+            'eventAction': 'review submit',
+            'eventLabel': this.params_.data.schoolName,
+            'eventValue': 100
+        });
     };
 
     /**
@@ -484,7 +502,7 @@ goog.scope(function() {
         var isValid = false,
             isValidOpt = false,
             userType = this.dropdowns_.userType.getValue();
-            this.dropdowns_.userType.getView().removeNotSelectedModifier();
+            this.dropdowns_.userType.getView().unsetNotValidState();
 
         if (userType != null) {
             isValid = true;
@@ -516,7 +534,7 @@ goog.scope(function() {
             isValidOpt = this.validateComment_(dataToValidate);
 
         } else {
-            this.dropdowns_.userType.getView().addNotSelectedModifier();
+            this.dropdowns_.userType.getView().setNotValidState();
             this.showValidationError_(FeedbackModal.Error.TYPE_REQUIRED);
         }
         return (isValid && isValidOpt);

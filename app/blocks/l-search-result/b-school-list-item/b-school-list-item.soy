@@ -35,7 +35,7 @@
         {call cl.iUtils.Utils.stringify}
             {param json: $params /}
         {/call}
-        " target="_blank" class="b-school-list-item">
+        " class="b-school-list-item">
 
         <div class="b-school-list-item__section">
             <div class="b-school-list-item__name">
@@ -58,7 +58,7 @@
             </div>
         </div>
 
-        {if length($params.metroStations) > 0 or 
+        {if length($params.metroStations) > 0 or
             length($params.ratings) > 0 or
             $params.area.name
         }

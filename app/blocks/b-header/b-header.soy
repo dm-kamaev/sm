@@ -16,6 +16,7 @@
  */
 {template .base autoescape="strict" kind="html"}
     <div class="b-header">
+        {call .banner_ /}
         <div class="b-header__body">
             {if $params?.url}
                 {call .search_ data="all" /}
@@ -60,30 +61,22 @@
  */
 {template .logo_ private="true" autoescape="strict" kind="html"}
     <div class="b-header__title">
-        <span class="b-header__stars">
-            <span class="b-header__star b-header__star_first">t</span>
-            <span class="b-header__star b-header__star_second">t</span>
-            <span class="b-header__star b-header__star_third">t</span>
-            <span class="b-header__star b-header__star_forth">t</span>
-            <span class="b-header__star b-header__star_fifth">t</span>
-        </span>
-        <h1 class="b-header__header">
-            {if $params?.url}
-                <a class="b-header__link" href="{$params.url}">
-                    Школы «мела»
-                </a>
-            {else}
-                Школы «мела»
-            {/if}
-        </h1>
-        <span class="b-header__stars">
-            <span class="b-header__star b-header__star_fifth">t</span>
-            <span class="b-header__star b-header__star_forth">t</span>
-            <span class="b-header__star b-header__star_third">t</span>
-            <span class="b-header__star b-header__star_second">t</span>
-            <span class="b-header__star b-header__star_first">t</span>
-        </span>
+        {if $params?.url}
+            <a class="b-header__link" href="{$params.url}">
+                {call .logoImg_ /}
+            </a>
+        {else}
+            {call .logoImg_ /}
+        {/if}
     </div>
+{/template}
+
+/**
+ * Logo img
+ */
+{template .logoImg_ private="true" autoescape="strict" kind="html"}
+    <img class="b-header__logo" src="/images/b-header/logo.svg"
+        alt="Школы Мела - индивидуальный рейтинг школ">
 {/template}
 
 
@@ -105,4 +98,26 @@
             'inputSize': 'min'
         ]/}
     {/call}
+{/template}
+
+
+/**
+ * Banner
+ */
+{template .banner_ autoescape="strict" kind="html"}
+    <div class="i-layout__banner">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': 'stendhal',
+                'type': 'banner',
+                'renderParams': [
+                    'data': [
+                        'textXl': 'Мы\u00A0хотим создать самый полезный сервис 
+                        для выбора школы. Как думаете, у\u00A0нас\u00A0получилось?',
+                        'textS': 'Мы\u00A0помогли вам выбрать\u00A0школу?'
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
 {/template}

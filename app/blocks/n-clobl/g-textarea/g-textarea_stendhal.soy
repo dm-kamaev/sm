@@ -11,7 +11,8 @@
  *     },
  *     config: {
  *         autoHeight: ?bool,
- *         showCounter: ?bool
+ *         showCounter: ?bool,
+ *         minHeight: ?string
  *     }
  * }}
  * @extends cl.gTextarea.Template
@@ -64,4 +65,19 @@
             ]/}
         {/call}
     </div>
+{/template}
+
+/**
+ * Css classes
+ * @override
+ * @param params ?{}
+ */
+{template .additionalClasses}
+    {if $params?.config?.autoHeight}
+            {sp}
+            g-textarea_auto-height
+    {/if}
+    {if $params?.config?.minHeight}
+        {sp}{call .rootClass/}_min-height_{$params?.config?.minHeight}
+    {/if}
 {/template}

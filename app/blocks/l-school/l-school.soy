@@ -81,7 +81,8 @@
  *     searchText: ?string,
  *     config: ?{
  *         staticVersion: ?string,
- *         year: ?number
+ *         year: ?number,
+ *         authUrl: ?string
  *     }
  * }
  */
@@ -119,7 +120,8 @@
  */
 {template .content_ autoescape="strict" kind="html"}
     {let $data: [
-        'id': $params?.data?.id
+        'id': $params?.data?.id,
+        'schoolName': $params?.data?.schoolName
     ] /}
 
     <div class="l-school"
@@ -241,6 +243,11 @@
             ]/}
         {/call}
 
+        // A necessary measure due to the adaptability
+        {call .extra_ data="all"}
+            {param clone: true /}
+        {/call}
+
         {call .schoolAnchors_}
             {param params: [
                 'data': [
@@ -250,12 +257,14 @@
             ]/}
         {/call}
 
-        {call .authSocial_/}
-
-        // A necessary measure due to the adaptability
-        {call .extra_ data="all"}
-            {param clone: true /}
+        {call .authSocial_}
+            {param params: [
+                'authUrl': $params?.config?.authUrl
+            ]/}
         {/call}
+
+        {call .modalInaccuracy_ data="all" /}
+
     </div>
 {/template}
 
@@ -284,10 +293,41 @@
             </a>
         {/if}
     </div>
+    <div class="l-school__link l-school__link_inaccuracy">
+        {call sm.bLink.Template.base}
+            {param params: [
+                'data': [
+                    'name': 'Сообщить о неточности'
+                ],
+                'theme': 'attention'
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+/**
+ * Template feedback modal
+ */
+{template .modalInaccuracy_ private="true"}
+    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+        {param params: [
+            'factory': 'stendhal',
+            'type': 'feedback-modal',
+            'renderParams': [
+                'config': [
+                    'type': 'mistake',
+                    'url': '/api/user-feedback'
+                ]
+            ]
+        ]/}
+    {/call}
 {/template}
 
 /**
  * Auth modal
+ * @param params {
+ *     authUrl: ?string
+ * }
  */
 {template .authSocial_ private="true"}
     {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
@@ -298,15 +338,11 @@
                     'socials': [
                         [
                             'type': 'fb',
-                            'url': 'http://localhost:1992/test/social'
+                            'url': $params?.authUrl + '?type=fb'
                         ],
                         [
                             'type': 'vk',
-                            'url': 'http://localhost:1992/test/social'
-                        ],
-                        [
-                            'type': 'gp',
-                            'url': 'http://localhost:1992/test/social'
+                            'url': $params?.authUrl + '?type=vk'
                         ]
                     ]
                 ]

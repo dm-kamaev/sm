@@ -60,6 +60,13 @@ sm.lSchool.School = function(opt_params) {
      * @private
      */
     this.isRegistrated_ = false;
+
+    /**
+     * Modal inaccuracy instance
+     * @type {sm.gModal.ModalFeedback}
+     * @private
+     */
+    this.modalInaccuracy_ = null;
 };
 goog.inherits(sm.lSchool.School, goog.ui.Component);
 
@@ -86,7 +93,8 @@ goog.scope(function() {
         'FEEDBACK_BUTTON': 'g-button_feedback-opener',
         'RATING': 'b-rating',
         'COMMENTS': 'b-comments',
-        'FEEDBACK_LINK': 'l-school__comments-placeholder-link'
+        'FEEDBACK_LINK': 'l-school__comments-placeholder-link',
+        'INACCURACY_LINK': 'l-school__link_inaccuracy'
     };
 
     /**
@@ -149,6 +157,12 @@ goog.scope(function() {
         }
 
         handler.listen(
+            this.elements_.inaccuracyLink,
+                goog.events.EventType.CLICK,
+                this.onClickInaccuracyLink_
+            );
+
+        handler.listen(
             this.score_,
             Score.Event.PLACE_COMMENT_CLICK,
             this.onClick_
@@ -186,6 +200,14 @@ goog.scope(function() {
     };
 
     /**
+     * onClick event
+     * @private
+     */
+    School.prototype.onClickInaccuracyLink_ = function() {
+        this.modalInaccuracy_.show();
+    };
+
+    /**
      * adds children
      * @private
      */
@@ -193,6 +215,7 @@ goog.scope(function() {
         this.initModal_()
             .initScore_()
             .initAuthSocial_()
+            .initModalInaccuracy_()
             .initComponents_(FoldList)
             .initComponents_(DBlockRatings)
             .initComponents_(Map)
@@ -242,7 +265,8 @@ goog.scope(function() {
     School.prototype.initModal_ = function() {
         this.modal_ = new FeedbackModal({
             data: {
-                url: this.createCommentUrl_()
+                url: this.createCommentUrl_(),
+                schoolName: this.params_.schoolName
             }
         });
         this.addChild(this.modal_);
@@ -260,6 +284,21 @@ goog.scope(function() {
         this.authSocial_ = factory.decorate(
             'auth-social-modal',
             this.getElementByClass(AuthSocialModalView.CssClass.ROOT),
+            this
+        );
+
+        return this;
+    };
+
+    /**
+     * Modal inaccuracy initialization
+     * @return {sm.lSchool.School}
+     * @private
+     */
+    School.prototype.initModalInaccuracy_ = function() {
+        this.modalInaccuracy_ = factory.decorate(
+            'feedback-modal',
+            this.getElementByClass(cl.gModal.View.CssClass.ROOT),
             this
         );
 
@@ -298,6 +337,9 @@ goog.scope(function() {
             ),
             rating: this.getElementByClass(
                 sm.lSchool.School.CssClass.RATING
+            ),
+            inaccuracyLink: this.getElementByClass(
+                sm.lSchool.School.CssClass.INACCURACY_LINK
             )
         };
     };

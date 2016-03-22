@@ -1,0 +1,345 @@
+{namespace sm.gModal.TemplateFeedback}
+
+/**
+ * Feedback modal template
+ * @param? params {{
+ *     data: {
+ *     }
+ *     config: {
+ *        type: ?string,
+ *        url: ?string
+ *     }
+ * }}
+ * @extends sm.gModal.TemplateStendhal
+ * @constructor
+ * @doc
+ */
+{template .modal}
+    {call .init data="all" /}
+{/template}
+
+/**
+ * Content
+ * @param? params {{
+ *     data: {
+ *     }
+ *     config: {
+ *        type: string
+ *     }
+ * }}
+ * @override
+ */
+{template .content}
+    {call .closer data="all"/}
+
+    <form class="{call .rootClass/}__form-content"
+         method="POST"
+         action="{if $params?.config?.url}
+                {$params?.config?.url}
+                {$params?.config?.type ?
+                '?type=' + $params?.config?.type :
+                '?type=opinion'}
+         {else}
+            ''
+         {/if}">
+
+        {call .feedbackHeader_ data="all" /}
+
+        {call .description_ data="all" /}
+
+        {call .inputFields_ data="all" /}
+
+        {call .submitButton_ data="all" /}
+
+        {call .errorArea_ /}
+    </form>
+{/template}
+
+/**
+ * Feedback header template
+ * @param? params {{
+ *     config: {
+ *        type: string
+ *     }
+ * }}
+ */
+{template .feedbackHeader_}
+    {let $headerContent kind="html"}
+        {if $params?.config?.type == 'mistake'}
+            Сообщить о&nbsp;неточности
+        {else}
+            Ваше мнение
+        {/if}
+    {/let}
+
+    <div class="{call .rootClass/}__section{sp}
+                {call .rootClass/}__section_header">
+        <div class="{call .rootClass/}__header-text">
+            {$headerContent}
+        </div>
+    </div>
+{/template}
+
+/**
+ * Feedback description template
+ * @param? params {{
+ *     config: {
+ *        type: string
+ *     }
+ * }}
+ */
+{template .description_}
+    {let $descriptionContent kind="html"}
+        {if $params?.config?.type == 'mistake'}
+            С&nbsp;помощью этой формы вы&nbsp;можете предложить редакторам Школ Мела изменить или дополнить информацию о&nbsp;школе
+        {else}
+            Расскажите, помогли&nbsp;ли Школы Мела найти хорошую школу для вашего ребёнка или по-новому посмотреть на&nbsp;школу, где он&nbsp;учится сейчас.
+        {/if}
+    {/let}
+
+    <div class="{call .rootClass/}__section{sp}
+                {call .rootClass/}__section_description">
+            <div class="{call .rootClass/}__description-text">
+                {$descriptionContent}
+            </div>
+    </div>
+{/template}
+
+/**
+  * Submit button template
+  * @param? params {{
+  *     config: {
+  *        type: string
+  *     }
+  * }}
+  */
+{template .submitButton_}
+    <div class="{call .rootClass/}__section{sp}
+        {call .rootClass/}__section_submit">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': $params?.config?.stylizationModifier,
+                'type': 'button',
+                'renderParams': [
+                    'data': [
+                        'content': 'Отправить'
+                    ],
+                    'config': [
+                        'theme': 'sienna'
+                    ]
+                ]
+            ]/}
+        {/call}
+</div>
+{/template}
+
+/**
+  * Validation error area template
+  */
+{template .errorArea_}
+    <div class="{call .rootClass/}__section{sp}
+        {call .rootClass/}__section_validation-errors">
+    </div>
+{/template}
+
+
+ /**
+  * Feedback input fields template
+  * @param? params {{
+  *     config: {
+  *        stylizationModifier: string
+  *     }
+  * }}
+  */
+{template .inputFields_}
+    <div class="{call .rootClass/}__section{sp}
+        {call .rootClass/}__section_input-fields">
+
+        {call .nameInput_ data="all" /}
+
+        {call .emailInput_ data="all" /}
+
+        {call .themeDropdown_ data="all" /}
+
+        {call .textArea_ data="all" /}
+    </div>
+{/template}
+
+/**
+ * Name input template
+ * @param? params {{
+ *     config: {
+ *        stylizationModifier: string
+ *     }
+ * }}
+ */
+{template .nameInput_}
+     <div class="{call .rootClass/}__input-field{sp}
+         {call .rootClass/}__input-field_name">
+         <div class="{call .rootClass/}__control-name">Ваше имя</div>
+         <div class="{call .rootClass/}__control">
+             {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+                 {param params: [
+                     'factory': $params.config.stylizationModifier,
+                     'type': 'input',
+                     'renderParams': [
+                         'data': [
+                             'placeholder': 'Ваше имя',
+                             'name': 'name'
+                         ],
+                         'config': [
+                             'validations': ['notEmpty']
+                         ]
+                     ]
+                 ]/}
+             {/call}
+         </div>
+     </div>
+{/template}
+
+/**
+ * Email input template
+ * @param? params {{
+ *     config: {
+ *        stylizationModifier: string
+ *     }
+ * }}
+ */
+{template .emailInput_}
+    <div class="{call .rootClass/}__input-field{sp}
+                {call .rootClass/}__input-field_email">
+        <div class="{call .rootClass/}__control-name">Ваш e-mail</div>
+        <div class="{call .rootClass/}__control">
+            {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+                {param params: [
+                    'factory': $params?.config?.stylizationModifier,
+                    'type': 'input',
+                    'renderParams': [
+                        'data': [
+                            'placeholder': 'Ваш e-mail',
+                            'name': 'email'
+                        ],
+                        'config': [
+                            'validations':  ['email', 'notEmpty']
+                        ]
+                    ]
+                ]/}
+            {/call}
+        </div>
+    </div>
+{/template}
+
+/**
+ * Dropdown field template
+ * @param? params {{
+ *     config: {
+ *        type: string,
+ *        stylizationModifier: string
+ *     }
+ * }}
+ */
+{template .themeDropdown_}
+
+    {let $themes: [
+        'opinion': [
+            ['label': 'Мнение о сервисе'],
+            ['label': 'Не могу найти свою школу'],
+            ['label': 'Ошибка на сайте'],
+            ['label': 'Неточные данные']
+        ],
+        'mistake': [
+            ['label': 'Описание и особенности'],
+            ['label': 'Другие данные'],
+            ['label': 'Контактные данные'],
+            ['label': 'Результаты экзаменов и олимпиад'],
+            ['label': 'Дополнительные занятия и профили']
+        ]
+    ]/}
+
+
+
+    <div class="{call .rootClass/}__input-field{sp}
+                {call .rootClass/}__input-field_theme">
+        <div class="{call .rootClass/}__control-name">Выберите тему</div>
+        <div class="{call .rootClass/}__control">
+            {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+                {param params: [
+                    'factory': $params?.config?.stylizationModifier,
+                    'type': 'dropdown-select',
+                    'renderParams': [
+                        'data': [
+                            'listItems': $params.config.type  == 'mistake'  ?
+                            $themes.mistake :
+                            $themes.opinion,
+                            'defaultOpenerText': 'Выберите тему'
+                        ],
+                        'config': [
+                            'iconSprite': 'opener-arrow',
+                            'textSize': 'small',
+                            'iconOffset': 'small',
+                            'indent': 'small',
+                            'usePlaceholder': true
+                        ]
+                    ]
+                ]/}
+            {/call}
+        </div>
+    </div>
+{/template}
+
+/**
+ * Textarea template
+ * @param? params {{
+ *     config: {
+ *        stylizationModifier: ?string
+ *     }
+ * }}
+ */
+{template .textArea_}
+    <div class="{call .rootClass/}__input-field{sp}
+                {call .rootClass/}__input-field_text">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': $params?.config?.stylizationModifier,
+                'type': 'textarea',
+                'renderParams': [
+                    'data': [
+                        'placeholder': 'Сообщение',
+                        'name': 'text',
+                        'maxLength': 750
+                    ],
+                    'config': [
+                        'autoHeight': true,
+                        'showCounter': true,
+                        'minHeight': 'small'
+                    ]
+                ]
+            ]/}
+        {/call}
+        </div>
+{/template}
+
+/**
+ * Css classes
+ * @override
+ */
+{template .additionalClasses}
+    i-utils__hidden{sp}
+    {call .rootClass/}_feedback
+{/template}
+
+/**
+ * @override
+ * @param? params {{
+ *     config: {
+ *         type: ?string
+ *     }
+ * }}
+ */
+{template .attributes kind="attributes"}
+    {let $data: [
+        'type': $params?.config?.type ?: 'opinion'
+    ]/}
+    data-params="{call goog.json.serialize data="$data" /}"
+{/template}
+

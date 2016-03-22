@@ -8,7 +8,6 @@ var Letter = require('../../../node_modules/nodules/mail').Letter;
 var transporterGenerator =
     require('../../../node_modules/nodules/mail').TransporterGenerator;
 var config = require('../../../app/config').config;
-var emailConfig = config.emailNotifier;
 
 var services = require('../../../app/components/services').all;
 
@@ -19,8 +18,8 @@ class newCommentNotifier {
     constructor() {}
 
     start() {
-        var email = emailConfig.email,
-            domain = emailConfig.domain;
+        var email = config.emailNotifier.email,
+            domain = config.url.protocol + '://' + config.url.host;
 
         var transporter = transporterGenerator.createSMTPTransporter({
             debug: true,
@@ -42,7 +41,7 @@ class newCommentNotifier {
                 'Важно: спорный комментарий' :
                 'Новый комментарий на Школах Мела';
 
-            var link = domain + 'school/' + school.url;
+            var link = domain + '/school/' + school.url;
 
             letterText += link;
             letterText += ' был добавлен комментарий с id = ';

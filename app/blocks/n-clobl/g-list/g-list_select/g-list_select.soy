@@ -6,11 +6,13 @@
  *     data: {
  *         items: list<{
  *             label: ?string,
- *             openerText: ?string
+ *             text: ?string
  *         }>,
  *         selectedItemId: ?number,
  *         config: [
- *              color: ?string
+ *              color: ?string,
+ *              textSize: ?string
+ *              indent: ?string
  *         ]
  *     }
  * }}
@@ -49,5 +51,11 @@
     {call .rootClass/}_select
     {if $params?.config?.color}
         {sp}{call .rootClass/}_{$params.config.color}-color
+    {/if}
+    {if $params?.config?.textSize}
+        {sp}{call .rootClass/}_text-{$params.config.textSize}
+    {/if}
+    {if $params?.config?.indent}
+        {sp}{call .rootClass/}_indent-{$params?.config?.indent}
     {/if}
 {/template}

@@ -2,6 +2,7 @@ goog.provide('sm.iFactory.TemplateFactoryStendhal');
 goog.provide('sm.iFactory.TemplateFactoryStendhal.INSTANCE');
 
 goog.require('cl.iFactory.TemplateFactory');
+goog.require('sm.bBanner.Template');
 goog.require('sm.bHeader.Template');
 goog.require('sm.gAuthSocial.TemplateStendhal');
 goog.require('sm.gAuthSocialModal.TemplateStendhal');
@@ -10,6 +11,7 @@ goog.require('sm.gDropdown.DropdownSelectTemplate');
 goog.require('sm.gHint.TemplateStendhal');
 goog.require('sm.gInput.DigitInputTemplate');
 goog.require('sm.gList.SelectTemplate');
+goog.require('sm.gModal.TemplateFeedback');
 goog.require('sm.gModal.TemplateStendhal');
 goog.require('sm.gTab.TemplateStendhal');
 goog.require('sm.gTextarea.TemplateStendhal');
@@ -36,6 +38,10 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'modal',
             sm.gModal.TemplateStendhal.modal
+        ).
+        setTemplateListItem(
+            'feedback-modal',
+            sm.gModal.TemplateFeedback.modal
         )
         .setTemplateListItem(
             'dropdown-select',
@@ -64,6 +70,10 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'header',
             sm.bHeader.Template.base
+        )
+        .setTemplateListItem(
+            'banner',
+            sm.bBanner.Template.banner
         );
 };
 goog.inherits(sm.iFactory.TemplateFactoryStendhal, cl.iFactory.TemplateFactory);

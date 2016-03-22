@@ -8,14 +8,16 @@
  *        staticText: string, - text in opener, which not changes
  *        listItems: list<[
  *            label: ?<string>,
- *            openerText: ?<string> - optional field
+ *            text: ?<string> - optional field
  *        ]>,
  *        selectedItemId: number
  *     }
  *     config: {
  *        usePlaceholder: boolean,
  *        iconSprite: ?string,
- *        theme: ?string
+ *        theme: ?string,
+ *        textSize: ?string,
+ *        indent: ?string
  *     }
  * }}
  * @extends cl.gDropdown.Template
@@ -34,13 +36,15 @@
  *         staticText: string,
  *         listItems: list<[
  *             label: ?<string>,
- *             openerText: ?<string> - optional field
+ *             text: ?<string> - optional field
  *         ]>,
  *         selectedItemId: number
  *     }
  *     config: {
  *         usePlaceholder: boolean
  *         iconSprite: ?string,
+ *         textSize: ?string,
+ *         indent: ?string
  *         stylizationModifier: ?string
  *     }
  * }}
@@ -95,7 +99,9 @@
  *     }
  *     config: {
  *         theme: ?string,
- *         color: ?string
+ *         color: ?string,
+ *         textSize: ?string,
+ *         indent: ?string
  *     }
  * }}
  */
@@ -111,7 +117,9 @@
                 ],
                 'config': [
                     'theme': $params?.config?.theme,
-                    'color': $params?.config?.color
+                    'color': $params?.config?.color,
+                    'textSize': $params?.config?.textSize,
+                    'indent': $params?.config?.indent
                 ]
             ]
         ]/}
@@ -133,5 +141,8 @@
     {/if}
     {if $params?.config?.iconOffset}
         {sp}{call .rootClass/}_{$params.config.iconOffset}-icon-offset
+    {/if}
+    {if $params?.config?.indent}
+        {sp}{call .rootClass/}_indent-{$params?.config?.indent}
     {/if}
 {/template}

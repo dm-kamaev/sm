@@ -7,7 +7,7 @@
 .b-search__fader {
 	position: fixed;
 	z-index: 10;
-	top: 70px;
+	top: 120px;
 	left: 0;
 
 	visibility: hidden;
@@ -351,11 +351,11 @@
     .b-search_theme_min,
     .b-search_theme_foldable {
         .b-search__item {
-            line-height: 55px;
+            line-height: 50px;
         }
     }
 
 	.b-search__fader {
-		top: 55px;
+		top: 50px;
 	}
 }

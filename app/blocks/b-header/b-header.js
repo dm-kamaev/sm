@@ -32,6 +32,13 @@ sm.bHeader.Header = function(view, opt_params, opt_domHelper) {
      * @private
      */
     this.search_ = null;
+
+    /**
+     * Banner instance
+     * @type {sm.bBanner.Banner}
+     * @private
+     */
+    this.banner_ = null;
 };
 goog.inherits(sm.bHeader.Header, cl.iControl.Control);
 
@@ -83,11 +90,15 @@ goog.scope(function() {
     Header.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
+        var domElements = this.getView().getDom();
+
         if (this.getView().getDom().search) {
             this.search_ = new Search();
             this.addChild(this.search_);
-            this.search_.decorate(this.getView().getDom().search);
+            this.search_.decorate(domElements.search);
         }
+
+        this.banner_ = this.decorateChild('banner', domElements.banner);
     };
 
     /**

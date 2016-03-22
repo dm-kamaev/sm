@@ -78,12 +78,47 @@ goog.scope(function() {
     };
 
     /**
-     * Get current selected value
+     * Get current selected index
      * @public
      * @return {number}
      */
     DropdownSelect.prototype.getValue = function() {
         return this.value_;
+    };
+
+    /**
+     * Get current selected text
+     * @public
+     * @return {string}
+     */
+    DropdownSelect.prototype.getSelectedValue = function() {
+        var selectedIndex = this.getValue();
+        return this.listInstance_.getItemValue(selectedIndex);
+    };
+
+    /**
+     * Return true if dropdown has value,
+     * and set or unset not valid state depends have it value or not
+     * @public
+     * @return {boolean}
+     */
+    DropdownSelect.prototype.validate = function() {
+        var isValid = false,
+            value = this.getValue();
+
+        if (value !== null) {
+            isValid = true;
+        }
+
+        var view = this.getView();
+
+        if (isValid) {
+            view.unsetNotValidState();
+        } else {
+            view.setNotValidState();
+        }
+
+        return isValid;
     };
 
     /**
@@ -99,9 +134,9 @@ goog.scope(function() {
      * @param {number} index
      */
     DropdownSelect.prototype.selectByIndex = function(index) {
-        var openerText = this.listInstance_.getOpenerText(index);
-
         this.value_ = index;
+
+        var openerText = this.listInstance_.getItemValue(index);
 
         var view = this.getView();
         view.removePlaceholderModifier();
@@ -115,6 +150,8 @@ goog.scope(function() {
      */
     DropdownSelect.prototype.onListItemSelect_ = function(event) {
         this.selectByIndex(event['itemId']);
+
+        this.validate();
 
         this.dispatchEvent({
             'type': DropdownSelect.Event.ITEM_SELECT,

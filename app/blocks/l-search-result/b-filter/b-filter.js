@@ -64,6 +64,13 @@ sm.lSearchResult.bFilter.Filter = function(opt_params) {
      * @private
      */
     this.filterSectionElements_ = null;
+
+    /**
+     * Classes input
+     * @type {Element}
+     * @protected
+     */
+    this.inputElements = null;
 };
 goog.inherits(sm.lSearchResult.bFilter.Filter, goog.ui.Component);
 
@@ -85,7 +92,17 @@ goog.scope(function() {
         ICON_ARROW_DOWN: 'g-icon_img_filter-arrow-down',
         ICON_ARROW_UP: 'g-icon_img_filter-arrow-up',
         FILTER_SECTION: 'b-filter__section',
+        INPUT: 'b-filter__input',
         HIDDEN: cl.iUtils.Utils.CssClass.HIDDEN
+    };
+
+    /**
+     * Event enum
+     * @enum {String}
+     */
+    Filter.Event = {
+       CHECKED_FILTER: 'checked-filter',
+       UNCHECKED_FILTER: 'unchecked-filter'
     };
 
     /**
@@ -148,6 +165,12 @@ goog.scope(function() {
                 this.filterSectionHiddenElements_.push(elem);
             }
         }
+
+        this.inputElements = goog.dom.getElementsByClass(
+            Filter.CssClass.INPUT,
+            element
+        );
+
     };
 
     /**
@@ -182,7 +205,76 @@ goog.scope(function() {
                 this.toggleFiltersVisibility_
             );
         }
+
+        for (var i = 0; i < this.inputElements.length; i++) {
+            handler.listen(
+                this.inputElements[i],
+                goog.events.EventType.CLICK,
+                this.onChangeFilterItem
+            );
+        }
     };
+
+    /**
+     * Reset filter
+     * @protected
+     */
+    Filter.prototype.reset = function() {
+        for (var i = 0; i < this.inputElements.length; i++) {
+            this.inputElements[i].checked = false;
+        }
+    };
+
+    /**
+     * Checks for checked radio
+     * @return {boolean}
+     * @protected
+     */
+    Filter.prototype.isCheckedInput = function() {
+        var result = false;
+
+        for (var i = 0; i < this.inputElements.length; i++) {
+            if (this.inputElements[i].checked) {
+                result = true;
+            }
+        }
+        return result;
+    };
+
+    /**
+     * Handler change the filter
+     * @protected
+     */
+    Filter.prototype.onChangeFilterItem = function() {
+        var type = this.isCheckedInput() ? Filter.Event.CHECKED_FILTER :
+            Filter.Event.UNCHECKED_FILTER;
+
+        this.dispatchEvent({
+            'type': type
+        });
+    };
+
+    /**
+     * Hide filter
+     * @private
+     */
+    Filter.prototype.hideFilter_ = function() {
+        goog.dom.classlist.add(
+            this.filtersElement_,
+            Filter.CssClass.HIDDEN
+        );
+
+        goog.dom.classlist.remove(
+            this.showFiltersIconElement_,
+            Filter.CssClass.ICON_ARROW_UP
+        );
+
+        goog.dom.classlist.add(
+            this.showFiltersIconElement_,
+            Filter.CssClass.ICON_ARROW_DOWN
+        );
+    };
+
 
     /**
      * Show hidden filters

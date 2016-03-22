@@ -91,10 +91,10 @@ goog.scope(function() {
     };
 
     /**
-     * Add not selected modifier
+     * Set valid state
      * @public
      */
-    DropdownSelectView.prototype.addNotSelectedModifier = function() {
+    DropdownSelectView.prototype.setNotValidState = function() {
         goog.dom.classes.add(
             this.getElement(),
             DropdownSelectView.CssClass.NOT_SELECTED
@@ -102,10 +102,10 @@ goog.scope(function() {
     };
 
     /**
-     * Remove not selected modifier
+     * Unset valid state
      * @public
      */
-    DropdownSelectView.prototype.removeNotSelectedModifier = function() {
+    DropdownSelectView.prototype.unsetNotValidState = function() {
         goog.dom.classes.remove(
             this.getElement(),
             DropdownSelectView.CssClass.NOT_SELECTED
