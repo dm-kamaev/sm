@@ -21,7 +21,6 @@ const config = require('./config.json');
 const production = !!util.env.production;
 const BLOCKS_DIR = '/app/blocks';
 
-
 gulp.task('doc', function () {
     apidoc({
         src: "./api/modules/",
@@ -158,10 +157,15 @@ gulp.task('evercookie', function() {
     .pipe(gulp.dest(path.join(__dirname + '/public/evercookie/')));;
 });
 
+gulp.task('copy', function() {
+    gulp.src('assets/robots.txt', {base: 'assets/'})
+        .pipe(gulp.dest('public'));
+});
+
 const tasks = function (bool) {
     return bool ?
-        ['soy', 'scripts', 'sprite', 'images', 'fonts', 'styles', 'evercookie'] :
-        ['watch', 'soy', 'scripts', 'sprite', 'images', 'fonts','styles', 'evercookie'];
+        ['soy', 'scripts', 'sprite', 'images', 'fonts', 'styles', 'evercookie', 'copy'] :
+        ['watch', 'soy', 'scripts', 'sprite', 'images', 'fonts','styles', 'evercookie', 'copy'];
 };
 
 gulp.task('build', tasks(true));
