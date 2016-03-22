@@ -63,7 +63,7 @@ goog.scope(function() {
 
         goog.events.listen(
             this.dom.closer,
-            goog.events.EventType.TOUCHEND,
+            goog.events.EventType.TOUCHSTART,
             this.onCloserClick_,
             false,
             this
