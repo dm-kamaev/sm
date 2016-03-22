@@ -28,8 +28,8 @@ goog.scope(function() {
         this.clientId_ = clientId;
 
         this.loadingLibrary_();
-        this.send('pageview');
         this.create_();
+        this.send('pageview');
     };
 
 

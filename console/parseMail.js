@@ -14,7 +14,13 @@ var config = require('../app/config').config;
 const TOKEN = 'a71b-2d1-123f';
 
 class ParseMail {
-    constructor() { }
+    constructor() {
+        /**
+         * Imap connector instance
+         * @private
+         */
+        this.imapConnection_ = null;
+    }
 
     /**
      * Main function
@@ -33,41 +39,57 @@ class ParseMail {
         };
 
         try {
-            var connection = await(imap.connect(mailConfig));
-            var letters = this.getLetters_(connection, config);
-            var commentIdsToDelete = this.processLetters_(letters);
-            this.deleteLetters_(connection, commentIdsToDelete);
+            this.imapConnection_ = await(imap.connect(mailConfig));
+            var letters = await(this.getLetters_());
+            var processedLettersIds = this.processLetters_(letters);
+            this.deleteLetters_(processedLettersIds);
         } catch(e) {
             console.log(e);
         } finally {
-            connection.end();
+            this.imapConnection_.end();
         }
     }
 
     /**
-     * @param {object} connection
-     * @param {object} config
      * @return {array<object>}
      * @private
      */
-    getLetters_(connection, config) {
-        await(connection.openBox('INBOX'));
+    getLetters_() {
+        await(this.imapConnection_.openBox('INBOX'));
 
         var fetchOptions = {
             bodies: ['HEADER', 'TEXT'],
-            markSeen: false
+            markSeen: false,
+            struct: true
         };
 
-        var letters = await(connection.search(['ALL'], fetchOptions));
+        /** get all letters at inbox **/
+        var letters = await(this.imapConnection_.search(['ALL'], fetchOptions));
 
         return letters.map(letter => {
-                return {
-                    uid: letter.attributes.uid,
-                    from: letter.parts[1].body.from[0]
-                        .match(/(?:<)(.+)(?:>)/)[1],
-                    body: mimelib.decodeQuotedPrintable(letter.parts[0].body)
+            return {
+                uid: letter.attributes.uid,
+                from: letter.parts[1].body.from[0]
+                    .match(/(?:<)(.+)(?:>)/)[1],
+                body: this.getLetterBody_(letter)
             };
         });
+    }
+
+    /**
+     * Get letter body
+     * @private
+     */
+    getLetterBody_(letter) {
+        /** Get letter parts from letter header **/
+        var letterParts = imap.getParts(letter.attributes.struct);
+
+        /** Get letter body part to parse **/
+        var content = await(this.imapConnection_.getPartData(
+            letter, letterParts[0]
+        ));
+
+        return await(content.toString('utf8'));
     }
 
     /**
@@ -75,7 +97,7 @@ class ParseMail {
      * @private
      */
     processLetters_(letters) {
-        var deletedComments = [];
+        var processedLetters = [];
         letters.forEach(letter => {
             if (letter.from === config.emailNotifier.email) {
                 var text = letter.body;
@@ -87,11 +109,11 @@ class ParseMail {
 
                 if (commentHost === config.url.host) {
                     this.sendDeleteReq_(commentId);
-                    deletedComments.push(commentId);
+                    processedLetters.push(letter.uid);
                 }
             }
         });
-        return deletedComments;
+        return processedLetters;
     }
 
     /**
@@ -99,9 +121,9 @@ class ParseMail {
      * @param {array<number>} letterIds - letter's ids
      * @private
      */
-    deleteLetters_(connection, letterIds) {
+    deleteLetters_(letterIds) {
         letterIds.forEach(id => {
-            connection.moveMessage(id, '[Gmail]/Trash');
+            this.imapConnection_.moveMessage(id, '[Gmail]/Trash');
         });
     }
 
