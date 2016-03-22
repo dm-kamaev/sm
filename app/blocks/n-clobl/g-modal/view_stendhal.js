@@ -68,6 +68,14 @@ goog.scope(function() {
             false,
             this
         );
+
+        goog.events.listen(
+            this.dom.closer,
+            goog.events.EventType.TOUCHEND,
+            this.onCloserClick_,
+            false,
+            this
+        );
     };
 
     /**
@@ -79,6 +87,14 @@ goog.scope(function() {
         goog.events.unlisten(
             this.dom.closer,
             goog.events.EventType.CLICK,
+            this.onCloserClick_,
+            false,
+            this
+        );
+
+        goog.events.unlisten(
+            this.dom.closer,
+            goog.events.EventType.TOUCHSTART,
             this.onCloserClick_,
             false,
             this
