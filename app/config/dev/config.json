@@ -1,0 +1,8 @@
+{
+    "port": 3000,
+    "environment": "development",
+    "url": {
+        "protocol": "http",
+        "host": "schools1.qa.lan"
+    }
+}

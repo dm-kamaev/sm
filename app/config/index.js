@@ -1,7 +1,7 @@
 'use strict'
 
 var fs = require('fs');
-var  dbConfig = require('./config.db.json');
+var dbConfig = require('./config.db.json');
 var config  = require('./config.json');
 
 var checkEnvironment = function () {
@@ -12,16 +12,9 @@ var checkEnvironment = function () {
         dbConfig = require('./config.local.db.json');
     }
 
-    var env = process.env.NODE_ENV,
-        environment = 'development';
-
-    if (env === 'production' || env === 'prod') {
-        environment = 'production';
-    }
-
     return {
-        db: dbConfig[environment],
-        config: config[environment]
+        db: dbConfig,
+        config: config
     };
 };
 

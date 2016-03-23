@@ -1,6 +1,9 @@
 var soy = require.main.require('./app/components/soy');
 var services = require.main.require('./app/components/services').all;
 const schoolView = require.main.require('./api/modules/school/views/schoolView');
+var urlConfig = require('../../../config').config.url;
+
+const AUTH_URL = urlConfig.protocol + '://' + urlConfig.host + ':3001/oauth';
 
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
@@ -122,10 +125,6 @@ exports.view = async (function(req, res) {
             var school = await(services.school.viewOne(schoolInstance.id));
             services.school.incrementViews(school.id);
             var popularSchools = await(services.school.getPopularSchools());
-            var authUrl = process.env.NODE_ENV === 'prod' ?
-                'http://schools.mel.fm:3001/oauth' :
-                'http://schools1.qa.lan:3001/oauth'; 
-            console.log(authUrl);
 
             res.header('Content-Type', 'text/html; charset=utf-8');
             res.end(
@@ -135,7 +134,7 @@ exports.view = async (function(req, res) {
                         schoolView.default(school, results, popularSchools),
                     config: {
                         year: new Date().getFullYear(),
-                        authUrl: authUrl
+                        authUrl: AUTH_URL
                     }
                 }
             }));
@@ -187,7 +186,7 @@ exports.search = async(function(req, res) {
                   urlArticle: 'http://mel.fm/2015/12/08/change_school/',
                   urlImg: 'images/l-search/b-link-article/article.png',
                   title: '7\u00A0причин, чтобы сменить\u00A0школу',
-                  subtitle: 'Как понять, что вы\u00A0просчитались' + 
+                  subtitle: 'Как понять, что вы\u00A0просчитались' +
                             ' с\u00A0выбором учебного\u00A0заведения'
               },
               config: {
