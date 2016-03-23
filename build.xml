@@ -16,7 +16,7 @@
 
     <!-- Switch to new release -->
     <target name="packaging-switch-release"
-            depends="packaging-switch-release-before, setup-folders, migrate-database, update-search-cache, switch-release-folder, deploy-authorization-config, node-start, initd-install, auth-node-start, init-crontab, packaging-switch-release-after"/>
+            depends="packaging-switch-release-before, setup-folders, migrate-database, update-search-cache, switch-release-folder, build-config, deploy-authorization-config, node-start, initd-install, auth-node-start, init-crontab, packaging-switch-release-after"/>
 
     <!-- Stop previous release -->
     <target name="packaging-stop-release" depends="packaging-stop-release-before, remove-crontab, node-stop, initd-remove, auth-node-stop, remove-release-folder, packaging-stop-release-after"/>
@@ -35,10 +35,16 @@
 
     <target name="deploy-authorization-config">
         <exec executable="${node}" dir="${basedir}/console/">
-            <arg line="ensureLocalConfig ${env}"/>
+            <arg line="buildLocalConfig ${env} ../environment/config"/>
         </exec>
         <copy file="${basedir}/environment/config/authorization.json"
               tofile="${basedir}/node_modules/services/config/config.json" />
+    </target>
+
+    <target name="build-config">
+        <exec executable="${node}" dir="${basedir}/console/">
+            <arg line="buildLocalConfig ${env} ../app/config"/>
+        </exec>
     </target>
 
 </project>
