@@ -10,6 +10,22 @@
     line-height: 18px;
 }
 
-.b-link__attention {
-    color: #ee362c;
+.b-link_attention {
+    color: #ff0000;
+}
+
+.b-link:hover {
+    color: #ff0000;
+}
+
+.b-link_small {
+    font-size: 12px;
+}
+
+.b-link_medium {
+    font-size: 13px;
+}
+
+.b-link_large {
+    font-size: 14px;
 }
