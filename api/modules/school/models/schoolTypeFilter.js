@@ -10,6 +10,9 @@ var SchoolTypeFilter = db.define('SchoolTypeFilter', {
         type: DataType.ARRAY(DataType.STRING),
         values: searchType.toArray()
     },
+    alias: {
+        type: DataType.STRING
+    }
 }, {
     underscored: true,
     tableName: 'school_type_filter',
