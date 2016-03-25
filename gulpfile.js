@@ -5,6 +5,7 @@ const util = require('gulp-util');
 const babel = require('gulp-babel');
 const apidoc = require('gulp-apidoc');
 const fs = require('fs-extra');
+const exec = require('child_process').exec;
 
 const gulpHelper =
     require('./node_modules/clobl/gulp-helper.js')
@@ -162,10 +163,23 @@ gulp.task('copy', function() {
         .pipe(gulp.dest('public'));
 });
 
+gulp.task('localConfig', function() {
+    exec('node ./console/buildLocalConfig local ../app/config && ' +
+    'node ./console/buildLocalConfig local ../environment/config && ' +
+    'mv ./environment/config/authorization.json ./environment/config/config.json',
+    function() {
+        gulp.src(
+            path.join(__dirname, '/environment/config/config.json')
+        ).pipe(
+            gulp.dest(path.join(__dirname, '/node_modules/services/config/'))
+        );
+    });
+});
+
 const tasks = function (bool) {
     return bool ?
         ['soy', 'scripts', 'sprite', 'images', 'fonts', 'styles', 'evercookie', 'copy'] :
-        ['watch', 'soy', 'scripts', 'sprite', 'images', 'fonts','styles', 'evercookie', 'copy'];
+        ['watch', 'soy', 'scripts', 'sprite', 'images', 'fonts','styles', 'evercookie', 'copy', 'localConfig'];
 };
 
 gulp.task('build', tasks(true));

@@ -190,13 +190,12 @@ goog.scope(function() {
         /**
          * TODO: authSocial example
          */
-        /*
-        if (this.isRegistrated_) {
-            this.modal_.show();
-        } else {
-            this.authSocial_.show();
-            this.isRegistrated_ = true;
-        }*/
+        // if (this.isRegistrated_) {
+        //     this.modal_.show();
+        // } else {
+        //     this.authSocial_.show();
+        //     this.isRegistrated_ = true;
+        // }
     };
 
     /**

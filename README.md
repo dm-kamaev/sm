@@ -53,14 +53,62 @@ updateSearch - актуализация поисковой таблицы
 /apidoc - доки по запросам к бэкэнду  
 /debug - удобная форма для теста запросов к бэкэнду. Требует собраные доки (gulp doc)  
 /doc - документация по проекту  
- 
+
+## Микросервис авторизации/сессии ##
+Необходимо создать папки **local** в `app/config` и `environment/config`.  
+В **app/config** создать `config.db.json`, `config.json`,
+а в **environment/config** `authorization.json`.  
+Структура файлов:  
+**config.json**  
+```javascript
+{
+    "port": 3000,
+    "environment": "development",
+    "url": {
+        "protocol": "http",
+        "host": "www21.lan"
+    }
+}
+```  
+**config.db.json**  
+```javascript
+{
+    "host": "localhost",
+    "port": "5432",
+    "username": "gorod",
+    "password": "123qwe",
+    "database": "school_market",
+    "dialect": "postgres"
+}
+```  
+**authorization.json**  
+```javascript
+{
+    "authorization": {
+        "vk": {
+            "clientId": 5334553,
+            "clientSecret": "6OA9JUBAlABYSm6iRFKb",
+            "redirectUri": "http://www21.lan:3000/authorize/vk"
+        },
+        "fb": {
+            "clientId": 525358880980041,
+            "clientSecret": "db1931569be7e254a87ab8aae5ae03db",
+            "redirectUri": "http://www21.lan:3000/authorize/fb"
+        }
+    }
+}
+```  
+Потом запускаем галп, и идём в `./node_modules/services`, делаем `npm i`, и
+можно запускать микросервис. Либо стандартно, можно `forever app.js`.
+
+
 ## Миграции ##
-Теперь все изменения в бд происходят через миграции. Чтобы накатить все 
-непримененные миграции следует выполнить **gulp migrate** на виртуалке. 
+Теперь все изменения в бд происходят через миграции. Чтобы накатить все
+непримененные миграции следует выполнить **gulp migrate** на виртуалке.
 **Внимание:** при первом применении миграций все таблицы в бд будут дропнуты
  и созданы с нуля.
  Если вы хотите каким-либо образом изменить структуру бд вам необходимо помимо изменения модели создать миграцию.
- Миграции лежат в api/modules/\*/migrations/. Число в начале - таймстамп времени создания. 
+ Миграции лежат в api/modules/\*/migrations/. Число в начале - таймстамп времени создания.
  Он влияет на очередность применения миграций к бд, т.е туда руками надо вбить время создания чтобы миграция была последней в списке.
   Инфа по миграциям: http://docs.sequelizejs.com/en/latest/docs/migrations/
 
@@ -73,7 +121,7 @@ updateSearch - актуализация поисковой таблицы
 http://repo.dfarm.lan/db/  
 ###### Как добавить свой ключ на хост и не вводить каждый раз пароль: ######
 1) Убедиться, что у вас есть rsa ключ. Если его нет, то создать: https://help.github.com/articles/generating-ssh-keys/  
-2) Забрать файл с допущенными ключами с хоста: 
+2) Забрать файл с допущенными ключами с хоста:
 `scp uploader@repo.dfarm.lan:~/.ssh/authorized_keys ./`   
 3) Записать туда свой публичный ключ: `cat ~/.ssh/id_rsa.pub >> authorized_keys`  
 4) Закинуть файл с допущенными ключами обратно на сервер: `scp authorized_keys uploader@repo.dfarm.lan:~/.ssh/authorized_keys`  
@@ -101,4 +149,3 @@ Forever пишет такие логи:
 * /opt/school-market/current/runtime/node.forever.log - Forever output
 * /opt/school-market/current/runtime/node.out.log - stdout from app.js
 * /opt/school-market/current/runtime/node.error.log - stderr from app.js
-
