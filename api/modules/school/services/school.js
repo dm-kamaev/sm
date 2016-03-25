@@ -478,7 +478,8 @@ service.typeFilters = async (function() {
     var formattedFilters = schoolTypeFilters.map(filter => {
         return {
             label: filter.name,
-            value: filter.id
+            value: filter.id,
+            alias: filter.alias
         };
     });
     return {

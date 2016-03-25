@@ -327,11 +327,35 @@ exports.generateFilter = function(string) {
 };
 
 
-
+/**
+ * Get all school type filters
+ * @return {Array.<Object>}
+ */
 exports.getTypeFilters = async(function() {
     return await(models.SchoolTypeFilter.findAll());
 });
 
+/**
+ * Get ids of school type filters by their aliases
+ * @param {Array.<string>} aliases
+ * @return {Array.<number>}
+ */
+exports.getTypeIdsByAliases = function(aliases) {
+    var searchParams = {
+        where: {
+            id: {
+                $in: aliases
+            }
+        },
+        attributes: ['id']
+    };
+
+    var schoolTypes = await(models.SchoolTypeFilter.findAll(searchParams));
+
+    return schoolTypes.map((schoolType) => {
+        return schoolType.id;
+    });
+};
 
 /**
  * @param {int} school_id

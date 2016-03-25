@@ -9,6 +9,9 @@ var Subject = db.define('Subject', {
     displayName: {
         type: DataType.STRING,
         field: 'display_name'
+    },
+    alias: {
+        type: DataType.STRING
     }
 }, {
     underscored: true,
