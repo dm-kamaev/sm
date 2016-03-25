@@ -119,7 +119,8 @@ var generateFilters = async(function(params) {
         .map(subject => {
             return {
                 label: subject.displayName,
-                value: subject.id
+                value: subject.id,
+                alias: subject.alias
             };
         });
 
@@ -171,8 +172,30 @@ exports.olympFilters = async (function() {
 exports.listCityResults = async (() => {
     var includeParams = {
         cityResult: true
-    }
+    };
+
     return await (models.Subject.findAll({
         include: sequelizeInclude(includeParams)
     }));
+});
+
+/**
+ * Get subjects id's by aliases
+ * @param {Array.<string>} aliases
+ * @return {Array.<number>}
+ */
+exports.getIdsByAliasses = async ((aliases) => {
+    var searchParams = {
+        where: {
+            alias: {
+                $in: aliases
+            }
+        },
+        attributes: ['id']
+    };
+    var subjects = await(models.Subject.findAll(searchParams));
+
+    return subjects.map((subject) => {
+        return subject.id;
+    });
 });
