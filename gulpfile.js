@@ -159,19 +159,22 @@ gulp.task('evercookie', function() {
 });
 
 gulp.task('copy', function() {
-    gulp.src('assets/robots.txt', {base: 'assets/'})
+    return gulp.src('assets/robots.txt', {base: 'assets/'})
         .pipe(gulp.dest('public'));
 });
 
 gulp.task('localConfig', function() {
-    exec('node ./console/buildLocalConfig local ../app/config && ' +
-    'node ./console/buildLocalConfig local ../environment/config && ' +
-    'mv ./environment/config/authorization.json ./environment/config/config.json',
-    function() {
-        gulp.src(
-            path.join(__dirname, '/environment/config/config.json')
-        ).pipe(
-            gulp.dest(path.join(__dirname, '/node_modules/services/config/'))
+    return new Promise(function(resolve, reject) {
+        exec('node ./console/buildLocalConfig local ../app/config && ' +
+            'node ./console/buildLocalConfig local ../environment/config && ' +
+            'mv ./environment/config/authorization.json ./environment/config/config.json',
+            function() {
+                gulp.src(
+                    path.join(__dirname, '/environment/config/config.json')
+                ).pipe(
+                    gulp.dest(path.join(__dirname, '/node_modules/services/config/'))
+                ).on('end', function() { resolve() });
+            }
         );
     });
 });

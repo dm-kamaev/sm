@@ -56,8 +56,8 @@ updateSearch - актуализация поисковой таблицы
 
 ## Микросервис авторизации/сессии ##
 Необходимо создать папки **local** в `app/config` и `environment/config`.  
-В **app/config** создать `config.db.json`, `config.json`,
-а в **environment/config** `authorization.json`.  
+В **app/config/local** создать `config.db.json`, `config.json`,
+а в **environment/config/local** `authorization.json`.  
 Структура файлов:  
 **config.json**  
 ```javascript
