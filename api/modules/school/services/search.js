@@ -336,11 +336,11 @@ exports.getTypeFilters = async(function() {
 });
 
 /**
- * Get ids of school type filters by their aliases
+ * Get array with ids of school types by array with their aliases
  * @param {Array.<string>} aliases
  * @return {Array.<number>}
  */
-exports.getTypeIdsByAliases = function(aliases) {
+exports.getSchoolTypeIdsByAliases = function(aliases) {
     var searchParams = {
         where: {
             id: {

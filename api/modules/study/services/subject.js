@@ -180,7 +180,7 @@ exports.listCityResults = async (() => {
 });
 
 /**
- * Get subjects id's by aliases
+ * Get array with subjects ids by array with aliases
  * @param {Array.<string>} aliases
  * @return {Array.<number>}
  */
