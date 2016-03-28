@@ -21,4 +21,8 @@
     &:hover {
         background-color: #ffebeb;
     }
+
+    &.g-button_disabled {
+        opacity: 0.5;
+    }
 }

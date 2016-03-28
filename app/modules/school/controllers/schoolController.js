@@ -125,13 +125,26 @@ exports.view = async (function(req, res) {
             var school = await(services.school.viewOne(schoolInstance.id));
             services.school.incrementViews(school.id);
             var popularSchools = await(services.school.getPopularSchools());
+            var user = {
+                data: req.user,
+                isCommented: typeof await(services.userData.checkCredentials(
+                    school.id,
+                    req.cookies.clevverId,
+                    req.user && req.user.id
+                )) !== 'undefined'
+            };
 
             res.header('Content-Type', 'text/html; charset=utf-8');
             res.end(
                 soy.render('sm.lSchool.Template.school', {
                 params: {
                     data:
-                        schoolView.default(school, results, popularSchools),
+                        schoolView.default(
+                            school,
+                            results,
+                            user,
+                            popularSchools
+                        ),
                     config: {
                         year: new Date().getFullYear(),
                         authUrl: AUTH_URL
