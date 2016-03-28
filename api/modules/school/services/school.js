@@ -563,8 +563,14 @@ service.viewOne = function(id) {
 /**
  * @param {number} schoolId
  * @param {object} params
- * @param {array<number> || null} params.score
- * @param {string || null} params.text
+ * @param {array<number>|null} params.score
+ * @param {string|null} params.text
+ * @param {string|null} params.userType
+ * @param {number|null} params.yearGraduate
+ * @param {string|null} params.classType
+ * @param {string|null} params.key
+ * @param {string|null} params.username
+ * @param {number|null} params.userId
  * @return {object{bool ratingCreated, bool commentCreated}}
  */
 service.review = async(function(schoolId, params) {
@@ -584,7 +590,8 @@ service.review = async(function(schoolId, params) {
             yearGraduate: params.yearGraduate,
             classType: params.classType,
             key: params.key,
-            username: params.username
+            username: params.username,
+            userId: params.userId
         };
 
         var userDataInstance = await(services.userData.create(userData));

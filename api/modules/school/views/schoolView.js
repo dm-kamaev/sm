@@ -25,10 +25,13 @@ var schoolView = {};
 /**
  * @param {object} schoolInstance - school instance
  * @param {object} results
+ * @param {object} user
+ * @param {object} user.data
+ * @param {string} user.isCommented
  * @param {?array<object>} opt_popularSchools - school instances
  * @return {object}
  */
-schoolView.default = function(schoolInstance, results, opt_popularSchools) {
+schoolView.default = function(schoolInstance, results, user, opt_popularSchools) {
     addressView.transformSchoolAddress(schoolInstance);
 
     var addresses = services.department.addressesFilter(schoolInstance.addresses),
@@ -74,7 +77,9 @@ schoolView.default = function(schoolInstance, results, opt_popularSchools) {
             olymp: olimpResultView.transformResults(results.olymp)
         },
         reviewCount: schoolInstance.totalScore ?
-            schoolInstance.reviewCount : 0
+            schoolInstance.reviewCount : 0,
+        isCommented: user.isCommented,
+        user: user.data
     };
     if (opt_popularSchools) {
         result.popularSchools = this.popular(opt_popularSchools);
@@ -366,9 +371,9 @@ var getStages = function(departments) {
  * @return {object} contains results count and schools array
  */
 schoolView.list = function(schools, opt_criterion) {
-    var res = {}; 
+    var res = {};
     if (schools.length !== 0) {
-        schools = groupSchools(schools); 
+        schools = groupSchools(schools);
 
         res.countResults = schools[0].countResults;
         res.schools = schools

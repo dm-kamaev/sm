@@ -69,6 +69,7 @@
  *        ]>,
  *        totalScore: number,
  *        reviewCount: number,
+ *        isCommented: bool,
  *        popularSchools: ?list<[
  *            id: ?number,
  *            url: ?string,
@@ -76,7 +77,8 @@
  *            description: ?string,
  *            metro: ?list<string>,
  *            totalScore: ?number
- *        ]>
+ *        ]>,
+ *        user: object
  *     ],
  *     searchText: ?string,
  *     config: ?{
@@ -121,7 +123,9 @@
 {template .content_ autoescape="strict" kind="html"}
     {let $data: [
         'id': $params?.data?.id,
-        'schoolName': $params?.data?.schoolName
+        'schoolName': $params?.data?.schoolName,
+        'isCommented': $params?.data?.isCommented,
+        'user': $params?.data?.user
     ] /}
 
     <div class="l-school"
@@ -222,6 +226,7 @@
  *             place: number,
  *             href: string
  *         }],
+ *         isCommented: bool
  *     }
  * }
  */
@@ -237,7 +242,8 @@
                     'config': [
                         'customClasses': [
                             'g-button_feedback-opener'
-                        ]
+                        ],
+                        'isDisabled': $params?.data?.isCommented
                     ]
                 ]
             ]/}

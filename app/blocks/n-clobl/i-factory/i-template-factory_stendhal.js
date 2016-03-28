@@ -7,6 +7,7 @@ goog.require('sm.bHeader.Template');
 goog.require('sm.gAuthSocial.TemplateStendhal');
 goog.require('sm.gAuthSocialModal.TemplateStendhal');
 goog.require('sm.gButton.TemplateSocialStendhal');
+goog.require('sm.gButton.TemplateStendhal');
 goog.require('sm.gDropdown.DropdownSelectTemplate');
 goog.require('sm.gHint.TemplateStendhal');
 goog.require('sm.gInput.DigitInputTemplate');
@@ -74,6 +75,10 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'banner',
             sm.bBanner.Template.banner
+        )
+        .setTemplateListItem(
+            'button',
+            sm.gButton.TemplateStendhal.button
         );
 };
 goog.inherits(sm.iFactory.TemplateFactoryStendhal, cl.iFactory.TemplateFactory);
