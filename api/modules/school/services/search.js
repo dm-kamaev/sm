@@ -343,7 +343,7 @@ exports.getTypeFilters = async(function() {
 exports.getTypeIdsByAliases = function(aliases) {
     var searchParams = {
         where: {
-            id: {
+            alias: {
                 $in: aliases
             }
         },

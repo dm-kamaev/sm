@@ -264,11 +264,38 @@ exports.createComment = async (function(req, res) {
 exports.search = async (function(req, res) {
     var result = '';
     try {
-        var params = req.query;
-
-        if(params.searchParams) {
+        var params = req.query,
+            searchParams = params.searchParams;
+        
+        if(searchParams) {
             var criterion = params.searchParams.sortType;
+
+            if (searchParams.schoolType) {
+                searchParams.schoolType = await(
+                    services.search.getTypeIdsByAliases(searchParams.schoolType)
+                );
+            }
+
+            if (searchParams.ege) {
+                searchParams.ege = await(
+                    services.subject.getSubjectIdByAliasses(searchParams.ege)
+                );
+            }
+
+            if (searchParams.gia) {
+                searchParams.gia = await(
+                    services.subject.getSubjectIdByAliasses(searchParams.gia)
+                );
+            }
+
+            if (searchParams.olimp) {
+                searchParams.olimp = await(
+                    services.subject.getSubjectIdByAliasses(searchParams.olimp)
+                );
+            }
         }
+
+        console.log('Search parameters ' + JSON.stringify(searchParams));
 
         var schools = await(services.school.list(params));
         result = schoolView.list(schools, criterion);

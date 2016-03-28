@@ -119,8 +119,7 @@ var generateFilters = async(function(params) {
         .map(subject => {
             return {
                 label: subject.displayName,
-                value: subject.id,
-                alias: subject.alias
+                value: subject.alias
             };
         });
 
@@ -184,7 +183,7 @@ exports.listCityResults = async (() => {
  * @param {Array.<string>} aliases
  * @return {Array.<number>}
  */
-exports.getIdsByAliasses = async ((aliases) => {
+exports.getSubjectIdByAliasses = async ((aliases) => {
     var searchParams = {
         where: {
             alias: {
