@@ -1,12 +1,13 @@
 'use strict';
-
 const path = require('path');
 const express = require('express');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const evercookie = require('evercookie');
+const passport = require('passport');
 
-var db = require('./app/components/db');
+const session = require('./app/components/session');
+var configurePassport = require('./app/components/configurePassport');
 const soy = require('./node_modules/clobl/soy').setOptions({
     templateFactory: path.join(
         __dirname,
@@ -43,9 +44,9 @@ app.set('views', path.join(__dirname, 'api-debug'));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 app.set('view engine', 'jade');
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
 app.use(morgan('dev'));
+
+app.use(express.static(path.join(__dirname, '/public')));
 
 app.use(cookieParser());
 app.use(evercookie.backend({
@@ -56,9 +57,12 @@ app.use(evercookie.backend({
     etagPath: '/evercookie/etag',
     cachePath: '/evercookie/cache'
 }));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
-app.use(express.static(path.join(__dirname, '/public')));
-
+app.use(session);
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/', modules.school.router);
 app.use('/', api.user.router);
@@ -88,9 +92,11 @@ async(function() {
     soy.loadFiles(
         paths.map(item => path.join(__dirname, item)),
         function() {
-            app.listen(config.port, function() {
+                app.listen(config.port, function() {
                 console.log('Running at port ' + config.port)
             });
         }
     );
+
+    configurePassport();
 })();

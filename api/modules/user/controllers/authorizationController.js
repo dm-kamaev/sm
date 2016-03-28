@@ -19,15 +19,18 @@ var services = require.main.require('./app/components/services').all;
 exports.authorize = async(function(req, res) {
     var result;
     try {
-        var userUrl = await(services.authorization.getUserUrl({
+        var user = await(services.user.getUserByCode({
             code: req.query.code,
             type: req.params.type
         }));
 
-        result = soy.render('sm.bAuthorizationModal.Template.modal');
+        await(new Promise(function(resolve, reject) {
+            req.logIn(user, function (err) {
+                err ? reject(err) : req.session.save(resolve);
+            });
+        }));
 
-        res.cookie('session_id', 'a34f-' +
-            userUrl.replace(/\D/g, '') + 'fe23');
+        result = soy.render('sm.bAuthorizationModal.Template.modal');
     } catch (error) {
         result = error.message;
     } finally {
