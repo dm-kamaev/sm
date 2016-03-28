@@ -75,13 +75,22 @@
 {template .ratingItem_ autoescape="strict" kind="html"}
     {if $params.items}
         <li class="b-data-block__item">
-            <a class="b-data-block__item-content
-                      b-data-block__item-content_text-color_red">
-                {$params.name}
-            </a>
+            {call sm.bLink.Template.base}
+                {param params: [
+                    'data': [
+                        'name': $params.name
+                    ],
+                    'config': [
+                        'customClasses': 'b-data-block__item-content',
+                        'size': 'large'
+                    ]
+                ]/}
+            {/call}
+
             <div class="b-data-block__number">
                 {length($params.items)}
             </div>
+
             <ul class="b-data-block__list i-utils__hidden">
                 {call .content}
                     {param params: [

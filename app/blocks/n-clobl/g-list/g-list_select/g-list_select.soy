@@ -8,13 +8,14 @@
  *             label: ?string,
  *             text: ?string
  *         }>,
- *         selectedItemId: ?number,
- *         config: [
- *              color: ?string,
- *              textSize: ?string
- *              indent: ?string
- *         ]
- *     }
+ *         selectedItemId: ?number
+ *     },
+ *     config: ?[
+ *          viewType: ?string
+ *          color: ?string,
+ *          textSize: ?string
+ *          indent: ?string
+ *     ]
  * }}
  * @extends cl.gList.Template
  * @constructor
@@ -22,6 +23,93 @@
  */
 {template .list}
     {call .init data="all"/}
+{/template}
+
+/**
+ * Init
+ * @param? params {{
+ *     data: {
+ *         items: list<{
+ *             label: ?string,
+ *             url: ?string
+ *         }>,
+ *         selectedItemId: ?number
+ *     }
+ *     config: ?[
+ *         viewType: ?string
+ *     ]
+ * }}
+ * @override
+ */
+{template .body}
+    {let $selectedItemId: $params?.data?.selectedItemId ?: 0/}
+
+    {if $params?.data?.items}
+        {for $i in range($params.data.items.length)}
+            {let $item: $params.data.items[$i]/}
+
+            {call .listItem}
+                {param params: [
+                    'label': $item.label,
+                    'url': $item.url,
+                    'isSelected': ($i == $selectedItemId),
+                    'viewType': $params?.config?.viewType
+                ]/}
+            {/call}
+        {/for}
+    {/if}
+{/template}
+
+/**
+ * List Item
+ * @param? params {{
+ *     label: ?string,
+ *     url: ?string,
+ *     selectedItemId: ?number,
+ *     viewType: ?string
+ * }}
+ * @override
+ */
+{template .listItem}
+    {if $params?.viewType == 'link'}
+        {call .listItemLink_ data="all" /}
+    {else}
+        {call cl.gList.Template.listItem data="all" /}
+    {/if}
+{/template}
+
+/**
+ * List item template
+ * @param? params {{
+ *     label: ?string,
+ *     url: ?string,
+ *     isSelected: boolean
+ * }}
+ */
+{template .listItemLink_ private="true"}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__item
+
+        {if $params.isSelected}
+            {sp}{call .rootClass/}__item_selected
+        {/if}
+    {/let}
+
+    {let $value kind="html"}
+        {call .value data="all"/}
+    {/let}
+
+    {call sm.bLink.Template.base}
+        {param params: [
+            'data': [
+                'name': $value,
+                'url': $params.url
+            ],
+            'config': [
+                'customClasses': $customClasses
+            ]
+        ]/}
+    {/call}
 {/template}
 
 /**

@@ -73,17 +73,24 @@
                     </div>
                 </div>
 
-                {if $params.href}
-                    <a  class="b-data-block__item-content
-                               b-data-block__item-content_text-color_red"
-                        href="{$params.href}">
-                            {$params.name}
-                     </a>
-                {else}
-                    <div class="b-data-block__item-content">
+                <div class="b-data-block__item-content">
+                    {if $params.href}
+                        {call sm.bLink.Template.base}
+                            {param params: [
+                                'data': [
+                                    'name': $params.name,
+                                    'url': $params.href
+                                ],
+                                'config': [
+                                    'size': 'large'
+                                ]
+                            ]/}
+                        {/call}
+                    {else}
                         {$params.name}
-                    </div>
-                {/if}
+                    {/if}
+                </div>
+
                 {call .hint_/}
             </div>
         </li>
@@ -100,7 +107,13 @@
             Москвы по итогам 2014—2015 учебного года
             <br>
             <div class="b-data-block__hint-href">
-                Подробнее
+                {call sm.bLink.Template.base}
+                    {param params: [
+                        'data': [
+                            'name': 'Подробнее'
+                        ]
+                    ]/}
+                {/call}
                 <div class="b-data-block__hint-href-icon">
                     {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
                         {param params: [

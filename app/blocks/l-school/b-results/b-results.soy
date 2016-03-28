@@ -133,9 +133,9 @@
                                     'selectedItemId': $params.data?.years.length - 1
                                 ],
                                 'config': [
+                                    'viewType': 'link',
                                     'iconSprite': 'sort-arrow',
                                     'theme': 'sort',
-                                    'textSize': 'large',
                                     'iconOffset': 'small'
                                 ]
                             ]
@@ -221,14 +221,25 @@
     <div class="b-results__olymp-diagram">
         {for $i in range($params.data.length)}
             {if $i == $shown}
-                <div class="b-results__show-more-button{sp}
-                    b-results__show-more-button_active">
-                    Развернуть полный список{sp}{sp}
+                {let $linkContent kind="html"}
                     <span class="b-results__olymp-count">
                         {$params.data.length - $shown}
                     </span>
-                </div>
+                {/let}
+
+                {call sm.bLink.Template.base}
+                    {param params: [
+                        'data': [
+                            'name': 'Развернуть полный список  ',
+                            'content': $linkContent
+                        ],
+                        'config': [
+                            'customClasses': 'b-results__show-more-button b-results__show-more-button_active'
+                        ]
+                    ]/}
+                {/call}
             {/if}
+
             <div class="b-results__olymp-item">
                 {$params.data[$i].name} —
                 {if $params.data[$i].winners}
@@ -286,9 +297,9 @@
                                 'selectedItemId': $params.data?.years.length - 1
                             ],
                             'config': [
+                                'viewType': 'link',
                                 'iconSprite': 'sort-arrow',
                                 'theme': 'sort',
-                                'textSize': 'large',
                                 'iconOffset': 'small'
                             ]
                         ]

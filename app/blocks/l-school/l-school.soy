@@ -280,17 +280,15 @@
 {template .schoolAnchors_ private="true"}
     <div class="l-school__anchors">
         {if $params?.data?.comments?.length > 0}
-            <a class="l-school__anchor" href="#comments">
-                Комментарии
-                <spna class="l-school__anchor-value">
-                    {$params.data.comments.length}
-                </span>
-            </a>
+            {call .commentsAnchor_}
+                {param params: [
+                    'sumComments': $params?.data?.comments?.length
+                ]/}
+            {/call}
         {/if}
+
         {if $params?.data?.ratings?.length > 0}
-            <a class="l-school__anchor" href="#results">
-                Результаты олимпиад и экзаменов
-            </a>
+            {call .resultsEgeGiaAnchor_ /}
         {/if}
     </div>
     <div class="l-school__link l-school__link_inaccuracy">
@@ -298,11 +296,53 @@
             {param params: [
                 'data': [
                     'name': 'Сообщить о неточности'
-                ],
-                'theme': 'attention'
+                ]
             ]/}
         {/call}
     </div>
+{/template}
+
+/**
+ * comments anchor
+ * @param? params {
+ *     sumComments: ?number
+ * }
+ */
+{template .commentsAnchor_ private="true"}
+    {let $commentContent kind="html"}
+        <span class="l-school__anchor-value">
+            {$params?.sumComments}
+        </span>
+    {/let}
+    {call sm.bLink.Template.base}
+        {param params:[
+            'data': [
+                'name': 'Комментарии',
+                'url': '#comments',
+                'content': $commentContent,
+            ],
+            'config': [
+                'customClasses': 'l-school__anchor'
+            ]
+        ]/}
+    {/call}
+{/template}
+
+/**
+ * results EGE and GIA anchor
+ */
+{template .resultsEgeGiaAnchor_ private="true"}
+    {call sm.bLink.Template.base}
+        {param params: [
+            'data': [
+                'name': 'Результаты олимпиад и экзаменов',
+                'url': '#results'
+            ],
+            'config': [
+                'customClasses': 'l-school__anchor'
+            ]
+        ]/}
+    {/call}
 {/template}
 
 /**
