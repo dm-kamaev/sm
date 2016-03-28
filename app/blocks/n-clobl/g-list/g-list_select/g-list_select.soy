@@ -48,25 +48,33 @@
         {for $i in range($params.data.items.length)}
             {let $item: $params.data.items[$i]/}
 
-            {if $params?.config?.viewType == 'link'}
-                {call .listItemLink_}
-                    {param params: [
-                        'label': $item.label,
-                        'url': $item.url,
-                        'isSelected': ($i == $selectedItemId)
-                    ]/}
-                {/call}
-
-            {else}
-                {call .listItem}
-                    {param params: [
-                        'label': $item.label,
-                        'url': $item.url,
-                        'isSelected': ($i == $selectedItemId)
-                    ]/}
-                {/call}
-            {/if}
+            {call .listItem}
+                {param params: [
+                    'label': $item.label,
+                    'url': $item.url,
+                    'isSelected': ($i == $selectedItemId),
+                    'viewType': $params?.config?.viewType
+                ]/}
+            {/call}
         {/for}
+    {/if}
+{/template}
+
+/**
+ * List Item
+ * @param? params {{
+ *     label: ?string,
+ *     url: ?string,
+ *     selectedItemId: ?number,
+ *     viewType: ?string
+ * }}
+ * @override
+ */
+{template .listItem}
+    {if $params?.viewType == 'link'}
+        {call .listItemLink_ data="all" /}
+    {else}
+        {call cl.gList.Template.listItem data="all" /}
     {/if}
 {/template}
 

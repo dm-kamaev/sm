@@ -102,7 +102,7 @@
         {/for}
 
         {if $params.data.filters.length > $filToShow}
-            {call .button_}
+            {call .buttonShowMore_}
                 {param params: [
                     'numberHiddenItems': $params.data.filters.length - $filToShow - 1
                 ]/}
@@ -117,7 +117,7 @@
  *     numberHiddenItems: ?number
  * }
  */
-{template .button_ private="true"}
+{template .buttonShowMore_ private="true"}
     {call sm.bLink.Template.base}
         {param params: [
             'data': [

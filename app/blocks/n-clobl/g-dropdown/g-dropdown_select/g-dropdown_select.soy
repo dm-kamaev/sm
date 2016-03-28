@@ -18,7 +18,6 @@
  *        iconSprite: ?string,
  *        theme: ?string,
  *        textSize: ?string,
- *        textStyle: ?string,
  *        indent: ?string
  *     }
  * }}
@@ -47,7 +46,6 @@
  *         viewType: ?string,
  *         iconSprite: ?string,
  *         textSize: ?string,
- *         textStyle: ?string,
  *         indent: ?string
  *         stylizationModifier: ?string
  *     }
@@ -106,7 +104,6 @@
  *         theme: ?string,
  *         color: ?string,
  *         textSize: ?string,
- *         textStyle: ?string,
  *         indent: ?string
  *     }
  * }}
@@ -126,7 +123,6 @@
                     'theme': $params?.config?.theme,
                     'color': $params?.config?.color,
                     'textSize': $params?.config?.textSize,
-                    'textStyle': $params?.config?.textStyle,
                     'indent': $params?.config?.indent
                 ]
             ]
@@ -147,9 +143,6 @@
     {/if}
     {if $params?.config?.textSize}
         {sp}{call .rootClass/}_text-{$params.config.textSize}
-    {/if}
-    {if $params?.config?.textStyle}
-        {sp}{call .rootClass/}_text-style-{$params.config.textStyle}
     {/if}
     {if $params?.config?.iconOffset}
         {sp}{call .rootClass/}_{$params.config.iconOffset}-icon-offset
