@@ -11,7 +11,7 @@ var SubjectView = function() {
  */
 SubjectView.GIA_SORT_LIST = [
     'математика',
-    'русский',
+    'русский язык',
     'обществознание',
     'английский',
     'информатика',
@@ -31,7 +31,6 @@ SubjectView.GIA_SORT_LIST = [
  * @type {string[]}
  */
 SubjectView.EGE_SORT_LIST = [
-    'математика (профильная)',
     'математика',
     'русский язык',
     'обществознание',
@@ -78,6 +77,18 @@ SubjectView.prototype.sorter = function(a, b, type) {
     }
 
     return varA - varB;
+};
+
+
+/**
+ * Take array of instance of subjects and return array of their id
+ * @param {Array.<Object>} subjects
+ * @return {Array.<number>}
+ */
+SubjectView.prototype.getSubjectIds = function(subjects) {
+    return subjects.map((subject) => {
+        return subject.id;
+    });
 };
 
 /**
