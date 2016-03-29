@@ -30,7 +30,6 @@
     "closure-templates": "^20141017.0.1",
     "colors": "^1.1.2",
     "commander": "^2.9.0",
-    "concat": "^1.0.0",
     "connect-session-sequelize": "^3.0.0",
     "cookie-parser": "^1.4.0",
     "css-reset": "0.0.1",
