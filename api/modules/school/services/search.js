@@ -393,12 +393,12 @@ exports.initSearchParams = async(function(params) {
 exports.getFilterIds = async(function(filter, type) {
     var ids = [];
 
-    if(filter) {
+    if (filter) {
         if (type == 'schoolType') {
             var types = await(services.search.getSchoolTypesByAliases(filter));
-            ids = searchView.typeFilterIds(types);
+            ids = searchView.schoolTypeFilterIds(types);
         } else {
-            var subjects = await(services.subject.getByAliasses(filter));
+            var subjects = await(services.subject.getByAliases(filter));
             ids = subjectView.subjectIds(subjects);
         }
     }

@@ -7,7 +7,7 @@ var searchView = {};
  * @param {Array.<Object>} typeInstances
  * @return {Array.<number>}
  */
-searchView.typeFilterIds = function (typeInstances) {
+searchView.schoolTypeFilterIds = function (typeInstances) {
     return typeInstances.map( (typeInstance) => {
             return typeInstance.id;
         }

@@ -183,7 +183,7 @@ exports.listCityResults = async (() => {
  * @param {Array.<string>} aliases
  * @return {Array.<Object>}
  */
-exports.getByAliasses = async(function(aliases) {
+exports.getByAliases = async(function(aliases) {
     var searchParams = {
         where: {
             alias: {
