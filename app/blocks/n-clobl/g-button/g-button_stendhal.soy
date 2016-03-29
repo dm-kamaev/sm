@@ -1,0 +1,24 @@
+{namespace sm.gButton.TemplateStendhal}
+
+/**
+ * @constructor
+ * @extends cl.gButton.Template
+ */
+{template .button}
+    {call .init data="all" /}
+{/template}
+
+
+/**
+ * @override
+ * @param params {
+ *     config: {
+ *         isDisabled: bool
+ *     }
+ * }
+ */
+{template .additionalClasses}
+    {if $params?.config?.isDisabled}
+        {call .rootClass /}_disabled
+    {/if}
+{/template}
