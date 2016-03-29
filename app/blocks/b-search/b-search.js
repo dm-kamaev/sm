@@ -54,7 +54,8 @@ goog.inherits(sm.bSearch.Search, goog.ui.Component);
 goog.scope(function() {
     var Search = sm.bSearch.Search,
         Suggest = gorod.gSuggest.Suggest,
-        Utils = cl.iUtils.Utils;
+        Utils = cl.iUtils.Utils,
+        Analytics = sm.iAnalytics.Analytics.getInstance();
 
     /**
      * CSS-class enum
@@ -466,6 +467,18 @@ goog.scope(function() {
      * @param {Object} data
      */
     Search.prototype.itemClickHandler_ = function(event, data) {
+        this.sendAnalyticsSchoolData_(data);
+
+        this.redirect_(event, data);
+    };
+
+    /**
+     * Redirect
+     * @param {Object} event
+     * @param {Object} data
+     * @private
+     */
+    Search.prototype.redirect_ = function(event, data) {
         this.suggest_.setText(data.item.name);
         this.suggest_.blur();
 
@@ -483,6 +496,22 @@ goog.scope(function() {
                 }
             });
         }
+    };
+
+    /**
+     * Send the name of the selected schools Analytics
+     * @param {Object} data
+     * @private
+     */
+    Search.prototype.sendAnalyticsSchoolData_ = function(data) {
+        var dataAnalytics = {
+            hitType: 'event',
+            eventCategory: 'suggest',
+            eventAction: 'suggest click',
+            eventLabel: data.item.name
+        };
+
+        Analytics.send(dataAnalytics);
     };
 
     /**
