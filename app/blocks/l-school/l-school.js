@@ -67,6 +67,13 @@ sm.lSchool.School = function(opt_params) {
      * @private
      */
     this.modalInaccuracy_ = null;
+
+    /**
+     * instance popular Schools
+     * @type {sm.bPopularSchools.PopularSchools}
+     * @private
+     */
+    this.popularSchools_ = null;
 };
 goog.inherits(sm.lSchool.School, goog.ui.Component);
 
@@ -81,7 +88,8 @@ goog.scope(function() {
         Comments = sm.lSchool.bComments.Comments,
         FeedbackModal = sm.lSchool.bFeedbackModal.FeedbackModal,
         AuthSocialModalView = cl.gAuthSocialModal.View,
-        factory = sm.iFactory.FactoryStendhal.getInstance();
+        factory = sm.iFactory.FactoryStendhal.getInstance(),
+        PopularSchools = sm.bPopularSchools.PopularSchools;
 
 
     /**
@@ -128,6 +136,8 @@ goog.scope(function() {
         this.initElements_(element);
 
         this.initChildren_();
+
+        this.initPopularSchools_(element);
     };
 
     /**
@@ -167,6 +177,12 @@ goog.scope(function() {
             Score.Event.PLACE_COMMENT_CLICK,
             this.onClick_
         );
+
+        this.getHandler().listen(
+            this.popularSchools_,
+            PopularSchools.Event.CLICK_SCHOOL,
+            this.onClickPopularSchool_
+        );
     };
 
     /**
@@ -179,6 +195,14 @@ goog.scope(function() {
             ':id',
             this.params_.id
         );
+    };
+
+    /**
+     * @param  {Object} event
+     * @private
+     */
+    School.prototype.onClickPopularSchool_ = function(event) {
+        this.popularSchools_.sendAnalyticsDataSchool(event, 'school click');
     };
 
     /**
@@ -342,7 +366,28 @@ goog.scope(function() {
             )
         };
     };
+
+    /**
+     * Initialization popular schools
+     * @param {Element} element
+     * @private
+     */
+    School.prototype.initPopularSchools_ = function(element) {
+
+        var bPopularSchools = goog.dom.getElementByClass(
+            sm.bPopularSchools.View.CssClass.ROOT,
+            element
+        );
+
+        this.popularSchools_ = factory.decorate(
+            'popular-schools',
+            bPopularSchools,
+            this
+        );
+    };
 });
+
+
 
 /**
  * creates sm.lSchool.School instance

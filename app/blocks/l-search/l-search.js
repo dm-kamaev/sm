@@ -33,19 +33,26 @@ sm.lSearch.Search = function(opt_params) {
      */
     this.search_ = null;
 
+    /**
+     * instance popular Schools
+     * @type {sm.bPopularSchools.PopularSchools}
+     * @private
+     */
+    this.popularSchools_ = null;
 };
 goog.inherits(sm.lSearch.Search, goog.ui.Component);
 
 goog.scope(function() {
     var Search = sm.lSearch.Search,
-        BlockSearch = sm.bSearch.Search;
+        BlockSearch = sm.bSearch.Search,
+        PopularSchools = sm.bPopularSchools.PopularSchools;
 
     /**
      * CSS-class enum
      * @enum {string}
      */
     Search.CssClass = {
-        ROOT: 'l-search__body',
+        ROOT: 'l-search',
         SEARCH_BUTTON: 'l-search__button_search'
     };
 
@@ -83,6 +90,18 @@ goog.scope(function() {
         this.search_ = new BlockSearch();
         this.addChild(this.search_);
         this.search_.decorate(bSearch);
+
+        var bPopularSchools = goog.dom.getElementByClass(
+            sm.bPopularSchools.View.CssClass.ROOT,
+            element
+        );
+
+        this.popularSchools_ =
+            sm.iFactory.FactoryStendhal.getInstance().decorate(
+                'popular-schools',
+                bPopularSchools,
+                this
+            );
     };
 
     /**
@@ -95,6 +114,12 @@ goog.scope(function() {
             this.elements_.searchButton,
             goog.events.EventType.CLICK,
             this.onButtonClick_
+        );
+
+        this.getHandler().listen(
+            this.popularSchools_,
+            PopularSchools.Event.CLICK_SCHOOL,
+            this.onClickPopularSchool_
         );
     };
 
@@ -109,6 +134,14 @@ goog.scope(function() {
                 Search.CssClass.SEARCH_BUTTON
             )
         };
+    };
+
+    /**
+     * @param  {Object} event
+     * @private
+     */
+    Search.prototype.onClickPopularSchool_ = function(event) {
+        this.popularSchools_.sendAnalyticsDataSchool(event, 'homepage click');
     };
 
     /**
