@@ -55,18 +55,18 @@ sm.lSchool.School = function(opt_params) {
     this.score_ = null;
 
     /**
-     * TODO: for authSocial example
-     * @type {Boolean}
-     * @private
-     */
-    this.isRegistrated_ = false;
-
-    /**
      * Modal inaccuracy instance
      * @type {sm.gModal.ModalFeedback}
      * @private
      */
     this.modalInaccuracy_ = null;
+
+    /**
+     * Feedback button instance
+     * @type {sm.gButton.Button}
+     * @private
+     */
+    this.bouton_ = null;
 };
 goog.inherits(sm.lSchool.School, goog.ui.Component);
 
@@ -139,10 +139,16 @@ goog.scope(function() {
         var handler = this.getHandler();
 
         /** bouton listener */
-        for (var i = 0; i < this.elements_.boutons.length; i++) {
+        if (!this.isCommented_()) {
             handler.listen(
-                this.elements_.boutons[i],
-                goog.events.EventType.CLICK,
+                this.bouton_,
+                cl.gButton.Button.Event.CLICK,
+                this.onClick_
+            );
+
+            handler.listen(
+                this.score_,
+                Score.Event.PLACE_COMMENT_CLICK,
                 this.onClick_
             );
         }
@@ -158,14 +164,8 @@ goog.scope(function() {
 
         handler.listen(
             this.elements_.inaccuracyLink,
-                goog.events.EventType.CLICK,
-                this.onClickInaccuracyLink_
-            );
-
-        handler.listen(
-            this.score_,
-            Score.Event.PLACE_COMMENT_CLICK,
-            this.onClick_
+            goog.events.EventType.CLICK,
+            this.onClickInaccuracyLink_
         );
     };
 
@@ -186,17 +186,11 @@ goog.scope(function() {
      * @private
      */
     School.prototype.onClick_ = function() {
-        this.modal_.show();
-        /**
-         * TODO: authSocial example
-         */
-        /*
-        if (this.isRegistrated_) {
+        if (this.getUser_()) {
             this.modal_.show();
         } else {
             this.authSocial_.show();
-            this.isRegistrated_ = true;
-        }*/
+        }
     };
 
     /**
@@ -221,7 +215,24 @@ goog.scope(function() {
             .initComponents_(Map)
             .initComponents_(Search)
             .initComponents_(Comments)
-            .initComponents_(Results);
+            .initComponents_(Results)
+            .initBouton_();
+    };
+
+    /**
+     * Button initialization
+     * @return {sm.lSchool.School}
+     * @private
+     */
+    School.prototype.initBouton_ = function() {
+        if (!this.isCommented_()) {
+            this.bouton_ = factory.decorate(
+                'button',
+                this.elements_.bouton,
+                this
+            );
+        }
+        return this;
     };
 
     /**
@@ -329,7 +340,7 @@ goog.scope(function() {
     School.prototype.initElements_ = function(root) {
         this.elements_ = {
             root: root,
-            boutons: this.getElementsByClass(
+            bouton: this.getElementByClass(
                 sm.lSchool.School.CssClass.FEEDBACK_BUTTON
             ),
             feedbackLink: this.getElementByClass(
@@ -342,6 +353,26 @@ goog.scope(function() {
                 sm.lSchool.School.CssClass.INACCURACY_LINK
             )
         };
+    };
+
+    /**
+     * @private
+     * @return {bool}
+     */
+    School.prototype.isCommented_ = function() {
+        return JSON.parse(
+                goog.dom.dataset.get(this.getElement(), 'params')
+            ).isCommented;
+    };
+
+    /**
+     * @private
+     * @return {object}
+     */
+    School.prototype.getUser_ = function() {
+        return !!JSON.parse(
+                goog.dom.dataset.get(this.getElement(), 'params')
+            ).user;
     };
 });
 

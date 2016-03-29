@@ -22,6 +22,8 @@ deployment-config.json
 .jshintrc
 .csscomb*
 .tags*
+/app/config/local/
+/environment/config/local/
 
 console/reports
 migrate_stderr

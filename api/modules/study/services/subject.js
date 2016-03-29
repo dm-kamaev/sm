@@ -179,11 +179,11 @@ exports.listCityResults = async (() => {
 });
 
 /**
- * Get subjects id's by aliases
+ * Get array with subject instances by array with their aliases
  * @param {Array.<string>} aliases
- * @return {Array.<number>}
+ * @return {Array.<Object>}
  */
-exports.getSubjectIdByAliasses = async ((aliases) => {
+exports.getByAliasses = async(function(aliases) {
     var searchParams = {
         where: {
             alias: {
@@ -192,9 +192,6 @@ exports.getSubjectIdByAliasses = async ((aliases) => {
         },
         attributes: ['id']
     };
-    var subjects = await(models.Subject.findAll(searchParams));
 
-    return subjects.map((subject) => {
-        return subject.id;
-    });
+    return await(models.Subject.findAll(searchParams));
 });

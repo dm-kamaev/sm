@@ -41,19 +41,6 @@
 	}
 }
 
-.b-data-block__item-content {
-	&.b-data-block__item-content_text-color_red {
-		text-decoration: none;
-		cursor: pointer;
-
-		color: #ee362c;
-	}
-
-	&:first-letter {
-		text-transform: uppercase;
-	}
-}
-
 .b-data-block__content {
 	font-family: arial, sans-serif;
 	font-size: 14px;

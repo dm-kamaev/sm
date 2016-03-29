@@ -87,6 +87,7 @@
 
     {let $filToShow: $params?.config?.filtersToShow ?
         ($params?.config?.filtersToShow - 1) : 5/}
+
     <div class="b-filter__filters
                 {$params?.config?.cannotBeHidden ? '' : ' i-utils__hidden'}">
         {for $i in range($params.data.filters.length)}
@@ -99,15 +100,47 @@
                 ]/}
             {/call}
         {/for}
+
         {if $params.data.filters.length > $filToShow}
-            <div class="b-filter__button b-filter__button_show">
-                 Еще {$params.data.filters.length - $filToShow - 1} предметов
-            </div>
-            <div class="b-filter__button b-filter__button_hide i-utils__hidden">
-                 Свернуть список
-            </div>
+            {call .buttonShowMore_}
+                {param params: [
+                    'numberHiddenItems': $params.data.filters.length - $filToShow - 1
+                ]/}
+            {/call}
         {/if}
     </div>
+{/template}
+
+/**
+ * Tempate button
+ * @param? params {
+ *     numberHiddenItems: ?number
+ * }
+ */
+{template .buttonShowMore_ private="true"}
+    {call sm.bLink.Template.base}
+        {param params: [
+            'data': [
+                'name': 'Еще ' + $params.numberHiddenItems + ' предметов'
+            ],
+            'config': [
+                'customClasses': 'b-filter__button b-filter__button_show',
+                'size': 'small'
+            ]
+        ]/}
+    {/call}
+
+    {call sm.bLink.Template.base}
+        {param params: [
+            'data': [
+                'name': 'Свернуть список'
+            ],
+            'config': [
+                'customClasses': 'b-filter__button b-filter__button_hide i-utils__hidden',
+                'size': 'small'
+            ]
+        ]/}
+    {/call}
 {/template}
 
 /**

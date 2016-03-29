@@ -5,15 +5,24 @@
  * @param params {
  *    data: ?[
  *        name: ?string,
- *        url: ?string
+ *        url: ?string,
+ *        content: ?string
  *    ],
- *    ?theme: ?string
+ *    config: ?[
+ *        customClasses: ?string,
+ *        target: ?string,
+ *        theme: ?string,
+ *        size: ?string
+ *    ]
  * }
  */
 
 {template .base autoescape="strict" kind="html"}
     {call .openTag_ data="all" /}
         {$params?.data?.name}
+        {if $params?.data?.content}
+            {$params?.data?.content}
+        {/if}
     {call .closeTag_ data="all" /}
 {/template}
 
@@ -24,20 +33,35 @@
  *        name: ?string,
  *        url: ?string
  *    ],
- *    ?theme: ?string
+ *    config: ?[
+ *        customClasses: ?string,
+ *        target: ?string,
+ *        theme: ?string,
+ *        size: ?string
+ *    ]
  * }
  */
 {template .openTag_ autoescape="strict" kind="html"}
 
     {let $dataClass kind="html"}
         b-link
-        {if $params?.theme}
-            {sp}b-link__{$params?.theme}
+        {if $params?.config?.customClasses}
+            {sp}{$params?.config?.customClasses}
+        {/if}
+        {if $params?.config?.theme}
+            {sp}b-link_{$params?.config?.theme}
+        {/if}
+        {if $params?.config?.size}
+            {sp}b-link_{$params?.config?.size}
         {/if}
     {/let}
 
     {if $params?.data?.url}
-        <a href="{$params?.data?.url}" class="{$dataClass}">
+        <a href="{$params?.data?.url}" class="{$dataClass}"
+            {if $params?.config?.target}
+                {sp}target="{$params?.config?.target}"
+            {/if}
+        >
     {else}
         <span class="{$dataClass}">
     {/if}

@@ -215,16 +215,26 @@ exports.createComment = async (function(req, res) {
         var schoolId = req.params.id,
             params = req.body;
 
-        var isCommented = await(services.userData.checkKey(
-            schoolId, params.key
+        params.userId = req.user && req.user.id;
+
+        var userData = await(services.userData.checkCredentials(
+            schoolId,
+            params.key,
+            params.userId
         ));
 
-        if (isCommented) {
+        services.userData.actualizeUserIds(params.key, params.userId);
+
+        if (typeof userData !== 'undefined') {
             result = [{
                 code: 1,
                 message: 'Вы уже оставляли отзыв у этой школы.'
             }];
             res.statusCode = 400;
+
+            services.userData.update(userData.id, {
+                userId: params.userId
+            });
         } else {
             result = await(services.school.review(schoolId, params));
         }

@@ -30,7 +30,7 @@
     "closure-templates": "^20141017.0.1",
     "colors": "^1.1.2",
     "commander": "^2.9.0",
-    "concat": "^1.0.0",
+    "connect-session-sequelize": "^3.0.0",
     "cookie-parser": "^1.4.0",
     "css-reset": "0.0.1",
     "csvtojson": "^0.5.0",
@@ -39,6 +39,7 @@
     "ejs": "^2.3.4",
     "eslint": "^1.6.0",
     "evercookie": "^0.3.0",
+    "express-session": "^1.13.0",
     "fs-extra": "^0.26.3",
     "google-closure-library": "^20160125.0.0",
     "gulp": "^3.9.0",
@@ -64,6 +65,7 @@
     "node-sass": "^3.3.3",
     "node-xlsx": "^0.6.0",
     "nodules": "git+ssh://git@github.com:c7s/nodules.git#release-20160310",
+    "passport": "^0.3.2",
     "pg": "^4.4.2",
     "pg-hstore": "^2.3.2",
     "progress": "^1.1.8",
@@ -80,7 +82,8 @@
     "squel": "^4.3.0",
     "tar.gz": "^1.0.2",
     "tipograph": "^0.3.3",
-    "translitit-cyrillic-russian-to-latin": "git+ssh://git@github.com:c7s-bot/translitit-cyrillic-russian-to-latin.git#master"
+    "translitit-cyrillic-russian-to-latin": "git+ssh://git@github.com:c7s-bot/translitit-cyrillic-russian-to-latin.git#master",
+    "uid-safe": "^2.1.0"
   },
   "dependencies": {
     "express": "^4.13.3",
