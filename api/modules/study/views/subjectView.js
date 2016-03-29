@@ -81,11 +81,11 @@ SubjectView.prototype.sorter = function(a, b, type) {
 
 
 /**
- * Take array of instance of subjects and return array of their id
+ * Transform array of subjects to array of their id
  * @param {Array.<Object>} subjects
  * @return {Array.<number>}
  */
-SubjectView.prototype.getSubjectIds = function(subjects) {
+SubjectView.prototype.subjectIds = function(subjects) {
     return subjects.map((subject) => {
         return subject.id;
     });

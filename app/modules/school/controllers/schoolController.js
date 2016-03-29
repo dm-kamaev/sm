@@ -26,40 +26,14 @@ exports.createComment = async (function(req, res) {
 
 
 exports.list = async (function(req, res) {
-    var searchText,
-        areaId,
-        metroId,
-        searchParams = {};
+    var params = await(services.search.initSearchParams({
+        searchParams: req.query
+    }));
 
-    try{
-        searchText = req.query.name ?
-            decodeURIComponent(req.query.name) : '';
-        areaId = req.query.areaId ?
-            decodeURIComponent(req.query.areaId) : '';
-        metroId = req.query.metroId ?
-            decodeURIComponent(req.query.metroId) : '';
-        sortType = req.query.sortType ?
-            decodeURIComponent(req.query.sortType) : '';
-    } catch(e) {
-        searchText = req.query.name || '';
-        areaId = req.query.areaId || '';
-        metroId = req.query.metroId || '';
-        sortType = req.query.sortType || '';
-    }
-
-    if (areaId) {
-        searchParams.areaId = areaId;
-    } else if (metroId) {
-        searchParams.metroId = metroId;
-    } else if (searchText) {
-        searchParams.name = searchText;
-    }
+    var searchText = req.query.name || '';
 
     var promises = [
-        services.school.list({
-            searchParams: searchParams,
-            page: 0
-        }),
+        services.school.list(params),
         services.school.searchFilters()
     ];
     var results = await(promises);
@@ -77,14 +51,13 @@ exports.list = async (function(req, res) {
                     url: '/api/school/search'
                 }
             },
-            searchText: req.query.name ?
-                searchText : '',
+            searchText: searchText,
             countResults: data.countResults,
             searchSettings: {
                 url: '/api/school/search',
                 method: 'GET',
                 data: {
-                    searchParams: searchParams,
+                    searchParams: params.searchParams,
                     page: 0
                 }
             },
