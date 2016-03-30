@@ -260,10 +260,10 @@ exports.createComment = async (function(req, res) {
  *       "searchParams": {
  *         "name": "123",
  *         "classes": [1,2,3,4],
- *         "schoolType": [1,2],
- *         "gia": [1,2],
- *         "ege": [2,3],
- *         "olimp": [3,5],
+ *         "schoolType": ["school-or-center", "cadet"],
+ *         "gia": ["math", "russian"],
+ *         "ege": ["art", "handcraft"],
+ *         "olimp": ["computer-science", "sports"],
  *         "metroId": 1,
  *         "areaId": 1,
  *         "sortType": 1
@@ -274,14 +274,9 @@ exports.createComment = async (function(req, res) {
 exports.search = async (function(req, res) {
     var result = '';
     try {
-        var params = req.query;
-
-        if(params.searchParams) {
-            var criterion = params.searchParams.sortType;
-        }
-
+        var params = await(services.search.initSearchParams(req.query));
         var schools = await(services.school.list(params));
-        result = schoolView.list(schools, criterion);
+        result = schoolView.list(schools, params.searchParams.sortType);
     } catch (e) {
         console.log(e);
         result = JSON.stringify(e);

@@ -478,8 +478,7 @@ service.typeFilters = async (function() {
     var formattedFilters = schoolTypeFilters.map(filter => {
         return {
             label: filter.name,
-            value: filter.id,
-            alias: filter.alias
+            value: filter.alias
         };
     });
     return {
@@ -672,15 +671,18 @@ service.listInstances = async(function(){
 
 /**
  * @public
- * @param {object || null} opt_params
- * @param {number || null} opt.params.page
- * @param {object || null} opt_params.searchParams
- * @param {string || null} opt_params.searchParams.name
- * @param {?Array<number>} opt_params.searchParams.schoolType
- * @param {?Array<number>} opt_params.searchParams.gia
- * @param {?Array<number>} opt_params.searchParams.ege
- * @param {?Array<number>} opt_params.searchParams.olimp
- * @return {promise<array<object>>}
+ * @param {Object=} opt_params
+ * @param {?number} opt_params.page
+ * @param {?Object} opt_params.searchParams
+ * @param {?string} opt_params.searchParams.name
+ * @param {?Array.<number>} opt_params.searchParams.schoolType
+ * @param {?Array.<number>} opt_params.searchParams.gia
+ * @param {?Array.<number>} opt_params.searchParams.ege
+ * @param {?Array.<number>} opt_params.searchParams.olimp
+ * @param {?string} opt_params.searchParams.name
+ * @param {?number} opt_params.searchParams.metroId
+ * @param {?number} opt_params.searchParams.areaId
+ * @return {Promise<Array.<Object>>}
  */
 service.list = async (function(opt_params) {
     var params = opt_params || {},

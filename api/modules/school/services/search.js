@@ -1,9 +1,15 @@
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
+var lodash = require('lodash');
+
 var models = require.main.require('./app/components/models').all;
 var services = require.main.require('./app/components/services').all;
+var subjectView = require('../../study/views/subjectView');
+var searchView = require('../views/searchView');
+
 var searchTypeEnum = require('../enums/searchType');
-var departmentTypeEnum = require('../../geo/enums/departmentStage');
+var schoolTypeEnum = require('../enums/schoolType');
+
 exports.name = 'search';
 
 exports.getSchoolRecords = async (function(id) {
@@ -110,7 +116,6 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
         type: 'OR',
         values: []
     };
-    console.log('searchParams: ' + Array.isArray(sqlOptions.from));
     if (!Array.isArray(sqlOptions.from)) {
         this.updateSqlOptions(sqlOptions.from, searchParams);
 
@@ -134,7 +139,7 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
             isGeoDataJoined = true;
         }
 
-        if (searchParams.classes && searchParams.classes.length) {
+        if (searchParams.classes.length) {
             var classArr = intArrayToSql(searchParams.classes);
             sqlOptions.where.push('school.education_interval @> ' + classArr);
         }
@@ -145,7 +150,7 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
             );
         }
 
-        if (searchParams.schoolType) {
+        if (searchParams.schoolType.length) {
             searchDataCount++;
             searchDataWhere.values.push({
                 type: 'AND',
@@ -156,7 +161,7 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
             });
         }
 
-        if (searchParams.gia) {
+        if (searchParams.gia.length) {
             searchDataCount++;
             searchDataWhere.values.push({
                 type: 'AND',
@@ -167,7 +172,7 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
             });
         }
 
-        if (searchParams.ege) {
+        if (searchParams.ege.length) {
             searchDataCount++;
             searchDataWhere.values.push({
                 type: 'AND',
@@ -178,7 +183,7 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
             });
         }
 
-        if (searchParams.olimp) {
+        if (searchParams.olimp.length) {
             searchDataCount++;
             searchDataWhere.values.push({
                 type: 'AND',
@@ -336,26 +341,69 @@ exports.getTypeFilters = async(function() {
 });
 
 /**
- * Get ids of school type filters by their aliases
+ * Get array with ids of school types by array with their aliases
  * @param {Array.<string>} aliases
  * @return {Array.<number>}
  */
-exports.getTypeIdsByAliases = function(aliases) {
+exports.getSchoolTypesByAliases = function(aliases) {
     var searchParams = {
         where: {
-            id: {
+            alias: {
                 $in: aliases
             }
         },
         attributes: ['id']
     };
 
-    var schoolTypes = await(models.SchoolTypeFilter.findAll(searchParams));
-
-    return schoolTypes.map((schoolType) => {
-        return schoolType.id;
-    });
+    return await(models.SchoolTypeFilter.findAll(searchParams));
 };
+
+/**
+ * Initialize search params
+ * @param {Object} params
+ * @param {Object} params.searchParams
+ * @param {?string} params.searchParams.name
+ * @param {?Array.<number>} params.searchParams.classes
+ * @param {?Array.<string>} params.searchParams.schoolType
+ * @param {?Array.<string>} params.searchParams.ege
+ * @param {?Array.<string>} params.searchParams.gia
+ * @param {?Array.<string>} params.searchParams.olimp
+ * @param {?number} params.searchParams.metroId
+ * @param {?number} params.searchParams.areaId
+ * @param {?number} params.searchParams.sortType
+ * @param {?number} params.page
+ */
+exports.initSearchParams = async(function(params) {
+    /** Transform aliases in filters into ids **/
+    var filterTypes = searchTypeEnum.toCamelCaseArray();
+    var ids = filterTypes.map(filterType => {
+        var filter = params.searchParams[filterType];
+        return await(services.search.getFilterIds(filter, filterType));
+    });
+    var filters = lodash.zipObject(filterTypes, ids);
+
+    return searchView.params(params, filters);
+});
+
+/**
+ * Get id of each parameter in filter by their alias
+ * @param {?Array.<string>} searchParams
+ * @return {Array.<number>}
+ */
+exports.getFilterIds = async(function(filter, type) {
+    var ids = [];
+    if (filter) {
+        if (type == searchTypeEnum.camelCaseFields.SCHOOL_TYPE) {
+            var types = await(services.search.getSchoolTypesByAliases(filter));
+            ids = searchView.schoolTypeFilterIds(types);
+        } else {
+            var subjects = await(services.subject.getByAliases(filter));
+            ids = subjectView.subjectIds(subjects);
+        }
+    }
+
+    return ids;
+});
 
 /**
  * @param {int} school_id

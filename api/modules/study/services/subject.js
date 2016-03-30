@@ -119,8 +119,7 @@ var generateFilters = async(function(params) {
         .map(subject => {
             return {
                 label: subject.displayName,
-                value: subject.id,
-                alias: subject.alias
+                value: subject.alias
             };
         });
 
@@ -180,11 +179,11 @@ exports.listCityResults = async (() => {
 });
 
 /**
- * Get subjects id's by aliases
+ * Get array with subject instances by array with their aliases
  * @param {Array.<string>} aliases
- * @return {Array.<number>}
+ * @return {Array.<Object>}
  */
-exports.getIdsByAliasses = async ((aliases) => {
+exports.getByAliases = async(function(aliases) {
     var searchParams = {
         where: {
             alias: {
@@ -193,9 +192,6 @@ exports.getIdsByAliasses = async ((aliases) => {
         },
         attributes: ['id']
     };
-    var subjects = await(models.Subject.findAll(searchParams));
 
-    return subjects.map((subject) => {
-        return subject.id;
-    });
+    return await(models.Subject.findAll(searchParams));
 });
