@@ -14,7 +14,7 @@ else
     npm update
 fi
 $gulp build
-cd $scriptpath/../node_modules/services/
+cd $scriptpath/../node_modules/services/authorization/
 if [ ! -d node_modules/ ]; then
     npm install
 else

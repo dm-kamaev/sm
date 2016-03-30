@@ -23,7 +23,7 @@ deployment-config.json
 .csscomb*
 .tags*
 /app/config/local/
-/environment/config/local/
+/environment/config/authorization/local/
 
 console/reports
 migrate_stderr

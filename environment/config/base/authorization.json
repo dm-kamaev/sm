@@ -1,9 +1,0 @@
-{
-    "db": {
-        "host": "median-mel1.qa.lan",
-        "port": "3306",
-        "username": "cityuser",
-        "database": "db1",
-        "dialect": "mysql"
-    }
-}
