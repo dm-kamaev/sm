@@ -166,13 +166,13 @@ gulp.task('copy', function() {
 gulp.task('localConfig', function() {
     return new Promise(function(resolve, reject) {
         exec('node ./console/buildLocalConfig local ../app/config && ' +
-            'node ./console/buildLocalConfig local ../environment/config && ' +
-            'mv ./environment/config/authorization.json ./environment/config/config.json',
+            'node ./console/buildLocalConfig local ../environment/config/authorization',
             function() {
-                gulp.src(
-                    path.join(__dirname, '/environment/config/config.json')
-                ).pipe(
-                    gulp.dest(path.join(__dirname, '/node_modules/services/config/'))
+                gulp.src([
+                    path.join(__dirname, '/environment/config/authorization/config.json'),
+                    path.join(__dirname, '/environment/config/authorization/config.db.json')
+                ]).pipe(
+                    gulp.dest(path.join(__dirname, '/node_modules/services/authorization/config/'))
                 ).on('end', function() { resolve() });
             }
         );

@@ -23,10 +23,10 @@ class MigrationsChecker {
      * Checks actuality of project migrations
      */
     check() {
-        var dbMigrations = this.dbMigrations_.sort(),
-            fsMigrations = this.fsMigrations_.sort();
+        var dbMigrations = this.dbMigrations_,
+            fsMigrations = this.fsMigrations_;
 
-        if (!lodash.isEqual(dbMigrations, fsMigrations)) {
+        if (lodash.difference(fsMigrations, dbMigrations).length) {
             this.throwError_();
         }
     }
@@ -79,18 +79,10 @@ class MigrationsChecker {
 
         var dbMigrations = this.dbMigrations_,
             fsMigrations = this.fsMigrations_,
-            diff1 = lodash.difference(fsMigrations, dbMigrations),
-            diff2 = lodash.difference(dbMigrations, fsMigrations);
+            diff = lodash.difference(fsMigrations, dbMigrations);
 
-        if (diff1.length) {
-            message += 'Migrations that are not found in the database: ' +
-                diff1.join(', ') + '.\n';
-        }
-
-        if (diff2.length) {
-            message += 'Migrations that are not in the file system: ' +
-                diff2.join(', ') + '.\n';
-        }
+        message += 'Migrations that are not found in the database: ' +
+            diff.join(', ') + '.\n';
 
         throw message;
     }
