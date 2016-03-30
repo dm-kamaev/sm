@@ -375,7 +375,7 @@ exports.getSchoolTypesByAliases = function(aliases) {
  */
 exports.initSearchParams = async(function(params) {
     /** Transform aliases in filters into ids **/
-    var filterTypes = ['schoolType', 'ege', 'gia', 'olimp'];
+    var filterTypes = searchTypeEnum.toCamelCaseArray();
     var ids = filterTypes.map(filterType => {
         var filter = params.searchParams[filterType];
         return await(services.search.getFilterIds(filter, filterType));
@@ -392,9 +392,8 @@ exports.initSearchParams = async(function(params) {
  */
 exports.getFilterIds = async(function(filter, type) {
     var ids = [];
-
     if (filter) {
-        if (type == 'schoolType') {
+        if (type == searchTypeEnum.camelCaseFields.SCHOOL_TYPE) {
             var types = await(services.search.getSchoolTypesByAliases(filter));
             ids = searchView.schoolTypeFilterIds(types);
         } else {
