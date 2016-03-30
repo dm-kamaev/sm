@@ -296,6 +296,18 @@ goog.scope(function() {
     };
 
     /**
+     * Serialize form to object
+     * @public
+     * @return {Object}
+     */
+    Filters.prototype.serialize = function() {
+        var form = jQuery(this.getElement);
+        var data = form.serializeArray();
+
+        return this.processingSerializeArray_(data);
+    };
+
+    /**
      * shows the button Reset filters
      * @private
      */

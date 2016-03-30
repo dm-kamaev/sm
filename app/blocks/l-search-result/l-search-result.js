@@ -3,6 +3,7 @@ goog.provide('sm.lSearchResult.SearchResult');
 goog.require('goog.dom.classes');
 goog.require('goog.dom.classlist');
 goog.require('goog.events');
+goog.require('goog.history.Html5History');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
 goog.require('gorod.gSuggest.Suggest');
@@ -28,6 +29,13 @@ sm.lSearchResult.SearchResult = function(opt_params) {
      * @type {Object}
      */
     this.params_ = opt_params || {};
+
+    /**
+     * History support state
+     * @private
+     * @type {boolean}
+     */
+    this.isHistorySupported_ = false;
 
     /**
      * SchoolList instance
@@ -124,80 +132,35 @@ goog.scope(function() {
     SearchResult.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
-        this.searchSettings_ = JSON.parse(
-            element.getAttribute('data-params')
-        );
+        /** Init params **/
+        this.getSearchSettings_();
+        this.detectHistorySupport_();
+        /** end init params **/
 
-        //school list
-        var bSchoolList = goog.dom.getElementByClass(
-            SchoolList.CssClass.ROOT,
-            element
-        );
+        /** init child instances **/
+        this.initSchoolList_();
+        this.initFilters_();
+        this.initHeader_();
+        this.initSearch_();
+        /** end init child instances **/
 
-        this.schoolList_ = new SchoolList();
-        this.addChild(this.schoolList_);
-        this.schoolList_.decorate(bSchoolList);
-
-        //filters
-        var filtersElement = goog.dom.getElementByClass(
-            Filters.CssClass.ROOT,
-            element
-        );
-
-        this.filters_ = new Filters();
-        this.addChild(this.filters_);
-        this.filters_.decorate(filtersElement);
-
-        //header
-        this.header_ = Header.getInstance();
-
-        var leftMenu = goog.dom.getElementByClass(
-            SearchResult.CssClass.ROOT
-        );
-        var menuSearch = goog.dom.getElementByClass(
-            Search.CssClass.ROOT,
-            leftMenu
-        );
-
-        if (menuSearch) {
-            this.menuSearch_ = new Search();
-            this.addChild(this.menuSearch_);
-            this.menuSearch_.decorate(menuSearch);
-        }
+        /** get dom elements **/
         this.initElements_(element);
+        /** end get dom elements **/
     };
 
     /**
      * Set up the Component.
+     * @override
      */
     SearchResult.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
 
-        this.getHandler().listen(
-            this.schoolList_,
-            SchoolList.Event.SORT_CLICK,
-            this.onSortHandler_
-        ).listen(
-            this.filters_,
-            Filters.event.SUBMIT,
-            this.filtersSubmitHandler_
-        );
-
         this.initSearchListeners_();
-
         this.initHeaderListeners_();
-
-        this.getHandler().listen(
-            this.schoolList_,
-            SchoolList.Event.SHOW_MORE,
-            this.showMoreSchoolListItemsHandler_
-        );
-
-        this.getHandler().listen(
-            goog.dom.getWindow(),
-            goog.events.EventType.PAGESHOW,
-            this.onShowPage_
-        );
+        this.initFiltersListeners_();
+        this.initSchoolListListeners_();
+        this.initWindowListeners_();
     };
 
     /**
@@ -218,7 +181,76 @@ goog.scope(function() {
     };
 
     /**
-     * Init listeners for search in menu
+     * Get search settings from data-params
+     * @private
+     */
+    SearchResult.prototype.getSearchSettings_ = function() {
+        this.searchSettings_ = JSON.parse(
+            this.getElement().getAttribute('data-params')
+        );
+    };
+
+    /**
+     * Init school list block
+     * @private
+     */
+    SearchResult.prototype.initSchoolList_ = function() {
+        var element = this.getElement();
+
+        var schoolListElement = goog.dom.getElementByClass(
+            SchoolList.CssClass.ROOT,
+            element
+        );
+        this.schoolList_ = new SchoolList();
+        this.addChild(this.schoolList_);
+        this.schoolList_.decorate(schoolListElement);
+    };
+
+    /**
+     * Init filters block
+     * @private
+     */
+    SearchResult.prototype.initFilters_ = function() {
+        var element = this.getElement();
+
+        var filtersElement = goog.dom.getElementByClass(
+            Filters.CssClass.ROOT,
+            element
+        );
+
+        this.filters_ = new Filters();
+        this.addChild(this.filters_);
+        this.filters_.decorate(filtersElement);
+    };
+
+    /**
+     * Init header instance
+     * @private
+     */
+    SearchResult.prototype.initHeader_ = function() {
+        this.header_ = Header.getInstance();
+    };
+
+    /**
+     * Init search in menu
+     * @private
+     */
+    SearchResult.prototype.initSearch_ = function() {
+        var element = this.getElement();
+
+        var menuSearch = goog.dom.getElementByClass(
+            Search.CssClass.ROOT,
+            element
+        );
+        if (menuSearch) {
+            this.menuSearch_ = new Search();
+            this.addChild(this.menuSearch_);
+            this.menuSearch_.decorate(menuSearch);
+        }
+    };
+
+    /**
+     * Init listeners for search block in menu
      * @private
      */
     SearchResult.prototype.initSearchListeners_ = function() {
@@ -234,7 +266,7 @@ goog.scope(function() {
     };
 
     /**
-     * Init listeners for header
+     * Init listeners for header block
      * @private
      */
     SearchResult.prototype.initHeaderListeners_ = function() {
@@ -250,12 +282,52 @@ goog.scope(function() {
     };
 
     /**
+     * Init listeners for filters
+     * @private
+     */
+    SearchResult.prototype.initFiltersListeners_ = function() {
+        this.getHandler().listen(
+            this.filters_,
+            Filters.event.SUBMIT,
+            this.filtersSubmitHandler_
+        );
+    };
+
+    /**
+     * Init listeners for school list block
+     * @private
+     */
+    SearchResult.prototype.initSchoolListListeners_ = function() {
+        this.getHandler().listen(
+            this.schoolList_,
+            SchoolList.Event.SORT_CLICK,
+            this.onSortHandler_
+        ).listen(
+            this.schoolList_,
+            SchoolList.Event.SHOW_MORE,
+            this.showMoreSchoolListItemsHandler_
+        );
+    };
+
+    /**
+     * Init listeners for window
+     * @private
+     */
+    SearchResult.prototype.initWindowListeners_ = function() {
+        this.getHandler().listen(
+            goog.dom.getWindow(),
+            goog.events.EventType.PAGESHOW,
+            this.onShowPage_
+        );
+    };
+
+    /**
      * Header submit handler
      * @param {Object} event
      * @private
      */
     SearchResult.prototype.onHeaderSubmit_ = function(event) {
-        this.menuSearch_.setValue(event.data.text);
+        this.menuSearch_.setValue(event.text);
         this.header_.setMode(Header.Mode.DEFAULT);
         this.filters_.reset();
         this.onSubmit_(event);
@@ -423,6 +495,14 @@ goog.scope(function() {
 
         this.schoolList_.reset();
         this.schoolList_.setItems(data.schools);
+    };
+
+    /**
+     * Detect is browser support HTML5 history
+     * @private
+     */
+    SearchResult.prototype.detectHistorySupport_ = function() {
+        this.isHistorySupported_ = goog.history.Html5History.isSupported();
     };
 });
 
