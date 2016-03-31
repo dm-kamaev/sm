@@ -68,7 +68,7 @@ sm.lSchool.School = function(opt_params) {
      */
     this.modalInaccuracy_ = null;
 
-    /**
+    /*
      * instance popular Schools
      * @type {sm.bPopularSchools.PopularSchools}
      * @private
@@ -177,12 +177,6 @@ goog.scope(function() {
             Score.Event.PLACE_COMMENT_CLICK,
             this.onClick_
         );
-
-        this.getHandler().listen(
-            this.popularSchools_,
-            PopularSchools.Event.CLICK_SCHOOL,
-            this.onClickPopularSchool_
-        );
     };
 
     /**
@@ -195,14 +189,6 @@ goog.scope(function() {
             ':id',
             this.params_.id
         );
-    };
-
-    /**
-     * @param  {Object} event
-     * @private
-     */
-    School.prototype.onClickPopularSchool_ = function(event) {
-        this.popularSchools_.sendAnalyticsDataSchool(event, 'school click');
     };
 
     /**

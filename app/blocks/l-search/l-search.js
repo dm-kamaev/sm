@@ -33,7 +33,7 @@ sm.lSearch.Search = function(opt_params) {
      */
     this.search_ = null;
 
-    /**
+    /*
      * instance popular Schools
      * @type {sm.bPopularSchools.PopularSchools}
      * @private
@@ -115,12 +115,6 @@ goog.scope(function() {
             goog.events.EventType.CLICK,
             this.onButtonClick_
         );
-
-        this.getHandler().listen(
-            this.popularSchools_,
-            PopularSchools.Event.CLICK_SCHOOL,
-            this.onClickPopularSchool_
-        );
     };
 
     /**
@@ -134,14 +128,6 @@ goog.scope(function() {
                 Search.CssClass.SEARCH_BUTTON
             )
         };
-    };
-
-    /**
-     * @param  {Object} event
-     * @private
-     */
-    Search.prototype.onClickPopularSchool_ = function(event) {
-        this.popularSchools_.sendAnalyticsDataSchool(event, 'homepage click');
     };
 
     /**

@@ -19,8 +19,7 @@ sm.bPopularSchools.View = function(opt_params, opt_template, opt_modifier) {
 goog.inherits(sm.bPopularSchools.View, cl.iControl.View);
 
 goog.scope(function() {
-    var View = sm.bPopularSchools.View,
-        PopularSchools = sm.bPopularSchools.PopularSchools;
+    var View = sm.bPopularSchools.View;
 
     /**
      * Css class enum
@@ -36,7 +35,7 @@ goog.scope(function() {
      * @enum {String}
      */
     View.Event = {
-       CLICK_SCHOOL: 'click-school'
+       SCHOOL_CLICK: 'school-click'
     };
 
     /**
@@ -55,7 +54,6 @@ goog.scope(function() {
         goog.base(this, 'enterDocument');
 
         for (var i = 0; i < this.dom.schools.length; i++) {
-            var ii = i;
             this.getHandler().listen(
                 this.dom.schools[i],
                 goog.events.EventType.CLICK,
@@ -67,15 +65,25 @@ goog.scope(function() {
     };
 
     /**
+     * Get Analytics Action
+     * @return {String}
+     */
+    View.prototype.getAnalyticsAction = function() {
+        var data = this.getDataParams_();
+
+        return data.analyticsAction;
+    };
+
+    /**
      * @param {Number} schoolNumInArr
      * @private
      */
     View.prototype.onClickSchool_ = function(schoolNumInArr) {
-        var dataSchool = this.getDataParams_(this.dom.schools[schoolNumInArr]),
-            schoolName = dataSchool.schoolName;
+        var schoolData = this.getDataParams_(this.dom.schools[schoolNumInArr]),
+            schoolName = schoolData.schoolName;
 
         this.dispatchEvent({
-            'type': View.Event.CLICK_SCHOOL,
+            'type': View.Event.SCHOOL_CLICK,
             'schoolName': schoolName
         });
     };
@@ -94,11 +102,12 @@ goog.scope(function() {
 
      /**
      * Get data params
-     * @param {Element} element dom element
+     * @param {Element=} opt_element dom element
      * @return {Object}
      * @private
      */
-    View.prototype.getDataParams_ = function(element) {
+    View.prototype.getDataParams_ = function(opt_element) {
+        var element = opt_element || this.getElement();
         var params = JSON.parse(goog.dom.dataset.get(element, 'params'));
 
         return params;

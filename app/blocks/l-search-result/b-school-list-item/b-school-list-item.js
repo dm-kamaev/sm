@@ -275,7 +275,7 @@ goog.scope(function() {
      * @private
      */
     ListItem.prototype.onClickListItem_ = function() {
-        this.sendAnalyticsDataSchool_();
+        this.sendAnalyticsSchoolData_();
     };
 
     /**
@@ -310,7 +310,7 @@ goog.scope(function() {
      * send Analytics data school
      * @private
      */
-    ListItem.prototype.sendAnalyticsDataSchool_ = function() {
+    ListItem.prototype.sendAnalyticsSchoolData_ = function() {
 
         var dataAnalytics = {
             hitType: 'event',

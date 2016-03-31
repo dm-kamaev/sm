@@ -14,15 +14,20 @@
  *     config: ?{
  *         popularSchool: {
  *             customClasses: ?string
- *         }
+ *         },
+ *         analyticsAction: ?string
  *     }
  * }
  */
 {template .base autoescape="strict" kind="html"}
-    <div class="b-popular-schools">
+    {let $analyticsAction: [
+        'analyticsAction': $params?.config?.analyticsAction
+    ] /}
+    <div class="b-popular-schools" 
+         data-params="{call goog.json.serialize data="$analyticsAction" /}">
         <div class="b-popular-schools__title">популярные школы</div>
         {foreach $school in $params?.popularSchools}
-            {let $data: [
+            {let $schoolName: [
                 'schoolName': $school.name
             ] /}
             <a class="b-popular-schools__school-link{sp}
@@ -30,7 +35,7 @@
                href="/school/{$school.url}">
                 <div class="b-popular-schools__school
                         {if isLast($school)}{sp}b-popular-schools__school_last{/if}"
-                     data-params="{call goog.json.serialize data="$data" /}">
+                     data-params="{call goog.json.serialize data="$schoolName" /}">
                     <div class="b-popular-schools__school-rating">
                         {call sm.bMark.Template.base}
                             {param params: [
