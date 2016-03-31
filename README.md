@@ -55,11 +55,11 @@ updateSearch - актуализация поисковой таблицы
 /doc - документация по проекту  
 
 ## Микросервис авторизации/сессии ##
-Необходимо создать папки **local** в `app/config` и `environment/config`.  
-В **app/config/local** создать `config.db.json`, `config.json`,
-а в **environment/config/local** `authorization.json`.  
+Необходимо создать папки **local** в `app/config` и `environment/config/authorization`.  
+В **app/config/local** создать `config.db.json`, `config.json`,  
+а в **environment/config/authorization/local** `config.json`, `config.db.json`.  
 Структура файлов:  
-**config.json**  
+**app/config/config.json**  
 ```javascript
 {
     "port": 3000,
@@ -70,7 +70,7 @@ updateSearch - актуализация поисковой таблицы
     }
 }
 ```  
-**config.db.json**  
+**app/config/config.db.json**  
 ```javascript
 {
     "host": "localhost",
@@ -81,7 +81,7 @@ updateSearch - актуализация поисковой таблицы
     "dialect": "postgres"
 }
 ```  
-**authorization.json**  
+**environment/config/authorization/config.json**  
 ```javascript
 {
     "authorization": {
@@ -96,6 +96,16 @@ updateSearch - актуализация поисковой таблицы
             "redirectUri": "http://www21.lan:3000/authorize/fb"
         }
     }
+}
+```  
+**environment/config/authorization/config.db.json**  
+```javascript
+{
+    "host": "median-mel1.qa.lan",
+    "port": "3306",
+    "username": "cityuser",
+    "database": "db1",
+    "dialect": "mysql"
 }
 ```  
 Потом запускаем галп, и идём в `./node_modules/services`, делаем `npm i`, и
