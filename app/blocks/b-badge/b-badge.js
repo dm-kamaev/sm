@@ -236,7 +236,8 @@ goog.scope(function() {
     Badge.prototype.onItemClickMetroMode_ = function(itemId) {
         var data = this.params_.data[itemId];
 
-        document.location.href = '/search?name=' + data.name +
-            '&metroId=' + data.id;
+        document.location.href = '/search?name=' +
+            encodeURIComponent(data.name) +
+            '&metroId=' + encodeURIComponent(data.id);
     };
 });
