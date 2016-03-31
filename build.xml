@@ -7,8 +7,8 @@
 
     <import file="${basedir}/node_modules/deployment/packaging.xml"/>
     <import file="${basedir}/node_modules/deployment/node.xml"/>
-    <import file="${basedir}/node_modules/services/authorization/node.xml"/>
-    <import file="${basedir}/node_modules/services/authorization/build.xml"/>
+    <import file="${basedir}/node_modules/auth-service/node.xml"/>
+    <import file="${basedir}/node_modules/auth-service/build.xml"/>
 
     <!-- Packaging tune -->
     <target name="setup-folders" depends="shared-folders-create, shared-set-permissions, setup-folders-logs, setup-folders-logs"/>
@@ -39,9 +39,9 @@
             <arg line="buildLocalConfig ${env} ../environment/config/authorization"/>
         </exec>
         <copy file="${basedir}/environment/config/authorization/config.json"
-              tofile="${basedir}/node_modules/services/authorization/config/config.json" />
+              tofile="${basedir}/node_modules/auth-service/config/config.json" />
         <copy file="${basedir}/environment/config/authorization/config.db.json"
-              tofile="${basedir}/node_modules/services/authorization/config/config.db.json" />
+              tofile="${basedir}/node_modules/auth-service/config/config.db.json" />
     </target>
 
     <target name="build-config">

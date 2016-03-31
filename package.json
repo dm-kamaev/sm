@@ -75,7 +75,7 @@
     "scp": "0.0.3",
     "sequelize": "^3.8.0",
     "sequelize-cli": "^1.9.1",
-    "services": "git+ssh://git@github.com:c7s/services.git#dev",
+    "auth-service": "git+ssh://git@github.com:c7s/auth-service.git#dev",
     "sleep": "^3.0.0",
     "soynode": "^1.1.0",
     "soyparser": "^0.2.2",

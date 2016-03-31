@@ -172,7 +172,7 @@ gulp.task('localConfig', function() {
                     path.join(__dirname, '/environment/config/authorization/config.json'),
                     path.join(__dirname, '/environment/config/authorization/config.db.json')
                 ]).pipe(
-                    gulp.dest(path.join(__dirname, '/node_modules/services/authorization/config/'))
+                    gulp.dest(path.join(__dirname, '/node_modules/auth-service/config/'))
                 ).on('end', function() { resolve() });
             }
         );
