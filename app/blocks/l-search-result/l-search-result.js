@@ -1,5 +1,6 @@
 goog.provide('sm.lSearchResult.SearchResult');
 
+goog.require('goog.Uri.QueryData');
 goog.require('goog.dom.classes');
 goog.require('goog.dom.classlist');
 goog.require('goog.events');
@@ -36,7 +37,7 @@ sm.lSearchResult.SearchResult = function(opt_params) {
      * @private
      * @type {boolean}
      */
-    this.isHistorySupported_ = false;
+    this.history_ = false;
 
     /**
      * SchoolList instance
@@ -358,7 +359,8 @@ goog.scope(function() {
      * @private
      */
     SearchResult.prototype.onHeaderSubmit_ = function(event) {
-        this.doHeaderSearch_(event.data);
+        var headerSearchParams = this.getParamsFromSearchEvent_(event.data);
+        this.doHeaderSearch_(headerSearchParams);
     };
 
     /**
@@ -380,7 +382,8 @@ goog.scope(function() {
      * @private
      */
     SearchResult.prototype.onSearchSubmit_ = function(event) {
-        this.doMenuSearch_(event.data);
+        var menuSearchParams = this.getParamsFromSearchEvent_(event.data);
+        this.doMenuSearch_(menuSearchParams);
     };
 
     /**
@@ -389,31 +392,27 @@ goog.scope(function() {
      * @private
      */
     SearchResult.prototype.doMenuSearch_ = function(paramsToUpdate) {
-        var params = {};
-
-        params.page = 0;
-        goog.object.extend(
-            params, this.getParamsFromSearchEvent_(paramsToUpdate));
+        var params = {
+            page: 0
+        };
+        goog.object.extend(params, paramsToUpdate);
         goog.object.extend(params, this.getParamsFromFilters_());
 
         this.doSearch_(params);
     };
 
     /**
-     * Get search text, which entered into input
-     * @private
-     * @return {Object}
-     */
-    SearchResult.prototype.getParamsFromSearch_ = function() {
-        var params = {};
-        params.name = this.menuSearch_.getValue();
-        return params;
-    };
-
-    /**
      * Get search params from search submit eventParams
-     * @param {Object} eventParams
-     * @return {Object}
+     * @param {{
+     *     text: ?string,
+     *     type: ?string,
+     *     id: ?number
+     * }} eventParams
+     * @return {{
+     *     name: ?string,
+     *     metroId: ?number,
+     *     areaId: ?number
+     * }}
      * @private
      */
     SearchResult.prototype.getParamsFromSearchEvent_ = function(eventParams) {
@@ -432,7 +431,7 @@ goog.scope(function() {
     };
 
     /**
-     * Search input handler
+     * Handler for typing in left menu search
      * @param {Object} event
      * @private
      */
@@ -452,20 +451,15 @@ goog.scope(function() {
     };
 
     /**
-     * Make a search from filter
-     * @param {Object} paramsToUpdate
+     * Make a search from filter when filters submits
+     * @param {Object} filterParams
      * @private
      */
-    SearchResult.prototype.doFiltersSearch_ = function(paramsToUpdate) {
+    SearchResult.prototype.doFiltersSearch_ = function(filterParams) {
         var params = {
             page: 0
         };
-
-        goog.object.extend(params, this.getParamsFromSearch_());
-        goog.object.extend(
-            params,
-            this.getParamsFromFilterEvent_(paramsToUpdate)
-        );
+        goog.object.extend(params, filterParams);
 
         this.doSearch_(params);
 
@@ -483,26 +477,50 @@ goog.scope(function() {
     };
 
     /**
-     * Get search params from filter submit eventParams
-     * @param {Object} eventParams
-     * @return {Object}
+     * Make update search params, send query to api, update url
+     * @param {Object} newParams
      * @private
      */
-    SearchResult.prototype.getParamsFromFilterEvent_ = function(eventParams) {
-        return eventParams;
+    SearchResult.prototype.doSearch_ = function(newParams) {
+        this.updateSearchParams_(newParams);
+
+        this.updateUrl_();
+        this.sendQuery_(true);
     };
 
     /**
-     * Make update search params, send query to api, update url
-     * @param {Object} searchParams
+     * Update url in according to current search params
      * @private
      */
-    SearchResult.prototype.doSearch_ = function(searchParams) {
-        this.updateSearchParams_(searchParams);
+    SearchResult.prototype.updateUrl_ = function() {
+        var currentPath = window.location.pathname,
+            queryParams = this.generateQueryString_(),
+            newUrl = currentPath + '?' + queryParams;
 
-        this.sendQuery_(true);
+        if (this.history_) {
+           this.history_.pushState(null, null, newUrl);
+        } else {
+            window.location.href = newUrl;
+        }
     };
-    
+
+    /**
+     * Generate new query string from current params to push it to history
+     * @return {string}
+     * @private
+     */
+    SearchResult.prototype.generateQueryString_ = function() {
+        var cleanedParams = goog.object.filter(this.searchParams_,
+            function(paramValue, paramName) {
+                var result = false;
+                if (paramName !== 'sortType' && paramName !== 'page') {
+                    result = !!paramValue && !!paramValue.length;
+                }
+                return result;
+            });
+        return jQuery.param(cleanedParams);
+    };
+
     /**
      * Update search parameters object with given data
      * @param {Object} params
@@ -641,10 +659,11 @@ goog.scope(function() {
      * @private
      */
     SearchResult.prototype.detectHistorySupport_ = function() {
-        this.isHistorySupported_ = goog.history.Html5History.isSupported();
+        if (goog.history.Html5History.isSupported()) {
+            this.history_ = window.history;
+        }
     };
 });
-
 
 var searchResult;
 

@@ -27,9 +27,7 @@ exports.createComment = async (function(req, res) {
 
 exports.list = async (function(req, res) {
     var searchParams = await(services.search.initSearchParams(req.query));
-    console.log(req.query.name);
     var searchText = req.query.name ? decodeURIComponent(req.query.name) : '';
-    console.log(searchText);
 
     var promises = [
         services.school.list(searchParams),
