@@ -67,6 +67,13 @@ sm.lSchool.School = function(opt_params) {
      * @private
      */
     this.bouton_ = null;
+
+    /*
+     * instance popular Schools
+     * @type {sm.bPopularSchools.PopularSchools}
+     * @private
+     */
+    this.popularSchools_ = null;
 };
 goog.inherits(sm.lSchool.School, goog.ui.Component);
 
@@ -81,7 +88,8 @@ goog.scope(function() {
         Comments = sm.lSchool.bComments.Comments,
         FeedbackModal = sm.lSchool.bFeedbackModal.FeedbackModal,
         AuthSocialModalView = cl.gAuthSocialModal.View,
-        factory = sm.iFactory.FactoryStendhal.getInstance();
+        factory = sm.iFactory.FactoryStendhal.getInstance(),
+        PopularSchools = sm.bPopularSchools.PopularSchools;
 
 
     /**
@@ -128,6 +136,8 @@ goog.scope(function() {
         this.initElements_(element);
 
         this.initChildren_();
+
+        this.initPopularSchools_(element);
     };
 
     /**
@@ -374,7 +384,28 @@ goog.scope(function() {
                 goog.dom.dataset.get(this.getElement(), 'params')
             ).user;
     };
+
+    /**
+     * Initialization popular schools
+     * @param {Element} element
+     * @private
+     */
+    School.prototype.initPopularSchools_ = function(element) {
+
+        var bPopularSchools = goog.dom.getElementByClass(
+            sm.bPopularSchools.View.CssClass.ROOT,
+            element
+        );
+
+        this.popularSchools_ = factory.decorate(
+            'popular-schools',
+            bPopularSchools,
+            this
+        );
+    };
 });
+
+
 
 /**
  * creates sm.lSchool.School instance
