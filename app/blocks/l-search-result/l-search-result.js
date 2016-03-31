@@ -4,6 +4,7 @@ goog.require('goog.dom.classes');
 goog.require('goog.dom.classlist');
 goog.require('goog.events');
 goog.require('goog.history.Html5History');
+goog.require('goog.object');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
 goog.require('gorod.gSuggest.Suggest');
@@ -67,10 +68,31 @@ sm.lSearchResult.SearchResult = function(opt_params) {
 
     /**
      * Current search settings
-     * @type {Object}
+     * @type {{
+     *     name: ?string,
+     *     metroId: ?number,
+     *     areaId: ?number,
+     *     schoolType: ?Array.<string>,
+     *     classes: ?Array.<number>,
+     *     ege: ?Array.<string>,
+     *     gia: ?Array.<string>,
+     *     olimp: ?Array.<string>,
+     *     sortType: ?number,
+     *     page: ?number
+     * }}
      * @private
      */
-    this.searchSettings_ = {};
+    this.searchParams_ = {};
+
+    /**
+     * Params for request to api
+     * @type {{
+     *     url: {string},
+     *     method: {string}
+     * }}
+     * @private
+     */
+    this.requestParams_ = {};
 
     /**
      * Dom elements
@@ -105,7 +127,6 @@ goog.scope(function() {
      */
     SearchResult.prototype.decorate = function(element) {
         goog.base(this, 'decorate', element);
-
         this.params_ = jQuery(element).data('params') || {};
     };
 
@@ -133,7 +154,7 @@ goog.scope(function() {
         goog.base(this, 'decorateInternal', element);
 
         /** Init params **/
-        this.getSearchSettings_();
+        this.initParams_();
         this.detectHistorySupport_();
         /** end init params **/
 
@@ -184,10 +205,16 @@ goog.scope(function() {
      * Get search settings from data-params
      * @private
      */
-    SearchResult.prototype.getSearchSettings_ = function() {
-        this.searchSettings_ = JSON.parse(
-            this.getElement().getAttribute('data-params')
-        );
+    SearchResult.prototype.initParams_ = function() {
+        var element = this.getElement(),
+            dataParams = JSON.parse(goog.dom.dataset.get(element, 'params'));
+
+        this.requestParams_ = {
+            url: dataParams.url,
+            method: dataParams.method || 'GET'
+        };
+
+        this.searchParams_ = dataParams.searchParams;
     };
 
     /**
@@ -257,16 +284,20 @@ goog.scope(function() {
         this.getHandler().listen(
             this.menuSearch_,
             Search.Event.SUBMIT,
-            this.onSubmit_
+            this.onSearchSubmit_
         ).listen(
             this.menuSearch_,
             Search.Event.ITEM_SELECT,
-            this.onSubmit_
+            this.onSearchSubmit_
+        ).listen(
+            this.menuSearch_,
+            Search.Event.TEXT_CHANGE,
+            this.onSearchTextChange_
         );
     };
 
     /**
-     * Init listeners for header block
+     * Init listeners for header blocfk
      * @private
      */
     SearchResult.prototype.initHeaderListeners_ = function() {
@@ -289,7 +320,7 @@ goog.scope(function() {
         this.getHandler().listen(
             this.filters_,
             Filters.event.SUBMIT,
-            this.filtersSubmitHandler_
+            this.onFiltersSubmit_
         );
     };
 
@@ -327,19 +358,88 @@ goog.scope(function() {
      * @private
      */
     SearchResult.prototype.onHeaderSubmit_ = function(event) {
-        this.menuSearch_.setValue(event.text);
-        this.header_.setMode(Header.Mode.DEFAULT);
-        this.filters_.reset();
-        this.onSubmit_(event);
+        this.doHeaderSearch_(event.data);
     };
 
     /**
-     * Input submit handler
+     * Make a search from header
+     * @param {Object} paramsToUpdate
+     * @private
+     */
+    SearchResult.prototype.doHeaderSearch_ = function(paramsToUpdate) {
+        this.menuSearch_.setValue(paramsToUpdate.text);
+        this.header_.setMode(Header.Mode.DEFAULT);
+        this.filters_.reset();
+
+        this.doMenuSearch_(paramsToUpdate);
+    };
+
+    /**
+     * Search submit handler
      * @param {Object} event
      * @private
      */
-    SearchResult.prototype.onSubmit_ = function(event) {
-        this.filters_.submit(event);
+    SearchResult.prototype.onSearchSubmit_ = function(event) {
+        this.doMenuSearch_(event.data);
+    };
+
+    /**
+     * Make a search from left menu
+     * @param {Object} paramsToUpdate
+     * @private
+     */
+    SearchResult.prototype.doMenuSearch_ = function(paramsToUpdate) {
+        var params = {};
+
+        params.page = 0;
+        goog.object.extend(
+            params, this.getParamsFromSearchEvent_(paramsToUpdate));
+        goog.object.extend(params, this.getParamsFromFilters_());
+
+        this.doSearch_(params);
+    };
+
+    /**
+     * Get search text, which entered into input
+     * @private
+     * @return {Object}
+     */
+    SearchResult.prototype.getParamsFromSearch_ = function() {
+        var params = {};
+        params.name = this.menuSearch_.getValue();
+        return params;
+    };
+
+    /**
+     * Get search params from search submit eventParams
+     * @param {Object} eventParams
+     * @return {Object}
+     * @private
+     */
+    SearchResult.prototype.getParamsFromSearchEvent_ = function(eventParams) {
+        var params = {
+            name: eventParams.text,
+            metroId: null,
+            areaId: null
+        };
+        if (eventParams.type == 'metro') {
+            params.metroId = eventParams.id;
+        } else if (eventParams.type == 'areas') {
+            params.areaId = eventParams.id;
+        }
+
+        return params;
+    };
+
+    /**
+     * Search input handler
+     * @param {Object} event
+     * @private
+     */
+    SearchResult.prototype.onSearchTextChange_ = function(event) {
+        this.updateSearchParams_(
+            this.getParamsFromSearchEvent_(event.data)
+        );
     };
 
     /**
@@ -347,21 +447,76 @@ goog.scope(function() {
      * @param {Object} event
      * @private
      */
-    SearchResult.prototype.filtersSubmitHandler_ = function(event) {
+    SearchResult.prototype.onFiltersSubmit_ = function(event) {
+        this.doFiltersSearch_(event.data);
+    };
+
+    /**
+     * Make a search from filter
+     * @param {Object} paramsToUpdate
+     * @private
+     */
+    SearchResult.prototype.doFiltersSearch_ = function(paramsToUpdate) {
         var params = {
-            data: event.data,
-            url: event.url,
-            type: event.method
+            page: 0
         };
 
-        params.data.searchParams.name = this.menuSearch_.getValue();
+        goog.object.extend(params, this.getParamsFromSearch_());
+        goog.object.extend(
+            params,
+            this.getParamsFromFilterEvent_(paramsToUpdate)
+        );
 
-        this.updateSearchSettings_(params);
-        this.searchSettings_.data.page = 0;
-        this.sendQuery_(true);
+        this.doSearch_(params);
 
         this.filters_.collapse();
         window.scrollTo(0, 0);
+    };
+
+    /**
+     * Get search params from filters
+     * @return {Object}
+     * @private
+     */
+    SearchResult.prototype.getParamsFromFilters_ = function() {
+        return this.filters_.serialize();
+    };
+
+    /**
+     * Get search params from filter submit eventParams
+     * @param {Object} eventParams
+     * @return {Object}
+     * @private
+     */
+    SearchResult.prototype.getParamsFromFilterEvent_ = function(eventParams) {
+        return eventParams;
+    };
+
+    /**
+     * Make update search params, send query to api, update url
+     * @param {Object} searchParams
+     * @private
+     */
+    SearchResult.prototype.doSearch_ = function(searchParams) {
+        this.updateSearchParams_(searchParams);
+
+        this.sendQuery_(true);
+    };
+    
+    /**
+     * Update search parameters object with given data
+     * @param {Object} params
+     * @private
+     */
+    SearchResult.prototype.updateSearchParams_ = function(params) {
+        var paramsToUpdate = goog.object.getKeys(params),
+            that = this;
+
+        paramsToUpdate.forEach(function(param) {
+            if (goog.object.containsKey(that.searchParams_, param)) {
+                goog.object.set(that.searchParams_, param, params[param]);
+            }
+        });
     };
 
     /**
@@ -371,8 +526,8 @@ goog.scope(function() {
      */
     SearchResult.prototype.onSortHandler_ = function(event) {
 
-        this.searchSettings_.data.page = 0;
-        this.searchSettings_.data.searchParams.sortType = event.itemId;
+        this.searchParams_.page = 0;
+        this.searchParams_.sortType = event.itemId;
 
         this.sendQuery_();
     };
@@ -382,7 +537,7 @@ goog.scope(function() {
      * @private
      */
     SearchResult.prototype.showMoreSchoolListItemsHandler_ = function() {
-        this.searchSettings_.data.page += 1;
+        this.searchParams_.page += 1;
         this.schoolList_.showLoader();
         this.sendQuery_();
     };
@@ -399,22 +554,6 @@ goog.scope(function() {
     };
 
     /**
-     * @param {Object} newSettings
-     * @private
-     */
-    SearchResult.prototype.updateSearchSettings_ = function(newSettings) {
-        this.searchSettings_.data = newSettings.data;
-
-        if (newSettings.url) {
-            this.searchSettings_.url = newSettings.url;
-        }
-
-        if (newSettings.method) {
-            this.searchSettings_.method = newSettings.method;
-        }
-    };
-
-    /**
      * Send query with search settings
      * @param {boolean} opt_updateHeader
      * @private
@@ -424,7 +563,7 @@ goog.scope(function() {
             updateHeader = opt_updateHeader ?
                 opt_updateHeader : false;
 
-        if (this.searchSettings_.data.page) {
+        if (this.searchParams_.page) {
             callback = this.addItems_;
         } else if (updateHeader) {
             callback = this.updateList_;
@@ -433,9 +572,9 @@ goog.scope(function() {
         }
 
         jQuery.ajax({
-            url: this.searchSettings_.url,
-            type: this.searchSettings_.method,
-            data: this.searchSettings_.data,
+            url: this.requestParams_.url,
+            type: this.requestParams_.method,
+            data: this.searchParams_,
             success: callback.bind(this)
         });
     };

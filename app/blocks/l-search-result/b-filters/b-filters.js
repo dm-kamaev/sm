@@ -81,6 +81,17 @@ goog.scope(function() {
     };
 
     /**
+     * Filter type enum
+     * @enum {string}
+     */
+    Filters.Type = {
+        EGE: 'ege',
+        GIA: 'gia',
+        SCHOOL_TYPE: 'schoolType',
+        CLASSES: 'classes'
+    };
+
+    /**
      * @override
      */
     Filters.prototype.decorate = function(element) {
@@ -233,14 +244,6 @@ goog.scope(function() {
     };
 
     /**
-     * Submit data
-     * @param {Object} event
-     */
-    Filters.prototype.submit = function(event) {
-        this.sendForm_(event);
-    };
-
-    /**
      * Expand filters
      */
     Filters.prototype.expand = function() {
@@ -301,9 +304,8 @@ goog.scope(function() {
      * @return {Object}
      */
     Filters.prototype.serialize = function() {
-        var form = jQuery(this.getElement);
+        var form = jQuery(this.getElement());
         var data = form.serializeArray();
-
         return this.processingSerializeArray_(data);
     };
 
@@ -335,13 +337,14 @@ goog.scope(function() {
 
     /**
      * Submit handler
-     * @param {Object} event
      * @private
      */
-    Filters.prototype.onSubmit_ = function(event) {
-        event.preventDefault();
-
-        this.sendForm_(event);
+    Filters.prototype.onSubmit_ = function() {
+        var data = this.serialize();
+        this.dispatchEvent({
+            type: Filters.event.SUBMIT,
+            data: data
+        });
     };
 
     /**
@@ -385,48 +388,23 @@ goog.scope(function() {
     };
 
     /**
-     * Send form
-     * @param {Object} event
-     * @private
-     */
-    Filters.prototype.sendForm_ = function(event) {
-        var form = jQuery(this.getElement()),
-            data = {
-                'searchParams': this.processingSerializeArray_(
-                    form.serializeArray()
-                )
-            },
-            type = event.data ? event.data.type : '';
-
-        if (type === 'metro') {
-            data.searchParams.metroId = event.data.id;
-        } else if (type === 'areas') {
-            data.searchParams.areaId = event.data.id;
-        }
-
-        this.dispatchEvent({
-            type: Filters.event.SUBMIT,
-            data: data,
-            url: form.attr('action'),
-            method: form.attr('method')
-        });
-    };
-
-    /**
      * Processing serialize array
      * @param {Array.<Object>} array
      * @return {Object}
      * @private
      */
     Filters.prototype.processingSerializeArray_ = function(array) {
-        var result = {};
+        //TODO decide something with types, which may can be some kind of map
+        var result = {
+            ege: [],
+            gia: [],
+            olimp: [],
+            classes: [],
+            schoolType: []
+        };
 
         for (var i = 0, item; i < array.length; i++) {
             item = array[i];
-
-            if (!result[item.name]) {
-                result[item.name] = [];
-            }
 
             result[item.name].push(item.value);
         }

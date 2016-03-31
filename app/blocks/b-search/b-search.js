@@ -80,6 +80,7 @@ goog.scope(function() {
     Search.Event = {
         SUBMIT: 'submit',
         ITEM_SELECT: 'itemSelect',
+        TEXT_CHANGE: 'textChange',
         DEFAULT_MODE_INITED: 'defaultModeInited',
         SEARCH_MODE_INITED: 'searchModeInited'
     };
@@ -205,6 +206,11 @@ goog.scope(function() {
             this.onSubmit_.bind(this)
         );
 
+        this.suggest_.addEventListener(
+            gorod.gSuggest.Suggest.Events.TEXT_CHANGE,
+            this.onTextChange_.bind(this)
+        );
+
         if (this.elements_.searchButton) {
             handler.listen(
                 this.elements_.searchButton,
@@ -295,6 +301,11 @@ goog.scope(function() {
         this.suggest_.removeEventListener(
             gorod.gSuggest.Suggest.Events.SUBMIT,
             this.onSubmit_.bind(this)
+        );
+
+        this.suggest_.removeEventListener(
+            gorod.gSuggest.Suggest.Events.TEXT_CHANGE,
+            this.onTextChange_.bind(this)
         );
     };
 
@@ -497,7 +508,7 @@ goog.scope(function() {
         } else {
             this.dispatchEvent({
                 type: Search.Event.SUBMIT,
-                text: data.text
+                data: data
             });
         }
     };
@@ -517,20 +528,15 @@ goog.scope(function() {
 
     /**
      * Handler for input data
+     * @param {Object} event
+     * @param {Object} data
      * @private
      */
-    Search.prototype.onTextChange_ = function() {
-        if (this.getValue().length > 0) {
-            goog.dom.classlist.remove(
-                this.elements_.icon,
-                'b-search__icon_disabled'
-            );
-        } else {
-            goog.dom.classlist.add(
-                this.elements_.icon,
-                'b-search__icon_disabled'
-            );
-        }
+    Search.prototype.onTextChange_ = function(event, data) {
+        this.dispatchEvent({
+            type: Search.Event.TEXT_CHANGE,
+            data: data
+        });
     };
 
     /**
