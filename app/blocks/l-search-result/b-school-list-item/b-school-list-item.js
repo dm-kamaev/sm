@@ -48,6 +48,12 @@ sm.lSearchResult.bSchoolListItem.SchoolListItem = function(opt_params) {
     this.url_ = this.params_.url;
 
     /**
+     * @private
+     * @type {string}
+     */
+    this.name_ = this.params_.name.light + this.params_.name.bold;
+
+    /**
      * scoreInstance
      * @private
      * @type {sm.bScoreSchoolList.ScoreSchoolList}
@@ -74,7 +80,8 @@ goog.inherits(sm.lSearchResult.bSchoolListItem.SchoolListItem,
 goog.scope(function() {
     var ListItem = sm.lSearchResult.bSchoolListItem.SchoolListItem,
         Score = sm.bScoreSchoolList.ScoreSchoolList,
-        Badge = sm.bBadge.Badge;
+        Badge = sm.bBadge.Badge,
+        Analytics = sm.iAnalytics.Analytics.getInstance();
 
     /**
      *  Css class enum
@@ -85,6 +92,7 @@ goog.scope(function() {
         LINK_NAME: 'b-school-list-item__name_bold',
         SECTION_BADGES: 'b-school-list-item__section_badges'
     };
+
 
     /**
      * Returns score
@@ -255,6 +263,19 @@ goog.scope(function() {
                 this.onSectionBadgesClick_
             );
         }
+
+        handler.listen(
+            this.getElement(),
+            goog.events.EventType.CLICK,
+            this.onClickListItem_
+        );
+    };
+
+    /**
+     * @private
+     */
+    ListItem.prototype.onClickListItem_ = function() {
+        this.sendAnalyticsSchoolData_();
     };
 
     /**
@@ -283,5 +304,21 @@ goog.scope(function() {
             }
         }
         return result;
+    };
+
+    /**
+     * send Analytics data school
+     * @private
+     */
+    ListItem.prototype.sendAnalyticsSchoolData_ = function() {
+
+        var dataAnalytics = {
+            hitType: 'event',
+            eventCategory: 'search',
+            eventAction: 'results click',
+            eventLabel: this.name_
+        };
+
+        Analytics.send(dataAnalytics);
     };
 });
