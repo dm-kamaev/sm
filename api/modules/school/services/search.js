@@ -361,16 +361,15 @@ exports.getSchoolTypesByAliases = function(aliases) {
 /**
  * Initialize search params
  * @param {Object} params
- * @param {Object} params.searchParams
- * @param {?string} params.searchParams.name
- * @param {?Array.<number>} params.searchParams.classes
- * @param {?Array.<string>} params.searchParams.schoolType
- * @param {?Array.<string>} params.searchParams.ege
- * @param {?Array.<string>} params.searchParams.gia
- * @param {?Array.<string>} params.searchParams.olimp
- * @param {?number} params.searchParams.metroId
- * @param {?number} params.searchParams.areaId
- * @param {?number} params.searchParams.sortType
+ * @param {?string} params.name
+ * @param {?Array.<number>} params.classes
+ * @param {?Array.<string>} params.schoolType
+ * @param {?Array.<string>} params.ege
+ * @param {?Array.<string>} params.gia
+ * @param {?Array.<string>} params.olimp
+ * @param {?number} params.metroId
+ * @param {?number} params.areaId
+ * @param {?number} params.sortType
  * @param {?number} params.page
  */
 exports.initSearchParams = async(function(params) {
