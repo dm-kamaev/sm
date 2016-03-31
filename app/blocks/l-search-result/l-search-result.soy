@@ -61,6 +61,7 @@
  *     },
  *     config: {
  *         staticVersion: ?string
+ *         analyticsCounter: ?string
  *     }
  * }}
  */
@@ -85,6 +86,7 @@
                 'page': 'search-result',
                 'staticVersion': $params.config?.staticVersion,
                 'year':  $params.config?.year,
+                'analyticsCounter': $params.config?.analyticsCounter
             ]
         ] /}
     {/call}

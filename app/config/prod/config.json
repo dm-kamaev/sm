@@ -4,5 +4,6 @@
     "url": {
         "protocol": "http",
         "host": "schools.mel.fm"
-    }
+    },
+    "analyticsCounter": "UA-34116537-10"
 }

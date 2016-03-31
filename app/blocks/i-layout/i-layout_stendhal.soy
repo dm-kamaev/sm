@@ -6,6 +6,7 @@
  * @property {?string} page
  * @property {?string} staticVersion
  * @property {?number} year
+ * @property {?number} analyticsCounter
  */
 
 /**
@@ -69,7 +70,8 @@
  *         landingScript: string
  *     },
  *     config: {
- *         staticVersion: ?string
+ *         staticVersion: ?string,
+ *         analyticsCounter: ?string
  *     }
  * }
  * @override
@@ -85,7 +87,7 @@
     {/if}
     <script>
         var analytics = sm.iAnalytics.Analytics.getInstance();
-        analytics.init('UA-34116537-10');
+        analytics.init('{$params?.config?.analyticsCounter}');
     </script>
 {/template}
 

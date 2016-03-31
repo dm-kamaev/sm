@@ -2,6 +2,7 @@ var soy = require.main.require('./app/components/soy');
 var services = require.main.require('./app/components/services').all;
 const schoolView = require.main.require('./api/modules/school/views/schoolView');
 var urlConfig = require('../../../config').config.url;
+var analyticsCounter = require('../../../config').config.analyticsCounter;
 
 const AUTH_URL = urlConfig.protocol + '://' + urlConfig.host + ':3001/oauth';
 
@@ -62,7 +63,8 @@ exports.list = async (function(req, res) {
                 }
             },
             config: {
-                year: new Date().getFullYear()
+                year: new Date().getFullYear(),
+                analyticsCounter: analyticsCounter
             }
         }
     };
@@ -120,7 +122,8 @@ exports.view = async (function(req, res) {
                         ),
                     config: {
                         year: new Date().getFullYear(),
-                        authUrl: AUTH_URL
+                        authUrl: AUTH_URL,
+                        analyticsCounter: analyticsCounter
                     }
                 }
             }));
@@ -176,7 +179,8 @@ exports.search = async(function(req, res) {
                             ' с\u00A0выбором учебного\u00A0заведения'
               },
               config: {
-                  year: new Date().getFullYear()
+                  year: new Date().getFullYear(),
+                  analyticsCounter: analyticsCounter
               }
           }
     });
