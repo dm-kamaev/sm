@@ -685,8 +685,7 @@ service.listInstances = async(function(){
  * @return {Promise<Array.<Object>>}
  */
 service.list = async (function(opt_params) {
-    var params = opt_params || {},
-        searchParams = params.searchParams || null;
+    var searchParams = opt_params || {};
     var sqlConfig = {
         select: [
             'school.id',
@@ -739,7 +738,7 @@ service.list = async (function(opt_params) {
                 ],
                 having : [],
                 limit: 10,
-                offset: params.page * 10
+                offset: searchParams.page * 10
         },
         where: [
             'address.is_school = true'

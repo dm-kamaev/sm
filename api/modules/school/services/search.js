@@ -377,7 +377,7 @@ exports.initSearchParams = async(function(params) {
     /** Transform aliases in filters into ids **/
     var filterTypes = searchTypeEnum.toCamelCaseArray();
     var ids = filterTypes.map(filterType => {
-        var filter = params.searchParams[filterType];
+        var filter = params[filterType];
         return await(services.search.getFilterIds(filter, filterType));
     });
     var filters = lodash.zipObject(filterTypes, ids);

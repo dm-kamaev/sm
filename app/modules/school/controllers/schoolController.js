@@ -26,14 +26,12 @@ exports.createComment = async (function(req, res) {
 
 
 exports.list = async (function(req, res) {
-    var params = await(services.search.initSearchParams({
-        searchParams: req.query
-    }));
-
+    var searchParams = await(services.search.initSearchParams(req.query));
+    console.log(searchParams);
     var searchText = req.query.name || '';
 
     var promises = [
-        services.school.list(params),
+        services.school.list(searchParams),
         services.school.searchFilters()
     ];
     var results = await(promises);
@@ -56,10 +54,7 @@ exports.list = async (function(req, res) {
             searchSettings: {
                 url: '/api/school/search',
                 method: 'GET',
-                data: {
-                    searchParams: params.searchParams,
-                    page: 0
-                }
+                searchParams: searchParams
             },
             config: {
                 year: new Date().getFullYear()
