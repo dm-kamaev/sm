@@ -159,7 +159,12 @@ gulp.task('evercookie', function() {
 });
 
 gulp.task('copy', function() {
-    return gulp.src('assets/robots.txt', {base: 'assets/'})
+    return gulp.src([
+            path.join(__dirname + '/assets/robots.txt'),
+            path.join(__dirname + '/assets/google86acdf989d7328cf.html'),
+            path.join(__dirname + '/assets/yandex_7cfaf013e2f3373d.html')
+        ],
+        {base: 'assets/'})
         .pipe(gulp.dest('public'));
 });
 
