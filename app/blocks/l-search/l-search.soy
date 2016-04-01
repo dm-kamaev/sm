@@ -23,6 +23,9 @@
  *         urlImg: ?string,
  *         title: ?string,
  *         subtitle: ?string
+ *     ],
+ *     config: [
+ *         analyticsId: ?string
  *     ]
  * }
  */
@@ -30,7 +33,6 @@
     {let $content kind="html"}
         {call .layoutContent_ data="all" /}
     {/let}
-
     {call sm.iLayout.Template.layout}
         {param params: [
             'data': [
@@ -43,6 +45,7 @@
                 'page': 'search',
                 'staticVersion': $params.config?.staticVersion,
                 'year':  $params.config?.year,
+                'analyticsId': $params.config?.analyticsId
             ]
         ] /}
     {/call}

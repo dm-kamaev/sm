@@ -60,7 +60,8 @@
  *         }
  *     },
  *     config: {
- *         staticVersion: ?string
+ *         staticVersion: ?string,
+ *         analyticsId: ?string
  *     }
  * }}
  */
@@ -85,6 +86,7 @@
                 'page': 'search-result',
                 'staticVersion': $params.config?.staticVersion,
                 'year':  $params.config?.year,
+                'analyticsId': $params.config?.analyticsId
             ]
         ] /}
     {/call}
