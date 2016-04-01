@@ -84,7 +84,8 @@
  *     config: ?{
  *         staticVersion: ?string,
  *         year: ?number,
- *         authUrl: ?string
+ *         authUrl: ?string,
+ *         analyticsId: ?string
  *     }
  * }
  */
@@ -111,6 +112,7 @@
                 'page': 'school',
                 'staticVersion': $params.config?.staticVersion,
                 'year':  $params.config?.year,
+                'analyticsId': $params.config?.analyticsId
             ]
         ] /}
     {/call}

@@ -4,5 +4,6 @@
     "url": {
         "protocol": "http",
         "host": "schools1.qa.lan"
-    }
+    },
+    "analyticsId": "UA-34116537-11"
 }
