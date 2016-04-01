@@ -1,0 +1,26 @@
+.g-auth-social.g-auth-social_stendhal {
+    padding: 35px;
+
+    .g-auth-social__text {
+        margin-bottom: 15px;
+
+        font: 15px/1.3 'PT Serif', serif;
+    }
+
+    .g-auth-social__text:last-child {
+        margin-top: 5px;
+        margin-bottom: 0;
+    }
+
+    .g-auth-social__title {
+        margin-top: 15px;
+        margin-bottom: 25px;
+    }
+
+    .g-auth-social__href {
+        display: inline;
+
+        cursor: pointer;
+        color: #25a9a8;
+    }
+}

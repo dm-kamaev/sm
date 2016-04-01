@@ -1,0 +1,26 @@
+.b-block-mark__code {
+    padding: 15px;
+
+    border-radius: 8px;
+
+    color: #232323;
+    background-color: rgba(199, 193, 198, 0.27);
+    font-weight: 600;
+}
+
+.b-block-mark__code-indent {
+    margin-left: 26px;
+}
+
+.b-block-mark__comment {
+    color: #364247;
+    font-weight: 500;
+}
+
+.b-block-mark__inline {
+    display: inline-block;
+
+    margin: 0 20px 20px 0;
+
+    vertical-align: top;
+}

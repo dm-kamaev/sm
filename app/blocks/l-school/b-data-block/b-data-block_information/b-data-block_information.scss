@@ -1,0 +1,12 @@
+@import "../../../i-media/i-media";
+
+.b-data-block_information {
+	.b-data-block__content {
+	  	color: #808080;
+	}
+}
+@include media-m {
+	.b-data-block_information {
+		margin-bottom: 0;
+	}
+}

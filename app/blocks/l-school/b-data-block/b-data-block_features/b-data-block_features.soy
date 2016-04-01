@@ -1,0 +1,42 @@
+{namespace sm.lSchool.bDataBlock.TemplateFeatures}
+/**
+ * Addresses item
+ * @param params {
+ *     header: ?string,
+ *     headerType: ?number
+ *     modifier: ?string
+ *     content: ?list<string>
+ * }
+ * @extends sm.lSchool.bDataBlock.Template
+ * @constructor
+ */
+{template .base}
+    {call .init}
+        {param params: [
+            'header': $params.header,
+            'headerType': $params.headerType ?
+                        $params.headerType :
+                        2,
+            'modifier': $params.modifier ?
+                        'b-data-block_features' + $params.modifier :
+                        'b-data-block_features',
+            'content': $params.content
+        ] /}
+    {/call}
+{/template}
+
+/**
+ * Content item
+ * @param params {
+ *     content: ?list<string>
+ * }
+ */
+{template .content autoescape="strict" kind="html"}
+    <ul class="b-data-block__content">
+    {foreach $feature in $params.content}
+        <li class="b-data-block__item">
+            <div class="b-data-block__dash">—</div>
+            <div class="b-data-block__text">{$feature}</div>
+        </li>
+    {/foreach}
+{/template}

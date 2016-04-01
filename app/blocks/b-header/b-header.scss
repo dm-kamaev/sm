@@ -1,0 +1,142 @@
+﻿@import "../i-media/i-media";
+@import "../i-animate/i-animate";
+
+/* layout */
+.b-header {
+    z-index: auto;
+
+    width: 100%;
+    height: auto;
+
+    text-align: center;
+
+    background: #fff;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
+
+    font-family: 'Proxima', Arial, sans-serif;
+}
+
+.b-header__body {
+    position: relative;
+    z-index: 15;
+
+    width: 1200px;
+    height: 70px;
+    margin: 0 auto;
+
+    &:before {
+        display: inline-block;
+
+        width: 0;
+        height: 100%;
+
+        content: '';
+        vertical-align: middle;
+    }
+}
+
+.b-header__main {
+    position: relative;
+    z-index: 1;
+
+    display: inline-block;
+
+    vertical-align: middle;
+}
+/* layout end */
+
+/* advanced search link */
+.b-header__link-search {
+    position: absolute;
+    z-index: 1;
+    top: 27px; //28
+    left: 0;
+
+    display: inline-block;
+}
+/* advanced search link end */
+
+/* logo */
+.b-header__logo {
+    height: 20px;
+    width: 192px;
+}
+/* logo end */
+
+/* search */
+.b-header__search {
+    position: absolute !important;
+    z-index: 1;
+    top: 0;
+    right: 0;
+
+    display: inline-block;
+
+    box-sizing: border-box;
+    width: 100%;
+}
+/* search end */
+
+.b-header_mode_search.b-header_animation_off {
+    /* animations begin */
+    .b-header__main,
+    .b-header__link-search {
+        visibility: hidden;
+    }
+    /* animations end */
+}
+
+.b-header_mode_default.b-header_animation_off {
+    .b-header__main,
+    .b-header__link-search {
+        visibility: visible;
+    }
+}
+
+.b-header_mode_search.b-header_animation_on {
+    /* animations begin */
+    .b-header__main,
+    .b-header__link-search {
+        animation-name: fadeOut;
+    }
+    /* animations end */
+}
+
+.b-header_mode_default.b-header_animation_on {
+    .b-header__main,
+    .b-header__link-search {
+        animation-name: fadeIn;
+    }
+}
+
+@include media-xl {
+    .b-header__body {
+        box-sizing: border-box;
+        width: 100%;
+        padding: 0 40px;
+    }
+
+    .b-header__link-search {
+        left: 40px;
+    }
+}
+
+@include media-s {
+
+    .b-header {
+        text-align: left;
+    }
+
+    .b-header__body {
+        height: 55px;
+        padding: 0 30px;
+    }
+    
+    .b-header__wrap {
+        margin-top: 12px;
+    }
+
+    .b-header__link-search {
+        display: none;
+    }
+}

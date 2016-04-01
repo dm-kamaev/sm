@@ -1,0 +1,14 @@
+@media screen and (max-width: 1280px) {
+    .i-layout_page_search.i-layout_modifier_stendhal .i-layout__footer {
+        width: 100%;
+        padding: 0 40px;
+
+        box-sizing: border-box;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .i-layout_page_search.i-layout_modifier_stendhal .i-layout__footer {
+        padding: 0 30px;
+    }
+}

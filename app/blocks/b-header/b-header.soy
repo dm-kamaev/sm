@@ -1,0 +1,123 @@
+{namespace sm.bHeader.Template}
+
+
+/**
+ * Header parameters
+ * @typedef {object} sm.bHeader.Template.Params
+ * @property {?string} url
+ * @property {?string} searchtext
+ * @property {?boolean} searchRedirect
+ * @property {?boolean} notShowLink
+ */
+
+/**
+ * Header
+ * @param params {?sm.bHeader.Template.Params}
+ */
+{template .base autoescape="strict" kind="html"}
+    <div class="b-header">
+        {call .banner_ /}
+        <div class="b-header__body">
+            {if $params?.url}
+                {call .search_ data="all" /}
+            {/if}
+            {call .advancedSearchLink_ data="all" /}
+
+            <div class="b-header__main i-animate">
+                {call .logo_ data="all" /}
+            </div>
+        </div>
+    </div>
+{/template}
+
+
+/**
+ * Advanced search link
+ * @param params {{
+ *     notShowLink: ?boolean
+ * }}
+ */
+{template .advancedSearchLink_ private="true" autoescape="strict" kind="html"}
+    {if not ($params?.notShowLink)}
+        <div class="b-header__link-search i-animate">
+            {call sm.bLink.Template.base}
+                {param params: [
+                    'data': [
+                        'name': 'Полный список школ',
+                        'url': '/search'
+                    ]
+                ]/}
+            {/call}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Logo
+ * @param params {{
+ *     url: string
+ * }}
+ */
+{template .logo_ private="true" autoescape="strict" kind="html"}
+    <div class="b-header__title">
+        {if $params?.url}
+            <a class="b-header__link" href="{$params.url}">
+                {call .logoImg_ /}
+            </a>
+        {else}
+            {call .logoImg_ /}
+        {/if}
+    </div>
+{/template}
+
+/**
+ * Logo img
+ */
+{template .logoImg_ private="true" autoescape="strict" kind="html"}
+    <img class="b-header__logo" src="/images/b-header/logo.svg"
+        alt="Школы Мела - индивидуальный рейтинг школ">
+{/template}
+
+
+/**
+ * Search
+ * @param params {{
+ *     searchText: ?string,
+ *     redirect: ?boolean
+ * }}
+ */
+{template .search_ private="true" autoescape="strict" kind="html"}
+    {call sm.bSearch.Template.base}
+        {param params: [
+            'placeholder': 'Номер школы, метро, район',
+            'text': $params?.searchText,
+            'theme': 'foldable',
+            'redirect': $params?.searchRedirect,
+            'customClasses': 'b-header__search',
+            'inputSize': 'min'
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * Banner
+ */
+{template .banner_ autoescape="strict" kind="html"}
+    <div class="i-layout__banner">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': 'stendhal',
+                'type': 'banner',
+                'renderParams': [
+                    'data': [
+                        'textXl': 'Мы\u00A0хотим создать самый полезный сервис 
+                        для выбора школы. Как думаете, у\u00A0нас\u00A0получилось?',
+                        'textS': 'Мы\u00A0помогли вам выбрать\u00A0школу?'
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}

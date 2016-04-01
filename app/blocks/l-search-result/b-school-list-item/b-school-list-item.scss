@@ -1,0 +1,143 @@
+@import "../i-media/i-media";
+
+.b-school-list-item {
+    display: inline-block;
+
+    width: 100%;
+    height: auto;
+    padding: 25px 0;
+
+    cursor: default;
+
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.b-school-list-item:last-child {
+    border-bottom: none;
+}
+
+.b-school-list-item__section {
+    position: relative;
+
+    margin-bottom: 12px;
+
+    &_badges {
+        display: inline-block;
+
+        width: auto;
+        margin-bottom: 10px;
+    }
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+
+}
+
+.b-school-list-item__metro-stations {
+    display: inline-block;
+
+    margin-right: 18px;
+}
+
+.b-school-list-item__area {
+    display: inline-block;
+
+    margin-right: 18px;
+}
+
+.b-school-list-item__ratings {
+    display: inline-block;
+}
+
+.b-school-list-item__name {
+    display: inline-block;
+
+    height: 100%;
+    padding-right: 160px;
+
+    cursor: pointer;
+
+    color: black;
+    text-decoration: none;
+
+    font: 700 21px/26px 'Proxima', Arial, sans-serif;
+
+    &_bold {
+        font-weight: 800;
+    }
+
+    &:hover {
+        color: #ee362c;
+    }
+}
+
+.b-school-list-item__name-wrap {
+    font-weight: 700;
+    font-family: 'Proxima', Arial, sans-serif;
+}
+
+.b-school-list-item__score {
+    position: absolute;
+
+    top: 2px;
+    right: 0;
+}
+
+.b-school-list-item__data {
+    display: inline-block;
+
+    width: 100%;
+    height: auto;
+    margin-top: 20px;
+
+    color: rgb(136, 136, 136);
+    font-size: 13px;
+}
+
+.b-school-list-item__data-item {
+    display: inline-block;
+
+    width: auto;
+    height: auto;
+}
+
+.b-school-list-item__description {
+    display: inline-block;
+
+    max-width: 705px;
+    padding-right: 80px;
+
+    color: #000;
+
+    font: 16px/22px 'PT Serif', Arial, sans-serif;
+}
+
+
+@include media-xl {
+    .b-school-list-item__name {
+        padding-right: 75px;
+    }
+}
+
+
+@include media-l {
+    .b-school-list-item__name {
+        padding-right: 160px;
+    }
+}
+
+
+@include media-m {
+
+}
+
+@include media-s {
+    .b-school-list-item__name {
+        padding-right: 75px;
+    }
+
+    .b-school-list-item__description {
+        padding-right: 0;
+    }
+}

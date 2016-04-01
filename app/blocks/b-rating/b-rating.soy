@@ -1,0 +1,93 @@
+{namespace sm.bRating.Template}
+
+/**
+ * rating view
+ * @param? params {
+ *     marks: ?list<number>,
+ *     averageMark: ?number,
+ *     theme: ?string,
+ *     noSectionNames: ?boolean,
+ *     noMarks: ?boolean
+ * }
+ */
+{template .base autoescape="strict" kind="html"}
+    <div class="
+        b-rating
+        {if $params.theme}
+            {sp}
+            b-rating_{$params.theme}-theme
+        {/if}
+    ">
+
+        {if not $params.noMarks}
+            {call .marks_}
+                {param params: [
+                    'marks': $params.marks,
+                    'averageMark': $params.averageMark
+                ]/}
+            {/call}
+        {/if}
+
+        {if not $params.noSectionNames}
+            {call .sectionNames_ /}
+        {/if}
+    </div>
+{/template}
+
+/**
+ * Marks template
+ * @param params {
+ *     marks: ?list<number>,
+ *     averageMark: ?number,
+ * }
+ */
+{template .marks_ autoescape="strict" kind="html" private="true"}
+    <div class="b-rating__marks">
+        <div class="b-rating__section">
+            <div class="b-rating__mark
+                        b-rating__mark_average
+                        {if not $params.averageMark > 0}
+                            {sp}
+                            b-rating__mark_null-average
+                        {/if}">
+                {$params.averageMark > 0 ?
+                    round($params.averageMark, 1) : '—'}
+            </div>
+        </div>
+        {foreach $mark in $params.marks}
+            <div class="b-rating__section">
+                <div class="b-rating__mark b-rating__mark_ordinary">
+                    {$mark > 0 ? round($mark, 1) : '—'}
+                </div>
+            </div>
+        {/foreach}
+    </div>
+{/template}
+
+/**
+ * Section names template
+ */
+{template .sectionNames_ autoescape="strict" kind="html" private="true"}
+    {let $sectionNames: [
+        'Средний балл',
+        'Образование',
+        'Преподаватели',
+        'Атмосфера',
+        'Инфраструктура'
+    ] /}
+    <div class="b-rating__sections">
+        {foreach $sectionName in $sectionNames}
+            <div class="b-rating__section">
+                <div class="
+                    b-rating__section-name
+                    {if isFirst($sectionName)}
+                        {sp}
+                        b-rating__section-name_average
+                    {/if}
+                ">
+                    {$sectionName}
+                </div>
+            </div>
+        {/foreach}
+    </div>
+{/template}

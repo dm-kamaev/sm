@@ -1,0 +1,75 @@
+{namespace sm.bPopularSchools.Template}
+/**
+ * The popular schools block
+ * @private
+ * @param params {
+ *     popularSchools: ?list<[
+ *         id: ?number,
+ *         url: ?string,
+ *         name: ?string,
+ *         description: ?string,
+ *         metro: ?list<string>,
+ *         totalScore: ?number
+ *     ]>,
+ *     config: ?{
+ *         popularSchool: {
+ *             customClasses: ?string
+ *         }
+ *     }
+ * }
+ */
+{template .base autoescape="strict" kind="html"}
+    <div class="b-popular-schools">
+        <div class="b-popular-schools__title">популярные школы</div>
+        {foreach $school in $params?.popularSchools}
+            <a class="b-popular-schools__school-link{sp}
+                      {$params?.config?.popularSchool?.customClasses ?: ''}"
+               href="/school/{$school.url}">
+                <div class="b-popular-schools__school
+                        {if isLast($school)}{sp}b-popular-schools__school_last{/if}">
+                    <div class="b-popular-schools__school-rating">
+                        {call sm.bMark.Template.base}
+                            {param params: [
+                                'value': $school.totalScore,
+                                'config': [
+                                    'zeroSign': 'question-mark'
+                                ]
+                            ]/}
+                        {/call}
+                    </div>
+                    <div class="b-popular-schools__school-information">
+                        <div class="b-popular-schools__school-name">{$school.name}</div>
+                        {if $school.description}
+                            <div class="b-popular-schools__school-description">{$school.description}</div>
+                        {/if}
+                        {if length($school?.metro) > 0}
+                            <div class="b-popular-schools__metro">
+                                {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+                                    {param params: [
+                                        'type': 'icon',
+                                        'renderParams': [
+                                            'data': [
+                                                'type': 'metro'
+                                            ],
+                                            'config': [
+                                                'customClasses': ['b-popular-schools__metro-icon']
+                                            ]
+                                        ]
+                                    ]/}
+                                {/call}
+                                {foreach $metroStation in $school?.metro}
+                                    <span class="b-popular-schools__metro-stations">
+                                        {$metroStation}
+                                        {if not isLast($metroStation)}
+                                            ,
+                                        {/if}
+                                    </span>{sp}
+                                {/foreach}
+                            </div>
+                        {/if}
+                    </div>
+                </div>
+            </a>
+        {/foreach}
+    </div>
+{/template}

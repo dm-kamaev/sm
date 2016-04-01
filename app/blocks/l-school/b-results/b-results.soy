@@ -1,0 +1,415 @@
+{namespace sm.lSchool.bResults.Template}
+
+/**
+ * Results template
+ * @param params {
+ *     data: []
+ * }
+ */
+{template .results}
+    {if
+        $params?.data?.ege?.years?.length or
+        $params?.data?.gia?.years?.length or
+        $params?.data?.olymp?.years?.length
+    }
+        {let $ege kind="html"}
+            {call .label_}
+                {param params: [
+                    'label': 'ЕГЭ'
+                ]/}
+            {/call}
+        {/let}
+        {let $gia kind="html"}
+            {call .label_}
+                {param params: [
+                    'label': 'ГИА'
+                ]/}
+            {/call}
+        {/let}
+        {let $olymp kind="html"}
+            {call .label_}
+                {param params: [
+                    'label': 'ОЛИМПИАДЫ'
+                ]/}
+            {/call}
+        {/let}
+        {let $egeContent kind="html"}
+            {call .examContent_}
+                {param params: [
+                    'data': $params?.data?.ege,
+                    'config': [
+                        'type': 'ege'
+                    ]
+                ]/}
+            {/call}
+        {/let}
+        {let $giaContent kind="html"}
+            {call .examContent_}
+                {param params: [
+                    'data': $params?.data?.gia,
+                    'config': [
+                        'type': 'gia'
+                    ]
+                ]/}
+            {/call}
+        {/let}
+        {let $olympContent kind="html"}
+            {call .olympContent_}
+                {param params: [
+                    'data': $params?.data?.olymp
+                ]/}
+            {/call}
+        {/let}
+
+        <div class="b-results">
+            {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+                {param params: [
+                    'type': 'tab',
+                    'renderParams': [
+                        'data': [
+                            'tabs': [
+                                [
+                                    'label': $ege,
+                                    'content': $egeContent,
+                                    'isEmpty': not
+                                        $params?.data?.ege?.years?.length
+                                ],
+                                [
+                                    'label': $gia,
+                                    'content': $giaContent,
+                                    'isEmpty': not
+                                        $params?.data?.gia?.years?.length
+                                ],
+                                [
+                                    'label': $olymp,
+                                    'content': $olympContent,
+                                    'isEmpty': not
+                                        $params?.data?.olymp?.years?.length
+                                ]
+                            ],
+                            'selectedTabId':
+                                $params?.data?.ege?.years?.length ?
+                                    0 :
+                                    $params?.data?.gia?.years?.length ?
+                                        1 : 2
+                        ]
+                    ]
+                ]/}
+           {/call}
+        </div>
+    {/if}
+{/template}
+
+/**
+ * Label template
+ * @param params {
+ *     label: ?string
+ * }
+ */
+{template .label_ private="true"}
+    <h3 class="b-results__label">{$params.label}</h3>
+{/template}
+
+/**
+ * Olymp content
+ * @param params {
+ *     data: []
+ * }
+ */
+{template .olympContent_ private="true"}
+    <div class="b-results__content b-results__content_olymp">
+        <div class="b-results__olymp-tooltip">
+            Данные предоставлены Открытым Правительством
+        </div>
+        <div class="b-results__dropdown">
+            {if $params.data?.years.length > 1}
+                <div class="b-results__dropdown-holder">
+                    {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+                        {param params: [
+                            'type': 'dropdown-select',
+                            'renderParams': [
+                                'data': [
+                                    'listItems': $params.data?.years,
+                                    'selectedItemId': $params.data?.years.length - 1
+                                ],
+                                'config': [
+                                    'iconSprite': 'sort-arrow',
+                                    'theme': 'sort',
+                                    'textSize': 'large',
+                                    'iconOffset': 'small'
+                                ]
+                            ]
+                        ]/}
+                    {/call}
+                </div>
+            {else}
+                {$params.data.years[$params.data?.years.length - 1]?.label}
+            {/if}
+        </div>
+
+        {call .olympYearResults_}
+            {param params: [
+                'yearResults': $params.data?.results
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+/**
+ * @param params {
+ *     yearResults: []
+ * }
+ */
+{template .olympYearResults_ private="true"}
+        {foreach $yearResults in $params.yearResults}
+            <div class="b-results__inner-content
+                {isLast($yearResults) ? '' : ' i-utils__hidden'}">
+                {if $yearResults.top}
+                    <div class="b-results__content-item">
+                        <div class="b-results__item-label">
+                            Младшие классы
+                        </div>
+                        <div class="b-results__item-data">
+                            {call .olympDiagram_}
+                                {param params: [
+                                    'data': $yearResults.top
+                                ]/}
+                            {/call}
+                        </div>
+                    </div>
+                {/if}
+                {if $yearResults.middle}
+                    <div class="b-results__content-item">
+                        <div class="b-results__item-label">
+                            Средние классы
+                        </div>
+                        <div class="b-results__item-data">
+                            {call .olympDiagram_}
+                                {param params: [
+                                    'data': $yearResults.middle
+                                ]/}
+                            {/call}
+                        </div>
+                    </div>
+                {/if}
+                {if $yearResults.bottom}
+                    <div class="b-results__content-item">
+                        <div class="b-results__item-label">
+                            Старшие классы
+                        </div>
+                        <div class="b-results__item-data">
+                            {call .olympDiagram_}
+                                {param params: [
+                                    'data': $yearResults.bottom
+                                ]/}
+                            {/call}
+                        </div>
+                    </div>
+                {/if}
+            </div>
+        {/foreach}
+{/template}
+
+/**
+ * Olympiad diagram
+ * @param params {
+ *     data: []
+ * }
+ */
+{template .olympDiagram_ private="true"}
+    {let $shown: 3/}
+    <div class="b-results__olymp-diagram">
+        {for $i in range($params.data.length)}
+            {if $i == $shown}
+                <div class="b-results__show-more-button{sp}
+                    b-results__show-more-button_active">
+                    Развернуть полный список{sp}{sp}
+                    <span class="b-results__olymp-count">
+                        {$params.data.length - $shown}
+                    </span>
+                </div>
+            {/if}
+            <div class="b-results__olymp-item">
+                {$params.data[$i].name} —
+                {if $params.data[$i].winners}
+                    {sp}
+                    {$params.data[$i].winners}
+                    {call cl.iUtils.Utils.declensionPrint}
+                        {param params: [
+                            'num': $params.data[$i].winners,
+                            'nom': ' победитель',
+                            'gen': ' победителя',
+                            'plu': ' победителей'
+                        ]/}
+                    {/call}
+                    {$params.data[$i].awardees ? ', ' : ''}
+                {/if}
+                {if $params.data[$i].awardees}
+                    {sp}
+                    {$params.data[$i].awardees}
+                    {call cl.iUtils.Utils.declensionPrint}
+                        {param params: [
+                            'num': $params.data[$i].awardees,
+                            'nom': ' призер',
+                            'gen': ' призера',
+                            'plu': ' призеров'
+                        ]/}
+                    {/call}
+                {/if}
+            </div>
+        {/for}
+    </div>
+{/template}
+
+/**
+ * Content template
+ * @param params {
+ *     data: [],
+ *     config: {
+ *         type: ?string
+ *     }
+ * }
+ */
+{template .examContent_ private="true"}
+    {let $maxValue: ($params.config.type == 'ege') ? 100 : 5 /}
+
+    <div class="b-results__content">
+        <div class="b-results__dropdown">
+        {if $params.data?.years.length > 1}
+            <div class="b-results__dropdown-holder">
+                {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+                    {param params: [
+                        'type': 'dropdown-select',
+                        'renderParams': [
+                            'data': [
+                                'listItems': $params.data?.years,
+                                'selectedItemId': $params.data?.years.length - 1
+                            ],
+                            'config': [
+                                'iconSprite': 'sort-arrow',
+                                'theme': 'sort',
+                                'textSize': 'large',
+                                'iconOffset': 'small'
+                            ]
+                        ]
+                    ]/}
+                {/call}
+            </div>
+        {else}
+            {$params.data.years[$params.data?.years.length - 1]?.label}
+        {/if}
+        </div>
+
+        {call .examYearResults_}
+            {param params: [
+                'yearResults': $params.data?.results,
+                'maxValue': $maxValue,
+                'range': $params?.data?.range
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+/**
+ * @param params {
+ *     yearResults: [],
+ *     maxValue: ?number,
+ *     range: ?number
+ * }
+ */
+{template .examYearResults_ private="true"}
+    {let $upperMoscow kind="html"}
+        Выше среднего <br class="b-results__item-label-br"> по Москве
+    {/let}
+    {foreach $yearResults in $params?.yearResults}
+        <div class="b-results__inner-content
+            {isLast($yearResults) ? '' : ' i-utils__hidden'}">
+            {if $yearResults.top}
+                {call .examContentItem_}
+                    {param params: [
+                        'diagramData': $yearResults.top,
+                        'maxValue': $params?.maxValue,
+                        'label': $upperMoscow,
+                        'range': $params?.range
+                    ]/}
+                {/call}
+            {/if}
+            {if $yearResults.middle}
+                {call .examContentItem_}
+                    {param params: [
+                        'diagramData': $yearResults.middle,
+                        'maxValue': $params?.maxValue,
+                        'label': 'Средний уровень',
+                        'range': $params?.range
+                    ]/}
+                {/call}
+            {/if}
+            {if $yearResults.bottom}
+                {call .examContentItem_}
+                    {param params: [
+                        'diagramData': $yearResults.bottom,
+                        'maxValue': $params?.maxValue,
+                        'label': 'Ниже среднего',
+                        'range': $params.data?.range
+                    ]/}
+                {/call}
+            {/if}
+        </div>
+    {/foreach}
+{/template}
+
+/**
+ * @param params {
+ *     label: ?string,
+ *     diagramData: ?string,
+ *     maxValue: ?string,
+ *     range: ?string
+ * }
+ */
+{template .examContentItem_ private="true"}
+    {let $tooltip kind="html"}
+        <div class=b-results__tooltip>
+            Результаты экзаменов по данным отчётов школ, среднее значение – по базе "Школ Мела"
+        </div>
+    {/let}
+    <div class="b-results__content-item">
+        <div class="b-results__item-label">
+            <div class="b-results__item-label-text">
+                {$params.label}
+            </div>
+            <div class="b-results__help-icon i-hint">
+                {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+                    {param params: [
+                        'type': 'icon',
+                        'renderParams': [
+                            'data': [
+                                'type': 'school-button'
+                            ]
+                        ]
+                    ]/}
+                {/call}
+                {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+                    {param params: [
+                        'type': 'hint',
+                        'renderParams': [
+                            'data': $tooltip,
+                            'config': [
+                                'customClasses': ['b-results__hint']
+                            ]
+                        ]
+                    ]/}
+                {/call}
+            </div>
+        </div>
+        <div class="b-results__item-data">
+            {call sm.bDiagram.Template.base}
+                {param params: [
+                    'data': $params?.diagramData,
+                    'maxValue': $params?.maxValue,
+                    'display': 'bars',
+                    'range': $params?.range
+                ]/}
+            {/call}
+        </div>
+    </div>
+{/template}

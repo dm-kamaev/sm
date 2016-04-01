@@ -1,0 +1,254 @@
+{namespace sm.lDoc.nDemo.bBlockSchoolList.Template}
+
+/**
+* preview
+*/
+{template .preview}
+    {call sm.lSearchResult.bSchoolList.Template.base}
+    {param params: [
+        'schools': [
+            [
+                'id': 1,
+                'name': [
+                    'light': 'Школа ',
+                    'bold': '№ 14'
+                ],
+                'score': [
+                    ['name':'Образование', 'value': 1.3],
+                    ['name':'Преподаватели', 'value': 2.7],
+                    ['name':'Инфраструктура', 'value': 3.5],
+                    ['name':'Атмосфера', 'value':4]
+                ],
+                'currentCriterion': [
+                    'name':'Средняя оценка', 
+                    'value':1
+                ],
+                'metroStations': ['Чкаловская', 'Курская'],
+                'ratings': ['Сто лучших школ России']
+            ],
+            [
+                'id': 2,
+                'name': [
+                    'light': 'Школа ',
+                    'bold': '№ 15'
+                ],
+                'score': [
+                    ['name':'Образование', 'value': 3.3],
+                    ['name':'Преподаватели', 'value': 3.7],
+                    ['name':'Инфраструктура', 'value': 4.5],
+                    ['name':'Атмосфера', 'value': 2]
+                ],
+                'currentCriterion': [
+                    'name':'Средняя оценка', 
+                    'value':2
+                ],
+                'metroStations': ['Чкаловская', 'Курская'],
+                'ratings': ['100 лучших школ России']
+            ],
+            [
+                'id': 3,
+                'name': [
+                    'light': 'Школа ',
+                    'bold': '№ 14'
+                ],
+                'score': [
+                    ['name':'Образование', 'value': 0.3],
+                    ['name':'Преподаватели', 'value': 4.7],
+                    ['name':'Инфраструктура', 'value': 2.5],
+                    ['name':'Атмосфера', 'value':3.8]
+                ],
+                'currentCriterion': [
+                    'name':'Средняя оценка', 
+                    'value':2.95
+                ],
+                'metroStations': ['Чкаловская', 'Курская'],
+                'ratings': ['100 лучших школ России']
+            ],
+            [
+                'id': 10,
+                'name': [
+                    'light': 'Центр образования ',
+                    'bold': '№ 548 «Царицыно»'
+                ],
+                'score': [
+                    ['name':'Образование', 'value': 2.3],
+                    ['name':'Преподаватели', 'value': 2.7],
+                    ['name':'Инфраструктура', 'value': 3.5],
+                    ['name':'Атмосфера', 'value':4]
+                ],
+                'currentCriterion': [
+                    'name':'Средняя оценка', 
+                    'value':3.4
+                ],
+                'description': 'Одна из лучших школ города, ежегодно занимающая верхние строчки в рейтингах московского депертамента образования',
+                'metroStations': ['Домодедовская','Орехово'],
+                'ratings': ['100 лучших школ России']
+            ],
+            [
+                'id': 19,
+                'name': [
+                    'light': 'Школа ',
+                    'bold': '№ 13'
+                ],
+                'score': [
+                    ['name':'Образование', 'value': 0.3],
+                    ['name':'Преподаватели', 'value': 4.7],
+                    ['name':'Инфраструктура', 'value': 2.5],
+                    ['name':'Атмосфера', 'value':3.8]
+                ],
+                'currentCriterion': [
+                    'name':'Средняя оценка', 
+                    'value':4
+                ],
+                'metroStations': ['Чкаловская', 'Курская'],
+                'ratings': ['100 лучших школ России']
+            ]
+        ]
+    ]/}
+    {/call}
+{/template}
+
+/**
+* doc
+*/
+{template .doc}
+    Template:
+    <br><br>
+    <div class="l-doc__code">
+        sm.lSearchResult.bSchoolList.Template
+    </div>
+    Params:
+    <br><br>
+    <div class="l-doc__code">
+        schools: list<[ <br>
+            <div class="l-doc__code-indent">id: number,</div>
+            <div class="l-doc__code-indent">url: string,</div>
+            <div class="l-doc__code-indent">name: [
+                <div class="l-doc__code-indent">
+                    ligth: string,<br>
+                    bold: string
+                    <span class="l-doc__comment">- bolded part of name</span>
+                    <br>
+                </div>],
+            </div>
+            <div class="l-doc__code-indent">score: list<[<br>
+                <div class="l-doc__code-indent">
+                    name: string,<br>
+                    value: string
+                    <br>
+                </div>
+            ]>,</div>
+            <div class="l-doc__code-indent">totalScore: number,</div>
+            <div class="l-doc__code-indent">description: string,</div>
+            <div class="l-doc__code-indent">metroStations:{sp}
+                list < string >,</div>
+            <div class="l-doc__code-indent">ratings:{sp}
+                list < string ></div>
+        ]>
+    </div>
+
+
+    {call sm.lSearchResult.bSchoolList.Template.base}
+        {param params: [
+        'schools': [
+            [
+                'id': 1,
+                'name': [
+                    'light': 'Школа ',
+                    'bold': '№ 14'
+                ],
+                'score': [
+                    ['name':'Образование', 'value': 1.3],
+                    ['name':'Преподаватели', 'value': 2.7],
+                    ['name':'Инфраструктура', 'value': 3.5],
+                    ['name':'Атмосфера', 'value':4]
+                ],
+                'currentCriterion': [
+                    'name':'Средняя оценка', 
+                    'value':1
+                ],
+                'metroStations': ['Чкаловская', 'Курская'],
+                'ratings': ['Сто лучших школ России']
+
+            ],
+            [
+                'id': 2,
+                'name': [
+                    'light': 'Школа ',
+                    'bold': '№ 15'
+                ],
+                'score': [
+                    ['name':'Образование', 'value': 3.3],
+                    ['name':'Преподаватели', 'value': 3.7],
+                    ['name':'Инфраструктура', 'value': 4.5],
+                    ['name':'Атмосфера', 'value': 2]
+                ],
+                'currentCriterion': [
+                    'name':'Средняя оценка', 
+                    'value':2
+                ],
+                'metroStations': ['Чкаловская', 'Курская'],
+                'ratings': ['100 лучших школ России']
+            ],
+            [
+                'id': 3,
+                'name': [
+                    'light': 'Школа ',
+                    'bold': '№ 14'
+                ],
+                'score': [
+                    ['name':'Образование', 'value': 0.3],
+                    ['name':'Преподаватели', 'value': 4.7],
+                    ['name':'Инфраструктура', 'value': 2.5],
+                    ['name':'Атмосфера', 'value':3.8]
+                ],
+                'currentCriterion': [
+                    'name':'Средняя оценка', 
+                    'value':2.95
+                ],
+                'metroStations': ['Чкаловская', 'Курская'],
+                'ratings': ['100 лучших школ России']
+            ],
+            [
+                'id': 10,
+                'name': [
+                    'light': 'Центр образования ',
+                    'bold': '№ 548 «Царицыно»'
+                ],
+                'score': [
+                    ['name':'Образование', 'value': 2.3],
+                    ['name':'Преподаватели', 'value': 2.7],
+                    ['name':'Инфраструктура', 'value': 3.5],
+                    ['name':'Атмосфера', 'value':4]
+                ],
+                'currentCriterion': [
+                    'name':'Средняя оценка', 
+                    'value':3.4
+                ],
+                'description': 'Одна из лучших школ города, ежегодно занимающая верхние строчки в рейтингах московского депертамента образования',
+                'metroStations': ['Домодедовская','Орехово'],
+                'ratings': ['100 лучших школ России']
+            ],
+            [
+                'id': 19,
+                'name': [
+                    'light': 'Школа ',
+                    'bold': '№ 13'
+                ],
+                'score': [
+                    ['name':'Образование', 'value': 0.3],
+                    ['name':'Преподаватели', 'value': 4.7],
+                    ['name':'Инфраструктура', 'value': 2.5],
+                    ['name':'Атмосфера', 'value':3.8]
+                ],
+                'currentCriterion': [
+                    'name':'Средняя оценка', 
+                    'value':4
+                ],
+                'metroStations': ['Чкаловская', 'Курская'],
+                'ratings': ['100 лучших школ России']
+            ]
+        ]
+    ]/}
+    {/call}
+{/template}

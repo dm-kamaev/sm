@@ -1,0 +1,46 @@
+{namespace sm.gAuthSocialModal.TemplateStendhal}
+
+/**
+ * Auth social template
+ * @param params {
+ *     data: {} - data for auth
+ * }
+ * @extends cl.gAuthSocialModal.Template
+ * @constructor
+ * @doc
+ */
+{template .authSocialModal}
+    {call .init data="all" /}
+{/template}
+
+/**
+ * @override
+ * @param params {
+ *     data: {
+ *         content: ?string
+ *     },
+ *     config: {
+ *         stylizationModifier: string
+ *     }
+ * }
+ */
+{template .modal}
+    {let $type kind="text"}
+        {call .modalType/}
+    {/let}
+
+    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+        {param params: [
+            'factory': $params.config.stylizationModifier,
+            'type': $type,
+            'renderParams': [
+                'data': [
+                    'content': $params.data.content,
+                ],
+                'config': [
+                    'size': 's'
+                ]
+            ]
+        ]/}
+    {/call}
+{/template}

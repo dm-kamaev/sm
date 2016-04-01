@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<project name="school-market" basedir=".">
+    <property name="initd_script" value="${ant.project.name}-node"/>
+    <property name="project.frontend.path" value="${basedir}"/>
+    <property name="project.node-modules.path" value="${basedir}/node_modules"/>
+
+    <import file="${basedir}/node_modules/deployment/packaging.xml"/>
+    <import file="${basedir}/node_modules/deployment/node.xml"/>
+    <import file="${basedir}/node_modules/services/node.xml"/>
+
+    <!-- Packaging tune -->
+    <target name="setup-folders" depends="shared-folders-create, shared-set-permissions, setup-folders-logs, setup-folders-logs"/>
+    <target name="shared-folders-create" depends="shared-folders-create-logs"/>
+    <target name="shared-set-permissions" depends="shared-set-permissions-logs"/>
+
+    <!-- Switch to new release -->
+    <target name="packaging-switch-release"
+            depends="packaging-switch-release-before, setup-folders, migrate-database, update-search-cache, switch-release-folder, build-config, deploy-authorization-config, node-start, initd-install, auth-node-start, init-crontab, packaging-switch-release-after"/>
+
+    <!-- Stop previous release -->
+    <target name="packaging-stop-release" depends="packaging-stop-release-before, remove-crontab, node-stop, initd-remove, auth-node-stop, remove-release-folder, packaging-stop-release-after"/>
+
+    <target name="migrate-database">
+        <exec executable="${gulp}" dir="${basedir}" failonerror="on">
+            <arg line="migrate"/>
+        </exec>
+    </target>
+
+    <target name="update-search-cache">
+        <exec executable="${node}" dir="${basedir}">
+            <arg line="commander search"/>
+        </exec>
+    </target>
+
+    <target name="deploy-authorization-config">
+        <exec executable="${node}" dir="${basedir}/console/">
+            <arg line="buildLocalConfig ${env} ../environment/config"/>
+        </exec>
+        <copy file="${basedir}/environment/config/authorization.json"
+              tofile="${basedir}/node_modules/services/config/config.json" />
+    </target>
+
+    <target name="build-config">
+        <exec executable="${node}" dir="${basedir}/console/">
+            <arg line="buildLocalConfig ${env} ../app/config"/>
+        </exec>
+    </target>
+
+</project>

@@ -1,0 +1,55 @@
+.b-stars {
+    display: inline-block;
+
+    min-width: 50px;
+
+    outline: none;
+    text-align: right;
+    color: #000;
+
+    line-height: 1em;
+    font: 0 "WebSymbols", Arial, sans-serif;
+}
+
+.b-stars_clickable {
+    cursor: pointer;
+}
+
+.b-stars__hidden-input{
+    display: none;
+}
+
+.b-stars__star {
+    display: inline-block;
+
+    margin-right: 3px;
+
+    font-size: 12px;
+}
+
+.b-star__star_not-selected {
+    color: rgb(230, 230, 230);
+}
+
+.b-stars__star_selected {
+    color: rgb(154, 154, 154);
+}
+
+.b-stars_size_large {
+    .b-stars__star {
+        margin-right: 4px;
+
+        font-size: 22px;
+    }
+}
+
+.b-stars__star_theme_colored {
+    .b-star__star_not-selected {
+        color: #e6e6e6;
+        display: inline-block;
+    }
+
+    .b-stars__star_selected {
+        color: #e2332a;
+    }
+}

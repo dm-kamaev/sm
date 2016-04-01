@@ -1,0 +1,47 @@
+.l-doc {
+    line-height: 1.2em;
+}
+
+.l-doc__h2 {
+    margin: 20px 0;
+}
+
+.l-doc__previews {
+    margin-top: 50px;
+}
+
+.l-doc__documentation {
+    margin-top: 25px;
+
+	color: #000;
+}
+
+.l-doc__preview-content {
+    padding: 10px;
+}
+
+
+.l-doc__code-indent {
+    margin-left: 26px;
+}
+
+.l-doc__code {
+    padding: 15px;
+
+    border-radius: 8px;
+
+    color: #232323;
+    background-color: rgba(199, 193, 198, 0.27);
+    font-weight: 600;
+}
+
+.l-doc__comment {
+    color: #364247;
+    font-weight: 500;
+}
+
+.l-doc__inline {
+    display: inline-block;
+
+    margin-right: 20px;
+}

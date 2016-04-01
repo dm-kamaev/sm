@@ -1,0 +1,83 @@
+{namespace sm.gTextarea.TemplateStendhal}
+
+/**
+ * Constructor
+ * @param? params {{
+ *     data: {
+ *         placeholder: ?string, - placeholder value
+ *         value: ?string,
+ *         name: ?string,
+ *         maxLength: ?number
+ *     },
+ *     config: {
+ *         autoHeight: ?bool,
+ *         showCounter: ?bool,
+ *         minHeight: ?string
+ *     }
+ * }}
+ * @extends cl.gTextarea.Template
+ * @constructor
+ * @doc
+ */
+{template .textarea}
+    {call .init data="all"/}
+{/template}
+
+/**
+ * @override
+ * @param params {
+ *     data: {
+ *         maxLength: ?number
+ *     }
+ * }
+ */
+{template .beforeCounter}
+    <div class="{call .rootClass/}__counter-custom-text-left">
+        {call cl.iUtils.Utils.declensionPrint}
+            {param params: [
+                'num': $params.data.maxLength,
+                'nom': 'Остался',
+                'gen': 'Осталось',
+                'plu': 'Осталось'
+            ]/}
+        {/call}
+    </div>
+    {sp}
+{/template}
+
+/**
+ * @override
+ * @param params {
+ *     data: {
+ *         maxLength: ?number
+ *     }
+ * }
+ */
+{template .afterCounter}
+    {sp}
+    <div class="{call .rootClass/}__counter-custom-text-symbols">
+        {call cl.iUtils.Utils.declensionPrint}
+            {param params: [
+                'num': $params.data.maxLength,
+                'nom': 'символ',
+                'gen': 'символа',
+                'plu': 'символов'
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+/**
+ * Css classes
+ * @override
+ * @param params ?{}
+ */
+{template .additionalClasses}
+    {if $params?.config?.autoHeight}
+            {sp}
+            g-textarea_auto-height
+    {/if}
+    {if $params?.config?.minHeight}
+        {sp}{call .rootClass/}_min-height_{$params?.config?.minHeight}
+    {/if}
+{/template}

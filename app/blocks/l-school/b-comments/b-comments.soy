@@ -1,0 +1,29 @@
+{namespace sm.lSchool.bComments.Template autoescape="strict"}
+/**
+ * Comments template
+ * @param params {{
+ *     comments: [{
+ *         author: string,
+ *         rank: string,
+ *         text: string,
+ *         sections: [{
+ *             name: string,
+ *             value: int
+ *         }]
+ *     }]
+ * }}
+ */
+{template .base kind="html"}
+	<div class="b-comments">
+		{foreach $comment in $params.comments}
+			{call sm.lSchool.bComment.Template.base}
+				{param params: [
+					'author': $comment.author,
+					'rank': $comment.rank,
+					'text': $comment.text,
+					'sections': $comment.sections
+				] /}
+			{/call}
+		{/foreach}
+	</div>
+{/template}

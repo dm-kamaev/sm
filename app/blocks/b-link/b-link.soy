@@ -1,0 +1,62 @@
+{namespace sm.bLink.Template}
+
+/**
+ * Link
+ * @param params {
+ *    data: ?[
+ *        name: ?string,
+ *        url: ?string
+ *    ],
+ *    ?theme: ?string
+ * }
+ */
+
+{template .base autoescape="strict" kind="html"}
+    {call .openTag_ data="all" /}
+        {$params?.data?.name}
+    {call .closeTag_ data="all" /}
+{/template}
+
+/**
+ * Open tag
+ * @param params {
+ *    data: ?[
+ *        name: ?string,
+ *        url: ?string
+ *    ],
+ *    ?theme: ?string
+ * }
+ */
+{template .openTag_ autoescape="strict" kind="html"}
+
+    {let $dataClass kind="html"}
+        b-link
+        {if $params?.theme}
+            {sp}b-link__{$params?.theme}
+        {/if}
+    {/let}
+
+    {if $params?.data?.url}
+        <a href="{$params?.data?.url}" class="{$dataClass}">
+    {else}
+        <span class="{$dataClass}">
+    {/if}
+
+{/template}
+
+/**
+ * Close tag
+ * @param params {
+ *    data: ?[
+ *        url: ?string
+ *    ]
+ * }
+ */
+{template .closeTag_ autoescape="strict" kind="html"}
+    {if $params?.data?.url}
+        </a>
+    {else}
+        </span>
+    {/if}
+{/template}
+

@@ -1,0 +1,109 @@
+{namespace sm.lSearchResult.bSchoolListItem.Template}
+
+/**
+ * School template
+ * @param? params {
+ *     id: ?number,
+ *     name: [
+ *         light: ?string,
+ *         bold: ?string
+ *     ],
+ *     url: ?string,
+ *     score: ?list<[
+ *         name: ?string,
+ *         value: ?number
+ *     ]>,
+ *     currentCriterion: [
+ *         name: ?string,
+ *         value: ?number
+ *     ],
+ *     description: ?string,
+ *     metroStations: ?list<[
+ *         id: number,
+ *         name: string
+ *     ]>,
+ *     area: ?[
+ *         id: number,
+ *         name: string
+ *     ],
+ *     ratings: ?list<string>,
+ *     isScoreClickable: ?boolean
+ * }
+ */
+{template .base autoescape="strict" kind="html"}
+    <a href="/school/{$params.url}" data-params="
+        {call cl.iUtils.Utils.stringify}
+            {param json: $params /}
+        {/call}
+        " class="b-school-list-item">
+
+        <div class="b-school-list-item__section">
+            <div class="b-school-list-item__name">
+                {$params.name.light}
+                {if $params.name.bold}
+                    <span class="b-school-list-item__name_bold">
+                        {$params.name.bold}
+                    </span>
+                {/if}
+            </div>
+
+            <div class="b-school-list-item__score">
+                {call sm.bScoreSchoolList.Template.base}
+                    {param params:[
+                        'score': $params.score,
+                        'sortCriterion': $params.currentCriterion,
+                        'isClickable': $params?.isScoreClickable
+                    ]/}
+                {/call}
+            </div>
+        </div>
+
+        {if length($params.metroStations) > 0 or
+            length($params.ratings) > 0 or
+            $params.area.name
+        }
+            <div class="b-school-list-item__section
+                        b-school-list-item__section_badges">
+                {if length($params.metroStations) > 0}
+                    <div class="b-school-list-item__metro-stations">
+                        {call sm.bBadge.Template.base}
+                            {param params:[
+                                'data': $params.metroStations,
+                                'display': 'metro'
+                            ]/}
+                        {/call}
+                    </div>
+                {else}
+                    <div class="b-school-list-item__area">
+                        {call sm.bBadge.Template.base}
+                            {param params:[
+                                'data': $params.area,
+                                'display': 'location'
+                            ]/}
+                        {/call}
+                    </div>
+                {/if}
+
+                {if length($params.ratings) > 0}
+                    <div class="b-school-list-item__ratings">
+
+                            {call sm.bBadge.Template.base}
+                            {param params:[
+                                'data': $params.ratings
+                                ]/}
+                            {/call}
+
+                    </div>
+                {/if}
+            </div>
+        {/if}
+
+        {if $params.description}
+            <div class="b-school-list-item__section">
+                <div class="b-school-list-item__description">
+                    {$params.description}
+                </div>
+            </div>
+        {/if}
+    </a>
+{/template}

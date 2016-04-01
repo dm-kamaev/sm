@@ -1,0 +1,184 @@
+{namespace sm.bDiagram.Template}
+
+/**
+ * Diagram template
+ * @param params {{
+ *     data: list<{
+ *             name: string,
+ *             value: string,
+ *             description: ?string,
+ *             averageValue: ?string
+ *         }>
+ *     range: ?number,
+ *     display: ?string,
+ *     maxValue: ?number,
+ *     starsConfig: ?[]
+ * }}
+ */
+{template .base}
+    <div class="b-diagram {$params.display ? 'b-diagram_' + $params.display
+        : ''}"
+        data-max-value="{$params.maxValue ?: 1}">
+        {foreach $item in $params.data}
+            <div class="b-diagram__item">
+                <div class="b-diagram__label">
+                    {let $cond:  $item.name == 'Математика (базовая)'/}
+                    {if $cond}
+                        Математика
+                        <div class="b-diagram__item-description">
+                            базовая
+                        </div>
+                    {elseif $item.name == 'Математика (профильная)'}
+                        Математика
+                        <div class="b-diagram__item-description">
+                            профильная
+                        </div>
+                    {else}
+                        {$item.name}
+                    {/if}
+                    {if $item.description}
+                        <div class="b-diagram__item-description">
+                            {$item.description}
+                        </div>
+                    {/if}
+                </div>
+                <div class="b-diagram__value">
+                    {if $params?.display == 'marks'}
+                        {call sm.bMark.Template.base}
+                            {param params: [
+                                'value': $item.value,
+                                'display': 'inline'
+                            ]/}
+                        {/call}
+                    {elseif $params?.display == 'stars'}
+                        {call sm.bMark.Template.base}
+                            {param params: [
+                                'value': $item.value,
+                                'display': 'stars',
+                                'starsConfig': $params.starsConfig ?: [
+                                    'style': [
+                                        'size': 'large'
+                                    ]
+                                ]
+                            ]/}
+                        {/call}
+                    {elseif $params?.display == 'text'}
+                        {$item.value}
+                    {elseif $params?.display == 'bars'}
+                        {call .bars}
+                            {param params: [
+                                'value': $item.value,
+                                'averageValue': $item.averageValue,
+                                'description': $item.description,
+                                'maxValue': $cond ? 5 : $params.maxValue,
+                                'range': $params.range
+                            ]/}
+                        {/call}
+                    {else}
+                        {call .default}
+                            {param params: [
+                                'value': $item.value,
+                                'maxValue': $params.maxValue
+                            ]/}
+                        {/call}
+                    {/if}
+                </div>
+            </div>
+        {/foreach}
+    </div>
+{/template}
+
+/**
+ * Default template
+ * @param params {{
+ *     value: number,
+ *     maxValue: ?number
+ * }}
+ */
+{template .default}
+    <div class="b-diagram__bar-filled"
+         data-value="{$params.value}"
+         style="width: {$params.value * 100 / $params.maxValue + '%'};">
+    </div>
+    <div class="b-diagram__bar"
+         style="width: {($params.maxValue - $params.value) * 100 /
+             $params.maxValue + '%'};">
+    </div>
+{/template}
+
+/**
+ * Bars template
+ * @param params {{
+ *     value: number,
+ *     averageValue: ?number,
+ *     maxValue: ?number,
+ *     range: ?number
+ * }}
+ */
+{template .bars}
+    {let $range: $params?.range ?: 0/}
+    <div class="b-diagram__bar-wrap">
+        <div class="b-diagram__bar-filled
+                    {$params.value > ($params.averageValue + $range) ?
+                        ' b-diagram__bar-filled_green' :
+                        ($params.value > ($params.averageValue - $range) ?
+                            '' : ' b-diagram__bar-filled_red')}"{sp}
+             data-value="{$params.value}"{sp}
+             style="width: {$params.value * 100 / $params.maxValue + '%'};">
+        </div>
+        <div class="b-diagram__bar"
+             style="width: {($params.maxValue - $params.value) * 100 /
+                 $params.maxValue + '%'};">
+        </div>
+        <div class="b-diagram__under-bar"
+             style="width:{sp}
+                {$params.averageValue * 100 / $params.maxValue + '%'};">
+        </div>
+        <div class="b-diagram__circle">
+        </div>
+        /*TODO: replace to factory hint*/
+        {call .tooltip_}
+            {param params: [
+                'left': $params.averageValue * 100 / $params.maxValue + '%',
+                'value': $params.averageValue
+            ]/}
+        {/call}
+    </div>
+    <div class="b-diagram__number-value">
+        {round($params.value, 1)}
+    </div>
+{/template}
+
+/**
+ * Tooltip
+ * @param params {
+ *     left: ?number,
+ *     value: ?number
+ * }
+ */
+{template .tooltip_ private="true"}
+    <div class="b-diagram__tooltip"
+         style="left: {$params.left};">
+        <div class="b-diagram__tooltip-arrow">
+        </div>
+        <div class="b-diagram__tooltip-arrow-shadow">
+        </div>
+        <div class="b-diagram__tooltip-content">
+            <div class="b-diagram__tooltip-average-mark">
+                В среднем по Москве —
+                <br>
+                <span class="b-diagram__tooltip-bold-text">
+                    {$params.value}
+                    {call cl.iUtils.Utils.declensionPrint}
+                        {param params: [
+                            'num': $params.value,
+                            'nom': ' балл',
+                            'gen': ' балла',
+                            'plu': ' баллов'
+                        ]/}
+                    {/call}
+                </span>
+            </div>
+        </div>
+    </div>
+{/template}

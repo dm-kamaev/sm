@@ -1,0 +1,11 @@
+{
+    "emailNotifier": {
+        "email": "sabina@mel.fm"
+    },
+    "deleteMailbox": {
+        "email": "delete@mel.fm",
+        "password": "123qwek^3;3C<",
+        "host": "imap.gmail.com",
+        "port": 993
+    }
+}

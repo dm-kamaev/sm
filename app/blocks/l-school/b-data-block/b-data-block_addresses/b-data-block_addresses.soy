@@ -1,0 +1,109 @@
+{namespace sm.lSchool.bDataBlock.TemplateAddresses}
+/**
+ * Addresses item
+ * @param params {
+ *      header: ?string,
+ *      headerType: ?number
+ *      modifier: ?string
+ *      content: [
+ *          address: list<[
+ *              title: string,
+ *              description: string,
+ *              metroStation: list<[
+ *                  id: number,
+ *                  name: string
+ *              ]>,
+ *              stage: string
+ *          ]>,
+ *          phones: list<string>
+ *      ]
+ * }
+ * @extends sm.lSchool.bDataBlock.Template
+ * @constructor
+ */
+{template .base}
+    {call .init}
+        {param params: [
+            'header': $params.header,
+            'headerType': $params.headerType ?
+                        $params.headerType :
+                        3,
+            'modifier': $params.modifier ?
+                        'b-data-block_addresses' + $params.modifier :
+                        'b-data-block_addresses',
+            'content': $params.content
+        ] /}
+    {/call}
+{/template}
+
+/**
+ * Content item
+ * @param params {
+ *    header: ?string
+ *    content: [
+ *        stages: list<[
+ *            name: string,
+ *            addresses: list<[
+ *                title: string,
+ *                description: string,
+ *                metroStation: list<[
+ *                    id: number,
+ *                    name: string
+ *                ]>
+ *            ]>
+ *        ]>,
+ *        phones: list<string>
+ *    ]
+ * }
+ */
+{template .content autoescape="strict" kind="html"}
+
+    <ul class="b-data-block__content">
+        /*output addresses*/
+        {foreach $stage in $params.content.stages}
+            <li class="b-data-block__item b-data-block__contact">
+                <div class="b-data-block__item-content">
+                    <div class="b-data-block__item-content-left">
+                        {$stage.name}
+                    </div>
+                    <div class="b-data-block__item-content-right">
+                        {foreach $address in $stage.addresses}
+                            <div class="b-data-block__address">
+                                <div class="b-data-block__item-content-address">
+                                    {$address.description}
+                                </div>
+
+                                {if $address.metroStation}
+                                    <div class="b-data-block__item-content-metroStation">
+                                        <div class="b-data-block__metro-icon g-icon_img_metro"></div>
+                                        {$address.metroStation.name}
+                                    </div>
+                                {/if}
+                            </div>
+                        {/foreach}
+                    </div>
+                    {if not isLast($stage)}
+                        <div class="b-data-block__line b-data-block__line_horisontal-line"></div>
+                    {/if}
+                </div>
+            </li>
+        {/foreach}
+
+        /*output phones*/
+        {if length($params.content.phones) > 0}
+            <li class="b-data-block__item-phones">
+                <div class="b-data-block__item-phones-caption">
+                    Телефоны
+                </div>
+                {foreach $phone in $params.content.phones}
+                    {$phone}
+
+                    {if not isLast($phone)}
+                        ,{sp}
+                    {/if}
+                {/foreach}
+            </li>
+        {/if}
+    </ul>
+
+{/template}

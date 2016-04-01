@@ -1,0 +1,91 @@
+{namespace sm.lSearchResult.bFilters.Template}
+
+/**
+ * Filter template
+ * @param? params {
+ *      filters: ?list<sm.lSearchResult.bFilter.Template.Params>,
+ *      url: ?string
+ * }
+ */
+{template .base autoescape="strict" kind="html"}
+    <form class="b-filters b-filters_state_collapsed"
+          method="GET"
+          action="{$params?.url ?: ''}">
+
+        <div class="b-filters__expander">
+            Показать фильтры
+            {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+                {param params: [
+                    'type': 'icon',
+                    'renderParams': [
+                        'data': [
+                            'type': 'filter-arrow-down'
+                        ],
+                        'config': [
+                            'customClasses': ['b-filters__expander-icon']
+                        ]
+                    ]
+                ]/}
+            {/call}
+        </div>
+
+        <div class="b-filters__content">
+            <div class="b-filters__filters">
+                {call .filters_ data="all" /}
+            </div>
+
+            <div class="b-filters__submit-button">
+                Подобрать
+            </div>
+
+            <div class="b-filters__control-buttons">
+                <div class="b-filters__collapser">
+                    {call sm.bLink.Template.base}
+                        {param params: [
+                            'data': [
+                                'name': 'Свернуть фильтр'
+                            ]
+                        ]/}
+                    {/call}
+                </div>
+
+                <div class="b-filters__reset i-utils__hidden">
+                    {call sm.bLink.Template.base}
+                        {param params: [
+                            'data': [
+                                'name': 'Сбросить фильтр'
+                            ],
+                            'theme': 'attention'
+                        ]/}
+                    {/call}
+                </div>
+            </div>
+        </div>
+    </form>
+{/template}
+
+
+/**
+ * Filter groups
+ * @param? params {
+ *      filters: ?list<sm.lSearchResult.bFilter.Template.Params>
+ * }
+ */
+{template .filters_ autoescape="strict" kind="html" private="true"}
+    {call sm.lSearchResult.bFilterClasses.Template.base}
+        {param params: [
+            'data': [
+                'header': [
+                    'title': 'В какой класс хотите отдать ребенка?'
+                ],
+                'name': 'classes'
+            ]
+        ]/}
+    {/call}
+
+    {foreach $filter in $params.filters}
+        {call sm.lSearchResult.bFilter.Template.base}
+            {param params: $filter/}
+        {/call}
+    {/foreach}
+{/template}

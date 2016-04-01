@@ -1,0 +1,255 @@
+@import "../i-media/i-media";
+
+.b-filter {
+    display: inline-block;
+
+    width: 100%;
+    padding: 10px 0;
+
+    border-bottom: 1px solid #e5e5e5;
+
+    text-align: left;
+    color: #000000;
+}
+
+.b-filter__header {
+    display: inline-block;
+
+    width: 100%;
+    padding: 10px 0 15px 0;
+
+    cursor: pointer;
+}
+
+.b-filter__title {
+    vertical-align: middle;
+
+    font-weight: bold;
+    font-size: 15px;
+    line-height: 25px;
+}
+
+.b-filter__tooltip {
+    display: inline-block;
+
+    margin-left: 8px;
+}
+
+.b-filter__section {
+    position: relative;
+
+    display: inline-block;
+
+    min-width: 50%;
+    margin: 0;
+}
+
+.b-filter__filter {
+    display: inline-block;
+
+    padding: 11px 0;
+    margin-right: 5px;
+
+    font-size: 14px;
+}
+
+.b-filter__input-label {
+    display: inline-block;
+
+    margin: 0 9px;
+    padding-left: 13px;
+
+    cursor: pointer;
+}
+
+.b-filter__show-filters-button {
+    float: right;
+
+    padding: 8px 0 0 6px;
+
+    cursor: pointer;
+}
+
+.b-filter__button {
+    display: inline-block;
+
+    color: #ee362c;
+    cursor: pointer;
+
+    font-size: 14px;
+}
+
+.b-filter__button_show,
+.b-filter__button_hide {
+    margin-top: 12px;
+    margin-bottom: 12px;
+}
+
+.b-filter__input {
+    position: absolute;
+    top: 12px;
+    left: 0;
+
+    margin: 0;
+
+    vertical-align: bottom;
+    cursor: pointer;
+}
+
+.b-filter__help {
+    position: relative;
+    top: -2px;
+
+    display: inline-block;
+
+    margin-left: 7px;
+
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+/*
+.b-filter__help:hover::after {
+    position: absolute;
+    top: -15px;
+    left: 35px;
+
+    width: 100px;
+    height: auto;
+    max-height: 10px;
+
+    content: attr(data-help);
+}*/
+
+.b-filter_classes {
+    padding: 10px 0 5px 0;
+    border-bottom: none;
+
+    .b-filter__header {
+        cursor: default;
+    }
+
+    .b-filter__filter {
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+
+    .b-filter__filter_center {
+        display: inline-block;
+
+        width: auto;
+        margin-bottom: 10px;
+        padding: 0;
+    }
+
+    .b-filter__input_class {
+        display: none;
+    }
+
+    .b-filter__filter_kindergarten {
+        position: relative;
+    }
+
+    .b-filter__input_kindergarten {
+        top: 6px;
+    }
+
+    .b-filter__input-label_kindergarten {
+        margin: 0 10px;
+
+        cursor: pointer;
+    }
+
+    .b-filter__input-label_class {
+        display: inline-block;
+
+        margin: 0;
+        padding: 0;
+        width: 25px;
+        height: 29px;
+
+        border: 1px solid #e5e1c2;
+        border-right: none;
+
+        background-color: #fffbd8;
+        font-size: 12px;
+        text-align: center;
+        line-height: 29px;
+        cursor: pointer;
+    }
+
+    .b-filter__input-label_middle {
+        border: 1px solid #d7e2bf;
+        border-right: none;
+        background-color: #f0fbd5;
+    }
+
+    .b-filter__input-label_high {
+        border: 1px solid #dbe1e3;
+        border-right: none;
+        background-color: #f4fbfc;
+
+        &:last-child {
+            border: 1px solid #dbe1e3;
+        }
+    }
+
+    .b-filter__input-label_inactive {
+        opacity: 0.4;
+    }
+
+    .b-filter__input_class:checked + .b-filter__input-label_class,
+    .b-filter__input-label_class:hover {
+        border-color:  #9da6a9;
+        box-shadow: inset 0px 0px 0 2px #9da6a9, inset -2px 0px 0 1px #9da6a9;
+
+        &:last-child {
+            box-shadow: inset 0px 0px 0 2px #9da6a9;
+        }
+    }
+
+    .b-filter__reset {
+        float: right;
+
+        margin-top: 7px;
+        margin-right: 2px;
+
+        cursor: pointer;
+
+        opacity: 0.25;
+        
+        &:hover {
+            opacity: 1;
+        }
+    }
+}
+
+
+@include media-l {
+    .b-filter_classes {
+        .b-filter__filters {
+            position: relative;
+
+            padding-right: 125px;
+        }
+
+        .b-filter__filter_center {
+            width: auto;
+            margin-right: 40px;
+
+            white-space: nowrap;
+        }
+
+        .b-filter__reset {
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+    }
+}
+
+@include media-s {
+    .b-filter__reset {
+        display: none;
+    }
+}
