@@ -303,7 +303,7 @@ goog.scope(function() {
      * @public
      * @return {Object}
      */
-    Filters.prototype.serialize = function() {
+    Filters.prototype.getData = function() {
         var form = jQuery(this.getElement());
         var data = form.serializeArray();
         return this.processingSerializeArray_(data);
@@ -340,7 +340,7 @@ goog.scope(function() {
      * @private
      */
     Filters.prototype.onSubmit_ = function() {
-        var data = this.serialize();
+        var data = this.getData();
         this.dispatchEvent({
             type: Filters.event.SUBMIT,
             data: data
@@ -394,7 +394,6 @@ goog.scope(function() {
      * @private
      */
     Filters.prototype.processingSerializeArray_ = function(array) {
-        //TODO decide something with types, which may can be some kind of map
         var result = {
             ege: [],
             gia: [],

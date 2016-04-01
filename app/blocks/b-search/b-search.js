@@ -487,13 +487,39 @@ goog.scope(function() {
         } else {
             this.dispatchEvent({
                 type: Search.Event.ITEM_SELECT,
-                data: {
-                    id: data.item.id,
-                    type: data.item.type,
-                    text: data.item.name
-                }
+                data: this.transformItemToEventData_(data.item)
             });
         }
+    };
+
+    /**
+     * Transform item object to event data
+     * @param {{
+     *     id: number,
+     *     type: number,
+     *     name: string
+     * }} item
+     * @return {{
+     *     name: string,
+     *     metroId: number|null,
+     *     areaId: number|null
+     *     }}
+     * @private
+     */
+    Search.prototype.transformItemToEventData_ = function(item) {
+        var data = {
+            name: item.name,
+            metroId: null,
+            areaId: null
+        };
+
+        if (item.type == 'metro') {
+            data.metroId = item.id;
+        } else if (item.type == 'areas') {
+            data.areaId = item.id;
+        }
+
+        return data;
     };
 
     /**
@@ -508,7 +534,11 @@ goog.scope(function() {
         } else {
             this.dispatchEvent({
                 type: Search.Event.SUBMIT,
-                data: data
+                data: {
+                    name: data.text,
+                    metroId: null,
+                    areaId: null
+                }
             });
         }
     };
@@ -535,7 +565,11 @@ goog.scope(function() {
     Search.prototype.onTextChange_ = function(event, data) {
         this.dispatchEvent({
             type: Search.Event.TEXT_CHANGE,
-            data: data
+            data: {
+                name: data.text,
+                metroId: null,
+                areaId: null
+            }
         });
     };
 
