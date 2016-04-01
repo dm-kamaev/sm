@@ -170,8 +170,8 @@ gulp.task('copy', function() {
 
 gulp.task('localConfig', function() {
     return new Promise(function(resolve, reject) {
-        exec('node ./console/buildLocalConfig local ../app/config && ' +
-            'node ./console/buildLocalConfig local ../environment/config/authorization',
+        exec('node ./console/buildLocalConfig dev ../app/config && ' +
+            'node ./console/buildLocalConfig dev ../environment/config/authorization',
             function() {
                 gulp.src([
                     path.join(__dirname, '/environment/config/authorization/config.json'),
