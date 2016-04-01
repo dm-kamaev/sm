@@ -135,7 +135,7 @@
          {call .innerContent_ data="all" /}
     </div>
 
-    {call sm.lSchool.bMap.Template.api}{/call}
+    {call sm.bMap.Template.api}{/call}
 {/template}
 
 
@@ -442,7 +442,7 @@
  */
 {template .map_ autoescape="strict" kind="html"}
     <div class="l-school__section l-school__section_map">
-        {call sm.lSchool.bMap.Template.map}
+        {call sm.bMap.Template.map}
             {param params: [
                 'data': [
                     'id': $params.data.id,

@@ -2,7 +2,7 @@
  * @fileoverview A constructor for a Yandex Maps map
  * @author Nikita Gubchenko
  */
-goog.provide('sm.lSchool.bMap.Map');
+goog.provide('sm.bMap.Map');
 
 goog.require('goog.Promise');
 goog.require('goog.array');
@@ -13,7 +13,7 @@ goog.require('goog.net.XhrIo');
 goog.require('goog.object');
 goog.require('goog.style');
 goog.require('goog.ui.Component');
-goog.require('sm.lSchool.bMap.Template');
+goog.require('sm.bMap.Template');
 goog.require('sm.lSchool.iViewport.Viewport');
 
 
@@ -22,7 +22,7 @@ goog.require('sm.lSchool.iViewport.Viewport');
  * @extends {goog.ui.Component}
  * @constructor
  */
-sm.lSchool.bMap.Map = function(opt_params) {
+sm.bMap.Map = function(opt_params) {
     goog.base(this);
 
     /**
@@ -75,10 +75,10 @@ sm.lSchool.bMap.Map = function(opt_params) {
      */
     this.placemarks_ = [];
 };
-goog.inherits(sm.lSchool.bMap.Map, goog.ui.Component);
+goog.inherits(sm.bMap.Map, goog.ui.Component);
 
 goog.scope(function() {
-    var Map = sm.lSchool.bMap.Map;
+    var Map = sm.bMap.Map;
     var Viewport = sm.lSchool.iViewport.Viewport;
 
 
@@ -195,7 +195,7 @@ goog.scope(function() {
     */
     Map.prototype.createDom = function() {
         goog.base(this, 'createDom');
-        var element = sm.lSchool.bMap.Template();
+        var element = sm.bMap.Template();
         this.decorateInternal(element);
     };
 
@@ -245,8 +245,7 @@ goog.scope(function() {
     Map.prototype.getDataPromise_ = function() {
         return jQuery.ajax({
             url: '/api/address/list',
-            type: 'POST',
-            data: ''
+            type: 'GET'
         });
     };
 
@@ -486,7 +485,7 @@ goog.scope(function() {
      */
     Map.prototype.generateBalloonLayout_ = function() {
         var that = this;
-        var balloonContent = sm.lSchool.bMap.Template.balloon().content;
+        var balloonContent = sm.bMap.Template.balloon().content;
         var MyBalloonLayout = ymaps.templateLayoutFactory.createClass(
             balloonContent,
             {

@@ -4,6 +4,7 @@ goog.require('goog.dom.classes');
 goog.require('goog.events');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
+goog.require('sm.bMap.Map');
 goog.require('sm.bRating.Rating');
 goog.require('sm.bScore.Score');
 goog.require('sm.bSearch.Search');
@@ -14,7 +15,6 @@ goog.require('sm.lSchool.bComments.Comments');
 goog.require('sm.lSchool.bDataBlock.DataBlockFoldList');
 goog.require('sm.lSchool.bDataBlock.DataBlockRatings');
 goog.require('sm.lSchool.bFeedbackModal.FeedbackModal');
-goog.require('sm.lSchool.bMap.Map');
 goog.require('sm.lSchool.bResults.Results');
 
 
@@ -83,7 +83,7 @@ goog.scope(function() {
         DBlockRatings = sm.lSchool.bDataBlock.DataBlockRatings,
         Results = sm.lSchool.bResults.Results,
         Score = sm.bScore.Score,
-        Map = sm.lSchool.bMap.Map,
+        Map = sm.bMap.Map,
         Search = sm.bSearch.Search,
         Comments = sm.lSchool.bComments.Comments,
         FeedbackModal = sm.lSchool.bFeedbackModal.FeedbackModal,
