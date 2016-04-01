@@ -2,7 +2,7 @@ var soy = require.main.require('./app/components/soy');
 var services = require.main.require('./app/components/services').all;
 const schoolView = require.main.require('./api/modules/school/views/schoolView');
 var urlConfig = require('../../../config').config.url;
-var analyticsCounter = require('../../../config').config.analyticsCounter;
+var analyticsId = require('../../../config').config.analyticsId;
 
 const AUTH_URL = urlConfig.protocol + '://' + urlConfig.host + ':3001/oauth';
 
@@ -64,7 +64,7 @@ exports.list = async (function(req, res) {
             },
             config: {
                 year: new Date().getFullYear(),
-                analyticsCounter: analyticsCounter
+                analyticsId: analyticsId
             }
         }
     };
@@ -123,7 +123,7 @@ exports.view = async (function(req, res) {
                     config: {
                         year: new Date().getFullYear(),
                         authUrl: AUTH_URL,
-                        analyticsCounter: analyticsCounter
+                        analyticsId: analyticsId
                     }
                 }
             }));
@@ -180,7 +180,7 @@ exports.search = async(function(req, res) {
               },
               config: {
                   year: new Date().getFullYear(),
-                  analyticsCounter: analyticsCounter
+                  analyticsId: analyticsId
               }
           }
     });

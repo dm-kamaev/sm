@@ -6,7 +6,7 @@
  * @property {?string} page
  * @property {?string} staticVersion
  * @property {?number} year
- * @property {?number} analyticsCounter
+ * @property {?number} analyticsId
  */
 
 /**
@@ -71,7 +71,7 @@
  *     },
  *     config: {
  *         staticVersion: ?string,
- *         analyticsCounter: ?string
+ *         analyticsId: ?string
  *     }
  * }
  * @override
@@ -87,7 +87,7 @@
     {/if}
     <script>
         var analytics = sm.iAnalytics.Analytics.getInstance();
-        analytics.init('{$params?.config?.analyticsCounter}');
+        analytics.init('{$params?.config?.analyticsId}');
     </script>
 {/template}
 
