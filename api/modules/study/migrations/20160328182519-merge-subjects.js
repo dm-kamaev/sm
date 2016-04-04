@@ -4,10 +4,12 @@ const squel = require('squel');
 const await = require('asyncawait/await');
 const async = require('asyncawait/async');
 const sequelize = require.main.require('../../../app/components/db');
-
+const SqlHelper = require('../../console/modules/sqlHelper/SqlHelper.js');
 
 module.exports = {
     up: async(function() {
+        SqlHelper.resetTable('search_data');
+
         /** computer science **/
         var computerScienceOld = getSubjectByName('информатика и икт'),
             computerScienceNew = getSubjectByName('информатика');
