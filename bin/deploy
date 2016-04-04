@@ -14,7 +14,7 @@ else
     npm update
 fi
 $gulp build
-ls -l
+
 cd node_modules/auth-service/
 if [ ! -d node_modules/ ]; then
     npm install
@@ -22,9 +22,6 @@ else
     npm update
 fi
 cd ../..
-ls
-echo "---"
-ls node_modules/auth-service/
 
 echo "Running packaging"
 package=$package target_host=$target_host env=$env lib_dir=$lib_dir remote_user=gorod packaging_release_number=$packaging_release_number source $lib_dir/bin/deploy
