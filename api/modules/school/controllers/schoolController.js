@@ -276,7 +276,7 @@ exports.search = async (function(req, res) {
     try {
         var params = await(services.search.initSearchParams(req.query));
         var schools = await(services.school.list(params));
-        result = schoolView.list(schools, params.searchParams.sortType);
+        result = schoolView.list(schools, params.sortType);
     } catch (e) {
         console.log(e);
         result = JSON.stringify(e);

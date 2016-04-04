@@ -16,18 +16,17 @@ searchView.schoolTypeFilterIds = function (typeInstances) {
 
 /**
  * Update filters in params
- * @param {Object} params
- * @param {Object} params.searchParams
- * @param {?string} params.searchParams.name
- * @param {?Array.<number>} params.searchParams.classes
- * @param {?Array.<string>} params.searchParams.schoolType
- * @param {?Array.<string>} params.searchParams.ege
- * @param {?Array.<string>} params.searchParams.gia
- * @param {?Array.<string>} params.searchParams.olimp
- * @param {?number} params.searchParams.metroId
- * @param {?number} params.searchParams.areaId
- * @param {?number} params.searchParams.sortType
- * @param {?number} params.page
+ * @param {Object} searchParams
+ * @param {?string} searchParams.name
+ * @param {?Array.<number>} searchParams.classes
+ * @param {?Array.<string>} searchParams.schoolType
+ * @param {?Array.<string>} searchParams.ege
+ * @param {?Array.<string>} searchParams.gia
+ * @param {?Array.<string>} searchParams.olimp
+ * @param {?number} searchParams.metroId
+ * @param {?number} searchParams.areaId
+ * @param {?number} searchParams.sortType
+ * @param {?number} searchParams.page
  *
  * @param {Object} filters
  * @param {?Array.<number>} filters.schoolType
@@ -37,9 +36,8 @@ searchView.schoolTypeFilterIds = function (typeInstances) {
  *
  * @return {Object}
  */
-searchView.params = function(params, filters) {
-    var searchParams = params.searchParams,
-        name;
+searchView.params = function(searchParams, filters) {
+    var name;
 
     if (searchParams.areaId || searchParams.metroId || !searchParams.name) {
         name = '';
@@ -48,18 +46,16 @@ searchView.params = function(params, filters) {
     }
 
     return {
-        searchParams: {
-            name: name,
-            schoolType: filters.schoolType || [],
-            classes: searchParams.classes || [],
-            gia: filters.gia || [],
-            ege: filters.ege || [],
-            olimp: filters.olimp || [],
-            metroId: searchParams.metroId || null,
-            areaId: searchParams.areaId || null,
-            sortType: searchParams.sortType || null
-        },
-        page: params.page || 0
+        name: name,
+        schoolType: filters.schoolType || [],
+        classes: searchParams.classes || [],
+        gia: filters.gia || [],
+        ege: filters.ege || [],
+        olimp: filters.olimp || [],
+        metroId: searchParams.metroId || null,
+        areaId: searchParams.areaId || null,
+        sortType: searchParams.sortType || null,
+        page: searchParams.page || 0
     };
 };
 
