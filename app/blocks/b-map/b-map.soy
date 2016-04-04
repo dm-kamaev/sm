@@ -1,22 +1,28 @@
-{namespace sm.lSchool.bMap.Template}
+{namespace sm.bMap.Template}
 
 /**
-* A layout for Yandex.Maps block
-* @param? params {{
-*     data: ?{
-*         id: ?number,
-*         address: ?list{
-*
-*         },
-*         name: ?string,
-*         totalScore: ?number
-*     }
-* }}
+ * A layout for Yandex.Maps block
+ * @param? params {{
+ *     data: ?[{
+ *         id: ?number,
+ *         address: ?list{
+ *             lat: number,
+ *             lng: number,
+ *             name: string,
+ *             stages: list<string>
+ *         },
+ *         name: ?string,
+ *         totalScore: ?number
+ *     }],
+ *     config: ?{
+ *         sidePins: boolean
+ *     }
+ * }}
 */
 {template .map}
     {let $dataParams kind="html"}
         {call cl.iUtils.Utils.stringify}
-            {param json: $params?.data /}
+            {param json: $params /}
         {/call}
     {/let}
     <div class="b-map" data-params="{$dataParams}">

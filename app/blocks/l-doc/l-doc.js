@@ -13,7 +13,7 @@ goog.require('sm.lDoc.nDemo.bBlockDataBlock.DataBlock');
 goog.require('sm.lSchool.School');
 goog.require('sm.lSearchResult.SearchResult');
 
-goog.require('sm.lSchool.bMap.Map');
+goog.require('sm.bMap.Map');
 
 
 sm.lDoc.Doc = function() {

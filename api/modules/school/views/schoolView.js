@@ -394,7 +394,10 @@ schoolView.list = function(schools, opt_criterion) {
                     ratings: ratingView.ratingResultView(school.rankDogm),
                     metroStations: addressView.getMetro(school.addresses),
                     area: addressView.getAreas(school.addresses),
-                    isScoreClickable: checkScoreValues(score, sortCriterion)
+                    isScoreClickable: checkScoreValues(score, sortCriterion),
+                    addresses:
+                        services.department.addressesFilter(school.addresses),
+                    totalScore: school.totalScore
                 };
             });
 
@@ -527,6 +530,9 @@ var groupSchools = function(schools) {
 
                     currentAddress.area.id = school.areaId;
                     currentAddress.area.name = school.areaName;
+
+                    currentAddress.name = school.addressName;
+                    currentAddress.coords = school.addressCoords;
                 });
             });
 
@@ -730,6 +736,24 @@ schoolView.filters = function(filters) {
        }
        return res;
    });
+};
+
+/**
+ * Returns schools for search page map
+ * @param {Array<Object>} schools
+ * @return {Array<Object>}
+ */
+schoolView.currentSchoolsMapPoints = function(schools) {
+    return schools.map(school => {
+        return {
+            addresses: addressView.default(school.addresses),
+            id: school.id,
+            name: school.name.light + school.name.bold,
+            description: school.description,
+            url: school.url,
+            totalScore: school.totalScore
+        };
+    });
 };
 
 module.exports = schoolView;

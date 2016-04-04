@@ -10,6 +10,7 @@ goog.require('goog.soy');
 goog.require('goog.ui.Component');
 goog.require('gorod.gSuggest.Suggest');
 goog.require('sm.bHeader.Header');
+goog.require('sm.bMap.Map');
 goog.require('sm.bSearch.Search');
 goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.lSearchResult.Template');
@@ -102,7 +103,8 @@ goog.scope(function() {
         SchoolList = sm.lSearchResult.bSchoolList.SchoolList,
         Filters = sm.lSearchResult.bFilters.Filters,
         Search = sm.bSearch.Search,
-        Header = sm.bHeader.Header;
+        Header = sm.bHeader.Header,
+        Map = sm.bMap.Map;
 
     /**
      * CSS-class enum
@@ -156,6 +158,7 @@ goog.scope(function() {
         this.initFilters_();
         this.initHeader_();
         this.initSearch_();
+        this.initMap_();
         /** end init child instances **/
 
         /** get dom elements **/
@@ -339,6 +342,23 @@ goog.scope(function() {
             goog.events.EventType.PAGESHOW,
             this.onShowPage_
         );
+
+    /**
+     * Init map
+     * @private
+     */
+    SearchResult.prototype.initMap_ = function() {
+        var element = this.getElement();
+
+        var map = goog.dom.getElementByClass(
+            Map.CssClass.ROOT,
+            element
+        );
+        if (map) {
+            var mapInstance = new Map();
+            this.addChild(mapInstance);
+            mapInstance.decorate(map);
+        }
     };
 
     /**

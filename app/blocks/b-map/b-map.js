@@ -2,7 +2,7 @@
  * @fileoverview A constructor for a Yandex Maps map
  * @author Nikita Gubchenko
  */
-goog.provide('sm.lSchool.bMap.Map');
+goog.provide('sm.bMap.Map');
 
 goog.require('goog.Promise');
 goog.require('goog.array');
@@ -13,7 +13,7 @@ goog.require('goog.net.XhrIo');
 goog.require('goog.object');
 goog.require('goog.style');
 goog.require('goog.ui.Component');
-goog.require('sm.lSchool.bMap.Template');
+goog.require('sm.bMap.Template');
 goog.require('sm.lSchool.iViewport.Viewport');
 
 
@@ -22,7 +22,7 @@ goog.require('sm.lSchool.iViewport.Viewport');
  * @extends {goog.ui.Component}
  * @constructor
  */
-sm.lSchool.bMap.Map = function(opt_params) {
+sm.bMap.Map = function(opt_params) {
     goog.base(this);
 
     /**
@@ -74,11 +74,17 @@ sm.lSchool.bMap.Map = function(opt_params) {
      * @private
      */
     this.placemarks_ = [];
+
+    /**
+     * @type {object}
+     * @private
+     */
+    this.config_ = null;
 };
-goog.inherits(sm.lSchool.bMap.Map, goog.ui.Component);
+goog.inherits(sm.bMap.Map, goog.ui.Component);
 
 goog.scope(function() {
-    var Map = sm.lSchool.bMap.Map;
+    var Map = sm.bMap.Map;
     var Viewport = sm.lSchool.iViewport.Viewport;
 
 
@@ -195,7 +201,7 @@ goog.scope(function() {
     */
     Map.prototype.createDom = function() {
         goog.base(this, 'createDom');
-        var element = sm.lSchool.bMap.Template();
+        var element = sm.bMap.Template();
         this.decorateInternal(element);
     };
 
@@ -209,8 +215,11 @@ goog.scope(function() {
         this.initParams_(element);
 
         var viewportPromise = this.getViewportPromise_(),
-            dataPromise = this.getDataPromise_(),
             ymapsPromise = this.getYmapsPromise_();
+
+        if (this.config_ && this.config_.sidePins) {
+            var dataPromise = this.getDataPromise_();
+        }
 
         viewportPromise.then(this.onShown_.bind(this));
 
@@ -245,8 +254,7 @@ goog.scope(function() {
     Map.prototype.getDataPromise_ = function() {
         return jQuery.ajax({
             url: '/api/address/list',
-            type: 'POST',
-            data: ''
+            type: 'GET'
         });
     };
 
@@ -291,7 +299,7 @@ goog.scope(function() {
     Map.prototype.onDataLoaded_ = function(data) {
         this.setCurrentPresets_(Map.PresetType.POINT);
         this.objectManager_.add(
-            this.getAllPlacemarkCollection_(data)
+            this.getAllPlacemarkCollection_(JSON.parse(data))
         );
     };
 
@@ -315,7 +323,7 @@ goog.scope(function() {
         //default placemarks
         this.setCurrentPresets_(Map.PresetType.DEFAULT);
         this.objectManager_.add(
-            this.getSchoolPlacemarks_(this.params_)
+            this.getCurrentPlacemarkCollection_(this.params_)
         );
 
         //Center map in accordance of default placemarks
@@ -335,7 +343,9 @@ goog.scope(function() {
         );
 
         //point placemarks
-        dataPromise.done(this.onDataLoaded_.bind(this));
+        if (dataPromise) {
+            dataPromise.done(this.onDataLoaded_.bind(this));
+        }
     };
 
     /**
@@ -363,9 +373,13 @@ goog.scope(function() {
      * @private
      */
     Map.prototype.initParams_ = function(element) {
+        var dataset = goog.dom.dataset.get(element, 'params'),
+            parsedDataset = JSON.parse(dataset);
         if (!this.params_) {
-            var dataset = goog.dom.dataset.get(element, 'params');
-            this.params_ = JSON.parse(dataset);
+            this.params_ = parsedDataset.data;
+        }
+        if (!this.config_) {
+            this.config_ = parsedDataset.config;
         }
     };
 
@@ -486,7 +500,7 @@ goog.scope(function() {
      */
     Map.prototype.generateBalloonLayout_ = function() {
         var that = this;
-        var balloonContent = sm.lSchool.bMap.Template.balloon().content;
+        var balloonContent = sm.bMap.Template.balloon().content;
         var MyBalloonLayout = ymaps.templateLayoutFactory.createClass(
             balloonContent,
             {
@@ -560,17 +574,18 @@ goog.scope(function() {
 
     /**
      * Success on getting all schools
-     * @param {Array.<Object>} responseData
+     * @param {Array.<Object>} data
      * @return {Array<Object>}
      * @private
      */
-    Map.prototype.getAllPlacemarkCollection_ = function(responseData) {
+    Map.prototype.getAllPlacemarkCollection_ = function(data) {
         var that = this,
-            data = JSON.parse(responseData),
             result = [];
 
         data.forEach(function(item) {
-            if (item.id != that.params_.id) {
+            if (!goog.object.every(that.params_, function(param) {
+                return param.id === item.id;
+            })) {
                 result.push.apply(
                     result,
                     that.getSchoolPlacemarks_(item)
@@ -580,6 +595,26 @@ goog.scope(function() {
 
         return result;
     };
+
+    /**
+     * @param {Array.<Object>} data
+     * @return {Array<Object>}
+     * @private
+     */
+    Map.prototype.getCurrentPlacemarkCollection_ = function(data) {
+        var that = this,
+            result = [];
+
+        data.forEach(function(item) {
+            result.push.apply(
+                result,
+                that.getSchoolPlacemarks_(item)
+            );
+        });
+
+        return result;
+    };
+
 
 
     /**

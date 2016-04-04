@@ -702,7 +702,10 @@ service.list = async (function(opt_params) {
             'metro.id AS "metroId"',
             'metro.name AS "metroName"',
             'area.id AS "areaId"',
-            'area.name AS "areaName"'
+            'area.name AS "areaName"',
+            'address.coords AS "addressCoords"',
+            'address.name AS "addressName"',
+            'department.stage AS "departmentStage"'
         ],
         from: {
                 select: [
@@ -750,7 +753,8 @@ service.list = async (function(opt_params) {
                     'address on address.school_id = school.id',
                     'address_metro on address_metro.address_id = address.id',
                     'metro on metro.id = address_metro.metro_id',
-                    'area on address.area_id = area.id'
+                    'area on address.area_id = area.id',
+                    'department on department.address_id = address.id'
                 ]
             }
         ],

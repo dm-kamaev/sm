@@ -56,6 +56,7 @@ exports.list = async (function(req, res) {
                 method: 'GET',
                 searchParams: searchParams
             },
+            mapSchools: schoolView.currentSchoolsMapPoints(data.schools),
             config: {
                 year: new Date().getFullYear(),
                 analyticsId: analyticsId
