@@ -145,7 +145,6 @@ exports.getMetro = function(address) {
 };
 
 exports.setMetro = async(function(address, metroArr) {
-    //console.log(address);
     metroArr.forEach(metro => {
         var ourMetro = await (models.Metro.findOne({
             where: {

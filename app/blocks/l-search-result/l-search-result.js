@@ -7,6 +7,7 @@ goog.require('goog.soy');
 goog.require('goog.ui.Component');
 goog.require('gorod.gSuggest.Suggest');
 goog.require('sm.bHeader.Header');
+goog.require('sm.bMap.Map');
 goog.require('sm.bSearch.Search');
 goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.lSearchResult.Template');
@@ -78,7 +79,8 @@ goog.scope(function() {
         SchoolList = sm.lSearchResult.bSchoolList.SchoolList,
         Filters = sm.lSearchResult.bFilters.Filters,
         Search = sm.bSearch.Search,
-        Header = sm.bHeader.Header;
+        Header = sm.bHeader.Header,
+        Map = sm.bMap.Map;
 
     /**
      * CSS-class enum
@@ -165,6 +167,8 @@ goog.scope(function() {
             this.menuSearch_.decorate(menuSearch);
         }
         this.initElements_(element);
+
+        this.initMap_();
     };
 
     /**
@@ -247,6 +251,24 @@ goog.scope(function() {
             Header.Event.ITEM_SELECT,
             this.onHeaderSubmit_
         );
+    };
+
+    /**
+     * Init search in menu
+     * @private
+     */
+    SearchResult.prototype.initMap_ = function() {
+        var element = this.getElement();
+
+        var map = goog.dom.getElementByClass(
+            Map.CssClass.ROOT,
+            element
+        );
+        if (map) {
+            var mapInstance = new Map();
+            this.addChild(mapInstance);
+            mapInstance.decorate(map);
+        }
     };
 
     /**

@@ -429,7 +429,7 @@
 /**
  * Map section
  * @param? params {{
- *     data: {
+ *     data: [{
  *         id: number,
  *         schoolName: string,
  *         totalScore: number,
@@ -437,19 +437,22 @@
  *             lat: number,
  *             lng: number
  *         }]
- *     }
+ *     }]
  * }}
  */
 {template .map_ autoescape="strict" kind="html"}
     <div class="l-school__section l-school__section_map">
         {call sm.bMap.Template.map}
             {param params: [
-                'data': [
+                'data': [[
                     'id': $params.data.id,
                     'addresses': $params.data.addresses,
                     'name': $params.data.schoolName,
                     'description': $params.data.schoolDescr,
                     'totalScore': $params.data.totalScore
+                ]],
+                'config': [
+                    'sidePins': true
                 ]
             ] /}
         {/call}

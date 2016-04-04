@@ -59,6 +59,19 @@
  *             page: number
  *         }
  *     },
+ *     mapSchools: [{
+ *         id: number,
+ *         name: string,
+ *         description: string,
+ *         url: string,
+ *         totalScore: number,
+ *         addresses: [{
+ *             lat: number,
+ *             lng: number,
+ *             name: string,
+ *             stages: list<string>
+ *         }]
+ *     }],
  *     config: {
  *         staticVersion: ?string,
  *         analyticsId: ?string
@@ -102,6 +115,8 @@
          data-params="{call goog.json.serialize data="$params.searchSettings" /}">
          {call .innerContent_ data="all" /}
     </div>
+
+    {call sm.bMap.Template.api}{/call}
 {/template}
 
 
@@ -110,6 +125,14 @@
  */
 {template .innerContent_ autoescape="strict" kind="html"}
     <div class="l-search-result__body">
+        {call .map}
+            {param params: [
+                'data': $params.mapSchools,
+                'config': [
+                    'sidePins': false
+                ]
+            ]/}
+        {/call}
         {call .listHeader_ data="all"}
             {param clone: true /}
         {/call}
@@ -127,6 +150,34 @@
                 {/call}
             </div>
         </div>
+    </div>
+{/template}
+
+/**
+ * Container for map
+ * @param? params {{
+ *     data: [{
+ *         id: number,
+ *         name: string,
+ *         description: string,
+ *         url: string,
+ *         totalScore: number,
+ *         addresses: [{
+ *             lat: number,
+ *             lng: number,
+ *             name: string,
+ *             stages: list<string>
+ *         }]
+ *     }]
+ * }}
+ */
+{template .map autoescape="strict" kind="html"}
+    <div class="l-search-result__map">
+        {call sm.bMap.Template.map}
+            {param params: [
+                'data': $params.data
+            ]/}
+        {/call}
     </div>
 {/template}
 
@@ -303,4 +354,3 @@
         ]/}
     {/call}
 {/template}
-
