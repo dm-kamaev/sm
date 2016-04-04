@@ -400,7 +400,7 @@ goog.scope(function() {
             this.onTextChange_.bind(this)
         );
     };
-    
+
     /**
      * Render suggest item
      * @param {object} item - School or metro or area item
