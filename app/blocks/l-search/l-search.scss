@@ -278,55 +278,6 @@
     vertical-align: top;
 }
 
-.l-search__image_list {
-    box-sizing: border-box;
-
-    width: 60px;
-    height: 60px;
-    margin-bottom: 27px;
-    padding: 10px 0;
-
-    text-align: center;
-
-    border: 4px solid #000;
-}
-
-.l-search__item-list {
-    line-height: 8px;
-}
-
-.l-search__image_point {
-    display: inline-block;
-    box-sizing: border-box;
-
-    width: 2px;
-    height: 2px;
-    margin-right: 4px;
-
-    border: 2px solid #000;
-
-    border-radius: 50%;
-}
-
-.l-search__image_dash {
-    display: inline-block;
-    box-sizing: border-box;
-
-    width: 20px;
-    height: 2px;
-
-    border: 2px solid #000;
-
-    border-radius: 2px;
-}
-
-.l-search__text-amount-schools {
-    margin-bottom: 10px;
-
-    font: 13px Arial, sans-serif;
-    line-height: 18px;
-}
-
 .l-search__horisontal-line {
     width: 100%;
     height: 1px;
@@ -551,18 +502,6 @@ screen and (max-width: 600px) // for desktop
         margin-top: 0;
         margin-bottom: 50px;
         padding: 0;
-    }
-
-    .l-search__image_list {
-        position: absolute;
-        top: 3px;
-        left: 0;
-    }
-
-    .l-search__information-text {
-        box-sizing: border-box;
-        width: 100%;
-        padding-left: 90px;
     }
 }
 

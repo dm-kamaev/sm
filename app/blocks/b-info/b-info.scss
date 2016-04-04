@@ -1,0 +1,72 @@
+.b-info__img {
+    box-sizing: border-box;
+
+    width: 60px;
+    height: 60px;
+    margin-bottom: 27px;
+    padding: 10px 0;
+
+    text-align: center;
+
+    border: 4px solid #000;
+}
+
+.b-info__text {
+    margin-bottom: 10px;
+
+    font: 13px Arial, sans-serif;
+    line-height: 18px;
+}
+
+.b-info__amount {
+    margin-bottom: 10px;
+
+    font: 13px Arial, sans-serif;
+    line-height: 18px;
+}
+
+.b-info__item-list {
+    line-height: 8px;
+}
+
+.b-info__img_point {
+    display: inline-block;
+    box-sizing: border-box;
+
+    width: 2px;
+    height: 2px;
+    margin-right: 4px;
+
+    border: 2px solid #000;
+
+    border-radius: 50%;
+}
+
+.b-info__img_dash {
+    display: inline-block;
+    box-sizing: border-box;
+
+    width: 20px;
+    height: 2px;
+
+    border: 2px solid #000;
+
+    border-radius: 2px;
+}
+
+@media screen and (max-device-width: 600px) // for phone
+and (orientation: portrait),
+screen and (max-width: 600px) // for desktop
+{
+    .b-info__img {
+        position: absolute;
+        top: 3px;
+        left: 0;
+    }
+
+    .b-info__info-text {
+        box-sizing: border-box;
+        width: 100%;
+        padding-left: 90px;
+    }
+}

@@ -1,0 +1,179 @@
+{namespace sm.bInfo.Template}
+
+/**
+ * Constructor
+ * @param? params {
+ *     imgUrl: ?uri,
+ *     text: ?string,
+ *     amount: ?number,
+ *     dataLink: {
+ *         name: ?string
+ *         url: ?uri
+ *     }
+ *}
+ * @extends cl.iControl.Template
+ * @constructor
+ */
+{template .info}
+    {call .init data="all" /}
+{/template}
+
+
+/**
+ * Body
+ * @param? params {
+ *     imgUrl: ?uri,
+ *     text: ?string,
+ *     amount: ?number,
+ *     dataLink: {
+ *         name: ?string
+ *         url: ?uri
+ *     }
+ *}
+ */
+{template .body}
+    <div class="{call .rootClass/}">
+        {call sm.bInfo.Template.img_ data="all" /}
+        {call sm.bInfo.Template.infoText_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * info text template
+ * @param? params {
+ *     text: ?string,
+ *     amount: ?number,
+ *     dataLink: {
+ *         name: ?string
+ *         url: ?uri
+ *     }
+ *}
+ */
+{template .infoText_ autoescape="strict" kind="html"}
+    <div class="{call .rootClass/}__info-text">
+        {call sm.bInfo.Template.text_}
+            {param params: [
+                'text': $params.text,
+                'amount': $params.amount,
+            ]/}
+        {/call}
+
+        {call sm.bInfo.Template.link_}
+            {param params: [
+                'data': [
+                    'name': $params?.dataLink?.name,
+                    'url': $params?.dataLink?.url
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Img template
+ * @param? params {
+ *     imgUrl: ?uri
+ *}
+ */
+{template .img_ autoescape="strict" kind="html"}
+    {if $params.imgUrl}
+        <img class="{call .rootClass/}__img" src="{$params.imgUrl}">
+    {else}
+        <div class="{call .rootClass/}__img">
+            {for $i in range(3)}
+                {call sm.bInfo.Template.imgList_ /}
+            {/for}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Text template
+ * @param? params {
+ *     text: ?string,
+ *     amount: ?number
+ *}
+ */
+{template .text_ autoescape="strict" kind="html"}
+    <div class="{call .rootClass/}__text">
+        {$params?.text}
+
+        {if $params?.amount}
+            <span class="{call .rootClass/}__amount">
+                {sp}{$params.amount}{sp}
+
+                {call sm.bInfo.Template.getEnding_}
+                    {param params: [
+                        'number': $params.amount ]
+                    /}
+                {/call}
+            </span>
+        {/if}
+    </div>
+{/template}
+
+
+/**
+ * Link template
+ * @param? params {
+ *     data: {
+ *         name: ?string,
+ *         url: ?uri
+ *     }
+ *}
+ */
+{template .link_ autoescape="strict" kind="html"}
+    {call sm.bLink.Template.base}
+        {param params: [
+            'data': [
+                'name': $params?.data?.name,
+                'url': $params?.data?.url
+            ]
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * Image Template
+ */
+{template .imgList_ autoescape="strict" kind="html" private="true"}
+    <div class="{call .rootClass/}__item-list">
+        <span class="{call .rootClass/}__img_point"></span>
+        <span class="{call .rootClass/}__img_dash"></span>
+    </div>
+{/template}
+
+
+/**
+ * makes word's 'школа' ending depends of incoming number
+ * @param? params {
+ *     number: number
+ * }
+ */
+{template .getEnding_}
+    {if $params.number >= 11 and $params.number <= 19}
+        школ
+    {else}
+        {let $lastNumber: $params.number % 10 /}
+        {if $lastNumber == 1}
+            школу
+        {elseif $lastNumber >= 2 and $lastNumber <= 4}
+            школы
+        {else}
+            школ
+        {/if}
+    {/if}
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-info
+{/template}

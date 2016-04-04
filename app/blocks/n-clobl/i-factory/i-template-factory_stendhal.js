@@ -4,6 +4,7 @@ goog.provide('sm.iFactory.TemplateFactoryStendhal.INSTANCE');
 goog.require('cl.iFactory.TemplateFactory');
 goog.require('sm.bBanner.Template');
 goog.require('sm.bHeader.Template');
+goog.require('sm.bInfo.Template');
 goog.require('sm.bPopularSchools.Template');
 goog.require('sm.gAuthSocial.TemplateStendhal');
 goog.require('sm.gAuthSocialModal.TemplateStendhal');
@@ -84,6 +85,10 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'popular-schools',
             sm.bPopularSchools.Template.base
+        )
+        .setTemplateListItem(
+            'info',
+            sm.bInfo.Template.info
         );
 };
 goog.inherits(sm.iFactory.TemplateFactoryStendhal, cl.iFactory.TemplateFactory);
