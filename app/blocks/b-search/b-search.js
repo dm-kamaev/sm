@@ -116,15 +116,15 @@ goog.scope(function() {
      * @return {{
      *     areaId: ?number,
      *     metroId: ?number,
-     *     name: ?string
+     *     text: ?string
      * }}
      * @public
      */
-    Search.prototype.getValue = function() {
+    Search.prototype.getData = function() {
         return {
             metroId: this.getMetroId(),
             areaId: this.getAreaId(),
-            name: this.getText()
+            text: this.getText()
         };
     };
 
@@ -132,21 +132,21 @@ goog.scope(function() {
      * @param {{
      *     areaId: ?number,
      *     metroId: ?number,
-     *     name: ?string
-     * }} value
+     *     text: ?string
+     * }} data
      * @public
      */
-    Search.prototype.setValue = function(value) {
-        if (value.hasOwnProperty('areaId')) {
-            this.setAreaId(value.areaId);
+    Search.prototype.setData = function(data) {
+        if (data.hasOwnProperty('areaId')) {
+            this.setAreaId(data.areaId);
         }
 
-        if (value.hasOwnProperty('metroId')) {
-            this.setMetroId(value.metroId);
+        if (data.hasOwnProperty('metroId')) {
+            this.setMetroId(data.metroId);
         }
 
-        if (value.hasOwnProperty('name')) {
-            this.setText(value.name);
+        if (data.hasOwnProperty('text')) {
+            this.setText(data.text);
         }
     };
 
@@ -224,7 +224,12 @@ goog.scope(function() {
      * @public
      */
     Search.prototype.switchToDefaultMode = function() {
-        this.setValue('');
+        this.setData({
+            text: '',
+            metroId: null,
+            areaId: null
+        });
+
         goog.dom.classes.remove(
             this.getElement(),
             Search.CssClass.SEARCH_MODE
@@ -576,28 +581,28 @@ goog.scope(function() {
     };
 
     /**
-     * Take values from item and put it to corresponding value
-     * @param {Object} item
+     * Take values from selected item and put it to value
+     * @param {Object} item - school or metro or area item
      * @private
      */
     Search.prototype.processItem_ = function(item) {
         if (item.type == 'metro') {
-            this.setValue({
+            this.setData({
                 metroId: item.id,
                 areaId: null,
-                name: item.text
+                text: item.name
             });
         } else if (item.type == 'areas') {
-            this.setValue({
+            this.setData({
                 metroId: null,
                 areaId: item.id,
-                name: item.text
+                text: item.name
             });
         } else {
-            this.setValue({
+            this.setData({
                 metroId: null,
                 areaId: null,
-                name: item.text
+                text: item.name
             });
         }
     };
@@ -636,10 +641,10 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.onTextChange_ = function(event, data) {
-        this.setValue({
+        this.setData({
             metroId: null,
             areaId: null,
-            name: data.text
+            text: data.text
         });
     };
 

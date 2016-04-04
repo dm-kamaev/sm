@@ -136,6 +136,17 @@ goog.scope(function() {
         return res;
     };
 
+    /**
+     * @public
+     * @return {{
+     *     text: ?string,
+     *     areaId: ?number,
+     *     metroId: ?number
+     * }}
+     */
+    Header.prototype.getSearchData = function() {
+        return this.search_.getData();
+    };
 
     /**
      * Is mode already selected

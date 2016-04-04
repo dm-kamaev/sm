@@ -33,13 +33,6 @@ sm.lSearchResult.SearchResult = function(opt_params) {
     this.params_ = opt_params || {};
 
     /**
-     * History support state
-     * @private
-     * @type {boolean}
-     */
-    this.isHistorySupported_ = false;
-
-    /**
      * Collection of children instances
      * @type {{
      *     header: ?sm.bHeader.Header
@@ -156,7 +149,6 @@ goog.scope(function() {
 
         /** Init params **/
         this.initParams_();
-        this.detectHistorySupport_();
         /** end init params **/
 
         /** init child instances **/
@@ -290,10 +282,6 @@ goog.scope(function() {
             this.instances_.search,
             Search.Event.ITEM_SELECT,
             this.onSearchSubmit_
-        ).listen(
-            this.instances_.search,
-            Search.Event.TEXT_CHANGE,
-            this.onSearchTextChange_
         );
     };
 
@@ -358,8 +346,11 @@ goog.scope(function() {
      * @private
      */
     SearchResult.prototype.onHeaderSubmit_ = function() {
-        this.instances_.search.setValue(paramsToUpdate.name);
+        var newSearchData = this.instances_.header.getSearchData();
+        this.instances_.search.setData(newSearchData);
+
         this.instances_.header.setMode(Header.Mode.DEFAULT);
+
         this.instances_.filters.reset();
 
         this.search_();
@@ -379,20 +370,6 @@ goog.scope(function() {
      */
     SearchResult.prototype.onFiltersSubmit_ = function() {
         this.search_();
-    };
-
-    /**
-     * Make a search from filter when filters submits
-     * @param {Object} filterParams
-     * @private
-     */
-    SearchResult.prototype.filtersSearch_ = function(filterParams) {
-        var params = {
-            page: 0
-        };
-        goog.object.extend(params, filterParams);
-
-        this.search_(params);
 
         this.instances_.filters.collapse();
         window.scrollTo(0, 0);
@@ -413,7 +390,7 @@ goog.scope(function() {
      * @private
      */
     SearchResult.prototype.getParamsFromSearch_ = function() {
-        return this.instances_.search.getValue()
+        return this.instances_.search.getData();
     };
 
     /**
@@ -425,6 +402,7 @@ goog.scope(function() {
             page: 0,
             sortType: 0
         };
+
         goog.object.extend(params, this.getParamsFromFilters_());
         goog.object.extend(params, this.getParamsFromSearch_());
         this.updateSearchParams_(params);
@@ -442,7 +420,7 @@ goog.scope(function() {
     SearchResult.prototype.updateUrl_ = function() {
         var newUrl = this.generateUrl_();
 
-        if (this.isHistorySupported_) {
+        if (goog.history.Html5History.isSupported()) {
            window.history.pushState(null, null, newUrl);
         } else {
             window.location.href = newUrl;
@@ -450,7 +428,7 @@ goog.scope(function() {
     };
 
     /**
-     * Generate new query string from current params to push it to history
+     * Generate new url from current params to push it to history
      * @return {string}
      * @private
      */
@@ -459,7 +437,7 @@ goog.scope(function() {
             this.isCorrectUrlParam_);
 
         var currentPath = window.location.pathname,
-            queryParams = encodeURI(jQuery.param(filteredParams));
+            queryParams = jQuery.param(filteredParams);
 
         return currentPath + '?' + queryParams;
     };
@@ -492,14 +470,40 @@ goog.scope(function() {
      * @private
      */
     SearchResult.prototype.updateSearchParams_ = function(params) {
-        var paramsToUpdate = goog.object.getKeys(params),
-            that = this;
+        var paramsToUpdate = goog.object.getKeys(params);
 
-        paramsToUpdate.forEach(function(param) {
-            if (goog.object.containsKey(that.searchParams_, param)) {
-                that.searchParams_[param] = params[param];
+        paramsToUpdate.filter(this.isCorrectParam_.bind(this))
+            .forEach(this.updateSearchParam_.bind(this, params));
+    };
+
+    /**
+     * Get value for each paramName from paramsToUpdate and put it to
+     * corresponding field of searchParams_ object.
+     * 'text' field from newParams correspond to 'name' field in searchParams_
+     * @param {Object} paramsToUpdate - object with new parameters
+     * @param {string} paramName - name of each parameter
+     * @private
+     */
+    SearchResult.prototype.updateSearchParam_ =
+        function(paramsToUpdate, paramName) {
+            if (paramName == 'text') {
+                this.searchParams_['name'] = paramsToUpdate['text'];
+            } else {
+                this.searchParams_[paramName] = paramsToUpdate[paramName];
             }
-        });
+    };
+
+    /**
+     * Check whether correct each param and contains in searchParams_ object
+     * except 'text' field
+     * @param {string} param
+     * @return {boolean}
+     * @private
+     */
+    SearchResult.prototype.isCorrectParam_ = function(param) {
+        return param == 'text' ?
+            true :
+            goog.object.containsKey(this.searchParams_, param);
     };
 
     /**
@@ -508,9 +512,10 @@ goog.scope(function() {
      * @private
      */
     SearchResult.prototype.onSort_ = function(event) {
-
-        this.searchParams_.page = 0;
-        this.searchParams_.sortType = event.itemId;
+        this.updateSearchParams_({
+            page: 0,
+            sortType: event.itemId
+        });
 
         this.send_().then(this.setItems_.bind(this));
     };
@@ -520,7 +525,9 @@ goog.scope(function() {
      * @private
      */
     SearchResult.prototype.onShowMoreSchoolListItems_ = function() {
-        this.searchParams_.page += 1;
+        this.updateSearchParams_({
+            page: this.searchParams_.page + 1
+        });
 
         this.instances_.schoolList.showLoader();
 
@@ -588,7 +595,7 @@ goog.scope(function() {
                 sm.lSearchResult.Template.listHeaderText, {
                     params: {
                         countResults: data.countResults,
-                        searchText: this.instances_.search.getValue()
+                        searchText: this.instances_.search.getText()
                     }
                 }
             );
@@ -606,14 +613,6 @@ goog.scope(function() {
 
         this.instances_.schoolList.reset();
         this.instances_.schoolList.setItems(data.schools);
-    };
-
-    /**
-     * Detect is browser support HTML5 history
-     * @private
-     */
-    SearchResult.prototype.detectHistorySupport_ = function() {
-        this.isHistorySupported_ = goog.history.Html5History.isSupported();
     };
 });
 
