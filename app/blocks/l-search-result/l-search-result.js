@@ -342,6 +342,7 @@ goog.scope(function() {
             goog.events.EventType.PAGESHOW,
             this.onShowPage_
         );
+    };
 
     /**
      * Init map
