@@ -7,6 +7,8 @@ goog.require('sm.bHeader.Header');
 goog.require('sm.bHeader.View');
 goog.require('sm.bPopularSchools.PopularSchools');
 goog.require('sm.bPopularSchools.View');
+goog.require('sm.bSearchPanel.SearchPanel');
+goog.require('sm.bSearchPanel.View');
 goog.require('sm.gAuthSocial.ViewStendhal');
 goog.require('sm.gDropdown.DropdownSelect');
 goog.require('sm.gDropdown.DropdownSelectView');
@@ -69,6 +71,10 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('popular-schools', {
             control: sm.bPopularSchools.PopularSchools,
             view: sm.bPopularSchools.View
+        })
+        .setControlListItem('search-panel', {
+            control: sm.bSearchPanel.SearchPanel,
+            view: sm.bSearchPanel.View
         });
 };
 goog.inherits(sm.iFactory.FactoryStendhal, cl.iFactory.Factory);

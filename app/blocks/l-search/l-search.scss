@@ -117,105 +117,8 @@
     margin-left: 18px;
 }
 
-.l-search__top-menu-wrap {
-    height: 155px;
-
-    background-color: #f4f4ec;
-}
-
-.l-search__top-menu {
-    position: relative;
-
-    max-width: 1200px;
-    margin: 0 auto;
-    padding-top: 40px;
-}
-
-.l-search__left-text {
-    display: inline-block;
-
-    box-sizing: border-box;
-    width: 16.67%;
-    margin-top: 14px;
-    padding-right: 20px;
-
-    vertical-align: top;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-
-    font: 16px 'Proxima', Arial, sans-serif;
-    font-weight: 800;
-}
-
 .l-search__search {
-    display: inline-block;
-
-    box-sizing: border-box;
-    width: 83.33%;
-    padding-right: 307px;
-    padding-left: 10px;
-}
-
-.l-search__search-field {
-    margin-bottom: 14px;
-}
-
-.l-search__search-links {
-    overflow: hidden;
-
-    height: 18px;
-}
-
-.l-search__search-link {
-    display: inline-block;
-
-    margin-right: 18px;
-
-    &:last-child {
-        margin-right: 0;
-    }
-}
-
-.l-search__button-wrap {
-    position: absolute;
-    right: 0;
-    top: 40px;
-
-    width: 277px;
-
-    text-align: center;
-    vertical-align: top;
-}
-
-.l-search__button {
-    box-sizing: border-box;
     width: 100%;
-    height: 47px;
-    margin-bottom: 14px;
-    padding-top: 12px;
-
-    cursor: pointer;
-    text-align: center;
-
-    border: 4px solid;
-}
-
-.l-search__search-button {
-    color: #000000;
-}
-
-.l-search__button_content {
-    width: 100%;
-}
-
-.l-search__button-text {
-    text-transform: uppercase;
-    letter-spacing: 1px;
-
-    font-family: proxima;
-    font-size: 16px;
-    font-weight: 800;
-    line-height: 1em;
 }
 
 .l-search__information-links-wrap {
@@ -310,15 +213,6 @@
     .l-search__title {
         margin-bottom: 27px;
     }
-    
-    .l-search__top-menu-wrap {
-        box-sizing: border-box;
-        padding: 0 40px;
-    }
-
-    .l-search__top-menu {
-        width: 100%;
-    }
 
     .l-search__information-links-wrap {
         box-sizing: border-box;
@@ -334,23 +228,6 @@
 {
     .l-search__header-image-wrap {
         left: 0;
-    }
-
-    .l-search__search-wrap {
-        display: inline-block;
-
-        box-sizing: border-box;
-        width: 100%;
-        padding-right: 307px;
-    }
-
-    .l-search__left-text {
-        width: 33.33%;
-    }
-
-    .l-search__search {
-        width: 66.66%;
-        padding-right: 0;
     }
 
     .l-search__schools {
@@ -399,29 +276,6 @@
         display: none;
     }
 
-    .l-search__search-wrap {
-        width: 66.66%;
-        padding-right: 10px;
-    }
-
-    .l-search__search {
-        width: 100%;
-        padding: 0;
-    }
-
-    .l-search__left-text {
-        display: none;
-    }
-
-    .l-search__button-wrap {
-        position: static;
-        display: inline-block;
-
-        box-sizing: border-box;
-        width: 33.33%;
-        padding-left: 20px;
-    }
-
     .l-search__schools {
         width: auto;
         padding-right: 0;
@@ -455,19 +309,6 @@ screen and (max-width: 600px) // for desktop
 
     .l-search__geoposition {
         margin-bottom: 2px;
-    }
-
-    .l-search__top-menu-wrap {
-        padding: 0 30px;
-    }
-
-    .l-search__search-wrap {
-        width: 100%;
-        padding-right: 0;
-    }
-
-    .l-search__button-wrap {
-        display: none;
     }
 
     .l-search__information-links-wrap {

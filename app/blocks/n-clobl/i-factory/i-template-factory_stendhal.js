@@ -6,6 +6,7 @@ goog.require('sm.bBanner.Template');
 goog.require('sm.bHeader.Template');
 goog.require('sm.bInfo.Template');
 goog.require('sm.bPopularSchools.Template');
+goog.require('sm.bSearchPanel.Template');
 goog.require('sm.gAuthSocial.TemplateStendhal');
 goog.require('sm.gAuthSocialModal.TemplateStendhal');
 goog.require('sm.gButton.TemplateSocialStendhal');
@@ -89,6 +90,10 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'info',
             sm.bInfo.Template.info
+        )
+        .setTemplateListItem(
+            'search-panel',
+            sm.bSearchPanel.Template.seachPanel
         );
 };
 goog.inherits(sm.iFactory.TemplateFactoryStendhal, cl.iFactory.TemplateFactory);

@@ -5,7 +5,7 @@ goog.require('goog.dom.classlist');
 goog.require('goog.events');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
-goog.require('sm.bSearch.Search');
+goog.require('sm.bSearchPanel.View');
 goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.iFactory.FactoryStendhal');
 goog.require('sm.iFactory.TemplateFactoryStendhal');
@@ -27,11 +27,11 @@ sm.lSearch.Search = function(opt_params) {
     this.params_ = opt_params || {};
 
     /**
-     * Search instance
-     * @type {?sm.bSearch.Search}
+     * Search Panel instance
+     * @type {sm.bSearchPanel.PanelSearch}
      * @private
      */
-    this.search_ = null;
+    this.searchPanel_ = null;
 
     /*
      * instance popular Schools
@@ -44,7 +44,6 @@ goog.inherits(sm.lSearch.Search, goog.ui.Component);
 
 goog.scope(function() {
     var Search = sm.lSearch.Search,
-        BlockSearch = sm.bSearch.Search,
         PopularSchools = sm.bPopularSchools.PopularSchools;
 
     /**
@@ -52,8 +51,7 @@ goog.scope(function() {
      * @enum {string}
      */
     Search.CssClass = {
-        ROOT: 'l-search',
-        SEARCH_BUTTON: 'l-search__button_search'
+        ROOT: 'l-search'
     };
 
     /**
@@ -80,17 +78,6 @@ goog.scope(function() {
     Search.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
-        this.initElements_(element);
-
-        var bSearch = goog.dom.getElementByClass(
-            BlockSearch.CssClass.ROOT,
-            element
-        );
-
-        this.search_ = new BlockSearch();
-        this.addChild(this.search_);
-        this.search_.decorate(bSearch);
-
         var bPopularSchools = goog.dom.getElementByClass(
             sm.bPopularSchools.View.CssClass.ROOT,
             element
@@ -102,6 +89,18 @@ goog.scope(function() {
                 bPopularSchools,
                 this
             );
+
+        var bSearchPanel = goog.dom.getElementByClass(
+            sm.bSearchPanel.View.CssClass.ROOT,
+            element
+        );
+
+        this.searchPanel_ =
+            sm.iFactory.FactoryStendhal.getInstance().decorate(
+                'search-panel',
+                bSearchPanel,
+                this
+            );
     };
 
     /**
@@ -109,46 +108,6 @@ goog.scope(function() {
      */
     Search.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
-
-        this.getHandler().listen(
-            this.elements_.searchButton,
-            goog.events.EventType.CLICK,
-            this.onButtonClick_
-        );
-    };
-
-    /**
-     * gets DOM elements
-     * @param {Element} root
-     * @private
-     */
-    Search.prototype.initElements_ = function(root) {
-        this.elements_ = {
-            searchButton: goog.dom.getElementByClass(
-                Search.CssClass.SEARCH_BUTTON
-            )
-        };
-    };
-
-    /**
-     * Button click handler
-     * @private
-     */
-    Search.prototype.onButtonClick_ = function() {
-        this.searchRequest_(this.search_.getValue());
-    };
-
-    /**
-     * Search redirect
-     * @param {string} searchString
-     * @private
-     */
-    Search.prototype.searchRequest_ = function(searchString) {
-        var url = '/search';
-        if (searchString) {
-            url += '?name=' + encodeURIComponent(searchString);
-        }
-        document.location.href = url;
     };
 });
 
