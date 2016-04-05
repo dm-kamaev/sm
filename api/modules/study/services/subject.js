@@ -119,7 +119,8 @@ var generateFilters = async(function(params) {
         .map(subject => {
             return {
                 label: subject.displayName,
-                value: subject.alias
+                value: subject.alias,
+                id: subject.id
             };
         });
 

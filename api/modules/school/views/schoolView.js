@@ -18,6 +18,7 @@ const olimpResultView = require.main.require(
 const subjectView = require.main.require(
     './api/modules/study/views/subjectView.js'
 );
+const searchType = require('../enums/searchType');
 
 var schoolView = {};
 
@@ -675,11 +676,11 @@ schoolView.listMapPoints = function(schools) {
 };
 
 /**
- * @param {object} data
- * @param {array<object>} data.schools - school instances
- * @param {array<object>} data.areas - area instances
- * @param {array<object>} data.metros - metro instances
- * @return {array<object>}
+ * @param {Object} data
+ * @param {Array<object>} data.schools - school instances
+ * @param {Array<object>} data.areas - area instances
+ * @param {Array<object>} data.metros - metro instances
+ * @return {Array<object>}
  */
 schoolView.suggest = function(data) {
     return {
@@ -690,46 +691,191 @@ schoolView.suggest = function(data) {
 };
 
 /**
- * @param {array<object>} filters
- * @return {array<object>}
+ * @param {Array<Object>} filters
+ * @param {Object.<
+ *     string, Array.<number>
+ * >} opt_searchParams
+ * @return {Object}
  */
-schoolView.filters = function(filters) {
-   return filters.map(item => {
-       var res = {
-           data: {
-               filters: item.values,
-               header: {
-                   tooltip: ''
-               },
-               name: item.filter
-           },
-           config: {}
-       };
+schoolView.filters = function(filters, opt_searchParams) {
+    var searchParams = opt_searchParams || {},
+        subjectFilters = schoolView.subjectFilters(filters, searchParams),
+        classesFilter = schoolView.classesFilter(searchParams.classes);
 
-       switch (item.filter) {
-           case 'school_type':
-               res.data.name = 'schoolType';
-               res.data.header.title = 'Тип школы';
-               res.config.filtersToShow = 15;
-               break;
-           case 'ege':
-               res.data.header.title = 'Высокие результаты ЕГЭ';
-               res.data.filters.sort((a, b) => subjectView.sorter(a.label, b.label, 'EGE'));
-               res.data.header.tooltip = 'Выше среднего значения по нашей базе.' +
-               ' Учитываются результаты московских школ за последний год.'
-               break;
-           case 'gia':
-               res.data.header.title = 'Высокие результаты ГИА';
-               res.data.filters.sort((a, b) => subjectView.sorter(a.label, b.label, 'GIA'));
-               res.data.header.tooltip = 'Выше среднего значения по нашей базе.' +
-               ' Учитываются результаты московских школ за последний год.'
-               break;
-           case 'olimp':
-               res.data.header.title = 'Есть победы в олимпиадах';
-               break;
-       }
-       return res;
-   });
+    return {
+        filters: subjectFilters,
+        filterClasses: classesFilter,
+        url: '/api/school/search',
+        config: {
+            hasCheckedFilters: hasCheckedFilters(subjectFilters, classesFilter)
+        }
+    };
+};
+
+/**
+ * Verify that one of filters is checked and return true in this case
+ * @param {Object} subjectFilters
+ * @param {Object} classesFilter
+ * @return {boolean}
+ */
+var hasCheckedFilters = function(subjectFilters, classesFilter) {
+    var isChecked =
+        classesFilter.isKindergartenSelected || classesFilter.selectedClass;
+
+    if(!isChecked) {
+        isChecked = lodash.some(subjectFilters, function(subjectFilter) {
+            return subjectFilter.config.isShowed;
+        });
+    }
+
+    return isChecked;
+};
+
+/**
+ * @param {Array.<
+ *     Object.<string, string|number>
+ * >} filters
+ * @param searchParams {Object.<string, Array.<number>>}
+ * @return {Array.<
+ *     Object.<string, Object>
+ * >}
+ */
+schoolView.subjectFilters = function(filters, searchParams) {
+    return filters.map(filterItem => {
+        var filterType = searchType
+                .camelCaseFields[searchType.getPropByValue(filterItem.filter)],
+            checkedItems = searchParams[filterType];
+
+        var filter = subjectFilter(filterItem.values, checkedItems);
+
+        var res = {
+            data: {
+                header: {
+                    title: subjectFiltersData[filterType].title,
+                    tooltip: subjectFiltersData[filterType].tooltip
+                },
+                name: filterType,
+                filters: filter
+            },
+            config: {
+                isShowed: hasCheckedItems(filter)
+            }
+        };
+
+        switch (filterType) {
+            case searchType.camelCaseFields.SCHOOL_TYPE:
+                res.config.filtersToShow = 15;
+                break;
+            case  searchType.camelCaseFields.EGE:
+                res.data.filters.sort(
+                    (a, b) => subjectView.sorter(a.label, b.label, 'EGE')
+                );
+                break;
+            case  searchType.camelCaseFields.GIA:
+                res.data.filters.sort(
+                    (a, b) => subjectView.sorter(a.label, b.label, 'GIA')
+                );
+                break;
+        }
+
+        return res;
+    });
+};
+
+/**
+ * Data for filters
+ * @type {Object.<
+ *     string, Object.<string, string>
+ * >}
+ */
+var subjectFiltersData = {
+    schoolType: {
+        title: 'Тип школы',
+        tooltip: ''
+    },
+    ege: {
+        title: 'Высокие результаты ЕГЭ',
+        tooltip: 'Выше среднего значения по нашей базе.' +
+        ' Учитываются результаты московских школ за последний год.'
+    },
+    gia: {
+        title: 'Высокие результаты ГИА',
+        tooltip: 'Выше среднего значения по нашей базе.' +
+        ' Учитываются результаты московских школ за последний год.'
+    },
+    olimp: {
+        title: 'Есть победы в олимпиадах',
+        tooltip: ''
+    }
+};
+
+/**
+ *
+ * @param {Array.<number>} filters
+ * @param {Array.<number>} checkedFilters - array with id of currently checked
+ * filters
+ * @return {Array.<Object.<string, boolean|string>>}
+ */
+var subjectFilter = function(filters, checkedFilters) {
+    return filters.map((filter) => {
+        return {
+            label: filter.label,
+            value: filter.value,
+            isChecked: isCheckedItem(checkedFilters, filter.id)
+        }
+    });
+};
+
+/**
+ * Search for given filterId in checkedFilters array
+ * @param {Array.<number>} checkedFilters
+ * @param {number} filterId
+ * @return {boolean}
+ */
+var isCheckedItem = function(checkedFilters, filterId) {
+    var isChecked = lodash.indexOf(checkedFilters, filterId);
+
+    return isChecked != -1;
+};
+
+/**
+ * Verify that one of filters is checked and return true in this case
+ * @param filters
+ * @return {boolean}
+ */
+var hasCheckedItems = function(filters) {
+    return lodash.some(filters, function(filter) {
+        return filter.isChecked;
+    });
+};
+
+/**
+ * Create classes filter settings from search params
+ * @param selectedClasses {Array.<string>}
+ * @return {{
+ *     header: {
+ *         title: ?string
+ *     },
+ *     isKindergartenSelected: boolean,
+ *     selectedClass: ?number
+ * }}
+ */
+schoolView.classesFilter = function(selectedClasses) {
+    console.log(selectedClasses);
+    var classesFilter = {
+        header: {
+            title: 'В какой класс Вы хотите отдать ребенка?'
+        }
+    };
+    selectedClasses.forEach((selectedClass) => {
+        if(Number(selectedClass) === 0) {
+            classesFilter.isKindergartenSelected = true;
+        } else {
+            classesFilter.selectedClass = Number(selectedClass);
+        }
+    });
+    console.log(classesFilter);
+    return classesFilter;
 };
 
 module.exports = schoolView;
