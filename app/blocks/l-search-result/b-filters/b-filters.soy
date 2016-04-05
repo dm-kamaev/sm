@@ -1,11 +1,16 @@
 {namespace sm.lSearchResult.bFilters.Template}
+/**
+ * @typedef {Object} sm.lSearchResult.bFilters.Template.Params
+ * @property {?Array.<sm.lSearchResult.bFilter.Template.Params>} filters
+ * @property {?sm.lSearchResult.bFilterClasses.Template.Params} filterClasses
+ * @property {?string} url
+ * @property {?Object} config
+ * @property {?boolean} hasCheckedFilters
+ */
 
 /**
  * Filter template
- * @param? params {
- *      filters: ?list<sm.lSearchResult.bFilter.Template.Params>,
- *      url: ?string
- * }
+ * @param? params {sm.lSearchResult.bFilters.Template.Params}
  */
 {template .base autoescape="strict" kind="html"}
     <form class="b-filters b-filters_state_collapsed"
@@ -48,8 +53,11 @@
                         ]/}
                     {/call}
                 </div>
+                <div class="b-filters__reset
+                    {$params?.config?.hasCheckedFilters ?
+                    ' i-utils__hidden' :
+                    ''}">
 
-                <div class="b-filters__reset i-utils__hidden">
                     {call sm.bLink.Template.base}
                         {param params: [
                             'data': [
@@ -71,18 +79,22 @@
  * Filter groups
  * @param? params {
  *      filters: ?list<sm.lSearchResult.bFilter.Template.Params>
+ *      filterClasses: {sm.lSearchResult.bFilterClasses.Template.Params}
  * }
  */
 {template .filters_ autoescape="strict" kind="html" private="true"}
+    {let $filterClasses: [
+        'data': [
+            'header': [
+                'title': $params.filterClasses?.header?.title
+            ],
+            'name': 'classes',
+            'selectedClass': $params.filterClasses?.selectedClass,
+            'isKindergartenSelected': $params.filterClasses?.isKindergartenSelected
+        ]
+    ] /}
     {call sm.lSearchResult.bFilterClasses.Template.base}
-        {param params: [
-            'data': [
-                'header': [
-                    'title': 'В какой класс хотите отдать ребенка?'
-                ],
-                'name': 'classes'
-            ]
-        ]/}
+        {param params: $filterClasses /}
     {/call}
 
     {foreach $filter in $params.filters}

@@ -8,6 +8,7 @@
  * @property {?string} data.name
  * @property {?object} config
  * @property {?boolean} config.cannotBeHidden
+ * @property {?boolean} config.isShowed
  * @property {?number} config.filtersToShow
  */
 
@@ -63,7 +64,7 @@
             {/call}
         {/if}
         {if not $params?.config?.cannotBeHidden}
-            {call .showFiltersButton/}
+            {call .showFiltersButton data="all" /}
         {/if}
     </div>
 {/template}
@@ -89,7 +90,12 @@
         ($params?.config?.filtersToShow - 1) : 5/}
 
     <div class="b-filter__filters
-                {$params?.config?.cannotBeHidden ? '' : ' i-utils__hidden'}">
+        {if not $params?.config?.cannotBeHidden}
+            {if not $params?.config?.isShowed}
+                {sp}i-utils__hidden
+            {/if}
+        {/if}
+        ">
         {for $i in range($params.data.filters.length)}
             {call .filter}
                 {param params: [
@@ -148,7 +154,8 @@
  * @param? params {
  *     filter: ?{
  *         label: ?string,
- *         value: ?string
+ *         value: ?string,
+ *         isChecked: ?boolean
  *     },
  *     hidden: ?bool
  *     name: ?string,
@@ -162,7 +169,8 @@
                 class="b-filter__input"
                 id="{$params.name}-{$params.id}"
                 name="{$params.name}"
-                value="{$params.filter.value}"/>
+                value="{$params.filter.value}"
+                {$params.filter?.isChecked ? 'checked' : ''}/>
             <label for="{$params.name}-{$params.id}"
                 class="b-filter__input-label">
                 {$params.filter.label}
@@ -174,11 +182,19 @@
 
 /**
  * Show filters button
+ * @param? params {
+ *     config: ?{
+ *         isShowed: ? boolean
+ *     }
+ * }
  */
 {template .showFiltersButton}
     <div class="b-filter__show-filters-button">
-        <div class="b-filter__show-filters-icon
-                    g-icon_img_filter-arrow-down">
+        <div class="b-filter__show-filters-icon{sp}
+            {$params?.config?.isShowed ?
+                'g-icon_img_filter-arrow-up' :
+                'g-icon_img_filter-arrow-down'
+            }">
         </div>
     </div>
 {/template}
