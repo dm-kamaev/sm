@@ -18,12 +18,20 @@ module.exports = {
             newId: computerScienceNewId,
             oldId: computerScienceOldId
         });
+        updateResults('city_result', {
+            newId: computerScienceNewId,
+            oldId: computerScienceOldId
+        });
         deleteSubjects(computerScienceOldId);
 
         /** math **/
         var mathOldId = getSubjectIdByName('математика (профильная)'),
             mathNewId = getSubjectIdByName('математика');
         updateResults('ege_result', {
+            newId: mathNewId,
+            oldId: mathOldId
+        });
+        updateResults('city_result', {
             newId: mathNewId,
             oldId: mathOldId
         });
@@ -38,6 +46,10 @@ module.exports = {
             oldId: russianOldId
         });
         updateResults('olimp_result', {
+            newId: russianNewId,
+            oldId: russianOldId
+        });
+        updateResults('city_result', {
             newId: russianNewId,
             oldId: russianOldId
         });
