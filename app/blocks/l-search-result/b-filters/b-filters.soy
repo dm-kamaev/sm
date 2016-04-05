@@ -2,7 +2,7 @@
 /**
  * @typedef {Object} sm.lSearchResult.bFilters.Template.Params
  * @property {?Array.<sm.lSearchResult.bFilter.Template.Params>} filters
- * @property {?sm.lSearchResult.bFilterClasses.Template.Params} filterClasses
+ * @property {?sm.lSearchResult.bFilterClasses.Template.Params} classesFilter
  * @property {?string} url
  * @property {?Object} config
  * @property {?boolean} hasCheckedFilters
@@ -55,8 +55,8 @@
                 </div>
                 <div class="b-filters__reset
                     {$params?.config?.hasCheckedFilters ?
-                    ' i-utils__hidden' :
-                    ''}">
+                    '' :
+                    ' i-utils__hidden'}">
 
                     {call sm.bLink.Template.base}
                         {param params: [
@@ -79,22 +79,13 @@
  * Filter groups
  * @param? params {
  *      filters: ?list<sm.lSearchResult.bFilter.Template.Params>
- *      filterClasses: {sm.lSearchResult.bFilterClasses.Template.Params}
+ *      classesFilter: {sm.lSearchResult.bFilterClasses.Template.Params}
  * }
  */
 {template .filters_ autoescape="strict" kind="html" private="true"}
-    {let $filterClasses: [
-        'data': [
-            'header': [
-                'title': $params.filterClasses?.header?.title
-            ],
-            'name': 'classes',
-            'selectedClass': $params.filterClasses?.selectedClass,
-            'isKindergartenSelected': $params.filterClasses?.isKindergartenSelected
-        ]
-    ] /}
+
     {call sm.lSearchResult.bFilterClasses.Template.base}
-        {param params: $filterClasses /}
+        {param params: $params.classesFilter /}
     {/call}
 
     {foreach $filter in $params.filters}
