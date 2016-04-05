@@ -67,14 +67,6 @@ sm.bMap.Map = function(opt_params) {
      */
     this.currentPlacemarkPresetOptions_ = {};
 
-
-    /**
-     * Placemarks of all schools
-     * @type {Array}
-     * @private
-     */
-    this.placemarks_ = [];
-
     /**
      * @type {object}
      * @private
@@ -92,7 +84,7 @@ goog.scope(function() {
      * Icon directory
      * @type {string}
      */
-    Map.ICON_DIR = '/images/l-school/b-map/b-map__pin/icons/';
+    Map.ICON_DIR = '/images/b-map/b-map__pin/icons/';
 
 
     /**
@@ -231,6 +223,58 @@ goog.scope(function() {
 
 
     /**
+     * Deletes all current placemarks
+     * @public
+     */
+    Map.prototype.clear = function() {
+        this.objectManager_.removeAll();
+    };
+
+    /**
+     * Adds new placemarks
+     * @param {array<object>=} opt_mapSchools
+     * @public
+     */
+    Map.prototype.addSchoolsPlacemarks = function(opt_mapSchools) {
+        if (opt_mapSchools) {
+            this.addPlacemarks_(opt_mapSchools);
+            this.centre_();
+        }
+    };
+
+    /**
+     * Add placemarks and events
+     * @param {array<object>} mapSchools
+     * @private
+     */
+    Map.prototype.addPlacemarks_ = function(mapSchools) {
+        this.objectManager_.add(
+            this.getCurrentPlacemarkCollection_(mapSchools)
+        );
+
+        // click event handling
+        this.objectManager_.objects.events.add(
+            'click',
+            this.onPlacemarkClick_,
+            this
+        );
+    };
+
+    /**
+     * Center map in accordance of default placemarks
+     * @private
+     */
+    Map.prototype.centre_ = function() {
+        this.ymaps_.setBounds(
+            this.objectManager_.getBounds(),
+            {
+                checkZoomRange: true,
+                zoomMargin: 35
+            }
+        ).then(this.checkZoom_.bind(this));
+    };
+
+    /**
      * Waiting for right viewport size
      * @return {goog.Promise}
      * @private
@@ -320,27 +364,9 @@ goog.scope(function() {
         this.initObjectManager_();
 
         //placemarks
-        //default placemarks
         this.setCurrentPresets_(Map.PresetType.DEFAULT);
-        this.objectManager_.add(
-            this.getCurrentPlacemarkCollection_(this.params_)
-        );
 
-        //Center map in accordance of default placemarks
-        this.ymaps_.setBounds(
-            this.objectManager_.getBounds(),
-            {
-                checkZoomRange: true,
-                zoomMargin: 35
-            }
-        ).then(this.checkZoom_.bind(this));
-
-        // click event handling
-        this.objectManager_.objects.events.add(
-            'click',
-            this.onPlacemarkClick_,
-            this
-        );
+        this.addSchoolsPlacemarks(this.params_);
 
         //point placemarks
         if (dataPromise) {
@@ -738,7 +764,7 @@ goog.scope(function() {
     Map.prototype.initMap_ = function() {
         this.ymaps_ = new ymaps.Map(
             this.getElement(),
-            this.getMapParams_(this.params_.addresses)
+            this.getMapParams_()
         );
         this.ymaps_.setZoom(Math.floor(this.ymaps_.getZoom()));
         this.ymaps_.behaviors.enable('scrollZoom');

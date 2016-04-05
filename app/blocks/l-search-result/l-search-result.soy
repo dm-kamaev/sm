@@ -119,21 +119,23 @@
                 ]
             ]/}
         {/call}
-        {call .listHeader_ data="all"}
-            {param clone: true /}
-        {/call}
-        {call .leftMenu_ data="all" /}
+        <div class="l-search-result__content">
+            {call .listHeader_ data="all"}
+                {param clone: true /}
+            {/call}
+            {call .leftMenu_ data="all" /}
 
-        <div class="l-search-result__results-section">
-            {call .listHeader_ data="all" /}
-            <div class="l-search-result__list-body
-                {$params.countResults ? '' : ' i-utils__hidden'}
-            ">
-                {call sm.lSearchResult.bSchoolList.Template.base}
-                    {param params: [
-                        'schools': $params.data.schools
-                    ]/}
-                {/call}
+            <div class="l-search-result__results-section">
+                {call .listHeader_ data="all" /}
+                <div class="l-search-result__list-body
+                    {$params.countResults ? '' : ' i-utils__hidden'}
+                ">
+                    {call sm.lSearchResult.bSchoolList.Template.base}
+                        {param params: [
+                            'schools': $params.data.schools
+                        ]/}
+                    {/call}
+                </div>
             </div>
         </div>
     </div>
@@ -142,7 +144,7 @@
 /**
  * Container for map
  * @param? params {{
- *     data: [{
+ *     data: ?[{
  *         id: number,
  *         name: string,
  *         description: string,
@@ -154,14 +156,23 @@
  *             name: string,
  *             stages: list<string>
  *         }]
- *     }]
+ *     }],
+ *     config: {
+ *         sidePins: boolean
+ *     }
  * }}
  */
 {template .map autoescape="strict" kind="html"}
-    <div class="l-search-result__map">
+    <div class="l-search-result__map
+                {if not $params?.data}
+                    {sp}i-utils__hidden
+                {/if}">
         {call sm.bMap.Template.map}
             {param params: [
-                'data': $params.data
+                'data': $params?.data,
+                'config': [
+                    'sidePins': false
+                ]
             ]/}
         {/call}
     </div>

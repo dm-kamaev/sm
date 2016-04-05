@@ -1,5 +1,6 @@
 goog.provide('sm.lSearchResult.SearchResult');
 
+goog.require('cl.iUtils.Utils');
 goog.require('goog.Uri.QueryData');
 goog.require('goog.dom.classes');
 goog.require('goog.dom.classlist');
@@ -40,6 +41,7 @@ sm.lSearchResult.SearchResult = function(opt_params) {
      *     search: ?sm.bSearch.Search
      *     filters: ?sm.lSearchResult.bFilters.Filters
      *     schoolList: ?sm.lSearchResult.bSchoolList.SchoolList
+     *     map: ?sm.bMap.bMap
      * }}
      * @private
      */
@@ -47,7 +49,8 @@ sm.lSearchResult.SearchResult = function(opt_params) {
         header: null,
         search: null,
         filters: null,
-        schoolList: null
+        schoolList: null,
+        map: null
     };
 
     /**
@@ -115,7 +118,8 @@ goog.scope(function() {
         TEXT_CHANGE: 'l-search-result__list-header',
         LIST_CONTAINER: 'l-search-result__list-body',
         HIDDEN: 'i-utils__hidden',
-        LEFT_MENU: 'l-search-result__left-menu'
+        LEFT_MENU: 'l-search-result__left-menu',
+        MAP_CONTAINER: 'l-search-result__map'
     };
 
     /**
@@ -153,6 +157,10 @@ goog.scope(function() {
         this.initParams_();
         /** end init params **/
 
+        /** get dom elements **/
+        this.initElements_(element);
+        /** end get dom elements **/
+
         /** init child instances **/
         this.initSchoolList_();
         this.initFilters_();
@@ -160,10 +168,6 @@ goog.scope(function() {
         this.initSearch_();
         this.initMap_();
         /** end init child instances **/
-
-        /** get dom elements **/
-        this.initElements_(element);
-        /** end get dom elements **/
     };
 
     /**
@@ -193,6 +197,11 @@ goog.scope(function() {
 
         this.elements_.listContainer = goog.dom.getElementByClass(
             SearchResult.CssClass.LIST_CONTAINER,
+            element
+        );
+
+        this.elements_.map = goog.dom.getElementByClass(
+            SearchResult.CssClass.MAP_CONTAINER,
             element
         );
     };
@@ -355,10 +364,11 @@ goog.scope(function() {
             Map.CssClass.ROOT,
             element
         );
+
         if (map) {
-            var mapInstance = new Map();
-            this.addChild(mapInstance);
-            mapInstance.decorate(map);
+            this.instances_.map = new Map();
+            this.addChild(this.instances_.map);
+            this.instances_.map.decorate(map);
         }
     };
 
@@ -430,7 +440,7 @@ goog.scope(function() {
 
         this.updateUrl_();
 
-        this.send_().then(this.updateList_.bind(this));
+        this.send_().then(this.updateSchools_.bind(this));
     };
 
     /**
@@ -602,13 +612,61 @@ goog.scope(function() {
     };
 
     /**
-     * Filters submit callback
+     * Updates list and map
      * @param {string} responseData
      * @private
      */
-    SearchResult.prototype.updateList_ = function(responseData) {
+    SearchResult.prototype.updateSchools_ = function(responseData) {
         var data = JSON.parse(responseData);
 
+        if (data.mapSchools) {
+            this.showMap_();
+            this.updateMap_(data.mapSchools);
+        } else {
+            this.hideMap_();
+        }
+
+        this.updateList_(data);
+    };
+
+    /**
+     * Shows map
+     * @private
+     */
+    SearchResult.prototype.showMap_ = function() {
+        goog.dom.classlist.remove(
+            this.elements_.map,
+            cl.iUtils.Utils.CssClass.HIDDEN
+        );
+    };
+
+    /**
+     * Hides map
+     * @private
+     */
+    SearchResult.prototype.hideMap_ = function() {
+        goog.dom.classlist.add(
+            this.elements_.map,
+            cl.iUtils.Utils.CssClass.HIDDEN
+        );
+    };
+
+    /**
+     * Updates map
+     * @param {array<object>} mapSchools
+     * @private
+     */
+    SearchResult.prototype.updateMap_ = function(mapSchools) {
+        this.instances_.map.clear();
+        this.instances_.map.addSchoolsPlacemarks(mapSchools);
+    };
+
+    /**
+     * Filters submit callback
+     * @param {object} data
+     * @private
+     */
+    SearchResult.prototype.updateList_ = function(data) {
         for (var i = 0, elem;
             elem = this.elements_.textChangeElements[i];
             i++) {

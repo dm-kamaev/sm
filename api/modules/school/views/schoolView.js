@@ -399,6 +399,7 @@ schoolView.list = function(schools, opt_criterion) {
                     totalScore: school.totalScore
                 };
             });
+        res.mapSchools = this.currentSchoolsMapPoints(res.schools);
 
     } else {
         res = {
