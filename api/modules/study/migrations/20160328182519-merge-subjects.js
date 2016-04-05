@@ -11,37 +11,37 @@ module.exports = {
         SqlHelper.resetTable('search_data');
 
         /** computer science **/
-        var computerScienceOld = getSubjectByName('информатика и икт'),
-            computerScienceNew = getSubjectByName('информатика');
+        var computerScienceOldId = getSubjectIdByName('информатика и икт'),
+            computerScienceNewId = getSubjectIdByName('информатика');
 
         updateResults('ege_result', {
-            newId: computerScienceNew.id,
-            oldId: computerScienceOld.id
+            newId: computerScienceNewId,
+            oldId: computerScienceOldId
         });
-        deleteSubjects(computerScienceOld.id);
+        deleteSubjects(computerScienceOldId);
 
         /** math **/
-        var mathOld = getSubjectByName('математика (профильная)'),
-            mathNew = getSubjectByName('математика');
+        var mathOldId = getSubjectIdByName('математика (профильная)'),
+            mathNewId = getSubjectIdByName('математика');
         updateResults('ege_result', {
-            newId: mathNew.id,
-            oldId: mathOld.id
+            newId: mathNewId,
+            oldId: mathOldId
         });
-        deleteSubjects(mathOld.id);
+        deleteSubjects(mathOldId);
 
         /** russian **/
-        var russianOld = getSubjectByName('русский'),
-            russianNew = getSubjectByName('русский язык');
+        var russianOldId = getSubjectIdByName('русский'),
+            russianNewId = getSubjectIdByName('русский язык');
 
         updateResults('gia_result', {
-            newId: russianNew.id,
-            oldId: russianOld.id
+            newId: russianNewId,
+            oldId: russianOldId
         });
         updateResults('olimp_result', {
-            newId: russianNew.id,
-            oldId: russianOld.id
+            newId: russianNewId,
+            oldId: russianOldId
         });
-        deleteSubjects(russianOld.id);
+        deleteSubjects(russianOldId);
     }),
     down: async(function() {
         return null;
@@ -58,16 +58,18 @@ module.exports = {
  * @return {Object}
  */
 var updateResults = function(table, subjectIds) {
-    var updateSubjects = squel.update()
-        .table(table)
-        .set('subject_id', subjectIds.newId)
-        .where('subject_id = ' + subjectIds.oldId)
-        .toString();
+    if (subjectIds.oldId) {
+        var updateSubjects = squel.update()
+            .table(table)
+            .set('subject_id', subjectIds.newId)
+            .where('subject_id = ' + subjectIds.oldId)
+            .toString();
 
-    return await(sequelize.query(
-        updateSubjects,
-        {type: sequelize.QueryTypes.UPDATE}
-    ));
+        return await(sequelize.query(
+            updateSubjects,
+            {type: sequelize.QueryTypes.UPDATE}
+        ));
+    }
 };
 
 /**
@@ -75,15 +77,17 @@ var updateResults = function(table, subjectIds) {
  * @param {number} subjectId
  */
 var deleteSubjects = function(subjectId) {
-    var deleteSubjects = squel.delete()
-        .from('subject')
-        .where('id = ' + subjectId)
-        .toString();
+    if (subjectId) {
+        var deleteSubjects = squel.delete()
+            .from('subject')
+            .where('id = ' + subjectId)
+            .toString();
 
-    return await(sequelize.query(
-        deleteSubjects,
-        {type: sequelize.QueryTypes.DELETE}
-    ));
+        return await(sequelize.query(
+            deleteSubjects,
+            {type: sequelize.QueryTypes.DELETE}
+        ));
+    }
 };
 
 /**
@@ -91,7 +95,7 @@ var deleteSubjects = function(subjectId) {
  * @param {string} subjectName
  * @return {Object}
  */
-var getSubjectByName = function(subjectName) {
+var getSubjectIdByName = function(subjectName) {
     var getSubjects = squel.select()
         .from('subject')
         .field('id')
