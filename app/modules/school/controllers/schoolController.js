@@ -29,7 +29,6 @@ exports.createComment = async (function(req, res) {
 exports.list = async (function(req, res) {
     var searchParams = await(services.search.initSearchParams(req.query));
     var searchText = req.query.name ? decodeURIComponent(req.query.name) : '';
-
     var promises = [
         services.school.list(searchParams),
         services.school.searchFilters()
@@ -38,16 +37,13 @@ exports.list = async (function(req, res) {
 
     var data = schoolView.list(results[0]);
 
-    var filters = schoolView.filters(results[1]);
 
+    var filters = schoolView.filters(results[1], searchParams);
     var params = {
         params: {
             data: {
                 schools: data.schools,
-                filters: {
-                    filters: filters,
-                    url: '/api/school/search'
-                }
+                filters: filters
             },
             searchText: searchText,
             countResults: data.countResults,
