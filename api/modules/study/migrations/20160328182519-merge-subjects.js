@@ -93,7 +93,7 @@ var deleteSubjects = function(subjectId) {
 /**
  * Get id of subject with given name
  * @param {string} subjectName
- * @return {Object}
+ * @return {?number}
  */
 var getSubjectIdByName = function(subjectName) {
     var getSubjects = squel.select()
@@ -108,5 +108,6 @@ var getSubjectIdByName = function(subjectName) {
         {type: sequelize.QueryTypes.SELECT}
     ));
 
-    return subjects[0];
+    var subject = subjects[0];
+    return subject ? subject.id : null;
 };
