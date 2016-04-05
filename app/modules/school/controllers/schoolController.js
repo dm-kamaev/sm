@@ -1,6 +1,7 @@
 var soy = require.main.require('./app/components/soy');
 var services = require.main.require('./app/components/services').all;
-const schoolView = require.main.require('./api/modules/school/views/schoolView');
+const schoolView = require('../../../../api/modules/school/views/schoolView');
+const searchView = require('../../../../api/modules/school/views/searchView');
 var urlConfig = require('../../../config').config.url;
 var analyticsId = require('../../../config').config.analyticsId;
 
@@ -29,7 +30,6 @@ exports.createComment = async (function(req, res) {
 exports.list = async (function(req, res) {
     var searchParams = await(services.search.initSearchParams(req.query));
     var searchText = req.query.name ? decodeURIComponent(req.query.name) : '';
-
     var promises = [
         services.school.list(searchParams),
         services.school.searchFilters()
@@ -37,17 +37,13 @@ exports.list = async (function(req, res) {
     var results = await(promises);
 
     var data = schoolView.list(results[0]);
-
-    var filters = schoolView.filters(results[1]);
-
+    var filters = searchView.filters(results[1], searchParams);
+    
     var params = {
         params: {
             data: {
                 schools: data.schools,
-                filters: {
-                    filters: filters,
-                    url: '/api/school/search'
-                }
+                filters: filters
             },
             searchText: searchText,
             countResults: data.countResults,

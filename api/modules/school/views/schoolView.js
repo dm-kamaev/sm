@@ -15,9 +15,8 @@ const giaResultView = require.main.require(
     './api/modules/study/views/giaResultView.js');
 const olimpResultView = require.main.require(
     './api/modules/study/views/olimpResultView.js');
-const subjectView = require.main.require(
-    './api/modules/study/views/subjectView.js'
-);
+
+const searchType = require('../enums/searchType');
 
 var schoolView = {};
 
@@ -681,11 +680,11 @@ schoolView.listMapPoints = function(schools) {
 };
 
 /**
- * @param {object} data
- * @param {array<object>} data.schools - school instances
- * @param {array<object>} data.areas - area instances
- * @param {array<object>} data.metros - metro instances
- * @return {array<object>}
+ * @param {Object} data
+ * @param {Array.<Object>} data.schools - school instances
+ * @param {Array.<Object>} data.areas - area instances
+ * @param {Array.<Object>} data.metros - metro instances
+ * @return {Array.<Object>}
  */
 schoolView.suggest = function(data) {
     return {
@@ -693,49 +692,6 @@ schoolView.suggest = function(data) {
         areas: areaView.list(data.areas),
         metro: metroView.list(data.metros)
     };
-};
-
-/**
- * @param {array<object>} filters
- * @return {array<object>}
- */
-schoolView.filters = function(filters) {
-   return filters.map(item => {
-       var res = {
-           data: {
-               filters: item.values,
-               header: {
-                   tooltip: ''
-               },
-               name: item.filter
-           },
-           config: {}
-       };
-
-       switch (item.filter) {
-           case 'school_type':
-               res.data.name = 'schoolType';
-               res.data.header.title = 'Тип школы';
-               res.config.filtersToShow = 15;
-               break;
-           case 'ege':
-               res.data.header.title = 'Высокие результаты ЕГЭ';
-               res.data.filters.sort((a, b) => subjectView.sorter(a.label, b.label, 'EGE'));
-               res.data.header.tooltip = 'Выше среднего значения по нашей базе.' +
-               ' Учитываются результаты московских школ за последний год.'
-               break;
-           case 'gia':
-               res.data.header.title = 'Высокие результаты ГИА';
-               res.data.filters.sort((a, b) => subjectView.sorter(a.label, b.label, 'GIA'));
-               res.data.header.tooltip = 'Выше среднего значения по нашей базе.' +
-               ' Учитываются результаты московских школ за последний год.'
-               break;
-           case 'olimp':
-               res.data.header.title = 'Есть победы в олимпиадах';
-               break;
-       }
-       return res;
-   });
 };
 
 /**

@@ -1,7 +1,18 @@
 {namespace sm.lSearchResult.bFilterClasses.Template}
 
 /**
+ * @typedef {object} sm.lSearchResult.bFilterClasses.Template.Params
+ * @property {?object} data
+ * @property {?object} data.header
+ * @property {?string} data.header.title
+ * @property {?string} data.name
+ * @property {?number} data.selectedClass
+ * @property {?boolean} data.isKindergartenSelected
+ */
+
+/**
  * Filter template
+ * @param params {sm.lSearchResult.bFilterClasses.Template.Params}
  * @extends sm.lSearchResult.bFilter.Template
  * @constructor
  */
@@ -20,7 +31,9 @@
  * template
  * @param? params {
  *    data: {
- *        name: ?string
+ *        name: ?string,
+ *        selectedClass: ?number,
+ *        isKindergartenSelected: ?boolean
  *    }
  * }
  */
@@ -45,7 +58,8 @@
                             ['label': 'Десятый класс'],
                             ['label': 'Одиннадцатый класс'],
                             ['label': 'Не выбран']
-                        ]
+                        ],
+                        'selectedItemId': $params.data?.selectedClass - 1
                     ],
                     'config': [
                         'iconSprite': 'opener-arrow',
@@ -58,25 +72,36 @@
             ] /}
         {/call}
         <div class="b-filter__filter b-filter__filter_center">
-            {for $i in range(11)}
+            {for $i in range(1, 12)}
                 <input type="radio"
-                    id="{$params?.data?.name}-{$i+1}"
-                    class="b-filter__input b-filter__input_class"
+                    id="{$params?.data?.name}-{$i}"
+                    class="b-filter__input
+                        {sp}b-filter__input_class"
                     name="{$params?.data?.name}"
-                    value="{$i+1}"/>
-                <label for="{$params?.data?.name}-{$i+1}"
+                    value="{$i}"
+                    {if $params.data.selectedClass == $i}
+                        checked
+                    {/if}/>
+                <label for="{$params?.data?.name}-{$i}"
                     class="b-filter__input-label b-filter__input-label_class
                     {sp}
-                    {$i > 3 ?
+                    {$i > 4 ?
                         'b-filter__input-label_middle ' : ''}
-                    {$i > 8 ?
+                    {$i > 9 ?
                         'b-filter__input-label_high' : ''}
+                    {if $params.data.selectedClass and $params.data.selectedClass != $i}
+                        {sp}b-filter__input-label_inactive
+                    {/if}
                     ">
-                        {$i+1}
+                        {$i}
                 </label>
             {/for}
         </div>
-        <div class="b-filter__reset i-utils__hidden">
+        <div class="b-filter__reset
+        {if not $params.data?.selectedClass}
+            {sp}i-utils__hidden
+        {/if}
+        ">
             {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
                 {param params: [
                     'type': 'icon',
@@ -93,7 +118,10 @@
                 class="b-filter__input b-filter__input_kindergarten"
                 id="{$params?.data?.name}-after-school"
                 name="{$params?.data?.name}"
-                value="0"/>
+                value="0"
+                {if $params?.data?.isKindergartenSelected}
+                    checked
+                {/if}/>
             <label for="{$params?.data?.name}-after-school"
                 class="b-filter__input-label b-filter__input-label_kindergarten">
                 При школе есть детский сад
