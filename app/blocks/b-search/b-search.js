@@ -217,6 +217,7 @@ goog.scope(function() {
             document.documentElement,
             Utils.CssClass.OVERFLOW_HIDDEN
         );
+        this.disableScroll_();
     };
 
     /**
@@ -242,6 +243,27 @@ goog.scope(function() {
             document.documentElement,
             Utils.CssClass.OVERFLOW_HIDDEN
         );
+        this.enableScroll_();
+    };
+
+    /**
+     * Disables scroll
+     * @private
+     */
+    Search.prototype.disableScroll_ = function() {
+        document.ontouchmove = function(event) {
+            event.preventDefault();
+        };
+    };
+
+    /**
+     * Enables scroll
+     * @private
+     */
+    Search.prototype.enableScroll_ = function() {
+        document.ontouchmove = function() {
+            return true;
+        };
     };
 
     /**
