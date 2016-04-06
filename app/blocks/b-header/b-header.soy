@@ -5,7 +5,7 @@
  * Header parameters
  * @typedef {object} sm.bHeader.Template.Params
  * @property {?string} url
- * @property {?string} searchtext
+ * @property {?string} searchText
  * @property {?boolean} searchRedirect
  * @property {?boolean} notShowLink
  */
@@ -18,18 +18,24 @@
     <div class="b-header">
         {call .banner_ /}
         <div class="b-header__body">
-            {if $params?.url}
-                {call .search_ data="all" /}
-            {/if}
-            {call .advancedSearchLink_ data="all" /}
+            <div class="b-header__section
+                b-header__section_logo">
+                {call .logo_ data="all"/}
+            </div>
 
-            <div class="b-header__main i-animate">
-                {call .logo_ data="all" /}
+            <div class="b-header__section
+                b-header__section_links">
+            </div>
+
+            <div class="b-header__section
+                b-header__section_search">
+                {if $params?.url}
+                    {call .search_ data="all" /}
+                {/if}
             </div>
         </div>
     </div>
 {/template}
-
 
 /**
  * Advanced search link
@@ -52,7 +58,6 @@
     {/if}
 {/template}
 
-
 /**
  * Logo
  * @param params {{
@@ -60,7 +65,8 @@
  * }}
  */
 {template .logo_ private="true" autoescape="strict" kind="html"}
-    <div class="b-header__title">
+    <div class="b-header__logo
+        i-animate">
         {if $params?.url}
             <a class="b-header__link" href="{$params.url}">
                 {call .logoImg_ /}
@@ -75,10 +81,9 @@
  * Logo img
  */
 {template .logoImg_ private="true" autoescape="strict" kind="html"}
-    <img class="b-header__logo" src="/images/b-header/logo.svg"
+    <img class="b-header__logo-img" src="/images/b-header/logo.svg"
         alt="Школы Мела - индивидуальный рейтинг школ">
 {/template}
-
 
 /**
  * Search
@@ -100,21 +105,28 @@
     {/call}
 {/template}
 
-
 /**
  * Banner
  */
 {template .banner_ autoescape="strict" kind="html"}
     <div class="i-layout__banner">
+        {let $textXl kind="html"}
+            Мы&nbsp;хотим создать самый полезный сервис для выбора школы.
+            {sp}Как думаете, у&nbsp;нас&nbsp;получилось?
+        {/let}
+
+        {let $textS kind="html"}
+            Мы&nbsp;помогли вам выбрать&nbsp;школу?
+        {/let}
+
         {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
                 'factory': 'stendhal',
                 'type': 'banner',
                 'renderParams': [
                     'data': [
-                        'textXl': 'Мы\u00A0хотим создать самый полезный сервис 
-                        для выбора школы. Как думаете, у\u00A0нас\u00A0получилось?',
-                        'textS': 'Мы\u00A0помогли вам выбрать\u00A0школу?'
+                        'textXl': $textXl,
+                        'textS': $textS
                     ]
                 ]
             ]/}

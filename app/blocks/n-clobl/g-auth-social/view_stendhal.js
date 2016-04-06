@@ -15,9 +15,8 @@ sm.gAuthSocial.ViewStendhal = function(opt_params, opt_template, opt_modifier) {
 };
 goog.inherits(sm.gAuthSocial.ViewStendhal, cl.gAuthSocial.View);
 
-
 goog.scope(function() {
-    View = sm.gAuthSocial.ViewStendhal;
+    var View = sm.gAuthSocial.ViewStendhal;
 
     /**
      * Css class enum
