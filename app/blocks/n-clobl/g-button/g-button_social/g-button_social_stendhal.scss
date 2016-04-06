@@ -3,21 +3,38 @@
 
     height: 40px;
     margin-bottom: 10px;
-    padding: 11px 0;
+    padding: 0;
 
     border: none;
     color: white;
+
     font-family: 'Proxima', Arial, sans-serif;
     font-size: 13px;
-    line-height: 23px;
+    line-height: 40px;
 
     .g-button__icon {
         position: absolute;
-        top: 12px;
-        left: 0;
 
         width: 60px;
 
         text-align: center;
     }
+
+    .g-button__label {
+        display: inline;
+
+        vertical-align: middle;
+    }
+}
+
+.g-button.g-button_social.g-button_vk.g-button_stendhal:hover {
+    background-color: #4972a6;
+}
+
+.g-button.g-button_social.g-button_gp.g-button_stendhal:hover {
+    background-color: #dc5144;
+}
+
+.g-button.g-button_social.g-button_fb.g-button_stendhal:hover {
+    background-color: #39579a;
 }
