@@ -5,6 +5,8 @@ var services = require.main.require('./app/components/services').all;
 var sequelizeInclude = require.main.require('./api/components/sequelizeInclude');
 var searchTypeEnum = require('../../school/enums/searchType');
 
+const subjectView = require('../views/subjectView');
+
 exports.name = 'subject';
 
 /**
@@ -119,7 +121,8 @@ var generateFilters = async(function(params) {
         .map(subject => {
             return {
                 label: subject.displayName,
-                value: subject.alias
+                value: subject.alias,
+                id: subject.id
             };
         });
 
@@ -138,7 +141,11 @@ exports.egeFilters = async (function() {
         modelAs: 'egeResult',
         filterName: searchTypeEnum.fields.EGE
     };
-    return await (generateFilters(params));
+    var filters = await (generateFilters(params));
+    filters.values.sort(
+        (a, b) => subjectView.sorter(a.label, b.label, 'EGE')
+    );
+    return filters;
 });
 
 /**
@@ -150,7 +157,11 @@ exports.giaFilters = async (function() {
         modelAs: 'giaResult',
         filterName: searchTypeEnum.fields.GIA
     };
-    return await (generateFilters(params));
+    var filters = await (generateFilters(params));
+    filters.values.sort(
+        (a, b) => subjectView.sorter(a.label, b.label, 'GIA')
+    );
+    return filters;
 });
 
 /**

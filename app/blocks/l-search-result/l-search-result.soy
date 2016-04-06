@@ -25,25 +25,7 @@
  *             metroStations: string[],
  *             area: []
  *         }],
- *         filters: {
- *             filters: [{
- *                 data: {
- *                     filters: [{
- *                         label: string,
- *                         value: string
- *                     }],
- *                      header: {
- *                          title: string,
- *                          help: string
- *                      },
- *                      name: string
- *                  },
- *                  config: {
- *                      cannotBeHidden: bool
- *                  }
- *             }],
- *             url: string
- *         }
+ *         filters: {sm.lSearchResult.bFilters.Template.Params}
  *     },
  *     searchText: string,
  *     countResults: number,
@@ -51,14 +33,31 @@
  *         url: string,
  *         method: string,
  *         data: {
- *             searchParams: {
- *                 name: string,
- *                 metroId: number,
- *                 areaId: number
- *             },
- *             page: number
+ *             name: ?string,
+ *             metroId: ?number,
+ *             areaId: ?number,
+ *             schoolType: ?Array.<string>,
+ *             classes: ?Array.<number>,
+ *             ege: ?Array.<string>,
+ *             gia: ?Array.<string>,
+ *             olimp: ?Array.<string>,
+ *             sortType: ?number,
+ *             page: ?number
  *         }
  *     },
+ *     mapSchools: [{
+ *         id: number,
+ *         name: string,
+ *         description: string,
+ *         url: string,
+ *         totalScore: number,
+ *         addresses: [{
+ *             lat: number,
+ *             lng: number,
+ *             name: string,
+ *             stages: list<string>
+ *         }]
+ *     }],
  *     config: {
  *         staticVersion: ?string,
  *         analyticsId: ?string
@@ -102,6 +101,8 @@
          data-params="{call goog.json.serialize data="$params.searchSettings" /}">
          {call .innerContent_ data="all" /}
     </div>
+
+    {call sm.bMap.Template.api}{/call}
 {/template}
 
 
@@ -110,23 +111,70 @@
  */
 {template .innerContent_ autoescape="strict" kind="html"}
     <div class="l-search-result__body">
-        {call .listHeader_ data="all"}
-            {param clone: true /}
+        {call .map}
+            {param params: [
+                'data': $params.mapSchools,
+                'config': [
+                    'sidePins': false
+                ]
+            ]/}
         {/call}
-        {call .leftMenu_ data="all" /}
+        <div class="l-search-result__content">
+            {call .listHeader_ data="all"}
+                {param clone: true /}
+            {/call}
+            {call .leftMenu_ data="all" /}
 
-        <div class="l-search-result__results-section">
-            {call .listHeader_ data="all" /}
-            <div class="l-search-result__list-body
-                {$params.countResults ? '' : ' i-utils__hidden'}
-            ">
-                {call sm.lSearchResult.bSchoolList.Template.base}
-                    {param params: [
-                        'schools': $params.data.schools
-                    ]/}
-                {/call}
+            <div class="l-search-result__results-section">
+                {call .listHeader_ data="all" /}
+                <div class="l-search-result__list-body
+                    {$params.countResults ? '' : ' i-utils__hidden'}
+                ">
+                    {call sm.lSearchResult.bSchoolList.Template.base}
+                        {param params: [
+                            'schools': $params.data.schools
+                        ]/}
+                    {/call}
+                </div>
             </div>
         </div>
+    </div>
+{/template}
+
+/**
+ * Container for map
+ * @param? params {{
+ *     data: ?[{
+ *         id: number,
+ *         name: string,
+ *         description: string,
+ *         url: string,
+ *         totalScore: number,
+ *         addresses: [{
+ *             lat: number,
+ *             lng: number,
+ *             name: string,
+ *             stages: list<string>
+ *         }]
+ *     }],
+ *     config: {
+ *         sidePins: boolean
+ *     }
+ * }}
+ */
+{template .map autoescape="strict" kind="html"}
+    <div class="l-search-result__map
+                {if not $params?.data}
+                    {sp}i-utils__hidden
+                {/if}">
+        {call sm.bMap.Template.map}
+            {param params: [
+                'data': $params?.data,
+                'config': [
+                    'sidePins': false
+                ]
+            ]/}
+        {/call}
     </div>
 {/template}
 
@@ -303,4 +351,3 @@
         ]/}
     {/call}
 {/template}
-

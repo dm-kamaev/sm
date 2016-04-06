@@ -478,7 +478,8 @@ service.typeFilters = async (function() {
     var formattedFilters = schoolTypeFilters.map(filter => {
         return {
             label: filter.name,
-            value: filter.alias
+            value: filter.alias,
+            id: filter.id
         };
     });
     return {
@@ -685,8 +686,7 @@ service.listInstances = async(function(){
  * @return {Promise<Array.<Object>>}
  */
 service.list = async (function(opt_params) {
-    var params = opt_params || {},
-        searchParams = params.searchParams || null;
+    var searchParams = opt_params || {};
     var sqlConfig = {
         select: [
             'school.id',
@@ -703,7 +703,10 @@ service.list = async (function(opt_params) {
             'metro.id AS "metroId"',
             'metro.name AS "metroName"',
             'area.id AS "areaId"',
-            'area.name AS "areaName"'
+            'area.name AS "areaName"',
+            'address.coords AS "addressCoords"',
+            'address.name AS "addressName"',
+            'department.stage AS "departmentStage"'
         ],
         from: {
                 select: [
@@ -739,7 +742,7 @@ service.list = async (function(opt_params) {
                 ],
                 having : [],
                 limit: 10,
-                offset: params.page * 10
+                offset: searchParams.page * 10
         },
         where: [
             'address.is_school = true'
@@ -751,7 +754,8 @@ service.list = async (function(opt_params) {
                     'address on address.school_id = school.id',
                     'address_metro on address_metro.address_id = address.id',
                     'metro on metro.id = address_metro.metro_id',
-                    'area on address.area_id = area.id'
+                    'area on address.area_id = area.id',
+                    'department on department.address_id = address.id'
                 ]
             }
         ],

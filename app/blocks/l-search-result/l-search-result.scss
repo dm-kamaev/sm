@@ -6,7 +6,7 @@ html, body {
 
 .l-search-result {
     width: 100%;
-    margin: 30px 0;
+    margin: auto;
 }
 
 .l-search-result__header {
@@ -32,6 +32,15 @@ html, body {
     border-bottom: 1px solid #e5e5e5;
 }
 
+.l-search-result__map {
+    width: 100%;
+    height: 500px;
+}
+
+.l-search-result__content {
+    margin-top: 60px;
+}
+
 .l-search-result__left-menu {
     float: left;
 
@@ -49,7 +58,7 @@ html, body {
 }
 
 .l-search-result__list-header {
-    margin: 27px 0 7px;
+    margin: -5px 0 7px;
 
 	color: #000;
 
@@ -176,5 +185,15 @@ html, body {
     .l-search-result__filters {
         margin-left: -30px;
         padding: 0 30px;
+    }
+
+    .l-search-result__map {
+        display: none;
+    }
+}
+
+@include media-l {
+    .l-search-result__map {
+        display: none;
     }
 }

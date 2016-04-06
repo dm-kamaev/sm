@@ -30,7 +30,7 @@ service.getUserByCode = async(function(data) {
         data
     ));
 
-    var userDataResponse = await(axios.get(URL + userUrlResponse.data));
+    var userDataResponse = await(axios.get(URL + userUrlResponse.data.path));
 
     return userDataResponse.data;
 });

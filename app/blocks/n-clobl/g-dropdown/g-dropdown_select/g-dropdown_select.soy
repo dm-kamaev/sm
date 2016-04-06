@@ -67,7 +67,8 @@
                         {sp}{call .rootClass/}__opener-text_placeholder
                      {/if}"
               data-params="{call goog.json.serialize data="$data" /}">
-            {if $params?.data?.defaultOpenerText}
+            {if $params?.data?.defaultOpenerText and
+                not $params?.data?.selectedItemId}
                 {$params?.data?.defaultOpenerText}
             {/if}
             {if $params?.data?.selectedItemId}

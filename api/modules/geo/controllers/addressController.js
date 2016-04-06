@@ -55,7 +55,7 @@ exports.getAddress = async (function(req, res) {
 
 
 /**
- * @api {post} api/address/list Get addresses
+ * @api {get} api/address/list Get addresses
  * @apiVersion 0.0.0
  * @apiGroup Address
  * @apiName List

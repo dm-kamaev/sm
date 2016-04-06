@@ -43,6 +43,24 @@ sm.bSearch.Search = function(opt_params) {
     this.dataParams_ = {};
 
     /**
+     * @type {?number}
+     * @private
+     */
+    this.areaId_ = null;
+
+    /**
+     * @type {?number}
+     * @private
+     */
+    this.metroId_ = null;
+
+    /**
+     * @type {?string}
+     * @private
+     */
+    this.text_ = null;
+
+    /**
      * Current mode
      * @type {Search.Mode|string}
      * @private
@@ -95,11 +113,80 @@ goog.scope(function() {
     };
 
     /**
-     * Get input value
-     * @return {string} Input value
+     * @return {{
+     *     areaId: ?number,
+     *     metroId: ?number,
+     *     text: ?string
+     * }}
      * @public
      */
-    Search.prototype.getValue = function() {
+    Search.prototype.getData = function() {
+        return {
+            metroId: this.getMetroId(),
+            areaId: this.getAreaId(),
+            text: this.getText()
+        };
+    };
+
+    /**
+     * @param {{
+     *     areaId: ?number,
+     *     metroId: ?number,
+     *     text: ?string
+     * }} data
+     * @public
+     */
+    Search.prototype.setData = function(data) {
+        if (data.hasOwnProperty('areaId')) {
+            this.setAreaId(data.areaId);
+        }
+
+        if (data.hasOwnProperty('metroId')) {
+            this.setMetroId(data.metroId);
+        }
+
+        if (data.hasOwnProperty('text')) {
+            this.setText(data.text);
+        }
+    };
+
+    /**
+     * @return {?number}
+     * @public
+     */
+    Search.prototype.getMetroId = function() {
+        return this.metroId_;
+    };
+
+    /**
+     * @param {?number} metroId
+     * @public
+     */
+    Search.prototype.setMetroId = function(metroId) {
+        this.metroId_ = metroId;
+    };
+
+    /**
+     * @return {?number}
+     * @public
+     */
+    Search.prototype.getAreaId = function() {
+        return this.areaId_;
+    };
+
+    /**
+     * @param {?number} areaId
+     * @public
+     */
+    Search.prototype.setAreaId = function(areaId) {
+        this.areaId_ = areaId;
+    };
+
+    /**
+     * @return {?string}
+     * @public
+     */
+    Search.prototype.getText = function() {
         return this.suggest_.getText();
     };
 
@@ -108,7 +195,7 @@ goog.scope(function() {
      * @param {string} value
      * @public
      */
-    Search.prototype.setValue = function(value) {
+    Search.prototype.setText = function(value) {
         this.suggest_.setText(value);
         this.suggest_.setValue(value);
     };
@@ -137,7 +224,12 @@ goog.scope(function() {
      * @public
      */
     Search.prototype.switchToDefaultMode = function() {
-        this.setValue('');
+        this.setData({
+            text: '',
+            metroId: null,
+            areaId: null
+        });
+
         goog.dom.classes.remove(
             this.getElement(),
             Search.CssClass.SEARCH_MODE
@@ -204,6 +296,11 @@ goog.scope(function() {
         this.suggest_.addEventListener(
             gorod.gSuggest.Suggest.Events.SUBMIT,
             this.onSubmit_.bind(this)
+        );
+
+        this.suggest_.addEventListener(
+            gorod.gSuggest.Suggest.Events.TEXT_CHANGE,
+            this.onTextChange_.bind(this)
         );
 
         if (this.elements_.searchButton) {
@@ -297,8 +394,12 @@ goog.scope(function() {
             gorod.gSuggest.Suggest.Events.SUBMIT,
             this.onSubmit_.bind(this)
         );
-    };
 
+        this.suggest_.removeEventListener(
+            gorod.gSuggest.Suggest.Events.TEXT_CHANGE,
+            this.onTextChange_.bind(this)
+        );
+    };
 
     /**
      * Render suggest item
@@ -326,7 +427,6 @@ goog.scope(function() {
 
         return res;
     };
-
 
     /**
      * Render suggest item name
@@ -479,7 +579,7 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.redirect_ = function(event, data) {
-        this.suggest_.setText(data.item.name);
+        this.setText(data.item.name);
         this.suggest_.blur();
 
         if (data.item.type === 'schools') {
@@ -487,13 +587,34 @@ goog.scope(function() {
         } else if (this.dataParams_.redirect) {
             this.onNotSchoolSelect_(event, data);
         } else {
-            this.dispatchEvent({
-                type: Search.Event.ITEM_SELECT,
-                data: {
-                    id: data.item.id,
-                    type: data.item.type,
-                    text: data.item.name
-                }
+            this.processItem_(data.item);
+            this.dispatchEvent(Search.Event.ITEM_SELECT);
+        }
+    };
+
+    /**
+     * Take values from selected item and put it to value
+     * @param {Object} item - school or metro or area item
+     * @private
+     */
+    Search.prototype.processItem_ = function(item) {
+        if (item.type == 'metro') {
+            this.setData({
+                metroId: item.id,
+                areaId: null,
+                text: item.name
+            });
+        } else if (item.type == 'areas') {
+            this.setData({
+                metroId: null,
+                areaId: item.id,
+                text: item.name
+            });
+        } else {
+            this.setData({
+                metroId: null,
+                areaId: null,
+                text: item.name
             });
         }
     };
@@ -524,10 +645,7 @@ goog.scope(function() {
         if (this.dataParams_.redirect) {
             this.searchRequest_(data.text);
         } else {
-            this.dispatchEvent({
-                type: Search.Event.SUBMIT,
-                text: data.text
-            });
+            this.dispatchEvent(Search.Event.SUBMIT);
         }
     };
 
@@ -546,20 +664,16 @@ goog.scope(function() {
 
     /**
      * Handler for input data
+     * @param {Object} event
+     * @param {Object} data
      * @private
      */
-    Search.prototype.onTextChange_ = function() {
-        if (this.getValue().length > 0) {
-            goog.dom.classlist.remove(
-                this.elements_.icon,
-                'b-search__icon_disabled'
-            );
-        } else {
-            goog.dom.classlist.add(
-                this.elements_.icon,
-                'b-search__icon_disabled'
-            );
-        }
+    Search.prototype.onTextChange_ = function(event, data) {
+        this.setData({
+            metroId: null,
+            areaId: null,
+            text: data.text
+        });
     };
 
     /**
