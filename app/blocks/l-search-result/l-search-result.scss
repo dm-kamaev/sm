@@ -197,3 +197,9 @@ html, body {
         display: none;
     }
 }
+
+@include media-s {
+    .l-search-result__list-header {
+        margin-top: 33px;
+    }
+}
