@@ -24,17 +24,19 @@ var schoolView = {};
 
 /**
  * @param {object} schoolInstance - school instance
- * @param {object} results
+ * @param {object} data
  * @param {object} user
  * @param {object} user.data
  * @param {string} user.isCommented
  * @param {?array<object>} opt_popularSchools - school instances
  * @return {object}
  */
-schoolView.default = function(schoolInstance, results, user, opt_popularSchools) {
+schoolView.default = function(schoolInstance, data, user, opt_popularSchools) {
     addressView.transformSchoolAddress(schoolInstance);
 
-    var addresses = services.department.addressesFilter(schoolInstance.addresses),
+    var addresses = services.department.addressesFilter(
+            schoolInstance.addresses
+        ),
         comments = schoolInstance.comments,
         score = getSections(schoolInstance.score),
         scoreCount = schoolInstance.scoreCount || [0, 0, 0, 0];
@@ -50,7 +52,9 @@ schoolView.default = function(schoolInstance, results, user, opt_popularSchools)
         extendedDayCost: getExtendedDayCost(schoolInstance.extendedDayCost),
         dressCode: schoolInstance.dressCode || false,
         classes: getEducationInterval(schoolInstance.educationInterval),
-        kindergarten: getKindergardenAvailability(schoolInstance.educationInterval),
+        kindergarten: getKindergardenAvailability(
+            schoolInstance.educationInterval
+        ),
         social: [],
         //metroStations: addressView.getMetro(addresses),
         sites: schoolInstance.links ?
@@ -67,22 +71,23 @@ schoolView.default = function(schoolInstance, results, user, opt_popularSchools)
         totalScore: schoolInstance.totalScore,
         results: {
             ege: egeResultView.transformResults(
-                results.ege,
-                results.city
+                data.ege,
+                data.city
             ),
             gia: giaResultView.transformResults(
-                results.gia,
-                results.city
+                data.gia,
+                data.city
             ),
-            olymp: olimpResultView.transformResults(results.olymp)
+            olymp: olimpResultView.transformResults(data.olymp)
         },
+        authSocialLink: data.authSocialLink,
         reviewCount: schoolInstance.totalScore ?
             schoolInstance.reviewCount : 0,
         isCommented: user.isCommented,
         user: user.data
     };
-    if (opt_popularSchools) {
-        result.popularSchools = this.popular(opt_popularSchools);
+    if (data.popularSchools) {
+        result.popularSchools = this.popular(data.popularSchools);
     }
 
     return result;
