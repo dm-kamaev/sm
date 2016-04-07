@@ -33,7 +33,14 @@ sm.lSearch.Search = function(opt_params) {
      */
     this.searchPanel_ = null;
 
-    /*
+    /**
+     * Search instance
+     * @type {?sm.bSearch.Search}
+     * @private
+     */
+    this.search_ = null;
+
+    /**
      * instance popular Schools
      * @type {sm.bPopularSchools.PopularSchools}
      * @private
@@ -78,18 +85,6 @@ goog.scope(function() {
     Search.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
-        var bPopularSchools = goog.dom.getElementByClass(
-            sm.bPopularSchools.View.CssClass.ROOT,
-            element
-        );
-
-        this.popularSchools_ =
-            sm.iFactory.FactoryStendhal.getInstance().decorate(
-                'popular-schools',
-                bPopularSchools,
-                this
-            );
-
         var bSearchPanel = goog.dom.getElementByClass(
             sm.bSearchPanel.View.CssClass.ROOT,
             element
@@ -101,13 +96,18 @@ goog.scope(function() {
                 bSearchPanel,
                 this
             );
-    };
 
-    /**
-     * Set up the Component
-     */
-    Search.prototype.enterDocument = function() {
-        goog.base(this, 'enterDocument');
+        var bPopularSchools = goog.dom.getElementByClass(
+            sm.bPopularSchools.View.CssClass.ROOT,
+            element
+        );
+
+        this.popularSchools_ =
+            sm.iFactory.FactoryStendhal.getInstance().decorate(
+                'popular-schools',
+                bPopularSchools,
+                this
+            );
     };
 });
 
