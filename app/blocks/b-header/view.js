@@ -33,6 +33,8 @@ goog.scope(function() {
      */
     View.CssClass = {
         ROOT: 'b-header',
+        MINIFIED_SEARCH: 'b-header__search_visible_s',
+        SEARCH: 'b-header__search_visible_l',
         SEARCH_MODE: 'b-header_mode_search',
         DEFAULT_MODE: 'b-header_mode_default',
         ANIMATION_ON: 'b-header_animation_on',
@@ -46,14 +48,8 @@ goog.scope(function() {
     View.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
-        this.dom.search = this.getElementByClass(
-            Search.CssClass.ROOT
-        );
-
-        this.dom.banner = this.getElementByClass(
-            sm.bBanner.View.CssClass.ROOT
-        );
-
+        this.initSearch_();
+        this.initBanner_();
         this.detectAnimationSupportion_();
     };
 
@@ -96,6 +92,32 @@ goog.scope(function() {
             sm.iAnimate.Animate.isSupported() ?
                 View.CssClass.ANIMATION_ON :
                 View.CssClass.ANIMATION_OFF
+        );
+    };
+
+    /**
+     * Find search dom elements
+     * @private
+     */
+    View.prototype.initSearch_ = function() {
+        this.dom.minifiedSearch = this.getElementByClass(
+            View.CssClass.MINIFIED_SEARCH
+        );
+
+        this.dom.search = this.getElementByClass(
+            View.CssClass.SEARCH
+        );
+
+        console.log(this.dom);
+    };
+
+    /**
+     * Find banner dom elements
+     * @private
+     */
+    View.prototype.initBanner_ = function() {
+        this.dom.banner = this.getElementByClass(
+            sm.bBanner.View.CssClass.ROOT
         );
     };
 });

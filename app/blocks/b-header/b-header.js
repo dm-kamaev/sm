@@ -27,6 +27,13 @@ sm.bHeader.Header = function(view, opt_params, opt_domHelper) {
     this.mode_ = sm.bHeader.Header.Mode.DEFAULT;
 
     /**
+     * Minified search instance
+     * @type {sm.bSearch.Search}
+     * @private
+     */
+    this.minifiedSearch_ = null;
+
+    /**
      * Search instance
      * @type {sm.bSearch.Search}
      * @private
@@ -91,8 +98,13 @@ goog.scope(function() {
         goog.base(this, 'decorateInternal', element);
 
         var domElements = this.getView().getDom();
+        if (domElements.minifiedSearch) {
+            this.minifiedSearch_ = new Search();
+            this.addChild(this.minifiedSearch_);
+            this.minifiedSearch_.decorate(domElements.minifiedSearch);
+        }
 
-        if (this.getView().getDom().search) {
+        if (domElements.search) {
             this.search_ = new Search();
             this.addChild(this.search_);
             this.search_.decorate(domElements.search);
@@ -106,19 +118,63 @@ goog.scope(function() {
      */
     Header.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
-        if (this.search_) {
-            this.getHandler().listen(
-                this.search_,
-                Search.Event.DEFAULT_MODE_INITED,
-                this.onDefaultModeInited_
-            ).listen(
-                this.search_,
-                Search.Event.SEARCH_MODE_INITED,
-                this.onSearchModeInited_
-            );
-        }
+        this.initMinifiedSearchListeners_();
+        this.initSearchListeners_();
     };
 
+    /**
+     * @private
+     */
+    Header.prototype.initMinifiedSearchListeners_ = function() {
+        this.getHandler().listen(
+            this.minifiedSearch_,
+            Search.Event.DEFAULT_MODE_INITED,
+            this.onDefaultModeInited_
+        ).listen(
+            this.minifiedSearch_,
+            Search.Event.SEARCH_MODE_INITED,
+            this.onSearchModeInited_
+        ).listen(
+            this.minifiedSearch_,
+            Search.Event.TEXT_CHANGE,
+            this.onMinifiedSearchTextChange_
+        ).listen(
+            this.minifiedSearch_,
+            Search.Event.SUBMIT,
+            this.onSubmit_
+        ).listen(
+            this.minifiedSearch_,
+            Search.Event.ITEM_SELECT,
+            this.onSubmit_
+        );
+    };
+
+    /**
+     * @private
+     */
+    Header.prototype.initSearchListeners_ = function() {
+        this.getHandler().listen(
+            this.search_,
+            Search.Event.TEXT_CHANGE,
+            this.onSearchTextChange_
+        ).listen(
+            this.search_,
+            Search.Event.SUBMIT,
+            this.onSubmit_
+        ).listen(
+            this.search_,
+            Search.Event.ITEM_SELECT,
+            this.onSubmit_
+        );
+    };
+
+    /**
+     * @private
+     */
+    Header.prototype.onSubmit_ = function() {
+        this.minifiedSearch_.reset();
+        this.search_.reset();
+    };
 
     /**
      * Set header mode
@@ -146,6 +202,26 @@ goog.scope(function() {
      */
     Header.prototype.getSearchData = function() {
         return this.search_.getData();
+    };
+
+    /**
+     * Set search value in according to minified search value
+     * @private
+     */
+    Header.prototype.onMinifiedSearchTextChange_ = function() {
+        this.search_.setData(
+            this.minifiedSearch_.getData()
+        );
+    };
+
+    /**
+     * Set minified search value in according to search value
+     * @private
+     */
+    Header.prototype.onSearchTextChange_ = function() {
+        this.minifiedSearch_.setData(
+            this.search_.getData()
+        );
     };
 
     /**
@@ -180,15 +256,15 @@ goog.scope(function() {
         switch (mode) {
             case Header.Mode.DEFAULT:
                 this.getView().switchToDefaultMode();
-                if (this.search_) {
-                    this.search_.setMode(Search.Mode.DEFAULT);
+                if (this.minifiedSearch_) {
+                    this.minifiedSearch_.setMode(Search.Mode.DEFAULT);
                 }
                 break;
 
             case Header.Mode.SEARCH:
                 this.getView().switchToSearchMode();
-                if (this.search_) {
-                    this.search_.setMode(Search.Mode.SEARCH);
+                if (this.minifiedSearch_) {
+                    this.minifiedSearch_.setMode(Search.Mode.SEARCH);
                 }
                 break;
         }

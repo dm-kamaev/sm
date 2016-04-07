@@ -61,6 +61,13 @@ sm.bSearch.Search = function(opt_params) {
     this.text_ = null;
 
     /**
+     * Current type
+     * @type {?string}
+     * @private
+     */
+    this.type_ = null;
+
+    /**
      * Current mode
      * @type {Search.Mode|string}
      * @private
@@ -88,8 +95,8 @@ goog.scope(function() {
         SEARCH_MODE: 'b-search_mode_search',
         DEFAULT_MODE: 'b-search_mode_default',
         ANIMATION_ON: 'b-search_animation_on',
-        ANIMATION_OFF: 'b-search_animation_off'
-
+        ANIMATION_OFF: 'b-search_animation_off',
+        FOLDABLE_TYPE: 'b-search_theme_foldable'
     };
 
     /**
@@ -99,6 +106,7 @@ goog.scope(function() {
     Search.Event = {
         SUBMIT: 'submit',
         ITEM_SELECT: 'itemSelect',
+        TEXT_CHANGE: 'textChange',
         DEFAULT_MODE_INITED: 'defaultModeInited',
         SEARCH_MODE_INITED: 'searchModeInited'
     };
@@ -110,6 +118,15 @@ goog.scope(function() {
     Search.Mode = {
         DEFAULT: 'default',
         SEARCH: 'search'
+    };
+
+    /**
+     * View types
+     * @enum {string}
+     */
+    Search.Type = {
+        FOLDABLE: 'foldable',
+        DEFAULT: 'default'
     };
 
     /**
@@ -148,6 +165,18 @@ goog.scope(function() {
         if (data.hasOwnProperty('text')) {
             this.setText(data.text);
         }
+    };
+
+    /**
+     * Resets data and suggest value
+     * @public
+     */
+    Search.prototype.reset = function() {
+        this.setData({
+            text: '',
+            metroId: null,
+            areaId: null
+        });
     };
 
     /**
@@ -225,12 +254,6 @@ goog.scope(function() {
      * @public
      */
     Search.prototype.switchToDefaultMode = function() {
-        this.setData({
-            text: '',
-            metroId: null,
-            areaId: null
-        });
-
         goog.dom.classes.remove(
             this.getElement(),
             Search.CssClass.SEARCH_MODE
@@ -289,8 +312,8 @@ goog.scope(function() {
     Search.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
+        this.detectType_();
         this.detectAnimationSupportion_();
-
         this.initElements_(element);
     };
 
@@ -325,24 +348,16 @@ goog.scope(function() {
             this.onTextChange_.bind(this)
         );
 
-        if (this.elements_.searchButton) {
+        if (this.type_ === Search.Type.FOLDABLE) {
             handler.listen(
                 this.elements_.searchButton,
                 goog.events.EventType.CLICK,
                 this.onSearchClick_
-            );
-        }
-
-        if (this.elements_.clearButton) {
-            handler.listen(
+            ).listen(
                 this.elements_.clearButton,
                 goog.events.EventType.CLICK,
                 this.onClearClick_
-            );
-        }
-
-        if (this.elements_.fader) {
-            handler.listen(
+            ).listen(
                 this.elements_.fader,
                 goog.events.EventType.CLICK,
                 this.onClearClick_
@@ -541,6 +556,7 @@ goog.scope(function() {
         this.dispatchEvent({
             'type': Search.Event.DEFAULT_MODE_INITED
         });
+        this.reset();
         this.setMode(Search.Mode.DEFAULT);
     };
 
@@ -610,7 +626,10 @@ goog.scope(function() {
             this.onNotSchoolSelect_(event, data);
         } else {
             this.processItem_(data.item);
-            this.dispatchEvent(Search.Event.ITEM_SELECT);
+            this.dispatchEvent({
+                type: Search.Event.ITEM_SELECT,
+                data: this.getData()
+            });
         }
     };
 
@@ -667,7 +686,10 @@ goog.scope(function() {
         if (this.dataParams_.redirect) {
             this.searchRequest_(data.text);
         } else {
-            this.dispatchEvent(Search.Event.SUBMIT);
+            this.dispatchEvent({
+                type: Search.Event.SUBMIT,
+                data: this.getData()
+            });
         }
     };
 
@@ -696,6 +718,7 @@ goog.scope(function() {
             areaId: null,
             text: data.text
         });
+        this.dispatchEvent(Search.Event.TEXT_CHANGE);
     };
 
     /**
@@ -728,5 +751,22 @@ goog.scope(function() {
             this.getElement(),
             animationSupportClass
         );
+    };
+
+    /**
+     * Detect current type
+     * @private
+     */
+    Search.prototype.detectType_ = function() {
+        var isFodableType = goog.dom.classlist.contains(
+            this.getElement(),
+            Search.CssClass.FOLDABLE_TYPE
+        );
+
+        if (isFodableType) {
+            this.type_ = Search.Type.FOLDABLE;
+        } else {
+            this.type_ = Search.Type.DEFAULT;
+        }
     };
 });

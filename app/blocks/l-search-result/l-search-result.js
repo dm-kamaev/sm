@@ -374,17 +374,18 @@ goog.scope(function() {
 
     /**
      * Header submit handler
+     * @param {Object} event
      * @private
      */
-    SearchResult.prototype.onHeaderSubmit_ = function() {
-        var newSearchData = this.instances_.header.getSearchData();
+    SearchResult.prototype.onHeaderSubmit_ = function(event) {
+        var newSearchData = event.data;
         this.instances_.search.setData(newSearchData);
 
         this.instances_.header.setMode(Header.Mode.DEFAULT);
 
         this.instances_.filters.reset();
 
-        this.search_();
+        this.minifiedSearch_();
     };
 
     /**
@@ -392,7 +393,7 @@ goog.scope(function() {
      * @private
      */
     SearchResult.prototype.onSearchSubmit_ = function() {
-        this.search_();
+        this.minifiedSearch_();
     };
 
     /**
@@ -400,7 +401,7 @@ goog.scope(function() {
      * @private
      */
     SearchResult.prototype.onFiltersSubmit_ = function() {
-        this.search_();
+        this.minifiedSearch_();
 
         this.instances_.filters.collapse();
         window.scrollTo(0, 0);
@@ -428,7 +429,7 @@ goog.scope(function() {
      * Update search params, send query to api, update url
      * @private
      */
-    SearchResult.prototype.search_ = function() {
+    SearchResult.prototype.minifiedSearch_ = function() {
         var params = {
             page: 0,
             sortType: 0
