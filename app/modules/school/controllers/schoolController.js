@@ -1,10 +1,7 @@
-var soy = require.main.require('./app/components/soy');
-var services = require.main.require('./app/components/services').all;
-const schoolView = require.main.require('./api/modules/school/views/schoolView');
-var urlConfig = require('../../../config').config.url;
-var analyticsId = require('../../../config').config.analyticsId;
-
-const AUTH_URL = urlConfig.protocol + '://' + urlConfig.host + ':3001/oauth';
+const soy = require.main.require('./app/components/soy'),
+    services = require.main.require('./app/components/services').all,
+    schoolView = require.main.require('./api/modules/school/views/schoolView'),
+    analyticsId = require('../../../config').config.analyticsId;
 
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
@@ -78,8 +75,9 @@ exports.list = async (function(req, res) {
 
 exports.view = async (function(req, res) {
     try {
-        var url = services.urls.stringToURL(req.params.name);
-        var schoolInstance = await(services.urls.getSchoolByUrl(url));
+        var url = services.urls.stringToURL(req.params.name),
+            schoolInstance = await(services.urls.getSchoolByUrl(url));
+
         if (!schoolInstance) {
             res.header('Content-Type', 'text/html; charset=utf-8');
             res.status(404);
@@ -87,19 +85,20 @@ exports.view = async (function(req, res) {
         } else if (url != schoolInstance.url) {
             res.redirect(schoolInstance.url);
         } else {
-            var resPromises = {
+            var promises = {
                     ege: services.egeResult.getAllBySchoolId(schoolInstance.id),
                     gia: services.giaResult.getAllBySchoolId(schoolInstance.id),
                     olymp: services.olimpResult.getAllBySchoolId(
                         schoolInstance.id
                     ),
-                    city: services.cityResult.getAll()
+                    city: services.cityResult.getAll(),
+                    authSocialLink: services.auth.getSocialLinks(),
+                    popularSchools: services.school.getPopularSchools()
                 },
-                results = await(resPromises);
+                dataFromPromises = await(promises);
 
             var school = await(services.school.viewOne(schoolInstance.id));
             services.school.incrementViews(school.id);
-            var popularSchools = await(services.school.getPopularSchools());
             var user = {
                 data: req.user,
                 isCommented: typeof await(services.userData.checkCredentials(
@@ -116,13 +115,11 @@ exports.view = async (function(req, res) {
                     data:
                         schoolView.default(
                             school,
-                            results,
-                            user,
-                            popularSchools
+                            dataFromPromises,
+                            user
                         ),
                     config: {
                         year: new Date().getFullYear(),
-                        authUrl: AUTH_URL,
                         analyticsId: analyticsId
                     }
                 }
