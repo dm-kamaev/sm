@@ -217,11 +217,7 @@ screen and (max-width: 600px) // for desktop
         margin-bottom: 30px;
         padding: 0;
 
-        &:first-of-type {
-            padding: 0;
-        }
-
-        &:last-child {
+        &:nth-child(n) {
             padding: 0;
         }
     }
