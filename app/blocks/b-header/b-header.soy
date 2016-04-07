@@ -29,9 +29,7 @@
 
             <div class="b-header__section
                 b-header__section_search">
-                {if $params?.url}
-                    {call .search_ data="all" /}
-                {/if}
+                {call .search_ data="all" /}
             </div>
         </div>
     </div>
@@ -101,7 +99,6 @@
 /**
  * Search
  * @param params {{
- *     searchText: ?string,
  *     redirect: ?boolean
  * }}
  */
@@ -109,11 +106,26 @@
     {call sm.bSearch.Template.base}
         {param params: [
             'placeholder': 'Номер школы, метро, район',
-            'text': $params?.searchText,
-            'theme': 'foldable',
+            'theme': 'min',
+            'customClasses': 'b-header__search b-header__search_visible_l',
             'redirect': $params?.searchRedirect,
-            'customClasses': 'b-header__search',
-            'inputSize': 'min'
+            'inputSize': 'min',
+            'config': [
+                'showSearchIcon': true,
+                'height': 'l'
+            ]
+        ]/}
+    {/call}
+    {call sm.bSearch.Template.base}
+        {param params: [
+            'placeholder': 'Номер школы, метро, район',
+            'theme': 'foldable',
+            'customClasses': 'b-header__search b-header__search_visible_s',
+            'redirect': $params?.searchRedirect,
+            'inputSize': 'min',
+            'config': [
+                'height': 'xxl'
+            ]
         ]/}
     {/call}
 {/template}
