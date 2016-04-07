@@ -31,6 +31,8 @@ var bodyParser = require('body-parser');
 var vm = require('vm');
 var fs = require('fs');
 
+var errorController = require('./app/modules/error/controllers/errorController');
+
 const await = require('asyncawait/await');
 const async = require('asyncawait/async');
 
@@ -100,3 +102,8 @@ async(function() {
 
     configurePassport();
 })();
+
+app.use(function(req, res, next) {
+    res.status(404);
+    errorController.notFound(req, res);
+});

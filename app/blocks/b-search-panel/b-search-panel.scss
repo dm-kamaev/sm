@@ -92,6 +92,22 @@
     line-height: 1em;
 }
 
+.b-search-panel_two-columns-theme {
+    .b-search-panel__field-wrap {
+        width: 66.66%;
+        padding-right: 10px;
+        padding-left: 0;
+    }
+
+    .b-search-panel__button-wrap {
+        box-sizing: border-box;
+        width: 33.33%;
+
+        padding-left: 20px;
+    }
+}
+
+
 @media screen and (max-width: 1280px) // for desktop and tablet
 {
     .b-search-panel {
@@ -122,6 +138,25 @@
         width: 66.66%;
         padding-right: 0;
     }
+
+    .b-search-panel_two-columns-theme {
+        .b-search-panel__content {
+            padding-right: 0;
+        }
+
+        .b-search-panel__field-wrap {
+            width: 66.66%;
+            padding-right: 10px;
+            padding-left: 0;
+        }
+
+        .b-search-panel__button-wrap {
+            box-sizing: border-box;
+            width: 33.33%;
+
+            padding-left: 20px;
+        }
+    }
 }
 
 @media screen and (max-width: 1000px) // for desktop and tablet
@@ -147,6 +182,13 @@
         width: 33.33%;
         padding-left: 20px;
     }
+
+    .b-search-panel_two-columns-theme {
+        .b-search-panel__content {
+            width: 100%;
+            padding-right: 0;
+        }
+    }
 }
 
 @media screen and (max-device-width: 600px) // for phone
@@ -164,6 +206,12 @@ screen and (max-width: 600px) // for desktop
 
     .b-search-panel__button-wrap {
         display: none;
+    }
+
+    .b-search-panel_two-columns-theme {
+        .b-search-panel__field-wrap {
+            width: 100%;
+        }
     }
 }
 

@@ -2,8 +2,8 @@ goog.provide('sm.bSearchPanel.SearchPanel');
 
 goog.require('cl.iControl.Control');
 
-goog.require('sm.bSearchPanel.View');
 goog.require('sm.bSearch.Search');
+goog.require('sm.bSearchPanel.View');
 
 /**
  * Search Panel

@@ -4,10 +4,13 @@
  * Constructor
  * @param? params {
  *     panelTitle: ?string,
- *     dataLinks: ?list<[
- *         name: ?string,
- *         url: ?string
- *     ]>
+ *     dataLink: {
+ *         name: ?string
+ *         url: ?uri
+ *     },
+ *     config: ?{
+ *         theme: ?string
+ *     }
  * }
  * @extends cl.iControl.Template
  * @constructor
@@ -24,6 +27,9 @@
  *     dataLink: {
  *         name: ?string
  *         url: ?uri
+ *     },
+ *     config: ?{
+ *         theme: ?string
  *     }
  * }
  * @override
