@@ -57,6 +57,7 @@
     "gulp-uglify": "^1.4.1",
     "gulp-util": "^3.0.6",
     "imap-simple": "^1.5.2",
+    "intel": "^1.1.0",
     "json2csv": "^3.0.1",
     "lodash": "^3.10.1",
     "mimelib": "^0.2.19",

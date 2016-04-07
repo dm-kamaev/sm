@@ -22,7 +22,9 @@ deployment-config.json
 .jshintrc
 .csscomb*
 .tags*
+
 /app/config/local/
+/app/config/config.*
 /environment/config/authorization/local/
 
 console/reports
