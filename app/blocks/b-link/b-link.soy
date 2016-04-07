@@ -6,7 +6,8 @@
  *    data: ?[
  *        name: ?string,
  *        url: ?string,
- *        content: ?string
+ *        content: ?string,
+ *        icon: ?string
  *    ],
  *    config: ?[
  *        customClasses: ?string,
@@ -19,6 +20,9 @@
 
 {template .base autoescape="strict" kind="html"}
     {call .openTag_ data="all" /}
+        {if $params?.data?.icon}
+            {$params?.data?.icon}
+        {/if}
         {$params?.data?.name}
         {if $params?.data?.content}
             {$params?.data?.content}

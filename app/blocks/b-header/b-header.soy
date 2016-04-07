@@ -7,7 +7,6 @@
  * @property {?string} url
  * @property {?string} searchText
  * @property {?boolean} searchRedirect
- * @property {?boolean} notShowLink
  */
 
 /**
@@ -24,7 +23,8 @@
             </div>
 
             <div class="b-header__section
-                b-header__section_links">
+                b-header__section_links i-animate">
+                {call .link_/}
             </div>
 
             <div class="b-header__section
@@ -38,24 +38,37 @@
 {/template}
 
 /**
- * Advanced search link
- * @param params {{
- *     notShowLink: ?boolean
- * }}
+ * Link template
  */
-{template .advancedSearchLink_ private="true" autoescape="strict" kind="html"}
-    {if not ($params?.notShowLink)}
-        <div class="b-header__link-search i-animate">
-            {call sm.bLink.Template.base}
-                {param params: [
+{template .link_ private="true" autoescape="strict" kind="html"}
+    {let $searchIcon kind="html"}
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': 'stendhal',
+                'type': 'icon',
+                'renderParams': [
                     'data': [
-                        'name': 'Полный список школ',
-                        'url': '/search'
+                        'type': 'catalog'
+                    ],
+                    'config': [
+                        'customClasses': ['b-header__search-link-icon']
                     ]
-                ]/}
-            {/call}
-        </div>
-    {/if}
+                ]
+            ]/}
+        {/call}
+    {/let}
+
+    <div class="b-header__search-link">
+        {call sm.bLink.Template.base}
+            {param params: [
+                'data': [
+                    'name': 'Все школы Москвы',
+                    'url': '/search',
+                    'icon': $searchIcon
+                ]
+            ]/}
+        {/call}
+    </div>
 {/template}
 
 /**
