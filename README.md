@@ -159,3 +159,10 @@ Forever пишет такие логи:
 * /opt/school-market/current/runtime/node.forever.log - Forever output
 * /opt/school-market/current/runtime/node.out.log - stdout from app.js
 * /opt/school-market/current/runtime/node.error.log - stderr from app.js
+
+###logger
+logger пишет в файл `/opt/school-market/current/runtime/node.forever.log` сообщения уровней `WARN`, `ERROR` и `CRITICAL`
+
+В dev-режиме дополнительно выводятся в консоль сообщения уровней `TRACE`, `VERBOSE`, `DEBUG` и `INFO`
+
+Для работы логгера **ОБЯЗАТЕЛЬНО** наличие директории `runtime` в корне проекта
