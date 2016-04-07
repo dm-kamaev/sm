@@ -78,13 +78,16 @@
  *            metro: ?list<string>,
  *            totalScore: ?number
  *        ]>,
+ *         authSocialLink: ?{
+ *             vk: ?string,
+ *             fb: ?string
+ *         },
  *        user: object
  *     ],
  *     searchText: ?string,
  *     config: ?{
  *         staticVersion: ?string,
  *         year: ?number,
- *         authUrl: ?string,
  *         analyticsId: ?string
  *     }
  * }
@@ -267,7 +270,7 @@
 
         {call .authSocial_}
             {param params: [
-                'authUrl': $params?.config?.authUrl
+                'authUrl': $params?.data?.authSocialLink
             ]/}
         {/call}
 
@@ -374,7 +377,10 @@
 /**
  * Auth modal
  * @param params {
- *     authUrl: ?string
+ *     authUrl: ?{
+ *         vk: ?string,
+ *         fb: ?string
+ *     }
  * }
  */
 {template .authSocial_ private="true"}
@@ -386,11 +392,11 @@
                     'socials': [
                         [
                             'type': 'fb',
-                            'url': $params?.authUrl + '?type=fb'
+                            'url': $params?.authUrl?.fb
                         ],
                         [
                             'type': 'vk',
-                            'url': $params?.authUrl + '?type=vk'
+                            'url': $params?.authUrl?.vk
                         ]
                     ]
                 ]
