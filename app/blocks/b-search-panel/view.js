@@ -68,12 +68,8 @@ goog.scope(function() {
      */
     View.prototype.initElements_ = function(root) {
         this.dom = {
-            button: goog.dom.getElementByClass(
-                View.CssClass.BUTTON
-            ),
-            search: goog.dom.getElementByClass(
-                sm.bSearch.Search.CssClass.ROOT
-            )
+            button: this.getElementByClass(View.CssClass.BUTTON),
+            search: this.getElementByClass(sm.bSearch.Search.CssClass.ROOT)
         };
     };
 

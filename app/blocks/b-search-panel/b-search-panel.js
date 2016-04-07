@@ -60,7 +60,7 @@ goog.scope(function() {
      * @private
      */
     SearchPanel.prototype.onButtonClick_ = function() {
-        this.searchRequest_(this.search_.getValue());
+        this.searchRequest_(this.search_.getText());
     };
 
      /**
@@ -76,5 +76,3 @@ goog.scope(function() {
         document.location.href = url;
     };
 });
-
-
