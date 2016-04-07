@@ -1,4 +1,4 @@
-{namespace sm.bInfo.Template}
+{namespace sm.bSchoolCatalog.Template}
 
 /**
  * Constructor
@@ -34,8 +34,8 @@
  */
 {template .body}
     <div class="{call .rootClass/}">
-        {call sm.bInfo.Template.img_ data="all" /}
-        {call sm.bInfo.Template.infoText_ data="all" /}
+        {call sm.bSchoolCatalog.Template.img_ data="all" /}
+        {call sm.bSchoolCatalog.Template.infoText_ data="all" /}
     </div>
 {/template}
 
@@ -53,14 +53,14 @@
  */
 {template .infoText_ autoescape="strict" kind="html"}
     <div class="{call .rootClass/}__info-text">
-        {call sm.bInfo.Template.text_}
+        {call sm.bSchoolCatalog.Template.text_}
             {param params: [
                 'text': $params.text,
                 'amount': $params.amount,
             ]/}
         {/call}
 
-        {call sm.bInfo.Template.link_}
+        {call sm.bSchoolCatalog.Template.link_}
             {param params: [
                 'data': [
                     'name': $params?.dataLink?.name,
@@ -84,7 +84,7 @@
     {else}
         <div class="{call .rootClass/}__img">
             {for $i in range(3)}
-                {call sm.bInfo.Template.imgList_ /}
+                {call sm.bSchoolCatalog.Template.imgList_ /}
             {/for}
         </div>
     {/if}
@@ -106,7 +106,7 @@
             <span class="{call .rootClass/}__amount">
                 {sp}{$params.amount}{sp}
 
-                {call sm.bInfo.Template.getEnding_}
+                {call sm.bSchoolCatalog.Template.getEnding_}
                     {param params: [
                         'number': $params.amount ]
                     /}
@@ -176,5 +176,5 @@
  * @override
  */
 {template .rootClass}
-    b-info
+    b-school-catalog
 {/template}
