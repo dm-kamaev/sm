@@ -6,6 +6,7 @@ public/
 tmp/
 doc/
 build/
+runtime/
 assets/dump/
 /parse/
 /console/reports
