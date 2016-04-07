@@ -1,6 +1,8 @@
 var services = require.main.require('./app/components/services').all;
 var schoolView = require('../../school/views/schoolView');
 
+var logger = require.main.require('./app/components/logger/logger').getLogger('app');
+
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 
@@ -15,9 +17,9 @@ exports.getAddresses = async (function(req, res) {
     try {
         var schoolId = req.params.id;
         result = await(services.school.getAddresses(schoolId));
-    } catch (e) {
-        console.log(e.message);
-        result = e;
+    } catch (error) {
+        logger.error(error.message);
+        result = error;
     } finally {
         res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(JSON.stringify(result));
@@ -44,9 +46,9 @@ exports.getAddress = async (function(req, res) {
         else {
             result = 'School hasn\'t address with id ' + address_id;
         }
-    } catch (e) {
-        console.log(e.message);
-        result = e;
+    } catch (error) {
+        logger.error(error.message);
+        result = error;
     } finally {
         res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(JSON.stringify(result));
@@ -67,9 +69,9 @@ exports.list = async (function(req, res) {
     try {
         var instances = await(services.address.listMapPoints());
         result = schoolView.listMapPoints(instances);
-    } catch (e) {
-        console.log(e);
-        result = e.message;
+    } catch (error) {
+        logger.error(error);
+        result = error.message;
     } finally {
         res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(JSON.stringify(result));

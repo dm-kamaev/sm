@@ -18,10 +18,9 @@ exports.test = async(function(string){
 });
 
 exports.request = async ((string) => {
-    console.log(string);
     var apiString = encodeURI( '/1.x/?geocode=' + string +
         '&format=json');
-    console.log('Sending request to '+apiString);
+    console.log('Sending request to ' + apiString);
     var options = {
         host: 'geocode-maps.yandex.ru',
         path: apiString,

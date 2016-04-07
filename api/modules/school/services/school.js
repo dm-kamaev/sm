@@ -3,13 +3,16 @@
 var colors = require('colors');
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
+
 var models = require('../../../../app/components/models').all;
 var services = require('../../../../app/components/services').all;
-var sequelize = require('../../../../app/components/db');
 var searchTypeEnum = require('../enums/searchType');
 var schoolTypeEnum = require('../enums/schoolType');
-var departmentTypeEnum = require('../../geo/enums/departmentStage');
+
+var sequelize = require('../../../../app/components/db');
+var logger = require('../../../../app/components/logger/logger').getLogger('app');
 var CsvConverter = require('../../../../console/modules/modelArchiver/CsvConverter');
+
 var service = {
     name: 'school'
 };
@@ -222,7 +225,6 @@ service.getPopularSchools = async(function(opt_amount) {
  * @return {[Object]} Address model instances list
  */
 service.getAddresses = async(function(schoolId) {
-    console.log(schoolId);
     return await(
         models.Address.findAll({
             where: {schoolId: schoolId},
@@ -328,8 +330,8 @@ service.onRatingChange = async(function(schoolId) {
     try {
         await(this.updateReviewCount(school));
         await(this.updateScore(school));
-    } catch (e) {
-        console.log(e);
+    } catch (error) {
+        logger.error(error);
     }
 });
 
@@ -781,7 +783,6 @@ service.list = async (function(opt_params) {
     };
     return sequelize.query(sqlString, options)
     .then(schools => {
-            console.log('Found: ', colors.green(schools.length));
             return schools;
         });
 });

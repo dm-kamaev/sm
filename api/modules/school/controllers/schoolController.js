@@ -1,7 +1,9 @@
-var services = require.main.require('./app/components/services').all;
-
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
+
+var logger = require.main.require('./app/components/logger/logger').getLogger('app');
+
+var services = require.main.require('./app/components/services').all;
 var schoolView = require('../views/schoolView');
 
 
@@ -38,11 +40,10 @@ exports.create = async (function(req, res) {
     var result = '';
     try {
         var data = req.body.schoolData;
-        console.log('data', data);
         result = await(services.school.create(data));
-    } catch (e) {
-        console.log(e);
-        result = JSON.stringify(e);
+    } catch (error) {
+        result = JSON.stringify(error);
+        logger.error(result);
     } finally {
         res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(JSON.stringify(result));
@@ -75,9 +76,9 @@ exports.update = async (function(req, res) {
         var school_id = req.params.id;
         var data = req.body.schoolData;
         result = await(services.school.update(school_id, data));
-    } catch (e) {
-        console.log(e);
-        result = e.message;
+    } catch (error) {
+        logger.error(error.message);
+        result = error.message;
     } finally {
         res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(JSON.stringify(result));
@@ -96,9 +97,9 @@ exports.delete = async (function(req, res) {
     try {
         var school_id = req.params.id;
         result = await(services.school.delete(school_id));
-    } catch (e) {
-        console.log(e);
-        result = e.message;
+    } catch (error) {
+        logger.error(error.message);
+        result = error.message;
     } finally {
         res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(JSON.stringify(result));
@@ -117,9 +118,9 @@ exports.list = async (function(req, res) {
     try {
         var schools = await (services.school.list());
         var result = schoolView.list(schools);
-    } catch (e) {
-        console.log(e);
-        result = e.message;
+    } catch (error) {
+        logger.error(error.message);
+        result = error.message;
     } finally {
         res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(JSON.stringify(result));
@@ -142,9 +143,9 @@ exports.suggestSearch = async (function(req, res) {
         var searchString = req.query.searchString;
         var data = await(services.search.suggestSearch(searchString));
         var result = schoolView.suggest(data);
-    } catch (e) {
-        console.log(e);
-        result = e.message;
+    } catch (error) {
+        logger.error(error.message);
+        result = error.message;
     } finally {
         res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(JSON.stringify(result));
@@ -162,9 +163,9 @@ exports.suggestSearch = async (function(req, res) {
 exports.view = async (function(req, res) {
     try {
         var result = await(services.school.viewOne(req.params.id));
-    } catch (e) {
-        console.log(e);
-        result = e.message;
+    } catch (error) {
+        logger.error(error.message);
+        result = error.message;
     } finally {
         res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(JSON.stringify(result));
@@ -184,9 +185,9 @@ exports.listSearchFilters = async (function(req, res) {
     var result;
     try {
         result = await(services.school.searchFilters());
-    } catch (e) {
-        console.log(e.message);
-        result = e.message;
+    } catch (error) {
+        logger.error(error.message);
+        result = error.message;
     } finally {
         res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(JSON.stringify(result));
@@ -239,9 +240,9 @@ exports.createComment = async (function(req, res) {
             result = await(services.school.review(schoolId, params));
         }
 
-    } catch (e) {
-        console.log(e);
-        result = JSON.stringify(e);
+    } catch (error) {
+        result = JSON.stringify(error);
+        logger.error(result);
     } finally {
         res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(JSON.stringify(result));
@@ -277,9 +278,9 @@ exports.search = async (function(req, res) {
         var params = await(services.search.initSearchParams(req.query));
         var schools = await(services.school.list(params));
         result = schoolView.list(schools, params.sortType);
-    } catch (e) {
-        console.log(e);
-        result = JSON.stringify(e);
+    } catch (error) {
+        result = JSON.stringify(error);
+        logger.error(result);
     } finally {
         res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(JSON.stringify(result));

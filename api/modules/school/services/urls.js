@@ -1,11 +1,14 @@
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
-var models = require('../../../../app/components/models').all;
 var translit = require('translitit-cyrillic-russian-to-latin');
+
+var logger = require('../../../../app/components/logger/logger').getLogger('app');
+
+var models = require('../../../../app/components/models').all;
 
 var service = {
     name: 'urls'
-}
+};
 
 /**
  * @param {string} string
@@ -39,9 +42,9 @@ service.generateUrl = async(function(school) {
                     {url: url},
                     {hooks: false})
                 );
-            } catch (e) {
+            } catch (error) {
                 /*if url in use then generate different url*/
-                console.log(e);
+                logger.error(error);
                 url = url + '_';
                 await(school.update(
                     {url: url},
