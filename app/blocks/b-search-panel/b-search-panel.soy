@@ -1,0 +1,148 @@
+{namespace sm.bSearchPanel.Template}
+
+/**
+ * Constructor
+ * @param? params {
+ *     panelTitle: ?string,
+ *     dataLink: {
+ *         name: ?string
+ *         url: ?uri
+ *     },
+ *     config: ?{
+ *         theme: ?string
+ *     }
+ * }
+ * @extends cl.iControl.Template
+ * @constructor
+ */
+{template .seachPanel}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * Body
+ * @param? params {
+ *     panelTitle: ?string,
+ *     dataLink: {
+ *         name: ?string
+ *         url: ?uri
+ *     },
+ *     config: ?{
+ *         theme: ?string
+ *     }
+ * }
+ * @override
+ */
+{template .body}
+    <div class="{call .rootClass/}__content-wrap">
+        <div class="{call .rootClass/}__content">
+            {if $params?.panelTitle}
+                {call sm.bSearchPanel.Template.header_ data="all" /}
+            {/if}
+
+            <div class="{call .rootClass/}__field-wrap">
+                {call sm.bSearchPanel.Template.field_ /}
+                {call sm.bSearchPanel.Template.links_ data="all" /}
+            </div>
+
+            <div class="{call .rootClass/}__button-wrap">
+                {call sm.bSearchPanel.Template.button_ /}
+                {call sm.bSearchPanel.Template.link_ /}
+            </div>
+        </div>
+    </div>
+{/template}
+
+
+/**
+ * Template header
+ * @param? params {
+ *     panelTitle: ?string
+ * }
+ */
+{template .header_ autoescape="strict" kind="html"}
+    <div class="{call .rootClass/}__header">
+        {$params?.panelTitle}
+    </div>
+{/template}
+
+
+/**
+ * Call popular schools template
+ */
+{template .field_ autoescape="strict" kind="html"}
+    <div class="{call .rootClass/}__field">
+        {call sm.bSearch.Template.base}
+            {param params: [
+                'autofocus': true,
+                'placeholder': 'Номер школы, метро, район',
+                'theme': 'main',
+                'redirect': true
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Search links template
+ * @param? params {
+ *     dataLinks: ?list<[
+ *         name: ?string,
+ *         url: ?string
+ *     ]>
+ * }
+ */
+{template .links_ autoescape="strict" kind="html"}
+    <div class="{call .rootClass/}__links">
+        {foreach $link in $params.dataLinks}
+            <div class="{call .rootClass/}__link">
+                {call sm.bLink.Template.base}
+                    {param params: [
+                        'data': [
+                            'name': $link.name,
+                            'url': $link.url
+                        ]
+                    ]/}
+                {/call}
+            </div>
+        {/foreach}
+    </div>
+{/template}
+
+
+/**
+ * Search button template
+ */
+{template .button_ autoescape="strict" kind="html"}
+    <div class="{call .rootClass/}__button">
+        <span class="{call .rootClass/}__button-text">
+            Найти школу
+        </span>
+    </div>
+{/template}
+
+
+/**
+ * Search link template
+ */
+{template .link_ autoescape="strict" kind="html"}
+    {call sm.bLink.Template.base}
+        {param params: [
+            'data': [
+                'name': 'Расширенный поиск',
+                'url': '/search'
+            ]
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-search-panel
+{/template}

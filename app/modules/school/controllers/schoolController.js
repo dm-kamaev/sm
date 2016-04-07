@@ -4,6 +4,7 @@ const schoolView = require('../../../../api/modules/school/views/schoolView');
 const searchView = require('../../../../api/modules/school/views/searchView');
 var urlConfig = require('../../../config').config.url;
 var analyticsId = require('../../../config').config.analyticsId;
+var errors = require('../lib/errors');
 
 const AUTH_URL = urlConfig.protocol + '://' + urlConfig.host + ':3001/oauth';
 
@@ -67,14 +68,13 @@ exports.list = async (function(req, res) {
 });
 
 
-exports.view = async (function(req, res) {
+exports.view = async (function(req, res, next) {
     try {
         var url = services.urls.stringToURL(req.params.name);
         var schoolInstance = await(services.urls.getSchoolByUrl(url));
+
         if (!schoolInstance) {
-            res.header('Content-Type', 'text/html; charset=utf-8');
-            res.status(404);
-            res.end('404');
+            throw new errors.SchoolNotFoundError();
         } else if (url != schoolInstance.url) {
             res.redirect(schoolInstance.url);
         } else {
@@ -119,10 +119,9 @@ exports.view = async (function(req, res) {
                 }
             }));
         }
-    } catch (e) {
-        console.log(e);
-        res.status(500);
-        res.end('500 Internal Server Error');
+    } catch (error) {
+        res.status(error.code || 500);
+        next();
     }
 });
 
@@ -139,28 +138,7 @@ exports.search = async(function(req, res) {
           params: {
               currentCity: 'Москва',
               popularSchools: schoolView.popular(data.popularSchools),
-              dataLinks : [
-                  {
-                      name: 'Школа 123',
-                      url: searchUrl +
-                        encodeURIComponent('школа 123')
-                  },
-                  {
-                      name: 'Тургеневская',
-                      url: searchUrl +
-                        encodeURIComponent('Тургеневская')
-                  },
-                  {
-                      name: 'Лицей',
-                      url: searchUrl +
-                        encodeURIComponent('Лицей')
-                  },
-                  {
-                      name: 'Замоскворечье',
-                      url: searchUrl +
-                        encodeURIComponent('Замоскворечье')
-                  }
-              ],
+              dataLinks : schoolView.dataLinks(),
               amountSchools: data.amountSchools,
               dataArticle : {
                   urlArticle: 'http://mel.fm/2015/12/08/change_school/',

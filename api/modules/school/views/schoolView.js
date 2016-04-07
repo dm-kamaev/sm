@@ -713,4 +713,34 @@ schoolView.currentSchoolsMapPoints = function(schools) {
     });
 };
 
+ /**
+ * @return {array<object>}
+ */
+schoolView.dataLinks = function() {
+    searchUrl = '/search?name=';
+
+    return [
+        {
+          name: 'Школа 123',
+          url: searchUrl +
+            encodeURIComponent('школа 123')
+        },
+        {
+          name: 'Тургеневская',
+          url: searchUrl +
+            encodeURIComponent('Тургеневская')
+        },
+        {
+          name: 'Лицей',
+          url: searchUrl +
+            encodeURIComponent('Лицей')
+        },
+        {
+          name: 'Замоскворечье',
+          url: searchUrl +
+            encodeURIComponent('Замоскворечье')
+        }
+    ];
+};
+
 module.exports = schoolView;

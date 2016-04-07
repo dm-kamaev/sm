@@ -1,4 +1,4 @@
-goog.provide('sm.lSearch.Search');
+goog.provide('sm.lErrorNotFound.ErrorNotFound');
 
 goog.require('goog.dom.classes');
 goog.require('goog.dom.classlist');
@@ -11,12 +11,12 @@ goog.require('sm.iFactory.FactoryStendhal');
 goog.require('sm.iFactory.TemplateFactoryStendhal');
 
 /**
- * Search result component
+ * ErrorNotFound result component
  * @param {object=} opt_params
  * @constructor
  * @extends {goog.ui.Component}
  */
-sm.lSearch.Search = function(opt_params) {
+sm.lErrorNotFound.ErrorNotFound = function(opt_params) {
     goog.base(this);
 
     /**
@@ -40,29 +40,29 @@ sm.lSearch.Search = function(opt_params) {
      */
     this.popularSchools_ = null;
 };
-goog.inherits(sm.lSearch.Search, goog.ui.Component);
+goog.inherits(sm.lErrorNotFound.ErrorNotFound, goog.ui.Component);
 
 goog.scope(function() {
-    var Search = sm.lSearch.Search,
+    var ErrorNotFound = sm.lErrorNotFound.ErrorNotFound,
         PopularSchools = sm.bPopularSchools.PopularSchools;
 
     /**
      * CSS-class enum
      * @enum {string}
      */
-    Search.CssClass = {
-        ROOT: 'l-search'
+    ErrorNotFound.CssClass = {
+        ROOT: 'l-error-not-found'
     };
 
     /**
      * Template-based dom element creation.
      * @public
      */
-    Search.prototype.createDom = function() {
+    ErrorNotFound.prototype.createDom = function() {
         goog.base(this, 'createDom');
 
         var element = goog.soy.renderAsElement(
-            sm.lSearch.Template.base,
+            sm.lErrorNotFound.Template.base,
             {
                 params: this.params_
             }
@@ -75,10 +75,10 @@ goog.scope(function() {
      * Internal decorates the DOM element
      * @param {Element} element
      */
-    Search.prototype.decorateInternal = function(element) {
+    ErrorNotFound.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
-        var bPopularSchools = goog.dom.getElementByClass(
+       var bPopularSchools = goog.dom.getElementByClass(
             sm.bPopularSchools.View.CssClass.ROOT,
             element
         );
@@ -106,21 +106,22 @@ goog.scope(function() {
     /**
      * Set up the Component
      */
-    Search.prototype.enterDocument = function() {
+    ErrorNotFound.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
     };
+
 });
 
 /**
- * creates sm.lSearch.Search instance
+ * creates sm.lErrorNotFound.ErrorNotFound instance
  */
 jQuery(function() {
     var root = goog.dom.getElementByClass(
-            sm.lSearch.Search.CssClass.ROOT
+            sm.lErrorNotFound.ErrorNotFound.CssClass.ROOT
         );
 
     if (root) {
-        var search = new sm.lSearch.Search();
+        var search = new sm.lErrorNotFound.ErrorNotFound();
         search.decorate(root);
     }
 });
