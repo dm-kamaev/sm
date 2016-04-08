@@ -127,28 +127,31 @@
 @include media-l {
     .b-header__section {
         &.b-header__section_logo {
-            width: 253px;
+            z-index: 3;
+
+            width: auto;
+            margin-right: 40px;
             padding-right: 0;
         }
 
         &.b-header__section_links {
-            position: absolute;
             left: 0;
+            z-index: 2;
 
-            box-sizing: border-box;
-            width: 680px;
-            padding-right: 0;
-            padding-left: 293px;
+            width: auto;
+            padding: 0;
+            margin-right: 40px;
         }
 
         &.b-header__section_search {
             position: absolute;
             right: 0;
+            z-index: 1;
 
             box-sizing: border-box;
             width: 100%;
             padding-right: 40px;
-            padding-left: 510px;
+            padding-left: 500px;
 
             text-align: right;
         }
@@ -176,7 +179,6 @@
     .b-header__section {
         &.b-header__section_search {
             position: absolute;
-            z-index: 1;
             top: 0;
             right: 0;
             bottom: 0;
@@ -188,9 +190,9 @@
         }
 
         &.b-header__section_links {
-            z-index: 2;
+            position: absolute;
 
-            width: auto;
+            margin-right: 0;
             padding-right: 0;
             padding-left: 306px;
         }
