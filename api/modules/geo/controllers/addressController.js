@@ -1,7 +1,7 @@
 var services = require('../../../../app/components/services').all;
 var schoolView = require('../../school/views/schoolView');
 
-var logger = require.main.require('./app/components/logger/logger').getLogger('app');
+var logger = require('../../../../app/components/logger/logger').getLogger('app');
 
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');

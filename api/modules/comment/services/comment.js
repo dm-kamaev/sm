@@ -3,7 +3,6 @@ var await = require('asyncawait/await');
 var logger =require('../../../../app/components/logger/logger').getLogger('app');
 var models = require('../../../../app/components/models').all;
 var services = require('../../../../app/components/services').all;
->>>>>>> BP-1054
 
 exports.name = 'comment';
 
