@@ -2,7 +2,7 @@
 
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
-var models = require.main.require('./app/components/models').all;
+var models = require('../../../../app/components/models').all;
 
 var service = {
     name: 'activity'

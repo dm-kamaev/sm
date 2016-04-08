@@ -7,8 +7,8 @@ var mail = require('./mail');
 var univer = require('./univer');
 var geo = require('./geo');
 var user = require('./user');
-var models = require.main.require('./app/components/models'),
-    services = require.main.require('./app/components/services');
+var models = require('../../app/components/models'),
+    services = require('../../app/components/services');
 
 models.initAssociations();
 

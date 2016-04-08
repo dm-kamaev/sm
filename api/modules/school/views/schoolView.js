@@ -1,20 +1,20 @@
-var services = require.main.require('./app/components/services').all;
+var services = require('../../../../app/components/services').all;
 var lodash = require('lodash');
 
-const areaView = require.main.require('./api/modules/geo/views/areaView.js');
-const metroView = require.main.require('./api/modules/geo/views/metroView.js');
-const addressView = require.main.require(
-    './api/modules/geo/views/addressView.js');
-const activityView = require.main.require(
-    './api/modules/school/views/activityView.js');
-const ratingView = require.main.require(
-    './api/modules/school/views/ratingView.js');
-const egeResultView = require.main.require(
-    './api/modules/study/views/egeResultView.js');
-const giaResultView = require.main.require(
-    './api/modules/study/views/giaResultView.js');
-const olimpResultView = require.main.require(
-    './api/modules/study/views/olimpResultView.js');
+const areaView = require('../../geo/views/areaView.js');
+const metroView = require('../../geo/views/metroView.js');
+const addressView = require(
+    '../../geo/views/addressView.js');
+const activityView = require(
+    './activityView.js');
+const ratingView = require(
+    './ratingView.js');
+const egeResultView = require(
+    '../../study/views/egeResultView.js');
+const giaResultView = require(
+    '../../study/views/giaResultView.js');
+const olimpResultView = require(
+    '../../study/views/olimpResultView.js');
 
 const searchType = require('../enums/searchType');
 

@@ -17,7 +17,7 @@ exports.initAll = function(apiModulesPath) {
         var moduleFolders = fs.readdirSync(modulePath)
             .filter(file => (file.indexOf('.') && file != 'index.js'));
         if (moduleFolders.indexOf('models') != -1)
-            this.initModels(path.join(modulePath, 'models'));   
+            this.initModels(path.join(modulePath, 'models'));
     });
     return this.all;
 };

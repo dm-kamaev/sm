@@ -1,5 +1,5 @@
-var modules = require.main.require('./api/modules');
-var models = require.main.require('./app/components/models').all;
+var modules = require('../modules');
+var models = require('../../app/components/models').all;
 
 /**
  *
@@ -55,4 +55,3 @@ var generate = function (includes, emptyAttributes) {
 };
 
 module.exports = generate;
-

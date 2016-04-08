@@ -1,4 +1,4 @@
-var services = require.main.require('./app/components/services').all;
+var services = require('../../../../app/components/services').all;
 var schoolView = require('../../school/views/schoolView');
 
 var async = require('asyncawait/async');

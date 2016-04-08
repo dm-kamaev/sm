@@ -3,7 +3,7 @@
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 
-var services = require.main.require('./app/components/services').all;
+var services = require('../../../../app/components/services').all;
 
 var config = require('../../../../app/config').config;
 
@@ -24,7 +24,7 @@ service.sendFeedback = async(function(letter) {
         from: 'schools.mel.fm <sender@mel.fm>',
         to: config.emailNotifier.email
     };
-    
+
     services.mail.sendLetter(letter, params);
 });
 

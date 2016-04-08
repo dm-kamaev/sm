@@ -1,20 +1,20 @@
 var colors = require('colors');
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
-var models = require.main.require('./app/components/models').all;
-var services = require.main.require('./app/components/services').all;
+var models = require('../../../../app/components/models').all;
+var services = require('../../../../app/components/services').all;
 
 exports.name = 'univer';
 
 exports.addSchoolResults = async((schoolRes) => {
-	await( 
+	await(
 		schoolRes.years.forEach(yearRes => {
 			yearRes.universities.forEach((univer) => {
 				writeResult(schoolRes.ourId, univer, yearRes.year);
-			}); 
+			});
 		})
 	);
-}); 
+});
 
 
 /**
@@ -28,14 +28,14 @@ var writeResult = async((schoolId, univer, year) => {
 			univerId: univer.vkId,
 			year: year
 		}
-	})); 
+	}));
 	if (record) {
 		await(record.update({
 			pplCount: univer.count
 		}));
 	}
 	else {
-		var univerMiodel = await(getUniver(univer));	
+		var univerMiodel = await(getUniver(univer));
 		await(models.SchoolUniversity.create({
 			schoolId: schoolId,
 			univerId: univer.vkId,
@@ -53,8 +53,6 @@ var getUniver = async ((univ) => {
 		defaults: {
 			name: univ.name
 		}
-	})); 
-	return uni;	
+	}));
+	return uni;
 });
-
-

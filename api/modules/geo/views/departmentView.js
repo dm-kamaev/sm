@@ -1,4 +1,4 @@
-const departmentStage = require.main.require('./api/modules/geo/enums/departmentStage.js');
+const departmentStage = require('../enums/departmentStage.js');
 
 var departmentView = {};
 

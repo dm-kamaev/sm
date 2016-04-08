@@ -1,8 +1,8 @@
 const lodash = require('lodash');
 
-const metroView = require.main.require('./api/modules/geo/views/metroView.js');
-const areaView = require.main.require('./api/modules/geo/views/areaView.js');
-const departmentView = require.main.require('./api/modules/geo/views/departmentView.js');
+const metroView = require('./metroView.js');
+const areaView = require('./areaView.js');
+const departmentView = require('./departmentView.js');
 const stages = require('../enums/departmentStage');
 
 var addressView = {};
