@@ -109,7 +109,7 @@
     vertical-align: middle;
     text-overflow: ellipsis;
 
-    line-height: 17px;
+    line-height: 39px;
 }
 
 .b-search__item-icon {
@@ -307,35 +307,19 @@
     }
 }
 
+@include media-l {
+    .b-search__item {
+        line-height: 49px;
+    }
+}
+
 @include media-m {
-    .b-search_theme_min,
-    .b-search_theme_foldable {
-
-        .b-search__item {
-            padding: 0 60px;
-
-            border-top: 1px solid #e5e5e5;
-
-            line-height: 70px;
-        }
-
-        .b-search__item-icon {
-            left: 31px;
-        }
+    .b-search__item {
+        padding: 0 60px;
     }
 
-    .b-search_theme_main {
-        .b-search__item {
-            padding: 0 60px;
-
-            border-top: 1px solid #e5e5e5;
-
-            line-height: 70px;
-        }
-
-        .b-search__item-icon {
-            left: 31px;
-        }
+    .b-search__item-icon {
+        left: 31px;
     }
 }
 

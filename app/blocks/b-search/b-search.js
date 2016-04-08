@@ -717,7 +717,6 @@ goog.scope(function() {
             metroId: null,
             areaId: null
         });
-        console.log(data.text);
         this.dispatchEvent(Search.Event.TEXT_CHANGE);
     };
 

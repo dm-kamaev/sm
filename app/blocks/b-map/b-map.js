@@ -227,7 +227,9 @@ goog.scope(function() {
      * @public
      */
     Map.prototype.clear = function() {
-        this.objectManager_.removeAll();
+        if (this.objectManager_) {
+            this.objectManager_.removeAll();
+        }
     };
 
     /**
@@ -248,16 +250,18 @@ goog.scope(function() {
      * @private
      */
     Map.prototype.addPlacemarks_ = function(mapSchools) {
-        this.objectManager_.add(
-            this.getCurrentPlacemarkCollection_(mapSchools)
-        );
+        if (this.objectManager_) {
+            this.objectManager_.add(
+                this.getCurrentPlacemarkCollection_(mapSchools)
+            );
 
-        // click event handling
-        this.objectManager_.objects.events.add(
-            'click',
-            this.onPlacemarkClick_,
-            this
-        );
+            // click event handling
+            this.objectManager_.objects.events.add(
+                'click',
+                this.onPlacemarkClick_,
+                this
+            );
+        }
     };
 
     /**
@@ -265,13 +269,15 @@ goog.scope(function() {
      * @private
      */
     Map.prototype.centre_ = function() {
-        this.ymaps_.setBounds(
-            this.objectManager_.getBounds(),
-            {
-                checkZoomRange: true,
-                zoomMargin: 35
-            }
-        ).then(this.checkZoom_.bind(this));
+        if (this.objectManager_) {
+            this.ymaps_.setBounds(
+                this.objectManager_.getBounds(),
+                {
+                    checkZoomRange: true,
+                    zoomMargin: 35
+                }
+            ).then(this.checkZoom_.bind(this));
+        }
     };
 
     /**
@@ -630,7 +636,6 @@ goog.scope(function() {
     Map.prototype.getCurrentPlacemarkCollection_ = function(data) {
         var that = this,
             result = [];
-
         data.forEach(function(item) {
             result.push.apply(
                 result,
@@ -739,7 +744,6 @@ goog.scope(function() {
         return result;
     };
 
-
     /**
      * Setter for current presets
      * @param {string} type
@@ -756,7 +760,6 @@ goog.scope(function() {
         this.currentPlacemarkPresetOptions_ = presets;
     };
 
-
     /**
      * Map initialization
      * @private
@@ -766,8 +769,13 @@ goog.scope(function() {
             this.getElement(),
             this.getMapParams_()
         );
+
+        if (this.config_.enableScrollZoom) {
+            this.ymaps_.behaviors.enable('scrollZoom');
+        } else {
+            this.ymaps_.behaviors.disable('scrollZoom');
+        }
         this.ymaps_.setZoom(Math.floor(this.ymaps_.getZoom()));
-        this.ymaps_.behaviors.enable('scrollZoom');
         this.ymaps_.controls.add(
             new ymaps.control.ZoomControl({
                 options: {
@@ -780,7 +788,6 @@ goog.scope(function() {
             Map.ZOOM
         );
     };
-
 
     /**
      * Getter for map parameters
