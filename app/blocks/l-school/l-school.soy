@@ -450,15 +450,18 @@
     <div class="l-school__section l-school__section_map">
         {call sm.bMap.Template.map}
             {param params: [
-                'data': [[
-                    'id': $params.data.id,
-                    'addresses': $params.data.addresses,
-                    'name': $params.data.schoolName,
-                    'description': $params.data.schoolDescr,
-                    'totalScore': $params.data.totalScore
-                ]],
+                'data': [
+                    [
+                        'id': $params.data.id,
+                        'addresses': $params.data.addresses,
+                        'name': $params.data.schoolName,
+                        'description': $params.data.schoolDescr,
+                        'totalScore': $params.data.totalScore
+                    ]
+                ],
                 'config': [
-                    'sidePins': true
+                    'sidePins': true,
+                    'enableScrollZoom': true
                 ]
             ] /}
         {/call}

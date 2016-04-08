@@ -155,10 +155,7 @@
  *             name: string,
  *             stages: list<string>
  *         }]
- *     }],
- *     config: {
- *         sidePins: boolean
- *     }
+ *     }]
  * }}
  */
 {template .map autoescape="strict" kind="html"}
@@ -170,7 +167,8 @@
             {param params: [
                 'data': $params?.data,
                 'config': [
-                    'sidePins': false
+                    'sidePins': false,
+                    'enableScrollZoom': false
                 ]
             ]/}
         {/call}

@@ -630,7 +630,6 @@ goog.scope(function() {
     Map.prototype.getCurrentPlacemarkCollection_ = function(data) {
         var that = this,
             result = [];
-
         data.forEach(function(item) {
             result.push.apply(
                 result,
@@ -739,7 +738,6 @@ goog.scope(function() {
         return result;
     };
 
-
     /**
      * Setter for current presets
      * @param {string} type
@@ -756,7 +754,6 @@ goog.scope(function() {
         this.currentPlacemarkPresetOptions_ = presets;
     };
 
-
     /**
      * Map initialization
      * @private
@@ -766,8 +763,13 @@ goog.scope(function() {
             this.getElement(),
             this.getMapParams_()
         );
+
+        if (this.config_.enableScrollZoom) {
+            this.ymaps_.behaviors.enable('scrollZoom');
+        } else {
+            this.ymaps_.behaviors.disable('scrollZoom');
+        }
         this.ymaps_.setZoom(Math.floor(this.ymaps_.getZoom()));
-        this.ymaps_.behaviors.enable('scrollZoom');
         this.ymaps_.controls.add(
             new ymaps.control.ZoomControl({
                 options: {
@@ -780,7 +782,6 @@ goog.scope(function() {
             Map.ZOOM
         );
     };
-
 
     /**
      * Getter for map parameters
