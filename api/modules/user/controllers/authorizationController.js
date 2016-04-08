@@ -30,9 +30,10 @@ exports.authorize = async(function(req, res) {
             });
         }));
 
-        result = soy.render('sm.bAuthorizationModal.Template.modal');
+        result = soy.render('sm.bAuthorizationModal.Template.complete');
     } catch (error) {
-        result = error.message;
+        console.log(error); // TODO: change to logger
+        result = soy.render('sm.bAuthorizationModal.Template.error');
     } finally {
         res.header('Content-Type', 'text/html; charset=utf-8');
         res.header('Access-Control-Allow-Origin', '*');
