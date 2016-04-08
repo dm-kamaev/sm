@@ -715,9 +715,9 @@ goog.scope(function() {
     Search.prototype.onTextChange_ = function(event, data) {
         this.setData({
             metroId: null,
-            areaId: null,
-            text: data.text
+            areaId: null
         });
+        console.log(data.text);
         this.dispatchEvent(Search.Event.TEXT_CHANGE);
     };
 
