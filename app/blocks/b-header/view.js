@@ -107,8 +107,6 @@ goog.scope(function() {
         this.dom.search = this.getElementByClass(
             View.CssClass.SEARCH
         );
-
-        console.log(this.dom);
     };
 
     /**
