@@ -44,9 +44,6 @@ const morgan = require('morgan');
 const expressLogStream = require('./app/components/logger/expressLogStream');
 const logger = require('./app/components/logger/logger').getLogger('app');
 
-logger.info({ message: 'test' });
-
-
 app.set('views', path.join(__dirname, 'api-debug'));
 
 // template engines
