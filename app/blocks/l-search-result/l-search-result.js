@@ -71,7 +71,7 @@ sm.lSearchResult.SearchResult = function(opt_params) {
      */
     this.searchParams_ = {
         name: null,
-        metrId: null,
+        metroId: null,
         areaId: null,
         schoolType: [],
         classes: [],
@@ -385,7 +385,7 @@ goog.scope(function() {
 
         this.instances_.filters.reset();
 
-        this.minifiedSearch_();
+        this.search_();
     };
 
     /**
@@ -393,7 +393,7 @@ goog.scope(function() {
      * @private
      */
     SearchResult.prototype.onSearchSubmit_ = function() {
-        this.minifiedSearch_();
+        this.search_();
     };
 
     /**
@@ -401,7 +401,7 @@ goog.scope(function() {
      * @private
      */
     SearchResult.prototype.onFiltersSubmit_ = function() {
-        this.minifiedSearch_();
+        this.search_();
 
         this.instances_.filters.collapse();
         window.scrollTo(0, 0);
@@ -429,7 +429,7 @@ goog.scope(function() {
      * Update search params, send query to api, update url
      * @private
      */
-    SearchResult.prototype.minifiedSearch_ = function() {
+    SearchResult.prototype.search_ = function() {
         var params = {
             page: 0,
             sortType: 0
