@@ -9,10 +9,10 @@
  *          address: list<[
  *              title: string,
  *              description: string,
- *              metroStation: list<[
+ *              metroStation: [
  *                  id: number,
  *                  name: string
- *              ]>,
+ *              ],
  *              stage: string
  *          ]>,
  *          phones: list<string>
@@ -46,10 +46,10 @@
  *            addresses: list<[
  *                title: string,
  *                description: string,
- *                metroStation: list<[
+ *                metroStation:[
  *                    id: number,
  *                    name: string
- *                ]>
+ *                ]
  *            ]>
  *        ]>,
  *        phones: list<string>
@@ -57,53 +57,127 @@
  * }
  */
 {template .content autoescape="strict" kind="html"}
-
     <ul class="b-data-block__content">
         /*output addresses*/
         {foreach $stage in $params.content.stages}
-            <li class="b-data-block__item b-data-block__contact">
-                <div class="b-data-block__item-content">
-                    <div class="b-data-block__item-content-left">
-                        {$stage.name}
-                    </div>
-                    <div class="b-data-block__item-content-right">
-                        {foreach $address in $stage.addresses}
-                            <div class="b-data-block__address">
-                                <div class="b-data-block__item-content-address">
-                                    {$address.description}
-                                </div>
-
-                                {if $address.metroStation}
-                                    <div class="b-data-block__item-content-metroStation">
-                                        <div class="b-data-block__metro-icon g-icon_img_metro"></div>
-                                        {$address.metroStation.name}
-                                    </div>
-                                {/if}
-                            </div>
-                        {/foreach}
-                    </div>
-                    {if not isLast($stage)}
-                        <div class="b-data-block__line b-data-block__line_horisontal-line"></div>
-                    {/if}
-                </div>
-            </li>
+            {call .stage_}
+                {param params: [
+                    'data': $stage
+                ] /}
+            {/call}
         {/foreach}
 
         /*output phones*/
         {if length($params.content.phones) > 0}
-            <li class="b-data-block__item-phones">
-                <div class="b-data-block__item-phones-caption">
-                    Телефоны
-                </div>
-                {foreach $phone in $params.content.phones}
-                    {$phone}
-
-                    {if not isLast($phone)}
-                        ,{sp}
-                    {/if}
-                {/foreach}
-            </li>
+            {call .phones_}
+                {param params: [
+                    'data': [
+                        'phones': $params.content.phones
+                    ]
+                ] /}
+            {/call}
         {/if}
     </ul>
+{/template}
 
+/**
+ * One stage template
+ * Create stage element and iterates over their addresses
+ * and create addresses element for each address
+ * @param params [
+ *     data: [
+ *         name: string,
+ *         addresses: list<[
+ *             description: string,
+ *             metroStation: [
+ *                 id: number,
+ *                 name: string
+ *             ]
+ *         ]>
+ *     ]
+ * ]
+ */
+{template .stage_}
+    <li class="b-data-block__item b-data-block__contact">
+        <div class="b-data-block__item-content">
+            <div class="b-data-block__item-content-left">
+                {$params.data.name}
+            </div>
+            <div class="b-data-block__item-content-right">
+                {foreach $address in $params.data.addresses}
+                    {call .address_}
+                        {param params: [
+                            'data': [
+                                'description': $address?.description,
+                                'metroStation': $address?.metroStation?.name
+                            ]
+                        ] /}
+                    {/call}
+                {/foreach}
+            </div>
+
+            <div class="b-data-block__line
+                b-data-block__line_horisontal-line">
+            </div>
+        </div>
+    </li>
+{/template}
+
+/**
+ * Create address element
+ * @param params [
+ *     data: [
+ *         description: ?string,
+ *         metroStation: ?string
+ *     ]
+ * ]
+ */
+{template .address_}
+    <div class="b-data-block__address">
+        <div class="b-data-block__item-content-address">
+            {$params.data.description}
+        </div>
+
+        {if $params.data.metroStation}
+            <div class="b-data-block__item-content-metroStation">
+                {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+                    {param params: [
+                        'type': 'icon',
+                        'renderParams': [
+                            'data': [
+                                'type': 'metro'
+                            ],
+                            'config': [
+                                'customClasses': ['b-data-block__metro-icon']
+                            ]
+                        ]
+                    ]/}
+                {/call}
+                {$params.data.metroStation}
+            </div>
+        {/if}
+    </div>
+{/template}
+
+/**
+ * Creates phones element
+ * @param params [
+ *     data: [
+ *         phones: list<string>
+ *     ]
+ * ]
+ */
+{template .phones_}
+    <li class="b-data-block__item-phones">
+        <div class="b-data-block__item-phones-caption">
+            Телефоны
+        </div>
+        {foreach $phone in $params.data.phones}
+            {$phone}
+
+            {if not isLast($phone)}
+                ,{sp}
+            {/if}
+        {/foreach}
+    </li>
 {/template}
