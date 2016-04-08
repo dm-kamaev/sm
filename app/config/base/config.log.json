@@ -18,7 +18,7 @@
             "level": 50,
             "formatter": "details",
             "class": "intel/handlers/file",
-            "file": "log/schools.log"
+            "file": "runtime/schools.log"
         }
     },
     "loggers": {
