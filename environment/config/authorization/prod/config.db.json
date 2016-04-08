@@ -2,7 +2,6 @@
     "host": "mel.fm",
     "port": "3306",
     "username": "cityuser",
-    "password": "OJ0ouwie",
     "database": "db1",
     "dialect": "mysql"
 }
