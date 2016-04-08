@@ -227,7 +227,9 @@ goog.scope(function() {
      * @public
      */
     Map.prototype.clear = function() {
-        this.objectManager_.removeAll();
+        if (this.objectManager_) {
+            this.objectManager_.removeAll();
+        }
     };
 
     /**
