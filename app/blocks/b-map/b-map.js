@@ -250,16 +250,18 @@ goog.scope(function() {
      * @private
      */
     Map.prototype.addPlacemarks_ = function(mapSchools) {
-        this.objectManager_.add(
-            this.getCurrentPlacemarkCollection_(mapSchools)
-        );
+        if (this.objectManager_) {
+            this.objectManager_.add(
+                this.getCurrentPlacemarkCollection_(mapSchools)
+            );
 
-        // click event handling
-        this.objectManager_.objects.events.add(
-            'click',
-            this.onPlacemarkClick_,
-            this
-        );
+            // click event handling
+            this.objectManager_.objects.events.add(
+                'click',
+                this.onPlacemarkClick_,
+                this
+            );
+        }
     };
 
     /**
@@ -267,13 +269,15 @@ goog.scope(function() {
      * @private
      */
     Map.prototype.centre_ = function() {
-        this.ymaps_.setBounds(
-            this.objectManager_.getBounds(),
-            {
-                checkZoomRange: true,
-                zoomMargin: 35
-            }
-        ).then(this.checkZoom_.bind(this));
+        if (this.objectManager_) {
+            this.ymaps_.setBounds(
+                this.objectManager_.getBounds(),
+                {
+                    checkZoomRange: true,
+                    zoomMargin: 35
+                }
+            ).then(this.checkZoom_.bind(this));
+        }
     };
 
     /**
