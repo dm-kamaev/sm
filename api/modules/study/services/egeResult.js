@@ -1,9 +1,9 @@
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var colors = require('colors');
-var models = require.main.require('./app/components/models').all;
-var services = require.main.require('./app/components/services').all;
-const common = require.main.require('./console/common');
+var models = require('../../../../app/components/models').all;
+var services = require('../../../../app/components/services').all;
+const common = require('../../../../console/common');
 
 exports.name = 'egeResult';
 

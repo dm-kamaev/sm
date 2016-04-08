@@ -1,6 +1,6 @@
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
-var sequelize = require.main.require('./app/components/db');
+var sequelize = require('../../app/components/db');
 /**
  * @deprecated
  */

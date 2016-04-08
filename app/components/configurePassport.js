@@ -3,7 +3,7 @@ var passport = require('passport');
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 
-var services = require.main.require('./app/components/services').all;
+var services = require('./services').all;
 
 module.exports = function() {
     passport.serializeUser(function(user, done) {

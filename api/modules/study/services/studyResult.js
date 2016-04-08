@@ -1,8 +1,8 @@
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
-var models = require.main.require('./app/components/models').all;
-var services = require.main.require('./app/components/services').all;
-var sequelize = require.main.require('./app/components/db');
+var models = require('../../../../app/components/models').all;
+var services = require('../../../../app/components/services').all;
+var sequelize = require('../../../../app/components/db');
 
 exports.name = 'studyResult';
 
@@ -38,7 +38,7 @@ exports.setSchoolOlimp = async((school, olimpResults) => {
         var subject = await(services.subject.getOrCreate(olimp.subject)),
             type = OLIMP_TYPES.find(tp => tp.name == olimp.type),
             status = olimp.status || null;
-        if (!type) 
+        if (!type)
             throw new Error('Undefined olimp type: '+ olimp.type);
         await(models.OlimpResult.create({
             schoolId: school.id,
@@ -62,14 +62,14 @@ exports.getAllGia = async(() => {
  * TODO: count avg for city
  */
 exports.getGiaAverage = async(function (cityId) {
-    var sqlString = 'select subject_id, AVG(result) ' + 
+    var sqlString = 'select subject_id, AVG(result) ' +
         'from gia_result group by subject_id';
     var sqlRes = await(sequelize.query(
-            sqlString, 
+            sqlString,
             { type: sequelize.QueryTypes.SELECT}
         )
     );
-    return sqlRes.map(res => { 
+    return sqlRes.map(res => {
         return {
             subjectId: res.subject_id,
             result: res.avg,
@@ -85,14 +85,14 @@ exports.getGiaAverage = async(function (cityId) {
  * TODO: count avg for city
  */
 exports.getEgeAverage = async(function(cityId) {
-    var sqlString = 'select subject_id, year, AVG(result) ' + 
+    var sqlString = 'select subject_id, year, AVG(result) ' +
         'from ege_result group by year, subject_id';
     var sqlRes = await(sequelize.query(
-            sqlString, 
+            sqlString,
             { type: sequelize.QueryTypes.SELECT}
         )
     );
-    return sqlRes.map(res => { 
+    return sqlRes.map(res => {
         return {
             subjectId: res.subject_id,
             year: res.year,
@@ -188,5 +188,5 @@ exports.createGia = async((gia, opt_option) => {
  * } ege
  */
 exports.createEge = async(function(ege){
-    await (models.EgeResult.create(ege));   
+    await (models.EgeResult.create(ege));
 });

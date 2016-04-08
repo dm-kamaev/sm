@@ -1,3 +1,3 @@
-var models = require.main.require('./app/components/models');
+var models = require('../../../../app/components/models');
 
 module.exports = models.initModels(__dirname);

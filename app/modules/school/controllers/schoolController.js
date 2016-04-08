@@ -1,9 +1,12 @@
-const soy = require.main.require('./app/components/soy'),
-    services = require.main.require('./app/components/services').all,
-    schoolView = require.main.require('./api/modules/school/views/schoolView'),
-    searchView = require('../../../../api/modules/school/views/searchView'),
-    errors = require('../lib/errors'),
-    analyticsId = require('../../../config').config.analyticsId;
+const errors = require('../lib/errors');
+const soy = require('../../../components/soy');
+const services = require('../../../components/services').all;
+const schoolView = require('../../../../api/modules/school/views/schoolView');
+const searchView = require('../../../../api/modules/school/views/searchView');
+const urlConfig = require('../../../config').config.url;
+const analyticsId = require('../../../config').config.analyticsId;
+
+const AUTH_URL = urlConfig.protocol + '://' + urlConfig.host + ':3001/oauth';
 
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
