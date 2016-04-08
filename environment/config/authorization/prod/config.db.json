@@ -1,5 +1,5 @@
 {
-    "host": "median-mel1.qa.lan",
+    "host": "mel.fm",
     "port": "3306",
     "username": "cityuser",
     "database": "db1",

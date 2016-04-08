@@ -1,10 +1,8 @@
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
-
-var logger = require.main.require('./app/components/logger/logger').getLogger('app');
-
-var models = require.main.require('./app/components/models').all;
-var services = require.main.require('./app/components/services').all;
+var logger =require('../../../../app/components/logger/logger').getLogger('app');
+var models = require('../../../../app/components/models').all;
+var services = require('../../../../app/components/services').all;
 
 exports.name = 'comment';
 

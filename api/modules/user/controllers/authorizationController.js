@@ -2,7 +2,7 @@ var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 
 var soy = require('../../../../app/components/soy');
-var services = require.main.require('./app/components/services').all;
+var services = require('../../../../app/components/services').all;
 
 /**
  * @api {get} /authorize/:type
@@ -30,9 +30,10 @@ exports.authorize = async(function(req, res) {
             });
         }));
 
-        result = soy.render('sm.bAuthorizationModal.Template.modal');
+        result = soy.render('sm.bAuthorizationModal.Template.complete');
     } catch (error) {
-        result = error.message;
+        console.log(error); // TODO: change to logger
+        result = soy.render('sm.bAuthorizationModal.Template.error');
     } finally {
         res.header('Content-Type', 'text/html; charset=utf-8');
         res.header('Access-Control-Allow-Origin', '*');

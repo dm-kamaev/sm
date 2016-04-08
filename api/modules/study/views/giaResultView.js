@@ -1,9 +1,9 @@
-const cityResultView = require.main.require(
-    './api/modules/study/views/cityResultView.js'
+const cityResultView = require(
+    './cityResultView.js'
 );
 
-const subjectView = require.main.require(
-    './api/modules/study/views/subjectView.js'
+const subjectView = require(
+    './subjectView.js'
 );
 
 /**

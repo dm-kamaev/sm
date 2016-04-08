@@ -1,8 +1,8 @@
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
-var sequelizeInclude = require.main.require('./api/components/sequelizeInclude');
-var models = require.main.require('./app/components/models').all;
-var services = require.main.require('./app/components/services').all;
+var sequelizeInclude = require('../../../components/sequelizeInclude');
+var models = require('../../../../app/components/models').all;
+var services = require('../../../../app/components/services').all;
 var sequelize = require('../../../../app/components/db');
 exports.name = 'address';
 

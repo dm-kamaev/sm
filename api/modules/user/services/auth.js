@@ -2,6 +2,7 @@ const async = require('asyncawait/async');
 const await = require('asyncawait/await');
 const request = require('request');
 const lodash = require('lodash');
+const axios = require('axios');
 const urlConfig = require('../../../../app/config').config.url;
 
 
@@ -41,11 +42,7 @@ AuthService.SOCIAL_AUTH_URL = urlConfig.protocol +
 AuthService.prototype.getSocialLink = function(socialType) {
     var url = AuthService.SOCIAL_AUTH_URL + socialType;
 
-    return new Promise(function(resolve, reject) {
-        request(url, function(error, response, body) {
-            resolve(body);
-        });
-    });
+    return axios.get(url);
 };
 
 /**
@@ -61,7 +58,9 @@ AuthService.prototype.getSocialLinks = async(function() {
             AuthService.SocialType.FB
         ],
         that = this,
-        socialLinks = await(socialTypes.map(type => that.getSocialLink(type)));
+        responses = await(socialTypes.map(type =>
+                that.getSocialLink(type))),
+        socialLinks = responses.map(response => response.data.url);
 
     return {
         vk: socialLinks[0],

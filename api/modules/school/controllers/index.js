@@ -1,6 +1,5 @@
 var express = require('express'),
     router  = express.Router();
-
 var schoolController = require('./schoolController');
 
 router.get('/school', schoolController.list);
