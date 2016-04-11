@@ -41,7 +41,8 @@
  *        customClasses: ?string,
  *        target: ?string,
  *        theme: ?string,
- *        size: ?string
+ *        size: ?string,
+ *        font: ?string
  *    ]
  * }
  */
@@ -57,6 +58,9 @@
         {/if}
         {if $params?.config?.size}
             {sp}b-link_{$params?.config?.size}
+        {/if}
+        {if $params?.config?.font}
+            {sp}b-link_font_{$params?.config?.font}
         {/if}
     {/let}
 

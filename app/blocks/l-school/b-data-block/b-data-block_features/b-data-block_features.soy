@@ -26,17 +26,118 @@
 {/template}
 
 /**
+ * Block init
+ * @param params {
+ *     header: ?string,
+ *     headerType: ?number,
+ *     modifier: ?string
+ *     content: ?list<string>
+ * }
+ * @override
+ */
+{template .init autoescape="strict" kind="html"}
+    <div class="b-data-block
+        {if $params.modifier}
+            {sp}{$params.modifier}
+        {/if}
+    ">
+
+        //Header section
+        {if $params.header}
+            {call .header}
+                {param params: [
+                    'header': $params.header
+                ] /}
+            {/call}
+        {/if}
+
+        //Content  section
+        {call .content data="all" /}
+    </div>
+{/template}
+
+/**
  * Content item
  * @param params {
  *     content: ?list<string>
  * }
+ * @override
  */
 {template .content autoescape="strict" kind="html"}
+    {if $params.content and length($params.content)}
+        {call .list_ data="all" /}
+    {else}
+        {call .text_ /}
+    {/if}
+{/template}
+
+/**
+ * list template
+ * @param params {
+ *     content: ?list<string>
+ * }
+ */
+{template .list_ autoescape="strict" kind="html"}
     <ul class="b-data-block__content">
-    {foreach $feature in $params.content}
-        <li class="b-data-block__item">
-            <div class="b-data-block__dash">—</div>
-            <div class="b-data-block__text">{$feature}</div>
-        </li>
-    {/foreach}
+        {foreach $feature in $params.content}
+            <li class="b-data-block__item">
+                <div class="b-data-block__dash">—</div>
+                <div class="b-data-block__text">{$feature}</div>
+            </li>
+        {/foreach}
+    </ul>
+{/template}
+
+/**
+ * text template
+ */
+{template .text_ autoescape="strict" kind="html"}
+    {let $linkFeedback kind="html"}
+        {call .link_}
+            {param params: [
+                'name': 'расскажите о своём опыте',
+                'customClass': 'link-feedback'
+            ]/}
+        {/call}
+    {/let}
+
+    {let $linkInaccuracy kind="html"}
+        {call .link_}
+            {param params: [
+                'name': 'форму обратной связи',
+                'customClass': 'link_inaccuracy'
+            ]/}
+        {/call}
+    {/let}
+
+    <div class="b-data-block__content">
+        <div class="b-data-block__item">
+            К&nbsp;сожалению, пока мы&nbsp;знаем об&nbsp;этой школе
+            не&nbsp;очень много. Если вы&nbsp;учились здесь или здесь
+            учатся ваши дети, пожалуйста, {$linkFeedback} в&nbsp;комментариях
+            или дополните наши данные через {$linkInaccuracy}
+        </div>
+    </div>
+{/template}
+
+/**
+ * list template
+ * @param params {
+ *     name: ?string,
+ *     customClass: ?string
+ * }
+ */
+{template .link_ autoescape="strict" kind="html"}
+    <span class="b-data-block__{$params?.customClass}">
+        {call sm.bLink.Template.base}
+            {param params: [
+                'data': [
+                    'name': $params?.name
+                ],
+                'config': [
+                    'font': 'default'
+                ]
+            ]/}
+        {/call}
+    </span>
 {/template}

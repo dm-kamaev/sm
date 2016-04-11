@@ -6,12 +6,18 @@
     text-decoration: none;
     cursor: pointer;
 
-    font: 13px Arial, sans-serif;
+    font-family: Arial, sans-serif;
+    font-size: 13px;
     line-height: 18px;
 }
 
 .b-link_attention {
     color: #ff0000;
+}
+
+.b-link_font_default {
+    font-family: inherit;
+    font-size: inherit;
 }
 
 .b-link:hover {

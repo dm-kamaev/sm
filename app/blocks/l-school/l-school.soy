@@ -507,16 +507,14 @@
  * }}
  */
 {template .features_ autoescape="strict" kind="html"}
-    {if $params.data.features and length($params.data.features) > 0}
         <div class="l-school__section l-school__section_features">
             {call sm.lSchool.bDataBlock.TemplateFeatures.base}
                 {param params: [
-                    'header': 'Особенности',
+                    'header': 'О школе',
                     'content': $params.data.features
                 ]/}
             {/call}
         </div>
-    {/if}
 {/template}
 
 
