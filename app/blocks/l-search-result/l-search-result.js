@@ -153,10 +153,6 @@ goog.scope(function() {
     SearchResult.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
-        /** Init params **/
-        this.initParams_();
-        /** end init params **/
-
         /** get dom elements **/
         this.initElements_(element);
         /** end get dom elements **/
@@ -168,6 +164,10 @@ goog.scope(function() {
         this.initSearch_();
         this.initMap_();
         /** end init child instances **/
+
+        /** Init params **/
+        this.initParams_();
+        /** end init params **/
     };
 
     /**
@@ -219,7 +219,9 @@ goog.scope(function() {
             method: dataParams.method || 'GET'
         };
 
-        this.searchParams_ = dataParams.searchParams;
+        this.instances_.search.setData(dataParams.searchParams);
+
+        this.searchParams_ = this.getSearchParams_();
     };
 
     /**
@@ -373,6 +375,24 @@ goog.scope(function() {
     };
 
     /**
+     * Returns search params
+     * @param {Ojbect} opt_param
+     * @return {Object}
+     * @private
+     */
+    SearchResult.prototype.getSearchParams_ = function(opt_param) {
+        var params = {
+            page: 0,
+            sortType: 0
+        };
+
+        goog.object.extend(params, this.getParamsFromFilters_());
+        goog.object.extend(params, this.getParamsFromSearch_());
+
+        return params;
+    };
+
+    /**
      * Header submit handler
      * @param {Object} event
      * @private
@@ -404,7 +424,6 @@ goog.scope(function() {
         this.search_();
 
         this.instances_.filters.collapse();
-        window.scrollTo(0, 0);
     };
 
     /**
@@ -430,14 +449,7 @@ goog.scope(function() {
      * @private
      */
     SearchResult.prototype.search_ = function() {
-        var params = {
-            page: 0,
-            sortType: 0
-        };
-
-        goog.object.extend(params, this.getParamsFromFilters_());
-        goog.object.extend(params, this.getParamsFromSearch_());
-        this.updateSearchParams_(params);
+        this.updateSearchParams_(this.getSearchParams_());
 
         this.updateUrl_();
 
