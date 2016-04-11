@@ -1,4 +1,4 @@
-var config = require('../../config/config.log');
+var config = require('../../config').log;
 var intel = require('intel');
 
 intel.config(config);
