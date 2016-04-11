@@ -404,7 +404,6 @@ goog.scope(function() {
         this.search_();
 
         this.instances_.filters.collapse();
-        window.scrollTo(0, 0);
     };
 
     /**
