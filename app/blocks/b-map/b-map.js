@@ -235,12 +235,15 @@ goog.scope(function() {
     /**
      * Adds new placemarks
      * @param {array<object>=} opt_mapSchools
+     * @param {array<number>=} opt_centerCoords
      * @public
      */
-    Map.prototype.addSchoolsPlacemarks = function(opt_mapSchools) {
+    Map.prototype.addSchoolsPlacemarks = function(opt_mapSchools,
+        opt_centerCoords) {
+
         if (opt_mapSchools) {
             this.addPlacemarks_(opt_mapSchools);
-            this.centre_();
+            this.centre_(opt_centerCoords);
         }
     };
 
@@ -265,10 +268,40 @@ goog.scope(function() {
     };
 
     /**
+     * Center map
+     * @param {array<number>} opt_centerCoords
+     * @private
+     */
+    Map.prototype.centre_ = function(opt_centerCoords) {
+        if (opt_centerCoords) {
+            this.setMapCenterCoords_(opt_centerCoords);
+        }
+        else if (this.config_.centerCoords) {
+            this.setMapCenterCoords_(this.config_.centerCoords);
+            this.config_.centerCoords = null;
+        }
+        else {
+            this.setMapCenterDefault_();
+        }
+    };
+
+    /**
+     * Center map in accordance of coordinates
+     * @param {array<number>} coords
+     * @private
+     */
+    Map.prototype.setMapCenterCoords_ = function(coords) {
+        this.ymaps_.setCenter(
+            [coords[1], coords[0]], 15, {
+            checkZoomRange: true
+        });
+    };
+
+    /**
      * Center map in accordance of default placemarks
      * @private
      */
-    Map.prototype.centre_ = function() {
+    Map.prototype.setMapCenterDefault_ = function() {
         if (this.objectManager_) {
             this.ymaps_.setBounds(
                 this.objectManager_.getBounds(),

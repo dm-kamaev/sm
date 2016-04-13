@@ -596,7 +596,7 @@ goog.scope(function() {
      * @private
      */
     SearchResult.prototype.send_ = function() {
-    return jQuery.ajax({
+        return jQuery.ajax({
             url: this.requestParams_.url,
             type: this.requestParams_.method,
             data: this.searchParams_
@@ -638,7 +638,6 @@ goog.scope(function() {
         } else {
             this.hideMap_();
         }
-
         this.updateList_(data);
     };
 
@@ -670,8 +669,32 @@ goog.scope(function() {
      * @private
      */
     SearchResult.prototype.updateMap_ = function(mapSchools) {
+        var centerCoords = this.getMapCenterCoords_();
+
         this.instances_.map.clear();
-        this.instances_.map.addSchoolsPlacemarks(mapSchools);
+        this.instances_.map.addSchoolsPlacemarks(mapSchools, centerCoords);
+    };
+
+    /**
+     * Get map centre coordinates
+     * @return {Array}
+     * @private
+     */
+    SearchResult.prototype.getMapCenterCoords_ = function() {
+        var centerCoords;
+
+        if (this.instances_.search.getMetroCoords() &&
+            this.instances_.search.getMetroCoords().length) {
+
+            centerCoords = this.instances_.search.getMetroCoords();
+        }
+        else if (this.instances_.search.getAreaCoords() &&
+            this.instances_.search.getAreaCoords().length) {
+
+            centerCoords = this.instances_.search.getAreaCoords();
+        }
+        this.instances_.search.reset();
+        return centerCoords;
     };
 
     /**

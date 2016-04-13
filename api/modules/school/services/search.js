@@ -373,6 +373,7 @@ exports.getSchoolTypesByAliases = function(aliases) {
  * @param {?number} params.page
  */
 exports.initSearchParams = async(function(params) {
+
     /** Transform aliases in filters into ids **/
     var filterTypes = searchTypeEnum.toCamelCaseArray();
     var ids = filterTypes.map(filterType => {
@@ -382,6 +383,33 @@ exports.initSearchParams = async(function(params) {
     var filters = lodash.zipObject(filterTypes, ids);
 
     return searchView.params(params, filters);
+});
+
+/**
+ * Get center coords
+ * @param {Object} params
+ * @param {?string} params.name
+ * @param {?Array.<number>} params.classes
+ * @param {?Array.<string>} params.schoolType
+ * @param {?Array.<string>} params.ege
+ * @param {?Array.<string>} params.gia
+ * @param {?Array.<string>} params.olimp
+ * @param {?number} params.metroId
+ * @param {?number} params.areaId
+ * @param {?number} params.sortType
+ * @param {?number} params.page
+ */
+exports.getCenterCoordsMap = async(function(params) {
+    var centerCoords;
+
+    if (params.metroId) {
+        centerCoords = services.search.getCoords('Metro', params.metroId);
+    }
+    // else if (params.areaId) {
+    //     centerCoords = services.search.getCoords('Area', params.areaId);
+    // }
+
+    return centerCoords;
 });
 
 /**
@@ -461,3 +489,18 @@ exports.deleteSearchData = async(function(searh_data_id) {
     var instance = await(exports.getById(searh_data_id));
     instance.destroy();
 });
+
+
+/**
+ * Get coords metro or area
+ * @param {string} modelsName (Metro or Area)
+ * @param {number} searh_data_id
+ * @return {Array} coords metro or area
+ */
+exports.getCoords = function(modelsName, searh_data_id) {
+    var result = await(models[modelsName].findOne({
+        attributes: ['coords'],
+        where: {id: searh_data_id}
+    }));
+    return result.coords;
+};

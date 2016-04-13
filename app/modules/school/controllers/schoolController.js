@@ -40,6 +40,8 @@ exports.list = async (function(req, res) {
     var data = schoolView.list(results[0]);
     var filters = searchView.filters(results[1], searchParams);
 
+    var centerCoordsMap = await(services.search.getCenterCoordsMap(searchParams));
+
     var params = {
         params: {
             data: {
@@ -54,6 +56,7 @@ exports.list = async (function(req, res) {
                 searchParams: searchParams
             },
             mapSchools: data.mapSchools,
+            centerCoordsMap: centerCoordsMap,
             config: {
                 year: new Date().getFullYear(),
                 analyticsId: analyticsId

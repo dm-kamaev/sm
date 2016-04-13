@@ -32,7 +32,7 @@
  *     searchSettings: {
  *         url: string,
  *         method: string,
- *         data: {
+ *         searchParams: {
  *             name: ?string,
  *             metroId: ?number,
  *             areaId: ?number,
@@ -58,6 +58,7 @@
  *             stages: list<string>
  *         }]
  *     }],
+ *     centerCoordsMap: ?list<number>,
  *     config: {
  *         staticVersion: ?string,
  *         analyticsId: ?string
@@ -114,14 +115,17 @@
             {param params: [
                 'data': $params.mapSchools,
                 'config': [
-                    'sidePins': false
+                    'sidePins': false,
+                    'centerCoords': $params.centerCoordsMap
                 ]
             ]/}
         {/call}
+
         <div class="l-search-result__content">
             {call .listHeader_ data="all"}
                 {param clone: true /}
             {/call}
+
             {call .leftMenu_ data="all" /}
 
             <div class="l-search-result__results-section">
@@ -155,7 +159,10 @@
  *             name: string,
  *             stages: list<string>
  *         }]
- *     }]
+ *     }],
+ *     config: ?{
+ *         centerCoords: ?list<number>
+ *    }
  * }}
  */
 {template .map autoescape="strict" kind="html"}
@@ -168,7 +175,8 @@
                 'data': $params?.data,
                 'config': [
                     'sidePins': false,
-                    'enableScrollZoom': false
+                    'enableScrollZoom': false,
+                    'centerCoords': $params.config?.centerCoords
                 ]
             ]/}
         {/call}

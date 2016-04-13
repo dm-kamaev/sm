@@ -722,7 +722,7 @@ schoolView.currentSchoolsMapPoints = function(schools) {
  * @return {array<object>}
  */
 schoolView.dataLinks = function() {
-    searchUrl = '/search?name=';
+    var searchUrl = '/search?name=';
 
     return [
         {
@@ -733,7 +733,7 @@ schoolView.dataLinks = function() {
         {
           name: 'Тургеневская',
           url: searchUrl +
-            encodeURIComponent('Тургеневская')
+            encodeURIComponent('Тургеневская') + '&metroId=122'
         },
         {
           name: 'Лицей',
