@@ -3,7 +3,7 @@ const await = require('asyncawait/await');
 const request = require('request');
 const lodash = require('lodash');
 const axios = require('axios');
-const urlConfig = require('../../../../app/config').config.url;
+const config = require('../../../../app/config').config;
 
 
 /**
@@ -30,10 +30,7 @@ AuthService.SocialType = {
  * Social auth url (needed for getting social link)
  * @type {string}
  */
-AuthService.SOCIAL_AUTH_URL = urlConfig.protocol +
-                       '://' + urlConfig.host +
-                       ':3001/oauth/?type=';
-
+AuthService.SOCIAL_AUTH_URL = config.authApi + '/oauth/?type=';
 /**
  * Getter for social link
  * @param  {string} socialType - ['vk', 'fb', 'gp']
@@ -60,7 +57,7 @@ AuthService.prototype.getSocialLinks = async(function() {
         that = this,
         responses = await(socialTypes.map(type =>
                 that.getSocialLink(type))),
-        socialLinks = responses.map(response => response.data.url);
+        socialLinks = responses.map(response => response.headers.location);
 
     return {
         vk: socialLinks[0],

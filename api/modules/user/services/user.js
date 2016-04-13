@@ -1,13 +1,14 @@
-var async = require('asyncawait/async');
-var await = require('asyncawait/await');
-var querystring = require('querystring');
-var axios = require('axios');
+var async = require('asyncawait/async'),
+    await = require('asyncawait/await'),
+    querystring = require('querystring'),
+    axios = require('axios');
 
-const url = require('../../../../app/config').config.url;
+const config = require('../../../../app/config').config;
 
-const URL = url.protocol + '://' + url.host + ':3001';
-const AUTH_URL = URL + '/oauth';
-const USER_URL = URL + '/user/';
+const USER_API = config.userApi,
+      GET_USER = '/user/',
+      AUTH_API = config.authApi,
+      POST_AUTH = '/oauth/';
 
 var service = {
     name: 'user'
@@ -26,11 +27,12 @@ service.getUserByCode = async(function(data) {
     });
 
     var userUrlResponse = await(axios.post(
-        AUTH_URL,
-        data
-    ));
+            AUTH_API + POST_AUTH,
+            data
+        )),
+        userUrl = userUrlResponse.headers.location;
 
-    var userDataResponse = await(axios.get(URL + userUrlResponse.data.path));
+    var userDataResponse = await(axios.get(userUrl));
 
     return userDataResponse.data;
 });
@@ -40,7 +42,7 @@ service.getUserByCode = async(function(data) {
  * @return {object}
  */
 service.getUserById = async(function(id) {
-    return await(axios.get(USER_URL + id)).data;
+    return await(axios.get(USER_API + GET_USER + id)).data;
 });
 
 module.exports = service;
