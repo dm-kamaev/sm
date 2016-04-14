@@ -4,6 +4,7 @@ goog.require('goog.dom.classes');
 goog.require('goog.events');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
+goog.require('sm.bDataBlock.DataBlockFeatures');
 goog.require('sm.bMap.Map');
 goog.require('sm.bRating.Rating');
 goog.require('sm.bScore.Score');
@@ -68,12 +69,19 @@ sm.lSchool.School = function(opt_params) {
      */
     this.bouton_ = null;
 
-    /*
+    /**
      * instance popular Schools
      * @type {sm.bPopularSchools.PopularSchools}
      * @private
      */
     this.popularSchools_ = null;
+
+    /**
+     * instance data Block Features
+     * @type {sm.bDataBlock.DataBlockFeatures}
+     * @private
+     */
+    this.dataBlockFeatures_ = null;
 };
 goog.inherits(sm.lSchool.School, goog.ui.Component);
 
@@ -86,6 +94,7 @@ goog.scope(function() {
         Map = sm.bMap.Map,
         Search = sm.bSearch.Search,
         Comments = sm.lSchool.bComments.Comments,
+        DataBlockFeatures = sm.bDataBlock.DataBlockFeatures,
         FeedbackModal = sm.lSchool.bFeedbackModal.FeedbackModal,
         AuthSocialModalView = cl.gAuthSocialModal.View,
         factory = sm.iFactory.FactoryStendhal.getInstance(),
@@ -138,6 +147,8 @@ goog.scope(function() {
         this.initChildren_();
 
         this.initPopularSchools_(element);
+
+        this.initDataBlockFeatures_(element);
     };
 
     /**
@@ -177,6 +188,18 @@ goog.scope(function() {
             goog.events.EventType.CLICK,
             this.onClickInaccuracyLink_
         );
+
+        handler.listen(
+            this.dataBlockFeatures_,
+            DataBlockFeatures.Event.CLICK_LINK_INACCURACY,
+            this.onClickInaccuracyLink_
+        );
+
+        handler.listen(
+            this.dataBlockFeatures_,
+            DataBlockFeatures.Event.CLICK_LINK_FEEDBACK,
+            this.onClicklinkFeedback_
+        );
     };
 
     /**
@@ -209,6 +232,14 @@ goog.scope(function() {
      */
     School.prototype.onClickInaccuracyLink_ = function() {
         this.modalInaccuracy_.show();
+    };
+
+    /**
+     * onClick event
+     * @private
+     */
+    School.prototype.onClicklinkFeedback_ = function() {
+        this.onClick_();
     };
 
     /**
@@ -403,8 +434,25 @@ goog.scope(function() {
             this
         );
     };
-});
 
+    /**
+     * Initialization Data Block Features
+     * @param {Element} element
+     * @private
+     */
+    School.prototype.initDataBlockFeatures_ = function(element) {
+
+        var bDataBlockFeatures = goog.dom.getElementByClass(
+            sm.bDataBlock.DataBlockFeaturesView.CssClass.ROOT,
+            element
+        );
+        this.dataBlockFeatures_ = factory.decorate(
+            'data-block-features',
+            bDataBlockFeatures,
+            this
+        );
+    };
+});
 
 
 /**

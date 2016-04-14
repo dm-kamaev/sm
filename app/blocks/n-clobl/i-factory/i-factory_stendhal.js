@@ -3,6 +3,8 @@ goog.provide('sm.iFactory.FactoryStendhal');
 goog.require('cl.iFactory.Factory');
 goog.require('sm.bBanner.Banner');
 goog.require('sm.bBanner.View');
+goog.require('sm.bDataBlock.DataBlockFeatures');
+goog.require('sm.bDataBlock.DataBlockFeaturesView');
 goog.require('sm.bHeader.Header');
 goog.require('sm.bHeader.View');
 goog.require('sm.bPopularSchools.PopularSchools');
@@ -75,6 +77,10 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('search-panel', {
             control: sm.bSearchPanel.SearchPanel,
             view: sm.bSearchPanel.View
+        })
+        .setControlListItem('data-block-features', {
+            control: sm.bDataBlock.DataBlockFeatures,
+            view: sm.bDataBlock.DataBlockFeaturesView
         });
 };
 goog.inherits(sm.iFactory.FactoryStendhal, cl.iFactory.Factory);
