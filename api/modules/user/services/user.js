@@ -21,15 +21,10 @@ var service = {
  * @return {string}
  */
 service.getUserByCode = async(function(data) {
-    var data = querystring.stringify({
-        code: data.code,
-        type: data.type
-    });
-
-    var userUrlResponse = await(axios.post(
-            AUTH_API + POST_AUTH,
-            data
-        )),
+    var userUrlResponse = await(axios.post(AUTH_API + POST_AUTH, {
+            code: data.code,
+            type: data.type
+        })),
         userUrl = userUrlResponse.headers.location;
 
     var userDataResponse = await(axios.get(userUrl));

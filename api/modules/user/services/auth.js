@@ -55,8 +55,7 @@ AuthService.prototype.getSocialLinks = async(function() {
             AuthService.SocialType.FB
         ],
         that = this,
-        responses = await(socialTypes.map(type =>
-                that.getSocialLink(type))),
+        responses = await(socialTypes.map(type => that.getSocialLink(type))),
         socialLinks = responses.map(response => response.headers.location);
 
     return {

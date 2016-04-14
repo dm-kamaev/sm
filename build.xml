@@ -47,10 +47,10 @@
         <exec executable="${node}" dir="${basedir}/console/">
             <arg line="buildLocalConfig ${env} ../environment/config/user"/>
         </exec>
-        <copy file="${basedir}/environment/config/authorization/config.json"
-              tofile="${project.node-modules.path}/auth-service/config/config.json" />
-        <copy file="${basedir}/environment/config/authorization/config.db.json"
-              tofile="${project.node-modules.path}/auth-service/config/config.db.json" />
+        <copy file="${basedir}/environment/config/user/config.json"
+              tofile="${project.node-modules.path}/user-service/config/config.json" />
+        <copy file="${basedir}/environment/config/user/config.db.json"
+              tofile="${project.node-modules.path}/user-service/config/config.db.json" />
     </target>
 
     <target name="build-config">

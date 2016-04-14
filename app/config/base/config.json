@@ -7,5 +7,7 @@
         "password": "123qwek^3;3C<",
         "host": "imap.gmail.com",
         "port": 993
-    }
+    },
+    "authApi": "http://localhost:3001",
+    "userApi": "http://localhost:3002"
 }
