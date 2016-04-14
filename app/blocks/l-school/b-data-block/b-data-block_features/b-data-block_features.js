@@ -27,8 +27,8 @@ goog.scope(function() {
      * @enum
      */
     DataBlockFeatures.Event = {
-        CLICK_LINK_FEEDBACK: DataBlockFeaturesView.Event.CLICK_LINK_FEEDBACK,
-        CLICK_LINK_INACCURACY: DataBlockFeaturesView.Event.CLICK_LINK_INACCURACY
+        LINK_FEEDBACK_CLICK: DataBlockFeaturesView.Event.LINK_FEEDBACK_CLICK,
+        LINK_INACCURACY_CLICK: DataBlockFeaturesView.Event.LINK_INACCURACY_CLICK
     };
 
     /**
@@ -46,17 +46,11 @@ goog.scope(function() {
         goog.base(this, 'enterDocument');
 
         this.autoDispatch(
-            DataBlockFeaturesView.Event.CLICK_LINK_FEEDBACK,
-            function(event) {
-                event['type'] = DataBlockFeatures.Event.CLICK_LINK_FEEDBACK;
-            }
+            DataBlockFeaturesView.Event.LINK_FEEDBACK_CLICK
         );
 
         this.autoDispatch(
-            DataBlockFeaturesView.Event.CLICK_LINK_INACCURACY,
-            function(event) {
-                event['type'] = DataBlockFeatures.Event.CLICK_LINK_INACCURACY;
-            }
+            DataBlockFeaturesView.Event.LINK_INACCURACY_CLICK
         );
     };
 });

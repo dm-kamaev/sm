@@ -67,7 +67,7 @@
     {if $params.content and length($params.content)}
         {call .list_ data="all" /}
     {else}
-        {call .text_ /}
+        {call .defaultText_ /}
     {/if}
 {/template}
 
@@ -91,7 +91,7 @@
 /**
  * text template
  */
-{template .text_ autoescape="strict" kind="html"}
+{template .defaultText_ autoescape="strict" kind="html"}
     {let $linkFeedback kind="html"}
         {call .link_}
             {param params: [

@@ -186,19 +186,19 @@ goog.scope(function() {
         handler.listen(
             this.elements_.inaccuracyLink,
             goog.events.EventType.CLICK,
-            this.onClickInaccuracyLink_
+            this.onInaccuracyLinkClick_
         );
 
         handler.listen(
             this.dataBlockFeatures_,
-            DataBlockFeatures.Event.CLICK_LINK_INACCURACY,
-            this.onClickInaccuracyLink_
+            DataBlockFeatures.Event.LINK_INACCURACY_CLICK,
+            this.onInaccuracyLinkClick_
         );
 
         handler.listen(
             this.dataBlockFeatures_,
-            DataBlockFeatures.Event.CLICK_LINK_FEEDBACK,
-            this.onClicklinkFeedback_
+            DataBlockFeatures.Event.LINK_FEEDBACK_CLICK,
+            this.onFeedbackLinkClick_
         );
     };
 
@@ -219,18 +219,14 @@ goog.scope(function() {
      * @private
      */
     School.prototype.onClick_ = function() {
-        if (this.getUser_()) {
-            this.modal_.show();
-        } else {
-            this.authSocial_.show();
-        }
+        this.showCommentModal_();
     };
 
     /**
      * onClick event
      * @private
      */
-    School.prototype.onClickInaccuracyLink_ = function() {
+    School.prototype.onInaccuracyLinkClick_ = function() {
         this.modalInaccuracy_.show();
     };
 
@@ -238,8 +234,20 @@ goog.scope(function() {
      * onClick event
      * @private
      */
-    School.prototype.onClicklinkFeedback_ = function() {
-        this.onClick_();
+    School.prototype.onFeedbackLinkClick_ = function() {
+        this.showCommentModal_();
+    };
+
+    /**
+     * show Modal for comments
+     * @private
+     */
+    School.prototype.showCommentModal_ = function() {
+        if (this.getUser_()) {
+            this.modal_.show();
+        } else {
+            this.authSocial_.show();
+        }
     };
 
     /**
