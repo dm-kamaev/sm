@@ -171,14 +171,37 @@ gulp.task('copy', function() {
 
 gulp.task('localConfig', function() {
     return new Promise(function(resolve, reject) {
-        exec('node ./console/buildLocalConfig dev ../app/config && ' +
-            'node ./console/buildLocalConfig dev ../environment/config/authorization',
+        exec('node ./console/buildLocalConfig dev ../app/config',
+            function() {
+                resolve();
+            }
+        );
+    });
+});
+
+gulp.task('authConfig', function() {
+    return new Promise(function(resolve, reject) {
+        exec('node ./console/buildLocalConfig dev ../environment/config/authorization',
+            function() {
+                gulp.src(
+                    path.join(__dirname, '/environment/config/authorization/config.json')
+                ).pipe(
+                    gulp.dest(path.join(__dirname, '/node_modules/auth-service/config/'))
+                ).on('end', function() { resolve() });
+            }
+        );
+    });
+});
+
+gulp.task('userConfig', function() {
+    return new Promise(function(resolve, reject) {
+        exec('node ./console/buildLocalConfig dev ../environment/config/user',
             function() {
                 gulp.src([
-                    path.join(__dirname, '/environment/config/authorization/config.json'),
-                    path.join(__dirname, '/environment/config/authorization/config.db.json')
+                    path.join(__dirname, '/environment/config/user/config.json'),
+                    path.join(__dirname, '/environment/config/user/config.db.json')
                 ]).pipe(
-                    gulp.dest(path.join(__dirname, '/node_modules/auth-service/config/'))
+                    gulp.dest(path.join(__dirname, '/node_modules/user-service/config/'))
                 ).on('end', function() { resolve() });
             }
         );
@@ -188,7 +211,7 @@ gulp.task('localConfig', function() {
 const tasks = function (bool) {
     return bool ?
         ['soy', 'scripts', 'sprite', 'images', 'fonts', 'styles', 'evercookie', 'copy'] :
-        ['watch', 'soy', 'scripts', 'sprite', 'images', 'fonts','styles', 'evercookie', 'copy', 'localConfig'];
+        ['watch', 'soy', 'scripts', 'sprite', 'images', 'fonts','styles', 'evercookie', 'copy', 'localConfig', 'authConfig', 'userConfig'];
 };
 
 gulp.task('build', tasks(true));

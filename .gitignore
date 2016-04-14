@@ -26,7 +26,7 @@ deployment-config.json
 
 /app/config/local/
 /app/config/config.*
-/environment/config/authorization/local/
+/environment/config/*/local/
 
 console/reports
 migrate_stderr

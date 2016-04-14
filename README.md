@@ -55,9 +55,9 @@ updateSearch - актуализация поисковой таблицы
 /doc - документация по проекту  
 
 ## Микросервис авторизации/сессии ##
-Необходимо создать папки **local** в `app/config` и `environment/config/authorization`.  
+Если есть необходимость в собственном конфиге, то создать папки **local** в `app/config`, `environment/config/authorization` и `environment/config/user`.  
 В **app/config/local** создать `config.db.json`, `config.json`,  
-а в **environment/config/authorization/local** `config.json`, `config.db.json`.  
+а в **environment/config/authorization/local** `config.json`.  
 Структура файлов:  
 **app/config/config.json**  
 ```javascript
@@ -84,6 +84,7 @@ updateSearch - актуализация поисковой таблицы
 **environment/config/authorization/config.json**  
 ```javascript
 {
+    "port": 3001,
     "authorization": {
         "vk": {
             "clientId": 5334553,
@@ -95,10 +96,18 @@ updateSearch - актуализация поисковой таблицы
             "clientSecret": "db1931569be7e254a87ab8aae5ae03db",
             "redirectUri": "http://www21.lan:3000/authorize/fb"
         }
-    }
+    },
+    "userService": "http://localhost:3002"
 }
 ```  
-**environment/config/authorization/config.db.json**  
+**environment/config/user/config.json**  
+```javascript
+{
+    "port": 3002,
+    "scheme": "mel"
+}
+```  
+**environment/config/user/config.db.json**  
 ```javascript
 {
     "host": "median-mel1.qa.lan",
@@ -108,8 +117,9 @@ updateSearch - актуализация поисковой таблицы
     "dialect": "mysql"
 }
 ```  
-Потом запускаем галп, и идём в `./node_modules/services`, делаем `npm i`, и
-можно запускать микросервис. Либо стандартно, можно `forever app.js`.
+Потом запускаем галп, и делаем `npm i` в `./node_modules/services` и
+`./node_modules/user`, и можно запускать микросервисы.
+Либо стандартно, можно `forever app.js`.
 
 
 ## Миграции ##

@@ -8,7 +8,8 @@
     <import file="${basedir}/node_modules/deployment/packaging.xml"/>
     <import file="${basedir}/node_modules/deployment/node.xml"/>
     <import file="${basedir}/node_modules/auth-service/node.xml"/>
-    <import file="${basedir}/node_modules/auth-service/build.xml"/>
+    <import file="${basedir}/node_modules/user-service/node.xml"/>
+    <import file="${basedir}/node_modules/user-service/build.xml"/>
 
     <!-- Packaging tune -->
     <target name="setup-folders" depends="shared-folders-create, shared-set-permissions, setup-folders-logs, setup-folders-logs"/>
@@ -17,10 +18,10 @@
 
     <!-- Switch to new release -->
     <target name="packaging-switch-release"
-            depends="packaging-switch-release-before, setup-folders, switch-release-folder, build-config, migrate-database, update-search-cache, deploy-authorization-config, auth-migrate, node-start, initd-install, auth-node-start, init-crontab, packaging-switch-release-after"/>
+            depends="packaging-switch-release-before, setup-folders, switch-release-folder, build-config, migrate-database, update-search-cache, deploy-authorization-config, deploy-user-config, user-migrate, node-start, initd-install, user-node-start, auth-node-start, init-crontab, packaging-switch-release-after"/>
 
     <!-- Stop previous release -->
-    <target name="packaging-stop-release" depends="packaging-stop-release-before, remove-crontab, node-stop, initd-remove, auth-node-stop, remove-release-folder, packaging-stop-release-after"/>
+    <target name="packaging-stop-release" depends="packaging-stop-release-before, remove-crontab, node-stop, initd-remove, auth-node-stop, user-node-stop, remove-release-folder, packaging-stop-release-after"/>
 
     <target name="migrate-database">
         <exec executable="${gulp}" dir="${basedir}" failonerror="on">
@@ -39,9 +40,17 @@
             <arg line="buildLocalConfig ${env} ../environment/config/authorization"/>
         </exec>
         <copy file="${basedir}/environment/config/authorization/config.json"
-              tofile="${basedir}/node_modules/auth-service/config/config.json" />
+              tofile="${project.node-modules.path}/auth-service/config/config.json" />
+    </target>
+
+    <target name="deploy-user-config">
+        <exec executable="${node}" dir="${basedir}/console/">
+            <arg line="buildLocalConfig ${env} ../environment/config/user"/>
+        </exec>
+        <copy file="${basedir}/environment/config/authorization/config.json"
+              tofile="${project.node-modules.path}/auth-service/config/config.json" />
         <copy file="${basedir}/environment/config/authorization/config.db.json"
-              tofile="${basedir}/node_modules/auth-service/config/config.db.json" />
+              tofile="${project.node-modules.path}/auth-service/config/config.db.json" />
     </target>
 
     <target name="build-config">
