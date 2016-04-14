@@ -4,6 +4,7 @@ goog.require('goog.dom.classes');
 goog.require('goog.events');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
+goog.require('sm.bDataBlock.DataBlockFeatures');
 goog.require('sm.bMap.Map');
 goog.require('sm.bRating.Rating');
 goog.require('sm.bScore.Score');
@@ -68,12 +69,19 @@ sm.lSchool.School = function(opt_params) {
      */
     this.bouton_ = null;
 
-    /*
+    /**
      * instance popular Schools
      * @type {sm.bPopularSchools.PopularSchools}
      * @private
      */
     this.popularSchools_ = null;
+
+    /**
+     * instance data Block Features
+     * @type {sm.bDataBlock.DataBlockFeatures}
+     * @private
+     */
+    this.dataBlockFeatures_ = null;
 };
 goog.inherits(sm.lSchool.School, goog.ui.Component);
 
@@ -86,6 +94,7 @@ goog.scope(function() {
         Map = sm.bMap.Map,
         Search = sm.bSearch.Search,
         Comments = sm.lSchool.bComments.Comments,
+        DataBlockFeatures = sm.bDataBlock.DataBlockFeatures,
         FeedbackModal = sm.lSchool.bFeedbackModal.FeedbackModal,
         AuthSocialModalView = cl.gAuthSocialModal.View,
         factory = sm.iFactory.FactoryStendhal.getInstance(),
@@ -138,6 +147,8 @@ goog.scope(function() {
         this.initChildren_();
 
         this.initPopularSchools_(element);
+
+        this.initDataBlockFeatures_(element);
     };
 
     /**
@@ -175,7 +186,19 @@ goog.scope(function() {
         handler.listen(
             this.elements_.inaccuracyLink,
             goog.events.EventType.CLICK,
-            this.onClickInaccuracyLink_
+            this.onInaccuracyLinkClick_
+        );
+
+        handler.listen(
+            this.dataBlockFeatures_,
+            DataBlockFeatures.Event.LINK_INACCURACY_CLICK,
+            this.onInaccuracyLinkClick_
+        );
+
+        handler.listen(
+            this.dataBlockFeatures_,
+            DataBlockFeatures.Event.LINK_FEEDBACK_CLICK,
+            this.onFeedbackLinkClick_
         );
     };
 
@@ -196,19 +219,35 @@ goog.scope(function() {
      * @private
      */
     School.prototype.onClick_ = function() {
-        if (this.getUser_()) {
-            this.modal_.show();
-        } else {
-            this.authSocial_.show();
-        }
+        this.showCommentModal_();
     };
 
     /**
      * onClick event
      * @private
      */
-    School.prototype.onClickInaccuracyLink_ = function() {
+    School.prototype.onInaccuracyLinkClick_ = function() {
         this.modalInaccuracy_.show();
+    };
+
+    /**
+     * onClick event
+     * @private
+     */
+    School.prototype.onFeedbackLinkClick_ = function() {
+        this.showCommentModal_();
+    };
+
+    /**
+     * show Modal for comments
+     * @private
+     */
+    School.prototype.showCommentModal_ = function() {
+        if (this.getUser_()) {
+            this.modal_.show();
+        } else {
+            this.authSocial_.show();
+        }
     };
 
     /**
@@ -403,8 +442,25 @@ goog.scope(function() {
             this
         );
     };
-});
 
+    /**
+     * Initialization Data Block Features
+     * @param {Element} element
+     * @private
+     */
+    School.prototype.initDataBlockFeatures_ = function(element) {
+
+        var bDataBlockFeatures = goog.dom.getElementByClass(
+            sm.bDataBlock.DataBlockFeaturesView.CssClass.ROOT,
+            element
+        );
+        this.dataBlockFeatures_ = factory.decorate(
+            'data-block-features',
+            bDataBlockFeatures,
+            this
+        );
+    };
+});
 
 
 /**
