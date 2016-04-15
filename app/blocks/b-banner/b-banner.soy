@@ -7,7 +7,8 @@
  *     data: ?{
  *         textXl: ?string,
  *         textS: ?string
- *     }
+ *     },
+ *     config: ?sm.iLayout.Template.Params.Config
  * }
  * @extends cl.iControl.Template
  * @constructor
@@ -52,7 +53,8 @@
             'type': 'feedback-modal',
             'renderParams': [
                 'config': [
-                    'url': '/api/user-feedback'
+                    'url': '/api/user-feedback',
+                    'csrf': $params?.config?.csrf
                 ]
             ]
         ]/}

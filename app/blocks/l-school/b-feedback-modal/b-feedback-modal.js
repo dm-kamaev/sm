@@ -593,7 +593,8 @@ goog.scope(function() {
      */
     FeedbackModal.prototype.send_ = function(clientId, opt_callback) {
         var data = this.getFormData_();
-        data.key = clientId;
+        data['key'] = clientId;
+        data['_csrf'] = window['ctx']['csrf'];
 
         var form = jQuery(this.elements_.form);
 

@@ -5,6 +5,9 @@
 * @param params {?{
 *     data: ?{
 *         url: ?string
+*     },
+*     config: ?{
+*         csrf: ?string
 *     }
 * }}
 */
@@ -20,6 +23,9 @@
                 'renderParams': [
                     'data': [
                         'content': $html
+                    ],
+                    'config': [
+                        'csrf': $params?.config?.csrf
                     ]
                 ]
             ]/}

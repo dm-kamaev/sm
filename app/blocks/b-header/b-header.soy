@@ -11,11 +11,14 @@
 
 /**
  * Header
- * @param params {?sm.bHeader.Template.Params}
+ * @param params {{
+ *     data: ?sm.bHeader.Template.Params,
+ *     config: ?sm.iLayout.Template.Params.Config
+ * }}
  */
 {template .base autoescape="strict" kind="html"}
     <div class="b-header">
-        {call .banner_ /}
+        {call .banner_ data="all" /}
         <div class="b-header__body">
             <div class="b-header__section
                 b-header__section_logo
@@ -74,14 +77,16 @@
 /**
  * Logo
  * @param params {{
- *     url: string
+ *     data: ?{
+ *         url: string
+ *     }
  * }}
  */
 {template .logo_ private="true" autoescape="strict" kind="html"}
     <div class="b-header__logo
         i-animate">
-        {if $params?.url}
-            <a class="b-header__link" href="{$params.url}">
+        {if $params?.data?.url}
+            <a class="b-header__link" href="{$params.data.url}">
                 {call .logoImg_ /}
             </a>
         {else}
@@ -100,8 +105,10 @@
 
 /**
  * Search
- * @param params {{
- *     redirect: ?boolean
+ * @param? params {{
+ *     data: ?{
+ *         redirect: ?boolean
+ *     }
  * }}
  */
 {template .search_ private="true" autoescape="strict" kind="html"}
@@ -110,7 +117,7 @@
             'placeholder': 'Номер школы, метро, район',
             'theme': 'min',
             'customClasses': 'b-header__search b-header__search_visible_l',
-            'redirect': $params?.searchRedirect,
+            'redirect': $params?.data?.searchRedirect,
             'inputSize': 'min',
             'config': [
                 'showSearchIcon': true,
@@ -123,7 +130,7 @@
             'placeholder': 'Номер школы, метро, район',
             'theme': 'foldable',
             'customClasses': 'b-header__search b-header__search_visible_s',
-            'redirect': $params?.searchRedirect,
+            'redirect': $params?.data?.searchRedirect,
             'inputSize': 'min',
             'config': [
                 'height': 'xxl'
@@ -134,6 +141,9 @@
 
 /**
  * Banner
+ * @param? params {{
+ *     config: ?sm.iLayout.Template.Params.Config
+ * }}
  */
 {template .banner_ autoescape="strict" kind="html"}
     <div class="i-layout__banner">
@@ -154,7 +164,8 @@
                     'data': [
                         'textXl': $textXl,
                         'textS': $textS
-                    ]
+                    ],
+                    'config': $params?.config
                 ]
             ]/}
         {/call}

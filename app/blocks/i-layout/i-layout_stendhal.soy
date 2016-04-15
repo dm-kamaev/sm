@@ -7,6 +7,7 @@
  * @property {?string} staticVersion
  * @property {?number} year
  * @property {?number} analyticsId
+ * @property {?string} csrf
  */
 
 /**
@@ -69,10 +70,7 @@
  *     data: {
  *         landingScript: string
  *     },
- *     config: {
- *         staticVersion: ?string,
- *         analyticsId: ?string
- *     }
+ *     config: ?sm.iLayout.Template.Params.Config
  * }
  * @override
  */
@@ -88,6 +86,8 @@
     <script>
         var analytics = sm.iAnalytics.Analytics.getInstance();
         analytics.init('{$params?.config?.analyticsId}');
+        window['ctx'] = [];
+        window['ctx']['csrf'] = {$params?.config?.csrf};
     </script>
 {/template}
 
@@ -113,7 +113,10 @@
 {template .header_ autoescape="strict" kind="html"}
     <div class="i-layout__header">
         {call sm.bHeader.Template.base}
-            {param params: $params.data.header /}
+            {param params: [
+                'data': $params.data.header,
+                'config': $params.config
+            ] /}
         {/call}
     </div>
 {/template}

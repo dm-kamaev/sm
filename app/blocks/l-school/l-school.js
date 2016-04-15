@@ -471,7 +471,7 @@ jQuery(function() {
         params = jQuery(root).data('params');
 
     if (root) {
-        var school = new sm.lSchool.School(params);
+        school = new sm.lSchool.School(params);
         school.decorate(root);
     }
 });
