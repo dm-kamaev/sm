@@ -389,7 +389,9 @@ goog.scope(function() {
         goog.object.extend(params, this.getParamsFromFilters_());
         goog.object.extend(params, this.getParamsFromSearch_());
 
-        return params;
+        this.updateSearchParams_(params);
+
+        return this.searchParams_;
     };
 
     /**
@@ -596,7 +598,7 @@ goog.scope(function() {
      * @private
      */
     SearchResult.prototype.send_ = function() {
-    return jQuery.ajax({
+        return jQuery.ajax({
             url: this.requestParams_.url,
             type: this.requestParams_.method,
             data: this.searchParams_
