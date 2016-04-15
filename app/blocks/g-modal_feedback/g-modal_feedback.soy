@@ -7,7 +7,8 @@
  *     }
  *     config: {
  *        type: ?string,
- *        url: ?string
+ *        url: ?string,
+ *        csrf: ?string
  *     }
  * }}
  * @extends sm.gModal.TemplateStendhal
@@ -24,7 +25,8 @@
  *     data: {
  *     }
  *     config: {
- *        type: string
+ *        type: ?string,
+ *        csrf: ?string
  *     }
  * }}
  * @override
@@ -33,15 +35,14 @@
     {call .closer data="all"/}
 
     <form class="{call .rootClass/}__form-content"
-         method="POST"
-         action="{if $params?.config?.url}
-                {$params?.config?.url}
-                {$params?.config?.type ?
-                '?type=' + $params?.config?.type :
-                '?type=opinion'}
-         {else}
-            ''
-         {/if}">
+          method="POST"
+          action="{if $params?.config?.url}
+                      {$params?.config?.url}
+                      ?type=
+                      {$params?.config?.type ?: 'option'}
+                  {/if}">
+
+        {call .csrf_ data="all" /}
 
         {call .feedbackHeader_ data="all" /}
 
@@ -53,6 +54,18 @@
 
         {call .errorArea_ /}
     </form>
+{/template}
+
+/**
+ * Csrf token
+ * @param? params {{
+ *     config: ?{
+ *        csrf: string
+ *     }
+ * }}
+ */
+{template .csrf_}
+    <input type="hidden" name="_csrf" value="{$params?.config?.csrf}" />
 {/template}
 
 /**
@@ -91,17 +104,20 @@
 {template .description_}
     {let $descriptionContent kind="html"}
         {if $params?.config?.type == 'mistake'}
-            С&nbsp;помощью этой формы вы&nbsp;можете предложить редакторам Школ Мела изменить или дополнить информацию о&nbsp;школе
+            С&nbsp;помощью этой формы вы&nbsp;можете предложить редакторам
+            Школ Мела изменить или дополнить информацию о&nbsp;школе
         {else}
-            Расскажите, помогли&nbsp;ли Школы Мела найти хорошую школу для вашего ребёнка или по-новому посмотреть на&nbsp;школу, где он&nbsp;учится сейчас.
+            Расскажите, помогли&nbsp;ли Школы Мела найти хорошую школу
+            для вашего ребёнка или по-новому посмотреть на&nbsp;школу,
+            где он&nbsp;учится сейчас.
         {/if}
     {/let}
 
     <div class="{call .rootClass/}__section{sp}
                 {call .rootClass/}__section_description">
-            <div class="{call .rootClass/}__description-text">
-                {$descriptionContent}
-            </div>
+        <div class="{call .rootClass/}__description-text">
+            {$descriptionContent}
+        </div>
     </div>
 {/template}
 
@@ -130,7 +146,7 @@
                 ]
             ]/}
         {/call}
-</div>
+    </div>
 {/template}
 
 /**

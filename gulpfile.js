@@ -114,7 +114,7 @@ gulp.task('sprite', function() {
     return gulpHelper.sprite.build([{
         src: path.join(__dirname, BLOCKS_DIR, '/n-clobl/g-icon/g-icon_img/*.png'),
         retina: {
-            filters: [path.join(__dirname, BLOCKS_DIR, '/n-clobl/g-icon/g-icon_img/*@2x.png')],
+            filters: [path.join(__dirname, BLOCKS_DIR, '/n-clobl/g-icon/g-icon_img/*@2x.png')]
         }
     }]);
 });
@@ -155,7 +155,7 @@ gulp.task('evercookie', function() {
             path.join('!' + __dirname + '/app/evercookie/css/**/*.*'),
             path.join('!' + __dirname + '/app/evercookie/*.*')
     ])
-    .pipe(gulp.dest(path.join(__dirname + '/public/evercookie/')));;
+    .pipe(gulp.dest(path.join(__dirname + '/public/evercookie/')));
 });
 
 gulp.task('copy', function() {

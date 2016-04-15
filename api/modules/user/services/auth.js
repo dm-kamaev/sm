@@ -4,6 +4,7 @@ const request = require('request');
 const lodash = require('lodash');
 const axios = require('axios');
 const config = require('../../../../app/config').config;
+const logger = require('../../../../app/components/logger/logger').getLogger('app');
 
 
 /**
@@ -54,14 +55,27 @@ AuthService.prototype.getSocialLinks = async(function() {
             AuthService.SocialType.VK,
             AuthService.SocialType.FB
         ],
-        that = this,
-        responses = await(socialTypes.map(type => that.getSocialLink(type))),
-        socialLinks = responses.map(response => response.headers.location);
+        result = {
+            vk: '',
+            fb: ''
+        },
+        that = this;
 
-    return {
-        vk: socialLinks[0],
-        fb: socialLinks[1]
-    };
+    try {
+        var responses = await(socialTypes.map(type => that.getSocialLink(type))),
+            socialLinks = responses.map(response => response.headers.location);
+
+        result = {
+            vk: socialLinks[0],
+            fb: socialLinks[1]
+        };
+    }
+    catch (error) {
+        logger.error(error);
+    }
+
+
+    return result;
 });
 
 /**

@@ -16,6 +16,8 @@ exports.notFound = async(function(req, res) {
     var data = await(dataPromises);
         searchUrl = '/search?name=';
 
+    console.log(req.csrfToken());
+
     var html = soy.render('sm.lErrorNotFound.Template.base', {
           params: {
               errorText: 'Страница, которую вы искали, не найдена',
@@ -24,7 +26,8 @@ exports.notFound = async(function(req, res) {
               amountSchools: data.amountSchools,
               config: {
                   year: new Date().getFullYear(),
-                  analyticsId: analyticsId
+                  analyticsId: analyticsId,
+                  csrf: req.csrfToken()
               }
           }
     });

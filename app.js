@@ -69,6 +69,8 @@ app.use(session);
 app.use(passport.initialize());
 app.use(passport.session());
 
+require('./app/middleware/csrf')(app);
+
 if (config.environment == 'development') {
     app.use('/doc', modules.doc.router);
     app.use('/', api.debug.router);

@@ -3,10 +3,8 @@ const soy = require('../../../components/soy');
 const services = require('../../../components/services').all;
 const schoolView = require('../../../../api/modules/school/views/schoolView');
 const searchView = require('../../../../api/modules/school/views/searchView');
-const urlConfig = require('../../../config').config.url;
 const analyticsId = require('../../../config').config.analyticsId;
-
-const AUTH_URL = urlConfig.protocol + '://' + urlConfig.host + ':3001/oauth';
+const logger = require('../../../components/logger/logger').getLogger('app');
 
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
@@ -19,7 +17,7 @@ exports.createComment = async (function(req, res) {
             params = req.body;
         result = await(services.school.comment(schoolId,params));
     } catch (e) {
-        console.log(e);
+        logger.error(e);
         result = JSON.stringify(e);
     } finally {
         res.header('Content-Type', 'text/html; charset=utf-8');
@@ -56,7 +54,8 @@ exports.list = async (function(req, res) {
             mapSchools: data.mapSchools,
             config: {
                 year: new Date().getFullYear(),
-                analyticsId: analyticsId
+                analyticsId: analyticsId,
+                csrf: req.csrfToken()
             }
         }
     };
@@ -113,7 +112,8 @@ exports.view = async (function(req, res, next) {
                         ),
                     config: {
                         year: new Date().getFullYear(),
-                        analyticsId: analyticsId
+                        analyticsId: analyticsId,
+                        csrf: req.csrfToken()
                     }
                 }
             }));
@@ -148,7 +148,8 @@ exports.search = async(function(req, res) {
               },
               config: {
                   year: new Date().getFullYear(),
-                  analyticsId: analyticsId
+                  analyticsId: analyticsId,
+                  csrf: req.csrfToken()
               }
           }
     });
