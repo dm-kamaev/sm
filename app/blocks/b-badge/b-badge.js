@@ -3,6 +3,7 @@ goog.provide('sm.bBadge.Badge');
 goog.require('cl.gHint.View');
 goog.require('goog.dom.classlist');
 goog.require('goog.ui.Component');
+goog.require('goog.uri.utils');
 goog.require('sm.bBadge.Template');
 
 /**
@@ -111,7 +112,7 @@ goog.scope(function() {
                     handler.listen(
                         itemActiveElements[i],
                         goog.events.EventType.CLICK,
-                        this.onItemClickMetroMode_.bind(this, i)
+                        this.onItemClickLocationMode_.bind(this, i)
                     );
                 }
             }
@@ -140,12 +141,10 @@ goog.scope(function() {
 
             for (var i = 0, id, elem; i < itemActiveLength; i++) {
                 elem = this.elements_.itemActive[i];
-                id = JSON.parse(goog.dom.dataset.get(elem, 'params'))['id'];
+                data = JSON.parse(goog.dom.dataset.get(elem, 'params'));
+                data.name = elem.textContent;
 
-                this.params_.data.push({
-                    id: id,
-                    name: elem.textContent
-                });
+                this.params_.data.push(data);
             }
         }
     };
@@ -233,11 +232,10 @@ goog.scope(function() {
      * @param  {number} itemId
      * @private
      */
-    Badge.prototype.onItemClickMetroMode_ = function(itemId) {
+    Badge.prototype.onItemClickLocationMode_ = function(itemId) {
         var data = this.params_.data[itemId];
 
-        document.location.href = '/search?name=' +
-            encodeURIComponent(data.name) +
-            '&metroId=' + encodeURIComponent(data.id);
+        document.location.href = '/search?' +
+            goog.uri.utils.buildQueryDataFromMap(data);
     };
 });
