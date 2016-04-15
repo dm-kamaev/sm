@@ -55,17 +55,21 @@ goog.scope(function() {
     DataBlockFeaturesView.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
 
-        this.getHandler().listen(
-            this.dom.linkFeedback,
-            goog.events.EventType.CLICK,
-            this.onLinkFeedbackClick_
-        );
+        if (this.dom.linkFeedback) {
+            this.getHandler().listen(
+                this.dom.linkFeedback,
+                goog.events.EventType.CLICK,
+                this.onLinkFeedbackClick_
+            );
+        }
 
-        this.getHandler().listen(
-            this.dom.linkInaccuracy,
-            goog.events.EventType.CLICK,
-            this.onLinkInaccuracyClick_
-        );
+        if (this.dom.linkInaccuracy) {
+            this.getHandler().listen(
+                this.dom.linkInaccuracy,
+                goog.events.EventType.CLICK,
+                this.onLinkInaccuracyClick_
+            );
+        }
     };
 
     /**
