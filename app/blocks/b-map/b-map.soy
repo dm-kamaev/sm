@@ -16,7 +16,8 @@
  *     }],
  *     config: ?{
  *         sidePins: ?boolean,
- *         enableScrollZoom: ?boolean
+ *         enableScrollZoom: ?boolean,
+ *         centerCoords: list<number>
  *     }
  * }}
 */
@@ -26,6 +27,7 @@
             {param json: $params /}
         {/call}
     {/let}
+
     <div class="b-map" data-params="{$dataParams}">
     </div>
 {/template}

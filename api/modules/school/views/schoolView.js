@@ -376,6 +376,7 @@ var getStages = function(departments) {
  */
 schoolView.list = function(schools, opt_criterion) {
     var res = {};
+
     if (schools.length !== 0) {
         schools = groupSchools(schools);
 
@@ -404,13 +405,43 @@ schoolView.list = function(schools, opt_criterion) {
                     totalScore: school.totalScore
                 };
             });
-        res.mapSchools = this.currentSchoolsMapPoints(res.schools);
 
     } else {
         res = {
             countResults: 0,
             schools: []
         };
+    }
+    return res;
+};
+
+
+/**
+ * @param {Array.<Object>} schools - schoolInstances for map
+ * @param {Array.<number>} opt_coords
+ * @return {Object} contains results schools array and central coordinate
+ * for the map
+ */
+schoolView.listMap = function(schools, opt_coords) {
+    var res = {};
+
+    if (schools.length !== 0) {
+        schools = groupSchools(schools);
+
+        res.schools = schools.map(school => {
+            return {
+                addresses: addressView.default(school.addresses),
+                id: school.id,
+                name: school.name.light + school.name.bold,
+                description: school.description,
+                url: school.url,
+                totalScore: school.totalScore
+            };
+        });
+    }
+
+    if (opt_coords) {
+        res.centerCoords = [opt_coords[1], opt_coords[0]];
     }
 
     return res;
@@ -700,29 +731,12 @@ schoolView.suggest = function(data) {
     };
 };
 
-/**
- * Returns schools for search page map
- * @param {Array<Object>} schools
- * @return {Array<Object>}
- */
-schoolView.currentSchoolsMapPoints = function(schools) {
-    return schools.map(school => {
-        return {
-            addresses: addressView.default(school.addresses),
-            id: school.id,
-            name: school.name.light + school.name.bold,
-            description: school.description,
-            url: school.url,
-            totalScore: school.totalScore
-        };
-    });
-};
 
  /**
  * @return {array<object>}
  */
 schoolView.dataLinks = function() {
-    searchUrl = '/search?name=';
+    var searchUrl = '/search?name=';
 
     return [
         {
@@ -733,7 +747,7 @@ schoolView.dataLinks = function() {
         {
           name: 'Тургеневская',
           url: searchUrl +
-            encodeURIComponent('Тургеневская')
+            encodeURIComponent('Тургеневская') + '&metroId=122'
         },
         {
           name: 'Лицей',

@@ -32,7 +32,7 @@
  *     searchSettings: {
  *         url: string,
  *         method: string,
- *         data: {
+ *         searchParams: {
  *             name: ?string,
  *             metroId: ?number,
  *             areaId: ?number,
@@ -45,19 +45,22 @@
  *             page: ?number
  *         }
  *     },
- *     mapSchools: [{
- *         id: number,
- *         name: string,
- *         description: string,
- *         url: string,
- *         totalScore: number,
- *         addresses: [{
- *             lat: number,
- *             lng: number,
+ *     map: {
+ *         schools: [{
+ *             id: number,
  *             name: string,
- *             stages: list<string>
- *         }]
- *     }],
+ *             description: string,
+ *             url: string,
+ *             totalScore: number,
+ *             addresses: [{
+ *                 lat: number,
+ *                 lng: number,
+ *                 name: string,
+ *                 stages: list<string>
+ *             }]
+ *          }],
+ *         centerCoords: ?list<number>,
+ *     },
  *     config: {
  *         staticVersion: ?string,
  *         analyticsId: ?string
@@ -113,16 +116,19 @@
     <div class="l-search-result__body">
         {call .map}
             {param params: [
-                'data': $params.mapSchools,
+                'data': $params?.map?.schools,
                 'config': [
-                    'sidePins': false
+                    'sidePins': false,
+                    'centerCoords': $params?.map?.centerCoords
                 ]
             ]/}
         {/call}
+
         <div class="l-search-result__content">
             {call .listHeader_ data="all"}
                 {param clone: true /}
             {/call}
+
             {call .leftMenu_ data="all" /}
 
             <div class="l-search-result__results-section">
@@ -156,7 +162,10 @@
  *             name: string,
  *             stages: list<string>
  *         }]
- *     }]
+ *     }],
+ *     config: ?{
+ *         centerCoords: ?list<number>
+ *    }
  * }}
  */
 {template .map autoescape="strict" kind="html"}
@@ -169,7 +178,8 @@
                 'data': $params?.data,
                 'config': [
                     'sidePins': false,
-                    'enableScrollZoom': false
+                    'enableScrollZoom': false,
+                    'centerCoords': $params.config?.centerCoords
                 ]
             ]/}
         {/call}

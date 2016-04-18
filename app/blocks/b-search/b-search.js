@@ -55,6 +55,13 @@ sm.bSearch.Search = function(opt_params) {
     this.metroId_ = null;
 
     /**
+     * @type {?Array<number>}
+     * @private
+     */
+    this.coords_ = [];
+
+
+    /**
      * @type {?string}
      * @private
      */
@@ -149,11 +156,13 @@ goog.scope(function() {
      * @param {{
      *     areaId: ?number,
      *     metroId: ?number,
+     *     coords: {Array.<number>},
      *     text: ?string
      * }} data
      * @public
      */
     Search.prototype.setData = function(data) {
+
         if (data.hasOwnProperty('areaId')) {
             this.setAreaId(data.areaId);
         }
@@ -165,6 +174,8 @@ goog.scope(function() {
         if (data.hasOwnProperty('text')) {
             this.setText(data.text);
         }
+
+        this.setCoords(data.coords);
     };
 
     /**
@@ -175,7 +186,8 @@ goog.scope(function() {
         this.setData({
             text: '',
             metroId: null,
-            areaId: null
+            areaId: null,
+            coords: null
         });
     };
 
@@ -209,6 +221,23 @@ goog.scope(function() {
      */
     Search.prototype.setAreaId = function(areaId) {
         this.areaId_ = areaId;
+    };
+
+    /**
+     * @return {Array.<number>}
+     * @public
+     */
+    Search.prototype.getCoords = function() {
+        return this.coords_;
+    };
+
+    /**
+     * set coordinates metro or area
+     * @param {Array.<number>} coords
+     * @public
+     */
+    Search.prototype.setCoords = function(coords) {
+        this.coords_ = coords;
     };
 
     /**
@@ -410,7 +439,8 @@ goog.scope(function() {
             select: function(item) {
                 return {
                     text: item.name,
-                    value: item.id
+                    value: item.id,
+                    coords: item.coords
                 };
             }
         });
@@ -643,18 +673,21 @@ goog.scope(function() {
             this.setData({
                 metroId: item.id,
                 areaId: null,
+                coords: item.coords,
                 text: item.name
             });
         } else if (item.type == 'areas') {
             this.setData({
                 metroId: null,
                 areaId: item.id,
+                coords: item.coords,
                 text: item.name
             });
         } else {
             this.setData({
                 metroId: null,
                 areaId: null,
+                coords: null,
                 text: item.name
             });
         }

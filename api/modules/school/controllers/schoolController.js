@@ -272,11 +272,22 @@ exports.createComment = async (function(req, res) {
  *     }
  */
 exports.search = async (function(req, res) {
-    var result = '';
+    var result;
     try {
         var params = await(services.search.initSearchParams(req.query));
-        var schools = await(services.school.list(params));
-        result = schoolView.list(schools, params.sortType);
+
+        var promises = {
+            schools: services.school.list(params),
+            centerCoords: services.metro.getCoords(params.metroId)
+        };
+        var results = await(promises);
+
+        var mapSchools = schoolView.listMap(results.schools, results.centerCoords);
+
+        result = schoolView.list(results.schools, params.sortType);
+        result.mapSchools = mapSchools.schools;
+        result.centerCoords = mapSchools.centerCoords;
+
     } catch (error) {
         result = JSON.stringify(error);
         logger.error(result);

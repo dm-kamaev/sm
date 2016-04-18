@@ -373,6 +373,7 @@ exports.getSchoolTypesByAliases = function(aliases) {
  * @param {?number} params.page
  */
 exports.initSearchParams = async(function(params) {
+
     /** Transform aliases in filters into ids **/
     var filterTypes = searchTypeEnum.toCamelCaseArray();
     var ids = filterTypes.map(filterType => {

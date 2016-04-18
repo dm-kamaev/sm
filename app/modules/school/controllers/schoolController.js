@@ -29,29 +29,32 @@ exports.createComment = async (function(req, res) {
 exports.list = async (function(req, res) {
     var searchParams = await(services.search.initSearchParams(req.query));
     var searchText = req.query.name ? decodeURIComponent(req.query.name) : '';
-    var promises = [
-        services.school.list(searchParams),
-        services.school.searchFilters()
-    ];
+
+    var promises = {
+        schools: services.school.list(searchParams),
+        filters: services.school.searchFilters(),
+        centerCoords: services.metro.getCoords(searchParams.metroId)
+    };
     var results = await(promises);
 
-    var data = schoolView.list(results[0]);
-    var filters = searchView.filters(results[1], searchParams);
+    var schoolsList = schoolView.list(results.schools);
+    var map = schoolView.listMap(results.schools, results.centerCoords);
+    var filters = searchView.filters(results.filters, searchParams);
 
     var params = {
         params: {
             data: {
-                schools: data.schools,
+                schools: schoolsList.schools,
                 filters: filters
             },
             searchText: searchText,
-            countResults: data.countResults,
+            countResults: schoolsList.countResults,
             searchSettings: {
                 url: '/api/school/search',
                 method: 'GET',
                 searchParams: searchParams
             },
-            mapSchools: data.mapSchools,
+            map: map,
             config: {
                 year: new Date().getFullYear(),
                 analyticsId: analyticsId,
