@@ -473,18 +473,24 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.renderItemName_ = function(item, str) {
-        var res = '';
+        var res = '',
+            str = str.replace(/ё/g, 'е'),
+            name = item.name.replace(/ё/g, 'е'),
+            fullName = item.fullName && item.fullName.replace(/ё/g, 'е'),
+            abbreviation = item.abbreviation &&
+                item.abbreviation.replace(/ё/g, 'е');
 
-        if (Suggest.findEntry(item.name, str)) {
+        if (Suggest.findEntry(name, str)) {
             res = item.name;
-        } else if (Suggest.findEntry(item.fullName, str)) {
+        } else if (Suggest.findEntry(fullName, str)) {
             res = item.fullName;
-        } else if (Suggest.findEntry(item.abbreviation, str)) {
+        } else if (Suggest.findEntry(abbreviation, str)) {
             res = item.abbreviation;
         }
 
         return res;
     };
+
 
 
     /**

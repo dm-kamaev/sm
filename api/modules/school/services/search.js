@@ -67,13 +67,45 @@ var findAnyInModel = function(model, searchString) {
     var params = {
         where: {
             name: {
-                $or: stringArr.map(str => {
-                    return {$iLike: '%' + str + '%'};
-                })
+                $or: stringArr.map(str => iLikeSimilarLetter(str))
+                        .reduce(function(prev, curr) {
+                            return prev.concat(curr);
+                        }, [])
             }
         }
     };
     return model.findAll(params);
+};
+
+/**
+ * @param {string} searchSubstring
+ * @return {object}
+ */
+var iLikeSimilarLetter = function(searchSubstring) {
+    var result;
+
+    if (searchSubstring.search(/е/) > -1) {
+        var similarCharPosition = searchSubstring.lastIndexOf('е'),
+            similarString =
+                replaceAt(searchSubstring, similarCharPosition, 'ё');
+
+        result = [
+            { $ilike: '%' + searchSubstring + '%' },
+            { $ilike: '%' + similarString + '%' }
+        ];
+    } else {
+        result = { $ilike: '%' + searchSubstring + '%' };
+    }
+    return result;
+};
+
+/**
+ * @param {string} string
+ * @param {number} position - position, what will be replaced
+ * @param {string} char - new char at position
+ */
+var replaceAt = function(string, position, char) {
+    return string.substr(0, position) + char + string.substr(position + 1);
 };
 
 /**
