@@ -450,7 +450,6 @@ goog.scope(function() {
      */
     SearchResult.prototype.search_ = function() {
         this.updateSearchParams_(this.getSearchParams_());
-
         this.updateUrl_();
 
         this.send_().then(this.updateSchools_.bind(this));
@@ -632,6 +631,8 @@ goog.scope(function() {
     SearchResult.prototype.updateSchools_ = function(responseData) {
         var data = JSON.parse(responseData);
 
+        this.instances_.search.setCoords(data.centerCoords);
+
         if (data.mapSchools) {
             this.showMap_();
             this.updateMap_(data.mapSchools);
@@ -681,20 +682,7 @@ goog.scope(function() {
      * @private
      */
     SearchResult.prototype.getMapCenterCoords_ = function() {
-        var centerCoords;
-
-        if (this.instances_.search.getMetroCoords() &&
-            this.instances_.search.getMetroCoords().length) {
-
-            centerCoords = this.instances_.search.getMetroCoords();
-        }
-        else if (this.instances_.search.getAreaCoords() &&
-            this.instances_.search.getAreaCoords().length) {
-
-            centerCoords = this.instances_.search.getAreaCoords();
-        }
-        this.instances_.search.reset();
-        return centerCoords;
+        return this.instances_.search.getCoords();
     };
 
     /**

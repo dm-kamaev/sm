@@ -45,20 +45,22 @@
  *             page: ?number
  *         }
  *     },
- *     mapSchools: [{
- *         id: number,
- *         name: string,
- *         description: string,
- *         url: string,
- *         totalScore: number,
- *         addresses: [{
- *             lat: number,
- *             lng: number,
+ *     map: {
+ *         schools: [{
+ *             id: number,
  *             name: string,
- *             stages: list<string>
- *         }]
- *     }],
- *     centerCoordsMap: ?list<number>,
+ *             description: string,
+ *             url: string,
+ *             totalScore: number,
+ *             addresses: [{
+ *                 lat: number,
+ *                 lng: number,
+ *                 name: string,
+ *                 stages: list<string>
+ *             }]
+ *          }],
+ *         centerCoords: ?list<number>,
+ *     },
  *     config: {
  *         staticVersion: ?string,
  *         analyticsId: ?string
@@ -113,10 +115,10 @@
     <div class="l-search-result__body">
         {call .map}
             {param params: [
-                'data': $params.mapSchools,
+                'data': $params?.map?.schools,
                 'config': [
                     'sidePins': false,
-                    'centerCoords': $params.centerCoordsMap
+                    'centerCoords': $params?.map?.centerCoords
                 ]
             ]/}
         {/call}

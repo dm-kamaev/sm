@@ -276,10 +276,6 @@ goog.scope(function() {
         if (opt_centerCoords) {
             this.setMapCenterCoords_(opt_centerCoords);
         }
-        else if (this.config_.centerCoords) {
-            this.setMapCenterCoords_(this.config_.centerCoords);
-            this.config_.centerCoords = null;
-        }
         else {
             this.setMapCenterDefault_();
         }
@@ -291,8 +287,7 @@ goog.scope(function() {
      * @private
      */
     Map.prototype.setMapCenterCoords_ = function(coords) {
-        this.ymaps_.setCenter(
-            [coords[1], coords[0]], 15, {
+        this.ymaps_.setCenter(coords, 15, {
             checkZoomRange: true
         });
     };
@@ -405,7 +400,7 @@ goog.scope(function() {
         //placemarks
         this.setCurrentPresets_(Map.PresetType.DEFAULT);
 
-        this.addSchoolsPlacemarks(this.params_);
+        this.addSchoolsPlacemarks(this.params_, this.config_.centerCoords);
 
         //point placemarks
         if (dataPromise) {

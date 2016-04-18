@@ -34,13 +34,6 @@ sm.lSearch.Search = function(opt_params) {
     this.searchPanel_ = null;
 
     /**
-     * Search instance
-     * @type {?sm.bSearch.Search}
-     * @private
-     */
-    this.search_ = null;
-
-    /**
      * instance popular Schools
      * @type {sm.bPopularSchools.PopularSchools}
      * @private

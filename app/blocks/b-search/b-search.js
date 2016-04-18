@@ -58,13 +58,8 @@ sm.bSearch.Search = function(opt_params) {
      * @type {?Array<number>}
      * @private
      */
-    this.areaCoords_ = [];
+    this.coords_ = [];
 
-    /**
-     * @type {?Array<number>}
-     * @private
-     */
-    this.metroCoords_ = [];
 
     /**
      * @type {?string}
@@ -144,9 +139,7 @@ goog.scope(function() {
     /**
      * @return {{
      *     areaId: ?number,
-     *     areaCoords: {Array<number>=},
      *     metroId: ?number,
-     *     metroCoords: {Array<number>=},
      *     text: ?string
      * }}
      * @public
@@ -162,33 +155,27 @@ goog.scope(function() {
     /**
      * @param {{
      *     areaId: ?number,
-     *     areaCoords: {Array<number>=},
      *     metroId: ?number,
-     *     metroCoords: {Array<number>=},
+     *     coords: {Array.<number>},
      *     text: ?string
      * }} data
      * @public
      */
     Search.prototype.setData = function(data) {
+
         if (data.hasOwnProperty('areaId')) {
             this.setAreaId(data.areaId);
-        }
-
-        if (data.hasOwnProperty('areaCoords')) {
-            this.setAreaCoords(data.areaCoords);
         }
 
         if (data.hasOwnProperty('metroId')) {
             this.setMetroId(data.metroId);
         }
 
-        if (data.hasOwnProperty('metroCoords')) {
-            this.setMetroCoords(data.metroCoords);
-        }
-
         if (data.hasOwnProperty('text')) {
             this.setText(data.text);
         }
+
+        this.setCoords(data.coords);
     };
 
     /**
@@ -199,9 +186,8 @@ goog.scope(function() {
         this.setData({
             text: '',
             metroId: null,
-            metroCoords: [],
             areaId: null,
-            areaCoords: []
+            coords: null
         });
     };
 
@@ -238,35 +224,20 @@ goog.scope(function() {
     };
 
     /**
-     * @return {Array<number>}
+     * @return {Array.<number>}
      * @public
      */
-    Search.prototype.getMetroCoords = function() {
-        return this.metroCoords_;
+    Search.prototype.getCoords = function() {
+        return this.coords_;
     };
 
     /**
-     * @param {Array<number>} metroCoords
+     * set coordinates metro or area
+     * @param {Array.<number>} coords
      * @public
      */
-    Search.prototype.setMetroCoords = function(metroCoords) {
-        this.metroCoords_ = metroCoords;
-    };
-
-    /**
-     * @return {Array<number>=}
-     * @public
-     */
-    Search.prototype.getAreaCoords = function() {
-        return this.areaCoords_;
-    };
-
-    /**
-     * @param {Array<number>} areaCoords
-     * @public
-     */
-    Search.prototype.setAreaCoords = function(areaCoords) {
-        this.areaCoords_ = areaCoords;
+    Search.prototype.setCoords = function(coords) {
+        this.coords_ = coords;
     };
 
     /**
@@ -468,7 +439,8 @@ goog.scope(function() {
             select: function(item) {
                 return {
                     text: item.name,
-                    value: item.id
+                    value: item.id,
+                    coords: item.coords
                 };
             }
         });
@@ -700,24 +672,22 @@ goog.scope(function() {
         if (item.type == 'metro') {
             this.setData({
                 metroId: item.id,
-                metroCoords: item.coords,
                 areaId: null,
-                areaCoords: [],
+                coords: item.coords,
                 text: item.name
             });
         } else if (item.type == 'areas') {
             this.setData({
                 metroId: null,
-                metroCoords: [],
                 areaId: item.id,
-                areaCoords: item.coords,
+                coords: item.coords,
                 text: item.name
             });
         } else {
             this.setData({
                 metroId: null,
                 areaId: null,
-                areaCoords: [],
+                coords: null,
                 text: item.name
             });
         }
