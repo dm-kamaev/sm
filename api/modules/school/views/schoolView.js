@@ -432,7 +432,7 @@ schoolView.listMap = function(schools, opt_coords) {
             return {
                 addresses: addressView.default(school.addresses),
                 id: school.id,
-                name: school.name.light + school.name.bold,
+                name: school.name,
                 description: school.description,
                 url: school.url,
                 totalScore: school.totalScore
