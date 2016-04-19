@@ -89,7 +89,9 @@
  *         staticVersion: ?string,
  *         year: ?number,
  *         analyticsId: ?string,
- *         csrf: ?string
+ *         csrf: ?string,
+ *         domain: ?string,
+ *         fbClientId: ?number
  *     }
  * }
  */
@@ -98,10 +100,12 @@
         {call .content_ data="all" /}
     {/let}
 
+    {let $title: $params.data?.schoolName + ' на Школах Мела' /}
+
     {call sm.iLayout.Template.layout}
         {param params: [
             'data': [
-                'title': $params.data?.schoolName + ' на Школах Мела',
+                'title': $title,
                 'content': $content,
                 'header': [
                     'searchText': $params.searchText,
@@ -109,7 +113,15 @@
                     'searchRedirect': true
                 ],
                 'landingScript': '/l-school.js',
-                'evercookie': true
+                'evercookie': true,
+                'openGraph': [
+                    'title': $title,
+                    'description': $params?.data?.schoolDescr ?:
+                        'Подробная информация и отзывы родителей и учеников',
+                    'image': $params?.config?.domain +
+                        '/images/i-layout/schools-share.png',
+                    'fbClientId': $params?.config?.fbClientId
+                ]
             ],
             'config': [
                 'modifier': 'stendhal',

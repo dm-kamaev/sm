@@ -3,8 +3,12 @@ const soy = require('../../../components/soy');
 const services = require('../../../components/services').all;
 const schoolView = require('../../../../api/modules/school/views/schoolView');
 const searchView = require('../../../../api/modules/school/views/searchView');
-const analyticsId = require('../../../config').config.analyticsId;
+const config = require('../../../config').config;
+const analyticsId = config.analyticsId;
 const logger = require('../../../components/logger/logger').getLogger('app');
+
+const DOMAIN = config.url.protocol + '://' + config.url.host;
+const FB_CLIENT_ID = config.facebookClientId;
 
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
@@ -58,7 +62,9 @@ exports.list = async (function(req, res) {
             config: {
                 year: new Date().getFullYear(),
                 analyticsId: analyticsId,
-                csrf: req.csrfToken()
+                csrf: req.csrfToken(),
+                domain: DOMAIN,
+                fbClientId: FB_CLIENT_ID
             }
         }
     };
@@ -116,7 +122,9 @@ exports.view = async (function(req, res, next) {
                     config: {
                         year: new Date().getFullYear(),
                         analyticsId: analyticsId,
-                        csrf: req.csrfToken()
+                        csrf: req.csrfToken(),
+                        domain: DOMAIN,
+                        fbClientId: FB_CLIENT_ID
                     }
                 }
             }));
@@ -152,7 +160,9 @@ exports.search = async(function(req, res) {
               config: {
                   year: new Date().getFullYear(),
                   analyticsId: analyticsId,
-                  csrf: req.csrfToken()
+                  csrf: req.csrfToken(),
+                  domain: DOMAIN,
+                  fbClientId: FB_CLIENT_ID
               }
           }
     });

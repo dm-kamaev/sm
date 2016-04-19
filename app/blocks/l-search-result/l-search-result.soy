@@ -63,7 +63,9 @@
  *     },
  *     config: {
  *         staticVersion: ?string,
- *         analyticsId: ?string
+ *         analyticsId: ?string,
+ *         domain: ?string,
+ *         fbClientId: ?number
  *     }
  * }}
  */
@@ -80,7 +82,15 @@
                 'header': [
                     'url': '/'
                 ],
-                'landingScript': '/l-search-result.js'
+                'landingScript': '/l-search-result.js',
+                'openGraph': [
+                    'title': 'Школы «Мела»',
+                    'description': 'Найдите в Москве школу, ' +
+                        'которая подойдёт вашему ребёнку',
+                    'image': $params?.config?.domain +
+                        '/images/i-layout/schools-share.png',
+                    'fbClientId': $params?.config?.fbClientId
+                ]
             ],
             'config': [
                 'modifier': 'stendhal',

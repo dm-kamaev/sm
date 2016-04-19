@@ -5,5 +5,6 @@
         "protocol": "http",
         "host": "schools1.qa.lan"
     },
-    "analyticsId": "UA-34116537-11"
+    "analyticsId": "UA-34116537-11",
+    "facebookClientId": 525358880980041
 }
