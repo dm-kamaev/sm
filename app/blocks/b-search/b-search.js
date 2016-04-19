@@ -391,6 +391,12 @@ goog.scope(function() {
                 goog.events.EventType.CLICK,
                 this.onClearClick_
             );
+        } else if (this.elements_.searchButton) {
+            handler.listen(
+                this.elements_.searchButton,
+                goog.events.EventType.CLICK,
+                this.onSubmit_
+            );
         }
 
         this.suggest_.setCallbacks({
@@ -719,11 +725,10 @@ goog.scope(function() {
      * Redirect handler
      * @private
      * @param {Object} event
-     * @param {Object} data
      */
-    Search.prototype.onSubmit_ = function(event, data) {
+    Search.prototype.onSubmit_ = function(event) {
         if (this.dataParams_.redirect) {
-            this.searchRequest_(data.text);
+            this.searchRequest_(this.getText());
         } else {
             this.dispatchEvent({
                 type: Search.Event.SUBMIT,
