@@ -1,3 +1,5 @@
+@import "../i-media/i-media";
+
 .l-search__body {
     min-height: 83%;
     margin: 0 auto 35px;
@@ -197,11 +199,6 @@
 
 @media screen and (max-width: 1280px) // for desktop and tablet
 {
-    .l-search__header {
-        box-sizing: border-box;
-        padding: 0 40px;
-    }
-
     .l-search__header-wrap {
         width: 100%;
     }
@@ -212,11 +209,6 @@
 
     .l-search__title {
         margin-bottom: 27px;
-    }
-
-    .l-search__information-links-wrap {
-        box-sizing: border-box;
-        padding: 0 40px;
     }
 
     .l-search__information-links {
@@ -293,7 +285,6 @@ screen and (max-width: 600px) // for desktop
 {
     .l-search__header {
         height: 171px;
-        padding: 0 30px;
 
         background: #f4f4ec;
     }
@@ -309,10 +300,6 @@ screen and (max-width: 600px) // for desktop
 
     .l-search__geoposition {
         margin-bottom: 2px;
-    }
-
-    .l-search__information-links-wrap {
-        padding: 0 30px;
     }
 
     .l-search__popular-schools {
@@ -346,3 +333,24 @@ screen and (max-width: 600px) // for desktop
     }
 }
 
+@include media-xl {
+    .l-search__header {
+        box-sizing: border-box;
+        padding: 0 40px;
+    }
+
+    .l-search__information-links-wrap {
+        box-sizing: border-box;
+        padding: 0 40px;
+    }
+}
+
+@include media-xs {
+    .l-search__header {
+        padding: 0 30px;
+    }
+
+    .l-search__information-links-wrap {
+        padding: 0 30px;
+    }
+}

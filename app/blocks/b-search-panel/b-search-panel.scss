@@ -1,3 +1,5 @@
+@import "../i-media/i-media";
+
 .b-search-panel {
     height: 155px;
 
@@ -110,11 +112,6 @@
 
 @media screen and (max-width: 1280px) // for desktop and tablet
 {
-    .b-search-panel {
-        box-sizing: border-box;
-        padding: 0 40px;
-    }
-
     .b-search-panel__content-wrap {
         width: 100%;
     }
@@ -195,10 +192,6 @@
 and (orientation: portrait),
 screen and (max-width: 600px) // for desktop
 {
-    .b-search-panel {
-        padding: 0 30px;
-    }
-
     .b-search-panel__content {
         width: 100%;
         padding-right: 0;
@@ -215,3 +208,15 @@ screen and (max-width: 600px) // for desktop
     }
 }
 
+@include media-xl {
+    .b-search-panel {
+        box-sizing: border-box;
+        padding: 0 40px;
+    }
+}
+
+@include media-xs {
+    .b-search-panel {
+        padding: 0 30px;
+    }
+}
