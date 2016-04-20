@@ -1,5 +1,6 @@
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
+var axios = require('axios');
 
 var soy = require('../../../../app/components/soy');
 var services = require('../../../../app/components/services').all;
@@ -37,6 +38,29 @@ exports.authorize = async(function(req, res) {
     } finally {
         res.header('Content-Type', 'text/html; charset=utf-8');
         res.header('Access-Control-Allow-Origin', '*');
+        res.end(result);
+    }
+});
+
+/**
+ * @api {get} /oauth/:type
+ * @apiName GetAuthUrl
+ * @apiGroup Authorization
+ *
+ * @apiParam {string} type Type of social net [vk, fb]
+ *
+ * @apiSuccess (Success 201) {Header} Location Absolute reference to authoriozation
+ */
+exports.getLink = async(function(req, res) {
+    var result;
+    try {
+        var socialLink = services.auth.getSocialLink(req.params.type),
+            authUrlResponse = await(axios.get(socialLink)),
+            authUrl = authUrlResponse.headers.location;
+        res.redirect(authUrl);
+    } catch (error) {
+        console.log(error); // TODO: change to logger
+        result = JSON.stringify(error);
         res.end(result);
     }
 });
