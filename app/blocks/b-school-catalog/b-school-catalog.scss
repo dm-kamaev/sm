@@ -82,10 +82,13 @@ screen and (max-width: 600px) // for desktop
     }
 
     .b-school-catalog__link,
-    .b-school-catalog__title,
     .b-school-catalog__text {
         box-sizing: border-box;
         width: 100%;
         padding-left: 90px;
+    }
+
+    .b-school-catalog__title {
+        display: none;
     }
 }
