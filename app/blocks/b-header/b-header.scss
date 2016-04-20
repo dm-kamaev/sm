@@ -174,7 +174,6 @@
 
     .b-header__body {
         height: 100px;
-        padding: 0 30px;
     }
 
     .b-header__section {
@@ -247,6 +246,10 @@
 }
 
 @include media-xs {
+    .b-header__body {
+        padding: 0 30px;
+    }
+
     .b-header__section {
         &.b-header__section_links {
             display: none;
