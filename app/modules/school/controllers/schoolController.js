@@ -150,13 +150,6 @@ exports.search = async(function(req, res) {
               popularSchools: schoolView.popular(data.popularSchools),
               dataLinks : schoolView.dataLinks(),
               amountSchools: data.amountSchools,
-              dataArticle : {
-                  urlArticle: 'http://mel.fm/2015/12/08/change_school/',
-                  urlImg: 'images/l-search/b-link-article/article.png',
-                  title: '7\u00A0причин, чтобы сменить\u00A0школу',
-                  subtitle: 'Как понять, что вы\u00A0просчитались' +
-                            ' с\u00A0выбором учебного\u00A0заведения'
-              },
               config: {
                   year: new Date().getFullYear(),
                   analyticsId: analyticsId,

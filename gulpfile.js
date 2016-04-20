@@ -120,7 +120,7 @@ gulp.task('sprite', function() {
 });
 
 gulp.task('images', function () {
-    var src = ['png', 'ico', 'svg', 'gif']
+    var src = ['png', 'ico', 'svg', 'gif', 'jpg']
             .map(ext => '**/*.' + ext)
             .map(mask => path.join(__dirname, BLOCKS_DIR, mask)),
         dest = path.join(__dirname, 'public/images');
