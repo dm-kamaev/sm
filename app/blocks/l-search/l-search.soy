@@ -18,12 +18,6 @@
  *         url: ?string
  *     ]>,
  *     amountSchools: ?number,
- *     dataArticle : [
- *         urlArticle: ?string,
- *         urlImg: ?string,
- *         title: ?string,
- *         subtitle: ?string
- *     ],
  *     config: [
  *         analyticsId: ?string,
  *         domain: ?string,
@@ -82,53 +76,13 @@
                 ]/}
             {/call}
         </div>
-            //TODO: uncomment
-            /*
-            {call sm.lSearch.Template.banner_ /}
-            {call sm.lSearch.Template.content_}
-                {param params: [
-                    'images': $params.images
-                ]/}
-            {/call}
-            */
-        <div class="l-search__information-links-wrap">
-            <div class="l-search__information-links">
-                <div class="l-search__schools">
-                    <div class="l-search__popular-schools">
-                        {call sm.bPopularSchools.Template.base}
-                            {param params: [
-                                'popularSchools': $params.popularSchools,
-                                'config': [
-                                    'popularSchool': [
-                                        'customClasses':
-                                        'l-search__popular-school'
-                                    ],
-                                    'analyticsAction': 'homepage click'
-                                ]
-                            ]/}
-                        {/call}
-                    </div>
-                    {call sm.lSearch.Template.informationSchools_}
-                        {param params: [
-                            'amountSchools': $params.amountSchools
-                        ]/}
-                    {/call}
-                    {call sm.lSearch.bLinkArticle.Template.base}
-                        {param params: [
-                            'urlArticle': $params.dataArticle.urlArticle,
-                            'urlImg': $params.dataArticle.urlImg,
-                            'title': $params.dataArticle.title,
-                            'subtitle': $params.dataArticle.subtitle
-                        ]/}
-                    {/call}
-                </div>
-            </div>
-        </div>
+
+        {call .informationLinks_ data="all" /}
     </div>
 {/template}
 
 /**
- * Title template
+ * Header template
  * @param? params {
  *     city: ?string
  * }
@@ -175,7 +129,7 @@
 {/template}
 
 /**
- * Search Template
+ * Template for block with search field
  * @param? params {
  *     examples: ?list<string>,
  *     dataLinks: ?list<[
@@ -203,112 +157,70 @@
 {/template}
 
 /**
- * Banner Template
+ * Information links template.
+ * Include popular schools, link to full school catalog and link to article
+ * @param params [
+ *     popularSchools: ?list<[
+ *         id: ?number,
+ *         url: ?string,
+ *         name: ?string,
+ *         description: ?string,
+ *         metro: ?list<string>,
+ *         totalScore: ?number
+ *     ]>,
+ *     amountSchools: ?number
+ * ]
  */
-{template .banner_ autoescape="strict" kind="html" private="true"}
-    <div class="l-search__rating-img"></div>
-{/template}
+{template .informationLinks_}
+    <div class="l-search__information-links-wrap">
+        <div class="l-search__information-links">
+            <div class="l-search__schools">
+                <div class="l-search__popular-schools">
+                    {call sm.bPopularSchools.Template.base}
+                        {param params: [
+                            'popularSchools': $params.popularSchools,
+                            'config': [
+                                'popularSchool': [
+                                    'customClasses':
+                                    'l-search__popular-school'
+                                ],
+                                'analyticsAction': 'homepage click'
+                            ]
+                        ]/}
+                    {/call}
+                </div>
 
-/**
- * Content Template
- * @param params {
- *     images: ?list<string>
- * }
- */
-{template .content_ autoescape="strict" kind="html" private="true"}
-    <div class="l-search__content">
-        <div class="l-search__item">
-            <div class="l-search__content-title">
-                Хорошкола
-            </div>
-            <img class="l-search__advertising-img" src="{$params.images[0]}" />
-            <div class="l-search__advertising-address">
-                м. Октябрьское поле, Сокол, ул. Маршала Тухачевского, 45, к. 2
-            </div>
-            <div class="l-search__content-text">
-                Прогимназия (детский сад и начальная школа), декларирующая своим
-                главным преимуществом метод ровеснического образования
-            </div>
-            <div class="l-search__advertising-footer">
-                Реклама
-            </div>
-        </div>
-        <div class="l-search__item l-search__item_even">
-            <div class="l-search__content-title">
-                Тест для школьника
-            </div>
-            <div class="l-search__content-text">
-                Часто родители думают,<br> что хорошо знают своего ребёнка, но
-                не всегда это так.
-                <div class="l-search__content-emptyline"></div>
-                Поэтому мы разработали сертифицированный тест чтобы ваш ребёнок
-                сам рассказал о себе
-            </div>
-            <div class="l-search__content-button">
-                {call sm.lSearch.Template.button_}
+                {call sm.lSearch.Template.schoolCatalog_}
                     {param params: [
-                        'text': 'Пройти тест',
-                        'theme': 'content'
+                        'amountSchools': $params.amountSchools
                     ]/}
                 {/call}
-            </div>
-        </div>
-        <div class="l-search__item">
-            <div class="l-search__content-title">
-                Подборки школ
-            </div>
-            <ul class="l-search__list">
-                <li>Для отличника</li>
-                <li>Для двоечника</li>
-                <li>С гуманитарным уклоном</li>
-                <li>С математическим уклоном</li>
-                <li>Для будущего бизнесмена</li>
-                <li>Высокий средний балл ЕГЭ</li>
-                <li>Новаторские школы</li>
-            </ul>
-        </div>
-        <div class="l-search__item l-search__item_even l-search__item_last">
-            <img class="l-search__article-img" src="{$params.images[1]}" />
-            <div class="l-search__article-quote">
-                «Цель школы — сломать волю ребенка»
-            </div>
-            <div class="l-search__article-title">
-                Антон Долин — о школе с шести лет, подлинной свободе и
-                учителях как невольных палачах
+
+                {call sm.lSearch.Template.article_ /}
             </div>
         </div>
     </div>
 {/template}
 
 /**
- * Button Template
- * @param? params {
- *     text: ?string,
- *     theme: string
- * }
- */
-{template .button_ autoescape="strict" kind="html" private="true"}
-    <div class="l-search__button l-search__button_{$params.theme}">
-        <span class="l-search__button-text">
-            {$params.text}
-        </span>
-    </div>
-{/template}
-
-/**
- * Information schools Template
+ * Template for link to full school catalog
  * @param? params {
  *     amountSchools: ?string
  * }
  */
-{template .informationSchools_ autoescape="strict" kind="html" private="true"}
+{template .schoolCatalog_ autoescape="strict" kind="html" private="true"}
+    {let $text kind="html"}
+        Мы&nbsp;составили полный каталог школ Москвы&nbsp;&mdash;
+        {sp}в&nbsp;нём сейчас
+    {/let}
+
     <div class="l-search__information-schools">
         {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
                 'factory': 'stendhal',
                 'type': 'school-catalog',
                 'renderParams': [
-                    'text': 'Мы составили полный каталог школ Москвы — в\u00A0нём сейчас',
+                    'text': $text,
                     'amount': $params.amountSchools,
                     'dataLink': [
                         'name': 'Полный список',
@@ -318,4 +230,36 @@
             ]/}
         {/call}
     </div>
+{/template}
+
+/**
+ * Template for link to article
+ */
+{template .article_}
+    {let $articleTitle kind="html"}
+        &laquo;Школа&nbsp;&mdash; это не&nbsp;гостиница
+        {sp}на&nbsp;11&nbsp;лет. Это гораздо важнее&raquo;
+    {/let}
+
+    {let $articleSubtitle kind="html"}
+        Никита Белоголовцев&nbsp;&mdash; о&nbsp;новом сервисе
+        {sp}&laquo;Мела&raquo; для родителей
+    {/let}
+
+    {let $imgUrl kind="uri"}
+        images/l-search/b-link-article/article.jpg
+    {/let}
+
+    {let $articleUrl kind="uri"}
+        http://mel.fm/2016/04/13/schools/
+    {/let}
+
+    {call sm.lSearch.bLinkArticle.Template.base}
+        {param params: [
+            'urlArticle': $articleUrl,
+            'urlImg': $imgUrl,
+            'title': $articleTitle,
+            'subtitle': $articleSubtitle
+        ]/}
+    {/call}
 {/template}
