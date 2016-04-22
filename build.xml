@@ -4,6 +4,8 @@
     <property name="initd_script" value="${ant.project.name}-node"/>
     <property name="project.frontend.path" value="${basedir}"/>
     <property name="project.node-modules.path" value="${basedir}/node_modules"/>
+    <property name="project.user.runtime.path" value="${project.frontend.runtime.path}"/>
+    <property name="project.auth.runtime.path" value="${project.frontend.runtime.path}"/>
 
     <import file="${basedir}/node_modules/deployment/packaging.xml"/>
     <import file="${basedir}/node_modules/deployment/node.xml"/>
@@ -41,6 +43,8 @@
         </exec>
         <copy file="${basedir}/environment/config/authorization/config.json"
               tofile="${project.node-modules.path}/auth-service/config/config.json" />
+        <copy file="${basedir}/environment/config/authorization/services.json"
+              tofile="${project.node-modules.path}/auth-service/config/services.json" />
     </target>
 
     <target name="deploy-user-config">
