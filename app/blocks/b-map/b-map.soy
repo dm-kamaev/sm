@@ -2,25 +2,29 @@
 
 /**
  * A layout for Yandex.Maps block
- * @param? params {{
- *     data: ?[{
- *         id: ?number,
- *         address: ?list{
- *             lat: number,
- *             lng: number,
- *             name: string,
- *             stages: list<string>
- *         },
- *         name: ?string,
- *         totalScore: ?number
- *     }],
- *     config: ?{
+ * @param? params [
+ *     data: [
+ *         schoolGroups: list<[
+ *             type: ?string,
+ *             schools: ?[
+ *                 id: ?number,
+ *                 address: ?list<[
+ *                     lat: number,
+ *                     lng: number,
+ *                     name: string,
+ *                     stages: list<string>
+ *                 ]>,
+ *                 name: ?string,
+ *                 totalScore: ?number
+ *              ]>,
+ *         mapCenter: list<number>
+ *     ],
+ *     config: ?[
  *         sidePins: ?boolean,
- *         enableScrollZoom: ?boolean,
- *         centerCoords: list<number>
- *     }
- * }}
-*/
+*         enableScrollZoom: ?boolean
+ *     ]
+ * ]
+ */
 {template .map}
     {let $dataParams kind="html"}
         {call cl.iUtils.Utils.stringify}

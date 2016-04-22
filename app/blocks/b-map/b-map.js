@@ -16,7 +16,6 @@ goog.require('goog.ui.Component');
 goog.require('sm.bMap.Template');
 goog.require('sm.lSchool.iViewport.Viewport');
 
-
 /**
  * @param {Object=} opt_params
  * @extends {goog.ui.Component}
@@ -26,18 +25,31 @@ sm.bMap.Map = function(opt_params) {
     goog.base(this);
 
     /**
+     * Object of map state on initialization
+     * @type {{
+     *     schoolGroups: Array.<{
+     *         type: string,
+     *         schools: Array.<Object>
+     *     }>
+     *     mapCenter: ?Array.<number>
+     * }}
+     * @private
+     */
+    this.params_ = opt_params;
+
+    /**
+     * Array of id of addresses on map
+     * @type {Array.<number>}
+     * @private
+     */
+    this.addedAddressesIds_ = [];
+
+    /**
      *   The ymaps object
      *   @type {Object=}
      *   @private
      */
     this.ymaps_ = undefined;
-
-    /**
-     *   An ID of a current school
-     *   @type {Number}
-     *   @private
-     */
-    this.params_ = opt_params;
 
     /**
      * Object manager of ymaps
@@ -79,13 +91,11 @@ goog.scope(function() {
     var Map = sm.bMap.Map;
     var Viewport = sm.lSchool.iViewport.Viewport;
 
-
     /**
      * Icon directory
      * @type {string}
      */
     Map.ICON_DIR = '/images/b-map/b-map__pin/icons/';
-
 
     /**
      * A config object with DOM class names
@@ -97,6 +107,13 @@ goog.scope(function() {
         CLOSE_BALLOON: 'b-map__balloon-close'
     };
 
+    /**
+     * Possible events
+     * @enum {string}
+     */
+    Map.Event = {
+      READY: 'ready'
+    };
 
     /**
      * Map presets names enum
@@ -109,7 +126,6 @@ goog.scope(function() {
         RED: 'red'
     };
 
-
     /**
      * Map presets types enum
      * @enum {string}
@@ -118,7 +134,6 @@ goog.scope(function() {
         DEFAULT: '',
         POINT: 'point'
     };
-
 
     /**
      * Preset type options
@@ -141,7 +156,6 @@ goog.scope(function() {
         }
     };
 
-
     /**
      * Map presets states enum
      * @enum {string}
@@ -150,7 +164,6 @@ goog.scope(function() {
         DEFAULT: '',
         ACTIVE: 'active'
     };
-
 
     /**
      * Preset state options
@@ -174,9 +187,8 @@ goog.scope(function() {
     */
     Map.defaultPosition = {
         COORDS: [55.755768, 37.617671],
-        ZOOM: 16
+        ZOOM: 13
     };
-
 
     /**
      * Zoom
@@ -187,10 +199,9 @@ goog.scope(function() {
         left: '10px'
     };
 
-
     /**
-    * @override
-    */
+     * @override
+     */
     Map.prototype.createDom = function() {
         goog.base(this, 'createDom');
         var element = sm.bMap.Template();
@@ -209,18 +220,46 @@ goog.scope(function() {
         var viewportPromise = this.getViewportPromise_(),
             ymapsPromise = this.getYmapsPromise_();
 
-        if (this.config_ && this.config_.sidePins) {
-            var dataPromise = this.getDataPromise_();
-        }
-
         viewportPromise.then(this.onShown_.bind(this));
 
         goog.Promise.all([
             viewportPromise,
             ymapsPromise
-        ]).then(this.onReady_.bind(this, dataPromise));
+        ]).then(this.onReady_.bind(this));
     };
 
+    /**
+     * Clear map, create placemarks from given data, add it to map,
+     * center it in according to provided center coords or
+     * group of placemarks on map
+     * @param {{
+     *     schoolGroups: Array.<{
+     *         type: string,
+     *         schools: Array.<Object>
+     *     }>,
+     *     mapCenter: ?Array.<number>
+     * }} data
+     * @public
+     */
+    Map.prototype.replaceItems = function(data) {
+        this.clear();
+        this.addItems(data);
+        this.center_(data.mapCenter);
+    };
+
+    /**
+     * Create placemarks from given data and add it to map
+     * @param {{
+     *     schoolGroups: Array.<{
+     *         type: string,
+     *         schools: Array.<Object>
+     *     }>
+     * }} data
+     * @public
+     */
+    Map.prototype.addItems = function(data) {
+        this.addSchoolGroups_(data.schoolGroups);
+    };
 
     /**
      * Deletes all current placemarks
@@ -233,29 +272,44 @@ goog.scope(function() {
     };
 
     /**
-     * Adds new placemarks
-     * @param {array<object>=} opt_mapSchools
-     * @param {array<number>=} opt_centerCoords
-     * @public
+     * Add school groups to map
+     * @param {Array.<{
+     *     type: string,
+     *     schools: Array.<Object>
+     * }>} data
+     * @private
      */
-    Map.prototype.addSchoolsPlacemarks = function(opt_mapSchools,
-        opt_centerCoords) {
-
-        if (opt_mapSchools) {
-            this.addPlacemarks_(opt_mapSchools);
-            this.centre_(opt_centerCoords);
-        }
+    Map.prototype.addSchoolGroups_ = function(data) {
+        data.forEach(this.addSchoolGroup_.bind(this));
     };
 
     /**
-     * Add placemarks and events
-     * @param {array<object>} mapSchools
+     * Add current group of points of schools to map
+     * @param {{
+     *     type: string,
+     *     schools: Array.<Object>
+     * }} schoolGroup
+     * @private
+     */
+    Map.prototype.addSchoolGroup_ = function(schoolGroup) {
+        if (schoolGroup.type === Map.PresetType.POINT) {
+            this.setCurrentPresets_(Map.PresetType.POINT);
+        } else {
+            this.setCurrentPresets_(Map.PresetType.DEFAULT);
+        }
+
+        this.addPlacemarks_(schoolGroup.schools);
+    };
+
+    /**
+     * Add placemarks to map and event listeners to it
+     * @param {Array.<Object>} mapSchools
      * @private
      */
     Map.prototype.addPlacemarks_ = function(mapSchools) {
         if (this.objectManager_) {
             this.objectManager_.add(
-                this.getCurrentPlacemarkCollection_(mapSchools)
+                this.createPlacemarkCollection_(mapSchools)
             );
 
             // click event handling
@@ -268,35 +322,42 @@ goog.scope(function() {
     };
 
     /**
-     * Center map
-     * @param {array<number>} opt_centerCoords
+     * Center map in according to given coordinates or
+     * in according to objects on map otherwise
+     * @param {Array.<number>=} opt_centerCoords
      * @private
      */
-    Map.prototype.centre_ = function(opt_centerCoords) {
+    Map.prototype.center_ = function(opt_centerCoords) {
         if (opt_centerCoords) {
             this.setMapCenterCoords_(opt_centerCoords);
         }
         else {
-            this.setMapCenterDefault_();
+            this.setMapCenterObjects_();
         }
     };
 
     /**
-     * Center map in accordance of coordinates
-     * @param {array<number>} coords
+     * Center map in according of given coordinates
+     * @param {Array.<number>|string} mapCenter
      * @private
      */
-    Map.prototype.setMapCenterCoords_ = function(coords) {
-        this.ymaps_.setCenter(coords, 15, {
+    Map.prototype.setMapCenterCoords_ = function(mapCenter) {
+        var centerCoords = mapCenter;
+
+        if (mapCenter == 'default') {
+            centerCoords = Map.defaultPosition.COORDS;
+        }
+
+        this.ymaps_.setCenter(centerCoords, Map.defaultPosition.ZOOM, {
             checkZoomRange: true
         });
     };
 
     /**
-     * Center map in accordance of default placemarks
+     * Center map in according to objects on map
      * @private
      */
-    Map.prototype.setMapCenterDefault_ = function() {
+    Map.prototype.setMapCenterObjects_ = function() {
         if (this.objectManager_) {
             this.ymaps_.setBounds(
                 this.objectManager_.getBounds(),
@@ -325,20 +386,7 @@ goog.scope(function() {
     };
 
     /**
-     * Waitng for schools data
-     * @return {Promise}
-     * @private
-     */
-    Map.prototype.getDataPromise_ = function() {
-        return jQuery.ajax({
-            url: '/api/address/list',
-            type: 'GET'
-        });
-    };
-
-
-    /**
-     * Waitong for yandex-map readiness
+     * Waiting for yandex-map readiness
      * @return {goog.Promise}
      * @private
      */
@@ -359,7 +407,6 @@ goog.scope(function() {
         }
     };
 
-
     /**
      * Handling map appearance
      * @private
@@ -368,26 +415,11 @@ goog.scope(function() {
         Viewport.getInstance().unlistenByKey(this.resizeListenerKey_);
     };
 
-
-    /**
-     * Handling schools data
-     * @param {string} data
-     * @private
-     */
-    Map.prototype.onDataLoaded_ = function(data) {
-        this.setCurrentPresets_(Map.PresetType.POINT);
-        this.objectManager_.add(
-            this.getAllPlacemarkCollection_(JSON.parse(data))
-        );
-    };
-
-
     /**
      * Handling all conditions readiness
-     * @param {goog.Promise} dataPromise
      * @private
      */
-    Map.prototype.onReady_ = function(dataPromise) {
+    Map.prototype.onReady_ = function() {
         //presets initialize
         this.initPresets_();
 
@@ -397,15 +429,10 @@ goog.scope(function() {
         //object manager initialization
         this.initObjectManager_();
 
-        //placemarks
-        this.setCurrentPresets_(Map.PresetType.DEFAULT);
+        /** Add points from data-params to map **/
+        this.replaceItems(this.params_);
 
-        this.addSchoolsPlacemarks(this.params_, this.config_.centerCoords);
-
-        //point placemarks
-        if (dataPromise) {
-            dataPromise.done(this.onDataLoaded_.bind(this));
-        }
+        this.dispatchEvent(Map.Event.READY);
     };
 
     /**
@@ -426,7 +453,6 @@ goog.scope(function() {
         this.ymaps_.geoObjects.add(this.objectManager_);
     };
 
-
     /**
      * Parameters initialization
      * @param {Element} element
@@ -442,7 +468,6 @@ goog.scope(function() {
             this.config_ = parsedDataset.config;
         }
     };
-
 
     /**
      * Presets initialization
@@ -513,7 +538,6 @@ goog.scope(function() {
             '-th.png';
     };
 
-
     /**
      * Getter for preset name
      * @param {string} name
@@ -528,7 +552,6 @@ goog.scope(function() {
 
         return namePrefix + name + namePostfix;
     };
-
 
     /**
      *
@@ -551,7 +574,6 @@ goog.scope(function() {
                     stateOption.zIndex
             };
         };
-
 
     /**
      * Sets a layout for the balloon, required by ymaps API
@@ -631,7 +653,6 @@ goog.scope(function() {
         return MyBalloonLayout;
     };
 
-
     /**
      * Success on getting all schools
      * @param {Array.<Object>} data
@@ -641,14 +662,13 @@ goog.scope(function() {
     Map.prototype.getAllPlacemarkCollection_ = function(data) {
         var that = this,
             result = [];
-
         data.forEach(function(item) {
             if (!goog.object.every(that.params_, function(param) {
                 return param.id === item.id;
             })) {
                 result.push.apply(
                     result,
-                    that.getSchoolPlacemarks_(item)
+                    that.generatePlacemarksFromSchool_(item)
                 );
             }
         });
@@ -657,24 +677,23 @@ goog.scope(function() {
     };
 
     /**
-     * @param {Array.<Object>} data
+     * Create placemark collection from given schools,
+     * checking whether addresses of school not in map already
+     * @param {Array.<Object>} schools
      * @return {Array<Object>}
      * @private
      */
-    Map.prototype.getCurrentPlacemarkCollection_ = function(data) {
+    Map.prototype.createPlacemarkCollection_ = function(schools) {
         var that = this,
             result = [];
-        data.forEach(function(item) {
+        schools.forEach(function(school) {
             result.push.apply(
                 result,
-                that.getSchoolPlacemarks_(item)
+                that.generatePlacemarksFromSchool_(school)
             );
         });
-
         return result;
     };
-
-
 
     /**
      * On placemark click actions
@@ -700,7 +719,6 @@ goog.scope(function() {
         }
     };
 
-
     /**
      * Removing of active state from selected placemark
      * @private
@@ -720,26 +738,17 @@ goog.scope(function() {
         );
     };
 
-
     /**
-     * Add placemarks to map
+     * Generate array of placemarks from one school
      * @param {Object} data
      * @return {Array<Object>}
      * @private
      */
-    Map.prototype.getSchoolPlacemarks_ = function(data) {
+    Map.prototype.generatePlacemarksFromSchool_ = function(data) {
         var totalScore = data.totalScore,
-            presetKey = Map.PresetName.DEFAULT,
+            presetKey = this.generatePresest_(totalScore),
             addressLength = data.addresses.length,
             result = [];
-
-        if (totalScore >= 4) {
-            presetKey = Map.PresetName.GREEN;
-        } else if (totalScore >= 3) {
-            presetKey = Map.PresetName.YELLOW;
-        } else if (totalScore > 0) {
-            presetKey = Map.PresetName.RED;
-        }
 
         var preset = this.currentPlacemarkPresetOptions_[presetKey];
 
@@ -747,29 +756,64 @@ goog.scope(function() {
             id = this.currentPlacemarkId_++;
             address = data.addresses[i];
 
-            result.push({
-                'type': 'Feature',
-                'id': id,
-                'geometry': {
-                    'type': 'Point',
-                    'coordinates': [address.lat, address.lng]
-                },
-                'properties': {
-                    'id': data.id,
-                    'name': data.name,
-                    'url': data.url,
-                    'description': data.description,
-                    'address': {
-                        'name': address.name,
-                        'stages': address.stages
+            if (!this.isAlreadyAdded_(address)) {
+                result.push({
+                    'type': 'Feature',
+                    'id': address.id,
+                    'geometry': {
+                        'type': 'Point',
+                        'coordinates': [address.lat, address.lng]
+                    },
+                    'properties': {
+                        'id': data.id,
+                        'name': data.name,
+                        'url': data.url,
+                        'description': data.description,
+                        'address': {
+                            'name': address.name,
+                            'stages': address.stages
+                        }
+                    },
+                    'options': {
+                        'preset': preset
                     }
-                },
-                'options': {
-                    'preset': preset
-                }
-            });
+                });
+            }
         }
         return result;
+    };
+
+    /**
+     * Generate preset name for placemark depends of given school score
+     * @param {number} score
+     * @return {Map.PresetName|string}
+     * @private
+     */
+    Map.prototype.generatePresest_ = function(score) {
+        var presetName = presetKey = Map.PresetName.DEFAULT;
+
+        if (score >= 4) {
+            presetName = Map.PresetName.GREEN;
+        } else if (score >= 3) {
+            presetName = Map.PresetName.YELLOW;
+        } else if (score > 0) {
+            presetName = Map.PresetName.RED;
+        }
+
+        return presetName;
+    };
+
+    /**
+     * Check whether address is already on map
+     * @param {Object} address
+     * @return {boolean}
+     * @private
+     */
+    Map.prototype.isAlreadyAdded_ = function(address) {
+        var addedAddresses = this.objectManager_.objects.getAll();
+        return addedAddresses.find(function(addedAddress) {
+            return addedAddress.id === address.id;
+        });
     };
 
     /**
