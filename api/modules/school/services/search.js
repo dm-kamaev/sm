@@ -521,7 +521,7 @@ exports.getFilterIds = async(function(filter, type) {
 });
 
 /**
- * Get center coordinates for map
+ * Get center coordinates for map depending of given search params
  * @param {Object} params
  * @param {number} params.metroId
  * @param {number} params.areaId
@@ -541,8 +541,13 @@ exports.getMapCenterCoords = function(params) {
 };
 
 /**
- *
+ * Check whether one of filters selected
  * @param {Object} params
+ * @param {?Array.<number>} params.classes
+ * @param {?Array.<number>} params.schoolType
+ * @param {?Array.<number>} params.ege
+ * @param {?Array.<number>} params.gia
+ * @param {?Array.<number>} params.olimp
  * @return {boolean}
  */
 var isFiltersSelected = function(params) {

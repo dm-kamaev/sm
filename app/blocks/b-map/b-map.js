@@ -38,13 +38,6 @@ sm.bMap.Map = function(opt_params) {
     this.params_ = opt_params;
 
     /**
-     * Array of id of addresses on map
-     * @type {Array.<number>}
-     * @private
-     */
-    this.addedAddressesIds_ = [];
-
-    /**
      *   The ymaps object
      *   @type {Object=}
      *   @private
@@ -262,13 +255,15 @@ goog.scope(function() {
     };
 
     /**
-     * Deletes all current placemarks
+     * Deletes all current placemarks, reset selected placemark,
+     * reset placemarks id
      * @public
      */
     Map.prototype.clear = function() {
         if (this.objectManager_) {
             this.objectManager_.removeAll();
         }
+        this.selectedPlacemarkId_ = null;
     };
 
     /**
@@ -654,29 +649,6 @@ goog.scope(function() {
     };
 
     /**
-     * Success on getting all schools
-     * @param {Array.<Object>} data
-     * @return {Array<Object>}
-     * @private
-     */
-    Map.prototype.getAllPlacemarkCollection_ = function(data) {
-        var that = this,
-            result = [];
-        data.forEach(function(item) {
-            if (!goog.object.every(that.params_, function(param) {
-                return param.id === item.id;
-            })) {
-                result.push.apply(
-                    result,
-                    that.generatePlacemarksFromSchool_(item)
-                );
-            }
-        });
-
-        return result;
-    };
-
-    /**
      * Create placemark collection from given schools,
      * checking whether addresses of school not in map already
      * @param {Array.<Object>} schools
@@ -751,7 +723,6 @@ goog.scope(function() {
             result = [];
 
         var preset = this.currentPlacemarkPresetOptions_[presetKey];
-
         for (var i = 0, id, address; i < addressLength; i++) {
             id = this.currentPlacemarkId_++;
             address = data.addresses[i];
@@ -759,7 +730,8 @@ goog.scope(function() {
             if (!this.isAlreadyAdded_(address)) {
                 result.push({
                     'type': 'Feature',
-                    'id': address.id,
+                    'id': id,
+                    'addressId': address.id,
                     'geometry': {
                         'type': 'Point',
                         'coordinates': [address.lat, address.lng]
@@ -812,7 +784,7 @@ goog.scope(function() {
     Map.prototype.isAlreadyAdded_ = function(address) {
         var addedAddresses = this.objectManager_.objects.getAll();
         return addedAddresses.find(function(addedAddress) {
-            return addedAddress.id === address.id;
+            return addedAddress.addressId === address.id;
         });
     };
 
