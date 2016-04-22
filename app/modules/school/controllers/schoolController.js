@@ -35,16 +35,18 @@ exports.list = async (function(req, res) {
     var searchText = req.query.name ? decodeURIComponent(req.query.name) : '';
 
     var promises = {
-        schools: services.school.list(searchParams),
+        schools: services.school.list(
+            searchParams,
+            {limitResults: true}
+        ),
         filters: services.school.searchFilters(),
-        centerCoords: services.metro.getCoords(searchParams.metroId)
+        centerCoords: services.search.getMapCenterCoords(searchParams)
     };
     var results = await(promises);
 
     var schoolsList = schoolView.list(results.schools);
-    var map = schoolView.listMap(results.schools, results.centerCoords);
+    var map = schoolView.listSearchMap(results.schools, results.centerCoords);
     var filters = searchView.filters(results.filters, searchParams);
-
     var params = {
         params: {
             data: {
@@ -68,7 +70,6 @@ exports.list = async (function(req, res) {
             }
         }
     };
-
     var html = soy.render('sm.lSearchResult.Template.list', params);
 
     res.header('Content-Type', 'text/html; charset=utf-8');
