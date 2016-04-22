@@ -82,6 +82,13 @@ sm.lSchool.School = function(opt_params) {
      * @private
      */
     this.dataBlockFeatures_ = null;
+
+    /**
+     * Map inctance
+     * @type {sm.bMap.Map}
+     * @private
+     */
+    this.map_ = null;
 };
 goog.inherits(sm.lSchool.School, goog.ui.Component);
 
@@ -97,9 +104,7 @@ goog.scope(function() {
         DataBlockFeatures = sm.bDataBlock.DataBlockFeatures,
         FeedbackModal = sm.lSchool.bFeedbackModal.FeedbackModal,
         AuthSocialModalView = cl.gAuthSocialModal.View,
-        factory = sm.iFactory.FactoryStendhal.getInstance(),
-        PopularSchools = sm.bPopularSchools.PopularSchools;
-
+        factory = sm.iFactory.FactoryStendhal.getInstance();
 
     /**
      * CSS-class enum
@@ -200,6 +205,12 @@ goog.scope(function() {
             DataBlockFeatures.Event.LINK_FEEDBACK_CLICK,
             this.onFeedbackLinkClick_
         );
+
+        handler.listen(
+            this.map_,
+            Map.Event.READY,
+            this.onMapReady_
+        );
     };
 
     /**
@@ -259,9 +270,9 @@ goog.scope(function() {
             .initScore_()
             .initAuthSocial_()
             .initModalInaccuracy_()
+            .initMap_()
             .initComponents_(FoldList)
             .initComponents_(DBlockRatings)
-            .initComponents_(Map)
             .initComponents_(Search)
             .initComponents_(Comments)
             .initComponents_(Results)
@@ -300,6 +311,20 @@ goog.scope(function() {
                 this.initComponent_(component, elements[i]);
             }
         }
+
+        return this;
+    };
+
+    /**
+     * Map initialization
+     * @return {sm.lSchool.School}
+     * @private
+     */
+    School.prototype.initMap_ = function() {
+        var mapElement = this.getElementByClass(Map.CssClass.ROOT);
+        this.map_ = new Map();
+        this.addChild(this.map_);
+        this.map_.decorate(mapElement);
 
         return this;
     };
@@ -402,6 +427,27 @@ goog.scope(function() {
                 sm.lSchool.School.CssClass.INACCURACY_LINK
             )
         };
+    };
+
+    /**
+     * Load additional points to map
+     * @private
+     */
+    School.prototype.onMapReady_ = function() {
+        jQuery.ajax({
+            url: '/api/school/schoolMapPoints',
+            type: 'GET'
+        }).then(this.addMapPoints.bind(this));
+    };
+
+    /**
+     * Add Points to map
+     * @param {string} responceData
+     */
+    School.prototype.addMapPoints = function(responceData) {
+        var data = JSON.parse(responceData);
+
+        this.map_.addItems(data);
     };
 
     /**
