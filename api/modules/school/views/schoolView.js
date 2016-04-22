@@ -417,34 +417,75 @@ schoolView.list = function(schools, opt_criterion) {
 
 
 /**
- * @param {Array.<Object>} schools - schoolInstances for map
+ * Group resutls of raw query to school object,
+ * divide array of school objects for 2 parts for map
+ * @param {Array.<Object>} schools - array of results of raw query
  * @param {Array.<number>} opt_coords
- * @return {Object} contains results schools array and central coordinate
+ * @return {Object.<string, Array.<Object|number>>} contains results schools array and central coordinate
  * for the map
  */
-schoolView.listMap = function(schools, opt_coords) {
-    var res = {};
+schoolView.listSearchMap = function(schools, opt_coords) {
+    var mapCenter = null;
+    if (opt_coords) {
+        mapCenter = Array.isArray(opt_coords) ?
+            [opt_coords[1], opt_coords[0]] :
+            opt_coords;
+    }
+
+    var result = {
+        schoolGroups: [],
+        mapCenter: mapCenter
+    };
 
     if (schools.length !== 0) {
-        schools = groupSchools(schools);
+        var schoolObjects = groupSchools(schools)
+            .map(this.schoolMap);
 
-        res.schools = schools.map(school => {
-            return {
-                addresses: addressView.default(school.addresses),
-                id: school.id,
-                name: school.name,
-                description: school.description,
-                url: school.url,
-                totalScore: school.totalScore
-            };
+        result.schoolGroups.push({
+            type: 'default',
+            schools: schoolObjects.slice(0, 10)
+        });
+
+        result.schoolGroups.push({
+            type: 'point',
+            schools: schoolObjects.slice(10)
         });
     }
+    return result;
+};
 
-    if (opt_coords) {
-        res.centerCoords = [opt_coords[1], opt_coords[0]];
-    }
+/**
+ * Group resutls of raw query to school object,
+ * return school to place it to map on schoo layout
+ * @param {Array.<Object>} schools - array of results of raw query
+ * @return {Object.<string, Object>} contains results schools array
+ */
+schoolView.listSchoolMap = function(schools) {
+    var schoolObjects = groupSchools(schools)
+        .map(this.schoolMap);
 
-    return res;
+    return {
+        schoolGroups: [{
+            type: 'point',
+            schools: schoolObjects
+        }]
+    };
+};
+
+/**
+ * Transform school object for map
+ * @param {Object} school
+ * @return {Object}
+ */
+schoolView.schoolMap = function(school) {
+    return {
+        addresses: addressView.default(school.addresses),
+        id: school.id,
+        name: school.name,
+        description: school.description,
+        url: school.url,
+        totalScore: school.totalScore
+    };
 };
 
 /**
@@ -633,11 +674,15 @@ var getName = function (name) {
 };
 
 /**
- * @param {array<object>} schools - schoolInstances
- * @return {array<object>}
+ * Transform array with result of raw query to school object with
+ * array of addresses
+ * @param {Array.<Object>} schools - schoolInstances
+ * @return {Array.<Object>}
  */
 schoolView.listMapPoints = function(schools) {
-    return schools.reduce((prev, curr) => {
+    var result = {};
+
+    result.schools = schools.reduce((prev, curr) => {
         curr = curr.dataValues;
 
         prev = prev.length > 0 ? prev : [{
@@ -714,6 +759,8 @@ schoolView.listMapPoints = function(schools) {
 
         return prev;
     }, []);
+
+    return result;
 };
 
 /**

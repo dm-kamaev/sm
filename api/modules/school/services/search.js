@@ -44,7 +44,7 @@ exports.suggestSearch = async(function(searchString) {
     var promises = [
         services.school.searchByText(searchString),
         findAnyInModel(models.Area, searchString),
-        findAnyInModel(models.Metro, searchString),
+        findAnyInModel(models.Metro, searchString)
     ];
     var results = await(promises);
     return {
@@ -53,6 +53,91 @@ exports.suggestSearch = async(function(searchString) {
         metros: results[2]
     };
 });
+
+/**
+ * Generate sql config object for search in schools
+ * @param {number} opt_offset
+ * @return {Object}
+ */
+exports.generateSqlConfig = function(opt_offset) {
+    var useOffset = (opt_offset !== null && opt_offset !== undefined);
+    console.log(opt_offset);
+    var sqlConfig = {
+        select: [
+            'school.id',
+            'school.name',
+            'school.full_name AS "fullName"',
+            'school.rank_dogm AS "rankDogm"',
+            'school.description',
+            'school.url',
+            'school.score',
+            'school.total_score AS "totalScore"',
+            'school.score_count AS "scoreCount"',
+            'school.count_results AS "countResults"',
+            'address.id AS "addressId"',
+            'metro.id AS "metroId"',
+            'metro.name AS "metroName"',
+            'area.id AS "areaId"',
+            'area.name AS "areaName"',
+            'address.coords AS "addressCoords"',
+            'address.name AS "addressName"',
+            'department.stage AS "departmentStage"'
+        ],
+        from: {
+            select: [
+                'school.id',
+                'school.name',
+                'school.full_name',
+                'school.rank_dogm',
+                'school.description',
+                'school.url',
+                'school.score',
+                'school.total_score',
+                'school.score_count',
+                'count(*) OVER() AS count_results'
+            ],
+            from: ['school'],
+            where: [],
+            as: 'school',
+            join: [],
+            group: ['school.id'],
+            order: [
+                'school.total_score DESC',
+                'school.score DESC NULLS LAST',
+                'school.id ASC'
+            ],
+            having: [],
+            limit: useOffset ? 10 : "ALL",
+            offset: useOffset ? opt_offset * 10 : 0
+        },
+        where: [
+            'address.is_school = true'
+        ],
+        join: [
+            {
+                type: 'LEFT OUTER',
+                values: [
+                    'address on address.school_id = school.id',
+                    'address_metro on address_metro.address_id = address.id',
+                    'metro on metro.id = address_metro.metro_id',
+                    'area on address.area_id = area.id',
+                    'department on department.address_id = address.id'
+                ]
+            }
+        ],
+        group: [
+        ],
+        order: [
+            'school.total_score DESC',
+            'school.score DESC NULLS LAST',
+            'school.id ASC',
+            'address_metro.distance ASC'
+        ],
+        having: []
+    };
+
+    return sqlConfig;
+};
 
 /**
  * @param {object} model
@@ -225,8 +310,6 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
                 ]
             });
         }
-
-
 
         if (searchParams.areaId) {
             isGeoDataJoined = true;
@@ -436,6 +519,39 @@ exports.getFilterIds = async(function(filter, type) {
 
     return ids;
 });
+
+/**
+ * Get center coordinates for map
+ * @param {Object} params
+ * @param {number} params.metroId
+ * @param {number} params.areaId
+ * @param {string} params.name
+ * @return {Array.<number>|string}
+ */
+exports.getMapCenterCoords = function(params) {
+    var result;
+    if (params.metroId) {
+        result = services.metro.getCoords(params.metroId);
+    } else if (params.areaId) {
+        /** Centering on area id **/
+    } else if(params.name === '' && !isFiltersSelected(params)) {
+        result = 'default';
+    }
+    return result;
+};
+
+/**
+ *
+ * @param {Object} params
+ * @return {boolean}
+ */
+var isFiltersSelected = function(params) {
+    var filterTypes = searchTypeEnum.toCamelCaseArray(),
+        isSelected = lodash.some(filterTypes, (filterType) => {
+            return params[filterType].length;
+        });
+    return isSelected || params.classes.length;
+};
 
 /**
  * @param {int} school_id
