@@ -85,12 +85,15 @@ sm.lSearchResult.SearchResult = function(opt_params) {
     /**
      * Params for request to api
      * @type {{
-     *     url: {string},
-     *     method: {string}
+     *     listDataUrl: {string},
+     *     mapDataUrl: {string}
      * }}
      * @private
      */
-    this.requestParams_ = {};
+    this.requestParams_ = {
+        listDataUrl: '/api/school/search',
+        mapDataUrl: '/api/school/searchMapPoints'
+    };
 
     /**
      * Dom elements
@@ -181,6 +184,7 @@ goog.scope(function() {
         this.initHeaderListeners_();
         this.initFiltersListeners_();
         this.initSchoolListListeners_();
+        this.initMapListeners_();
         this.initWindowListeners_();
     };
 
@@ -213,11 +217,6 @@ goog.scope(function() {
     SearchResult.prototype.initParams_ = function() {
         var element = this.getElement(),
             dataParams = JSON.parse(goog.dom.dataset.get(element, 'params'));
-
-        this.requestParams_ = {
-            url: dataParams.url,
-            method: dataParams.method || 'GET'
-        };
 
         this.instances_.search.setData(dataParams.searchParams);
 
@@ -344,6 +343,18 @@ goog.scope(function() {
     };
 
     /**
+     * Init map listeners
+     * @private
+     */
+    SearchResult.prototype.initMapListeners_ = function() {
+        this.getHandler().listen(
+            this.instances_.map,
+            Map.Event.READY,
+            this.onMapReady_
+        );
+    };
+
+    /**
      * Init listeners for window
      * @private
      */
@@ -429,6 +440,15 @@ goog.scope(function() {
     };
 
     /**
+     * Load and add additional points to map
+     * @private
+     */
+    SearchResult.prototype.onMapReady_ = function() {
+        this.send_(this.requestParams_.mapDataUrl)
+            .then(this.addMapPoints_.bind(this));
+    };
+
+    /**
      * Get search params from filters
      * @return {Object}
      * @private
@@ -454,7 +474,11 @@ goog.scope(function() {
         this.updateSearchParams_(this.getSearchParams_());
         this.updateUrl_();
 
-        this.send_().then(this.updateSchools_.bind(this));
+        this.send_(this.requestParams_.listDataUrl)
+            .then(this.updateSchools_.bind(this));
+
+        this.send_(this.requestParams_.mapDataUrl)
+            .then(this.replaceMapPoints_.bind(this));
     };
 
     /**
@@ -563,7 +587,8 @@ goog.scope(function() {
             sortType: event.itemId
         });
 
-        this.send_().then(this.setItems_.bind(this));
+        this.send_(this.requestParams_.listDataUrl)
+            .then(this.setItems_.bind(this));
     };
 
     /**
@@ -577,7 +602,8 @@ goog.scope(function() {
 
         this.instances_.schoolList.showLoader();
 
-        this.send_().then(this.addItems_.bind(this));
+        this.send_(this.requestParams_.listDataUrl)
+            .then(this.addItems_.bind(this));
     };
 
     /**
@@ -593,13 +619,14 @@ goog.scope(function() {
 
     /**
      * Send query with search settings
+     * @param {string} url
      * @return {Promise}
      * @private
      */
-    SearchResult.prototype.send_ = function() {
+    SearchResult.prototype.send_ = function(url) {
         return jQuery.ajax({
-            url: this.requestParams_.url,
-            type: this.requestParams_.method,
+            url: url,
+            type: 'GET',
             data: this.searchParams_
         });
     };
@@ -635,9 +662,8 @@ goog.scope(function() {
 
         this.instances_.search.setCoords(data.centerCoords);
 
-        if (data.mapSchools) {
+        if (data.countResults > 0) {
             this.showMap_();
-            this.updateMap_(data.mapSchools);
         } else {
             this.hideMap_();
         }
@@ -645,7 +671,7 @@ goog.scope(function() {
     };
 
     /**
-     * Shows map
+     * Show map
      * @private
      */
     SearchResult.prototype.showMap_ = function() {
@@ -656,7 +682,7 @@ goog.scope(function() {
     };
 
     /**
-     * Hides map
+     * Hide map
      * @private
      */
     SearchResult.prototype.hideMap_ = function() {
@@ -667,15 +693,25 @@ goog.scope(function() {
     };
 
     /**
-     * Updates map
-     * @param {array<object>} mapSchools
+     * Add points to map and center it if necessary
+     * @param {string} responceData
      * @private
      */
-    SearchResult.prototype.updateMap_ = function(mapSchools) {
-        var centerCoords = this.getMapCenterCoords_();
+    SearchResult.prototype.addMapPoints_ = function(responceData) {
+        var data = JSON.parse(responceData);
 
-        this.instances_.map.clear();
-        this.instances_.map.addSchoolsPlacemarks(mapSchools, centerCoords);
+        this.instances_.map.addItems(data);
+    };
+
+    /**
+     * Set points to map and center it in according to responce data
+     * @param {string} responceData
+     * @private
+     */
+    SearchResult.prototype.replaceMapPoints_ = function(responceData) {
+        var data = JSON.parse(responceData);
+
+        this.instances_.map.replaceItems(data);
     };
 
     /**
