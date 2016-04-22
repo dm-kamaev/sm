@@ -250,24 +250,23 @@ exports.createComment = async (function(req, res) {
 
 
 /**
- * @api {get} api/school/search Search school
+ * @api {get} api/school/search Search in all schools withs given
+ * parameters and return 10 results depends of given page
  * @apiVersion 0.0.0
  * @apiGroup School
  * @apiName Search
  * @apiParam {Object} searchParams Search params.
  * @apiParamExample {json} Request-Example:
  *     {
- *       "searchParams": {
- *         "name": "123",
- *         "classes": [1,2,3,4],
- *         "schoolType": ["school-or-center", "cadet"],
- *         "gia": ["math", "russian"],
- *         "ege": ["art", "handcraft"],
- *         "olimp": ["computer-science", "sports"],
- *         "metroId": 1,
- *         "areaId": 1,
- *         "sortType": 1
- *       },
+ *       "name": "123",
+ *       "classes": [1,2,3,4],
+ *       "schoolType": ["school-or-center", "cadet"],
+ *       "gia": ["math", "russian"],
+ *       "ege": ["art", "handcraft"],
+ *       "olimp": ["computer-science", "sports"],
+ *       "metroId": 1,
+ *       "areaId": 1,
+ *       "sortType": 1,
  *       "page": 0
  *     }
  */
@@ -276,21 +275,89 @@ exports.search = async (function(req, res) {
     try {
         var params = await(services.search.initSearchParams(req.query));
 
+        var schools = await(services.school.list(
+            params,
+            {limitResults: true}
+        ));
+
+        result = schoolView.list(schools, params.sortType);
+    } catch (error) {
+        result = JSON.stringify(error);
+        logger.error(result);
+    } finally {
+        res.header('Content-Type', 'text/html; charset=utf-8');
+        res.end(JSON.stringify(result));
+    }
+});
+
+/**
+ * @api {get} api/school/searchMapPoints Search in all schools with given
+ * parameters and return all results to place it at map
+ * @apiVersion 0.0.0
+ * @apiGroup School
+ * @apiName SearchMapPoints
+ * @apiParam {Object} searchParams Search params.
+ * @apiParamExample {json} Request-Example:
+ *     {
+ *       "name": "123",
+ *       "classes": [1,2,3,4],
+ *       "schoolType": ["school-or-center", "cadet"],
+ *       "gia": ["math", "russian"],
+ *       "ege": ["art", "handcraft"],
+ *       "olimp": ["computer-science", "sports"],
+ *       "metroId": 1,
+ *       "areaId": 1,
+ *       "sortType": 1
+ *     }
+ */
+exports.searchMapPoints = async(function(req, res) {
+    var result;
+    try {
+        var params = await(services.search.initSearchParams(req.query));
+        
         var promises = {
-            schools: services.school.list(params),
-            centerCoords: services.metro.getCoords(params.metroId)
+            schools: services.school.list(
+                params,
+                {limitResults: false}
+            ),
+            centerCoords: services.search.getMapCenterCoords(params)
         };
         var results = await(promises);
 
-        var mapSchools = schoolView.listMap(results.schools, results.centerCoords);
-
-        result = schoolView.list(results.schools, params.sortType);
-        result.mapSchools = mapSchools.schools;
-        result.centerCoords = mapSchools.centerCoords;
+        result = schoolView.listSearchMap(
+            results.schools,
+            results.centerCoords
+        );
 
     } catch (error) {
         result = JSON.stringify(error);
         logger.error(result);
+    } finally {
+        res.header('Content-Type', 'text/html; charset=utf-8');
+        res.end(JSON.stringify(result));
+    }
+});
+
+/**
+ * @api {get} api/school/schoolMapPoints return all schools to place it
+ * at map on school page
+ * @apiVersion 0.0.0
+ * @apiGroup School
+ * @apiName SchoolMapPoints
+ */
+exports.schoolMapPoints = async(function(req, res) {
+    var result;
+
+    try {
+        var schools = await(services.school.list(
+            {},
+            {limitResults: false}
+        ));
+
+        result = schoolView.listSchoolMap(schools);
+    } catch (error) {
+        logger.error(error);
+        result = error.message;
     } finally {
         res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(JSON.stringify(result));
