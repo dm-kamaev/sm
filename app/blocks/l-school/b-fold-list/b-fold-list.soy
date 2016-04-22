@@ -1,0 +1,351 @@
+{namespace sm.lSchool.bFoldList.Template}
+
+/**
+ * Constructor
+ * @param params [
+ *     data: [name: string, items: list<srtring>] |
+ *           list<[name: string, items: list<srtring>]>,
+ *     config: [
+ *         type: string,
+ *         showMore: bool
+ *     ]
+ * ]
+ * @extends cl.iControl.Template
+ * @constructor
+ */
+{template .foldList}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * @param params [
+ *     data: [name: string, items: list<srtring>] |
+ *           list<[name: string, items: list<srtring>]>,
+ *     config: [
+ *         type: string,
+ *         showMore: bool
+ *     ]
+ * ]
+ * @override
+ */
+{template .body}
+    {if $params.config.type == 'unfolded' and length($params.data)}
+        {call .unfoldedList_ data="all" /}
+    {elseif $params.config.showMore == true}
+        {call .content_ data="all" /}
+    {else}
+        {call .list_ data="all" /}
+    {/if}
+{/template}
+
+
+/**
+ * @param params [
+ *     data: list<[name: string, items: list<srtring>]>,
+ *     config: [
+ *         type: string,
+ *         showMore: bool
+ *     ]
+ * ]
+ */
+{template .unfoldedList_ kind="html"}
+    {foreach $list in $params.data}
+        {call .recursion_}
+            {param params: [
+                'data' : $list,
+                'config' : [
+                    'type': $params.config.type,
+                    'showMore': $params.config.showMore
+                ]
+            ]/}
+        {/call}
+    {/foreach}
+{/template}
+
+
+/**
+ * @param params [
+ *     data: [name: string, items: list<srtring>] |
+ *           list<[name: string, items: list<srtring>]>,
+ *     config: [
+ *         type: string
+ *     ]
+ * ]
+ */
+{template .content_ kind="html"}
+    {let $length kind="html"}
+        {length($params.data) ?: length($params.data.items)}
+    {/let}
+
+    <ul class="{call .rootClass/}__list">
+        {if $params.data.name}
+            {call .title_}
+                {param params: [
+                    'name': $params.data.name
+                ]/}
+            {/call}
+        {/if}
+
+        {call .firstList_}
+            {param data: $params.data.items ?: $params.data/}
+        {/call}
+
+        {if $length > 3}
+            {call .otherList_}
+                {param data: $params.data.items ?: $params.data/}
+            {/call}
+
+            {call .button_}
+                {param params: [
+                    'number': $length,
+                    'listType': $params.config.type
+                ]/}
+            {/call}
+        {/if}
+    </ul>
+{/template}
+
+
+/**
+ * @param data [
+ *      list<srtring> |
+ *      list<[name: string, items: list<srtring>]>
+ * ]
+ */
+{template .firstList_ kind="html"}
+    {for $i in range(3)}
+        {if $data and $data[$i]}
+            {call .item_}
+                {param params: $data[$i]/}
+            {/call}
+        {/if}
+    {/for}
+{/template}
+
+
+/**
+ * @param data [
+ *      list<srtring> |
+ *      list<[name: string, items: list<srtring>]>
+ * ]
+ */
+{template .otherList_ kind="html"}
+    <li class="{call .rootClass/}__item {call .rootClass/}__item_list">
+        <ul class="{call .rootClass/}__list{sp}
+            {call .rootClass/}__list_other i-utils__hidden">
+
+            {for $i in range(3, length($data))}
+                {call .item_}
+                    {param params: $data[$i]/}
+                {/call}
+            {/for}
+        </ul>
+    </li>
+{/template}
+
+
+/**
+ * @param params [
+ *     data: [
+ *        name: string,
+ *        items: list<srtring>] | list<[name: string, items: list<srtring>]>
+ *     ]
+ * ]
+ */
+{template .list_ kind="html"}
+    {call .title_}
+        {param params: [
+            'name': $params.data.name,
+            'number': length($params.data.items)
+        ]/}
+    {/call}
+
+    <ul class="{call .rootClass/}__list{sp}
+                {call .rootClass/}__list_active i-utils__hidden">
+
+        {foreach $list in $params.data.items ?: $params.data}
+            {call .item_}
+                {param params: $list/}
+            {/call}
+        {/foreach}
+    </ul>
+{/template}
+
+
+/**
+ * @param params [
+ *      name: string |
+ *      list<srtring> |
+ *      list<[name: string, items: list<srtring>]>
+ * ]
+ */
+{template .item_ kind="html"}
+    {if $params.items}
+        <li class="{call .rootClass/}__item {call .rootClass/}__item_list">
+            {call .recursion_}
+                {param params: [
+                    'data' : $params
+                ]/}
+            {/call}
+        </li>
+    {else}
+        <li class="{call .rootClass/}__item {call .rootClass/}__item_default">
+            &mdash; {$params.name ?: $params}
+        </li>
+    {/if}
+{/template}
+
+
+/**
+ * @param params [
+ *     data: [name: string, items: list<srtring>] |
+ *           list<[name: string, items: list<srtring>]>,
+ *     config: [
+ *         type: string,
+ *         showMore: bool
+ *     ]
+ * ]
+ */
+{template .recursion_ kind="html"}
+    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+        {param params: [
+            'factory': 'stendhal',
+            'type': 'fold-list',
+            'renderParams': [
+                'data' : $params.data,
+                'config' : [
+                    'type': $params?.config?.type,
+                    'showMore': $params?.config?.showMore
+                ]
+            ]
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * @param params [
+ *     name: string,
+ *     number: ?number
+ * ]
+ */
+{template .title_ kind="html"}
+    {if $params?.number}
+        <div class="{call .rootClass/}__title">
+            {call .link_}
+                {param params: [
+                    'name': $params.name,
+                    'config': [
+                        'customClasses': 'b-fold-list__link',
+                        'size': 'large'
+                    ]
+                ]/}
+            {/call}
+
+            {call .number_}
+                {param number: $params.number /}
+            {/call}
+        </div>
+    {else}
+        <div class="{call .rootClass/}__title{sp}
+            {call .rootClass/}__title_default">
+
+            {$params.name}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * @param params [
+ *     number: string,
+ *     listType: ?string
+ * ]
+ */
+{template .button_ kind="html"}
+    {let $customClasses kind="html"}
+        {if $params?.listType == 'unfolded'}
+            {call .rootClass/}__item_default
+        {/if}
+    {/let}
+
+    <li class="{call .rootClass/}__item {call .rootClass/}__item_button
+    {sp}{call .rootClass/}__item_button-unfold {$customClasses}">
+
+        {call .link_}
+            {param params: [
+                'name': 'Ещё',
+                'config': [
+                    'customClasses': 'b-fold-list__button-link',
+                    'theme': 'attention',
+                    'size': 'large'
+                ]
+            ]/}
+        {/call}
+
+        {call .number_}
+            {param number: $params.number - 3 /}
+        {/call}
+    </li>
+
+    <li class="{call .rootClass/}__item {call .rootClass/}__item_button
+        {sp}{call .rootClass/}__item_button-fold i-utils__hidden 
+        {sp}{$customClasses}">
+
+        {call .link_}
+            {param params: [
+                'name': 'Скрыть',
+                'config': [
+                    'customClasses': 'b-fold-list__button-link',
+                    'theme': 'attention',
+                    'size': 'large'
+                ]
+            ]/}
+        {/call}
+    </li>
+{/template}
+
+
+/**
+ * @param params [
+ *     name: string,
+ *     config: [
+ *         customClasses: ?string,
+ *         theme: ?string
+ *    ]
+ * ]
+ */
+{template .link_ kind="html"}
+    {call sm.bLink.Template.base}
+        {param params: [
+            'data': [
+                'name': $params.name
+            ],
+            'config': [
+                'customClasses': $params.config?.customClasses,
+                'theme': $params.config?.theme,
+                'size': 'large'
+            ]
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * @param number [number]
+ */
+{template .number_ kind="html"}
+    <span class="{call .rootClass/}__number">
+        {$number}
+    </span>
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-fold-list
+{/template}

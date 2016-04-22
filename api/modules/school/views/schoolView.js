@@ -323,7 +323,9 @@ var getSpecializedClasses = function(specializedClasses) {
             }
 
             if (result[index].items.indexOf(specializedClass[1]) === -1) {
-                result[index].items.push(specializedClass[1]);
+                result[index].items.push({
+                    name: specializedClass[1]
+                });
             }
         }
     }

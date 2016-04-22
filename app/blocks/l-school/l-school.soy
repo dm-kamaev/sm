@@ -722,7 +722,8 @@
             {call sm.lSchool.bDataBlock.TemplateFoldList.base}
                 {param params: [
                     'header': 'Профильные классы',
-                    'content': $params.data.specializedClasses
+                    'content': $params.data.specializedClasses,
+                    'type': 'unfolded'
                 ] /}
             {/call}
         </div>
@@ -748,13 +749,8 @@
             {call sm.lSchool.bDataBlock.TemplateFoldList.base}
                 {param params: [
                     'header': 'Дополнительные занятия',
-                    'headerType': 2,
-                    'content': [
-                        [
-                            'name': 'Показать список',
-                            'items': $params.data.activities
-                        ]
-                    ]
+                    'content': $params.data.activities,
+                    'type': 'folded'
                 ] /}
             {/call}
         </div>

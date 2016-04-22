@@ -24,6 +24,8 @@ goog.require('sm.gModal.ViewFeedback');
 goog.require('sm.gModal.ViewStendhal');
 goog.require('sm.gTextarea.TextareaStendhal');
 goog.require('sm.gTextarea.ViewStendhal');
+goog.require('sm.lSchool.bFoldList.FoldList');
+goog.require('sm.lSchool.bFoldList.View');
 
 /**
  * FactoryStendhal
@@ -81,6 +83,10 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('data-block-features', {
             control: sm.bDataBlock.DataBlockFeatures,
             view: sm.bDataBlock.DataBlockFeaturesView
+        })
+        .setControlListItem('fold-list', {
+            control: sm.lSchool.bFoldList.FoldList,
+            view: sm.lSchool.bFoldList.View
         });
 };
 goog.inherits(sm.iFactory.FactoryStendhal, cl.iFactory.Factory);
