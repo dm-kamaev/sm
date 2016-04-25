@@ -41,7 +41,7 @@ exports.list = async (function(req, res) {
     };
     var results = await(promises);
 
-    var schoolsList = schoolView.list(results.schools);
+    var schoolsList = schoolView.list(results.schools, null, searchParams.page);
     var map = schoolView.listMap(results.schools, results.centerCoords);
     var filters = searchView.filters(results.filters, searchParams);
 

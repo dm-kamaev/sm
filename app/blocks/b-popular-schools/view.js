@@ -80,11 +80,14 @@ goog.scope(function() {
      */
     View.prototype.onClickSchool_ = function(schoolNumInArr) {
         var schoolData = this.getDataParams_(this.dom.schools[schoolNumInArr]),
-            schoolName = schoolData.schoolName;
+            schoolName = schoolData.schoolName,
+            schoolId = schoolData.id;
 
         this.dispatchEvent({
+            'id': schoolId,
             'type': View.Event.SCHOOL_CLICK,
-            'schoolName': schoolName
+            'schoolName': schoolName,
+            'position': schoolNumInArr + 1
         });
     };
 
@@ -114,4 +117,3 @@ goog.scope(function() {
     };
 
 });
-

@@ -284,7 +284,7 @@ exports.search = async (function(req, res) {
 
         var mapSchools = schoolView.listMap(results.schools, results.centerCoords);
 
-        result = schoolView.list(results.schools, params.sortType);
+        result = schoolView.list(results.schools, params.sortType, params.page);
         result.mapSchools = mapSchools.schools;
         result.centerCoords = mapSchools.centerCoords;
 

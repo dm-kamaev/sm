@@ -42,6 +42,28 @@ goog.scope(function() {
         ga('send', params);
     };
 
+    /**
+     * Add information about product
+     * @param {{
+     *     id: string,
+     *     name: string,
+     *     brand: ?string,
+     *     category: ?string,
+     *     variant: ?string,
+     *     price: ?string,
+     *     quantity: ?number,
+     *     coupon: ?string,
+     *     position: ?number
+     * }} params
+     * @param {string} place - where clickied the item
+     */
+    Analytics.prototype.clickProduct = function(params, place) {
+        ga('ec:addProduct', params);
+        ga('ec:setAction', 'click', {
+            'list': place
+        });
+    };
+
 
     /**
      * Creates a counter for the resource
@@ -49,6 +71,8 @@ goog.scope(function() {
      */
     Analytics.prototype.create_ = function() {
         ga('create', this.clientId_, 'auto');
+
+        ga('require', 'ec');
     };
 
 
