@@ -68,6 +68,7 @@ goog.scope(function() {
      * @private
      */
     PopularSchools.prototype.onSchoolClick_ = function(event) {
+        this.sendEcAnalytics_(event);
         this.sendAnalyticsSchoolData_(this.analyticsAction_, event.schoolName);
     };
 
@@ -88,5 +89,19 @@ goog.scope(function() {
         };
 
         Analytics.send(dataAnalytics);
+    };
+
+    /**
+     * Send ECommerce Analytics data
+     * @param {String} data
+     * @private
+     */
+    PopularSchools.prototype.sendEcAnalytics_ = function(data) {
+        var ecData = {
+            id: data.id,
+            name: data.schoolName,
+            position: data.position
+        };
+        Analytics.clickProduct(ecData, 'Popular Schools');
     };
 });

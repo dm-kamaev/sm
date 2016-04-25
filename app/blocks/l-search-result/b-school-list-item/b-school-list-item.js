@@ -272,10 +272,13 @@ goog.scope(function() {
     };
 
     /**
+     * @param {Object} event
      * @private
      */
-    ListItem.prototype.onClickListItem_ = function() {
-        this.sendAnalyticsSchoolData_();
+    ListItem.prototype.onClickListItem_ = function(event) {
+        if (!event.defaultPrevented) {
+            this.sendAnalyticsSchoolData_(event);
+        }
     };
 
     /**
@@ -308,9 +311,21 @@ goog.scope(function() {
 
     /**
      * send Analytics data school
+     * @param {Object} event
      * @private
      */
-    ListItem.prototype.sendAnalyticsSchoolData_ = function() {
+    ListItem.prototype.sendAnalyticsSchoolData_ = function(event) {
+
+        var schoolParams =
+            JSON.parse(goog.dom.dataset.get(event.currentTarget, 'params'));
+
+        var ecData = {
+            id: schoolParams.id,
+            name: this.name_,
+            position: schoolParams.position
+        };
+
+        Analytics.clickProduct(ecData, 'Search Results');
 
         var dataAnalytics = {
             hitType: 'event',
