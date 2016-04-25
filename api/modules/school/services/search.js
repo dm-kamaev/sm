@@ -256,7 +256,7 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
             isGeoDataJoined = true;
         }
 
-        if (searchParams.classes.length) {
+        if (searchParams.classes && searchParams.classes.length) {
             var classArr = intArrayToSql(searchParams.classes);
             sqlOptions.where.push('school.education_interval @> ' + classArr);
         }
@@ -267,7 +267,7 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
             );
         }
 
-        if (searchParams.schoolType.length) {
+        if (searchParams.schoolType && searchParams.schoolType.length) {
             searchDataCount++;
             searchDataWhere.values.push({
                 type: 'AND',
@@ -278,7 +278,7 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
             });
         }
 
-        if (searchParams.gia.length) {
+        if (searchParams.gia && searchParams.gia.length) {
             searchDataCount++;
             searchDataWhere.values.push({
                 type: 'AND',
@@ -289,7 +289,7 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
             });
         }
 
-        if (searchParams.ege.length) {
+        if (searchParams.ege && searchParams.ege.length) {
             searchDataCount++;
             searchDataWhere.values.push({
                 type: 'AND',
@@ -300,7 +300,7 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
             });
         }
 
-        if (searchParams.olimp.length) {
+        if (searchParams.olimp && searchParams.olimp.length) {
             searchDataCount++;
             searchDataWhere.values.push({
                 type: 'AND',

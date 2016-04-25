@@ -682,7 +682,7 @@ var getName = function (name) {
 schoolView.listMapPoints = function(schools) {
     var result = {};
 
-    result.schools = schools.reduce((prev, curr) => {
+    return schools.reduce((prev, curr) => {
         curr = curr.dataValues;
 
         prev = prev.length > 0 ? prev : [{
@@ -759,8 +759,6 @@ schoolView.listMapPoints = function(schools) {
 
         return prev;
     }, []);
-
-    return result;
 };
 
 /**

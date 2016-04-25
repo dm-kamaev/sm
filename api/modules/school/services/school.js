@@ -697,9 +697,7 @@ service.list = async (function(opt_params, opt_config) {
     
     var sqlConfig = services.search.generateSqlConfig(resultsOffset);
 
-    if (!isEmptyObject(searchParams)) {
-        services.search.updateSqlOptions(sqlConfig, searchParams);
-    }
+    services.search.updateSqlOptions(sqlConfig, searchParams);
 
     var sqlString = services.search.generateSearchSql(sqlConfig);
 
@@ -711,15 +709,6 @@ service.list = async (function(opt_params, opt_config) {
             return schools;
         });
 });
-
-/**
- * Check whether object is empty
- * @param {Object} object
- * @return {boolean}
- */
-var isEmptyObject = function(object) {
-    return !lodash.keys(object).length;
-};
 
 /**
  * @param {string} text
