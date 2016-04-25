@@ -80,7 +80,6 @@ goog.scope(function() {
      */
     Analytics.prototype.viewProduct = function(params) {
         ga('ec:addProduct', params);
-        console.log(params);
     };
 
     /**
