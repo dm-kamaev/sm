@@ -98,7 +98,8 @@ goog.scope(function() {
         FeedbackModal = sm.lSchool.bFeedbackModal.FeedbackModal,
         AuthSocialModalView = cl.gAuthSocialModal.View,
         factory = sm.iFactory.FactoryStendhal.getInstance(),
-        PopularSchools = sm.bPopularSchools.PopularSchools;
+        PopularSchools = sm.bPopularSchools.PopularSchools,
+        Analytics = sm.iAnalytics.Analytics.getInstance();
 
 
     /**
@@ -200,6 +201,9 @@ goog.scope(function() {
             DataBlockFeatures.Event.LINK_FEEDBACK_CLICK,
             this.onFeedbackLinkClick_
         );
+
+        this.setEcAnalytics_();
+        this.sendAnalyticsPageview_();
     };
 
     /**
@@ -236,6 +240,27 @@ goog.scope(function() {
      */
     School.prototype.onFeedbackLinkClick_ = function() {
         this.showCommentModal_();
+    };
+
+    /**
+     * Sets EC analytics
+     * @private
+     */
+    School.prototype.setEcAnalytics_ = function() {
+        Analytics.viewProduct({
+            id: this.params_.id,
+            name: this.params_.schoolName
+        });
+
+        Analytics.setView();
+    };
+
+    /**
+     * Sends pageview analytics
+     * @private
+     */
+    School.prototype.sendAnalyticsPageview_ = function() {
+        Analytics.send('pageview');
     };
 
     /**

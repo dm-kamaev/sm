@@ -29,7 +29,7 @@ goog.scope(function() {
 
         this.loadingLibrary_();
         this.create_();
-        this.send('pageview');
+        // this.send('pageview');
     };
 
 
@@ -43,7 +43,7 @@ goog.scope(function() {
     };
 
     /**
-     * Add information about product
+     * Add item info on click
      * @param {{
      *     id: string,
      *     name: string,
@@ -62,6 +62,32 @@ goog.scope(function() {
         ga('ec:setAction', 'click', {
             'list': place
         });
+    };
+
+    /**
+     * Add information about product
+     * @param {{
+     *     id: string,
+     *     name: string,
+     *     brand: ?string,
+     *     category: ?string,
+     *     variant: ?string,
+     *     price: ?string,
+     *     quantity: ?number,
+     *     coupon: ?string,
+     *     position: ?number
+     * }} params
+     */
+    Analytics.prototype.viewProduct = function(params) {
+        ga('ec:addProduct', params);
+        console.log(params);
+    };
+
+    /**
+     * Set view
+     */
+    Analytics.prototype.setView = function() {
+        ga('ec:setAction', 'detail');
     };
 
 
