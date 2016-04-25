@@ -358,7 +358,7 @@ goog.scope(function() {
      * @private
      */
     FeedbackModal.prototype.onUserTypeClick_ = function(event) {
-        var itemId = event.itemId;
+        var itemId = event['itemId'];
 
         switch (itemId) {
             case 0:
@@ -472,7 +472,7 @@ goog.scope(function() {
      * @private
      */
     FeedbackModal.prototype.sendAnalyticsSchoolName_ = function() {
-        var schoolName = this.params_.data.schoolName;
+        var schoolName = this.params_.data['schoolName'];
 
         this.sendAnalyticsEvent_(
             FeedbackModal.AnalyticsAction.REVIEW_SUBMIT,
@@ -497,13 +497,13 @@ goog.scope(function() {
         if (this.isYearChoise_(userType)) {
             this.sendAnalyticsEvent_(
                 FeedbackModal.AnalyticsAction.YEAR_CHOICE,
-                dataForm.classType
+                dataForm['classType']
             );
         }
         else {
             this.sendAnalyticsEvent_(
                 FeedbackModal.AnalyticsAction.GRADUATION_CHOICE,
-                dataForm.yearGraduate
+                dataForm['yearGraduate']
             );
         }
     };
@@ -553,11 +553,11 @@ goog.scope(function() {
             FeedbackModal.AnalyticsAction.STAR_EDUCATION,
             FeedbackModal.AnalyticsAction.STAR_TEACHER,
             FeedbackModal.AnalyticsAction.STAR_ATMOSPHERE,
-            FeedbackModal.AnalyticsAction.STAR_INFRASTUCTURE,
+            FeedbackModal.AnalyticsAction.STAR_INFRASTUCTURE
         ];
 
         for (var i = 0; i < scoreName.length; i++) {
-            this.sendAnalyticsEvent_(scoreName[i], dataForm.score[i]);
+            this.sendAnalyticsEvent_(scoreName[i], dataForm['score'][i]);
         }
     };
 
@@ -630,13 +630,13 @@ goog.scope(function() {
 
         this.dropdowns_.userType.getView().unsetNotValidState();
 
-        if (dataForm.userType != null) {
+        if (dataForm['userType'] != null) {
             isValid = true;
 
             isValidOpt = this.validateComment_(dataForm);
 
         } else {
-            dataForm.userType.setNotValidState();
+            dataForm['userType'].setNotValidState();
             this.showValidationError_(FeedbackModal.Error.TYPE_REQUIRED);
         }
         return (isValid && isValidOpt);
@@ -741,10 +741,10 @@ goog.scope(function() {
      */
     FeedbackModal.prototype.validateComment_ = function(formData) {
         var isValid = false,
-            commentText = formData.text;
+            commentText = formData['text'];
 
         if (commentText.trim()) {
-            isValid = this.validateGraduateInput_(formData.yearGraduate);
+            isValid = this.validateGraduateInput_(formData['yearGraduate']);
         } else {
             isValid = this.validateScore_(formData);
         }
@@ -761,8 +761,8 @@ goog.scope(function() {
     FeedbackModal.prototype.validateScore_ = function(formData) {
         var isValid = false;
 
-        for (var i = 0, l = formData.score.length, scoreItem;
-            i < l, scoreItem = formData.score[i]; i++) {
+        for (var i = 0, len = formData['score'].length, scoreItem; i < len; i++) {
+            scoreItem = formData['score'][i];
             if (parseInt(scoreItem)) {
                 isValid = true;
             }
@@ -773,7 +773,7 @@ goog.scope(function() {
                 FeedbackModal.Error.RATING_REQUIRED
             );
         } else {
-            isValid = this.validateGraduateInput_(formData.yearGraduate);
+            isValid = this.validateGraduateInput_(formData['yearGraduate']);
         }
 
         return isValid;

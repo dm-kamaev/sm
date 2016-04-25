@@ -70,16 +70,16 @@ sm.lSearchResult.SearchResult = function(opt_params) {
      * @private
      */
     this.searchParams_ = {
-        name: null,
-        metroId: null,
-        areaId: null,
-        schoolType: [],
-        classes: [],
-        ege: [],
-        gia: [],
-        olimp: [],
-        sortType: 0,
-        page: 0
+        'name': null,
+        'metroId': null,
+        'areaId': null,
+        'schoolType': [],
+        'classes': [],
+        'ege': [],
+        'gia': [],
+        'olimp': [],
+        'sortType': 0,
+        'page': 0
     };
 
     /**
@@ -423,8 +423,8 @@ goog.scope(function() {
      */
     SearchResult.prototype.getSearchParams_ = function(opt_param) {
         var params = {
-            page: 0,
-            sortType: 0
+            'page': 0,
+            'sortType': 0
         };
 
         goog.object.extend(params, this.getParamsFromFilters_());
@@ -610,8 +610,8 @@ goog.scope(function() {
      */
     SearchResult.prototype.onSort_ = function(event) {
         this.updateSearchParams_({
-            page: 0,
-            sortType: event.itemId
+            'page': 0,
+            'sortType': event['itemId']
         });
 
         this.send_(this.requestParams_.listDataUrl)
@@ -624,7 +624,7 @@ goog.scope(function() {
      */
     SearchResult.prototype.onShowMoreSchoolListItems_ = function() {
         this.updateSearchParams_({
-            page: this.searchParams_.page + 1
+            'page': this.searchParams_.page + 1
         });
 
         this.instances_.schoolList.showLoader();
@@ -665,11 +665,11 @@ goog.scope(function() {
      * @private
      */
     SearchResult.prototype.setItems_ = function(data) {
+        var schools = data['list']['schools'];
+        
         this.instances_.schoolList.reset();
-
-        this.instances_.schoolList.setItems(data.list.schools);
-
-        this.sendAddedItemImpressions_(data.list.schools);
+        this.instances_.schoolList.setItems(schools);
+        this.sendAddedItemImpressions_(schools);
     };
 
     /**
@@ -678,9 +678,10 @@ goog.scope(function() {
      * @private
      */
     SearchResult.prototype.addItems_ = function(data) {
-        this.instances_.schoolList.addItems(data.list.schools);
-
-        this.sendAddedItemImpressions_(data.list.schools);
+        var schools = data['list']['schools'];
+        
+        this.instances_.schoolList.addItems(schools);
+        this.sendAddedItemImpressions_(schools);
     };
 
     /**
@@ -705,8 +706,8 @@ goog.scope(function() {
      * @private
      */
     SearchResult.prototype.updateSchools_ = function(data) {
-        var list = data.list,
-            map = data.map;
+        var list = data['list'],
+            map = data['map'];
 
         if (list.countResults > 0) {
             this.showMap_();
@@ -768,21 +769,20 @@ goog.scope(function() {
      * @private
      */
     SearchResult.prototype.updateList_ = function(data) {
-        for (var i = 0, elem;
-            elem = this.elements_.textChangeElements[i];
-            i++) {
+        var textChangeElements = this.elements_.textChangeElements;
+        for (var i = 0, elem; elem = textChangeElements[i]; i++) {
             goog.soy.renderElement(
                 elem,
                 sm.lSearchResult.Template.listHeaderText, {
                     params: {
-                        countResults: data.countResults,
+                        countResults: data['countResults'],
                         searchText: this.instances_.search.getText()
                     }
                 }
             );
         }
 
-        data.countResults ?
+        data['countResults'] ?
             goog.dom.classes.remove(
                 this.elements_.listContainer,
                 SearchResult.CssClass.HIDDEN
@@ -793,7 +793,7 @@ goog.scope(function() {
             );
 
         this.instances_.schoolList.reset();
-        this.instances_.schoolList.setItems(data.schools);
+        this.instances_.schoolList.setItems(data['schools']);
     };
 });
 

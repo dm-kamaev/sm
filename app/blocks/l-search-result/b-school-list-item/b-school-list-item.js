@@ -214,10 +214,72 @@ goog.scope(function() {
     ListItem.prototype.createDom = function() {
         goog.base(this, 'createDom');
 
+        var params = this.params_;
+
         var element = goog.soy.renderAsElement(
             sm.lSearchResult.bSchoolListItem.Template.base,
             {
-                params: this.params_
+                params: {
+                    id: params['id'],
+                    fullName: params['fullName'],
+                    description: params['description'],
+                    url: params['url'],
+                    name: {
+                        bold: params['name']['bold'],
+                        light: params['name']['light']
+                    },
+                    score: params['score'].map(function(score) {
+                        return {
+                            name: score['name'],
+                            value: score['value']
+                        };
+                    }),
+                    totalScore: params['totalScore'],
+                    ratings: params['ratings'],
+                    metroStations: params['metroStations'].map(
+                        function(metro) {
+                            return {
+                                'id': metro['id'],
+                                'name': metro['name']
+                            };
+                        }
+                    ),
+                    isScoreClickable: params['isScoreClickable'],
+                    currentCriterion: {
+                        name: params['currentCriterion']['name'],
+                        value: params['currentCriterion']['value']
+                    },
+                    addresses: params['addresses'].map(function(address) {
+                        return {
+                            area: {
+                                id: address['area']['id'],
+                                name: address['area']['name']
+                            },
+                            coords: address['coords'],
+                            departments: address['departments'].map(
+                                function(department) {
+                                    return {
+                                        score: department['score']
+                                    };
+                                }
+                            ),
+                            id: address['id'],
+                            metroStations: address['metroStations'].map(
+                                function(metro) {
+                                    return {
+                                        id: metro['id'],
+                                        name: metro['name']
+                                    };
+                                }
+                            ),
+                            name: address['name']
+                        };
+                    }),
+                    area: {
+                        id: params['area']['id'],
+                        name: params['area']['name']
+                    }
+                }
             }
         );
 

@@ -1,6 +1,7 @@
 goog.provide('sm.bScore.Score');
 
 goog.require('goog.dom');
+goog.require('goog.ui.Component');
 
 
 

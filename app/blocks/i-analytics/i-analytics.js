@@ -1,5 +1,7 @@
 goog.provide('sm.iAnalytics.Analytics');
 
+
+
 /**
  * Google Analytics
  * @constructor
@@ -14,6 +16,7 @@ sm.iAnalytics.Analytics = function() {
     this.clientId_ = null;
 };
 goog.addSingletonGetter(sm.iAnalytics.Analytics);
+
 
 goog.scope(function() {
     var Analytics = sm.iAnalytics.Analytics;
@@ -154,4 +157,14 @@ goog.scope(function() {
         elem.src = urlLibrary;
         elemScript.parentNode.insertBefore(elem, elemScript);
     };
+
+    goog.exportSymbol(
+        'sm.iAnalytics.Analytics.getInstance',
+        Analytics.getInstance
+    );
+    goog.exportProperty(
+        Analytics.prototype,
+        'init',
+        Analytics.prototype.init
+    );
 });

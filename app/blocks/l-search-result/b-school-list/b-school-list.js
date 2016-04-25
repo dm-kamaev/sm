@@ -9,6 +9,7 @@ goog.require('sm.lSearchResult.bSchoolListItem.SchoolListItem');
 goog.require('sm.lSearchResult.bSort.Sort');
 
 
+
 /**
  * School list component
  * @param {object=} opt_params
@@ -318,7 +319,7 @@ goog.scope(function() {
             that.schoolListItems_.push(item);
         });
 
-        if (opt_listData.length < 10) {
+        if (data.length < 10) {
             this.disable_();
         } else {
             this.hideLoader_();

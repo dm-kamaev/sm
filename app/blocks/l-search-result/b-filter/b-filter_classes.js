@@ -3,14 +3,16 @@ goog.provide('sm.lSearchResult.bFilter.FilterClasses');
 goog.require('cl.iUtils.Utils');
 goog.require('goog.dom.classlist');
 goog.require('goog.events');
-
 goog.require('sm.lSearchResult.bFilter.Filter');
 
+
+
+
 /**
- * TODO: move all classes logic from b-filter to b-filter_classes
- *
- * @param {opject=} opt_params
+ * Classes filter
+ * @param {Object=} opt_params
  * @constructor
+ * @extends {sm.lSearchResult.bFilter.Filter}
  */
 sm.lSearchResult.bFilter.FilterClasses = function(opt_params) {
     goog.base(this);

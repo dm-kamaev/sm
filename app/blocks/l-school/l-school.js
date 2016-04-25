@@ -23,6 +23,7 @@ goog.require('sm.lSchool.bResults.Results');
  * School page
  * @param {Object=} opt_params
  * @constructor
+ * @extends {goog.ui.Component}
  */
 sm.lSchool.School = function(opt_params) {
     goog.base(this);
@@ -302,10 +303,10 @@ goog.scope(function() {
             .initMap_()
             .initBouton_()
             .initComments_()
-            .initComponents_(DataBlockFoldList)
-            .initComponents_(DBlockRatings)
-            .initComponents_(Search)
-            .initComponents_(Results);
+            .initComponents_(DataBlockFoldList, DataBlockFoldList.CssClass.ROOT)
+            .initComponents_(DBlockRatings, DBlockRatings.CssClass.ROOT)
+            .initComponents_(Search, Search.CssClass.ROOT)
+            .initComponents_(Results, Results.CssClass.ROOT);
     };
 
     /**
@@ -396,8 +397,7 @@ goog.scope(function() {
                 schoolName: this.params_.schoolName
             }
         });
-        this.addChild(this.modal_);
-        this.modal_.render(this.getElement());
+        this.addChild(this.modal_, true);
 
         return this;
     };

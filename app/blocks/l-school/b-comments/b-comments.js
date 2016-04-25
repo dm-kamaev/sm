@@ -141,8 +141,8 @@ goog.scope(function() {
         }
 
         /** comments decoration */
-        var comment,
-            commentInstance;
+        var comment;
+        var commentInstance;
         if (comments.length > 0) {
             for (var i = 0; i < comments.length; i++) {
                 comment = comments[i];

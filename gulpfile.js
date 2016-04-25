@@ -22,6 +22,8 @@ const config = require('./config.json');
 const production = !!util.env.production;
 const BLOCKS_DIR = '/app/blocks';
 
+const gulpTasks = require('./gulp')(gulpHelper);
+
 gulp.task('doc', function () {
     apidoc({
         src: "./api/modules/",
@@ -56,45 +58,7 @@ gulp.task('soy', function () {
     return gulpHelper.soy.build();
 });
 
-gulp.task('scripts', ['soy', 'lint'], function () {
-    var getDirectories = function(srcpath)  {
-        return fs.readdirSync(srcpath).filter(function(file) {
-            return fs.statSync(path.join(srcpath, file)).isDirectory();
-        });
-    };
-
-    var upLetter = function (string, index) {
-        return string.slice(0, index) +
-            string[index].toUpperCase() +
-            string.slice(index+1);
-    };
-
-    var getEnteryPointFromName = function (name) {
-        name = name.replace(/l-/g, ''); // Remove l-
-        var slice = upLetter(name, 0); // doc => Doc
-        var k;
-        while ((k = slice.indexOf('-')) != -1){
-            slice = upLetter(slice, k+1);
-            slice = slice.slice(0, k) + slice.slice(k+1);
-        }
-        return 'sm.l' + slice + '.' + slice;
-    };
-
-    var blocks =path.join(__dirname, BLOCKS_DIR),
-        outputFiles = getDirectories(path.join(__dirname,'/app/blocks'))
-        .filter(dirname => dirname.startsWith('l-'))
-        .filter(name => fs.existsSync(path.join(blocks, name, name) + '.js'))
-        .map(name => {
-                return {
-                    fileName: name + '.js',
-                    entryPoint: getEnteryPointFromName(name)
-                }
-            });
-
-    return gulpHelper.js.build({
-        outputFiles: outputFiles
-    });
-});
+gulp.task('scripts', ['soy', 'lint'], gulpTasks.scripts);
 
 gulp.task('styles', ['sprite'], function () {
     return gulpHelper.css.build({
@@ -160,10 +124,10 @@ gulp.task('evercookie', function() {
 
 gulp.task('copy', function() {
     return gulp.src([
-            path.join(__dirname + '/assets/robots.txt'),
-            path.join(__dirname + '/assets/google86acdf989d7328cf.html'),
-            path.join(__dirname + '/assets/yandex_7cfaf013e2f3373d.html'),
-            path.join(__dirname + '/assets/sitemap.txt')
+            path.join(__dirname, '/assets/robots.txt'),
+            path.join(__dirname, '/assets/google86acdf989d7328cf.html'),
+            path.join(__dirname, '/assets/yandex_7cfaf013e2f3373d.html'),
+            path.join(__dirname, '/assets/sitemap.txt')
         ],
         {base: 'assets/'})
         .pipe(gulp.dest('public'));
@@ -217,3 +181,14 @@ const tasks = function (bool) {
 
 gulp.task('build', tasks(true));
 gulp.task('default', tasks(production));
+
+gulp.task('compile', ['copy-sources'], gulpTasks.compile);
+gulp.task('copy-sources', function() {
+    return gulp.src([
+            'app/blocks/**/*.js',
+            'node_modules/clobl/blocks/**/*.js'
+        ], {
+            base: './'
+        })
+        .pipe(gulp.dest('public'));
+});
