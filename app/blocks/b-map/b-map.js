@@ -726,7 +726,6 @@ goog.scope(function() {
         for (var i = 0, id, address; i < addressLength; i++) {
             id = this.currentPlacemarkId_++;
             address = data.addresses[i];
-
             if (!this.isAlreadyAdded_(address)) {
                 result.push({
                     'type': 'Feature',
@@ -783,9 +782,10 @@ goog.scope(function() {
      */
     Map.prototype.isAlreadyAdded_ = function(address) {
         var addedAddresses = this.objectManager_.objects.getAll();
-        return addedAddresses.find(function(addedAddress) {
-            return addedAddress.addressId === address.id;
+        var result = addedAddresses.find(function(addedAddress) {
+            return addedAddress.addressId === parseInt(address.id);
         });
+        return result;
     };
 
     /**
