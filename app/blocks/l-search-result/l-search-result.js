@@ -107,7 +107,8 @@ goog.scope(function() {
         Filters = sm.lSearchResult.bFilters.Filters,
         Search = sm.bSearch.Search,
         Header = sm.bHeader.Header,
-        Map = sm.bMap.Map;
+        Map = sm.bMap.Map,
+        Analytics = sm.iAnalytics.Analytics.getInstance();
 
     /**
      * CSS-class enum
@@ -182,6 +183,8 @@ goog.scope(function() {
         this.initFiltersListeners_();
         this.initSchoolListListeners_();
         this.initWindowListeners_();
+
+        this.sendAnalyticsPageview_();
     };
 
     /**
@@ -353,6 +356,14 @@ goog.scope(function() {
             goog.events.EventType.PAGESHOW,
             this.onShowPage_
         );
+    };
+
+    /**
+     * Sends pageview analytics
+     * @private
+     */
+    SearchResult.prototype.sendAnalyticsPageview_ = function() {
+        Analytics.send('pageview');
     };
 
     /**

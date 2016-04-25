@@ -44,7 +44,8 @@ goog.inherits(sm.lSearch.Search, goog.ui.Component);
 
 goog.scope(function() {
     var Search = sm.lSearch.Search,
-        PopularSchools = sm.bPopularSchools.PopularSchools;
+        PopularSchools = sm.bPopularSchools.PopularSchools,
+        Analytics = sm.iAnalytics.Analytics.getInstance();
 
     /**
      * CSS-class enum
@@ -69,6 +70,15 @@ goog.scope(function() {
         );
 
         this.decorateInternal(element);
+    };
+
+    /**
+     * Sets up the Component.
+     */
+    Search.prototype.enterDocument = function() {
+        goog.base(this, 'enterDocument');
+
+        this.sendAnalyticsPageview_();
     };
 
     /**
@@ -101,6 +111,14 @@ goog.scope(function() {
                 bPopularSchools,
                 this
             );
+    };
+
+    /**
+     * Sends pageview analytics
+     * @private
+     */
+    Search.prototype.sendAnalyticsPageview_ = function() {
+        Analytics.send('pageview');
     };
 });
 
