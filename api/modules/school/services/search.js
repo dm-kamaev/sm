@@ -6,10 +6,11 @@ var models = require('../../../../app/components/models').all;
 var services = require('../../../../app/components/services').all;
 var subjectView = require('../../study/views/subjectView');
 var searchView = require('../views/searchView');
-const coordinateView = require('../../geo/views/coordinateView');
 
 var searchTypeEnum = require('../enums/searchType');
 var schoolTypeEnum = require('../enums/schoolType');
+
+const mapPositionType = require('../enums/mapPositionType');
 
 exports.name = 'search';
 
@@ -535,24 +536,27 @@ exports.getFilterIds = async(function(filter, type) {
  * @param {number} params.metroId
  * @param {number} params.areaId
  * @param {string} params.name
- * @return {Object.<string, Array.<number>|string>}
+ * @return {Object.<{
+ *     center: Array.<number>,
+ *     type: string
+ * }>}
  */
-exports.getMapCenter = function(params) {
+exports.getMapPositionParams = function(params) {
     var result = {};
     if (params.metroId) {
         result = {
-            coordinates: services.metro.getCoords(params.metroId),
-            type: 'metro'
+            center: services.metro.getCoords(params.metroId),
+            type: mapPositionType.METRO
         };
     } else if (params.areaId) {
         /** Centering on area id **/
         result = {
-            type: 'area'
+            type: mapPositionType.AREA
         };
     } else if(params.name === '' && !isFiltersSelected(params)) {
         result = {
-            coordinates: services.city.getCenterCoords(),
-            type: 'cityCenter'
+            center: services.city.getCenterCoords(),
+            type: mapPositionType.CITY_CENTER
         };
     }
     return result;

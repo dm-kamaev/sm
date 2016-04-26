@@ -697,7 +697,7 @@ goog.scope(function() {
      */
     SearchResult.prototype.addMapPoints_ = function(data) {
         this.instances_.map.addItems(data.schools);
-        this.instances_.map.center(data.center);
+        this.instances_.map.center(data.position);
     };
 
     /**

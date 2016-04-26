@@ -193,6 +193,16 @@ goog.scope(function() {
     };
 
     /**
+     * Possible type of positioning of map
+     * @enum {string}
+     */
+    Map.PositionType = {
+        CITY_CENTER: 'cityCenter',
+        AREA: 'area',
+        METRO: 'metro'
+    };
+
+    /**
      * Zoom
      * @type {Object}
      */
@@ -268,15 +278,18 @@ goog.scope(function() {
     };
 
     /**
-     * Center map in according to given coordinates or
+     * Center map in according to given position object or
      * in according to objects on map otherwise
-     * @param {Array.<number>=} opt_center
+     * @param {{
+     *     center: Array.<number>,
+     *     type: string
+     * }} opt_position
      * @public
      */
-    Map.prototype.center = function(opt_center) {
-        var center = opt_center || {};
-        if (center.coordinates) {
-            this.setMapCenterCoords_(center);
+    Map.prototype.center = function(opt_position) {
+        var position = opt_position || {};
+        if (position.center) {
+            this.setMapCenterCoords_(position);
         }
         else {
             this.setMapCenterObjects_();
@@ -304,13 +317,16 @@ goog.scope(function() {
     };
 
     /**
-     * Center map in according of given coordinates
-     * @param {Array.<number>} mapCenter
+     * Center map in according of given positon object
+     * @param {{
+     *     center: Array.<number>,
+     *     type: string
+     * }} position
      * @private
      */
-    Map.prototype.setMapCenterCoords_ = function(mapCenter) {
-        var scale = this.generateScale_(mapCenter.type),
-            coordinates = mapCenter.coordinates;
+    Map.prototype.setMapCenterCoords_ = function(position) {
+        var scale = this.generateScale_(position.type),
+            coordinates = position.center;
         this.ymaps_.setCenter(
             coordinates,
             scale,
@@ -323,15 +339,15 @@ goog.scope(function() {
 
     /**
      * Generate scale depends of given centering type
-     * @param {string} centerType
+     * @param {string} positionType
      * @return {number}
      * @private
      */
-    Map.prototype.generateScale_ = function(centerType) {
+    Map.prototype.generateScale_ = function(positionType) {
         var scale = Map.Scale.DEFAULT;
-        if (centerType == 'metro') {
+        if (positionType == Map.PositionType.METRO) {
             scale = Map.Scale.METRO;
-        } else if (centerType == 'cityCenter') {
+        } else if (positionType == Map.PositionType.CITY_CENTER) {
             scale = Map.Scale.CITY_CENTER;
         }
         return scale;
@@ -420,7 +436,7 @@ goog.scope(function() {
 
         /** Add points from data-params to map **/
         this.replaceItems(this.params_.schools);
-        this.center(this.params_.center);
+        this.center(this.params_.position);
 
         this.dispatchEvent(Map.Event.READY);
     };

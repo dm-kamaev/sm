@@ -42,12 +42,12 @@ exports.list = async (function(req, res) {
             }
         ),
         filters: services.school.searchFilters(),
-        centerCoords: services.search.getMapCenter(searchParams)
+        mapPosition: services.search.getMapPositionParams(searchParams)
     };
     var results = await(promises);
 
     var schoolsList = schoolView.list(results.schools);
-    var map = schoolView.listMap(results.schools, results.centerCoords);
+    var map = schoolView.listMap(results.schools, results.mapPosition);
     var filters = searchView.filters(results.filters, searchParams);
     var params = {
         params: {

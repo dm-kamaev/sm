@@ -321,12 +321,12 @@ exports.searchMapPoints = async(function(req, res) {
         
         var promises = {
             schools: services.school.list(params),
-            mapCenter: services.search.getMapCenter(params)
+            mapPosition: services.search.getMapPositionParams(params)
         };
         var results = await(promises);
         result = schoolView.listMap(
             results.schools,
-            results.mapCenter
+            results.mapPosition
         );
 
     } catch (error) {
