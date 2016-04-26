@@ -42,7 +42,7 @@ exports.list = async (function(req, res) {
             }
         ),
         filters: services.school.searchFilters(),
-        centerCoords: services.search.getMapCenterCoords(searchParams)
+        centerCoords: services.search.getMapCenter(searchParams)
     };
     var results = await(promises);
 

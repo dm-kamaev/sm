@@ -22,5 +22,5 @@ exports.getMoscow = async(function() {
  * @return {Array.<number>}
  */
 exports.getCenterCoords = function() {
-    return [37.617671, 55.755768];
+    return [55.755768, 37.617671];
 };

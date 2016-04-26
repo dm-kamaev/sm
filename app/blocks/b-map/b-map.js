@@ -179,8 +179,17 @@ goog.scope(function() {
     * @type {Object}
     */
     Map.defaultPosition = {
-        COORDS: [55.755768, 37.617671],
-        ZOOM: 13
+        COORDS: [55.755768, 37.617671]
+    };
+
+    /**
+     * Possible scales for map
+     * @enum {number}
+     */
+    Map.Scale = {
+        CITY_CENTER: 13,
+        METRO: 15,
+        DEFAULT: 15
     };
 
     /**
@@ -261,12 +270,13 @@ goog.scope(function() {
     /**
      * Center map in according to given coordinates or
      * in according to objects on map otherwise
-     * @param {Array.<number>=} opt_centerCoords
+     * @param {Array.<number>=} opt_center
      * @public
      */
-    Map.prototype.center = function(opt_centerCoords) {
-        if (opt_centerCoords) {
-            this.setMapCenterCoords_(opt_centerCoords);
+    Map.prototype.center = function(opt_center) {
+        var center = opt_center || {};
+        if (center.coordinates) {
+            this.setMapCenterCoords_(center);
         }
         else {
             this.setMapCenterObjects_();
@@ -299,10 +309,32 @@ goog.scope(function() {
      * @private
      */
     Map.prototype.setMapCenterCoords_ = function(mapCenter) {
-        this.ymaps_.setCenter(mapCenter, Map.defaultPosition.ZOOM, {
-            checkZoomRange: true,
-            duration: 400
-        });
+        var scale = this.generateScale_(mapCenter.type),
+            coordinates = mapCenter.coordinates;
+        this.ymaps_.setCenter(
+            coordinates,
+            scale,
+            {
+                checkZoomRange: true,
+                duration: 400
+            }
+        );
+    };
+
+    /**
+     * Generate scale depends of given centering type
+     * @param {string} centerType
+     * @return {number}
+     * @private
+     */
+    Map.prototype.generateScale_ = function(centerType) {
+        var scale = Map.Scale.DEFAULT;
+        if (centerType == 'metro') {
+            scale = Map.Scale.METRO;
+        } else if (centerType == 'cityCenter') {
+            scale = Map.Scale.CITY_CENTER;
+        }
+        return scale;
     };
 
     /**
@@ -388,7 +420,7 @@ goog.scope(function() {
 
         /** Add points from data-params to map **/
         this.replaceItems(this.params_.schools);
-        this.center(this.params_.mapCenter);
+        this.center(this.params_.center);
 
         this.dispatchEvent(Map.Event.READY);
     };
@@ -806,7 +838,7 @@ goog.scope(function() {
         };
 
         ymapsParams['center'] = Map.defaultPosition.COORDS;
-        ymapsParams['zoom'] = Map.defaultPosition.ZOOM;
+        ymapsParams['zoom'] = Map.Scale.DEFAULT;
 
         return ymapsParams;
     };
