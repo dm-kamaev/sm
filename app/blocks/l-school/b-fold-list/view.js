@@ -27,12 +27,11 @@ goog.scope(function() {
      */
     View.CssClass = {
         ROOT: 'b-fold-list',
-        UNFOLD_BUTTON: 'b-fold-list__item_button-unfold',
-        FOLD_BUTTON: 'b-fold-list__item_button-fold',
+        UNFOLD_BUTTON: 'b-fold-list__button_unfold',
+        FOLD_BUTTON: 'b-fold-list__button_fold',
         NUMBER: 'b-fold-list__number',
-        OTHER_LIST: 'b-fold-list__list_other',
+        HIDDEN_LIST: 'b-fold-list__list_hidden',
         LINK_LIST: 'b-fold-list__link',
-        ACTIVE_LIST: 'b-fold-list__list_active',
         HIDDEN: 'i-utils__hidden'
     };
 
@@ -85,19 +84,20 @@ goog.scope(function() {
         }
     };
 
+
     /**
      * closes all open lists
      */
-    View.prototype.hideActiveList = function() {
-        if (this.dom.activeList) {
+    View.prototype.foldHiddenLists = function() {
+        if (this.dom.hiddenList) {
             var isContains = goog.dom.classlist.contains(
-                this.dom.activeList,
+                this.dom.hiddenList,
                 View.CssClass.HIDDEN
             );
 
             if (!isContains) {
                 goog.dom.classlist.add(
-                    this.dom.activeList,
+                    this.dom.hiddenList,
                     View.CssClass.HIDDEN
                 );
             }
@@ -128,14 +128,14 @@ goog.scope(function() {
      */
     View.prototype.onLinkListClick_ = function() {
         this.hideShowNumber_();
-        this.hideShowActiveList_();
+        this.foldUnfoldHiddenList_();
     };
 
     /**
      * @private
      */
     View.prototype.onUnfoldButtonClick_ = function() {
-        this.hideShowOtherList_();
+        this.foldUnfoldHiddenList_();
         this.hideShowUnfoldButton_();
         this.hideShowFoldButton_();
     };
@@ -144,23 +144,13 @@ goog.scope(function() {
      * @private
      */
     View.prototype.onFoldButtonClick_ = function() {
-        this.hideShowOtherList_();
+        this.foldUnfoldHiddenList_();
         this.hideShowFoldButton_();
         this.hideShowUnfoldButton_();
 
         this.dispatchEvent({
             'type': View.Event.FOLD_BUTTON_CLICK
         });
-    };
-
-    /**
-     * @private
-     */
-    View.prototype.hideShowActiveList_ = function() {
-        goog.dom.classlist.toggle(
-            this.dom.activeList,
-            View.CssClass.HIDDEN
-        );
     };
 
     /**
@@ -186,9 +176,9 @@ goog.scope(function() {
     /**
      * @private
      */
-    View.prototype.hideShowOtherList_ = function() {
+    View.prototype.foldUnfoldHiddenList_ = function() {
         goog.dom.classlist.toggle(
-            this.dom.otherList,
+            this.dom.hiddenList,
             View.CssClass.HIDDEN
         );
     };
@@ -222,14 +212,11 @@ goog.scope(function() {
             number: this.getDomElement_(
                 View.CssClass.NUMBER
             ),
-            otherList: this.getDomElement_(
-                View.CssClass.OTHER_LIST
+            hiddenList: this.getDomElement_(
+                View.CssClass.HIDDEN_LIST
             ),
             linkList: this.getDomElement_(
                 View.CssClass.LINK_LIST
-            ),
-            activeList: this.getDomElement_(
-                View.CssClass.ACTIVE_LIST
             )
         };
     };

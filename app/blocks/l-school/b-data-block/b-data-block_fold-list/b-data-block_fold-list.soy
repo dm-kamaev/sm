@@ -3,20 +3,24 @@
 
 /**
  * @typedef {object} sm.lSchool.bDataBlock.TemplateFoldList.Node
- * @property {string} name
+ * @property {object} data
+ * @property {?string} data.name
  * @property {?sm.lSchool.bDataBlock.TemplateFoldList.Node} items
+ * @property {?object} config
+ * @property {?string} config.type
  */
-
 
 /**
  * Classes item
- * @param params {{
+ * @param? params [[
  *    header: ?string,
  *    headerType: ?number
  *    modifier: ?string
  *    content: [sm.lSchool.bDataBlock.TemplateFoldList.Node],
- *    type: ?string
- * }}
+ *    config: [
+ *       type: ?string
+ *    ]
+ * ]]
  * @extends sm.lSchool.bDataBlock.Template
  * @constructor
  */
@@ -33,17 +37,19 @@
                         'b-data-block_fold-list' + $params.modifier :
                         'b-data-block_fold-list',
             'content': $params.content,
-            'type': $params.type
+            'config': $params.config
         ] /}
     {/call}
 {/template}
 
 /**
  * Content item
- * @param params {{
+ * @param? params [[
  *    content: [sm.lSchool.bDataBlock.TemplateFoldList.Node],
- *    type: ?string
- * }}
+ *    config: [
+ *       type: ?string
+ *    ]
+ * ]]
  */
 {template .content autoescape="strict" kind="html"}
     {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
@@ -52,10 +58,7 @@
             'type': 'fold-list',
             'renderParams': [
                 'data' : $params.content,
-                'config' : [
-                    'type': $params.type,
-                    'showMore': true
-                ]
+                'config': $params.config
             ]
         ]/}
     {/call}

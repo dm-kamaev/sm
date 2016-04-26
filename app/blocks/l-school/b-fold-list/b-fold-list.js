@@ -55,9 +55,16 @@ goog.scope(function() {
      */
     FoldList.prototype.onFoldButtonClick_ = function() {
         for (var i = 0; i < this.foldLists_.length; i++) {
-            this.foldLists_[i].getView().hideActiveList();
-            this.foldLists_[i].getView().showNumber();
+            this.foldLists_[i].foldLists();
         }
+    };
+
+    /**
+     * fold all open Lists
+     */
+    FoldList.prototype.foldLists = function() {
+        this.getView().foldHiddenLists();
+        this.getView().showNumber();
     };
 
     /**

@@ -1,36 +1,14 @@
 .b-fold-list {
+    margin-top: 0;
+
     font-family: Arial;
     font-size: 14px;
-}
 
-.b-fold-list__list {
-    margin-bottom: 25px;
-}
-
-.b-fold-list__list_other {
-    margin-bottom: 0;
-}
-
-.b-fold-list__list_active {
-    margin-bottom: 0;
-}
-
-.b-fold-list__title {
-    margin-bottom: 15px;
-}
-
-.b-fold-list__title_default {
-    margin-bottom: 20px;
-
-    font-weight: 600;
+    line-height: normal;
 }
 
 .b-fold-list__item {
     margin-bottom: 15px;
-
-    &:last-child {
-        margin-bottom: 0;
-    }
 }
 
 .b-fold-list__item_default {
@@ -39,10 +17,22 @@
     text-transform: lowercase;
 }
 
-.b-fold-list__button-link {
-    text-transform: none;
-}
-
 .b-fold-list__number {
     margin-left: 10px;
+}
+
+.b-fold-list_unfolded {
+    .b-fold-list__title {
+        margin-bottom: 20px;
+
+        font-weight: 600;
+    }
+}
+
+.b-fold-list_folded {
+    .b-fold-list__title {
+        margin-bottom: 15px;
+
+        font-weight: normal;
+    }
 }
