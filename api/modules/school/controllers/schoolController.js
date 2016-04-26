@@ -321,7 +321,7 @@ exports.searchMapPoints = async(function(req, res) {
         
         var promises = {
             schools: services.school.list(params),
-            mapCenter: services.search.getMapCenterCoords(params)
+            mapCenter: services.search.getMapCenter(params)
         };
         var results = await(promises);
         result = schoolView.listMap(

@@ -6,6 +6,7 @@ var models = require('../../../../app/components/models').all;
 var services = require('../../../../app/components/services').all;
 var subjectView = require('../../study/views/subjectView');
 var searchView = require('../views/searchView');
+const coordinateView = require('../../geo/views/coordinateView');
 
 var searchTypeEnum = require('../enums/searchType');
 var schoolTypeEnum = require('../enums/schoolType');
@@ -534,16 +535,25 @@ exports.getFilterIds = async(function(filter, type) {
  * @param {number} params.metroId
  * @param {number} params.areaId
  * @param {string} params.name
- * @return {Array.<number>|string}
+ * @return {Object.<string, Array.<number>|string>}
  */
-exports.getMapCenterCoords = function(params) {
-    var result;
+exports.getMapCenter = function(params) {
+    var result = {};
     if (params.metroId) {
-        result = services.metro.getCoords(params.metroId);
+        result = {
+            coordinates: services.metro.getCoords(params.metroId),
+            type: 'metro'
+        };
     } else if (params.areaId) {
         /** Centering on area id **/
+        result = {
+            type: 'area'
+        };
     } else if(params.name === '' && !isFiltersSelected(params)) {
-        result = services.city.getCenterCoords();
+        result = {
+            coordinates: services.city.getCenterCoords(),
+            type: 'cityCenter'
+        };
     }
     return result;
 };

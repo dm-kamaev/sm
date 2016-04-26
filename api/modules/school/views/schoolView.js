@@ -420,11 +420,11 @@ schoolView.list = function(schools, opt_criterion) {
  * Group resutls of raw query to school object,
  * divide array of school objects for 2 parts for map
  * @param {Array.<Object>} schools - array of results of raw query
- * @param {Array.<number>} opt_centerCoords
+ * @param {Array.<number>} opt_center
  * @return {Object.<string, Array.<Object|number>>} contains results schools array and central coordinate
  * for the map
  */
-schoolView.listMap = function(schools, opt_centerCoords) {
+schoolView.listMap = function(schools, opt_center) {
     var mapSchools = [];
 
     if (schools.length > 0) {
@@ -433,9 +433,7 @@ schoolView.listMap = function(schools, opt_centerCoords) {
 
     return {
         schools: mapSchools,
-        mapCenter: opt_centerCoords ?
-            [opt_centerCoords[1], opt_centerCoords[0]] :
-            null
+        center: opt_center
     };
 };
 
