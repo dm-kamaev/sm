@@ -177,7 +177,7 @@
  */
 {template .map autoescape="strict" kind="html"}
     <div class="l-search-result__map
-                {if length($params?.schoolGroups) == 0}
+                {if length($params?.schools) == 0}
                     {sp}i-utils__hidden
                 {/if}">
         {call sm.bMap.Template.map}

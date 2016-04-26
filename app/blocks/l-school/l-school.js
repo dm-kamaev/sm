@@ -435,19 +435,20 @@ goog.scope(function() {
      */
     School.prototype.onMapReady_ = function() {
         jQuery.ajax({
-            url: '/api/school/schoolMapPoints',
+            url: '/api/school/searchMapPoints',
+            dataType: 'json',
             type: 'GET'
         }).then(this.addMapPoints.bind(this));
     };
 
     /**
      * Add Points to map
-     * @param {string} responceData
+     * @param {{
+     *     schools: Array.<Object>
+     * }} data
      */
-    School.prototype.addMapPoints = function(responceData) {
-        var data = JSON.parse(responceData);
-
-        this.map_.addItems(data);
+    School.prototype.addMapPoints = function(data) {
+        this.map_.addItems(data.schools);
     };
 
     /**

@@ -471,14 +471,11 @@
     <div class="l-school__section l-school__section_map">
         {let $mapParams: [
             'data': [
-                'schoolGroups': [[
-                    'type': 'default',
-                    'schools': [[
-                        'id': $params.data.id,
-                        'addresses': $params.data.addresses,
-                        'name': $params.data.schoolName,
-                        'totalScore': $params.data.totalScore
-                    ]]
+                'schools': [[
+                    'id': $params.data.id,
+                    'addresses': $params.data.addresses,
+                    'name': $params.data.schoolName,
+                    'totalScore': $params.data.totalScore
                 ]]
             ],
             'config': [

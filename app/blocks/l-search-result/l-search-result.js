@@ -476,9 +476,6 @@ goog.scope(function() {
 
         this.send_(this.requestParams_.listDataUrl)
             .then(this.updateSchools_.bind(this));
-
-        this.send_(this.requestParams_.mapDataUrl)
-            .then(this.replaceMapPoints_.bind(this));
     };
 
     /**
@@ -588,7 +585,7 @@ goog.scope(function() {
         });
 
         this.send_(this.requestParams_.listDataUrl)
-            .then(this.setItems_.bind(this));
+            .then(this.updateSchools_.bind(this));
     };
 
     /**
@@ -627,47 +624,48 @@ goog.scope(function() {
         return jQuery.ajax({
             url: url,
             type: 'GET',
+            dataType: 'json',
             data: this.searchParams_
         });
     };
 
     /**
      * Filters submit callback
-     * @param {string} responseData
+     * @param {string} data
      * @private
      */
-    SearchResult.prototype.setItems_ = function(responseData) {
-        var data = JSON.parse(responseData);
+    SearchResult.prototype.setItems_ = function(data) {
         this.instances_.schoolList.reset();
-        this.instances_.schoolList.setItems(data.schools);
+        this.instances_.schoolList.setItems(data.list.schools);
     };
 
     /**
      * Filters submit callback
-     * @param {string} responseData
+     * @param {string} data
      * @private
      */
-    SearchResult.prototype.addItems_ = function(responseData) {
-        var data = JSON.parse(responseData);
-        this.instances_.schoolList.addItems(data.schools);
+    SearchResult.prototype.addItems_ = function(data) {
+        this.instances_.schoolList.addItems(data.list.schools);
     };
 
     /**
      * Updates list and map
-     * @param {string} responseData
+     * @param {string} data
      * @private
      */
-    SearchResult.prototype.updateSchools_ = function(responseData) {
-        var data = JSON.parse(responseData);
+    SearchResult.prototype.updateSchools_ = function(data) {
+        var list = data.list,
+            map = data.map;
 
-        this.instances_.search.setCoords(data.centerCoords);
-
-        if (data.countResults > 0) {
+        if (list.countResults > 0) {
             this.showMap_();
+            this.replaceMapPoints_(map);
+            this.send_(this.requestParams_.mapDataUrl)
+                .then(this.addMapPoints_.bind(this));
         } else {
             this.hideMap_();
         }
-        this.updateList_(data);
+        this.updateList_(list);
     };
 
     /**
@@ -694,33 +692,21 @@ goog.scope(function() {
 
     /**
      * Add points to map and center it if necessary
-     * @param {string} responceData
+     * @param {string} data
      * @private
      */
-    SearchResult.prototype.addMapPoints_ = function(responceData) {
-        var data = JSON.parse(responceData);
-
-        this.instances_.map.addItems(data);
+    SearchResult.prototype.addMapPoints_ = function(data) {
+        this.instances_.map.addItems(data.schools);
+        this.instances_.map.center(data.mapCenter);
     };
 
     /**
      * Set points to map and center it in according to responce data
-     * @param {string} responceData
+     * @param {string} data
      * @private
      */
-    SearchResult.prototype.replaceMapPoints_ = function(responceData) {
-        var data = JSON.parse(responceData);
-
-        this.instances_.map.replaceItems(data);
-    };
-
-    /**
-     * Get map centre coordinates
-     * @return {Array}
-     * @private
-     */
-    SearchResult.prototype.getMapCenterCoords_ = function() {
-        return this.instances_.search.getCoords();
+    SearchResult.prototype.replaceMapPoints_ = function(data) {
+        this.instances_.map.replaceItems(data.schools);
     };
 
     /**
