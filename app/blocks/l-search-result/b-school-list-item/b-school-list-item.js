@@ -197,6 +197,18 @@ goog.scope(function() {
     };
 
     /**
+    * @return {Object}
+    */
+    ListItem.prototype.getImpressionData = function() {
+        return {
+            id: this.id_,
+            name: this.name_,
+            position: this.params_.position,
+            list: 'Search Results'
+        };
+    };
+
+    /**
      * @override
      */
     ListItem.prototype.createDom = function() {
@@ -316,13 +328,10 @@ goog.scope(function() {
      */
     ListItem.prototype.sendAnalyticsSchoolData_ = function(event) {
 
-        var schoolParams =
-            JSON.parse(goog.dom.dataset.get(event.currentTarget, 'params'));
-
         var ecData = {
-            id: schoolParams.id,
+            id: this.params_.id,
             name: this.name_,
-            position: schoolParams.position
+            position: this.params_.position
         };
 
         Analytics.clickProduct(ecData, 'Search Results');

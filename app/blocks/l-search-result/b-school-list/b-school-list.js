@@ -134,7 +134,8 @@ goog.scope(function() {
                 'currentCriterion': params.currentCriterion,
                 'isScoreClickable': params.isScoreClickable,
                 'url': params.url,
-                'name': params.name
+                'name': params.name,
+                'position': params.position
             });
 
 
@@ -322,6 +323,16 @@ goog.scope(function() {
         } else {
             this.hideLoader_();
         }
+    };
+
+    /**
+     * Get impression data of list items
+     * @return {Array<Object>}
+     */
+    SchoolList.prototype.getImpressionData = function() {
+        return this.schoolListItems_.map(function(item) {
+            return item.getImpressionData();
+        });
     };
 
     /**

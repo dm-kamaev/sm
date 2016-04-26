@@ -282,7 +282,7 @@ exports.search = async (function(req, res) {
             }
         ));
         result = {
-            list: schoolView.list(schools, params.sortType),
+            list: schoolView.list(schools, params.sortType, params.page),
             map: schoolView.listMap(schools)
         };
     } catch (error) {

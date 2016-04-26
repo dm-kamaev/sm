@@ -80,8 +80,10 @@ goog.scope(function() {
      * @private
      */
     PopularSchools.prototype.setImpressions_ = function(schoolParams) {
-        schoolParams.forEach((schoolParam, i) =>
-            this.setImpression_(schoolParam, i + 1));
+        for (var i = 0, schoolParam; schoolParam = schoolParams[i]; i++) {
+            this.setImpression_(schoolParam, i + 1);
+        }
+        Analytics.setView();
     };
 
     /**
@@ -94,7 +96,8 @@ goog.scope(function() {
         Analytics.addImpression({
             id: schoolParam.id,
             name: schoolParam.schoolName,
-            position: position
+            position: position,
+            list: 'Popular Schools'
         });
     };
 
