@@ -7,9 +7,9 @@ var services = require('../../../../app/components/services').all;
 exports.name = 'metro';
 
 /**
- * Get coords metro or area
+ * Get coordinates for given metro
  * @param {number} searh_data_id
- * @return {Array} coords metro or area
+ * @return {Array} metro coordinates
  */
 exports.getCoords = async(function(searh_data_id) {
     var result;
