@@ -222,36 +222,28 @@ goog.scope(function() {
     };
 
     /**
-     * Clear map, create placemarks from given data, add it to map,
-     * center it in according to provided center coords or
-     * group of placemarks on map
-     * @param {{
-     *     schoolGroups: Array.<{
-     *         type: string,
-     *         schools: Array.<Object>
-     *     }>,
-     *     mapCenter: ?Array.<number>
-     * }} data
+     * Clear map, create placemarks from given data, add it to map as big pins
+     * @param {Array.<Object.<string, Array|string|number>>} schools
      * @public
      */
-    Map.prototype.replaceItems = function(data) {
+    Map.prototype.replaceItems = function(schools) {
         this.clear();
-        this.addItems(data);
-        this.center_(data.mapCenter);
+        if (schools.length) {
+            this.setCurrentPresets_(Map.PresetType.DEFAULT);
+            this.addPlacemarks_(schools);
+        }
     };
 
     /**
-     * Create placemarks from given data and add it to map
-     * @param {{
-     *     schoolGroups: Array.<{
-     *         type: string,
-     *         schools: Array.<Object>
-     *     }>
-     * }} data
+     * Create placemarks from given data and add it to map as point pins
+     * @param {Array.<Object.<string, Array|string|number>>} schools
      * @public
      */
-    Map.prototype.addItems = function(data) {
-        this.addSchoolGroups_(data.schoolGroups);
+    Map.prototype.addItems = function(schools) {
+        if (schools.length) {
+            this.setCurrentPresets_(Map.PresetType.POINT);
+            this.addPlacemarks_(schools);
+        }
     };
 
     /**
@@ -267,33 +259,18 @@ goog.scope(function() {
     };
 
     /**
-     * Add school groups to map
-     * @param {Array.<{
-     *     type: string,
-     *     schools: Array.<Object>
-     * }>} data
-     * @private
+     * Center map in according to given coordinates or
+     * in according to objects on map otherwise
+     * @param {Array.<number>=} opt_centerCoords
+     * @public
      */
-    Map.prototype.addSchoolGroups_ = function(data) {
-        data.forEach(this.addSchoolGroup_.bind(this));
-    };
-
-    /**
-     * Add current group of points of schools to map
-     * @param {{
-     *     type: string,
-     *     schools: Array.<Object>
-     * }} schoolGroup
-     * @private
-     */
-    Map.prototype.addSchoolGroup_ = function(schoolGroup) {
-        if (schoolGroup.type === Map.PresetType.POINT) {
-            this.setCurrentPresets_(Map.PresetType.POINT);
-        } else {
-            this.setCurrentPresets_(Map.PresetType.DEFAULT);
+    Map.prototype.center = function(opt_centerCoords) {
+        if (opt_centerCoords) {
+            this.setMapCenterCoords_(opt_centerCoords);
         }
-
-        this.addPlacemarks_(schoolGroup.schools);
+        else {
+            this.setMapCenterObjects_();
+        }
     };
 
     /**
@@ -317,34 +294,14 @@ goog.scope(function() {
     };
 
     /**
-     * Center map in according to given coordinates or
-     * in according to objects on map otherwise
-     * @param {Array.<number>=} opt_centerCoords
-     * @private
-     */
-    Map.prototype.center_ = function(opt_centerCoords) {
-        if (opt_centerCoords) {
-            this.setMapCenterCoords_(opt_centerCoords);
-        }
-        else {
-            this.setMapCenterObjects_();
-        }
-    };
-
-    /**
      * Center map in according of given coordinates
-     * @param {Array.<number>|string} mapCenter
+     * @param {Array.<number>} mapCenter
      * @private
      */
     Map.prototype.setMapCenterCoords_ = function(mapCenter) {
-        var centerCoords = mapCenter;
-
-        if (mapCenter == 'default') {
-            centerCoords = Map.defaultPosition.COORDS;
-        }
-
-        this.ymaps_.setCenter(centerCoords, Map.defaultPosition.ZOOM, {
-            checkZoomRange: true
+        this.ymaps_.setCenter(mapCenter, Map.defaultPosition.ZOOM, {
+            checkZoomRange: true,
+            duration: 400
         });
     };
 
@@ -354,13 +311,18 @@ goog.scope(function() {
      */
     Map.prototype.setMapCenterObjects_ = function() {
         if (this.objectManager_) {
-            this.ymaps_.setBounds(
-                this.objectManager_.getBounds(),
-                {
-                    checkZoomRange: true,
-                    zoomMargin: 35
-                }
-            ).then(this.checkZoom_.bind(this));
+            var bounds = this.objectManager_.getBounds();
+
+            if (bounds) {
+                this.ymaps_.setBounds(
+                    bounds,
+                    {
+                        duration: 400,
+                        checkZoomRange: true,
+                        zoomMargin: 35
+                    }
+                ).then(this.checkZoom_.bind(this));
+            }
         }
     };
 
@@ -425,7 +387,8 @@ goog.scope(function() {
         this.initObjectManager_();
 
         /** Add points from data-params to map **/
-        this.replaceItems(this.params_);
+        this.replaceItems(this.params_.schools);
+        this.center(this.params_.mapCenter);
 
         this.dispatchEvent(Map.Event.READY);
     };
@@ -782,10 +745,9 @@ goog.scope(function() {
      */
     Map.prototype.isAlreadyAdded_ = function(address) {
         var addedAddresses = this.objectManager_.objects.getAll();
-        var result = addedAddresses.find(function(addedAddress) {
-            return addedAddress.addressId === parseInt(address.id);
+        return addedAddresses.find(function(addedAddress) {
+            return addedAddress.addressId == address.id;
         });
-        return result;
     };
 
     /**
