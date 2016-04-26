@@ -89,6 +89,23 @@ goog.scope(function() {
         ga('ec:setAction', 'detail');
     };
 
+    /**
+     * Add impression about related product
+     * @param {{
+     *     id: string,
+     *     name: string,
+     *     list: ?string,
+     *     brand: ?string,
+     *     category: ?string,
+     *     variant: ?string,
+     *     position: ?number,
+     *     price: ?string
+     * }} params
+     */
+    Analytics.prototype.addImpression = function(params) {
+        ga('ec:addImpression', params);
+    };
+
 
     /**
      * Creates a counter for the resource
