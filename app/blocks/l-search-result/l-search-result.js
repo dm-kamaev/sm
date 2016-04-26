@@ -184,6 +184,10 @@ goog.scope(function() {
         this.initSchoolListListeners_();
         this.initWindowListeners_();
 
+        this.sendListItemImpressions_(
+            this.instances_.schoolList.getImpressionData(),
+            1
+        );
         this.sendAnalyticsPageview_();
     };
 
@@ -357,6 +361,21 @@ goog.scope(function() {
             this.onShowPage_
         );
     };
+
+    /**
+     * Set list item impressions
+     * @param {Array<Object>} data
+     * @param {number} nonInteraction
+     * @private
+     */
+    SearchResult.prototype.sendListItemImpressions_ =
+        function(data, nonInteraction) {
+            data.forEach(function(itemData, i) {
+                Analytics.addImpression(itemData);
+            });
+            Analytics.setView();
+            Analytics.sendEvent('Search List', 'load', nonInteraction);
+        };
 
     /**
      * Sends pageview analytics
@@ -624,6 +643,8 @@ goog.scope(function() {
         var data = JSON.parse(responseData);
         this.instances_.schoolList.reset();
         this.instances_.schoolList.setItems(data.schools);
+
+        this.sendAddedItemImpressions_(data.schools);
     };
 
     /**
@@ -634,6 +655,24 @@ goog.scope(function() {
     SearchResult.prototype.addItems_ = function(responseData) {
         var data = JSON.parse(responseData);
         this.instances_.schoolList.addItems(data.schools);
+
+        this.sendAddedItemImpressions_(data.schools);
+    };
+
+    /**
+     * Send impesssion of added schools
+     * @param {Array<Object>} schools
+     * @private
+     */
+    SearchResult.prototype.sendAddedItemImpressions_ = function(schools) {
+        this.sendListItemImpressions_(schools.map(function(school) {
+            return {
+                id: school.id,
+                name: school.name.light + school.name.bold,
+                position: school.position,
+                list: 'Search Results'
+            };
+        }), 0);
     };
 
     /**
@@ -653,6 +692,8 @@ goog.scope(function() {
             this.hideMap_();
         }
         this.updateList_(data);
+
+        this.sendAddedItemImpressions_(data.schools);
     };
 
     /**
