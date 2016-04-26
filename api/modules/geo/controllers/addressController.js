@@ -54,26 +54,3 @@ exports.getAddress = async (function(req, res) {
         res.end(JSON.stringify(result));
     }
 });
-
-
-/**
- * @api {get} api/address/list Get addresses
- * @apiVersion 0.0.0
- * @apiGroup Address
- * @apiName List
- * @apiSuccess {Object[]} addresses Very userful documentation here.
- */
-exports.list = async (function(req, res) {
-    var result;
-
-    try {
-        var instances = await(services.address.listMapPoints());
-        result = schoolView.listMapPoints(instances);
-    } catch (error) {
-        logger.error(error);
-        result = error.message;
-    } finally {
-        res.header('Content-Type', 'text/html; charset=utf-8');
-        res.end(JSON.stringify(result));
-    }
-});
