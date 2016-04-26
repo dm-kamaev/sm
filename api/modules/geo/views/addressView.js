@@ -108,6 +108,7 @@ addressView.default = function(addresses) {
 
     return addresses.map(adr => {
         return {
+            id: adr.id,
             lat: adr.coords[0],
             lng: adr.coords[1],
             name: adr.name,

@@ -82,6 +82,13 @@ sm.lSchool.School = function(opt_params) {
      * @private
      */
     this.dataBlockFeatures_ = null;
+
+    /**
+     * Map inctance
+     * @type {sm.bMap.Map}
+     * @private
+     */
+    this.map_ = null;
 };
 goog.inherits(sm.lSchool.School, goog.ui.Component);
 
@@ -100,7 +107,6 @@ goog.scope(function() {
         factory = sm.iFactory.FactoryStendhal.getInstance(),
         PopularSchools = sm.bPopularSchools.PopularSchools,
         Analytics = sm.iAnalytics.Analytics.getInstance();
-
 
     /**
      * CSS-class enum
@@ -204,6 +210,12 @@ goog.scope(function() {
 
         this.setEcAnalytics_();
         this.sendAnalyticsPageview_();
+
+        handler.listen(
+            this.map_,
+            Map.Event.READY,
+            this.onMapReady_
+        );
     };
 
     /**
@@ -284,13 +296,13 @@ goog.scope(function() {
             .initScore_()
             .initAuthSocial_()
             .initModalInaccuracy_()
+            .initMap_()
+            .initBouton_()
             .initComponents_(DataBlockFoldList)
             .initComponents_(DBlockRatings)
-            .initComponents_(Map)
             .initComponents_(Search)
             .initComponents_(Comments)
-            .initComponents_(Results)
-            .initBouton_();
+            .initComponents_(Results);
     };
 
     /**
@@ -325,6 +337,20 @@ goog.scope(function() {
                 this.initComponent_(component, elements[i]);
             }
         }
+
+        return this;
+    };
+
+    /**
+     * Map initialization
+     * @return {sm.lSchool.School}
+     * @private
+     */
+    School.prototype.initMap_ = function() {
+        var mapElement = this.getElementByClass(Map.CssClass.ROOT);
+        this.map_ = new Map();
+        this.addChild(this.map_);
+        this.map_.decorate(mapElement);
 
         return this;
     };
@@ -427,6 +453,28 @@ goog.scope(function() {
                 sm.lSchool.School.CssClass.INACCURACY_LINK
             )
         };
+    };
+
+    /**
+     * Load additional points to map
+     * @private
+     */
+    School.prototype.onMapReady_ = function() {
+        jQuery.ajax({
+            url: '/api/school/searchMapPoints',
+            dataType: 'json',
+            type: 'GET'
+        }).then(this.addMapPoints.bind(this));
+    };
+
+    /**
+     * Add Points to map
+     * @param {{
+     *     schools: Array.<Object>
+     * }} data
+     */
+    School.prototype.addMapPoints = function(data) {
+        this.map_.addItems(data.schools);
     };
 
     /**

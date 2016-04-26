@@ -10,6 +10,8 @@ var searchView = require('../views/searchView');
 var searchTypeEnum = require('../enums/searchType');
 var schoolTypeEnum = require('../enums/schoolType');
 
+const mapPositionType = require('../enums/mapPositionType');
+
 exports.name = 'search';
 
 exports.getSchoolRecords = async (function(id) {
@@ -44,7 +46,7 @@ exports.suggestSearch = async(function(searchString) {
     var promises = [
         services.school.searchByText(searchString),
         findAnyInModel(models.Area, searchString),
-        findAnyInModel(models.Metro, searchString),
+        findAnyInModel(models.Metro, searchString)
     ];
     var results = await(promises);
     return {
@@ -53,6 +55,99 @@ exports.suggestSearch = async(function(searchString) {
         metros: results[2]
     };
 });
+
+/**
+ * Generate sql config object for search in schools
+ * @param {number=} opt_schoolsAmount
+ * @param {number=} opt_page
+ * @return {Object}
+ */
+exports.generateSqlConfig = function(opt_schoolsAmount, opt_page) {
+    var limit = 'ALL',
+        offset = 0,
+        page = opt_page || 0;
+
+    if (opt_schoolsAmount) {
+        limit = opt_schoolsAmount;
+        offset = page * opt_schoolsAmount;
+    }
+
+    var sqlConfig = {
+        select: [
+            'school.id',
+            'school.name',
+            'school.full_name AS "fullName"',
+            'school.rank_dogm AS "rankDogm"',
+            'school.description',
+            'school.url',
+            'school.score',
+            'school.total_score AS "totalScore"',
+            'school.score_count AS "scoreCount"',
+            'school.count_results AS "countResults"',
+            'address.id AS "addressId"',
+            'metro.id AS "metroId"',
+            'metro.name AS "metroName"',
+            'area.id AS "areaId"',
+            'area.name AS "areaName"',
+            'address.coords AS "addressCoords"',
+            'address.name AS "addressName"',
+            'department.stage AS "departmentStage"'
+        ],
+        from: {
+            select: [
+                'school.id',
+                'school.name',
+                'school.full_name',
+                'school.rank_dogm',
+                'school.description',
+                'school.url',
+                'school.score',
+                'school.total_score',
+                'school.score_count',
+                'count(*) OVER() AS count_results'
+            ],
+            from: ['school'],
+            where: [],
+            as: 'school',
+            join: [],
+            group: ['school.id'],
+            order: [
+                'school.total_score DESC',
+                'school.score DESC NULLS LAST',
+                'school.id ASC'
+            ],
+            having: [],
+            limit: limit,
+            offset: offset
+        },
+        where: [
+            'address.is_school = true'
+        ],
+        join: [
+            {
+                type: 'LEFT OUTER',
+                values: [
+                    'address on address.school_id = school.id',
+                    'address_metro on address_metro.address_id = address.id',
+                    'metro on metro.id = address_metro.metro_id',
+                    'area on address.area_id = area.id',
+                    'department on department.address_id = address.id'
+                ]
+            }
+        ],
+        group: [
+        ],
+        order: [
+            'school.total_score DESC',
+            'school.score DESC NULLS LAST',
+            'school.id ASC',
+            'address_metro.distance ASC'
+        ],
+        having: []
+    };
+
+    return sqlConfig;
+};
 
 /**
  * @param {object} model
@@ -181,7 +276,7 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
             isGeoDataJoined = true;
         }
 
-        if (searchParams.classes.length) {
+        if (searchParams.classes && searchParams.classes.length) {
             var classArr = intArrayToSql(searchParams.classes);
             sqlOptions.where.push('school.education_interval @> ' + classArr);
         }
@@ -192,7 +287,7 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
             );
         }
 
-        if (searchParams.schoolType.length) {
+        if (searchParams.schoolType && searchParams.schoolType.length) {
             searchDataCount++;
             searchDataWhere.values.push({
                 type: 'AND',
@@ -203,7 +298,7 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
             });
         }
 
-        if (searchParams.gia.length) {
+        if (searchParams.gia && searchParams.gia.length) {
             searchDataCount++;
             searchDataWhere.values.push({
                 type: 'AND',
@@ -214,7 +309,7 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
             });
         }
 
-        if (searchParams.ege.length) {
+        if (searchParams.ege && searchParams.ege.length) {
             searchDataCount++;
             searchDataWhere.values.push({
                 type: 'AND',
@@ -225,7 +320,7 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
             });
         }
 
-        if (searchParams.olimp.length) {
+        if (searchParams.olimp && searchParams.olimp.length) {
             searchDataCount++;
             searchDataWhere.values.push({
                 type: 'AND',
@@ -235,8 +330,6 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
                 ]
             });
         }
-
-
 
         if (searchParams.areaId) {
             isGeoDataJoined = true;
@@ -446,6 +539,56 @@ exports.getFilterIds = async(function(filter, type) {
 
     return ids;
 });
+
+/**
+ * Get center coordinates for map depending of given search params
+ * @param {Object} params
+ * @param {number} params.metroId
+ * @param {number} params.areaId
+ * @param {string} params.name
+ * @return {Object.<{
+ *     center: Array.<number>,
+ *     type: string
+ * }>}
+ */
+exports.getMapPositionParams = function(params) {
+    var result = {};
+    if (params.metroId) {
+        result = {
+            center: services.metro.getCoords(params.metroId),
+            type: mapPositionType.METRO
+        };
+    } else if (params.areaId) {
+        /** Centering on area id **/
+        result = {
+            type: mapPositionType.AREA
+        };
+    } else if(params.name === '' && !isFiltersSelected(params)) {
+        result = {
+            center: services.city.getCenterCoords(),
+            type: mapPositionType.CITY_CENTER
+        };
+    }
+    return result;
+};
+
+/**
+ * Check whether one of filters selected
+ * @param {Object} params
+ * @param {?Array.<number>} params.classes
+ * @param {?Array.<number>} params.schoolType
+ * @param {?Array.<number>} params.ege
+ * @param {?Array.<number>} params.gia
+ * @param {?Array.<number>} params.olimp
+ * @return {boolean}
+ */
+var isFiltersSelected = function(params) {
+    var filterTypes = searchTypeEnum.toCamelCaseArray(),
+        isSelected = lodash.some(filterTypes, (filterType) => {
+            return params[filterType].length;
+        });
+    return isSelected || params.classes.length;
+};
 
 /**
  * @param {int} school_id

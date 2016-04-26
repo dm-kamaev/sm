@@ -55,7 +55,7 @@ sm.bSearch.Search = function(opt_params) {
     this.metroId_ = null;
 
     /**
-     * @type {?Array<number>}
+     * @type {?Array.<number>}
      * @private
      */
     this.coords_ = [];
@@ -156,7 +156,7 @@ goog.scope(function() {
      * @param {{
      *     areaId: ?number,
      *     metroId: ?number,
-     *     coords: {Array.<number>},
+     *     coords: Array.<number>,
      *     text: ?string
      * }} data
      * @public

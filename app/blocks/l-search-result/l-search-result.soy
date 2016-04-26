@@ -12,7 +12,6 @@
  *                 light: string,
  *                 bold: string
  *             },
- *             type: string,
  *             score: [{
  *                 name: string,
  *                 value: number
@@ -24,8 +23,7 @@
  *             description: string,
  *             ratings: string[],
  *             metroStations: string[],
- *             area: [],
- *             position: ?number
+ *             area: []
  *         }],
  *         filters: {sm.lSearchResult.bFilters.Template.Params}
  *     },
@@ -61,7 +59,10 @@
  *                 stages: list<string>
  *             }]
  *          }],
- *         centerCoords: ?list<number>,
+ *         position: {
+ *             center: Array.<string>,
+ *             type: ?string
+ *         },
  *     },
  *     config: {
  *         staticVersion: ?string,
@@ -127,13 +128,7 @@
 {template .innerContent_ autoescape="strict" kind="html"}
     <div class="l-search-result__body">
         {call .map}
-            {param params: [
-                'data': $params?.map?.schools,
-                'config': [
-                    'sidePins': false,
-                    'centerCoords': $params?.map?.centerCoords
-                ]
-            ]/}
+            {param params: $params?.map /}
         {/call}
 
         <div class="l-search-result__content">
@@ -161,37 +156,36 @@
 
 /**
  * Container for map
- * @param? params {{
- *     data: ?[{
- *         id: number,
- *         name: string,
- *         description: string,
- *         url: string,
- *         totalScore: number,
- *         addresses: [{
- *             lat: number,
- *             lng: number,
+ * @param? params [
+ *     schoolGroups: list<[
+ *         type: ?string,
+ *         schools: list<[
+ *             id: number,
  *             name: string,
- *             stages: list<string>
- *         }]
- *     }],
- *     config: ?{
- *         centerCoords: ?list<number>
- *    }
- * }}
+ *             description: string,
+ *             url: string,
+ *             totalScore: number,
+ *             addresses: list<[
+ *                 lat: number,
+ *                 lng: number,
+ *                 name: string,
+ *                 stages: list<string>
+ *             ]>
+ *         ]>
+ *     ]>,
+ *     mapCenter: ?list<number>
+ * ]
  */
 {template .map autoescape="strict" kind="html"}
     <div class="l-search-result__map
-                {if not $params?.data}
+                {if length($params?.schools) == 0}
                     {sp}i-utils__hidden
                 {/if}">
         {call sm.bMap.Template.map}
             {param params: [
-                'data': $params?.data,
+                'data': $params,
                 'config': [
-                    'sidePins': false,
-                    'enableScrollZoom': false,
-                    'centerCoords': $params.config?.centerCoords
+                    'enableScrollZoom': false
                 ]
             ]/}
         {/call}
