@@ -53,6 +53,8 @@ goog.scope(function() {
                 this.onSchoolClick_
             );
         }
+
+        this.setImpressions_(this.getView().getSchoolsParams());
     };
 
     /**
@@ -70,6 +72,30 @@ goog.scope(function() {
     PopularSchools.prototype.onSchoolClick_ = function(event) {
         this.sendEcAnalytics_(event);
         this.sendAnalyticsSchoolData_(this.analyticsAction_, event.schoolName);
+    };
+
+    /**
+     * Set impressions for all popular schools
+     * @param {Array<Object>} schoolParams
+     * @private
+     */
+    PopularSchools.prototype.setImpressions_ = function(schoolParams) {
+        schoolParams.forEach((schoolParam, i) =>
+            this.setImpression_(schoolParam, i + 1));
+    };
+
+    /**
+     * Set impressions for all popular schools
+     * @param {Object} schoolParam
+     * @param {number} position
+     * @private
+     */
+    PopularSchools.prototype.setImpression_ = function(schoolParam, position) {
+        Analytics.addImpression({
+            id: schoolParam.id,
+            name: schoolParam.schoolName,
+            position: position
+        });
     };
 
     /**

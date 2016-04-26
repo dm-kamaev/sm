@@ -75,6 +75,18 @@ goog.scope(function() {
     };
 
     /**
+     * Get popular school's params
+     * @return {Array<Object>}
+     */
+    View.prototype.getSchoolsParams = function() {
+        var schoolParams = [];
+        for (var i = 0, elem; elem = this.dom.schools[i]; i++) {
+            schoolParams.push(this.getDataParams_(elem));
+        }
+        return schoolParams;
+    };
+
+    /**
      * @param {Number} schoolNumInArr
      * @private
      */
