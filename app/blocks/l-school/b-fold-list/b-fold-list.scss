@@ -7,6 +7,10 @@
     line-height: normal;
 }
 
+.b-fold-list__title {
+    margin-bottom: 15px;
+}
+
 .b-fold-list__item {
     margin-bottom: 15px;
 }
@@ -21,18 +25,24 @@
     margin-left: 10px;
 }
 
-.b-fold-list_unfolded {
-    .b-fold-list__title {
-        margin-bottom: 20px;
+.b-fold-list__button {
+    margin-left: 20px;
+}
 
+.b-fold-list_titless > .b-fold-list__button {
+    margin-left: 0;
+}
+
+.b-fold-list_unfolded {
+    margin-bottom: 25px;
+
+    .b-fold-list__title {
         font-weight: 600;
     }
 }
 
 .b-fold-list_folded {
     .b-fold-list__title {
-        margin-bottom: 15px;
-
         font-weight: normal;
     }
 }

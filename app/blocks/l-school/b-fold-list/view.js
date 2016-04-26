@@ -15,6 +15,20 @@ goog.require('goog.dom.classes');
  */
 sm.lSchool.bFoldList.View = function(opt_params, opt_template, opt_modifier) {
     goog.base(this, opt_params, opt_template, opt_modifier);
+
+    /**
+     * List type
+     * @type {String}
+     * @private
+     */
+    this.type_ = null;
+
+    /**
+     * folded or unfolded list
+     * @type {boolean}
+     * @private
+     */
+    this.isFolded_ = null;
 };
 goog.inherits(sm.lSchool.bFoldList.View, cl.iControl.View);
 
@@ -27,6 +41,8 @@ goog.scope(function() {
      */
     View.CssClass = {
         ROOT: 'b-fold-list',
+        TYPE_FOLDED: 'b-fold-list_folded',
+        TYPE_UNFOLDED: 'b-fold-list_unfolded',
         UNFOLD_BUTTON: 'b-fold-list__button_unfold',
         FOLD_BUTTON: 'b-fold-list__button_fold',
         NUMBER: 'b-fold-list__number',
@@ -40,7 +56,17 @@ goog.scope(function() {
      * @enum {String}
      */
     View.Event = {
-       FOLD_BUTTON_CLICK: 'fold-button-click'
+        FOLD: 'fold',
+        UNFOLD: 'unfold'
+    };
+
+    /**
+     * List type enum
+     * @enum {String}
+     */
+    View.Type = {
+        FOLDED: 'folded',
+        UNFOLDED: 'unfolded'
     };
 
     /**
@@ -51,6 +77,10 @@ goog.scope(function() {
         goog.base(this, 'decorateInternal', element);
 
         this.initDom_(element);
+
+        this.type_ = this.getType_();
+
+        this.isFolded_ = true;
     };
 
     /**
@@ -84,113 +114,155 @@ goog.scope(function() {
         }
     };
 
-
     /**
-     * closes all open lists
+     * fold list and change its type
      */
-    View.prototype.foldHiddenLists = function() {
-        if (this.dom.hiddenList) {
-            var isContains = goog.dom.classlist.contains(
-                this.dom.hiddenList,
-                View.CssClass.HIDDEN
-            );
+    View.prototype.fold = function() {
+        this.isFolded_ = true;
+        this.setHiddenListVisibility_(false);
 
-            if (!isContains) {
-                goog.dom.classlist.add(
-                    this.dom.hiddenList,
-                    View.CssClass.HIDDEN
-                );
-            }
+        if (this.type_ == View.Type.FOLDED) {
+            this.setNumberVisibility_(true);
+        }
+        else {
+            this.setFoldButtonVisibility_(false);
+            this.setUnfoldButtonVisibility_(true);
         }
     };
 
     /**
-     * It shows the number of items of all links
+     * unfold list and change its type
      */
-    View.prototype.showNumber = function() {
-        if (this.dom.number) {
-            var isContains = goog.dom.classlist.contains(
-                this.dom.number,
-                View.CssClass.HIDDEN
-            );
+    View.prototype.unfold = function() {
+        this.isFolded_ = false;
+        this.setHiddenListVisibility_(true);
 
-            if (isContains) {
-                goog.dom.classlist.remove(
-                    this.dom.number,
-                    View.CssClass.HIDDEN
-                );
-            }
+        if (this.type_ == View.Type.FOLDED) {
+            this.setNumberVisibility_(false);
+        }
+        else {
+            this.setFoldButtonVisibility_(true);
+            this.setUnfoldButtonVisibility_(false);
         }
     };
 
     /**
+     * get Children Lists this Instance
+     * @return {Array}
+     */
+    View.prototype.getChildrenLists = function() {
+        return this.getDom().foldLists;
+    };
+
+    /**
+     * check the elem contains other Elems
+     * @param {Element} elem
+     * @param {Array} array
+     * @return {?number}
+     * @private
+     */
+    View.prototype.isElemContainsInOtherElems_ = function(elem, array) {
+        var elems = array.filter(function(arrayElem) {
+            return arrayElem != elem && goog.dom.contains(arrayElem, elem);
+        });
+
+        return elems.length;
+    };
+
+    /**
+     * get type for list (foldet or unfolded)
+     * @return {string}
+     * @private
+     */
+    View.prototype.getType_ = function() {
+        var isFolded = goog.dom.classlist.contains(
+            this.getElement(),
+            View.CssClass.TYPE_FOLDED
+        );
+
+        return isFolded ? View.Type.FOLDED : View.Type.UNFOLDED;
+    };
+
+    /**
+     * Link list Click handler
      * @private
      */
     View.prototype.onLinkListClick_ = function() {
-        this.hideShowNumber_();
-        this.foldUnfoldHiddenList_();
-    };
-
-    /**
-     * @private
-     */
-    View.prototype.onUnfoldButtonClick_ = function() {
-        this.foldUnfoldHiddenList_();
-        this.hideShowUnfoldButton_();
-        this.hideShowFoldButton_();
-    };
-
-    /**
-     * @private
-     */
-    View.prototype.onFoldButtonClick_ = function() {
-        this.foldUnfoldHiddenList_();
-        this.hideShowFoldButton_();
-        this.hideShowUnfoldButton_();
+        var eventType = this.isFolded_ ?
+            View.Event.UNFOLD :
+            View.Event.FOLD;
 
         this.dispatchEvent({
-            'type': View.Event.FOLD_BUTTON_CLICK
+            'type': eventType
         });
     };
 
     /**
+     * unfold button Click handler
      * @private
      */
-    View.prototype.hideShowUnfoldButton_ = function() {
-        goog.dom.classlist.toggle(
-            this.dom.unfoldButton,
-            View.CssClass.HIDDEN
-        );
+    View.prototype.onUnfoldButtonClick_ = function() {
+        this.dispatchEvent({
+            'type': View.Event.UNFOLD
+        });
     };
 
     /**
+     * fold button Click handler
      * @private
      */
-    View.prototype.hideShowFoldButton_ = function() {
-        goog.dom.classlist.toggle(
-            this.dom.foldButton,
-            View.CssClass.HIDDEN
-        );
+    View.prototype.onFoldButtonClick_ = function() {
+        this.dispatchEvent({
+            'type': View.Event.FOLD
+        });
     };
 
     /**
+     * adds or deletes a class HIDDEN for unfoldButton
+     * @param {boolean} value
      * @private
      */
-    View.prototype.foldUnfoldHiddenList_ = function() {
-        goog.dom.classlist.toggle(
-            this.dom.hiddenList,
-            View.CssClass.HIDDEN
-        );
+    View.prototype.setUnfoldButtonVisibility_ = function(value) {
+        var elem = this.dom.unfoldButton;
+        value ?
+            goog.dom.classlist.remove(elem, View.CssClass.HIDDEN) :
+            goog.dom.classlist.add(elem, View.CssClass.HIDDEN);
     };
 
     /**
+     * adds or deletes a class HIDDEN for foldButton
+     * @param {boolean} value
      * @private
      */
-    View.prototype.hideShowNumber_ = function() {
-        goog.dom.classlist.toggle(
-            this.dom.number,
-            View.CssClass.HIDDEN
-        );
+    View.prototype.setFoldButtonVisibility_ = function(value) {
+        var elem = this.dom.foldButton;
+        value ?
+            goog.dom.classlist.remove(elem, View.CssClass.HIDDEN) :
+            goog.dom.classlist.add(elem, View.CssClass.HIDDEN);
+    };
+
+    /**
+     * adds or deletes a class HIDDEN for hiddenList
+     * @param {boolean} value
+     * @private
+     */
+    View.prototype.setHiddenListVisibility_ = function(value) {
+        var elem = this.dom.hiddenList;
+        value ?
+            goog.dom.classlist.remove(elem, View.CssClass.HIDDEN) :
+            goog.dom.classlist.add(elem, View.CssClass.HIDDEN);
+    };
+
+    /**
+     * adds or deletes a class HIDDEN for number
+     * @param {boolean} value
+     * @private
+     */
+    View.prototype.setNumberVisibility_ = function(value) {
+        var elem = this.dom.number;
+        value ?
+            goog.dom.classlist.remove(elem, View.CssClass.HIDDEN) :
+            goog.dom.classlist.add(elem, View.CssClass.HIDDEN);
     };
 
     /**
@@ -200,7 +272,7 @@ goog.scope(function() {
      */
     View.prototype.initDom_ = function(element) {
         this.dom = {
-            foldLists: this.getElementsByClass(
+            foldLists: this.getDomElements_(
                 View.CssClass.ROOT
             ),
             unfoldButton: this.getDomElement_(
@@ -222,29 +294,30 @@ goog.scope(function() {
     };
 
     /**
-     * get Dom element of this Instance
+     * get an array of DOM elements
      * @param {string} elemClass
-     * @return {Element}
+     * @return {Array}
+     * @private
+     */
+    View.prototype.getDomElements_ = function(elemClass) {
+        var elems = this.getElementsByClass(elemClass),
+            elemsArr = Array.prototype.slice.call(elems, 0),
+            lists = this.getElementsByClass(View.CssClass.ROOT),
+            listsArr = Array.prototype.slice.call(lists, 0);
+
+        return elemsArr.filter(function(elem) {
+            return !this.isElemContainsInOtherElems_(elem, listsArr);
+        }, this);
+    };
+
+    /**
+     * get DOM element
+     * @param {string} elemClass
+     * @return {?Element}
      * @private
      */
     View.prototype.getDomElement_ = function(elemClass) {
-        var result = '';
-
-        var elements = this.getElementsByClass(
-            elemClass,
-            this.getElement()
-        );
-
-        for (var i = 0; i < elements.length; i++) {
-            var parent = goog.dom.getAncestorByClass(
-                elements[i],
-                View.CssClass.ROOT
-            );
-
-            if (parent === this.getElement()) {
-                result = elements[i];
-            }
-        }
-        return result;
+        var elems = this.getDomElements_(elemClass);
+        return elems[0];
     };
 });

@@ -36,7 +36,10 @@
  */
 {template .additionalClasses}
     {if $params.config?.type}
-        {call .rootClass/}_{$params.config.type}
+        {call .rootClass/}_{$params.config.type}{sp}
+    {/if}
+    {if not $params.data.name}
+        {call .rootClass/}_titless{sp}
     {/if}
 {/template}
 
@@ -73,24 +76,24 @@
  * @param? type [string]
  */
 {template .title_ kind="html"}
-    {if $count and $name and $type == 'unfolded'}
+    {if $count and $name}
         <div class="{call .rootClass/}__title">
-            {$name}
-        </div>
-    {elseif $count and $name}
-        <div class="{call .rootClass/}__title">
-            {call .link_}
-                {param params: [
-                    'name': $name,
-                    'config': [
-                        'customClasses': 'b-fold-list__link'
-                    ]
-                ]/}
-            {/call}
+            {if $type == 'unfolded'}
+                {$name}
+            {else}
+                {call .link_}
+                    {param params: [
+                        'name': $name,
+                        'config': [
+                            'customClasses': 'b-fold-list__link'
+                        ]
+                    ]/}
+                {/call}
 
-            {call .number_}
-                {param number: $count /}
-            {/call}
+                {call .number_}
+                    {param number: $count /}
+                {/call}
+            {/if}
         </div>
     {/if}
 {/template}
@@ -117,7 +120,8 @@
     {else}
         {call .subItems_}
             {param items: $items /}
-            {param count: $count /}
+            {param strartIndex: 0 /}
+            {param endIndex: $count /}
             {param type: 'hidden' /}
         {/call}
     {/if}
@@ -128,34 +132,25 @@
  * @param items [list<string | sm.lSchool.bFoldList.Template.Params>]
  * @param? strartIndex [number]
  * @param? endIndex [number]
- * @param? count [number]
  * @param? type [string]
  */
 {template .subItems_ kind="html"}
-    <ul class="{call .rootClass/}__list
-               {if $type}{sp}{call .rootClass/}__list_{$type}{/if}
-               {if $type == 'hidden'}{sp}i-utils__hidden{/if}">
+    {let $count: length($items) /}
+    {if $strartIndex < $count}
+        <ul class="{call .rootClass/}__list
+                   {if $type}{sp}{call .rootClass/}__list_{$type}{/if}
+                   {if $type == 'hidden'}{sp}i-utils__hidden{/if}">
 
-        {if $endIndex and $endIndex < length($items)}
-            {for $i in range($strartIndex, $endIndex)}
+            {let $from: $strartIndex /}
+            {let $to: $count < $endIndex ? $count : $endIndex /}
+
+            {for $i in range($from, $to)}
                 {call .item_}
                     {param item: $items[$i] /}
                 {/call}
             {/for}
-        {elseif $endIndex}
-            {for $i in range($strartIndex, length($items))}
-                {call .item_}
-                    {param item: $items[$i] /}
-                {/call}
-            {/for}
-        {else}
-            {for $i in range($count)}
-                {call .item_}
-                    {param item: $items[$i] /}
-                {/call}
-            {/for}
-        {/if}
-    </ul>
+        </ul>
+    {/if}
 {/template}
 
 

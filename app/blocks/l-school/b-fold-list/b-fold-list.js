@@ -45,69 +45,59 @@ goog.scope(function() {
         goog.base(this, 'enterDocument');
 
         this.viewListen(
-            View.Event.FOLD_BUTTON_CLICK,
-            this.onFoldButtonClick_
+            View.Event.FOLD,
+            this.onFold_
+        );
+
+        this.viewListen(
+            View.Event.UNFOLD,
+            this.onUnfold_
         );
     };
 
     /**
+     * fold list and its child lists
+     */
+    FoldList.prototype.fold = function() {
+        this.getView().fold();
+
+        this.foldLists_.forEach(function(list) {
+            list.fold();
+        });
+    };
+
+    /**
+     * unfold list
+     */
+    FoldList.prototype.unfold = function() {
+        this.getView().unfold();
+    };
+
+    /**
+     * fold handler
      * @private
      */
-    FoldList.prototype.onFoldButtonClick_ = function() {
-        for (var i = 0; i < this.foldLists_.length; i++) {
-            this.foldLists_[i].foldLists();
-        }
+    FoldList.prototype.onFold_ = function() {
+        this.fold();
     };
 
     /**
-     * fold all open Lists
+     * unfold handler
+     * @private
      */
-    FoldList.prototype.foldLists = function() {
-        this.getView().foldHiddenLists();
-        this.getView().showNumber();
+    FoldList.prototype.onUnfold_ = function() {
+        this.unfold();
     };
 
     /**
-     * subsidiaries folded lists initialization
+     * folded lists initialization
      * @private
      */
     FoldList.prototype.initFoldLists_ = function() {
-        var domElements = this.getView().getDom();
+        var elements = this.getView().getChildrenLists();
 
-        if (domElements.foldLists) {
-            var elements = this.getElementsThisInstance_(domElements.foldLists);
-
-            for (var i = 0; i < elements.length; i++) {
-                this.foldLists_.push(this.decorateChild(
-                    'fold-list',
-                    elements[i]
-                ));
-            }
-        }
-    };
-
-    /**
-     * get Elements that contain this Instance
-     * @param {Array} array
-     * @return {Array}
-     * @private
-     */
-    FoldList.prototype.getElementsThisInstance_ = function(array) {
-        var result = [];
-
-        for (var i = 0; i < array.length; i++) {
-            var isContains = false;
-
-            for (var j = 0; j < array.length; j++) {
-                if (j != i && goog.dom.contains(array[j], array[i])) {
-                    isContains = true;
-                }
-            }
-
-            if (!isContains) {
-                result.push(array[i]);
-            }
-        }
-        return result;
+        this.foldLists_ = elements.map(function(elem) {
+            return this.decorateChild('fold-list', elem);
+        }, this);
     };
 });

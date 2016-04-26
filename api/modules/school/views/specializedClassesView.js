@@ -3,49 +3,39 @@ var specializedClassesView = {};
 
 /**
  * @param {object} specializedClasses
- * @return {array}
+ * @return {object}
  */
 specializedClassesView.list = function(specializedClasses) {
-    var result = specializedClassesView.listParams_([], 'unfolded');
+    var steps = ['Начальная школа', 'Средняя школа', 'Старшая школа'];
 
-    var items = specializedClassesView.itemsToLevel_(specializedClasses, 0, 4);
-    if (items.length) {
-        result.data.items.push(
-            specializedClassesView.listParams_(
-                items,
-                'unfolded',
-                'Начальная школа'
-            )
-        );
-    }
+    var itemsData = [
+            specializedClassesView.itemsByClasses_(specializedClasses, 0, 4),
+            specializedClassesView.itemsByClasses_(specializedClasses, 5, 9),
+            specializedClassesView.itemsByClasses_(specializedClasses, 9, 11)
+        ];
 
-    var items = specializedClassesView.itemsToLevel_(specializedClasses, 5, 9);
-    if (items.length) {
-        result.data.items.push(
-            specializedClassesView.listParams_(
-                items,
-                'unfolded',
-                'Средняя школа'
-            )
-        );
-    }
+    var items = itemsData
+            .map((data, index) => {
+                var step = steps[index];
+                return data.length ?
+                    specializedClassesView.listParams_(data, step) :
+                    null;
+            })
+            .filter(item => item != null);
 
-    var items = specializedClassesView.itemsToLevel_(specializedClasses, 9, 11);
-    if (items.length) {
-        result.data.items.push(
-            specializedClassesView.listParams_(
-                items,
-                'unfolded',
-                'Старшая школа'
-            )
-        );
-    }
-
-    return result;
+    return specializedClassesView.listParams_(items);
 };
 
+/**
+ * creates an array of the classes (from, to)
+ * @param {object} specializedClasses
+ * @param {number} start
+ * @param {number} end
+ * @return {array}
+ */
+specializedClassesView.itemsByClasses_ = function(
+    specializedClasses, start, end) {
 
-specializedClassesView.itemsToLevel_ = function(specializedClasses, start, end) {
     var classes = lodash.filter(specializedClasses, function(collection) {
         if(collection[0] >= start && collection[0] <= end) {
             return collection[1];
@@ -61,14 +51,20 @@ specializedClassesView.itemsToLevel_ = function(specializedClasses, start, end) 
     return items;
 };
 
-specializedClassesView.listParams_ = function(items, type, opt_name) {
+/**
+ * @param {object} specializedClasses
+ * @param {array} items
+ * @param {srting=} opt_name
+ * @return {object}
+ */
+specializedClassesView.listParams_ = function(items, opt_name) {
     return {
         data: {
             name: opt_name || '',
             items: items
         },
         config: {
-            type: type
+            type: 'unfolded'
         }
     };
 }
