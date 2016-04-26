@@ -87,7 +87,7 @@ goog.inherits(sm.lSchool.School, goog.ui.Component);
 
 goog.scope(function() {
     var School = sm.lSchool.School,
-        FoldList = sm.lSchool.bDataBlock.DataBlockFoldList,
+        DataBlockFoldList = sm.lSchool.bDataBlock.DataBlockFoldList,
         DBlockRatings = sm.lSchool.bDataBlock.DataBlockRatings,
         Results = sm.lSchool.bResults.Results,
         Score = sm.bScore.Score,
@@ -284,7 +284,7 @@ goog.scope(function() {
             .initScore_()
             .initAuthSocial_()
             .initModalInaccuracy_()
-            .initComponents_(FoldList)
+            .initComponents_(DataBlockFoldList)
             .initComponents_(DBlockRatings)
             .initComponents_(Map)
             .initComponents_(Search)

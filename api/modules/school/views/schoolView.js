@@ -7,6 +7,8 @@ const addressView = require(
     '../../geo/views/addressView.js');
 const activityView = require(
     './activityView.js');
+const specializedClassesView = require(
+    './specializedClassesView.js');
 const ratingView = require(
     './ratingView.js');
 const egeResultView = require(
@@ -299,55 +301,17 @@ var getDirectorName = function(name) {
     return result;
 };
 
+/**
+ *  @param {object} specializedClasses
+ *  @return {object}
+ */
 var getSpecializedClasses = function(specializedClasses) {
-    var result = [],
-        grade = '',
-        index = -1;
-    if (specializedClasses) {
-        for (var i = 0,
-                l = specializedClasses.length,
-                specializedClass, specialLevel; i < l; i++) {
-            specializedClass = specializedClasses[i];
-            specialLevel = schoolGradeToLevel(specializedClass[0])
-
-
-
-            if (grade !== specialLevel) {
-                grade = specialLevel;
-
-                result.push({
-                    'name': grade,
-                    'items': []
-                });
-                index += 1;
-            }
-
-            if (result[index].items.indexOf(specializedClass[1]) === -1) {
-                result[index].items.push(specializedClass[1]);
-            }
-        }
-    }
-
-    return result;
+    return specializedClassesView.list(specializedClasses);
 };
-
- /**
-  * @param {number} grade
-  * @return {string}
-  */
-var schoolGradeToLevel = function(grade) {
-    if (grade < 5) {
-        return 'Начальная школа';
-    } else if (grade < 9) {
-        return 'Средняя школа';
-    } else {
-        return 'Старшая школа'
-    }
-}
 
 /**
  *  @param {object} activities
- *  @return {array}
+ *  @return {object}
  */
 var getActivities = function(activities) {
     return activityView.list(activities);
