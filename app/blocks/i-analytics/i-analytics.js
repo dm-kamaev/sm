@@ -29,7 +29,7 @@ goog.scope(function() {
 
         this.loadingLibrary_();
         this.create_();
-        this.send('pageview');
+        // this.send('pageview');
     };
 
 
@@ -42,6 +42,70 @@ goog.scope(function() {
         ga('send', params);
     };
 
+    /**
+     * Add item info on click
+     * @param {{
+     *     id: string,
+     *     name: string,
+     *     brand: ?string,
+     *     category: ?string,
+     *     variant: ?string,
+     *     price: ?string,
+     *     quantity: ?number,
+     *     coupon: ?string,
+     *     position: ?number
+     * }} params
+     * @param {string} place - where clickied the item
+     */
+    Analytics.prototype.clickProduct = function(params, place) {
+        ga('ec:addProduct', params);
+        ga('ec:setAction', 'click', {
+            'list': place
+        });
+    };
+
+    /**
+     * Add information about product
+     * @param {{
+     *     id: string,
+     *     name: string,
+     *     brand: ?string,
+     *     category: ?string,
+     *     variant: ?string,
+     *     price: ?string,
+     *     quantity: ?number,
+     *     coupon: ?string,
+     *     position: ?number
+     * }} params
+     */
+    Analytics.prototype.viewProduct = function(params) {
+        ga('ec:addProduct', params);
+    };
+
+    /**
+     * Set view
+     */
+    Analytics.prototype.setView = function() {
+        ga('ec:setAction', 'detail');
+    };
+
+    /**
+     * Add impression about related product
+     * @param {{
+     *     id: string,
+     *     name: string,
+     *     list: ?string,
+     *     brand: ?string,
+     *     category: ?string,
+     *     variant: ?string,
+     *     position: ?number,
+     *     price: ?string
+     * }} params
+     */
+    Analytics.prototype.addImpression = function(params) {
+        ga('ec:addImpression', params);
+    };
+
 
     /**
      * Creates a counter for the resource
@@ -49,6 +113,8 @@ goog.scope(function() {
      */
     Analytics.prototype.create_ = function() {
         ga('create', this.clientId_, 'auto');
+
+        ga('require', 'ec');
     };
 
 

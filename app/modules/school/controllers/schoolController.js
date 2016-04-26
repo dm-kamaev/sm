@@ -96,7 +96,7 @@ exports.view = async (function(req, res, next) {
                         schoolInstance.id
                     ),
                     city: services.cityResult.getAll(),
-                    authSocialLink: services.auth.getSocialLinks(),
+                    authSocialLink: services.auth.getAuthSocialUrl(),
                     popularSchools: services.school.getPopularSchools()
                 },
                 dataFromPromises = await(promises);
@@ -148,7 +148,7 @@ exports.search = async(function(req, res) {
         searchUrl = '/search?name=';
 
     var html = soy.render('sm.lSearch.Template.base', {
-          params: {
+        params: {
               currentCity: 'Москва',
               popularSchools: schoolView.popular(data.popularSchools),
               dataLinks : schoolView.dataLinks(),
@@ -160,7 +160,7 @@ exports.search = async(function(req, res) {
                   domain: DOMAIN,
                   fbClientId: FB_CLIENT_ID
               }
-          }
+        }
     });
 
     res.header('Content-Type', 'text/html; charset=utf-8');

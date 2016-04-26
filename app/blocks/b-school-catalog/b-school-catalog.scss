@@ -1,14 +1,31 @@
+.b-school-catalog__content {
+    color: #000;
+    text-decoration: none;
+}
+
+.b-school-catalog__content:hover .b-school-catalog__title {
+    color: #ff0000;
+}
+
 .b-school-catalog__img {
     box-sizing: border-box;
 
-    width: 60px;
-    height: 60px;
+    width: 56px;
+    height: 56px;
     margin-bottom: 27px;
-    padding: 10px 0;
+    padding: 8px 0;
 
     text-align: center;
 
     border: 4px solid #000;
+}
+
+.b-school-catalog__title {
+    margin-bottom: 15px;
+
+    font-family: 'PT Serif', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
 }
 
 .b-school-catalog__text {
@@ -64,9 +81,14 @@ screen and (max-width: 600px) // for desktop
         left: 0;
     }
 
-    .b-school-catalog__info-text {
+    .b-school-catalog__link,
+    .b-school-catalog__text {
         box-sizing: border-box;
         width: 100%;
         padding-left: 90px;
+    }
+
+    .b-school-catalog__title {
+        display: none;
     }
 }

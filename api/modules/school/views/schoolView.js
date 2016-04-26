@@ -7,6 +7,8 @@ const addressView = require(
     '../../geo/views/addressView.js');
 const activityView = require(
     './activityView.js');
+const specializedClassesView = require(
+    './specializedClassesView.js');
 const ratingView = require(
     './ratingView.js');
 const egeResultView = require(
@@ -299,55 +301,17 @@ var getDirectorName = function(name) {
     return result;
 };
 
+/**
+ *  @param {object} specializedClasses
+ *  @return {object}
+ */
 var getSpecializedClasses = function(specializedClasses) {
-    var result = [],
-        grade = '',
-        index = -1;
-    if (specializedClasses) {
-        for (var i = 0,
-                l = specializedClasses.length,
-                specializedClass, specialLevel; i < l; i++) {
-            specializedClass = specializedClasses[i];
-            specialLevel = schoolGradeToLevel(specializedClass[0])
-
-
-
-            if (grade !== specialLevel) {
-                grade = specialLevel;
-
-                result.push({
-                    'name': grade,
-                    'items': []
-                });
-                index += 1;
-            }
-
-            if (result[index].items.indexOf(specializedClass[1]) === -1) {
-                result[index].items.push(specializedClass[1]);
-            }
-        }
-    }
-
-    return result;
+    return specializedClassesView.list(specializedClasses);
 };
-
- /**
-  * @param {number} grade
-  * @return {string}
-  */
-var schoolGradeToLevel = function(grade) {
-    if (grade < 5) {
-        return 'Начальная школа';
-    } else if (grade < 9) {
-        return 'Средняя школа';
-    } else {
-        return 'Старшая школа'
-    }
-}
 
 /**
  *  @param {object} activities
- *  @return {array}
+ *  @return {object}
  */
 var getActivities = function(activities) {
     return activityView.list(activities);
@@ -372,9 +336,10 @@ var getStages = function(departments) {
 /**
  * @param {array<object>} schools - schoolInstances
  * @param {number} opt_criterion
+ * @param {number} opt_page
  * @return {object} contains results count and schools array
  */
-schoolView.list = function(schools, opt_criterion) {
+schoolView.list = function(schools, opt_criterion, opt_page) {
     var res = {};
 
     if (schools.length !== 0) {
@@ -382,7 +347,7 @@ schoolView.list = function(schools, opt_criterion) {
 
         res.countResults = schools[0].countResults;
         res.schools = schools
-            .map(school => {
+            .map((school, i) => {
 
                 var score = getScore(school.score, school.totalScore, opt_criterion);
                 var sortCriterion = score.shift();
@@ -391,6 +356,7 @@ schoolView.list = function(schools, opt_criterion) {
                     id: school.id,
                     url: school.url,
                     name: getName(school.name),
+                    type: school.schoolType,
                     description: school.description,
                     abbreviation: school.abbreviation,
                     score: score,
@@ -402,7 +368,8 @@ schoolView.list = function(schools, opt_criterion) {
                     isScoreClickable: checkScoreValues(score, sortCriterion),
                     addresses:
                         services.department.addressesFilter(school.addresses),
-                    totalScore: school.totalScore
+                    totalScore: school.totalScore,
+                    position: getPosition(i, opt_page)
                 };
             });
 
@@ -647,6 +614,17 @@ var getName = function (name) {
 };
 
 /**
+ * Get position of school in list
+ * @param {number} localPosition
+ * @param {number} page
+ * @return {number}
+ */
+var getPosition = function(localPosition, page) {
+    var pagePosition = page ? page * 10 : 0;
+    return pagePosition + localPosition + 1;
+};
+
+/**
  * @param {Object} data
  * @param {Array.<Object>} data.schools - school instances
  * @param {Array.<Object>} data.areas - area instances
@@ -660,7 +638,6 @@ schoolView.suggest = function(data) {
         metro: metroView.list(data.metros)
     };
 };
-
 
  /**
  * @return {array<object>}

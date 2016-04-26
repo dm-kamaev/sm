@@ -183,9 +183,10 @@ gulp.task('authConfig', function() {
     return new Promise(function(resolve, reject) {
         exec('node ./console/buildLocalConfig dev ../environment/config/authorization',
             function() {
-                gulp.src(
-                    path.join(__dirname, '/environment/config/authorization/config.json')
-                ).pipe(
+                gulp.src([
+                    path.join(__dirname, '/environment/config/authorization/config.json'),
+                    path.join(__dirname, '/environment/config/authorization/services.json')
+                ]).pipe(
                     gulp.dest(path.join(__dirname, '/node_modules/auth-service/config/'))
                 ).on('end', function() { resolve() });
             }

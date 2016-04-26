@@ -1,92 +1,37 @@
-const async = require('asyncawait/async');
-const await = require('asyncawait/await');
-const request = require('request');
-const lodash = require('lodash');
-const axios = require('axios');
 const config = require('../../../../app/config').config;
-const logger = require('../../../../app/components/logger/logger').getLogger('app');
 
+const AUTH_URL = config.authApi + '/oauth/?type=';
 
-/**
- * @constructor
- */
-var AuthService = function() {
-    /**
-     * Service name
-     * @type {string}
-     */
-    this.name = 'auth';
+var service = {
+    name: 'auth'
 };
 
-/**
- * Social type enum
- * @enum {string}
- */
-AuthService.SocialType = {
-    VK: 'vk',
-    FB: 'fb'
-};
-
-/**
- * Social auth url (needed for getting social link)
- * @type {string}
- */
-AuthService.SOCIAL_AUTH_URL = config.authApi + '/oauth/?type=';
 /**
  * Getter for social link
  * @param  {string} socialType - ['vk', 'fb', 'gp']
- * @return {Promise} - promise, that returns link string
+ * @return {sttring}
  */
-AuthService.prototype.getSocialLink = function(socialType) {
-    var url = AuthService.SOCIAL_AUTH_URL + socialType;
+service.getSocialLink = function(socialType) {
+    var url = AUTH_URL + socialType;
 
-    return axios.get(url);
+    return url;
 };
 
 /**
- * Getter for all social links
+ * Getter for all social API url
  * @return {{
  *     vk: string,
  *     fb: string
- * }} - returns promise!
+ * }}
  */
-AuthService.prototype.getSocialLinks = async(function() {
-    var socialTypes = [
-            AuthService.SocialType.VK,
-            AuthService.SocialType.FB
-        ],
-        result = {
-            vk: '',
-            fb: ''
-        },
-        that = this;
-
-    try {
-        var responses = await(socialTypes.map(type => that.getSocialLink(type))),
-            socialLinks = responses.map(response => response.headers.location);
-
-        result = {
-            vk: socialLinks[0],
-            fb: socialLinks[1]
-        };
-    }
-    catch (error) {
-        logger.error(error);
-    }
-
-
-    return result;
-});
-
-/**
- * @exports
- */
-module.exports = new AuthService();
-
-/**
- * @exports
- * @return {Function}
- */
-exports.getConstructor = function() {
-    return AuthService;
+service.getAuthSocialUrl = function() {
+    return {
+        vk: '/oauth/vk',
+        fb: '/oauth/fb'
+    };
 };
+
+/**
+ * @exports
+ */
+module.exports = service;

@@ -11,6 +11,7 @@
  *             light: ?string,
  *             bold: ?string
  *         ],
+ *         type: ?string,
  *         score: ?list<[
  *             name: ?string,
  *             value: ?number
@@ -25,7 +26,8 @@
  *             name: string
  *         ]>,
  *         ratings: list<string>,
- *         isScoreClickable: ?boolean
+ *         isScoreClickable: ?boolean,
+ *         position: ?number
  *     ]>
  * }
  */
@@ -82,13 +84,15 @@
                         'id': $school.id,
                         'url': $school.url,
                         'name': $school.name,
+                        'type': $school.type,
                         'score': $school.score,
                         'currentCriterion': $school.currentCriterion,
                         'description': $school.description,
                         'metroStations': $school.metroStations,
                         'area': $school.area,
                         'ratings': $school.ratings,
-                        'isScoreClickable': $school.isScoreClickable
+                        'isScoreClickable': $school.isScoreClickable,
+                        'position': $school?.position
                     ]/}
                 {/call}
             {/foreach}

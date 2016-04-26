@@ -318,7 +318,7 @@ exports.searchMapPoints = async(function(req, res) {
     var result;
     try {
         var params = await(services.search.initSearchParams(req.query));
-        
+
         var promises = {
             schools: services.school.list(params),
             mapPosition: services.search.getMapPositionParams(params)

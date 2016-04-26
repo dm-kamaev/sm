@@ -1,75 +1,76 @@
 {namespace sm.lSearchResult.Template}
 
+
 /**
  * Schools result list
  * @param? params {{
  *     data: {
- *         schools: list<[
+ *         schools: [{
  *             id: number,
  *             url: string,
- *             name: [
+ *             name: {
  *                 light: string,
  *                 bold: string
- *             ],
+ *             },
  *             score: [{
  *                 name: string,
  *                 value: number
- *             ]>,
- *             currentCriterion: [
+ *             }],
+ *             currentCriterion: {
  *                 name: string,
  *                 value: number
- *             ],
+ *             },
  *             description: string,
- *             ratings: list<string>,
- *             metroStations: list<string>,
- *             area: list<string>
+ *             ratings: string[],
+ *             metroStations: string[],
+ *             area: []
  *         }],
  *         filters: {sm.lSearchResult.bFilters.Template.Params}
  *     },
  *     searchText: string,
  *     countResults: number,
- *     searchSettings: [
+ *     searchSettings: {
  *         url: string,
  *         method: string,
- *         searchParams: [
+ *         searchParams: {
  *             name: ?string,
  *             metroId: ?number,
  *             areaId: ?number,
- *             schoolType: ?list<string>,
- *             classes: ?list<number>,
- *             ege: ?list<string>,
- *             gia: ?list<string>,
- *             olimp: ?list<string>,
+ *             schoolType: ?Array.<string>,
+ *             classes: ?Array.<number>,
+ *             ege: ?Array.<string>,
+ *             gia: ?Array.<string>,
+ *             olimp: ?Array.<string>,
  *             sortType: ?number,
  *             page: ?number
- *         ]
- *     ],
- *     map: [
- *         schoolGroups: list<[
- *             type: ?string,
- *             schools: list<[
- *                 id: number,
+ *         }
+ *     },
+ *     map: {
+ *         schools: [{
+ *             id: number,
+ *             name: string,
+ *             description: string,
+ *             url: string,
+ *             totalScore: number,
+ *             addresses: [{
+ *                 lat: number,
+ *                 lng: number,
  *                 name: string,
- *                 description: string,
- *                 url: string,
- *                 totalScore: number,
- *                 addresses: list<[
- *                     lat: number,
- *                     lng: number,
- *                     name: string,
- *                     stages: list<string>
- *                 ]>
- *             ]>
- *         ]>,
- *         mapCenter: ?list<number>
- *     ],
- *     config: [
+ *                 stages: list<string>
+ *             }]
+ *          }],
+ *         position: {
+ *             center: Array.<string>,
+ *             type: ?string
+ *         },
+ *     },
+ *     config: {
  *         staticVersion: ?string,
  *         analyticsId: ?string,
  *         domain: ?string,
  *         fbClientId: ?number
- *     ]
- * ]
+ *     }
+ * }}
  */
 {template .list autoescape="strict" kind="html"}
     {let $content kind="html"}

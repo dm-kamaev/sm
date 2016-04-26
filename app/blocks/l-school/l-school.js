@@ -94,7 +94,7 @@ goog.inherits(sm.lSchool.School, goog.ui.Component);
 
 goog.scope(function() {
     var School = sm.lSchool.School,
-        FoldList = sm.lSchool.bDataBlock.DataBlockFoldList,
+        DataBlockFoldList = sm.lSchool.bDataBlock.DataBlockFoldList,
         DBlockRatings = sm.lSchool.bDataBlock.DataBlockRatings,
         Results = sm.lSchool.bResults.Results,
         Score = sm.bScore.Score,
@@ -104,7 +104,9 @@ goog.scope(function() {
         DataBlockFeatures = sm.bDataBlock.DataBlockFeatures,
         FeedbackModal = sm.lSchool.bFeedbackModal.FeedbackModal,
         AuthSocialModalView = cl.gAuthSocialModal.View,
-        factory = sm.iFactory.FactoryStendhal.getInstance();
+        factory = sm.iFactory.FactoryStendhal.getInstance(),
+        PopularSchools = sm.bPopularSchools.PopularSchools,
+        Analytics = sm.iAnalytics.Analytics.getInstance();
 
     /**
      * CSS-class enum
@@ -206,6 +208,9 @@ goog.scope(function() {
             this.onFeedbackLinkClick_
         );
 
+        this.setEcAnalytics_();
+        this.sendAnalyticsPageview_();
+
         handler.listen(
             this.map_,
             Map.Event.READY,
@@ -250,6 +255,27 @@ goog.scope(function() {
     };
 
     /**
+     * Sets EC analytics
+     * @private
+     */
+    School.prototype.setEcAnalytics_ = function() {
+        Analytics.viewProduct({
+            id: this.params_.id,
+            name: this.params_.schoolName
+        });
+
+        Analytics.setView();
+    };
+
+    /**
+     * Sends pageview analytics
+     * @private
+     */
+    School.prototype.sendAnalyticsPageview_ = function() {
+        Analytics.send('pageview');
+    };
+
+    /**
      * show Modal for comments
      * @private
      */
@@ -271,12 +297,12 @@ goog.scope(function() {
             .initAuthSocial_()
             .initModalInaccuracy_()
             .initMap_()
-            .initComponents_(FoldList)
+            .initBouton_()
+            .initComponents_(DataBlockFoldList)
             .initComponents_(DBlockRatings)
             .initComponents_(Search)
             .initComponents_(Comments)
-            .initComponents_(Results)
-            .initBouton_();
+            .initComponents_(Results);
     };
 
     /**

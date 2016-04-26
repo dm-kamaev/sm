@@ -647,6 +647,9 @@ goog.scope(function() {
      * @param {Object} data
      */
     Search.prototype.itemClickHandler_ = function(event, data) {
+        if (data.item.type === 'schools') {
+            this.sendEcAnalytics_(data);
+        }
         this.sendAnalyticsSchoolData_(data);
 
         this.redirect_(event, data);
@@ -719,6 +722,21 @@ goog.scope(function() {
         };
 
         Analytics.send(dataAnalytics);
+    };
+
+    /**
+     * Send the name of the selected schools Analytics
+     * @param {Object} data
+     * @private
+     */
+    Search.prototype.sendEcAnalytics_ = function(data) {
+        var ecData = {
+            id: data.key,
+            name: data.text,
+            position: data.index + 1
+        };
+
+        Analytics.clickProduct(ecData, 'Suggest');
     };
 
     /**

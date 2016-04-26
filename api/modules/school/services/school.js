@@ -686,7 +686,7 @@ service.listInstances = async(function(){
  * @param {?number} opt_params.searchParams.areaId
  *
  * @param {Object=} opt_config
- * @param {boolean} opt_config.limitResults
+ * @param {number} opt_config.limitResults
  *
  * @return {Promise<Array.<Object>>}
  */

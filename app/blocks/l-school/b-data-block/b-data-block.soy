@@ -17,7 +17,8 @@
  *     header: ?string,
  *     headerType: ?number,
  *     modifier: ?string
- *     content: ?list<string>
+ *     content: ?list<string>,
+ *     config: ?[string, string]
  * }
  */
 {template .init autoescape="strict" kind="html"}
@@ -62,15 +63,16 @@
 /**
  * Content part
  * @param params {
- *     content: ?list<string>
+ *     content: ?list<string>,
+ *     config: ?[string, string]
  * }
  */
 {template .content autoescape="strict" kind="html"}
     <ul class="b-data-block__content">
-    {foreach $item in $params.content}
-        <li class="b-data-block__item">
-            {$item}
-        </li>
-    {/foreach}
+        {foreach $item in $params.content}
+            <li class="b-data-block__item">
+                {$item}
+            </li>
+        {/foreach}
     </ul>
 {/template}

@@ -96,8 +96,12 @@ updateSearch - актуализация поисковой таблицы
             "clientSecret": "db1931569be7e254a87ab8aae5ae03db",
             "redirectUri": "http://www21.lan:3000/authorize/fb"
         }
-    },
-    "userService": "http://localhost:3002"
+    }
+}
+```  
+```javascript
+{
+    "user": "http://localhost:3002"
 }
 ```  
 **environment/config/user/config.json**  

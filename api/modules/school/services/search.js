@@ -179,7 +179,7 @@ var findAnyInModel = function(model, searchString) {
 var iLikeSimilarLetter = function(searchSubstring) {
     var result;
 
-    if (searchSubstring.search(/е/) > -1) {
+    if (searchSubstring.indexOf('е') > -1) {
         var similarCharPosition = searchSubstring.lastIndexOf('е'),
             similarString =
                 replaceAt(searchSubstring, similarCharPosition, 'ё');
@@ -254,14 +254,24 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
     }
     else {
         if (searchParams.name) {
+            var values = [
+                generateSqlFilter('school.name', searchParams.name, 'AND'),
+                generateSqlFilter('school.full_name', searchParams.name, 'AND'),
+                generateSqlFilter('metro.name', searchParams.name, 'AND'),
+                generateSqlFilter('area.name', searchParams.name, 'AND')
+            ];
+            if (searchParams.name.indexOf('е') > -1) {
+                var similarCharPosition = searchParams.name.lastIndexOf('е'),
+                    similarString =
+                        replaceAt(searchParams.name, similarCharPosition, 'ё');
+                values.push(
+                    generateSqlFilter('metro.name', similarString),
+                    generateSqlFilter('area.name', similarString)
+                );
+            }
             sqlOptions.where.push({
                 type: 'OR',
-                values: [
-                    generateSqlFilter('school.name', searchParams.name, 'AND'),
-                    generateSqlFilter('school.full_name', searchParams.name, 'AND'),
-                    generateSqlFilter('metro.name', searchParams.name, 'AND'),
-                    generateSqlFilter('area.name', searchParams.name, 'AND')
-                ]
+                values: values
             });
             isGeoDataJoined = true;
         }
