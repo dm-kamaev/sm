@@ -277,10 +277,14 @@ exports.search = async (function(req, res) {
 
         var schools = await(services.school.list(
             params,
-            {limitResults: true}
+            {
+                limitResults: 10
+            }
         ));
-
-        result = schoolView.list(schools, params.sortType);
+        result = {
+            list: schoolView.list(schools, params.sortType),
+            map: schoolView.listMap(schools)
+        };
     } catch (error) {
         result = JSON.stringify(error);
         logger.error(result);
@@ -316,48 +320,18 @@ exports.searchMapPoints = async(function(req, res) {
         var params = await(services.search.initSearchParams(req.query));
         
         var promises = {
-            schools: services.school.list(
-                params,
-                {limitResults: false}
-            ),
-            centerCoords: services.search.getMapCenterCoords(params)
+            schools: services.school.list(params),
+            mapCenter: services.search.getMapCenterCoords(params)
         };
         var results = await(promises);
-
-        result = schoolView.listSearchMap(
+        result = schoolView.listMap(
             results.schools,
-            results.centerCoords
+            results.mapCenter
         );
 
     } catch (error) {
         result = JSON.stringify(error);
         logger.error(result);
-    } finally {
-        res.header('Content-Type', 'text/html; charset=utf-8');
-        res.end(JSON.stringify(result));
-    }
-});
-
-/**
- * @api {get} api/school/schoolMapPoints return all schools to place it
- * at map on school page
- * @apiVersion 0.0.0
- * @apiGroup School
- * @apiName SchoolMapPoints
- */
-exports.schoolMapPoints = async(function(req, res) {
-    var result;
-
-    try {
-        var schools = await(services.school.list(
-            {},
-            {limitResults: false}
-        ));
-
-        result = schoolView.listSchoolMap(schools);
-    } catch (error) {
-        logger.error(error);
-        result = error.message;
     } finally {
         res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(JSON.stringify(result));

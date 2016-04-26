@@ -56,12 +56,20 @@ exports.suggestSearch = async(function(searchString) {
 
 /**
  * Generate sql config object for search in schools
- * @param {number} opt_offset
+ * @param {number=} opt_schoolsAmount
+ * @param {number=} opt_page
  * @return {Object}
  */
-exports.generateSqlConfig = function(opt_offset) {
-    var useOffset = (opt_offset !== null && opt_offset !== undefined);
-    console.log(opt_offset);
+exports.generateSqlConfig = function(opt_schoolsAmount, opt_page) {
+    var limit = 'ALL',
+        offset = 0,
+        page = opt_page || 0;
+
+    if (opt_schoolsAmount) {
+        limit = opt_schoolsAmount;
+        offset = page * opt_schoolsAmount;
+    }
+
     var sqlConfig = {
         select: [
             'school.id',
@@ -107,8 +115,8 @@ exports.generateSqlConfig = function(opt_offset) {
                 'school.id ASC'
             ],
             having: [],
-            limit: useOffset ? 10 : "ALL",
-            offset: useOffset ? opt_offset * 10 : 0
+            limit: limit,
+            offset: offset
         },
         where: [
             'address.is_school = true'
@@ -535,7 +543,7 @@ exports.getMapCenterCoords = function(params) {
     } else if (params.areaId) {
         /** Centering on area id **/
     } else if(params.name === '' && !isFiltersSelected(params)) {
-        result = 'default';
+        result = services.city.getCenterCoords();
     }
     return result;
 };

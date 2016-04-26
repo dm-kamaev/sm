@@ -37,7 +37,9 @@ exports.list = async (function(req, res) {
     var promises = {
         schools: services.school.list(
             searchParams,
-            {limitResults: true}
+            {
+                limitResults: 10
+            }
         ),
         filters: services.school.searchFilters(),
         centerCoords: services.search.getMapCenterCoords(searchParams)
@@ -45,7 +47,7 @@ exports.list = async (function(req, res) {
     var results = await(promises);
 
     var schoolsList = schoolView.list(results.schools);
-    var map = schoolView.listSearchMap(results.schools, results.centerCoords);
+    var map = schoolView.listMap(results.schools, results.centerCoords);
     var filters = searchView.filters(results.filters, searchParams);
     var params = {
         params: {

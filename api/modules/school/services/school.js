@@ -693,9 +693,12 @@ service.listInstances = async(function(){
 service.list = async (function(opt_params, opt_config) {
     var searchParams = opt_params || {},
         config = opt_config || {},
-        resultsOffset = config.limitResults ? searchParams.page : null;
+        limitResults = config.limitResults || null;
     
-    var sqlConfig = services.search.generateSqlConfig(resultsOffset);
+    var sqlConfig = services.search.generateSqlConfig(
+        limitResults,
+        searchParams.page
+    );
 
     services.search.updateSqlOptions(sqlConfig, searchParams);
 

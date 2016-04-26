@@ -420,55 +420,22 @@ schoolView.list = function(schools, opt_criterion) {
  * Group resutls of raw query to school object,
  * divide array of school objects for 2 parts for map
  * @param {Array.<Object>} schools - array of results of raw query
- * @param {Array.<number>} opt_coords
+ * @param {Array.<number>} opt_centerCoords
  * @return {Object.<string, Array.<Object|number>>} contains results schools array and central coordinate
  * for the map
  */
-schoolView.listSearchMap = function(schools, opt_coords) {
-    var mapCenter = null;
-    if (opt_coords) {
-        mapCenter = Array.isArray(opt_coords) ?
-            [opt_coords[1], opt_coords[0]] :
-            opt_coords;
+schoolView.listMap = function(schools, opt_centerCoords) {
+    var mapSchools = [];
+
+    if (schools.length > 0) {
+       mapSchools = groupSchools(schools).map(this.schoolMap);
     }
-
-    var result = {
-        schoolGroups: [],
-        mapCenter: mapCenter
-    };
-
-    if (schools.length !== 0) {
-        var schoolObjects = groupSchools(schools)
-            .map(this.schoolMap);
-
-        result.schoolGroups.push({
-            type: 'default',
-            schools: schoolObjects.slice(0, 10)
-        });
-
-        result.schoolGroups.push({
-            type: 'point',
-            schools: schoolObjects.slice(10)
-        });
-    }
-    return result;
-};
-
-/**
- * Group resutls of raw query to school object,
- * return school to place it to map on schoo layout
- * @param {Array.<Object>} schools - array of results of raw query
- * @return {Object.<string, Object>} contains results schools array
- */
-schoolView.listSchoolMap = function(schools) {
-    var schoolObjects = groupSchools(schools)
-        .map(this.schoolMap);
 
     return {
-        schoolGroups: [{
-            type: 'point',
-            schools: schoolObjects
-        }]
+        schools: mapSchools,
+        mapCenter: opt_centerCoords ?
+            [opt_centerCoords[1], opt_centerCoords[0]] :
+            null
     };
 };
 
@@ -671,94 +638,6 @@ var getName = function (name) {
             result.light += char;
     }
     return result;
-};
-
-/**
- * Transform array with result of raw query to school object with
- * array of addresses
- * @param {Array.<Object>} schools - schoolInstances
- * @return {Array.<Object>}
- */
-schoolView.listMapPoints = function(schools) {
-    var result = {};
-
-    return schools.reduce((prev, curr) => {
-        curr = curr.dataValues;
-
-        prev = prev.length > 0 ? prev : [{
-            id: curr.id,
-            url: curr.url,
-            name: curr.name,
-            description: curr.description,
-            totalScore: curr.totalScore || 0,
-            addresses: [{
-                id: curr.addressId,
-                lat: curr.coords[0],
-                lng: curr.coords[1],
-                name: curr.adrName,
-                stages: [curr.stage]
-            }]
-        }];
-
-        var concated,
-            added,
-            cond;
-
-        for (var j = prev.length - 1, item; j >= 0; j--) {
-            item = prev[j];
-            if (curr.id == item.id) {
-                for (var i = item.addresses.length - 1, address; i >= 0; i--) {
-                    address = item.addresses[i];
-
-                    if (address.id == curr.addressId) {
-                        concated = true;
-                        cond = !(
-                            address.stages[0] == curr.stage ||
-                            address.stages[1] == curr.stage
-                        );
-
-                        if (cond) {
-                            address.stages.push(curr.stage);
-                        }
-
-                        break;
-                    }
-                }
-
-                if (!concated) {
-                    item.addresses.push({
-                        id: curr.addressId,
-                        lat: curr.coords[0],
-                        lng: curr.coords[1],
-                        name: curr.adrName,
-                        stages: [curr.stage]
-                    })
-                }
-
-                added = true;
-                break;
-            }
-        }
-
-        if (!added) {
-            prev.push({
-                id: curr.id,
-                url: curr.url,
-                name: curr.name,
-                description: curr.description,
-                totalScore: curr.totalScore || 0,
-                addresses: [{
-                    id: curr.addressId,
-                    lat: curr.coords[0],
-                    lng: curr.coords[1],
-                    name: curr.adrName,
-                    stages: [curr.stage]
-                }]
-             })
-        }
-
-        return prev;
-    }, []);
 };
 
 /**
