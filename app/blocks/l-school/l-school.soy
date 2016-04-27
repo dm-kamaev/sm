@@ -38,14 +38,26 @@
  *            ]>,
  *            phones: list<string>
  *        ],
- *        specializedClasses: list<[
- *            name: string
- *            items: list<string>
- *        ]>,
- *        activities: list<[
- *            name: string
- *            items: list<string>
- *        ]>,
+ *        specializedClasses: [
+ *              data: [
+ *                 name: ?string,
+ *                 items: ?list<string> |
+ *                    ?list<[name: string, items: list<string>, config:[?]]>
+ *             ],
+ *             config: [
+ *                 type: ?string
+ *             ]
+ *        ],
+ *        activities: [
+ *              data: [
+ *                 name: ?string,
+ *                 items: ?list<string> |
+ *                    ?list<[name: string, items: list<string>, config:[?]]>
+ *             ],
+ *             config: [
+ *                 type: ?string
+ *             ]
+ *        ],
  *        comments: list<[
  *            author: string,
  *            rank: string,
@@ -469,22 +481,22 @@
  */
 {template .map_ autoescape="strict" kind="html"}
     <div class="l-school__section l-school__section_map">
+        {let $mapParams: [
+            'data': [
+                'schools': [[
+                    'id': $params.data.id,
+                    'addresses': $params.data.addresses,
+                    'name': $params.data.schoolName,
+                    'totalScore': $params.data.totalScore
+                ]]
+            ],
+            'config': [
+                'enableScrollZoom': true
+            ]
+        ] /}
+
         {call sm.bMap.Template.map}
-            {param params: [
-                'data': [
-                    [
-                        'id': $params.data.id,
-                        'addresses': $params.data.addresses,
-                        'name': $params.data.schoolName,
-                        'description': $params.data.schoolDescr,
-                        'totalScore': $params.data.totalScore
-                    ]
-                ],
-                'config': [
-                    'sidePins': true,
-                    'enableScrollZoom': true
-                ]
-            ] /}
+            {param params: $mapParams /}
         {/call}
     </div>
 {/template}
@@ -718,23 +730,32 @@
 
 /**
  * Specialized classes section
- * @param? params {{
- *     data: {
- *         specializedClasses: [{
- *             name: string
- *             items: [string]
- *         }],
- *     }
- * }}
+ * @param? params [[
+ *     data: [
+ *         specializedClasses: [
+ *             data: [
+ *                 name: ?string,
+ *                 items: ?list<string> |
+ *                    ?list<[name: string, items: list<string>, config:[?]]>
+ *             ],
+ *             config: [
+ *                 type: ?string
+ *             ]
+ *         ]
+ *     ]
+ * ]]
  */
 {template .specializedClasses_ autoescape="strict" kind="html"}
     {if $params.data.specializedClasses and
-        length($params.data.specializedClasses) > 0}
+        $params.data.specializedClasses?.data and
+        length($params.data.specializedClasses?.data?.items)}
+
         <div class="l-school__section l-school__section_specialized-classes">
             {call sm.lSchool.bDataBlock.TemplateFoldList.base}
                 {param params: [
                     'header': 'Профильные классы',
-                    'content': $params.data.specializedClasses
+                    'content': $params.data.specializedClasses.data,
+                    'config': $params.data.specializedClasses.config
                 ] /}
             {/call}
         </div>
@@ -744,29 +765,32 @@
 
 /**
  * Activities section
- * @param? params {{
- *     data: {
- *         activities: [{
- *             name: string
- *             items: [string]
- *         }]
- *     }
- * }}
+ * @param? params [[
+ *     data: [
+ *         activities: [
+ *             data: [
+ *                 name: ?string,
+ *                 items: ?list<string> |
+ *                    ?list<[name: string, items: list<string>, config:[?]]>
+ *             ],
+ *             config: [
+ *                 type: ?string
+ *             ]
+ *         ]
+ *     ]
+ * ]]
  */
 {template .activities_ autoescape="strict" kind="html"}
     {if $params.data.activities and
-        length($params.data.activities) > 0}
+        $params.data.activities.data and
+        length($params.data.activities.data?.items)}
+
         <div class="l-school__section l-school__section_activities">
             {call sm.lSchool.bDataBlock.TemplateFoldList.base}
                 {param params: [
                     'header': 'Дополнительные занятия',
-                    'headerType': 2,
-                    'content': [
-                        [
-                            'name': 'Показать список',
-                            'items': $params.data.activities
-                        ]
-                    ]
+                    'content': $params.data.activities.data,
+                    'config': $params.data.activities.config
                 ] /}
             {/call}
         </div>

@@ -4,12 +4,14 @@ var await = require('asyncawait/await');
 var models = require('../../../../app/components/models').all;
 var services = require('../../../../app/components/services').all;
 
+const geoView = require('../views/geoView');
+
 exports.name = 'metro';
 
 /**
- * Get coords metro or area
+ * Get coordinates for given metro
  * @param {number} searh_data_id
- * @return {Array} coords metro or area
+ * @return {Array} metro coordinates
  */
 exports.getCoords = async(function(searh_data_id) {
     var result;
@@ -22,5 +24,5 @@ exports.getCoords = async(function(searh_data_id) {
 
         result = metroData.coords;
     }
-    return result;
+    return geoView.coordinatesDefault(result);
 });

@@ -85,12 +85,15 @@ sm.lSearchResult.SearchResult = function(opt_params) {
     /**
      * Params for request to api
      * @type {{
-     *     url: {string},
-     *     method: {string}
+     *     listDataUrl: {string},
+     *     mapDataUrl: {string}
      * }}
      * @private
      */
-    this.requestParams_ = {};
+    this.requestParams_ = {
+        listDataUrl: '/api/school/search',
+        mapDataUrl: '/api/school/searchMapPoints'
+    };
 
     /**
      * Dom elements
@@ -182,8 +185,13 @@ goog.scope(function() {
         this.initHeaderListeners_();
         this.initFiltersListeners_();
         this.initSchoolListListeners_();
+        this.initMapListeners_();
         this.initWindowListeners_();
 
+        this.sendListItemImpressions_(
+            this.instances_.schoolList.getImpressionData(),
+            1
+        );
         this.sendAnalyticsPageview_();
     };
 
@@ -216,11 +224,6 @@ goog.scope(function() {
     SearchResult.prototype.initParams_ = function() {
         var element = this.getElement(),
             dataParams = JSON.parse(goog.dom.dataset.get(element, 'params'));
-
-        this.requestParams_ = {
-            url: dataParams.url,
-            method: dataParams.method || 'GET'
-        };
 
         this.instances_.search.setData(dataParams.searchParams);
 
@@ -347,6 +350,18 @@ goog.scope(function() {
     };
 
     /**
+     * Init map listeners
+     * @private
+     */
+    SearchResult.prototype.initMapListeners_ = function() {
+        this.getHandler().listen(
+            this.instances_.map,
+            Map.Event.READY,
+            this.onMapReady_
+        );
+    };
+
+    /**
      * Init listeners for window
      * @private
      */
@@ -357,6 +372,21 @@ goog.scope(function() {
             this.onShowPage_
         );
     };
+
+    /**
+     * Set list item impressions
+     * @param {Array<Object>} data
+     * @param {number} nonInteraction
+     * @private
+     */
+    SearchResult.prototype.sendListItemImpressions_ =
+        function(data, nonInteraction) {
+            data.forEach(function(itemData, i) {
+                Analytics.addImpression(itemData);
+            });
+            Analytics.setView();
+            Analytics.sendEvent('Search List', 'load', nonInteraction);
+        };
 
     /**
      * Sends pageview analytics
@@ -440,6 +470,15 @@ goog.scope(function() {
     };
 
     /**
+     * Load and add additional points to map
+     * @private
+     */
+    SearchResult.prototype.onMapReady_ = function() {
+        this.send_(this.requestParams_.mapDataUrl)
+            .then(this.addMapPoints_.bind(this));
+    };
+
+    /**
      * Get search params from filters
      * @return {Object}
      * @private
@@ -465,7 +504,8 @@ goog.scope(function() {
         this.updateSearchParams_(this.getSearchParams_());
         this.updateUrl_();
 
-        this.send_().then(this.updateSchools_.bind(this));
+        this.send_(this.requestParams_.listDataUrl)
+            .then(this.updateSchools_.bind(this));
     };
 
     /**
@@ -574,7 +614,8 @@ goog.scope(function() {
             sortType: event.itemId
         });
 
-        this.send_().then(this.setItems_.bind(this));
+        this.send_(this.requestParams_.listDataUrl)
+            .then(this.updateSchools_.bind(this));
     };
 
     /**
@@ -588,7 +629,8 @@ goog.scope(function() {
 
         this.instances_.schoolList.showLoader();
 
-        this.send_().then(this.addItems_.bind(this));
+        this.send_(this.requestParams_.listDataUrl)
+            .then(this.addItems_.bind(this));
     };
 
     /**
@@ -604,59 +646,83 @@ goog.scope(function() {
 
     /**
      * Send query with search settings
+     * @param {string} url
      * @return {Promise}
      * @private
      */
-    SearchResult.prototype.send_ = function() {
+    SearchResult.prototype.send_ = function(url) {
         return jQuery.ajax({
-            url: this.requestParams_.url,
-            type: this.requestParams_.method,
+            url: url,
+            type: 'GET',
+            dataType: 'json',
             data: this.searchParams_
         });
     };
 
     /**
      * Filters submit callback
-     * @param {string} responseData
+     * @param {string} data
      * @private
      */
-    SearchResult.prototype.setItems_ = function(responseData) {
-        var data = JSON.parse(responseData);
+    SearchResult.prototype.setItems_ = function(data) {
         this.instances_.schoolList.reset();
-        this.instances_.schoolList.setItems(data.schools);
+
+        this.instances_.schoolList.setItems(data.list.schools);
+
+        this.sendAddedItemImpressions_(data.list.schools);
     };
 
     /**
      * Filters submit callback
-     * @param {string} responseData
+     * @param {string} data
      * @private
      */
-    SearchResult.prototype.addItems_ = function(responseData) {
-        var data = JSON.parse(responseData);
-        this.instances_.schoolList.addItems(data.schools);
+    SearchResult.prototype.addItems_ = function(data) {
+        this.instances_.schoolList.addItems(data.list.schools);
+
+        this.sendAddedItemImpressions_(data.list.schools);
+    };
+
+    /**
+     * Send impesssion of added schools
+     * @param {Array<Object>} schools
+     * @private
+     */
+    SearchResult.prototype.sendAddedItemImpressions_ = function(schools) {
+        this.sendListItemImpressions_(schools.map(function(school) {
+            return {
+                id: school.id,
+                name: school.name.light + school.name.bold,
+                position: school.position,
+                list: 'Search Results'
+            };
+        }), 0);
     };
 
     /**
      * Updates list and map
-     * @param {string} responseData
+     * @param {string} data
      * @private
      */
-    SearchResult.prototype.updateSchools_ = function(responseData) {
-        var data = JSON.parse(responseData);
+    SearchResult.prototype.updateSchools_ = function(data) {
+        var list = data.list,
+            map = data.map;
 
-        this.instances_.search.setCoords(data.centerCoords);
-
-        if (data.mapSchools) {
+        if (list.countResults > 0) {
             this.showMap_();
-            this.updateMap_(data.mapSchools);
+            this.replaceMapPoints_(map);
+            this.send_(this.requestParams_.mapDataUrl)
+                .then(this.addMapPoints_.bind(this));
         } else {
             this.hideMap_();
         }
-        this.updateList_(data);
+        this.updateList_(list);
+
+        this.sendAddedItemImpressions_(list.schools);
     };
 
     /**
-     * Shows map
+     * Show map
      * @private
      */
     SearchResult.prototype.showMap_ = function() {
@@ -667,7 +733,7 @@ goog.scope(function() {
     };
 
     /**
-     * Hides map
+     * Hide map
      * @private
      */
     SearchResult.prototype.hideMap_ = function() {
@@ -678,24 +744,22 @@ goog.scope(function() {
     };
 
     /**
-     * Updates map
-     * @param {array<object>} mapSchools
+     * Add points to map and center it if necessary
+     * @param {string} data
      * @private
      */
-    SearchResult.prototype.updateMap_ = function(mapSchools) {
-        var centerCoords = this.getMapCenterCoords_();
-
-        this.instances_.map.clear();
-        this.instances_.map.addSchoolsPlacemarks(mapSchools, centerCoords);
+    SearchResult.prototype.addMapPoints_ = function(data) {
+        this.instances_.map.addItems(data.schools);
+        this.instances_.map.center(data.position);
     };
 
     /**
-     * Get map centre coordinates
-     * @return {Array}
+     * Set points to map and center it in according to responce data
+     * @param {string} data
      * @private
      */
-    SearchResult.prototype.getMapCenterCoords_ = function() {
-        return this.instances_.search.getCoords();
+    SearchResult.prototype.replaceMapPoints_ = function(data) {
+        this.instances_.map.replaceItems(data.schools);
     };
 
     /**

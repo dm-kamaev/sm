@@ -4,6 +4,7 @@ goog.require('goog.dom.classes');
 goog.require('goog.dom.classlist');
 goog.require('goog.events');
 goog.require('goog.ui.Component');
+goog.require('sm.iFactory.FactoryStendhal');
 
 /**
  * Fold list component
@@ -14,97 +15,55 @@ sm.lSchool.bDataBlock.DataBlockFoldList = function() {
     goog.base(this);
 
     /**
-     * list of dom elements which can be clicked
+     * folded list
+     * @type {sm.lSchool.bFoldList.FoldList}
      * @private
      */
-    this.listControls_;
-
+    this.foldList_ = null;
 };
 goog.inherits(sm.lSchool.bDataBlock.DataBlockFoldList, goog.ui.Component);
 
 
 goog.scope(function() {
-    var FoldList = sm.lSchool.bDataBlock.DataBlockFoldList;
+    var DataBlockFoldList = sm.lSchool.bDataBlock.DataBlockFoldList,
+        factory = sm.iFactory.FactoryStendhal.getInstance();
 
     /**
      * CSS-class enum
      * @enum {string}
      */
-    FoldList.CssClass = {
-        ROOT: 'b-data-block_fold-list',
-        CONTROL: 'b-data-block__item-content',
-        OPENED: 'b-data-block__item-content_opened',
-        HIDDEN: 'i-utils__hidden',
-        LIST: 'b-data-block__list',
-        NUMBER: 'b-data-block__number'
+    DataBlockFoldList.CssClass = {
+        ROOT: 'b-data-block_fold-list'
     };
 
     /**
      * Internal decorates the DOM element
      * @param {node} element
      */
-    FoldList.prototype.decorateInternal = function(element) {
+    DataBlockFoldList.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
-        this.listControls_ = goog.dom.getElementsByClass(
-            FoldList.CssClass.CONTROL,
-            element
+        this.initFoldList_();
+    };
+
+    /**
+     * initialization folded list
+     * @return {sm.lSchool.bDataBlock.DataBlockFoldList}
+     * @private
+     */
+    DataBlockFoldList.prototype.initFoldList_ = function() {
+        this.foldList_ = factory.decorate(
+            'fold-list',
+            this.getElementByClass(sm.lSchool.bFoldList.View.CssClass.ROOT),
+            this
         );
+        return this;
     };
 
     /**
      * Sets up the Component.
      */
-    FoldList.prototype.enterDocument = function() {
+    DataBlockFoldList.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
-
-        for (var i = 0, l = this.listControls_.length, listControl; i < l; i++)
-        {
-            listControl = this.listControls_[i];
-            this.getHandler().listen(
-                listControl,
-                goog.events.EventType.CLICK,
-                this.controlClickHandler_
-            );
-        }
-    };
-
-    /**
-     *  Click on list control handler
-     * @param {Object} event
-     * @private
-     */
-    FoldList.prototype.controlClickHandler_ = function(event) {
-        this.toggleList_(event.target);
-    };
-
-    /**
-     * @param {node} clickTarget
-     * @private
-     */
-    FoldList.prototype.toggleList_ = function(clickTarget) {
-        var dataItem = goog.dom.getParentElement(clickTarget);
-        var list = goog.dom.getElementByClass(
-                FoldList.CssClass.LIST,
-                dataItem
-            );
-        var number = goog.dom.getElementByClass(
-            FoldList.CssClass.NUMBER,
-            dataItem
-        );
-
-        goog.dom.classes.toggle(
-            clickTarget,
-            FoldList.CssClass.OPENED
-        );
-        goog.dom.classes.toggle(
-            list,
-            FoldList.CssClass.HIDDEN
-        );
-        goog.dom.classes.toggle(
-            number,
-            FoldList.CssClass.HIDDEN
-        );
-
     };
 });

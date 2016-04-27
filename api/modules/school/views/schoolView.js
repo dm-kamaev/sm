@@ -7,6 +7,8 @@ const addressView = require(
     '../../geo/views/addressView.js');
 const activityView = require(
     './activityView.js');
+const specializedClassesView = require(
+    './specializedClassesView.js');
 const ratingView = require(
     './ratingView.js');
 const egeResultView = require(
@@ -284,55 +286,17 @@ var getDirectorName = function(name) {
     return result;
 };
 
+/**
+ *  @param {object} specializedClasses
+ *  @return {object}
+ */
 var getSpecializedClasses = function(specializedClasses) {
-    var result = [],
-        grade = '',
-        index = -1;
-    if (specializedClasses) {
-        for (var i = 0,
-                l = specializedClasses.length,
-                specializedClass, specialLevel; i < l; i++) {
-            specializedClass = specializedClasses[i];
-            specialLevel = schoolGradeToLevel(specializedClass[0])
-
-
-
-            if (grade !== specialLevel) {
-                grade = specialLevel;
-
-                result.push({
-                    'name': grade,
-                    'items': []
-                });
-                index += 1;
-            }
-
-            if (result[index].items.indexOf(specializedClass[1]) === -1) {
-                result[index].items.push(specializedClass[1]);
-            }
-        }
-    }
-
-    return result;
+    return specializedClassesView.list(specializedClasses);
 };
-
- /**
-  * @param {number} grade
-  * @return {string}
-  */
-var schoolGradeToLevel = function(grade) {
-    if (grade < 5) {
-        return 'Начальная школа';
-    } else if (grade < 9) {
-        return 'Средняя школа';
-    } else {
-        return 'Старшая школа'
-    }
-}
 
 /**
  *  @param {object} activities
- *  @return {array}
+ *  @return {object}
  */
 var getActivities = function(activities) {
     return activityView.list(activities);
@@ -408,34 +372,48 @@ schoolView.list = function(schools, opt_criterion, opt_page) {
 
 
 /**
- * @param {Array.<Object>} schools - schoolInstances for map
- * @param {Array.<number>} opt_coords
- * @return {Object} contains results schools array and central coordinate
- * for the map
+ * Group resutls of raw query to school object,
+ * divide array of school objects for 2 parts for map
+ * @param {Array.<Object>} schools - array of results of raw query
+ * @param {{
+ *     position: Array.<number>,
+ *     type: string
+ * }} opt_position
+ * @return {{
+ *     schools: Array.<Object>,
+ *     position: {
+ *         center: Array.<number>,
+ *         type: string
+ *     }
+ * }} contains results schools array and position perferences for map
  */
-schoolView.listMap = function(schools, opt_coords) {
-    var res = {};
+schoolView.listMap = function(schools, opt_position) {
+    var mapSchools = [];
 
-    if (schools.length !== 0) {
-        schools = groupSchools(schools);
-
-        res.schools = schools.map(school => {
-            return {
-                addresses: addressView.default(school.addresses),
-                id: school.id,
-                name: school.name,
-                description: school.description,
-                url: school.url,
-                totalScore: school.totalScore
-            };
-        });
+    if (schools.length > 0) {
+       mapSchools = groupSchools(schools).map(this.schoolMap);
     }
 
-    if (opt_coords) {
-        res.centerCoords = [opt_coords[1], opt_coords[0]];
-    }
+    return {
+        schools: mapSchools,
+        position: opt_position
+    };
+};
 
-    return res;
+/**
+ * Transform school object for map
+ * @param {Object} school
+ * @return {Object}
+ */
+schoolView.schoolMap = function(school) {
+    return {
+        addresses: addressView.default(school.addresses),
+        id: school.id,
+        name: school.name,
+        description: school.description,
+        url: school.url,
+        totalScore: school.totalScore
+    };
 };
 
 /**
@@ -625,90 +603,6 @@ var getPosition = function(localPosition, page) {
 };
 
 /**
- * @param {array<object>} schools - schoolInstances
- * @return {array<object>}
- */
-schoolView.listMapPoints = function(schools) {
-    return schools.reduce((prev, curr) => {
-        curr = curr.dataValues;
-
-        prev = prev.length > 0 ? prev : [{
-            id: curr.id,
-            url: curr.url,
-            name: curr.name,
-            description: curr.description,
-            totalScore: curr.totalScore || 0,
-            addresses: [{
-                id: curr.addressId,
-                lat: curr.coords[0],
-                lng: curr.coords[1],
-                name: curr.adrName,
-                stages: [curr.stage]
-            }]
-        }];
-
-        var concated,
-            added,
-            cond;
-
-        for (var j = prev.length - 1, item; j >= 0; j--) {
-            item = prev[j];
-            if (curr.id == item.id) {
-                for (var i = item.addresses.length - 1, address; i >= 0; i--) {
-                    address = item.addresses[i];
-
-                    if (address.id == curr.addressId) {
-                        concated = true;
-                        cond = !(
-                            address.stages[0] == curr.stage ||
-                            address.stages[1] == curr.stage
-                        );
-
-                        if (cond) {
-                            address.stages.push(curr.stage);
-                        }
-
-                        break;
-                    }
-                }
-
-                if (!concated) {
-                    item.addresses.push({
-                        id: curr.addressId,
-                        lat: curr.coords[0],
-                        lng: curr.coords[1],
-                        name: curr.adrName,
-                        stages: [curr.stage]
-                    })
-                }
-
-                added = true;
-                break;
-            }
-        }
-
-        if (!added) {
-            prev.push({
-                id: curr.id,
-                url: curr.url,
-                name: curr.name,
-                description: curr.description,
-                totalScore: curr.totalScore || 0,
-                addresses: [{
-                    id: curr.addressId,
-                    lat: curr.coords[0],
-                    lng: curr.coords[1],
-                    name: curr.adrName,
-                    stages: [curr.stage]
-                }]
-             })
-        }
-
-        return prev;
-    }, []);
-};
-
-/**
  * @param {Object} data
  * @param {Array.<Object>} data.schools - school instances
  * @param {Array.<Object>} data.areas - area instances
@@ -722,7 +616,6 @@ schoolView.suggest = function(data) {
         metro: metroView.list(data.metros)
     };
 };
-
 
  /**
  * @return {array<object>}

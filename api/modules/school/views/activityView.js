@@ -1,46 +1,35 @@
+var lodash = require('lodash');
 var activityView = {};
 
 /**
  * @param {object} activities
- * @return {array}
+ * @return {object}
  */
 activityView.list = function(activities) {
-    var result = [];
+    activities = lodash.sortBy(activities, 'profile');
+    activities = lodash.groupBy(activities, 'profile');
 
-    activities = activities.sort(function(a, b) {
-        if (a.profile > b.profile) {
-            return 1;
-        }
+    var items = lodash.keys(activities)
+        .map(key => {
+            var types= activities[key].map(activity => activity.type),
+                items = lodash.uniq(types);
 
-        if (a.profile < b.profile) {
-            return -1;
-        }
+            return activityView.listParams_(items, 'folded', key);
+        });
 
-        return 0;
-    });
-
-    var profile = '',
-        index = -1;
-
-    for (var i = 0, l = activities.length, activity; i < l; i++) {
-        activity = activities[i];
-
-        if (profile !== activity.profile) {
-            profile = activity.profile;
-
-            result.push({
-                'name': profile,
-                'items': []
-            });
-            index += 1;
-        }
-
-        if (result[index].items.indexOf(activity.type) === -1) {
-            result[index].items.push(activity.type);
-        }
-    }
-
-    return result;
+    return activityView.listParams_(items, 'unfolded');
 };
+
+activityView.listParams_ = function(items, type, opt_name) {
+    return {
+        data: {
+            name: opt_name || '',
+            items: items
+        },
+        config: {
+            type: type
+        }
+    };
+}
 
 module.exports = activityView;

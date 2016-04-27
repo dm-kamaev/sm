@@ -35,12 +35,26 @@ goog.scope(function() {
 
     /**
      * Sent to Google Analytics information on the treatment
-     * @param {String/Object} params
+     * @param {string/Object} params
      * @public
      */
     Analytics.prototype.send = function(params) {
         ga('send', params);
     };
+
+    /**
+     * Send event
+     * @param {string} name
+     * @param {string} action
+     * @param {boolean} nonInteraction
+     * @public
+     */
+    Analytics.prototype.sendEvent = function(name, action, nonInteraction) {
+        ga('send', 'event', name, action, {
+            'nonInteraction': nonInteraction
+        });
+    };
+
 
     /**
      * Add item info on click

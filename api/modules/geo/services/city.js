@@ -16,3 +16,11 @@ exports.getMoscow = async(function() {
     }));
     return instArr[0];
 });
+
+/**
+ * Return city center coordinates
+ * @return {Array.<number>}
+ */
+exports.getCenterCoords = function() {
+    return [55.755768, 37.617671];
+};
