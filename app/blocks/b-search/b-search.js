@@ -7,6 +7,7 @@ goog.require('goog.events');
 goog.require('goog.ui.Component');
 goog.require('gorod.gSuggest.Suggest');
 goog.require('sm.bSearch.Template');
+goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.iAnimate.Animate');
 
 /**
@@ -399,6 +400,8 @@ goog.scope(function() {
             );
         }
 
+        var that = this;
+
         this.suggest_.setCallbacks({
             getData: function(elem) {
                 var data = JSON.parse(elem);
@@ -431,7 +434,12 @@ goog.scope(function() {
                     }
                     res = res.concat(items);
                 }
-                return res.slice(0, 10);
+
+                res = res.slice(0, 10);
+
+                that.sendItemImpressions_(res);
+
+                return res;
             },
 
             search: function(elem) {
@@ -472,6 +480,24 @@ goog.scope(function() {
             gorod.gSuggest.Suggest.Events.TEXT_CHANGE,
             this.onTextChange_.bind(this)
         );
+    };
+
+    /**
+     * Send impressions of got items
+     * @param {Array<Object>} items
+     * @private
+     */
+    Search.prototype.sendItemImpressions_ = function(items) {
+        items.forEach(function(item, i) {
+            Analytics.addImpression({
+                id: item.id,
+                name: item.name,
+                position: i + 1,
+                list: 'Suggest'
+            });
+        });
+        Analytics.setView();
+        Analytics.sendEvent('Suggest', 'search', 0);
     };
 
     /**
