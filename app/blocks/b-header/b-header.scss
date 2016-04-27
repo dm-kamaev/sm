@@ -9,10 +9,13 @@
     width: 100%;
     height: auto;
 
-    border-bottom: 1px solid #e5e5e5;
     background: #fff;
 
     font-family: 'Proxima', Arial, sans-serif;
+}
+
+.b-header_line_bottom {
+    border-bottom: 1px solid #e5e5e5;
 }
 
 .b-header__body {

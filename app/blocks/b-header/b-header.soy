@@ -7,6 +7,7 @@
  * @property {?string} url
  * @property {?string} searchText
  * @property {?boolean} searchRedirect
+ * @property {boolean=} bottomLine
  */
 
 /**
@@ -17,8 +18,11 @@
  * }}
  */
 {template .base autoescape="strict" kind="html"}
-    <div class="b-header">
+    <div class="b-header
+    {if $params.data?.bottomLine}{sp}b-header_line_bottom{/if}">
+
         {call .banner_ data="all" /}
+
         <div class="b-header__body">
             <div class="b-header__section
                 b-header__section_logo
@@ -51,7 +55,7 @@
                 'type': 'icon',
                 'renderParams': [
                     'data': [
-                        'type': 'catalog'
+                        'type': 'list'
                     ],
                     'config': [
                         'customClasses': ['b-header__search-link-icon']
