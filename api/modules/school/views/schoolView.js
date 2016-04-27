@@ -647,24 +647,24 @@ schoolView.dataLinks = function() {
 
     return [
         {
-          name: 'Школа 123',
+          name: 'Школа 1234',
           url: searchUrl +
-            encodeURIComponent('школа 123')
+            encodeURIComponent('школа 1234')
         },
         {
-          name: 'Тургеневская',
+          name: 'Новослободская',
           url: searchUrl +
-            encodeURIComponent('Тургеневская') + '&metroId=122'
+            encodeURIComponent('Новослободская') + '&metroId=67'
+        },
+        {
+          name: 'Тимирязевский',
+          url: searchUrl +
+            encodeURIComponent('Тимирязевский')
         },
         {
           name: 'Лицей',
           url: searchUrl +
             encodeURIComponent('Лицей')
-        },
-        {
-          name: 'Замоскворечье',
-          url: searchUrl +
-            encodeURIComponent('Замоскворечье')
         }
     ];
 };
