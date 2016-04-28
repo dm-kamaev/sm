@@ -3,7 +3,6 @@
 /**
  * Constructor
  * @param? params {
- *     imgUrl: ?uri,
  *     text: ?string,
  *     amount: ?number,
  *     dataLink: {
@@ -35,7 +34,7 @@
 {template .body}
     <div class="{call .rootClass/}">
         <a class="{call .rootClass/}__content" href="{$params?.dataLink?.url}">
-            {call sm.bSchoolCatalog.Template.img_ data="all" /}
+            {call sm.bSchoolCatalog.Template.img_ /}
             {call sm.bSchoolCatalog.Template.title_ /}
             {call sm.bSchoolCatalog.Template.text_ data="all" /}
         </a>
@@ -49,20 +48,22 @@
 
 /**
  * Img template
- * @param? params {
- *     imgUrl: ?uri
- * }
  */
 {template .img_ autoescape="strict" kind="html"}
-    {if $params.imgUrl}
-        <img class="{call .rootClass/}__img" src="{$params.imgUrl}">
-    {else}
-        <div class="{call .rootClass/}__img">
-            {for $i in range(3)}
-                {call sm.bSchoolCatalog.Template.imgList_ /}
-            {/for}
-        </div>
-    {/if}
+    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+        {param params: [
+            'factory': 'stendhal',
+            'type': 'icon',
+            'renderParams': [
+                'data': [
+                    'type': 'catalog'
+                ],
+                'config': [
+                    'customClasses': ['b-school-catalog__catalog']
+                ]
+            ]
+        ]/}
+    {/call}
 {/template}
 
 
@@ -120,17 +121,6 @@
             ]
         ]/}
     {/call}
-{/template}
-
-
-/**
- * Image Template
- */
-{template .imgList_ autoescape="strict" kind="html" private="true"}
-    <div class="{call .rootClass/}__item-list">
-        <span class="{call .rootClass/}__img_point"></span>
-        <span class="{call .rootClass/}__img_dash"></span>
-    </div>
 {/template}
 
 
