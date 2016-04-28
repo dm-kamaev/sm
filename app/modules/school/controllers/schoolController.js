@@ -149,7 +149,6 @@ exports.search = async(function(req, res) {
 
     var html = soy.render('sm.lSearch.Template.base', {
         params: {
-              currentCity: 'Москва',
               popularSchools: schoolView.popular(data.popularSchools),
               dataLinks : schoolView.dataLinks(),
               amountSchools: data.amountSchools,
