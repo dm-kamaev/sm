@@ -61,7 +61,7 @@
  *        comments: list<[
  *            author: string,
  *            rank: string,
- *            text: string,
+ *            textParagraphs: string,
  *            sections: list<[
  *                name: string,
  *                value: int
@@ -852,25 +852,6 @@
     </div>
 {/template}
 
-
-/**
- * Content title
- * @private
- */
-{template .contentTitle_ autoescape="strict" kind="html"}
-    {@param image:string}
-    {@param text:string}
-    //TODO: uncomment
-    //{@param buttonAlt:string}
-    <div class="l-school__content-header">
-        {if $image != null}{/if}
-        <div class="l-school__content-header-text">{$text}</div>
-        //TODO: uncomment
-        //<div class="b-icon_img_school-button l-school__content-header-button"alt="{$buttonAlt}"></div>
-    </div>
-{/template}
-
-
 /**
  * Comments block
  * @param? params {{
@@ -895,10 +876,9 @@
         {if $comments and length($comments) > 0}
             <div class="l-school__comments-title">
                 {call .contentTitle_}
-                    {param image: '123.png' /}
-                    {param text: 'Комментарии пользователей' /}
-                    //TODO: uncomment
-                    // {param buttonAlt: 'надпись2' /}
+                    {param params: [
+                        'text': 'Комментарии пользователей'
+                    ] /}
                 {/call}
             </div>
             <div class="l-school__comments-content">
@@ -918,5 +898,19 @@
             </div>
         {/if}
         <div class="l-school__horisontal-line"></div>
+    </div>
+{/template}
+
+
+/**
+ * Content title
+ * @param params {{
+ *     text: string
+ * }}
+ * @private
+ */
+{template .contentTitle_ autoescape="strict" kind="html"}
+    <div class="l-school__content-header">
+        <div class="l-school__content-header-text">{$params.text}</div>
     </div>
 {/template}

@@ -1,84 +1,59 @@
 {namespace sm.lSchool.bComment.Template autoescape="strict"}
 
-
 /**
  * Comment Template
  * @param params {{
- *     author: string,
- *     rank: string,
- *     text: string,
+ *     author: ?string,
+ *     rank: ?string,
+ *     textParagraphs: {
+ *         crop: ?Array.<string>,
+ *         full: Array.<string>
+ *     },
+ *     sections: Array.<{
+ *         name: string,
+ *         value: number
+ *     }>
+ * }}
+ */
+{template .base kind="html"}
+    <div class="b-comment">
+		{if length($params.sections)}
+            {call .header_ data="all" /}
+		{/if}
+
+        {call .body_ data="all" /}
+
+        {call .footer_ data="all" /}
+    </div>
+{/template}
+
+/**
+ * @param params {{
  *     sections: [{
  *         name: string,
  *         value: number
  *     }]
  * }}
  */
-{template .base kind="html"}
-    <div class="b-comment">
-		{if length($params.sections)}
-			{let $middle: ceiling((length($params.sections)) / 2) /}
-			<div class="b-comment__header">
-				<div class="b-comment__rating-group">
-					{foreach $section in $params.sections}
-						{if index($section) == $middle}
-							</div><div class="b-comment__rating-group">
-						{/if}
-						{call sm.lSchool.bComment.Template.section_}
-							{param params:[
-								'name': $section.name,
-								'rating': $section.value
-							]/}
-						{/call}
-					{/foreach}
-				</div>
-			</div>
-		{/if}
-
-		<div class="b-comment__wrap">
-			{if strLen($params.text) > 430}
-
-				<span class="b-comment__text">
-					{print $params.text|truncate:430}
-				</span>
-				<span class="b-comment__text b-comment__text_hidden">
-                	{$params.text}
-                </span>
-				<div class="b-comment__spoiler">
-                    Показать полностью
-                </div>
-
-			{else}
-				<span class="b-comment__text">
-        			{$params.text}
-        		</span>
-
-        	{/if}
+{template .header_ kind="html"}
+    {let $middle: ceiling((length($params.sections)) / 2) /}
+    <div class="b-comment__header">
+        <div class="b-comment__rating-group">
+            {foreach $section in $params.sections}
+                {if index($section) == $middle}
+                    </div>
+                    <div class="b-comment__rating-group">
+                {/if}
+                {call sm.lSchool.bComment.Template.section_}
+                    {param params:[
+                        'name': $section.name,
+                        'rating': $section.value
+                    ]/}
+                {/call}
+            {/foreach}
         </div>
-
-		<div class="b-comment__footer">
-            {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
-                {param params: [
-                    'type': 'icon',
-                    'renderParams': [
-                        'data': [
-                            'type': 'person'
-                        ],
-                        'config': [
-                            'customClasses': ['b-comment__avatar']
-                        ]
-                    ]
-                ]/}
-            {/call}
-            <div class="b-comment__author">
-                {if $params?.author}
-                    {$params.author},
-                {/if}{sp}
-                {$params.rank}
-            </div>
-		</div>
     </div>
 {/template}
-
 
 /**
  * Comment Section Template
@@ -106,4 +81,130 @@
 		    </div>
         </div>
     {/if}
+{/template}
+
+/**
+ * @param params {{
+ *     textParagraphs: {
+ *         crop: Array.<string>,
+ *         full: Array.<string>
+ *     }
+ * }}
+ */
+{template .body_ kind="html"}
+    <div class="b-comment__wrap">
+        {if $params?.textParagraphs?.crop and
+            length($params?.textParagraphs?.crop) > 0}
+            {call .longText_ data="all" /}
+        {else}
+            {call .defaultText_ data="all" /}
+        {/if}
+    </div>
+{/template}
+
+/**
+ * Template for text of comment which exceed possible visible value
+ * @param params {{
+ *     textParagraphs: {
+ *         crop: Array.<string>,
+ *         full: Array.<string>
+ *     }
+ * }}
+ */
+{template .longText_ kind="html"}
+    <div class="b-comment__text">
+        {call .text_}
+            {param params: [
+                'data': [
+                    'paragraphs': $params.textParagraphs.crop
+                ]
+            ]/}
+        {/call}
+
+        {call sm.bLink.Template.base}
+            {param params: [
+                'data': [
+                    'name': 'Показать полностью'
+                ],
+                'config': [
+                    'customClasses': 'b-comment__spoiler',
+                    'size': 'small'
+                ]
+            ]/}
+        {/call}
+    </div>
+    <div class="b-comment__text b-comment__text_hidden">
+        {call .text_}
+            {param params: [
+                'data': [
+                    'paragraphs': $params.textParagraphs.full
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+/**
+ * Template for text of comment which not exceed possible visible value
+ * @param params {{
+ *     textParagraphs: {
+ *         full: Array.<string>
+ *     }
+ * }}*
+ */
+{template .defaultText_ kind="html"}
+    <div class="b-comment__text">
+        {call .text_}
+            {param params: [
+                'data': [
+                    'paragraphs': $params.textParagraphs.full
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+/**
+ * Create comment text from given paragraphs
+ * @param params {{
+ *     paragraphs: Array.<string>
+ * }}
+ */
+{template .text_ kind="html"}
+    {foreach $paragraph in $params.data.paragraphs}
+        <p class="b-comment__paragraph
+            {isLast($paragraph) ? ' b-comment__paragraph_last' : ''}">
+            {$paragraph}
+        </p>
+    {/foreach}
+{/template}
+
+/**
+ * @param params {{
+ *     author: ?string,
+ *     rank: ?string
+ * }}
+ */
+{template .footer_ kind="html"}
+    <div class="b-comment__footer">
+        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+            {param params: [
+                'type': 'icon',
+                'renderParams': [
+                    'data': [
+                        'type': 'person'
+                    ],
+                    'config': [
+                        'customClasses': ['b-comment__avatar']
+                    ]
+                ]
+            ]/}
+        {/call}
+        <div class="b-comment__author">
+            {if $params?.author}
+                {$params.author},
+            {/if}{sp}
+            {$params.rank}
+        </div>
+</div>
 {/template}
