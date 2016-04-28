@@ -6,11 +6,11 @@
     padding: 0 0 23px 0;
 
     border-bottom: 1px solid #e5e5e5;
-
     background-color: white;
 
     &:last-child {
         margin-bottom: 0;
+
         border-bottom: none;
     }
 }
@@ -21,9 +21,10 @@
     width: 100%;
 	margin: 0 0 10px 0;
 
+    color: grey;
+
     font-size: 12px;
     line-height: 19px;
-    color: grey;
 }
 
 .b-comment__rating-group {
@@ -73,18 +74,19 @@
 
     vertical-align: bottom;
 
+    color: #9a9a9a;
+
+    font-family: 'Arial', sans-serif;
     font-size: 12px;
     line-height: 20px;
-    font-family: 'Arial', sans-serif;
-
-    color: #9a9a9a;
 }
 
 .b-comment__avatar{
     display: inline-block;
 
-    vertical-align: middle;
     margin-right: 5px;
+
+    vertical-align: middle;
 }
 
 .b-comment__spoiler_hidden{
@@ -109,15 +111,17 @@
     margin: 0 10px 0 0;
 
     text-align: left;
+
     color: rgb(154, 154, 154);
 
-    font-weight: normal;
     font-size: 12px;
+    font-weight: normal;
 }
 
 .b-comment__stars-rating {
     display: inline-block;
 
     text-align: left;
+
     font-size: 14px;
 }
