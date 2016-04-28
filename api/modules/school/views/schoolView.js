@@ -19,6 +19,8 @@ const olimpResultView = require(
     '../../study/views/olimpResultView.js');
 const scoreView = require('../views/scoreView');
 
+const commentView = require('../../comment/views/commentView');
+
 const searchType = require('../enums/searchType');
 
 var schoolView = {};
@@ -39,7 +41,7 @@ schoolView.default = function(schoolInstance, data, user, opt_popularSchools) {
     var addresses = services.department.addressesFilter(
             schoolInstance.addresses
         ),
-        comments = schoolInstance.comments,
+        comments = commentView.school(schoolInstance.comments),
         score = scoreView.sections(schoolInstance.score),
         scoreCount = schoolInstance.scoreCount || [0, 0, 0, 0];
 
@@ -65,11 +67,11 @@ schoolView.default = function(schoolInstance, data, user, opt_popularSchools) {
             schoolInstance.specializedClasses),
         activities: getActivities(schoolInstance.activities),
         contacts: getContacts(schoolInstance.addresses, schoolInstance.phones),
-        comments: getComments(comments),
+        comments: comments,
         addresses: addressView.default(addresses),
         ratings: ratingView.ratingSchoolView(
             schoolInstance.rank, schoolInstance.rankDogm),
-        score: checkScoreValues(score) ? score : false,
+        score: scoreView.notEmpty(score) ? score : false,
         totalScore: schoolInstance.totalScore,
         results: {
             ege: egeResultView.transformResults(
@@ -353,7 +355,10 @@ schoolView.list = function(schools, opt_criterion, opt_page) {
                     ratings: ratingView.ratingResultView(school.rankDogm),
                     metroStations: addressView.getMetro(school.addresses),
                     area: addressView.getAreas(school.addresses),
-                    isScoreClickable: checkScoreValues(score, sortCriterion),
+                    isScoreClickable: scoreView.notEmpty(
+                        sortScore.score,
+                        sortScore.currentCriterion
+                    ),
                     addresses:
                         services.department.addressesFilter(school.addresses),
                     totalScore: school.totalScore,

@@ -43,8 +43,7 @@ scoreView.sectionsNotEmpty = function(score) {
 };
 
 /**
- * Return score array depends of sort criterion:
- * result array contains score without
+ * Return score object depends of sort criterion
  * @param {Array.<number>} score
  * @param {number} totalScore
  * @param {number} opt_criterion - criterion of sort
@@ -55,16 +54,37 @@ scoreView.sectionsNotEmpty = function(score) {
  */
 scoreView.sort = function(score, totalScore, opt_criterion) {
     var scoreItems = this.sections(score),
-        sortCriterionIndex = opt_criterion ? opt_criterion : 0,
-        scoreCriterion = scoreItems[sortCriterionIndex];
+        sortCriterionIndex = opt_criterion ? opt_criterion : 0;
 
+    scoreItems.unshift({
+        name: 'Средняя оценка',
+        value: totalScore
+    });
+
+    var scoreCriterion = scoreItems[sortCriterionIndex];
     return {
         currentCriterion: scoreCriterion,
-        score: scoreItems.slice(sortCriterionIndex, sortCriterionIndex + 1)
+        score: scoreItems.filter(item => {
+            return item.name != scoreCriterion.name
+        })
     };
 };
 
-
-scoreView.
+/**
+ * Check if all scores of item is 0, and if provided check sort criterion too
+ * @param {Array.<{
+ *     name: string,
+ *     value: number
+ * }>} score
+ * @param {{
+ *     name: string,
+ *     value: number
+ * }} opt_sortCriterion
+ * @return {boolean}
+ */
+scoreView.notEmpty =function(score, opt_sortCriterion) {
+    var sortCriterion = opt_sortCriterion || {};
+    return sortCriterion.value || score.some(item => item.value);
+};
 
 module.exports = scoreView;
