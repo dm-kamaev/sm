@@ -5,7 +5,7 @@
  *     comments: [{
  *         author: string,
  *         rank: string,
- *         text: string,
+ *         textParagraphs: string,
  *         sections: [{
  *             name: string,
  *             value: int
@@ -20,7 +20,7 @@
 				{param params: [
 					'author': $comment.author,
 					'rank': $comment.rank,
-					'text': $comment.text,
+					'textParagraphs': $comment.textParagraphs,
 					'sections': $comment.sections
 				] /}
 			{/call}
