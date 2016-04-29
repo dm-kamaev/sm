@@ -185,7 +185,7 @@
                     ]/}
                 {/call}
 
-                {call sm.lSearch.Template.article_ /}
+                {call sm.lSearch.Template.articles_ /}
             </div>
         </div>
     </div>
@@ -222,35 +222,17 @@
 {/template}
 
 /**
- * Template for link to article
+ * Template for link to articles
  */
-{template .article_}
-    {let $articleTitle kind="html"}
-        &laquo;Школа&nbsp;&mdash; это не&nbsp;гостиница
-        {sp}на&nbsp;11&nbsp;лет. Это гораздо важнее&raquo;
-    {/let}
-
-    {let $articleSubtitle kind="html"}
-        Никита Белоголовцев&nbsp;&mdash; о&nbsp;новом сервисе
-        {sp}&laquo;Мела&raquo; для родителей
-    {/let}
-
-    {let $imgUrl kind="uri"}
-        images/l-search/b-link-article/article.jpg
-    {/let}
-
-    {let $articleUrl kind="uri"}
-        http://mel.fm/2016/04/13/schools/
-    {/let}
-
-    {call sm.lSearch.bLinkArticle.Template.base}
-        {param params: [
-            'urlArticle': $articleUrl,
-            'urlImg': $imgUrl,
-            'title': $articleTitle,
-            'subtitle': $articleSubtitle
-        ]/}
-    {/call}
+{template .articles_}
+    <div class="l-search__articles">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': 'stendhal',
+                'type': 'article-links'
+            ]/}
+        {/call}
+    </div>
 {/template}
 
 /**
