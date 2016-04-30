@@ -6,7 +6,9 @@ var await = require('asyncawait/await');
 var services = require.main.require('./app/components/services').all;
 const fs = require('fs');
 
-var geoConverter = require('./modules/geo/Converter.js');
+var geoConverter = require('./modules/geo/Converter.js'),
+    SchoolSearcher = require('./modules/parse/SchoolSearcher'),
+    confusionSchools = require('./parsePguActsConfusionSchools.json');
 
 const REMOVE_DUPLICATES = false;
 
@@ -26,10 +28,37 @@ class ParseActs {
      * @param {string} directory
      */
     parse() {
-        var activities = this.getActivities_();
-            // schools = await(services.school.listInstances()),
-            //
-            // matchedData = this.matchData_(schools, activities);
+        var activities = this.getActivities_(),
+            schools = await(services.school.listInstances());
+
+        var activitiesBySchool = this.filterActivitiesBySchool_(activities);
+
+        var schoolSearcher = new SchoolSearcher(schools);
+        var foundActivitiesBySchool = schoolSearcher.find(activitiesBySchool);
+
+        var spheres = {};
+        foundActivitiesBySchool.forEach(school => {
+            var foundActivites = [];
+            school.data.forEach(activity => {
+                var sphere = activity.sphere;
+                if (spheres.hasOwnProperty(sphere)) {
+                    spheres[sphere].count++;
+                    spheres[sphere].names.push(activity.name);
+                    if (foundActivites.indexOf(sphere) === -1) {
+                        spheres[sphere].schools++;
+                        foundActivites.push(sphere);
+                    }
+                } else {
+                    spheres[sphere] = {
+                        count: 1,
+                        schools: 1,
+                        names: [activity.name]
+                    };
+                    foundActivites.push(sphere);
+                }
+            });
+        });
+        fs.writeFileSync('spheres.json', JSON.stringify(spheres));
 
         // await(services.school.deleteAdditionalEducations());
         // matchedData.forEach(schoolActivities => {
@@ -242,6 +271,46 @@ class ParseActs {
         }
         console.log(uniqArray.length);
         return uniqArray;
+    }
+
+    /**
+     * @private
+     * @param {array<object>} activities
+     * @return {array<object>}
+     */
+    filterActivitiesBySchool_(activities) {
+        var sortBySchool = {},
+            result = [];
+        var maxDescription = {
+            text: '',
+            length: 0
+        };
+        activities.forEach(activity => {
+            maxDescription = activity.description.length >
+                maxDescription.length ? {
+                    length: activity.description.length,
+                    text: activity.description
+                }  : maxDescription;
+            var schoolName = activity.school;
+            if (confusionSchools.indexOf(schoolName) === -1 &&
+                schoolName.indexOf('Москомспорта') === -1) {
+
+                if (sortBySchool.hasOwnProperty(schoolName)) {
+                    sortBySchool[schoolName].push(activity);
+                } else {
+                    sortBySchool[schoolName] = [activity];
+                }
+            }
+        });
+
+        for (var school in sortBySchool) {
+            result.push({
+                name: school,
+                data: sortBySchool[school]
+            });
+        }
+        console.log(maxDescription);
+        return result;
     }
 }
 
