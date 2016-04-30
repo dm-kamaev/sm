@@ -17,6 +17,9 @@ const giaResultView = require(
     '../../study/views/giaResultView.js');
 const olimpResultView = require(
     '../../study/views/olimpResultView.js');
+const scoreView = require('../views/scoreView');
+
+const commentView = require('../../comment/views/commentView');
 
 const searchType = require('../enums/searchType');
 
@@ -38,8 +41,8 @@ schoolView.default = function(schoolInstance, data, user, opt_popularSchools) {
     var addresses = services.department.addressesFilter(
             schoolInstance.addresses
         ),
-        comments = schoolInstance.comments,
-        score = getSections(schoolInstance.score),
+        comments = commentView.school(schoolInstance.comments),
+        score = scoreView.sections(schoolInstance.score),
         scoreCount = schoolInstance.scoreCount || [0, 0, 0, 0];
 
     var result = {
@@ -64,11 +67,11 @@ schoolView.default = function(schoolInstance, data, user, opt_popularSchools) {
             schoolInstance.specializedClasses),
         activities: getActivities(schoolInstance.activities),
         contacts: getContacts(schoolInstance.addresses, schoolInstance.phones),
-        comments: getComments(comments),
+        comments: comments,
         addresses: addressView.default(addresses),
         ratings: ratingView.ratingSchoolView(
             schoolInstance.rank, schoolInstance.rankDogm),
-        score: checkScoreValues(score) ? score : false,
+        score: scoreView.notEmpty(score) ? score : false,
         totalScore: schoolInstance.totalScore,
         results: {
             ege: egeResultView.transformResults(
@@ -237,27 +240,11 @@ var getContacts = function(addresses, opt_phones) {
 };
 
 /**
- *  @param {array<object>=} comments
- *  @return {array<object>}
+ *  @param {Array.<Object>=} comments
+ *  @return {Array.<Object>}
  */
 var getComments = function(comments) {
-    var typeConvert = {
-        'Parent': 'Родитель',
-        'Graduate': 'Выпускник',
-        'Scholar': 'Ученик'
-    };
 
-    return comments
-        .filter(comment => comment.text)
-        .map(comment => {
-            var sections = getSections(comment.rating.score, true);
-            return {
-                author: '',
-                rank: typeConvert[comment.userData.userType],
-                text: comment.text,
-                sections: sections
-            };
-        });
 };
 
 /**
@@ -349,8 +336,11 @@ schoolView.list = function(schools, opt_criterion, opt_page) {
         res.schools = schools
             .map((school, i) => {
 
-                var score = getScore(school.score, school.totalScore, opt_criterion);
-                var sortCriterion = score.shift();
+                var sortScore = scoreView.sort(
+                    school.score,
+                    school.totalScore,
+                    opt_criterion
+                );
 
                 return {
                     id: school.id,
@@ -359,13 +349,16 @@ schoolView.list = function(schools, opt_criterion, opt_page) {
                     type: school.schoolType,
                     description: school.description,
                     abbreviation: school.abbreviation,
-                    score: score,
-                    currentCriterion: sortCriterion,
+                    score: sortScore.score,
+                    currentCriterion: sortScore.currentCriterion,
                     fullName: school.fullName,
                     ratings: ratingView.ratingResultView(school.rankDogm),
                     metroStations: addressView.getMetro(school.addresses),
                     area: addressView.getAreas(school.addresses),
-                    isScoreClickable: checkScoreValues(score, sortCriterion),
+                    isScoreClickable: scoreView.notEmpty(
+                        sortScore.score,
+                        sortScore.currentCriterion
+                    ),
                     addresses:
                         services.department.addressesFilter(school.addresses),
                     totalScore: school.totalScore,
@@ -457,18 +450,8 @@ schoolView.suggestList = function(schools) {
  * @private
  */
 var checkScoreValues = function(score, opt_sortCriterion) {
-    var result = false;
-
-    if (opt_sortCriterion && opt_sortCriterion.value !== 0) {
-        result = true;
-    }
-
-    score.forEach(function(item) {
-        if (item.value !== 0) {
-            result = true;
-        }
-    });
-    return result;
+    var sortCriterion = opt_sortCriterion || {};
+    return sortCriterion || score.some(item => item.value);
 };
 
 /**
@@ -574,7 +557,7 @@ var groupSchools = function(schools) {
  * @return {Array<Object>}
  */
 var getScore = function(score, totalScore, opt_criterion) {
-    var scoreItems = getSections(score),
+    var scoreItems = scoreView.sections(score),
         sortCriterionIndex = opt_criterion ? opt_criterion : 0;
 
     scoreItems.unshift({

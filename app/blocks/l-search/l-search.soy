@@ -3,7 +3,6 @@
 /**
  * Search template
  * @param? params {
- *     currentCity: ?string,
  *     images: ?list<string>,
  *     popularSchools: ?list<[
  *         id: ?number,
@@ -65,11 +64,7 @@
 {template .layoutContent_ autoescape="strict" kind="html"}
     <div class="l-search">
         <div class="l-search__body">
-            {call sm.lSearch.Template.header_}
-                {param params: [
-                    'city': $params.currentCity
-                ]/}
-            {/call}
+            {call sm.lSearch.Template.header_ /}
             {call sm.lSearch.Template.search_}
                 {param params: [
                     'dataLinks' : $params.dataLinks
@@ -83,50 +78,44 @@
 
 /**
  * Header template
- * @param? params {
- *     city: ?string
- * }
  */
 {template .header_ autoescape="strict" kind="html" private="true"}
     <div class="l-search__header">
         <div class="l-search__header-wrap">
             <div class="l-search__header-content">
-                <div class="l-search__geoposition">
-                    <div class="l-search__pointer">u</div>
-                    <div class="l-search__city">{$params.city}</div>
-                </div>
                 <div class="l-search__title">
-                    Найдите школу, которая подходит вашему&nbsp;ребёнку
+                    Найдите в&nbsp;Москве лучшую школу для
+                    вашего&nbsp;ребёнка
                 </div>
+
                 <ul class="l-search__title-list">
-                    <li class="l-search__title-list-item">
-                        <div class="l-search__title-list-dash"> — </div>
-                        <div class="l-search__title-list-text">
-                            Поиск по номерам школ, станциям метро и&nbsp;районам
-                        </div>
-                    </li>
-                    <li class="l-search__title-list-item">
-                        <div class="l-search__title-list-dash"> — </div>
-                        <div class="l-search__title-list-text">
+                    {call .listItem_}
+                        {param text kind="html"}
+                            Ищите по&nbsp;номерам школ, адресам,
+                            станциям метро и&nbsp;районам&nbsp;Москвы
+                        {/param}
+                    {/call}
+
+                    {call .listItem_}
+                        {param text kind="html"}
                             Узнайте результаты ГИА и ЕГЭ
                             в&nbsp;выбранной&nbsp;школе
-                        </div>
-                    </li>
-                    <li class="l-search__title-list-item">
-                        <div class="l-search__title-list-dash"> — </div>
-                        <div class="l-search__title-list-text">
+                        {/param}
+                    {/call}
+
+                    {call .listItem_}
+                        {param text kind="html"}
                             Сравнивайте школы
-                        </div>
-                    </li>
+                        {/param}
+                    {/call}
                 </ul>
             </div>
-            <div class="l-search__header-image-wrap">
-                <div class="l-search__header-image">
-                </div>
-            </div>
+
+            <img class="l-search__header-image" src="images/l-search/cover.svg">
         </div>
     </div>
 {/template}
+
 
 /**
  * Template for block with search field
@@ -196,7 +185,7 @@
                     ]/}
                 {/call}
 
-                {call sm.lSearch.Template.article_ /}
+                {call sm.lSearch.Template.articles_ /}
             </div>
         </div>
     </div>
@@ -233,33 +222,29 @@
 {/template}
 
 /**
- * Template for link to article
+ * Template for link to articles
  */
-{template .article_}
-    {let $articleTitle kind="html"}
-        &laquo;Школа&nbsp;&mdash; это не&nbsp;гостиница
-        {sp}на&nbsp;11&nbsp;лет. Это гораздо важнее&raquo;
-    {/let}
+{template .articles_}
+    <div class="l-search__articles">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': 'stendhal',
+                'type': 'article-links'
+            ]/}
+        {/call}
+    </div>
+{/template}
 
-    {let $articleSubtitle kind="html"}
-        Никита Белоголовцев&nbsp;&mdash; о&nbsp;новом сервисе
-        {sp}&laquo;Мела&raquo; для родителей
-    {/let}
+/**
+ * List Item template
+ * @param text [string]
+ */
+{template .listItem_ kind="html"}
+    <li class="l-search__title-list-item">
+        <div class="l-search__title-list-dash"> — </div>
 
-    {let $imgUrl kind="uri"}
-        images/l-search/b-link-article/article.jpg
-    {/let}
-
-    {let $articleUrl kind="uri"}
-        http://mel.fm/2016/04/13/schools/
-    {/let}
-
-    {call sm.lSearch.bLinkArticle.Template.base}
-        {param params: [
-            'urlArticle': $articleUrl,
-            'urlImg': $imgUrl,
-            'title': $articleTitle,
-            'subtitle': $articleSubtitle
-        ]/}
-    {/call}
+        <div class="l-search__title-list-text">
+            {$text}
+        </div>
+    </li>
 {/template}
