@@ -5,30 +5,29 @@
     margin: 0 auto 35px;
 
     color: #000000;
+    background-color: #f4f4ec;
 }
 
-.l-search__header {
+.l-search__header-wrap {
     width: 100%;
-    height: 400px;
 
     color: #000;
-    background-color: #f4f4ec;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 
     text-align: right;
+}
+
+.l-search__header {
+    position: relative;
+
+    width: 1200px;
+    height: 400px;
+    margin: 0 auto;
 
     line-height: 400px;
 }
 
-.l-search__header-wrap {
-    position: relative;
-
-    width: 1200px;
-    height: 100%;
-    margin: 0 auto;
-}
-
-.l-search__header-image {
+.l-search__image {
     position: absolute;
     left: 0;
     bottom: 0;
@@ -39,6 +38,10 @@
     padding-right: 60px;
 
     box-sizing: border-box;
+}
+
+.l-search__image_clone {
+    display: none;
 }
 
 .l-search__header-content {
@@ -187,7 +190,7 @@
 }
 
 @include media-xl {
-    .l-search__header-wrap {
+    .l-search__header {
         width: 100%;
         padding: 0 40px;
 
@@ -231,7 +234,7 @@
         max-width: 380px;
     }
 
-    .l-search__header-image {
+    .l-search__image {
         left: -40px;
 
         width: 100%;
@@ -261,7 +264,7 @@
 }
 
 @include media-m {
-    .l-search__header-image {
+    .l-search__image {
         width: 55%;
         min-width: 500px;
         padding-right: 0;
@@ -305,7 +308,7 @@
         display: none;
     }
 
-    .l-search__header-image {
+    .l-search__image {
         left: 0;
         right: 0;
 
@@ -316,11 +319,18 @@
 }
 
 @include media-xs {
-    .l-search__header {
+    .l-search__body {
+        position: relative;
+
         height: 380px;
     }
 
     .l-search__header-wrap {
+        border: none;
+    }
+
+    .l-search__header {
+        height: auto;
         padding: 0 30px;
     }
 
@@ -334,10 +344,21 @@
         line-height: 20px;
     }
 
-    .l-search__header-image {
+    .l-search__image {
+        bottom: 0;
+
         width: 100%;
+        max-width: 400px;
         min-width: auto;
         padding: 0 30px;
+    }
+
+    .l-search__image_main {
+        display: none;
+    }
+
+    .l-search__image_clone {
+        display: block;
     }
 
     .l-search__information-links-wrap {
@@ -392,7 +413,7 @@
 }
 
 @include media-xxs {
-    .l-search__header {
+    .l-search__body {
         height: 345px;
     }
 

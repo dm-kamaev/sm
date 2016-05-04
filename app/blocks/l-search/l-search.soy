@@ -64,12 +64,15 @@
 {template .layoutContent_ autoescape="strict" kind="html"}
     <div class="l-search">
         <div class="l-search__body">
-            {call sm.lSearch.Template.header_ /}
-            {call sm.lSearch.Template.search_}
+            {call .header_ /}
+
+            {call .search_}
                 {param params: [
                     'dataLinks' : $params.dataLinks
                 ]/}
             {/call}
+
+            {call .headerImgClone_ /}
         </div>
 
         {call .informationLinks_ data="all" /}
@@ -80,8 +83,8 @@
  * Header template
  */
 {template .header_ autoescape="strict" kind="html" private="true"}
-    <div class="l-search__header">
-        <div class="l-search__header-wrap">
+    <div class="l-search__header-wrap">
+        <div class="l-search__header">
             <div class="l-search__header-content">
                 <div class="l-search__title">
                     Найдите в&nbsp;Москве лучшую школу
@@ -111,7 +114,8 @@
                 </ul>
             </div>
 
-            <img class="l-search__header-image" src="images/l-search/cover.svg">
+            <img class="l-search__image l-search__image_main"{sp}
+                 src="images/l-search/cover.svg">
         </div>
     </div>
 {/template}
@@ -143,6 +147,14 @@
             ]/}
         {/call}
     </div>
+{/template}
+
+/**
+ * Cloned header image template
+ */
+{template .headerImgClone_ kind="html" private="true"}
+    <img class="l-search__image l-search__image_clone"
+         src="images/l-search/cover.svg">
 {/template}
 
 /**

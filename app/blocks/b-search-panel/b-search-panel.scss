@@ -52,10 +52,10 @@
 .b-search-panel__link {
     display: inline-block;
 
-    margin-right: 18px;
+    margin-left: 18px;
 
-    &:last-child {
-        margin-right: 0;
+    &:first-child {
+        margin-left: 0;
     }
 }
 
@@ -178,6 +178,10 @@
         padding: 0 30px;
     }
 
+    .b-search-panel__content-wrap {
+        padding-top: 0;
+    }
+
     .b-search-panel__field-wrap {
         width: 100%;
         padding-right: 0;
@@ -188,6 +192,10 @@
     }
 
     .b-search-panel_two-columns-theme {
+        .b-search-panel__content-wrap {
+            padding-top: 40px;
+        }
+
         .b-search-panel__field-wrap {
             width: 100%;
             padding-right: 0;
