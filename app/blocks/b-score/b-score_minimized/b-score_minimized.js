@@ -1,5 +1,6 @@
 goog.provide('sm.bScore.ScoreMinimized');
 
+goog.require('cl.iUtils.Utils');
 goog.require('goog.dom');
 goog.require('goog.dom.classes');
 goog.require('goog.dom.classlist');
@@ -25,75 +26,48 @@ sm.bScore.ScoreMinimized = function(opt_params) {
     this.params_ = opt_params || {};
 
     /**
-     * @private
-     * @type {Array.<Number>}
-     */
-    this.score_ = this.params_.score ? this.params_.score : [];
-
-    /**
-     * @private
-     * @type {number}
-     */
-    this.currentCriterion_ = this.params_.currentCriterion.value ?
-        this.params_.currentCriterion.value :
-        0;
-    /**
      * Defines clickable or not
      * @type {boolean}
      * @private
      */
-    this.isClickable_ = this.params_.isClickable;
+    this.isActive_ = false;
 
     /**
-     * Tooltip dom element
+     * Collection of dom elements
+     * @type {Object.<string, Element>}
      * @private
-     * @type {Element}
      */
-    this.tooltip_ = null;
-
-    /**
-     * Dom element with name of current criteria of sort
-     * @private
-     * @type {Element}
-     */
-    this.criterionNameElement_ = null;
-
-    /**
-     * Dom element with mark of current criteria of sort
-     * @private
-     * @type {Element}
-     */
-    this.criterionValueElement_ = null;
+    this.elements_ = {};
 
     /**
      * Indicates is tooltip showed or not
      * @private
      * @type {boolean}
      */
-    this.tooltipShowed_ = false;
+    this.isHiddenMarksShowed_ = false;
 };
 goog.inherits(sm.bScore.ScoreMinimized, sm.bScore.Score);
 
 goog.scope(function() {
-    var ScoreMinimized = sm.bScore.ScoreMinimized;
+    var ScoreMinimized = sm.bScore.ScoreMinimized,
+        Utils = cl.iUtils.Utils;
 
     /**
      * Css class enum
-     * @enum {String}
+     * @enum {string}
      */
     ScoreMinimized.CssClass = {
         ROOT: 'b-score',
-        TOOLTIP: 'b-score__other-marks',
-        TOOLTIP_NAME: 'b-score__mark-name',
+        HIDDEN_MARKS: 'b-score__hidden-marks',
+        VISIBLE_MARK: 'b-score__visible_mark',
         MARK_NAME: 'b-score__mark-name',
-        CURRENT_CRITERION_NAME: 'b-score__current-criterion-name',
-        CURRENT_CRITERION_VALUE: 'b-score__current-criterion-value',
-        HIDDEN: 'i-utils__hidden'
+        MARK_VALUE: 'b-score__mark-value',
+        ACTIVE_STATE: 'b-score_active'
     };
 
     /**
      * Event enum
-     * @enum {String}
+     * @enum {string}
      */
     ScoreMinimized.Event = {
         CLICK: 'b-score-click'
@@ -101,26 +75,14 @@ goog.scope(function() {
 
     /**
      * Internal decorates the DOM element
-     * @param {Node} element
+     * @param {Element} element
      * @public
      */
     ScoreMinimized.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
-        this.tooltip_ = goog.dom.getElementByClass(
-            ScoreMinimized.CssClass.TOOLTIP,
-            element
-        );
-
-        this.criterionNameElement_ = goog.dom.getElementByClass(
-            ScoreMinimized.CssClass.CURRENT_CRITERION_NAME,
-            element
-        );
-
-        this.criterionValueElement_ = goog.dom.getElementByClass(
-            ScoreMinimized.CssClass.CURRENT_CRITERION_VALUE,
-            element
-        );
+        this.initDomElements_();
+        this.initState_();
     };
 
     /**
@@ -128,28 +90,27 @@ goog.scope(function() {
      */
     ScoreMinimized.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
-
-        if (this.isClickable_) {
+        if (this.isActive_) {
             var handler = this.getHandler();
 
             if (goog.labs.userAgent.device.isDesktop()) {
                 handler.listen(
                     this.getElement(),
                     goog.events.EventType.MOUSEENTER,
-                    this.showCriterion_
+                    this.onNameMouseEnter_
                 );
 
                 handler.listen(
-                    this.criterionValueElement_,
+                    this.elements_.visibleMarkValue,
                     goog.events.EventType.MOUSELEAVE,
-                    this.hideCriterion_
+                    this.onNameMouseLeave_
                 );
             }
 
             handler.listen(
-                this.criterionValueElement_,
+                this.elements_.visibleMarkValue,
                 goog.events.EventType.CLICK,
-                this.criterionClickHandler_
+                this.onVisibleMarkValueClick_
             );
 
             handler.listen(
@@ -161,29 +122,78 @@ goog.scope(function() {
     };
 
     /**
-     * shows current criterion
+     * Init dom elements
      * @private
      */
-    ScoreMinimized.prototype.showCriterion_ = function() {
-        if (!this.tooltipShowed_) {
-            goog.dom.classes.remove(
-                this.criterionNameElement_,
-                ScoreMinimized.CssClass.HIDDEN
-            );
+    ScoreMinimized.prototype.initDomElements_ = function() {
+        var element = this.getElement();
+
+        this.elements_.hiddenMarks = goog.dom.getElementByClass(
+            ScoreMinimized.CssClass.HIDDEN_MARKS,
+            element
+        );
+
+        var visibleMark = goog.dom.getElementByClass(
+            ScoreMinimized.CssClass.VISIBLE_MARK,
+            element
+        );
+        this.elements_.visibleMarkName = goog.dom.getElementByClass(
+            ScoreMinimized.CssClass.MARK_NAME,
+            visibleMark
+        );
+        this.elements_.visibleMarkValue = goog.dom.getElementByClass(
+            ScoreMinimized.CssClass.MARK_VALUE,
+            visibleMark
+        );
+    };
+
+    /**
+     * Check whether control active:
+     * hidden score items can be showed
+     * @private
+     */
+    ScoreMinimized.prototype.initState_ = function() {
+        this.isActive_ = goog.dom.classlist.contains(
+            this.getElement(),
+            ScoreMinimized.CssClass.ACTIVE_STATE
+        );
+    };
+
+    /**
+     * Mouse enter to visible name event handler
+     * @private
+     */
+    ScoreMinimized.prototype.onNameMouseEnter_ = function() {
+        if (!this.isHiddenMarksShowed_) {
+            this.setNameVisibility_(true);
         }
     };
 
     /**
-     * shows current criteria
+     * Mouse leave to visible name event handler
      * @private
      */
-    ScoreMinimized.prototype.hideCriterion_ = function() {
-        if (!this.tooltipShowed_) {
-            goog.dom.classes.add(
-                this.criterionNameElement_,
-                ScoreMinimized.CssClass.HIDDEN
-            );
+    ScoreMinimized.prototype.onNameMouseLeave_ = function() {
+        if (!this.isHiddenMarksShowed_) {
+            this.setNameVisibility_(false);
         }
+    };
+
+    /**
+     * Hide or show name of visible score
+     * @param {boolean} visibility
+     * @private
+     */
+    ScoreMinimized.prototype.setNameVisibility_ = function(visibility) {
+        visibility ?
+            goog.dom.classes.remove(
+                this.elements_.visibleMarkName,
+                Utils.CssClass.HIDDEN
+            ) :
+            goog.dom.classes.add(
+                this.elements_.visibleMarkName,
+                Utils.CssClass.HIDDEN
+            );
     };
 
     /**
@@ -191,69 +201,67 @@ goog.scope(function() {
      * @param {Object} event
      * @private
      */
-    ScoreMinimized.prototype.criterionClickHandler_ = function(event) {
+    ScoreMinimized.prototype.onVisibleMarkValueClick_ = function(event) {
         event.preventDefault();
+
+        if (this.isHiddenMarksShowed_) {
+            this.setHiddenMarksVisibility_(false);
+            this.setNameVisibility_(false);
+        }
+        else {
+            this.setHiddenMarksVisibility_(true);
+            this.setNameVisibility_(true);
+        }
 
         this.dispatchEvent({
             'type': ScoreMinimized.Event.CLICK
         });
-
-        if (this.tooltipShowed_) {
-            this.hideTooltip_();
-        }
-        else {
-            this.showTooltip_();
-        }
     };
 
     /**
-     * Handles a click over a document
+     * Handles a click over a document and if click occurs not in hidden marks
+     * or in visible mark name, hide hidden marks
      * @param {Object} event
      * @private
      */
     ScoreMinimized.prototype.documentClickHandler_ = function(event) {
         var domHelper = this.getDomHelper(),
 
-        /*check if click target in tooltip dom element*/
+        /** check if click target in hidden marks dom element **/
         inTooltipElement = domHelper.contains(
-            this.tooltip_,
+            this.elements_.hiddenMarks,
             event.target
         ),
 
-        /*check if click target in criteria value dom element*/
+        /** check if click target in visible mark value dom element **/
         inCriterionElement = domHelper.contains(
-            this.criterionValueElement_,
+            this.elements_.visibleMarkValue,
             event.target
         );
 
-        if (!inTooltipElement && !inCriterionElement && this.tooltipShowed_) {
-            this.hideTooltip_();
+        if (!inTooltipElement &&
+            !inCriterionElement &&
+            this.isHiddenMarksShowed_) {
+            this.setHiddenMarksVisibility_(false);
+            this.setNameVisibility_(false);
         }
     };
 
     /**
-     * Hide tooltip
+     * Show and hide element with hidden marks
+     * @param {boolean} visibility
      * @private
      */
-    ScoreMinimized.prototype.hideTooltip_ = function() {
-        goog.dom.classes.add(
-            this.tooltip_,
-            ScoreMinimized.CssClass.HIDDEN
-        );
-        this.tooltipShowed_ = false;
-        this.hideCriterion_();
-    };
-
-    /**
-     * Shows tooltip
-     * @private
-     */
-    ScoreMinimized.prototype.showTooltip_ = function() {
-        goog.dom.classes.remove(
-            this.tooltip_,
-            ScoreMinimized.CssClass.HIDDEN
-        );
-        this.showCriterion_();
-        this.tooltipShowed_ = true;
+    ScoreMinimized.prototype.setHiddenMarksVisibility_ = function(visibility) {
+        visibility ?
+            goog.dom.classes.remove(
+                this.elements_.hiddenMarks,
+                Utils.CssClass.HIDDEN
+            ) :
+            goog.dom.classes.add(
+                this.elements_.hiddenMarks,
+                Utils.CssClass.HIDDEN
+            );
+        this.isHiddenMarksShowed_ = visibility;
     };
 });

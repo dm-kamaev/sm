@@ -1,17 +1,20 @@
 {namespace sm.bScore.TemplateMinimized}
+
+/**
+ * Minimized score parameters
+ * @typedef {Object} sm.bScore.TemplateMinimized.Params
+ * @property {Object} data
+ * @property {Array.<{name: string, value: number}>} data.hiddenMarks
+ * @property {string} data.hiddenMarksTitle
+ * @property {{name: string, value: number}} data.visibleMark
+ * @property {Object} config
+ * @property {boolean} config.isActive
+ * @property {boolean} config.isNameVisible
+ */
+
 /**
  * Score in school list view
- * @param params {
- *     score: list<[
- *         name: ?string,
- *         value: ?number
- *     ]>,
- *     sortCriterion: [
- *         name: ?string,
- *         value: ?number
- *     ],
- *     isClickable: ?boolean
- * }
+ * @param params {sm.bScore.TemplateMinimized.Params}
  * @extends sm.bScore.Template
  * @constructor
  */
@@ -21,85 +24,150 @@
 
 /**
  * Block init
- * @param params {
- *     score: list<[
- *         name: ?string,
- *         value: ?number
- *     ]>,
- *     sortCriterion: [
- *         name: ?string,
- *         value: ?number
- *     ],
- *     isClickable: ?boolean
- * }
+ * @param params {sm.bScore.TemplateMinimized.Params}
  */
 {template .init autoescape="strict" kind="html"}
-    <div class="b-score
-                b-score_school-list
-                {$params?.isClickable ?
-                ' b-score_active' :
-                ''}">
+    <div class="{call .rootClass_ /}
+                {sp}{call .rootClass_ /}_minimized
+                {if $params?.config?.isActive}
+                    {sp}{call .rootClass_ /}_active
+                {/if}
+                ">
 
-        <div class="b-score__current-criterion-name
-            i-utils__hidden">
-            {$params?.sortCriterion?.name}
-        </div>
+        {call .visibleMark_ data="all" /}
+        {call .hiddenMarks_ data="all" /}
+    </div>
+{/template}
 
-        <div class="b-score__current-criterion-value">
-            {call sm.bMark.Template.base}
-                {param params: [
-                    'value': $params?.sortCriterion?.value,
-                    'display': 'inline',
-                    'config': [
-                        'size': 'l',
-                        'zeroSign': 'nothing'
-                    ]
-                ]/}
-            {/call}
-        </div>
+/**
+ * @param params {{
+ *     data: {
+ *         visibleMark: {
+ *             name: ?string,
+ *             value: ?number
+ *         }
+ *     },
+ *     config: {
+ *         isNameVisible: ?boolean,
+ *         isActive: ?boolean
+ *     }
+ * }}
+ */
+{template .visibleMark_ kind="html"}
+    <div class="{call .rootClass_ /}__visible_mark">
+        {call .mark_}
+            {param params: [
+                'data': $params?.data?.visibleMark,
+                'config': [
+                    'theme': 'large',
+                    'isNameVisible': $params?.config?.isNameVisible,
+                    'type': 'visible',
+                    'isActive': $params?.config?.isActive
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
 
-        <div class="b-score__other-marks
-            i-utils__hidden">
-            <div class="b-score__arrow">
-                <div class="b-score__arrow-shadow"></div>
+/**
+ * Hidden list content template
+ * @param params {{
+ *     data: {
+ *         hiddenMarks: Array.<{
+ *             name: ?string,
+ *             value: ?number
+ *         }>,
+ *         hiddenMarksTitle: string
+ *     }
+ * }}
+ */
+{template .hiddenMarks_ autoescape="strict" kind="html"}
+    {if length($params?.data?.hiddenMarks) > 0}
+        <div class="{call .rootClass_ /}__hidden-marks
+                    i-utils__hidden">
+            <div class="{call .rootClass_ /}__arrow">
+                <div class="{call .rootClass_ /}__arrow-shadow"></div>
             </div>
-            {if length($params.score) > 0}
-                {call .scoreItems}
-                    {param params: [
-                        'data': $params.score
-                    ]/}
-                {/call}
+
+            <ul>
+                <li class="{call .rootClass_ /}__hidden-mark-item">
+                    {$params.data.hiddenMarksTitle}
+                </li>
+                {foreach $mark in $params.data.hiddenMarks}
+                    <li class="{call .rootClass_ /}__hidden-mark-item">
+                        {call .mark_}
+                            {param params: [
+                                'data': $mark,
+                                'config': [
+                                    'isNameVisible': true,
+                                    'theme': 'small'
+                                ]
+                            ]/}
+                        {/call}
+                    </li>
+                {/foreach}
+            </ul>
+        </div>
+    {/if}
+{/template}
+
+/**
+ * Score mark template
+ * @param params {{
+ *     data: {
+ *         name: ?string,
+ *         value: ?number
+ *     },
+ *     config: {
+ *         theme: ?string,
+ *         isNameVisible: ?boolean,
+ *         type: ?string,
+ *         isActive: ?boolean
+ *     }
+ * }}
+ */
+{template .mark_ kind="html"}
+    <div class="{call .rootClass_ /}__mark
+        {if $params?.config?.type}
+            {sp}{call .rootClass_ /}__mark_type_{$params.config.type}
+        {/if}">
+
+        <div class="{call .rootClass_ /}__mark-name
+            {if not $params?.config?.isNameVisible}
+                {sp}i-utils__hidden
             {/if}
+            {if $params?.config?.isActive}
+                {sp}{call .rootClass_ /}__mark-name_active
+            {/if}
+            ">
+            {$params?.data?.name}
+        </div>
+
+        {let $markParams: [
+            'value': $params?.data?.value,
+            'display': 'inline',
+            'config': [
+                'size': $params?.config?.theme == 'large' ? 'l' :
+                    $params?.config?.theme == 'small' ? 's'  :
+                     '',
+                'zeroSign': $params?.config?.theme == 'large' ? 'nothing' : ''
+            ]
+        ] /}
+
+        <div class="{call .rootClass_ /}__mark-value
+            {if $params?.config?.isActive}
+                {sp}{call .rootClass_ /}__mark-value_active
+            {/if}">
+            {call sm.bMark.Template.base}
+                {param params: $markParams /}
+            {/call}
         </div>
     </div>
 {/template}
 
 /**
- * Score items template
- * @param params {
- *     data: list<[
- *         name: ?string,
- *         value: ?number
- *     ]>
- * }
+ * Root class template
  */
-{template .scoreItems autoescape="strict" kind="html"}
-    <ul>
-        <li class="b-score__mark-item">Оценки, поставленные пользователями</li>
-        {foreach $item in $params.data}
-            <li class="b-score__mark-item">
-                <div class="b-score__mark-name">
-                    {$item.name}
-                </div>
-                <div class="b-score__mark-value">
-                    {call sm.bMark.Template.base}
-                        {param params: [
-                            'value': $item.value,
-                            'display': 'number'
-                        ]/}
-                    {/call}
-                </div>
-            </li>
-        {/foreach}
-    </ul>
+{template .rootClass_}
+    b-score
 {/template}

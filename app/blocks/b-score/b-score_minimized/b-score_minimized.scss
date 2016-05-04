@@ -1,4 +1,4 @@
-@import "../i-media/i-media";
+@import "../../i-media/i-media";
 
 .b-score_minimized {
     position: relative;
@@ -8,29 +8,36 @@
     line-height: 20px;
 }
 
-.b-score__current-criterion-name {
+.b-score__mark-value {
     display: inline-block;
 
-    margin-right: 22px;
-
-    color: #000;
+    &.b-score__mark-value_active {
+        width: 54px;
+        margin: 0;
+    }
 }
 
-.b-score__current-criterion-value {
+.b-score__mark-name {
     display: inline-block;
 
-    width: 54px;
-    margin: 0;
+    width: 120px;
+
+    &.b-score__mark-name_active {
+        width: auto;
+        margin-right: 22px;
+
+        color: #000;
+    }
 }
 
-.b-score__other-marks {
+.b-score__hidden-marks {
     position: absolute;
     z-index: 10;
     right: -14px;
 
-    width: 150px;
+    width: 170px;
     margin-top: 15px;
-    padding: 23px 30px 14px 30px;
+    padding: 24px 30px 20px;
 
     color: #808080;
     background: #fff;
@@ -40,12 +47,12 @@
 .b-score__arrow {
     position: absolute;
     top: -9px;
-    left: 140px;
-
-    height: 9px;
-    width: 16px;
+    left: 160px;
 
     overflow: hidden;
+
+    width: 16px;
+    height: 9px;
 }
 
 .b-score__arrow-shadow {
@@ -53,61 +60,45 @@
     top: 5px;
     left: 4px;
 
-    height: 8px;
     width: 8px;
+    height: 8px;
+
+    transform: rotate(45deg);
 
     background: white;
     box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);
-
-    -webkit-transform: rotate(45deg);
-    -ms-transform: rotate(45deg);
-    transform: rotate(45deg);
 }
 
-.b-score__mark-item {
-    margin-bottom: 9px;
+.b-score__hidden-mark-item {
+    margin-bottom: 6px;
+    padding-top: 1px;
     padding-bottom: 8px;
 
     border-bottom: 1px solid #e5e5e5;
 
+    &:first-child {
+        margin-bottom: 8px;
+        padding-top: 0;
+    }
+
     &:last-child {
         margin-bottom: 0;
+        padding-bottom: 0;
 
         border-bottom: none;
     }
 }
-.b-score__mark-name {
-    display: inline-block;
-    width: 122px;
-}
-.b-score__mark-value {
-    display: inline-block;
-}
 
 .b-score_active {
-	.b-score__current-criterion-value {
+	.b-score__visible_mark {
 		cursor: pointer;
 	}
 }
 
-@include media-xl {
-    .b-score__current-criterion-name {
-        display: none;
-    }
-}
-
-@include media-l {
-    .b-score__current-criterion-name {
-        display: inline-block;
-    }
-}
-
 @include media-m {
-
-}
-
-@include media-s {
-    .b-score__current-criterion-name {
-        display: none;
+    .b-score__mark-name {
+        &.b-score__mark-name_active {
+            display: none;
+        }
     }
 }
