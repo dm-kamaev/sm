@@ -59,7 +59,7 @@
         http://mel.fm/2016/04/13/schools/
     {/let}
 
-    <div class="{call .rootClass/}__first-article">
+    <div class="{call .rootClass/}__article {call .rootClass/}__article_first">
         {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
                 'factory': 'stendhal',
@@ -96,7 +96,7 @@
         http://mel.fm/2015/12/08/change_school/
     {/let}
 
-    <div class="{call .rootClass/}__second-article">
+    <div class="{call .rootClass/}__article {call .rootClass/}__article_second">
         {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
                 'factory': 'stendhal',

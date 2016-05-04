@@ -57,11 +57,16 @@
     line-height: 18px;
 }
 
-@media screen and (max-device-width: 600px) // for phone
-and (orientation: portrait),
-screen and (max-width: 600px) // for desktop
-{
-    .b-article-link__image {
-        width: 100%;
+@include media-l {
+    .b-article-link__image-container {
+        box-sizing: border-box;
+
+        padding-right: 65px;
+    }
+}
+
+@include media-xs {
+    .b-article-link__image-container {
+        padding: 0;
     }
 }

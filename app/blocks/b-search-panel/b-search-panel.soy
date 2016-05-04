@@ -117,8 +117,14 @@
  */
 {template .button_ autoescape="strict" kind="html"}
     <div class="{call .rootClass/}__button">
-        <span class="{call .rootClass/}__button-text">
+        <span class="{call .rootClass/}__button-text{sp}
+                     {call .rootClass/}__button-text_xl">
             Найти школу
+        </span>
+
+        <span class="{call .rootClass/}__button-text{sp}
+                     {call .rootClass/}__button-text_l">
+            Найти
         </span>
     </div>
 {/template}
