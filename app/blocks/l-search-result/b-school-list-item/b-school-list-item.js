@@ -5,7 +5,7 @@ goog.require('goog.events');
 goog.require('goog.ui.Component');
 goog.require('sm.bBadge.Badge');
 goog.require('sm.bRating.Rating');
-goog.require('sm.bScoreSchoolList.ScoreSchoolList');
+goog.require('sm.bScore.ScoreMinimized');
 
 /**
  * School list item component
@@ -56,7 +56,7 @@ sm.lSearchResult.bSchoolListItem.SchoolListItem = function(opt_params) {
     /**
      * scoreInstance
      * @private
-     * @type {sm.bScoreSchoolList.ScoreSchoolList}
+     * @type {sm.bScore.ScoreMinimized}
      */
     this.scoreInstance_ = null;
 
@@ -79,7 +79,7 @@ goog.inherits(sm.lSearchResult.bSchoolListItem.SchoolListItem,
 
 goog.scope(function() {
     var ListItem = sm.lSearchResult.bSchoolListItem.SchoolListItem,
-        Score = sm.bScoreSchoolList.ScoreSchoolList,
+        ScoreMinimized = sm.bScore.ScoreMinimized,
         Badge = sm.bBadge.Badge,
         Analytics = sm.iAnalytics.Analytics.getInstance();
 
@@ -189,14 +189,6 @@ goog.scope(function() {
     };
 
     /**
-     * Change criterion of sort
-     * @param {Number} newCriterion
-     */
-    ListItem.prototype.changeSorCriterion = function(newCriterion) {
-        this.scoreInstance_.changeCriterion(newCriterion);
-    };
-
-    /**
     * @return {Object}
     */
     ListItem.prototype.getImpressionData = function() {
@@ -232,13 +224,8 @@ goog.scope(function() {
         goog.base(this, 'decorateInternal', element);
 
         var scoreElement;
-
-        scoreElement = this.getElementByClass(Score.CssClass.ROOT);
-        this.scoreInstance_ = new Score({
-            'score': this.score_,
-            'currentCriterion': this.currentCriterion_,
-            'isClickable': this.isScoreClickable_
-        });
+        scoreElement = this.getElementByClass(ScoreMinimized.CssClass.ROOT);
+        this.scoreInstance_ = new ScoreMinimized();
         this.addChild(this.scoreInstance_);
         this.scoreInstance_.decorate(scoreElement);
 

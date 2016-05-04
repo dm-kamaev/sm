@@ -1,4 +1,4 @@
-goog.provide('sm.bScoreSchoolList.ScoreSchoolList');
+goog.provide('sm.bScore.ScoreMinimized');
 
 goog.require('goog.dom');
 goog.require('goog.dom.classes');
@@ -7,10 +7,7 @@ goog.require('goog.events');
 goog.require('goog.labs.userAgent.device');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
-goog.require('sm.bMark.bMark');
 goog.require('sm.bScore.Score');
-goog.require('sm.bScoreSchoolList.Template');
-
 
 /**
  * Score component in school list view
@@ -18,7 +15,7 @@ goog.require('sm.bScoreSchoolList.Template');
  * @constructor
  * @extends {sm.bScore.Score}
  */
-sm.bScoreSchoolList.ScoreSchoolList = function(opt_params) {
+sm.bScore.ScoreMinimized = function(opt_params) {
     goog.base(this);
     /**
      * Parameters
@@ -29,13 +26,13 @@ sm.bScoreSchoolList.ScoreSchoolList = function(opt_params) {
 
     /**
      * @private
-     * @type {array.<Number>}
+     * @type {Array.<Number>}
      */
     this.score_ = this.params_.score ? this.params_.score : [];
 
     /**
      * @private
-     * @type {Number}
+     * @type {number}
      */
     this.currentCriterion_ = this.params_.currentCriterion.value ?
         this.params_.currentCriterion.value :
@@ -50,30 +47,23 @@ sm.bScoreSchoolList.ScoreSchoolList = function(opt_params) {
     /**
      * Tooltip dom element
      * @private
-     * @type {Node}
+     * @type {Element}
      */
     this.tooltip_ = null;
 
     /**
      * Dom element with name of current criteria of sort
      * @private
-     * @type {Node}
+     * @type {Element}
      */
     this.criterionNameElement_ = null;
 
     /**
      * Dom element with mark of current criteria of sort
      * @private
-     * @type {Node}
+     * @type {Element}
      */
     this.criterionValueElement_ = null;
-
-    /**
-     * Dom element with names of criterias in tooltip
-     * @private
-     * @type {Node}
-     */
-    this.tooltipNameElements_ = [];
 
     /**
      * Indicates is tooltip showed or not
@@ -81,25 +71,17 @@ sm.bScoreSchoolList.ScoreSchoolList = function(opt_params) {
      * @type {boolean}
      */
     this.tooltipShowed_ = false;
-
-    /**
-     * B-mark Instances
-     * @private
-     * @type {sm.bMark.bMark}
-     */
-    this.markInstances_ = [];
 };
-goog.inherits(sm.bScoreSchoolList.ScoreSchoolList, sm.bScore.Score);
+goog.inherits(sm.bScore.ScoreMinimized, sm.bScore.Score);
 
 goog.scope(function() {
-    var Score = sm.bScoreSchoolList.ScoreSchoolList,
-        Mark = sm.bMark.bMark;
+    var ScoreMinimized = sm.bScore.ScoreMinimized;
 
     /**
      * Css class enum
      * @enum {String}
      */
-    Score.CssClass = {
+    ScoreMinimized.CssClass = {
         ROOT: 'b-score',
         TOOLTIP: 'b-score__other-marks',
         TOOLTIP_NAME: 'b-score__mark-name',
@@ -113,7 +95,7 @@ goog.scope(function() {
      * Event enum
      * @enum {String}
      */
-    Score.Event = {
+    ScoreMinimized.Event = {
         CLICK: 'b-score-click'
     };
 
@@ -122,26 +104,21 @@ goog.scope(function() {
      * @param {Node} element
      * @public
      */
-    Score.prototype.decorateInternal = function(element) {
+    ScoreMinimized.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
         this.tooltip_ = goog.dom.getElementByClass(
-            Score.CssClass.TOOLTIP,
+            ScoreMinimized.CssClass.TOOLTIP,
             element
         );
 
         this.criterionNameElement_ = goog.dom.getElementByClass(
-            Score.CssClass.CURRENT_CRITERION_NAME,
+            ScoreMinimized.CssClass.CURRENT_CRITERION_NAME,
             element
         );
 
         this.criterionValueElement_ = goog.dom.getElementByClass(
-            Score.CssClass.CURRENT_CRITERION_VALUE,
-            element
-        );
-
-        this.tooltipNameElements_ = goog.dom.getElementsByClass(
-            Score.CssClass.TOOLTIP_NAME,
+            ScoreMinimized.CssClass.CURRENT_CRITERION_VALUE,
             element
         );
     };
@@ -149,7 +126,7 @@ goog.scope(function() {
     /**
      * Sets up the component
      */
-    Score.prototype.enterDocument = function() {
+    ScoreMinimized.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
 
         if (this.isClickable_) {
@@ -187,11 +164,11 @@ goog.scope(function() {
      * shows current criterion
      * @private
      */
-    Score.prototype.showCriterion_ = function() {
+    ScoreMinimized.prototype.showCriterion_ = function() {
         if (!this.tooltipShowed_) {
             goog.dom.classes.remove(
                 this.criterionNameElement_,
-                Score.CssClass.HIDDEN
+                ScoreMinimized.CssClass.HIDDEN
             );
         }
     };
@@ -200,11 +177,11 @@ goog.scope(function() {
      * shows current criteria
      * @private
      */
-    Score.prototype.hideCriterion_ = function() {
+    ScoreMinimized.prototype.hideCriterion_ = function() {
         if (!this.tooltipShowed_) {
             goog.dom.classes.add(
                 this.criterionNameElement_,
-                Score.CssClass.HIDDEN
+                ScoreMinimized.CssClass.HIDDEN
             );
         }
     };
@@ -214,11 +191,11 @@ goog.scope(function() {
      * @param {Object} event
      * @private
      */
-    Score.prototype.criterionClickHandler_ = function(event) {
+    ScoreMinimized.prototype.criterionClickHandler_ = function(event) {
         event.preventDefault();
 
         this.dispatchEvent({
-            'type': Score.Event.CLICK
+            'type': ScoreMinimized.Event.CLICK
         });
 
         if (this.tooltipShowed_) {
@@ -234,7 +211,7 @@ goog.scope(function() {
      * @param {Object} event
      * @private
      */
-    Score.prototype.documentClickHandler_ = function(event) {
+    ScoreMinimized.prototype.documentClickHandler_ = function(event) {
         var domHelper = this.getDomHelper(),
 
         /*check if click target in tooltip dom element*/
@@ -258,10 +235,10 @@ goog.scope(function() {
      * Hide tooltip
      * @private
      */
-    Score.prototype.hideTooltip_ = function() {
+    ScoreMinimized.prototype.hideTooltip_ = function() {
         goog.dom.classes.add(
             this.tooltip_,
-            Score.CssClass.HIDDEN
+            ScoreMinimized.CssClass.HIDDEN
         );
         this.tooltipShowed_ = false;
         this.hideCriterion_();
@@ -271,10 +248,10 @@ goog.scope(function() {
      * Shows tooltip
      * @private
      */
-    Score.prototype.showTooltip_ = function() {
+    ScoreMinimized.prototype.showTooltip_ = function() {
         goog.dom.classes.remove(
             this.tooltip_,
-            Score.CssClass.HIDDEN
+            ScoreMinimized.CssClass.HIDDEN
         );
         this.showCriterion_();
         this.tooltipShowed_ = true;

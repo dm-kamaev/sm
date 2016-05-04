@@ -1,4 +1,4 @@
-{namespace sm.bScoreSchoolList.Template}
+{namespace sm.bScore.TemplateMinimized}
 /**
  * Score in school list view
  * @param params {
@@ -64,7 +64,7 @@
                 <div class="b-score__arrow-shadow"></div>
             </div>
             {if length($params.score) > 0}
-                {call sm.bScoreSchoolList.Template.scoreItems}
+                {call .scoreItems}
                     {param params: [
                         'data': $params.score
                     ]/}
