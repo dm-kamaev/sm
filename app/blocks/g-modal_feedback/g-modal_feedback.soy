@@ -39,7 +39,7 @@
           action="{if $params?.config?.url}
                       {$params?.config?.url}
                       ?type=
-                      {$params?.config?.type ?: 'option'}
+                      {$params?.config?.type ?: 'opinion'}
                   {/if}">
 
         {call .csrf_ data="all" /}
