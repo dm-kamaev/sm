@@ -91,8 +91,6 @@
 .b-header__search-link {
     display: inline-block;
 
-    padding: 0 10px;
-
     vertical-align: middle;
 
     &:hover {
@@ -213,6 +211,10 @@
 
     .b-header__wrap {
         margin-top: 12px;
+    }
+
+    .b-header__search-link {
+        padding: 0 10px;
     }
 
     /* header animation polyfill */
