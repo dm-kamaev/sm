@@ -43,35 +43,48 @@ scoreView.sectionsNotEmpty = function(score) {
 };
 
 /**
- * Return score object depends of sort criterion
+ * Return score object depends of visible mark
  * @param {Array.<number>} score
  * @param {number} totalScore
- * @param {number} opt_criterion - criterion of sort
+ * @param {number} opt_visibleMarkIndex - code of mark to make visible
+ * 0 means total Score, 1 - 4 means corresponding mark in order
  * @return {{
- *     currentCriterion: Object.<string, number|string>,
- *     score: Array.<Object.<string, number|string>>
+ *     data: {
+ *         visibleMark: Object.<string, number|string>,
+ *         hiddenMarks: Array.<Object.<string, number|string>>
+ *     },
+ *     config: {
+ *         isActive: boolean
+ *     }
  * }}
  */
-scoreView.sort = function(score, totalScore, opt_criterion) {
+scoreView.minimized = function(score, totalScore, opt_visibleMarkIndex) {
     var scoreItems = this.sections(score),
-        sortCriterionIndex = opt_criterion ? opt_criterion : 0;
+        visibleMarkIndex = opt_visibleMarkIndex ? opt_visibleMarkIndex : 0;
 
     scoreItems.unshift({
         name: 'Средняя оценка',
         value: totalScore
     });
 
-    var scoreCriterion = scoreItems[sortCriterionIndex];
+    var visbleMark = scoreItems[visibleMarkIndex];
+    var hiddenMarks = scoreItems.filter(item => {
+        return item.name != visbleMark.name
+    });
+
     return {
-        currentCriterion: scoreCriterion,
-        score: scoreItems.filter(item => {
-            return item.name != scoreCriterion.name
-        })
+        data: {
+            visibleMark: visbleMark,
+            hiddenMarks: hiddenMarks
+        },
+        config: {
+            isActive: scoreView.notEmpty(hiddenMarks, visbleMark)
+        }
     };
 };
 
 /**
- * Check if all scores of item is 0, and if provided check sort criterion too
+ * Check if all scores of item is 0, and if provided check minimized criterion too
  * @param {Array.<{
  *     name: string,
  *     value: number
@@ -82,7 +95,7 @@ scoreView.sort = function(score, totalScore, opt_criterion) {
  * }} opt_sortCriterion
  * @return {boolean}
  */
-scoreView.notEmpty =function(score, opt_sortCriterion) {
+scoreView.notEmpty = function(score, opt_sortCriterion) {
     var sortCriterion = opt_sortCriterion || {};
     return sortCriterion.value || score.some(item => item.value);
 };

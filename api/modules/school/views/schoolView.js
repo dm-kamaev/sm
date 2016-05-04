@@ -336,7 +336,7 @@ schoolView.list = function(schools, opt_criterion, opt_page) {
         res.schools = schools
             .map((school, i) => {
 
-                var sortScore = scoreView.sort(
+                var score = scoreView.minimized(
                     school.score,
                     school.totalScore,
                     opt_criterion
@@ -349,16 +349,11 @@ schoolView.list = function(schools, opt_criterion, opt_page) {
                     type: school.schoolType,
                     description: school.description,
                     abbreviation: school.abbreviation,
-                    score: sortScore.score,
-                    currentCriterion: sortScore.currentCriterion,
+                    score: score,
                     fullName: school.fullName,
                     ratings: ratingView.ratingResultView(school.rankDogm),
                     metroStations: addressView.getMetro(school.addresses),
                     area: addressView.getAreas(school.addresses),
-                    isScoreClickable: scoreView.notEmpty(
-                        sortScore.score,
-                        sortScore.currentCriterion
-                    ),
                     addresses:
                         services.department.addressesFilter(school.addresses),
                     totalScore: school.totalScore,
