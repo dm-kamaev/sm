@@ -3,11 +3,13 @@
 .b-mark {
     display: inline-block;
 
+    text-align: center;
+
+    color: #000000;
+
     font-family: 'Proxima', Arial, sans-serif;
     font-size: 22px;
-    text-align: center;
     font-weight: 600;
-    color: #000000;
 }
 
 .b-mark__circle {
@@ -26,11 +28,11 @@
 
 .b-mark__mark {
     position: absolute;
+    z-index: 0;
     top: 0;
+    right: 0;
     bottom: 0;
     left: 0;
-    right: 0;
-    z-index: 0;
 
     width: auto;
     height: 22px;
@@ -72,6 +74,8 @@
         width: 3px;
         height: 3px;
         margin-right: 11px;
+
+        vertical-align: middle;
 
         background-color: #c6c6c1;
     }
@@ -117,12 +121,36 @@
 
 .b-mark_inline.b-mark_size_s {
     .b-mark__mark {
+        letter-spacing: normal;
+
+        color: #808080;
+
+        font-family: 'Arial', sans-serif;
+        font-weight: normal;
+        line-height: 20px;
+    }
+
+    .b-mark__circle {
+        box-sizing: border-box;
+        width: 8px;
+        height: 8px;
+        margin-right: 12px;
+
+        border-width: 4px;
+    }
+}
+
+.b-mark_inline.b-mark_size_xs {
+    .b-mark__mark {
         display: none;
     }
 
     .b-mark__circle {
-        height: 1px;
-        width: 1px;
+        box-sizing: border-box;
+        width: 8px;
+        height: 8px;
+
+        border-width: 4px;
     }
 }
 
@@ -130,12 +158,13 @@
     .b-mark__mark {
         position: static;
 
+        letter-spacing: normal;
+
+        color: #808080;
 
         font-family: Arial, sans-serif;
         font-size: 13px;
         font-weight: normal;
-        letter-spacing: normal;
-        color: #808080;
         line-height: 20px;
     }
 }
@@ -148,9 +177,9 @@
 
 .b-mark_question {
 	.b-mark__mark {
-		font-size: 28px;
-
 		color: #c6c6c1;
+
+		font-size: 28px;
 	}
 }
 
