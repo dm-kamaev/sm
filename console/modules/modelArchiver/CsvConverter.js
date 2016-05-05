@@ -2,8 +2,9 @@
 const csv2json = require('csvtojson').Converter;
 const json2csv = require('json2csv');
 const await = require('asyncawait/await');
-var replace = require('tipograph').Replace;
+const replace = require('tipograph').Replace;
 const languages = require('tipograph').Languages;
+const lodash = require('lodash');
 
 class CsvConverter {
     /**
@@ -108,23 +109,15 @@ class CsvConverter {
      * used to unflatten arrays
      */
     stabilizeJSON_(unstableJSON) {
-        for (var key in unstableJSON) {
-            var oldValue = unstableJSON[key];
-            try {
-                if (typeof oldValue == 'object') {
-                    var newValue = Object.assign({}, oldValue);
-                    this.stabilizeJSON_(newValue);
-                } else {
-                    var newValue = JSON.parse(oldValue);
-                }
-                unstableJSON[key] = newValue;
-            } catch (e) {
-                unstableJSON[key] = oldValue;
+        lodash.forIn(unstableJSON, (value, key) => {
+            if (value == 'null') {
+                unstableJSON[key] = null;
             }
-        }
+            else if (lodash.isPlainObject(value)) {
+                this.stabilizeJSON_(value);
+            }
+        });
     }
-
-
 
     /**
      * @private
