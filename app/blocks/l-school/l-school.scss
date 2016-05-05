@@ -104,11 +104,9 @@ body {
     margin-right: 8px;
 }
 
-
 .l-school__cleaner {
     clear: both;
 }
-
 
 .l-school__comment-dummy {
     display: inline-block;
@@ -219,40 +217,6 @@ body {
     font-size: 0;
 }
 
-.l-school__comments-title {
-    display: inline-block;
-
-    width: 33.33%;
-    padding-right: 20px;
-
-    vertical-align: top;
-    box-sizing: border-box;
-
-    font-size: 16px;
-}
-
-.l-school__comments-content {
-    display: inline-block;
-
-    width: 66.66%;
-    padding-left: 10px;
-
-    box-sizing: border-box;
-}
-
-.l-school__comments-placeholder {
-    margin: 55px 0;
-
-    text-align: center;
-
-    font: 16px/1.2 'PT Serif', serif;
-}
-
-.l-school__comments-placeholder-link {
-    cursor: pointer;
-
-    color: #ed635a;
-}
 
 .l-school__content-block{
     margin-bottom: 36px;
@@ -434,16 +398,6 @@ body {
         display: none;
     }
 
-    .l-school__comments-title {
-        width: 25%;
-        padding-right: 22.5px;
-    }
-
-    .l-school__comments-content {
-        width: 75%;
-        padding-left: 7.5px;
-    }
-
     .l-school__section_popular-schools {
         padding-right: 90px;
     }
@@ -491,16 +445,6 @@ body {
         display: block;
 
         margin-top: 30px;
-    }
-
-    .l-school__comments-title {
-        margin-bottom: 9px;
-    }
-
-    .l-school__comments-title,
-    .l-school__comments-content {
-        width: 100%;
-        padding: 0;
     }
 
     .l-school__content-header-text {

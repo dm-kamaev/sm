@@ -14,16 +14,97 @@
  * }}
  */
 {template .base kind="html"}
-	<div class="b-comments">
-		{foreach $comment in $params.comments}
-			{call sm.lSchool.bComment.Template.base}
-				{param params: [
-					'author': $comment.author,
-					'rank': $comment.rank,
-					'textParagraphs': $comment.textParagraphs,
-					'sections': $comment.sections
-				] /}
-			{/call}
-		{/foreach}
-	</div>
+    <div class="b-comments">
+        {if $params.comments and length($params.comments) > 0}
+            {call .comments_ data="all" /}
+        {else}
+            {call .placeholder_ /}
+        {/if}
+    </div>
+{/template}
+
+/**
+ * Comments block
+ * @param params {{
+ *     comments: [{
+ *         author: string,
+ *         rank: string,
+ *         textParagraphs: string,
+ *         sections: [{
+ *             name: string,
+ *             value: int
+ *         }]
+ *     }]
+ * }}
+ */
+{template .comments_ autoescape="strict" kind="html"}
+    {call .header_ /}
+
+    <div class="b-comments__comments">
+        {foreach $comment in $params.comments}
+            {call sm.lSchool.bComment.Template.base}
+                {param params: [
+                    'author': $comment.author,
+                    'rank': $comment.rank,
+                    'textParagraphs': $comment.textParagraphs,
+                    'sections': $comment.sections
+                ] /}
+            {/call}
+        {/foreach}
+    </div>
+{/template}
+
+/**
+ * Content header
+ */
+{template .header_ autoescape="strict" kind="html"}
+    <div class="b-comments__header">
+        <div class="b-comments__header-text">
+            Комментарии пользователей
+        </div>
+    </div>
+{/template}
+
+/**
+ * Comments placeholder
+ */
+{template .placeholder_ kind="html" private="true"}
+    <div class="b-comments__placeholder">
+        {call .imgPlaceholder_ /}
+
+        {call .textPlaceholder_ /}
+
+        {call sm.bLink.Template.base}
+            {param params: [
+                'data': [
+                    'name': 'Станьте первым!'
+                ],
+                'config': [
+                    'customClasses': 'b-comments__placeholder-link',
+                    'theme': 'attention',
+                    'font': 'default'
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+/**
+ * Img placeholder
+ */
+{template .imgPlaceholder_ kind="html" private="true"}
+    <div class="b-comments__placeholder-img-container">
+        <div class="b-comments__placeholder-img-hover"></div>
+        <img class="b-comments__placeholder-img"
+             src="/images/l-school/b-comments/comments_placeholder.svg">
+    </div>
+{/template}
+
+/**
+ * Text placeholder
+ */
+{template .textPlaceholder_ kind="html" private="true"}
+    <div class="b-comments__placeholder-text">
+        Никто пока не&nbsp;оставил отзыв об&nbsp;этой&nbsp;школе.{sp}
+    </div>
 {/template}
