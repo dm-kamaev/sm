@@ -819,7 +819,6 @@
     {/if}
 {/template}
 
-
 /**
  * Popular schools section
  * @param? params {{
@@ -865,52 +864,20 @@
  *                 value: int
  *             }]
  *         }]
- *     }
+ *     },
+ *     isCommented: bool
  * }}
  * @private
  */
 {template .comments_ autoescape="strict" kind="html"}
-    {let $comments: $params.data.comments /}
+    <div class="l-school__section l-school__section_comments">
+        {call sm.lSchool.bComments.Template.base}
+            {param params: [
+                'comments': $params.data.comments,
+                'isCommented': $params.data.isCommented
+            ] /}
+        {/call}
 
-    <div id="comments" class="l-school__section l-school__section_comments">
-        {if $comments and length($comments) > 0}
-            <div class="l-school__comments-title">
-                {call .contentTitle_}
-                    {param params: [
-                        'text': 'Комментарии пользователей'
-                    ] /}
-                {/call}
-            </div>
-            <div class="l-school__comments-content">
-                {call sm.lSchool.bComments.Template.base}
-                    {param params: [
-                        'comments': $comments
-                    ] /}
-                {/call}
-            </div>
-        {else}
-            <div class="l-school__horisontal-line"></div>
-            <div class="l-school__comments-placeholder">
-                Никто пока не оставил отзыв об этой школе.{sp}
-                <span class="l-school__comments-placeholder-link">
-                    Станьте первым!
-                </span>
-            </div>
-        {/if}
         <div class="l-school__horisontal-line"></div>
-    </div>
-{/template}
-
-
-/**
- * Content title
- * @param params {{
- *     text: string
- * }}
- * @private
- */
-{template .contentTitle_ autoescape="strict" kind="html"}
-    <div class="l-school__content-header">
-        <div class="l-school__content-header-text">{$params.text}</div>
     </div>
 {/template}

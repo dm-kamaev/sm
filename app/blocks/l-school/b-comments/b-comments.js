@@ -23,6 +23,13 @@ sm.lSchool.bComments.Comments = function(opt_params) {
     this.params_ = opt_params || {};
 
     /**
+     * Elements
+     * @type {Object}
+     * @private
+     */
+    this.elements_ = {};
+
+    /**
      * @private
      * @type {Array.<Element>}
      */
@@ -40,8 +47,17 @@ goog.scope(function() {
      */
     Comments.CssClass = {
         ROOT: 'b-comments',
-        LINE: 'b-comments__line',
+        PLACEHOLDER_LINK: 'b-comments__placeholder-link',
+        PLACEHOLDER_IMG: 'b-comments__placeholder-img-container',
         COMMENT: 'b-comment'
+    };
+
+    /**
+     * Event enum
+     * @enum {String}
+     */
+    Comments.Event = {
+       LEAVE_COMMENT: 'placeholder-click'
     };
 
     /**
@@ -52,6 +68,7 @@ goog.scope(function() {
         var el = goog.soy.renderAsElement(sm.lSchool.bComments.Template.base, {
             params: this.params_
         });
+
         this.decorateInternal(el);
     };
 
@@ -62,6 +79,59 @@ goog.scope(function() {
     Comments.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
+        this.initCommentsArray_();
+
+        this.initDom_();
+    };
+
+     /**
+     * @override
+     */
+    Comments.prototype.enterDocument = function() {
+        goog.base(this, 'enterDocument');
+
+        if (this.elements_.placeholderLink) {
+            this.getHandler().listen(
+                this.elements_.placeholderLink,
+                goog.events.EventType.CLICK,
+                this.onPlaceholderLinkClick_
+            );
+        }
+
+        if (this.elements_.placeholderImg) {
+            this.getHandler().listen(
+                this.elements_.placeholderImg,
+                goog.events.EventType.CLICK,
+                this.onPlaceholderImgClick_
+            );
+        }
+    };
+
+    /**
+     * on Placeholder Link Click event
+     * @private
+     */
+    Comments.prototype.onPlaceholderLinkClick_ = function() {
+        this.dispatchEvent({
+            'type': Comments.Event.LEAVE_COMMENT
+        });
+    };
+
+    /**
+     * on Placeholder Img Click event
+     * @private
+     */
+    Comments.prototype.onPlaceholderImgClick_ = function() {
+        this.dispatchEvent({
+            'type': Comments.Event.LEAVE_COMMENT
+        });
+    };
+
+    /**
+     * Comments array initialization
+     * @private
+     */
+    Comments.prototype.initCommentsArray_ = function() {
         var comments = goog.dom.getElementsByClass(
             Comments.CssClass.COMMENT, this.getElement()
         );
@@ -82,6 +152,21 @@ goog.scope(function() {
                 commentInstance.decorate(comment);
             }
         }
+    };
+
+     /**
+     * DOM elements
+     * @private
+     */
+    Comments.prototype.initDom_ = function() {
+        this.elements_ = {
+            placeholderLink: this.getElementByClass(
+                Comments.CssClass.PLACEHOLDER_LINK
+            ),
+            placeholderImg: this.getElementByClass(
+                Comments.CssClass.PLACEHOLDER_IMG
+            )
+        };
     };
 
     /**

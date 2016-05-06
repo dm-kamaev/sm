@@ -89,6 +89,13 @@ sm.lSchool.School = function(opt_params) {
      * @private
      */
     this.map_ = null;
+
+    /**
+     * Comments instance
+     * @type {sm.lSchool.bComments.Comments}
+     * @private
+     */
+    this.comments_ = null;
 };
 goog.inherits(sm.lSchool.School, goog.ui.Component);
 
@@ -116,8 +123,6 @@ goog.scope(function() {
         'ROOT': 'l-school',
         'FEEDBACK_BUTTON': 'g-button_feedback-opener',
         'RATING': 'b-rating',
-        'COMMENTS': 'b-comments',
-        'FEEDBACK_LINK': 'l-school__comments-placeholder-link',
         'INACCURACY_LINK': 'l-school__link_inaccuracy'
     };
 
@@ -171,25 +176,23 @@ goog.scope(function() {
             handler.listen(
                 this.bouton_,
                 cl.gButton.Button.Event.CLICK,
-                this.onClick_
+                this.onLeaveComment_
             );
 
             handler.listen(
                 this.score_,
                 Score.Event.PLACE_COMMENT_CLICK,
-                this.onClick_
+                this.onLeaveComment_
+            );
+
+            handler.listen(
+                this.comments_,
+                Comments.Event.LEAVE_COMMENT,
+                this.onLeaveComment_
             );
         }
 
         /** feedback link listener */
-        if (this.elements_.feedbackLink) {
-            handler.listen(
-                this.elements_.feedbackLink,
-                goog.events.EventType.CLICK,
-                this.onClick_
-            );
-        }
-
         handler.listen(
             this.elements_.inaccuracyLink,
             goog.events.EventType.CLICK,
@@ -231,10 +234,10 @@ goog.scope(function() {
     };
 
     /**
-     * onClick event
+     * onLeaveComment event
      * @private
      */
-    School.prototype.onClick_ = function() {
+    School.prototype.onLeaveComment_ = function() {
         this.showCommentModal_();
     };
 
@@ -298,10 +301,10 @@ goog.scope(function() {
             .initModalInaccuracy_()
             .initMap_()
             .initBouton_()
+            .initComments_()
             .initComponents_(DataBlockFoldList)
             .initComponents_(DBlockRatings)
             .initComponents_(Search)
-            .initComponents_(Comments)
             .initComponents_(Results);
     };
 
@@ -363,6 +366,19 @@ goog.scope(function() {
     School.prototype.initScore_ = function() {
         this.score_ = this.initComponent_(
             Score, this.getElementByClass(Score.CssClass.ROOT)
+        );
+
+        return this;
+    };
+
+    /**
+     * Comments initialization
+     * @return {sm.lSchool.School}
+     * @private
+     */
+    School.prototype.initComments_ = function() {
+        this.comments_ = this.initComponent_(
+            Comments, this.getElementByClass(Comments.CssClass.ROOT)
         );
 
         return this;
@@ -442,9 +458,6 @@ goog.scope(function() {
             root: root,
             bouton: this.getElementByClass(
                 sm.lSchool.School.CssClass.FEEDBACK_BUTTON
-            ),
-            feedbackLink: this.getElementByClass(
-                sm.lSchool.School.CssClass.FEEDBACK_LINK
             ),
             rating: this.getElementByClass(
                 sm.lSchool.School.CssClass.RATING
