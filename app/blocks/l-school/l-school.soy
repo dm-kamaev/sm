@@ -864,7 +864,8 @@
  *                 value: int
  *             }]
  *         }]
- *     }
+ *     },
+ *     isCommented: bool
  * }}
  * @private
  */
@@ -872,7 +873,8 @@
     <div class="l-school__section l-school__section_comments">
         {call sm.lSchool.bComments.Template.base}
             {param params: [
-                'comments': $params.data.comments
+                'comments': $params.data.comments,
+                'isCommented': $params.data.isCommented
             ] /}
         {/call}
 

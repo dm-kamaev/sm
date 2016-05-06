@@ -52,9 +52,9 @@
 
 .b-comments__placeholder {
     display: inline-block;
+
     margin: 0 auto 55px;
 
-    cursor: pointer;
     text-align: center;
 
     font-family: 'PT Serif', serif;
@@ -64,20 +64,13 @@
 
 .b-comments__placeholder-img-container {
     position: relative;
-}
 
-.b-comments__placeholder-img {
-    display: block;
-
+    width: 120px;
+    height: 120px;
     margin: 0 auto 28px;
-}
 
-.b-comments__placeholder:hover .b-comments__placeholder-img-hover {
-    background: rgba(0, 0, 0, 0.1);
-}
-
-.b-comments__placeholder:active .b-comments__placeholder-img-hover {
-    background: rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    border-radius: 60px 60px;
 }
 
 .b-comments__placeholder-img-hover {
@@ -87,12 +80,20 @@
     right: 0;
     bottom: 0;
 
-    width: 120px;
-    height: 120px;
-    margin: auto;
+    width: 100%;
+    height: 100%;
 
     transition: background 0.3s ease;
     border-radius: 60px 60px;
+
+    &:hover {
+        background: rgba(0, 0, 0, 0.1);
+    }
+
+    &:active {
+        background: rgba(0, 0, 0, 0.2);
+    }
+
 }
 
 @include media-l {

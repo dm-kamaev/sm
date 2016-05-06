@@ -47,7 +47,8 @@ goog.scope(function() {
      */
     Comments.CssClass = {
         ROOT: 'b-comments',
-        PLACEHOLDER: 'b-comments__placeholder',
+        PLACEHOLDER_LINK: 'b-comments__placeholder-link',
+        PLACEHOLDER_IMG: 'b-comments__placeholder-img-container',
         COMMENT: 'b-comment'
     };
 
@@ -89,20 +90,38 @@ goog.scope(function() {
     Comments.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
 
-        if (this.elements_.placeholder) {
+        if (this.elements_.placeholderLink) {
             this.getHandler().listen(
-                this.elements_.placeholder,
+                this.elements_.placeholderLink,
                 goog.events.EventType.CLICK,
-                this.onPlaceholderClick_
+                this.onPlaceholderLinkClick_
+            );
+        }
+
+        if (this.elements_.placeholderImg) {
+            this.getHandler().listen(
+                this.elements_.placeholderImg,
+                goog.events.EventType.CLICK,
+                this.onPlaceholderImgClick_
             );
         }
     };
 
     /**
-     * onClick event
+     * on Placeholder Link Click event
      * @private
      */
-    Comments.prototype.onPlaceholderClick_ = function() {
+    Comments.prototype.onPlaceholderLinkClick_ = function() {
+        this.dispatchEvent({
+            'type': Comments.Event.LEAVE_COMMENT
+        });
+    };
+
+    /**
+     * on Placeholder Img Click event
+     * @private
+     */
+    Comments.prototype.onPlaceholderImgClick_ = function() {
         this.dispatchEvent({
             'type': Comments.Event.LEAVE_COMMENT
         });
@@ -141,9 +160,12 @@ goog.scope(function() {
      */
     Comments.prototype.initDom_ = function() {
         this.elements_ = {
-            placeholder: this.getElementByClass(
-                Comments.CssClass.PLACEHOLDER
+            placeholderLink: this.getElementByClass(
+                Comments.CssClass.PLACEHOLDER_LINK
             ),
+            placeholderImg: this.getElementByClass(
+                Comments.CssClass.PLACEHOLDER_IMG
+            )
         };
     };
 

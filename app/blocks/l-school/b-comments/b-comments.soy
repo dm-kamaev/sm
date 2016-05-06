@@ -10,7 +10,8 @@
  *             name: string,
  *             value: int
  *         }]
- *     }]
+ *     }],
+ *     isCommented: bool
  * }}
  */
 {template .base kind="html"}
@@ -18,7 +19,7 @@
         {if $params.comments and length($params.comments) > 0}
             {call .comments_ data="all" /}
         {else}
-            {call .placeholder_ /}
+            {call .placeholder_ data="all" /}
         {/if}
     </div>
 {/template}
@@ -67,34 +68,45 @@
 
 /**
  * Comments placeholder
+ * @param params {{
+ *     isCommented: bool
+ * }}
  */
 {template .placeholder_ kind="html" private="true"}
     <div class="b-comments__placeholder">
-        {call .imgPlaceholder_ /}
+        {call .imgPlaceholder_}
+            {param isCommented: $params.isCommented /}
+        {/call}
 
         {call .textPlaceholder_ /}
 
-        {call sm.bLink.Template.base}
-            {param params: [
-                'data': [
-                    'name': 'Станьте первым!'
-                ],
-                'config': [
-                    'customClasses': 'b-comments__placeholder-link',
-                    'theme': 'attention',
-                    'font': 'default'
-                ]
-            ]/}
-        {/call}
+        {if not $params.isCommented}
+            {call sm.bLink.Template.base}
+                {param params: [
+                    'data': [
+                        'name': 'Станьте первым!'
+                    ],
+                    'config': [
+                        'customClasses': 'b-comments__placeholder-link',
+                        'theme': 'attention',
+                        'font': 'default'
+                    ]
+                ]/}
+            {/call}
+        {/if}
     </div>
 {/template}
 
 /**
  * Img placeholder
+ * @param? isCommented [bool]
  */
 {template .imgPlaceholder_ kind="html" private="true"}
     <div class="b-comments__placeholder-img-container">
-        <div class="b-comments__placeholder-img-hover"></div>
+        {if not $isCommented}
+            <div class="b-comments__placeholder-img-hover"></div>
+        {/if}
+
         <img class="b-comments__placeholder-img"
              src="/images/l-school/b-comments/comments_placeholder.svg">
     </div>
