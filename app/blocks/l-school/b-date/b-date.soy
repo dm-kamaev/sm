@@ -102,8 +102,24 @@
         {param month: $params.data.commentDate.month /}
     {/call}
 
-    {if $params.data.todayDate.year != $params.data.commentDate.year}
-        {sp}{$params.data.commentDate.year}
+    {call .getFormattedYear_}
+        {param params: [
+            'presentYear': $params.data.todayDate.year,
+            'commentYear':  $params.data.commentDate.year
+        ]/}
+    {/call}
+{/template}
+
+/**
+ * Template formatted year
+ * @param params {{
+ *     presentYear: number,
+ *     commentYear: number
+ * }}
+ */
+{template .getFormattedYear_ kind="html" private="true"}
+    {if $params.presentYear != $params.commentYear}
+        {sp}{$params.commentYear}
     {/if}
 {/template}
 
