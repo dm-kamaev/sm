@@ -283,12 +283,12 @@ goog.scope(function() {
      * @param {{
      *     center: Array.<number>,
      *     type: string
-     * }} opt_position
+     * }=} opt_position
      * @public
      */
     Map.prototype.center = function(opt_position) {
         var position = opt_position || {};
-        if (position.center) {
+        if (position['center']) {
             this.setMapCenterCoords_(position);
         }
         else {
@@ -325,8 +325,9 @@ goog.scope(function() {
      * @private
      */
     Map.prototype.setMapCenterCoords_ = function(position) {
-        var scale = this.generateScale_(position.type),
-            coordinates = position.center;
+        var coordinates = position['center'],
+            scale = this.generateScale_(position['type']);
+
         this.ymaps_.setCenter(
             coordinates,
             scale,
@@ -435,8 +436,8 @@ goog.scope(function() {
         this.initObjectManager_();
 
         /** Add points from data-params to map **/
-        this.replaceItems(this.params_.schools);
-        this.center(this.params_.position);
+        this.replaceItems(this.params_['schools']);
+        this.center(this.params_['position']);
 
         this.dispatchEvent(Map.Event.READY);
     };
@@ -636,7 +637,8 @@ goog.scope(function() {
                 },
                 'getShape': function() {
                     if (!this._isElement(this._$element)) {
-                        return MyBalloonLayout.superclass['getShape'].call(this);
+                        return MyBalloonLayout.superclass['getShape']
+                            .call(this);
                     }
 
                     var position = this._$element.position();
@@ -675,6 +677,7 @@ goog.scope(function() {
                 that.generatePlacemarksFromSchool_(school)
             );
         });
+
         return result;
     };
 
@@ -730,13 +733,13 @@ goog.scope(function() {
     Map.prototype.generatePlacemarksFromSchool_ = function(data) {
         var totalScore = data['totalScore'],
             presetKey = this.generatePresest_(totalScore),
-            addressLength = data['addresses'].length,
+            addresses = data['addresses'],
             result = [];
 
         var preset = this.currentPlacemarkPresetOptions_[presetKey];
-        for (var i = 0, id, address; i < addressLength; i++) {
+
+        for (var i = 0, id, address; address = addresses[i]; i++) {
             id = this.currentPlacemarkId_++;
-            address = data.addresses[i];
             if (!this.isAlreadyAdded_(address)) {
                 result.push({
                     'type': 'Feature',

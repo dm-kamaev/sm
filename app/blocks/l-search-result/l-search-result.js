@@ -417,7 +417,7 @@ goog.scope(function() {
 
     /**
      * Returns search params
-     * @param {Ojbect} opt_param
+     * @param {Object=} opt_param
      * @return {Object}
      * @private
      */
@@ -441,8 +441,9 @@ goog.scope(function() {
      * @private
      */
     SearchResult.prototype.onHeaderSubmit_ = function(event) {
-        var newSearchData = event.data;
-        this.instances_.search.setData(newSearchData);
+        var data = event['data'];
+
+        this.instances_.search.setData(data);
 
         this.instances_.header.setMode(Header.Mode.DEFAULT);
 
@@ -501,7 +502,9 @@ goog.scope(function() {
      * @private
      */
     SearchResult.prototype.search_ = function() {
-        this.updateSearchParams_(this.getSearchParams_());
+        var params = this.getSearchParams_();
+
+        this.updateSearchParams_(params);
         this.updateUrl_();
 
         this.send_(this.requestParams_.listDataUrl)
@@ -666,7 +669,7 @@ goog.scope(function() {
      */
     SearchResult.prototype.setItems_ = function(data) {
         var schools = data['list']['schools'];
-        
+
         this.instances_.schoolList.reset();
         this.instances_.schoolList.setItems(schools);
         this.sendAddedItemImpressions_(schools);
@@ -679,7 +682,7 @@ goog.scope(function() {
      */
     SearchResult.prototype.addItems_ = function(data) {
         var schools = data['list']['schools'];
-        
+
         this.instances_.schoolList.addItems(schools);
         this.sendAddedItemImpressions_(schools);
     };
@@ -709,9 +712,10 @@ goog.scope(function() {
         var list = data['list'],
             map = data['map'];
 
-        if (list.countResults > 0) {
+        if (list['countResults'] > 0) {
             this.showMap_();
             this.replaceMapPoints_(map);
+
             this.send_(this.requestParams_.mapDataUrl)
                 .then(this.addMapPoints_.bind(this));
         } else {
@@ -719,7 +723,7 @@ goog.scope(function() {
         }
         this.updateList_(list);
 
-        this.sendAddedItemImpressions_(list.schools);
+        this.sendAddedItemImpressions_(list['schools']);
     };
 
     /**
@@ -750,8 +754,8 @@ goog.scope(function() {
      * @private
      */
     SearchResult.prototype.addMapPoints_ = function(data) {
-        this.instances_.map.addItems(data.schools);
-        this.instances_.map.center(data.position);
+        this.instances_.map.addItems(data['schools']);
+        this.instances_.map.center(data['position']);
     };
 
     /**
@@ -760,7 +764,7 @@ goog.scope(function() {
      * @private
      */
     SearchResult.prototype.replaceMapPoints_ = function(data) {
-        this.instances_.map.replaceItems(data.schools);
+        this.instances_.map.replaceItems(data['schools']);
     };
 
     /**

@@ -759,10 +759,11 @@ goog.scope(function() {
      * @private
      */
     FeedbackModal.prototype.validateScore_ = function(formData) {
-        var isValid = false;
+        var isValid = false,
+            score = formData['score'];
 
-        for (var i = 0, len = formData['score'].length, scoreItem; i < len; i++) {
-            scoreItem = formData['score'][i];
+        for (var i = 0, len = score.length, scoreItem; i < len; i++) {
+            scoreItem = score[i];
             if (parseInt(scoreItem)) {
                 isValid = true;
             }

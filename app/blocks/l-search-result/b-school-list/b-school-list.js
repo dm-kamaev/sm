@@ -310,14 +310,13 @@ goog.scope(function() {
      * @param {Array.<Object>=} opt_listData
      */
     SchoolList.prototype.addItems = function(opt_listData) {
-        var that = this;
         var data = opt_listData || [];
 
         data.forEach(function(itemData) {
             var item = new SchoolListItem(itemData);
-            that.addChild(item, true);
-            that.schoolListItems_.push(item);
-        });
+            this.addChild(item, true);
+            this.schoolListItems_.push(item);
+        }, this);
 
         if (data.length < 10) {
             this.disable_();
