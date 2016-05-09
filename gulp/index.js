@@ -1,6 +1,7 @@
 module.exports = function(gulpHelper) {
     return {
-        compile: require('./task-compile')(gulpHelper),
-        scripts: require('./task-scripts')(gulpHelper)
+        compile: require('./taskCompile')(gulpHelper),
+        debug: require('./taskDebug')(gulpHelper),
+        scripts: require('./taskScripts')(gulpHelper)
     };
 };

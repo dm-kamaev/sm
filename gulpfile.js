@@ -58,8 +58,6 @@ gulp.task('soy', function () {
     return gulpHelper.soy.build();
 });
 
-gulp.task('scripts', ['soy', 'lint'], gulpTasks.scripts);
-
 gulp.task('styles', ['sprite'], function () {
     return gulpHelper.css.build({
         outputFiles: [{
@@ -175,20 +173,13 @@ gulp.task('userConfig', function() {
 
 const tasks = function (bool) {
     return bool ?
-        ['soy', 'scripts', 'sprite', 'images', 'fonts', 'styles', 'evercookie', 'copy'] :
+        ['soy', 'compile', 'sprite', 'images', 'fonts', 'styles', 'evercookie', 'copy'] :
         ['watch', 'soy', 'scripts', 'sprite', 'images', 'fonts','styles', 'evercookie', 'copy', 'localConfig', 'authConfig', 'userConfig'];
 };
 
 gulp.task('build', tasks(true));
 gulp.task('default', tasks(production));
 
-gulp.task('compile', ['copy-sources'], gulpTasks.compile);
-gulp.task('copy-sources', function() {
-    return gulp.src([
-            'app/blocks/**/*.js',
-            'node_modules/clobl/blocks/**/*.js'
-        ], {
-            base: './'
-        })
-        .pipe(gulp.dest('public'));
-});
+gulp.task('scripts', ['soy', 'lint'], gulpTasks.scripts);
+gulp.task('debug', ['soy'], gulpTasks.debug);
+gulp.task('compile', ['soy'], gulpTasks.compile);
