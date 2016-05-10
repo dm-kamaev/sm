@@ -2,15 +2,12 @@
 /**
  * Comments template
  * @param params {{
- *     comments: [{
+ *     comments: {
  *         author: string,
  *         rank: string,
  *         textParagraphs: string,
- *         sections: [{
- *             name: string,
- *             value: int
- *         }]
- *     }]
+ *         score: {sm.bScore.TemplateMinimized.Params}
+ *     }
  * }}
  */
 {template .base kind="html"}
@@ -21,7 +18,7 @@
 					'author': $comment.author,
 					'rank': $comment.rank,
 					'textParagraphs': $comment.textParagraphs,
-					'sections': $comment.sections
+					'score': $comment.score
 				] /}
 			{/call}
 		{/foreach}
