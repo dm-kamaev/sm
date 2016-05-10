@@ -154,6 +154,12 @@
     }
 }
 
+.b-mark_inline.b-mark_circle-indent_s {
+    .b-mark__circle {
+        margin-right: 7px;
+    }
+}
+
 .b-mark_number {
     .b-mark__mark {
         position: static;

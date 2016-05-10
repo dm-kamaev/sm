@@ -9,6 +9,7 @@
  *     config: ?{
  *         customClasses: ?string,
  *         size: ?string | ['l', 'm', 's', 'xs'],
+ *         circleIndent: ? string | ['s']
  *         zeroSign: ?string
  *     }
  * }}
@@ -33,6 +34,9 @@
                 {/if}
                 {if $params?.config?.size}
                     b-mark_size_{$params?.config?.size}{sp}
+                {/if}
+                {if $params?.config?.circleIndent}
+                    b-mark_circle-indent_{$params?.config?.circleIndent}{sp}
                 {/if}
                 {if $params.value == 0 and
                     $params?.config?.zeroSign == 'question-mark'}
