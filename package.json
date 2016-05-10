@@ -78,6 +78,7 @@
     "scp": "0.0.3",
     "sequelize": "^3.8.0",
     "sequelize-cli": "^1.9.1",
+    "sitemap": "^1.6.0",
     "sleep": "^3.0.0",
     "soynode": "^1.1.0",
     "soyparser": "^0.2.2",

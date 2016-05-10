@@ -6,6 +6,7 @@ const commander = require('commander');
 
 require('./console/beautifySchoolData.js').Command;
 require('./console/comments.js').Command;
+require('./console/createSitemap.js').Command;
 require('./console/department.js').Command;
 require('./console/dump.js').Command;
 require('./console/egeData.js').Command;
