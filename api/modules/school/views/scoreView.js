@@ -7,7 +7,7 @@ var scoreView = {};
  * @param {Array.<number>} score
  * @return {Array.<{name: string, value: number}>|boolean}
  */
-scoreView.school = function(score) {
+scoreView.school = function (score) {
     var sectionNames = [
         'Образование',
         'Преподаватели',

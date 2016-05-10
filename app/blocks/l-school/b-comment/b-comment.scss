@@ -1,5 +1,6 @@
 .b-comment {
     position: relative;
+
     display: inline-block;
 
     width: 100%;
@@ -7,11 +8,11 @@
     padding: 0 0 23px 0;
 
     border-bottom: 1px solid #e5e5e5;
-
     background-color: white;
 
     &:last-child {
         margin-bottom: 0;
+
         border-bottom: none;
     }
 }
@@ -22,9 +23,10 @@
     width: 100%;
 	margin: 0 0 10px 0;
 
+    color: grey;
+
     font-size: 12px;
     line-height: 19px;
-    color: grey;
 }
 
 .b-comment__rating-group {
@@ -64,12 +66,13 @@
 .b-comment__footer {
     position: relative;
 
+    letter-spacing: 0.03em;
+
     color: #808080;
 
+    font-family: 'Arial', sans-serif;
     font-size: 12px;
     line-height: 20px;
-    font-family: 'Arial', sans-serif;
-    letter-spacing: 0.03em;
 }
 
 .b-comment__score {
@@ -80,16 +83,18 @@
 
 .b-comment__user-information {
     display: inline-block;
-    vertical-align: middle;
 
     margin-right: 33px;
+
+    vertical-align: middle;
 }
 
 .b-comment__user-avatar{
     display: inline-block;
 
-    vertical-align: middle;
     margin-right: 5px;
+
+    vertical-align: middle;
 }
 
 .b-comment__header-section{
@@ -110,15 +115,17 @@
     margin: 0 10px 0 0;
 
     text-align: left;
+
     color: rgb(154, 154, 154);
 
-    font-weight: normal;
     font-size: 12px;
+    font-weight: normal;
 }
 
 .b-comment__stars-rating {
     display: inline-block;
 
     text-align: left;
+
     font-size: 14px;
 }

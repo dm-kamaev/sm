@@ -52,13 +52,6 @@ sm.bScore.ScoreMinimized = function(opt_params) {
      * @type {boolean}
      */
     this.isHiddenMarksShowed_ = false;
-
-    /**
-     * Current type
-     * @private
-     * @type {string}
-     */
-    this.type_ = sm.bScore.ScoreMinimized.Type.DEFAULT;
 };
 goog.inherits(sm.bScore.ScoreMinimized, sm.bScore.Score);
 

@@ -7,10 +7,9 @@
     height: auto;
     padding: 25px 0;
 
-    color: #000;
-
     cursor: default;
 
+    color: #000;
     border-bottom: 1px solid #e5e5e5;
 }
 
@@ -59,9 +58,9 @@
     padding-right: 160px;
 
     cursor: pointer;
+    text-decoration: none;
 
     color: black;
-    text-decoration: none;
 
     font: 700 21px/26px 'Proxima', Arial, sans-serif;
 
@@ -75,13 +74,12 @@
 }
 
 .b-school-list-item__name-wrap {
-    font-weight: 700;
     font-family: 'Proxima', Arial, sans-serif;
+    font-weight: 700;
 }
 
 .b-school-list-item__score {
     position: absolute;
-
     top: 2px;
     right: 0;
 
@@ -97,6 +95,7 @@
     margin-top: 20px;
 
     color: rgb(136, 136, 136);
+
     font-size: 13px;
 }
 

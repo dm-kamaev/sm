@@ -93,6 +93,9 @@
  *             value: ?number
  *         }>,
  *         hiddenMarksTitle: string
+ *     },
+ *     config: {
+ *         theme: ?string
  *     }
  * }}
  */
@@ -100,9 +103,11 @@
     {if length($params?.data?.hiddenMarks) > 0}
         <div class="{call .rootClass_ /}__hidden-marks
                     i-utils__hidden">
-            <div class="{call .rootClass_ /}__arrow">
-                <div class="{call .rootClass_ /}__arrow-shadow"></div>
-            </div>
+            {if $params?.config?.theme != 'compact'}
+                <div class="{call .rootClass_ /}__arrow">
+                    <div class="{call .rootClass_ /}__arrow-shadow"></div>
+                </div>
+            {/if}
 
             <ul>
                 <li class="{call .rootClass_ /}__hidden-mark-item">
