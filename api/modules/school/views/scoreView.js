@@ -3,26 +3,93 @@
 var scoreView = {};
 
 /**
+ * View fo school landing
+ * @param {Array.<number>} score
+ * @return {Array.<{name: string, value: number}>|boolean}
+ */
+scoreView.school = function(score) {
+    var sectionNames = [
+        'Образование',
+        'Преподаватели',
+        'Атмосфера',
+        'Инфраструктура'
+    ],
+    scoreSections = this.sections(sectionNames, score);
+
+    return this.isNotEmpty(scoreSections) ? scoreSections : false;
+};
+
+/**
+ * View for comments
+ * @param {Array.<number>} score
+ * @param {number} totalScore
+ * @return {{
+ *     data: {
+ *         visibleMark: Object.<string, number|string>,
+ *         hiddenMarks: Array.<Object.<string, number|string>>
+ *     },
+ *     config: {
+ *         isActive: boolean
+ *     }
+ * }}
+ */
+scoreView.comment = function(score, totalScore) {
+    var sectionNames = [
+            'Оценка',
+            'Образование',
+            'Преподаватели',
+            'Атмосфера',
+            'Инфраструктура'
+        ],
+        sectionValues = [totalScore].concat(score),
+        sections = this.sections(sectionNames, sectionValues);
+
+    return this.minimized(sections);
+};
+
+/**
+ * View for search results page
+ * @param {Array.<number>} score
+ * @param {number} totalScore
+ * @param {number=} opt_sortCriterion
+ * @return {{
+ *     data: {
+ *         visibleMark: Object.<string, number|string>,
+ *         hiddenMarks: Array.<Object.<string, number|string>>
+ *     },
+ *     config: {
+ *         isActive: boolean
+ *     }
+ * }}
+ */
+scoreView.results = function(score, totalScore, opt_sortCriterion) {
+    var sortCriterion = opt_sortCriterion || 0,
+        sectionNames = [
+            'Средняя оценка',
+            'Образование',
+            'Преподаватели',
+            'Атмосфера',
+            'Инфраструктура'
+        ],
+        sectionValues = [totalScore].concat(score),
+        sections = this.sections(sectionNames, sectionValues);
+    return this.minimized(sections, sortCriterion);
+};
+
+/**
  * Transform array with score to array with names and values
- * @param {Array.number} opt_score
+ * @param {Array.<string>} sectionNames
+ * @param {Array.<number>} sectionValues
  * @return {Array.<{
  *     name: string,
  *     value: number
  * }>}
  */
-scoreView.sections = function(opt_score) {
-    var score = opt_score || [0, 0, 0, 0],
-        sections = [
-            'Образование',
-            'Преподаватели',
-            'Атмосфера',
-            'Инфраструктура'
-        ];
-
-    return score.map((scoreItem, index) => {
+scoreView.sections = function(sectionNames, sectionValues) {
+    return sectionNames.map((sectionName, index) => {
         return {
-            name: sections[index],
-            value: scoreItem
+            name: sectionName,
+            value: sectionValues[index] || 0
         }
     });
 };
@@ -44,8 +111,7 @@ scoreView.sectionsNotEmpty = function(score) {
 
 /**
  * Return score object depends of visible mark
- * @param {Array.<number>} score
- * @param {number} totalScore
+ * @param {Array.<{name: string, value: number}>} scoreSections
  * @param {number} opt_visibleMarkIndex - code of mark to make visible
  * 0 means total Score, 1 - 4 means corresponding mark in order
  * @return {{
@@ -58,17 +124,11 @@ scoreView.sectionsNotEmpty = function(score) {
  *     }
  * }}
  */
-scoreView.minimized = function(score, totalScore, opt_visibleMarkIndex) {
-    var scoreItems = this.sections(score),
-        visibleMarkIndex = opt_visibleMarkIndex ? opt_visibleMarkIndex : 0;
+scoreView.minimized = function(scoreSections, opt_visibleMarkIndex) {
+    var visibleMarkIndex = opt_visibleMarkIndex ? opt_visibleMarkIndex : 0;
 
-    scoreItems.unshift({
-        name: 'Средняя оценка',
-        value: totalScore
-    });
-
-    var visbleMark = scoreItems[visibleMarkIndex];
-    var hiddenMarks = scoreItems.filter(item => {
+    var visbleMark = scoreSections[visibleMarkIndex];
+    var hiddenMarks = scoreSections.filter(item => {
         return item.name != visbleMark.name
     });
 
@@ -78,13 +138,14 @@ scoreView.minimized = function(score, totalScore, opt_visibleMarkIndex) {
             hiddenMarks: hiddenMarks
         },
         config: {
-            isActive: scoreView.notEmpty(hiddenMarks, visbleMark)
+            isActive: !!scoreView.isNotEmpty(hiddenMarks, visbleMark)
         }
     };
 };
 
 /**
- * Check if all scores of item is 0, and if provided check minimized criterion too
+ * Check if all scores of item is 0,
+ * and if provided check minimized criterion too
  * @param {Array.<{
  *     name: string,
  *     value: number
@@ -95,7 +156,7 @@ scoreView.minimized = function(score, totalScore, opt_visibleMarkIndex) {
  * }} opt_sortCriterion
  * @return {boolean}
  */
-scoreView.notEmpty = function(score, opt_sortCriterion) {
+scoreView.isNotEmpty = function(score, opt_sortCriterion) {
     var sortCriterion = opt_sortCriterion || {};
     return sortCriterion.value || score.some(item => item.value);
 };

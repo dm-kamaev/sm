@@ -42,9 +42,7 @@ schoolView.default = function(schoolInstance, data, user, opt_popularSchools) {
             schoolInstance.addresses
         ),
         comments = commentView.school(schoolInstance.comments),
-        score = scoreView.sections(schoolInstance.score),
         scoreCount = schoolInstance.scoreCount || [0, 0, 0, 0];
-
     var result = {
         id: schoolInstance.id,
         url: schoolInstance.url,
@@ -71,7 +69,7 @@ schoolView.default = function(schoolInstance, data, user, opt_popularSchools) {
         addresses: addressView.default(addresses),
         ratings: ratingView.ratingSchoolView(
             schoolInstance.rank, schoolInstance.rankDogm),
-        score: scoreView.notEmpty(score) ? score : false,
+        score: scoreView.school(schoolInstance.score),
         totalScore: schoolInstance.totalScore,
         results: {
             ege: egeResultView.transformResults(
@@ -336,7 +334,7 @@ schoolView.list = function(schools, opt_criterion, opt_page) {
         res.schools = schools
             .map((school, i) => {
 
-                var score = scoreView.minimized(
+                var score = scoreView.results(
                     school.score,
                     school.totalScore,
                     opt_criterion

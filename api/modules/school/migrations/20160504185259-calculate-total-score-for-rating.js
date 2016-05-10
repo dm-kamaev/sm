@@ -53,7 +53,9 @@ var calculateAverageScore = function(opt_score) {
 };
 
 /**
- *
+ * Set total score for rating with given id
+ * @param {number} ratingId
+ * @param {number} totalScore
  */
 var setTotalScore = async(function(ratingId, totalScore) {
     var updateRatingQuery = squel.update()
