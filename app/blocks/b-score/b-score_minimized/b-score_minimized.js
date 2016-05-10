@@ -26,11 +26,18 @@ sm.bScore.ScoreMinimized = function(opt_params) {
     this.params_ = opt_params || {};
 
     /**
-     * Defines clickable or not
+     * Defines clickable visible mark or not
      * @type {boolean}
      * @private
      */
     this.isActive_ = false;
+
+    /**
+     * Defines whether visible name of visible mark
+     * @type {boolean}
+     * @private
+     */
+    this.isNameVisible_ = false;
 
     /**
      * Collection of dom elements
@@ -45,6 +52,13 @@ sm.bScore.ScoreMinimized = function(opt_params) {
      * @type {boolean}
      */
     this.isHiddenMarksShowed_ = false;
+
+    /**
+     * Current type
+     * @private
+     * @type {string}
+     */
+    this.type_ = sm.bScore.ScoreMinimized.Type.DEFAULT;
 };
 goog.inherits(sm.bScore.ScoreMinimized, sm.bScore.Score);
 
@@ -52,18 +66,20 @@ goog.scope(function() {
     var ScoreMinimized = sm.bScore.ScoreMinimized,
         Utils = cl.iUtils.Utils;
 
+
     /**
      * Css class enum
      * @enum {string}
      */
     ScoreMinimized.CssClass = {
-        ROOT: 'b-score',
+        ROOT: 'b-score_minimized',
         HIDDEN_MARKS: 'b-score__hidden-marks',
         VISIBLE_MARK: 'b-score__visible_mark',
         MARK_NAME: 'b-score__mark-name',
         MARK_VALUE: 'b-score__mark-value',
         ACTIVE_STATE: 'b-score_active'
     };
+
 
     /**
      * Event enum
@@ -72,6 +88,7 @@ goog.scope(function() {
     ScoreMinimized.Event = {
         CLICK: 'b-score-click'
     };
+
 
     /**
      * Internal decorates the DOM element
@@ -83,7 +100,9 @@ goog.scope(function() {
 
         this.initDomElements_();
         this.initState_();
+        this.initNameVisibility_();
     };
+
 
     /**
      * Sets up the component
@@ -91,35 +110,26 @@ goog.scope(function() {
     ScoreMinimized.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
         if (this.isActive_) {
-            var handler = this.getHandler();
+            this.initVisibleMarkNameListeners_();
+            this.initVisibleMarkValueListeners_();
 
-            if (goog.labs.userAgent.device.isDesktop()) {
-                handler.listen(
-                    this.getElement(),
-                    goog.events.EventType.MOUSEENTER,
-                    this.onNameMouseEnter_
-                );
-
-                handler.listen(
-                    this.elements_.visibleMarkValue,
-                    goog.events.EventType.MOUSELEAVE,
-                    this.onNameMouseLeave_
-                );
-            }
-
-            handler.listen(
-                this.elements_.visibleMarkValue,
-                goog.events.EventType.CLICK,
-                this.onVisibleMarkValueClick_
-            );
-
-            handler.listen(
-                document,
-                goog.events.EventType.CLICK,
-                this.documentClickHandler_
-            );
+            this.initDocumentListeners_();
         }
     };
+
+
+    /**
+     * Initializes listeners for document
+     * @private
+     */
+    ScoreMinimized.prototype.initDocumentListeners_ = function() {
+        this.getHandler().listen(
+            document,
+            goog.events.EventType.CLICK,
+            this.documentClickHandler_
+        );
+    };
+
 
     /**
      * Init dom elements
@@ -147,8 +157,9 @@ goog.scope(function() {
         );
     };
 
+
     /**
-     * Check whether control active:
+     * Detect whether control active:
      * hidden score items can be showed
      * @private
      */
@@ -159,42 +170,119 @@ goog.scope(function() {
         );
     };
 
+
+    /**
+     * Detect whether name of visible score mark is hidden
+     * @private
+     */
+    ScoreMinimized.prototype.initNameVisibility_ = function() {
+        this.isNameVisible_ = !goog.dom.classlist.contains(
+            this.elements_.visibleMarkName,
+            Utils.CssClass.HIDDEN
+        );
+    };
+
+
+    /**
+     * Initializes listeners for visible mark name
+     * @private
+     */
+    ScoreMinimized.prototype.initVisibleMarkNameListeners_ = function() {
+        if (this.elements_.visibleMarkName &&
+            goog.labs.userAgent.device.isDesktop() &&
+            this.isNameVisible_
+        ) {
+            this.getHandler().listen(
+                this.elements_.visibleMarkName,
+                goog.events.EventType.CLICK,
+                this.onVisibleMarkNameClick_
+            );
+        }
+    };
+
+
+    /**
+     * Initializes listeners for visible mark value
+     * @private
+     */
+    ScoreMinimized.prototype.initVisibleMarkValueListeners_ = function() {
+        if (this.elements_.visibleMarkValue) {
+            if (goog.labs.userAgent.device.isDesktop() &&
+                !this.isNameVisible_) {
+                this.getHandler().listen(
+                    this.elements_.visibleMarkValue,
+                    goog.events.EventType.MOUSEENTER,
+                    this.onVisibleMarkMouseEnter_
+                ).listen(
+                    this.elements_.visibleMarkValue,
+                    goog.events.EventType.MOUSELEAVE,
+                    this.onVisibleMarkMouseLeave_
+                );
+            }
+
+            this.getHandler().listen(
+                this.elements_.visibleMarkValue,
+                goog.events.EventType.CLICK,
+                this.onVisibleMarkValueClick_
+            );
+        }
+    };
+
+
     /**
      * Mouse enter to visible name event handler
      * @private
      */
-    ScoreMinimized.prototype.onNameMouseEnter_ = function() {
+    ScoreMinimized.prototype.onVisibleMarkMouseEnter_ = function() {
         if (!this.isHiddenMarksShowed_) {
             this.setNameVisibility_(true);
         }
     };
 
+
     /**
      * Mouse leave to visible name event handler
      * @private
      */
-    ScoreMinimized.prototype.onNameMouseLeave_ = function() {
+    ScoreMinimized.prototype.onVisibleMarkMouseLeave_ = function() {
         if (!this.isHiddenMarksShowed_) {
             this.setNameVisibility_(false);
         }
     };
 
+
     /**
-     * Hide or show name of visible score
+     * Mouse click to visible mane handler
+     * @private
+     */
+    ScoreMinimized.prototype.onVisibleMarkNameClick_ = function() {
+        console.log(this.isHiddenMarksShowed_);
+        this.isHiddenMarksShowed_ ?
+            this.setHiddenMarksVisibility_(false) :
+            this.setHiddenMarksVisibility_(true);
+        console.log(this.isHiddenMarksShowed_);
+    };
+
+
+    /**
+     * Hide or show name of visible score, if name not visible on init
      * @param {boolean} visibility
      * @private
      */
     ScoreMinimized.prototype.setNameVisibility_ = function(visibility) {
-        visibility ?
-            goog.dom.classes.remove(
-                this.elements_.visibleMarkName,
-                Utils.CssClass.HIDDEN
-            ) :
-            goog.dom.classes.add(
-                this.elements_.visibleMarkName,
-                Utils.CssClass.HIDDEN
-            );
+        if (!this.isNameVisible_) {
+            visibility ?
+                goog.dom.classes.remove(
+                    this.elements_.visibleMarkName,
+                    Utils.CssClass.HIDDEN
+                ) :
+                goog.dom.classes.add(
+                    this.elements_.visibleMarkName,
+                    Utils.CssClass.HIDDEN
+                );
+        }
     };
+
 
     /**
      * Handles a click over criteria value element
@@ -218,6 +306,7 @@ goog.scope(function() {
         });
     };
 
+
     /**
      * Handles a click over a document and if click occurs not in hidden marks
      * or in visible mark name, hide hidden marks
@@ -234,18 +323,22 @@ goog.scope(function() {
         ),
 
         /** check if click target in visible mark value dom element **/
-        inCriterionElement = domHelper.contains(
+        inVisibleMark = domHelper.contains(
             this.elements_.visibleMarkValue,
+            event.target
+        ) || domHelper.contains(
+            this.elements_.visibleMarkName,
             event.target
         );
 
         if (!inTooltipElement &&
-            !inCriterionElement &&
+            !inVisibleMark &&
             this.isHiddenMarksShowed_) {
             this.setHiddenMarksVisibility_(false);
             this.setNameVisibility_(false);
         }
     };
+
 
     /**
      * Show and hide element with hidden marks

@@ -3,96 +3,112 @@
 .b-score_minimized {
     position: relative;
 
-    font-family: Arial, sans-serif;
-    font-size: 13px;
-    line-height: 20px;
-}
-
-.b-score__mark-value {
-    display: inline-block;
-
-    &.b-score__mark-value_active {
-        width: 54px;
-        margin: 0;
-    }
-}
-
-.b-score__mark-name {
-    display: inline-block;
-
-    width: 120px;
-
-    &.b-score__mark-name_active {
-        width: auto;
-        margin-right: 22px;
-
-        color: #000;
-    }
-}
-
-.b-score__hidden-marks {
-    position: absolute;
-    z-index: 10;
-    right: -14px;
-
-    width: 170px;
-    margin-top: 15px;
-    padding: 24px 30px 20px;
-
-    color: #808080;
-    background: #fff;
-    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);
-}
-
-.b-score__arrow {
-    position: absolute;
-    top: -9px;
-    left: 160px;
-
-    overflow: hidden;
-
-    width: 16px;
-    height: 9px;
-}
-
-.b-score__arrow-shadow {
-    position: absolute;
-    top: 5px;
-    left: 4px;
-
-    width: 8px;
-    height: 8px;
-
-    transform: rotate(45deg);
-
-    background: white;
-    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);
-}
-
-.b-score__hidden-mark-item {
-    margin-bottom: 6px;
-    padding-top: 1px;
-    padding-bottom: 8px;
-
-    border-bottom: 1px solid #e5e5e5;
-
-    &:first-child {
-        margin-bottom: 8px;
-        padding-top: 0;
+    .b-score__mark.b-score__mark_type_visible {
+        .b-score__mark-value {
+            width: 54px;
+        }
     }
 
-    &:last-child {
-        margin-bottom: 0;
-        padding-bottom: 0;
+    .b-score__mark-value {
+        display: inline-block;
 
-        border-bottom: none;
+        &.b-score__mark-value_active {
+            margin: 0;
+        }
     }
-}
 
-.b-score_active {
-	.b-score__visible_mark {
-		cursor: pointer;
-	}
+    .b-score__mark-name {
+        display: inline-block;
+
+        width: 120px;
+
+        &.b-score__mark-name_active {
+            width: auto;
+            margin-right: 22px;
+        }
+    }
+
+    .b-score__hidden-marks {
+        position: absolute;
+        z-index: 10;
+        top: 39px;
+        right: -14px;
+
+        width: 170px;
+        padding: 24px 30px 20px;
+
+        color: #808080;
+        background: #fff;
+        box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);
+    }
+
+    .b-score__arrow {
+        position: absolute;
+        top: -9px;
+        left: 160px;
+
+        overflow: hidden;
+
+        width: 16px;
+        height: 9px;
+    }
+
+    .b-score__arrow-shadow {
+        position: absolute;
+        top: 5px;
+        left: 4px;
+
+        width: 8px;
+        height: 8px;
+
+        transform: rotate(45deg);
+
+        background: white;
+        box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);
+    }
+
+    .b-score__hidden-mark-item {
+        margin-bottom: 6px;
+        padding-top: 1px;
+        padding-bottom: 8px;
+
+        border-bottom: 1px solid #e5e5e5;
+
+        &:first-child {
+            margin-bottom: 8px;
+            padding-top: 0;
+        }
+
+        &:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+
+            border-bottom: none;
+        }
+    }
+
+    &.b-score_active {
+        .b-score__visible_mark {
+            cursor: pointer;
+        }
+    }
+
+    &.b-score_compact {
+        .b-score__mark.b-score__mark_type_visible {
+            .b-score__mark-value {
+                width: auto;
+            }
+        }
+
+        .b-score__mark-name.b-score__mark-name_active {
+            margin-right: 7px;
+        }
+
+        .b-score__hidden-marks {
+            top: 24px;
+            right: -172px;
+        }
+    }
 }
 
 @include media-m {
