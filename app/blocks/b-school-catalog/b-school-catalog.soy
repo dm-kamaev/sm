@@ -21,28 +21,26 @@
 /**
  * Body
  * @param? params {
- *     imgUrl: ?uri,
  *     text: ?string,
  *     amount: ?number,
  *     dataLink: {
- *         name: ?string
+ *         ?name: ?string
  *         url: ?uri
  *     }
  * }
  * @override
  */
 {template .body}
-    <div class="{call .rootClass/}">
-        <a class="{call .rootClass/}__content" href="{$params?.dataLink?.url}">
-            {call sm.bSchoolCatalog.Template.img_ /}
-            {call sm.bSchoolCatalog.Template.title_ /}
-            {call sm.bSchoolCatalog.Template.text_ data="all" /}
-        </a>
+    <a class="{call .rootClass/}__wrap-link" href="{$params.dataLink?.url}">
+        {call sm.bSchoolCatalog.Template.img_/}
 
-        <div class="{call .rootClass/}__link">
+        {call sm.bSchoolCatalog.Template.title_/}
+
+        <div class="{call .rootClass/}__content">
+            {call sm.bSchoolCatalog.Template.text_ data="all" /}
             {call sm.bSchoolCatalog.Template.link_ data="all" /}
         </div>
-    </div>
+    </a>
 {/template}
 
 
@@ -79,48 +77,50 @@
 
 /**
  * Text template
- * @param? params {
- *     text: ?string,
- *     amount: ?number
- *}
+ * @param params {
+ *     text: ?string
+ * }
  */
 {template .text_ autoescape="strict" kind="html"}
-    <div class="{call .rootClass/}__text">
-        {$params?.text}
-
-        {if $params?.amount}
-            <span class="{call .rootClass/}__amount">
-                {sp}{$params.amount}{sp}
-
-                {call sm.bSchoolCatalog.Template.getEnding_}
-                    {param params: [
-                        'number': $params.amount ]
-                    /}
-                {/call}
-            </span>
-        {/if}
-    </div>
+    <span class="{call .rootClass/}__text">
+        {$params?.text}{sp}
+    </span>
 {/template}
 
 
 /**
  * Link template
  * @param? params {
+ *     amount: ?number,
  *     dataLink: {
- *         name: ?string,
+ *         ?name: ?string,
  *         url: ?uri
  *     }
- *}
+ * }
  */
 {template .link_ autoescape="strict" kind="html"}
-    {call sm.bLink.Template.base}
-        {param params: [
-            'data': [
-                'name': $params?.dataLink?.name,
-                'url': $params?.dataLink?.url
-            ]
-        ]/}
-    {/call}
+    {if $params?.amount}
+        {let $linkName kind="html"}
+            {$params.amount}{sp}
+
+            {call sm.bSchoolCatalog.Template.getEnding_}
+                {param params: [
+                    'number': $params.amount
+                ]/}
+            {/call}
+        {/let}
+
+        {call sm.bLink.Template.base}
+            {param params: [
+                'data': [
+                    'name': $linkName
+                ],
+                'config': [
+                    'customClasses': 'b-school-catalog__link'
+                ]
+            ]/}
+        {/call}
+    {/if}
 {/template}
 
 

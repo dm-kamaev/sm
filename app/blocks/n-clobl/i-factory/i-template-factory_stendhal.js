@@ -19,7 +19,10 @@ goog.require('sm.gModal.TemplateFeedback');
 goog.require('sm.gModal.TemplateStendhal');
 goog.require('sm.gTab.TemplateStendhal');
 goog.require('sm.gTextarea.TemplateStendhal');
+goog.require('sm.lSchool.bDate.Template');
 goog.require('sm.lSchool.bFoldList.Template');
+goog.require('sm.lSearch.bArticleLink.Template');
+goog.require('sm.lSearch.bArticleLinks.Template');
 
 /**
  * Template factory
@@ -99,6 +102,18 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'fold-list',
             sm.lSchool.bFoldList.Template.foldList
+        )
+        .setTemplateListItem(
+            'article-links',
+            sm.lSearch.bArticleLinks.Template.articleLinks
+        )
+        .setTemplateListItem(
+            'article-link',
+            sm.lSearch.bArticleLink.Template.articleLink
+        )
+        .setTemplateListItem(
+            'date',
+            sm.lSchool.bDate.Template.date
         );
 };
 goog.inherits(sm.iFactory.TemplateFactoryStendhal, cl.iFactory.TemplateFactory);

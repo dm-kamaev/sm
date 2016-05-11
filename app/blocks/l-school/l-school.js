@@ -23,6 +23,7 @@ goog.require('sm.lSchool.bResults.Results');
  * School page
  * @param {Object=} opt_params
  * @constructor
+ * @extends {goog.ui.Component}
  */
 sm.lSchool.School = function(opt_params) {
     goog.base(this);
@@ -89,6 +90,13 @@ sm.lSchool.School = function(opt_params) {
      * @private
      */
     this.map_ = null;
+
+    /**
+     * Comments instance
+     * @type {sm.lSchool.bComments.Comments}
+     * @private
+     */
+    this.comments_ = null;
 };
 goog.inherits(sm.lSchool.School, goog.ui.Component);
 
@@ -116,8 +124,6 @@ goog.scope(function() {
         'ROOT': 'l-school',
         'FEEDBACK_BUTTON': 'g-button_feedback-opener',
         'RATING': 'b-rating',
-        'COMMENTS': 'b-comments',
-        'FEEDBACK_LINK': 'l-school__comments-placeholder-link',
         'INACCURACY_LINK': 'l-school__link_inaccuracy'
     };
 
@@ -171,25 +177,23 @@ goog.scope(function() {
             handler.listen(
                 this.bouton_,
                 cl.gButton.Button.Event.CLICK,
-                this.onClick_
+                this.onLeaveComment_
             );
 
             handler.listen(
                 this.score_,
                 Score.Event.PLACE_COMMENT_CLICK,
-                this.onClick_
+                this.onLeaveComment_
+            );
+
+            handler.listen(
+                this.comments_,
+                Comments.Event.LEAVE_COMMENT,
+                this.onLeaveComment_
             );
         }
 
         /** feedback link listener */
-        if (this.elements_.feedbackLink) {
-            handler.listen(
-                this.elements_.feedbackLink,
-                goog.events.EventType.CLICK,
-                this.onClick_
-            );
-        }
-
         handler.listen(
             this.elements_.inaccuracyLink,
             goog.events.EventType.CLICK,
@@ -231,10 +235,10 @@ goog.scope(function() {
     };
 
     /**
-     * onClick event
+     * onLeaveComment event
      * @private
      */
-    School.prototype.onClick_ = function() {
+    School.prototype.onLeaveComment_ = function() {
         this.showCommentModal_();
     };
 
@@ -298,11 +302,11 @@ goog.scope(function() {
             .initModalInaccuracy_()
             .initMap_()
             .initBouton_()
-            .initComponents_(DataBlockFoldList)
-            .initComponents_(DBlockRatings)
-            .initComponents_(Search)
-            .initComponents_(Comments)
-            .initComponents_(Results);
+            .initComments_()
+            .initComponents_(DataBlockFoldList, DataBlockFoldList.CssClass.ROOT)
+            .initComponents_(DBlockRatings, DBlockRatings.CssClass.ROOT)
+            .initComponents_(Search, Search.CssClass.ROOT)
+            .initComponents_(Results, Results.CssClass.ROOT);
     };
 
     /**
@@ -369,6 +373,19 @@ goog.scope(function() {
     };
 
     /**
+     * Comments initialization
+     * @return {sm.lSchool.School}
+     * @private
+     */
+    School.prototype.initComments_ = function() {
+        this.comments_ = this.initComponent_(
+            Comments, this.getElementByClass(Comments.CssClass.ROOT)
+        );
+
+        return this;
+    };
+
+    /**
      * Modal initialization
      * @return {sm.lSchool.School}
      * @private
@@ -380,8 +397,7 @@ goog.scope(function() {
                 schoolName: this.params_.schoolName
             }
         });
-        this.addChild(this.modal_);
-        this.modal_.render(this.getElement());
+        this.addChild(this.modal_, true);
 
         return this;
     };
@@ -442,9 +458,6 @@ goog.scope(function() {
             root: root,
             bouton: this.getElementByClass(
                 sm.lSchool.School.CssClass.FEEDBACK_BUTTON
-            ),
-            feedbackLink: this.getElementByClass(
-                sm.lSchool.School.CssClass.FEEDBACK_LINK
             ),
             rating: this.getElementByClass(
                 sm.lSchool.School.CssClass.RATING

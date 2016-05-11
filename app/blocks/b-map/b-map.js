@@ -283,12 +283,12 @@ goog.scope(function() {
      * @param {{
      *     center: Array.<number>,
      *     type: string
-     * }} opt_position
+     * }=} opt_position
      * @public
      */
     Map.prototype.center = function(opt_position) {
         var position = opt_position || {};
-        if (position.center) {
+        if (position['center']) {
             this.setMapCenterCoords_(position);
         }
         else {
@@ -325,8 +325,9 @@ goog.scope(function() {
      * @private
      */
     Map.prototype.setMapCenterCoords_ = function(position) {
-        var scale = this.generateScale_(position.type),
-            coordinates = position.center;
+        var coordinates = position['center'],
+            scale = this.generateScale_(position['type']);
+
         this.ymaps_.setCenter(
             coordinates,
             scale,
@@ -435,8 +436,8 @@ goog.scope(function() {
         this.initObjectManager_();
 
         /** Add points from data-params to map **/
-        this.replaceItems(this.params_.schools);
-        this.center(this.params_.position);
+        this.replaceItems(this.params_['schools']);
+        this.center(this.params_['position']);
 
         this.dispatchEvent(Map.Event.READY);
     };
@@ -447,14 +448,14 @@ goog.scope(function() {
      */
     Map.prototype.initObjectManager_ = function() {
         this.objectManager_ = new ymaps.ObjectManager({
-            geoObjectBalloonAutoPan: true,
-            geoObjectHideIconOnBalloonOpen: false,
-            geoObjectBalloonPanelMaxMapArea: 0,
-            geoObjectBalloonCloseButton: true,
-            geoObjectBalloonLayout:
+            'geoObjectBalloonAutoPan': true,
+            'geoObjectHideIconOnBalloonOpen': false,
+            'geoObjectBalloonPanelMaxMapArea': 0,
+            'geoObjectBalloonCloseButton': true,
+            'geoObjectBalloonLayout':
                 this.generateBalloonLayout_(this.params_),
-            geoObjectPane: 'balloon',
-            geoObjectBalloonZIndex: 1040
+            'geoObjectPane': 'balloon',
+            'geoObjectBalloonZIndex': 1040
         });
         this.ymaps_.geoObjects.add(this.objectManager_);
     };
@@ -467,11 +468,12 @@ goog.scope(function() {
     Map.prototype.initParams_ = function(element) {
         var dataset = goog.dom.dataset.get(element, 'params'),
             parsedDataset = JSON.parse(dataset);
+
         if (!this.params_) {
-            this.params_ = parsedDataset.data;
+            this.params_ = parsedDataset['data'];
         }
         if (!this.config_) {
-            this.config_ = parsedDataset.config;
+            this.config_ = parsedDataset['config'];
         }
     };
 
@@ -570,14 +572,13 @@ goog.scope(function() {
     Map.prototype.getPresetOptions_ =
         function(imageHref, typeOption, stateOption) {
             return {
-                balloonOffset: typeOption.balloonOffset,
-                iconImageHref: imageHref,
-                iconImageSize: typeOption.iconImageSize,
-                iconImageOffset: typeOption.iconImageOffset,
-                iconLayout: 'default#image',
-                zIndex: typeOption.zIndex + stateOption.zIndex,
-                zIndexHover: typeOption.zIndex + 100 +
-                    stateOption.zIndex
+                'balloonOffset': typeOption.balloonOffset,
+                'iconImageHref': imageHref,
+                'iconImageSize': typeOption.iconImageSize,
+                'iconImageOffset': typeOption.iconImageOffset,
+                'iconLayout': 'default#image',
+                'zIndex': typeOption.zIndex + stateOption.zIndex,
+                'zIndexHover': typeOption.zIndex + 100 + stateOption.zIndex
             };
         };
 
@@ -634,9 +635,10 @@ goog.scope(function() {
                     that.removeActiveStateFromSelectedPlacemark_();
                     this.events.fire('userclose');
                 },
-                getShape: function() {
+                'getShape': function() {
                     if (!this._isElement(this._$element)) {
-                        return MyBalloonLayout.superclass.getShape.call(this);
+                        return MyBalloonLayout.superclass['getShape']
+                            .call(this);
                     }
 
                     var position = this._$element.position();
@@ -675,6 +677,7 @@ goog.scope(function() {
                 that.generatePlacemarksFromSchool_(school)
             );
         });
+
         return result;
     };
 
@@ -728,32 +731,32 @@ goog.scope(function() {
      * @private
      */
     Map.prototype.generatePlacemarksFromSchool_ = function(data) {
-        var totalScore = data.totalScore,
+        var totalScore = data['totalScore'],
             presetKey = this.generatePresest_(totalScore),
-            addressLength = data.addresses.length,
+            addresses = data['addresses'],
             result = [];
 
         var preset = this.currentPlacemarkPresetOptions_[presetKey];
-        for (var i = 0, id, address; i < addressLength; i++) {
+
+        for (var i = 0, id, address; address = addresses[i]; i++) {
             id = this.currentPlacemarkId_++;
-            address = data.addresses[i];
             if (!this.isAlreadyAdded_(address)) {
                 result.push({
                     'type': 'Feature',
                     'id': id,
-                    'addressId': address.id,
+                    'addressId': address['id'],
                     'geometry': {
                         'type': 'Point',
-                        'coordinates': [address.lat, address.lng]
+                        'coordinates': [address['lat'], address['lng']]
                     },
                     'properties': {
-                        'id': data.id,
-                        'name': data.name,
-                        'url': data.url,
-                        'description': data.description,
+                        'id': data['id'],
+                        'name': data['name'],
+                        'url': data['url'],
+                        'description': data['description'],
                         'address': {
-                            'name': address.name,
-                            'stages': address.stages
+                            'name': address['name'],
+                            'stages': address['stages']
                         }
                     },
                     'options': {
@@ -762,6 +765,7 @@ goog.scope(function() {
                 });
             }
         }
+
         return result;
     };
 
@@ -824,7 +828,7 @@ goog.scope(function() {
             this.getMapParams_()
         );
 
-        if (this.config_.enableScrollZoom) {
+        if (this.config_['enableScrollZoom']) {
             this.ymaps_.behaviors.enable('scrollZoom');
         } else {
             this.ymaps_.behaviors.disable('scrollZoom');

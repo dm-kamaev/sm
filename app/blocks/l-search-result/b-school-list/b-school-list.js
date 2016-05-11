@@ -9,6 +9,7 @@ goog.require('sm.lSearchResult.bSchoolListItem.SchoolListItem');
 goog.require('sm.lSearchResult.bSort.Sort');
 
 
+
 /**
  * School list component
  * @param {object=} opt_params
@@ -309,16 +310,15 @@ goog.scope(function() {
      * @param {Array.<Object>=} opt_listData
      */
     SchoolList.prototype.addItems = function(opt_listData) {
-        var that = this;
         var data = opt_listData || [];
 
         data.forEach(function(itemData) {
             var item = new SchoolListItem(itemData);
-            that.addChild(item, true);
-            that.schoolListItems_.push(item);
-        });
+            this.addChild(item, true);
+            this.schoolListItems_.push(item);
+        }, this);
 
-        if (opt_listData.length < 10) {
+        if (data.length < 10) {
             this.disable_();
         } else {
             this.hideLoader_();

@@ -147,9 +147,9 @@ goog.scope(function() {
      */
     Search.prototype.getData = function() {
         return {
-            metroId: this.getMetroId(),
-            areaId: this.getAreaId(),
-            text: this.getText()
+            'metroId': this.getMetroId(),
+            'areaId': this.getAreaId(),
+            'text': this.getText()
         };
     };
 
@@ -165,18 +165,18 @@ goog.scope(function() {
     Search.prototype.setData = function(data) {
 
         if (data.hasOwnProperty('areaId')) {
-            this.setAreaId(data.areaId);
+            this.setAreaId(data['areaId']);
         }
 
         if (data.hasOwnProperty('metroId')) {
-            this.setMetroId(data.metroId);
+            this.setMetroId(data['metroId']);
         }
 
         if (data.hasOwnProperty('text')) {
-            this.setText(data.text);
+            this.setText(data['text']);
         }
 
-        this.setCoords(data.coords);
+        this.setCoords(data['coords']);
     };
 
     /**
@@ -185,10 +185,10 @@ goog.scope(function() {
      */
     Search.prototype.reset = function() {
         this.setData({
-            text: '',
-            metroId: null,
-            areaId: null,
-            coords: null
+            'text': '',
+            'metroId': null,
+            'areaId': null,
+            'coords': null
         });
     };
 
@@ -412,7 +412,7 @@ goog.scope(function() {
                 for (var i = 0, type; type = types[i]; i++) {
                     items = data[type];
                     for (var j = 0, item; item = items[j]; j++) {
-                        item.type = type;
+                        item['type'] = type;
                     }
                     if (type == 'schools') {
                         items = items.sort(function(school1, school2) {
@@ -452,9 +452,9 @@ goog.scope(function() {
 
             select: function(item) {
                 return {
-                    text: item.name,
-                    value: item.id,
-                    coords: item.coords
+                    text: item['name'],
+                    value: item['id'],
+                    coords: item['coords']
                 };
             }
         });
@@ -516,10 +516,10 @@ goog.scope(function() {
         if (name) {
             res = sm.bSearch.Template.item({
                 params: {
-                    type: item.type,
+                    type: item['type'],
                     name: name,
                     areas: this.renderItemAreas_(item),
-                    totalScore: item.totalScore
+                    totalScore: item['totalScore']
                 }
             });
         }
@@ -537,17 +537,17 @@ goog.scope(function() {
     Search.prototype.renderItemName_ = function(item, str) {
         var res = '',
             str = str.replace(/ё/g, 'е'),
-            name = item.name.replace(/ё/g, 'е'),
-            fullName = item.fullName && item.fullName.replace(/ё/g, 'е'),
-            abbreviation = item.abbreviation &&
-                item.abbreviation.replace(/ё/g, 'е');
+            name = item['name'].replace(/ё/g, 'е'),
+            fullName = item['fullName'] && item['fullName'].replace(/ё/g, 'е'),
+            abbreviation = item['abbreviation'] &&
+                item['abbreviation'].replace(/ё/g, 'е');
 
         if (Suggest.findEntry(name, str)) {
-            res = item.name;
+            res = item['name'];
         } else if (Suggest.findEntry(fullName, str)) {
-            res = item.fullName;
+            res = item['fullName'];
         } else if (Suggest.findEntry(abbreviation, str)) {
-            res = item.abbreviation;
+            res = item['abbreviation'];
         }
 
         return res;
@@ -562,10 +562,10 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.renderItemAreas_ = function(item) {
-        var addresses = item.addresses || [],
+        var addresses = item['addresses'] || [],
             areas = addresses
                 .map(function(address) {
-                    return address.area.name;
+                    return address['area']['name'];
                 })
                 .filter(function(area, index, areas) {
                     return areas.indexOf(area) == index;
@@ -688,15 +688,15 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.redirect_ = function(event, data) {
-        this.setText(data.item.name);
+        this.setText(data['item']['name']);
         this.suggest_.blur();
 
-        if (data.item.type === 'schools') {
-            document.location.href = '/school/' + data.item.url;
+        if (data['item']['type'] === 'schools') {
+            document.location.href = '/school/' + data['item']['url'];
         } else if (this.dataParams_.redirect) {
             this.onNotSchoolSelect_(event, data);
         } else {
-            this.processItem_(data.item);
+            this.processItem_(data['item']);
             this.dispatchEvent({
                 type: Search.Event.ITEM_SELECT,
                 data: this.getData()
@@ -710,26 +710,26 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.processItem_ = function(item) {
-        if (item.type == 'metro') {
+        if (item['type'] == 'metro') {
             this.setData({
-                metroId: item.id,
-                areaId: null,
-                coords: item.coords,
-                text: item.name
+                'metroId': item['id'],
+                'areaId': null,
+                'coords': item['coords'],
+                'text': item['name']
             });
-        } else if (item.type == 'areas') {
+        } else if (item['type'] == 'areas') {
             this.setData({
-                metroId: null,
-                areaId: item.id,
-                coords: item.coords,
-                text: item.name
+                'metroId': null,
+                'areaId': item['id'],
+                'coords': item['coords'],
+                'text': item['name']
             });
         } else {
             this.setData({
-                metroId: null,
-                areaId: null,
-                coords: null,
-                text: item.name
+                'metroId': null,
+                'areaId': null,
+                'coords': null,
+                'text': item['name']
             });
         }
     };
@@ -744,7 +744,7 @@ goog.scope(function() {
             hitType: 'event',
             eventCategory: 'suggest',
             eventAction: 'suggest click',
-            eventLabel: data.item.name
+            eventLabel: data['item']['name']
         };
 
         Analytics.send(dataAnalytics);
@@ -802,8 +802,8 @@ goog.scope(function() {
      */
     Search.prototype.onTextChange_ = function(event, data) {
         this.setData({
-            metroId: null,
-            areaId: null
+            'metroId': null,
+            'areaId': null
         });
         this.dispatchEvent(Search.Event.TEXT_CHANGE);
     };
@@ -816,11 +816,11 @@ goog.scope(function() {
      */
     Search.prototype.onNotSchoolSelect_ = function(event, data) {
         var url = '/search' +
-                '?name=' + encodeURIComponent(data.text);
-        if (data.item.type === 'metro') {
-            url += '&metroId=' + data.item.id;
-        } else if (data.item.type === 'areas') {
-            url += '&areaId=' + data.item.id;
+                '?name=' + encodeURIComponent(data['text']);
+        if (data['item']['type'] === 'metro') {
+            url += '&metroId=' + data['item']['id'];
+        } else if (data['item']['type'] === 'areas') {
+            url += '&areaId=' + data['item']['id'];
         }
         document.location.href = url;
     };

@@ -633,14 +633,14 @@ schoolView.dataLinks = function() {
             encodeURIComponent('Новослободская') + '&metroId=67'
         },
         {
-          name: 'Тимирязевский',
-          url: searchUrl +
-            encodeURIComponent('Тимирязевский')
-        },
-        {
           name: 'Лицей',
           url: searchUrl +
             encodeURIComponent('Лицей')
+        },
+        {
+          name: 'Тимирязевский',
+          url: searchUrl +
+            encodeURIComponent('Тимирязевский')
         }
     ];
 };

@@ -200,15 +200,18 @@
     }
 }
 
-@media screen and (max-device-width: 600px) // for phone
-and (orientation: portrait),
-screen and (max-width: 600px) // for desktop
-{
+@include media-xs {
+    .l-error-not-found__title-text {
+        margin-top: 65px;
+        padding-left: 120px;
+
+        vertical-align: top;
+    }
 
     .l-error-not-found__popular-schools {
-        white-space: normal;
-
         width: 100%;
+
+        white-space: normal;
     }
 
     .l-error-not-found__popular-school {
@@ -232,21 +235,13 @@ screen and (max-width: 600px) // for desktop
     }
 }
 
-@include media-xs {
-    .l-error-not-found__title-text {
-        vertical-align: top;
-        margin-top: 65px;
-        padding-left: 120px;
-    }
-
-}
-
 @include media-xxs {
     .l-error-not-found__title-wrap {
         height: 285px;
 
         line-height: 0;
     }
+
     .l-error-not-found__title-img {
         position: static;
 
