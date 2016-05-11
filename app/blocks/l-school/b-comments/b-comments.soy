@@ -24,15 +24,12 @@
 /**
  * Comments block
  * @param params {{
- *     comments: [{
+ *     comments: Array.<{
  *         author: string,
  *         rank: string,
  *         textParagraphs: string,
- *         sections: [{
- *             name: string,
- *             value: int
- *         }]
- *     }]
+ *         score: {sm.bScore.TemplateMinimized.Params}
+ *     }>
  * }}
  */
 {template .comments_ autoescape="strict" kind="html"}

@@ -15,7 +15,6 @@ scoreView.school = function (score) {
         'Инфраструктура'
     ],
     scoreSections = this.sections(sectionNames, score);
-
     return this.isNotEmpty(scoreSections) ? scoreSections : false;
 };
 
@@ -79,13 +78,14 @@ scoreView.results = function(score, totalScore, opt_sortCriterion) {
 /**
  * Transform array with score to array with names and values
  * @param {Array.<string>} sectionNames
- * @param {Array.<number>} sectionValues
+ * @param {?Array.<number>} nullableSectionValues
  * @return {Array.<{
  *     name: string,
  *     value: number
  * }>}
  */
-scoreView.sections = function(sectionNames, sectionValues) {
+scoreView.sections = function(sectionNames, nullableSectionValues) {
+    var sectionValues = nullableSectionValues || [];
     return sectionNames.map((sectionName, index) => {
         return {
             name: sectionName,
