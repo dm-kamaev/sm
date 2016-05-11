@@ -1,4 +1,4 @@
-const scriptsHelper = require('./scriptsHelper.js');
+const scriptsHelper = require('./ScriptsHelper.js');
 
 module.exports = function(gulpHelper) {
     return function() {
