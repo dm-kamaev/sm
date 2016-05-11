@@ -13,19 +13,30 @@ const hostName = config.url.protocol + '://' + config.url.host;
 
 const sitemapPath = path.join(__dirname, '../../../assets/sitemap.xml');
 
-class SitemapCreator {
+class SitemapUpdater {
     constructor() {
-        this.cacheTime = 600000; //600 sec (10 min) cache purge period
         this.urls = [];
     }
 
     /**
-     * Create Sitemap
+     * Update Sitemap
      */
-    create() {
+    update() {
         this.generateData_();
-        this.generate_();
-        this.write_();
+        this.generateSitemap_();
+        this.writeSitemap_();
+    }
+
+    /**
+     * Generation data for Sitemap
+     */
+    generateData_() {
+        this.addUrlData_('/');
+
+        var schoolsUrls = await(this.generateSchoolsUrls_());
+        for (var i = 0, len = schoolsUrls.length; i < len; i++) {
+            this.addUrlData_(schoolsUrls[i]);
+        }
     }
 
     /**
@@ -34,29 +45,16 @@ class SitemapCreator {
      */
     generateSchoolsUrls_() {
         var urls = await(urlService.getAllUrls()); 
-        return urls.map(urlItem => hostName + '/school/' + urlItem + '/');
+        return urls.map(urlItem => hostName + '/school/' + urlItem);
     }
 
     /**
-     * Generation data for Sitemap
+     * Add url data for Sitemap
      */
-    generateData_() {
-        this.addData_('/', 0.5);
-
-        var schoolsUrls = await(this.generateSchoolsUrls_());
-        for (var i = 0, len = schoolsUrls.length; i < len; i++) {
-            this.addData_(schoolsUrls[i], 0.5);
-        }
-    }
-
-    /**
-     * Add data for Sitemap
-     */
-    addData_(urlItem, priority) {
+    addUrlData_(urlItem) {
         this.urls.push({
             url: urlItem,
             changefreq: 'monthly',
-            priority: priority,
             lastmodrealtime: true,
             lastmodfile: sitemapPath
         })
@@ -64,11 +62,15 @@ class SitemapCreator {
 
     /**
      * Generate Sitemap
+     * cacheTime = 5 days (cache purge period)
      */
-    generate_() {
+    generateSitemap_() {
+        var minute = 60000,
+            fiveDays = minute * 60 * 24 * 5;
+
         this.sitemap = sitemap.createSitemap({
             hostname: hostName,
-            cacheTime: this.cacheTime,
+            cacheTime: fiveDays,
             urls: this.urls
         });
     }
@@ -76,10 +78,14 @@ class SitemapCreator {
     /**
      * Write Sitemap in file
      */
-    write_() {
-        console.log(this.sitemap.toString());
+    writeSitemap_() {
+        if (!fs.existsSync(sitemapPath)) {
+            fs.open(sitemapPath, "wx", function (err, fd) {
+                fs.close(fd);
+            });
+        }
         fs.writeFileSync(sitemapPath, this.sitemap.toString());
     }
-}
+};
 
-module.exports = SitemapCreator;
+module.exports = SitemapUpdater;
