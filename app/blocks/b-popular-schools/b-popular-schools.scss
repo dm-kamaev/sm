@@ -25,6 +25,10 @@
 
 .b-popular-schools__school-rating {
     margin-bottom: 21px;
+
+    font-family: 'Proxima', Arial, sans-serif;
+    font-weight: 600;
+    color: #000000;
 }
 
 .b-popular-schools__school-name {
@@ -32,7 +36,7 @@
 
     line-height: 21px;
 
-    font-family: 'PT Serif';
+    font-family: 'PT Serif', serif;
     font-weight: 800;
     font-size: 16px;
 }
@@ -60,7 +64,7 @@
 .b-popular-schools__school-description {
     margin-bottom: 18px;
 
-    font-family: arial;
+    font-family: Arial, sans-serif;
     font-size: 13px;
     line-height: 18px;
 }

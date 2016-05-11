@@ -20,7 +20,9 @@ commentView.school = function(comments) {
     return comments
         .filter(comment => comment.text)
         .map(comment => {
-            var sections = scoreView.sectionsNotEmpty(comment.rating.score);
+            var score = scoreView.comment(
+                comment.rating.score, comment.rating.totalScore
+            );
             return {
                 author: '',
                 rank: typeConvert[comment.userData.userType],
@@ -30,7 +32,7 @@ commentView.school = function(comments) {
                     ),
                     full: commentView.textParagraphs(comment.text)
                 },
-                sections: sections
+                score: score
             };
         });
 };

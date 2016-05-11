@@ -20,6 +20,10 @@ var Comment = db.define('Comment', {
     groupId: {
         type: DataType.INTEGER,
         field: 'comment_group_id'
+    },
+    createdAt: {
+        type: DataType.DATE,
+        field: 'created_at'
     }
 }, {
     underscored: true,

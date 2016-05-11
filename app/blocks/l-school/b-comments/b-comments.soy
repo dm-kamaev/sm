@@ -2,15 +2,12 @@
 /**
  * Comments template
  * @param params {{
- *     comments: [{
+ *     comments: Array.<{
  *         author: string,
  *         rank: string,
  *         textParagraphs: string,
- *         sections: [{
- *             name: string,
- *             value: int
- *         }]
- *     }],
+ *         score: {sm.bScore.TemplateMinimized.Params}
+ *     }>,
  *     isCommented: bool
  * }}
  */
@@ -27,15 +24,12 @@
 /**
  * Comments block
  * @param params {{
- *     comments: [{
+ *     comments: Array.<{
  *         author: string,
  *         rank: string,
  *         textParagraphs: string,
- *         sections: [{
- *             name: string,
- *             value: int
- *         }]
- *     }]
+ *         score: {sm.bScore.TemplateMinimized.Params}
+ *     }>
  * }}
  */
 {template .comments_ autoescape="strict" kind="html"}
@@ -48,7 +42,7 @@
                     'author': $comment.author,
                     'rank': $comment.rank,
                     'textParagraphs': $comment.textParagraphs,
-                    'sections': $comment.sections
+                    'score': $comment.score
                 ] /}
             {/call}
         {/foreach}

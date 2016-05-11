@@ -47,7 +47,10 @@
                         {call sm.bMark.Template.base}
                             {param params: [
                                 'value': $item.value,
-                                'display': 'inline'
+                                'display': 'inline',
+                                'config': [
+                                    'showMark': true
+                                ]
                             ]/}
                         {/call}
                     {elseif $params?.display == 'stars'}

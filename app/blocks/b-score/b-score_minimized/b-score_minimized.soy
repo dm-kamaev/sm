@@ -1,0 +1,240 @@
+{namespace sm.bScore.TemplateMinimized}
+
+/**
+ * Minimized score parameters
+ * @typedef {Object} sm.bScore.TemplateMinimized.Params
+ * @property {Object} data
+ * @property {Array.<{name: string, value: number}>} data.hiddenMarks
+ * @property {string} data.hiddenMarksTitle
+ * @property {{name: string, value: number}} data.visibleMark
+ * @property {Object} config
+ * @property {boolean} config.isActive
+ * @property {boolean} config.isNameVisible
+ * @property {string} config.theme
+ */
+
+/**
+ * Score in school list view
+ * @param params {sm.bScore.TemplateMinimized.Params}
+ * @extends sm.bScore.Template
+ * @constructor
+ */
+{template .base autoescape="strict" kind="html"}
+    {call .init data="all" /}
+{/template}
+
+/**
+ * Block init
+ * @param params {sm.bScore.TemplateMinimized.Params}
+ */
+{template .init autoescape="strict" kind="html"}
+    <div class="{call .rootClass_ /}
+                {sp}{call .rootClass_ /}_minimized
+                {sp}{call .rootClass_ /}_{$params.config.theme}
+                {if $params?.config?.isActive}
+                    {sp}{call .rootClass_ /}_active
+                {/if}
+                ">
+        {let $notShowScore: $params?.config?.theme == 'compact' and
+            not $params?.config?.isActive /}
+
+        {if not $notShowScore}
+            {call .visibleMark_ data="all" /}
+            {call .hiddenMarks_ data="all" /}
+        {/if}
+    </div>
+{/template}
+
+/**
+ * @param params {{
+ *     data: {
+ *         visibleMark: {
+ *             name: ?string,
+ *             value: ?number
+ *         }
+ *     },
+ *     config: {
+ *         isNameVisible: ?boolean,
+ *         isActive: ?boolean,
+ *         theme: ?string
+ *     }
+ * }}
+ */
+{template .visibleMark_ kind="html"}
+    <div class="{call .rootClass_ /}__visible_mark">
+        {if $params.config.theme == 'compact' and
+            $params.data.visibleMark.value == 0}
+                {call .showMarks_ /}
+        {else}
+            {call .mark_}
+                {param params: [
+                    'data': $params?.data?.visibleMark,
+                    'config': [
+                        'size': $params?.config?.theme == 'compact' ?
+                        'xs' :
+                        'l',
+                        'isNameVisible': $params?.config?.isNameVisible,
+                        'type': 'visible',
+                        'isActive': $params?.config?.isActive,
+                        'theme': $params?.config?.theme
+                    ]
+                ]/}
+            {/call}
+        {/if}
+    </div>
+{/template}
+
+/**
+ * Hidden list content template
+ * @param params {{
+ *     data: {
+ *         hiddenMarks: Array.<{
+ *             name: ?string,
+ *             value: ?number
+ *         }>,
+ *         hiddenMarksTitle: string
+ *     },
+ *     config: {
+ *         theme: ?string
+ *     }
+ * }}
+ */
+{template .hiddenMarks_ autoescape="strict" kind="html"}
+    {if length($params?.data?.hiddenMarks) > 0}
+        <div class="{call .rootClass_ /}__hidden-marks
+                    i-utils__hidden">
+            {if $params?.config?.theme != 'compact'}
+                <div class="{call .rootClass_ /}__arrow">
+                    <div class="{call .rootClass_ /}__arrow-shadow"></div>
+                </div>
+            {/if}
+
+            <ul>
+                <li class="{call .rootClass_ /}__hidden-mark-item">
+                    {$params.data.hiddenMarksTitle}
+                </li>
+                {foreach $mark in $params.data.hiddenMarks}
+                    <li class="{call .rootClass_ /}__hidden-mark-item">
+                        {call .mark_}
+                            {param params: [
+                                'data': $mark,
+                                'config': [
+                                    'isNameVisible': true,
+                                    'size': 's'
+                                ]
+                            ]/}
+                        {/call}
+                    </li>
+                {/foreach}
+            </ul>
+        </div>
+    {/if}
+{/template}
+
+/**
+ * Score mark template
+ * @param params {{
+ *     data: {
+ *         name: ?string,
+ *         value: ?number
+ *     },
+ *     config: {
+ *         size: ?string,
+ *         isNameVisible: ?boolean,
+ *         type: ?string,
+ *         isActive: ?boolean
+ *     }
+ * }}
+ */
+{template .mark_ kind="html"}
+    <div class="{call .rootClass_ /}__mark
+        {if $params?.config?.type}
+            {sp}{call .rootClass_ /}__mark_type_{$params.config.type}
+        {/if}">
+
+        {call .markName_ data="all" /}
+        {call .markValue_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Mark name template
+ * @param params {{
+ *     data: {
+ *         name: ?string,
+ *     },
+ *     config: {
+ *         isNameVisible: ?boolean,
+ *         isActive: ?boolean,
+ *     }
+ * }}
+ */
+{template .markName_ kind="html"}
+    <div class="{call .rootClass_ /}__mark-name
+        {if not $params?.config?.isNameVisible}
+            {sp}i-utils__hidden
+        {/if}
+        {if $params?.config?.isActive}
+            {sp}{call .rootClass_ /}__mark-name_active
+        {/if}
+        ">
+            {$params?.data?.name}
+    </div>
+{/template}
+
+/**
+ * Mark value template
+ * @param params {{
+ *     data: {
+ *         value: ?number
+ *     },
+ *     config: {
+ *         size: ?string,
+ *         type: ?string,
+ *         isActive: ?boolean
+ *     }
+ * }}
+ */
+{template .markValue_ kind="html"}
+    {let $markParams: [
+        'value': $params?.data?.value,
+        'display': 'inline',
+        'config': [
+            'size': $params?.config?.size,
+            'zeroSign': $params?.config?.size == 'l' ? 'nothing' : '',
+            'showMark': true
+        ]
+    ] /}
+
+    <div class="{call .rootClass_ /}__mark-value
+        {if $params?.config?.isActive}
+            {sp}{call .rootClass_ /}__mark-value_active
+        {/if}">
+        {call sm.bMark.Template.base}
+            {param params: $markParams /}
+        {/call}
+    </div>
+{/template}
+
+/**
+ * Template for show marks button
+ */
+{template .showMarks_}
+    <div class="{call .rootClass_ /}__mark
+            {sp}{call .rootClass_ /}__mark_type_visible">
+
+        <div class="{call .rootClass_ /}__mark-name
+                {sp}{call .rootClass_ /}__mark-name_active
+            ">
+                Показать оценки
+        </div>
+    </div>
+{/template}
+
+/**
+ * Root class template
+ */
+{template .rootClass_}
+    b-score
+{/template}

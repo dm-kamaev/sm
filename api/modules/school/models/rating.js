@@ -29,6 +29,10 @@ var Rating = db.define('Rating', {
         }
         //allowNull: false
     },
+    totalScore: {
+        type: DataType.FLOAT,
+        field: 'total_score'
+    },
     userDataId: {
         type: DataType.INTEGER,
         field: 'user_data_id'

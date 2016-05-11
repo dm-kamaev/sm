@@ -618,19 +618,38 @@ service.review = async(function(schoolId, params) {
 
 /**
  * @private
- * @param {object} school
- * @param {array<number>} params.score
- * @return {object}
+ * @param {Object} school
+ * @param {Array.<number>} params.score
+ * @return {Object}
  */
 service.rate = async(function(school, params) {
-
-    var rt = await (models.Rating.create({
+    var totalScore = calculateTotalScore(params.score);
+    var rating = await (models.Rating.create({
         score: params.score,
+        totalScore: totalScore,
         schoolId: school.id,
         userDataId: params.userDataId
     }));
-    return rt;
+    return rating;
 });
+
+/**
+ * Calculate total score from score parameters. If one of score parameter
+ * equals 0, total score equals 0 too
+ * @param {Array.<number>} score
+ * @return {number}
+ */
+var calculateTotalScore = function(score) {
+    var notEmptyScore = score.every(scoreItem => scoreItem),
+        result = 0;
+    if (notEmptyScore) {
+        var sum = score.reduce((sum, currentScore) => {
+            return sum + currentScore;
+        });
+        result = sum / score.length;
+    }
+    return result;
+};
 
 service.createActivity = async(params => {
     CsvConverter.cureQuotes(params);
