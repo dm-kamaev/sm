@@ -249,11 +249,9 @@ goog.scope(function() {
      * @private
      */
     ScoreMinimized.prototype.onVisibleMarkNameClick_ = function() {
-        console.log(this.isHiddenMarksShowed_);
         this.isHiddenMarksShowed_ ?
             this.setHiddenMarksVisibility_(false) :
             this.setHiddenMarksVisibility_(true);
-        console.log(this.isHiddenMarksShowed_);
     };
 
 

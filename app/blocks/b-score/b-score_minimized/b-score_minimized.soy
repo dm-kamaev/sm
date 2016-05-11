@@ -71,8 +71,8 @@
                     'data': $params?.data?.visibleMark,
                     'config': [
                         'size': $params?.config?.theme == 'compact' ?
-                            'small'
-                            : 'large',
+                        'xs' :
+                        'l',
                         'isNameVisible': $params?.config?.isNameVisible,
                         'type': 'visible',
                         'isActive': $params?.config?.isActive,
@@ -120,7 +120,7 @@
                                 'data': $mark,
                                 'config': [
                                     'isNameVisible': true,
-                                    'size': 'small'
+                                    'size': 's'
                                 ]
                             ]/}
                         {/call}
@@ -204,14 +204,9 @@
         'value': $params?.data?.value,
         'display': 'inline',
         'config': [
-            'size': $params?.config?.size == 'large' ? 'l' :
-                $params?.config?.size == 'small' ? 's'  :
-                 '',
+            'size': $params?.config?.size,
             'zeroSign': $params?.config?.size == 'large' ? 'nothing' : '',
-            'circleIndent': $params?.config?.theme == 'compact' and
-                $params?.config?.type == 'visible' ?
-                's' :
-                ''
+            'showMark': true
         ]
     ] /}
 

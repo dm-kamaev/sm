@@ -3,10 +3,17 @@
 .b-score_minimized {
     position: relative;
 
+    font: 13px Arial, sans-serif;
+    line-height: 20px;
+
     .b-score__mark.b-score__mark_type_visible {
         .b-score__mark-value {
             width: 54px;
+
+            font-family: 'Proxima', Arial, sans-serif;
+            font-weight: 600;
         }
+
     }
 
     .b-score__mark-value {
@@ -35,7 +42,10 @@
         left: -41px;
 
         width: 170px;
-        padding: 24px 30px 20px;
+        padding: 24px 30px;
+
+        font-family: Arial, sans-serif;
+        font-size: 13px;
 
         color: #808080;
         background: #fff;
@@ -68,9 +78,9 @@
     }
 
     .b-score__hidden-mark-item {
-        margin-bottom: 6px;
+        margin-bottom: 7px;
         padding-top: 1px;
-        padding-bottom: 8px;
+        padding-bottom: 10px;
 
         border-bottom: 1px solid #e5e5e5;
 
@@ -94,27 +104,40 @@
     }
 
     &.b-score_compact {
+        font-size: 12px;
+
         .b-score__mark.b-score__mark_type_visible {
             .b-score__mark-value {
                 width: auto;
+
+                font-family: Arial, sans-serif;
+                font-weight: normal;
             }
         }
 
         .b-score__mark-name.b-score__mark-name_active {
-            margin-right: 7px;
+            margin-right: 9px;
         }
 
         .b-score__hidden-marks {
-            top: 24px;
-            left: 22px;
+            top: 23px;
+            left: 20px;
+        }
+
+        .b-score__visible_mark:hover {
+            .b-score__mark.b-score__mark_type_visible {
+                color: #ff0000;
+            }
         }
     }
 }
 
 @include media-m {
-    .b-score__mark-name {
-        &.b-score__mark-name_active {
-            display: none;
+    .b-score.b-score_minimized.b-score_default {
+        .b-score__mark-name {
+            &.b-score__mark-name_active {
+                display: none;
+            }
         }
     }
 }
