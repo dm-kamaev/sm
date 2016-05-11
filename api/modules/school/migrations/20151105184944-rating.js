@@ -20,6 +20,9 @@ module.exports = {
         score: {
             type: Sequelize.ARRAY(Sequelize.INTEGER),
         },
+        total_score: {
+            type: Sequelize.FLOAT
+        },
         school_id: {
             onDelete: 'cascade',
             type: Sequelize.INTEGER,

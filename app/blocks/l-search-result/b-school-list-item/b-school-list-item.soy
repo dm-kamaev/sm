@@ -10,14 +10,7 @@
  *     ],
  *     type: ?string,
  *     url: ?string,
- *     score: ?list<[
- *         name: ?string,
- *         value: ?number
- *     ]>,
- *     currentCriterion: [
- *         name: ?string,
- *         value: ?number
- *     ],
+ *     score: {sm.bScore.TemplateMinimized.Params},
  *     description: ?string,
  *     metroStations: ?list<[
  *         id: number,
@@ -28,7 +21,6 @@
  *         name: string
  *     ],
  *     ratings: ?list<string>,
- *     isScoreClickable: ?boolean,
  *     position: ?number
  * }
  */
@@ -40,24 +32,11 @@
         " class="b-school-list-item">
 
         <div class="b-school-list-item__section">
-            <div class="b-school-list-item__name">
-                {$params.name.light}
-                {if $params.name.bold}
-                    <span class="b-school-list-item__name_bold">
-                        {$params.name.bold}
-                    </span>
-                {/if}
-            </div>
+            {call .name_ data="all" /}
 
-            <div class="b-school-list-item__score">
-                {call sm.bScoreSchoolList.Template.base}
-                    {param params:[
-                        'score': $params.score,
-                        'sortCriterion': $params.currentCriterion,
-                        'isClickable': $params?.isScoreClickable
-                    ]/}
-                {/call}
-            </div>
+            {call .score_}
+                {param params: $params.score /}
+            {/call}
         </div>
 
         {if length($params.metroStations) > 0 or
@@ -108,4 +87,50 @@
             </div>
         {/if}
     </a>
+{/template}
+
+/**
+ * @param params {{
+ *     name: {
+ *         light: string,
+ *         bold: string
+ *     }
+ * }}
+ */
+{template .name_ kind="html"}
+    <div class="b-school-list-item__name">
+        {$params.name.light}
+        {if $params.name.bold}
+            <span class="b-school-list-item__name_bold">
+                {$params.name.bold}
+            </span>
+        {/if}
+    </div>
+{/template}
+
+/**
+ * @param params {sm.bScore.TemplateMinimized.Params}
+ */
+{template .score_ kind="html"}
+    {let $hiddenMarksTitle kind="html"}
+        Оценки, поставленные пользователями
+    {/let}
+
+    {let $scoreParams: [
+        'data': [
+            'hiddenMarks': $params.data.hiddenMarks,
+            'hiddenMarksTitle': $hiddenMarksTitle,
+            'visibleMark': $params.data.visibleMark
+        ],
+        'config': [
+            'isActive': $params.config.isActive,
+            'theme': 'default'
+        ]
+    ]/}
+
+    <div class="b-school-list-item__score">
+        {call sm.bScore.TemplateMinimized.base}
+            {param params: $scoreParams /}
+        {/call}
+    </div>
 {/template}

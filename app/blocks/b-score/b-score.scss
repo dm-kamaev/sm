@@ -3,6 +3,11 @@
 .b-score__section {
 	display: inline-block;
 
+    color: #000000;
+
+    font-family: 'Proxima', Arial, sans-serif;
+    font-weight: 600;
+
 	&.b-score__section_left {
 		width: 118px;
 		margin-top: 4px;
@@ -36,22 +41,25 @@
 
 	text-align: center;
 
-	font-family: arial, sans-serif;
+	font-family: Arial, sans-serif;
 	font-size: 11px;
+    font-weight: normal;
 }
 
 .b-score__inform {
 	margin-top: 5px;
 	margin-bottom: 12px;
 
-	font-family: Proxima, arial, sans-serif;
-	font-weight: 700;
-	font-size: 15px;
 	color: #000;
 
+	font-family: Proxima, arial, sans-serif;
+	font-size: 15px;
+	font-weight: 700;
+
 	&.b-score__inform_place-comment {
-		color: #ee362c;
 		cursor: pointer;
+
+		color: #ee362c;
 	}
 
 	&:last-child {
