@@ -180,3 +180,9 @@ logger пишет в файл `/opt/school-market/current/runtime/node.forever.l
 В dev-режиме дополнительно выводятся в консоль сообщения уровней `TRACE`, `VERBOSE`, `DEBUG` и `INFO`
 
 Для работы логгера **ОБЯЗАТЕЛЬНО** наличие директории `runtime` в корне проекта
+
+## Advanced compilation ##
+Для дебага скриптов в режиме Advanced compilation нужно запустить комманду
+```sh
+gulp debug
+```
