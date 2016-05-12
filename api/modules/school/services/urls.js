@@ -86,9 +86,10 @@ service.updateAll = async(function() {
  * @return {Array}
  */
 service.getAllUrls = async(function() {
-    var schools = await(models.School.findAll());
-    var urLs = schools.map(school => school.url);
-    return urLs;
+    var schools = await(models.School.findAll({
+        attributes: ['url']
+    }));
+    return schools.map(school => school.url);
 });
 
 /**

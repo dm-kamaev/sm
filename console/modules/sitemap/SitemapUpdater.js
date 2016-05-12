@@ -6,85 +6,101 @@ const async = require('asyncawait/async');
 const await = require('asyncawait/await');
 const sitemap = require('sitemap');
 
-const urlService = require(path.join(__dirname, '../../../api/modules/school/services/urls'));
+const urlService = require('../../../api/modules/school/services/urls');
 
-const config = require(path.join(__dirname, '../../../app/config')).config;
+const config = require('../../../app/config').config;
 const hostName = config.url.protocol + '://' + config.url.host;
 
-const sitemapPath = path.join(__dirname, '../../../assets/sitemap.xml');
 
 class SitemapUpdater {
     constructor() {
-        this.urls = [];
+        this.sitemapPath = path.join(__dirname, '../../../assets/sitemap.xml');
+        this.sitemap = [];
     }
 
     /**
      * Update Sitemap
+     * @public
      */
     update() {
-        this.generateData_();
-        this.generateSitemap_();
-        this.writeSitemap_();
+        var urls = this.generateUrlsArray_();
+        this.sitemap = this.generateSitemap_(urls);
+        this.writeSitemap_(this.sitemap);
     }
 
     /**
-     * Generation data for Sitemap
+     * Generation urls array for Sitemap
+     * @return {Array.<Object>}
+     * @private
      */
-    generateData_() {
-        this.addUrlData_('/');
+    generateUrlsArray_() {
+        var urlsArray = [];
 
-        var schoolsUrls = await(this.generateSchoolsUrls_());
+        urlsArray.push(this.generateUrlData_('/'));
+
+        var schoolsUrls = await(this.getSchoolsUrls_());
         for (var i = 0, len = schoolsUrls.length; i < len; i++) {
-            this.addUrlData_(schoolsUrls[i]);
+            urlsArray.push(this.generateUrlData_(schoolsUrls[i]));
         }
+
+        return urlsArray;
     }
 
     /**
-     * Generation schools Urls for Sitemap
+     * Get schools Urls for Sitemap
      * @return {Array}
+     * @private
      */
-    generateSchoolsUrls_() {
-        var urls = await(urlService.getAllUrls()); 
-        return urls.map(urlItem => hostName + '/school/' + urlItem);
+    getSchoolsUrls_() {
+        var urls = await(urlService.getAllUrls());
+        return urls.map(url=> '/school/' + url);
     }
 
     /**
      * Add url data for Sitemap
+     * @param {string} url
+     * @return {Object}
+     * @private
      */
-    addUrlData_(urlItem) {
-        this.urls.push({
-            url: urlItem,
+    generateUrlData_(url) {
+        return {
+            url: url,
             changefreq: 'monthly',
             lastmodrealtime: true,
-            lastmodfile: sitemapPath
-        })
+            lastmodfile: this.sitemapPath
+        };
     }
 
     /**
      * Generate Sitemap
-     * cacheTime = 5 days (cache purge period)
+     * cacheTime = 1 day (cache purge period)
+     * @param {Array.<Object>} urls
+     * @return {Array.<Object>}
+     * @private
      */
-    generateSitemap_() {
+    generateSitemap_(urls) {
         var minute = 60000,
-            fiveDays = minute * 60 * 24 * 5;
+            day = minute * 60 * 24;
 
-        this.sitemap = sitemap.createSitemap({
+        return sitemap.createSitemap({
             hostname: hostName,
-            cacheTime: fiveDays,
-            urls: this.urls
+            cacheTime: day,
+            urls: urls
         });
     }
 
     /**
      * Write Sitemap in file
+     * @param {Array.<Object>} siteMap
+     * @private
      */
-    writeSitemap_() {
-        if (!fs.existsSync(sitemapPath)) {
-            fs.open(sitemapPath, "wx", function (err, fd) {
+    writeSitemap_(siteMap) {
+        if (!fs.existsSync(this.sitemapPath)) {
+            fs.open(this.sitemapPath, "wx", function (err, fd) {
                 fs.close(fd);
             });
         }
-        fs.writeFileSync(sitemapPath, this.sitemap.toString());
+        fs.writeFileSync(this.sitemapPath, siteMap.toString());
     }
 };
 
