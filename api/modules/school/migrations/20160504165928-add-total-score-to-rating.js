@@ -8,9 +8,11 @@ const sequelize = require('../../app/components/db');
 module.exports  = {
     up: async(function(queryInterface, Sequelize) {
 
-        try{await(queryInterface.addColumn('rating', 'total_score', {
-            type: Sequelize.FLOAT
-        }))}
+        try {
+            await(queryInterface.addColumn('rating', 'total_score', {
+                type: Sequelize.FLOAT
+            }));
+        }
         catch (error) {
         };
     }),
