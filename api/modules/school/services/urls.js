@@ -81,6 +81,16 @@ service.updateAll = async(function() {
     await(schools.forEach(school => this.generateUrl(school)));
 });
 
+/**
+ * get all urls from database
+ * @return {Array}
+ */
+service.getAllUrls = async(function() {
+    var schools = await(models.School.findAll({
+        attributes: ['url']
+    }));
+    return schools.map(school => school.url);
+});
 
 /**
  * @param {string} url
