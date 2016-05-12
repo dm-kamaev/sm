@@ -8,24 +8,57 @@ var commentView = {};
 /**
  * Transform comments to show it on school page
  * @param {Array.<Object>=} comments
- * @return {Object}
+ * @return {Array.<{
+ *     user: {
+ *         type: string,
+ *         name: string,
+ *         details: string
+ *     },
+ *     date: {
+ *         today: {
+ *             year: number,
+ *             month: number,
+ *             day: number
+ *         },
+ *         publication: {
+ *             year: number,
+ *             month: number,
+ *             day: number
+ *         }
+ *     },
+ *     textParagraphs: {
+ *         crop: Array.<string>,
+ *         full: ?Array.<string>
+ *     },
+ *     score: {
+ *         data: {
+ *             visibleMark: Object.<string, number|string>,
+ *             hiddenMarks: Array.<Object.<string, number|string>>
+ *         },
+ *         config: {
+ *             isActive: boolean
+ *         }
+ *     }
+ * }>}
  */
 commentView.school = function(comments) {
-    var typeConvert = {
-        'Parent': 'Родитель',
-        'Graduate': 'Выпускник',
-        'Scholar': 'Ученик'
-    };
-
     return comments
         .filter(comment => comment.text)
         .map(comment => {
             var score = scoreView.comment(
                 comment.rating.score, comment.rating.totalScore
             );
+
+            var userData = comment.userData || {};
             return {
-                author: '',
-                rank: typeConvert[comment.userData.userType],
+                user: {
+                    name: userData.username || '',
+                    details: details(userData)
+                },
+                date: {
+                    today: dateObject(new Date()),
+                    publication: dateObject(comment.createdAt)
+                },
                 textParagraphs: {
                     crop: commentView.textParagraphs(
                         cropText(comment.text, 430)
@@ -53,6 +86,121 @@ var cropText = function(text, maxLength) {
     }
     return result;
 };
+
+
+/**
+ * Transform date to date object
+ * @param {string|Date} date
+ * @return {{
+ *     year: number,
+ *     month: number,
+ *     day: number
+ * }}
+ */
+var dateObject = function(date) {
+    var transformedDate = date;
+    if(!date instanceof Date) {
+        transformedDate = new Date(date);
+    }
+
+    return {
+        year: transformedDate.getFullYear(),
+        months: transformedDate.getMonth(),
+        day: transformedDate.getDay()
+    };
+};
+
+
+/**
+ * @param {{
+ *     userType: string,
+ *     classType: ?number,
+ *     yearGraduate: ?number
+ * }} userData
+ * @return {string}
+ */
+var details = function(userData) {
+    var additionalInformationConverter = {
+            'Parent': parentAdditionalInformation,
+            'Graduate': graduateAdditionalInformation,
+            'Scholar': scholarAdditionalInformation
+        },
+        userType = userData.userType;
+    return additionalInformationConverter[userType](userData) || '';
+};
+
+
+/**
+ * Generate additional information for parent user type
+ * @param {{
+ *     userType: string,
+ *     classType: ?number,
+ *     yearGraduate: ?number
+ * }} userData
+ * @return {string}
+ */
+var parentAdditionalInformation = function(userData) {
+    var result = 'родитель',
+        classType = userData.classType;
+    if (classType) {
+        var classTypes = {
+                1: 'первоклассника',
+                2: 'второклассника',
+                3: 'третьеклассника',
+                4: 'четвероклассника',
+                5: 'пятиклассника',
+                6: 'шестиклассника',
+                7: 'семиклассника',
+                8: 'восьмиклассника',
+                9: 'девятиклассника',
+                10: 'десятиклассника',
+                11: 'одиннадцатиклассника'
+            };
+        result += ' ' + classTypes[classType];
+    }
+    return result;
+};
+
+
+/**
+ * Generate additional information for scholar user type
+ * @param {{
+ *     userType: string,
+ *     classType: ?number,
+ *     yearGraduate: ?number
+ * }} userData
+ * @return {string}
+ */
+var scholarAdditionalInformation = function(userData) {
+    var result = 'ученик',
+        classType = userData.classType;
+
+    if (classType) {
+        result += ' (' + classType + '-й класс)';
+    }
+    return result;
+};
+
+
+/**
+ * Generate additional information for graduate user type
+ * @param {{
+ *     userType: string,
+ *     classType: ?number,
+ *     yearGraduate: ?number
+ * }} userData
+ * @return {string}
+ */
+var graduateAdditionalInformation = function(userData) {
+    var result = 'выпускник',
+        yearGraduate = userData.yearGraduate;
+
+    if (yearGraduate) {
+        result += ' (' + yearGraduate + ')';
+    }
+    return result;
+};
+
 
 /**
  * Split comment string to paragraphs
