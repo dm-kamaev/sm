@@ -39,7 +39,7 @@ sm.lSearchResult.bSchoolListItem.SchoolListItem = function(opt_params) {
      * @private
      * @type {string}
      */
-    this.name_ = this.params_.name.light + this.params_.name.bold;
+    this.name_ = this.params_.name['light'] + this.params_.name['bold'];
 
     /**
      * scoreInstance
@@ -365,20 +365,19 @@ goog.scope(function() {
      * @private
      */
     ListItem.prototype.sendAnalyticsSchoolData_ = function(event) {
-
         var ecData = {
-            id: this.params_.id,
-            name: this.name_,
-            position: this.params_.position
+            'id': this.params_['id'],
+            'name': this.name_,
+            'position': this.params_['position']
         };
 
         Analytics.clickProduct(ecData, 'Search Results');
 
         var dataAnalytics = {
-            hitType: 'event',
-            eventCategory: 'search',
-            eventAction: 'results click',
-            eventLabel: this.name_
+            'hitType': 'event',
+            'eventCategory': 'search',
+            'eventAction': 'results click',
+            'eventLabel': this.name_
         };
 
         Analytics.send(dataAnalytics);

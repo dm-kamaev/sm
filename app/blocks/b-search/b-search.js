@@ -490,10 +490,10 @@ goog.scope(function() {
     Search.prototype.sendItemImpressions_ = function(items) {
         items.forEach(function(item, i) {
             Analytics.addImpression({
-                id: item.id,
-                name: item.name,
-                position: i + 1,
-                list: 'Suggest'
+                'id': item['id'],
+                'name': item['name'],
+                'position': i + 1,
+                'list': 'Suggest'
             });
         });
         Analytics.setView();
@@ -673,7 +673,7 @@ goog.scope(function() {
      * @param {Object} data
      */
     Search.prototype.itemClickHandler_ = function(event, data) {
-        if (data.item.type === 'schools') {
+        if (data['item']['type'] === 'schools') {
             this.sendEcAnalytics_(data);
         }
         this.sendAnalyticsSchoolData_(data);
@@ -741,10 +741,10 @@ goog.scope(function() {
      */
     Search.prototype.sendAnalyticsSchoolData_ = function(data) {
         var dataAnalytics = {
-            hitType: 'event',
-            eventCategory: 'suggest',
-            eventAction: 'suggest click',
-            eventLabel: data['item']['name']
+            'hitType': 'event',
+            'eventCategory': 'suggest',
+            'eventAction': 'suggest click',
+            'eventLabel': data['item']['name']
         };
 
         Analytics.send(dataAnalytics);
@@ -757,9 +757,9 @@ goog.scope(function() {
      */
     Search.prototype.sendEcAnalytics_ = function(data) {
         var ecData = {
-            id: data.key,
-            name: data.text,
-            position: data.index + 1
+            'id': data['key'],
+            'name': data['text'],
+            'position': data['index'] + 1
         };
 
         Analytics.clickProduct(ecData, 'Suggest');
@@ -771,7 +771,7 @@ goog.scope(function() {
      * @param {Object} event
      */
     Search.prototype.onSubmit_ = function(event) {
-        if (this.dataParams_.redirect) {
+        if (this.dataParams_['redirect']) {
             this.searchRequest_(this.getText());
         } else {
             this.dispatchEvent({

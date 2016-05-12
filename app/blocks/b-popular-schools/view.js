@@ -71,7 +71,7 @@ goog.scope(function() {
     View.prototype.getAnalyticsAction = function() {
         var data = this.getDataParams_();
 
-        return data.analyticsAction;
+        return data['analyticsAction'];
     };
 
     /**
@@ -92,8 +92,8 @@ goog.scope(function() {
      */
     View.prototype.onClickSchool_ = function(schoolNumInArr) {
         var schoolData = this.getDataParams_(this.dom.schools[schoolNumInArr]),
-            schoolName = schoolData.schoolName,
-            schoolId = schoolData.id;
+            schoolName = schoolData['schoolName'],
+            schoolId = schoolData['id'];
 
         this.dispatchEvent({
             'id': schoolId,

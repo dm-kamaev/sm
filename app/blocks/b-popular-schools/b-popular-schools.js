@@ -71,7 +71,10 @@ goog.scope(function() {
      */
     PopularSchools.prototype.onSchoolClick_ = function(event) {
         this.sendEcAnalytics_(event);
-        this.sendAnalyticsSchoolData_(this.analyticsAction_, event.schoolName);
+        this.sendAnalyticsSchoolData_(
+            this.analyticsAction_,
+            event['schoolName']
+        );
     };
 
     /**
@@ -94,10 +97,10 @@ goog.scope(function() {
      */
     PopularSchools.prototype.setImpression_ = function(schoolParam, position) {
         Analytics.addImpression({
-            id: schoolParam.id,
-            name: schoolParam.schoolName,
-            position: position,
-            list: 'Popular Schools'
+            'id': schoolParam['id'],
+            'name': schoolParam['schoolName'],
+            'position': position,
+            'list': 'Popular Schools'
         });
     };
 
@@ -111,10 +114,10 @@ goog.scope(function() {
         label) {
 
         var dataAnalytics = {
-            hitType: 'event',
-            eventCategory: 'popular',
-            eventAction: action,
-            eventLabel: label
+            'hitType': 'event',
+            'eventCategory': 'popular',
+            'eventAction': action,
+            'eventLabel': label
         };
 
         Analytics.send(dataAnalytics);
@@ -127,10 +130,11 @@ goog.scope(function() {
      */
     PopularSchools.prototype.sendEcAnalytics_ = function(data) {
         var ecData = {
-            id: data.id,
-            name: data.schoolName,
-            position: data.position
+            'id': data['id'],
+            'name': data['schoolName'],
+            'position': data['position']
         };
+
         Analytics.clickProduct(ecData, 'Popular Schools');
     };
 });

@@ -84,6 +84,7 @@ goog.inherits(sm.lSchool.bFeedbackModal.FeedbackModal, goog.ui.Component);
 goog.scope(function() {
     var FeedbackModal = sm.lSchool.bFeedbackModal.FeedbackModal,
         Analytics = sm.iAnalytics.Analytics.getInstance();
+
     /**
      * CSS-class enum
      * @enum {string}
@@ -472,7 +473,7 @@ goog.scope(function() {
      * @private
      */
     FeedbackModal.prototype.sendAnalyticsSchoolName_ = function() {
-        var schoolName = this.params_.data['schoolName'];
+        var schoolName = this.params_['data']['schoolName'];
 
         this.sendAnalyticsEvent_(
             FeedbackModal.AnalyticsAction.REVIEW_SUBMIT,
