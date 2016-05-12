@@ -1,16 +1,33 @@
 {namespace sm.lSchool.bComment.Template autoescape="strict"}
 
 /**
+ * @typedef {Object} sm.lSchool.bComment.Template.Params
+ * @property {Object} user
+ * @property {string} user.type
+ * @property {?string} user.name
+ * @property {?string} user.details
+ *
+ * @property {Object} textParagraphs
+ * @property {?Array.<string>} textParagraphs.crop
+ * @property {Array.<string>} textParagraphs.full
+ * @property {sm.bScore.TemplateMinimized.Params} score
+ *
+ * @property {Object} date
+ *
+ * @property {Object} date.today
+ * @property {string} date.today.year
+ * @property {string} date.today.month
+ * @property {string} date.today.day
+ *
+ * @property {Object} date.publication
+ * @property {string} date.publication.year
+ * @property {string} date.publication.month
+ * @property {string} date.publication.day
+ */
+
+/**
  * Comment Template
- * @param params {{
- *     author: ?string,
- *     rank: ?string,
- *     textParagraphs: {
- *         crop: ?Array.<string>,
- *         full: Array.<string>
- *     },
- *     score: {sm.bScore.TemplateMinimized.Params}
- * }}
+ * @param params {sm.lSchool.bComment.Template.Params}
  */
 {template .base kind="html"}
     <div class="b-comment">
@@ -121,17 +138,26 @@
 
 /**
  * @param params {{
- *     author: ?string,
- *     rank: ?string,
+ *     user: {
+ *         type: string,
+ *         name: string,
+ *         details: string
+ *     }
  *     score: {sm.bScore.TemplateMinimized.Params}
  * }}
  */
 {template .footer_ kind="html"}
     <div class="b-comment__footer">
-        {call .userInformation_ data="all" /}
+        {call .userInformation_}
+            {param params: $params.user /}
+        {/call}
 
         {call .score_}
             {param params: $params.score /}
+        {/call}
+
+        {call .publicationDate_}
+            {param params: $params.date /}
         {/call}
     </div>
 {/template}
@@ -165,8 +191,9 @@
 
 /**
  * @param params {{
- *     author: ?string,
- *     rank: ?string
+ *     type: string,
+ *     name: string,
+ *     details: string
  * }}
  */
 {template .userInformation_}
@@ -185,8 +212,45 @@
             ]/}
         {/call}
 
-        <span class="b-comment__user-name">
-            {$params.rank}
+        {if $params.name}
+            <span class="b-comment__user-name">
+                {$params.name},
+            </span>
+        {/if}
+
+        <span class="b-comment__user-details
+            {if not $params.name}
+                {sp}b-comment__user-details_capitalized
+            {/if}">
+                {$params.details}
         </span>
+    </div>
+{/template}
+
+/**
+ * Publication date template
+ * @param params {{
+ *     today: {
+ *         year: string,
+ *         month: string,
+ *         day: string
+ *     }
+ *     publication: {
+ *         year: string,
+ *         month: string,
+ *         day: string
+ *     }
+ * }}
+ */
+{template .publicationDate_}
+    <div class="b-comment__publication-date">
+        {call sm.lSchool.bDate.Template.date}
+            {param params: [
+                'data': [
+                    'todayDate': $params.today,
+                    'commentDate': $params.publication
+                ]
+            ] /}
+        {/call}
     </div>
 {/template}
