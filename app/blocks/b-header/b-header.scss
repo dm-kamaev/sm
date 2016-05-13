@@ -91,6 +91,8 @@
 .b-header__search-link {
     display: inline-block;
 
+    margin-right: 20px;
+
     vertical-align: middle;
 
     &:hover {
@@ -108,6 +110,57 @@
     margin-right: 15px;
 
     opacity: 0.3;
+}
+
+.b-header__authorization-link {
+    display: inline-block;
+
+    width: 70px;
+    height: 50px;
+
+    text-align: center;
+    vertical-align: middle;
+
+    border-left: 1px solid #e5e5e5;
+
+    &:before {
+        display: inline-block;
+
+        width: 0;
+        height: 100%;
+
+        content: '';
+        vertical-align: middle;
+    }
+}
+
+.b-header__authorization-link-content {
+    display: inline-block;
+
+    width: 30px;
+    height: 30px;
+
+    vertical-align: middle;
+
+    &:before {
+        display: inline-block;
+
+        width: 0;
+        height: 100%;
+
+        content: '';
+        vertical-align: middle;
+    }
+}
+
+.b-header__authorization-link-icon {
+    display: inline-block;
+
+    opacity: 0.6;
+
+    &:hover {
+        opacity: 1;
+    }
 }
 
 /* links end */

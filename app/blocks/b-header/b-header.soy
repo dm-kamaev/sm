@@ -33,7 +33,7 @@
             <div class="b-header__section
                 b-header__section_links
                 i-animate">
-                {call .link_/}
+                {call .links_/}
             </div>
 
             <div class="b-header__section
@@ -44,10 +44,21 @@
     </div>
 {/template}
 
+
 /**
- * Link template
+ * Links template
  */
-{template .link_ private="true" autoescape="strict" kind="html"}
+{template .links_ kind="html" private="true"}
+    {call .linkSearch_/}
+    {call .linkAuthorization_/}
+    // {call .linkLiked_/}
+{/template}
+
+
+/**
+ * link All Schools template
+ */
+{template .linkSearch_ private="true" autoescape="strict" kind="html"}
     {let $searchIcon kind="html"}
         {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
@@ -80,6 +91,74 @@
         {/call}
     </div>
 {/template}
+
+
+/**
+ * link Authorization template
+ */
+{template .linkAuthorization_ kind="html" private="true"}
+    <div class="b-header__authorization-link">
+        <div class="b-header__authorization-link-content">
+            {call .iconAuthorization_/}
+            // {call .userName_/}
+            {call .authorizationTooltip_/}
+        </div>
+    </div>
+{/template}
+
+
+/**
+ * authorization icon
+ */
+{template .iconAuthorization_ kind="html" private="true"}
+    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+        {param params: [
+            'factory': 'stendhal',
+            'type': 'icon',
+            'renderParams': [
+                'data': [
+                    'type': 'person'
+                ],
+                'config': [
+                    'customClasses': ['b-header__authorization-link-icon']
+                ]
+            ]
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * authorization Tooltip
+ */
+{template .authorizationTooltip_ kind="html" private="true"}
+    {let $tooltipData kind="html"}
+        <div class="b-header__authorization-link-text{sp}
+                    b-header__authorization-link-text_unauthorized">
+            Войти
+        </div>
+
+        <div class="b-header__authorization-link-text{sp}
+                    b-header__authorization-link-text_authorized{sp}
+                    i-utils__hidden">
+            Выйти
+        </div>
+    {/let}
+
+    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+        {param params: [
+            'factory': 'stendhal',
+            'type': 'hint',
+            'renderParams': [
+                'data': $tooltipData,
+                'config': [
+                    'customClasses': ['b-header__authorization-link-hint']
+                ]
+            ]
+        ]/}
+    {/call}
+{/template}
+
 
 /**
  * Logo
