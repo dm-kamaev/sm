@@ -9,7 +9,7 @@ var await = require('asyncawait/await');
 exports.notFound = async(function(req, res) {
 
     var dataPromises = {
-        popularSchools: services.school.getPopularSchools(5),
+        popularSchools: services.school.getRandomPopularSchools(5),
         amountSchools: services.school.getSchoolsCount()
     };
 
