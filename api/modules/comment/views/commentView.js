@@ -105,8 +105,8 @@ var dateObject = function(date) {
 
     return {
         year: transformedDate.getFullYear(),
-        months: transformedDate.getMonth(),
-        day: transformedDate.getDay()
+        month: transformedDate.getMonth(),
+        day: transformedDate.getDate()
     };
 };
 
