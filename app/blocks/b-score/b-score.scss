@@ -1,83 +1,83 @@
 @import "../i-media/i-media";
 
 .b-score__section {
-	display: inline-block;
+    display: inline-block;
 
     color: #000000;
 
     font-family: 'Proxima', Arial, sans-serif;
     font-weight: 600;
 
-	&.b-score__section_left {
-		width: 118px;
-		margin-top: 4px;
-		margin-right: 10px;
+    &.b-score__section_left {
+        width: 118px;
+        margin-top: 4px;
+        margin-right: 10px;
 
-		text-align: center;
-	}
+        text-align: center;
+    }
 
-	&.b-score__section_right {
-		width: 200px;
+    &.b-score__section_right {
+        width: 200px;
 
-		vertical-align: top;
-	}
+        vertical-align: top;
+    }
 }
 
 .b-score__average {
-	margin: 0 auto 8px;
+    margin: 0 auto 8px;
 }
 
 .b-score__delimiter {
-	width: 0;
-	height: 14px;
-	margin: 0 auto 5px;
+    width: 0;
+    height: 14px;
+    margin: 0 auto 5px;
 
-	border: 1px solid #dcdcd7;
+    border: 1px solid #dcdcd7;
 }
 
 .b-score__comments-amount {
-	width: 75px;
-	margin: 0 auto;
+    width: 75px;
+    margin: 0 auto;
 
-	text-align: center;
+    text-align: center;
 
-	font-family: Arial, sans-serif;
-	font-size: 11px;
+    font-family: Arial, sans-serif;
+    font-size: 11px;
     font-weight: normal;
 }
 
 .b-score__inform {
-	margin-top: 5px;
-	margin-bottom: 12px;
+    margin-top: 5px;
+    margin-bottom: 12px;
 
-	color: #000;
+    color: #000;
 
-	font-family: Proxima, arial, sans-serif;
-	font-size: 15px;
-	font-weight: 700;
+    font-family: Proxima, arial, sans-serif;
+    font-size: 15px;
+    font-weight: 700;
 
-	&.b-score__inform_place-comment {
-		cursor: pointer;
+    &.b-score__inform_place-comment {
+        cursor: pointer;
 
-		color: #ee362c;
-	}
+        color: #ee362c;
+    }
 
-	&:last-child {
-		margin-bottom: 0;
-	}
+    &:last-child {
+        margin-bottom: 0;
+    }
 }
 
 @include media-s {
-  	.b-score__section.b-score__section_left {
-	  	width: 64px;
-	  	margin-right: 33px;
-	}
+    .b-score__section.b-score__section_left {
+        width: 64px;
+        margin-right: 33px;
+    }
 
-	.b-score__section_right {
-	  	margin-right: -60px;
-	}
+    .b-score__section_right {
+        margin-right: -60px;
+    }
 
-	.b-score__comments-amount {
-		width: 64px;
-  	}
+    .b-score__comments-amount {
+        width: 64px;
+    }
 }
