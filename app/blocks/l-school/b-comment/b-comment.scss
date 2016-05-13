@@ -1,3 +1,5 @@
+@import "../../i-media/i-media";
+
 .b-comment {
     display: inline-block;
 
@@ -41,7 +43,7 @@
     display: inline-block;
 
     width: 100%;
-    margin: 0 0 9px 0;
+    margin: 0 0 10px 0;
 
     word-wrap: break-word;
 }
@@ -90,6 +92,29 @@
     vertical-align: middle;
 }
 
+.b-comment__user-name {
+    display: inline-block;
+
+    margin-right: 4px;
+
+    &:first-letter {
+        text-transform: uppercase;
+    }
+}
+
+.b-comment__user-details.b-comment__user-details_capitalized {
+    display: inline-block;
+
+    &:first-letter {
+        text-transform: uppercase;
+    }
+}
+
+.b-comment__publication-date {
+    display: inline-block;
+    float: right;
+}
+
 .b-comment__header-section{
     display: inline-block;
 
@@ -121,4 +146,13 @@
     text-align: left;
 
     font-size: 14px;
+}
+
+@include media-xs {
+    .b-comment__user-information {
+        display: block;
+
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
 }

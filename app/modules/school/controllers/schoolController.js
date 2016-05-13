@@ -97,7 +97,7 @@ exports.view = async (function(req, res, next) {
                     ),
                     city: services.cityResult.getAll(),
                     authSocialLink: services.auth.getAuthSocialUrl(),
-                    popularSchools: services.school.getPopularSchools()
+                    popularSchools: services.school.getRandomPopularSchools(6)
                 },
                 dataFromPromises = await(promises);
 
@@ -140,7 +140,7 @@ exports.view = async (function(req, res, next) {
 
 exports.search = async(function(req, res) {
     var dataPromises = {
-        popularSchools: services.school.getPopularSchools(3),
+        popularSchools: services.school.getRandomPopularSchools(3),
         amountSchools: services.school.getSchoolsCount()
     };
 

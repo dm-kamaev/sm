@@ -58,12 +58,7 @@
  *                 type: ?string
  *             ]
  *        ],
- *        comments: list<[
- *            author: string,
- *            rank: string,
- *            textParagraphs: string,
- *            score: {sm.bScore.TemplateMinimized.Params}
- *        ]>,
+ *        comments: Array.<{sm.lSchool.bComment.Template.Params}>,
  *        addresses: list<
  *           list<number>
  *        >,
@@ -850,19 +845,11 @@
 
 /**
  * Comments block
- * @param? params {{
+ * @param params {{
  *     data: {
- *         comments: [{
- *             author: string,
- *             rank: string,
- *             text: string,
- *             sections: [{
- *                 name: string,
- *                 value: int
- *             }]
- *         }]
- *     },
- *     isCommented: bool
+ *         comments: Array.<{sm.lSchool.bComment.Template.Params}>,
+ *         isCommented: boolean
+ *     }
  * }}
  * @private
  */

@@ -1,15 +1,14 @@
 {namespace sm.lSchool.bComments.Template autoescape="strict"}
+
+/**
+ * @typedef {Object} sm.lSchool.bComments.Template.Params
+ * @property Array.<{sm.lSchool.bComment.Template.Params}> comments
+ * @property {boolean} isCommented
+ */
+
 /**
  * Comments template
- * @param params {{
- *     comments: Array.<{
- *         author: string,
- *         rank: string,
- *         textParagraphs: string,
- *         score: {sm.bScore.TemplateMinimized.Params}
- *     }>,
- *     isCommented: bool
- * }}
+ * @param params {sm.lSchool.bComments.Template.Params}
  */
 {template .base kind="html"}
     <div class="b-comments">
@@ -23,14 +22,7 @@
 
 /**
  * Comments block
- * @param params {{
- *     comments: Array.<{
- *         author: string,
- *         rank: string,
- *         textParagraphs: string,
- *         score: {sm.bScore.TemplateMinimized.Params}
- *     }>
- * }}
+ * @param params {Array.<{sm.lSchool.bComment.Template.Params>}>}
  */
 {template .comments_ autoescape="strict" kind="html"}
     {call .header_ /}
@@ -38,12 +30,7 @@
     <div class="b-comments__comments">
         {foreach $comment in $params.comments}
             {call sm.lSchool.bComment.Template.base}
-                {param params: [
-                    'author': $comment.author,
-                    'rank': $comment.rank,
-                    'textParagraphs': $comment.textParagraphs,
-                    'score': $comment.score
-                ] /}
+                {param params: $comment /}
             {/call}
         {/foreach}
     </div>

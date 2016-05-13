@@ -1,21 +1,22 @@
 {namespace sm.lSchool.bDate.Template}
 
 /**
+ * @typedef sm.lSchool.bDate.Template.Params
+ * @property {Object} data
+ *
+ * @property {Object} data.todayDate
+ * @property {number} data.todayDate.year
+ * @property {number} data.todayDate.month
+ * @property {number} data.todayDate.data
+ *
+ * @property {number} data.commentDate.year
+ * @property {number} data.commentDate.year
+ * @property {number} data.commentDate.year
+ */
+
+/**
  * date template
- * @param params {{
- *     data: {
- *         todayDate: {
- *             year: number,
- *             month: number,
- *             day: number
- *         },
- *         commentDate: {
- *             year: number,
- *             month: number,
- *             day: number
- *         }
- *     }
- * }}
+ * @param params {sm.lSchool.bDate.Template.Params}
  * @extends cl.iControl.Template
  * @constructor
  */

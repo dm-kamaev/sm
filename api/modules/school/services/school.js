@@ -179,10 +179,7 @@ service.getPopularSchools = async(function(opt_amount) {
                  views: 0
              }
         },
-        order: [
-            ['views', 'DESC']
-        ],
-        limit: opt_amount || 6, //TODO: move '6' somewhere maybe?
+        limit: opt_amount || 10,
         include: [{
             model: models.Address,
             as: 'addresses',
@@ -203,6 +200,7 @@ service.getPopularSchools = async(function(opt_amount) {
             ]
         }],
         order: [
+            ['views', 'DESC'],
             [
                 {
                     model: models.Address,
@@ -218,6 +216,42 @@ service.getPopularSchools = async(function(opt_amount) {
         ]
     }));
 });
+
+/**
+ * @param {number} amount
+ * @return {array<object>} school instances
+ */
+service.getRandomPopularSchools = async(function(amount) {
+    var schools = await(service.getPopularSchools()),
+        randomIndexes = service.getRandomIndexes(0, 9, amount);
+
+    return randomIndexes.map(index => schools[index]);
+});
+
+
+/**
+ * Get array of random numbers
+ * @param {number} start
+ * @param {number} end
+ * @param {number} amount
+ * @return {Array}
+ */
+service.getRandomIndexes = function(start, end, amount) {
+    var res = [],
+        randomIndex;
+
+    while (res.length < amount) {
+        randomIndex = lodash.random(start, end);
+
+        while (res.indexOf(randomIndex) != -1) {
+            randomIndex = lodash.random(start, end);
+        }
+
+        res.push(randomIndex);
+    }
+    
+    return res;
+};
 
 
 /**
