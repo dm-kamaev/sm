@@ -27,6 +27,7 @@ require('./console/updateSchoolNames.js').Command;
 require('./console/updateSearch.js').Command;
 require('./console/updateUrls.js').Command;
 require('./console/vkapi.js').Command;
+require('./console/updateUserData.js').Command;
 
 /*
  * The line below initializes the interface on `node ./commander
