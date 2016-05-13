@@ -223,31 +223,34 @@ service.getPopularSchools = async(function(opt_amount) {
  */
 service.getRandomPopularSchools = async(function(amount) {
     var schools = await(service.getPopularSchools()),
-        arrayRandom = [];
+        randomIndexes = service.getRandomIndexes(0, 9, amount);
 
-    for (var i = 0; i <= amount; i++) {
-        arrayRandom.push(service.getRandom(0, 9, arrayRandom));
-    }
-
-    return arrayRandom.map(item => schools[item]);
+    return randomIndexes.map(index => schools[index]);
 });
 
 
 /**
- * Get random number between start and end, which is not contained in
- * uniqueValues
+ * Get array of random numbers
  * @param {number} start
  * @param {number} end
- * @param {Array} uniqueValues
- * @return {number}
+ * @param {number} amount
+ * @return {Array}
  */
-service.getRandom = function(start, end, uniqueValues) {
-    var random = lodash.random(start, end);
+service.getRandomIndexes = function(start, end, amount) {
+    var res = [],
+        randomIndex;
 
-    if (lodash.indexOf(uniqueValues, random) != -1) {
-        random = service.getRandom(0, 9, uniqueValues);
+    while (res.length < amount) {
+        randomIndex = lodash.random(start, end);
+
+        while (res.indexOf(randomIndex) != -1) {
+            randomIndex = lodash.random(start, end);
+        }
+
+        res.push(randomIndex);
     }
-    return random;
+    
+    return res;
 };
 
 
