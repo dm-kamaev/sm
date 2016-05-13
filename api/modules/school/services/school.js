@@ -179,10 +179,7 @@ service.getPopularSchools = async(function(opt_amount) {
                  views: 0
              }
         },
-        order: [
-            ['views', 'DESC']
-        ],
-        limit: opt_amount || 6, //TODO: move '6' somewhere maybe?
+        limit: opt_amount || 10,
         include: [{
             model: models.Address,
             as: 'addresses',
@@ -203,6 +200,7 @@ service.getPopularSchools = async(function(opt_amount) {
             ]
         }],
         order: [
+            ['views', 'DESC'],
             [
                 {
                     model: models.Address,
@@ -218,6 +216,39 @@ service.getPopularSchools = async(function(opt_amount) {
         ]
     }));
 });
+
+/**
+ * @param {number} amount
+ * @return {array<object>} school instances
+ */
+service.getRandomPopularSchools = async(function(amount) {
+    var schools = await(service.getPopularSchools()),
+        arrayRandom = [];
+
+    for (var i = 0; i <= amount; i++) {
+        arrayRandom.push(service.getRandom(0, 9, arrayRandom));
+    }
+
+    return arrayRandom.map(item => schools[item]);
+});
+
+
+/**
+ * Get random number between start and end, which is not contained in
+ * uniqueValues
+ * @param {number} start
+ * @param {number} end
+ * @param {Array} uniqueValues
+ * @return {number}
+ */
+service.getRandom = function(start, end, uniqueValues) {
+    var random = lodash.random(start, end);
+
+    if (lodash.indexOf(uniqueValues, random) != -1) {
+        random = service.getRandom(0, 9, uniqueValues);
+    }
+    return random;
+};
 
 
 /**
