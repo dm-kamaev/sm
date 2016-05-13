@@ -215,11 +215,7 @@ goog.scope(function() {
         this.setEcAnalytics_();
         this.sendAnalyticsPageview_();
 
-        handler.listen(
-            this.map_,
-            Map.Event.READY,
-            this.onMapReady_
-        );
+        handler.listen(this.map_, Map.Event.READY, this.onMapReady_);
     };
 
     /**
@@ -264,8 +260,8 @@ goog.scope(function() {
      */
     School.prototype.setEcAnalytics_ = function() {
         Analytics.viewProduct({
-            id: this.params_.id,
-            name: this.params_.schoolName
+            'id': this.params_['id'],
+            'name': this.params_['schoolName']
         });
 
         Analytics.setView();

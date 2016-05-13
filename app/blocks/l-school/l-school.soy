@@ -199,9 +199,9 @@
  */
 {template .description_ autoescape="strict" kind="html"}
     <div class="l-school__section l-school__section_description">
-        <div class="l-school__name">
+        <h1 class="l-school__name">
             {$params.data.schoolName}
-        </div>
+        </h1>
         {if $params.data.metroStations}
             <div class="l-school__metro-stations">
                 {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}

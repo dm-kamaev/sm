@@ -48,7 +48,7 @@
     width: 17%;
     margin-bottom: 24px;
 
-    font-size: 16px;
+    font: 600 14px Arial, sans-serif;
     line-height: 20px;
     vertical-align: top;
 }
@@ -76,7 +76,7 @@
     display: inline-block;
 
     width: 83%;
-    padding-top: 6px;
+    padding-top: 4px;
 }
 
 .b-results__dropdown {
@@ -116,8 +116,7 @@
 
 .b-results__olymp-diagram {
     font-family: Arial, sans-serif;
-    font-size: 13px;
-    letter-spacing: 0.035em;
+    font-size: 14px;
 }
 
 .b-results__olymp-item,
