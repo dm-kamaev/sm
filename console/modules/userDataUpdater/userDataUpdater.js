@@ -6,6 +6,14 @@ const csv2json = require('csvtojson').Converter;
 const userDataService = require('../../../api/modules/user/services/userData');
 const fs = require('fs');
 
+/**
+ * Class, used for updating 'user_data' table in db.
+ * It can take information for update from .csv (with ';' delimiter)
+ * with no headers and two rows:
+ * id and username
+ * and place it to corresponding fields at 'user_data' table.
+ * It write to db through user service, which updates user_data.
+ */
 class UserDataUpdater {
     constructor() {}
 

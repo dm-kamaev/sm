@@ -93,7 +93,10 @@ var calculateGrade = function(graduateYear, creationDate) {
     var grade = creationMonth > 4 ?
         currentYear - admissionYear :
         currentYear - admissionYear - 1;
-    return grade <= 11 ? grade : null;
+
+    return (grade <= 11 && grade > 0) ?
+        grade :
+        null;
 };
 
 
