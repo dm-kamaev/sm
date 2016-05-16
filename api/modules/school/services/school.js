@@ -223,7 +223,9 @@ service.getPopularSchools = async(function(opt_amount) {
  */
 service.getRandomPopularSchools = async(function(amount) {
     var schools = await(service.getPopularSchools()),
-        randomIndexes = service.getRandomIndexes(0, 9, amount);
+        schoolsLen = schools.length,
+        resultLen = Math.min(schoolsLen, amount),
+        randomIndexes = service.getRandomIndexes(0, schoolsLen - 1, resultLen);
 
     return randomIndexes.map(index => schools[index]);
 });
