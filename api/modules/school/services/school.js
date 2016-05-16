@@ -674,11 +674,14 @@ service.rate = async(function(school, params) {
  * @return {number}
  */
 var calculateTotalScore = function(score) {
-    var notEmptyScore = score.every(scoreItem => scoreItem),
+    var notEmptyScore = score.every(scoreItem => {
+            return parseFloat(scoreItem);
+        }),
         result = 0;
     if (notEmptyScore) {
-        var sum = score.reduce((sum, currentScore) => {
-            return sum + currentScore;
+        var sum = 0;
+        score.forEach((currentScore) => {
+            return sum += parseFloat(currentScore);
         });
         result = sum / score.length;
     }
