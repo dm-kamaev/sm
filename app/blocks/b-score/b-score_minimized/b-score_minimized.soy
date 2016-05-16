@@ -35,13 +35,9 @@
                     {sp}{call .rootClass_ /}_active
                 {/if}
                 ">
-        {let $notShowScore: $params?.config?.theme == 'compact' and
-            not $params?.config?.isActive /}
 
-        {if not $notShowScore}
-            {call .visibleMark_ data="all" /}
-            {call .hiddenMarks_ data="all" /}
-        {/if}
+        {call .visibleMark_ data="all" /}
+        {call .hiddenMarks_ data="all" /}
     </div>
 {/template}
 

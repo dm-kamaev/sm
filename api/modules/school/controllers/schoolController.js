@@ -236,6 +236,12 @@ exports.createComment = async (function(req, res) {
                 userId: params.userId
             });
         } else {
+
+            if(params.userId) {
+                var user = await(services.user.getUserById(params.userId));
+                params.username = user.firstName;
+            }
+
             result = await(services.school.review(schoolId, params));
         }
 

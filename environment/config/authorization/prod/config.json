@@ -1,5 +1,5 @@
 {
-    "authorization": {
+    "authentication": {
         "vk": {
             "clientId": 5063331,
             "clientSecret": "O2Lu14g8RUKrstrCnqlZ",
