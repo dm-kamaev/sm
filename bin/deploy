@@ -14,7 +14,6 @@ else
     npm update
 fi
 
-export JAVA_OPTS="-Xmx256m"
 $gulp build
 
 cd node_modules/auth-service/

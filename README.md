@@ -190,3 +190,7 @@ gulp debug
 ```sh
 gulp debug --layout l-doc
 ```
+или
+```sh
+gulp debug --layout l-doc.js
+```
