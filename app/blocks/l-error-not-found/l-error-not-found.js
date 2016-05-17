@@ -10,14 +10,17 @@ goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.iFactory.FactoryStendhal');
 goog.require('sm.iFactory.TemplateFactoryStendhal');
 
+
+
 /**
  * ErrorNotFound result component
- * @param {object=} opt_params
+ * @param {Object=} opt_params
  * @constructor
  * @extends {goog.ui.Component}
  */
 sm.lErrorNotFound.ErrorNotFound = function(opt_params) {
     goog.base(this);
+
 
     /**
      * Parameters
@@ -26,14 +29,15 @@ sm.lErrorNotFound.ErrorNotFound = function(opt_params) {
      */
     this.params_ = opt_params || {};
 
+
     /**
      * Search Panel instance
-     * @type {sm.bSearchPanel.PanelSearch}
+     * @type {sm.bSearchPanel.SearchPanel}
      * @private
      */
     this.searchPanel_ = null;
 
-    /*
+    /**
      * instance popular Schools
      * @type {sm.bPopularSchools.PopularSchools}
      * @private
@@ -42,9 +46,11 @@ sm.lErrorNotFound.ErrorNotFound = function(opt_params) {
 };
 goog.inherits(sm.lErrorNotFound.ErrorNotFound, goog.ui.Component);
 
+
 goog.scope(function() {
     var ErrorNotFound = sm.lErrorNotFound.ErrorNotFound,
         PopularSchools = sm.bPopularSchools.PopularSchools;
+
 
     /**
      * CSS-class enum
@@ -53,6 +59,7 @@ goog.scope(function() {
     ErrorNotFound.CssClass = {
         ROOT: 'l-error-not-found'
     };
+
 
     /**
      * Template-based dom element creation.
@@ -71,6 +78,7 @@ goog.scope(function() {
         this.decorateInternal(element);
     };
 
+
     /**
      * Internal decorates the DOM element
      * @param {Element} element
@@ -78,9 +86,9 @@ goog.scope(function() {
     ErrorNotFound.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
-       var bPopularSchools = goog.dom.getElementByClass(
-            sm.bPopularSchools.View.CssClass.ROOT,
-            element
+        var bPopularSchools = goog.dom.getElementByClass(
+             sm.bPopularSchools.View.CssClass.ROOT,
+             element
         );
 
         this.popularSchools_ =
@@ -103,6 +111,7 @@ goog.scope(function() {
             );
     };
 
+
     /**
      * Set up the Component
      */
@@ -110,7 +119,8 @@ goog.scope(function() {
         goog.base(this, 'enterDocument');
     };
 
-});
+});  // goog.scope
+
 
 /**
  * creates sm.lErrorNotFound.ErrorNotFound instance

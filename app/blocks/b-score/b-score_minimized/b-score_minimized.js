@@ -10,20 +10,25 @@ goog.require('goog.soy');
 goog.require('goog.ui.Component');
 goog.require('sm.bScore.Score');
 
+
+
 /**
  * Score component in school list view
- * @param {object} opt_params
+ * @param {Object=} opt_params
  * @constructor
  * @extends {sm.bScore.Score}
  */
 sm.bScore.ScoreMinimized = function(opt_params) {
     goog.base(this);
+
+
     /**
      * Parameters
      * @type {Object}
      * @private
      */
     this.params_ = opt_params || {};
+
 
     /**
      * Defines clickable visible mark or not
@@ -32,6 +37,7 @@ sm.bScore.ScoreMinimized = function(opt_params) {
      */
     this.isActive_ = false;
 
+
     /**
      * Defines whether visible name of visible mark
      * @type {boolean}
@@ -39,12 +45,14 @@ sm.bScore.ScoreMinimized = function(opt_params) {
      */
     this.isNameVisible_ = false;
 
+
     /**
      * Collection of dom elements
      * @type {Object.<string, Element>}
      * @private
      */
     this.elements_ = {};
+
 
     /**
      * Indicates is tooltip showed or not
@@ -348,4 +356,4 @@ goog.scope(function() {
             );
         this.isHiddenMarksShowed_ = visibility;
     };
-});
+});  // goog.scope

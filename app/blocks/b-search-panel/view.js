@@ -5,22 +5,26 @@ goog.require('cl.iControl.View');
 goog.require('cl.iUtils.Utils');
 goog.require('goog.dom.classes');
 
+
+
 /**
  * Search Panel View
  * @param {Object=} opt_params
- * @param {Function=} opt_template
+ * @param {string=} opt_type
  * @param {string=} opt_modifier
  * @constructor
  * @extends {cl.iControl.View}
  */
-sm.bSearchPanel.View = function(opt_params, opt_template, opt_modifier) {
-    goog.base(this, opt_params, opt_template, opt_modifier);
+sm.bSearchPanel.View = function(opt_params, opt_type, opt_modifier) {
+    goog.base(this, opt_params, opt_type, opt_modifier);
 
 };
 goog.inherits(sm.bSearchPanel.View, cl.iControl.View);
 
+
 goog.scope(function() {
     var View = sm.bSearchPanel.View;
+
 
     /**
      * Css class enum
@@ -31,13 +35,15 @@ goog.scope(function() {
         BUTTON: 'b-search-panel__button'
     };
 
+
     /**
      * Event enum
-     * @enum {String}
+     * @enum {string}
      */
     View.Event = {
        CLICK_BUTTON: 'click-button'
     };
+
 
     /**
      * @override
@@ -47,6 +53,7 @@ goog.scope(function() {
 
         this.initElements_(element);
     };
+
 
     /**
      * @override
@@ -61,6 +68,7 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * gets DOM elements
      * @param {Element} root
@@ -73,6 +81,7 @@ goog.scope(function() {
         };
     };
 
+
     /**
      * Click button
      * @private
@@ -83,4 +92,4 @@ goog.scope(function() {
         });
     };
 
-});
+});  // goog.scope

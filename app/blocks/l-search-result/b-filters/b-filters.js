@@ -11,6 +11,8 @@ goog.require('sm.lSearchResult.bFilter.Filter');
 goog.require('sm.lSearchResult.bFilter.FilterClasses');
 goog.require('sm.lSearchResult.bFilters.Template');
 
+
+
 /**
  * Filters component
  * @param {object=} opt_params
@@ -20,12 +22,14 @@ goog.require('sm.lSearchResult.bFilters.Template');
 sm.lSearchResult.bFilters.Filters = function(opt_params) {
     goog.base(this);
 
+
     /**
      * Parameters
      * @private
      * @type {Object}
      */
     this.params_ = opt_params || {};
+
 
     /**
      * Dom elements
@@ -34,6 +38,7 @@ sm.lSearchResult.bFilters.Filters = function(opt_params) {
      */
     this.elements_ = {};
 
+
     /**
      * Instance filter classes
      * @type {sm.lSearchResult.bFilter.FilterClasses}
@@ -41,7 +46,8 @@ sm.lSearchResult.bFilters.Filters = function(opt_params) {
      */
      this.filterClasses_ = null;
 
-     /**
+
+    /**
      * Array instances filters
      * @type Array {sm.lSearchResult.bFilter.Filter}
      * @private
@@ -51,10 +57,12 @@ sm.lSearchResult.bFilters.Filters = function(opt_params) {
 };
 goog.inherits(sm.lSearchResult.bFilters.Filters, goog.ui.Component);
 
+
 goog.scope(function() {
     var Filters = sm.lSearchResult.bFilters.Filters,
         Filter = sm.lSearchResult.bFilter.Filter,
         FilterClasses = sm.lSearchResult.bFilter.FilterClasses;
+
 
     /**
      * CSS-class enum
@@ -72,6 +80,7 @@ goog.scope(function() {
         HIDDEN: cl.iUtils.Utils.CssClass.HIDDEN
     };
 
+
     /**
      * Event enum
      * @enum {string}
@@ -79,6 +88,7 @@ goog.scope(function() {
     Filters.event = {
         SUBMIT: 'filters-submit'
     };
+
 
     /**
      * Filter type enum
@@ -91,6 +101,7 @@ goog.scope(function() {
         CLASSES: 'classes'
     };
 
+
     /**
      * @override
      */
@@ -99,6 +110,7 @@ goog.scope(function() {
 
         this.params_ = jQuery(element).data('params') || {};
     };
+
 
     /**
      * @override
@@ -115,6 +127,7 @@ goog.scope(function() {
 
         this.decorateInternal(element);
     };
+
 
     /**
      * @override
@@ -145,6 +158,7 @@ goog.scope(function() {
             }
         }
     };
+
 
     /**
      * Init elements
@@ -183,6 +197,7 @@ goog.scope(function() {
             element
         );
     };
+
 
     /**
      * @override
@@ -243,6 +258,7 @@ goog.scope(function() {
         }
     };
 
+
     /**
      * Expand filters
      */
@@ -254,6 +270,7 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * Collapse filters
      */
@@ -264,6 +281,7 @@ goog.scope(function() {
             Filters.CssClass.STATE_COLLAPSED
         );
     };
+
 
     /**
      * Reset filters
@@ -278,6 +296,7 @@ goog.scope(function() {
 
         this.hideButtonReset_();
     };
+
 
     /**
      * Is checked input
@@ -298,6 +317,7 @@ goog.scope(function() {
         return res;
     };
 
+
     /**
      * Serialize form to object
      * @public
@@ -309,6 +329,7 @@ goog.scope(function() {
         return this.processingSerializeArray_(data);
     };
 
+
     /**
      * shows the button Reset filters
      * @private
@@ -316,6 +337,7 @@ goog.scope(function() {
     Filters.prototype.onCheckedFilter_ = function() {
         this.showButtonReset_();
     };
+
 
     /**
      * shows the button Reset filters
@@ -327,6 +349,7 @@ goog.scope(function() {
         }
     };
 
+
     /**
      * Reset filters
      * @private
@@ -334,6 +357,7 @@ goog.scope(function() {
     Filters.prototype.onResetFiltersClick_ = function() {
         this.reset();
     };
+
 
     /**
      * Submit handler
@@ -347,6 +371,7 @@ goog.scope(function() {
         });
     };
 
+
     /**
      * Expand handler
      * @param {Object} event
@@ -356,6 +381,7 @@ goog.scope(function() {
         this.expand();
     };
 
+
     /**
      * Collapse handler
      * @param {Object} event
@@ -364,6 +390,7 @@ goog.scope(function() {
     Filters.prototype.onCollapserClick_ = function(event) {
         this.collapse();
     };
+
 
     /**
      * Hide button reset
@@ -376,6 +403,7 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * Show button reset
      * @private
@@ -386,6 +414,7 @@ goog.scope(function() {
             Filter.CssClass.HIDDEN
         );
     };
+
 
     /**
      * Processing serialize array
@@ -410,4 +439,4 @@ goog.scope(function() {
 
         return result;
     };
-});
+});  // goog.scope

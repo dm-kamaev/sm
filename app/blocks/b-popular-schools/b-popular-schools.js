@@ -5,18 +5,18 @@ goog.require('cl.iControl.Control');
 goog.require('goog.dom');
 goog.require('sm.bPopularSchools.View');
 
+
+
 /**
  * Popular School
  * @param {Object=} opt_view
- * @param {Object=} opt_params
  * @param {Object=} opt_domHelper
  * @constructor
  * @extends {cl.iControl.Control}
  */
-sm.bPopularSchools.PopularSchools = function(opt_view, opt_params,
-  opt_domHelper) {
+sm.bPopularSchools.PopularSchools = function(opt_view, opt_domHelper) {
+    goog.base(this, opt_view, opt_domHelper);
 
-    goog.base(this, opt_view, opt_params, opt_domHelper);
 
     /**
      * Data params "analytics action" ROOT class
@@ -27,10 +27,12 @@ sm.bPopularSchools.PopularSchools = function(opt_view, opt_params,
 };
 goog.inherits(sm.bPopularSchools.PopularSchools, cl.iControl.Control);
 
+
 goog.scope(function() {
     var PopularSchools = sm.bPopularSchools.PopularSchools,
         View = sm.bPopularSchools.View,
         Analytics = sm.iAnalytics.Analytics.getInstance();
+
 
     /**
      * @override
@@ -40,6 +42,7 @@ goog.scope(function() {
 
         this.setAnalyticsAction_();
     };
+
 
     /**
      * @override
@@ -57,12 +60,14 @@ goog.scope(function() {
         this.setImpressions_(this.getView().getSchoolsParams());
     };
 
+
     /**
      * @private
      */
     PopularSchools.prototype.setAnalyticsAction_ = function() {
         this.analyticsAction_ = this.getView().getAnalyticsAction();
     };
+
 
     /**
      * send Analytics data school
@@ -77,9 +82,10 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * Set impressions for all popular schools
-     * @param {Array<Object>} schoolParams
+     * @param {Array.<Object>} schoolParams
      * @private
      */
     PopularSchools.prototype.setImpressions_ = function(schoolParams) {
@@ -88,6 +94,7 @@ goog.scope(function() {
         }
         Analytics.setView();
     };
+
 
     /**
      * Set impressions for all popular schools
@@ -104,10 +111,11 @@ goog.scope(function() {
         });
     };
 
+
     /**
      * send Analytics data school
-     * @param {String} action
-     * @param {String} label
+     * @param {string} action
+     * @param {string} label
      * @private
      */
     PopularSchools.prototype.sendAnalyticsSchoolData_ = function(action,
@@ -123,9 +131,10 @@ goog.scope(function() {
         Analytics.send(dataAnalytics);
     };
 
+
     /**
      * Send ECommerce Analytics data
-     * @param {String} data
+     * @param {string} data
      * @private
      */
     PopularSchools.prototype.sendEcAnalytics_ = function(data) {
@@ -137,4 +146,4 @@ goog.scope(function() {
 
         Analytics.clickProduct(ecData, 'Popular Schools');
     };
-});
+});  // goog.scope

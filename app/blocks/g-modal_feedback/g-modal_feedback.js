@@ -2,16 +2,18 @@ goog.provide('sm.gModal.ModalFeedback');
 
 goog.require('sm.gModal.ModalStendhal');
 
+
+
 /**
  * Modal control
- * @param {Object=} view
- * @param {Object=} opt_params
+ * @param {Object} view
  * @param {Object=} opt_domHelper
  * @constructor
  * @extends {sm.gModal.ModalStendhal}
  */
-sm.gModal.ModalFeedback = function(view, opt_params, opt_domHelper) {
-    goog.base(this, view, opt_params, opt_domHelper);
+sm.gModal.ModalFeedback = function(view, opt_domHelper) {
+    goog.base(this, view, opt_domHelper);
+
 
     /**
      * Elements instances
@@ -23,8 +25,10 @@ sm.gModal.ModalFeedback = function(view, opt_params, opt_domHelper) {
 };
 goog.inherits(sm.gModal.ModalFeedback, sm.gModal.ModalStendhal);
 
+
 goog.scope(function() {
     var ModalFeedback = sm.gModal.ModalFeedback;
+
 
     /**
      * Validation error texts
@@ -33,6 +37,7 @@ goog.scope(function() {
     ModalFeedback.Error = {
         'FILL_REQUIRED_FIELDS': 'Пожалуйста, заполните обязательные поля'
     };
+
 
     /**
      * @param {Element} element
@@ -43,6 +48,7 @@ goog.scope(function() {
 
         this.initElements_();
     };
+
 
     /**
      * Sets up the Component.
@@ -59,6 +65,7 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * Show errors
      * @param {string} error
@@ -69,6 +76,7 @@ goog.scope(function() {
             this.getView().showValidationError(error);
         }
     };
+
 
     /**
      * Clear input fields in form
@@ -81,6 +89,7 @@ goog.scope(function() {
         });
     };
 
+
     /**
      * Check that error is valid
      * @param {string} error
@@ -90,6 +99,7 @@ goog.scope(function() {
     ModalFeedback.prototype.isValidError_ = function(error) {
         return error == ModalFeedback.Error.FILL_REQUIRED_FIELDS;
     };
+
 
     /**
      * Submit button click handler
@@ -102,6 +112,7 @@ goog.scope(function() {
             this.showError(ModalFeedback.Error.FILL_REQUIRED_FIELDS);
         }
     };
+
 
     /**
      * Send data to api
@@ -127,6 +138,7 @@ goog.scope(function() {
         });
     };
 
+
     /**
      * Success query callback
      * @private
@@ -136,6 +148,7 @@ goog.scope(function() {
         this.hide();
     };
 
+
     /**
      * Error query callback
      * @private
@@ -143,6 +156,7 @@ goog.scope(function() {
     ModalFeedback.prototype.onErrorQuery_ = function() {
         this.showError(ModalFeedback.Error.FILL_REQUIRED_FIELDS);
     };
+
 
     /**
      * Validates form
@@ -159,6 +173,7 @@ goog.scope(function() {
         return isValid;
     };
 
+
     /**
      * Validate inputs
      * @return {boolean}
@@ -174,6 +189,7 @@ goog.scope(function() {
         return isValid;
     };
 
+
     /**
      * Validate theme dropdown
      * @return {boolean}
@@ -183,6 +199,7 @@ goog.scope(function() {
         return this.elements_.dropdown.validate();
     };
 
+
     /**
      * Validate text area
      * @return {boolean}
@@ -191,6 +208,7 @@ goog.scope(function() {
     ModalFeedback.prototype.validateText_ = function() {
         return this.elements_.textarea.validate();
     };
+
 
     /**
      * Init containing elements
@@ -213,6 +231,7 @@ goog.scope(function() {
         this.initInputs_();
     };
 
+
     /**
      * Inits containing inputs
      * @private
@@ -225,4 +244,4 @@ goog.scope(function() {
             this.elements_.inputs[i] = this.decorateChild('input', input);
         }
     };
-});
+});  // goog.scope

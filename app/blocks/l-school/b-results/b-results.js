@@ -6,6 +6,8 @@ goog.require('sm.bDiagram.Diagram');
 goog.require('sm.iFactory.FactoryStendhal');
 goog.require('sm.lSchool.bResults.Template');
 
+
+
 /**
  * sm.lSchool.bResults.Results component
  * @param {Object=} opt_params
@@ -15,12 +17,14 @@ goog.require('sm.lSchool.bResults.Template');
 sm.lSchool.bResults.Results = function(opt_params) {
     goog.base(this);
 
+
     /**
      * Tab
      * @type {cl.gTab.Tab}
      * @private
      */
     this.tab_ = null;
+
 
     /**
      * Contents with dropdown
@@ -37,6 +41,7 @@ sm.lSchool.bResults.Results = function(opt_params) {
      */
     this.contents_ = [];
 
+
     /**
      * Parameters
      * @type {Object}
@@ -46,6 +51,7 @@ sm.lSchool.bResults.Results = function(opt_params) {
 };
 goog.inherits(sm.lSchool.bResults.Results, goog.ui.Component);
 
+
 goog.scope(function() {
     var Results = sm.lSchool.bResults.Results,
         Factory = sm.iFactory.FactoryStendhal,
@@ -54,6 +60,7 @@ goog.scope(function() {
         DropdownSelect = sm.gDropdown.DropdownSelect,
         Utils = cl.iUtils.Utils,
         Diagram = sm.bDiagram.Diagram;
+
 
     /**
      * Css class enum
@@ -67,6 +74,7 @@ goog.scope(function() {
         SHOW_MORE_BUTTON_ACTIVE: 'b-results__show-more-button_active'
     };
 
+
     /**
      * @override
      * @param {Element} element
@@ -76,6 +84,7 @@ goog.scope(function() {
             goog.base(this, 'decorate', element);
         }
     };
+
 
     /**
      * @override
@@ -107,6 +116,7 @@ goog.scope(function() {
         }
     };
 
+
     /**
      * @override
      */
@@ -122,6 +132,7 @@ goog.scope(function() {
 
         this.decorateInternal(element);
     };
+
 
     /**
      * @override
@@ -141,6 +152,7 @@ goog.scope(function() {
 
         this.initDiagrams_(diagramElements);
     };
+
 
     /**
      * @override
@@ -178,6 +190,7 @@ goog.scope(function() {
         });
     };
 
+
     /**
      * @override
      */
@@ -188,6 +201,7 @@ goog.scope(function() {
         this.params_ = null;
         this.tab_ = null;
     };
+
 
     /**
      * On dropdown select actions
@@ -205,6 +219,7 @@ goog.scope(function() {
         this.show_(content.innerContents[content.selectedItemId].element);
     };
 
+
     /**
      * On tab select actions
      * @param {Object} event
@@ -219,6 +234,7 @@ goog.scope(function() {
             });
     };
 
+
     /**
      * Shows elements
      * @param {Element} element
@@ -228,6 +244,7 @@ goog.scope(function() {
         goog.dom.classlist.remove(element, Utils.CssClass.HIDDEN);
     };
 
+
     /**
      * Hides element
      * @param {Element} element
@@ -236,6 +253,7 @@ goog.scope(function() {
     Results.prototype.hide_ = function(element) {
         goog.dom.classlist.add(element, Utils.CssClass.HIDDEN);
     };
+
 
     /**
      * Shows olympiads
@@ -248,6 +266,7 @@ goog.scope(function() {
             Results.CssClass.SHOW_MORE_BUTTON_ACTIVE
         );
     };
+
 
     /**
      * Hides olympiads in inner content
@@ -267,6 +286,7 @@ goog.scope(function() {
             );
         }
     };
+
 
     /**
      * Contents initialization
@@ -309,9 +329,10 @@ goog.scope(function() {
         }
     };
 
+
     /**
      * Inner contents initialization
-     * @param {Array.<Elements>} elements
+     * @param {Array.<Element>} elements
      * @return {Array.<{
      *     element: Element,
      *     showMoreButtonElements: Array.<Element>
@@ -336,6 +357,7 @@ goog.scope(function() {
         return innerContents;
     };
 
+
     /**
      * Diagrams initialization
      * @param {Array.<Element>} elements
@@ -348,4 +370,4 @@ goog.scope(function() {
             instance.decorate(elements[i]);
         }
     };
-});
+});  // goog.scope

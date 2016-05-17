@@ -10,14 +10,17 @@ goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.iFactory.FactoryStendhal');
 goog.require('sm.iFactory.TemplateFactoryStendhal');
 
+
+
 /**
  * Search result component
- * @param {object=} opt_params
+ * @param {Object=} opt_params
  * @constructor
  * @extends {goog.ui.Component}
  */
 sm.lSearch.Search = function(opt_params) {
     goog.base(this);
+
 
     /**
      * Parameters
@@ -26,12 +29,14 @@ sm.lSearch.Search = function(opt_params) {
      */
     this.params_ = opt_params || {};
 
+
     /**
      * Search Panel instance
      * @type {sm.bSearchPanel.PanelSearch}
      * @private
      */
     this.searchPanel_ = null;
+
 
     /**
      * instance popular Schools
@@ -42,10 +47,12 @@ sm.lSearch.Search = function(opt_params) {
 };
 goog.inherits(sm.lSearch.Search, goog.ui.Component);
 
+
 goog.scope(function() {
     var Search = sm.lSearch.Search,
         PopularSchools = sm.bPopularSchools.PopularSchools,
         Analytics = sm.iAnalytics.Analytics.getInstance();
+
 
     /**
      * CSS-class enum
@@ -54,6 +61,7 @@ goog.scope(function() {
     Search.CssClass = {
         ROOT: 'l-search'
     };
+
 
     /**
      * Template-based dom element creation.
@@ -72,6 +80,7 @@ goog.scope(function() {
         this.decorateInternal(element);
     };
 
+
     /**
      * Sets up the Component.
      */
@@ -80,6 +89,7 @@ goog.scope(function() {
 
         this.sendAnalyticsPageview_();
     };
+
 
     /**
      * Internal decorates the DOM element
@@ -113,6 +123,7 @@ goog.scope(function() {
             );
     };
 
+
     /**
      * Sends pageview analytics
      * @private
@@ -120,7 +131,8 @@ goog.scope(function() {
     Search.prototype.sendAnalyticsPageview_ = function() {
         Analytics.send('pageview');
     };
-});
+});  // goog.scope
+
 
 /**
  * creates sm.lSearch.Search instance

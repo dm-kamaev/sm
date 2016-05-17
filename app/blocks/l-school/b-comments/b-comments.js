@@ -7,6 +7,8 @@ goog.require('goog.ui.Component');
 goog.require('sm.lSchool.bComment.Comment');
 goog.require('sm.lSchool.bComments.Template');
 
+
+
 /**
  * Comments component
  * @param {object=} opt_params
@@ -16,11 +18,13 @@ goog.require('sm.lSchool.bComments.Template');
 sm.lSchool.bComments.Comments = function(opt_params) {
     goog.base(this);
 
+
     /**
      * @private
-     * @type {object}
+     * @type {Object}
      */
     this.params_ = opt_params || {};
+
 
     /**
      * Elements
@@ -28,6 +32,7 @@ sm.lSchool.bComments.Comments = function(opt_params) {
      * @private
      */
     this.elements_ = {};
+
 
     /**
      * @private
@@ -41,6 +46,7 @@ goog.inherits(sm.lSchool.bComments.Comments, goog.ui.Component);
 goog.scope(function() {
     var Comments = sm.lSchool.bComments.Comments;
 
+
     /**
      * CSS-class enum
      * @enum {string}
@@ -52,13 +58,15 @@ goog.scope(function() {
         COMMENT: 'b-comment'
     };
 
+
     /**
      * Event enum
-     * @enum {String}
+     * @enum {string}
      */
     Comments.Event = {
        LEAVE_COMMENT: 'placeholder-click'
     };
+
 
     /**
      * Template-based dom element creation.
@@ -72,9 +80,10 @@ goog.scope(function() {
         this.decorateInternal(el);
     };
 
+
     /**
      * Internal decorates the DOM element
-     * @param {node} element
+     * @param {Element} element
      */
     Comments.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
@@ -84,7 +93,8 @@ goog.scope(function() {
         this.initDom_();
     };
 
-     /**
+
+    /**
      * @override
      */
     Comments.prototype.enterDocument = function() {
@@ -107,6 +117,7 @@ goog.scope(function() {
         }
     };
 
+
     /**
      * on Placeholder Link Click event
      * @private
@@ -117,6 +128,7 @@ goog.scope(function() {
         });
     };
 
+
     /**
      * on Placeholder Img Click event
      * @private
@@ -126,6 +138,7 @@ goog.scope(function() {
             'type': Comments.Event.LEAVE_COMMENT
         });
     };
+
 
     /**
      * Comments array initialization
@@ -154,7 +167,8 @@ goog.scope(function() {
         }
     };
 
-     /**
+
+    /**
      * DOM elements
      * @private
      */
@@ -169,9 +183,10 @@ goog.scope(function() {
         };
     };
 
+
     /**
      * creates and returns comment
-     * @param {object} params
+     * @param {Object} params
      * @return {Element}
      * @public
      */
@@ -188,4 +203,4 @@ goog.scope(function() {
 
         return comment;
     };
-});
+});  // goog.scope

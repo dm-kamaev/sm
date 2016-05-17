@@ -18,17 +18,20 @@ goog.require('sm.bRating.Template');
 sm.bRating.Rating = function(opt_params) {
     goog.base(this);
 
+
     /**
      * @private
      * @type {object}
      */
     this.params_ = opt_params || {};
 
+
     /**
      * @private
-     * @type {array.<element>}
+     * @type {Array.<element>}
      */
     this.marks_ = [];
+
 
     /**
      * @private
@@ -36,11 +39,13 @@ sm.bRating.Rating = function(opt_params) {
      */
     this.averageMark_ = null;
 
+
     /**
      * @private
-     * @type {array.<number>}
+     * @type {Array.<number>}
      */
     this.values_ = [];
+
 
     /**
      * @private
@@ -50,8 +55,10 @@ sm.bRating.Rating = function(opt_params) {
 };
 goog.inherits(sm.bRating.Rating, goog.ui.Component);
 
+
 goog.scope(function() {
     var Rating = sm.bRating.Rating;
+
 
     /**
      * CSS-class enum
@@ -63,6 +70,7 @@ goog.scope(function() {
         AVERAGE_MARK: 'b-rating__mark_average',
         NULL_AVERAGE_MARK: 'b-rating__mark_null-average'
     };
+
 
     /**
      * Template-based dom element creation.
@@ -78,9 +86,10 @@ goog.scope(function() {
         this.decorateInternal(el);
     };
 
+
     /**
      * Internal decorates the DOM element
-     * @param {Node} element
+     * @param {Element} element
      */
     Rating.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
@@ -98,6 +107,7 @@ goog.scope(function() {
         this.setValues(this.values_, this.averageValue_);
     };
 
+
     /**
      * Sets up the Component.
      */
@@ -107,7 +117,7 @@ goog.scope(function() {
 
     /**
      * set and render marks values
-     * @param {array.<number>=} opt_values values of marks
+     * @param {Array.<number>=} opt_values values of marks
      * @param {number=} opt_averageValue
      * @public
      */
@@ -125,6 +135,7 @@ goog.scope(function() {
         this.renderAverageValue_(this.averageValue_);
     };
 
+
     /**
      * get mark value
      * @param {number} index of value
@@ -135,6 +146,7 @@ goog.scope(function() {
         return this.values_[index];
     };
 
+
     /**
      * Cleans up the Component.
      */
@@ -142,12 +154,14 @@ goog.scope(function() {
         goog.base(this, 'exitDocument');
     };
 
+
     /**
      * Delete label component and dom elements
      */
     Rating.prototype.dispose = function() {
         goog.base(this, 'dispose');
     };
+
 
     /**
      * evaluate average rating
@@ -164,6 +178,7 @@ goog.scope(function() {
 
         return averageRating;
     };
+
 
     /**
      * init marks values
@@ -184,6 +199,7 @@ goog.scope(function() {
         this.averageValue_ = this.params_.averageValue ||
             this.stringToValue_(this.averageMark_.innerHTML);
     };
+
 
     /**
      * render average mark value
@@ -206,6 +222,7 @@ goog.scope(function() {
         }
     };
 
+
     /**
      * render mark value
      * @param {number} index of mark value
@@ -217,6 +234,7 @@ goog.scope(function() {
             this.marks_[index].innerHTML = this.valueToString_(value, 1);
         }
     };
+
 
     /**
      * sets mark value
@@ -235,9 +253,10 @@ goog.scope(function() {
         return isChanged;
     };
 
+
     /**
      * sets mark values
-     * @param {array.<number>} values of marks
+     * @param {Array.<number>} values of marks
      * @return {boolean} true if mark exists, false in other case
      * @private
      */
@@ -253,6 +272,7 @@ goog.scope(function() {
         return isChanged;
     };
 
+
     /**
      * value to string cast
      * @param {string} strValue
@@ -267,6 +287,7 @@ goog.scope(function() {
         }
         return value;
     };
+
 
     /**
      * value to string cast
@@ -285,4 +306,4 @@ goog.scope(function() {
 
         return strValue;
     };
-});
+});  // goog.scope

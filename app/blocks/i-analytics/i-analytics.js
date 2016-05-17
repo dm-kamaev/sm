@@ -8,9 +8,10 @@ goog.provide('sm.iAnalytics.Analytics');
  */
 sm.iAnalytics.Analytics = function() {
 
+
     /**
      * Client Id
-     * @type {String}
+     * @type {string}
      * @private
      */
     this.clientId_ = null;
@@ -24,7 +25,7 @@ goog.scope(function() {
 
     /**
      * Init analytics
-     * @param {String} clientId
+     * @param {string} clientId
      * @public
      */
     Analytics.prototype.init = function(clientId) {
@@ -38,7 +39,7 @@ goog.scope(function() {
 
     /**
      * Sent to Google Analytics information on the treatment
-     * @param {string/Object} params
+     * @param {string|Object} params
      * @public
      */
     Analytics.prototype.send = function(params) {
@@ -72,7 +73,7 @@ goog.scope(function() {
      *     coupon: ?string,
      *     position: ?number
      * }} params
-     * @param {string} place - where clickied the item
+     * @param {string} place - where clicked the item
      */
     Analytics.prototype.clickProduct = function(params, place) {
         ga('ec:addProduct', params);
@@ -167,4 +168,4 @@ goog.scope(function() {
         'init',
         Analytics.prototype.init
     );
-});
+});  // goog.scope

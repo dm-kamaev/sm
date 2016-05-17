@@ -7,7 +7,6 @@ goog.require('sm.lSearchResult.bFilter.Filter');
 
 
 
-
 /**
  * Classes filter
  * @param {Object=} opt_params
@@ -17,12 +16,14 @@ goog.require('sm.lSearchResult.bFilter.Filter');
 sm.lSearchResult.bFilter.FilterClasses = function(opt_params) {
     goog.base(this);
 
+
     /**
      * Reset button
      * @type {Element}
      * @private
      */
     this.filterResetElement_ = null;
+
 
     /**
      * Input label class
@@ -31,12 +32,14 @@ sm.lSearchResult.bFilter.FilterClasses = function(opt_params) {
      */
     this.inputLabelClassElements_ = null;
 
+
     /**
      * Input class
      * @type {Element}
      * @private
      */
     this.inputClassElements_ = null;
+
 
     /**
      * Kindergarten classes input
@@ -53,7 +56,7 @@ goog.inherits(
 
 goog.scope(function() {
     var FilterClasses = sm.lSearchResult.bFilter.FilterClasses;
-    var Filter = sm.lSearchResult.bFilter.Filter;
+
 
     /**
      * CSS-class enum
@@ -112,6 +115,7 @@ goog.scope(function() {
             element
         );
     };
+
 
     /**
      * @override
@@ -184,6 +188,7 @@ goog.scope(function() {
         }
     };
 
+
     /**
      * Select class by index
      * @param {number} index
@@ -202,6 +207,7 @@ goog.scope(function() {
         }
     };
 
+
     /**
      * Reset filter and hide cross
      * @override
@@ -212,6 +218,7 @@ goog.scope(function() {
         this.resetKindergarten_();
         this.resetClasses_();
     };
+
 
     /**
      * Checks for checked radio
@@ -227,6 +234,7 @@ goog.scope(function() {
         return result;
     };
 
+
     /**
      * Reset filter click event handling
      * @private
@@ -234,6 +242,7 @@ goog.scope(function() {
     FilterClasses.prototype.onClickResetButton_ = function() {
         this.resetClasses_();
     };
+
 
     /**
      * Dropdown item select event handling
@@ -244,6 +253,7 @@ goog.scope(function() {
         this.selectClass(event['itemId']);
     };
 
+
     /**
      * Reset button click event handling
      * @param {object} event
@@ -252,6 +262,7 @@ goog.scope(function() {
     FilterClasses.prototype.onClickReset_ = function(event) {
         this.dropdown_.clear();
     };
+
 
     /**
      * Input classes click event handling
@@ -263,6 +274,7 @@ goog.scope(function() {
         this.dropdown_.selectByIndex(index);
         this.selectClass(index);
     };
+
 
     /**
      * Show reset button
@@ -280,6 +292,7 @@ goog.scope(function() {
         }
     };
 
+
     /**
      * Reset filter and hide cross
      * @private
@@ -294,6 +307,7 @@ goog.scope(function() {
         this.selectDropdownDefaultElement_();
     };
 
+
     /**
      * select the default element
      * @private
@@ -304,6 +318,7 @@ goog.scope(function() {
         this.dropdown_.selectByIndex(idDefaultElement);
     };
 
+
     /**
      * Reset filter Kindergarten
      * @private
@@ -312,7 +327,8 @@ goog.scope(function() {
         this.inputClassesKindergartenElement_.checked = false;
     };
 
-     /**
+
+    /**
      * Hide filter classes cross
      * @private
      */
@@ -323,7 +339,8 @@ goog.scope(function() {
         );
     };
 
-     /**
+
+    /**
      * Show filter classes cross
      * @private
      */
@@ -333,6 +350,7 @@ goog.scope(function() {
             FilterClasses.CssClass.HIDDEN
         );
     };
+
 
     /**
      * Select label by index
@@ -353,6 +371,7 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * Set active filter classes
      * @private
@@ -367,4 +386,4 @@ goog.scope(function() {
             }
         }
     };
-});
+});  // goog.scope

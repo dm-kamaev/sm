@@ -3,23 +3,26 @@ goog.provide('sm.gTextarea.ViewStendhal');
 goog.require('cl.gTextarea.View');
 goog.require('cl.iUtils.Utils');
 
+
+
 /**
  * Textarea check View
  * @param {Object=} opt_params
- * @param {Function=} opt_template
- * @param {goog.dom.DomHelper=} opt_domHelper
+ * @param {string=} opt_type
+ * @param {string=} opt_modifier
  * @constructor
- * @extends {cl.gTextarea.View}
+ * @extends {cl.iControl.View}
  */
-sm.gTextarea.ViewStendhal =
-    function(opt_params, opt_template, opt_domHelper) {
-    goog.base(this, opt_params, opt_template, opt_domHelper);
+sm.gTextarea.ViewStendhal = function(opt_params, opt_type, opt_modifier) {
+    goog.base(this, opt_params, opt_type, opt_modifier);
 };
 goog.inherits(sm.gTextarea.ViewStendhal, cl.gTextarea.View);
+
 
 goog.scope(function() {
     var View = sm.gTextarea.ViewStendhal,
         Utils = cl.iUtils.Utils;
+
 
     /**
      * Css class enum
@@ -32,14 +35,16 @@ goog.scope(function() {
         COUNTER_CUSTOM_TEXT_LEFT: 'g-textarea__counter-custom-text-left'
     };
 
+
     /**
      * CustomText enum
-     * @enum {String}
+     * @enum {string}
      */
     View.CustomText = {
         MAX_LENGTH: 'Максимальная длина комментария —',
         SYMBOLS: 'символов'
     };
+
 
     /**
      * @override
@@ -56,6 +61,7 @@ goog.scope(function() {
             View.CssClass.COUNTER_CUSTOM_TEXT_LEFT
         );
     };
+
 
     /**
      * @override
@@ -93,6 +99,7 @@ goog.scope(function() {
         }
     };
 
+
     /**
      * Add not valid modifier
      * @public
@@ -104,6 +111,7 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * Remove not valid modifier
      * @public
@@ -114,4 +122,4 @@ goog.scope(function() {
             View.CssClass.NOT_VALID
         );
     };
-});
+});  // goog.scope

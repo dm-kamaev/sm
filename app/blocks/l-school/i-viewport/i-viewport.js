@@ -3,6 +3,7 @@ goog.provide('sm.lSchool.iViewport.Viewport');
 goog.require('goog.events.EventTarget');
 
 
+
 /**
  * l-school layout viewport
  * @constructor
@@ -10,12 +11,14 @@ goog.require('goog.events.EventTarget');
 sm.lSchool.iViewport.Viewport = function() {
     goog.base(this);
 
+
     /**
      * Current size
      * @type {?Viewport.Size}
      * @private
      */
     this.size_ = null;
+
 
     this.init_();
 };
@@ -25,6 +28,7 @@ goog.addSingletonGetter(sm.lSchool.iViewport.Viewport);
 
 goog.scope(function() {
     var Viewport = sm.lSchool.iViewport.Viewport;
+
 
     /**
      * Viewport sizes enum
@@ -38,6 +42,7 @@ goog.scope(function() {
         'XL': 1280
     };
 
+
     /**
      * Events enum
      * @enum {string}
@@ -46,6 +51,7 @@ goog.scope(function() {
         'RESIZE': 'resize'
     };
 
+
     /**
      * Current size
      * @return {?Viewport.Size}
@@ -53,6 +59,7 @@ goog.scope(function() {
     Viewport.prototype.getSize = function() {
         return this.size_;
     };
+
 
     /**
      * Viewport initialization
@@ -69,6 +76,7 @@ goog.scope(function() {
             this
         );
     };
+
 
     /**
      * Viewport size calculation
@@ -98,6 +106,7 @@ goog.scope(function() {
         return size;
     };
 
+
     /**
      * Resize event handling
      * @private
@@ -114,4 +123,4 @@ goog.scope(function() {
             });
         }
     };
-});
+});  // goog.scope

@@ -6,6 +6,8 @@ goog.require('goog.ui.Component');
 goog.require('goog.uri.utils');
 goog.require('sm.bBadge.Template');
 
+
+
 /**
  * sm.bBadge.Badge component
  * @param {Object=} opt_params
@@ -15,12 +17,14 @@ goog.require('sm.bBadge.Template');
 sm.bBadge.Badge = function(opt_params) {
     goog.base(this);
 
+
     /**
      * Elements
      * @type {Object}
      * @private
      */
     this.elements_ = {};
+
 
     /**
      * Parameters
@@ -36,6 +40,7 @@ goog.scope(function() {
     Badge = sm.bBadge.Badge,
     HintView = cl.gHint.View;
 
+
     /**
      * Css class enum
      * @enum {string}
@@ -46,6 +51,7 @@ goog.scope(function() {
         ITEM: 'b-badge__item',
         HINT_HREF: 'b-badge__hint-href'
     };
+
 
     /**
      * @override
@@ -62,6 +68,7 @@ goog.scope(function() {
 
         this.decorateInternal(element);
     };
+
 
     /**
      * @override
@@ -85,6 +92,7 @@ goog.scope(function() {
             this.initMetroDataParams_();
         }
     };
+
 
     /**
      * @override
@@ -119,6 +127,7 @@ goog.scope(function() {
         }
     };
 
+
     /**
      * @override
      */
@@ -128,6 +137,7 @@ goog.scope(function() {
         this.params_ = null;
         this.elements_ = null;
     };
+
 
     /**
      * Metro data-params initialization
@@ -149,6 +159,7 @@ goog.scope(function() {
         }
     };
 
+
     /**
      * Checks for display: rating
      * @return {boolean}
@@ -161,6 +172,7 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * On hint href click
      * @private
@@ -168,6 +180,7 @@ goog.scope(function() {
     Badge.prototype.onHintHrefClick_ = function() {
         window.open('http://dogm.mos.ru/rating/');
     };
+
 
     /**
      * On click for display: rating
@@ -182,6 +195,7 @@ goog.scope(function() {
             this.onDocumentClick_
         );
     };
+
 
     /**
      * On document click actions
@@ -205,6 +219,7 @@ goog.scope(function() {
         }
     };
 
+
     /**
      * Toggle hint include css class
      * @private
@@ -215,6 +230,7 @@ goog.scope(function() {
             HintView.CssClass.INCLUDE_CLICK_MODE
         );
     };
+
 
     /**
      * Remove hint include css class
@@ -227,6 +243,7 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * On item active click
      * @param  {number} itemId
@@ -238,4 +255,4 @@ goog.scope(function() {
         document.location.href = '/search?' +
             goog.uri.utils.buildQueryDataFromMap(data);
     };
-});
+});  // goog.scope

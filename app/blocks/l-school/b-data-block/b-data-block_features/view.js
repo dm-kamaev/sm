@@ -2,23 +2,27 @@ goog.provide('sm.bDataBlock.DataBlockFeaturesView');
 
 goog.require('sm.bDataBlock.View');
 
+
+
 /**
  * Data Block View
  * @param {Object=} opt_params
- * @param {Function=} opt_template
+ * @param {string=} opt_type
  * @param {string=} opt_modifier
  * @constructor
  * @extends {sm.bDataBlock.View}
  */
-sm.bDataBlock.DataBlockFeaturesView = function(opt_params,
-    opt_template, opt_modifier) {
+sm.bDataBlock.DataBlockFeaturesView = function(
+    opt_params, opt_type, opt_modifier) {
 
-    goog.base(this, opt_params, opt_template, opt_modifier);
+    goog.base(this, opt_params, opt_type, opt_modifier);
 };
 goog.inherits(sm.bDataBlock.DataBlockFeaturesView, sm.bDataBlock.View);
 
+
 goog.scope(function() {
     var DataBlockFeaturesView = sm.bDataBlock.DataBlockFeaturesView;
+
 
     /**
      * CssClass enum
@@ -30,6 +34,7 @@ goog.scope(function() {
         LINK_INACCURACY: 'b-data-block__link-inaccuracy'
     };
 
+
     /**
      * Event enum
      * @enum
@@ -38,6 +43,7 @@ goog.scope(function() {
         LINK_FEEDBACK_CLICK: 'link-feedback-click',
         LINK_INACCURACY_CLICK: 'link-inaccuracy-click'
     };
+
 
     /**
      * @override
@@ -48,6 +54,7 @@ goog.scope(function() {
 
         this.initDom_(element);
     };
+
 
     /**
      * @override
@@ -72,6 +79,7 @@ goog.scope(function() {
         }
     };
 
+
     /**
      * Click link Feedback
      * @private
@@ -82,6 +90,7 @@ goog.scope(function() {
         });
     };
 
+
     /**
      * Click link Feedback
      * @private
@@ -91,6 +100,7 @@ goog.scope(function() {
             'type': DataBlockFeaturesView.Event.LINK_INACCURACY_CLICK
         });
     };
+
 
     /**
      * Initializes dom elements
@@ -107,4 +117,4 @@ goog.scope(function() {
             )
         };
     };
-});
+});  // goog.scope
