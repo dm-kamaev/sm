@@ -15,13 +15,13 @@ sm.iEvercookie.Evercookie = function() {
      * @private
      */
     this.evercookie_ = new evercookie({
-        baseurl: '',
-        asseturi: '/evercookie/assets',
-        phpuri: '/evercookie',
-        pngPath: '/png',
-        etagPath: '/etag',
-        cachePath: '/cache',
-        history: false
+        'baseurl': '',
+        'asseturi': '/evercookie/assets',
+        'phpuri': '/evercookie',
+        'pngPath': '/png',
+        'etagPath': '/etag',
+        'cachePath': '/cache',
+        'history': false
     });
 
 
@@ -48,13 +48,13 @@ sm.iEvercookie.Evercookie.prototype.getClientId = function(callback) {
     else {
         that.get('clevverId', function(value) {
              if (value) {
-                that.clientId_ = value;
-            }
-            else {
-                that.clientId_ = that.generateGuid_();
-                that.set('clevverId', that.clientId_);
-            }
-            callback(that.clientId_);
+                 that.clientId_ = value;
+             }
+             else {
+                 that.clientId_ = that.generateGuid_();
+                 that.set('clevverId', that.clientId_);
+             }
+             callback(that.clientId_);
         });
     }
 };
