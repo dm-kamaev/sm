@@ -5,6 +5,8 @@ goog.require('goog.events.EventType');
 goog.require('goog.ui.Component');
 goog.require('sm.bDiagram.Template');
 
+
+
 /**
  * sm.bDiagram.Diagram component
  * @param {Object=} opt_params
@@ -14,12 +16,14 @@ goog.require('sm.bDiagram.Template');
 sm.bDiagram.Diagram = function(opt_params) {
     goog.base(this);
 
+
     /**
      * Elements
      * @type {Object}
      * @private
      */
     this.elements_ = {};
+
 
     /**
      * Parameters
@@ -28,6 +32,7 @@ sm.bDiagram.Diagram = function(opt_params) {
      */
     this.params_ = opt_params || {};
 
+
     /**
      * Flag for hint
      * @type {boolean}
@@ -35,9 +40,10 @@ sm.bDiagram.Diagram = function(opt_params) {
      */
     this.hintIsShown_ = false;
 
+
     /**
      * Shown hint element
-     * @type {element}
+     * @type {Element}
      * @private
      */
     this.shownHintElement_ = null;
@@ -47,6 +53,7 @@ goog.inherits(sm.bDiagram.Diagram, goog.ui.Component);
 
 goog.scope(function() {
     Diagram = sm.bDiagram.Diagram;
+
 
     /**
      * Css class enum
@@ -58,6 +65,7 @@ goog.scope(function() {
         HINT: 'b-diagram__tooltip',
         SHOWN_HINT: 'b-diagram__tooltip_shown'
     };
+
 
     /**
      * @override
@@ -75,6 +83,7 @@ goog.scope(function() {
         this.decorateInternal(element);
     };
 
+
     /**
      * @override
      * @param {Element} element
@@ -88,6 +97,7 @@ goog.scope(function() {
 
         this.elements_.hints = this.getElementsByClass(Diagram.CssClass.HINT);
     };
+
 
     /**
      * @override
@@ -112,6 +122,7 @@ goog.scope(function() {
         }
     };
 
+
     /**
      * @override
      */
@@ -123,6 +134,7 @@ goog.scope(function() {
         this.hintIsShown_ = null;
         this.shownHintElement_ = null;
     };
+
 
     /**
      * On bar click actions
@@ -152,6 +164,7 @@ goog.scope(function() {
         }
     };
 
+
     /**
      * On document click actions
      * @private
@@ -164,6 +177,7 @@ goog.scope(function() {
         }
     };
 
+
     /**
      * On mouse enter actions
      * @private
@@ -173,6 +187,7 @@ goog.scope(function() {
             this.hideHint_();
         }
     };
+
 
     /**
      * Hides hint
@@ -192,4 +207,4 @@ goog.scope(function() {
 
         this.hintIsShown_ = !this.hintIsShown_;
     };
-});
+});  // goog.scope

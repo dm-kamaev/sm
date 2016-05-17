@@ -27,6 +27,8 @@ goog.require('sm.gTextarea.ViewStendhal');
 goog.require('sm.lSchool.bFoldList.FoldList');
 goog.require('sm.lSchool.bFoldList.View');
 
+
+
 /**
  * FactoryStendhal
  * @constructor
@@ -99,4 +101,4 @@ goog.scope(function() {
      * Important!
      */
     Factory.getInstance().attachToManager();
-});
+});  // goog.scope

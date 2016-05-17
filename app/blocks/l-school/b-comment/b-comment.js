@@ -8,6 +8,8 @@ goog.require('goog.ui.Component');
 goog.require('sm.bScore.ScoreMinimized');
 goog.require('sm.lSchool.bComment.Template');
 
+
+
 /**
  * Comment component
  * @param {object=} opt_params
@@ -25,10 +27,12 @@ sm.lSchool.bComment.Comment = function(opt_params) {
 };
 goog.inherits(sm.lSchool.bComment.Comment, goog.ui.Component);
 
+
 goog.scope(function() {
     var Comment = sm.lSchool.bComment.Comment,
         ScoreMinimized = sm.bScore.ScoreMinimized,
         Utils = cl.iUtils.Utils;
+
 
     /**
      * CSS-class enum
@@ -40,6 +44,7 @@ goog.scope(function() {
         CROPPED_TEXT: 'b-comment__text_cropped',
         SHOW_MORE: 'b-comment__show-more'
     };
+
 
     /**
      * Template-based dom element creation.
@@ -53,17 +58,18 @@ goog.scope(function() {
         this.decorateInternal(el);
     };
 
+
     /**
      * Internal decorates the DOM element
-     * @param {Node} element
+     * @param {Element} element
      */
     Comment.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
         this.initElements_();
         this.initScore_();
-
     };
+
 
     /**
      * Sets up the Component.
@@ -83,6 +89,7 @@ goog.scope(function() {
         }
     };
 
+
     /**
      * Init dom elements
      * @private
@@ -99,6 +106,7 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * Spoiler click handler
      * @private
@@ -107,6 +115,7 @@ goog.scope(function() {
         this.setFullTextVisibility_(true);
         this.setShowMoreVisibility_(false);
     };
+
 
     /**
      * set visibility of hidden text
@@ -135,6 +144,7 @@ goog.scope(function() {
         }
     };
 
+
     /**
      * set visibility of show more button
      * @param {boolean} visibility
@@ -151,6 +161,7 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * Init score instance
      * @private
@@ -161,4 +172,4 @@ goog.scope(function() {
         this.addChild(score);
         score.decorate(scoreElement);
     };
-});
+});  // goog.scope

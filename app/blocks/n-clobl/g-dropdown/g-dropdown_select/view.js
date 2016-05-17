@@ -2,6 +2,8 @@ goog.provide('sm.gDropdown.DropdownSelectView');
 
 goog.require('cl.gDropdown.View');
 
+
+
 /**
  * Dropdown control
  * @param {Object=} opt_params
@@ -13,6 +15,7 @@ goog.require('cl.gDropdown.View');
 sm.gDropdown.DropdownSelectView =
     function(opt_params, opt_template, opt_modifier) {
     goog.base(this, opt_params, opt_template, opt_modifier);
+
 
     /**
      * Dropdown params
@@ -27,6 +30,7 @@ goog.inherits(sm.gDropdown.DropdownSelectView, cl.gDropdown.View);
 goog.scope(function() {
     var DropdownSelectView = sm.gDropdown.DropdownSelectView;
 
+
     /**
      * Css class enum
      * @enum {string}
@@ -37,6 +41,7 @@ goog.scope(function() {
         ROOT: 'g-dropdown_select',
         NOT_SELECTED: 'g-dropdown_not-selected'
     };
+
 
     /**
      * @override
@@ -56,6 +61,7 @@ goog.scope(function() {
         this.params_ = jQuery(this.dom.customText).data('params') || {};
     };
 
+
     /**
      * Set text to custom text in opener
      * @param {string} text
@@ -68,6 +74,7 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * Removes placeholder modifier from element with custom text
      * @protected
@@ -78,6 +85,7 @@ goog.scope(function() {
             DropdownSelectView.CssClass.PLACEHOLDER
         );
     };
+
 
     /**
      * Adds placeholder modifier from element with custom text
@@ -90,6 +98,7 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * Set valid state
      * @public
@@ -100,6 +109,7 @@ goog.scope(function() {
             DropdownSelectView.CssClass.NOT_SELECTED
         );
     };
+
 
     /**
      * Unset valid state
@@ -112,6 +122,7 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * Clear selection
      */
@@ -121,4 +132,4 @@ goog.scope(function() {
         }
         this.setOpenerCustomText(this.params_.defaultOpenerText || '');
     };
-});
+});  // goog.scope

@@ -7,6 +7,8 @@ goog.require('sm.bBadge.Badge');
 goog.require('sm.bRating.Rating');
 goog.require('sm.bScore.ScoreMinimized');
 
+
+
 /**
  * School list item component
  * @param {object=} opt_params
@@ -16,6 +18,7 @@ goog.require('sm.bScore.ScoreMinimized');
 sm.lSearchResult.bSchoolListItem.SchoolListItem = function(opt_params) {
     goog.base(this);
 
+
     /**
      * Parameters
      * @type {Object}
@@ -23,11 +26,13 @@ sm.lSearchResult.bSchoolListItem.SchoolListItem = function(opt_params) {
      */
     this.params_ = opt_params || {};
 
+
     /**
      *  @private
-     *  @type {Number}
+     *  @type {number}
      */
     this.id_ = this.params_.id;
+
 
     /**
      * @private
@@ -35,11 +40,13 @@ sm.lSearchResult.bSchoolListItem.SchoolListItem = function(opt_params) {
      */
     this.url_ = this.params_.url;
 
+
     /**
      * @private
      * @type {string}
      */
     this.name_ = this.params_.name['light'] + this.params_.name['bold'];
+
 
     /**
      * scoreInstance
@@ -47,6 +54,7 @@ sm.lSearchResult.bSchoolListItem.SchoolListItem = function(opt_params) {
      * @type {sm.bScore.ScoreMinimized}
      */
     this.scoreInstance_ = null;
+
 
     /**
      * DOM elements
@@ -58,15 +66,17 @@ sm.lSearchResult.bSchoolListItem.SchoolListItem = function(opt_params) {
 goog.inherits(sm.lSearchResult.bSchoolListItem.SchoolListItem,
     goog.ui.Component);
 
+
 goog.scope(function() {
     var ListItem = sm.lSearchResult.bSchoolListItem.SchoolListItem,
         ScoreMinimized = sm.bScore.ScoreMinimized,
         Badge = sm.bBadge.Badge,
         Analytics = sm.iAnalytics.Analytics.getInstance();
 
+
     /**
      *  Css class enum
-     *  @enum {String}
+     *  @enum {string}
      */
     ListItem.CssClass = {
         ROOT: 'b-school-list-item',
@@ -78,8 +88,8 @@ goog.scope(function() {
     /**
      * Returns score
      * @public
-     * @param {Number=} opt_index
-     * @return {(Array.<Number>|Number)}
+     * @param {number=} opt_index
+     * @return {(Array.<number>|number)}
      */
     ListItem.prototype.getScore = function(opt_index) {
         var res;
@@ -94,21 +104,24 @@ goog.scope(function() {
         return res;
     };
 
+
     /**
      * Returns total score
-     * @return  {Number}
+     * @return  {number}
      */
     ListItem.prototype.getTotalScore = function() {
         return this.currentCriterion_;
     };
 
+
     /**
      * Returns item id
-     * @return {Number}
+     * @return {number}
      */
     ListItem.prototype.getId = function() {
         return this.id_;
     };
+
 
     /**
      * Compare by total score descending
@@ -142,6 +155,7 @@ goog.scope(function() {
         return result;
     };
 
+
     /**
      * Compare by score desc then by total score desc then by id asc
      * @param {sm.lSearchResult.bSchoolListItem.SchoolListItem} item
@@ -160,6 +174,7 @@ goog.scope(function() {
         return result;
     };
 
+
     /**
      * Compare by id ascending
      * @param {sm.lSearchResult.bSchoolListItem.SchoolListItem} item
@@ -169,9 +184,10 @@ goog.scope(function() {
         return this.getId() - item.getId();
     };
 
+
     /**
-    * @return {Object}
-    */
+     * @return {Object}
+     */
     ListItem.prototype.getImpressionData = function() {
         return {
             id: this.id_,
@@ -180,6 +196,7 @@ goog.scope(function() {
             list: 'Search Results'
         };
     };
+
 
     /**
      * @override
@@ -331,6 +348,7 @@ goog.scope(function() {
         }
     };
 
+
     /**
      * On section badges click
      * @param {Object} event
@@ -339,6 +357,7 @@ goog.scope(function() {
     ListItem.prototype.onSectionBadgesClick_ = function(event) {
         event.preventDefault();
     };
+
 
     /**
      * Compare input array with null score:[0, 0, 0, 0]
@@ -358,6 +377,7 @@ goog.scope(function() {
         }
         return result;
     };
+
 
     /**
      * send Analytics data school
@@ -382,4 +402,4 @@ goog.scope(function() {
 
         Analytics.send(dataAnalytics);
     };
-});
+});  // goog.scope

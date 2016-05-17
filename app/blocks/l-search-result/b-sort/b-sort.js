@@ -7,6 +7,8 @@ goog.require('goog.ui.Component');
 goog.require('sm.iFactory.FactoryStendhal');
 goog.require('sm.lSearchResult.bSort.Template');
 
+
+
 /**
  * Sort component
  * @param {object=} opt_params
@@ -16,12 +18,14 @@ goog.require('sm.lSearchResult.bSort.Template');
 sm.lSearchResult.bSort.Sort = function(opt_params) {
     goog.base(this);
 
+
     /**
      * Parameters
      * @private
      * @type {Object}
      */
     this.params_ = opt_params || {};
+
 
     /**
      * Instance
@@ -30,12 +34,14 @@ sm.lSearchResult.bSort.Sort = function(opt_params) {
      */
     this.dropdown_ = null;
 
+
     /**
      * Instance
      * @type {cl.gList.View}
      * @private
      */
     this.list_ = null;
+
 
     /**
      * Switcher custom text element
@@ -46,10 +52,12 @@ sm.lSearchResult.bSort.Sort = function(opt_params) {
 };
 goog.inherits(sm.lSearchResult.bSort.Sort, goog.ui.Component);
 
+
 goog.scope(function() {
     var Sort = sm.lSearchResult.bSort.Sort,
         DropdownView = cl.gDropdown.View,
         List = cl.gList.List;
+
 
     /**
      * CSS-class enum
@@ -60,6 +68,7 @@ goog.scope(function() {
         SWITCHER_CUSTOM_TEXT: 'g-dropdown__switcher-custom-text'
     };
 
+
     /**
      * Event enum
      * @enum {string}
@@ -67,6 +76,7 @@ goog.scope(function() {
     Sort.Event = {
         ITEM_CLICK: 'itemClick'
     };
+
 
     /**
      * Switcher text enum
@@ -80,6 +90,7 @@ goog.scope(function() {
         INFRASTRUCTURE: 'инфраструктуре'
     };
 
+
     /**
      * Decorate
      * @param {Element} element
@@ -89,6 +100,7 @@ goog.scope(function() {
 
         this.params_ = jQuery(element).data('params') || {};
     };
+
 
     /**
      * Template-based dom element creation.
@@ -106,6 +118,7 @@ goog.scope(function() {
 
         this.decorateInternal(element);
     };
+
 
     /**
      * Internal decorates the DOM element
@@ -131,6 +144,7 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * Set up the Component.
      */
@@ -144,9 +158,10 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * Set custom text content for switcher
-     * @param {String} text
+     * @param {string} text
      * @private
      */
     Sort.prototype.setSwitcherCustomText_ = function(text) {
@@ -155,6 +170,7 @@ goog.scope(function() {
             text
         );
     };
+
 
     /**
      * Item click handler
@@ -197,4 +213,4 @@ goog.scope(function() {
                 break;
         }
     };
-});
+});  // goog.scope

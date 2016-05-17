@@ -6,7 +6,6 @@ goog.require('goog.ui.Component');
 goog.require('sm.iFactory.FactoryStendhal');
 goog.require('sm.lSearchResult.bSchoolList.Template');
 goog.require('sm.lSearchResult.bSchoolListItem.SchoolListItem');
-goog.require('sm.lSearchResult.bSort.Sort');
 
 
 
@@ -19,12 +18,14 @@ goog.require('sm.lSearchResult.bSort.Sort');
 sm.lSearchResult.bSchoolList.SchoolList = function(opt_params) {
     goog.base(this);
 
+
     /**
      * Parameters
      * @private
      * @type {Object}
      */
     this.params_ = opt_params || {};
+
 
     /**
      * Array of instances of list elements
@@ -33,12 +34,14 @@ sm.lSearchResult.bSchoolList.SchoolList = function(opt_params) {
      */
     this.schoolListItems_ = [];
 
+
     /**
      * Body element
      * @type {?Element}
      * @private
      */
     this.bodyElement_ = null;
+
 
     /**
      * Loader element
@@ -47,12 +50,14 @@ sm.lSearchResult.bSchoolList.SchoolList = function(opt_params) {
      */
     this.loaderElement_ = null;
 
+
     /**
      * Instance
      * @type {sm.lSearchResult.bSort.Sort}
      * @private
      */
     this.sort_ = null;
+
 
     /**
      * @type {number}
@@ -62,10 +67,11 @@ sm.lSearchResult.bSchoolList.SchoolList = function(opt_params) {
 };
 goog.inherits(sm.lSearchResult.bSchoolList.SchoolList, goog.ui.Component);
 
+
 goog.scope(function() {
     var SchoolList = sm.lSearchResult.bSchoolList.SchoolList,
-        Sort = sm.lSearchResult.bSort.Sort,
         SchoolListItem = sm.lSearchResult.bSchoolListItem.SchoolListItem;
+
 
     /**
      * CSS-class enum
@@ -78,6 +84,7 @@ goog.scope(function() {
         LOADER: 'b-school-list__loader'
     };
 
+
     /**
      * Event enum
      * @enum
@@ -86,6 +93,7 @@ goog.scope(function() {
         'SORT_CLICK': sm.gDropdown.DropdownSelect.Event.ITEM_SELECT,
         'SHOW_MORE': 'show-more-items'
     };
+
 
     /**
      * Template-based dom element creation.
@@ -103,6 +111,7 @@ goog.scope(function() {
 
         this.decorateInternal(element);
     };
+
 
     /**
      * Internal decorates the DOM element
@@ -170,6 +179,7 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * @override
      */
@@ -178,6 +188,7 @@ goog.scope(function() {
 
         this.initListeners_();
     };
+
 
     /**
      * TODO: repair
@@ -206,6 +217,7 @@ goog.scope(function() {
         }
     };
 
+
     /**
      * Show more items handler
      * @private
@@ -213,6 +225,7 @@ goog.scope(function() {
     SchoolList.prototype.showMoreHandler_ = function() {
         this.dispatchEvent(SchoolList.Event.SHOW_MORE);
     };
+
 
     /**
      * Checks is bottom of the page
@@ -227,6 +240,7 @@ goog.scope(function() {
         }
     };
 
+
     /**
      * Shows loader
      */
@@ -237,6 +251,7 @@ goog.scope(function() {
         );
         this.hideShowMoreButton_();
     };
+
 
     /**
      * Hides loader
@@ -249,6 +264,7 @@ goog.scope(function() {
         );
         this.showShowMoreButton_();
     };
+
 
     /**
      * Show show more button
@@ -272,6 +288,7 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * Hides loader and more button
      * @private
@@ -287,6 +304,7 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * @override
      */
@@ -294,6 +312,7 @@ goog.scope(function() {
         goog.base(this, 'getContentElement');
         return this.bodyElement_;
     };
+
 
     /**
      * Set school list
@@ -304,6 +323,7 @@ goog.scope(function() {
         this.schoolListItems_ = [];
         this.addItems(opt_listData);
     };
+
 
     /**
      * Add school list items
@@ -325,6 +345,7 @@ goog.scope(function() {
         }
     };
 
+
     /**
      * Get impression data of list items
      * @return {Array<Object>}
@@ -334,6 +355,7 @@ goog.scope(function() {
             return item.getImpressionData();
         });
     };
+
 
     /**
      * Listen events
@@ -358,6 +380,7 @@ goog.scope(function() {
         }
     };
 
+
     /**
      * Reset uploading controlls
      */
@@ -365,6 +388,7 @@ goog.scope(function() {
         this.hideLoader_();
         this.initListeners_();
     };
+
 
     /**
      * Turn off uploading controlls
@@ -374,6 +398,7 @@ goog.scope(function() {
         this.getHandler().removeAll();
         this.hideLoaderAndButton_();
     };
+
 
     /**
      * Remove school list item children
@@ -392,4 +417,4 @@ goog.scope(function() {
         return res;
     };
 
-});
+});  // goog.scope

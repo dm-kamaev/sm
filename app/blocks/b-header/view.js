@@ -9,6 +9,7 @@ goog.require('sm.bSearch.Search');
 goog.require('sm.iAnimate.Animate');
 
 
+
 /**
  * Button View
  * @param {Object=} opt_params
@@ -26,6 +27,7 @@ goog.inherits(sm.bHeader.View, cl.iControl.View);
 goog.scope(function() {
     var View = sm.bHeader.View,
         Search = sm.bSearch.Search;
+
 
     /**
      * Css class enum
@@ -52,6 +54,7 @@ goog.scope(function() {
         this.initBanner_();
         this.detectAnimationSupportion_();
     };
+
 
     /**
      * Switch view to default mode
@@ -95,6 +98,7 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * Find search dom elements
      * @private
@@ -109,6 +113,7 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * Find banner dom elements
      * @private
@@ -118,4 +123,4 @@ goog.scope(function() {
             sm.bBanner.View.CssClass.ROOT
         );
     };
-});
+});  // goog.scope

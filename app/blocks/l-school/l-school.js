@@ -19,6 +19,7 @@ goog.require('sm.lSchool.bFeedbackModal.FeedbackModal');
 goog.require('sm.lSchool.bResults.Results');
 
 
+
 /**
  * School page
  * @param {Object=} opt_params
@@ -28,12 +29,14 @@ goog.require('sm.lSchool.bResults.Results');
 sm.lSchool.School = function(opt_params) {
     goog.base(this);
 
+
     /**
      * params
      * @type {Object|{}}
      * @private
      */
     this.params_ = opt_params || {};
+
 
     /**
      * modal window
@@ -42,12 +45,14 @@ sm.lSchool.School = function(opt_params) {
      */
     this.modal_ = null;
 
+
     /**
      * Auth modal window
      * @type {sm.gModal.ModalAuth}
      * @private
      */
     this.authSocial_ = null;
+
 
     /**
      * Score instance
@@ -56,12 +61,14 @@ sm.lSchool.School = function(opt_params) {
      */
     this.score_ = null;
 
+
     /**
      * Modal inaccuracy instance
      * @type {sm.gModal.ModalFeedback}
      * @private
      */
     this.modalInaccuracy_ = null;
+
 
     /**
      * Feedback button instance
@@ -70,12 +77,14 @@ sm.lSchool.School = function(opt_params) {
      */
     this.bouton_ = null;
 
+
     /**
      * instance popular Schools
      * @type {sm.bPopularSchools.PopularSchools}
      * @private
      */
     this.popularSchools_ = null;
+
 
     /**
      * instance data Block Features
@@ -84,12 +93,14 @@ sm.lSchool.School = function(opt_params) {
      */
     this.dataBlockFeatures_ = null;
 
+
     /**
      * Map inctance
      * @type {sm.bMap.Map}
      * @private
      */
     this.map_ = null;
+
 
     /**
      * Comments instance
@@ -116,6 +127,7 @@ goog.scope(function() {
         PopularSchools = sm.bPopularSchools.PopularSchools,
         Analytics = sm.iAnalytics.Analytics.getInstance();
 
+
     /**
      * CSS-class enum
      * @enum {string}
@@ -127,6 +139,7 @@ goog.scope(function() {
         'INACCURACY_LINK': 'l-school__link_inaccuracy'
     };
 
+
     /**
      * URL enum
      * @enum {string}
@@ -134,6 +147,7 @@ goog.scope(function() {
     School.Url = {
         'CREATE_COMMENT': '/api/school/:id/comment'
     };
+
 
     /**
      * Template-based dom element creation.
@@ -148,9 +162,10 @@ goog.scope(function() {
         this.decorateInternal(element);
     };
 
+
     /**
      * Internal decorates the DOM element
-     * @param {element} element
+     * @param {Element} element
      */
     School.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
@@ -163,6 +178,7 @@ goog.scope(function() {
 
         this.initDataBlockFeatures_(element);
     };
+
 
     /**
      * Sets up the Component.
@@ -218,6 +234,7 @@ goog.scope(function() {
         handler.listen(this.map_, Map.Event.READY, this.onMapReady_);
     };
 
+
     /**
      * creates comment url
      * @return {string}
@@ -230,6 +247,7 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * onLeaveComment event
      * @private
@@ -237,6 +255,7 @@ goog.scope(function() {
     School.prototype.onLeaveComment_ = function() {
         this.showCommentModal_();
     };
+
 
     /**
      * onClick event
@@ -246,6 +265,7 @@ goog.scope(function() {
         this.modalInaccuracy_.show();
     };
 
+
     /**
      * onClick event
      * @private
@@ -253,6 +273,7 @@ goog.scope(function() {
     School.prototype.onFeedbackLinkClick_ = function() {
         this.showCommentModal_();
     };
+
 
     /**
      * Sets EC analytics
@@ -267,6 +288,7 @@ goog.scope(function() {
         Analytics.setView();
     };
 
+
     /**
      * Sends pageview analytics
      * @private
@@ -274,6 +296,7 @@ goog.scope(function() {
     School.prototype.sendAnalyticsPageview_ = function() {
         Analytics.send('pageview');
     };
+
 
     /**
      * show Modal for comments
@@ -286,6 +309,7 @@ goog.scope(function() {
             this.authSocial_.show();
         }
     };
+
 
     /**
      * adds children
@@ -305,6 +329,7 @@ goog.scope(function() {
             .initComponents_(Results, Results.CssClass.ROOT);
     };
 
+
     /**
      * Button initialization
      * @return {sm.lSchool.School}
@@ -320,6 +345,7 @@ goog.scope(function() {
         }
         return this;
     };
+
 
     /**
      * Components initialization
@@ -341,6 +367,7 @@ goog.scope(function() {
         return this;
     };
 
+
     /**
      * Map initialization
      * @return {sm.lSchool.School}
@@ -355,6 +382,7 @@ goog.scope(function() {
         return this;
     };
 
+
     /**
      * Score initialization
      * @return {sm.lSchool.School}
@@ -368,6 +396,7 @@ goog.scope(function() {
         return this;
     };
 
+
     /**
      * Comments initialization
      * @return {sm.lSchool.School}
@@ -380,6 +409,7 @@ goog.scope(function() {
 
         return this;
     };
+
 
     /**
      * Modal initialization
@@ -398,6 +428,7 @@ goog.scope(function() {
         return this;
     };
 
+
     /**
      * Modal auth initialization
      * @return {sm.lSchool.School}
@@ -412,6 +443,7 @@ goog.scope(function() {
 
         return this;
     };
+
 
     /**
      * Modal inaccuracy initialization
@@ -428,6 +460,7 @@ goog.scope(function() {
         return this;
     };
 
+
     /**
      * Component initialization
      * @param {Function} component
@@ -443,6 +476,7 @@ goog.scope(function() {
 
         return instance;
     };
+
 
     /**
      * gets DOM elements
@@ -464,6 +498,7 @@ goog.scope(function() {
         };
     };
 
+
     /**
      * Load additional points to map
      * @private
@@ -476,6 +511,7 @@ goog.scope(function() {
         }).then(this.addMapPoints.bind(this));
     };
 
+
     /**
      * Add Points to map
      * @param {{
@@ -486,9 +522,10 @@ goog.scope(function() {
         this.map_.addItems(data.schools);
     };
 
+
     /**
      * @private
-     * @return {bool}
+     * @return {boolean}
      */
     School.prototype.isCommented_ = function() {
         return JSON.parse(
@@ -496,15 +533,17 @@ goog.scope(function() {
             ).isCommented;
     };
 
+
     /**
      * @private
-     * @return {object}
+     * @return {Object}
      */
     School.prototype.getUser_ = function() {
         return !!JSON.parse(
                 goog.dom.dataset.get(this.getElement(), 'params')
             ).user;
     };
+
 
     /**
      * Initialization popular schools
@@ -525,6 +564,7 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * Initialization Data Block Features
      * @param {Element} element
@@ -542,7 +582,7 @@ goog.scope(function() {
             this
         );
     };
-});
+});  // goog.scope
 
 
 /**

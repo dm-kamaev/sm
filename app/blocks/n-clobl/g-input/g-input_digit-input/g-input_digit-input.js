@@ -3,9 +3,11 @@ goog.provide('sm.gInput.DigitInput');
 goog.require('cl.gInput.Input');
 goog.require('sm.gInput.DigitInputView');
 
+
+
 /**
  * Input control
- * @param {Object=} view
+ * @param {Object} view
  * @param {Object=} opt_params
  * @param {Object=} opt_domHelper
  * @constructor
@@ -29,6 +31,7 @@ goog.scope(function() {
         FOCUS: sm.gInput.DigitInputView.Event.FOCUS
     };
 
+
     /**
      * @override
      */
@@ -42,4 +45,4 @@ goog.scope(function() {
             }
         );
     };
-});
+});  // goog.scope

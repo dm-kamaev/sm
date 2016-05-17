@@ -18,6 +18,8 @@ goog.require('sm.lSearchResult.Template');
 goog.require('sm.lSearchResult.bFilters.Filters');
 goog.require('sm.lSearchResult.bSchoolList.SchoolList');
 
+
+
 /**
  * Search result component
  * @param {object=} opt_params
@@ -27,12 +29,14 @@ goog.require('sm.lSearchResult.bSchoolList.SchoolList');
 sm.lSearchResult.SearchResult = function(opt_params) {
     goog.base(this);
 
+
     /**
      * Parameters
      * @private
      * @type {Object}
      */
     this.params_ = opt_params || {};
+
 
     /**
      * Collection of children instances
@@ -52,6 +56,7 @@ sm.lSearchResult.SearchResult = function(opt_params) {
         schoolList: null,
         map: null
     };
+
 
     /**
      * Current search parameters
@@ -82,6 +87,7 @@ sm.lSearchResult.SearchResult = function(opt_params) {
         'page': 0
     };
 
+
     /**
      * Params for request to api
      * @type {{
@@ -95,6 +101,7 @@ sm.lSearchResult.SearchResult = function(opt_params) {
         mapDataUrl: '/api/school/searchMapPoints'
     };
 
+
     /**
      * Dom elements
      * @type {Element}
@@ -104,6 +111,7 @@ sm.lSearchResult.SearchResult = function(opt_params) {
 };
 goog.inherits(sm.lSearchResult.SearchResult, goog.ui.Component);
 
+
 goog.scope(function() {
     var SearchResult = sm.lSearchResult.SearchResult,
         SchoolList = sm.lSearchResult.bSchoolList.SchoolList,
@@ -112,6 +120,7 @@ goog.scope(function() {
         Header = sm.bHeader.Header,
         Map = sm.bMap.Map,
         Analytics = sm.iAnalytics.Analytics.getInstance();
+
 
     /**
      * CSS-class enum
@@ -126,6 +135,7 @@ goog.scope(function() {
         MAP_CONTAINER: 'l-search-result__map'
     };
 
+
     /**
      * @override
      */
@@ -133,6 +143,7 @@ goog.scope(function() {
         goog.base(this, 'decorate', element);
         this.params_ = jQuery(element).data('params') || {};
     };
+
 
     /**
      * @override
@@ -149,6 +160,7 @@ goog.scope(function() {
 
         this.decorateInternal(element);
     };
+
 
     /**
      * @override
@@ -174,6 +186,7 @@ goog.scope(function() {
         /** end init params **/
     };
 
+
     /**
      * Set up the Component.
      * @override
@@ -194,6 +207,7 @@ goog.scope(function() {
         );
         this.sendAnalyticsPageview_();
     };
+
 
     /**
      * Init dom elements
@@ -217,6 +231,7 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * Get search settings from data-params
      * @private
@@ -229,6 +244,7 @@ goog.scope(function() {
 
         this.searchParams_ = this.getSearchParams_();
     };
+
 
     /**
      * Init school list block
@@ -245,6 +261,7 @@ goog.scope(function() {
         this.addChild(this.instances_.schoolList);
         this.instances_.schoolList.decorate(schoolListElement);
     };
+
 
     /**
      * Init filters block
@@ -263,6 +280,7 @@ goog.scope(function() {
         this.instances_.filters.decorate(filtersElement);
     };
 
+
     /**
      * Init header instance
      * @private
@@ -270,6 +288,7 @@ goog.scope(function() {
     SearchResult.prototype.initHeader_ = function() {
         this.instances_.header = Header.getInstance();
     };
+
 
     /**
      * Init search in menu
@@ -289,6 +308,7 @@ goog.scope(function() {
         }
     };
 
+
     /**
      * Init listeners for search block in menu
      * @private
@@ -304,6 +324,7 @@ goog.scope(function() {
             this.onSearchSubmit_
         );
     };
+
 
     /**
      * Init listeners for header blocfk
@@ -321,6 +342,7 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * Init listeners for filters
      * @private
@@ -332,6 +354,7 @@ goog.scope(function() {
             this.onFiltersSubmit_
         );
     };
+
 
     /**
      * Init listeners for school list block
@@ -349,6 +372,7 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * Init map listeners
      * @private
@@ -360,6 +384,7 @@ goog.scope(function() {
             this.onMapReady_
         );
     };
+
 
     /**
      * Init listeners for window
@@ -373,9 +398,10 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * Set list item impressions
-     * @param {Array<Object>} data
+     * @param {Array.<Object>} data
      * @param {number} nonInteraction
      * @private
      */
@@ -388,6 +414,7 @@ goog.scope(function() {
             Analytics.sendEvent('Search List', 'load', nonInteraction);
         };
 
+
     /**
      * Sends pageview analytics
      * @private
@@ -395,6 +422,7 @@ goog.scope(function() {
     SearchResult.prototype.sendAnalyticsPageview_ = function() {
         Analytics.send('pageview');
     };
+
 
     /**
      * Init map
@@ -414,6 +442,7 @@ goog.scope(function() {
             this.instances_.map.decorate(map);
         }
     };
+
 
     /**
      * Returns search params
@@ -435,6 +464,7 @@ goog.scope(function() {
         return this.searchParams_;
     };
 
+
     /**
      * Header submit handler
      * @param {Object} event
@@ -452,6 +482,7 @@ goog.scope(function() {
         this.search_();
     };
 
+
     /**
      * Search submit handler
      * @private
@@ -459,6 +490,7 @@ goog.scope(function() {
     SearchResult.prototype.onSearchSubmit_ = function() {
         this.search_();
     };
+
 
     /**
      * Filters submit handler
@@ -470,6 +502,7 @@ goog.scope(function() {
         this.instances_.filters.collapse();
     };
 
+
     /**
      * Load and add additional points to map
      * @private
@@ -478,6 +511,7 @@ goog.scope(function() {
         this.send_(this.requestParams_.mapDataUrl)
             .then(this.addMapPoints_.bind(this));
     };
+
 
     /**
      * Get search params from filters
@@ -488,6 +522,7 @@ goog.scope(function() {
         return this.instances_.filters.getData();
     };
 
+
     /**
      * Get params from search in menu
      * @return {Object}
@@ -496,6 +531,7 @@ goog.scope(function() {
     SearchResult.prototype.getParamsFromSearch_ = function() {
         return this.instances_.search.getData();
     };
+
 
     /**
      * Update search params, send query to api, update url
@@ -510,6 +546,7 @@ goog.scope(function() {
         this.send_(this.requestParams_.listDataUrl)
             .then(this.updateSchools_.bind(this));
     };
+
 
     /**
      * Update url in according to current search params
@@ -526,6 +563,7 @@ goog.scope(function() {
         }
     };
 
+
     /**
      * Generate new url from current params to push it to history
      * @return {string}
@@ -540,6 +578,7 @@ goog.scope(function() {
 
         return currentPath + '?' + queryParams;
     };
+
 
     /**
      * Check whether correct each param in search params field
@@ -563,6 +602,7 @@ goog.scope(function() {
         return result;
     };
 
+
     /**
      * Update search parameters object with given data
      * @param {Object} params
@@ -574,6 +614,7 @@ goog.scope(function() {
         paramsToUpdate.filter(this.isCorrectParam_.bind(this))
             .forEach(this.updateSearchParam_.bind(this, params));
     };
+
 
     /**
      * Get value for each paramName from paramsToUpdate and put it to
@@ -593,6 +634,7 @@ goog.scope(function() {
             }
     };
 
+
     /**
      * Check whether correct each param and contains in searchParams_ object
      * except 'text' field
@@ -605,6 +647,7 @@ goog.scope(function() {
             true :
             goog.object.containsKey(this.searchParams_, param);
     };
+
 
     /**
      * Sort item click handler
@@ -621,6 +664,7 @@ goog.scope(function() {
             .then(this.updateSchools_.bind(this));
     };
 
+
     /**
      * Handler for show more school list items
      * @private
@@ -636,16 +680,18 @@ goog.scope(function() {
             .then(this.addItems_.bind(this));
     };
 
+
     /**
      * Handler for page show
      * @private
-     * @param {object} event
+     * @param {Object} event
      */
     SearchResult.prototype.onShowPage_ = function(event) {
         if (event.event_.persisted) {
             this.instances_.schoolList.reset();
         }
     };
+
 
     /**
      * Send query with search settings
@@ -662,6 +708,7 @@ goog.scope(function() {
         });
     };
 
+
     /**
      * Filters submit callback
      * @param {string} data
@@ -675,6 +722,7 @@ goog.scope(function() {
         this.sendAddedItemImpressions_(schools);
     };
 
+
     /**
      * Filters submit callback
      * @param {string} data
@@ -687,9 +735,10 @@ goog.scope(function() {
         this.sendAddedItemImpressions_(schools);
     };
 
+
     /**
      * Send impesssion of added schools
-     * @param {Array<Object>} schools
+     * @param {Array.<Object>} schools
      * @private
      */
     SearchResult.prototype.sendAddedItemImpressions_ = function(schools) {
@@ -704,6 +753,7 @@ goog.scope(function() {
             };
         }), 0);
     };
+
 
     /**
      * Updates list and map
@@ -728,6 +778,7 @@ goog.scope(function() {
         this.sendAddedItemImpressions_(list['schools']);
     };
 
+
     /**
      * Show map
      * @private
@@ -738,6 +789,7 @@ goog.scope(function() {
             cl.iUtils.Utils.CssClass.HIDDEN
         );
     };
+
 
     /**
      * Hide map
@@ -750,6 +802,7 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * Add points to map and center it if necessary
      * @param {string} data
@@ -760,6 +813,7 @@ goog.scope(function() {
         this.instances_.map.center(data['position']);
     };
 
+
     /**
      * Set points to map and center it in according to responce data
      * @param {string} data
@@ -769,9 +823,10 @@ goog.scope(function() {
         this.instances_.map.replaceItems(data['schools']);
     };
 
+
     /**
      * Filters submit callback
-     * @param {object} data
+     * @param {Object} data
      * @private
      */
     SearchResult.prototype.updateList_ = function(data) {
@@ -801,14 +856,14 @@ goog.scope(function() {
         this.instances_.schoolList.reset();
         this.instances_.schoolList.setItems(data['schools']);
     };
-});
+});  // goog.scope
 
-var searchResult;
 
 /**
  * creates sm.lSearchResult.SearchResult instance
  */
 jQuery(function() {
+    var searchResult;
     var root = goog.dom.getElementByClass(
             sm.lSearchResult.SearchResult.CssClass.ROOT
         );

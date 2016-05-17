@@ -5,6 +5,8 @@ goog.require('cl.iControl.View');
 goog.require('cl.iUtils.Utils');
 goog.require('goog.dom.classes');
 
+
+
 /**
  * Banner View
  * @param {Object=} opt_params
@@ -22,6 +24,7 @@ goog.inherits(sm.bBanner.View, cl.iControl.View);
 goog.scope(function() {
     var View = sm.bBanner.View;
 
+
     /**
      * Css class enum
      * @enum {string}
@@ -30,13 +33,15 @@ goog.scope(function() {
         ROOT: 'b-banner'
     };
 
+
     /**
      * Event enum
-     * @enum {String}
+     * @enum {string}
      */
     View.Event = {
        CLICK_BANNER: 'click-banner'
     };
+
 
     /**
      * @override
@@ -48,6 +53,7 @@ goog.scope(function() {
             sm.gModal.ViewFeedback.CssClass.ROOT
         );
     };
+
 
     /**
      * @override
@@ -62,6 +68,7 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * Click banner
      * @private
@@ -71,4 +78,4 @@ goog.scope(function() {
             'type': View.Event.CLICK_BANNER
         });
     };
-});
+});  // goog.scope

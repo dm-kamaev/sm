@@ -5,6 +5,8 @@ goog.require('cl.iControl.Control');
 goog.require('sm.bSearch.Search');
 goog.require('sm.bSearchPanel.View');
 
+
+
 /**
  * Search Panel
  * @param {Object=} opt_view
@@ -15,6 +17,7 @@ goog.require('sm.bSearchPanel.View');
  */
 sm.bSearchPanel.SearchPanel = function(opt_view, opt_params, opt_domHelper) {
     goog.base(this, opt_view, opt_params, opt_domHelper);
+
 
     /**
      * Search instance
@@ -31,6 +34,7 @@ goog.scope(function() {
         View = sm.bSearchPanel.View,
         Search = sm.bSearch.Search;
 
+
     /**
      * @param {Element} element
      * @override
@@ -42,6 +46,7 @@ goog.scope(function() {
         this.addChild(this.search_);
         this.search_.decorate(this.getView().getDom().search);
     };
+
 
     /**
      * @override
@@ -55,6 +60,7 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * Button click handler
      * @private
@@ -62,6 +68,7 @@ goog.scope(function() {
     SearchPanel.prototype.onButtonClick_ = function() {
         this.searchRequest_(this.search_.getText());
     };
+
 
      /**
      * Search redirect
@@ -75,4 +82,4 @@ goog.scope(function() {
         }
         document.location.href = url;
     };
-});
+});  // goog.scope

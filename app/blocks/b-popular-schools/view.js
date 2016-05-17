@@ -5,6 +5,8 @@ goog.require('cl.iControl.View');
 goog.require('cl.iUtils.Utils');
 goog.require('goog.dom.classes');
 
+
+
 /**
  * Popular school view
  * @param {Object=} opt_params
@@ -18,25 +20,29 @@ sm.bPopularSchools.View = function(opt_params, opt_template, opt_modifier) {
 };
 goog.inherits(sm.bPopularSchools.View, cl.iControl.View);
 
+
 goog.scope(function() {
     var View = sm.bPopularSchools.View;
 
+
     /**
      * Css class enum
-     * @enum {String}
+     * @enum {string}
      */
     View.CssClass = {
         ROOT: 'b-popular-schools',
         SCHOOL: 'b-popular-schools__school'
     };
 
+
     /**
      * Event enum
-     * @enum {String}
+     * @enum {string}
      */
     View.Event = {
        SCHOOL_CLICK: 'school-click'
     };
+
 
     /**
      * @override
@@ -46,6 +52,7 @@ goog.scope(function() {
 
         this.initDom_(element);
     };
+
 
     /**
      * @override
@@ -64,15 +71,17 @@ goog.scope(function() {
         }
     };
 
+
     /**
      * Get Analytics Action
-     * @return {String}
+     * @return {string}
      */
     View.prototype.getAnalyticsAction = function() {
         var data = this.getDataParams_();
 
         return data['analyticsAction'];
     };
+
 
     /**
      * Get popular school's params
@@ -86,8 +95,9 @@ goog.scope(function() {
         return schoolParams;
     };
 
+
     /**
-     * @param {Number} schoolNumInArr
+     * @param {number} schoolNumInArr
      * @private
      */
     View.prototype.onClickSchool_ = function(schoolNumInArr) {
@@ -103,6 +113,7 @@ goog.scope(function() {
         });
     };
 
+
     /**
      * Initializes dom elements
      * @param {Element} element
@@ -115,7 +126,8 @@ goog.scope(function() {
         );
     };
 
-     /**
+
+    /**
      * Get data params
      * @param {Element=} opt_element dom element
      * @return {Object}
@@ -127,5 +139,4 @@ goog.scope(function() {
 
         return params;
     };
-
-});
+});  // goog.scope

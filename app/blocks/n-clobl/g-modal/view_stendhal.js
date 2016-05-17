@@ -24,6 +24,7 @@ goog.inherits(sm.gModal.ViewStendhal, cl.gModal.View);
 goog.scope(function() {
     var View = sm.gModal.ViewStendhal;
 
+
     /**
      * Css class enum
      * @enum {string}
@@ -33,6 +34,7 @@ goog.scope(function() {
         CLOSER_HOVER_ENABLE: 'g-modal__close-button_hover_enable'
     };
 
+
     /**
      * Event enum
      * @enum {string}
@@ -40,6 +42,7 @@ goog.scope(function() {
     View.Event = {
         CLOSE: 'close'
     };
+
 
     /**
      * @override
@@ -58,6 +61,7 @@ goog.scope(function() {
         }
     };
 
+
     /**
      * @override
      */
@@ -72,6 +76,7 @@ goog.scope(function() {
             this
         );
     };
+
 
     /**
      * @override
@@ -88,6 +93,7 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * Closer click handler
      * @private
@@ -95,4 +101,4 @@ goog.scope(function() {
     View.prototype.onCloserClick_ = function() {
         this.dispatchEvent(View.Event.CLOSE);
     };
-});
+});  // goog.scope

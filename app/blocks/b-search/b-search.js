@@ -10,6 +10,8 @@ goog.require('sm.bSearch.Template');
 goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.iAnimate.Animate');
 
+
+
 /**
  * Input suggest component
  * @param {object=} opt_params
@@ -19,29 +21,34 @@ goog.require('sm.iAnimate.Animate');
 sm.bSearch.Search = function(opt_params) {
     goog.base(this);
 
+
     /**
      * @private
-     * @type {object}
+     * @type {Object}
      */
     this.params_ = opt_params || {};
 
+
     /**
      * @private
-     * @type {object}
+     * @type {Object}
      */
     this.elements_ = {};
 
-    /**
-     * @private
-     * @type {object}
-     */
-    this.suggest_ = null;
 
     /**
      * @private
-     * @type {?object}
+     * @type {Object}
+     */
+    this.suggest_ = null;
+
+
+    /**
+     * @private
+     * @type {?Object}
      */
     this.dataParams_ = {};
+
 
     /**
      * @type {?number}
@@ -49,11 +56,13 @@ sm.bSearch.Search = function(opt_params) {
      */
     this.areaId_ = null;
 
+
     /**
      * @type {?number}
      * @private
      */
     this.metroId_ = null;
+
 
     /**
      * @type {?Array.<number>}
@@ -68,12 +77,14 @@ sm.bSearch.Search = function(opt_params) {
      */
     this.text_ = null;
 
+
     /**
      * Current type
      * @type {?string}
      * @private
      */
     this.type_ = null;
+
 
     /**
      * Current mode
@@ -84,11 +95,13 @@ sm.bSearch.Search = function(opt_params) {
 };
 goog.inherits(sm.bSearch.Search, goog.ui.Component);
 
+
 goog.scope(function() {
     var Search = sm.bSearch.Search,
         Suggest = gorod.gSuggest.Suggest,
         Utils = cl.iUtils.Utils,
         Analytics = sm.iAnalytics.Analytics.getInstance();
+
 
     /**
      * CSS-class enum
@@ -107,6 +120,7 @@ goog.scope(function() {
         FOLDABLE_TYPE: 'b-search_theme_foldable'
     };
 
+
     /**
      * Event enum
      * @enum {string}
@@ -119,6 +133,7 @@ goog.scope(function() {
         SEARCH_MODE_INITED: 'searchModeInited'
     };
 
+
     /**
      * Search modes
      * @enum {string}
@@ -128,6 +143,7 @@ goog.scope(function() {
         SEARCH: 'search'
     };
 
+
     /**
      * View types
      * @enum {string}
@@ -136,6 +152,7 @@ goog.scope(function() {
         FOLDABLE: 'foldable',
         DEFAULT: 'default'
     };
+
 
     /**
      * @return {{
@@ -152,6 +169,7 @@ goog.scope(function() {
             'text': this.getText()
         };
     };
+
 
     /**
      * @param {{
@@ -179,6 +197,7 @@ goog.scope(function() {
         this.setCoords(data['coords']);
     };
 
+
     /**
      * Resets data and suggest value
      * @public
@@ -192,6 +211,7 @@ goog.scope(function() {
         });
     };
 
+
     /**
      * @return {?number}
      * @public
@@ -199,6 +219,7 @@ goog.scope(function() {
     Search.prototype.getMetroId = function() {
         return this.metroId_;
     };
+
 
     /**
      * @param {?number} metroId
@@ -208,6 +229,7 @@ goog.scope(function() {
         this.metroId_ = metroId;
     };
 
+
     /**
      * @return {?number}
      * @public
@@ -215,6 +237,7 @@ goog.scope(function() {
     Search.prototype.getAreaId = function() {
         return this.areaId_;
     };
+
 
     /**
      * @param {?number} areaId
@@ -224,6 +247,7 @@ goog.scope(function() {
         this.areaId_ = areaId;
     };
 
+
     /**
      * @return {Array.<number>}
      * @public
@@ -231,6 +255,7 @@ goog.scope(function() {
     Search.prototype.getCoords = function() {
         return this.coords_;
     };
+
 
     /**
      * set coordinates metro or area
@@ -241,6 +266,7 @@ goog.scope(function() {
         this.coords_ = coords;
     };
 
+
     /**
      * @return {?string}
      * @public
@@ -248,6 +274,7 @@ goog.scope(function() {
     Search.prototype.getText = function() {
         return this.suggest_.getText();
     };
+
 
     /**
      * Sets input value
@@ -258,6 +285,7 @@ goog.scope(function() {
         this.suggest_.setText(value);
         this.suggest_.setValue(value);
     };
+
 
     /**
      * Switch to search mode
@@ -279,6 +307,7 @@ goog.scope(function() {
         this.disableScroll_();
     };
 
+
     /**
      * Switch to default mode
      * @public
@@ -299,6 +328,7 @@ goog.scope(function() {
         this.enableScroll_();
     };
 
+
     /**
      * Disables scroll
      * @private
@@ -309,6 +339,7 @@ goog.scope(function() {
         };
     };
 
+
     /**
      * Enables scroll
      * @private
@@ -318,6 +349,7 @@ goog.scope(function() {
             return true;
         };
     };
+
 
     /**
      * Set header mode
@@ -335,9 +367,10 @@ goog.scope(function() {
         return res;
     };
 
+
     /**
      * Internal decorates the DOM element
-     * @param {element} element
+     * @param {Element} element
      */
     Search.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
@@ -346,6 +379,7 @@ goog.scope(function() {
         this.detectAnimationSupportion_();
         this.initElements_(element);
     };
+
 
     /**
      * Set up the Component.
@@ -460,6 +494,7 @@ goog.scope(function() {
         });
      };
 
+
     /**
      * Clean up the Component.
      */
@@ -482,9 +517,10 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * Send impressions of got items
-     * @param {Array<Object>} items
+     * @param {Array.<Object>} items
      * @private
      */
     Search.prototype.sendItemImpressions_ = function(items) {
@@ -500,9 +536,10 @@ goog.scope(function() {
         Analytics.sendEvent('Suggest', 'search', 0);
     };
 
+
     /**
      * Render suggest item
-     * @param {object} item - School or metro or area item
+     * @param {Object} item - School or metro or area item
      * @param {string} str - Search str
      * @return {string}
      * @private
@@ -527,10 +564,11 @@ goog.scope(function() {
         return res;
     };
 
+
     /**
      * Render suggest item name
-     * @param {object} item - School or metro or area item
-     * @param {string} str - Search str
+     * @param {Object} item - School or metro or area item
+     * @param {string} str - Search string
      * @return {string}
      * @private
      */
@@ -554,10 +592,9 @@ goog.scope(function() {
     };
 
 
-
     /**
      * Render suggest item areas
-     * @param {object} item - School or metro or area item
+     * @param {Object} item - School or metro or area item
      * @return {string}
      * @private
      */
@@ -605,6 +642,7 @@ goog.scope(function() {
         };
     };
 
+
     /**
      * Search button click handler
      * @private
@@ -615,6 +653,7 @@ goog.scope(function() {
         });
         this.setMode(Search.Mode.SEARCH);
     };
+
 
     /**
      * Search button click handler
@@ -627,6 +666,7 @@ goog.scope(function() {
         this.reset();
         this.setMode(Search.Mode.DEFAULT);
     };
+
 
     /**
      * Switch mode of view
@@ -645,6 +685,7 @@ goog.scope(function() {
         }
     };
 
+
     /**
      * Is mode correct
      * @param {sm.bHeader.Header.Mode} mode
@@ -656,6 +697,7 @@ goog.scope(function() {
             mode == Search.Mode.SEARCH;
     };
 
+
     /**
      * Is mode already selected
      * @param {sm.bHeader.Header.Mode} mode
@@ -665,6 +707,7 @@ goog.scope(function() {
     Search.prototype.isCurrentMode_ = function(mode) {
         return this.mode_ == mode;
     };
+
 
     /**
      * Redirect handler
@@ -680,6 +723,7 @@ goog.scope(function() {
 
         this.redirect_(event, data);
     };
+
 
     /**
      * Redirect
@@ -703,6 +747,7 @@ goog.scope(function() {
             });
         }
     };
+
 
     /**
      * Take values from selected item and put it to value
@@ -734,6 +779,7 @@ goog.scope(function() {
         }
     };
 
+
     /**
      * Send the name of the selected schools Analytics
      * @param {Object} data
@@ -750,6 +796,7 @@ goog.scope(function() {
         Analytics.send(dataAnalytics);
     };
 
+
     /**
      * Send the name of the selected schools Analytics
      * @param {Object} data
@@ -764,6 +811,7 @@ goog.scope(function() {
 
         Analytics.clickProduct(ecData, 'Suggest');
     };
+
 
     /**
      * Redirect handler
@@ -781,6 +829,7 @@ goog.scope(function() {
         }
     };
 
+
     /**
      * Search redirect
      * @param {string} searchString
@@ -793,6 +842,7 @@ goog.scope(function() {
         }
         document.location.href = url;
     };
+
 
     /**
      * Handler for input data
@@ -807,6 +857,7 @@ goog.scope(function() {
         });
         this.dispatchEvent(Search.Event.TEXT_CHANGE);
     };
+
 
     /**
      * Area/metro redirect handler
@@ -825,6 +876,7 @@ goog.scope(function() {
         document.location.href = url;
     };
 
+
     /**
      * Turn on animation if it is supported
      * @private
@@ -839,6 +891,7 @@ goog.scope(function() {
             animationSupportClass
         );
     };
+
 
     /**
      * Detect current type
@@ -856,4 +909,4 @@ goog.scope(function() {
             this.type_ = Search.Type.DEFAULT;
         }
     };
-});
+});  // goog.scope

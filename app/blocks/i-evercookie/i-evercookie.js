@@ -1,11 +1,14 @@
 goog.provide('sm.iEvercookie.Evercookie');
 
 
+
 /**
  * Evercookie facade
  * @constructor
  */
 sm.iEvercookie.Evercookie = function() {
+
+
     /**
      * Evercookie
      * @type {Object}
@@ -34,7 +37,7 @@ goog.addSingletonGetter(sm.iEvercookie.Evercookie);
 
 /**
  * Get client id
- * @param {function} callback
+ * @param {Function} callback
  */
 sm.iEvercookie.Evercookie.prototype.getClientId = function(callback) {
     var that = this;
@@ -61,7 +64,7 @@ sm.iEvercookie.Evercookie.prototype.getClientId = function(callback) {
  * Get value
  * @param {string} name
  * @param {function} callback
- * @param {boolean} opt_dontReset
+ * @param {boolean=} opt_dontReset
  */
 sm.iEvercookie.Evercookie.prototype.get = function(name,
                                                    callback,
@@ -93,4 +96,4 @@ sm.iEvercookie.Evercookie.prototype.generateGuid_ = function() {
             v = c == 'x' ? r : (r & 0x3 | 0x8);
         return v.toString(16);
     });
-};
+};  // goog.scope

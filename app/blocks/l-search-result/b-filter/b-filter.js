@@ -7,6 +7,8 @@ goog.require('goog.events');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
 
+
+
 /**
  * Filter component
  * @param {object=} opt_params
@@ -16,6 +18,7 @@ goog.require('goog.ui.Component');
 sm.lSearchResult.bFilter.Filter = function(opt_params) {
     goog.base(this);
 
+
     /**
      * Parameters
      * @private
@@ -23,12 +26,6 @@ sm.lSearchResult.bFilter.Filter = function(opt_params) {
      */
     this.params_ = opt_params || {};
 
-    /**
-     * Handler
-     * @type {!goog.events.EventHandler.<T>}
-     * @private
-     */
-    this.handler_ = this.getHandler();
 
     /**
      * Filters element
@@ -37,12 +34,14 @@ sm.lSearchResult.bFilter.Filter = function(opt_params) {
      */
     this.filtersElement_ = null;
 
+
     /**
      * Show button element
      * @type {Element}
      * @private
      */
     this.showHiddenFiltersButtonElement_ = null;
+
 
     /**
      * Show filter button element
@@ -51,6 +50,7 @@ sm.lSearchResult.bFilter.Filter = function(opt_params) {
      */
     this.showFiltersButtonElement_ = null;
 
+
     /**
      * Show filter icon element
      * @type {Element}
@@ -58,12 +58,14 @@ sm.lSearchResult.bFilter.Filter = function(opt_params) {
      */
     this.showFiltersIconElement_ = null;
 
+
     /**
      * Filters element
      * @type {Element}
      * @private
      */
     this.filterSectionElements_ = null;
+
 
     /**
      * Classes input
@@ -76,6 +78,7 @@ goog.inherits(sm.lSearchResult.bFilter.Filter, goog.ui.Component);
 
 goog.scope(function() {
     var Filter = sm.lSearchResult.bFilter.Filter;
+
 
     /**
      * CSS-class enum
@@ -96,14 +99,16 @@ goog.scope(function() {
         HIDDEN: cl.iUtils.Utils.CssClass.HIDDEN
     };
 
+
     /**
      * Event enum
-     * @enum {String}
+     * @enum {string}
      */
     Filter.Event = {
        CHECKED_FILTER: 'checked-filter',
        UNCHECKED_FILTER: 'unchecked-filter'
     };
+
 
     /**
      * Template-based dom element creation.
@@ -121,6 +126,7 @@ goog.scope(function() {
 
         this.decorateInternal(element);
     };
+
 
     /**
      * Internal decorates the DOM element
@@ -173,6 +179,7 @@ goog.scope(function() {
 
     };
 
+
     /**
      * @override
      */
@@ -215,6 +222,7 @@ goog.scope(function() {
         }
     };
 
+
     /**
      * Reset filter
      * @protected
@@ -224,6 +232,7 @@ goog.scope(function() {
             this.inputElements[i].checked = false;
         }
     };
+
 
     /**
      * Checks for checked radio
@@ -241,6 +250,7 @@ goog.scope(function() {
         return result;
     };
 
+
     /**
      * Handler change the filter
      * @protected
@@ -253,6 +263,7 @@ goog.scope(function() {
             'type': type
         });
     };
+
 
     /**
      * Hide filter
@@ -298,6 +309,7 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * Hide shown filters
      * @private
@@ -320,6 +332,7 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * Reset filter
      * @private
@@ -340,4 +353,4 @@ goog.scope(function() {
             Filter.CssClass.ICON_ARROW_DOWN
         );
     };
-});
+});  // goog.scope

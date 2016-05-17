@@ -5,6 +5,8 @@ goog.require('cl.iControl.View');
 goog.require('cl.iUtils.Utils');
 goog.require('goog.dom.classes');
 
+
+
 /**
  * Fold List View
  * @param {Object=} opt_params
@@ -18,7 +20,7 @@ sm.lSchool.bFoldList.View = function(opt_params, opt_template, opt_modifier) {
 
     /**
      * List type
-     * @type {String}
+     * @type {string}
      * @private
      */
     this.type_ = null;
@@ -32,8 +34,10 @@ sm.lSchool.bFoldList.View = function(opt_params, opt_template, opt_modifier) {
 };
 goog.inherits(sm.lSchool.bFoldList.View, cl.iControl.View);
 
+
 goog.scope(function() {
     var View = sm.lSchool.bFoldList.View;
+
 
     /**
      * Css class enum
@@ -51,23 +55,26 @@ goog.scope(function() {
         HIDDEN: 'i-utils__hidden'
     };
 
+
     /**
      * Event enum
-     * @enum {String}
+     * @enum {string}
      */
     View.Event = {
         FOLD: 'fold',
         UNFOLD: 'unfold'
     };
 
+
     /**
      * List type enum
-     * @enum {String}
+     * @enum {string}
      */
     View.Type = {
         FOLDED: 'folded',
         UNFOLDED: 'unfolded'
     };
+
 
     /**
      * @override
@@ -82,6 +89,7 @@ goog.scope(function() {
 
         this.isFolded_ = true;
     };
+
 
     /**
      * @override
@@ -114,6 +122,7 @@ goog.scope(function() {
         }
     };
 
+
     /**
      * fold list and change its type
      */
@@ -129,6 +138,7 @@ goog.scope(function() {
             this.setUnfoldButtonVisibility_(true);
         }
     };
+
 
     /**
      * unfold list and change its type
@@ -146,6 +156,7 @@ goog.scope(function() {
         }
     };
 
+
     /**
      * get Children Lists this Instance
      * @return {Array}
@@ -153,6 +164,7 @@ goog.scope(function() {
     View.prototype.getChildrenLists = function() {
         return this.getDom().foldLists;
     };
+
 
     /**
      * check the elem contains other Elems
@@ -169,8 +181,9 @@ goog.scope(function() {
         return elems.length;
     };
 
+
     /**
-     * get type for list (foldet or unfolded)
+     * get type for list (folded or unfolded)
      * @return {string}
      * @private
      */
@@ -182,6 +195,7 @@ goog.scope(function() {
 
         return isFolded ? View.Type.FOLDED : View.Type.UNFOLDED;
     };
+
 
     /**
      * Link list Click handler
@@ -197,6 +211,7 @@ goog.scope(function() {
         });
     };
 
+
     /**
      * unfold button Click handler
      * @private
@@ -207,6 +222,7 @@ goog.scope(function() {
         });
     };
 
+
     /**
      * fold button Click handler
      * @private
@@ -216,6 +232,7 @@ goog.scope(function() {
             'type': View.Event.FOLD
         });
     };
+
 
     /**
      * adds or deletes a class HIDDEN for unfoldButton
@@ -229,6 +246,7 @@ goog.scope(function() {
             goog.dom.classlist.add(elem, View.CssClass.HIDDEN);
     };
 
+
     /**
      * adds or deletes a class HIDDEN for foldButton
      * @param {boolean} value
@@ -240,6 +258,7 @@ goog.scope(function() {
             goog.dom.classlist.remove(elem, View.CssClass.HIDDEN) :
             goog.dom.classlist.add(elem, View.CssClass.HIDDEN);
     };
+
 
     /**
      * adds or deletes a class HIDDEN for hiddenList
@@ -253,6 +272,7 @@ goog.scope(function() {
             goog.dom.classlist.add(elem, View.CssClass.HIDDEN);
     };
 
+
     /**
      * adds or deletes a class HIDDEN for number
      * @param {boolean} value
@@ -264,6 +284,7 @@ goog.scope(function() {
             goog.dom.classlist.remove(elem, View.CssClass.HIDDEN) :
             goog.dom.classlist.add(elem, View.CssClass.HIDDEN);
     };
+
 
     /**
      * Initializes dom elements
@@ -293,6 +314,7 @@ goog.scope(function() {
         };
     };
 
+
     /**
      * get an array of DOM elements
      * @param {string} elemClass
@@ -310,6 +332,7 @@ goog.scope(function() {
         }, this);
     };
 
+
     /**
      * get DOM element
      * @param {string} elemClass
@@ -320,4 +343,4 @@ goog.scope(function() {
         var elems = this.getDomElements_(elemClass);
         return elems[0];
     };
-});
+});  // goog.scope

@@ -6,9 +6,10 @@ goog.require('sm.bHeader.View');
 goog.require('sm.bSearch.Search');
 
 
+
 /**
  * Header
- * @param {Object=} view
+ * @param {Object} view
  * @param {Object=} opt_params
  * @param {Object=} opt_domHelper
  * @constructor
@@ -17,7 +18,9 @@ goog.require('sm.bSearch.Search');
 sm.bHeader.Header = function(view, opt_params, opt_domHelper) {
     goog.base(this, view, opt_params, opt_domHelper);
 
+
     this.setSupportedState(goog.ui.Component.State.FOCUSED, false);
+
 
     /**
      * Current mode
@@ -26,6 +29,7 @@ sm.bHeader.Header = function(view, opt_params, opt_domHelper) {
      */
     this.mode_ = sm.bHeader.Header.Mode.DEFAULT;
 
+
     /**
      * Minified search instance
      * @type {sm.bSearch.Search}
@@ -33,12 +37,14 @@ sm.bHeader.Header = function(view, opt_params, opt_domHelper) {
      */
     this.minifiedSearch_ = null;
 
+
     /**
      * Search instance
      * @type {sm.bSearch.Search}
      * @private
      */
     this.search_ = null;
+
 
     /**
      * Banner instance
@@ -66,6 +72,7 @@ goog.scope(function() {
         'SEARCH': 'search'
     };
 
+
     /**
      * Event enum
      * @enum {string}
@@ -74,6 +81,7 @@ goog.scope(function() {
         'SUBMIT': Search.Event.SUBMIT,
         'ITEM_SELECT': Search.Event.ITEM_SELECT
     };
+
 
     /**
      * Singleton getter
@@ -90,6 +98,7 @@ goog.scope(function() {
 
         return Header.instance_;
     };
+
 
     /**
      * @override
@@ -113,6 +122,7 @@ goog.scope(function() {
         this.banner_ = this.decorateChild('banner', domElements.banner);
     };
 
+
     /**
      * @override
      */
@@ -121,6 +131,7 @@ goog.scope(function() {
         this.initMinifiedSearchListeners_();
         this.initSearchListeners_();
     };
+
 
     /**
      * @private
@@ -149,6 +160,7 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * @private
      */
@@ -168,6 +180,7 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * @private
      */
@@ -175,6 +188,7 @@ goog.scope(function() {
         this.minifiedSearch_.reset();
         this.search_.reset();
     };
+
 
     /**
      * Set header mode
@@ -192,6 +206,7 @@ goog.scope(function() {
         return res;
     };
 
+
     /**
      * @public
      * @return {{
@@ -204,6 +219,7 @@ goog.scope(function() {
         return this.search_.getData();
     };
 
+
     /**
      * Set search value in according to minified search value
      * @private
@@ -214,6 +230,7 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * Set minified search value in according to search value
      * @private
@@ -223,6 +240,7 @@ goog.scope(function() {
             this.search_.getData()
         );
     };
+
 
     /**
      * Is mode already selected
@@ -270,9 +288,10 @@ goog.scope(function() {
         }
     };
 
+
     /**
      * Default mode inition handler
-     * @param {object} event
+     * @param {Object} event
      * @private
      */
     Header.prototype.onDefaultModeInited_ = function(event) {
@@ -282,7 +301,7 @@ goog.scope(function() {
 
     /**
      * Search mode inition handler
-     * @param {object} event
+     * @param {Object} event
      * @private
      */
     Header.prototype.onSearchModeInited_ = function(event) {
@@ -293,4 +312,4 @@ goog.scope(function() {
     jQuery(function() {
         Header.getInstance();
     });
-});
+});  // goog.scope

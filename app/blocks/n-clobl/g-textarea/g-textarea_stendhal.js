@@ -2,9 +2,11 @@ goog.provide('sm.gTextarea.TextareaStendhal');
 
 goog.require('cl.gTextarea.Textarea');
 
+
+
 /**
  * Stendhal textarea control
- * @param {Object=} view
+ * @param {Object} view
  * @param {Object=} opt_params
  * @param {Object=} opt_domHelper
  * @constructor
@@ -15,8 +17,10 @@ sm.gTextarea.TextareaStendhal = function(view, opt_params, opt_domHelper) {
 };
 goog.inherits(sm.gTextarea.TextareaStendhal, cl.gTextarea.Textarea);
 
+
 goog.scope(function() {
     var TextareaStendhal = sm.gTextarea.TextareaStendhal;
+
 
     /**
      * Check is any value entered in texarea
@@ -34,4 +38,4 @@ goog.scope(function() {
 
         return isValid;
     };
-});
+});  // goog.scope

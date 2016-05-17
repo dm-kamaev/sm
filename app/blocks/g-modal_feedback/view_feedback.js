@@ -3,6 +3,7 @@ goog.provide('sm.gModal.ViewFeedback');
 goog.require('sm.gModal.ViewStendhal');
 
 
+
 /**
  * Feedback modal View
  * @param {Object=} opt_params
@@ -20,6 +21,7 @@ goog.inherits(sm.gModal.ViewFeedback, sm.gModal.ViewStendhal);
 goog.scope(function() {
     var ViewFeedback = sm.gModal.ViewFeedback;
 
+
     /**
      * Css class enum
      * @enum {string}
@@ -29,6 +31,7 @@ goog.scope(function() {
         VALIDATION_ERRORS: 'g-modal__section_validation-errors',
         FORM: 'g-modal__form-content'
     };
+
 
     /**
      * @param {Element} element
@@ -41,6 +44,7 @@ goog.scope(function() {
             .getDataParams_(element);
 
     };
+
 
     /**
      * Show error
@@ -60,6 +64,7 @@ goog.scope(function() {
 
     };
 
+
     /**
      * Get data params
      * @param {Element} element dom element
@@ -75,6 +80,7 @@ goog.scope(function() {
 
         return this;
     };
+
 
     /**
      * Initializes dom elements
@@ -115,4 +121,4 @@ goog.scope(function() {
 
         return this;
     };
-});
+});  // goog.scope

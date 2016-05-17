@@ -2,6 +2,8 @@ goog.provide('sm.gInput.DigitInputView');
 
 goog.require('cl.gInput.View');
 
+
+
 /**
  * Input View
  * @param {Object=} opt_params
@@ -18,6 +20,8 @@ goog.inherits(sm.gInput.DigitInputView, cl.gInput.View);
 
 goog.scope(function() {
     var DigitInputView = sm.gInput.DigitInputView;
+
+
     /**
      * Css class enum
      * @enum {string}
@@ -26,6 +30,7 @@ goog.scope(function() {
         NOT_VALID: 'g-input_not-valid'
     };
 
+
     /**
      * Event enum
      * @enum {string}
@@ -33,6 +38,7 @@ goog.scope(function() {
     DigitInputView.Event = {
         FOCUS: 'input-focus'
     };
+
 
     /**
      * @override
@@ -47,6 +53,7 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * Focus handler
      */
@@ -56,7 +63,8 @@ goog.scope(function() {
         });
     };
 
-    /***
+
+    /**
      * Add modifier, which mean that value in input is not valid
      * @public
      */
@@ -67,7 +75,8 @@ goog.scope(function() {
             );
     };
 
-    /***
+
+    /**
      * Remove modifier, which mean that value in input is not valid
      * @public
      */
@@ -77,4 +86,4 @@ goog.scope(function() {
             DigitInputView.CssClass.NOT_VALID
         );
     };
-});
+});  // goog.scope

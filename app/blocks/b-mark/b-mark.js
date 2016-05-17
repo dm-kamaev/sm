@@ -5,14 +5,17 @@ goog.require('goog.dom.classlist');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
 
+
+
 /**
  * Mark component
- * @param {Object} opt_params
+ * @param {Object=} opt_params
  * @constructor
  * @extends {goog.ui.Component}
  */
 sm.bMark.bMark = function(opt_params) {
     goog.base(this);
+
 
     /**
      * Parameters
@@ -21,35 +24,40 @@ sm.bMark.bMark = function(opt_params) {
      */
     this.params_ = opt_params || {};
 
+
     /**
      * Value
-     * @type {Number}
+     * @type {number}
      * @private
      */
     this.value_ = this.params_.value;
 
+
     /**
      * Color modifier
-     * @type {String}
+     * @type {string}
      * @private
      */
     this.colorModifier_ = null;
 
+
     /**
      * Dom element with value
-     * @type {Node}
+     * @type {Element}
      * @private
      */
     this.valueElement_ = null;
 };
 goog.inherits(sm.bMark.bMark, goog.ui.Component);
 
+
 goog.scope(function() {
     var Mark = sm.bMark.bMark;
 
+
     /**
      * Css class enum
-     * @enum {String}
+     * @enum {string}
      */
     Mark.CssClass = {
         ROOT: 'b-mark',
@@ -61,18 +69,20 @@ goog.scope(function() {
         MODIFIER_EMPTY: 'b-mark_empty'
     };
 
+
     /**
      * Get value
-     * @return {Number}
+     * @return {number}
      * @public
      */
     Mark.prototype.getValue = function() {
         return this.value_;
     };
 
+
     /**
      * Set value
-     * @param {Number} value
+     * @param {number} value
      * @public
      */
     Mark.prototype.setValue = function(value) {
@@ -100,9 +110,10 @@ goog.scope(function() {
         this.valueElement_.innerHTML = this.formatValue_(this.value_);
     };
 
+
     /**
      * Internal decorates the DOM element
-     * @param {Node} element
+     * @param {Element} element
      */
     Mark.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
@@ -116,10 +127,11 @@ goog.scope(function() {
         this.value_ = this.valueElement_.innerHTML;
     };
 
+
     /**
      * Returns color modifier
-     * @param {Node} element
-     * @return {String}
+     * @param {Element} element
+     * @return {string}
      * @private
      */
     Mark.prototype.getColorModifier_ = function(element) {
@@ -144,10 +156,11 @@ goog.scope(function() {
         return mod;
     };
 
+
     /**
      * Changes, adds or removes modifier of block
-     * @param {String} modifier
-     * @param {String} opt_action
+     * @param {string} modifier
+     * @param {string=} opt_action
      * @private
      */
     Mark.prototype.changeModifier_ = function(modifier, opt_action) {
@@ -176,9 +189,10 @@ goog.scope(function() {
         }
     };
 
+
     /**
-     * @param {Number} value
-     * @return {String}
+     * @param {number} value
+     * @return {string}
      * @private
      */
     Mark.prototype.formatValue_ = function(value) {
@@ -198,4 +212,4 @@ goog.scope(function() {
         return res;
     };
 
-});
+});  // goog.scope

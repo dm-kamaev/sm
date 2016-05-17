@@ -24,6 +24,8 @@ goog.require('sm.lSchool.bFoldList.Template');
 goog.require('sm.lSearch.bArticleLink.Template');
 goog.require('sm.lSearch.bArticleLinks.Template');
 
+
+
 /**
  * Template factory
  * @constructor
@@ -130,4 +132,4 @@ goog.scope(function() {
      * Important!
      */
     TemplateFactory.getInstance().attachToManager();
-});
+});  // goog.scope

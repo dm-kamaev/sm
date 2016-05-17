@@ -3,6 +3,7 @@ goog.provide('sm.gList.SelectListView');
 goog.require('cl.gList.View');
 
 
+
 /**
  * List view
  * @param {Object=} opt_params
@@ -17,8 +18,10 @@ sm.gList.SelectListView =
 };
 goog.inherits(sm.gList.SelectListView, cl.gList.View);
 
+
 goog.scope(function() {
     var View = sm.gList.SelectListView;
+
 
     /**
      * Get data params object from element
@@ -31,4 +34,4 @@ goog.scope(function() {
             element.getAttribute('data-params')
         );
     };
-});
+});  // goog.scope

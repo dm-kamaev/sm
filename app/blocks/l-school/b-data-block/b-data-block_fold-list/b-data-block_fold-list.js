@@ -6,6 +6,8 @@ goog.require('goog.events');
 goog.require('goog.ui.Component');
 goog.require('sm.iFactory.FactoryStendhal');
 
+
+
 /**
  * Fold list component
  * @constructor
@@ -13,6 +15,7 @@ goog.require('sm.iFactory.FactoryStendhal');
  */
 sm.lSchool.bDataBlock.DataBlockFoldList = function() {
     goog.base(this);
+
 
     /**
      * folded list
@@ -28,6 +31,7 @@ goog.scope(function() {
     var DataBlockFoldList = sm.lSchool.bDataBlock.DataBlockFoldList,
         factory = sm.iFactory.FactoryStendhal.getInstance();
 
+
     /**
      * CSS-class enum
      * @enum {string}
@@ -36,15 +40,17 @@ goog.scope(function() {
         ROOT: 'b-data-block_fold-list'
     };
 
+
     /**
      * Internal decorates the DOM element
-     * @param {node} element
+     * @param {Element} element
      */
     DataBlockFoldList.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
         this.initFoldList_();
     };
+
 
     /**
      * initialization folded list
@@ -60,10 +66,11 @@ goog.scope(function() {
         return this;
     };
 
+
     /**
      * Sets up the Component.
      */
     DataBlockFoldList.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
     };
-});
+});  // goog.scope

@@ -4,6 +4,8 @@ goog.require('cl.iControl.Control');
 
 goog.require('sm.lSchool.bFoldList.View');
 
+
+
 /**
  * Fold List
  * @param {Object=} opt_view
@@ -15,6 +17,7 @@ goog.require('sm.lSchool.bFoldList.View');
 sm.lSchool.bFoldList.FoldList = function(opt_view, opt_params, opt_domHelper) {
     goog.base(this, opt_view, opt_params, opt_domHelper);
 
+
     /**
      * fold lists
      * @type {sm.lSchool.bFoldList.FoldList}
@@ -24,9 +27,11 @@ sm.lSchool.bFoldList.FoldList = function(opt_view, opt_params, opt_domHelper) {
 };
 goog.inherits(sm.lSchool.bFoldList.FoldList, cl.iControl.Control);
 
+
 goog.scope(function() {
     var FoldList = sm.lSchool.bFoldList.FoldList,
         View = sm.lSchool.bFoldList.View;
+
 
     /**
      * @param {Element} element
@@ -37,6 +42,7 @@ goog.scope(function() {
 
         this.initFoldLists_();
     };
+
 
     /**
      * @override
@@ -55,6 +61,7 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * fold list and its child lists
      */
@@ -66,12 +73,14 @@ goog.scope(function() {
         });
     };
 
+
     /**
      * unfold list
      */
     FoldList.prototype.unfold = function() {
         this.getView().unfold();
     };
+
 
     /**
      * fold handler
@@ -81,6 +90,7 @@ goog.scope(function() {
         this.fold();
     };
 
+
     /**
      * unfold handler
      * @private
@@ -88,6 +98,7 @@ goog.scope(function() {
     FoldList.prototype.onUnfold_ = function() {
         this.unfold();
     };
+
 
     /**
      * folded lists initialization
@@ -100,4 +111,4 @@ goog.scope(function() {
             return this.decorateChild('fold-list', elem);
         }, this);
     };
-});
+});  // goog.scope
