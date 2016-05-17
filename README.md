@@ -186,3 +186,7 @@ logger пишет в файл `/opt/school-market/current/runtime/node.forever.l
 ```sh
 gulp debug
 ```
+Для того, чтобы собрать отдельный лейаут можно воспользоваться параметром `layout`
+```sh
+gulp debug --layout l-doc
+```

@@ -39,5 +39,22 @@ module.exports = {
                 });
 
         return outputFiles;
+    },
+    filterEntryPoints: function(entryPoints, opt_layout) {
+        var res = entryPoints;
+
+        if (opt_layout) {
+            var fileName = opt_layout.replace(/\.js$/, '') + '.js',
+                pointsFound = entryPoints.filter(item => item.fileName == fileName);
+
+            if (pointsFound.length) {
+                res = pointsFound;
+            }
+            else {
+                console.log('WARN: "' + fileName + '" not found');
+            }
+        }
+
+        return res;
     }
 };
