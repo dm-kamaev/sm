@@ -8,13 +8,12 @@ goog.require('sm.gModal.ViewStendhal');
 /**
  * Modal control
  * @param {Object} view
- * @param {Object=} opt_params
  * @param {Object=} opt_domHelper
  * @constructor
  * @extends {cl.gModal.Modal}
  */
-sm.gModal.ModalStendhal = function(view, opt_params, opt_domHelper) {
-    goog.base(this, view, opt_params, opt_domHelper);
+sm.gModal.ModalStendhal = function(view, opt_domHelper) {
+    goog.base(this, view, opt_domHelper);
 
 
     /**

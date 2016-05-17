@@ -10,13 +10,12 @@ goog.require('sm.bSearch.Search');
 /**
  * Header
  * @param {Object} view
- * @param {Object=} opt_params
  * @param {Object=} opt_domHelper
  * @constructor
  * @extends {cl.iControl.Control}
  */
-sm.bHeader.Header = function(view, opt_params, opt_domHelper) {
-    goog.base(this, view, opt_params, opt_domHelper);
+sm.bHeader.Header = function(view, opt_domHelper) {
+    goog.base(this, view, opt_domHelper);
 
 
     this.setSupportedState(goog.ui.Component.State.FOCUSED, false);

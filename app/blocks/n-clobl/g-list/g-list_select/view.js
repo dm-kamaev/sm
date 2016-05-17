@@ -7,14 +7,13 @@ goog.require('cl.gList.View');
 /**
  * List view
  * @param {Object=} opt_params
- * @param {Function=} opt_template
- * @param {goog.dom.DomHelper=} opt_domHelper
+ * @param {string=} opt_type
+ * @param {string=} opt_modifier
  * @constructor
- * @extends {cl.gList.View}
+ * @extends {cl.iControl.View}
  */
-sm.gList.SelectListView =
-    function(opt_params, opt_template, opt_domHelper) {
-    goog.base(this, opt_params, opt_template, opt_domHelper);
+sm.gList.SelectListView = function(opt_params, opt_type, opt_modifier) {
+    goog.base(this, opt_params, opt_type, opt_modifier);
 };
 goog.inherits(sm.gList.SelectListView, cl.gList.View);
 

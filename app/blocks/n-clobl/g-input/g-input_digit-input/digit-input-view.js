@@ -7,13 +7,13 @@ goog.require('cl.gInput.View');
 /**
  * Input View
  * @param {Object=} opt_params
- * @param {Function=} opt_template
- * @param {goog.dom.DomHelper=} opt_domHelper
+ * @param {string=} opt_type
+ * @param {string=} opt_modifier
  * @constructor
- * @extends {cl.gInput.View}
+ * @extends {cl.iControl.View}
  */
-sm.gInput.DigitInputView = function(opt_params, opt_template, opt_domHelper) {
-    goog.base(this, opt_params, opt_template, opt_domHelper);
+sm.gInput.DigitInputView = function(opt_params, opt_type, opt_modifier) {
+    goog.base(this, opt_params, opt_type, opt_modifier);
 };
 goog.inherits(sm.gInput.DigitInputView, cl.gInput.View);
 

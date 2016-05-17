@@ -5,16 +5,15 @@ goog.require('cl.gDropdown.View');
 
 
 /**
- * Dropdown control
+ * Dropdown select view
  * @param {Object=} opt_params
- * @param {Function=} opt_template
+ * @param {string=} opt_type
  * @param {string=} opt_modifier
  * @constructor
- * @extends {cl.gDropdown.View}
+ * @extends {cl.iControl.View}
  */
-sm.gDropdown.DropdownSelectView =
-    function(opt_params, opt_template, opt_modifier) {
-    goog.base(this, opt_params, opt_template, opt_modifier);
+sm.gDropdown.DropdownSelectView = function(opt_params, opt_type, opt_modifier) {
+    goog.base(this, opt_params, opt_type, opt_modifier);
 
 
     /**

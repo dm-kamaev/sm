@@ -7,13 +7,12 @@ goog.require('cl.gList.List');
 /**
  * Select list control
  * @param {Object} view
- * @param {Object=} opt_params
  * @param {Object=} opt_domHelper
  * @constructor
  * @extends {cl.gList.List}
  */
-sm.gList.SelectList = function(view, opt_params, opt_domHelper) {
-    goog.base(this, view, opt_params, opt_domHelper);
+sm.gList.SelectList = function(view, opt_domHelper) {
+    goog.base(this, view, opt_domHelper);
 
 
     /**

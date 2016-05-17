@@ -7,15 +7,15 @@ goog.require('sm.bDataBlock.View');
 /**
  * Data Block View
  * @param {Object=} opt_params
- * @param {Function=} opt_template
+ * @param {string=} opt_type
  * @param {string=} opt_modifier
  * @constructor
  * @extends {sm.bDataBlock.View}
  */
-sm.bDataBlock.DataBlockFeaturesView = function(opt_params,
-    opt_template, opt_modifier) {
+sm.bDataBlock.DataBlockFeaturesView = function(
+    opt_params, opt_type, opt_modifier) {
 
-    goog.base(this, opt_params, opt_template, opt_modifier);
+    goog.base(this, opt_params, opt_type, opt_modifier);
 };
 goog.inherits(sm.bDataBlock.DataBlockFeaturesView, sm.bDataBlock.View);
 

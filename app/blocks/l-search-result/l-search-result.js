@@ -743,8 +743,6 @@ goog.scope(function() {
      */
     SearchResult.prototype.sendAddedItemImpressions_ = function(schools) {
         this.sendListItemImpressions_(schools.map(function(school) {
-            console.log(school);
-
             return {
                 id: school['id'],
                 name: school['name']['light'] + school['name']['bold'],

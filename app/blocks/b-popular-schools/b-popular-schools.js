@@ -10,14 +10,12 @@ goog.require('sm.bPopularSchools.View');
 /**
  * Popular School
  * @param {Object=} opt_view
- * @param {Object=} opt_params
  * @param {Object=} opt_domHelper
  * @constructor
  * @extends {cl.iControl.Control}
  */
-sm.bPopularSchools.PopularSchools = function(opt_view, opt_params,
-  opt_domHelper) {
-    goog.base(this, opt_view, opt_params, opt_domHelper);
+sm.bPopularSchools.PopularSchools = function(opt_view, opt_domHelper) {
+    goog.base(this, opt_view, opt_domHelper);
 
 
     /**

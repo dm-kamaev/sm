@@ -13,13 +13,13 @@ goog.require('sm.iAnimate.Animate');
 /**
  * Button View
  * @param {Object=} opt_params
- * @param {Function=} opt_template
+ * @param {string=} opt_type
  * @param {string=} opt_modifier
  * @constructor
  * @extends {cl.iControl.View}
  */
-sm.bHeader.View = function(opt_params, opt_template, opt_modifier) {
-    goog.base(this, opt_params, opt_template, opt_modifier);
+sm.bHeader.View = function(opt_params, opt_type, opt_modifier) {
+    goog.base(this, opt_params, opt_type, opt_modifier);
 };
 goog.inherits(sm.bHeader.View, cl.iControl.View);
 

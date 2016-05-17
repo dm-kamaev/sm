@@ -8,14 +8,13 @@ goog.require('sm.lSchool.bFoldList.View');
 
 /**
  * Fold List
- * @param {Object=} opt_view
- * @param {Object=} opt_params
+ * @param {Object} view
  * @param {Object=} opt_domHelper
  * @constructor
  * @extends {cl.iControl.Control}
  */
-sm.lSchool.bFoldList.FoldList = function(opt_view, opt_params, opt_domHelper) {
-    goog.base(this, opt_view, opt_params, opt_domHelper);
+sm.lSchool.bFoldList.FoldList = function(view, opt_domHelper) {
+    goog.base(this, view, opt_domHelper);
 
 
     /**

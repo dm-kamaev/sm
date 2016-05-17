@@ -6,15 +6,14 @@ goog.require('cl.gList.List');
 
 
 /**
- * Select control
+ * Dropdown select control
  * @param {Object} view
- * @param {Object=} opt_params
  * @param {Object=} opt_domHelper
  * @constructor
  * @extends {cl.gDropdown.Dropdown}
  */
-sm.gDropdown.DropdownSelect = function(view, opt_params, opt_domHelper) {
-    goog.base(this, view, opt_params, opt_domHelper);
+sm.gDropdown.DropdownSelect = function(view, opt_domHelper) {
+    goog.base(this, view, opt_domHelper);
 
 
     /**

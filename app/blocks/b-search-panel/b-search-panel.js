@@ -10,13 +10,12 @@ goog.require('sm.bSearchPanel.View');
 /**
  * Search Panel
  * @param {Object=} opt_view
- * @param {Object=} opt_params
  * @param {Object=} opt_domHelper
  * @constructor
  * @extends {cl.iControl.Control}
  */
-sm.bSearchPanel.SearchPanel = function(opt_view, opt_params, opt_domHelper) {
-    goog.base(this, opt_view, opt_params, opt_domHelper);
+sm.bSearchPanel.SearchPanel = function(opt_view, opt_domHelper) {
+    goog.base(this, opt_view, opt_domHelper);
 
 
     /**

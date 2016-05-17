@@ -9,13 +9,12 @@ goog.require('sm.bBanner.View');
 /**
  * Banner
  * @param {Object} view
- * @param {Object=} opt_params
  * @param {Object=} opt_domHelper
  * @constructor
  * @extends {cl.iControl.Control}
  */
-sm.bBanner.Banner = function(view, opt_params, opt_domHelper) {
-    goog.base(this, view, opt_params, opt_domHelper);
+sm.bBanner.Banner = function(view, opt_domHelper) {
+    goog.base(this, view, opt_domHelper);
 
 
     /**

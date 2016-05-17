@@ -7,13 +7,12 @@ goog.require('cl.gTextarea.Textarea');
 /**
  * Stendhal textarea control
  * @param {Object} view
- * @param {Object=} opt_params
  * @param {Object=} opt_domHelper
  * @constructor
  * @extends {cl.gTextarea.Textarea}
  */
-sm.gTextarea.TextareaStendhal = function(view, opt_params, opt_domHelper) {
-    goog.base(this, view, opt_params, opt_domHelper);
+sm.gTextarea.TextareaStendhal = function(view, opt_domHelper) {
+    goog.base(this, view, opt_domHelper);
 };
 goog.inherits(sm.gTextarea.TextareaStendhal, cl.gTextarea.Textarea);
 

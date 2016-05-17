@@ -10,13 +10,13 @@ goog.require('goog.labs.userAgent.device');
 /**
  * Modal View
  * @param {Object=} opt_params
- * @param {Function=} opt_template
+ * @param {string=} opt_type
  * @param {string=} opt_modifier
  * @constructor
- * @extends {cl.gModal.View}
+ * @extends {cl.iControl.View}
  */
-sm.gModal.ViewStendhal = function(opt_params, opt_template, opt_modifier) {
-    goog.base(this, opt_params, opt_template, opt_modifier);
+sm.gModal.ViewStendhal = function(opt_params, opt_type, opt_modifier) {
+    goog.base(this, opt_params, opt_type, opt_modifier);
 };
 goog.inherits(sm.gModal.ViewStendhal, cl.gModal.View);
 
