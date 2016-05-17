@@ -82,7 +82,7 @@ class UserDataUpdater {
      * @private
      */
     writeUserDataItemToDb_(item) {
-        if(item.id) {
+        if (item.id) {
             await(userDataService.update(item.id, item));
         }
     }

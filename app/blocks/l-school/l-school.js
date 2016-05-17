@@ -519,7 +519,7 @@ goog.scope(function() {
      * }} data
      */
     School.prototype.addMapPoints = function(data) {
-        this.map_.addItems(data.schools);
+        this.map_.addItems(data['schools']);
     };
 
 

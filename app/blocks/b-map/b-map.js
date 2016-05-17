@@ -847,7 +847,7 @@ goog.scope(function() {
     Map.prototype.isAlreadyAdded_ = function(address) {
         var addedAddresses = this.objectManager_.objects.getAll();
         return addedAddresses.find(function(addedAddress) {
-            return addedAddress.addressId == address.id;
+            return addedAddress['addressId'] == address.id;
         });
     };
 
