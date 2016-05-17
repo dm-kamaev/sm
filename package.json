@@ -26,7 +26,7 @@
     "axios": "^0.9.1",
     "body-parser": "~1.13.2",
     "cheerio": "^0.19.0",
-    "clobl": "git+ssh://git@github.com:c7s/clobl.git#dev",
+    "clobl": "git+ssh://git@github.com:c7s/clobl.git#release-20160517",
     "closure": "^1.0.3",
     "closure-templates": "^20141017.0.1",
     "colors": "^1.1.2",
@@ -37,7 +37,7 @@
     "csurf": "^1.8.3",
     "csvtojson": "^0.5.0",
     "decompress": "^3.0.0",
-    "deployment": "git+ssh://git@github.com:c7s/deployment.git#dev",
+    "deployment": "git+ssh://git@github.com:c7s/deployment.git#release-20160427",
     "ejs": "^2.3.4",
     "eslint": "^1.6.0",
     "evercookie": "^0.3.0",
@@ -68,7 +68,7 @@
     "multi-geocoder": "^0.1.4",
     "node-sass": "^3.3.3",
     "node-xlsx": "^0.6.0",
-    "nodules": "git+ssh://git@github.com:c7s/nodules.git#dev",
+    "nodules": "git+ssh://git@github.com:c7s/nodules.git#release-20160427",
     "passport": "^0.3.2",
     "pg": "^4.4.2",
     "pg-hstore": "^2.3.2",
@@ -88,7 +88,7 @@
     "tipograph": "^0.3.3",
     "translitit-cyrillic-russian-to-latin": "git+ssh://git@github.com:c7s-bot/translitit-cyrillic-russian-to-latin.git#master",
     "uid-safe": "^2.1.0",
-    "user-service": "git+ssh://git@github.com/c7s/user-service.git#dev"
+    "user-service": "git+ssh://git@github.com/c7s/user-service.git#release-20160516"
   },
   "dependencies": {
     "express": "^4.13.3",
