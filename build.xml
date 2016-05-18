@@ -3,6 +3,7 @@
 <project name="school-market" basedir=".">
     <property name="initd_script" value="${ant.project.name}-node"/>
     <property name="project.frontend.path" value="${basedir}"/>
+    <property name="project.frontend.runtime.path" value="${project.frontend.path}/runtime"/>
     <property name="project.node-modules.path" value="${basedir}/node_modules"/>
     <property name="project.user.runtime.path" value="${project.frontend.runtime.path}"/>
     <property name="project.auth.runtime.path" value="${project.frontend.runtime.path}"/>
