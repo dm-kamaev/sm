@@ -24,7 +24,7 @@
  *     text: ?string,
  *     amount: ?number,
  *     dataLink: {
- *         ?name: ?string
+ *         name: ?string
  *         url: ?uri
  *     }
  * }
@@ -48,6 +48,10 @@
  * Img template
  */
 {template .img_ autoescape="strict" kind="html"}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__catalog
+    {/let}
+
     {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
         {param params: [
             'factory': 'stendhal',
@@ -57,7 +61,7 @@
                     'type': 'catalog'
                 ],
                 'config': [
-                    'customClasses': ['b-school-catalog__catalog']
+                    'customClasses': [$customClasses]
                 ]
             ]
         ]/}
@@ -93,7 +97,7 @@
  * @param? params {
  *     amount: ?number,
  *     dataLink: {
- *         ?name: ?string,
+ *         name: ?string,
  *         url: ?uri
  *     }
  * }
@@ -110,13 +114,17 @@
             {/call}
         {/let}
 
+        {let $customClasses kind="html"}
+            {call .rootClass/}__link
+        {/let}
+
         {call sm.bLink.Template.base}
             {param params: [
                 'data': [
                     'name': $linkName
                 ],
                 'config': [
-                    'customClasses': 'b-school-catalog__link'
+                    'customClasses': $customClasses
                 ]
             ]/}
         {/call}
