@@ -8,7 +8,11 @@
  * @property {?string} searchText
  * @property {?boolean} searchRedirect
  * @property {boolean=} bottomLine
+ * @property {Object} user
+ * @property {string=} user.firstName
+ * @property {?string} user.lastName
  */
+
 
 /**
  * Header
@@ -33,7 +37,7 @@
             <div class="b-header__section
                 b-header__section_links
                 i-animate">
-                {call .links_/}
+                {call .links_ data="all"/}
             </div>
 
             <div class="b-header__section
@@ -47,10 +51,11 @@
 
 /**
  * Links template
+ * @param params {?}
  */
 {template .links_ kind="html" private="true"}
     {call .linkSearch_/}
-    {call .linkAuthorization_/}
+    {call .linkAuthorization_ data="all" /}
     // {call .linkLiked_/}
 {/template}
 
@@ -95,68 +100,32 @@
 
 /**
  * link Authorization template
+ * @param? params {
+ *     data: {
+ *        user: ?{
+ *            firstName: ?string,
+ *            lastName: ?string,
+ *            data: ?object
+ *        }
+ *     }
+ * }
  */
 {template .linkAuthorization_ kind="html" private="true"}
     <div class="b-header__authorization-link">
         <div class="b-header__authorization-link-content">
-            {call .iconAuthorization_/}
-            // {call .userName_/}
-            {call .authorizationTooltip_/}
+            {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+                {param params: [
+                    'factory': 'stendhal',
+                    'type': 'authorization-link',
+                    'renderParams': [
+                        'data': [
+                            'user': $params?.user
+                        ]
+                    ]
+                ]/}
+            {/call}
         </div>
-    </div>
-{/template}
-
-
-/**
- * authorization icon
- */
-{template .iconAuthorization_ kind="html" private="true"}
-    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-        {param params: [
-            'factory': 'stendhal',
-            'type': 'icon',
-            'renderParams': [
-                'data': [
-                    'type': 'person'
-                ],
-                'config': [
-                    'customClasses': ['b-header__authorization-link-icon']
-                ]
-            ]
-        ]/}
-    {/call}
-{/template}
-
-
-/**
- * authorization Tooltip
- */
-{template .authorizationTooltip_ kind="html" private="true"}
-    {let $tooltipData kind="html"}
-        <div class="b-header__authorization-link-text{sp}
-                    b-header__authorization-link-text_unauthorized">
-            Войти
-        </div>
-
-        <div class="b-header__authorization-link-text{sp}
-                    b-header__authorization-link-text_authorized{sp}
-                    i-utils__hidden">
-            Выйти
-        </div>
-    {/let}
-
-    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-        {param params: [
-            'factory': 'stendhal',
-            'type': 'hint',
-            'renderParams': [
-                'data': $tooltipData,
-                'config': [
-                    'customClasses': ['b-header__authorization-link-hint']
-                ]
-            ]
-        ]/}
-    {/call}
+    </div> //Константин Константинопольский
 {/template}
 
 

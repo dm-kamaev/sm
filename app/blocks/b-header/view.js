@@ -38,8 +38,7 @@ goog.scope(function() {
         SEARCH_MODE: 'b-header_mode_search',
         DEFAULT_MODE: 'b-header_mode_default',
         ANIMATION_ON: 'b-header_animation_on',
-        ANIMATION_OFF: 'b-header_animation_off',
-        AUTHORIZATION_LINK: 'b-header__authorization-link-content'
+        ANIMATION_OFF: 'b-header_animation_off'
     };
 
 
@@ -51,22 +50,10 @@ goog.scope(function() {
 
         this.initSearch_();
         this.initBanner_();
-        this.initDom_();
+        this.initAuthorizationLink_();
         this.detectAnimationSupportion_();
     };
 
-    /**
-     * @override
-     */
-    View.prototype.enterDocument = function() {
-        goog.base(this, 'enterDocument');
-
-        this.getHandler().listen(
-            this.dom.authorizationLink,
-            goog.events.EventType.CLICK,
-            this.onAuthorizationLinkClick_
-        );
-    };
 
     /**
      * Switch view to default mode
@@ -94,27 +81,6 @@ goog.scope(function() {
         goog.dom.classes.remove(
             this.getElement(),
             View.CssClass.DEFAULT_MODE
-        );
-    };
-
-
-    /**
-     * Authorization Link Click
-     * @private
-     */
-    View.prototype.onAuthorizationLinkClick_ = function() {
-       this.toggleActiveAuthorizationLink_();
-    };
-
-
-    /**
-     * makes Link to active and inactive
-     * @private
-     */
-    View.prototype.toggleActiveAuthorizationLink_ = function() {
-        goog.dom.classlist.toggle(
-            this.dom.authorizationLink,
-            cl.gHint.View.CssClass.INCLUDE_CLICK_MODE
         );
     };
 
@@ -159,9 +125,9 @@ goog.scope(function() {
      * Initializes dom elements
      * @private
      */
-    View.prototype.initDom_ = function() {
+    View.prototype.initAuthorizationLink_ = function() {
         this.dom.authorizationLink = this.getElementByClass(
-            View.CssClass.AUTHORIZATION_LINK
+            sm.bAuthorizationLink.View.CssClass.ROOT
         );
     };
 });

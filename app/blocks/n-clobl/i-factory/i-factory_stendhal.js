@@ -1,6 +1,8 @@
 goog.provide('sm.iFactory.FactoryStendhal');
 
 goog.require('cl.iFactory.Factory');
+goog.require('sm.bAuthorizationLink.AuthorizationLink');
+goog.require('sm.bAuthorizationLink.View');
 goog.require('sm.bBanner.Banner');
 goog.require('sm.bBanner.View');
 goog.require('sm.bDataBlock.DataBlockFeatures');
@@ -87,6 +89,10 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('fold-list', {
             control: sm.lSchool.bFoldList.FoldList,
             view: sm.lSchool.bFoldList.View
+        })
+        .setControlListItem('authorization-link', {
+            control: sm.bAuthorizationLink.AuthorizationLink,
+            view: sm.bAuthorizationLink.View
         });
 };
 goog.inherits(sm.iFactory.FactoryStendhal, cl.iFactory.Factory);

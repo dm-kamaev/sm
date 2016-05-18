@@ -46,6 +46,13 @@ sm.bHeader.Header = function(view, opt_params, opt_domHelper) {
      * @private
      */
     this.banner_ = null;
+
+    /**
+     * Authorization Link instance
+     * @type {sm.bAuthorizationLink.AuthorizationLink}
+     * @private
+     */
+    this.authorizationLink_ = null;
 };
 goog.inherits(sm.bHeader.Header, cl.iControl.Control);
 
@@ -111,6 +118,11 @@ goog.scope(function() {
         }
 
         this.banner_ = this.decorateChild('banner', domElements.banner);
+
+        this.authorizationLink_ = this.decorateChild(
+            'authorization-link',
+            domElements.authorizationLink
+        );
     };
 
     /**

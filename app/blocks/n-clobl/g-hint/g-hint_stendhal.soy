@@ -4,7 +4,10 @@
  * Hint template
  * @param params {
  *     config: {
- *         align: ?string
+ *         align: ?string,
+ *         offset: ?string,
+ *         noPadding: ?boolean,
+ *         theme: ?string
  *     }
  * }
  * @constructor
@@ -37,15 +40,23 @@
  * @param params {
  *     config: {
  *         align: ?string,
- *         offset: ?string
+ *         offset: ?string,
+ *         noPadding: ?boolean,
+ *         theme: ?string
  *     }
  * }
  */
 {template .additionalClasses}
     {if $params?.config?.align}
-        {call .rootClass/}_{$params.config.align}-align{sp}
+        {sp}{call .rootClass/}_{$params.config.align}-align
     {/if}
     {if $params?.config?.offset}
-        {call .rootClass/}_offset-{$params.config.offset}
+        {sp}{call .rootClass/}_offset-{$params.config.offset}
+    {/if}
+    {if $params?.config?.theme}
+        {sp}{call .rootClass/}_{$params.config.theme}
+    {/if}
+    {if $params?.config?.noPadding}
+        {sp}{call .rootClass/}_no-padding
     {/if}
 {/template}

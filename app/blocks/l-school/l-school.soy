@@ -87,11 +87,15 @@
  *            metro: ?list<string>,
  *            totalScore: ?number
  *        ]>,
- *         authSocialLink: ?{
- *             vk: ?string,
- *             fb: ?string
- *         },
- *        user: object
+ *        user: ?[
+ *            firstName: ?string,
+ *            lastName: ?string,
+ *            data: ?object
+ *        ],
+ *        authSocialLinks: [
+ *            vk: ?string,
+ *            fb: ?string
+ *        ]
  *     ],
  *     searchText: ?string,
  *     config: ?{
@@ -120,8 +124,10 @@
                     'searchText': $params.searchText,
                     'url': '/',
                     'searchRedirect': true,
-                    'bottomLine': true
+                    'bottomLine': true,
+                    'user': $params.data?.user
                 ],
+                'authSocialLinks': $params.data?.authSocialLinks,
                 'landingScript': '/l-school.js',
                 'evercookie': true,
                 'openGraph': [
@@ -294,7 +300,7 @@
 
         {call .authSocial_}
             {param params: [
-                'authUrl': $params?.data?.authSocialLink
+                'authUrl': $params?.data?.authSocialLinks
             ]/}
         {/call}
 

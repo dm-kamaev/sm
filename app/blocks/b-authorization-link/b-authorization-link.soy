@@ -1,0 +1,211 @@
+{namespace sm.bAuthorizationLink.Template}
+
+/**
+ * Constructor
+ * @param? params {
+ *     data: {
+ *        user: ?{
+ *            firstName: ?string,
+ *            lastName: ?string
+ *        }
+ *     },
+ *     config: {
+ *         socialLinks: {
+ *             vk: ?string,
+ *             fb: ?string
+ *         }
+ *     }
+ * }
+ * @extends cl.iControl.Template
+ * @constructor
+ */
+{template .authorizationLink}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * Body
+ * @param? params {
+ *     data: {
+ *        user: ?{
+ *            firstName: ?string,
+ *            lastName: ?string
+ *        }
+ *     },
+ *     config: {
+ *         socialLinks: {
+ *             vk: ?string,
+ *             fb: ?string
+ *         }
+ *     }
+ * @override
+ */
+{template .body}
+    {call .icon_/}
+    {call .tooltip_ data="all"/}
+    {call .modal_ data="all"/}
+{/template}
+
+
+/**
+ * @param? params {
+ *     config: {
+ *         socialLinks: {
+ *             vk: ?string,
+ *             fb: ?string
+ *         }
+ *     }
+ * }
+ */
+{template .modal_ kind="html" private="true"}
+    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+        {param params: [
+            'factory': 'stendhal',
+            'type': 'auth-social-modal',
+            'renderParams': [
+                'data': [
+                    'socials': [
+                        [
+                            'type': 'fb',
+                            'url': $params.config?.socialLinks?.fb
+                        ],
+                        [
+                            'type': 'vk',
+                            'url': $params.config?.socialLinks?.vk
+                        ]
+                    ]
+                ]
+            ]
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * authorization link icon
+ */
+{template .icon_ kind="html" private="true"}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__icon
+    {/let}
+
+    <div class="{call .rootClass/}__icon-wrap">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': 'stendhal',
+                'type': 'icon',
+                'renderParams': [
+                    'data': [
+                        'type': 'user'
+                    ],
+                    'config': [
+                        'customClasses': [$customClasses]
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * authorization link Tooltip
+ * @param? params {
+ *     data: {
+ *        user: ?{
+ *            firstName: ?string,
+ *            lastName: ?string
+ *        }
+ *     }
+ * }
+ */
+{template .tooltip_ kind="html" private="true"}
+    {let $tooltipData kind="html"}
+        {call .tooltipData_ data="all" /}
+    {/let}
+
+    {let $customClasses kind="html"}
+        {call .rootClass/}__hint
+    {/let}
+
+    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+        {param params: [
+            'factory': 'stendhal',
+            'type': 'hint',
+            'renderParams': [
+                'data': $tooltipData,
+                'config': [
+                    'customClasses': [$customClasses],
+                    'align': 'center',
+                    'noPadding': true,
+                    'theme': 'straight-arrow'
+                ]
+            ]
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * tooltip Data
+ * @param? params {
+ *     data: {
+ *        user: ?{
+ *            firstName: ?string,
+ *            lastName: ?string
+ *        }
+ *     }
+ * }
+ */
+{template .tooltipData_ kind="html" private="true"}
+    {let $userName kind="html"}
+        {if $params.data?.user?.firstName}
+            {$params.data.user.firstName}{sp}
+        {/if}
+        {if $params.data?.user?.lastName}
+            {$params.data.user.lastName}
+        {/if}
+    {/let}
+
+    {let $linkCustomClasses kind="html"}
+        {call .rootClass/}__link{sp}
+        {if $userName}
+            {call .rootClass/}__link_unauthorize
+        {else}
+            {call .rootClass/}__link_authorize
+        {/if}
+    {/let}
+
+    {let $content kind="html"}
+        {if $userName}
+            <div class="{call .rootClass/}__name">
+                {$userName}
+            </div>
+        {/if}
+
+        {call sm.bLink.Template.base}
+            {param params:[
+                'data': [
+                    'name': $userName ? 'Выйти' : 'Войти'
+                ],
+                'config': [
+                    'customClasses': $linkCustomClasses
+                ]
+            ]/}
+        {/call}
+    {/let}
+
+    <div class="{call .rootClass/}__hint-content">
+        {$content}
+    </div>
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-authorization-link
+{/template}

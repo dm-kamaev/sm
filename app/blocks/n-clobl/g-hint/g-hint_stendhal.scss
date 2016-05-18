@@ -92,3 +92,37 @@
         left: -90px;
     }
 }
+
+.g-hint.g-hint_stendhal.g-hint_straight-arrow {
+    top: 30px;
+
+    .g-hint__arrow {
+        top: 7px;
+        left: -5px;
+
+        transform: rotate(45deg);
+
+        border: 0;
+        background-color: #ffffff;
+    }
+
+    .g-hint__arrow-shadow {
+        left: -5px;
+
+        transform: rotate(45deg);
+    }
+}
+
+.g-hint.g-hint_stendhal.g-hint_center-align {
+    width: auto;
+
+    .g-hint__content {
+        left: -50%;
+    }
+}
+
+.g-hint.g-hint_stendhal.g-hint_no-padding {
+    .g-hint__content {
+        padding: 0;
+    }
+}

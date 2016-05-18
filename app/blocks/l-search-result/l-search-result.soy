@@ -18,7 +18,15 @@
  *             metroStations: string[],
  *             area: []
  *         }],
- *         filters: {sm.lSearchResult.bFilters.Template.Params}
+ *         filters: {sm.lSearchResult.bFilters.Template.Params},
+ *         user: ?{
+ *            firstName: ?string,
+ *            lastName: ?string
+ *         },
+ *         authSocialLinks: {
+ *            vk: ?string,
+ *            fb: ?string
+ *         }
  *     },
  *     searchText: string,
  *     countResults: number,
@@ -77,8 +85,10 @@
                 'content': $content,
                 'header': [
                     'url': '/',
-                    'bottomLine': true
+                    'bottomLine': true,
+                    'user': $params.data?.user
                 ],
+                'authSocialLinks': $params.data?.authSocialLinks,
                 'landingScript': '/l-search-result.js',
                 'openGraph': [
                     'title': 'Школы «Мела»',

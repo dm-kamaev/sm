@@ -10,24 +10,32 @@ exports.notFound = async(function(req, res) {
 
     var dataPromises = {
         popularSchools: services.school.getPopularSchools(5),
-        amountSchools: services.school.getSchoolsCount()
+        amountSchools: services.school.getSchoolsCount(),
+        authSocialLinks: services.auth.getAuthSocialUrl()
     };
 
     var data = await(dataPromises);
         searchUrl = '/search?name=';
 
     var html = soy.render('sm.lErrorNotFound.Template.base', {
-          params: {
-              errorText: 'Страница, которую вы искали, не найдена',
-              popularSchools: schoolView.popular(data.popularSchools),
-              dataLinks : schoolView.dataLinks(),
-              amountSchools: data.amountSchools,
-              config: {
-                  year: new Date().getFullYear(),
-                  analyticsId: analyticsId,
-                  csrf: req.csrfToken()
-              }
-          }
+        params: {
+            data: {
+                user: {
+                    firstName: '',
+                    firstName: ''
+                },
+                authSocialLinks: data.authSocialLinks,
+            },
+            errorText: 'Страница, которую вы искали, не найдена',
+            popularSchools: schoolView.popular(data.popularSchools),
+            dataLinks : schoolView.dataLinks(),
+            amountSchools: data.amountSchools,
+            config: {
+                year: new Date().getFullYear(),
+                analyticsId: analyticsId,
+                csrf: req.csrfToken()
+            }
+        }
     });
 
     res.end(html);
