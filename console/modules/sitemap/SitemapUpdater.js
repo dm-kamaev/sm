@@ -13,7 +13,7 @@ const config = require('../../../app/config').config;
 class SitemapUpdater {
     constructor() {
         this.hostName_ = config.url.protocol + '://' + config.url.host;
-        this.sitemapPath_ = path.join(__dirname, '../../../assets/sitemap.xml');
+        this.sitemapPath_ = path.join(__dirname, '../../../public/sitemap.xml');
         this.sitemap_ = [];
     }
 
