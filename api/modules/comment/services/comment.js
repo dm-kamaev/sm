@@ -67,6 +67,7 @@ exports.getComments = async(function(commentGroupId) {
         where: {
             'comment_group_id': commentGroupId
         },
+        order: [['createdAt', 'DESC']],
         include: include
     });
 });
