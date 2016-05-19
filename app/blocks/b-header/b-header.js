@@ -2,6 +2,7 @@ goog.provide('sm.bHeader.Header');
 
 goog.require('cl.iControl.Control');
 goog.require('goog.dom');
+goog.require('sm.bAuthorizationLink.AuthorizationLink');
 goog.require('sm.bHeader.View');
 goog.require('sm.bSearch.Search');
 
@@ -61,6 +62,7 @@ goog.scope(function() {
     var Header = sm.bHeader.Header,
         View = sm.bHeader.View,
         Search = sm.bSearch.Search,
+        AuthorizationLink = sm.bAuthorizationLink.AuthorizationLink,
         FactoryManager = cl.iFactory.FactoryManager;
 
 
@@ -79,7 +81,9 @@ goog.scope(function() {
      */
     Header.Event = {
         'SUBMIT': Search.Event.SUBMIT,
-        'ITEM_SELECT': Search.Event.ITEM_SELECT
+        'ITEM_SELECT': Search.Event.ITEM_SELECT,
+        'LOGIN': AuthorizationLink.Event.LOGIN,
+        'LOGOUT': AuthorizationLink.Event.LOGOUT
     };
 
     /**
@@ -134,6 +138,7 @@ goog.scope(function() {
         this.initSearchListeners_();
     };
 
+
     /**
      * @private
      */
@@ -179,6 +184,7 @@ goog.scope(function() {
             this.onSubmit_
         );
     };
+
 
     /**
      * @private

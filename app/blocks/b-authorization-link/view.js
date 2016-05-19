@@ -10,13 +10,13 @@ goog.require('goog.dom.classlist');
 /**
  * AuthorizationLink View
  * @param {Object=} opt_params
- * @param {Function=} opt_template
+ * @param {Function=} opt_type
  * @param {string=} opt_modifier
  * @constructor
  * @extends {cl.iControl.View}
  */
-sm.bAuthorizationLink.View = function(opt_params, opt_template, opt_modifier) {
-    goog.base(this, opt_params, opt_template, opt_modifier);
+sm.bAuthorizationLink.View = function(opt_params, opt_type, opt_modifier) {
+    goog.base(this, opt_params, opt_type, opt_modifier);
 
     /**
      * hide or show hint
@@ -38,8 +38,8 @@ goog.scope(function() {
         ROOT: 'b-authorization-link',
         ICON: 'b-authorization-link__icon-wrap',
         HINT: 'b-authorization-link__hint-content',
-        AUTHORIZE_LINK: 'b-authorization-link__link_authorize',
-        UNAUTHORIZE_LINK: 'b-authorization-link__link_unauthorize'
+        LOGIN_LINK: 'b-authorization-link__link_login',
+        LOGOUT_LINK: 'b-authorization-link__link_logout'
     };
 
 
@@ -48,8 +48,8 @@ goog.scope(function() {
      * @enum {String}
      */
     View.Event = {
-        AUTHORIZE: 'authorize-click',
-        UNAUTHORIZE: 'unauthorize-click'
+        LOGIN: 'login-click',
+        LOGOUT: 'logout-click'
     };
 
 
@@ -82,19 +82,19 @@ goog.scope(function() {
             this.onDocumentClick_
         );
 
-        if (this.dom.authorizeLink) {
+        if (this.dom.loginLink) {
             this.getHandler().listen(
-                this.dom.authorizeLink,
+                this.dom.loginLink,
                 goog.events.EventType.CLICK,
-                this.onAuthorizeLinkClick_
+                this.onLoginLinkClick_
             );
         }
 
-        if (this.dom.unauthorizeLink) {
+        if (this.dom.logoutLink) {
             this.getHandler().listen(
-                this.dom.unauthorizeLink,
+                this.dom.logoutLink,
                 goog.events.EventType.CLICK,
-                this.onUnauthorizeLinkClick_
+                this.onLogoutLinkClick_
             );
         }
     };
@@ -117,27 +117,27 @@ goog.scope(function() {
 
 
     /**
-     * Authorize Link Click
+     * Login Link Click
      * @private
      */
-    View.prototype.onAuthorizeLinkClick_ = function() {
+    View.prototype.onLoginLinkClick_ = function() {
         this.hideHint();
 
         this.dispatchEvent({
-            'type': View.Event.AUTHORIZE
+            'type': View.Event.LOGIN
         });
     };
 
 
     /**
-     * Unauthorize Link Click
+     * Logout Link Click
      * @private
      */
-    View.prototype.onUnauthorizeLinkClick_ = function() {
+    View.prototype.onLogoutLinkClick_ = function() {
         this.hideHint();
 
         this.dispatchEvent({
-            'type': View.Event.UNAUTHORIZE
+            'type': View.Event.LOGOUT
         });
     };
 
@@ -206,14 +206,11 @@ goog.scope(function() {
             hint: this.getElementByClass(
                 View.CssClass.HINT
             ),
-            authorizeLink: this.getElementByClass(
-                View.CssClass.AUTHORIZE_LINK
+            loginLink: this.getElementByClass(
+                View.CssClass.LOGIN_LINK
             ),
-            unauthorizeLink: this.getElementByClass(
-                View.CssClass.UNAUTHORIZE_LINK
-            ),
-            socialModal: this.getElementByClass(
-                cl.gAuthSocialModal.View.CssClass.ROOT
+            logoutLink: this.getElementByClass(
+                View.CssClass.LOGOUT_LINK
             )
         };
     };

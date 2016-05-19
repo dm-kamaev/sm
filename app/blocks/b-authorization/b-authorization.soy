@@ -1,0 +1,78 @@
+{namespace sm.bAuthorization.Template}
+
+/**
+ * Constructor
+ * @param? params {
+ *     data: {
+ *         authSocialLinks: {
+ *             vk: ?string,
+ *             fb: ?string
+ *         }
+ *     }
+ * }
+ * @extends cl.iControl.Template
+ * @constructor
+ */
+{template .authorization}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * Body
+ * @param? params {
+ *     data: {
+ *         authSocialLinks: {
+ *             vk: ?string,
+ *             fb: ?string
+ *         }
+ *     }
+ * }
+ * @override
+ */
+{template .body}
+    {call .modal_ data="all"/}
+{/template}
+
+
+/**
+ * @param? params {
+ *     data: {
+ *         authSocialLinks: {
+ *             vk: ?string,
+ *             fb: ?string
+ *         }
+ *     }
+ * }
+ */
+{template .modal_ kind="html" private="true"}
+    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+        {param params: [
+            'factory': 'stendhal',
+            'type': 'auth-social-modal',
+            'renderParams': [
+                'data': [
+                    'socials': [
+                        [
+                            'type': 'fb',
+                            'url': $params.data?.authSocialLinks?.fb
+                        ],
+                        [
+                            'type': 'vk',
+                            'url': $params.data?.authSocialLinks?.vk
+                        ]
+                    ]
+                ]
+            ]
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-authorization
+{/template}

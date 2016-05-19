@@ -4,7 +4,9 @@ goog.require('goog.dom.classes');
 goog.require('goog.events');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
+goog.require('sm.bAuthorization.Authorization');
 goog.require('sm.bDataBlock.DataBlockFeatures');
+goog.require('sm.bHeader.Header');
 goog.require('sm.bMap.Map');
 goog.require('sm.bRating.Rating');
 goog.require('sm.bScore.Score');
@@ -41,13 +43,6 @@ sm.lSchool.School = function(opt_params) {
      * @private
      */
     this.modal_ = null;
-
-    /**
-     * Auth modal window
-     * @type {sm.gModal.ModalAuth}
-     * @private
-     */
-    this.authSocial_ = null;
 
     /**
      * Score instance
@@ -97,6 +92,13 @@ sm.lSchool.School = function(opt_params) {
      * @private
      */
     this.comments_ = null;
+
+    /**
+     * Header instance
+     * @type {sm.bHeader.Header}
+     * @private
+     */
+    this.header_ = null;
 };
 goog.inherits(sm.lSchool.School, goog.ui.Component);
 
@@ -104,6 +106,7 @@ goog.scope(function() {
     var School = sm.lSchool.School,
         DataBlockFoldList = sm.lSchool.bDataBlock.DataBlockFoldList,
         DBlockRatings = sm.lSchool.bDataBlock.DataBlockRatings,
+        Header = sm.bHeader.Header,
         Results = sm.lSchool.bResults.Results,
         Score = sm.bScore.Score,
         Map = sm.bMap.Map,
@@ -112,9 +115,12 @@ goog.scope(function() {
         DataBlockFeatures = sm.bDataBlock.DataBlockFeatures,
         FeedbackModal = sm.lSchool.bFeedbackModal.FeedbackModal,
         AuthSocialModalView = cl.gAuthSocialModal.View,
+        PopularSchools = sm.bPopularSchools.PopularSchools;
+
+    var Analytics = sm.iAnalytics.Analytics.getInstance(),
         factory = sm.iFactory.FactoryStendhal.getInstance(),
-        PopularSchools = sm.bPopularSchools.PopularSchools,
-        Analytics = sm.iAnalytics.Analytics.getInstance();
+        authorization = sm.bAuthorization.Authorization.getInstance();
+
 
     /**
      * CSS-class enum
@@ -162,6 +168,8 @@ goog.scope(function() {
         this.initPopularSchools_(element);
 
         this.initDataBlockFeatures_(element);
+
+        this.initHeader_();
     };
 
     /**
@@ -212,6 +220,18 @@ goog.scope(function() {
             this.onFeedbackLinkClick_
         );
 
+        handler.listen(
+            this.header_,
+            Header.Event.LOGIN,
+            this.onLoginClick_
+        );
+
+        handler.listen(
+            this.header_,
+            Header.Event.LOGOUT,
+            this.onLogoutClick_
+        );
+
         this.setEcAnalytics_();
         this.sendAnalyticsPageview_();
 
@@ -237,6 +257,24 @@ goog.scope(function() {
     School.prototype.onLeaveComment_ = function() {
         this.showCommentModal_();
     };
+
+
+    /**
+     * login Click
+     * @private
+     */
+    School.prototype.onLoginClick_ = function() {
+        this.login_();
+    };
+
+
+    /**
+     * Logout Click
+     * @private
+     */
+    School.prototype.onLogoutClick_ = function() {
+    };
+
 
     /**
      * onClick event
@@ -275,6 +313,16 @@ goog.scope(function() {
         Analytics.send('pageview');
     };
 
+
+    /**
+     * login
+     * @private
+     */
+    School.prototype.login_ = function() {
+        authorization.show();
+    };
+
+
     /**
      * show Modal for comments
      * @private
@@ -283,7 +331,7 @@ goog.scope(function() {
         if (this.getUser_()) {
             this.modal_.show();
         } else {
-            this.authSocial_.show();
+            this.login_();
         }
     };
 
@@ -294,7 +342,6 @@ goog.scope(function() {
     School.prototype.initChildren_ = function() {
         this.initModal_()
             .initScore_()
-            .initAuthSocial_()
             .initModalInaccuracy_()
             .initMap_()
             .initBouton_()
@@ -368,6 +415,19 @@ goog.scope(function() {
         return this;
     };
 
+
+    /**
+     * Header initialization
+     * @return {sm.lSchool.School}
+     * @private
+     */
+    School.prototype.initHeader_ = function() {
+        this.header_ = Header.getInstance();
+
+        return this;
+    };
+
+
     /**
      * Comments initialization
      * @return {sm.lSchool.School}
@@ -398,20 +458,6 @@ goog.scope(function() {
         return this;
     };
 
-    /**
-     * Modal auth initialization
-     * @return {sm.lSchool.School}
-     * @private
-     */
-    School.prototype.initAuthSocial_ = function() {
-        this.authSocial_ = factory.decorate(
-            'auth-social-modal',
-            this.getElementByClass(AuthSocialModalView.CssClass.ROOT),
-            this
-        );
-
-        return this;
-    };
 
     /**
      * Modal inaccuracy initialization
@@ -421,7 +467,7 @@ goog.scope(function() {
     School.prototype.initModalInaccuracy_ = function() {
         this.modalInaccuracy_ = factory.decorate(
             'feedback-modal',
-            this.getElementByClass(cl.gModal.View.CssClass.ROOT),
+            this.getElementByClass(sm.gModal.ViewFeedback.CssClass.ROOT),
             this
         );
 
@@ -501,9 +547,10 @@ goog.scope(function() {
      * @return {object}
      */
     School.prototype.getUser_ = function() {
-        return !!JSON.parse(
+        var user = JSON.parse(
                 goog.dom.dataset.get(this.getElement(), 'params')
             ).user;
+        return !! user.data;
     };
 
     /**

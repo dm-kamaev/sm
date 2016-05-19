@@ -8,12 +8,6 @@
  *            firstName: ?string,
  *            lastName: ?string
  *        }
- *     },
- *     config: {
- *         socialLinks: {
- *             vk: ?string,
- *             fb: ?string
- *         }
  *     }
  * }
  * @extends cl.iControl.Template
@@ -32,53 +26,13 @@
  *            firstName: ?string,
  *            lastName: ?string
  *        }
- *     },
- *     config: {
- *         socialLinks: {
- *             vk: ?string,
- *             fb: ?string
- *         }
  *     }
+ * }
  * @override
  */
 {template .body}
     {call .icon_/}
     {call .tooltip_ data="all"/}
-    {call .modal_ data="all"/}
-{/template}
-
-
-/**
- * @param? params {
- *     config: {
- *         socialLinks: {
- *             vk: ?string,
- *             fb: ?string
- *         }
- *     }
- * }
- */
-{template .modal_ kind="html" private="true"}
-    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-        {param params: [
-            'factory': 'stendhal',
-            'type': 'auth-social-modal',
-            'renderParams': [
-                'data': [
-                    'socials': [
-                        [
-                            'type': 'fb',
-                            'url': $params.config?.socialLinks?.fb
-                        ],
-                        [
-                            'type': 'vk',
-                            'url': $params.config?.socialLinks?.vk
-                        ]
-                    ]
-                ]
-            ]
-        ]/}
-    {/call}
 {/template}
 
 
@@ -111,14 +65,7 @@
 
 /**
  * authorization link Tooltip
- * @param? params {
- *     data: {
- *        user: ?{
- *            firstName: ?string,
- *            lastName: ?string
- *        }
- *     }
- * }
+ * @param? params {?}
  */
 {template .tooltip_ kind="html" private="true"}
     {let $tooltipData kind="html"}
@@ -171,9 +118,9 @@
     {let $linkCustomClasses kind="html"}
         {call .rootClass/}__link{sp}
         {if $userName}
-            {call .rootClass/}__link_unauthorize
+            {call .rootClass/}__link_logout
         {else}
-            {call .rootClass/}__link_authorize
+            {call .rootClass/}__link_login
         {/if}
     {/let}
 

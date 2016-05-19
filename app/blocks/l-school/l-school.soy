@@ -298,12 +298,6 @@
             ]/}
         {/call}
 
-        {call .authSocial_}
-            {param params: [
-                'authUrl': $params?.data?.authSocialLinks
-            ]/}
-        {/call}
-
         {call .modalInaccuracy_ data="all" /}
     </div>
 {/template}
@@ -405,37 +399,6 @@
                     'type': 'mistake',
                     'url': '/api/user-feedback',
                     'csrf': $csrf
-                ]
-            ]
-        ]/}
-    {/call}
-{/template}
-
-/**
- * Auth modal
- * @param params {
- *     authUrl: ?{
- *         vk: ?string,
- *         fb: ?string
- *     }
- * }
- */
-{template .authSocial_ private="true"}
-    {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
-        {param params: [
-            'type': 'auth-social-modal',
-            'renderParams': [
-                'data': [
-                    'socials': [
-                        [
-                            'type': 'fb',
-                            'url': $params?.authUrl?.fb
-                        ],
-                        [
-                            'type': 'vk',
-                            'url': $params?.authUrl?.vk
-                        ]
-                    ]
                 ]
             ]
         ]/}

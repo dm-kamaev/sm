@@ -10,6 +10,7 @@ goog.require('goog.object');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
 goog.require('gorod.gSuggest.Suggest');
+goog.require('sm.bAuthorization.Authorization');
 goog.require('sm.bHeader.Header');
 goog.require('sm.bMap.Map');
 goog.require('sm.bSearch.Search');
@@ -110,8 +111,10 @@ goog.scope(function() {
         Filters = sm.lSearchResult.bFilters.Filters,
         Search = sm.bSearch.Search,
         Header = sm.bHeader.Header,
-        Map = sm.bMap.Map,
-        Analytics = sm.iAnalytics.Analytics.getInstance();
+        Map = sm.bMap.Map;
+
+    var Analytics = sm.iAnalytics.Analytics.getInstance(),
+        authorization = sm.bAuthorization.Authorization.getInstance();
 
     /**
      * CSS-class enum
@@ -318,6 +321,14 @@ goog.scope(function() {
             this.instances_.header,
             Header.Event.ITEM_SELECT,
             this.onHeaderSubmit_
+        ).listen(
+            this.instances_.header,
+            Header.Event.LOGIN,
+            this.onLoginClick_
+        ).listen(
+            this.instances_.header,
+            Header.Event.LOGOUT,
+            this.onLogoutClick_
         );
     };
 
@@ -646,6 +657,33 @@ goog.scope(function() {
             this.instances_.schoolList.reset();
         }
     };
+
+
+    /**
+     * login Click
+     * @private
+     */
+    SearchResult.prototype.onLoginClick_ = function() {
+        this.login_();
+    };
+
+
+    /**
+     * Logout Click
+     * @private
+     */
+    SearchResult.prototype.onLogoutClick_ = function() {
+    };
+
+
+    /**
+     * login
+     * @private
+     */
+    SearchResult.prototype.login_ = function() {
+        authorization.show();
+    };
+
 
     /**
      * Send query with search settings

@@ -9,39 +9,28 @@ goog.require('sm.bAuthorizationLink.View');
 /**
  * AuthorizationLink
  * @param {Object} view
- * @param {Object=} opt_params
  * @param {Object=} opt_domHelper
  * @constructor
  * @extends {cl.iControl.Control}
  */
-sm.bAuthorizationLink.AuthorizationLink = function(view, opt_params,
-    opt_domHelper) {
-    goog.base(this, view, opt_params, opt_domHelper);
-
-    /**
-     * Auth modal window
-     * @type {sm.gModal.ModalAuth}
-     * @private
-     */
-    this.socialModal_ = null;
+sm.bAuthorizationLink.AuthorizationLink = function(view, opt_domHelper) {
+    goog.base(this, view, opt_domHelper);
 };
 goog.inherits(sm.bAuthorizationLink.AuthorizationLink, cl.iControl.Control);
 
 
 goog.scope(function() {
     var AuthorizationLink = sm.bAuthorizationLink.AuthorizationLink,
-        View = sm.bAuthorizationLink.View,
-        factoryManager = cl.iFactory.FactoryManager.getInstance();
+        View = sm.bAuthorizationLink.View;
 
 
     /**
-     * @override
-     * @param {Element} element
+     * Event enum
+     * @enum {String}
      */
-    AuthorizationLink.prototype.decorateInternal = function(element) {
-        goog.base(this, 'decorateInternal', element);
-
-        this.initSocialModal_();
+    AuthorizationLink.Event = {
+        LOGIN: View.Event.LOGIN,
+        LOGOUT: View.Event.LOGOUT
     };
 
 
@@ -51,43 +40,12 @@ goog.scope(function() {
     AuthorizationLink.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
 
-        this.viewListen(
-            View.Event.AUTHORIZE,
-            this.onAuthorizeClick_
+        this.autoDispatch(
+            View.Event.LOGIN
         );
 
-        this.viewListen(
-            View.Event.UNAUTHORIZE,
-            this.onUnauthorizeClick_
-        );
-    };
-
-
-    /**
-     * Authorize Click
-     * @private
-     */
-    AuthorizationLink.prototype.onAuthorizeClick_ = function() {
-        this.socialModal_.show();
-    };
-
-
-    /**
-     * Unauthorize Click
-     * @private
-     */
-    AuthorizationLink.prototype.onUnauthorizeClick_ = function() {
-    };
-
-
-    /**
-     * init Social Modal
-     * @private
-     */
-    AuthorizationLink.prototype.initSocialModal_ = function() {
-        this.socialModal_ = this.decorateChild(
-            'auth-social-modal',
-            this.getView().getDom().socialModal
+        this.autoDispatch(
+            View.Event.LOGOUT
         );
     };
 });  // goog.scope
