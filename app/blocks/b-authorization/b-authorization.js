@@ -63,8 +63,15 @@ goog.scope(function() {
     /**
      * show authorization modal
      */
-    Authorization.prototype.show = function() {
+    Authorization.prototype.login = function() {
         this.socialModal_.show();
+    };
+
+
+    /**
+     * logout
+     */
+    Authorization.prototype.logout = function() {
     };
 
 

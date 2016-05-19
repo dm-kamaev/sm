@@ -81,9 +81,7 @@ goog.scope(function() {
      */
     Header.Event = {
         'SUBMIT': Search.Event.SUBMIT,
-        'ITEM_SELECT': Search.Event.ITEM_SELECT,
-        'LOGIN': AuthorizationLink.Event.LOGIN,
-        'LOGOUT': AuthorizationLink.Event.LOGOUT
+        'ITEM_SELECT': Search.Event.ITEM_SELECT
     };
 
     /**

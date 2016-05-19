@@ -23,7 +23,7 @@ sm.bAuthorizationLink.View = function(opt_params, opt_type, opt_modifier) {
      * @type {boolean}
      * @private
      */
-    this.isHintVisibility_ = false;
+    this.isHintVisible_ = false;
 };
 goog.inherits(sm.bAuthorizationLink.View, cl.iControl.View);
 
@@ -82,21 +82,17 @@ goog.scope(function() {
             this.onDocumentClick_
         );
 
-        if (this.dom.loginLink) {
-            this.getHandler().listen(
-                this.dom.loginLink,
-                goog.events.EventType.CLICK,
-                this.onLoginLinkClick_
-            );
-        }
+        this.getHandler().listen(
+            this.dom.loginLink,
+            goog.events.EventType.CLICK,
+            this.onLoginLinkClick_
+        );
 
-        if (this.dom.logoutLink) {
-            this.getHandler().listen(
-                this.dom.logoutLink,
-                goog.events.EventType.CLICK,
-                this.onLogoutLinkClick_
-            );
-        }
+        this.getHandler().listen(
+            this.dom.logoutLink,
+            goog.events.EventType.CLICK,
+            this.onLogoutLinkClick_
+        );
     };
 
 
@@ -153,7 +149,7 @@ goog.scope(function() {
             event.target
         );
 
-        if (this.isHintVisibility_ && !isContaints) {
+        if (this.isHintVisible_ && !isContaints) {
             this.hideHint();
         }
     };
@@ -165,7 +161,7 @@ goog.scope(function() {
      * @private
      */
     View.prototype.onIconClick_ = function() {
-        if (this.isHintVisibility_) {
+        if (this.isHintVisible_) {
             this.hideHint();
         }
         else {
@@ -190,7 +186,7 @@ goog.scope(function() {
                 cl.gHint.View.CssClass.INCLUDE_CLICK_MODE
             );
 
-        this.isHintVisibility_ = visible;
+        this.isHintVisible_ = visible;
     };
 
 

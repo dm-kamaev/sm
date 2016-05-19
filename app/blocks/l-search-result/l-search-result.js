@@ -113,8 +113,7 @@ goog.scope(function() {
         Header = sm.bHeader.Header,
         Map = sm.bMap.Map;
 
-    var Analytics = sm.iAnalytics.Analytics.getInstance(),
-        authorization = sm.bAuthorization.Authorization.getInstance();
+    var Analytics = sm.iAnalytics.Analytics.getInstance();
 
     /**
      * CSS-class enum
@@ -321,14 +320,6 @@ goog.scope(function() {
             this.instances_.header,
             Header.Event.ITEM_SELECT,
             this.onHeaderSubmit_
-        ).listen(
-            this.instances_.header,
-            Header.Event.LOGIN,
-            this.onLoginClick_
-        ).listen(
-            this.instances_.header,
-            Header.Event.LOGOUT,
-            this.onLogoutClick_
         );
     };
 
@@ -656,32 +647,6 @@ goog.scope(function() {
         if (event.event_.persisted) {
             this.instances_.schoolList.reset();
         }
-    };
-
-
-    /**
-     * login Click
-     * @private
-     */
-    SearchResult.prototype.onLoginClick_ = function() {
-        this.login_();
-    };
-
-
-    /**
-     * Logout Click
-     * @private
-     */
-    SearchResult.prototype.onLogoutClick_ = function() {
-    };
-
-
-    /**
-     * login
-     * @private
-     */
-    SearchResult.prototype.login_ = function() {
-        authorization.show();
     };
 
 

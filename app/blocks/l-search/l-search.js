@@ -5,8 +5,6 @@ goog.require('goog.dom.classlist');
 goog.require('goog.events');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
-goog.require('sm.bAuthorization.Authorization');
-goog.require('sm.bHeader.Header');
 goog.require('sm.bSearchPanel.View');
 goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.iFactory.FactoryStendhal');
@@ -41,23 +39,15 @@ sm.lSearch.Search = function(opt_params) {
      * @private
      */
     this.popularSchools_ = null;
-
-    /**
-     * Header instance
-     * @type {sm.bHeader.Header}
-     * @private
-     */
-    this.header_ = null;
 };
 goog.inherits(sm.lSearch.Search, goog.ui.Component);
 
 goog.scope(function() {
     var Search = sm.lSearch.Search,
-        Header = sm.bHeader.Header,
         PopularSchools = sm.bPopularSchools.PopularSchools;
 
-    var Analytics = sm.iAnalytics.Analytics.getInstance(),
-        authorization = sm.bAuthorization.Authorization.getInstance();
+    var Analytics = sm.iAnalytics.Analytics.getInstance();
+    
 
     /**
      * CSS-class enum
@@ -93,18 +83,6 @@ goog.scope(function() {
         this.sendAnalyticsPageview_();
 
         var handler = this.getHandler();
-
-        handler.listen(
-            this.header_,
-            Header.Event.LOGIN,
-            this.onLoginClick_
-        );
-
-        handler.listen(
-            this.header_,
-            Header.Event.LOGOUT,
-            this.onLogoutClick_
-        );
     };
 
     /**
@@ -137,34 +115,6 @@ goog.scope(function() {
                 bPopularSchools,
                 this
             );
-
-        this.initHeader_();
-    };
-
-
-    /**
-     * login Click
-     * @private
-     */
-    Search.prototype.onLoginClick_ = function() {
-        this.login_();
-    };
-
-
-    /**
-     * Logout Click
-     * @private
-     */
-    Search.prototype.onLogoutClick_ = function() {
-    };
-
-
-    /**
-     * Autorize
-     * @private
-     */
-    Search.prototype.login_ = function() {
-        authorization.show();
     };
 
 
@@ -174,18 +124,6 @@ goog.scope(function() {
      */
     Search.prototype.sendAnalyticsPageview_ = function() {
         Analytics.send('pageview');
-    };
-
-
-    /**
-     * Header initialization
-     * @return {sm.lSearch.Search}
-     * @private
-     */
-    Search.prototype.initHeader_ = function() {
-        this.header_ = Header.getInstance();
-
-        return this;
     };
 });
 

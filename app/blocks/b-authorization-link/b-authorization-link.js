@@ -2,6 +2,7 @@ goog.provide('sm.bAuthorizationLink.AuthorizationLink');
 
 goog.require('cl.iControl.Control');
 goog.require('goog.dom');
+goog.require('sm.bAuthorization.Authorization');
 goog.require('sm.bAuthorizationLink.View');
 
 
@@ -23,6 +24,8 @@ goog.scope(function() {
     var AuthorizationLink = sm.bAuthorizationLink.AuthorizationLink,
         View = sm.bAuthorizationLink.View;
 
+    var Authorization = sm.bAuthorization.Authorization;
+
 
     /**
      * Event enum
@@ -40,12 +43,32 @@ goog.scope(function() {
     AuthorizationLink.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
 
-        this.autoDispatch(
-            View.Event.LOGIN
+        this.viewListen(
+            View.Event.LOGIN,
+            this.onLoginClick_
         );
 
-        this.autoDispatch(
-            View.Event.LOGOUT
+        this.viewListen(
+            View.Event.LOGOUT,
+            this.onLogoutClick_
         );
+    };
+
+
+    /**
+     * Login Click
+     * @private
+     */
+    AuthorizationLink.prototype.onLoginClick_ = function() {
+        Authorization.getInstance().login();
+    };
+
+
+    /**
+     * Logout Click
+     * @private
+     */
+    AuthorizationLink.prototype.onLogoutClick_ = function() {
+        Authorization.getInstance().logout();
     };
 });  // goog.scope

@@ -6,7 +6,6 @@ goog.require('goog.soy');
 goog.require('goog.ui.Component');
 goog.require('sm.bAuthorization.Authorization');
 goog.require('sm.bDataBlock.DataBlockFeatures');
-goog.require('sm.bHeader.Header');
 goog.require('sm.bMap.Map');
 goog.require('sm.bRating.Rating');
 goog.require('sm.bScore.Score');
@@ -92,13 +91,6 @@ sm.lSchool.School = function(opt_params) {
      * @private
      */
     this.comments_ = null;
-
-    /**
-     * Header instance
-     * @type {sm.bHeader.Header}
-     * @private
-     */
-    this.header_ = null;
 };
 goog.inherits(sm.lSchool.School, goog.ui.Component);
 
@@ -106,7 +98,6 @@ goog.scope(function() {
     var School = sm.lSchool.School,
         DataBlockFoldList = sm.lSchool.bDataBlock.DataBlockFoldList,
         DBlockRatings = sm.lSchool.bDataBlock.DataBlockRatings,
-        Header = sm.bHeader.Header,
         Results = sm.lSchool.bResults.Results,
         Score = sm.bScore.Score,
         Map = sm.bMap.Map,
@@ -115,11 +106,11 @@ goog.scope(function() {
         DataBlockFeatures = sm.bDataBlock.DataBlockFeatures,
         FeedbackModal = sm.lSchool.bFeedbackModal.FeedbackModal,
         AuthSocialModalView = cl.gAuthSocialModal.View,
-        PopularSchools = sm.bPopularSchools.PopularSchools;
+        PopularSchools = sm.bPopularSchools.PopularSchools,
+        Authorization = sm.bAuthorization.Authorization;
 
     var Analytics = sm.iAnalytics.Analytics.getInstance(),
-        factory = sm.iFactory.FactoryStendhal.getInstance(),
-        authorization = sm.bAuthorization.Authorization.getInstance();
+        factory = sm.iFactory.FactoryStendhal.getInstance();
 
 
     /**
@@ -168,8 +159,6 @@ goog.scope(function() {
         this.initPopularSchools_(element);
 
         this.initDataBlockFeatures_(element);
-
-        this.initHeader_();
     };
 
     /**
@@ -220,18 +209,6 @@ goog.scope(function() {
             this.onFeedbackLinkClick_
         );
 
-        handler.listen(
-            this.header_,
-            Header.Event.LOGIN,
-            this.onLoginClick_
-        );
-
-        handler.listen(
-            this.header_,
-            Header.Event.LOGOUT,
-            this.onLogoutClick_
-        );
-
         this.setEcAnalytics_();
         this.sendAnalyticsPageview_();
 
@@ -256,23 +233,6 @@ goog.scope(function() {
      */
     School.prototype.onLeaveComment_ = function() {
         this.showCommentModal_();
-    };
-
-
-    /**
-     * login Click
-     * @private
-     */
-    School.prototype.onLoginClick_ = function() {
-        this.login_();
-    };
-
-
-    /**
-     * Logout Click
-     * @private
-     */
-    School.prototype.onLogoutClick_ = function() {
     };
 
 
@@ -315,15 +275,6 @@ goog.scope(function() {
 
 
     /**
-     * login
-     * @private
-     */
-    School.prototype.login_ = function() {
-        authorization.show();
-    };
-
-
-    /**
      * show Modal for comments
      * @private
      */
@@ -331,7 +282,7 @@ goog.scope(function() {
         if (this.getUser_()) {
             this.modal_.show();
         } else {
-            this.login_();
+            Authorization.getInstance().login();
         }
     };
 
@@ -411,18 +362,6 @@ goog.scope(function() {
         this.score_ = this.initComponent_(
             Score, this.getElementByClass(Score.CssClass.ROOT)
         );
-
-        return this;
-    };
-
-
-    /**
-     * Header initialization
-     * @return {sm.lSchool.School}
-     * @private
-     */
-    School.prototype.initHeader_ = function() {
-        this.header_ = Header.getInstance();
 
         return this;
     };

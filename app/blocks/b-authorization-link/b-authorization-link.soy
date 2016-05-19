@@ -96,6 +96,72 @@
 
 /**
  * tooltip Data
+ * @param? params {?}
+ */
+{template .tooltipData_ kind="html" private="true"}
+    <div class="{call .rootClass/}__hint-content
+                {sp}{call .rootClass/}__hint-content_logged-out ">
+        {call .tooltipLogin_ /}
+    </div>
+
+    <div class="{call .rootClass/}__hint-content
+                {sp}{call .rootClass/}__hint-content_logged">
+        {call .tooltipLogout_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * tooltip Login
+ */
+{template .tooltipLogin_ kind="html" private="true"}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__link{sp}
+        {call .rootClass/}__link_login
+    {/let}
+
+    {call sm.bLink.Template.base}
+        {param params:[
+            'data': [
+                'name': 'Войти'
+            ],
+            'config': [
+                'customClasses': $customClasses
+            ]
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * tooltip Logout
+ * @param? params {?}
+ */
+{template .tooltipLogout_ kind="html" private="true"}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__link{sp}
+        {call .rootClass/}__link_logout
+    {/let}
+
+    <div class="{call .rootClass/}__name">
+        {call .userName_ data="all" /}
+    </div>
+
+    {call sm.bLink.Template.base}
+        {param params:[
+            'data': [
+                'name': 'Выйти'
+            ],
+            'config': [
+                'customClasses': $customClasses
+            ]
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * userName
  * @param? params {
  *     data: {
  *        user: ?{
@@ -105,47 +171,32 @@
  *     }
  * }
  */
-{template .tooltipData_ kind="html" private="true"}
-    {let $userName kind="html"}
-        {if $params.data?.user?.firstName}
-            {$params.data.user.firstName}{sp}
-        {/if}
-        {if $params.data?.user?.lastName}
-            {$params.data.user.lastName}
-        {/if}
-    {/let}
+{template .userName_ kind="html" private="true"}
+    {if $params.data?.user?.firstName}
+        {$params.data.user.firstName}{sp}
+    {/if}
+    {if $params.data?.user?.lastName}
+        {$params.data.user.lastName}
+    {/if}
+{/template}
 
-    {let $linkCustomClasses kind="html"}
-        {call .rootClass/}__link{sp}
-        {if $userName}
-            {call .rootClass/}__link_logout
-        {else}
-            {call .rootClass/}__link_login
-        {/if}
-    {/let}
 
-    {let $content kind="html"}
-        {if $userName}
-            <div class="{call .rootClass/}__name">
-                {$userName}
-            </div>
-        {/if}
-
-        {call sm.bLink.Template.base}
-            {param params:[
-                'data': [
-                    'name': $userName ? 'Выйти' : 'Войти'
-                ],
-                'config': [
-                    'customClasses': $linkCustomClasses
-                ]
-            ]/}
-        {/call}
-    {/let}
-
-    <div class="{call .rootClass/}__hint-content">
-        {$content}
-    </div>
+/**
+ * @param? params {
+ *     data: {
+ *        user: ?{
+ *            firstName: ?string,
+ *            lastName: ?string
+ *        }
+ *     }
+ * }
+ * Css classes
+ * @override
+ */
+{template .additionalClasses}
+    {if $params?.data?.user?.firstName or $params?.data?.user?.lastName}
+        {call .rootClass/}_logged
+    {/if}
 {/template}
 
 
