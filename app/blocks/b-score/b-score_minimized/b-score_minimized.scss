@@ -40,7 +40,7 @@
         position: absolute;
         z-index: 10;
         top: 39px;
-        left: -41px;
+        right: -14px;
 
         width: 170px;
         padding: 24px 30px;
@@ -111,7 +111,7 @@
     &.b-score_compact {
         display: none;
 
-        &.b-score__hoverable {
+        &.b-score_hoverable {
             .b-score__visible_mark:hover {
                 color: #ff0000;
             }
@@ -136,6 +136,7 @@
 
             .b-score__hidden-marks {
                 top: 23px;
+                right: auto;
                 left: 0;
             }
         }

@@ -78,7 +78,7 @@ goog.scope(function() {
         VISIBLE_MARK: 'b-score__visible_mark',
         MARK_NAME: 'b-score__mark-name',
         MARK_VALUE: 'b-score__mark-value',
-        HOVERABLE: 'b-score__hoverable',
+        HOVERABLE: 'b-score_hoverable',
         ACTIVE_STATE: 'b-score_active'
     };
 
