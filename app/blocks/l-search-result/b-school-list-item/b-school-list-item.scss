@@ -55,7 +55,7 @@
     display: inline-block;
 
     height: 100%;
-    padding-right: 160px;
+    padding-right: 180px;
 
     cursor: pointer;
     text-decoration: none;
@@ -115,25 +115,7 @@
 }
 
 
-@include media-xl {
-    .b-school-list-item__name {
-        padding-right: 75px;
-    }
-}
-
-
-@include media-l {
-    .b-school-list-item__name {
-        padding-right: 160px;
-    }
-}
-
-
-@include media-m {
-
-}
-
-@include media-s {
+@include media-xs {
     .b-school-list-item__name {
         padding-right: 75px;
     }
