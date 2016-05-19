@@ -78,6 +78,7 @@ goog.scope(function() {
         VISIBLE_MARK: 'b-score__visible_mark',
         MARK_NAME: 'b-score__mark-name',
         MARK_VALUE: 'b-score__mark-value',
+        HOVERABLE: 'b-score__hoverable',
         ACTIVE_STATE: 'b-score_active'
     };
 
@@ -99,6 +100,7 @@ goog.scope(function() {
     ScoreMinimized.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
+        this.detectHoverability_();
         this.initDomElements_();
         this.initState_();
         this.initNameVisibility_();
@@ -129,6 +131,21 @@ goog.scope(function() {
             goog.events.EventType.CLICK,
             this.documentClickHandler_
         );
+    };
+
+
+    /**
+     * Check hoverability for block and
+     * if it hoverable, add to it corresponding modifier
+     * @private
+     */
+    ScoreMinimized.prototype.detectHoverability_ = function() {
+        if (goog.labs.userAgent.device.isDesktop()) {
+            goog.dom.classlist.add(
+                this.getElement(),
+                ScoreMinimized.CssClass.HOVERABLE
+            );
+        }
     };
 
 
@@ -190,7 +207,6 @@ goog.scope(function() {
      */
     ScoreMinimized.prototype.initVisibleMarkNameListeners_ = function() {
         if (this.elements_.visibleMarkName &&
-            goog.labs.userAgent.device.isDesktop() &&
             this.isNameVisible_
         ) {
             this.getHandler().listen(
