@@ -82,11 +82,15 @@ schoolView.default = function(schoolInstance, data, user, opt_popularSchools) {
             ),
             olymp: olimpResultView.transformResults(data.olymp)
         },
-        authSocialLink: data.authSocialLink,
+        authSocialLinks: data.authSocialLinks,
         reviewCount: schoolInstance.totalScore ?
             schoolInstance.reviewCount : 0,
         isCommented: user.isCommented,
-        user: user.data
+        user: {
+            firstName: user.firstName,
+            lastName: user.lastName,
+            data: user.data
+        }
     };
     if (data.popularSchools) {
         result.popularSchools = this.popular(data.popularSchools);

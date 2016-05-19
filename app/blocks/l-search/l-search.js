@@ -50,8 +50,10 @@ goog.inherits(sm.lSearch.Search, goog.ui.Component);
 
 goog.scope(function() {
     var Search = sm.lSearch.Search,
-        PopularSchools = sm.bPopularSchools.PopularSchools,
-        Analytics = sm.iAnalytics.Analytics.getInstance();
+        PopularSchools = sm.bPopularSchools.PopularSchools;
+
+    var Analytics = sm.iAnalytics.Analytics.getInstance();
+    
 
 
     /**
@@ -88,6 +90,8 @@ goog.scope(function() {
         goog.base(this, 'enterDocument');
 
         this.sendAnalyticsPageview_();
+
+        var handler = this.getHandler();
     };
 
 

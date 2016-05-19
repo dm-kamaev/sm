@@ -2,6 +2,7 @@ goog.provide('sm.bHeader.Header');
 
 goog.require('cl.iControl.Control');
 goog.require('goog.dom');
+goog.require('sm.bAuthorizationLink.AuthorizationLink');
 goog.require('sm.bHeader.View');
 goog.require('sm.bSearch.Search');
 
@@ -51,6 +52,13 @@ sm.bHeader.Header = function(view, opt_domHelper) {
      * @private
      */
     this.banner_ = null;
+
+    /**
+     * Authorization Link instance
+     * @type {sm.bAuthorizationLink.AuthorizationLink}
+     * @private
+     */
+    this.authorizationLink_ = null;
 };
 goog.inherits(sm.bHeader.Header, cl.iControl.Control);
 
@@ -59,6 +67,7 @@ goog.scope(function() {
     var Header = sm.bHeader.Header,
         View = sm.bHeader.View,
         Search = sm.bSearch.Search,
+        AuthorizationLink = sm.bAuthorizationLink.AuthorizationLink,
         FactoryManager = cl.iFactory.FactoryManager;
 
 
@@ -119,6 +128,11 @@ goog.scope(function() {
         }
 
         this.banner_ = this.decorateChild('banner', domElements.banner);
+
+        this.authorizationLink_ = this.decorateChild(
+            'authorization-link',
+            domElements.authorizationLink
+        );
     };
 
 

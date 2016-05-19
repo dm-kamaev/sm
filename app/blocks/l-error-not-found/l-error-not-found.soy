@@ -2,6 +2,16 @@
 
 /**
  * @param? params {
+ *     data: {
+ *        user: ?{
+ *            firstName: ?string,
+ *            lastName: ?string
+ *        },
+ *        authSocialLinks: {
+ *            vk: ?string,
+ *            fb: ?string
+ *        }
+ *     },
  *     errorText: ?string,
  *     popularSchools: ?list<[
  *         id: ?number,
@@ -36,8 +46,10 @@
                     'searchText': $params.searchText,
                     'url': '/',
                     'searchRedirect': true,
-                    'bottomLine': true
+                    'bottomLine': true,
+                    'user': $params.data?.user
                 ],
+                'authSocialLinks': $params.data?.authSocialLinks,
                 'landingScript': '/l-error-not-found.js'
             ],
             'config': [

@@ -42,18 +42,25 @@ exports.list = async (function(req, res) {
             }
         ),
         filters: services.school.searchFilters(),
-        mapPosition: services.search.getMapPositionParams(searchParams)
+        mapPosition: services.search.getMapPositionParams(searchParams),
+        authSocialLinks: services.auth.getAuthSocialUrl()
     };
     var results = await(promises);
 
-    var schoolsList = schoolView.list(results.schools);
-    var map = schoolView.listMap(results.schools, results.mapPosition);
-    var filters = searchView.filters(results.filters, searchParams);
+    var schoolsList = schoolView.list(results.schools),
+        map = schoolView.listMap(results.schools, results.mapPosition),
+        filters = searchView.filters(results.filters, searchParams);
+
     var params = {
         params: {
             data: {
                 schools: schoolsList.schools,
-                filters: filters
+                filters: filters,
+                authSocialLinks: results.authSocialLinks,
+                user: {
+                    firstName: '',
+                    lastName: ''
+                }
             },
             searchText: searchText,
             countResults: schoolsList.countResults,
@@ -104,6 +111,8 @@ exports.view = async (function(req, res, next) {
             var school = await(services.school.viewOne(schoolInstance.id));
             services.school.incrementViews(school.id);
             var user = {
+                firstName: '',
+                lastName: '',
                 data: req.user,
                 isCommented: typeof await(services.userData.checkCredentials(
                     school.id,
@@ -141,7 +150,8 @@ exports.view = async (function(req, res, next) {
 exports.search = async(function(req, res) {
     var dataPromises = {
         popularSchools: services.school.getRandomPopularSchools(3),
-        amountSchools: services.school.getSchoolsCount()
+        amountSchools: services.school.getSchoolsCount(),
+        authSocialLinks: services.auth.getAuthSocialUrl()
     };
 
     var data = await(dataPromises),
@@ -149,16 +159,23 @@ exports.search = async(function(req, res) {
 
     var html = soy.render('sm.lSearch.Template.base', {
         params: {
-              popularSchools: schoolView.popular(data.popularSchools),
-              dataLinks : schoolView.dataLinks(),
-              amountSchools: data.amountSchools,
-              config: {
-                  year: new Date().getFullYear(),
-                  analyticsId: analyticsId,
-                  csrf: req.csrfToken(),
-                  domain: DOMAIN,
-                  fbClientId: FB_CLIENT_ID
-              }
+            data: {
+                authSocialLinks: data.authSocialLinks,
+                user: {
+                    firstName: '',
+                    lastName: ''
+                }
+            },
+            popularSchools: schoolView.popular(data.popularSchools),
+            dataLinks : schoolView.dataLinks(),
+            amountSchools: data.amountSchools,
+            config: {
+                year: new Date().getFullYear(),
+                analyticsId: analyticsId,
+                csrf: req.csrfToken(),
+                domain: DOMAIN,
+                fbClientId: FB_CLIENT_ID
+            }
         }
     });
 

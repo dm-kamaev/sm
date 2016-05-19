@@ -17,21 +17,25 @@
  *         title: string,
  *         content: string,
  *         header: sm.bHeader.Template.Params,
+ *         authSocialLinks: {
+ *             vk: ?string,
+ *             fb: ?string
+ *         },
  *         landingScript: string,
  *         evercookie: ?bool,
  *         openGraph: ?{
-*              url: ?string,
-*              siteName: ?string,
-*              title: ?string,
-*              type: ?string,
-*              description: ?string,
-*              image: ?string,
-*              fbClientId: ?number,
-*              twitterCardType: ?string,
-*              twitterSiteName: ?string,
-*              imageWidth: ?string,
-*              imageHeight: ?string
-*         }
+ *             url: ?string,
+ *             siteName: ?string,
+ *             title: ?string,
+ *             type: ?string,
+ *             description: ?string,
+ *             image: ?string,
+ *             fbClientId: ?number,
+ *             twitterCardType: ?string,
+ *             twitterSiteName: ?string,
+ *             imageWidth: ?string,
+ *             imageHeight: ?string
+ *         }
  *     },
  *     config: ?sm.iLayout.Template.Params.Config
  * }}
@@ -119,6 +123,7 @@
         <div class="i-layout__content">
             {$params.data.content}
         </div>
+        {call .authorization_ data="all" /}
         {call .footer_ data="all" /}
     </div>
 {/template}
@@ -134,6 +139,34 @@
                 'data': $params.data.header,
                 'config': $params.config
             ] /}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * authorization modal
+ * @param? params {
+ *     data: {
+ *         authSocialLinks: {
+ *             vk: ?string,
+ *             fb: ?string
+ *         }
+ *     }
+ * }
+ */
+{template .authorization_ autoescape="strict" kind="html"}
+    <div class="i-layout__modal">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': 'stendhal',
+                'type': 'authorization',
+                'renderParams': [
+                    'data': [
+                        'authSocialLinks': $params.data?.authSocialLinks
+                    ]
+                ]
+            ]/}
         {/call}
     </div>
 {/template}

@@ -3,6 +3,16 @@
 /**
  * Search template
  * @param? params {
+ *     data: {
+ *        user: ?{
+ *            firstName: ?string,
+ *            lastName: ?string
+ *        },
+ *        authSocialLinks: {
+ *            vk: ?string,
+ *            fb: ?string
+ *        }
+ *     },
  *     images: ?list<string>,
  *     popularSchools: ?list<[
  *         id: ?number,
@@ -16,7 +26,7 @@
  *         name: ?string,
  *         url: ?string
  *     ]>,
- *     amountSchools: ?number,
+ *     amountSchools: ?number
  *     config: [
  *         analyticsId: ?string,
  *         domain: ?string,
@@ -34,8 +44,10 @@
                 'title': 'Школы Мела',
                 'content': $content,
                 'header': [
-                    'searchRedirect': true
+                    'searchRedirect': true,
+                    'user': $params.data?.user
                 ],
+                'authSocialLinks': $params.data?.authSocialLinks,
                 'landingScript': '/l-search.js',
                 'openGraph': [
                     'title': 'Школы «Мела»',

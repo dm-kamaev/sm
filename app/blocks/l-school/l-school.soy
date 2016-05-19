@@ -82,11 +82,15 @@
  *            metro: ?list<string>,
  *            totalScore: ?number
  *        ]>,
- *         authSocialLink: ?{
- *             vk: ?string,
- *             fb: ?string
- *         },
- *        user: object
+ *        user: ?[
+ *            firstName: ?string,
+ *            lastName: ?string,
+ *            data: ?object
+ *        ],
+ *        authSocialLinks: [
+ *            vk: ?string,
+ *            fb: ?string
+ *        ]
  *     ],
  *     searchText: ?string,
  *     config: ?{
@@ -115,8 +119,10 @@
                     'searchText': $params.searchText,
                     'url': '/',
                     'searchRedirect': true,
-                    'bottomLine': true
+                    'bottomLine': true,
+                    'user': $params.data?.user
                 ],
+                'authSocialLinks': $params.data?.authSocialLinks,
                 'landingScript': '/l-school.js',
                 'evercookie': true,
                 'openGraph': [
@@ -287,12 +293,6 @@
             ]/}
         {/call}
 
-        {call .authSocial_}
-            {param params: [
-                'authUrl': $params?.data?.authSocialLink
-            ]/}
-        {/call}
-
         {call .modalInaccuracy_ data="all" /}
     </div>
 {/template}
@@ -394,37 +394,6 @@
                     'type': 'mistake',
                     'url': '/api/user-feedback',
                     'csrf': $csrf
-                ]
-            ]
-        ]/}
-    {/call}
-{/template}
-
-/**
- * Auth modal
- * @param params {
- *     authUrl: ?{
- *         vk: ?string,
- *         fb: ?string
- *     }
- * }
- */
-{template .authSocial_ private="true"}
-    {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
-        {param params: [
-            'type': 'auth-social-modal',
-            'renderParams': [
-                'data': [
-                    'socials': [
-                        [
-                            'type': 'fb',
-                            'url': $params?.authUrl?.fb
-                        ],
-                        [
-                            'type': 'vk',
-                            'url': $params?.authUrl?.vk
-                        ]
-                    ]
                 ]
             ]
         ]/}

@@ -8,7 +8,11 @@
  * @property {?string} searchText
  * @property {?boolean} searchRedirect
  * @property {boolean=} bottomLine
+ * @property {Object} user
+ * @property {string=} user.firstName
+ * @property {?string} user.lastName
  */
+
 
 /**
  * Header
@@ -33,7 +37,7 @@
             <div class="b-header__section
                 b-header__section_links
                 i-animate">
-                {call .link_/}
+                {call .links_ data="all"/}
             </div>
 
             <div class="b-header__section
@@ -44,10 +48,22 @@
     </div>
 {/template}
 
+
 /**
- * Link template
+ * Links template
+ * @param params {?}
  */
-{template .link_ private="true" autoescape="strict" kind="html"}
+{template .links_ kind="html" private="true"}
+    {call .linkSearch_/}
+    {call .linkAuthorization_ data="all" /}
+    // {call .linkLiked_/}
+{/template}
+
+
+/**
+ * link All Schools template
+ */
+{template .linkSearch_ private="true" autoescape="strict" kind="html"}
     {let $searchIcon kind="html"}
         {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
@@ -80,6 +96,38 @@
         {/call}
     </div>
 {/template}
+
+
+/**
+ * link Authorization template
+ * @param? params {
+ *     data: {
+ *        user: ?{
+ *            firstName: ?string,
+ *            lastName: ?string,
+ *            data: ?object
+ *        }
+ *     }
+ * }
+ */
+{template .linkAuthorization_ kind="html" private="true"}
+    <div class="b-header__authorization-link">
+        <div class="b-header__authorization-link-content">
+            {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+                {param params: [
+                    'factory': 'stendhal',
+                    'type': 'authorization-link',
+                    'renderParams': [
+                        'data': [
+                            'user': $params?.user
+                        ]
+                    ]
+                ]/}
+            {/call}
+        </div>
+    </div> //Константин Константинопольский
+{/template}
+
 
 /**
  * Logo

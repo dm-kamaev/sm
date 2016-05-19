@@ -2,6 +2,8 @@ goog.provide('sm.iFactory.TemplateFactoryStendhal');
 goog.provide('sm.iFactory.TemplateFactoryStendhal.INSTANCE');
 
 goog.require('cl.iFactory.TemplateFactory');
+goog.require('sm.bAuthorization.Template');
+goog.require('sm.bAuthorizationLink.Template');
 goog.require('sm.bBanner.Template');
 goog.require('sm.bHeader.Template');
 goog.require('sm.bPopularSchools.Template');
@@ -116,6 +118,14 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'date',
             sm.lSchool.bDate.Template.date
+        )
+        .setTemplateListItem(
+            'authorization-link',
+            sm.bAuthorizationLink.Template.authorizationLink
+        )
+        .setTemplateListItem(
+            'authorization',
+            sm.bAuthorization.Template.authorization
         );
 };
 goog.inherits(sm.iFactory.TemplateFactoryStendhal, cl.iFactory.TemplateFactory);

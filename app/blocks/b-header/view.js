@@ -52,6 +52,7 @@ goog.scope(function() {
 
         this.initSearch_();
         this.initBanner_();
+        this.initAuthorizationLink_();
         this.detectAnimationSupportion_();
     };
 
@@ -121,6 +122,17 @@ goog.scope(function() {
     View.prototype.initBanner_ = function() {
         this.dom.banner = this.getElementByClass(
             sm.bBanner.View.CssClass.ROOT
+        );
+    };
+
+
+    /**
+     * Initializes dom elements
+     * @private
+     */
+    View.prototype.initAuthorizationLink_ = function() {
+        this.dom.authorizationLink = this.getElementByClass(
+            sm.bAuthorizationLink.View.CssClass.ROOT
         );
     };
 });  // goog.scope

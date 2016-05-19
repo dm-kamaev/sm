@@ -10,6 +10,7 @@ goog.require('goog.object');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
 goog.require('gorod.gSuggest.Suggest');
+goog.require('sm.bAuthorization.Authorization');
 goog.require('sm.bHeader.Header');
 goog.require('sm.bMap.Map');
 goog.require('sm.bSearch.Search');
@@ -118,8 +119,9 @@ goog.scope(function() {
         Filters = sm.lSearchResult.bFilters.Filters,
         Search = sm.bSearch.Search,
         Header = sm.bHeader.Header,
-        Map = sm.bMap.Map,
-        Analytics = sm.iAnalytics.Analytics.getInstance();
+        Map = sm.bMap.Map;
+
+    var Analytics = sm.iAnalytics.Analytics.getInstance();
 
 
     /**
