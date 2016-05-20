@@ -303,7 +303,7 @@ goog.scope(function() {
      * @private
      */
     School.prototype.showCommentModal_ = function() {
-        if (this.getUser_()) {
+        if (this.isUserLoggedIn_()) {
             this.modal_.show();
         } else {
             this.authSocial_.show();
@@ -530,18 +530,21 @@ goog.scope(function() {
     School.prototype.isCommented_ = function() {
         return JSON.parse(
                 goog.dom.dataset.get(this.getElement(), 'params')
-            ).isCommented;
+            )['isCommented'];
     };
 
 
     /**
+     * Check if user object is empty,
+     * if it empty, that means that user is not logged in
      * @private
      * @return {Object}
      */
-    School.prototype.getUser_ = function() {
-        return !!JSON.parse(
-                goog.dom.dataset.get(this.getElement(), 'params')
-            ).user;
+    School.prototype.isUserLoggedIn_ = function() {
+        var user = JSON.parse(
+            goog.dom.dataset.get(this.getElement(), 'params')
+        )['user'];
+        return !goog.object.isEmpty(user);
     };
 
 

@@ -52,7 +52,7 @@ goog.inherits(sm.bDiagram.Diagram, goog.ui.Component);
 
 
 goog.scope(function() {
-    Diagram = sm.bDiagram.Diagram;
+    var Diagram = sm.bDiagram.Diagram;
 
 
     /**
