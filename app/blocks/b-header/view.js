@@ -11,7 +11,7 @@ goog.require('sm.iAnimate.Animate');
 
 
 /**
- * Button View
+ * Header View
  * @param {Object=} opt_params
  * @param {string=} opt_type
  * @param {string=} opt_modifier
@@ -53,6 +53,7 @@ goog.scope(function() {
         this.initSearch_();
         this.initBanner_();
         this.initAuthorizationLink_();
+        this.initFavorite_();
         this.detectAnimationSupportion_();
     };
 
@@ -133,6 +134,17 @@ goog.scope(function() {
     View.prototype.initAuthorizationLink_ = function() {
         this.dom.authorizationLink = this.getElementByClass(
             sm.bAuthorizationLink.View.CssClass.ROOT
+        );
+    };
+
+
+    /**
+     * Initializes dom elements
+     * @private
+     */
+    View.prototype.initFavorite_ = function() {
+        this.dom.favorite = this.getElementByClass(
+            sm.bFavorite.View.CssClass.ROOT
         );
     };
 });  // goog.scope

@@ -53,7 +53,6 @@ goog.scope(function() {
         PopularSchools = sm.bPopularSchools.PopularSchools;
 
     var Analytics = sm.iAnalytics.Analytics.getInstance();
-    
 
 
     /**

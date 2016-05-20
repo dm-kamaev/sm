@@ -1,0 +1,159 @@
+{namespace sm.bFavorite.Template}
+
+
+/**
+ * Favorite template parameters
+ * @typedef {Object} sm.bFavorite.Template.Params
+ * @property {Object} data
+ * @property {(Array<Object>|undefined)} data.schools
+ * @property {string} data.schools.name
+ * @property {(Array<string>|undefined)} data.schools.metro
+ * @property {(string|undefined)} data.schools.area
+ * @property {number} data.schools.number
+ */
+
+
+/**
+ * Constructor
+ * @param params {sm.bFavorite.Template.Params}
+ * @extends cl.iControl.Template
+ * @constructor
+ */
+{template .favorite}
+    {call .init data="all" /}
+{/template}
+
+
+/**
+ * Body
+ * @param params {?}
+ * @override
+ */
+{template .body}
+    {call .icon_/}
+    {call .tooltip_ data="all"/}
+{/template}
+
+
+/**
+ * icons template
+ */
+{template .icon_ kind="html" private="true"}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__icon
+    {/let}
+
+    <div class="{call .rootClass/}__icon-wrap">
+        {call .renderChild}
+            {param params: [
+                'type': 'icon',
+                'renderParams': [
+                    'data': [
+                        'type': 'favorite'
+                    ],
+                    'config': [
+                        'customClasses': [$customClasses]
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Tooltips template
+ * @param params {?}
+ */
+{template .tooltip_ kind="html" private="true"}
+    {let $tooltipData kind="html"}
+        {call .tooltipData_ data="all" /}
+    {/let}
+
+    {let $customClasses kind="html"}
+        {call .rootClass/}__hint
+    {/let}
+
+    {call .renderChild}
+        {param params: [
+            'type': 'hint',
+            'renderParams': [
+                'data': $tooltipData,
+                'config': [
+                    'customClasses': [$customClasses],
+                    'align': 'center',
+                    'noPadding': true,
+                    'theme': 'straight-arrow'
+                ]
+            ]
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * tooltip Data
+ * @param params {?}
+ */
+{template .tooltipData_ kind="html" private="true"}
+    <div class="{call .rootClass/}__hint-content
+                {sp}{call .rootClass/}__hint-content_text">
+        {call .contentText_ /}
+    </div>
+
+    <div class="{call .rootClass/}__hint-content
+                {sp}{call .rootClass/}__hint-content_list">
+        {call .listSchools_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * content text if array schools is empty
+ */
+{template .contentText_ kind="html" private="true"}
+    Пока&nbsp;вы&nbsp;ничего не&nbsp;добавили&nbsp;в&nbsp;избранное
+{/template}
+
+
+/**
+ * list of schools
+ * @param params {
+ *     data: {
+ *         schools: ?{
+ *             name: string,
+ *             metro: ?Array<string>,
+ *             area: ?string
+ *             score: ?number
+ *         }
+ *     }
+ * }
+ */
+{template .listSchools_ kind="html" private="true"}
+    {$params?.data?.schools}
+{/template}
+
+
+/**
+ * Css classes
+ * @param params {
+ *     data: {
+ *         schools: ?Array<Object>
+ *     }
+ * }
+ * @override
+ */
+{template .additionalClasses}
+    {if $params?.data?.schools and length($params?.data?.schools)}
+        {call .rootClass/}_filled
+    {/if}
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-favorite
+{/template}
