@@ -101,8 +101,9 @@ exports.getNotSended = async (function () {
  * @param {Object||number} comment
  * @param {{
  *     text: string,
- *     isNoticeSend: boolean
- * }}
+ *     isNoticeSend: boolean,
+ *     createdAt: Date
+ * }} data
  */
 exports.update = async(function (comment, data) {
     var instance = comment;
@@ -147,4 +148,18 @@ exports.delete = async(function (commentId) {
     data.userData.destroy();
 
     return commentId;
+});
+
+
+/**
+ * Return comment, finded by given comment text
+ * @param {string} text
+ * @return {?models.Comment}
+ */
+exports.getByText = async(function(text) {
+    return await(models.Comment.findOne({
+        where: {
+            text: text
+        }
+    }));
 });
