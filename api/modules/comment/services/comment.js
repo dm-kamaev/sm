@@ -159,7 +159,9 @@ exports.delete = async(function (commentId) {
 exports.getByText = async(function(text) {
     return await(models.Comment.findOne({
         where: {
-            text: text
+            text: {
+                $iLike: '%' + text+ '%'
+            }
         }
     }));
 });

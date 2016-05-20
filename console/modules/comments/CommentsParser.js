@@ -104,7 +104,6 @@ module.exports = class CommentsParser {
      */
     parseComment_(comment) {
         var parsedComment = {};
-
         parsedComment.userType = this.getUserType_(comment.type);
         parsedComment.key = comment.hash;
 

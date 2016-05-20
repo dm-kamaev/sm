@@ -22,6 +22,7 @@
     },
      "globals": {
          "goog",
+         "cl",
          "sm"
      },
     "ecmaFeatures": {

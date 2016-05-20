@@ -92,7 +92,6 @@ class CommentPublicationDateUpdater {
         if (dbComment) {
             result = {
                 id: dbComment.id,
-                hash: comment.hash,
                 createdAt: new Date(comment.submitDate).toISOString()
             };
         }
