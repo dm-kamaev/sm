@@ -163,7 +163,7 @@ gulp.task('userConfig', function() {
 
 const tasks = function (bool) {
     return bool ?
-        ['soy', 'compile', 'sprite', 'images', 'fonts', 'styles', 'copy'] :
+        ['createTimestamp', 'soy', 'compile', 'sprite', 'images', 'fonts', 'styles', 'copy'] :
         ['watch', 'soy', 'scripts', 'sprite', 'images', 'fonts','styles', 'copy', 'localConfig', 'authConfig', 'userConfig'];
 };
 
@@ -173,3 +173,5 @@ gulp.task('default', tasks(production));
 gulp.task('scripts', ['soy', 'lint'], gulpTasks.scripts);
 gulp.task('debug', ['soy'], gulpTasks.debug);
 gulp.task('compile', ['soy'], gulpTasks.compile);
+
+gulp.task('createTimestamp', gulpTasks.createTimestamp);
