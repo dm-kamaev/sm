@@ -1,7 +1,10 @@
 var soy = require.main.require('./app/components/soy');
 var services = require('../../../../app/components/services').all;
 const schoolView = require('../../../../api/modules/school/views/schoolView');
-var analyticsId = require('../../../config').config.analyticsId;
+
+const config = require('../../../config').config;
+const analyticsId = config.analyticsId;
+const yandexMetrikaId = config.yandexMetrikaId;
 
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
@@ -25,6 +28,7 @@ exports.notFound = async(function(req, res) {
               config: {
                   year: new Date().getFullYear(),
                   analyticsId: analyticsId,
+                  yandexMetrikaId: yandexMetrikaId,
                   csrf: req.csrfToken()
               }
           }

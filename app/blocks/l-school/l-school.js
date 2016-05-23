@@ -11,6 +11,7 @@ goog.require('sm.bScore.Score');
 goog.require('sm.bSearch.Search');
 goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.iFactory.FactoryStendhal');
+goog.require('sm.iMetrika.Metrika');
 goog.require('sm.lSchool.bComment.Comment');
 goog.require('sm.lSchool.bComments.Comments');
 goog.require('sm.lSchool.bDataBlock.DataBlockFoldList');

@@ -6,7 +6,8 @@
  * @property {?string} page
  * @property {?string} staticVersion
  * @property {?number} year
- * @property {?number} analyticsId
+ * @property {?string} analyticsId
+ * @property {?number} yandexMetrikaId
  * @property {?string} csrf
  */
 
@@ -98,14 +99,44 @@
         <script type="text/javascript" src="/evercookie/js/evercookie.js"></script>
     {/if}
 
+    {call .analytics_ data="all"/}
+    {call .metrika_ data="all"/}
+{/template}
+
+
+/**
+ * @param? params {
+ *     config: ?sm.iLayout.Template.Params.Config
+ * }
+ */
+{template .analytics_ autoescape="strict" kind="html"}
     <script>
         var analytics = sm.iAnalytics.Analytics.getInstance();
         analytics.init('{$params?.config?.analyticsId}');
         window['ctx'] = [];
         window['ctx']['csrf'] = {$params?.config?.csrf};
     </script>
+{/template}
 
-    {call sm.iMetrika.Template.base/}
+
+/**
+ * @param? params {
+ *     config: ?sm.iLayout.Template.Params.Config
+ * }
+ */
+{template .metrika_ autoescape="strict" kind="html"}
+    <script type="text/javascript">
+        var metrika = sm.iMetrika.Metrika.getInstance();
+        metrika.init('{$params?.config?.yandexMetrikaId}');
+    </script>
+
+    <noscript>
+        <div>
+            <img src="https://mc.yandex.ru/watch/
+                {$params?.config?.yandexMetrikaId}"
+                style="position:absolute; left:-9999px;" alt="" />
+        </div>
+    </noscript>
 {/template}
 
 

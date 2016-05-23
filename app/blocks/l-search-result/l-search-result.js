@@ -14,6 +14,7 @@ goog.require('sm.bHeader.Header');
 goog.require('sm.bMap.Map');
 goog.require('sm.bSearch.Search');
 goog.require('sm.iAnalytics.Analytics');
+goog.require('sm.iMetrika.Metrika');
 goog.require('sm.lSearchResult.Template');
 goog.require('sm.lSearchResult.bFilters.Filters');
 goog.require('sm.lSearchResult.bSchoolList.SchoolList');
