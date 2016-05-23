@@ -27,11 +27,18 @@ class CommentPublicationDateUpdater {
      * @public
      */
     updateDates(filePath, options) {
-        var parsedComments = this.parseComments_(filePath, options),
-            notEmptyComments = this.filterWithText_(parsedComments),
-            associatedComments = await(
-                this.associateCommentsWithId_(notEmptyComments)
-            );
+        var csvComments = this.getFormattedCsvComments_(filePath, options),
+            dbComments = this.getFormattedDbComments_();
+        
+        var associatedComments = this.associateByText_(
+            csvComments, dbComments
+        );
+        
+        console.log('Total amount comments from csv: ' + csvComments.length);
+        console.log(
+            'Associated comments from csv: ' + associatedComments.length
+        );
+
         this.archive_(associatedComments);
     }
 
@@ -41,10 +48,18 @@ class CommentPublicationDateUpdater {
      * @param {string} options
      * @private
      */
-    parseComments_(filePath, options) {
+    getFormattedCsvComments_(filePath, options) {
         var commentsParser = new CommentsParser(filePath, options);
 
-        return await(commentsParser.getFromCsv());
+        var csvComments = await(commentsParser.getFromCsv()),
+            notEmptyCsvComments = this.filterWithText_(csvComments);
+
+        return notEmptyCsvComments.map(comment => {
+            return {
+                text: this.formatText_(comment.text),
+                createdAt: comment.submitDate
+            };
+        });
     }
 
 
@@ -62,40 +77,77 @@ class CommentPublicationDateUpdater {
 
 
     /**
-     * @param {Array<Object>} comments
+     * Return all comments from db
+     * @return {Array<{
+     *     id: number,
+     *     text: string
+     * }>}
+     * @private
+     */
+    getFormattedDbComments_() {
+        var dbCommments = await(commentService.list());
+
+        return dbCommments.map(comment => {
+            return {
+                id: comment.id,
+                text: this.formatText_(comment.text)
+            };
+        });
+    }
+
+
+    /**
+     * Delete from text newline symbols and all non-text symbols
+     * @param {string} text
+     * @return {string}
+     * @private
+     */
+    formatText_(text) {
+        return text
+            .replace(/[^a-zA-Zа-яА-ЯёЁ1-9]/g,'')
+            .replace(/[ёЁ]/g, 'е')
+            .toLowerCase();
+    }
+
+
+    /**
+     * Associate comments from csv and db by text
+     * @param {Array<{
+     *     text: string,
+     *     createdAt: Date
+     * }>} csvComments
+     * @param {Array<{
+     *     id: number,
+     *     text: string
+     * }>} dbComments
      * @return {Array<{
      *     id: number,
      *     createdAt: Date
      * }>}
      * @private
      */
-    associateCommentsWithId_(comments) {
-        return comments.map(comment => {
-            return this.associateCommentWithId_(comment);
+    associateByText_(csvComments, dbComments) {
+        var associatedComments = csvComments.map(csvComment => {
+            var result = {},
+                dbComment = dbComments.find(dbComment => {
+                    return dbComment.text == csvComment.text;
+                });
+
+            if (dbComment) {
+                result = {
+                    id: dbComment.id,
+                    createdAt: new Date(csvComment.createdAt)
+                };
+            }
+            
+            return result;
         });
-    }
 
+        var  notEmptyComments = associatedComments.filter(comment => {
+            return !lodash.isEmpty(comment);
+        });
 
-    /**
-     * Search comments in db by text from given comment and
-     * return associated comment
-     * @param {Object} comment
-     * @return {{
-     *     id: number,
-     *     createdAt: Date
-     * }|{}}
-     * @private
-     */
-    associateCommentWithId_(comment) {
-        var dbComment = await(commentService.getByText(comment.text)),
-            result = {};
-        if (dbComment) {
-            result = {
-                id: dbComment.id,
-                createdAt: new Date(comment.submitDate).toISOString()
-            };
-        }
-        return result;
+        return notEmptyComments;
     }
 
 
