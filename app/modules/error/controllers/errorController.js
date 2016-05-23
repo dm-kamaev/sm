@@ -26,6 +26,7 @@ exports.notFound = async(function(req, res) {
               dataLinks : schoolView.dataLinks(),
               amountSchools: data.amountSchools,
               config: {
+                  staticVersion: new Date().getTime(),
                   year: new Date().getFullYear(),
                   analyticsId: analyticsId,
                   yandexMetrikaId: yandexMetrikaId,
