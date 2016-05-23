@@ -721,7 +721,7 @@ goog.scope(function() {
      */
     FeedbackModal.prototype.getFormDataClassType_ = function() {
         var classType = this.dropdowns_.classType.getValue();
-        return classType ? classType + 1 : '';
+        return classType >= 0 ? classType + 1 : '';
     };
 
 
