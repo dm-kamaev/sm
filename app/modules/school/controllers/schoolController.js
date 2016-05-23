@@ -74,6 +74,7 @@ exports.list = async (function(req, res) {
             },
             map: map,
             config: {
+                staticVersion: new Date().getTime(),
                 year: new Date().getFullYear(),
                 analyticsId: analyticsId,
                 yandexMetrikaId: yandexMetrikaId,
@@ -136,6 +137,7 @@ exports.view = async (function(req, res, next) {
                             user
                         ),
                     config: {
+                        staticVersion: new Date().getTime(),
                         year: new Date().getFullYear(),
                         analyticsId: analyticsId,
                         yandexMetrikaId: yandexMetrikaId,
@@ -175,6 +177,7 @@ exports.search = async(function(req, res) {
             dataLinks : schoolView.dataLinks(),
             amountSchools: data.amountSchools,
             config: {
+                staticVersion: new Date().getTime(),
                 year: new Date().getFullYear(),
                 analyticsId: analyticsId,
                 yandexMetrikaId: yandexMetrikaId,
