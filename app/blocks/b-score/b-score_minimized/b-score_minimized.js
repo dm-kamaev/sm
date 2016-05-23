@@ -127,8 +127,12 @@ goog.scope(function() {
      */
     ScoreMinimized.prototype.initDocumentListeners_ = function() {
         this.getHandler().listen(
-            document,
+            goog.dom.getDocument(),
             goog.events.EventType.CLICK,
+            this.documentClickHandler_
+        ).listen(
+            goog.dom.getDocument(),
+            goog.events.EventType.TOUCHSTART,
             this.documentClickHandler_
         );
     };
@@ -329,26 +333,13 @@ goog.scope(function() {
      * @private
      */
     ScoreMinimized.prototype.documentClickHandler_ = function(event) {
-        var domHelper = this.getDomHelper(),
-
-        /** check if click target in hidden marks dom element **/
-        inTooltipElement = domHelper.contains(
-            this.elements_.hiddenMarks,
-            event.target
-        ),
-
-        /** check if click target in visible mark value dom element **/
-        inVisibleMark = domHelper.contains(
-            this.elements_.visibleMarkValue,
-            event.target
-        ) || domHelper.contains(
-            this.elements_.visibleMarkName,
+        var domHelper = this.getDomHelper();
+        var inELement = domHelper.contains(
+            this.getElement(),
             event.target
         );
 
-        if (!inTooltipElement &&
-            !inVisibleMark &&
-            this.isHiddenMarksShowed_) {
+        if (!inELement && this.isHiddenMarksShowed_) {
             this.setHiddenMarksVisibility_(false);
             this.setNameVisibility_(false);
         }
