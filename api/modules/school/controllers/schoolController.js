@@ -223,8 +223,6 @@ exports.createComment = async (function(req, res) {
             params.userId
         ));
 
-        services.userData.actualizeUserIds(params.key, params.userId);
-
         if (typeof userData !== 'undefined') {
             result = [{
                 code: 1,

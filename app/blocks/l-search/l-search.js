@@ -9,6 +9,7 @@ goog.require('sm.bSearchPanel.View');
 goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.iFactory.FactoryStendhal');
 goog.require('sm.iFactory.TemplateFactoryStendhal');
+goog.require('sm.iMetrika.Metrika');
 
 
 
@@ -32,7 +33,7 @@ sm.lSearch.Search = function(opt_params) {
 
     /**
      * Search Panel instance
-     * @type {sm.bSearchPanel.PanelSearch}
+     * @type {sm.bSearchPanel.SearchPanel}
      * @private
      */
     this.searchPanel_ = null;
@@ -53,7 +54,6 @@ goog.scope(function() {
         PopularSchools = sm.bPopularSchools.PopularSchools;
 
     var Analytics = sm.iAnalytics.Analytics.getInstance();
-    
 
 
     /**
@@ -90,8 +90,6 @@ goog.scope(function() {
         goog.base(this, 'enterDocument');
 
         this.sendAnalyticsPageview_();
-
-        var handler = this.getHandler();
     };
 
 

@@ -111,15 +111,6 @@ gulp.task('fonts', function () {
         .pipe(gulp.dest(path.join(__dirname + '/public/fonts')));
 });
 
-gulp.task('evercookie', function() {
-    return gulp.src([
-            path.join(__dirname + '/app/evercookie/**/*.*'),
-            path.join('!' + __dirname + '/app/evercookie/css/**/*.*'),
-            path.join('!' + __dirname + '/app/evercookie/*.*')
-    ])
-    .pipe(gulp.dest(path.join(__dirname + '/public/evercookie/')));
-});
-
 gulp.task('copy', function() {
     return gulp.src([
             path.join(__dirname + '/assets/robots.txt'),
@@ -172,8 +163,8 @@ gulp.task('userConfig', function() {
 
 const tasks = function (bool) {
     return bool ?
-        ['soy', 'compile', 'sprite', 'images', 'fonts', 'styles', 'evercookie', 'copy'] :
-        ['watch', 'soy', 'scripts', 'sprite', 'images', 'fonts','styles', 'evercookie', 'copy', 'localConfig', 'authConfig', 'userConfig'];
+        ['soy', 'compile', 'sprite', 'images', 'fonts', 'styles', 'copy'] :
+        ['watch', 'soy', 'scripts', 'sprite', 'images', 'fonts','styles', 'copy', 'localConfig', 'authConfig', 'userConfig'];
 };
 
 gulp.task('build', tasks(true));

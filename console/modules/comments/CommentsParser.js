@@ -52,6 +52,19 @@ module.exports = class CommentsParser {
     }
 
     /**
+     * Parse comments and return it
+     * @return {Array<Object>} - parsed from csv comments
+     * @public
+     */
+    getFromCsv() {
+        var comments = await(this.readCsv_(this.path_));
+
+        return comments.map(comment => {
+            return this.parseComment_(comment);
+        });
+    }
+
+    /**
      * @private
      * @param {array<object>} data
      * @return {array<object>}
@@ -91,7 +104,6 @@ module.exports = class CommentsParser {
      */
     parseComment_(comment) {
         var parsedComment = {};
-
         parsedComment.userType = this.getUserType_(comment.type);
         parsedComment.key = comment.hash;
 
@@ -120,7 +132,6 @@ module.exports = class CommentsParser {
             }
 
             parsedComment.text = text;
-
             parsedComment.classType = comment.kidGrade || comment.pupilGrade;
         }
 
@@ -129,6 +140,8 @@ module.exports = class CommentsParser {
             atm = comment.atmosphere || 0,
             infrastr = comment.infrastructure || 0;
         parsedComment.score = [edu, teach, atm, infrastr];
+
+        parsedComment.submitDate = comment.submitDate;
 
         return parsedComment;
     }

@@ -5,7 +5,6 @@ goog.require('goog.array');
 goog.require('goog.dom.classes');
 goog.require('goog.ui.Component');
 goog.require('sm.bStars.Stars');
-goog.require('sm.iEvercookie.Evercookie');
 goog.require('sm.iFactory.FactoryStendhal');
 goog.require('sm.lSchool.bFeedbackModal.Template');
 
@@ -75,20 +74,6 @@ sm.lSchool.bFeedbackModal.FeedbackModal = function(opt_params) {
      * @private
      */
     this.yearGraduate_ = null;
-
-
-    /**
-     * @type {object}
-     * @private
-     */
-    this.evercookie_ = sm.iEvercookie.Evercookie.getInstance();
-
-
-    /**
-     * @type {?string}
-     * @private
-     */
-    this.clientIdPromise_ = null;
 };
 goog.inherits(sm.lSchool.bFeedbackModal.FeedbackModal, goog.ui.Component);
 
@@ -282,21 +267,6 @@ goog.scope(function() {
         );
 
         this.initDropdowns_(factory);
-
-        this.awaitClientId_();
-    };
-
-
-    /**
-     * await for cookie value
-     * @private
-     */
-    FeedbackModal.prototype.awaitClientId_ = function() {
-        this.clientIdPromise_ = new goog.Promise(function(resolve, reject) {
-            this.evercookie_.getClientId(function(clientId) {
-                resolve(clientId);
-            });
-        }, this);
     };
 
 
@@ -475,14 +445,7 @@ goog.scope(function() {
      */
     FeedbackModal.prototype.formSubmit_ = function() {
         if (this.isValid_()) {
-            var that = this;
-
-            this.clientIdPromise_.then(function(clientId) {
-                that.send_(clientId, function() {
-                    that.updateCommentsAnalytics_();
-                    location.reload();
-                });
-            });
+            this.send_();
         }
     };
 
@@ -624,13 +587,10 @@ goog.scope(function() {
 
     /**
      * Sends form using jQuery.ajax
-     * @param {string} clientId
-     * @param {Function=} opt_callback
      * @private
      */
-    FeedbackModal.prototype.send_ = function(clientId, opt_callback) {
+    FeedbackModal.prototype.send_ = function() {
         var data = this.getFormData_();
-        data['key'] = clientId;
         data['_csrf'] = window['ctx']['csrf'];
 
         var form = jQuery(this.elements_.form);
@@ -640,7 +600,7 @@ goog.scope(function() {
             type: form.attr('method'),
             data: JSON.stringify(data),
             contentType: 'application/json',
-            success: opt_callback ? opt_callback : function() {},
+            success: this.onSuccess_.bind(this),
             error: this.onError_.bind(this)
         });
     };
@@ -655,6 +615,14 @@ goog.scope(function() {
         this.showValidationError_(JSON.parse(response.responseText)[0].message);
     };
 
+    /**
+     * ajax success handler
+     * @private
+     */
+    FeedbackModal.prototype.onSuccess_ = function() {
+        this.updateCommentsAnalytics_();
+        location.reload();
+    };
 
     /**
      * Modal data validation
@@ -721,7 +689,7 @@ goog.scope(function() {
      */
     FeedbackModal.prototype.getFormDataClassType_ = function() {
         var classType = this.dropdowns_.classType.getValue();
-        return classType ? classType + 1 : '';
+        return classType >= 0 ? classType + 1 : '';
     };
 
 

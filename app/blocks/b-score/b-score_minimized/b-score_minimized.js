@@ -78,6 +78,7 @@ goog.scope(function() {
         VISIBLE_MARK: 'b-score__visible_mark',
         MARK_NAME: 'b-score__mark-name',
         MARK_VALUE: 'b-score__mark-value',
+        HOVERABLE: 'b-score_hoverable',
         ACTIVE_STATE: 'b-score_active'
     };
 
@@ -99,6 +100,7 @@ goog.scope(function() {
     ScoreMinimized.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
+        this.detectHoverability_();
         this.initDomElements_();
         this.initState_();
         this.initNameVisibility_();
@@ -125,10 +127,29 @@ goog.scope(function() {
      */
     ScoreMinimized.prototype.initDocumentListeners_ = function() {
         this.getHandler().listen(
-            document,
+            goog.dom.getDocument(),
             goog.events.EventType.CLICK,
             this.documentClickHandler_
+        ).listen(
+            goog.dom.getDocument(),
+            goog.events.EventType.TOUCHSTART,
+            this.documentClickHandler_
         );
+    };
+
+
+    /**
+     * Check hoverability for block and
+     * if it hoverable, add to it corresponding modifier
+     * @private
+     */
+    ScoreMinimized.prototype.detectHoverability_ = function() {
+        if (goog.labs.userAgent.device.isDesktop()) {
+            goog.dom.classlist.add(
+                this.getElement(),
+                ScoreMinimized.CssClass.HOVERABLE
+            );
+        }
     };
 
 
@@ -190,7 +211,6 @@ goog.scope(function() {
      */
     ScoreMinimized.prototype.initVisibleMarkNameListeners_ = function() {
         if (this.elements_.visibleMarkName &&
-            goog.labs.userAgent.device.isDesktop() &&
             this.isNameVisible_
         ) {
             this.getHandler().listen(
@@ -313,26 +333,13 @@ goog.scope(function() {
      * @private
      */
     ScoreMinimized.prototype.documentClickHandler_ = function(event) {
-        var domHelper = this.getDomHelper(),
-
-        /** check if click target in hidden marks dom element **/
-        inTooltipElement = domHelper.contains(
-            this.elements_.hiddenMarks,
-            event.target
-        ),
-
-        /** check if click target in visible mark value dom element **/
-        inVisibleMark = domHelper.contains(
-            this.elements_.visibleMarkValue,
-            event.target
-        ) || domHelper.contains(
-            this.elements_.visibleMarkName,
+        var domHelper = this.getDomHelper();
+        var inELement = domHelper.contains(
+            this.getElement(),
             event.target
         );
 
-        if (!inTooltipElement &&
-            !inVisibleMark &&
-            this.isHiddenMarksShowed_) {
+        if (!inELement && this.isHiddenMarksShowed_) {
             this.setHiddenMarksVisibility_(false);
             this.setNameVisibility_(false);
         }

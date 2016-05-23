@@ -28,7 +28,8 @@
  *     config: ?{
  *         staticVersion: ?string,
  *         year: ?number,
- *         analyticsId: ?string
+ *         analyticsId: ?string,
+ *         yandexMetrikaId: ?number,
  *     }
  * }
  */
@@ -58,6 +59,7 @@
                 'staticVersion': $params.config?.staticVersion,
                 'year':  $params.config?.year,
                 'analyticsId': $params.config?.analyticsId,
+                'yandexMetrikaId': $params.config?.yandexMetrikaId,
                 'csrf': $params.config?.csrf
             ]
         ] /}

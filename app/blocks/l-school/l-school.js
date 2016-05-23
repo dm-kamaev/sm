@@ -12,6 +12,7 @@ goog.require('sm.bScore.Score');
 goog.require('sm.bSearch.Search');
 goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.iFactory.FactoryStendhal');
+goog.require('sm.iMetrika.Metrika');
 goog.require('sm.lSchool.bComment.Comment');
 goog.require('sm.lSchool.bComments.Comments');
 goog.require('sm.lSchool.bDataBlock.DataBlockFoldList');
@@ -298,7 +299,7 @@ goog.scope(function() {
      * @private
      */
     School.prototype.showCommentModal_ = function() {
-        if (this.getUser_()) {
+        if (this.isUserLoggedIn_()) {
             this.modal_.show();
         } else {
             Authorization.getInstance().login();
@@ -508,19 +509,21 @@ goog.scope(function() {
     School.prototype.isCommented_ = function() {
         return JSON.parse(
                 goog.dom.dataset.get(this.getElement(), 'params')
-            ).isCommented;
+            )['isCommented'];
     };
 
 
     /**
+     * Check if user object is empty,
+     * if it empty, that means that user is not logged in
      * @private
      * @return {Object}
      */
-    School.prototype.getUser_ = function() {
+    School.prototype.isUserLoggedIn_ = function() {
         var user = JSON.parse(
-                goog.dom.dataset.get(this.getElement(), 'params')
-            ).user;
-        return !! user.data;
+            goog.dom.dataset.get(this.getElement(), 'params')
+        )['user'];
+        return !goog.object.isEmpty(user);
     };
 
 

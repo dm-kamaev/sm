@@ -96,6 +96,7 @@
  *     config: ?{
  *         staticVersion: ?string,
  *         year: ?number,
+ *         yandexMetrikaId: ?number,
  *         analyticsId: ?string,
  *         csrf: ?string,
  *         domain: ?string,
@@ -124,7 +125,6 @@
                 ],
                 'authSocialLinks': $params.data?.authSocialLinks,
                 'landingScript': '/l-school.js',
-                'evercookie': true,
                 'openGraph': [
                     'title': $title,
                     'description': $params?.data?.schoolDescr ?:
@@ -140,6 +140,7 @@
                 'staticVersion': $params.config?.staticVersion,
                 'year':  $params.config?.year,
                 'analyticsId': $params.config?.analyticsId,
+                'yandexMetrikaId': $params.config?.yandexMetrikaId,
                 'csrf': $params.config?.csrf
             ]
         ] /}

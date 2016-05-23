@@ -40,7 +40,6 @@
     "deployment": "git+ssh://git@github.com:c7s/deployment.git#dev",
     "ejs": "^2.3.4",
     "eslint": "^1.6.0",
-    "evercookie": "^0.3.0",
     "express-session": "^1.13.0",
     "fs-extra": "^0.26.3",
     "google-closure-library": "^20160125.0.0",

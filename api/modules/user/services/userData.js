@@ -49,7 +49,6 @@ service.checkCredentials = async(function(schoolId, key, userId) {
     var relatedUserData = await(models.UserData.findAll({
         where: {
             $or: [
-                { key: key },
                 { userId: userId }
             ]
         }
@@ -75,28 +74,6 @@ service.update = async(function(userDataId, data) {
     await(userData.update(data));
 
     return userData;
-});
-
-/**
- * Sets missing userId's to userData with same key field
- * @param {string} key
- * @param {number} userId
- */
-service.actualizeUserIds = async(function(key, userId) {
-    var userData = await(models.UserData.findAll({
-        where: {
-            key: key,
-            userId: null
-        }
-    }));
-
-    if (userData.length) {
-        userData.forEach(instance => {
-            instance.update({
-                userId: userId
-            })
-        });
-    }
 });
 
 module.exports = service;
