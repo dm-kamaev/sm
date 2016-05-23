@@ -3,7 +3,6 @@
 const path = require('path');
 const express = require('express');
 const cookieParser = require('cookie-parser');
-const evercookie = require('evercookie');
 const passport = require('passport');
 
 const session = require('./app/components/session');
@@ -54,14 +53,6 @@ app.set('view engine', 'jade');
 app.use(express.static(path.join(__dirname, '/public')));
 
 app.use(cookieParser());
-app.use(evercookie.backend({
-    pngCookieName: 'evercookie_png',
-    etagCookieName: 'evercookie_etag',
-    cacheCookieName: 'evercookie_cache',
-    pngPath: '/evercookie/png',
-    etagPath: '/evercookie/etag',
-    cachePath: '/evercookie/cache'
-}));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 

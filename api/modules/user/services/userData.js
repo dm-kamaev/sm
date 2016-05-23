@@ -49,7 +49,6 @@ service.checkCredentials = async(function(schoolId, key, userId) {
     var relatedUserData = await(models.UserData.findAll({
         where: {
             $or: [
-                { key: key },
                 { userId: userId }
             ]
         }
