@@ -43,12 +43,13 @@ goog.scope(function() {
             win = window,
             callbacks = 'yandex_metrika_callbacks';
 
-        var counter = 'yaCounter' + this.clientId_;
+        var that = this,
+            counter = 'yaCounter' + this.clientId_;
 
         (win[callbacks] = win[callbacks] || []).push(function() {
             try {
-                win[counter] = new Ya.Metrika({
-                    'id': this.clientId_,
+                win[counter] = new Ya['Metrika']({
+                    'id': that.clientId_,
                     'clickmap': true,
                     'trackLinks': true,
                     'accurateTrackBounce': true,
@@ -64,9 +65,9 @@ goog.scope(function() {
             elemScript.parentNode.insertBefore(elem, elemScript);
         };
 
-        elem.type = 'text/javascript';
-        elem.async = true;
-        elem.src = 'https://mc.yandex.ru/metrika/watch.js';
+        elem['type'] = 'text/javascript';
+        elem['async'] = true;
+        elem['src'] = 'https://mc.yandex.ru/metrika/watch.js';
 
         if (win['opera'] == '[object Opera]') {
             doc.addEventListener('DOMContentLoaded', func, false);
