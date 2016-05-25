@@ -41,7 +41,7 @@ class CommentPublicationDateManipulator {
 
         console.log('Total amount comments from archive: ' + comments.length);
         console.log(
-            'Associated comments from csv: ' + associatedComments.length
+            'Associated comments from db: ' + associatedComments.length
         );
 
         this.updateDbComments_(associatedComments);
