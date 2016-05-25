@@ -137,6 +137,18 @@
     }
 }
 
+.b-score_minimal {
+    .b-score__mark.b-score__mark_type_visible {
+        .b-score__mark-value {
+            width: 44px;
+
+            font-family: Arial, sans-serif;
+            font-weight: normal;
+        }
+    }
+}
+
+
 @include media-m {
     .b-score.b-score_minimized.b-score_default {
         .b-score__mark-name {

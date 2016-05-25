@@ -7,6 +7,7 @@
  * @property {Object} data
  * @property {(Array<Object>|undefined)} data.schools
  * @property {string} data.schools.name
+ * @property {string} data.schools.url
  * @property {(Array<string>|undefined)} data.schools.metro
  * @property {(string|undefined)} data.schools.area
  * @property {number} data.schools.number
@@ -122,6 +123,7 @@
  *     data: {
  *         schools: ?{
  *             name: string,
+ *             url: string,
  *             metro: ?Array<string>,
  *             area: ?string
  *             score: ?number
@@ -130,7 +132,17 @@
  * }
  */
 {template .listSchools_ kind="html" private="true"}
-    {$params?.data?.schools}
+    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+        {param params: [
+            'factory': 'stendhal',
+            'type': 'school-list-paged',
+            'renderParams': [
+                'data': [
+                    'schools': $params.data.schools
+                ]
+            ]
+        ]/}
+    {/call}
 {/template}
 
 

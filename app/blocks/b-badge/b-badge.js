@@ -32,6 +32,14 @@ sm.bBadge.Badge = function(opt_params) {
      * @private
      */
     this.params_ = opt_params || {};
+
+
+    /**
+     * Defines clickable badge or not
+     * @type {boolean}
+     * @private
+     */
+    this.isActive_ = false;
 };
 goog.inherits(sm.bBadge.Badge, goog.ui.Component);
 
@@ -49,7 +57,8 @@ goog.scope(function() {
         ROOT: 'b-badge',
         RATING: 'b-badge_rating',
         ITEM: 'b-badge__item',
-        HINT_HREF: 'b-badge__hint-href'
+        HINT_HREF: 'b-badge__hint-href',
+        ACTIVE_STATE: 'b-badge_active'
     };
 
 
@@ -77,6 +86,8 @@ goog.scope(function() {
     Badge.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
+        this.initState_();
+
         if (this.isRating_()) {
             this.elements_.item = this.getElementByClass(
                 Badge.CssClass.ITEM
@@ -100,29 +111,51 @@ goog.scope(function() {
     Badge.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
 
-        var handler = this.getHandler();
+        if (this.isActive_) {
+            console.log(this.isActive_);
+            if (this.isRating_()) {
+                this.initRatingListeners_();
+            }
+            else {
+                this.initLocationsListeners_();
+            }
+        }
+    };
 
-        if (this.isRating_()) {
-            handler.listen(
-                this.elements_.item,
-                goog.events.EventType.CLICK,
-                this.onItemClickRatingMode_
-            ).listen(
-                this.elements_.hintHref,
-                goog.events.EventType.CLICK,
-                this.onHintHrefClick_
-            );
-        } else {
-            var itemActiveElements = this.elements_.itemActive;
 
-            if (itemActiveElements) {
-                for (var i = 0; i < itemActiveElements.length; i++) {
-                    handler.listen(
-                        itemActiveElements[i],
-                        goog.events.EventType.CLICK,
-                        this.onItemClickLocationMode_.bind(this, i)
-                    );
-                }
+    /**
+     * Initializes listeners for Rating
+     * @private
+     */
+    Badge.prototype.initRatingListeners_ = function() {
+        this.getHandler().listen(
+            this.elements_.item,
+            goog.events.EventType.CLICK,
+            this.onItemClickRatingMode_
+        );
+
+        this.getHandler().listen(
+            this.elements_.hintHref,
+            goog.events.EventType.CLICK,
+            this.onHintHrefClick_
+        );
+    };
+
+
+    /**
+     * Initializes listeners for Locations
+     * @private
+     */
+    Badge.prototype.initLocationsListeners_ = function() {
+        var itemActiveElements = this.elements_.itemActive;
+
+        if (itemActiveElements) {
+            for (var i = 0; i < itemActiveElements.length; i++) {
+                this.getHandler().listen(
+                    itemActiveElements[i],
+                    goog.events.EventType.CLICK,
+                    this.onItemClickLocationMode_.bind(this, i)
+                );
             }
         }
     };
@@ -157,6 +190,18 @@ goog.scope(function() {
                 this.params_.data.push(data);
             }
         }
+    };
+
+
+    /**
+     * Detect whether control active
+     * @private
+     */
+    Badge.prototype.initState_ = function() {
+        this.isActive_ = goog.dom.classlist.contains(
+            this.getElement(),
+            Badge.CssClass.ACTIVE_STATE
+        );
     };
 
 

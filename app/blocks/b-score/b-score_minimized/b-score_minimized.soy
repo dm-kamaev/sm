@@ -57,6 +57,16 @@
  * }}
  */
 {template .visibleMark_ kind="html"}
+    {let $sizeMark kind="html"}
+        {if $params?.config?.theme == 'compact'}
+            xs
+        {elseif $params?.config?.theme == 'minimal'}
+            m
+        {else}
+            l
+        {/if}
+    {/let}
+
     <div class="{call .rootClass_ /}__visible_mark">
         {if $params.config.theme == 'compact' and
             $params.data.visibleMark.value == 0}
@@ -66,9 +76,7 @@
                 {param params: [
                     'data': $params?.data?.visibleMark,
                     'config': [
-                        'size': $params?.config?.theme == 'compact' ?
-                        'xs' :
-                        'l',
+                        'size': $sizeMark,
                         'isNameVisible': $params?.config?.isNameVisible,
                         'type': 'visible',
                         'isActive': $params?.config?.isActive,
@@ -96,7 +104,7 @@
  * }}
  */
 {template .hiddenMarks_ autoescape="strict" kind="html"}
-    {if length($params?.data?.hiddenMarks) > 0}
+    {if $params?.data?.hiddenMarks and length($params?.data?.hiddenMarks) > 0}
         <div class="{call .rootClass_ /}__hidden-marks
                     i-utils__hidden">
             {if $params?.config?.theme != 'compact'}

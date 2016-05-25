@@ -114,6 +114,25 @@
     font: 16px/22px 'PT Serif', Arial, sans-serif;
 }
 
+.b-school-list-item.b-school-list-item_minimal {
+    padding: 5px 0 10px 0;
+
+    cursor: pointer;
+
+    .b-school-list-item__section {
+        margin-bottom: 2px;
+    }
+
+    .b-school-list-item__name {
+        padding-right: 0;
+
+        font-weight: normal;
+    }
+
+    .b-school-list-item__score {
+        top: 5px;
+    }
+}
 
 @include media-xl {
     .b-school-list-item__name {

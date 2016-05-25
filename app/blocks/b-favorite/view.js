@@ -150,6 +150,9 @@ goog.scope(function() {
             ),
             hint: this.getElementByClass(
                 View.CssClass.HINT
+            ),
+            schoolListPaged: this.getElementByClass(
+                sm.bSchoolListPaged.View.CssClass.ROOT
             )
         };
     };

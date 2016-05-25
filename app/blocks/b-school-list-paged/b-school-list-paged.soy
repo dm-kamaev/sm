@@ -1,0 +1,63 @@
+{namespace sm.bSchoolListPaged.Template}
+
+/**
+ * Constructor
+ * @param? params {?}
+ * @extends cl.iControl.Template
+ * @constructor
+ */
+{template .schoolListPaged}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * Body
+ * @param? params {?}
+ * @override
+ */
+{template .body}
+    {call .list_ data="all" /}
+    {call .footer_ data="all" /}
+{/template}
+
+
+/**
+ * @param? params {?}
+ */
+{template .list_ kind="html" private="true"}
+   <div class="b-school-list-paged__body">
+        {foreach $school in $params.data.schools}
+            {call sm.bSchoolListItem.Template.base}
+                {param params:[
+                    'id': $school.id,
+                    'url': $school.url,
+                    'name': $school.name,
+                    'type': $school.type,
+                    'score': $school.score,
+                    'metroStations': $school.metroStations,
+                    'area': $school.area,
+                    'position': $school?.position,
+                    'theme': 'minimal'
+                ]/}
+            {/call}
+        {/foreach}
+    </div>
+{/template}
+
+
+/**
+ *
+ */
+{template .footer_ kind="html" private="true"}
+    
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-school-list-paged
+{/template}

@@ -8,42 +8,71 @@
  *         name: string
  *     ]>,
  *     display: ?string
+ *     config: {
+ *         isNotClickable: boolean
+ *     }
  * }}
  */
-
 {template .base}
-    <div class="b-badge{not($params?.display) ? ' b-badge_rating' : ''}">
-        {call .icon_ data="all"/}
-        {if length($params.data) > 0}
-            {foreach $dataItem in $params.data}
-                {if $params?.display == 'metro'}
-                    {call .metroItem_}
-                        {param params:[
-                            'name': $dataItem.name,
-                            'id': $dataItem.id
-                        ] /}
-                    {/call}
-                {else}
-                    {call .ratingItem_}
-                        {param params:[
-                            'ratingName': $dataItem
-                        ] /}
-                    {/call}
-                {/if}
-                {if not isLast($dataItem)}
-                    ,{sp}
-                {/if}
-            {/foreach}
-        {else}
-            {call .areaItem_}
-                {param params:[
-                    'name': $params.data.name,
-                    'id': $params.data.id
-                ] /}
-            {/call}
+    {let $class kind="html"}
+        b-badge
+        {if not $params?.display}
+            {sp}b-badge_rating
         {/if}
+
+        {if not $params?.config?.isNotClickable}
+            {sp}b-badge_active
+        {/if}
+    {/let}
+
+    <div class="{$class}">
+        {call .icon_ data="all"/}
+        {call .text_ data="all" /}
     </div>
 {/template}
+
+
+/**
+ * @param params {{
+ *     data: ?list<[
+ *         id: number,
+ *         name: string
+ *     ]>,
+ *     display: ?string
+ * }}
+ */
+{template .text_ private="true"}
+    {if length($params.data) > 0}
+        {foreach $dataItem in $params.data}
+            {if $params?.display == 'metro'}
+                {call .metroItem_}
+                    {param params:[
+                        'name': $dataItem.name,
+                        'id': $dataItem.id,
+                    ] /}
+                {/call}
+            {else}
+                {call .ratingItem_}
+                    {param params:[
+                        'ratingName': $dataItem
+                    ] /}
+                {/call}
+            {/if}
+
+            {if not isLast($dataItem)}
+                ,{sp}
+            {/if}
+        {/foreach}
+    {else}
+        {call .areaItem_}
+            {param params:[
+                'name': $params.data.name,
+                'id': $params.data.id
+            ] /}
+        {/call}
+    {/if}
+{/template}
+
 
 /**
  * @param params {
@@ -51,8 +80,9 @@
  * }
  */
 {template .icon_ private="true"}
-    {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
         {param params: [
+            'factory': 'stendhal',
             'type': 'icon',
             'renderParams': [
                 'data': [
@@ -126,8 +156,9 @@
             <div class="b-badge__hint-href">
                 Подробнее
                 <div class="b-badge__hint-href-icon">
-                    {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+                    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
                         {param params: [
+                            'factory': 'stendhal',
                             'type': 'icon',
                             'renderParams': [
                                 'data': [
@@ -140,8 +171,9 @@
             </div>
         </div>
     {/let}
-    {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
         {param params: [
+            'factory': 'stendhal',
             'type': 'hint',
             'renderParams': [
                 'data': $hintData,

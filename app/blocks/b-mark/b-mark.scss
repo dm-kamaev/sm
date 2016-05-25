@@ -39,7 +39,7 @@
     line-height: 24px;
 }
 
-.b-mark_green{
+.b-mark_green {
     .b-mark__circle {
         border-color: #00aa00;
     }
@@ -114,6 +114,17 @@
         top: 5px;
 
         vertical-align: top;
+    }
+}
+
+.b-mark_inline.b-mark_size_m {
+    vertical-align: baseline;
+
+    line-height: 18px;
+
+    .b-mark__circle {
+        width: 9px;
+        height: 9px;
     }
 }
 
