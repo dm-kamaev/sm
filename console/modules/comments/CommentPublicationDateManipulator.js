@@ -1,7 +1,9 @@
 /**
  * @fileOverview Tool for update publication date in comments
- * It parses comments from given .csv, create comment text,
- * takes comments by text, and updates it with publication date
+ * It parses comments from given .csv and create archive with parsed comments
+ * It Can update comments dates from given early created archive
+ * In this case comparisons being on stripped texts of comments to detect
+ * which comment need to update
  * from .csv
  */
 'use strict';
@@ -9,52 +11,82 @@
 
 const await = require('asyncawait/await');
 const CommentsParser = require('./CommentsParser');
-const commentService = require('../../../api/modules/comment/services/comment');
-const CsvConverter = require('../modelArchiver/CsvConverter');
 const Archiver = require('../modelArchiver/Archiver');
 const lodash = require('lodash');
+
+const comment = require('../../../api/modules/comment');
+var services = require('../../../app/components/services').all;
 
 const FILE_PATH = './api/modules/comment/migrations/Comments.tar.gz';
 
 
 
-class CommentPublicationDateUpdater {
+class CommentPublicationDateManipulator {
     constructor() {}
 
     /**
-     * Get comments from csv and update it in db
-     * @param {string} filePath
+     * Get comments from archived file,
+     * find it in db by text,
+     * update for found comments publlication dates
+     * @param {string} path
      * @public
      */
-    updateDates(filePath, options) {
-        var csvComments = this.getFormattedCsvComments_(filePath, options),
-            dbComments = this.getFormattedDbComments_();
-        
+    updateDates(path) {
+        var comments = this.getArchivedComments_(path),
+            dbComments = this.getDbComments_();
+
         var associatedComments = this.associateByText_(
-            csvComments, dbComments
+            comments, dbComments
         );
-        
-        console.log('Total amount comments from csv: ' + csvComments.length);
+
+        console.log('Total amount comments from archive: ' + comments.length);
         console.log(
             'Associated comments from csv: ' + associatedComments.length
         );
 
-        this.archive_(associatedComments);
+        this.updateDbComments_(associatedComments);
     }
+
+    /**
+     * Parse comments from csv and create archive
+     * @param {string} filePath
+     * @param {string} options
+     * @public
+     */
+    parseCommentsFromCsv(filePath, options) {
+        var csvComments = this.getCsvComments_(filePath, options);
+
+        console.log('Total amount comments from csv: ' + csvComments.length);
+        this.archive_(csvComments);
+    }
+
 
     /**
      * Parse comments from given csv
      * @param {string} filePath
      * @param {string} options
+     * @return {Array.<Object>}
+     */
+    getCsvComments_(filePath, options) {
+        var commentsParser = new CommentsParser(filePath, options);
+        var csvComments = await(commentsParser.getFromCsv());
+
+        return this.filterWithText_(csvComments);
+    }
+
+    /**
+     *
+     * @param {string} path
+     * @return {Array<{
+     *     text: string,
+     *     createdAt: string
+     * }>}
      * @private
      */
-    getFormattedCsvComments_(filePath, options) {
-        var commentsParser = new CommentsParser(filePath, options);
+    getArchivedComments_(path) {
+        var extractedComments =  this.extract_(path);
 
-        var csvComments = await(commentsParser.getFromCsv()),
-            notEmptyCsvComments = this.filterWithText_(csvComments);
-
-        return notEmptyCsvComments.map(comment => {
+        return extractedComments.map(comment => {
             return {
                 text: this.formatText_(comment.text),
                 createdAt: comment.submitDate
@@ -64,7 +96,7 @@ class CommentPublicationDateUpdater {
 
 
     /**
-     * Return colmments only with text field existing
+     * Return comments only with text field existing
      * @param {Array<Object>} comments
      * @return {Array<Object>}
      * @private
@@ -84,8 +116,8 @@ class CommentPublicationDateUpdater {
      * }>}
      * @private
      */
-    getFormattedDbComments_() {
-        var dbCommments = await(commentService.list());
+    getDbComments_() {
+        var dbCommments = await(services.comment.list());
 
         return dbCommments.map(comment => {
             return {
@@ -104,8 +136,8 @@ class CommentPublicationDateUpdater {
      */
     formatText_(text) {
         return text
-            .replace(/[^a-zA-Zа-яА-ЯёЁ1-9]/g,'')
             .replace(/[ёЁ]/g, 'е')
+            .replace(/[^а-яА-Я\w\d]/g,'')
             .toLowerCase();
     }
 
@@ -146,7 +178,6 @@ class CommentPublicationDateUpdater {
         var  notEmptyComments = associatedComments.filter(comment => {
             return !lodash.isEmpty(comment);
         });
-
         return notEmptyComments;
     }
 
@@ -155,7 +186,7 @@ class CommentPublicationDateUpdater {
      * Update comments in db with given data
      * @param {Array<({
      *     id: number,
-     *     cretedAt: Date
+     *     createdAt: string
      * }|{})>} comments
      * @private
      */
@@ -167,29 +198,43 @@ class CommentPublicationDateUpdater {
 
     /**
      * Update each comment in db
-     * @param {({id: number, createdAt: Date}|{})} comment
+     * @param {{
+     *     id: number,
+     *     createdAt: string
+     * }} comment
      * @private
      */
     updateDbComment_(comment) {
-        if(!lodash.isEmpty(comment)) {
-            commentService.update(comment.id, {
-                createdAt: comment.createdAt
-            });
-        }
+        await(services.comment.update(comment.id, {
+            createdAt: comment.createdAt
+        }));
     }
 
     /**
      * Archive given comments into file
-     * @param {({id: number, createdAt: Date}|{})} comments
+     * @param {(Array<{id: number, createdAt: Date}>)} comments
      * @private
      */
     archive_(comments) {
-        var converter = new CsvConverter(JSON.stringify(comments)),
-            archiver = new Archiver(FILE_PATH),
-            csv = await (converter.toCsv());
+        var archiver = new Archiver(FILE_PATH);
 
-        await(archiver.compress(csv));
+        await(archiver.compress(JSON.stringify(comments)));
+    }
+
+    /**
+     * Extract comments from given path
+     * @param {string} path
+     * @return Array<{
+     *     text: string,
+     *     createdAt: string
+     * }>
+     * @private
+     */
+    extract_(path) {
+        var archiver = new Archiver(path);
+
+        return JSON.parse(archiver.decompress());
     }
 }
 
-module.exports = CommentPublicationDateUpdater;
+module.exports = CommentPublicationDateManipulator;
