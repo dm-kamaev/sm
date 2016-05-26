@@ -742,8 +742,8 @@ goog.scope(function() {
         } else {
             this.processItem_(data['item']);
             this.dispatchEvent({
-                type: Search.Event.ITEM_SELECT,
-                data: this.getData()
+                'type': Search.Event.ITEM_SELECT,
+                'data': this.getData()
             });
         }
     };
@@ -823,8 +823,8 @@ goog.scope(function() {
             this.searchRequest_(this.getText());
         } else {
             this.dispatchEvent({
-                type: Search.Event.SUBMIT,
-                data: this.getData()
+                'type': Search.Event.SUBMIT,
+                'data': this.getData()
             });
         }
     };
