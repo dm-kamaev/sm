@@ -8,7 +8,7 @@ const await = require('asyncawait/await');
 var parse = async(function(options) {
     var userDataUpdater = new UserDataUpdater();
 
-    await (userDataUpdater.createCorrelatingCsv(options));
+    await (userDataUpdater.createCorrelatingArchive(options));
 });
 
 var update = async(function(path) {
@@ -18,7 +18,7 @@ var update = async(function(path) {
 });
 
 commander
-    .command('parseUserData')
+    .command('createCorellatingArchive')
     .description('Create archive with original and updated names')
     .option(
         '-u, --updatedNames <path>', 'Path to updated file'

@@ -1,11 +1,15 @@
 'use strict';
 
 const await = require('asyncawait/await');
+const fs = require('fs');
 const path = require('path');
 const csv2json = require('csvtojson').Converter;
+
 const sequelize = require('../../../app/components/db');
-const fs = require('fs');
 const squel = require('squel');
+
+const lodash = require('lodash');
+
 
 const Archiver = require('../modelArchiver/Archiver');
 
@@ -43,7 +47,7 @@ class UserDataUpdater {
      *     updatedNames: string
      * }} options
      */
-    createCorrelatingCsv(options) {
+    createCorrelatingArchive(options) {
         var oldNames = await(this.getDataFromCsv_(options.oldNames)),
             newNames = await(this.getDataFromCsv_(options.updatedNames));
         var correlatingNames = this.correlateNames_(oldNames, newNames);
@@ -129,9 +133,10 @@ class UserDataUpdater {
 
             return result;
         });
-
-        return names;
+        var uniqNames = lodash.uniq(names, 'original');
+        return uniqNames;
     }
+
 
     /**
      * Find by id items in nmes array
@@ -163,36 +168,11 @@ class UserDataUpdater {
      */
     updateDbUserData_(userDataItems) {
         userDataItems.forEach(dataItem => {
-            var dbUserData = await(
-                this.findUserDataByUserName_(dataItem.original)
-            );
-            if(dbUserData) {
-                this.updateDbUserDataItem_(
-                    dbUserData.id,
-                    dataItem.corrected
-                );
-            }
+            await(this.updateDbUserDataName_(
+                dataItem.original,
+                dataItem.corrected
+            ));
         });
-    }
-
-
-    /**
-     * Find by username user_data item
-     * @param {string} username
-     * @private
-     */
-    findUserDataByUserName_(username) {
-        var query = squel.select()
-            .from('user_data')
-            .where('username = \'' + username + '\'')
-            .toString();
-
-        var dbUserData = await(sequelize.query(
-            query,
-            {type: sequelize.QueryTypes.SELECT}
-        ));
-
-        return dbUserData[0];
     }
 
 
@@ -202,11 +182,11 @@ class UserDataUpdater {
      * @param {string} username
      * @private
      */
-    updateDbUserDataItem_(id, username) {
+    updateDbUserDataName_(oldUserName, newUserName) {
         var query = squel.update()
             .table('user_data')
-            .where('id = ' + id)
-            .set('username',  username)
+            .where('username = \'' + oldUserName + '\'')
+            .set('username',  newUserName)
             .toString();
 
         return await(sequelize.query(
