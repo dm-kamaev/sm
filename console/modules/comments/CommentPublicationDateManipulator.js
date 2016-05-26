@@ -14,8 +14,8 @@ const CommentsParser = require('./CommentsParser');
 const Archiver = require('../modelArchiver/Archiver');
 const lodash = require('lodash');
 
-const comment = require('../../../api/modules/comment');
-var services = require('../../../app/components/services').all;
+const squel = require('squel');
+const sequelize = require('../../../app/components/db');
 
 const FILE_PATH = './api/modules/comment/migrations/Comments.tar.gz';
 
@@ -34,7 +34,6 @@ class CommentPublicationDateManipulator {
     updateDates(path) {
         var comments = this.getArchivedComments_(path),
             dbComments = this.getDbComments_();
-
         var associatedComments = this.associateByText_(
             comments, dbComments
         );
@@ -53,11 +52,14 @@ class CommentPublicationDateManipulator {
      * @param {string} options
      * @public
      */
-    parseCommentsFromCsv(filePath, options) {
-        var csvComments = this.getCsvComments_(filePath, options);
+    createCommentsArchiveFromCsv(filePath, options) {
+        var csvComments = this.getCsvComments_(filePath, options),
+            notEmptyComments = this.filterWithText_(csvComments),
+            shrinkedComments = this.shrinkFields_(notEmptyComments);
 
-        console.log('Total amount comments from csv: ' + csvComments.length);
-        this.archive_(csvComments);
+
+        console.log('Total amount comments from csv: ' + shrinkedComments.length);
+        this.archive_(shrinkedComments);
     }
 
 
@@ -71,7 +73,7 @@ class CommentPublicationDateManipulator {
         var commentsParser = new CommentsParser(filePath, options);
         var csvComments = await(commentsParser.getFromCsv());
 
-        return this.filterWithText_(csvComments);
+        return csvComments;
     }
 
     /**
@@ -89,7 +91,7 @@ class CommentPublicationDateManipulator {
         return extractedComments.map(comment => {
             return {
                 text: this.formatText_(comment.text),
-                createdAt: comment.submitDate
+                createdAt: new Date(comment.createdAt).toUTCString()
             };
         });
     }
@@ -109,17 +111,57 @@ class CommentPublicationDateManipulator {
 
 
     /**
-     * Return all comments from db
+     * Shrink not needed fields of parsed from csv comments by comment parser
+     * @param {Array<{
+     *     text: string,
+     *     submitDate: string
+     * }>} comments
+     * @return {Array<{
+     *     text: string,
+     *     createdAt: string
+     * }>}
+     */
+    shrinkFields_(comments) {
+        return comments.map(comment => {
+            return {
+                text: comment.text,
+                createdAt: new Date(comment.submitDate).toUTCString()
+            };
+        });
+    }
+
+
+    /**
+     * Return comments from db by given id or all comments
      * @return {Array<{
      *     id: number,
      *     text: string
      * }>}
      * @private
      */
-    getDbComments_() {
-        var dbCommments = await(services.comment.list());
+    getDbComments_(opt_id) {
+        var query = '';
 
-        return dbCommments.map(comment => {
+        if (opt_id) {
+            query = squel.select()
+                .field('id')
+                .field('text')
+                .from('comment')
+                .where('id = ' + opt_id)
+                .toString();
+        } else {
+            query = squel.select()
+                .field('id')
+                .field('text')
+                .from('comment')
+                .toString();
+        }
+
+        var dbComments = await(sequelize.query(
+            query,
+            {type: sequelize.QueryTypes.SELECT}
+        ));
+        return dbComments.map(comment => {
             return {
                 id: comment.id,
                 text: this.formatText_(comment.text)
@@ -168,7 +210,7 @@ class CommentPublicationDateManipulator {
             if (dbComment) {
                 result = {
                     id: dbComment.id,
-                    createdAt: new Date(csvComment.createdAt)
+                    createdAt: new Date(csvComment.createdAt).toUTCString()
                 };
             }
             
@@ -184,30 +226,35 @@ class CommentPublicationDateManipulator {
 
     /**
      * Update comments in db with given data
-     * @param {Array<({
+     * @param {Array<{
      *     id: number,
      *     createdAt: string
-     * }|{})>} comments
+     * }>} comments
      * @private
      */
     updateDbComments_(comments) {
         comments.forEach(comment => {
-            this.updateDbComment_(comment);
+            this.updateDbPublicationDate_(comment.id, comment.createdAt);
         });
     }
 
     /**
      * Update each comment in db
-     * @param {{
-     *     id: number,
-     *     createdAt: string
-     * }} comment
+     * @param {number} id
+     * @param {Date} date
      * @private
      */
-    updateDbComment_(comment) {
-        await(services.comment.update(comment.id, {
-            createdAt: comment.createdAt
-        }));
+    updateDbPublicationDate_(id, date) {
+        var query = squel.update()
+            .table('comment')
+            .set('created_at', date)
+            .where('id = ' + id)
+            .toString();
+        
+        await(sequelize.query(
+            query,
+            {type: sequelize.QueryTypes.UPDATE}
+        ));
     }
 
     /**
