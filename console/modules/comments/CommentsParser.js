@@ -4,7 +4,7 @@ var await = require('asyncawait/await');
 var readlineSync = require('readline-sync');
 var Converter = require('csvtojson').Converter;
 
-var services = require.main.require('./app/components/services').all;
+var services = require('../../../app/components/services').all;
 var SchoolSearcher = require('../parse/SchoolSearcher');
 var PollComments = require('./PollComments');
 
