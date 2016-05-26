@@ -108,7 +108,7 @@ exports.view = async (function(req, res, next) {
                         schoolInstance.id
                     ),
                     city: services.cityResult.getAll(),
-                    authSocialLink: services.auth.getAuthSocialUrl(),
+                    authSocialLinks: services.auth.getAuthSocialUrl(),
                     popularSchools: services.school.getRandomPopularSchools(6)
                 },
                 dataFromPromises = await(promises);

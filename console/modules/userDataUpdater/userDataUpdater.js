@@ -1,10 +1,19 @@
 'use strict';
 
 const await = require('asyncawait/await');
+const fs = require('fs');
 const path = require('path');
 const csv2json = require('csvtojson').Converter;
-const userDataService = require('../../../api/modules/user/services/userData');
-const fs = require('fs');
+
+const sequelize = require('../../../app/components/db');
+const squel = require('squel');
+
+const lodash = require('lodash');
+
+
+const Archiver = require('../modelArchiver/Archiver');
+
+const FILE_PATH = './api/modules/user/migrations/user-data.tar.gz';
 
 /**
  * Class, used for updating 'user_data' table in db.
@@ -24,9 +33,38 @@ class UserDataUpdater {
      * @param {string} pathToFile
      */
     updateFromCsv(pathToFile) {
-        var file = this.openCsv_(pathToFile);
-        var data = await(this.getDataFromCsv_(file));
-        this.updateUserData_(data);
+        var data = await(this.getDataFromCsv_(pathToFile));
+        this.updateDbUserData_(data);
+    }
+
+
+    /**
+     * Create file which contains csv file with objects with
+     * updated name newNamesFile and old name from oldNamesFile
+     * Comparison occurs by id
+     * @param {{
+     *     oldNames: string,
+     *     updatedNames: string
+     * }} options
+     */
+    createCorrelatingArchive(options) {
+        var oldNames = await(this.getDataFromCsv_(options.oldNames)),
+            newNames = await(this.getDataFromCsv_(options.updatedNames));
+        var correlatingNames = this.correlateNames_(oldNames, newNames);
+
+        this.archive_(correlatingNames);
+    }
+
+
+    /**
+     * Give user data objects from archive on path,
+     * find by original names user_data items in db and update it with new names
+     * @param {string} path
+     * @public
+     */
+    updateFromArchive(path) {
+        var userNames = this.extract_(path);
+        await(this.updateDbUserData_(userNames));
     }
 
 
@@ -43,10 +81,12 @@ class UserDataUpdater {
 
     /**
      * Get data from csv
-     * @param {string} file
+     * @param {string} pathToFile
      * @private
      */
-    getDataFromCsv_(file) {
+    getDataFromCsv_(pathToFile) {
+        var file = this.openCsv_(pathToFile);
+
         return new Promise(function(resolve, reject) {
             var csvConverter = new csv2json({
                 noheader: true,
@@ -63,28 +103,123 @@ class UserDataUpdater {
         });
     }
 
-
     /**
-     * Updates user data with given data
-     * @param {Array.<Object>} userDataItems
+     * Correllate names from old and new arrays by id
+     * @param {Array<{
+     *     id: number,
+     *     username: string
+     * }>} oldNames
+     * @param {Array<{
+     *     id: number,
+     *     username: string
+     * }>} newNames
+     * @return {Array<{
+     *     original: number,
+     *     corrected: string
+     * }>}
      * @private
      */
-    updateUserData_(userDataItems) {
-        userDataItems.forEach(dataItem => {
-            this.writeUserDataItemToDb_(dataItem);
+    correlateNames_(oldNames, newNames) {
+        var names = newNames.map(nameObject => {
+            var result = {},
+                findedOldNameItem = this.findNameById_(oldNames, nameObject.id);
+
+            if(findedOldNameItem) {
+                result = {
+                    original: findedOldNameItem.username,
+                    corrected: nameObject.username
+                };
+            }
+
+            return result;
+        });
+        var uniqNames = lodash.uniq(names, 'original');
+        return uniqNames;
+    }
+
+
+    /**
+     * Find by id items in nmes array
+     * @param {Array<{
+     *     id: number,
+     *     username: string
+     * }>} names
+     * @param {(number|string)} id
+     * @return {{
+     *     id: number,
+     *     username: string
+     * }}
+     * @private
+     */
+    findNameById_(names, id) {
+        return names.find(name => {
+            return parseInt(name.id) == parseInt(id);
         });
     }
 
 
     /**
-     * Write item with given params to db
-     * @param {Object} item
+     * Updates user data with given data
+     * @param {Array.<{
+     *     original: number,
+     *     corrected: string
+     * }>} userDataItems
      * @private
      */
-    writeUserDataItemToDb_(item) {
-        if (item.id) {
-            await(userDataService.update(item.id, item));
-        }
+    updateDbUserData_(userDataItems) {
+        userDataItems.forEach(dataItem => {
+            await(this.updateDbUserDataName_(
+                dataItem.original,
+                dataItem.corrected
+            ));
+        });
+    }
+
+
+    /**
+     * Write new username to user_data with given id
+     * @param {number} id
+     * @param {string} username
+     * @private
+     */
+    updateDbUserDataName_(oldUserName, newUserName) {
+        var query = squel.update()
+            .table('user_data')
+            .where('username = \'' + oldUserName + '\'')
+            .set('username',  newUserName)
+            .toString();
+
+        return await(sequelize.query(
+            query,
+            {type: sequelize.QueryTypes.UPDATE}
+        ));
+    }
+
+
+    /**
+     * Archive given comments into file
+     * @param {(Array<{id: number, createdAt: Date}>)} comments
+     * @private
+     */
+    archive_(comments) {
+        var archiver = new Archiver(FILE_PATH);
+        
+        await(archiver.compress(JSON.stringify(comments)));
+    }
+
+    /**
+     * Extract comments from given path
+     * @param {string} path
+     * @return Array<{
+     *     original: number,
+     *     corrected: string
+     * }>
+     * @private
+     */
+    extract_(path) {
+        var archiver = new Archiver(path);
+
+        return JSON.parse(archiver.decompress());
     }
 }
 
