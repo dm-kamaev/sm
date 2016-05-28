@@ -1,0 +1,12 @@
+[
+    "school_id",
+    "category",
+    "sphere",
+    "name",
+    "description",
+    "phone",
+    "raw_data",
+    "id",
+    "created_at",
+    "updated_at"
+]

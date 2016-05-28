@@ -82,11 +82,12 @@ class CsvConverter {
 
     /**
      * @public
+     * @param {string=} opt_delimiter
      * @return {string}
      */
-    toCsv() {
+    toCsv(opt_delimiter) {
         var json = this.getJson_();
-        return await(this.csvPromise_(json));
+        return await(this.csvPromise_(json, opt_delimiter));
     }
 
     /**
@@ -139,12 +140,14 @@ class CsvConverter {
     /**
      * @private
      * @param {object} json
+     * @param {string=} opt_delimiter
      * @return {promise<string>}
      */
-    csvPromise_(json) {
+    csvPromise_(json, opt_delimiter) {
         return new Promise (function(resolve, reject) {
             json2csv({
                 data: json,
+                del: opt_delimiter || ','
             }, function(err, csv) {
                 if (err)
                     reject(err);

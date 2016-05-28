@@ -170,6 +170,10 @@ var School = db.define('School', {
                 as: 'activites',
                 foreignKey: 'school_id'
             });
+            School.hasMany(models.AdditionalEducation, {
+                as: 'additionalEducations',
+                foreignKey: 'school_id'
+            });
         }
     }
 });
