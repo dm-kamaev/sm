@@ -206,10 +206,11 @@
         'display': 'inline',
         'config': [
             'size': $params?.config?.size,
-            'zeroSign': $params?.config?.size == 'l' ? 'nothing' : '',
+            'zeroSign': $params?.config?.size == 'l' or
+                $params?.config?.size == 'm' ?'nothing' : '',
             'showMark': true
         ]
-    ] /}
+    ]/}
 
     <div class="{call .rootClass_ /}__mark-value
         {if $params?.config?.isActive}

@@ -3,21 +3,26 @@
 
 /**
  * Header parameters
- * @typedef {object} sm.bHeader.Template.Params
- * @property {?string} url
- * @property {?string} searchText
- * @property {?boolean} searchRedirect
- * @property {boolean=} bottomLine
- * @property {Object} user
- * @property {string=} user.firstName
- * @property {?string} user.lastName
+ * @typedef {Object} sm.bHeader.Template.Params
+ * @property {Object} data
+ * @property {Object} config
  */
 
 
 /**
  * Header
  * @param params {{
- *     data: ?sm.bHeader.Template.Params,
+ *     data: {
+ *          url: ?string,
+ *          searchText: ?string,
+ *          searchRedirect: ?boolean,
+ *          bottomLine: ?boolean,
+ *          user: ?{
+ *              firstName: ?string,
+ *              lastName: ?string
+ *          },
+ *          favorite: sm.bSchoolListPaged.Template.data.schools
+ *     },
  *     config: ?sm.iLayout.Template.Params.Config
  * }}
  */
@@ -56,7 +61,7 @@
 {template .links_ kind="html" private="true"}
     {call .linkSearch_/}
     {call .linkAuthorization_ data="all" /}
-    {call .favorite_/}
+    {call .favorite_ data="all" /}
 {/template}
 
 
@@ -125,12 +130,17 @@
                 ]/}
             {/call}
         </div>
-    </div> //Константин Константинопольский
+    </div>
 {/template}
 
 
 /**
  * template favorite
+ * @param params {{
+ *     data: {
+ *          favorite: sm.bSchoolListPaged.Template.data.schools
+ *     }
+ * }}
  */
 {template .favorite_ kind="html" private="true"}
     <div class="b-header__favorite">
@@ -141,7 +151,7 @@
                     'type': 'favorite',
                     'renderParams': [
                         'data': [
-                            'schools': $params.data.schools
+                            'schools': $params.data?.favorite
                         ]
                     ]
                 ]/}

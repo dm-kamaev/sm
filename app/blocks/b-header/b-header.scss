@@ -182,6 +182,10 @@
     .b-header__link-search {
         left: 40px;
     }
+
+    .b-header__favorite {
+        display: none;
+    }
 }
 
 @include media-l {

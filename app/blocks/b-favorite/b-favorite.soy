@@ -6,17 +6,16 @@
  * @typedef {Object} sm.bFavorite.Template.Params
  * @property {Object} data
  * @property {(Array<Object>|undefined)} data.schools
- * @property {string} data.schools.name
- * @property {string} data.schools.url
- * @property {(Array<string>|undefined)} data.schools.metro
- * @property {(string|undefined)} data.schools.area
- * @property {number} data.schools.number
  */
 
 
 /**
  * Constructor
- * @param params {sm.bFavorite.Template.Params}
+ * @param params {
+ *     data: {
+ *         schools: sm.bSchoolListPaged.Template.Params
+ *     }
+ * }
  * @extends cl.iControl.Template
  * @constructor
  */
@@ -121,14 +120,7 @@
  * list of schools
  * @param params {
  *     data: {
- *         schools: ?{
- *             name: string,
- *             url: string,
- *             metro: ?Array<string>,
- *             area: ?string
- *             score: ?number
- *         }
- *     }
+ *         schools: ?Array<Object>
  * }
  */
 {template .listSchools_ kind="html" private="true"}

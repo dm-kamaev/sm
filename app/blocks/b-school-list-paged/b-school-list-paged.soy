@@ -2,7 +2,28 @@
 
 /**
  * Constructor
- * @param? params {?}
+ * @param? params {
+ *     data: {
+ *         schools: {
+ *             id: ?number,
+ *             name: [
+ *                 light: ?string,
+ *                 bold: ?string
+ *             ],
+ *             url: ?string,
+ *             type: ?string,
+ *             score: ?number
+ *             metroStations: ?list<[
+ *                 id: number,
+ *                 name: string
+ *             ]>,
+ *             area: ?[
+ *                 id: number,
+ *                 name: string
+ *             ]
+ *         }
+ *     }
+ * }
  * @extends cl.iControl.Template
  * @constructor
  */
@@ -17,7 +38,7 @@
  * @override
  */
 {template .body}
-    {call .list_ data="all" /}
+    {call .content_ data="all" /}
     {call .footer_ data="all" /}
 {/template}
 
@@ -25,32 +46,226 @@
 /**
  * @param? params {?}
  */
-{template .list_ kind="html" private="true"}
-   <div class="b-school-list-paged__body">
-        {foreach $school in $params.data.schools}
-            {call sm.bSchoolListItem.Template.base}
-                {param params:[
-                    'id': $school.id,
-                    'url': $school.url,
-                    'name': $school.name,
-                    'type': $school.type,
-                    'score': $school.score,
-                    'metroStations': $school.metroStations,
-                    'area': $school.area,
-                    'position': $school?.position,
-                    'theme': 'minimal'
-                ]/}
-            {/call}
-        {/foreach}
+{template .content_ kind="html" private="true"}
+    <div class="{call .rootClass/}__content">
+        {call .list_}
+            {param params: [
+                'data': [
+                    'schools': $params?.data?.schools
+                ],
+                'config': [
+                    'start': 0,
+                    'end': 5
+                ]
+            ]/}
+        {/call}
     </div>
 {/template}
 
 
 /**
- *
+ * @param? params {
+ *     data: {
+ *         schools: {
+ *             id: ?number,
+ *             name: [
+ *                 light: ?string,
+ *                 bold: ?string
+ *             ],
+ *             url: ?string,
+ *             type: ?string,
+ *             score: ?number
+ *             metroStations: ?list<[
+ *                 id: number,
+ *                 name: string
+ *             ]>,
+ *             area: ?[
+ *                 id: number,
+ *                 name: string
+ *             ]
+ *         }
+ *     },
+ *     config: {
+ *         start: number,
+ *         end: number,
+ *         customClasses: ? string
+ *     }
+ * }
+ */
+{template .list_ kind="html" private="true"}
+    {let $schoolsCount: $params?.data?.schools ?
+        length($params?.data?.schools):
+        0
+    /}
+
+    {let $start: $params.config.start /}
+
+    {let $end: $params.config.end < $schoolsCount ?
+        $params.config.end :
+        $schoolsCount
+    /}
+
+    <div class="{call .rootClass/}__list{sp}
+        {$params?.config?.customClasses ?: ''}">
+
+        {for $i in range($start, $end)}
+            <div class="{call .rootClass/}__school">
+                {call sm.bSchoolListItem.Template.base}
+                    {param params:[
+                        'id': $params?.data?.schools[$i].id,
+                        'url': $params?.data?.schools[$i].url,
+                        'name': $params?.data?.schools[$i].name,
+                        'type': $params?.data?.schools[$i].type,
+                        'score': $params?.data?.schools[$i].score,
+                        'metroStations': $params?.data?.schools[$i].metroStations,
+                        'area': $params?.data?.schools[$i].area,
+                        'theme': 'minimal'
+                    ]/}
+                {/call}
+            </div>
+        {/for}
+    </div>
+
+    {if $end < $schoolsCount}
+        {call .list_}
+            {param params: [
+                'data': [
+                    'schools': $params?.data?.schools
+                ],
+                'config': [
+                    'start': $start + 5,
+                    'end': $end + 5,
+                    'customClasses': 'i-utils__hidden'
+                ]
+            ]/}
+        {/call}
+    {/if}
+{/template}
+
+
+/**
+ * Template footer
+ * @param params {
+ *     data: {
+ *         schools: list<Object>
+ *     }
+ * }
  */
 {template .footer_ kind="html" private="true"}
-    
+    {let $footerClasses kind="html"}
+        {call .rootClass/}__footer
+
+        {if $params?.data?.schools and length($params?.data?.schools) <= 5}
+            {sp}i-utils__hidden
+        {/if}
+    {/let}
+
+    <div class="{$footerClasses}">
+        {call .link_}
+            {param params: [
+                'data': [
+                    'text': 'Назад'
+                ],
+                'config': [
+                    'modifier': 'previous'
+                ]
+            ]/}
+        {/call}
+
+        {call .pages_ data="all" /}
+
+        {call .link_}
+            {param params: [
+                'data': [
+                    'text': 'Далее'
+                ],
+                'config': [
+                    'modifier': 'next'
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Template link
+ * @param params {
+ *     data: {
+ *         text: ?string
+ *     },
+ *     config: {
+ *         modifier: ?string
+ *     }
+ * }
+ */
+{template .link_ kind="html" private="true"}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__link{sp}
+        {call .rootClass/}__link_{$params.config?.modifier}
+
+        {if $params.config?.modifier == 'next'}
+            {sp}{call .rootClass/}__link_active
+        {/if}
+
+        {if $params.config?.modifier == 'previous'}
+            {sp}{call .rootClass/}__link_inactive
+        {/if}
+    {/let}
+
+    {call sm.bLink.Template.base}
+        {param params: [
+            'data': [
+                'name': $params.data.text,
+            ],
+            'config': [
+                'customClasses': $customClasses,
+                'size': 'large'
+            ]
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * Template count
+ * @param params {?}
+ */
+{template .pages_ kind="html" private="true"}
+    <span class="{call .rootClass/}__pages-count">
+        {call .interval_ /}
+        {call .count_ data="all" /}
+    </span>
+{/template}
+
+
+/**
+ * Template interval
+ */
+{template .interval_ kind="html" private="true"}
+    <span class="{call .rootClass/}__interval-count">
+        1&mdash;5
+    </span>
+{/template}
+
+
+/**
+ * Template count
+ * @param params {
+ *     data: {
+ *         schools: list<Object>
+ *     }
+ * }
+ */
+{template .count_ kind="html" private="true"}
+    {let $schoolsCount: $params?.data?.schools ?
+        length($params?.data?.schools):
+        0
+    /}
+
+    <span class="{call .rootClass/}__count">
+        из {$schoolsCount}
+    </span>
 {/template}
 
 

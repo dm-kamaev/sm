@@ -112,7 +112,6 @@ goog.scope(function() {
         goog.base(this, 'enterDocument');
 
         if (this.isActive_) {
-            console.log(this.isActive_);
             if (this.isRating_()) {
                 this.initRatingListeners_();
             }
