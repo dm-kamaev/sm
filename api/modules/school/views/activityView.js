@@ -6,13 +6,13 @@ var activityView = {};
  * @return {object}
  */
 activityView.list = function(activities) {
-    activities = lodash.sortBy(activities, 'profile');
-    activities = lodash.groupBy(activities, 'profile');
+    activities = lodash.sortBy(activities, 'category');
+    activities = lodash.groupBy(activities, 'category');
 
     var items = lodash.keys(activities)
         .map(key => {
-            var types= activities[key].map(activity => activity.type),
-                items = lodash.uniq(types);
+            var spheres= activities[key].map(activity => activity.sphere),
+                items = lodash.uniq(spheres);
 
             return activityView.listParams_(items, 'folded', key);
         });
@@ -20,14 +20,14 @@ activityView.list = function(activities) {
     return activityView.listParams_(items, 'unfolded');
 };
 
-activityView.listParams_ = function(items, type, opt_name) {
+activityView.listParams_ = function(items, sphere, opt_name) {
     return {
         data: {
             name: opt_name || '',
             items: items
         },
         config: {
-            type: type
+            type: sphere
         }
     };
 }

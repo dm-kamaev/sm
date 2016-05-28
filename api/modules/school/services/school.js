@@ -548,7 +548,7 @@ service.viewOne = function(id) {
     }));
 
     var resultPromises = {
-        activities: services.activity.getActivities(id),
+        activities: services.additionalEducation.findBySchoolId(id),
         comments: services.comment.getComments(school.commentGroupId),
         addresses: services.address.getWithDepartmentsWithMetro(id, true, true)
     };
@@ -694,7 +694,7 @@ service.list = async (function(opt_params, opt_config) {
     var searchParams = opt_params || {},
         config = opt_config || {},
         limitResults = config.limitResults || null;
-    
+
     var sqlConfig = services.search.generateSqlConfig(
         limitResults,
         searchParams.page

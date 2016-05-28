@@ -6,6 +6,7 @@ var AdditionalEducation = db.define('AdditionalEducation', {
         type: DataType.INTEGER,
         field: 'school_id'
     },
+    category: DataType.STRING,
     sphere: DataType.STRING,
     name: DataType.STRING,
     description: DataType.TEXT,
