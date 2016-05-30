@@ -37,8 +37,8 @@ goog.inherits(sm.bBadge.Badge, goog.ui.Component);
 
 
 goog.scope(function() {
-    Badge = sm.bBadge.Badge,
-    HintView = cl.gHint.View;
+    var Badge = sm.bBadge.Badge,
+        HintView = cl.gHint.View;
 
 
     /**
@@ -149,9 +149,9 @@ goog.scope(function() {
 
             var itemActiveLength = this.elements_.itemActive.length;
 
-            for (var i = 0, id, elem; i < itemActiveLength; i++) {
+            for (var i = 0, elem; i < itemActiveLength; i++) {
                 elem = this.elements_.itemActive[i];
-                data = JSON.parse(goog.dom.dataset.get(elem, 'params'));
+                var data = JSON.parse(goog.dom.dataset.get(elem, 'params'));
                 data.name = elem.textContent;
 
                 this.params_.data.push(data);
@@ -188,7 +188,7 @@ goog.scope(function() {
      */
     Badge.prototype.onItemClickRatingMode_ = function() {
         this.toggleHintInlude_();
-
+        console.log('Toggle hint');
         this.getHandler().listen(
             document,
             goog.events.EventType.CLICK,
@@ -225,6 +225,7 @@ goog.scope(function() {
      * @private
      */
     Badge.prototype.toggleHintInlude_ = function() {
+        console.log(HintView.CssClass.INCLUDE_CLICK_MODE);
         goog.dom.classlist.toggle(
             this.getElement(),
             HintView.CssClass.INCLUDE_CLICK_MODE
