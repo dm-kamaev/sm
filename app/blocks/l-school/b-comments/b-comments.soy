@@ -11,7 +11,7 @@
  * @param params {sm.lSchool.bComments.Template.Params}
  */
 {template .base kind="html"}
-    <div class="b-comments">
+    <div id="comments" class="b-comments">
         {if $params.comments and length($params.comments) > 0}
             {call .comments_ data="all" /}
         {else}
