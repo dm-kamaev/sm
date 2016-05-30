@@ -118,8 +118,8 @@ goog.scope(function() {
             this.size_ = size;
 
             this.dispatchEvent({
-                type: Viewport.Event.RESIZE,
-                newSize: size
+                'type': Viewport.Event.RESIZE,
+                'newSize': size
             });
         }
     };

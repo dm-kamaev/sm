@@ -574,17 +574,17 @@ goog.scope(function() {
      */
     Search.prototype.renderItemName_ = function(item, str) {
         var res = '',
-            str = str.replace(/ё/g, 'е'),
+            searchString = str.replace(/ё/g, 'е'),
             name = item['name'].replace(/ё/g, 'е'),
             fullName = item['fullName'] && item['fullName'].replace(/ё/g, 'е'),
             abbreviation = item['abbreviation'] &&
                 item['abbreviation'].replace(/ё/g, 'е');
 
-        if (Suggest.findEntry(name, str)) {
+        if (Suggest.findEntry(name, searchString)) {
             res = item['name'];
-        } else if (Suggest.findEntry(fullName, str)) {
+        } else if (Suggest.findEntry(fullName, searchString)) {
             res = item['fullName'];
-        } else if (Suggest.findEntry(abbreviation, str)) {
+        } else if (Suggest.findEntry(abbreviation, searchString)) {
             res = item['abbreviation'];
         }
 
@@ -742,8 +742,8 @@ goog.scope(function() {
         } else {
             this.processItem_(data['item']);
             this.dispatchEvent({
-                type: Search.Event.ITEM_SELECT,
-                data: this.getData()
+                'type': Search.Event.ITEM_SELECT,
+                'data': this.getData()
             });
         }
     };
@@ -823,8 +823,8 @@ goog.scope(function() {
             this.searchRequest_(this.getText());
         } else {
             this.dispatchEvent({
-                type: Search.Event.SUBMIT,
-                data: this.getData()
+                'type': Search.Event.SUBMIT,
+                'data': this.getData()
             });
         }
     };

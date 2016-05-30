@@ -1,7 +1,7 @@
 {
     "rules": {
         "indent": [
-            1,
+            0,
             4
         ],
         "quotes": [
@@ -32,6 +32,7 @@
     "env": {
         "node": true,
         "browser": true,
+        "jquery": true,
         "es6": true
     },
     "extends": "eslint:recommended"

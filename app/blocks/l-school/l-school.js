@@ -575,7 +575,7 @@ jQuery(function() {
         params = jQuery(root).data('params');
 
     if (root) {
-        school = new sm.lSchool.School(params);
+        var school = new sm.lSchool.School(params);
         school.decorate(root);
     }
 });

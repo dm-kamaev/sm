@@ -59,7 +59,7 @@ goog.scope(function() {
      */
     DigitInputView.prototype.onFocus = function() {
         this.dispatchEvent({
-            type: DigitInputView.Event.FOCUS
+            'type': DigitInputView.Event.FOCUS
         });
     };
 

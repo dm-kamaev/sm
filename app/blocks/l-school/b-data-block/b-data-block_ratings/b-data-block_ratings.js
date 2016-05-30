@@ -35,8 +35,8 @@ goog.inherits(sm.lSchool.bDataBlock.DataBlockRatings, goog.ui.Component);
 
 
 goog.scope(function() {
-    DataBlock = sm.lSchool.bDataBlock.DataBlockRatings,
-    HintView = cl.gHint.View;
+    var DataBlock = sm.lSchool.bDataBlock.DataBlockRatings,
+        HintView = cl.gHint.View;
 
 
     /**
@@ -163,6 +163,7 @@ goog.scope(function() {
      * @private
      */
     DataBlock.prototype.toggleHintInlude_ = function() {
+        console.log(HintView.CssClass.INCLUDE_CLICK_MODE);
         goog.dom.classlist.toggle(
             this.elements_.contentWrap,
             HintView.CssClass.INCLUDE_CLICK_MODE

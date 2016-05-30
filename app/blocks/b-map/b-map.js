@@ -824,7 +824,7 @@ goog.scope(function() {
      * @private
      */
     Map.prototype.generatePresest_ = function(score) {
-        var presetName = presetKey = Map.PresetName.DEFAULT;
+        var presetName = Map.PresetName.DEFAULT;
 
         if (score >= 4) {
             presetName = Map.PresetName.GREEN;

@@ -366,8 +366,8 @@ goog.scope(function() {
     Filters.prototype.onSubmit_ = function() {
         var data = this.getData();
         this.dispatchEvent({
-            type: Filters.event.SUBMIT,
-            data: data
+            'type': Filters.event.SUBMIT,
+            'data': data
         });
     };
 
@@ -424,11 +424,11 @@ goog.scope(function() {
      */
     Filters.prototype.processingSerializeArray_ = function(array) {
         var result = {
-            ege: [],
-            gia: [],
-            olimp: [],
-            classes: [],
-            schoolType: []
+            'ege': [],
+            'gia': [],
+            'olimp': [],
+            'classes': [],
+            'schoolType': []
         };
 
         for (var i = 0, item; i < array.length; i++) {
