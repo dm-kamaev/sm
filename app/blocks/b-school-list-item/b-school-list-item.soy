@@ -22,21 +22,27 @@
  *     ],
  *     ratings: ?list<string>,
  *     position: ?number,
- *     theme: ?string
+ *     theme: ?string,
+ *     isNotClickable: ?bool
  * }
  */
 {template .base autoescape="strict" kind="html"}
-    {let $class kind="html"}
+    {let $classes kind="html"}
         b-school-list-item
         {if $params?.theme}
             {sp}b-school-list-item_{$params.theme}
         {/if}
+
+        {if not $params?.isNotClickable}
+            {sp}b-school-list-item_active
+        {/if}
     {/let}
+
     <a href="/school/{$params.url}" data-params="
         {call cl.iUtils.Utils.stringify}
             {param json: $params /}
         {/call}"
-        class="{$class}">
+        class="{$classes}">
 
         {call .sectionHeader_ data="all" /}
         {call .sectionBadges_ data="all" /}
@@ -188,7 +194,8 @@
                         'name': $params.name.light + $params.name.bold ?: ''
                     ],
                     'config': [
-                        'size': 'large'
+                        'size': 'large',
+                        'customClasses': 'b-school-list-item__link-name'
                     ]
                 ]/}
             {/call}

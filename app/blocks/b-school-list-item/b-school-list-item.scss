@@ -119,6 +119,10 @@
 
     cursor: pointer;
 
+    &:hover .b-school-list-item__link-name {
+        color: #ff0000;
+    }
+
     .b-school-list-item__section {
         margin-bottom: 2px;
     }

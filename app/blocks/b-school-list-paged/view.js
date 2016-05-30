@@ -250,13 +250,26 @@ goog.scope(function() {
      * @private
      */
     View.prototype.setInterval_ = function() {
+        var interval = this.calculateInterval_(5);
+        this.insertInterval_(interval);
+    };
+
+
+    /**
+     * calculate Interval
+     * @param {number} itemsPerPage
+     * @return {Object}
+     * @private
+     */
+    View.prototype.calculateInterval_ = function(itemsPerPage) {
         var lastItemIndex,
-            itemsPerPage = 5,
+            firstItemIndex,
             itemsCount = this.dom.schoolListItems.length;
 
         var skipedItemsCount = this.currentPage_ * itemsPerPage,
-            firstItemIndex = skipedItemsCount + 1,
             restItemsCount = itemsCount - skipedItemsCount;
+
+            firstItemIndex = skipedItemsCount + 1;
 
         if (restItemsCount < itemsPerPage) {
             lastItemIndex = itemsCount;
@@ -267,6 +280,29 @@ goog.scope(function() {
         var text = firstItemIndex + '\u2014' + lastItemIndex;
 
         goog.dom.setTextContent(this.dom.interval, text);
+
+        return {
+            'firstIndex': firstItemIndex,
+            'lastIndex': lastItemIndex
+        };
+    };
+
+
+    /**
+     * insert Interval
+     * @param {Object} interval
+     * @private
+     */
+    View.prototype.insertInterval_ = function(interval) {
+        goog.soy.renderElement(
+            this.dom.interval,
+            sm.bSchoolListPaged.Template.interval, {
+                'params': {
+                    'start': interval.firstIndex,
+                    'end': interval.lastIndex
+                }
+            }
+        );
     };
 
 

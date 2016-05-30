@@ -62,6 +62,14 @@ sm.bSchoolListItem.SchoolListItem = function(opt_params) {
      * @private
      */
     this.elements_ = {};
+
+
+    /**
+     * Defines clickable school item or not
+     * @type {boolean}
+     * @private
+     */
+    this.isActive_ = false;
 };
 goog.inherits(sm.bSchoolListItem.SchoolListItem,
     goog.ui.Component);
@@ -81,7 +89,8 @@ goog.scope(function() {
     ListItem.CssClass = {
         ROOT: 'b-school-list-item',
         LINK_NAME: 'b-school-list-item__name_bold',
-        SECTION_BADGES: 'b-school-list-item__section_badges'
+        SECTION_BADGES: 'b-school-list-item__section_badges',
+        ACTIVE_STATE: 'b-school-list-item_active'
     };
 
 
@@ -212,6 +221,7 @@ goog.scope(function() {
         goog.base(this, 'decorateInternal', element);
 
         this.initParams_();
+        this.initState_();
 
         var scoreElement = this.getElementByClass(
             ScoreMinimized.CssClass.ROOT
@@ -246,19 +256,21 @@ goog.scope(function() {
 
         var handler = this.getHandler();
 
-        if (this.elements_.sectionBadges) {
+        if (this.isActive_) {
+            if (this.elements_.sectionBadges) {
+                handler.listen(
+                    this.elements_.sectionBadges,
+                    goog.events.EventType.CLICK,
+                    this.onSectionBadgesClick_
+                );
+            }
+
             handler.listen(
-                this.elements_.sectionBadges,
+                this.getElement(),
                 goog.events.EventType.CLICK,
-                this.onSectionBadgesClick_
+                this.onClickListItem_
             );
         }
-
-        handler.listen(
-            this.getElement(),
-            goog.events.EventType.CLICK,
-            this.onClickListItem_
-        );
     };
 
     /**
@@ -294,6 +306,18 @@ goog.scope(function() {
         this.schoolId_ = this.params_.id;
         this.url_ = this.params_.url;
         this.name_ = this.params_.name['light'] + this.params_.name['bold'];
+    };
+
+
+    /**
+     * Detect whether control active
+     * @private
+     */
+    ListItem.prototype.initState_ = function() {
+        this.isActive_ = goog.dom.classlist.contains(
+            this.getElement(),
+            ListItem.CssClass.ACTIVE_STATE
+        );
     };
 
 

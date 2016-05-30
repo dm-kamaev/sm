@@ -21,7 +21,8 @@
  *                 id: number,
  *                 name: string
  *             ]
- *         }
+ *         },
+ *         countSchoolsPerPage: ?number
  *     }
  * }
  * @extends cl.iControl.Template
@@ -43,22 +44,35 @@
 {/template}
 
 
+
 /**
- * @param? params {?}
+ * @param? params {
+ *     data: {
+ *         schools: list<Object>
+ *     }
+ * }
  */
 {template .content_ kind="html" private="true"}
+    {let $schoolsPerPage: $params?.data?.countSchoolsPerPage ?: 5 /}
+
+    {let $pageCount:
+        $params?.data?.schools ?
+            ceiling(length($params?.data?.schools)/$schoolsPerPage) : 0
+    /}
+
     <div class="{call .rootClass/}__content">
-        {call .list_}
-            {param params: [
-                'data': [
-                    'schools': $params?.data?.schools
-                ],
-                'config': [
-                    'start': 0,
-                    'end': 5
-                ]
-            ]/}
-        {/call}
+        {for $i in range($pageCount)}
+            {call .list_}
+                {param params: [
+                    'data': [
+                        'schools': $params?.data?.schools,
+                        'pageCount': $pageCount,
+                        'pageNumber': $i,
+                        'schoolsPerPage': $schoolsPerPage
+                    ]
+                ]/}
+            {/call}
+        {/for}
     </div>
 {/template}
 
@@ -83,32 +97,25 @@
  *                 id: number,
  *                 name: string
  *             ]
- *         }
- *     },
- *     config: {
- *         start: number,
- *         end: number,
- *         customClasses: ? string
+ *         },
+ *         pageCount: ?number,
+ *         pageNumber: ?number,
+ *         schoolsPerPage: ?number
  *     }
  * }
  */
 {template .list_ kind="html" private="true"}
-    {let $schoolsCount: $params?.data?.schools ?
-        length($params?.data?.schools):
-        0
-    /}
+    {let $from: $params?.data?.pageNumber * $params?.data?.schoolsPerPage /}
 
-    {let $start: $params.config.start /}
-
-    {let $end: $params.config.end < $schoolsCount ?
-        $params.config.end :
-        $schoolsCount
+    {let $to: $params?.data?.pageNumber == $params?.data?.pageCount - 1 ?
+        length($params?.data?.schools) :
+        ($params?.data?.pageNumber + 1) * $params?.data?.schoolsPerPage
     /}
 
     <div class="{call .rootClass/}__list{sp}
-        {$params?.config?.customClasses ?: ''}">
+        {$params?.data?.pageNumber > 0 ? 'i-utils__hidden' : ''}">
 
-        {for $i in range($start, $end)}
+        {for $i in range($from, $to)}
             <div class="{call .rootClass/}__school">
                 {call sm.bSchoolListItem.Template.base}
                     {param params:[
@@ -119,27 +126,13 @@
                         'score': $params?.data?.schools[$i].score,
                         'metroStations': $params?.data?.schools[$i].metroStations,
                         'area': $params?.data?.schools[$i].area,
-                        'theme': 'minimal'
+                        'theme': 'minimal',
+                        'isNotClickable': true
                     ]/}
                 {/call}
             </div>
         {/for}
     </div>
-
-    {if $end < $schoolsCount}
-        {call .list_}
-            {param params: [
-                'data': [
-                    'schools': $params?.data?.schools
-                ],
-                'config': [
-                    'start': $start + 5,
-                    'end': $end + 5,
-                    'customClasses': 'i-utils__hidden'
-                ]
-            ]/}
-        {/call}
-    {/if}
 {/template}
 
 
@@ -233,7 +226,13 @@
  */
 {template .pages_ kind="html" private="true"}
     <span class="{call .rootClass/}__pages-count">
-        {call .interval_ /}
+        {call .interval}
+            {param params: [
+                'start': 1,
+                'end': 5
+            ]/}
+        {/call}
+
         {call .count_ data="all" /}
     </span>
 {/template}
@@ -241,10 +240,14 @@
 
 /**
  * Template interval
+ * @param params {
+ *     start: ?number,
+ *     end: ?number
+ * }
  */
-{template .interval_ kind="html" private="true"}
+{template .interval kind="html"}
     <span class="{call .rootClass/}__interval-count">
-        1&mdash;5
+        {$params.start}&mdash;{$params.end}
     </span>
 {/template}
 
@@ -264,7 +267,7 @@
     /}
 
     <span class="{call .rootClass/}__count">
-        из {$schoolsCount}
+        {sp}из {$schoolsCount}
     </span>
 {/template}
 
