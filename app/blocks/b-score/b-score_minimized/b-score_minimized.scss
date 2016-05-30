@@ -121,8 +121,8 @@
             display: block;
             font-size: 12px;
 
-            .b-score__mark.b-score__mark_type_visible {
-                .b-score__mark-value {
+            .b-score____mark.b-score__mark_type_visible {
+                .b-scoremark-value {
                     width: auto;
 
                     font-family: Arial, sans-serif;
@@ -142,14 +142,14 @@
         }
     }
     /** Compact theme end **/
-}
 
+    &.b-score_minimal {
+        .b-score__mark.b-score__mark_type_visible {
+            .b-score__mark-value {
+                width: 44px;
 
-@include media-m {
-    .b-score.b-score_minimized.b-score_default {
-        .b-score__mark-name {
-            &.b-score__mark-name_active {
-                display: none;
+                font-family: Arial, sans-serif;
+                font-weight: normal;
             }
         }
     }
@@ -157,13 +157,10 @@
 
 
 @include media-xs {
-    .b-score_minimal {
-        .b-score__mark.b-score__mark_type_visible {
-            .b-score__mark-value {
-                width: 44px;
-
-                font-family: Arial, sans-serif;
-                font-weight: normal;
+    .b-score.b-score_minimized.b-score_default {
+        .b-score__mark-name {
+            &.b-score__mark-name_active {
+                display: none;
             }
         }
     }

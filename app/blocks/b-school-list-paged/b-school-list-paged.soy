@@ -222,14 +222,18 @@
 
 /**
  * Template count
- * @param params {?}
+ * @param? params {
+ *     data: {
+ *         countSchoolsPerPage: ?number
+ *     }
+ * }
  */
 {template .pages_ kind="html" private="true"}
     <span class="{call .rootClass/}__pages-count">
         {call .interval}
             {param params: [
                 'start': 1,
-                'end': 5
+                'end': $params?.data?.countSchoolsPerPage ?: 5
             ]/}
         {/call}
 
