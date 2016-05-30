@@ -149,10 +149,10 @@ goog.scope(function() {
 
             var itemActiveLength = this.elements_.itemActive.length;
 
-            for (var i = 0, elem; i < itemActiveLength; i++) {
+            for (var i = 0, elem, data; i < itemActiveLength; i++) {
                 elem = this.elements_.itemActive[i];
-                var data = JSON.parse(goog.dom.dataset.get(elem, 'params'));
-                data.name = elem.textContent;
+                data = JSON.parse(goog.dom.dataset.get(elem, 'params'));
+                data['name'] = elem.textContent;
 
                 this.params_.data.push(data);
             }
@@ -188,7 +188,6 @@ goog.scope(function() {
      */
     Badge.prototype.onItemClickRatingMode_ = function() {
         this.toggleHintInlude_();
-        console.log('Toggle hint');
         this.getHandler().listen(
             document,
             goog.events.EventType.CLICK,
@@ -225,7 +224,6 @@ goog.scope(function() {
      * @private
      */
     Badge.prototype.toggleHintInlude_ = function() {
-        console.log(HintView.CssClass.INCLUDE_CLICK_MODE);
         goog.dom.classlist.toggle(
             this.getElement(),
             HintView.CssClass.INCLUDE_CLICK_MODE
