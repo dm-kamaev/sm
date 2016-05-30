@@ -64,6 +64,16 @@
     {$params.data.title}
 {/template}
 
+/**
+ * @param? params {?}
+ * @override
+ */
+{template .description autoescape="strict" kind="html"}
+    {if $params.data?.description}
+        <meta name="description" content="{$params.data?.description}"></meta>
+    {/if}
+{/template}
+
 
 /**
  * @override

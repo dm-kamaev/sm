@@ -90,7 +90,8 @@ schoolView.default = function(schoolInstance, data, user, opt_popularSchools) {
             firstName: user.firstName,
             lastName: user.lastName,
             data: user.data
-        }
+        },
+        seoDescription: schoolInstance.seoDescription
     };
     if (data.popularSchools) {
         result.popularSchools = this.popular(data.popularSchools);

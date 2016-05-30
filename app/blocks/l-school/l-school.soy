@@ -90,7 +90,8 @@
  *        authSocialLinks: [
  *            vk: ?string,
  *            fb: ?string
- *        ]
+ *        ],
+ *        seoDescription: ?string
  *     ],
  *     searchText: ?string,
  *     config: ?{
@@ -105,16 +106,18 @@
  * }
  */
 {template .school autoescape="strict" kind="html"}
+    {let $title: $params.data?.schoolName +
+        ' Москва: контакты, отзывы. Школы Мела.' /}
+
     {let $content kind="html"}
         {call .content_ data="all" /}
     {/let}
-
-    {let $title: $params.data?.schoolName + ' на Школах Мела' /}
 
     {call sm.iLayout.Template.layout}
         {param params: [
             'data': [
                 'title': $title,
+                'description': $params?.data.seoDescription,
                 'content': $content,
                 'header': [
                     'searchText': $params.searchText,

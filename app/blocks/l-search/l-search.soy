@@ -36,13 +36,24 @@
  * }
  */
 {template .base autoescape="strict" kind="html"}
+    {let $title kind="text"}
+        Школы Москвы. Вся информация о школах Москвы, отзывы, контакты.
+        Школы Мела.
+    {/let}
+    {let $description kind="text"}
+        Информационный портал Школы Мела - лучший сайт для выбора школы.
+        Полная информация о школах Москвы: адреса и телефоны, результаты
+        экзаменов и олимпиад, профильные классы и дополнительные занятия.
+        Отзывы родителей и выпускников.
+    {/let}
     {let $content kind="html"}
         {call .layoutContent_ data="all" /}
     {/let}
     {call sm.iLayout.Template.layout}
         {param params: [
             'data': [
-                'title': 'Школы Мела',
+                'title': $title,
+                'description': $description,
                 'content': $content,
                 'header': [
                     'searchRedirect': true,
@@ -100,10 +111,10 @@
     <div class="l-search__header-wrap">
         <div class="l-search__header">
             <div class="l-search__header-content">
-                <div class="l-search__title">
+                <h1 class="l-search__title">
                     Найдите в&nbsp;Москве лучшую школу
                     для&nbsp;вашего&nbsp;ребёнка
-                </div>
+                </h1>
 
                 <ul class="l-search__title-list">
                     {call .listItem_}

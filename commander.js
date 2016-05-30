@@ -22,6 +22,7 @@ require('./console/parse_area.js').Command;
 require('./console/parseExt.js').Command;
 require('./console/parseMail.js').Command;
 require('./console/parsePguActs.js').Command;
+require('./console/seoDescription.js').Command;
 require('./console/rating').Command;
 require('./console/updateRanks.js').Command;
 require('./console/updateSchoolNames.js').Command;

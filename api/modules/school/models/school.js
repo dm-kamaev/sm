@@ -115,6 +115,10 @@ var School = db.define('School', {
     url: {
         type: DataType.STRING,
         unique: true
+    },
+    seoDescription: {
+        type: DataType.STRING(300),
+        field: 'seo_description'
     }
 }, {
     underscored: true,
