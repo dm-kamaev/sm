@@ -1,4 +1,4 @@
-goog.provide('sm.lSearchResult.bSchoolListItem.SchoolListItem');
+goog.provide('sm.bSchoolListItem.SchoolListItem');
 
 goog.require('goog.dom.dataset');
 goog.require('goog.events');
@@ -15,7 +15,7 @@ goog.require('sm.bScore.ScoreMinimized');
  * @constructor
  * @extends {goog.ui.Component}
  */
-sm.lSearchResult.bSchoolListItem.SchoolListItem = function(opt_params) {
+sm.bSchoolListItem.SchoolListItem = function(opt_params) {
     goog.base(this);
 
 
@@ -31,7 +31,7 @@ sm.lSearchResult.bSchoolListItem.SchoolListItem = function(opt_params) {
      *  @private
      *  @type {number}
      */
-    this.id_ = this.params_.id;
+    this.schoolId_ = this.params_.id;
 
 
     /**
@@ -45,7 +45,7 @@ sm.lSearchResult.bSchoolListItem.SchoolListItem = function(opt_params) {
      * @private
      * @type {string}
      */
-    this.name_ = this.params_.name['light'] + this.params_.name['bold'];
+    this.name_ = this.params_.name;
 
 
     /**
@@ -62,13 +62,21 @@ sm.lSearchResult.bSchoolListItem.SchoolListItem = function(opt_params) {
      * @private
      */
     this.elements_ = {};
+
+
+    /**
+     * Defines clickable school item or not
+     * @type {boolean}
+     * @private
+     */
+    this.isActive_ = false;
 };
-goog.inherits(sm.lSearchResult.bSchoolListItem.SchoolListItem,
+goog.inherits(sm.bSchoolListItem.SchoolListItem,
     goog.ui.Component);
 
 
 goog.scope(function() {
-    var ListItem = sm.lSearchResult.bSchoolListItem.SchoolListItem,
+    var ListItem = sm.bSchoolListItem.SchoolListItem,
         ScoreMinimized = sm.bScore.ScoreMinimized,
         Badge = sm.bBadge.Badge,
         Analytics = sm.iAnalytics.Analytics.getInstance();
@@ -81,36 +89,8 @@ goog.scope(function() {
     ListItem.CssClass = {
         ROOT: 'b-school-list-item',
         LINK_NAME: 'b-school-list-item__name_bold',
-        SECTION_BADGES: 'b-school-list-item__section_badges'
-    };
-
-
-    /**
-     * Returns score
-     * @public
-     * @param {number=} opt_index
-     * @return {(Array.<number>|number)}
-     */
-    ListItem.prototype.getScore = function(opt_index) {
-        var res;
-        if (typeof opt_index != 'undefined') {
-            res = this.score_[opt_index].value;
-        }
-        else {
-            res = this.score_.map(function(item) {
-                return item.value;
-            });
-        }
-        return res;
-    };
-
-
-    /**
-     * Returns total score
-     * @return  {number}
-     */
-    ListItem.prototype.getTotalScore = function() {
-        return this.currentCriterion_;
+        SECTION_BADGES: 'b-school-list-item__section_badges',
+        ACTIVE_STATE: 'b-school-list-item_active'
     };
 
 
@@ -118,70 +98,18 @@ goog.scope(function() {
      * Returns item id
      * @return {number}
      */
-    ListItem.prototype.getId = function() {
-        return this.id_;
-    };
-
-
-    /**
-     * Compare by total score descending
-     * then by presence of score
-     * then by id asc
-     * @param {sm.lSearchResult.bSchoolListItem.SchoolListItem} item
-     * @return {number}
-     */
-    ListItem.prototype.compareByTotalScore = function(item) {
-        var result;
-
-        result = item.getTotalScore() - this.getTotalScore();
-
-        if (result === 0) {
-            var itemZeroScore,
-                thisZeroScore;
-
-            itemZeroScore = this.checkScore_(item.getScore());
-            thisZeroScore = this.checkScore_(this.getScore());
-
-            if (itemZeroScore && !thisZeroScore) {
-                result = -1;
-            }
-            else if (!itemZeroScore && thisZeroScore) {
-                result = 1;
-            }
-            else {
-                result = this.compareById(item);
-            }
-        }
-        return result;
-    };
-
-
-    /**
-     * Compare by score desc then by total score desc then by id asc
-     * @param {sm.lSearchResult.bSchoolListItem.SchoolListItem} item
-     * @param {number} index
-     * @return {number}
-     */
-    ListItem.prototype.compareByScore = function(item, index) {
-        var result;
-
-        result = item.getScore(index) - this.getScore(index);
-
-        if (result === 0) {
-            result = this.compareByTotalScore(item);
-        }
-
-        return result;
+    ListItem.prototype.getSchoolId = function() {
+        return this.schoolId_;
     };
 
 
     /**
      * Compare by id ascending
-     * @param {sm.lSearchResult.bSchoolListItem.SchoolListItem} item
+     * @param {sm.bSchoolListItem.SchoolListItem} item
      * @return {number}
      */
     ListItem.prototype.compareById = function(item) {
-        return this.getId() - item.getId();
+        return this.getSchoolId() - item.getSchoolId();
     };
 
 
@@ -190,7 +118,7 @@ goog.scope(function() {
      */
     ListItem.prototype.getImpressionData = function() {
         return {
-            id: this.id_,
+            id: this.schoolId_,
             name: this.name_,
             position: this.params_.position,
             list: 'Search Results'
@@ -208,7 +136,7 @@ goog.scope(function() {
             score = params['score'];
 
         var element = goog.soy.renderAsElement(
-            sm.lSearchResult.bSchoolListItem.Template.base,
+            sm.bSchoolListItem.Template.base,
             {
                 params: {
                     id: params['id'],
@@ -291,8 +219,13 @@ goog.scope(function() {
      */
     ListItem.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
-        var scoreElement;
-        scoreElement = this.getElementByClass(ScoreMinimized.CssClass.ROOT);
+
+        this.initParams_();
+        this.initState_();
+
+        var scoreElement = this.getElementByClass(
+            ScoreMinimized.CssClass.ROOT
+        );
         this.scoreInstance_ = new ScoreMinimized();
         this.addChild(this.scoreInstance_);
         this.scoreInstance_.decorate(scoreElement);
@@ -323,19 +256,21 @@ goog.scope(function() {
 
         var handler = this.getHandler();
 
-        if (this.elements_.sectionBadges) {
+        if (this.isActive_) {
+            if (this.elements_.sectionBadges) {
+                handler.listen(
+                    this.elements_.sectionBadges,
+                    goog.events.EventType.CLICK,
+                    this.onSectionBadgesClick_
+                );
+            }
+
             handler.listen(
-                this.elements_.sectionBadges,
+                this.getElement(),
                 goog.events.EventType.CLICK,
-                this.onSectionBadgesClick_
+                this.onClickListItem_
             );
         }
-
-        handler.listen(
-            this.getElement(),
-            goog.events.EventType.CLICK,
-            this.onClickListItem_
-        );
     };
 
     /**
@@ -360,22 +295,29 @@ goog.scope(function() {
 
 
     /**
-     * Compare input array with null score:[0, 0, 0, 0]
-     * and return true if they equals
-     * @param {Array} score
-     * @return {boolean}
+     * get params from Dom and add params in field
      * @private
      */
-    ListItem.prototype.checkScore_ = function(score) {
-        var nullScore = [0, 0, 0, 0],
-            result = true;
+    ListItem.prototype.initParams_ = function() {
+        this.params_ = JSON.parse(
+            this.getElement().getAttribute('data-params')
+        );
 
-        for (var i = 0, l = score.length; i < l; i++) {
-            if (score[i] != nullScore[i]) {
-                result = false;
-            }
-        }
-        return result;
+        this.schoolId_ = this.params_.id;
+        this.url_ = this.params_.url;
+        this.name_ = this.params_.name['light'] + this.params_.name['bold'];
+    };
+
+
+    /**
+     * Detect whether control active
+     * @private
+     */
+    ListItem.prototype.initState_ = function() {
+        this.isActive_ = goog.dom.classlist.contains(
+            this.getElement(),
+            ListItem.CssClass.ACTIVE_STATE
+        );
     };
 
 
@@ -399,7 +341,6 @@ goog.scope(function() {
             'eventAction': 'results click',
             'eventLabel': this.name_
         };
-
         Analytics.send(dataAnalytics);
     };
 });  // goog.scope

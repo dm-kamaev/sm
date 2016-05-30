@@ -72,7 +72,7 @@
         </div>
         <div class="b-school-list__body">
             {foreach $school in $params.schools}
-                {call sm.lSearchResult.bSchoolListItem.Template.base}
+                {call sm.bSchoolListItem.Template.base}
                     {param params:[
                         'id': $school.id,
                         'url': $school.url,

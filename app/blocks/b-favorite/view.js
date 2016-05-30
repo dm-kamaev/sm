@@ -1,21 +1,18 @@
-goog.provide('sm.bAuthorizationLink.View');
+goog.provide('sm.bFavorite.View');
 
-goog.require('cl.gHint.View');
 goog.require('cl.iControl.View');
-goog.require('cl.iUtils.Utils');
-goog.require('goog.dom.classlist');
 
 
 
 /**
- * AuthorizationLink View
+ * Constructor
  * @param {Object=} opt_params
  * @param {string=} opt_type
  * @param {string=} opt_modifier
  * @constructor
  * @extends {cl.iControl.View}
  */
-sm.bAuthorizationLink.View = function(opt_params, opt_type, opt_modifier) {
+sm.bFavorite.View = function(opt_params, opt_type, opt_modifier) {
     goog.base(this, opt_params, opt_type, opt_modifier);
 
     /**
@@ -25,31 +22,21 @@ sm.bAuthorizationLink.View = function(opt_params, opt_type, opt_modifier) {
      */
     this.isHintVisible_ = false;
 };
-goog.inherits(sm.bAuthorizationLink.View, cl.iControl.View);
+goog.inherits(sm.bFavorite.View, cl.iControl.View);
+
 
 goog.scope(function() {
-    var View = sm.bAuthorizationLink.View;
+    var View = sm.bFavorite.View;
+
 
     /**
      * Css class enum
      * @enum {string}
      */
     View.CssClass = {
-        ROOT: 'b-authorization-link',
-        ICON: 'b-authorization-link__icon-wrap',
-        HINT: 'b-authorization-link__hint-content',
-        LOGIN_LINK: 'b-authorization-link__link_login',
-        LOGOUT_LINK: 'b-authorization-link__link_logout'
-    };
-
-
-    /**
-     * Event enum
-     * @enum {String}
-     */
-    View.Event = {
-        LOGIN: 'login-click',
-        LOGOUT: 'logout-click'
+        ROOT: 'b-favorite',
+        ICON: 'b-favorite__icon-wrap',
+        HINT: 'b-favorite__hint-content'
     };
 
 
@@ -81,18 +68,6 @@ goog.scope(function() {
             goog.events.EventType.CLICK,
             this.onDocumentClick_
         );
-
-        this.getHandler().listen(
-            this.dom.loginLink,
-            goog.events.EventType.CLICK,
-            this.onLoginLinkClick_
-        );
-
-        this.getHandler().listen(
-            this.dom.logoutLink,
-            goog.events.EventType.CLICK,
-            this.onLogoutLinkClick_
-        );
     };
 
 
@@ -109,32 +84,6 @@ goog.scope(function() {
      */
     View.prototype.hideHint = function() {
         this.setHintVisibility_(false);
-    };
-
-
-    /**
-     * Login Link Click
-     * @private
-     */
-    View.prototype.onLoginLinkClick_ = function() {
-        this.hideHint();
-
-        this.dispatchEvent({
-            'type': View.Event.LOGIN
-        });
-    };
-
-
-    /**
-     * Logout Link Click
-     * @private
-     */
-    View.prototype.onLogoutLinkClick_ = function() {
-        this.hideHint();
-
-        this.dispatchEvent({
-            'type': View.Event.LOGOUT
-        });
     };
 
 
@@ -202,11 +151,8 @@ goog.scope(function() {
             hint: this.getElementByClass(
                 View.CssClass.HINT
             ),
-            loginLink: this.getElementByClass(
-                View.CssClass.LOGIN_LINK
-            ),
-            logoutLink: this.getElementByClass(
-                View.CssClass.LOGOUT_LINK
+            schoolListPaged: this.getElementByClass(
+                sm.bSchoolListPaged.View.CssClass.ROOT
             )
         };
     };

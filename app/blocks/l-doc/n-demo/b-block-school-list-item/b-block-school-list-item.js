@@ -1,17 +1,17 @@
 goog.provide('sm.lDoc.nDemo.bBlockSchoolListItem.SchoolListItem');
 
-goog.require('sm.lSearchResult.bSchoolListItem.SchoolListItem');
+goog.require('sm.bSchoolListItem.SchoolListItem');
 goog.require('goog.dom');
 
 sm.lDoc.nDemo.bBlockSchoolListItem.SchoolListItem = function() {
 
     var elements = goog.dom.getElementsByClass(
-        sm.lSearchResult.bSchoolListItem.SchoolListItem.CssClass.ROOT
+        sm.bSchoolListItem.SchoolListItem.CssClass.ROOT
     );
 
     var schoolListItem;
     for (var i = 0, elem; elem = elements[i]; i++) {
-        schoolListItem = new sm.lSearchResult.bSchoolListItem.SchoolListItem({
+        schoolListItem = new sm.bSchoolListItem.SchoolListItem({
             'id': 10,
             'score': [
                 {'name': 'Образование', 'value': 2.3},

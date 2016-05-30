@@ -59,6 +59,13 @@ sm.bHeader.Header = function(view, opt_domHelper) {
      * @private
      */
     this.authorizationLink_ = null;
+
+    /**
+     * favorite instance
+     * @type {sm.bFavorite.Favorite}
+     * @private
+     */
+    this.favorite_ = null;
 };
 goog.inherits(sm.bHeader.Header, cl.iControl.Control);
 
@@ -132,6 +139,11 @@ goog.scope(function() {
         this.authorizationLink_ = this.decorateChild(
             'authorization-link',
             domElements.authorizationLink
+        );
+
+        this.favorite_ = this.decorateChild(
+            'favorite',
+            domElements.favorite
         );
     };
 

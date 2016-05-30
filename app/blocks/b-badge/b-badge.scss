@@ -10,8 +10,10 @@
 
     text-decoration: none;
     color: #808080;
+}
 
-    &:hover {
+.b-badge_active {
+    .b-badge__item:hover {
         color: #ee362c;
     }
 }

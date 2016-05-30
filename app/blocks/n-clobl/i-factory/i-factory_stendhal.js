@@ -9,10 +9,14 @@ goog.require('sm.bBanner.Banner');
 goog.require('sm.bBanner.View');
 goog.require('sm.bDataBlock.DataBlockFeatures');
 goog.require('sm.bDataBlock.DataBlockFeaturesView');
+goog.require('sm.bFavorite.Favorite');
+goog.require('sm.bFavorite.View');
 goog.require('sm.bHeader.Header');
 goog.require('sm.bHeader.View');
 goog.require('sm.bPopularSchools.PopularSchools');
 goog.require('sm.bPopularSchools.View');
+goog.require('sm.bSchoolListPaged.SchoolListPaged');
+goog.require('sm.bSchoolListPaged.View');
 goog.require('sm.bSearchPanel.SearchPanel');
 goog.require('sm.bSearchPanel.View');
 goog.require('sm.gAuthSocial.ViewStendhal');
@@ -101,6 +105,14 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('authorization', {
             control: sm.bAuthorization.Authorization,
             view: sm.bAuthorization.View
+        })
+        .setControlListItem('favorite', {
+            control: sm.bFavorite.Favorite,
+            view: sm.bFavorite.View
+        })
+        .setControlListItem('school-list-paged', {
+            control: sm.bSchoolListPaged.SchoolListPaged,
+            view: sm.bSchoolListPaged.View
         });
 };
 goog.inherits(sm.iFactory.FactoryStendhal, cl.iFactory.Factory);

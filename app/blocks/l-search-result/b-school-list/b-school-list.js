@@ -3,9 +3,9 @@ goog.provide('sm.lSearchResult.bSchoolList.SchoolList');
 goog.require('goog.dom.classlist');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
+goog.require('sm.bSchoolListItem.SchoolListItem');
 goog.require('sm.iFactory.FactoryStendhal');
 goog.require('sm.lSearchResult.bSchoolList.Template');
-goog.require('sm.lSearchResult.bSchoolListItem.SchoolListItem');
 
 
 
@@ -29,7 +29,7 @@ sm.lSearchResult.bSchoolList.SchoolList = function(opt_params) {
 
     /**
      * Array of instances of list elements
-     * @type {Array.<sm.lSearchResult.bSchoolListItem.SchoolListItem>}
+     * @type {Array.<sm.bSchoolListItem.SchoolListItem>}
      * @private
      */
     this.schoolListItems_ = [];
@@ -70,7 +70,7 @@ goog.inherits(sm.lSearchResult.bSchoolList.SchoolList, goog.ui.Component);
 
 goog.scope(function() {
     var SchoolList = sm.lSearchResult.bSchoolList.SchoolList,
-        SchoolListItem = sm.lSearchResult.bSchoolListItem.SchoolListItem;
+        SchoolListItem = sm.bSchoolListItem.SchoolListItem;
 
 
     /**
@@ -121,7 +121,6 @@ goog.scope(function() {
         goog.base(this, 'decorateInternal', element);
         var schoolListItemInstance,
             schoolListItemElements,
-            params,
             length;
 
         //dom elements of schools
@@ -134,20 +133,7 @@ goog.scope(function() {
         for (var i = 0, item; i < length; i++) {
             item = schoolListItemElements[i];
 
-            params = JSON.parse(
-                item.getAttribute('data-params')
-            );
-
-            schoolListItemInstance = new SchoolListItem({
-                'id': params.id,
-                'score': params.score,
-                'currentCriterion': params.currentCriterion,
-                'isScoreClickable': params.isScoreClickable,
-                'url': params.url,
-                'name': params.name,
-                'position': params.position
-            });
-
+            schoolListItemInstance = new SchoolListItem();
 
             this.addChild(schoolListItemInstance);
             this.schoolListItems_.push(schoolListItemInstance);
@@ -187,34 +173,6 @@ goog.scope(function() {
         goog.base(this, 'enterDocument');
 
         this.initListeners_();
-    };
-
-
-    /**
-     * TODO: repair
-     * Schools sort maker
-     * @param {number=} opt_sortKey
-     */
-    SchoolList.prototype.sort = function(opt_sortKey) {
-        var schoolListItems = this.removeItemChildren_();
-        var sortKey = (typeof opt_sortKey == 'undefined') ?
-            this.sortKey_ :
-            opt_sortKey;
-        this.sortKey_ = sortKey;
-
-        schoolListItems.sort(function(item1, item2) {
-            return (sortKey > 0) ?
-                item1.compareByScore(item2, sortKey - 1) :
-                item1.compareByTotalScore(item2);
-        });
-
-        schoolListItems.forEach(function(item) {
-            item.changeSorCriterion(sortKey);
-        });
-
-        for (var i = 0; i < schoolListItems.length; i++) {
-            this.addChild(schoolListItems[i]);
-        }
     };
 
 
@@ -403,7 +361,7 @@ goog.scope(function() {
     /**
      * Remove school list item children
      * @param {bool=} opt_unrender
-     * @return {Array.<sm.lSearchResult.bSchoolListItem.SchoolListItem>}
+     * @return {Array.<sm.bSchoolListItem.SchoolListItem>}
      * @private
      */
     SchoolList.prototype.removeItemChildren_ = function(opt_unrender) {
