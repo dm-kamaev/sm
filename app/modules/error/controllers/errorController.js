@@ -1,6 +1,7 @@
 var soy = require.main.require('./app/components/soy');
 var services = require('../../../../app/components/services').all;
 const schoolView = require('../../../../api/modules/school/views/schoolView');
+const userView = require('../../../../api/modules/user/views/user');
 
 const config = require('../../../config').config;
 const analyticsId = config.analyticsId;
@@ -16,12 +17,16 @@ exports.notFound = async(function(req, res) {
         amountSchools: services.school.getSchoolsCount(),
         authSocialLinks: services.auth.getAuthSocialUrl()
     };
-
     var data = await(dataPromises);
-        searchUrl = '/search?name=';
+
+    var user = req.user || {};
 
     var html = soy.render('sm.lErrorNotFound.Template.base', {
           params: {
+              data: {
+                  user: userView.default(user),
+                  authSocialLinks: data.authSocialLinks
+              },
               errorText: 'Страница, которую вы искали, не найдена',
               popularSchools: schoolView.popular(data.popularSchools),
               dataLinks : schoolView.dataLinks(),

@@ -4,25 +4,24 @@
 /**
  * Header parameters
  * @typedef {Object} sm.bHeader.Template.Params
- * @property {Object} data
- * @property {Object} config
+ * @property {?string} url
+ * @property {?string} searchText
+ * @property {?boolean} searchRedirect
+ * @property {boolean=} bottomLine
+ *
+ * @property {Object} user
+ * @property {string=} user.firstName
+ * @property {?string} user.lastName
+ * @property {?number} user.id
+ *
+ * @property {sm.bSchoolListPaged.Template.data.schools} favorite
  */
 
 
 /**
  * Header
  * @param params {{
- *     data: {
- *          url: ?string,
- *          searchText: ?string,
- *          searchRedirect: ?boolean,
- *          bottomLine: ?boolean,
- *          user: ?{
- *              firstName: ?string,
- *              lastName: ?string
- *          },
- *          favorite: sm.bSchoolListPaged.Template.data.schools
- *     },
+ *     data: ?sm.bHeader.Template.Params,
  *     config: ?sm.iLayout.Template.Params.Config
  * }}
  */
@@ -35,7 +34,7 @@
         <div class="b-header__body">
             <div class="b-header__section
                 b-header__section_logo
-                 i-animate">
+                i-animate">
                 {call .logo_ data="all"/}
             </div>
 
@@ -124,7 +123,7 @@
                     'type': 'authorization-link',
                     'renderParams': [
                         'data': [
-                            'user': $params?.user
+                            'user': $params?.data?.user
                         ]
                     ]
                 ]/}

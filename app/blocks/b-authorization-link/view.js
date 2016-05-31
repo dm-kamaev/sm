@@ -87,7 +87,6 @@ goog.scope(function() {
             goog.events.EventType.CLICK,
             this.onLoginLinkClick_
         );
-
         this.getHandler().listen(
             this.dom.logoutLink,
             goog.events.EventType.CLICK,
