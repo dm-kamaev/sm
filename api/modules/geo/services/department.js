@@ -134,9 +134,13 @@ exports.addressesFilter = function(addressList) {
             if (address.departments.length > 0) {
                 address.departments.forEach(department => {
                     if (department.stage ===
-                        departmentStage.fields.ELEMENTARY ||
+                            departmentStage.fields.ELEMENTARY ||
                         department.stage ===
-                        departmentStage.fields.MIDDLE_HIDE) {
+                            departmentStage.fields.MIDDLE ||
+                        department.stage ===
+                            departmentStage.fields.HIGH ||
+                        department.stage ===
+                            departmentStage.fields.MIDDLE_HIDE) {
                         res = true;
                     }
                 });

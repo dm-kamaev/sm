@@ -47,7 +47,11 @@ addressView.stageList = function (addresses, opt_options) {
     var addresses = this.list(addresses, opt_options),
         stagesEnum = [
             'Начальные классы',
-            'Старшие и средние классы',
+            'Средние классы',
+            'Старшие классы',
+            'Начальные и средние классы',
+            'Начальные и старшие классы',
+            'Средние и старшие классы',
             '1 — 11 классы',
             'Другие адреса'
         ],
@@ -173,7 +177,9 @@ var filterBydepartment = function(addresses) {
         else {
             var neededStage = address.departments.find(department => {
                 if (department.stage == stages.ELEMENTARY ||
-                    department.stage == stages.MIDDLE_HIDE)
+                    department.stage == stages.MIDDLE_HIDE ||
+                    department.stage == stages.MIDDLE ||
+                    department.stage == stages.HIGH)
                     return true;
             });
 
