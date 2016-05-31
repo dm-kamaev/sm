@@ -3,18 +3,17 @@
 
 /**
  * Header parameters
- * @typedef {Object} sm.bHeader.Template.Params
- * @property {?string} url
- * @property {?string} searchText
- * @property {?boolean} searchRedirect
- * @property {boolean=} bottomLine
- *
- * @property {Object} user
- * @property {string=} user.firstName
- * @property {?string} user.lastName
- * @property {?number} user.id
- *
- * @property {sm.bSchoolListPaged.Template.data.schools} favorite
+ * @typedef {{
+ *      url: ?string,
+ *      searchText: ?string,
+ *      searchRedirect: ?boolean,
+ *      bottomLine: ?boolean,
+ *      user: ?{
+ *          firstName: ?string,
+ *          lastName: ?string
+ *      },
+ *      favorite: sm.bSchoolListPaged.Template.data.schools
+ * }} sm.bHeader.Template.Params
  */
 
 
