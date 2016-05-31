@@ -1,0 +1,156 @@
+{namespace sm.bFavoriteLink.Template}
+
+/**
+ * Constructor
+ * @param params {
+ *     data: {
+ *         isFavorite: boolean
+ *     },
+ *     config: {
+ *         theme: ?string
+ *    }
+ * }
+ * @extends cl.iControl.Template
+ * @constructor
+ */
+{template .favoriteLink}
+    {call .init data="all" /}
+{/template}
+
+
+/**
+ * Body
+ * @param params {?}
+ * @override
+ */
+{template .body}
+    {call .icon_ data="all" /}
+    {call .link_ data="all" /}
+{/template}
+
+
+/**
+ * Icon
+ * @param params {
+ *     data: {
+ *         isFavorite: boolean
+ *     }
+ * }
+ */
+{template .icon_ kind="html" private="true"}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__icon{sp}
+    {/let}
+
+    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+        {param params: [
+            'factory': 'stendhal',
+            'type': 'icon',
+            'renderParams': [
+                'data': [
+                    'type': $params.data?.isFavorite ?
+                        'favorite_red' :
+                        'favorite'
+                ],
+                'config': [
+                    'customClasses': [$customClasses],
+                    'size': 'm'
+                ]
+            ]
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * Link to add to favorites or remove
+ */
+{template .link_ kind="html" private="true"}
+    {call .linkNotFavorite_ /}
+    {call .linkFavorite_ /}
+{/template}
+
+
+/**
+ * Link to add to favorites
+ */
+{template .linkNotFavorite_ kind="html" private="true"}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__link
+    {/let}
+
+    {let $name kind="html"}
+        <div class="{call .rootClass/}__link {call .rootClass/}__link_l">
+            Добавить{sp}
+        </div>
+
+        <div class="{call .rootClass/}__link {call .rootClass/}__link_s">
+            в избранное
+        </div>
+    {/let}
+
+    <div class="{call .rootClass/}__link-wrap
+        {sp}{call .rootClass/}__link-wrap_not-favorite">
+        {call sm.bLink.Template.base}
+            {param params:[
+                'data': [
+                    'name': $name
+                ],
+                'config': [
+                    'customClasses': $customClasses
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Link to remove to favorites
+ */
+{template .linkFavorite_ kind="html" private="true"}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__link
+    {/let}
+
+    <div class="{call .rootClass/}__link-wrap
+        {sp}{call .rootClass/}__link-wrap_favorite">
+
+        {call sm.bLink.Template.base}
+            {param params:[
+                'data': [
+                    'name': 'В избранном'
+                ],
+                'config': [
+                    'customClasses': $customClasses
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-favorite-link
+{/template}
+
+
+/**
+ * @override
+ * @param params {
+ *     data: {
+ *         isFavorite: boolean
+ *     }
+ * }
+ */
+{template .additionalClasses}
+    {if $params.data?.isFavorite}
+        {sp}{call .rootClass/}_favorite
+    {else}
+        {sp}{call .rootClass/}_not-favorite
+    {/if}
+{/template}
