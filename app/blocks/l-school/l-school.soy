@@ -202,18 +202,20 @@
  */
 {template .sectionDescription_ autoescape="strict" kind="html"}
     <div class="l-school__section l-school__section_description">
-        {call .name_ data="all" /}
+        <div class="l-school__title">
+            {call .name_ data="all" /}
 
-        {call .favoriteLink_}
-            {param params: [
-                'data': [
-                    'isFavorite': $params.data?.isFavorite
-                ],
-                'config': [
-                    'modifier': 'l'
-                ]
-            ]/}
-        {/call}
+            {call .favoriteLink_}
+                {param params: [
+                    'data': [
+                        'isFavorite': $params.data?.isFavorite
+                    ],
+                    'config': [
+                        'modifier': 'l'
+                    ]
+                ]/}
+            {/call}
+        </div>
 
         {call .metro_ data="all" /}
         {call .description_ data="all" /}
@@ -242,7 +244,7 @@
  *          isFavorite: boolean
  *      },
  *      config: {
- *          modifier: {
+ *          modifier: ?string
  *     }
  * }
  */
@@ -263,6 +265,9 @@
                 'renderParams': [
                     'data': [
                         'isFavorite': $params.data?.isFavorite ?: false
+                    ],
+                    'config': [
+                        'theme': 'full'
                     ]
                 ]
             ]/}

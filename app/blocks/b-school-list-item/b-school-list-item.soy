@@ -23,7 +23,8 @@
  *     ratings: ?list<string>,
  *     position: ?number,
  *     theme: ?string,
- *     isNotClickable: ?bool
+ *     isNotClickable: ?bool,
+ *     isFavorite: ?bool
  * }
  */
 {template .base autoescape="strict" kind="html"}
@@ -82,15 +83,19 @@
         <div class="b-school-list-item__section
             b-school-list-item__section_badges">
 
-            {if $params?.metroStations and length($params?.metroStations)}
-                {call .metro_ data="all" /}
-            {elseif $params?.area?.name}
-                {call .area_ data="all" /}
-            {/if}
+            <div class="b-school-list-item__position">
+                {if $params?.metroStations and length($params?.metroStations)}
+                    {call .metro_ data="all" /}
+                {elseif $params?.area?.name}
+                    {call .area_ data="all" /}
+                {/if}
 
-            {if $params?.ratings and length($params?.ratings)}
-                {call .rating_ data="all" /}
-            {/if}
+                {if $params?.ratings and length($params?.ratings)}
+                    {call .rating_ data="all" /}
+                {/if}
+            </div>
+
+            {call .favoriteLink_ data="all" /}
         </div>
     {/if}
 {/template}
@@ -173,6 +178,40 @@
             ]/}
         {/call}
     </div>
+{/template}
+
+
+/**
+ * favorite Link
+ * @param? params {
+ *     isNotClickable: bool,
+ *     isFavorite: bool
+ * }
+ */
+{template .favoriteLink_ kind="html" private="true"}
+    {let $classes kind="html"}
+        b-school-list-item__favorite
+        {if $params?.isNotClickable}
+            {sp}i-utils__hidden
+        {/if}
+    {/let}
+
+    <div class="{$classes}">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': 'stendhal',
+                'type': 'favorite-link',
+                'renderParams': [
+                    'data': [
+                        'isFavorite': $params.data?.isFavorite ?: false
+                    ],
+                    'config': [
+                        'theme': 'light'
+                    ]
+                ]
+            ]/}
+        {/call}
+     </div>
 {/template}
 
 

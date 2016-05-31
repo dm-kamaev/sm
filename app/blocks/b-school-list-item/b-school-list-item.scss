@@ -32,7 +32,12 @@
     &:last-child {
         margin-bottom: 0;
     }
+}
 
+.b-school-list-item__position {
+    display: inline-block;
+
+    margin-right: 25px;
 }
 
 .b-school-list-item__metro-stations {
@@ -48,6 +53,10 @@
 }
 
 .b-school-list-item__ratings {
+    display: inline-block;
+}
+
+.b-school-list-item__favorite {
     display: inline-block;
 }
 

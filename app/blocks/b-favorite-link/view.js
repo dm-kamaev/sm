@@ -87,7 +87,6 @@ goog.scope(function() {
     View.prototype.onClick_ = function() {
         var isFavorite = this.isFavorite_();
 
-        console.log(isFavorite);
         if (isFavorite) {
             this.onFavoriteClick_();
         }

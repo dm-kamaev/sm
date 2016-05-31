@@ -25,7 +25,7 @@
  */
 {template .body}
     {call .icon_ data="all" /}
-    {call .link_ data="all" /}
+    {call .links_ data="all" /}
 {/template}
 
 
@@ -34,12 +34,23 @@
  * @param params {
  *     data: {
  *         isFavorite: boolean
- *     }
+ *     },
+ *     config: {
+ *         theme: ?string
+ *    }
  * }
  */
 {template .icon_ kind="html" private="true"}
     {let $customClasses kind="html"}
         {call .rootClass/}__icon{sp}
+    {/let}
+
+    {let $iconSize kind="html"}
+        {if $params?.config?.theme == 'light'}
+            xs
+        {elseif $params?.config?.theme == 'full'}
+            l
+        {/if}
     {/let}
 
     {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
@@ -54,7 +65,7 @@
                 ],
                 'config': [
                     'customClasses': [$customClasses],
-                    'size': 'm'
+                    'size': $iconSize ?: ''
                 ]
             ]
         ]/}
@@ -64,24 +75,26 @@
 
 /**
  * Link to add to favorites or remove
+ * @param params {?}
  */
-{template .link_ kind="html" private="true"}
-    {call .linkNotFavorite_ /}
-    {call .linkFavorite_ /}
+{template .links_ kind="html" private="true"}
+    {call .linkNotFavorite_ data="all" /}
+    {call .linkFavorite_ data="all" /}
 {/template}
 
 
 /**
  * Link to add to favorites
+ * @param params {
+ *     config: {
+ *         theme: ?string
+ *    }
+ * }
  */
 {template .linkNotFavorite_ kind="html" private="true"}
-    {let $customClasses kind="html"}
-        {call .rootClass/}__link
-    {/let}
-
     {let $name kind="html"}
         <div class="{call .rootClass/}__link {call .rootClass/}__link_l">
-            Добавить{sp}
+            Добавить&nbsp;
         </div>
 
         <div class="{call .rootClass/}__link {call .rootClass/}__link_s">
@@ -91,14 +104,12 @@
 
     <div class="{call .rootClass/}__link-wrap
         {sp}{call .rootClass/}__link-wrap_not-favorite">
-        {call sm.bLink.Template.base}
+        {call .link_}
             {param params:[
                 'data': [
                     'name': $name
                 ],
-                'config': [
-                    'customClasses': $customClasses
-                ]
+                'config': $params?.config
             ]/}
         {/call}
     </div>
@@ -107,26 +118,55 @@
 
 /**
  * Link to remove to favorites
+ * @param params {
+ *     config: {
+ *         theme: ?string
+ *    }
+ * }
  */
 {template .linkFavorite_ kind="html" private="true"}
-    {let $customClasses kind="html"}
-        {call .rootClass/}__link
-    {/let}
-
     <div class="{call .rootClass/}__link-wrap
         {sp}{call .rootClass/}__link-wrap_favorite">
 
-        {call sm.bLink.Template.base}
+        {call .link_}
             {param params:[
                 'data': [
                     'name': 'В избранном'
                 ],
-                'config': [
-                    'customClasses': $customClasses
-                ]
+                'config': $params?.config
             ]/}
         {/call}
     </div>
+{/template}
+
+
+/**
+ * Link favorites
+ * @param params {
+ *     data: {
+ *         name: ?string
+ *    },
+ *     config: {
+ *         theme: ?string
+ *    }
+ * }
+ */
+{template .link_ kind="html" private="true"}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__link
+    {/let}
+
+    {call sm.bLink.Template.base}
+        {param params:[
+            'data': [
+                'name': $params.data.name
+            ],
+            'config': [
+                'customClasses': $customClasses,
+                'theme': $params?.config?.theme ?: ''
+            ]
+        ]/}
+    {/call}
 {/template}
 
 
