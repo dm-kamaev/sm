@@ -117,11 +117,11 @@ exports.view = async (function(req, res, next) {
 
             var user = req.user || {},
                 isUserCommented = typeof await(
-                        services.userData.checkCredentials(
-                        school.id,
-                        req.cookies.clevverId,
-                        req.user && req.user.id
-                    )) !== 'undefined';
+                    services.userData.checkCredentials(
+                    school.id,
+                    req.user && req.user.id
+                )) !== 'undefined';
+
             user = userView.school(user, isUserCommented);
 
 

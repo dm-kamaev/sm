@@ -57,9 +57,7 @@ exports.unauthorize = async(function (req, res) {
     var origin = req.query.origin;
 
     await(new Promise(function(resolve, reject) {
-        req.session.destroy(() => {
-            resolve();
-        });
+        req.session.destroy(resolve);
     }));
 
     if (origin) {

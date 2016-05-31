@@ -23,6 +23,13 @@ sm.bAuthorization.Authorization = function(view, opt_domHelper) {
      * @private
      */
     this.socialModal_ = null;
+
+    /**
+     * Authorization url
+     * @type {string}
+     * @private
+     */
+    this.unauthorizeUrl_ = '/unauthorize';
 };
 goog.inherits(sm.bAuthorization.Authorization, cl.iControl.Control);
 
@@ -78,7 +85,7 @@ goog.scope(function() {
                 'origin': this.generateCurrentUrl_()
             });
 
-        window.location.replace('/unauthorize?' + redirectPath);
+        window.location.replace(this.unauthorizeUrl_ + '?' + redirectPath);
     };
 
 
