@@ -3,6 +3,7 @@ var express = require('express'),
 
 var authorizationController = require('./authorizationController');
 
+router.get('/unauthorize', authorizationController.unauthorize);
 router.get('/authorize/:type', authorizationController.authorize);
 router.get('/oauth/:type', authorizationController.getLink);
 

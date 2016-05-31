@@ -3,6 +3,7 @@ const soy = require('../../../components/soy');
 const services = require('../../../components/services').all;
 const schoolView = require('../../../../api/modules/school/views/schoolView');
 const searchView = require('../../../../api/modules/school/views/searchView');
+const userView = require('../../../../api/modules/user/views/user');
 
 const config = require('../../../config').config;
 const analyticsId = config.analyticsId;
@@ -52,7 +53,8 @@ exports.list = async (function(req, res) {
 
     var schoolsList = schoolView.list(results.schools),
         map = schoolView.listMap(results.schools, results.mapPosition),
-        filters = searchView.filters(results.filters, searchParams);
+        filters = searchView.filters(results.filters, searchParams),
+        user = req.user || {};
 
     var params = {
         params: {
@@ -60,10 +62,7 @@ exports.list = async (function(req, res) {
                 schools: schoolsList.schools,
                 filters: filters,
                 authSocialLinks: results.authSocialLinks,
-                user: {
-                    firstName: '',
-                    lastName: ''
-                }
+                user: userView.default(user)
             },
             searchText: searchText,
             countResults: schoolsList.countResults,
@@ -115,16 +114,16 @@ exports.view = async (function(req, res, next) {
 
             var school = await(services.school.viewOne(schoolInstance.id));
             services.school.incrementViews(school.id);
-            var user = {
-                firstName: '',
-                lastName: '',
-                data: req.user,
-                isCommented: typeof await(services.userData.checkCredentials(
-                    school.id,
-                    req.cookies.clevverId,
-                    req.user && req.user.id
-                )) !== 'undefined'
-            };
+
+            var user = req.user || {},
+                isUserCommented = typeof await(
+                        services.userData.checkCredentials(
+                        school.id,
+                        req.cookies.clevverId,
+                        req.user && req.user.id
+                    )) !== 'undefined';
+            user = userView.school(user, isUserCommented);
+
 
             res.header('Content-Type', 'text/html; charset=utf-8');
             res.end(
@@ -162,16 +161,13 @@ exports.search = async(function(req, res) {
     };
 
     var data = await(dataPromises),
-        searchUrl = '/search?name=';
+        user = req.user || {};
 
     var html = soy.render('sm.lSearch.Template.base', {
         params: {
             data: {
                 authSocialLinks: data.authSocialLinks,
-                user: {
-                    firstName: '',
-                    lastName: ''
-                }
+                user: userView.default(user)
             },
             popularSchools: schoolView.popular(data.popularSchools),
             dataLinks : schoolView.dataLinks(),

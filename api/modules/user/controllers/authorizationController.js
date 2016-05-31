@@ -42,6 +42,34 @@ exports.authorize = async(function(req, res) {
     }
 });
 
+
+/**
+ * @api {get} /unauthorize
+ * @apiVersion 0.0.0
+ * @apiGroup User
+ * @apiName unauthorize
+ * @apiParamExample {json} Request-Example:
+ * {
+ *     "origin": "schools/"
+ * }
+ */
+exports.unauthorize = async(function (req, res) {
+    var origin = req.query.origin;
+
+    await(new Promise(function(resolve, reject) {
+        req.session.destroy(() => {
+            resolve();
+        });
+    }));
+
+    if (origin) {
+        res.redirect(origin);
+    } else {
+        res.redirect('/');
+    }
+});
+
+
 /**
  * @api {get} /oauth/:type
  * @apiName GetAuthUrl

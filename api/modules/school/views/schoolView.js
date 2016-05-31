@@ -89,7 +89,7 @@ schoolView.default = function(schoolInstance, data, user, opt_popularSchools) {
         user: {
             firstName: user.firstName,
             lastName: user.lastName,
-            data: user.data
+            id: user.id
         }
     };
     if (data.popularSchools) {
