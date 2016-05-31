@@ -30,7 +30,7 @@
         <div class="b-header__body">
             <div class="b-header__section
                 b-header__section_logo
-                 i-animate">
+                i-animate">
                 {call .logo_ data="all"/}
             </div>
 
@@ -56,7 +56,6 @@
 {template .links_ kind="html" private="true"}
     {call .linkSearch_/}
     {call .linkAuthorization_ data="all" /}
-    // {call .linkLiked_/}
 {/template}
 
 
@@ -119,13 +118,13 @@
                     'type': 'authorization-link',
                     'renderParams': [
                         'data': [
-                            'user': $params?.user
+                            'user': $params?.data?.user
                         ]
                     ]
                 ]/}
             {/call}
         </div>
-    </div> //Константин Константинопольский
+    </div>
 {/template}
 
 
