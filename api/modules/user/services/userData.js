@@ -35,11 +35,10 @@ service.create = async(function(data) {
 /**
  * Checks if user commented the school
  * @param {number} schoolId
- * @param {string} key - user cookie or poll hash
  * @param {number} userId
  * @return {object|undefined}
  */
-service.checkCredentials = async(function(schoolId, key, userId) {
+service.checkCredentials = async(function(schoolId, userId) {
     var commented;
     var relatedRating = await(models.Rating.findAll({
         where: {

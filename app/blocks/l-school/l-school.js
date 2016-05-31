@@ -522,8 +522,8 @@ goog.scope(function() {
     School.prototype.isUserLoggedIn_ = function() {
         var user = JSON.parse(
             goog.dom.dataset.get(this.getElement(), 'params')
-        )['user']['data'];
-        return !goog.object.isEmpty(user);
+        )['user'];
+        return user.id;
     };
 
 

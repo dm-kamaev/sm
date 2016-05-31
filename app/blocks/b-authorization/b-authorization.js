@@ -2,6 +2,7 @@ goog.provide('sm.bAuthorization.Authorization');
 
 goog.require('cl.iControl.Control');
 goog.require('goog.dom');
+goog.require('goog.uri.utils');
 goog.require('sm.bAuthorization.View');
 
 
@@ -18,10 +19,17 @@ sm.bAuthorization.Authorization = function(view, opt_domHelper) {
 
     /**
      * Auth modal window
-     * @type {sm.gModal.ModalAuth}
+     * @type {cl.gAuthSocialModal.AuthSocialModal}
      * @private
      */
     this.socialModal_ = null;
+
+    /**
+     * Authorization url
+     * @type {string}
+     * @private
+     */
+    this.unauthorizeUrl_ = '/unauthorize';
 };
 goog.inherits(sm.bAuthorization.Authorization, cl.iControl.Control);
 
@@ -49,6 +57,7 @@ goog.scope(function() {
         return Authorization.instance_;
     };
 
+
     /**
      * @override
      * @param {Element} element
@@ -69,9 +78,14 @@ goog.scope(function() {
 
 
     /**
-     * logout
+     * Generate origin address and redirect to logout url with origin option
      */
     Authorization.prototype.logout = function() {
+        var redirectPath = goog.uri.utils.buildQueryDataFromMap({
+                'origin': this.generateCurrentUrl_()
+            });
+
+        window.location.replace(this.unauthorizeUrl_ + '?' + redirectPath);
     };
 
 
@@ -84,6 +98,23 @@ goog.scope(function() {
             'auth-social-modal',
             this.getView().getDom().socialModal
         );
+    };
+
+
+    /**
+     * Generate origin address
+     * @return {string}
+     * @private
+     */
+    Authorization.prototype.generateCurrentUrl_ = function() {
+        var location = document.location.href;
+
+        var currentPath = goog.uri.utils.getPath(location),
+            currentQueryParams = goog.uri.utils.getQueryData(location);
+
+        return currentQueryParams ?
+            currentPath + '?' + currentQueryParams :
+            currentPath;
     };
 
 
