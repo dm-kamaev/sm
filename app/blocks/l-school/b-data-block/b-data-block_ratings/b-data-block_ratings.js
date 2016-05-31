@@ -163,7 +163,6 @@ goog.scope(function() {
      * @private
      */
     DataBlock.prototype.toggleHintInlude_ = function() {
-        console.log(HintView.CssClass.INCLUDE_CLICK_MODE);
         goog.dom.classlist.toggle(
             this.elements_.contentWrap,
             HintView.CssClass.INCLUDE_CLICK_MODE
