@@ -1,5 +1,6 @@
 goog.provide('sm.bSchoolListItem.SchoolListItem');
 
+goog.require('cl.iFactory.FactoryManager');
 goog.require('goog.dom.dataset');
 goog.require('goog.events');
 goog.require('goog.ui.Component');
@@ -79,6 +80,7 @@ goog.scope(function() {
     var ListItem = sm.bSchoolListItem.SchoolListItem,
         ScoreMinimized = sm.bScore.ScoreMinimized,
         Badge = sm.bBadge.Badge,
+        FactoryManager = cl.iFactory.FactoryManager,
         Analytics = sm.iAnalytics.Analytics.getInstance();
 
 
@@ -245,6 +247,8 @@ goog.scope(function() {
                 instance.decorate(badgeElements[i]);
             }
         }
+
+        this.initFavoriteLink_(element);
     };
 
     /**
@@ -317,6 +321,26 @@ goog.scope(function() {
         this.isActive_ = goog.dom.classlist.contains(
             this.getElement(),
             ListItem.CssClass.ACTIVE_STATE
+        );
+    };
+
+
+    /**
+     * Initialization Favorite Link
+     * @param {Element} element
+     * @private
+     */
+    ListItem.prototype.initFavoriteLink_ = function(element) {
+        var favoriteLink = goog.dom.getElementByClass(
+            sm.bFavoriteLink.View.CssClass.ROOT,
+            element
+        );
+
+        FactoryManager.getInstance().decorate(
+            'stendhal',
+            'favorite-link',
+            favoriteLink,
+            this
         );
     };
 

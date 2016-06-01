@@ -317,6 +317,7 @@ goog.scope(function() {
             .initModalInaccuracy_()
             .initMap_()
             .initBouton_()
+            .initFavoriteLinks_()
             .initComments_()
             .initComponents_(DataBlockFoldList, DataBlockFoldList.CssClass.ROOT)
             .initComponents_(DBlockRatings, DBlockRatings.CssClass.ROOT)
@@ -544,6 +545,31 @@ goog.scope(function() {
             bPopularSchools,
             this
         );
+    };
+
+
+    /**
+     * Initialization Favorite Links
+     * @param {Element} element
+     * @return {sm.lSchool.School}
+     * @private
+     */
+    School.prototype.initFavoriteLinks_ = function(element) {
+
+        var favoriteLinks = goog.dom.getElementsByClass(
+            sm.bFavoriteLink.View.CssClass.ROOT,
+            element
+        );
+
+        for (var i = 0; i < favoriteLinks.length; i++) {
+            factory.decorate(
+                'favorite-link',
+                favoriteLinks[i],
+                this
+            );
+        }
+
+        return this;
     };
 
 

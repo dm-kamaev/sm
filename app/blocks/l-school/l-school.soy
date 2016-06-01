@@ -74,6 +74,7 @@
  *        totalScore: number,
  *        reviewCount: number,
  *        isCommented: bool,
+ *        isFavorite: bool,
  *        popularSchools: ?list<[
  *            id: ?number,
  *            url: ?string,
@@ -175,7 +176,7 @@
  * @param? params {?}
  */
 {template .innerContent_ autoescape="strict" kind="html"}
-    {call .description_ data="all" /}
+    {call .sectionDescription_ data="all" /}
     {call .feedback_ data="all" /}
 
     <div class="l-school__cleaner"></div>
@@ -200,45 +201,130 @@
 
 /**
  * School name + school description
- * @param? params {{
- *     data: [
- *         schoolName: string,
- *         schoolDescr: string
- *     ]
- * }}
+ * @param? params {?}
  */
-{template .description_ autoescape="strict" kind="html"}
+{template .sectionDescription_ autoescape="strict" kind="html"}
     <div class="l-school__section l-school__section_description">
-        <h1 class="l-school__name">
-            {$params.data.schoolName}
-        </h1>
-        {if $params.data.metroStations}
-            <div class="l-school__metro-stations">
-                {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
-                    {param params: [
-                        'type': 'icon',
-                        'renderParams': [
-                            'data': [
-                                'type': 'metro'
-                            ],
-                            'config': [
-                                'customClasses':  'l-school__metro-icon'
-                            ]
-                        ]
-                    ]/}
-                {/call}
-                {foreach $metro in $params.data.metroStations}
-                    {$metro}
-                    {if not isLast($metro)},{sp}{/if}
-                {/foreach}
-            </div>
-        {/if}
-        {if $params.data.schoolDescr}
-            <div class="l-school__description">
-                {$params.data.schoolDescr}
-            </div>
-        {/if}
+        <div class="l-school__title">
+            {call .name_ data="all" /}
+
+            {call .favoriteLink_}
+                {param params: [
+                    'data': [
+                        'isFavorite': $params.data?.isFavorite
+                    ],
+                    'config': [
+                        'modifier': 'l'
+                    ]
+                ]/}
+            {/call}
+        </div>
+
+        {call .metro_ data="all" /}
+        {call .description_ data="all" /}
     </div>
+{/template}
+
+
+/**
+ * @param params {
+ *      data: {
+ *          schoolName: string
+ *      }
+ * }
+ */
+{template .name_ kind="html" private="true"}
+    <h1 class="l-school__name">
+        {$params.data.schoolName}
+    </h1>
+{/template}
+
+
+/**
+ * favorite Link
+ * @param? params {
+ *      data: {
+ *          isFavorite: boolean
+ *      },
+ *      config: {
+ *          modifier: ?string
+ *     }
+ * }
+ */
+{template .favoriteLink_ kind="html" private="true"}
+    {let $classes kind="html"}
+        l-school__link
+        {sp}l-school__link_favorite
+        {if $params?.config?.modifier}
+            {sp}l-school__link_{$params?.config?.modifier}
+        {/if}
+    {/let}
+
+    <div class="{$classes}">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': 'stendhal',
+                'type': 'favorite-link',
+                'renderParams': [
+                    'data': [
+                        'isFavorite': $params.data?.isFavorite
+                    ],
+                    'config': [
+                        'theme': 'full'
+                    ]
+                ]
+            ]/}
+        {/call}
+     </div>
+{/template}
+
+
+/**
+ * @param? params {
+ *      data: {
+ *          metroStations: ?list<string>
+ *      }
+ * }
+ */
+{template .metro_ kind="html" private="true"}
+    {if $params.data.metroStations}
+        <div class="l-school__metro-stations">
+            {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+                {param params: [
+                    'type': 'icon',
+                    'renderParams': [
+                        'data': [
+                            'type': 'metro'
+                        ],
+                        'config': [
+                            'customClasses':  'l-school__metro-icon'
+                        ]
+                    ]
+                ]/}
+            {/call}
+
+            {foreach $metro in $params.data?.metroStations}
+                {$metro}
+                {if not isLast($metro)},{sp}{/if}
+            {/foreach}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * @param params {
+ *      data: {
+ *          schoolDescr: string
+ *      }
+ * }
+ */
+{template .description_ kind="html" private="true"}
+    {if $params.data.schoolDescr}
+        <div class="l-school__description">
+            {$params.data.schoolDescr}
+        </div>
+    {/if}
 {/template}
 
 
@@ -324,6 +410,18 @@
             {call .resultsEgeGiaAnchor_ /}
         {/if}
     </div>
+
+    {call .favoriteLink_}
+        {param params: [
+            'data': [
+                'isFavorite': $params.data?.isFavorite
+            ],
+            'config': [
+                'modifier': 's'
+            ]
+        ]/}
+    {/call}
+
     <div class="l-school__link l-school__link_inaccuracy">
         {call sm.bLink.Template.base}
             {param params: [

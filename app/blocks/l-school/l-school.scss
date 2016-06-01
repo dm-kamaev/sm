@@ -66,10 +66,19 @@ body {
     background-color: #c80018;
 }
 
-.l-school__name {
+.l-school__title {
+    z-index: 2;
     position: relative;
 
+    display: inline-block;
+
     margin-bottom: 10px;
+}
+
+.l-school__name {
+    display: inline;
+
+    margin-right: 20px;
 
     font: 800 30px/1.3 'Proxima', Arial, sans-serif;
 }
@@ -150,21 +159,21 @@ body {
 }
 
 .l-school__container {
-	font-family: 'Proxima', Arial, sans-serif;
+    font-family: 'Proxima', Arial, sans-serif;
 
-	display: inline-block;
+    display: inline-block;
 
-	margin-top: 60px;
+    margin-top: 60px;
 
-	text-align: left;
+    text-align: left;
 
-	max-width: 1200px;
+    max-width: 1200px;
 }
 
 .l-school__section {
     display: inline-block;
 
-	width: 100%;
+    width: 100%;
 }
 
 .l-school__column {
@@ -173,35 +182,35 @@ body {
 
     font-size: 16px;
 
-	&.l-school__column_left {
+    &.l-school__column_left {
         float: left;
 
-		width: 350px;
-	}
+        width: 350px;
+    }
 
-	&.l-school__column_right {
+    &.l-school__column_right {
         width: 100%;
-		padding-left: 410px;
-	}
+        padding-left: 410px;
+    }
 }
 
 .l-school__item-container {
-	display: inline-block;
+    display: inline-block;
 
-	width: 100%;
-	margin-bottom: 53px;
+    width: 100%;
+    margin-bottom: 53px;
 
-	&.l-school__item-container_right {
-		margin-right: 0px;
-	}
+    &.l-school__item-container_right {
+        margin-right: 0px;
+    }
 
-	&.l-school__item-container_information {
-		margin: 60px 0 0;
-	}
+    &.l-school__item-container_information {
+        margin: 60px 0 0;
+    }
 
-	&:last-child {
-		margin-bottom: 0;
-	}
+    &:last-child {
+        margin-bottom: 0;
+    }
 
 }
 
@@ -216,13 +225,13 @@ body {
 }
 
 
-.l-school__content-block{
+.l-school__content-block {
     margin-bottom: 36px;
 
     text-align: left;
 }
 
-.l-school__director-name{
+.l-school__director-name {
 }
 
 
@@ -230,7 +239,7 @@ body {
     font-weight: bold;
 }
 
-.l-school__contacts-record{
+.l-school__contacts-record {
     margin-bottom: 10px;
 }
 
@@ -243,11 +252,11 @@ body {
     line-height: 1.2;
 }
 
-.l-school__site-name{
+.l-school__site-name {
     font-size: 12px;
 }
 
-.l-school__link-record{
+.l-school__link-record {
     display: inline-block;
     margin: 0 10px 12px 0;
 
@@ -281,8 +290,26 @@ body {
     color: #000;
 }
 
-.l-school__link{
+.l-school__link {
     margin-top: 12px;
+}
+
+.l-school__link_inaccuracy {
+    display: inline-block;
+}
+
+.l-school__link_favorite {
+    display: inline-block;
+}
+
+.l-school__link_l {
+    display: inline;
+
+    line-height: 30px;
+}
+
+.l-school__link_s {
+    display: none;
 }
 
 .l-school__footer {
@@ -463,12 +490,23 @@ body {
         margin-top: 30px;
     }
 
-    .l-school__name {
+    .l-school__title {
+        margin-right: 0;
         margin-bottom: 13px;
+    }
 
+    .l-school__name {
         letter-spacing: 0;
         font-weight: 800;
         font-size: 22px;
+    }
+
+    .l-school__link_l {
+        display: none;
+    }
+
+    .l-school__link_s {
+        display: inline-block;
     }
 
     .l-school__description {
@@ -490,6 +528,10 @@ body {
 
     .l-school__link {
         margin-top: 26px;
+    }
+
+    .l-school__link_inaccuracy {
+        float: right;
     }
 
     .l-school__section_extra_clone {

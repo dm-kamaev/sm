@@ -1,0 +1,92 @@
+{namespace sm.gIcon.TemplateStendhal}
+
+/**
+ * Constructor
+ * @param params {{
+ *     config: {
+ *         stylizationModifier: ?string,
+ *         customClasses: ?list<string>,
+ *         theme: ?string,
+ *         size: ?string
+ *     },
+ *     includes: ?list{
+ *         type: ?string,
+ *         data: ?string
+ *     }
+ * }}
+ * @constructor
+ * @extends cl.gIcon.Template
+ */
+{template .base}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * Icon template
+ * @param params {
+ *     data: {
+ *         type: ?string
+ *     },
+ *     config: {
+ *         size: ?string
+ *     }
+ * }
+ * @extends cl.gIcon.Template
+ * @constructor
+ * @doc
+ */
+{template .icon}
+    {call .init data="all" /}
+{/template}
+
+
+/**
+ * Css classes
+ * @param params {{
+ *     config: {
+ *         stylizationModifier: ?string,
+ *         customClasses: ?list<string>,
+ *         theme: ?string,
+ *         size: ?string
+ *     },
+ *     includes: ?list{
+ *         type: ?string,
+ *         data: ?string
+ *     }
+ * }}
+ */
+{template .classes}
+    i-control
+    {sp}
+    {call .rootClass/}
+    {sp}
+    {call .stylizationModifierClass data="all"/}
+    {if $params?.config?.theme}
+        {sp}{call .rootClass/}_{$params.config.theme}-theme
+    {/if}
+    {if $params?.config?.customClasses}
+        {foreach $class in $params.config.customClasses}
+            {sp}{$class}
+        {/foreach}
+    {/if}
+    {sp}
+    {call .additionalClasses data="all"/}
+    {sp}
+    {call .size_ data="all"/}
+{/template}
+
+
+/**
+ * modifier class size
+ * @param params {{
+ *     config: {
+ *         size: ?string
+ *     }
+ * }}
+ */
+{template .size_}
+    {if $params?.config?.size}
+        {call .rootClass/}_img_size_{$params?.config?.size}
+    {/if}
+{/template}

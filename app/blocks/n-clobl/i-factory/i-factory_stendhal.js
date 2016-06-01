@@ -11,6 +11,8 @@ goog.require('sm.bDataBlock.DataBlockFeatures');
 goog.require('sm.bDataBlock.DataBlockFeaturesView');
 goog.require('sm.bFavorite.Favorite');
 goog.require('sm.bFavorite.View');
+goog.require('sm.bFavoriteLink.FavoriteLink');
+goog.require('sm.bFavoriteLink.View');
 goog.require('sm.bHeader.Header');
 goog.require('sm.bHeader.View');
 goog.require('sm.bPopularSchools.PopularSchools');
@@ -113,6 +115,10 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('school-list-paged', {
             control: sm.bSchoolListPaged.SchoolListPaged,
             view: sm.bSchoolListPaged.View
+        })
+        .setControlListItem('favorite-link', {
+            control: sm.bFavoriteLink.FavoriteLink,
+            view: sm.bFavoriteLink.View
         });
 };
 goog.inherits(sm.iFactory.FactoryStendhal, cl.iFactory.Factory);
