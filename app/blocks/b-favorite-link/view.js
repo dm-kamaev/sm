@@ -40,8 +40,9 @@ goog.scope(function() {
      * @enum {string}
      */
     View.Event = {
-       NOT_FAVORITE_CLICK: 'not-favorite-click',
-       FAVORITE_CLICK: 'favorite-click'
+       CLICK: 'click',
+       MOUSEOVER: 'mouseover',
+       MOUSEOUT: 'mouseout'
     };
 
 
@@ -51,6 +52,7 @@ goog.scope(function() {
      */
     View.TypeIcon = {
         FAVORITE: 'favorite_red',
+        FAVORITE_DARK: 'favorite_dark_red',
         NOT_FAVORITE: 'favorite'
     };
 
@@ -77,6 +79,37 @@ goog.scope(function() {
             goog.events.EventType.CLICK,
             this.onClick_
         );
+
+        this.getHandler().listen(
+            this.getElement(),
+            goog.events.EventType.MOUSEOVER,
+            this.onMouseover_
+        );
+
+        this.getHandler().listen(
+            this.getElement(),
+            goog.events.EventType.MOUSEOUT,
+            this.onMouseout_
+        );
+    };
+
+
+    /**
+     * switch Element modifier (favorite or not favorite)
+     * @param {bool} favorite
+     */
+    View.prototype.setFavorite = function(favorite) {
+        favorite ?
+            goog.dom.classlist.swap(
+                this.getElement(),
+                View.CssClass.FAVORITE,
+                View.CssClass.NOT_FAVORITE
+            ) :
+            goog.dom.classlist.swap(
+                this.getElement(),
+                View.CssClass.NOT_FAVORITE,
+                View.CssClass.FAVORITE
+            );
     };
 
 
@@ -85,61 +118,40 @@ goog.scope(function() {
      * @private
      */
     View.prototype.onClick_ = function() {
-        var isFavorite = this.isFavorite_();
-
-        if (isFavorite) {
-            this.onFavoriteClick_();
-        }
-        else {
-            this.onNotFavoriteClick_();
-        }
-    };
-
-
-    /**
-     * Not Favorite Click
-     * @private
-     */
-    View.prototype.onNotFavoriteClick_ = function() {
         this.dispatchEvent({
-            'type': View.Event.NOT_FAVORITE_CLICK
+            'type': View.Event.CLICK,
+            'data': {
+                'isFavorite': this.isFavorite_()
+            }
         });
-
-        this.switchClass_(
-            View.CssClass.NOT_FAVORITE,
-            View.CssClass.FAVORITE
-        );
     };
 
 
     /**
-     * Favorite Click
+     * Element Mouseover
      * @private
      */
-    View.prototype.onFavoriteClick_ = function() {
-         this.dispatchEvent({
-            'type': View.Event.FAVORITE_CLICK
+    View.prototype.onMouseover_ = function() {
+        this.dispatchEvent({
+            'type': View.Event.MOUSEOVER,
+            'data': {
+                'isFavorite': this.isFavorite_()
+            }
         });
-
-        this.switchClass_(
-            View.CssClass.FAVORITE,
-            View.CssClass.NOT_FAVORITE
-        );
     };
 
 
     /**
-     * switch Element modifier
-     * @param {string} oldClass
-     * @param {string} newClass
+     * Element Mouseout
      * @private
      */
-    View.prototype.switchClass_ = function(oldClass, newClass) {
-        goog.dom.classlist.swap(
-            this.getElement(),
-            oldClass,
-            newClass
-        );
+    View.prototype.onMouseout_ = function() {
+        this.dispatchEvent({
+            'type': View.Event.MOUSEOUT,
+            'data': {
+                'isFavorite': this.isFavorite_()
+            }
+        });
     };
 
 

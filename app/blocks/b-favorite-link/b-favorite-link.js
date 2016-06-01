@@ -48,34 +48,19 @@ goog.scope(function() {
         goog.base(this, 'enterDocument');
 
         this.viewListen(
-            View.Event.NOT_FAVORITE_CLICK,
-            this.onNotFavoriteClick_
+            View.Event.CLICK,
+            this.onClick_
         );
 
         this.viewListen(
-            View.Event.FAVORITE_CLICK,
-            this.onFavoriteClick_
+            View.Event.MOUSEOVER,
+            this.onMouseover_
         );
-    };
 
-
-    /**
-     * Not Favorite Click
-     * @private
-     */
-    FavoriteLink.prototype.onNotFavoriteClick_ = function() {
-        this.addFavorite();
-        this.icon_.setType(View.TypeIcon.FAVORITE);
-    };
-
-
-    /**
-     * Favorite Click
-     * @private
-     */
-    FavoriteLink.prototype.onFavoriteClick_ = function() {
-        this.removeFavorite();
-        this.icon_.setType(View.TypeIcon.NOT_FAVORITE);
+        this.viewListen(
+            View.Event.MOUSEOUT,
+            this.onMouseout_
+        );
     };
 
 
@@ -83,6 +68,7 @@ goog.scope(function() {
      * Add to favorites
      */
     FavoriteLink.prototype.addFavorite = function() {
+        this.icon_.setType(View.TypeIcon.FAVORITE);
     };
 
 
@@ -90,6 +76,50 @@ goog.scope(function() {
      * remove from favorites
      */
     FavoriteLink.prototype.removeFavorite = function() {
+        this.icon_.setType(View.TypeIcon.NOT_FAVORITE);
+    };
+
+
+    /**
+     * Element Click
+     * @param  {Object} event
+     * @private
+     */
+    FavoriteLink.prototype.onClick_ = function(event) {
+        var isFavorite = event['data']['isFavorite'];
+
+        if (isFavorite) {
+            this.removeFavorite();
+        }
+        else {
+            this.addFavorite();
+        }
+
+        this.getView().setFavorite(isFavorite);
+    };
+
+
+    /**
+     * Element Mouseover
+     * @param  {Object} event
+     * @private
+     */
+    FavoriteLink.prototype.onMouseover_ = function(event) {
+        if (event['data']['isFavorite']) {
+            this.icon_.setType(View.TypeIcon.FAVORITE_DARK);
+        }
+    };
+
+
+    /**
+     * Element Mouseout
+     * @param  {Object} event
+     * @private
+     */
+    FavoriteLink.prototype.onMouseout_ = function(event) {
+        if (event['data']['isFavorite']) {
+            this.icon_.setType(View.TypeIcon.FAVORITE);
+        }
     };
 
 

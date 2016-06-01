@@ -87,6 +87,6 @@
  */
 {template .size_}
     {if $params?.config?.size}
-        {call .additionalClasses data="all" /}_size_{$params?.config?.size}
+        {call .rootClass/}_img_size_{$params?.config?.size}
     {/if}
 {/template}

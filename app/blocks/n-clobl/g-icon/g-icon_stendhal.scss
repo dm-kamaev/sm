@@ -48,31 +48,19 @@
     background-size: contain;
 }
 
-.g-icon_stendhal.g-icon_img_favorite.g-icon_img_favorite_size_l {
-    width: 15px;
-    height: 15px;
-}
-
-.g-icon_stendhal.g-icon_img_favorite_red.g-icon_img_favorite_size_l {
-    width: 15px;
-    height: 15px;
-}
-
-.g-icon_stendhal.g-icon_img_favorite.g-icon_img_favorite_size_xs {
-    width: 9px;
-    height: 9px;
-}
-
-.g-icon_stendhal.g-icon_img_favorite_red.g-icon_img_favorite_size_xs {
-    width: 9px;
-    height: 9px;
-}
-
 .g-icon_stendhal.g-icon_img_favorite_red {
     width: 13px;
     height: 13px;
 
     background-image: url(/images/n-clobl/g-icon/g-icon_img/g-icon_img_favorite_red.svg);
+    background-size: contain;
+}
+
+.g-icon_stendhal.g-icon_img_favorite_dark_red {
+    width: 13px;
+    height: 13px;
+
+    background-image: url(/images/n-clobl/g-icon/g-icon_img/g-icon_img_favorite_dark_red.svg);
     background-size: contain;
 }
 
@@ -89,4 +77,34 @@
 
         font-family: "WebSymbols", Arial, sans-serif;
     }
+}
+
+.g-icon_stendhal.g-icon_img_favorite.g-icon_img_size_l {
+    width: 15px;
+    height: 15px;
+}
+
+.g-icon_stendhal.g-icon_img_favorite_red.g-icon_img_size_l {
+    width: 15px;
+    height: 15px;
+}
+
+.g-icon_stendhal.g-icon_img_favorite_dark_red.g-icon_img_size_l {
+    width: 15px;
+    height: 15px;
+}
+
+.g-icon_stendhal.g-icon_img_favorite.g-icon_img_size_xs {
+    width: 9px;
+    height: 9px;
+}
+
+.g-icon_stendhal.g-icon_img_favorite_red.g-icon_img_size_xs {
+    width: 9px;
+    height: 9px;
+}
+
+.g-icon_stendhal.g-icon_img_favorite_dark_red.g-icon_img_size_xs {
+    width: 9px;
+    height: 9px;
 }
