@@ -320,6 +320,16 @@
     .b-search__item-icon {
         left: 31px;
     }
+
+    .b-search__control {
+        right: 55px;
+    }
+}
+
+@include media-xs {
+    .b-search__control {
+        right: 30px;
+    }
 }
 
 @include media-s {

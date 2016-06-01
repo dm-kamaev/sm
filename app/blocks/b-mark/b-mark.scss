@@ -211,8 +211,9 @@
     }
 
     .b-mark_inline.b-mark_size_l .b-mark__circle,
+    .b-mark_inline.b-mark_size_m .b-mark__circle,
     .b-mark_inline.b-mark_size_s .b-mark__circle,
-    .b-mark_inline.b-mark_size_xs .b-mark__circle{
+    .b-mark_inline.b-mark_size_xs .b-mark__circle {
         display: inline-block;
     }
 }

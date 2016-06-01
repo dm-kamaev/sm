@@ -1,3 +1,5 @@
+@import "../i-media/i-media";
+
 .b-school-list-paged {
     width: 350px;
     text-align: left;
@@ -43,4 +45,10 @@
 
     color: #bfbfbf;
     user-select: none;
+}
+
+@include media-xs {
+    .b-school-list-paged {
+        width: 100%;
+    }
 }
