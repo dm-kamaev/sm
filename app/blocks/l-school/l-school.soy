@@ -92,7 +92,12 @@
  *            vk: ?string,
  *            fb: ?string
  *        ],
- *        seoDescription: ?string
+ *        seoDescription: ?string,
+ *        results: ?{
+ *            ege: ?object,
+ *            gia: ?object,
+ *            olymp: ?object
+ *        }
  *     ],
  *     searchText: ?string,
  *     config: ?{
@@ -341,11 +346,11 @@
  *                 value: int
  *             }]
  *         }],
- *         ratings: ?[{
- *             name: string,
- *             place: number,
- *             href: string
- *         }],
+ *         results: ?{
+ *             ege: ?object,
+ *             gia: ?object,
+ *             olymp: ?object
+ *         },
  *         isCommented: bool
  *     }
  * }
@@ -378,7 +383,7 @@
             {param params: [
                 'data': [
                     'comments': $params?.data?.comments,
-                    'ratings': $params?.data?.ratings
+                    'results': $params?.data?.results
                 ]
             ]/}
         {/call}
@@ -392,7 +397,11 @@
  * @param params {
  *     data: {
  *         comments: list<{}>,
- *         ratings: list <{}>
+ *         results: ?{
+ *             ege: ?object,
+ *             gia: ?object,
+ *             olymp: ?object
+ *         }
  *     }
  * }
  */
@@ -406,7 +415,11 @@
             {/call}
         {/if}
 
-        {if $params?.data?.ratings?.length > 0}
+        {if
+            $params?.data?.results?.ege?.years?.length or
+            $params?.data?.results?.gia?.years?.length or
+            $params?.data?.results?.olymp?.years?.length
+        }
             {call .resultsEgeGiaAnchor_ /}
         {/if}
     </div>
