@@ -1,8 +1,8 @@
 var DataType = require('sequelize'),
     db = require('../../../../app/components/db');
 
-var Favorites = db.define(
-    'Favorites',
+var Favorite = db.define(
+    'Favorite',
     {
         id: {
             type: DataType.INTEGER,
@@ -22,7 +22,7 @@ var Favorites = db.define(
         tableName: 'favorites',
         classMethods: {
             associate: function(models) {
-                Favorites.belongsTo(models.school, {
+                Favorite.belongsTo(models.school, {
                     as: 'school',
                     foreignKey: 'school_id'
                 });
