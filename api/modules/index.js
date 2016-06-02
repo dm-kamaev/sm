@@ -7,6 +7,7 @@ var mail = require('./mail');
 var univer = require('./univer');
 var geo = require('./geo');
 var user = require('./user');
+var favorite = require('./favorite');
 var models = require('../../app/components/models'),
     services = require('../../app/components/services');
 
@@ -21,3 +22,4 @@ exports.mail = mail;
 exports.study = study;
 exports.user = user;
 exports.univer = univer;
+exports.favorite = favorite;

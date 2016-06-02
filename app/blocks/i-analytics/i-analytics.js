@@ -46,6 +46,7 @@ goog.scope(function() {
         ga('send', params);
     };
 
+
     /**
      * Send event
      * @param {string} name
@@ -82,6 +83,53 @@ goog.scope(function() {
         });
     };
 
+
+    /**
+     * Add product information in addition to favorites
+     * @param {{
+     *     id: string,
+     *     name: string,
+     *     brand: ?string,
+     *     category: ?string,
+     *     variant: ?string,
+     *     price: ?string,
+     *     quantity: ?number,
+     *     coupon: ?string,
+     *     position: ?number
+     * }} params
+     * @param {string} place - where clicked the item
+     */
+    Analytics.prototype.addProduct = function(params, place) {
+        ga('ec:addProduct', params);
+        ga('ec:setAction', 'add', {
+            'list': place
+        });
+    };
+
+
+    /**
+     * Add information about the product by removing from favorites
+     * @param {{
+     *     id: string,
+     *     name: string,
+     *     brand: ?string,
+     *     category: ?string,
+     *     variant: ?string,
+     *     price: ?string,
+     *     quantity: ?number,
+     *     coupon: ?string,
+     *     position: ?number
+     * }} params
+     * @param {string} place - where clicked the item
+     */
+    Analytics.prototype.removeProduct = function(params, place) {
+        ga('ec:addProduct', params);
+        ga('ec:setAction', 'remove', {
+            'list': place
+        });
+    };
+
+
     /**
      * Add information about product
      * @param {{
@@ -100,12 +148,14 @@ goog.scope(function() {
         ga('ec:addProduct', params);
     };
 
+
     /**
      * Set view
      */
     Analytics.prototype.setView = function() {
         ga('ec:setAction', 'detail');
     };
+
 
     /**
      * Add impression about related product

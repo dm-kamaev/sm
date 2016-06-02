@@ -30,6 +30,18 @@ goog.inherits(sm.bFavoriteLink.FavoriteLink, cl.iControl.Control);
 goog.scope(function() {
     var FavoriteLink = sm.bFavoriteLink.FavoriteLink,
         View = sm.bFavoriteLink.View;
+
+
+    /**
+     * Event enum
+     * @enum
+     */
+    FavoriteLink.Event = {
+        FAVORITE_ADDED: 'favorite-added',
+        FAVORITE_REMOVED: 'favorite_removed'
+    };
+
+
     /**
      * @override
      * @param {Element} element
@@ -50,6 +62,11 @@ goog.scope(function() {
         this.viewListen(
             View.Event.CLICK,
             this.onClick_
+        );
+
+        this.autoDispatch(
+            View.Event.CLICK,
+            this.initEventType_
         );
 
         this.viewListen(
@@ -82,7 +99,7 @@ goog.scope(function() {
 
     /**
      * Element Click
-     * @param  {Object} event
+     * @param {Object} event
      * @private
      */
     FavoriteLink.prototype.onClick_ = function(event) {
@@ -119,6 +136,21 @@ goog.scope(function() {
     FavoriteLink.prototype.onMouseout_ = function(event) {
         if (event['data']['isFavorite']) {
             this.icon_.setType(View.TypeIcon.FAVORITE);
+        }
+    };
+
+
+    /**
+     * dispatch Event (add to favorites or remove)
+     * @param {Object} event
+     * @private
+     */
+    FavoriteLink.prototype.initEventType_ = function(event) {
+        if (event['data']['isFavorite']) {
+            event['type'] = FavoriteLink.Event.FAVORITE_REMOVED;
+        }
+        else {
+            event['type'] = FavoriteLink.Event.FAVORITE_ADDED;
         }
     };
 
