@@ -5,6 +5,7 @@ goog.require('goog.dom.dataset');
 goog.require('goog.events');
 goog.require('goog.ui.Component');
 goog.require('sm.bBadge.Badge');
+goog.require('sm.bFavoriteLink.FavoriteLink');
 goog.require('sm.bRating.Rating');
 goog.require('sm.bScore.ScoreMinimized');
 
@@ -71,6 +72,14 @@ sm.bSchoolListItem.SchoolListItem = function(opt_params) {
      * @private
      */
     this.isActive_ = false;
+
+
+    /**
+     * Favorite Link Instance
+     * @type {sm.bFavoriteLink.FavoriteLink}
+     * @private
+     */
+    this.favoriteLink_ = null;
 };
 goog.inherits(sm.bSchoolListItem.SchoolListItem,
     goog.ui.Component);
@@ -274,8 +283,41 @@ goog.scope(function() {
                 goog.events.EventType.CLICK,
                 this.onClickListItem_
             );
+
+            handler.listen(
+                this.favoriteLink_,
+                sm.bFavoriteLink.FavoriteLink.Event.FAVORITE_ADDED,
+                this.onAddFavoriteClick_
+            );
+
+            handler.listen(
+                this.favoriteLink_,
+                sm.bFavoriteLink.FavoriteLink.Event.FAVORITE_REMOVED,
+                this.onRemoveFavoriteClick_
+            );
         }
     };
+
+
+    /**
+     * Remove Favorite Click
+     * @private
+     */
+    ListItem.prototype.onRemoveFavoriteClick_ = function() {
+        this.setEcAnalyticsRemove_();
+        this.sendDataAnalytics_('favourite', 'delete');
+    };
+
+
+    /**
+     * Add Favorite Click
+     * @private
+     */
+    ListItem.prototype.onAddFavoriteClick_ = function() {
+        this.setEcAnalyticsAdd_();
+        this.sendDataAnalytics_('favourite', 'add');
+    };
+
 
     /**
      * @param {Object} event
@@ -283,7 +325,8 @@ goog.scope(function() {
      */
     ListItem.prototype.onClickListItem_ = function(event) {
         if (!event.defaultPrevented) {
-            this.sendAnalyticsSchoolData_(event);
+            this.setEcAnalyticsClick_();
+            this.sendDataAnalytics_('search', 'results click');
         }
     };
 
@@ -336,7 +379,7 @@ goog.scope(function() {
             element
         );
 
-        FactoryManager.getInstance().decorate(
+        this.favoriteLink_ = FactoryManager.getInstance().decorate(
             'stendhal',
             'favorite-link',
             favoriteLink,
@@ -346,25 +389,62 @@ goog.scope(function() {
 
 
     /**
-     * send Analytics data school
-     * @param {Object} event
+     * Sets EC analytics to click on the school
      * @private
      */
-    ListItem.prototype.sendAnalyticsSchoolData_ = function(event) {
-        var ecData = {
+    ListItem.prototype.setEcAnalyticsClick_ = function() {
+        Analytics.clickProduct(this.getDataEc_(), 'Search Results');
+    };
+
+
+    /**
+     * Sets EC analytics to add school from favorites
+     * @private
+     */
+    ListItem.prototype.setEcAnalyticsAdd_ = function() {
+        Analytics.addProduct(this.getDataEc_(), 'Search Results');
+    };
+
+
+    /**
+     * Sets EC analytics to remove school from favorites
+     * @private
+     */
+    ListItem.prototype.setEcAnalyticsRemove_ = function() {
+        Analytics.removeProduct(this.getDataEc_(), 'Search Results');
+    };
+
+
+    /**
+     * send data for Analytics
+     * @param {string} eventCategory
+     * @param {string} eventAction
+     * @private
+     */
+    ListItem.prototype.sendDataAnalytics_ = function(
+        eventCategory, eventAction) {
+
+        var dataAnalytics = {
+            'hitType': 'event',
+            'eventCategory': eventCategory,
+            'eventAction': eventAction,
+            'eventLabel': this.name_
+        };
+
+        Analytics.send(dataAnalytics);
+    };
+
+
+    /**
+     * get data for ecommerce
+     * @return {Object}
+     * @private
+     */
+    ListItem.prototype.getDataEc_ = function() {
+        return {
             'id': this.params_['id'],
             'name': this.name_,
             'position': this.params_['position']
         };
-
-        Analytics.clickProduct(ecData, 'Search Results');
-
-        var dataAnalytics = {
-            'hitType': 'event',
-            'eventCategory': 'search',
-            'eventAction': 'results click',
-            'eventLabel': this.name_
-        };
-        Analytics.send(dataAnalytics);
     };
 });  // goog.scope
