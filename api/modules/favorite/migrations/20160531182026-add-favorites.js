@@ -10,7 +10,14 @@ module.exports = {
                 type: Sequelize.INTEGER
             },
             user_id: Sequelize.INTEGER,
-            school_id: Sequelize.INTEGER
+            item_id: {
+                onDelete: 'cascade',
+                type: Sequelize.INTEGER,
+                references: {
+                    model: 'school',
+                    key: 'id'
+                }
+            }
         });
     },
     down: function(queryInterface) {

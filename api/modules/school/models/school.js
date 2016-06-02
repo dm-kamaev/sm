@@ -178,6 +178,11 @@ var School = db.define('School', {
                 as: 'additionalEducations',
                 foreignKey: 'school_id'
             });
+            School.hasMany(models.Favorite, {
+                as: 'favorite',
+                foreignKey: 'item_id',
+                onDelete: 'cascade'
+            });
         }
     }
 });
