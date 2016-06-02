@@ -6,6 +6,7 @@ goog.require('goog.soy');
 goog.require('goog.ui.Component');
 goog.require('sm.bAuthorization.Authorization');
 goog.require('sm.bDataBlock.DataBlockFeatures');
+goog.require('sm.bFavoriteLink.FavoriteLink');
 goog.require('sm.bMap.Map');
 goog.require('sm.bRating.Rating');
 goog.require('sm.bScore.Score');
@@ -102,6 +103,14 @@ sm.lSchool.School = function(opt_params) {
      * @private
      */
     this.comments_ = null;
+
+
+    /**
+     * Favorite Links instances
+     * @type {sm.bFavoriteLink.FavoriteLink}
+     * @private
+     */
+    this.favoriteLinks_ = [];
 };
 goog.inherits(sm.lSchool.School, goog.ui.Component);
 
@@ -182,9 +191,26 @@ goog.scope(function() {
     School.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
 
+        this.listenCommentButtons_();
+
+        this.listenFeedbackLinks_();
+
+        this.listenFavoriteLinks_();
+
+        this.setEcAnalyticsPageview_();
+        this.sendAnalyticsPageview_();
+
+        this.listenMap_();
+    };
+
+
+    /**
+     * buttons to listen leaving comments
+     * @private
+     */
+    School.prototype.listenCommentButtons_ = function() {
         var handler = this.getHandler();
 
-        /** bouton listener */
         if (!this.isCommented_()) {
             handler.listen(
                 this.bouton_,
@@ -204,8 +230,16 @@ goog.scope(function() {
                 this.onLeaveComment_
             );
         }
+    };
 
-        /** feedback link listener */
+
+    /**
+     * listen feedback links
+     * @private
+     */
+    School.prototype.listenFeedbackLinks_ = function() {
+        var handler = this.getHandler();
+
         handler.listen(
             this.elements_.inaccuracyLink,
             goog.events.EventType.CLICK,
@@ -223,11 +257,44 @@ goog.scope(function() {
             DataBlockFeatures.Event.LINK_FEEDBACK_CLICK,
             this.onFeedbackLinkClick_
         );
+    };
 
-        this.setEcAnalytics_();
-        this.sendAnalyticsPageview_();
 
-        handler.listen(this.map_, Map.Event.READY, this.onMapReady_);
+    /**
+     * listen to favorite links
+     * @private
+     */
+    School.prototype.listenFavoriteLinks_ = function() {
+        var handler = this.getHandler();
+
+        for (var i = 0; i < this.favoriteLinks_.length; i++) {
+            handler.listen(
+                this.favoriteLinks_[i],
+                sm.bFavoriteLink.FavoriteLink.Event.FAVORITE_ADDED,
+                this.onAddFavoriteClick_
+            );
+
+            handler.listen(
+                this.favoriteLinks_[i],
+                sm.bFavoriteLink.FavoriteLink.Event.FAVORITE_REMOVED,
+                this.onRemoveFavoriteClick_
+            );
+        }
+    };
+
+
+    /**
+     * listens map
+     * @private
+     */
+    School.prototype.listenMap_ = function() {
+        var handler = this.getHandler();
+
+        handler.listen(
+            this.map_,
+            Map.Event.READY,
+            this.onMapReady_
+        );
     };
 
 
@@ -272,15 +339,49 @@ goog.scope(function() {
 
 
     /**
+     * Add Favorite Click
+     * @private
+     */
+    School.prototype.onAddFavoriteClick_ = function() {
+        this.setEcAnalyticsAdd_();
+        this.sendDataAnalytics_('favorite', 'add');
+    };
+
+
+    /**
+     * Remove Favorite Click
+     * @private
+     */
+    School.prototype.onRemoveFavoriteClick_ = function() {
+        this.setEcAnalyticsRemove_();
+        this.sendDataAnalytics_('favorite', 'delete');
+    };
+
+
+    /**
+     * Sets EC analytics to add school from favorites
+     * @private
+     */
+    School.prototype.setEcAnalyticsAdd_ = function() {
+        Analytics.addProduct(this.getDataEc_(), 'School Details');
+    };
+
+
+    /**
+     * Sets EC analytics to remove school from favorites
+     * @private
+     */
+    School.prototype.setEcAnalyticsRemove_ = function() {
+        Analytics.removeProduct(this.getDataEc_(), 'School Details');
+    };
+
+
+    /**
      * Sets EC analytics
      * @private
      */
-    School.prototype.setEcAnalytics_ = function() {
-        Analytics.viewProduct({
-            'id': this.params_['id'],
-            'name': this.params_['schoolName']
-        });
-
+    School.prototype.setEcAnalyticsPageview_ = function() {
+        Analytics.viewProduct(this.getDataEc_());
         Analytics.setView();
     };
 
@@ -295,6 +396,39 @@ goog.scope(function() {
 
 
     /**
+     * send data for Analytics
+     * @param {string} eventCategory
+     * @param {string} eventAction
+     * @private
+     */
+    School.prototype.sendDataAnalytics_ = function(
+        eventCategory, eventAction) {
+
+        var dataAnalytics = {
+            'hitType': 'event',
+            'eventCategory': eventCategory,
+            'eventAction': eventAction,
+            'eventLabel': this.params_['schoolName']
+        };
+
+        Analytics.send(dataAnalytics);
+    };
+
+
+    /**
+     * get data for ecommerce
+     * @return {Object}
+     * @private
+     */
+    School.prototype.getDataEc_ = function() {
+        return {
+            'id': this.params_['id'],
+            'name': this.params_['schoolName']
+        };
+    };
+
+
+    /**
      * show Modal for comments
      * @private
      */
@@ -304,6 +438,55 @@ goog.scope(function() {
         } else {
             Authorization.getInstance().login();
         }
+    };
+
+
+    /**
+     * Load additional points to map
+     * @private
+     */
+    School.prototype.onMapReady_ = function() {
+        jQuery.ajax({
+            url: '/api/school/searchMapPoints',
+            dataType: 'json',
+            type: 'GET'
+        }).then(this.addMapPoints.bind(this));
+    };
+
+
+    /**
+     * Add Points to map
+     * @param {{
+     *     schools: Array.<Object>
+     * }} data
+     */
+    School.prototype.addMapPoints = function(data) {
+        this.map_.addItems(data['schools']);
+    };
+
+
+    /**
+     * @private
+     * @return {boolean}
+     */
+    School.prototype.isCommented_ = function() {
+        return JSON.parse(
+                goog.dom.dataset.get(this.getElement(), 'params')
+            )['isCommented'];
+    };
+
+
+    /**
+     * Check if user object is empty,
+     * if it empty, that means that user is not logged in
+     * @private
+     * @return {Object}
+     */
+    School.prototype.isUserLoggedIn_ = function() {
+        var user = JSON.parse(
+            goog.dom.dataset.get(this.getElement(), 'params')
+        )['user'];
+        return user.id;
     };
 
 
@@ -480,55 +663,6 @@ goog.scope(function() {
 
 
     /**
-     * Load additional points to map
-     * @private
-     */
-    School.prototype.onMapReady_ = function() {
-        jQuery.ajax({
-            url: '/api/school/searchMapPoints',
-            dataType: 'json',
-            type: 'GET'
-        }).then(this.addMapPoints.bind(this));
-    };
-
-
-    /**
-     * Add Points to map
-     * @param {{
-     *     schools: Array.<Object>
-     * }} data
-     */
-    School.prototype.addMapPoints = function(data) {
-        this.map_.addItems(data['schools']);
-    };
-
-
-    /**
-     * @private
-     * @return {boolean}
-     */
-    School.prototype.isCommented_ = function() {
-        return JSON.parse(
-                goog.dom.dataset.get(this.getElement(), 'params')
-            )['isCommented'];
-    };
-
-
-    /**
-     * Check if user object is empty,
-     * if it empty, that means that user is not logged in
-     * @private
-     * @return {Object}
-     */
-    School.prototype.isUserLoggedIn_ = function() {
-        var user = JSON.parse(
-            goog.dom.dataset.get(this.getElement(), 'params')
-        )['user'];
-        return user.id;
-    };
-
-
-    /**
      * Initialization popular schools
      * @param {Element} element
      * @private
@@ -562,11 +696,13 @@ goog.scope(function() {
         );
 
         for (var i = 0; i < favoriteLinks.length; i++) {
-            factory.decorate(
+            var instance = factory.decorate(
                 'favorite-link',
                 favoriteLinks[i],
                 this
             );
+
+            this.favoriteLinks_.push(instance);
         }
 
         return this;
