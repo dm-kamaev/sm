@@ -60,14 +60,14 @@ app.use(session);
 app.use(passport.initialize());
 app.use(passport.session());
 
-require('./app/middleware/csrf')(app);
-
 if (config.environment == 'development') {
     app.use('/doc', modules.doc.router);
     app.use('/', api.debug.router);
     app.use('/apidoc', express.static(path.join(__dirname, '/doc')));
     app.use('/api-debug', express.static(path.join(__dirname, '/api-debug')));
 }
+
+require('./app/middleware/csrf')(app);
 
 app.use(morgan('dev',  {
     skip: (req, res) => res.statusCode >= 400,
