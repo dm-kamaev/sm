@@ -4,29 +4,27 @@ var DataType = require('sequelize'),
 var Favorite = db.define(
     'Favorite',
     {
-        id: {
-            type: DataType.INTEGER,
-            allowNull: false
-        },
         userId: {
             type: DataType.INTEGER,
             field: 'user_id'
         },
-        schoolId: {
+        itemId: {
             type: DataType.INTEGER,
-            field: 'school_id'
+            field: 'item_id'
         }
     },
     {
         underscored: true,
-        tableName: 'favorites',
+        tableName: 'favorite',
         classMethods: {
             associate: function(models) {
-                Favorite.belongsTo(models.school, {
-                    as: 'school',
-                    foreignKey: 'school_id'
+                Favorite.belongsTo(models.School, {
+                    as: 'item',
+                    foreignKey: 'item_id'
                 });
             }
         }
     }
 );
+
+module.exports = Favorite;
