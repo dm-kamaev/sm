@@ -5,12 +5,13 @@ const Decompress = require('decompress');
 const await = require('asyncawait/await');
 const common = require('../../common');
 const path = require('path');
+const sequelize = require('../../../app/components/db');
+const lodash = require('lodash');
 
 
 /**
  * This class can be used standalone from ModelArchiver.
- * Seqeuince of decompress -> your code with that file -> deleteUnarchivedFile
- * can be userfull with migrations based on straight csv uploading to postgres.
+ * Can be userfull with migrations based on straight csv uploading to postgres.
  *
  * To achive this goal you need to:
  *     1) initiate an object of Archiver with path to your archived .csv file;
@@ -58,9 +59,7 @@ class Archiver {
         } catch(e) {
             console.log(e.message);
         } finally {
-            if (!opt_outputFilePath) {
-                this.cleanFolder_();
-            }
+            this.cleanFolder_();
         }
     }
 
@@ -89,6 +88,47 @@ class Archiver {
         try {
             fs.removeSync(path.join(directory, this.tmpName_));
         } catch (e) {}
+    }
+
+    /**
+     * @public
+     * @param {string} table
+     * @param {string} delimiter
+     */
+    copyToDb(table, delimiter) {
+        var fileLocation = path.parse(this.path_),
+            fileDir = fileLocation.dir,
+            filePath = path.join(fileDir, this.tmpName_);
+
+        this.decompress(fileDir);
+
+        var sqlQuery = 'COPY ' + table + '(' + this.getHeaders_(filePath) +
+            ') FROM \'' + filePath + '\' WITH CSV HEADER DELIMITER \'' +
+            delimiter + '\';';
+        await(sequelize.query(sqlQuery));
+
+        this.deleteUnarchivedFile(fileDir);
+    }
+
+    /**
+     * @private
+     * @param {string} filePath
+     * @return {Array<string>}
+     */
+    getHeaders_(filePath) {
+        var file = fs.readFileSync(filePath, {encoding: 'utf8'}),
+            headers = file.slice(0, file.indexOf('\n'));
+
+        return headers.split('|').map(header => this.formatHeader_(header));
+    }
+
+    /**
+     * @private
+     * @param {string} header
+     * @return {string}
+     */
+    formatHeader_(header) {
+        return lodash.snakeCase(header.replace(/("")/g, ''));
     }
 
     /**
