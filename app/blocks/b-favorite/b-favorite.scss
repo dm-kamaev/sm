@@ -1,3 +1,5 @@
+@import "../i-media/i-media";
+
 .b-favorite {
     display: inline-block;
 
@@ -41,6 +43,8 @@
 }
 
 .b-favorite__hint-content_text {
+    text-align: center;
+
     color: #808080;
 
     font: 13px Arial, sans-serif;
@@ -58,5 +62,11 @@
     
     .b-favorite__hint-content_text {
         display: none;
+    }
+}
+
+@include media-xs {
+    .b-favorite {
+        position: static;
     }
 }

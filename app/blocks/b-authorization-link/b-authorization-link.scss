@@ -1,8 +1,12 @@
+@import "../i-media/i-media";
+
 .b-authorization-link {
     display: inline-block;
 
     width: 100%;
     height: 100%;
+
+    text-align: center;
 }
 
 .b-authorization-link__icon-wrap {
@@ -68,3 +72,10 @@
         display: none;
     }
 }
+
+@include media-xs {
+    .b-authorization-link {
+        position: static;
+    }
+}
+

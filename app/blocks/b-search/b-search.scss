@@ -320,6 +320,10 @@
     .b-search__item-icon {
         left: 31px;
     }
+
+    .b-search__control {
+        right: 55px;
+    }
 }
 
 @include media-s {
@@ -338,5 +342,11 @@
         .b-search__item {
             line-height: 50px;
         }
+    }
+}
+
+@include media-xs {
+    .b-search__control {
+        right: 30px;
     }
 }

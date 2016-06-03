@@ -58,8 +58,11 @@
  */
 {template .links_ kind="html" private="true"}
     {call .linkSearch_/}
-    {call .linkAuthorization_ data="all" /}
-    {call .favorite_ data="all" /}
+
+    <div class="b-header__user-controls">
+        {call .linkAuthorization_ data="all" /}
+        {call .favorite_ data="all" /}
+    </div>
 {/template}
 
 
@@ -67,7 +70,7 @@
  * link All Schools template
  */
 {template .linkSearch_ private="true" autoescape="strict" kind="html"}
-    {let $searchIcon kind="html"}
+    <a class="b-header__search-link" href="/search">
         {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
                 'factory': 'stendhal',
@@ -82,22 +85,33 @@
                 ]
             ]/}
         {/call}
-    {/let}
 
-    <div class="b-header__search-link">
         {call sm.bLink.Template.base}
             {param params: [
                 'data': [
-                    'name': 'Все школы Москвы',
-                    'url': '/search',
-                    'icon': $searchIcon
+                    'name': 'Все школы Москвы'
                 ],
                 'config': [
-                    'size': 'extralarge'
+                    'size': 'extralarge',
+                    'customClasses': 'b-header__search-link-text' +
+                            ' b-header__search-link-text_visible_l'
                 ]
             ]/}
         {/call}
-    </div>
+
+        {call sm.bLink.Template.base}
+            {param params: [
+                'data': [
+                    'name': 'Все школы'
+                ],
+                'config': [
+                    'size': 'extralarge',
+                    'customClasses': 'b-header__search-link-text' +
+                            ' b-header__search-link-text_visible_m'
+                ]
+            ]/}
+        {/call}
+    </a>
 {/template}
 
 
@@ -114,8 +128,8 @@
  * }
  */
 {template .linkAuthorization_ kind="html" private="true"}
-    <div class="b-header__authorization-link">
-        <div class="b-header__authorization-link-content">
+    <div class="b-header__user-control b-header__user-control_authorization">
+        <div class="b-header__authorization-content">
             {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
                 {param params: [
                     'factory': 'stendhal',
@@ -141,7 +155,7 @@
  * }}
  */
 {template .favorite_ kind="html" private="true"}
-    <div class="b-header__favorite">
+    <div class="b-header__user-control b-header__user-control_favorite">
         <div class="b-header__favorite-content">
             {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
                 {param params: [
