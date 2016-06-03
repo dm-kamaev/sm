@@ -21,10 +21,11 @@ sm.lSearchResult.bFilter.Filter = function(opt_params) {
 
     /**
      * Parameters
-     * @private
      * @type {Object}
+     * @private
      */
     this.params_ = opt_params || {};
+
 
 
     /**
@@ -73,6 +74,14 @@ sm.lSearchResult.bFilter.Filter = function(opt_params) {
      * @protected
      */
     this.inputElements = null;
+
+
+    /**
+     * Dom Hidable elements
+     * @type {Array<Element>}
+     * @private
+     */
+    this.filterSectionHidableElements_ = [];
 };
 goog.inherits(sm.lSearchResult.bFilter.Filter, goog.ui.Component);
 
@@ -95,6 +104,7 @@ goog.scope(function() {
         ICON_ARROW_DOWN: 'g-icon_img_filter-arrow-down',
         ICON_ARROW_UP: 'g-icon_img_filter-arrow-up',
         FILTER_SECTION: 'b-filter__section',
+        FILTER_SECTION_HIDABLE: 'b-filter__section_hidable',
         INPUT: 'b-filter__input',
         HIDDEN: cl.iUtils.Utils.CssClass.HIDDEN
     };
@@ -165,10 +175,13 @@ goog.scope(function() {
             element
         );
 
-        this.filterSectionHiddenElements_ = [];
         for (var i = 0, elem; elem = this.filterSectionElements_[i]; i++) {
-            if (goog.dom.classes.has(elem, Filter.CssClass.HIDDEN)) {
-                this.filterSectionHiddenElements_.push(elem);
+            var isHidable = goog.dom.classes.has(
+                elem,
+                Filter.CssClass.FILTER_SECTION_HIDABLE
+            );
+            if (isHidable) {
+                this.filterSectionHidableElements_.push(elem);
             }
         }
 
@@ -292,9 +305,9 @@ goog.scope(function() {
      * @private
      */
     Filter.prototype.showHiddenFilters_ = function() {
-        for (var i = 0; i < this.filterSectionHiddenElements_.length; i++) {
+        for (var i = 0; i < this.filterSectionHidableElements_.length; i++) {
             goog.dom.classlist.remove(
-                this.filterSectionHiddenElements_[i],
+                this.filterSectionHidableElements_[i],
                 Filter.CssClass.HIDDEN
             );
         }
@@ -315,9 +328,9 @@ goog.scope(function() {
      * @private
      */
     Filter.prototype.hideShownFilters_ = function() {
-        for (var i = 0; i < this.filterSectionHiddenElements_.length; i++) {
+        for (var i = 0; i < this.filterSectionHidableElements_.length; i++) {
             goog.dom.classlist.add(
-                this.filterSectionHiddenElements_[i],
+                this.filterSectionHidableElements_[i],
                 Filter.CssClass.HIDDEN
             );
         }
