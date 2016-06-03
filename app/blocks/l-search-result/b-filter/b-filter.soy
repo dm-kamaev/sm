@@ -85,6 +85,9 @@
  * }
  */
 {template .filters autoescape="strict" kind="html"}
+    {let $isExpand kind="html"}
+        {call .isExpand_ data="all" /}
+    {/let}
 
     {let $filToShow: $params?.config?.filtersToShow ?
         ($params?.config?.filtersToShow - 1) : 5/}
@@ -100,7 +103,8 @@
             {call .filter}
                 {param params: [
                     'filter': $params.data.filters[$i],
-                    'hidden': $i > $filToShow ? true : false,
+                    'hidden': not $isExpand and $i > $filToShow ? true : false,
+                    'hidable': $i > $filToShow ? true : false,
                     'name': $params.data.name,
                     'id': $i
                 ]/}
@@ -110,7 +114,8 @@
         {if $params.data.filters.length > $filToShow}
             {call .buttonShowMore_}
                 {param params: [
-                    'numberHiddenItems': $params.data.filters.length - $filToShow - 1
+                    'numberHiddenItems': $params.data.filters.length - $filToShow - 1,
+                    'isExpand': $isExpand
                 ]/}
             {/call}
         {/if}
@@ -120,7 +125,8 @@
 /**
  * Tempate button
  * @param? params {
- *     numberHiddenItems: ?number
+ *     numberHiddenItems: ?number,
+ *     isExpand: ?boolean
  * }
  */
 {template .buttonShowMore_ private="true"}
@@ -130,7 +136,8 @@
                 'name': 'Еще ' + $params.numberHiddenItems + ' предметов'
             ],
             'config': [
-                'customClasses': 'b-filter__button b-filter__button_show',
+                'customClasses': ($params.isExpand ? 'i-utils__hidden ' : '') +
+                    'b-filter__button b-filter__button_show',
                 'size': 'small'
             ]
         ]/}
@@ -142,7 +149,8 @@
                 'name': 'Свернуть список'
             ],
             'config': [
-                'customClasses': 'b-filter__button b-filter__button_hide i-utils__hidden',
+                'customClasses': ($params.isExpand ? '' : 'i-utils__hidden ') +
+                    'b-filter__button b-filter__button_hide',
                 'size': 'small'
             ]
         ]/}
@@ -157,13 +165,24 @@
  *         value: ?string,
  *         isChecked: ?boolean
  *     },
- *     hidden: ?bool
+ *     hidden: ?bool,
+ *     hidable: ?bool,
  *     name: ?string,
  *     id: number
  * }
  */
 {template .filter autoescape="strict" kind="html"}
-    <div class="b-filter__section {$params.hidden ? 'i-utils__hidden' : ''}">
+    {let $classes kind="html"}
+        b-filter__section
+        {if $params.hidden}
+            {sp}i-utils__hidden
+        {/if}
+        {if $params.hidable or $params.hidden}
+            {sp}b-filter__section_hidable
+        {/if}
+    {/let}
+
+    <div class="{$classes}">
         <div class="b-filter__filter">
             <input type="checkbox"
                 class="b-filter__input"
@@ -177,6 +196,23 @@
             </label>
         </div>
     </div>
+{/template}
+
+
+/**
+ * Show list of filters collapsed or expanded
+ * @param? params {
+ *     filter: ?{
+ *         isChecked: ?boolean
+ *     }
+ * }
+ */
+{template .isExpand_ kind="html" private="true"}
+    {for $i in range($params.data.filters.length)}
+        {if $i > 5 and $params.data.filters[$i].isChecked}
+            true
+        {/if}
+    {/for}
 {/template}
 
 
