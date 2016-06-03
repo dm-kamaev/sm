@@ -326,12 +326,6 @@
     }
 }
 
-@include media-xs {
-    .b-search__control {
-        right: 30px;
-    }
-}
-
 @include media-s {
     .b-search_theme_min,
     .b-search_theme_foldable{
@@ -348,5 +342,11 @@
         .b-search__item {
             line-height: 50px;
         }
+    }
+}
+
+@include media-xs {
+    .b-search__control {
+        right: 30px;
     }
 }

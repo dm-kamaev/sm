@@ -70,7 +70,7 @@
  * link All Schools template
  */
 {template .linkSearch_ private="true" autoescape="strict" kind="html"}
-    {let $searchIcon kind="html"}
+    <a class="b-header__search-link" href="/search">
         {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
                 'factory': 'stendhal',
@@ -85,37 +85,33 @@
                 ]
             ]/}
         {/call}
-    {/let}
 
-    <div class="b-header__search-link b-header__search-link_visible_l">
         {call sm.bLink.Template.base}
             {param params: [
                 'data': [
-                    'name': 'Все школы Москвы',
-                    'url': '/search',
-                    'icon': $searchIcon
+                    'name': 'Все школы Москвы'
                 ],
                 'config': [
-                    'size': 'extralarge'
+                    'size': 'extralarge',
+                    'customClasses': 'b-header__search-link-text' +
+                            ' b-header__search-link-text_visible_l'
                 ]
             ]/}
         {/call}
-    </div>
 
-    <div class="b-header__search-link b-header__search-link_visible_m">
         {call sm.bLink.Template.base}
             {param params: [
                 'data': [
-                    'name': 'Все школы',
-                    'url': '/search',
-                    'icon': $searchIcon
+                    'name': 'Все школы'
                 ],
                 'config': [
-                    'size': 'extralarge'
+                    'size': 'extralarge',
+                    'customClasses': 'b-header__search-link-text' +
+                            ' b-header__search-link-text_visible_m'
                 ]
             ]/}
         {/call}
-    </div>
+    </a>
 {/template}
 
 
