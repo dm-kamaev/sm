@@ -12,6 +12,7 @@
  * @property {?number} config.filtersToShow
  */
 
+
 /**
  * Filter template
  * @param? params {sm.lSearchResult.bFilter.Template.Params}
@@ -20,22 +21,17 @@
     {call .init data="all"/}
 {/template}
 
-/**
- * Root class name template
- */
-{template .rootClassName autoescape="strict" kind="html"}
-    b-filter
-{/template}
 
 /**
  * Filter init template
  */
 {template .init autoescape="strict" kind="html"}
-    <div class="{call .rootClassName/}">
+    <div class="{call .rootClass/} {call .additionalClasses/}">
         {call .header data="all"/}
         {call .filters data="all"/}
     </div>
 {/template}
+
 
 /**
  * Header template
@@ -52,25 +48,22 @@
  * }
  */
 {template .header autoescape="strict" kind="html"}
-    <div class="b-filter__header">
-        <span class="b-filter__title">
-            {$params?.data?.header?.title}
-        </span>
+    <div class="{call .rootClass/}__header">
+        {call .title data="all" /}
+
         {if $params?.data?.header?.tooltip}
-            {call .tooltip}
-                {param params: [
-                    'text': $params?.data?.header?.tooltip
-                ]/}
-            {/call}
+            {call .tooltip data="all" /}
         {/if}
+
         {if not $params?.config?.cannotBeHidden}
             {call .showFiltersButton data="all" /}
         {/if}
     </div>
 {/template}
 
+
 /**
- * Body template
+ * filters template
  * @param? params {
  *     data: ?{
  *         filters: ?list<{
@@ -85,77 +78,22 @@
  * }
  */
 {template .filters autoescape="strict" kind="html"}
-    {let $isExpand kind="html"}
-        {call .isExpand_ data="all" /}
-    {/let}
+    {let $classes kind="html"}
+        {call .rootClass/}__filters
 
-    {let $filToShow: $params?.config?.filtersToShow ?
-        ($params?.config?.filtersToShow - 1) : 5/}
-
-    <div class="b-filter__filters
         {if not $params?.config?.cannotBeHidden}
             {if not $params?.config?.isShowed}
                 {sp}i-utils__hidden
             {/if}
         {/if}
-        ">
-        {for $i in range($params.data.filters.length)}
-            {call .filter}
-                {param params: [
-                    'filter': $params.data.filters[$i],
-                    'hidden': not $isExpand and $i > $filToShow ? true : false,
-                    'hidable': $i > $filToShow ? true : false,
-                    'name': $params.data.name,
-                    'id': $i
-                ]/}
-            {/call}
-        {/for}
+    {/let}
 
-        {if $params.data.filters.length > $filToShow}
-            {call .buttonShowMore_}
-                {param params: [
-                    'numberHiddenItems': $params.data.filters.length - $filToShow - 1,
-                    'isExpand': $isExpand
-                ]/}
-            {/call}
-        {/if}
+    <div class="{$classes}">
+        {call .listFilters_ data="all" /}
+        {call .button_ data="all"/}
     </div>
 {/template}
 
-/**
- * Tempate button
- * @param? params {
- *     numberHiddenItems: ?number,
- *     isExpand: ?boolean
- * }
- */
-{template .buttonShowMore_ private="true"}
-    {call sm.bLink.Template.base}
-        {param params: [
-            'data': [
-                'name': 'Еще ' + $params.numberHiddenItems + ' предметов'
-            ],
-            'config': [
-                'customClasses': ($params.isExpand ? 'i-utils__hidden ' : '') +
-                    'b-filter__button b-filter__button_show',
-                'size': 'small'
-            ]
-        ]/}
-    {/call}
-
-    {call sm.bLink.Template.base}
-        {param params: [
-            'data': [
-                'name': 'Свернуть список'
-            ],
-            'config': [
-                'customClasses': ($params.isExpand ? '' : 'i-utils__hidden ') +
-                    'b-filter__button b-filter__button_hide',
-                'size': 'small'
-            ]
-        ]/}
-    {/call}
-{/template}
 
 /**
  * Filter template
@@ -173,29 +111,147 @@
  */
 {template .filter autoescape="strict" kind="html"}
     {let $classes kind="html"}
-        b-filter__section
+        {call .rootClass/}__section
+
         {if $params.hidden}
             {sp}i-utils__hidden
         {/if}
+
         {if $params.hidable or $params.hidden}
-            {sp}b-filter__section_hidable
+            {sp}{call .rootClass/}__section_hidable
         {/if}
     {/let}
 
     <div class="{$classes}">
-        <div class="b-filter__filter">
+        <div class="{call .rootClass/}__filter">
             <input type="checkbox"
-                class="b-filter__input"
+                class="{call .rootClass/}__input"
                 id="{$params.name}-{$params.id}"
                 name="{$params.name}"
                 value="{$params.filter.value}"
                 {$params.filter?.isChecked ? 'checked' : ''}/>
+
             <label for="{$params.name}-{$params.id}"
-                class="b-filter__input-label">
+                class="{call .rootClass/}__input-label">
                 {$params.filter.label}
             </label>
         </div>
     </div>
+{/template}
+
+
+/**
+ * Body template
+ * @param? params {
+ *     data: ?{
+ *         filters: ?list<{
+ *             label: ?string,
+ *             value: ?string
+ *         }>,
+ *         name: ?string
+ *     }
+ * }
+ */
+{template .listFilters_ autoescape="strict" kind="html"}
+    {let $isExpanded kind="html"}
+        {call .isExpanded_ data="all" /}
+    {/let}
+
+    {let $filToShow kind="html"}
+        {call .filToShow_ data="all" /}
+    {/let}
+
+    {for $i in range($params.data.filters.length)}
+        {call .filter}
+            {param params: [
+                'filter': $params.data.filters[$i],
+                'hidden': not $isExpanded and $i > $filToShow ? true : false,
+                'hidable': $i > $filToShow ? true : false,
+                'name': $params.data.name,
+                'id': $i
+            ]/}
+        {/call}
+    {/for}
+{/template}
+
+
+/**
+ * Body template
+ * @param? params {
+ *     data: ?{
+ *         name: ?string
+ *     }
+ * }
+ */
+{template .button_ autoescape="strict" kind="html"}
+    {let $isExpanded kind="html"}
+        {call .isExpanded_ data="all" /}
+    {/let}
+
+    {let $filToShow kind="html"}
+        {call .filToShow_ data="all" /}
+    {/let}
+
+    {if $params.data.filters.length > $filToShow}
+        {call .buttonShowMore_}
+            {param params: [
+                'numberHiddenItems': $params.data.filters.length - $filToShow - 1,
+                'isExpanded': $isExpanded
+            ]/}
+        {/call}
+    {/if}
+{/template}
+
+
+/**
+ * Tempate button
+ * @param? params {
+ *     numberHiddenItems: ?number,
+ *     isExpanded: ?boolean
+ * }
+ */
+{template .buttonShowMore_ private="true"}
+    {let $customClassesButtonShow kind="html"}
+        {call .rootClass/}__button{sp}
+        {call .rootClass/}__button_show
+
+        {if $params.isExpanded}
+            {sp}i-utils__hidden
+        {/if}
+    {/let}
+
+    {let $customClassesButtonHide kind="html"}
+        {call .rootClass/}__button{sp}
+        {call .rootClass/}__button_hide
+
+        {if not $params.isExpanded}
+            {sp}i-utils__hidden
+        {/if}
+    {/let}
+
+    {call sm.bLink.Template.base}
+        {param params: [
+            'data': [
+                'name': 'Еще ' + $params.numberHiddenItems + ' предметов'
+            ],
+            'config': [
+                'customClasses': $customClassesButtonShow,
+                'size': 'small'
+            ]
+        ]/}
+    {/call}
+
+    {call sm.bLink.Template.base}
+        {param params: [
+            'data': [
+                'name': 'Свернуть список'
+            ],
+            'config': [
+                'customClasses': $customClassesButtonHide,
+                'size': 'small'
+            ]
+        ]/}
+    {/call}
 {/template}
 
 
@@ -207,12 +263,29 @@
  *     }
  * }
  */
-{template .isExpand_ kind="html" private="true"}
+{template .isExpanded_ kind="html" private="true"}
     {for $i in range($params.data.filters.length)}
         {if $i > 5 and $params.data.filters[$i].isChecked}
             true
         {/if}
     {/for}
+{/template}
+
+
+/**
+ * determines how many filters show
+ * @param? params {
+ *     config: ?{
+ *         filtersToShow: ?number
+ *     }
+ * }
+ */
+{template .filToShow_ kind="html" private="true"}
+    {if $params?.config?.filtersToShow}
+        {$params?.config?.filtersToShow - 1}
+    {else}
+        5
+    {/if}
 {/template}
 
 
@@ -225,8 +298,8 @@
  * }
  */
 {template .showFiltersButton}
-    <div class="b-filter__show-filters-button">
-        <div class="b-filter__show-filters-icon{sp}
+    <div class="{call .rootClass/}__show-filters-button">
+        <div class="{call .rootClass/}__show-filters-icon{sp}
             {$params?.config?.isShowed ?
                 'g-icon_img_filter-arrow-up' :
                 'g-icon_img_filter-arrow-down'
@@ -237,31 +310,45 @@
 
 
 /**
+ * Title template
+ * @param? params {
+ *     data: ?{
+ *         header: ?{
+ *             title: ?string
+ *         }
+ *     }
+ * }
+ */
+{template .title autoescape="strict" kind="html"}
+    <span class="{call .rootClass/}__title">
+        {$params?.data?.header?.title}
+    </span>
+{/template}
+
+
+/**
  * Template tooltip
  * @param? params {
- *     text: ?string
+ *     data: ?{
+ *         header: ?{
+ *             tooltip: ?string
+ *         }
+ *     }
  * }
  */
 {template .tooltip}
-    <div class="b-filter__tooltip i-hint">
-        <div class="b-filter__tooltip-icon">
-            {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
-                {param params: [
-                    'type': 'icon',
-                    'renderParams': [
-                        'data': [
-                            'type': 'school-button'
-                        ]
-                    ]
-                ]/}
-            {/call}
-        </div>
+    <div class="{call .rootClass/}__tooltip i-hint">
+        {let $customClasses kind="html"}
+            {call .rootClass/}__hint
+        {/let}
 
         {let $tooltipData kind="html"}
-            <div class="b-filter__hint-content">
-                {$params?.text}
+            <div class="{call .rootClass/}__hint-content">
+                {$params?.data?.header?.tooltip}
             </div>
         {/let}
+
+        {call .tooltipIcon /}
 
         {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
             {param params: [
@@ -270,10 +357,44 @@
                     'data': $tooltipData,
                     'config': [
                         'align': 'arrow',
-                        'customClasses': ['b-filter__hint']
+                        'customClasses': [$customClasses]
                     ]
                 ]
             ]/}
         {/call}
     </div>
+{/template}
+
+
+/**
+ * Template tooltip icon
+ */
+{template .tooltipIcon}
+    <div class="{call .rootClass/}__tooltip-icon">
+        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+            {param params: [
+                'type': 'icon',
+                'renderParams': [
+                    'data': [
+                        'type': 'school-button'
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Root class name template
+ */
+{template .rootClass}
+    b-filter
+{/template}
+
+
+/**
+ * @override
+ */
+{template .additionalClasses}
 {/template}
