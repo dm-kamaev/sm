@@ -106,19 +106,6 @@ var School = db.define('School', {
     commentGroupId: {
         type: DataType.INTEGER,
         field: 'comment_group_id'
-    },
-    views: {
-        type: DataType.INTEGER,
-        notNull: false,
-        defaultValue: 0
-    },
-    url: {
-        type: DataType.STRING,
-        unique: true
-    },
-    seoDescription: {
-        type: DataType.STRING(300),
-        field: 'seo_description'
     }
 }, {
     underscored: true,

@@ -9,6 +9,7 @@ var models = require('../../../../app/components/models').all;
 var services = require('../../../../app/components/services').all;
 var searchTypeEnum = require('../enums/searchType');
 var schoolTypeEnum = require('../enums/schoolType');
+var entityType = require('../../entity/enums/entityType');
 
 var sequelize = require('../../../../app/components/db');
 var logger = require('../../../../app/components/logger/logger').getLogger('app');
@@ -173,13 +174,14 @@ service.incrementViews = async(function(schoolId) {
  * @return {array<object>} school instances
  */
 service.getPopularSchools = async(function(opt_amount) {
+    var pages = await(services.page.getPopular(entityType.SCHOOL, opt_amount));
+
     return await(models.School.findAll({
         where: {
-             $not: {
-                 views: 0
-             }
+            id: {
+                $in: pages.map(page => page.entityId)
+            }
         },
-        limit: opt_amount || 10,
         include: [{
             model: models.Address,
             as: 'addresses',
@@ -200,7 +202,6 @@ service.getPopularSchools = async(function(opt_amount) {
             ]
         }],
         order: [
-            ['views', 'DESC'],
             [
                 {
                     model: models.Address,
@@ -251,7 +252,7 @@ service.getRandomIndexes = function(start, end, amount) {
 
         res.push(randomIndex);
     }
-    
+
     return res;
 };
 

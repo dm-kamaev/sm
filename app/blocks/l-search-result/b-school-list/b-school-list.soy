@@ -6,7 +6,7 @@
  * @param? params {
  *     schools: ?list<[
  *         id: ?number,
- *         url: ?string,
+ *         alias: ?string,
  *         name: [
  *             light: ?string,
  *             bold: ?string
@@ -75,7 +75,7 @@
                 {call sm.bSchoolListItem.Template.base}
                     {param params:[
                         'id': $school.id,
-                        'url': $school.url,
+                        'alias': $school.alias,
                         'name': $school.name,
                         'type': $school.type,
                         'score': $school.score,

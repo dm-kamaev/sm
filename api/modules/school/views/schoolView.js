@@ -45,7 +45,6 @@ schoolView.default = function(schoolInstance, data, user, opt_popularSchools) {
         scoreCount = schoolInstance.scoreCount || [0, 0, 0, 0];
     var result = {
         id: schoolInstance.id,
-        url: schoolInstance.url,
         schoolName: schoolInstance.name,
         schoolType: schoolInstance.schoolType,
         schoolDescr: schoolInstance.description,
@@ -83,15 +82,15 @@ schoolView.default = function(schoolInstance, data, user, opt_popularSchools) {
             olymp: olimpResultView.transformResults(data.olymp)
         },
         authSocialLinks: data.authSocialLinks,
-        reviewCount: schoolInstance.totalScore ?
-            schoolInstance.reviewCount : 0,
         isCommented: user.isCommented,
         user: {
             firstName: user.firstName,
             lastName: user.lastName,
             id: user.id
         },
-        seoDescription: schoolInstance.seoDescription
+        reviewCount: schoolInstance.totalScore ?
+            schoolInstance.reviewCount : 0,
+        seoDescription: data.page.description
     };
     if (data.popularSchools) {
         result.popularSchools = this.popular(data.popularSchools);
@@ -109,7 +108,7 @@ schoolView.popular = function(popularSchools) {
     return popularSchools.map(school => {
         return {
             id: school.id,
-            url: school.url,
+            alias: school.alias,
             name: school.name,
             description: school.description || '',
             metro: nearestMetro(school.addresses),
@@ -329,7 +328,7 @@ var getStages = function(departments) {
  * @param {number} opt_page
  * @return {object} contains results count and schools array
  */
-schoolView.list = function(schools, opt_criterion, opt_page) {
+schoolView.list = function(schools, schoolAliases, opt_criterion, opt_page) {
     var res = {};
 
     if (schools.length !== 0) {
@@ -347,7 +346,7 @@ schoolView.list = function(schools, opt_criterion, opt_page) {
 
                 return {
                     id: school.id,
-                    url: school.url,
+                    alias: school.alias,
                     name: getName(school.name),
                     type: school.schoolType,
                     description: school.description,
@@ -414,7 +413,7 @@ schoolView.schoolMap = function(school) {
         id: school.id,
         name: school.name,
         description: school.description,
-        url: school.url,
+        alias: school.alias,
         totalScore: school.totalScore
     };
 };
@@ -428,7 +427,7 @@ schoolView.suggestList = function(schools) {
         .map(school => {
             return {
                 id: school.id,
-                url: school.url,
+                alias: school.alias,
                 name: school.name,
                 description: '',
                 abbreviation: school.abbreviation,
@@ -438,6 +437,27 @@ schoolView.suggestList = function(schools) {
                 addresses: school.addresses
             };
     });
+};
+
+/**
+ * @param {array<object>} schools
+ * @param {array<object>} aliases
+ * @return {array<object>}
+ */
+schoolView.joinAliases = function(schools, aliases) {
+    return schools.map(school => {
+        school.alias = getAlias(aliases, school.id);
+        return school;
+    });
+};
+
+/**
+ * @param {Array<Object>} schoolAliases
+ * @param {number} schoolId
+ * @return {string}
+ */
+var getAlias = function(schoolAliases, schoolId) {
+    return lodash.find(schoolAliases, {entityId: schoolId}).alias;
 };
 
 /**

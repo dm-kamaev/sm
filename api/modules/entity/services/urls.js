@@ -1,10 +1,14 @@
+'use strict';
+
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var translit = require('translitit-cyrillic-russian-to-latin');
 
 var logger = require('../../../../app/components/logger/logger').getLogger('app');
 
-var models = require('../../../../app/components/models').all;
+var models = require('../../../../app/components/models').all,
+    services = require('../../../../app/components/services').all,
+    entityType = require('../enums/entityType');
 
 var service = {
     name: 'urls'
@@ -74,7 +78,7 @@ service.createIdUrls = async(function() {
 });
 
 /**
- * Used in console script to initialise urls 
+ * Used in console script to initialise urls
  */
 service.updateAll = async(function() {
     var schools = await(models.School.findAll());
@@ -93,28 +97,30 @@ service.getAllUrls = async(function() {
 });
 
 /**
- * @param {string} url
+ * @param {string} alias
  * @return {id || null} school
  */
-service.getSchoolByUrl = async(function(url){
-    var school = await(models.School.findOne({
-        where: {
-            url: url
-        },
-        attributes: ['id', 'url']
-    }));
+service.getSchoolByUrl = async(function(alias) {
+    var page = await(services.page.getByAlias(alias, entityType.SCHOOL)),
+        school = await(models.School.findOne({
+            where: {
+                id: page.entityId
+            },
+            attributes: ['id']
+        }));
     if (!school) {
         var record = await(models.SchoolUrl.findOne({
             where: {
                 url: url
             }
         }));
-        school = record ? 
+        school = record ?
             await(models.School.findOne({where: {id: record.schoolId}})) :
             null;
+    } else {
+        school.alias = page.alias;
     }
     return school;
 });
 
 module.exports = service;
-

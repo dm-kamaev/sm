@@ -40,7 +40,7 @@ sm.bSchoolListItem.SchoolListItem = function(opt_params) {
      * @private
      * @type {string}
      */
-    this.url_ = this.params_.url;
+    this.alias_ = this.params_.alias;
 
 
     /**
@@ -153,7 +153,7 @@ goog.scope(function() {
                     id: params['id'],
                     fullName: params['fullName'],
                     description: params['description'],
-                    url: params['url'],
+                    alias: params['alias'],
                     name: {
                         bold: params['name']['bold'],
                         light: params['name']['light']
@@ -351,7 +351,7 @@ goog.scope(function() {
         );
 
         this.schoolId_ = this.params_.id;
-        this.url_ = this.params_.url;
+        this.alias_ = this.params_.alias;
         this.name_ = this.params_.name['light'] + this.params_.name['bold'];
     };
 

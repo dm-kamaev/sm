@@ -4,7 +4,6 @@ const Sequelize = require('sequelize');
 
 const sequelize = require('../../../../app/components/db'),
       entityTypes = require('../enums/entityType');
-console.log(entityTypes.toArray());
 
 var Page = sequelize.define('Page', {
     entityId: {
@@ -25,7 +24,7 @@ var Page = sequelize.define('Page', {
         type: Sequelize.STRING,
         allowNull: false,
         unique: 'compositeIndex'
-    }
+    },
     views: Sequelize.INTEGER,
     description: Sequelize.STRING(300)
 }, {

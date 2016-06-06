@@ -53,8 +53,8 @@
 {template .balloon}
     <div class="b-map__balloon">
         <div class="b-map__balloon-name">
-            [if properties.url]
-                <a href="/school/$[properties.url]" class="b-map__href">
+            [if properties.alias]
+                <a href="/school/$[properties.alias]" class="b-map__href">
                     $[properties.name]
                 </a>
             [else]
