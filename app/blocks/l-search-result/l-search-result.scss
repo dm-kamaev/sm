@@ -20,7 +20,7 @@ html, body {
     content: '';
 }
 
-.l-search-result__top-menu{
+.l-search-result__top-menu {
     display: inline-block;
 
     width: 100%;
@@ -44,7 +44,7 @@ html, body {
 .l-search-result__left-menu {
     float: left;
 
-    width: 340px;
+    width: 380px;
 
     text-align: center;
 }
@@ -148,6 +148,10 @@ html, body {
     .l-search-result__filters {
         box-sizing: content-box;
         padding: 0 40px;
+    }
+
+    .l-search-result__left-menu {
+        width: 340px;
     }
 }
 
