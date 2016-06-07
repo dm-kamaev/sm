@@ -90,8 +90,8 @@ goog.inherits(sm.bMap.Map, goog.ui.Component);
 
 
 goog.scope(function() {
-    var Map = sm.bMap.Map;
-    var Viewport = sm.lSchool.iViewport.Viewport;
+    var Map = sm.bMap.Map,
+        Viewport = sm.lSchool.iViewport.Viewport;
 
 
     /**
@@ -107,6 +107,7 @@ goog.scope(function() {
      */
     Map.CssClass = {
         ROOT: 'b-map',
+        ITEM_NAME: 'b-map__href',
         BALLOON: 'b-map__balloon',
         CLOSE_BALLOON: 'b-map__balloon-close'
     };
@@ -117,7 +118,8 @@ goog.scope(function() {
      * @enum {string}
      */
     Map.Event = {
-      READY: 'ready'
+      READY: 'ready',
+      ITEM_NAME_CLICK: 'item-name-click'
     };
 
 
@@ -647,9 +649,17 @@ goog.scope(function() {
                         '.' + Map.CssClass.CLOSE_BALLOON,
                         this._$element[0]
                     );
+                    this.itemName_ = jQuery(
+                        '.' + Map.CssClass.ITEM_NAME,
+                        this._$element[0]
+                    );
                     this.closeButton_.on(
                         'click',
                         jQuery.proxy(this.onCloseClick, this)
+                    );
+                    this.itemName_.on(
+                        'click',
+                        jQuery.proxy(this.onItemNameClick, this)
                     );
                 },
                 clear: function() {
@@ -677,6 +687,21 @@ goog.scope(function() {
                     e.preventDefault();
                     that.removeActiveStateFromSelectedPlacemark_();
                     this.events.fire('userclose');
+                },
+                onItemNameClick: function(e) {
+                    var name = goog.dom.getTextContent(this.itemName_[0]);
+
+                    var params = JSON.parse(
+                            goog.dom.dataset.get(this.itemName_[0], 'params')
+                        );
+
+                    that.dispatchEvent({
+                        'type': Map.Event.ITEM_NAME_CLICK,
+                        'data': {
+                            'name': name,
+                            'id': params['id']
+                        }
+                    });
                 },
                 'getShape': function() {
                     if (!this._isElement(this._$element)) {

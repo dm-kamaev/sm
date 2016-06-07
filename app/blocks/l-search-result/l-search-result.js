@@ -386,6 +386,12 @@ goog.scope(function() {
             Map.Event.READY,
             this.onMapReady_
         );
+
+        this.getHandler().listen(
+            this.instances_.map,
+            Map.Event.ITEM_NAME_CLICK,
+            this.onMapItemNameClick_
+        );
     };
 
 
@@ -513,6 +519,55 @@ goog.scope(function() {
     SearchResult.prototype.onMapReady_ = function() {
         this.send_(this.requestParams_.mapDataUrl)
             .then(this.addMapPoints_.bind(this));
+    };
+
+
+    /**
+     * go to school by clicking on name on map
+     * @param {Object} event
+     * @private
+     */
+    SearchResult.prototype.onMapItemNameClick_ = function(event) {
+        var name = event['data']['name'],
+            id = event['data']['id'];
+
+        this.setEcAnalyticsClickMap_(id, name);
+        this.sendDataAnalytics_('search map', 'schools click', name);
+    };
+
+
+    /**
+     * Sets EC analytics on click on map
+     * @param {number} id
+     * @param {string} name
+     * @private
+     */
+    SearchResult.prototype.setEcAnalyticsClickMap_ = function(id, name) {
+        var dataEc = {
+            'id': id,
+            'name': name
+        };
+        Analytics.clickProduct(dataEc, 'Search Map');
+    };
+
+
+    /**
+     * send data for Analytics
+     * @param {string} eventCategory
+     * @param {string} eventAction
+     * @param {string} eventLabel
+     * @private
+     */
+    SearchResult.prototype.sendDataAnalytics_ = function(
+        eventCategory, eventAction, eventLabel) {
+
+        var dataAnalytics = {
+            'hitType': 'event',
+            'eventCategory': eventCategory,
+            'eventAction': eventAction,
+            'eventLabel': eventLabel
+        };
+        Analytics.send(dataAnalytics);
     };
 
 

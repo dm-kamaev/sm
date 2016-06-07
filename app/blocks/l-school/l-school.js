@@ -295,6 +295,12 @@ goog.scope(function() {
             Map.Event.READY,
             this.onMapReady_
         );
+
+        handler.listen(
+            this.map_,
+            Map.Event.ITEM_NAME_CLICK,
+            this.onMapItemNameClick_
+        );
     };
 
 
@@ -339,6 +345,33 @@ goog.scope(function() {
 
 
     /**
+     * Load additional points to map
+     * @private
+     */
+    School.prototype.onMapReady_ = function() {
+        jQuery.ajax({
+            url: '/api/school/searchMapPoints',
+            dataType: 'json',
+            type: 'GET'
+        }).then(this.addMapPoints.bind(this));
+    };
+
+
+    /**
+     * go to school by clicking on name on map
+     * @param {Object} event
+     * @private
+     */
+    School.prototype.onMapItemNameClick_ = function(event) {
+        var name = event['data']['name'],
+            id = event['data']['id'];
+
+        this.setEcAnalyticsClickMap_(id, name);
+        this.sendDataAnalytics_('school map', 'schools click', name);
+    };
+
+
+    /**
      * Add Favorite Click
      * @private
      */
@@ -377,6 +410,17 @@ goog.scope(function() {
 
 
     /**
+     * Sets EC analytics on click
+     * @param {number} id
+     * @param {string} name
+     * @private
+     */
+    School.prototype.setEcAnalyticsClickMap_ = function(id, name) {
+        Analytics.clickProduct(this.getDataEc_(id, name), 'School Map');
+    };
+
+
+    /**
      * Sets EC analytics
      * @private
      */
@@ -399,16 +443,17 @@ goog.scope(function() {
      * send data for Analytics
      * @param {string} eventCategory
      * @param {string} eventAction
+     * @param {string=} opt_eventLabel
      * @private
      */
     School.prototype.sendDataAnalytics_ = function(
-        eventCategory, eventAction) {
+        eventCategory, eventAction, opt_eventLabel) {
 
         var dataAnalytics = {
             'hitType': 'event',
             'eventCategory': eventCategory,
             'eventAction': eventAction,
-            'eventLabel': this.params_['schoolName']
+            'eventLabel': opt_eventLabel || this.params_['schoolName']
         };
 
         Analytics.send(dataAnalytics);
@@ -417,13 +462,15 @@ goog.scope(function() {
 
     /**
      * get data for ecommerce
+     * @param {number=} opt_id
+     * @param {string=} opt_name
      * @return {Object}
      * @private
      */
-    School.prototype.getDataEc_ = function() {
+    School.prototype.getDataEc_ = function(opt_id, opt_name) {
         return {
-            'id': this.params_['id'],
-            'name': this.params_['schoolName']
+            'id': opt_id || this.params_['id'],
+            'name': opt_name || this.params_['schoolName']
         };
     };
 
@@ -438,19 +485,6 @@ goog.scope(function() {
         } else {
             Authorization.getInstance().login();
         }
-    };
-
-
-    /**
-     * Load additional points to map
-     * @private
-     */
-    School.prototype.onMapReady_ = function() {
-        jQuery.ajax({
-            url: '/api/school/searchMapPoints',
-            dataType: 'json',
-            type: 'GET'
-        }).then(this.addMapPoints.bind(this));
     };
 
 
