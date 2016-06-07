@@ -89,8 +89,10 @@ goog.scope(function() {
     var ListItem = sm.bSchoolListItem.SchoolListItem,
         ScoreMinimized = sm.bScore.ScoreMinimized,
         Badge = sm.bBadge.Badge,
-        FactoryManager = cl.iFactory.FactoryManager,
-        Analytics = sm.iAnalytics.Analytics.getInstance();
+        FactoryManager = cl.iFactory.FactoryManager;
+
+    var analytics = sm.iAnalytics.Analytics.getInstance();
+
 
 
     /**
@@ -111,16 +113,6 @@ goog.scope(function() {
      */
     ListItem.prototype.getSchoolId = function() {
         return this.schoolId_;
-    };
-
-
-    /**
-     * Compare by id ascending
-     * @param {sm.bSchoolListItem.SchoolListItem} item
-     * @return {number}
-     */
-    ListItem.prototype.compareById = function(item) {
-        return this.getSchoolId() - item.getSchoolId();
     };
 
 
@@ -268,6 +260,7 @@ goog.scope(function() {
         goog.base(this, 'enterDocument');
 
         var handler = this.getHandler();
+        var handler = this.getHandler();
 
         if (this.isActive_) {
             if (this.elements_.sectionBadges) {
@@ -306,6 +299,7 @@ goog.scope(function() {
     ListItem.prototype.onRemoveFavoriteClick_ = function() {
         this.setEcAnalyticsRemove_();
         this.sendDataAnalytics_('favourite', 'delete');
+        this.sendRemoveFromFavorites_();
     };
 
 
@@ -316,6 +310,7 @@ goog.scope(function() {
     ListItem.prototype.onAddFavoriteClick_ = function() {
         this.setEcAnalyticsAdd_();
         this.sendDataAnalytics_('favourite', 'add');
+        this.sendAddToFavorites_();
     };
 
 
@@ -393,7 +388,7 @@ goog.scope(function() {
      * @private
      */
     ListItem.prototype.setEcAnalyticsClick_ = function() {
-        Analytics.clickProduct(this.getDataEc_(), 'Search Results');
+        analytics.clickProduct(this.getDataEc_(), 'Search Results');
     };
 
 
@@ -402,7 +397,7 @@ goog.scope(function() {
      * @private
      */
     ListItem.prototype.setEcAnalyticsAdd_ = function() {
-        Analytics.addProduct(this.getDataEc_(), 'Search Results');
+        analytics.addProduct(this.getDataEc_(), 'Search Results');
     };
 
 
@@ -411,7 +406,24 @@ goog.scope(function() {
      * @private
      */
     ListItem.prototype.setEcAnalyticsRemove_ = function() {
-        Analytics.removeProduct(this.getDataEc_(), 'Search Results');
+        analytics.removeProduct(this.getDataEc_(), 'Search Results');
+    };
+
+    /**
+     * Send data about adding to favorites
+     * @private
+     */
+    ListItem.prototype.sendAddToFavorites_ = function() {
+        this.favoriteLink_.sendData(this.getSchoolId(), 'add');
+    };
+
+
+    /**
+     * Send data about removing from favorites
+     * @private
+     */
+    ListItem.prototype.sendRemoveFromFavorites_ = function() {
+        this.favoriteLink_.sendData(this.getSchoolId(), 'remove');
     };
 
 
@@ -431,7 +443,8 @@ goog.scope(function() {
             'eventLabel': this.name_
         };
 
-        Analytics.send(dataAnalytics);
+        var analytics = sm.iAnalytics.Analytics.getInstance();
+        analytics.send(dataAnalytics);
     };
 
 
