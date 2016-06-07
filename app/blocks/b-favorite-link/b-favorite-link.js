@@ -124,11 +124,11 @@ goog.scope(function() {
         }
         var token = window['ctx']['csrf'];
         return jQuery.ajax({
-            url: this.favoriteApiAddress_,
-            type: method,
-            data: {
-                itemId: itemId,
-                _csrf: token
+            'url': this.favoriteApiAddress_,
+            'type': method,
+            'data': {
+                'itemId': itemId,
+                '_csrf': token
             }
         });
     };
