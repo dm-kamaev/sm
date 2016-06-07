@@ -39,6 +39,7 @@
     </div>
 {/template}
 
+
 /**
 * API request for ymaps
 */
@@ -47,20 +48,27 @@
     </script>
 {/template}
 
+
 /**
- * BalloonTemplate
+ * Balloon Template
  */
 {template .balloon}
     <div class="b-map__balloon">
+        {let $dataParams kind="js"}
+            {lb}"id": $[properties.id]{rb}
+        {/let}
+
         <div class="b-map__balloon-name">
             [if properties.url]
-                <a href="/school/$[properties.url]" class="b-map__href">
+                <a href="/school/$[properties.url]" class="b-map__href"
+                    data-params="{$dataParams}">
                     $[properties.name]
                 </a>
             [else]
                 $[properties.name]
             [endif]
         </div>
+
         <div class="b-map__balloon-close">
             {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
                 {param params: [
@@ -73,6 +81,7 @@
                 ]/}
             {/call}
         </div>
+
         <div class="b-map__balloon-content">
             [if properties.address.stages]
                 [if properties.address.stages.length > 1]
