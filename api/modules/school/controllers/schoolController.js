@@ -277,17 +277,29 @@ exports.createComment = async (function(req, res) {
 exports.search = async (function(req, res) {
     var result;
     try {
-        var params = await(services.search.initSearchParams(req.query));
+        var params = await(services.search.initSearchParams(req.query)),
+            user = req.user || {};
 
-        var schools = await(services.school.list(
-            params,
-            {
-                limitResults: 10
-            }
-        ));
+        var favoriteIds = await(
+            services.favorite.getAllItemIdsByUserId(user.id)
+        );
+
+        var promises = {
+            schools: services.school.list(
+                params,
+                {
+                    limitResults: 10
+                }
+            ),
+            favoriteItems: services.school.getByIdsWithGeoData(
+                favoriteIds
+            )
+        };
+        var data = await(promises);
+
         result = {
-            list: schoolView.list(schools, params.sortType, params.page),
-            map: schoolView.listMap(schools)
+            list: schoolView.list(data.schools, params.sortType, params.page),
+            map: schoolView.listMap(data.schools)
         };
     } catch (error) {
         result = JSON.stringify(error);

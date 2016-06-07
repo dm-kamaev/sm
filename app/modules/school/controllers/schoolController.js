@@ -36,33 +36,45 @@ exports.createComment = async (function(req, res) {
 
 exports.list = async (function(req, res) {
     var searchParams = await(services.search.initSearchParams(req.query));
-    var searchText = req.query.name ? decodeURIComponent(req.query.name) : '';
+    var searchText = req.query.name ? decodeURIComponent(req.query.name) : '',
+        user = req.user || {};
 
-    var promises = {
-        schools: services.school.list(
-            searchParams,
-            {
-                limitResults: 10
+    var favoriteIds = await(services.favorite.getAllItemIdsByUserId(user.id)),
+        promises = {
+            schools: services.school.list(
+                searchParams,
+                {
+                    limitResults: 10
+                }
+            ),
+            filters: services.school.searchFilters(),
+            mapPosition: services.search.getMapPositionParams(searchParams),
+            authSocialLinks: services.auth.getAuthSocialUrl(),
+            favorites: {
+                items: services.school.getByIdsWithGeoData(favoriteIds),
+                itemUrls: services.school.getUrlsByIds(favoriteIds)
             }
-        ),
-        filters: services.school.searchFilters(),
-        mapPosition: services.search.getMapPositionParams(searchParams),
-        authSocialLinks: services.auth.getAuthSocialUrl()
-    };
+        };
     var results = await(promises);
 
     var schoolsList = schoolView.list(results.schools),
+        schoolListWithFavorite = schoolView.listWithFavorites(
+            schoolsList.schools, favoriteIds
+        ),
         map = schoolView.listMap(results.schools, results.mapPosition),
         filters = searchView.filters(results.filters, searchParams),
-        user = req.user || {};
+        favorites = schoolView.listCompact(results.favorites);
 
     var params = {
         params: {
             data: {
-                schools: schoolsList.schools,
+                schools: schoolListWithFavorite,
                 filters: filters,
                 authSocialLinks: results.authSocialLinks,
-                user: userView.default(user)
+                user: userView.default(user),
+                favorites: {
+                    schools: favorites
+                }
             },
             searchText: searchText,
             countResults: schoolsList.countResults,
@@ -100,7 +112,11 @@ exports.view = async (function(req, res, next) {
         } else if (url != schoolInstance.url) {
             res.redirect(schoolInstance.url);
         } else {
-            var promises = {
+            var user = req.user || {},
+                favoriteIds = await(
+                    services.favorite.getAllItemIdsByUserId(user.id)
+                ),
+                promises = {
                     ege: services.egeResult.getAllBySchoolId(schoolInstance.id),
                     gia: services.giaResult.getAllBySchoolId(schoolInstance.id),
                     olymp: services.olimpResult.getAllBySchoolId(
@@ -108,22 +124,24 @@ exports.view = async (function(req, res, next) {
                     ),
                     city: services.cityResult.getAll(),
                     authSocialLinks: services.auth.getAuthSocialUrl(),
-                    popularSchools: services.school.getRandomPopularSchools(6)
+                    popularSchools: services.school.getRandomPopularSchools(6),
+                    favorites: {
+                        items: services.school.getByIdsWithGeoData(favoriteIds),
+                        itemUrls: services.school.getUrlsByIds(favoriteIds)
+                    }
                 },
                 dataFromPromises = await(promises);
 
             var school = await(services.school.viewOne(schoolInstance.id));
             services.school.incrementViews(school.id);
 
-            var user = req.user || {},
-                isUserCommented = typeof await(
+            var isUserCommented = typeof await(
                     services.userData.checkCredentials(
                     school.id,
                     req.user && req.user.id
                 )) !== 'undefined';
 
             user = userView.school(user, isUserCommented);
-
 
             res.header('Content-Type', 'text/html; charset=utf-8');
             res.end(
@@ -154,20 +172,28 @@ exports.view = async (function(req, res, next) {
 });
 
 exports.search = async(function(req, res) {
-    var dataPromises = {
-        popularSchools: services.school.getRandomPopularSchools(3),
-        amountSchools: services.school.getSchoolsCount(),
-        authSocialLinks: services.auth.getAuthSocialUrl()
-    };
+    var user = req.user || {};
 
-    var data = await(dataPromises),
-        user = req.user || {};
+    var favoriteIds = await(services.favorite.getAllItemIdsByUserId(user.id)),
+        dataPromises = {
+            popularSchools: services.school.getRandomPopularSchools(3),
+            amountSchools: services.school.getSchoolsCount(),
+            authSocialLinks: services.auth.getAuthSocialUrl(),
+            favorites: {
+                items: services.school.getByIdsWithGeoData(favoriteIds),
+                itemUrls: services.school.getUrlsByIds(favoriteIds)
+            }
+        },
+        data = await(dataPromises);
 
     var html = soy.render('sm.lSearch.Template.base', {
         params: {
             data: {
                 authSocialLinks: data.authSocialLinks,
-                user: userView.default(user)
+                user: userView.default(user),
+                favorites: {
+                    schools: schoolView.listCompact(data.favorites)
+                }
             },
             popularSchools: schoolView.popular(data.popularSchools),
             dataLinks : schoolView.dataLinks(),
