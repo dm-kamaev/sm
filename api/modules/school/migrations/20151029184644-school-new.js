@@ -40,6 +40,9 @@ module.exports = {
             rank: {
                 type: Sequelize.INTEGER
             },
+            seo_description: {
+                type: Sequelize.STRING(300)
+            },
             score: {
                 type: Sequelize.ARRAY(Sequelize.FLOAT)
             },
@@ -60,6 +63,7 @@ module.exports = {
                     key: 'id'
                 }
             },
+
             created_at: Sequelize.DATE,
             updated_at: Sequelize.DATE
         });
