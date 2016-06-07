@@ -33,7 +33,6 @@ goog.scope(function() {
 
         this.loadingLibrary_();
         this.create_();
-        // this.send('pageview');
     };
 
 
