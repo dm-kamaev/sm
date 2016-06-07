@@ -32,7 +32,7 @@ class SchoolNotFoundError extends Error {
  *     fullName: string,
  *     schoolType: enum.school.school_type,
  *     director: string,
- *     phones?: strimg[],
+ *     phones?: string[],
  *     site?: string,
  *     educationInterval: number[],
  *     govermentKey: number,
@@ -217,6 +217,26 @@ service.getPopularSchools = async(function(opt_amount) {
     }));
 });
 
+
+/**
+ * Return array of urls for school with given Ids
+ * @param {Array<number>} schoolId
+ * @return {string}
+ */
+service.getUrlsByIds = async(function(schoolIds) {
+    var schools = await(models.School.findAll({
+        where: {
+            id: {
+                $in: schoolIds
+            }
+        },
+        attributes: ['id', 'url']
+    }));
+
+    return schools;
+});
+
+
 /**
  * @param {number} amount
  * @return {array<object>} school instances
@@ -371,6 +391,79 @@ service.onRatingChange = async(function(schoolId) {
         logger.error(error);
     }
 });
+
+
+/**
+ * Return schools with geo data included, finded by id,
+ * in order  by given array of ids
+ * @param {number} schoolId
+ * @return {Promise<Array<models.School>>}
+ */
+service.getByIdsWithGeoData = async(function(schoolIds) {
+    var schools = await(models.School.findAll({
+        where: {
+            id: {
+                $in: schoolIds
+            }
+        },
+        attributes: ['id', 'name', 'totalScore'],
+        include: [{
+            model: models.Address,
+            where: {
+                isSchool: true
+            },
+            as: 'addresses',
+            attributes: ['id', 'name'],
+            include: [
+                {
+                    model: models.AddressMetro,
+                    as: 'addressMetroes',
+                    attributes: ['id', 'distance']
+                },
+                {
+                    model: models.Metro,
+                    as: 'metroStations',
+                    attributes: ['id', 'name']
+                },
+                {
+                    model: models.Area,
+                    as: 'area',
+                    attributes: ['id', 'name']
+                }
+            ]
+        }],
+        order: [
+            ['id', 'ASC'],
+            [
+                {
+                    model: models.Address,
+                    as: 'addresses'
+                },
+                'id',
+                'ASC'
+            ],
+            [
+                {
+                    model: models.Address,
+                    as: 'addresses'
+                },
+                {
+                    model: models.AddressMetro,
+                    as: 'addressMetroes'
+                },
+                'distance',
+                'ASC'
+            ]
+        ]
+    }));
+
+    return schoolIds.map(schoolId => {
+        return schools.find(school => {
+            return school.id == schoolId;
+        });
+    });
+});
+
 
 /**
  * @param {object} school - School instance

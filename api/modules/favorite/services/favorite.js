@@ -8,26 +8,24 @@ const errors = require('../lib/errors');
 
 
 var service = {
-    name: 'favorites'
+    name: 'favorite'
 };
 
 
 /**
- * Get all favorites for user with given id
+ * Get all ids of favorite entries for user with given id
  * @param {number} userId
- * @return {?Array.<models.Favorite>}
+ * @return {Array<number>}
  */
-service.getByUserId = async(function(userId) {
-    return await(models.Favorite.findAll({
+service.getAllItemIdsByUserId = async(function(userId) {
+    var favoriteEntries = await(models.Favorite.findAll({
         where: {
             'userId': userId
         },
-        order: [['createdAt', 'DESC']],
-        include: {
-            model: models.School,
-            as: 'school'
-        }
+        order: [['createdAt', 'DESC']]
     }));
+
+    return favoriteEntries.map(favoriteEntry => favoriteEntry.itemId);
 });
 
 
@@ -92,7 +90,6 @@ service.create = async(function(userId, itemId) {
  */
 service.delete = async(function(favoriteId) {
     var favorite = await(service.getById(favoriteId));
-
     if(favorite) {
         await(favorite.destroy());
     } else {

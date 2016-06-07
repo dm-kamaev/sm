@@ -102,13 +102,13 @@ goog.scope(function() {
         favorite ?
             goog.dom.classlist.swap(
                 this.getElement(),
-                View.CssClass.FAVORITE,
-                View.CssClass.NOT_FAVORITE
+                View.CssClass.NOT_FAVORITE,
+                View.CssClass.FAVORITE
             ) :
             goog.dom.classlist.swap(
                 this.getElement(),
-                View.CssClass.NOT_FAVORITE,
-                View.CssClass.FAVORITE
+                View.CssClass.FAVORITE,
+                View.CssClass.NOT_FAVORITE
             );
     };
 

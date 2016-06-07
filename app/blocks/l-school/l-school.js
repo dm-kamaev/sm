@@ -340,21 +340,29 @@ goog.scope(function() {
 
     /**
      * Add Favorite Click
+     * @param {goog.events.Event} event
      * @private
      */
-    School.prototype.onAddFavoriteClick_ = function() {
+    School.prototype.onAddFavoriteClick_ = function(event) {
+        var favoriteInstance = event.target;
         this.setEcAnalyticsAdd_();
         this.sendDataAnalytics_('favorite', 'add');
+        this.setFavoriteState(true);
+        this.sendAddToFavorites_(favoriteInstance);
     };
 
 
     /**
      * Remove Favorite Click
+     * @param {goog.events.Event} event
      * @private
      */
-    School.prototype.onRemoveFavoriteClick_ = function() {
+    School.prototype.onRemoveFavoriteClick_ = function(event) {
+        var favoriteInstance = event.target;
         this.setEcAnalyticsRemove_();
         this.sendDataAnalytics_('favorite', 'delete');
+        this.setFavoriteState(false);
+        this.sendRemoveFromFavorites_(favoriteInstance);
     };
 
 
@@ -425,6 +433,39 @@ goog.scope(function() {
             'id': this.params_['id'],
             'name': this.params_['schoolName']
         };
+    };
+
+
+    /**
+     * Send data about adding to favorites
+     * @param {sm.bFavoriteLink.FavoriteLink} favoriteInstance
+     * @private
+     */
+    School.prototype.sendAddToFavorites_ = function(favoriteInstance) {
+        favoriteInstance.sendData(this.params_.id, 'add');
+    };
+
+
+    /**
+     * Send data about removing from favorites
+     * @param {sm.bFavoriteLink.FavoriteLink} favoriteInstance
+     * @private
+     */
+    School.prototype.sendRemoveFromFavorites_ = function(favoriteInstance) {
+        favoriteInstance.sendData(this.params_.id, 'remove');
+    };
+
+
+    /**
+     * Set added to favorite or removed from favorite state for school
+     * @param {boolean} isFavorite
+     */
+    School.prototype.setFavoriteState = function(isFavorite) {
+        goog.array.forEach(this.favoriteLinks_, function(favoriteLink) {
+            isFavorite ?
+                favoriteLink.addFavorite() :
+                favoriteLink.removeFavorite();
+        });
     };
 
 
@@ -684,15 +725,14 @@ goog.scope(function() {
 
     /**
      * Initialization Favorite Links
-     * @param {Element} element
      * @return {sm.lSchool.School}
      * @private
      */
-    School.prototype.initFavoriteLinks_ = function(element) {
+    School.prototype.initFavoriteLinks_ = function() {
 
         var favoriteLinks = goog.dom.getElementsByClass(
             sm.bFavoriteLink.View.CssClass.ROOT,
-            element
+            this.getElement()
         );
 
         for (var i = 0; i < favoriteLinks.length; i++) {

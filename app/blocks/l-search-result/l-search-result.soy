@@ -16,13 +16,15 @@
  *             description: string,
  *             ratings: string[],
  *             metroStations: string[],
- *             area: []
+ *             area: [],
+ *             isFavorite: boolean
  *         }],
  *         filters: {sm.lSearchResult.bFilters.Template.Params},
  *         user: ?{
  *            firstName: ?string,
  *            lastName: ?string
  *         },
+ *        favorites: sm.bSchoolListPaged.Template.Params.Data,
  *         authSocialLinks: {
  *            vk: ?string,
  *            fb: ?string
@@ -87,7 +89,8 @@
                 'header': [
                     'url': '/',
                     'bottomLine': true,
-                    'user': $params.data?.user
+                    'user': $params.data?.user,
+                    'favorites': $params?.data?.favorites
                 ],
                 'authSocialLinks': $params.data?.authSocialLinks,
                 'landingScript': '/l-search-result.js',

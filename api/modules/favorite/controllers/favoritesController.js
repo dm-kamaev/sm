@@ -3,8 +3,6 @@
 
 const async = require('asyncawait/async');
 const await = require('asyncawait/await');
-
-
 const services = require('../../../../app/components/services').all;
 
 
@@ -22,19 +20,24 @@ const services = require('../../../../app/components/services').all;
  *
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
- *     {Object}
  *
- * @apiError (Error 404) NotFoundError user not found
+ * @apiError (Error 404) NotFoundError favorite item not found
  */
 exports.create = async(function(req, res) {
     var user = req.user,
-        itemId = req.params.itemId;
+        itemId = req.body.itemId;
 
-
-    var favorite = await(services.favorite.create(user.id, itemId)),
-        favoriteSchool = await(services.school.getByIdWithLocation(itemId));
-    res.status(200);
-    res.end(JSON.stringify(favoriteSchool));
+    //TODO make an documentation of responce when this answer will be processed
+    //TODO by frontend
+    var favoriteSchool = await(services.school.getByIdsWithGeoData([itemId]));
+    if (favoriteSchool) {
+        await(services.favorite.create(user.id, itemId));
+        res.status(200);
+        res.end(JSON.stringify(favoriteSchool));
+    } else {
+        res.status(404);
+        res.end();
+    }
 });
 
 
@@ -57,16 +60,16 @@ exports.create = async(function(req, res) {
  */
 exports.delete = async(function(req, res) {
     var user = req.user,
-        itemId = req.params.itemId;
-
+        itemId = req.body.itemId;
+    
     try {
-        services.favorite.deleteByUserIdAnditemId(user.id, itemId);
+        services.favorite.deleteByUserIdAndItemId(user.id, itemId);
     } catch (error) {
         if(error) {
             res.status(404);
         } else {
             res.status(200);
         }
-        res.end();
     }
+    res.end();
 });

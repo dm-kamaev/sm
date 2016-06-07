@@ -1,15 +1,23 @@
 'use strict';
 
-module.exports = {
-  up: function(db, DataType) {
-    return db.addColumn(
-        'school',
-        'seo_description',
-        DataType.STRING(300)
-    );
-  },
+const await = require('asyncawait/await');
+const async = require('asyncawait/async');
 
-  down: function (db, DataType) {
-      return db.removeColumn('school', 'seo_description');
-  }
+
+module.exports = {
+  up: async(function(db, DataType) {
+      try {
+          await(db.addColumn(
+              'school',
+              'seo_description',
+              DataType.STRING(300)
+          ));
+      }
+      catch(error) {
+      }
+  }),
+
+  down: async(function (db, DataType) {
+      return await(db.removeColumn('school', 'seo_description'));
+  })
 };

@@ -3,34 +3,33 @@
 
 /**
  * @typedef {{
- *     data: {
- *         schools: Array<{
- *             id: ?number,
- *             name: {
- *                 light: ?string,
- *                 bold: ?string
- *             },
- *             url: ?string,
- *             type: ?string,
- *             score: ?number
- *             metroStations: Array<{
- *                 id: number,
- *                 name: string
- *             }>,
- *             area: {
- *                 id: number,
- *                 name: string
- *             }
- *         }>,
- *         countSchoolsPerPage: ?number
- *     }
- * }} sm.bSchoolListPaged.Template.Params
+ *     schools: Array<{
+ *         id: number,
+ *         name: {
+ *             light: (undefined|string),
+ *             bold: (undefined|string)
+ *         },
+ *         url: (undefined|string,
+ *         score: (undefined|number)
+ *         metroStations: (undefined|Array<{
+ *             id: number,
+ *             name: string
+ *         }>),
+ *         area: (undefined|{
+ *             id: number,
+ *             name: string
+ *         })
+ *     }>,
+ *     countSchoolsPerPage: ?number
+ * }} sm.bSchoolListPaged.Template.Params.Data
  */
 
 
 /**
  * Constructor
- * @param? params {sm.bSchoolListPaged.Template.Params}
+ * @param? params {{
+ *     data: sm.bSchoolListPaged.Template.Params.Data
+ * }}
  * @extends cl.iControl.Template
  * @constructor
  */
@@ -54,7 +53,7 @@
 /**
  * @param? params {
  *     data: {
- *         schools: list<Object>
+ *         schools: Array<sm.bSchoolListPaged.Template.Params.Data>
  *     }
  * }
  */
@@ -86,27 +85,10 @@
 /**
  * @param? params {
  *     data: {
- *         schools: {
- *             id: ?number,
- *             name: [
- *                 light: ?string,
- *                 bold: ?string
- *             ],
- *             url: ?string,
- *             type: ?string,
- *             score: ?number
- *             metroStations: ?list<[
- *                 id: number,
- *                 name: string
- *             ]>,
- *             area: ?[
- *                 id: number,
- *                 name: string
- *             ]
- *         },
- *         pageCount: ?number,
- *         pageNumber: ?number,
- *         schoolsPerPage: ?number
+ *         schools: sm.bSchoolListPaged.Template.Params.Data,
+ *         pageCount: (undefined|number),
+ *         pageNumber: (undefined|number),
+ *         schoolsPerPage: (undefined|number)
  *     }
  * }
  */
@@ -128,7 +110,6 @@
                         'id': $params?.data?.schools[$i].id,
                         'url': $params?.data?.schools[$i].url,
                         'name': $params?.data?.schools[$i].name,
-                        'type': $params?.data?.schools[$i].type,
                         'score': $params?.data?.schools[$i].score,
                         'metroStations': $params?.data?.schools[$i].metroStations,
                         'area': $params?.data?.schools[$i].area,
@@ -146,7 +127,7 @@
  * Template footer
  * @param params {
  *     data: {
- *         schools: list<Object>
+ *         schools: sm.bSchoolListPaged.Template.Params.Data
  *     }
  * }
  */
@@ -191,10 +172,10 @@
  * Template link
  * @param params {
  *     data: {
- *         text: ?string
+ *         text: (undefined|string)
  *     },
  *     config: {
- *         modifier: ?string
+ *         modifier: (undefined|string)
  *     }
  * }
  */
@@ -230,7 +211,7 @@
  * Template count
  * @param? params {
  *     data: {
- *         countSchoolsPerPage: ?number
+ *         countSchoolsPerPage: (undefined|number)
  *     }
  * }
  */
@@ -266,7 +247,7 @@
  * Template count
  * @param params {
  *     data: {
- *         schools: list<Object>
+ *         schools: sm.bSchoolListPaged.Template.Params.Data
  *     }
  * }
  */

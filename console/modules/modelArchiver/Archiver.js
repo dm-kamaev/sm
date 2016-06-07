@@ -9,10 +9,10 @@ const path = require('path');
 
 /**
  * This class can be used standalone from ModelArchiver.
- * Seqeuince of decompress -> your code with that file -> deleteUnarchivedFile
- * can be userfull with migrations based on straight csv uploading to postgres.
+ * Sequence of decompress -> your code with that file -> deleteUnarchivedFile
+ * can be usefull with migrations based on straight csv uploading to postgres.
  *
- * To achive this goal you need to:
+ * To achieve this goal you need to:
  *     1) initiate an object of Archiver with path to your archived .csv file;
  *     2) use decompress function with %directory% that will store an
  *         uncompressed file;

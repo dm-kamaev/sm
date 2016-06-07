@@ -23,6 +23,13 @@ sm.bFavoriteLink.FavoriteLink = function(view, opt_domHelper) {
      * @private
      */
     this.icon_ = null;
+
+    /**
+     * Address to send queries for manipulate favorite
+     * @type {string}
+     * @private
+     */
+    this.favoriteApiAddress_ = '/api/favorite';
 };
 goog.inherits(sm.bFavoriteLink.FavoriteLink, cl.iControl.Control);
 
@@ -66,7 +73,7 @@ goog.scope(function() {
 
         this.autoDispatch(
             View.Event.CLICK,
-            this.initEventType_
+            this.initEventType_.bind(this)
         );
 
         this.viewListen(
@@ -86,6 +93,7 @@ goog.scope(function() {
      */
     FavoriteLink.prototype.addFavorite = function() {
         this.icon_.setType(View.TypeIcon.FAVORITE);
+        this.getView().setFavorite(true);
     };
 
 
@@ -94,6 +102,35 @@ goog.scope(function() {
      */
     FavoriteLink.prototype.removeFavorite = function() {
         this.icon_.setType(View.TypeIcon.NOT_FAVORITE);
+        this.getView().setFavorite(false);
+    };
+
+
+    /**
+     * Send data about adding or removing item with given id
+     * @param {number} itemId
+     * @param {string=} opt_action
+     * @return {Promise}
+     */
+    FavoriteLink.prototype.sendData = function(itemId, opt_action) {
+        var method = '';
+
+        if (opt_action == 'add') {
+            method = 'POST';
+        } else if (opt_action == 'remove') {
+            method = 'DELETE';
+        } else {
+            method = 'GET';
+        }
+        var token = window['ctx']['csrf'];
+        return jQuery.ajax({
+            url: this.favoriteApiAddress_,
+            type: method,
+            data: {
+                itemId: itemId,
+                _csrf: token
+            }
+        });
     };
 
 
@@ -111,8 +148,6 @@ goog.scope(function() {
         else {
             this.addFavorite();
         }
-
-        this.getView().setFavorite(isFavorite);
     };
 
 
@@ -142,7 +177,8 @@ goog.scope(function() {
 
     /**
      * dispatch Event (add to favorites or remove)
-     * @param {Object} event
+     * @param {goog.events.Event} event
+     * @return {goog.events.Event}
      * @private
      */
     FavoriteLink.prototype.initEventType_ = function(event) {
@@ -152,6 +188,8 @@ goog.scope(function() {
         else {
             event['type'] = FavoriteLink.Event.FAVORITE_ADDED;
         }
+        event['target'] = this;
+        return event;
     };
 
 

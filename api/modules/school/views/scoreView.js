@@ -3,7 +3,7 @@
 var scoreView = {};
 
 /**
- * View fo school landing
+ * View for school landing
  * @param {Array.<number>} score
  * @return {Array.<{name: string, value: number}>|boolean}
  */
@@ -76,6 +76,33 @@ scoreView.results = function(score, totalScore, opt_sortCriterion) {
 };
 
 /**
+ *
+ * @param {number} scoreItem
+ *  * @return {{
+ *     data: {
+ *         visibleMark: Object.<string, number|string>,
+ *         hiddenMarks: Array.<Object.<string, number|string>>
+ *     },
+ *     config: {
+ *         isActive: boolean
+ *     }
+ * }}
+ */
+scoreView.schoolListCompact = function(scoreItem) {
+    return {
+        data: {
+            visibleMark: {
+                value: scoreItem
+            },
+            hiddenMarks: []
+        },
+        config: {
+            isActive: false
+        }
+    };
+};
+
+/**
  * Transform array with score to array with names and values
  * @param {Array.<string>} sectionNames
  * @param {?Array.<number>} nullableSectionValues
@@ -90,7 +117,7 @@ scoreView.sections = function(sectionNames, nullableSectionValues) {
         return {
             name: sectionName,
             value: sectionValues[index] || 0
-        }
+        };
     });
 };
 
@@ -129,7 +156,7 @@ scoreView.minimized = function(scoreSections, opt_visibleMarkIndex) {
 
     var visbleMark = scoreSections[visibleMarkIndex];
     var hiddenMarks = scoreSections.filter(item => {
-        return item.name != visbleMark.name
+        return item.name != visbleMark.name;
     });
 
     return {

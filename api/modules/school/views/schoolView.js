@@ -37,7 +37,6 @@ var schoolView = {};
  */
 schoolView.default = function(schoolInstance, data, user, opt_popularSchools) {
     addressView.transformSchoolAddress(schoolInstance);
-
     var addresses = services.department.addressesFilter(
             schoolInstance.addresses
         ),
@@ -58,7 +57,6 @@ schoolView.default = function(schoolInstance, data, user, opt_popularSchools) {
             schoolInstance.educationInterval
         ),
         social: [],
-        //metroStations: addressView.getMetro(addresses),
         sites: schoolInstance.links ?
             getSites(schoolInstance.links) : getSites(schoolInstance.site),
         specializedClasses: getSpecializedClasses(
@@ -86,10 +84,14 @@ schoolView.default = function(schoolInstance, data, user, opt_popularSchools) {
         reviewCount: schoolInstance.totalScore ?
             schoolInstance.reviewCount : 0,
         isCommented: user.isCommented,
+        isFavorite: schoolView.isFavorite(schoolInstance, data.favorites.items),
         user: {
             firstName: user.firstName,
             lastName: user.lastName,
             id: user.id
+        },
+        favorites: {
+            schools: schoolView.listCompact(data.favorites)
         },
         seoDescription: schoolInstance.seoDescription
     };
@@ -242,40 +244,6 @@ var getContacts = function(addresses, opt_phones) {
     };
 };
 
-/**
- *  @param {Array.<Object>=} comments
- *  @return {Array.<Object>}
- */
-var getComments = function(comments) {
-
-};
-
-/**
- *  @param {array<object>=} opt_array Ratings to convert
- *  @param {boolean=} opt_withoutEmptySections
- *  @return {array<object>}
- */
-var getSections = function(opt_array, opt_withoutEmptySections) {
-    var array = opt_array || [0, 0, 0, 0];
-
-    var sections = array.map((item, index) => {
-        var type = [
-            'Образование',
-            'Преподаватели',
-            'Атмосфера',
-            'Инфраструктура'
-        ];
-        return {
-            name: type[index],
-            value: item
-        };
-    });
-
-    return opt_withoutEmptySections ?
-        sections.filter(item => item.value) :
-        sections;
-};
-
 
 /**
  * translates director name to right output format
@@ -307,22 +275,6 @@ var getActivities = function(activities) {
     return activityView.list(activities);
 };
 
-var getStages = function(departments) {
-    var result = [];
-    var unical = {};
-    var deps = departments || [];
-
-    for (var i = 0, n = deps.length, dep; i < n; i++) {
-        dep = deps[i];
-        if (dep != undefined && dep.stage && !unical[dep.stage]) {
-            unical[dep.stage] = true;
-            result.push(dep.stage);
-        }
-    }
-
-    return result;
-};
-
 /**
  * @param {array<object>} schools - schoolInstances
  * @param {number} opt_criterion
@@ -349,7 +301,6 @@ schoolView.list = function(schools, opt_criterion, opt_page) {
                     id: school.id,
                     url: school.url,
                     name: getName(school.name),
-                    type: school.schoolType,
                     description: school.description,
                     abbreviation: school.abbreviation,
                     score: score,
@@ -440,17 +391,6 @@ schoolView.suggestList = function(schools) {
     });
 };
 
-/**
- * Check if all scores of item is 0
- * @param {Array<Object>} score
- * @param {Object} opt_sortCriterion
- * @return {boolean}
- * @private
- */
-var checkScoreValues = function(score, opt_sortCriterion) {
-    var sortCriterion = opt_sortCriterion || {};
-    return sortCriterion || score.some(item => item.value);
-};
 
 /**
  * Groups school objects to one object with addresses and metro arrays
@@ -547,25 +487,6 @@ var groupSchools = function(schools) {
     return result;
 };
 
-/**
- * Return array like [criterion, otherScore]
- * @param {array} score
- * @param {number} totalScore
- * @param {number} opt_criterion
- * @return {Array<Object>}
- */
-var getScore = function(score, totalScore, opt_criterion) {
-    var scoreItems = scoreView.sections(score),
-        sortCriterionIndex = opt_criterion ? opt_criterion : 0;
-
-    scoreItems.unshift({
-        name: 'Средняя оценка',
-        value: totalScore
-    });
-
-    scoreItems.unshift(scoreItems.splice(sortCriterionIndex, 1)[0]);
-    return scoreItems;
-};
 
 /**
  * Makes name object from name string
@@ -580,7 +501,7 @@ var getName = function (name) {
         char,
         numberFounded = false;
 
-    for(i = 0, l = name.length; i < l; i++) {
+    for(var i = 0, l = name.length; i < l; i++) {
         char = name.charAt(i);
 
         if(char === '№') {
@@ -648,6 +569,129 @@ schoolView.dataLinks = function() {
             encodeURIComponent('Тимирязевский')
         }
     ];
+};
+
+
+/**
+ * @param {{
+ *     items: models.School,
+ *     itemUrls: models.School
+ * }} schoolsData
+ * @return {Array<{
+ *         id: number,
+ *         name: {
+ *             light: (undefined|string),
+ *             bold: (undefined|string)
+ *         },
+ *         url: (undefined|string),
+ *         score: (undefined|number)
+ *         metroStations: (undefined|Array<{
+ *             id: number,
+ *             name: string
+ *         }>),
+ *         area: (undefined|{
+ *             id: number,
+ *             name: string
+ *         }),
+ *         url: string
+ *     }>
+ * }>}
+ */
+schoolView.listCompact = function(schoolsData) {
+    var schools = schoolsData.items,
+        itemUrls = schoolsData.itemUrls;
+    return schools.map(school => {
+
+        /** Find in array with url data item with current school id **/
+        var urlData = itemUrls.find(itemUrl => {
+            return itemUrl.id == school.id;
+        });
+
+        return {
+            id: school.id,
+            name: getName(school.name),
+            score: scoreView.schoolListCompact(school.totalScore),
+            metroStations: addressView.getMetro(school.addresses),
+            area: addressView.getAreas(school.addresses),
+            url: schoolView.url(urlData)
+        };
+    });
+};
+
+
+/**
+ * Return url from given school instance
+ * @param {models.School} school
+ * @return {string}
+ */
+schoolView.url = function(school) {
+    return school.url;
+};
+
+
+/**
+ * Check that school in given favorites
+ * @param {models.School} school
+ * @param {Array<models.School>} favoriteItems
+ * @return {boolean}
+ */
+schoolView.isFavorite = function(school, favoriteItems) {
+    return favoriteItems.some(favoriteItem => {
+        return favoriteItem.id == school.id;
+    });
+};
+
+
+/**
+ * Add to given school list isFavorite property if school id
+ * in given favorites ids
+ * @param {Array<number>} favoriteItemIds
+ * @param {Array<{
+ *     id: number,
+ *     name: {
+ *         light: (undefined|string),
+ *         bold: (undefined|string)
+ *     },
+ *     url: (undefined|string),
+ *     score: (undefined|number)
+ *     metroStations: (undefined|Array<{
+ *         id: number,
+ *         name: string
+ *     }>),
+ *     area: (undefined|{
+ *         id: number,
+ *         name: string
+ *     }),
+ *     url: string
+ * }>} schools
+ * @return {Array<{
+ *     id: number,
+ *     name: {
+ *         light: (undefined|string),
+ *         bold: (undefined|string)
+ *     },
+ *     url: (undefined|string),
+ *     score: (undefined|number)
+ *     metroStations: (undefined|Array<{
+ *         id: number,
+ *         name: string
+ *     }>),
+ *     area: (undefined|{
+ *         id: number,
+ *         name: string
+ *     }),
+ *     url: string,
+ *     isFavorite: boolean
+ * }>}
+ */
+schoolView.listWithFavorites = function(schools, favoriteItemIds) {
+    return schools.map(school => {
+        var schoolWithFavorite = school;
+        schoolWithFavorite.isFavorite = favoriteItemIds.some(itemId => {
+            return itemId == school.id;
+        });
+        return schoolWithFavorite;
+    });
 };
 
 module.exports = schoolView;

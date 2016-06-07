@@ -3,5 +3,7 @@ var express = require('express'),
 
 const favoritesController = require('./favoritesController');
 
-router.post('/favorite', favoritesController.create);
 router.delete('/favorite', favoritesController.delete);
+router.post('/favorite', favoritesController.create);
+
+module.exports = router;

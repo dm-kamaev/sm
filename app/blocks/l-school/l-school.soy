@@ -83,11 +83,11 @@
  *            metro: ?list<string>,
  *            totalScore: ?number
  *        ]>,
- *        user: ?[
+ *        user: ?{
  *            firstName: ?string,
- *            lastName: ?string,
- *            data: ?object
- *        ],
+ *            lastName: ?string
+ *        },
+ *        favorites: sm.bSchoolListPaged.Template.Params.Data
  *        authSocialLinks: [
  *            vk: ?string,
  *            fb: ?string
@@ -130,7 +130,8 @@
                     'url': '/',
                     'searchRedirect': true,
                     'bottomLine': true,
-                    'user': $params.data?.user
+                    'user': $params.data?.user,
+                    'favorites': $params?.data?.favorites
                 ],
                 'authSocialLinks': $params.data?.authSocialLinks,
                 'landingScript': '/l-school.js',
@@ -158,7 +159,17 @@
 
 
 /**
- * @param? params {?}
+ * @param? params {{
+ *     data: {
+ *         id: number,
+ *         schoolName: string,
+ *         isCommented: boolean,
+ *         user: {
+ *            firstName: ?string,
+ *            lastName: ?string
+ *         }
+ *     }
+ * }}
  */
 {template .content_ autoescape="strict" kind="html"}
     {let $data: [
@@ -206,7 +217,11 @@
 
 /**
  * School name + school description
- * @param? params {?}
+ * @param? params {{
+ *    data: {
+ *        isFavorite: boolean
+ *    }
+ * }}
  */
 {template .sectionDescription_ autoescape="strict" kind="html"}
     <div class="l-school__section l-school__section_description">
@@ -264,7 +279,6 @@
             {sp}l-school__link_{$params?.config?.modifier}
         {/if}
     {/let}
-
     <div class="{$classes}">
         {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
@@ -351,7 +365,7 @@
  *             gia: ?object,
  *             olymp: ?object
  *         },
- *         isCommented: bool
+ *         isCommented: boolean
  *     }
  * }
  */
@@ -379,14 +393,7 @@
             {param clone: true /}
         {/call}
 
-        {call .schoolAnchors_}
-            {param params: [
-                'data': [
-                    'comments': $params?.data?.comments,
-                    'results': $params?.data?.results
-                ]
-            ]/}
-        {/call}
+        {call .schoolAnchors_ data="all" /}
 
         {call .modalInaccuracy_ data="all" /}
     </div>
@@ -877,7 +884,15 @@
 
 /**
  * Results section
- * @param params {?}
+ * @param params {{
+ *     data: {
+ *         results: {
+ *             ege: Array<Object>,
+ *             gia: Array<Object>,
+ *             olymp: Array<Object>
+ *         }
+ *     }
+ * }}
  */
 {template .results_ autoescape="strict" kind="html"}
     {if

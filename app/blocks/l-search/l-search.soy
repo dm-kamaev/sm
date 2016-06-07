@@ -11,7 +11,8 @@
  *        authSocialLinks: {
  *            vk: ?string,
  *            fb: ?string
- *        }
+ *        },
+ *        favorites: sm.bSchoolListPaged.Template.Params.Data
  *     },
  *     images: ?list<string>,
  *     popularSchools: ?list<[
@@ -57,7 +58,8 @@
                 'content': $content,
                 'header': [
                     'searchRedirect': true,
-                    'user': $params.data?.user
+                    'user': $params.data?.user,
+                    'favorites': $params?.data?.favorites
                 ],
                 'authSocialLinks': $params.data?.authSocialLinks,
                 'landingScript': '/l-search.js',
