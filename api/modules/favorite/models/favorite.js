@@ -11,6 +11,10 @@ var Favorite = db.define(
         itemId: {
             type: DataType.INTEGER,
             field: 'item_id'
+        },
+        createdAt: {
+            type: DataType.DATE,
+            field: 'created_at'
         }
     },
     {
