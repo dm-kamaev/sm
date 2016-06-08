@@ -65,6 +65,13 @@ sm.bSearch.Search = function(opt_params) {
 
 
     /**
+     * @type {?number}
+     * @private
+     */
+    this.districtId_ = null;
+
+
+    /**
      * @type {?Array.<number>}
      * @private
      */
@@ -158,6 +165,7 @@ goog.scope(function() {
      * @return {{
      *     areaId: ?number,
      *     metroId: ?number,
+     *     districtId: ?number,
      *     text: ?string
      * }}
      * @public
@@ -166,6 +174,7 @@ goog.scope(function() {
         return {
             'metroId': this.getMetroId(),
             'areaId': this.getAreaId(),
+            'districtId': this.getDistrictId(),
             'text': this.getText()
         };
     };
@@ -175,6 +184,7 @@ goog.scope(function() {
      * @param {{
      *     areaId: ?number,
      *     metroId: ?number,
+     *     districtId: ?number,
      *     coords: Array.<number>,
      *     text: ?string
      * }} data
@@ -188,6 +198,10 @@ goog.scope(function() {
 
         if (data.hasOwnProperty('metroId')) {
             this.setMetroId(data['metroId']);
+        }
+
+        if (data.hasOwnProperty('districtId')) {
+            this.setDistrictId(data['districtId']);
         }
 
         if (data.hasOwnProperty('text')) {
@@ -207,6 +221,7 @@ goog.scope(function() {
             'text': '',
             'metroId': null,
             'areaId': null,
+            'districtId': null,
             'coords': null
         });
     };
@@ -245,6 +260,24 @@ goog.scope(function() {
      */
     Search.prototype.setAreaId = function(areaId) {
         this.areaId_ = areaId;
+    };
+
+
+    /**
+     * @return {?number}
+     * @public
+     */
+    Search.prototype.getDistrictId = function() {
+        return this.metroId_;
+    };
+
+
+    /**
+     * @param {?number} districtId
+     * @public
+     */
+    Search.prototype.setDistrictId = function(districtId) {
+        this.districtId_ = districtId;
     };
 
 
@@ -439,9 +472,10 @@ goog.scope(function() {
         this.suggest_.setCallbacks({
             getData: function(elem) {
                 var data = JSON.parse(elem);
-                var res = [];
-                var types = ['schools', 'areas', 'metro'],
+                var res = [],
                     items;
+
+                var types = ['schools', 'areas', 'metro', 'districts'];
 
                 for (var i = 0, type; type = types[i]; i++) {
                     items = data[type];
@@ -539,14 +573,13 @@ goog.scope(function() {
 
     /**
      * Render suggest item
-     * @param {Object} item - School or metro or area item
+     * @param {Object} item - School or metro or area or district item
      * @param {string} str - Search str
      * @return {string}
      * @private
      */
     Search.prototype.renderItem_ = function(item, str) {
         var res = '';
-
         str = str || '';
 
         var name = this.renderItemName_(item, str);
@@ -567,7 +600,7 @@ goog.scope(function() {
 
     /**
      * Render suggest item name
-     * @param {Object} item - School or metro or area item
+     * @param {Object} item - School or metro or area or district item
      * @param {string} str - Search string
      * @return {string}
      * @private
@@ -751,32 +784,30 @@ goog.scope(function() {
 
     /**
      * Take values from selected item and put it to value
-     * @param {Object} item - school or metro or area item
+     * @param {Object} item - school or metro or area or district item
      * @private
      */
     Search.prototype.processItem_ = function(item) {
-        if (item['type'] == 'metro') {
-            this.setData({
-                'metroId': item['id'],
-                'areaId': null,
-                'coords': item['coords'],
-                'text': item['name']
-            });
-        } else if (item['type'] == 'areas') {
-            this.setData({
-                'metroId': null,
-                'areaId': item['id'],
-                'coords': item['coords'],
-                'text': item['name']
-            });
-        } else {
-            this.setData({
-                'metroId': null,
-                'areaId': null,
-                'coords': null,
-                'text': item['name']
-            });
+        var type = item['type'];
+
+        var data = {
+            'metroId': null,
+            'areaId': null,
+            'districtId': null,
+            'coords': item['coords'],
+            'text': item['name']
+        };
+
+        if (type == 'metro') {
+            data.metroId = item['id'];
         }
+        else if (type == 'areas') {
+            data.areaId = item['id'];
+        }
+        else if (type == 'districts') {
+            data.districtId = item['id'];
+        }
+        this.setData(data);
     };
 
 
@@ -853,7 +884,8 @@ goog.scope(function() {
     Search.prototype.onTextChange_ = function(event, data) {
         this.setData({
             'metroId': null,
-            'areaId': null
+            'areaId': null,
+            'districtId': null
         });
         this.dispatchEvent(Search.Event.TEXT_CHANGE);
     };
@@ -872,6 +904,8 @@ goog.scope(function() {
             url += '&metroId=' + data['item']['id'];
         } else if (data['item']['type'] === 'areas') {
             url += '&areaId=' + data['item']['id'];
+        } else if (data['item']['type'] === 'districts') {
+            url += '&districtId=' + data['item']['id'];
         }
         document.location.href = url;
     };

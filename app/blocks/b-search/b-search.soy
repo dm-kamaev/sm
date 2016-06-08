@@ -110,7 +110,9 @@
         {case 'metro'}
             {call .itemIconMetro_ /}
         {case 'areas'}
-            {call .itemIconArea_ /}
+            {call .itemIconLocation_ /}
+        {case 'districts'}
+            {call .itemIconLocation_ /}
     {/switch}
 {/template}
 
@@ -159,7 +161,7 @@
 /**
  * Search suggest area icon
  */
-{template .itemIconArea_ private="true" autoescape="strict" kind="html"}
+{template .itemIconLocation_ private="true" autoescape="strict" kind="html"}
     {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
         {param params: [
             'factory': 'stendhal',
