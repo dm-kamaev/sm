@@ -24,10 +24,16 @@
  *            firstName: ?string,
  *            lastName: ?string
  *         },
- *        favorites: sm.bSchoolListPaged.Template.Params.Data,
+ *         favorites: sm.bSchoolListPaged.Template.Params.Data,
  *         authSocialLinks: {
  *            vk: ?string,
  *            fb: ?string
+ *         },
+ *         seo: ?{
+ *             title: string,
+ *             description: string,
+ *             textLeft: Array<string>,
+ *             textRight: Array<string>
  *         }
  *     },
  *     searchText: string,
@@ -149,19 +155,14 @@
 
             <div class="l-search-result__results-section">
                 {call .listHeader_ data="all" /}
-                <div class="l-search-result__list-body
-                    {$params.countResults ? '' : ' i-utils__hidden'}
-                ">
-                    {call sm.lSearchResult.bSchoolList.Template.base}
-                        {param params: [
-                            'schools': $params.data.schools
-                        ]/}
-                    {/call}
-                </div>
+                {call .listBody_ data="all" /}
             </div>
         </div>
     </div>
+
+    {call .footerSeo_ data="all" /}
 {/template}
+
 
 /**
  * Container for map
@@ -203,6 +204,28 @@
 
 
 /**
+ * Body for list of schools
+ * @param? params {
+ *     data: {
+ *         schools: {?}
+ *     },
+ *     countResults: ?number
+ * }
+ */
+{template .listBody_ private="true"}
+    <div class="l-search-result__list-body
+        {$params.countResults ? '' : ' i-utils__hidden'}
+    ">
+        {call sm.lSearchResult.bSchoolList.Template.base}
+            {param params: [
+                'schools': $params.data.schools
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
  * Header for list of schools
  * @param? params {
  *     countResults: ?number,
@@ -210,7 +233,7 @@
  * }
  * @param? clone {boolean}
  */
-{template .listHeader_}
+{template .listHeader_ private="true"}
     <div class="l-search-result__list-header{sp}
                 {$clone ? 'l-search-result__list-header_clone' : ''}">
         {call .listHeaderText data="all" /}
@@ -221,31 +244,61 @@
 /**
  * Text of header for list of schools
  * @param? params {
+ *     data: {
+ *         seo: {
+ *             title: ?string
+ *         }
+ *     },
  *     countResults: ?number,
  *     searchText: ?string
  * }
  */
 {template .listHeaderText}
     <span class="l-search-result__list-header-text">
-        {if length($params.searchText)}
-            По запросу{sp}
-            <span class="l-search-result__list-header-text
-                         l-search-result__list-header-text_strong">
-                «{$params.searchText}»
-            </span>{sp}
+        {if $params.data?.seo and $params.data?.seo?.title}
+            {call .headerText_ data="all" /}
+            {call .headerDescription_ data="all" /}
         {else}
-            По вашему запросу{sp}
+            {call .generateHeaderText_ data="all" /}
         {/if}
-        мы{sp}
-        <span class="l-search-result__list-header-text
-                     l-search-result__list-header-text_change">
-            {call .generateHeaderText}
-                {param params: [
-                    'countResults': $params.countResults
-                ] /}
-            {/call}
-        </span>
     </span>
+{/template}
+
+
+/**
+ * Text of header for list of schools
+ * @param? params {
+ *     data: {
+ *         seo: {
+ *             title: ?string
+ *         }
+ *     }
+ * }
+ */
+{template .headerText_ private="true"}
+    <div class="l-search-result__list-header-text
+                l-search-result__list-header-text_strong
+                l-search-result__list-header-text_title">
+        {$params.data.seo.title}
+    </div>
+{/template}
+
+
+/**
+ * Description of header for list of schools
+ * @param? params {
+ *     data: {
+ *         seo: {
+ *             description: ?string
+ *         }
+ *     }
+ * }
+ */
+{template .headerDescription_ private="true"}
+    <div class="l-search-result__list-header-text
+                l-search-result__list-header-text_description">
+        {$params.data.seo?.description}
+    </div>
 {/template}
 
 
@@ -255,7 +308,21 @@
  *     countResults: number
  * }
  */
-{template .generateHeaderText}
+{template .generateHeaderText_ private="true"}
+    {if length($params.searchText)}
+        По запросу{sp}
+        <span class="l-search-result__list-header-text
+                     l-search-result__list-header-text_strong">
+            «{$params.searchText}»
+        </span>{sp}
+    {else}
+        По вашему запросу{sp}
+    {/if}
+
+    мы{sp}
+
+    <span class="l-search-result__list-header-text
+                 l-search-result__list-header-text_change">
         {if $params.countResults == 0}
             не нашли ничего.
         {else}
@@ -263,44 +330,20 @@
                                l-search-result__list-header-text_strong
                                l-search-result__list-header-text_amount">
                 {$params.countResults}{sp}
-                {if $params.countResults > 100}
-                    {let $lastTwoNumbers: $params.countResults % 100 /}
-                    {call .getEnding_}
-                        {param params: [
-                            'number': $lastTwoNumbers
-                        ]/}
-                    {/call}
-                {else}
-                    {call .getEnding_}
-                        {param params: [
-                            'number': $params.countResults
-                        ]/}
-                    {/call}
-                {/if}
+
+                {call cl.iUtils.Utils.declensionPrint}
+                    {param params: [
+                        'num': $params.countResults,
+                        'nom': ' школу',
+                        'gen': ' школы',
+                        'plu': ' школ'
+                    ]/}
+                {/call}
             </span>
         {/if}
+    </span>
 {/template}
 
-/**
- * makes word's 'школа' ending depends of incoming number
- * @param? params {
- *     number: number
- * }
- */
-{template .getEnding_}
-    {if $params.number >= 11 and $params.number <= 19}
-        школ
-    {else}
-        {let $lastNumber: $params.number % 10 /}
-        {if $lastNumber == 1}
-            школу
-        {elseif $lastNumber >= 2 and $lastNumber <= 4}
-            школы
-        {else}
-            школ
-        {/if}
-    {/if}
-{/template}
 
 /**
  * Left menu template
@@ -321,6 +364,7 @@
         {call .filters_ data="all"/}
     </div>
 {/template}
+
 
 /**
  * Filter template
@@ -356,6 +400,7 @@
     </div>
 {/template}
 
+
 /**
  * Search
  * @param params {{
@@ -376,4 +421,49 @@
             ]
         ]/}
     {/call}
+{/template}
+
+
+/**
+ * Footer for text SEO
+ * @param? params {
+ *     data: {
+ *         seo: {
+ *             textLeft: Array<string>,
+ *             textRight: Array<string>
+ *         }
+ *     }
+ * }
+ */
+{template .footerSeo_ private="true"}
+    {if $params.data?.seo}
+        <div class="l-search-result__footer-seo">
+            <div class="l-search-result__text-seo
+                        l-search-result__text-seo_left">
+                {call .textSeo_}
+                    {param text: $params.data.seo.textLeft /}
+                {/call}
+            </div>
+
+            <div class="l-search-result__text-seo
+                        l-search-result__text-seo_right">
+                {call .textSeo_}
+                    {param text: $params.data.seo.textRight /}
+                {/call}
+            </div>
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Text for SEO
+ * @param? text {Array<string>}
+ */
+{template .textSeo_ private="true"}
+    {for $i in range(length($text))}
+        <div class="l-search-result__paragraph-seo">
+            {$text[$i]}
+        </div>
+    {/for}
 {/template}

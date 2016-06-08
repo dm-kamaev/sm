@@ -602,7 +602,7 @@ goog.scope(function() {
         this.updateUrl_();
 
         this.send_(this.requestParams_.listDataUrl)
-            .then(this.updateSchools_.bind(this));
+            .then(this.updateSearchResults_.bind(this));
     };
 
 
@@ -719,7 +719,7 @@ goog.scope(function() {
         });
 
         this.send_(this.requestParams_.listDataUrl)
-            .then(this.updateSchools_.bind(this));
+            .then(this.sortSearchResults_.bind(this));
     };
 
 
@@ -812,24 +812,36 @@ goog.scope(function() {
 
 
     /**
-     * Updates list and map
-     * @param {string} data
+     * Updates list schools and list header and map
+     * @param {Object} data
      * @private
      */
-    SearchResult.prototype.updateSchools_ = function(data) {
+    SearchResult.prototype.updateSearchResults_ = function(data) {
         var list = data['list'],
             map = data['map'];
 
         if (list['countResults'] > 0) {
-            this.showMap_();
-            this.replaceMapPoints_(map);
-
-            this.send_(this.requestParams_.mapDataUrl)
-                .then(this.addMapPoints_.bind(this));
+            this.updateMap_(map);
         } else {
             this.hideMap_();
         }
         this.updateList_(list);
+
+        this.sendAddedItemImpressions_(list['schools']);
+    };
+
+
+    /**
+     * Sort list schools and update the map for sorting results
+     * @param {Object} data
+     * @private
+     */
+    SearchResult.prototype.sortSearchResults_ = function(data) {
+        var list = data['list'],
+            map = data['map'];
+
+        this.updateMap_(map);
+        this.updateListSchools_(list);
 
         this.sendAddedItemImpressions_(list['schools']);
     };
@@ -860,8 +872,22 @@ goog.scope(function() {
 
 
     /**
+     * Update map
+     * @param {Object} data
+     * @private
+     */
+    SearchResult.prototype.updateMap_ = function(data) {
+        this.showMap_();
+            this.replaceMapPoints_(data);
+
+        this.send_(this.requestParams_.mapDataUrl)
+            .then(this.addMapPoints_.bind(this));
+    };
+
+
+    /**
      * Add points to map and center it if necessary
-     * @param {string} data
+     * @param {Object} data
      * @private
      */
     SearchResult.prototype.addMapPoints_ = function(data) {
@@ -886,6 +912,17 @@ goog.scope(function() {
      * @private
      */
     SearchResult.prototype.updateList_ = function(data) {
+        this.updateHeader_(data);
+        this.updateListSchools_(data);
+    };
+
+
+    /**
+     * Update schools list header
+     * @param {Object} data
+     * @private
+     */
+    SearchResult.prototype.updateHeader_ = function(data) {
         var textChangeElements = this.elements_.textChangeElements;
         for (var i = 0, elem; elem = textChangeElements[i]; i++) {
             goog.soy.renderElement(
@@ -898,7 +935,15 @@ goog.scope(function() {
                 }
             );
         }
+    };
 
+
+    /**
+     * Update schools list
+     * @param {Object} data
+     * @private
+     */
+    SearchResult.prototype.updateListSchools_ = function(data) {
         data['countResults'] ?
             goog.dom.classes.remove(
                 this.elements_.listContainer,
