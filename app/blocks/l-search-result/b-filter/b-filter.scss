@@ -70,10 +70,13 @@
     cursor: pointer;
 }
 
-.b-filter__button_show,
-.b-filter__button_hide {
+.b-filter__button {
     margin-top: 12px;
     margin-bottom: 12px;
+}
+
+.b-filter__button_show-modal {
+    display: block;
 }
 
 .b-filter__input {

@@ -97,8 +97,11 @@ goog.scope(function() {
     Filters.Type = {
         EGE: 'ege',
         GIA: 'gia',
+        OLIMP: 'olimp',
         SCHOOL_TYPE: 'schoolType',
-        CLASSES: 'classes'
+        CLASSES: 'classes',
+        ADDITIONAL_EDUCATION: 'additionalEducation',
+        ACTIVITY: 'activity'
     };
 
 
@@ -326,6 +329,7 @@ goog.scope(function() {
     Filters.prototype.getData = function() {
         var form = jQuery(this.getElement());
         var data = form.serializeArray();
+
         return this.processingSerializeArray_(data);
     };
 
@@ -423,13 +427,11 @@ goog.scope(function() {
      * @private
      */
     Filters.prototype.processingSerializeArray_ = function(array) {
-        var result = {
-            'ege': [],
-            'gia': [],
-            'olimp': [],
-            'classes': [],
-            'schoolType': []
-        };
+        var result = {};
+
+        goog.object.forEach(Filters.Type, function(value, key, object) {
+            result[value] = [];
+        });
 
         for (var i = 0, item; i < array.length; i++) {
             item = array[i];

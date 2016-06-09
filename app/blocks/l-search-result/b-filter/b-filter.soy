@@ -179,7 +179,8 @@
  * Body template
  * @param? params {
  *     data: ?{
- *         name: ?string
+ *         name: string,
+ *         filters: Array<Object>
  *     }
  * }
  */
@@ -192,7 +193,10 @@
         {call .filToShow_ data="all" /}
     {/let}
 
-    {if $params.data.filters.length > $filToShow}
+    {if $params.data.name == 'activity' or
+        $params.data.name == 'additionalEducation'}
+        {call .bottonShowModal_ /}
+    {elseif $params.data.filters.length > $filToShow}
         {call .buttonShowMore_}
             {param params: [
                 'numberHiddenItems': $params.data.filters.length - $filToShow - 1,
@@ -200,6 +204,29 @@
             ]/}
         {/call}
     {/if}
+{/template}
+
+
+/**
+ * Button template for the call modal
+ */
+{template .bottonShowModal_ private="true"}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__button{sp}
+        {call .rootClass/}__button_show-modal
+    {/let}
+
+    {call sm.bLink.Template.base}
+        {param params: [
+            'data': [
+                'name': 'Полный список'
+            ],
+            'config': [
+                'customClasses': $customClasses,
+                'size': 'small'
+            ]
+        ]/}
+    {/call}
 {/template}
 
 
@@ -273,7 +300,7 @@
 
 
 /**
- * determines how many filters show
+ * Determines how many filters show
  * @param? params {
  *     config: ?{
  *         filtersToShow: ?number

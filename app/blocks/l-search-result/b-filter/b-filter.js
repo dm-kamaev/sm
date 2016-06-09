@@ -61,6 +61,14 @@ sm.lSearchResult.bFilter.Filter = function(opt_params) {
 
 
     /**
+     * Button for the call modal
+     * @type {Element}
+     * @private
+     */
+    this.showModalButtonElement_ = null;
+
+
+    /**
      * Filters element
      * @type {Element}
      * @private
@@ -97,6 +105,7 @@ goog.scope(function() {
         ROOT: 'b-filter',
         HEADER: 'b-filter__header',
         FILTERS: 'b-filter__filters',
+        SHOW_MODAL_BUTTON: 'b-filter__button_show-modal',
         SHOW_HIDDEN_FILTERS_BUTTON: 'b-filter__button_show',
         HIDE_SHOWN_FILTERS_BUTTON: 'b-filter__button_hide',
         SHOW_FILTERS_BUTTON: 'b-filter__show-filters-button',
@@ -152,6 +161,11 @@ goog.scope(function() {
 
         this.showFiltersIconElement_ = goog.dom.getElementByClass(
             Filter.CssClass.SHOW_FILTERS_ICON,
+            element
+        );
+
+        this.showModalButtonElement_ = goog.dom.getElementByClass(
+            Filter.CssClass.SHOW_MODAL_BUTTON,
             element
         );
 
@@ -226,6 +240,14 @@ goog.scope(function() {
             );
         }
 
+        if (this.showModalButtonElement_) {
+            handler.listen(
+                this.showModalButtonElement_,
+                goog.events.EventType.CLICK,
+                this.onShowModalButtonClick_
+            );
+        }
+
         for (var i = 0; i < this.inputElements.length; i++) {
             handler.listen(
                 this.inputElements[i],
@@ -261,6 +283,14 @@ goog.scope(function() {
             }
         }
         return result;
+    };
+
+
+    /**
+     * Handler button for show modal
+     * @private
+     */
+    Filter.prototype.onShowModalButtonClick_ = function() {
     };
 
 

@@ -71,6 +71,8 @@ sm.lSearchResult.SearchResult = function(opt_params) {
      *     ege: ?Array.<string>,
      *     gia: ?Array.<string>,
      *     olimp: ?Array.<string>,
+     *     additionalEducation: ?Array.<string>,
+     *     activity: ?Array.<string>,
      *     sortType: ?number,
      *     page: ?number
      * }}
@@ -85,6 +87,8 @@ sm.lSearchResult.SearchResult = function(opt_params) {
         'ege': [],
         'gia': [],
         'olimp': [],
+        'additionalEducation': [],
+        'activity': [],
         'sortType': 0,
         'page': 0
     };
