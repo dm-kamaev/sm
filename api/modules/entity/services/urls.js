@@ -31,33 +31,33 @@ service.stringToURL = function(string) {
 /**
  * @param {object} school - school instance
  */
-service.generateUrl = async(function(school) {
+service.generateSchoolAlias = async(function(school) {
     if (!school.name) {
         console.log(
             'WARN:'.yellow +
             ' can\'t create url to school with id', school.id
         );
-    }
-    else {
-        var url = service.stringToURL(school.name);
-        if (url != school.url) {
+    } else {
+        var alias = service.stringToURL(school.name),
+            schoolPage =
+                await(services.page.getOne(school.id, entityType.SCHOOL))
+        if (alias != schoolPage.alias) {
             try {
-                await(school.update(
-                    {url: url},
-                    {hooks: false})
-                );
+                await(schoolPage.update(
+                    {alias: alias}
+                ));
             } catch (error) {
                 /*if url in use then generate different url*/
                 logger.error(error);
-                url = url + '_';
-                await(school.update(
-                    {url: url},
-                    {hooks: false})
-                );
+                alias = alias + '_';
+                await(schoolPage.update(
+                    {alias: alias}
+                ));
             } finally {
-                await(models.SchoolUrl.create({
-                    schoolId: school.id,
-                    url: url
+                await(models.AliasBacklog.create({
+                    entityId: school.id,
+                    entityType: entityType.SCHOOL,
+                    alias: alias
                 }));
             }
         }
@@ -82,18 +82,21 @@ service.createIdUrls = async(function() {
  */
 service.updateAll = async(function() {
     var schools = await(models.School.findAll());
-    await(schools.forEach(school => this.generateUrl(school)));
+    await(schools.forEach(school => this.generateSchoolAlias(school)));
 });
 
 /**
  * get all urls from database
  * @return {Array}
  */
-service.getAllUrls = async(function() {
-    var schools = await(models.School.findAll({
-        attributes: ['url']
+service.getAllSchoolUrls = async(function() {
+    var schoolPages = await(models.Page.findAll({
+        attributes: ['alias'],
+        where: {
+            entityType: entityType.SCHOOL
+        }
     }));
-    return schools.map(school => school.url);
+    return schoolPages.map(schoolPage => schoolPage.alias);
 });
 
 /**
@@ -109,13 +112,14 @@ service.getSchoolByUrl = async(function(alias) {
             attributes: ['id']
         }));
     if (!school) {
-        var record = await(models.SchoolUrl.findOne({
+        var record = await(models.AliasBacklog.findOne({
             where: {
-                url: url
+                alias: alias,
+                entityType: entityType.SCHOOL
             }
         }));
         school = record ?
-            await(models.School.findOne({where: {id: record.schoolId}})) :
+            await(models.School.findOne({where: {id: record.entityId}})) :
             null;
     } else {
         school.alias = page.alias;

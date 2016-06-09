@@ -1,5 +1,6 @@
 var DataType = require('sequelize'),
-    db = require('../../../../app/components/db');
+    db = require('../../../../app/components/db'),
+    urlService = require('../../entity/services/urls');
 const schoolType = require('../enums/schoolType');
 
 var School = db.define('School', {
@@ -109,10 +110,10 @@ var School = db.define('School', {
 }, {
     underscored: true,
     tableName: 'school',
-    // hooks: {
-    //     afterCreate: urlService.generateUrl,
-    //     afterUpdate: urlService.generateUrl,
-    // },
+    hooks: {
+        afterCreate: urlService.generateSchoolAlias,
+        afterUpdate: urlService.generateSchoolAlias,
+    },
 
     classMethods: {
         associate: function(models) {

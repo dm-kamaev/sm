@@ -6,7 +6,7 @@ const async = require('asyncawait/async');
 const await = require('asyncawait/await');
 const sitemap = require('sitemap');
 
-const urlService = require('../../../api/modules/school/services/urls');
+const urlService = require('../../../api/modules/entity/services/urls');
 const config = require('../../../app/config').config;
 
 
@@ -79,7 +79,7 @@ class SitemapUpdater {
      * @private
      */
     getSchoolsUrls_() {
-        var urls = await(urlService.getAllUrls());
+        var urls = await(urlService.getAllSchoolUrls());
         return urls.map(url => '/school/' + url);
     }
 

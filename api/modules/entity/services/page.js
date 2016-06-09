@@ -19,7 +19,7 @@ var service = {
  */
 service.getOne = async(function(entityId, entityType) {
     return models.Page.findOne({
-        attributes: ['alias', 'views', 'description'],
+        attributes: ['id', 'alias', 'views', 'description'],
         where: {
             entityId: entityId,
             entityType: entityType
