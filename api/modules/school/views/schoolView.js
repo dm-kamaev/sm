@@ -670,4 +670,11 @@ schoolView.dataLinks = function() {
     ];
 };
 
+/**
+ * @param {array<object>} schools
+ */
+schoolView.listIds = function(schools) {
+    return lodash.uniq(schools.map(school => school.id));
+};
+
 module.exports = schoolView;
