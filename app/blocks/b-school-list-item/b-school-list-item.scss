@@ -124,7 +124,7 @@
 }
 
 .b-school-list-item.b-school-list-item_minimal {
-    padding: 5px 0 10px 0;
+    padding: 14px 0 10px 0;
 
     cursor: pointer;
 
@@ -140,10 +140,15 @@
         padding-right: 50px;
 
         font-weight: normal;
+        line-height: 0;
+    }
+
+    .b-school-list-item__position {
+        margin-right: 0;
     }
 
     .b-school-list-item__score {
-        top: 5px;
+        top: -1px;
     }
 }
 
