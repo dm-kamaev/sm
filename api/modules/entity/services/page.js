@@ -106,4 +106,16 @@ service.getPopular = async(function(entityType, opt_amount) {
     });
 });
 
+/**
+ * @param {number} entityId
+ * @param {string} entityType
+ */
+service.incrementViews = async(function(entityId, entityType) {
+    var entity = await(models.Page.findOne({where: {
+        entityId: entityId,
+        entityType: entityType
+    }}));
+    entity.increment('views');
+});
+
 module.exports = service;

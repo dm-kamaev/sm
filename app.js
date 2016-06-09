@@ -84,6 +84,7 @@ app.use('/api', api.comment.router);
 app.use('/api', api.school.router);
 app.use('/api', api.geo.router);
 app.use('/api', api.feedback.router);
+app.use('/api', api.entity.router);
 
 async(function() {
     var startupControl = new StartupControl({

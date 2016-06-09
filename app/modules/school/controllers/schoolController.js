@@ -124,7 +124,6 @@ exports.view = async (function(req, res, next) {
                 dataFromPromises = await(promises);
 
             var school = await(services.school.viewOne(schoolInstance.id));
-            // services.school.incrementViews(school.id);
 
             var schoolAliases = await(services.page.getAliases(
                     dataFromPromises.popularSchools.map(school => school.id),
