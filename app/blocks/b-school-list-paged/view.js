@@ -10,7 +10,7 @@ goog.require('goog.dom.classlist');
 /**
  * SchoolListPaged View
  * @param {Object=} opt_params
- * @param {Function=} opt_type
+ * @param {string=} opt_type
  * @param {string=} opt_modifier
  * @constructor
  * @extends {cl.iControl.View}
@@ -258,7 +258,10 @@ goog.scope(function() {
     /**
      * calculate Interval
      * @param {number} itemsPerPage
-     * @return {Object}
+     * @return {{
+     *     firstIndex: number,
+     *     lastIndex: number
+     * }}
      * @private
      */
     View.prototype.calculateInterval_ = function(itemsPerPage) {
@@ -277,29 +280,33 @@ goog.scope(function() {
             lastItemIndex = skipedItemsCount + itemsPerPage;
         }
 
-        var text = firstItemIndex + '\u2014' + lastItemIndex;
+        /*var text = firstItemIndex + '\u2014' + lastItemIndex;
 
-        goog.dom.setTextContent(this.dom.interval, text);
+        goog.dom.setTextContent(this.dom.interval, text);*/
 
         return {
-            'firstIndex': firstItemIndex,
-            'lastIndex': lastItemIndex
+            firstIndex: firstItemIndex,
+            lastIndex: lastItemIndex
         };
     };
 
 
     /**
      * insert Interval
-     * @param {Object} interval
+     * @param {{
+     *     firstIndex: number,
+     *     lastIndex: number
+     * }} interval
      * @private
      */
     View.prototype.insertInterval_ = function(interval) {
         goog.soy.renderElement(
             this.dom.interval,
-            sm.bSchoolListPaged.Template.interval, {
-                'params': {
-                    'start': interval.firstIndex,
-                    'end': interval.lastIndex
+            sm.bSchoolListPaged.Template.interval,
+            {
+                params: {
+                    start: interval.firstIndex,
+                    end: interval.lastIndex
                 }
             }
         );

@@ -40,7 +40,6 @@
 
 /**
  * Body
- * @param? params {?}
  * @override
  */
 {template .body}
@@ -51,11 +50,11 @@
 
 
 /**
- * @param? params {
+ * @param? params {{
  *     data: {
  *         schools: Array<sm.bSchoolListPaged.Template.Params.Data>
  *     }
- * }
+ * }}
  */
 {template .content_ kind="html" private="true"}
     {let $schoolsPerPage: $params?.data?.countSchoolsPerPage ?: 5 /}
@@ -83,14 +82,14 @@
 
 
 /**
- * @param? params {
+ * @param? params {{
  *     data: {
  *         schools: sm.bSchoolListPaged.Template.Params.Data,
  *         pageCount: (undefined|number),
  *         pageNumber: (undefined|number),
  *         schoolsPerPage: (undefined|number)
  *     }
- * }
+ * }}
  */
 {template .list_ kind="html" private="true"}
     {let $from: $params?.data?.pageNumber * $params?.data?.schoolsPerPage /}
@@ -125,11 +124,11 @@
 
 /**
  * Template footer
- * @param params {
+ * @param params {{
  *     data: {
  *         schools: sm.bSchoolListPaged.Template.Params.Data
  *     }
- * }
+ * }}
  */
 {template .footer_ kind="html" private="true"}
     {let $footerClasses kind="html"}
@@ -170,14 +169,14 @@
 
 /**
  * Template link
- * @param params {
+ * @param params {{
  *     data: {
  *         text: (undefined|string)
  *     },
  *     config: {
  *         modifier: (undefined|string)
  *     }
- * }
+ * }}
  */
 {template .link_ kind="html" private="true"}
     {let $customClasses kind="html"}
@@ -209,11 +208,11 @@
 
 /**
  * Template count
- * @param? params {
+ * @param? params {{
  *     data: {
  *         countSchoolsPerPage: (undefined|number)
  *     }
- * }
+ * }}
  */
 {template .pages_ kind="html"}
     <span class="{call .rootClass/}__pages-count">
@@ -231,10 +230,10 @@
 
 /**
  * Template interval
- * @param params {
- *     start: ?number,
- *     end: ?number
- * }
+ * @param params {{
+ *     start: number,
+ *     end: number
+ * }}
  */
 {template .interval kind="html"}
     <span class="{call .rootClass/}__interval-count">
@@ -245,11 +244,11 @@
 
 /**
  * Template count
- * @param params {
+ * @param params {{
  *     data: {
  *         schools: sm.bSchoolListPaged.Template.Params.Data
  *     }
- * }
+ * }}
  */
 {template .count_ kind="html" private="true"}
     {let $schoolsCount: $params?.data?.schools ?
