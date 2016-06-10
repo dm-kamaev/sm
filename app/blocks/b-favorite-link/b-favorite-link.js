@@ -71,11 +71,6 @@ goog.scope(function() {
             this.onClick_
         );
 
-        this.autoDispatch(
-            View.Event.CLICK,
-            this.initEventType_.bind(this)
-        );
-
         this.viewListen(
             View.Event.MOUSEOVER,
             this.onMouseover_
@@ -136,20 +131,39 @@ goog.scope(function() {
 
     /**
      * Element Click
-     * @param {Object} event
+     * @param {{
+     *     data: {
+     *         isFavorite: boolean
+     *     }
+     * }} event
      * @private
      */
     FavoriteLink.prototype.onClick_ = function(event) {
-        var isFavorite = event['data']['isFavorite'];
-
-        if (isFavorite) {
-            this.removeFavorite();
-        }
-        else {
-            this.addFavorite();
-        }
+        var currentFavoriteState = event['data']['isFavorite'],
+            newFavoriteState = !currentFavoriteState,
+            authorization = sm.iAuthorization.Authorization.getInstance();
+        console.log(authorization.isUserAuthorized());
+        authorization.isUserAuthorized() ?
+            this.switchState_(newFavoriteState) :
+            authorization.authorize();
     };
 
+
+    /**
+     * Switch state to given state value and dispatch event about this action
+     * 'true' means in Favorite state, 'false' means not in favorite
+     * @param {boolean} state
+     * @private
+     */
+    FavoriteLink.prototype.switchState_ = function(state) {
+        if (state) {
+            this.addFavorite();
+            this.dispatchEvent(FavoriteLink.Event.FAVORITE_ADDED);
+        } else {
+            this.removeFavorite();
+            this.dispatchEvent(FavoriteLink.Event.FAVORITE_REMOVED);
+        }
+    };
 
     /**
      * Element Mouseover
@@ -172,24 +186,6 @@ goog.scope(function() {
         if (event['data']['isFavorite']) {
             this.icon_.setType(View.TypeIcon.FAVORITE);
         }
-    };
-
-
-    /**
-     * dispatch Event (add to favorites or remove)
-     * @param {goog.events.Event} event
-     * @return {goog.events.Event}
-     * @private
-     */
-    FavoriteLink.prototype.initEventType_ = function(event) {
-        if (event['data']['isFavorite']) {
-            event['type'] = FavoriteLink.Event.FAVORITE_REMOVED;
-        }
-        else {
-            event['type'] = FavoriteLink.Event.FAVORITE_ADDED;
-        }
-        event['target'] = this;
-        return event;
     };
 
 

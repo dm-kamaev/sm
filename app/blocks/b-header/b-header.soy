@@ -162,7 +162,10 @@
                     'factory': 'stendhal',
                     'type': 'favorite',
                     'renderParams': [
-                        'data': $params.data?.favorites
+                        'data': $params.data?.favorites,
+                        'config': [
+                            'isUserAuthorized': $params.data?.user ? true : false
+                        ]
                     ]
                 ]/}
             {/call}
