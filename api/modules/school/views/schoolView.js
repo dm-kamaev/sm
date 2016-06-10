@@ -83,13 +83,8 @@ schoolView.default = function(schoolInstance, data, user, opt_popularSchools) {
         authSocialLinks: data.authSocialLinks,
         reviewCount: schoolInstance.totalScore ?
             schoolInstance.reviewCount : 0,
-        isCommented: user.isCommented,
         isFavorite: schoolView.isFavorite(schoolInstance, data.favorites.items),
-        user: {
-            firstName: user.firstName,
-            lastName: user.lastName,
-            id: user.id
-        },
+        user: user,
         favorites: {
             schools: schoolView.listCompact(data.favorites)
         },
