@@ -8,7 +8,7 @@
  *         light: ?string,
  *         bold: ?string
  *     ],
- *     url: ?string,
+ *     alias: ?string,
  *     score: {sm.bScore.TemplateMinimized.Params},
  *     description: ?string,
  *     metroStations: ?list<[
@@ -38,7 +38,7 @@
         {/if}
     {/let}
 
-    <a href="/school/{$params.url}" data-params="
+    <a href="/school/{$params.alias}" data-params="
         {call cl.iUtils.Utils.stringify}
             {param json: $params /}
         {/call}"

@@ -61,7 +61,7 @@ exports.create = async(function(req, res) {
 exports.delete = async(function(req, res) {
     var user = req.user,
         itemId = req.body.itemId;
-    
+
     try {
         services.favorite.deleteByUserIdAndItemId(user.id, itemId);
     } catch (error) {

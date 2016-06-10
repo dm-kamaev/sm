@@ -197,6 +197,7 @@ goog.scope(function() {
 
         this.listenFavoriteLinks_();
 
+        this.incrementViews_();
         this.setEcAnalyticsPageview_();
         this.sendAnalyticsPageview_();
 
@@ -444,6 +445,23 @@ goog.scope(function() {
      */
     School.prototype.sendAnalyticsPageview_ = function() {
         Analytics.send('pageview');
+    };
+
+    /**
+     * Increment school views
+     * @private
+     */
+    School.prototype.incrementViews_ = function() {
+        var url = '/api/school/' + this.params_.id + '/views',
+            data = {};
+        data['_csrf'] = window['ctx']['csrf'];
+
+        jQuery.ajax({
+            url: url,
+            type: 'POST',
+            data: JSON.stringify(data),
+            contentType: 'application/json'
+        });
     };
 
 

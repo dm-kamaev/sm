@@ -9,7 +9,7 @@
  *             light: (undefined|string),
  *             bold: (undefined|string)
  *         },
- *         url: (undefined|string,
+ *         alias: (undefined|string,
  *         score: (undefined|number)
  *         metroStations: (undefined|Array<{
  *             id: number,
@@ -108,7 +108,7 @@
                 {call sm.bSchoolListItem.Template.base}
                     {param params:[
                         'id': $params?.data?.schools[$i].id,
-                        'url': $params?.data?.schools[$i].url,
+                        'alias': $params?.data?.schools[$i].alias,
                         'name': $params?.data?.schools[$i].name,
                         'score': $params?.data?.schools[$i].score,
                         'metroStations': $params?.data?.schools[$i].metroStations,

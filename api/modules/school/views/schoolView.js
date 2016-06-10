@@ -44,7 +44,6 @@ schoolView.default = function(schoolInstance, data, user, opt_popularSchools) {
         scoreCount = schoolInstance.scoreCount || [0, 0, 0, 0];
     var result = {
         id: schoolInstance.id,
-        url: schoolInstance.url,
         schoolName: schoolInstance.name,
         schoolType: schoolInstance.schoolType,
         schoolDescr: schoolInstance.description,
@@ -81,8 +80,6 @@ schoolView.default = function(schoolInstance, data, user, opt_popularSchools) {
             olymp: olimpResultView.transformResults(data.olymp)
         },
         authSocialLinks: data.authSocialLinks,
-        reviewCount: schoolInstance.totalScore ?
-            schoolInstance.reviewCount : 0,
         isCommented: user.isCommented,
         isFavorite: schoolView.isFavorite(schoolInstance, data.favorites.items),
         user: {
@@ -93,7 +90,9 @@ schoolView.default = function(schoolInstance, data, user, opt_popularSchools) {
         favorites: {
             schools: schoolView.listCompact(data.favorites)
         },
-        seoDescription: schoolInstance.seoDescription
+        reviewCount: schoolInstance.totalScore ?
+            schoolInstance.reviewCount : 0,
+        seoDescription: data.page.description
     };
     if (data.popularSchools) {
         result.popularSchools = this.popular(data.popularSchools);
@@ -111,7 +110,7 @@ schoolView.popular = function(popularSchools) {
     return popularSchools.map(school => {
         return {
             id: school.id,
-            url: school.url,
+            alias: school.alias,
             name: school.name,
             description: school.description || '',
             metro: nearestMetro(school.addresses),
@@ -281,7 +280,7 @@ var getActivities = function(activities) {
  * @param {number} opt_page
  * @return {object} contains results count and schools array
  */
-schoolView.list = function(schools, opt_criterion, opt_page) {
+schoolView.list = function(schools, schoolAliases, opt_criterion, opt_page) {
     var res = {};
 
     if (schools.length !== 0) {
@@ -299,7 +298,7 @@ schoolView.list = function(schools, opt_criterion, opt_page) {
 
                 return {
                     id: school.id,
-                    url: school.url,
+                    alias: school.alias,
                     name: getName(school.name),
                     description: school.description,
                     abbreviation: school.abbreviation,
@@ -365,7 +364,7 @@ schoolView.schoolMap = function(school) {
         id: school.id,
         name: school.name,
         description: school.description,
-        url: school.url,
+        alias: school.alias,
         totalScore: school.totalScore
     };
 };
@@ -379,7 +378,7 @@ schoolView.suggestList = function(schools) {
         .map(school => {
             return {
                 id: school.id,
-                url: school.url,
+                alias: school.alias,
                 name: school.name,
                 description: '',
                 abbreviation: school.abbreviation,
@@ -391,6 +390,26 @@ schoolView.suggestList = function(schools) {
     });
 };
 
+/**
+ * @param {array<object>} schools
+ * @param {array<object>} aliases
+ * @return {array<object>}
+ */
+schoolView.joinAliases = function(schools, aliases) {
+    return schools.map(school => {
+        school.alias = getAlias(aliases, school.id);
+        return school;
+    });
+};
+
+/**
+ * @param {Array<Object>} schoolAliases
+ * @param {number} schoolId
+ * @return {string}
+ */
+var getAlias = function(schoolAliases, schoolId) {
+    return lodash.find(schoolAliases, {entityId: schoolId}).alias;
+};
 
 /**
  * Groups school objects to one object with addresses and metro arrays
@@ -571,7 +590,6 @@ schoolView.dataLinks = function() {
     ];
 };
 
-
 /**
  * @param {{
  *     items: models.School,
@@ -601,31 +619,15 @@ schoolView.listCompact = function(schoolsData) {
     var schools = schoolsData.items,
         itemUrls = schoolsData.itemUrls;
     return schools.map(school => {
-
-        /** Find in array with url data item with current school id **/
-        var urlData = itemUrls.find(itemUrl => {
-            return itemUrl.id == school.id;
-        });
-
         return {
             id: school.id,
             name: getName(school.name),
             score: scoreView.schoolListCompact(school.totalScore),
             metroStations: addressView.getMetro(school.addresses),
             area: addressView.getAreas(school.addresses),
-            url: schoolView.url(urlData)
+            alias: getAlias(itemUrls, school.id)
         };
     });
-};
-
-
-/**
- * Return url from given school instance
- * @param {models.School} school
- * @return {string}
- */
-schoolView.url = function(school) {
-    return school.url;
 };
 
 
@@ -692,6 +694,13 @@ schoolView.listWithFavorites = function(schools, favoriteItemIds) {
         });
         return schoolWithFavorite;
     });
+};
+
+/**
+ * @param {array<object>} schools
+ */
+schoolView.listIds = function(schools) {
+    return lodash.uniq(schools.map(school => school.id));
 };
 
 module.exports = schoolView;

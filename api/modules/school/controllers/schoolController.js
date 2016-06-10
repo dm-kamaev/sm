@@ -4,6 +4,7 @@ var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var logger = require('../../../../app/components/logger/logger').getLogger('app');
 var schoolView = require('../views/schoolView');
+var entityType = require('../../entity/enums/entityType');
 
 
 /**
@@ -140,7 +141,15 @@ exports.list = async (function(req, res) {
 exports.suggestSearch = async (function(req, res) {
     try {
         var searchString = req.query.searchString;
-        var data = await(services.search.suggestSearch(searchString));
+        var data = await(services.search.suggestSearch(searchString)),
+            aliases = await(services.page.getAliases(
+                data.schools.map(school => school.id),
+                entityType.SCHOOL
+            ));
+        data.schools = schoolView.joinAliases(
+            data.schools.map(school => school.dataValues),
+            aliases
+        );
         var result = schoolView.suggest(data);
     } catch (error) {
         logger.error(error.message);
@@ -297,9 +306,22 @@ exports.search = async (function(req, res) {
         };
         var data = await(promises);
 
+        var schools = await(services.school.list(
+                params,
+                {
+                    limitResults: 10
+                }
+            )),
+            aliases = await(services.page.getAliases(
+                schools.map(school => school.id),
+                entityType.SCHOOL
+            ));
+
+        schools = schoolView.joinAliases(schools, aliases);
+
         result = {
-            list: schoolView.list(data.schools, params.sortType, params.page),
-            map: schoolView.listMap(data.schools)
+            list: schoolView.list(schools, params.sortType, params.page),
+            map: schoolView.listMap(schools)
         };
     } catch (error) {
         result = JSON.stringify(error);
@@ -337,11 +359,12 @@ exports.searchMapPoints = async(function(req, res) {
 
         var promises = {
             schools: services.school.list(params),
-            mapPosition: services.search.getMapPositionParams(params)
+            mapPosition: services.search.getMapPositionParams(params),
+            aliases: services.page.getAllAliases(entityType.SCHOOL)
         };
         var results = await(promises);
         result = schoolView.listMap(
-            results.schools,
+            schoolView.joinAliases(results.schools, results.aliases),
             results.mapPosition
         );
 

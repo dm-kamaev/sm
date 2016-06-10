@@ -4,6 +4,7 @@ const services = require('../../../components/services').all;
 const schoolView = require('../../../../api/modules/school/views/schoolView');
 const searchView = require('../../../../api/modules/school/views/searchView');
 const userView = require('../../../../api/modules/user/views/user');
+const entityType = require('../../../../api/modules/entity/enums/entityType');
 
 const config = require('../../../config').config;
 const analyticsId = config.analyticsId;
@@ -52,12 +53,21 @@ exports.list = async (function(req, res) {
             authSocialLinks: services.auth.getAuthSocialUrl(),
             favorites: {
                 items: services.school.getByIdsWithGeoData(favoriteIds),
-                itemUrls: services.school.getUrlsByIds(favoriteIds)
+                itemUrls: services.page.getAliases(
+                    favoriteIds,
+                    entityType.SCHOOL
+                )
             }
         };
     var results = await(promises);
 
-    var schoolsList = schoolView.list(results.schools),
+    var schoolAliases = await(services.page.getAliases(
+            schoolView.listIds(results.schools),
+            entityType.SCHOOL
+        )),
+        schools = schoolView.joinAliases(results.schools, schoolAliases);
+
+    var schoolsList = schoolView.list(schools),
         schoolListWithFavorite = schoolView.listWithFavorites(
             schoolsList.schools, favoriteIds
         ),
@@ -104,13 +114,13 @@ exports.list = async (function(req, res) {
 
 exports.view = async (function(req, res, next) {
     try {
-        var url = services.urls.stringToURL(req.params.name),
-            schoolInstance = await(services.urls.getSchoolByUrl(url));
+        var alias = services.urls.stringToURL(req.params.name),
+            schoolInstance = await(services.urls.getSchoolByUrl(alias));
 
         if (!schoolInstance) {
             throw new errors.SchoolNotFoundError();
-        } else if (url != schoolInstance.url) {
-            res.redirect(schoolInstance.url);
+        } else if (alias != schoolInstance.alias) {
+            res.redirect(schoolInstance.alias);
         } else {
             var user = req.user || {},
                 favoriteIds = await(
@@ -123,17 +133,33 @@ exports.view = async (function(req, res, next) {
                         schoolInstance.id
                     ),
                     city: services.cityResult.getAll(),
+                    page: services.page.getDescription(
+                        schoolInstance.id,
+                        entityType.SCHOOL
+                    ),
                     authSocialLinks: services.auth.getAuthSocialUrl(),
                     popularSchools: services.school.getRandomPopularSchools(6),
                     favorites: {
                         items: services.school.getByIdsWithGeoData(favoriteIds),
-                        itemUrls: services.school.getUrlsByIds(favoriteIds)
+                        itemUrls: services.page.getAliases(
+                            favoriteIds,
+                            entityType.SCHOOL
+                        )
                     }
                 },
                 dataFromPromises = await(promises);
 
             var school = await(services.school.viewOne(schoolInstance.id));
-            services.school.incrementViews(school.id);
+
+            var schoolAliases = await(services.page.getAliases(
+                    dataFromPromises.popularSchools.map(school => school.id),
+                    entityType.SCHOOL
+                ));
+            dataFromPromises.popularSchools = schoolView.joinAliases(
+                dataFromPromises.popularSchools,
+                schoolAliases
+            );
+
 
             var isUserCommented = typeof await(
                     services.userData.checkCredentials(
@@ -173,7 +199,6 @@ exports.view = async (function(req, res, next) {
 
 exports.search = async(function(req, res) {
     var user = req.user || {};
-
     var favoriteIds = await(services.favorite.getAllItemIdsByUserId(user.id)),
         dataPromises = {
             popularSchools: services.school.getRandomPopularSchools(3),
@@ -181,10 +206,20 @@ exports.search = async(function(req, res) {
             authSocialLinks: services.auth.getAuthSocialUrl(),
             favorites: {
                 items: services.school.getByIdsWithGeoData(favoriteIds),
-                itemUrls: services.school.getUrlsByIds(favoriteIds)
+                itemUrls: services.page.getAliases(
+                    favoriteIds,
+                    entityType.SCHOOL
+                )
             }
         },
         data = await(dataPromises);
+
+    var schoolAliases = await(services.page.getAliases(
+            data.popularSchools.map(school => school.id),
+            entityType.SCHOOL
+        ));
+    data.popularSchools =
+        schoolView.joinAliases(data.popularSchools, schoolAliases);
 
     var html = soy.render('sm.lSearch.Template.base', {
         params: {

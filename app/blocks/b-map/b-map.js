@@ -824,7 +824,7 @@ goog.scope(function() {
                     'properties': {
                         'id': data['id'],
                         'name': data['name'],
-                        'url': data['url'],
+                        'alias': data['alias'],
                         'description': data['description'],
                         'address': {
                             'name': address['name'],
