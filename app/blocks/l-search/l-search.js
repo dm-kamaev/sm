@@ -15,20 +15,19 @@ goog.require('sm.iMetrika.Metrika');
 
 /**
  * Search result component
- * @param {Object=} opt_params
  * @constructor
  * @extends {goog.ui.Component}
  */
-sm.lSearch.Search = function(opt_params) {
+sm.lSearch.Search = function() {
     goog.base(this);
 
 
     /**
      * Parameters
      * @private
-     * @type {Object}
+     * @type {sm.iAuthorization.Authorization.InitParams}
      */
-    this.params_ = opt_params || {};
+    this.authParams_ = {};
 
 
     /**
@@ -100,29 +99,10 @@ goog.scope(function() {
     Search.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
-        var bSearchPanel = goog.dom.getElementByClass(
-            sm.bSearchPanel.View.CssClass.ROOT,
-            element
-        );
-
-        this.searchPanel_ =
-            sm.iFactory.FactoryStendhal.getInstance().decorate(
-                'search-panel',
-                bSearchPanel,
-                this
-            );
-
-        var bPopularSchools = goog.dom.getElementByClass(
-            sm.bPopularSchools.View.CssClass.ROOT,
-            element
-        );
-
-        this.popularSchools_ =
-            sm.iFactory.FactoryStendhal.getInstance().decorate(
-                'popular-schools',
-                bPopularSchools,
-                this
-            );
+        this.initParams_()
+            .initAuthorization_()
+            .initSearchPanel_()
+            .initPopularSchools_();
     };
 
 
@@ -132,6 +112,84 @@ goog.scope(function() {
      */
     Search.prototype.sendAnalyticsPageview_ = function() {
         Analytics.send('pageview');
+    };
+
+
+    /**
+     * Get data params from dom element and put it to corresponding params
+     * @return {sm.lSearch.Search}
+     * @private
+     */
+    Search.prototype.initParams_ = function() {
+        var dataParams = JSON.parse(
+            goog.dom.dataset.get(this.getElement(), 'params')
+        );
+
+        this.authParams_ = {
+            isUserAuthorized: dataParams['isUserAuthorized'],
+            authSocialLinks: {
+                fb: dataParams['authSocialLinks']['fb'],
+                vk: dataParams['authSocialLinks']['vk']
+            },
+            factoryType: 'stendhal'
+        };
+
+        return this;
+    };
+
+
+    /**
+     * Init authorization
+     * @return {sm.lSearch.Search}
+     * @private
+     */
+    Search.prototype.initAuthorization_ = function() {
+        var authorization = sm.iAuthorization.Authorization.getInstance();
+        authorization.init(this.authParams_);
+        return this;
+    };
+
+    /**
+     * Init search panel instance
+     * @return {sm.lSearch.Search}
+     * @private
+     */
+    Search.prototype.initSearchPanel_ = function() {
+        var bSearchPanel = goog.dom.getElementByClass(
+            sm.bSearchPanel.View.CssClass.ROOT,
+            this.getElement()
+        );
+
+        this.searchPanel_ =
+            sm.iFactory.FactoryStendhal.getInstance().decorate(
+                'search-panel',
+                bSearchPanel,
+                this
+            );
+
+        return this;
+    };
+
+
+    /**
+     * Init popular school instance
+     * @return {sm.lSearch.Search}
+     * @private
+     */
+    Search.prototype.initPopularSchools_ = function() {
+        var bPopularSchools = goog.dom.getElementByClass(
+            sm.bPopularSchools.View.CssClass.ROOT,
+            this.getElement()
+        );
+
+        this.popularSchools_ =
+            sm.iFactory.FactoryStendhal.getInstance().decorate(
+                'popular-schools',
+                bPopularSchools,
+                this
+            );
+
+        return this;
     };
 });  // goog.scope
 

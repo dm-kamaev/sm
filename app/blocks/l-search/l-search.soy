@@ -61,7 +61,6 @@
                     'user': $params.data?.user,
                     'favorites': $params?.data?.favorites
                 ],
-                'authSocialLinks': $params.data?.authSocialLinks,
                 'landingScript': '/l-search.js',
                 'openGraph': [
                     'title': 'Школы «Мела»',
@@ -89,7 +88,13 @@
  * @param? params {?}
  */
 {template .layoutContent_ autoescape="strict" kind="html"}
-    <div class="l-search">
+    {let $data: [
+        'isUserAuthorized': $params?.data?.user ? true : false,
+        'authSocialLinks': $params.data?.authSocialLinks
+    ] /}
+    <div class="l-search"
+         data-params="{call goog.json.serialize data="$data" /}">
+
         <div class="l-search__body">
             {call .header_ /}
 
