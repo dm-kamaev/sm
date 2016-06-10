@@ -10,7 +10,6 @@ goog.require('goog.object');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
 goog.require('gorod.gSuggest.Suggest');
-goog.require('sm.bAuthorization.Authorization');
 goog.require('sm.bHeader.Header');
 goog.require('sm.bMap.Map');
 goog.require('sm.bSearch.Search');
@@ -24,20 +23,19 @@ goog.require('sm.lSearchResult.bSchoolList.SchoolList');
 
 /**
  * Search result component
- * @param {object=} opt_params
  * @constructor
  * @extends {goog.ui.Component}
  */
-sm.lSearchResult.SearchResult = function(opt_params) {
+sm.lSearchResult.SearchResult = function() {
     goog.base(this);
 
 
     /**
-     * Parameters
+     * Authorization parameters
      * @private
-     * @type {Object}
+     * @type {sm.iAuthorization.Authorization.InitParams}
      */
-    this.params_ = opt_params || {};
+    this.authParams_ = {};
 
 
     /**
@@ -187,6 +185,9 @@ goog.scope(function() {
         /** Init params **/
         this.initParams_();
         /** end init params **/
+
+        /** Authorization init after params because params need to init it **/
+        this.initAuthorization_();
     };
 
 
@@ -241,13 +242,36 @@ goog.scope(function() {
      */
     SearchResult.prototype.initParams_ = function() {
         var element = this.getElement(),
-            dataParams = JSON.parse(goog.dom.dataset.get(element, 'params'));
+            dataParams = JSON.parse(goog.dom.dataset.get(element, 'params')),
+            searchSettings = dataParams['searchSettings'],
+            searchParams = searchSettings['searchParams'],
+            params = dataParams['params'];
 
-        this.instances_.search.setData(dataParams.searchParams);
+        this.instances_.search.setData(searchParams);
 
-        this.searchParams_ = this.getSearchParams_();
+        this.authParams_ = {
+            isUserAuthorized: params['isUserAuthorized'],
+                authSocialLinks: {
+                    fb: params['authSocialLinks']['fb'],
+                    vk: params['authSocialLinks']['vk']
+                },
+            factoryType: 'stendhal'
+        };
     };
 
+
+    /**
+     * Init authorization
+     * @return {sm.lSearchResult.SearchResult}
+     * @private
+     */
+    SearchResult.prototype.initAuthorization_ = function() {
+        var authorization = sm.iAuthorization.Authorization.getInstance();
+
+        authorization.init(this.authParams_);
+
+        return this;
+    };
 
     /**
      * Init school list block

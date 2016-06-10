@@ -15,20 +15,19 @@ goog.require('sm.iMetrika.Metrika');
 
 /**
  * ErrorNotFound result component
- * @param {Object=} opt_params
  * @constructor
  * @extends {goog.ui.Component}
  */
-sm.lErrorNotFound.ErrorNotFound = function(opt_params) {
+sm.lErrorNotFound.ErrorNotFound = function() {
     goog.base(this);
 
 
     /**
      * Parameters
      * @private
-     * @type {Object}
+     * @type {sm.iAuthorization.Authorization.InitParams}
      */
-    this.params_ = opt_params || {};
+    this.authParams_ = {};
 
 
     /**
@@ -63,33 +62,70 @@ goog.scope(function() {
 
 
     /**
-     * Template-based dom element creation.
-     * @public
-     */
-    ErrorNotFound.prototype.createDom = function() {
-        goog.base(this, 'createDom');
-
-        var element = goog.soy.renderAsElement(
-            sm.lErrorNotFound.Template.base,
-            {
-                params: this.params_
-            }
-        );
-
-        this.decorateInternal(element);
-    };
-
-
-    /**
      * Internal decorates the DOM element
      * @param {Element} element
      */
     ErrorNotFound.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
+        this.initParams_()
+            .initPopularSchools_()
+            .initSearchPanel_()
+            .initAuthorization_();
+    };
+
+
+    /**
+     * Set up the Component
+     */
+    ErrorNotFound.prototype.enterDocument = function() {
+        goog.base(this, 'enterDocument');
+    };
+
+
+    /**
+     * Get data params from dom element and put it to corresponding params
+     * @return {sm.lErrorNotFound.ErrorNotFound}
+     * @private
+     */
+    ErrorNotFound.prototype.initParams_ = function() {
+        var dataParams = JSON.parse(
+            goog.dom.dataset.get(this.getElement(), 'params')
+        );
+
+        this.authParams_ = {
+            isUserAuthorized: dataParams['isUserAuthorized'],
+            authSocialLinks: {
+                fb: dataParams['authSocialLinks']['fb'],
+                vk: dataParams['authSocialLinks']['vk']
+            },
+            factoryType: 'stendhal'
+        };
+
+        return this;
+    };
+
+    /**
+     * Init authorization
+     * @return {sm.lErrorNotFound.ErrorNotFound}
+     * @private
+     */
+    ErrorNotFound.prototype.initAuthorization_ = function() {
+        var authorization = sm.iAuthorization.Authorization.getInstance();
+        authorization.init(this.authParams_);
+        return this;
+    };
+
+
+    /**
+     * Init popular school instance
+     * @return {sm.lErrorNotFound.ErrorNotFound}
+     * @private
+     */
+    ErrorNotFound.prototype.initPopularSchools_ = function() {
         var bPopularSchools = goog.dom.getElementByClass(
-             sm.bPopularSchools.View.CssClass.ROOT,
-             element
+            sm.bPopularSchools.View.CssClass.ROOT,
+            this.getElement()
         );
 
         this.popularSchools_ =
@@ -99,9 +135,19 @@ goog.scope(function() {
                 this
             );
 
+        return this;
+    };
+
+
+    /**
+     * Init search panel instance
+     * @return {sm.lErrorNotFound.ErrorNotFound}
+     * @private
+     */
+    ErrorNotFound.prototype.initSearchPanel_ = function() {
         var bSearchPanel = goog.dom.getElementByClass(
             sm.bSearchPanel.View.CssClass.ROOT,
-            element
+            this.getElement()
         );
 
         this.searchPanel_ =
@@ -110,14 +156,8 @@ goog.scope(function() {
                 bSearchPanel,
                 this
             );
-    };
 
-
-    /**
-     * Set up the Component
-     */
-    ErrorNotFound.prototype.enterDocument = function() {
-        goog.base(this, 'enterDocument');
+        return this;
     };
 
 });  // goog.scope

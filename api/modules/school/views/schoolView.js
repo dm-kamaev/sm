@@ -80,19 +80,14 @@ schoolView.default = function(schoolInstance, data, user, opt_popularSchools) {
             olymp: olimpResultView.transformResults(data.olymp)
         },
         authSocialLinks: data.authSocialLinks,
-        isCommented: user.isCommented,
+        reviewCount: schoolInstance.totalScore ?
+            schoolInstance.reviewCount : 0,
         isFavorite: schoolView.isFavorite(schoolInstance, data.favorites.items),
-        user: {
-            firstName: user.firstName,
-            lastName: user.lastName,
-            id: user.id
-        },
+        user: user,
         favorites: {
             schools: schoolView.listCompact(data.favorites)
         },
-        reviewCount: schoolInstance.totalScore ?
-            schoolInstance.reviewCount : 0,
-        seoDescription: data.page.description
+        seoDescription: schoolInstance.seoDescription
     };
     if (data.popularSchools) {
         result.popularSchools = this.popular(data.popularSchools);
@@ -280,7 +275,7 @@ var getActivities = function(activities) {
  * @param {number} opt_page
  * @return {object} contains results count and schools array
  */
-schoolView.list = function(schools, schoolAliases, opt_criterion, opt_page) {
+schoolView.list = function(schools, opt_criterion, opt_page) {
     var res = {};
 
     if (schools.length !== 0) {
@@ -590,6 +585,7 @@ schoolView.dataLinks = function() {
     ];
 };
 
+
 /**
  * @param {{
  *     items: models.School,
@@ -619,6 +615,7 @@ schoolView.listCompact = function(schoolsData) {
     var schools = schoolsData.items,
         itemUrls = schoolsData.itemUrls;
     return schools.map(school => {
+
         return {
             id: school.id,
             name: getName(school.name),

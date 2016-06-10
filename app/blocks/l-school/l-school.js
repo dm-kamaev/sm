@@ -4,7 +4,6 @@ goog.require('goog.dom.classes');
 goog.require('goog.events');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
-goog.require('sm.bAuthorization.Authorization');
 goog.require('sm.bDataBlock.DataBlockFeatures');
 goog.require('sm.bFavoriteLink.FavoriteLink');
 goog.require('sm.bMap.Map');
@@ -12,6 +11,7 @@ goog.require('sm.bRating.Rating');
 goog.require('sm.bScore.Score');
 goog.require('sm.bSearch.Search');
 goog.require('sm.iAnalytics.Analytics');
+goog.require('sm.iAuthorization.Authorization');
 goog.require('sm.iFactory.FactoryStendhal');
 goog.require('sm.iMetrika.Metrika');
 goog.require('sm.lSchool.bComment.Comment');
@@ -25,20 +25,31 @@ goog.require('sm.lSchool.bResults.Results');
 
 /**
  * School page
- * @param {Object=} opt_params
  * @constructor
  * @extends {goog.ui.Component}
  */
-sm.lSchool.School = function(opt_params) {
+sm.lSchool.School = function() {
     goog.base(this);
 
 
     /**
      * params
-     * @type {Object|{}}
+     * @type {{
+     *     id: number,
+     *     schoolName: string,
+     *     isCommented: boolean
+     * }}
      * @private
      */
-    this.params_ = opt_params || {};
+    this.params_ = {};
+
+
+    /**
+     * Authorization init params
+     * @type {sm.iAuthorization.Authorization.InitParams}
+     * @private
+     */
+    this.authParams_ = {};
 
 
     /**
@@ -125,9 +136,7 @@ goog.scope(function() {
         Comments = sm.lSchool.bComments.Comments,
         DataBlockFeatures = sm.bDataBlock.DataBlockFeatures,
         FeedbackModal = sm.lSchool.bFeedbackModal.FeedbackModal,
-        AuthSocialModalView = cl.gAuthSocialModal.View,
-        PopularSchools = sm.bPopularSchools.PopularSchools,
-        Authorization = sm.bAuthorization.Authorization;
+        Authorization = sm.iAuthorization.Authorization;
 
     var Analytics = sm.iAnalytics.Analytics.getInstance(),
         factory = sm.iFactory.FactoryStendhal.getInstance();
@@ -175,13 +184,10 @@ goog.scope(function() {
     School.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
-        this.initElements_(element);
-
-        this.initChildren_();
-
-        this.initPopularSchools_(element);
-
-        this.initDataBlockFeatures_(element);
+        this.initParams_()
+            .initAuthorization_()
+            .initElements_(element)
+            .initChildren_();
     };
 
 
@@ -202,6 +208,35 @@ goog.scope(function() {
         this.sendAnalyticsPageview_();
 
         this.listenMap_();
+    };
+
+
+    /**
+     * Get data params from dom element and place it to corresponding params
+     * @return {sm.lSchool.School}
+     * @private
+     */
+    School.prototype.initParams_ = function() {
+        var dataParams = JSON.parse(
+            goog.dom.dataset.get(this.getElement(), 'params')
+        );
+
+        this.authParams_ = {
+            isUserAuthorized: dataParams['isUserAuthorized'],
+            authSocialLinks: {
+                fb: dataParams['authSocialLinks']['fb'],
+                vk: dataParams['authSocialLinks']['vk']
+            },
+            factoryType: 'stendhal'
+        };
+
+        this.params_ = {
+            id: dataParams['id'],
+            schoolName: dataParams['schoolName'],
+            isCommented: dataParams['isCommented']
+        };
+
+        return this;
     };
 
 
@@ -381,7 +416,7 @@ goog.scope(function() {
         var favoriteInstance = event.target;
         this.setEcAnalyticsAdd_();
         this.sendDataAnalytics_('favorite', 'add');
-        this.setFavoriteState(true);
+        this.setFavoriteState_(true);
         this.sendAddToFavorites_(favoriteInstance);
     };
 
@@ -395,7 +430,7 @@ goog.scope(function() {
         var favoriteInstance = event.target;
         this.setEcAnalyticsRemove_();
         this.sendDataAnalytics_('favorite', 'delete');
-        this.setFavoriteState(false);
+        this.setFavoriteState_(false);
         this.sendRemoveFromFavorites_(favoriteInstance);
     };
 
@@ -524,8 +559,9 @@ goog.scope(function() {
     /**
      * Set added to favorite or removed from favorite state for school
      * @param {boolean} isFavorite
+     * @private
      */
-    School.prototype.setFavoriteState = function(isFavorite) {
+    School.prototype.setFavoriteState_ = function(isFavorite) {
         goog.array.forEach(this.favoriteLinks_, function(favoriteLink) {
             isFavorite ?
                 favoriteLink.addFavorite() :
@@ -539,11 +575,11 @@ goog.scope(function() {
      * @private
      */
     School.prototype.showCommentModal_ = function() {
-        if (this.isUserLoggedIn_()) {
-            this.modal_.show();
-        } else {
-            Authorization.getInstance().login();
-        }
+        var authorization = Authorization.getInstance();
+
+        authorization.isUserAuthorized() ?
+            this.modal_.show() :
+            authorization.authorize();
     };
 
 
@@ -559,32 +595,30 @@ goog.scope(function() {
 
 
     /**
-     * @private
+     * Return whether already place comment to school
      * @return {boolean}
+     * @private
      */
     School.prototype.isCommented_ = function() {
-        return JSON.parse(
-                goog.dom.dataset.get(this.getElement(), 'params')
-            )['isCommented'];
+        return this.params_.isCommented;
     };
 
 
     /**
-     * Check if user object is empty,
-     * if it empty, that means that user is not logged in
+     * Init authorization
+     * @return {sm.lSchool.School}
      * @private
-     * @return {Object}
      */
-    School.prototype.isUserLoggedIn_ = function() {
-        var user = JSON.parse(
-            goog.dom.dataset.get(this.getElement(), 'params')
-        )['user'];
-        return user.id;
+    School.prototype.initAuthorization_ = function() {
+        var authorization = sm.iAuthorization.Authorization.getInstance();
+        authorization.init(this.authParams_);
+        return this;
     };
 
 
     /**
-     * adds children
+     * Init children instances
+     * @return {sm.lSchool.School}
      * @private
      */
     School.prototype.initChildren_ = function() {
@@ -595,12 +629,15 @@ goog.scope(function() {
             .initBouton_()
             .initFavoriteLinks_()
             .initComments_()
+            .initPopularSchools_()
+            .initDataBlockFeatures_()
             .initComponents_(DataBlockFoldList, DataBlockFoldList.CssClass.ROOT)
             .initComponents_(DBlockRatings, DBlockRatings.CssClass.ROOT)
             .initComponents_(Search, Search.CssClass.ROOT)
             .initComponents_(Results, Results.CssClass.ROOT);
-    };
 
+        return this;
+    };
 
     /**
      * Button initialization
@@ -736,12 +773,11 @@ goog.scope(function() {
 
     /**
      * gets DOM elements
-     * @param {Element} root
+     * @return {sm.lSchool.School}
      * @private
      */
-    School.prototype.initElements_ = function(root) {
+    School.prototype.initElements_ = function() {
         this.elements_ = {
-            root: root,
             bouton: this.getElementByClass(
                 sm.lSchool.School.CssClass.FEEDBACK_BUTTON
             ),
@@ -752,19 +788,19 @@ goog.scope(function() {
                 sm.lSchool.School.CssClass.INACCURACY_LINK
             )
         };
+
+        return this;
     };
 
 
     /**
      * Initialization popular schools
-     * @param {Element} element
+     * @return {sm.lSchool.School}
      * @private
      */
-    School.prototype.initPopularSchools_ = function(element) {
-
-        var bPopularSchools = goog.dom.getElementByClass(
-            sm.bPopularSchools.View.CssClass.ROOT,
-            element
+    School.prototype.initPopularSchools_ = function() {
+        var bPopularSchools = this.getElementByClass(
+            sm.bPopularSchools.View.CssClass.ROOT
         );
 
         this.popularSchools_ = factory.decorate(
@@ -772,6 +808,8 @@ goog.scope(function() {
             bPopularSchools,
             this
         );
+
+        return this;
     };
 
 
@@ -782,9 +820,8 @@ goog.scope(function() {
      */
     School.prototype.initFavoriteLinks_ = function() {
 
-        var favoriteLinks = goog.dom.getElementsByClass(
-            sm.bFavoriteLink.View.CssClass.ROOT,
-            this.getElement()
+        var favoriteLinks = this.getElementsByClass(
+            sm.bFavoriteLink.View.CssClass.ROOT
         );
 
         for (var i = 0; i < favoriteLinks.length; i++) {
@@ -803,20 +840,19 @@ goog.scope(function() {
 
     /**
      * Initialization Data Block Features
-     * @param {Element} element
+     * @return {sm.lSchool.School}
      * @private
      */
-    School.prototype.initDataBlockFeatures_ = function(element) {
-
-        var bDataBlockFeatures = goog.dom.getElementByClass(
-            sm.bDataBlock.DataBlockFeaturesView.CssClass.ROOT,
-            element
+    School.prototype.initDataBlockFeatures_ = function() {
+        var bDataBlockFeatures = this.getElementByClass(
+            sm.bDataBlock.DataBlockFeaturesView.CssClass.ROOT
         );
         this.dataBlockFeatures_ = factory.decorate(
             'data-block-features',
             bDataBlockFeatures,
             this
         );
+        return this;
     };
 });  // goog.scope
 
@@ -825,11 +861,10 @@ goog.scope(function() {
  * creates sm.lSchool.School instance
  */
 jQuery(function() {
-    var root = goog.dom.getElementByClass(sm.lSchool.School.CssClass.ROOT),
-        params = jQuery(root).data('params');
+    var root = goog.dom.getElementByClass(sm.lSchool.School.CssClass.ROOT);
 
     if (root) {
-        var school = new sm.lSchool.School(params);
+        var school = new sm.lSchool.School();
         school.decorate(root);
     }
 });

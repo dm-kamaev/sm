@@ -8,18 +8,20 @@ var userView = {};
  *     firstName: (string||undefined),
  *     lastName: (string||undefined)
  * }} user
- * @return {{
+ * @return {?{
  *     id: number
  *     firstName: string
  *     lastName: string
  * }}
  */
 userView.default = function(user) {
-    return {
+    var result = {
         id: user.id || undefined,
         firstName: user.firstName || '',
         lastName: user.lastName || ''
     };
+
+    return user.id ? result : null;
 };
 
 
@@ -31,19 +33,20 @@ userView.default = function(user) {
  *     lastName: (string|undefined)
  * }} user
  * @param isCommented {boolean}
- * @return {{
+ * @return {?{
  *     id: (number|undefined),
  *     firstName: string,
  *     lastName: string
  * }}
  */
 userView.school = function(user, isCommented) {
-    return {
-        id: user.id || undefined,
+    var result = {
+        id: user.id,
         firstName: user.firstName || '',
         lastName: user.lastName || '',
         isCommented: isCommented
     };
+    return user.id ? result : null;
 };
 
 

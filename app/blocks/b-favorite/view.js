@@ -36,9 +36,17 @@ goog.scope(function() {
     View.CssClass = {
         ROOT: 'b-favorite',
         ICON: 'b-favorite__icon-wrap',
-        HINT: 'b-favorite__hint-content'
+        HINT: 'b-favorite__hint-content',
+        AUTHORIZE_LINK: 'b-favorite__link_authorize'
     };
 
+    /**
+     * Event enum
+     * @type {string}
+     */
+    View.Event = {
+        AUTHORIZE: 'authorize'
+    };
 
     /**
      * @override
@@ -61,9 +69,11 @@ goog.scope(function() {
             this.dom.icon,
             goog.events.EventType.CLICK,
             this.onIconClick_
-        );
-
-        this.getHandler().listen(
+        ).listen(
+            this.dom.authorizeLink,
+            goog.events.EventType.CLICK,
+            this.onAuthorizeLinkClick_
+        ).listen(
             document,
             goog.events.EventType.CLICK,
             this.onDocumentClick_
@@ -120,6 +130,17 @@ goog.scope(function() {
 
 
     /**
+     * Handles event of clicking to authorization link
+     * @private
+     */
+    View.prototype.onAuthorizeLinkClick_ = function() {
+        this.dispatchEvent({
+            'type': View.Event.AUTHORIZE
+        });
+    };
+
+
+    /**
      * adds or deletes class to show hint
      * @param {bool} visible
      * @private
@@ -150,6 +171,9 @@ goog.scope(function() {
             ),
             hint: this.getElementByClass(
                 View.CssClass.HINT
+            ),
+            authorizeLink: this.getElementByClass(
+                View.CssClass.AUTHORIZE_LINK
             ),
             schoolListPaged: this.getElementByClass(
                 sm.bSchoolListPaged.View.CssClass.ROOT

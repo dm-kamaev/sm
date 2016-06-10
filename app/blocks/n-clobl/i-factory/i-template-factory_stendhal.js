@@ -2,7 +2,6 @@ goog.provide('sm.iFactory.TemplateFactoryStendhal');
 goog.provide('sm.iFactory.TemplateFactoryStendhal.INSTANCE');
 
 goog.require('cl.iFactory.TemplateFactory');
-goog.require('sm.bAuthorization.Template');
 goog.require('sm.bAuthorizationLink.Template');
 goog.require('sm.bBanner.Template');
 goog.require('sm.bFavorite.Template');
@@ -126,10 +125,6 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'authorization-link',
             sm.bAuthorizationLink.Template.authorizationLink
-        )
-        .setTemplateListItem(
-            'authorization',
-            sm.bAuthorization.Template.authorization
         )
         .setTemplateListItem(
             'favorite',

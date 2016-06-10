@@ -1,6 +1,7 @@
 goog.provide('sm.bFavorite.Favorite');
 
 goog.require('cl.iControl.Control');
+goog.require('sm.iAuthorization.Authorization');
 
 
 
@@ -27,7 +28,8 @@ goog.inherits(sm.bFavorite.Favorite, cl.iControl.Control);
 
 goog.scope(function() {
     var Favorite = sm.bFavorite.Favorite,
-        View = sm.bFavorite.View;
+        View = sm.bFavorite.View,
+        Authorization = sm.iAuthorization.Authorization;
 
 
     /**
@@ -40,6 +42,28 @@ goog.scope(function() {
         this.initSchoolListPaged_();
     };
 
+    /**
+     * @override
+     */
+    Favorite.prototype.enterDocument = function() {
+        goog.base(this, 'enterDocument');
+
+        this.viewListen(
+            View.Event.AUTHORIZE,
+            this.onAuthorize_
+        );
+    };
+
+
+    /**
+     * Handles authorize action
+     * @private
+     */
+    Favorite.prototype.onAuthorize_ = function() {
+        var authorization = Authorization.getInstance();
+
+        authorization.authorize();
+    };
 
     /**
      * init School List Paged

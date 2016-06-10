@@ -73,7 +73,6 @@
  *        ]>,
  *        totalScore: number,
  *        reviewCount: number,
- *        isCommented: bool,
  *        isFavorite: bool,
  *        popularSchools: ?list<[
  *            id: ?number,
@@ -85,7 +84,8 @@
  *        ]>,
  *        user: ?{
  *            firstName: ?string,
- *            lastName: ?string
+ *            lastName: ?string,
+ *            isCommented: boolean
  *        },
  *        favorites: sm.bSchoolListPaged.Template.Params.Data
  *        authSocialLinks: [
@@ -118,7 +118,6 @@
     {let $content kind="html"}
         {call .content_ data="all" /}
     {/let}
-
     {call sm.iLayout.Template.layout}
         {param params: [
             'data': [
@@ -133,7 +132,6 @@
                     'user': $params.data?.user,
                     'favorites': $params?.data?.favorites
                 ],
-                'authSocialLinks': $params.data?.authSocialLinks,
                 'landingScript': '/l-school.js',
                 'openGraph': [
                     'title': $title,
@@ -164,9 +162,10 @@
  *         id: number,
  *         schoolName: string,
  *         isCommented: boolean,
- *         user: {
- *            firstName: ?string,
- *            lastName: ?string
+ *         user: ?{
+ *            firstName: (string|undefined),
+ *            lastName: (string|undefined),
+ *            isCommented: boolean
  *         }
  *     }
  * }}
@@ -175,8 +174,9 @@
     {let $data: [
         'id': $params?.data?.id,
         'schoolName': $params?.data?.schoolName,
-        'isCommented': $params?.data?.isCommented,
-        'user': $params?.data?.user
+        'isCommented': $params?.data?.user?.isCommented,
+        'isUserAuthorized': $params?.data?.user ? true : false,
+        'authSocialLinks': $params.data?.authSocialLinks
     ] /}
 
     <div class="l-school"
@@ -365,7 +365,9 @@
  *             gia: ?object,
  *             olymp: ?object
  *         },
- *         isCommented: boolean
+ *         user: {
+ *             isCommented: boolean
+ *         }
  *     }
  * }
  */
@@ -382,7 +384,7 @@
                         'customClasses': [
                             'g-button_feedback-opener'
                         ],
-                        'isDisabled': $params?.data?.isCommented
+                        'isDisabled': $params?.data?.user?.isCommented
                     ]
                 ]
             ]/}
@@ -947,7 +949,9 @@
  * @param params {{
  *     data: {
  *         comments: Array.<{sm.lSchool.bComment.Template.Params}>,
- *         isCommented: boolean
+ *         user: ?{
+ *             isCommented: boolean
+ *         }
  *     }
  * }}
  * @private
@@ -957,7 +961,7 @@
         {call sm.lSchool.bComments.Template.base}
             {param params: [
                 'comments': $params.data.comments,
-                'isCommented': $params.data.isCommented
+                'isCommented': $params.data?.user?.isCommented
             ] /}
         {/call}
 
