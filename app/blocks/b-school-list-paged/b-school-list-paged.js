@@ -47,6 +47,31 @@ goog.scope(function() {
 
 
     /**
+     * Add one item to the top page
+     * @param {Object} item
+     */
+    SchoolListPaged.prototype.addItem = function(item) {
+        this.removeItems();
+    };
+
+
+    /**
+     * Remove item with given id
+     * @param {number} itemId
+     */
+    SchoolListPaged.prototype.removeItem = function(itemId) {
+        this.removeItems();
+    };
+
+
+    /**
+     * Remove all items from list
+     */
+    SchoolListPaged.prototype.removeItems = function() {
+        this.removeChildren(true);
+    };
+
+    /**
      * init School List Items
      * @private
      */

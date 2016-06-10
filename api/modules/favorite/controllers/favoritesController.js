@@ -1,5 +1,7 @@
 'use strict';
 
+const schoolView = require('../../school/views/schoolView');
+const entityType = require('../../entity/enums/entityType');
 
 const async = require('asyncawait/async');
 const await = require('asyncawait/await');
@@ -27,13 +29,21 @@ exports.create = async(function(req, res) {
     var user = req.user,
         itemId = req.body.itemId;
 
-    //TODO make an documentation of responce when this answer will be processed
-    //TODO by frontend
-    var favoriteSchool = await(services.school.getByIdsWithGeoData([itemId]));
+    var favoriteSchool = await(services.school.getByIdsWithGeoData([itemId]))[0],
+        page = await(services.page.getOne(
+            favoriteSchool.id,
+            entityType.SCHOOL
+        )),
+        result = schoolView.listCompactItem({
+            item: favoriteSchool,
+            itemUrl: page
+        });
+
+
     if (favoriteSchool) {
         await(services.favorite.create(user.id, itemId));
         res.status(200);
-        res.end(JSON.stringify(favoriteSchool));
+        res.end(JSON.stringify(result));
     } else {
         res.status(404);
         res.end();
@@ -68,7 +78,7 @@ exports.delete = async(function(req, res) {
         if(error) {
             res.status(404);
         } else {
-            res.status(200);
+            res.status(204);
         }
     }
     res.end();

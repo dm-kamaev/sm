@@ -597,7 +597,7 @@ schoolView.dataLinks = function() {
  *             light: (undefined|string),
  *             bold: (undefined|string)
  *         },
- *         url: (undefined|string),
+ *         alias: (undefined|string),
  *         score: (undefined|number)
  *         metroStations: (undefined|Array<{
  *             id: number,
@@ -606,8 +606,7 @@ schoolView.dataLinks = function() {
  *         area: (undefined|{
  *             id: number,
  *             name: string
- *         }),
- *         url: string
+ *         })
  *     }>
  * }>}
  */
@@ -626,6 +625,43 @@ schoolView.listCompact = function(schoolsData) {
         };
     });
 };
+
+/**
+* @param {{
+*     item: models.School,
+*     itemUrl: models.Page
+* }} schoolData
+* @return {{
+*     id: number,
+*     name: {
+*         light: (undefined|string),
+*         bold: (undefined|string)
+*     },
+*     alias: (undefined|string),
+*     score: (undefined|number)
+*     metroStations: (undefined|Array<{
+*         id: number,
+*         name: string
+*     }>),
+*     area: (undefined|{
+*         id: number,
+*         name: string
+*     })
+* }}
+*/
+((schoolView.listCompactItem = function (schoolData) {
+    var school = schoolData.item,
+        page = schoolData.itemUrl;
+
+    return {
+        id: school.id,
+        name: getName(school.name),
+        score: scoreView.schoolListCompact(school.totalScore),
+        metroStations: addressView.getMetro(school.addresses),
+        area: addressView.getAreas(school.addresses),
+        alias: page.alias
+    };
+}));
 
 
 /**
