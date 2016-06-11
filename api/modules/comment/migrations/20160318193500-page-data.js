@@ -1,14 +1,12 @@
 'use strict';
 
-const await = require('asyncawait/await'),
-      async = require('asyncawait/async'),
-      path = require('path'),
-      sequelize = require('../../app/components/db');
+const async = require('asyncawait/async'),
+    path = require('path');
 
 const Archiver = require('../../console/modules/modelArchiver/Archiver.js');
 
 const TABLE = 'page',
-      DELIMITER = '|';
+    DELIMITER = '|';
 
 module.exports = {
     up: async(function() {

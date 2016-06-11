@@ -1,7 +1,6 @@
 'use strict';
 
 var async = require('asyncawait/async');
-var await = require('asyncawait/await');
 var MailSender = require('../../../../node_modules/nodules/mail').MailSender;
 var Letter = require('../../../../node_modules/nodules/mail').Letter;
 var transporterGenerator =

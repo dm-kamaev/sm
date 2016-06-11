@@ -1,12 +1,9 @@
 'use strict';
 
 const async = require('asyncawait/async'),
-      await = require('asyncawait/await');
+    await = require('asyncawait/await');
 
-const sequelize = require('../../../../app/components/db'),
-      logger = require('../../../../app/components/logger/logger')
-          .getLogger('app'),
-      models = require('../../../../app/components/models').all;
+const models = require('../../../../app/components/models').all;
 
 var service = {
     name: 'page'

@@ -7,21 +7,19 @@ var sequelize = require.main.require('../../../app/components/db');
 var squel = require('squel');
 
 module.exports = {
-    up: async(function () {
-
+    up: async(function() {
         var wrongAreaId = getAreaId('Хорошейвский'),
             correctAreaId = getAreaId('Хорошёвский');
 
         updateAddressesAreaId(wrongAreaId, correctAreaId);
         deleteArea(wrongAreaId);
     }),
-    down: function () {
+    down: function() {
         return null;
     }
 };
 
 var getAreaId = function(name) {
-
     var sqlSelect = squel.select()
         .field('id')
         .from('area')

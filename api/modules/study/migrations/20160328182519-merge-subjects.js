@@ -62,11 +62,11 @@ module.exports = {
 
 /**
  * Change subject id references from given results page
+ * @param {string} table
  * @param {{
  *      oldId: number,
  *      newId: number
  * }} subjectIds
- * @param table
  * @return {Object}
  */
 var updateResults = function(table, subjectIds) {
@@ -95,7 +95,7 @@ var deleteSubjects = function(subjectId) {
             .where('id = ' + subjectId)
             .toString();
 
-        return await(sequelize.query(
+        await(sequelize.query(
             deleteSubjects,
             {type: sequelize.QueryTypes.DELETE}
         ));

@@ -5,7 +5,7 @@ var colors = require('colors');
 var searchType = require('../../api/modules/school/enums/searchType');
 
 module.exports = {
-    up: function (queryInterface, Sequelize) {
+    up: function(queryInterface, Sequelize) {
         return queryInterface.createTable('search_data', {
             id: {
                 allowNull: false,
@@ -17,7 +17,7 @@ module.exports = {
                 type: Sequelize.INTEGER,
                 onDelete: 'cascade',
                 references: {
-                    model:'school',
+                    model: 'school',
                     key: 'id'
                 }
             },
@@ -40,7 +40,7 @@ module.exports = {
             console.log('*****************');
         });
     },
-    down: function (queryInterface) {
+    down: function(queryInterface) {
         return queryInterface.dropTable('search_data');
     }
 };

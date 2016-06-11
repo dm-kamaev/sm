@@ -1,10 +1,10 @@
 'use strict';
 
 module.exports = {
-    up: function (queryInterface, Sequelize) {
-        return queryInterface.addColumn('school','url', {
-                type: Sequelize.STRING
-            })
+    up: function(queryInterface, Sequelize) {
+        return queryInterface.addColumn('school', 'url', {
+            type: Sequelize.STRING
+        })
             .then(function() {
                 return queryInterface.createTable('school_url', {
                     id: {
@@ -35,9 +35,9 @@ module.exports = {
                 });
             });
     },
-    down: function (queryInterface) {
+    down: function(queryInterface) {
         return queryInterface.removeColumn('school', 'url')
-            .then(function(){
+            .then(function() {
                 return queryInterface.dropTable('school_url');
             });
     }

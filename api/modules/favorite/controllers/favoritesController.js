@@ -27,8 +27,8 @@ exports.create = async(function(req, res) {
     var user = req.user,
         itemId = req.body.itemId;
 
-    //TODO make an documentation of responce when this answer will be processed
-    //TODO by frontend
+    // TODO make an documentation of responce when this answer will be processed
+    // TODO by frontend
     var favoriteSchool = await(services.school.getByIdsWithGeoData([itemId]));
     if (favoriteSchool) {
         await(services.favorite.create(user.id, itemId));
@@ -65,7 +65,7 @@ exports.delete = async(function(req, res) {
     try {
         services.favorite.deleteByUserIdAndItemId(user.id, itemId);
     } catch (error) {
-        if(error) {
+        if (error) {
             res.status(404);
         } else {
             res.status(200);

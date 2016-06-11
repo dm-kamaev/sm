@@ -3,14 +3,13 @@ var await = require('asyncawait/await');
 var sequelizeInclude = require('../../../components/sequelizeInclude');
 var models = require('../../../../app/components/models').all;
 var services = require('../../../../app/components/services').all;
-var sequelize = require('../../../../app/components/db');
 exports.name = 'address';
 
 
 exports.getTest = async(() => {
     return await(models.Address.findOne({
-        include:[{
-            all:true,
+        include: [{
+            all: true,
             nested: true
         }]
     }));
@@ -36,8 +35,7 @@ exports.addAddress = async(function(school_id, data) {
         console.log('is alredy binded to school '.yellow +
             'with id:'.yellow, addressBD.school_id);
         address = addressBD;
-    }
-    else {
+    } else {
         data.school_id = school_id;
         if (!data.coords) {
             data.coords = await(
@@ -91,8 +89,8 @@ exports.getById = async(function(address_id) {
 
 exports.getAddress = async(function(params) {
     var includeParams = {
-            departments: true
-        };
+        departments: true
+    };
     return await(models.Address.findOne({
         where: params,
         include: sequelizeInclude(includeParams)
@@ -102,11 +100,11 @@ exports.getAddress = async(function(params) {
 
 exports.getAllWithMetro = async(function() {
     return await(models.Address.findAll({
-        include:[{
+        include: [{
             model: models.Metro,
-            //through: 'address_metro',
+            // through: 'address_metro',
             as: 'metroStations'
-            }]
+        }]
     }));
 });
 
@@ -122,7 +120,7 @@ exports.getDepartments = function(address) {
 
 /**
  * Returns metro from array<address>/address
- * @param {array<object> || object} address
+ * @param {array<object>|object} address
  * @return {array<string>}
  */
 exports.getMetro = function(address) {
@@ -146,7 +144,7 @@ exports.getMetro = function(address) {
 
 exports.setMetro = async(function(address, metroArr) {
     metroArr.forEach(metro => {
-        var ourMetro = await (models.Metro.findOne({
+        var ourMetro = await(models.Metro.findOne({
             where: {
                 name: metro.name
             }
@@ -168,7 +166,7 @@ exports.setMetro = async(function(address, metroArr) {
  * @param {String} area
  * @param {String} address
  */
-exports.setArea = async ((area, address) => {
+exports.setArea = async((area, address) => {
     var areaInstance = await(models.Area.findOne({
         where: {
             name: area
@@ -180,7 +178,7 @@ exports.setArea = async ((area, address) => {
         }
     }));
 
-    addressInstance.forEach((item) => {
+    addressInstance.forEach(item => {
         item.setArea(areaInstance);
     });
 });

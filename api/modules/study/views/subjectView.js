@@ -53,6 +53,7 @@ SubjectView.EGE_SORT_LIST = [
  * Sorter
  * @param {Object} a
  * @param {Object} b
+ * @param {string} type
  * @return {number}
  */
 SubjectView.prototype.sorter = function(a, b, type) {
@@ -86,7 +87,7 @@ SubjectView.prototype.sorter = function(a, b, type) {
  * @return {Array.<number>}
  */
 SubjectView.prototype.subjectIds = function(subjects) {
-    return subjects.map((subject) => {
+    return subjects.map(subject => {
         return subject.id;
     });
 };

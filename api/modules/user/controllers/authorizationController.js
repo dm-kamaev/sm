@@ -26,7 +26,7 @@ exports.authorize = async(function(req, res) {
         }));
 
         await(new Promise(function(resolve, reject) {
-            req.logIn(user, function (err) {
+            req.logIn(user, function(err) {
                 err ? reject(err) : req.session.save(resolve);
             });
         }));
@@ -53,7 +53,7 @@ exports.authorize = async(function(req, res) {
  *     "origin": "schools/"
  * }
  */
-exports.unauthorize = async(function (req, res) {
+exports.unauthorize = async(function(req, res) {
     var origin = req.query.origin;
 
     await(new Promise(function(resolve, reject) {
@@ -75,7 +75,8 @@ exports.unauthorize = async(function (req, res) {
  *
  * @apiParam {string} type Type of social net [vk, fb]
  *
- * @apiSuccess (Success 201) {Header} Location Absolute reference to authoriozation
+ * @apiSuccess (Success 201) {Header} Location
+ *     Absolute reference to authoriozation
  */
 exports.getLink = async(function(req, res) {
     var result;

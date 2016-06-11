@@ -1,4 +1,4 @@
-const lodash = require('lodash');
+'use strict';
 
 /**
  * Olympiad results view
@@ -9,7 +9,7 @@ var OlimpResultView = function() {
 
 /**
  * Results transformation
- * @param results
+ * @param {Array<Object>} results
  * @return {{years: U[], results: U[]}}
  */
 OlimpResultView.prototype.transformResults = function(results) {
@@ -74,7 +74,7 @@ OlimpResultView.prototype.transformResults = function(results) {
             return {
                 label: key,
                 text: key
-            }
+            };
         }),
         results: keys.map(key => {
             var subjects = Object.keys(res[key]),
@@ -86,7 +86,7 @@ OlimpResultView.prototype.transformResults = function(results) {
             subjects.forEach(subject => {
                 item = res[key][subject];
 
-                if(item.top) {
+                if (item.top) {
                     top.push({
                         name: subject,
                         awardees: item.top.awardees,
@@ -94,7 +94,7 @@ OlimpResultView.prototype.transformResults = function(results) {
                     });
                 }
 
-                if(item.middle) {
+                if (item.middle) {
                     middle.push({
                         name: subject,
                         awardees: item.middle.awardees,
@@ -102,7 +102,7 @@ OlimpResultView.prototype.transformResults = function(results) {
                     });
                 }
 
-                if(item.bottom) {
+                if (item.bottom) {
                     bottom.push({
                         name: subject,
                         awardees: item.bottom ?
@@ -120,7 +120,7 @@ OlimpResultView.prototype.transformResults = function(results) {
                     middle.sort((a, b) => that.sorter_(a, b)) : undefined,
                 bottom: bottom.length > 0 ?
                     bottom.sort((a, b) => that.sorter_(a, b)) : undefined
-            }
+            };
         })
     };
 };

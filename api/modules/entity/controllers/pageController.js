@@ -3,7 +3,8 @@
 var services = require('../../../../app/components/services').all;
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
-var logger = require('../../../../app/components/logger/logger').getLogger('app');
+var logger = require('../../../../app/components/logger/logger')
+    .getLogger('app');
 
 
 /**
@@ -18,7 +19,7 @@ var logger = require('../../../../app/components/logger/logger').getLogger('app'
  * @apiErrorExample
  *     HTTP/1.1 404 Not Found
  */
-exports.incrementViews = async (function(req, res) {
+exports.incrementViews = async(function(req, res) {
     try {
         var identity = req.params;
         await(services.page.incrementViews(
@@ -27,6 +28,7 @@ exports.incrementViews = async (function(req, res) {
         ));
         res.status(204);
     } catch (error) {
+        logger.error(error.message);
         res.status(404);
     } finally {
         res.send();

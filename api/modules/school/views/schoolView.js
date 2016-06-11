@@ -21,8 +21,6 @@ const scoreView = require('../views/scoreView');
 
 const commentView = require('../../comment/views/commentView');
 
-const searchType = require('../enums/searchType');
-
 var schoolView = {};
 
 
@@ -40,8 +38,7 @@ schoolView.default = function(schoolInstance, data, user, opt_popularSchools) {
     var addresses = services.department.addressesFilter(
             schoolInstance.addresses
         ),
-        comments = commentView.school(schoolInstance.comments),
-        scoreCount = schoolInstance.scoreCount || [0, 0, 0, 0];
+        comments = commentView.school(schoolInstance.comments);
     var result = {
         id: schoolInstance.id,
         schoolName: schoolInstance.name,
@@ -130,28 +127,28 @@ var nearestMetro = function(addresses) {
 };
 
 /**
- * @param cost
+ * @param {string} cost
  * @return {string}
  */
 var getExtendedDayCost = function(cost) {
     var res = '';
 
     switch (cost) {
-        case 'нет':
-        case '-':
-        case null:
-            break;
+    case 'нет':
+    case '-':
+    case null:
+        break;
 
-        case 'есть':
-            res = 'есть продлёнка';
-            break;
+    case 'есть':
+        res = 'есть продлёнка';
+        break;
 
-        case 'бесплатно':
-            res = 'есть бесплатная продлёнка';
-            break;
+    case 'бесплатно':
+        res = 'есть бесплатная продлёнка';
+        break;
 
-        default:
-            res = 'есть продлёнка (' + cost + ')';
+    default:
+        res = 'есть продлёнка (' + cost + ')';
     }
 
     return res;
@@ -159,14 +156,13 @@ var getExtendedDayCost = function(cost) {
 
 
 /**
- *  @param {array<number>} interval
- *  @return {string}
+ * @param {array<number>} interval
+ * @return {string}
  */
-var getEducationInterval = function(interval, type) {
+var getEducationInterval = function(interval) {
     var res = 'Обучение с ';
 
-    if (interval)
-    {
+    if (interval) {
         var begin = interval[0],
             end = interval[interval.length - 1];
 
@@ -178,9 +174,8 @@ var getEducationInterval = function(interval, type) {
         res += ' по ';
         res += end;
         res += ' класс';
-    }
-    else {
-        res += '1 по 11 класс'
+    } else {
+        res += '1 по 11 класс';
     }
 
     return res;
@@ -198,7 +193,7 @@ var getKindergardenAvailability = function(interval) {
 
 
 /**
- *  @param {string} site
+ *  @param {string|array<string>} sites
  *  @return {array<object>}
  */
 var getSites = function(sites) {
@@ -214,9 +209,9 @@ var getSites = function(sites) {
         });
     } else {
         return [{
-                name: 'Сайт школы',
-                href: 'http://' + sites,
-                link: sites
+            name: 'Сайт школы',
+            href: 'http://' + sites,
+            link: sites
         }];
     }
 };
@@ -241,8 +236,8 @@ var getContacts = function(addresses, opt_phones) {
 
 /**
  * translates director name to right output format
- * @param name string
- * @return string
+ * @param {string} name
+ * @return {string}
  */
 var getDirectorName = function(name) {
     var nameWords = [],
@@ -284,7 +279,6 @@ schoolView.list = function(schools, opt_criterion, opt_page) {
         res.countResults = schools[0].countResults;
         res.schools = schools
             .map((school, i) => {
-
                 var score = scoreView.results(
                     school.score,
                     school.totalScore,
@@ -308,7 +302,6 @@ schoolView.list = function(schools, opt_criterion, opt_page) {
                     position: getPosition(i, opt_page)
                 };
             });
-
     } else {
         res = {
             countResults: 0,
@@ -339,7 +332,7 @@ schoolView.listMap = function(schools, opt_position) {
     var mapSchools = [];
 
     if (schools.length > 0) {
-       mapSchools = groupSchools(schools).map(this.schoolMap);
+        mapSchools = groupSchools(schools).map(this.schoolMap);
     }
 
     return {
@@ -382,7 +375,7 @@ schoolView.suggestList = function(schools) {
                 fullName: school.fullName,
                 addresses: school.addresses
             };
-    });
+        });
 };
 
 /**
@@ -416,27 +409,26 @@ var groupSchools = function(schools) {
         currentSchoolId = schools[0].id,
         grouppedById = [];
 
-    //iterates l+1 times for last address of last school
-    for(var i = 0, l = schools.length; i <= l; i++) {
+    // iterates l+1 times for last address of last school
+    for (var i = 0, l = schools.length; i <= l; i++) {
         var schoolItem = schools[i];
         if (!schoolItem || schoolItem.id !== currentSchoolId) {
-
             var resultItem = {};
 
-            //Copy fiels from one school to result school that not changes
+            // Copy fiels from one school to result school that not changes
             lodash.forOwn(grouppedById[0], (value, key) => {
-                    if (key !== 'addressId'
-                        && key !== 'metroId'
-                        && key !== 'metroName'
-                        && key !== 'departmentStage') {
-                        resultItem[key] = value;
-                    }
-                });
+                if (key !== 'addressId' &&
+                    key !== 'metroId' &&
+                    key !== 'metroName' &&
+                    key !== 'departmentStage') {
+                    resultItem[key] = value;
+                }
+            });
 
             var grouppedByAddress = lodash.groupBy(grouppedById, 'addressId');
             resultItem.addresses = [];
 
-            //iterates over schools with same address
+            // iterates over schools with same address
             lodash.forEach(grouppedByAddress, (schools, key) => {
                 resultItem.addresses.push({
                     id: key,
@@ -445,19 +437,19 @@ var groupSchools = function(schools) {
                     departments: []
                 });
 
-                lodash.forEach(schools, (school) => {
+                lodash.forEach(schools, school => {
                     var currentAddress = resultItem
                         .addresses[resultItem.addresses.length - 1];
 
                     var isNewMetro = true;
-                    //checks that current metro is not in metro array already
-                    lodash.forEach(currentAddress.metroStations, (station)=>{
-                        if(station.id === school.metroId) {
+                    // checks that current metro is not in metro array already
+                    lodash.forEach(currentAddress.metroStations, station => {
+                        if (station.id === school.metroId) {
                             isNewMetro = false;
                         }
                     });
-                    //if this is new mero than push it into metro array
-                    if(isNewMetro && school.metroId !== null) {
+                    // if this is new mero than push it into metro array
+                    if (isNewMetro && school.metroId !== null) {
                         currentAddress.metroStations
                             .push({
                                 id: school.metroId,
@@ -466,15 +458,16 @@ var groupSchools = function(schools) {
                     }
 
                     var isNewDepartment = true;
-                    //checks that current department is not in metro array already
-                    lodash.forEach(currentAddress.departments, (department) => {
-                        if(department.stage === school.departmentStage) {
+                    // checks that current department is not
+                    // in metro array already
+                    lodash.forEach(currentAddress.departments, department => {
+                        if (department.stage === school.departmentStage) {
                             isNewDepartment = false;
                         }
                     });
 
-                    //if this is new department than push it into metro array
-                    if (isNewDepartment  && school.departmentStage !== null) {
+                    // if this is new department than push it into metro array
+                    if (isNewDepartment && school.departmentStage !== null) {
                         currentAddress.departments.push({
                             stage: school.departmentStage
                         });
@@ -490,7 +483,7 @@ var groupSchools = function(schools) {
 
             result.push(resultItem);
 
-            if(schoolItem) {
+            if (schoolItem) {
                 currentSchoolId = schoolItem.id;
             }
 
@@ -507,7 +500,7 @@ var groupSchools = function(schools) {
  * @param {string} name
  * @return {Object}
  */
-var getName = function (name) {
+var getName = function(name) {
     var result = {
             'light': '',
             'bold': ''
@@ -515,10 +508,10 @@ var getName = function (name) {
         char,
         numberFounded = false;
 
-    for(var i = 0, l = name.length; i < l; i++) {
+    for (var i = 0, l = name.length; i < l; i++) {
         char = name.charAt(i);
 
-        if(char === '№') {
+        if (char === '№') {
             numberFounded = true;
         }
 
@@ -563,23 +556,23 @@ schoolView.dataLinks = function() {
 
     return [
         {
-          name: 'Школа 1234',
-          url: searchUrl +
+            name: 'Школа 1234',
+            url: searchUrl +
             encodeURIComponent('школа 1234')
         },
         {
-          name: 'Новослободская',
-          url: searchUrl +
+            name: 'Новослободская',
+            url: searchUrl +
             encodeURIComponent('Новослободская') + '&metroId=67'
         },
         {
-          name: 'Лицей',
-          url: searchUrl +
+            name: 'Лицей',
+            url: searchUrl +
             encodeURIComponent('Лицей')
         },
         {
-          name: 'Тимирязевский',
-          url: searchUrl +
+            name: 'Тимирязевский',
+            url: searchUrl +
             encodeURIComponent('Тимирязевский')
         }
     ];
@@ -592,30 +585,28 @@ schoolView.dataLinks = function() {
  *     itemUrls: models.School
  * }} schoolsData
  * @return {Array<{
+ *     id: number,
+ *     name: {
+ *         light: (undefined|string),
+ *         bold: (undefined|string)
+ *     },
+ *     url: (undefined|string),
+ *     score: (undefined|number),
+ *     metroStations: (undefined|Array<{
  *         id: number,
- *         name: {
- *             light: (undefined|string),
- *             bold: (undefined|string)
- *         },
- *         url: (undefined|string),
- *         score: (undefined|number)
- *         metroStations: (undefined|Array<{
- *             id: number,
- *             name: string
- *         }>),
- *         area: (undefined|{
- *             id: number,
- *             name: string
- *         }),
- *         url: string
- *     }>
+ *         name: string
+ *     }>),
+ *     area: (undefined|{
+ *         id: number,
+ *         name: string
+ *     }),
+ *     url: string
  * }>}
  */
 schoolView.listCompact = function(schoolsData) {
     var schools = schoolsData.items,
         itemUrls = schoolsData.itemUrls;
     return schools.map(school => {
-
         return {
             id: school.id,
             name: getName(school.name),
@@ -644,7 +635,6 @@ schoolView.isFavorite = function(school, favoriteItems) {
 /**
  * Add to given school list isFavorite property if school id
  * in given favorites ids
- * @param {Array<number>} favoriteItemIds
  * @param {Array<{
  *     id: number,
  *     name: {
@@ -652,7 +642,7 @@ schoolView.isFavorite = function(school, favoriteItems) {
  *         bold: (undefined|string)
  *     },
  *     url: (undefined|string),
- *     score: (undefined|number)
+ *     score: (undefined|number),
  *     metroStations: (undefined|Array<{
  *         id: number,
  *         name: string
@@ -663,6 +653,7 @@ schoolView.isFavorite = function(school, favoriteItems) {
  *     }),
  *     url: string
  * }>} schools
+ * @param {Array<number>} favoriteItemIds
  * @return {Array<{
  *     id: number,
  *     name: {
@@ -670,7 +661,7 @@ schoolView.isFavorite = function(school, favoriteItems) {
  *         bold: (undefined|string)
  *     },
  *     url: (undefined|string),
- *     score: (undefined|number)
+ *     score: (undefined|number),
  *     metroStations: (undefined|Array<{
  *         id: number,
  *         name: string
@@ -694,7 +685,8 @@ schoolView.listWithFavorites = function(schools, favoriteItemIds) {
 };
 
 /**
- * @param {array<object>} schools
+ * @param {Array<Object>} schools
+ * @return {Array<string>}
  */
 schoolView.listIds = function(schools) {
     return lodash.uniq(schools.map(school => school.id));

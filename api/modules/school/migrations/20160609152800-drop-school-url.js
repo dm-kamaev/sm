@@ -1,10 +1,10 @@
 'use strict';
 
 module.exports = {
-    up: function (queryInterface, Sequelize) {
+    up: function(queryInterface, Sequelize) {
         return queryInterface.dropTable('school_url');
     },
-    down: function (queryInterface) {
+    down: function(queryInterface, Sequelize) {
         return queryInterface.createTable('school_url', {
             id: {
                 allowNull: false,

@@ -3,7 +3,7 @@
 const schoolType = require('../../api/modules/school/enums/schoolType');
 
 module.exports = {
-    up: function (queryInterface, Sequelize) {
+    up: function(queryInterface, Sequelize) {
         return queryInterface.createTable('school', {
             id: {
                 allowNull: false,
@@ -52,14 +52,14 @@ module.exports = {
             city_id: {
                 type: Sequelize.INTEGER,
                 references: {
-                     model: 'city',
-                     key: 'id'
+                    model: 'city',
+                    key: 'id'
                 }
             },
             comment_group_id: {
                 type: Sequelize.INTEGER,
                 references: {
-                    model:'comment_group',
+                    model: 'comment_group',
                     key: 'id'
                 }
             },
@@ -68,7 +68,7 @@ module.exports = {
             updated_at: Sequelize.DATE
         });
     },
-    down: function (queryInterface) {
+    down: function(queryInterface) {
         return queryInterface.dropTable('school');
     }
 };

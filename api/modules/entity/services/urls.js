@@ -4,7 +4,8 @@ var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var translit = require('translitit-cyrillic-russian-to-latin');
 
-var logger = require('../../../../app/components/logger/logger').getLogger('app');
+var logger =
+    require('../../../../app/components/logger/logger').getLogger('app');
 
 var models = require('../../../../app/components/models').all,
     services = require('../../../../app/components/services').all,
@@ -40,14 +41,14 @@ service.generateSchoolAlias = async(function(school) {
     } else {
         var alias = service.stringToURL(school.name),
             schoolPage =
-                await(services.page.getOne(school.id, entityType.SCHOOL))
+                await(services.page.getOne(school.id, entityType.SCHOOL));
         if (alias != schoolPage.alias) {
             try {
                 await(schoolPage.update(
                     {alias: alias}
                 ));
             } catch (error) {
-                /*if url in use then generate different url*/
+                /* if url in use then generate different url*/
                 logger.error(error);
                 alias = alias + '_';
                 await(schoolPage.update(

@@ -5,14 +5,14 @@ var userView = {};
  * Default view for user
  * @param {{
  *     id: number,
- *     firstName: (string||undefined),
- *     lastName: (string||undefined)
+ *     firstName: (string|undefined),
+ *     lastName: (string|undefined)
  * }} user
- * @return {?{
- *     id: number
- *     firstName: string
+ * @return {{
+ *     id: number,
+ *     firstName: string,
  *     lastName: string
- * }}
+ * }} | null
  */
 userView.default = function(user) {
     var result = {
@@ -32,7 +32,7 @@ userView.default = function(user) {
  *     firstName: (string|undefined),
  *     lastName: (string|undefined)
  * }} user
- * @param isCommented {boolean}
+ * @param {boolean} isCommented
  * @return {?{
  *     id: (number|undefined),
  *     firstName: string,

@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-    up: function (queryInterface) {
+    up: function(queryInterface) {
         return queryInterface.removeColumn('school', 'url')
             .then(function() {
                 return queryInterface.removeColumn('school', 'views');
@@ -10,14 +10,14 @@ module.exports = {
                 return queryInterface.removeColumn('school', 'seo_description');
             });
     },
-    down: function (queryInterface, Sequelize) {
+    down: function(queryInterface, Sequelize) {
         return queryInterface.addColumn('school', 'url', {
-                type: DataType.STRING,
-                unique: true
-            })
+            type: Sequelize.STRING,
+            unique: true
+        })
             .then(function() {
                 return queryInterface.removeColumn('school', 'views', {
-                    type: DataType.INTEGER,
+                    type: Sequelize.INTEGER,
                     notNull: false,
                     defaultValue: 0
                 });
@@ -27,9 +27,9 @@ module.exports = {
                     'school',
                     'seo_description',
                     {
-                        type: DataType.STRING(300),
+                        type: Sequelize.STRING(300),
                         field: 'seo_description'
-                });
+                    });
             });
     }
 };

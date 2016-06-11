@@ -25,16 +25,15 @@ GiaResultView.prototype.transformResults = function(results, cityResults) {
         range = 0.5,
         averageResult,
         average,
-        examRes,
-        that = this;
+        examRes;
 
     results.forEach(item => {
-        /**TODO: add years*/
+        /** TODO: add years*/
         item.year = item.year || '2015';
 
         res[item.year] = res[item.year] || {};
         examRes = Math.round(item.result * 10) / 10;
-        averageResult =  cityResultView.getResult(
+        averageResult = cityResultView.getResult(
             cityResults,
             item.subjectId,
             'gia'
@@ -48,7 +47,7 @@ GiaResultView.prototype.transformResults = function(results, cityResults) {
                 value: examRes,
                 averageValue: average,
                 order: item.subject.name
-            })
+            });
         } else if (examRes > average - range) {
             res[item.year].middle = res[item.year].middle || [];
             res[item.year].middle.push({
@@ -56,7 +55,7 @@ GiaResultView.prototype.transformResults = function(results, cityResults) {
                 value: examRes,
                 averageValue: average,
                 order: item.subject.name
-            })
+            });
         } else {
             res[item.year].bottom = res[item.year].bottom || [];
             res[item.year].bottom.push({
@@ -64,7 +63,7 @@ GiaResultView.prototype.transformResults = function(results, cityResults) {
                 value: examRes,
                 averageValue: average,
                 order: item.subject.name
-            })
+            });
         }
     });
 
@@ -75,18 +74,30 @@ GiaResultView.prototype.transformResults = function(results, cityResults) {
             return {
                 label: key,
                 text: key
-            }
+            };
         }),
         results: keys.map(key => {
             var item = res[key];
             return {
                 top: item.top ?
-                    item.top.sort((a, b) => subjectView.sorter(a.order, b.order, 'GIA')) : undefined,
+                    item.top.sort((a, b) => subjectView.sorter(
+                        a.order,
+                        b.order,
+                        'GIA'
+                    )) : undefined,
                 middle: item.middle ?
-                    item.middle.sort((a, b) => subjectView.sorter(a.order, b.order, 'GIA')) : undefined,
+                    item.middle.sort((a, b) => subjectView.sorter(
+                        a.order,
+                        b.order,
+                        'GIA'
+                    )) : undefined,
                 bottom: item.bottom ?
-                    item.bottom.sort((a, b) => subjectView.sorter(a.order, b.order, 'GIA')) : undefined
-            }
+                    item.bottom.sort((a, b) => subjectView.sorter(
+                        a.order,
+                        b.order,
+                        'GIA'
+                    )) : undefined
+            };
         }),
         range: range
     };

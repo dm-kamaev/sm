@@ -1,5 +1,5 @@
 'use strict';
-const path = require('path');
+
 const await = require('asyncawait/await');
 const async = require('asyncawait/async');
 
@@ -7,7 +7,7 @@ var sequelize = require.main.require('../../../app/components/db');
 var squel = require('squel');
 
 module.exports = {
-    up: async(function () {
+    up: async(function() {
         var sqlUpdate = squel.update()
             .table('school')
             .set('director', 'Рачевский Ефим Лазаревич')
@@ -20,7 +20,7 @@ module.exports = {
             }
         ));
     }),
-    down: function () {
+    down: function() {
         return null;
     }
 };

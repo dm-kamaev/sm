@@ -9,8 +9,7 @@ var geo = require('./geo');
 var user = require('./user');
 var favorite = require('./favorite');
 var entity = require('./entity');
-var models = require('../../app/components/models'),
-    services = require('../../app/components/services');
+var models = require('../../app/components/models');
 
 models.initAssociations();
 

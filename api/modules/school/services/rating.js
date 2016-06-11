@@ -1,14 +1,8 @@
-var colors = require('colors');
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var models = require('../../../../app/components/models').all;
-var services = require('../../../../app/components/services').all;
-var sequelize  = require('../../../../app/components/db');
-var sequelizeInclude = require('../../../components/sequelizeInclude');
-var transaction = require('../../../components/transaction.js');
-var Enum = require('../../../components/enum').all;
 var service = {
-    name : 'rating'
+    name: 'rating'
 };
 
 

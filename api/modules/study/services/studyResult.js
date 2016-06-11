@@ -38,15 +38,17 @@ exports.setSchoolOlimp = async((school, olimpResults) => {
         var subject = await(services.subject.getOrCreate(olimp.subject)),
             type = OLIMP_TYPES.find(tp => tp.name == olimp.type),
             status = olimp.status || null;
-        if (!type)
-            throw new Error('Undefined olimp type: '+ olimp.type);
+        if (!type) {
+            throw new Error('Undefined olimp type: ' + olimp.type);
+        }
         await(models.OlimpResult.create({
             schoolId: school.id,
             subjectId: subject.id,
             type: type.value,
             stage: olimp.stage || null,
             class: olimp.class || null,
-            status: status.replace('ё','е'), //TODO: craete an enum controller and refactor this
+            status: status.replace('ё', 'е'),
+                // TODO: create an enum controller and refactor this
             year: olimp.year || null
         }));
     }));
@@ -61,12 +63,12 @@ exports.getAllGia = async(() => {
  * @param {integer} cityId
  * TODO: count avg for city
  */
-exports.getGiaAverage = async(function (cityId) {
+exports.getGiaAverage = async(function(cityId) {
     var sqlString = 'select subject_id, AVG(result) ' +
         'from gia_result group by subject_id';
     var sqlRes = await(sequelize.query(
             sqlString,
-            { type: sequelize.QueryTypes.SELECT}
+            {type: sequelize.QueryTypes.SELECT}
         )
     );
     return sqlRes.map(res => {
@@ -89,7 +91,7 @@ exports.getEgeAverage = async(function(cityId) {
         'from ege_result group by year, subject_id';
     var sqlRes = await(sequelize.query(
             sqlString,
-            { type: sequelize.QueryTypes.SELECT}
+            {type: sequelize.QueryTypes.SELECT}
         )
     );
     return sqlRes.map(res => {
@@ -118,7 +120,7 @@ exports.getEgeAverage = async(function(cityId) {
  *
  * @return {Promise} A promise that returns GiaResult model instance / instances
  */
-exports.getGia = async ((gia, opt_option) => {
+exports.getGia = async((gia, opt_option) => {
     var option = opt_option || {};
 
     var searchTerms = {
@@ -137,7 +139,6 @@ exports.getGia = async ((gia, opt_option) => {
 
         var foundGia = await(models.GiaResult.findOne(searchTerms));
         res = foundGia || await(this.create(gia));
-
     } else if (option.count == 'one') {
         res = await(models.GiaResult.findOne(searchTerms));
     } else {
@@ -160,24 +161,24 @@ exports.getGia = async ((gia, opt_option) => {
  * @return {Promise} A promise that returns GiaResult model instance
  */
 exports.createGia = async((gia, opt_option) => {
-        var option = opt_option || {};
-        var res;
+    var option = opt_option || {};
+    var res;
 
-        if (option.updateIfExists) {
-            var giaFound = await (this.getGia({
-                school_id: gia.school_id,
-                subject_id: gia.subject_id
-            }, {count: 'one'}));
+    if (option.updateIfExists) {
+        var giaFound = await(this.getGia({
+            school_id: gia.school_id,
+            subject_id: gia.subject_id
+        }, {count: 'one'}));
 
-            res = giaFound ?
-                await (giaFound.update(gia)) :
-                await (models.GiaResult.create(gia));
-        } else {
-            res = await (models.GiaResult.create(gia));
-        }
-
-        return res;
+        res = giaFound ?
+                await(giaFound.update(gia)) :
+                await(models.GiaResult.create(gia));
+    } else {
+        res = await(models.GiaResult.create(gia));
     }
+
+    return res;
+}
 );
 /**
  * @param {
@@ -187,6 +188,6 @@ exports.createGia = async((gia, opt_option) => {
  *      subject_id: int
  * } ege
  */
-exports.createEge = async(function(ege){
-    await (models.EgeResult.create(ege));
+exports.createEge = async(function(ege) {
+    await(models.EgeResult.create(ege));
 });

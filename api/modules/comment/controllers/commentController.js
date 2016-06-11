@@ -65,7 +65,7 @@ exports.create = async(function(req, res) {
         result = JSON.stringify(
             await(services.comment.create(groupID, params))
             );
-    } catch(e) {
+    } catch (e) {
         result = e.message;
     } finally {
         res.header('Content-Type', 'text/html; charset=utf-8');
@@ -96,7 +96,7 @@ exports.delete = async(function(req, res) {
             }];
             res.statusCode = 400;
         }
-    } catch(e) {
+    } catch (e) {
         result = e.message;
     } finally {
         res.header('Content-Type', 'text/html; charset=utf-8');

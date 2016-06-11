@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-    up: function (queryInterface, Sequelize) {
+    up: function(queryInterface, Sequelize) {
         return queryInterface.createTable('activity', {
             id: {
                 allowNull: false,
@@ -25,7 +25,7 @@ module.exports = {
             updated_at: Sequelize.DATE
         });
     },
-    down: function (queryInterface) {
+    down: function(queryInterface) {
         return queryInterface.dropTable('activity');
     }
 };

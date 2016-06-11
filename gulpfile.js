@@ -6,6 +6,7 @@ const babel = require('gulp-babel');
 const apidoc = require('gulp-apidoc');
 const fs = require('fs-extra');
 const exec = require('child_process').exec;
+const eslint = require('gulp-eslint');
 
 const gulpHelper =
     require('./node_modules/clobl/gulp-helper.js')
@@ -161,10 +162,16 @@ gulp.task('userConfig', function() {
     });
 });
 
+gulp.task('backendLint', function () {
+    return gulp.src('api/**/*.js')
+        .pipe(eslint())
+        .pipe(eslint.format());
+});
+
 const tasks = function (bool) {
     return bool ?
         ['createTimestamp', 'soy', 'compile', 'sprite', 'images', 'fonts', 'styles', 'copy'] :
-        ['watch', 'soy', 'scripts', 'sprite', 'images', 'fonts','styles', 'copy', 'localConfig', 'authConfig', 'userConfig'];
+        ['watch', 'soy', 'scripts', 'sprite', 'images', 'fonts','styles', 'copy', 'localConfig', 'authConfig', 'userConfig', 'backendLint'];
 };
 
 gulp.task('build', tasks(true));

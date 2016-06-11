@@ -15,7 +15,7 @@ var Activity = db.define('Activity', {
     tableName: 'activity',
 
     classMethods: {
-        associate: function (models) {
+        associate: function(models) {
             Activity.belongsTo(models.School, {
                 foreignKey: 'school_id'
             });

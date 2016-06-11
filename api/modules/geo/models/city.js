@@ -7,7 +7,7 @@ var City = db.define('City', {
     underscored: true,
     tableName: 'city',
     classMethods: {
-        associate: function (models) {
+        associate: function(models) {
             City.hasMany(models.School, {
                 as: 'schools',
                 foreignKey: 'city_id'

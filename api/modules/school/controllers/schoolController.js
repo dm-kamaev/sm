@@ -2,7 +2,8 @@
 var services = require('../../../../app/components/services').all;
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
-var logger = require('../../../../app/components/logger/logger').getLogger('app');
+var logger =
+    require('../../../../app/components/logger/logger').getLogger('app');
 var schoolView = require('../views/schoolView');
 var entityType = require('../../entity/enums/entityType');
 
@@ -36,7 +37,7 @@ var entityType = require('../../entity/enums/entityType');
  *         }
  *     }
  */
-exports.create = async (function(req, res) {
+exports.create = async(function(req, res) {
     var result = '';
     try {
         var data = req.body.schoolData;
@@ -70,7 +71,7 @@ exports.create = async (function(req, res) {
  *         }
  *     }
  */
-exports.update = async (function(req, res) {
+exports.update = async(function(req, res) {
     var result = '';
     try {
         var school_id = req.params.id;
@@ -92,7 +93,7 @@ exports.update = async (function(req, res) {
  * @apiGroup School
  * @apiName Delete
  */
-exports.delete = async (function(req, res) {
+exports.delete = async(function(req, res) {
     var result = '';
     try {
         var school_id = req.params.id;
@@ -114,10 +115,11 @@ exports.delete = async (function(req, res) {
  * @apiName Schools
  * @apiSuccess {Object[]} schools Very userful documentation here.
  */
-exports.list = async (function(req, res) {
+exports.list = async(function(req, res) {
+    var result;
     try {
-        var schools = await (services.school.list());
-        var result = schoolView.list(schools);
+        var schools = await(services.school.list());
+        result = schoolView.list(schools);
     } catch (error) {
         logger.error(error.message);
         result = error.message;
@@ -138,7 +140,8 @@ exports.list = async (function(req, res) {
  *       "searchString" : "123"
  *     }
  */
-exports.suggestSearch = async (function(req, res) {
+exports.suggestSearch = async(function(req, res) {
+    var result;
     try {
         var searchString = req.query.searchString;
         var data = await(services.search.suggestSearch(searchString)),
@@ -150,7 +153,7 @@ exports.suggestSearch = async (function(req, res) {
             data.schools.map(school => school.dataValues),
             aliases
         );
-        var result = schoolView.suggest(data);
+        result = schoolView.suggest(data);
     } catch (error) {
         logger.error(error.message);
         result = error.message;
@@ -168,9 +171,10 @@ exports.suggestSearch = async (function(req, res) {
  * @apiName School
  * @apiSuccess {Object} schools Very userful documentation here.
  */
-exports.view = async (function(req, res) {
+exports.view = async(function(req, res) {
+    var result;
     try {
-        var result = await(services.school.viewOne(req.params.id));
+        result = await(services.school.viewOne(req.params.id));
     } catch (error) {
         logger.error(error.message);
         result = error.message;
@@ -181,15 +185,13 @@ exports.view = async (function(req, res) {
 });
 
 
-
-
 /**
  * @api {get} api/school/search/filters Get school type list
  * @apiVersion 0.0.0
  * @apiGroup School
  * @apiName ListSearchFilters
  */
-exports.listSearchFilters = async (function(req, res) {
+exports.listSearchFilters = async(function(req, res) {
     var result;
     try {
         result = await(services.school.searchFilters());
@@ -218,7 +220,7 @@ exports.listSearchFilters = async (function(req, res) {
  *       "score": [3,2,1,5]
  *     }
  */
-exports.createComment = async (function(req, res) {
+exports.createComment = async(function(req, res) {
     var result = '';
     try {
         var schoolId = req.params.id,
@@ -243,15 +245,13 @@ exports.createComment = async (function(req, res) {
                 userId: params.userId
             });
         } else {
-
-            if(params.userId) {
+            if (params.userId) {
                 var user = await(services.user.getUserById(params.userId));
                 params.username = user.firstName;
             }
 
             result = await(services.school.review(schoolId, params));
         }
-
     } catch (error) {
         result = JSON.stringify(error);
         logger.error(result);
@@ -283,34 +283,16 @@ exports.createComment = async (function(req, res) {
  *       "page": 0
  *     }
  */
-exports.search = async (function(req, res) {
+exports.search = async(function(req, res) {
     var result;
     try {
-        var params = await(services.search.initSearchParams(req.query)),
-            user = req.user || {};
-
-        var favoriteIds = await(
-            services.favorite.getAllItemIdsByUserId(user.id)
-        );
-
-        var promises = {
-            schools: services.school.list(
-                params,
-                {
-                    limitResults: 10
-                }
-            ),
-            favoriteItems: services.school.getByIdsWithGeoData(
-                favoriteIds
-            )
-        };
-        var data = await(promises);
+        var params = await(services.search.initSearchParams(req.query));
 
         var schools = await(services.school.list(
                 params,
-                {
-                    limitResults: 10
-                }
+            {
+                limitResults: 10
+            }
             )),
             aliases = await(services.page.getAliases(
                 schools.map(school => school.id),
@@ -367,7 +349,6 @@ exports.searchMapPoints = async(function(req, res) {
             schoolView.joinAliases(results.schools, results.aliases),
             results.mapPosition
         );
-
     } catch (error) {
         result = JSON.stringify(error);
         logger.error(result);

@@ -1,12 +1,10 @@
 'use strict';
 
-const await = require('asyncawait/await'),
-      async = require('asyncawait/async'),
-      squel = require('squel'),
-      path  = require('path');
+const async = require('asyncawait/async'),
+    squel = require('squel');
 
 const sequelize = require('../../app/components/db'),
-      departmentStage = require('../../api/modules/geo/enums/departmentStage');
+    departmentStage = require('../../api/modules/geo/enums/departmentStage');
 
 module.exports = {
     up: async(function() {

@@ -18,7 +18,7 @@ var AddressMetro = db.define('AddressMetro', {
     underscored: true,
     tableName: 'address_metro',
     classMethods: {
-        associate: function (models) {
+        associate: function(models) {
             AddressMetro.belongsTo(models.Address, {
                 foreignKey: 'address_id'
             });

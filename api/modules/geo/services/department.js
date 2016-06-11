@@ -1,7 +1,6 @@
-var colors = require('colors');
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
-var models =require('../../../../app/components/models').all;
+var models = require('../../../../app/components/models').all;
 var services = require('../../../../app/components/services').all;
 var departmentStage = require('../enums/departmentStage');
 exports.name = 'department';
@@ -32,7 +31,7 @@ exports.addDepartment = function(school_id, address_id, data) {
         .then(instance => {
             address.addDepartment(instance);
             return instance;
-    }));
+        }));
 };
 
 
@@ -74,9 +73,9 @@ exports.getAll = function() {
 /**
  * Get all data from table by data
  * @param {{
- *     id?: nimber,
- *     stage?: string,
- *     name?: string
+ *     id: ?number,
+ *     stage: ?string,
+ *     name: ?string
  * }} data
  * @return {Object} instances of Department model
  */
@@ -88,8 +87,8 @@ exports.getAllByData = function(data) {
 /**
  * Get one data from table by data
  * @param {{
- *     stage?: string,
- *     name?: string
+ *     stage: ?string,
+ *     name: ?string
  * }} data
  * @return {Object} instance of Department model
  */
@@ -144,8 +143,7 @@ exports.addressesFilter = function(addressList) {
                         res = true;
                     }
                 });
-            }
-            else {
+            } else {
                 addressesWithoutStage.push(address);
             }
             return res;
@@ -154,8 +152,7 @@ exports.addressesFilter = function(addressList) {
     var addresses;
     if (addressesWithNeededStages.length > 0) {
         addresses = addressesWithNeededStages;
-    }
-    else {
+    } else {
         addresses = addressesWithoutStage;
     }
 
@@ -170,9 +167,9 @@ exports.addressesFilter = function(addressList) {
 exports.addAddressList = function(departmentId, addressIdList) {
     addressIdList.forEach(function(addressId) {
         var params = {
-                address_id: addressId,
-                department_id: departmentId
-            };
+            address_id: addressId,
+            department_id: departmentId
+        };
         await(models.Department_address.create(params));
     });
 };

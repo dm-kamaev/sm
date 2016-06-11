@@ -2,7 +2,7 @@
 
 
 module.exports = {
-    up: function (queryInterface, Sequelize) {
+    up: function(queryInterface, Sequelize) {
         return queryInterface.createTable('subject', {
             id: {
                 allowNull: false,
@@ -19,7 +19,7 @@ module.exports = {
             updated_at: Sequelize.DATE
         });
     },
-    down: function (queryInterface) {
+    down: function(queryInterface) {
         return queryInterface.dropTable('subject');
     }
 };

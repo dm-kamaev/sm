@@ -16,7 +16,7 @@ var Department = db.define('Department', {
     tableName: 'department',
 
     classMethods: {
-        associate: function (models) {
+        associate: function(models) {
             Department.belongsTo(models.Address, {
                 foreignKey: 'address_id'
             });

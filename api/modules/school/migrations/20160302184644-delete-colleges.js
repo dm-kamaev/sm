@@ -6,12 +6,12 @@ var sequelize = require.main.require('../../../app/components/db');
 var squel = require('squel');
 
 module.exports = {
-    up: async(function () {
+    up: async(function() {
         await(deleteRecord(492, 'school'));
         await(deleteRecord(372, 'comment'));
         await(deleteRecord(620, 'school'));
     }),
-    down: function () {
+    down: function() {
         return null;
     }
 };

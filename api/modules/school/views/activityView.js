@@ -11,7 +11,7 @@ activityView.list = function(activities) {
 
     var items = lodash.keys(activities)
         .map(key => {
-            var spheres= activities[key].map(activity => activity.sphere),
+            var spheres = activities[key].map(activity => activity.sphere),
                 items = lodash.uniq(spheres);
 
             return activityView.listParams_(items, 'folded', key);
@@ -30,6 +30,6 @@ activityView.listParams_ = function(items, sphere, opt_name) {
             type: sphere
         }
     };
-}
+};
 
 module.exports = activityView;

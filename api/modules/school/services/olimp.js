@@ -1,14 +1,8 @@
-var colors = require('colors');
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var models = require('../../../../app/components/models').all;
-var services = require('../../../../app/components/services').all;
-var sequelize  = require('../../../../app/components/db');
-var sequelizeInclude = require('../../../components/sequelizeInclude');
-var transaction = require('../../../components/transaction.js');
-var Enum = require('../../../components/enum').all;
 var service = {
-    name : 'olimpResult'
+    name: 'olimpResult'
 };
 
 
@@ -45,7 +39,7 @@ service.add = async(function(school_id, subject_id, data) {
  * @return {Object} instance of OlimpResult model
  */
 service.update = async(function(olymp_id, data) {
-    var instance = await(service.getById(olimp_id));
+    var instance = await(service.getById(olymp_id));
     return await(instance.update(data));
 });
 

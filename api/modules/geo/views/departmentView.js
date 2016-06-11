@@ -23,7 +23,7 @@ departmentView.list = function(departments) {
  */
 departmentView.classes = function(departments) {
     var stage,
-        deps = departments.map(dep => {return dep.stage;}),
+        deps = departments.map(dep => { return dep.stage; }),
         elementary = deps.indexOf(departmentStage.ELEMENTARY),
         middle_hide = deps.indexOf(departmentStage.MIDDLE_HIDE),
         middle = deps.indexOf(departmentStage.MIDDLE),
@@ -47,5 +47,5 @@ departmentView.classes = function(departments) {
         stage = 'Другие адреса';
     }
     return stage;
-}
+};
 module.exports = departmentView;

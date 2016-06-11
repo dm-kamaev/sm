@@ -3,10 +3,11 @@
 const await = require('asyncawait/await');
 const async = require('asyncawait/async');
 
-const path  = require('path');
-const ModelArchiver = require(
-    '../../console/modules/modelArchiver/ModelArchiver.js');
-const SchoolTypeFilter = require('../../api/modules/school/models/schoolTypeFilter');
+const path = require('path');
+const ModelArchiver =
+    require('../../console/modules/modelArchiver/ModelArchiver.js');
+const SchoolTypeFilter =
+    require('../../api/modules/school/models/schoolTypeFilter');
 
 
 module.exports = {

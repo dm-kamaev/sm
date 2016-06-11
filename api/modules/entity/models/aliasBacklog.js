@@ -3,7 +3,7 @@
 const Sequelize = require('sequelize');
 
 const sequelize = require('../../../../app/components/db'),
-      entityTypes = require('../enums/entityType');
+    entityTypes = require('../enums/entityType');
 
 var AliasBacklog = sequelize.define('AliasBacklog', {
     entityId: {
