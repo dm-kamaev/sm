@@ -11,8 +11,8 @@ module.exports = {
                 type: Sequelize.INTEGER
             },
             name: Sequelize.STRING,
-            created_at: Sequelize.DATE,
-            updated_at: Sequelize.DATE
+            'created_at': Sequelize.DATE,
+            'updated_at': Sequelize.DATE
         });
     },
     down: function(queryInterface) {

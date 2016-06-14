@@ -10,9 +10,9 @@ module.exports = {
                 type: Sequelize.INTEGER
             },
             name: Sequelize.STRING,
-            vk_id: Sequelize.INTEGER,
-            created_at: Sequelize.DATE,
-            updated_at: Sequelize.DATE
+            'vk_id': Sequelize.INTEGER,
+            'created_at': Sequelize.DATE,
+            'updated_at': Sequelize.DATE
         });
     },
     down: function(queryInterface) {

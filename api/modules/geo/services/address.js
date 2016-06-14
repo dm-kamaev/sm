@@ -18,13 +18,13 @@ exports.getTest = async(() => {
 
 /**
  * Added new address
- * @param {number} school_id
+ * @param {number} schoolId
  * @param {{
  *     name: string,
  *     coords?: array
  * }} data
  */
-exports.addAddress = async(function(school_id, data) {
+exports.addAddress = async(function(schoolId, data) {
     var addressBD = await(services.address.getAddress({
         name: data.name
     }));
@@ -36,7 +36,7 @@ exports.addAddress = async(function(school_id, data) {
             'with id:'.yellow, addressBD.school_id);
         address = addressBD;
     } else {
-        data.school_id = school_id;
+        data.schoolId = schoolId;
         if (!data.coords) {
             data.coords = await(
                     services.yapi.getCoords('Москва, ' + data.name));
@@ -49,15 +49,15 @@ exports.addAddress = async(function(school_id, data) {
 
 /**
  * Update address data
- * @param {number} address_id
+ * @param {number} addressId
  * @param {{
  *     name?: string,
  *     coords?: array,
  *     isSchool?: bool
  * }} data
  */
-exports.update = async(function(address_id, data) {
-    var address = await(services.address.getAddress({id: address_id}));
+exports.update = async(function(addressId, data) {
+    var address = await(services.address.getAddress({id: addressId}));
     return await(address.update(data));
 });
 
@@ -73,15 +73,15 @@ exports.getAll = async(function() {
 
 /**
  * Get all data by data
- * @param {number} address_id
+ * @param {number} addressId
  * @return {Object} instances of Address model
  */
-exports.getById = async(function(address_id) {
+exports.getById = async(function(addressId) {
     var includeParams = {
         departments: true
     };
     return await(models.Address.findOne({
-        where: {id: address_id},
+        where: {id: addressId},
         include: sequelizeInclude(includeParams)
     }));
 });

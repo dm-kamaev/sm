@@ -18,12 +18,12 @@ const OLIMP_TYPES = [
 ];
 
 /**
- * param {int} school_id
+ * @param {number} schoolId
  */
-exports.dropEgeResults = async(function(school_id) {
+exports.dropEgeResults = async(function(schoolId) {
     await(models.EgeResult.destroy({
         where: {
-            schoolId: school_id
+            schoolId: schoolId
         }
     }));
 });
@@ -110,8 +110,8 @@ exports.getEgeAverage = async(function(cityId) {
  *     id?: number,
  *     count?: number,
  *     result?: number,
- *     school_id?: number,
- *     subject_id?: number
+ *     schoolId?: number,
+ *     subjectId?: number
  * }} gia
  * @param {{
  *     count?: 'one',
@@ -132,8 +132,8 @@ exports.getGia = async((gia, opt_option) => {
     if (option.createIfNotExists) {
         searchTerms = {
             where: {
-                school_id: gia.school_id,
-                subject_id: gia.subject_id
+                schoolId: gia.school_id,
+                subjectId: gia.subject_id
             }
         };
 
@@ -152,8 +152,8 @@ exports.getGia = async((gia, opt_option) => {
  * @param {{
  *     count?: number,
  *     result?: number,
- *     school_id?: number,
- *     subject_id?: number
+ *     schoolId?: number,
+ *     subjectId?: number
  * }} gia
  * @param {{
  *     updateIfExists?: Boolean
@@ -166,8 +166,8 @@ exports.createGia = async((gia, opt_option) => {
 
     if (option.updateIfExists) {
         var giaFound = await(this.getGia({
-            school_id: gia.school_id,
-            subject_id: gia.subject_id
+            schoolId: gia.school_id,
+            subjectId: gia.subject_id
         }, {count: 'one'}));
 
         res = giaFound ?

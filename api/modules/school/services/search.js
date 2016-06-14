@@ -640,21 +640,21 @@ exports.setSchoolType = async(function(schoolId, value) {
 
 /**
  * Get one data
- * @param {number} searh_data_id
+ * @param {number} searhDataId
  * @return {Object} instance of SearhData model
  */
-exports.getById = async(function(searh_data_id) {
+exports.getById = async(function(searhDataId) {
     return await(models.Department.findOne({
-        where: {id: searh_data_id}
+        where: {id: searhDataId}
     }));
 });
 
 
 /**
  * Delete searshData
- * @param {int} searh_data_id
+ * @param {number} searhDataId
  */
-exports.deleteSearchData = async(function(searh_data_id) {
-    var instance = await(exports.getById(searh_data_id));
+exports.deleteSearchData = async(function(searhDataId) {
+    var instance = await(exports.getById(searhDataId));
     instance.destroy();
 });

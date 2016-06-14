@@ -13,7 +13,7 @@ module.exports = {
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-            school_id: {
+            'school_id': {
                 type: Sequelize.INTEGER,
                 onDelete: 'cascade',
                 references: {
@@ -28,8 +28,8 @@ module.exports = {
                 type: Sequelize.ENUM,
                 values: searchType.toArray()
             },
-            created_at: Sequelize.DATE,
-            updated_at: Sequelize.DATE
+            'created_at': Sequelize.DATE,
+            'updated_at': Sequelize.DATE
         }).then(function() {
             console.log('*****************');
             console.log(

@@ -16,15 +16,15 @@ module.exports = {
             coords: {
                 type: Sequelize.ARRAY(Sequelize.ARRAY(Sequelize.FLOAT))
             },
-            address_id: {
+            'address_id': {
                 type: Sequelize.INTEGER,
                 references: {
                     model: 'address',
                     key: 'id'
                 }
             },
-            created_at: Sequelize.DATE,
-            updated_at: Sequelize.DATE
+            'created_at': Sequelize.DATE,
+            'updated_at': Sequelize.DATE
         });
     },
     down: function(queryInterface) {

@@ -8,28 +8,28 @@ var service = {
 
 /**
  * Add rating row
- * @params {number} school_id
+ * @params {number} schoolId
  * @param {{
  *     score?: Array [number]
  * }} data
  * @return {Object} instance of Rating model
  */
-service.add = async(function(school_id, data) {
-    data.school_id = school_id;
+service.add = async(function(schoolId, data) {
+    data.schoolId = schoolId;
     return await(models.Rating.create(data));
 });
 
 
 /**
  * Update rating data
- * @param {number} rating_id
+ * @param {number} ratingId
  * @param {{
  *     score: Array [number]
  * }} data
  * @return {Object} instance of Rating model
  */
-service.update = async(function(rating_id, data) {
-    var instance = await(service.getOneByData({id: rating_id}));
+service.update = async(function(ratingId, data) {
+    var instance = await(service.getOneByData({id: ratingId}));
     return await(instance.update(data));
 });
 
@@ -61,22 +61,22 @@ service.getAllByData = async(function(data) {
 
 /**
  * Get one by id
- * @param {number} rating_id
+ * @param {number} ratingId
  * @return {Object} instance of Rating model
  */
-service.getById = async(function(rating_id) {
+service.getById = async(function(ratingId) {
     return await(models.Rating.findOne({
-        where: {id: rating_id}
+        where: {id: ratingId}
     }));
 });
 
 
 /**
  * Delete rating instance
- * @param {number} rating_id
+ * @param {number} ratingId
  */
-service.delete = async(function(rating_id) {
-    var instance = await(service.getById(rating_id));
+service.delete = async(function(ratingId) {
+    var instance = await(service.getById(ratingId));
     await(instance.destroy());
 });
 

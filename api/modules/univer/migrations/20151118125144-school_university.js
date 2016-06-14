@@ -9,15 +9,15 @@ module.exports = {
                 autoIncrement: true,
                 type: Sequelize.INTEGER
             },
-            created_at: {
+            'created_at': {
                 allowNull: false,
                 type: Sequelize.DATE
             },
-            updated_at: {
+            'updated_at': {
                 allowNull: false,
                 type: Sequelize.DATE
             },
-            school_id: {
+            'school_id': {
                 allowNull: false,
                 onDelete: 'cascade',
                 type: Sequelize.INTEGER,
@@ -26,7 +26,7 @@ module.exports = {
                     key: 'id'
                 }
             },
-            university_id: {
+            'university_id': {
                 allowNull: false,
                 type: Sequelize.INTEGER,
                 references: {
@@ -34,7 +34,7 @@ module.exports = {
                     key: 'id'
                 }
             },
-            ppl_count: {
+            'ppl_count': {
                 type: Sequelize.INTEGER
             },
             year: {

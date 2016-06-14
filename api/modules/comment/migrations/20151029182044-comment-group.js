@@ -9,10 +9,10 @@ module.exports = {
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-            created_at: {
+            'created_at': {
                 type: Sequelize.DATE
             },
-            updated_at: {
+            'updated_at': {
                 type: Sequelize.DATE
             },
         });

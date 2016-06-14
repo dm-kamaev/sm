@@ -9,11 +9,11 @@ module.exports = {
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-            entity_id: {
+            'entity_id': {
                 type: Sequelize.INTEGER,
                 allowNull: false
             },
-            entity_type: {
+            'entity_type': {
                 type: Sequelize.STRING,
                 allowNull: false,
                 unique: 'compositeIndex'
@@ -23,8 +23,8 @@ module.exports = {
                 allowNull: false,
                 unique: 'compositeIndex'
             },
-            created_at: Sequelize.DATE,
-            updated_at: Sequelize.DATE
+            'created_at': Sequelize.DATE,
+            'updated_at': Sequelize.DATE
         });
     },
     down: function(queryInterface) {

@@ -36,14 +36,14 @@ exports.getAddresses = async(function(req, res) {
 exports.getAddress = async(function(req, res) {
     var result = '';
     try {
-        var school_id = req.params.school_id;
-        var address_id = req.params.id;
+        var schoolId = req.params.school_id;
+        var addressId = req.params.id;
         var address =
-                await(services.school.getAddress(school_id, address_id));
+                await(services.school.getAddress(schoolId, addressId));
         if (address) {
             result = address;
         } else {
-            result = 'School hasn\'t address with id ' + address_id;
+            result = 'School hasn\'t address with id ' + addressId;
         }
     } catch (error) {
         logger.error(error.message);

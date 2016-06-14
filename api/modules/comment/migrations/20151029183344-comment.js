@@ -9,16 +9,16 @@ module.exports = {
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-            created_at: {
+            'created_at': {
                 type: Sequelize.DATE
             },
-            updated_at: {
+            'updated_at': {
                 type: Sequelize.DATE
             },
             text: {
                 type: Sequelize.TEXT
             },
-            user_type: {
+            'user_type': {
                 allowNull: false,
                 type: Sequelize.ENUM, // ('Parent','Graduate','Scholar'),
                 values: authorType.toArray()
@@ -27,7 +27,7 @@ module.exports = {
                 allowNull: false,
                 type: Sequelize.ARRAY(Sequelize.INTEGER)
             },
-            comment_group_id: {
+            'comment_group_id': {
                 type: Sequelize.INTEGER,
                 onDelete: 'cascade',
                 references: {

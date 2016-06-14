@@ -9,21 +9,21 @@ module.exports = {
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-            created_at: {
+            'created_at': {
                 allowNull: false,
                 type: Sequelize.DATE
             },
-            updated_at: {
+            'updated_at': {
                 allowNull: false,
                 type: Sequelize.DATE
             },
             score: {
                 type: Sequelize.ARRAY(Sequelize.INTEGER),
             },
-            total_score: {
+            'total_score': {
                 type: Sequelize.FLOAT
             },
-            school_id: {
+            'school_id': {
                 onDelete: 'cascade',
                 type: Sequelize.INTEGER,
                 references: {

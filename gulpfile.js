@@ -164,7 +164,9 @@ gulp.task('userConfig', function() {
 
 gulp.task('backendLint', function () {
     return gulp.src('api/**/*.js')
-        .pipe(eslint())
+        .pipe(eslint({
+            config: path.join(__dirname, 'node_modules/nodules/.eslintrc')
+        }))
         .pipe(eslint.format());
 });
 

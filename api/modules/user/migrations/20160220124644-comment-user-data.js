@@ -20,19 +20,19 @@ module.exports = {
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-            user_type: {
+            'user_type': {
                 allowNull: false,
                 type: Sequelize.ENUM,
                 values: userType.toArray()
             },
-            class_type: {
+            'class_type': {
                 type: Sequelize.INTEGER
             },
-            year_graduate: {
+            'year_graduate': {
                 type: Sequelize.INTEGER
             },
-            created_at: Sequelize.DATE,
-            updated_at: Sequelize.DATE
+            'created_at': Sequelize.DATE,
+            'updated_at': Sequelize.DATE
         }));
         queryInterface.addColumn('comment', 'user_data_id', {
             type: Sequelize.INTEGER,

@@ -18,7 +18,7 @@ exports.name = 'comment';
 exports.create = async(function(commentGroupId, params) {
     try {
         var createParams = {
-            comment_group_id: commentGroupId,
+            groupId: commentGroupId,
             text: params.text,
             userDataId: params.userDataId,
             isNoticeSend: false

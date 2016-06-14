@@ -74,9 +74,9 @@ exports.create = async(function(req, res) {
 exports.update = async(function(req, res) {
     var result = '';
     try {
-        var school_id = req.params.id;
+        var schoolId = req.params.id;
         var data = req.body.schoolData;
-        result = await(services.school.update(school_id, data));
+        result = await(services.school.update(schoolId, data));
     } catch (error) {
         logger.error(error.message);
         result = error.message;
@@ -96,8 +96,8 @@ exports.update = async(function(req, res) {
 exports.delete = async(function(req, res) {
     var result = '';
     try {
-        var school_id = req.params.id;
-        result = await(services.school.delete(school_id));
+        var schoolId = req.params.id;
+        result = await(services.school.delete(schoolId));
     } catch (error) {
         logger.error(error.message);
         result = error.message;

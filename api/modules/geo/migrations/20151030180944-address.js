@@ -15,7 +15,7 @@ module.exports = {
             coords: {
                 type: Sequelize.ARRAY(Sequelize.ARRAY(Sequelize.FLOAT))
             },
-            school_id: {
+            'school_id': {
                 type: Sequelize.INTEGER,
                 onDelete: 'cascade',
                 references: {
@@ -23,15 +23,15 @@ module.exports = {
                     key: 'id'
                 }
             },
-            area_id: {
+            'area_id': {
                 type: Sequelize.INTEGER,
                 references: {
                     model: 'area',
                     key: 'id'
                 }
             },
-            created_at: Sequelize.DATE,
-            updated_at: Sequelize.DATE
+            'created_at': Sequelize.DATE,
+            'updated_at': Sequelize.DATE
         });
     },
     down: function(queryInterface) {

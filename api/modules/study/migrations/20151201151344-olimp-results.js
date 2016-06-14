@@ -12,7 +12,7 @@ module.exports = {
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-            school_id: {
+            'school_id': {
                 onDelete: 'cascade',
                 type: Sequelize.INTEGER,
                 references: {
@@ -20,7 +20,7 @@ module.exports = {
                     key: 'id'
                 }
             },
-            subject_id: {
+            'subject_id': {
                 type: Sequelize.INTEGER,
                 references: {
                     model: 'subject',
@@ -44,8 +44,8 @@ module.exports = {
             year: {
                 type: Sequelize.INTEGER
             },
-            created_at: Sequelize.DATE,
-            updated_at: Sequelize.DATE
+            'created_at': Sequelize.DATE,
+            'updated_at': Sequelize.DATE
         });
     },
     down: function(queryInterface) {

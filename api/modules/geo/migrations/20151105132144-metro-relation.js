@@ -9,7 +9,7 @@ module.exports = {
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-            address_id: {
+            'address_id': {
                 type: Sequelize.INTEGER,
                 onDelete: 'cascade',
                 references: {
@@ -17,7 +17,7 @@ module.exports = {
                     key: 'id'
                 }
             },
-            metro_id: {
+            'metro_id': {
                 type: Sequelize.INTEGER,
                 onDelete: 'cascade',
                 references: {
@@ -25,8 +25,8 @@ module.exports = {
                     key: 'id'
                 }
             },
-            created_at: Sequelize.DATE,
-            updated_at: Sequelize.DATE
+            'created_at': Sequelize.DATE,
+            'updated_at': Sequelize.DATE
         });
     },
     down: function(queryInterface) {

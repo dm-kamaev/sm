@@ -104,7 +104,7 @@ service.create = function(data) {
 
 /**
  * Update school data
- * @param {Object} school_id
+ * @param {Object} schoolId
  * @param {{
  *     name: string,
  *     abbreviation: string,
@@ -117,17 +117,17 @@ service.create = function(data) {
  * }} data
  * @return {Object} School model instance
  */
-service.update = async(function(school_id, data) {
+service.update = async(function(schoolId, data) {
     CsvConverter.cureQuotes(data);
 
     var school = await(
         models.School.findOne({
-            where: {id: school_id}
+            where: {id: schoolId}
         })
     );
 
     if (!school) {
-        throw new SchoolNotFoundError(school_id);
+        throw new SchoolNotFoundError(schoolId);
     }
     return await(school.update(data));
 });
@@ -135,31 +135,31 @@ service.update = async(function(school_id, data) {
 
 /**
  * Delete school
- * @param {number} school_id
+ * @param {number} schoolId
  */
-service.delete = async(function(school_id) {
+service.delete = async(function(schoolId) {
     var school = await(models.School.findOne(
         {
-            where: {id: school_id}
+            where: {id: schoolId}
         }
     ));
     if (!school) {
-        throw new SchoolNotFoundError(school_id);
+        throw new SchoolNotFoundError(schoolId);
     }
     await(school.destroy());
-    return school_id;
+    return schoolId;
 });
 
 
 /**
  * Get school addresses
- * @param  {school_id} school_id
- * @param  {address_id} address_id
+ * @param  {school_id} schoolId
+ * @param  {address_id} addressId
  * @return {[Object]} Address model instance or undefined
  */
-service.getAddress = async(function(school_id, address_id) {
-    var address = await(services.address.getById(address_id));
-    if (address.school_id == school_id) {
+service.getAddress = async(function(schoolId, addressId) {
+    var address = await(services.address.getById(addressId));
+    if (address.school_id == schoolId) {
         return address;
     }
 });
@@ -313,16 +313,16 @@ service.getSchoolsCount = async(function() {
 
 /**
  * Get department of school address
- * @param  {school_id} school_id
- * @param  {address_id} address_id
- * @param  {department_id} department_id
+ * @param  {school_id} schoolId
+ * @param  {address_id} addressId
+ * @param  {department_id} departmentId
  * @return {[Object]} Department model instance or undefined
  */
 service.getAddressDepartment = async(
-    function(school_id, address_id, department_id) {
-        var address = await(service.getAddress(school_id, address_id));
+    function(schoolId, addressId, departmentId) {
+        var address = await(service.getAddress(schoolId, addressId));
         var department = await(address.getDepartments({
-            where: {id: department_id}
+            where: {id: departmentId}
         }));
         return department;
     }
@@ -331,12 +331,12 @@ service.getAddressDepartment = async(
 
 /**
  * Get department of school address
- * @param  {school_id} school_id
- * @param  {address_id} address_id
+ * @param  {school_id} schoolId
+ * @param  {address_id} addressId
  * @return {[Object]} Department model instances or undefined
  */
-service.getAddressDepartments = async(function(school_id, address_id) {
-    var address = await(service.getAddress(school_id, address_id));
+service.getAddressDepartments = async(function(schoolId, addressId) {
+    var address = await(service.getAddress(schoolId, addressId));
     var department = address.getDepartments();
     return department;
 });

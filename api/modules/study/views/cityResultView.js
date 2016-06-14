@@ -10,7 +10,7 @@ var CityResultView = function() {
  * @param {Array<Object>} result
  * @param {number} subjectId
  * @param {string} type
- * @param {(string|number)} opt_year
+ * @param {(string|number)=} opt_year
  * @return {*}
  */
 CityResultView.prototype.getResult =

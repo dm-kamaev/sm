@@ -9,16 +9,16 @@ exports.name = 'metro';
 
 /**
  * Get coordinates for given metro
- * @param {number} searh_data_id
+ * @param {number} searhDataId
  * @return {Array} metro coordinates
  */
-exports.getCoords = async(function(searh_data_id) {
+exports.getCoords = async(function(searhDataId) {
     var result;
 
-    if (searh_data_id) {
+    if (searhDataId) {
         var metroData = await(models.Metro.findOne({
             attributes: ['coords'],
-            where: {id: searh_data_id}
+            where: {id: searhDataId}
         }));
 
         result = metroData.coords;

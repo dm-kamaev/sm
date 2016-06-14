@@ -9,8 +9,8 @@ module.exports = {
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-            user_id: Sequelize.INTEGER,
-            item_id: {
+            'user_id': Sequelize.INTEGER,
+            'item_id': {
                 onDelete: 'cascade',
                 type: Sequelize.INTEGER,
                 references: {
@@ -18,8 +18,8 @@ module.exports = {
                     key: 'id'
                 }
             },
-            created_at: Sequelize.DATE,
-            updated_at: Sequelize.DATE
+            'created_at': Sequelize.DATE,
+            'updated_at': Sequelize.DATE
         });
     },
     down: function(queryInterface) {

@@ -21,9 +21,9 @@ var service = {
  */
 service.stringToURL = function(string) {
     string = string.toLowerCase()
-        .replace(/\ /g, '-')
+        .replace(/ /g, '-')
         .replace(/\./g, '-')
-        .replace(/(\№|«|»|%|(|))/g, '');
+        .replace(/(№|«|»|%|(|))/g, '');
     var latin = translit(string)
         .replace(/(--)/g, '-');
     return encodeURIComponent(latin);

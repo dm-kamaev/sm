@@ -15,8 +15,8 @@ module.exports = {
                 type: Sequelize.ENUM,
                 values: departmentStage.toArray()
             },
-            created_at: Sequelize.DATE,
-            updated_at: Sequelize.DATE
+            'created_at': Sequelize.DATE,
+            'updated_at': Sequelize.DATE
         });
     },
     down: function(queryInterface, Sequelize) {
