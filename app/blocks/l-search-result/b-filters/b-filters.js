@@ -85,8 +85,9 @@ goog.scope(function() {
      * Event enum
      * @enum {string}
      */
-    Filters.event = {
-        SUBMIT: 'filters-submit'
+    Filters.Event = {
+        SUBMIT: 'filters-submit',
+        SHOW_SEARCH_FILTER_CLICK: Filter.Event.SHOW_SEARCH_FILTER_CLICK
     };
 
 

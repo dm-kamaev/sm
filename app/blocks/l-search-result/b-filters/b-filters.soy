@@ -19,8 +19,9 @@
 
         <div class="b-filters__expander">
             Показать фильтры
-            {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+            {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
                 {param params: [
+                    'factory': 'stendhal',
                     'type': 'icon',
                     'renderParams': [
                         'data': [

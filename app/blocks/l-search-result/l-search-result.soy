@@ -281,6 +281,7 @@
         {/if}
 {/template}
 
+
 /**
  * makes word's 'школа' ending depends of incoming number
  * @param? params {
@@ -302,6 +303,7 @@
     {/if}
 {/template}
 
+
 /**
  * Left menu template
  * @param? params {
@@ -310,17 +312,17 @@
  */
 {template .leftMenu_ autoescape="strict" kind="html" private="true"}
     <div class="l-search-result__left-menu">
-        <div class="l-search-result__search">
-            {call .search_}
-                {param params: [
-                     'searchText': $params?.searchText,
-                     'redirect': false
-                ]/}
-            {/call}
-        </div>
+        {call .search_}
+            {param params: [
+                 'searchText': $params?.searchText,
+                 'redirect': false
+            ]/}
+        {/call}
+
         {call .filters_ data="all"/}
     </div>
 {/template}
+
 
 /**
  * Filter template
@@ -356,6 +358,7 @@
     </div>
 {/template}
 
+
 /**
  * Search
  * @param params {{
@@ -364,16 +367,18 @@
  * }}
  */
 {template .search_ private="true" autoescape="strict" kind="html"}
-    {call sm.bSearch.Template.base}
-        {param params: [
-            'placeholder': 'Номер школы, метро, район',
-            'text': $params?.searchText,
-            'theme': 'min',
-            'redirect': $params?.searchRedirect,
-            'inputSize': 'min',
-            'config': [
-                'height': 's'
-            ]
-        ]/}
-    {/call}
+    <div class="l-search-result__search">
+        {call sm.bSearch.Template.base}
+            {param params: [
+                'placeholder': 'Номер школы, метро, район',
+                'text': $params?.searchText,
+                'theme': 'min',
+                'redirect': $params?.searchRedirect,
+                'inputSize': 'min',
+                'config': [
+                    'height': 's'
+                ]
+            ]/}
+        {/call}
+    </div>
 {/template}

@@ -36,6 +36,8 @@ goog.require('sm.gTextarea.TextareaStendhal');
 goog.require('sm.gTextarea.ViewStendhal');
 goog.require('sm.lSchool.bFoldList.FoldList');
 goog.require('sm.lSchool.bFoldList.View');
+goog.require('sm.lSearchResult.bFilterSearch.FilterSearch');
+goog.require('sm.lSearchResult.bFilterSearch.View');
 
 
 
@@ -119,6 +121,10 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('favorite-link', {
             control: sm.bFavoriteLink.FavoriteLink,
             view: sm.bFavoriteLink.View
+        })
+        .setControlListItem('filter-search', {
+            control: sm.lSearchResult.bFilterSearch.FilterSearch,
+            view: sm.lSearchResult.bFilterSearch.View
         });
 };
 goog.inherits(sm.iFactory.FactoryStendhal, cl.iFactory.Factory);

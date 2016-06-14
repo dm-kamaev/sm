@@ -1,0 +1,168 @@
+{namespace sm.lSearchResult.bFilterSearch.Template}
+
+/**
+ * Constructor
+ * @param? params {{
+ *     data: {
+ *         header: string,
+ *         filters: {
+ *             title: ?string,
+ *             items: Array<{Object}>
+ *         },
+ *         search: {
+ *             placeholder: ?string,
+ *             text: ?string
+ *         },
+ *         selectedItems: Array<Object>
+ *     }
+ * }}
+ * @extends cl.iControl.Template
+ * @constructor
+ */
+{template .filterSearch}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * Body
+ * @param? params {?}
+ * @override
+ */
+{template .body}
+    {call .header_ data="all" /}
+    {call .search_ data="all" /}
+    {call .filter_ data="all" /}
+    {call .selected_ data="all" /}
+    {call .button_ /}
+{/template}
+
+
+/**
+ * Title
+ * @param? params {{
+ *     data: {
+ *         header: string
+ *     }
+ * }}
+ */
+{template .header_ private="true"}
+    <div class="{call .rootClass/}__section {call .rootClass/}__section_header">
+        {$params.data.header}
+    </div>
+{/template}
+
+
+/**
+ * Search
+ * @param? params {{
+ *     data: {
+ *         search: {
+ *             placeholder: ?string,
+ *             text: ?string
+ *         }
+ *     }
+ * }}
+ */
+{template .search_ private="true"}
+    <div class="{call .rootClass/}__section {call .rootClass/}__section_search">
+        {call sm.bSearch.Template.base}
+            {param params: [
+                'placeholder': $params.data.search?.placeholder,
+                'text': $params.data.search?.text,
+                'theme': 'min',
+                'redirect': '',
+                'inputSize': 'min',
+                'config': [
+                    'height': 's'
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Filter form
+ * @param? params {{
+ *     data: {
+ *         filters: {
+ *             title: ?string,
+ *             items: Array<Object>
+ *         }
+ *     }
+ * }}
+ */
+{template .filter_ private="true"}
+    <form class="{call .rootClass/}__section {call .rootClass/}__section_filter">
+        {call sm.lSearchResult.bFilter.Template.base}
+            {param params: [
+                'data': [
+                    'header': [
+                        'title': $params.data.filters?.title
+                    ],
+                    'filters': $params.data.filters?.items
+                ],
+                'config': [
+                    'cannotBeHidden': true,
+                    'filtersToShow': length($params.data.filters?.items),
+                    'theme': 'minimal'
+                ]
+            ]/}
+        {/call}
+    </form>
+{/template}
+
+
+/**
+ * Selected filter elements
+ * @param? params {{
+ *     data: {
+ *         selectedItems: ?Array<Object>
+ *     }
+ * }}
+ */
+{template .selected_ private="true"}
+    <div class="{call .rootClass/}__section {call .rootClass/}__section_selected">
+        {if $params.data?.selectedItems}
+            {for $i in range($params.data?.selectedItems.length)}
+                <div class="{call .rootClass/}__selected-item">
+                    {$params.data?.selectedItems}
+                </div>
+            {/for}
+        {/if}
+    </div>
+{/template}
+
+
+/**
+ * Button
+ */
+{template .button_ private="true"}
+    <div class="{call .rootClass/}__section {call .rootClass/}__section_button">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': 'stendhal',
+                'type': 'button',
+                'renderParams': [
+                    'data': [
+                        'content': 'Применить'
+                    ],
+                    'config': [
+                        'theme': 'sienna',
+                        'isDisabled': true
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-filter-search
+{/template}

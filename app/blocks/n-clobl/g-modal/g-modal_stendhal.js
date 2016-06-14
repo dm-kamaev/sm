@@ -22,6 +22,14 @@ sm.gModal.ModalStendhal = function(view, opt_domHelper) {
      * @private
      */
     this.list_ = null;
+
+
+    /**
+     * Determines whether self destroy instance
+     * @type {bool}
+     * @private
+     */
+    this.selfDestroy_ = false;
 };
 goog.inherits(sm.gModal.ModalStendhal, cl.gModal.Modal);
 
@@ -29,6 +37,26 @@ goog.inherits(sm.gModal.ModalStendhal, cl.gModal.Modal);
 goog.scope(function() {
     var Modal = sm.gModal.ModalStendhal,
         View = sm.gModal.ViewStendhal;
+
+    var factoryManager = cl.iFactory.FactoryManager.getInstance();
+
+
+    /**
+     * render modal
+     * @param {bool=} opt_selfDestroy
+     * @return {sm.gModal.ModalStendhal}
+     */
+    Modal.render = function(opt_selfDestroy) {
+        var instance = factoryManager.render(
+            'stendhal',
+            'modal',
+            document
+        );
+
+        instance.selfDestroy_ = opt_selfDestroy;
+
+        return instance;
+    };
 
 
     /**
@@ -39,7 +67,53 @@ goog.scope(function() {
         this.getHandler().listen(
             this.getView(),
             View.Event.CLOSE,
-            this.hide
+            this.onCloseClick_
         );
+    };
+
+
+    /**
+     * @override
+     * @param {Element} element
+     */
+    Modal.prototype.decorateInternal = function(element) {
+        goog.base(this, 'decorateInternal', element);
+    };
+
+
+    /**
+     * render content
+     * @param {string} templateType
+     * @param {Object} templateParams
+     */
+    Modal.prototype.renderContent = function(templateType, templateParams) {
+        this.content_ = factoryManager.render(
+            this.getView().getStylization(),
+            templateType,
+            this.getView().getDom().content,
+            templateParams,
+            this
+        );
+    };
+
+
+    /**
+     * remove content
+     */
+    Modal.prototype.remove = function() {
+        this.dispose();
+    };
+
+
+    /**
+     * close click
+     * @private
+     */
+    Modal.prototype.onCloseClick_ = function() {
+        this.hide();
+
+        if (this.selfDestroy_) {
+            this.remove();
+        }
     };
 });  // goog.scope

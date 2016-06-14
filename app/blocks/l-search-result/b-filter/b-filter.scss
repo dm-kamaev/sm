@@ -218,6 +218,32 @@
     }
 }
 
+.b-filter_minimal {
+    border: none;
+
+    .b-filter__header {
+        padding: 10px 0;
+        font: 14px Arial, sans-serif;
+    }
+
+    .b-filter__section {
+        width: 50%;
+
+        vertical-align: top;
+
+        font: 14px Arial, sans-serif;
+        line-height: 20px;
+    }
+
+    .b-filter__filter {
+        padding: 10px 0;
+    }
+
+    .b-filter__input {
+        top: 15px;
+    }
+}
+
 
 @include media-l {
     .b-filter_classes {

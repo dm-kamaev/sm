@@ -1,24 +1,24 @@
 @import "../../i-media/i-media";
 
 .g-modal.g-modal_stendhal {
- 	padding: 0;
+    padding: 0;
 
     color: #000000;
 
-	box-sizing: border-box;
+    box-sizing: border-box;
 
     .g-modal__content {
         padding: 0;
-	    box-sizing: border-box;
+        box-sizing: border-box;
 
-	    max-width: 800px;
+        max-width: 800px;
     }
 
 
     .g-modal__close-button {
         position: absolute;
-        top: 45px;
-        right: 45px;
+        top: 35px;
+        right: 35px;
 
         width: 18px;
         height: 18px;

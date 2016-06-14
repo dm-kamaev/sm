@@ -90,6 +90,14 @@ sm.lSearchResult.bFilter.Filter = function(opt_params) {
      * @private
      */
     this.filterSectionHidableElements_ = [];
+
+
+    /**
+     * Filter name
+     * @type {string}
+     * @private
+     */
+    this.filterName_ = null;
 };
 goog.inherits(sm.lSearchResult.bFilter.Filter, goog.ui.Component);
 
@@ -124,8 +132,9 @@ goog.scope(function() {
      * @enum {string}
      */
     Filter.Event = {
-       CHECKED_FILTER: 'checked-filter',
-       UNCHECKED_FILTER: 'unchecked-filter'
+        CHECKED_FILTER: 'checked-filter',
+        UNCHECKED_FILTER: 'unchecked-filter',
+        SHOW_SEARCH_FILTER_CLICK: 'show-search-filter-click'
     };
 
 
@@ -204,6 +213,7 @@ goog.scope(function() {
             element
         );
 
+        this.getFilterName_();
     };
 
 
@@ -291,6 +301,12 @@ goog.scope(function() {
      * @private
      */
     Filter.prototype.onShowModalButtonClick_ = function() {
+        this.dispatchEvent({
+            type: Filter.Event.SHOW_SEARCH_FILTER_CLICK,
+            data: {
+                name: this.filterName_
+            }
+        });
     };
 
 
@@ -395,5 +411,17 @@ goog.scope(function() {
             this.showFiltersIconElement_,
             Filter.CssClass.ICON_ARROW_DOWN
         );
+    };
+
+
+    /**
+     * Get filter name
+     * @private
+     */
+    Filter.prototype.getFilterName_ = function() {
+        var data = JSON.parse(
+            this.getElement().getAttribute('data-params')
+        );
+        this.filterName_ = data.name;
     };
 });  // goog.scope

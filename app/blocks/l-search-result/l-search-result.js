@@ -114,6 +114,22 @@ sm.lSearchResult.SearchResult = function(opt_params) {
      * @private
      */
     this.elements_ = {};
+
+
+    /**
+     * Factory type
+     * @type {String}
+     * @private
+     */
+    this.factoryType_ = 'stendhal';
+
+
+    /**
+     * With search filters modal
+     * @type {sm.gModal.ModalStendhal}
+     * @private
+     */
+    this.filterModal_ = null;
 };
 goog.inherits(sm.lSearchResult.SearchResult, goog.ui.Component);
 
@@ -126,7 +142,8 @@ goog.scope(function() {
         Header = sm.bHeader.Header,
         Map = sm.bMap.Map;
 
-    var Analytics = sm.iAnalytics.Analytics.getInstance();
+    var Analytics = sm.iAnalytics.Analytics.getInstance(),
+        factoryManager = cl.iFactory.FactoryManager.getInstance();
 
 
     /**
@@ -357,8 +374,13 @@ goog.scope(function() {
     SearchResult.prototype.initFiltersListeners_ = function() {
         this.getHandler().listen(
             this.instances_.filters,
-            Filters.event.SUBMIT,
+            Filters.Event.SUBMIT,
             this.onFiltersSubmit_
+        );
+        this.getHandler().listen(
+            this.instances_.filters,
+            Filters.Event.SHOW_SEARCH_FILTER_CLICK,
+            this.onShowSearchFilterClick_
         );
     };
 
@@ -523,6 +545,52 @@ goog.scope(function() {
     SearchResult.prototype.onMapReady_ = function() {
         this.send_(this.requestParams_.mapDataUrl)
             .then(this.addMapPoints_.bind(this));
+    };
+
+
+    /**
+     * Show Search Filter Click
+     * @param {Object} event
+     * @private
+     */
+    SearchResult.prototype.onShowSearchFilterClick_ = function(event) {
+        this.initModalFilter_(event.data.name);
+        this.filterModal_.show();
+    };
+
+
+    /**
+     * Init Modal Filter
+     * @param {string} name
+     * @private
+     */
+    SearchResult.prototype.initModalFilter_ = function(name) {
+        var filterParams;
+
+        if (name == 'additionalEducation') {
+            filterParams = this.getAdditionalEducationParams_();
+        } else if (name == 'specializedClasses') {
+            filterParams = this.getSpecializedClassesParams_();
+        }
+
+        this.filterModal_ = sm.gModal.ModalStendhal.render(true);
+        // this.filterModal_.renderContent('filter-search', filterParams);
+    };
+
+
+    /**
+     * Get filter params for Additional Education
+     * @private
+     */
+    SearchResult.prototype.getAdditionalEducationParams_ = function() {
+    };
+
+
+    /**
+     * Get filter params for Specialized Classes
+     * @private
+     */
+    SearchResult.prototype.getSpecializedClassesParams_ = function() {
     };
 
 

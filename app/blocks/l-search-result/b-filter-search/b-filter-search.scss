@@ -1,0 +1,43 @@
+.b-filter-search {
+    width: 680px;
+}
+
+.b-filter-search__section {
+    padding: 0 40px;
+}
+
+.b-filter-search__section_header {
+    padding-top: 40px;
+    padding-bottom: 25px;
+
+    background-color: #f7f7f1;
+
+    text-align: left;
+    text-transform: uppercase;
+
+    font: 16px 'Proxima', Arial, sans-serif;
+    font-weight: 800;
+    line-height: 22px;
+}
+
+.b-filter-search__section_filter {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.b-filter-search__section_search {
+    padding-bottom: 30px;
+
+    background-color: #f7f7f1;
+}
+
+.b-filter-search__section_selected {
+    background-color: #f7f7f1;
+}
+
+.b-filter-search__section_button {
+    padding-top: 20px;
+    padding-bottom: 20px;
+
+    background-color: #f7f7f1;
+}

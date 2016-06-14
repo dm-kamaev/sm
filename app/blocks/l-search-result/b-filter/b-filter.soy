@@ -10,6 +10,7 @@
  * @property {?boolean} config.cannotBeHidden
  * @property {?boolean} config.isShowed
  * @property {?number} config.filtersToShow
+ * @property {?number} config.theme
  */
 
 
@@ -24,9 +25,19 @@
 
 /**
  * Filter init template
+ * @param? params {sm.lSearchResult.bFilter.Template.Params}
  */
 {template .init autoescape="strict" kind="html"}
-    <div class="{call .rootClass/} {call .additionalClasses/}">
+    {let $data kind="html"}
+        {call cl.iUtils.Utils.stringify}
+            {param json: [
+                'name': $params.data?.name
+            ]/}
+        {/call}
+    {/let}
+
+    <div class="{call .rootClass/} {call .additionalClasses data="all"/}"
+        data-params="{$data}">
         {call .header data="all"/}
         {call .filters data="all"/}
     </div>
@@ -193,8 +204,8 @@
         {call .filToShow_ data="all" /}
     {/let}
 
-    {if $params.data.name == 'activity' or
-        $params.data.name == 'additionalEducation'}
+    {if $params.data.name == 'additionalEducation' or
+        $params.data.name == 'specializedClasses'}
         {call .bottonShowModal_ /}
     {elseif $params.data.filters.length > $filToShow}
         {call .buttonShowMore_}
@@ -309,7 +320,7 @@
  */
 {template .filToShow_ kind="html" private="true"}
     {if $params?.config?.filtersToShow}
-        {$params?.config?.filtersToShow - 1}
+        {$params?.config?.filtersToShow}
     {else}
         5
     {/if}
@@ -377,8 +388,9 @@
 
         {call .tooltipIcon /}
 
-        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
+                'factory': 'stendhal',
                 'type': 'hint',
                 'renderParams': [
                     'data': $tooltipData,
@@ -398,8 +410,9 @@
  */
 {template .tooltipIcon}
     <div class="{call .rootClass/}__tooltip-icon">
-        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
+                'factory': 'stendhal',
                 'type': 'icon',
                 'renderParams': [
                     'data': [
@@ -422,6 +435,14 @@
 
 /**
  * @override
+ * @param? params {
+ *     config: ?{
+ *         theme: ?string
+ *     }
+ * }
  */
 {template .additionalClasses}
+    {if $params?.config?.theme}
+        {call .rootClass/}_{$params?.config?.theme}
+    {/if}
 {/template}

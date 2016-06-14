@@ -68,23 +68,7 @@ goog.scope(function() {
     View.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
 
-        goog.events.listen(
-            this.dom.closer,
-            goog.events.EventType.CLICK,
-            this.onCloserClick_,
-            false,
-            this
-        );
-    };
-
-
-    /**
-     * @override
-     */
-    View.prototype.exitDocument = function() {
-        goog.base(this, 'exitDocument');
-
-        goog.events.unlisten(
+        this.getHandler().listen(
             this.dom.closer,
             goog.events.EventType.CLICK,
             this.onCloserClick_,
