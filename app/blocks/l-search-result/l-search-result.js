@@ -249,6 +249,8 @@ goog.scope(function() {
 
         this.instances_.search.setData(searchParams);
 
+        this.searchParams_ = this.getSearchParams_();
+
         this.authParams_ = {
             isUserAuthorized: params['isUserAuthorized'],
                 authSocialLinks: {
