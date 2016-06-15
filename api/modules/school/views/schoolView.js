@@ -302,9 +302,6 @@ schoolView.list = function(schools, opt_criterion, opt_page) {
                     ratings: ratingView.ratingResultView(school.rankDogm),
                     metroStations: addressView.getMetro(school.addresses),
                     area: addressView.getAreas(school.addresses),
-                    addresses:
-                        services.department.addressesFilter(school.addresses),
-                    totalScore: school.totalScore,
                     position: getPosition(i, opt_page)
                 };
             });
@@ -638,7 +635,18 @@ schoolView.listCompact = function(schoolsData) {
 *         bold: (undefined|string)
 *     },
 *     alias: (undefined|string),
-*     score: (undefined|number)
+*     score: {
+*         data: {
+*             visibleMark: {
+*                 name: (undefined|string),
+*                 value: (undefined|number)
+*             }
+*             hiddenMarks: Array<{
+*                 name: (undefined|string),
+*                 value: (undefined|number)
+*             }>
+*         }
+*     }
 *     metroStations: (undefined|Array<{
 *         id: number,
 *         name: string
@@ -649,7 +657,7 @@ schoolView.listCompact = function(schoolsData) {
 *     })
 * }}
 */
-((schoolView.listCompactItem = function (schoolData) {
+schoolView.listCompactItem = function (schoolData) {
     var school = schoolData.item,
         page = schoolData.itemUrl;
 
@@ -661,7 +669,7 @@ schoolView.listCompact = function(schoolsData) {
         area: addressView.getAreas(school.addresses),
         alias: page.alias
     };
-}));
+};
 
 
 /**
