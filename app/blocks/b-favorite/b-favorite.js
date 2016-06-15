@@ -33,6 +33,24 @@ goog.scope(function() {
 
 
     /**
+     * Add given item to favorites
+     * @param {sm.bSchoolListItem.SchoolListItem.Params} favoriteItem
+     */
+    Favorite.prototype.addItem = function(favoriteItem) {
+        this.schoolListPaged_.addItem(favoriteItem);
+    };
+
+
+    /**
+     * Remove item with given id from favorites
+     * @param {number} itemId
+     */
+    Favorite.prototype.removeItem = function(itemId) {
+        this.schoolListPaged_.removeItem(itemId);
+    };
+
+
+    /**
      * @override
      * @param {Element} element
      */
