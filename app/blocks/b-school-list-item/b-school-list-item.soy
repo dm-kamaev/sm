@@ -226,10 +226,17 @@
 {template .name_ kind="html"}
     <div class="b-school-list-item__name">
         {if $params.theme == 'minimal'}
+            {let $name kind="html"}
+                {$params.name.light}
+                {if $params.name.bold}
+                    {$params.name.bold}
+                {/if}
+            {/let}
+
             {call sm.bLink.Template.base}
                 {param params: [
                     'data': [
-                        'name': $params.name.light + $params.name.bold ?: ''
+                        'name': $name
                     ],
                     'config': [
                         'size': 'large',
