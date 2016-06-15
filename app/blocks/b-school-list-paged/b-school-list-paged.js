@@ -23,7 +23,15 @@ sm.bSchoolListPaged.SchoolListPaged = function(view, opt_domHelper) {
      * @type {sm.bSchoolListItem.SchoolListItem}
      * @private
      */
-    this.schoolListItems_ = [];
+    this.items_ = [];
+
+
+    /**
+     * Render params for current list items
+     * @type {Array<Object>}
+     * @private
+     */
+    this.itemsParams_ = [];
 };
 goog.inherits(sm.bSchoolListPaged.SchoolListPaged, cl.iControl.Control);
 
@@ -42,7 +50,8 @@ goog.scope(function() {
     SchoolListPaged.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
-        this.initSchoolListItems_();
+        this.initItems_();
+        this.initItemsParams_();
     };
 
 
@@ -51,7 +60,9 @@ goog.scope(function() {
      * @param {Object} item
      */
     SchoolListPaged.prototype.addItem = function(item) {
-        this.removeItems();
+        this.removeItems_();
+        this.itemsParams_.unshift(item);
+        this.updateItems_();
     };
 
 
@@ -60,35 +71,66 @@ goog.scope(function() {
      * @param {number} itemId
      */
     SchoolListPaged.prototype.removeItem = function(itemId) {
-        this.removeItems();
+        this.removeItems_();
+        this.itemsParams_ = goog.array.filter(
+            this.itemsParams_,
+            function(itemParams) {
+                return itemParams.id != itemId;
+            }
+        );
+        this.updateItems_();
     };
 
 
     /**
-     * Remove all items from list
+     * Remove all items from list and from items array
+     * @private
      */
-    SchoolListPaged.prototype.removeItems = function() {
+    SchoolListPaged.prototype.removeItems_ = function() {
         this.removeChildren(true);
+        this.items_ = [];
     };
+
+
+    /**
+     * Render item lists with refreshed item params array
+     * @private
+     */
+    SchoolListPaged.prototype.updateItems_ = function() {
+        this.getView().updateItems(this.itemsParams_);
+        this.initItems_();
+    };
+
+
+    /**
+     * Init item params for each added item
+     * @private
+     */
+    SchoolListPaged.prototype.initItemsParams_ = function() {
+        this.itemsParams_ = this.items_.map(function(item) {
+            return item.getParams();
+        });
+    };
+
 
     /**
      * init School List Items
      * @private
      */
-    SchoolListPaged.prototype.initSchoolListItems_ = function() {
-        var schoolListItemInstance,
+    SchoolListPaged.prototype.initItems_ = function() {
+        var itemInstance,
             item;
 
-        var lengthList = this.getView().getDom().schoolListItems.length;
+        var itemsAmount = this.getView().getDom().schoolListItems.length;
 
-        for (var i = 0; i < lengthList; i++) {
+        for (var i = 0; i < itemsAmount; i++) {
             item = this.getView().getDom().schoolListItems[i];
 
-            schoolListItemInstance = new SchoolListItem();
-
-            this.addChild(schoolListItemInstance);
-            this.schoolListItems_.push(schoolListItemInstance);
-            schoolListItemInstance.decorate(item);
+            itemInstance = new SchoolListItem();
+            console.log(item);
+            this.addChild(itemInstance);
+            this.items_.push(itemInstance);
+            itemInstance.decorate(item);
         }
     };
 });  // goog.scope

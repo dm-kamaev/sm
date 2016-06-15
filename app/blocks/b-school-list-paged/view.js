@@ -4,6 +4,7 @@ goog.require('cl.gHint.View');
 goog.require('cl.iControl.View');
 goog.require('cl.iUtils.Utils');
 goog.require('goog.dom.classlist');
+goog.require('sm.bSchoolListPaged.Template');
 
 
 
@@ -18,6 +19,11 @@ goog.require('goog.dom.classlist');
 sm.bSchoolListPaged.View = function(opt_params, opt_type, opt_modifier) {
     goog.base(this, opt_params, opt_type, opt_modifier);
 
+
+    /**
+     * @type {sm.bSchoolListPaged.View.Params}
+     */
+    this.params = opt_params || {};
 
     /**
      * visible list schools of schools
@@ -54,6 +60,9 @@ goog.scope(function() {
      */
     View.CssClass = {
         ROOT: 'b-school-list-paged',
+        CONTENT: 'b-school-list-paged__content',
+        FOOTER: 'b-school-list-paged__footer',
+        COUNT: 'b-school-list-paged__count',
         LIST_SCHOOLS: 'b-school-list-paged__list',
         LINK: 'b-school-list-paged__link',
         LINK_NEXT: 'b-school-list-paged__link_next',
@@ -63,6 +72,26 @@ goog.scope(function() {
         INTERVAL: 'b-school-list-paged__interval-count'
     };
 
+
+    /**
+     * @typedef {{
+     *     itemsPerPage: number
+     * }}
+     */
+    sm.bSchoolListPaged.View.Params;
+
+    /**
+     * Updates items in list
+     * @param {Array.<sm.bSchoolListItem.SchoolListItem.Params>} items
+     */
+    View.prototype.updateItems = function(items) {
+        this.renderItemLists_(items);
+        this.updateItemElements_();
+
+        this.setControlsInitialState_(items.length);
+    };
+
+
     /**
      * @override
      * @param {Element} element
@@ -70,8 +99,11 @@ goog.scope(function() {
     View.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
-        this.initDom_();
-        this.initListSchools_();
+        this.initControlElements_()
+            .initContentElements_()
+            .initItemElements_()
+            .initItemListElements_()
+            .initParams_();
     };
 
 
@@ -150,6 +182,91 @@ goog.scope(function() {
         if (this.isActiveLink_(this.dom.linkPrevious)) {
             this.setPreviousPage();
         }
+    };
+
+
+    /**
+     * Render lists with given items
+     * @param {Array.<sm.bSchoolListItem.SchoolListItem.Params>} items
+     * @private
+     */
+    View.prototype.renderItemLists_ = function(items) {
+        goog.soy.renderElement(
+            this.dom.content,
+            sm.bSchoolListPaged.Template.content,
+            {
+                params: {
+                    data: {
+                        schools: items
+                    }
+                }
+            }
+        );
+    };
+
+
+    /**
+     * Set initial state for controls
+     * @param {number} schoolsAmount
+     * @private
+     */
+    View.prototype.setControlsInitialState_ = function(schoolsAmount) {
+        this.setActiveLink_(false, this.dom.linkPrevious);
+        this.setActiveLink_(true, this.dom.linkNext);
+
+        this.currentPage_ = 0;
+        this.setInterval_();
+        this.setCount_(schoolsAmount);
+
+        this.initFooterVisibility_(schoolsAmount);
+    };
+
+
+    /**
+     * Set count in according to schools amount
+     * @param {number} schoolsAmount
+     * @private
+     */
+    View.prototype.setCount_ = function(schoolsAmount) {
+        goog.soy.renderElement(
+            this.dom.count,
+            sm.bSchoolListPaged.Template.countText,
+            {
+                params: {
+                    schoolsCount: schoolsAmount
+                }
+            }
+        );
+    };
+
+
+    /**
+     * Make footer visible or not depends of schools per page and
+     * amount of schools
+     * @param {number} schoolsAmount
+     * @private
+     */
+    View.prototype.initFooterVisibility_ = function(schoolsAmount) {
+        if (schoolsAmount > this.params.itemsPerPage) {
+            goog.dom.classlist.remove(
+                this.dom.footer,
+                cl.iUtils.Utils.CssClass.HIDDEN
+            );
+        } else {
+            goog.dom.classlist.add(
+                this.dom.footer,
+                cl.iUtils.Utils.CssClass.HIDDEN
+            );
+        }
+    };
+
+    /**
+     * Re-Init dom elements of items, after re-render item lists
+     * @private
+     */
+    View.prototype.updateItemElements_ = function() {
+        this.initItemElements_()
+            .initItemListElements_();
     };
 
 
@@ -250,7 +367,7 @@ goog.scope(function() {
      * @private
      */
     View.prototype.setInterval_ = function() {
-        var interval = this.calculateInterval_(5);
+        var interval = this.calculateInterval_(this.params.itemsPerPage);
         this.insertInterval_(interval);
     };
 
@@ -279,10 +396,6 @@ goog.scope(function() {
         } else {
             lastItemIndex = skipedItemsCount + itemsPerPage;
         }
-
-        /*var text = firstItemIndex + '\u2014' + lastItemIndex;
-
-        goog.dom.setTextContent(this.dom.interval, text);*/
 
         return {
             firstIndex: firstItemIndex,
@@ -328,37 +441,101 @@ goog.scope(function() {
 
 
     /**
-     * Initializes List Schools
+     * Init favorite item dom elements
+     * @return {sm.bSchoolListPaged.View}
      * @private
      */
-    View.prototype.initListSchools_ = function() {
+    View.prototype.initItemElements_ = function() {
+        this.dom.schoolListItems = this.getElementsByClass(
+            sm.bSchoolListItem.SchoolListItem.CssClass.ROOT
+        );
+
+        return this;
+    };
+
+
+    /**
+     * Initializes List Schools
+     * @return {sm.bSchoolListPaged.View}
+     * @private
+     */
+    View.prototype.initItemListElements_ = function() {
         this.dom.listSchools = this.getElementsByClass(
             View.CssClass.LIST_SCHOOLS
         );
 
         this.visibleListSchools_ = this.dom.listSchools[0];
         this.countPages_ = this.dom.listSchools.length - 1;
+
+        return this;
     };
 
 
     /**
-     * Initializes dom elements
+     * Initializes dom elements of controls
+     * @return {sm.bSchoolListPaged.View}
      * @private
      */
-    View.prototype.initDom_ = function() {
-        this.dom = {
-            schoolListItems: this.getElementsByClass(
-                sm.bSchoolListItem.SchoolListItem.CssClass.ROOT
-            ),
-            linkNext: this.getElementByClass(
+    View.prototype.initControlElements_ = function() {
+        this.dom.linkNext = this.getElementByClass(
                 View.CssClass.LINK_NEXT
-            ),
-            linkPrevious: this.getElementByClass(
+            );
+        this.dom.linkPrevious = this.getElementByClass(
                 View.CssClass.LINK_PREVIOUS
-            ),
-            interval: this.getElementByClass(
+            );
+        this.dom.interval = this.getElementByClass(
                 View.CssClass.INTERVAL
-            )
+            );
+
+        return this;
+    };
+
+
+    /**
+     * Initializes dom elements of controls
+     * @return {sm.bSchoolListPaged.View}
+     * @private
+     */
+    View.prototype.initContentElements_ = function() {
+        this.dom.content = this.getElementByClass(
+            View.CssClass.CONTENT
+        );
+
+        this.dom.footer = this.getElementByClass(
+            View.CssClass.FOOTER
+        );
+
+        this.dom.count = this.getElementByClass(
+            View.CssClass.COUNT
+        );
+
+        return this;
+    };
+
+    /**
+     * Get data params from dom element
+     * @return {sm.bSchoolListPaged.View.Params}
+     * @private
+     */
+    View.prototype.getDataparams_ = function() {
+        var dataParams = goog.dom.dataset.get(
+            this.getElement(),
+            'params'
+        );
+
+        return {
+            itemsPerPage: dataParams['countItemsPerPage'] || 5
         };
+    };
+
+    /**
+     * Init fields from data params
+     * @return {sm.bSchoolListPaged.View}
+     * @private
+     */
+    View.prototype.initParams_ = function() {
+        this.params = this.getDataparams_();
+
+        return this;
     };
 });  // goog.scope
