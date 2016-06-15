@@ -67,6 +67,8 @@ if (config.environment == 'development') {
     app.use('/api-debug', express.static(path.join(__dirname, '/api-debug')));
 }
 
+app.use('/api', api.mail.router);
+
 require('./app/middleware/csrf')(app);
 
 app.use(morgan('dev',  {
