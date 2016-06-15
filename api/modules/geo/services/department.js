@@ -12,8 +12,7 @@ exports.name = 'department';
  * @param {number} addressId
  * @param {{
  *     stage: string,
- *     name: string,
- *     availability: [Array]
+ *     name: string
  * }} data
  * @return {Object} instance of Department model
  */
@@ -40,8 +39,7 @@ exports.addDepartment = function(schoolId, addressId, data) {
  * @param {number} departmentId
  * @param {{
  *     stage?: string,
- *     name?: string,
- *     availability: [Array]
+ *     name?: string
  * }} data
  * @return {Object} instance of Department model
  */
@@ -122,7 +120,7 @@ exports.getAddresses = function(departmentId) {
 
 /**
  * Get address array for needed stages
- * @param {Array} addressList Array of addresses instance
+     * @param {Array} addressList Array of addresses instance
  * @return {Array} Array of filter addresses instance
  */
 exports.addressesFilter = function(addressList) {
@@ -132,14 +130,7 @@ exports.addressesFilter = function(addressList) {
             var res = false;
             if (address.departments.length > 0) {
                 address.departments.forEach(department => {
-                    if (department.stage ===
-                            departmentStage.fields.ELEMENTARY ||
-                        department.stage ===
-                            departmentStage.fields.MIDDLE ||
-                        department.stage ===
-                            departmentStage.fields.HIGH ||
-                        department.stage ===
-                            departmentStage.fields.MIDDLE_HIDE) {
+                    if (department.educationalGrades.some(grade => grade > 0)) {
                         res = true;
                     }
                 });

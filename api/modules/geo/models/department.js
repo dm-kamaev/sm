@@ -10,6 +10,10 @@ var Department = db.define('Department', {
     addressId: {
         type: DataType.INTEGER,
         field: 'address_id'
+    },
+    educationalGrades: {
+        type: DataType.ARRAY(DataType.INTEGER),
+        field: 'educational_grades'
     }
 }, {
     underscored: true,
