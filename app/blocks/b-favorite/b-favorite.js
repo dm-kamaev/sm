@@ -75,8 +75,10 @@ goog.scope(function() {
     };
 
 
+
     /**
      * Init new state and set it by view method
+     * @private
      */
     Favorite.prototype.updateState_ = function() {
         var state = this.schoolListPaged_.isNotEmpty() ?

@@ -209,6 +209,7 @@ goog.scope(function() {
      * Checks that given state is valid
      * @param {string} state
      * @return {boolean}
+     * @private
      */
     View.prototype.isValidState_ = function(state) {
         return state == View.State.EMPTY ||
