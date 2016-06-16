@@ -14,7 +14,7 @@ goog.require('sm.bScore.ScoreMinimized');
 
 /**
  * School list item component
- * @param {object=} opt_params
+ * @param {sm.bSchoolListItem.SchoolListItem.Params=} opt_params
  * @constructor
  * @extends {goog.ui.Component}
  */
@@ -189,6 +189,9 @@ goog.scope(function() {
                                 };
                             }
                         )
+                },
+                config: {
+                    isActive: score['config']['isActive']
                 }
             },
             metroStations: params['metroStations'].map(
@@ -206,8 +209,8 @@ goog.scope(function() {
             ratings: params['ratings'] || null,
             position: params['position'] || null,
             theme: params['theme'] || null,
-            isNotClickable: params['isNotClickable'] || null,
-            isFavorite: params['isFavorite'] || null
+            isNotClickable: params['isNotClickable'] || false,
+            isFavorite: params['isFavorite'] || false
         };
     };
 
@@ -252,49 +255,7 @@ goog.scope(function() {
         var element = goog.soy.renderAsElement(
             sm.bSchoolListItem.Template.base,
             {
-                params: {
-                    id: this.params_.id,
-                    name: {
-                        light: this.params_.name.light,
-                        bold: this.params_.name.bold
-                    },
-                    alias: this.params_.alias,
-                    description: this.params_.description,
-                    score: {
-                        data: {
-                            visibleMark: {
-                                name: this.params_.score.data.visibleMark.name,
-                                value: this.params_.score.data.visibleMark.value
-                            },
-                            hiddenMarks:
-                                this.params_.score.data.hiddenMarks.map(
-                                    function(hiddenMark) {
-                                        return {
-                                            name: hiddenMark.name,
-                                            value: hiddenMark.value
-                                        };
-                                    }
-                                )
-                        }
-                    },
-                    metroStations: this.params_.metroStations.map(
-                        function(metroStation) {
-                            return {
-                                id: metroStation.id,
-                                name: metroStation.name
-                            };
-                        }
-                    ),
-                    area: {
-                        id: this.params_.area.id,
-                        name: this.params_.area.name
-                    },
-                    ratings: this.params_.ratings,
-                    position: this.params_.position,
-                    theme: this.params_.theme,
-                    isNotClickable: this.params_.isNotClickable,
-                    isFavorite: this.params_.isFavorite
-                }
+                params: this.params_
             }
         );
 
@@ -358,9 +319,7 @@ goog.scope(function() {
                 this.getElement(),
                 goog.events.EventType.CLICK,
                 this.onClickListItem_
-            );
-
-            handler.listen(
+            ).listen(
                 this.favoriteLink_,
                 sm.bFavoriteLink.FavoriteLink.Event.SET_FAVORITE_STATE,
                 this.onAddFavoriteClick_
@@ -543,9 +502,9 @@ goog.scope(function() {
      */
     ListItem.prototype.getDataEc_ = function() {
         return {
-            'id': this.params_['id'],
+            'id': this.params_.id,
             'name': this.name_,
-            'position': this.params_['position']
+            'position': this.params_.position
         };
     };
 });  // goog.scope

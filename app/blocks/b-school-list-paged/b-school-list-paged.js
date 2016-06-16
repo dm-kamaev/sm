@@ -83,6 +83,15 @@ goog.scope(function() {
 
 
     /**
+     * If empty return false
+     * @return {boolean}
+     */
+    SchoolListPaged.prototype.isNotEmpty = function() {
+        return !!this.itemsParams_.length;
+    };
+
+
+    /**
      * Remove all items from list and from items array
      * @private
      */
@@ -98,7 +107,7 @@ goog.scope(function() {
      */
     SchoolListPaged.prototype.updateItems_ = function() {
         this.getView().updateItems(this.itemsParams_);
-        this.initItems_();
+        this.initItems_(this.itemsParams_);
     };
 
 
@@ -115,19 +124,22 @@ goog.scope(function() {
 
     /**
      * init School List Items
+     * @param {Array.<sm.bSchoolListItem.SchoolListItem.Params>=} opt_itemsParams
      * @private
      */
-    SchoolListPaged.prototype.initItems_ = function() {
+    SchoolListPaged.prototype.initItems_ = function(opt_itemsParams) {
         var itemInstance,
-            item;
+            itemsParams = opt_itemsParams || [],
+            item,
+            itemParams;
 
         var itemsAmount = this.getView().getDom().schoolListItems.length;
 
         for (var i = 0; i < itemsAmount; i++) {
             item = this.getView().getDom().schoolListItems[i];
+            itemParams = itemsParams[i];
 
-            itemInstance = new SchoolListItem();
-            console.log(item);
+            itemInstance = new SchoolListItem(itemParams);
             this.addChild(itemInstance);
             this.items_.push(itemInstance);
             itemInstance.decorate(item);

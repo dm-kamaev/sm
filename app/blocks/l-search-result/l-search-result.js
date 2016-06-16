@@ -388,7 +388,6 @@ goog.scope(function() {
      * @private
      */
     SearchResult.prototype.initSchoolListListeners_ = function() {
-        console.log(this.instances_.schoolList);
         this.getHandler().listen(
             this.instances_.schoolList,
             SchoolList.Event.SORT_CLICK,

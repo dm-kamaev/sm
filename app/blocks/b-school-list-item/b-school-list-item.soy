@@ -2,29 +2,29 @@
 
 /**
  * School template
- * @param? params {
+ * @param? params {{
  *     id: ?number,
- *     name: [
+ *     name: {
  *         light: ?string,
  *         bold: ?string
- *     ],
+ *     },
  *     alias: ?string,
  *     score: {sm.bScore.TemplateMinimized.Params},
  *     description: ?string,
- *     metroStations: ?list<[
+ *     metroStations: ?Array<{
  *         id: number,
  *         name: string
- *     ]>,
- *     area: ?[
+ *     }>,
+ *     area: ?{
  *         id: number,
  *         name: string
- *     ],
- *     ratings: ?list<string>,
+ *     },
+ *     ratings: ?Array<string>,
  *     position: ?number,
  *     theme: ?string,
- *     isNotClickable: ?bool,
- *     isFavorite: ?bool
- * }
+ *     isNotClickable: ?boolean,
+ *     isFavorite: ?boolean
+ * }}
  */
 {template .base autoescape="strict" kind="html"}
     {let $classes kind="html"}
