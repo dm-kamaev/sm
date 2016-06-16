@@ -317,10 +317,15 @@ exports.search = async (function(req, res) {
                 entityType.SCHOOL
             ));
 
-        schools = schoolView.joinAliases(schools, aliases);
+        var schoolsWithAliases = schoolView.joinAliases(schools, aliases),
+            schoolsWithFavoriteMark = schoolView.listWithFavorites(
+                schoolsWithAliases, favoriteIds
+            );
 
         result = {
-            list: schoolView.list(schools, params.sortType, params.page),
+            list: schoolView.list(
+                schoolsWithFavoriteMark, params.sortType, params.page
+            ),
             map: schoolView.listMap(schools)
         };
     } catch (error) {

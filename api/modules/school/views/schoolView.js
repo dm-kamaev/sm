@@ -302,7 +302,8 @@ schoolView.list = function(schools, opt_criterion, opt_page) {
                     ratings: ratingView.ratingResultView(school.rankDogm),
                     metroStations: addressView.getMetro(school.addresses),
                     area: addressView.getAreas(school.addresses),
-                    position: getPosition(i, opt_page)
+                    position: getPosition(i, opt_page),
+                    isFavorite: school.isFavorite
                 };
             });
 
