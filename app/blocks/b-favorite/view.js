@@ -37,8 +37,11 @@ goog.scope(function() {
         ROOT: 'b-favorite',
         ICON: 'b-favorite__icon-wrap',
         HINT: 'b-favorite__hint-content',
-        AUTHORIZE_LINK: 'b-favorite__link_authorize'
+        AUTHORIZE_LINK: 'b-favorite__link_authorize',
+        FILLED: 'b-favorite_filled',
+        EMPTY: 'b-favorite_empty'
     };
+
 
     /**
      * Event enum
@@ -46,6 +49,26 @@ goog.scope(function() {
      */
     View.Event = {
         AUTHORIZE: 'authorize'
+    };
+
+
+    /**
+     * States enum
+     * @enum {string}
+     */
+    View.State = {
+        FILLED: 'filled',
+        EMPTY: 'empty'
+    };
+
+    /**
+     * Sets given state
+     * @param {string} state
+     */
+    View.prototype.setState = function(state) {
+        if (this.isValidState_(state)) {
+            this.switchState_(state);
+        }
     };
 
     /**
@@ -179,5 +202,44 @@ goog.scope(function() {
                 sm.bSchoolListPaged.View.CssClass.ROOT
             )
         };
+    };
+
+
+    /**
+     * Checks that given state is valid
+     * @param {string} state
+     * @return {boolean}
+     */
+    View.prototype.isValidState_ = function(state) {
+        return state == View.State.EMPTY ||
+            state == View.State.FILLED;
+    };
+
+
+    /**
+     * Switch state to given state
+     * @param {string} state
+     * @private
+     */
+    View.prototype.switchState_ = function(state) {
+        if (state == View.State.EMPTY) {
+            goog.dom.classlist.add(
+                this.getElement(),
+                View.CssClass.EMPTY
+            );
+            goog.dom.classlist.remove(
+                this.getElement(),
+                View.CssClass.FILLED
+            );
+        } else if (state == View.State.FILLED) {
+            goog.dom.classlist.add(
+                this.getElement(),
+                View.CssClass.FILLED
+            );
+            goog.dom.classlist.remove(
+                this.getElement(),
+                View.CssClass.EMPTY
+            );
+        }
     };
 });  // goog.scope

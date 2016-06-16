@@ -33,6 +33,26 @@ goog.scope(function() {
 
 
     /**
+     * Add given item to favorites
+     * @param {sm.bSchoolListItem.SchoolListItem.Params} favoriteItem
+     */
+    Favorite.prototype.addItem = function(favoriteItem) {
+        this.schoolListPaged_.addItem(favoriteItem);
+        this.updateState_();
+    };
+
+
+    /**
+     * Remove item with given id from favorites
+     * @param {number} itemId
+     */
+    Favorite.prototype.removeItem = function(itemId) {
+        this.schoolListPaged_.removeItem(itemId);
+        this.updateState_();
+    };
+
+
+    /**
      * @override
      * @param {Element} element
      */
@@ -52,6 +72,17 @@ goog.scope(function() {
             View.Event.AUTHORIZE,
             this.onAuthorize_
         );
+    };
+
+
+    /**
+     * Init new state and set it by view method
+     */
+    Favorite.prototype.updateState_ = function() {
+        var state = this.schoolListPaged_.isNotEmpty() ?
+            View.State.FILLED :
+            View.State.EMPTY;
+        this.getView().setState(state);
     };
 
 

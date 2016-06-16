@@ -2,6 +2,7 @@ goog.provide('sm.bFavoriteLink.FavoriteLink');
 
 goog.require('cl.iControl.Control');
 goog.require('goog.dom');
+goog.require('sm.bFavoriteLink.Event.FavoriteAdded');
 goog.require('sm.bFavoriteLink.View');
 
 
@@ -36,7 +37,8 @@ goog.inherits(sm.bFavoriteLink.FavoriteLink, cl.iControl.Control);
 
 goog.scope(function() {
     var FavoriteLink = sm.bFavoriteLink.FavoriteLink,
-        View = sm.bFavoriteLink.View;
+        View = sm.bFavoriteLink.View,
+        Event = sm.bFavoriteLink.Event;
 
 
     /**
@@ -44,8 +46,9 @@ goog.scope(function() {
      * @enum
      */
     FavoriteLink.Event = {
-        FAVORITE_ADDED: 'favorite-added',
-        FAVORITE_REMOVED: 'favorite_removed'
+        FAVORITE_ADDED: Event.FavoriteAdded.Type,
+        SET_FAVORITE_STATE: 'set-favorite-state',
+        SET_NOT_FAVORITE_STATE: 'set-not-favorite-state'
     };
 
 
@@ -112,6 +115,7 @@ goog.scope(function() {
 
         if (opt_action == 'add') {
             method = 'POST';
+            var callback = this.onSuccessFavoriteAdd_.bind(this);
         } else if (opt_action == 'remove') {
             method = 'DELETE';
         } else {
@@ -124,8 +128,22 @@ goog.scope(function() {
             'data': {
                 'itemId': itemId,
                 '_csrf': token
-            }
+            },
+            'dataType': 'json',
+            'success': callback
         });
+    };
+
+
+    /**
+     * Dispatches event about successfull add to favorites with added item
+     * @param {Object} data
+     * @private
+     */
+    FavoriteLink.prototype.onSuccessFavoriteAdd_ = function(data) {
+        var item = sm.bSchoolListItem.SchoolListItem.transformParams(data),
+            event = new Event.FavoriteAdded(item, this);
+        this.dispatchEvent(event);
     };
 
 
@@ -158,10 +176,10 @@ goog.scope(function() {
     FavoriteLink.prototype.switchState_ = function(state) {
         if (state) {
             this.addFavorite();
-            this.dispatchEvent(FavoriteLink.Event.FAVORITE_ADDED);
+            this.dispatchEvent(FavoriteLink.Event.SET_FAVORITE_STATE);
         } else {
             this.removeFavorite();
-            this.dispatchEvent(FavoriteLink.Event.FAVORITE_REMOVED);
+            this.dispatchEvent(FavoriteLink.Event.SET_NOT_FAVORITE_STATE);
         }
     };
 

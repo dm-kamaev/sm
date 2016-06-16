@@ -134,21 +134,21 @@ var getExtendedDayCost = function(cost) {
     var res = '';
 
     switch (cost) {
-    case 'нет':
-    case '-':
-    case null:
+        case 'нет':
+        case '-':
+        case null:
         break;
 
-    case 'есть':
-        res = 'есть продлёнка';
-        break;
+        case 'есть':
+            res = 'есть продлёнка';
+            break;
 
-    case 'бесплатно':
-        res = 'есть бесплатная продлёнка';
-        break;
+        case 'бесплатно':
+            res = 'есть бесплатная продлёнка';
+            break;
 
-    default:
-        res = 'есть продлёнка (' + cost + ')';
+        default:
+            res = 'есть продлёнка (' + cost + ')';
     }
 
     return res;
@@ -162,7 +162,8 @@ var getExtendedDayCost = function(cost) {
 var getEducationInterval = function(interval) {
     var res = 'Обучение с ';
 
-    if (interval) {
+    if (interval)
+    {
         var begin = interval[0],
             end = interval[interval.length - 1];
 
@@ -296,10 +297,8 @@ schoolView.list = function(schools, opt_criterion, opt_page) {
                     ratings: ratingView.ratingResultView(school.rankDogm),
                     metroStations: addressView.getMetro(school.addresses),
                     area: addressView.getAreas(school.addresses),
-                    addresses:
-                        services.department.addressesFilter(school.addresses),
-                    totalScore: school.totalScore,
-                    position: getPosition(i, opt_page)
+                    position: getPosition(i, opt_page),
+                    isFavorite: school.isFavorite
                 };
             });
     } else {
@@ -585,22 +584,22 @@ schoolView.dataLinks = function() {
  *     itemUrls: models.School
  * }} schoolsData
  * @return {Array<{
- *     id: number,
- *     name: {
- *         light: (undefined|string),
- *         bold: (undefined|string)
- *     },
- *     url: (undefined|string),
- *     score: (undefined|number),
- *     metroStations: (undefined|Array<{
  *         id: number,
- *         name: string
- *     }>),
- *     area: (undefined|{
- *         id: number,
- *         name: string
- *     }),
- *     url: string
+ *         name: {
+ *             light: (undefined|string),
+ *             bold: (undefined|string)
+ *         },
+ *         alias: (undefined|string),
+ *         score: (undefined|number)
+ *         metroStations: (undefined|Array<{
+ *             id: number,
+ *             name: string
+ *         }>),
+ *         area: (undefined|{
+ *             id: number,
+ *             name: string
+ *         })
+ *     }>
  * }>}
  */
 schoolView.listCompact = function(schoolsData) {
@@ -616,6 +615,54 @@ schoolView.listCompact = function(schoolsData) {
             alias: getAlias(itemUrls, school.id)
         };
     });
+};
+
+/**
+* @param {{
+*     item: models.School,
+*     itemUrl: models.Page
+* }} schoolData
+* @return {{
+*     id: number,
+*     name: {
+*         light: (undefined|string),
+*         bold: (undefined|string)
+*     },
+*     alias: (undefined|string),
+*     score: {
+*         data: {
+*             visibleMark: {
+*                 name: (undefined|string),
+*                 value: (undefined|number)
+*             }
+*             hiddenMarks: Array<{
+*                 name: (undefined|string),
+*                 value: (undefined|number)
+*             }>
+*         }
+*     }
+*     metroStations: (undefined|Array<{
+*         id: number,
+*         name: string
+*     }>),
+*     area: (undefined|{
+*         id: number,
+*         name: string
+*     })
+* }}
+*/
+schoolView.listCompactItem = function (schoolData) {
+    var school = schoolData.item,
+        page = schoolData.itemUrl;
+
+    return {
+        id: school.id,
+        name: getName(school.name),
+        score: scoreView.schoolListCompact(school.totalScore),
+        metroStations: addressView.getMetro(school.addresses),
+        area: addressView.getAreas(school.addresses),
+        alias: page.alias
+    };
 };
 
 
@@ -635,6 +682,7 @@ schoolView.isFavorite = function(school, favoriteItems) {
 /**
  * Add to given school list isFavorite property if school id
  * in given favorites ids
+ * @param {Array<number>} favoriteItemIds
  * @param {Array<{
  *     id: number,
  *     name: {
@@ -653,7 +701,6 @@ schoolView.isFavorite = function(school, favoriteItems) {
  *     }),
  *     url: string
  * }>} schools
- * @param {Array<number>} favoriteItemIds
  * @return {Array<{
  *     id: number,
  *     name: {

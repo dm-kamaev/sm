@@ -65,12 +65,12 @@ exports.list = async (function(req, res) {
             schoolView.listIds(results.schools),
             entityType.SCHOOL
         )),
-        schools = schoolView.joinAliases(results.schools, schoolAliases);
+        schools = schoolView.joinAliases(results.schools, schoolAliases),
+        schoolsWithFavoriteMark = schoolView.listWithFavorites(
+            schools, favoriteIds
+        );
 
-    var schoolsList = schoolView.list(schools),
-        schoolListWithFavorite = schoolView.listWithFavorites(
-            schoolsList.schools, favoriteIds
-        ),
+    var schoolsList = schoolView.list(schoolsWithFavoriteMark),
         map = schoolView.listMap(results.schools, results.mapPosition),
         filters = searchView.filters(results.filters, searchParams),
         favorites = schoolView.listCompact(results.favorites);
@@ -78,7 +78,7 @@ exports.list = async (function(req, res) {
     var params = {
         params: {
             data: {
-                schools: schoolListWithFavorite,
+                schools: schoolsList.schools,
                 filters: filters,
                 authSocialLinks: results.authSocialLinks,
                 user: userView.default(user),

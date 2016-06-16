@@ -398,6 +398,14 @@ goog.scope(function() {
             this.instances_.schoolList,
             SchoolList.Event.SHOW_MORE,
             this.onShowMoreSchoolListItems_
+        ).listen(
+            this.instances_.schoolList,
+            SchoolList.Event.FAVORITE_ADDED,
+            this.onFavoriteAdded_
+        ).listen(
+            this.instances_.schoolList,
+            SchoolList.Event.FAVORITE_REMOVED,
+            this.onFavoriteRemoved_
         );
     };
 
@@ -762,6 +770,30 @@ goog.scope(function() {
 
         this.send_(this.requestParams_.listDataUrl)
             .then(this.addItems_.bind(this));
+    };
+
+
+    /**
+     * Handler for adding one school into favorite list
+     * @param {sm.bFavoriteLink.Event.FavoriteAdded} event
+     * @private
+     */
+    SearchResult.prototype.onFavoriteAdded_ = function(event) {
+        var addedItem = event.data;
+
+        this.instances_.header.addFavorite(addedItem);
+    };
+
+
+    /**
+     *
+     * @param {sm.bSchoolListItem.Event.FavoriteRemoved} event
+     * @private
+     */
+    SearchResult.prototype.onFavoriteRemoved_ = function(event) {
+        var removedItemId = event.data.itemId;
+
+        this.instances_.header.removeFavorite(removedItemId);
     };
 
 
