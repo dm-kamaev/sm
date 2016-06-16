@@ -73,7 +73,7 @@
 
     <target name="change-owner">
         <exec executable="chown" dir="${basedir}">
-            <arg line="-R schools ${basedir}"/>
+            <arg line="-R schools:gorod ${basedir}"/>
         </exec>
     </target>
 
