@@ -38,6 +38,7 @@ goog.scope(function() {
      */
     Favorite.prototype.addItem = function(favoriteItem) {
         this.schoolListPaged_.addItem(favoriteItem);
+        this.updateState_();
     };
 
 
@@ -47,6 +48,7 @@ goog.scope(function() {
      */
     Favorite.prototype.removeItem = function(itemId) {
         this.schoolListPaged_.removeItem(itemId);
+        this.updateState_();
     };
 
 
@@ -70,6 +72,17 @@ goog.scope(function() {
             View.Event.AUTHORIZE,
             this.onAuthorize_
         );
+    };
+
+
+    /**
+     * Init new state and set it by view method
+     */
+    Favorite.prototype.updateState_ = function() {
+        var state = this.schoolListPaged_.isNotEmpty() ?
+            View.State.FILLED :
+            View.State.EMPTY;
+        this.getView().setState(state);
     };
 
 
