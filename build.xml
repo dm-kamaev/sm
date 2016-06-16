@@ -5,8 +5,9 @@
     <property name="project.frontend.path" value="${basedir}"/>
     <property name="project.frontend.runtime.path" value="${project.frontend.path}/runtime"/>
     <property name="project.node-modules.path" value="${basedir}/node_modules"/>
-    <property name="project.user.runtime.path" value="${project.frontend.runtime.path}"/>
-    <property name="project.auth.runtime.path" value="${project.frontend.runtime.path}"/>
+    <property name="user.runtime-path" value="${project.frontend.runtime.path}"/>
+    <property name="auth.runtime-path" value="${project.frontend.runtime.path}"/>
+    <property name="user.path" value="${project.node-modules.path}/user-service"/>
 
     <import file="${basedir}/node_modules/deployment/packaging.xml"/>
     <import file="${basedir}/node_modules/deployment/node.xml"/>
