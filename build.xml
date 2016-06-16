@@ -22,7 +22,7 @@
 
     <!-- Switch to new release -->
     <target name="packaging-switch-release"
-            depends="packaging-switch-release-before, setup-folders, switch-release-folder, build-config, migrate-database, update-search-cache, update-sitemap, deploy-authorization-config, deploy-user-config, user.migrate, node-start, initd-install, user.node-start, auth.node-start, init-crontab, packaging-switch-release-after"/>
+            depends="packaging-switch-release-before, setup-folders, switch-release-folder, build-config, migrate-database, update-search-cache, update-sitemap, deploy-authorization-config, deploy-user-config, user.migrate, node-start, initd-install, user.node-start, auth.node-start, init-crontab, packaging-switch-release-after, change-owner"/>
 
     <!-- Stop previous release -->
     <target name="packaging-stop-release" depends="packaging-stop-release-before, remove-crontab, node-stop, initd-remove, auth.node-stop, user.node-stop, remove-release-folder, packaging-stop-release-after"/>
@@ -68,6 +68,12 @@
     <target name="build-config">
         <exec executable="${node}" dir="${basedir}/console/">
             <arg line="buildLocalConfig ${env} ../app/config"/>
+        </exec>
+    </target>
+
+    <target name="change-owner">
+        <exec executable="chown" dir="${basedir}">
+            <arg line="-R schools ${basedir}"/>
         </exec>
     </target>
 
