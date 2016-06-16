@@ -48,8 +48,9 @@ const services = require('../../../../app/components/services').all;
 exports.create = async(function(req, res) {
     var user = req.user,
         itemId = req.body.itemId;
-    var favoriteSchool = await(services.school.getByIdsWithGeoData([itemId]))[0];
-    
+    var favoriteSchool =
+        await(services.school.getByIdsWithGeoData([itemId]))[0];
+
     if (favoriteSchool) {
         var page = await(services.page.getOne(
                 favoriteSchool.id,

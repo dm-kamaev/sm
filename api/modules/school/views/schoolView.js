@@ -134,21 +134,21 @@ var getExtendedDayCost = function(cost) {
     var res = '';
 
     switch (cost) {
-        case 'нет':
-        case '-':
-        case null:
+    case 'нет':
+    case '-':
+    case null:
         break;
 
-        case 'есть':
-            res = 'есть продлёнка';
-            break;
+    case 'есть':
+        res = 'есть продлёнка';
+        break;
 
-        case 'бесплатно':
-            res = 'есть бесплатная продлёнка';
-            break;
+    case 'бесплатно':
+        res = 'есть бесплатная продлёнка';
+        break;
 
-        default:
-            res = 'есть продлёнка (' + cost + ')';
+    default:
+        res = 'есть продлёнка (' + cost + ')';
     }
 
     return res;
@@ -162,8 +162,7 @@ var getExtendedDayCost = function(cost) {
 var getEducationInterval = function(interval) {
     var res = 'Обучение с ';
 
-    if (interval)
-    {
+    if (interval) {
         var begin = interval[0],
             end = interval[interval.length - 1];
 
@@ -590,7 +589,7 @@ schoolView.dataLinks = function() {
  *             bold: (undefined|string)
  *         },
  *         alias: (undefined|string),
- *         score: (undefined|number)
+ *         score: (undefined|number),
  *         metroStations: (undefined|Array<{
  *             id: number,
  *             name: string
@@ -618,43 +617,42 @@ schoolView.listCompact = function(schoolsData) {
 };
 
 /**
-* @param {{
-*     item: models.School,
-*     itemUrl: models.Page
-* }} schoolData
-* @return {{
-*     id: number,
-*     name: {
-*         light: (undefined|string),
-*         bold: (undefined|string)
-*     },
-*     alias: (undefined|string),
-*     score: {
-*         data: {
-*             visibleMark: {
-*                 name: (undefined|string),
-*                 value: (undefined|number)
-*             }
-*             hiddenMarks: Array<{
-*                 name: (undefined|string),
-*                 value: (undefined|number)
-*             }>
-*         }
-*     }
-*     metroStations: (undefined|Array<{
-*         id: number,
-*         name: string
-*     }>),
-*     area: (undefined|{
-*         id: number,
-*         name: string
-*     })
-* }}
-*/
-schoolView.listCompactItem = function (schoolData) {
+ * @param {{
+ *     item: models.School,
+ *     itemUrl: models.Page
+ * }} schoolData
+ * @return {{
+ *     id: number,
+ *     name: {
+ *         light: (undefined|string),
+ *         bold: (undefined|string)
+ *     },
+ *     alias: (undefined|string),
+ *     score: {
+ *         data: {
+ *             visibleMark: {
+ *                 name: (undefined|string),
+ *                 value: (undefined|number)
+ *             },
+ *             hiddenMarks: Array<{
+ *                 name: (undefined|string),
+ *                 value: (undefined|number)
+ *             }>
+ *         }
+ *     },
+ *     metroStations: (undefined|Array<{
+ *         id: number,
+ *         name: string
+ *     }>),
+ *     area: (undefined|{
+ *         id: number,
+ *         name: string
+ *     })
+ * }}
+ */
+schoolView.listCompactItem = function(schoolData) {
     var school = schoolData.item,
         page = schoolData.itemUrl;
-
     return {
         id: school.id,
         name: getName(school.name),
@@ -682,7 +680,6 @@ schoolView.isFavorite = function(school, favoriteItems) {
 /**
  * Add to given school list isFavorite property if school id
  * in given favorites ids
- * @param {Array<number>} favoriteItemIds
  * @param {Array<{
  *     id: number,
  *     name: {
@@ -701,6 +698,7 @@ schoolView.isFavorite = function(school, favoriteItems) {
  *     }),
  *     url: string
  * }>} schools
+ * @param {Array<number>} favoriteItemIds
  * @return {Array<{
  *     id: number,
  *     name: {

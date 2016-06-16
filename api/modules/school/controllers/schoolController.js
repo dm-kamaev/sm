@@ -286,10 +286,13 @@ exports.createComment = async(function(req, res) {
 exports.search = async(function(req, res) {
     var result;
     try {
-        var params = await(services.search.initSearchParams(req.query));
+        var user = req.user || {},
+            params = await(services.search.initSearchParams(req.query)),
+            favoriteIds =
+                await(services.favorite.getAllItemIdsByUserId(user.id));
 
         var schools = await(services.school.list(
-                params,
+            params,
             {
                 limitResults: 10
             }
