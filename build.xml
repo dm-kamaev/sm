@@ -79,7 +79,7 @@
 
     <target name="change-mode">
        <exec executable="chown" dir="${basedir}">
-           <arg line="-R g+w ${basedir}/runtime">
+           <arg line="-R g+w ${basedir}/runtime"/>
        </exec>
    </target>
 
