@@ -84,7 +84,7 @@ schoolView.default = function(schoolInstance, data, user, opt_popularSchools) {
         favorites: {
             schools: schoolView.listCompact(data.favorites)
         },
-        seoDescription: schoolInstance.seoDescription
+        seoDescription: data.page.description
     };
     if (data.popularSchools) {
         result.popularSchools = this.popular(data.popularSchools);

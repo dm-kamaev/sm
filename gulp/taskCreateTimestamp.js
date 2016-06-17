@@ -1,7 +1,7 @@
 var fs = require('fs');
 var path = require('path');
 
-const CONFIG_PATH = '../app/config/config.json';
+const CONFIG_PATH = '../app/config/base/config.json';
 
 module.exports = function(gulpHelper) {
 
