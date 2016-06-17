@@ -31,9 +31,25 @@ sm.lSearchResult.bFilter.Filter = function(opt_params) {
     /**
      * Filters element
      * @type {Element}
-     * @private
+     * @protected
      */
-    this.filtersElement_ = null;
+    this.filtersElement = null;
+
+
+    /**
+     * Filters element
+     * @type {Element}
+     * @protected
+     */
+    this.filterSectionElements = null;
+
+
+    /**
+     * Classes input
+     * @type {Element}
+     * @protected
+     */
+    this.inputElements = null;
 
 
     /**
@@ -66,22 +82,6 @@ sm.lSearchResult.bFilter.Filter = function(opt_params) {
      * @private
      */
     this.showModalButtonElement_ = null;
-
-
-    /**
-     * Filters element
-     * @type {Element}
-     * @private
-     */
-    this.filterSectionElements_ = null;
-
-
-    /**
-     * Classes input
-     * @type {Element}
-     * @protected
-     */
-    this.inputElements = null;
 
 
     /**
@@ -134,6 +134,8 @@ goog.scope(function() {
     Filter.Event = {
         CHECKED_FILTER: 'checked-filter',
         UNCHECKED_FILTER: 'unchecked-filter',
+        CHECKED_ITEM: 'checked-item',
+        UNCHECKED_ITEM: 'unchecked-item',
         SHOW_SEARCH_FILTER_CLICK: 'show-search-filter-click'
     };
 
@@ -163,11 +165,218 @@ goog.scope(function() {
     Filter.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
-        this.filtersElement_ = goog.dom.getElementByClass(
-            Filter.CssClass.FILTERS,
+        this.initFilterItems(element);
+        this.initFilterContainer_(element);
+        this.initButtons_(element);
+
+        this.getFilterName_();
+    };
+
+
+    /**
+     * @override
+     */
+    Filter.prototype.enterDocument = function() {
+        goog.base(this, 'enterDocument');
+
+        this.initFilterItemsListeners();
+        this.initButtonsListeners_();
+    };
+
+
+    /**
+     * Reset filter
+     * @protected
+     */
+    Filter.prototype.reset = function() {
+        for (var i = 0; i < this.inputElements.length; i++) {
+            this.inputElements[i].checked = false;
+        }
+    };
+
+
+    /**
+     * Checks for checked radio all inputs
+     * @return {boolean}
+     * @protected
+     */
+    Filter.prototype.isCheckedInputs = function() {
+        var result = false;
+
+        for (var i = 0; i < this.inputElements.length; i++) {
+            if (this.inputElements[i].checked) {
+                result = true;
+            }
+        }
+        return result;
+    };
+
+
+    /**
+     * Checks for checked radio input
+     * @param {Element} input
+     * @return {boolean}
+     * @protected
+     */
+    Filter.prototype.isCheckedInput = function(input) {
+        return input.checked ? true : false;
+    };
+
+
+    /**
+     * Handler change the filter
+     * @param {Object} event
+     * @protected
+     */
+    Filter.prototype.onChangeFilter = function(event) {
+        var type = this.isCheckedInputs() ? Filter.Event.CHECKED_FILTER :
+            Filter.Event.UNCHECKED_FILTER;
+
+        this.dispatchEvent({
+            'type': type
+        });
+    };
+
+
+    /**
+     * Handler change item
+     * @param {Object} event
+     * @protected
+     */
+    Filter.prototype.onChangeItem = function(event) {
+        var type = this.isCheckedInput(event.target) ?
+            Filter.Event.CHECKED_ITEM :
+            Filter.Event.UNCHECKED_ITEM;
+
+        var filterSection = goog.dom.getAncestorByClass(
+            event.target,
+            Filter.CssClass.FILTER_SECTION
+        );
+
+        this.dispatchEvent({
+            'type': type,
+            'data': this.getDataParams(filterSection)
+        });
+    };
+
+
+    /**
+     * Uncheck item
+     * @param {{
+     *     value: string,
+     *     label: string,
+     *     name: string,
+     *     id: string
+     * }} params
+     * @public
+     */
+    Filter.prototype.uncheckItem = function(params) {
+        var item = this.findInput(params.value);
+        item.checked = false;
+    };
+
+
+    /**
+     * Find an input
+     * @param {string} value
+     * @return {Element}
+     * @protected
+     */
+    Filter.prototype.findInput = function(value) {
+        var input;
+
+        for (var i = 0; i < this.inputElements.length; i++) {
+            if (this.inputElements[i].value == value) {
+                input = this.inputElements[i];
+            }
+        }
+        return input;
+    };
+
+
+    /**
+     * Get data params
+     * @param {Element} element
+     * @return {Object}
+     * @protected
+     */
+    Filter.prototype.getDataParams = function(element) {
+        return JSON.parse(
+            element.getAttribute('data-params')
+        );
+    };
+
+
+    /**
+     * Init Filter Items
+     * @param {Element} element
+     * @protected
+     */
+    Filter.prototype.initFilterItems = function(element) {
+        this.filterSectionElements = goog.dom.getElementsByClass(
+            Filter.CssClass.FILTER_SECTION,
             element
         );
 
+        for (var i = 0, elem; elem = this.filterSectionElements[i]; i++) {
+            var isHidable = goog.dom.classes.has(
+                elem,
+                Filter.CssClass.FILTER_SECTION_HIDABLE
+            );
+            if (isHidable) {
+                this.filterSectionHidableElements_.push(elem);
+            }
+        }
+
+        this.inputElements = goog.dom.getElementsByClass(
+            Filter.CssClass.INPUT,
+            element
+        );
+    };
+
+
+    /**
+     * Init Filter Items Listeners
+     * @protected
+     */
+    Filter.prototype.initFilterItemsListeners = function() {
+        var handler = this.getHandler();
+
+        for (var i = 0; i < this.inputElements.length; i++) {
+            handler.listen(
+                this.inputElements[i],
+                goog.events.EventType.CLICK,
+                this.onChangeFilter
+            );
+
+            handler.listen(
+                this.inputElements[i],
+                goog.events.EventType.CLICK,
+                this.onChangeItem
+            );
+        }
+    };
+
+
+    /**
+     * Init Filter Container
+     * @param {Element} element
+     * @private
+     */
+    Filter.prototype.initFilterContainer_ = function(element) {
+        this.filtersElement = goog.dom.getElementByClass(
+            Filter.CssClass.FILTERS,
+            element
+        );
+    };
+
+
+    /**
+     * Init Buttons
+     * @param {Element} element
+     * @private
+     */
+    Filter.prototype.initButtons_ = function(element) {
         this.showFiltersIconElement_ = goog.dom.getElementByClass(
             Filter.CssClass.SHOW_FILTERS_ICON,
             element
@@ -192,37 +401,14 @@ goog.scope(function() {
             Filter.CssClass.HIDE_SHOWN_FILTERS_BUTTON,
             element
         );
-
-        this.filterSectionElements_ = goog.dom.getElementsByClass(
-            Filter.CssClass.FILTER_SECTION,
-            element
-        );
-
-        for (var i = 0, elem; elem = this.filterSectionElements_[i]; i++) {
-            var isHidable = goog.dom.classes.has(
-                elem,
-                Filter.CssClass.FILTER_SECTION_HIDABLE
-            );
-            if (isHidable) {
-                this.filterSectionHidableElements_.push(elem);
-            }
-        }
-
-        this.inputElements = goog.dom.getElementsByClass(
-            Filter.CssClass.INPUT,
-            element
-        );
-
-        this.getFilterName_();
     };
 
 
     /**
-     * @override
+     * Init Buttons Listeners
+     * @private
      */
-    Filter.prototype.enterDocument = function() {
-        goog.base(this, 'enterDocument');
-
+    Filter.prototype.initButtonsListeners_ = function() {
         var handler = this.getHandler();
 
         if (this.showHiddenFiltersButtonElement_) {
@@ -257,42 +443,6 @@ goog.scope(function() {
                 this.onShowModalButtonClick_
             );
         }
-
-        for (var i = 0; i < this.inputElements.length; i++) {
-            handler.listen(
-                this.inputElements[i],
-                goog.events.EventType.CLICK,
-                this.onChangeFilterItem
-            );
-        }
-    };
-
-
-    /**
-     * Reset filter
-     * @protected
-     */
-    Filter.prototype.reset = function() {
-        for (var i = 0; i < this.inputElements.length; i++) {
-            this.inputElements[i].checked = false;
-        }
-    };
-
-
-    /**
-     * Checks for checked radio
-     * @return {boolean}
-     * @protected
-     */
-    Filter.prototype.isCheckedInput = function() {
-        var result = false;
-
-        for (var i = 0; i < this.inputElements.length; i++) {
-            if (this.inputElements[i].checked) {
-                result = true;
-            }
-        }
-        return result;
     };
 
 
@@ -311,26 +461,12 @@ goog.scope(function() {
 
 
     /**
-     * Handler change the filter
-     * @protected
-     */
-    Filter.prototype.onChangeFilterItem = function() {
-        var type = this.isCheckedInput() ? Filter.Event.CHECKED_FILTER :
-            Filter.Event.UNCHECKED_FILTER;
-
-        this.dispatchEvent({
-            'type': type
-        });
-    };
-
-
-    /**
      * Hide filter
      * @private
      */
     Filter.prototype.hideFilter_ = function() {
         goog.dom.classlist.add(
-            this.filtersElement_,
+            this.filtersElement,
             Filter.CssClass.HIDDEN
         );
 
@@ -398,7 +534,7 @@ goog.scope(function() {
      */
     Filter.prototype.toggleFiltersVisibility_ = function() {
         goog.dom.classlist.toggle(
-            this.filtersElement_,
+            this.filtersElement,
             Filter.CssClass.HIDDEN
         );
 

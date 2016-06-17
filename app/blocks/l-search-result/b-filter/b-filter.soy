@@ -10,6 +10,7 @@
  * @property {?boolean} config.cannotBeHidden
  * @property {?boolean} config.isShowed
  * @property {?number} config.filtersToShow
+ * @property {?boolean} config.showFilterSearch
  * @property {?number} config.theme
  */
 
@@ -59,17 +60,19 @@
  * }
  */
 {template .header autoescape="strict" kind="html"}
-    <div class="{call .rootClass/}__header">
-        {call .title data="all" /}
+    {if $params?.data?.header?.title}
+        <div class="{call .rootClass/}__header">
+            {call .title data="all" /}
 
-        {if $params?.data?.header?.tooltip}
-            {call .tooltip data="all" /}
-        {/if}
+            {if $params?.data?.header?.tooltip}
+                {call .tooltip data="all" /}
+            {/if}
 
-        {if not $params?.config?.cannotBeHidden}
-            {call .showFiltersButton data="all" /}
-        {/if}
-    </div>
+            {if not $params?.config?.cannotBeHidden}
+                {call .showFiltersButton data="all" /}
+            {/if}
+        </div>
+    {/if}
 {/template}
 
 
@@ -133,21 +136,64 @@
         {/if}
     {/let}
 
-    <div class="{$classes}">
-        <div class="{call .rootClass/}__filter">
-            <input type="checkbox"
-                class="{call .rootClass/}__input"
-                id="{$params.name}-{$params.id}"
-                name="{$params.name}"
-                value="{$params.filter.value}"
-                {$params.filter?.isChecked ? 'checked' : ''}/>
+    {let $dataParams kind="html"}
+        {call cl.iUtils.Utils.stringify}
+            {param json: [
+                'value': $params.filter.value,
+                'label': $params.filter.label,
+                'id': $params.filter.id,
+                'name': $params.name
+            ]/}
+        {/call}
+    {/let}
 
-            <label for="{$params.name}-{$params.id}"
-                class="{call .rootClass/}__input-label">
-                {$params.filter.label}
-            </label>
+    <div class="{$classes}" data-params="{$dataParams}">
+        <div class="{call .rootClass/}__filter">
+            {call .input data="all" /}
+            {call .label data="all" /}
         </div>
     </div>
+{/template}
+
+
+/**
+ * Input template
+ * @param? params {
+ *     filter: ?{
+ *         label: ?string,
+ *         value: ?string,
+ *         isChecked: ?boolean
+ *     },
+ *     name: ?string,
+ *     id: number
+ * }
+ */
+{template .input autoescape="strict" kind="html"}
+    <input type="checkbox"
+        class="{call .rootClass/}__input"
+        id="{$params.name}-{$params.id}"
+        name="{$params.name}"
+        value="{$params.filter.value}"
+        {$params.filter?.isChecked ? 'checked' : ''}
+    />
+{/template}
+
+
+/**
+ * Label template
+ * @param? params {
+ *     filter: ?{
+ *         label: ?string
+ *     },
+ *     name: ?string,
+ *     id: number
+ * }
+ */
+{template .label autoescape="strict" kind="html"}
+    <label for="{$params.name}-{$params.id}"
+        class="{call .rootClass/}__input-label">
+        {$params.filter.label}
+    </label>
 {/template}
 
 
@@ -160,6 +206,9 @@
  *             value: ?string
  *         }>,
  *         name: ?string
+ *     },
+ *     config: ?{
+ *         theme: ?string
  *     }
  * }
  */
@@ -173,13 +222,21 @@
     {/let}
 
     {for $i in range($params.data.filters.length)}
+        {let $id kind="html"}
+            {if $params.config.theme == 'minimal'}
+                {$params.data.filters[$i].value}
+            {else}
+                {$i}
+            {/if}
+        {/let}
+
         {call .filter}
             {param params: [
                 'filter': $params.data.filters[$i],
                 'hidden': not $isExpanded and $i > $filToShow ? true : false,
                 'hidable': $i > $filToShow ? true : false,
                 'name': $params.data.name,
-                'id': $i
+                'id': $id
             ]/}
         {/call}
     {/for}
@@ -192,6 +249,9 @@
  *     data: ?{
  *         name: string,
  *         filters: Array<Object>
+ *     },
+ *     config: {
+ *         showFilterSearch: boolean
  *     }
  * }
  */
@@ -204,8 +264,7 @@
         {call .filToShow_ data="all" /}
     {/let}
 
-    {if $params.data.name == 'additionalEducation' or
-        $params.data.name == 'specializedClasses'}
+    {if $params?.config?.showFilterSearch}
         {call .bottonShowModal_ /}
     {elseif $params.data.filters.length > $filToShow}
         {call .buttonShowMore_}

@@ -6,6 +6,7 @@ goog.require('gorod.gSuggest.Suggest');
 goog.require('gorod.iUIInstanceStorage.UIInstanceStorage');
 goog.require('sm.bSearch.Search');
 goog.require('sm.lSearchResult.bFilter.Filter');
+goog.require('sm.lSearchResult.bFilter.FilterLabels');
 goog.require('sm.lSearchResult.bFilterSearch.View');
 
 
@@ -38,6 +39,14 @@ sm.lSearchResult.bFilterSearch.FilterSearch = function(view, opt_domHelper) {
 
 
     /**
+     * Instance selected filters
+     * @type {sm.lSearchResult.bFilter.FilterLabels}
+     * @private
+     */
+    this.selected_ = null;
+
+
+    /**
      * Instance button
      * @type {cl.gButton.Button}
      * @private
@@ -53,23 +62,10 @@ goog.scope(function() {
         UIInstanceStorage = gorod.iUIInstanceStorage.UIInstanceStorage,
         Suggest = gorod.gSuggest.Suggest,
         Search = sm.bSearch.Search,
-        Filter = sm.lSearchResult.bFilter.Filter;
+        Filter = sm.lSearchResult.bFilter.Filter,
+        FilterLabels = sm.lSearchResult.bFilter.FilterLabels;
 
     var factoryManager = cl.iFactory.FactoryManager.getInstance();
-
-
-    /**
-     * @override
-     */
-    FilterSearch.prototype.createDom = function() {
-        goog.base(this, 'createDom');
-
-        var element = goog.soy.renderAsElement(
-            sm.lSearchResult.bFilterSearch.Template.filterSearch, {
-                params: this.params
-            }
-        );
-    };
 
 
     /**
@@ -81,7 +77,46 @@ goog.scope(function() {
 
         this.initSearch_();
         this.initFilter_();
+        this.initSelected_();
         this.initButton_();
+    };
+
+
+     /**
+     * @override
+     */
+    FilterSearch.prototype.enterDocument = function() {
+        goog.base(this, 'enterDocument');
+
+        this.getHandler().listen(
+            this.filter_,
+            Filter.Event.CHECKED_ITEM,
+            this.onFilterItemCheck_
+        );
+
+        this.getHandler().listen(
+            this.filter_,
+            Filter.Event.UNCHECKED_ITEM,
+            this.onFilterItemUncheck_
+        );
+
+        this.getHandler().listen(
+            this.selected_,
+            FilterLabels.Event.UNCHECKED_ITEM,
+            this.onSelectedItemUncheck_
+        );
+
+        this.getHandler().listen(
+            this.selected_,
+            FilterLabels.Event.CHECKED_FILTER,
+            this.onAddedSelected_
+        );
+
+        this.getHandler().listen(
+            this.selected_,
+            FilterLabels.Event.UNCHECKED_FILTER,
+            this.onRemovedSelected_
+        );
     };
 
 
@@ -116,6 +151,17 @@ goog.scope(function() {
 
 
     /**
+     * Initialize selected filters
+     * @private
+     */
+    FilterSearch.prototype.initSelected_ = function() {
+        this.selected_ = new FilterLabels();
+        this.addChild(this.selected_);
+        this.selected_.decorate(this.getView().getDom().selected);
+    };
+
+
+    /**
      * Initialize button
      * @private
      */
@@ -126,5 +172,55 @@ goog.scope(function() {
             this.getView().getDom().button,
             this
         );
+    };
+
+
+    /**
+     * Check Filter Item
+     * @param {Object} event
+     * @private
+     */
+    FilterSearch.prototype.onFilterItemCheck_ = function(event) {
+        this.selected_.addItem(event.data);
+    };
+
+
+    /**
+     * Uncheck Filter Item
+     * @param {Object} event
+     * @private
+     */
+    FilterSearch.prototype.onFilterItemUncheck_ = function(event) {
+        this.selected_.removeItem(event.data);
+    };
+
+
+    /**
+     * Uncheck Selected Item
+     * @param {Object} event
+     * @private
+     */
+    FilterSearch.prototype.onSelectedItemUncheck_ = function(event) {
+        this.filter_.uncheckItem(event.data);
+    };
+
+
+    /**
+     * Added to selected filter
+     * @private
+     */
+    FilterSearch.prototype.onAddedSelected_ = function() {
+        this.button_.enable();
+    };
+
+
+    /**
+     * Removed selected filter
+     * @private
+     */
+    FilterSearch.prototype.onRemovedSelected_ = function() {
+        if (!this.selected_.isCheckedInputs()) {
+            this.button_.disable();
+        }
     };
 });  // goog.scope

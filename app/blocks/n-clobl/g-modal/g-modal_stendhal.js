@@ -85,14 +85,18 @@ goog.scope(function() {
      * render content
      * @param {string} templateType
      * @param {Object} templateParams
+     * @param {Object} parent
+     * @return {Object}
      */
-    Modal.prototype.renderContent = function(templateType, templateParams) {
-        this.content_ = factoryManager.render(
+    Modal.prototype.renderContent = function(templateType, templateParams,
+        parent) {
+
+        return factoryManager.render(
             this.getView().getStylization(),
             templateType,
             this.getView().getDom().content,
             templateParams,
-            this
+            parent
         );
     };
 

@@ -1,0 +1,92 @@
+{namespace sm.lSearchResult.bFilterLabels.Template}
+
+/**
+ * @typedef {object} sm.lSearchResult.bFilterLabels.Template.Params
+ * @property {?object} data
+ * @property {?{label: ?string, value: ?string}[]} data.filters
+ * @property {?object} config
+ * @property {?boolean} config.cannotBeHidden
+ * @property {?number} config.filtersToShow
+ * @property {?number} config.theme
+ */
+
+/**
+ * Constructor
+ * @param params {sm.lSearchResult.bFilterLabels.Template.Params}
+ * @extends sm.lSearchResult.bFilter.Template
+ * @constructor
+ */
+{template .base autoescape="strict" kind="html"}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * Filter template
+ * @param? params {
+ *     filter: ?{
+ *         label: ?string,
+ *         value: ?string,
+ *         isChecked: ?boolean
+ *     },
+ *     name: ?string,
+ *     id: number
+ * }
+ * @override
+ */
+{template .filter autoescape="strict" kind="html"}
+    {let $dataParams kind="html"}
+        {call cl.iUtils.Utils.stringify}
+            {param json: [
+                'value': $params.filter.value,
+                'label': $params.filter.label,
+                'id': $params.filter.id,
+                'name': $params.name
+            ]/}
+        {/call}
+    {/let}
+
+    <div class="{call .rootClass/}__section" data-params="{$dataParams}">
+        <div class="{call .rootClass/}__filter">
+            {call .input data="all" /}
+            {call .label data="all" /}
+        </div>
+
+        {call .cross_ /}
+    </div>
+{/template}
+
+
+/**
+ * Filter template
+ */
+{template .cross_ autoescape="strict" kind="html"}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__icon
+    {/let}
+
+    <div class="{call .rootClass/}__remove">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': 'stendhal',
+                'type': 'icon',
+                'renderParams': [
+                    'data': [
+                        'type': 'cross'
+                    ],
+                    'config': [
+                        'customClasses': [$customClasses]
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * @override
+ */
+{template .additionalClasses}
+    {call .rootClass/}_labels
+{/template}

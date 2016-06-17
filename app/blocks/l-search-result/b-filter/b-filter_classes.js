@@ -134,7 +134,7 @@ goog.scope(function() {
         this.getHandler().listen(
             this.dropdown_,
             sm.gDropdown.DropdownSelect.Event.ITEM_SELECT,
-            this.onChangeFilterItem,
+            this.onChangeFilter,
             false,
             this
         );
@@ -171,7 +171,7 @@ goog.scope(function() {
             this.getHandler().listen(
                 this.filterResetElement_,
                 goog.events.EventType.CLICK,
-                this.onChangeFilterItem,
+                this.onChangeFilter,
                 false,
                 this
             );
@@ -225,13 +225,21 @@ goog.scope(function() {
      * @return {boolean}
      * @override
      */
-    FilterClasses.prototype.isCheckedInput = function() {
-        var result = goog.base(this, 'isCheckedInput');
+    FilterClasses.prototype.isCheckedInputs = function() {
+        var result = goog.base(this, 'isCheckedInputs');
 
         if (this.inputClassesKindergartenElement_.checked == true) {
             result = true;
         }
         return result;
+    };
+
+
+    /**
+     * Handler change item
+     * @override
+     */
+    FilterClasses.prototype.onChangeItem = function() {
     };
 
 

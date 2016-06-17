@@ -75,6 +75,10 @@ goog.scope(function() {
                 sm.lSearchResult.bFilter.Filter.CssClass.ROOT,
                 element
             ),
+            selected: this.getElementByClass(
+                sm.lSearchResult.bFilter.FilterLabels.CssClass.ROOT,
+                element
+            ),
             button: this.getElementByClass(
                 cl.gButton.View.CssClass.ROOT,
                 element

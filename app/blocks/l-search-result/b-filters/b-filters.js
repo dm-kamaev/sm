@@ -102,7 +102,7 @@ goog.scope(function() {
         SCHOOL_TYPE: 'schoolType',
         CLASSES: 'classes',
         ADDITIONAL_EDUCATION: 'additionalEducation',
-        ACTIVITY: 'activity'
+        SPECIALIZED_CLASSES: 'specializedClasses'
     };
 
 
@@ -310,12 +310,12 @@ goog.scope(function() {
         var res = false;
 
         for (var i = 0; i < this.filters_.length; i++) {
-            if (this.filters_[i].isCheckedInput()) {
+            if (this.filters_[i].isCheckedInputs()) {
                 res = true;
             }
         }
 
-        if (this.filterClasses_.isCheckedInput()) {
+        if (this.filterClasses_.isCheckedInputs()) {
             res = true;
         }
         return res;
@@ -371,7 +371,7 @@ goog.scope(function() {
     Filters.prototype.onSubmit_ = function() {
         var data = this.getData();
         this.dispatchEvent({
-            'type': Filters.event.SUBMIT,
+            'type': Filters.Event.SUBMIT,
             'data': data
         });
     };

@@ -1,5 +1,6 @@
 .b-filter-search {
     width: 680px;
+    max-height: 635px;
 }
 
 .b-filter-search__section {
@@ -21,6 +22,9 @@
 }
 
 .b-filter-search__section_filter {
+    overflow: auto;
+
+    max-height: 255px;
     padding-top: 10px;
     padding-bottom: 10px;
 }
@@ -32,7 +36,13 @@
 }
 
 .b-filter-search__section_selected {
+    overflow: hidden;
+    max-height: 110px;
+
     background-color: #f7f7f1;
+
+    font-size: 0px;
+    line-height: 0px;
 }
 
 .b-filter-search__section_button {

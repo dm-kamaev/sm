@@ -5,6 +5,7 @@
  * @param? params {{
  *     data: {
  *         header: string,
+ *         name: ?string,
  *         filters: {
  *             title: ?string,
  *             items: Array<{Object}>
@@ -86,6 +87,7 @@
  * Filter form
  * @param? params {{
  *     data: {
+ *         name: ?tring,
  *         filters: {
  *             title: ?string,
  *             items: Array<Object>
@@ -94,13 +96,14 @@
  * }}
  */
 {template .filter_ private="true"}
-    <form class="{call .rootClass/}__section {call .rootClass/}__section_filter">
+    <div class="{call .rootClass/}__section {call .rootClass/}__section_filter">
         {call sm.lSearchResult.bFilter.Template.base}
             {param params: [
                 'data': [
                     'header': [
                         'title': $params.data.filters?.title
                     ],
+                    'name': $params.data.name,
                     'filters': $params.data.filters?.items
                 ],
                 'config': [
@@ -110,7 +113,7 @@
                 ]
             ]/}
         {/call}
-    </form>
+    </div>
 {/template}
 
 
@@ -123,15 +126,22 @@
  * }}
  */
 {template .selected_ private="true"}
-    <div class="{call .rootClass/}__section {call .rootClass/}__section_selected">
-        {if $params.data?.selectedItems}
-            {for $i in range($params.data?.selectedItems.length)}
-                <div class="{call .rootClass/}__selected-item">
-                    {$params.data?.selectedItems}
-                </div>
-            {/for}
-        {/if}
-    </div>
+    <form class="{call .rootClass/}__section {call .rootClass/}__section_selected">
+        {call sm.lSearchResult.bFilterLabels.Template.base}
+            {param params: [
+                'data': [
+                    'name': $params.data.name,
+                    'filters': $params.data?.selectedItems ?: ''
+                ],
+                'config': [
+                    'cannotBeHidden': true,
+                    'filtersToShow': $params.data?.selectedItems ?
+                        length($params.data?.selectedItems) :
+                        ''
+                ]
+            ]/}
+        {/call}
+    </form>
 {/template}
 
 

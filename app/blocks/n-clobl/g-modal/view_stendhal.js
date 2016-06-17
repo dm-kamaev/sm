@@ -30,6 +30,7 @@ goog.scope(function() {
      * @enum {string}
      */
     View.CssClass = {
+        CONTENT: cl.gModal.View.CssClass.CONTENT,
         CLOSER: 'g-modal__close-button',
         CLOSER_HOVER_ENABLE: 'g-modal__close-button_hover_enable'
     };
@@ -75,6 +76,23 @@ goog.scope(function() {
             false,
             this
         );
+    };
+
+
+    /**
+     * Modal onclick
+     * @param {Object} event
+     * @protected
+     */
+    View.prototype.onModalClick = function(event) {
+        var ancestor = goog.dom.getAncestorByClass(
+            event.target,
+            View.CssClass.CONTENT
+        );
+
+        if (ancestor !== this.dom.content && document.contains(event.target)) {
+            this.dispatchEvent(View.Event.CLOSE);
+        }
     };
 
 

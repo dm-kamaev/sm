@@ -130,6 +130,14 @@ sm.lSearchResult.SearchResult = function(opt_params) {
      * @private
      */
     this.filterModal_ = null;
+
+
+    /**
+     * Content filters modal
+     * @type {sm.lSearchResult.bFilterSearch.FilterSearch}
+     * @private
+     */
+    this.modalContent_ = null;
 };
 goog.inherits(sm.lSearchResult.SearchResult, goog.ui.Component);
 
@@ -574,7 +582,12 @@ goog.scope(function() {
         }
 
         this.filterModal_ = sm.gModal.ModalStendhal.render(true);
-        // this.filterModal_.renderContent('filter-search', filterParams);
+
+        this.modalContent_ = this.filterModal_.renderContent(
+            'filter-search',
+            filterParams,
+            this
+        );
     };
 
 
