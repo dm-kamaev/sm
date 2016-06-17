@@ -67,6 +67,8 @@ if (config.environment == 'development') {
     app.use('/api-debug', express.static(path.join(__dirname, '/api-debug')));
 }
 
+app.use('/api', api.mail.router);
+
 require('./app/middleware/csrf')(app);
 
 app.use(morgan('dev',  {
@@ -85,6 +87,7 @@ app.use('/api', api.school.router);
 app.use('/api', api.geo.router);
 app.use('/api', api.feedback.router);
 app.use('/api', api.favorite.router);
+app.use('/api', api.entity.router);
 
 async(function() {
     var startupControl = new StartupControl({

@@ -24,7 +24,7 @@ var SchoolUniversity = db.define('SchoolUniversity', {
     tableName: 'school_university',
 
     classMethods: {
-        associate: function (models) {
+        associate: function(models) {
             SchoolUniversity.belongsTo(models.School, {
                 foreignKey: 'school_id'
             });

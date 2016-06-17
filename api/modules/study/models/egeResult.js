@@ -22,7 +22,7 @@ var EgeResult = db.define('EgeResult', {
     underscored: true,
     tableName: 'ege_result',
     classMethods: {
-        associate: function (models) {
+        associate: function(models) {
             EgeResult.belongsTo(models.School, {
                 foreignKey: 'school_id'
             });

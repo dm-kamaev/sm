@@ -5,21 +5,21 @@ const await = require('asyncawait/await');
 const async = require('asyncawait/async');
 const path = require('path');
 const sequelize = require.main.require('../../../app/components/db');
-const SqlHelper = require('../../console/modules/sqlHelper/SqlHelper.js');
 
-const folder = path.join(__dirname, '../../api/modules/study/migrations'),
-      scores = require(
+const folder = path.join(__dirname, '../../api/modules/study/migrations');
+const scores = require(
           path.join(folder, '20160531131100-update-ege.json')
       );
 
 module.exports = {
     up: async(function() {
-        var subjects = getSubjects();
+        var subjects = getSubjects(),
+            subject;
 
         deleteOldExams();
 
-        var previousEgeScores = scores["ege"]["2014"];
-        for(var subject in previousEgeScores) {
+        var previousEgeScores = scores['ege']['2014'];
+        for (subject in previousEgeScores) {
             insertEgeResults(
                 subjects[subject],
                 previousEgeScores[subject],
@@ -27,8 +27,8 @@ module.exports = {
             );
         }
 
-        var lastEgeScores = scores["ege"]["2015"];
-        for(var subject in lastEgeScores) {
+        var lastEgeScores = scores['ege']['2015'];
+        for (subject in lastEgeScores) {
             insertEgeResults(
                 subjects[subject],
                 lastEgeScores[subject],

@@ -7,7 +7,7 @@
  *     data: {
  *         schools: [{
  *             id: number,
- *             url: string,
+ *             alias: string,
  *             name: {
  *                 light: string,
  *                 bold: string
@@ -21,8 +21,8 @@
  *         }],
  *         filters: {sm.lSearchResult.bFilters.Template.Params},
  *         user: ?{
- *            firstName: ?string,
- *            lastName: ?string
+ *            firstName: (string|undefined),
+ *            lastName: (string|undefined)
  *         },
  *         favorites: sm.bSchoolListPaged.Template.Params.Data,
  *         authSocialLinks: {
@@ -59,7 +59,7 @@
  *             id: number,
  *             name: string,
  *             description: string,
- *             url: string,
+ *             alias: string,
  *             totalScore: number,
  *             addresses: [{
  *                 lat: number,
@@ -98,7 +98,6 @@
                     'user': $params.data?.user,
                     'favorites': $params?.data?.favorites
                 ],
-                'authSocialLinks': $params.data?.authSocialLinks,
                 'landingScript': '/l-search-result.js',
                 'openGraph': [
                     'title': 'Школы «Мела»',
@@ -128,8 +127,16 @@
  * @override
  */
 {template .content_ autoescape="strict" kind="html"}
+    {let $data: [
+        'searchSettings': $params.searchSettings,
+        'params': [
+            'isUserAuthorized': $params.data?.user ? true : false,
+            'authSocialLinks': $params.data?.authSocialLinks
+        ]
+    ] /}
+
     <div class="l-search-result"
-         data-params="{call goog.json.serialize data="$params.searchSettings" /}">
+        data-params="{call goog.json.serialize data="$data" /}">
          {call .innerContent_ data="all" /}
     </div>
 
@@ -173,7 +180,7 @@
  *             id: number,
  *             name: string,
  *             description: string,
- *             url: string,
+ *             alias: string,
  *             totalScore: number,
  *             addresses: list<[
  *                 lat: number,
@@ -255,13 +262,13 @@
  */
 {template .listHeaderText}
     <span class="l-search-result__list-header-text">
-        {if $params.data?.seo and $params.data?.seo?.title}
-            {call .headerText_ data="all" /}
-            {call .headerDescription_ data="all" /}
-        {else}
-            {call .generateHeaderText_ data="all" /}
-        {/if}
-    </span>
+            {if $params.data?.seo and $params.data?.seo?.title}
+                {call .headerText_ data="all" /}
+                {call .headerDescription_ data="all" /}
+            {else}
+                {call .generateHeaderText_ data="all" /}
+            {/if}
+        </span>
 {/template}
 
 

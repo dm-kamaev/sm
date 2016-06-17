@@ -9,11 +9,12 @@ const CommentPublicationDateManipulator = require(
     '../../console/modules/comments/CommentPublicationDateManipulator');
 
 const folder = path.join(__dirname, '../../api/modules/comment/migrations');
-const pathToData = path.join(folder, '20160520215940-add-publication-date.json');
+const pathToData =
+    path.join(folder, '20160520215940-add-publication-date.json');
 const data = require(pathToData).data;
 
 module.exports = {
-    up: async(function () {
+    up: async(function() {
         var commentPublicationDateManipulator =
             new CommentPublicationDateManipulator();
         sequelize.options.logging = false;
@@ -23,7 +24,7 @@ module.exports = {
             await(commentPublicationDateManipulator.updateDates(filePath));
         });
     }),
-    down: function () {
+    down: function() {
         return null;
     }
 };

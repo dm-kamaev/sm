@@ -31,7 +31,7 @@ var OlimpResult = db.define('OlimpResult', {
     underscored: true,
     tableName: 'olimp_result',
     classMethods: {
-        associate: function (models) {
+        associate: function(models) {
             OlimpResult.belongsTo(models.School, {
                 foreignKey: 'school_id'
             });

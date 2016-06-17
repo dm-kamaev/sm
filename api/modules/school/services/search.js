@@ -8,14 +8,13 @@ var subjectView = require('../../study/views/subjectView');
 var searchView = require('../views/searchView');
 
 var searchTypeEnum = require('../enums/searchType');
-var schoolTypeEnum = require('../enums/schoolType');
 
 const mapPositionType = require('../enums/mapPositionType');
 
 exports.name = 'search';
 
-exports.getSchoolRecords = async (function(id) {
-    return await (models.SearchData.findAll({
+exports.getSchoolRecords = async(function(id) {
+    return await(models.SearchData.findAll({
         where: {
             schoolId: id
         }
@@ -31,8 +30,8 @@ exports.getSchoolRecords = async (function(id) {
 var getSearchSubstrings = function(string) {
     return string.toLowerCase()
         .trim()
-        .replace(/[^\wа-яА-ЯёЁ\-\s]/g,'') //remove everything except letters, numbers and spaces
-        .trim()
+        .replace(/[^\wа-яА-ЯёЁ\-\s]/g, '') // remove everything except
+        .trim()                            // letters, numbers and spaces
         .split(' ');
 };
 
@@ -79,7 +78,6 @@ exports.generateSqlConfig = function(opt_schoolsAmount, opt_page) {
             'school.full_name AS "fullName"',
             'school.rank_dogm AS "rankDogm"',
             'school.description',
-            'school.url',
             'school.score',
             'school.total_score AS "totalScore"',
             'school.score_count AS "scoreCount"',
@@ -100,7 +98,6 @@ exports.generateSqlConfig = function(opt_schoolsAmount, opt_page) {
                 'school.full_name',
                 'school.rank_dogm',
                 'school.description',
-                'school.url',
                 'school.score',
                 'school.total_score',
                 'school.score_count',
@@ -152,12 +149,13 @@ exports.generateSqlConfig = function(opt_schoolsAmount, opt_page) {
 /**
  * @param {object} model
  * @param {string} searchString
- * @return {promise<array<object>> || array<>}
+ * @return {promise<array<object>>|array}
  */
 var findAnyInModel = function(model, searchString) {
     var stringArr = getSearchSubstrings(searchString);
-    if (!stringArr || stringArr=='')
+    if (!stringArr || stringArr == '') {
         return [];
+    }
 
     var params = {
         where: {
@@ -198,13 +196,14 @@ var iLikeSimilarLetter = function(searchSubstring) {
  * @param {string} string
  * @param {number} position - position, what will be replaced
  * @param {string} char - new char at position
+ * @return {string}
  */
 var replaceAt = function(string, position, char) {
     return string.substr(0, position) + char + string.substr(position + 1);
 };
 
 /**
- * @param {array<number>}
+ * @param {array<number>} arr
  * @return {string}
  */
 var intArrayToSql = function(arr) {
@@ -212,16 +211,16 @@ var intArrayToSql = function(arr) {
 };
 
 /**
- * @params {string} field
- * @params {string} string
- * @params {string} [type = 'and']
+ * @param {string} field
+ * @param {string} string
+ * @param {string} [type = 'and']
  * @return {string}
  */
 var generateSqlFilter = function(field, string, type) {
     type = type || 'AND';
     var subStrings = getSearchSubstrings(string);
     return subStrings
-        .map(substring => field + ' ILIKE \'%' +substring + '%\'')
+        .map(substring => field + ' ILIKE \'%' + substring + '%\'')
         .join(' ' + type + ' ');
 };
 
@@ -251,8 +250,7 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
                 generateOrder(searchParams.sortType)
             );
         }
-    }
-    else {
+    } else {
         if (searchParams.name) {
             var values = [
                 generateSqlFilter('school.name', searchParams.name, 'AND'),
@@ -281,7 +279,7 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
             sqlOptions.where.push('school.education_interval @> ' + classArr);
         }
 
-         if (searchParams.sortType) {
+        if (searchParams.sortType) {
             sqlOptions.order.unshift(
                 generateOrder(searchParams.sortType)
             );
@@ -292,8 +290,10 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
             searchDataWhere.values.push({
                 type: 'AND',
                 values: [
-                    'search_data.type = \'' + searchTypeEnum.fields.SCHOOL_TYPE + '\'',
-                    'search_data.values && ' + intArrayToSql(searchParams.schoolType)
+                    'search_data.type = \'' +
+                        searchTypeEnum.fields.SCHOOL_TYPE + '\'',
+                    'search_data.values && ' +
+                        intArrayToSql(searchParams.schoolType)
                 ]
             });
         }
@@ -325,8 +325,10 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
             searchDataWhere.values.push({
                 type: 'AND',
                 values: [
-                    'search_data.type = \'' + searchTypeEnum.fields.OLIMPIAD+ '\'',
-                    'search_data.values @> ' + intArrayToSql(searchParams.olimp)
+                    'search_data.type = \'' +
+                        searchTypeEnum.fields.OLIMPIAD + '\'',
+                    'search_data.values @> ' +
+                        intArrayToSql(searchParams.olimp)
                 ]
             });
         }
@@ -342,22 +344,26 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
         }
 
         if (searchDataCount) {
-            //search_data must be first in the from clause
+            // search_data must be first in the from clause
             sqlOptions.from.unshift('search_data');
             sqlOptions.where.push(searchDataWhere);
             sqlOptions.where.push('school.id = search_data.school_id');
-            sqlOptions.having.push(['COUNT(DISTINCT search_data.id) ', ' = ', searchDataCount]);
+            sqlOptions.having.push(
+                ['COUNT(DISTINCT search_data.id) ',
+                ' = ',
+                searchDataCount]
+            );
         }
         if (isGeoDataJoined) {
-             sqlOptions.join.push({
-                 type: 'LEFT OUTER',
-                 values: [
-                     'address on address.school_id = school.id',
-                     'area on area.id = address.area_id',
-                     'address_metro on address_metro.address_id = address.id',
-                     'metro on metro.id = address_metro.metro_id'
-                 ]
-             });
+            sqlOptions.join.push({
+                type: 'LEFT OUTER',
+                values: [
+                    'address on address.school_id = school.id',
+                    'area on area.id = address.area_id',
+                    'address_metro on address_metro.address_id = address.id',
+                    'metro on metro.id = address_metro.metro_id'
+                ]
+            });
         }
     }
 };
@@ -386,7 +392,6 @@ var generateWhereSql = function(where, opt_type) {
         } else {
             throw new Error('Unexpected type on WHERE parsing');
         }
-
     }).join(' ' + type + ' ');
 };
 
@@ -397,8 +402,8 @@ var generateJoin = function(join) {
 };
 
 /**
- * @params {object} sqlOptions
- * @params {bool} opt_notUseDelimiter - if true not add ';' symbol
+ * @param {object} options
+ * @param {bool} opt_notUseDelimiter - if true not add ';' symbol
  * at the end of sqlstring, for inner from query
  * @return {string}
  */
@@ -406,41 +411,47 @@ exports.generateSearchSql = function(options, opt_notUseDelimiter) {
     var selectStr = 'SELECT ' + options.select.join(', ');
     var fromStr = ' FROM ';
 
-    if(!Array.isArray(options.from)) {
-         fromStr += '(' + this.generateSearchSql(options.from, true)
-                + ') AS "' + options.from.as + '"';
-        innerFrom = true;
+    if (!Array.isArray(options.from)) {
+        fromStr += '(' + this.generateSearchSql(options.from, true) +
+            ') AS "' + options.from.as + '"';
     } else {
-        fromStr +=  options.from.join(', ');
+        fromStr += options.from.join(', ');
     }
 
     var whereStr = '';
-    if (options.where.length)
+    if (options.where.length) {
         whereStr = ' WHERE ' + generateWhereSql(options.where);
+    }
     var groupStr = '';
-    if (options.group.length)
+    if (options.group.length) {
         groupStr = ' GROUP BY ' + options.group.join(', ');
+    }
     var orderStr = '';
-    if (options.order.length)
+    if (options.order.length) {
         orderStr = ' ORDER BY ' + options.order.join(', ');
+    }
     var havingStr = '';
-    if (options.having.length)
+    if (options.having.length) {
         havingStr = ' HAVING ' + options.having
             .map(rec => rec[0] + rec[1] + rec[2])
             .join(' AND ');
+    }
     var joinStr = '';
-    if (options.join.length)
+    if (options.join.length) {
         joinStr = options.join
             .map(onejoin => generateJoin(onejoin))
             .join(', ');
+    }
     var limitStr = '';
-    if (options.limit)
+    if (options.limit) {
         limitStr = ' LIMIT ' + options.limit;
+    }
     var offsetStr = '';
-    if (options.offset)
+    if (options.offset) {
         offsetStr = ' OFFSET ' + options.offset;
-
-    var result = selectStr + fromStr + joinStr + whereStr + groupStr + havingStr + orderStr + limitStr + offsetStr;
+    }
+    var result = selectStr + fromStr + joinStr + whereStr + groupStr +
+        havingStr + orderStr + limitStr + offsetStr;
     if (!opt_notUseDelimiter) {
         result += ';';
     }
@@ -448,15 +459,16 @@ exports.generateSearchSql = function(options, opt_notUseDelimiter) {
 };
 
 /**
- * @params {string} string
+ * @param {string} string
  * @return {object}
  */
 exports.generateFilter = function(string) {
     var subStrings = getSearchSubstrings(string);
     return {
         $and: subStrings.filter(substr => {
-            if (substr)
+            if (substr) {
                 return substr;
+            }
         })
         .map(substr => {
             return {
@@ -508,7 +520,6 @@ exports.getSchoolTypesByAliases = function(aliases) {
  * @param {?number} params.page
  */
 exports.initSearchParams = async(function(params) {
-
     /** Transform aliases in filters into ids **/
     var filterTypes = searchTypeEnum.toCamelCaseArray();
     var ids = filterTypes.map(filterType => {
@@ -563,7 +574,7 @@ exports.getMapPositionParams = function(params) {
         result = {
             type: mapPositionType.AREA
         };
-    } else if(params.name === '' && !isFiltersSelected(params)) {
+    } else if (params.name === '' && !isFiltersSelected(params)) {
         result = {
             center: services.city.getCenterCoords(),
             type: mapPositionType.CITY_CENTER
@@ -584,7 +595,7 @@ exports.getMapPositionParams = function(params) {
  */
 var isFiltersSelected = function(params) {
     var filterTypes = searchTypeEnum.toCamelCaseArray(),
-        isSelected = lodash.some(filterTypes, (filterType) => {
+        isSelected = lodash.some(filterTypes, filterType => {
             return params[filterType].length;
         });
     return isSelected || params.classes.length;
@@ -598,7 +609,7 @@ var isFiltersSelected = function(params) {
  *
  */
 exports.addSearchData = async(function(schoolId, values, searchType) {
-    await (models.SearchData.create({
+    await(models.SearchData.create({
         schoolId: schoolId,
         type: searchType,
         values: values
@@ -619,7 +630,7 @@ exports.setSchoolType = async(function(schoolId, value) {
     }));
     var values = [];
     values.push(value);
-    await (models.SearchData.create({
+    await(models.SearchData.create({
         schoolId: schoolId,
         type: searchTypeEnum.fields.SCHOOL_TYPE,
         values: values
@@ -629,21 +640,21 @@ exports.setSchoolType = async(function(schoolId, value) {
 
 /**
  * Get one data
- * @param {number} searh_data_id
+ * @param {number} searhDataId
  * @return {Object} instance of SearhData model
  */
-exports.getById = async(function(searh_data_id) {
+exports.getById = async(function(searhDataId) {
     return await(models.Department.findOne({
-        where: {id: searh_data_id}
+        where: {id: searhDataId}
     }));
 });
 
 
 /**
  * Delete searshData
- * @param {int} searh_data_id
+ * @param {number} searhDataId
  */
-exports.deleteSearchData = async(function(searh_data_id) {
-    var instance = await(exports.getById(searh_data_id));
+exports.deleteSearchData = async(function(searhDataId) {
+    var instance = await(exports.getById(searhDataId));
     instance.destroy();
 });

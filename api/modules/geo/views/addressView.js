@@ -1,5 +1,3 @@
-const lodash = require('lodash');
-
 const metroView = require('./metroView.js');
 const areaView = require('./areaView.js');
 const departmentView = require('./departmentView.js');
@@ -43,9 +41,9 @@ addressView.list = function(addresses, opt_options) {
  * @param {?bool} opt_options.filterByDepartment
  * @return {array<object>}
  */
-addressView.stageList = function (addresses, opt_options) {
-    var addresses = this.list(addresses, opt_options),
-        stagesEnum = [
+addressView.stageList = function(addresses, opt_options) {
+    addresses = this.list(addresses, opt_options);
+    var stagesEnum = [
             'Начальные классы',
             'Средние классы',
             'Старшие классы',
@@ -84,7 +82,6 @@ addressView.stageList = function (addresses, opt_options) {
         stages[0].name = 'Адреса';
     }
     return stages;
-
 };
 
 
@@ -117,7 +114,7 @@ addressView.default = function(addresses) {
             lng: adr.coords[1],
             name: adr.name,
             stages: getStages(adr.departments)
-        }
+        };
     });
 };
 
@@ -172,15 +169,15 @@ var filterBydepartment = function(addresses) {
     return addresses.filter(address => {
         var result = false;
         if (!address.departments || !address.departments.length) {
-            result = true; //show addresses with no departments
-        }
-        else {
+            result = true; // show addresses with no departments
+        } else {
             var neededStage = address.departments.find(department => {
                 if (department.stage == stages.ELEMENTARY ||
                     department.stage == stages.MIDDLE_HIDE ||
                     department.stage == stages.MIDDLE ||
-                    department.stage == stages.HIGH)
+                    department.stage == stages.HIGH) {
                     return true;
+                }
             });
 
             if (neededStage) {
@@ -189,7 +186,6 @@ var filterBydepartment = function(addresses) {
         }
         return result;
     });
-
 };
 
 

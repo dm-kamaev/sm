@@ -1,10 +1,13 @@
 'use strict';
 
 module.exports = {
-    up: function (queryInterface, Sequelize) {
+    up: function(queryInterface, Sequelize) {
         return queryInterface.dropTable('department_address')
             .then(function() {
-                return queryInterface.removeColumn('department', 'availability');
+                return queryInterface.removeColumn(
+                    'department',
+                    'availability'
+                );
             })
             .then(function() {
                 return queryInterface.addColumn('department', 'address_id', {
@@ -17,7 +20,7 @@ module.exports = {
                 });
             });
     },
-    down: function (queryInterface, Sequelize) {
-        return null; //TODO: create department back here
+    down: function(queryInterface, Sequelize) {
+        return null; // TODO: create department back here
     }
 };

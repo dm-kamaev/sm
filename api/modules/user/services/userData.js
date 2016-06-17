@@ -1,10 +1,6 @@
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var models = require('../../../../app/components/models').all;
-var services = require('../../../../app/components/services').all;
-var sequelize  = require('../../../../app/components/db');
-var sequelizeInclude = require('../../../components/sequelizeInclude');
-var Enum = require('../../../components/enum').all;
 var lodash = require('lodash');
 var service = {
     name: 'userData'

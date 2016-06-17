@@ -65,10 +65,10 @@ var isUpdateNeeded = function(item) {
 
 /**
  * Update each user data item
- * @param item
+ * @param {Object} item
  * @return {{
  *     id: number,
- *     grade: number|null
+ *     grade: (number|null)
  * }}
  */
 var updateUserDataItem = function(item) {

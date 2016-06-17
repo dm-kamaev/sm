@@ -48,9 +48,9 @@
                     'url': '/',
                     'searchRedirect': true,
                     'bottomLine': true,
-                    'user': $params.data?.user
+                    'user': $params.data?.user,
+                    'favorites': $params?.data?.favorites
                 ],
-                'authSocialLinks': $params.data?.authSocialLinks,
                 'landingScript': '/l-error-not-found.js'
             ],
             'config': [
@@ -71,7 +71,13 @@
  * @param? params {?}
  */
 {template .layoutContent_ autoescape="strict" kind="html"}
-    <div class="l-error-not-found">
+    {let $data: [
+        'isUserAuthorized': $params?.data?.user ? true : false,
+        'authSocialLinks': $params.data?.authSocialLinks
+    ] /}
+    <div class="l-error-not-found"
+        data-params="{call goog.json.serialize data="$data" /}">
+
         <div class="l-error-not-found__body">
             {call sm.lErrorNotFound.Template.title_}
                 {param params: [

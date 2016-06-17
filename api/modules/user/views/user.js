@@ -5,21 +5,23 @@ var userView = {};
  * Default view for user
  * @param {{
  *     id: number,
- *     firstName: (string||undefined),
- *     lastName: (string||undefined)
+ *     firstName: (string|undefined),
+ *     lastName: (string|undefined)
  * }} user
  * @return {{
- *     id: number
- *     firstName: string
+ *     id: number,
+ *     firstName: string,
  *     lastName: string
- * }}
+ * }} | null
  */
 userView.default = function(user) {
-    return {
+    var result = {
         id: user.id || undefined,
         firstName: user.firstName || '',
         lastName: user.lastName || ''
     };
+
+    return user.id ? result : null;
 };
 
 
@@ -30,20 +32,21 @@ userView.default = function(user) {
  *     firstName: (string|undefined),
  *     lastName: (string|undefined)
  * }} user
- * @param isCommented {boolean}
- * @return {{
+ * @param {boolean} isCommented
+ * @return {?{
  *     id: (number|undefined),
  *     firstName: string,
  *     lastName: string
  * }}
  */
 userView.school = function(user, isCommented) {
-    return {
-        id: user.id || undefined,
+    var result = {
+        id: user.id,
         firstName: user.firstName || '',
         lastName: user.lastName || '',
         isCommented: isCommented
     };
+    return user.id ? result : null;
 };
 
 

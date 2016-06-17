@@ -23,13 +23,13 @@ departmentView.list = function(departments) {
  */
 departmentView.classes = function(departments) {
     var stage,
-        deps = departments.map(dep => {return dep.stage;}),
+        deps = departments.map(dep => { return dep.stage; }),
         elementary = deps.indexOf(departmentStage.ELEMENTARY),
-        middle_hide = deps.indexOf(departmentStage.MIDDLE_HIDE),
+        middleHide = deps.indexOf(departmentStage.MIDDLE_HIDE),
         middle = deps.indexOf(departmentStage.MIDDLE),
         high = deps.indexOf(departmentStage.HIGH);
 
-    if (elementary != -1 && middle_hide != -1) {
+    if (elementary != -1 && middleHide != -1) {
         stage = '1 — 11 классы';
     } else if (elementary != -1 && middle != -1) {
         stage = 'Начальные и средние классы';
@@ -37,7 +37,7 @@ departmentView.classes = function(departments) {
         stage = 'Начальные и старшие классы';
     } else if (elementary != -1) {
         stage = 'Начальные классы';
-    } else if (middle_hide != -1) {
+    } else if (middleHide != -1) {
         stage = 'Средние и старшие классы';
     } else if (middle != -1) {
         stage = 'Средние классы';
@@ -47,5 +47,5 @@ departmentView.classes = function(departments) {
         stage = 'Другие адреса';
     }
     return stage;
-}
+};
 module.exports = departmentView;

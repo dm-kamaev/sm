@@ -5,12 +5,6 @@ const async = require('asyncawait/async');
 const squel = require('squel');
 const sequelize = require('../../app/components/db');
 
-const path  = require('path');
-const ModelArchiver = require(
-    '../../console/modules/modelArchiver/ModelArchiver.js');
-const School = require('../../api/modules/school/models/school');
-
-
 module.exports = {
     up: async(function() {
         var sqlQuery = squel.update()

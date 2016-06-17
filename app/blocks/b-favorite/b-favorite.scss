@@ -1,5 +1,6 @@
 @import "../i-media/i-media";
 
+/** Layout **/
 .b-favorite {
     display: inline-block;
 
@@ -39,10 +40,14 @@
 }
 
 .b-favorite__hint-content {
-    padding: 15px 30px;
+    padding: 10px 30px 15px;
 }
 
-.b-favorite__hint-content_text {
+.b-favorite__hint-content-list {
+    display: none;
+}
+
+.b-favorite__hint-content-text {
     text-align: center;
 
     color: #808080;
@@ -50,20 +55,43 @@
     font: 13px Arial, sans-serif;
     line-height: 18px;
 }
+/** Layout end **/
 
-.b-favorite__hint-content_list {
-    display: none;
-}
-
+/** Possible states **/
 .b-favorite_filled {
-    .b-favorite__hint-content_list {
+    .b-favorite__hint-content-list {
         display: block;
     }
-    
-    .b-favorite__hint-content_text {
+
+    .b-favorite__hint-content-text {
         display: none;
     }
 }
+
+.b-favorite_user-not-authorized {
+    .b-favorite__hint-content {
+        &.b-favorite__hint-content_user-authorized {
+            display: none;
+        }
+
+        &.b-favorite__hint-content_user-not-authorized {
+            display: block;
+        }
+    }
+}
+
+.b-favorite_user-authorized {
+    .b-favorite__hint-content {
+        &.b-favorite__hint-content_user-authorized {
+            display: block;
+        }
+
+        &.b-favorite__hint-content_user-not-authorized {
+            display: none;
+        }
+    }
+}
+/** Possible states end **/
 
 @include media-xs {
     .b-favorite {

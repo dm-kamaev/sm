@@ -9,10 +9,10 @@ specializedClassesView.list = function(specializedClasses) {
     var steps = ['Начальная школа', 'Средняя школа', 'Старшая школа'];
 
     var itemsData = [
-            specializedClassesView.itemsByClasses_(specializedClasses, 0, 4),
-            specializedClassesView.itemsByClasses_(specializedClasses, 5, 9),
-            specializedClassesView.itemsByClasses_(specializedClasses, 9, 11)
-        ];
+        specializedClassesView.itemsByClasses_(specializedClasses, 0, 4),
+        specializedClassesView.itemsByClasses_(specializedClasses, 5, 9),
+        specializedClassesView.itemsByClasses_(specializedClasses, 9, 11)
+    ];
 
     var items = itemsData
             .map((data, index) => {
@@ -34,17 +34,17 @@ specializedClassesView.list = function(specializedClasses) {
  * @return {array}
  */
 specializedClassesView.itemsByClasses_ = function(
-    specializedClasses, start, end) {
-
+    specializedClasses, start, end
+) {
     var classes = lodash.filter(specializedClasses, function(collection) {
-        if(collection[0] >= start && collection[0] <= end) {
+        if (collection[0] >= start && collection[0] <= end) {
             return collection[1];
         }
     });
 
     var items = [];
 
-    lodash.forEach(classes, function(item){
+    lodash.forEach(classes, function(item) {
         items.push(lodash.last(item));
     });
 
@@ -52,7 +52,6 @@ specializedClassesView.itemsByClasses_ = function(
 };
 
 /**
- * @param {object} specializedClasses
  * @param {array} items
  * @param {srting=} opt_name
  * @return {object}
@@ -67,6 +66,6 @@ specializedClassesView.listParams_ = function(items, opt_name) {
             type: 'unfolded'
         }
     };
-}
+};
 
 module.exports = specializedClassesView;

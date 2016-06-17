@@ -1,14 +1,21 @@
 {namespace sm.bAuthorizationLink.Template}
 
+
+/**
+ * Authorization link parameters
+ * @typedef {{
+ *     user: ?{
+ *         firstName: ?string,
+ *         lastName: ?string
+ *     }
+ * }} sm.bAuthorizationLink.Params.Data
+ */
+
+
 /**
  * Constructor
  * @param? params {
- *     data: {
- *        user: ?{
- *            firstName: ?string,
- *            lastName: ?string
- *        }
- *     }
+ *     data: sm.bAuthorizationLink.Params.Data
  * }
  * @extends cl.iControl.Template
  * @constructor
@@ -20,14 +27,9 @@
 
 /**
  * Body
- * @param? params {
- *     data: {
- *        user: ?{
- *            firstName: ?string,
- *            lastName: ?string
- *        }
- *     }
- * }
+ * @param? params {{
+ *     data: sm.bAuthorizationLink.Params.Data
+ * }}
  * @override
  */
 {template .body}
@@ -65,7 +67,6 @@
 
 /**
  * authorization link Tooltip
- * @param? params {?}
  */
 {template .tooltip_ kind="html" private="true"}
     {let $tooltipData kind="html"}
@@ -96,7 +97,6 @@
 
 /**
  * tooltip Data
- * @param? params {?}
  */
 {template .tooltipData_ kind="html" private="true"}
     <div class="{call .rootClass/}__hint-content
@@ -135,7 +135,6 @@
 
 /**
  * tooltip Logout
- * @param? params {?}
  */
 {template .tooltipLogout_ kind="html" private="true"}
     {let $customClasses kind="html"}
@@ -162,14 +161,9 @@
 
 /**
  * userName
- * @param? params {
- *     data: {
- *        user: ?{
- *            firstName: ?string,
- *            lastName: ?string
- *        }
- *     }
- * }
+ * @param? params {{
+ *     data: sm.bAuthorizationLink.Params.Data
+ * }}
  */
 {template .userName_ kind="html" private="true"}
     {if $params.data?.user?.firstName}
@@ -183,14 +177,9 @@
 
 /**
  * Css classes
- * @param? params {
- *     data: {
- *        user: ?{
- *            firstName: ?string,
- *            lastName: ?string
- *        }
- *     }
- * }
+ * @param? params {{
+ *     data: sm.bAuthorizationLink.Params.Data
+ * }}
  * @override
  */
 {template .additionalClasses}

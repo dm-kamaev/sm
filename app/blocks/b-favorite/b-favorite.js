@@ -1,6 +1,7 @@
 goog.provide('sm.bFavorite.Favorite');
 
 goog.require('cl.iControl.Control');
+goog.require('sm.iAuthorization.Authorization');
 
 
 
@@ -27,7 +28,28 @@ goog.inherits(sm.bFavorite.Favorite, cl.iControl.Control);
 
 goog.scope(function() {
     var Favorite = sm.bFavorite.Favorite,
-        View = sm.bFavorite.View;
+        View = sm.bFavorite.View,
+        Authorization = sm.iAuthorization.Authorization;
+
+
+    /**
+     * Add given item to favorites
+     * @param {sm.bSchoolListItem.SchoolListItem.Params} favoriteItem
+     */
+    Favorite.prototype.addItem = function(favoriteItem) {
+        this.schoolListPaged_.addItem(favoriteItem);
+        this.updateState_();
+    };
+
+
+    /**
+     * Remove item with given id from favorites
+     * @param {number} itemId
+     */
+    Favorite.prototype.removeItem = function(itemId) {
+        this.schoolListPaged_.removeItem(itemId);
+        this.updateState_();
+    };
 
 
     /**
@@ -40,6 +62,41 @@ goog.scope(function() {
         this.initSchoolListPaged_();
     };
 
+    /**
+     * @override
+     */
+    Favorite.prototype.enterDocument = function() {
+        goog.base(this, 'enterDocument');
+
+        this.viewListen(
+            View.Event.AUTHORIZE,
+            this.onAuthorize_
+        );
+    };
+
+
+
+    /**
+     * Init new state and set it by view method
+     * @private
+     */
+    Favorite.prototype.updateState_ = function() {
+        var state = this.schoolListPaged_.isNotEmpty() ?
+            View.State.FILLED :
+            View.State.EMPTY;
+        this.getView().setState(state);
+    };
+
+
+    /**
+     * Handles authorize action
+     * @private
+     */
+    Favorite.prototype.onAuthorize_ = function() {
+        var authorization = Authorization.getInstance();
+
+        authorization.authorize();
+    };
 
     /**
      * init School List Paged

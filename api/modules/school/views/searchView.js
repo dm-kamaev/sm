@@ -1,6 +1,5 @@
 'use strict';
 const lodash = require('lodash');
-const searchType = require('../enums/searchType');
 
 var searchView = {};
 
@@ -9,10 +8,10 @@ var searchView = {};
  * @param {Array.<Object>} typeInstances
  * @return {Array.<number>}
  */
-searchView.schoolTypeFilterIds = function (typeInstances) {
-    return typeInstances.map( (typeInstance) => {
-            return typeInstance.id;
-        }
+searchView.schoolTypeFilterIds = function(typeInstances) {
+    return typeInstances.map(typeInstance => {
+        return typeInstance.id;
+    }
     );
 };
 
@@ -91,7 +90,7 @@ var hasCheckedFilters = function(schoolFilters, classesFilter) {
         classesFilter.data.isKindergartenSelected ||
         classesFilter.data.selectedClass;
 
-    if(!isChecked) {
+    if (!isChecked) {
         isChecked = lodash.some(schoolFilters, function(subjectFilter) {
             return subjectFilter.config.isShowed;
         });
@@ -103,7 +102,7 @@ var hasCheckedFilters = function(schoolFilters, classesFilter) {
 /**
  * Generate school filters
  * @param {Array.<Object.<string, string|number>>} filters
- * @param searchParams {Object.<string, Array.<number>>}
+ * @param {Object.<string, Array.<number>>} searchParams
  * @return {Array.<Object.<string, Object>>}
  */
 searchView.schoolFilters = function(filters, searchParams) {
@@ -111,7 +110,7 @@ searchView.schoolFilters = function(filters, searchParams) {
         var filterType = lodash.camelCase(filter.filter),
             checkedItems = searchParams[filterType];
 
-        return schoolFilter(filter, checkedItems, filterType)
+        return schoolFilter(filter, checkedItems, filterType);
     });
 };
 
@@ -164,11 +163,11 @@ var filterTitle = function(filterType) {
 var filterTooltip = function(filterType) {
     var tooltips = {
         schoolType: '',
-        ege:  'Выше среднего значения по\u00A0нашей базе.' +
+        ege: 'Выше среднего значения по\u00A0нашей базе.' +
             ' Учитываются результаты московских школ за\u00A0последний год.',
         gia: 'Выше среднего значения по\u00A0нашей базе.' +
             ' Учитываются результаты московских школ за\u00A0последний год.',
-        olimp:  ''
+        olimp: ''
     };
     return tooltips[filterType];
 };
@@ -181,12 +180,12 @@ var filterTooltip = function(filterType) {
  * @return {Array.<Object.<string, boolean|string>>}
  */
 var filterValues = function(filters, checkedFilters) {
-    return filters.map((filter) => {
+    return filters.map(filter => {
         return {
             label: filter.label,
             value: filter.value,
             isChecked: isCheckedItem(checkedFilters, filter.id)
-        }
+        };
     });
 };
 
@@ -198,13 +197,13 @@ var filterValues = function(filters, checkedFilters) {
  */
 var isCheckedItem = function(checkedFilters, filterId) {
     return !!checkedFilters.find(checkedFilter => {
-        return checkedFilter == filterId
+        return checkedFilter == filterId;
     });
 };
 
 /**
  * Verify that one of filters is checked and return true in this case
- * @param filters
+ * @param {Array<Object>} filters
  * @return {boolean}
  */
 var hasCheckedItems = function(filters) {
@@ -227,7 +226,7 @@ searchView.classesFilter = function(searchParams) {
             },
             name: 'classes',
             isKindergartenSelected: lodash.some(
-                selectedClasses, (selectedClass) => {
+                selectedClasses, selectedClass => {
                     return parseInt(selectedClass) === 0;
                 }
             ),
@@ -236,7 +235,6 @@ searchView.classesFilter = function(searchParams) {
             })
         }
     };
-
 };
 
 module.exports = searchView;

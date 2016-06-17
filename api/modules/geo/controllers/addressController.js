@@ -1,7 +1,7 @@
 var services = require('../../../../app/components/services').all;
-var schoolView = require('../../school/views/schoolView');
 
-var logger = require('../../../../app/components/logger/logger').getLogger('app');
+var logger =
+    require('../../../../app/components/logger/logger').getLogger('app');
 
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
@@ -12,7 +12,7 @@ var await = require('asyncawait/await');
  * @apiGroup School
  * @apiName Addresses
  */
-exports.getAddresses = async (function(req, res) {
+exports.getAddresses = async(function(req, res) {
     var result = '';
     try {
         var schoolId = req.params.id;
@@ -33,18 +33,17 @@ exports.getAddresses = async (function(req, res) {
  * @apiGroup School
  * @apiName Address
  */
-exports.getAddress = async (function(req, res) {
+exports.getAddress = async(function(req, res) {
     var result = '';
     try {
-        var school_id = req.params.school_id;
-        var address_id = req.params.id;
+        var schoolId = req.params.school_id;
+        var addressId = req.params.id;
         var address =
-                await(services.school.getAddress(school_id, address_id));
+                await(services.school.getAddress(schoolId, addressId));
         if (address) {
             result = address;
-        }
-        else {
-            result = 'School hasn\'t address with id ' + address_id;
+        } else {
+            result = 'School hasn\'t address with id ' + addressId;
         }
     } catch (error) {
         logger.error(error.message);

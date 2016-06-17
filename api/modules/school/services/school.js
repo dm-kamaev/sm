@@ -8,17 +8,22 @@ var lodash = require('lodash');
 var models = require('../../../../app/components/models').all;
 var services = require('../../../../app/components/services').all;
 var searchTypeEnum = require('../enums/searchType');
-var schoolTypeEnum = require('../enums/schoolType');
+var entityType = require('../../entity/enums/entityType');
 
 var sequelize = require('../../../../app/components/db');
-var logger = require('../../../../app/components/logger/logger').getLogger('app');
-var CsvConverter = require('../../../../console/modules/modelArchiver/CsvConverter');
+var logger =
+    require('../../../../app/components/logger/logger').getLogger('app');
+var CsvConverter =
+    require('../../../../console/modules/modelArchiver/CsvConverter');
 
 var service = {
     name: 'school'
 };
 
 class SchoolNotFoundError extends Error {
+    /**
+     * @param {number} id
+     */
     constructor(id) {
         super('Cant find school with id = ' + id);
     }
@@ -32,17 +37,17 @@ class SchoolNotFoundError extends Error {
  *     fullName: string,
  *     schoolType: enum.school.school_type,
  *     director: string,
- *     phones?: string[],
- *     site?: string,
+ *     phones: (string[]|undefined),
+ *     site: (string|undefined),
  *     educationInterval: number[],
  *     govermentKey: number,
- *     addresses?: {
- *         departments: [{
+ *     addresses: ({
+ *         departments: Array<{
  *             stage: string,
  *             name: string,
- *             availability: [boolean]
- *         }]
- *     }
+ *             availability: boolean
+ *         }>
+ *     }|undefined)
  * }} data
  * @return {Object} School model instance
  */
@@ -64,8 +69,7 @@ service.create = function(data) {
                     await(services.address.getAddress({name: address.name}));
             if (!addressBD) {
                 result = true;
-            }
-            else {
+            } else {
                 console.log('Address:'.yellow, address.name);
 
                 var oldSchool = services.school.viewOne(addressBD.school_id);
@@ -100,7 +104,7 @@ service.create = function(data) {
 
 /**
  * Update school data
- * @param {Object} school_id
+ * @param {Object} schoolId
  * @param {{
  *     name: string,
  *     abbreviation: string,
@@ -113,49 +117,49 @@ service.create = function(data) {
  * }} data
  * @return {Object} School model instance
  */
-service.update = async(function(school_id, data) {
+service.update = async(function(schoolId, data) {
     CsvConverter.cureQuotes(data);
 
     var school = await(
         models.School.findOne({
-            where: {id: school_id}
+            where: {id: schoolId}
         })
     );
 
-    if (!school)
-        throw new SchoolNotFoundError(school_id);
-
+    if (!school) {
+        throw new SchoolNotFoundError(schoolId);
+    }
     return await(school.update(data));
 });
 
 
 /**
  * Delete school
- * @param {number} school_id
+ * @param {number} schoolId
  */
-service.delete = async (function(school_id) {
+service.delete = async(function(schoolId) {
     var school = await(models.School.findOne(
         {
-            where: {id: school_id}
+            where: {id: schoolId}
         }
     ));
-    if (!school)
-        throw new SchoolNotFoundError(school_id);
-
+    if (!school) {
+        throw new SchoolNotFoundError(schoolId);
+    }
     await(school.destroy());
-    return school_id;
+    return schoolId;
 });
 
 
 /**
  * Get school addresses
- * @param  {school_id} school_id
- * @param  {address_id} address_id
+ * @param  {school_id} schoolId
+ * @param  {address_id} addressId
  * @return {[Object]} Address model instance or undefined
  */
-service.getAddress = async(function(school_id, address_id) {
-    var address = await(services.address.getById(address_id));
-    if (address.school_id == school_id) {
+service.getAddress = async(function(schoolId, addressId) {
+    var address = await(services.address.getById(addressId));
+    if (address.school_id == schoolId) {
         return address;
     }
 });
@@ -164,7 +168,8 @@ service.getAddress = async(function(school_id, address_id) {
  * @param {number} schoolId
  */
 service.incrementViews = async(function(schoolId) {
-    var sqlString = 'UPDATE school SET views = views + 1 where id = ' + schoolId;
+    var sqlString = 'UPDATE school SET views = views + 1 where id = ' +
+        schoolId;
     await(sequelize.query(sqlString));
 });
 
@@ -173,13 +178,14 @@ service.incrementViews = async(function(schoolId) {
  * @return {array<object>} school instances
  */
 service.getPopularSchools = async(function(opt_amount) {
+    var pages = await(services.page.getPopular(entityType.SCHOOL, opt_amount));
+
     return await(models.School.findAll({
         where: {
-             $not: {
-                 views: 0
-             }
+            id: {
+                $in: pages.map(page => page.entityId)
+            }
         },
-        limit: opt_amount || 10,
         include: [{
             model: models.Address,
             as: 'addresses',
@@ -200,7 +206,6 @@ service.getPopularSchools = async(function(opt_amount) {
             ]
         }],
         order: [
-            ['views', 'DESC'],
             [
                 {
                     model: models.Address,
@@ -223,18 +228,18 @@ service.getPopularSchools = async(function(opt_amount) {
  * @param {Array<number>} schoolId
  * @return {string}
  */
-service.getUrlsByIds = async(function(schoolIds) {
-    var schools = await(models.School.findAll({
-        where: {
-            id: {
-                $in: schoolIds
-            }
-        },
-        attributes: ['id', 'url']
-    }));
-
-    return schools;
-});
+// service.getUrlsByIds = async(function(schoolIds) {
+//     var schools = await(models.School.findAll({
+//         where: {
+//             id: {
+//                 $in: schoolIds
+//             }
+//         },
+//         attributes: ['id', 'url']
+//     }));
+//
+//     return schools;
+// });
 
 
 /**
@@ -271,7 +276,7 @@ service.getRandomIndexes = function(start, end, amount) {
 
         res.push(randomIndex);
     }
-    
+
     return res;
 };
 
@@ -308,15 +313,17 @@ service.getSchoolsCount = async(function() {
 
 /**
  * Get department of school address
- * @param  {school_id} school_id
- * @param  {address_id} address_id
- * @param  {department_id} department_id
+ * @param  {school_id} schoolId
+ * @param  {address_id} addressId
+ * @param  {department_id} departmentId
  * @return {[Object]} Department model instance or undefined
  */
 service.getAddressDepartment = async(
-    function(school_id, address_id, department_id) {
-        var address = await(service.getAddress(school_id, address_id));
-        var department = await(address.getDepartments({where: {id: department_id}}));
+    function(schoolId, addressId, departmentId) {
+        var address = await(service.getAddress(schoolId, addressId));
+        var department = await(address.getDepartments({
+            where: {id: departmentId}
+        }));
         return department;
     }
 );
@@ -324,12 +331,12 @@ service.getAddressDepartment = async(
 
 /**
  * Get department of school address
- * @param  {school_id} school_id
- * @param  {address_id} address_id
+ * @param  {school_id} schoolId
+ * @param  {address_id} addressId
  * @return {[Object]} Department model instances or undefined
  */
-service.getAddressDepartments = async(function(school_id, address_id) {
-    var address = await(service.getAddress(school_id, address_id));
+service.getAddressDepartments = async(function(schoolId, addressId) {
+    var address = await(service.getAddress(schoolId, addressId));
     var department = address.getDepartments();
     return department;
 });
@@ -339,8 +346,8 @@ service.getAddressDepartments = async(function(school_id, address_id) {
  * @param {number} groupId
  * @return {Object} School instance or undefined
  */
-service.getSchoolByGrouId = async( function(groupId) {
-    var school = await (models.School.findOne({
+service.getSchoolByGrouId = async(function(groupId) {
+    var school = await(models.School.findOne({
         where: {
             commentGroupId: groupId
         }
@@ -349,20 +356,21 @@ service.getSchoolByGrouId = async( function(groupId) {
 });
 
 
-service.getGroupId = async (function(school) {
+service.getGroupId = async(function(school) {
     var instance = school;
-    if (typeof school === 'number'){
+    if (typeof school === 'number') {
         instance = await(models.School.findOne({
-            where : {id: school}
+            where: {id: school}
         }));
-        if (!instance)
+        if (!instance) {
             throw new Error('Can\'t find the school');
+        }
     }
     if (instance.commentGroupId === null) {
-        var newCommentGroup = await (
+        var newCommentGroup = await(
             models.CommentGroup.create()
         );
-        await (instance.update({
+        await(instance.update({
             commentGroupId: newCommentGroup.id
         }));
     }
@@ -381,9 +389,9 @@ service.onRatingChange = async(function(schoolId) {
         }
     }));
 
-    if (!school)
+    if (!school) {
         throw new SchoolNotFoundError(schoolId);
-
+    }
     try {
         await(this.updateReviewCount(school));
         await(this.updateScore(school));
@@ -500,8 +508,9 @@ service.updateRanks = async(function() {
     var loggingState = sequelize.options.logging;
     sequelize.options.logging = false;
     await(schools.forEach(school => {
-        if (school.totalScore != previousScore)
+        if (school.totalScore != previousScore) {
             rankCounter++;
+        }
         school.update({
             rank: rankCounter
         });
@@ -571,7 +580,7 @@ var getTotalScore = function(score) {
             count++;
         }
     });
-    return count ? sum/count : 0;
+    return count ? sum / count : 0;
 };
 
 /**
@@ -581,7 +590,7 @@ var getTotalScore = function(score) {
  * @return {bool}
  */
 var isFeedbackLack = function(scoreCount, reviewCount) {
-    var ratingsLack = reviewCount >= 5 ? false : true,
+    var ratingsLack = !(reviewCount >= 5),
         i = scoreCount && scoreCount.length || 0;
 
     while (i-- && !ratingsLack) {
@@ -596,17 +605,16 @@ var isFeedbackLack = function(scoreCount, reviewCount) {
 /**
  * @public
  */
-service.searchFilters = async (function() {
+service.searchFilters = async(function() {
     var typeFilters = service.typeFilters();
     var egeFilters = services.subject.egeFilters();
     var giaFilters = services.subject.giaFilters();
     var olympFilters = services.subject.olympFilters();
-    return await (typeFilters, egeFilters, giaFilters, olympFilters);
+    return await(typeFilters, egeFilters, giaFilters, olympFilters);
 });
 
-service.typeFilters = async (function() {
-    var schoolTypeFilters
-        = await(services.search.getTypeFilters());
+service.typeFilters = async(function() {
+    var schoolTypeFilters = await(services.search.getTypeFilters());
     var formattedFilters = schoolTypeFilters.map(filter => {
         return {
             label: filter.name,
@@ -631,23 +639,24 @@ service.setRankDogm = async(function(school, rank) {
     }));
 });
 
-service.setAddresses = async ((school, addresses) => {
+service.setAddresses = async((school, addresses) => {
     var currentAddresses = await(service.getAddresses(school.id));
-    addresses.forEach((adr)=>{
+    addresses.forEach(adr => {
         var sameAdr = currentAddresses.find(element => {
-         if (element.name == adr.name)
-            return true;
+            if (element.name == adr.name) {
+                return true;
+            }
         });
-        if (!sameAdr){
+        if (!sameAdr) {
             models.Address.create(adr).then(adrinst => {
                 school.addAddresses(adrinst);
             });
-         }
+        }
     });
 });
 
 
-service.getForParse = async((govKeyId) => {
+service.getForParse = async(govKeyId => {
     var includeParams = [{
         model: models.Address,
         as: 'addresses'
@@ -670,6 +679,8 @@ service.findBySite = async(function(site) {
 
 /**
  * @public
+ * @param {number} id
+ * @return {Object}
  */
 service.viewOne = function(id) {
     var school = await(models.School.findOne({
@@ -706,8 +717,9 @@ service.viewOne = function(id) {
  * @return {object{bool ratingCreated, bool commentCreated}}
  */
 service.review = async(function(schoolId, params) {
-    if (!params.text && !params.score)
+    if (!params.text && !params.score) {
         throw new Error('Expected comment text or rating');
+    }
     try {
         var answer = {
             ratingCreated: false,
@@ -736,7 +748,7 @@ service.review = async(function(schoolId, params) {
         }
         if (params.text) {
             var commentGroup = await(service.getGroupId(school));
-            await (services.comment.create(commentGroup, params));
+            await(services.comment.create(commentGroup, params));
             answer.commentCreated = true;
         }
         return answer;
@@ -753,7 +765,7 @@ service.review = async(function(schoolId, params) {
  */
 service.rate = async(function(school, params) {
     var totalScore = calculateTotalScore(params.score);
-    var rating = await (models.Rating.create({
+    var rating = await(models.Rating.create({
         score: params.score,
         totalScore: totalScore,
         schoolId: school.id,
@@ -775,8 +787,8 @@ var calculateTotalScore = function(score) {
         result = 0;
     if (notEmptyScore) {
         var sum = 0;
-        score.forEach((currentScore) => {
-            return sum += parseFloat(currentScore);
+        score.forEach(currentScore => {
+            sum += parseFloat(currentScore);
         });
         result = sum / score.length;
     }
@@ -785,10 +797,10 @@ var calculateTotalScore = function(score) {
 
 service.createActivity = async(params => {
     CsvConverter.cureQuotes(params);
-    await (models.Activity.create(
+    await(models.Activity.create(
         params,
         {
-            //include: models.Activity
+            // include: models.Activity
         }
     ));
 });
@@ -806,7 +818,7 @@ service.deleteActivities = async(() => {
 /**
  * usded in console. Can be a bit slow
  */
-service.listInstances = async(function(){
+service.listInstances = async(function() {
     return await(models.School.findAll({
         include: [{
             model: models.Rating,
@@ -841,7 +853,7 @@ service.listInstances = async(function(){
  *
  * @return {Promise<Array.<Object>>}
  */
-service.list = async (function(opt_params, opt_config) {
+service.list = async(function(opt_params, opt_config) {
     var searchParams = opt_params || {},
         config = opt_config || {},
         limitResults = config.limitResults || null;
@@ -873,11 +885,11 @@ service.searchByText = function(text) {
         whereParams = {
             $or: [
                 {
-                   name: nameFilter
+                    name: nameFilter
                 }, {
-                   fullName: nameFilter
+                    fullName: nameFilter
                 }, {
-                   abbreviation: nameFilter
+                    abbreviation: nameFilter
                 }
             ]
         };

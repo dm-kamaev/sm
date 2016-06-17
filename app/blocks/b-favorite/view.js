@@ -36,9 +36,40 @@ goog.scope(function() {
     View.CssClass = {
         ROOT: 'b-favorite',
         ICON: 'b-favorite__icon-wrap',
-        HINT: 'b-favorite__hint-content'
+        HINT: 'b-favorite__hint-content',
+        AUTHORIZE_LINK: 'b-favorite__link_authorize',
+        FILLED: 'b-favorite_filled',
+        EMPTY: 'b-favorite_empty'
     };
 
+
+    /**
+     * Event enum
+     * @type {string}
+     */
+    View.Event = {
+        AUTHORIZE: 'authorize'
+    };
+
+
+    /**
+     * States enum
+     * @enum {string}
+     */
+    View.State = {
+        FILLED: 'filled',
+        EMPTY: 'empty'
+    };
+
+    /**
+     * Sets given state
+     * @param {string} state
+     */
+    View.prototype.setState = function(state) {
+        if (this.isValidState_(state)) {
+            this.switchState_(state);
+        }
+    };
 
     /**
      * @override
@@ -61,9 +92,11 @@ goog.scope(function() {
             this.dom.icon,
             goog.events.EventType.CLICK,
             this.onIconClick_
-        );
-
-        this.getHandler().listen(
+        ).listen(
+            this.dom.authorizeLink,
+            goog.events.EventType.CLICK,
+            this.onAuthorizeLinkClick_
+        ).listen(
             document,
             goog.events.EventType.CLICK,
             this.onDocumentClick_
@@ -120,6 +153,17 @@ goog.scope(function() {
 
 
     /**
+     * Handles event of clicking to authorization link
+     * @private
+     */
+    View.prototype.onAuthorizeLinkClick_ = function() {
+        this.dispatchEvent({
+            'type': View.Event.AUTHORIZE
+        });
+    };
+
+
+    /**
      * adds or deletes class to show hint
      * @param {bool} visible
      * @private
@@ -151,9 +195,52 @@ goog.scope(function() {
             hint: this.getElementByClass(
                 View.CssClass.HINT
             ),
+            authorizeLink: this.getElementByClass(
+                View.CssClass.AUTHORIZE_LINK
+            ),
             schoolListPaged: this.getElementByClass(
                 sm.bSchoolListPaged.View.CssClass.ROOT
             )
         };
+    };
+
+
+    /**
+     * Checks that given state is valid
+     * @param {string} state
+     * @return {boolean}
+     * @private
+     */
+    View.prototype.isValidState_ = function(state) {
+        return state == View.State.EMPTY ||
+            state == View.State.FILLED;
+    };
+
+
+    /**
+     * Switch state to given state
+     * @param {string} state
+     * @private
+     */
+    View.prototype.switchState_ = function(state) {
+        if (state == View.State.EMPTY) {
+            goog.dom.classlist.add(
+                this.getElement(),
+                View.CssClass.EMPTY
+            );
+            goog.dom.classlist.remove(
+                this.getElement(),
+                View.CssClass.FILLED
+            );
+        } else if (state == View.State.FILLED) {
+            goog.dom.classlist.add(
+                this.getElement(),
+                View.CssClass.FILLED
+            );
+            goog.dom.classlist.remove(
+                this.getElement(),
+                View.CssClass.EMPTY
+            );
+        }
     };
 });  // goog.scope

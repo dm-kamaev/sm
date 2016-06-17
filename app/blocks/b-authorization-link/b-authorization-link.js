@@ -2,8 +2,8 @@ goog.provide('sm.bAuthorizationLink.AuthorizationLink');
 
 goog.require('cl.iControl.Control');
 goog.require('goog.dom');
-goog.require('sm.bAuthorization.Authorization');
 goog.require('sm.bAuthorizationLink.View');
+goog.require('sm.iAuthorization.Authorization');
 
 
 
@@ -24,12 +24,12 @@ goog.scope(function() {
     var AuthorizationLink = sm.bAuthorizationLink.AuthorizationLink,
         View = sm.bAuthorizationLink.View;
 
-    var Authorization = sm.bAuthorization.Authorization;
+    var Authorization = sm.iAuthorization.Authorization;
 
 
     /**
      * Event enum
-     * @enum {String}
+     * @enum {string}
      */
     AuthorizationLink.Event = {
         LOGIN: View.Event.LOGIN,
@@ -60,7 +60,7 @@ goog.scope(function() {
      * @private
      */
     AuthorizationLink.prototype.onLoginClick_ = function() {
-        Authorization.getInstance().login();
+        Authorization.getInstance().authorize();
     };
 
 
@@ -69,6 +69,6 @@ goog.scope(function() {
      * @private
      */
     AuthorizationLink.prototype.onLogoutClick_ = function() {
-        Authorization.getInstance().logout();
+        Authorization.getInstance().unauthorize();
     };
 });  // goog.scope

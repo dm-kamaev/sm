@@ -1,7 +1,6 @@
 'use strict';
-const scoreView = require('../../school/views/scoreView');
 
-const soy = require('../../../../app/components/soy');
+const scoreView = require('../../school/views/scoreView');
 
 var commentView = {};
 
@@ -78,11 +77,12 @@ commentView.school = function(comments) {
  * @return {string}
  */
 var cropText = function(text, maxLength) {
+    var result;
     if (text.length > maxLength) {
         var lastDotIndex = text.substr(0, maxLength).lastIndexOf('.');
 
         /** Get a part from text from beginning to last dot, include dot **/
-        var result = text.slice(0, lastDotIndex + 1);
+        result = text.slice(0, lastDotIndex + 1);
     }
     return result;
 };
@@ -99,7 +99,7 @@ var cropText = function(text, maxLength) {
  */
 var dateObject = function(date) {
     var transformedDate = date;
-    if(!date instanceof Date) {
+    if (!date instanceof Date) {
         transformedDate = new Date(date);
     }
 
@@ -144,18 +144,18 @@ var parentAdditionalInformation = function(userData) {
         classType = userData.classType;
     if (classType) {
         var classTypes = {
-                1: 'первоклассника',
-                2: 'второклассника',
-                3: 'третьеклассника',
-                4: 'четвероклассника',
-                5: 'пятиклассника',
-                6: 'шестиклассника',
-                7: 'семиклассника',
-                8: 'восьмиклассника',
-                9: 'девятиклассника',
-                10: 'десятиклассника',
-                11: 'одиннадцатиклассника'
-            };
+            1: 'первоклассника',
+            2: 'второклассника',
+            3: 'третьеклассника',
+            4: 'четвероклассника',
+            5: 'пятиклассника',
+            6: 'шестиклассника',
+            7: 'семиклассника',
+            8: 'восьмиклассника',
+            9: 'девятиклассника',
+            10: 'десятиклассника',
+            11: 'одиннадцатиклассника'
+        };
         result += ' ' + classTypes[classType];
     }
     return result;
@@ -222,15 +222,16 @@ commentView.textParagraphs = function(text) {
         ];
 
     for (var i = 0, paragraph, length = stringChunks.length;
-        i < length, paragraph = stringChunks[i];
+        i < length && stringChunks[i];
         i++) {
+        paragraph = stringChunks[i];
 
         var isTitle = paragraphTitles.find(title => {
             return title == paragraph.toLowerCase();
         });
 
         if (isTitle) {
-             paragraph += '. ' + stringChunks[i + 1];
+            paragraph += '. ' + stringChunks[i + 1];
             i++;
         }
         paragraphs.push(paragraph);

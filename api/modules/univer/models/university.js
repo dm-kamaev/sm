@@ -2,19 +2,19 @@ var DataType = require('sequelize');
 var db = require('../../../../app/components/db');
 
 var University = db.define('University', {
-	id: {
-		type: DataType.INTEGER,
-		field: 'id',
-		unique: true,
+    id: {
+        type: DataType.INTEGER,
+        field: 'id',
+        unique: true,
         allowNull: false,
-		primaryKey: true
-	},
+        primaryKey: true
+    },
     name: DataType.STRING,
 }, {
     underscored: true,
     tableName: 'university',
-	classMethods: {
-        associate: function (models) {
+    classMethods: {
+        associate: function(models) {
             University.hasOne(models.SchoolUniversity, {
                 foreignKey: 'university_id'
             });

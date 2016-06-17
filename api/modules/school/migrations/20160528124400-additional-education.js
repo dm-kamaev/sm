@@ -16,8 +16,8 @@ module.exports = {
             phone: Sequelize.STRING,
             contact: Sequelize.STRING,
             requirements: Sequelize.TEXT,
-            raw_data: Sequelize.TEXT,
-            school_id: {
+            'raw_data': Sequelize.TEXT,
+            'school_id': {
                 onDelete: 'cascade',
                 type: Sequelize.INTEGER,
                 references: {
@@ -25,11 +25,11 @@ module.exports = {
                     key: 'id'
                 }
             },
-            created_at: {
+            'created_at': {
                 allowNull: false,
                 type: Sequelize.DATE
             },
-            updated_at: {
+            'updated_at': {
                 allowNull: false,
                 type: Sequelize.DATE
             }

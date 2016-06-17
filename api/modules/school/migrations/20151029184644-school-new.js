@@ -3,7 +3,7 @@
 const schoolType = require('../../api/modules/school/enums/schoolType');
 
 module.exports = {
-    up: function (queryInterface, Sequelize) {
+    up: function(queryInterface, Sequelize) {
         return queryInterface.createTable('school', {
             id: {
                 allowNull: false,
@@ -17,7 +17,7 @@ module.exports = {
             abbreviation: {
                 type: Sequelize.STRING
             },
-            full_name: {
+            'full_name': {
                 type: Sequelize.STRING
             },
             director: {
@@ -29,46 +29,45 @@ module.exports = {
             site: {
                 type: Sequelize.STRING
             },
-            school_type: {
+            'school_type': {
                 type: Sequelize.ENUM,
                 values: schoolType.toArray()
             },
-            goverment_key: {
+            'goverment_key': {
                 type: Sequelize.INTEGER,
                 unique: true
             },
             rank: {
                 type: Sequelize.INTEGER
             },
-            seo_description: {
+            'seo_description': {
                 type: Sequelize.STRING(300)
             },
             score: {
                 type: Sequelize.ARRAY(Sequelize.FLOAT)
             },
-            education_interval: {
+            'education_interval': {
                 type: Sequelize.ARRAY(Sequelize.INTEGER)
             },
-            city_id: {
+            'city_id': {
                 type: Sequelize.INTEGER,
                 references: {
-                     model: 'city',
-                     key: 'id'
-                }
-            },
-            comment_group_id: {
-                type: Sequelize.INTEGER,
-                references: {
-                    model:'comment_group',
+                    model: 'city',
                     key: 'id'
                 }
             },
-
-            created_at: Sequelize.DATE,
-            updated_at: Sequelize.DATE
+            'comment_group_id': {
+                type: Sequelize.INTEGER,
+                references: {
+                    model: 'comment_group',
+                    key: 'id'
+                }
+            },
+            'created_at': Sequelize.DATE,
+            'updated_at': Sequelize.DATE
         });
     },
-    down: function (queryInterface) {
+    down: function(queryInterface) {
         return queryInterface.dropTable('school');
     }
 };

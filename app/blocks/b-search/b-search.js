@@ -769,7 +769,7 @@ goog.scope(function() {
         this.suggest_.blur();
 
         if (data['item']['type'] === 'schools') {
-            document.location.href = '/school/' + data['item']['url'];
+            document.location.href = '/school/' + data['item']['alias'];
         } else if (this.dataParams_.redirect) {
             this.onNotSchoolSelect_(event, data);
         } else {

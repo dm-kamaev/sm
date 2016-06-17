@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-    up: function (queryInterface, Sequelize) {
+    up: function(queryInterface, Sequelize) {
         return queryInterface.createTable('comment_group', {
             id: {
                 allowNull: false,
@@ -9,15 +9,15 @@ module.exports = {
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-            created_at: {
+            'created_at': {
                 type: Sequelize.DATE
             },
-            updated_at: {
+            'updated_at': {
                 type: Sequelize.DATE
             },
         });
     },
-    down: function (queryInterface) {
+    down: function(queryInterface) {
         return queryInterface.dropTable('comment_group');
     }
 };

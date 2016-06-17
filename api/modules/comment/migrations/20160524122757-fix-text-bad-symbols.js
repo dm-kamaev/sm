@@ -6,17 +6,18 @@ const squel = require('squel');
 const sequelize = require('../../app/components/db');
 const path = require('path');
 
-const pathToData = path.join(__dirname, '../../api/modules/comment/migrations/20160524122757-fix-text-bad-symbols.json');
+const pathToData = path.join(__dirname, '../../api/modules/comment/' +
+    'migrations/20160524122757-fix-text-bad-symbols.json');
 const data = require(pathToData);
 
 
 module.exports = {
-    up: async(function () {
+    up: async(function() {
         data.forEach(dataItem => {
             await(updateComment(dataItem));
         });
     }),
-    down: function () {
+    down: function() {
         return null;
     }
 };
@@ -32,7 +33,7 @@ module.exports = {
 var updateComment = async(function(commentTexts) {
     var dbComment = await(findCommentByText(commentTexts.original));
 
-    if(dbComment) {
+    if (dbComment) {
         await(updateCommentText(dbComment.id, commentTexts.corrected));
     }
 });
@@ -53,7 +54,7 @@ var findCommentByText = function(text) {
         .limit(1)
         .toString();
 
-    var comments =  await(sequelize.query(
+    var comments = await(sequelize.query(
         query,
         {type: sequelize.QueryTypes.SELECT}
     ));
@@ -71,10 +72,10 @@ var updateCommentText = function(id, text) {
     var query = squel.update()
         .table('comment')
         .where('id = ' + id)
-        .set('text',  text)
+        .set('text', text)
         .toString();
 
-    return await(sequelize.query(
+    await(sequelize.query(
         query,
         {type: sequelize.QueryTypes.UPDATE}
     ));

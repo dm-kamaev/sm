@@ -1,7 +1,5 @@
-'use strict'
-var path = require('path'),
-    fs = require('fs'),
-    lodash = require('lodash');
+'use strict';
+var lodash = require('lodash');
 
 class Enum {
     /**
@@ -9,7 +7,7 @@ class Enum {
      * @param {string} name
      * @param {object} fields
      */
-    constructor (name, fields) {
+    constructor(name, fields) {
         this.name_ = name;
         this.fields_ = fields;
 
