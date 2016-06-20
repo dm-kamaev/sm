@@ -33,10 +33,6 @@
     opacity: 0.6;
 
     vertical-align: middle;
-
-    &:hover {
-        opacity: 1;
-    }
 }
 
 .b-favorite__hint-content {
@@ -89,6 +85,19 @@
         &.b-favorite__hint-content_user-not-authorized {
             display: none;
         }
+    }
+}
+
+.b-favorite_opened {
+    .b-favorite__icon {
+        opacity: 1;
+    }
+}
+
+.b-favorite_hoverable {
+    .b-favorite__icon-wrap:hover
+    .b-favorite__icon{
+        opacity: 1;
     }
 }
 /** Possible states end **/
