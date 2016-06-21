@@ -39,7 +39,9 @@ goog.scope(function() {
         HINT: 'b-favorite__hint-content',
         AUTHORIZE_LINK: 'b-favorite__link_authorize',
         FILLED: 'b-favorite_filled',
-        EMPTY: 'b-favorite_empty'
+        EMPTY: 'b-favorite_empty',
+        HOVERABLE: 'b-favorite_hoverable',
+        OPENED: 'b-favorite_opened'
     };
 
 
@@ -78,7 +80,8 @@ goog.scope(function() {
     View.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
-        this.initDom_();
+        this.initDom_()
+            .detectHoverability_();
     };
 
 
@@ -107,16 +110,18 @@ goog.scope(function() {
     /**
      * show Hint
      */
-    View.prototype.showHint = function() {
+    View.prototype.setOpenedState = function() {
         this.setHintVisibility_(true);
+        this.setOpenedBlockState_(true);
     };
 
 
     /**
      * hide Hint
      */
-    View.prototype.hideHint = function() {
+    View.prototype.unsetOpenedState = function() {
         this.setHintVisibility_(false);
+        this.setOpenedBlockState_(false);
     };
 
 
@@ -132,7 +137,7 @@ goog.scope(function() {
         );
 
         if (this.isHintVisible_ && !isContaints) {
-            this.hideHint();
+            this.unsetOpenedState();
         }
     };
 
@@ -144,10 +149,10 @@ goog.scope(function() {
      */
     View.prototype.onIconClick_ = function() {
         if (this.isHintVisible_) {
-            this.hideHint();
+            this.unsetOpenedState();
         }
         else {
-            this.showHint();
+            this.setOpenedState();
         }
     };
 
@@ -184,7 +189,26 @@ goog.scope(function() {
 
 
     /**
+     * Set or remove opened state modifier from block
+     * @param {boolean} openedState
+     * @private
+     */
+    View.prototype.setOpenedBlockState_ = function(openedState) {
+        openedState ?
+            goog.dom.classlist.add(
+                this.getElement(),
+                View.CssClass.OPENED
+            ) :
+            goog.dom.classlist.remove(
+                this.getElement(),
+                View.CssClass.OPENED
+            );
+    };
+
+
+    /**
      * Initializes dom elements
+     * @return {sm.bFavorite.View}
      * @private
      */
     View.prototype.initDom_ = function() {
@@ -202,6 +226,26 @@ goog.scope(function() {
                 sm.bSchoolListPaged.View.CssClass.ROOT
             )
         };
+
+        return this;
+    };
+
+
+    /**
+     * Check hoverability for block and
+     * if it hoverable, add to it corresponding modifier
+     * @return {sm.bFavorite.View}
+     * @private
+     */
+    View.prototype.detectHoverability_ = function() {
+        if (goog.labs.userAgent.device.isDesktop()) {
+            goog.dom.classlist.add(
+                this.getElement(),
+                View.CssClass.HOVERABLE
+            );
+        }
+
+        return this;
     };
 
 

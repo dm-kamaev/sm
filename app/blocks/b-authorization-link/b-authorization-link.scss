@@ -1,5 +1,5 @@
 @import "../i-media/i-media";
-
+/** default layout **/
 .b-authorization-link {
     display: inline-block;
 
@@ -34,10 +34,6 @@
     opacity: 0.6;
 
     vertical-align: middle;
-
-    &:hover {
-        opacity: 1;
-    }
 }
 
 .b-authorization-link__name {
@@ -62,7 +58,9 @@
 .b-authorization-link__hint-content_logged {
     display: none;
 }
+/** default layout end **/
 
+/** Possible states **/
 .b-authorization-link_logged {
     .b-authorization-link__hint-content_logged {
         display: block;
@@ -72,6 +70,20 @@
         display: none;
     }
 }
+
+.b-authorization-link_hoverable {
+    .b-authorization-link__icon-wrap:hover
+    .b-authorization-link__icon {
+        opacity: 1;
+    }
+}
+
+.b-authorization-link_opened {
+    .b-authorization-link__icon {
+        opacity: 1;
+    }
+}
+/** end possible states **/
 
 @include media-xs {
     .b-authorization-link {
