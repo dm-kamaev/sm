@@ -420,7 +420,7 @@ goog.scope(function() {
     School.prototype.onAddFavoriteClick_ = function(event) {
         var favoriteInstance = event.target;
         this.setEcAnalyticsAdd_();
-        this.sendDataAnalytics_('favorite', 'add');
+        this.sendDataAnalytics_('favorite', 'details add');
         this.setFavoriteState_(true);
         this.sendAddToFavorites_(favoriteInstance);
     };
@@ -434,7 +434,7 @@ goog.scope(function() {
     School.prototype.onRemoveFavoriteClick_ = function(event) {
         var favoriteInstance = event.target;
         this.setEcAnalyticsRemove_();
-        this.sendDataAnalytics_('favorite', 'delete');
+        this.sendDataAnalytics_('favorite', 'details delete');
         this.setFavoriteState_(false);
         this.sendRemoveFromFavorites_(favoriteInstance);
         Header.getInstance().removeFavorite(this.params_.id);
