@@ -3,10 +3,6 @@ var DataType = require('sequelize'),
 
 var Department = db.define('Department', {
     name: DataType.STRING,
-    stage: {
-        type: DataType.STRING(50),
-        allowNull: false
-    },
     addressId: {
         type: DataType.INTEGER,
         field: 'address_id'

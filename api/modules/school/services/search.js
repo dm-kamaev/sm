@@ -89,7 +89,7 @@ exports.generateSqlConfig = function(opt_schoolsAmount, opt_page) {
             'area.name AS "areaName"',
             'address.coords AS "addressCoords"',
             'address.name AS "addressName"',
-            'department.stage AS "departmentStage"'
+            'department.educational_grades AS "departmentEducationalGrades"'
         ],
         from: {
             select: [

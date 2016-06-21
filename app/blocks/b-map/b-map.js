@@ -828,7 +828,8 @@ goog.scope(function() {
                         'description': data['description'],
                         'address': {
                             'name': address['name'],
-                            'stages': address['stages']
+                            'stages': address['stages'] === 'Другие адреса' ?
+                                '' : address['stages']
                         }
                     },
                     'options': {

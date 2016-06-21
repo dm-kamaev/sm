@@ -1,11 +1,17 @@
 'use strict';
 
 const async = require('asyncawait/async'),
-      await = require('asyncawait/await'),
-      commander = require('commander'),
-      lodash = require('lodash');
+    await = require('asyncawait/await'),
+    commander = require('commander'),
+    lodash = require('lodash'),
+    path = require('path');
 
-const services = require('../app/components/services').all;
+const services = require('../app/components/services').all,
+    models = require('../app/components/models').all,
+    Archiver = require('./modules/modelArchiver/Archiver'),
+    CsvConverter = require('./modules/modelArchiver/CsvConverter');
+
+const CSV_DELIMITER = '|';
 
 class DepartmentStageToGrades {
     constructor() {
@@ -32,9 +38,9 @@ class DepartmentStageToGrades {
 
         var departmentsGrades = this.convertStages_(preparedDepartments);
 
-        console.log(departmentsGrades[5]); process.exit();
-
         await(this.updateDb_(departmentsGrades));
+
+        // await(this.deleteUnnecessaryDepartments_());
     }
 
     /**
@@ -98,6 +104,15 @@ class DepartmentStageToGrades {
                 }
             ));
         });
+    }
+
+    /**
+     * @private
+     */
+    deleteUnnecessaryDepartments_() {
+        models.Department.destroy({where: {
+            educationalGrades: null
+        }});
     }
 
     /**
