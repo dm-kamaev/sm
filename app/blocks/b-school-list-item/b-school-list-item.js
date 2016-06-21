@@ -341,7 +341,10 @@ goog.scope(function() {
         this.dispatchEvent(event);
 
         this.setEcAnalyticsRemove_();
-        this.sendDataAnalytics_('favourite', 'delete');
+        this.sendDataAnalytics_(
+            'favorite',
+            'search results delete'
+        );
         this.sendRemoveFromFavorites_();
     };
 
@@ -352,7 +355,10 @@ goog.scope(function() {
      */
     ListItem.prototype.onAddFavoriteClick_ = function() {
         this.setEcAnalyticsAdd_();
-        this.sendDataAnalytics_('favourite', 'add');
+        this.sendDataAnalytics_(
+            'favourite',
+            'search results add'
+        );
         this.sendAddToFavorites_();
     };
 
