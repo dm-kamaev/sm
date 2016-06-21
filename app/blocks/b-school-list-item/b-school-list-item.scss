@@ -34,32 +34,16 @@
     }
 }
 
-.b-school-list-item__position {
+
+.b-school-list-item__badge {
     display: inline-block;
 
-    margin-right: 25px;
-}
-
-.b-school-list-item__metro-stations {
-    display: inline-block;
-
-    margin-right: 18px;
+    margin-right: 20px;
     margin-bottom: 5px;
-}
 
-.b-school-list-item__area {
-    display: inline-block;
-
-    margin-right: 18px;
-    margin-bottom: 5px;
-}
-
-.b-school-list-item__ratings {
-    display: inline-block;
-}
-
-.b-school-list-item__favorite {
-    display: inline-block;
+    &:last-child {
+        margin-right: 0;
+    }
 }
 
 .b-school-list-item__name {
