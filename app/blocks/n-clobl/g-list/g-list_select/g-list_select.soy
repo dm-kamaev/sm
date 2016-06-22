@@ -42,7 +42,7 @@
  * @override
  */
 {template .body}
-    {let $selectedItemId: $params?.data?.selectedItemId ?: 0/}
+    {let $selectedItemId: $params?.data?.selectedItemId /}
 
     {if $params?.data?.items}
         {for $i in range($params.data.items.length)}
@@ -52,7 +52,8 @@
                 {param params: [
                     'label': $item.label,
                     'url': $item.url,
-                    'isSelected': ($i == $selectedItemId),
+                    'isSelected': ($i == $selectedItemId) or
+                        ($item?.isSelected),
                     'viewType': $params?.config?.viewType
                 ]/}
             {/call}

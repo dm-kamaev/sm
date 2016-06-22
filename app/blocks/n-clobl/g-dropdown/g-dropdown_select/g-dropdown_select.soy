@@ -97,7 +97,9 @@
  * List template
  * @param? params {{
  *     data: {
- *         listItems: list<string>,
+ *         listItems: Array<{
+ *             label: string,
+ *         >},
  *         selectedItemId: number
  *     }
  *     config: {
@@ -110,9 +112,8 @@
  * }}
  */
 {template .content kind="html"}
-    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+    {call .renderChild}
         {param params: [
-            'factory': $params.config.stylizationModifier,
             'type': 'list-select',
             'renderParams': [
                 'data': [
