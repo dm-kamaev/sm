@@ -11,6 +11,7 @@ var searchTypeEnum = require('../enums/searchType');
 var entityType = require('../../entity/enums/entityType');
 
 var sequelize = require('../../../../app/components/db');
+var redis = require('../../../../app/components/redis');
 var logger =
     require('../../../../app/components/logger/logger').getLogger('app');
 var CsvConverter =
@@ -178,48 +179,61 @@ service.incrementViews = async(function(schoolId) {
  * @return {array<object>} school instances
  */
 service.getPopularSchools = async(function(opt_amount) {
-    var pages = await(services.page.getPopular(entityType.SCHOOL, opt_amount));
+    var popularSchools = JSON.parse(await(redis.getAsync(
+        'school.popularSchools'
+    )));
 
-    return await(models.School.findAll({
-        where: {
-            id: {
-                $in: pages.map(page => page.entityId)
-            }
-        },
-        include: [{
-            model: models.Address,
-            as: 'addresses',
+    if (!popularSchools) {
+        var pages = await(services.page.getPopular(
+            entityType.SCHOOL, opt_amount
+        ));
+
+        popularSchools = await(models.School.findAll({
             where: {
-                isSchool: true
-            },
-            include: [
-                {
-                    model: models.AddressMetro,
-                    as: 'addressMetroes',
-                    include: [
-                        {
-                            model: models.Metro,
-                            as: 'metroStation'
-                        }
-                    ]
+                id: {
+                    $in: pages.map(page => page.entityId)
                 }
-            ]
-        }],
-        order: [
-            [
-                {
-                    model: models.Address,
-                    as: 'addresses'
+            },
+            include: [{
+                model: models.Address,
+                as: 'addresses',
+                where: {
+                    isSchool: true
                 },
-                {
-                    model: models.AddressMetro,
-                    as: 'addressMetroes'
-                },
-                'distance',
-                'ASC'
+                include: [
+                    {
+                        model: models.AddressMetro,
+                        as: 'addressMetroes',
+                        include: [
+                            {
+                                model: models.Metro,
+                                as: 'metroStation'
+                            }
+                        ]
+                    }
+                ]
+            }],
+            order: [
+                [
+                    {
+                        model: models.Address,
+                        as: 'addresses'
+                    },
+                    {
+                        model: models.AddressMetro,
+                        as: 'addressMetroes'
+                    },
+                    'distance',
+                    'ASC'
+                ]
             ]
-        ]
-    }));
+        }));
+
+        redis.set('school.popularSchools', JSON.stringify(popularSchools));
+        redis.expire('school.popularSchools', 60 * 60);
+    }
+
+    return popularSchools;
 });
 
 
