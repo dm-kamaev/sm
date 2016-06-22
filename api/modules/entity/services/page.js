@@ -91,7 +91,7 @@ service.getByAlias = async(function(alias, entityType) {
  */
 service.getPopular = async(function(entityType, opt_amount) {
     return models.Page.findAll({
-        attributes: ['entityId', 'views'],
+        attributes: ['entityId'],
         where: {
             $not: {
                 views: 0

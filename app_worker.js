@@ -26,7 +26,6 @@ var modules = require('./app/modules');
 var api = require('./api/modules');
 var bodyParser = require('body-parser');
 var vm = require('vm');
-var fs = require('fs');
 
 var errorController = require('./app/modules/error/controllers/errorController');
 
