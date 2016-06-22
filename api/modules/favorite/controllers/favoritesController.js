@@ -75,7 +75,7 @@ exports.create = async(function(req, res) {
             res.status(200);
             res.end(JSON.stringify(result));
         } else {
-            res.header(400);
+            res.status(400);
             res.end();
         }
     } else {

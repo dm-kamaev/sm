@@ -25,7 +25,7 @@
 }
 
 .b-favorite-link__link_l::first-letter {
-    text-transform: uppercase;
+    text-transform: capitalize;
 }
 
 .b-favorite-link_not-favorite {
@@ -68,6 +68,6 @@
     }
 
     .b-favorite-link__link_s::first-letter {
-        text-transform: uppercase;
+        text-transform: capitalize;
     }
 }

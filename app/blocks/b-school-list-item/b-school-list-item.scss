@@ -22,7 +22,7 @@
 
     margin-bottom: 12px;
 
-    &_badges {
+    .b-school-list-item__section_badges {
         display: inline-block;
 
         width: auto;
@@ -135,6 +135,10 @@
 
     .b-school-list-item__score {
         top: -1px;
+    }
+
+    .b-school-list-item__badge {
+        margin-bottom: 0;
     }
 }
 

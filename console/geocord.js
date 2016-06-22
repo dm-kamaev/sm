@@ -1,5 +1,4 @@
 var MultiGeocoder = require('multi-geocoder');
-var modules = require.main.require('./api/modules');
 var commander = require('commander');
 var geocoder = new MultiGeocoder({ coordorder: 'latlong', lang: 'ru-RU'});
 var fs = require('fs');

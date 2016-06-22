@@ -4,13 +4,12 @@ var await = require('asyncawait/await');
 var commander = require('commander');
 var xlsx = require('node-xlsx');
 var colors = require('colors');
-var common = require.main.require('./console/common');
+var common = require('./common');
 
 var ProgressBar = require('progress');
-var sequelize = require.main.require('./app/components/db');
+var sequelize = require('../app/components/db');
 
-var modules = require.main.require('./api/modules');
-var services = require.main.require('./app/components/services').all;
+var services = require('../app/components/services').all;
 
 const LIST_INDEX = 1;
 const FIRST_ROW = 4;
@@ -44,22 +43,22 @@ class PBar {
         if (!PBar.instance)
             PBar.instance = new PBar();
         return PBar.instance;
-    } 
+    }
     parseExcel(length) {
         if (this.pbar)
             this.pbar.terminate();
-        this.pbar = new ProgressBar('Parsing excel :bar :current/:total', { 
+        this.pbar = new ProgressBar('Parsing excel :bar :current/:total', {
             total: length,
-            width: 30 
+            width: 30
         });
     }
-    
+
     dbWrite(length) {
         if (this.pbar)
             this.pbar.terminate();
-        this.pbar = new ProgressBar('Writing to database :bar :current/:total', { 
+        this.pbar = new ProgressBar('Writing to database :bar :current/:total', {
             total: length,
-            width: 30 
+            width: 30
         });
     }
 
@@ -90,7 +89,7 @@ class DbWriter {
            })
          );
     }
-    
+
     /**
      * @private
      * @param {object} schoolNode JSON node with information about one school
@@ -103,7 +102,7 @@ class DbWriter {
         }));
         PBar.getInstance().tick();
     }
-    
+
     /**
      * @private
      * @prarm {string} subject Subject name
@@ -113,10 +112,10 @@ class DbWriter {
         subjectName = subjectName
             .toLowerCase()
             .trim();
-        var cachedSubject = 
+        var cachedSubject =
             this.cachedSubjects.find(subject => subject.name == subjectName);
         if (!cachedSubject) {
-            cachedSubject = 
+            cachedSubject =
                 await(services.subject.getOrCreate(subjectName));
             this.cachedSubjects.push(cachedSubject);
         }
@@ -160,13 +159,13 @@ class MainParser {
             this.parseSchool_();
         }
     }
-    
+
     static getYear(string) {
         return string.replace(/\D/g, ''); //leave only digits
     }
-    
+
     /**
-     * @param {string} site 
+     * @param {string} site
      * @returns {object} instance School instance
      */
     static getSchool(site) {
@@ -235,10 +234,10 @@ class MainParser {
     getSchoolResults() {
         return this.schoolResults;
     }
-    
+
     /**
      * @private
-     * @param {int} startColumn 
+     * @param {int} startColumn
      */
     parseYear_(startColumn) {
         var endColumn = startColumn + SUBJECT_COUNT;
@@ -248,7 +247,7 @@ class MainParser {
         };
         for (var i = startColumn; i<endColumn; i++) {
             var subject = this.sheet[SUBJECT_ROW][i];
-            var result = this.currentRow[i]|| ''; 
+            var result = this.currentRow[i]|| '';
                 result = MainParser.normalizeResult(result, i, yearRes.year);
             if (result && typeof result != 'string') {
                 this.isEmtyRow = false;
@@ -260,14 +259,14 @@ class MainParser {
         }
         return yearRes;
     }
-    
+
     /**
      * @private
-     * @param {int} startColumn 
+     * @param {int} startColumn
      * @prama {int} depCount Departament count
      */
     parseDepartamYear_(startColumn, depCount) {
-        var endColumn = startColumn + SUBJECT_COUNT; 
+        var endColumn = startColumn + SUBJECT_COUNT;
         var yearRes = {
             year: MainParser.getYear(this.sheet[YEAR_ROW][startColumn]),
             results: []
@@ -304,14 +303,14 @@ class MainParser {
         if (depCount) {
             this.incrementRow_(); //go to first departament
             for (var i = 0; i< YEAR_COUNT; i++){
-                var column = FIRST_COL + (i * 2 * SUBJECT_COUNT);//2 to skip the gia 
+                var column = FIRST_COL + (i * 2 * SUBJECT_COUNT);//2 to skip the gia
                 var yearRes = this.parseDepartamYear_(column, depCount);
                 if (yearRes.results.length)
                     result.push(yearRes);
             }
             this.setRow_(this.currentRowIndex + depCount - 1) //-1 because row would be incrementade once after school parsing
         }
-        
+
         return result;
     }
 
@@ -328,9 +327,9 @@ class MainParser {
             var schoolResult = {results: []};
             schoolResult.school = school;
             this.isEmtyRow = true;
-            
+
             for (var i = 0; i < YEAR_COUNT; i++){
-                var column = FIRST_COL + (i * 2 * SUBJECT_COUNT);//2 to skip the gia 
+                var column = FIRST_COL + (i * 2 * SUBJECT_COUNT);//2 to skip the gia
                 var yearRes = this.parseYear_(column);
                 if (yearRes.results.length)
                     schoolResult.results.push(yearRes);
@@ -355,4 +354,3 @@ commander
     .action(file => parse(file));
 
 exports.Command;
-
