@@ -9,7 +9,6 @@ var sequelize = require.main.require('./app/components/db');
 
 var parseAreas = require('./parse_area');
 
-var modules = require.main.require('./api/modules');
 var services = require.main.require('./app/components/services').all;
 
 var replace = require('./parseConfig').replace;
@@ -399,4 +398,3 @@ commander
     .action(file => parse(file));
 
 exports.Command;
-
