@@ -32,6 +32,7 @@ require('./console/updateUrls.js').Command;
 require('./console/commentPublicationDate').Command;
 require('./console/vkapi.js').Command;
 require('./console/updateUserData.js').Command;
+require('./console/geoData.js').Command;
 
 /*
  * The line below initializes the interface on `node ./commander
