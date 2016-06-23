@@ -6,7 +6,8 @@ const cluster = require('cluster'),
     await = require('asyncawait/await');
 
 const logger = require('./app/components/logger/logger').getLogger('app');
-const StartupControl = require('./app/components/startupControl/startupControl');
+const StartupControl =
+    require('./app/components/startupControl/startupControl');
 
 cluster.setupMaster({
     exec: 'app_worker.js'

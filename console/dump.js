@@ -12,13 +12,12 @@ const common = require.main.require('./console/common');
 const SEPARATOR = '_';
 const sequelize = require.main.require('./app/components/db');
 
-
 var start = async(function() {
     var vars = [
-        'Create db dump file [local]', 
-        'Create db dump file [local] and write it to config as current', 
+        'Create db dump file [local]',
+        'Create db dump file [local] and write it to config as current',
         'Create db dump file [remote]',
-        'Create db dump file [remote] and write it to config as current', 
+        'Create db dump file [remote] and write it to config as current',
         'Load db dump from the local storage',
         'Load db dump from the remote storage',
         'Load db dump from the remote storage by name',
@@ -26,7 +25,7 @@ var start = async(function() {
         'Drop all tables'],
     index = readlineSync.keyInSelect(vars, 'What to do?');
     switch (index) {
-        case 0: 
+        case 0:
             var dumpCreator = new DumpCreator();
             dumpCreator.create();
             break;
@@ -36,7 +35,7 @@ var start = async(function() {
             });
             dumpCreator.create();
             break;
-        case 2: 
+        case 2:
             var dumpCreator = new DumpCreator({
                 remote: true
             });
@@ -53,13 +52,13 @@ var start = async(function() {
             var dumpLoader = new DumpLoader();
             dumpLoader.load();
             break;
-        case 5: 
+        case 5:
             var dumpLoader = new DumpLoader({
                 remote: true
             });
             dumpLoader.load();
             break;
-        case 6: 
+        case 6:
             var dumpLoader = new DumpLoader({
                 remote: true,
                 askName: true
@@ -85,7 +84,7 @@ class DumpCreator {
         this.isUpdateConfig_ = opt_params.config || false;
         this.isToRemote_ = opt_params.remote || false;
     }
-    
+
     /**
      * @public
      */
@@ -95,7 +94,7 @@ class DumpCreator {
             DumpHelper.fixConfig();
         var filename = this.generateFilename_();
         var filePath = DUMP_FOLDER + filename;
-        if (common.fileExists(filePath)) 
+        if (common.fileExists(filePath))
             throw new Error('File already exists');
         var command = 'pg_dump -Fc ' + dbConfig.name +
             ' > ' + filePath;
@@ -104,7 +103,7 @@ class DumpCreator {
             console.log('file ' + colors.green(filename) + ' created! ');
             if (this.isToRemote_) {
                 await(this.upload_(filePath));
-            }  
+            }
             if (this.isUpdateConfig_) {
                 await(this.updateConfig_(filename));
             }
@@ -112,10 +111,10 @@ class DumpCreator {
             throw execRes;
         }
     }
-       
+
 
     /**
-     * @private 
+     * @private
      * @param {string} filePath
      */
     upload_(filePath) {
@@ -174,9 +173,9 @@ class DumpCreator {
      * @return {string}
      */
     leadZero_(num) {
-        return ('0' + num).slice(-2); 
+        return ('0' + num).slice(-2);
     }
-    
+
     /**
      * @private
      * @return {string || null}
@@ -205,7 +204,7 @@ class DumpHelper {
             db = dbConfig.name,
             branch = dump.split(SEPARATOR)[0], //TODO: if no config?
             time = dump.split(SEPARATOR)[1],
-            dumpStr = (branch && time) ? 
+            dumpStr = (branch && time) ?
                 'Dump: ' + colors.green(branch) + SEPARATOR + time :
                 'Dump: ' + dump;
         console.log (dumpStr);
@@ -238,9 +237,9 @@ class DumpLoader {
     constructor(opt_params) {
         opt_params = opt_params || {};
         this.isFromRemote_ = opt_params.remote || false;
-        if (opt_params.askName) 
+        if (opt_params.askName)
             this.filename_ = readlineSync.question('Please type dump filename from http://repo.dfarm.lan/db/ :');
-        else 
+        else
             this.filename_ = dbConfig.dump;
     }
 
@@ -278,10 +277,10 @@ class DumpLoader {
      */
     load_() {
         var filePath = DUMP_FOLDER + this.filename_;
-        if (!common.fileExists(filePath)) 
+        if (!common.fileExists(filePath))
             throw new Error('Can\'t find the file');
         await(DumpHelper.dropAll());
-        var command = 'pg_restore -d ' + dbConfig.name + 
+        var command = 'pg_restore -d ' + dbConfig.name +
             ' ' + filePath;
         await(common.execAsync(command));
     }
@@ -297,4 +296,3 @@ commander
     .action(() => start());
 
 exports.Command;
-
