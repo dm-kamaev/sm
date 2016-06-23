@@ -179,9 +179,7 @@ service.incrementViews = async(function(schoolId) {
  * @return {array<object>} school instances
  */
 service.getPopularSchools = async(function(opt_amount) {
-    var popularSchools = JSON.parse(await(redis.getAsync(
-        'school.popularSchools'
-    )));
+    var popularSchools = redis.get('school.popularSchools');
 
     if (!popularSchools) {
         var pages = await(services.page.getPopular(
@@ -229,8 +227,7 @@ service.getPopularSchools = async(function(opt_amount) {
             ]
         }));
 
-        redis.set('school.popularSchools', JSON.stringify(popularSchools));
-        redis.expire('school.popularSchools', 60 * 60);
+        redis.set('school.popularSchools', popularSchools, 60 * 60);
     }
 
     return popularSchools;

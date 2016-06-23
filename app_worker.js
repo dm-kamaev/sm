@@ -39,6 +39,7 @@ const config = require('./app/config').config;
 const morgan = require('morgan');
 const expressLogStream = require('./app/components/logger/expressLogStream');
 const logger = require('./app/components/logger/logger').getLogger('app');
+const redis = require('./app/components/redis');
 
 app.set('views', path.join(__dirname, 'api-debug'));
 
@@ -95,7 +96,9 @@ async(function() {
     soy.loadFiles(
         paths.map(item => path.join(__dirname, item)),
         function() {
-            app.listen(config.port);
+            app.listen(config.port, function() {
+                redis.connect();
+            });
         }
     );
 
