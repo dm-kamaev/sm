@@ -39,19 +39,26 @@ var getSearchSubstrings = function(string) {
 /**
  * @public
  * @param {string} searchString
- * @return {object}
+ * @return {{
+ *     schools: Array<models.School>,
+ *     areas: Array<models.Area>,
+ *     metros: Array<models.Metro>,
+ *     districts: Array<models.District>
+ * }}
  */
 exports.suggestSearch = async(function(searchString) {
-    var promises = [
-        services.school.searchByText(searchString),
-        findAnyInModel(models.Area, searchString),
-        findAnyInModel(models.Metro, searchString)
-    ];
+    var promises = {
+        schools: services.school.searchByText(searchString),
+        areas: findAnyInModel(models.Area, searchString),
+        metros: findAnyInModel(models.Metro, searchString),
+        districts: findAnyInModel(models.District, searchString)
+    };
     var results = await(promises);
     return {
-        schools: results[0],
-        areas: results[1],
-        metros: results[2]
+        schools: results.schools,
+        areas: results.areas,
+        metros: results.metros,
+        districts: results.districts
     };
 });
 

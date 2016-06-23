@@ -179,7 +179,6 @@ service.incrementViews = async(function(schoolId) {
  */
 service.getPopularSchools = async(function(opt_amount) {
     var pages = await(services.page.getPopular(entityType.SCHOOL, opt_amount));
-
     return await(models.School.findAll({
         where: {
             id: {

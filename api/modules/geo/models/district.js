@@ -19,9 +19,11 @@ var District = db.define(
             associate: function(models) {
                 District.hasMany(models.Address, {
                     as: 'addresses',
-                    foreignKey: 'city_id'
+                    foreignKey: 'district_id'
                 });
             }
         }
     }
 );
+
+module.exports = District;

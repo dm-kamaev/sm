@@ -41,6 +41,10 @@ var Address = db.define('Address', {
                 as: 'area',
                 foreignKey: 'area_id'
             });
+            Address.belongsTo(models.District, {
+                as: 'district',
+                foreignKey: 'district_id'
+            });
         }
     }
 });
