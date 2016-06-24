@@ -129,8 +129,8 @@ var School = db.define('School', {
                 as: 'egeResults', foreignKey: 'school_id',
                 onDelete: 'cascade'
             });
-            School.hasMany(models.SearchData, {
-                as: 'searchData', foreignKey: 'school_id',
+            School.hasMany(models.SchoolSearchData, {
+                as: 'schoolSearchData', foreignKey: 'school_id',
                 onDelete: 'cascade'
             });
             School.hasMany(models.Address, {
