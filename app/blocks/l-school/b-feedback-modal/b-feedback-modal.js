@@ -263,7 +263,11 @@ goog.scope(function() {
             goog.dom.getElementByClass(
                 cl.gInput.View.CssClass.ROOT,
                 this.modal_.getElement()
-            )
+            ),
+            this,
+            {
+                'validations': []
+            }
         );
 
         this.initDropdowns_(factory);
@@ -490,16 +494,21 @@ goog.scope(function() {
         );
 
         if (this.isYearChoise_(userType)) {
-            this.sendAnalyticsEvent_(
-                FeedbackModal.AnalyticsAction.YEAR_CHOICE,
-                dataForm['classType']
-            );
+            if (goog.isDefAndNotNull(dataForm['classType'])) {
+                this.sendAnalyticsEvent_(
+                    FeedbackModal.AnalyticsAction.YEAR_CHOICE,
+                    dataForm['classType']
+                );
+            }
         }
         else {
-            this.sendAnalyticsEvent_(
-                FeedbackModal.AnalyticsAction.GRADUATION_CHOICE,
-                dataForm['yearGraduate']
-            );
+            var yearGraduate = dataForm['yearGraduate'];
+            if (goog.isDefAndNotNull(yearGraduate)) {
+                this.sendAnalyticsEvent_(
+                    FeedbackModal.AnalyticsAction.GRADUATION_CHOICE,
+                    yearGraduate
+                );
+            }
         }
     };
 
@@ -571,11 +580,12 @@ goog.scope(function() {
         action, label, opt_value) {
 
         var dataAnalytics = {
-            hitType: 'event',
-            eventCategory: 'review',
-            eventAction: action,
-            eventLabel: label
+            'hitType': 'event',
+            'eventCategory': 'review',
+            'eventAction': action,
+            'eventLabel': label
         };
+
 
         if (opt_value) {
             dataAnalytics.eventValue = opt_value;
@@ -637,13 +647,12 @@ goog.scope(function() {
 
         this.dropdowns_.userType.getView().unsetNotValidState();
 
-        if (dataForm['userType'] != null) {
+        if (goog.isDefAndNotNull(dataForm['userType'])) {
             isValid = true;
 
             isValidOpt = this.validateComment_(dataForm);
-
         } else {
-            dataForm['userType'].setNotValidState();
+            this.dropdowns_.userType.getView().setNotValidState();
             this.showValidationError_(FeedbackModal.Error.TYPE_REQUIRED);
         }
         return (isValid && isValidOpt);
@@ -668,7 +677,7 @@ goog.scope(function() {
 
     /**
      * get formatted user type
-     * @return {string}
+     * @return {(?string|undefined)}
      * @private
      */
     FeedbackModal.prototype.getFormDataUserType_ = function() {
@@ -684,12 +693,12 @@ goog.scope(function() {
 
     /**
      * get formatted data on user class
-     * @return {number}
+     * @return {?number}
      * @private
      */
     FeedbackModal.prototype.getFormDataClassType_ = function() {
         var classType = this.dropdowns_.classType.getValue();
-        return classType >= 0 ? classType + 1 : '';
+        return goog.isDefAndNotNull(classType) ? classType + 1 : null;
     };
 
 
@@ -712,7 +721,7 @@ goog.scope(function() {
 
     /**
      * get formatted year graduation
-     * @return {number}
+     * @return {?number}
      * @private
      */
     FeedbackModal.prototype.getFormDataYearGraduate_ = function() {
@@ -720,10 +729,16 @@ goog.scope(function() {
             data = form.serializeArray();
 
         var yearGraduate = goog.array.find(data, function(item) {
-            return (item.name == 'yearGraduate');
-        });
+                return (item.name == 'yearGraduate');
+            }),
+            result = NaN,
+            yearGraduateValue = yearGraduate.value;
 
-        return yearGraduate.value;
+        if (yearGraduateValue != '') {
+            result = Number(yearGraduateValue);
+        }
+
+        return isNaN(result) ? null : result;
     };
 
 
@@ -798,7 +813,7 @@ goog.scope(function() {
 
     /**
      * Validate input with year of graduate
-     * @param {number} value
+     * @param {?number} value
      * @private
      * @return {boolean}
      */
@@ -807,7 +822,7 @@ goog.scope(function() {
             isValid = false,
             yearRegex = /[\d][\d][\d][\d]/;
 
-        if (userType == 1) {
+        if (userType == FeedbackModal.UserType.ALUMNI) {
             if (value) {
                 if (yearRegex.test(value)) {
                     isValid = true;
