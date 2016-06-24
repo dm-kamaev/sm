@@ -119,7 +119,7 @@ exports.getAddresses = function(departmentId) {
 
 /**
  * Get address array for needed stages
-     * @param {Array} addressList Array of addresses instance
+ * @param {Array} addressList Array of addresses instance
  * @return {Array} Array of filter addresses instance
  */
 exports.addressesFilter = function(addressList) {
@@ -129,7 +129,8 @@ exports.addressesFilter = function(addressList) {
             var res = false;
             if (address.departments.length > 0) {
                 address.departments.forEach(department => {
-                    if (department.educationalGrades.some(grade => grade > 0)) {
+                    if (department.educationalGrades &&
+                        department.educationalGrades.some(grade => grade > 0)) {
                         res = true;
                     }
                 });

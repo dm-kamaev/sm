@@ -10,7 +10,7 @@ const services = require('../app/components/services').all,
     CsvConverter = require('./modules/modelArchiver/CsvConverter'),
     Archiver = require('./modules/modelArchiver/Archiver');
 
-const INPUT_DELIMITER = ';',
+const INPUT_DELIMITER = ',',
     HEADERS = [
         'schoolId',
         'schoolName',
@@ -93,7 +93,7 @@ class DepartmentCreator {
      * @return {string}
      */
     toPgArray_(range) {
-        return range ? '{' + range.join() + '}' : null;
+        return range || range === 0 ? '{' + range.toString() + '}' : null;
     }
 
     /**
@@ -120,10 +120,27 @@ class DepartmentCreator {
             department.schoolId,
             department.addressId, {
                 name: department.name,
-                educationalGrades: department.range &&
-                    department.range.split(',') || null
+                educationalGrades: this.rangeToArray_(department.range)
             }
         );
+    }
+
+    /**
+     * @private
+     * @param {(string|number)} range
+     * @return {(Array<number>|null)}
+     */
+    rangeToArray_(range) {
+        var resultArray;
+        if (typeof range === 'number') {
+            resultArray = [range];
+        } else if (!range) {
+            resultArray = null;
+        } else {
+            resultArray = range.split(',');
+        }
+        console.log(resultArray);
+        return resultArray;
     }
 }
 

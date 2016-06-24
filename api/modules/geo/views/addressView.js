@@ -181,7 +181,8 @@ var filterBydepartment = function(addresses) {
             result = true; // show addresses with no departments
         } else {
             var neededStage = address.departments.find(department => {
-                if (department.educationalGrades.some(grade => grade > 0)) {
+                if (department.educationalGrades &&
+                    department.educationalGrades.some(grade => grade > 0)) {
                     return true;
                 }
             });
