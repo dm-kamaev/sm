@@ -9,10 +9,7 @@ module.exports = {
         return queryInterface.changeColumn(
             'department',
             'stage',
-            {
-                type: Sequelize.STRING(50),
-                allowNull: false
-            }
+            {type: Sequelize.STRING(50)}
         );
     }),
     down: function(queryInterface, Sequelize) {

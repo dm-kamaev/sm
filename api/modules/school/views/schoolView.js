@@ -459,15 +459,18 @@ var groupSchools = function(schools) {
                     // checks that current department is not
                     // in metro array already
                     lodash.forEach(currentAddress.departments, department => {
-                        if (department.stage === school.departmentStage) {
+                        if (department.educationalGrades ===
+                            school.departmentEducationalGrades) {
                             isNewDepartment = false;
                         }
                     });
 
                     // if this is new department than push it into metro array
-                    if (isNewDepartment && school.departmentStage !== null) {
+                    if (isNewDepartment &&
+                        school.departmentEducationalGrades !== null) {
                         currentAddress.departments.push({
-                            stage: school.departmentStage
+                            educationalGrades:
+                                school.departmentEducationalGrades
                         });
                     }
 

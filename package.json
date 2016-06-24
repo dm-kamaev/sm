@@ -20,7 +20,6 @@
   },
   "homepage": "https://github.com/c7s/l3_school-market#readme",
   "devDependencies": {
-    "archiver": "^0.20.0",
     "asyncawait": "^1.0.1",
     "auth-service": "git+ssh://git@github.com:c7s/auth-service.git#dev",
     "axios": "^0.9.1",

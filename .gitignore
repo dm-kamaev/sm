@@ -28,6 +28,7 @@ deployment-config.json
 /app/config/local/
 /app/config/config.*
 /environment/config/*/local/
+/environment/config/*/*.json
 /environment/*/config.*
 
 console/reports

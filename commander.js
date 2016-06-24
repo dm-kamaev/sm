@@ -4,10 +4,12 @@ const commander = require('commander');
  * Require Command objects from cli scripts here. No need to assign them to a variable.
  */
 
+require('./console/addDepartments.js').Command;
 require('./console/beautifySchoolData.js').Command;
 require('./console/comments.js').Command;
 require('./console/updateSitemap.js').Command;
 require('./console/department.js').Command;
+require('./console/departmentStageToGrades.js').Command;
 require('./console/dump.js').Command;
 require('./console/egeData.js').Command;
 require('./console/geocord.js').Command;
