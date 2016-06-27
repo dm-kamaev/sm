@@ -525,12 +525,11 @@ goog.scope(function() {
      */
     School.prototype.sendDataAnalytics_ = function(
         eventCategory, eventAction, opt_eventLabel) {
-
         var dataAnalytics = {
             'hitType': 'event',
             'eventCategory': eventCategory,
             'eventAction': eventAction,
-            'eventLabel': opt_eventLabel || this.params_['schoolName']
+            'eventLabel': opt_eventLabel || this.params_.schoolName
         };
 
         Analytics.send(dataAnalytics);
@@ -546,8 +545,8 @@ goog.scope(function() {
      */
     School.prototype.getDataEc_ = function(opt_id, opt_name) {
         return {
-            'id': opt_id || this.params_['id'],
-            'name': opt_name || this.params_['schoolName']
+            'id': opt_id || this.params_.id,
+            'name': opt_name || this.params_.schoolName
         };
     };
 

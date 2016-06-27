@@ -113,6 +113,7 @@ goog.scope(function() {
         CONTROL_SEARCH: 'b-search__control_search',
         CONTROL_CLEAR: 'b-search__control_clear',
         FADER: 'b-search__fader',
+        SUGGEST_HOLDER: 'b-search__suggest-holder',
         SEARCH_MODE: 'b-search_mode_search',
         DEFAULT_MODE: 'b-search_mode_default',
         ANIMATION_ON: 'b-search_animation_on',
@@ -292,18 +293,19 @@ goog.scope(function() {
      * @public
      */
     Search.prototype.switchToSearchMode = function() {
-        goog.dom.classes.add(
+        goog.dom.classlist.add(
             this.getElement(),
             Search.CssClass.SEARCH_MODE
         );
-        goog.dom.classes.remove(
+        goog.dom.classlist.remove(
             this.getElement(),
             Search.CssClass.DEFAULT_MODE
         );
-        goog.dom.classes.add(
+        goog.dom.classlist.add(
             document.documentElement,
             Utils.CssClass.OVERFLOW_HIDDEN
         );
+        this.suggest_.focus();
         this.disableScroll_();
     };
 
@@ -313,15 +315,15 @@ goog.scope(function() {
      * @public
      */
     Search.prototype.switchToDefaultMode = function() {
-        goog.dom.classes.remove(
+        goog.dom.classlist.remove(
             this.getElement(),
             Search.CssClass.SEARCH_MODE
         );
-        goog.dom.classes.add(
+        goog.dom.classlist.add(
             this.getElement(),
             Search.CssClass.DEFAULT_MODE
         );
-        goog.dom.classes.remove(
+        goog.dom.classlist.remove(
             document.documentElement,
             Utils.CssClass.OVERFLOW_HIDDEN
         );
@@ -425,6 +427,10 @@ goog.scope(function() {
                 this.elements_.fader,
                 goog.events.EventType.CLICK,
                 this.onClearClick_
+            ).listen(
+                this.elements_.suggestHolder,
+                goog.events.EventType.ANIMATIONEND,
+                this.onSwitchModeAnimationEnd_
             );
         } else if (this.elements_.searchButton) {
             handler.listen(
@@ -638,6 +644,10 @@ goog.scope(function() {
             fader: goog.dom.getElementByClass(
                 Search.CssClass.FADER,
                 root
+            ),
+            suggestHolder: goog.dom.getElementByClass(
+                Search.CssClass.SUGGEST_HOLDER,
+                root
             )
         };
     };
@@ -667,6 +677,16 @@ goog.scope(function() {
         this.setMode(Search.Mode.DEFAULT);
     };
 
+
+    /**
+     * Switch mode animation end handler
+     * @private
+     */
+    Search.prototype.onSwitchModeAnimationEnd_ = function() {
+        if (this.mode_ == Search.Mode.SEARCH) {
+            this.suggest_.focus();
+        }
+    };
 
     /**
      * Switch mode of view

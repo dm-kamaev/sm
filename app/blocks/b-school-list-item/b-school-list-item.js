@@ -46,9 +46,11 @@ sm.bSchoolListItem.SchoolListItem = function(opt_params) {
 
     /**
      * @private
-     * @type {string}
+     * @type {?string}
      */
-    this.name_ = this.params_.name;
+    this.name_ = this.params_.name ?
+        (this.params_.name.light || '') + (this.params_.name.bold || '') :
+        null;
 
 
     /**
@@ -356,7 +358,7 @@ goog.scope(function() {
     ListItem.prototype.onAddFavoriteClick_ = function() {
         this.setEcAnalyticsAdd_();
         this.sendDataAnalytics_(
-            'favourite',
+            'favorite',
             'search results add'
         );
         this.sendAddToFavorites_();
@@ -390,7 +392,6 @@ goog.scope(function() {
      * @private
      */
     ListItem.prototype.initParams_ = function() {
-
         if (goog.object.isEmpty(this.params_)) {
             var dataParams = JSON.parse(
                 this.getElement().getAttribute('data-params')
@@ -399,7 +400,11 @@ goog.scope(function() {
 
             this.schoolId_ = this.params_.id;
             this.alias_ = this.params_.alias;
-            this.name_ = this.params_.name.light + this.params_.name.bold;
+
+            this.name_ =
+                (this.params_.name.light || '') +
+                (this.params_.name.bold || '');
+
         }
     };
 

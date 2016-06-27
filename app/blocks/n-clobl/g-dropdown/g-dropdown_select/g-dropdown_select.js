@@ -87,7 +87,7 @@ goog.scope(function() {
     /**
      * Get current selected index
      * @public
-     * @return {number}
+     * @return {?number}
      */
     DropdownSelect.prototype.getValue = function() {
         return this.value_;
