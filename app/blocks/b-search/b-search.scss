@@ -171,7 +171,7 @@
         box-sizing: border-box;
         width: 100%;
         height: 100%;
-        padding: 0 50px 0 53px;
+        padding: 0 90px 0 53px;
 
         background: none;
     }
@@ -348,5 +348,11 @@
 @include media-xs {
     .b-search__control {
         right: 30px;
+    }
+
+    .b-search_theme_foldable {
+        .b-search__suggest {;
+            padding: 0 50px 0 53px;
+        }
     }
 }
