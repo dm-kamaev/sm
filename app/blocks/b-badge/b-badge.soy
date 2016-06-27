@@ -14,9 +14,11 @@
  * }}
  */
 {template .base}
+    {let $isRating: not $params?.display/}
+
     {let $class kind="html"}
         b-badge
-        {if not $params?.display}
+        {if $isRating}
             {sp}b-badge_rating
         {/if}
 
@@ -30,6 +32,9 @@
     <div class="{$class}">
         {call .icon_ data="all"/}
         {call .text_ data="all" /}
+        {if $isRating}
+            {call .hint_ /}
+        {/if}
     </div>
 {/template}
 
@@ -144,7 +149,6 @@
     <div class="b-badge__item">
         {$params.ratingName}
     </div>
-    {call .hint_/}
 {/template}
 
 /**
