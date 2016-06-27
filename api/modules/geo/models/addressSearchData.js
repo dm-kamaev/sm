@@ -3,7 +3,7 @@ var Sequelize = require('sequelize');
 var sequelize = require('../../../../app/components/db'),
     addressSearchType = require('../enums/addressSearchType');
 
-var AddressSearchData = db.define('AddressSearchData', {
+var AddressSearchData = sequelize.define('AddressSearchData', {
     'address_id': {
         type: Sequelize.INTEGER,
         onDelete: 'cascade',
