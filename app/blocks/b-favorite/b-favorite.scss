@@ -31,9 +31,9 @@
 .b-favorite__icon {
     display: inline-block;
 
-    opacity: 0.6;
-
     vertical-align: middle;
+
+    opacity: 0.6;
 }
 
 .b-favorite__hint-content {
@@ -97,7 +97,7 @@
 
 .b-favorite_hoverable {
     .b-favorite__icon-wrap:hover
-    .b-favorite__icon{
+    .b-favorite__icon {
         opacity: 1;
     }
 }

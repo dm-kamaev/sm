@@ -17,7 +17,6 @@
 
     cursor: pointer;
 
-
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     &:before {
         display: inline-block;
@@ -33,19 +32,18 @@
 .b-authorization-link__icon {
     display: inline-block;
 
-    opacity: 0.6;
-
     vertical-align: middle;
+
+    opacity: 0.6;
 }
 
 .b-authorization-link__name {
-    padding-bottom: 15px;
     margin-bottom: 15px;
+    padding-bottom: 15px;
 
     white-space: nowrap;
 
     color: #808080;
-
     border-bottom: 1px solid #e5e5e5;
 
     font-family: Arial, sans-serif;
