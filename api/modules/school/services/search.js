@@ -303,8 +303,10 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
             searchDataWhere.values.push({
                 type: 'AND',
                 values: [
-                    'school_search_data.type = \'' + searchTypeEnum.fields.GIA + '\'',
-                    'school_search_data.values @> ' + intArrayToSql(searchParams.gia)
+                    'school_search_data.type = \'' +
+                        searchTypeEnum.fields.GIA + '\'',
+                    'school_search_data.values @> ' +
+                        intArrayToSql(searchParams.gia)
                 ]
             });
         }
@@ -314,8 +316,10 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
             searchDataWhere.values.push({
                 type: 'AND',
                 values: [
-                    'school_search_data.type = \'' + searchTypeEnum.fields.EGE + '\'',
-                    'school_search_data.values @> ' + intArrayToSql(searchParams.ege)
+                    'school_search_data.type = \'' +
+                        searchTypeEnum.fields.EGE + '\'',
+                    'school_search_data.values @> ' +
+                        intArrayToSql(searchParams.ege)
                 ]
             });
         }
