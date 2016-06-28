@@ -21,17 +21,8 @@ module.exports = {
             'created_at': Sequelize.DATE,
             'updated_at': Sequelize.DATE
         }));
-        await(queryInterface.addColumn('address', 'district_id', {
-            type: Sequelize.INTEGER,
-            onDelete: 'cascade',
-            references: {
-                model: 'district',
-                key: 'id'
-            }
-        }));
     }),
     down: async(function(queryInterface) {
         await(queryInterface.dropTable('district'));
-        await(queryInterface.removeColumn('address', 'district_id'));
     })
 };
