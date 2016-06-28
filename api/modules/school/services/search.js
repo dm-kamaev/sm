@@ -350,6 +350,13 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
             sqlOptions.where.push('metro.id = ' + searchParams.metroId);
         }
 
+        if (searchParams.districtId) {
+            isGeoDataJoined = true;
+            sqlOptions.where.push(
+                'area.district_id = ' + searchParams.districtId
+            );
+        }
+
         if (searchDataCount) {
             // search_data must be first in the from clause
             sqlOptions.from.unshift('search_data');
@@ -580,6 +587,11 @@ exports.getMapPositionParams = function(params) {
         /** Centering on area id **/
         result = {
             type: mapPositionType.AREA
+        };
+    } else if (params.districtId) {
+        result = {
+            center: services.district.getCenterCoords(params.districtId),
+            type: mapPositionType.DISTRICT
         };
     } else if (params.name === '' && !isFiltersSelected(params)) {
         result = {

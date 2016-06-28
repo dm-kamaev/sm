@@ -40,7 +40,10 @@ searchView.schoolTypeFilterIds = function(typeInstances) {
 searchView.params = function(searchParams, filters) {
     var name;
 
-    if (searchParams.areaId || searchParams.metroId || !searchParams.name) {
+    if (searchParams.areaId ||
+        searchParams.metroId ||
+        searchParams.districtId ||
+        !searchParams.name) {
         name = '';
     } else {
         name = searchParams.name;
@@ -55,6 +58,7 @@ searchView.params = function(searchParams, filters) {
         olimp: filters.olimp || [],
         metroId: searchParams.metroId || null,
         areaId: searchParams.areaId || null,
+        districtId: searchParams.districtId || null,
         sortType: searchParams.sortType || null,
         page: searchParams.page || 0
     };

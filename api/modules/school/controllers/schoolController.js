@@ -279,6 +279,7 @@ exports.createComment = async(function(req, res) {
  *       "olimp": ["computer-science", "sports"],
  *       "metroId": 1,
  *       "areaId": 1,
+ *       "districtId": 40,
  *       "sortType": 1,
  *       "page": 0
  *     }
