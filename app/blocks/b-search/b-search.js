@@ -268,7 +268,7 @@ goog.scope(function() {
      * @public
      */
     Search.prototype.getDistrictId = function() {
-        return this.metroId_;
+        return this.districtId_;
     };
 
 

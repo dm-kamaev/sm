@@ -78,6 +78,7 @@ sm.lSearchResult.SearchResult = function() {
         'name': null,
         'metroId': null,
         'areaId': null,
+        'districtId': null,
         'schoolType': [],
         'classes': [],
         'ege': [],

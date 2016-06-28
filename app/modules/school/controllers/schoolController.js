@@ -66,7 +66,7 @@ exports.list = async (function(req, res) {
             entityType.SCHOOL
         )),
         schools = schoolView.joinAliases(results.schools, schoolAliases),
-        schoolsWithFavoriteMark = schoolView.listWithFavorites(
+       schoolsWithFavoriteMark = schoolView.listWithFavorites(
             schools, favoriteIds
         );
 
