@@ -4,7 +4,8 @@ const await = require('asyncawait/await');
 const commander = require('commander');
 const SearchUpdater = require('./modules/searchUpdater/SearchUpdater');
 var sequelize = require.main.require('./app/components/db');
-    
+var modules = require('../api/modules');
+
 var start = async(function(argstring) {
     var args = argstring.split(' ');
     var options = {};
@@ -21,4 +22,3 @@ commander
     .action((argstring) => start(argstring||''));
 
 exports.Command;
-

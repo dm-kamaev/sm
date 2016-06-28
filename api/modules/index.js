@@ -7,8 +7,9 @@ var mail = require('./mail');
 var univer = require('./univer');
 var geo = require('./geo');
 var user = require('./user');
-var models = require.main.require('./app/components/models'),
-    services = require.main.require('./app/components/services');
+var favorite = require('./favorite');
+var entity = require('./entity');
+var models = require('../../app/components/models');
 
 models.initAssociations();
 
@@ -21,3 +22,5 @@ exports.mail = mail;
 exports.study = study;
 exports.user = user;
 exports.univer = univer;
+exports.favorite = favorite;
+exports.entity = entity;

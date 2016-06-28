@@ -1,5 +1,4 @@
-var modules = require.main.require('./api/modules');
-var models = require.main.require('./app/components/models').all;
+var models = require('../../app/components/models').all;
 
 /**
  *
@@ -10,44 +9,48 @@ var models = require.main.require('./app/components/models').all;
  *
  */
 
-var generate = function (includes, emptyAttributes) {
+var generate = function(includes, emptyAttributes) {
     emptyAttributes = emptyAttributes || false;
 
     var dictionary = {
-      comments: models.Comment,
-      commentGroup: models.CommentGroup,
-      addresses: models.Address,
-      nearMetro: models.Metro,
-      univer: models.Univer,
-      school: models.School,
-      subject: models.Subject,
-      city: models.City,
-      cityResult: models.CityResult,
-      giaResults: models.GiaResult,
-      ratings: models.Rating,
-      rating: models.Rating,
-      searchData: models.SearchData,
-      olimpResults: models.OlimpResult,
-      departments: models.Department
+        comments: models.Comment,
+        commentGroup: models.CommentGroup,
+        addresses: models.Address,
+        nearMetro: models.Metro,
+        univer: models.Univer,
+        school: models.School,
+        subject: models.Subject,
+        city: models.City,
+        cityResult: models.CityResult,
+        giaResults: models.GiaResult,
+        ratings: models.Rating,
+        rating: models.Rating,
+        searchData: models.SearchData,
+        olimpResults: models.OlimpResult,
+        departments: models.Department
     };
 
     var result = [];
-    for (var prop in includes){
+    for (var prop in includes) {
         if (prop != 'where') {
-            var modelInList = dictionary[prop] /*|| models[prop]*/;
-            if (!modelInList)
+            var modelInList = dictionary[prop];
+            if (!modelInList) {
                 throw new Error('Cant find association for relation \'' + prop +
                         '\' Check dictionary in sequelizeInclude.js');
+            }
             var node = {
                 model: modelInList,
                 as: prop
             };
-            if (emptyAttributes)
+            if (emptyAttributes) {
                 node.attributes = [];
-            if (includes[prop].where)
+            }
+            if (includes[prop].where) {
                 node.where = includes[prop].where;
-            if (typeof includes[prop] != 'boolean')
+            }
+            if (typeof includes[prop] != 'boolean') {
                 node.include = generate(includes[prop], emptyAttributes);
+            }
             result.push(node);
         }
     }
@@ -55,4 +58,3 @@ var generate = function (includes, emptyAttributes) {
 };
 
 module.exports = generate;
-

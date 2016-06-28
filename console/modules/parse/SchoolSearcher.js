@@ -239,8 +239,9 @@ class SchoolSearcher {
         var result = '';
         types.forEach(type => {
             type = type.trim().toLowerCase();
-            if (name.toLowerCase().indexOf(type) > -1)
+            if (name.toLowerCase().indexOf(type) > -1) {
                 result = type;
+            }
         });
         return result;
     }

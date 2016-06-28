@@ -2,6 +2,7 @@
 
 var fs = require('fs');
 var dbConfig = require('./config.db.json');
+var logConfig = require('./config.log.json');
 var config  = require('./config.json');
 
 var checkEnvironment = function () {
@@ -14,6 +15,7 @@ var checkEnvironment = function () {
 
     return {
         db: dbConfig,
+        log: logConfig,
         config: config
     };
 };

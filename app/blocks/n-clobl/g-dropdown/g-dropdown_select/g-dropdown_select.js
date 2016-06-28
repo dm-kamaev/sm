@@ -3,16 +3,18 @@ goog.provide('sm.gDropdown.DropdownSelect');
 goog.require('cl.gDropdown.Dropdown');
 goog.require('cl.gList.List');
 
+
+
 /**
- * Select control
- * @param {Object=} view
- * @param {Object=} opt_params
+ * Dropdown select control
+ * @param {Object} view
  * @param {Object=} opt_domHelper
  * @constructor
  * @extends {cl.gDropdown.Dropdown}
  */
-sm.gDropdown.DropdownSelect = function(view, opt_params, opt_domHelper) {
-    goog.base(this, view, opt_params, opt_domHelper);
+sm.gDropdown.DropdownSelect = function(view, opt_domHelper) {
+    goog.base(this, view, opt_domHelper);
+
 
     /**
      * manager of list
@@ -20,6 +22,7 @@ sm.gDropdown.DropdownSelect = function(view, opt_params, opt_domHelper) {
      * @private
      */
     this.listInstance_ = null;
+
 
     /**
      * Selected value
@@ -34,6 +37,7 @@ goog.scope(function() {
     var DropdownSelect = sm.gDropdown.DropdownSelect,
         DropdownView = cl.gDropdown.View;
 
+
     /**
      * Event enum
      * @enum
@@ -41,6 +45,7 @@ goog.scope(function() {
     DropdownSelect.Event = {
         ITEM_SELECT: cl.gList.List.Event.ITEM_SELECT
     };
+
 
     /**
      * @param {Element} element
@@ -57,6 +62,7 @@ goog.scope(function() {
             this
         );
     };
+
 
     /**
      * @override
@@ -77,6 +83,7 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * Get current selected index
      * @public
@@ -85,6 +92,7 @@ goog.scope(function() {
     DropdownSelect.prototype.getValue = function() {
         return this.value_;
     };
+
 
     /**
      * Get current selected text
@@ -95,6 +103,7 @@ goog.scope(function() {
         var selectedIndex = this.getValue();
         return this.listInstance_.getItemValue(selectedIndex);
     };
+
 
     /**
      * Return true if dropdown has value,
@@ -121,6 +130,7 @@ goog.scope(function() {
         return isValid;
     };
 
+
     /**
      * Clear selection
      */
@@ -128,6 +138,7 @@ goog.scope(function() {
         this.value_ = null;
         this.getView().clear();
     };
+
 
     /**
      * Select item by index
@@ -142,6 +153,7 @@ goog.scope(function() {
         view.removePlaceholderModifier();
         view.setOpenerCustomText(openerText);
     };
+
 
     /**
      * Handler for click on list items
@@ -159,6 +171,7 @@ goog.scope(function() {
         });
     };
 
+
     /**
      * Handler for click on dropdown
      * @param {Object} event
@@ -174,4 +187,4 @@ goog.scope(function() {
             this.close();
         }
     };
-});
+});  // goog.scope

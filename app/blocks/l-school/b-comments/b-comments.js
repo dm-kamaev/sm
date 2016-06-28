@@ -7,6 +7,8 @@ goog.require('goog.ui.Component');
 goog.require('sm.lSchool.bComment.Comment');
 goog.require('sm.lSchool.bComments.Template');
 
+
+
 /**
  * Comments component
  * @param {object=} opt_params
@@ -16,11 +18,21 @@ goog.require('sm.lSchool.bComments.Template');
 sm.lSchool.bComments.Comments = function(opt_params) {
     goog.base(this);
 
+
     /**
      * @private
-     * @type {object}
+     * @type {Object}
      */
     this.params_ = opt_params || {};
+
+
+    /**
+     * Elements
+     * @type {Object}
+     * @private
+     */
+    this.elements_ = {};
+
 
     /**
      * @private
@@ -34,15 +46,27 @@ goog.inherits(sm.lSchool.bComments.Comments, goog.ui.Component);
 goog.scope(function() {
     var Comments = sm.lSchool.bComments.Comments;
 
+
     /**
      * CSS-class enum
      * @enum {string}
      */
     Comments.CssClass = {
         ROOT: 'b-comments',
-        LINE: 'b-comments__line',
+        PLACEHOLDER_LINK: 'b-comments__placeholder-link',
+        PLACEHOLDER_IMG: 'b-comments__placeholder-img-container',
         COMMENT: 'b-comment'
     };
+
+
+    /**
+     * Event enum
+     * @enum {string}
+     */
+    Comments.Event = {
+       LEAVE_COMMENT: 'placeholder-click'
+    };
+
 
     /**
      * Template-based dom element creation.
@@ -52,16 +76,75 @@ goog.scope(function() {
         var el = goog.soy.renderAsElement(sm.lSchool.bComments.Template.base, {
             params: this.params_
         });
+
         this.decorateInternal(el);
     };
 
+
     /**
      * Internal decorates the DOM element
-     * @param {node} element
+     * @param {Element} element
      */
     Comments.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
+        this.initCommentsArray_();
+
+        this.initDom_();
+    };
+
+
+    /**
+     * @override
+     */
+    Comments.prototype.enterDocument = function() {
+        goog.base(this, 'enterDocument');
+
+        if (this.elements_.placeholderLink) {
+            this.getHandler().listen(
+                this.elements_.placeholderLink,
+                goog.events.EventType.CLICK,
+                this.onPlaceholderLinkClick_
+            );
+        }
+
+        if (this.elements_.placeholderImg) {
+            this.getHandler().listen(
+                this.elements_.placeholderImg,
+                goog.events.EventType.CLICK,
+                this.onPlaceholderImgClick_
+            );
+        }
+    };
+
+
+    /**
+     * on Placeholder Link Click event
+     * @private
+     */
+    Comments.prototype.onPlaceholderLinkClick_ = function() {
+        this.dispatchEvent({
+            'type': Comments.Event.LEAVE_COMMENT
+        });
+    };
+
+
+    /**
+     * on Placeholder Img Click event
+     * @private
+     */
+    Comments.prototype.onPlaceholderImgClick_ = function() {
+        this.dispatchEvent({
+            'type': Comments.Event.LEAVE_COMMENT
+        });
+    };
+
+
+    /**
+     * Comments array initialization
+     * @private
+     */
+    Comments.prototype.initCommentsArray_ = function() {
         var comments = goog.dom.getElementsByClass(
             Comments.CssClass.COMMENT, this.getElement()
         );
@@ -71,8 +154,8 @@ goog.scope(function() {
         }
 
         /** comments decoration */
-        var comment,
-            commentInstance;
+        var comment;
+        var commentInstance;
         if (comments.length > 0) {
             for (var i = 0; i < comments.length; i++) {
                 comment = comments[i];
@@ -84,9 +167,26 @@ goog.scope(function() {
         }
     };
 
+
+    /**
+     * DOM elements
+     * @private
+     */
+    Comments.prototype.initDom_ = function() {
+        this.elements_ = {
+            placeholderLink: this.getElementByClass(
+                Comments.CssClass.PLACEHOLDER_LINK
+            ),
+            placeholderImg: this.getElementByClass(
+                Comments.CssClass.PLACEHOLDER_IMG
+            )
+        };
+    };
+
+
     /**
      * creates and returns comment
-     * @param {object} params
+     * @param {Object} params
      * @return {Element}
      * @public
      */
@@ -103,4 +203,4 @@ goog.scope(function() {
 
         return comment;
     };
-});
+});  // goog.scope

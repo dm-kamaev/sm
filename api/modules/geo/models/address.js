@@ -20,7 +20,7 @@ var Address = db.define('Address', {
     underscored: true,
     tableName: 'address',
     classMethods: {
-        associate: function (models) {
+        associate: function(models) {
             Address.belongsTo(models.School, {
                 foreignKey: 'school_id'
             });

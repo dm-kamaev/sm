@@ -4,6 +4,8 @@ goog.require('cl.gHint.View');
 goog.require('goog.ui.Component');
 goog.require('sm.lSchool.bDataBlock.TemplateRatings');
 
+
+
 /**
  * sm.lSchool.bDataBlock.DataBlockRatings component
  * @param {Object=} opt_params
@@ -13,12 +15,14 @@ goog.require('sm.lSchool.bDataBlock.TemplateRatings');
 sm.lSchool.bDataBlock.DataBlockRatings = function(opt_params) {
     goog.base(this);
 
+
     /**
      * Elements
      * @type {Object}
      * @private
      */
     this.elements_ = {};
+
 
     /**
      * Parameters
@@ -31,8 +35,9 @@ goog.inherits(sm.lSchool.bDataBlock.DataBlockRatings, goog.ui.Component);
 
 
 goog.scope(function() {
-    DataBlock = sm.lSchool.bDataBlock.DataBlockRatings,
-    HintView = cl.gHint.View;
+    var DataBlock = sm.lSchool.bDataBlock.DataBlockRatings,
+        HintView = cl.gHint.View;
+
 
     /**
      * Css class enum
@@ -43,6 +48,7 @@ goog.scope(function() {
         CONTENT_WRAP: 'b-data-block__content-wrap',
         HINT_HREF: 'b-data-block__hint-href'
     };
+
 
     /**
      * @override
@@ -60,6 +66,7 @@ goog.scope(function() {
         this.decorateInternal(element);
     };
 
+
     /**
      * @override
      * @param {Element} element
@@ -72,6 +79,7 @@ goog.scope(function() {
         this.elements_.hintHref =
             this.getElementByClass(DataBlock.CssClass.HINT_HREF);
     };
+
 
     /**
      * @override
@@ -91,6 +99,7 @@ goog.scope(function() {
             );
     };
 
+
     /**
      * @override
      */
@@ -101,6 +110,7 @@ goog.scope(function() {
         this.elements_ = null;
     };
 
+
     /**
      * On hint href click
      * @private
@@ -108,6 +118,7 @@ goog.scope(function() {
     DataBlock.prototype.onHintHrefClick_ = function() {
         window.open('http://dogm.mos.ru/rating/');
     };
+
 
     /**
      * On content wrap click
@@ -122,6 +133,7 @@ goog.scope(function() {
             this.onDocumentClick_
         );
     };
+
 
     /**
      * On document click actions
@@ -145,6 +157,7 @@ goog.scope(function() {
         }
     };
 
+
     /**
      * Toggle hint include css class
      * @private
@@ -156,6 +169,7 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * Remove hint include css class
      * @private
@@ -166,4 +180,4 @@ goog.scope(function() {
             HintView.CssClass.INCLUDE_CLICK_MODE
         );
     };
-});
+});  // goog.scope

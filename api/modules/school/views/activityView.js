@@ -1,46 +1,35 @@
+var lodash = require('lodash');
 var activityView = {};
 
 /**
  * @param {object} activities
- * @return {array}
+ * @return {object}
  */
 activityView.list = function(activities) {
-    var result = [];
+    activities = lodash.sortBy(activities, 'category');
+    activities = lodash.groupBy(activities, 'category');
 
-    activities = activities.sort(function(a, b) {
-        if (a.profile > b.profile) {
-            return 1;
+    var items = lodash.keys(activities)
+        .map(key => {
+            var spheres = activities[key].map(activity => activity.sphere),
+                items = lodash.uniq(spheres);
+
+            return activityView.listParams_(items, 'folded', key);
+        });
+
+    return activityView.listParams_(items, 'unfolded');
+};
+
+activityView.listParams_ = function(items, sphere, opt_name) {
+    return {
+        data: {
+            name: opt_name || '',
+            items: items
+        },
+        config: {
+            type: sphere
         }
-
-        if (a.profile < b.profile) {
-            return -1;
-        }
-
-        return 0;
-    });
-
-    var profile = '',
-        index = -1;
-
-    for (var i = 0, l = activities.length, activity; i < l; i++) {
-        activity = activities[i];
-
-        if (profile !== activity.profile) {
-            profile = activity.profile;
-
-            result.push({
-                'name': profile,
-                'items': []
-            });
-            index += 1;
-        }
-
-        if (result[index].items.indexOf(activity.type) === -1) {
-            result[index].items.push(activity.type);
-        }
-    }
-
-    return result;
+    };
 };
 
 module.exports = activityView;

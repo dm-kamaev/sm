@@ -1,12 +1,13 @@
 goog.provide('sm.bScore.Score');
 
 goog.require('goog.dom');
+goog.require('goog.ui.Component');
 
 
 
 /**
  * Score component
- * @param {object} opt_params
+ * @param {Object=} opt_params
  * @constructor
  * @extends {goog.ui.Component}
  */
@@ -16,25 +17,29 @@ sm.bScore.Score = function(opt_params) {
 };
 goog.inherits(sm.bScore.Score, goog.ui.Component);
 
+
 goog.scope(function() {
     var Score = sm.bScore.Score;
 
+
     /**
      * Css class enum
-     * @enum {String}
+     * @enum {string}
      */
     Score.CssClass = {
         ROOT: 'b-score',
         PLACE_COMMENT: 'b-score__inform_place-comment'
     };
 
+
     /**
      * Event enum
-     * @enum {String}
+     * @enum {string}
      */
     Score.Event = {
         PLACE_COMMENT_CLICK: 'place-comment-click'
     };
+
 
     /**
      * Sets up the component
@@ -53,6 +58,7 @@ goog.scope(function() {
         }
     };
 
+
     /**
      * Place comment click handler
      * @private
@@ -62,5 +68,4 @@ goog.scope(function() {
             'type': Score.Event.PLACE_COMMENT_CLICK
         });
     };
-
-});
+});  // goog.scope

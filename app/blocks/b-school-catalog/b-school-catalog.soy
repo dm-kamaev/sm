@@ -1,0 +1,163 @@
+{namespace sm.bSchoolCatalog.Template}
+
+/**
+ * Constructor
+ * @param? params {
+ *     text: ?string,
+ *     amount: ?number,
+ *     dataLink: {
+ *         name: ?string
+ *         url: ?uri
+ *     }
+ * }
+ * @extends cl.iControl.Template
+ * @constructor
+ */
+{template .info}
+    {call .init data="all" /}
+{/template}
+
+
+/**
+ * Body
+ * @param? params {
+ *     text: ?string,
+ *     amount: ?number,
+ *     dataLink: {
+ *         name: ?string
+ *         url: ?uri
+ *     }
+ * }
+ * @override
+ */
+{template .body}
+    <a class="{call .rootClass/}__wrap-link" href="{$params.dataLink?.url}">
+        {call sm.bSchoolCatalog.Template.img_/}
+
+        {call sm.bSchoolCatalog.Template.title_/}
+
+        <div class="{call .rootClass/}__content">
+            {call sm.bSchoolCatalog.Template.text_ data="all" /}
+            {call sm.bSchoolCatalog.Template.link_ data="all" /}
+        </div>
+    </a>
+{/template}
+
+
+/**
+ * Img template
+ */
+{template .img_ autoescape="strict" kind="html"}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__catalog
+    {/let}
+
+    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+        {param params: [
+            'factory': 'stendhal',
+            'type': 'icon',
+            'renderParams': [
+                'data': [
+                    'type': 'catalog'
+                ],
+                'config': [
+                    'customClasses': [$customClasses]
+                ]
+            ]
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * Title template
+ */
+{template .title_ autoescape="strict" kind="html"}
+    <div class="{call .rootClass/}__title">
+        Каталог
+    </div>
+{/template}
+
+
+/**
+ * Text template
+ * @param params {
+ *     text: ?string
+ * }
+ */
+{template .text_ autoescape="strict" kind="html"}
+    <span class="{call .rootClass/}__text">
+        {$params?.text}{sp}
+    </span>
+{/template}
+
+
+/**
+ * Link template
+ * @param? params {
+ *     amount: ?number,
+ *     dataLink: {
+ *         name: ?string,
+ *         url: ?uri
+ *     }
+ * }
+ */
+{template .link_ autoescape="strict" kind="html"}
+    {if $params?.amount}
+        {let $linkName kind="html"}
+            {$params.amount}{sp}
+
+            {call sm.bSchoolCatalog.Template.getEnding_}
+                {param params: [
+                    'number': $params.amount
+                ]/}
+            {/call}
+        {/let}
+
+        {let $customClasses kind="html"}
+            {call .rootClass/}__link
+        {/let}
+
+        {call sm.bLink.Template.base}
+            {param params: [
+                'data': [
+                    'name': $linkName
+                ],
+                'config': [
+                    'customClasses': $customClasses
+                ]
+            ]/}
+        {/call}
+    {/if}
+{/template}
+
+
+/**
+ * makes word's 'школа' ending depends of incoming number
+ * @param? params {
+ *     number: number
+ * }
+ */
+{template .getEnding_}
+    {if $params.number >= 11 and $params.number <= 19}
+        школ
+    {else}
+        {let $lastNumber: $params.number % 10 /}
+        {if $lastNumber == 1}
+            школу
+        {elseif $lastNumber >= 2 and $lastNumber <= 4}
+            школы
+        {else}
+            школ
+        {/if}
+    {/if}
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-school-catalog
+{/template}

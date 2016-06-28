@@ -2,14 +2,14 @@
 
 .b-schools-footer {
     width:100%;
-    padding: 25px 0;
+    padding: 35px 0 25px;
     margin-bottom: 30px;
 
     text-align: left;
     border-top: 1px solid rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
 
-    font-family: 'Roboto';
+    font-family: Arial, sans-serif;
 }
 
 .b-schools-footer__left-block {
@@ -56,4 +56,19 @@
     .b-schools-footer__link {
         margin-bottom: 15px;
     }
+}
+
+@include media-xxs {
+    .b-schools-footer {
+        padding: 30px 0 30px;
+    }
+
+    .b-schools-footer__link {
+        margin-bottom: 2px;
+    }
+
+    .b-schools-footer__link.b-schools-footer__link_copyright {
+        margin-bottom: 15px;
+    }
+
 }

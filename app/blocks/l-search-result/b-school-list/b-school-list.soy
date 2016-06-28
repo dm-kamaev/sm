@@ -6,26 +6,22 @@
  * @param? params {
  *     schools: ?list<[
  *         id: ?number,
- *         url: ?string,
+ *         alias: ?string,
  *         name: [
  *             light: ?string,
  *             bold: ?string
  *         ],
- *         score: ?list<[
- *             name: ?string,
- *             value: ?number
- *         ]>,
- *         currentCriterion: [
- *             name: ?string,
- *             value: ?number
- *         ],
+ *         type: ?string,
+ *         score: {sm.bScore.TemplateMinimized.Params},
  *         description: ?string,
  *         metroStations: ?list<[
  *             id: number,
  *             name: string
  *         ]>,
  *         ratings: list<string>,
- *         isScoreClickable: ?boolean
+ *         isScoreClickable: ?boolean,
+ *         position: ?number,
+ *         isFavorite: boolean
  *     ]>
  * }
  */
@@ -66,6 +62,7 @@
                                 'defaultOpenerText': 'средней оценке'
                             ],
                             'config': [
+                                'viewType': 'link',
                                 'iconSprite': 'sort-arrow',
                                 'theme': 'sort'
                             ]
@@ -76,19 +73,8 @@
         </div>
         <div class="b-school-list__body">
             {foreach $school in $params.schools}
-                {call sm.lSearchResult.bSchoolListItem.Template.base}
-                    {param params:[
-                        'id': $school.id,
-                        'url': $school.url,
-                        'name': $school.name,
-                        'score': $school.score,
-                        'currentCriterion': $school.currentCriterion,
-                        'description': $school.description,
-                        'metroStations': $school.metroStations,
-                        'area': $school.area,
-                        'ratings': $school.ratings,
-                        'isScoreClickable': $school.isScoreClickable
-                    ]/}
+                {call sm.bSchoolListItem.Template.base}
+                    {param params: $school/}
                 {/call}
             {/foreach}
         </div>

@@ -53,14 +53,86 @@ updateSearch - актуализация поисковой таблицы
 /apidoc - доки по запросам к бэкэнду  
 /debug - удобная форма для теста запросов к бэкэнду. Требует собраные доки (gulp doc)  
 /doc - документация по проекту  
- 
+
+## Микросервис авторизации/сессии ##
+Если есть необходимость в собственном конфиге, то создать папки **local** в `app/config`, `environment/config/authorization` и `environment/config/user`.  
+В **app/config/local** создать `config.db.json`, `config.json`,  
+а в **environment/config/authorization/local** `config.json`.  
+Структура файлов:  
+**app/config/config.json**  
+```javascript
+{
+    "port": 3000,
+    "environment": "development",
+    "url": {
+        "protocol": "http",
+        "host": "www21.lan"
+    }
+}
+```  
+**app/config/config.db.json**  
+```javascript
+{
+    "host": "localhost",
+    "port": "5432",
+    "username": "gorod",
+    "password": "123qwe",
+    "database": "school_market",
+    "dialect": "postgres"
+}
+```  
+**environment/config/authorization/config.json**  
+```javascript
+{
+    "port": 3001,
+    "authorization": {
+        "vk": {
+            "clientId": 5334553,
+            "clientSecret": "6OA9JUBAlABYSm6iRFKb",
+            "redirectUri": "http://www21.lan:3000/authorize/vk"
+        },
+        "fb": {
+            "clientId": 525358880980041,
+            "clientSecret": "db1931569be7e254a87ab8aae5ae03db",
+            "redirectUri": "http://www21.lan:3000/authorize/fb"
+        }
+    }
+}
+```  
+```javascript
+{
+    "user": "http://localhost:3002"
+}
+```  
+**environment/config/user/config.json**  
+```javascript
+{
+    "port": 3002,
+    "scheme": "mel"
+}
+```  
+**environment/config/user/config.db.json**  
+```javascript
+{
+    "host": "median-mel1.qa.lan",
+    "port": "3306",
+    "username": "cityuser",
+    "database": "db1",
+    "dialect": "mysql"
+}
+```  
+Потом запускаем галп, и делаем `npm i` в `./node_modules/services` и
+`./node_modules/user`, и можно запускать микросервисы.
+Либо стандартно, можно `forever app.js`.
+
+
 ## Миграции ##
-Теперь все изменения в бд происходят через миграции. Чтобы накатить все 
-непримененные миграции следует выполнить **gulp migrate** на виртуалке. 
+Теперь все изменения в бд происходят через миграции. Чтобы накатить все
+непримененные миграции следует выполнить **gulp migrate** на виртуалке.
 **Внимание:** при первом применении миграций все таблицы в бд будут дропнуты
  и созданы с нуля.
  Если вы хотите каким-либо образом изменить структуру бд вам необходимо помимо изменения модели создать миграцию.
- Миграции лежат в api/modules/\*/migrations/. Число в начале - таймстамп времени создания. 
+ Миграции лежат в api/modules/\*/migrations/. Число в начале - таймстамп времени создания.
  Он влияет на очередность применения миграций к бд, т.е туда руками надо вбить время создания чтобы миграция была последней в списке.
   Инфа по миграциям: http://docs.sequelizejs.com/en/latest/docs/migrations/
 
@@ -73,7 +145,7 @@ updateSearch - актуализация поисковой таблицы
 http://repo.dfarm.lan/db/  
 ###### Как добавить свой ключ на хост и не вводить каждый раз пароль: ######
 1) Убедиться, что у вас есть rsa ключ. Если его нет, то создать: https://help.github.com/articles/generating-ssh-keys/  
-2) Забрать файл с допущенными ключами с хоста: 
+2) Забрать файл с допущенными ключами с хоста:
 `scp uploader@repo.dfarm.lan:~/.ssh/authorized_keys ./`   
 3) Записать туда свой публичный ключ: `cat ~/.ssh/id_rsa.pub >> authorized_keys`  
 4) Закинуть файл с допущенными ключами обратно на сервер: `scp authorized_keys uploader@repo.dfarm.lan:~/.ssh/authorized_keys`  
@@ -102,3 +174,23 @@ Forever пишет такие логи:
 * /opt/school-market/current/runtime/node.out.log - stdout from app.js
 * /opt/school-market/current/runtime/node.error.log - stderr from app.js
 
+###logger
+logger пишет в файл `/opt/school-market/current/runtime/node.forever.log` сообщения уровней `WARN`, `ERROR` и `CRITICAL`
+
+В dev-режиме дополнительно выводятся в консоль сообщения уровней `TRACE`, `VERBOSE`, `DEBUG` и `INFO`
+
+Для работы логгера **ОБЯЗАТЕЛЬНО** наличие директории `runtime` в корне проекта
+
+## Advanced compilation ##
+Для дебага скриптов в режиме Advanced compilation нужно запустить комманду
+```sh
+gulp debug
+```
+Для того, чтобы собрать отдельный лейаут можно воспользоваться параметром `layout`
+```sh
+gulp debug --layout l-doc
+```
+или
+```sh
+gulp debug --layout l-doc.js
+```

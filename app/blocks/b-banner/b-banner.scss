@@ -4,12 +4,11 @@
     width: 100%;
     height: 50px;
 
+    cursor: pointer;
+    text-align: left;
+
     color: #fff;
     background-color: #0c6b2c;
-
-    cursor: pointer;
-
-    text-align: left;
 
     font-family: Arial;
     font-size: 13px;
@@ -42,15 +41,17 @@
 }
 
 @include media-s {
-    .b-banner__body {
-        padding: 0 30px;
-    }
-
     .b-banner__text_size-xl {
         display: none;
     }
 
     .b-banner__text_size-s {
         display: block;
+    }
+}
+
+@include media-xs {
+    .b-banner__body {
+        padding: 0 30px;
     }
 }

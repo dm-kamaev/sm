@@ -1,0 +1,166 @@
+{namespace sm.lSchool.bDate.Template}
+
+/**
+ * @typedef sm.lSchool.bDate.Template.Params
+ * @property {Object} data
+ *
+ * @property {Object} data.todayDate
+ * @property {number} data.todayDate.year
+ * @property {number} data.todayDate.month
+ * @property {number} data.todayDate.data
+ *
+ * @property {number} data.commentDate.year
+ * @property {number} data.commentDate.year
+ * @property {number} data.commentDate.year
+ */
+
+/**
+ * date template
+ * @param params {sm.lSchool.bDate.Template.Params}
+ * @extends cl.iControl.Template
+ * @constructor
+ */
+{template .date kind="html"}
+    {call .init data="all"/}
+{/template}
+
+/**
+ * Body
+ * @param params {{
+ *     data: {
+ *         todayDate: {
+ *             year: number,
+ *             month: number,
+ *             day: number
+ *         },
+ *         commentDate: {
+ *             year: number,
+ *             month: number,
+ *             day: number
+ *         }
+ *     }
+ * }}
+ * @override
+ */
+{template .body kind="html"}
+    {let $todayDate: $params.data.todayDate /}
+    {let $commentDate: $params.data.commentDate /}
+
+    {if $todayDate.year == $commentDate.year and
+        $todayDate.month == $commentDate.month and
+        $todayDate.day == $commentDate.day}
+
+        {call .printDate_}
+            {param date: 'сегодня' /}
+        {/call}
+    {elseif $todayDate.year == $commentDate.year and
+            $todayDate.month == $commentDate.month and
+            ($todayDate.day - 1) == $commentDate.day}
+
+        {call .printDate_}
+            {param date: 'вчера' /}
+        {/call}
+    {else}
+        {let $date kind="html"}
+            {call .getDateString_ data="all" /}
+        {/let}
+
+        {call .printDate_}
+            {param date: $date /}
+        {/call}
+    {/if}
+{/template}
+
+/**
+ * Print date template
+ * @param? date {string}
+ */
+{template .printDate_ kind="html" private="true"}
+    {$date}
+{/template}
+
+/**
+ * Generate a date string
+ * @param params {{
+ *     data: {
+ *         todayDate: {
+ *             year: number,
+ *             month: number,
+ *             day: number
+ *         },
+ *         commentDate: {
+ *             year: number,
+ *             month: number,
+ *             day: number
+ *         }
+ *     }
+ * }}
+ */
+{template .getDateString_ kind="html" private="true"}
+    {$params.data.commentDate.day}{sp}
+
+    {call .getFormattedMonth_}
+        {param month: $params.data.commentDate.month /}
+    {/call}
+
+    {call .getFormattedYear_}
+        {param params: [
+            'presentYear': $params.data.todayDate.year,
+            'commentYear':  $params.data.commentDate.year
+        ]/}
+    {/call}
+{/template}
+
+/**
+ * Template formatted year
+ * @param params {{
+ *     presentYear: number,
+ *     commentYear: number
+ * }}
+ */
+{template .getFormattedYear_ kind="html" private="true"}
+    {if $params.presentYear != $params.commentYear}
+        {sp}{$params.commentYear}
+    {/if}
+{/template}
+
+/**
+ * Template formatted month
+ * @param? month {number}
+ */
+{template .getFormattedMonth_ kind="html" private="true"}
+    {switch $month}
+        {case 0}
+            января
+        {case 1}
+            февраля
+        {case 2}
+            марта
+        {case 3}
+            апреля
+        {case 4}
+            мая
+        {case 5}
+            июня
+        {case 6}
+            июля
+        {case 7}
+            августа
+        {case 8}
+            сентября
+        {case 9}
+            октября
+        {case 10}
+            ноября
+        {case 11}
+            декабря
+    {/switch}
+{/template}
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-date
+{/template}

@@ -1,12 +1,10 @@
 var DataType = require('sequelize'),
-    db = require('../../../../app/components/db'),
-    departmentStage = require('../enums/departmentStage');
+    db = require('../../../../app/components/db');
 
 var Department = db.define('Department', {
     name: DataType.STRING,
     stage: {
-        type: DataType.ENUM,
-        values: departmentStage.toArray(),
+        type: DataType.STRING(50),
         allowNull: false
     },
     addressId: {
@@ -18,7 +16,7 @@ var Department = db.define('Department', {
     tableName: 'department',
 
     classMethods: {
-        associate: function (models) {
+        associate: function(models) {
             Department.belongsTo(models.Address, {
                 foreignKey: 'address_id'
             });

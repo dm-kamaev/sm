@@ -1,6 +1,7 @@
 goog.provide('sm.iAnimate.Animate');
 
 
+
 /**
  * Animate constructor
  * @constructor

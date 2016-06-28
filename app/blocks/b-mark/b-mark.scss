@@ -3,11 +3,9 @@
 .b-mark {
     display: inline-block;
 
-    font-family: 'Proxima', Arial, sans-serif;
-    font-size: 22px;
     text-align: center;
-    font-weight: 600;
-    color: #000000;
+
+    font-size: 22px;
 }
 
 .b-mark__circle {
@@ -19,18 +17,18 @@
     height: 52px;
 
     border: 4px solid #c6c6c1;
-    border-radius: 50px;
+    border-radius: 50%;
 
     font-weight: 800;
 }
 
 .b-mark__mark {
     position: absolute;
+    z-index: 0;
     top: 0;
+    right: 0;
     bottom: 0;
     left: 0;
-    right: 0;
-    z-index: 0;
 
     width: auto;
     height: 22px;
@@ -41,7 +39,7 @@
     line-height: 24px;
 }
 
-.b-mark_green{
+.b-mark_green {
     .b-mark__circle {
         border-color: #00aa00;
     }
@@ -53,7 +51,7 @@
     }
 }
 
-.b-mark_red{
+.b-mark_red {
     .b-mark__circle {
         border-color: #ee362c;
     }
@@ -62,17 +60,18 @@
 .b-mark_inline {
     display: inline-block;
 
-	vertical-align: middle;
+    vertical-align: middle;
 
     .b-mark__circle {
-        top: 1px;
-
         display: inline-block;
 
-        width: 3px;
-        height: 3px;
+        width: 11px;
+        height: 11px;
         margin-right: 11px;
 
+        vertical-align: middle;
+
+        border-width: 0;
         background-color: #c6c6c1;
     }
 
@@ -81,7 +80,10 @@
 
         display: inline-block;
 
+        height: auto;
+
         font-size: 13px;
+        line-height: inherit;
     }
 }
 
@@ -115,14 +117,62 @@
     }
 }
 
+.b-mark_inline.b-mark_size_m {
+    vertical-align: baseline;
+
+    line-height: 18px;
+
+    .b-mark__circle {
+        width: 9px;
+        height: 9px;
+    }
+}
+
 .b-mark_inline.b-mark_size_s {
+    vertical-align: baseline;
+
+    font-size: 13px;
+    line-height: 20px;
+
     .b-mark__mark {
-        display: none;
+        letter-spacing: normal;
+
+        line-height: 20px;
     }
 
     .b-mark__circle {
-        height: 1px;
-        width: 1px;
+        box-sizing: border-box;
+        width: 8px;
+        height: 8px;
+        margin-right: 12px;
+
+        border-width: 4px;
+    }
+}
+
+.b-mark_inline.b-mark_size_xs {
+    vertical-align: baseline;
+
+    font-size: 12px;
+    line-height: 20px;
+
+    .b-mark__mark {
+        letter-spacing: normal;
+
+        font-size: 12px;
+    }
+
+    .b-mark__circle {
+        box-sizing: border-box;
+        width: 7px;
+        height: 7px;
+        margin-right: 7px;
+    }
+}
+
+.b-mark_inline.b-mark_no-mark {
+    .b-mark__mark {
+        display: none;
     }
 }
 
@@ -130,12 +180,13 @@
     .b-mark__mark {
         position: static;
 
+        letter-spacing: normal;
+
+        color: #808080;
 
         font-family: Arial, sans-serif;
         font-size: 13px;
         font-weight: normal;
-        letter-spacing: normal;
-        color: #808080;
         line-height: 20px;
     }
 }
@@ -147,11 +198,11 @@
 }
 
 .b-mark_question {
-	.b-mark__mark {
-		font-size: 28px;
+    .b-mark__mark {
+        color: #c6c6c1;
 
-		color: #c6c6c1;
-	}
+        font-size: 28px;
+    }
 }
 
 @include media-xxs {
@@ -159,8 +210,10 @@
         display: none;
     }
 
-	.b-mark_inline.b-mark_size_l .b-mark__circle,
-    .b-mark_inline.b-mark_size_s .b-mark__circle {
+    .b-mark_inline.b-mark_size_l .b-mark__circle,
+    .b-mark_inline.b-mark_size_m .b-mark__circle,
+    .b-mark_inline.b-mark_size_s .b-mark__circle,
+    .b-mark_inline.b-mark_size_xs .b-mark__circle {
         display: inline-block;
     }
 }

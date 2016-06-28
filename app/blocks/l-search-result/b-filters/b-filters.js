@@ -11,6 +11,8 @@ goog.require('sm.lSearchResult.bFilter.Filter');
 goog.require('sm.lSearchResult.bFilter.FilterClasses');
 goog.require('sm.lSearchResult.bFilters.Template');
 
+
+
 /**
  * Filters component
  * @param {object=} opt_params
@@ -20,12 +22,14 @@ goog.require('sm.lSearchResult.bFilters.Template');
 sm.lSearchResult.bFilters.Filters = function(opt_params) {
     goog.base(this);
 
+
     /**
      * Parameters
      * @private
      * @type {Object}
      */
     this.params_ = opt_params || {};
+
 
     /**
      * Dom elements
@@ -34,6 +38,7 @@ sm.lSearchResult.bFilters.Filters = function(opt_params) {
      */
     this.elements_ = {};
 
+
     /**
      * Instance filter classes
      * @type {sm.lSearchResult.bFilter.FilterClasses}
@@ -41,7 +46,8 @@ sm.lSearchResult.bFilters.Filters = function(opt_params) {
      */
      this.filterClasses_ = null;
 
-     /**
+
+    /**
      * Array instances filters
      * @type Array {sm.lSearchResult.bFilter.Filter}
      * @private
@@ -51,10 +57,12 @@ sm.lSearchResult.bFilters.Filters = function(opt_params) {
 };
 goog.inherits(sm.lSearchResult.bFilters.Filters, goog.ui.Component);
 
+
 goog.scope(function() {
     var Filters = sm.lSearchResult.bFilters.Filters,
         Filter = sm.lSearchResult.bFilter.Filter,
         FilterClasses = sm.lSearchResult.bFilter.FilterClasses;
+
 
     /**
      * CSS-class enum
@@ -72,6 +80,7 @@ goog.scope(function() {
         HIDDEN: cl.iUtils.Utils.CssClass.HIDDEN
     };
 
+
     /**
      * Event enum
      * @enum {string}
@@ -79,6 +88,19 @@ goog.scope(function() {
     Filters.event = {
         SUBMIT: 'filters-submit'
     };
+
+
+    /**
+     * Filter type enum
+     * @enum {string}
+     */
+    Filters.Type = {
+        EGE: 'ege',
+        GIA: 'gia',
+        SCHOOL_TYPE: 'schoolType',
+        CLASSES: 'classes'
+    };
+
 
     /**
      * @override
@@ -88,6 +110,7 @@ goog.scope(function() {
 
         this.params_ = jQuery(element).data('params') || {};
     };
+
 
     /**
      * @override
@@ -104,6 +127,7 @@ goog.scope(function() {
 
         this.decorateInternal(element);
     };
+
 
     /**
      * @override
@@ -134,6 +158,7 @@ goog.scope(function() {
             }
         }
     };
+
 
     /**
      * Init elements
@@ -172,6 +197,7 @@ goog.scope(function() {
             element
         );
     };
+
 
     /**
      * @override
@@ -232,13 +258,6 @@ goog.scope(function() {
         }
     };
 
-    /**
-     * Submit data
-     * @param {Object} event
-     */
-    Filters.prototype.submit = function(event) {
-        this.sendForm_(event);
-    };
 
     /**
      * Expand filters
@@ -251,6 +270,7 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * Collapse filters
      */
@@ -261,6 +281,7 @@ goog.scope(function() {
             Filters.CssClass.STATE_COLLAPSED
         );
     };
+
 
     /**
      * Reset filters
@@ -275,6 +296,7 @@ goog.scope(function() {
 
         this.hideButtonReset_();
     };
+
 
     /**
      * Is checked input
@@ -295,6 +317,19 @@ goog.scope(function() {
         return res;
     };
 
+
+    /**
+     * Serialize form to object
+     * @public
+     * @return {Object}
+     */
+    Filters.prototype.getData = function() {
+        var form = jQuery(this.getElement());
+        var data = form.serializeArray();
+        return this.processingSerializeArray_(data);
+    };
+
+
     /**
      * shows the button Reset filters
      * @private
@@ -302,6 +337,7 @@ goog.scope(function() {
     Filters.prototype.onCheckedFilter_ = function() {
         this.showButtonReset_();
     };
+
 
     /**
      * shows the button Reset filters
@@ -313,6 +349,7 @@ goog.scope(function() {
         }
     };
 
+
     /**
      * Reset filters
      * @private
@@ -321,16 +358,19 @@ goog.scope(function() {
         this.reset();
     };
 
+
     /**
      * Submit handler
-     * @param {Object} event
      * @private
      */
-    Filters.prototype.onSubmit_ = function(event) {
-        event.preventDefault();
-
-        this.sendForm_(event);
+    Filters.prototype.onSubmit_ = function() {
+        var data = this.getData();
+        this.dispatchEvent({
+            'type': Filters.event.SUBMIT,
+            'data': data
+        });
     };
+
 
     /**
      * Expand handler
@@ -341,6 +381,7 @@ goog.scope(function() {
         this.expand();
     };
 
+
     /**
      * Collapse handler
      * @param {Object} event
@@ -349,6 +390,7 @@ goog.scope(function() {
     Filters.prototype.onCollapserClick_ = function(event) {
         this.collapse();
     };
+
 
     /**
      * Hide button reset
@@ -361,6 +403,7 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * Show button reset
      * @private
@@ -372,33 +415,6 @@ goog.scope(function() {
         );
     };
 
-    /**
-     * Send form
-     * @param {Object} event
-     * @private
-     */
-    Filters.prototype.sendForm_ = function(event) {
-        var form = jQuery(this.getElement()),
-            data = {
-                'searchParams': this.processingSerializeArray_(
-                    form.serializeArray()
-                )
-            },
-            type = event.data ? event.data.type : '';
-
-        if (type === 'metro') {
-            data.searchParams.metroId = event.data.id;
-        } else if (type === 'areas') {
-            data.searchParams.areaId = event.data.id;
-        }
-
-        this.dispatchEvent({
-            type: Filters.event.SUBMIT,
-            data: data,
-            url: form.attr('action'),
-            method: form.attr('method')
-        });
-    };
 
     /**
      * Processing serialize array
@@ -407,18 +423,20 @@ goog.scope(function() {
      * @private
      */
     Filters.prototype.processingSerializeArray_ = function(array) {
-        var result = {};
+        var result = {
+            'ege': [],
+            'gia': [],
+            'olimp': [],
+            'classes': [],
+            'schoolType': []
+        };
 
         for (var i = 0, item; i < array.length; i++) {
             item = array[i];
-
-            if (!result[item.name]) {
-                result[item.name] = [];
-            }
 
             result[item.name].push(item.value);
         }
 
         return result;
     };
-});
+});  // goog.scope

@@ -6,6 +6,7 @@ public/
 tmp/
 doc/
 build/
+runtime/
 assets/dump/
 /parse/
 /console/reports
@@ -20,8 +21,14 @@ deployment-config.json
 .remote-sync.json
 .tern-project
 .jshintrc
+.eslintrc
 .csscomb*
 .tags*
+
+/app/config/local/
+/app/config/config.*
+/environment/config/*/local/
+/environment/*/config.*
 
 console/reports
 migrate_stderr

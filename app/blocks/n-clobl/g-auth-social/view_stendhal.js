@@ -2,6 +2,8 @@ goog.provide('sm.gAuthSocial.ViewStendhal');
 
 goog.require('cl.gAuthSocial.View');
 
+
+
 /**
  * sm.gAuthSocial.ViewStendhal
  * @param {Object=} opt_params
@@ -17,7 +19,8 @@ goog.inherits(sm.gAuthSocial.ViewStendhal, cl.gAuthSocial.View);
 
 
 goog.scope(function() {
-    View = sm.gAuthSocial.ViewStendhal;
+    var View = sm.gAuthSocial.ViewStendhal;
+
 
     /**
      * Css class enum
@@ -26,6 +29,7 @@ goog.scope(function() {
     View.CssClass = {
         HREF: cl.gAuthSocial.View.CssClass.ROOT + '__href'
     };
+
 
     /**
      * @override
@@ -36,6 +40,7 @@ goog.scope(function() {
 
         this.dom.href = this.getElementByClass(View.CssClass.HREF);
     };
+
 
     /**
      * @override
@@ -48,6 +53,7 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * On href click actions
      * @protected
@@ -55,4 +61,4 @@ goog.scope(function() {
     View.prototype.onHrefClick = function() {
         window.open('http://mel.fm/terms');
     };
-});
+});  // goog.scope

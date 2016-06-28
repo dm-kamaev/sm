@@ -1,16 +1,15 @@
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
-var sequelizeInclude = require.main.require('./api/components/sequelizeInclude');
-var models = require.main.require('./app/components/models').all;
-var services = require.main.require('./app/components/services').all;
-var sequelize = require('../../../../app/components/db');
+var sequelizeInclude = require('../../../components/sequelizeInclude');
+var models = require('../../../../app/components/models').all;
+var services = require('../../../../app/components/services').all;
 exports.name = 'address';
 
 
 exports.getTest = async(() => {
     return await(models.Address.findOne({
-        include:[{
-            all:true,
+        include: [{
+            all: true,
             nested: true
         }]
     }));
@@ -19,13 +18,13 @@ exports.getTest = async(() => {
 
 /**
  * Added new address
- * @param {number} school_id
+ * @param {number} schoolId
  * @param {{
  *     name: string,
  *     coords?: array
  * }} data
  */
-exports.addAddress = async(function(school_id, data) {
+exports.addAddress = async(function(schoolId, data) {
     var addressBD = await(services.address.getAddress({
         name: data.name
     }));
@@ -36,9 +35,8 @@ exports.addAddress = async(function(school_id, data) {
         console.log('is alredy binded to school '.yellow +
             'with id:'.yellow, addressBD.school_id);
         address = addressBD;
-    }
-    else {
-        data.school_id = school_id;
+    } else {
+        data.schoolId = schoolId;
         if (!data.coords) {
             data.coords = await(
                     services.yapi.getCoords('Москва, ' + data.name));
@@ -51,15 +49,15 @@ exports.addAddress = async(function(school_id, data) {
 
 /**
  * Update address data
- * @param {number} address_id
+ * @param {number} addressId
  * @param {{
  *     name?: string,
  *     coords?: array,
  *     isSchool?: bool
  * }} data
  */
-exports.update = async(function(address_id, data) {
-    var address = await(services.address.getAddress({id: address_id}));
+exports.update = async(function(addressId, data) {
+    var address = await(services.address.getAddress({id: addressId}));
     return await(address.update(data));
 });
 
@@ -75,15 +73,15 @@ exports.getAll = async(function() {
 
 /**
  * Get all data by data
- * @param {number} address_id
+ * @param {number} addressId
  * @return {Object} instances of Address model
  */
-exports.getById = async(function(address_id) {
+exports.getById = async(function(addressId) {
     var includeParams = {
         departments: true
     };
     return await(models.Address.findOne({
-        where: {id: address_id},
+        where: {id: addressId},
         include: sequelizeInclude(includeParams)
     }));
 });
@@ -91,8 +89,8 @@ exports.getById = async(function(address_id) {
 
 exports.getAddress = async(function(params) {
     var includeParams = {
-            departments: true
-        };
+        departments: true
+    };
     return await(models.Address.findOne({
         where: params,
         include: sequelizeInclude(includeParams)
@@ -102,11 +100,11 @@ exports.getAddress = async(function(params) {
 
 exports.getAllWithMetro = async(function() {
     return await(models.Address.findAll({
-        include:[{
+        include: [{
             model: models.Metro,
-            //through: 'address_metro',
+            // through: 'address_metro',
             as: 'metroStations'
-            }]
+        }]
     }));
 });
 
@@ -122,7 +120,7 @@ exports.getDepartments = function(address) {
 
 /**
  * Returns metro from array<address>/address
- * @param {array<object> || object} address
+ * @param {array<object>|object} address
  * @return {array<string>}
  */
 exports.getMetro = function(address) {
@@ -145,9 +143,8 @@ exports.getMetro = function(address) {
 };
 
 exports.setMetro = async(function(address, metroArr) {
-    //console.log(address);
     metroArr.forEach(metro => {
-        var ourMetro = await (models.Metro.findOne({
+        var ourMetro = await(models.Metro.findOne({
             where: {
                 name: metro.name
             }
@@ -169,7 +166,7 @@ exports.setMetro = async(function(address, metroArr) {
  * @param {String} area
  * @param {String} address
  */
-exports.setArea = async ((area, address) => {
+exports.setArea = async((area, address) => {
     var areaInstance = await(models.Area.findOne({
         where: {
             name: area
@@ -181,24 +178,9 @@ exports.setArea = async ((area, address) => {
         }
     }));
 
-    addressInstance.forEach((item) => {
+    addressInstance.forEach(item => {
         item.setArea(areaInstance);
     });
-});
-
-
-exports.listMapPoints = async (function() {
-    var sqlQuery = "SELECT school.id, school.name, school.url, " +
-        "school.total_score AS \"totalScore\", address.id AS \"addressId\", " +
-        "address.name AS \"adrName\", school.description, " +
-        "address.coords, department.stage FROM school " +
-        "INNER JOIN address ON school.id = address.school_id " +
-        "INNER JOIN department ON address.id = department.address_id " +
-        "WHERE department.stage IN ('Основное и среднее', " +
-        "'Начальное образование') ORDER BY school.id",
-        schools = sequelize.query(sqlQuery, { model: models.School });
-
-        return schools;
 });
 
 /**

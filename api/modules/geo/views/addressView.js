@@ -1,8 +1,6 @@
-const lodash = require('lodash');
-
-const metroView = require.main.require('./api/modules/geo/views/metroView.js');
-const areaView = require.main.require('./api/modules/geo/views/areaView.js');
-const departmentView = require.main.require('./api/modules/geo/views/departmentView.js');
+const metroView = require('./metroView.js');
+const areaView = require('./areaView.js');
+const departmentView = require('./departmentView.js');
 const stages = require('../enums/departmentStage');
 
 var addressView = {};
@@ -43,11 +41,15 @@ addressView.list = function(addresses, opt_options) {
  * @param {?bool} opt_options.filterByDepartment
  * @return {array<object>}
  */
-addressView.stageList = function (addresses, opt_options) {
-    var addresses = this.list(addresses, opt_options),
-        stagesEnum = [
+addressView.stageList = function(addresses, opt_options) {
+    addresses = this.list(addresses, opt_options);
+    var stagesEnum = [
             'Начальные классы',
-            'Старшие и средние классы',
+            'Средние классы',
+            'Старшие классы',
+            'Начальные и средние классы',
+            'Начальные и старшие классы',
+            'Средние и старшие классы',
             '1 — 11 классы',
             'Другие адреса'
         ],
@@ -80,7 +82,6 @@ addressView.stageList = function (addresses, opt_options) {
         stages[0].name = 'Адреса';
     }
     return stages;
-
 };
 
 
@@ -108,11 +109,12 @@ addressView.default = function(addresses) {
 
     return addresses.map(adr => {
         return {
+            id: adr.id,
             lat: adr.coords[0],
             lng: adr.coords[1],
             name: adr.name,
             stages: getStages(adr.departments)
-        }
+        };
     });
 };
 
@@ -167,13 +169,15 @@ var filterBydepartment = function(addresses) {
     return addresses.filter(address => {
         var result = false;
         if (!address.departments || !address.departments.length) {
-            result = true; //show addresses with no departments
-        }
-        else {
+            result = true; // show addresses with no departments
+        } else {
             var neededStage = address.departments.find(department => {
                 if (department.stage == stages.ELEMENTARY ||
-                    department.stage == stages.MIDDLE_HIDE)
+                    department.stage == stages.MIDDLE_HIDE ||
+                    department.stage == stages.MIDDLE ||
+                    department.stage == stages.HIGH) {
                     return true;
+                }
             });
 
             if (neededStage) {
@@ -182,7 +186,6 @@ var filterBydepartment = function(addresses) {
         }
         return result;
     });
-
 };
 
 

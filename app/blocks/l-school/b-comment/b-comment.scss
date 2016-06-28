@@ -1,3 +1,5 @@
+@import "../../i-media/i-media";
+
 .b-comment {
     display: inline-block;
 
@@ -6,24 +8,25 @@
     padding: 0 0 23px 0;
 
     border-bottom: 1px solid #e5e5e5;
-
     background-color: white;
 
     &:last-child {
         margin-bottom: 0;
+
         border-bottom: none;
     }
 }
 
-.b-comment__header{
+.b-comment__header {
     display: inline-block;
 
     width: 100%;
 	margin: 0 0 10px 0;
 
+    color: grey;
+
     font-size: 12px;
     line-height: 19px;
-    color: grey;
 }
 
 .b-comment__rating-group {
@@ -36,7 +39,7 @@
     }
 }
 
-.b-comment__wrap{
+.b-comment__wrap {
     display: inline-block;
 
     width: 100%;
@@ -45,46 +48,71 @@
     word-wrap: break-word;
 }
 
-.b-comment__text{
+.b-comment__paragraph {
+    margin-bottom: 10px;
+
+    &.b-comment__paragraph_last {
+        display: inline;
+
+        margin-right: 5px;
+        margin-bottom: 0;
+    }
+}
+
+.b-comment__text {
     white-space: pre-line;
 }
 
-.b-comment__text_hidden{
-    display: none;
-}
+.b-comment__footer {
+    position: relative;
 
-.b-comment__avatar{
-    display: inline-block;
+    color: #808080;
 
-    vertical-align: baseline;
-}
-
-.b-comment__author{
-    display: inline-block;
-}
-
-.b-comment__footer{
-    float: right;
-
+    font-family: 'Arial', sans-serif;
     font-size: 12px;
-    color: grey;
+    line-height: 20px;
 }
 
-.b-comment__spoiler{
+.b-comment__score {
+    display: inline-block;
+}
+
+.b-comment__user-information {
     display: inline-block;
 
-    margin: 0 0 0 5px;
-
-    color: red;
+    margin-right: 33px;
 }
 
-.b-comment__spoiler_hidden{
-    display: none;
+.b-comment__user-avatar{
+    display: inline-block;
+
+    margin-top: -3px;
+    margin-right: 5px;
+
+    vertical-align: middle;
 }
 
-.b-comment__spoiler:hover{
-    color: rgb(255, 53, 116);
-    cursor: pointer;
+.b-comment__user-name {
+    display: inline-block;
+
+    margin-right: 4px;
+
+    &:first-letter {
+        text-transform: uppercase;
+    }
+}
+
+.b-comment__user-details.b-comment__user-details_capitalized {
+    display: inline-block;
+
+    &:first-letter {
+        text-transform: uppercase;
+    }
+}
+
+.b-comment__publication-date {
+    display: inline-block;
+    float: right;
 }
 
 .b-comment__header-section{
@@ -105,15 +133,26 @@
     margin: 0 10px 0 0;
 
     text-align: left;
+
     color: rgb(154, 154, 154);
 
-    font-weight: normal;
     font-size: 12px;
+    font-weight: normal;
 }
 
 .b-comment__stars-rating {
     display: inline-block;
 
     text-align: left;
+
     font-size: 14px;
+}
+
+@include media-xs {
+    .b-comment__user-information {
+        display: block;
+
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
 }

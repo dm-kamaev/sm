@@ -7,14 +7,15 @@ var metroView = {};
  * @return {array<object>}
  */
 metroView.list = function(metros) {
-    var uniqMetros = lodash.uniq(metros, 'id')
+    var uniqMetros = lodash.uniq(metros, 'id');
 
     return uniqMetros
         .map(metro => {
-            if(metro.name) {
+            if (metro.name) {
                 return {
                     id: metro.id,
-                    name: metro.name.replace('метро ', '')
+                    name: metro.name.replace('метро ', ''),
+                    coords: metro.coords
                 };
             }
         });

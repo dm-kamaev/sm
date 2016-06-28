@@ -1,3 +1,3 @@
-var services = require.main.require('./app/components/services');
+var services = require('../../../../app/components/services');
 
 module.exports = services.initServices(__dirname);

@@ -1,3 +1,4 @@
 User-agent: *
-Disallow: /
+Disallow: /search
 Host: schools.mel.fm
+Sitemap: schools.mel.fm/sitemap.xml

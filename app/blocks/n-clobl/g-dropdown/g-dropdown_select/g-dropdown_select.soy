@@ -14,6 +14,7 @@
  *     }
  *     config: {
  *        usePlaceholder: boolean,
+ *        viewType: ?string,
  *        iconSprite: ?string,
  *        theme: ?string,
  *        textSize: ?string,
@@ -41,7 +42,8 @@
  *         selectedItemId: number
  *     }
  *     config: {
- *         usePlaceholder: boolean
+ *         usePlaceholder: boolean,
+ *         viewType: ?string,
  *         iconSprite: ?string,
  *         textSize: ?string,
  *         indent: ?string
@@ -65,7 +67,8 @@
                         {sp}{call .rootClass/}__opener-text_placeholder
                      {/if}"
               data-params="{call goog.json.serialize data="$data" /}">
-            {if $params?.data?.defaultOpenerText}
+            {if $params?.data?.defaultOpenerText and
+                not $params?.data?.selectedItemId}
                 {$params?.data?.defaultOpenerText}
             {/if}
             {if $params?.data?.selectedItemId}
@@ -94,10 +97,13 @@
  * List template
  * @param? params {{
  *     data: {
- *         listItems: list<string>,
+ *         listItems: Array<{
+ *             label: string,
+ *         >},
  *         selectedItemId: number
  *     }
  *     config: {
+ *         viewType: ?string,
  *         theme: ?string,
  *         color: ?string,
  *         textSize: ?string,
@@ -106,9 +112,8 @@
  * }}
  */
 {template .content kind="html"}
-    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+    {call .renderChild}
         {param params: [
-            'factory': $params.config.stylizationModifier,
             'type': 'list-select',
             'renderParams': [
                 'data': [
@@ -116,6 +121,7 @@
                     'selectedItemId': $params.data.selectedItemId
                 ],
                 'config': [
+                    'viewType': $params?.config?.viewType,
                     'theme': $params?.config?.theme,
                     'color': $params?.config?.color,
                     'textSize': $params?.config?.textSize,
@@ -133,6 +139,7 @@
  */
 {template .additionalClasses}
     {call .rootClass/}_select
+
     {if $params?.config?.color}
         {sp}{call .rootClass/}_{$params.config.color}-color
     {/if}

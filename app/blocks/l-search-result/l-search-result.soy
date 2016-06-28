@@ -7,42 +7,27 @@
  *     data: {
  *         schools: [{
  *             id: number,
- *             url: string,
+ *             alias: string,
  *             name: {
  *                 light: string,
  *                 bold: string
  *             },
- *             score: [{
- *                 name: string,
- *                 value: number
- *             }],
- *             currentCriterion: {
- *                 name: string,
- *                 value: number
- *             },
+ *             score: {sm.bScore.TemplateMinimized.Params}
  *             description: string,
  *             ratings: string[],
  *             metroStations: string[],
- *             area: []
+ *             area: [],
+ *             isFavorite: boolean
  *         }],
- *         filters: {
- *             filters: [{
- *                 data: {
- *                     filters: [{
- *                         label: string,
- *                         value: string
- *                     }],
- *                      header: {
- *                          title: string,
- *                          help: string
- *                      },
- *                      name: string
- *                  },
- *                  config: {
- *                      cannotBeHidden: bool
- *                  }
- *             }],
- *             url: string
+ *         filters: {sm.lSearchResult.bFilters.Template.Params},
+ *         user: ?{
+ *            firstName: (string|undefined),
+ *            lastName: (string|undefined)
+ *         },
+ *         favorites: sm.bSchoolListPaged.Template.Params.Data,
+ *         authSocialLinks: {
+ *             vk: (string|undefined),
+ *             fb: (string|undefined)
  *         }
  *     },
  *     searchText: string,
@@ -50,17 +35,44 @@
  *     searchSettings: {
  *         url: string,
  *         method: string,
- *         data: {
- *             searchParams: {
- *                 name: string,
- *                 metroId: number,
- *                 areaId: number
- *             },
- *             page: number
+ *         searchParams: {
+ *             name: ?string,
+ *             metroId: ?number,
+ *             areaId: ?number,
+ *             schoolType: ?Array.<string>,
+ *             classes: ?Array.<number>,
+ *             ege: ?Array.<string>,
+ *             gia: ?Array.<string>,
+ *             olimp: ?Array.<string>,
+ *             sortType: ?number,
+ *             page: ?number
  *         }
  *     },
+ *     map: {
+ *         schools: [{
+ *             id: number,
+ *             name: string,
+ *             description: string,
+ *             alias: string,
+ *             totalScore: number,
+ *             addresses: [{
+ *                 lat: number,
+ *                 lng: number,
+ *                 name: string,
+ *                 stages: list<string>
+ *             }]
+ *          }],
+ *         position: {
+ *             center: Array.<string>,
+ *             type: ?string
+ *         },
+ *     },
  *     config: {
- *         staticVersion: ?string
+ *         staticVersion: ?string,
+ *         analyticsId: ?string,
+ *         yandexMetrikaId: ?number,
+ *         domain: ?string,
+ *         fbClientId: ?number
  *     }
  * }}
  */
@@ -75,16 +87,29 @@
                 'title': 'Результаты поиска на Школах Мела',
                 'content': $content,
                 'header': [
-                    'notShowLink': true,
-                    'url': '/'
+                    'url': '/',
+                    'bottomLine': true,
+                    'user': $params.data?.user,
+                    'favorites': $params?.data?.favorites
                 ],
-                'landingScript': '/l-search-result.js'
+                'landingScript': '/l-search-result.js',
+                'openGraph': [
+                    'title': 'Школы «Мела»',
+                    'description': 'Найдите в Москве школу, ' +
+                        'которая подойдёт вашему ребёнку',
+                    'image': $params?.config?.domain +
+                        '/images/i-layout/schools-share.png',
+                    'fbClientId': $params?.config?.fbClientId
+                ]
             ],
             'config': [
                 'modifier': 'stendhal',
                 'page': 'search-result',
                 'staticVersion': $params.config?.staticVersion,
                 'year':  $params.config?.year,
+                'analyticsId': $params.config?.analyticsId,
+                'yandexMetrikaId': $params.config?.yandexMetrikaId,
+                'csrf': $params.config?.csrf
             ]
         ] /}
     {/call}
@@ -96,10 +121,20 @@
  * @override
  */
 {template .content_ autoescape="strict" kind="html"}
+    {let $data: [
+        'searchSettings': $params.searchSettings,
+        'params': [
+            'isUserAuthorized': $params.data?.user ? true : false,
+            'authSocialLinks': $params.data?.authSocialLinks
+        ]
+    ] /}
+
     <div class="l-search-result"
-         data-params="{call goog.json.serialize data="$params.searchSettings" /}">
+        data-params="{call goog.json.serialize data="$data" /}">
          {call .innerContent_ data="all" /}
     </div>
+
+    {call sm.bMap.Template.api}{/call}
 {/template}
 
 
@@ -108,23 +143,68 @@
  */
 {template .innerContent_ autoescape="strict" kind="html"}
     <div class="l-search-result__body">
-        {call .listHeader_ data="all"}
-            {param clone: true /}
+        {call .map}
+            {param params: $params?.map /}
         {/call}
-        {call .leftMenu_ data="all" /}
 
-        <div class="l-search-result__results-section">
-            {call .listHeader_ data="all" /}
-            <div class="l-search-result__list-body
-                {$params.countResults ? '' : ' i-utils__hidden'}
-            ">
-                {call sm.lSearchResult.bSchoolList.Template.base}
-                    {param params: [
-                        'schools': $params.data.schools
-                    ]/}
-                {/call}
+        <div class="l-search-result__content">
+            {call .listHeader_ data="all"}
+                {param clone: true /}
+            {/call}
+
+            {call .leftMenu_ data="all" /}
+
+            <div class="l-search-result__results-section">
+                {call .listHeader_ data="all" /}
+                <div class="l-search-result__list-body
+                    {$params.countResults ? '' : ' i-utils__hidden'}
+                ">
+                    {call sm.lSearchResult.bSchoolList.Template.base}
+                        {param params: [
+                            'schools': $params.data.schools
+                        ]/}
+                    {/call}
+                </div>
             </div>
         </div>
+    </div>
+{/template}
+
+/**
+ * Container for map
+ * @param? params [
+ *     schoolGroups: list<[
+ *         type: ?string,
+ *         schools: list<[
+ *             id: number,
+ *             name: string,
+ *             description: string,
+ *             alias: string,
+ *             totalScore: number,
+ *             addresses: list<[
+ *                 lat: number,
+ *                 lng: number,
+ *                 name: string,
+ *                 stages: list<string>
+ *             ]>
+ *         ]>
+ *     ]>,
+ *     mapCenter: ?list<number>
+ * ]
+ */
+{template .map autoescape="strict" kind="html"}
+    <div class="l-search-result__map
+                {if length($params?.schools) == 0}
+                    {sp}i-utils__hidden
+                {/if}">
+        {call sm.bMap.Template.map}
+            {param params: [
+                'data': $params,
+                'config': [
+                    'enableScrollZoom': false
+                ]
+            ]/}
+        {/call}
     </div>
 {/template}
 
@@ -297,8 +377,10 @@
             'text': $params?.searchText,
             'theme': 'min',
             'redirect': $params?.searchRedirect,
-            'inputSize': 'min'
+            'inputSize': 'min',
+            'config': [
+                'height': 's'
+            ]
         ]/}
     {/call}
 {/template}
-

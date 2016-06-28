@@ -1,3 +1,5 @@
+@import "../i-media/i-media";
+
 .b-popular-schools__title {
     margin-bottom: 27px;
 
@@ -23,6 +25,10 @@
 
 .b-popular-schools__school-rating {
     margin-bottom: 21px;
+
+    font-family: 'Proxima', Arial, sans-serif;
+    font-weight: 600;
+    color: #000000;
 }
 
 .b-popular-schools__school-name {
@@ -30,7 +36,7 @@
 
     line-height: 21px;
 
-    font-family: 'PT Serif';
+    font-family: 'PT Serif', serif;
     font-weight: 800;
     font-size: 16px;
 }
@@ -58,7 +64,7 @@
 .b-popular-schools__school-description {
     margin-bottom: 18px;
 
-    font-family: arial;
+    font-family: Arial, sans-serif;
     font-size: 13px;
     line-height: 18px;
 }
@@ -79,10 +85,7 @@
     font: 400 13px arial, sans-serif;
 }
 
-@media screen and (max-device-width: 600px) // for phone
-and (orientation: portrait),
-screen and (max-width: 600px) // for desktop
-{
+@include media-xs {
     .b-popular-schools__title {
         margin-bottom: 20px;
     }

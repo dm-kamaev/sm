@@ -1,7 +1,8 @@
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
-var models = require.main.require('./app/components/models').all;
-var services = require.main.require('./app/components/services').all;
+var logger = require('../../../../app/components/logger/logger')
+    .getLogger('app');
+var models = require('../../../../app/components/models').all;
 
 exports.name = 'comment';
 
@@ -14,35 +15,36 @@ exports.name = 'comment';
  * @param {number} params.userDataId
  * @return {object|| Error} - comment instance or error
  */
-exports.create = async (function(commentGroupId, params) {
+exports.create = async(function(commentGroupId, params) {
     try {
         var createParams = {
-                comment_group_id: commentGroupId,
-                text: params.text,
-                userDataId: params.userDataId,
-                isNoticeSend: false
-            };
-        if (params.rating)
+            groupId: commentGroupId,
+            text: params.text,
+            userDataId: params.userDataId,
+            isNoticeSend: false
+        };
+        if (params.rating) {
             createParams.ratingId = params.rating.id;
+        }
         var comment = await(
             models.Comment.create(createParams)
         );
         return comment;
-    } catch (e) {
-        console.log(e.message);
-        throw e;
+    } catch (error) {
+        logger.error(error.message);
+        throw error;
     }
 });
 
-exports.list = async (function (commentGroupId) {
+exports.list = async(function(commentGroupId) {
     var params = commentGroupId ?
-        {
-            where: {
-                id: commentGroupId
-            }
-        } : {};
-        console.log(params);
-    var comments = await (models.Comment.findAll(params));
+    {
+        where: {
+            id: commentGroupId
+        }
+    } : {};
+
+    var comments = await(models.Comment.findAll(params));
     return comments;
 });
 
@@ -51,7 +53,7 @@ exports.list = async (function (commentGroupId) {
  * @return {object} commentGroup with comments with rating and userData
  */
 exports.getComments = async(function(commentGroupId) {
-    var include =  [
+    var include = [
         {
             model: models.Rating,
             as: 'rating'
@@ -66,12 +68,13 @@ exports.getComments = async(function(commentGroupId) {
         where: {
             'comment_group_id': commentGroupId
         },
+        order: [['createdAt', 'DESC']],
         include: include
     });
 });
 
-exports.get = async (function (commentId) {
-    var comment = await (models.Comment.findOne({
+exports.get = async(function(commentId) {
+    var comment = await(models.Comment.findOne({
         where: {
             id: commentId
         }
@@ -84,8 +87,8 @@ exports.get = async (function (commentId) {
  * Return all comments with not send notification state
  * @return {Array<Object>}
  */
-exports.getNotSended = async (function () {
-    var comments = await (models.Comment.findAll({
+exports.getNotSended = async(function() {
+    var comments = await(models.Comment.findAll({
         where: {
             isNoticeSend: false
         }
@@ -99,15 +102,16 @@ exports.getNotSended = async (function () {
  * @param {Object||number} comment
  * @param {{
  *     text: string,
- *     isNoticeSend: boolean
- * }}
+ *     isNoticeSend: boolean,
+ *     createdAt: Date
+ * }} data
  */
-exports.update = async(function (comment, data) {
+exports.update = async(function(comment, data) {
     var instance = comment;
-    if(typeof comment === 'number') {
-        instance = await( models.Comment.findOne({
+    if (typeof comment === 'number') {
+        instance = await(models.Comment.findOne({
             where: {id: comment}
-        }) );
+        }));
     }
 
     if (!instance) {
@@ -125,7 +129,7 @@ exports.update = async(function (comment, data) {
  * @param {number} id - comment id
  * @return {bool} was deleted
  */
-exports.delete = async(function (commentId) {
+exports.delete = async(function(commentId) {
     var comment = await(models.Comment.findOne({
         where: { id: commentId }
     }));
@@ -145,4 +149,20 @@ exports.delete = async(function (commentId) {
     data.userData.destroy();
 
     return commentId;
+});
+
+
+/**
+ * Return comment, finded by given comment text
+ * @param {string} text
+ * @return {?models.Comment}
+ */
+exports.getByText = async(function(text) {
+    return await(models.Comment.findOne({
+        where: {
+            text: {
+                $iLike: '%' + text + '%'
+            }
+        }
+    }));
 });

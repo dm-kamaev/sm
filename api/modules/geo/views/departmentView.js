@@ -1,4 +1,4 @@
-const departmentStage = require.main.require('./api/modules/geo/enums/departmentStage.js');
+const departmentStage = require('../enums/departmentStage.js');
 
 var departmentView = {};
 
@@ -23,18 +23,29 @@ departmentView.list = function(departments) {
  */
 departmentView.classes = function(departments) {
     var stage,
-        deps = departments.map(dep => {return dep.stage;}),
+        deps = departments.map(dep => { return dep.stage; }),
         elementary = deps.indexOf(departmentStage.ELEMENTARY),
-        middle_hide = deps.indexOf(departmentStage.MIDDLE_HIDE);
-    if (elementary != -1 && middle_hide != -1) {
+        middleHide = deps.indexOf(departmentStage.MIDDLE_HIDE),
+        middle = deps.indexOf(departmentStage.MIDDLE),
+        high = deps.indexOf(departmentStage.HIGH);
+
+    if (elementary != -1 && middleHide != -1) {
         stage = '1 — 11 классы';
+    } else if (elementary != -1 && middle != -1) {
+        stage = 'Начальные и средние классы';
+    } else if (elementary != -1 && high != -1) {
+        stage = 'Начальные и старшие классы';
     } else if (elementary != -1) {
         stage = 'Начальные классы';
-    } else if (middle_hide != -1) {
-        stage = 'Старшие и средние классы';
+    } else if (middleHide != -1) {
+        stage = 'Средние и старшие классы';
+    } else if (middle != -1) {
+        stage = 'Средние классы';
+    } else if (high != -1) {
+        stage = 'Старшие классы';
     } else {
         stage = 'Другие адреса';
     }
     return stage;
-}
+};
 module.exports = departmentView;

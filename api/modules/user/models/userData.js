@@ -32,7 +32,7 @@ var UserData = db.define('UserData', {
     underscored: true,
     tableName: 'user_data',
     classMethods: {
-        associate: function (models) {
+        associate: function(models) {
             UserData.hasOne(models.Comment, {
                 as: 'userData',
                 foreignKey: 'user_data_id'

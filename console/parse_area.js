@@ -4,8 +4,6 @@ var commander = require('commander');
 var xlsx = require('node-xlsx');
 var colors = require('colors');
 
-
-var modules = require.main.require('./api/modules');
 var services = require.main.require('./app/components/services').all;
 
 /**

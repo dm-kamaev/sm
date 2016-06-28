@@ -1,5 +1,4 @@
-var DataType = require('sequelize'),
-    authorType = require('../enums/authorType');
+var DataType = require('sequelize');
 var db = require('../../../../app/components/db');
 
 
@@ -20,12 +19,16 @@ var Comment = db.define('Comment', {
     groupId: {
         type: DataType.INTEGER,
         field: 'comment_group_id'
+    },
+    createdAt: {
+        type: DataType.DATE,
+        field: 'created_at'
     }
 }, {
     underscored: true,
     tableName: 'comment',
     classMethods: {
-        associate: function (models) {
+        associate: function(models) {
             Comment.belongsTo(models.CommentGroup, {
                 foreignKey: 'comment_group_id'
             });

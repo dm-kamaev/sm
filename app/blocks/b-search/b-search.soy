@@ -10,6 +10,9 @@
  * @property {?string} theme
  * @property {?string} customClasses
  * @property {?string} inputSize
+ * @property {?map} config
+ * @property {?boolean} config.showSearchIcon
+ * @property {?string} config.height
  */
 
 /**
@@ -21,8 +24,9 @@
         'redirect': $params?.redirect
     ] /}
 
-    <div class="b-search
+    <div class="b-search{sp}
                 b-search_theme_{$params.theme}{sp}
+                b-search_height_{$params?.config?.height ?: 'm'}{sp}
                 {$params?.customClasses ? $params?.customClasses + ' ' : ''}
                 {$params?.theme == 'foldable' ? 'i-animate ' : ''}"
         data-params="{call goog.json.serialize data="$data" /}"
@@ -31,7 +35,7 @@
             <div class="b-search__fader i-animate"></div>
         {/if}
         <div class="b-search__body">
-            {if $params?.theme == 'foldable'}
+            {if $params?.theme == 'foldable' or $params?.config?.showSearchIcon}
                 <div class="b-search__bg i-animate"></div>
                 {call .searchButton_ /}
             {/if}

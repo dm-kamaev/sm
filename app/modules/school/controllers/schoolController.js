@@ -1,9 +1,19 @@
-var soy = require.main.require('./app/components/soy');
-var services = require.main.require('./app/components/services').all;
-const schoolView = require.main.require('./api/modules/school/views/schoolView');
-var urlConfig = require('../../../config').config.url;
+const errors = require('../lib/errors');
+const soy = require('../../../components/soy');
+const services = require('../../../components/services').all;
+const schoolView = require('../../../../api/modules/school/views/schoolView');
+const searchView = require('../../../../api/modules/school/views/searchView');
+const userView = require('../../../../api/modules/user/views/user');
+const entityType = require('../../../../api/modules/entity/enums/entityType');
 
-const AUTH_URL = urlConfig.protocol + '://' + urlConfig.host + ':3001/oauth';
+const config = require('../../../config').config;
+const analyticsId = config.analyticsId;
+const yandexMetrikaId = config.yandexMetrikaId;
+
+const logger = require('../../../components/logger/logger').getLogger('app');
+
+const DOMAIN = config.url.protocol + '://' + config.url.host;
+const FB_CLIENT_ID = config.facebookClientId;
 
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
@@ -16,7 +26,7 @@ exports.createComment = async (function(req, res) {
             params = req.body;
         result = await(services.school.comment(schoolId,params));
     } catch (e) {
-        console.log(e);
+        logger.error(e);
         result = JSON.stringify(e);
     } finally {
         res.header('Content-Type', 'text/html; charset=utf-8');
@@ -26,74 +36,75 @@ exports.createComment = async (function(req, res) {
 
 
 exports.list = async (function(req, res) {
-    var searchText,
-        areaId,
-        metroId,
-        searchParams = {};
+    var searchParams = await(services.search.initSearchParams(req.query));
+    var searchText = req.query.name ? decodeURIComponent(req.query.name) : '',
+        user = req.user || {};
 
-    try{
-        searchText = req.query.name ?
-            decodeURIComponent(req.query.name) : '';
-        areaId = req.query.areaId ?
-            decodeURIComponent(req.query.areaId) : '';
-        metroId = req.query.metroId ?
-            decodeURIComponent(req.query.metroId) : '';
-        sortType = req.query.sortType ?
-            decodeURIComponent(req.query.sortType) : '';
-    } catch(e) {
-        searchText = req.query.name || '';
-        areaId = req.query.areaId || '';
-        metroId = req.query.metroId || '';
-        sortType = req.query.sortType || '';
-    }
-
-    if (areaId) {
-        searchParams.areaId = areaId;
-    } else if (metroId) {
-        searchParams.metroId = metroId;
-    } else if (searchText) {
-        searchParams.name = searchText;
-    }
-
-    var promises = [
-        services.school.list({
-            searchParams: searchParams,
-            page: 0
-        }),
-        services.school.searchFilters()
-    ];
+    var favoriteIds = await(services.favorite.getAllItemIdsByUserId(user.id)),
+        promises = {
+            schools: services.school.list(
+                searchParams,
+                {
+                    limitResults: 10
+                }
+            ),
+            filters: services.school.searchFilters(),
+            mapPosition: services.search.getMapPositionParams(searchParams),
+            authSocialLinks: services.auth.getAuthSocialUrl(),
+            favorites: {
+                items: services.school.getByIdsWithGeoData(favoriteIds),
+                itemUrls: services.page.getAliases(
+                    favoriteIds,
+                    entityType.SCHOOL
+                )
+            }
+        };
     var results = await(promises);
 
-    var data = schoolView.list(results[0]);
+    var schoolAliases = await(services.page.getAliases(
+            schoolView.listIds(results.schools),
+            entityType.SCHOOL
+        )),
+        schools = schoolView.joinAliases(results.schools, schoolAliases),
+        schoolsWithFavoriteMark = schoolView.listWithFavorites(
+            schools, favoriteIds
+        );
 
-    var filters = schoolView.filters(results[1]);
+    var schoolsList = schoolView.list(schoolsWithFavoriteMark),
+        map = schoolView.listMap(results.schools, results.mapPosition),
+        filters = searchView.filters(results.filters, searchParams),
+        favorites = schoolView.listCompact(results.favorites);
 
     var params = {
         params: {
             data: {
-                schools: data.schools,
-                filters: {
-                    filters: filters,
-                    url: '/api/school/search'
+                schools: schoolsList.schools,
+                filters: filters,
+                authSocialLinks: results.authSocialLinks,
+                user: userView.default(user),
+                favorites: {
+                    schools: favorites
                 }
             },
-            searchText: req.query.name ?
-                searchText : '',
-            countResults: data.countResults,
+            searchText: searchText,
+            countResults: schoolsList.countResults,
             searchSettings: {
                 url: '/api/school/search',
                 method: 'GET',
-                data: {
-                    searchParams: searchParams,
-                    page: 0
-                }
+                searchParams: searchParams
             },
+            map: map,
             config: {
-                year: new Date().getFullYear()
+                staticVersion: config.lastBuildTimestamp,
+                year: new Date().getFullYear(),
+                analyticsId: analyticsId,
+                yandexMetrikaId: yandexMetrikaId,
+                csrf: req.csrfToken(),
+                domain: DOMAIN,
+                fbClientId: FB_CLIENT_ID
             }
         }
     };
-
     var html = soy.render('sm.lSearchResult.Template.list', params);
 
     res.header('Content-Type', 'text/html; charset=utf-8');
@@ -101,98 +112,138 @@ exports.list = async (function(req, res) {
 });
 
 
-exports.view = async (function(req, res) {
+exports.view = async (function(req, res, next) {
     try {
-        var url = services.urls.stringToURL(req.params.name);
-        var schoolInstance = await(services.urls.getSchoolByUrl(url));
+        var alias = services.urls.stringToURL(req.params.name),
+            schoolInstance = await(services.urls.getSchoolByUrl(alias));
+
         if (!schoolInstance) {
-            res.header('Content-Type', 'text/html; charset=utf-8');
-            res.status(404);
-            res.end('404');
-        } else if (url != schoolInstance.url) {
-            res.redirect(schoolInstance.url);
+            throw new errors.SchoolNotFoundError();
+        } else if (alias != schoolInstance.alias) {
+            res.redirect(schoolInstance.alias);
         } else {
-            var resPromises = {
+            var user = req.user || {},
+                favoriteIds = await(
+                    services.favorite.getAllItemIdsByUserId(user.id)
+                ),
+                promises = {
                     ege: services.egeResult.getAllBySchoolId(schoolInstance.id),
                     gia: services.giaResult.getAllBySchoolId(schoolInstance.id),
                     olymp: services.olimpResult.getAllBySchoolId(
                         schoolInstance.id
                     ),
-                    city: services.cityResult.getAll()
+                    city: services.cityResult.getAll(),
+                    page: services.page.getDescription(
+                        schoolInstance.id,
+                        entityType.SCHOOL
+                    ),
+                    authSocialLinks: services.auth.getAuthSocialUrl(),
+                    popularSchools: services.school.getRandomPopularSchools(6),
+                    favorites: {
+                        items: services.school.getByIdsWithGeoData(favoriteIds),
+                        itemUrls: services.page.getAliases(
+                            favoriteIds,
+                            entityType.SCHOOL
+                        )
+                    }
                 },
-                results = await(resPromises);
+                dataFromPromises = await(promises);
 
             var school = await(services.school.viewOne(schoolInstance.id));
-            services.school.incrementViews(school.id);
-            var popularSchools = await(services.school.getPopularSchools());
+
+            var schoolAliases = await(services.page.getAliases(
+                    dataFromPromises.popularSchools.map(school => school.id),
+                    entityType.SCHOOL
+                ));
+            dataFromPromises.popularSchools = schoolView.joinAliases(
+                dataFromPromises.popularSchools,
+                schoolAliases
+            );
+
+
+            var isUserCommented = typeof await(
+                    services.userData.checkCredentials(
+                    school.id,
+                    req.user && req.user.id
+                )) !== 'undefined';
+
+            user = userView.school(user, isUserCommented);
 
             res.header('Content-Type', 'text/html; charset=utf-8');
             res.end(
                 soy.render('sm.lSchool.Template.school', {
                 params: {
                     data:
-                        schoolView.default(school, results, popularSchools),
+                        schoolView.default(
+                            school,
+                            dataFromPromises,
+                            user
+                        ),
                     config: {
+                        staticVersion: config.lastBuildTimestamp,
                         year: new Date().getFullYear(),
-                        authUrl: AUTH_URL
+                        analyticsId: analyticsId,
+                        yandexMetrikaId: yandexMetrikaId,
+                        csrf: req.csrfToken(),
+                        domain: DOMAIN,
+                        fbClientId: FB_CLIENT_ID
                     }
                 }
             }));
         }
-    } catch (e) {
-        console.log(e);
-        res.status(500);
-        res.end('500 Internal Server Error');
+    } catch (error) {
+        console.log(error);
+        res.status(error.code || 500);
+        next();
     }
 });
 
 exports.search = async(function(req, res) {
-    var dataPromises = {
-        popularSchools: services.school.getPopularSchools(3),
-        amountSchools: services.school.getSchoolsCount()
-    };
+    var user = req.user || {};
+    var favoriteIds = await(services.favorite.getAllItemIdsByUserId(user.id)),
+        dataPromises = {
+            popularSchools: services.school.getRandomPopularSchools(3),
+            amountSchools: services.school.getSchoolsCount(),
+            authSocialLinks: services.auth.getAuthSocialUrl(),
+            favorites: {
+                items: services.school.getByIdsWithGeoData(favoriteIds),
+                itemUrls: services.page.getAliases(
+                    favoriteIds,
+                    entityType.SCHOOL
+                )
+            }
+        },
+        data = await(dataPromises);
 
-    var data = await(dataPromises),
-        searchUrl = '/search?name=';
+    var schoolAliases = await(services.page.getAliases(
+            data.popularSchools.map(school => school.id),
+            entityType.SCHOOL
+        ));
+    data.popularSchools =
+        schoolView.joinAliases(data.popularSchools, schoolAliases);
 
     var html = soy.render('sm.lSearch.Template.base', {
-          params: {
-              currentCity: 'Москва',
-              popularSchools: schoolView.popular(data.popularSchools),
-              dataLinks : [
-                  {
-                      name: 'Школа 123',
-                      url: searchUrl +
-                        encodeURIComponent('школа 123')
-                  },
-                  {
-                      name: 'Тургеневская',
-                      url: searchUrl +
-                        encodeURIComponent('Тургеневская')
-                  },
-                  {
-                      name: 'Лицей',
-                      url: searchUrl +
-                        encodeURIComponent('Лицей')
-                  },
-                  {
-                      name: 'Замоскворечье',
-                      url: searchUrl +
-                        encodeURIComponent('Замоскворечье')
-                  }
-              ],
-              amountSchools: data.amountSchools,
-              dataArticle : {
-                  urlArticle: 'http://mel.fm/2015/12/08/change_school/',
-                  urlImg: 'images/l-search/b-link-article/article.png',
-                  title: '7\u00A0причин, чтобы сменить\u00A0школу',
-                  subtitle: 'Как понять, что вы\u00A0просчитались' +
-                            ' с\u00A0выбором учебного\u00A0заведения'
-              },
-              config: {
-                  year: new Date().getFullYear()
-              }
-          }
+        params: {
+            data: {
+                authSocialLinks: data.authSocialLinks,
+                user: userView.default(user),
+                favorites: {
+                    schools: schoolView.listCompact(data.favorites)
+                }
+            },
+            popularSchools: schoolView.popular(data.popularSchools),
+            dataLinks : schoolView.dataLinks(),
+            amountSchools: data.amountSchools,
+            config: {
+                staticVersion: config.lastBuildTimestamp,
+                year: new Date().getFullYear(),
+                analyticsId: analyticsId,
+                yandexMetrikaId: yandexMetrikaId,
+                csrf: req.csrfToken(),
+                domain: DOMAIN,
+                fbClientId: FB_CLIENT_ID
+            }
+        }
     });
 
     res.header('Content-Type', 'text/html; charset=utf-8');

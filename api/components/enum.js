@@ -1,6 +1,5 @@
-'use strict'
-var path = require('path'),
-    fs = require('fs');
+'use strict';
+var lodash = require('lodash');
 
 class Enum {
     /**
@@ -8,9 +7,16 @@ class Enum {
      * @param {string} name
      * @param {object} fields
      */
-    constructor (name, fields) {
+    constructor(name, fields) {
         this.name_ = name;
         this.fields_ = fields;
+
+        /**
+         * Fields with values transformed to camel case
+         * @type {Object}
+         * @private
+         */
+        this.camelCaseFields_ = null;
 
         Object.assign(this, fields);
     }
@@ -32,6 +38,21 @@ class Enum {
     }
 
     /**
+     * Get fields with values transformed to camelCase
+     * @public
+     * @return {Object}
+     */
+    get camelCaseFields() {
+        var fields = this.fields;
+
+        if (!this.camelCaseFields_) {
+            this.camelCaseFields_ = lodash.mapValues(fields, this.toCamelCase_);
+        }
+
+        return this.camelCaseFields_;
+    }
+
+    /**
      * @public
      * @return {array<string>}
      */
@@ -42,6 +63,18 @@ class Enum {
         }
         return res;
     }
+
+    /**
+     * Return array with enum field values transformed to camel case
+     * @public
+     * @return {Array.<string>}
+     */
+    toCamelCaseArray() {
+        var fields = this.toArray();
+
+        return fields.map(this.toCamelCase_);
+    }
+
 
     /**
      * @public
@@ -55,6 +88,16 @@ class Enum {
             }
         }
         return null;
+    }
+
+    /**
+     * Transform given value to camel case
+     * @private
+     * @param {string} value
+     * @return {string}
+     */
+    toCamelCase_(value) {
+        return lodash.camelCase(value);
     }
 }
 module.exports = Enum;

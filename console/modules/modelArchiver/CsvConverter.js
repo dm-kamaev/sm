@@ -2,8 +2,9 @@
 const csv2json = require('csvtojson').Converter;
 const json2csv = require('json2csv');
 const await = require('asyncawait/await');
-var replace = require('tipograph').Replace;
+const replace = require('tipograph').Replace;
 const languages = require('tipograph').Languages;
+const lodash = require('lodash');
 
 class CsvConverter {
     /**
@@ -81,11 +82,12 @@ class CsvConverter {
 
     /**
      * @public
+     * @param {string=} opt_delimiter
      * @return {string}
      */
-    toCsv() {
+    toCsv(opt_delimiter) {
         var json = this.getJson_();
-        return await(this.csvPromise_(json));
+        return await(this.csvPromise_(json, opt_delimiter));
     }
 
     /**
@@ -108,23 +110,15 @@ class CsvConverter {
      * used to unflatten arrays
      */
     stabilizeJSON_(unstableJSON) {
-        for (var key in unstableJSON) {
-            var oldValue = unstableJSON[key];
-            try {
-                if (typeof oldValue == 'object') {
-                    var newValue = Object.assign({}, oldValue);
-                    this.stabilizeJSON_(newValue);
-                } else {
-                    var newValue = JSON.parse(oldValue);
-                }
-                unstableJSON[key] = newValue;
-            } catch (e) {
-                unstableJSON[key] = oldValue;
+        lodash.forIn(unstableJSON, (value, key) => {
+            if (value == 'null') {
+                unstableJSON[key] = null;
             }
-        }
+            else if (lodash.isPlainObject(value)) {
+                this.stabilizeJSON_(value);
+            }
+        });
     }
-
-
 
     /**
      * @private
@@ -146,12 +140,14 @@ class CsvConverter {
     /**
      * @private
      * @param {object} json
+     * @param {string=} opt_delimiter
      * @return {promise<string>}
      */
-    csvPromise_(json) {
+    csvPromise_(json, opt_delimiter) {
         return new Promise (function(resolve, reject) {
             json2csv({
                 data: json,
+                del: opt_delimiter || ','
             }, function(err, csv) {
                 if (err)
                     reject(err);

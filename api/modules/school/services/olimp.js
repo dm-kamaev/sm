@@ -1,21 +1,15 @@
-var colors = require('colors');
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
-var models = require.main.require('./app/components/models').all;
-var services = require.main.require('./app/components/services').all;
-var sequelize  = require.main.require('./app/components/db');
-var sequelizeInclude = require.main.require('./api/components/sequelizeInclude');
-var transaction = require.main.require('./api/components/transaction.js');
-var Enum = require.main.require('./api/components/enum').all;
+var models = require('../../../../app/components/models').all;
 var service = {
-    name : 'olimpResult'
+    name: 'olimpResult'
 };
 
 
 /**
  * Add olympResult row
- * @param {number} school_id
- * @param {number} subject_id
+ * @param {number} schoolId
+ * @param {number} subjectId
  * @param {{
  *     type: 'всероссийская' || 'московская',
  *     stage: number,
@@ -25,16 +19,16 @@ var service = {
  * }} data
  * @return {Object} instance of OlimpResult model
  */
-service.add = async(function(school_id, subject_id, data) {
-    data.school_id = school_id;
-    data.subject_id = subject_id;
+service.add = async(function(schoolId, subjectId, data) {
+    data.schoolId = schoolId;
+    data.subjectId = subjectId;
     return await(models.OlimpResult.create(data));
 });
 
 
 /**
  * Uppdate olympResult data
- * @param {number} olymp_id
+ * @param {number} olympId
  * @param {{
  *     type?: 'всероссийская' || 'московская',
  *     stage?: number,
@@ -44,8 +38,8 @@ service.add = async(function(school_id, subject_id, data) {
  * }} data
  * @return {Object} instance of OlimpResult model
  */
-service.update = async(function(olymp_id, data) {
-    var instance = await(service.getById(olimp_id));
+service.update = async(function(olympId, data) {
+    var instance = await(service.getById(olympId));
     return await(instance.update(data));
 });
 
@@ -82,22 +76,22 @@ service.getAllByData = async(function(data) {
 
 /**
  * Get one data from table by data
- * @param {number} olymp_id
+ * @param {number} olympId
  * @return {Object} instance of OlimpResult model
  */
-service.getById = async(function(olymp_id) {
+service.getById = async(function(olympId) {
     return await(models.OlimpResult.findOne({
-        where: {id: olymp_id}
+        where: {id: olympId}
     }));
 });
 
 
 /**
  * Delete olympResult instance
- * @param {number} olymp_id
+ * @param {number} olympId
  */
-service.delete = async(function(olymp_id) {
-    var instance = await(service.getById(olymp_id));
+service.delete = async(function(olympId) {
+    var instance = await(service.getById(olympId));
     await(instance.destroy());
 });
 

@@ -1,7 +1,6 @@
 var async = require('asyncawait/async');
-var await = require('asyncawait/await');
 
-var services = require.main.require('./app/components/services').all;
+var services = require('../../../../app/components/services').all;
 
 
 var feedbackView = require('../views/feedbackView');
@@ -27,12 +26,11 @@ exports.processUserFeedback = async(function(req, res) {
 
         params.type = req.query.type;
 
-        if((params.type === 'opinion' || params.type === 'mistake') &&
+        if ((params.type === 'opinion' || params.type === 'mistake') &&
             params.name.trim() &&
             params.email.trim() &&
             params.text.trim() &&
             params.theme.trim()) {
-
             var letter = {
                 theme: feedbackView.getLetterTheme(params),
                 content: feedbackView.getLetterBody(params)
@@ -42,7 +40,7 @@ exports.processUserFeedback = async(function(req, res) {
         } else {
             res.status(400);
         }
-    } catch(e) {
+    } catch (e) {
         res.status(404);
         result = e.message;
     } finally {

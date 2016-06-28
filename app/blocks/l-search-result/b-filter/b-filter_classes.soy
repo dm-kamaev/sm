@@ -1,7 +1,18 @@
 {namespace sm.lSearchResult.bFilterClasses.Template}
 
 /**
+ * @typedef {object} sm.lSearchResult.bFilterClasses.Template.Params
+ * @property {?object} data
+ * @property {?object} data.header
+ * @property {?string} data.header.title
+ * @property {?string} data.name
+ * @property {?number} data.selectedClass
+ * @property {?boolean} data.isKindergartenSelected
+ */
+
+/**
  * Filter template
+ * @param params {sm.lSearchResult.bFilterClasses.Template.Params}
  * @extends sm.lSearchResult.bFilter.Template
  * @constructor
  */
@@ -9,101 +20,203 @@
     {call .init data="all"/}
 {/template}
 
-/**
- * Root class name
- */
-{template .rootClassName autoescape="strict" kind="html"}
-    b-filter b-filter_classes
-{/template}
 
 /**
- * template
+ * filters template
  * @param? params {
  *    data: {
- *        name: ?string
+ *        name: ?string,
+ *        selectedClass: ?number,
+ *        isKindergartenSelected: ?boolean
+ *    }
+ * }
+ * @override
+ */
+{template .filters autoescape="strict" kind="html"}
+    <div class="{call .rootClass/}__filters">
+        {call .listClasses_ data="all" /}
+        {call .labelsClasses_ data="all" /}
+        {call .kindergarten_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * list classes template
+ * @param? params {
+ *    data: {
+ *        selectedClass: ?number
  *    }
  * }
  */
-{template .filters autoescape="strict" kind="html"}
-    <div class="b-filter__filters">
-        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
-            {param params: [
-                'type': 'dropdown-select',
-                'renderParams': [
-                    'data': [
-                        'defaultOpenerText': 'Не выбран',
-                        'listItems': [
-                            ['label': 'Первый класс'],
-                            ['label': 'Второй класс'],
-                            ['label': 'Третий класс'],
-                            ['label': 'Четвертый класс'],
-                            ['label': 'Пятый класс'],
-                            ['label': 'Шестой класс'],
-                            ['label': 'Седьмой класс'],
-                            ['label': 'Восьмой класс'],
-                            ['label': 'Девятый класс'],
-                            ['label': 'Десятый класс'],
-                            ['label': 'Одиннадцатый класс'],
-                            ['label': 'Не выбран']
-                        ]
+{template .listClasses_ private="true"}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__classes-dropdown
+    {/let}
+
+    {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+        {param params: [
+            'type': 'dropdown-select',
+            'renderParams': [
+                'data': [
+                    'defaultOpenerText': 'Не выбран',
+                    'listItems': [
+                        ['label': 'Первый класс'],
+                        ['label': 'Второй класс'],
+                        ['label': 'Третий класс'],
+                        ['label': 'Четвертый класс'],
+                        ['label': 'Пятый класс'],
+                        ['label': 'Шестой класс'],
+                        ['label': 'Седьмой класс'],
+                        ['label': 'Восьмой класс'],
+                        ['label': 'Девятый класс'],
+                        ['label': 'Десятый класс'],
+                        ['label': 'Одиннадцатый класс'],
+                        ['label': 'Не выбран']
                     ],
-                    'config': [
-                        'iconSprite': 'opener-arrow',
-                        'customClasses': [
-                            'b-filter__classes-dropdown'
-                        ]
-                    ]
+                    'selectedItemId': $params.data?.selectedClass - 1
+                ],
+                'config': [
+                    'iconSprite': 'opener-arrow',
+                    'customClasses': [$customClasses],
+                    'textSize': 'medium'
                 ]
-            ] /}
-        {/call}
-        <div class="b-filter__filter b-filter__filter_center">
-            {for $i in range(11)}
-                <input type="radio"
-                    id="{$params?.data?.name}-{$i+1}"
-                    class="b-filter__input b-filter__input_class"
-                    name="{$params?.data?.name}"
-                    value="{$i+1}"/>
-                <label for="{$params?.data?.name}-{$i+1}"
-                    class="b-filter__input-label b-filter__input-label_class
-                    {sp}
-                    {$i > 3 ?
-                        'b-filter__input-label_middle ' : ''}
-                    {$i > 8 ?
-                        'b-filter__input-label_high' : ''}
-                    ">
-                        {$i+1}
-                </label>
-            {/for}
-        </div>
-        <div class="b-filter__reset i-utils__hidden">
-            {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
-                {param params: [
-                    'type': 'icon',
-                    'renderParams': [
-                        'data': [
-                            'type': 'reset'
-                        ]
-                    ]
-                ]/}
-            {/call}
-        </div>
-        <div class="b-filter__filter b-filter__filter_kindergarten">
-            <input type="checkbox"
-                class="b-filter__input b-filter__input_kindergarten"
-                id="{$params?.data?.name}-after-school"
-                name="{$params?.data?.name}"
-                value="0"/>
-            <label for="{$params?.data?.name}-after-school"
-                class="b-filter__input-label b-filter__input-label_kindergarten">
+            ]
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * template kindergarten
+ * @param? params {
+ *    data: {
+ *        isKindergartenSelected: ?boolean
+ *    }
+ * }
+ */
+{template .kindergarten_ autoescape="strict" kind="html"}
+    <div class="{call .rootClass/}__filter {call .rootClass/}__filter_kindergarten">
+        <input type="checkbox"
+            class="{call .rootClass/}__input {call .rootClass/}__input_kindergarten"
+            id="{$params?.data?.name}-after-school"
+            name="{$params?.data?.name}"
+            value="0"
+            {if $params?.data?.isKindergartenSelected}
+                checked
+            {/if}/>
+
+        <label for="{$params?.data?.name}-after-school"
+            class="{call .rootClass/}__input-label
+            {sp}{call .rootClass/}__input-label_kindergarten">
                 При школе есть детский сад
-            </label>
-        </div>
+        </label>
     </div>
 {/template}
+
+
+/**
+ * labels Classes template
+ * @param? params {
+ *    data: {
+ *        name: ?string,
+ *        selectedClass: ?number
+ *    }
+ * }
+ */
+{template .labelsClasses_ private="true"}
+    {call .labels_ data="all" /}
+    {call .buttonReset_ data="all" /}
+{/template}
+
+
+/**
+ * labels template
+ * @param? params {
+ *    data: {
+ *        name: ?string,
+ *        selectedClass: ?number
+ *    }
+ * }
+ */
+{template .labels_ private="true"}
+    <div class="{call .rootClass/}__filter {call .rootClass/}__filter_center">
+        {for $i in range(1, 12)}
+            <input type="radio"
+                id="{$params?.data?.name}-{$i}"
+                class="{call .rootClass/}__input
+                    {sp}{call .rootClass/}__input_class"
+                name="{$params?.data?.name}"
+                value="{$i}"
+                {if $params.data.selectedClass == $i}
+                    checked
+                {/if}/>
+
+            {let $labelClasses kind="html"}
+                {call .rootClass/}__input-label
+                {sp}{call .rootClass/}__input-label_class
+
+                {if $i > 4}
+                    {sp}{call .rootClass/}__input-label_middle
+                {/if}
+
+                {if $i > 9}
+                    {sp}{call .rootClass/}__input-label_high
+                {/if}
+
+                {if $params.data.selectedClass and
+                    $params.data.selectedClass != $i}
+                    {sp}{call .rootClass/}__input-label_inactive
+                {/if}
+            {/let}
+
+            <label for="{$params?.data?.name}-{$i}"
+                class="{$labelClasses}">
+                    {$i}
+            </label>
+        {/for}
+    </div>
+{/template}
+
+
+/**
+ * Button reset template
+ * @param? params {
+ *    data: {
+ *        selectedClass: ?number
+ *    }
+ * }
+ */
+{template .buttonReset_ private="true"}
+    <div class="{call .rootClass/}__reset
+    {if not $params.data?.selectedClass}
+        {sp}i-utils__hidden
+    {/if}
+    ">
+        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+            {param params: [
+                'type': 'icon',
+                'renderParams': [
+                    'data': [
+                        'type': 'reset'
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
 
 /**
  * @override
  */
 {template .showFiltersButton}
+{/template}
 
+
+/**
+ * @override
+ */
+{template .additionalClasses}
+    {call .rootClass/}_classes
 {/template}

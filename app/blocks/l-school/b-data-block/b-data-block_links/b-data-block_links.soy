@@ -39,14 +39,22 @@
  */
 {template .content autoescape="strict" kind="html"}
     <ul class="b-data-block__content">
-    {foreach $linkItem in $params.content}
-        <li class="b-data-block__item">
-            <a class="b-data-block__item-content_text-color_red
-                      b-data-block__item-content"
-               href="{$linkItem.href}"
-               target="_blank">
-                {$linkItem.name}
-             </a>
-        </li>
-    {/foreach}
+        {foreach $linkItem in $params.content}
+            <li class="b-data-block__item">
+                {call sm.bLink.Template.base}
+                    {param params: [
+                        'data': [
+                            'name': $linkItem.name,
+                            'url': $linkItem.href
+                        ],
+                        'config': [
+                            'customClasses': 'b-data-block__item-content',
+                            'target': '_blank',
+                            'size': 'large'
+                        ]
+                    ]/}
+                {/call}
+            </li>
+        {/foreach}
+    </ul>
 {/template}

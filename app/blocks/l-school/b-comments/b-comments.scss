@@ -1,10 +1,143 @@
+@import "../../i-media/i-media";
+
 .b-comments {
     display: inline-block;
 
     width: 100%;
 
-	color: black;
+    text-align: center;
+    color: black;
 
     font-size: 16px;
     line-height: 22px;
+}
+
+.b-comments__header {
+    display: inline-block;
+
+    box-sizing: border-box;
+    width: 33.33%;
+    margin-bottom: 18px;
+    padding-right: 20px;
+
+    text-align: left;
+    vertical-align: top;
+
+    font-family: 'Proxima', Arial, sans-serif;
+    font-size: 16px;
+}
+
+.b-comments__header-text {
+    display: inline-block;
+
+    max-width: 250px;
+
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+
+    font-size: 16px;
+    line-height: 1.2;
+    font-weight: 800;
+}
+
+.b-comments__comments {
+    display: inline-block;
+
+    box-sizing: border-box;
+    width: 66.66%;
+    padding-left: 10px;
+
+    text-align: left;
+}
+
+.b-comments__placeholder {
+    display: inline-block;
+
+    margin: 0 auto 55px;
+
+    text-align: center;
+
+    font-family: 'PT Serif', serif;
+    font-size:16px;
+    line-height: 22px;
+}
+
+.b-comments__placeholder-img-container {
+    position: relative;
+
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 28px;
+
+    cursor: pointer;
+    border-radius: 60px 60px;
+}
+
+.b-comments__placeholder-img-hover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    width: 100%;
+    height: 100%;
+
+    transition: opacity 0.3s ease;
+    border-radius: 60px 60px;
+    background: #000;
+    opacity: 0;
+
+    &:hover {
+        opacity: 0.1;
+    }
+
+    &:active {
+        opacity: 0.2;
+    }
+
+}
+
+@include media-l {
+    .b-comments__header {
+        width: 25%;
+        padding-right: 22.5px;
+    }
+
+    .b-comments__comments {
+        width: 75%;
+        padding-left: 7.5px;
+    }
+
+    .b-comments__placeholder {
+        margin-bottom: 80px;
+    }
+}
+
+@include media-m {
+    .b-comments__header {
+        margin-bottom: 9px;
+    }
+
+    .b-comments__header,
+    .b-comments__comments {
+        width: 100%;
+        padding: 0;
+    }
+
+    .b-comments__header-text {
+        max-width: none;
+    }
+}
+
+@include media-s {
+    .b-comments__placeholder {
+        margin-bottom: 55px;
+    }
+}
+
+@include media-xs {
+    .b-comments__placeholder-text {
+        display: inline;
+    }
 }

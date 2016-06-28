@@ -1,0 +1,27 @@
+{
+    "formatters": {
+        "details": {
+            "format": "[%(date)s] %(levelname)s %(message)s",
+            "strip": true
+        }
+    },
+    "handlers": {
+        "logfile": {
+            "level": 50,
+            "formatter": "details",
+            "class": "intel/handlers/file",
+            "file": "runtime/schools.log"
+        }
+    },
+    "loggers": {
+        "app": {
+            "handlers": ["logfile"]
+        },
+        "express": {
+            "handlers": ["logfile"]
+        },
+        "sequelize": {
+            "handlers": ["logfile"]
+        }
+    }
+}

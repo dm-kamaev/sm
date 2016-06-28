@@ -2,22 +2,25 @@ goog.provide('sm.bHeader.Header');
 
 goog.require('cl.iControl.Control');
 goog.require('goog.dom');
+goog.require('sm.bAuthorizationLink.AuthorizationLink');
 goog.require('sm.bHeader.View');
 goog.require('sm.bSearch.Search');
 
 
+
 /**
  * Header
- * @param {Object=} view
- * @param {Object=} opt_params
+ * @param {Object} view
  * @param {Object=} opt_domHelper
  * @constructor
  * @extends {cl.iControl.Control}
  */
-sm.bHeader.Header = function(view, opt_params, opt_domHelper) {
-    goog.base(this, view, opt_params, opt_domHelper);
+sm.bHeader.Header = function(view, opt_domHelper) {
+    goog.base(this, view, opt_domHelper);
+
 
     this.setSupportedState(goog.ui.Component.State.FOCUSED, false);
+
 
     /**
      * Current mode
@@ -26,6 +29,15 @@ sm.bHeader.Header = function(view, opt_params, opt_domHelper) {
      */
     this.mode_ = sm.bHeader.Header.Mode.DEFAULT;
 
+
+    /**
+     * Minified search instance
+     * @type {sm.bSearch.Search}
+     * @private
+     */
+    this.minifiedSearch_ = null;
+
+
     /**
      * Search instance
      * @type {sm.bSearch.Search}
@@ -33,12 +45,27 @@ sm.bHeader.Header = function(view, opt_params, opt_domHelper) {
      */
     this.search_ = null;
 
+
     /**
      * Banner instance
      * @type {sm.bBanner.Banner}
      * @private
      */
     this.banner_ = null;
+
+    /**
+     * Authorization Link instance
+     * @type {sm.bAuthorizationLink.AuthorizationLink}
+     * @private
+     */
+    this.authorizationLink_ = null;
+
+    /**
+     * favorite instance
+     * @type {sm.bFavorite.Favorite}
+     * @private
+     */
+    this.favorite_ = null;
 };
 goog.inherits(sm.bHeader.Header, cl.iControl.Control);
 
@@ -47,6 +74,7 @@ goog.scope(function() {
     var Header = sm.bHeader.Header,
         View = sm.bHeader.View,
         Search = sm.bSearch.Search,
+        AuthorizationLink = sm.bAuthorizationLink.AuthorizationLink,
         FactoryManager = cl.iFactory.FactoryManager;
 
 
@@ -59,6 +87,7 @@ goog.scope(function() {
         'SEARCH': 'search'
     };
 
+
     /**
      * Event enum
      * @enum {string}
@@ -67,6 +96,7 @@ goog.scope(function() {
         'SUBMIT': Search.Event.SUBMIT,
         'ITEM_SELECT': Search.Event.ITEM_SELECT
     };
+
 
     /**
      * Singleton getter
@@ -84,6 +114,25 @@ goog.scope(function() {
         return Header.instance_;
     };
 
+
+    /**
+     * Add given item to favorites
+     * @param {sm.bSchoolListItem.SchoolListItem.Params} favoriteItem
+     */
+    Header.prototype.addFavorite = function(favoriteItem) {
+        this.favorite_.addItem(favoriteItem);
+    };
+
+
+    /**
+     * Remove item with given id from favorites
+     * @param {number} itemId
+     */
+    Header.prototype.removeFavorite = function(itemId) {
+        this.favorite_.removeItem(itemId);
+    };
+
+
     /**
      * @override
      */
@@ -91,32 +140,96 @@ goog.scope(function() {
         goog.base(this, 'decorateInternal', element);
 
         var domElements = this.getView().getDom();
+        if (domElements.minifiedSearch) {
+            this.minifiedSearch_ = new Search();
+            this.addChild(this.minifiedSearch_);
+            this.minifiedSearch_.decorate(domElements.minifiedSearch);
+        }
 
-        if (this.getView().getDom().search) {
+        if (domElements.search) {
             this.search_ = new Search();
             this.addChild(this.search_);
             this.search_.decorate(domElements.search);
         }
 
         this.banner_ = this.decorateChild('banner', domElements.banner);
+
+        this.authorizationLink_ = this.decorateChild(
+            'authorization-link',
+            domElements.authorizationLink
+        );
+
+        this.favorite_ = this.decorateChild(
+            'favorite',
+            domElements.favorite
+        );
     };
+
 
     /**
      * @override
      */
     Header.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
-        if (this.search_) {
-            this.getHandler().listen(
-                this.search_,
-                Search.Event.DEFAULT_MODE_INITED,
-                this.onDefaultModeInited_
-            ).listen(
-                this.search_,
-                Search.Event.SEARCH_MODE_INITED,
-                this.onSearchModeInited_
-            );
-        }
+        this.initMinifiedSearchListeners_();
+        this.initSearchListeners_();
+    };
+
+
+    /**
+     * @private
+     */
+    Header.prototype.initMinifiedSearchListeners_ = function() {
+        this.getHandler().listen(
+            this.minifiedSearch_,
+            Search.Event.DEFAULT_MODE_INITED,
+            this.onDefaultModeInited_
+        ).listen(
+            this.minifiedSearch_,
+            Search.Event.SEARCH_MODE_INITED,
+            this.onSearchModeInited_
+        ).listen(
+            this.minifiedSearch_,
+            Search.Event.TEXT_CHANGE,
+            this.onMinifiedSearchTextChange_
+        ).listen(
+            this.minifiedSearch_,
+            Search.Event.SUBMIT,
+            this.onSubmit_
+        ).listen(
+            this.minifiedSearch_,
+            Search.Event.ITEM_SELECT,
+            this.onSubmit_
+        );
+    };
+
+
+    /**
+     * @private
+     */
+    Header.prototype.initSearchListeners_ = function() {
+        this.getHandler().listen(
+            this.search_,
+            Search.Event.TEXT_CHANGE,
+            this.onSearchTextChange_
+        ).listen(
+            this.search_,
+            Search.Event.SUBMIT,
+            this.onSubmit_
+        ).listen(
+            this.search_,
+            Search.Event.ITEM_SELECT,
+            this.onSubmit_
+        );
+    };
+
+
+    /**
+     * @private
+     */
+    Header.prototype.onSubmit_ = function() {
+        this.minifiedSearch_.reset();
+        this.search_.reset();
     };
 
 
@@ -134,6 +247,41 @@ goog.scope(function() {
         }
 
         return res;
+    };
+
+
+    /**
+     * @public
+     * @return {{
+     *     text: ?string,
+     *     areaId: ?number,
+     *     metroId: ?number
+     * }}
+     */
+    Header.prototype.getSearchData = function() {
+        return this.search_.getData();
+    };
+
+
+    /**
+     * Set search value in according to minified search value
+     * @private
+     */
+    Header.prototype.onMinifiedSearchTextChange_ = function() {
+        this.search_.setData(
+            this.minifiedSearch_.getData()
+        );
+    };
+
+
+    /**
+     * Set minified search value in according to search value
+     * @private
+     */
+    Header.prototype.onSearchTextChange_ = function() {
+        this.minifiedSearch_.setData(
+            this.search_.getData()
+        );
     };
 
 
@@ -169,23 +317,24 @@ goog.scope(function() {
         switch (mode) {
             case Header.Mode.DEFAULT:
                 this.getView().switchToDefaultMode();
-                if (this.search_) {
-                    this.search_.setMode(Search.Mode.DEFAULT);
+                if (this.minifiedSearch_) {
+                    this.minifiedSearch_.setMode(Search.Mode.DEFAULT);
                 }
                 break;
 
             case Header.Mode.SEARCH:
                 this.getView().switchToSearchMode();
-                if (this.search_) {
-                    this.search_.setMode(Search.Mode.SEARCH);
+                if (this.minifiedSearch_) {
+                    this.minifiedSearch_.setMode(Search.Mode.SEARCH);
                 }
                 break;
         }
     };
 
+
     /**
      * Default mode inition handler
-     * @param {object} event
+     * @param {Object} event
      * @private
      */
     Header.prototype.onDefaultModeInited_ = function(event) {
@@ -195,7 +344,7 @@ goog.scope(function() {
 
     /**
      * Search mode inition handler
-     * @param {object} event
+     * @param {Object} event
      * @private
      */
     Header.prototype.onSearchModeInited_ = function(event) {
@@ -206,4 +355,4 @@ goog.scope(function() {
     jQuery(function() {
         Header.getInstance();
     });
-});
+});  // goog.scope

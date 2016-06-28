@@ -1,8 +1,11 @@
-var services = require.main.require('./app/components/services').all;
 
+var services = require('../../../../app/components/services').all;
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
+var logger =
+    require('../../../../app/components/logger/logger').getLogger('app');
 var schoolView = require('../views/schoolView');
+var entityType = require('../../entity/enums/entityType');
 
 
 /**
@@ -34,15 +37,14 @@ var schoolView = require('../views/schoolView');
  *         }
  *     }
  */
-exports.create = async (function(req, res) {
+exports.create = async(function(req, res) {
     var result = '';
     try {
         var data = req.body.schoolData;
-        console.log('data', data);
         result = await(services.school.create(data));
-    } catch (e) {
-        console.log(e);
-        result = JSON.stringify(e);
+    } catch (error) {
+        result = JSON.stringify(error);
+        logger.error(result);
     } finally {
         res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(JSON.stringify(result));
@@ -69,15 +71,15 @@ exports.create = async (function(req, res) {
  *         }
  *     }
  */
-exports.update = async (function(req, res) {
+exports.update = async(function(req, res) {
     var result = '';
     try {
-        var school_id = req.params.id;
+        var schoolId = req.params.id;
         var data = req.body.schoolData;
-        result = await(services.school.update(school_id, data));
-    } catch (e) {
-        console.log(e);
-        result = e.message;
+        result = await(services.school.update(schoolId, data));
+    } catch (error) {
+        logger.error(error.message);
+        result = error.message;
     } finally {
         res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(JSON.stringify(result));
@@ -91,14 +93,14 @@ exports.update = async (function(req, res) {
  * @apiGroup School
  * @apiName Delete
  */
-exports.delete = async (function(req, res) {
+exports.delete = async(function(req, res) {
     var result = '';
     try {
-        var school_id = req.params.id;
-        result = await(services.school.delete(school_id));
-    } catch (e) {
-        console.log(e);
-        result = e.message;
+        var schoolId = req.params.id;
+        result = await(services.school.delete(schoolId));
+    } catch (error) {
+        logger.error(error.message);
+        result = error.message;
     } finally {
         res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(JSON.stringify(result));
@@ -113,13 +115,14 @@ exports.delete = async (function(req, res) {
  * @apiName Schools
  * @apiSuccess {Object[]} schools Very userful documentation here.
  */
-exports.list = async (function(req, res) {
+exports.list = async(function(req, res) {
+    var result;
     try {
-        var schools = await (services.school.list());
-        var result = schoolView.list(schools);
-    } catch (e) {
-        console.log(e);
-        result = e.message;
+        var schools = await(services.school.list());
+        result = schoolView.list(schools);
+    } catch (error) {
+        logger.error(error.message);
+        result = error.message;
     } finally {
         res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(JSON.stringify(result));
@@ -137,14 +140,23 @@ exports.list = async (function(req, res) {
  *       "searchString" : "123"
  *     }
  */
-exports.suggestSearch = async (function(req, res) {
+exports.suggestSearch = async(function(req, res) {
+    var result;
     try {
         var searchString = req.query.searchString;
-        var data = await(services.search.suggestSearch(searchString));
-        var result = schoolView.suggest(data);
-    } catch (e) {
-        console.log(e);
-        result = e.message;
+        var data = await(services.search.suggestSearch(searchString)),
+            aliases = await(services.page.getAliases(
+                data.schools.map(school => school.id),
+                entityType.SCHOOL
+            ));
+        data.schools = schoolView.joinAliases(
+            data.schools.map(school => school.dataValues),
+            aliases
+        );
+        result = schoolView.suggest(data);
+    } catch (error) {
+        logger.error(error.message);
+        result = error.message;
     } finally {
         res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(JSON.stringify(result));
@@ -159,19 +171,18 @@ exports.suggestSearch = async (function(req, res) {
  * @apiName School
  * @apiSuccess {Object} schools Very userful documentation here.
  */
-exports.view = async (function(req, res) {
+exports.view = async(function(req, res) {
+    var result;
     try {
-        var result = await(services.school.viewOne(req.params.id));
-    } catch (e) {
-        console.log(e);
-        result = e.message;
+        result = await(services.school.viewOne(req.params.id));
+    } catch (error) {
+        logger.error(error.message);
+        result = error.message;
     } finally {
         res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(JSON.stringify(result));
     }
 });
-
-
 
 
 /**
@@ -180,13 +191,13 @@ exports.view = async (function(req, res) {
  * @apiGroup School
  * @apiName ListSearchFilters
  */
-exports.listSearchFilters = async (function(req, res) {
+exports.listSearchFilters = async(function(req, res) {
     var result;
     try {
         result = await(services.school.searchFilters());
-    } catch (e) {
-        console.log(e.message);
-        result = e.message;
+    } catch (error) {
+        logger.error(error.message);
+        result = error.message;
     } finally {
         res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(JSON.stringify(result));
@@ -209,29 +220,41 @@ exports.listSearchFilters = async (function(req, res) {
  *       "score": [3,2,1,5]
  *     }
  */
-exports.createComment = async (function(req, res) {
+exports.createComment = async(function(req, res) {
     var result = '';
     try {
         var schoolId = req.params.id,
             params = req.body;
 
-        var isCommented = await(services.userData.checkKey(
-            schoolId, params.key
+        params.userId = req.user && req.user.id;
+
+        var userData = await(services.userData.checkCredentials(
+            schoolId,
+            params.key,
+            params.userId
         ));
 
-        if (isCommented) {
+        if (typeof userData !== 'undefined') {
             result = [{
                 code: 1,
                 message: 'Вы уже оставляли отзыв у этой школы.'
             }];
             res.statusCode = 400;
+
+            services.userData.update(userData.id, {
+                userId: params.userId
+            });
         } else {
+            if (params.userId) {
+                var user = await(services.user.getUserById(params.userId));
+                params.username = user.firstName;
+            }
+
             result = await(services.school.review(schoolId, params));
         }
-
-    } catch (e) {
-        console.log(e);
-        result = JSON.stringify(e);
+    } catch (error) {
+        result = JSON.stringify(error);
+        logger.error(result);
     } finally {
         res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(JSON.stringify(result));
@@ -240,41 +263,103 @@ exports.createComment = async (function(req, res) {
 
 
 /**
- * @api {get} api/school/search Search school
+ * @api {get} api/school/search Search in all schools withs given
+ * parameters and return 10 results depends of given page
  * @apiVersion 0.0.0
  * @apiGroup School
  * @apiName Search
  * @apiParam {Object} searchParams Search params.
  * @apiParamExample {json} Request-Example:
  *     {
- *       "searchParams": {
- *         "name": "123",
- *         "classes": [1,2,3,4],
- *         "schoolType": [1,2],
- *         "gia": [1,2],
- *         "ege": [2,3],
- *         "olimp": [3,5],
- *         "metroId": 1,
- *         "areaId": 1,
- *         "sortType": 1
- *       },
+ *       "name": "123",
+ *       "classes": [1,2,3,4],
+ *       "schoolType": ["school-or-center", "cadet"],
+ *       "gia": ["math", "russian"],
+ *       "ege": ["art", "handcraft"],
+ *       "olimp": ["computer-science", "sports"],
+ *       "metroId": 1,
+ *       "areaId": 1,
+ *       "sortType": 1,
  *       "page": 0
  *     }
  */
-exports.search = async (function(req, res) {
-    var result = '';
+exports.search = async(function(req, res) {
+    var result;
     try {
-        var params = req.query;
+        var user = req.user || {},
+            params = await(services.search.initSearchParams(req.query)),
+            favoriteIds =
+                await(services.favorite.getAllItemIdsByUserId(user.id));
 
-        if(params.searchParams) {
-            var criterion = params.searchParams.sortType;
-        }
+        var schools = await(services.school.list(
+            params,
+            {
+                limitResults: 10
+            }
+            )),
+            aliases = await(services.page.getAliases(
+                schools.map(school => school.id),
+                entityType.SCHOOL
+            ));
 
-        var schools = await(services.school.list(params));
-        result = schoolView.list(schools, criterion);
-    } catch (e) {
-        console.log(e);
-        result = JSON.stringify(e);
+        var schoolsWithAliases = schoolView.joinAliases(schools, aliases),
+            schoolsWithFavoriteMark = schoolView.listWithFavorites(
+                schoolsWithAliases, favoriteIds
+            );
+
+        result = {
+            list: schoolView.list(
+                schoolsWithFavoriteMark, params.sortType, params.page
+            ),
+            map: schoolView.listMap(schools)
+        };
+    } catch (error) {
+        result = JSON.stringify(error);
+        logger.error(result);
+    } finally {
+        res.header('Content-Type', 'text/html; charset=utf-8');
+        res.end(JSON.stringify(result));
+    }
+});
+
+/**
+ * @api {get} api/school/searchMapPoints Search in all schools with given
+ * parameters and return all results to place it at map
+ * @apiVersion 0.0.0
+ * @apiGroup School
+ * @apiName SearchMapPoints
+ * @apiParam {Object} searchParams Search params.
+ * @apiParamExample {json} Request-Example:
+ *     {
+ *       "name": "123",
+ *       "classes": [1,2,3,4],
+ *       "schoolType": ["school-or-center", "cadet"],
+ *       "gia": ["math", "russian"],
+ *       "ege": ["art", "handcraft"],
+ *       "olimp": ["computer-science", "sports"],
+ *       "metroId": 1,
+ *       "areaId": 1,
+ *       "sortType": 1
+ *     }
+ */
+exports.searchMapPoints = async(function(req, res) {
+    var result;
+    try {
+        var params = await(services.search.initSearchParams(req.query));
+
+        var promises = {
+            schools: services.school.list(params),
+            mapPosition: services.search.getMapPositionParams(params),
+            aliases: services.page.getAllAliases(entityType.SCHOOL)
+        };
+        var results = await(promises);
+        result = schoolView.listMap(
+            schoolView.joinAliases(results.schools, results.aliases),
+            results.mapPosition
+        );
+    } catch (error) {
+        result = JSON.stringify(error);
+        logger.error(result);
     } finally {
         res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(JSON.stringify(result));

@@ -4,16 +4,17 @@ goog.require('cl.gModal.Modal');
 goog.require('sm.gModal.ViewStendhal');
 
 
+
 /**
  * Modal control
- * @param {Object=} view
- * @param {Object=} opt_params
+ * @param {Object} view
  * @param {Object=} opt_domHelper
  * @constructor
  * @extends {cl.gModal.Modal}
  */
-sm.gModal.ModalStendhal = function(view, opt_params, opt_domHelper) {
-    goog.base(this, view, opt_params, opt_domHelper);
+sm.gModal.ModalStendhal = function(view, opt_domHelper) {
+    goog.base(this, view, opt_domHelper);
+
 
     /**
      * List
@@ -29,6 +30,7 @@ goog.scope(function() {
     var Modal = sm.gModal.ModalStendhal,
         View = sm.gModal.ViewStendhal;
 
+
     /**
      * @override
      */
@@ -40,4 +42,4 @@ goog.scope(function() {
             this.hide
         );
     };
-});
+});  // goog.scope

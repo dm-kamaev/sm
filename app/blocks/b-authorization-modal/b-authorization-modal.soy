@@ -3,9 +3,19 @@
 /**
  * Default authorization modal view
  */
-{template .modal}
+{template .complete}
     <script>
         window.opener.location.reload();
+        window.close();
+    </script>
+{/template}
+
+
+/**
+ * Default authorization modal view
+ */
+{template .error}
+    <script>
         window.close();
     </script>
 {/template}

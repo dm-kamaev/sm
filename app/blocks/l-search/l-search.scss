@@ -1,96 +1,80 @@
+@import "../i-media/i-media";
+
 .l-search__body {
     min-height: 83%;
     margin: 0 auto 35px;
 
     color: #000000;
-}
-
-.l-search__header {
-    width: 100%;
-    height: 321px;
-
-    color: #000;
     background-color: #f4f4ec;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .l-search__header-wrap {
-    width: 1200px;
-    height: 100%;
-    margin: 0 auto;
-}
-
-.l-search__header-image-wrap {
-    position: relative;
-    left: 36px;
-
-    display: inline-block;
-    overflow: hidden;
-
-    width: 55%;
-    max-width: 512px;
-    height: 100%;
-}
-
-.l-search__header-image {
-    position: absolute;
-    bottom: -28px;
-
     width: 100%;
-    height: 100%;
+
+    color: #000;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+
+    text-align: right;
+}
+
+.l-search__header {
+    position: relative;
+
+    width: 1200px;
+    height: 400px;
     margin: 0 auto;
 
-    background-image: url(images/l-search/header-banner.svg);
-    background-repeat: no-repeat;
-    background-size: 100%;
+    line-height: 400px;
+}
+
+.l-search__image {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+
+    width: 66.66%;
+    height: auto;
+    max-height: 415px;
+    padding-right: 60px;
+
+    box-sizing: border-box;
+}
+
+.l-search__image_clone {
+    display: none;
 }
 
 .l-search__header-content {
     display: inline-block;
 
-    width: 45%;
-    padding-top: 40px;
+    width: 33.33%;
+    padding-left: 20px;
 
-    vertical-align: top;
-}
+    box-sizing: border-box;
 
-.l-search__geoposition {
-    margin-bottom: 22px;
+    vertical-align: middle;
 
-    // cursor: pointer;
-}
-
-.l-search__pointer {
-    display: inline-block;
-
-    margin-right: 20px;
-
-    color: #ee362c;
-
-    font: 30px "WebSymbols", Arial, sans-serif;
-}
-
-.l-search__city {
-    display: inline-block;
-
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-
-    font: 30px 'Proxima', Arial, sans-serif;
-    line-height: 50px;
+    line-height: normal;
 }
 
 .l-search__title {
-    margin-bottom: 39px;
+    display: inline-block;
+    margin-bottom: 25px;
 
-    letter-spacing: 0.018em;
+    text-align: left;
 
-    font: 20px 'PT Serif', Arial, sans-serif;
-    line-height: 30px;
+    font-family: 'Proxima', sans-serif;
+    font-size: 30.01px;
+    font-weight: 700;
+    line-height: 36px;
 }
 
 .l-search__title-list {
+    display: inline-block;
+
     list-style: none;
+
+    text-align: left;
 }
 
 .l-search__title-list-item {
@@ -98,8 +82,9 @@
 
     margin-bottom: 10px;
 
-    font: 14px Arial, sans-serif;
-    line-height: 18px;
+    font-family: 'PT Serif', serif;
+    font-size: 16px;
+    line-height: 22px;
 
     &:last-child {
         margin-bottom: 0;
@@ -117,109 +102,12 @@
     margin-left: 18px;
 }
 
-.l-search__top-menu-wrap {
-    height: 155px;
-
-    background-color: #f4f4ec;
-}
-
-.l-search__top-menu {
-    position: relative;
-
-    max-width: 1200px;
-    margin: 0 auto;
-    padding-top: 40px;
-}
-
-.l-search__left-text {
-    display: inline-block;
-
-    box-sizing: border-box;
-    width: 16.67%;
-    margin-top: 14px;
-    padding-right: 20px;
-
-    vertical-align: top;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-
-    font: 16px 'Proxima', Arial, sans-serif;
-    font-weight: 800;
-}
-
 .l-search__search {
-    display: inline-block;
-
-    box-sizing: border-box;
-    width: 83.33%;
-    padding-right: 307px;
-    padding-left: 10px;
-}
-
-.l-search__search-field {
-    margin-bottom: 14px;
-}
-
-.l-search__search-links {
-    overflow: hidden;
-
-    height: 18px;
-}
-
-.l-search__search-link {
-    display: inline-block;
-
-    margin-right: 18px;
-
-    &:last-child {
-        margin-right: 0;
-    }
-}
-
-.l-search__button-wrap {
-    position: absolute;
-    right: 0;
-    top: 40px;
-
-    width: 277px;
-
-    text-align: center;
-    vertical-align: top;
-}
-
-.l-search__button {
-    box-sizing: border-box;
     width: 100%;
-    height: 47px;
-    margin-bottom: 14px;
-    padding-top: 12px;
-
-    cursor: pointer;
-    text-align: center;
-
-    border: 4px solid;
-}
-
-.l-search__search-button {
-    color: #000000;
-}
-
-.l-search__button_content {
-    width: 100%;
-}
-
-.l-search__button-text {
-    text-transform: uppercase;
-    letter-spacing: 1px;
-
-    font-family: proxima;
-    font-size: 16px;
-    font-weight: 800;
-    line-height: 1em;
 }
 
 .l-search__information-links-wrap {
-    margin-bottom: 50px;
+    margin-bottom: 40px;
 }
 
 .l-search__information-links {
@@ -265,66 +153,26 @@
     }
 }
 
-.l-search__information-schools {
+.l-search__school-catalog {
     display: inline-block;
 
     box-sizing: border-box;
-    width: 50%;
+    width: 16.66%;
     margin-top: 45px;
-    margin-right: -307px;
-    padding-right: 307px;
+    padding-right: 10px;
     padding-left: 15px;
 
     vertical-align: top;
 }
 
-.l-search__image_list {
-    box-sizing: border-box;
-
-    width: 60px;
-    height: 60px;
-    margin-bottom: 27px;
-    padding: 10px 0;
-
-    text-align: center;
-
-    border: 4px solid #000;
-}
-
-.l-search__item-list {
-    line-height: 8px;
-}
-
-.l-search__image_point {
+.l-search__articles {
     display: inline-block;
+
     box-sizing: border-box;
+    width: 33.33%;
+    padding-left: 20px;
 
-    width: 2px;
-    height: 2px;
-    margin-right: 4px;
-
-    border: 2px solid #000;
-
-    border-radius: 50%;
-}
-
-.l-search__image_dash {
-    display: inline-block;
-    box-sizing: border-box;
-
-    width: 20px;
-    height: 2px;
-
-    border: 2px solid #000;
-
-    border-radius: 2px;
-}
-
-.l-search__text-amount-schools {
-    margin-bottom: 10px;
-
-    font: 13px Arial, sans-serif;
-    line-height: 18px;
+    vertical-align: top;
 }
 
 .l-search__horisontal-line {
@@ -341,192 +189,189 @@
     margin-bottom: 30px;
 }
 
-@media screen and (max-width: 1280px) // for desktop and tablet
-{
+@include media-xl {
     .l-search__header {
-        box-sizing: border-box;
-        padding: 0 40px;
-    }
-
-    .l-search__header-wrap {
         width: 100%;
-    }
-
-    .l-search__header-content {
-        padding-top: 29px;
-    }
-
-    .l-search__title {
-        margin-bottom: 27px;
-    }
-    
-    .l-search__top-menu-wrap {
-        box-sizing: border-box;
         padding: 0 40px;
-    }
 
-    .l-search__top-menu {
-        width: 100%;
-    }
-
-    .l-search__information-links-wrap {
         box-sizing: border-box;
-        padding: 0 40px;
     }
 
     .l-search__information-links {
         width: 100%;
     }
+
+    .l-search__information-links-wrap {
+        margin-bottom: 55px;
+        padding: 0 40px;
+
+        box-sizing: border-box;
+    }
 }
 
-@media screen and (max-width: 1100px) // for desktop and tablet
-{
-    .l-search__header-image-wrap {
-        left: 0;
+@include media-l {
+    .l-search__header {
+        height: 375px;
+
+        line-height: 375px;
     }
 
-    .l-search__search-wrap {
+    .l-search__header-content {
         display: inline-block;
-
-        box-sizing: border-box;
         width: 100%;
-        padding-right: 307px;
+        padding-left: 460px;
+
+        text-align: right;
     }
 
-    .l-search__left-text {
-        width: 33.33%;
-    }
-
-    .l-search__search {
-        width: 66.66%;
-        padding-right: 0;
-    }
-
-    .l-search__schools {
-        box-sizing: border-box;
+    .l-search__title {
         width: 100%;
-        padding-right: 307px;
+        max-width: 380px;
+    }
+
+    .l-search__title-list {
+        width: 100%;
+        max-width: 380px;
+    }
+
+    .l-search__image {
+        left: -40px;
+
+        width: 100%;
+        padding-right: 425px;
     }
 
     .l-search__popular-schools {
-        white-space: nowrap;
         overflow: hidden;
 
-        width: 66.66%;
-        padding-right: 0;
+        width: 50%;
+        padding-right: 15px;
+
+        white-space: nowrap;
     }
 
     .l-search__popular-school {
         width: 50%;
     }
 
-    .l-search__information-schools {
+    .l-search__school-catalog {
+        width: 25%;
+    }
+
+    .l-search__articles {
+        width: 25%;
+    }
+}
+
+@include media-m {
+    .l-search__image {
+        width: 55%;
+        min-width: 500px;
+        padding-right: 0;
+    }
+
+    .l-search__popular-schools {
+        width: 66.66%;
+        padding-right: 10px;
+    }
+
+    .l-search__school-catalog {
         width: 33.33%;
         padding-right: 0;
         padding-left: 20px;
     }
+
+    .l-search__articles {
+        display: none;
+    }
 }
 
-@media screen and (max-width: 1000px) // for desktop and tablet
-{
+@include media-s {
     .l-search__header {
-        height: 240px;
-    }
+        height: 415px;
 
-    .l-search__header-image {
-        left: 0;
-        right: 0;
-
-        max-width: 300px;
+        line-height: normal;
     }
 
     .l-search__header-content {
-        padding-top: 50px;
+        padding-left: 0;
+
+        text-align: left;
+    }
+
+    .l-search__title {
+        max-width: 100%;
+        margin-top: 25px;
     }
 
     .l-search__title-list {
         display: none;
     }
 
-    .l-search__search-wrap {
-        width: 66.66%;
-        padding-right: 10px;
+    .l-search__image {
+        left: 0;
+        right: 0;
+
+        width: 515px;
+        min-width: auto;
+        margin: auto;
     }
-
-    .l-search__search {
-        width: 100%;
-        padding: 0;
-    }
-
-    .l-search__left-text {
-        display: none;
-    }
-
-    .l-search__button-wrap {
-        position: static;
-        display: inline-block;
-
-        box-sizing: border-box;
-        width: 33.33%;
-        padding-left: 20px;
-    }
-
-    .l-search__schools {
-        width: auto;
-        padding-right: 0;
-    }
-
-    .l-search__information-schools {
-        margin-right: 0;
-    }
-
 }
 
-@media screen and (max-device-width: 600px) // for phone
-and (orientation: portrait),
-screen and (max-width: 600px) // for desktop
-{
+@include media-xs {
+    .l-search__body {
+        position: relative;
+
+        height: 380px;
+    }
+
+    .l-search__header-wrap {
+        border: none;
+    }
+
     .l-search__header {
-        height: 171px;
-        padding: 0 30px;
-
-        background: #f4f4ec;
-    }
-
-    .l-search__header-image-wrap {
-        display: none;
-    }
-
-    .l-search__header-content {
-        width: 100%;
-        padding-top: 26px;
-    }
-
-    .l-search__geoposition {
-        margin-bottom: 2px;
-    }
-
-    .l-search__top-menu-wrap {
+        height: auto;
         padding: 0 30px;
     }
 
-    .l-search__search-wrap {
-        width: 100%;
-        padding-right: 0;
+    .l-search__title {
+        max-width: 100%;
+        margin-top: 25px;
+
+        letter-spacing: 0.3px;
+
+        font-size: 18px;
+        line-height: 20px;
     }
 
-    .l-search__button-wrap {
+    .l-search__image {
+        bottom: 0;
+
+        width: 100%;
+        max-width: 400px;
+        min-width: 0;
+        padding: 0 30px;
+    }
+
+    .l-search__image_main {
         display: none;
+    }
+
+    .l-search__image_clone {
+        display: block;
     }
 
     .l-search__information-links-wrap {
+        margin-bottom: 55px;
         padding: 0 30px;
     }
 
     .l-search__popular-schools {
-        white-space: normal;
-
         width: 100%;
+        margin-bottom: 25px;
+
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        white-space: normal;
     }
 
     .l-search__popular-school {
@@ -544,25 +389,35 @@ screen and (max-width: 600px) // for desktop
         }
     }
 
-    .l-search__information-schools {
+    .l-search__school-catalog {
         position: relative;
 
         width: 100%;
         margin-top: 0;
-        margin-bottom: 50px;
+        margin-bottom: 35px;
         padding: 0;
+        padding-bottom: 25px;
+
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     }
 
-    .l-search__image_list {
-        position: absolute;
-        top: 3px;
-        left: 0;
-    }
+    .l-search__articles {
+        position: static;
 
-    .l-search__information-text {
-        box-sizing: border-box;
+        display: inline-block;
+
         width: 100%;
-        padding-left: 90px;
+        padding: 0;
+        margin-right: 0;
     }
 }
 
+@include media-xxs {
+    .l-search__body {
+        height: 345px;
+    }
+
+    .l-search__title {
+        font-size: 15px;
+    }
+}

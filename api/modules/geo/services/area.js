@@ -1,8 +1,6 @@
-var colors = require('colors');
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
-var models = require.main.require('./app/components/models').all;
-var services = require.main.require('./app/components/services').all;
+var models = require('../../../../app/components/models').all;
 exports.name = 'area';
 
 /**
@@ -10,7 +8,7 @@ exports.name = 'area';
  * @param {String} name
  * @return {Area}
  */
-exports.create = async((params) => {
+exports.create = async(params => {
     return await(models.Area.findOrCreate({
         where: {
             name: params.name

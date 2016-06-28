@@ -12,13 +12,13 @@ var SearchData = db.define('SearchData', {
     },
     type: {
         type: DataType.ENUM,
-        values: searchType.toArray() 
+        values: searchType.toArray()
     }
 }, {
     underscored: true,
     tableName: 'search_data',
     classMethods: {
-        associate: function (models) {
+        associate: function(models) {
             SearchData.belongsTo(models.School, {
                 as: 'school', foreignKey: 'school_id'
             });

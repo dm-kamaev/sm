@@ -2,7 +2,7 @@
 
 
 module.exports = {
-    up: function (queryInterface, Sequelize) {
+    up: function(queryInterface, Sequelize) {
         return queryInterface.createTable('subject', {
             id: {
                 allowNull: false,
@@ -14,12 +14,12 @@ module.exports = {
                 type: Sequelize.STRING,
                 unique: true
             },
-            display_name: Sequelize.STRING,
-            created_at: Sequelize.DATE,
-            updated_at: Sequelize.DATE
+            'display_name': Sequelize.STRING,
+            'created_at': Sequelize.DATE,
+            'updated_at': Sequelize.DATE
         });
     },
-    down: function (queryInterface) {
+    down: function(queryInterface) {
         return queryInterface.dropTable('subject');
     }
 };

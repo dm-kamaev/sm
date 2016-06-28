@@ -1,32 +1,29 @@
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
-var colors = require('colors');
-var models = require.main.require('./app/components/models').all;
-var services = require.main.require('./app/components/services').all;
-const common = require.main.require('./console/common');
+var models = require('../../../../app/components/models').all;
 
 exports.name = 'giaResult';
 
 /**
  * Add giaResult row
- * @param {number} school_id
- * @param {number} subject_id
+ * @param {number} schoolId
+ * @param {number} subjectId
  * @param {{
  *     count!: number,
  *     result!: number
  * }} data
  * @return {Object} instance of GiaResult model
  */
-exports.add = async(function(school_id, subject_id, data) {
-    data.school_id = school_id;
-    data.subject_id = subject_id;
+exports.add = async(function(schoolId, subjectId, data) {
+    data.schoolId = schoolId;
+    data.subjectId = subjectId;
     return await(models.GiaResult.create(data));
 });
 
 
 /**
  * Uppdate giaResult data
- * @param {number} gia_id
+ * @param {number} giaId
  * @param {{
  *     count: number,
  *     result: number
@@ -36,8 +33,8 @@ exports.add = async(function(school_id, subject_id, data) {
 /**
  * Update gia data
  */
-exports.update = async(function(gia_id, data) {
-    var instance = await(exports.getById(gia_id));
+exports.update = async(function(giaId, data) {
+    var instance = await(exports.getById(giaId));
     return await(instance.update(data));
 });
 
@@ -87,21 +84,21 @@ exports.getAllBySchoolId = async(function(schoolId) {
 
 /**
  * Get one data from table by data
- * @param {number} gia_id
+ * @param {number} giaId
  * @return {Object} instance of GiaResult model
  */
-exports.getById = async(function(gia_id) {
+exports.getById = async(function(giaId) {
     return await(models.GiaResult.findOne({
-        where: {id: gia_id}
+        where: {id: giaId}
     }));
 });
 
 
 /**
  * Delete giaResult instance
- * @param {number} gia_id
+ * @param {number} giaId
  */
-exports.delete = async(function(gia_id) {
-    var instance = await(exports.getById(gia_id));
+exports.delete = async(function(giaId) {
+    var instance = await(exports.getById(giaId));
     await(instance.destroy());
 });

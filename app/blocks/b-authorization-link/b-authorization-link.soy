@@ -1,0 +1,198 @@
+{namespace sm.bAuthorizationLink.Template}
+
+
+/**
+ * Authorization link parameters
+ * @typedef {{
+ *     user: ?{
+ *         firstName: ?string,
+ *         lastName: ?string
+ *     }
+ * }} sm.bAuthorizationLink.Params.Data
+ */
+
+
+/**
+ * Constructor
+ * @param? params {
+ *     data: sm.bAuthorizationLink.Params.Data
+ * }
+ * @extends cl.iControl.Template
+ * @constructor
+ */
+{template .authorizationLink}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * Body
+ * @param? params {{
+ *     data: sm.bAuthorizationLink.Params.Data
+ * }}
+ * @override
+ */
+{template .body}
+    {call .icon_/}
+    {call .tooltip_ data="all"/}
+{/template}
+
+
+/**
+ * authorization link icon
+ */
+{template .icon_ kind="html" private="true"}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__icon
+    {/let}
+
+    <div class="{call .rootClass/}__icon-wrap">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': 'stendhal',
+                'type': 'icon',
+                'renderParams': [
+                    'data': [
+                        'type': 'user'
+                    ],
+                    'config': [
+                        'customClasses': [$customClasses]
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * authorization link Tooltip
+ */
+{template .tooltip_ kind="html" private="true"}
+    {let $tooltipData kind="html"}
+        {call .tooltipData_ data="all" /}
+    {/let}
+
+    {let $customClasses kind="html"}
+        {call .rootClass/}__hint
+    {/let}
+
+    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+        {param params: [
+            'factory': 'stendhal',
+            'type': 'hint',
+            'renderParams': [
+                'data': $tooltipData,
+                'config': [
+                    'offset': 'l',
+                    'customClasses': [$customClasses],
+                    'noPadding': true,
+                    'theme': 'straight-arrow'
+                ]
+            ]
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * tooltip Data
+ */
+{template .tooltipData_ kind="html" private="true"}
+    <div class="{call .rootClass/}__hint-content
+                {sp}{call .rootClass/}__hint-content_logged-out">
+        {call .tooltipLogin_ /}
+    </div>
+
+    <div class="{call .rootClass/}__hint-content
+                {sp}{call .rootClass/}__hint-content_logged">
+        {call .tooltipLogout_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * tooltip Login
+ */
+{template .tooltipLogin_ kind="html" private="true"}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__link{sp}
+        {call .rootClass/}__link_login
+    {/let}
+
+    {call sm.bLink.Template.base}
+        {param params:[
+            'data': [
+                'name': 'Войти'
+            ],
+            'config': [
+                'customClasses': $customClasses
+            ]
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * tooltip Logout
+ */
+{template .tooltipLogout_ kind="html" private="true"}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__link{sp}
+        {call .rootClass/}__link_logout
+    {/let}
+
+    <div class="{call .rootClass/}__name">
+        {call .userName_ data="all" /}
+    </div>
+
+    {call sm.bLink.Template.base}
+        {param params:[
+            'data': [
+                'name': 'Выйти'
+            ],
+            'config': [
+                'customClasses': $customClasses
+            ]
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * userName
+ * @param? params {{
+ *     data: sm.bAuthorizationLink.Params.Data
+ * }}
+ */
+{template .userName_ kind="html" private="true"}
+    {if $params.data?.user?.firstName}
+        {$params.data.user.firstName}{sp}
+    {/if}
+    {if $params.data?.user?.lastName}
+        {$params.data.user.lastName}
+    {/if}
+{/template}
+
+
+/**
+ * Css classes
+ * @param? params {{
+ *     data: sm.bAuthorizationLink.Params.Data
+ * }}
+ * @override
+ */
+{template .additionalClasses}
+    {if $params?.data?.user?.firstName or $params?.data?.user?.lastName}
+        {call .rootClass/}_logged
+    {/if}
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-authorization-link
+{/template}

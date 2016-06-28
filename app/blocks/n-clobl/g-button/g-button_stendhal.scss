@@ -22,3 +22,13 @@
         background-color: #ffebeb;
     }
 }
+
+.g-button_stendhal.g-button_disabled {
+    cursor: default;
+
+    opacity: 0.5;
+
+    &:hover {
+        background-color: initial;
+    }
+}

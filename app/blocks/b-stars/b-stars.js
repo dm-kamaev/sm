@@ -7,9 +7,10 @@ goog.require('goog.ui.Component');
 goog.require('sm.bStars.Template');
 
 
+
 /**
  * Stars Component
- * @param {object=} opt_params
+ * @param {Object=} opt_params
  * @constructor
  * @extends {goog.ui.Component}
  */
@@ -18,13 +19,13 @@ sm.bStars.Stars = function(opt_params) {
 
     /**
      * @private
-     * @type {object}
+     * @type {Object}
      */
     this.params_ = opt_params || {data: {}};
 
     /**
      * @private
-     * @type {object}
+     * @type {Object}
      */
     this.config_ = this.params_.config ? this.params_.config : {};
     /**
@@ -35,19 +36,19 @@ sm.bStars.Stars = function(opt_params) {
 
     /**
      * @private
-     * @type {bool}
+     * @type {boolean}
      */
     this.isClickable_ = this.config_.isClickable || false;
 
     /**
      * @private
-     * @type {array}
+     * @type {Array}
      */
     this.stars_ = [];
 
     /**
      * @private
-     * @type {node}
+     * @type {Element}
      */
     this.inputElem_ = null;
 };
@@ -56,6 +57,7 @@ goog.inherits(sm.bStars.Stars, goog.ui.Component);
 
 goog.scope(function() {
     var Stars = sm.bStars.Stars;
+
 
     /**
      * CSS-class enum
@@ -68,6 +70,7 @@ goog.scope(function() {
         STAR_NOT_SELECTED: 'b-star__star_not-selected',
         INPUT: 'b-stars__hidden-input'
     };
+
 
     /**
      * Event enum
@@ -92,8 +95,8 @@ goog.scope(function() {
 
     /**
      * Internal decorates the DOM element
-     * @param {Node} element
-     * @inheritDoc
+     * @param {Element} element
+     * @override
      */
     Stars.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
@@ -108,7 +111,7 @@ goog.scope(function() {
 
     /**
      * Sets up the Component.
-     * @inheritDoc
+     * @override
      */
     Stars.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
@@ -151,6 +154,7 @@ goog.scope(function() {
             this.selectStars(starNumber);
     };
 
+
     /**
      * Change value
      * @param {number} newValue
@@ -169,6 +173,7 @@ goog.scope(function() {
         this.dispatchEvent(newEvent);
     };
 
+
     /**
      * Clearing selection
      * @private
@@ -186,6 +191,7 @@ goog.scope(function() {
         }
     };
 
+
     /**
      * Reselecting stars
      * @param {number} count
@@ -201,4 +207,4 @@ goog.scope(function() {
         }
         this.changeValue_(count);
     };
-});
+});  // goog.scope

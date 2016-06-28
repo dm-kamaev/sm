@@ -8,7 +8,8 @@
  *     starsConfig: ?{},
  *     config: ?{
  *         customClasses: ?string,
- *         size: ?string | ['l', 'm', 's'],
+ *         size: ?string | ['l', 'm', 's', 'xs'],
+ *         showMark: ?boolean,
  *         zeroSign: ?string
  *     }
  * }}
@@ -33,10 +34,13 @@
                 {/if}
                 {if $params?.config?.size}
                     b-mark_size_{$params?.config?.size}{sp}
-                {/if}
+            {/if}
                 {if $params.value == 0 and
                     $params?.config?.zeroSign == 'question-mark'}
                     b-mark_question{sp}
+                {/if}
+                {if not $params?.config?.showMark}
+                    b-mark_no-mark{sp}
                 {/if}
                 {$params?.config?.customClasses ?: ''}
                 ">

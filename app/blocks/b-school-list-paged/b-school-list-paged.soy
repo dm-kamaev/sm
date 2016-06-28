@@ -1,0 +1,302 @@
+{namespace sm.bSchoolListPaged.Template}
+
+
+/**
+ * @typedef {{
+ *     schools: Array<{
+ *         id: number,
+ *         name: {
+ *             light: (undefined|string),
+ *             bold: (undefined|string)
+ *         },
+ *         alias: (undefined|string,
+ *         score: (undefined|number)
+ *         metroStations: (undefined|Array<{
+ *             id: number,
+ *             name: string
+ *         }>),
+ *         area: (undefined|{
+ *             id: number,
+ *             name: string
+ *         })
+ *     }>,
+ *     countSchoolsPerPage: ?number
+ * }} sm.bSchoolListPaged.Template.Params.Data
+ */
+
+
+/**
+ * Constructor
+ * @param? params {{
+ *     data: sm.bSchoolListPaged.Template.Params.Data
+ * }}
+ * @extends cl.iControl.Template
+ * @constructor
+ */
+{template .schoolListPaged}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * Body
+ * @override
+ */
+{template .body}
+    {call .content data="all" /}
+    {call .footer_ data="all" /}
+{/template}
+
+
+
+/**
+ * @param? params {{
+ *     data: {
+ *         schools: Array<sm.bSchoolListPaged.Template.Params.Data>
+ *     }
+ * }}
+ */
+{template .content kind="html"}
+    {let $schoolsPerPage: $params?.data?.countSchoolsPerPage ?: 5 /}
+
+    {let $pageCount:
+        $params?.data?.schools ?
+            ceiling(length($params?.data?.schools)/$schoolsPerPage) : 0
+    /}
+
+    <div class="{call .rootClass/}__content">
+        {for $i in range($pageCount)}
+            {call .list_}
+                {param params: [
+                    'data': [
+                        'schools': $params?.data?.schools,
+                        'pageCount': $pageCount,
+                        'pageNumber': $i,
+                        'schoolsPerPage': $schoolsPerPage
+                    ]
+                ]/}
+            {/call}
+        {/for}
+    </div>
+{/template}
+
+
+/**
+ * @param? params {{
+ *     data: {
+ *         schools: sm.bSchoolListPaged.Template.Params.Data,
+ *         pageCount: (undefined|number),
+ *         pageNumber: (undefined|number),
+ *         schoolsPerPage: (undefined|number)
+ *     }
+ * }}
+ */
+{template .list_ kind="html" private="true"}
+    {let $from: $params?.data?.pageNumber * $params?.data?.schoolsPerPage /}
+
+    {let $to: $params?.data?.pageNumber == $params?.data?.pageCount - 1 ?
+        length($params?.data?.schools) :
+        ($params?.data?.pageNumber + 1) * $params?.data?.schoolsPerPage
+    /}
+
+    <div class="{call .rootClass/}__list{sp}
+        {$params?.data?.pageNumber > 0 ? 'i-utils__hidden' : ''}">
+
+        {for $i in range($from, $to)}
+            <div class="{call .rootClass/}__school">
+                {call sm.bSchoolListItem.Template.base}
+                    {param params:[
+                        'id': $params?.data?.schools[$i].id,
+                        'alias': $params?.data?.schools[$i].alias,
+                        'name': $params?.data?.schools[$i].name,
+                        'score': $params?.data?.schools[$i].score,
+                        'metroStations': $params?.data?.schools[$i].metroStations,
+                        'area': $params?.data?.schools[$i].area,
+                        'theme': 'minimal',
+                        'isNotClickable': true
+                    ]/}
+                {/call}
+            </div>
+        {/for}
+    </div>
+{/template}
+
+
+/**
+ * Template footer
+ * @param params {{
+ *     data: {
+ *         schools: Array<sm.bSchoolListPaged.Template.Params.Data>
+ *     }
+ * }}
+ */
+{template .footer_ kind="html" private="true"}
+    {let $footerClasses kind="html"}
+        {call .rootClass/}__footer
+
+        {if $params?.data?.schools and length($params?.data?.schools) <= 5}
+            {sp}i-utils__hidden
+        {/if}
+    {/let}
+
+    <div class="{$footerClasses}">
+        {call .link_}
+            {param params: [
+                'data': [
+                    'text': 'Назад'
+                ],
+                'config': [
+                    'modifier': 'previous'
+                ]
+            ]/}
+        {/call}
+
+        {call .pages_ data="all" /}
+
+        {call .link_}
+            {param params: [
+                'data': [
+                    'text': 'Далее'
+                ],
+                'config': [
+                    'modifier': 'next'
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Template link
+ * @param params {{
+ *     data: {
+ *         text: (undefined|string)
+ *     },
+ *     config: {
+ *         modifier: (undefined|string)
+ *     }
+ * }}
+ */
+{template .link_ kind="html" private="true"}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__link{sp}
+        {call .rootClass/}__link_{$params.config?.modifier}
+
+        {if $params.config?.modifier == 'next'}
+            {sp}{call .rootClass/}__link_active
+        {/if}
+
+        {if $params.config?.modifier == 'previous'}
+            {sp}{call .rootClass/}__link_inactive
+        {/if}
+    {/let}
+
+    {call sm.bLink.Template.base}
+        {param params: [
+            'data': [
+                'name': $params.data.text,
+            ],
+            'config': [
+                'customClasses': $customClasses,
+                'size': 'large'
+            ]
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * Template count
+ * @param? params {{
+ *     data: {
+ *         countSchoolsPerPage: (undefined|number),
+ *         schools: Array<sm.bSchoolListPaged.Template.Params.Data>
+ *     }
+ * }}
+ */
+{template .pages_ kind="html"}
+    <span class="{call .rootClass/}__pages-count">
+        {call .interval}
+            {param params: [
+                'start': 1,
+                'end': $params?.data?.countSchoolsPerPage ?: 5
+            ]/}
+        {/call}
+
+        {let $schoolsCount: $params?.data?.schools ?
+            length($params?.data?.schools):
+            0
+        /}
+
+        {call .count_}
+            {param params: [
+                'schoolsCount': $schoolsCount
+            ]/}
+        {/call}
+    </span>
+{/template}
+
+
+/**
+ * Template interval
+ * @param params {{
+ *     start: number,
+ *     end: number
+ * }}
+ */
+{template .interval kind="html"}
+    <span class="{call .rootClass/}__interval-count">
+        {$params.start}&mdash;{$params.end}
+    </span>
+{/template}
+
+
+/**
+ * Template count
+ * @param params {{
+ *     schoolsCount: number
+ * }}
+ */
+{template .count_ kind="html" private="true"}
+    <span class="{call .rootClass/}__count">
+        {call .countText}
+            {param params: $params /}
+        {/call}
+    </span>
+{/template}
+
+/**
+ * Template count text
+ * @param params {{
+ *     schoolsCount: number
+ * }}
+ */
+{template .countText}
+    {sp}из {$params.schoolsCount}
+{/template}
+
+
+/**
+ * @param params {{
+ *     data: {
+ *          countSchoolsPerPage: ?number
+ *     }
+ * }}
+ */
+{template .attributes kind="attributes"}
+    {let $dataParams: [
+        'countItemsPerPage': $params.data?.countSchoolsPerPage
+    ]/}
+
+    data-params="{call goog.json.serialize data="$dataParams" /}"
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-school-list-paged
+{/template}

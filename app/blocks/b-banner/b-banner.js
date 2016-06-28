@@ -4,16 +4,18 @@ goog.require('cl.iControl.Control');
 goog.require('goog.dom');
 goog.require('sm.bBanner.View');
 
+
+
 /**
  * Banner
- * @param {Object=} view
- * @param {Object=} opt_params
+ * @param {Object} view
  * @param {Object=} opt_domHelper
  * @constructor
  * @extends {cl.iControl.Control}
  */
-sm.bBanner.Banner = function(view, opt_params, opt_domHelper) {
-    goog.base(this, view, opt_params, opt_domHelper);
+sm.bBanner.Banner = function(view, opt_domHelper) {
+    goog.base(this, view, opt_domHelper);
+
 
     /**
      * ModalFeedback instance
@@ -29,6 +31,7 @@ goog.scope(function() {
     var Banner = sm.bBanner.Banner,
         View = sm.bBanner.View;
 
+
     /**
      * @param {Element} element
      * @override
@@ -38,6 +41,7 @@ goog.scope(function() {
 
         this.initElements_();
     };
+
 
     /**
      * Init containing elements
@@ -52,6 +56,7 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * @override
      */
@@ -64,6 +69,7 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * Show modal
      * @private
@@ -71,4 +77,4 @@ goog.scope(function() {
     Banner.prototype.onClickBanner_ = function() {
         this.modalFeedback_.show();
     };
-});
+});  // goog.scope

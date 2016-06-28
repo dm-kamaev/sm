@@ -9,16 +9,17 @@ goog.require('sm.bSearch.Search');
 goog.require('sm.iAnimate.Animate');
 
 
+
 /**
- * Button View
+ * Header View
  * @param {Object=} opt_params
- * @param {Function=} opt_template
+ * @param {string=} opt_type
  * @param {string=} opt_modifier
  * @constructor
  * @extends {cl.iControl.View}
  */
-sm.bHeader.View = function(opt_params, opt_template, opt_modifier) {
-    goog.base(this, opt_params, opt_template, opt_modifier);
+sm.bHeader.View = function(opt_params, opt_type, opt_modifier) {
+    goog.base(this, opt_params, opt_type, opt_modifier);
 };
 goog.inherits(sm.bHeader.View, cl.iControl.View);
 
@@ -27,12 +28,15 @@ goog.scope(function() {
     var View = sm.bHeader.View,
         Search = sm.bSearch.Search;
 
+
     /**
      * Css class enum
      * @enum {string}
      */
     View.CssClass = {
         ROOT: 'b-header',
+        MINIFIED_SEARCH: 'b-header__search_visible_s',
+        SEARCH: 'b-header__search_visible_l',
         SEARCH_MODE: 'b-header_mode_search',
         DEFAULT_MODE: 'b-header_mode_default',
         ANIMATION_ON: 'b-header_animation_on',
@@ -46,16 +50,13 @@ goog.scope(function() {
     View.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
-        this.dom.search = this.getElementByClass(
-            Search.CssClass.ROOT
-        );
-
-        this.dom.banner = this.getElementByClass(
-            sm.bBanner.View.CssClass.ROOT
-        );
-
+        this.initSearch_();
+        this.initBanner_();
+        this.initAuthorizationLink_();
+        this.initFavorite_();
         this.detectAnimationSupportion_();
     };
+
 
     /**
      * Switch view to default mode
@@ -98,4 +99,52 @@ goog.scope(function() {
                 View.CssClass.ANIMATION_OFF
         );
     };
-});
+
+
+    /**
+     * Find search dom elements
+     * @private
+     */
+    View.prototype.initSearch_ = function() {
+        this.dom.minifiedSearch = this.getElementByClass(
+            View.CssClass.MINIFIED_SEARCH
+        );
+
+        this.dom.search = this.getElementByClass(
+            View.CssClass.SEARCH
+        );
+    };
+
+
+    /**
+     * Find banner dom elements
+     * @private
+     */
+    View.prototype.initBanner_ = function() {
+        this.dom.banner = this.getElementByClass(
+            sm.bBanner.View.CssClass.ROOT
+        );
+    };
+
+
+    /**
+     * Initializes dom elements
+     * @private
+     */
+    View.prototype.initAuthorizationLink_ = function() {
+        this.dom.authorizationLink = this.getElementByClass(
+            sm.bAuthorizationLink.View.CssClass.ROOT
+        );
+    };
+
+
+    /**
+     * Initializes dom elements
+     * @private
+     */
+    View.prototype.initFavorite_ = function() {
+        this.dom.favorite = this.getElementByClass(
+            sm.bFavorite.View.CssClass.ROOT
+        );
+    };
+});  // goog.scope

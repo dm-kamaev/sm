@@ -1,44 +1,46 @@
-var services = require.main.require('./app/components/services').all;
+var services = require('../../../../app/components/services').all;
 var lodash = require('lodash');
 
-const areaView = require.main.require('./api/modules/geo/views/areaView.js');
-const metroView = require.main.require('./api/modules/geo/views/metroView.js');
-const addressView = require.main.require(
-    './api/modules/geo/views/addressView.js');
-const activityView = require.main.require(
-    './api/modules/school/views/activityView.js');
-const ratingView = require.main.require(
-    './api/modules/school/views/ratingView.js');
-const egeResultView = require.main.require(
-    './api/modules/study/views/egeResultView.js');
-const giaResultView = require.main.require(
-    './api/modules/study/views/giaResultView.js');
-const olimpResultView = require.main.require(
-    './api/modules/study/views/olimpResultView.js');
-const subjectView = require.main.require(
-    './api/modules/study/views/subjectView.js'
-);
+const areaView = require('../../geo/views/areaView.js');
+const metroView = require('../../geo/views/metroView.js');
+const addressView = require(
+    '../../geo/views/addressView.js');
+const activityView = require(
+    './activityView.js');
+const specializedClassesView = require(
+    './specializedClassesView.js');
+const ratingView = require(
+    './ratingView.js');
+const egeResultView = require(
+    '../../study/views/egeResultView.js');
+const giaResultView = require(
+    '../../study/views/giaResultView.js');
+const olimpResultView = require(
+    '../../study/views/olimpResultView.js');
+const scoreView = require('../views/scoreView');
+
+const commentView = require('../../comment/views/commentView');
 
 var schoolView = {};
 
 
 /**
  * @param {object} schoolInstance - school instance
- * @param {object} results
+ * @param {object} data
+ * @param {object} user
+ * @param {object} user.data
+ * @param {string} user.isCommented
  * @param {?array<object>} opt_popularSchools - school instances
  * @return {object}
  */
-schoolView.default = function(schoolInstance, results, opt_popularSchools) {
+schoolView.default = function(schoolInstance, data, user, opt_popularSchools) {
     addressView.transformSchoolAddress(schoolInstance);
-
-    var addresses = services.department.addressesFilter(schoolInstance.addresses),
-        comments = schoolInstance.comments,
-        score = getSections(schoolInstance.score),
-        scoreCount = schoolInstance.scoreCount || [0, 0, 0, 0];
-
+    var addresses = services.department.addressesFilter(
+            schoolInstance.addresses
+        ),
+        comments = commentView.school(schoolInstance.comments);
     var result = {
         id: schoolInstance.id,
-        url: schoolInstance.url,
         schoolName: schoolInstance.name,
         schoolType: schoolInstance.schoolType,
         schoolDescr: schoolInstance.description,
@@ -47,37 +49,45 @@ schoolView.default = function(schoolInstance, results, opt_popularSchools) {
         extendedDayCost: getExtendedDayCost(schoolInstance.extendedDayCost),
         dressCode: schoolInstance.dressCode || false,
         classes: getEducationInterval(schoolInstance.educationInterval),
-        kindergarten: getKindergardenAvailability(schoolInstance.educationInterval),
+        kindergarten: getKindergardenAvailability(
+            schoolInstance.educationInterval
+        ),
         social: [],
-        //metroStations: addressView.getMetro(addresses),
         sites: schoolInstance.links ?
             getSites(schoolInstance.links) : getSites(schoolInstance.site),
         specializedClasses: getSpecializedClasses(
             schoolInstance.specializedClasses),
         activities: getActivities(schoolInstance.activities),
         contacts: getContacts(schoolInstance.addresses, schoolInstance.phones),
-        comments: getComments(comments),
+        comments: comments,
         addresses: addressView.default(addresses),
         ratings: ratingView.ratingSchoolView(
             schoolInstance.rank, schoolInstance.rankDogm),
-        score: checkScoreValues(score) ? score : false,
+        score: scoreView.school(schoolInstance.score),
         totalScore: schoolInstance.totalScore,
         results: {
             ege: egeResultView.transformResults(
-                results.ege,
-                results.city
+                data.ege,
+                data.city
             ),
             gia: giaResultView.transformResults(
-                results.gia,
-                results.city
+                data.gia,
+                data.city
             ),
-            olymp: olimpResultView.transformResults(results.olymp)
+            olymp: olimpResultView.transformResults(data.olymp)
         },
+        authSocialLinks: data.authSocialLinks,
         reviewCount: schoolInstance.totalScore ?
-            schoolInstance.reviewCount : 0
+            schoolInstance.reviewCount : 0,
+        isFavorite: schoolView.isFavorite(schoolInstance, data.favorites.items),
+        user: user,
+        favorites: {
+            schools: schoolView.listCompact(data.favorites)
+        },
+        seoDescription: data.page.description
     };
-    if (opt_popularSchools) {
-        result.popularSchools = this.popular(opt_popularSchools);
+    if (data.popularSchools) {
+        result.popularSchools = this.popular(data.popularSchools);
     }
 
     return result;
@@ -92,7 +102,7 @@ schoolView.popular = function(popularSchools) {
     return popularSchools.map(school => {
         return {
             id: school.id,
-            url: school.url,
+            alias: school.alias,
             name: school.name,
             description: school.description || '',
             metro: nearestMetro(school.addresses),
@@ -117,28 +127,28 @@ var nearestMetro = function(addresses) {
 };
 
 /**
- * @param cost
+ * @param {string} cost
  * @return {string}
  */
 var getExtendedDayCost = function(cost) {
     var res = '';
 
     switch (cost) {
-        case 'нет':
-        case '-':
-        case null:
-            break;
+    case 'нет':
+    case '-':
+    case null:
+        break;
 
-        case 'есть':
-            res = 'есть продлёнка';
-            break;
+    case 'есть':
+        res = 'есть продлёнка';
+        break;
 
-        case 'бесплатно':
-            res = 'есть бесплатная продлёнка';
-            break;
+    case 'бесплатно':
+        res = 'есть бесплатная продлёнка';
+        break;
 
-        default:
-            res = 'есть продлёнка (' + cost + ')';
+    default:
+        res = 'есть продлёнка (' + cost + ')';
     }
 
     return res;
@@ -146,14 +156,13 @@ var getExtendedDayCost = function(cost) {
 
 
 /**
- *  @param {array<number>} interval
- *  @return {string}
+ * @param {array<number>} interval
+ * @return {string}
  */
-var getEducationInterval = function(interval, type) {
+var getEducationInterval = function(interval) {
     var res = 'Обучение с ';
 
-    if (interval)
-    {
+    if (interval) {
         var begin = interval[0],
             end = interval[interval.length - 1];
 
@@ -165,9 +174,8 @@ var getEducationInterval = function(interval, type) {
         res += ' по ';
         res += end;
         res += ' класс';
-    }
-    else {
-        res += '1 по 11 класс'
+    } else {
+        res += '1 по 11 класс';
     }
 
     return res;
@@ -185,7 +193,7 @@ var getKindergardenAvailability = function(interval) {
 
 
 /**
- *  @param {string} site
+ *  @param {string|array<string>} sites
  *  @return {array<object>}
  */
 var getSites = function(sites) {
@@ -201,9 +209,9 @@ var getSites = function(sites) {
         });
     } else {
         return [{
-                name: 'Сайт школы',
-                href: 'http://' + sites,
-                link: sites
+            name: 'Сайт школы',
+            href: 'http://' + sites,
+            link: sites
         }];
     }
 };
@@ -225,61 +233,11 @@ var getContacts = function(addresses, opt_phones) {
     };
 };
 
-/**
- *  @param {array<object>=} comments
- *  @return {array<object>}
- */
-var getComments = function(comments) {
-    var typeConvert = {
-        'Parent': 'Родитель',
-        'Graduate': 'Выпускник',
-        'Scholar': 'Ученик'
-    };
-
-    return comments
-        .filter(comment => comment.text)
-        .map(comment => {
-            var sections = getSections(comment.rating.score, true);
-            return {
-                author: '',
-                rank: typeConvert[comment.userData.userType],
-                text: comment.text,
-                sections: sections
-            };
-        });
-};
-
-/**
- *  @param {array<object>=} opt_array Ratings to convert
- *  @param {boolean=} opt_withoutEmptySections
- *  @return {array<object>}
- */
-var getSections = function(opt_array, opt_withoutEmptySections) {
-    var array = opt_array || [0, 0, 0, 0];
-
-    var sections = array.map((item, index) => {
-        var type = [
-            'Образование',
-            'Преподаватели',
-            'Атмосфера',
-            'Инфраструктура'
-        ];
-        return {
-            name: type[index],
-            value: item
-        };
-    });
-
-    return opt_withoutEmptySections ?
-        sections.filter(item => item.value) :
-        sections;
-};
-
 
 /**
  * translates director name to right output format
- * @param name string
- * @return string
+ * @param {string} name
+ * @return {string}
  */
 var getDirectorName = function(name) {
     var nameWords = [],
@@ -290,117 +248,111 @@ var getDirectorName = function(name) {
     return result;
 };
 
+/**
+ *  @param {object} specializedClasses
+ *  @return {object}
+ */
 var getSpecializedClasses = function(specializedClasses) {
-    var result = [],
-        grade = '',
-        index = -1;
-    if (specializedClasses) {
-        for (var i = 0,
-                l = specializedClasses.length,
-                specializedClass, specialLevel; i < l; i++) {
-            specializedClass = specializedClasses[i];
-            specialLevel = schoolGradeToLevel(specializedClass[0])
-
-
-
-            if (grade !== specialLevel) {
-                grade = specialLevel;
-
-                result.push({
-                    'name': grade,
-                    'items': []
-                });
-                index += 1;
-            }
-
-            if (result[index].items.indexOf(specializedClass[1]) === -1) {
-                result[index].items.push(specializedClass[1]);
-            }
-        }
-    }
-
-    return result;
+    return specializedClassesView.list(specializedClasses);
 };
-
- /**
-  * @param {number} grade
-  * @return {string}
-  */
-var schoolGradeToLevel = function(grade) {
-    if (grade < 5) {
-        return 'Начальная школа';
-    } else if (grade < 9) {
-        return 'Средняя школа';
-    } else {
-        return 'Старшая школа'
-    }
-}
 
 /**
  *  @param {object} activities
- *  @return {array}
+ *  @return {object}
  */
 var getActivities = function(activities) {
     return activityView.list(activities);
 };
 
-var getStages = function(departments) {
-    var result = [];
-    var unical = {};
-    var deps = departments || [];
-
-    for (var i = 0, n = deps.length, dep; i < n; i++) {
-        dep = deps[i];
-        if (dep != undefined && dep.stage && !unical[dep.stage]) {
-            unical[dep.stage] = true;
-            result.push(dep.stage);
-        }
-    }
-
-    return result;
-};
-
 /**
  * @param {array<object>} schools - schoolInstances
  * @param {number} opt_criterion
+ * @param {number} opt_page
  * @return {object} contains results count and schools array
  */
-schoolView.list = function(schools, opt_criterion) {
-    var res = {}; 
+schoolView.list = function(schools, opt_criterion, opt_page) {
+    var res = {};
+
     if (schools.length !== 0) {
-        schools = groupSchools(schools); 
+        schools = groupSchools(schools);
 
         res.countResults = schools[0].countResults;
         res.schools = schools
-            .map(school => {
-
-                var score = getScore(school.score, school.totalScore, opt_criterion);
-                var sortCriterion = score.shift();
+            .map((school, i) => {
+                var score = scoreView.results(
+                    school.score,
+                    school.totalScore,
+                    opt_criterion
+                );
 
                 return {
                     id: school.id,
-                    url: school.url,
+                    alias: school.alias,
                     name: getName(school.name),
                     description: school.description,
                     abbreviation: school.abbreviation,
                     score: score,
-                    currentCriterion: sortCriterion,
                     fullName: school.fullName,
                     ratings: ratingView.ratingResultView(school.rankDogm),
                     metroStations: addressView.getMetro(school.addresses),
                     area: addressView.getAreas(school.addresses),
-                    isScoreClickable: checkScoreValues(score, sortCriterion)
+                    position: getPosition(i, opt_page),
+                    isFavorite: school.isFavorite
                 };
             });
-
     } else {
         res = {
             countResults: 0,
             schools: []
         };
     }
-
     return res;
+};
+
+
+/**
+ * Group resutls of raw query to school object,
+ * divide array of school objects for 2 parts for map
+ * @param {Array.<Object>} schools - array of results of raw query
+ * @param {{
+ *     position: Array.<number>,
+ *     type: string
+ * }} opt_position
+ * @return {{
+ *     schools: Array.<Object>,
+ *     position: {
+ *         center: Array.<number>,
+ *         type: string
+ *     }
+ * }} contains results schools array and position perferences for map
+ */
+schoolView.listMap = function(schools, opt_position) {
+    var mapSchools = [];
+
+    if (schools.length > 0) {
+        mapSchools = groupSchools(schools).map(this.schoolMap);
+    }
+
+    return {
+        schools: mapSchools,
+        position: opt_position
+    };
+};
+
+/**
+ * Transform school object for map
+ * @param {Object} school
+ * @return {Object}
+ */
+schoolView.schoolMap = function(school) {
+    return {
+        addresses: addressView.default(school.addresses),
+        id: school.id,
+        name: school.name,
+        description: school.description,
+        alias: school.alias,
+        totalScore: school.totalScore
+    };
 };
 
 /**
@@ -412,7 +364,7 @@ schoolView.suggestList = function(schools) {
         .map(school => {
             return {
                 id: school.id,
-                url: school.url,
+                alias: school.alias,
                 name: school.name,
                 description: '',
                 abbreviation: school.abbreviation,
@@ -421,29 +373,28 @@ schoolView.suggestList = function(schools) {
                 fullName: school.fullName,
                 addresses: school.addresses
             };
+        });
+};
+
+/**
+ * @param {array<object>} schools
+ * @param {array<object>} aliases
+ * @return {array<object>}
+ */
+schoolView.joinAliases = function(schools, aliases) {
+    return schools.map(school => {
+        school.alias = getAlias(aliases, school.id);
+        return school;
     });
 };
 
 /**
- * Check if all scores of item is 0
- * @param {Array<Object>} score
- * @param {Object} opt_sortCriterion
- * @return {boolean}
- * @private
+ * @param {Array<Object>} schoolAliases
+ * @param {number} schoolId
+ * @return {string}
  */
-var checkScoreValues = function(score, opt_sortCriterion) {
-    var result = false;
-
-    if (opt_sortCriterion && opt_sortCriterion.value !== 0) {
-        result = true;
-    }
-
-    score.forEach(function(item) {
-        if (item.value !== 0) {
-            result = true;
-        }
-    });
-    return result;
+var getAlias = function(schoolAliases, schoolId) {
+    return lodash.find(schoolAliases, {entityId: schoolId}).alias;
 };
 
 /**
@@ -456,27 +407,26 @@ var groupSchools = function(schools) {
         currentSchoolId = schools[0].id,
         grouppedById = [];
 
-    //iterates l+1 times for last address of last school
-    for(var i = 0, l = schools.length; i <= l; i++) {
+    // iterates l+1 times for last address of last school
+    for (var i = 0, l = schools.length; i <= l; i++) {
         var schoolItem = schools[i];
         if (!schoolItem || schoolItem.id !== currentSchoolId) {
-
             var resultItem = {};
 
-            //Copy fiels from one school to result school that not changes
+            // Copy fiels from one school to result school that not changes
             lodash.forOwn(grouppedById[0], (value, key) => {
-                    if (key !== 'addressId'
-                        && key !== 'metroId'
-                        && key !== 'metroName'
-                        && key !== 'departmentStage') {
-                        resultItem[key] = value;
-                    }
-                });
+                if (key !== 'addressId' &&
+                    key !== 'metroId' &&
+                    key !== 'metroName' &&
+                    key !== 'departmentStage') {
+                    resultItem[key] = value;
+                }
+            });
 
             var grouppedByAddress = lodash.groupBy(grouppedById, 'addressId');
             resultItem.addresses = [];
 
-            //iterates over schools with same address
+            // iterates over schools with same address
             lodash.forEach(grouppedByAddress, (schools, key) => {
                 resultItem.addresses.push({
                     id: key,
@@ -485,19 +435,19 @@ var groupSchools = function(schools) {
                     departments: []
                 });
 
-                lodash.forEach(schools, (school) => {
+                lodash.forEach(schools, school => {
                     var currentAddress = resultItem
                         .addresses[resultItem.addresses.length - 1];
 
                     var isNewMetro = true;
-                    //checks that current metro is not in metro array already
-                    lodash.forEach(currentAddress.metroStations, (station)=>{
-                        if(station.id === school.metroId) {
+                    // checks that current metro is not in metro array already
+                    lodash.forEach(currentAddress.metroStations, station => {
+                        if (station.id === school.metroId) {
                             isNewMetro = false;
                         }
                     });
-                    //if this is new mero than push it into metro array
-                    if(isNewMetro && school.metroId !== null) {
+                    // if this is new mero than push it into metro array
+                    if (isNewMetro && school.metroId !== null) {
                         currentAddress.metroStations
                             .push({
                                 id: school.metroId,
@@ -506,15 +456,16 @@ var groupSchools = function(schools) {
                     }
 
                     var isNewDepartment = true;
-                    //checks that current department is not in metro array already
-                    lodash.forEach(currentAddress.departments, (department) => {
-                        if(department.stage === school.departmentStage) {
+                    // checks that current department is not
+                    // in metro array already
+                    lodash.forEach(currentAddress.departments, department => {
+                        if (department.stage === school.departmentStage) {
                             isNewDepartment = false;
                         }
                     });
 
-                    //if this is new department than push it into metro array
-                    if (isNewDepartment  && school.departmentStage !== null) {
+                    // if this is new department than push it into metro array
+                    if (isNewDepartment && school.departmentStage !== null) {
                         currentAddress.departments.push({
                             stage: school.departmentStage
                         });
@@ -522,12 +473,15 @@ var groupSchools = function(schools) {
 
                     currentAddress.area.id = school.areaId;
                     currentAddress.area.name = school.areaName;
+
+                    currentAddress.name = school.addressName;
+                    currentAddress.coords = school.addressCoords;
                 });
             });
 
             result.push(resultItem);
 
-            if(schoolItem) {
+            if (schoolItem) {
                 currentSchoolId = schoolItem.id;
             }
 
@@ -538,32 +492,13 @@ var groupSchools = function(schools) {
     return result;
 };
 
-/**
- * Return array like [criterion, otherScore]
- * @param {array} score
- * @param {number} totalScore
- * @param {number} opt_criterion
- * @return {Array<Object>}
- */
-var getScore = function(score, totalScore, opt_criterion) {
-    var scoreItems = getSections(score),
-        sortCriterionIndex = opt_criterion ? opt_criterion : 0;
-
-    scoreItems.unshift({
-        name: 'Средняя оценка',
-        value: totalScore
-    });
-
-    scoreItems.unshift(scoreItems.splice(sortCriterionIndex, 1)[0]);
-    return scoreItems;
-};
 
 /**
  * Makes name object from name string
  * @param {string} name
  * @return {Object}
  */
-var getName = function (name) {
+var getName = function(name) {
     var result = {
             'light': '',
             'bold': ''
@@ -571,10 +506,10 @@ var getName = function (name) {
         char,
         numberFounded = false;
 
-    for(i = 0, l = name.length; i < l; i++) {
+    for (var i = 0, l = name.length; i < l; i++) {
         char = name.charAt(i);
 
-        if(char === '№') {
+        if (char === '№') {
             numberFounded = true;
         }
 
@@ -586,95 +521,22 @@ var getName = function (name) {
 };
 
 /**
- * @param {array<object>} schools - schoolInstances
- * @return {array<object>}
+ * Get position of school in list
+ * @param {number} localPosition
+ * @param {number} page
+ * @return {number}
  */
-schoolView.listMapPoints = function(schools) {
-    return schools.reduce((prev, curr) => {
-        curr = curr.dataValues;
-
-        prev = prev.length > 0 ? prev : [{
-            id: curr.id,
-            url: curr.url,
-            name: curr.name,
-            description: curr.description,
-            totalScore: curr.totalScore || 0,
-            addresses: [{
-                id: curr.addressId,
-                lat: curr.coords[0],
-                lng: curr.coords[1],
-                name: curr.adrName,
-                stages: [curr.stage]
-            }]
-        }];
-
-        var concated,
-            added,
-            cond;
-
-        for (var j = prev.length - 1, item; j >= 0; j--) {
-            item = prev[j];
-            if (curr.id == item.id) {
-                for (var i = item.addresses.length - 1, address; i >= 0; i--) {
-                    address = item.addresses[i];
-
-                    if (address.id == curr.addressId) {
-                        concated = true;
-                        cond = !(
-                            address.stages[0] == curr.stage ||
-                            address.stages[1] == curr.stage
-                        );
-
-                        if (cond) {
-                            address.stages.push(curr.stage);
-                        }
-
-                        break;
-                    }
-                }
-
-                if (!concated) {
-                    item.addresses.push({
-                        id: curr.addressId,
-                        lat: curr.coords[0],
-                        lng: curr.coords[1],
-                        name: curr.adrName,
-                        stages: [curr.stage]
-                    })
-                }
-
-                added = true;
-                break;
-            }
-        }
-
-        if (!added) {
-            prev.push({
-                id: curr.id,
-                url: curr.url,
-                name: curr.name,
-                description: curr.description,
-                totalScore: curr.totalScore || 0,
-                addresses: [{
-                    id: curr.addressId,
-                    lat: curr.coords[0],
-                    lng: curr.coords[1],
-                    name: curr.adrName,
-                    stages: [curr.stage]
-                }]
-             })
-        }
-
-        return prev;
-    }, []);
+var getPosition = function(localPosition, page) {
+    var pagePosition = page ? page * 10 : 0;
+    return pagePosition + localPosition + 1;
 };
 
 /**
- * @param {object} data
- * @param {array<object>} data.schools - school instances
- * @param {array<object>} data.areas - area instances
- * @param {array<object>} data.metros - metro instances
- * @return {array<object>}
+ * @param {Object} data
+ * @param {Array.<Object>} data.schools - school instances
+ * @param {Array.<Object>} data.areas - area instances
+ * @param {Array.<Object>} data.metros - metro instances
+ * @return {Array.<Object>}
  */
 schoolView.suggest = function(data) {
     return {
@@ -684,47 +546,195 @@ schoolView.suggest = function(data) {
     };
 };
 
-/**
- * @param {array<object>} filters
+ /**
  * @return {array<object>}
  */
-schoolView.filters = function(filters) {
-   return filters.map(item => {
-       var res = {
-           data: {
-               filters: item.values,
-               header: {
-                   tooltip: ''
-               },
-               name: item.filter
-           },
-           config: {}
-       };
+schoolView.dataLinks = function() {
+    var searchUrl = '/search?name=';
 
-       switch (item.filter) {
-           case 'school_type':
-               res.data.name = 'schoolType';
-               res.data.header.title = 'Тип школы';
-               res.config.filtersToShow = 15;
-               break;
-           case 'ege':
-               res.data.header.title = 'Высокие результаты ЕГЭ';
-               res.data.filters.sort((a, b) => subjectView.sorter(a.label, b.label, 'EGE'));
-               res.data.header.tooltip = 'Выше среднего значения по нашей базе.' +
-               ' Учитываются результаты московских школ за последний год.'
-               break;
-           case 'gia':
-               res.data.header.title = 'Высокие результаты ГИА';
-               res.data.filters.sort((a, b) => subjectView.sorter(a.label, b.label, 'GIA'));
-               res.data.header.tooltip = 'Выше среднего значения по нашей базе.' +
-               ' Учитываются результаты московских школ за последний год.'
-               break;
-           case 'olimp':
-               res.data.header.title = 'Есть победы в олимпиадах';
-               break;
-       }
-       return res;
-   });
+    return [
+        {
+            name: 'Школа 1234',
+            url: searchUrl +
+            encodeURIComponent('школа 1234')
+        },
+        {
+            name: 'Новослободская',
+            url: searchUrl +
+            encodeURIComponent('Новослободская') + '&metroId=67'
+        },
+        {
+            name: 'Лицей',
+            url: searchUrl +
+            encodeURIComponent('Лицей')
+        },
+        {
+            name: 'Тимирязевский',
+            url: searchUrl +
+            encodeURIComponent('Тимирязевский')
+        }
+    ];
+};
+
+
+/**
+ * @param {{
+ *     items: models.School,
+ *     itemUrls: models.School
+ * }} schoolsData
+ * @return {Array<{
+ *         id: number,
+ *         name: {
+ *             light: (undefined|string),
+ *             bold: (undefined|string)
+ *         },
+ *         alias: (undefined|string),
+ *         score: (undefined|number),
+ *         metroStations: (undefined|Array<{
+ *             id: number,
+ *             name: string
+ *         }>),
+ *         area: (undefined|{
+ *             id: number,
+ *             name: string
+ *         })
+ *     }>
+ * }>}
+ */
+schoolView.listCompact = function(schoolsData) {
+    var schools = schoolsData.items,
+        itemUrls = schoolsData.itemUrls;
+    return schools.map(school => {
+        return {
+            id: school.id,
+            name: getName(school.name),
+            score: scoreView.schoolListCompact(school.totalScore),
+            metroStations: addressView.getMetro(school.addresses),
+            area: addressView.getAreas(school.addresses),
+            alias: getAlias(itemUrls, school.id)
+        };
+    });
+};
+
+/**
+ * @param {{
+ *     item: models.School,
+ *     itemUrl: models.Page
+ * }} schoolData
+ * @return {{
+ *     id: number,
+ *     name: {
+ *         light: (undefined|string),
+ *         bold: (undefined|string)
+ *     },
+ *     alias: (undefined|string),
+ *     score: {
+ *         data: {
+ *             visibleMark: {
+ *                 name: (undefined|string),
+ *                 value: (undefined|number)
+ *             },
+ *             hiddenMarks: Array<{
+ *                 name: (undefined|string),
+ *                 value: (undefined|number)
+ *             }>
+ *         }
+ *     },
+ *     metroStations: (undefined|Array<{
+ *         id: number,
+ *         name: string
+ *     }>),
+ *     area: (undefined|{
+ *         id: number,
+ *         name: string
+ *     })
+ * }}
+ */
+schoolView.listCompactItem = function(schoolData) {
+    var school = schoolData.item,
+        page = schoolData.itemUrl;
+    return {
+        id: school.id,
+        name: getName(school.name),
+        score: scoreView.schoolListCompact(school.totalScore),
+        metroStations: addressView.getMetro(school.addresses),
+        area: addressView.getAreas(school.addresses),
+        alias: page.alias
+    };
+};
+
+
+/**
+ * Check that school in given favorites
+ * @param {models.School} school
+ * @param {Array<models.School>} favoriteItems
+ * @return {boolean}
+ */
+schoolView.isFavorite = function(school, favoriteItems) {
+    return favoriteItems.some(favoriteItem => {
+        return favoriteItem.id == school.id;
+    });
+};
+
+
+/**
+ * Add to given school list isFavorite property if school id
+ * in given favorites ids
+ * @param {Array<{
+ *     id: number,
+ *     name: {
+ *         light: (undefined|string),
+ *         bold: (undefined|string)
+ *     },
+ *     url: (undefined|string),
+ *     score: (undefined|number),
+ *     metroStations: (undefined|Array<{
+ *         id: number,
+ *         name: string
+ *     }>),
+ *     area: (undefined|{
+ *         id: number,
+ *         name: string
+ *     }),
+ *     url: string
+ * }>} schools
+ * @param {Array<number>} favoriteItemIds
+ * @return {Array<{
+ *     id: number,
+ *     name: {
+ *         light: (undefined|string),
+ *         bold: (undefined|string)
+ *     },
+ *     url: (undefined|string),
+ *     score: (undefined|number),
+ *     metroStations: (undefined|Array<{
+ *         id: number,
+ *         name: string
+ *     }>),
+ *     area: (undefined|{
+ *         id: number,
+ *         name: string
+ *     }),
+ *     url: string,
+ *     isFavorite: boolean
+ * }>}
+ */
+schoolView.listWithFavorites = function(schools, favoriteItemIds) {
+    return schools.map(school => {
+        var schoolWithFavorite = school;
+        schoolWithFavorite.isFavorite = favoriteItemIds.some(itemId => {
+            return itemId == school.id;
+        });
+        return schoolWithFavorite;
+    });
+};
+
+/**
+ * @param {Array<Object>} schools
+ * @return {Array<string>}
+ */
+schoolView.listIds = function(schools) {
+    return lodash.uniq(schools.map(school => school.id));
 };
 
 module.exports = schoolView;

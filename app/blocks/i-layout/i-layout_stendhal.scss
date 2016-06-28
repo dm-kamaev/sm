@@ -1,5 +1,10 @@
 @import "../i-media/i-media";
 
+.i-layout_modifier_stendhal {
+    overflow-x: hidden;
+}
+
+
 .i-layout_modifier_stendhal .i-layout__wrapper {
     overflow: hidden;
 }
@@ -11,8 +16,12 @@
     margin: auto;
 }
 
+.i-layout_page_search.i-layout_modifier_stendhal .i-layout__wrapper{
+    overflow: visible;
+}
 
-.i-layout_page_search .i-layout__content {
+.i-layout_page_search .i-layout__content,
+.i-layout_page_error-not-found .i-layout__content {
     width: auto;
 }
 
@@ -27,7 +36,7 @@
     }
 }
 
-@include media-s {
+@include media-xs {
     .i-layout_page_school.i-layout_modifier_stendhal .i-layout__content,
     .i-layout_page_school.i-layout_modifier_stendhal .i-layout__footer {
         padding: 0 30px;

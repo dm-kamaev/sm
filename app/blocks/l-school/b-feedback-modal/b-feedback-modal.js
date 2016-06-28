@@ -1,21 +1,24 @@
 goog.provide('sm.lSchool.bFeedbackModal.FeedbackModal');
 
 goog.require('cl.iUtils.Utils');
+goog.require('goog.array');
 goog.require('goog.dom.classes');
 goog.require('goog.ui.Component');
 goog.require('sm.bStars.Stars');
-goog.require('sm.iEvercookie.Evercookie');
 goog.require('sm.iFactory.FactoryStendhal');
 goog.require('sm.lSchool.bFeedbackModal.Template');
 
+
+
 /**
  * Feedback modal
- * @param {Object} opt_params
+ * @param {Object=} opt_params
  * @constructor
  * @extends {goog.ui.Component}
  */
 sm.lSchool.bFeedbackModal.FeedbackModal = function(opt_params) {
     goog.base(this);
+
 
     /**
      * parameters
@@ -24,12 +27,14 @@ sm.lSchool.bFeedbackModal.FeedbackModal = function(opt_params) {
      */
     this.params_ = opt_params || {};
 
+
     /**
      * DOM elements
      * @type {Object}
      * @private
      */
     this.elements_ = {};
+
 
     /**
      * Textarea instance
@@ -38,12 +43,14 @@ sm.lSchool.bFeedbackModal.FeedbackModal = function(opt_params) {
      */
     this.textarea_ = null;
 
+
     /**
      * modal
      * @type {cl.gModal.Modal}
      * @private
      */
     this.modal_ = null;
+
 
     /**
      * Stars instances
@@ -52,6 +59,7 @@ sm.lSchool.bFeedbackModal.FeedbackModal = function(opt_params) {
      */
     this.stars_ = [];
 
+
     /**
      * Instances of dropdowns with type of user
      * @type {Object}
@@ -59,30 +67,21 @@ sm.lSchool.bFeedbackModal.FeedbackModal = function(opt_params) {
      */
     this.dropdowns_ = {};
 
+
     /**
      * Input instance
      * @type {sm.gInput.DigitInput}
      * @private
      */
     this.yearGraduate_ = null;
-
-    /**
-     * @type {object}
-     * @private
-     */
-    this.evercookie_ = sm.iEvercookie.Evercookie.getInstance();
-
-    /**
-     * @type {?string}
-     * @private
-     */
-    this.clientIdPromise_ = null;
 };
 goog.inherits(sm.lSchool.bFeedbackModal.FeedbackModal, goog.ui.Component);
 
 goog.scope(function() {
     var FeedbackModal = sm.lSchool.bFeedbackModal.FeedbackModal,
         Analytics = sm.iAnalytics.Analytics.getInstance();
+
+
     /**
      * CSS-class enum
      * @enum {string}
@@ -99,6 +98,7 @@ goog.scope(function() {
         'VALIDATION_ERRORS': 'b-feedback__validation-errors'
     };
 
+
     /**
      * Validation error texts
      * @enum {string}
@@ -110,6 +110,34 @@ goog.scope(function() {
         'WRONG_GRADUATION_YEAR': ' Укажите год выпуска в формате ХХХХ.'
     };
 
+
+    /**
+     * formatting data for the type of user
+     * @enum {number}
+     */
+    FeedbackModal.UserType = {
+        'PARENT': 0,
+        'ALUMNI': 1,
+        'STUDENT': 2
+    };
+
+
+    /**
+     * action to send events Analytics
+     * @enum {string}
+     */
+    FeedbackModal.AnalyticsAction = {
+        'REVIEW_SUBMIT': 'review submit',
+        'YEAR_CHOICE': 'year choice',
+        'GRADUATION_CHOICE': 'graduation choice',
+        'ROLE_CHOISE': 'role choice',
+        'STAR_EDUCATION': 'star-education',
+        'STAR_TEACHER': 'star-teachers',
+        'STAR_ATMOSPHERE': 'star-atmosphere',
+        'STAR_INFRASTUCTURE': 'star-infrastructure'
+    };
+
+
     /**
      * shows modal window
      * @public
@@ -118,6 +146,7 @@ goog.scope(function() {
         this.modal_.show();
     };
 
+
     /**
      * hides modal window
      * @public
@@ -125,6 +154,7 @@ goog.scope(function() {
     FeedbackModal.prototype.hide = function() {
         this.modal_.hide();
     };
+
 
     /**
      * From cleaning
@@ -160,6 +190,7 @@ goog.scope(function() {
         this.initDropdownListeners_(handler);
     };
 
+
     /**
      * Template-based dom element creation.
      * @public
@@ -172,6 +203,7 @@ goog.scope(function() {
 
         this.decorateInternal(elem);
     };
+
 
     /**
      * Internal decorates the DOM element
@@ -235,21 +267,8 @@ goog.scope(function() {
         );
 
         this.initDropdowns_(factory);
-
-        this.awaitClientId_();
     };
 
-    /**
-     * await for cookie value
-     * @private
-     */
-    FeedbackModal.prototype.awaitClientId_ = function() {
-        this.clientIdPromise_ = new goog.Promise(function(resolve, reject) {
-            this.evercookie_.getClientId(function(clientId) {
-                resolve(clientId);
-            });
-        }, this);
-    };
 
     /**
      * dropdowns initialization
@@ -284,6 +303,7 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * stars initialization
      * @param {Array.<Element>} elements
@@ -313,9 +333,10 @@ goog.scope(function() {
         return res;
     };
 
+
     /**
      * Listeners for close control initialization
-     * @param {Object=} handler
+     * @param {Object} handler
      * @private
      */
     FeedbackModal.prototype.initDropdownListeners_ = function(handler) {
@@ -326,13 +347,14 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * Handler for click on user type select
      * @param {Object} event
      * @private
      */
     FeedbackModal.prototype.onUserTypeClick_ = function(event) {
-        var itemId = event.itemId;
+        var itemId = event['itemId'];
 
         switch (itemId) {
             case 0:
@@ -350,11 +372,12 @@ goog.scope(function() {
         }
     };
 
+
     /**
      * Show or hide Class select element
-     * @param {boolean} opt_showClasses - show element if true
+     * @param {boolean=} opt_showClasses - show element if true
      * and hide if false or undefined
-     * @param {boolean} opt_showStudentText - show student text if true
+     * @param {boolean=} opt_showStudentText - show student text if true
      * and parent if false or not defined
      * @private
      */
@@ -393,9 +416,10 @@ goog.scope(function() {
         }
     };
 
+
     /**
      * Show or hide Graduation input block
-     * @param {boolean} opt_showInput - if true show element,
+     * @param {boolean=} opt_showInput - if true show element,
      * if false or undefined - hide
      * @private
      */
@@ -414,78 +438,177 @@ goog.scope(function() {
         }
     };
 
+
     /**
      * Submit event handler
      * @private
      */
     FeedbackModal.prototype.formSubmit_ = function() {
-        var form = jQuery(this.elements_.form),
-            data = form.serializeArray();
-
-        if (this.isValid_(data)) {
-            var that = this;
-
-            this.setAnalyticsAccountingComments_();
-
-            this.clientIdPromise_.then(function(clientId) {
-                that.send_(form, clientId, function() {
-                    location.reload();
-                });
-            });
+        if (this.isValid_()) {
+            this.send_();
         }
     };
+
 
     /**
      * Set analytics accounting comments
      * @private
      */
-    FeedbackModal.prototype.setAnalyticsAccountingComments_ = function() {
-        Analytics.send({
-            'hitType': 'event',
-            'eventCategory': 'review',
-            'eventAction': 'review submit',
-            'eventLabel': this.params_.data.schoolName,
-            'eventValue': 100
-        });
+    FeedbackModal.prototype.updateCommentsAnalytics_ = function() {
+        this.sendAnalyticsSchoolName_();
+        this.sendAnalyticsUserData_();
+        this.sendAnalyticsScore_();
     };
+
+
+    /**
+     * Send analytics schoolName
+     * @private
+     */
+    FeedbackModal.prototype.sendAnalyticsSchoolName_ = function() {
+        var schoolName = this.params_['data']['schoolName'];
+
+        this.sendAnalyticsEvent_(
+            FeedbackModal.AnalyticsAction.REVIEW_SUBMIT,
+            schoolName,
+            100
+        );
+    };
+
+
+    /**
+     * send analytics user data
+     * @private
+     */
+    FeedbackModal.prototype.sendAnalyticsUserData_ = function() {
+        var dataForm = this.getFormData_(),
+            userType = this.dropdowns_.userType.getValue();
+
+        this.sendAnalyticsEvent_(
+            FeedbackModal.AnalyticsAction.ROLE_CHOISE,
+            this.formatUserTypeToAnalytics_(userType)
+        );
+
+        if (this.isYearChoise_(userType)) {
+            this.sendAnalyticsEvent_(
+                FeedbackModal.AnalyticsAction.YEAR_CHOICE,
+                dataForm['classType']
+            );
+        }
+        else {
+            this.sendAnalyticsEvent_(
+                FeedbackModal.AnalyticsAction.GRADUATION_CHOICE,
+                dataForm['yearGraduate']
+            );
+        }
+    };
+
+
+    /**
+     * get graduation year or class of user
+     * @param {string} userType
+     * @return {boolean}
+     * @private
+     */
+    FeedbackModal.prototype.isYearChoise_ = function(userType) {
+        var result;
+
+        if (userType == FeedbackModal.UserType.PARENT ||
+            userType == FeedbackModal.UserType.STUDENT) {
+            result = true;
+        }
+        else if (userType == FeedbackModal.UserType.ALUMNI) {
+            result = false;
+        }
+        return result;
+    };
+
+
+    /**
+     * get formatted for the analyst user type
+     * @param {string} userType
+     * @return {string}
+     * @private
+     */
+    FeedbackModal.prototype.formatUserTypeToAnalytics_ = function(userType) {
+        var dictionary = {};
+        dictionary[FeedbackModal.UserType.ALUMNI] = 'alumni';
+        dictionary[FeedbackModal.UserType.PARENT] = 'parent';
+        dictionary[FeedbackModal.UserType.STUDENT] = 'student';
+
+        return dictionary[userType];
+    };
+
+
+    /**
+     * Send analytics all score
+     * @private
+     */
+    FeedbackModal.prototype.sendAnalyticsScore_ = function() {
+        var dataForm = this.getFormData_();
+
+        var scoreName = [
+            FeedbackModal.AnalyticsAction.STAR_EDUCATION,
+            FeedbackModal.AnalyticsAction.STAR_TEACHER,
+            FeedbackModal.AnalyticsAction.STAR_ATMOSPHERE,
+            FeedbackModal.AnalyticsAction.STAR_INFRASTUCTURE
+        ];
+
+        for (var i = 0; i < scoreName.length; i++) {
+            this.sendAnalyticsEvent_(scoreName[i], dataForm['score'][i]);
+        }
+    };
+
+
+    /**
+     * Send data comment analytics
+     * @param {string} action
+     * @param {string} label
+     * @param {number=} opt_value
+     * @private
+     */
+    FeedbackModal.prototype.sendAnalyticsEvent_ = function(
+        action, label, opt_value) {
+
+        var dataAnalytics = {
+            hitType: 'event',
+            eventCategory: 'review',
+            eventAction: action,
+            eventLabel: label
+        };
+
+        if (opt_value) {
+            dataAnalytics.eventValue = opt_value;
+        }
+
+        Analytics.send(dataAnalytics);
+    };
+
 
     /**
      * Sends form using jQuery.ajax
-     * @param {Element} form
-     * @param {string} clientId
-     * @param {Function=} opt_callback
      * @private
      */
-    FeedbackModal.prototype.send_ = function(form, clientId, opt_callback) {
-        var data = form.serialize();
-        switch (this.dropdowns_.userType.getValue()) {
-            case 0:
-                data += this.dropdowns_.classType.getValue() ?
-                    '&classType=' + this.dropdowns_.classType.getValue() : '';
-                data += '&userType=Parent';
-                break;
-            case 1:
-                data += '&userType=Graduate';
-                break;
-            case 2:
-                data += this.dropdowns_.classType.getValue() ?
-                    '&classType=' + this.dropdowns_.classType.getValue() : '';
-                data += '&userType=Scholar';
-                break;
-        }
-        data += '&key=' + clientId;
+    FeedbackModal.prototype.send_ = function() {
+        var data = this.getFormData_();
+        data['_csrf'] = window['ctx']['csrf'];
+
+        var form = jQuery(this.elements_.form);
+
         jQuery.ajax({
             url: form.attr('action'),
             type: form.attr('method'),
-            data: data,
-            success: opt_callback ? opt_callback : function() {},
+            data: JSON.stringify(data),
+            contentType: 'application/json',
+            success: this.onSuccess_.bind(this),
             error: this.onError_.bind(this)
         });
     };
 
+
     /**
      * ajax error handler
-     * @param {object} response
+     * @param {Object} response
      * @private
      */
     FeedbackModal.prototype.onError_ = function(response) {
@@ -493,53 +616,134 @@ goog.scope(function() {
     };
 
     /**
+     * ajax success handler
+     * @private
+     */
+    FeedbackModal.prototype.onSuccess_ = function() {
+        this.updateCommentsAnalytics_();
+        location.reload();
+    };
+
+    /**
      * Modal data validation
-     * @param {Array.<Object>} data
      * @return {boolean}
      * @private
      */
-    FeedbackModal.prototype.isValid_ = function(data) {
+    FeedbackModal.prototype.isValid_ = function() {
         var isValid = false,
-            isValidOpt = false,
-            userType = this.dropdowns_.userType.getValue();
-            this.dropdowns_.userType.getView().unsetNotValidState();
+            isValidOpt = false;
 
-        if (userType != null) {
+        var dataForm = this.getFormData_();
+
+        this.dropdowns_.userType.getView().unsetNotValidState();
+
+        if (dataForm['userType'] != null) {
             isValid = true;
 
-            var dataToValidate = {
-                    'textArea': '',
-                    'yearGraduate': '',
-                    'score': []
-                };
-
-            for (var i = 0, item; item = data[i]; i++) {
-                var value = item.value,
-                    name = item.name;
-
-                /** Take values for each check criterion  **/
-                switch (name) {
-                    case 'text':
-                        dataToValidate.textArea = value;
-                        break;
-                    case 'yearGraduate':
-                        dataToValidate.yearGraduate = value;
-                        break;
-                    case 'score':
-                        dataToValidate.score.push(value);
-                        break;
-                }
-            }
-
-            isValidOpt = this.validateComment_(dataToValidate);
+            isValidOpt = this.validateComment_(dataForm);
 
         } else {
-            this.dropdowns_.userType.getView().setNotValidState();
+            dataForm['userType'].setNotValidState();
             this.showValidationError_(FeedbackModal.Error.TYPE_REQUIRED);
         }
         return (isValid && isValidOpt);
     };
 
+
+    /**
+     * Get data form
+     * @return {Object}
+     * @private
+     */
+    FeedbackModal.prototype.getFormData_ = function() {
+        return {
+            'userType' : this.getFormDataUserType_(),
+            'classType' : this.getFormDataClassType_(),
+            'text': this.getFormDataText_(),
+            'yearGraduate': this.getFormDataYearGraduate_(),
+            'score': this.getFormDataScore_()
+        };
+    };
+
+
+    /**
+     * get formatted user type
+     * @return {string}
+     * @private
+     */
+    FeedbackModal.prototype.getFormDataUserType_ = function() {
+        var dictionary = {};
+        dictionary[FeedbackModal.UserType.ALUMNI] = 'Graduate';
+        dictionary[FeedbackModal.UserType.PARENT] = 'Parent';
+        dictionary[FeedbackModal.UserType.STUDENT] = 'Scholar';
+
+        var userType = this.dropdowns_.userType.getValue();
+        return dictionary[userType];
+    };
+
+
+    /**
+     * get formatted data on user class
+     * @return {number}
+     * @private
+     */
+    FeedbackModal.prototype.getFormDataClassType_ = function() {
+        var classType = this.dropdowns_.classType.getValue();
+        return classType >= 0 ? classType + 1 : '';
+    };
+
+
+    /**
+     * get formatted text comment
+     * @return {string}
+     * @private
+     */
+    FeedbackModal.prototype.getFormDataText_ = function() {
+        var form = jQuery(this.elements_.form),
+            data = form.serializeArray();
+
+        var text = goog.array.find(data, function(item) {
+            return (item.name == 'text');
+        });
+
+        return text.value;
+    };
+
+
+    /**
+     * get formatted year graduation
+     * @return {number}
+     * @private
+     */
+    FeedbackModal.prototype.getFormDataYearGraduate_ = function() {
+        var form = jQuery(this.elements_.form),
+            data = form.serializeArray();
+
+        var yearGraduate = goog.array.find(data, function(item) {
+            return (item.name == 'yearGraduate');
+        });
+
+        return yearGraduate.value;
+    };
+
+
+    /**
+     * get score user
+     * @return {number}
+     * @private
+     */
+    FeedbackModal.prototype.getFormDataScore_ = function() {
+        var form = jQuery(this.elements_.form),
+            data = form.serializeArray();
+
+        var scores = goog.array.filter(data, function(item) {
+            return (item.name == 'score');
+        });
+
+        return scores.map(function(item) {
+            return item.value;
+        });
+    };
 
 
     /**
@@ -551,16 +755,17 @@ goog.scope(function() {
      */
     FeedbackModal.prototype.validateComment_ = function(formData) {
         var isValid = false,
-            commentText = formData.textArea;
+            commentText = formData['text'];
 
         if (commentText.trim()) {
-            isValid = this.validateGraduateInput_(formData.yearGraduate);
+            isValid = this.validateGraduateInput_(formData['yearGraduate']);
         } else {
             isValid = this.validateScore_(formData);
         }
 
         return isValid;
     };
+
 
     /**
      * Validate score item
@@ -569,10 +774,11 @@ goog.scope(function() {
      * @private
      */
     FeedbackModal.prototype.validateScore_ = function(formData) {
-        var isValid = false;
+        var isValid = false,
+            score = formData['score'];
 
-        for (var i = 0, l = formData.score.length, scoreItem;
-            i < l, scoreItem = formData.score[i]; i++) {
+        for (var i = 0, len = score.length, scoreItem; i < len; i++) {
+            scoreItem = score[i];
             if (parseInt(scoreItem)) {
                 isValid = true;
             }
@@ -583,11 +789,12 @@ goog.scope(function() {
                 FeedbackModal.Error.RATING_REQUIRED
             );
         } else {
-            isValid = this.validateGraduateInput_(formData.yearGraduate);
+            isValid = this.validateGraduateInput_(formData['yearGraduate']);
         }
 
         return isValid;
     };
+
 
     /**
      * Validate input with year of graduate
@@ -621,6 +828,7 @@ goog.scope(function() {
         return isValid;
     };
 
+
     /**
      * removes 'checked' attribute from radio
      * @private
@@ -634,6 +842,7 @@ goog.scope(function() {
             }
         }
     };
+
 
     /**
      * Show error
@@ -653,6 +862,7 @@ goog.scope(function() {
 
     };
 
+
     /**
      * Hide errors
      * @private
@@ -667,4 +877,4 @@ goog.scope(function() {
             cl.iUtils.Utils.CssClass.HIDDEN
         );
     };
-});
+});  // goog.scope

@@ -3,28 +3,49 @@
 
 /**
  * Header parameters
- * @typedef {object} sm.bHeader.Template.Params
- * @property {?string} url
- * @property {?string} searchtext
- * @property {?boolean} searchRedirect
- * @property {?boolean} notShowLink
+ * @typedef {{
+ *      url: ?string,
+ *      searchText: ?string,
+ *      searchRedirect: ?boolean,
+ *      bottomLine: ?boolean,
+ *      user: ?{
+ *          firstName: ?string,
+ *          lastName: ?string
+ *      },
+ *      favorites: sm.bSchoolListPaged.Template.Params.Data
+ * }} sm.bHeader.Template.Params.Data
  */
+
 
 /**
  * Header
- * @param params {?sm.bHeader.Template.Params}
+ * @param params {{
+ *     data: ?sm.bHeader.Template.Params.Data,
+ *     config: ?sm.iLayout.Template.Params.Config
+ * }}
  */
 {template .base autoescape="strict" kind="html"}
-    <div class="b-header">
-        {call .banner_ /}
-        <div class="b-header__body">
-            {if $params?.url}
-                {call .search_ data="all" /}
-            {/if}
-            {call .advancedSearchLink_ data="all" /}
+    <div class="b-header
+    {if $params.data?.bottomLine}{sp}b-header_line_bottom{/if}">
 
-            <div class="b-header__main i-animate">
-                {call .logo_ data="all" /}
+        {call .banner_ data="all" /}
+
+        <div class="b-header__body">
+            <div class="b-header__section
+                b-header__section_logo
+                i-animate">
+                {call .logo_ data="all"/}
+            </div>
+
+            <div class="b-header__section
+                b-header__section_links
+                i-animate">
+                {call .links_ data="all"/}
+            </div>
+
+            <div class="b-header__section
+                b-header__section_search">
+                {call .search_ data="all" /}
             </div>
         </div>
     </div>
@@ -32,37 +53,140 @@
 
 
 /**
- * Advanced search link
- * @param params {{
- *     notShowLink: ?boolean
- * }}
+ * Links template
+ * @param params {?}
  */
-{template .advancedSearchLink_ private="true" autoescape="strict" kind="html"}
-    {if not ($params?.notShowLink)}
-        <div class="b-header__link-search i-animate">
-            {call sm.bLink.Template.base}
-                {param params: [
+{template .links_ kind="html" private="true"}
+    {call .linkSearch_/}
+
+    <div class="b-header__user-controls">
+        {call .linkAuthorization_ data="all" /}
+        {call .favorite_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * link All Schools template
+ */
+{template .linkSearch_ private="true" autoescape="strict" kind="html"}
+    <a class="b-header__search-link" href="/search">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': 'stendhal',
+                'type': 'icon',
+                'renderParams': [
                     'data': [
-                        'name': 'Полный список школ',
-                        'url': '/search'
+                        'type': 'list'
+                    ],
+                    'config': [
+                        'customClasses': ['b-header__search-link-icon']
+                    ]
+                ]
+            ]/}
+        {/call}
+
+        {call sm.bLink.Template.base}
+            {param params: [
+                'data': [
+                    'name': 'Все школы Москвы'
+                ],
+                'config': [
+                    'size': 'extralarge',
+                    'customClasses': 'b-header__search-link-text' +
+                            ' b-header__search-link-text_visible_l'
+                ]
+            ]/}
+        {/call}
+
+        {call sm.bLink.Template.base}
+            {param params: [
+                'data': [
+                    'name': 'Все школы'
+                ],
+                'config': [
+                    'size': 'extralarge',
+                    'customClasses': 'b-header__search-link-text' +
+                            ' b-header__search-link-text_visible_m'
+                ]
+            ]/}
+        {/call}
+    </a>
+{/template}
+
+
+/**
+ * link Authorization template
+ * @param? params {
+ *     data: {
+ *        user: ?{
+ *            firstName: ?string,
+ *            lastName: ?string,
+ *            data: ?object
+ *        }
+ *     }
+ * }
+ */
+{template .linkAuthorization_ kind="html" private="true"}
+    <div class="b-header__user-control b-header__user-control_authorization">
+        <div class="b-header__authorization-content">
+            {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+                {param params: [
+                    'factory': 'stendhal',
+                    'type': 'authorization-link',
+                    'renderParams': [
+                        'data': [
+                            'user': $params?.data?.user
+                        ]
                     ]
                 ]/}
             {/call}
         </div>
-    {/if}
+    </div>
+{/template}
+
+
+/**
+ * template favorite
+ * @param params {{
+ *     data: {
+ *          favorites: sm.bSchoolListPaged.Template.Params.Data
+ *     }
+ * }}
+ */
+{template .favorite_ kind="html" private="true"}
+    <div class="b-header__user-control b-header__user-control_favorite">
+        <div class="b-header__favorite-content">
+            {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+                {param params: [
+                    'factory': 'stendhal',
+                    'type': 'favorite',
+                    'renderParams': [
+                        'data': $params.data?.favorites,
+                        'config': [
+                            'isUserAuthorized': $params.data?.user ? true : false
+                        ]
+                    ]
+                ]/}
+            {/call}
+        </div>
+    </div>
 {/template}
 
 
 /**
  * Logo
  * @param params {{
- *     url: string
+ *     data: ?{
+ *         url: string
+ *     }
  * }}
  */
 {template .logo_ private="true" autoescape="strict" kind="html"}
-    <div class="b-header__title">
-        {if $params?.url}
-            <a class="b-header__link" href="{$params.url}">
+    <div class="b-header__logo
+        i-animate">
+        {if $params?.data?.url}
+            <a class="b-header__link" href="{$params.data.url}">
                 {call .logoImg_ /}
             </a>
         {else}
@@ -75,47 +199,73 @@
  * Logo img
  */
 {template .logoImg_ private="true" autoescape="strict" kind="html"}
-    <img class="b-header__logo" src="/images/b-header/logo.svg"
+    <img class="b-header__logo-img" src="/images/b-header/logo.svg"
         alt="Школы Мела - индивидуальный рейтинг школ">
 {/template}
 
-
 /**
  * Search
- * @param params {{
- *     searchText: ?string,
- *     redirect: ?boolean
+ * @param? params {{
+ *     data: ?{
+ *         redirect: ?boolean
+ *     }
  * }}
  */
 {template .search_ private="true" autoescape="strict" kind="html"}
     {call sm.bSearch.Template.base}
         {param params: [
             'placeholder': 'Номер школы, метро, район',
-            'text': $params?.searchText,
+            'theme': 'min',
+            'customClasses': 'b-header__search b-header__search_visible_l',
+            'redirect': $params?.data?.searchRedirect,
+            'inputSize': 'min',
+            'config': [
+                'showSearchIcon': true,
+                'height': 'l'
+            ]
+        ]/}
+    {/call}
+    {call sm.bSearch.Template.base}
+        {param params: [
+            'placeholder': 'Номер школы, метро, район',
             'theme': 'foldable',
-            'redirect': $params?.searchRedirect,
-            'customClasses': 'b-header__search',
-            'inputSize': 'min'
+            'customClasses': 'b-header__search b-header__search_visible_s',
+            'redirect': $params?.data?.searchRedirect,
+            'inputSize': 'min',
+            'config': [
+                'height': 'xxl'
+            ]
         ]/}
     {/call}
 {/template}
 
-
 /**
  * Banner
+ * @param? params {{
+ *     config: ?sm.iLayout.Template.Params.Config
+ * }}
  */
 {template .banner_ autoescape="strict" kind="html"}
     <div class="i-layout__banner">
+        {let $textXl kind="html"}
+            Мы&nbsp;хотим создать самый полезный сервис для выбора школы.
+            {sp}Как думаете, у&nbsp;нас&nbsp;получилось?
+        {/let}
+
+        {let $textS kind="html"}
+            Мы&nbsp;помогли вам выбрать&nbsp;школу?
+        {/let}
+
         {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
                 'factory': 'stendhal',
                 'type': 'banner',
                 'renderParams': [
                     'data': [
-                        'textXl': 'Мы\u00A0хотим создать самый полезный сервис 
-                        для выбора школы. Как думаете, у\u00A0нас\u00A0получилось?',
-                        'textS': 'Мы\u00A0помогли вам выбрать\u00A0школу?'
-                    ]
+                        'textXl': $textXl,
+                        'textS': $textS
+                    ],
+                    'config': $params?.config
                 ]
             ]/}
         {/call}

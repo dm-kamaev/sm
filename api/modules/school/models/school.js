@@ -1,6 +1,6 @@
 var DataType = require('sequelize'),
-    db = require('../../../../app/components/db');
-var urlService = require('../services/urls');
+    db = require('../../../../app/components/db'),
+    urlService = require('../../entity/services/urls');
 const schoolType = require('../enums/schoolType');
 
 var School = db.define('School', {
@@ -106,22 +106,13 @@ var School = db.define('School', {
     commentGroupId: {
         type: DataType.INTEGER,
         field: 'comment_group_id'
-    },
-    views: {
-        type: DataType.INTEGER,
-        notNull: false,
-        defaultValue: 0
-    },
-    url: {
-        type: DataType.STRING,
-        unique: true
     }
 }, {
     underscored: true,
     tableName: 'school',
     hooks: {
-        afterCreate: urlService.generateUrl,
-        afterUpdate: urlService.generateUrl,
+        afterCreate: urlService.generateSchoolAlias,
+        afterUpdate: urlService.generateSchoolAlias,
     },
 
     classMethods: {
@@ -140,10 +131,6 @@ var School = db.define('School', {
             });
             School.hasMany(models.SearchData, {
                 as: 'searchData', foreignKey: 'school_id',
-                onDelete: 'cascade'
-            });
-            School.hasMany(models.SchoolUrl, {
-                as: 'urls', foreignKey: 'school_id',
                 onDelete: 'cascade'
             });
             School.hasMany(models.Address, {
@@ -169,6 +156,15 @@ var School = db.define('School', {
             School.hasMany(models.Activity, {
                 as: 'activites',
                 foreignKey: 'school_id'
+            });
+            School.hasMany(models.AdditionalEducation, {
+                as: 'additionalEducations',
+                foreignKey: 'school_id'
+            });
+            School.hasMany(models.Favorite, {
+                as: 'favorite',
+                foreignKey: 'item_id',
+                onDelete: 'cascade'
             });
         }
     }

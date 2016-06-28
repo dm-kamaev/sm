@@ -1,41 +1,38 @@
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
-var colors = require('colors');
-var models = require.main.require('./app/components/models').all;
-var services = require.main.require('./app/components/services').all;
-const common = require.main.require('./console/common');
+var models = require('../../../../app/components/models').all;
 
 exports.name = 'egeResult';
 
 
 /**
  * Add egeResult row
- * @param {number} school_id
- * @param {number} subject_id
+ * @param {number} schoolId
+ * @param {number} subjectId
  * @param {{
  *     year!: number,
  *     result!: number
  * }} data
  * @return {Object} instance of EgeResult model
  */
-exports.add = async(function(school_id, subject_id, data) {
-    data.school_id = school_id;
-    data.subject_id = subject_id;
+exports.add = async(function(schoolId, subjectId, data) {
+    data.schoolId = schoolId;
+    data.subjectId = subjectId;
     return await(models.EgeResult.create(data));
 });
 
 
 /**
  * Uppdate egeResult data
- * @param {number} ege_id
+ * @param {number} egeId
  * @param {{
  *     year: number,
  *     result: number
  * }} data
  * @return {Object} instance of EgeResult model
  */
-exports.update = async(function(ege_id, data) {
-    var instance = await(exports.getById(ege_id));
+exports.update = async(function(egeId, data) {
+    var instance = await(exports.getById(egeId));
     return await(instance.update(data));
 });
 
@@ -87,12 +84,12 @@ exports.getAllBySchoolId = async(function(schoolId) {
 
 /**
  * Get one data from table by data
- * @param {number} ege_id
+ * @param {number} egeId
  * @return {Object} instance of EgeResult model
  */
-exports.getById = async(function(ege_id) {
+exports.getById = async(function(egeId) {
     return await(models.EgeResult.findOne({
-        where: {id: ege_id}
+        where: {id: egeId}
     }));
 });
 
@@ -101,7 +98,7 @@ exports.getById = async(function(ege_id) {
  * Delete egeResult instance
  * @param {number} ege_id
  */
-exports.delete = async(function(ege_id) {
-    var instance = await(exports.getById(ege_id));
+exports.delete = async(function(egeId) {
+    var instance = await(exports.getById(egeId));
     await(instance.destroy());
 });

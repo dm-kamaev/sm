@@ -1,13 +1,20 @@
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
-var models = require.main.require('./app/components/models').all;
-var services = require.main.require('./app/components/services').all;
+var lodash = require('lodash');
+
+var models = require('../../../../app/components/models').all;
+var services = require('../../../../app/components/services').all;
+var subjectView = require('../../study/views/subjectView');
+var searchView = require('../views/searchView');
+
 var searchTypeEnum = require('../enums/searchType');
-var departmentTypeEnum = require('../../geo/enums/departmentStage');
+
+const mapPositionType = require('../enums/mapPositionType');
+
 exports.name = 'search';
 
-exports.getSchoolRecords = async (function(id) {
-    return await (models.SearchData.findAll({
+exports.getSchoolRecords = async(function(id) {
+    return await(models.SearchData.findAll({
         where: {
             schoolId: id
         }
@@ -23,8 +30,8 @@ exports.getSchoolRecords = async (function(id) {
 var getSearchSubstrings = function(string) {
     return string.toLowerCase()
         .trim()
-        .replace(/[^\wа-яА-ЯёЁ\-\s]/g,'') //remove everything except letters, numbers and spaces
-        .trim()
+        .replace(/[^\wа-яА-ЯёЁ\-\s]/g, '') // remove everything except
+        .trim()                            // letters, numbers and spaces
         .split(' ');
 };
 
@@ -38,7 +45,7 @@ exports.suggestSearch = async(function(searchString) {
     var promises = [
         services.school.searchByText(searchString),
         findAnyInModel(models.Area, searchString),
-        findAnyInModel(models.Metro, searchString),
+        findAnyInModel(models.Metro, searchString)
     ];
     var results = await(promises);
     return {
@@ -49,21 +56,114 @@ exports.suggestSearch = async(function(searchString) {
 });
 
 /**
+ * Generate sql config object for search in schools
+ * @param {number=} opt_schoolsAmount
+ * @param {number=} opt_page
+ * @return {Object}
+ */
+exports.generateSqlConfig = function(opt_schoolsAmount, opt_page) {
+    var limit = 'ALL',
+        offset = 0,
+        page = opt_page || 0;
+
+    if (opt_schoolsAmount) {
+        limit = opt_schoolsAmount;
+        offset = page * opt_schoolsAmount;
+    }
+
+    var sqlConfig = {
+        select: [
+            'school.id',
+            'school.name',
+            'school.full_name AS "fullName"',
+            'school.rank_dogm AS "rankDogm"',
+            'school.description',
+            'school.score',
+            'school.total_score AS "totalScore"',
+            'school.score_count AS "scoreCount"',
+            'school.count_results AS "countResults"',
+            'address.id AS "addressId"',
+            'metro.id AS "metroId"',
+            'metro.name AS "metroName"',
+            'area.id AS "areaId"',
+            'area.name AS "areaName"',
+            'address.coords AS "addressCoords"',
+            'address.name AS "addressName"',
+            'department.stage AS "departmentStage"'
+        ],
+        from: {
+            select: [
+                'school.id',
+                'school.name',
+                'school.full_name',
+                'school.rank_dogm',
+                'school.description',
+                'school.score',
+                'school.total_score',
+                'school.score_count',
+                'count(*) OVER() AS count_results'
+            ],
+            from: ['school'],
+            where: [],
+            as: 'school',
+            join: [],
+            group: ['school.id'],
+            order: [
+                'school.total_score DESC',
+                'school.score DESC NULLS LAST',
+                'school.id ASC'
+            ],
+            having: [],
+            limit: limit,
+            offset: offset
+        },
+        where: [
+            'address.is_school = true'
+        ],
+        join: [
+            {
+                type: 'LEFT OUTER',
+                values: [
+                    'address on address.school_id = school.id',
+                    'address_metro on address_metro.address_id = address.id',
+                    'metro on metro.id = address_metro.metro_id',
+                    'area on address.area_id = area.id',
+                    'department on department.address_id = address.id'
+                ]
+            }
+        ],
+        group: [
+        ],
+        order: [
+            'school.total_score DESC',
+            'school.score DESC NULLS LAST',
+            'school.id ASC',
+            'address_metro.distance ASC'
+        ],
+        having: []
+    };
+
+    return sqlConfig;
+};
+
+/**
  * @param {object} model
  * @param {string} searchString
- * @return {promise<array<object>> || array<>}
+ * @return {promise<array<object>>|array}
  */
 var findAnyInModel = function(model, searchString) {
     var stringArr = getSearchSubstrings(searchString);
-    if (!stringArr || stringArr=='')
+    if (!stringArr || stringArr == '') {
         return [];
+    }
 
     var params = {
         where: {
             name: {
-                $or: stringArr.map(str => {
-                    return {$iLike: '%' + str + '%'};
-                })
+                $or: stringArr.map(str => iLikeSimilarLetter(str))
+                        .reduce(function(prev, curr) {
+                            return prev.concat(curr);
+                        }, [])
             }
         }
     };
@@ -71,7 +171,39 @@ var findAnyInModel = function(model, searchString) {
 };
 
 /**
- * @param {array<number>}
+ * @param {string} searchSubstring
+ * @return {object}
+ */
+var iLikeSimilarLetter = function(searchSubstring) {
+    var result;
+
+    if (searchSubstring.indexOf('е') > -1) {
+        var similarCharPosition = searchSubstring.lastIndexOf('е'),
+            similarString =
+                replaceAt(searchSubstring, similarCharPosition, 'ё');
+
+        result = [
+            { $ilike: '%' + searchSubstring + '%' },
+            { $ilike: '%' + similarString + '%' }
+        ];
+    } else {
+        result = { $ilike: '%' + searchSubstring + '%' };
+    }
+    return result;
+};
+
+/**
+ * @param {string} string
+ * @param {number} position - position, what will be replaced
+ * @param {string} char - new char at position
+ * @return {string}
+ */
+var replaceAt = function(string, position, char) {
+    return string.substr(0, position) + char + string.substr(position + 1);
+};
+
+/**
+ * @param {array<number>} arr
  * @return {string}
  */
 var intArrayToSql = function(arr) {
@@ -79,16 +211,16 @@ var intArrayToSql = function(arr) {
 };
 
 /**
- * @params {string} field
- * @params {string} string
- * @params {string} [type = 'and']
+ * @param {string} field
+ * @param {string} string
+ * @param {string} [type = 'and']
  * @return {string}
  */
 var generateSqlFilter = function(field, string, type) {
     type = type || 'AND';
     var subStrings = getSearchSubstrings(string);
     return subStrings
-        .map(substring => field + ' ILIKE \'%' +substring + '%\'')
+        .map(substring => field + ' ILIKE \'%' + substring + '%\'')
         .join(' ' + type + ' ');
 };
 
@@ -110,7 +242,6 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
         type: 'OR',
         values: []
     };
-    console.log('searchParams: ' + Array.isArray(sqlOptions.from));
     if (!Array.isArray(sqlOptions.from)) {
         this.updateSqlOptions(sqlOptions.from, searchParams);
 
@@ -119,17 +250,26 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
                 generateOrder(searchParams.sortType)
             );
         }
-    }
-    else {
+    } else {
         if (searchParams.name) {
+            var values = [
+                generateSqlFilter('school.name', searchParams.name, 'AND'),
+                generateSqlFilter('school.full_name', searchParams.name, 'AND'),
+                generateSqlFilter('metro.name', searchParams.name, 'AND'),
+                generateSqlFilter('area.name', searchParams.name, 'AND')
+            ];
+            if (searchParams.name.indexOf('е') > -1) {
+                var similarCharPosition = searchParams.name.lastIndexOf('е'),
+                    similarString =
+                        replaceAt(searchParams.name, similarCharPosition, 'ё');
+                values.push(
+                    generateSqlFilter('metro.name', similarString),
+                    generateSqlFilter('area.name', similarString)
+                );
+            }
             sqlOptions.where.push({
                 type: 'OR',
-                values: [
-                    generateSqlFilter('school.name', searchParams.name, 'AND'),
-                    generateSqlFilter('school.full_name', searchParams.name, 'AND'),
-                    generateSqlFilter('metro.name', searchParams.name, 'AND'),
-                    generateSqlFilter('area.name', searchParams.name, 'AND')
-                ]
+                values: values
             });
             isGeoDataJoined = true;
         }
@@ -139,24 +279,26 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
             sqlOptions.where.push('school.education_interval @> ' + classArr);
         }
 
-         if (searchParams.sortType) {
+        if (searchParams.sortType) {
             sqlOptions.order.unshift(
                 generateOrder(searchParams.sortType)
             );
         }
 
-        if (searchParams.schoolType) {
+        if (searchParams.schoolType && searchParams.schoolType.length) {
             searchDataCount++;
             searchDataWhere.values.push({
                 type: 'AND',
                 values: [
-                    'search_data.type = \'' + searchTypeEnum.fields.SCHOOL_TYPE + '\'',
-                    'search_data.values && ' + intArrayToSql(searchParams.schoolType)
+                    'search_data.type = \'' +
+                        searchTypeEnum.fields.SCHOOL_TYPE + '\'',
+                    'search_data.values && ' +
+                        intArrayToSql(searchParams.schoolType)
                 ]
             });
         }
 
-        if (searchParams.gia) {
+        if (searchParams.gia && searchParams.gia.length) {
             searchDataCount++;
             searchDataWhere.values.push({
                 type: 'AND',
@@ -167,7 +309,7 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
             });
         }
 
-        if (searchParams.ege) {
+        if (searchParams.ege && searchParams.ege.length) {
             searchDataCount++;
             searchDataWhere.values.push({
                 type: 'AND',
@@ -178,18 +320,18 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
             });
         }
 
-        if (searchParams.olimp) {
+        if (searchParams.olimp && searchParams.olimp.length) {
             searchDataCount++;
             searchDataWhere.values.push({
                 type: 'AND',
                 values: [
-                    'search_data.type = \'' + searchTypeEnum.fields.OLIMPIAD+ '\'',
-                    'search_data.values @> ' + intArrayToSql(searchParams.olimp)
+                    'search_data.type = \'' +
+                        searchTypeEnum.fields.OLIMPIAD + '\'',
+                    'search_data.values @> ' +
+                        intArrayToSql(searchParams.olimp)
                 ]
             });
         }
-
-
 
         if (searchParams.areaId) {
             isGeoDataJoined = true;
@@ -202,22 +344,26 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
         }
 
         if (searchDataCount) {
-            //search_data must be first in the from clause
+            // search_data must be first in the from clause
             sqlOptions.from.unshift('search_data');
             sqlOptions.where.push(searchDataWhere);
             sqlOptions.where.push('school.id = search_data.school_id');
-            sqlOptions.having.push(['COUNT(DISTINCT search_data.id) ', ' = ', searchDataCount]);
+            sqlOptions.having.push(
+                ['COUNT(DISTINCT search_data.id) ',
+                ' = ',
+                searchDataCount]
+            );
         }
         if (isGeoDataJoined) {
-             sqlOptions.join.push({
-                 type: 'LEFT OUTER',
-                 values: [
-                     'address on address.school_id = school.id',
-                     'area on area.id = address.area_id',
-                     'address_metro on address_metro.address_id = address.id',
-                     'metro on metro.id = address_metro.metro_id'
-                 ]
-             });
+            sqlOptions.join.push({
+                type: 'LEFT OUTER',
+                values: [
+                    'address on address.school_id = school.id',
+                    'area on area.id = address.area_id',
+                    'address_metro on address_metro.address_id = address.id',
+                    'metro on metro.id = address_metro.metro_id'
+                ]
+            });
         }
     }
 };
@@ -246,7 +392,6 @@ var generateWhereSql = function(where, opt_type) {
         } else {
             throw new Error('Unexpected type on WHERE parsing');
         }
-
     }).join(' ' + type + ' ');
 };
 
@@ -257,8 +402,8 @@ var generateJoin = function(join) {
 };
 
 /**
- * @params {object} sqlOptions
- * @params {bool} opt_notUseDelimiter - if true not add ';' symbol
+ * @param {object} options
+ * @param {bool} opt_notUseDelimiter - if true not add ';' symbol
  * at the end of sqlstring, for inner from query
  * @return {string}
  */
@@ -266,41 +411,47 @@ exports.generateSearchSql = function(options, opt_notUseDelimiter) {
     var selectStr = 'SELECT ' + options.select.join(', ');
     var fromStr = ' FROM ';
 
-    if(!Array.isArray(options.from)) {
-         fromStr += '(' + this.generateSearchSql(options.from, true)
-                + ') AS "' + options.from.as + '"';
-        innerFrom = true;
+    if (!Array.isArray(options.from)) {
+        fromStr += '(' + this.generateSearchSql(options.from, true) +
+            ') AS "' + options.from.as + '"';
     } else {
-        fromStr +=  options.from.join(', ');
+        fromStr += options.from.join(', ');
     }
 
     var whereStr = '';
-    if (options.where.length)
+    if (options.where.length) {
         whereStr = ' WHERE ' + generateWhereSql(options.where);
+    }
     var groupStr = '';
-    if (options.group.length)
+    if (options.group.length) {
         groupStr = ' GROUP BY ' + options.group.join(', ');
+    }
     var orderStr = '';
-    if (options.order.length)
+    if (options.order.length) {
         orderStr = ' ORDER BY ' + options.order.join(', ');
+    }
     var havingStr = '';
-    if (options.having.length)
+    if (options.having.length) {
         havingStr = ' HAVING ' + options.having
             .map(rec => rec[0] + rec[1] + rec[2])
             .join(' AND ');
+    }
     var joinStr = '';
-    if (options.join.length)
+    if (options.join.length) {
         joinStr = options.join
             .map(onejoin => generateJoin(onejoin))
             .join(', ');
+    }
     var limitStr = '';
-    if (options.limit)
+    if (options.limit) {
         limitStr = ' LIMIT ' + options.limit;
+    }
     var offsetStr = '';
-    if (options.offset)
+    if (options.offset) {
         offsetStr = ' OFFSET ' + options.offset;
-
-    var result = selectStr + fromStr + joinStr + whereStr + groupStr + havingStr + orderStr + limitStr + offsetStr;
+    }
+    var result = selectStr + fromStr + joinStr + whereStr + groupStr +
+        havingStr + orderStr + limitStr + offsetStr;
     if (!opt_notUseDelimiter) {
         result += ';';
     }
@@ -308,15 +459,16 @@ exports.generateSearchSql = function(options, opt_notUseDelimiter) {
 };
 
 /**
- * @params {string} string
+ * @param {string} string
  * @return {object}
  */
 exports.generateFilter = function(string) {
     var subStrings = getSearchSubstrings(string);
     return {
         $and: subStrings.filter(substr => {
-            if (substr)
+            if (substr) {
                 return substr;
+            }
         })
         .map(substr => {
             return {
@@ -327,11 +479,127 @@ exports.generateFilter = function(string) {
 };
 
 
-
+/**
+ * Get all school type filters
+ * @return {Array.<Object>}
+ */
 exports.getTypeFilters = async(function() {
     return await(models.SchoolTypeFilter.findAll());
 });
 
+/**
+ * Get array with ids of school types by array with their aliases
+ * @param {Array.<string>} aliases
+ * @return {Array.<number>}
+ */
+exports.getSchoolTypesByAliases = function(aliases) {
+    var searchParams = {
+        where: {
+            alias: {
+                $in: aliases
+            }
+        },
+        attributes: ['id']
+    };
+
+    return await(models.SchoolTypeFilter.findAll(searchParams));
+};
+
+/**
+ * Initialize search params
+ * @param {Object} params
+ * @param {?string} params.name
+ * @param {?Array.<number>} params.classes
+ * @param {?Array.<string>} params.schoolType
+ * @param {?Array.<string>} params.ege
+ * @param {?Array.<string>} params.gia
+ * @param {?Array.<string>} params.olimp
+ * @param {?number} params.metroId
+ * @param {?number} params.areaId
+ * @param {?number} params.sortType
+ * @param {?number} params.page
+ */
+exports.initSearchParams = async(function(params) {
+    /** Transform aliases in filters into ids **/
+    var filterTypes = searchTypeEnum.toCamelCaseArray();
+    var ids = filterTypes.map(filterType => {
+        var filter = params[filterType];
+        return await(services.search.getFilterIds(filter, filterType));
+    });
+    var filters = lodash.zipObject(filterTypes, ids);
+
+    return searchView.params(params, filters);
+});
+
+/**
+ * Get id of each parameter in filter by their alias
+ * @param {?Array.<string>} searchParams
+ * @return {Array.<number>}
+ */
+exports.getFilterIds = async(function(filter, type) {
+    var ids = [];
+    if (filter) {
+        if (type == searchTypeEnum.camelCaseFields.SCHOOL_TYPE) {
+            var types = await(services.search.getSchoolTypesByAliases(filter));
+            ids = searchView.schoolTypeFilterIds(types);
+        } else {
+            var subjects = await(services.subject.getByAliases(filter));
+            ids = subjectView.subjectIds(subjects);
+        }
+    }
+
+    return ids;
+});
+
+/**
+ * Get center coordinates for map depending of given search params
+ * @param {Object} params
+ * @param {number} params.metroId
+ * @param {number} params.areaId
+ * @param {string} params.name
+ * @return {Object.<{
+ *     center: Array.<number>,
+ *     type: string
+ * }>}
+ */
+exports.getMapPositionParams = function(params) {
+    var result = {};
+    if (params.metroId) {
+        result = {
+            center: services.metro.getCoords(params.metroId),
+            type: mapPositionType.METRO
+        };
+    } else if (params.areaId) {
+        /** Centering on area id **/
+        result = {
+            type: mapPositionType.AREA
+        };
+    } else if (params.name === '' && !isFiltersSelected(params)) {
+        result = {
+            center: services.city.getCenterCoords(),
+            type: mapPositionType.CITY_CENTER
+        };
+    }
+    return result;
+};
+
+/**
+ * Check whether one of filters selected
+ * @param {Object} params
+ * @param {?Array.<number>} params.classes
+ * @param {?Array.<number>} params.schoolType
+ * @param {?Array.<number>} params.ege
+ * @param {?Array.<number>} params.gia
+ * @param {?Array.<number>} params.olimp
+ * @return {boolean}
+ */
+var isFiltersSelected = function(params) {
+    var filterTypes = searchTypeEnum.toCamelCaseArray(),
+        isSelected = lodash.some(filterTypes, filterType => {
+            return params[filterType].length;
+        });
+    return isSelected || params.classes.length;
+};
 
 /**
  * @param {int} school_id
@@ -341,7 +609,7 @@ exports.getTypeFilters = async(function() {
  *
  */
 exports.addSearchData = async(function(schoolId, values, searchType) {
-    await (models.SearchData.create({
+    await(models.SearchData.create({
         schoolId: schoolId,
         type: searchType,
         values: values
@@ -362,7 +630,7 @@ exports.setSchoolType = async(function(schoolId, value) {
     }));
     var values = [];
     values.push(value);
-    await (models.SearchData.create({
+    await(models.SearchData.create({
         schoolId: schoolId,
         type: searchTypeEnum.fields.SCHOOL_TYPE,
         values: values
@@ -372,21 +640,21 @@ exports.setSchoolType = async(function(schoolId, value) {
 
 /**
  * Get one data
- * @param {number} searh_data_id
+ * @param {number} searhDataId
  * @return {Object} instance of SearhData model
  */
-exports.getById = async(function(searh_data_id) {
+exports.getById = async(function(searhDataId) {
     return await(models.Department.findOne({
-        where: {id: searh_data_id}
+        where: {id: searhDataId}
     }));
 });
 
 
 /**
  * Delete searshData
- * @param {int} searh_data_id
+ * @param {number} searhDataId
  */
-exports.deleteSearchData = async(function(searh_data_id) {
-    var instance = await(exports.getById(searh_data_id));
+exports.deleteSearchData = async(function(searhDataId) {
+    var instance = await(exports.getById(searhDataId));
     instance.destroy();
 });

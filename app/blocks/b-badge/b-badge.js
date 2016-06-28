@@ -3,7 +3,10 @@ goog.provide('sm.bBadge.Badge');
 goog.require('cl.gHint.View');
 goog.require('goog.dom.classlist');
 goog.require('goog.ui.Component');
+goog.require('goog.uri.utils');
 goog.require('sm.bBadge.Template');
+
+
 
 /**
  * sm.bBadge.Badge component
@@ -14,6 +17,7 @@ goog.require('sm.bBadge.Template');
 sm.bBadge.Badge = function(opt_params) {
     goog.base(this);
 
+
     /**
      * Elements
      * @type {Object}
@@ -21,19 +25,29 @@ sm.bBadge.Badge = function(opt_params) {
      */
     this.elements_ = {};
 
+
     /**
      * Parameters
      * @type {Object}
      * @private
      */
     this.params_ = opt_params || {};
+
+
+    /**
+     * Defines clickable badge or not
+     * @type {boolean}
+     * @private
+     */
+    this.isActive_ = false;
 };
 goog.inherits(sm.bBadge.Badge, goog.ui.Component);
 
 
 goog.scope(function() {
-    Badge = sm.bBadge.Badge,
-    HintView = cl.gHint.View;
+    var Badge = sm.bBadge.Badge,
+        HintView = cl.gHint.View;
+
 
     /**
      * Css class enum
@@ -43,8 +57,10 @@ goog.scope(function() {
         ROOT: 'b-badge',
         RATING: 'b-badge_rating',
         ITEM: 'b-badge__item',
-        HINT_HREF: 'b-badge__hint-href'
+        HINT_HREF: 'b-badge__hint-href',
+        ACTIVE_STATE: 'b-badge_active'
     };
+
 
     /**
      * @override
@@ -62,12 +78,15 @@ goog.scope(function() {
         this.decorateInternal(element);
     };
 
+
     /**
      * @override
      * @param {Element} element
      */
     Badge.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
+
+        this.initState_();
 
         if (this.isRating_()) {
             this.elements_.item = this.getElementByClass(
@@ -85,38 +104,61 @@ goog.scope(function() {
         }
     };
 
+
     /**
      * @override
      */
     Badge.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
 
-        var handler = this.getHandler();
-
-        if (this.isRating_()) {
-            handler.listen(
-                this.elements_.item,
-                goog.events.EventType.CLICK,
-                this.onItemClickRatingMode_
-            ).listen(
-                this.elements_.hintHref,
-                goog.events.EventType.CLICK,
-                this.onHintHrefClick_
-            );
-        } else {
-            var itemActiveElements = this.elements_.itemActive;
-
-            if (itemActiveElements) {
-                for (var i = 0; i < itemActiveElements.length; i++) {
-                    handler.listen(
-                        itemActiveElements[i],
-                        goog.events.EventType.CLICK,
-                        this.onItemClickMetroMode_.bind(this, i)
-                    );
-                }
+        if (this.isActive_) {
+            if (this.isRating_()) {
+                this.initRatingListeners_();
+            }
+            else {
+                this.initLocationsListeners_();
             }
         }
     };
+
+
+    /**
+     * Initializes listeners for Rating
+     * @private
+     */
+    Badge.prototype.initRatingListeners_ = function() {
+        this.getHandler().listen(
+            this.elements_.item,
+            goog.events.EventType.CLICK,
+            this.onItemClickRatingMode_
+        );
+
+        this.getHandler().listen(
+            this.elements_.hintHref,
+            goog.events.EventType.CLICK,
+            this.onHintHrefClick_
+        );
+    };
+
+
+    /**
+     * Initializes listeners for Locations
+     * @private
+     */
+    Badge.prototype.initLocationsListeners_ = function() {
+        var itemActiveElements = this.elements_.itemActive;
+
+        if (itemActiveElements) {
+            for (var i = 0; i < itemActiveElements.length; i++) {
+                this.getHandler().listen(
+                    itemActiveElements[i],
+                    goog.events.EventType.CLICK,
+                    this.onItemClickLocationMode_.bind(this, i)
+                );
+            }
+        }
+    };
+
 
     /**
      * @override
@@ -128,6 +170,7 @@ goog.scope(function() {
         this.elements_ = null;
     };
 
+
     /**
      * Metro data-params initialization
      * @private
@@ -138,17 +181,28 @@ goog.scope(function() {
 
             var itemActiveLength = this.elements_.itemActive.length;
 
-            for (var i = 0, id, elem; i < itemActiveLength; i++) {
+            for (var i = 0, elem, data; i < itemActiveLength; i++) {
                 elem = this.elements_.itemActive[i];
-                id = JSON.parse(goog.dom.dataset.get(elem, 'params'))['id'];
+                data = JSON.parse(goog.dom.dataset.get(elem, 'params'));
+                data['name'] = elem.textContent;
 
-                this.params_.data.push({
-                    id: id,
-                    name: elem.textContent
-                });
+                this.params_.data.push(data);
             }
         }
     };
+
+
+    /**
+     * Detect whether control active
+     * @private
+     */
+    Badge.prototype.initState_ = function() {
+        this.isActive_ = goog.dom.classlist.contains(
+            this.getElement(),
+            Badge.CssClass.ACTIVE_STATE
+        );
+    };
+
 
     /**
      * Checks for display: rating
@@ -162,6 +216,7 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * On hint href click
      * @private
@@ -170,19 +225,20 @@ goog.scope(function() {
         window.open('http://dogm.mos.ru/rating/');
     };
 
+
     /**
      * On click for display: rating
      * @private
      */
     Badge.prototype.onItemClickRatingMode_ = function() {
         this.toggleHintInlude_();
-
         this.getHandler().listen(
             document,
             goog.events.EventType.CLICK,
             this.onDocumentClick_
         );
     };
+
 
     /**
      * On document click actions
@@ -206,6 +262,7 @@ goog.scope(function() {
         }
     };
 
+
     /**
      * Toggle hint include css class
      * @private
@@ -216,6 +273,7 @@ goog.scope(function() {
             HintView.CssClass.INCLUDE_CLICK_MODE
         );
     };
+
 
     /**
      * Remove hint include css class
@@ -228,15 +286,16 @@ goog.scope(function() {
         );
     };
 
+
     /**
      * On item active click
      * @param  {number} itemId
      * @private
      */
-    Badge.prototype.onItemClickMetroMode_ = function(itemId) {
+    Badge.prototype.onItemClickLocationMode_ = function(itemId) {
         var data = this.params_.data[itemId];
 
-        document.location.href = '/search?name=' + data.name +
-            '&metroId=' + data.id;
+        document.location.href = '/search?' +
+            goog.uri.utils.buildQueryDataFromMap(data);
     };
-});
+});  // goog.scope

@@ -1,0 +1,252 @@
+{namespace sm.lSchool.bFoldList.Template}
+
+/**
+ * @typedef {object} sm.lSchool.bFoldList.Template.Params
+ * @property {object} data
+ * @property {?string} data.name
+ * @property {[string | sm.lSchool.bFoldList.Template.Params]} items
+ * @property {?object} config
+ * @property {?string} config.type
+ */
+
+
+/**
+ * Constructor
+ * @param params sm.lSchool.bFoldList.Template.Params
+ * @extends cl.iControl.Template
+ * @constructor
+ */
+{template .foldList}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-fold-list
+{/template}
+
+
+/**
+ * @param params [sm.lSchool.bFoldList.Template.Params]
+ * @override
+ */
+{template .additionalClasses}
+    {if $params.config?.type}
+        {call .rootClass/}_{$params.config.type}{sp}
+    {/if}
+    {if not $params.data.name}
+        {call .rootClass/}_titless{sp}
+    {/if}
+{/template}
+
+
+/**
+ * @param params [sm.lSchool.bFoldList.Template.Params]
+ * @override
+ */
+{template .body}
+    {let $count: length($params?.data?.items) /}
+
+    {call .title_}
+        {param name: $params.data.name /}
+        {param count: $count /}
+        {param type: $params.config?.type /}
+    {/call}
+
+    {call .items_}
+        {param items: $params.data.items /}
+        {param count: $count /}
+        {param type: $params.config?.type /}
+    {/call}
+
+    {call .button_}
+        {param count: $count /}
+        {param type: $params.config?.type /}
+    {/call}
+{/template}
+
+
+/**
+ * @param? name [string]
+ * @param? count [number]
+ * @param? type [string]
+ */
+{template .title_ kind="html"}
+    {if $count and $name}
+        <div class="{call .rootClass/}__title">
+            {if $type == 'unfolded'}
+                {$name}
+            {else}
+                {call .link_}
+                    {param params: [
+                        'name': $name,
+                        'config': [
+                            'customClasses': 'b-fold-list__link'
+                        ]
+                    ]/}
+                {/call}
+
+                {call .number_}
+                    {param number: $count /}
+                {/call}
+            {/if}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * @param items [list<string | sm.lSchool.bFoldList.Template.Params>]
+ * @param count [number]
+ * @param? type [string]
+ */
+{template .items_ kind="html"}
+    {if $type == 'unfolded'}
+        {call .subItems_}
+            {param items: $items /}
+            {param strartIndex: 0 /}
+            {param endIndex: 3 /}
+        {/call}
+        {call .subItems_}
+            {param items: $items /}
+            {param strartIndex: 3 /}
+            {param endIndex: $count /}
+            {param type: 'hidden' /}
+        {/call}
+    {else}
+        {call .subItems_}
+            {param items: $items /}
+            {param strartIndex: 0 /}
+            {param endIndex: $count /}
+            {param type: 'hidden' /}
+        {/call}
+    {/if}
+{/template}
+
+
+/**
+ * @param items [list<string | sm.lSchool.bFoldList.Template.Params>]
+ * @param? strartIndex [number]
+ * @param? endIndex [number]
+ * @param? type [string]
+ */
+{template .subItems_ kind="html"}
+    {let $count: length($items) /}
+    {if $strartIndex < $count}
+        <ul class="{call .rootClass/}__list
+                   {if $type}{sp}{call .rootClass/}__list_{$type}{/if}
+                   {if $type == 'hidden'}{sp}i-utils__hidden{/if}">
+
+            {let $from: $strartIndex /}
+            {let $to: $count < $endIndex ? $count : $endIndex /}
+
+            {for $i in range($from, $to)}
+                {call .item_}
+                    {param item: $items[$i] /}
+                {/call}
+            {/for}
+        </ul>
+    {/if}
+{/template}
+
+
+/**
+ * @param item [string | sm.lSchool.bFoldList.Template.Params]
+ */
+{template .item_ kind="html"}
+    <li class="{call .rootClass/}__item
+               {if $item?.data}{sp}{call .rootClass/}__item_list{else}
+               {sp}{call .rootClass/}__item_default{/if}">
+
+        {if $item?.data}
+            {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+                {param params: [
+                    'factory': 'stendhal',
+                    'type': 'fold-list',
+                    'renderParams': $item
+                ]/}
+            {/call}
+        {else}
+            &mdash; {$item}
+        {/if}
+    </li>
+{/template}
+
+/**
+ * @param count [number]
+ * @param? type [string]
+ */
+{template .button_}
+    {if $type == 'unfolded' and $count > 3}
+        <div class="{call .rootClass/}__button
+                    {sp}{call .rootClass/}__button_unfold">
+            {call .link_}
+                {param params: [
+                    'name': 'Ещё',
+                    'config': [
+                        'customClasses': 'b-fold-list__button-link',
+                        'theme': 'attention'
+                    ]
+                ]/}
+            {/call}
+
+            {call .number_}
+                {param number: $count - 3/}
+            {/call}
+        </div>
+
+        <div class="{call .rootClass/}__button
+                    {sp}{call .rootClass/}__button_fold
+                    {sp}i-utils__hidden">
+            {call .link_}
+                {param params: [
+                    'name': 'Свернуть',
+                    'config': [
+                        'customClasses': 'b-fold-list__button-link',
+                        'theme': 'attention'
+                    ]
+                ]/}
+            {/call}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * @param params [
+ *     name: string,
+ *     config: [
+ *         customClasses: ?string,
+ *         theme: ?string
+ *    ]
+ * ]
+ */
+{template .link_ kind="html"}
+    {call sm.bLink.Template.base}
+        {param params: [
+            'data': [
+                'name': $params.name
+            ],
+            'config': [
+                'customClasses': $params.config?.customClasses,
+                'theme': $params.config?.theme,
+                'size': 'large'
+            ]
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * @param number [number]
+ */
+{template .number_ kind="html"}
+    <span class="{call .rootClass/}__number">
+        {$number}
+    </span>
+{/template}
+

@@ -1,9 +1,9 @@
-const cityResultView = require.main.require(
-    './api/modules/study/views/cityResultView.js'
+const cityResultView = require(
+    './cityResultView.js'
 );
 
-const subjectView = require.main.require(
-    './api/modules/study/views/subjectView.js'
+const subjectView = require(
+    './subjectView.js'
 );
 
 /**
@@ -25,8 +25,7 @@ EgeResultView.prototype.transformResults = function(results, cityResults) {
         range = 5,
         averageResult,
         average,
-        examRes,
-        that = this;
+        examRes;
 
     results.forEach(item => {
         res[item.year] = res[item.year] || {};
@@ -46,7 +45,7 @@ EgeResultView.prototype.transformResults = function(results, cityResults) {
                 value: examRes,
                 averageValue: average,
                 order: item.subject.name
-            })
+            });
         } else if (examRes > average - range) {
             res[item.year].middle = res[item.year].middle || [];
             res[item.year].middle.push({
@@ -54,7 +53,7 @@ EgeResultView.prototype.transformResults = function(results, cityResults) {
                 value: examRes,
                 averageValue: average,
                 order: item.subject.name
-            })
+            });
         } else {
             res[item.year].bottom = res[item.year].bottom || [];
             res[item.year].bottom.push({
@@ -62,7 +61,7 @@ EgeResultView.prototype.transformResults = function(results, cityResults) {
                 value: examRes,
                 averageValue: average,
                 order: item.subject.name
-            })
+            });
         }
     });
 
@@ -73,18 +72,30 @@ EgeResultView.prototype.transformResults = function(results, cityResults) {
             return {
                 label: key,
                 text: key
-            }
+            };
         }),
         results: keys.map(key => {
             var item = res[key];
             return {
                 top: item.top ?
-                    item.top.sort((a, b) => subjectView.sorter(a.order, b.order, 'EGE')) : undefined,
+                    item.top.sort((a, b) => subjectView.sorter(
+                        a.order,
+                        b.order,
+                        'EGE'
+                    )) : undefined,
                 middle: item.middle ?
-                    item.middle.sort((a, b) => subjectView.sorter(a.order, b.order, 'EGE')) : undefined,
+                    item.middle.sort((a, b) => subjectView.sorter(
+                        a.order,
+                        b.order,
+                        'EGE'
+                    )) : undefined,
                 bottom: item.bottom ?
-                    item.bottom.sort((a, b) => subjectView.sorter(a.order, b.order, 'EGE')) : undefined
-            }
+                    item.bottom.sort((a, b) => subjectView.sorter(
+                        a.order,
+                        b.order,
+                        'EGE'
+                    )) : undefined
+            };
         }),
         range: range
     };

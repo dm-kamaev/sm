@@ -2,19 +2,34 @@ goog.provide('sm.iFactory.TemplateFactoryStendhal');
 goog.provide('sm.iFactory.TemplateFactoryStendhal.INSTANCE');
 
 goog.require('cl.iFactory.TemplateFactory');
+goog.require('sm.bAuthorizationLink.Template');
 goog.require('sm.bBanner.Template');
+goog.require('sm.bFavorite.Template');
+goog.require('sm.bFavoriteLink.Template');
 goog.require('sm.bHeader.Template');
+goog.require('sm.bPopularSchools.Template');
+goog.require('sm.bSchoolCatalog.Template');
+goog.require('sm.bSchoolListPaged.Template');
+goog.require('sm.bSearchPanel.Template');
 goog.require('sm.gAuthSocial.TemplateStendhal');
 goog.require('sm.gAuthSocialModal.TemplateStendhal');
 goog.require('sm.gButton.TemplateSocialStendhal');
+goog.require('sm.gButton.TemplateStendhal');
 goog.require('sm.gDropdown.DropdownSelectTemplate');
 goog.require('sm.gHint.TemplateStendhal');
+goog.require('sm.gIcon.TemplateStendhal');
 goog.require('sm.gInput.DigitInputTemplate');
 goog.require('sm.gList.SelectTemplate');
 goog.require('sm.gModal.TemplateFeedback');
 goog.require('sm.gModal.TemplateStendhal');
 goog.require('sm.gTab.TemplateStendhal');
 goog.require('sm.gTextarea.TemplateStendhal');
+goog.require('sm.lSchool.bDate.Template');
+goog.require('sm.lSchool.bFoldList.Template');
+goog.require('sm.lSearch.bArticleLink.Template');
+goog.require('sm.lSearch.bArticleLinks.Template');
+
+
 
 /**
  * Template factory
@@ -74,6 +89,58 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'banner',
             sm.bBanner.Template.banner
+        )
+        .setTemplateListItem(
+            'button',
+            sm.gButton.TemplateStendhal.button
+        )
+        .setTemplateListItem(
+            'popular-schools',
+            sm.bPopularSchools.Template.base
+        )
+        .setTemplateListItem(
+            'school-catalog',
+            sm.bSchoolCatalog.Template.info
+        )
+        .setTemplateListItem(
+            'search-panel',
+            sm.bSearchPanel.Template.seachPanel
+        )
+        .setTemplateListItem(
+            'fold-list',
+            sm.lSchool.bFoldList.Template.foldList
+        )
+        .setTemplateListItem(
+            'article-links',
+            sm.lSearch.bArticleLinks.Template.articleLinks
+        )
+        .setTemplateListItem(
+            'article-link',
+            sm.lSearch.bArticleLink.Template.articleLink
+        )
+        .setTemplateListItem(
+            'date',
+            sm.lSchool.bDate.Template.date
+        )
+        .setTemplateListItem(
+            'authorization-link',
+            sm.bAuthorizationLink.Template.authorizationLink
+        )
+        .setTemplateListItem(
+            'favorite',
+            sm.bFavorite.Template.favorite
+        )
+        .setTemplateListItem(
+            'school-list-paged',
+            sm.bSchoolListPaged.Template.schoolListPaged
+        )
+        .setTemplateListItem(
+            'favorite-link',
+            sm.bFavoriteLink.Template.favoriteLink
+        )
+        .setTemplateListItem(
+            'icon',
+            sm.gIcon.TemplateStendhal.icon
         );
 };
 goog.inherits(sm.iFactory.TemplateFactoryStendhal, cl.iFactory.TemplateFactory);
@@ -90,4 +157,4 @@ goog.scope(function() {
      * Important!
      */
     TemplateFactory.getInstance().attachToManager();
-});
+});  // goog.scope

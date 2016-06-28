@@ -1,11 +1,14 @@
 goog.provide('sm.lSchool.bComment.Comment');
 
+goog.require('cl.iUtils.Utils');
 goog.require('goog.dom.classes');
 goog.require('goog.events');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
-goog.require('sm.bStars.Stars');
+goog.require('sm.bScore.ScoreMinimized');
 goog.require('sm.lSchool.bComment.Template');
+
+
 
 /**
  * Comment component
@@ -24,8 +27,12 @@ sm.lSchool.bComment.Comment = function(opt_params) {
 };
 goog.inherits(sm.lSchool.bComment.Comment, goog.ui.Component);
 
+
 goog.scope(function() {
-    var Comment = sm.lSchool.bComment.Comment;
+    var Comment = sm.lSchool.bComment.Comment,
+        ScoreMinimized = sm.bScore.ScoreMinimized,
+        Utils = cl.iUtils.Utils;
+
 
     /**
      * CSS-class enum
@@ -33,12 +40,11 @@ goog.scope(function() {
      */
     Comment.CssClass = {
         ROOT: 'b-comment',
-        TEXT: 'b-comment__text',
-        HIDDENTEXT: 'b-comment__text_hidden',
-        SPOILER: 'b-comment__spoiler',
-        HIDDENSPOILER: 'b-comment__spoiler_hidden',
-        STARS: 'b-stars'
+        FULL_TEXT: 'b-comment__text_full',
+        CROPPED_TEXT: 'b-comment__text_cropped',
+        SHOW_MORE: 'b-comment__show-more'
     };
+
 
     /**
      * Template-based dom element creation.
@@ -52,33 +58,18 @@ goog.scope(function() {
         this.decorateInternal(el);
     };
 
+
     /**
      * Internal decorates the DOM element
-     * @param {Node} element
+     * @param {Element} element
      */
     Comment.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
-        this.spoiler_ = goog.dom.getElementByClass(
-            Comment.CssClass.SPOILER, element
-        );
-        this.text_ = goog.dom.getElementByClass(
-            Comment.CssClass.TEXT, element
-        );
-        this.hiddenText_ = goog.dom.getElementByClass(
-            Comment.CssClass.HIDDENTEXT, element
-        );
-        this.stars_ = goog.dom.getElementsByClass(
-            Comment.CssClass.STARS, element
-        );
-
-        /** stars decoration */
-        for (var i = 0, stars; i < this.stars_.length; i++) {
-            stars = new sm.bStars.Stars();
-            this.addChild(stars, false);
-            stars.decorate(this.stars_[i]);
-        }
+        this.initElements_();
+        this.initScore_();
     };
+
 
     /**
      * Sets up the Component.
@@ -87,33 +78,98 @@ goog.scope(function() {
         goog.base(this, 'enterDocument');
 
         /** spoiler listeners */
-        if (!(this.spoiler_ == null)) {
+        if (!(this.showMore_ == null)) {
             var handler = this.getHandler();
 
             handler.listen(
-                this.spoiler_,
+                this.showMore_,
                 goog.events.EventType.CLICK,
-                this.showText_
+                this.onShowMoreClick_
             );
         }
     };
 
+
     /**
-     * spoiler handler
+     * Init dom elements
      * @private
      */
-    Comment.prototype.showText_ = function() {
-        goog.dom.classes.add(
-            this.spoiler_,
-            Comment.CssClass.HIDDENSPOILER
+    Comment.prototype.initElements_ = function() {
+        this.showMore_ = this.getElementByClass(
+            Comment.CssClass.SHOW_MORE
         );
-        goog.dom.classes.add(
-            this.text_,
-            Comment.CssClass.HIDDENTEXT
+        this.croppedText_ = this.getElementByClass(
+            Comment.CssClass.CROPPED_TEXT
         );
-        goog.dom.classes.remove(
-            this.hiddenText_,
-            Comment.CssClass.HIDDENTEXT
+        this.fullText_ = this.getElementByClass(
+            Comment.CssClass.FULL_TEXT
         );
     };
-});
+
+
+    /**
+     * Spoiler click handler
+     * @private
+     */
+    Comment.prototype.onShowMoreClick_ = function() {
+        this.setFullTextVisibility_(true);
+        this.setShowMoreVisibility_(false);
+    };
+
+
+    /**
+     * set visibility of hidden text
+     * @param {boolean} visibility
+     * @private
+     */
+    Comment.prototype.setFullTextVisibility_ = function(visibility) {
+        if (visibility) {
+            goog.dom.classes.add(
+                this.croppedText_,
+                Utils.CssClass.HIDDEN
+            );
+            goog.dom.classes.remove(
+                this.fullText_,
+                Utils.CssClass.HIDDEN
+            );
+        } else {
+            goog.dom.classes.add(
+                this.croppedText_,
+                Utils.CssClass.HIDDEN
+            );
+            goog.dom.classes.remove(
+                this.fullText_,
+                Utils.CssClass.HIDDEN
+            );
+        }
+    };
+
+
+    /**
+     * set visibility of show more button
+     * @param {boolean} visibility
+     * @private
+     */
+    Comment.prototype.setShowMoreVisibility_ = function(visibility) {
+        visibility ? goog.dom.classes.remove(
+            this.showMore_,
+            Utils.CssClass.HIDDEN
+        ) :
+        goog.dom.classes.add(
+            this.showMore_,
+            Utils.CssClass.HIDDEN
+        );
+    };
+
+
+    /**
+     * Init score instance
+     * @private
+     */
+    Comment.prototype.initScore_ = function() {
+        var scoreElement = this.getElementByClass(ScoreMinimized.CssClass.ROOT);
+        var score = new ScoreMinimized;
+        this.addChild(score);
+        score.decorate(scoreElement);
+    };
+});  // goog.scope
