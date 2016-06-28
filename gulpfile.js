@@ -167,13 +167,21 @@ gulp.task('backendLint', function () {
         .pipe(eslint({
             config: path.join(__dirname, 'node_modules/nodules/.eslintrc')
         }))
-        .pipe(eslint.format());
+        .pipe(eslint.format())
+        .pipe(eslint.results((result => {
+            if (result.errorCount) {
+                throw new Error('Error count: ' + result.errorCount +
+                    '. Linter check failed!');
+            }
+        })));
 });
 
 const tasks = function (bool) {
     return bool ?
-        ['createTimestamp', 'soy', 'compile', 'sprite', 'images', 'fonts', 'styles', 'copy'] :
-        ['watch', 'soy', 'scripts', 'sprite', 'images', 'fonts','styles', 'copy', 'localConfig', 'authConfig', 'userConfig', 'backendLint'];
+        ['createTimestamp', 'soy', 'compile', 'sprite', 'images', 'fonts',
+            'styles', 'copy'] :
+        ['watch', 'soy', 'scripts', 'sprite', 'images', 'fonts','styles',
+            'copy', 'localConfig', 'authConfig', 'userConfig', 'backendLint'];
 };
 
 gulp.task('build', tasks(true));
