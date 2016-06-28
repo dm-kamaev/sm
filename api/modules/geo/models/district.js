@@ -17,8 +17,8 @@ var District = db.define(
         tableName: 'district',
         classMethods: {
             associate: function(models) {
-                District.hasMany(models.Address, {
-                    as: 'addresses',
+                District.hasMany(models.Area, {
+                    as: 'areas',
                     foreignKey: 'district_id'
                 });
             }
