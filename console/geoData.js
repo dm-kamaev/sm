@@ -35,19 +35,19 @@ var archiveDistricts = async(function() {
 });
 
 commander
-    .command('create db districts')
+    .command('create-db-districts')
     .description(
         'creates districts in db and associate it to areas via services'
     )
     .action(createDbDistricts);
 
 commander
-    .command('generate district associations')
+    .command('generate-district-associations')
     .description('create an archive with district id and containing area id')
     .action(createDistrictsRelationReport);
 
 commander
-    .command('archive districts')
+    .command('archive-districts')
     .description('create an archive with districts from db')
     .action(archiveDistricts);
 

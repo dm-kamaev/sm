@@ -1,0 +1,147 @@
+[
+  {
+    "listType": "licei",
+    "geoType": null,
+    "searchParameters": [
+      ["type", "lyceum"]
+    ],
+    "text": null,
+    "description": null
+  },
+  {
+    "listType": "gimnazii",
+    "geoType": null,
+    "searchParameters": [
+      ["type", "gymnazium"]
+    ],
+    "text": null,
+    "description": null
+  },
+  {
+    "listType": "kadetskiye",
+    "geoType": null,
+    "searchParameters": [
+      ["type", "cadet"]
+    ],
+    "text": null,
+    "description": null
+  },
+  {
+    "listType": "centry-obrazovaniya",
+    "geoType": null,
+    "searchParameters": [
+      ["type", "educational_center"]
+    ],
+    "text": null,
+    "description": null
+  },
+  {
+    "listType": "cao",
+    "geoType": null,
+    "searchParameters": [
+      ["district", "цао"]
+    ],
+    "text": null,
+    "description": null
+  },
+  {
+    "listType": "cao",
+    "geoType": null,
+    "searchParameters": [
+      ["district", "цао"]
+    ],
+    "text": null,
+    "description": null
+  },
+  {
+    "listType": "cao",
+    "geoType": null,
+    "searchParameters": [
+      ["district", "цао"]
+    ],
+    "text": null,
+    "description": null
+  },
+  {
+    "listType": "sao",
+    "geoType": null,
+    "searchParameters": [
+      ["district", "сао"]
+    ],
+    "text": null,
+    "description": null
+  },
+  {
+    "listType": "svao",
+    "geoType": null,
+    "searchParameters": [
+      ["district", "свао"]
+    ],
+    "text": null,
+    "description": null
+  },
+  {
+    "listType": "vao",
+    "geoType": null,
+    "searchParameters": [
+      ["district", "вао"]
+    ],
+    "text": null,
+    "description": null
+  },
+  {
+    "listType": "uvao",
+    "geoType": null,
+    "searchParameters": [
+      ["district", "ювао"]
+    ],
+    "text": null,
+    "description": null
+  },
+  {
+    "listType": "uao",
+    "geoType": null,
+    "searchParameters": [
+      ["district", "юао"]
+    ],
+    "text": null,
+    "description": null
+  },
+  {
+    "listType": "uzao",
+    "geoType": null,
+    "searchParameters": [
+      ["district", "юзао"]
+    ],
+    "text": null,
+    "description": null
+  },
+  {
+    "listType": "zao",
+    "geoType": null,
+    "searchParameters": [
+      ["district", "зао"]
+    ],
+    "text": null,
+    "description": null
+  },
+  {
+    "listType": "szao",
+    "geoType": null,
+    "searchParameters": [
+      ["district", "сзао"]
+    ],
+    "text": null,
+    "description": null
+  },
+  {
+    "listType": "zelao",
+    "geoType": null,
+    "searchParameters": [
+      ["district", "зелао"]
+    ],
+    "text": null,
+    "description": null
+  }
+
+]
