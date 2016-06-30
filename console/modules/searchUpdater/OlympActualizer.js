@@ -12,7 +12,7 @@ class OlympActualizer extends SearchDataActualizer {
      * @param {object} school
      */
     constructor(school) {
-        await(super(school)); //call parent constructor
+        await(super(school)); // call parent constructor
         this.resultSubjects_ = [];
         this.searchType_ = searchType.fields.OLIMPIAD;
     }
@@ -24,8 +24,9 @@ class OlympActualizer extends SearchDataActualizer {
     getSubjects_() {
         this.olympResults_.forEach(olympRes => {
             if (!this.resultSubjects_.find(
-                    subject => subject == olympRes.subjectId))
+                    subject => subject == olympRes.subjectId)) {
                 this.resultSubjects_.push(olympRes.subjectId);
+            }
         });
     }
 
@@ -34,8 +35,8 @@ class OlympActualizer extends SearchDataActualizer {
      * get olymp results for school
      */
     getResults_() {
-        //TODO: to fix 'Olimp' typo model name must be fixed as well
-        this.olympResults_ = await (this.school_.getOlimpResults()); 
+        // TODO: to fix 'Olimp' typo model name must be fixed as well
+        this.olympResults_ = await(this.school_.getOlimpResults());
     }
 }
 

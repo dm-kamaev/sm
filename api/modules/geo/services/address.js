@@ -227,3 +227,18 @@ exports.getWithDepartmentsWithMetro = async(function(
 
     return models.Address.findAll(params);
 });
+
+/**
+ * @return {Array<Object>}
+ */
+exports.getAllWithSearchData = async(function() {
+    return models.Address.findAll({
+        include: [{
+            model: models.Department,
+            as: 'departments'
+        }, {
+            model: models.AddressSearchData,
+            as: 'searchData'
+        }]
+    });
+});

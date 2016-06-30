@@ -4,8 +4,9 @@ var sequelize = require('../../../../app/components/db'),
     addressSearchType = require('../enums/addressSearchType');
 
 var AddressSearchData = sequelize.define('AddressSearchData', {
-    'address_id': {
+    addressId: {
         type: Sequelize.INTEGER,
+        field: 'address_id',
         onDelete: 'cascade',
         references: {
             model: 'address',

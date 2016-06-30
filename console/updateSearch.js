@@ -4,13 +4,14 @@ const await = require('asyncawait/await');
 const commander = require('commander');
 const SearchUpdater = require('./modules/searchUpdater/SearchUpdater');
 var sequelize = require.main.require('./app/components/db');
-var modules = require('../api/modules');
+var modules = require('../api/modules'); // eslint-disable-line no-unused-vars
 
 var start = async(function(argstring) {
     var args = argstring.split(' ');
     var options = {};
-    if (args.indexOf('silent') != -1)
+    if (args.indexOf('silent') != -1) {
         options.isQuiet = true;
+    }
     sequelize.options.logging = false;
     var searchUpdater = await(new SearchUpdater(options));
     searchUpdater.updateForAll();
@@ -19,6 +20,6 @@ var start = async(function(argstring) {
 commander
     .command('search [argstring]')
     .description('Update search table')
-    .action((argstring) => start(argstring||''));
+    .action((argstring) => start(argstring || ''));
 
 exports.Command;
