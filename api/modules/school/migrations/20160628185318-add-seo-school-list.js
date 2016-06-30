@@ -1,0 +1,36 @@
+'use strict';
+
+module.exports = {
+    up: function(queryInterface, Sequelize) {
+        return queryInterface.createTable(
+            'seo_school_list',
+            {
+                id: {
+                    allowNull: false,
+                    autoIncrement: true,
+                    primaryKey: true,
+                    type: Sequelize.INTEGER
+                },
+                description: Sequelize.STRING,
+                'seo_text': {
+                    type: Sequelize.ARRAY(Sequelize.STRING)
+                },
+                'search_parameters': {
+                    type: Sequelize.ARRAY(Sequelize.ARRAY(Sequelize.STRING)),
+                    allowNull: false
+                },
+                'list_type': {
+                    type: Sequelize.STRING
+                },
+                'geo_type': {
+                    type: Sequelize.STRING
+                },
+                'created_at': Sequelize.DATE,
+                'updated_at': Sequelize.DATE
+            }
+        );
+    },
+    down: function(queryInterface) {
+        return queryInterface.dropTable('seo_school_list');
+    }
+};
