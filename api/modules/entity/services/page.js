@@ -9,6 +9,28 @@ var service = {
     name: 'page'
 };
 
+
+/**
+ * @param {{
+ *    entityId: ?number,
+ *    entityType: string,
+ *    alias: string,
+ *    views: (number|undefined),
+ *    description: (string|undefined)
+ * }} data
+ * @return {Promise<models.Page>}
+ */
+service.create = async(function(data) {
+    return models.Page.create(data);
+});
+
+/**
+ * @return {Promise<Array<models.Page>>}
+ */
+service.getAll = async(function() {
+    return models.Page.findAll();
+});
+
 /**
  * @param {number} entityId
  * @param {string} entityType
