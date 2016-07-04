@@ -83,23 +83,30 @@ class CsvConverter {
     /**
      * @public
      * @param {string=} opt_delimiter
+     * @param {{
+     *     notCureQuotes: boolean
+     * }=} opt_config
      * @return {string}
      */
-    toCsv(opt_delimiter) {
-        var json = this.getJson_();
+    toCsv(opt_delimiter, opt_config) {
+        var config = opt_config || {},
+            json = this.getJson_(config.notCureQuotes);
         return await(this.csvPromise_(json, opt_delimiter));
     }
 
     /**
      * @private
+     * @param {boolean=} opt_notCureQuotes
      * @return {object}
      */
-    getJson_() {
+    getJson_(opt_notCureQuotes) {
         var res = (this.type_ == 'object') ?
             this.input_ :
             JSON.parse(this.input_);
 
-        CsvConverter.cureQuotes(res);
+        if (!opt_notCureQuotes) {
+            CsvConverter.cureQuotes(res);
+        }
 
         return res;
     }
@@ -141,7 +148,7 @@ class CsvConverter {
      * @private
      * @param {object} json
      * @param {string=} opt_delimiter
-     * @return {promise<string>}
+     * @return {Promise<string>}
      */
     csvPromise_(json, opt_delimiter) {
         return new Promise (function(resolve, reject) {

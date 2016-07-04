@@ -1,0 +1,70 @@
+{
+  "schoolTypes": [
+    {
+      "name": "licei",
+      "value": "LYCEUM"
+    },
+    {
+      "name": "gimnazii",
+      "value": "GYMNASIUM"
+    },
+    {
+      "name": "kadetskiye",
+      "value": "CADET_SCHOOL"
+    },
+    {
+      "name": "centry-obrazovaniya",
+      "value": "EDUCATION_CENTER"
+    }
+  ],
+  "geoTypes": [
+    {
+      "name": "cao",
+      "value": "ЦАО"
+    },
+    {
+      "name": "sao",
+      "value": "САО"
+    },
+    {
+      "name": "svao",
+      "value": "СВАО"
+    },
+    {
+      "name": "vao",
+      "value": "ВАО"
+    },
+    {
+      "name": "uvao",
+      "value": "ЮВАО"
+    },
+    {
+      "name": "uao",
+      "value": "ЮАО"
+    },
+    {
+      "name": "svao",
+      "value": "СВАО"
+    },
+    {
+      "name": "uzao",
+      "value": "ЮЗАО"
+    },
+    {
+      "name": "uvao",
+      "value": "ЮВАО"
+    },
+    {
+      "name": "zao",
+      "value": "ЗАО"
+    },
+    {
+      "name": "szao",
+      "value": "СЗАО"
+    },
+    {
+      "name": "zelao",
+      "value": "ЗелАО"
+    }
+  ]
+}

@@ -1,19 +1,13 @@
 'use strict';
 
-const async = require('asyncawait/async'),
-    await = require('asyncawait/await'),
+const await = require('asyncawait/await'),
     path = require('path'),
     squel = require('squel');
 
 const Archiver = require('../modelArchiver/Archiver'),
-    CsvConverter = require('../modelArchiver/CsvConverter'),
-    services = require('../../../app/components/services').all,
     sequelize = require('../../../app/components/db');
 
-const seoPageAliases = require('./seoPageAliases.json'),
-    seoSchoolLists = require('./seoSchoolLists.json');
-
-const CSV_DELIMITER = '|';
+const seoPageAliases = require('./seoPageAliases.json');
 
 class SeoPageOperator {
 
@@ -28,7 +22,7 @@ class SeoPageOperator {
 
 
         pages.forEach(page => {
-           this.createDbPage_(page);
+            this.createDbPage_(page);
         });
     }
 
@@ -46,39 +40,6 @@ class SeoPageOperator {
             jsonData = JSON.stringify(data);
 
         this.archive_(jsonData, 'seo-page-alias.tar.gz');
-    }
-
-    /**
-     * Create archive from seoSchoolLists json with csv for loading to db
-     */
-    createSeoSchoolListsArchive() {
-        var date = new Date().toJSON(),
-            data = seoSchoolLists.map(seoSchoolList => {
-                return {
-                    description: seoSchoolList.description ?
-                        seoSchoolList.description :
-                        null,
-                    'seo_text': seoSchoolList.seoText ?
-                        '{' + seoSchoolList.seoText.join() + '}' :
-                        null,
-                    'search_parameters':
-                        '{' +
-                        seoSchoolList.searchParameters.map(parameter => {
-                            return '{' + parameter.join() + '}';
-                        }).join() +
-                        '}',
-                    'list_type': seoSchoolList.listType,
-                    'geo_type': seoSchoolList.geoType,
-                    'created_at': date,
-                    'updated_at': date
-                };
-            });
-
-        var csvConverter = new CsvConverter(data);
-        await(this.archive_(
-            csvConverter.toCsv(CSV_DELIMITER),
-            'seo-school-lists.tar.gz'
-        ));
     }
 
 
@@ -121,8 +82,6 @@ class SeoPageOperator {
 
         archiver.compress(csvData);
     }
-
-
 }
 
 module.exports = SeoPageOperator;
