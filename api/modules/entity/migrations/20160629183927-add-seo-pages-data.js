@@ -6,7 +6,7 @@ const async = require('asyncawait/async'),
     path = require('path');
 
 const SeoPageOperator =
-    require('../../console/modules/seoPageTools/SeoPageOperator.js');
+    require('../../console/modules/seo/SeoPageOperator.js');
 
 
 module.exports = {

@@ -102,7 +102,7 @@ service.getAllSchoolUrls = async(function() {
 
 /**
  * @param {string} alias
- * @return {id || null} school
+ * @return {?models.School} school
  */
 service.getSchoolByUrl = async(function(alias) {
     var page = await(services.page.getByAlias(alias, entityType.SCHOOL)),
