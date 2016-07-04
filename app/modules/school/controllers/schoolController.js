@@ -150,91 +150,91 @@ exports.view = async (function(req, res, next) {
             throw new errors.PageNotFoundError();
         } else if (!page.entityId) {
             next();
-        }
-
-        var schoolInstance = await(services.urls.getSchoolByUrl(alias));
-        if (!schoolInstance) {
-            throw new errors.SchoolNotFoundError();
-        } else if (alias != schoolInstance.alias) {
-            res.redirect(schoolInstance.alias);
         } else {
-            var user = req.user || {},
-                favoriteIds = await(
-                    services.favorite.getAllItemIdsByUserId(user.id)
-                ),
-                promises = {
-                    ege: services.egeResult.getAllBySchoolId(
-                        schoolInstance.id
+            var schoolInstance = await(services.urls.getSchoolByUrl(alias));
+            if (!schoolInstance) {
+                throw new errors.SchoolNotFoundError();
+            } else if (alias != schoolInstance.alias) {
+                res.redirect(schoolInstance.alias);
+            } else {
+                var user = req.user || {},
+                    favoriteIds = await(
+                        services.favorite.getAllItemIdsByUserId(user.id)
                     ),
-                    gia: services.giaResult.getAllBySchoolId(
-                        schoolInstance.id
-                    ),
-                    olymp: services.olimpResult.getAllBySchoolId(
-                        schoolInstance.id
-                    ),
-                    city: services.cityResult.getAll(),
-                    page: services.page.getDescription(
-                        schoolInstance.id,
-                        entityType.SCHOOL
-                    ),
-                    authSocialLinks: services.auth.getAuthSocialUrl(),
-                    popularSchools:
-                        services.school.getRandomPopularSchools(6),
-                    favorites: {
-                        items: services.school.getByIdsWithGeoData(
-                            favoriteIds
+                    promises = {
+                        ege: services.egeResult.getAllBySchoolId(
+                            schoolInstance.id
                         ),
-                        itemUrls: services.page.getAliases(
-                            favoriteIds,
+                        gia: services.giaResult.getAllBySchoolId(
+                            schoolInstance.id
+                        ),
+                        olymp: services.olimpResult.getAllBySchoolId(
+                            schoolInstance.id
+                        ),
+                        city: services.cityResult.getAll(),
+                        page: services.page.getDescription(
+                            schoolInstance.id,
                             entityType.SCHOOL
-                        )
-                    }
-                },
-                dataFromPromises = await(promises);
+                        ),
+                        authSocialLinks: services.auth.getAuthSocialUrl(),
+                        popularSchools: services.school.getRandomPopularSchools(6),
+                        favorites: {
+                            items: services.school.getByIdsWithGeoData(
+                                favoriteIds
+                            ),
+                            itemUrls: services.page.getAliases(
+                                favoriteIds,
+                                entityType.SCHOOL
+                            )
+                        }
+                    },
+                    dataFromPromises = await(promises);
 
-            var school = await(services.school.viewOne(schoolInstance.id));
+                var school = await(services.school.viewOne(schoolInstance.id));
 
-            var schoolAliases = await(services.page.getAliases(
-                dataFromPromises.popularSchools.map(school => school.id),
-                entityType.SCHOOL
-            ));
-            dataFromPromises.popularSchools = schoolView.joinAliases(
-                dataFromPromises.popularSchools,
-                schoolAliases
-            );
+                var schoolAliases = await(services.page.getAliases(
+                    dataFromPromises.popularSchools.map(school => school.id),
+                    entityType.SCHOOL
+                ));
+                dataFromPromises.popularSchools = schoolView.joinAliases(
+                    dataFromPromises.popularSchools,
+                    schoolAliases
+                );
 
 
-            var isUserCommented = typeof await(
-                    services.userData.checkCredentials(
-                        school.id,
-                        req.user && req.user.id
-                    )) !== 'undefined';
+                var isUserCommented = typeof await(
+                        services.userData.checkCredentials(
+                            school.id,
+                            req.user && req.user.id
+                        )) !== 'undefined';
 
-            user = userView.school(user, isUserCommented);
+                user = userView.school(user, isUserCommented);
 
-            res.header('Content-Type', 'text/html; charset=utf-8');
-            res.end(
-                soy.render('sm.lSchool.Template.school', {
-                    params: {
-                        data:
-                            schoolView.default(
+                res.header('Content-Type', 'text/html; charset=utf-8');
+                res.end(
+                    soy.render('sm.lSchool.Template.school', {
+                        params: {
+                            data: schoolView.default(
                                 school,
                                 dataFromPromises,
                                 user
                             ),
-                        config: {
-                            staticVersion: config.lastBuildTimestamp,
-                            year: new Date().getFullYear(),
-                            analyticsId: analyticsId,
-                            yandexMetrikaId: yandexMetrikaId,
-                            csrf: req.csrfToken(),
-                            domain: DOMAIN,
-                            fbClientId: FB_CLIENT_ID
+                            config: {
+                                staticVersion: config.lastBuildTimestamp,
+                                year: new Date().getFullYear(),
+                                analyticsId: analyticsId,
+                                yandexMetrikaId: yandexMetrikaId,
+                                csrf: req.csrfToken(),
+                                domain: DOMAIN,
+                                fbClientId: FB_CLIENT_ID
+                            }
                         }
-                    }
-                }));
+                    }));
+            }
         }
     } catch (error) {
+        console.log(error);
+
         res.status(error.code || 500);
         next();
     }
