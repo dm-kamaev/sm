@@ -16,7 +16,7 @@ searchView.schoolTypeFilterIds = function(typeInstances) {
 };
 
 /**
- * Update filters in params
+ * Update opt_filters in params
  * @param {Object} searchParams
  * @param {?string} searchParams.name
  * @param {?Array.<number>} searchParams.classes
@@ -29,16 +29,29 @@ searchView.schoolTypeFilterIds = function(typeInstances) {
  * @param {?number} searchParams.sortType
  * @param {?number} searchParams.page
  *
- * @param {Object} filters
- * @param {?Array.<number>} filters.schoolType
- * @param {?Array.<number>} filters.ege
- * @param {?Array.<number>} filters.gia
- * @param {?Array.<number>} filters.olimp
+ * @param {Object=} opt_filters
+ * @param {?Array.<number>} opt_filters.schoolType
+ * @param {?Array.<number>} opt_filters.ege
+ * @param {?Array.<number>} opt_filters.gia
+ * @param {?Array.<number>} opt_filters.olimp
  *
- * @return {Object}
+ * @return {{
+ *     name: string,
+ *     schoolType: Array<number>,
+ *     classes: Array<number>,
+ *     gia: Array<number>,
+ *     ege: Array<number>,
+ *     olimp: Array<number>,
+ *     metroId: ?number,
+ *     areaId: ?number,
+ *     districtId: ?number,
+ *     sortType: ?number,
+ *     page: number
+ * }}
  */
-searchView.params = function(searchParams, filters) {
-    var name;
+searchView.params = function(searchParams, opt_filters) {
+    var name,
+        filters = opt_filters || {};
 
     if (searchParams.areaId ||
         searchParams.metroId ||
@@ -51,16 +64,54 @@ searchView.params = function(searchParams, filters) {
 
     return {
         name: name,
-        schoolType: filters.schoolType || [],
+        schoolType: filters.schoolType ||
+            searchParams.schoolType ||
+            [],
         classes: searchParams.classes || [],
-        gia: filters.gia || [],
-        ege: filters.ege || [],
-        olimp: filters.olimp || [],
+        gia: filters.gia ||
+            searchParams.gia ||
+            [],
+        ege: filters.ege ||
+            searchParams.ege ||
+            [],
+        olimp: filters.olimp ||
+            searchParams.olimp ||
+            [],
         metroId: searchParams.metroId || null,
         areaId: searchParams.areaId || null,
         districtId: searchParams.districtId || null,
         sortType: searchParams.sortType || null,
         page: searchParams.page || 0
+    };
+};
+
+/**
+ * @param {{
+ *     searchParameters: string
+ * }} seoSchoolList
+ * @return {{
+ *     searchText: string,
+ *     searchParams: {
+ *         name: string,
+ *         schoolType: Array<number>,
+ *         classes: Array<number>,
+ *         gia: Array<number>,
+ *         ege: Array<number>,
+ *         olimp: Array<number>,
+ *         metroId: ?number,
+ *         areaId: ?number,
+ *         districtId: ?number,
+ *         sortType: ?number,
+ *         page: number
+ *     }
+ * }}
+ */
+searchView.seoSchoolListParams = function(seoSchoolList) {
+    var storedParams = JSON.parse(seoSchoolList.searchParameters);
+
+    return {
+        searchParams: searchView.params(storedParams),
+        searchText: storedParams.name || ''
     };
 };
 

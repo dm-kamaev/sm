@@ -11,12 +11,12 @@ module.exports = {
                     primaryKey: true,
                     type: Sequelize.INTEGER
                 },
-                description: Sequelize.STRING,
+                'seo_title': Sequelize.STRING,
                 'seo_text': {
                     type: Sequelize.ARRAY(Sequelize.STRING)
                 },
                 'search_parameters': {
-                    type: Sequelize.ARRAY(Sequelize.ARRAY(Sequelize.STRING)),
+                    type: Sequelize.STRING,
                     allowNull: false
                 },
                 'list_type': {

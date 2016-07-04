@@ -501,6 +501,23 @@ exports.getTypeFilters = async(function() {
     return await(models.SchoolTypeFilter.findAll());
 });
 
+
+/**
+ * Return school type filter, found by given value
+ * @param {string} typeFilterValue
+ * @return {Promise<models.schoolTypeFilter>}
+ */
+exports.getTypeFilterByValue = function(typeFilterValue) {
+    return models.SchoolTypeFilter.findOne({
+            where: {
+                values: {
+                    $contains: [typeFilterValue]
+                }
+            }
+        }
+    );
+};
+
 /**
  * Get array with ids of school types by array with their aliases
  * @param {Array.<string>} aliases
@@ -532,6 +549,20 @@ exports.getSchoolTypesByAliases = function(aliases) {
  * @param {?number} params.areaId
  * @param {?number} params.sortType
  * @param {?number} params.page
+ *
+ * @return {{
+ *     name: string,
+ *     schoolType: Array<number>,
+ *     classes: Array<number>,
+ *     gia: Array<number>,
+ *     ege: Array<number>,
+ *     olimp: Array<number>,
+ *     metroId: ?number,
+ *     areaId: ?number,
+ *     districtId: ?number,
+ *     sortType: ?number,
+ *     page: number
+ * }}
  */
 exports.initSearchParams = async(function(params) {
     /** Transform aliases in filters into ids **/

@@ -9,8 +9,8 @@ const sequelize = require('../../../../app/components/db'),
 var SeoSchoolList = sequelize.define(
     'SeoSchoolList',
     {
-        description: {
-            field: 'text',
+        seoTitle: {
+            field: 'seo_title',
             type: Sequelize.STRING
         },
         seoText: {
@@ -20,7 +20,7 @@ var SeoSchoolList = sequelize.define(
         searchParameters: {
             field: 'search_parameters',
             allowNull: false,
-            type: Sequelize.ARRAY(Sequelize.ARRAY(Sequelize.STRING))
+            type: Sequelize.STRING
         },
         listType: {
             field: 'list_type',
