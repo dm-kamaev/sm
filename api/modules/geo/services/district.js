@@ -38,6 +38,20 @@ service.getAllWithAreas = async(function() {
 
 
 /**
+ * Return district, found by name
+ * @param {string} name
+ * @return {models.District}
+ */
+service.getByName = async(function(name) {
+    return await(models.District.findOne({
+        where: {
+            name: name
+        }
+    }));
+});
+
+
+/**
  * Return coordinates of center of district with given id
  * @param {number} districtId
  * @return {Array<number>}
