@@ -168,8 +168,8 @@ class SeoSchoolListOperator {
             searchType = itemData.searchType,
             date = new Date().toJSON();
         return {
-            'seo_title': null,
-            'seo_text': null,
+            'title': null,
+            'text': null,
             'search_parameters': JSON.stringify(
                 this.generateSearchParameters_(listType, geoType, searchType)
             ),

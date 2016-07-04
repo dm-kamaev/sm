@@ -51,24 +51,15 @@ service.getAll = function() {
  * }} data
  */
 service.updateByType = async(function(type, data) {
-    var conditions = {};
-
-    if (type.geoType) {
-        conditions = {
+    await(models.SeoSchoolList.update(
+        data,
+        {
             where: {
                 listType: type.listType,
-                geoType: type.geoType
+                geoType: type.geoType || null
             }
-        };
-    } else {
-        conditions = {
-            where: {
-                listType: type.listType
-            }
-        };
-    }
-
-    await(models.SeoSchoolList.update(data, conditions));
+        }
+    ));
 });
 
 /**
@@ -80,24 +71,12 @@ service.updateByType = async(function(type, data) {
  * @return {models.SeoSchoolList}
  */
 service.getByRequestParams = async(function(requestParams) {
-    var conditions = {};
-
-    if (requestParams.geoType) {
-        conditions = {
-            where: {
-                listType: requestParams.listType,
-                geoType: requestParams.geoType
-            }
-        };
-    } else {
-        conditions = {
-            where: {
-                listType: requestParams.listType
-            }
-        };
-    }
-
-    return await(models.SeoSchoolList.findOne(conditions));
+    return await(models.SeoSchoolList.findOne({
+        where: {
+            listType: requestParams.listType,
+            geoType: requestParams.geoType || null
+        }
+    }));
 });
 
 module.exports = service;

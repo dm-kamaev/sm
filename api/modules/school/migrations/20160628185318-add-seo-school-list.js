@@ -11,8 +11,8 @@ module.exports = {
                     primaryKey: true,
                     type: Sequelize.INTEGER
                 },
-                'seo_title': Sequelize.STRING,
-                'seo_text': {
+                'title': Sequelize.STRING,
+                'text': {
                     type: Sequelize.ARRAY(Sequelize.STRING)
                 },
                 'search_parameters': {
