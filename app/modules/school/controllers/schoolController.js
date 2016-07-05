@@ -39,6 +39,7 @@ exports.list = async (function(req, res, next) {
     try {
         var searchParams = {},
             searchText = '',
+            seoData = {},
             user = req.user || {};
 
         if (req.params && req.params.listType) {
@@ -55,6 +56,7 @@ exports.list = async (function(req, res, next) {
 
             searchParams = seoSchoolListParams.searchParams;
             searchText = seoSchoolListParams.searchText;
+            seoData = seoSchoolListParams.seo;
         } else {
             searchParams =
                 await(services.search.initSearchParams(req.query));
@@ -106,7 +108,8 @@ exports.list = async (function(req, res, next) {
                     user: userView.default(user),
                     favorites: {
                         schools: favorites
-                    }
+                    },
+                    seo: seoData
                 },
                 searchText: searchText,
                 countResults: schoolsList.countResults,

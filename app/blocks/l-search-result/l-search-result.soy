@@ -5,7 +5,7 @@
  * Schools result list
  * @param? params {{
  *     data: {
- *         schools: [{
+ *         schools: Array<{
  *             id: number,
  *             alias: string,
  *             name: {
@@ -18,7 +18,7 @@
  *             metroStations: string[],
  *             area: [],
  *             isFavorite: boolean
- *         }],
+ *         }>,
  *         filters: {sm.lSearchResult.bFilters.Template.Params},
  *         user: ?{
  *            firstName: (string|undefined),
@@ -30,10 +30,12 @@
  *            fb: ?string
  *         },
  *         seo: ?{
- *             title: string,
- *             description: string,
- *             textLeft: Array<string>,
- *             textRight: Array<string>
+ *             metaTitle: (string|undefined),
+ *             metaDescription: (string|undefined),
+ *             title: (string|undefined),
+ *             description: (string|undefined),
+ *             textLeft: (Array<string>|undefined),
+ *             textRight: (Array<string>|undefined)
  *         }
  *     },
  *     searchText: string,
@@ -87,11 +89,20 @@
         {call .content_ data="all" /}
     {/let}
 
+    {let $description kind="html"}
+        {call .description_ data="all" /}
+    {/let}
+
+    {let $title kind="html"}
+        {call .title_ data="all" /}
+    {/let}
+
     {call sm.iLayout.Template.layout}
         {param params: [
             'data': [
-                'title': 'Результаты поиска на Школах Мела',
+                'title': $title,
                 'content': $content,
+                'description': $description,
                 'header': [
                     'url': '/',
                     'bottomLine': true,
@@ -119,6 +130,45 @@
             ]
         ] /}
     {/call}
+{/template}
+
+/**
+ * @param params {{
+ *     data: {
+ *         (seo: {
+ *             metaDescription: (string|undefined)
+ *         }|undefined)
+ *     }
+ * }}
+ */
+{template .description_ kind="html"}
+    {if $params.data?.seo and $params.data?.seo?.metaDescription}
+        {$params.data?.seo?.metaDescription}
+    {else}
+        Интерактивная карта Москвы с полной информацией
+        о всех образовательных учреждениях города Москвы.
+        Список школ, лицеев и гимназий. Отзывы родителей и выпускников.
+    {/if}
+{/template}
+
+
+/**
+ * @param params {{
+ *     data: {
+ *         (seo: {
+ *             metaTitle: (string|undefined)
+ *         }|undefined)
+ *     }
+ * }}
+ */
+{template .title_ kind="html"}
+    {if $params.data?.seo and $params.data?.seo?.metaTitle}
+            {$params.data?.seo?.metaTitle}
+    {else}
+       Школы Москвы на карте.
+       Список школ Москвы с возможностью выбора по параметрам.
+       Школы Мела.
+    {/if}
 {/template}
 
 
@@ -253,7 +303,8 @@
  * @param? params {
  *     data: {
  *         seo: {
- *             title: ?string
+ *             title: (string|undefined),
+ *             description: (string|undefined)
  *         }
  *     },
  *     countResults: ?number,
@@ -264,7 +315,9 @@
     <span class="l-search-result__list-header-text">
             {if $params.data?.seo and $params.data?.seo?.title}
                 {call .headerText_ data="all" /}
-                {call .headerDescription_ data="all" /}
+                {if $params.data.seo.description}
+                    {call .headerDescription_ data="all" /}
+                {/if}
             {else}
                 {call .generateHeaderText_ data="all" /}
             {/if}
@@ -277,17 +330,21 @@
  * @param? params {
  *     data: {
  *         seo: {
- *             title: ?string
+ *             title: (string|undefined),
+ *             description: (string|undefined)
  *         }
  *     }
  * }
  */
 {template .headerText_ private="true"}
-    <div class="l-search-result__list-header-text
+    <h1 class="l-search-result__list-header-text
                 l-search-result__list-header-text_strong
-                l-search-result__list-header-text_title">
+                {$params.data.seo.description ?
+                    ' l-search-result__list-header-text_title' :
+                    ''}
+                ">
         {$params.data.seo.title}
-    </div>
+    </h1>
 {/template}
 
 
@@ -443,7 +500,8 @@
  * }
  */
 {template .footerSeo_ private="true"}
-    {if $params.data?.seo}
+    {if $params.data?.seo and
+        ($params.data?.seo.textLeft or $params.data?.seo.textRight)}
         <div class="l-search-result__footer-seo">
             <div class="l-search-result__text-seo
                         l-search-result__text-seo_left">
@@ -468,9 +526,11 @@
  * @param? text {Array<string>}
  */
 {template .textSeo_ private="true"}
-    {for $i in range(length($text))}
-        <div class="l-search-result__paragraph-seo">
-            {$text[$i]}
-        </div>
-    {/for}
+    {if $text}
+        {for $i in range(length($text))}
+            <div class="l-search-result__paragraph-seo">
+                {$text[$i]}
+            </div>
+        {/for}
+    {/if}
 {/template}
