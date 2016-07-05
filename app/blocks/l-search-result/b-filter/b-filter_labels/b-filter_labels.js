@@ -74,7 +74,13 @@ goog.scope(function() {
     FilterLabels.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
 
-        this.initFilterItemsListeners();
+        var handler = this.getHandler();
+
+        handler.listen(
+            this.getElement(),
+            goog.events.EventType.CLICK,
+            this.onRootElementClick_
+        );
     };
 
 
@@ -83,8 +89,7 @@ goog.scope(function() {
      * @param {({
      *     value: string,
      *     label: string,
-     *     name: string,
-     *     id: string
+     *     name: string
      * }|Element)} data
      * @public
      */
@@ -101,7 +106,6 @@ goog.scope(function() {
         goog.dom.removeNode(filterSection);
 
         this.initFilterItems(this.getElement());
-        this.initFilterItemsListeners();
 
         this.dispatchEvent({
             'type': FilterLabels.Event.UNCHECKED_FILTER
@@ -114,34 +118,16 @@ goog.scope(function() {
      * @param {{
      *     value: string,
      *     label: string,
-     *     name: string,
-     *     id: string
+     *     name: string
      * }} params data-params Element
      * @public
      */
     FilterLabels.prototype.addItem = function(params) {
         this.renderItem_(params);
-
         this.initFilterItems(this.getElement());
-        this.initFilterItemsListeners();
 
         this.dispatchEvent({
             'type': FilterLabels.Event.CHECKED_FILTER
-        });
-    };
-
-
-    /**
-     * Handler change item
-     * @param {Object} event
-     * @override
-     */
-    FilterLabels.prototype.onChangeItem = function() {
-        var filterSection = this.getItem_(event.target);
-
-        this.dispatchEvent({
-            'type': FilterLabels.Event.UNCHECKED_ITEM,
-            'data': this.getDataParams(filterSection)
         });
     };
 
@@ -151,7 +137,7 @@ goog.scope(function() {
      * @param {Element} element
      * @override
      */
-    Filter.prototype.initFilterItems = function(element) {
+    FilterLabels.prototype.initFilterItems = function(element) {
         this.filterSectionElements = goog.dom.getElementsByClass(
             Filter.CssClass.FILTER_SECTION,
             element
@@ -172,52 +158,49 @@ goog.scope(function() {
      * Init Filter Items Listeners
      * @override
      */
-    Filter.prototype.initFilterItemsListeners = function() {
-        var handler = this.getHandler();
+    FilterLabels.prototype.initFilterItemsListeners = function() {
+    };
 
-        for (var i = 0; i < this.inputElements.length; i++) {
-            handler.listen(
-                this.inputElements[i],
-                goog.events.EventType.CLICK,
-                this.onChangeFilter
-            );
 
-            handler.listen(
-                this.inputElements[i],
-                goog.events.EventType.CLICK,
-                this.onChangeItem
-            );
-        }
+    /**
+     * on Root Element Click
+     * @param {Object} event
+     * @private
+     */
+    FilterLabels.prototype.onRootElementClick_ = function(event) {
+        if (this.isRemoveClick_(event.target)) {
+            this.removeItem(event.target);
 
-        if (this.crossRemove_.length) {
-            for (var i = 0; i < this.crossRemove_.length; i++) {
-                this.getHandler().listen(
-                    this.crossRemove_[i],
-                    goog.events.EventType.CLICK,
-                    this.onRemoveClick_
-                );
+            var filterSection = this.getItem_(event.target);
 
-                this.getHandler().listen(
-                    this.crossRemove_[i],
-                    goog.events.EventType.CLICK,
-                    this.onChangeItem
-                );
-            }
+            this.dispatchEvent({
+                'type': FilterLabels.Event.UNCHECKED_ITEM,
+                'data': this.getDataParams(filterSection)
+            });
         }
     };
 
 
     /**
-     * Remove filter item click
-     * @param {Object} event
+     * Checks is a Remove node or not
+     * @return {Element} node
      * @private
      */
-    FilterLabels.prototype.onRemoveClick_ = function(event) {
-        this.removeItem(event.target);
+    FilterLabels.prototype.isRemoveClick_ = function(node) {
+        var result;
 
-        this.dispatchEvent({
-            'type': FilterLabels.CssClass.UNCHECKED_ITEM
-        });
+        for (var i = 0; i < this.crossRemove_.length; i++) {
+            var isContains = goog.dom.contains(
+                this.crossRemove_[i],
+                node
+            );
+
+            if (this.crossRemove_[i] == node || isContains) {
+                result = true;
+            }
+        }
+
+        return result;
     };
 
 
@@ -240,8 +223,7 @@ goog.scope(function() {
      * @param {{
      *     value: string,
      *     label: string,
-     *     name: string,
-     *     id: string
+     *     name: string
      * }} templateParams
      * @private
      */
@@ -252,13 +234,17 @@ goog.scope(function() {
                     filter: {
                         label: templateParams.label,
                         value: templateParams.value,
-                        id: templateParams.id,
                         isChecked: true
                     },
                     name: templateParams.name
                 }
             }
         );
-        goog.dom.appendChild(this.filtersElement, element);
+
+        goog.dom.insertChildAt(
+            this.filtersElement,
+            element,
+            0
+        );
     };
 });  // goog.scope

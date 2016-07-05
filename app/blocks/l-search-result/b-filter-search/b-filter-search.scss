@@ -27,6 +27,7 @@
     max-height: 255px;
     padding-top: 10px;
     padding-bottom: 10px;
+    padding-right: 20px;
 }
 
 .b-filter-search__section_search {
@@ -36,8 +37,9 @@
 }
 
 .b-filter-search__section_selected {
-    overflow: hidden;
+    overflow: auto;
     max-height: 110px;
+    padding-right: 20px;
 
     background-color: #f7f7f1;
 

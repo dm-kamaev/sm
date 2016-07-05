@@ -29,8 +29,7 @@
  *         value: ?string,
  *         isChecked: ?boolean
  *     },
- *     name: ?string,
- *     id: number
+ *     name: ?string
  * }
  * @override
  */
@@ -40,7 +39,6 @@
             {param json: [
                 'value': $params.filter.value,
                 'label': $params.filter.label,
-                'id': $params.filter.id,
                 'name': $params.name
             ]/}
         {/call}
@@ -48,8 +46,21 @@
 
     <div class="{call .rootClass/}__section" data-params="{$dataParams}">
         <div class="{call .rootClass/}__filter">
-            {call .input data="all" /}
-            {call .label data="all" /}
+            {call .input}
+                {param params: [
+                    'filter': $params.filter,
+                    'name': $params.name,
+                    'id': $params.filter.value + '-selected'
+                ]/}
+            {/call}
+
+            {call .label}
+                {param params: [
+                    'filter': $params.filter,
+                    'name': $params.name,
+                    'id': $params.filter.value + '-selected'
+                ]/}
+            {/call}
         </div>
 
         {call .cross_ /}
