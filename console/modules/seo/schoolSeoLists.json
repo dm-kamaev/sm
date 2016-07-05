@@ -2,19 +2,31 @@
   "schoolTypes": [
     {
       "name": "licei",
-      "value": "LYCEUM"
+      "value": "LYCEUM",
+      "plural": "лицеи",
+      "genetive": "лицеев",
+      "accusative": "лицей"
     },
     {
       "name": "gimnazii",
-      "value": "GYMNASIUM"
+      "value": "GYMNASIUM",
+      "plural": "гимназии",
+      "genetive": "гимназий",
+      "accusative": "гимназию"
     },
     {
       "name": "kadetskiye",
-      "value": "CADET_SCHOOL"
+      "value": "CADET_SCHOOL",
+      "plural": "кадетские школы",
+      "genetive": "кадетских школ",
+      "accusative": "кадетскую школу"
     },
     {
       "name": "centry-obrazovaniya",
-      "value": "EDUCATION_CENTER"
+      "value": "EDUCATION_CENTER",
+      "plural": "центры образования",
+      "genetive": "центров образования",
+      "accusative": "центр образования"
     }
   ],
   "geoTypes": [
