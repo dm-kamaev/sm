@@ -799,13 +799,13 @@ goog.scope(function() {
         };
 
         if (type == 'metro') {
-            data.metroId = item['id'];
+            data['metroId'] = item['id'];
         }
         else if (type == 'areas') {
-            data.areaId = item['id'];
+            data['areaId'] = item['id'];
         }
         else if (type == 'districts') {
-            data.districtId = item['id'];
+            data['districtId'] = item['id'];
         }
         this.setData(data);
     };
