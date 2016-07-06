@@ -29,6 +29,13 @@ var actualizeSeoSchoolListSearchParams = async(function() {
 });
 
 
+var createRobotsRules = async(function () {
+    var seoSchoolListOperator = new SeoSchoolListOperator();
+
+    await(seoSchoolListOperator.generateRobotsRules());
+});
+
+
 commander
     .command('archive-seo-pages')
     .description('creates seo pages archive from json')
@@ -44,5 +51,11 @@ commander
     .command('actualize-seo-school-list-search-params')
     .description('actualizes search params for seo school lists')
     .action(actualizeSeoSchoolListSearchParams);
+
+commander
+    .command('create-robots-rules-file')
+    .description('create rules for robots.txt to disallow indexing ' +
+    'predefined seo search with parameters')
+    .action(createRobotsRules);
 
 exports.Command;

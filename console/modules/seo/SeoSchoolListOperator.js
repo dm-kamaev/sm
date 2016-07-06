@@ -1,9 +1,19 @@
+/**
+ * @fileOverview Class to manipulate seo school lists - special 'seo' search
+ * pages with predefined search parameters.
+ * It can create seo_school_list table archive from schoolSeoLists.json - file
+ * with possible predefined search types,
+ * update search parameters in seo_school_list table, using schoolSeoLists.json,
+ * generate possible aliases combinations for disabling index with query
+ * parameters in robots.txt.
+ * The schoolSeoLists.json must be in script folder for normal work.
+ */
 'use strict';
 
-'use strict';
 
 const await = require('asyncawait/await'),
     path = require('path'),
+    fs = require('fs'),
     lodash = require('lodash');
 
 const Archiver = require('../modelArchiver/Archiver'),
@@ -12,9 +22,20 @@ const Archiver = require('../modelArchiver/Archiver'),
 
 const schoolSeoLists = require('./schoolSeoLists.json');
 
-const CSV_DELIMITER = '|';
+const CSV_DELIMITER = '|',
+    ROBOTS_REPORT = 'robots-report',
+    ARCHIVE_FILE = 'seo-school-lists.tar.gz';
 
 class SeoSchoolListOperator {
+
+    /**
+     * Generate rules for robots.txt in export file
+     */
+    generateRobotsRules() {
+        var seoListsAliases = this.generateListsAliases_(schoolSeoLists);
+
+        this.createRobotsRulesFile(seoListsAliases);
+    }
 
 
     /**
@@ -25,16 +46,76 @@ class SeoSchoolListOperator {
         var seoLists = this.generateLists_(schoolSeoLists),
             csv = this.createCsv_(seoLists);
 
-        await(this.archive_(csv, 'seo-school-lists.tar.gz'));
+        await(this.archive_(csv, ARCHIVE_FILE));
     }
 
 
+    /**
+     * Fill search parameters field in seo school lists table
+     * schoolType and districtId parameters takes from existing tables in db
+     */
     actualizeDbSearchParams() {
         var seoLists = this.generateLists_(schoolSeoLists);
 
         this.actualizeDbSearchParams_(seoLists);
     }
 
+
+    /**
+     * Generate array of possible seo lists aliases
+     * @param {{
+     *     schoolType: Array<{
+     *         name: string,
+     *         value: string
+     *     }>,
+     *     geoType: Array<{
+     *         name: string,
+     *         value: string
+     *     }>
+     * }} types
+     * @return {Array<string>}
+     * @private
+     */
+    generateListsAliases_(types) {
+        var schoolUrl = '/school',
+            schoolTypeAliases = types.schoolTypes.map(schoolType => {
+                return schoolUrl + '/' + schoolType.name;
+            }),
+            geoTypeAliases = types.geoTypes.map(geoType => {
+                return schoolUrl + '/' + geoType.name;
+            }),
+            unFlattenedMixedTypeAliases = types.schoolTypes.map(schoolType => {
+                return types.geoTypes.map(geoType => {
+                    return schoolUrl + '/' + schoolType.name + '/' + geoType.name;
+                });
+            }),
+            mixedTypeAliases = lodash.flatten(unFlattenedMixedTypeAliases);
+
+        return [].concat(schoolTypeAliases)
+            .concat(geoTypeAliases)
+            .concat(mixedTypeAliases);
+    }
+
+
+    /**
+     * Create or rewrite file with rules for robots.txt from given aliases
+     * @param {Array<string>} aliases
+     */
+    createRobotsRulesFile(aliases) {
+        var filePath = path.join(__dirname, ROBOTS_REPORT);
+
+        if (!fs.existsSync(filePath)) {
+            fs.open(filePath, "wx", function (err, fd) {
+                fs.close(fd);
+            });
+        }
+        fs.writeFileSync(filePath, '');
+
+        aliases.map(alias => {
+            var data = 'Disallow: ' + alias + '?*\n';
+            fs.appendFileSync(filePath, data);
+        });
+    }
 
     /**
      * Generate objects of seo school lists
