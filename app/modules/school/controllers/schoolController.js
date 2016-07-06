@@ -15,8 +15,9 @@ const logger = require('../../../components/logger/logger').getLogger('app');
 const DOMAIN = config.url.protocol + '://' + config.url.host;
 const FB_CLIENT_ID = config.facebookClientId;
 
-var async = require('asyncawait/async');
-var await = require('asyncawait/await');
+const async = require('asyncawait/async'),
+    await = require('asyncawait/await'),
+    lodash = require('lodash');
 
 
 exports.createComment = async (function(req, res) {
@@ -42,7 +43,9 @@ exports.list = async (function(req, res, next) {
             seoData = {},
             user = req.user || {};
 
-        if (req.params && req.params.listType) {
+        if (req.params &&
+            req.params.listType &&
+            lodash.isEmpty(req.query)) {
             var seoSchoolList = await(services.seoSchoolList.getByRequestParams(
                     req.params
                 ));
@@ -236,8 +239,6 @@ exports.view = async (function(req, res, next) {
             }
         }
     } catch (error) {
-        console.log(error);
-
         res.status(error.code || 500);
         next();
     }
