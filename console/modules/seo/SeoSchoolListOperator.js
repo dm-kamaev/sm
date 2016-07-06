@@ -2,11 +2,13 @@
  * @fileOverview Class to manipulate seo school lists - special 'seo' search
  * pages with predefined search parameters.
  * It can create seo_school_list table archive from schoolSeoLists.json - file
- * with possible predefined search types,
+ * with possible predefined search types and seo-texts.csv file,
  * update search parameters in seo_school_list table, using schoolSeoLists.json,
  * generate possible aliases combinations for disabling index with query
  * parameters in robots.txt.
  * The schoolSeoLists.json must be in script folder for normal work.
+ * It can create archive with seo texts from 'seo-texts.csv' for further
+ * update school seo lists page
  */
 'use strict';
 
@@ -24,7 +26,9 @@ const schoolSeoLists = require('./schoolSeoLists.json');
 
 const CSV_DELIMITER = '|',
     ROBOTS_REPORT = 'robots-report',
-    ARCHIVE_FILE = 'seo-school-lists.tar.gz';
+    SEO_SCHOOL_LISTS_ARCHIVE = 'seo-school-lists.tar.gz',
+    TEXTS_ARCHIVE = 'seo-school-lists-texts.tar.gz',
+    TEXTS_CSV = 'seo-texts.csv';
 
 class SeoSchoolListOperator {
 
@@ -41,12 +45,17 @@ class SeoSchoolListOperator {
     /**
      * Fills search parameters in school seo lists for different
      * variations of listType and geoType
+     * Also it takes seo_texts from archive nearby
+     * @param {string=} opt_csvFile
      */
-    createArchive() {
-        var seoLists = this.generateLists_(schoolSeoLists),
-            csv = this.createCsv_(seoLists);
+    createArchive(opt_csvFile) {
+        var csvFile = opt_csvFile || TEXTS_CSV,
+            seoTexts = this.getTextsFromCsv_(csvFile),
+            seoLists = this.generateLists_(schoolSeoLists, seoTexts),
+            dbSeoLists = seoLists.map(this.prepareObjectForDb_),
+            csv = this.createCsv_(dbSeoLists);
 
-        await(this.archive_(csv, ARCHIVE_FILE));
+        await(this.archive_(csv, SEO_SCHOOL_LISTS_ARCHIVE));
     }
 
 
@@ -57,7 +66,54 @@ class SeoSchoolListOperator {
     actualizeDbSearchParams() {
         var seoLists = this.generateLists_(schoolSeoLists);
 
-        this.actualizeDbSearchParams_(seoLists);
+        this.actualizeDbSchoolListsParams_(seoLists);
+    }
+
+    /**
+     * Parse seo texts from given csv and put it to db
+     * @param {string=} opt_csvFile
+     */
+    archiveTextsFromCsv(opt_csvFile) {
+        var csvFile = opt_csvFile || TEXTS_CSV,
+            seoTexts = this.getTextsFromCsv_(csvFile),
+            dbTexts = seoTexts.map(this.prepareObjectForDb_),
+            csv = this.createCsv_(dbTexts);
+
+        await(this.archive_(csv, TEXTS_ARCHIVE));
+    }
+
+
+    /**
+     * Parses texts objects from given csv
+     * @param {string} csv
+     * @return {Array<{
+     *     listType: string,
+     *     geoType: ?string,
+     *     texts: Array<string>
+     * }>}
+     * @private
+     */
+    getTextsFromCsv_(csv) {
+        var csvFilePath = path.join(__dirname, csv),
+            csvFileData = fs.readFileSync(csvFilePath).toString(),
+            csvConverter = new CsvConverter(csvFileData),
+            csvData = await(csvConverter.toJson({
+                delimiter: '|',
+                headers: [
+                    'listType',
+                    'geoType',
+                    'description',
+                    'textLeft',
+                    'textRight'
+                ]
+            }));
+        return csvData.map(item => {
+            return {
+                listType: item.listType,
+                geoType: item.geoType || null,
+                text: [item.description, item.textLeft, item.textRight]
+            };
+        });
     }
 
 
@@ -86,7 +142,9 @@ class SeoSchoolListOperator {
             }),
             unFlattenedMixedTypeAliases = types.schoolTypes.map(schoolType => {
                 return types.geoTypes.map(geoType => {
-                    return schoolUrl + '/' + schoolType.name + '/' + geoType.name;
+                    return schoolUrl + '/' +
+                        schoolType.name + '/' +
+                        geoType.name;
                 });
             }),
             mixedTypeAliases = lodash.flatten(unFlattenedMixedTypeAliases);
@@ -129,39 +187,53 @@ class SeoSchoolListOperator {
      *         value: string
      *     }>
      * }} types
+     * @param {Array<{
+     *     listType: string,
+     *     geoType: string,
+     *     text: Array<string>
+     * }>} texts
      * @return {Array<{
      *     description: string,
-     *     seo_text: string,
-     *     search_parameters: string,
-     *     list_type: string,
-     *     geo_type: string,
-     *     created_at: Date,
-     *     updated_at: Date
+     *     seoText: string,
+     *     searchParameters: string,
+     *     listType: string,
+     *     geoType: string,
+     *     createdAt: Date,
+     *     updatedAt: Date
      * }>}
      * @private
      */
-    generateLists_(types) {
+    generateLists_(types, texts) {
         var schoolTypeLists = types.schoolTypes.map(schoolType => {
-                return this.generateList_({
-                    listType: schoolType,
-                    geoType: null,
-                    searchType: 'institution'
-                });
+                return this.generateList_(
+                    {
+                        listType: schoolType,
+                        geoType: null,
+                        searchType: 'institution'
+                    },
+                    texts
+                );
             }),
             geoTypeLists = types.geoTypes.map(geoType => {
-                return this.generateList_({
-                    listType: geoType,
-                    geoType: null,
-                    searchType: 'district'
-                });
+                return this.generateList_(
+                    {
+                        listType: geoType,
+                        geoType: null,
+                        searchType: 'district'
+                    },
+                    texts
+                );
             }),
             unFlattenedMixedTypeLists = types.schoolTypes.map(schoolType => {
                 return types.geoTypes.map(geoType => {
-                    return this.generateList_({
-                        listType: schoolType,
-                        geoType: geoType,
-                        searchType: 'mixed'
-                    });
+                    return this.generateList_(
+                        {
+                            listType: schoolType,
+                            geoType: geoType,
+                            searchType: 'mixed'
+                        },
+                        texts
+                    );
                 });
             }),
             mixedTypeLists = lodash.flatten(unFlattenedMixedTypeLists);
@@ -185,9 +257,9 @@ class SeoSchoolListOperator {
      * }>} schoolLists
      * @private
      */
-    actualizeDbSearchParams_(schoolLists) {
+    actualizeDbSchoolListsParams_(schoolLists) {
         schoolLists.forEach(schoolList => {
-            this.actualizeParamsByType_({
+            this.actualizeSchoolListByType_({
                 listType: schoolList.list_type,
                 geoType: schoolList.geo_type,
                 searchParameters: schoolList.search_parameters
@@ -202,19 +274,27 @@ class SeoSchoolListOperator {
      * @param {{
      *     listType: string,
      *     geoType: ?string,
-     *     searchParameters: string
+     *     searchParameters: string,
+     *     text: Array<string>
      * }} data
      * @private
      */
-    actualizeParamsByType_(data) {
+    actualizeSchoolListByType_(data) {
+        var dataToUpdate = {};
+
+        Object.keys(data).forEach(key => {
+            if (key !== 'listType' && key !== 'geoType') {
+                dataToUpdate[key] = data[key];
+            }
+        });
+        console.log(dataToUpdate);
+
         await(services.seoSchoolList.updateByType(
             {
                 listType: data.listType,
                 geoType: data.geoType
             },
-            {
-                searchParameters: data.searchParameters
-            }
+            dataToUpdate
         ));
     }
 
@@ -234,6 +314,11 @@ class SeoSchoolListOperator {
      *     }|undefined),
      *     searchType: string
      * }} itemData
+     * @param {Array<{
+     *     listType: string,
+     *     geoType: string,
+     *     text: Array<string>
+     * }>} texts
      * @return {{
      *     description: string,
      *     seo_text: string,
@@ -245,24 +330,24 @@ class SeoSchoolListOperator {
      * }}
      * @private
      */
-    generateList_(itemData) {
+    generateList_(itemData, texts) {
         var listType = itemData.listType,
             geoType = itemData.geoType,
             searchType = itemData.searchType,
             date = new Date().toJSON();
         return {
-            'seo_title': this.generateSeoTitle_(listType, geoType, searchType),
-            'seo_description':
+            seoTitle: this.generateSeoTitle_(listType, geoType, searchType),
+            seoDescription:
                 this.generateSeoDescription_(listType, geoType, searchType),
-            'title': this.generateTitle_(listType, geoType, searchType),
-            'text': null,
-            'search_parameters': JSON.stringify(
+            title: this.generateTitle_(listType, geoType, searchType),
+            text: this.getTextByType_(listType, geoType, texts),
+            searchParameters: JSON.stringify(
                 this.generateSearchParameters_(listType, geoType, searchType)
             ),
-            'list_type': listType.name,
-            'geo_type': geoType ? geoType.name : null,
-            'created_at': date,
-            'updated_at': date
+            listType: listType.name,
+            geoType: geoType ? geoType.name : null,
+            createdAt: date,
+            updatedAt: date
         };
     }
 
@@ -523,6 +608,32 @@ class SeoSchoolListOperator {
         return ''.concat(string.charAt(0).toUpperCase() + string.slice(1));
     }
 
+
+    /**
+     * Get text corresponding to given type from types array
+     * @param {string} listType
+     * @param {string} geoType
+     * @param {Array<{
+     *     listType: string,
+     *     geoType: string,
+     *     text: Array<string>
+     * }>} texts
+     * @return {Array<string>}
+     * @private
+     */
+    getTextByType_(listType, geoType, texts) {
+        var listTypeName = listType.name,
+            geoTypeName = geoType ? geoTypeName : null;
+
+        var correspondingText = texts.find(text => {
+            return text.listType == listTypeName &&
+                text.geoType == geoTypeName;
+        });
+
+        return correspondingText ? correspondingText.text : null;
+    }
+
+
     /**
      * Generate search parameters from given listType and geo type.
      * Search for district id and school type id by given values of each type
@@ -665,6 +776,30 @@ class SeoSchoolListOperator {
                 notCureQuotes: true
             }
         );
+    }
+
+
+    /**
+     * Transforms names of fields of given object from camelCase to snake_case
+     * transform array to string in '{ }' brackets
+     * Need for export to db
+     * @param {Object} object
+     * @return {Object}
+     */
+    prepareObjectForDb_(object) {
+        var result = {};
+        Object.keys(object).map(key => {
+            var currentValue = object[key];
+
+            if (Array.isArray(currentValue)) {
+                currentValue = JSON.stringify(currentValue)
+                    .replace('[', '{')
+                    .replace(']', '}');
+            }
+            result[lodash.snakeCase(key)] = currentValue;
+        });
+
+        return result;
     }
 }
 

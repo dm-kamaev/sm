@@ -29,12 +29,18 @@ var actualizeSeoSchoolListSearchParams = async(function() {
 });
 
 
-var createRobotsRules = async(function () {
+var createRobotsRules = async(function() {
     var seoSchoolListOperator = new SeoSchoolListOperator();
 
     await(seoSchoolListOperator.generateRobotsRules());
 });
 
+
+var archiveSeoTexts = async(function() {
+    var seoSchoolListOperator = new SeoSchoolListOperator();
+
+    await(seoSchoolListOperator.archiveTextsFromCsv());
+});
 
 commander
     .command('archive-seo-pages')
@@ -57,5 +63,11 @@ commander
     .description('create rules for robots.txt to disallow indexing ' +
     'predefined seo search with parameters')
     .action(createRobotsRules);
+
+
+commander
+    .command('archive-db-seo-texts')
+    .description('Fills db with seo texts from given or default file')
+    .action(archiveSeoTexts);
 
 exports.Command;
