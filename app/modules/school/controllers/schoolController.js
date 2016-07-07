@@ -3,6 +3,8 @@ const soy = require('../../../components/soy');
 const services = require('../../../components/services').all;
 const schoolView = require('../../../../api/modules/school/views/schoolView');
 const searchView = require('../../../../api/modules/school/views/searchView');
+const schoolSeoListView =
+    require('../../../../api/modules/school/views/schoolSeoListView');
 const userView = require('../../../../api/modules/user/views/user');
 const entityType = require('../../../../api/modules/entity/enums/entityType');
 
@@ -54,12 +56,12 @@ exports.list = async (function(req, res, next) {
                 throw new errors.PageNotFoundError();
             }
 
-            var seoSchoolListParams =
-                searchView.seoSchoolListParams(seoSchoolList);
+            var storedParams =
+                schoolSeoListView.searchParams(seoSchoolList);
 
-            searchParams = seoSchoolListParams.searchParams;
-            searchText = seoSchoolListParams.searchText;
-            seoData = seoSchoolListParams.seo;
+            searchParams = storedParams.searchParams;
+            searchText = storedParams.searchText;
+            seoData = schoolSeoListView.seoData(seoSchoolList);
         } else {
             searchParams =
                 await(services.search.initSearchParams(req.query));

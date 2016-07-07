@@ -85,50 +85,6 @@ searchView.params = function(searchParams, opt_filters) {
     };
 };
 
-/**
- * @param {models.SeoSchoolList} seoSchoolList
- * @return {{
- *     searchText: string,
- *     searchParams: {
- *         name: string,
- *         schoolType: Array<number>,
- *         classes: Array<number>,
- *         gia: Array<number>,
- *         ege: Array<number>,
- *         olimp: Array<number>,
- *         metroId: ?number,
- *         areaId: ?number,
- *         districtId: ?number,
- *         sortType: ?number,
- *         page: number
- *     },
- *     seo: {
- *         metaTitle: ?string,
- *         metaDescription: ?string,
- *         title: ?string,
- *         description: ?string,
- *         textLeft: ?Array<string>,
- *         textRight : ?Array<string>
- *     }
- * }}
- */
-searchView.seoSchoolListParams = function(seoSchoolList) {
-    var storedParams = JSON.parse(seoSchoolList.searchParameters),
-        text = seoSchoolList.text || [];
-
-    return {
-        seo: {
-            metaTitle: seoSchoolList.seoTitle,
-            metaDescription: seoSchoolList.seoDescription,
-            title: seoSchoolList.title,
-            description: text[0],
-            textLeft: text[1],
-            textRight: text[2]
-        },
-        searchParams: searchView.params(storedParams),
-        searchText: storedParams.name || ''
-    };
-};
 
 /**
  * @param {Array.<Object>} filters
