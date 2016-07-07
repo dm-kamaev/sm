@@ -87,8 +87,8 @@ html, body {
 }
 
 .l-search-result__footer-seo {
-    padding-top: 52px;
     margin-bottom: 75px;
+    padding-top: 52px;
 
     border-top: 1px solid #e5e5e5;
 }
@@ -98,6 +98,8 @@ html, body {
 
     box-sizing: border-box;
     width: 50%;
+
+    vertical-align: top;
 
     font: 13px Helvetica, sans-serif;
     line-height: 18px;
