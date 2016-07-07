@@ -15,7 +15,7 @@ module.exports = {
                 'seo_description': Sequelize.STRING,
                 'title': Sequelize.STRING,
                 'text': {
-                    type: Sequelize.ARRAY(Sequelize.STRING)
+                    type: Sequelize.ARRAY(Sequelize.TEXT)
                 },
                 'search_parameters': {
                     type: Sequelize.STRING,

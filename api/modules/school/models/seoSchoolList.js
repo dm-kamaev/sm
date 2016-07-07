@@ -23,7 +23,7 @@ var SeoSchoolList = sequelize.define(
         },
         text: {
             field: 'text',
-            type: Sequelize.ARRAY(Sequelize.STRING)
+            type: Sequelize.ARRAY(Sequelize.TEXT)
         },
         searchParameters: {
             field: 'search_parameters',
