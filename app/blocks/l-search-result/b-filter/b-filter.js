@@ -4,6 +4,7 @@ goog.require('cl.iUtils.Utils');
 goog.require('goog.dom.classes');
 goog.require('goog.dom.classlist');
 goog.require('goog.events');
+goog.require('goog.object');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
 
@@ -27,15 +28,6 @@ sm.lSearchResult.bFilter.Filter = function(opt_params) {
     this.params_ = opt_params || {};
 
 
-
-    /**
-     * Filters element
-     * @type {Element}
-     * @protected
-     */
-    this.filtersElement = null;
-
-
     /**
      * Filters element
      * @type {Element}
@@ -50,6 +42,22 @@ sm.lSearchResult.bFilter.Filter = function(opt_params) {
      * @protected
      */
     this.inputElements = null;
+
+
+    /**
+     * Filters element
+     * @type {Element}
+     * @private
+     */
+    this.filtersElement_ = null;
+
+
+    /**
+     * List of filters element
+     * @type {Element}
+     * @protected
+     */
+    this.wrapperListFilters = null;
 
 
     /**
@@ -77,14 +85,6 @@ sm.lSearchResult.bFilter.Filter = function(opt_params) {
 
 
     /**
-     * Button for the call modal
-     * @type {Element}
-     * @private
-     */
-    this.showModalButtonElement_ = null;
-
-
-    /**
      * Dom Hidable elements
      * @type {Array<Element>}
      * @private
@@ -95,9 +95,9 @@ sm.lSearchResult.bFilter.Filter = function(opt_params) {
     /**
      * Filter name
      * @type {string}
-     * @private
+     * @protected
      */
-    this.filterName_ = null;
+    this.filterName = null;
 };
 goog.inherits(sm.lSearchResult.bFilter.Filter, goog.ui.Component);
 
@@ -113,7 +113,7 @@ goog.scope(function() {
         ROOT: 'b-filter',
         HEADER: 'b-filter__header',
         FILTERS: 'b-filter__filters',
-        SHOW_MODAL_BUTTON: 'b-filter__button_show-modal',
+        LIST_FILTERS: 'b-filter__list-filters',
         SHOW_HIDDEN_FILTERS_BUTTON: 'b-filter__button_show',
         HIDE_SHOWN_FILTERS_BUTTON: 'b-filter__button_hide',
         SHOW_FILTERS_BUTTON: 'b-filter__show-filters-button',
@@ -135,8 +135,7 @@ goog.scope(function() {
         CHECKED_FILTER: 'checked-filter',
         UNCHECKED_FILTER: 'unchecked-filter',
         CHECKED_ITEM: 'checked-item',
-        UNCHECKED_ITEM: 'unchecked-item',
-        SHOW_SEARCH_FILTER_CLICK: 'show-search-filter-click'
+        UNCHECKED_ITEM: 'unchecked-item'
     };
 
 
@@ -167,9 +166,9 @@ goog.scope(function() {
 
         this.initFilterItems(element);
         this.initFilterContainer_(element);
-        this.initButtons_(element);
+        this.initButtons(element);
 
-        this.getFilterName_();
+        this.setName_();
     };
 
 
@@ -180,18 +179,51 @@ goog.scope(function() {
         goog.base(this, 'enterDocument');
 
         this.initFilterItemsListeners();
-        this.initButtonsListeners_();
+        this.initButtonsListeners();
     };
 
 
     /**
      * Reset filter
-     * @protected
+     * @public
      */
     Filter.prototype.reset = function() {
         for (var i = 0; i < this.inputElements.length; i++) {
             this.inputElements[i].checked = false;
         }
+    };
+
+
+    /**
+     * Uncheck item
+     * @param {{
+     *     value: string,
+     *     label: string,
+     *     name: string,
+     *     id: string
+     * }} params
+     * @public
+     */
+    Filter.prototype.uncheckItem = function(params) {
+        var item = this.findInput(params.value);
+        item.checked = false;
+    };
+
+
+    /**
+     * Get data selected filters
+     * @return {Array<{
+     *     value: string,
+     *     label: string,
+     *     name: string,
+     *     isChecked: bool
+     * }>}
+     * @public
+     */
+    Filter.prototype.getSelectedData = function() {
+        return this.getFiltersData().filter(function(item) {
+            return item.isChecked;
+        });
     };
 
 
@@ -224,21 +256,6 @@ goog.scope(function() {
 
 
     /**
-     * Handler change the filter
-     * @param {Object} event
-     * @protected
-     */
-    Filter.prototype.onChangeFilter = function(event) {
-        var type = this.isCheckedInputs() ? Filter.Event.CHECKED_FILTER :
-            Filter.Event.UNCHECKED_FILTER;
-
-        this.dispatchEvent({
-            'type': type
-        });
-    };
-
-
-    /**
      * Handler change item
      * @param {Object} event
      * @protected
@@ -261,36 +278,17 @@ goog.scope(function() {
 
 
     /**
-     * Uncheck item
-     * @param {{
-     *     value: string,
-     *     label: string,
-     *     name: string,
-     *     id: string
-     * }} params
-     * @public
-     */
-    Filter.prototype.uncheckItem = function(params) {
-        var item = this.findInput(params.value);
-        item.checked = false;
-    };
-
-
-    /**
-     * Find an input
-     * @param {string} value
-     * @return {Element}
+     * Handler change the filter
+     * @param {Object} event
      * @protected
      */
-    Filter.prototype.findInput = function(value) {
-        var input;
+    Filter.prototype.onChangeFilter = function(event) {
+        var type = this.isCheckedInputs() ? Filter.Event.CHECKED_FILTER :
+            Filter.Event.UNCHECKED_FILTER;
 
-        for (var i = 0; i < this.inputElements.length; i++) {
-            if (this.inputElements[i].value == value) {
-                input = this.inputElements[i];
-            }
-        }
-        return input;
+        this.dispatchEvent({
+            'type': type
+        });
     };
 
 
@@ -308,15 +306,58 @@ goog.scope(function() {
 
 
     /**
-     * Init Filter Items
-     * @param {Element} element
+     * Find an input
+     * @param {string} value
+     * @return {Element}
      * @protected
      */
-    Filter.prototype.initFilterItems = function(element) {
+    Filter.prototype.findInput = function(value) {
+        var inputs = Array.prototype.slice.call(this.inputElements, 0);
+
+        return inputs.find(function(input) {
+            return input.value == value;
+        });
+    };
+
+
+    /**
+     * Get data filters
+     * @return {Array<{
+     *     value: string,
+     *     label: string,
+     *     name: string
+     * }>}
+     * @protected
+     */
+    Filter.prototype.getFiltersData = function() {
+        var elems = Array.prototype.slice.call(this.filterSectionElements, 0);
+
+        return elems.map(function(elem) {
+            var item = this.getDataParams(elem);
+
+            var input = this.findInput(item.value);
+            item.isChecked = this.isCheckedInput(input);
+
+            return item;
+
+        }, this);
+    };
+
+
+    /**
+     * Init Filter Items
+     * @param {Element=} opt_element
+     * @protected
+     */
+    Filter.prototype.initFilterItems = function(opt_element) {
+        var element = opt_element || this.getElement();
+
         this.filterSectionElements = goog.dom.getElementsByClass(
             Filter.CssClass.FILTER_SECTION,
             element
         );
+
+        this.filterSectionHidableElements_ = [];
 
         for (var i = 0, elem; elem = this.filterSectionElements[i]; i++) {
             var isHidable = goog.dom.classes.has(
@@ -359,31 +400,13 @@ goog.scope(function() {
 
 
     /**
-     * Init Filter Container
-     * @param {Element} element
-     * @private
-     */
-    Filter.prototype.initFilterContainer_ = function(element) {
-        this.filtersElement = goog.dom.getElementByClass(
-            Filter.CssClass.FILTERS,
-            element
-        );
-    };
-
-
-    /**
      * Init Buttons
      * @param {Element} element
-     * @private
+     * @protected
      */
-    Filter.prototype.initButtons_ = function(element) {
+    Filter.prototype.initButtons = function(element) {
         this.showFiltersIconElement_ = goog.dom.getElementByClass(
             Filter.CssClass.SHOW_FILTERS_ICON,
-            element
-        );
-
-        this.showModalButtonElement_ = goog.dom.getElementByClass(
-            Filter.CssClass.SHOW_MODAL_BUTTON,
             element
         );
 
@@ -406,9 +429,9 @@ goog.scope(function() {
 
     /**
      * Init Buttons Listeners
-     * @private
+     * @protected
      */
-    Filter.prototype.initButtonsListeners_ = function() {
+    Filter.prototype.initButtonsListeners = function() {
         var handler = this.getHandler();
 
         if (this.showHiddenFiltersButtonElement_) {
@@ -435,28 +458,6 @@ goog.scope(function() {
                 this.toggleFiltersVisibility_
             );
         }
-
-        if (this.showModalButtonElement_) {
-            handler.listen(
-                this.showModalButtonElement_,
-                goog.events.EventType.CLICK,
-                this.onShowModalButtonClick_
-            );
-        }
-    };
-
-
-    /**
-     * Handler button for show modal
-     * @private
-     */
-    Filter.prototype.onShowModalButtonClick_ = function() {
-        this.dispatchEvent({
-            type: Filter.Event.SHOW_SEARCH_FILTER_CLICK,
-            data: {
-                name: this.filterName_
-            }
-        });
     };
 
 
@@ -466,7 +467,7 @@ goog.scope(function() {
      */
     Filter.prototype.hideFilter_ = function() {
         goog.dom.classlist.add(
-            this.filtersElement,
+            this.filtersElement_,
             Filter.CssClass.HIDDEN
         );
 
@@ -534,7 +535,7 @@ goog.scope(function() {
      */
     Filter.prototype.toggleFiltersVisibility_ = function() {
         goog.dom.classlist.toggle(
-            this.filtersElement,
+            this.filtersElement_,
             Filter.CssClass.HIDDEN
         );
 
@@ -551,13 +552,31 @@ goog.scope(function() {
 
 
     /**
-     * Get filter name
+     * set filter name
      * @private
      */
-    Filter.prototype.getFilterName_ = function() {
+    Filter.prototype.setName_ = function() {
         var data = JSON.parse(
             this.getElement().getAttribute('data-params')
         );
-        this.filterName_ = data.name;
+        this.filterName = data.name;
+    };
+
+
+    /**
+     * Init Filter Container
+     * @param {Element} element
+     * @private
+     */
+    Filter.prototype.initFilterContainer_ = function(element) {
+        this.filtersElement_ = goog.dom.getElementByClass(
+            Filter.CssClass.FILTERS,
+            element
+        );
+
+        this.wrapperListFilters = goog.dom.getElementByClass(
+            Filter.CssClass.LIST_FILTERS,
+            element
+        );
     };
 });  // goog.scope

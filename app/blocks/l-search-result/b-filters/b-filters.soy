@@ -84,14 +84,19 @@
  * }
  */
 {template .filters_ autoescape="strict" kind="html" private="true"}
-
     {call sm.lSearchResult.bFilterClasses.Template.base}
         {param params: $params.classesFilter /}
     {/call}
 
     {foreach $filter in $params.filters}
-        {call sm.lSearchResult.bFilter.Template.base}
-            {param params: $filter/}
-        {/call}
+        {if $filter?.config?.type == 'extended'}
+            {call sm.lSearchResult.bFilterExtended.Template.base}
+                {param params: $filter/}
+            {/call}
+        {else}
+            {call sm.lSearchResult.bFilter.Template.base}
+                {param params: $filter/}
+            {/call}
+        {/if}
     {/foreach}
 {/template}

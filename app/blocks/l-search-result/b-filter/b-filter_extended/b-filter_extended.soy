@@ -1,0 +1,62 @@
+{namespace sm.lSearchResult.bFilterExtended.Template}
+
+
+/**
+ * Constructor
+ * @param params {sm.lSearchResult.bFilter.Template.Params}
+ * @extends sm.lSearchResult.bFilter.Template
+ * @constructor
+ */
+{template .base autoescape="strict" kind="html"}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * Tempate button
+ * @override
+ */
+{template .buttonShowMore private="true"}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__button{sp}
+        {call .rootClass/}__button_show-modal
+    {/let}
+
+    {call sm.bLink.Template.base}
+        {param params: [
+            'data': [
+                'name': 'Полный список'
+            ],
+            'config': [
+                'customClasses': $customClasses,
+                'size': 'small'
+            ]
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * Determines how many filters show
+ * @param? params {
+ *     config: ?{
+ *         filtersToShow: ?number
+ *     }
+ * }
+ * @override
+ */
+{template .filToShow kind="html" private="true"}
+    {if $params?.config?.filtersToShow}
+        {$params?.config?.filtersToShow}
+    {else}
+        3
+    {/if}
+{/template}
+
+
+/**
+ * @override
+ */
+{template .additionalClasses}
+    {call .rootClass/}_extended
+{/template}

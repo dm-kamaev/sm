@@ -69,6 +69,15 @@ goog.scope(function() {
 
 
     /**
+     * Event enum
+     * @enum {String}
+     */
+    FilterSearch.Event = {
+        BUTTON_CLICK: 'button-click'
+    };
+
+
+    /**
      * @override
      * @param {Element} element
      */
@@ -88,6 +97,61 @@ goog.scope(function() {
     FilterSearch.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
 
+        this.initFilterListeners_();
+        this.initSelectedListeners_();
+        this.initButtonListeners_();
+    };
+
+
+    /**
+     * Check Filter Item
+     * @param {Object} event
+     * @private
+     */
+    FilterSearch.prototype.onFilterItemCheck_ = function(event) {
+        this.selected_.addItem(event.data);
+    };
+
+
+    /**
+     * Uncheck Filter Item
+     * @param {Object} event
+     * @private
+     */
+    FilterSearch.prototype.onFilterItemUncheck_ = function(event) {
+        this.selected_.removeItem(event.data);
+    };
+
+
+    /**
+     * Uncheck Selected Item
+     * @param {Object} event
+     * @private
+     */
+    FilterSearch.prototype.onSelectedItemUncheck_ = function(event) {
+        this.filter_.uncheckItem(event.data);
+    };
+
+
+    /**
+     * Button handler
+     * @private
+     */
+    FilterSearch.prototype.onButtonClick_ = function() {
+        this.dispatchEvent({
+            'type': FilterSearch.Event.BUTTON_CLICK,
+            'data': {
+                'filters': this.selected_.getSelectedData()
+            }
+        });
+    };
+
+
+    /**
+     * Init Filter Listeners
+     * @private
+     */
+    FilterSearch.prototype.initFilterListeners_ = function() {
         this.getHandler().listen(
             this.filter_,
             Filter.Event.CHECKED_ITEM,
@@ -99,23 +163,31 @@ goog.scope(function() {
             Filter.Event.UNCHECKED_ITEM,
             this.onFilterItemUncheck_
         );
+    };
 
+
+    /**
+     * Init Selected Filters Listeners
+     * @private
+     */
+    FilterSearch.prototype.initSelectedListeners_ = function() {
         this.getHandler().listen(
             this.selected_,
             FilterLabels.Event.UNCHECKED_ITEM,
             this.onSelectedItemUncheck_
         );
+    };
 
-        this.getHandler().listen(
-            this.selected_,
-            FilterLabels.Event.CHECKED_FILTER,
-            this.onAddedSelected_
-        );
 
+    /**
+     * Init Button Listeners
+     * @private
+     */
+    FilterSearch.prototype.initButtonListeners_ = function() {
         this.getHandler().listen(
-            this.selected_,
-            FilterLabels.Event.UNCHECKED_FILTER,
-            this.onRemovedSelected_
+            this.button_,
+            cl.gButton.Button.Event.CLICK,
+            this.onButtonClick_
         );
     };
 
@@ -172,55 +244,5 @@ goog.scope(function() {
             this.getView().getDom().button,
             this
         );
-    };
-
-
-    /**
-     * Check Filter Item
-     * @param {Object} event
-     * @private
-     */
-    FilterSearch.prototype.onFilterItemCheck_ = function(event) {
-        this.selected_.addItem(event.data);
-    };
-
-
-    /**
-     * Uncheck Filter Item
-     * @param {Object} event
-     * @private
-     */
-    FilterSearch.prototype.onFilterItemUncheck_ = function(event) {
-        this.selected_.removeItem(event.data);
-    };
-
-
-    /**
-     * Uncheck Selected Item
-     * @param {Object} event
-     * @private
-     */
-    FilterSearch.prototype.onSelectedItemUncheck_ = function(event) {
-        this.filter_.uncheckItem(event.data);
-    };
-
-
-    /**
-     * Added to selected filter
-     * @private
-     */
-    FilterSearch.prototype.onAddedSelected_ = function() {
-        this.button_.enable();
-    };
-
-
-    /**
-     * Removed selected filter
-     * @private
-     */
-    FilterSearch.prototype.onRemovedSelected_ = function() {
-        if (!this.selected_.isCheckedInputs()) {
-            this.button_.disable();
-        }
     };
 });  // goog.scope

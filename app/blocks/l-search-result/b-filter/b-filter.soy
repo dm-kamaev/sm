@@ -3,15 +3,15 @@
 /**
  * @typedef {object} sm.lSearchResult.bFilter.Template.Params
  * @property {?object} data
- * @property {?{label: ?string, value: ?string}[]} data.filters
+ * @property {?{label: ?string, value: ?string, isChecked: ?bool}[]} data.filters
  * @property {?{title: ?string, help: ?string}} data.header
  * @property {?string} data.name
  * @property {?object} config
  * @property {?boolean} config.cannotBeHidden
  * @property {?boolean} config.isShowed
  * @property {?number} config.filtersToShow
- * @property {?boolean} config.showFilterSearch
  * @property {?number} config.theme
+ * @property {?number} config.type
  */
 
 
@@ -82,7 +82,8 @@
  *     data: ?{
  *         filters: ?list<{
  *             label: ?string,
- *             value: ?string
+ *             value: ?string,
+ *             isChecked: ?bool
  *         }>,
  *         name: ?string
  *     },
@@ -103,8 +104,8 @@
     {/let}
 
     <div class="{$classes}">
-        {call .listFilters_ data="all" /}
-        {call .button_ data="all"/}
+        {call .listFilters data="all" /}
+        {call .button_ data="all" /}
     </div>
 {/template}
 
@@ -202,7 +203,8 @@
  *     data: ?{
  *         filters: ?list<{
  *             label: ?string,
- *             value: ?string
+ *             value: ?string,
+ *             isChecked: ?bool
  *         }>,
  *         name: ?string
  *     },
@@ -211,34 +213,32 @@
  *     }
  * }
  */
-{template .listFilters_ autoescape="strict" kind="html"}
-    {let $isExpanded kind="html"}
-        {call .isExpanded_ data="all" /}
-    {/let}
-
+{template .listFilters autoescape="strict" kind="html"}
     {let $filToShow kind="html"}
-        {call .filToShow_ data="all" /}
+        {call .filToShow data="all" /}
     {/let}
 
-    {for $i in range($params.data.filters.length)}
-        {let $id kind="html"}
-            {if $params.config.theme == 'minimal'}
-                {$params.data.filters[$i].value}
-            {else}
-                {$i}
-            {/if}
-        {/let}
+    <div class="{call .rootClass/}__list-filters">
+        {for $i in range($params.data.filters.length)}
+            {let $id kind="html"}
+                {if $params.config?.theme == 'minimal'}
+                    {$params.data.filters[$i].value}
+                {else}
+                    {$i}
+                {/if}
+            {/let}
 
-        {call .filter}
-            {param params: [
-                'filter': $params.data.filters[$i],
-                'hidden': not $isExpanded and $i > $filToShow ? true : false,
-                'hidable': $i > $filToShow ? true : false,
-                'name': $params.data.name,
-                'id': $id
-            ]/}
-        {/call}
-    {/for}
+            {call .filter}
+                {param params: [
+                    'filter': $params.data.filters[$i],
+                    'hidden': $i > $filToShow ? true : false,
+                    'hidable': $i > $filToShow ? true : false,
+                    'name': $params.data.name,
+                    'id': $id
+                ]/}
+            {/call}
+        {/for}
+    </div>
 {/template}
 
 
@@ -248,28 +248,18 @@
  *     data: ?{
  *         name: string,
  *         filters: Array<Object>
- *     },
- *     config: {
- *         showFilterSearch: boolean
  *     }
  * }
  */
 {template .button_ autoescape="strict" kind="html"}
-    {let $isExpanded kind="html"}
-        {call .isExpanded_ data="all" /}
-    {/let}
-
     {let $filToShow kind="html"}
-        {call .filToShow_ data="all" /}
+        {call .filToShow data="all" /}
     {/let}
 
-    {if $params?.config?.showFilterSearch}
-        {call .bottonShowModal_ /}
-    {elseif $params.data.filters.length > $filToShow}
-        {call .buttonShowMore_}
+    {if $params.data.filters.length > $filToShow}
+        {call .buttonShowMore}
             {param params: [
-                'numberHiddenItems': $params.data.filters.length - $filToShow - 1,
-                'isExpanded': $isExpanded
+                'numberHiddenItems': $params.data.filters.length - $filToShow - 1
             ]/}
         {/call}
     {/if}
@@ -277,52 +267,21 @@
 
 
 /**
- * Button template for the call modal
- */
-{template .bottonShowModal_ private="true"}
-    {let $customClasses kind="html"}
-        {call .rootClass/}__button{sp}
-        {call .rootClass/}__button_show-modal
-    {/let}
-
-    {call sm.bLink.Template.base}
-        {param params: [
-            'data': [
-                'name': 'Полный список'
-            ],
-            'config': [
-                'customClasses': $customClasses,
-                'size': 'small'
-            ]
-        ]/}
-    {/call}
-{/template}
-
-
-/**
  * Tempate button
  * @param? params {
- *     numberHiddenItems: ?number,
- *     isExpanded: ?boolean
+ *     numberHiddenItems: ?number
  * }
  */
-{template .buttonShowMore_ private="true"}
+{template .buttonShowMore private="true"}
     {let $customClassesButtonShow kind="html"}
         {call .rootClass/}__button{sp}
         {call .rootClass/}__button_show
-
-        {if $params.isExpanded}
-            {sp}i-utils__hidden
-        {/if}
     {/let}
 
     {let $customClassesButtonHide kind="html"}
         {call .rootClass/}__button{sp}
-        {call .rootClass/}__button_hide
-
-        {if not $params.isExpanded}
-            {sp}i-utils__hidden
-        {/if}
+        {call .rootClass/}__button_hide{sp}
+        i-utils__hidden
     {/let}
 
     {call sm.bLink.Template.base}
@@ -352,23 +311,6 @@
 
 
 /**
- * Show list of filters collapsed or expanded
- * @param? params {
- *     filter: ?{
- *         isChecked: ?boolean
- *     }
- * }
- */
-{template .isExpanded_ kind="html" private="true"}
-    {for $i in range($params.data.filters.length)}
-        {if $i > 5 and $params.data.filters[$i].isChecked}
-            true
-        {/if}
-    {/for}
-{/template}
-
-
-/**
  * Determines how many filters show
  * @param? params {
  *     config: ?{
@@ -376,7 +318,7 @@
  *     }
  * }
  */
-{template .filToShow_ kind="html" private="true"}
+{template .filToShow kind="html" private="true"}
     {if $params?.config?.filtersToShow}
         {$params?.config?.filtersToShow}
     {else}

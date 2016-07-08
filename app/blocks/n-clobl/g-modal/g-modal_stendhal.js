@@ -85,26 +85,25 @@ goog.scope(function() {
      * render content
      * @param {string} templateType
      * @param {Object} templateParams
-     * @param {Object} parent
      * @return {Object}
      */
-    Modal.prototype.renderContent = function(templateType, templateParams,
-        parent) {
+    Modal.prototype.renderContent = function(templateType, templateParams) {
 
         return factoryManager.render(
             this.getView().getStylization(),
             templateType,
             this.getView().getDom().content,
             templateParams,
-            parent
+            this
         );
     };
 
 
     /**
-     * remove content
+     * remove modal and content
      */
     Modal.prototype.remove = function() {
+        this.hide();
         this.dispose();
     };
 
@@ -117,7 +116,7 @@ goog.scope(function() {
         this.hide();
 
         if (this.selfDestroy_) {
-            this.remove();
+            this.dispose();
         }
     };
 });  // goog.scope

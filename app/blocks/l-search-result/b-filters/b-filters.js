@@ -9,6 +9,7 @@ goog.require('goog.style');
 goog.require('goog.ui.Component');
 goog.require('sm.lSearchResult.bFilter.Filter');
 goog.require('sm.lSearchResult.bFilter.FilterClasses');
+goog.require('sm.lSearchResult.bFilter.FilterExtended');
 goog.require('sm.lSearchResult.bFilters.Template');
 
 
@@ -61,6 +62,7 @@ goog.inherits(sm.lSearchResult.bFilters.Filters, goog.ui.Component);
 goog.scope(function() {
     var Filters = sm.lSearchResult.bFilters.Filters,
         Filter = sm.lSearchResult.bFilter.Filter,
+        FilterExtended = sm.lSearchResult.bFilter.FilterExtended,
         FilterClasses = sm.lSearchResult.bFilter.FilterClasses;
 
 
@@ -153,6 +155,12 @@ goog.scope(function() {
                 this.filterClasses_ = new FilterClasses();
                 this.addChild(this.filterClasses_);
                 this.filterClasses_.decorate(elem);
+            }
+            else if (goog.dom.classes.has(elem, FilterExtended.CssClass.ROOT)) {
+                filter = new FilterExtended();
+                this.addChild(filter);
+                filter.decorate(elem);
+                this.filters_.push(filter);
             }
             else {
                 filter = new Filter();

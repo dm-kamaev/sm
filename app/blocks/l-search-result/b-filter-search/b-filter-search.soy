@@ -35,7 +35,7 @@
     {call .search_ data="all" /}
     {call .filter_ data="all" /}
     {call .selected_ data="all" /}
-    {call .button_ /}
+    {call .button_ data="all" /}
 {/template}
 
 
@@ -126,7 +126,7 @@
  * }}
  */
 {template .selected_ private="true"}
-    <form class="{call .rootClass/}__section {call .rootClass/}__section_selected">
+    <div class="{call .rootClass/}__section {call .rootClass/}__section_selected">
         {call sm.lSearchResult.bFilterLabels.Template.base}
             {param params: [
                 'data': [
@@ -141,7 +141,7 @@
                 ]
             ]/}
         {/call}
-    </form>
+    </div>
 {/template}
 
 
@@ -159,8 +159,7 @@
                         'content': 'Применить'
                     ],
                     'config': [
-                        'theme': 'sienna',
-                        'isDisabled': true
+                        'theme': 'sienna'
                     ]
                 ]
             ]/}
