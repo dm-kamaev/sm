@@ -15,10 +15,21 @@ const lodash = require('lodash');
  *
  * To achieve this goal you need to:
  *     1) initiate an object of Archiver with path to your archived .csv file;
- *     2) run archiver.copyToDb(%table_name%, %delimiter%);
+ *     2) run archiver.fillTable(%table_name%, %delimiter%);
  * You can see an example at
  * api/modules/entity/migrations/20160603133300-page-data.js
+ *
+ * Also it can update table with .csv
+ * To achieve this goal you need to:
+ *     1) initiate an object of Archiver with path to your archived .csv file;
+ *     2) run archiver.updateTable(%table_name%, %delimiter%, %fieldsToMatch%);
+ * Please note, that headers archived csv must contain [%fieldsToMatch%,]
+ * and each [%fieldsToMatch%] item must be non-nullable fields due to postgress
+ * compare values features.
  */
+
+const TMP_TABLE_PREFIX = 'tmp_';
+
 class Archiver {
 
     /**
@@ -86,24 +97,199 @@ class Archiver {
     }
 
     /**
+     * Replace data in table with data from archive
      * @public
      * @param {string} table
      * @param {string} delimiter
      */
-    copyToDb(table, delimiter) {
+    fillTable(table, delimiter) {
         var fileLocation = path.parse(this.path_),
             fileDir = fileLocation.dir,
             filePath = path.join(fileDir, this.tmpName_);
 
         this.decompress(fileDir);
 
-        var sqlQuery = 'COPY ' + table + '(' + this.getHeaders_(filePath) +
-            ') FROM \'' + filePath + '\' WITH CSV HEADER DELIMITER \'' +
-            delimiter + '\';';
-        await(sequelize.query(sqlQuery));
+        this.copyToTable_(table, filePath, delimiter);
 
         this.deleteUnarchivedFile(fileDir);
     }
+
+
+    /**
+     * Update table with given name with csv from archive
+     * Note, that fieldsToMatch cannot be nullable due to postgres compare
+     * values features (NULL = NULL is false)
+     * @param {string} table
+     * @param {string} delimiter
+     * @param {Array<string>} fieldsToMatch
+     * @public
+     */
+    updateTable(table, delimiter, fieldsToMatch) {
+        var fileLocation = path.parse(this.path_),
+            fileDir = fileLocation.dir,
+            filePath = path.join(fileDir, this.tmpName_);
+        this.decompress(fileDir);
+        var headers = this.getHeaders_(filePath);
+
+        await(this.cloneToTempTable_(table, headers));
+
+        var tmpTable = TMP_TABLE_PREFIX + table;
+        await(this.copyToTable_(tmpTable, filePath, delimiter));
+        // remove temporary file
+        this.deleteUnarchivedFile(fileDir);
+
+        var dbFieldsToMatch = fieldsToMatch.map(this.formatHeader_),
+            dbFieldsToUpdate = headers.filter((fieldName) => {
+                return dbFieldsToMatch.indexOf(fieldName) == -1;
+            });
+
+        await(this.updateTableFromTmpTable_(
+            table,
+            dbFieldsToMatch,
+            dbFieldsToUpdate
+        ));
+
+        // remove temporary table
+        await(this.destroyTmpTable_(table));
+    }
+
+
+    /**
+     * Creates temp table by copy fields from given table
+     * @param {string} tableName
+     * @param {Array<string>} fields
+     * @private
+     */
+    cloneToTempTable_(tableName, fields) {
+        var queryFields = fields.toString(),
+            tmpTableName = TMP_TABLE_PREFIX + tableName,
+            cloneQuery =
+                'CREATE TABLE ' + tmpTableName +
+                ' AS SELECT ' + queryFields + ' FROM ' + tableName + ' LIMIT 0';
+        await(sequelize.query(
+            cloneQuery,
+            {
+                type: sequelize.QueryTypes.CREATE
+            }
+        ));
+    }
+
+    /**
+     * Destroy temp table with given name
+     * @param {string} tableName
+     * @private
+     */
+    destroyTmpTable_(tableName) {
+        var tmpTableName = TMP_TABLE_PREFIX + tableName,
+            dropQuery = 'DROP TABLE ' + tmpTableName;
+
+        await(sequelize.query(
+            dropQuery,
+            {
+                type: sequelize.QueryTypes.DROP
+            }
+        ));
+    }
+
+
+    /**
+     * Update given table with values from given tmpTable,
+     * compared by fieldsToMatch
+     * @param {string} table
+     * @param {Array<string>} fieldsToMatch
+     * @param {Array<string>} fieldsToUpdate
+     * @private
+     */
+    updateTableFromTmpTable_(table, fieldsToMatch, fieldsToUpdate) {
+        var tmpTable = TMP_TABLE_PREFIX + table,
+            expressions = this.generateExpressions_(tmpTable, fieldsToUpdate),
+            conditions = this.generateConditions_(
+                table, tmpTable, fieldsToMatch
+            ),
+            updateQuery = 'UPDATE ' + table +
+                ' SET ' + expressions +
+                ' FROM ' + tmpTable +
+                ' WHERE ' + conditions;
+
+        await(sequelize.query(
+            updateQuery,
+            {
+                type: sequelize.QueryTypes.UPDATE
+            }
+        ));
+    }
+
+    /**
+     * Generate expressions for update sql query
+     * @param {string} sourceTableName
+     * @param {Array<string>} fields
+     * @return {string}
+     * @private
+     */
+    generateExpressions_(sourceTableName, fields) {
+        var targetFields = '(',
+            sourceFields = '(',
+            fieldsAmount = fields.length;
+
+
+        fields.forEach((field, index) => {
+            targetFields += field;
+            sourceFields += sourceTableName + '.' + field;
+
+            if (index != fieldsAmount - 1) {
+                targetFields += ', ';
+                sourceFields += ', ';
+            } else {
+                targetFields += ')';
+                sourceFields += ')';
+            }
+        });
+
+        return targetFields + ' = ' + sourceFields;
+    }
+
+    /**
+     * Generate conditions for update sql query
+     * @param {string} targetTableName
+     * @param {string} sourceTableName
+     * @param {Array<string>} fields
+     * @return {string}
+     * @private
+     */
+    generateConditions_(targetTableName, sourceTableName, fields) {
+        return fields.reduce(
+            (previousValue, currentValue, index, array) => {
+                var length = array.length;
+                var result = previousValue.concat(
+                    targetTableName + '.' + currentValue +
+                    ' = ' +
+                    sourceTableName + '.' + currentValue);
+
+                if (index !== length - 1) {
+                    result += ' AND ';
+                }
+
+                return result;
+            },
+            '');
+    }
+
+
+    /**
+     * Copy data from given csv on tmpFilePath to table with given name
+     * @param {string} table
+     * @param {string} tmpFilePath
+     * @param {string} delimiter
+     * @private
+     */
+    copyToTable_(table, tmpFilePath, delimiter) {
+        var sqlQuery = 'COPY ' + table + '(' + this.getHeaders_(tmpFilePath) +
+            ') FROM \'' + tmpFilePath + '\' WITH CSV HEADER DELIMITER \'' +
+            delimiter + '\';';
+
+        await(sequelize.query(sqlQuery));
+    }
+
 
     /**
      * @private

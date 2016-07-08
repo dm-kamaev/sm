@@ -39,19 +39,26 @@ var getSearchSubstrings = function(string) {
 /**
  * @public
  * @param {string} searchString
- * @return {object}
+ * @return {{
+ *     schools: Array<models.School>,
+ *     areas: Array<models.Area>,
+ *     metros: Array<models.Metro>,
+ *     districts: Array<models.District>
+ * }}
  */
 exports.suggestSearch = async(function(searchString) {
-    var promises = [
-        services.school.searchByText(searchString),
-        findAnyInModel(models.Area, searchString),
-        findAnyInModel(models.Metro, searchString)
-    ];
+    var promises = {
+        schools: services.school.searchByText(searchString),
+        areas: findAnyInModel(models.Area, searchString),
+        metros: findAnyInModel(models.Metro, searchString),
+        districts: findAnyInModel(models.District, searchString)
+    };
     var results = await(promises);
     return {
-        schools: results[0],
-        areas: results[1],
-        metros: results[2]
+        schools: results.schools,
+        areas: results.areas,
+        metros: results.metros,
+        districts: results.districts
     };
 });
 
@@ -343,6 +350,13 @@ exports.updateSqlOptions = function(sqlOptions, searchParams) {
             sqlOptions.where.push('metro.id = ' + searchParams.metroId);
         }
 
+        if (searchParams.districtId) {
+            isGeoDataJoined = true;
+            sqlOptions.where.push(
+                'area.district_id = ' + searchParams.districtId
+            );
+        }
+
         if (searchDataCount) {
             // search_data must be first in the from clause
             sqlOptions.from.unshift('search_data');
@@ -487,6 +501,22 @@ exports.getTypeFilters = async(function() {
     return await(models.SchoolTypeFilter.findAll());
 });
 
+
+/**
+ * Return school type filter, found by given value
+ * @param {string} typeFilterValue
+ * @return {Promise<models.schoolTypeFilter>}
+ */
+exports.getTypeFilterByValue = function(typeFilterValue) {
+    return models.SchoolTypeFilter.findOne({
+        where: {
+            values: {
+                $contains: [typeFilterValue]
+            }
+        }
+    });
+};
+
 /**
  * Get array with ids of school types by array with their aliases
  * @param {Array.<string>} aliases
@@ -518,6 +548,20 @@ exports.getSchoolTypesByAliases = function(aliases) {
  * @param {?number} params.areaId
  * @param {?number} params.sortType
  * @param {?number} params.page
+ *
+ * @return {{
+ *     name: string,
+ *     schoolType: Array<number>,
+ *     classes: Array<number>,
+ *     gia: Array<number>,
+ *     ege: Array<number>,
+ *     olimp: Array<number>,
+ *     metroId: ?number,
+ *     areaId: ?number,
+ *     districtId: ?number,
+ *     sortType: ?number,
+ *     page: number
+ * }}
  */
 exports.initSearchParams = async(function(params) {
     /** Transform aliases in filters into ids **/
@@ -573,6 +617,11 @@ exports.getMapPositionParams = function(params) {
         /** Centering on area id **/
         result = {
             type: mapPositionType.AREA
+        };
+    } else if (params.districtId) {
+        result = {
+            center: services.district.getCenterCoords(params.districtId),
+            type: mapPositionType.DISTRICT
         };
     } else if (params.name === '' && !isFiltersSelected(params)) {
         result = {

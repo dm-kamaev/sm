@@ -20,6 +20,7 @@ sftp-config.json
 deployment-config.json
 .remote-sync.json
 .tern-project
+.eslintrc
 .jshintrc
 .eslintrc
 .csscomb*

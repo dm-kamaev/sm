@@ -18,7 +18,7 @@ module.exports = {
             filePath = path.join(dir, file),
             archiver = new Archiver(filePath);
 
-        archiver.copyToDb(TABLE, DELIMITER);
+        archiver.fillTable(TABLE, DELIMITER);
     }),
     down: async(function(queryInterface) {
 

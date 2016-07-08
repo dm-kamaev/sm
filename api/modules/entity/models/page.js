@@ -14,7 +14,6 @@ var Page = sequelize.define('Page', {
     entityType: {
         field: 'entity_type',
         type: Sequelize.STRING,
-        allowNull: false,
         unique: 'compositeIndex',
         validate: {
             isIn: [entityTypes.toArray()]
