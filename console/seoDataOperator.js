@@ -66,7 +66,7 @@ commander
 
 
 commander
-    .command('archive-db-seo-texts')
+    .command('archive-seo-texts')
     .description('Fills db with seo texts from given or default file')
     .action(archiveSeoTexts);
 
