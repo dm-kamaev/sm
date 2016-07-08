@@ -62,11 +62,11 @@ schoolSeoListView.seoData = function(seoSchoolList) {
 
 /**
  * Split given text to array of paragraphs
- * @param {string} text
- * @return {Array<string>}
+ * @param {?string} text
+ * @return {?Array<string>}
  */
 var splitTextForParagraphs = function(text) {
-    return text.split('\n');
+    return text ? text.split('\n') : null;
 };
 
 module.exports = schoolSeoListView;
