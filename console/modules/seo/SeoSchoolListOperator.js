@@ -27,7 +27,7 @@ const schoolSeoLists = require('./schoolSeoLists.json');
 const CSV_DELIMITER = '|',
     ROBOTS_REPORT = 'robots-report',
     SEO_SCHOOL_LISTS_ARCHIVE = 'seo-school-lists.tar.gz',
-    TEXTS_ARCHIVE = 'seo-school-lists-texts.tar.gz',
+    TEXTS_ARCHIVE = '20160707152941-seo-school-lists-texts.tar.gz',
     TEXTS_CSV = 'seo-texts.csv';
 
 class SeoSchoolListOperator {
@@ -75,7 +75,8 @@ class SeoSchoolListOperator {
      */
     archiveTextsFromCsv(opt_csvFile) {
         var csvFile = opt_csvFile || TEXTS_CSV,
-            seoTexts = this.getTextsFromCsv_(csvFile),
+            csvSeoTexts = this.getTextsFromCsv_(csvFile),
+            seoTexts = csvSeoTexts.map(this.addListIdToSeoText_.bind(this)),
             dbTexts = seoTexts.map(this.prepareObjectForDb_),
             csv = this.createCsv_(dbTexts);
 
@@ -89,7 +90,7 @@ class SeoSchoolListOperator {
      * @return {Array<{
      *     listType: string,
      *     geoType: ?string,
-     *     texts: Array<string>
+     *     text: Array<string>
      * }>}
      * @private
      */
@@ -114,6 +115,44 @@ class SeoSchoolListOperator {
                 text: [item.description, item.textLeft, item.textRight]
             };
         });
+    }
+
+
+    /**
+     * Add id to text instead listType and geoType
+     * @param {{
+     *     listType: string,
+     *     geoType: ?string,
+     *     text: Array<string>
+     * }} text
+     * @return {{
+     *     id: number,
+     *     text: Array<string>
+     * }}
+     * @private
+     */
+    addListIdToSeoText_(text) {
+        return {
+            id: this.getDbListIdByType_(text.listType, text.geoType),
+            text: text.text
+        };
+    }
+
+
+    /**
+     * Return id in db of school seo list with given type parameter combination
+     * @param {string} listType
+     * @param {string} geoType
+     * @return {number}
+     * @private
+     */
+    getDbListIdByType_(listType, geoType) {
+        var seoList = await(services.seoSchoolList.getByType({
+            listType: listType,
+            geoType: geoType
+        }));
+
+        return seoList.id;
     }
 
 
@@ -287,7 +326,6 @@ class SeoSchoolListOperator {
                 dataToUpdate[key] = data[key];
             }
         });
-        console.log(dataToUpdate);
 
         await(services.seoSchoolList.updateByType(
             {
