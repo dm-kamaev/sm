@@ -733,10 +733,11 @@ schoolView.listWithFavorites = function(schools, favoriteItemIds) {
 };
 
 /**
+ * Get array of unique school's ids
  * @param {Array<Object>} schools
- * @return {Array<string>}
+ * @return {Array<number>}
  */
-schoolView.listIds = function(schools) {
+schoolView.uniqueIds = function(schools) {
     return lodash.uniq(schools.map(school => school.id));
 };
 

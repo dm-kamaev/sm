@@ -62,7 +62,7 @@ exports.list = async (function(req, res) {
     var results = await(promises);
 
     var schoolAliases = await(services.page.getAliases(
-            schoolView.listIds(results.schools),
+            schoolView.uniqueIds(results.schools),
             entityType.SCHOOL
         )),
         schools = schoolView.joinAliases(results.schools, schoolAliases),

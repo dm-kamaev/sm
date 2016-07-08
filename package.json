@@ -84,7 +84,7 @@
     "sleep": "^3.0.0",
     "soynode": "^1.1.0",
     "soyparser": "^0.2.2",
-    "squel": "^5.0.0",
+    "squel": "^5.3.2",
     "tar.gz": "^1.0.2",
     "tipograph": "^0.3.3",
     "translitit-cyrillic-russian-to-latin": "git+ssh://git@github.com:c7s-bot/translitit-cyrillic-russian-to-latin.git#master",
