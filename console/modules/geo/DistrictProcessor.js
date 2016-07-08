@@ -1,15 +1,23 @@
+/**
+ * @fileOverview Class to operate with districts in db
+ * It can fill db with districts and fill relations between districts and areas
+ * It can backup this relations and districts to use this archives in migrations
+ *
+ * To fill db with districts need use following sequence:
+ * 1.) fillDbDistricts()
+ * 2.) generateDistrictsRelationReport()
+ * 3.) archiveDbDistricts()
+ */
+
 'use strict';
 
-const fs = require('fs');
-const path = require('path');
-
-const await = require('asyncawait/await');
+const path = require('path'),
+    await = require('asyncawait/await');
 
 const CsvConverter = require('../modelArchiver/CsvConverter'),
     Archiver = require('../modelArchiver/Archiver');
 
-const models = require('../../../app/components/models').all,
-    services = require('../../../app/components/services').all;
+const services = require('../../../app/components/services').all;
 
 var districts = require('./districts.json');
 
@@ -35,6 +43,7 @@ class DistrictProcessor {
 
     /**
      * Generate report about relations between districts and areas
+     * in json format, than archive it
      */
     generateDistrictsRelationReport() {
         var districts = await(services.district.getAllWithAreas()),
@@ -51,9 +60,10 @@ class DistrictProcessor {
 
 
     /**
-     * Create archive of district in db
+     * Create archive of district in db without their id,
+     * then archive it
      */
-    archiveDbDistricts() {
+     archiveDbDistricts() {
         var dbDistricts = await(services.district.getAllWithAreas()),
             date = new Date().toJSON(),
             formattedDistricts = dbDistricts.map(district => {
