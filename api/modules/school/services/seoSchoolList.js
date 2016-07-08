@@ -70,7 +70,7 @@ service.updateByType = async(function(type, data) {
  * }} pageParams
  * @return {models.SeoSchoolList}
  */
-service.getByRequestParams = async(function(requestParams) {
+service.getByType = async(function(requestParams) {
     return await(models.SeoSchoolList.findOne({
         where: {
             listType: requestParams.listType,

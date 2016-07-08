@@ -9,6 +9,13 @@ const sequelize = require('../../../../app/components/db'),
 var SeoSchoolList = sequelize.define(
     'SeoSchoolList',
     {
+        id: {
+            field: 'id',
+            type: Sequelize.INTEGER,
+            unique: true,
+            allowNull: false,
+            primaryKey: true
+        },
         seoTitle: {
             field: 'seo_title',
             type: Sequelize.STRING
