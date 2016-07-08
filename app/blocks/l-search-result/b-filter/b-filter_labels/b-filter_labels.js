@@ -51,8 +51,6 @@ goog.scope(function() {
      * @enum {string}
      */
     FilterLabels.Event = {
-        CHECKED_FILTER: Filter.Event.CHECKED_FILTER,
-        UNCHECKED_FILTER: Filter.Event.UNCHECKED_FILTER,
         UNCHECKED_ITEM: Filter.Event.UNCHECKED_ITEM
     };
 
@@ -100,10 +98,6 @@ goog.scope(function() {
         goog.dom.removeNode(filterSection);
 
         this.initFilterItems();
-
-        this.dispatchEvent({
-            'type': FilterLabels.Event.UNCHECKED_FILTER
-        });
     };
 
 
@@ -120,10 +114,6 @@ goog.scope(function() {
         this.renderItem_(params);
         this.initFilterItems();
         this.initFilterItemsListeners();
-
-        this.dispatchEvent({
-            'type': FilterLabels.Event.CHECKED_FILTER
-        });
     };
 
 

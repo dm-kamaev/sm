@@ -279,10 +279,19 @@ goog.scope(function() {
 
     /**
      * Handler change the filter
-     * @param {Object} event
+     * @param {goog.events.Event} event
      * @protected
      */
     Filter.prototype.onChangeFilter = function(event) {
+        this.dispatchChangedFilterEvent();
+    };
+
+
+    /**
+     * dispatch Changed Filter Event
+     * @protected
+     */
+    Filter.prototype.dispatchChangedFilterEvent = function() {
         var type = this.isCheckedInputs() ? Filter.Event.CHECKED_FILTER :
             Filter.Event.UNCHECKED_FILTER;
 

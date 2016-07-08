@@ -72,6 +72,15 @@ goog.scope(function() {
 
 
     /**
+     * Reset filter
+     * @override
+     */
+    FilterExtended.prototype.reset = function() {
+        this.updateListFilters_(this.allFiltersData_);
+    };
+
+
+    /**
      * Init Buttons
      * @param {Element} element
      * @override
@@ -129,7 +138,7 @@ goog.scope(function() {
 
     /**
      * Hide Search Filter Click
-     * @param {Object} event
+     * @param {goog.events.Event} event
      * @private
      */
     FilterExtended.prototype.onModalFilterButtonClick_ = function(event) {
@@ -139,6 +148,8 @@ goog.scope(function() {
 
         this.updateListFilters_(params);
         this.filterModal_.remove();
+
+        this.dispatchChangedFilterEvent();
     };
 
 
@@ -174,18 +185,10 @@ goog.scope(function() {
 
     /**
      * update content (inputs and labels)
-     * @param {{
-     *      name: string,
-     *      Array<{
-     *         value: string,
-     *         label: string,
-     *         name: ?string,
-     *         isChecked: bool
-     *     }>
-     * } | Array<{
-     *         value: string,
-     *         label: string,
-     *         isChecked: bool
+     * @param {Array<{
+     *     value: string,
+     *     label: string,
+     *     isChecked: bool
      * }>} filters
      * @private
      */
@@ -193,10 +196,10 @@ goog.scope(function() {
         goog.soy.renderElement(
             this.wrapperListFilters,
             sm.lSearchResult.bFilterExtended.Template.listFilters, {
-                'params': {
-                    'data': {
-                        'name': this.filterName,
-                        'filters': filters
+                params: {
+                    data: {
+                        name: this.filterName,
+                        filters: filters
                     }
                 }
             }

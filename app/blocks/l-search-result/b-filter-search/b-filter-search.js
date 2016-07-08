@@ -139,9 +139,9 @@ goog.scope(function() {
      */
     FilterSearch.prototype.onButtonClick_ = function() {
         this.dispatchEvent({
-            'type': FilterSearch.Event.BUTTON_CLICK,
-            'data': {
-                'filters': this.selected_.getSelectedData()
+            type: FilterSearch.Event.BUTTON_CLICK,
+            data: {
+                filters: this.selected_.getSelectedData()
             }
         });
     };
