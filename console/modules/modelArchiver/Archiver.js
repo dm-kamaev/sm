@@ -131,11 +131,11 @@ class Archiver {
         this.decompress(fileDir);
         var headers = this.getHeaders_(filePath);
 
-        this.cloneToTempTable_(table, headers);
+        await(this.cloneToTempTable_(table, headers));
 
         var tmpTable = TMP_TABLE_PREFIX + table;
-        this.copyToTable_(tmpTable, filePath, delimiter);
-        //remove temporary file
+        await(this.copyToTable_(tmpTable, filePath, delimiter));
+        // remove temporary file
         this.deleteUnarchivedFile(fileDir);
 
         var dbFieldsToMatch = fieldsToMatch.map(this.formatHeader_),
@@ -143,14 +143,14 @@ class Archiver {
                 return dbFieldsToMatch.indexOf(fieldName) == -1;
             });
 
-        this.updateTableFromTmpTable_(
+        await(this.updateTableFromTmpTable_(
             table,
             dbFieldsToMatch,
             dbFieldsToUpdate
-        );
+        ));
 
-        //remove temporary table
-        this.destroyTmpTable_(table);
+        // remove temporary table
+        await(this.destroyTmpTable_(table));
     }
 
 
@@ -164,9 +164,8 @@ class Archiver {
         var queryFields = fields.toString(),
             tmpTableName = TMP_TABLE_PREFIX + tableName,
             cloneQuery =
-                'CREATE TEMP TABLE ' + tmpTableName +
+                'CREATE TABLE ' + tmpTableName +
                 ' AS SELECT ' + queryFields + ' FROM ' + tableName + ' LIMIT 0';
-
         await(sequelize.query(
             cloneQuery,
             {
@@ -287,6 +286,7 @@ class Archiver {
         var sqlQuery = 'COPY ' + table + '(' + this.getHeaders_(tmpFilePath) +
             ') FROM \'' + tmpFilePath + '\' WITH CSV HEADER DELIMITER \'' +
             delimiter + '\';';
+
         await(sequelize.query(sqlQuery));
     }
 

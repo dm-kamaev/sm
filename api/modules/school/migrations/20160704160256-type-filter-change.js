@@ -9,7 +9,6 @@ const sequelize = require('../../app/components/db');
 
 module.exports = {
     up: async(function() {
-        console.log(__dirname);
 
         var date = new Date().toJSON(),
             sqlUpdate = squel.update()
