@@ -48,7 +48,7 @@ exports.list = async (function(req, res, next) {
         if (req.params &&
             req.params.listType &&
             lodash.isEmpty(req.query)) {
-            var seoSchoolList = await(services.seoSchoolList.getByRequestParams(
+            var seoSchoolList = await(services.seoSchoolList.getByType(
                     req.params
                 ));
 
