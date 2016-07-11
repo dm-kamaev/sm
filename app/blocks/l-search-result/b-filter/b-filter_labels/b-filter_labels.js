@@ -23,6 +23,31 @@ sm.lSearchResult.bFilter.FilterLabels = function(opt_params) {
      * @private
      */
     this.crossRemove_ = [];
+
+
+    /**
+     * Button with number hidden items
+     * @type {Element}
+     * @private
+     */
+    this.buttonMore_ = null;
+
+
+    /**
+     * number hidden items
+     * @type {Element}
+     * @private
+     */
+    this.numberHiddenItems_ = null;
+
+
+    /**
+     * number show items
+     * @type {number}
+     * @private
+     */
+    this.numberShowItems_ =
+        sm.lSearchResult.bFilter.FilterLabels.numberShowItems;
 };
 goog.inherits(
     sm.lSearchResult.bFilter.FilterLabels,
@@ -32,7 +57,8 @@ goog.inherits(
 
 goog.scope(function() {
     var FilterLabels = sm.lSearchResult.bFilter.FilterLabels,
-        Filter = sm.lSearchResult.bFilter.Filter;
+        Filter = sm.lSearchResult.bFilter.Filter,
+        Utils = cl.iUtils.Utils;
 
 
     /**
@@ -40,9 +66,11 @@ goog.scope(function() {
      * @enum {string}
      */
     FilterLabels.CssClass = {
-        'ROOT': 'b-filter_labels',
-        'REMOVE': 'b-filter__remove',
-        'FILTER_SECTION': Filter.CssClass.FILTER_SECTION
+        ROOT: 'b-filter_labels',
+        REMOVE: 'b-filter__remove',
+        BUTTON_MORE: 'b-filter__button_more',
+        BUTTON_NUMBER: 'b-filter__button-number',
+        FILTER_SECTION: Filter.CssClass.FILTER_SECTION
     };
 
 
@@ -56,24 +84,10 @@ goog.scope(function() {
 
 
     /**
-     * Internal decorates the DOM element
-     * @param {Element} element
+     * Number filters to show
+     * @const {number}
      */
-    FilterLabels.prototype.decorateInternal = function(element) {
-        goog.base(this, 'decorateInternal', element);
-
-        this.initFilterItems(element);
-    };
-
-
-    /**
-     * @override
-     */
-    FilterLabels.prototype.enterDocument = function() {
-        goog.base(this, 'enterDocument');
-
-        this.initFilterItemsListeners();
-    };
+    FilterLabels.numberShowItems = 6;
 
 
     /**
@@ -86,18 +100,11 @@ goog.scope(function() {
      * @public
      */
     FilterLabels.prototype.removeItem = function(data) {
-        var domElement;
-
-        if (data instanceof Node) {
-            domElement = data;
-        } else {
-            domElement = this.findInput(data.value);
-        }
-
-        var filterSection = this.getItem_(domElement);
-        goog.dom.removeNode(filterSection);
-
+        this.removeNode_(data);
         this.initFilterItems();
+
+        this.changeButtonState_();
+        this.showLastHiddenItem_();
     };
 
 
@@ -114,6 +121,9 @@ goog.scope(function() {
         this.renderItem_(params);
         this.initFilterItems();
         this.initFilterItemsListeners();
+
+        this.changeButtonState_();
+        this.hideLastShownItem_();
     };
 
 
@@ -137,6 +147,24 @@ goog.scope(function() {
 
         this.crossRemove_ = this.getElementsByClass(
             FilterLabels.CssClass.REMOVE
+        );
+    };
+
+
+    /**
+     * Init Buttons and her elements
+     * @param {Element} element
+     * @protected
+     */
+    FilterLabels.prototype.initButtons = function(element) {
+        this.buttonMore_ = goog.dom.getElementByClass(
+            FilterLabels.CssClass.BUTTON_MORE,
+            element
+        );
+
+        this.numberHiddenItems_ = goog.dom.getElementByClass(
+            FilterLabels.CssClass.BUTTON_NUMBER,
+            element
         );
     };
 
@@ -192,6 +220,101 @@ goog.scope(function() {
 
 
     /**
+     * Change state of the button, when added or removed filter item
+     * @private
+     */
+    FilterLabels.prototype.changeButtonState_ = function() {
+        var numberAllItems = this.filterSectionElements.length;
+
+        if (numberAllItems == this.numberShowItems_) {
+            this.hideButtonMore_();
+        }
+        else if (numberAllItems == this.numberShowItems_ + 1) {
+            this.showButtonMore_();
+        }
+
+        if (numberAllItems > this.numberShowItems_) {
+            this.insertNumberInButton_(numberAllItems - this.numberShowItems_);
+        }
+    };
+
+
+    /**
+     * show Button More
+     * @private
+     */
+    FilterLabels.prototype.showButtonMore_ = function() {
+        goog.dom.classlist.remove(
+            this.buttonMore_,
+            Utils.CssClass.HIDDEN
+        );
+    };
+
+
+    /**
+     * hide Button More
+     * @private
+     */
+    FilterLabels.prototype.hideButtonMore_ = function() {
+        goog.dom.classlist.add(
+            this.buttonMore_,
+            Utils.CssClass.HIDDEN
+        );
+    };
+
+
+    /**
+     * show last hidden filter item
+     * @private
+     */
+    FilterLabels.prototype.showLastHiddenItem_ = function() {
+        if (this.filterSectionElements.length + 1 > this.numberShowItems_) {
+            goog.dom.classlist.remove(
+                this.filterSectionElements[this.numberShowItems_ - 1],
+                Utils.CssClass.HIDDEN
+            );
+        }
+    };
+
+
+    /**
+     * hide last shown filter item
+     * @private
+     */
+    FilterLabels.prototype.hideLastShownItem_ = function() {
+        if (this.filterSectionElements.length > this.numberShowItems_) {
+            goog.dom.classlist.add(
+                this.filterSectionElements[this.numberShowItems_],
+                Utils.CssClass.HIDDEN
+            );
+        }
+    };
+
+
+    /**
+     * Remove node
+     * @param {({
+     *     value: string,
+     *     label: string,
+     *     name: string
+     * }|Element)} data
+     * @private
+     */
+    FilterLabels.prototype.removeNode_ = function(data) {
+        var domElement;
+
+        if (data instanceof Node) {
+            domElement = data;
+        } else {
+            domElement = this.findInput(data.value);
+        }
+
+        var filterSection = this.getItem_(domElement);
+        goog.dom.removeNode(filterSection);
+    };
+
+
+    /**
      * Render item
      * @param {{
      *     value: string,
@@ -218,6 +341,19 @@ goog.scope(function() {
             this.wrapperListFilters,
             element,
             0
+        );
+    };
+
+
+    /**
+     * insert Number hidden items In Button
+     * @param {number} numberHiddenItems
+     * @private
+     */
+    FilterLabels.prototype.insertNumberInButton_ = function(numberHiddenItems) {
+        goog.dom.setTextContent(
+            this.numberHiddenItems_,
+            numberHiddenItems
         );
     };
 });  // goog.scope

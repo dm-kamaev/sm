@@ -105,7 +105,7 @@
 
     <div class="{$classes}">
         {call .listFilters data="all" /}
-        {call .button_ data="all" /}
+        {call .button data="all" /}
     </div>
 {/template}
 
@@ -251,13 +251,13 @@
  *     }
  * }
  */
-{template .button_ autoescape="strict" kind="html"}
+{template .button autoescape="strict" kind="html"}
     {let $filToShow kind="html"}
         {call .filToShow data="all" /}
     {/let}
 
     {if $params.data.filters.length > $filToShow}
-        {call .buttonShowMore}
+        {call .buttonMore}
             {param params: [
                 'numberHiddenItems': $params.data.filters.length - $filToShow - 1
             ]/}
@@ -272,7 +272,7 @@
  *     numberHiddenItems: ?number
  * }
  */
-{template .buttonShowMore private="true"}
+{template .buttonMore kind="html"}
     {let $customClassesButtonShow kind="html"}
         {call .rootClass/}__button{sp}
         {call .rootClass/}__button_show
@@ -318,7 +318,7 @@
  *     }
  * }
  */
-{template .filToShow kind="html" private="true"}
+{template .filToShow kind="html"}
     {if $params?.config?.filtersToShow}
         {$params?.config?.filtersToShow}
     {else}

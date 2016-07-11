@@ -3,27 +3,23 @@
 
     border: none;
 
-    .b-filter__list-filters {
-        margin-top: 10px;
-
-        &:empty {
-            margin: 0;
-        }
-    }
-
     .b-filter__section {
         width: auto;
         min-width: auto;
         margin: 10px 10px 0 0;
         padding: 8px 15px 10px 10px;
 
-        vertical-align: top;
+        vertical-align: baseline;
 
         border: 1px solid #e5e5e5;
         border-radius: 5px;
 
         font: 14px Arial, sans-serif;
         line-height: 20px;
+
+        &:first-child {
+            margin-top: 20px;
+        }
     }
 
     .b-filter__filter {
@@ -34,6 +30,8 @@
 
     .b-filter__remove {
         display: inline-block;
+
+        cursor: pointer;
 
         vertical-align: top;
     }
@@ -53,5 +51,24 @@
     .b-filter__input-label {
         margin: 0;
         padding: 0;
+
+        cursor: default;
+    }
+
+    .b-filter__button_more {
+        display: inline-block;
+
+        width: auto;
+        min-width: auto;
+        margin: 10px 10px 0 0;
+        padding: 8px 15px 10px 10px;
+
+        vertical-align: baseline;
+
+        border: 1px solid #e5e5e5;
+        border-radius: 5px;
+
+        font: 14px Arial, sans-serif;
+        line-height: 20px;
     }
 }
