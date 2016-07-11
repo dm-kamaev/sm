@@ -353,3 +353,160 @@ exports.searchMapPoints = async(function(req, res) {
         res.end(JSON.stringify(result));
     }
 });
+
+
+/**
+ * Search over activity by given name
+ * @api {get} api/school/activity
+ * @apiVersion 0.0.0
+ * @apiGroup School
+ * @apiName Activity
+ * @apiParam {Object} searchParams Search params.
+ * @apiParamExample {json} Request-Example:
+ *     {
+ *       "schoolId": 123,
+ *       "name": "матем"
+ *     }
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     [
+ *         {
+ *                "label": "Математика",
+ *                "value":"1"
+ *             },
+ *             {
+ *                "label": "Занимательная математика",
+ *                "value":"2"
+ *             }
+ *     ]
+ */
+exports.activity = async(function(req, res) {
+    var result = [
+        {
+            'label': 'Математика',
+            'value': '1'
+        },
+        {
+            'label': 'Занимательная математика',
+            'value': '2'
+        },
+        {
+            'label': 'Робототехника',
+            'value': '3'
+        },
+        {
+            'label': 'Макраме',
+            'value': '4'
+        },
+        {
+            'label': 'Вязание',
+            'value': '5'
+        },
+        {
+            'label': 'Чтение',
+            'value': '6'
+        },
+        {
+            'label': 'Рисование',
+            'value': '7'
+        },
+        {
+            'label': 'Пение',
+            'value': '8'
+        },
+        {
+            'label': 'Плавание',
+            'value': '9'
+        },
+        {
+            'label': 'Вышивание',
+            'value': '10'
+        },
+        {
+            'label': 'История',
+            'value': '11'
+        }
+    ];
+
+    res.status(200);
+    res.end(JSON.stringify(result));
+});
+
+
+/**
+ * Search over activity by given name
+ * @api {get} api/school/specializedClasses
+ * @apiVersion 0.0.0
+ * @apiGroup School
+ * @apiName SpecializedClasses
+ * @apiParam {Object} searchParams Search params.
+ * @apiParamExample {json} Request-Example:
+ *     {
+ *       "schoolId": 123,
+ *       "name": "матем"
+ *     }
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     [
+ *         {
+ *                "label": "Математика",
+ *                "value":"1"
+ *             },
+ *             {
+ *                "label": "Занимательная математика",
+ *                "value":"2"
+ *             }
+ *     ]
+ */
+exports.specializedClasses = async(function(req, res) {
+    var result = [
+        {
+            'label': 'Математика',
+            'value': '1'
+        },
+        {
+            'label': 'Занимательная математика',
+            'value': '2'
+        },
+        {
+            'label': 'Робототехника',
+            'value': '3'
+        },
+        {
+            'label': 'Макраме',
+            'value': '4'
+        },
+        {
+            'label': 'Вязание',
+            'value': '5'
+        },
+        {
+            'label': 'Чтение',
+            'value': '6'
+        },
+        {
+            'label': 'Рисование',
+            'value': '7'
+        },
+        {
+            'label': 'Пение',
+            'value': '8'
+        },
+        {
+            'label': 'Плавание',
+            'value': '9'
+        },
+        {
+            'label': 'Вышивание',
+            'value': '10'
+        },
+        {
+            'label': 'История',
+            'value': '11'
+        }
+    ];
+
+    res.status(200);
+    res.end(JSON.stringify(result));
+});
+
