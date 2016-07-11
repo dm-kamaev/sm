@@ -4,7 +4,8 @@ const lodash = require('lodash');
 
 const services = require('../../../app/components/services').all,
     searchTypeEnum =
-        require('../../../api/modules/geo/enums/addressSearchType');
+        require('../../../api/modules/geo/enums/addressSearchType'),
+    entityType = require('../../../api/modules/entity/enums/entityType');
 
 class AddressActualizer {
     /**
@@ -15,6 +16,11 @@ class AddressActualizer {
          * @type {Object}
          */
         this.address_ = address;
+
+        /**
+         * @type {Array<Object>}
+         */
+        this.searchData_ = address.searchData;
     }
 
     /**
@@ -22,6 +28,8 @@ class AddressActualizer {
      */
     actualize() {
         this.actualizeEducationalGrades_();
+        this.actualizeMetro_();
+        this.actualizeArea_();
     }
 
     /**
@@ -29,17 +37,48 @@ class AddressActualizer {
      */
     actualizeEducationalGrades_() {
         var educationalGrades = this.getEducationalGrades_(),
-            searchData = this.address_.searchData,
             searchType = searchTypeEnum.EDUCATIONAL_GRADES;
-        if (this.getSearchDataByType_(searchData, searchType)) {
-            services.addressSearch.update(searchData.id, {
-                values: educationalGrades
+        this.upsertData_(searchType, educationalGrades);
+    }
+
+    /**
+     * @private
+     */
+    actualizeMetro_() {
+        var metroIds = this.address_.addressMetroes.map(addressMetro =>
+            addressMetro['metro_id']),
+            searchType = searchTypeEnum.METRO;
+        this.upsertData_(searchType, metroIds);
+    }
+
+    /**
+     * @private
+     */
+    actualizeArea_() {
+        var areaId = [this.address_.area_id],
+            searchType = searchTypeEnum.AREA;
+        this.upsertData_(searchType, areaId);
+    }
+
+    /**
+     * @private
+     * @param {string} searchType
+     * @param values {Array<number>}
+     */
+    upsertData_(searchType, values) {
+        if (this.getSearchDataByType_(searchType)) {
+            services.addressSearch.update(this.searchData_.id, {
+                values: values,
+                entityType: entityType.SCHOOL,
+                entityId: this.address_.school_id
             });
-        } else if (educationalGrades.length) {
+        } else if (values.length) {
             services.addressSearch.create({
                 addressId: this.address_.id,
                 type: searchType,
-                values: educationalGrades
+                values: values,
+                entityType: entityType.SCHOOL,
+                entityId: this.address_.school_id
             });
         }
     }
@@ -60,12 +99,11 @@ class AddressActualizer {
 
     /**
      * @private
-     * @param {Array<Object>} searchData
      * @param {string} searchType
      * @return {(Object | undefined)}
      */
-    getSearchDataByType_(searchData, searchType) {
-        return searchData.find(data => data.type === searchType);
+    getSearchDataByType_(searchType) {
+        return this.searchData_.find(data => data.type === searchType);
     }
 }
 

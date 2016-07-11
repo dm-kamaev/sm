@@ -17,6 +17,8 @@ module.exports = {
                     key: 'id'
                 }
             },
+            'entity_id': Sequelize.INTEGER,
+            'entity_type': Sequelize.STRING,
             values: Sequelize.ARRAY(Sequelize.INTEGER),
             type: Sequelize.STRING,
             'created_at': Sequelize.DATE,
