@@ -1,14 +1,14 @@
 'use strict';
 
 const path = require('path');
-const await = require('asyncawait/await');
 const async = require('asyncawait/async');
 
-const ModelArchiver = require('../../console/modules/modelArchiver/ModelArchiver.js');
+const ModelArchiver =
+    require('../../console/modules/modelArchiver/ModelArchiver.js');
 const Department = require('../../api/modules/geo/models/department');
 
 module.exports = {
-    up: async(function () {
+    up: async(function() {
         var dir = path.join(__dirname, '../../api/modules/geo/migrations'),
             file = '20160215214700-additional-departments.tar.gz',
             archiver = new ModelArchiver(Department, dir, null, file);
@@ -17,7 +17,7 @@ module.exports = {
             bulkInsert: true
         });
     }),
-    down: function () {
+    down: function() {
         return null;
     }
 };

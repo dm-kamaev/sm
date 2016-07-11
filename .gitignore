@@ -20,13 +20,16 @@ sftp-config.json
 deployment-config.json
 .remote-sync.json
 .tern-project
+.eslintrc
 .jshintrc
+.eslintrc
 .csscomb*
 .tags*
 
 /app/config/local/
 /app/config/config.*
 /environment/config/*/local/
+/environment/config/*/*.json
 /environment/*/config.*
 
 console/reports

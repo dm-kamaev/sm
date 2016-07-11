@@ -1,10 +1,10 @@
 'use strict';
 
 module.exports = {
-    up: function (queryInterface, Sequelize) {
-        return queryInterface.addColumn('school','url', {
-                type: Sequelize.STRING
-            })
+    up: function(queryInterface, Sequelize) {
+        return queryInterface.addColumn('school', 'url', {
+            type: Sequelize.STRING
+        })
             .then(function() {
                 return queryInterface.createTable('school_url', {
                     id: {
@@ -13,15 +13,15 @@ module.exports = {
                         primaryKey: true,
                         type: Sequelize.INTEGER
                     },
-                    created_at: {
+                    'created_at': {
                         allowNull: false,
                         type: Sequelize.DATE
                     },
-                    updated_at: {
+                    'updated_at': {
                         allowNull: false,
                         type: Sequelize.DATE
                     },
-                    school_id: {
+                    'school_id': {
                         onDelete: 'cascade',
                         type: Sequelize.INTEGER,
                         references: {
@@ -35,9 +35,9 @@ module.exports = {
                 });
             });
     },
-    down: function (queryInterface) {
+    down: function(queryInterface) {
         return queryInterface.removeColumn('school', 'url')
-            .then(function(){
+            .then(function() {
                 return queryInterface.dropTable('school_url');
             });
     }

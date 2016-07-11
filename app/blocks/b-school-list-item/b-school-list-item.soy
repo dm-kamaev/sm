@@ -2,29 +2,29 @@
 
 /**
  * School template
- * @param? params {
+ * @param? params {{
  *     id: ?number,
- *     name: [
+ *     name: {
  *         light: ?string,
  *         bold: ?string
- *     ],
- *     url: ?string,
+ *     },
+ *     alias: ?string,
  *     score: {sm.bScore.TemplateMinimized.Params},
  *     description: ?string,
- *     metroStations: ?list<[
+ *     metroStations: ?Array<{
  *         id: number,
  *         name: string
- *     ]>,
- *     area: ?[
+ *     }>,
+ *     area: ?{
  *         id: number,
  *         name: string
- *     ],
- *     ratings: ?list<string>,
+ *     },
+ *     ratings: ?Array<string>,
  *     position: ?number,
  *     theme: ?string,
- *     isNotClickable: ?bool,
- *     isFavorite: ?bool
- * }
+ *     isNotClickable: ?boolean,
+ *     isFavorite: ?boolean
+ * }}
  */
 {template .base autoescape="strict" kind="html"}
     {let $classes kind="html"}
@@ -38,7 +38,7 @@
         {/if}
     {/let}
 
-    <a href="/school/{$params.url}" data-params="
+    <a href="/school/{$params.alias}" data-params="
         {call cl.iUtils.Utils.stringify}
             {param json: $params /}
         {/call}"
@@ -82,17 +82,15 @@
         <div class="b-school-list-item__section
             b-school-list-item__section_badges">
 
-            <div class="b-school-list-item__position">
-                {if $params?.metroStations and length($params?.metroStations)}
-                    {call .metro_ data="all" /}
-                {elseif $params?.area?.name}
-                    {call .area_ data="all" /}
-                {/if}
+            {if $params?.metroStations and length($params?.metroStations)}
+                {call .metro_ data="all" /}
+            {elseif $params?.area?.name}
+                {call .area_ data="all" /}
+            {/if}
 
-                {if $params?.ratings and length($params?.ratings)}
-                    {call .rating_ data="all" /}
-                {/if}
-            </div>
+            {if $params?.ratings and length($params?.ratings)}
+                {call .rating_ data="all" /}
+            {/if}
 
             {call .favoriteLink_ data="all" /}
         </div>
@@ -126,7 +124,8 @@
  * }}
  */
 {template .metro_ kind="html"}
-    <div class="b-school-list-item__metro-stations">
+    <div class="b-school-list-item__badge
+                b-school-list-item__badge_metro">
         {call sm.bBadge.Template.base}
             {param params:[
                 'data': $params.metroStations,
@@ -150,7 +149,8 @@
  * }}
  */
 {template .area_ kind="html"}
-    <div class="b-school-list-item__area">
+    <div class="b-school-list-item__badge
+                    b-school-list-item__badge_area">
         {call sm.bBadge.Template.base}
             {param params:[
                 'data': $params.area,
@@ -170,7 +170,8 @@
  * }}
  */
 {template .rating_ kind="html"}
-    <div class="b-school-list-item__ratings">
+    <div class="b-school-list-item__badge
+                    b-school-list-item__badge_ratings">
         {call sm.bBadge.Template.base}
             {param params:[
                 'data': $params.ratings
@@ -189,7 +190,8 @@
  */
 {template .favoriteLink_ kind="html" private="true"}
     {let $classes kind="html"}
-        b-school-list-item__favorite
+        b-school-list-item__badge
+        b-school-list-item__badge_favorite
         {if $params?.isNotClickable}
             {sp}i-utils__hidden
         {/if}
@@ -226,10 +228,17 @@
 {template .name_ kind="html"}
     <div class="b-school-list-item__name">
         {if $params.theme == 'minimal'}
+            {let $name kind="html"}
+                {$params.name.light}
+                {if $params.name.bold}
+                    {$params.name.bold}
+                {/if}
+            {/let}
+
             {call sm.bLink.Template.base}
                 {param params: [
                     'data': [
-                        'name': $params.name.light + $params.name.bold ?: ''
+                        'name': $name
                     ],
                     'config': [
                         'size': 'large',

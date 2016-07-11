@@ -7,14 +7,14 @@ var scoreView = {};
  * @param {Array.<number>} score
  * @return {Array.<{name: string, value: number}>|boolean}
  */
-scoreView.school = function (score) {
+scoreView.school = function(score) {
     var sectionNames = [
-        'Образование',
-        'Преподаватели',
-        'Атмосфера',
-        'Инфраструктура'
-    ],
-    scoreSections = this.sections(sectionNames, score);
+            'Образование',
+            'Преподаватели',
+            'Атмосфера',
+            'Инфраструктура'
+        ],
+        scoreSections = this.sections(sectionNames, score);
     return this.isNotEmpty(scoreSections) ? scoreSections : false;
 };
 
@@ -78,7 +78,7 @@ scoreView.results = function(score, totalScore, opt_sortCriterion) {
 /**
  *
  * @param {number} scoreItem
- *  * @return {{
+ * @return {{
  *     data: {
  *         visibleMark: Object.<string, number|string>,
  *         hiddenMarks: Array.<Object.<string, number|string>>
@@ -124,7 +124,7 @@ scoreView.sections = function(sectionNames, nullableSectionValues) {
 /**
  * Transform array with score to array with names and values for score,
  * which not empty
- * @param score
+ * @param {Array} score
  * @return {Array.<{
  *     name: string,
  *     value: number
@@ -152,7 +152,7 @@ scoreView.sectionsNotEmpty = function(score) {
  * }}
  */
 scoreView.minimized = function(scoreSections, opt_visibleMarkIndex) {
-    var visibleMarkIndex = opt_visibleMarkIndex ? opt_visibleMarkIndex : 0;
+    var visibleMarkIndex = opt_visibleMarkIndex || 0;
 
     var visbleMark = scoreSections[visibleMarkIndex];
     var hiddenMarks = scoreSections.filter(item => {

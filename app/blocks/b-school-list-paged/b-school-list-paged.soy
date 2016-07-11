@@ -9,7 +9,7 @@
  *             light: (undefined|string),
  *             bold: (undefined|string)
  *         },
- *         url: (undefined|string,
+ *         alias: (undefined|string,
  *         score: (undefined|number)
  *         metroStations: (undefined|Array<{
  *             id: number,
@@ -40,24 +40,23 @@
 
 /**
  * Body
- * @param? params {?}
  * @override
  */
 {template .body}
-    {call .content_ data="all" /}
+    {call .content data="all" /}
     {call .footer_ data="all" /}
 {/template}
 
 
 
 /**
- * @param? params {
+ * @param? params {{
  *     data: {
  *         schools: Array<sm.bSchoolListPaged.Template.Params.Data>
  *     }
- * }
+ * }}
  */
-{template .content_ kind="html" private="true"}
+{template .content kind="html"}
     {let $schoolsPerPage: $params?.data?.countSchoolsPerPage ?: 5 /}
 
     {let $pageCount:
@@ -83,14 +82,14 @@
 
 
 /**
- * @param? params {
+ * @param? params {{
  *     data: {
  *         schools: sm.bSchoolListPaged.Template.Params.Data,
  *         pageCount: (undefined|number),
  *         pageNumber: (undefined|number),
  *         schoolsPerPage: (undefined|number)
  *     }
- * }
+ * }}
  */
 {template .list_ kind="html" private="true"}
     {let $from: $params?.data?.pageNumber * $params?.data?.schoolsPerPage /}
@@ -108,7 +107,7 @@
                 {call sm.bSchoolListItem.Template.base}
                     {param params:[
                         'id': $params?.data?.schools[$i].id,
-                        'url': $params?.data?.schools[$i].url,
+                        'alias': $params?.data?.schools[$i].alias,
                         'name': $params?.data?.schools[$i].name,
                         'score': $params?.data?.schools[$i].score,
                         'metroStations': $params?.data?.schools[$i].metroStations,
@@ -125,11 +124,11 @@
 
 /**
  * Template footer
- * @param params {
+ * @param params {{
  *     data: {
- *         schools: sm.bSchoolListPaged.Template.Params.Data
+ *         schools: Array<sm.bSchoolListPaged.Template.Params.Data>
  *     }
- * }
+ * }}
  */
 {template .footer_ kind="html" private="true"}
     {let $footerClasses kind="html"}
@@ -170,14 +169,14 @@
 
 /**
  * Template link
- * @param params {
+ * @param params {{
  *     data: {
  *         text: (undefined|string)
  *     },
  *     config: {
  *         modifier: (undefined|string)
  *     }
- * }
+ * }}
  */
 {template .link_ kind="html" private="true"}
     {let $customClasses kind="html"}
@@ -209,13 +208,14 @@
 
 /**
  * Template count
- * @param? params {
+ * @param? params {{
  *     data: {
- *         countSchoolsPerPage: (undefined|number)
+ *         countSchoolsPerPage: (undefined|number),
+ *         schools: Array<sm.bSchoolListPaged.Template.Params.Data>
  *     }
- * }
+ * }}
  */
-{template .pages_ kind="html" private="true"}
+{template .pages_ kind="html"}
     <span class="{call .rootClass/}__pages-count">
         {call .interval}
             {param params: [
@@ -224,17 +224,26 @@
             ]/}
         {/call}
 
-        {call .count_ data="all" /}
+        {let $schoolsCount: $params?.data?.schools ?
+            length($params?.data?.schools):
+            0
+        /}
+
+        {call .count_}
+            {param params: [
+                'schoolsCount': $schoolsCount
+            ]/}
+        {/call}
     </span>
 {/template}
 
 
 /**
  * Template interval
- * @param params {
- *     start: ?number,
- *     end: ?number
- * }
+ * @param params {{
+ *     start: number,
+ *     end: number
+ * }}
  */
 {template .interval kind="html"}
     <span class="{call .rootClass/}__interval-count">
@@ -245,21 +254,42 @@
 
 /**
  * Template count
- * @param params {
- *     data: {
- *         schools: sm.bSchoolListPaged.Template.Params.Data
- *     }
- * }
+ * @param params {{
+ *     schoolsCount: number
+ * }}
  */
 {template .count_ kind="html" private="true"}
-    {let $schoolsCount: $params?.data?.schools ?
-        length($params?.data?.schools):
-        0
-    /}
-
     <span class="{call .rootClass/}__count">
-        {sp}из {$schoolsCount}
+        {call .countText}
+            {param params: $params /}
+        {/call}
     </span>
+{/template}
+
+/**
+ * Template count text
+ * @param params {{
+ *     schoolsCount: number
+ * }}
+ */
+{template .countText}
+    {sp}из {$params.schoolsCount}
+{/template}
+
+
+/**
+ * @param params {{
+ *     data: {
+ *          countSchoolsPerPage: ?number
+ *     }
+ * }}
+ */
+{template .attributes kind="attributes"}
+    {let $dataParams: [
+        'countItemsPerPage': $params.data?.countSchoolsPerPage
+    ]/}
+
+    data-params="{call goog.json.serialize data="$dataParams" /}"
 {/template}
 
 

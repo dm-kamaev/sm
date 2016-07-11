@@ -1,27 +1,23 @@
 'use strict';
 
-const await = require('asyncawait/await');
 const async = require('asyncawait/async');
 
-var squel = require('squel');
+const departmentStage = require('../../api/modules/geo/enums/departmentStage');
 
 module.exports = {
-    up: async(function (queryInterface, Sequelize) {
+    up: async(function(queryInterface, Sequelize) {
         return queryInterface.changeColumn(
             'department',
             'stage',
-            {
-                type: Sequelize.STRING(50),
-                allowNull: false
-            }
+            {type: Sequelize.STRING(50)}
         );
     }),
-    down: function () {
+    down: function(queryInterface, Sequelize) {
         return queryInterface.changeColumn(
             'department',
             'stage',
             {
-                type: DataType.ENUM,
+                type: Sequelize.ENUM,
                 values: departmentStage.toArray(),
                 allowNull: false
             }

@@ -16,12 +16,9 @@
  * @param? params {{
  *     data: {
  *         title: string,
+ *         description: ?string,
  *         content: string,
  *         header: {sm.bHeader.Template.Params.Data},
- *         authSocialLinks: {
- *             vk: ?string,
- *             fb: ?string
- *         },
  *         landingScript: string,
  *         openGraph: ?{
  *             url: ?string,
@@ -155,12 +152,11 @@
  * @override
  */
 {template .content autoescape="strict" kind="html"}
-    {call .header_ data="all" /}
     <div class="i-layout__wrapper">
+        {call .header_ data="all" /}
         <div class="i-layout__content">
             {$params.data.content}
         </div>
-        {call .authorization_ data="all" /}
         {call .footer_ data="all" /}
     </div>
 {/template}
@@ -176,34 +172,6 @@
                 'data': $params.data.header,
                 'config': $params.config
             ] /}
-        {/call}
-    </div>
-{/template}
-
-
-/**
- * authorization modal
- * @param? params {
- *     data: {
- *         authSocialLinks: {
- *             vk: ?string,
- *             fb: ?string
- *         }
- *     }
- * }
- */
-{template .authorization_ autoescape="strict" kind="html"}
-    <div class="i-layout__modal">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': 'stendhal',
-                'type': 'authorization',
-                'renderParams': [
-                    'data': [
-                        'authSocialLinks': $params.data?.authSocialLinks
-                    ]
-                ]
-            ]/}
         {/call}
     </div>
 {/template}

@@ -67,10 +67,18 @@ class CsvConverter {
 
     /**
      * @public
+     * @param {{
+     *     delimiter: (string|undefined),
+     *     headers: (Array<string>|undefined)
+     * }=} opt_params
      * @return {object};
      */
-    toJson() {
-        var unstableJSON = await(this.jsonPromise_(this.input_));
+    toJson(opt_params) {
+        var params = opt_params || {};
+        var unstableJSON = await(this.jsonPromise_(
+            this.input_,
+            params
+        ));
         this.stabilizeJSON_(unstableJSON);
 
         // TODO: find a normal way to do it
@@ -83,23 +91,30 @@ class CsvConverter {
     /**
      * @public
      * @param {string=} opt_delimiter
+     * @param {{
+     *     notCureQuotes: boolean
+     * }=} opt_config
      * @return {string}
      */
-    toCsv(opt_delimiter) {
-        var json = this.getJson_();
+    toCsv(opt_delimiter, opt_config) {
+        var config = opt_config || {},
+            json = this.getJson_(config.notCureQuotes);
         return await(this.csvPromise_(json, opt_delimiter));
     }
 
     /**
      * @private
+     * @param {boolean=} opt_notCureQuotes
      * @return {object}
      */
-    getJson_() {
+    getJson_(opt_notCureQuotes) {
         var res = (this.type_ == 'object') ?
             this.input_ :
             JSON.parse(this.input_);
 
-        CsvConverter.cureQuotes(res);
+        if (!opt_notCureQuotes) {
+            CsvConverter.cureQuotes(res);
+        }
 
         return res;
     }
@@ -123,11 +138,15 @@ class CsvConverter {
     /**
      * @private
      * @param {string} csv
+     * @param {{
+     *     delimiter: (string|undefined),
+     *     headers: (string|undefined)
+     * }} params
      * @return {promise<string>}
      */
-    jsonPromise_(csv) {
+    jsonPromise_(csv, params) {
         return new Promise(function(resolve, reject) {
-            var converter = new csv2json({});
+            var converter = new csv2json(params);
             converter.fromString(csv, function(err, result) {
                 if (err) {
                     reject(err);
@@ -141,7 +160,7 @@ class CsvConverter {
      * @private
      * @param {object} json
      * @param {string=} opt_delimiter
-     * @return {promise<string>}
+     * @return {Promise<string>}
      */
     csvPromise_(json, opt_delimiter) {
         return new Promise (function(resolve, reject) {

@@ -3,20 +3,20 @@ var DataType = require('sequelize'),
 
 var Department = db.define('Department', {
     name: DataType.STRING,
-    stage: {
-        type: DataType.STRING(50),
-        allowNull: false
-    },
     addressId: {
         type: DataType.INTEGER,
         field: 'address_id'
+    },
+    educationalGrades: {
+        type: DataType.ARRAY(DataType.INTEGER),
+        field: 'educational_grades'
     }
 }, {
     underscored: true,
     tableName: 'department',
 
     classMethods: {
-        associate: function (models) {
+        associate: function(models) {
             Department.belongsTo(models.Address, {
                 foreignKey: 'address_id'
             });

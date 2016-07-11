@@ -1,28 +1,25 @@
-var colors = require('colors');
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
-var models =require('../../../../app/components/models').all;
+var models = require('../../../../app/components/models').all;
 var services = require('../../../../app/components/services').all;
-var departmentStage = require('../enums/departmentStage');
 exports.name = 'department';
 
 
 /**
  * Add new department
- * @param {number} school_id
- * @param {number} address_id
+ * @param {number} schoolId
+ * @param {number} addressId
  * @param {{
- *     stage: string,
- *     name: string,
- *     availability: [Array]
+ *     educationalGrades: string,
+ *     name: string
  * }} data
  * @return {Object} instance of Department model
  */
-exports.addDepartment = function(school_id, address_id, data) {
-    var addresses = await(services.school.getAddresses(school_id));
+exports.addDepartment = function(schoolId, addressId, data) {
+    var addresses = await(services.school.getAddresses(schoolId));
     var address = addresses.find(address => {
         var result = false;
-        if (address.id === address_id) {
+        if (address.id === addressId) {
             result = true;
         }
         return result;
@@ -32,32 +29,31 @@ exports.addDepartment = function(school_id, address_id, data) {
         .then(instance => {
             address.addDepartment(instance);
             return instance;
-    }));
+        }));
 };
 
 
 /**
  * Update department data
- * @param {number} department_id
+ * @param {number} departmentId
  * @param {{
- *     stage?: string,
- *     name?: string,
- *     availability: [Array]
+ *     educationalGrades?: string,
+ *     name?: string
  * }} data
  * @return {Object} instance of Department model
  */
-exports.update = async(function(department_id, data) {
-    var instance = exports.getById(department_id);
+exports.update = async(function(departmentId, data) {
+    var instance = exports.getById(departmentId);
     return await(instance.update(data));
 });
 
 
 /**
  * Delete department data
- * @param {number} department_id
+ * @param {number} departmentId
  */
-exports.delete = async(function(department_id) {
-    var instance = await(exports.getById(department_id));
+exports.delete = async(function(departmentId) {
+    var instance = await(exports.getById(departmentId));
     instance.destroy();
 });
 
@@ -74,9 +70,9 @@ exports.getAll = function() {
 /**
  * Get all data from table by data
  * @param {{
- *     id?: nimber,
- *     stage?: string,
- *     name?: string
+ *     id: ?number,
+ *     educationalGrades: ?string,
+ *     name: ?string
  * }} data
  * @return {Object} instances of Department model
  */
@@ -88,8 +84,8 @@ exports.getAllByData = function(data) {
 /**
  * Get one data from table by data
  * @param {{
- *     stage?: string,
- *     name?: string
+ *     educationalGrades: ?string,
+ *     name: ?string
  * }} data
  * @return {Object} instance of Department model
  */
@@ -100,23 +96,23 @@ exports.getOneByData = function(data) {
 
 /**
  * Get one data from table by data
- * @param {number} department_id
+ * @param {number} departmentId
  * @return {Object} instance of Department model
  */
-exports.getById = function(department_id) {
+exports.getById = function(departmentId) {
     return await(models.Department.findOne({
-        where: {id: department_id}
+        where: {id: departmentId}
     }));
 };
 
 
 /**
  * Get address id dy department instance
- * @param {number} department_id
+ * @param {number} departmentId
  * @return {Object} instances of Address model
  */
-exports.getAddresses = function(department_id) {
-    var instance = exports.getOneBydata({id: department_id});
+exports.getAddresses = function(departmentId) {
+    var instance = exports.getOneBydata({id: departmentId});
     return await(instance.getAddress());
 };
 
@@ -133,19 +129,12 @@ exports.addressesFilter = function(addressList) {
             var res = false;
             if (address.departments.length > 0) {
                 address.departments.forEach(department => {
-                    if (department.stage ===
-                            departmentStage.fields.ELEMENTARY ||
-                        department.stage ===
-                            departmentStage.fields.MIDDLE ||
-                        department.stage ===
-                            departmentStage.fields.HIGH ||
-                        department.stage ===
-                            departmentStage.fields.MIDDLE_HIDE) {
+                    if (department.educationalGrades &&
+                        department.educationalGrades.some(grade => grade > 0)) {
                         res = true;
                     }
                 });
-            }
-            else {
+            } else {
                 addressesWithoutStage.push(address);
             }
             return res;
@@ -154,8 +143,7 @@ exports.addressesFilter = function(addressList) {
     var addresses;
     if (addressesWithNeededStages.length > 0) {
         addresses = addressesWithNeededStages;
-    }
-    else {
+    } else {
         addresses = addressesWithoutStage;
     }
 
@@ -170,9 +158,9 @@ exports.addressesFilter = function(addressList) {
 exports.addAddressList = function(departmentId, addressIdList) {
     addressIdList.forEach(function(addressId) {
         var params = {
-                address_id: addressId,
-                department_id: departmentId
-            };
+            addressId: addressId,
+            departmentId: departmentId
+        };
         await(models.Department_address.create(params));
     });
 };

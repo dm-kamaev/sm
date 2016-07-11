@@ -1,6 +1,5 @@
 'use strict';
 const lodash = require('lodash');
-const searchType = require('../enums/searchType');
 
 var searchView = {};
 
@@ -9,15 +8,15 @@ var searchView = {};
  * @param {Array.<Object>} typeInstances
  * @return {Array.<number>}
  */
-searchView.schoolTypeFilterIds = function (typeInstances) {
-    return typeInstances.map( (typeInstance) => {
-            return typeInstance.id;
-        }
+searchView.schoolTypeFilterIds = function(typeInstances) {
+    return typeInstances.map(typeInstance => {
+        return typeInstance.id;
+    }
     );
 };
 
 /**
- * Update filters in params
+ * Update opt_filters in params
  * @param {Object} searchParams
  * @param {?string} searchParams.name
  * @param {?Array.<number>} searchParams.classes
@@ -30,18 +29,34 @@ searchView.schoolTypeFilterIds = function (typeInstances) {
  * @param {?number} searchParams.sortType
  * @param {?number} searchParams.page
  *
- * @param {Object} filters
- * @param {?Array.<number>} filters.schoolType
- * @param {?Array.<number>} filters.ege
- * @param {?Array.<number>} filters.gia
- * @param {?Array.<number>} filters.olimp
+ * @param {Object=} opt_filters
+ * @param {?Array.<number>} opt_filters.schoolType
+ * @param {?Array.<number>} opt_filters.ege
+ * @param {?Array.<number>} opt_filters.gia
+ * @param {?Array.<number>} opt_filters.olimp
  *
- * @return {Object}
+ * @return {{
+ *     name: string,
+ *     schoolType: Array<number>,
+ *     classes: Array<number>,
+ *     gia: Array<number>,
+ *     ege: Array<number>,
+ *     olimp: Array<number>,
+ *     metroId: ?number,
+ *     areaId: ?number,
+ *     districtId: ?number,
+ *     sortType: ?number,
+ *     page: number
+ * }}
  */
-searchView.params = function(searchParams, filters) {
-    var name;
+searchView.params = function(searchParams, opt_filters) {
+    var name,
+        filters = opt_filters || {};
 
-    if (searchParams.areaId || searchParams.metroId || !searchParams.name) {
+    if (searchParams.areaId ||
+        searchParams.metroId ||
+        searchParams.districtId ||
+        !searchParams.name) {
         name = '';
     } else {
         name = searchParams.name;
@@ -49,17 +64,27 @@ searchView.params = function(searchParams, filters) {
 
     return {
         name: name,
-        schoolType: filters.schoolType || [],
+        schoolType: filters.schoolType ||
+            searchParams.schoolType ||
+            [],
         classes: searchParams.classes || [],
-        gia: filters.gia || [],
-        ege: filters.ege || [],
-        olimp: filters.olimp || [],
+        gia: filters.gia ||
+            searchParams.gia ||
+            [],
+        ege: filters.ege ||
+            searchParams.ege ||
+            [],
+        olimp: filters.olimp ||
+            searchParams.olimp ||
+            [],
         metroId: searchParams.metroId || null,
         areaId: searchParams.areaId || null,
+        districtId: searchParams.districtId || null,
         sortType: searchParams.sortType || null,
         page: searchParams.page || 0
     };
 };
+
 
 /**
  * @param {Array.<Object>} filters
@@ -91,7 +116,7 @@ var hasCheckedFilters = function(schoolFilters, classesFilter) {
         classesFilter.data.isKindergartenSelected ||
         classesFilter.data.selectedClass;
 
-    if(!isChecked) {
+    if (!isChecked) {
         isChecked = lodash.some(schoolFilters, function(subjectFilter) {
             return subjectFilter.config.isShowed;
         });
@@ -103,7 +128,7 @@ var hasCheckedFilters = function(schoolFilters, classesFilter) {
 /**
  * Generate school filters
  * @param {Array.<Object.<string, string|number>>} filters
- * @param searchParams {Object.<string, Array.<number>>}
+ * @param {Object.<string, Array.<number>>} searchParams
  * @return {Array.<Object.<string, Object>>}
  */
 searchView.schoolFilters = function(filters, searchParams) {
@@ -111,7 +136,7 @@ searchView.schoolFilters = function(filters, searchParams) {
         var filterType = lodash.camelCase(filter.filter),
             checkedItems = searchParams[filterType];
 
-        return schoolFilter(filter, checkedItems, filterType)
+        return schoolFilter(filter, checkedItems, filterType);
     });
 };
 
@@ -164,11 +189,11 @@ var filterTitle = function(filterType) {
 var filterTooltip = function(filterType) {
     var tooltips = {
         schoolType: '',
-        ege:  'Выше среднего значения по\u00A0нашей базе.' +
+        ege: 'Выше среднего значения по\u00A0нашей базе.' +
             ' Учитываются результаты московских школ за\u00A0последний год.',
         gia: 'Выше среднего значения по\u00A0нашей базе.' +
             ' Учитываются результаты московских школ за\u00A0последний год.',
-        olimp:  ''
+        olimp: ''
     };
     return tooltips[filterType];
 };
@@ -181,12 +206,12 @@ var filterTooltip = function(filterType) {
  * @return {Array.<Object.<string, boolean|string>>}
  */
 var filterValues = function(filters, checkedFilters) {
-    return filters.map((filter) => {
+    return filters.map(filter => {
         return {
             label: filter.label,
             value: filter.value,
             isChecked: isCheckedItem(checkedFilters, filter.id)
-        }
+        };
     });
 };
 
@@ -198,13 +223,13 @@ var filterValues = function(filters, checkedFilters) {
  */
 var isCheckedItem = function(checkedFilters, filterId) {
     return !!checkedFilters.find(checkedFilter => {
-        return checkedFilter == filterId
+        return checkedFilter == filterId;
     });
 };
 
 /**
  * Verify that one of filters is checked and return true in this case
- * @param filters
+ * @param {Array<Object>} filters
  * @return {boolean}
  */
 var hasCheckedItems = function(filters) {
@@ -227,7 +252,7 @@ searchView.classesFilter = function(searchParams) {
             },
             name: 'classes',
             isKindergartenSelected: lodash.some(
-                selectedClasses, (selectedClass) => {
+                selectedClasses, selectedClass => {
                     return parseInt(selectedClass) === 0;
                 }
             ),
@@ -236,7 +261,6 @@ searchView.classesFilter = function(searchParams) {
             })
         }
     };
-
 };
 
 module.exports = searchView;

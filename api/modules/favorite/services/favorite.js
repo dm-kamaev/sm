@@ -90,7 +90,7 @@ service.create = async(function(userId, itemId) {
  */
 service.delete = async(function(favoriteId) {
     var favorite = await(service.getById(favoriteId));
-    if(favorite) {
+    if (favorite) {
         await(favorite.destroy());
     } else {
         throw new errors.FavoriteEntryNotFound();
@@ -106,7 +106,7 @@ service.delete = async(function(favoriteId) {
 service.deleteByUserIdAndItemId = async(function(userId, itemId) {
     var favorite = await(service.getByUserIdAndItemId(userId, itemId));
 
-    if(favorite) {
+    if (favorite) {
         await(favorite.destroy());
     } else {
         throw new errors.FavoriteEntryNotFound();

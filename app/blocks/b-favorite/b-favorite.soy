@@ -3,15 +3,20 @@
 
 /**
  * Favorite template parameters
- * @typedef {Object} sm.bFavorite.Template.Params
- * @property {Object} data
- * @property {(Array<sm.bSchoolListPaged.Template.Params>|undefined)} data.schools
+ * @typedef {{
+ *     schools: Array<sm.bSchoolListPaged.Template.Params>
+ * }} sm.bFavorite.Template.Params.Data
  */
 
 
 /**
  * Constructor
- * @param params {sm.bFavorite.Template.Params}
+ * @param params {{
+ *     data: sm.bFavorite.Template.Params.Data,
+ *     config: {
+ *         isUserAuthorized: boolean
+ *     }
+ * }}
  * @extends cl.iControl.Template
  * @constructor
  */
@@ -22,7 +27,6 @@
 
 /**
  * Body
- * @param params {?}
  * @override
  */
 {template .body}
@@ -59,7 +63,6 @@
 
 /**
  * Tooltips template
- * @param params {?}
  */
 {template .tooltip_ kind="html" private="true"}
     {let $tooltipData kind="html"}
@@ -89,16 +92,27 @@
 
 /**
  * tooltip Data
- * @param params {?}
  */
 {template .tooltipData_ kind="html" private="true"}
     <div class="{call .rootClass/}__hint-content
-                {sp}{call .rootClass/}__hint-content_text">
-        {call .contentText_ /}
+                {sp}{call .rootClass/}__hint-content_user-authorized">
+        {call .contentUserAuthorized data="all"/}
     </div>
-
     <div class="{call .rootClass/}__hint-content
-                {sp}{call .rootClass/}__hint-content_list">
+                {sp}{call .rootClass/}__hint-content_user-not-authorized">
+        {call .contentUserNotAuthorized /}
+    </div>
+{/template}
+
+/**
+ * Tooltip content for state, when user is authorized
+ */
+{template .contentUserAuthorized}
+    <div class="{call .rootClass/}__hint-content-text
+                {sp}{call .rootClass/}__hint-content-text_favorite-empty">
+        {call .contentTextAuthoroized_ /}
+    </div>
+     <div class="{call .rootClass/}__hint-content-list">
         {call .listSchools_ data="all" /}
     </div>
 {/template}
@@ -107,17 +121,18 @@
 /**
  * content text if array schools is empty
  */
-{template .contentText_ kind="html" private="true"}
-    Пока&nbsp;вы&nbsp;ничего не&nbsp;добавили&nbsp;в&nbsp;избранное
+{template .contentTextAuthoroized_ kind="html" private="true"}
+    Пока&nbsp;вы&nbsp;ничего не&nbsp;добавили&nbsp;в&nbsp;избранное.
 {/template}
 
 
 /**
  * list of schools
- * @param params {
+ * @param params {{
  *     data: {
  *         schools: ?Array<Object>
- * }
+ *     }
+ * }}
  */
 {template .listSchools_ kind="html" private="true"}
     {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
@@ -126,7 +141,7 @@
             'type': 'school-list-paged',
             'renderParams': [
                 'data': [
-                    'schools': $params.data.schools
+                    'schools': $params?.data?.schools
                 ]
             ]
         ]/}
@@ -135,17 +150,58 @@
 
 
 /**
+ * Tooltip content for state, when user not authorized
+ */
+{template .contentUserNotAuthorized}
+    <div class="{call .rootClass/}__hint-content-text
+                {sp}{call .rootClass/}__hint-content-text_user-not-authorized">
+        {call .contentTextNotAuthorized_ /}
+    </div>
+{/template}
+
+/**
+ * content text if user not authorized
+ */
+{template .contentTextNotAuthorized_}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__link{sp}
+        {call .rootClass/}__link_authorize
+    {/let}
+    {call sm.bLink.Template.base}
+        {param params:[
+            'data': [
+                'name': 'Войдите'
+            ],
+            'config': [
+             'customClasses': $customClasses
+            ]
+        ] /}
+    {/call}
+    ,{sp}чтобы добавлять&nbsp;в&nbsp;избранное
+{/template}
+
+
+/**
  * Css classes
- * @param params {
+ * @param params {{
  *     data: {
  *         schools: ?Array<Object>
+ *     },
+ *     config: {
+ *         isUserAuthorized: boolean
  *     }
- * }
+ * }}
  * @override
  */
 {template .additionalClasses}
     {if $params?.data?.schools and length($params?.data?.schools)}
-        {call .rootClass/}_filled
+        {sp}{call .rootClass/}_filled
+    {/if}
+
+    {if $params?.config?.isUserAuthorized}
+        {sp}{call .rootClass/}_user-authorized
+    {else}
+        {sp}{call .rootClass/}_user-not-authorized
     {/if}
 {/template}
 

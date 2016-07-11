@@ -1,11 +1,7 @@
 'use strict';
 
-const await = require('asyncawait/await');
-const async = require('asyncawait/async');
-const sequelize = require('../../app/components/db');
-
 module.exports = {
-    up: function (queryInterface, Sequelize) {
+    up: function(queryInterface, Sequelize) {
         queryInterface.addColumn('user_data', 'user_id', {
             type: Sequelize.INTEGER
         });
@@ -13,7 +9,7 @@ module.exports = {
             type: Sequelize.STRING
         });
     },
-    down: function (queryInterface) {
+    down: function(queryInterface) {
         queryInterface.removeColumn('user_data', 'user_id');
         queryInterface.removeColumn('user_data', 'key');
     }

@@ -10,7 +10,6 @@ goog.require('goog.object');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
 goog.require('gorod.gSuggest.Suggest');
-goog.require('sm.bAuthorization.Authorization');
 goog.require('sm.bHeader.Header');
 goog.require('sm.bMap.Map');
 goog.require('sm.bSearch.Search');
@@ -24,20 +23,19 @@ goog.require('sm.lSearchResult.bSchoolList.SchoolList');
 
 /**
  * Search result component
- * @param {object=} opt_params
  * @constructor
  * @extends {goog.ui.Component}
  */
-sm.lSearchResult.SearchResult = function(opt_params) {
+sm.lSearchResult.SearchResult = function() {
     goog.base(this);
 
 
     /**
-     * Parameters
+     * Authorization parameters
      * @private
-     * @type {Object}
+     * @type {sm.iAuthorization.Authorization.InitParams}
      */
-    this.params_ = opt_params || {};
+    this.authParams_ = {};
 
 
     /**
@@ -82,6 +80,7 @@ sm.lSearchResult.SearchResult = function(opt_params) {
         'name': null,
         'metroId': null,
         'areaId': null,
+        'districtId': null,
         'schoolType': [],
         'classes': [],
         'ege': [],
@@ -200,6 +199,9 @@ goog.scope(function() {
         /** Init params **/
         this.initParams_();
         /** end init params **/
+
+        /** Authorization init after params because params need to init it **/
+        this.initAuthorization_();
     };
 
 
@@ -254,13 +256,38 @@ goog.scope(function() {
      */
     SearchResult.prototype.initParams_ = function() {
         var element = this.getElement(),
-            dataParams = JSON.parse(goog.dom.dataset.get(element, 'params'));
+            dataParams = JSON.parse(goog.dom.dataset.get(element, 'params')),
+            searchSettings = dataParams['searchSettings'],
+            searchParams = searchSettings['searchParams'],
+            params = dataParams['params'];
 
-        this.instances_.search.setData(dataParams.searchParams);
+        this.instances_.search.setData(searchParams);
 
         this.searchParams_ = this.getSearchParams_();
+
+        this.authParams_ = {
+            isUserAuthorized: params['isUserAuthorized'],
+                authSocialLinks: {
+                    fb: params['authSocialLinks']['fb'],
+                    vk: params['authSocialLinks']['vk']
+                },
+            factoryType: 'stendhal'
+        };
     };
 
+
+    /**
+     * Init authorization
+     * @return {sm.lSearchResult.SearchResult}
+     * @private
+     */
+    SearchResult.prototype.initAuthorization_ = function() {
+        var authorization = sm.iAuthorization.Authorization.getInstance();
+
+        authorization.init(this.authParams_);
+
+        return this;
+    };
 
     /**
      * Init school list block
@@ -385,6 +412,14 @@ goog.scope(function() {
             this.instances_.schoolList,
             SchoolList.Event.SHOW_MORE,
             this.onShowMoreSchoolListItems_
+        ).listen(
+            this.instances_.schoolList,
+            SchoolList.Event.FAVORITE_ADDED,
+            this.onFavoriteAdded_
+        ).listen(
+            this.instances_.schoolList,
+            SchoolList.Event.FAVORITE_REMOVED,
+            this.onFavoriteRemoved_
         );
     };
 
@@ -615,7 +650,7 @@ goog.scope(function() {
         this.updateUrl_();
 
         this.send_(this.requestParams_.listDataUrl)
-            .then(this.updateSchools_.bind(this));
+            .then(this.updateSearchResults_.bind(this));
     };
 
 
@@ -732,7 +767,7 @@ goog.scope(function() {
         });
 
         this.send_(this.requestParams_.listDataUrl)
-            .then(this.updateSchools_.bind(this));
+            .then(this.sortSearchResults_.bind(this));
     };
 
 
@@ -749,6 +784,30 @@ goog.scope(function() {
 
         this.send_(this.requestParams_.listDataUrl)
             .then(this.addItems_.bind(this));
+    };
+
+
+    /**
+     * Handler for adding one school into favorite list
+     * @param {sm.bFavoriteLink.Event.FavoriteAdded} event
+     * @private
+     */
+    SearchResult.prototype.onFavoriteAdded_ = function(event) {
+        var addedItem = event.data;
+
+        this.instances_.header.addFavorite(addedItem);
+    };
+
+
+    /**
+     *
+     * @param {sm.bSchoolListItem.Event.FavoriteRemoved} event
+     * @private
+     */
+    SearchResult.prototype.onFavoriteRemoved_ = function(event) {
+        var removedItemId = event.data.itemId;
+
+        this.instances_.header.removeFavorite(removedItemId);
     };
 
 
@@ -825,24 +884,36 @@ goog.scope(function() {
 
 
     /**
-     * Updates list and map
-     * @param {string} data
+     * Updates list schools and list header and map
+     * @param {Object} data
      * @private
      */
-    SearchResult.prototype.updateSchools_ = function(data) {
+    SearchResult.prototype.updateSearchResults_ = function(data) {
         var list = data['list'],
             map = data['map'];
 
         if (list['countResults'] > 0) {
-            this.showMap_();
-            this.replaceMapPoints_(map);
-
-            this.send_(this.requestParams_.mapDataUrl)
-                .then(this.addMapPoints_.bind(this));
+            this.updateMap_(map);
         } else {
             this.hideMap_();
         }
         this.updateList_(list);
+
+        this.sendAddedItemImpressions_(list['schools']);
+    };
+
+
+    /**
+     * Sort list schools and update the map for sorting results
+     * @param {Object} data
+     * @private
+     */
+    SearchResult.prototype.sortSearchResults_ = function(data) {
+        var list = data['list'],
+            map = data['map'];
+
+        this.updateMap_(map);
+        this.updateListSchools_(list);
 
         this.sendAddedItemImpressions_(list['schools']);
     };
@@ -873,8 +944,22 @@ goog.scope(function() {
 
 
     /**
+     * Update map
+     * @param {Object} data
+     * @private
+     */
+    SearchResult.prototype.updateMap_ = function(data) {
+        this.showMap_();
+            this.replaceMapPoints_(data);
+
+        this.send_(this.requestParams_.mapDataUrl)
+            .then(this.addMapPoints_.bind(this));
+    };
+
+
+    /**
      * Add points to map and center it if necessary
-     * @param {string} data
+     * @param {Object} data
      * @private
      */
     SearchResult.prototype.addMapPoints_ = function(data) {
@@ -899,6 +984,17 @@ goog.scope(function() {
      * @private
      */
     SearchResult.prototype.updateList_ = function(data) {
+        this.updateHeader_(data);
+        this.updateListSchools_(data);
+    };
+
+
+    /**
+     * Update schools list header
+     * @param {Object} data
+     * @private
+     */
+    SearchResult.prototype.updateHeader_ = function(data) {
         var textChangeElements = this.elements_.textChangeElements;
         for (var i = 0, elem; elem = textChangeElements[i]; i++) {
             goog.soy.renderElement(
@@ -911,7 +1007,15 @@ goog.scope(function() {
                 }
             );
         }
+    };
 
+
+    /**
+     * Update schools list
+     * @param {Object} data
+     * @private
+     */
+    SearchResult.prototype.updateListSchools_ = function(data) {
         data['countResults'] ?
             goog.dom.classes.remove(
                 this.elements_.listContainer,

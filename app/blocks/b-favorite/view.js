@@ -36,9 +36,42 @@ goog.scope(function() {
     View.CssClass = {
         ROOT: 'b-favorite',
         ICON: 'b-favorite__icon-wrap',
-        HINT: 'b-favorite__hint-content'
+        HINT: 'b-favorite__hint-content',
+        AUTHORIZE_LINK: 'b-favorite__link_authorize',
+        FILLED: 'b-favorite_filled',
+        EMPTY: 'b-favorite_empty',
+        HOVERABLE: 'b-favorite_hoverable',
+        OPENED: 'b-favorite_opened'
     };
 
+
+    /**
+     * Event enum
+     * @type {string}
+     */
+    View.Event = {
+        AUTHORIZE: 'authorize'
+    };
+
+
+    /**
+     * States enum
+     * @enum {string}
+     */
+    View.State = {
+        FILLED: 'filled',
+        EMPTY: 'empty'
+    };
+
+    /**
+     * Sets given state
+     * @param {string} state
+     */
+    View.prototype.setState = function(state) {
+        if (this.isValidState_(state)) {
+            this.switchState_(state);
+        }
+    };
 
     /**
      * @override
@@ -47,7 +80,8 @@ goog.scope(function() {
     View.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
-        this.initDom_();
+        this.initDom_()
+            .detectHoverability_();
     };
 
 
@@ -61,9 +95,11 @@ goog.scope(function() {
             this.dom.icon,
             goog.events.EventType.CLICK,
             this.onIconClick_
-        );
-
-        this.getHandler().listen(
+        ).listen(
+            this.dom.authorizeLink,
+            goog.events.EventType.CLICK,
+            this.onAuthorizeLinkClick_
+        ).listen(
             document,
             goog.events.EventType.CLICK,
             this.onDocumentClick_
@@ -74,16 +110,18 @@ goog.scope(function() {
     /**
      * show Hint
      */
-    View.prototype.showHint = function() {
+    View.prototype.setOpenedState = function() {
         this.setHintVisibility_(true);
+        this.setOpenedBlockState_(true);
     };
 
 
     /**
      * hide Hint
      */
-    View.prototype.hideHint = function() {
+    View.prototype.unsetOpenedState = function() {
         this.setHintVisibility_(false);
+        this.setOpenedBlockState_(false);
     };
 
 
@@ -99,7 +137,7 @@ goog.scope(function() {
         );
 
         if (this.isHintVisible_ && !isContaints) {
-            this.hideHint();
+            this.unsetOpenedState();
         }
     };
 
@@ -111,11 +149,22 @@ goog.scope(function() {
      */
     View.prototype.onIconClick_ = function() {
         if (this.isHintVisible_) {
-            this.hideHint();
+            this.unsetOpenedState();
         }
         else {
-            this.showHint();
+            this.setOpenedState();
         }
+    };
+
+
+    /**
+     * Handles event of clicking to authorization link
+     * @private
+     */
+    View.prototype.onAuthorizeLinkClick_ = function() {
+        this.dispatchEvent({
+            'type': View.Event.AUTHORIZE
+        });
     };
 
 
@@ -140,7 +189,26 @@ goog.scope(function() {
 
 
     /**
+     * Set or remove opened state modifier from block
+     * @param {boolean} openedState
+     * @private
+     */
+    View.prototype.setOpenedBlockState_ = function(openedState) {
+        openedState ?
+            goog.dom.classlist.add(
+                this.getElement(),
+                View.CssClass.OPENED
+            ) :
+            goog.dom.classlist.remove(
+                this.getElement(),
+                View.CssClass.OPENED
+            );
+    };
+
+
+    /**
      * Initializes dom elements
+     * @return {sm.bFavorite.View}
      * @private
      */
     View.prototype.initDom_ = function() {
@@ -151,9 +219,72 @@ goog.scope(function() {
             hint: this.getElementByClass(
                 View.CssClass.HINT
             ),
+            authorizeLink: this.getElementByClass(
+                View.CssClass.AUTHORIZE_LINK
+            ),
             schoolListPaged: this.getElementByClass(
                 sm.bSchoolListPaged.View.CssClass.ROOT
             )
         };
+
+        return this;
+    };
+
+
+    /**
+     * Check hoverability for block and
+     * if it hoverable, add to it corresponding modifier
+     * @return {sm.bFavorite.View}
+     * @private
+     */
+    View.prototype.detectHoverability_ = function() {
+        if (goog.labs.userAgent.device.isDesktop()) {
+            goog.dom.classlist.add(
+                this.getElement(),
+                View.CssClass.HOVERABLE
+            );
+        }
+
+        return this;
+    };
+
+
+    /**
+     * Checks that given state is valid
+     * @param {string} state
+     * @return {boolean}
+     * @private
+     */
+    View.prototype.isValidState_ = function(state) {
+        return state == View.State.EMPTY ||
+            state == View.State.FILLED;
+    };
+
+
+    /**
+     * Switch state to given state
+     * @param {string} state
+     * @private
+     */
+    View.prototype.switchState_ = function(state) {
+        if (state == View.State.EMPTY) {
+            goog.dom.classlist.add(
+                this.getElement(),
+                View.CssClass.EMPTY
+            );
+            goog.dom.classlist.remove(
+                this.getElement(),
+                View.CssClass.FILLED
+            );
+        } else if (state == View.State.FILLED) {
+            goog.dom.classlist.add(
+                this.getElement(),
+                View.CssClass.FILLED
+            );
+            goog.dom.classlist.remove(
+                this.getElement(),
+                View.CssClass.EMPTY
+            );
+        }
     };
 });  // goog.scope

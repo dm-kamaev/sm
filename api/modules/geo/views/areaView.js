@@ -13,7 +13,7 @@ areaView.list = function(areas) {
         .map(area => {
             return {
                 id: area.id,
-                name: area.name,
+                name: area.name
             };
         });
 };

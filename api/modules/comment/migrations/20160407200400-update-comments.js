@@ -9,15 +9,13 @@ const folder = path.join(__dirname, '../../api/modules/comment/migrations');
 const pathToData = path.join(folder, '20160407200400-update-comments.json');
 const data = require(pathToData).data;
 
-var school = require('../../api/modules/school');
-const models = require('../../app/components/models');
-const services = require('../../app/components/services');
+// var school = require('../../api/modules/school');
+// const models = require('../../app/components/models');
 
 const PollComments = require('../../console/modules/comments/PollComments');
 
 module.exports = {
-    up: async(function () {
-        models.initAssociations();
+    up: async(function() {
         sequelize.options.logging = false;
         var pollComments = new PollComments();
         data.forEach(item => {
@@ -26,7 +24,7 @@ module.exports = {
             ));
         });
     }),
-    down: function () {
+    down: function() {
         return null;
     }
 };

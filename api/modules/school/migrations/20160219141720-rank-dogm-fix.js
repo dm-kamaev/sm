@@ -10,7 +10,7 @@ const ModelArchiver = require(
 const School = require('../../api/modules/school/models/school');
 
 module.exports = {
-    up: async(function () {
+    up: async(function() {
         var dir = path.join(__dirname, '../../api/modules/school/migrations'),
             file = '20160219141720-rank-dogm-fix.tar.gz',
             archiver = new ModelArchiver(School, dir, null, file);
@@ -39,7 +39,7 @@ module.exports = {
             }
         ));
     }),
-    down: function () {
+    down: function() {
         return null;
     }
 };

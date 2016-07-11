@@ -1,6 +1,6 @@
 var DataType = require('sequelize'),
-    db = require('../../../../app/components/db');
-var urlService = require('../services/urls');
+    db = require('../../../../app/components/db'),
+    urlService = require('../../entity/services/urls');
 const schoolType = require('../enums/schoolType');
 
 var School = db.define('School', {
@@ -106,26 +106,13 @@ var School = db.define('School', {
     commentGroupId: {
         type: DataType.INTEGER,
         field: 'comment_group_id'
-    },
-    views: {
-        type: DataType.INTEGER,
-        notNull: false,
-        defaultValue: 0
-    },
-    url: {
-        type: DataType.STRING,
-        unique: true
-    },
-    seoDescription: {
-        type: DataType.STRING(300),
-        field: 'seo_description'
     }
 }, {
     underscored: true,
     tableName: 'school',
     hooks: {
-        afterCreate: urlService.generateUrl,
-        afterUpdate: urlService.generateUrl,
+        afterCreate: urlService.generateSchoolAlias,
+        afterUpdate: urlService.generateSchoolAlias,
     },
 
     classMethods: {
@@ -144,10 +131,6 @@ var School = db.define('School', {
             });
             School.hasMany(models.SearchData, {
                 as: 'searchData', foreignKey: 'school_id',
-                onDelete: 'cascade'
-            });
-            School.hasMany(models.SchoolUrl, {
-                as: 'urls', foreignKey: 'school_id',
                 onDelete: 'cascade'
             });
             School.hasMany(models.Address, {

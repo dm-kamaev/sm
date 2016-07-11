@@ -29,7 +29,6 @@ ratingView.ratingSchoolView = function(rankMel, rankDogm) {
 
 /**
  * Rating view for resuts page
- * @param {number} rankMel
  * @param {number} rankDogm
  * @return {array<string>}
  */
@@ -43,12 +42,12 @@ ratingView.ratingResultView = function(rankDogm) {
 
 
 /**
- * Check that position in rating exists and less than 100 
+ * Check that position in rating exists and less than 100
  * @param {number} rank
  * @return {boolean}
  */
 var checkPlace = function(rank) {
-    return (rank <= 100 && rank) ? true : false;
+    return (rank <= 100 && rank);
 };
 
 module.exports = ratingView;

@@ -1,9 +1,7 @@
-const lodash = require('lodash');
-
 const metroView = require('./metroView.js');
 const areaView = require('./areaView.js');
 const departmentView = require('./departmentView.js');
-const stages = require('../enums/departmentStage');
+const lodashFlatten = require('lodash/array/flatten');
 
 var addressView = {};
 
@@ -32,7 +30,7 @@ addressView.list = function(addresses, opt_options) {
                 title: '',
                 description: address.name,
                 metroStations: metroView.list(address.metroStations),
-                stage: departmentView.classes(address.departments)
+                stage: departmentView.departmentClasses(address.departments)
             };
         });
 };
@@ -43,9 +41,9 @@ addressView.list = function(addresses, opt_options) {
  * @param {?bool} opt_options.filterByDepartment
  * @return {array<object>}
  */
-addressView.stageList = function (addresses, opt_options) {
-    var addresses = this.list(addresses, opt_options),
-        stagesEnum = [
+addressView.stageList = function(addresses, opt_options) {
+    addresses = this.list(addresses, opt_options);
+    var stagesEnum = [
             'Начальные классы',
             'Средние классы',
             'Старшие классы',
@@ -84,7 +82,6 @@ addressView.stageList = function (addresses, opt_options) {
         stages[0].name = 'Адреса';
     }
     return stages;
-
 };
 
 
@@ -94,30 +91,14 @@ addressView.stageList = function (addresses, opt_options) {
  * @return {Array.<Object>}
  */
 addressView.default = function(addresses) {
-    var getStages = function(departments) {
-        var result = [];
-        var unical = {};
-        var deps = departments || [];
-
-        for (var i = 0, n = deps.length, dep; i < n; i++) {
-            dep = deps[i];
-            if (dep != undefined && dep.stage && !unical[dep.stage]) {
-                unical[dep.stage] = true;
-                result.push(dep.stage);
-            }
-        }
-
-        return result;
-    };
-
     return addresses.map(adr => {
         return {
             id: adr.id,
             lat: adr.coords[0],
             lng: adr.coords[1],
             name: adr.name,
-            stages: getStages(adr.departments)
-        }
+            stages: getStages_(adr.departments)
+        };
     });
 };
 
@@ -163,6 +144,31 @@ addressView.transformSchoolAddress = function(school) {
     });
 };
 
+
+/**
+ * @private
+ * @param {array<object>} departments
+ * @return {array<object>}
+ */
+var getStages_ = function(departments) {
+    var result = [];
+    var unical = {};
+    var deps = departments || [];
+
+    for (var i = 0, n = deps.length, dep; i < n; i++) {
+        dep = deps[i];
+        if (dep != undefined &&
+            dep.educationalGrades &&
+            !unical[dep.educationalGrades]) {
+            unical[dep.educationalGrades] = true;
+            result.push(dep.educationalGrades);
+        }
+    }
+
+    return departmentView.classes(lodashFlatten(result));
+};
+
+
 /**
  * return filtered array with empty departments or with needed stages
  * @param {array<object>} addresses
@@ -172,15 +178,13 @@ var filterBydepartment = function(addresses) {
     return addresses.filter(address => {
         var result = false;
         if (!address.departments || !address.departments.length) {
-            result = true; //show addresses with no departments
-        }
-        else {
+            result = true; // show addresses with no departments
+        } else {
             var neededStage = address.departments.find(department => {
-                if (department.stage == stages.ELEMENTARY ||
-                    department.stage == stages.MIDDLE_HIDE ||
-                    department.stage == stages.MIDDLE ||
-                    department.stage == stages.HIGH)
+                if (department.educationalGrades &&
+                    department.educationalGrades.some(grade => grade > 0)) {
                     return true;
+                }
             });
 
             if (neededStage) {
@@ -189,7 +193,6 @@ var filterBydepartment = function(addresses) {
         }
         return result;
     });
-
 };
 
 

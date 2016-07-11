@@ -1,12 +1,12 @@
 'use strict';
 
 module.exports = {
-    up: function (queryInterface, Sequelize) {
+    up: function(queryInterface, Sequelize) {
         return queryInterface.addColumn('school', 'total_score', {
-                type: Sequelize.FLOAT,
-                allowNull: false,
-                defaultValue: 0
-            })
+            type: Sequelize.FLOAT,
+            allowNull: false,
+            defaultValue: 0
+        })
             .then(function() {
                 return queryInterface.addColumn('school', 'score_count', {
                     type: Sequelize.ARRAY(Sequelize.INTEGER)
@@ -18,7 +18,11 @@ module.exports = {
                 });
             })
             .then(function() {
-                return queryInterface.renameColumn('school', 'rank', 'rank_dogm');
+                return queryInterface.renameColumn(
+                    'school',
+                    'rank',
+                    'rank_dogm'
+                );
             })
             .then(function() {
                 return queryInterface.addColumn('school', 'rank', {
@@ -26,7 +30,7 @@ module.exports = {
                 });
             });
     },
-    down: function (queryInterface) {
+    down: function(queryInterface) {
         return queryInterface.removeColumn('school', 'total_score')
             .then(function() {
                 return queryInterface.removeColumn('school', 'score_count');
@@ -38,7 +42,11 @@ module.exports = {
                 return queryInterface.removeColumn('school', 'rank');
             })
             .then(function() {
-                return queryInterface.renameColumn('school', 'rank_dogm', 'rank');
+                return queryInterface.renameColumn(
+                    'school',
+                    'rank_dogm',
+                    'rank'
+                );
             });
     }
 };

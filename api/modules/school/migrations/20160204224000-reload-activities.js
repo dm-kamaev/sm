@@ -4,11 +4,12 @@ const path = require('path');
 const await = require('asyncawait/await');
 const async = require('asyncawait/async');
 
-const ModelArchiver = require('../../console/modules/modelArchiver/ModelArchiver.js');
+const ModelArchiver =
+    require('../../console/modules/modelArchiver/ModelArchiver.js');
 const Activity = require('../../api/modules/school/models/activity');
 
 module.exports = {
-    up: async(function () {
+    up: async(function() {
         await(Activity.destroy({
             truncate: true
         }));
@@ -21,7 +22,7 @@ module.exports = {
             bulkInsert: true
         });
     }),
-    down: function () {
+    down: function() {
         return null;
     }
 };

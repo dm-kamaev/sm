@@ -3,7 +3,7 @@
 const await = require('asyncawait/await');
 const async = require('asyncawait/async');
 
-const path  = require('path');
+const path = require('path');
 const ModelArchiver = require(
     '../../console/modules/modelArchiver/ModelArchiver.js');
 const School = require('../../api/modules/school/models/school');
@@ -18,6 +18,6 @@ module.exports = {
         await(archiver.load());
     }),
     down: async(function(queryInterface) {
-        
+
     })
 };

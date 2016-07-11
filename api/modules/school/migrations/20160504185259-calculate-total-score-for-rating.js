@@ -5,9 +5,9 @@ const async = require('asyncawait/async');
 const squel = require('squel');
 const sequelize = require('../../app/components/db');
 
-module.exports  = {
+module.exports = {
     up: async(function() {
-        return await (updateTotalScore());
+        return await(updateTotalScore());
     }),
     down: {}
 };
@@ -27,9 +27,8 @@ var updateTotalScore = async(function() {
         {type: sequelize.QueryTypes.SELECT}
     ));
 
-    for(var i = 0, rating, l = ratings.length;
-        rating = ratings[i], i < l;
-        i++) {
+    for (var i = 0, rating, l = ratings.length; i < l; i++) {
+        rating = ratings[i];
         var totalScore = calculateAverageScore(rating.score);
         await(setTotalScore(rating.id, totalScore));
     }
@@ -38,9 +37,10 @@ var updateTotalScore = async(function() {
 /**
  * Calculates average score from score array
  * @param {Array.<number>} opt_score
+ * @return {number}
  */
 var calculateAverageScore = function(opt_score) {
-    var score = opt_score || [0,0,0,0],
+    var score = opt_score || [0, 0, 0, 0],
         notEmptyScore = score.every(scoreItem => scoreItem),
         result = 0;
     if (notEmptyScore) {

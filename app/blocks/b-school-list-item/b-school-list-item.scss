@@ -22,11 +22,11 @@
 
     margin-bottom: 12px;
 
-    &_badges {
+    .b-school-list-item__section_badges {
         display: inline-block;
 
         width: auto;
-        margin-bottom: 10px;
+        margin-bottom: 5px;
     }
 
     &:last-child {
@@ -34,30 +34,16 @@
     }
 }
 
-.b-school-list-item__position {
+
+.b-school-list-item__badge {
     display: inline-block;
 
-    margin-right: 25px;
-}
+    margin-right: 20px;
+    margin-bottom: 5px;
 
-.b-school-list-item__metro-stations {
-    display: inline-block;
-
-    margin-right: 18px;
-}
-
-.b-school-list-item__area {
-    display: inline-block;
-
-    margin-right: 18px;
-}
-
-.b-school-list-item__ratings {
-    display: inline-block;
-}
-
-.b-school-list-item__favorite {
-    display: inline-block;
+    &:last-child {
+        margin-right: 0;
+    }
 }
 
 .b-school-list-item__name {
@@ -149,6 +135,10 @@
 
     .b-school-list-item__score {
         top: -1px;
+    }
+
+    .b-school-list-item__badge {
+        margin-bottom: 0;
     }
 }
 

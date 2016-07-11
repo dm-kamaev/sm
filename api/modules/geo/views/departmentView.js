@@ -1,4 +1,4 @@
-const departmentStage = require('../enums/departmentStage.js');
+const lodashFlatten = require('lodash/array/flatten');
 
 var departmentView = {};
 
@@ -11,41 +11,53 @@ departmentView.list = function(departments) {
         .map(department => {
             return {
                 name: department.name,
-                stage: department.stage
+                stage: department.educationalGrades
             };
         });
 };
+
 
 /**
  * View of departments for the b-data-block_addresses block
  * @param {array<object>} departments - department instances
  * @return {array<object>}
  */
-departmentView.classes = function(departments) {
-    var stage,
-        deps = departments.map(dep => {return dep.stage;}),
-        elementary = deps.indexOf(departmentStage.ELEMENTARY),
-        middle_hide = deps.indexOf(departmentStage.MIDDLE_HIDE),
-        middle = deps.indexOf(departmentStage.MIDDLE),
-        high = deps.indexOf(departmentStage.HIGH);
+departmentView.departmentClasses = function(departments) {
+    return this.classes(
+        lodashFlatten(departments.map(department =>
+            department.educationalGrades
+        ))
+    );
+};
 
-    if (elementary != -1 && middle_hide != -1) {
+/**
+ * @param {array<object>} educationalGrades
+ * @return {array<object>}
+ */
+departmentView.classes = function(educationalGrades) {
+    var stage,
+        elementary = educationalGrades.some(grade => grade >= 1 && grade <= 4),
+        middle = educationalGrades.some(grade => grade >= 5 && grade <= 9),
+        high = educationalGrades.some(grade => grade >= 10 && grade <= 11);
+
+    if (elementary && middle && high) {
         stage = '1 — 11 классы';
-    } else if (elementary != -1 && middle != -1) {
+    } else if (elementary && middle) {
         stage = 'Начальные и средние классы';
-    } else if (elementary != -1 && high != -1) {
-        stage = 'Начальные и старшие классы';
-    } else if (elementary != -1) {
-        stage = 'Начальные классы';
-    } else if (middle_hide != -1) {
+    } else if (middle && high) {
         stage = 'Средние и старшие классы';
-    } else if (middle != -1) {
+    } else if (elementary && high) {
+        stage = 'Начальные и старшие классы';
+    } else if (elementary) {
+        stage = 'Начальные классы';
+    } else if (middle) {
         stage = 'Средние классы';
-    } else if (high != -1) {
+    } else if (high) {
         stage = 'Старшие классы';
     } else {
         stage = 'Другие адреса';
     }
     return stage;
-}
+};
+
 module.exports = departmentView;

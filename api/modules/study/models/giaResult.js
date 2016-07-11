@@ -22,7 +22,7 @@ var GiaResult = db.define('GiaResult', {
     underscored: true,
     tableName: 'gia_result',
     classMethods: {
-        associate: function (models) {
+        associate: function(models) {
             GiaResult.belongsTo(models.School, {
                 foreignKey: 'school_id'
             });

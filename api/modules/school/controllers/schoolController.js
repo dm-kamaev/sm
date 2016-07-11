@@ -2,8 +2,10 @@
 var services = require('../../../../app/components/services').all;
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
-var logger = require('../../../../app/components/logger/logger').getLogger('app');
+var logger =
+    require('../../../../app/components/logger/logger').getLogger('app');
 var schoolView = require('../views/schoolView');
+var entityType = require('../../entity/enums/entityType');
 
 
 /**
@@ -35,7 +37,7 @@ var schoolView = require('../views/schoolView');
  *         }
  *     }
  */
-exports.create = async (function(req, res) {
+exports.create = async(function(req, res) {
     var result = '';
     try {
         var data = req.body.schoolData;
@@ -69,12 +71,12 @@ exports.create = async (function(req, res) {
  *         }
  *     }
  */
-exports.update = async (function(req, res) {
+exports.update = async(function(req, res) {
     var result = '';
     try {
-        var school_id = req.params.id;
+        var schoolId = req.params.id;
         var data = req.body.schoolData;
-        result = await(services.school.update(school_id, data));
+        result = await(services.school.update(schoolId, data));
     } catch (error) {
         logger.error(error.message);
         result = error.message;
@@ -91,11 +93,11 @@ exports.update = async (function(req, res) {
  * @apiGroup School
  * @apiName Delete
  */
-exports.delete = async (function(req, res) {
+exports.delete = async(function(req, res) {
     var result = '';
     try {
-        var school_id = req.params.id;
-        result = await(services.school.delete(school_id));
+        var schoolId = req.params.id;
+        result = await(services.school.delete(schoolId));
     } catch (error) {
         logger.error(error.message);
         result = error.message;
@@ -113,10 +115,11 @@ exports.delete = async (function(req, res) {
  * @apiName Schools
  * @apiSuccess {Object[]} schools Very userful documentation here.
  */
-exports.list = async (function(req, res) {
+exports.list = async(function(req, res) {
+    var result;
     try {
-        var schools = await (services.school.list());
-        var result = schoolView.list(schools);
+        var schools = await(services.school.list());
+        result = schoolView.list(schools);
     } catch (error) {
         logger.error(error.message);
         result = error.message;
@@ -137,11 +140,20 @@ exports.list = async (function(req, res) {
  *       "searchString" : "123"
  *     }
  */
-exports.suggestSearch = async (function(req, res) {
+exports.suggestSearch = async(function(req, res) {
+    var result;
     try {
         var searchString = req.query.searchString;
-        var data = await(services.search.suggestSearch(searchString));
-        var result = schoolView.suggest(data);
+        var data = await(services.search.suggestSearch(searchString)),
+            aliases = await(services.page.getAliases(
+                data.schools.map(school => school.id),
+                entityType.SCHOOL
+            ));
+        data.schools = schoolView.joinAliases(
+            data.schools.map(school => school.dataValues),
+            aliases
+        );
+        result = schoolView.suggest(data);
     } catch (error) {
         logger.error(error.message);
         result = error.message;
@@ -159,9 +171,10 @@ exports.suggestSearch = async (function(req, res) {
  * @apiName School
  * @apiSuccess {Object} schools Very userful documentation here.
  */
-exports.view = async (function(req, res) {
+exports.view = async(function(req, res) {
+    var result;
     try {
-        var result = await(services.school.viewOne(req.params.id));
+        result = await(services.school.viewOne(req.params.id));
     } catch (error) {
         logger.error(error.message);
         result = error.message;
@@ -172,15 +185,13 @@ exports.view = async (function(req, res) {
 });
 
 
-
-
 /**
  * @api {get} api/school/search/filters Get school type list
  * @apiVersion 0.0.0
  * @apiGroup School
  * @apiName ListSearchFilters
  */
-exports.listSearchFilters = async (function(req, res) {
+exports.listSearchFilters = async(function(req, res) {
     var result;
     try {
         result = await(services.school.searchFilters());
@@ -209,7 +220,7 @@ exports.listSearchFilters = async (function(req, res) {
  *       "score": [3,2,1,5]
  *     }
  */
-exports.createComment = async (function(req, res) {
+exports.createComment = async(function(req, res) {
     var result = '';
     try {
         var schoolId = req.params.id,
@@ -234,15 +245,13 @@ exports.createComment = async (function(req, res) {
                 userId: params.userId
             });
         } else {
-
-            if(params.userId) {
+            if (params.userId) {
                 var user = await(services.user.getUserById(params.userId));
                 params.username = user.firstName;
             }
 
             result = await(services.school.review(schoolId, params));
         }
-
     } catch (error) {
         result = JSON.stringify(error);
         logger.error(result);
@@ -270,36 +279,40 @@ exports.createComment = async (function(req, res) {
  *       "olimp": ["computer-science", "sports"],
  *       "metroId": 1,
  *       "areaId": 1,
+ *       "districtId": 40,
  *       "sortType": 1,
  *       "page": 0
  *     }
  */
-exports.search = async (function(req, res) {
+exports.search = async(function(req, res) {
     var result;
     try {
-        var params = await(services.search.initSearchParams(req.query)),
-            user = req.user || {};
+        var user = req.user || {},
+            params = await(services.search.initSearchParams(req.query)),
+            favoriteIds =
+                await(services.favorite.getAllItemIdsByUserId(user.id));
 
-        var favoriteIds = await(
-            services.favorite.getAllItemIdsByUserId(user.id)
-        );
+        var schools = await(services.school.list(
+            params,
+            {
+                limitResults: 10
+            }
+            )),
+            aliases = await(services.page.getAliases(
+                schools.map(school => school.id),
+                entityType.SCHOOL
+            ));
 
-        var promises = {
-            schools: services.school.list(
-                params,
-                {
-                    limitResults: 10
-                }
-            ),
-            favoriteItems: services.school.getByIdsWithGeoData(
-                favoriteIds
-            )
-        };
-        var data = await(promises);
+        var schoolsWithAliases = schoolView.joinAliases(schools, aliases),
+            schoolsWithFavoriteMark = schoolView.listWithFavorites(
+                schoolsWithAliases, favoriteIds
+            );
 
         result = {
-            list: schoolView.list(data.schools, params.sortType, params.page),
-            map: schoolView.listMap(data.schools)
+            list: schoolView.list(
+                schoolsWithFavoriteMark, params.sortType, params.page
+            ),
+            map: schoolView.listMap(schools)
         };
     } catch (error) {
         result = JSON.stringify(error);
@@ -337,14 +350,14 @@ exports.searchMapPoints = async(function(req, res) {
 
         var promises = {
             schools: services.school.list(params),
-            mapPosition: services.search.getMapPositionParams(params)
+            mapPosition: services.search.getMapPositionParams(params),
+            aliases: services.page.getAllAliases(entityType.SCHOOL)
         };
         var results = await(promises);
         result = schoolView.listMap(
-            results.schools,
+            schoolView.joinAliases(results.schools, results.aliases),
             results.mapPosition
         );
-
     } catch (error) {
         result = JSON.stringify(error);
         logger.error(result);

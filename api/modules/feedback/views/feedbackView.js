@@ -4,17 +4,18 @@ var feedbackView = {};
  * @param {{
  *     type: string
  * }} params
+ * @return {string}
  */
 feedbackView.getLetterTheme = function(params) {
     var letterTheme = '';
 
     switch (params.type) {
-        case 'opinion':
-            letterTheme = 'Ваше мнение';
-            break;
-        case 'mistake':
-            letterTheme = 'Сообщить о неточности';
-            break;
+    case 'opinion':
+        letterTheme = 'Ваше мнение';
+        break;
+    case 'mistake':
+        letterTheme = 'Сообщить о неточности';
+        break;
     }
 
     return letterTheme;
@@ -30,6 +31,7 @@ feedbackView.getLetterTheme = function(params) {
  *     url: ?string
  * }} params
  * @type {{name: string}}
+ * @return {string}
  */
 feedbackView.getLetterBody = function(params) {
     var letterBody = '';

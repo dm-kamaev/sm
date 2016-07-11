@@ -14,20 +14,27 @@
  * }}
  */
 {template .base}
+    {let $isRating: not $params?.display/}
+
     {let $class kind="html"}
         b-badge
-        {if not $params?.display}
+        {if $isRating}
             {sp}b-badge_rating
         {/if}
 
         {if not $params?.config?.isNotClickable}
             {sp}b-badge_active
         {/if}
+
+        {sp}b-badge_{$params?.display ?: 'test'}
     {/let}
 
     <div class="{$class}">
         {call .icon_ data="all"/}
         {call .text_ data="all" /}
+        {if $isRating}
+            {call .hint_ /}
+        {/if}
     </div>
 {/template}
 
@@ -42,35 +49,37 @@
  * }}
  */
 {template .text_ private="true"}
-    {if length($params.data) > 0}
-        {foreach $dataItem in $params.data}
-            {if $params?.display == 'metro'}
-                {call .metroItem_}
-                    {param params:[
-                        'name': $dataItem.name,
-                        'id': $dataItem.id,
-                    ] /}
-                {/call}
-            {else}
-                {call .ratingItem_}
-                    {param params:[
-                        'ratingName': $dataItem
-                    ] /}
-                {/call}
-            {/if}
+    <div class="b-badge__text">
+        {if length($params.data) > 0}
+            {foreach $dataItem in $params.data}
+                {if $params?.display == 'metro'}
+                    {call .metroItem_}
+                        {param params:[
+                            'name': $dataItem.name,
+                            'id': $dataItem.id,
+                        ] /}
+                    {/call}
+                {else}
+                    {call .ratingItem_}
+                        {param params:[
+                            'ratingName': $dataItem
+                        ] /}
+                    {/call}
+                {/if}
 
-            {if not isLast($dataItem)}
-                ,{sp}
-            {/if}
-        {/foreach}
-    {else}
-        {call .areaItem_}
-            {param params:[
-                'name': $params.data.name,
-                'id': $params.data.id
-            ] /}
-        {/call}
-    {/if}
+                {if not isLast($dataItem)}
+                    ,{sp}
+                {/if}
+            {/foreach}
+        {else}
+            {call .areaItem_}
+                {param params:[
+                    'name': $params.data.name,
+                    'id': $params.data.id
+                ] /}
+            {/call}
+        {/if}
+    </div>
 {/template}
 
 
@@ -80,20 +89,19 @@
  * }
  */
 {template .icon_ private="true"}
-    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-        {param params: [
-            'factory': 'stendhal',
-            'type': 'icon',
-            'renderParams': [
-                'data': [
-                    'type': $params.display ?: 'test'
-                ],
-                'config': [
-                    'customClasses': ['b-badge__icon']
+    <div class="b-badge__icon">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': 'stendhal',
+                'type': 'icon',
+                'renderParams': [
+                    'data': [
+                        'type': $params.display ?: 'test'
+                    ]
                 ]
-            ]
-        ]/}
-    {/call}
+            ]/}
+        {/call}
+    </div>
 {/template}
 
 
@@ -141,7 +149,6 @@
     <div class="b-badge__item">
         {$params.ratingName}
     </div>
-    {call .hint_/}
 {/template}
 
 /**

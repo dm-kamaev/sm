@@ -90,8 +90,10 @@ goog.scope(function() {
      * @enum
      */
     SchoolList.Event = {
-        'SORT_CLICK': sm.gDropdown.DropdownSelect.Event.ITEM_SELECT,
-        'SHOW_MORE': 'show-more-items'
+        SORT_CLICK: sm.gDropdown.DropdownSelect.Event.ITEM_SELECT,
+        FAVORITE_ADDED: SchoolListItem.Event.FAVORITE_ADDED,
+        FAVORITE_REMOVED: SchoolListItem.Event.FAVORITE_REMOVED,
+        SHOW_MORE: 'show-more-items'
     };
 
 
@@ -291,7 +293,8 @@ goog.scope(function() {
         var data = opt_listData || [];
 
         data.forEach(function(itemData) {
-            var item = new SchoolListItem(itemData);
+            var params = SchoolListItem.transformParams(itemData),
+                item = new SchoolListItem(params);
             this.addChild(item, true);
             this.schoolListItems_.push(item);
         }, this);

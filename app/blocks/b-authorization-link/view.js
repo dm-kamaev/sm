@@ -39,7 +39,9 @@ goog.scope(function() {
         ICON: 'b-authorization-link__icon-wrap',
         HINT: 'b-authorization-link__hint-content',
         LOGIN_LINK: 'b-authorization-link__link_login',
-        LOGOUT_LINK: 'b-authorization-link__link_logout'
+        LOGOUT_LINK: 'b-authorization-link__link_logout',
+        OPENED: 'b-authorization-link_opened',
+        HOVERABLE: 'b-authorization-link_hoverable'
     };
 
 
@@ -60,6 +62,7 @@ goog.scope(function() {
     View.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
+        this.detectHoverability_();
         this.initDom_();
     };
 
@@ -98,16 +101,18 @@ goog.scope(function() {
     /**
      * show Hint
      */
-    View.prototype.showHint = function() {
+    View.prototype.setActiveState = function() {
         this.setHintVisibility_(true);
+        this.setOpenedBlockState_(true);
     };
 
 
     /**
      * hide Hint
      */
-    View.prototype.hideHint = function() {
+    View.prototype.setInactiveState = function() {
         this.setHintVisibility_(false);
+        this.setOpenedBlockState_(false);
     };
 
 
@@ -116,7 +121,7 @@ goog.scope(function() {
      * @private
      */
     View.prototype.onLoginLinkClick_ = function() {
-        this.hideHint();
+        this.setInactiveState();
 
         this.dispatchEvent({
             'type': View.Event.LOGIN
@@ -129,7 +134,7 @@ goog.scope(function() {
      * @private
      */
     View.prototype.onLogoutLinkClick_ = function() {
-        this.hideHint();
+        this.setInactiveState();
 
         this.dispatchEvent({
             'type': View.Event.LOGOUT
@@ -149,7 +154,7 @@ goog.scope(function() {
         );
 
         if (this.isHintVisible_ && !isContaints) {
-            this.hideHint();
+            this.setInactiveState();
         }
     };
 
@@ -161,10 +166,10 @@ goog.scope(function() {
      */
     View.prototype.onIconClick_ = function() {
         if (this.isHintVisible_) {
-            this.hideHint();
+            this.setInactiveState();
         }
         else {
-            this.showHint();
+            this.setActiveState();
         }
     };
 
@@ -186,6 +191,39 @@ goog.scope(function() {
             );
 
         this.isHintVisible_ = visible;
+    };
+
+
+    /**
+     * Set or remove active state class from block
+     * @param {boolean} activeness
+     * @private
+     */
+    View.prototype.setOpenedBlockState_ = function(activeness) {
+        activeness ?
+            goog.dom.classlist.add(
+                this.getElement(),
+                View.CssClass.OPENED
+            ) :
+            goog.dom.classlist.remove(
+                this.getElement(),
+                View.CssClass.OPENED
+            );
+    };
+
+
+    /**
+     * Check hoverability for block and
+     * if it hoverable, add to it corresponding modifier
+     * @private
+     */
+    View.prototype.detectHoverability_ = function() {
+        if (goog.labs.userAgent.device.isDesktop()) {
+            goog.dom.classlist.add(
+                this.getElement(),
+                View.CssClass.HOVERABLE
+            );
+        }
     };
 
 

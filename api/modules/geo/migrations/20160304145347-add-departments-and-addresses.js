@@ -1,7 +1,6 @@
 'use strict';
 
 const path = require('path');
-const await = require('asyncawait/await');
 const async = require('asyncawait/async');
 
 const ModelArchiver = require(
@@ -24,11 +23,12 @@ module.exports = {
         departmentArchiver.load();
 
         file = '20160304145347-add-address-metro.tar.gz';
-        var addressMetroArchiver = new ModelArchiver(AddressMetro, dir, null, file);
+        var addressMetroArchiver =
+            new ModelArchiver(AddressMetro, dir, null, file);
         console.log('-Address-metro');
         addressMetroArchiver.load();
     }),
-    down: function () {
+    down: function() {
         return null;
     }
 };

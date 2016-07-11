@@ -116,6 +116,24 @@ goog.scope(function() {
 
 
     /**
+     * Add given item to favorites
+     * @param {sm.bSchoolListItem.SchoolListItem.Params} favoriteItem
+     */
+    Header.prototype.addFavorite = function(favoriteItem) {
+        this.favorite_.addItem(favoriteItem);
+    };
+
+
+    /**
+     * Remove item with given id from favorites
+     * @param {number} itemId
+     */
+    Header.prototype.removeFavorite = function(itemId) {
+        this.favorite_.removeItem(itemId);
+    };
+
+
+    /**
      * @override
      */
     Header.prototype.decorateInternal = function(element) {
