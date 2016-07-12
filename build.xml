@@ -2,13 +2,18 @@
 
 <project name="school-market" basedir=".">
     <property name="initd_script" value="${ant.project.name}-node"/>
-    <property name="project.frontend.path" value="${basedir}"/>
-    <property name="project.frontend.runtime.path" value="${project.frontend.path}/runtime"/>
+    <property name="packaging.source.frontend-app.path" value="${basedir}"/>
+    <property name="packaging.source.frontend-app.runtime.path"
+              value="${packaging.source.frontend-app.path}/runtime"/>
     <property name="project.node-modules.path" value="${basedir}/node_modules"/>
-    <property name="user.path" value="${project.node-modules.path}/user-service"/>
-    <property name="auth.path" value="${project.node-modules.path}/auth-service"/>
-    <property name="user.runtime-path" value="${project.frontend.runtime.path}"/>
-    <property name="auth.runtime-path" value="${project.frontend.runtime.path}"/>
+    <property name="user.path"
+              value="${project.node-modules.path}/user-service"/>
+    <property name="auth.path"
+              value="${project.node-modules.path}/auth-service"/>
+    <property name="user.runtime-path"
+              value="${packaging.source.frontend-app.runtime.path}"/>
+    <property name="auth.runtime-path"
+              value="${packaging.source.frontend-app.runtime.path}"/>
 
     <import file="${basedir}/node_modules/deployment/packaging.xml"/>
     <import file="${basedir}/node_modules/deployment/node.xml"/>
@@ -16,37 +21,54 @@
     <import file="${basedir}/node_modules/user-service/build.xml"/>
 
     <!-- Packaging tune -->
-    <target name="setup-folders" depends="shared-folders-create, shared-set-permissions, setup-folders-logs, setup-folders-logs"/>
-    <target name="shared-folders-create" depends="shared-folders-create-logs"/>
-    <target name="shared-set-permissions" depends="shared-set-permissions-logs"/>
+    <!-- <target name="setup-folders" depends="shared-folders-create, shared-set-permissions, setup-folders-logs, setup-folders-logs"/> -->
+    <!-- <target name="shared-folders-create" depends="shared-folders-create-logs"/> -->
+    <!-- <target name="shared-set-permissions" depends="shared-set-permissions-logs"/> -->
 
     <!-- Switch to new release -->
-    <target name="packaging-switch-release"
-            depends="packaging-switch-release-before, setup-folders, switch-release-folder, build-config, migrate-database, update-search-cache, update-sitemap, deploy-authorization-config, deploy-user-config, user.migrate, node-start, initd-install, user.node-start, auth.node-start, init-crontab, packaging-switch-release-after, change-owner"/>
+    <target name="packaging.release.switch"
+            depends="packaging.shared-folders,
+                     schools.build-config,
+                     schools.deploy-authorization-config,
+                     schools.deploy-user-config,
+                     schools.migrate,
+                     schools.update-search-cache,
+                     schools.update-search-cache,
+                     user.migrate,
+                     auth.create-runtime-dir,
+                     user.create-runtime-dir,
+                     packaging.release.folder.link,
+                     packaging.rollback-script,
+                     packaging.node.restart,
+                     user.node.restart,
+                     auth.node.restart,
+                     packaging.crontab.install,
+                     packaging.initd.install,
+                     schools.change-owner"/>
 
     <!-- Stop previous release -->
-    <target name="packaging-stop-release" depends="packaging-stop-release-before, remove-crontab, node-stop, initd-remove, auth.node-stop, user.node-stop, remove-release-folder, packaging-stop-release-after"/>
+    <target name="packaging.release.clean"/>
 
-    <target name="migrate-database">
+    <target name="schools.migrate">
         <exec executable="${gulp}" dir="${basedir}" failonerror="on">
             <arg line="migrate"/>
         </exec>
     </target>
 
-    <target name="update-search-cache">
-        <exec executable="${node}" dir="${basedir}">
+    <target name="schools.update-search-cache">
+        <exec executable="node" dir="${basedir}">
             <arg line="commander search"/>
         </exec>
     </target>
 
-    <target name="update-sitemap">
-        <exec executable="${node}" dir="${basedir}">
+    <target name="schools.update-search-cache">
+        <exec executable="node" dir="${basedir}">
             <arg line="commander sitemap"/>
         </exec>
     </target>
 
-    <target name="deploy-authorization-config">
-        <exec executable="${node}" dir="${basedir}/console/">
+    <target name="schools.deploy-authorization-config">
+        <exec executable="node" dir="${basedir}/console/">
             <arg line="buildLocalConfig ${env} ../environment/config/authorization"/>
         </exec>
         <copy file="${basedir}/environment/config/authorization/config.json"
@@ -55,8 +77,8 @@
               tofile="${project.node-modules.path}/auth-service/config/services.json" />
     </target>
 
-    <target name="deploy-user-config">
-        <exec executable="${node}" dir="${basedir}/console/">
+    <target name="schools.deploy-user-config">
+        <exec executable="node" dir="${basedir}/console/">
             <arg line="buildLocalConfig ${env} ../environment/config/user"/>
         </exec>
         <copy file="${basedir}/environment/config/user/config.json"
@@ -65,13 +87,13 @@
               tofile="${project.node-modules.path}/user-service/config/config.db.json" />
     </target>
 
-    <target name="build-config">
-        <exec executable="${node}" dir="${basedir}/console/">
+    <target name="schools.build-config">
+        <exec executable="node" dir="${basedir}/console/">
             <arg line="buildLocalConfig ${env} ../app/config"/>
         </exec>
     </target>
 
-    <target name="change-owner">
+    <target name="schools.change-owner">
         <exec executable="chown" dir="${basedir}">
             <arg line="-R schools ${basedir}"/>
         </exec>
