@@ -33,7 +33,6 @@
                      schools.deploy-user-config,
                      schools.migrate,
                      schools.update-search-cache,
-                     schools.update-search-cache,
                      user.migrate,
                      auth.create-runtime-dir,
                      user.create-runtime-dir,
