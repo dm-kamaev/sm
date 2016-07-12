@@ -869,14 +869,7 @@ service.list = async(function(opt_params, opt_config) {
         config = opt_config || {},
         limitResults = config.limitResults || null;
 
-    var sqlConfig = services.search.generateSqlConfig(
-        limitResults,
-        searchParams.page
-    );
-
-    services.search.updateSqlOptions(sqlConfig, searchParams);
-
-    var sqlString = services.search.generateSearchSql(sqlConfig);
+    var sqlString = services.search.getSearchSql(searchParams, limitResults);
 
     var options = {
         type: sequelize.QueryTypes.SELECT
