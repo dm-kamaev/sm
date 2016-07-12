@@ -391,6 +391,8 @@ class SearchQuery {
                     this.schoolDataCount_
                 );
         }
+
+        return this;
     }
 
     /**
@@ -408,6 +410,8 @@ class SearchQuery {
                     this.addressDataCount_
                 );
         }
+
+        return this;
     }
 
     /**
