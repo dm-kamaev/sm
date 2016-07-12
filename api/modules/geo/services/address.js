@@ -239,17 +239,6 @@ exports.getAllWithSearchData = async(function() {
         }, {
             model: models.AddressSearchData,
             as: 'searchData'
-        }, {
-            model: models.AddressMetro,
-            as: 'addressMetroes'
-        }],
-        order: [[
-            {
-                model: models.AddressMetro,
-                as: 'addressMetroes'
-            },
-            'distance',
-            'ASC'
-        ]]
+        }]
     });
 });

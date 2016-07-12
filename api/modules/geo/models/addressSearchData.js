@@ -1,21 +1,9 @@
 var Sequelize = require('sequelize');
 
 var sequelize = require('../../../../app/components/db'),
-    addressSearchType = require('../enums/addressSearchType'),
-    entityTypes = require('../../entity/enums/entityType');
+    addressSearchType = require('../enums/addressSearchType');
 
 var AddressSearchData = sequelize.define('AddressSearchData', {
-    entityId: {
-        field: 'entity_id',
-        type: Sequelize.INTEGER
-    },
-    entityType: {
-        field: 'entity_type',
-        type: Sequelize.STRING,
-        validate: {
-            isIn: [entityTypes.toArray()]
-        }
-    },
     addressId: {
         type: Sequelize.INTEGER,
         field: 'address_id',

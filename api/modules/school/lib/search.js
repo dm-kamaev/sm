@@ -187,18 +187,8 @@ class SearchQuery {
      */
     setArea(opt_areaId) {
         if (opt_areaId) {
-            this.addressSearchParams_.or(
-                squel.expr()
-                    .and('address_search_data.type = ?',
-                        addressSearchType.fields.AREA
-                    )
-                    .and(
-                        'address_search_data.values && ' +
-                        this.intArrayToSql_([opt_areaId])
-                    )
-            );
-
-            this.addressDataCount_++;
+            this.innerQuery_.where('area.id = ' + opt_areaId);
+            this.isGeoData_ = true;
         }
 
         return this;
@@ -210,18 +200,8 @@ class SearchQuery {
      */
     setMetro(opt_metroId) {
         if (opt_metroId) {
-            this.addressSearchParams_.or(
-                squel.expr()
-                    .and('address_search_data.type = ?',
-                        addressSearchType.fields.METRO
-                    )
-                    .and(
-                        'address_search_data.values && ' +
-                        this.intArrayToSql_([opt_metroId])
-                    )
-            );
-
-            this.addressDataCount_++;
+            this.innerQuery_.where('metro.id = ' + opt_metroId);
+            this.isGeoData_ = true;
         }
 
         return this;
@@ -411,8 +391,6 @@ class SearchQuery {
                     this.schoolDataCount_
                 );
         }
-
-        return this;
     }
 
     /**
@@ -424,14 +402,12 @@ class SearchQuery {
             this.innerQuery_
                 .from('address_search_data')
                 .where(this.addressSearchParams_)
-                .where('address_search_data.entity_id = school.id')
+                .where('address.id = address_search_data.address_id')
                 .having(
-                    '(COUNT(DISTINCT address_search_data.id) =' +
-                    ' COUNT(DISTINCT address_search_data.address_id))'
+                    'COUNT(DISTINCT address_search_data.id) = ' +
+                    this.addressDataCount_
                 );
         }
-
-        return this;
     }
 
     /**
