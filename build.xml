@@ -48,6 +48,20 @@
     <!-- Stop previous release -->
     <target name="packaging.release.clean"/>
 
+    <!-- Overriding packaging tasks -->
+
+    <!-- Remove upload folder actions -->
+    <target name="packaging.shared-folders"
+            depends="packaging.shared-folders.create,
+                     packaging.shared-folders.set-permissions,
+                     packaging.shared-folders.link.logs"/>
+
+    <target name="packaging.shared-folders.create"
+            depends="packaging.shared-folders.create.logs"/>
+
+    <target name="packaging.shared-folders.set-permissions"
+            depends="packaging.shared-folders.set-permissions.logs"/>
+
     <target name="schools.migrate">
         <exec executable="${gulp}" dir="${basedir}" failonerror="on">
             <arg line="migrate"/>
