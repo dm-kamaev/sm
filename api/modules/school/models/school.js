@@ -5,6 +5,14 @@ const schoolType = require('../enums/schoolType');
 
 var School = db.define('School', {
 
+    id: {
+        field: 'id',
+        type: DataType.INTEGER,
+        unique: true,
+        autoIncrement: true,
+        allowNull: false,
+        primaryKey: true
+    },
     /**
      * School info
      */
