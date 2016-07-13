@@ -206,20 +206,6 @@ goog.scope(function() {
 
 
     /**
-     * Get filter section
-     * @param {Element} childNodeFilterSection
-     * @return {Element} filter section
-     * @private
-     */
-    FilterLabels.prototype.getItem_ = function(childNodeFilterSection) {
-        return goog.dom.getAncestorByClass(
-            childNodeFilterSection,
-            FilterLabels.CssClass.FILTER_SECTION
-        );
-    };
-
-
-    /**
      * Change state of the button, when added or removed filter item
      * @private
      */
@@ -292,25 +278,16 @@ goog.scope(function() {
 
 
     /**
-     * Remove node
-     * @param {({
-     *     value: string,
-     *     label: string,
-     *     name: string
-     * }|Element)} data
+     * Get filter section
+     * @param {Element} childNodeFilterSection
+     * @return {Element} filter section
      * @private
      */
-    FilterLabels.prototype.removeNode_ = function(data) {
-        var domElement;
-
-        if (data instanceof Node) {
-            domElement = data;
-        } else {
-            domElement = this.findInput(data.value);
-        }
-
-        var filterSection = this.getItem_(domElement);
-        goog.dom.removeNode(filterSection);
+    FilterLabels.prototype.getItem_ = function(childNodeFilterSection) {
+        return goog.dom.getAncestorByClass(
+            childNodeFilterSection,
+            FilterLabels.CssClass.FILTER_SECTION
+        );
     };
 
 
@@ -355,5 +332,28 @@ goog.scope(function() {
             this.numberHiddenItems_,
             numberHiddenItems
         );
+    };
+
+
+    /**
+     * Remove node
+     * @param {({
+     *     value: string,
+     *     label: string,
+     *     name: string
+     * }|Element)} data
+     * @private
+     */
+    FilterLabels.prototype.removeNode_ = function(data) {
+        var domElement;
+
+        if (data instanceof Node) {
+            domElement = data;
+        } else {
+            domElement = this.findInput(data.value);
+        }
+
+        var filterSection = this.getItem_(domElement);
+        goog.dom.removeNode(filterSection);
     };
 });  // goog.scope

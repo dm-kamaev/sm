@@ -25,14 +25,6 @@ sm.lSearchResult.bFilter.FilterExtended = function(opt_params) {
 
 
     /**
-     * full Data Filter List
-     * @type {Object}
-     * @private
-     */
-    this.allFiltersData_ = {};
-
-
-    /**
      * instance Modal
      * @type {sm.gModal.ModalStendhal}
      * @private
@@ -66,8 +58,6 @@ goog.scope(function() {
      */
     FilterExtended.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
-
-        this.allFiltersData_ = this.getFiltersData();
     };
 
 
@@ -76,7 +66,37 @@ goog.scope(function() {
      * @override
      */
     FilterExtended.prototype.reset = function() {
-        this.updateListFilters_(this.allFiltersData_);
+        this.updateListFilters(this.allFiltersData);
+    };
+
+
+    /**
+     * update content (inputs and labels)
+     * @param {Array<{
+     *     value: string,
+     *     label: string,
+     *     isChecked: bool
+     * }>} filters
+     * @override
+     */
+    FilterExtended.prototype.updateListFilters = function(filters) {
+        goog.soy.renderElement(
+            this.wrapperListFilters,
+            sm.lSearchResult.bFilterExtended.Template.listFilters, {
+                params: {
+                    data: {
+                        name: this.filterName,
+                        filters: filters
+                    }
+                },
+                config: {
+                    type: this.type
+                }
+            }
+        );
+
+        this.initFilterItems();
+        this.initFilterItemsListeners();
     };
 
 
@@ -113,6 +133,23 @@ goog.scope(function() {
 
 
     /**
+     * Init Modal Filter
+     * @return {sm.gModal.ModalStendhal}
+     * @private
+     */
+    FilterExtended.prototype.initModalFilter_ = function() {
+        var modal = sm.gModal.ModalStendhal.render(true);
+
+        modal.renderContent(
+            'filter-search',
+            this.getModalContentData_()
+        );
+
+        return modal;
+    };
+
+
+    /**
      * Init modal filter listeners
      * @param {Element} element
      * @private
@@ -144,9 +181,9 @@ goog.scope(function() {
     FilterExtended.prototype.onModalFilterButtonClick_ = function(event) {
         var params = event.data.filters.length ?
             event.data.filters :
-            this.allFiltersData_;
+            this.allFiltersData;
 
-        this.updateListFilters_(params);
+        this.updateListFilters(params);
         this.filterModal_.remove();
 
         this.dispatchChangedFilterEvent();
@@ -163,50 +200,6 @@ goog.scope(function() {
         this.initModalFilterListeners_(modal);
 
         return modal;
-    };
-
-
-    /**
-     * Init Modal Filter
-     * @return {sm.gModal.ModalStendhal}
-     * @private
-     */
-    FilterExtended.prototype.initModalFilter_ = function() {
-        var modal = sm.gModal.ModalStendhal.render(true);
-
-        modal.renderContent(
-            'filter-search',
-            this.getModalContentData_()
-        );
-
-        return modal;
-    };
-
-
-    /**
-     * update content (inputs and labels)
-     * @param {Array<{
-     *     value: string,
-     *     label: string,
-     *     isChecked: bool
-     * }>} filters
-     * @private
-     */
-    Filter.prototype.updateListFilters_ = function(filters) {
-        goog.soy.renderElement(
-            this.wrapperListFilters,
-            sm.lSearchResult.bFilterExtended.Template.listFilters, {
-                params: {
-                    data: {
-                        name: this.filterName,
-                        filters: filters
-                    }
-                }
-            }
-        );
-
-        this.initFilterItems();
-        this.initFilterItemsListeners();
     };
 
 
@@ -235,9 +228,7 @@ goog.scope(function() {
      * @private
      */
     FilterExtended.prototype.getModalContentData_ = function() {
-        var selected = this.getSelectedData(),
-            popular = this.allFiltersData_,
-            params;
+        var params;
 
         if (this.filterName == 'additionalEducation') {
             params = this.getAdditionalEducationParams_();
@@ -246,36 +237,7 @@ goog.scope(function() {
             params = this.getSpecializedClassesParams_();
         }
 
-        params.data.filters.items = this.setSelected_(popular, selected);
-        params.data.selectedItems = selected;
-
         return params;
-    };
-
-
-    /**
-     * In first array is set to isChecked true
-     * according to the value of the second array
-     * @param {Array<{
-     *     value: string,
-     *     label: string,
-     *     name: string,
-     *     isChecked: bool
-     * }>} filters
-     * @param {Array<{Object}>} selectedFilters like filters
-     * @return {Array<{Object}>} like filters
-     * @private
-     */
-    FilterExtended.prototype.setSelected_ = function(filters, selectedFilters) {
-        return filters.map(function(item) {
-            var itemClone = goog.object.clone(item);
-
-            itemClone.isChecked = selectedFilters.some(function(selected) {
-                return itemClone.value == selected.value;
-            });
-
-            return itemClone;
-        });
     };
 
 
@@ -288,21 +250,28 @@ goog.scope(function() {
      *         filters: {
      *             title: string
      *         },
-     *         search: string
+     *         search: string,
+     *         sourseUrl: string
      *     }
      * }}
      * @private
      */
     FilterExtended.prototype.getAdditionalEducationParams_ = function() {
+        var selected = this.getSelectedData(),
+            popular = this.allFiltersData;
+
         var additionalEducation = {
             data: {
                 header: 'Дополнительные занятия',
                 name: 'additionalEducation',
                 filters: {
-                    title: 'Популярные дополнительные занятия'
+                    title: 'Популярные дополнительные занятия',
+                    items: this.setSelected(popular, selected)
                 },
+                selectedItems: selected,
                 search: {
-                    placeholder: 'Какие занятия вы ищете?'
+                    placeholder: 'Какие занятия вы ищете?',
+                    sourceUrl: '/api/school/activity'
                 }
             }
         };
@@ -319,21 +288,28 @@ goog.scope(function() {
      *         filters: {
      *             title: string
      *         },
-     *         search: string
+     *         search: string,
+     *         sourseUrl: string
      *     }
      * }}
      * @private
      */
     FilterExtended.prototype.getSpecializedClassesParams_ = function() {
-       var specializedClasses = {
+        var selected = this.getSelectedData(),
+            popular = this.allFiltersData;
+
+        var specializedClasses = {
             data: {
                 header: 'Профильные классы',
                 name: 'specializedClasses',
                 filters: {
-                        title: 'Популярные профильные классы'
+                        title: 'Популярные профильные классы',
+                        items: this.setSelected(popular, selected)
                 },
+                selectedItems: selected,
                 search: {
-                    placeholder: 'Какой профиль вы ищете?'
+                    placeholder: 'Какой профиль вы ищете?',
+                    sourceUrl: 'api/school/specializedClasses'
                 }
             }
         };

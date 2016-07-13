@@ -29,6 +29,30 @@ sm.lSearchResult.bFilter.Filter = function(opt_params) {
 
 
     /**
+     * Type filter
+     * @type {Element}
+     * @protected
+     */
+    this.type = null;
+
+
+    /**
+     * Filter name
+     * @type {string}
+     * @protected
+     */
+    this.filterName = null;
+
+
+    /**
+     * full Data Filter List
+     * @type {Object}
+     * @protected
+     */
+    this.allFiltersData = {};
+
+
+    /**
      * Filters element
      * @type {Element}
      * @protected
@@ -93,11 +117,11 @@ sm.lSearchResult.bFilter.Filter = function(opt_params) {
 
 
     /**
-     * Filter name
-     * @type {string}
-     * @protected
+     * Header (Dom elements)
+     * @type {Element}
+     * @private
      */
-    this.filterName = null;
+    this.header_ = null;
 };
 goog.inherits(sm.lSearchResult.bFilter.Filter, goog.ui.Component);
 
@@ -166,9 +190,11 @@ goog.scope(function() {
 
         this.initFilterItems(element);
         this.initFilterContainer_(element);
+        this.initFilterComponents_(element);
         this.initButtons(element);
 
-        this.setName_();
+        this.setParams_();
+        this.setAllFiltersData_();
     };
 
 
@@ -195,18 +221,93 @@ goog.scope(function() {
 
 
     /**
-     * Uncheck item
-     * @param {{
+     * update content (inputs and labels)
+     * @param {Array<{
+     *     value: string,
+     *     label: string,
+     *     isChecked: bool
+     * }>} filters
+     */
+    Filter.prototype.updateListFilters = function(filters) {
+        goog.soy.renderElement(
+            this.wrapperListFilters,
+            sm.lSearchResult.bFilter.Template.listFilters, {
+                params: {
+                    data: {
+                        name: this.filterName,
+                        filters: filters
+                    },
+                    config: {
+                        type: this.type
+                    }
+                }
+            }
+        );
+
+        this.initFilterItems();
+        this.initFilterItemsListeners();
+    };
+
+
+    /**
+     * adds or deletes class to show header
+     * @param {bool} visible
+     */
+    Filter.prototype.setHeaderVisibility = function(visible) {
+        var isContains = goog.dom.classlist.contains(
+            this.header_,
+            Filter.CssClass.HIDDEN
+        );
+
+        if (visible && isContains) {
+            goog.dom.classlist.remove(
+                this.header_,
+                Filter.CssClass.HIDDEN
+            );
+        }
+        else if (!visible && !isContains) {
+            goog.dom.classlist.add(
+                this.header_,
+                Filter.CssClass.HIDDEN
+            );
+        }
+    };
+
+
+    /**
+     * In first array is set to isChecked true
+     * according to the value of the second array
+     * @param {Array<{
      *     value: string,
      *     label: string,
      *     name: string,
-     *     id: string
-     * }} params
-     * @public
+     *     isChecked: bool
+     * }>} filters
+     * @param {Array<{Object}>} selectedFilters like filters
+     * @return {Array<{Object}>} like filters
      */
-    Filter.prototype.uncheckItem = function(params) {
-        var item = this.findInput(params.value);
-        item.checked = false;
+    Filter.prototype.setSelected = function(filters, selectedFilters) {
+        return filters.map(function(item) {
+            var itemClone = goog.object.clone(item);
+
+            itemClone.isChecked = selectedFilters.some(function(selected) {
+                return itemClone.value == selected.value;
+            });
+
+            return itemClone;
+        });
+    };
+
+
+    /**
+     * Get default filters data
+     * @return {Array<{
+     *     label: string,
+     *     value: string
+     * }>}
+     */
+    Filter.prototype.getAllFiltersData = function() {
+        return this.allFiltersData;
     };
 
 
@@ -224,6 +325,25 @@ goog.scope(function() {
         return this.getFiltersData().filter(function(item) {
             return item.isChecked;
         });
+    };
+
+
+    /**
+     * Uncheck item
+     * @param {{
+     *     value: string,
+     *     label: string,
+     *     name: string,
+     *     id: string
+     * }} params
+     * @public
+     */
+    Filter.prototype.uncheckItem = function(params) {
+        var item = this.findInput(params.value);
+
+        if (item) {
+            item.checked = false;
+        }
     };
 
 
@@ -252,6 +372,58 @@ goog.scope(function() {
      */
     Filter.prototype.isCheckedInput = function(input) {
         return input.checked ? true : false;
+    };
+
+
+    /**
+     * Find an input
+     * @param {string} value
+     * @return {Element}
+     * @protected
+     */
+    Filter.prototype.findInput = function(value) {
+        var inputs = Array.prototype.slice.call(this.inputElements, 0);
+
+        return inputs.find(function(input) {
+            return input.value == value;
+        });
+    };
+
+
+    /**
+     * Get data params
+     * @param {Element} element
+     * @return {Object}
+     * @protected
+     */
+    Filter.prototype.getDataParams = function(element) {
+        return JSON.parse(
+            element.getAttribute('data-params')
+        );
+    };
+
+
+    /**
+     * Get data filters
+     * @return {Array<{
+     *     value: string,
+     *     label: string,
+     *     name: string
+     * }>}
+     * @protected
+     */
+    Filter.prototype.getFiltersData = function() {
+        var elems = Array.prototype.slice.call(this.filterSectionElements, 0);
+
+        return elems.map(function(elem) {
+            var item = this.getDataParams(elem);
+
+            var input = this.findInput(item.value);
+            item.isChecked = this.isCheckedInput(input);
+
+            return item;
+
+        }, this);
     };
 
 
@@ -298,58 +470,6 @@ goog.scope(function() {
         this.dispatchEvent({
             'type': type
         });
-    };
-
-
-    /**
-     * Get data params
-     * @param {Element} element
-     * @return {Object}
-     * @protected
-     */
-    Filter.prototype.getDataParams = function(element) {
-        return JSON.parse(
-            element.getAttribute('data-params')
-        );
-    };
-
-
-    /**
-     * Find an input
-     * @param {string} value
-     * @return {Element}
-     * @protected
-     */
-    Filter.prototype.findInput = function(value) {
-        var inputs = Array.prototype.slice.call(this.inputElements, 0);
-
-        return inputs.find(function(input) {
-            return input.value == value;
-        });
-    };
-
-
-    /**
-     * Get data filters
-     * @return {Array<{
-     *     value: string,
-     *     label: string,
-     *     name: string
-     * }>}
-     * @protected
-     */
-    Filter.prototype.getFiltersData = function() {
-        var elems = Array.prototype.slice.call(this.filterSectionElements, 0);
-
-        return elems.map(function(elem) {
-            var item = this.getDataParams(elem);
-
-            var input = this.findInput(item.value);
-            item.isChecked = this.isCheckedInput(input);
-
-            return item;
-
-        }, this);
     };
 
 
@@ -460,9 +580,8 @@ goog.scope(function() {
         }
 
         if (this.showFiltersButtonElement_) {
-            var header = this.getElementByClass(Filter.CssClass.HEADER);
             handler.listen(
-                header,
+                this.header_,
                 goog.events.EventType.CLICK,
                 this.toggleFiltersVisibility_
             );
@@ -561,14 +680,37 @@ goog.scope(function() {
 
 
     /**
-     * set filter name
+     * set params
      * @private
      */
-    Filter.prototype.setName_ = function() {
+    Filter.prototype.setParams_ = function() {
         var data = JSON.parse(
             this.getElement().getAttribute('data-params')
         );
         this.filterName = data.name;
+        this.type = data.type;
+    };
+
+
+    /**
+     * set default filters data
+     * @private
+     */
+    Filter.prototype.setAllFiltersData_ = function() {
+        this.allFiltersData = this.getFiltersData();
+    };
+
+
+    /**
+     * Init Filter Components
+     * @param {Element} element
+     * @private
+     */
+    Filter.prototype.initFilterComponents_ = function(element) {
+        this.header_ = this.getElementByClass(
+            Filter.CssClass.HEADER,
+            element
+        );
     };
 
 

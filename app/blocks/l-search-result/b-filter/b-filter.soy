@@ -32,7 +32,8 @@
     {let $data kind="html"}
         {call cl.iUtils.Utils.stringify}
             {param json: [
-                'name': $params.data?.name
+                'name': $params.data?.name,
+                'type': $params.config?.type
             ]/}
         {/call}
     {/let}
@@ -209,7 +210,7 @@
  *         name: ?string
  *     },
  *     config: ?{
- *         theme: ?string
+ *         type: ?string
  *     }
  * }
  */
@@ -221,8 +222,8 @@
     <div class="{call .rootClass/}__list-filters">
         {for $i in range($params.data.filters.length)}
             {let $id kind="html"}
-                {if $params.config?.theme == 'minimal'}
-                    {$params.data.filters[$i].value}
+                {if $params.config?.type}
+                    {$i}-{$params.config?.type}
                 {else}
                     {$i}
                 {/if}
@@ -313,14 +314,21 @@
 /**
  * Determines how many filters show
  * @param? params {
+ *     data: ?{
+ *         name: string,
+ *         filters: Array<Object>
+ *     },
  *     config: ?{
- *         filtersToShow: ?number
+ *         filtersToShow: ?number,
+ *         type: ?string
  *     }
  * }
  */
 {template .filToShow kind="html"}
     {if $params?.config?.filtersToShow}
         {$params?.config?.filtersToShow}
+    {elseif $params?.config?.type == 'minimal'}
+        {length($params.data.filters) - 1}
     {else}
         5
     {/if}

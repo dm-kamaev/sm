@@ -67,8 +67,12 @@ goog.scope(function() {
                 gorod.gSuggest.Suggest.Css.ROOT,
                 element
             ),
-            search: this.getElementByClass(
-               sm.bSearch.Search.CssClass.ROOT,
+            suggestInput: this.getElementByClass(
+                gorod.gSuggest.Suggest.Css.INPUT,
+                element
+            ),
+            suggestList: this.getElementByClass(
+                gorod.gSuggest.Suggest.Css.LIST,
                 element
             ),
             filter: this.getElementByClass(

@@ -1,21 +1,34 @@
 {namespace sm.lSearchResult.bFilterSearch.Template}
 
 /**
+ * @typedef {{
+ *     header: string,
+ *     name: ?string,
+ *     filters: {
+ *         title: ?string,
+ *         items: Array<{
+ *             label: string,
+ *             value: string,
+ *             isChecked: (bool|undefined)
+ *         }>
+ *     },
+ *     search: {
+ *         placeholder: ?string,
+ *         text: ?string,
+ *         sourceUrl: string
+ *     },
+ *     selectedItems: Array<{
+ *         label: string,
+ *         value: string,
+ *         isChecked: (bool|undefined)
+ *     }>
+ * }} sm.lSearchResult.bFilterSearch.Template.Pasams.Data
+ */
+
+/**
  * Constructor
- * @param? params {{
- *     data: {
- *         header: string,
- *         name: ?string,
- *         filters: {
- *             title: ?string,
- *             items: Array<{Object}>
- *         },
- *         search: {
- *             placeholder: ?string,
- *             text: ?string
- *         },
- *         selectedItems: Array<Object>
- *     }
+ * @param params {{
+ *     data: sm.lSearchResult.bFilterSearch.Template.Pasams.Data
  * }}
  * @extends cl.iControl.Template
  * @constructor
@@ -27,7 +40,9 @@
 
 /**
  * Body
- * @param? params {?}
+ * @param params {{
+ *     data: sm.lSearchResult.bFilterSearch.Template.Pasams.Data
+ * }}
  * @override
  */
 {template .body}
@@ -41,7 +56,7 @@
 
 /**
  * Title
- * @param? params {{
+ * @param params {{
  *     data: {
  *         header: string
  *     }
@@ -56,26 +71,46 @@
 
 /**
  * Search
- * @param? params {{
+ * @param params {{
  *     data: {
  *         search: {
  *             placeholder: ?string,
- *             text: ?string
+ *             text: ?string,
+ *             sourceUrl: ?string
  *         }
  *     }
  * }}
  */
 {template .search_ private="true"}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__suggest
+    {/let}
+
     <div class="{call .rootClass/}__section {call .rootClass/}__section_search">
-        {call sm.bSearch.Template.base}
+        {call gorod.gSuggest.SuggestTemplate.render}
             {param params: [
-                'placeholder': $params.data.search?.placeholder,
-                'text': $params.data.search?.text,
-                'theme': 'min',
-                'redirect': '',
-                'inputSize': 'min',
+                'data': [
+                    'text': $params.data.search?.text,
+                    'minLength': 3,
+                    'autofocus': true,
+                    'placeholder': $params.data.search?.placeholder,
+                    'sourceUrl': $params.data.search?.sourceUrl,
+                    'argName': 'searchString'
+                ],
                 'config': [
-                    'height': 's'
+                    'customClasses': $customClasses,
+                    'filtrationEnabled': false,
+                    'notShowList': true
+                ],
+                'list': [
+                    'theme': 'stendhal',
+                    'color': 'sienna'
+                ],
+                'input': [
+                    'style': [
+                        'theme': 'stendhal',
+                        'size': 'min'
+                    ]
                 ]
             ]/}
         {/call}
@@ -85,7 +120,7 @@
 
 /**
  * Filter form
- * @param? params {{
+ * @param params {{
  *     data: {
  *         name: ?tring,
  *         filters: {
@@ -109,6 +144,7 @@
                 'config': [
                     'cannotBeHidden': true,
                     'filtersToShow': length($params.data.filters?.items),
+                    'type': 'minimal',
                     'theme': 'minimal'
                 ]
             ]/}
@@ -119,7 +155,7 @@
 
 /**
  * Selected filter elements
- * @param? params {{
+ * @param params {{
  *     data: {
  *         selectedItems: ?Array<Object>
  *     }

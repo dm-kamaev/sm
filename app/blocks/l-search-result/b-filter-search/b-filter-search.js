@@ -23,11 +23,11 @@ sm.lSearchResult.bFilterSearch.FilterSearch = function(view, opt_domHelper) {
 
 
     /**
-     * Instance search
-     * @type {sm.bSearch.Search}
+     * Instance suggest
+     * @type {gorod.gSuggest.Suggest}
      * @private
      */
-    this.search_ = null;
+    this.suggest_ = null;
 
 
     /**
@@ -52,6 +52,15 @@ sm.lSearchResult.bFilterSearch.FilterSearch = function(view, opt_domHelper) {
      * @private
      */
     this.button_ = null;
+
+
+    /**
+     * Number symbols to start search
+     * @type {number}
+     * @private
+     */
+    this.numberSymbolsToStartSearch_ =
+        sm.lSearchResult.bFilterSearch.FilterSearch.numberSymbolsToStartSearch;
 };
 goog.inherits(sm.lSearchResult.bFilterSearch.FilterSearch, cl.iControl.Control);
 
@@ -78,13 +87,20 @@ goog.scope(function() {
 
 
     /**
+     * Number symbols to start search
+     * @const {number}
+     */
+    FilterSearch.numberSymbolsToStartSearch = 3;
+
+
+    /**
      * @override
      * @param {Element} element
      */
     FilterSearch.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
-        this.initSearch_();
+        this.initSuggest_();
         this.initFilter_();
         this.initSelected_();
         this.initButton_();
@@ -97,6 +113,7 @@ goog.scope(function() {
     FilterSearch.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
 
+        this.initSuggestListeners_();
         this.initFilterListeners_();
         this.initSelectedListeners_();
         this.initButtonListeners_();
@@ -104,7 +121,17 @@ goog.scope(function() {
 
 
     /**
-     * Check Filter Item
+     * Clean up the Component.
+     */
+    FilterSearch.prototype.exitDocument = function() {
+        goog.base(this, 'exitDocument');
+
+        this.destroySuggestListeners_();
+    };
+
+
+    /**
+     * Check Filter Item Handler
      * @param {Object} event
      * @private
      */
@@ -114,7 +141,7 @@ goog.scope(function() {
 
 
     /**
-     * Uncheck Filter Item
+     * Uncheck Filter Item Handler
      * @param {Object} event
      * @private
      */
@@ -124,7 +151,7 @@ goog.scope(function() {
 
 
     /**
-     * Uncheck Selected Item
+     * Uncheck Selected Item Handler
      * @param {Object} event
      * @private
      */
@@ -144,6 +171,79 @@ goog.scope(function() {
                 filters: this.selected_.getSelectedData()
             }
         });
+    };
+
+
+    /**
+     * Handler Search data
+     * @param {Object} event
+     * @param {{
+     *     searchString: ?string,
+     *     Array<{
+     *         label: ?string,
+     *         value: string
+     *     }> result
+     * }} data
+     * @private
+     */
+    FilterSearch.prototype.onSearch_ = function(event, data) {
+        var filters = JSON.parse(data.result);
+
+        this.updateFilterItems_(filters);
+        this.filter_.setHeaderVisibility(false);
+    };
+
+
+    /**
+     * Change Search Text Handler
+     * @param {Object} event
+     * @param {{
+     *     text: string
+     * }} data
+     * @private
+     */
+    FilterSearch.prototype.onChangeSearchText_ = function(event, data) {
+        var numberSymbols = FilterSearch.numberSymbolsToStartSearch;
+
+        if (data.text.length <= (numberSymbols - 1)) {
+            var popular = this.filter_.getAllFiltersData();
+
+            this.updateFilterItems_(popular);
+            this.filter_.setHeaderVisibility(true);
+        }
+    };
+
+
+    /**
+     * update filter
+     * @param {Array<{
+     *     label: ?string,
+     *     value: string
+     * }>} data
+     * @private
+     */
+    FilterSearch.prototype.updateFilterItems_ = function(data) {
+        var selected = this.selected_.getSelectedData(),
+            filters = this.filter_.setSelected(data, selected);
+
+        this.filter_.updateListFilters(filters);
+    };
+
+
+    /**
+     * Init Suggest Listeners
+     * @private
+     */
+    FilterSearch.prototype.initSuggestListeners_ = function() {
+        this.suggest_.addEventListener(
+            Suggest.Events.SEARCH,
+            this.onSearch_.bind(this)
+        );
+
+        this.suggest_.addEventListener(
+            Suggest.Events.TEXT_CHANGE,
+            this.onChangeSearchText_.bind(this)
+        );
     };
 
 
@@ -193,21 +293,41 @@ goog.scope(function() {
 
 
     /**
-     * Initialize search
+     * Destroy Suggest Listeners
      * @private
      */
-    FilterSearch.prototype.initSearch_ = function() {
-
-        var suggest = new Suggest('.' + Suggest.Css.ROOT);
-
-        UIInstanceStorage.getInstance().addInstance(
-            suggest,
-            this.getView().getDom().suggest
+    FilterSearch.prototype.destroySuggestListeners_ = function() {
+        this.suggest_.removeEventListener(
+            Suggest.Events.SEARCH,
+            this.onSearch_.bind(this)
         );
 
-        this.search_ = new Search();
-        this.addChild(this.search_);
-        this.search_.decorate(this.getView().getDom().search);
+        this.suggest_.removeEventListener(
+            Suggest.Events.TEXT_CHANGE,
+            this.onChangeSearchText_.bind(this)
+        );
+    };
+
+
+    /**
+     * Initialize suggest
+     * @private
+     */
+    FilterSearch.prototype.initSuggest_ = function() {
+
+        var input = new gorod.bInput.Input(
+            this.getView().getDom().suggestInput
+        );
+
+        var list = new gorod.bList.List(
+            this.getView().getDom().suggestList
+        );
+        list.init();
+
+        this.suggest_ = new Suggest(
+            this.getView().getDom().suggest
+        );
+        this.suggest_.init();
     };
 
 
