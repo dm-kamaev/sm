@@ -60,7 +60,7 @@
         </exec>
     </target>
 
-    <target name="schools.update-search-cache">
+    <target name="schools.update-sitemap">
         <exec executable="node" dir="${basedir}">
             <arg line="commander sitemap"/>
         </exec>
