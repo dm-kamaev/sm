@@ -38,7 +38,7 @@
                      user.create-runtime-dir,
                      packaging.release.folder.link,
                      packaging.rollback-script,
-                     packaging.node.restart,
+                     node.forever.restart,
                      user.node.restart,
                      auth.node.restart,
                      packaging.crontab.install,
