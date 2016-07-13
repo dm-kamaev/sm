@@ -14,6 +14,7 @@ require('./console/dump.js').Command;
 require('./console/egeData.js').Command;
 require('./console/geocord.js').Command;
 require('./console/getActs.js').Command;
+require('./console/execUpdater.js').Command;
 require('./console/isAddressIsSchool.js').Command;
 require('./console/metro.js').Command;
 require('./console/modelArchiver.js').Command;
@@ -34,8 +35,6 @@ require('./console/updateUrls.js').Command;
 require('./console/commentPublicationDate').Command;
 require('./console/vkapi.js').Command;
 require('./console/updateUserData.js').Command;
-require('./console/geoData.js').Command;
-require('./console/seoDataOperator.js').Command;
 
 /*
  * The line below initializes the interface on `node ./commander
