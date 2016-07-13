@@ -114,6 +114,19 @@ class Format {
         str = str.trim();
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
+
+    /**
+     * Transform given array to string in postgres Array format
+     * please note, that array to place in db can consist only of
+     * another arrays or simple types
+     * @param {Array<*>} array
+     * @return {string}
+     */
+    static prepareArrayForDb(array) {
+        return JSON.stringify(array)
+            .replace(/\[/g, '{')
+            .replace(/]/g, '}');
+    }
 }
 
 module.exports = Format;
