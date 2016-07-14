@@ -43,14 +43,16 @@ goog.scope(function() {
 
     /**
      * render modal
+     * @param {Object=} opt_params
      * @param {bool=} opt_selfDestroy
      * @return {sm.gModal.ModalStendhal}
      */
-    Modal.render = function(opt_selfDestroy) {
+    Modal.render = function(opt_params, opt_selfDestroy) {
         var instance = factoryManager.render(
             'stendhal',
             'modal',
-            document
+            document,
+            opt_params
         );
 
         instance.selfDestroy_ = opt_selfDestroy;

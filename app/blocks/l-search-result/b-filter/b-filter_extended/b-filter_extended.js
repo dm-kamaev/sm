@@ -138,7 +138,13 @@ goog.scope(function() {
      * @private
      */
     FilterExtended.prototype.initModalFilter_ = function() {
-        var modal = sm.gModal.ModalStendhal.render(true);
+        var params = {
+            config: {
+                size: 'l'
+            }
+        };
+
+        var modal = sm.gModal.ModalStendhal.render(params, true);
 
         modal.renderContent(
             'filter-search',
@@ -230,8 +236,8 @@ goog.scope(function() {
     FilterExtended.prototype.getModalContentData_ = function() {
         var params;
 
-        if (this.filterName == 'additionalEducation') {
-            params = this.getAdditionalEducationParams_();
+        if (this.filterName == 'activity') {
+            params = this.getActivityParams_();
         }
         else if (this.filterName == 'specializedClasses') {
             params = this.getSpecializedClassesParams_();
@@ -242,7 +248,7 @@ goog.scope(function() {
 
 
      /**
-     * Get filter params for Additional Education
+     * Get filter params for Activity
      * @return {{
      *     data: {
      *         header: string,
@@ -256,14 +262,14 @@ goog.scope(function() {
      * }}
      * @private
      */
-    FilterExtended.prototype.getAdditionalEducationParams_ = function() {
+    FilterExtended.prototype.getActivityParams_ = function() {
         var selected = this.getSelectedData(),
             popular = this.allFiltersData;
 
-        var additionalEducation = {
+        var activity = {
             data: {
                 header: 'Дополнительные занятия',
-                name: 'additionalEducation',
+                name: 'activity',
                 filters: {
                     title: 'Популярные дополнительные занятия',
                     items: this.setSelected(popular, selected)
@@ -275,7 +281,7 @@ goog.scope(function() {
                 }
             }
         };
-        return additionalEducation;
+        return activity;
     };
 
 

@@ -1,3 +1,5 @@
+@import "../../i-media/i-media";
+
 .b-filter_labels {
     padding: 0;
 
@@ -7,7 +9,7 @@
         width: auto;
         min-width: auto;
         margin: 10px 10px 0 0;
-        padding: 8px 15px 10px 10px;
+        padding: 8px 15px 10px;
 
         vertical-align: baseline;
 
@@ -23,17 +25,17 @@
     }
 
     .b-filter__filter {
-        max-width: 533px;
-        margin-right: 20px;
-        padding: 0;
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0 28px 0 0;
     }
 
     .b-filter__remove {
-        display: inline-block;
+        position: absolute;
+        top: 8px;
+        right: 15px;
 
         cursor: pointer;
-
-        vertical-align: top;
     }
 
     .b-filter__icon {
@@ -70,5 +72,18 @@
 
         font: 14px Arial, sans-serif;
         line-height: 20px;
+    }
+}
+
+@include media-xs {
+    .b-filter_labels {
+        .b-filter__section {
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+
+        .b-filter__remove {
+            right: 10px;
+        }
     }
 }
