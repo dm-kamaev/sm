@@ -6,6 +6,8 @@
     <property name="packaging.source.frontend-app.runtime.path"
               value="${packaging.source.frontend-app.path}/runtime"/>
     <property name="project.node-modules.path" value="${basedir}/node_modules"/>
+    <property name="packaging.source.supervisor"
+              value="${packaging.target.current-path}/environment/supervisord/${packaging.project}.conf"/>
     <property name="user.path"
               value="${project.node-modules.path}/user-service"/>
     <property name="auth.path"
@@ -28,6 +30,9 @@
     <!-- Switch to new release -->
     <target name="packaging.release.switch"
             depends="packaging.shared-folders,
+                     packaging.supervisor.link,
+                     user.supervisor.link,
+                     auth.supervisor.link,
                      schools.build-config,
                      schools.deploy-authorization-config,
                      schools.deploy-user-config,
@@ -38,19 +43,17 @@
                      user.create-runtime-dir,
                      packaging.release.folder.link,
                      packaging.rollback-script,
-                     node.forever.restart,
-                     user.node.restart,
-                     auth.node.restart,
+                     packaging.supervisor.restart,
                      packaging.crontab.install,
                      packaging.initd.install,
                      schools.change-owner"/>
 
     <!-- Stop previous release -->
-    <target name="packaging.release.clean"/>
+    <target name="packaging.release.clean"
+            depends="packaging.shared-folders.unlink"/>
 
     <!-- Overriding packaging tasks -->
 
-    <!-- Remove upload folder actions -->
     <target name="packaging.shared-folders"
             depends="packaging.shared-folders.create,
                      packaging.shared-folders.set-permissions,
@@ -61,6 +64,11 @@
 
     <target name="packaging.shared-folders.set-permissions"
             depends="packaging.shared-folders.set-permissions.logs"/>
+
+    <target name="packaging.shared-folders.unlink"
+            depends="packaging.shared-folders.unlink.logs"/>
+
+
 
     <target name="schools.migrate">
         <exec executable="${gulp}" dir="${basedir}" failonerror="on">
