@@ -4,7 +4,9 @@ var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var logger =
     require('../../../../app/components/logger/logger').getLogger('app');
-var schoolView = require('../views/schoolView');
+var schoolView = require('../views/schoolView'),
+    specializedClassesView = require('../views/specializedClassesView'),
+    activityView = require('../views/activityView');
 var entityType = require('../../entity/enums/entityType');
 
 
@@ -392,57 +394,27 @@ exports.searchMapPoints = async(function(req, res) {
  *                "value":"2"
  *             }
  *     ]
+ *
+ * @apiError (Error 500)
  */
 exports.activity = async(function(req, res) {
-    var result = [
-        {
-            'label': 'Математика',
-            'value': '1'
-        },
-        {
-            'label': 'Занимательная математика',
-            'value': '2'
-        },
-        {
-            'label': 'Робототехника',
-            'value': '3'
-        },
-        {
-            'label': 'Макраме',
-            'value': '4'
-        },
-        {
-            'label': 'Вязание',
-            'value': '5'
-        },
-        {
-            'label': 'Чтение',
-            'value': '6'
-        },
-        {
-            'label': 'Рисование',
-            'value': '7'
-        },
-        {
-            'label': 'Пение',
-            'value': '8'
-        },
-        {
-            'label': 'Плавание',
-            'value': '9'
-        },
-        {
-            'label': 'Вышивание',
-            'value': '10'
-        },
-        {
-            'label': 'История',
-            'value': '11'
-        }
-    ];
+    var name,
+        result;
+    try {
+        name = req.query.name || '';
 
-    res.status(200);
-    res.end(JSON.stringify(result));
+        var activitySpheres =
+                await(services.additionalEducation.searchSphereByName(name));
+
+        result = activityView.sphereFilter(activitySpheres);
+        res.status(200);
+    } catch (error) {
+        res.status(500);
+        result = error.message;
+    } finally {
+        res.header('Content-Type', 'text/html; charset=utf-8');
+        res.end(JSON.stringify(result));
+    }
 });
 
 
@@ -470,56 +442,25 @@ exports.activity = async(function(req, res) {
  *                "value":"2"
  *             }
  *     ]
+ *
+ * @apiError (Error 500)
  */
 exports.specializedClasses = async(function(req, res) {
-    var result = [
-        {
-            'label': 'Математика',
-            'value': '1'
-        },
-        {
-            'label': 'Занимательная математика',
-            'value': '2'
-        },
-        {
-            'label': 'Робототехника',
-            'value': '3'
-        },
-        {
-            'label': 'Макраме',
-            'value': '4'
-        },
-        {
-            'label': 'Вязание',
-            'value': '5'
-        },
-        {
-            'label': 'Чтение',
-            'value': '6'
-        },
-        {
-            'label': 'Рисование',
-            'value': '7'
-        },
-        {
-            'label': 'Пение',
-            'value': '8'
-        },
-        {
-            'label': 'Плавание',
-            'value': '9'
-        },
-        {
-            'label': 'Вышивание',
-            'value': '10'
-        },
-        {
-            'label': 'История',
-            'value': '11'
-        }
-    ];
+    var name,
+        result;
+    try {
+        name = req.query.name || '';
 
-    res.status(200);
-    res.end(JSON.stringify(result));
+        var specializedClasses =
+                await(services.specializedClasses.searchTypeByName(name));
+
+        result = specializedClassesView.typeFilters(specializedClasses);
+        res.status(200);
+    } catch (error) {
+        res.status(500);
+        result = error.message;
+    } finally {
+        res.header('Content-Type', 'text/html; charset=utf-8');
+        res.end(JSON.stringify(result));
+    }
 });
-
