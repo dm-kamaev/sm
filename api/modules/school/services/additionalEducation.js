@@ -101,4 +101,22 @@ service.createSphere = async(function(params) {
     return models.AdditionalEducationSphere.create(params);
 });
 
+
+/**
+ * Return array of additional education spheres,
+ * with name containing given name string
+ * @param {string} name
+ * @return {Array<models.AdditionalEducationSphere>}
+ */
+service.searchSphereByName = async(function(name) {
+    return await(models.AdditionalEducationSphere.findAll({
+        where: {
+            name: {
+                $like: '%' + name + '%'
+            }
+        }
+    }));
+});
+
+
 module.exports = service;
