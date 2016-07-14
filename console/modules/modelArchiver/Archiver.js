@@ -129,7 +129,7 @@ class Archiver {
             fileDir = fileLocation.dir,
             filePath = path.join(fileDir, this.tmpName_);
         this.decompress(fileDir);
-        var headers = this.getHeaders_(filePath);
+        var headers = this.getHeaders_(filePath, delimiter);
 
         await(this.cloneToTempTable_(table, headers));
 
@@ -283,8 +283,9 @@ class Archiver {
      * @private
      */
     copyToTable_(table, tmpFilePath, delimiter) {
-        var sqlQuery = 'COPY ' + table + '(' + this.getHeaders_(tmpFilePath) +
-            ') FROM \'' + tmpFilePath + '\' WITH CSV HEADER DELIMITER \'' +
+        var sqlQuery = 'COPY ' + table + '(' +
+            this.getHeaders_(tmpFilePath, delimiter) + ') FROM \'' +
+            tmpFilePath + '\' WITH CSV HEADER DELIMITER \'' +
             delimiter + '\';';
 
         await(sequelize.query(sqlQuery));
@@ -294,13 +295,16 @@ class Archiver {
     /**
      * @private
      * @param {string} filePath
+     * @param {string=} opt_delimiter
      * @return {Array<string>}
      */
-    getHeaders_(filePath) {
+    getHeaders_(filePath, opt_delimiter) {
         var file = fs.readFileSync(filePath, {encoding: 'utf8'}),
-            headers = file.slice(0, file.indexOf('\n'));
+            headers = file.slice(0, file.indexOf('\n')),
+            delimiter = opt_delimiter || '|';
 
-        return headers.split('|').map(header => this.formatHeader_(header));
+        return headers.split(delimiter)
+            .map(header => this.formatHeader_(header));
     }
 
     /**
