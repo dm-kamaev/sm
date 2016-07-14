@@ -7,6 +7,7 @@ goog.require('goog.events');
 goog.require('goog.object');
 goog.require('goog.soy');
 goog.require('goog.ui.Component');
+goog.require('sm.iAnalytics.Analytics');
 
 
 
@@ -126,7 +127,8 @@ sm.lSearchResult.bFilter.Filter = function(opt_params) {
 goog.inherits(sm.lSearchResult.bFilter.Filter, goog.ui.Component);
 
 goog.scope(function() {
-    var Filter = sm.lSearchResult.bFilter.Filter;
+    var Filter = sm.lSearchResult.bFilter.Filter,
+        Analytics = sm.iAnalytics.Analytics;
 
 
     /**
@@ -391,6 +393,20 @@ goog.scope(function() {
 
 
     /**
+     * Get filter section
+     * @param {Element} childNodeFilterSection
+     * @return {Element} filter section
+     * @protected
+     */
+    Filter.prototype.getFilterSection = function(childNodeFilterSection) {
+        return goog.dom.getAncestorByClass(
+            childNodeFilterSection,
+            Filter.CssClass.FILTER_SECTION
+        );
+    };
+
+
+    /**
      * Get data params
      * @param {Element} element
      * @return {Object}
@@ -433,19 +449,13 @@ goog.scope(function() {
      * @protected
      */
     Filter.prototype.onChangeItem = function(event) {
-        var type = this.isCheckedInput(event.target) ?
-            Filter.Event.CHECKED_ITEM :
-            Filter.Event.UNCHECKED_ITEM;
+        var isChecked = this.isCheckedInput(event.target);
 
-        var filterSection = goog.dom.getAncestorByClass(
-            event.target,
-            Filter.CssClass.FILTER_SECTION
-        );
+        var filterSection = this.getFilterSection(event.target);
+        var params = this.getDataParams(filterSection);
 
-        this.dispatchEvent({
-            'type': type,
-            'data': this.getDataParams(filterSection)
-        });
+        this.dispatchEventChangeItem_(isChecked, params);
+        this.sendAnalyticsItemData_(isChecked, params.label);
     };
 
 
@@ -676,6 +686,46 @@ goog.scope(function() {
             this.showFiltersIconElement_,
             Filter.CssClass.ICON_ARROW_DOWN
         );
+    };
+
+
+    /**
+     * Send label and action on click on the filter item
+     * @param {bool} isAdded
+     * @param {string} label
+     * @private
+     */
+    Filter.prototype.sendAnalyticsItemData_ = function(isAdded, label) {
+        var dataAnalytics = {
+            'hitType': 'event',
+            'eventCategory': this.filterName,
+            'eventAction': isAdded ? 'add' : 'delete',
+            'eventLabel': label
+        };
+
+        Analytics.getInstance().send(dataAnalytics);
+    };
+
+
+    /**
+     * dispatch Event Change State Item
+     * @param {bool} isChecked
+     * @param {{
+     *     label: string,
+     *     value: string,
+     *     name: string
+     * }} params
+     * @private
+     */
+    Filter.prototype.dispatchEventChangeItem_ = function(isChecked, params) {
+        var type = isChecked ?
+            Filter.Event.CHECKED_ITEM :
+            Filter.Event.UNCHECKED_ITEM;
+
+        this.dispatchEvent({
+            'type': type,
+            'data': params
+        });
     };
 
 

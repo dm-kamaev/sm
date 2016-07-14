@@ -79,6 +79,7 @@ goog.scope(function() {
      * @enum {string}
      */
     FilterLabels.Event = {
+        CHECKED_ITEM: Filter.Event.CHECKED_ITEM,
         UNCHECKED_ITEM: Filter.Event.UNCHECKED_ITEM
     };
 
@@ -178,10 +179,19 @@ goog.scope(function() {
 
         if (this.crossRemove_.length) {
             for (var i = 0; i < this.crossRemove_.length; i++) {
+
+                var cross = this.crossRemove_[i];
+
                 handler.listen(
-                    this.crossRemove_[i],
+                    cross,
                     goog.events.EventType.CLICK,
                     this.onRemoveClick_
+                );
+
+                handler.listen(
+                    cross,
+                    goog.events.EventType.CLICK,
+                    this.onChangeItem
                 );
             }
         }
@@ -195,13 +205,6 @@ goog.scope(function() {
      */
     FilterLabels.prototype.onRemoveClick_ = function(event) {
         this.removeItem(event.target);
-
-        var filterSection = this.getItem_(event.target);
-
-        this.dispatchEvent({
-            'type': FilterLabels.Event.UNCHECKED_ITEM,
-            'data': this.getDataParams(filterSection)
-        });
     };
 
 
@@ -278,20 +281,6 @@ goog.scope(function() {
 
 
     /**
-     * Get filter section
-     * @param {Element} childNodeFilterSection
-     * @return {Element} filter section
-     * @private
-     */
-    FilterLabels.prototype.getItem_ = function(childNodeFilterSection) {
-        return goog.dom.getAncestorByClass(
-            childNodeFilterSection,
-            FilterLabels.CssClass.FILTER_SECTION
-        );
-    };
-
-
-    /**
      * Render item
      * @param {{
      *     value: string,
@@ -353,7 +342,7 @@ goog.scope(function() {
             domElement = this.findInput(data.value);
         }
 
-        var filterSection = this.getItem_(domElement);
+        var filterSection = this.getFilterSection(domElement);
         goog.dom.removeNode(filterSection);
     };
 });  // goog.scope
