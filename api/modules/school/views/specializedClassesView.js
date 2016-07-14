@@ -68,4 +68,22 @@ specializedClassesView.listParams_ = function(items, opt_name) {
     };
 };
 
+
+/**
+ * Create filters from given specialized classes types
+ * @param {Array<models.SpecializedClassType>} specializedClassTypes
+ * @return {Array<{
+ *     label: string,
+ *     value: number
+ * }>}
+ */
+specializedClassesView.typeFilters = function(specializedClassTypes) {
+    return specializedClassTypes.map(type => {
+        return {
+            label: type.name,
+            value: type.id
+        };
+    });
+};
+
 module.exports = specializedClassesView;
