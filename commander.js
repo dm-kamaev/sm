@@ -36,7 +36,8 @@ require('./console/vkapi.js').Command;
 require('./console/updateUserData.js').Command;
 require('./console/geoData.js').Command;
 require('./console/seoDataOperator.js').Command;
-require('./console/SpecializedClassesOperator').Command;
+require('./console/specializedClassesOperator').Command;
+require('./console/activityOperator').Command;
 
 /*
  * The line below initializes the interface on `node ./commander
