@@ -104,6 +104,130 @@ exports.list = async (function(req, res, next) {
             filters = searchView.filters(results.filters, searchParams),
             favorites = schoolView.listCompact(results.favorites);
 
+        filters.filters.push(
+            {
+                "data":{
+                    "header":{
+                        "title":"Дополнительные занятия",
+                        "tooltip":""
+                    },
+                    "name":"additionalEducation",
+                    "filters":[
+                        {
+                            "label":"Математика",
+                            "value":"math",
+                            "isChecked":false
+                        },
+                        {
+                            "label":"Занимательная математика",
+                            "value":"zanMath",
+                            "isChecked":false
+                        },
+                        {
+                            "label":"Робототехника",
+                            "value":"robo",
+                            "isChecked":false
+                        },
+                        {
+                            "label":"Макраме",
+                            "value":"4",
+                            "isChecked":false
+                        },
+                        {
+                            "label":"Вязание",
+                            "value":"vaz",
+                            "isChecked":false
+                        },
+                        {
+                            "label":"Пение",
+                            "value":"pen",
+                            "isChecked":false
+                        },
+                        {
+                            "label":"Чтение",
+                            "value":"cht",
+                            "isChecked":false
+                        },
+                        {
+                            "label":"Рисование",
+                            "value":"ris",
+                            "isChecked":false
+                        },
+                        {
+                            "label":"История",
+                            "value":"ist",
+                            "isChecked":false
+                        }
+                    ]
+                },
+                "config":{
+                    "isShowed":false,
+                    "showFilterSearch": true,
+                    "type": "extended"
+                }
+            },
+            {
+                "data":{
+                    "header":{
+                        "title":"Профильные классы",
+                        "tooltip":""
+                    },
+                    "name":"specializedClasses",
+                    "filters":[
+                        {
+                            "label":"За страницами учебника математики",
+                            "value":"math",
+                            "isChecked":false
+                        },
+                        {
+                            "label":"Занимательная математика",
+                            "value":"zanMath",
+                            "isChecked":false
+                        },
+                        {
+                            "label":"Робототехника",
+                            "value":"robo",
+                            "isChecked":false
+                        },
+                        {
+                            "label":"Макраме",
+                            "value":"4",
+                            "isChecked":false
+                        },
+                        {
+                            "label":"Вязание",
+                            "value":"vaz",
+                            "isChecked":false
+                        },
+                        {
+                            "label":"Пение",
+                            "value":"pen",
+                            "isChecked":false
+                        },
+                        {
+                            "label":"Чтение",
+                            "value":"cht",
+                            "isChecked":false
+                        },
+                        {
+                            "label":"Рисование",
+                            "value":"ris",
+                            "isChecked":false
+                        },
+                        {
+                            "label":"История",
+                            "value":"ist",
+                            "isChecked":false
+                        }
+                    ]
+                },
+                "config":{
+                    "isShowed":false,
+                    "showFilterSearch": true,
+                    "type": "extended"
+                }
+            });
+
         var params = {
             params: {
                 data: {
