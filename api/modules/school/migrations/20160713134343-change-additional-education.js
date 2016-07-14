@@ -5,17 +5,17 @@ const async = require('asyncawait/async'),
 
 module.exports = {
     up: async(function(queryInterface, Sequelize) {
-         await(queryInterface.addColumn(
-             'additional_education',
-             'sphere_id',
-             {
-                 type: Sequelize.INTEGER,
-                 onDelete: 'cascade',
-                 references: {
-                     model: 'additional_education_sphere',
-                     key: 'id'
-                 }
-             }
+        await(queryInterface.addColumn(
+            'additional_education',
+            'sphere_id',
+            {
+                type: Sequelize.INTEGER,
+                onDelete: 'cascade',
+                references: {
+                    model: 'additional_education_sphere',
+                    key: 'id'
+                }
+            }
         ));
         return queryInterface.removeColumn(
             'additional_education',

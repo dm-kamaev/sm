@@ -114,7 +114,7 @@ class SpecializedClassesOperator {
      */
     fillTypesTable_(types) {
         return types.map(type => {
-            return await(services.specializedClassType.create(type));
+            return await(services.specializedClasses.createType(type));
         });
     }
 
