@@ -82,7 +82,7 @@
 
     <target name="schools.deploy-authorization-config">
         <exec executable="node" dir="${basedir}/console/">
-            <arg line="buildLocalConfig ${env} ../environment/config/authorization"/>
+            <arg line="buildLocalConfig ${params.env} ../environment/config/authorization"/>
         </exec>
         <copy file="${basedir}/environment/config/authorization/config.json"
               tofile="${project.node-modules.path}/auth-service/config/config.json" />
@@ -92,7 +92,7 @@
 
     <target name="schools.deploy-user-config">
         <exec executable="node" dir="${basedir}/console/">
-            <arg line="buildLocalConfig ${env} ../environment/config/user"/>
+            <arg line="buildLocalConfig ${params.env} ../environment/config/user"/>
         </exec>
         <copy file="${basedir}/environment/config/user/config.json"
               tofile="${project.node-modules.path}/user-service/config/config.json" />
@@ -102,7 +102,7 @@
 
     <target name="schools.build-config">
         <exec executable="node" dir="${basedir}/console/">
-            <arg line="buildLocalConfig ${env} ../app/config"/>
+            <arg line="buildLocalConfig ${params.env} ../app/config"/>
         </exec>
     </target>
 
