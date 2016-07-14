@@ -1,5 +1,11 @@
 /**
- * @fileOverview Class, developed for manipulate specialized classes of schools
+ * @fileOverview Class, designed for operate specialized classes of schools
+ * It get specialized classes from array, which places in school table;
+ * form unique array of specialized classes names with popularity
+ * (amount of how much specialized classes with current name found in school);
+ * place unique specialized classes to specialized classes types table;
+ * update specialized classes from school by changing names to their id's;
+ * then archive this tables.
  */
 
 'use strict';
@@ -25,7 +31,7 @@ class SpecializedClassesOperator {
      * write it to db, update specialized_classes field in school then
      * archive types and schools
      */
-    archiveDbTypes() {
+    process() {
         var schoolDbTypes = this.getDbTypes_(),
             uniqueTypes = this.getUniqueTypesWithPopularity_(schoolDbTypes),
             dbTypes = await(this.fillTypesTable_(uniqueTypes)),
@@ -189,7 +195,6 @@ class SpecializedClassesOperator {
         var date = new Date().toJSON(),
             preparedTypes = dbTypes.map(type => {
                 return {
-                    id: type.id,
                     name: type.name,
                     popularity: type.popularity,
                     'updated_at': date,
