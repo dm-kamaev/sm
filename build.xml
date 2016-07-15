@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <project name="school-market" basedir=".">
+    <import file="${basedir}/node_modules/deployment/packaging.xml"/>
+    <import file="${basedir}/node_modules/deployment/node.xml"/>
+    <import file="${basedir}/node_modules/auth-service/build.xml"/>
+    <import file="${basedir}/node_modules/user-service/build.xml"/>
+
     <property name="initd_script" value="${ant.project.name}-node"/>
     <property name="packaging.source.frontend-app.path" value="${basedir}"/>
     <property name="packaging.source.frontend-app.runtime.path"
               value="${packaging.source.frontend-app.path}/runtime"/>
     <property name="project.node-modules.path" value="${basedir}/node_modules"/>
     <property name="packaging.source.supervisor"
-              value="${packaging.target.current-path}/environment/supervisord/
-                     ${packaging.project}.conf"/>
+              value="${packaging.target.current-path}/environment/supervisord/${packaging.project}.conf"/>
     <property name="user.path"
               value="${project.node-modules.path}/user-service"/>
     <property name="auth.path"
@@ -16,12 +20,8 @@
     <property name="user.runtime-path"
               value="${packaging.source.frontend-app.runtime.path}"/>
     <property name="auth.runtime-path"
-              value="${packaging.source.frontend-app.runtime.path}"/>
+        value="${packaging.source.frontend-app.runtime.path}"/>
 
-    <import file="${basedir}/node_modules/deployment/packaging.xml"/>
-    <import file="${basedir}/node_modules/deployment/node.xml"/>
-    <import file="${basedir}/node_modules/auth-service/build.xml"/>
-    <import file="${basedir}/node_modules/user-service/build.xml"/>
 
     <!-- Packaging tune -->
     <!-- <target name="setup-folders" depends="shared-folders-create, shared-set-permissions, setup-folders-logs, setup-folders-logs"/> -->
