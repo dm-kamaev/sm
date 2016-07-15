@@ -115,10 +115,10 @@ goog.scope(function() {
      * @private
      */
     Modal.prototype.onCloseClick_ = function() {
-        this.hide();
-
         if (this.selfDestroy_) {
-            this.dispose();
+            this.remove();
+        } else {
+            this.hide();
         }
     };
 });  // goog.scope

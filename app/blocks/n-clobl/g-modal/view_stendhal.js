@@ -13,7 +13,7 @@ goog.require('goog.labs.userAgent.device');
  * @param {string=} opt_type
  * @param {string=} opt_modifier
  * @constructor
- * @extends {cl.iControl.View}
+ * @extends {cl.gModal.View}
  */
 sm.gModal.ViewStendhal = function(opt_params, opt_type, opt_modifier) {
     goog.base(this, opt_params, opt_type, opt_modifier);
@@ -82,7 +82,7 @@ goog.scope(function() {
     /**
      * Modal onclick
      * @param {Object} event
-     * @protected
+     * @override
      */
     View.prototype.onModalClick = function(event) {
         var ancestor = goog.dom.getAncestorByClass(
