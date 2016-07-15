@@ -43,6 +43,11 @@
 }
 
 .g-modal.g-modal_stendhal.g-modal_size-l {
+    .g-modal__content {
+        width: 100%;
+        max-width: 680px;
+    }
+
     .g-modal__close-button {
         top: 35px;
         right: 35px;

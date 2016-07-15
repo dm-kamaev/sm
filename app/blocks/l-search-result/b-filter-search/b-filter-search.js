@@ -189,8 +189,15 @@ goog.scope(function() {
     FilterSearch.prototype.onSearch_ = function(event, data) {
         var filters = JSON.parse(data.result);
 
-        this.updateFilterItems_(filters);
-        this.filter_.setHeaderVisibility(false);
+        if (filters.length) {
+            this.updateFilterItems_(filters);
+            this.filter_.setHeaderVisibility(false);
+
+            this.showFilter_();
+        }
+        else {
+            this.showPlaceholder_();
+        }
     };
 
 
@@ -210,7 +217,29 @@ goog.scope(function() {
 
             this.updateFilterItems_(popular);
             this.filter_.setHeaderVisibility(true);
+
+            this.showFilter_();
         }
+    };
+
+
+    /**
+     * Show filter and hide placeholder filter
+     * @private
+     */
+    FilterSearch.prototype.showFilter_ = function() {
+        this.getView().setPlaceholderVisibility(false);
+        this.getView().setFilterVisibility(true);
+    };
+
+
+    /**
+     * Show placeholder filter and hide filter
+     * @private
+     */
+    FilterSearch.prototype.showPlaceholder_ = function() {
+        this.getView().setPlaceholderVisibility(true);
+        this.getView().setFilterVisibility(false);
     };
 
 

@@ -48,6 +48,7 @@
 {template .body}
     {call .header_ data="all" /}
     {call .search_ data="all" /}
+    {call .placeholder_ /}
     {call .filter_ data="all" /}
     {call .selected_ data="all" /}
     {call .button_ data="all" /}
@@ -119,7 +120,21 @@
 
 
 /**
- * Filter form
+ * Placeholder for filter
+ */
+{template .placeholder_ private="true"}
+    <div class="{call .rootClass/}__section{sp}
+        {call .rootClass/}__section_placeholder i-utils__hidden">
+
+        <div class="{call .rootClass/}__placeholder-text">
+            По вашему запросу ничего не найдено.
+        </div>
+    </div>
+{/template}
+
+
+/**
+ * Filter
  * @param params {{
  *     data: {
  *         name: ?tring,

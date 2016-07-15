@@ -111,7 +111,7 @@ exports.list = async (function(req, res, next) {
                         "title":"Дополнительные занятия",
                         "tooltip":""
                     },
-                    "name":"additionalEducation",
+                    "name":"activity",
                     "filters":[
                         {
                             "label":"Математика",

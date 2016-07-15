@@ -33,7 +33,9 @@ goog.scope(function() {
      * @enum {string}
      */
     View.CssClass = {
-        ROOT: 'b-filter-search'
+        ROOT: 'b-filter-search',
+        FILTER_SECTION: 'b-filter-search__section_filter',
+        PLACEHOLDER_SECTION: 'b-filter-search__section_placeholder'
     };
 
 
@@ -57,6 +59,56 @@ goog.scope(function() {
 
 
     /**
+     * adds or deletes class to show placeholder
+     * @param {bool} visible
+     */
+    View.prototype.setPlaceholderVisibility = function(visible) {
+        var isContains = goog.dom.classlist.contains(
+            this.dom.placeholderSection,
+            Utils.CssClass.HIDDEN
+        );
+
+        if (visible && isContains) {
+            goog.dom.classlist.remove(
+                this.dom.placeholderSection,
+                Utils.CssClass.HIDDEN
+            );
+        }
+        else if (!visible && !isContains) {
+            goog.dom.classlist.add(
+                this.dom.placeholderSection,
+                Utils.CssClass.HIDDEN
+            );
+        }
+    };
+
+
+    /**
+     * adds or deletes class to show filters
+     * @param {bool} visible
+     */
+    View.prototype.setFilterVisibility = function(visible) {
+        var isContains = goog.dom.classlist.contains(
+            this.dom.filterSection,
+            Utils.CssClass.HIDDEN
+        );
+
+        if (visible && isContains) {
+            goog.dom.classlist.remove(
+                this.dom.filterSection,
+                Utils.CssClass.HIDDEN
+            );
+        }
+        else if (!visible && !isContains) {
+            goog.dom.classlist.add(
+                this.dom.filterSection,
+                Utils.CssClass.HIDDEN
+            );
+        }
+    };
+
+
+    /**
      * Initializes dom elements
      * @param {Element} element
      * @private
@@ -73,6 +125,14 @@ goog.scope(function() {
             ),
             suggestList: this.getElementByClass(
                 gorod.gSuggest.Suggest.Css.LIST,
+                element
+            ),
+            placeholderSection: this.getElementByClass(
+                View.CssClass.PLACEHOLDER_SECTION,
+                element
+            ),
+            filterSection: this.getElementByClass(
+                View.CssClass.FILTER_SECTION,
                 element
             ),
             filter: this.getElementByClass(

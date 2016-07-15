@@ -187,15 +187,15 @@
     .b-filter__reset {
         display: none;
     }
-}
 
-@include media-xs {
     .b-filter_minimal {
         .b-filter__section {
             width: 100%;
         }
     }
+}
 
+@include media-xs {
     .b-filter__section {
         width: 100%;
     }
