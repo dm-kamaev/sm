@@ -108,13 +108,13 @@ exports.list = async (function(req, res, next) {
             {
                 "data":{
                     "header":{
-                        "title":"Дополнительные занятия",
+                        "title":"Профильные классы",
                         "tooltip":""
                     },
-                    "name":"activity",
+                    "name":"specializedClasses",
                     "filters":[
                         {
-                            "label":"Математика",
+                            "label":"За страницами учебника математики",
                             "value":"math",
                             "isChecked":false
                         },
@@ -169,13 +169,13 @@ exports.list = async (function(req, res, next) {
             {
                 "data":{
                     "header":{
-                        "title":"Профильные классы",
+                        "title":"Курсы, кружки и секции",
                         "tooltip":""
                     },
-                    "name":"specializedClasses",
+                    "name":"activity",
                     "filters":[
                         {
-                            "label":"За страницами учебника математики",
+                            "label":"Математика",
                             "value":"math",
                             "isChecked":false
                         },

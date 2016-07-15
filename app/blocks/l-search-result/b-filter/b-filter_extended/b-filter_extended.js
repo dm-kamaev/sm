@@ -268,10 +268,10 @@ goog.scope(function() {
 
         var activity = {
             data: {
-                header: 'Дополнительные занятия',
+                header: 'Курсы, кружки и секции',
                 name: 'activity',
                 filters: {
-                    title: 'Популярные дополнительные занятия',
+                    title: 'Популярные',
                     items: this.setSelected(popular, selected)
                 },
                 selectedItems: selected,
@@ -309,7 +309,7 @@ goog.scope(function() {
                 header: 'Профильные классы',
                 name: 'specializedClasses',
                 filters: {
-                        title: 'Популярные профильные классы',
+                        title: 'Популярные',
                         items: this.setSelected(popular, selected)
                 },
                 selectedItems: selected,
