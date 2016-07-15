@@ -15,7 +15,7 @@ else
 fi
 
 $gulp backendLint
-$gulp build
+$gulp build --env $env
 
 cd node_modules/auth-service/
 if [ ! -d node_modules/ ]; then

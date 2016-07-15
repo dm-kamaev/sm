@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <project name="school-market" basedir=".">
-    <import file="${basedir}/node_modules/deployment/packaging.xml"/>
-    <import file="${basedir}/node_modules/deployment/node.xml"/>
-    <import file="${basedir}/node_modules/auth-service/build.xml"/>
-    <import file="${basedir}/node_modules/user-service/build.xml"/>
-
     <property name="initd_script" value="${ant.project.name}-node"/>
     <property name="packaging.source.frontend-app.path" value="${basedir}"/>
     <property name="packaging.source.frontend-app.runtime.path"
               value="${packaging.source.frontend-app.path}/runtime"/>
     <property name="project.node-modules.path" value="${basedir}/node_modules"/>
+    <property name="packaging.project" value="${ant.project.name}"/>
+    <property name="packaging.target.basedir" value="/opt/${packaging.project}"/>
+    <property name="packaging.target.current-path" value="${packaging.target.basedir}/current"/>
+
     <property name="packaging.source.supervisor"
               value="${packaging.target.current-path}/environment/supervisord/${packaging.project}.conf"/>
     <property name="user.path"
@@ -22,11 +21,11 @@
     <property name="auth.runtime-path"
         value="${packaging.source.frontend-app.runtime.path}"/>
 
+    <import file="${basedir}/node_modules/deployment/packaging.xml"/>
+    <import file="${basedir}/node_modules/deployment/node.xml"/>
+    <import file="${basedir}/node_modules/auth-service/build.xml"/>
+    <import file="${basedir}/node_modules/user-service/build.xml"/>
 
-    <!-- Packaging tune -->
-    <!-- <target name="setup-folders" depends="shared-folders-create, shared-set-permissions, setup-folders-logs, setup-folders-logs"/> -->
-    <!-- <target name="shared-folders-create" depends="shared-folders-create-logs"/> -->
-    <!-- <target name="shared-set-permissions" depends="shared-set-permissions-logs"/> -->
 
     <!-- Switch to new release -->
     <target name="packaging.release.switch"
@@ -34,9 +33,6 @@
                      packaging.supervisor.link,
                      user.supervisor.link,
                      auth.supervisor.link,
-                     schools.build-config,
-                     schools.deploy-authorization-config,
-                     schools.deploy-user-config,
                      schools.migrate,
                      schools.update-search-cache,
                      user.migrate,
@@ -69,10 +65,6 @@
     <target name="packaging.shared-folders.unlink"
             depends="packaging.shared-folders.unlink.logs"/>
 
-    <target name="schools.test">
-        <echo message="${packaging.target.current-path}/environment/supervisord/${packaging.project}.conf"/>
-    </target>
-
 
     <target name="schools.migrate">
         <exec executable="${gulp}" dir="${basedir}" failonerror="on">
@@ -89,32 +81,6 @@
     <target name="schools.update-sitemap">
         <exec executable="node" dir="${basedir}">
             <arg line="commander sitemap"/>
-        </exec>
-    </target>
-
-    <target name="schools.deploy-authorization-config">
-        <exec executable="node" dir="${basedir}/console/">
-            <arg line="buildLocalConfig ${params.env} ../environment/config/authorization"/>
-        </exec>
-        <copy file="${basedir}/environment/config/authorization/config.json"
-              tofile="${project.node-modules.path}/auth-service/config/config.json" />
-        <copy file="${basedir}/environment/config/authorization/services.json"
-              tofile="${project.node-modules.path}/auth-service/config/services.json" />
-    </target>
-
-    <target name="schools.deploy-user-config">
-        <exec executable="node" dir="${basedir}/console/">
-            <arg line="buildLocalConfig ${params.env} ../environment/config/user"/>
-        </exec>
-        <copy file="${basedir}/environment/config/user/config.json"
-              tofile="${project.node-modules.path}/user-service/config/config.json" />
-        <copy file="${basedir}/environment/config/user/config.db.json"
-              tofile="${project.node-modules.path}/user-service/config/config.db.json" />
-    </target>
-
-    <target name="schools.build-config">
-        <exec executable="node" dir="${basedir}/console/">
-            <arg line="buildLocalConfig ${params.env} ../app/config"/>
         </exec>
     </target>
 

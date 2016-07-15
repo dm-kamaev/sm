@@ -4,11 +4,10 @@ const path = require('path');
 const async = require('asyncawait/async');
 const await = require('asyncawait/await');
 
-const Department = require('../../api/modules/geo/models/department');
 const sequelize = require('../../app/components/db');
 const Archiver = require('../../console/modules/modelArchiver/Archiver');
 
-const DELIMITER = ",";
+const DELIMITER = ',';
 
 module.exports = {
     up: async(function() {
