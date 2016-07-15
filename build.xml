@@ -7,7 +7,7 @@
               value="${packaging.source.frontend-app.path}/runtime"/>
     <property name="project.node-modules.path" value="${basedir}/node_modules"/>
     <property name="packaging.source.supervisor"
-              value="${packaging.target.current-path}/environment/supervisord/${packaging.project}.conf"/>
+              value="${packaging.target.current-path}/environment/supervisord/${ant.project.name}.conf"/>
     <property name="user.path"
               value="${project.node-modules.path}/user-service"/>
     <property name="auth.path"
