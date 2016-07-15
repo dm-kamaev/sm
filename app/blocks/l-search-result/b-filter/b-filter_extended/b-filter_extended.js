@@ -236,8 +236,8 @@ goog.scope(function() {
     FilterExtended.prototype.getModalContentData_ = function() {
         var params;
 
-        if (this.filterName == 'activity') {
-            params = this.getActivityParams_();
+        if (this.filterName == 'activities') {
+            params = this.getActivitiesParams_();
         }
         else if (this.filterName == 'specializedClasses') {
             params = this.getSpecializedClassesParams_();
@@ -248,7 +248,7 @@ goog.scope(function() {
 
 
      /**
-     * Get filter params for Activity
+     * Get filter params for Activities
      * @return {{
      *     data: {
      *         header: string,
@@ -262,14 +262,14 @@ goog.scope(function() {
      * }}
      * @private
      */
-    FilterExtended.prototype.getActivityParams_ = function() {
+    FilterExtended.prototype.getActivitiesParams_ = function() {
         var selected = this.getSelectedData(),
             popular = this.allFiltersData;
 
-        var activity = {
+        var activities = {
             data: {
                 header: 'Курсы, кружки и секции',
-                name: 'activity',
+                name: 'activities',
                 filters: {
                     title: 'Популярные',
                     items: this.setSelected(popular, selected)
@@ -281,7 +281,7 @@ goog.scope(function() {
                 }
             }
         };
-        return activity;
+        return activities;
     };
 
 

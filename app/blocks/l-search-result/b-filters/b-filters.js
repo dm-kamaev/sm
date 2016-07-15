@@ -103,8 +103,8 @@ goog.scope(function() {
         OLIMP: 'olimp',
         SCHOOL_TYPE: 'schoolType',
         CLASSES: 'classes',
-        ADDITIONAL_EDUCATION: 'additionalEducation',
-        SPECIALIZED_CLASSES: 'specializedClasses'
+        SPECIALIZED_CLASSES: 'specializedClasses',
+        ACTIVITIES: 'activities'
     };
 
 
