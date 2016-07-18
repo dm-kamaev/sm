@@ -76,6 +76,7 @@ exports.getSearchSql = function(searchParams, limit) {
         .setStudyResult(searchParams.olimp, 'olymp')
         .setArea(searchParams.areaId)
         .setMetro(searchParams.metroId)
+        .setDistrict(searchParams.districtId)
         .getQuery();
 };
 

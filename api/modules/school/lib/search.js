@@ -208,6 +208,19 @@ class SearchQuery {
     }
 
     /**
+     * @param {number=} opt_districtId
+     * @return {Object}
+     */
+    setDistrict(opt_districtId) {
+        if (opt_districtId) {
+            this.innerQuery_.where('district.id = ' + opt_districtId);
+            this.isGeoData_ = true;
+        }
+
+        return this;
+    }
+
+    /**
      * Get query string
      * @return {string}
      */
@@ -356,7 +369,8 @@ class SearchQuery {
                     'address.id = address_metro.address_id'
                 )
                 .left_join('metro', null, 'metro.id = address_metro.metro_id')
-                .left_join('area', null, 'area.id = address.area_id');
+                .left_join('area', null, 'area.id = address.area_id')
+                .left_join('district', null, 'district.id = area.district_id');
         }
 
         return this;
