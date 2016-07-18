@@ -22,12 +22,12 @@ const async = require('asyncawait/async'),
     lodash = require('lodash');
 
 
-exports.createComment = async (function(req, res) {
+exports.createComment = async(function(req, res) {
     var result = '';
     try {
         var schoolId = req.params.id,
             params = req.body;
-        result = await(services.school.comment(schoolId,params));
+        result = await(services.school.comment(schoolId, params));
     } catch (e) {
         logger.error(e);
         result = JSON.stringify(e);
@@ -38,7 +38,7 @@ exports.createComment = async (function(req, res) {
 });
 
 
-exports.list = async (function(req, res, next) {
+exports.list = async(function(req, res, next) {
     try {
         var searchParams = {},
             searchText = '',
@@ -91,7 +91,7 @@ exports.list = async (function(req, res, next) {
         var results = await(promises);
 
         var schoolAliases = await(services.page.getAliases(
-                schoolView.listIds(results.schools),
+                schoolView.uniqueIds(results.schools),
                 entityType.SCHOOL
             )),
             schools = schoolView.joinAliases(results.schools, schoolAliases),
@@ -146,7 +146,7 @@ exports.list = async (function(req, res, next) {
 });
 
 
-exports.view = async (function(req, res, next) {
+exports.view = async(function(req, res, next) {
     try {
         var alias = services.urls.stringToURL(req.params.name),
             page = await(services.page.getByAlias(
@@ -185,7 +185,8 @@ exports.view = async (function(req, res, next) {
                             entityType.SCHOOL
                         ),
                         authSocialLinks: services.auth.getAuthSocialUrl(),
-                        popularSchools: services.school.getRandomPopularSchools(6),
+                        popularSchools:
+                            services.school.getRandomPopularSchools(6),
                         favorites: {
                             items: services.school.getByIdsWithGeoData(
                                 favoriteIds
@@ -280,7 +281,7 @@ exports.search = async(function(req, res) {
                 }
             },
             popularSchools: schoolView.popular(data.popularSchools),
-            dataLinks : schoolView.dataLinks(),
+            dataLinks: schoolView.dataLinks(),
             amountSchools: data.amountSchools,
             config: {
                 staticVersion: config.lastBuildTimestamp,

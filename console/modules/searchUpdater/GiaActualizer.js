@@ -10,10 +10,11 @@ class GiaActualizer extends SearchDataActualizer {
     /**
      * @public
      * @param {object} school
-     * @param {array<object>} citySubjects - subject instances with avg results for Moscow
+     * @param {array<object>} citySubjects - subject instances
+     *     with avg results for Moscow
      */
     constructor(school, citySubjects) {
-        await(super(school, citySubjects)); //call parent constructor
+        await(super(school, citySubjects)); // call parent constructor
         this.citySubjects_ = citySubjects;
         this.resultSubjects_ = [];
         this.searchType_ = searchType.fields.GIA;
@@ -26,8 +27,8 @@ class GiaActualizer extends SearchDataActualizer {
      * it works, I promise
      */
     getSubjects_() {
-        //TODO: refactor or comment this
-        await (this.giaResults_.forEach(giaResult => { 
+        // TODO: refactor or comment this
+        await(this.giaResults_.forEach(giaResult => {
             var citySubject = this.citySubjects_.find(
                 subj => subj.id == giaResult.subject_id);
             if (citySubject) {
@@ -36,8 +37,9 @@ class GiaActualizer extends SearchDataActualizer {
                         res.cityId == this.school_.city_id &&
                         res.type == this.searchType_
                     ));
-                if (cityResult && giaResult.result >= cityResult.result)
+                if (cityResult && giaResult.result >= cityResult.result) {
                     this.resultSubjects_.push(giaResult.subject_id);
+                }
             }
         }));
     }
@@ -47,7 +49,7 @@ class GiaActualizer extends SearchDataActualizer {
      * get gia results for school
      */
     getResults_() {
-        this.giaResults_ = await (this.school_.getGiaResults()); 
+        this.giaResults_ = await(this.school_.getGiaResults());
     }
 }
 

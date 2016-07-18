@@ -6,6 +6,9 @@ const services = require('../../../app/components/services').all;
  * abstract class
  */
 class SearchDataActualizer {
+    /**
+     * @param {Object} school
+     */
     constructor(school) {
         this.school_ = school;
         this.currentSearcData_ = await(
@@ -21,8 +24,9 @@ class SearchDataActualizer {
         this.getData_();
         await(this.getResults_());
         this.getSubjects_();
-        if (this.resultSubjects_.length)
+        if (this.resultSubjects_.length) {
             await(this.updateDb_());
+        }
     }
 
     /**
@@ -32,7 +36,7 @@ class SearchDataActualizer {
     getData_() {
         this.typeData_ = this.currentSearcData_.find(
             rec => rec.type == this.searchType_
-        ); 
+        );
     }
 
     /**
@@ -44,7 +48,7 @@ class SearchDataActualizer {
                 values: this.resultSubjects_
             }));
         } else {
-            await (services.search.addSearchData(
+            await(services.search.addSearchData(
                 this.school_.id,
                 this.resultSubjects_,
                 this.searchType_)
@@ -54,4 +58,3 @@ class SearchDataActualizer {
 }
 
 module.exports = SearchDataActualizer;
-

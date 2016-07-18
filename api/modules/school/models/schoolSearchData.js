@@ -2,7 +2,7 @@ var DataType = require('sequelize');
 var db = require('../../../../app/components/db');
 const searchType = require('../enums/searchType');
 
-var SearchData = db.define('SearchData', {
+var SchoolSearchData = db.define('SchoolSearchData', {
     schoolId: {
         type: DataType.INTEGER,
         field: 'school_id'
@@ -18,14 +18,14 @@ var SearchData = db.define('SearchData', {
     }
 }, {
     underscored: true,
-    tableName: 'search_data',
+    tableName: 'school_search_data',
     classMethods: {
         associate: function(models) {
-            SearchData.belongsTo(models.School, {
+            SchoolSearchData.belongsTo(models.School, {
                 as: 'school', foreignKey: 'school_id'
             });
         }
     }
 });
 
-module.exports = SearchData;
+module.exports = SchoolSearchData;

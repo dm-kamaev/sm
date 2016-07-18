@@ -22,6 +22,7 @@ const gulpHelper =
 const config = require('./config.json');
 const production = !!util.env.production;
 const BLOCKS_DIR = '/app/blocks';
+const ENV = util.env.env ? util.env.env : 'dev';
 
 const gulpTasks = require('./gulp')(gulpHelper);
 
@@ -124,7 +125,7 @@ gulp.task('copy', function() {
 
 gulp.task('localConfig', function() {
     return new Promise(function(resolve, reject) {
-        exec('node ./console/buildLocalConfig dev ../app/config',
+        exec('node ./console/buildLocalConfig ' + ENV + ' ../app/config',
             function() {
                 resolve();
             }
@@ -134,7 +135,8 @@ gulp.task('localConfig', function() {
 
 gulp.task('authConfig', function() {
     return new Promise(function(resolve, reject) {
-        exec('node ./console/buildLocalConfig dev ../environment/config/authorization',
+        exec('node ./console/buildLocalConfig ' + ENV +
+            ' ../environment/config/authorization',
             function() {
                 gulp.src([
                     path.join(__dirname, '/environment/config/authorization/config.json'),
@@ -149,7 +151,8 @@ gulp.task('authConfig', function() {
 
 gulp.task('userConfig', function() {
     return new Promise(function(resolve, reject) {
-        exec('node ./console/buildLocalConfig dev ../environment/config/user',
+        exec('node ./console/buildLocalConfig ' + ENV +
+            ' ../environment/config/user',
             function() {
                 gulp.src([
                     path.join(__dirname, '/environment/config/user/config.json'),
@@ -179,7 +182,7 @@ gulp.task('backendLint', function () {
 const tasks = function (bool) {
     return bool ?
         ['createTimestamp', 'soy', 'compile', 'sprite', 'images', 'fonts',
-            'styles', 'copy'] :
+            'styles', 'copy', 'localConfig', 'authConfig', 'userConfig'] :
         ['watch', 'soy', 'scripts', 'sprite', 'images', 'fonts','styles',
             'copy', 'localConfig', 'authConfig', 'userConfig', 'backendLint'];
 };

@@ -4,18 +4,20 @@ const path = require('path');
 const async = require('asyncawait/async');
 const await = require('asyncawait/await');
 
-const ModelArchiver = require(
-    '../../console/modules/modelArchiver/ModelArchiver.js');
-const Department = require('../../api/modules/geo/models/department');
 const sequelize = require('../../app/components/db');
+const Archiver = require('../../console/modules/modelArchiver/Archiver');
+
+const DELIMITER = ',';
 
 module.exports = {
     up: async(function() {
         var dir = path.join(__dirname, '../../api/modules/geo/migrations'),
             file = '20160617204900-department-range-data.tar.gz',
-            archiver = new ModelArchiver(Department, dir, null, file);
+            archiver = new Archiver(path.join(dir, file));
 
-        archiver.load();
+        sequelize.options.logging = false;
+
+        archiver.updateTable('department', DELIMITER, ['id']);
 
         var sqlQuery = 'DELETE FROM department ' +
             'WHERE educational_grades is null;';
