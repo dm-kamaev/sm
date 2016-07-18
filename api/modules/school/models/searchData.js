@@ -11,8 +11,10 @@ var SearchData = db.define('SearchData', {
         type: DataType.ARRAY(DataType.INTEGER)
     },
     type: {
-        type: DataType.ENUM,
-        values: searchType.toArray()
+        type: DataType.STRING,
+        validate: {
+            isIn: [searchType.toArray()]
+        }
     }
 }, {
     underscored: true,
