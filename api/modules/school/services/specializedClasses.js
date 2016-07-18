@@ -36,11 +36,26 @@ service.searchTypeByName = async(function(name) {
     return await(models.SpecializedClassType.findAll({
         where: {
             name: {
-                $ilike: '%' + name + '%'
+                $iLike: '%' + name + '%'
             }
         }
     }));
 });
+
+
+/**
+ * Return array of most popular addition education spheres
+ * by their popularity
+ * @param {number=} opt_amount
+ * @return {Array<models.SpecializedClassType>}
+ */
+service.getPopularTypes = async(function(opt_amount) {
+    return await(models.SpecializedClassType.findAll({
+        limit: opt_amount || 6,
+        order: [['popularity', 'DESC']]
+    }));
+});
+
 
 module.exports = service;
 

@@ -9,6 +9,7 @@ var service = {
     name: 'additionalEducation'
 };
 
+
 /**
  * @param {{
  *     schoolId: number,
@@ -54,6 +55,7 @@ service.update = async(function(id, params) {
     return instance ? instance.update(params) : null;
 });
 
+
 /**
  * Return all additional education entries
  * @return {Promise<Array<models.AdditionalEducation>>}
@@ -78,6 +80,7 @@ service.findBySchoolId = async(function(schoolId) {
         ]
     });
 });
+
 
 /**
  * Delete all additional educations
@@ -112,9 +115,23 @@ service.searchSphereByName = async(function(name) {
     return await(models.AdditionalEducationSphere.findAll({
         where: {
             name: {
-                $like: '%' + name + '%'
+                $iLike: '%' + name + '%'
             }
         }
+    }));
+});
+
+
+/**
+ * Return array of most popular addition education spheres
+ * by their popularity
+ * @param {number=} opt_amount
+ * @return {Array<models.AdditionalEducationSphere>}
+ */
+service.getPopularSpheres = async(function(opt_amount) {
+    return await(models.AdditionalEducationSphere.findAll({
+        limit: opt_amount || 6,
+        order: [['popularity', 'DESC']]
     }));
 });
 
