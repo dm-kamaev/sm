@@ -1,4 +1,7 @@
 var lodash = require('lodash');
+
+var searchType = require('../enums/searchType');
+
 var specializedClassesView = {};
 
 /**
@@ -84,6 +87,26 @@ specializedClassesView.typeFilters = function(specializedClassTypes) {
             value: type.id
         };
     });
+};
+
+
+/**
+ * Create filters with name and values from given specialized classes types
+ * @param {Array<models.SpecializedClassType>} specializedClassTypes
+ * @return {{
+ *     filterType: string,
+ *     values: Array<{
+ *         label: string,
+ *         value: number
+ *     }>
+ * }}
+ */
+specializedClassesView.sphereSearchFilter = function(specializedClassTypes) {
+    var typeFilters = specializedClassesView.typeFilters(specializedClassTypes);
+    return {
+        filterType: searchType.fields.SPECIALIZED_CLASS_TYPE,
+        values: typeFilters
+    };
 };
 
 module.exports = specializedClassesView;

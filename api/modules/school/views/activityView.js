@@ -1,4 +1,7 @@
 var lodash = require('lodash');
+
+var searchType = require('../enums/searchType');
+
 var activityView = {};
 
 /**
@@ -65,6 +68,26 @@ activityView.sphereFilter = function(spheres) {
             value: sphere.id
         };
     });
+};
+
+
+/**
+ * Creates filters with name and values from given additional education spheres
+ * @param {Array<models.AdditionalEducationView>} spheres
+ * @return {{
+ *     filterType: string,
+ *     values: Array<{
+ *         label: string,
+ *         value: number
+ *     }>
+ * }}
+ */
+activityView.sphereSearchFilter = function(spheres) {
+    var sphereFilter = activityView.sphereFilter(spheres);
+    return {
+        filterType: searchType.fields.ACTIVITY_SPHERE,
+        values: sphereFilter
+    };
 };
 
 module.exports = activityView;
