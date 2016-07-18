@@ -77,7 +77,7 @@ exports.list = async (function(req, res, next) {
                         limitResults: 10
                     }
                 ),
-                filters: services.school.searchFilters(),
+                filtersData: services.school.searchFiltersData(),
                 mapPosition: services.search.getMapPositionParams(searchParams),
                 authSocialLinks: services.auth.getAuthSocialUrl(),
                 favorites: {
@@ -101,132 +101,8 @@ exports.list = async (function(req, res, next) {
 
         var schoolsList = schoolView.list(schoolsWithFavoriteMark),
             map = schoolView.listMap(results.schools, results.mapPosition),
-            filters = searchView.filters(results.filters, searchParams),
+            filters = searchView.filters(results.filtersData, searchParams),
             favorites = schoolView.listCompact(results.favorites);
-
-        filters.filters.push(
-            {
-                "data":{
-                    "header":{
-                        "title":"Профильные классы",
-                        "tooltip":""
-                    },
-                    "name":"specializedClasses",
-                    "filters":[
-                        {
-                            "label":"За страницами учебника математики",
-                            "value":"math",
-                            "isChecked":false
-                        },
-                        {
-                            "label":"Занимательная математика",
-                            "value":"zanMath",
-                            "isChecked":false
-                        },
-                        {
-                            "label":"Робототехника",
-                            "value":"robo",
-                            "isChecked":false
-                        },
-                        {
-                            "label":"Макраме",
-                            "value":"4",
-                            "isChecked":false
-                        },
-                        {
-                            "label":"Вязание",
-                            "value":"vaz",
-                            "isChecked":false
-                        },
-                        {
-                            "label":"Пение",
-                            "value":"pen",
-                            "isChecked":false
-                        },
-                        {
-                            "label":"Чтение",
-                            "value":"cht",
-                            "isChecked":false
-                        },
-                        {
-                            "label":"Рисование",
-                            "value":"ris",
-                            "isChecked":false
-                        },
-                        {
-                            "label":"История",
-                            "value":"ist",
-                            "isChecked":false
-                        }
-                    ]
-                },
-                "config":{
-                    "isShowed":false,
-                    "showFilterSearch": true,
-                    "type": "extended"
-                }
-            },
-            {
-                "data":{
-                    "header":{
-                        "title":"Курсы, кружки и секции",
-                        "tooltip":""
-                    },
-                    "name":"activities",
-                    "filters":[
-                        {
-                            "label":"Математика",
-                            "value":"math",
-                            "isChecked":false
-                        },
-                        {
-                            "label":"Занимательная математика",
-                            "value":"zanMath",
-                            "isChecked":false
-                        },
-                        {
-                            "label":"Робототехника",
-                            "value":"robo",
-                            "isChecked":false
-                        },
-                        {
-                            "label":"Макраме",
-                            "value":"4",
-                            "isChecked":false
-                        },
-                        {
-                            "label":"Вязание",
-                            "value":"vaz",
-                            "isChecked":false
-                        },
-                        {
-                            "label":"Пение",
-                            "value":"pen",
-                            "isChecked":false
-                        },
-                        {
-                            "label":"Чтение",
-                            "value":"cht",
-                            "isChecked":false
-                        },
-                        {
-                            "label":"Рисование",
-                            "value":"ris",
-                            "isChecked":false
-                        },
-                        {
-                            "label":"История",
-                            "value":"ist",
-                            "isChecked":false
-                        }
-                    ]
-                },
-                "config":{
-                    "isShowed":false,
-                    "showFilterSearch": true,
-                    "type": "extended"
-                }
-            });
 
         var params = {
             params: {

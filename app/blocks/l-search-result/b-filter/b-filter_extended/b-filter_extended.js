@@ -38,8 +38,7 @@ goog.inherits(
 
 
 goog.scope(function() {
-    var FilterExtended = sm.lSearchResult.bFilter.FilterExtended,
-        Filter = sm.lSearchResult.bFilter.Filter;
+    var FilterExtended = sm.lSearchResult.bFilter.FilterExtended;
 
 
     /**
@@ -49,6 +48,16 @@ goog.scope(function() {
     FilterExtended.CssClass = {
         ROOT: 'b-filter_extended',
         SHOW_MODAL_BUTTON: 'b-filter__button_show-modal'
+    };
+
+    
+    /**
+     * Possible types
+     * @enum {string}
+     */
+    FilterExtended.Name = {
+        ACTIVITY_SPHERE: 'activitySphere',
+        SPECIALIZED_CLASS_TYPE: 'specializedClassType'
     };
 
 
@@ -236,10 +245,10 @@ goog.scope(function() {
     FilterExtended.prototype.getModalContentData_ = function() {
         var params;
 
-        if (this.filterName == 'activities') {
-            params = this.getActivitiesParams_();
-        }
-        else if (this.filterName == 'specializedClasses') {
+        if (this.filterName == FilterExtended.Name.ACTIVITY_SPHERE) {
+            params = this.getActivityParams_();
+        } else if (
+            this.filterName == FilterExtended.Name.SPECIALIZED_CLASS_TYPE) {
             params = this.getSpecializedClassesParams_();
         }
 
@@ -254,10 +263,17 @@ goog.scope(function() {
      *         header: string,
      *         name: string,
      *         filters: {
-     *             title: string
+     *             title: string,
+     *             items: Array<{
+     *                 label: string,
+     *                 value: string,
+     *                 isChecked: boolean
+     *             }>
      *         },
-     *         search: string,
-     *         sourseUrl: string
+     *         search: {
+     *             placeholder: string,
+     *              sourceUrl: string
+     *         }
      *     }
      * }}
      * @private
@@ -266,10 +282,10 @@ goog.scope(function() {
         var selected = this.getSelectedData(),
             popular = this.allFiltersData;
 
-        var activities = {
+        return {
             data: {
                 header: 'Курсы, кружки и секции',
-                name: 'activities',
+                name: FilterExtended.Name.ACTIVITY_SPHERE,
                 filters: {
                     title: 'Популярные',
                     items: this.setSelected(popular, selected)
@@ -281,7 +297,6 @@ goog.scope(function() {
                 }
             }
         };
-        return activities;
     };
 
 
@@ -292,10 +307,17 @@ goog.scope(function() {
      *         header: string,
      *         name: string,
      *         filters: {
-     *             title: string
+     *             title: string,
+     *             items: Array<{
+     *                 label: string,
+     *                 value: string,
+     *                 isChecked: boolean
+     *             }>
      *         },
-     *         search: string,
-     *         sourseUrl: string
+     *         search: {
+     *             placeholder: string,
+     *              sourceUrl: string
+     *         }
      *     }
      * }}
      * @private
@@ -304,13 +326,13 @@ goog.scope(function() {
         var selected = this.getSelectedData(),
             popular = this.allFiltersData;
 
-        var specializedClasses = {
+        return {
             data: {
                 header: 'Профильные классы',
-                name: 'specializedClasses',
+                name: FilterExtended.Name.SPECIALIZED_CLASS_TYPE,
                 filters: {
-                        title: 'Популярные',
-                        items: this.setSelected(popular, selected)
+                    title: 'Популярные профильные классы',
+                    items: this.setSelected(popular, selected)
                 },
                 selectedItems: selected,
                 search: {
@@ -319,6 +341,5 @@ goog.scope(function() {
                 }
             }
         };
-        return specializedClasses;
     };
 });  // goog.scope

@@ -614,14 +614,29 @@ var isFeedbackLack = function(scoreCount, reviewCount) {
 };
 
 /**
+ * Get all data for generate search filters
+ * @return {{
+ *      subjects: Array<models.Subject>,
+ *      schoolTypes: Array<models.SchoolTypeFilter>,
+ *      egeSubjects: Array<models.EgeResult>,
+ *      giaSubjects: Array<models.GiaResult>,
+ *      olympiadSubjects: Array<models.OlimpResult>,
+ *      activitySpheres: Array<models.AdditionalEducationSphere>,
+ *      specializedClassesTypes: Array<models.SpecializedClassType>
+ * }}
  * @public
  */
-service.searchFilters = async(function() {
-    var typeFilters = service.typeFilters();
-    var egeFilters = services.subject.egeFilters();
-    var giaFilters = services.subject.giaFilters();
-    var olympFilters = services.subject.olympFilters();
-    return await(typeFilters, egeFilters, giaFilters, olympFilters);
+service.searchFiltersData = async(function() {
+    var data = {
+        subjects: services.subject.getAll(),
+        schoolTypes: services.search.getTypeFilters(),
+        egeSubjects: services.egeResult.getUniqueSubjects(),
+        giaSubjects: services.giaResult.getUniqueSubjects(),
+        olympiadSubjects: services.olimpResult.getUniqueSubjects(),
+        activitySpheres: services.additionalEducation.getPopularSpheres(),
+        specializedClassesTypes: services.specializedClasses.getPopularTypes()
+    };
+    return await(data);
 });
 
 service.typeFilters = async(function() {
