@@ -2,6 +2,8 @@ var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var models = require('../../../../app/components/models').all;
 
+const Sequelize = require('sequelize');
+
 exports.name = 'giaResult';
 
 /**
@@ -101,4 +103,19 @@ exports.getById = async(function(giaId) {
 exports.delete = async(function(giaId) {
     var instance = await(exports.getById(giaId));
     await(instance.destroy());
+});
+
+
+/**
+ * Return all gia results with unique subject id's
+ * @return {Array<models.GiaResult>}
+ */
+exports.getUniqueSubjects = async(function() {
+    return await(models.GiaResult.findAll(
+        {
+            attributes: [
+                [Sequelize.literal('DISTINCT "subject_id"'), 'subjectId']
+            ]
+        }
+    ));
 });

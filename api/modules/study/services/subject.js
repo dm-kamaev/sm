@@ -51,6 +51,15 @@ exports.get = async((subject, opt_option) => {
     return res;
 });
 
+
+/**
+ * Return all subjects
+ * @return {Array<models.Subject>}
+ */
+exports.getAll = async(function() {
+    return await(models.Subject.findAll());
+});
+
 exports.getOrCreate = async(name => {
     name = name.toLowerCase();
     var res = await(models.Subject.findOne({
