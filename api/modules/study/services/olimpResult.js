@@ -2,7 +2,7 @@ var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var models = require('../../../../app/components/models').all;
 
-const Sequelize= require('sequelize');
+const Sequelize = require('sequelize');
 
 exports.name = 'olimpResult';
 

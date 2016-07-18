@@ -3,9 +3,6 @@ var await = require('asyncawait/await');
 var models = require('../../../../app/components/models').all;
 var services = require('../../../../app/components/services').all;
 var sequelizeInclude = require('../../../../api/components/sequelizeInclude');
-var searchTypeEnum = require('../../school/enums/searchType');
-
-const subjectView = require('../views/subjectView');
 
 exports.name = 'subject';
 

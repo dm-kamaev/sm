@@ -50,7 +50,7 @@ goog.scope(function() {
         SHOW_MODAL_BUTTON: 'b-filter__button_show-modal'
     };
 
-    
+
     /**
      * Possible types
      * @enum {string}
