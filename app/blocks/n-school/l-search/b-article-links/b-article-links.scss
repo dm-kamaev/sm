@@ -1,0 +1,49 @@
+@import "../../../n-common/i-media/i-media";
+
+.b-article-links__header {
+    margin-bottom: 25px;
+
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+
+    font: 16px 'Proxima', Arial, sans-serif;
+    font-weight: 800;
+}
+
+.b-article-links__article {
+    display: inline-block;
+
+    box-sizing: border-box;
+    width: 50%;
+
+    vertical-align: top;
+}
+
+.b-article-links__article_first {
+    padding-right: 15px;
+}
+
+.b-article-links__article_second {
+    padding-left: 15px;
+}
+
+@include media-l {
+    .b-article-links__article {
+        width: 100%;
+        padding: 0;
+    }
+
+    .b-article-links__article_second {
+        display: none;
+    }
+}
+
+@include media-xs {
+    .b-article-links__article_first {
+        margin-bottom: 35px;
+    }
+
+    .b-article-links__article_second {
+        display: inline-block;
+    }
+}

@@ -1,0 +1,68 @@
+{namespace sm.lSearchResult.bSort.Template}
+
+/**
+ * Sort template
+ */
+{template .base autoescape="strict" kind="html"}
+    {let $switcher kind="html"}
+        {call .switcher_ /}
+    {/let}
+
+    {let $content kind="html"}
+        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+            {param params: [
+                'type': 'list',
+                'renderParams': [
+                    'data': [
+                        'items': [
+                            [
+                                'label': 'Средняя оценка'
+                            ],
+                            [
+                                'label': 'Образование'
+                            ],
+                            [
+                                'label': 'Преподаватели'
+                            ],
+                            [
+                                'label': 'Атмосфера'
+                            ],
+                            [
+                                'label': 'Инфраструктура'
+                            ]
+                        ]
+                    ]
+                ]
+            ]/}
+        {/call}
+    {/let}
+
+    <div class="b-sort">
+        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+            {param params: [
+                'type': 'dropdown',
+                'renderParams': [
+                    'data': [
+                        'opener': $switcher,
+                        'content': $content
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Switcher template
+ */
+{template .switcher_ autoescape="strict" kind="html" private="true"}
+    <span class="g-dropdown__switcher-text">
+        Сортировать по {sp}
+        <span class="g-dropdown__switcher-custom-text">
+            средней оценке
+        </span>
+    </span>
+    <img class="g-dropdown__switcher-image"
+         src="/images/n-school/l-search-result/b-sort/downArrow.png">
+{/template}

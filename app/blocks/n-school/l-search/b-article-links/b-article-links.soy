@@ -1,0 +1,121 @@
+{namespace sm.lSearch.bArticleLinks.Template}
+
+/**
+ * Constructor
+ * @extends cl.iControl.Template
+ * @constructor
+ */
+{template .articleLinks kind="html"}
+    {call .init data="all"/}
+{/template}
+
+/**
+ * Body
+ * @override
+ */
+{template .body kind="html"}
+    {call .header_ /}
+    {call .content_ /}
+{/template}
+
+/**
+ * Header template
+ */
+{template .header_ kind="html"}
+    <div class="{call .rootClass/}__header">
+        Читайте на «меле»
+    </div>
+{/template}
+
+/**
+ * Content template
+ */
+{template .content_ kind="html"}
+    <div class="{call .rootClass/}__content">
+        {call .firstArticle_ /}
+        {call .secondArticle_ /}
+    </div>
+{/template}
+
+/**
+ * first Article
+ */
+{template .firstArticle_ kind="html"}
+    {let $articleTitle kind="html"}
+        &laquo;Школа&nbsp;&mdash; это не&nbsp;гостиница
+        {sp}на&nbsp;11&nbsp;лет. Это гораздо важнее&raquo;
+    {/let}
+
+    {let $articleSubtitle kind="html"}
+        Никита Белоголовцев&nbsp;&mdash; о&nbsp;новом сервисе
+        {sp}&laquo;Мела&raquo; для родителей
+    {/let}
+
+    {let $imgUrl kind="uri"}
+        images/n-school/l-search/b-article-links/article_nikita.jpg
+    {/let}
+
+    {let $articleUrl kind="uri"}
+        http://mel.fm/2016/04/13/schools/
+    {/let}
+
+    <div class="{call .rootClass/}__article {call .rootClass/}__article_first">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': 'stendhal',
+                'type': 'article-link',
+                'renderParams': [
+                    'articleUrl': $articleUrl,
+                    'imgUrl': $imgUrl,
+                    'title': $articleTitle,
+                    'subtitle': $articleSubtitle
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+/**
+ * second Article
+ */
+{template .secondArticle_ kind="html"}
+    {let $articleTitle kind="html"}
+        7&nbsp;причин сменить&nbsp;школу
+    {/let}
+
+    {let $articleSubtitle kind="html"}
+        Как&nbsp;понять, что вы&nbsp;просчитались с&nbsp;выбором
+        учебного&nbsp;заведения
+    {/let}
+
+    {let $imgUrl kind="uri"}
+        images/n-school/l-search/b-article-links/article_change.jpg
+    {/let}
+
+    {let $articleUrl kind="uri"}
+        http://mel.fm/2015/12/08/change_school/
+    {/let}
+
+    <div class="{call .rootClass/}__article {call .rootClass/}__article_second">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': 'stendhal',
+                'type': 'article-link',
+                'renderParams': [
+                    'articleUrl': $articleUrl,
+                    'imgUrl': $imgUrl,
+                    'title': $articleTitle,
+                    'subtitle': $articleSubtitle
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass kind="html"}
+    b-article-links
+{/template}

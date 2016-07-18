@@ -1,0 +1,104 @@
+{namespace sm.bMap.Template}
+
+/**
+ * A layout for Yandex.Maps block
+ * @param? params [
+ *     data: [
+ *         schoolGroups: list<[
+ *             type: ?string,
+ *             schools: ?[
+ *                 id: ?number,
+ *                 address: ?list<[
+ *                     lat: number,
+ *                     lng: number,
+ *                     name: string,
+ *                     stages: list<string>
+ *                 ]>,
+ *                 name: ?string,
+ *                 totalScore: ?number
+ *              ]>,
+ *         position: [
+ *             center: ?list.<number>,
+ *             type: ?string
+ *         ]
+ *     ],
+ *     config: ?[
+ *         sidePins: ?boolean,
+ *         enableScrollZoom: ?boolean
+ *     ]
+ * ]
+ */
+{template .map}
+    {let $dataParams kind="html"}
+        {call cl.iUtils.Utils.stringify}
+            {param json: $params /}
+        {/call}
+    {/let}
+
+    <div class="b-map" data-params="{$dataParams}">
+    </div>
+{/template}
+
+
+/**
+* API request for ymaps
+*/
+{template .api}
+    <script type="text/javascript" src="//api-maps.yandex.ru/2.1/?lang=ru_RU">
+    </script>
+{/template}
+
+
+/**
+ * Balloon Template
+ */
+{template .balloon}
+    <div class="b-map__balloon">
+        {let $dataParams kind="js"}
+            {lb}"id": $[properties.id]{rb}
+        {/let}
+
+        <div class="b-map__balloon-name">
+            [if properties.alias]
+                <a href="/school/$[properties.alias]" class="b-map__href"
+                    data-params="{$dataParams}">
+                    $[properties.name]
+                </a>
+            [else]
+                $[properties.name]
+            [endif]
+        </div>
+
+        <div class="b-map__balloon-close">
+            {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+                {param params: [
+                    'type': 'icon',
+                    'renderParams': [
+                        'data': [
+                            'type': 'close-balloon'
+                        ]
+                    ]
+                ]/}
+            {/call}
+        </div>
+
+        <div class="b-map__balloon-content">
+            [if properties.address.stages]
+                <div class="b-map__content-item">
+                    {lb}{lb} properties.address.stages {rb}{rb}
+                </div>
+            [endif]
+
+            <div class="b-map__content-item">
+                $[properties.address.name]
+            </div>
+
+            [if properties.description]
+                <div class="b-map__content-item
+                            b-map__content-item_school-descr">
+                    $[properties.description]
+                </div>
+            [endif]
+        </div>
+    </div>
+{/template}
