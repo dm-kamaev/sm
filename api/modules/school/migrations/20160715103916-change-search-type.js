@@ -5,7 +5,7 @@ var searchType = require('../../api/modules/school/enums/searchType');
 module.exports = {
     up: function(queryInterface, Sequelize) {
         return queryInterface.changeColumn(
-            'search_data',
+            'school_search_data',
             'type',
             {
                 type: Sequelize.STRING
@@ -14,7 +14,7 @@ module.exports = {
     },
     down: function(queryInterface, Sequelize) {
         return queryInterface.changeColumn(
-            'search_data',
+            'school_search_data',
             'type',
             {
                 type: {
