@@ -7,18 +7,8 @@ var models = require.main.require('./app/components/models').all;
 var services = require.main.require('./app/components/services').all;
 var sequelize = require.main.require('./app/components/db');
 var lodash = require('lodash');
-var stageTypeEnum = require('../api/modules/geo/enums/departmentStage.js');
 
 class IsAddressIsSchool {
-    constructor() {
-        /**
-         * @private
-         */
-        this.stageTypes_ = [
-            stageTypeEnum.ELEMENTARY,
-            stageTypeEnum.MIDDLE_HIDE
-        ];
-    }
 
     /**
      * Main method
@@ -34,7 +24,7 @@ class IsAddressIsSchool {
         }));
         var updatedAddresses = this.processAddresses_(addresses);
         this.updatedAddresses_(updatedAddresses);
-        console.log('Database updating');
+        console.log('Addresses are updated');
     }
 
     /**
@@ -44,16 +34,15 @@ class IsAddressIsSchool {
     updatedAddresses_(addresses) {
         addresses.forEach((address, i) => {
             if (i % 100 == 0) {
-
                 process.stdout.clearLine();
                 process.stdout.cursorTo(0);
                 process.stdout.write('Processing addresses: ' +
                     (i / addresses.length * 100).toFixed(1) + '%');
-
             }
-            services.address.update(address.id, {
+
+            await(services.address.update(address.id, {
                 isSchool: address.isSchool
-            });
+            }));
         });
 
         process.stdout.clearLine();
@@ -86,13 +75,13 @@ class IsAddressIsSchool {
 
     /**
      * @private
-     * @param {array<object>} stages
+     * @param {array<object>} departments
      * @return {bool}
      */
     checkDepartments_(departments) {
-        return lodash.any(departments, department => {
-            return lodash.includes(this.stageTypes_ ,department.stage);
-        });
+        return lodash.any(departments, department =>
+            !lodash.any(department.educationalGrades, (grade) => grade === 0)
+        );
     }
 }
 
@@ -106,5 +95,5 @@ var start = async(() => {
 commander
     .command('isAddressIsSchool')
     .description('Adds isSchool to address table')
-    .action(()=> start());
+    .action(() => start());
 exports.Command;
