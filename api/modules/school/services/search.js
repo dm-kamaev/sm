@@ -315,11 +315,10 @@ var isFiltersSelected = function(params) {
 };
 
 /**
+ * Used to add data in SearchData table
  * @param {number} school_id
  * @param {Array<number>} values Subjects IDs
  * @param {enums.searchTypes} searchType
- * Used to add data in SearchData table
- *
  */
 exports.addSearchData = async(function(schoolId, values, searchType) {
     await(models.SchoolSearchData.create({

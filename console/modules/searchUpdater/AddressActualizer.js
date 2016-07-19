@@ -4,7 +4,8 @@ const lodash = require('lodash');
 
 const services = require('../../../app/components/services').all,
     searchTypeEnum =
-        require('../../../api/modules/geo/enums/addressSearchType');
+        require('../../../api/modules/geo/enums/addressSearchType'),
+    entityType = require('../../../api/modules/entity/enums/entityType');
 
 class AddressActualizer {
     /**
@@ -22,24 +23,69 @@ class AddressActualizer {
      */
     actualize() {
         this.actualizeEducationalGrades_();
+        this.actualizeMetros_();
+        this.actualizeArea_();
+        this.actualizeDistrict_();
     }
 
     /**
      * @private
      */
     actualizeEducationalGrades_() {
-        var educationalGrades = this.getEducationalGrades_(),
-            searchData = this.address_.searchData,
-            searchType = searchTypeEnum.EDUCATIONAL_GRADES;
+        this.actualizeData_(
+            this.getEducationalGrades_(),
+            searchTypeEnum.EDUCATIONAL_GRADES
+        );
+    }
+
+    /**
+     * @private
+     */
+    actualizeMetros_() {
+        this.actualizeData_(
+            this.getMetros_(this.address_.addressMetroes),
+            searchTypeEnum.METRO
+        );
+    }
+
+    /**
+     * @private
+     */
+    actualizeArea_() {
+        this.actualizeData_(
+            [this.address_.areaId],
+            searchTypeEnum.AREA
+        );
+    }
+
+    /**
+     * @private
+     */
+    actualizeDistrict_() {
+        this.actualizeData_(
+            [this.address_.area.district.id],
+            searchTypeEnum.DISTRICT
+        );
+    }
+
+    /**
+     * @private
+     * @param {Array<number>} values
+     * @param {string} searchType
+     */
+    actualizeData_(values, searchType) {
+        var searchData = this.address_.searchData;
         if (this.getSearchDataByType_(searchData, searchType)) {
-            services.addressSearch.update(searchData.id, {
-                values: educationalGrades
+            services.addressSearch.update(searchData.Id, {
+                values: values
             });
-        } else if (educationalGrades.length) {
+        } else if (values.length) {
             services.addressSearch.create({
+                entityId: this.address_.schoolId,
+                entityType: entityType.SCHOOL,
                 addressId: this.address_.id,
-                type: searchType,
-                values: educationalGrades
+                values: values,
+                type: searchType
             });
         }
     }
@@ -56,6 +102,15 @@ class AddressActualizer {
             .uniq()
             .filter((grade) => grade !== null)
             .value();
+    }
+
+    /**
+     * @private
+     * @param {Array<Object>} metros
+     * @return {Array<number>}
+     */
+    getMetros_(metros) {
+        return metros.map(metro => metro.metroId);
     }
 
     /**

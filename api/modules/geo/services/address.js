@@ -233,12 +233,36 @@ exports.getWithDepartmentsWithMetro = async(function(
  */
 exports.getAllWithSearchData = async(function() {
     return models.Address.findAll({
+        attributes: ['id', 'schoolId', 'areaId'],
         include: [{
-            model: models.Department,
-            as: 'departments'
-        }, {
             model: models.AddressSearchData,
-            as: 'searchData'
-        }]
+            as: 'searchData',
+            attributes: ['type']
+        }, {
+            model: models.Department,
+            as: 'departments',
+            attributes: ['educationalGrades']
+        }, {
+            model: models.AddressMetro,
+            as: 'addressMetroes',
+            attributes: ['distance', 'metroId']
+        }, {
+            model: models.Area,
+            as: 'area',
+            attributes: ['id'],
+            include: [{
+                model: models.District,
+                as: 'district',
+                attributes: ['id']
+            }]
+        }],
+        order: [[
+            {
+                model: models.AddressMetro,
+                as: 'addressMetroes'
+            },
+            'distance',
+            'ASC'
+        ]]
     });
 });
