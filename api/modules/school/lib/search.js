@@ -442,6 +442,15 @@ class SearchQuery {
                     'COUNT(DISTINCT school_search_data.id) = ' +
                     this.schoolDataCount_
                 );
+
+            this.countQuery_
+                .from('school_search_data')
+                .where(this.schoolSearchParams_)
+                .where('school.id = school_search_data.school_id')
+                .having(
+                    'COUNT(DISTINCT school_search_data.id) = ' +
+                    this.schoolDataCount_
+                );
         }
 
         return this;
