@@ -1,4 +1,4 @@
-goog.provide('sm.lSearch.Search');
+goog.provide('sm.lSchoolHome.SchoolHome');
 
 goog.require('goog.dom.classes');
 goog.require('goog.dom.classlist');
@@ -14,11 +14,11 @@ goog.require('sm.iMetrika.Metrika');
 
 
 /**
- * Search result component
+ * School Home component
  * @constructor
  * @extends {goog.ui.Component}
  */
-sm.lSearch.Search = function() {
+sm.lSchoolHome.SchoolHome = function() {
     goog.base(this);
 
 
@@ -45,11 +45,11 @@ sm.lSearch.Search = function() {
      */
     this.popularSchools_ = null;
 };
-goog.inherits(sm.lSearch.Search, goog.ui.Component);
+goog.inherits(sm.lSchoolHome.SchoolHome, goog.ui.Component);
 
 
 goog.scope(function() {
-    var Search = sm.lSearch.Search,
+    var SchoolHome = sm.lSchoolHome.SchoolHome,
         PopularSchools = sm.bPopularSchools.PopularSchools;
 
     var Analytics = sm.iAnalytics.Analytics.getInstance();
@@ -59,8 +59,8 @@ goog.scope(function() {
      * CSS-class enum
      * @enum {string}
      */
-    Search.CssClass = {
-        ROOT: 'l-search'
+    SchoolHome.CssClass = {
+        ROOT: 'l-school-home'
     };
 
 
@@ -68,11 +68,11 @@ goog.scope(function() {
      * Template-based dom element creation.
      * @public
      */
-    Search.prototype.createDom = function() {
+    SchoolHome.prototype.createDom = function() {
         goog.base(this, 'createDom');
 
         var element = goog.soy.renderAsElement(
-            sm.lSearch.Template.base,
+            sm.lSchoolHome.Template.base,
             {
                 params: this.params_
             }
@@ -85,7 +85,7 @@ goog.scope(function() {
     /**
      * Sets up the Component.
      */
-    Search.prototype.enterDocument = function() {
+    SchoolHome.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
 
         this.sendAnalyticsPageview_();
@@ -96,7 +96,7 @@ goog.scope(function() {
      * Internal decorates the DOM element
      * @param {Element} element
      */
-    Search.prototype.decorateInternal = function(element) {
+    SchoolHome.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
         this.initParams_()
@@ -110,17 +110,17 @@ goog.scope(function() {
      * Sends pageview analytics
      * @private
      */
-    Search.prototype.sendAnalyticsPageview_ = function() {
+    SchoolHome.prototype.sendAnalyticsPageview_ = function() {
         Analytics.send('pageview');
     };
 
 
     /**
      * Get data params from dom element and put it to corresponding params
-     * @return {sm.lSearch.Search}
+     * @return {sm.lSchoolHome.SchoolHome}
      * @private
      */
-    Search.prototype.initParams_ = function() {
+    SchoolHome.prototype.initParams_ = function() {
         var dataParams = JSON.parse(
             goog.dom.dataset.get(this.getElement(), 'params')
         );
@@ -140,10 +140,10 @@ goog.scope(function() {
 
     /**
      * Init authorization
-     * @return {sm.lSearch.Search}
+     * @return {sm.lSchoolHome.SchoolHome}
      * @private
      */
-    Search.prototype.initAuthorization_ = function() {
+    SchoolHome.prototype.initAuthorization_ = function() {
         var authorization = sm.iAuthorization.Authorization.getInstance();
         authorization.init(this.authParams_);
         return this;
@@ -151,10 +151,10 @@ goog.scope(function() {
 
     /**
      * Init search panel instance
-     * @return {sm.lSearch.Search}
+     * @return {sm.lSchoolHome.SchoolHome}
      * @private
      */
-    Search.prototype.initSearchPanel_ = function() {
+    SchoolHome.prototype.initSearchPanel_ = function() {
         var bSearchPanel = goog.dom.getElementByClass(
             sm.bSearchPanel.View.CssClass.ROOT,
             this.getElement()
@@ -173,10 +173,10 @@ goog.scope(function() {
 
     /**
      * Init popular school instance
-     * @return {sm.lSearch.Search}
+     * @return {sm.lSchoolHome.SchoolHome}
      * @private
      */
-    Search.prototype.initPopularSchools_ = function() {
+    SchoolHome.prototype.initPopularSchools_ = function() {
         var bPopularSchools = goog.dom.getElementByClass(
             sm.bPopularSchools.View.CssClass.ROOT,
             this.getElement()
@@ -195,15 +195,15 @@ goog.scope(function() {
 
 
 /**
- * creates sm.lSearch.Search instance
+ * creates sm.lSchoolHome.SchoolHome instance
  */
 jQuery(function() {
     var root = goog.dom.getElementByClass(
-            sm.lSearch.Search.CssClass.ROOT
+            sm.lSchoolHome.SchoolHome.CssClass.ROOT
         );
 
     if (root) {
-        var search = new sm.lSearch.Search();
-        search.decorate(root);
+        var schoolHome = new sm.lSchoolHome.SchoolHome();
+        schoolHome.decorate(root);
     }
 });

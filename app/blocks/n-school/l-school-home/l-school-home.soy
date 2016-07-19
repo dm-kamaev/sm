@@ -1,7 +1,7 @@
-{namespace sm.lSearch.Template}
+{namespace sm.lSchoolHome.Template}
 
 /**
- * Search template
+ * School home template
  * @param? params {
  *     data: {
  *        user: ?{
@@ -61,7 +61,7 @@
                     'user': $params.data?.user,
                     'favorites': $params?.data?.favorites
                 ],
-                'landingScript': '/l-search.js',
+                'landingScript': '/l-school-home.js',
                 'openGraph': [
                     'title': 'Школы «Мела»',
                     'description': 'Найдите в Москве школу, ' +
@@ -73,7 +73,7 @@
             ],
             'config': [
                 'modifier': 'stendhal',
-                'page': 'search',
+                'page': 'school-home',
                 'staticVersion': $params.config?.staticVersion,
                 'year':  $params.config?.year,
                 'analyticsId': $params.config?.analyticsId,
@@ -92,10 +92,10 @@
         'isUserAuthorized': $params?.data?.user ? true : false,
         'authSocialLinks': $params.data?.authSocialLinks
     ] /}
-    <div class="l-search"
+    <div class="l-school-home"
          data-params="{call goog.json.serialize data="$data" /}">
 
-        <div class="l-search__body">
+        <div class="l-school-home__body">
             {call .header_ /}
 
             {call .search_}
@@ -115,15 +115,15 @@
  * Header template
  */
 {template .header_ autoescape="strict" kind="html" private="true"}
-    <div class="l-search__header-wrap">
-        <div class="l-search__header">
-            <div class="l-search__header-content">
-                <h1 class="l-search__title">
+    <div class="l-school-home__header-wrap">
+        <div class="l-school-home__header">
+            <div class="l-school-home__header-content">
+                <h1 class="l-school-home__title">
                     Найдите в&nbsp;Москве лучшую школу
                     для&nbsp;вашего&nbsp;ребёнка
                 </h1>
 
-                <ul class="l-search__title-list">
+                <ul class="l-school-home__title-list">
                     {call .listItem_}
                         {param text kind="html"}
                             Ищите по&nbsp;номерам школ, адресам,
@@ -146,8 +146,8 @@
                 </ul>
             </div>
 
-            <img class="l-search__image l-search__image_main"{sp}
-                 src="images/n-school/l-search/cover.svg">
+            <img class="l-school-home__image l-school-home__image_main"{sp}
+                 src="images/n-school/l-school-home/cover.svg">
         </div>
     </div>
 {/template}
@@ -164,7 +164,7 @@
  * }
  */
 {template .search_ autoescape="strict" kind="html" private="true"}
-    <div class="l-search__search">
+    <div class="l-school-home__search">
         {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
                 'factory': 'stendhal',
@@ -185,8 +185,8 @@
  * Cloned header image template
  */
 {template .headerImgClone_ kind="html" private="true"}
-    <img class="l-search__image l-search__image_clone"
-         src="images/n-school/l-search/cover.svg">
+    <img class="l-school-home__image l-school-home__image_clone"
+         src="images/n-school/l-school-home/cover.svg">
 {/template}
 
 /**
@@ -205,17 +205,17 @@
  * ]
  */
 {template .informationLinks_}
-    <div class="l-search__information-links-wrap">
-        <div class="l-search__information-links">
-            <div class="l-search__schools">
-                <div class="l-search__popular-schools">
+    <div class="l-school-home__information-links-wrap">
+        <div class="l-school-home__information-links">
+            <div class="l-school-home__schools">
+                <div class="l-school-home__popular-schools">
                     {call sm.bPopularSchools.Template.base}
                         {param params: [
                             'popularSchools': $params.popularSchools,
                             'config': [
                                 'popularSchool': [
                                     'customClasses':
-                                    'l-search__popular-school'
+                                    'l-school-home__popular-school'
                                 ],
                                 'analyticsAction': 'homepage click'
                             ]
@@ -223,13 +223,13 @@
                     {/call}
                 </div>
 
-                {call sm.lSearch.Template.schoolCatalog_}
+                {call sm.lSchoolHome.Template.schoolCatalog_}
                     {param params: [
                         'amountSchools': $params.amountSchools
                     ]/}
                 {/call}
 
-                {call sm.lSearch.Template.articles_ /}
+                {call sm.lSchoolHome.Template.articles_ /}
             </div>
         </div>
     </div>
@@ -247,7 +247,7 @@
         {sp}в&nbsp;нём сейчас
     {/let}
 
-    <div class="l-search__school-catalog">
+    <div class="l-school-home__school-catalog">
         {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
                 'factory': 'stendhal',
@@ -269,7 +269,7 @@
  * Template for link to articles
  */
 {template .articles_}
-    <div class="l-search__articles">
+    <div class="l-school-home__articles">
         {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
                 'factory': 'stendhal',
@@ -284,10 +284,10 @@
  * @param text [string]
  */
 {template .listItem_ kind="html"}
-    <li class="l-search__title-list-item">
-        <div class="l-search__title-list-dash"> — </div>
+    <li class="l-school-home__title-list-item">
+        <div class="l-school-home__title-list-dash"> — </div>
 
-        <div class="l-search__title-list-text">
+        <div class="l-school-home__title-list-text">
             {$text}
         </div>
     </li>

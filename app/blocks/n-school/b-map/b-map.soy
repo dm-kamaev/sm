@@ -1,32 +1,37 @@
 {namespace sm.bMap.Template}
 
+/*
+ * @typedef {{
+ *     schools: Array<{
+ *         id: number,
+ *         name: string,
+ *         alias: ?string,
+ *         description: ?string,
+ *         totalScore: ?number,
+ *         address: Array<{
+ *             id: number,
+ *             lat: number,
+ *             lng: number,
+ *             name: string,
+ *             stages: (string|Array<string>)
+ *         }>,
+ *     }>,
+ *     position: {
+ *         center: ?Array<number>,
+ *         type: ?string
+ *     }
+ * }} sm.bMap.Template.Params.Data
+ */
+
 /**
  * A layout for Yandex.Maps block
- * @param? params [
- *     data: [
- *         schoolGroups: list<[
- *             type: ?string,
- *             schools: ?[
- *                 id: ?number,
- *                 address: ?list<[
- *                     lat: number,
- *                     lng: number,
- *                     name: string,
- *                     stages: list<string>
- *                 ]>,
- *                 name: ?string,
- *                 totalScore: ?number
- *              ]>,
- *         position: [
- *             center: ?list.<number>,
- *             type: ?string
- *         ]
- *     ],
- *     config: ?[
+ * @param params {{
+ *     data: sm.bMap.Template.Params.Data
+ *     config: ?{
  *         sidePins: ?boolean,
  *         enableScrollZoom: ?boolean
- *     ]
- * ]
+ *     }
+ * }}
  */
 {template .map}
     {let $dataParams kind="html"}

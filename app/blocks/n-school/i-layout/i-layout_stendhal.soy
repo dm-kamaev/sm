@@ -161,9 +161,9 @@
  * @override
  */
 {template .content autoescape="strict" kind="html"}
-    <div class="i-layout__wrapper">
+    <div class="{call .rootClass/}__wrapper">
         {call .header_ data="all" /}
-        <div class="i-layout__content">
+        <div class="{call .rootClass/}__content">
             {$params.data.content}
         </div>
         {call .footer_ data="all" /}
@@ -175,7 +175,7 @@
  * @param? params {?}
  */
 {template .header_ autoescape="strict" kind="html"}
-    <div class="i-layout__header">
+    <div class="{call .rootClass/}__header">
         {call sm.bHeader.Template.base}
             {param params: [
                 'data': $params.data.header,
@@ -195,7 +195,7 @@
  * }
  */
 {template .footer_ autoescape="strict" kind="html"}
-    <div class="i-layout__footer">
+    <div class="{call .rootClass/}__footer">
         {call sm.lSchool.bFooter.Template.base}
             {param params: [
                 'data': [
@@ -214,4 +214,13 @@
             ] /}
         {/call}
     </div>
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    i-layout
 {/template}

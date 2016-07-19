@@ -15,7 +15,7 @@ var upLetter = function (string, index) {
 };
 
 var getEnteryPointFromName = function (name) {
-    name = name.replace(/l-/g, ''); // Remove l-
+    name = name.replace(/l-/, ''); // Remove l-
     var slice = upLetter(name, 0); // doc => Doc
     var k;
     while ((k = slice.indexOf('-')) != -1){

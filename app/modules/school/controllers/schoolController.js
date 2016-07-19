@@ -271,7 +271,7 @@ exports.search = async(function(req, res) {
     data.popularSchools =
         schoolView.joinAliases(data.popularSchools, schoolAliases);
 
-    var html = soy.render('sm.lSearch.Template.base', {
+    var html = soy.render('sm.lSchoolHome.Template.base', {
         params: {
             data: {
                 authSocialLinks: data.authSocialLinks,

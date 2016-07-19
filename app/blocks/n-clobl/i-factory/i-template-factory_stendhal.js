@@ -26,8 +26,8 @@ goog.require('sm.gTab.TemplateStendhal');
 goog.require('sm.gTextarea.TemplateStendhal');
 goog.require('sm.lSchool.bDate.Template');
 goog.require('sm.lSchool.bFoldList.Template');
-goog.require('sm.lSearch.bArticleLink.Template');
-goog.require('sm.lSearch.bArticleLinks.Template');
+goog.require('sm.lSchoolHome.bArticleLink.Template');
+goog.require('sm.lSchoolHome.bArticleLinks.Template');
 
 
 
@@ -112,11 +112,11 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         )
         .setTemplateListItem(
             'article-links',
-            sm.lSearch.bArticleLinks.Template.articleLinks
+            sm.lSchoolHome.bArticleLinks.Template.articleLinks
         )
         .setTemplateListItem(
             'article-link',
-            sm.lSearch.bArticleLink.Template.articleLink
+            sm.lSchoolHome.bArticleLink.Template.articleLink
         )
         .setTemplateListItem(
             'date',
