@@ -235,25 +235,6 @@ service.getPopularSchools = async(function(opt_amount) {
 
 
 /**
- * Return array of urls for school with given Ids
- * @param {Array<number>} schoolId
- * @return {string}
- */
-// service.getUrlsByIds = async(function(schoolIds) {
-//     var schools = await(models.School.findAll({
-//         where: {
-//             id: {
-//                 $in: schoolIds
-//             }
-//         },
-//         attributes: ['id', 'url']
-//     }));
-//
-//     return schools;
-// });
-
-
-/**
  * @param {number} amount
  * @return {array<object>} school instances
  */

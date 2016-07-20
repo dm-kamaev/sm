@@ -1,7 +1,8 @@
 'use strict';
 
 var async = require('asyncawait/async'),
-    await = require('asyncawait/await');
+    await = require('asyncawait/await'),
+    Sequielize = require('sequelize');
 
 var models = require('../../../../app/components/models').all;
 
@@ -135,5 +136,25 @@ service.getPopularSpheres = async(function(opt_amount) {
     }));
 });
 
+
+/**
+ * Get additional education instances with unique spheres, filtered by
+ * given schoolId
+ * @param {number} schoolId
+ * @return {Array<models.AdditionalEducation>}
+ */
+service.getUniqueSpheresBySchoolId = async(function(schoolId) {
+    return await(models.AdditionalEducation.findAll(
+        {
+            attributes: [
+                [Sequielize.literal('DISTINCT "school_id"'), 'schoolId'],
+                'sphereId'
+            ],
+            where: {
+                schoolId: schoolId
+            }
+        }
+    ));
+});
 
 module.exports = service;
