@@ -1,0 +1,600 @@
+{namespace sm.lSmSearch.Template}
+
+
+/**
+ * Search page
+ * @param? params {{
+ *     data: sm.iLayout.TemplateStendhal.Params.Data,
+ *     config: ?sm.iLayout.Template.Params.Config
+ * }}
+ * @extends sm.iLayout.TemplateStendhal
+ * @constructor
+ * @doc
+ */
+{template .search autoescape="strict" kind="html"}
+    {call .document data="all" /}
+{/template}
+
+
+/**
+ * Content
+ * @param params {{
+ *     data: {
+ *         user: ?{
+ *            firstName: (string|undefined),
+ *            lastName: (string|undefined)
+ *         },
+ *         authSocialLinks: {
+ *            vk: ?string,
+ *            fb: ?string
+ *         },
+ *         seo: {
+ *             title: (string|undefined),
+ *             description: (string|undefined),
+ *             textLeft: (Array<string>|undefined),
+ *             textRight: (Array<string>|undefined)
+ *         },
+ *         map: sm.bMap.Template.Params.Data,
+ *         search: {
+ *             countResults: number,
+ *             searchText: string,
+ *             placeholder: ?string
+ *         },
+ *         entityList: Array<{
+ *             id: number,
+ *             alias: string,
+ *             name: {
+ *                 light: string,
+ *                 bold: string
+ *             },
+ *             description: string,
+ *             metro: (undefined|Array<{
+ *                 id: number,
+ *                 name: string
+ *             }>),
+ *             area: (undefined|Array<{
+ *                 id: number,
+ *                 name: string
+ *             }>),
+ *             score: sm.bScore.TemplateMinimized.Params,
+ *             ratings: Array<string>,
+ *             isFavorite: boolean
+ *         }>,
+ *         filters: sm.lSearch.bFilters.Template.Params,
+ *         searchSettings: {
+ *             url: string,
+ *             method: string,
+ *             searchParams: {
+ *                 name: ?string,
+ *                 metroId: ?number,
+ *                 areaId: ?number,
+ *                 schoolType: ?Array.<string>,
+ *                 classes: ?Array.<number>,
+ *                 ege: ?Array.<string>,
+ *                 gia: ?Array.<string>,
+ *                 olimp: ?Array.<string>,
+ *                 sortType: ?number,
+ *                 page: ?number
+ *             }
+ *         }
+ *     }
+ * }}
+ */
+{template .bodyContent_ autoescape="strict" kind="html"}
+// {call cl.iUtils.Utils.stringify}
+//           {param json: $params /}
+//     {/call}
+    {let $data: [
+        'searchSettings': $params.searchSettings,
+        'params': [
+            'isUserAuthorized': $params.data?.user ? true : false,
+            'authSocialLinks': $params.data?.authSocialLinks
+        ]
+    ]/}
+
+    <div class="{call .rootClass/}__body"
+        data-params="{call goog.json.serialize data="$data" /}">
+
+        {call .map_ data="all" /}
+        {call .innerContent_ data="all" /}
+        {call .footerSeo_ data="all" /}
+    </div>
+
+    {call sm.bMap.Template.api/}
+{/template}
+
+
+/**
+ * Text of header for list of schools
+ * @param params {{
+ *     data: {
+ *         seo: {
+ *             title: (string|undefined),
+ *             description: (string|undefined)
+ *         },
+ *         search: {
+ *             countResults: number,
+ *             searchText: string
+ *         }
+ *     }
+ * }}
+ */
+{template .listHeaderText}
+    <span class="{call .rootClass/}__list-header-text">
+        {if $params.data?.seo and $params.data?.seo?.title}
+            {call .headerText_ data="all" /}
+
+            {if $params.data.seo.description}
+                {call .headerDescription_ data="all" /}
+            {/if}
+        {else}
+            {call .generateHeaderText_}
+                {param params: [
+                    'searchText': $params.data?.search?.searchText,
+                    'countResults': $params.data?.search?.countResults
+                ]/}
+            {/call}
+        {/if}
+    </span>
+{/template}
+
+
+/**
+ * Container for map
+ * @param params {{
+ *     data: {
+ *         entities: Array<{
+ *             id: number,
+ *             name: string,
+ *             alias: ?string,
+ *             description: ?string,
+ *             totalScore: ?number,
+ *             address: Array<{
+ *                 id: number,
+ *                 lat: number,
+ *                 lng: number,
+ *                 name: string,
+ *                 stages: (string|Array<string>)
+ *             }>,
+ *         }>,
+ *         position: {
+ *             center: ?Array<number>,
+ *             type: ?string
+ *         }
+ *     }
+ * }}
+ */
+{template .map_ autoescape="strict" kind="html"}
+    {let $classes kind="html"}
+        {call .rootClass/}__section{sp}
+        {call .rootClass/}__section_map
+
+        // {if not length($params?.entities)}
+        //     {sp}i-utils__hidden
+        // {/if}
+    {/let}
+
+    <div class="{$classes}">
+        {call sm.bMap.Template.map}
+            {param params: [
+                'data': $params.data,
+                'config': [
+                    'enableScrollZoom': false
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Left menu and Search results
+ * @param params {{
+ *     data: {
+ *         seo: {
+ *             title: (string|undefined),
+ *             description: (string|undefined)
+ *         },
+ *         search: {
+ *             countResults: number,
+ *             searchText: string,
+ *             placeholder: ?string
+ *         },
+ *         entityList: Array<{
+ *             id: number,
+ *             alias: string,
+ *             name: {
+ *                 light: string,
+ *                 bold: string
+ *             },
+ *             description: string,
+ *             metro: (undefined|Array<{
+ *                 id: number,
+ *                 name: string
+ *             }>),
+ *             area: (undefined|Array<{
+ *                 id: number,
+ *                 name: string
+ *             }>),
+ *             score: {sm.bScore.TemplateMinimized.Params},
+ *             ratings: Array<string>,
+ *             isFavorite: boolean
+ *         }>,
+ *         filters: {sm.lSearch.bFilters.Template.Params}
+ *     }
+ * }}
+ */
+{template .innerContent_}
+    <div class="{call .rootClass/}__section {call .rootClass/}__section_content">
+        {call .listHeader_}
+            {param params: [
+                'data': $params.data,
+                'config': [
+                    'size': 's'
+                ]
+            ]/}
+        {/call}
+
+        {call .leftMenu_ data="all" /}
+        {call .results_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Left menu template
+ * @param params {{
+ *     data: {
+ *         search: {
+ *             placeholder: ?string
+ *             searchText: ?string
+ *         }
+ *     }
+ * }}
+ */
+{template .leftMenu_ autoescape="strict" kind="html" private="true"}
+    <div class="{call .rootClass/}__left-menu">
+        {call .search_}
+            {param params: [
+                'data': $params.data?.search,
+                'config': [
+                    'redirect': false
+                ]
+            ]/}
+        {/call}
+
+        {call .filters_ data="all"/}
+    </div>
+{/template}
+
+
+/**
+ * Search
+ * @param params {{
+ *     data: {
+ *        placeholder: ?string
+ *        searchText: ?string
+ *     },
+ *     config: {
+ *         redirect: bool
+ *     }
+ * }}
+ */
+{template .search_ private="true" autoescape="strict" kind="html"}
+    <div class="{call .rootClass/}__search">
+    // {call cl.iUtils.Utils.stringify}
+    //       {param json: $params /}
+    // {/call}
+
+        {call sm.bSearch.Template.base}
+            {param params: [
+                'placeholder': $params.data?.placeholder,
+                'text': $params.data?.searchText,
+                'theme': 'min',
+                'redirect': $params.config?.searchRedirect,
+                'inputSize': 'min',
+                'config': [
+                    'height': 's'
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Filter template
+ * @param? params {
+ *     data: {
+ *         filters: sm.lSearch.bFilters.Template.Params
+ *     }
+ * }
+ */
+{template .filters_ autoescape="strict" kind="html" private="true"}
+    <div class="{call .rootClass/}__filters">
+        {call sm.lSearchResult.bFilters.Template.base}
+            {param params: $params?.data?.filters/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Left menu and list results
+ * @param params {{
+ *     data: {
+ *         seo: {
+ *             title: (string|undefined),
+ *             description: (string|undefined)
+ *         },
+ *         search: {
+ *             countResults: number,
+ *             searchText: string,
+ *             placeholder: ?string
+ *         },
+ *         entityList: Array<{
+ *             id: number,
+ *             alias: string,
+ *             name: {
+ *                 light: string,
+ *                 bold: string
+ *             },
+ *             description: string,
+ *             metro: (undefined|Array<{
+ *                 id: number,
+ *                 name: string
+ *             }>),
+ *             area: (undefined|Array<{
+ *                 id: number,
+ *                 name: string
+ *             }>),
+ *             score: {sm.bScore.TemplateMinimized.Params},
+ *             ratings: Array<string>,
+ *             isFavorite: boolean
+ *         }>
+ *     }
+ * }}
+ */
+{template .results_}
+    <div class="{call .rootClass/}__list-results">
+        {call .listHeader_}
+            {param params: [
+                'data': $params.data,
+                'config': [
+                    'size': 'l'
+                ]
+            ]/}
+        {/call}
+
+        {call .listBody_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Body for list results
+ * @param params {
+ *     data: {
+ *         entityList: Array<{
+ *             id: number,
+ *             alias: string,
+ *             name: {
+ *                 light: string,
+ *                 bold: string
+ *             },
+ *             description: string,
+ *             metro: (undefined|Array<{
+ *                 id: number,
+ *                 name: string
+ *             }>),
+ *             area: (undefined|Array<{
+ *                 id: number,
+ *                 name: string
+ *             }>),
+ *             score: {sm.bScore.TemplateMinimized.Params},
+ *             ratings: Array<string>,
+ *             isFavorite: boolean
+ *         }>,
+ *         search: {
+ *             countResults: ?number
+ *         }
+ *     }
+ * }
+ */
+{template .listBody_ private="true"}
+    {let $classes kind="html"}
+        {call .rootClass/}__list-body
+
+        {if $params.data.search?.countResults}
+            {sp}i-utils__hidden
+        {/if}
+    {/let}
+
+    <div class="{$classes}">
+        {call sm.lSearchResult.bSchoolList.Template.base}
+            {param params: [
+                'schools': $params.data.entityList
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Header for list of results
+ * @param params {{
+ *     data: {
+ *         seo: {
+ *             title: (string|undefined),
+ *             description: (string|undefined)
+ *         },
+ *         search: {
+ *             countResults: number,
+ *             searchText: string,
+ *             placeholder: ?string
+ *         }
+ *     },
+ *     config: {
+ *         size: (string|undefined)
+ *     }
+ * }}
+ */
+{template .listHeader_}
+    {let $classes kind="html"}
+        {call .rootClass/}__list-header
+
+        {if $params?.config?.size}
+            {sp}{call .rootClass/}__list-header_size_{$params?.config?.size}
+        {/if}
+    {/let}
+
+    <div class="{$classes}">
+        {call .listHeaderText data="all"/}
+    </div>
+{/template}
+
+
+/**
+ * Text of header for list results
+ * @param params {{
+ *     data: {
+ *         seo: {
+ *             title: (string|undefined),
+ *             description: (string|undefined)
+ *         }
+ *     }
+ * }}
+ */
+{template .headerText_}
+    {let $classes kind="html"}
+        {call .rootClass/}__list-header-text{sp}
+        {call .rootClass/}__list-header-text_strong
+
+        {if $params.data.seo.description}
+            {sp}{call .rootClass/}__list-header-text_title
+        {/if}
+    {/let}
+
+    <h1 class="{$classes}">
+        {$params.data.seo.title}
+    </h1>
+{/template}
+
+
+/**
+ * Description of header for list results
+ * @param params {{
+ *     data: {
+ *         seo: {
+ *             description: ?string
+ *         }
+ *     }
+ * }}
+ */
+{template .headerDescription_}
+    <div class="{call .rootClass/}__list-header-text{sp}
+                {call .rootClass/}__list-header-text_description">
+        {$params.data.seo?.description}
+    </div>
+{/template}
+
+
+/**
+ * Generates header text for results
+ * @param params {{
+ *     searchText: string,
+ *     countResults: number
+ * }}
+ */
+{template .generateHeaderText_}
+    {if length($params.searchText)}
+        По запросу{sp}
+        <span class="{call .rootClass/}__list-header-text{sp}
+                     {call .rootClass/}__list-header-text_strong">
+            «{$params.searchText}»
+        </span>{sp}
+    {else}
+        По вашему запросу{sp}
+    {/if}
+
+    мы{sp}
+
+    <span class="{call .rootClass/}__list-header-text{sp}
+                 {call .rootClass/}__list-header-text_change">
+        {if $params.countResults == 0}
+            не нашли ничего.
+        {else}
+            нашли <span class="{call .rootClass/}__list-header-text{sp}
+                               {call .rootClass/}__list-header-text_strong{sp}
+                               {call .rootClass/}__list-header-text_amount">
+                {$params.countResults}{sp}
+
+                {call cl.iUtils.Utils.declensionPrint}
+                    {param params: [
+                        'num': $params.countResults,
+                        'nom': ' школу',
+                        'gen': ' школы',
+                        'plu': ' школ'
+                    ]/}
+                {/call}
+            </span>
+        {/if}
+    </span>
+{/template}
+
+
+/**
+ * Footer for text SEO
+ * @param params {{
+ *     data: {
+ *         seo: {
+ *             textLeft: Array<string>,
+ *             textRight: Array<string>
+ *         }
+ *     }
+ * }}
+ */
+{template .footerSeo_}
+    {if $params.data?.seo and
+        ($params.data?.seo.textLeft or $params.data?.seo.textRight)}
+        <div class="{call .rootClass/}__footer-seo">
+            <div class="{call .rootClass/}__text-seo{sp}
+                        {call .rootClass/}__text-seo_left">
+                {call .textSeo_}
+                    {param text: $params.data.seo.textLeft /}
+                {/call}
+            </div>
+
+            <div class="{call .rootClass/}__text-seo{sp}
+                        {call .rootClass/}__text-seo_right">
+                {call .textSeo_}
+                    {param text: $params.data.seo.textRight /}
+                {/call}
+            </div>
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Text for SEO
+ * @param? text {Array<string>}
+ */
+{template .textSeo_ private="true"}
+    {if $text}
+        {for $i in range(length($text))}
+            <div class="{call .rootClass/}__paragraph-seo">
+                {$text[$i]}
+            </div>
+        {/for}
+    {/if}
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    l-sm-search
+{/template}
