@@ -78,8 +78,7 @@ class GiaActualizer extends SearchDataActualizer {
                 }
             }
         }));
-        console.log(resultSubjects);
-        
+
         return resultSubjects;
     }
 }
