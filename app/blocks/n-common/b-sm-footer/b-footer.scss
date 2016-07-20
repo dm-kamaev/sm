@@ -1,6 +1,6 @@
 @import "../../n-common/i-media/i-media";
 
-.b-footer {
+.b-sm-footer {
     width: 100%;
     padding: 35px 0 25px;
     margin-bottom: 30px;
@@ -9,10 +9,10 @@
     border-top: 1px solid rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
 
-    font-family: 13px Arial, sans-serif;
+    font: 13px Arial, sans-serif;
 }
 
-.b-footer__link {
+.b-sm-footer__link {
     display: inline-block;
     margin-right: 20px;
 
@@ -21,34 +21,34 @@
     }
 }
 
-.b-footer__link_copyright {
+.b-sm-footer__link_copyright {
     color: #000;
 }
 
 @include media-xs {
-    .b-footer {
+    .b-sm-footer {
         padding-bottom: 10px;
     }
 
-    .b-footer__link {
+    .b-sm-footer__link {
         margin-bottom: 15px;
     }
 
-    .b-footer__link_copyright {
+    .b-sm-footer__link_copyright {
         display: block;
     }
 }
 
 @include media-xxs {
-    .b-footer {
+    .b-sm-footer {
         padding: 30px 0 30px;
     }
 
-    .b-footer__link {
+    .b-sm-footer__link {
         margin-bottom: 2px;
     }
 
-    .b-footer__link_copyright {
+    .b-sm-footer__link_copyright {
         margin-bottom: 15px;
     }
 }

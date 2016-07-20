@@ -75,14 +75,14 @@
  *             sortType: ?number,
  *             page: ?number
  *         }
- *     },
- *     landingScript: string
+ *     }
  * }} sm.iLayout.TemplateStendhal.Params.Data
  */
 
 
  /*
  * @typedef {{
+ *     landingScript: string
  *     staticVersion: ?string,
  *     analyticsId: ?string,
  *     yandexMetrikaId: ?number,
@@ -185,10 +185,8 @@
 
 /**
  * @param params {{
- *     data: {
- *         landingScript: string
- *     },
  *     config: {
+ *         landingScript: string
  *         staticVersion: ?string,
  *         analyticsId: ?string,
  *         yandexMetrikaId: ?number,
@@ -199,7 +197,7 @@
  */
 {template .extraScripts autoescape="strict" kind="html"}
     {call cl.iStatic.Template.script}
-        {param path: $params.data.landingScript /}
+        {param path: $params?.config?.landingScript /}
         {param staticVersion: $params?.config?.staticVersion /}
     {/call}
 
@@ -318,22 +316,26 @@
  */
 {template .footer_ autoescape="strict" kind="html"}
     <div class="{call .rootClass/}__footer">
-        {call sm.lSchool.bFooter.Template.base}
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
-                'data': [
-                    'year': $params?.config?.year
-                ],
-                'dataLinks': [
-                    [
-                        'name': 'Сотрудничество',
-                        'url': 'http://mel.fm/contacts'
-                    ],
-                    [
-                        'name': 'Пользовательское соглашение',
-                        'url': 'http://mel.fm/terms'
+                'factory': $params.config.modifier ?: 'stendhal',
+                'type': 'footer',
+                'renderParams': [
+                    'data': [
+                        'year': $params?.config?.year,
+                        'links': [
+                            [
+                                'name': 'Сотрудничество',
+                                'url': 'http://mel.fm/contacts'
+                            ],
+                            [
+                                'name': 'Пользовательское соглашение',
+                                'url': 'http://mel.fm/terms'
+                            ]
+                        ]
                     ]
                 ]
-            ] /}
+            ]/}
         {/call}
     </div>
 {/template}

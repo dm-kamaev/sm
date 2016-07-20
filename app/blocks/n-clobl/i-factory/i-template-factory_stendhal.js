@@ -6,12 +6,12 @@ goog.require('sm.bAuthorizationLink.Template');
 goog.require('sm.bBanner.Template');
 goog.require('sm.bFavorite.Template');
 goog.require('sm.bFavoriteLink.Template');
-goog.require('sm.bFooter.Template');
 goog.require('sm.bHeader.Template');
 goog.require('sm.bPopularSchools.Template');
 goog.require('sm.bSchoolCatalog.Template');
 goog.require('sm.bSchoolListPaged.Template');
 goog.require('sm.bSearchPanel.Template');
+goog.require('sm.bSmFooter.Template');
 goog.require('sm.gAuthSocial.TemplateStendhal');
 goog.require('sm.gAuthSocialModal.TemplateStendhal');
 goog.require('sm.gButton.TemplateSocialStendhal');
@@ -145,7 +145,7 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         )
         .setTemplateListItem(
             'footer',
-            sm.bFooter.Template.footer
+            sm.bSmFooter.Template.footer
         );
 };
 goog.inherits(sm.iFactory.TemplateFactoryStendhal, cl.iFactory.TemplateFactory);
