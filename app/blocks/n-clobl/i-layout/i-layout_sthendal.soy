@@ -1,0 +1,348 @@
+{namespace sm.iLayout.TemplateStendhal}
+
+
+/*
+ * @typedef {{
+ *     openGraph: ?{
+ *         url: ?string,
+ *         siteName: ?string,
+ *         title: ?string,
+ *         type: ?string,
+ *         description: ?string,
+ *         image: ?string,
+ *         fbClientId: ?number,
+ *         twitterCardType: ?string,
+ *         twitterSiteName: ?string,
+ *         imageWidth: ?string,
+ *         imageHeight: ?string
+ *     },
+ *     header: sm.bHeader.Template.Params.Data,
+ *     user: ?{
+ *        firstName: (string|undefined),
+ *        lastName: (string|undefined)
+ *     },
+ *     authSocialLinks: {
+ *        vk: ?string,
+ *        fb: ?string
+ *     },
+ *     seo: {
+ *         metaTitle: string,
+ *         metaDescription: (string|undefined),
+ *         title: (string|undefined),
+ *         description: (string|undefined),
+ *         textLeft: (Array<string>|undefined),
+ *         textRight: (Array<string>|undefined)
+ *     },
+ *     map: sm.bMap.Template.Params.Data,
+ *     search: {
+ *         countResults: number,
+ *         searchText: string,
+ *         placeholder: ?string
+ *     },
+ *     entityList: Array<{
+ *         id: number,
+ *         alias: string,
+ *         name: {
+ *             light: string,
+ *             bold: string
+ *         },
+ *         description: string,
+ *         metro: (undefined|Array<{
+ *             id: number,
+ *             name: string
+ *         }>),
+ *         area: (undefined|Array<{
+ *             id: number,
+ *             name: string
+ *         }>),
+ *         score: sm.bScore.TemplateMinimized.Params,
+ *         ratings: Array<string>,
+ *         isFavorite: boolean
+ *     }>,
+ *     filters: sm.lSearch.bFilters.Template.Params,
+ *     searchSettings: {
+ *         url: string,
+ *         method: string,
+ *         searchParams: {
+ *             name: ?string,
+ *             metroId: ?number,
+ *             areaId: ?number,
+ *             schoolType: ?Array.<string>,
+ *             classes: ?Array.<number>,
+ *             ege: ?Array.<string>,
+ *             gia: ?Array.<string>,
+ *             olimp: ?Array.<string>,
+ *             sortType: ?number,
+ *             page: ?number
+ *         }
+ *     },
+ *     landingScript: string
+ * }} sm.iLayout.TemplateStendhal.Params.Data
+ */
+
+
+ /*
+ * @typedef {{
+ *     staticVersion: ?string,
+ *     analyticsId: ?string,
+ *     yandexMetrikaId: ?number,
+ *     domain: ?string,
+ *     fbClientId: ?number,
+ *     csrf: ?string,
+ *     year: ?number,
+ *     modifier: ?string,
+ *     page: ?string
+ * }} sm.iLayout.TemplateStendhal.Params.Config
+ */
+
+
+/**
+ * Base landing for pages
+ * @param? params {{
+ *     data: sm.iLayout.TemplateStendhal.Params.Data,
+ *     config: ?sm.iLayout.Template.Params.Config
+ * }}
+ * @extends cl.iLayout.Template
+ * @constructor
+ * @doc
+ */
+{template .layout autoescape="strict" kind="html"}
+    {call .document data="all" /}
+{/template}
+
+
+/**
+ * Meta tags
+ */
+{template .meta autoescape="strict" kind="html"}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+{/template}
+
+
+/**
+ * @param params {{
+ *     data: {
+ *         seo: {
+ *             metaTitle: string
+ *         }
+ *     }
+ * }}
+ * @override
+ */
+{template .title autoescape="strict" kind="html"}
+    {$params.data.seo.metaTitle}
+{/template}
+
+
+/**
+ * @param params {{
+ *     data: {
+ *         seo: {
+ *             metaDescription: (string|undefined)
+ *         }
+ *     }
+ * }}
+ * @override
+ */
+{template .description autoescape="strict" kind="html"}
+    {if $params.data.seo?.metaDescription}
+        <meta name="description"content="$params.data.seo?.metaDescription">
+        </meta>
+    {/if}
+{/template}
+
+
+/**
+ * Favicon
+ * @override
+ */
+{template .favicon autoescape="strict" kind="html"}
+    <link rel="shortcut icon" href="/images/n-common/favicon.ico"
+        type="image/x-icon">
+{/template}
+
+
+/**
+ * @override
+ */
+{template .extraStyles autoescape="strict" kind="html"}
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700,700italic&subset=latin,cyrillic'
+        rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic'
+        rel='stylesheet' type='text/css'>
+{/template}
+
+
+/**
+ * @override
+ */
+{template .scripts autoescape="strict" kind="html"}
+    <script type="text/javascript"
+        src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js">
+    </script>
+{/template}
+
+
+/**
+ * @param params {{
+ *     data: {
+ *         landingScript: string
+ *     },
+ *     config: {
+ *         staticVersion: ?string,
+ *         analyticsId: ?string,
+ *         yandexMetrikaId: ?number,
+ *         csrf: ?string
+ *     }
+ * }}
+ * @override
+ */
+{template .extraScripts autoescape="strict" kind="html"}
+    {call cl.iStatic.Template.script}
+        {param path: $params.data.landingScript /}
+        {param staticVersion: $params?.config?.staticVersion /}
+    {/call}
+
+    {call .csrf_ data="all"/}
+    {call .analytics_ data="all"/}
+    {call .metrika_ data="all"/}
+{/template}
+
+
+/**
+ * @param params {{
+ *     config: {
+ *         csrf: ?string
+ *     }
+ * }}
+ */
+{template .csrf_ autoescape="strict" kind="html"}
+    <script>
+        window['ctx'] = [];
+        window['ctx']['csrf'] = {$params?.config?.csrf};
+    </script>
+{/template}
+
+
+/**
+ * @param params {{
+ *     config: {
+ *         analyticsId: ?string
+ *     }
+ * }}
+ */
+{template .analytics_ autoescape="strict" kind="html"}
+    <script>
+        var analytics = sm.iAnalytics.Analytics.getInstance();
+        analytics.init('{$params?.config?.analyticsId}');
+    </script>
+{/template}
+
+
+/**
+ * @param params {{
+ *     config: {
+ *         yandexMetrikaId: ?string
+ *     }
+ * }}
+ */
+{template .metrika_ autoescape="strict" kind="html"}
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+        var metrika = sm.iMetrika.Metrika.getInstance();
+        metrika.init('{$params?.config?.yandexMetrikaId}');
+    </script>
+
+    <noscript>
+        <div>
+            <img src="https://mc.yandex.ru/watch/
+                {$params?.config?.yandexMetrikaId}"
+                style="position:absolute; left:-9999px;" alt="" />
+        </div>
+    </noscript>
+    <!-- /Yandex.Metrika counter -->
+{/template}
+
+
+/**
+ * @param params {{
+ *     data: sm.iLayout.TemplateStendhal.Params.Data,
+ *     config: sm.iLayout.TemplateStendhal.Params.Config
+ * }}
+ * @override
+ */
+{template .content autoescape="strict" kind="html"}
+    <div class="{call .rootClass/}">
+        {call .header_ data="all" /}
+        {call .bodyContent_ data="all" /}
+        {call .footer_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Header
+ * @param params {{
+ *     data: {
+ *         header: sm.bHeader.Template.Params.Data
+ *     }
+ *     config: sm.iLayout.TemplateStendhal.Params.Config
+ * }}
+ */
+{template .header_ autoescape="strict" kind="html"}
+    <div class="{call .rootClass/}__header">
+        {call sm.bHeader.Template.base}
+            {param params: [
+                'data': $params.data.header,
+                'config': $params.config
+            ] /}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Content
+ */
+{template .bodyContent_ autoescape="strict" kind="html"}
+{/template}
+
+
+/**
+ * Footer
+ * @param params {
+ *     config: {
+ *         year: ?number
+ *     }
+ * }
+ */
+{template .footer_ autoescape="strict" kind="html"}
+    <div class="{call .rootClass/}__footer">
+        {call sm.lSchool.bFooter.Template.base}
+            {param params: [
+                'data': [
+                    'year': $params?.config?.year
+                ],
+                'dataLinks': [
+                    [
+                        'name': 'Сотрудничество',
+                        'url': 'http://mel.fm/contacts'
+                    ],
+                    [
+                        'name': 'Пользовательское соглашение',
+                        'url': 'http://mel.fm/terms'
+                    ]
+                ]
+            ] /}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    i-layout
+{/template}
