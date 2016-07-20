@@ -360,6 +360,7 @@ class SearchQuery {
                     .or('school.full_name ILIKE ?', searchString)
                     .or('metro.name ILIKE ?', searchString)
                     .or('area.name ILIKE ?', searchString)
+                    .or('district.name ILIKE ?', searchString)
             );
 
         return this;
@@ -379,7 +380,8 @@ class SearchQuery {
                     'address.id = address_metro.address_id'
                 )
                 .left_join('metro', null, 'metro.id = address_metro.metro_id')
-                .left_join('area', null, 'area.id = address.area_id');
+                .left_join('area', null, 'area.id = address.area_id')
+                .left_join('district', null, 'area.district_id = district.id');
         }
 
         return this;
