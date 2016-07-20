@@ -77,6 +77,8 @@ class AddressActualizer {
         var searchData = this.address_.searchData;
         if (this.getSearchDataByType_(searchData, searchType)) {
             services.addressSearch.update(searchData.Id, {
+                entityId: this.address_.schoolId,
+                entityType: entityType.SCHOOL,
                 values: values
             });
         } else if (values.length) {
