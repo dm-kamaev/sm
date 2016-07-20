@@ -237,7 +237,7 @@ exports.getAllWithSearchData = async(function() {
         include: [{
             model: models.AddressSearchData,
             as: 'searchData',
-            attributes: ['type']
+            attributes: ['id', 'type']
         }, {
             model: models.Department,
             as: 'departments',

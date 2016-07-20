@@ -74,9 +74,12 @@ class AddressActualizer {
      * @param {string} searchType
      */
     actualizeData_(values, searchType) {
-        var searchData = this.address_.searchData;
-        if (this.getSearchDataByType_(searchData, searchType)) {
-            services.addressSearch.update(searchData.Id, {
+        var searchData = this.getSearchDataByType_(
+            this.address_.searchData,
+            searchType
+        );
+        if (searchData) {
+            services.addressSearch.update(searchData.id, {
                 entityId: this.address_.schoolId,
                 entityType: entityType.SCHOOL,
                 values: values
