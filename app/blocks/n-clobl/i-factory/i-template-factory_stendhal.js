@@ -6,6 +6,7 @@ goog.require('sm.bAuthorizationLink.Template');
 goog.require('sm.bBanner.Template');
 goog.require('sm.bFavorite.Template');
 goog.require('sm.bFavoriteLink.Template');
+goog.require('sm.bFooter.Template');
 goog.require('sm.bHeader.Template');
 goog.require('sm.bPopularSchools.Template');
 goog.require('sm.bSchoolCatalog.Template');
@@ -141,6 +142,10 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'icon',
             sm.gIcon.TemplateStendhal.icon
+        )
+        .setTemplateListItem(
+            'footer',
+            sm.bFooter.Template.footer
         );
 };
 goog.inherits(sm.iFactory.TemplateFactoryStendhal, cl.iFactory.TemplateFactory);
