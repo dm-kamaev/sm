@@ -27,7 +27,7 @@ const schoolSeoLists = require('./schoolSeoLists.json');
 const CSV_DELIMITER = '|',
     ROBOTS_REPORT = 'robots-report',
     SEO_SCHOOL_LISTS_ARCHIVE = 'seo-school-lists.tar.gz',
-    TEXTS_ARCHIVE = '20160707152941-seo-school-lists-texts.tar.gz',
+    TEXTS_ARCHIVE = 'seo-school-lists-texts.tar.gz',
     TEXTS_CSV = 'seo-texts.csv';
 
 class SeoSchoolListOperator {
