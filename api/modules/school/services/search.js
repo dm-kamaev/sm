@@ -93,6 +93,8 @@ exports.getSearchSql = function(searchParams, limit) {
         .setStudyResult(searchParams.gia, 'gia')
         .setStudyResult(searchParams.ege, 'ege')
         .setStudyResult(searchParams.olimp, 'olymp')
+        .setSpecializedClassType(searchParams.specializedClassType)
+        .setActivitySphere(searchParams.activitySphere)
         .setArea(searchParams.areaId)
         .setMetro(searchParams.metroId)
         .getQuery();

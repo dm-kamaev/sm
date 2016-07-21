@@ -29,7 +29,7 @@ class SearchQuery {
         this.examTypes_ = {
             gia: schoolSearchType.fields.GIA,
             ege: schoolSearchType.fields.EGE,
-            olymp: schoolSearchType.fields.OLIMPIAD,
+            olymp: schoolSearchType.fields.OLIMPIAD
         };
 
         /**
@@ -172,6 +172,58 @@ class SearchQuery {
                 .and(
                     'school_search_data.values @> ' +
                     this.intArrayToSql_(opt_studyResult)
+                )
+            );
+
+            this.schoolDataCount_++;
+        }
+
+        return this;
+    }
+
+
+    /**
+     * Set to query condition about selected specialized class types
+     * @param {Array<number>} opt_specializedClassType
+     * @return {Object}
+     */
+    setSpecializedClassType(opt_specializedClassType) {
+        if (opt_specializedClassType && opt_specializedClassType.length) {
+            this.schoolSearchParams_.or(
+                squel.expr()
+                    .and(
+                    'school_search_data.type = ?',
+                    schoolSearchType.fields.SPECIALIZED_CLASS_TYPE
+                )
+                    .and(
+                    'school_search_data.values @> ' +
+                    this.intArrayToSql_(opt_specializedClassType)
+                )
+            );
+
+            this.schoolDataCount_++;
+        }
+
+        return this;
+    }
+
+
+    /**
+     * Set to query condition about selected activity spheres
+     * @param {Array<number>} opt_activitySphere
+     * @return {Object}
+     */
+    setActivitySphere(opt_activitySphere) {
+        if (opt_activitySphere && opt_activitySphere.length) {
+            this.schoolSearchParams_.or(
+                squel.expr()
+                    .and(
+                    'school_search_data.type = ?',
+                    schoolSearchType.fields.ACTIVITY_SPHERE
+                )
+                    .and(
+                    'school_search_data.values @> ' +
+                    this.intArrayToSql_(opt_activitySphere)
                 )
             );
 
