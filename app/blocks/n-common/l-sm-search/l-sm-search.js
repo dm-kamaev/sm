@@ -4,7 +4,10 @@ goog.require('cl.iControl.Control');
 goog.require('cl.iFactory.FactoryManager');
 goog.require('goog.dom');
 goog.require('sm.iAnalytics.Analytics');
+goog.require('sm.iFactory.FactoryStendhal');
+goog.require('sm.iFactory.TemplateFactoryStendhal');
 goog.require('sm.iMetrika.Metrika');
+goog.require('sm.lSmSearch.View');
 goog.require('sm.lSmSearch.View');
 
 

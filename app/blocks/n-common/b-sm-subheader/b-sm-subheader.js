@@ -1,22 +1,23 @@
-goog.provide('sm.bHeader.Header');
+goog.provide('sm.bSmSubheader.SmSubheader');
 
 goog.require('cl.iControl.Control');
+goog.require('cl.iFactory.FactoryManager');
 goog.require('goog.dom');
 goog.require('sm.bAuthorizationLink.AuthorizationLink');
-goog.require('sm.bHeader.View');
 goog.require('sm.bSearch.Search');
+goog.require('sm.bSmSubheader.View');
 
 
 
 /**
- * Header
+ * Subheader
  * @param {Object} view
  * @param {Object=} opt_domHelper
  * @constructor
  * @extends {cl.iControl.Control}
  */
-sm.bHeader.Header = function(view, opt_domHelper) {
-    goog.base(this, view, opt_domHelper);
+sm.bSmSubheader.SmSubheader = function(view, opt_domHelper) {
+    sm.bSmSubheader.SmSubheader.base(this, 'constructor', view, opt_domHelper);
 
 
     this.setSupportedState(goog.ui.Component.State.FOCUSED, false);
@@ -24,10 +25,10 @@ sm.bHeader.Header = function(view, opt_domHelper) {
 
     /**
      * Current mode
-     * @type {Header.Mode|string}
+     * @type {Subheader.Mode|string}
      * @private
      */
-    this.mode_ = sm.bHeader.Header.Mode.DEFAULT;
+    this.mode_ = sm.bSmSubheader.SmSubheader.Mode.DEFAULT;
 
 
     /**
@@ -47,13 +48,6 @@ sm.bHeader.Header = function(view, opt_domHelper) {
 
 
     /**
-     * Banner instance
-     * @type {sm.bBanner.Banner}
-     * @private
-     */
-    this.banner_ = null;
-
-    /**
      * Authorization Link instance
      * @type {sm.bAuthorizationLink.AuthorizationLink}
      * @private
@@ -67,22 +61,22 @@ sm.bHeader.Header = function(view, opt_domHelper) {
      */
     this.favorite_ = null;
 };
-goog.inherits(sm.bHeader.Header, cl.iControl.Control);
+goog.inherits(sm.bSmSubheader.SmSubheader, cl.iControl.Control);
 
 
 goog.scope(function() {
-    var Header = sm.bHeader.Header,
-        View = sm.bHeader.View,
+    var Subheader = sm.bSmSubheader.SmSubheader,
+        View = sm.bSmSubheader.View,
         Search = sm.bSearch.Search,
         AuthorizationLink = sm.bAuthorizationLink.AuthorizationLink,
         FactoryManager = cl.iFactory.FactoryManager;
 
 
     /**
-     * Header modes
+     * Subheader modes
      * @enum {string}
      */
-    Header.Mode = {
+    Subheader.Mode = {
         'DEFAULT': 'default',
         'SEARCH': 'search'
     };
@@ -92,28 +86,28 @@ goog.scope(function() {
      * Event enum
      * @enum {string}
      */
-    Header.Event = {
+    Subheader.Event = {
         'SUBMIT': Search.Event.SUBMIT,
-        'ITEM_SELECT': Search.Event.ITEM_SELECT
+       'ITEM_SELECT': Search.Event.ITEM_SELECT
     };
 
 
     /**
      * Singleton getter
-     * @return {sm.bHeader.Header}
+     * @return {sm.bSmSubheader.SmSubheader}
      */
-    Header.getInstance = function() {
+    Subheader.getInstance = function() {
         var rootElement = goog.dom.getElementByClass(View.CssClass.ROOT);
 
-        if (rootElement && !Header.instance_) {
-            Header.instance_ = FactoryManager.getInstance().decorate(
+        if (rootElement && !Subheader.instance_) {
+            Subheader.instance_ = FactoryManager.getInstance().decorate(
                 'stendhal',
-                'header',
+                'smSubheader',
                 rootElement
             );
         }
 
-        return Header.instance_;
+        return Subheader.instance_;
     };
 
 
@@ -121,7 +115,7 @@ goog.scope(function() {
      * Add given item to favorites
      * @param {sm.bSchoolListItem.SchoolListItem.Params} favoriteItem
      */
-    Header.prototype.addFavorite = function(favoriteItem) {
+    Subheader.prototype.addFavorite = function(favoriteItem) {
         this.favorite_.addItem(favoriteItem);
     };
 
@@ -130,7 +124,7 @@ goog.scope(function() {
      * Remove item with given id from favorites
      * @param {number} itemId
      */
-    Header.prototype.removeFavorite = function(itemId) {
+    Subheader.prototype.removeFavorite = function(itemId) {
         this.favorite_.removeItem(itemId);
     };
 
@@ -138,8 +132,8 @@ goog.scope(function() {
     /**
      * @override
      */
-    Header.prototype.decorateInternal = function(element) {
-        goog.base(this, 'decorateInternal', element);
+    Subheader.prototype.decorateInternal = function(element) {
+        Subheader.base(this, 'decorateInternal', element);
 
         var domElements = this.getView().getDom();
         if (domElements.minifiedSearch) {
@@ -153,8 +147,6 @@ goog.scope(function() {
             this.addChild(this.search_);
             this.search_.decorate(domElements.search);
         }
-
-        this.banner_ = this.decorateChild('banner', domElements.banner);
 
         this.authorizationLink_ = this.decorateChild(
             'authorization-link',
@@ -171,8 +163,8 @@ goog.scope(function() {
     /**
      * @override
      */
-    Header.prototype.enterDocument = function() {
-        goog.base(this, 'enterDocument');
+    Subheader.prototype.enterDocument = function() {
+        Subheader.base(this, 'enterDocument');
         this.initMinifiedSearchListeners_();
         this.initSearchListeners_();
     };
@@ -181,7 +173,7 @@ goog.scope(function() {
     /**
      * @private
      */
-    Header.prototype.initMinifiedSearchListeners_ = function() {
+    Subheader.prototype.initMinifiedSearchListeners_ = function() {
         this.getHandler().listen(
             this.minifiedSearch_,
             Search.Event.DEFAULT_MODE_INITED,
@@ -209,7 +201,7 @@ goog.scope(function() {
     /**
      * @private
      */
-    Header.prototype.initSearchListeners_ = function() {
+    Subheader.prototype.initSearchListeners_ = function() {
         this.getHandler().listen(
             this.search_,
             Search.Event.TEXT_CHANGE,
@@ -229,7 +221,7 @@ goog.scope(function() {
     /**
      * @private
      */
-    Header.prototype.onSubmit_ = function() {
+    Subheader.prototype.onSubmit_ = function() {
         this.minifiedSearch_.reset();
         this.search_.reset();
     };
@@ -237,10 +229,10 @@ goog.scope(function() {
 
     /**
      * Set header mode
-     * @param {sm.bHeader.Header.Mode} mode
+     * @param {sm.bSmSubheader.SmSubheader.Mode} mode
      * @return {boolean}
      */
-    Header.prototype.setMode = function(mode) {
+    Subheader.prototype.setMode = function(mode) {
         var res = (this.isCorrectMode_(mode) && !this.isCurrentMode_(mode));
 
         if (res) {
@@ -260,7 +252,7 @@ goog.scope(function() {
      *     metroId: ?number
      * }}
      */
-    Header.prototype.getSearchData = function() {
+    Subheader.prototype.getSearchData = function() {
         return this.search_.getData();
     };
 
@@ -269,7 +261,7 @@ goog.scope(function() {
      * Set search value in according to minified search value
      * @private
      */
-    Header.prototype.onMinifiedSearchTextChange_ = function() {
+    Subheader.prototype.onMinifiedSearchTextChange_ = function() {
         this.search_.setData(
             this.minifiedSearch_.getData()
         );
@@ -280,7 +272,7 @@ goog.scope(function() {
      * Set minified search value in according to search value
      * @private
      */
-    Header.prototype.onSearchTextChange_ = function() {
+    Subheader.prototype.onSearchTextChange_ = function() {
         this.minifiedSearch_.setData(
             this.search_.getData()
         );
@@ -289,42 +281,42 @@ goog.scope(function() {
 
     /**
      * Is mode already selected
-     * @param {sm.bHeader.Header.Mode} mode
+     * @param {sm.bSmSubheader.SmSubheader.Mode} mode
      * @return {boolean}
      * @private
      */
-    Header.prototype.isCurrentMode_ = function(mode) {
+    Subheader.prototype.isCurrentMode_ = function(mode) {
         return this.mode_ == mode;
     };
 
 
     /**
      * Is mode correct
-     * @param {sm.bHeader.Header.Mode} mode
+     * @param {sm.bSmSubheader.SmSubheader.Mode} mode
      * @return {boolean}
      * @private
      */
-    Header.prototype.isCorrectMode_ = function(mode) {
-        return mode == Header.Mode.DEFAULT ||
-               mode == Header.Mode.SEARCH;
+    Subheader.prototype.isCorrectMode_ = function(mode) {
+        return mode == Subheader.Mode.DEFAULT ||
+               mode == Subheader.Mode.SEARCH;
     };
 
 
     /**
      * Switch mode of view of header and search
-     * @param {sm.bHeader.Header.Mode} mode
+     * @param {sm.bSmSubheader.SmSubheader.Mode} mode
      * @private
      */
-    Header.prototype.switchMode_ = function(mode) {
+    Subheader.prototype.switchMode_ = function(mode) {
         switch (mode) {
-            case Header.Mode.DEFAULT:
+            case Subheader.Mode.DEFAULT:
                 this.getView().switchToDefaultMode();
                 if (this.minifiedSearch_) {
                     this.minifiedSearch_.setMode(Search.Mode.DEFAULT);
                 }
                 break;
 
-            case Header.Mode.SEARCH:
+            case Subheader.Mode.SEARCH:
                 this.getView().switchToSearchMode();
                 if (this.minifiedSearch_) {
                     this.minifiedSearch_.setMode(Search.Mode.SEARCH);
@@ -339,8 +331,8 @@ goog.scope(function() {
      * @param {Object} event
      * @private
      */
-    Header.prototype.onDefaultModeInited_ = function(event) {
-        this.setMode(Header.Mode.DEFAULT);
+    Subheader.prototype.onDefaultModeInited_ = function(event) {
+        this.setMode(Subheader.Mode.DEFAULT);
     };
 
 
@@ -349,12 +341,12 @@ goog.scope(function() {
      * @param {Object} event
      * @private
      */
-    Header.prototype.onSearchModeInited_ = function(event) {
-        this.setMode(Header.Mode.SEARCH);
+    Subheader.prototype.onSearchModeInited_ = function(event) {
+        this.setMode(Subheader.Mode.SEARCH);
     };
 
 
     jQuery(function() {
-        Header.getInstance();
+        Subheader.getInstance();
     });
 });  // goog.scope

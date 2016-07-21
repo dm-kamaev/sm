@@ -16,7 +16,7 @@
  *         imageWidth: ?string,
  *         imageHeight: ?string
  *     },
- *     header: sm.bHeader.Template.Params.Data,
+ *     subheader: sm.bSmSubheader.Template.Params.Data,
  *     user: ?{
  *        firstName: (string|undefined),
  *        lastName: (string|undefined)
@@ -271,7 +271,7 @@
  */
 {template .content autoescape="strict" kind="html"}
     <div class="{call .rootClass/}">
-        {call .header_ data="all" /}
+        {call .subheader_ data="all" /}
         {call .bodyContent_ data="all" /}
         {call .footer_ data="all" /}
     </div>
@@ -279,21 +279,23 @@
 
 
 /**
- * Header
+ * Subheader
  * @param params {{
  *     data: {
- *         header: sm.bHeader.Template.Params.Data
+ *         subheader: sm.bSmSubheader.Template.Params.Data
  *     }
- *     config: sm.iLayout.TemplateStendhal.Params.Config
  * }}
  */
-{template .header_ autoescape="strict" kind="html"}
-    <div class="{call .rootClass/}__header">
-        {call sm.bHeader.Template.base}
+{template .subheader_ autoescape="strict" kind="html"}
+    <div class="{call .rootClass/}__subheader">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
-                'data': $params.data.header,
-                'config': $params.config
-            ] /}
+                'factory': $params.config.modifier ?: 'stendhal',
+                'type': 'smSubheader',
+                'renderParams': [
+                    'data': $params.data.subheader
+                ]
+            ]/}
         {/call}
     </div>
 {/template}
@@ -319,7 +321,7 @@
         {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
                 'factory': $params.config.modifier ?: 'stendhal',
-                'type': 'footer',
+                'type': 'smFooter',
                 'renderParams': [
                     'data': [
                         'year': $params?.config?.year,
