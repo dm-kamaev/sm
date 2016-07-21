@@ -179,10 +179,10 @@ goog.scope(function() {
      * @param {Object} event
      * @param {{
      *     searchString: ?string,
-     *     Array<{
+     *     result: Array<{
      *         label: ?string,
      *         value: string
-     *     }> result
+     *     }>
      * }} data
      * @private
      */

@@ -62,6 +62,16 @@ goog.scope(function() {
 
 
     /**
+     * Possible api addresses
+     * @enum {string}
+     */
+    FilterExtended.ApiUrl = {
+        ACTIVITY_SPHERE: '/api/school/activitySphere',
+        SPECIALIZED_CLASS_TYPE: 'api/school/specializedClassType'
+    };
+
+
+    /**
      * Internal decorates the DOM element
      * @param {Element} element
      */
@@ -293,7 +303,7 @@ goog.scope(function() {
                 selectedItems: selected,
                 search: {
                     placeholder: 'Какие занятия вы ищете?',
-                    sourceUrl: '/api/school/activity'
+                    sourceUrl: FilterExtended.ApiUrl.ACTIVITY_SPHERE
                 }
             }
         };
@@ -337,7 +347,7 @@ goog.scope(function() {
                 selectedItems: selected,
                 search: {
                     placeholder: 'Какой профиль вы ищете?',
-                    sourceUrl: 'api/school/specializedClasses'
+                    sourceUrl: FilterExtended.ApiUrl.SPECIALIZED_CLASS_TYPE
                 }
             }
         };
