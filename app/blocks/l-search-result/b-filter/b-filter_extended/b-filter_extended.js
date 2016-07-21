@@ -256,7 +256,7 @@ goog.scope(function() {
         var params;
 
         if (this.filterName == FilterExtended.Name.ACTIVITY_SPHERE) {
-            params = this.getActivityParams_();
+            params = this.getActivitiesParams_();
         } else if (
             this.filterName == FilterExtended.Name.SPECIALIZED_CLASS_TYPE) {
             params = this.getSpecializedClassesParams_();
