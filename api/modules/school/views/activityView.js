@@ -5,7 +5,7 @@ var searchType = require('../enums/searchType');
 var activityView = {};
 
 /**
- * @param {object} activities
+ * @param {Array<models.AdditionalEducation>} activities
  * @return {object}
  */
 activityView.list = function(activities) {
@@ -14,7 +14,7 @@ activityView.list = function(activities) {
 
     var items = lodash.keys(activities)
         .map(key => {
-            var spheres = activities[key].map(activity => activity.sphere),
+            var spheres = activities[key].map(activity => activity.sphere.name),
                 items = lodash.uniq(spheres);
 
             return activityView.listParams_(items, 'folded', key);
@@ -25,9 +25,8 @@ activityView.list = function(activities) {
 
 
 /**
- *
  * @param {Array<Object>} items
- * @param {string} sphere
+ * @param {string} type
  * @param {string=} opt_name
  * @return {{
  *     data: {
@@ -40,14 +39,14 @@ activityView.list = function(activities) {
  * }}
  * @private
  */
-activityView.listParams_ = function(items, sphere, opt_name) {
+activityView.listParams_ = function(items, type, opt_name) {
     return {
         data: {
             name: opt_name || '',
             items: items
         },
         config: {
-            type: sphere
+            type: type
         }
     };
 };

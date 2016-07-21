@@ -35,7 +35,8 @@ var AdditionalEducation = db.define('AdditionalEducation', {
             AdditionalEducation.belongsTo(
                 models.AdditionalEducationSphere,
                 {
-                    foreignKey: 'sphere_id'
+                    foreignKey: 'sphere_id',
+                    as: 'sphere'
                 }
             );
         }

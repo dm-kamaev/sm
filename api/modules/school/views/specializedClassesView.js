@@ -5,11 +5,25 @@ var searchType = require('../enums/searchType');
 var specializedClassesView = {};
 
 /**
- * @param {object} specializedClasses
- * @return {object}
+ * @param {Array<Array<number>>} schoolSpecializedClasses
+ * @param {Array<models.SpecializedClassType>} specializedClassTypes
+ * @return {{
+ *     data: {
+ *        name: string,
+ *        items: Array<Object>,
+ *     },
+ *     config: {
+ *         type: string
+ *     }
+ * }}
  */
-specializedClassesView.list = function(specializedClasses) {
-    var steps = ['Начальная школа', 'Средняя школа', 'Старшая школа'];
+specializedClassesView.list = function(
+    schoolSpecializedClasses, specializedClassTypes
+) {
+    var steps = ['Начальная школа', 'Средняя школа', 'Старшая школа'],
+        specializedClasses = specializedClassesView.withTypeName(
+            schoolSpecializedClasses, specializedClassTypes
+        );
 
     var itemsData = [
         specializedClassesView.itemsByClasses_(specializedClasses, 0, 4),
@@ -29,17 +43,41 @@ specializedClassesView.list = function(specializedClasses) {
     return specializedClassesView.listParams_(items);
 };
 
+
+/**
+ * Combine school specialized classes an their type name by type id
+ * @param {Array<Array<number>>} schoolSpecializedClasses
+ * @param {Array<models.SpecializedClassType>} specializedClassTypes
+ * @return {Array<Array<(string|number)>>}
+ */
+specializedClassesView.withTypeName = function(
+    schoolSpecializedClasses, specializedClassTypes
+) {
+    return schoolSpecializedClasses.map(specializedClass => {
+        var typeId = specializedClass[1],
+            type = specializedClassTypes.find(type => {
+                return type.id == typeId;
+            });
+
+        return [specializedClass[0], type.name];
+    });
+};
+
+
 /**
  * creates an array of the classes (from, to)
- * @param {object} specializedClasses
+ * @param {Array<Array<(string|number)>>} specializedClasses
  * @param {number} start
  * @param {number} end
- * @return {array}
+ * @return {Array<string>}
  */
 specializedClassesView.itemsByClasses_ = function(
     specializedClasses, start, end
 ) {
     var classes = lodash.filter(specializedClasses, function(collection) {
+        /** Element in array with index 0 means grade of pupils
+         * for current specialized class. If current specialized class
+         * between start and end => place it into result array **/
         if (collection[0] >= start && collection[0] <= end) {
             return collection[1];
         }
@@ -55,9 +93,17 @@ specializedClassesView.itemsByClasses_ = function(
 };
 
 /**
- * @param {array} items
- * @param {srting=} opt_name
- * @return {object}
+ * @param {Array<string|Object>} items
+ * @param {string=} opt_name
+ * @return {{
+ *     data: {
+ *        name: string,
+ *        items: Array<(string|Object)>,
+ *     },
+ *     config: {
+ *         type: string
+ *     }
+ * }}
  */
 specializedClassesView.listParams_ = function(items, opt_name) {
     return {
