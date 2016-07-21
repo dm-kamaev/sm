@@ -371,11 +371,11 @@ exports.searchMapPoints = async(function(req, res) {
 
 
 /**
- * Search over activity by given name
- * @api {get} api/school/activity
+ * Search over activity spheres by given name or school id
+ * @api {get} api/school/activitySphere
  * @apiVersion 0.0.0
  * @apiGroup School
- * @apiName Activity
+ * @apiName ActivitySphere
  * @apiParam {Object} searchParams Search params.
  * @apiParamExample {json} Request-Example:
  *     {
@@ -395,9 +395,9 @@ exports.searchMapPoints = async(function(req, res) {
  *             }
  *     ]
  *
- * @apiError (Error 500)
+ * @apiError Error (Error 500)
  */
-exports.activity = async(function(req, res) {
+exports.activitySphere = async(function(req, res) {
     var name,
         result;
     try {
@@ -419,11 +419,50 @@ exports.activity = async(function(req, res) {
 
 
 /**
- * Search over activity by given name
- * @api {get} api/school/specializedClasses
+ * Search over activity spheres by given name or school id
+ * @api {get} api/school/activitySphere/popular
  * @apiVersion 0.0.0
  * @apiGroup School
- * @apiName SpecializedClasses
+ * @apiName PopularActivitySphere
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     [
+ *         {
+ *                "label": "Математика",
+ *                "value":"1"
+ *             },
+ *             {
+ *                "label": "Занимательная математика",
+ *                "value":"2"
+ *             }
+ *     ]
+ *
+ * @apiError Error (Error 500)
+ */
+exports.popularActivitySphere = async(function(req, res) {
+    var result;
+    try {
+        var popularActivitySpheres =
+            await(services.additionalEducation.getPopularSpheres());
+
+        result = activityView.sphereFilter(popularActivitySpheres);
+        res.status(200);
+    } catch (error) {
+        res.status(500);
+        result = error.message;
+    } finally {
+        res.header('Content-Type', 'text/html; charset=utf-8');
+        res.end(JSON.stringify(result));
+    }
+});
+
+
+/**
+ * Search over specialized class types sphere by given name or by school id
+ * @api {get} api/school/specializedClassType
+ * @apiVersion 0.0.0
+ * @apiGroup School
+ * @apiName SpecializedClassType
  * @apiParam {Object} searchParams Search params.
  * @apiParamExample {json} Request-Example:
  *     {
@@ -443,18 +482,58 @@ exports.activity = async(function(req, res) {
  *             }
  *     ]
  *
- * @apiError (Error 500)
+ * @apiError Error (Error 500)
  */
-exports.specializedClasses = async(function(req, res) {
+exports.specializedClassType = async(function(req, res) {
     var name,
         result;
     try {
         name = req.query.name || '';
 
-        var specializedClasses =
+        var specializedClassTypes =
                 await(services.specializedClasses.searchTypeByName(name));
 
-        result = specializedClassesView.typeFilters(specializedClasses);
+        result = specializedClassesView.typeFilters(specializedClassTypes);
+        res.status(200);
+    } catch (error) {
+        res.status(500);
+        result = error.message;
+    } finally {
+        res.header('Content-Type', 'text/html; charset=utf-8');
+        res.end(JSON.stringify(result));
+    }
+});
+
+
+/**
+ * Search over specialized class types sphere by given name or by school id
+ * @api {get} api/school/specializedClassType/popular
+ * @apiVersion 0.0.0
+ * @apiGroup School
+ * @apiName PopularSpecializedClassType
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     [
+ *         {
+ *                "label": "Математика",
+ *                "value":"1"
+ *             },
+ *             {
+ *                "label": "Занимательная математика",
+ *                "value":"2"
+ *             }
+ *     ]
+ *
+ * @apiError Error (Error 500)
+ */
+exports.popularSpecializedClassType = async(function(req, res) {
+    var result;
+    try {
+        var popularSpecializedClassTypes =
+            await(services.specializedClasses.getPopularTypes());
+
+        result =
+            specializedClassesView.typeFilters(popularSpecializedClassTypes);
         res.status(200);
     } catch (error) {
         res.status(500);
