@@ -68,7 +68,7 @@ service.getAll = async(function() {
 
 /**
  * @param {number} schoolId
- * @return {Promise<Array<Oobject>>}
+ * @return {Promise<Array<models.AdditionalEducation>>}
  */
 service.findBySchoolId = async(function(schoolId) {
     return models.AdditionalEducation.findAll({
@@ -76,9 +76,12 @@ service.findBySchoolId = async(function(schoolId) {
             schoolId: schoolId
         },
         attributes: [
-            'category',
-            'sphere'
-        ]
+            'category'
+        ],
+        include: {
+            model: models.AdditionalEducationSphere,
+            as: 'sphere'
+        }
     });
 });
 

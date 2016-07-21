@@ -13,6 +13,7 @@ var service = {
     name: 'specializedClasses'
 };
 
+
 /**
  * Create one scpecialized class type with given data and return it
  * @param {{
@@ -23,6 +24,17 @@ var service = {
  */
 service.createType = async(function(data) {
     return await(models.SpecializedClassType.create(data));
+});
+
+
+/**
+ * Return all possible specialized class types
+ * @return {Array<models.SpecializedClassType>}
+ */
+service.getAllTypes = async(function() {
+    return await(models.SpecializedClassType.findAll({
+        attributes: ['id', 'name']
+    }));
 });
 
 
