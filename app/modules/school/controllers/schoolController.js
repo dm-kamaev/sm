@@ -184,6 +184,8 @@ exports.view = async(function(req, res, next) {
                             schoolInstance.id,
                             entityType.SCHOOL
                         ),
+                        specializedClassTypes:
+                            services.specializedClasses.getAllTypes(),
                         authSocialLinks: services.auth.getAuthSocialUrl(),
                         popularSchools:
                             services.school.getRandomPopularSchools(6),
