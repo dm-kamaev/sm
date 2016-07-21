@@ -86,8 +86,8 @@ sm.lSearchResult.SearchResult = function() {
         'ege': [],
         'gia': [],
         'olimp': [],
-        'specializedClasses': [],
-        'activities': [],
+        'specializedClassType': [],
+        'activitySphere': [],
         'sortType': 0,
         'page': 0
     };
