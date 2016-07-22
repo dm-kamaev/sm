@@ -94,7 +94,15 @@
 
 
 /**
- * Tempate button
+ * Body template
+ */
+{template .button autoescape="strict" kind="html"}
+    {call .buttonMore /}
+{/template}
+
+
+/**
+ * Button more template
  * @override
  */
 {template .buttonMore kind="html"}
