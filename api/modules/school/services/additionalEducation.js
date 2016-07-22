@@ -127,6 +127,23 @@ service.searchSphereByName = async(function(name) {
 
 
 /**
+ * @param {Array<number>} sphereIds
+ * @return {Array<models.AdditionalEducationSphere>}
+ */
+service.getSpheresBySearchParams = async(function(sphereIds) {
+    var result;
+
+    if (sphereIds.length) {
+        result = service.getById(sphereIds);
+    } else {
+        result = service.getPopularSpheres();
+    }
+
+    return await(result);
+});
+
+
+/**
  * Return array of most popular addition education spheres
  * by their popularity
  * @param {number=} opt_amount
@@ -134,9 +151,42 @@ service.searchSphereByName = async(function(name) {
  */
 service.getPopularSpheres = async(function(opt_amount) {
     return await(models.AdditionalEducationSphere.findAll({
+        attributes: ['id', 'name'],
         limit: opt_amount || 6,
         order: [['popularity', 'DESC']]
     }));
+});
+
+
+/**
+ * Return additional education spheres by given id
+ * @param {(Array<number>|number)} ids
+ * @return {
+ *     (Array<models.AdditionalEducationSphere>|
+ *     models.AdditionalEducationSphere)
+ * }
+ */
+service.getById = async(function(id) {
+    var condition;
+
+    if (Array.isArray(id)) {
+        condition = {
+            id: {
+                $in: id
+            }
+        };
+    } else {
+        condition = {
+            id: id
+        };
+    }
+
+    return await(models.AdditionalEducationSphere.findAll(
+        {
+            attributes: ['id', 'name'],
+            where: condition
+        }
+    ));
 });
 
 

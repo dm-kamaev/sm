@@ -7,7 +7,6 @@ var lodash = require('lodash');
 
 var models = require('../../../../app/components/models').all;
 var services = require('../../../../app/components/services').all;
-var searchTypeEnum = require('../enums/searchType');
 var entityType = require('../../entity/enums/entityType');
 
 var sequelize = require('../../../../app/components/db');
@@ -596,6 +595,10 @@ var isFeedbackLack = function(scoreCount, reviewCount) {
 
 /**
  * Get all data for generate search filters
+ * @param {{
+ *     activitySphere: Array<number>,
+ *     specializedClassType: Array<number>
+ * }} searchParams
  * @return {{
  *      subjects: Array<models.Subject>,
  *      schoolTypes: Array<models.SchoolTypeFilter>,
@@ -607,32 +610,22 @@ var isFeedbackLack = function(scoreCount, reviewCount) {
  * }}
  * @public
  */
-service.searchFiltersData = async(function() {
+service.searchFiltersData = async(function(searchParams) {
     var data = {
         subjects: services.subject.getAll(),
         schoolTypes: services.search.getTypeFilters(),
         egeSubjects: services.egeResult.getUniqueSubjects(),
         giaSubjects: services.giaResult.getUniqueSubjects(),
         olympiadSubjects: services.olimpResult.getUniqueSubjects(),
-        activitySpheres: services.additionalEducation.getPopularSpheres(),
-        specializedClassesTypes: services.specializedClasses.getPopularTypes()
+        activitySpheres: services.additionalEducation.getSpheresBySearchParams(
+            searchParams.activitySphere
+        ),
+        specializedClassesTypes:
+            services.specializedClasses.getTypesBySearchParams(
+                searchParams.specializedClassType
+            )
     };
     return await(data);
-});
-
-service.typeFilters = async(function() {
-    var schoolTypeFilters = await(services.search.getTypeFilters());
-    var formattedFilters = schoolTypeFilters.map(filter => {
-        return {
-            label: filter.name,
-            value: filter.alias,
-            id: filter.id
-        };
-    });
-    return {
-        filter: searchTypeEnum.fields.SCHOOL_TYPE,
-        values: formattedFilters
-    };
 });
 
 
