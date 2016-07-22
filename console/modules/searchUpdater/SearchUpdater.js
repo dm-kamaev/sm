@@ -6,9 +6,13 @@ const EgeActualizer = require('./EgeActualizer');
 const GiaActualizer = require('./GiaActualizer');
 const OlympActualizer = require('./OlympActualizer');
 const AddressActualizer = require('./AddressActualizer');
+const TextActualizer = require('./TextActualizer');
 const models = require('../../../app/components/models').all;
+const entityType = require('../../../api/modules/entity/enums/entityType');
 
 const services = require('../../../app/components/services').all;
+
+const SCHOOL_FIELDS_TO_UPDATE = ['name', 'fullName', 'abbreviation'];
 
 class SearchUpdater {
     /**
@@ -44,13 +48,17 @@ class SearchUpdater {
     updateForAll() {
         var dataPromises = {
                 schools: services.school.listInstances(),
-                addresses: services.address.getAllWithSearchData()
+                addresses: services.address.getAllWithSearchData(),
+                areas: services.area.getAll(),
+                district: services.district.getAll(),
+                metro: services.metro.getAll()
             },
             data = await(dataPromises);
 
         await(
-            this.updateSchools_(data.schools),
-            this.updateAddresses_(data.addresses)
+            // this.updateSchools_(data.schools),
+            // this.updateAddresses_(data.addresses),
+            this.updateTextData_(data)
         );
         console.log('Succses. Stopping script');
     }
@@ -99,6 +107,20 @@ class SearchUpdater {
             await(addressActualizer.actualize());
             bar.tick();
         });
+    }
+
+    /**
+     * @private
+     * @param {Object} data
+     */
+    updateTextData_(data) {
+        var textActualizer = new TextActualizer(
+            data.schools,
+            entityType.SCHOOL,
+            SCHOOL_FIELDS_TO_UPDATE
+        );
+        textActualizer.actualize();
+
     }
 
     /**

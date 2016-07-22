@@ -33,3 +33,12 @@ exports.updateByName = async(function(areaName, data) {
         }
     }));
 });
+
+/**
+ * @return {Array<Object>}
+ */
+exports.getAll = async(function() {
+    return await(models.Area.findAll({
+        attributes: ['id', 'name']
+    }));
+});

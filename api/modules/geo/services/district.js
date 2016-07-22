@@ -67,4 +67,13 @@ service.getCenterCoords = async(function(districtId) {
     return geoView.coordinatesDefault(district.centerCoords);
 });
 
+/**
+ * @return {Array<Object>}
+ */
+service.getAll = async(function() {
+    return await(models.District.findAll({
+        attributes: ['id', 'name']
+    }));
+});
+
 module.exports = service;

@@ -25,3 +25,12 @@ exports.getCoords = async(function(searhDataId) {
     }
     return geoView.coordinatesDefault(result);
 });
+
+/**
+ * @return {Array<Object>}
+ */
+exports.getAll = async(function() {
+    return await(models.Metro.findAll({
+        attributes: ['id', 'name']
+    }));
+});
