@@ -6,7 +6,7 @@ var schoolSearchType = require('../enums/searchType'),
     addressSearchType = require('../../geo/enums/addressSearchType'),
     entityType = require('../../entity/enums/entityType');
 
-class SearchQuery {
+class SchoolSearchQuery {
     /**
      * Create query templates
      */
@@ -528,4 +528,4 @@ class SearchQuery {
     };
 }
 
-module.exports = SearchQuery;
+module.exports = SchoolSearchQuery;

@@ -1,0 +1,336 @@
+'use strict';
+
+var squel = require('squel').useFlavour('postgres');
+
+var SearchQuery = require('../../entity/lib/Search');
+
+var addressSearchType = require('../../geo/enums/addressSearchType'),
+    schoolSearchType = require('../enums/searchType');
+
+class SchoolSearchQuery extends SearchQuery {
+    /**
+     * Constructor
+     */
+    constructor() {
+        super();
+
+        /**
+         * @private
+         * @type {Object}
+         */
+        this.examTypes_ = {
+            gia: schoolSearchType.fields.GIA,
+            ege: schoolSearchType.fields.EGE,
+            olymp: schoolSearchType.fields.OLIMPIAD,
+        };
+
+        /**
+         * @private
+         * @type {Object}
+         */
+        this.schoolSearchParams_ = squel.expr();
+
+        /**
+         * @protected
+         * @type {number}
+         */
+        this.schoolDataCount_ = 0;
+    }
+
+    /**
+     * @param {(Array<number>|undefined)} classes
+     * @return {Object}
+     */
+    setClasses(classes) {
+        this.addAddressSearchData_(
+            classes,
+            addressSearchType.fields.EDUCATIONAL_GRADES
+        );
+
+        return this;
+    }
+
+    /**
+     * @param {(Array<number>|undefined)} schoolType
+     * @return {Object}
+     */
+    setSchoolType(schoolType) {
+        this.addSchoolSearchData_(
+            schoolType,
+            schoolSearchType.fields.SCHOOL_TYPE
+        );
+
+        return this;
+    }
+
+    /**
+     * @param {(Array<number>|undefined)} studyResult
+     * @param {string} studyType
+     * @return {Object}
+     */
+    setStudyResult(studyResult, studyType) {
+        this.addSchoolSearchData_(
+            studyResult,
+            this.examTypes_[studyType]
+        );
+
+        return this;
+    }
+
+    /**
+     * @param {(number|undefined)} areaId
+     * @return {Object}
+     */
+    setArea(areaId) {
+        if (areaId) {
+            this.addAddressSearchData_(
+                [areaId],
+                addressSearchType.fields.AREA
+            );
+        }
+
+        return this;
+    }
+
+    /**
+     * @param {(number|undefined)} metroId
+     * @return {Object}
+     */
+    setMetro(metroId) {
+        if (metroId) {
+            this.addAddressSearchData_(
+                [metroId],
+                addressSearchType.fields.METRO
+            );
+        }
+
+        return this;
+    }
+
+    /**
+     * @param {(number|undefined)} districtId
+     * @return {Object}
+     */
+    setDistrict(districtId) {
+        if (districtId) {
+            this.addAddressSearchData_(
+                [districtId],
+                addressSearchType.fields.DISTRICT
+            );
+        }
+
+        return this;
+    }
+
+    /**
+     * @private
+     */
+    setBaseQuery_() {
+        this.baseQuery_
+            .field('school.id')
+            .field('school.name')
+            .field('school.full_name', 'fullName')
+            .field('school.rank_dogm', 'rankDogm')
+            .field('school.description')
+            .field('school.score')
+            .field('school.total_score', 'totalScore')
+            .field('school.score_count', 'scoreCount')
+            .field('address.id', 'addressId')
+            .field('metro.id', 'metroId')
+            .field('metro.name', 'metroName')
+            .field('area.id', 'areaId')
+            .field('area.name', 'areaName')
+            .field('address.coords', 'addressCoords')
+            .field('address.name', 'addressName')
+            .field(
+                'department.educational_grades',
+                'departmentEducationalGrades'
+            )
+            .field('school.result_count', 'countResults')
+            .where('address.is_school = true')
+            .left_join('address', null, 'school.id = address.school_id')
+            .left_join(
+                'address_metro',
+                null,
+                'address.id = address_metro.address_id'
+            )
+            .left_join('metro', null, 'metro.id = address_metro.metro_id')
+            .left_join('area', null, 'area.id = address.area_id')
+            .left_join(
+                'department',
+                null,
+                'address.id = department.address_id'
+            );
+    }
+
+    /**
+     * @private
+     */
+    setInnerQuery_() {
+        this.innerQuery_
+            .from('school')
+            .field('school.id')
+            .field('school.name')
+            .field('school.full_name')
+            .field('school.rank_dogm')
+            .field('school.description')
+            .field('school.score')
+            .field('school.total_score')
+            .field('school.score_count')
+            .field('COUNT(school.id) OVER()', 'result_count');
+    }
+
+    /**
+     * @private
+     * @return {string}
+     */
+    getAlias_() {
+        return 'school';
+    }
+
+    /**
+     * @private
+     * @param {number} scoreSortType
+     */
+    setScoreTypeOrder_(scoreSortType) {
+        this.baseQuery_
+            .order('school.score[' + scoreSortType + '] DESC NULLS LAST', null);
+        this.innerQuery_
+            .order('school.score[' + scoreSortType + '] DESC NULLS LAST', null);
+    }
+
+    /**
+     * @private
+     */
+    setQueriesOrder_() {
+        this.setBaseOrder_();
+        this.setInnerOrder_();
+    }
+
+    /**
+     * @private
+     */
+    setBaseOrder_() {
+        this.baseQuery_
+            .order('school.total_score', false)
+            .order('school.score DESC NULLS LAST', null)
+            .order('address_metro.distance');
+    }
+
+    /**
+     * @private
+     */
+    setInnerOrder_() {
+        this.innerQuery_
+            .order('school.total_score', false)
+            .order('school.score DESC NULLS LAST', null);
+    }
+
+    /**
+     * @private
+     * @param {string} searchString
+     */
+    setStringWhere_(searchString) {
+        this.setNameWhere_(searchString);
+        this.setNameJoinAndGroup_();
+    }
+
+    /**
+     * @private
+     * @param {string} name
+     */
+    setNameWhere_(name) {
+        var searchString = '%' + name + '%';
+        this.innerQuery_
+            .where(
+                squel.expr()
+                    .or('school.name ILIKE ?', searchString)
+                    .or('school.full_name ILIKE ?', searchString)
+                    .or('school.abbreviation ILIKE ?', searchString)
+                    .or('metro.name ILIKE ?', searchString)
+                    .or('area.name ILIKE ?', searchString)
+                    .or('district.name ILIKE ?', searchString)
+                    .toString()
+            );
+    }
+
+    /**
+     * @private
+     */
+    setNameJoinAndGroup_() {
+        this.innerQuery_
+            .left_join('address', null, 'school.id = address.school_id')
+            .left_join(
+                'address_metro',
+                null,
+                'address.id = address_metro.address_id'
+            )
+            .left_join('metro', null, 'metro.id = address_metro.metro_id')
+            .left_join('area', null, 'area.id = address.area_id')
+            .left_join('district', null, 'district.id = area.district_id')
+            .group('school.id');
+    }
+
+    /**
+     * @private
+     */
+    updateInnerWhere_() {
+        if (this.addressDataCount_) {
+            this.innerQuery_
+                .where(
+                    'school.id IN (' + this.generateAddressDataQuery_() + ')'
+                );
+        }
+
+        if (this.schoolDataCount_) {
+            this.innerQuery_
+                .where(
+                    'school.id IN (' + this.generateSchoolDataQuery_() + ')'
+                );
+        }
+    }
+
+    /**
+     * @private
+     * @param {Array<number>} values
+     * @param {string} type
+     */
+    addSchoolSearchData_(values, type) {
+        if (values && values.length) {
+            this.schoolSearchParams_.or(
+                squel.expr()
+                    .and(
+                        'school_search_data.type = ?',
+                        type
+                    )
+                    .and(
+                        'school_search_data.values @> ' +
+                        this.intArrayToSql_(values)
+                    )
+                    .toString()
+            );
+
+            this.schoolDataCount_++;
+        }
+    }
+
+    /**
+     * @private
+     * @return {Object}
+     */
+    generateSchoolDataQuery_() {
+        return squel.select()
+            .from('school_search_data')
+            .field('DISTINCT school_id')
+            .where(
+                this.schoolSearchParams_.toString()
+            )
+            .group('school_id')
+            .having(
+                'COUNT(DISTINCT id) = ' + this.schoolDataCount_
+            )
+            .toString();
+    }
+}
+
+module.exports = SchoolSearchQuery;
