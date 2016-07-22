@@ -77,7 +77,7 @@ exports.list = async(function(req, res, next) {
                         limitResults: 10
                     }
                 ),
-                filtersData: services.school.searchFiltersData(),
+                filtersData: services.school.searchFiltersData(searchParams),
                 mapPosition: services.search.getMapPositionParams(searchParams),
                 authSocialLinks: services.auth.getAuthSocialUrl(),
                 favorites: {
