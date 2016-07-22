@@ -63,6 +63,7 @@ activityView.listParams_ = function(items, type, opt_name) {
 activityView.sphereFilter = function(spheres) {
     return spheres.map(sphere => {
         return {
+            id: sphere.id,
             label: sphere.name,
             value: sphere.id
         };
@@ -81,7 +82,7 @@ activityView.sphereFilter = function(spheres) {
  *     }>
  * }}
  */
-activityView.sphereSearchFilter = function(spheres) {
+activityView.typeSearchFilter = function(spheres) {
     var sphereFilter = activityView.sphereFilter(spheres);
     return {
         filterType: searchType.fields.ACTIVITY_SPHERE,

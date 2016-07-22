@@ -23,24 +23,28 @@ searchView.schoolTypeFilterIds = function(typeInstances) {
 };
 
 /**
- * Update opt_filters in params
- * @param {Object} searchParams
- * @param {?string} searchParams.name
- * @param {?Array.<number>} searchParams.classes
- * @param {?Array.<string>} searchParams.schoolType
- * @param {?Array.<string>} searchParams.ege
- * @param {?Array.<string>} searchParams.gia
- * @param {?Array.<string>} searchParams.olimp
- * @param {?number} searchParams.metroId
- * @param {?number} searchParams.areaId
- * @param {?number} searchParams.sortType
- * @param {?number} searchParams.page
+ * Update opt_filters in params and set default values
+ * @param {{
+ *     name: string,
+ *     schoolType: (Array<number>|undefined),
+ *     classes: (Array<number>|undefined),
+ *     gia: (Array<number>|undefined),
+ *     ege: (Array<number>|undefined),
+ *     olimp: (Array<number>|undefined),
+ *     activitySphere: (Array<number>|undefined),
+ *     specializedClassType: (Array<number>|undefined),
+ *     metroId: (number|undefined),
+ *     areaId: (number|undefined),
+ *     districtId: (number|undefined),
+ *     sortType: (number|undefined),
+ *     page: (number|undefined)
+ * }} searchParams
  *
- * @param {Object=} opt_filters
- * @param {?Array.<number>} opt_filters.schoolType
- * @param {?Array.<number>} opt_filters.ege
- * @param {?Array.<number>} opt_filters.gia
- * @param {?Array.<number>} opt_filters.olimp
+ * @param {{
+ *     schoolType: (Array.<number>|undefined),
+ *     ege: (Array.<number>|undefined),
+ *     gia: (Array.<number>|undefined)
+ * }=} opt_filters
  *
  * @return {{
  *     name: string,
@@ -49,6 +53,8 @@ searchView.schoolTypeFilterIds = function(typeInstances) {
  *     gia: Array<number>,
  *     ege: Array<number>,
  *     olimp: Array<number>,
+ *     activitySphere: Array<number>,
+ *     specializedClassType: Array<number>,
  *     metroId: ?number,
  *     areaId: ?number,
  *     districtId: ?number,
@@ -196,8 +202,8 @@ searchView.schoolFilters = function(filtersData, searchParams) {
             filtersData.giaSubjects, filtersData.subjects),
         olympResultView.searchFilter(
             filtersData.olympiadSubjects, filtersData.subjects),
-        activityView.sphereSearchFilter(filtersData.activitySpheres),
-        specializedClassesView.sphereSearchFilter(
+        activityView.typeSearchFilter(filtersData.activitySpheres),
+        specializedClassesView.typeSearchFilter(
             filtersData.specializedClassesTypes)
     ];
 
@@ -285,10 +291,18 @@ var filterTooltip = function(filterType) {
 
 /**
  * Generate each filter object
- * @param {Array.<number>} filters
+ * @param {Array.<{
+ *     label: string,
+ *     value: (string|number),
+ *     id: (number|undefined)
+ * }>} filters
  * @param {Array.<number>} checkedFilters - array with id of currently checked
  * filters
- * @return {Array.<Object.<string, boolean|string>>}
+ * @return {Array.<{
+ *     label: string,
+ *     value: string,
+ *     isChecked: boolean
+ * }>}
  */
 var filterValues = function(filters, checkedFilters) {
     return filters.map(filter => {

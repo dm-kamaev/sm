@@ -129,6 +129,7 @@ specializedClassesView.listParams_ = function(items, opt_name) {
 specializedClassesView.typeFilters = function(specializedClassTypes) {
     return specializedClassTypes.map(type => {
         return {
+            id: type.id,
             label: type.name,
             value: type.id
         };
@@ -147,7 +148,7 @@ specializedClassesView.typeFilters = function(specializedClassTypes) {
  *     }>
  * }}
  */
-specializedClassesView.sphereSearchFilter = function(specializedClassTypes) {
+specializedClassesView.typeSearchFilter = function(specializedClassTypes) {
     var typeFilters = specializedClassesView.typeFilters(specializedClassTypes);
     return {
         filterType: searchType.fields.SPECIALIZED_CLASS_TYPE,
