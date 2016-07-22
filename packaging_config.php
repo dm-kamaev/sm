@@ -2,12 +2,13 @@
 // run packaging bin/make-deb
 
 defined('LIB_DIR') || define('LIB_DIR', 'node_modules/deployment');
-$project_release_number = getenv('packaging_release_number');
+$project = getenv('project');
+$packaging_release_number = getenv('packaging_release_number');
 
 $configure = [
-    'packagename' => 'school-market',
+    'packagename' => "${project}.${packaging_release_number}",
     'arch' => 'all',
-    'version' => "1.$project_release_number",
+    'version' => '1.0',
     'packagetype' => 'deb',
 
     'tmpdir' => '/tmp',
@@ -19,7 +20,7 @@ $configure = [
 ];
 
 $filemapping = [
-    'opt/@PACKAGENAME@/@VERSION@' => [
+    'opt/@PACKAGENAME@' => [
         '*',
         '.sequelizerc',
 
@@ -28,8 +29,5 @@ $filemapping = [
         '- /bin/make-deb',
         '- /bin/deploy',
         '- /packaging_config.php',
-    ],
-    'etc/init.d/@PACKAGENAME@-node' => 'templates/@PACKAGENAME@-node',
-    'etc/nginx/sites-available/schools.mel.fm' => 'environment/nginx/schools_mel_fm.conf',
-    'etc/nginx/sites-available/schools' => 'environment/nginx/school-market.qa.conf',
+    ]
 ];

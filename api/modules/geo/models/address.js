@@ -41,6 +41,11 @@ var Address = db.define('Address', {
                 as: 'area',
                 foreignKey: 'area_id'
             });
+            Address.hasMany(models.AddressSearchData, {
+                as: 'searchData',
+                foreignKey: 'address_id',
+                onDelete: 'cascade'
+            });
         }
     }
 });

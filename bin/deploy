@@ -14,7 +14,8 @@ else
     npm update
 fi
 
-$gulp build
+$gulp backendLint
+$gulp build --env $env
 
 cd node_modules/auth-service/
 if [ ! -d node_modules/ ]; then
@@ -32,4 +33,4 @@ fi
 cd ../..
 
 echo "Running packaging"
-package=$package target_host=$target_host env=$env lib_dir=$lib_dir remote_user=gorod packaging_release_number=$packaging_release_number source $lib_dir/bin/deploy
+project=$project target_host=$target_host env=$env lib_dir=$lib_dir remote_user=gorod packaging_release_number=$packaging_release_number source $lib_dir/bin/deploy

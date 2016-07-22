@@ -5,6 +5,7 @@ const areaView = require('../../geo/views/areaView.js');
 const metroView = require('../../geo/views/metroView.js');
 const addressView = require(
     '../../geo/views/addressView.js');
+const districtView = require('../../geo/views/districtView');
 const activityView = require(
     './activityView.js');
 const specializedClassesView = require(
@@ -459,15 +460,18 @@ var groupSchools = function(schools) {
                     // checks that current department is not
                     // in metro array already
                     lodash.forEach(currentAddress.departments, department => {
-                        if (department.stage === school.departmentStage) {
+                        if (department.educationalGrades ===
+                            school.departmentEducationalGrades) {
                             isNewDepartment = false;
                         }
                     });
 
                     // if this is new department than push it into metro array
-                    if (isNewDepartment && school.departmentStage !== null) {
+                    if (isNewDepartment &&
+                        school.departmentEducationalGrades !== null) {
                         currentAddress.departments.push({
-                            stage: school.departmentStage
+                            educationalGrades:
+                                school.departmentEducationalGrades
                         });
                     }
 
@@ -532,17 +536,25 @@ var getPosition = function(localPosition, page) {
 };
 
 /**
- * @param {Object} data
- * @param {Array.<Object>} data.schools - school instances
- * @param {Array.<Object>} data.areas - area instances
- * @param {Array.<Object>} data.metros - metro instances
- * @return {Array.<Object>}
+ * @param {{
+ *    schools: Array<models.School>,
+ *    areas: Array<models.Area>,
+ *    metro: Array<models.Metro>,
+ *    districts: Array<models.District>
+ * }} data
+ * @return {{
+ *     schools: Array<Object>,
+ *     areas: Array<Object>,
+ *     metro: Array<Object>,
+ *     districts: Array<Object>
+ * }}
  */
 schoolView.suggest = function(data) {
     return {
         schools: this.suggestList(data.schools),
         areas: areaView.list(data.areas),
-        metro: metroView.list(data.metros)
+        metro: metroView.list(data.metros),
+        districts: districtView.list(data.districts)
     };
 };
 
@@ -730,10 +742,11 @@ schoolView.listWithFavorites = function(schools, favoriteItemIds) {
 };
 
 /**
+ * Get array of unique school's ids
  * @param {Array<Object>} schools
- * @return {Array<string>}
+ * @return {Array<number>}
  */
-schoolView.listIds = function(schools) {
+schoolView.uniqueIds = function(schools) {
     return lodash.uniq(schools.map(school => school.id));
 };
 

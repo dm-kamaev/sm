@@ -209,6 +209,7 @@ goog.scope(function() {
      */
     Map.Scale = {
         CITY_CENTER: 13,
+        DISTRICT: 12,
         METRO: 15,
         DEFAULT: 15
     };
@@ -220,6 +221,7 @@ goog.scope(function() {
      */
     Map.PositionType = {
         CITY_CENTER: 'cityCenter',
+        DISTRICT: 'district',
         AREA: 'area',
         METRO: 'metro'
     };
@@ -377,10 +379,15 @@ goog.scope(function() {
      */
     Map.prototype.generateScale_ = function(positionType) {
         var scale = Map.Scale.DEFAULT;
+
         if (positionType == Map.PositionType.METRO) {
             scale = Map.Scale.METRO;
-        } else if (positionType == Map.PositionType.CITY_CENTER) {
+        }
+        else if (positionType == Map.PositionType.CITY_CENTER) {
             scale = Map.Scale.CITY_CENTER;
+        }
+        else if (positionType == Map.PositionType.DISTRICT) {
+            scale = Map.Scale.DISTRICT;
         }
         return scale;
     };
@@ -828,7 +835,8 @@ goog.scope(function() {
                         'description': data['description'],
                         'address': {
                             'name': address['name'],
-                            'stages': address['stages']
+                            'stages': address['stages'] === 'Другие адреса' ?
+                                '' : address['stages']
                         }
                     },
                     'options': {

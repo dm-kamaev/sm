@@ -4,10 +4,12 @@ const commander = require('commander');
  * Require Command objects from cli scripts here. No need to assign them to a variable.
  */
 
+require('./console/addDepartments.js').Command;
 require('./console/beautifySchoolData.js').Command;
 require('./console/comments.js').Command;
 require('./console/updateSitemap.js').Command;
 require('./console/department.js').Command;
+require('./console/departmentStageToGrades.js').Command;
 require('./console/dump.js').Command;
 require('./console/egeData.js').Command;
 require('./console/geocord.js').Command;
@@ -32,6 +34,8 @@ require('./console/updateUrls.js').Command;
 require('./console/commentPublicationDate').Command;
 require('./console/vkapi.js').Command;
 require('./console/updateUserData.js').Command;
+require('./console/geoData.js').Command;
+require('./console/seoDataOperator.js').Command;
 
 /*
  * The line below initializes the interface on `node ./commander

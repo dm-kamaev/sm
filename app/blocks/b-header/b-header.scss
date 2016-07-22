@@ -373,6 +373,8 @@
 
         height: 100%;
 
+        margin-right: -7px;
+
         &:before {
             display: inline-block;
             width: 0;
@@ -383,24 +385,16 @@
     }
 
     .b-header__user-control {
+        padding-left: 12px;
+
         height: 30px;
+
+        &.b-header__user-control_authorization {
+            padding-right: 12px;
+        }
     }
 
     .b-header__user-control_authorization {
-        text-align: left;
-
         border-left: none;
-    }
-
-    .b-header__authorization-content {
-        width: auto;
-    }
-
-    .b-header__user-control_favorite {
-        text-align: right;
-    }
-
-    .b-header__favorite-content {
-        width: auto;
     }
 }

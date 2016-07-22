@@ -16,6 +16,7 @@
  * @param? params {{
  *     data: {
  *         title: string,
+ *         description: ?string,
  *         content: string,
  *         header: {sm.bHeader.Template.Params.Data},
  *         landingScript: string,
@@ -151,8 +152,8 @@
  * @override
  */
 {template .content autoescape="strict" kind="html"}
-    {call .header_ data="all" /}
     <div class="i-layout__wrapper">
+        {call .header_ data="all" /}
         <div class="i-layout__content">
             {$params.data.content}
         </div>

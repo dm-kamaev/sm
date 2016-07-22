@@ -2,7 +2,11 @@ var DataType = require('sequelize'),
     db = require('../../../../app/components/db');
 
 var Area = db.define('Area', {
-    name: DataType.STRING
+    name: DataType.STRING,
+    districtId: {
+        type: DataType.INTEGER,
+        field: 'district_id'
+    }
 }, {
     underscored: true,
     tableName: 'area',
@@ -12,6 +16,10 @@ var Area = db.define('Area', {
             Area.hasMany(models.Address, {
                 as: 'adress',
                 foreignKey: 'area_id'
+            });
+            Area.belongsTo(models.District, {
+                as: 'district',
+                foreignKey: 'district_id'
             });
         }
     }

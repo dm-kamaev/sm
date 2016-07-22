@@ -110,7 +110,9 @@
         {case 'metro'}
             {call .itemIconMetro_ /}
         {case 'areas'}
-            {call .itemIconArea_ /}
+            {call .itemIconLocation_ /}
+        {case 'districts'}
+            {call .itemIconLocation_ /}
     {/switch}
 {/template}
 
@@ -159,7 +161,7 @@
 /**
  * Search suggest area icon
  */
-{template .itemIconArea_ private="true" autoescape="strict" kind="html"}
+{template .itemIconLocation_ private="true" autoescape="strict" kind="html"}
     {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
         {param params: [
             'factory': 'stendhal',
@@ -180,23 +182,22 @@
  * Clear button template
  */
 {template .clearButton_ kind="html"}
-    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-        {param params: [
-            'factory': 'stendhal',
-            'type': 'icon',
-            'renderParams': [
-                'data': [
-                    'type': 'clear'
-                ],
-                'config': [
-                    'customClasses': [
-                        'b-search__control', 'b-search__control_clear',
-                        'i-animate'
+    <div class="b-search__control b-search__control_clear i-animate">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': 'stendhal',
+                'type': 'icon',
+                'renderParams': [
+                    'data': [
+                        'type': 'cross'
+                    ],
+                    'config': [
+                        'size': 'xs'
                     ]
                 ]
-            ]
-        ]/}
-    {/call}
+            ]/}
+        {/call}
+    </div>
 {/template}
 
 /**
@@ -205,23 +206,21 @@
 {template .searchButton_ kind="html"}
     <div class="b-search__open-button-holder
                 i-animate">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': 'stendhal',
-                'type': 'icon',
-                'renderParams': [
-                    'data': [
-                        'type': 'search'
-                    ],
-                    'config': [
-                        'customClasses': [
-                            'b-search__control',
-                            'b-search__control_search',
-                            'i-animate'
+        <div class="b-search__control b-search__control_search i-animate">
+            {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+                {param params: [
+                    'factory': 'stendhal',
+                    'type': 'icon',
+                    'renderParams': [
+                        'data': [
+                            'type': 'search'
+                        ],
+                        'config': [
+                            'size': 'xs'
                         ]
                     ]
-                ]
-            ]/}
-        {/call}
+                ]/}
+            {/call}
+        </div>
     </div>
 {/template}
