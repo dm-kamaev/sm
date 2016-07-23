@@ -196,7 +196,7 @@ goog.scope(function() {
         this.initButtons(element);
 
         this.setParams_();
-        this.setAllFiltersData_();
+        this.setAllFiltersData();
     };
 
 
@@ -440,6 +440,15 @@ goog.scope(function() {
             return item;
 
         }, this);
+    };
+
+
+    /**
+     * set default filters data
+     * @protected
+     */
+    Filter.prototype.setAllFiltersData = function() {
+        this.allFiltersData = this.getFiltersData();
     };
 
 
@@ -739,15 +748,6 @@ goog.scope(function() {
         );
         this.filterName = data.name;
         this.type = data.type;
-    };
-
-
-    /**
-     * set default filters data
-     * @private
-     */
-    Filter.prototype.setAllFiltersData_ = function() {
-        this.allFiltersData = this.getFiltersData();
     };
 
 

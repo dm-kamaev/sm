@@ -72,6 +72,16 @@ goog.scope(function() {
 
 
     /**
+     * Possible api addresses for popular filters
+     * @enum {string}
+     */
+    FilterExtended.ApiUrlPopular = {
+        ACTIVITY_SPHERE: '/api/school/activitySphere/popular',
+        SPECIALIZED_CLASS_TYPE: 'api/school/specializedClassType/popular'
+    };
+
+
+    /**
      * Internal decorates the DOM element
      * @param {Element} element
      */
@@ -116,6 +126,36 @@ goog.scope(function() {
 
         this.initFilterItems();
         this.initFilterItemsListeners();
+    };
+
+
+    /**
+     * set default filters data
+     * @override
+     */
+    FilterExtended.prototype.setAllFiltersData = function() {
+        var api = this.getApiUrlPopular_();
+
+        this.send_(api)
+            .then(function(data) {
+                this.allFiltersData = data;
+            }
+            .bind(this));
+    };
+
+
+    /**
+     * Send query
+     * @param {string} url
+     * @return {Promise}
+     * @private
+     */
+    FilterExtended.prototype.send_ = function(url) {
+        return jQuery.ajax({
+            url: url,
+            type: 'GET',
+            dataType: 'json'
+        });
     };
 
 
@@ -351,5 +391,24 @@ goog.scope(function() {
                 }
             }
         };
+    };
+
+
+    /**
+     * get Api Url Popular filters
+     * @return {string}
+     * @private
+     */
+    FilterExtended.prototype.getApiUrlPopular_ = function() {
+        var apiUrlPopular;
+
+        if (this.filterName == FilterExtended.Name.SPECIALIZED_CLASS_TYPE) {
+            apiUrlPopular = FilterExtended.ApiUrlPopular.SPECIALIZED_CLASS_TYPE;
+        }
+        else if (this.filterName == FilterExtended.Name.ACTIVITY_SPHERE) {
+            apiUrlPopular = FilterExtended.ApiUrlPopular.ACTIVITY_SPHERE;
+        }
+
+        return apiUrlPopular;
     };
 });  // goog.scope
