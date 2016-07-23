@@ -16,66 +16,11 @@
  *         imageWidth: ?string,
  *         imageHeight: ?string
  *     },
- *     subheader: sm.bSmSubheader.Template.Params.Data,
- *     user: ?{
- *        firstName: (string|undefined),
- *        lastName: (string|undefined)
- *     },
- *     authSocialLinks: {
- *        vk: ?string,
- *        fb: ?string
- *     },
  *     seo: {
  *         metaTitle: string,
- *         metaDescription: (string|undefined),
- *         title: (string|undefined),
- *         description: (string|undefined),
- *         textLeft: (Array<string>|undefined),
- *         textRight: (Array<string>|undefined)
+ *         metaDescription: (string|undefined)
  *     },
- *     map: sm.bMap.Template.Params.Data,
- *     search: {
- *         countResults: number,
- *         searchText: string,
- *         placeholder: ?string
- *     },
- *     entityList: Array<{
- *         id: number,
- *         alias: string,
- *         name: {
- *             light: string,
- *             bold: string
- *         },
- *         description: string,
- *         metro: (undefined|Array<{
- *             id: number,
- *             name: string
- *         }>),
- *         area: (undefined|Array<{
- *             id: number,
- *             name: string
- *         }>),
- *         score: sm.bScore.TemplateMinimized.Params,
- *         ratings: Array<string>,
- *         isFavorite: boolean
- *     }>,
- *     filters: sm.lSearch.bFilters.Template.Params,
- *     searchSettings: {
- *         url: string,
- *         method: string,
- *         searchParams: {
- *             name: ?string,
- *             metroId: ?number,
- *             areaId: ?number,
- *             schoolType: ?Array.<string>,
- *             classes: ?Array.<number>,
- *             ege: ?Array.<string>,
- *             gia: ?Array.<string>,
- *             olimp: ?Array.<string>,
- *             sortType: ?number,
- *             page: ?number
- *         }
- *     }
+ *     subheader: sm.bSmSubheader.Template.Params.Data
  * }} sm.iLayout.TemplateStendhal.Params.Data
  */
 
@@ -100,7 +45,7 @@
  * Base landing for pages
  * @param? params {{
  *     data: sm.iLayout.TemplateStendhal.Params.Data,
- *     config: ?sm.iLayout.Template.Params.Config
+ *     config: ?sm.iLayout.TemplateStendhal.Params.Config
  * }}
  * @extends cl.iLayout.Template
  * @constructor

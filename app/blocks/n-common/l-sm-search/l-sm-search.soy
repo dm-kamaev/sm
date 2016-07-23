@@ -1,11 +1,98 @@
 {namespace sm.lSmSearch.Template}
 
 
+/*
+ * @typedef {{
+ *     openGraph: ?{
+ *         url: ?string,
+ *         siteName: ?string,
+ *         title: ?string,
+ *         type: ?string,
+ *         description: ?string,
+ *         image: ?string,
+ *         fbClientId: ?number,
+ *         twitterCardType: ?string,
+ *         twitterSiteName: ?string,
+ *         imageWidth: ?string,
+ *         imageHeight: ?string
+ *     },
+ *     seo: {
+ *         metaTitle: string,
+ *         metaDescription: (string|undefined),
+ *         title: (string|undefined),
+ *         description: (string|undefined),
+ *         textLeft: (Array<string>|undefined),
+ *         textRight: (Array<string>|undefined)
+ *     },
+ *     subheader: sm.bSmSubheader.Template.Params.Data,
+ *     user: ?{
+ *        firstName: (string|undefined),
+ *        lastName: (string|undefined)
+ *     },
+ *     authSocialLinks: {
+ *        vk: ?string,
+ *        fb: ?string
+ *     },
+ *     map: sm.bMap.Template.Params.Data,
+ *     search: {
+ *         countResults: number,
+ *         searchText: string,
+ *         placeholder: ?string
+ *     },
+ *     entityList: Array<{
+ *         id: number,
+ *         alias: string,
+ *         name: {
+ *             light: string,
+ *             bold: string
+ *         },
+ *         description: string,
+ *         metro: (undefined|Array<{
+ *             id: number,
+ *             name: string
+ *         }>),
+ *         area: (undefined|Array<{
+ *             id: number,
+ *             name: string
+ *         }>),
+ *         score: sm.bScore.TemplateMinimized.Params,
+ *         ratings: Array<string>,
+ *         isFavorite: boolean
+ *     }>,
+ *     filters: sm.lSearch.bFilters.Template.Params,
+ *     searchSettings: {
+ *         url: string,
+ *         method: string,
+ *         searchParams: {
+ *             name: ?string,
+ *             metroId: ?number,
+ *             areaId: ?number,
+ *             schoolType: ?Array.<string>,
+ *             classes: ?Array.<number>,
+ *             ege: ?Array.<string>,
+ *             gia: ?Array.<string>,
+ *             olimp: ?Array.<string>,
+ *             sortType: ?number,
+ *             page: ?number
+ *         }
+ *     },
+ *     popularEntities: Array<{
+ *         id: number,
+ *         alias: ?string,
+ *         name: string,
+ *         description: ?string,
+ *         metro: ?Array<string>,
+ *         totalScore: ?number
+ *     }>
+ * }} sm.lSmSearch.Template.Params.Data
+ */
+
+
 /**
  * Search page
  * @param? params {{
- *     data: sm.iLayout.TemplateStendhal.Params.Data,
- *     config: ?sm.iLayout.Template.Params.Config
+ *     data: sm.lSmSearch.Template.Params.Data,
+ *     config: ?sm.iLayout.TemplateStendhal.Params.Config
  * }}
  * @extends sm.iLayout.TemplateStendhal
  * @constructor
@@ -20,6 +107,12 @@
  * Content
  * @param params {{
  *     data: {
+ *         seo: {
+ *             title: (string|undefined),
+ *             description: (string|undefined),
+ *             textLeft: (Array<string>|undefined),
+ *             textRight: (Array<string>|undefined)
+ *         },
  *         user: ?{
  *            firstName: (string|undefined),
  *            lastName: (string|undefined)
@@ -27,12 +120,6 @@
  *         authSocialLinks: {
  *            vk: ?string,
  *            fb: ?string
- *         },
- *         seo: {
- *             title: (string|undefined),
- *             description: (string|undefined),
- *             textLeft: (Array<string>|undefined),
- *             textRight: (Array<string>|undefined)
  *         },
  *         map: sm.bMap.Template.Params.Data,
  *         search: {
@@ -76,7 +163,15 @@
  *                 sortType: ?number,
  *                 page: ?number
  *             }
- *         }
+ *         },
+ *         popularEntities: Array<{
+ *             id: number,
+ *             alias: ?string,
+ *             name: string,
+ *             description: ?string,
+ *             metro: ?Array<string>,
+ *             totalScore: ?number
+ *         }>
  *     }
  * }}
  */
@@ -95,9 +190,10 @@
     <div class="{call .rootClass/}__body"
         data-params="{call goog.json.serialize data="$data" /}">
 
-        {call .map_ data="all" /}
-        {call .innerContent_ data="all" /}
-        {call .footerSeo_ data="all" /}
+        {call .sectionMap_ data="all" /}
+        {call .sectionContent_ data="all" /}
+        {call .sectionFooterSeo_ data="all" /}
+        {call .sectionPopular_ data="all" /}
     </div>
 
     {call sm.bMap.Template.api/}
@@ -164,7 +260,7 @@
  *     }
  * }}
  */
-{template .map_ autoescape="strict" kind="html"}
+{template .sectionMap_ autoescape="strict" kind="html"}
     {let $classes kind="html"}
         {call .rootClass/}__section{sp}
         {call .rootClass/}__section_map
@@ -224,7 +320,7 @@
  *     }
  * }}
  */
-{template .innerContent_}
+{template .sectionContent_}
     <div class="{call .rootClass/}__section {call .rootClass/}__section_content">
         {call .listHeader_}
             {param params: [
@@ -554,10 +650,11 @@
  *     }
  * }}
  */
-{template .footerSeo_}
+{template .sectionFooterSeo_}
     {if $params.data?.seo and
         ($params.data?.seo.textLeft or $params.data?.seo.textRight)}
-        <div class="{call .rootClass/}__footer-seo">
+        <div class="{call .rootClass/}__section{sp}
+                    {call .rootClass/}__section_footer-seo">
             <div class="{call .rootClass/}__text-seo{sp}
                         {call .rootClass/}__text-seo_left">
                 {call .textSeo_}
@@ -588,6 +685,43 @@
             </div>
         {/for}
     {/if}
+{/template}
+
+
+/**
+ * Popular entityes
+ * @param params {{
+ *     data: {
+ *         popularEntities: Array<{
+ *             id: number,
+ *             alias: ?string,
+ *             name: string,
+ *             description: ?string,
+ *             metro: ?Array<string>,
+ *             totalScore: ?number
+ *         }>
+ *     }
+ * }}
+ */
+{template .sectionPopular_}
+    <div class="{call .rootClass/}__section{sp}
+                {call .rootClass/}__section_popular">
+        {call cl.iUtils.Utils.stringify}
+            {param json: $params.data.popularEntities /}
+        {/call}
+
+        // {call sm.bPopularSchools.Template.base}
+        //     {param params: [
+        //         'popularSchools': $params.data.popularSchools,
+        //         'config': [
+        //             'popularSchool': [
+        //                 'customClasses': 'l-school__popular'
+        //             ],
+        //             'analyticsAction': 'school click'
+        //         ]
+        //     ]/}
+        // {/call}
+    </div>
 {/template}
 
 

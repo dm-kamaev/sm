@@ -1,13 +1,6 @@
 goog.provide('sm.lSmSearch.SmSearch');
 
-goog.require('cl.iControl.Control');
-goog.require('cl.iFactory.FactoryManager');
-goog.require('goog.dom');
-goog.require('sm.iAnalytics.Analytics');
-goog.require('sm.iFactory.FactoryStendhal');
-goog.require('sm.iFactory.TemplateFactoryStendhal');
-goog.require('sm.iMetrika.Metrika');
-goog.require('sm.lSmSearch.View');
+goog.require('sm.iLayout.LayoutStendhal');
 goog.require('sm.lSmSearch.View');
 
 
@@ -17,12 +10,12 @@ goog.require('sm.lSmSearch.View');
  * @param {Object} view
  * @param {Object=} opt_domHelper
  * @constructor
- * @extends {cl.iControl.Control}
+ * @extends {sm.iLayout.LayoutStendhal}
  */
 sm.lSmSearch.SmSearch = function(view, opt_domHelper) {
     sm.lSmSearch.SmSearch.base(this, 'constructor', view, opt_domHelper);
 };
-goog.inherits(sm.lSmSearch.SmSearch, cl.iControl.Control);
+goog.inherits(sm.lSmSearch.SmSearch, sm.iLayout.LayoutStendhal);
 
 
 goog.scope(function() {
