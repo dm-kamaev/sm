@@ -194,7 +194,7 @@ class SearchQuery {
                     schoolSearchType.fields.SPECIALIZED_CLASS_TYPE
                 )
                     .and(
-                    'school_search_data.values @> ' +
+                    'school_search_data.values && ' +
                     this.intArrayToSql_(opt_specializedClassType)
                 )
             );
@@ -220,7 +220,7 @@ class SearchQuery {
                     schoolSearchType.fields.ACTIVITY_SPHERE
                 )
                     .and(
-                    'school_search_data.values @> ' +
+                    'school_search_data.values && ' +
                     this.intArrayToSql_(opt_activitySphere)
                 )
             );
