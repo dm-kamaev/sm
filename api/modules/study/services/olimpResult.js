@@ -2,6 +2,8 @@ var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var models = require('../../../../app/components/models').all;
 
+const Sequelize = require('sequelize');
+
 exports.name = 'olimpResult';
 
 /**
@@ -20,4 +22,20 @@ exports.getAllBySchoolId = async(function(schoolId) {
         ],
         order: [['year', 'ASC']]
     }));
+});
+
+
+/**
+ * Return all results of olympiads with unique subject id's
+ * @return {Array<models.OlimpResult>}
+ */
+exports.getUniqueSubjects = async(function() {
+    return await(models.OlimpResult.findAll(
+        {
+            attributes: [
+                [Sequelize.literal('DISTINCT "subject_id"'), 'subjectId']
+            ],
+            order: [['subjectId', 'ASC']]
+        }
+    ));
 });

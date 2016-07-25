@@ -42,6 +42,17 @@ class Archiver {
         this.tmpName_ = 'archive.tmp';
     }
 
+    /**
+     * Create archive with given csv data on given path
+     * @param {string} csvData
+     * @param {string} filepath
+     */
+    static archive(csvData, filepath) {
+        var archiver = new Archiver(filepath);
+
+        archiver.compress(csvData);
+    };
+
     get tmpName() {
         return this.tmpName_;
     }
