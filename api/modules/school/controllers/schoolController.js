@@ -4,7 +4,9 @@ var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var logger =
     require('../../../../app/components/logger/logger').getLogger('app');
-var schoolView = require('../views/schoolView');
+var schoolView = require('../views/schoolView'),
+    specializedClassesView = require('../views/specializedClassesView'),
+    activityView = require('../views/activityView');
 var entityType = require('../../entity/enums/entityType');
 
 
@@ -361,6 +363,181 @@ exports.searchMapPoints = async(function(req, res) {
     } catch (error) {
         result = JSON.stringify(error);
         logger.error(result);
+    } finally {
+        res.header('Content-Type', 'text/html; charset=utf-8');
+        res.end(JSON.stringify(result));
+    }
+});
+
+
+/**
+ * Search over activity spheres by given name or school id
+ * @api {get} api/school/activitySphere
+ * @apiVersion 0.0.0
+ * @apiGroup School
+ * @apiName ActivitySphere
+ * @apiParam {Object} searchParams Search params.
+ * @apiParamExample {json} Request-Example:
+ *     {
+ *       "schoolId": 123,
+ *       "name": "матем"
+ *     }
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     [
+ *         {
+ *                "label": "Математика",
+ *                "value":"1"
+ *             },
+ *             {
+ *                "label": "Занимательная математика",
+ *                "value":"2"
+ *             }
+ *     ]
+ *
+ * @apiError Error (Error 500)
+ */
+exports.activitySphere = async(function(req, res) {
+    var name,
+        result;
+    try {
+        name = req.query.name || '';
+
+        var activitySpheres =
+                await(services.additionalEducation.searchSphereByName(name));
+
+        result = activityView.sphereFilter(activitySpheres);
+        res.status(200);
+    } catch (error) {
+        res.status(500);
+        result = error.message;
+    } finally {
+        res.header('Content-Type', 'text/html; charset=utf-8');
+        res.end(JSON.stringify(result));
+    }
+});
+
+
+/**
+ * Search over activity spheres by given name or school id
+ * @api {get} api/school/activitySphere/popular
+ * @apiVersion 0.0.0
+ * @apiGroup School
+ * @apiName PopularActivitySphere
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     [
+ *         {
+ *            "label": "Математика",
+ *            "value":"1"
+ *         },
+ *         {
+ *            "label": "Занимательная математика",
+ *            "value":"2"
+ *         }
+ *     ]
+ *
+ * @apiError Error (Error 500)
+ */
+exports.popularActivitySphere = async(function(req, res) {
+    var result;
+    try {
+        var popularActivitySpheres =
+            await(services.additionalEducation.getPopularSpheres());
+
+        result = activityView.sphereFilter(popularActivitySpheres);
+        res.status(200);
+    } catch (error) {
+        res.status(500);
+        result = error.message;
+    } finally {
+        res.header('Content-Type', 'text/html; charset=utf-8');
+        res.end(JSON.stringify(result));
+    }
+});
+
+
+/**
+ * Search over specialized class types sphere by given name or by school id
+ * @api {get} api/school/specializedClassType
+ * @apiVersion 0.0.0
+ * @apiGroup School
+ * @apiName SpecializedClassType
+ * @apiParam {Object} searchParams Search params.
+ * @apiParamExample {json} Request-Example:
+ *     {
+ *       "schoolId": 123,
+ *       "name": "матем"
+ *     }
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     [
+ *         {
+ *                "label": "Математика",
+ *                "value":"1"
+ *             },
+ *             {
+ *                "label": "Занимательная математика",
+ *                "value":"2"
+ *             }
+ *     ]
+ *
+ * @apiError Error (Error 500)
+ */
+exports.specializedClassType = async(function(req, res) {
+    var name,
+        result;
+    try {
+        name = req.query.name || '';
+
+        var specializedClassTypes =
+                await(services.specializedClasses.searchTypeByName(name));
+
+        result = specializedClassesView.typeFilters(specializedClassTypes);
+        res.status(200);
+    } catch (error) {
+        res.status(500);
+        result = error.message;
+    } finally {
+        res.header('Content-Type', 'text/html; charset=utf-8');
+        res.end(JSON.stringify(result));
+    }
+});
+
+
+/**
+ * Search over specialized class types sphere by given name or by school id
+ * @api {get} api/school/specializedClassType/popular
+ * @apiVersion 0.0.0
+ * @apiGroup School
+ * @apiName PopularSpecializedClassType
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     [
+ *         {
+ *                "label": "Математика",
+ *                "value":"1"
+ *             },
+ *             {
+ *                "label": "Занимательная математика",
+ *                "value":"2"
+ *             }
+ *     ]
+ *
+ * @apiError Error (Error 500)
+ */
+exports.popularSpecializedClassType = async(function(req, res) {
+    var result;
+    try {
+        var popularSpecializedClassTypes =
+            await(services.specializedClasses.getPopularTypes());
+
+        result =
+            specializedClassesView.typeFilters(popularSpecializedClassTypes);
+        res.status(200);
+    } catch (error) {
+        res.status(500);
+        result = error.message;
     } finally {
         res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(JSON.stringify(result));

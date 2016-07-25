@@ -5,6 +5,10 @@
  * @param? params {{
  *     data: {
  *         content: ?string
+ *     },
+ *     config: {
+ *         stylizationModifier: ?string,
+ *         size: ?string
  *     }
  * }}
  * @extends cl.gModal.Template
@@ -26,7 +30,7 @@
  */
 {template .content}
     {call .closer data="all"/}
-    {$params?.data?.content}
+    {$params?.data?.content ?: ''}
 {/template}
 
 /**
@@ -38,7 +42,7 @@
  */
 {template .closer}
     <div class="{call .rootClass/}__close-button">
-        {if $params.config?.size == 's'}
+        {if $params?.config?.size == 's'}
             {call .smallIcon data="all"/}
         {else}
             {call .defaultIcons data="all"/}
@@ -57,7 +61,7 @@
     <div class="{call .rootClass/}__close-icon">
         {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
-                'factory': $params.config.stylizationModifier,
+                'factory': $params?.config?.stylizationModifier,
                 'type': 'icon',
                 'renderParams': [
                     'data': [
@@ -70,7 +74,7 @@
     <div class="{call .rootClass/}__close-icon-hover">
         {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
-                'factory': $params.config.stylizationModifier,
+                'factory': $params?.config?.stylizationModifier,
                 'type': 'icon',
                 'renderParams': [
                     'data': [
@@ -92,7 +96,7 @@
 {template .smallIcon}
     {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
         {param params: [
-            'factory': $params.config.stylizationModifier,
+            'factory': $params?.config?.stylizationModifier,
             'type': 'icon',
             'renderParams': [
                 'data': [

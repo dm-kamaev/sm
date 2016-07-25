@@ -56,9 +56,11 @@ schoolView.default = function(schoolInstance, data, user, opt_popularSchools) {
         social: [],
         sites: schoolInstance.links ?
             getSites(schoolInstance.links) : getSites(schoolInstance.site),
-        specializedClasses: getSpecializedClasses(
-            schoolInstance.specializedClasses),
-        activities: getActivities(schoolInstance.activities),
+        specializedClasses: specializedClassesView.list(
+            schoolInstance.specializedClasses,
+            data.specializedClassTypes
+        ),
+        activities: activityView.list(schoolInstance.activities),
         contacts: getContacts(schoolInstance.addresses, schoolInstance.phones),
         comments: comments,
         addresses: addressView.default(addresses),
@@ -247,22 +249,6 @@ var getDirectorName = function(name) {
     nameWords = name.split(' ');
     result = nameWords[1] + ' ' + nameWords[2] + ' ' + nameWords[0];
     return result;
-};
-
-/**
- *  @param {object} specializedClasses
- *  @return {object}
- */
-var getSpecializedClasses = function(specializedClasses) {
-    return specializedClassesView.list(specializedClasses);
-};
-
-/**
- *  @param {object} activities
- *  @return {object}
- */
-var getActivities = function(activities) {
-    return activityView.list(activities);
 };
 
 /**

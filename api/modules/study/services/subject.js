@@ -3,9 +3,6 @@ var await = require('asyncawait/await');
 var models = require('../../../../app/components/models').all;
 var services = require('../../../../app/components/services').all;
 var sequelizeInclude = require('../../../../api/components/sequelizeInclude');
-var searchTypeEnum = require('../../school/enums/searchType');
-
-const subjectView = require('../views/subjectView');
 
 exports.name = 'subject';
 
@@ -49,6 +46,15 @@ exports.get = async((subject, opt_option) => {
     }
 
     return res;
+});
+
+
+/**
+ * Return all subjects
+ * @return {Array<models.Subject>}
+ */
+exports.getAll = async(function() {
+    return await(models.Subject.findAll());
 });
 
 exports.getOrCreate = async(name => {
@@ -97,82 +103,6 @@ exports.setCityAverage = async(function(data) {
             egeResult: data.egeAvg
         }));
     }
-});
-
-/**
- * @param params {{
- *     model: {object},
- *     modelAs: {string},
- *     filterName: {string}
- * }}
- */
-var generateFilters = async(function(params) {
-    var subjects = await(models.Subject.findAll());
-    var filters = await(params.model.findAll({
-        attributes: ['subject_id'],
-        group: 'subject_id'
-    }));
-
-    var formatedSubjects = subjects
-        .filter(subject =>
-            filters.find(filter =>
-                filter.subject_id == subject.id))
-        .map(subject => {
-            return {
-                label: subject.displayName,
-                value: subject.alias,
-                id: subject.id
-            };
-        });
-
-    return {
-        filter: params.filterName,
-        values: formatedSubjects
-    };
-});
-
-/**
- * @private
- */
-exports.egeFilters = async(function() {
-    var params = {
-        model: models.EgeResult,
-        modelAs: 'egeResult',
-        filterName: searchTypeEnum.fields.EGE
-    };
-    var filters = await(generateFilters(params));
-    filters.values.sort(
-        (a, b) => subjectView.sorter(a.label, b.label, 'EGE')
-    );
-    return filters;
-});
-
-/**
- * @private
- */
-exports.giaFilters = async(function() {
-    var params = {
-        model: models.GiaResult,
-        modelAs: 'giaResult',
-        filterName: searchTypeEnum.fields.GIA
-    };
-    var filters = await(generateFilters(params));
-    filters.values.sort(
-        (a, b) => subjectView.sorter(a.label, b.label, 'GIA')
-    );
-    return filters;
-});
-
-/**
- * @private
- */
-exports.olympFilters = async(function() {
-    var params = {
-        model: models.OlimpResult,
-        modelAs: 'olimpResult',
-        filterName: searchTypeEnum.fields.OLIMPIAD
-    };
-    return await(generateFilters(params));
 });
 
 /**

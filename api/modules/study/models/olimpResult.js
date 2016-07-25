@@ -12,7 +12,7 @@ var OlimpResult = db.define('OlimpResult', {
     },
     type: {
         type: DataType.ENUM,
-        values: ['всероссийская', 'московская'],
+        values: ['всероссийская', 'московская']
     },
     stage: {
         type: DataType.INTEGER

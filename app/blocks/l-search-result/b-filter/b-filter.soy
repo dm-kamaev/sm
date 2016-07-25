@@ -3,13 +3,15 @@
 /**
  * @typedef {object} sm.lSearchResult.bFilter.Template.Params
  * @property {?object} data
- * @property {?{label: ?string, value: ?string}[]} data.filters
+ * @property {?{label: ?string, value: ?string, isChecked: ?bool}[]} data.filters
  * @property {?{title: ?string, help: ?string}} data.header
  * @property {?string} data.name
  * @property {?object} config
  * @property {?boolean} config.cannotBeHidden
  * @property {?boolean} config.isShowed
  * @property {?number} config.filtersToShow
+ * @property {?number} config.theme
+ * @property {?number} config.type
  */
 
 
@@ -24,9 +26,20 @@
 
 /**
  * Filter init template
+ * @param? params {sm.lSearchResult.bFilter.Template.Params}
  */
 {template .init autoescape="strict" kind="html"}
-    <div class="{call .rootClass/} {call .additionalClasses/}">
+    {let $data kind="html"}
+        {call cl.iUtils.Utils.stringify}
+            {param json: [
+                'name': $params.data?.name,
+                'type': $params.config?.type
+            ]/}
+        {/call}
+    {/let}
+
+    <div class="{call .rootClass/} {call .additionalClasses data="all"/}"
+        data-params="{$data}">
         {call .header data="all"/}
         {call .filters data="all"/}
     </div>
@@ -48,17 +61,19 @@
  * }
  */
 {template .header autoescape="strict" kind="html"}
-    <div class="{call .rootClass/}__header">
-        {call .title data="all" /}
+    {if $params?.data?.header?.title}
+        <div class="{call .rootClass/}__header">
+            {call .title data="all" /}
 
-        {if $params?.data?.header?.tooltip}
-            {call .tooltip data="all" /}
-        {/if}
+            {if $params?.data?.header?.tooltip}
+                {call .tooltip data="all" /}
+            {/if}
 
-        {if not $params?.config?.cannotBeHidden}
-            {call .showFiltersButton data="all" /}
-        {/if}
-    </div>
+            {if not $params?.config?.cannotBeHidden}
+                {call .showFiltersButton data="all" /}
+            {/if}
+        </div>
+    {/if}
 {/template}
 
 
@@ -68,7 +83,8 @@
  *     data: ?{
  *         filters: ?list<{
  *             label: ?string,
- *             value: ?string
+ *             value: ?string,
+ *             isChecked: ?bool
  *         }>,
  *         name: ?string
  *     },
@@ -89,8 +105,8 @@
     {/let}
 
     <div class="{$classes}">
-        {call .listFilters_ data="all" /}
-        {call .button_ data="all"/}
+        {call .listFilters data="all" /}
+        {call .button data="all" /}
     </div>
 {/template}
 
@@ -122,21 +138,63 @@
         {/if}
     {/let}
 
-    <div class="{$classes}">
-        <div class="{call .rootClass/}__filter">
-            <input type="checkbox"
-                class="{call .rootClass/}__input"
-                id="{$params.name}-{$params.id}"
-                name="{$params.name}"
-                value="{$params.filter.value}"
-                {$params.filter?.isChecked ? 'checked' : ''}/>
+    {let $dataParams kind="html"}
+        {call cl.iUtils.Utils.stringify}
+            {param json: [
+                'value': $params.filter.value,
+                'label': $params.filter.label,
+                'name': $params.name
+            ]/}
+        {/call}
+    {/let}
 
-            <label for="{$params.name}-{$params.id}"
-                class="{call .rootClass/}__input-label">
-                {$params.filter.label}
-            </label>
+    <div class="{$classes}" data-params="{$dataParams}">
+        <div class="{call .rootClass/}__filter">
+            {call .input data="all" /}
+            {call .label data="all" /}
         </div>
     </div>
+{/template}
+
+
+/**
+ * Input template
+ * @param? params {
+ *     filter: ?{
+ *         label: ?string,
+ *         value: ?string,
+ *         isChecked: ?boolean
+ *     },
+ *     name: ?string,
+ *     id: number
+ * }
+ */
+{template .input autoescape="strict" kind="html"}
+    <input type="checkbox"
+        class="{call .rootClass/}__input"
+        id="{$params.name}-{$params.id}"
+        name="{$params.name}"
+        value="{$params.filter.value}"
+        {$params.filter?.isChecked ? 'checked' : ''}
+    />
+{/template}
+
+
+/**
+ * Label template
+ * @param? params {
+ *     filter: ?{
+ *         label: ?string
+ *     },
+ *     name: ?string,
+ *     id: number
+ * }
+ */
+{template .label autoescape="strict" kind="html"}
+    <label for="{$params.name}-{$params.id}"
+        class="{call .rootClass/}__input-label">
+        {$params.filter.label}
+    </label>
 {/template}
 
 
@@ -146,57 +204,67 @@
  *     data: ?{
  *         filters: ?list<{
  *             label: ?string,
- *             value: ?string
+ *             value: ?string,
+ *             isChecked: ?bool
  *         }>,
  *         name: ?string
+ *     },
+ *     config: ?{
+ *         type: ?string
  *     }
  * }
  */
-{template .listFilters_ autoescape="strict" kind="html"}
-    {let $isExpanded kind="html"}
-        {call .isExpanded_ data="all" /}
-    {/let}
-
+{template .listFilters autoescape="strict" kind="html"}
     {let $filToShow kind="html"}
-        {call .filToShow_ data="all" /}
+        {call .filToShow data="all" /}
     {/let}
 
-    {for $i in range($params.data.filters.length)}
-        {call .filter}
-            {param params: [
-                'filter': $params.data.filters[$i],
-                'hidden': not $isExpanded and $i > $filToShow ? true : false,
-                'hidable': $i > $filToShow ? true : false,
-                'name': $params.data.name,
-                'id': $i
-            ]/}
-        {/call}
-    {/for}
+    <div class="{call .rootClass/}__list-filters">
+        {for $i in range($params.data.filters.length)}
+            {let $id kind="html"}
+                {if $params.config?.type}
+                    {$i}-{$params.config?.type}
+                {else}
+                    {$i}
+                {/if}
+            {/let}
+
+            {call .filter}
+                {param params: [
+                    'filter': $params.data.filters[$i],
+                    'hidden': $i > $filToShow ? true : false,
+                    'hidable': $i > $filToShow ? true : false,
+                    'name': $params.data.name,
+                    'id': $id
+                ]/}
+            {/call}
+        {/for}
+    </div>
 {/template}
 
 
 /**
  * Body template
- * @param? params {
+ * @param params {
  *     data: ?{
- *         name: ?string
+ *         name: string,
+ *         filters: Array<Object>
+ *     },
+ *     config: ?{
+ *         filtersToShow: ?number,
+ *         type: ?string
  *     }
  * }
  */
-{template .button_ autoescape="strict" kind="html"}
-    {let $isExpanded kind="html"}
-        {call .isExpanded_ data="all" /}
-    {/let}
-
+{template .button autoescape="strict" kind="html"}
     {let $filToShow kind="html"}
-        {call .filToShow_ data="all" /}
+        {call .filToShow data="all" /}
     {/let}
 
     {if $params.data.filters.length > $filToShow}
-        {call .buttonShowMore_}
+        {call .buttonMore}
             {param params: [
-                'numberHiddenItems': $params.data.filters.length - $filToShow - 1,
-                'isExpanded': $isExpanded
+                'numberHiddenItems': $params.data.filters.length - $filToShow - 1
             ]/}
         {/call}
     {/if}
@@ -206,27 +274,19 @@
 /**
  * Tempate button
  * @param? params {
- *     numberHiddenItems: ?number,
- *     isExpanded: ?boolean
+ *     numberHiddenItems: ?number
  * }
  */
-{template .buttonShowMore_ private="true"}
+{template .buttonMore kind="html"}
     {let $customClassesButtonShow kind="html"}
         {call .rootClass/}__button{sp}
         {call .rootClass/}__button_show
-
-        {if $params.isExpanded}
-            {sp}i-utils__hidden
-        {/if}
     {/let}
 
     {let $customClassesButtonHide kind="html"}
         {call .rootClass/}__button{sp}
-        {call .rootClass/}__button_hide
-
-        {if not $params.isExpanded}
-            {sp}i-utils__hidden
-        {/if}
+        {call .rootClass/}__button_hide{sp}
+        i-utils__hidden
     {/let}
 
     {call sm.bLink.Template.base}
@@ -256,33 +316,23 @@
 
 
 /**
- * Show list of filters collapsed or expanded
+ * Determines how many filters show
  * @param? params {
- *     filter: ?{
- *         isChecked: ?boolean
- *     }
- * }
- */
-{template .isExpanded_ kind="html" private="true"}
-    {for $i in range($params.data.filters.length)}
-        {if $i > 5 and $params.data.filters[$i].isChecked}
-            true
-        {/if}
-    {/for}
-{/template}
-
-
-/**
- * determines how many filters show
- * @param? params {
+ *     data: ?{
+ *         name: string,
+ *         filters: Array<Object>
+ *     },
  *     config: ?{
- *         filtersToShow: ?number
+ *         filtersToShow: ?number,
+ *         type: ?string
  *     }
  * }
  */
-{template .filToShow_ kind="html" private="true"}
+{template .filToShow kind="html"}
     {if $params?.config?.filtersToShow}
-        {$params?.config?.filtersToShow - 1}
+        {$params?.config?.filtersToShow}
+    {elseif $params?.config?.type == 'minimal'}
+        {length($params.data.filters) - 1}
     {else}
         5
     {/if}
@@ -350,8 +400,9 @@
 
         {call .tooltipIcon /}
 
-        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
+                'factory': 'stendhal',
                 'type': 'hint',
                 'renderParams': [
                     'data': $tooltipData,
@@ -371,8 +422,9 @@
  */
 {template .tooltipIcon}
     <div class="{call .rootClass/}__tooltip-icon">
-        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
+                'factory': 'stendhal',
                 'type': 'icon',
                 'renderParams': [
                     'data': [
@@ -395,6 +447,14 @@
 
 /**
  * @override
+ * @param? params {
+ *     config: ?{
+ *         theme: ?string
+ *     }
+ * }
  */
 {template .additionalClasses}
+    {if $params?.config?.theme}
+        {call .rootClass/}_{$params?.config?.theme}
+    {/if}
 {/template}

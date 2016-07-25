@@ -69,6 +69,8 @@ sm.lSearchResult.SearchResult = function() {
      *     ege: ?Array.<string>,
      *     gia: ?Array.<string>,
      *     olimp: ?Array.<string>,
+     *     specializedClasses: ?Array.<string>,
+     *     activities: ?Array.<string>,
      *     sortType: ?number,
      *     page: ?number
      * }}
@@ -84,6 +86,8 @@ sm.lSearchResult.SearchResult = function() {
         'ege': [],
         'gia': [],
         'olimp': [],
+        'specializedClassType': [],
+        'activitySphere': [],
         'sortType': 0,
         'page': 0
     };
@@ -109,6 +113,14 @@ sm.lSearchResult.SearchResult = function() {
      * @private
      */
     this.elements_ = {};
+
+
+    /**
+     * Factory type
+     * @type {String}
+     * @private
+     */
+    this.factoryType_ = 'stendhal';
 };
 goog.inherits(sm.lSearchResult.SearchResult, goog.ui.Component);
 
@@ -121,7 +133,8 @@ goog.scope(function() {
         Header = sm.bHeader.Header,
         Map = sm.bMap.Map;
 
-    var Analytics = sm.iAnalytics.Analytics.getInstance();
+    var Analytics = sm.iAnalytics.Analytics.getInstance(),
+        factoryManager = cl.iFactory.FactoryManager.getInstance();
 
 
     /**
@@ -380,7 +393,7 @@ goog.scope(function() {
     SearchResult.prototype.initFiltersListeners_ = function() {
         this.getHandler().listen(
             this.instances_.filters,
-            Filters.event.SUBMIT,
+            Filters.Event.SUBMIT,
             this.onFiltersSubmit_
         );
     };

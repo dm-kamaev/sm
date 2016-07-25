@@ -1,3 +1,5 @@
+const lodash = require('lodash');
+
 /**
  * SubjectView
  * @constructor
@@ -91,6 +93,43 @@ SubjectView.prototype.subjectIds = function(subjects) {
         return subject.id;
     });
 };
+
+
+/**
+ * Generate filter of given type from subjects and their id's
+ * @param {Array<(
+ *     models.egeResult|
+ *     models.giaResult|
+ *     models.olimpResult
+ * )>} results
+ * @param {Array<models.Subject>} subjects
+ * @param {string} filterType
+ * @return {{
+ *    filterType: string,
+ *    values: Array<{
+ *       label: string,
+ *       value: string,
+ *       id: number
+ *    }>
+ * }}
+ */
+SubjectView.prototype.searchFilter =
+    function(results, subjects, filterType) {
+        var filter = results.map(result => {
+            var subjectId = result.subjectId,
+                subject = lodash.find(subjects, 'id', subjectId);
+
+            return {
+                label: subject.displayName,
+                value: subject.alias,
+                id: subject.id
+            };
+        });
+        return {
+            filterType: filterType,
+            values: filter
+        };
+    };
 
 /**
  * Exports

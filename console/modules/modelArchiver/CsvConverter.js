@@ -6,6 +6,8 @@ const replace = require('tipograph').Replace;
 const languages = require('tipograph').Languages;
 const lodash = require('lodash');
 
+const CSV_DELIMITER = '|';
+
 class CsvConverter {
     /**
      * @public
@@ -54,6 +56,24 @@ class CsvConverter {
                 JSON[key] = oldValue;
             }
         }
+    }
+
+    /**
+     * Create csv from given data
+     * @param {Object} data
+     * @param {string} opt_csvDelimiter
+     * @return {string}
+     */
+    static createCsv(data, opt_csvDelimiter) {
+        var csvDelimiter = opt_csvDelimiter || CSV_DELIMITER,
+            csvConverter = new CsvConverter(data);
+
+        return csvConverter.toCsv(
+            csvDelimiter,
+            {
+                notCureQuotes: true
+            }
+        );
     }
 
     /**

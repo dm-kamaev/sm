@@ -1,6 +1,13 @@
 'use strict';
 const lodash = require('lodash');
 
+const olympResultView = require('../../study/views/olimpResultView'),
+    egeResultView = require('../../study/views/egeResultView'),
+    giaResultView = require('../../study/views/giaResultView'),
+    activityView = require('./activityView'),
+    specializedClassesView = require('./specializedClassesView'),
+    searchTypeEnum = require('../enums/searchType');
+
 var searchView = {};
 
 /**
@@ -16,24 +23,28 @@ searchView.schoolTypeFilterIds = function(typeInstances) {
 };
 
 /**
- * Update opt_filters in params
- * @param {Object} searchParams
- * @param {?string} searchParams.name
- * @param {?Array.<number>} searchParams.classes
- * @param {?Array.<string>} searchParams.schoolType
- * @param {?Array.<string>} searchParams.ege
- * @param {?Array.<string>} searchParams.gia
- * @param {?Array.<string>} searchParams.olimp
- * @param {?number} searchParams.metroId
- * @param {?number} searchParams.areaId
- * @param {?number} searchParams.sortType
- * @param {?number} searchParams.page
+ * Update opt_filters in params and set default values
+ * @param {{
+ *     name: string,
+ *     schoolType: (Array<number>|undefined),
+ *     classes: (Array<number>|undefined),
+ *     gia: (Array<number>|undefined),
+ *     ege: (Array<number>|undefined),
+ *     olimp: (Array<number>|undefined),
+ *     activitySphere: (Array<number>|undefined),
+ *     specializedClassType: (Array<number>|undefined),
+ *     metroId: (number|undefined),
+ *     areaId: (number|undefined),
+ *     districtId: (number|undefined),
+ *     sortType: (number|undefined),
+ *     page: (number|undefined)
+ * }} searchParams
  *
- * @param {Object=} opt_filters
- * @param {?Array.<number>} opt_filters.schoolType
- * @param {?Array.<number>} opt_filters.ege
- * @param {?Array.<number>} opt_filters.gia
- * @param {?Array.<number>} opt_filters.olimp
+ * @param {{
+ *     schoolType: (Array.<number>|undefined),
+ *     ege: (Array.<number>|undefined),
+ *     gia: (Array.<number>|undefined)
+ * }=} opt_filters
  *
  * @return {{
  *     name: string,
@@ -42,6 +53,8 @@ searchView.schoolTypeFilterIds = function(typeInstances) {
  *     gia: Array<number>,
  *     ege: Array<number>,
  *     olimp: Array<number>,
+ *     activitySphere: Array<number>,
+ *     specializedClassType: Array<number>,
  *     metroId: ?number,
  *     areaId: ?number,
  *     districtId: ?number,
@@ -77,6 +90,8 @@ searchView.params = function(searchParams, opt_filters) {
         olimp: filters.olimp ||
             searchParams.olimp ||
             [],
+        activitySphere: searchParams.activitySphere || [],
+        specializedClassType: searchParams.specializedClassType || [],
         metroId: searchParams.metroId || null,
         areaId: searchParams.areaId || null,
         districtId: searchParams.districtId || null,
@@ -87,12 +102,44 @@ searchView.params = function(searchParams, opt_filters) {
 
 
 /**
- * @param {Array.<Object>} filters
- * @param {Object.<string, Array.<number>>} searchParams
- * @return {Object}
+ * @param {{
+ *      subjects: Array<models.Subject>,
+ *      schoolTypes: Array<models.SchoolTypeFilter>,
+ *      egeSubjects: Array<models.EgeResult>,
+ *      giaSubjects: Array<models.GiaResult>,
+ *      olympiadSubjects: Array<models.OlimpResult>,
+ *      activitySpheres: Array<models.AdditionalEducationSphere>,
+ *      specializedClassesTypes: Array<models.SpecializedClassType>
+ * }} filtersData
+ * @param {{
+ *     schoolType: Array<number>,
+ *     classes: Array<number>,
+ *     gia: Array<number>,
+ *     ege: Array<number>,
+ *     olimp: Array<number>
+ * }} searchParams
+ * @return {{
+ *     filters: Array<{
+ *         header: string,
+ *         name: string,
+ *         filters: Array<{
+ *             label: string,
+ *             value: string,
+ *             isChecked: boolean
+ *         }>
+ *     }>,
+ *     classesFilter: {
+ *         data: {
+ *             header: string,
+ *             name: string,
+ *             isKindergartenSelected: boolean,
+ *             selectedClass: Array<number>
+ *         }
+ *     }
+ * }}
  */
-searchView.filters = function(filters, searchParams) {
-    var schoolFilters = searchView.schoolFilters(filters, searchParams),
+searchView.filters = function(filtersData, searchParams) {
+    var schoolFilters = searchView.schoolFilters(filtersData, searchParams),
         classesFilter = searchView.classesFilter(searchParams);
 
     return {
@@ -127,13 +174,41 @@ var hasCheckedFilters = function(schoolFilters, classesFilter) {
 
 /**
  * Generate school filters
- * @param {Array.<Object.<string, string|number>>} filters
- * @param {Object.<string, Array.<number>>} searchParams
+ * @param {{
+ *      subjects: Array<models.Subject>,
+ *      schoolTypes: Array<models.SchoolTypeFilter>,
+ *      egeSubjects: Array<models.EgeResult>,
+ *      giaSubjects: Array<models.GiaResult>,
+ *      olympiadSubjects: Array<models.OlimpResult>,
+ *      activitySpheres: Array<models.AdditionalEducationSphere>,
+ *      specializedClassesTypes: Array<models.SpecializedClassType>
+ * }} filtersData
+ * @param {{
+ *     schoolType: Array<number>,
+ *     classes: Array<number>,
+ *     gia: Array<number>,
+ *     ege: Array<number>,
+ *     olimp: Array<number>
+ * }} searchParams
  * @return {Array.<Object.<string, Object>>}
  */
-searchView.schoolFilters = function(filters, searchParams) {
+searchView.schoolFilters = function(filtersData, searchParams) {
+    /** here makes order of filters in left menu **/
+    var filters = [
+        searchView.typeFilter(filtersData.schoolTypes),
+        egeResultView.searchFilter(
+            filtersData.egeSubjects, filtersData.subjects),
+        giaResultView.searchFilter(
+            filtersData.giaSubjects, filtersData.subjects),
+        olympResultView.searchFilter(
+            filtersData.olympiadSubjects, filtersData.subjects),
+        activityView.typeSearchFilter(filtersData.activitySpheres),
+        specializedClassesView.typeSearchFilter(
+            filtersData.specializedClassesTypes)
+    ];
+
     return filters.map(filter => {
-        var filterType = lodash.camelCase(filter.filter),
+        var filterType = lodash.camelCase(filter.filterType),
             checkedItems = searchParams[filterType];
 
         return schoolFilter(filter, checkedItems, filterType);
@@ -160,9 +235,23 @@ var schoolFilter = function(filterItem, checkedItems, filterType) {
             filters: filter
         },
         config: {
-            isShowed: hasCheckedItems(filter)
+            isShowed: hasCheckedItems(filter),
+            type: transformFilterType(filterType)
         }
     };
+};
+
+
+/**
+ * Transform given filter type to type for template
+ * @param {string} type
+ * @return {?string}
+ */
+var transformFilterType = function(type) {
+    return type == lodash.camelCase(searchTypeEnum.ACTIVITY_SPHERE) ||
+            type == lodash.camelCase(searchTypeEnum.SPECIALIZED_CLASS_TYPE) ?
+        'extended' :
+        null;
 };
 
 /**
@@ -175,7 +264,9 @@ var filterTitle = function(filterType) {
         schoolType: 'Тип школы',
         ege: 'Высокие результаты ЕГЭ',
         gia: 'Высокие результаты ГИА',
-        olimp: 'Есть победы в\u00A0олимпиадах'
+        olimp: 'Есть победы в\u00A0олимпиадах',
+        activitySphere: 'Курсы, кружки и\u00A0секции',
+        specializedClassType: 'Профильные классы'
     };
 
     return titles[filterType];
@@ -200,10 +291,18 @@ var filterTooltip = function(filterType) {
 
 /**
  * Generate each filter object
- * @param {Array.<number>} filters
+ * @param {Array.<{
+ *     label: string,
+ *     value: (string|number),
+ *     id: (number|undefined)
+ * }>} filters
  * @param {Array.<number>} checkedFilters - array with id of currently checked
  * filters
- * @return {Array.<Object.<string, boolean|string>>}
+ * @return {Array.<{
+ *     label: string,
+ *     value: string,
+ *     isChecked: boolean
+ * }>}
  */
 var filterValues = function(filters, checkedFilters) {
     return filters.map(filter => {
@@ -241,7 +340,14 @@ var hasCheckedItems = function(filters) {
 /**
  * Create classes filter settings from search params
  * @param {Object.<string, Array.<number>>} searchParams
- * @return {Object.<string, Object>}
+ * @return {{
+ *     data: {
+ *         header: string,
+ *         name: string,
+ *         isKindergartenSelected: boolean,
+ *         selectedClass: Array<number>
+ *     }
+ * }}
  */
 searchView.classesFilter = function(searchParams) {
     var selectedClasses = searchParams.classes;
@@ -253,13 +359,39 @@ searchView.classesFilter = function(searchParams) {
             name: 'classes',
             isKindergartenSelected: lodash.some(
                 selectedClasses, selectedClass => {
-                    return parseInt(selectedClass) === 0;
+                    return Number(selectedClass) === 0;
                 }
             ),
             selectedClass: selectedClasses.find(selectedClass => {
-                return parseInt(selectedClass) > 0;
+                return Number(selectedClass) > 0;
             })
         }
+    };
+};
+
+/**
+ * Create school type filter
+ * @param {Array<models.schoolTypeFilter>} schoolTypes
+ * @return {{
+ *     filterType: string,
+ *     values: Array<{
+ *         label: string,
+ *         value: string,
+ *         id: number
+ *     }>
+ * }}
+ */
+searchView.typeFilter = function(schoolTypes) {
+    var formattedTypeFilter = schoolTypes.map(filter => {
+        return {
+            label: filter.name,
+            value: filter.alias,
+            id: filter.id
+        };
+    });
+    return {
+        filterType: searchTypeEnum.fields.SCHOOL_TYPE,
+        values: formattedTypeFilter
     };
 };
 

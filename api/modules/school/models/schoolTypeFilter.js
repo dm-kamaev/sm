@@ -15,7 +15,7 @@ var SchoolTypeFilter = db.define('SchoolTypeFilter', {
     }
 }, {
     underscored: true,
-    tableName: 'school_type_filter',
+    tableName: 'school_type_filter'
 });
 
 module.exports = SchoolTypeFilter;

@@ -9,6 +9,7 @@ goog.require('goog.style');
 goog.require('goog.ui.Component');
 goog.require('sm.lSearchResult.bFilter.Filter');
 goog.require('sm.lSearchResult.bFilter.FilterClasses');
+goog.require('sm.lSearchResult.bFilter.FilterExtended');
 goog.require('sm.lSearchResult.bFilters.Template');
 
 
@@ -61,6 +62,7 @@ goog.inherits(sm.lSearchResult.bFilters.Filters, goog.ui.Component);
 goog.scope(function() {
     var Filters = sm.lSearchResult.bFilters.Filters,
         Filter = sm.lSearchResult.bFilter.Filter,
+        FilterExtended = sm.lSearchResult.bFilter.FilterExtended,
         FilterClasses = sm.lSearchResult.bFilter.FilterClasses;
 
 
@@ -85,8 +87,9 @@ goog.scope(function() {
      * Event enum
      * @enum {string}
      */
-    Filters.event = {
-        SUBMIT: 'filters-submit'
+    Filters.Event = {
+        SUBMIT: 'filters-submit',
+        SHOW_SEARCH_FILTER_CLICK: Filter.Event.SHOW_SEARCH_FILTER_CLICK
     };
 
 
@@ -97,8 +100,11 @@ goog.scope(function() {
     Filters.Type = {
         EGE: 'ege',
         GIA: 'gia',
+        OLIMP: 'olimp',
         SCHOOL_TYPE: 'schoolType',
-        CLASSES: 'classes'
+        CLASSES: 'classes',
+        SPECIALIZED_CLASS_TYPE: 'specializedClassType',
+        ACTIVITY_SPHERE: 'activitySphere'
     };
 
 
@@ -149,6 +155,12 @@ goog.scope(function() {
                 this.filterClasses_ = new FilterClasses();
                 this.addChild(this.filterClasses_);
                 this.filterClasses_.decorate(elem);
+            }
+            else if (goog.dom.classes.has(elem, FilterExtended.CssClass.ROOT)) {
+                filter = new FilterExtended();
+                this.addChild(filter);
+                filter.decorate(elem);
+                this.filters_.push(filter);
             }
             else {
                 filter = new Filter();
@@ -306,12 +318,12 @@ goog.scope(function() {
         var res = false;
 
         for (var i = 0; i < this.filters_.length; i++) {
-            if (this.filters_[i].isCheckedInput()) {
+            if (this.filters_[i].isCheckedInputs()) {
                 res = true;
             }
         }
 
-        if (this.filterClasses_.isCheckedInput()) {
+        if (this.filterClasses_.isCheckedInputs()) {
             res = true;
         }
         return res;
@@ -326,6 +338,7 @@ goog.scope(function() {
     Filters.prototype.getData = function() {
         var form = jQuery(this.getElement());
         var data = form.serializeArray();
+
         return this.processingSerializeArray_(data);
     };
 
@@ -366,7 +379,7 @@ goog.scope(function() {
     Filters.prototype.onSubmit_ = function() {
         var data = this.getData();
         this.dispatchEvent({
-            'type': Filters.event.SUBMIT,
+            'type': Filters.Event.SUBMIT,
             'data': data
         });
     };
@@ -423,13 +436,11 @@ goog.scope(function() {
      * @private
      */
     Filters.prototype.processingSerializeArray_ = function(array) {
-        var result = {
-            'ege': [],
-            'gia': [],
-            'olimp': [],
-            'classes': [],
-            'schoolType': []
-        };
+        var result = {};
+
+        goog.object.forEach(Filters.Type, function(value, key, object) {
+            result[value] = [];
+        });
 
         for (var i = 0, item; i < array.length; i++) {
             item = array[i];
