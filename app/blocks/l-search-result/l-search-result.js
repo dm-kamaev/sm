@@ -109,6 +109,14 @@ sm.lSearchResult.SearchResult = function() {
      * @private
      */
     this.elements_ = {};
+
+
+    /**
+     * Backend answer on the current request or not (for Items Loaded)
+     * @type {bool}
+     * @private
+     */
+    this.isItemsLoaded_ = true;
 };
 goog.inherits(sm.lSearchResult.SearchResult, goog.ui.Component);
 
@@ -763,14 +771,28 @@ goog.scope(function() {
      * @private
      */
     SearchResult.prototype.onShowMoreSchoolListItems_ = function() {
-        this.updateSearchParams_({
-            'page': this.searchParams_.page + 1
-        });
+        if (this.isItemsLoaded_) {
+            this.updateSearchParams_({
+                'page': this.searchParams_.page + 1
+            });
 
-        this.instances_.schoolList.showLoader();
+            this.instances_.schoolList.showLoader();
 
-        this.send_(this.requestParams_.listDataUrl)
-            .then(this.addItems_.bind(this));
+            this.isItemsLoaded_ = false;
+            this.send_(this.requestParams_.listDataUrl)
+                .then(this.processingResponseItemsLoaded_.bind(this));
+        }
+    };
+
+
+    /**
+     * Process the response from the server (callback)
+     * @param {string} data
+     * @private
+     */
+    SearchResult.prototype.processingResponseItemsLoaded_ = function(data) {
+        this.addItems_(data);
+        this.isItemsLoaded_ = true;
     };
 
 
