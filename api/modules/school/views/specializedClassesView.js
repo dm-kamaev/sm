@@ -53,14 +53,15 @@ specializedClassesView.list = function(
 specializedClassesView.withTypeName = function(
     schoolSpecializedClasses, specializedClassTypes
 ) {
-    return schoolSpecializedClasses.map(specializedClass => {
-        var typeId = specializedClass[1],
-            type = specializedClassTypes.find(type => {
-                return type.id == typeId;
-            });
+    return schoolSpecializedClasses ?
+        schoolSpecializedClasses.map(specializedClass => {
+            var typeId = specializedClass[1],
+                type = specializedClassTypes.find(type => {
+                    return type.id == typeId;
+                });
 
-        return [specializedClass[0], type.name];
-    });
+            return [specializedClass[0], type.name];
+        }) : null;
 };
 
 

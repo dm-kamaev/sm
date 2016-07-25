@@ -6,7 +6,7 @@ var models = require('../../../../app/components/models').all;
 var services = require('../../../../app/components/services').all;
 var subjectView = require('../../study/views/subjectView');
 var searchView = require('../views/searchView');
-var SchoolSearch = require('../lib/search.js');
+var SchoolSearchQuery = require('../lib/SchoolSearch');
 
 var schoolSearchType = require('../enums/searchType');
 
@@ -83,7 +83,7 @@ exports.suggestSearch = async(function(searchString) {
 });
 
 exports.getSearchSql = function(searchParams, limit) {
-    return new SchoolSearch()
+    return new SchoolSearchQuery()
         .setLimit(limit)
         .setOffset(searchParams.page * limit || 0)
         .setSortType(searchParams.sortType)
