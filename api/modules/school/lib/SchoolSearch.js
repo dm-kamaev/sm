@@ -57,7 +57,8 @@ class SchoolSearchQuery extends SearchQuery {
     setSchoolType(schoolType) {
         this.addSchoolSearchData_(
             schoolType,
-            schoolSearchType.fields.SCHOOL_TYPE
+            schoolSearchType.fields.SCHOOL_TYPE,
+            true
         );
 
         return this;
@@ -214,6 +215,7 @@ class SchoolSearchQuery extends SearchQuery {
         this.baseQuery_
             .order('school.total_score', false)
             .order('school.score DESC NULLS LAST', null)
+            .order('school.id', true)
             .order('address_metro.distance');
     }
 
@@ -223,7 +225,8 @@ class SchoolSearchQuery extends SearchQuery {
     setInnerOrder_() {
         this.innerQuery_
             .order('school.total_score', false)
-            .order('school.score DESC NULLS LAST', null);
+            .order('school.score DESC NULLS LAST', null)
+            .order('school.id', true);
     }
 
     /**
@@ -294,9 +297,11 @@ class SchoolSearchQuery extends SearchQuery {
      * @private
      * @param {Array<number>} values
      * @param {string} type
+     * @param {boolean=} opt_overlap
      */
-    addSchoolSearchData_(values, type) {
+    addSchoolSearchData_(values, type, opt_overlap) {
         if (values && values.length) {
+            var operator = opt_overlap ? '&&' : '@>';
             this.schoolSearchParams_.or(
                 squel.expr()
                     .and(
@@ -304,7 +309,7 @@ class SchoolSearchQuery extends SearchQuery {
                         type
                     )
                     .and(
-                        'school_search_data.values @> ' +
+                        'school_search_data.values ' + operator + ' ' +
                         this.intArrayToSql_(values)
                     )
                     .toString()
