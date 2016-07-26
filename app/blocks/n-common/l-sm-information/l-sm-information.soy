@@ -1,0 +1,533 @@
+{namespace sm.lSmInformation.Template}
+
+
+/*
+ * @typedef {{
+ *     openGraph: ?{
+ *         url: ?string,
+ *         siteName: ?string,
+ *         title: ?string,
+ *         type: ?string,
+ *         description: ?string,
+ *         image: ?string,
+ *         fbClientId: ?number,
+ *         twitterCardType: ?string,
+ *         twitterSiteName: ?string,
+ *         imageWidth: ?string,
+ *         imageHeight: ?string
+ *     },
+ *     seo: {
+ *         metaTitle: string,
+ *         metaDescription: (string|undefined)
+ *     },
+ *     subheader: sm.bSmSubheader.Template.Params.Data,
+ *     user: ?{
+ *        firstName: (string|undefined),
+ *        lastName: (string|undefined),
+ *        isCommented: boolean
+ *     },
+ *     authSocialLinks: {
+ *        vk: ?string,
+ *        fb: ?string
+ *     },
+ *     entityData: {
+ *         id: number,
+ *         name: string,
+ *         type: string,
+ *         shortDescription: string,
+ *         informationBoard: sm.bSmInformationBoard.Template.Params.Data
+ *         detailedDescription: string,
+ *         features: {
+ *              title: string,
+ *              items: Array<string>
+ *         },
+ *         feedbackBoard: sm.bSmFeedbackBoard.Template.Params.Data
+ *         comments: Array<{sm.lSchool.bComment.Template.Params}>,
+ *         addresses: Array<
+ *            Array<number>
+ *         >,
+ *         score: Array<{
+ *             name: string,
+ *             value: number
+ *         }>,
+ *         totalScore: number,
+ *         reviewCount: number,
+ *         isFavorite: bool,
+ *     },
+ *     popularEntities: Array<{
+ *         id: number,
+ *         alias: ?string,
+ *         name: string,
+ *         description: ?string,
+ *         metro: ?Array<string>,
+ *         totalScore: ?number
+ *     }>
+ * }} sm.lSmInformation.Template.Params.Data
+ */
+
+
+/**
+ * Search page
+ * @param? params {{
+ *     data: sm.lSmInformation.Template.Params.Data,
+ *     config: ?sm.iLayout.Template.Params.Config
+ * }}
+ * @extends sm.iLayout.TemplateStendhal
+ * @constructor
+ * @doc
+ */
+{template .information autoescape="strict" kind="html"}
+    {call .document data="all" /}
+{/template}
+
+
+/**
+ * Content
+ * @param params {{
+ *     data: {
+ *         user: ?{
+ *            firstName: (string|undefined),
+ *            lastName: (string|undefined),
+ *            isCommented: boolean
+ *         },
+ *         authSocialLinks: {
+ *            vk: ?string,
+ *            fb: ?string
+ *         },
+ *         entityData: {
+ *             id: number,
+ *             name: string,
+ *             type: string,
+ *             shortDescription: string,
+ *             informationBoard: sm.bSmInformationBoard.Template.Params.Data
+ *             detailedDescription: string,
+ *             features: {
+ *                  title: string,
+ *                  items: Array<string>
+ *             },
+ *             feedbackBoard: sm.bSmFeedbackBoard.Template.Params.Data
+ *             comments: Array<{sm.lSchool.bComment.Template.Params}>,
+ *             addresses: Array<
+ *                Array<number>
+ *             >,
+ *             score: Array<{
+ *                 name: string,
+ *                 value: number
+ *             }>,
+ *             totalScore: number,
+ *             reviewCount: number,
+ *             isFavorite: bool,
+ *         },
+ *         popularEntities: Array<{
+ *             id: number,
+ *             alias: ?string,
+ *             name: string,
+ *             description: ?string,
+ *             metro: ?Array<string>,
+ *             totalScore: ?number
+ *         }>
+ *     }
+ * }}
+ */
+{template .bodyContent_ autoescape="strict" kind="html"}
+    {let $data: [
+        'id': $params.data.entityData?.id,
+        'name': $params.data.entityData?.name,
+        'isCommented': $params.data.user?.isCommented,
+        'isUserAuthorized': $params.data.user ? true : false,
+        'authSocialLinks': $params.data?.authSocialLinks
+    ]/}
+
+    <div class="{call .rootClass/}__body"
+        data-params="{call goog.json.serialize data="$data" /}">
+
+        {call .sectionData_ data="all" /}
+        {call .sectionComments_ data="all" /}
+        {call .sectionPopular_ data="all" /}
+    </div>
+
+    {call sm.bMap.Template.api}{/call}
+{/template}
+
+
+/**
+ * Section with a complete data entity
+ * @param params {{
+ *     data: {
+ *         entityData: {
+ *             id: number,
+ *             name: string,
+ *             type: string,
+ *             shortDescription: string,
+ *             informationBoard: sm.bSmInformationBoard.Template.Params.Data
+ *             detailedDescription: string,
+ *             features: {
+ *                  title: string,
+ *                  items: Array<string>
+ *             },
+ *             feedbackBoard: sm.bSmFeedbackBoard.Template.Params.Data
+ *             addresses: Array<
+ *                Array<number>
+ *             >,
+ *             score: Array<{
+ *                 name: string,
+ *                 value: number
+ *             }>,
+ *             totalScore: number,
+ *             reviewCount: number,
+ *         }
+ *     }
+ * }}
+ */
+{template .sectionData_}
+    <div class="{call .rootClass/}__section {call .rootClass/}__section_data">
+        {call .title_ data="all" /}
+        {call .informationBoard_ data="all" /}
+        {call .details_ data="all" /}
+        {call .location_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Content
+ * @param params {{
+ *     data: {
+ *         user: ?{
+ *            isCommented: boolean
+ *         },
+ *         entityData: {
+ *             comments: Array<{sm.lSchool.bComment.Template.Params}>,
+ *         }
+ *     }
+ * }}
+ */
+{template .sectionComments_}
+    <div class="{call .rootClass/}__section{sp}
+                {call .rootClass/}__section_comments">
+        {call sm.lSchool.bComments.Template.base}
+            {param params: [
+                'comments': $params.data.comments,
+                'isCommented': $params.data?.user?.isCommented
+            ] /}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Content
+ * @param params {{
+ *     data: {
+ *         popularEntities: Array<{
+ *             id: number,
+ *             alias: ?string,
+ *             name: string,
+ *             description: ?string,
+ *             metro: ?Array<string>,
+ *             totalScore: ?number
+ *         }>
+ *     }
+ * }}
+ */
+{template .sectionPopular_}
+    <div class="{call .rootClass/}__section{sp}
+                {call .rootClass/}__section_popular">
+        {call cl.iUtils.Utils.stringify}
+            {param json: $params.data.popularEntities /}
+        {/call}
+
+        // {call sm.bPopularSchools.Template.base}
+        //     {param params: [
+        //         'popularSchools': $params.data.popularSchools,
+        //         'config': [
+        //             'popularSchool': [
+        //                 'customClasses': 'l-school__popular'
+        //             ],
+        //             'analyticsAction': 'school click'
+        //         ]
+        //     ]/}
+        // {/call}
+    </div>
+{/template}
+
+
+/**
+ * Title entity
+ * @param params {{
+ *     data: {
+ *         entityData: {
+ *             name: string,
+ *             shortDescription: string,
+ *             score: Array<{
+ *                 name: string,
+ *                 value: number
+ *             }>,
+ *             totalScore: number,
+ *             reviewCount: number,
+ *         }
+ *     }
+ * }}
+ */
+{template .title_}
+    <div class="{call .rootClass/}__title">
+        {call .score_ data="all" /}
+        {call .titleText_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Section with a complete data entity
+ * @param params {{
+ *     data: {
+ *         entityData: {
+ *             score: Array<{
+ *                 name: string,
+ *                 value: number
+ *             }>,
+ *             totalScore: number,
+ *             reviewCount: number,
+ *         }
+ *     }
+ * }}
+ */
+{template .score_}
+    <div class="{call .rootClass/}__score">
+        {call sm.bScore.Template.base}
+             {param params: [
+                'reviewCount': $params.data.entityData?.reviewCount,
+                'score': $params.data.entityData?.score,
+                'totalScore': $params.data.entityData.totalScore
+             ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Title entity
+ * @param params {{
+ *     data: {
+ *         entityData: {
+ *             name: string,
+ *             shortDescription: string
+ *         }
+ *     }
+ * }}
+ */
+{template .titleText_}
+    <div class="{call .rootClass/}__entity-name">
+        {$params.data.entityData.name}
+    </div>
+
+    <div class="{call .rootClass/}__short-description">
+        {$params.data.entityData.shortDescription}
+    </div>
+{/template}
+
+
+/**
+ * Section with a complete data entity
+ * @param params {{
+ *     data: {
+ *         entityData: {
+ *             informationBoard: sm.bSmInformationBoard.Template.Params.Data
+ *         }
+ *     }
+ * }}
+ */
+{template .informationBoard_}
+    <div class="{call .rootClass/}__information-board">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': $params.config.modifier,
+                'type': 'smInformationBoard',
+                'renderParams': [
+                    'data': $params.data.entityData.informationBoard
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Section with a complete data entity
+ * @param params {{
+ *     data: {
+ *         user: ?{
+ *            isCommented: boolean
+ *         },
+ *         entityData: {
+ *             detailedDescription: string,
+ *             features: {
+ *                  title: string,
+ *                  items: Array<string>
+ *             },
+ *             feedbackBoard: sm.bSmFeedbackBoard.Template.Params.Data
+ *         }
+ *     }
+ * }}
+ */
+{template .details_}
+    <div class="{call .rootClass/}__details">
+        {call .detailedDescription_ data="all" /}
+        {call .features_ data="all" /}
+        {call .feedbackBoard_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Detailed description
+ * @param params {{
+ *     data: {
+ *         entityData: {
+ *             detailedDescription: string
+ *         }
+ *     }
+ * }}
+ */
+{template .detailedDescription_}
+    <div class="{call .rootClass/}__detailed-description">
+        {$params.data.entityData.detailedDescription}
+    </div>
+{/template}
+
+
+/**
+ * Features
+ * @param params {{
+ *     data: {
+ *         entityData: {
+ *             features: {
+ *                  title: string,
+ *                  items: Array<string>
+ *             }
+ *         }
+ *     }
+ * }}
+ */
+{template .features_}
+    <div class="{call .rootClass/}__features">
+        {call sm.lSchool.bDataBlock.TemplateFeatures.base}
+            {param params: [
+                'header': $params.data.entityData.features.title,
+                'content': $params.data.entityData.features.items
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Features
+ * @param params {{
+ *     data: {
+ *         entityData: {
+ *             feedbackBoard: sm.bSmFeedbackBoard.Template.Params.Data
+ *         }
+ *     }
+ * }}
+ */
+{template .feedbackBoard_}
+    <div class="{call .rootClass/}-feedback-board">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': $params.config.modifier,
+                'type': 'smFeedbackBoard',
+                'renderParams': [
+                    'data': $params.data.entityData.feedbackBoard
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * location
+ * @param params {{
+ *     data: {
+ *         entityData: {
+ *             id: number,
+ *             name: string,
+ *             addresses: Array<
+ *                Array<number>
+ *             >,
+ *             totalScore: number
+ *         }
+ *     }
+ * }}
+ */
+{template .location_}
+    <div class="{call .rootClass/}__location">
+        {call .map_ data="all" /}
+        {call .descriptionLocation_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * map
+ * @param params {{
+ *     data: {
+ *         entityData: {
+ *             id: number,
+ *             name: string,
+ *             addresses: Array<
+ *                Array<number>
+ *             >,
+ *             totalScore: number
+ *         }
+ *     }
+ * }}
+ */
+{template .map_}
+    <div class="{call .rootClass/}__map">
+        {call sm.bMap.Template.map}
+            {param params: [
+                'data': [
+                    'entity': [[
+                        'id': $params.data.entityData.id,
+                        'addresses': $params.data.entityData.addresses,
+                        'name': $params.data.entityData.name,
+                        'totalScore': $params.data.entityData.totalScore
+                    ]]
+                ],
+                'config': [
+                    'enableScrollZoom': true
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * description Location
+ * @param params {{
+ *     data: {
+ *         entityData: {
+ *             addresses: Array<
+ *                Array<number>
+ *             >,
+ *         }
+ *     }
+ * }}
+ */
+{template .descriptionLocation_}
+    <div class="{call .rootClass/}__description-location">
+        {$params.data.entityData.addresses}
+    </div>
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    l-sm-information
+{/template}

@@ -1,0 +1,75 @@
+{namespace sm.lSchoolHome.bArticleLink.Template}
+
+/**
+ * Constructor
+ * @param params [
+ *     articleUrl: ?string,
+ *     imgUrl: ?string,
+ *     title: ?string,
+ *     subtitle: ?string
+ * ]
+ * @extends cl.iControl.Template
+ * @constructor
+ */
+{template .articleLink kind="html"}
+    {call .init data="all"/}
+{/template}
+
+/**
+ * Body
+ * @param params [
+ *     articleUrl: ?string,
+ *     imgUrl: ?string,
+ *     title: ?string,
+ *     subtitle: ?string
+ * ]
+ * @override
+ */
+{template .body kind="html"}
+    <a class="{call .rootClass/}__link" href="{$params.articleUrl}" target="_blank">
+        {call .img_ data="all" /}
+        {call .title_ data="all" /}
+        {call .subtitle_ data="all" /}
+    </a>
+{/template}
+
+/**
+ * template img
+ * @param params [
+ *     imgUrl: ?string
+ * ]
+ */
+{template .img_ kind="html"}
+    <div class="{call .rootClass/}__image-container">
+        <div class="{call .rootClass/}__image-hover"></div>
+        <img class="{call .rootClass/}__image" src="{$params.imgUrl}">
+    </div>
+{/template}
+
+/**
+ * template title
+ * @param params [
+ *     title: ?string
+ * ]
+ */
+{template .title_ kind="html"}
+    <div class="{call .rootClass/}__title">{$params.title}</div>
+{/template}
+
+/**
+ * template subtitle
+ * @param params [
+ *     subtitle: ?string
+ * ]
+ */
+{template .subtitle_ kind="html"}
+    <div class="{call .rootClass/}__subtitle">{$params.subtitle}</div>
+{/template}
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass kind="html"}
+    b-article-link
+{/template}

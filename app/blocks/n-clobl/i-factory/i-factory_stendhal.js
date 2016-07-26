@@ -19,6 +19,12 @@ goog.require('sm.bSchoolListPaged.SchoolListPaged');
 goog.require('sm.bSchoolListPaged.View');
 goog.require('sm.bSearchPanel.SearchPanel');
 goog.require('sm.bSearchPanel.View');
+goog.require('sm.bSmFeedbackBoard.SmFeedbackBoard');
+goog.require('sm.bSmFeedbackBoard.View');
+goog.require('sm.bSmInformationBoard.SmInformationBoard');
+goog.require('sm.bSmInformationBoard.View');
+goog.require('sm.bSmSubheader.SmSubheader');
+goog.require('sm.bSmSubheader.View');
 goog.require('sm.gAuthSocial.ViewStendhal');
 goog.require('sm.gDropdown.DropdownSelect');
 goog.require('sm.gDropdown.DropdownSelectView');
@@ -119,6 +125,18 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('filter-search', {
             control: sm.lSearchResult.bFilterSearch.FilterSearch,
             view: sm.lSearchResult.bFilterSearch.View
+        })
+        .setControlListItem('smSubheader', {
+            control: sm.bSmSubheader.SmSubheader,
+            view: sm.bSmSubheader.View
+        })
+        .setControlListItem('smInformationBoard', {
+            control: sm.bSmInformationBoard.SmInformationBoard,
+            view: sm.bSmInformationBoard.View
+        })
+        .setControlListItem('smFeedbackBoard', {
+            control: sm.bSmFeedbackBoard.SmFeedbackBoard,
+            view: sm.bSmFeedbackBoard.View
         });
 };
 goog.inherits(sm.iFactory.FactoryStendhal, cl.iFactory.Factory);

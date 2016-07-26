@@ -11,6 +11,10 @@ goog.require('sm.bPopularSchools.Template');
 goog.require('sm.bSchoolCatalog.Template');
 goog.require('sm.bSchoolListPaged.Template');
 goog.require('sm.bSearchPanel.Template');
+goog.require('sm.bSmFeedbackBoard.Template');
+goog.require('sm.bSmFooter.Template');
+goog.require('sm.bSmInformationBoard.Template');
+goog.require('sm.bSmSubheader.Template');
 goog.require('sm.gAuthSocial.TemplateStendhal');
 goog.require('sm.gAuthSocialModal.TemplateStendhal');
 goog.require('sm.gButton.TemplateSocialStendhal');
@@ -26,8 +30,8 @@ goog.require('sm.gTab.TemplateStendhal');
 goog.require('sm.gTextarea.TemplateStendhal');
 goog.require('sm.lSchool.bDate.Template');
 goog.require('sm.lSchool.bFoldList.Template');
-goog.require('sm.lSearch.bArticleLink.Template');
-goog.require('sm.lSearch.bArticleLinks.Template');
+goog.require('sm.lSchoolHome.bArticleLink.Template');
+goog.require('sm.lSchoolHome.bArticleLinks.Template');
 goog.require('sm.lSearchResult.bFilterSearch.Template');
 
 
@@ -113,11 +117,11 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         )
         .setTemplateListItem(
             'article-links',
-            sm.lSearch.bArticleLinks.Template.articleLinks
+            sm.lSchoolHome.bArticleLinks.Template.articleLinks
         )
         .setTemplateListItem(
             'article-link',
-            sm.lSearch.bArticleLink.Template.articleLink
+            sm.lSchoolHome.bArticleLink.Template.articleLink
         )
         .setTemplateListItem(
             'date',
@@ -146,6 +150,22 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'filter-search',
             sm.lSearchResult.bFilterSearch.Template.filterSearch
+        )
+        .setTemplateListItem(
+            'smFooter',
+            sm.bSmFooter.Template.footer
+        )
+        .setTemplateListItem(
+            'smSubheader',
+            sm.bSmSubheader.Template.subheader
+        )
+        .setTemplateListItem(
+            'smInformationBoard',
+            sm.bSmInformationBoard.Template.informationBoard
+        )
+        .setTemplateListItem(
+            'smFeedbackBoard',
+            sm.bSmFeedbackBoard.Template.feedbackBoard
         );
 };
 goog.inherits(sm.iFactory.TemplateFactoryStendhal, cl.iFactory.TemplateFactory);

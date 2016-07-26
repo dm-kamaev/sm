@@ -1,0 +1,536 @@
+{namespace sm.lSearchResult.Template}
+
+
+/**
+ * Schools result list
+ * @param? params {{
+ *     data: {
+ *         schools: Array<{
+ *             id: number,
+ *             alias: string,
+ *             name: {
+ *                 light: string,
+ *                 bold: string
+ *             },
+ *             score: {sm.bScore.TemplateMinimized.Params}
+ *             description: string,
+ *             ratings: string[],
+ *             metroStations: string[],
+ *             area: [],
+ *             isFavorite: boolean
+ *         }>,
+ *         filters: {sm.lSearchResult.bFilters.Template.Params},
+ *         user: ?{
+ *            firstName: (string|undefined),
+ *            lastName: (string|undefined)
+ *         },
+ *         favorites: sm.bSchoolListPaged.Template.Params.Data,
+ *         authSocialLinks: {
+ *            vk: ?string,
+ *            fb: ?string
+ *         },
+ *         seo: ?{
+ *             metaTitle: (string|undefined),
+ *             metaDescription: (string|undefined),
+ *             title: (string|undefined),
+ *             description: (string|undefined),
+ *             textLeft: (Array<string>|undefined),
+ *             textRight: (Array<string>|undefined)
+ *         }
+ *     },
+ *     searchText: string,
+ *     countResults: number,
+ *     searchSettings: {
+ *         url: string,
+ *         method: string,
+ *         searchParams: {
+ *             name: ?string,
+ *             metroId: ?number,
+ *             areaId: ?number,
+ *             schoolType: ?Array.<string>,
+ *             classes: ?Array.<number>,
+ *             ege: ?Array.<string>,
+ *             gia: ?Array.<string>,
+ *             olimp: ?Array.<string>,
+ *             sortType: ?number,
+ *             page: ?number
+ *         }
+ *     },
+ *     map: {
+ *         schools: [{
+ *             id: number,
+ *             name: string,
+ *             description: string,
+ *             alias: string,
+ *             totalScore: number,
+ *             addresses: [{
+ *                 lat: number,
+ *                 lng: number,
+ *                 name: string,
+ *                 stages: list<string>
+ *             }]
+ *          }],
+ *         position: {
+ *             center: Array.<string>,
+ *             type: ?string
+ *         },
+ *     },
+ *     config: {
+ *         staticVersion: ?string,
+ *         analyticsId: ?string,
+ *         yandexMetrikaId: ?number,
+ *         domain: ?string,
+ *         fbClientId: ?number
+ *     }
+ * }}
+ */
+{template .list autoescape="strict" kind="html"}
+    {let $content kind="html"}
+        {call .content_ data="all" /}
+    {/let}
+
+    {let $description kind="html"}
+        {call .description_ data="all" /}
+    {/let}
+
+    {let $title kind="html"}
+        {call .title_ data="all" /}
+    {/let}
+
+    {call sm.iLayout.Template.layout}
+        {param params: [
+            'data': [
+                'title': $title,
+                'content': $content,
+                'description': $description,
+                'header': [
+                    'url': '/',
+                    'bottomLine': true,
+                    'user': $params.data?.user,
+                    'favorites': $params?.data?.favorites
+                ],
+                'landingScript': '/l-search-result.js',
+                'openGraph': [
+                    'title': 'Школы «Мела»',
+                    'description': 'Найдите в Москве школу, ' +
+                        'которая подойдёт вашему ребёнку',
+                    'image': $params?.config?.domain +
+                        '/images/n-school/i-layout/schools-share.png',
+                    'fbClientId': $params?.config?.fbClientId
+                ]
+            ],
+            'config': [
+                'modifier': 'stendhal',
+                'page': 'search-result',
+                'staticVersion': $params.config?.staticVersion,
+                'year':  $params.config?.year,
+                'analyticsId': $params.config?.analyticsId,
+                'yandexMetrikaId': $params.config?.yandexMetrikaId,
+                'csrf': $params.config?.csrf
+            ]
+        ] /}
+    {/call}
+{/template}
+
+/**
+ * @param params {{
+ *     data: {
+ *         (seo: {
+ *             metaDescription: (string|undefined)
+ *         }|undefined)
+ *     }
+ * }}
+ */
+{template .description_ kind="html"}
+    {if $params.data?.seo and $params.data?.seo?.metaDescription}
+        {$params.data?.seo?.metaDescription}
+    {else}
+        Интерактивная карта Москвы с полной информацией
+        о всех образовательных учреждениях города Москвы.
+        Список школ, лицеев и гимназий. Отзывы родителей и выпускников.
+    {/if}
+{/template}
+
+
+/**
+ * @param params {{
+ *     data: {
+ *         (seo: {
+ *             metaTitle: (string|undefined)
+ *         }|undefined)
+ *     }
+ * }}
+ */
+{template .title_ kind="html"}
+    {if $params.data?.seo and $params.data?.seo?.metaTitle}
+            {$params.data?.seo?.metaTitle}
+    {else}
+       Школы Москвы на карте.
+       Список школ Москвы с возможностью выбора по параметрам.
+       Школы Мела.
+    {/if}
+{/template}
+
+
+/**
+ * @param? params {?}
+ * @override
+ */
+{template .content_ autoescape="strict" kind="html"}
+    {let $data: [
+        'searchSettings': $params.searchSettings,
+        'params': [
+            'isUserAuthorized': $params.data?.user ? true : false,
+            'authSocialLinks': $params.data?.authSocialLinks
+        ]
+    ] /}
+
+    <div class="l-search-result"
+        data-params="{call goog.json.serialize data="$data" /}">
+         {call .innerContent_ data="all" /}
+    </div>
+
+    {call sm.bMap.Template.api}{/call}
+{/template}
+
+
+/**
+ * @param? params {?}
+ */
+{template .innerContent_ autoescape="strict" kind="html"}
+    <div class="l-search-result__body">
+        {call .map}
+            {param params: $params?.map /}
+        {/call}
+
+        <div class="l-search-result__content">
+            {call .listHeader_ data="all"}
+                {param clone: true /}
+            {/call}
+
+            {call .leftMenu_ data="all" /}
+
+            <div class="l-search-result__results-section">
+                {call .listHeader_ data="all" /}
+                {call .listBody_ data="all" /}
+            </div>
+        </div>
+    </div>
+
+    {call .footerSeo_ data="all" /}
+{/template}
+
+
+/**
+ * Container for map
+ * @param? params [
+ *     schoolGroups: list<[
+ *         type: ?string,
+ *         schools: list<[
+ *             id: number,
+ *             name: string,
+ *             description: string,
+ *             alias: string,
+ *             totalScore: number,
+ *             addresses: list<[
+ *                 lat: number,
+ *                 lng: number,
+ *                 name: string,
+ *                 stages: list<string>
+ *             ]>
+ *         ]>
+ *     ]>,
+ *     mapCenter: ?list<number>
+ * ]
+ */
+{template .map autoescape="strict" kind="html"}
+    <div class="l-search-result__map
+                {if length($params?.schools) == 0}
+                    {sp}i-utils__hidden
+                {/if}">
+        {call sm.bMap.Template.map}
+            {param params: [
+                'data': $params,
+                'config': [
+                    'enableScrollZoom': false
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Body for list of schools
+ * @param? params {
+ *     data: {
+ *         schools: {?}
+ *     },
+ *     countResults: ?number
+ * }
+ */
+{template .listBody_ private="true"}
+    <div class="l-search-result__list-body
+        {$params.countResults ? '' : ' i-utils__hidden'}
+    ">
+        {call sm.lSearchResult.bSchoolList.Template.base}
+            {param params: [
+                'schools': $params.data.schools
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Header for list of schools
+ * @param? params {
+ *     countResults: ?number,
+ *     searchText: ?string
+ * }
+ * @param? clone {boolean}
+ */
+{template .listHeader_ private="true"}
+    <div class="l-search-result__list-header{sp}
+                {$clone ? 'l-search-result__list-header_clone' : ''}">
+        {call .listHeaderText data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Text of header for list of schools
+ * @param? params {
+ *     data: {
+ *         seo: {
+ *             title: (string|undefined),
+ *             description: (string|undefined)
+ *         }
+ *     },
+ *     countResults: ?number,
+ *     searchText: ?string
+ * }
+ */
+{template .listHeaderText}
+    <span class="l-search-result__list-header-text">
+            {if $params.data?.seo and $params.data?.seo?.title}
+                {call .headerText_ data="all" /}
+                {if $params.data.seo.description}
+                    {call .headerDescription_ data="all" /}
+                {/if}
+            {else}
+                {call .generateHeaderText_ data="all" /}
+            {/if}
+        </span>
+{/template}
+
+
+/**
+ * Text of header for list of schools
+ * @param? params {
+ *     data: {
+ *         seo: {
+ *             title: (string|undefined),
+ *             description: (string|undefined)
+ *         }
+ *     }
+ * }
+ */
+{template .headerText_ private="true"}
+    <h1 class="l-search-result__list-header-text
+                l-search-result__list-header-text_strong
+                {$params.data.seo.description ?
+                    ' l-search-result__list-header-text_title' :
+                    ''}
+                ">
+        {$params.data.seo.title}
+    </h1>
+{/template}
+
+
+/**
+ * Description of header for list of schools
+ * @param? params {
+ *     data: {
+ *         seo: {
+ *             description: ?string
+ *         }
+ *     }
+ * }
+ */
+{template .headerDescription_ private="true"}
+    <div class="l-search-result__list-header-text
+                l-search-result__list-header-text_description">
+        {$params.data.seo?.description}
+    </div>
+{/template}
+
+
+/**
+ * Generates header text for school list
+ * @param? params {
+ *     countResults: number
+ * }
+ */
+{template .generateHeaderText_ private="true"}
+    {if length($params.searchText)}
+        По запросу{sp}
+        <span class="l-search-result__list-header-text
+                     l-search-result__list-header-text_strong">
+            «{$params.searchText}»
+        </span>{sp}
+    {else}
+        По вашему запросу{sp}
+    {/if}
+
+    мы{sp}
+
+    <span class="l-search-result__list-header-text
+                 l-search-result__list-header-text_change">
+        {if $params.countResults == 0}
+            не нашли ничего.
+        {else}
+            нашли <span class="l-search-result__list-header-text
+                               l-search-result__list-header-text_strong
+                               l-search-result__list-header-text_amount">
+                {$params.countResults}{sp}
+
+                {call cl.iUtils.Utils.declensionPrint}
+                    {param params: [
+                        'num': $params.countResults,
+                        'nom': ' школу',
+                        'gen': ' школы',
+                        'plu': ' школ'
+                    ]/}
+                {/call}
+            </span>
+        {/if}
+    </span>
+{/template}
+
+
+/**
+ * Left menu template
+ * @param? params {
+ *     searchText: string
+ * }
+ */
+{template .leftMenu_ autoescape="strict" kind="html" private="true"}
+    <div class="l-search-result__left-menu">
+        <div class="l-search-result__search">
+            {call .search_}
+                {param params: [
+                     'searchText': $params?.searchText,
+                     'redirect': false
+                ]/}
+            {/call}
+        </div>
+        {call .filters_ data="all"/}
+    </div>
+{/template}
+
+
+/**
+ * Filter template
+ * @param? params {
+ *     data: {
+ *         filters: {
+ *             filters: list<{
+ *                 data: {
+ *                     filters: ?list<{
+ *                         label: ?string,
+ *                         value: ?string
+ *                     }>,
+ *                     header: {
+ *                         title: ?string,
+ *                         help: ?string
+ *                     },
+ *                     name: ?string
+ *                 },
+ *                 config:{
+ *                     cannotBeHidden: ?bool
+ *                 }
+ *             }>,
+ *             url: ?string
+ *         }
+ *     }
+ * }
+ */
+{template .filters_ autoescape="strict" kind="html" private="true"}
+    <div class="l-search-result__filters">
+        {call sm.lSearchResult.bFilters.Template.base}
+            {param params: $params?.data?.filters/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Search
+ * @param params {{
+ *     searchText: ?string,
+ *     redirect: ?boolean
+ * }}
+ */
+{template .search_ private="true" autoescape="strict" kind="html"}
+    {call sm.bSearch.Template.base}
+        {param params: [
+            'placeholder': 'Номер школы, метро, район',
+            'text': $params?.searchText,
+            'theme': 'min',
+            'redirect': $params?.searchRedirect,
+            'inputSize': 'min',
+            'config': [
+                'height': 's'
+            ]
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * Footer for text SEO
+ * @param? params {
+ *     data: {
+ *         seo: {
+ *             textLeft: Array<string>,
+ *             textRight: Array<string>
+ *         }
+ *     }
+ * }
+ */
+{template .footerSeo_ private="true"}
+    {if $params.data?.seo and
+        ($params.data?.seo.textLeft or $params.data?.seo.textRight)}
+        <div class="l-search-result__footer-seo">
+            <div class="l-search-result__text-seo
+                        l-search-result__text-seo_left">
+                {call .textSeo_}
+                    {param text: $params.data.seo.textLeft /}
+                {/call}
+            </div>
+
+            <div class="l-search-result__text-seo
+                        l-search-result__text-seo_right">
+                {call .textSeo_}
+                    {param text: $params.data.seo.textRight /}
+                {/call}
+            </div>
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Text for SEO
+ * @param? text {Array<string>}
+ */
+{template .textSeo_ private="true"}
+    {if $text}
+        {for $i in range(length($text))}
+            <div class="l-search-result__paragraph-seo">
+                {$text[$i]}
+            </div>
+        {/for}
+    {/if}
+{/template}
