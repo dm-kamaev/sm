@@ -25,6 +25,8 @@ goog.require('sm.bSmInformationBoard.SmInformationBoard');
 goog.require('sm.bSmInformationBoard.View');
 goog.require('sm.bSmItem.SmItem');
 goog.require('sm.bSmItem.View');
+goog.require('sm.bSmScore.SmScore');
+goog.require('sm.bSmScore.View');
 goog.require('sm.bSmSubheader.SmSubheader');
 goog.require('sm.bSmSubheader.View');
 goog.require('sm.gAuthSocial.ViewStendhal');
@@ -127,8 +129,10 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('filter-search', {
             control: sm.lSearchResult.bFilterSearch.FilterSearch,
             view: sm.lSearchResult.bFilterSearch.View
-        })
-        .setControlListItem('smSubheader', {
+        });
+
+    /** Common blocks and their heirs **/
+    this.setControlListItem('smSubheader', {
             control: sm.bSmSubheader.SmSubheader,
             view: sm.bSmSubheader.View
         })
@@ -139,6 +143,10 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('smFeedbackBoard', {
             control: sm.bSmFeedbackBoard.SmFeedbackBoard,
             view: sm.bSmFeedbackBoard.View
+        })
+        .setControlListItem('smScore', {
+            control: sm.bSmScore.SmScore,
+            view: sm.bSmScore.View
         })
         .setControlListItem('smItem', {
             control: sm.bSmItem.SmItem,

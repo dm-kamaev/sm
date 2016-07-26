@@ -15,6 +15,7 @@ goog.require('sm.bSmFeedbackBoard.Template');
 goog.require('sm.bSmFooter.Template');
 goog.require('sm.bSmInformationBoard.Template');
 goog.require('sm.bSmItem.Template');
+goog.require('sm.bSmScore.Template');
 goog.require('sm.bSmSubheader.Template');
 goog.require('sm.gAuthSocial.TemplateStendhal');
 goog.require('sm.gAuthSocialModal.TemplateStendhal');
@@ -151,8 +152,10 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'filter-search',
             sm.lSearchResult.bFilterSearch.Template.filterSearch
-        )
-        .setTemplateListItem(
+        );
+
+    /* Global blocks an their heirs */
+    this.setTemplateListItem(
             'smFooter',
             sm.bSmFooter.Template.footer
         )
@@ -171,6 +174,10 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'smItem',
             sm.bSmItem.Template.item
+        )
+        .setTemplateListItem(
+            'smScore',
+            sm.bSmScore.Template.score
         );
 };
 goog.inherits(sm.iFactory.TemplateFactoryStendhal, cl.iFactory.TemplateFactory);
