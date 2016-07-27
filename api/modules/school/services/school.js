@@ -7,7 +7,6 @@ var lodash = require('lodash');
 
 var models = require('../../../../app/components/models').all;
 var services = require('../../../../app/components/services').all;
-var searchTypeEnum = require('../enums/searchType');
 var entityType = require('../../entity/enums/entityType');
 
 var sequelize = require('../../../../app/components/db');
@@ -232,25 +231,6 @@ service.getPopularSchools = async(function(opt_amount) {
 
     return popularSchools;
 });
-
-
-/**
- * Return array of urls for school with given Ids
- * @param {Array<number>} schoolId
- * @return {string}
- */
-// service.getUrlsByIds = async(function(schoolIds) {
-//     var schools = await(models.School.findAll({
-//         where: {
-//             id: {
-//                 $in: schoolIds
-//             }
-//         },
-//         attributes: ['id', 'url']
-//     }));
-//
-//     return schools;
-// });
 
 
 /**
@@ -614,29 +594,38 @@ var isFeedbackLack = function(scoreCount, reviewCount) {
 };
 
 /**
+ * Get all data for generate search filters
+ * @param {{
+ *     activitySphere: Array<number>,
+ *     specializedClassType: Array<number>
+ * }} searchParams
+ * @return {{
+ *      subjects: Array<models.Subject>,
+ *      schoolTypes: Array<models.SchoolTypeFilter>,
+ *      egeSubjects: Array<models.EgeResult>,
+ *      giaSubjects: Array<models.GiaResult>,
+ *      olympiadSubjects: Array<models.OlimpResult>,
+ *      activitySpheres: Array<models.AdditionalEducationSphere>,
+ *      specializedClassesTypes: Array<models.SpecializedClassType>
+ * }}
  * @public
  */
-service.searchFilters = async(function() {
-    var typeFilters = service.typeFilters();
-    var egeFilters = services.subject.egeFilters();
-    var giaFilters = services.subject.giaFilters();
-    var olympFilters = services.subject.olympFilters();
-    return await(typeFilters, egeFilters, giaFilters, olympFilters);
-});
-
-service.typeFilters = async(function() {
-    var schoolTypeFilters = await(services.search.getTypeFilters());
-    var formattedFilters = schoolTypeFilters.map(filter => {
-        return {
-            label: filter.name,
-            value: filter.alias,
-            id: filter.id
-        };
-    });
-    return {
-        filter: searchTypeEnum.fields.SCHOOL_TYPE,
-        values: formattedFilters
+service.searchFiltersData = async(function(searchParams) {
+    var data = {
+        subjects: services.subject.getAll(),
+        schoolTypes: services.search.getTypeFilters(),
+        egeSubjects: services.egeResult.getUniqueSubjects(),
+        giaSubjects: services.giaResult.getUniqueSubjects(),
+        olympiadSubjects: services.olimpResult.getUniqueSubjects(),
+        activitySpheres: services.additionalEducation.getSpheresBySearchParams(
+            searchParams.activitySphere
+        ),
+        specializedClassesTypes:
+            services.specializedClasses.getTypesBySearchParams(
+                searchParams.specializedClassType
+            )
     };
+    return await(data);
 });
 
 

@@ -1,0 +1,103 @@
+{namespace sm.lSchool.bComments.Template autoescape="strict"}
+
+/**
+ * @typedef {Object} sm.lSchool.bComments.Template.Params
+ * @property Array.<{sm.lSchool.bComment.Template.Params}> comments
+ * @property {boolean} isCommented
+ */
+
+/**
+ * Comments template
+ * @param params {sm.lSchool.bComments.Template.Params}
+ */
+{template .base kind="html"}
+    <div id="comments" class="b-comments">
+        {if $params.comments and length($params.comments) > 0}
+            {call .comments_ data="all" /}
+        {else}
+            {call .placeholder_ data="all" /}
+        {/if}
+    </div>
+{/template}
+
+/**
+ * Comments block
+ * @param params {Array.<{sm.lSchool.bComment.Template.Params>}>}
+ */
+{template .comments_ autoescape="strict" kind="html"}
+    {call .header_ /}
+
+    <div class="b-comments__comments">
+        {foreach $comment in $params.comments}
+            {call sm.lSchool.bComment.Template.base}
+                {param params: $comment /}
+            {/call}
+        {/foreach}
+    </div>
+{/template}
+
+/**
+ * Content header
+ */
+{template .header_ autoescape="strict" kind="html"}
+    <div class="b-comments__header">
+        <h3 class="b-comments__header-text">
+            Комментарии пользователей
+        </h3>
+    </div>
+{/template}
+
+/**
+ * Comments placeholder
+ * @param params {{
+ *     isCommented: bool
+ * }}
+ */
+{template .placeholder_ kind="html" private="true"}
+    <div class="b-comments__placeholder">
+        {call .imgPlaceholder_}
+            {param isCommented: $params.isCommented /}
+        {/call}
+
+        {call .textPlaceholder_ /}
+
+        {if not $params.isCommented}
+            {call sm.bLink.Template.base}
+                {param params: [
+                    'data': [
+                        'name': 'Станьте первым!'
+                    ],
+                    'config': [
+                        'customClasses': 'b-comments__placeholder-link',
+                        'theme': 'attention',
+                        'font': 'default'
+                    ]
+                ]/}
+            {/call}
+        {/if}
+    </div>
+{/template}
+
+/**
+ * Img placeholder
+ * @param? isCommented [bool]
+ */
+{template .imgPlaceholder_ kind="html" private="true"}
+    <div class="b-comments__placeholder-img-container">
+        {if not $isCommented}
+            <div class="b-comments__placeholder-img-hover"></div>
+        {/if}
+
+        <img class="b-comments__placeholder-img"
+             src="/images/n-school/l-school/b-comments/comments_placeholder.svg">
+    </div>
+{/template}
+
+/**
+ * Text placeholder
+ */
+{template .textPlaceholder_ kind="html" private="true"}
+    <div class="b-comments__placeholder-text">
+        Никто пока не&nbsp;оставил отзыв об&nbsp;этой&nbsp;школе.{sp}
+    </div>
+{/template}

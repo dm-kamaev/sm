@@ -77,7 +77,7 @@ exports.list = async(function(req, res, next) {
                         limitResults: 10
                     }
                 ),
-                filters: services.school.searchFilters(),
+                filtersData: services.school.searchFiltersData(searchParams),
                 mapPosition: services.search.getMapPositionParams(searchParams),
                 authSocialLinks: services.auth.getAuthSocialUrl(),
                 favorites: {
@@ -101,7 +101,7 @@ exports.list = async(function(req, res, next) {
 
         var schoolsList = schoolView.list(schoolsWithFavoriteMark),
             map = schoolView.listMap(results.schools, results.mapPosition),
-            filters = searchView.filters(results.filters, searchParams),
+            filters = searchView.filters(results.filtersData, searchParams),
             favorites = schoolView.listCompact(results.favorites);
 
         var params = {
@@ -184,6 +184,8 @@ exports.view = async(function(req, res, next) {
                             schoolInstance.id,
                             entityType.SCHOOL
                         ),
+                        specializedClassTypes:
+                            services.specializedClasses.getAllTypes(),
                         authSocialLinks: services.auth.getAuthSocialUrl(),
                         popularSchools:
                             services.school.getRandomPopularSchools(6),
@@ -271,7 +273,7 @@ exports.search = async(function(req, res) {
     data.popularSchools =
         schoolView.joinAliases(data.popularSchools, schoolAliases);
 
-    var html = soy.render('sm.lSearch.Template.base', {
+    var html = soy.render('sm.lSchoolHome.Template.base', {
         params: {
             data: {
                 authSocialLinks: data.authSocialLinks,

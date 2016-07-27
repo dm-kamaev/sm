@@ -9,28 +9,64 @@ const searchType = require('../../../api/modules/school/enums/searchType');
 class GiaActualizer extends SearchDataActualizer {
     /**
      * @public
-     * @param {object} school
-     * @param {array<object>} citySubjects - subject instances
+     * @param {models.School} school
+     * @param {Array<models.Subject>} citySubjects - subject instances
      *     with avg results for Moscow
      */
     constructor(school, citySubjects) {
-        await(super(school, citySubjects)); // call parent constructor
+        super(school); // call parent constructor
+
+        /**
+         * Subject instances with avg results for Moscow
+         * @type {Array<models.Subject>}
+         * @private
+         */
         this.citySubjects_ = citySubjects;
-        this.resultSubjects_ = [];
+
+        /**
+         * Type of current search data
+         * @type {string}
+         * @private
+         */
         this.searchType_ = searchType.fields.GIA;
     }
 
 
     /**
+     * Get olympiads values for school search data
+     * @return {Array<number>}
+     * @override
+     * @protected
+     */
+    getValues() {
+        var giaResults = this.getResults_();
+        return this.getSubjects_(giaResults);
+    }
+
+
+    /**
+     * get gia results for school
+     * @return {Array<models.GiaResult>}
      * @private
+     */
+    getResults_() {
+        return await(this.school_.getGiaResults());
+    }
+
+    /**
      * get array of subjects IDs where school gia result > city avg result
      * it works, I promise
+     * @param {Array<models.GiaResult>} giaResults
+     * @return {Array<number>}
+     * @private
      */
-    getSubjects_() {
+    getSubjects_(giaResults) {
         // TODO: refactor or comment this
-        await(this.giaResults_.forEach(giaResult => {
+        var resultSubjects = [];
+        await(giaResults.forEach(giaResult => {
             var citySubject = this.citySubjects_.find(
-                subj => subj.id == giaResult.subject_id);
+                subj => subj.id == giaResult.subjectId);
+
             if (citySubject) {
                 var cityResult = citySubject.cityResult.find(
                     res => (
@@ -38,18 +74,12 @@ class GiaActualizer extends SearchDataActualizer {
                         res.type == this.searchType_
                     ));
                 if (cityResult && giaResult.result >= cityResult.result) {
-                    this.resultSubjects_.push(giaResult.subject_id);
+                    resultSubjects.push(giaResult.subjectId);
                 }
             }
         }));
-    }
 
-    /**
-     * @private
-     * get gia results for school
-     */
-    getResults_() {
-        this.giaResults_ = await(this.school_.getGiaResults());
+        return resultSubjects;
     }
 }
 

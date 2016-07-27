@@ -1,0 +1,262 @@
+{namespace sm.bSmInformationBoard.Template}
+
+
+/*
+ * @typedef {{
+ *     educationalInstitution: {
+ *         name: string,
+ *         description: ?string,
+ *         siteUrl: ?string,
+ *         score: Array<{
+ *             name: string,
+ *             value: number
+ *         }>,
+ *         totalScore: number,
+ *         reviewCount: number
+ *     },
+ *     address: {
+ *         text: string
+ *         metro: Array<string>
+ *     },
+ *     workTime: {
+ *         days: Array<string>
+ *         description: string,
+ *     }
+ * }} sm.bSmInformationBoard.Template.Params.Data
+ */
+
+
+ /**
+ * Information Board
+ * @param params {{
+ *     data: sm.bSmInformationBoard.Template.Params.Data
+ * }}
+ * @extends cl.iControl.Template
+ * @constructor
+ */
+{template .informationBoard autoescape="strict" kind="html"}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * Body
+ * @param params {{
+ *     data: sm.bSmInformationBoard.Template.Params.Data
+ * }}
+ * @override
+ */
+{template .body}
+    {call .institution_ data="all" /}
+    {call .address_ data="all" /}
+    {call .workTime_ data="all" /}
+{/template}
+
+
+/**
+ * Data educational institution
+ * @param params {{
+ *     data: {
+ *         educationalInstitution: {
+ *             name: string,
+ *             description: ?string,
+ *             siteUrl: ?string,
+ *             score: Array<{
+ *                 name: string,
+ *                 value: number
+ *             }>,
+ *             totalScore: number,
+ *             reviewCount: number
+ *         }
+ *     }
+ * }}
+ */
+{template .institution_}
+    <div class="{call .rootClass/}__section{sp}
+                {call .rootClass/}__section_institution">
+        {call .title_ data="all" /}
+        {call .content_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Address section entity
+ * @param params {{
+ *     data: {
+ *         address: {
+ *             text: string
+ *             metro: Array<string>
+ *         }
+ *     }
+ * }}
+ */
+{template .address_}
+    <div class="{call .rootClass/}__section{sp}
+                {call .rootClass/}__section_address">
+        {call .title_ data="all" /}
+        {call .content_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Working time section
+ * @param params {{
+ *     data: {
+ *         workTime: {
+ *             days: Array<string>
+ *             description: string,
+ *         }
+ *     }
+ * }}
+ */
+{template .workTime_}
+    <div class="{call .rootClass/}__section{sp}
+                {call .rootClass/}__section_time">
+        {call .title_ data="all" /}
+        {call .content_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Title for section board
+ * @param params {{
+ *     data: {
+ *         name: string,
+ *         score: Array<{
+ *             name: string,
+ *             value: number
+ *         }>,
+ *         totalScore: number,
+ *         reviewCount: number
+ *     }
+ * }}
+ */
+{template .title_}
+    {call .name_ data="all" /}
+    {call .score_ data="all" /}
+{/template}
+
+
+/**
+ * Data educational institution
+ * @param params {{
+ *     data: {
+ *         name: string
+ *     }
+ * }}
+ */
+{template .name_}
+    <div class="{call .rootClass/}__name">
+        {$params.data.name}
+    </div>
+{/template}
+
+
+/**
+ * Score title
+ * @param params {{
+ *     data: {
+ *         score: Array<{
+ *             name: string,
+ *             value: number
+ *         }>,
+ *         totalScore: number,
+ *         reviewCount: number
+ *     }
+ * }}
+ */
+{template .score_}
+    {if $params.data?.score or $params.data?.totalScore}
+        <div class="{call .rootClass/}__score">
+            {call sm.bScore.Template.base}
+                 {param params: [
+                    'reviewCount': $params.data?.reviewCount,
+                    'score': $params.data?.score,
+                    'totalScore': $params.data?.totalScore
+                 ]/}
+            {/call}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Content for section board
+ * @param params {?}
+ */
+{template .content_}
+    {if $params.data.type == 'address'}
+        {call .text_ data="all" /}
+        {call .location_ data="all" /}
+    {elseif $params.data.type == 'time'}
+        {call .calendar_ data="all" /}
+        {call .text_ data="all" /}
+    {else}
+        {call .text_ data="all" /}
+    {/if}
+{/template}
+
+
+/**
+ * Description educational institution
+ * @param params {{
+ *     data: {
+ *         text: string
+ *     }
+ * }}
+ */
+{template .text_}
+    <div class="{call .rootClass/}__text">
+        {$params.data.text}
+    </div>
+{/template}
+
+
+/**
+ * Description educational institution
+ * @param params {{
+ *     data: {
+ *         address: {
+ *             text: string
+ *             metro: Array<string>
+ *         }
+ *     }
+ * }}
+ */
+{template .location_}
+    <div class="{call .rootClass/}__location">
+        {$params.data.address.text}
+        {$params.data.address.metro}
+    </div>
+{/template}
+
+
+/**
+ * Description educational institution
+ * @param params {{
+ *     data: {
+ *         workTime: {
+ *             days: Array<string>
+ *             description: string,
+ *         }
+ *     }
+ * }}
+ */
+{template .calendar_}
+    <div class="{call .rootClass/}__calendar">
+        {$params.data.address.text.days}
+        {$params.data.address.text.description}
+    </div>
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-sm-information-board
+{/template}

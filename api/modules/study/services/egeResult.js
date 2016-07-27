@@ -2,6 +2,8 @@ var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var models = require('../../../../app/components/models').all;
 
+const Sequelize = require('sequelize');
+
 exports.name = 'egeResult';
 
 
@@ -101,4 +103,18 @@ exports.getById = async(function(egeId) {
 exports.delete = async(function(egeId) {
     var instance = await(exports.getById(egeId));
     await(instance.destroy());
+});
+
+/**
+ * Return all ege results with unique subject id's
+ * @return {Array<models.Egeresult>}
+ */
+exports.getUniqueSubjects = async(function() {
+    return await(models.EgeResult.findAll(
+        {
+            attributes: [
+                [Sequelize.literal('DISTINCT "subject_id"'), 'subjectId']
+            ]
+        }
+    ));
 });
