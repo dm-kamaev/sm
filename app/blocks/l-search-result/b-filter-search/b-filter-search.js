@@ -73,6 +73,7 @@ goog.scope(function() {
         Search = sm.bSearch.Search,
         Filter = sm.lSearchResult.bFilter.Filter,
         FilterLabels = sm.lSearchResult.bFilter.FilterLabels;
+        UIInstanceStorage = gorod.iUIInstanceStorage.UIInstanceStorage;
 
     var factoryManager = cl.iFactory.FactoryManager.getInstance();
 
@@ -117,6 +118,8 @@ goog.scope(function() {
         this.initFilterListeners_();
         this.initSelectedListeners_();
         this.initButtonListeners_();
+
+        this.suggest_.focus();
     };
 
 
@@ -127,6 +130,16 @@ goog.scope(function() {
         goog.base(this, 'exitDocument');
 
         this.destroySuggestListeners_();
+    };
+
+
+    /**
+     * Clean up the Component.
+     */
+    FilterSearch.prototype.disposeInternal = function() {
+        this.destroySuggest_();
+
+        goog.base(this, 'disposeInternal');
     };
 
 
@@ -392,6 +405,25 @@ goog.scope(function() {
             'button',
             this.getView().getDom().button,
             this
+        );
+    };
+
+
+    /**
+     * Destroy Suggest
+     * @private
+     */
+    FilterSearch.prototype.destroySuggest_ = function() {
+        UIInstanceStorage.getInstance().removeInstance(
+            this.getView().getDom().suggest
+        );
+
+        UIInstanceStorage.getInstance().removeInstance(
+            this.getView().getDom().suggestInput
+        );
+
+        UIInstanceStorage.getInstance().removeInstance(
+            this.getView().getDom().suggestList
         );
     };
 });  // goog.scope
