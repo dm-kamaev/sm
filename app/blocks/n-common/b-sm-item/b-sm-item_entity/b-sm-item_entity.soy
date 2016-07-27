@@ -1,0 +1,142 @@
+{namespace sm.bSmItem.TemplateEntity}
+
+
+/**
+ * @typedef {{
+ *     id: ?number,
+ *     type: string,
+ *     name: {
+ *         light: string,
+ *         bold: ?string
+ *     },
+ *     alias: ?string,
+ *     score: ?sm.bSmScore.Template.Params.Data,
+ *     description: string,
+ *     metro: ?Array<{
+ *         id: number,
+ *         name: string
+ *     }>,
+ *     area: ?Array<{
+ *         id: number,
+ *         name: string
+ *     }>,
+ *     isFavorite: ?boolean,
+ *     countDepartment: ?number,
+ *     position: (number|undefined)
+ * }} sm.bSmItem.TemplateEntity.Params.Data
+ */
+
+
+ /**
+ * Constructor
+ * @param params {{
+ *     data: sm.bSmItem.TemplateEntity.Params.Data,
+ *     config: ?sm.bSmItem.Template.Params.Config
+ * }}
+ * @extends sm.bSmItem.Template
+ * @constructor
+ */
+{template .item}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * Details
+ * @param params {{
+ *     data: {
+ *         metro: ?Array<{
+ *             id: number,
+ *             name: string
+ *         }>,
+ *         area: ?Array<{
+ *             id: number,
+ *             name: string
+ *         }>,
+ *         isFavorite: ?boolean,
+ *         countDepartment: ?number,
+ *     },
+ *     config: {
+ *         stylizationModifier: (string|undefined)
+ *     }
+ * }}
+ * @override
+ */
+{template .sectionDetails}
+    <div class="{call .rootClass/}__section{sp}
+                {call .rootClass/}__section_details">
+        {call .location data="all" /}
+        {call .favoriteLink_ data="all" /}
+        {call .countDepartment data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Favorite Link
+ * @param params {{
+ *     data: {
+ *         isFavorite: ?boolean
+ *     },
+ *     config: {
+ *         stylizationModifier: (string|undefined)
+ *     }
+ * }}
+ */
+{template .favoriteLink_ kind="html" private="true"}
+    <div class="{call .rootClass/}__badge {call .rootClass/}__badge_favorite">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': $params?.config?.stylizationModifier ?: 'stendhal',
+                'type': 'favorite-link',
+                'renderParams': [
+                    'data': [
+                        'isFavorite': $params.data?.isFavorite
+                    ],
+                    'config': [
+                        'theme': 'light'
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Details
+ * @param params {{
+ *     data: {
+ *         countDepartment: ?number
+ *     }
+ * }}
+ * @protected
+ */
+{template .countDepartment}
+    {if $params.data?.countDepartment}
+        <div class="{call .rootClass/}__badge{sp}
+                    {call .rootClass/}__badge_department">
+            {$params.data.countDepartment}{sp}
+
+            {call cl.iUtils.Utils.declensionPrint}
+                {param params: [
+                    'num': $params.data.countDepartment,
+                    'nom': 'филиал',
+                    'gen': 'филиала',
+                    'plu': 'филиалов'
+                ]/}
+            {/call}
+
+            {sp}в Москве
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Css classes
+ * @override
+ */
+{template .additionalClasses}
+    b-sm-item_entity
+{/template}

@@ -6,7 +6,7 @@ goog.require('sm.bSmItem.View');
 
 
 /**
- * Item
+ * Constructor
  * @param {Object} view
  * @param {Object=} opt_domHelper
  * @constructor

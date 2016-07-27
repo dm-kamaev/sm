@@ -25,9 +25,17 @@
 
 
  /**
+ * @typedef {{
+ *     stylizationModifier: (string|undefined)
+ * }} sm.bSmItem.Template.Params.Config
+ */
+
+
+ /**
  * Constructor
  * @param params {{
- *     data: sm.bSmItem.Template.Params.Data
+ *     data: sm.bSmItem.Template.Params.Data,
+ *     config: ?sm.bSmItem.Template.Params.Config
  * }}
  * @extends cl.iControl.Template
  * @constructor
@@ -47,7 +55,7 @@
 {template .body}
     {call .sectionHeader_ data="all" /}
     {call .sectionDescription_ data="all" /}
-    {call .sectionDetails_ data="all" /}
+    {call .sectionDetails data="all" /}
 {/template}
 
 
@@ -110,11 +118,12 @@
  *         }>
  *     }
  * }}
+ * @protected
  */
-{template .sectionDetails_}
+{template .sectionDetails}
     <div class="{call .rootClass/}__section{sp}
                 {call .rootClass/}__section_details">
-        {call .location_ data="all" /}
+        {call .location data="all" /}
     </div>
 {/template}
 
@@ -188,8 +197,9 @@
  *         }>
  *     }
  * }}
+ * @protected
  */
-{template .location_}
+{template .location}
     {if $params.data?.metro and length($params.data?.metro)}
         {call .metro_ data="all" /}
     {elseif $params.data?.area and length($params.data?.area)}

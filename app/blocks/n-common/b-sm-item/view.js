@@ -8,7 +8,7 @@ goog.require('goog.dom.classes');
 
 
 /**
- * Header View
+ * Item View
  * @param {Object=} opt_params
  * @param {string=} opt_type
  * @param {string=} opt_modifier
