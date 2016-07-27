@@ -3,25 +3,38 @@
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 
-var logger =
-    require('../../../../app/components/logger/logger').getLogger('app');
-
-var models = require('../../../../app/components/models').all,
-    services = require('../../../../app/components/services').all,
-    entityType = require('../enums/entityType');
+var models = require('../../../../app/components/models').all;
 
 var service = {
     name: 'textSearchData'
 };
 
 /**
- * @return {Array<Object>}
+ * @param {Object} data
+ * @return {Object}
  */
-service.getAll = async(function() {
-    return await(models.TextSearchData.findAll({
-        attributes: ['id', 'entity_id', 'entity_type', 'original_text']
-    }));
+service.create = async(function(data) {
+    return await(models.TextSearchData.create(data));
 });
 
+/**
+ * @param {string} type
+ * @return {Array<Object>}
+ */
+service.getByEntityType = async(function(entityType) {
+    return await(models.TextSearchData.findAll({
+        attributes: [
+            'id',
+            'entityId',
+            'entityType',
+            'formattedText',
+            'originalText',
+            'type'
+        ],
+        where: {
+            entityType: entityType
+        }
+    }));
+});
 
 module.exports = service;

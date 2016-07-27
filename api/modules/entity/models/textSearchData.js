@@ -26,7 +26,8 @@ var TextSearchData = sequelize.define('TextSearchData', {
     originalText: {
         field: 'original_text',
         type: Sequelize.STRING
-    }
+    },
+    type: Sequelize.STRING
 }, {
     underscored: true,
     tableName: 'text_search_data'

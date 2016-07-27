@@ -12,7 +12,10 @@ const entityType = require('../../../api/modules/entity/enums/entityType');
 
 const services = require('../../../app/components/services').all;
 
-const SCHOOL_FIELDS_TO_UPDATE = ['name', 'fullName', 'abbreviation'];
+const SCHOOL_FIELDS = ['name', 'fullName', 'abbreviation'],
+    METRO_FIELDS = ['name'],
+    AREA_FIELDS = ['name'],
+    DISTRICT_FIELDS = ['name'];
 
 class SearchUpdater {
     /**
@@ -50,14 +53,14 @@ class SearchUpdater {
                 schools: services.school.listInstances(),
                 addresses: services.address.getAllWithSearchData(),
                 areas: services.area.getAll(),
-                district: services.district.getAll(),
-                metro: services.metro.getAll()
+                districts: services.district.getAll(),
+                metros: services.metro.getAll()
             },
             data = await(dataPromises);
 
         await(
-            // this.updateSchools_(data.schools),
-            // this.updateAddresses_(data.addresses),
+            this.updateSchools_(data.schools),
+            this.updateAddresses_(data.addresses),
             this.updateTextData_(data)
         );
         console.log('Succses. Stopping script');
@@ -114,13 +117,34 @@ class SearchUpdater {
      * @param {Object} data
      */
     updateTextData_(data) {
-        var textActualizer = new TextActualizer(
-            data.schools,
-            entityType.SCHOOL,
-            SCHOOL_FIELDS_TO_UPDATE
-        );
-        textActualizer.actualize();
+        var bar = this.getProgressBar_('text data', 4),
+            textActualizers = [
+                new TextActualizer(
+                    data.schools,
+                    entityType.SCHOOL,
+                    SCHOOL_FIELDS
+                ),
+                new TextActualizer(
+                    data.metros,
+                    entityType.METRO,
+                    METRO_FIELDS
+                ),
+                new TextActualizer(
+                    data.areas,
+                    entityType.AREA,
+                    AREA_FIELDS
+                ),
+                new TextActualizer(
+                    data.districts,
+                    entityType.DISTRICT,
+                    DISTRICT_FIELDS
+                )
+            ];
 
+        textActualizers.forEach(textActualizer => {
+            await(textActualizer.actualize());
+            bar.tick();
+        });
     }
 
     /**

@@ -19,6 +19,7 @@ module.exports = {
             },
             'formatted_text': Sequelize.STRING,
             'original_text': Sequelize.STRING,
+            type: Sequelize.STRING,
             'created_at': Sequelize.DATE,
             'updated_at': Sequelize.DATE
         });
