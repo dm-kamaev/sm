@@ -118,8 +118,6 @@ goog.scope(function() {
         this.initFilterListeners_();
         this.initSelectedListeners_();
         this.initButtonListeners_();
-
-        this.suggest_.focus();
     };
 
 
