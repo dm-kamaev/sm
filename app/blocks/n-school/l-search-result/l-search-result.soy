@@ -393,14 +393,14 @@
             нашли <span class="l-search-result__list-header-text
                                l-search-result__list-header-text_strong
                                l-search-result__list-header-text_amount">
-                {$params.countResults}{sp}
-
+                {$params.countResults}
+                &nbsp;
                 {call cl.iUtils.Utils.declensionPrint}
                     {param params: [
                         'num': $params.countResults,
-                        'nom': ' школу',
-                        'gen': ' школы',
-                        'plu': ' школ'
+                        'nom': 'школу',
+                        'gen': 'школы',
+                        'plu': 'школ'
                     ]/}
                 {/call}
             </span>

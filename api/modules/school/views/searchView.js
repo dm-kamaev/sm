@@ -202,9 +202,9 @@ searchView.schoolFilters = function(filtersData, searchParams) {
             filtersData.giaSubjects, filtersData.subjects),
         olympResultView.searchFilter(
             filtersData.olympiadSubjects, filtersData.subjects),
-        activityView.typeSearchFilter(filtersData.activitySpheres),
         specializedClassesView.typeSearchFilter(
-            filtersData.specializedClassesTypes)
+            filtersData.specializedClassesTypes),
+        activityView.typeSearchFilter(filtersData.activitySpheres)
     ];
 
     return filters.map(filter => {
