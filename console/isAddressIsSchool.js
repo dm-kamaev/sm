@@ -80,7 +80,7 @@ class IsAddressIsSchool {
      */
     checkDepartments_(departments) {
         return lodash.any(departments, department =>
-            !lodash.any(department.educationalGrades, (grade) => grade === 0)
+            lodash.any(department.educationalGrades, (grade) => grade !== 0)
         );
     }
 }

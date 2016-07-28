@@ -174,12 +174,12 @@ class SchoolSearchQuery extends SearchQuery {
             .field('area.name', 'areaName')
             .field('address.coords', 'addressCoords')
             .field('address.name', 'addressName')
+            .field('address.is_school', 'addressIsSchool')
             .field(
                 'department.educational_grades',
                 'departmentEducationalGrades'
             )
             .field('school.result_count', 'countResults')
-            .where('address.is_school = true')
             .left_join('address', null, 'school.id = address.school_id')
             .left_join(
                 'address_metro',
