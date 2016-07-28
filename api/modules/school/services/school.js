@@ -888,6 +888,14 @@ service.searchByText = function(text) {
         };
     return nameFilter['$and'].length ?
         models.School.findAll({
+            attributes: [
+                'id',
+                'name',
+                'abbreviation',
+                'score',
+                'totalScore',
+                'fullName'
+            ],
             where: whereParams,
             include: [{
                 model: models.Address,

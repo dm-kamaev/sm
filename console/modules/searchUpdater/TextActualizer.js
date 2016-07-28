@@ -117,8 +117,8 @@ class TextActualizer {
      */
     formatText_(text) {
         return text
-            .replace(/ё/g, 'е')
-            .replace(/Ё/g, 'Е');
+            .toLowerCase()
+            .replace(/ё/g, 'е');
     }
 }
 
