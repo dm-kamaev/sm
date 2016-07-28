@@ -91,15 +91,15 @@ addressView.stageList = function(addresses, opt_options) {
  * @return {Array.<Object>}
  */
 addressView.default = function(addresses) {
-    return addresses.map(adr => {
-        return {
-            id: adr.id,
-            lat: adr.coords[0],
-            lng: adr.coords[1],
-            name: adr.name,
-            stages: getStages_(adr.departments)
-        };
-    });
+    return addresses
+        .filter(address => address.isSchool)
+        .map(address => ({
+            id: address.id,
+            lat: address.coords[0],
+            lng: address.coords[1],
+            name: address.name,
+            stages: getStages_(address.departments)
+        }));
 };
 
 

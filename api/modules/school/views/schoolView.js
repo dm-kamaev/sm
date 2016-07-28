@@ -465,6 +465,7 @@ var groupSchools = function(schools) {
                     currentAddress.area.name = school.areaName;
 
                     currentAddress.name = school.addressName;
+                    currentAddress.isSchool = school.addressIsSchool;
                     currentAddress.coords = school.addressCoords;
                 });
             });
