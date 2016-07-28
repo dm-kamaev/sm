@@ -1,6 +1,7 @@
 goog.provide('sm.bSmItem.SmItemEntity');
 
 goog.require('sm.bBadge.Badge');
+goog.require('sm.bSmItem.Event.FavoriteRemoved');
 goog.require('sm.bSmItem.SmItem');
 goog.require('sm.bSmItem.ViewEntity');
 
@@ -45,7 +46,20 @@ goog.inherits(sm.bSmItem.SmItemEntity, sm.bSmItem.SmItem);
 
 goog.scope(function() {
     var Item = sm.bSmItem.SmItemEntity,
-        View = sm.bSmItem.ViewEntity;
+        View = sm.bSmItem.ViewEntity,
+        FavoriteLink = sm.bFavoriteLink.FavoriteLink;
+
+    var Event = sm.bSmItem.Event;
+
+
+    /**
+     * Event enum
+     * @enum {string}
+     */
+    Item.Event = {
+        FAVORITE_ADDED: FavoriteLink.Event.FAVORITE_ADDED,
+        FAVORITE_REMOVED: Event.FavoriteRemoved.Type
+    };
 
 
     /**

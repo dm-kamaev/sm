@@ -24,7 +24,11 @@ goog.require('sm.bSmFeedbackBoard.View');
 goog.require('sm.bSmInformationBoard.SmInformationBoard');
 goog.require('sm.bSmInformationBoard.View');
 goog.require('sm.bSmItem.SmItem');
+goog.require('sm.bSmItem.SmItemEntity');
 goog.require('sm.bSmItem.View');
+goog.require('sm.bSmItem.ViewEntity');
+goog.require('sm.bSmItemList.SmItemList');
+goog.require('sm.bSmItemList.View');
 goog.require('sm.bSmScore.SmScore');
 goog.require('sm.bSmScore.View');
 goog.require('sm.bSmScore.ViewBrief');
@@ -156,6 +160,14 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('smItem', {
             control: sm.bSmItem.SmItem,
             view: sm.bSmItem.View
+        })
+        .setControlListItem('smItemEntity', {
+            control: sm.bSmItem.SmItemEntity,
+            view: sm.bSmItem.ViewEntity
+        })
+        .setControlListItem('smItemList', {
+            control: sm.bSmItemList.SmItemList,
+            view: sm.bSmItemList.View
         });
 };
 goog.inherits(sm.iFactory.FactoryStendhal, cl.iFactory.Factory);

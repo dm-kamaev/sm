@@ -1,0 +1,172 @@
+{namespace sm.bSmItemList.Template}
+
+
+/**
+ * @typedef {{
+ *     type: ?string,
+ *     items: Array<(
+ *         sm.bSmItem.Template.Params.Data|
+ *         sm.bSmItem.TemplateEntity.Params.Data
+ *     )>,
+ *     countItemsPerPage: ?number
+ * }} sm.bSmItemList.Template.Params.Data
+ */
+
+
+ /**
+ * @typedef {{
+ *     stylizationModifier: (string|undefined)
+ * }} sm.bSmItemList.Template.Params.Config
+ */
+
+
+ /**
+ * Constructor
+ * @param params {{
+ *     data: sm.bSmItemList.Template.Params.Data,
+ *     config: ?sm.bSmItemList.Template.Params.Config
+ * }}
+ * @extends cl.iControl.Template
+ * @constructor
+ */
+{template .itemList}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * Body
+ * @param params {{
+ *     data: sm.bSmItemList.Template.Params.Data
+ *     config: ?sm.bSmItemList.Template.Params.Config
+ * }}
+ * @override
+ */
+{template .body}
+    {call .sectionContent_ data="all" /}
+{/template}
+
+
+/**
+ * @param params {{
+ *     data: {
+ *         type: ?string,
+ *         items: Array<(
+ *             sm.bSmItem.Template.Params.Data|
+ *             sm.bSmItem.TemplateEntity.Params.Data
+ *         )>,
+ *         countItemsPerPage: ?number
+ *     }
+ * }}
+ */
+{template .sectionContent_}
+    <div class="{call .rootClass/}__section{sp}
+                {call .rootClass/}__section_content">
+        {call .list_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Items list
+ * @param params {{
+ *     data: {
+ *         type: ?string,
+ *         items: Array<(
+ *             sm.bSmItem.Template.Params.Data|
+ *             sm.bSmItem.TemplateEntity.Params.Data
+ *         )>,
+ *         countItemsPerPage: ?number
+ *     },
+ *     config: {
+ *         ?stylizationModifier
+ *     }
+ * }}
+ */
+{template .list_}
+    {let $itemType kind="html"}
+        {if $params.data.type == 'favorite'}
+            smItem
+        {else}
+            smItemEntity
+        {/if}
+    {/let}
+
+    {let $countItemsPerPage kind="html"}
+        {if $params.data?.countItemsPerPage}
+            {$params.data.countItemsPerPage}
+        {else}
+            {length($params.data.items)}
+        {/if}
+    {/let}
+
+    <div class="{call .rootClass/}__list">
+        {for $i in range(length($params.data.items))}
+            {call .item_}
+                {param params: [
+                    'data': [
+                        'item': $params.data.items[$i],
+                        'itemType': $itemType,
+                        'hidden': $i >= $countItemsPerPage ? true : false
+                    ],
+                    'config': $params?.config
+                ]/}
+            {/call}
+        {/for}
+    </div>
+{/template}
+
+
+/**
+ * Items list
+ * @param params {{
+ *     data: {
+ *         itemType: ?string,
+ *         item: (
+ *             sm.bSmItem.Template.Params.Data|
+ *             sm.bSmItem.TemplateEntity.Params.Data
+ *         ),
+ *         hidden: boolean
+ *     },
+ *     config: {
+ *         ?stylizationModifier
+ *     }
+ * }}
+ */
+{template .item_}
+    {let $classes kind="html"}
+        {call .rootClass/}__item
+
+        {if $params.data.hidden}
+            {sp}{cl.iUtils.Utils.CssClass.HIDDEN}
+        {/if}
+    {/let}
+
+    {let $customClasses kind="html"}
+        {call .rootClass/}__item-list
+    {/let}
+
+    <div class="{call .rootClass/}__item">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': $params?.config?.stylizationModifier ?: 'stendhal',
+                'type': $params.data.itemType,
+                'renderParams': [
+                    'data': $params.data.item,
+                    'config': [
+                        'customClasses': [$customClasses]
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-sm-item-list
+{/template}

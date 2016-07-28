@@ -59,8 +59,7 @@ goog.inherits(sm.bSmItem.ViewEntity, sm.bSmItem.View);
 
 
 goog.scope(function() {
-    var View = sm.bSmItem.ViewEntity,
-        FavoriteLink = sm.bFavoriteLink.FavoriteLink;
+    var View = sm.bSmItem.ViewEntity;
 
 
     /**
@@ -70,16 +69,6 @@ goog.scope(function() {
     View.CssClass = {
         ROOT: 'b-sm-item_entity',
         DETAILS_SECTION: 'b-sm-item_entity__section_details'
-    };
-
-
-    /**
-     * Event enum
-     * @enum {string}
-     */
-    View.Event = {
-        FAVORITE_ADDED: FavoriteLink.Event.FAVORITE_ADDED,
-        FAVORITE_REMOVED: Event.FavoriteRemoved.Type
     };
 
 
