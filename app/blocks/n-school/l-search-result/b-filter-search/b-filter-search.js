@@ -67,13 +67,10 @@ goog.inherits(sm.lSearchResult.bFilterSearch.FilterSearch, cl.iControl.Control);
 
 goog.scope(function() {
     var FilterSearch = sm.lSearchResult.bFilterSearch.FilterSearch,
-        View = sm.lSearchResult.bFilterSearch.View,
         UIInstanceStorage = gorod.iUIInstanceStorage.UIInstanceStorage,
         Suggest = gorod.gSuggest.Suggest,
-        Search = sm.bSearch.Search,
         Filter = sm.lSearchResult.bFilter.Filter,
         FilterLabels = sm.lSearchResult.bFilter.FilterLabels;
-        UIInstanceStorage = gorod.iUIInstanceStorage.UIInstanceStorage;
 
     var factoryManager = cl.iFactory.FactoryManager.getInstance();
 

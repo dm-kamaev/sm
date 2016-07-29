@@ -385,9 +385,7 @@ goog.scope(function() {
      * @protected
      */
     Filter.prototype.findInput = function(value) {
-        var inputs = Array.prototype.slice.call(this.inputElements, 0);
-
-        return goog.array.find(inputs, function(input) {
+        return goog.array.find(this.inputElements, function(input) {
             return input.value == value;
         });
     };
