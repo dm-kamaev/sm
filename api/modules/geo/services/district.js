@@ -76,4 +76,23 @@ service.getAll = async(function() {
     }));
 });
 
+
+
+/**
+ * @param {Array<number>} ids
+ * @return {Array<Object>}
+ */
+service.getByIds = async(function(ids) {
+    return ids.length ?
+        await(models.District.findAll({
+            attributes: ['id', 'name'],
+            where: {
+                id: {
+                    $in: ids
+                }
+            }
+        })) :
+        [];
+});
+
 module.exports = service;

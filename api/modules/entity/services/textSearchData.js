@@ -37,4 +37,15 @@ service.getByEntityType = async(function(entityType) {
     }));
 });
 
+service.search = async(function(searchString) {
+    return await(models.TextSearchData.findAll({
+        attributes: ['entityId', 'entityType'],
+        where: {
+            formattedText: {
+                $like: '%' + searchString + '%'
+            }
+        }
+    }));
+});
+
 module.exports = service;

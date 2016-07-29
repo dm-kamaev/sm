@@ -34,3 +34,20 @@ exports.getAll = async(function() {
         attributes: ['id', 'name']
     }));
 });
+
+/**
+ * @param {Array<number>} ids
+ * @return {Array<Object>}
+ */
+exports.getByIds = async(function(ids) {
+    return ids.length ?
+        await(models.Metro.findAll({
+            attributes: ['id', 'name', 'coords'],
+            where: {
+                id: {
+                    $in: ids
+                }
+            }
+        })) :
+        [];
+});
