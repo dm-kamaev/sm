@@ -850,7 +850,7 @@
     "clobl": {
       "version": "1.0.0",
       "from": "git+ssh://git@github.com/c7s/clobl.git#release-20160725",
-      "resolved": "git+ssh://git@github.com/c7s/clobl.git#da607f000735ab23a7ea1b4ac69900ad73d0d12e",
+      "resolved": "git+ssh://git@github.com/c7s/clobl.git#eb74baa8f95e5d93aea12bfe187c76c3b188793b",
       "dependencies": {
         "clone": {
           "version": "0.2.0",
