@@ -3,11 +3,11 @@
 
 /**
  * @typedef {{
- *     type: ?string,
  *     items: Array<(
  *         sm.bSmItem.Template.Params.Data|
  *         sm.bSmItem.TemplateEntity.Params.Data
  *     )>,
+ *     itemType: string,
  *     countItemsPerPage: ?number
  * }} sm.bSmItemList.Template.Params.Data
  */
@@ -48,14 +48,18 @@
 
 
 /**
+ * Section content
  * @param params {{
  *     data: {
- *         type: ?string,
  *         items: Array<(
  *             sm.bSmItem.Template.Params.Data|
  *             sm.bSmItem.TemplateEntity.Params.Data
  *         )>,
+ *         itemType: string,
  *         countItemsPerPage: ?number
+ *     },
+ *     config: {
+ *         stylizationModifier: (string|undefined)
  *     }
  * }}
  */
@@ -71,27 +75,19 @@
  * Items list
  * @param params {{
  *     data: {
- *         type: ?string,
  *         items: Array<(
  *             sm.bSmItem.Template.Params.Data|
  *             sm.bSmItem.TemplateEntity.Params.Data
  *         )>,
+ *         itemType: string,
  *         countItemsPerPage: ?number
  *     },
  *     config: {
- *         ?stylizationModifier
+ *         stylizationModifier: (string|undefined)
  *     }
  * }}
  */
 {template .list_}
-    {let $itemType kind="html"}
-        {if $params.data.type == 'favorite'}
-            smItem
-        {else}
-            smItemEntity
-        {/if}
-    {/let}
-
     {let $countItemsPerPage kind="html"}
         {if $params.data?.countItemsPerPage}
             {$params.data.countItemsPerPage}
@@ -102,14 +98,16 @@
 
     <div class="{call .rootClass/}__list">
         {for $i in range(length($params.data.items))}
-            {call .item_}
+            {call .item}
                 {param params: [
                     'data': [
-                        'item': $params.data.items[$i],
-                        'itemType': $itemType,
-                        'hidden': $i >= $countItemsPerPage ? true : false
+                        'item': $params.data.items[$i]
                     ],
-                    'config': $params?.config
+                    'config': [
+                        'type': $params.data.itemType,
+                        'isHidden': $i >= $countItemsPerPage ? true : false,
+                        'stylizationModifier': $params.config.stylizationModifier
+                    ]
                 ]/}
             {/call}
         {/for}
@@ -121,23 +119,23 @@
  * Items list
  * @param params {{
  *     data: {
- *         itemType: ?string,
  *         item: (
  *             sm.bSmItem.Template.Params.Data|
  *             sm.bSmItem.TemplateEntity.Params.Data
- *         ),
- *         hidden: boolean
+ *         )
  *     },
  *     config: {
- *         ?stylizationModifier
+ *         type: string,
+ *         isHidden: ?boolean,
+ *         stylizationModifier: (string|undefined)
  *     }
  * }}
  */
-{template .item_}
+{template .item}
     {let $classes kind="html"}
         {call .rootClass/}__item
 
-        {if $params.data.hidden}
+        {if $params.config?.isHidden}
             {sp}{cl.iUtils.Utils.CssClass.HIDDEN}
         {/if}
     {/let}
@@ -146,11 +144,11 @@
         {call .rootClass/}__item-list
     {/let}
 
-    <div class="{call .rootClass/}__item">
+    <div class="{$classes}">
         {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
                 'factory': $params?.config?.stylizationModifier ?: 'stendhal',
-                'type': $params.data.itemType,
+                'type': $params.config.type,
                 'renderParams': [
                     'data': $params.data.item,
                     'config': [
@@ -160,6 +158,35 @@
             ]/}
         {/call}
     </div>
+{/template}
+
+
+
+/**
+ * Attributes
+ * @param params {{
+ *     data: {
+ *         items: Array<(
+ *             sm.bSmItem.Template.Params.Data|
+ *             sm.bSmItem.TemplateEntity.Params.Data
+ *         )>,
+ *         itemType: ?string,
+ *         countItemsPerPage: ?number
+ *     }
+ * }}
+ * @override
+ */
+{template .attributes kind="attributes"}
+    {let $data: [
+        'itemType': $params.data.itemType,
+        'countItemsPerPage': $params.data?.countItemsPerPage ?:
+            length($params.data.items)
+    ]/}
+
+    data-params="
+    {call cl.iUtils.Utils.stringify}
+        {param json: $data/}
+    {/call}"
 {/template}
 
 
