@@ -1,3 +1,7 @@
+/**
+ * @fileoverview Base score block
+ */
+
 goog.provide('sm.bSmScore.SmScore');
 
 goog.require('cl.iControl.Control');
