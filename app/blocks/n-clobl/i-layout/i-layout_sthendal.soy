@@ -1,7 +1,7 @@
 {namespace sm.iLayout.TemplateStendhal}
 
 
-/*
+/**
  * @typedef {{
  *     openGraph: ?{
  *         url: ?string,
@@ -20,12 +20,12 @@
  *         metaTitle: string,
  *         metaDescription: (string|undefined)
  *     },
- *     subheader: sm.bSmSubheader.Template.Params.Data
+ *     subHeader: sm.bSmSubHeader.Template.Params.Data
  * }} sm.iLayout.TemplateStendhal.Params.Data
  */
 
 
- /*
+/**
  * @typedef {{
  *     landingScript: string
  *     staticVersion: ?string,
@@ -91,8 +91,7 @@
  */
 {template .description autoescape="strict" kind="html"}
     {if $params.data.seo?.metaDescription}
-        <meta name="description"content="$params.data.seo?.metaDescription">
-        </meta>
+        <meta name="description" content="{$params.data.seo?.metaDescription}">
     {/if}
 {/template}
 

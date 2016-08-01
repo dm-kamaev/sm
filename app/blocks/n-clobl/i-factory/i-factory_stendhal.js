@@ -27,6 +27,7 @@ goog.require('sm.bSmItem.SmItem');
 goog.require('sm.bSmItem.View');
 goog.require('sm.bSmScore.SmScore');
 goog.require('sm.bSmScore.View');
+goog.require('sm.bSmScore.ViewBrief');
 goog.require('sm.bSmSubheader.SmSubheader');
 goog.require('sm.bSmSubheader.View');
 goog.require('sm.gAuthSocial.ViewStendhal');
@@ -147,6 +148,10 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('smScore', {
             control: sm.bSmScore.SmScore,
             view: sm.bSmScore.View
+        })
+        .setControlListItem('smScoreBrief', {
+            control: sm.bSmScore.SmScore,
+            view: sm.bSmScore.ViewBrief
         })
         .setControlListItem('smItem', {
             control: sm.bSmItem.SmItem,
