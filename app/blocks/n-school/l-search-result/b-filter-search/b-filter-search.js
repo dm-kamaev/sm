@@ -67,10 +67,8 @@ goog.inherits(sm.lSearchResult.bFilterSearch.FilterSearch, cl.iControl.Control);
 
 goog.scope(function() {
     var FilterSearch = sm.lSearchResult.bFilterSearch.FilterSearch,
-        View = sm.lSearchResult.bFilterSearch.View,
         UIInstanceStorage = gorod.iUIInstanceStorage.UIInstanceStorage,
         Suggest = gorod.gSuggest.Suggest,
-        Search = sm.bSearch.Search,
         Filter = sm.lSearchResult.bFilter.Filter,
         FilterLabels = sm.lSearchResult.bFilter.FilterLabels;
 
@@ -127,6 +125,16 @@ goog.scope(function() {
         goog.base(this, 'exitDocument');
 
         this.destroySuggestListeners_();
+    };
+
+
+    /**
+     * Clean up the Component.
+     */
+    FilterSearch.prototype.disposeInternal = function() {
+        this.destroySuggest_();
+
+        goog.base(this, 'disposeInternal');
     };
 
 
@@ -392,6 +400,25 @@ goog.scope(function() {
             'button',
             this.getView().getDom().button,
             this
+        );
+    };
+
+
+    /**
+     * Destroy Suggest
+     * @private
+     */
+    FilterSearch.prototype.destroySuggest_ = function() {
+        UIInstanceStorage.getInstance().removeInstance(
+            this.getView().getDom().suggest
+        );
+
+        UIInstanceStorage.getInstance().removeInstance(
+            this.getView().getDom().suggestInput
+        );
+
+        UIInstanceStorage.getInstance().removeInstance(
+            this.getView().getDom().suggestList
         );
     };
 });  // goog.scope

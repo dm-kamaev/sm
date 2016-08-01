@@ -69,21 +69,21 @@ html, body {
     display: none;
 }
 
-.l-search-result__list-header-text_title {
-    margin-bottom: 15px;
-}
+.l-search-result__list-header-text {
+    &.l-search-result__list-header-text_title {
+        margin-bottom: 15px;
+    }
 
-.l-search-result__list-header-text_description {
-    margin-bottom: 45px;
+    &.l-search-result__list-header-text_description {
+        margin-bottom: 45px;
 
-    font: 16px 'PT Serif', serif;
-    line-height: 22px;
-}
+        font: 16px 'PT Serif', serif;
+        line-height: 22px;
+    }
 
-.l-search-result__list-header-text_strong {
-    display: inline-block;
-
-    font-weight: 800;
+    &.l-search-result__list-header-text_strong {
+        font-weight: 800;
+    }
 }
 
 .l-search-result__footer-seo {

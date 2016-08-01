@@ -2,6 +2,8 @@
 
 .b-filter-search {
     text-align: left;
+
+    overflow: auto;
 }
 
 .b-filter-search__section {
@@ -77,5 +79,15 @@
     .b-filter-search__section {
         padding-left: 30px;
         padding-right: 30px;
+    }
+
+    .b-filter-search__section_placeholder {
+        min-height: 212px;
+        height: auto;
+    }
+
+    .b-filter-search__section_filter {
+        min-height: 212px;
+        height: auto;
     }
 }

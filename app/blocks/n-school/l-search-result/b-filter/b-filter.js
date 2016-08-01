@@ -1,6 +1,7 @@
 goog.provide('sm.lSearchResult.bFilter.Filter');
 
 goog.require('cl.iUtils.Utils');
+goog.require('goog.array');
 goog.require('goog.dom.classes');
 goog.require('goog.dom.classlist');
 goog.require('goog.events');
@@ -384,9 +385,7 @@ goog.scope(function() {
      * @protected
      */
     Filter.prototype.findInput = function(value) {
-        var inputs = Array.prototype.slice.call(this.inputElements, 0);
-
-        return inputs.find(function(input) {
+        return goog.array.find(this.inputElements, function(input) {
             return input.value == value;
         });
     };
