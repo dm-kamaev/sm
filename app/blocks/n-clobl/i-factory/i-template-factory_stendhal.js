@@ -155,7 +155,7 @@ sm.iFactory.TemplateFactoryStendhal = function() {
             sm.lSearchResult.bFilterSearch.Template.filterSearch
         );
 
-    /* Global blocks an their heirs */
+    /** Global blocks an their heirs **/
     this.setTemplateListItem(
             'smFooter',
             sm.bSmFooter.Template.footer
