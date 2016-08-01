@@ -4,9 +4,12 @@ var lodash = require('lodash');
 
 var models = require('../../../../app/components/models').all;
 var services = require('../../../../app/components/services').all;
+var sequelize = require('../../../../app/components/db');
 var subjectView = require('../../study/views/subjectView');
 var searchView = require('../views/searchView');
 var SchoolSearchQuery = require('../lib/SchoolSearch');
+var SuggestSearchQuery = require('../../entity/lib/SuggestSearch');
+var entityType = require('../../entity/enums/entityType');
 
 var schoolSearchType = require('../enums/searchType');
 
@@ -41,21 +44,6 @@ exports.getSchoolRecords = async(function(id, opt_type) {
     }));
 });
 
-
-/**
- * Separate search string and remove symbols
- * @param {string} string
- * @return {Array<string>}
- */
-var getSearchSubstrings = function(string) {
-    return string.toLowerCase()
-        .trim()
-        .replace(/[^\wа-яА-ЯёЁ\-\s]/g, '') // remove everything except
-        .trim()                            // letters, numbers and spaces
-        .split(' ');
-};
-
-
 /**
  * @public
  * @param {string} searchString
@@ -67,19 +55,26 @@ var getSearchSubstrings = function(string) {
  * }}
  */
 exports.suggestSearch = async(function(searchString) {
-    var promises = {
-        schools: services.school.searchByText(searchString),
-        areas: findAnyInModel(models.Area, searchString),
-        metros: findAnyInModel(models.Metro, searchString),
-        districts: findAnyInModel(models.District, searchString)
-    };
-    var results = await(promises);
-    return {
-        schools: results.schools,
-        areas: results.areas,
-        metros: results.metros,
-        districts: results.districts
-    };
+    var queryString = new SuggestSearchQuery([
+            entityType.SCHOOL,
+            entityType.AREA,
+            entityType.METRO,
+            entityType.DISTRICT
+        ])
+        .setSearchString(searchString)
+        .getQuery(),
+        foundData = await(sequelize.query(
+            queryString,
+            {type: sequelize.QueryTypes.SELECT}
+        )),
+        resultIds = joinSuggestData(foundData);
+
+    return await({
+        schools: services.school.searchByIds(resultIds.school || []),
+        areas: services.area.getByIds(resultIds.area || []),
+        metros: services.metro.getByIds(resultIds.metro || []),
+        districts: services.district.getByIds(resultIds.district || [])
+    });
 });
 
 exports.getSearchSql = function(searchParams, limit) {
@@ -102,81 +97,20 @@ exports.getSearchSql = function(searchParams, limit) {
 };
 
 /**
- * @param {Object} model
- * @param {string} searchString
- * @return {Promise<Array<Object>>|Array}
- */
-var findAnyInModel = function(model, searchString) {
-    var stringArr = getSearchSubstrings(searchString);
-    if (!stringArr || stringArr == '') {
-        return [];
-    }
-
-    var params = {
-        where: {
-            name: {
-                $or: stringArr.map(str => iLikeSimilarLetter(str))
-                        .reduce(function(prev, curr) {
-                            return prev.concat(curr);
-                        }, [])
-            }
-        }
-    };
-    return model.findAll(params);
-};
-
-/**
- * @param {string} searchSubstring
+ * @param {Array<Object>} data
  * @return {Object}
  */
-var iLikeSimilarLetter = function(searchSubstring) {
-    var result;
+var joinSuggestData = function(data) {
+    var result = {};
 
-    if (searchSubstring.indexOf('е') > -1) {
-        var similarCharPosition = searchSubstring.lastIndexOf('е'),
-            similarString =
-                replaceAt(searchSubstring, similarCharPosition, 'ё');
+    data.forEach(item => {
+        result.hasOwnProperty(item.entityType) ?
+            result[item.entityType].push(item.entityId) :
+            result[item.entityType] = [item.entityId];
+    });
 
-        result = [
-            { $ilike: '%' + searchSubstring + '%' },
-            { $ilike: '%' + similarString + '%' }
-        ];
-    } else {
-        result = { $ilike: '%' + searchSubstring + '%' };
-    }
     return result;
 };
-
-/**
- * @param {string} string
- * @param {number} position - position, what will be replaced
- * @param {string} char - new char at position
- * @return {string}
- */
-var replaceAt = function(string, position, char) {
-    return string.substr(0, position) + char + string.substr(position + 1);
-};
-
-/**
- * @param {string} string
- * @return {Object}
- */
-exports.generateFilter = function(string) {
-    var subStrings = getSearchSubstrings(string);
-    return {
-        $and: subStrings.filter(substr => {
-            if (substr) {
-                return substr;
-            }
-        })
-        .map(substr => {
-            return {
-                $iLike: '%' + substr + '%'
-            };
-        })
-    };
-};
-
 
 /**
  * Get all school type filters

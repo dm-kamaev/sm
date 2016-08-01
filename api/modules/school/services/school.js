@@ -870,25 +870,24 @@ service.list = async(function(opt_params, opt_config) {
 });
 
 /**
- * @param {string} text
+ * @param {Array<number>} ids
  * @return {promise<array<object>>}
  */
-service.searchByText = function(text) {
-    var nameFilter = services.search.generateFilter(text),
-        whereParams = {
-            $or: [
-                {
-                    name: nameFilter
-                }, {
-                    fullName: nameFilter
-                }, {
-                    abbreviation: nameFilter
-                }
-            ]
-        };
-    return nameFilter['$and'].length ?
+service.searchByIds = function(ids) {
+    return ids.length ?
         models.School.findAll({
-            where: whereParams,
+            attributes: [
+                'id',
+                'name',
+                'abbreviation',
+                'totalScore',
+                'fullName'
+            ],
+            where: {
+                id: {
+                    $in: ids
+                }
+            },
             include: [{
                 model: models.Address,
                 as: 'addresses',
@@ -903,8 +902,7 @@ service.searchByText = function(text) {
                         'name'
                     ]
                 }]
-            }],
-            limit: 10
+            }]
         }) :
         [];
 };
