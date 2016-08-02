@@ -1,7 +1,7 @@
 {namespace sm.lSmSearch.Template}
 
 
-/*
+/**
  * @typedef {{
  *     openGraph: ?{
  *         url: ?string,
@@ -39,6 +39,7 @@
  *         searchText: string,
  *         placeholder: ?string
  *     },
+ *     sort: sm.gDropdown.TemplateSelect.Params.Data
  *     entityList: Array<{
  *         id: number,
  *         alias: string,
@@ -127,6 +128,7 @@
  *             searchText: string,
  *             placeholder: ?string
  *         },
+ *         sort: sm.gDropdown.TemplateSelect.Params.Data
  *         entityList: Array<{
  *             id: number,
  *             alias: string,
@@ -197,41 +199,6 @@
     </div>
 
     {call sm.bMap.Template.api/}
-{/template}
-
-
-/**
- * Text of header for list of schools
- * @param params {{
- *     data: {
- *         seo: {
- *             title: (string|undefined),
- *             description: (string|undefined)
- *         },
- *         search: {
- *             countResults: number,
- *             searchText: string
- *         }
- *     }
- * }}
- */
-{template .listHeaderText}
-    <span class="{call .rootClass/}__list-header-text">
-        {if $params.data?.seo and $params.data?.seo?.title}
-            {call .headerText_ data="all" /}
-
-            {if $params.data.seo.description}
-                {call .headerDescription_ data="all" /}
-            {/if}
-        {else}
-            {call .generateHeaderText_}
-                {param params: [
-                    'searchText': $params.data?.search?.searchText,
-                    'countResults': $params.data?.search?.countResults
-                ]/}
-            {/call}
-        {/if}
-    </span>
 {/template}
 
 
@@ -546,6 +513,75 @@
 
     <div class="{$classes}">
         {call .listHeaderText data="all"/}
+        <span class="{call .rootClass /}__horizontal-line"></span>
+        {call .sortControl_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Text of header for list of schools
+ * @param params {{
+ *     data: {
+ *         seo: {
+ *             title: (string|undefined),
+ *             description: (string|undefined)
+ *         },
+ *         search: {
+ *             countResults: number,
+ *             searchText: string
+ *         }
+ *     }
+ * }}
+ */
+{template .listHeaderText}
+    <span class="{call .rootClass/}__list-header-text">
+        {if $params.data?.seo and $params.data?.seo?.title}
+            {call .headerText_ data="all" /}
+
+            {if $params.data.seo.description}
+                {call .headerDescription_ data="all" /}
+            {/if}
+        {else}
+            {call .generateHeaderText_}
+                {param params: [
+                    'searchText': $params.data?.search?.searchText,
+                    'countResults': $params.data?.search?.countResults
+                ]/}
+            {/call}
+        {/if}
+    </span>
+{/template}
+
+
+/**
+ * Sort control template
+ * @param params {{
+ *     data: {
+ *         sort: sm.gDropdown.TemplateSelect.Params.Data
+ *     }
+ * }}
+ */
+{template .sortControl_ kind="html"}
+    {let $customClasses kind="html"}
+        {call .rootClass /}__sort-control-wrap
+    {/let}
+
+    <div class="{call .rootClass /}__sort-control">
+        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+            {param params: [
+                'type': 'dropdown-select',
+                'renderParams': [
+                    'data': $params.data.sort,
+                    'config': [
+                        'viewType': 'link',
+                        'iconSprite': 'small-opener-arrow',
+                        'theme': 'minimal',
+                        'customClasses': [$customClasses]
+                    ]
+                ]
+            ]/}
+        {/call}
     </div>
 {/template}
 
