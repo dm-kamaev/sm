@@ -180,7 +180,12 @@ class SchoolSearchQuery extends SearchQuery {
                 'departmentEducationalGrades'
             )
             .field('school.result_count', 'countResults')
-            .left_join('address', null, 'school.id = address.school_id')
+            .left_join(
+                'address',
+                null,
+                'school.id = address.entity_id AND ' +
+                    'address.entity_type = \'school\''
+            )
             .left_join(
                 'address_metro',
                 null,
@@ -293,7 +298,12 @@ class SchoolSearchQuery extends SearchQuery {
      */
     setNameJoinAndGroup_() {
         this.innerQuery_
-            .left_join('address', null, 'school.id = address.school_id')
+            .left_join(
+                'address',
+                null,
+                'school.id = address.entity_id AND ' +
+                    'address.entity_type = \'school\''
+            )
             .left_join(
                 'address_metro',
                 null,

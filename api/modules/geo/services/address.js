@@ -184,16 +184,19 @@ exports.setArea = async((area, address) => {
 });
 
 /**
- * @param {number} schoolId
- * @param {bool} isSchool
- * @param {bool} order - order by distance
+ * @param {number} entityId
+ * @param {string} entityType
+ * @param {{
+ *     isSchool: boolean,
+ *     order: boolean - order by distance
+ * }} params
  */
 exports.getWithDepartmentsWithMetro = async(function(
-    schoolId,
-    isSchool,
-    order
+    entityId,
+    entityType,
+    params
 ) {
-    var params = {
+    var addressParams = {
         include: [{
             model: models.Department,
             as: 'departments'
@@ -206,16 +209,17 @@ exports.getWithDepartmentsWithMetro = async(function(
             }]
         }],
         where: {
-            schoolId: schoolId
+            entityId: entityId,
+            entityType: entityType
         }
     };
 
-    if (isSchool) {
-        params.where.isSchool = isSchool;
+    if (params.isSchool) {
+        addressParams.where.isSchool = params.isSchool;
     }
 
-    if (order) {
-        params.order = [[
+    if (params.order) {
+        addressParams.order = [[
             {
                 model: models.AddressMetro,
                 as: 'addressMetroes'
@@ -233,7 +237,7 @@ exports.getWithDepartmentsWithMetro = async(function(
  */
 exports.getAllWithSearchData = async(function() {
     return models.Address.findAll({
-        attributes: ['id', 'schoolId', 'areaId'],
+        attributes: ['id', 'entityId', 'areaId'],
         include: [{
             model: models.AddressSearchData,
             as: 'searchData',
