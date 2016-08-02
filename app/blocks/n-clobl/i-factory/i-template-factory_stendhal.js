@@ -24,11 +24,11 @@ goog.require('sm.gAuthSocial.TemplateStendhal');
 goog.require('sm.gAuthSocialModal.TemplateStendhal');
 goog.require('sm.gButton.TemplateSocialStendhal');
 goog.require('sm.gButton.TemplateStendhal');
-goog.require('sm.gDropdown.DropdownSelectTemplate');
+goog.require('sm.gDropdown.TemplateSelect');
 goog.require('sm.gHint.TemplateStendhal');
 goog.require('sm.gIcon.TemplateStendhal');
 goog.require('sm.gInput.DigitInputTemplate');
-goog.require('sm.gList.SelectTemplate');
+goog.require('sm.gList.TemplateSelect');
 goog.require('sm.gModal.TemplateFeedback');
 goog.require('sm.gModal.TemplateStendhal');
 goog.require('sm.gTab.TemplateStendhal');
@@ -70,11 +70,11 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         )
         .setTemplateListItem(
             'dropdown-select',
-            sm.gDropdown.DropdownSelectTemplate.dropdown
+            sm.gDropdown.TemplateSelect.dropdown
         )
         .setTemplateListItem(
             'list-select',
-            sm.gList.SelectTemplate.list
+            sm.gList.TemplateSelect.list
         )
         .setTemplateListItem(
             'digit-input',

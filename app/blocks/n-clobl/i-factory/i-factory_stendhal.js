@@ -36,11 +36,11 @@ goog.require('sm.bSmSubheader.SmSubheader');
 goog.require('sm.bSmSubheader.View');
 goog.require('sm.gAuthSocial.ViewStendhal');
 goog.require('sm.gDropdown.DropdownSelect');
-goog.require('sm.gDropdown.DropdownSelectView');
+goog.require('sm.gDropdown.ViewSelect');
 goog.require('sm.gInput.DigitInput');
 goog.require('sm.gInput.DigitInputView');
-goog.require('sm.gList.SelectList');
-goog.require('sm.gList.SelectListView');
+goog.require('sm.gList.List.Select');
+goog.require('sm.gList.ViewSelect');
 goog.require('sm.gModal.ModalFeedback');
 goog.require('sm.gModal.ModalStendhal');
 goog.require('sm.gModal.ViewFeedback');
@@ -66,11 +66,11 @@ sm.iFactory.FactoryStendhal = function() {
 
     this.setControlListItem('dropdown-select', {
             control: sm.gDropdown.DropdownSelect,
-            view: sm.gDropdown.DropdownSelectView
+            view: sm.gDropdown.ViewSelect
         })
         .setControlListItem('list-select', {
-            control: sm.gList.SelectList,
-            view: sm.gList.SelectListView
+            control: sm.gList.List.Select,
+            view: sm.gList.ViewSelect
         })
         .setControlListItem('digit-input', {
             control: sm.gInput.DigitInput,
