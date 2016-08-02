@@ -1,4 +1,4 @@
-goog.provide('sm.gList.SelectList');
+goog.provide('sm.gList.List.Select');
 
 goog.require('cl.gList.List');
 
@@ -11,22 +11,22 @@ goog.require('cl.gList.List');
  * @constructor
  * @extends {cl.gList.List}
  */
-sm.gList.SelectList = function(view, opt_domHelper) {
-    goog.base(this, view, opt_domHelper);
+sm.gList.List.Select = function(view, opt_domHelper) {
+    sm.gList.List.Select.base(this, 'constructor', view, opt_domHelper);
 
 
     /**
      * Text, that sends to opener customtext of select
-     * @type {Array.<string>}
+     * @type {Array<string>}
      * @private
      */
     this.itemValues_ = [];
 };
-goog.inherits(sm.gList.SelectList, cl.gList.List);
+goog.inherits(sm.gList.List.Select, cl.gList.List);
 
 
 goog.scope(function() {
-    var SelectList = sm.gList.SelectList;
+    var SelectList = sm.gList.List.Select;
 
 
     /**
@@ -34,7 +34,7 @@ goog.scope(function() {
      * @override
      */
     SelectList.prototype.decorateInternal = function(element) {
-        goog.base(this, 'decorateInternal', element);
+        SelectList.base(this, 'decorateInternal', element);
 
         var dataParams = this.getView().getDataParams(element);
 
