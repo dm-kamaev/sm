@@ -43,7 +43,7 @@ goog.scope(function() {
 
 
     /**
-     * Add item to top
+     * Add item to top of list
      * @param {Object} data
      */
     ItemList.prototype.addItemTop = function(data) {
@@ -53,7 +53,7 @@ goog.scope(function() {
 
 
     /**
-     * Add item to bottom
+     * Add item to bottom of list
      * @param {Object} data
      */
     ItemList.prototype.addItemBottom = function(data) {
@@ -65,10 +65,12 @@ goog.scope(function() {
 
 
     /**
-     * Remove item
-     * @param {sm.bSmItem.SmItem|sm.bSmItem.SmItemEntity} item
+     * Remove item from list
+     * @param {number} itemId
      */
-    ItemList.prototype.removeItem = function(item) {
+    ItemList.prototype.removeItem = function(itemId) {
+        var item = this.getItem_(itemId);
+
         this.removeChild(item);
 
         var domElement = item.getElement();
@@ -82,11 +84,13 @@ goog.scope(function() {
      * Show next hidden items and hide shown items (equal count Items Per Page)
      */
     ItemList.prototype.showNextPage = function() {
-        var countPage = this.getView().getCountPage();
+        var pageNumber = this.getPageNumber();
 
-        if (this.params.pageNumber < countPage) {
-            this.params.pageNumber++;
-            this.getView().setPage(this.params.pageNumber);
+        if (!this.isLastPage()) {
+            pageNumber++;
+
+            this.getView().setPage(pageNumber);
+            this.setPageNumber_(pageNumber);
         }
     };
 
@@ -96,12 +100,104 @@ goog.scope(function() {
      * (equal count Items Per Page)
      */
     ItemList.prototype.showPreviousPage = function() {
-        var countPage = this.getView().getCountPage();
+        var pageNumber = this.getPageNumber();
 
-        if (0 <= this.params.pageNumber) {
-            this.params.pageNumber--;
-            this.getView().setPage(this.params.pageNumber);
+        if (!this.isFirstPage()) {
+            pageNumber--;
+
+            this.getView().setPage(pageNumber);
+            this.setPageNumber_(pageNumber);
         }
+    };
+
+
+    /**
+     * Show first page of list items (equal count Items Per Page)
+     */
+    ItemList.prototype.showFirstPage = function() {
+        this.getView().setPage(1);
+        this.setPageNumber_(1);
+    };
+
+
+    /**
+     * Get true if first page, else get false
+     * @return {bool}
+     */
+    ItemList.prototype.isFirstPage = function() {
+        return this.getPageNumber() == 1;
+    };
+
+
+    /**
+     * Get true if last page, else get false
+     * @return {bool}
+     */
+    ItemList.prototype.isLastPage = function() {
+        return this.getCountPages() == this.getPageNumber();
+    };
+
+
+    /**
+     * Get count pages
+     * @return {number}
+     */
+    ItemList.prototype.getCountPages = function() {
+        return Math.ceil(
+            this.items_.length / this.params.countItemsPerPage
+        ) || null;
+    };
+
+
+    /**
+     * Get count items
+     * @return {number}
+     */
+    ItemList.prototype.getCountItems = function() {
+        return this.items_.length;
+    };
+
+
+    /**
+     * Get count items per page
+     * @return {number}
+     */
+    ItemList.prototype.getCountItemsPerPage = function() {
+        return this.params.countItemsPerPage || null;
+    };
+
+
+    /**
+     * Get page number
+     * @return {number}
+     */
+    ItemList.prototype.getPageNumber = function() {
+        return this.params.pageNumber || null;
+    };
+
+
+    /**
+     * Set page number
+     * @param {number} pageNumber
+     * @private
+     */
+    ItemList.prototype.setPageNumber_ = function(pageNumber) {
+        this.params.pageNumber = pageNumber;
+    };
+
+
+    /**
+     * Get item
+     * @param {number} itemId
+     * @return {sm.bSmItem.SmItem|sm.bSmItem.SmItemEntity}
+     * @private
+     */
+    ItemList.prototype.getItem_ = function(itemId) {
+        var result = this.items_.filter(function(item) {
+            return item.getItemId() == itemId;
+        });
+
+        return result[0];
     };
 
 

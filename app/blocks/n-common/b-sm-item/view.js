@@ -31,6 +31,31 @@ goog.scope(function() {
      * @enum {string}
      */
     View.CssClass = {
-        ROOT: 'b-sm-item',
+        ROOT: 'b-sm-item'
+    };
+
+
+    /**
+     * @override
+     * @param {Element} element
+     */
+    View.prototype.decorateInternal = function(element) {
+        View.base(this, 'decorateInternal', element);
+
+        this.initParams_();
+    };
+
+
+    /**
+     * Initializes params from attributes data-params
+     * @private
+     */
+    View.prototype.initParams_ = function() {
+        this.params = JSON.parse(
+            goog.dom.dataset.get(
+                this.getElement(),
+                'params'
+            )
+        );
     };
 });  // goog.scope

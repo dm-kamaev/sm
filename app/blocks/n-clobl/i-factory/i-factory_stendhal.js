@@ -29,6 +29,8 @@ goog.require('sm.bSmItem.View');
 goog.require('sm.bSmItem.ViewEntity');
 goog.require('sm.bSmItemList.SmItemList');
 goog.require('sm.bSmItemList.View');
+goog.require('sm.bSmListPaged.SmListPaged');
+goog.require('sm.bSmListPaged.View');
 goog.require('sm.bSmScore.SmScore');
 goog.require('sm.bSmScore.View');
 goog.require('sm.bSmScore.ViewBrief');
@@ -168,6 +170,10 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('smItemList', {
             control: sm.bSmItemList.SmItemList,
             view: sm.bSmItemList.View
+        })
+        .setControlListItem('smListPaged', {
+            control: sm.bSmListPaged.SmListPaged,
+            view: sm.bSmListPaged.View
         });
 };
 goog.inherits(sm.iFactory.FactoryStendhal, cl.iFactory.Factory);

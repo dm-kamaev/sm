@@ -22,7 +22,7 @@ sm.bSmItemList.View = function(opt_params, opt_type, opt_modifier) {
     /**
      * Parameters
      * @type {{
-     *     itemType: (smItem,smItemEntity),
+     *     itemType: (smItem|smItemEntity),
      *     countItemsPerPage: (number|undefined),
      *     pageNumber: (number|undefined)
      * }}
@@ -98,25 +98,12 @@ goog.scope(function() {
      */
     View.prototype.setPage = function(pageNumber) {
 
-        this.params.pageNumber = pageNumber;
-
         this.hideItems_(0, this.dom.itemContainers.length);
 
-        var start = pageNumber * this.params.countItemsPerPage,
+        var start = (pageNumber - 1) * this.params.countItemsPerPage,
             end = start + this.params.countItemsPerPage;
 
         this.showItems_(start, end);
-    };
-
-
-    /**
-     * Get count page
-     * @return {number}
-     */
-    View.prototype.getCountPage = function() {
-        return Math.ceil(
-            this.dom.itemContainers.length / this.params.countItemsPerPage
-        ) - 1;
     };
 
 
@@ -271,7 +258,7 @@ goog.scope(function() {
         );
 
         if (this.params.countItemsPerPage) {
-            this.params.pageNumber = 0;
+            this.params.pageNumber = 1;
         }
     };
 });  // goog.scope

@@ -1,0 +1,269 @@
+{namespace sm.bSmListPaged.Template}
+
+
+/**
+ * @typedef {{
+ *     items: Array<(
+ *         sm.bSmItem.Template.Params.Data|
+ *         sm.bSmItem.TemplateEntity.Params.Data
+ *     )>,
+ *     countItemsPerPage: number
+ * }} sm.bSmListPaged.Template.Params.Data
+ */
+
+
+  /**
+ * @typedef {{
+ *     stylizationModifier: (string|undefined)
+ * }} sm.bSmListPaged.Template.Params.Config
+ */
+
+
+/**
+ * Constructor
+ * @param params {{
+ *     data: sm.bSmListPaged.Template.Params.Data,
+ *     config: ?sm.bSmListPaged.Template.Params.Config
+ * }}
+ * @extends cl.iControl.Template
+ * @constructor
+ */
+{template .listPaged}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * Body
+ * @param params {{
+ *     data: sm.bSmListPaged.Template.Params.Data,
+ *     config: ?sm.bSmListPaged.Template.Params.Config
+ * }}
+ * @override
+ */
+{template .body}
+    {call .content_ data="all" /}
+    {call .footer_ data="all" /}
+{/template}
+
+
+/**
+ * Template interval
+ * @param params {{
+ *     start: number,
+ *     end: number
+ * }}
+ */
+{template .interval kind="html"}
+    <span class="{call .rootClass/}__interval-count">
+        {$params.start}&mdash;{$params.end}
+    </span>
+{/template}
+
+
+/**
+ * Template count text
+ * @param params {{
+ *     itemsCount: number
+ * }}
+ */
+{template .countText}
+    {sp}из {$params.itemsCount}
+{/template}
+
+
+/**
+ * Content
+ * @param params {{
+ *     data: sm.bSmListPaged.Template.Params.Data,
+ *     config: ?sm.bSmListPaged.Template.Params.Config
+ * }}
+ */
+{template .content_ kind="html"}
+    <div class="{call .rootClass/}__content">
+        {call .list_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Items list
+ * @param params {{
+ *     data: {
+ *         items: Array<(
+ *             sm.bSmItem.Template.Params.Data|
+ *             sm.bSmItem.TemplateEntity.Params.Data
+ *         )>,
+ *         countItemsPerPage: number
+ *     },
+ *     config: {
+ *         stylizationModifier: (string|undefined)
+ *     }
+ * }}
+ */
+{template .list_ kind="html" private="true"}
+    <div class="{call .rootClass/}__list">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': $params?.config?.stylizationModifier ?: 'stendhal',
+                'type': 'smItemList',
+                'renderParams': [
+                    'data': [
+                        'items': $params?.data?.items,
+                        'itemType': 'smItem',
+                        'countItemsPerPage': $params?.data?.countItemsPerPage
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Template footer
+ * @param params {{
+ *     data: {
+ *         items: Array<(
+ *             sm.bSmItem.Template.Params.Data|
+ *             sm.bSmItem.TemplateEntity.Params.Data
+ *         )>,
+ *         countItemsPerPage: number
+ *     }
+ * }}
+ */
+{template .footer_ kind="html" private="true"}
+    {let $classes kind="html"}
+        {call .rootClass/}__footer
+
+        {if $params?.data?.items and 
+            length($params?.data?.items) <= $params?.data?.countItemsPerPage}
+
+            {sp}i-utils__hidden
+        {/if}
+    {/let}
+
+    <div class="{$classes}">
+        {call .link_}
+            {param params: [
+                'data': [
+                    'text': 'Назад'
+                ],
+                'config': [
+                    'modifier': 'previous'
+                ]
+            ]/}
+        {/call}
+
+        {call .pages_ data="all" /}
+
+        {call .link_}
+            {param params: [
+                'data': [
+                    'text': 'Далее'
+                ],
+                'config': [
+                    'modifier': 'next'
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Template link
+ * @param params {{
+ *     data: {
+ *         text: (undefined|string)
+ *     },
+ *     config: {
+ *         modifier: (undefined|string)
+ *     }
+ * }}
+ */
+{template .link_ kind="html" private="true"}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__link{sp}
+        {call .rootClass/}__link_{$params.config?.modifier}
+
+        {if $params.config?.modifier == 'next'}
+            {sp}{call .rootClass/}__link_active
+        {/if}
+
+        {if $params.config?.modifier == 'previous'}
+            {sp}{call .rootClass/}__link_inactive
+        {/if}
+    {/let}
+
+    {call sm.bLink.Template.base}
+        {param params: [
+            'data': [
+                'name': $params.data.text,
+            ],
+            'config': [
+                'customClasses': $customClasses,
+                'size': 'large'
+            ]
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * Template count
+ * @param params {{
+ *     data: {
+ *         items: Array<(
+ *             sm.bSmItem.Template.Params.Data|
+ *             sm.bSmItem.TemplateEntity.Params.Data
+ *         )>,
+ *         countItemsPerPage: number
+ *     }
+ * }}
+ */
+{template .pages_ kind="html"}
+    <span class="{call .rootClass/}__pages-count">
+        {call .interval}
+            {param params: [
+                'start': 1,
+                'end': $params?.data?.countItemsPerPage
+            ]/}
+        {/call}
+
+        {let $itemsCount: $params?.data?.items ?
+            length($params?.data?.items):
+            0
+        /}
+
+        {call .count_}
+            {param params: [
+                'itemsCount': $itemsCount
+            ]/}
+        {/call}
+    </span>
+{/template}
+
+
+/**
+ * Template count
+ * @param params {{
+ *     itemsCount: ?number
+ * }}
+ */
+{template .count_ kind="html" private="true"}
+    <span class="{call .rootClass/}__count">
+        {call .countText}
+            {param params: $params /}
+        {/call}
+    </span>
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-sm-list-paged
+{/template}

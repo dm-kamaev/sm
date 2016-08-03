@@ -21,4 +21,13 @@ goog.inherits(sm.bSmItem.SmItem, cl.iControl.Control);
 goog.scope(function() {
     var Item = sm.bSmItem.SmItem,
         View = sm.bSmItem.View;
+
+
+    /**
+     * Get item id
+     * @return {number}
+     */
+    Item.prototype.getItemId = function() {
+        return this.params.data.id;
+    };
 });  // goog.scope

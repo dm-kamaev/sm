@@ -26,7 +26,8 @@
 
  /**
  * @typedef {{
- *     stylizationModifier: (string|undefined)
+ *     stylizationModifier: (string|undefined),
+ *     customClasses: ?Array<string>
  * }} sm.bSmItem.Template.Params.Config
  */
 
@@ -179,6 +180,14 @@
 {template .score_}
     <div class="{call .rootClass/}__score">
         {$params.data?.score}
+        // {call .renderChild}
+        //     {param params: [
+        //         'type': 'smScore',
+        //         'renderParams': [
+        //             'data': $params.data.score
+        //         ]
+        //     ]/}
+        // {/call}
     </div>
 {/template}
 
@@ -200,7 +209,8 @@
  * @protected
  */
 {template .location}
-    {if $params.data?.metro and length($params.data?.metro)}
+    // {if $params.data?.metro and length($params.data?.metro)}
+    {if $params.data?.metroStations and length($params.data?.metroStations)}
         {call .metro_ data="all" /}
     {elseif $params.data?.area and length($params.data?.area)}
         {call .area_ data="all" /}
@@ -223,13 +233,14 @@
     <div class="{call .rootClass/}__badge {call .rootClass/}__badge_metro">
         {call sm.bBadge.Template.base}
             {param params:[
-                'data': $params.data.metro,
+                'data': $params.data.metroStations,
                 'display': 'metro',
                 'config': [
                     'isNotClickable': true
                 ]
             ]/}
         {/call}
+        //'data': $params.data.metro,
     </div>
 {/template}
 
@@ -249,13 +260,14 @@
     <div class="{call .rootClass/}__badge {call .rootClass/}__badge_area">
         {call sm.bBadge.Template.base}
             {param params:[
-                'data': $params.data.area[0],
+                'data': $params.data.area,
                 'display': 'location',
                 'config': [
                     'isNotClickable': true
                 ]
             ]/}
         {/call}
+        //'data': $params.data.area[0]
     </div>
 {/template}
 
