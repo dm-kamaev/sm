@@ -8,7 +8,6 @@ goog.require('sm.bBadge.Badge');
 goog.require('sm.bFavoriteLink.FavoriteLink');
 goog.require('sm.bSchoolListItem.Event.FavoriteRemoved');
 goog.require('sm.bScore.ScoreMinimized');
-goog.require('sm.iEvent.EventPayload');
 
 
 
@@ -95,7 +94,7 @@ goog.scope(function() {
         FactoryManager = cl.iFactory.FactoryManager,
         FavoriteLink = sm.bFavoriteLink.FavoriteLink;
 
-    var EventPayload = sm.iEvent.EventPayload;
+    var Event = sm.bSchoolListItem.Event;
 
     var analytics = sm.iAnalytics.Analytics.getInstance();
 
@@ -118,8 +117,7 @@ goog.scope(function() {
      */
     ListItem.Event = {
         FAVORITE_ADDED: FavoriteLink.Event.FAVORITE_ADDED,
-        //sm.iEvent.EventPayload<{itemId: number}>
-        FAVORITE_REMOVED: 'favorite-removed'
+        FAVORITE_REMOVED: Event.FavoriteRemoved.Type
     };
 
 
@@ -340,15 +338,7 @@ goog.scope(function() {
      * @private
      */
     ListItem.prototype.onRemoveFavoriteClick_ = function() {
-        /** @type {sm.iEvent.EventPayload<{itemId: number}>} */
-        var event = new EventPayload(
-            {
-                itemId: this.schoolId_
-            },
-            ListItem.Event.FAVORITE_REMOVED,
-            this
-        );
-
+        var event = new Event.FavoriteRemoved(this.schoolId_, this);
         this.dispatchEvent(event);
 
         this.setEcAnalyticsRemove_();

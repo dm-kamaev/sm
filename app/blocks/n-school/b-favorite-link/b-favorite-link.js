@@ -37,9 +37,8 @@ goog.inherits(sm.bFavoriteLink.FavoriteLink, cl.iControl.Control);
 
 goog.scope(function() {
     var FavoriteLink = sm.bFavoriteLink.FavoriteLink,
-        View = sm.bFavoriteLink.View;
-
-    var EventPayload = sm.iEvent.EventPayload;
+        View = sm.bFavoriteLink.View,
+        Event = sm.bFavoriteLink.Event;
 
 
     /**
@@ -47,8 +46,7 @@ goog.scope(function() {
      * @enum
      */
     FavoriteLink.Event = {
-        //sm.iEvent.EventPayload<sm.bSchoolListItem.SchoolListItem.Params>
-        FAVORITE_ADDED: 'favorite-added',
+        FAVORITE_ADDED: Event.FavoriteAdded.Type,
         SET_FAVORITE_STATE: 'set-favorite-state',
         SET_NOT_FAVORITE_STATE: 'set-not-favorite-state'
     };
@@ -143,15 +141,8 @@ goog.scope(function() {
      * @private
      */
     FavoriteLink.prototype.onSuccessFavoriteAdd_ = function(data) {
-        var item = sm.bSchoolListItem.SchoolListItem.transformParams(data);
-
-        /** @type {sm.iEvent.EventPayload<
-         *     sm.bSchoolListItem.SchoolListItem.Params
-         * >}
-         */
-        var event = new EventPayload(
-            item, FavoriteLink.Event.FAVORITE_ADDED, this
-        );
+        var item = sm.bSchoolListItem.SchoolListItem.transformParams(data),
+            event = new Event.FavoriteAdded(item, this);
         this.dispatchEvent(event);
     };
 
