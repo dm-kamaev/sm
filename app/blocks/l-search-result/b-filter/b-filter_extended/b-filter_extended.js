@@ -4,6 +4,7 @@ goog.require('cl.iUtils.Utils');
 goog.require('goog.dom.classlist');
 goog.require('goog.events');
 goog.require('sm.lSearchResult.bFilter.Filter');
+goog.require('sm.lSearchResult.bFilterSearch.FilterSearch');
 
 
 
@@ -48,6 +49,15 @@ goog.scope(function() {
     FilterExtended.CssClass = {
         ROOT: 'b-filter_extended',
         SHOW_MODAL_BUTTON: 'b-filter__button_show-modal'
+    };
+
+
+    /**
+     * Event enum
+     * @enum {String}
+     */
+    FilterExtended.Event = {
+        APPLY_CLICK: 'apply-click'
     };
 
 
@@ -252,6 +262,18 @@ goog.scope(function() {
         this.filterModal_.remove();
 
         this.dispatchChangedFilterEvent();
+        this.dispatchApplyClickEvent_();
+    };
+
+
+    /**
+     * Dispatch Apply Click Event
+     * @private
+     */
+    FilterExtended.prototype.dispatchApplyClickEvent_ = function() {
+        this.dispatchEvent({
+            'type': FilterExtended.Event.APPLY_CLICK
+        });
     };
 
 
