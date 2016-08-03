@@ -143,32 +143,18 @@ goog.scope(function() {
         goog.base(this, 'decorateInternal', element);
 
         this.initElements_();
+        this.initFilters_();
+    };
 
-        var filters = this.elements_.filters,
-            elem,
-            filter;
 
-        for (var i = 0; i < filters.length; i++) {
-            elem = filters[i];
+    /**
+     * @override
+     */
+    Filters.prototype.enterDocument = function() {
+        goog.base(this, 'enterDocument');
 
-            if (goog.dom.classes.has(elem, FilterClasses.CssClass.ROOT)) {
-                this.filterClasses_ = new FilterClasses();
-                this.addChild(this.filterClasses_);
-                this.filterClasses_.decorate(elem);
-            }
-            else if (goog.dom.classes.has(elem, FilterExtended.CssClass.ROOT)) {
-                filter = new FilterExtended();
-                this.addChild(filter);
-                filter.decorate(elem);
-                this.filters_.push(filter);
-            }
-            else {
-                filter = new Filter();
-                this.addChild(filter);
-                filter.decorate(elem);
-                this.filters_.push(filter);
-            }
-        }
+        this.initElementsListeners_();
+        this.initFiltersListeners_();
     };
 
 
@@ -212,11 +198,43 @@ goog.scope(function() {
 
 
     /**
-     * @override
+     * Init filters
+     * @private
      */
-    Filters.prototype.enterDocument = function() {
-        goog.base(this, 'enterDocument');
+    Filters.prototype.initFilters_ = function() {
+        var filters = this.elements_.filters,
+            elem,
+            filter;
 
+        for (var i = 0; i < filters.length; i++) {
+            elem = filters[i];
+
+            if (goog.dom.classes.has(elem, FilterClasses.CssClass.ROOT)) {
+                this.filterClasses_ = new FilterClasses();
+                this.addChild(this.filterClasses_);
+                this.filterClasses_.decorate(elem);
+            }
+            else if (goog.dom.classes.has(elem, FilterExtended.CssClass.ROOT)) {
+                filter = new FilterExtended();
+                this.addChild(filter);
+                filter.decorate(elem);
+                this.filters_.push(filter);
+            }
+            else {
+                filter = new Filter();
+                this.addChild(filter);
+                filter.decorate(elem);
+                this.filters_.push(filter);
+            }
+        }
+    };
+
+
+    /**
+     * Initializes listeners for Elements
+     * @private
+     */
+    Filters.prototype.initElementsListeners_ = function() {
         this.getHandler().listen(
             this.elements_.submit,
             goog.events.EventType.CLICK,
@@ -240,7 +258,14 @@ goog.scope(function() {
             goog.events.EventType.CLICK,
             this.onResetFiltersClick_
         );
+    };
 
+
+    /**
+     * Initializes listeners for Filters
+     * @private
+     */
+    Filters.prototype.initFiltersListeners_ = function() {
         this.getHandler().listen(
             this.filterClasses_,
             Filter.Event.CHECKED_FILTER,
@@ -254,18 +279,24 @@ goog.scope(function() {
         );
 
         for (var i = 0; i < this.filters_.length; i++) {
+            var filter = this.filters_[i];
+
             this.getHandler().listen(
-                this.filters_[i],
+                filter,
                 Filter.Event.CHECKED_FILTER,
                 this.onCheckedFilter_
             );
-        }
 
-        for (var i = 0; i < this.filters_.length; i++) {
             this.getHandler().listen(
-                this.filters_[i],
+                filter,
                 Filter.Event.UNCHECKED_FILTER,
                 this.onUncheckedFilter_
+            );
+
+            this.getHandler().listen(
+                filter,
+                FilterExtended.Event.APPLY_CLICK,
+                this.onSubmit_
             );
         }
     };
