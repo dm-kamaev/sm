@@ -152,6 +152,10 @@ goog.scope(function() {
      * @private
      */
     Item.prototype.initScore_ = function() {
+        this.score_ = this.decorateChild(
+            'smScoreBrief',
+            this.getView().getDom().score
+        );
     };
 
 

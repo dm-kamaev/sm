@@ -124,7 +124,7 @@ goog.scope(function() {
     View.prototype.initDom_ = function(element) {
         this.dom = {
             score: this.getElementByClass(
-                sm.bSmScore.SmScore.View.CssClass.ROOT,
+                sm.bSmScore.ViewBrief.View.CssClass.ROOT,
                 element
             ),
             detailsSection: this.getElementByClass(

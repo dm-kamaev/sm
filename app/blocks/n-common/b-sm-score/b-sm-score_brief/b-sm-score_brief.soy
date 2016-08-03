@@ -30,9 +30,11 @@
  *         primaryMark: {
  *             size: string,
  *             isNameVisible: boolean,
- *             zeroSign: ('nothing'|'question-mark'|undefined)
+ *             zeroSign: ('nothing'|'question-mark'|undefined),
+ *             showMark: boolean
  *         }
- *         theme: string
+ *         theme: string,
+ *         isActive: boolean
  *     }
  * }} sm.bSmScore.TemplateBrief.Params.Config
  */
@@ -43,6 +45,7 @@
  *     config: sm.bSmScore.TemplateBrief.Params.Config
  * }} sm.bSmScore.TemplateBrief.Params
  */
+
 
 /**
  * Template for ScoreBrief block
@@ -193,21 +196,21 @@
  * @protected
  */
 {template .markListItems kind="html"}
-     {if $params.data.marks.secondary and
-                            length($params.data.marks.secondary)}
-         {foreach $mark in $params.data.marks.secondary}
-             {call .mark_}
-                 {param params: [
-                     'data': $mark,
-                     'config': [
-                         'type': 'secondary',
-                         'showMark': true,
-                         'theme': $params?.config?.theme
-                     ]
-                 ] /}
-             {/call}
-         {/foreach}
-     {/if}
+    {if $params.data.marks.secondary and
+                           length($params.data.marks.secondary)}
+        {foreach $mark in $params.data.marks.secondary}
+            {call .mark_}
+                {param params: [
+                    'data': $mark,
+                    'config': [
+                        'type': 'secondary',
+                        'showMark': true,
+                        'theme': $params?.config?.theme
+                    ]
+                ] /}
+            {/call}
+        {/foreach}
+    {/if}
 {/template}
 
 /**

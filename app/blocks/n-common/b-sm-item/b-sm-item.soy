@@ -54,8 +54,8 @@
  * @override
  */
 {template .body}
-    {call .sectionHeader_ data="all" /}
-    {call .sectionDescription_ data="all" /}
+    {call .sectionHeader data="all" /}
+    {call .sectionDescription data="all" /}
     {call .sectionDetails data="all" /}
 {/template}
 
@@ -71,12 +71,13 @@
  *         score: ?sm.bSmScore.Template.Params.Data
  *     }
  * }}
+ * @protected
  */
-{template .sectionHeader_}
+{template .sectionHeader}
     <div class="{call .rootClass/}__section{sp}
                 {call .rootClass/}__section_header">
-        {call .name_ data="all" /}
-        {call .score_ data="all" /}
+        {call .name data="all" /}
+        {call .score data="all" /}
     </div>
 {/template}
 
@@ -88,13 +89,14 @@
  *         description: (string|undefined)
  *     }
  * }}
+ * @protected
  */
-{template .sectionDescription_}
+{template .sectionDescription}
     {let $classes kind="html"}
         {call .rootClass/}__section{sp}
         {call .rootClass/}__section_description
 
-        {if $params.data?.description}
+        {if not $params.data?.description}
             {sp}i-utils__hidden
         {/if}
     {/let}
@@ -139,8 +141,9 @@
  *         }
  *     }
  * }}
+ * @protected
  */
-{template .name_}
+{template .name}
     <div class="{call .rootClass/}__name">
         {let $name kind="html"}
             {$params.data.name.light}
@@ -176,8 +179,9 @@
  *         score: ?sm.bSmScore.Template.Params.Data
  *     }
  * }}
+ * @protected
  */
-{template .score_}
+{template .score}
     <div class="{call .rootClass/}__score">
         {$params.data?.score}
         // {call .renderChild}

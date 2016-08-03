@@ -9,8 +9,9 @@
  *         light: (string|undefined),
  *         bold: (string|undefined)
  *     },
- *     alias: (string|undefined),
- *     score: (sm.bSmScore.Template.Params.Data|undefined),
+ *     cost: (number|undefined),
+ *     alias: ?string,
+ *     score: (sm.bSmScore.TemplateBrief.Params.Data|undefined),
  *     description: string,
  *     metro: (Array<{
  *         id: number,
@@ -20,8 +21,9 @@
  *         id: number,
  *         name: string
  *     }>|undefined),
- *     isFavorite: boolean,
- *     countDepartment: (number|undefined),
+ *     online: ('only'|available'|undefidned),
+ *     isFavorite: ?boolean,
+ *     countDepartment: ?number,
  *     position: (number|undefined)
  * }} sm.bSmItem.TemplateEntity.Params.Data
  */
@@ -42,6 +44,79 @@
 
 
 /**
+ * Header
+ * @param params {{
+ *     data: {
+ *         type: string,
+ *         name: {
+ *             light: string,
+ *             bold: ?string
+ *         },
+ *         cost: (number|undefined),
+ *         score: ?sm.bSmScore.Template.Params.Data
+ *     }
+ * }}
+ * @override
+ */
+{template .sectionHeader}
+    <div class="{call .rootClass/}__section{sp}
+                {call .rootClass/}__section_header">
+        {call .name data="all" /}
+
+        {call .cost_}
+            {param params: [
+                'data': $params.data,
+                'config': [
+                    'size': 'l'
+                ]
+            ]/}
+        {/call}
+
+        {call .score data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Description
+ * @param params {{
+ *     data: {
+ *         type: string,
+ *         cost: (number|undefined),
+ *         description: (string|undefined)
+ *     }
+ * }}
+ * @override
+ */
+{template .sectionDescription}
+    {let $classes kind="html"}
+        {call .rootClass/}__section{sp}
+        {call .rootClass/}__section_description
+
+        {if not $params.data?.description or not $params.data.type == 'course'}
+            {sp}i-utils__hidden
+        {/if}
+    {/let}
+
+    <div class="{$classes}">
+        {call .description_ data="all" /}
+//$params.data,
+        {call .cost_}
+            {param params: [
+                'data': [
+                    'cost': '1 200',
+                    'type': 'course'
+                ],
+                'config': [
+                    'size': 's'
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
  * Details
  * @param params {{
  *     data: {
@@ -53,8 +128,9 @@
  *             id: number,
  *             name: string
  *         }>|undefined),
- *         isFavorite: boolean,
- *         countDepartment: (number|undefined),
+ *         online: ('only'|available'|undefidned),
+ *         isFavorite: ?boolean,
+ *         countDepartment: ?number
  *     },
  *     config: {
  *         stylizationModifier: (string|undefined)
@@ -66,9 +142,222 @@
     <div class="{call .rootClass/}__section{sp}
                 {call .rootClass/}__section_details">
         {call .location data="all" /}
+        {call .countDepartment_ data="all" /}
+        {call .online_ data="all" /}
         {call .favoriteLink_ data="all" /}
-        {call .countDepartment data="all" /}
     </div>
+{/template}
+
+
+/**
+ * Item name
+ * @param params {{
+ *     data: {
+ *         name: {
+ *             light: string,
+ *             bold: ?string
+ *         }
+ *     }
+ * }}
+ * @override
+ */
+{template .name}
+    <div class="{call .rootClass/}__name">
+        {$params.data.name.light}
+
+        {if $params.data.name?.bold}
+            <span class="{call .rootClass/}__name-bold">
+                {$params.data.name.bold}
+            </span>
+        {/if}
+    </div>
+{/template}
+
+
+/**
+ * Cost
+ * @param params {{
+ *     data: {
+ *         type: string,
+ *         cost: (number|undefined)
+ *     },
+ *     config: {
+ *         size: string
+ *     }
+ * }}
+ */
+{template .cost_}
+    {let $classes kind="html"}
+        {call .rootClass/}__cost{sp}
+        {call .rootClass/}__cost_size_{$params.config.size}
+    {/let}
+
+    {if $params.data.type == 'course'}
+        <div class="{$classes}">
+            {call .insertCost_ data="all" /}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Insert cost of
+ * @param params {{
+ *     data: {
+ *         cost: (number|undefined)
+ *     }
+ * }}
+ */
+{template .insertCost_}
+    {if $params.data?.cost == 0}
+        бесплатно
+    {elseif $params.data?.cost}
+        от&nbsp;{$params.data.cost} руб./мес
+    {else}
+        цена&nbsp;по&nbsp;запросу
+    {/if}
+{/template}
+
+
+/**
+ * Score
+ * @param params {{
+ *     data: {
+ *         score: ?sm.bSmScore.TemplateBrief.Params.Data
+ *     }
+ * }}
+ * @override
+ */
+{template .score}
+    <div class="{call .rootClass/}__score">
+        // {call cl.iUtils.Utils.stringify}
+        //     {param json: $params?.data?.score /}
+        // {/call}
+        // {call .renderChild}
+        //     {param params: [
+        //         'type': 'smScoreBrief',
+        //         'renderParams': [
+        //             'data': $params.data.score,
+        //             'config': [
+        //                 'primaryMark': [
+        //                     'isNameVisible': false,
+        //                     'zeroSign': 'nothing'
+        //                 ],
+        //                 'theme': 'bold'
+        //             ]
+        //         ]
+        //     ]/}
+        // {/call}
+
+        {call .renderChild}
+            {param params: [
+                'type': 'smScoreBrief',
+                'renderParams': [
+                    'data': [
+                        'marks': [
+                            'primary': [
+                                'name': $params.data.score.data.visibleMark.name,
+                                'value': $params.data.score.data.visibleMark.value
+                            ],
+                            'secondary': [
+                                [
+                                'name': $params.data.score.data?.hiddenMarks[0].name,
+                                'value': $params.data.score.data?.hiddenMarks[0].value
+                                ],
+                                [
+                                'name': $params.data.score.data?.hiddenMarks[1].name,
+                                'value': $params.data.score.data?.hiddenMarks[1].value
+                                ],
+                                [
+                                'name': $params.data.score.data?.hiddenMarks[2].name,
+                                'value': $params.data.score.data?.hiddenMarks[2].value
+                                ],
+                                [
+                                'name': $params.data.score.data?.hiddenMarks[3].name,
+                                'value': $params.data.score.data?.hiddenMarks[3].value
+                                ]
+                            ]
+                        ],
+                        'secondaryMarkListHeader': 'Оценки, поставленные пользователями'
+                    ],
+                    'config': [
+                        'primaryMark': [
+                            'size': 'l',
+                            'isNameVisible': false,
+                            'zeroSign': 'nothing',
+                            'showMark': true
+                        ],
+                        'theme': 'bold',
+                        'isActive': true
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Description
+ * @param params {{
+ *     data: {
+ *         description: (string|undefined)
+ *     }
+ * }}
+ */
+{template .description_}
+    <div class="{call .rootClass/}__description">
+        {$params.data?.description ?: ''}
+    </div>
+{/template}
+
+
+/**
+ * Online access
+ * @param params {{
+ *     data: {
+ *         online: ('only'|available'|undefidned)
+ *     }
+ * }}
+ */
+{template .online_}
+    {if $params.data?.online}
+        <div class="{call .rootClass/}__badge{sp}
+                    {call .rootClass/}__badge_online">
+            {call .insertOnline_ data="all" /}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Insert online access
+ * @param params {{
+ *     data: {
+ *         online: ('only'|available'|undefidned)
+ *     }
+ * }}
+ */
+{template .insertOnline_}
+    {let $text kind="html"}
+        {if $params.data.online == 'only'}
+            Онлайн-курсы
+        {elseif $params.data.online == 'available'}
+            Доступны онлайн-крсы
+        {/if}
+    {/let}
+
+    {let $icon kind="html"}
+        {if $params.data.online == 'only'}
+            arrow
+        {/if}
+    {/let}
+
+    // {call sm.bBadge.Template.base}
+    //     {param params:[
+    //         'data': $text
+    //     ]/}
+    // {/call}
 {/template}
 
 
@@ -110,9 +399,8 @@
  *         countDepartment: (number|undefined)
  *     }
  * }}
- * @protected
  */
-{template .countDepartment}
+{template .countDepartment_}
     {if $params.data?.countDepartment}
         <div class="{call .rootClass/}__badge{sp}
                     {call .rootClass/}__badge_department">
