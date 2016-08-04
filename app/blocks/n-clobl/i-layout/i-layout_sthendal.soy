@@ -1,21 +1,27 @@
+/**
+ * @fileoverview Base layout template
+ * Create html, head, body tags;
+ * Add meta-tags scripts and css styles to page;
+ * Add header, subheader and footer to page;
+ */
 {namespace sm.iLayout.TemplateStendhal}
 
 
 /**
  * @typedef {{
- *     openGraph: ?{
- *         url: ?string,
- *         siteName: ?string,
- *         title: ?string,
- *         type: ?string,
- *         description: ?string,
- *         image: ?string,
+ *     openGraph: ({
+ *         url: (string|undefined),
+ *         siteName: (string|undefined),
+ *         title: (string|undefined),
+ *         type: (string|undefined),
+ *         description: (string|undefined),
+ *         image: (string|undefined),
  *         fbClientId: ?number,
- *         twitterCardType: ?string,
- *         twitterSiteName: ?string,
- *         imageWidth: ?string,
- *         imageHeight: ?string
- *     },
+ *         twitterCardType: (string|undefined),
+ *         twitterSiteName: (string|undefined),
+ *         imageWidth: (string|undefined),
+ *         imageHeight: (string|undefined)
+ *     }|undefined),
  *     seo: {
  *         metaTitle: string,
  *         metaDescription: (string|undefined)
@@ -27,16 +33,15 @@
 
 /**
  * @typedef {{
- *     landingScript: string
- *     staticVersion: ?string,
- *     analyticsId: ?string,
+ *     staticVersion: (string|undefined),
+ *     analyticsId: (string|undefined),
  *     yandexMetrikaId: ?number,
- *     domain: ?string,
+ *     domain: (string|undefined),
  *     fbClientId: ?number,
- *     csrf: ?string,
- *     year: ?number,
- *     modifier: ?string,
- *     page: ?string
+ *     csrf: string,
+ *     year: (number|undefined),
+ *     modifier: string,
+ *     page: (string|undefined)
  * }} sm.iLayout.TemplateStendhal.Params.Config
  */
 
@@ -130,21 +135,16 @@
 /**
  * @param params {{
  *     config: {
- *         landingScript: string
- *         staticVersion: ?string,
- *         analyticsId: ?string,
- *         yandexMetrikaId: ?number,
- *         csrf: ?string
+ *         staticVersion: (string|undefined),
+ *         analyticsId: (string|undefined),
+ *         yandexMetrikaId: (number|undefined),
+ *         csrf: string
  *     }
  * }}
  * @override
  */
 {template .extraScripts autoescape="strict" kind="html"}
-    {call cl.iStatic.Template.script}
-        {param path: $params?.config?.landingScript /}
-        {param staticVersion: $params?.config?.staticVersion /}
-    {/call}
-
+    {call .layoutScript data="all" /}
     {call .csrf_ data="all"/}
     {call .analytics_ data="all"/}
     {call .metrika_ data="all"/}
@@ -152,9 +152,18 @@
 
 
 /**
+ * Add layout script to page
+ * Must be overridden when inheriting
+ * @protected
+ */
+{template .layoutScript kind="html"}
+{/template}
+
+
+/**
  * @param params {{
  *     config: {
- *         csrf: ?string
+ *         csrf: string
  *     }
  * }}
  */
@@ -169,7 +178,7 @@
 /**
  * @param params {{
  *     config: {
- *         analyticsId: ?string
+ *         analyticsId: (string|undefined)
  *     }
  * }}
  */
@@ -184,7 +193,7 @@
 /**
  * @param params {{
  *     config: {
- *         yandexMetrikaId: ?string
+ *         yandexMetrikaId: (string|undefined)
  *     }
  * }}
  */
@@ -237,7 +246,7 @@
                 'factory': $params.config.modifier ?: 'stendhal',
                 'type': 'smSubheader',
                 'renderParams': [
-                    'data': $params.data.subheader
+                    'data': $params.data.subHeader
                 ]
             ]/}
         {/call}

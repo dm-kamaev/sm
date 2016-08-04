@@ -109,10 +109,10 @@ goog.scope(function() {
 
     /**
      * Initializes items (Dom elements)
-     * @param {Element} element
+     * @param {Element=} opt_element
      */
-    View.prototype.initItems = function(element) {
-        var element = element || this.getElement();
+    View.prototype.initItems = function(opt_element) {
+        var element = opt_element || this.getElement();
 
         this.dom.items = this.getElementsByClass(
             sm.bSmItem.View.CssClass.ROOT,
@@ -133,7 +133,7 @@ goog.scope(function() {
      * @private
      */
     View.prototype.showItems_ = function(start, end) {
-        for (var i = start; i < end; i++) {
+        for (var i = start, itemContainer; i < end; i++) {
             itemContainer = this.dom.itemContainers[i];
 
             if (itemContainer) {
@@ -150,7 +150,7 @@ goog.scope(function() {
      * @private
      */
     View.prototype.hideItems_ = function(start, end) {
-        for (var i = start; i < end; i++) {
+        for (var i = start, itemContainer; i < end; i++) {
             itemContainer = this.dom.itemContainers[i];
 
             if (itemContainer) {
@@ -232,11 +232,11 @@ goog.scope(function() {
 
     /**
      * Initializes list (container for items)
-     * @param {Element} element
+     * @param {Element=} opt_element
      * @private
      */
-    View.prototype.initList_ = function(element) {
-        var element = element || this.getElement();
+    View.prototype.initList_ = function(opt_element) {
+        var element = opt_element || this.getElement();
 
         this.dom.list = this.getElementByClass(
             sm.bSmItemList.View.CssClass.LIST,
