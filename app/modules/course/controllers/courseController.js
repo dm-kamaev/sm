@@ -53,12 +53,113 @@ exports.search = async(function(req, res, next) {
                         {
                             'label': 'Качество',
                             'text': 'качеству'
+                        },
+                        {
+                            'label': 'Стоимость',
+                            'text': 'стоимости'
                         }
                     ],
                     staticText: 'Сортировать по ',
                     defaultOpenerText: 'стоимости'
                 },
-                entityList: [],
+                entityList: {
+                    items: [
+                        {
+                            id: 5,
+                            name: {
+                                light: 'Подготовка к ЕГЭ по русскому языку'
+                            },
+                            score: {
+                                primary: {
+                                    name: 'Средняя оценка',
+                                    value: 4.5
+                                },
+                                secondary: [
+                                    {
+                                        name: 'Стоимость',
+                                        value: 4.7
+                                    },
+                                    {
+                                        name: 'Качество',
+                                        value: 3
+                                    }
+                                ]
+                            },
+                            area: [
+                                'Даниловский'
+                            ],
+                            metro: [
+                                'Юго-западная',
+                                'Беляево'
+                            ],
+                            isFavorite: true,
+                            countDepartment: 10
+                        },
+                        {
+                            id: 5,
+                            name: {
+                                light: 'Подготовка к ЕГЭ по русскому языку'
+                            },
+                            score: {
+                                primary: {
+                                    name: 'Средняя оценка',
+                                    value: 4.5
+                                },
+                                secondary: [
+                                    {
+                                        name: 'Стоимость',
+                                        value: 4.7
+                                    },
+                                    {
+                                        name: 'Качество',
+                                        value: 3
+                                    }
+                                ]
+                            },
+                            area: [
+                                'Даниловский'
+                            ],
+                            metro: [
+                                'Юго-западная',
+                                'Беляево'
+                            ],
+                            isFavorite: true,
+                            countDepartment: 10
+                        },
+                        {
+                            id: 5,
+                            name: {
+                                light: 'Подготовка к ЕГЭ по русскому языку'
+                            },
+                            score: {
+                                primary: {
+                                    name: 'Средняя оценка',
+                                    value: 4.5
+                                },
+                                secondary: [
+                                    {
+                                        name: 'Стоимость',
+                                        value: 4.7
+                                    },
+                                    {
+                                        name: 'Качество',
+                                        value: 3
+                                    }
+                                ]
+                            },
+                            area: [
+                                'Даниловский'
+                            ],
+                            metro: [
+                                'Юго-западная',
+                                'Беляево'
+                            ],
+                            isFavorite: true,
+                            countDepartment: 10
+                        }
+                    ],
+                    itemType: 'smItemEntity'
+                },
                 searchSettings: {
                     url: 'api/course/search',
                     method: 'GET',

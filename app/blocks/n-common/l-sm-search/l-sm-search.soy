@@ -40,26 +40,7 @@
  *         placeholder: ?string
  *     },
  *     sort: sm.gDropdown.TemplateSelect.Params.Data
- *     entityList: Array<{
- *         id: number,
- *         alias: string,
- *         name: {
- *             light: string,
- *             bold: string
- *         },
- *         description: string,
- *         metro: (undefined|Array<{
- *             id: number,
- *             name: string
- *         }>),
- *         area: (undefined|Array<{
- *             id: number,
- *             name: string
- *         }>),
- *         score: sm.bSmScore.TemplateBrief.Params,
- *         ratings: Array<string>,
- *         isFavorite: boolean
- *     }>,
+ *     entityList: sm.bSmItemList.Template.Params.Data,
  *     filters: sm.lSearch.bFilters.Template.Params,
  *     searchSettings: {
  *         url: string,
@@ -146,26 +127,7 @@
  *             placeholder: ?string
  *         },
  *         sort: sm.gDropdown.TemplateSelect.Params.Data
- *         entityList: Array<{
- *             id: number,
- *             alias: string,
- *             name: {
- *                 light: string,
- *                 bold: string
- *             },
- *             description: string,
- *             metro: (undefined|Array<{
- *                 id: number,
- *                 name: string
- *             }>),
- *             area: (undefined|Array<{
- *                 id: number,
- *                 name: string
- *             }>),
- *             score: sm.bScore.TemplateMinimized.Params,
- *             ratings: Array<string>,
- *             isFavorite: boolean
- *         }>,
+ *         entityList: sm.bSmItemList.Template.Params.Data,
  *         filters: sm.lSearch.bFilters.Template.Params,
  *         searchSettings: {
  *             url: string,
@@ -284,26 +246,7 @@
  *             searchText: string,
  *             placeholder: ?string
  *         },
- *         entityList: Array<{
- *             id: number,
- *             alias: string,
- *             name: {
- *                 light: string,
- *                 bold: string
- *             },
- *             description: string,
- *             metro: (undefined|Array<{
- *                 id: number,
- *                 name: string
- *             }>),
- *             area: (undefined|Array<{
- *                 id: number,
- *                 name: string
- *             }>),
- *             score: {sm.bScore.TemplateMinimized.Params},
- *             ratings: Array<string>,
- *             isFavorite: boolean
- *         }>,
+ *         entityList: sm.bSmItemList.Template.Params.Data,
  *         filters: {sm.lSearch.bFilters.Template.Params}
  *     }
  * }}
@@ -421,26 +364,7 @@
  *             searchText: string,
  *             placeholder: ?string
  *         },
- *         entityList: Array<{
- *             id: number,
- *             alias: string,
- *             name: {
- *                 light: string,
- *                 bold: string
- *             },
- *             description: string,
- *             metro: (undefined|Array<{
- *                 id: number,
- *                 name: string
- *             }>),
- *             area: (undefined|Array<{
- *                 id: number,
- *                 name: string
- *             }>),
- *             score: {sm.bScore.TemplateMinimized.Params},
- *             ratings: Array<string>,
- *             isFavorite: boolean
- *         }>
+ *         entityList: sm.bSmItemList.Template.Params.Data
  *     }
  * }}
  */
@@ -464,26 +388,7 @@
  * Body for list results
  * @param params {
  *     data: {
- *         entityList: Array<{
- *             id: number,
- *             alias: string,
- *             name: {
- *                 light: string,
- *                 bold: string
- *             },
- *             description: string,
- *             metro: (undefined|Array<{
- *                 id: number,
- *                 name: string
- *             }>),
- *             area: (undefined|Array<{
- *                 id: number,
- *                 name: string
- *             }>),
- *             score: {sm.bScore.TemplateMinimized.Params},
- *             ratings: Array<string>,
- *             isFavorite: boolean
- *         }>,
+ *         entityList: sm.bSmItemList.Template.Params.Data,
  *         search: {
  *             countResults: ?number
  *         }
@@ -494,17 +399,26 @@
     {let $classes kind="html"}
         {call .rootClass/}__list-body
 
-        {if $params.data.search?.countResults}
+        {if not $params.data.search?.countResults}
             {sp}{cl.iUtils.Utils.CssClass.HIDDEN}
         {/if}
     {/let}
 
     <div class="{$classes}">
-        {call sm.lSearchResult.bSchoolList.Template.base}
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': $params.config.modifier,
+                'type': 'smItemList',
+                'renderParams': [
+                    'data': $params.data.entityList
+                ]
+            ] /}
+        {/call}
+        /*{call sm.lSearchResult.bSchoolList.Template.base}
             {param params: [
                 'schools': $params.data.entityList
             ]/}
-        {/call}
+        {/call}*/
     </div>
 {/template}
 
@@ -593,12 +507,13 @@
 
     {let $wrapperClasses kind="html"}
         {call .rootClass /}__sort
-        {if $params.data.search?.countResults}
+        {if not $params.data.search?.countResults}
             {sp}{cl.iUtils.Utils.CssClass.HIDDEN}
         {/if}
     {/let}
 
     <div class="{$wrapperClasses}">
+        <div class="{call .rootClass /}__horizontal-line"></div>
         <div class="{call .rootClass /}__sort-control">
             {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
                 {param params: [
@@ -615,7 +530,6 @@
                 ]/}
             {/call}
         </div>
-        <div class="{call .rootClass /}__horizontal-line"></div>
     </div>
 {/template}
 

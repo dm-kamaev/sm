@@ -8,7 +8,7 @@
  *         sm.bSmItem.TemplateEntity.Params.Data
  *     )>,
  *     itemType: string,
- *     countItemsPerPage: ?number
+ *     countItemsPerPage: (number|undefined)
  * }} sm.bSmItemList.Template.Params.Data
  */
 
@@ -24,7 +24,7 @@
  * Constructor
  * @param params {{
  *     data: sm.bSmItemList.Template.Params.Data,
- *     config: ?sm.bSmItemList.Template.Params.Config
+ *     config: (sm.bSmItemList.Template.Params.Config|undefined)
  * }}
  * @extends cl.iControl.Template
  * @constructor
@@ -56,7 +56,7 @@
  *             sm.bSmItem.TemplateEntity.Params.Data
  *         )>,
  *         itemType: string,
- *         countItemsPerPage: ?number
+ *         countItemsPerPage: (number|undefined)
  *     },
  *     config: {
  *         stylizationModifier: (string|undefined)
