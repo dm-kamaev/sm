@@ -3,19 +3,19 @@
 
 /**
  * @typedef {{
- *     openGraph: ?{
- *         url: ?string,
- *         siteName: ?string,
- *         title: ?string,
- *         type: ?string,
- *         description: ?string,
- *         image: ?string,
- *         fbClientId: ?number,
- *         twitterCardType: ?string,
- *         twitterSiteName: ?string,
- *         imageWidth: ?string,
- *         imageHeight: ?string
- *     },
+ *     openGraph: ({
+ *         url: (string|undefined),
+ *         siteName: (string|undefined),
+ *         title: (string|undefined),
+ *         type: (string|undefined),
+ *         description: (string|undefined),
+ *         image: (string|undefined),
+ *         fbClientId: (string|undefined),
+ *         twitterCardType: (string|undefined),
+ *         twitterSiteName: (string|undefined),
+ *         imageWidth: (string|undefined),
+ *         imageHeight: (string|undefined)
+ *     }|undefined),
  *     seo: {
  *         metaTitle: string,
  *         metaDescription: (string|undefined),
@@ -24,14 +24,14 @@
  *         textLeft: (Array<string>|undefined),
  *         textRight: (Array<string>|undefined)
  *     },
- *     subheader: sm.bSmSubheader.Template.Params.Data,
+ *     subHeader: sm.bSmSubheader.Template.Params.Data,
  *     user: ?{
  *        firstName: (string|undefined),
  *        lastName: (string|undefined)
  *     },
  *     authSocialLinks: {
- *        vk: ?string,
- *        fb: ?string
+ *        vk: (string|undefined),
+ *        fb: (string|undefined)
  *     },
  *     map: sm.bMap.Template.Params.Data,
  *     search: {
@@ -56,7 +56,7 @@
  *             id: number,
  *             name: string
  *         }>),
- *         score: sm.bScore.TemplateMinimized.Params,
+ *         score: sm.bSmScore.TemplateBrief.Params,
  *         ratings: Array<string>,
  *         isFavorite: boolean
  *     }>,
@@ -68,22 +68,22 @@
  *             name: ?string,
  *             metroId: ?number,
  *             areaId: ?number,
- *             schoolType: ?Array.<string>,
- *             classes: ?Array.<number>,
- *             ege: ?Array.<string>,
- *             gia: ?Array.<string>,
- *             olimp: ?Array.<string>,
+ *             schoolType: ?Array<string>,
+ *             classes: ?Array<number>,
+ *             ege: ?Array<string>,
+ *             gia: ?Array<string>,
+ *             olimp: ?Array<string>,
  *             sortType: ?number,
  *             page: ?number
  *         }
  *     },
  *     popularEntities: Array<{
  *         id: number,
- *         alias: ?string,
+ *         alias: string,
  *         name: string,
- *         description: ?string,
- *         metro: ?Array<string>,
- *         totalScore: ?number
+ *         description: (string?undefined),
+ *         metro: (Array<string>|undefined),
+ *         totalScore: (number|undefined)
  *     }>
  * }} sm.lSmSearch.Template.Params.Data
  */
@@ -103,6 +103,23 @@
     {call .document data="all" /}
 {/template}
 
+
+/**
+ * Add layout script to page
+ * @param params {{
+ *     config: {
+ *         staticVersion: (string|undefined)
+ *     }
+ * }}
+ * @protected
+ * @override
+ */
+{template .layoutScript kind="html"}
+    {call cl.iStatic.Template.script}
+        {param path: 'l-sm-search.js' /}
+        {param staticVersion: $params?.config?.staticVersion /}
+    {/call}
+{/template}
 
 /**
  * Content
@@ -204,28 +221,6 @@
 
 /**
  * Container for map
- * @param params {{
- *     data: {
- *         entities: Array<{
- *             id: number,
- *             name: string,
- *             alias: ?string,
- *             description: ?string,
- *             totalScore: ?number,
- *             address: Array<{
- *                 id: number,
- *                 lat: number,
- *                 lng: number,
- *                 name: string,
- *                 stages: (string|Array<string>)
- *             }>,
- *         }>,
- *         position: {
- *             center: ?Array<number>,
- *             type: ?string
- *         }
- *     }
- * }}
  */
 {template .sectionMap_ autoescape="strict" kind="html"}
     {let $classes kind="html"}
@@ -238,14 +233,40 @@
     {/let}
 
     <div class="{$classes}">
+        /*
+
+         * @param params {{
+         *     data: {
+         *         entities: Array<{
+         *             id: number,
+         *             name: string,
+         *             alias: ?string,
+         *             description: ?string,
+         *             totalScore: ?number,
+         *             address: Array<{
+         *                 id: number,
+         *                 lat: number,
+         *                 lng: number,
+         *                 name: string,
+         *                 stages: (string|Array<string>)
+         *             }>,
+         *         }>,
+         *         position: {
+         *             center: ?Array<number>,
+         *             type: ?string
+         *         }
+         *     }
+         * }}
+
+
         {call sm.bMap.Template.map}
             {param params: [
-                'data': $params.data,
+                'data': $params.data.map,
                 'config': [
                     'enableScrollZoom': false
                 ]
             ]/}
-        {/call}
+        {/call}*/
     </div>
 {/template}
 
@@ -288,7 +309,10 @@
  * }}
  */
 {template .sectionContent_}
-    <div class="{call .rootClass/}__section {call .rootClass/}__section_content">
+    <div class="{call .rootClass/}__section
+        {sp}{call .rootClass/}__section_content">
+
+        {call .leftMenu_ data="all" /}
         {call .listHeader_}
             {param params: [
                 'data': $params.data,
@@ -298,7 +322,6 @@
             ]/}
         {/call}
 
-        {call .leftMenu_ data="all" /}
         {call .results_ data="all" /}
     </div>
 {/template}
@@ -345,11 +368,11 @@
  */
 {template .search_ private="true" autoescape="strict" kind="html"}
     <div class="{call .rootClass/}__search">
-    // {call cl.iUtils.Utils.stringify}
-    //       {param json: $params /}
-    // {/call}
+    {call cl.iUtils.Utils.stringify}
+           {param json: $params /}
+    {/call}
 
-        {call sm.bSearch.Template.base}
+        /*{call sm.bSearch.Template.base}
             {param params: [
                 'placeholder': $params.data?.placeholder,
                 'text': $params.data?.searchText,
@@ -360,24 +383,27 @@
                     'height': 's'
                 ]
             ]/}
-        {/call}
+        {/call}*/
     </div>
 {/template}
 
 
 /**
  * Filter template
- * @param? params {
- *     data: {
- *         filters: sm.lSearch.bFilters.Template.Params
- *     }
- * }
  */
 {template .filters_ autoescape="strict" kind="html" private="true"}
     <div class="{call .rootClass/}__filters">
-        {call sm.lSearchResult.bFilters.Template.base}
+        /*
+
+         * @param? params {
+         *     data: {
+         *         filters: sm.lSearch.bFilters.Template.Params
+         *     }
+         * }
+
+         {call sm.lSearchResult.bFilters.Template.base}
             {param params: $params?.data?.filters/}
-        {/call}
+        {/call}*/
     </div>
 {/template}
 
@@ -428,7 +454,7 @@
                 ]
             ]/}
         {/call}
-
+        {call .sort_ data="all" /}
         {call .listBody_ data="all" /}
     </div>
 {/template}
@@ -469,7 +495,7 @@
         {call .rootClass/}__list-body
 
         {if $params.data.search?.countResults}
-            {sp}i-utils__hidden
+            {sp}{cl.iUtils.Utils.CssClass.HIDDEN}
         {/if}
     {/let}
 
@@ -513,8 +539,6 @@
 
     <div class="{$classes}">
         {call .listHeaderText data="all"/}
-        <span class="{call .rootClass /}__horizontal-line"></span>
-        {call .sortControl_ data="all" /}
     </div>
 {/template}
 
@@ -535,7 +559,7 @@
  * }}
  */
 {template .listHeaderText}
-    <span class="{call .rootClass/}__list-header-text">
+    <div class="{call .rootClass/}__list-header-text">
         {if $params.data?.seo and $params.data?.seo?.title}
             {call .headerText_ data="all" /}
 
@@ -550,7 +574,7 @@
                 ]/}
             {/call}
         {/if}
-    </span>
+    </div>
 {/template}
 
 
@@ -562,26 +586,36 @@
  *     }
  * }}
  */
-{template .sortControl_ kind="html"}
+{template .sort_ kind="html"}
     {let $customClasses kind="html"}
         {call .rootClass /}__sort-control-wrap
     {/let}
 
-    <div class="{call .rootClass /}__sort-control">
-        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
-            {param params: [
-                'type': 'dropdown-select',
-                'renderParams': [
-                    'data': $params.data.sort,
-                    'config': [
-                        'viewType': 'link',
-                        'iconSprite': 'small-opener-arrow',
-                        'theme': 'minimal',
-                        'customClasses': [$customClasses]
+    {let $wrapperClasses kind="html"}
+        {call .rootClass /}__sort
+        {if $params.data.search?.countResults}
+            {sp}{cl.iUtils.Utils.CssClass.HIDDEN}
+        {/if}
+    {/let}
+
+    <div class="{$wrapperClasses}">
+        <div class="{call .rootClass /}__sort-control">
+            {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+                {param params: [
+                    'type': 'dropdown-select',
+                    'renderParams': [
+                        'data': $params.data.sort,
+                        'config': [
+                            'viewType': 'link',
+                            'iconSprite': 'small-opener-arrow',
+                            'theme': 'minimal',
+                            'customClasses': [$customClasses]
+                        ]
                     ]
-                ]
-            ]/}
-        {/call}
+                ]/}
+            {/call}
+        </div>
+        <div class="{call .rootClass /}__horizontal-line"></div>
     </div>
 {/template}
 

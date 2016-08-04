@@ -1,9 +1,81 @@
-.l-sm-search__horizontal-line {
-    width: 100%;
-    height: 1px;
-    margin: 10px 0 -10px;
+.l-sm-search__body {
 
-    background: #e5e5e5;
+    width: 1200px;
+    min-width: 315px;
+    margin: auto;
+
+    font-family: Arial, sans-serif;
+}
+
+/** layout **/
+.l-sm-search__footer {
+    width: 1200px;
+    min-width: 315px;
+    margin: 60px auto 0;
+}
+
+.l-sm-search__section {
+    margin-bottom: 60px;
+
+    &.l-sm-search__section_map {
+        height: 500px;
+        background: #f4f4ec;
+    }
+
+
+    &.l-sm-search__section_content {
+        margin-top: 60px;
+        padding-bottom: 60px;
+        border-bottom: 1px solid #e5e5e5;
+
+
+        &:after {
+            content: '';
+            display: block;
+            clear: both;
+        }
+    }
+
+    &.l-sm-search__section_popular {
+        margin-top: 45px;
+
+        height: 370px;
+        background: #f4f4ec;
+    }
+}
+/** layout end **/
+
+
+/** Content section **/
+.l-sm-search__left-menu {
+    display: inline-block;
+
+    width: 350px;
+    height: 1100px;
+
+    margin-right: 60px;
+
+    text-align: center;
+
+    background: #f4f4ec;
+}
+
+.l-sm-search__list-results {
+    display: inline-block;
+
+    width: 790px;
+
+    vertical-align: top;
+}
+
+.l-sm-search__list-header {
+    color: #000;
+
+    font: 600 19px/1.3 Proxima, arial, sans-serif;
+
+    &.l-sm-search__list-header_size_s {
+        display: none;
+    }
 }
 
 .l-sm-search__sort-control {
@@ -12,4 +84,30 @@
     padding-left: 18px;
 
     background: #ffffff;
+}
+
+.l-sm-search__list-header-text {
+    &.l-sm-search__list-header-text_title {
+        margin-bottom: 15px;
+    }
+
+    &.l-sm-search__list-header-text_description {
+        margin-bottom: 45px;
+
+        font: 16px 'PT Serif', serif;
+        line-height: 22px;
+    }
+
+    &.l-sm-search__list-header-text_strong {
+        font-weight: 800;
+    }
+}
+/** content section end **/
+
+.l-sm-search__horizontal-line {
+    width: 100%;
+    height: 1px;
+    margin: 10px 0 -10px;
+
+    background: #e5e5e5;
 }

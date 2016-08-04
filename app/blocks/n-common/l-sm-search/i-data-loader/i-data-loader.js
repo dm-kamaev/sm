@@ -110,4 +110,4 @@ goog.scope(function() {
             data: searchParams
         });
     };
-});
+});  // goog.scope
