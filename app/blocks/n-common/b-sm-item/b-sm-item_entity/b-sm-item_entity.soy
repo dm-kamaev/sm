@@ -3,25 +3,25 @@
 
 /**
  * @typedef {{
- *     id: ?number,
+ *     id: (number|undefined),
  *     type: string,
  *     name: {
- *         light: string,
- *         bold: ?string
+ *         light: (string|undefined),
+ *         bold: (string|undefined)
  *     },
- *     alias: ?string,
- *     score: ?sm.bSmScore.Template.Params.Data,
+ *     alias: (string|undefined),
+ *     score: (sm.bSmScore.Template.Params.Data|undefined),
  *     description: string,
- *     metro: ?Array<{
+ *     metro: (Array<{
  *         id: number,
  *         name: string
- *     }>,
- *     area: ?Array<{
+ *     }>|undefined),
+ *     area: (Array<{
  *         id: number,
  *         name: string
- *     }>,
- *     isFavorite: ?boolean,
- *     countDepartment: ?number,
+ *     }>|undefined),
+ *     isFavorite: boolean,
+ *     countDepartment: (number|undefined),
  *     position: (number|undefined)
  * }} sm.bSmItem.TemplateEntity.Params.Data
  */
@@ -31,7 +31,7 @@
  * Constructor
  * @param params {{
  *     data: sm.bSmItem.TemplateEntity.Params.Data,
- *     config: ?sm.bSmItem.Template.Params.Config
+ *     config: (sm.bSmItem.Template.Params.Config|undefined)
  * }}
  * @extends sm.bSmItem.Template
  * @constructor
@@ -45,16 +45,16 @@
  * Details
  * @param params {{
  *     data: {
- *         metro: ?Array<{
+ *         metro: (Array<{
  *             id: number,
  *             name: string
- *         }>,
- *         area: ?Array<{
+ *         }>|undefined),
+ *         area: (Array<{
  *             id: number,
  *             name: string
- *         }>,
- *         isFavorite: ?boolean,
- *         countDepartment: ?number,
+ *         }>|undefined),
+ *         isFavorite: boolean,
+ *         countDepartment: (number|undefined),
  *     },
  *     config: {
  *         stylizationModifier: (string|undefined)
@@ -76,7 +76,7 @@
  * Favorite Link
  * @param params {{
  *     data: {
- *         isFavorite: ?boolean
+ *         isFavorite: boolean
  *     },
  *     config: {
  *         stylizationModifier: (string|undefined)
@@ -107,7 +107,7 @@
  * Details
  * @param params {{
  *     data: {
- *         countDepartment: ?number
+ *         countDepartment: (number|undefined)
  *     }
  * }}
  * @protected

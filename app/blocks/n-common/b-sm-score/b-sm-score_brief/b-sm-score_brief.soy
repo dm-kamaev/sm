@@ -25,17 +25,24 @@
  * }} sm.bSmScore.TemplateBrief.Params.Data
  */
 
- /**
-  * @typedef {{
-  *         primaryMark: {
-  *             size: string,
-  *             isNameVisible: boolean,
-  *             zeroSign: ('nothing'|'question-mark'|undefined)
-  *         }
-  *         theme: string
-  *     }
-  * }} sm.bSmScore.TemplateBrief.Params.Config
-  */
+/**
+ * @typedef {{
+ *         primaryMark: {
+ *             size: string,
+ *             isNameVisible: boolean,
+ *             zeroSign: ('nothing'|'question-mark'|undefined)
+ *         }
+ *         theme: string
+ *     }
+ * }} sm.bSmScore.TemplateBrief.Params.Config
+ */
+
+/**
+ * @typedef {{
+ *     data: sm.bSmScore.TemplateBrief.Params.Data,
+ *     config: sm.bSmScore.TemplateBrief.Params.Config
+ * }} sm.bSmScore.TemplateBrief.Params
+ */
 
 /**
  * Template for ScoreBrief block
