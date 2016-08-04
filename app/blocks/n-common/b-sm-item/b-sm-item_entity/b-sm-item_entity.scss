@@ -1,12 +1,12 @@
 @import "../../i-media/i-media";
 
 .b-sm-item_entity {
-    padding: 25px 0;
+    padding: 24px 0;
 
     cursor: default;
 
     .b-sm-item__section {
-        margin-bottom: 12px;
+        margin-bottom: 10px;
 
         &:last-child {
             margin-bottom: 0;
@@ -14,8 +14,10 @@
     }
 
     .b-sm-item__name {
-        height: 100%;
+        width: 100%;
         padding-right: 180px;
+
+        box-sizing: border-box;
 
         cursor: pointer;
         text-decoration: none;
@@ -51,6 +53,7 @@
         display: inline-block;
 
         max-width: 705px;
+        margin-bottom: 5px;
         padding-right: 80px;
 
         color: #000;
@@ -71,15 +74,21 @@
 }
 
 
-
+@include media-l {
+    .b-sm-item_entity {
+        padding: 20px 0;
+    }
+}
 
 
 @include media-xs {
-    .b-sm-item__name {
-        padding-right: 75px;
-    }
+    .b-sm-item_entity {
+        .b-sm-item__name {
+            padding-right: 75px;
+        }
 
-    .b-sm-item__description {
-        padding-right: 0;
+        .b-sm-item__description {
+            padding-right: 0;
+        }
     }
 }
