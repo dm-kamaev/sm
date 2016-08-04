@@ -69,6 +69,8 @@ sm.lSearchResult.SearchResult = function() {
      *     ege: ?Array.<string>,
      *     gia: ?Array.<string>,
      *     olimp: ?Array.<string>,
+     *     specializedClasses: ?Array.<string>,
+     *     activities: ?Array.<string>,
      *     sortType: ?number,
      *     page: ?number
      * }}
@@ -84,6 +86,8 @@ sm.lSearchResult.SearchResult = function() {
         'ege': [],
         'gia': [],
         'olimp': [],
+        'specializedClassType': [],
+        'activitySphere': [],
         'sortType': 0,
         'page': 0
     };
@@ -109,6 +113,22 @@ sm.lSearchResult.SearchResult = function() {
      * @private
      */
     this.elements_ = {};
+
+
+    /**
+     * Backend answer on the current request or not (for Items Loaded)
+     * @type {bool}
+     * @private
+     */
+    this.isItemsLoaded_ = true;
+
+    /*
+     * Factory type
+     * @type {String}
+     * @private
+     */
+    this.factoryType_ = 'stendhal';
+
 };
 goog.inherits(sm.lSearchResult.SearchResult, goog.ui.Component);
 
@@ -121,7 +141,8 @@ goog.scope(function() {
         Header = sm.bHeader.Header,
         Map = sm.bMap.Map;
 
-    var Analytics = sm.iAnalytics.Analytics.getInstance();
+    var Analytics = sm.iAnalytics.Analytics.getInstance(),
+        factoryManager = cl.iFactory.FactoryManager.getInstance();
 
 
     /**
@@ -380,7 +401,7 @@ goog.scope(function() {
     SearchResult.prototype.initFiltersListeners_ = function() {
         this.getHandler().listen(
             this.instances_.filters,
-            Filters.event.SUBMIT,
+            Filters.Event.SUBMIT,
             this.onFiltersSubmit_
         );
     };
@@ -763,14 +784,28 @@ goog.scope(function() {
      * @private
      */
     SearchResult.prototype.onShowMoreSchoolListItems_ = function() {
-        this.updateSearchParams_({
-            'page': this.searchParams_.page + 1
-        });
+        if (this.isItemsLoaded_) {
+            this.updateSearchParams_({
+                'page': this.searchParams_.page + 1
+            });
 
-        this.instances_.schoolList.showLoader();
+            this.instances_.schoolList.showLoader();
 
-        this.send_(this.requestParams_.listDataUrl)
-            .then(this.addItems_.bind(this));
+            this.isItemsLoaded_ = false;
+            this.send_(this.requestParams_.listDataUrl)
+                .then(this.processingResponseItemsLoaded_.bind(this));
+        }
+    };
+
+
+    /**
+     * Process the response from the server (callback)
+     * @param {string} data
+     * @private
+     */
+    SearchResult.prototype.processingResponseItemsLoaded_ = function(data) {
+        this.addItems_(data);
+        this.isItemsLoaded_ = true;
     };
 
 

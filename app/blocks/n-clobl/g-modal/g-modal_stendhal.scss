@@ -1,17 +1,17 @@
 @import "../../i-media/i-media";
 
 .g-modal.g-modal_stendhal {
- 	padding: 0;
+    padding: 0;
 
     color: #000000;
 
-	box-sizing: border-box;
+    box-sizing: border-box;
 
     .g-modal__content {
         padding: 0;
-	    box-sizing: border-box;
+        box-sizing: border-box;
 
-	    max-width: 800px;
+        max-width: 800px;
     }
 
 
@@ -42,6 +42,22 @@
     }
 }
 
+.g-modal.g-modal_stendhal.g-modal_size-l {
+    .g-modal__content {
+        width: 100%;
+        max-width: 680px;
+    }
+
+    .g-modal__close-button {
+        top: 35px;
+        right: 35px;
+
+        z-index: 1;
+
+        transform: translate3d(0,0,0);
+    }
+}
+
 .g-modal.g-modal_stendhal.g-modal_size-s {
     .g-modal__content {
         max-width: 320px;
@@ -58,6 +74,14 @@
         .g-modal__close-button {
             top: 30px;
             right: 30px;
+        }
+    }
+}
+
+@include media-xxs {
+    .g-modal.g-modal_stendhal.g-modal_size-l {
+        .g-modal__close-button {
+            right: 25px;
         }
     }
 }

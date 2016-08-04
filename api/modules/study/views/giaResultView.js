@@ -1,10 +1,6 @@
-const cityResultView = require(
-    './cityResultView.js'
-);
-
-const subjectView = require(
-    './subjectView.js'
-);
+const cityResultView = require('./cityResultView'),
+    subjectView = require('./subjectView'),
+    searchType = require('../../school/enums/searchType');
 
 /**
  * GiaResultView
@@ -102,6 +98,32 @@ GiaResultView.prototype.transformResults = function(results, cityResults) {
         range: range
     };
 };
+
+/**
+ * Generate ege result filters with sorted values
+ * @param {Array<models.GiaResult>} giaSubjectsIds
+ * @param {Array<models.Subject>} subjects
+ * @return {{
+ *    filter: string,
+ *    values: Array<{
+ *       label: string,
+ *       value: string,
+ *       id: number
+ *    }>
+ * }}
+ */
+GiaResultView.prototype.searchFilter = function(giaSubjectsIds, subjects) {
+    var filters = subjectView.searchFilter(
+        giaSubjectsIds, subjects, searchType.fields.GIA
+    );
+
+    filters.values.sort(
+        (a, b) => subjectView.sorter(a.label, b.label, 'GIA')
+    );
+
+    return filters;
+};
+
 
 /**
  * Exports

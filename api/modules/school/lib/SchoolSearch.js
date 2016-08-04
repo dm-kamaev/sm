@@ -79,6 +79,37 @@ class SchoolSearchQuery extends SearchQuery {
     }
 
     /**
+     * Set to query condition about selected specialized class types
+     * @param {(Array<number>|undefined)} specializedClassType
+     * @return {Object}
+     */
+    setSpecializedClassType(specializedClassType) {
+        this.addSchoolSearchData_(
+            specializedClassType,
+            schoolSearchType.fields.SPECIALIZED_CLASS_TYPE,
+            true
+        );
+
+        return this;
+    }
+
+
+    /**
+     * Set to query condition about selected activity spheres
+     * @param {(Array<number>|undefined)} activitySphere
+     * @return {Object}
+     */
+    setActivitySphere(activitySphere) {
+        this.addSchoolSearchData_(
+            activitySphere,
+            schoolSearchType.fields.ACTIVITY_SPHERE,
+            true
+        );
+
+        return this;
+    }
+
+    /**
      * @param {(number|undefined)} areaId
      * @return {Object}
      */
@@ -143,12 +174,12 @@ class SchoolSearchQuery extends SearchQuery {
             .field('area.name', 'areaName')
             .field('address.coords', 'addressCoords')
             .field('address.name', 'addressName')
+            .field('address.is_school', 'addressIsSchool')
             .field(
                 'department.educational_grades',
                 'departmentEducationalGrades'
             )
             .field('school.result_count', 'countResults')
-            .where('address.is_school = true')
             .left_join('address', null, 'school.id = address.school_id')
             .left_join(
                 'address_metro',

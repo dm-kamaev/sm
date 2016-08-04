@@ -5,6 +5,10 @@ const ProgressBar = require('progress');
 const EgeActualizer = require('./EgeActualizer');
 const GiaActualizer = require('./GiaActualizer');
 const OlympActualizer = require('./OlympActualizer');
+const SpecializedClassTypeActualizer =
+    require('./SpecializedClassTypeActualizer');
+const SchoolActivitySphereActualizer =
+    require('./SchoolActivitySphereActualizer');
 const AddressActualizer = require('./AddressActualizer');
 const models = require('../../../app/components/models').all;
 
@@ -17,9 +21,35 @@ class SearchUpdater {
      * @param {bool=} opt_options.isQuiet
      */
     constructor(opt_options) {
+        /**
+         * @type {*|exports}
+         * @private
+         */
+        this.citySubjects_ = null;
+
+        /**
+         * @type {Array<models.SchoolTypeFilter>}
+         * @private
+         */
+        this.schoolTypeFilters_ = null;
+
+        /**
+         * Current options
+         * @type {{
+         *     isQuiet: boolean
+         * }}
+         * @private
+         */
+        this.options_ = opt_options || {};
+    }
+
+
+    /**
+     * Init fields
+     */
+    init() {
         this.citySubjects_ = await(services.subject.listCityResults());
         this.schoolTypeFilters_ = await(services.search.getTypeFilters());
-        this.options_ = opt_options || {};
     }
 
     /**
@@ -66,6 +96,9 @@ class SearchUpdater {
         }
         var bar = this.getProgressBar_('schools', schools.length);
         await(this.updateAverage_());
+
+        await(this.init());
+
         await(schools.forEach(school => {
             /* update type filters */
             var filterInstance = this.getTypeFilter_(school.schoolType);
@@ -84,6 +117,19 @@ class SearchUpdater {
             /* update olymp filters */
             var olympActualizer = await(new OlympActualizer(school));
             await(olympActualizer.actualize());
+
+
+            /* update specialized class types filters */
+            var specializedClassesActualizer =
+                new SpecializedClassTypeActualizer(school);
+            await(specializedClassesActualizer.actualize());
+
+
+            /* update activity spheres */
+            var schoolActivitySphereActualizer =
+                new SchoolActivitySphereActualizer(school);
+            await(schoolActivitySphereActualizer.actualize());
+
             bar.tick();
         }));
     }
@@ -132,12 +178,13 @@ class SearchUpdater {
 
 
     /**
+     * @return {Promise}
      * @private
      * @async
      */
     updateAverage_() {
         var msc = await(services.city.getMoscow());
-        await(
+        return await(
             this.updateGiaAvg_(msc.id),
             this.updateEgeAvg_(msc.id)
        );

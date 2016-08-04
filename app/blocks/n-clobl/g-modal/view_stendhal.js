@@ -13,7 +13,7 @@ goog.require('goog.labs.userAgent.device');
  * @param {string=} opt_type
  * @param {string=} opt_modifier
  * @constructor
- * @extends {cl.iControl.View}
+ * @extends {cl.gModal.View}
  */
 sm.gModal.ViewStendhal = function(opt_params, opt_type, opt_modifier) {
     goog.base(this, opt_params, opt_type, opt_modifier);
@@ -30,6 +30,7 @@ goog.scope(function() {
      * @enum {string}
      */
     View.CssClass = {
+        CONTENT: cl.gModal.View.CssClass.CONTENT,
         CLOSER: 'g-modal__close-button',
         CLOSER_HOVER_ENABLE: 'g-modal__close-button_hover_enable'
     };
@@ -68,7 +69,7 @@ goog.scope(function() {
     View.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
 
-        goog.events.listen(
+        this.getHandler().listen(
             this.dom.closer,
             goog.events.EventType.CLICK,
             this.onCloserClick_,
@@ -79,18 +80,19 @@ goog.scope(function() {
 
 
     /**
+     * Modal onclick
+     * @param {Object} event
      * @override
      */
-    View.prototype.exitDocument = function() {
-        goog.base(this, 'exitDocument');
-
-        goog.events.unlisten(
-            this.dom.closer,
-            goog.events.EventType.CLICK,
-            this.onCloserClick_,
-            false,
-            this
+    View.prototype.onModalClick = function(event) {
+        var ancestor = goog.dom.getAncestorByClass(
+            event.target,
+            View.CssClass.CONTENT
         );
+
+        if (ancestor !== this.dom.content && document.contains(event.target)) {
+            this.dispatchEvent(View.Event.CLOSE);
+        }
     };
 
 

@@ -8,36 +8,60 @@ const searchType = require('../../../api/modules/school/enums/searchType');
  */
 class OlympActualizer extends SearchDataActualizer {
     /**
-     * @public
-     * @param {object} school
+     * @constructor
+     * @param {models.School} school
      */
     constructor(school) {
-        await(super(school)); // call parent constructor
+        super(school);
+
         this.resultSubjects_ = [];
+
+
         this.searchType_ = searchType.fields.OLIMPIAD;
     }
 
-    /**
-     * @private
-     * get array of subjects IDs for school olymp results
-     */
-    getSubjects_() {
-        this.olympResults_.forEach(olympRes => {
-            if (!this.resultSubjects_.find(
-                    subject => subject == olympRes.subjectId)) {
-                this.resultSubjects_.push(olympRes.subjectId);
-            }
-        });
-    }
 
     /**
+     * Get olympiads values for school search data
+     * @override
+     * @protected
+     */
+    getValues() {
+        var olympiadResults = this.getResults_();
+
+        return this.getSubjects_(olympiadResults);
+    }
+
+
+    /**
+     * get olympiads results for school
+     * @return {Array<models.OlimpResult>}
      * @private
-     * get olymp results for school
      */
     getResults_() {
         // TODO: to fix 'Olimp' typo model name must be fixed as well
-        this.olympResults_ = await(this.school_.getOlimpResults());
+        return await(this.school_.getOlimpResults());
     }
+
+    /**
+     * get array of subjects IDs for school olymp results
+     * @param {Array<models.OlimpResult>} olympiadResults
+     * @return {Array<number>}
+     * @private
+     */
+    getSubjects_(olympiadResults) {
+        var resultSubjects = [];
+        olympiadResults.forEach(olympRes => {
+            if (!resultSubjects.find(
+                    subject => subject == olympRes.subjectId)) {
+                resultSubjects.push(olympRes.subjectId);
+            }
+        });
+
+        return resultSubjects;
+    }
+
+
 }
 
 module.exports = OlympActualizer;

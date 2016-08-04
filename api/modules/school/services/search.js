@@ -14,11 +14,30 @@ const mapPositionType = require('../enums/mapPositionType');
 
 exports.name = 'search';
 
-exports.getSchoolRecords = async(function(id) {
-    return await(models.SchoolSearchData.findAll({
-        where: {
+
+/**
+ * Get all search data for school with given id and type (if provided)
+ * @param {number} id
+ * @param {string=} opt_type
+ * @return {Array<models.SchoolSearchData>}
+ */
+exports.getSchoolRecords = async(function(id, opt_type) {
+    var conditions = {};
+
+    if (opt_type) {
+        conditions = {
+            $and: {
+                schoolId: id,
+                type: opt_type
+            }
+        };
+    } else {
+        conditions = {
             schoolId: id
-        }
+        };
+    }
+    return await(models.SchoolSearchData.findAll({
+        where: conditions
     }));
 });
 
@@ -74,6 +93,8 @@ exports.getSearchSql = function(searchParams, limit) {
         .setStudyResult(searchParams.gia, 'gia')
         .setStudyResult(searchParams.ege, 'ege')
         .setStudyResult(searchParams.olimp, 'olymp')
+        .setSpecializedClassType(searchParams.specializedClassType)
+        .setActivitySphere(searchParams.activitySphere)
         .setArea(searchParams.areaId)
         .setMetro(searchParams.metroId)
         .setDistrict(searchParams.districtId)
@@ -159,7 +180,7 @@ exports.generateFilter = function(string) {
 
 /**
  * Get all school type filters
- * @return {Array.<Object>}
+ * @return {Array<models.SchoolTypeFilter>}
  */
 exports.getTypeFilters = async(function() {
     return await(models.SchoolTypeFilter.findAll());

@@ -1,10 +1,6 @@
-const cityResultView = require(
-    './cityResultView.js'
-);
-
-const subjectView = require(
-    './subjectView.js'
-);
+const cityResultView = require('./cityResultView'),
+    subjectView = require('./subjectView'),
+    searchType = require('../../school/enums/searchType');
 
 /**
  * EgeResultView
@@ -99,6 +95,31 @@ EgeResultView.prototype.transformResults = function(results, cityResults) {
         }),
         range: range
     };
+};
+
+/**
+ * Generate ege result filters with sorted values
+ * @param {Array<models.EgeResult>} egeSubjectsIds
+ * @param {Array<models.Subject>} subjects
+ * @return {{
+ *    filter: string,
+ *    values: Array<{
+ *       label: string,
+ *       value: string,
+ *       id: number
+ *    }>
+ * }}
+ */
+EgeResultView.prototype.searchFilter = function(egeSubjectsIds, subjects) {
+    var filters = subjectView.searchFilter(
+        egeSubjectsIds, subjects, searchType.fields.EGE
+    );
+
+    filters.values.sort(
+        (a, b) => subjectView.sorter(a.label, b.label, 'EGE')
+    );
+
+    return filters;
 };
 
 /**
