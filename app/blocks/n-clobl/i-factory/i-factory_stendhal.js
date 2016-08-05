@@ -38,6 +38,7 @@ goog.require('sm.gModal.ViewFeedback');
 goog.require('sm.gModal.ViewStendhal');
 goog.require('sm.gTextarea.TextareaStendhal');
 goog.require('sm.gTextarea.ViewStendhal');
+goog.require('sm.iFactory.TemplateFactoryStendhal');
 goog.require('sm.lSchool.bFoldList.FoldList');
 goog.require('sm.lSchool.bFoldList.View');
 goog.require('sm.lSearchResult.bFilterSearch.FilterSearch');
@@ -51,9 +52,11 @@ goog.require('sm.lSearchResult.bFilterSearch.View');
  * @extends {cl.iFactory.Factory}
  */
 sm.iFactory.FactoryStendhal = function() {
-    var templateFactory = sm.iFactory.TemplateFactoryStendhal.getInstance();
+    var templateFactory = sm.iFactory.TemplateFactoryStendhal;
 
-    goog.base(this, templateFactory, 'stendhal');
+    sm.iFactory.FactoryStendhal.base(
+        this, 'constructor', templateFactory.getInstance(), 'stendhal'
+    );
 
     this.setControlListItem('dropdown-select', {
             control: sm.gDropdown.DropdownSelect,
@@ -144,7 +147,7 @@ goog.addSingletonGetter(sm.iFactory.FactoryStendhal);
 
 goog.scope(function() {
     var Factory = sm.iFactory.FactoryStendhal;
-
+    //debugger;
     /**
      * Important!
      */
