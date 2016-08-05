@@ -33,7 +33,7 @@
  * Constructor
  * @param params {{
  *     data: sm.bSmItem.TemplateEntity.Params.Data,
- *     config: (sm.bSmItem.Template.Params.Config|undefined)
+ *     config: sm.bSmItem.Template.Params.Config
  * }}
  * @extends sm.bSmItem.Template
  * @constructor
@@ -100,13 +100,10 @@
 
     <div class="{$classes}">
         {call .description_ data="all" /}
-//$params.data,
+
         {call .cost_}
             {param params: [
-                'data': [
-                    'cost': '1 200',
-                    'type': 'course'
-                ],
+                'data': $params.data,
                 'config': [
                     'size': 's'
                 ]
@@ -133,7 +130,7 @@
  *         countDepartment: ?number
  *     },
  *     config: {
- *         stylizationModifier: (string|undefined)
+ *         stylizationModifier: string
  *     }
  * }}
  * @override
@@ -353,11 +350,22 @@
         {/if}
     {/let}
 
-    // {call sm.bBadge.Template.base}
-    //     {param params:[
-    //         'data': $text
-    //     ]/}
-    // {/call}
+    {call .renderChild}
+        {param params: [
+            'type': 'smBadge',
+            'renderParams': [
+                'data': [
+                    'items': [
+                        ['name': $text]
+                    ],
+                ],
+                'config': [
+                    'type': 'online',
+                    'iconName': 'cursor'
+                ]
+            ]
+        ]/}
+    {/call}
 {/template}
 
 
@@ -368,15 +376,14 @@
  *         isFavorite: boolean
  *     },
  *     config: {
- *         stylizationModifier: (string|undefined)
+ *         stylizationModifier: string
  *     }
  * }}
  */
 {template .favoriteLink_ kind="html" private="true"}
     <div class="{call .rootClass/}__badge {call .rootClass/}__badge_favorite">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+        {call .renderChild}
             {param params: [
-                'factory': $params?.config?.stylizationModifier ?: 'stendhal',
                 'type': 'favorite-link',
                 'renderParams': [
                     'data': [

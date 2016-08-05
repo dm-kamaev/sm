@@ -26,7 +26,7 @@
 
  /**
  * @typedef {{
- *     stylizationModifier: (string|undefined),
+ *     stylizationModifier: string,
  *     customClasses: ?Array<string>
  * }} sm.bSmItem.Template.Params.Config
  */
@@ -36,7 +36,7 @@
  * Constructor
  * @param params {{
  *     data: sm.bSmItem.Template.Params.Data,
- *     config: ?sm.bSmItem.Template.Params.Config
+ *     config: sm.bSmItem.Template.Params.Config
  * }}
  * @extends cl.iControl.Template
  * @constructor
@@ -49,7 +49,8 @@
 /**
  * Body
  * @param params {{
- *     data: sm.bSmItem.Template.Params.Data
+ *     data: sm.bSmItem.Template.Params.Data,
+ *     config: sm.bSmItem.Template.Params.Config
  * }}
  * @override
  */
@@ -235,12 +236,17 @@
  */
 {template .metro_}
     <div class="{call .rootClass/}__badge {call .rootClass/}__badge_metro">
-        {call sm.bBadge.Template.base}
-            {param params:[
-                'data': $params.data.metroStations,
-                'display': 'metro',
-                'config': [
-                    'isNotClickable': true
+        {call .renderChild}
+            {param params: [
+                'type': 'smBadge',
+                'renderParams': [
+                    'data': [
+                        'items': $params.data.metroStations,
+                    ],
+                    'config': [
+                        'type': 'metro',
+                        'iconName': 'metro'
+                    ]
                 ]
             ]/}
         {/call}
@@ -262,16 +268,24 @@
  */
 {template .area_}
     <div class="{call .rootClass/}__badge {call .rootClass/}__badge_area">
-        {call sm.bBadge.Template.base}
-            {param params:[
-                'data': $params.data.area,
-                'display': 'location',
-                'config': [
-                    'isNotClickable': true
+        {call .renderChild}
+            {param params: [
+                'type': 'smBadge',
+                'renderParams': [
+                    'data': [
+                        'items': [
+                            ['name': $params.data.area.name,
+                            'id': $params.data.area.id]
+                        ],
+                    ],
+                    'config': [
+                        'type': 'area',
+                        'iconName': 'area'
+                    ]
                 ]
             ]/}
         {/call}
-        //'data': $params.data.area[0]
+        //'data': $params.data.area
     </div>
 {/template}
 

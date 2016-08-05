@@ -83,7 +83,7 @@ goog.scope(function() {
 
         if (this.isActive_) {
             this.initItemsListeners_();
-            this.initHintControlsListeners_();
+            this.initHintControlListeners_();
         }
     };
 
@@ -107,7 +107,7 @@ goog.scope(function() {
      * Initializes listeners for hint
      * @private
      */
-    View.prototype.initHintControlsListeners_ = function() {
+    View.prototype.initHintControlListeners_ = function() {
         this.getHandler().listen(
             this.getElement(),
             goog.events.EventType.CLICK,

@@ -15,8 +15,8 @@
  * @typedef {{
  *     type: string,
  *     iconName: (string|undefined),
- *     isActive: boolean,
- *     stylizationModifier: (string|undefined)
+ *     isNotActive: boolean,
+ *     stylizationModifier: string
  * }} sm.bSmBadge.Template.Params.Config
  */
 
@@ -55,7 +55,7 @@
  * @param params {{
  *     config: {
  *         iconName: (string|undefined),
- *         stylizationModifier: (string|undefined)
+ *         stylizationModifier: string
  *     }
  * }}
  * @override
@@ -63,9 +63,8 @@
 {template .icon_}
     {if $params?.config?.iconName}
         <div class="{call .rootClass/}__icon">
-            {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {call .renderChild}
                 {param params: [
-                    'factory': $params.config?.stylizationModifier ?: 'stendhal',
                     'type': 'icon',
                     'renderParams': [
                         'data': [
@@ -162,8 +161,7 @@
  * Hint
  * @param params {{
  *     config: {
- *         type: string,
- *         stylizationModifier: (string|undefined)
+ *         type: string
  *     }
  * }}
  * @override
@@ -171,13 +169,12 @@
 {template .hint_}
     {if $params?.config?.type == 'rating'}
         {let $hintContent kind="html"}
-            {call .hintContent_ data="all" /}
+            {call .hintContent_ /}
         {/let}
 
         <div class="{call .rootClass/}__hint">
-            {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {call .renderChild}
                 {param params: [
-                    'factory': $params.config?.stylizationModifier ?: 'stendhal',
                     'type': 'hint',
                     'renderParams': [
                         'data': $hintContent,
@@ -194,11 +191,6 @@
 
 /**
  * Hint Content
- * @param params {{
- *     config: {
- *         stylizationModifier: (string|undefined)
- *     }
- * }}
  * @override
  */
 {template .hintContent_}
@@ -216,7 +208,7 @@
                 ]/}
             {/call}
 
-            {call .hintIcon_ data="all" /}
+            {call .hintIcon_ /}
         </div>
     </div>
 {/template}
@@ -224,18 +216,12 @@
 
 /**
  * Hint Icon
- * @param params {{
- *     config: {
- *         stylizationModifier: (string|undefined)
- *     }
- * }}
  * @override
  */
 {template .hintIcon_}
     <div class="{call .rootClass/}__hint-link-icon">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+        {call .renderChild}
             {param params: [
-                'factory': $params.config?.stylizationModifier ?: 'stendhal',
                 'type': 'icon',
                 'renderParams': [
                     'data': [
@@ -253,7 +239,7 @@
  * @param params {{
  *     config: {
  *         type: string,
- *         isActive: boolean
+ *         isNotActive: boolean
  *     }
  * }}
  * @override
@@ -262,7 +248,7 @@
     {if $params?.config?.type}
         {sp}{call .rootClass/}_{$params.config.type}
     {/if}
-    {if $params?.config?.isActive}
+    {if not $params?.config?.isNotActive}
         {sp}{call .rootClass/}_active
     {/if}
 {/template}

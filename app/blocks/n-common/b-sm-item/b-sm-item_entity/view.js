@@ -1,6 +1,5 @@
 goog.provide('sm.bSmItem.ViewEntity');
 
-goog.require('sm.bBadge.Badge');
 goog.require('sm.bSmItem.View');
 
 
@@ -37,11 +36,13 @@ sm.bSmItem.ViewEntity = function(opt_params, opt_type, opt_modifier) {
      *             id: number,
      *             name: string
      *         }>,
+     *         online: ('only'|available'|undefidned),
      *         isFavorite: ?boolean,
+     *         countDepartment: ?number,
      *         position: (number|undefined)
      *     },
      *     config: {
-     *         stylizationModifier: (string|undefined)
+     *         stylizationModifier: string
      *     }
      * }}
      */
@@ -68,7 +69,7 @@ goog.scope(function() {
      */
     View.CssClass = {
         ROOT: 'b-sm-item_entity',
-        DETAILS_SECTION: 'b-sm-item_entity__section_details'
+        DETAILS_SECTION: 'b-sm-item__section_details'
     };
 
 
@@ -124,7 +125,7 @@ goog.scope(function() {
     View.prototype.initDom_ = function(element) {
         this.dom = {
             score: this.getElementByClass(
-                sm.bSmScore.ViewBrief.View.CssClass.ROOT,
+                sm.bSmScore.ViewBrief.CssClass.ROOT,
                 element
             ),
             detailsSection: this.getElementByClass(
@@ -132,7 +133,7 @@ goog.scope(function() {
                 element
             ),
             badges: this.getElementsByClass(
-                sm.bBadge.Badge.CssClass.ROOT,
+                sm.bSmBadge.View.CssClass.ROOT,
                 element
             ),
             favoriteLink: this.getElementByClass(

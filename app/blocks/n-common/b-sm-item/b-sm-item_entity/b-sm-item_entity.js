@@ -1,6 +1,5 @@
 goog.provide('sm.bSmItem.SmItemEntity');
 
-goog.require('sm.bBadge.Badge');
 goog.require('sm.bSmItem.Event.FavoriteRemoved');
 goog.require('sm.bSmItem.SmItem');
 goog.require('sm.bSmItem.ViewEntity');
@@ -28,7 +27,7 @@ sm.bSmItem.SmItemEntity = function(view, opt_domHelper) {
 
     /**
      * Badges instances
-     * @type {Array<sm.bBadge.Badge>}
+     * @type {Array<sm.bSmBadge.SmBadge>}
      * @private
      */
     this.badges_ = [];
@@ -164,12 +163,14 @@ goog.scope(function() {
      * @private
      */
     Item.prototype.initBadges_ = function() {
-        var badges = this.getDom().badges;
+        var badges = this.getView().getDom().badges,
+            instance;
 
-        for (var i = 0, instance; i < badges.length; i++) {
-            instance = new Badge();
-            this.addChild(instance);
-            instance.decorate(badges[i]);
+        for (var i = 0; i < badges.length; i++) {
+            instance = this.decorateChild(
+                'smBadge',
+                badges[i]
+            );
 
             this.badges_.push(instance);
         }
@@ -181,11 +182,9 @@ goog.scope(function() {
      * @private
      */
     Item.prototype.initFavoriteLink_ = function() {
-        this.favoriteLink_ = FactoryManager.getInstance().decorate(
-            this.getView().getStylization(),
+        this.favoriteLink_ = this.decorateChild(
             'favorite-link',
-            this.getDom().favoriteLink,
-            this
+            this.getView().getDom().favoriteLink
         );
     };
 });  // goog.scope
