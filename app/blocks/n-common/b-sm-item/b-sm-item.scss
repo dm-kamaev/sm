@@ -10,15 +10,10 @@
     cursor: pointer;
 
     color: #000;
-    border-bottom: 1px solid #e5e5e5;
 
     &:hover .b-sm-item__link-name {
         color: #ff0000;
     }
-}
-
-.b-sm-item:last-child {
-    border-bottom: none;
 }
 
 .b-sm-item__section {

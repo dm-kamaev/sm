@@ -214,8 +214,8 @@
  * @protected
  */
 {template .location}
-    // {if $params.data?.metro and length($params.data?.metro)}
-    {if $params.data?.metroStations and length($params.data?.metroStations)}
+    {if $params.data?.metro and length($params.data?.metro)}
+    // {if $params.data?.metroStations and length($params.data?.metroStations)}
         {call .metro_ data="all" /}
     {elseif $params.data?.area and length($params.data?.area)}
         {call .area_ data="all" /}
@@ -241,7 +241,7 @@
                 'type': 'smBadge',
                 'renderParams': [
                     'data': [
-                        'items': $params.data.metroStations,
+                        'items': $params.data.metro,
                     ],
                     'config': [
                         'type': 'metro',
@@ -273,14 +273,11 @@
                 'type': 'smBadge',
                 'renderParams': [
                     'data': [
-                        'items': [
-                            ['name': $params.data.area.name,
-                            'id': $params.data.area.id]
-                        ],
+                        'items': $params.data.area,
                     ],
                     'config': [
                         'type': 'area',
-                        'iconName': 'area'
+                        'iconName': 'location'
                     ]
                 ]
             ]/}

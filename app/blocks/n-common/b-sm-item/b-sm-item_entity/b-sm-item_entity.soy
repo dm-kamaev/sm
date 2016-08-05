@@ -227,56 +227,11 @@
  */
 {template .score}
     <div class="{call .rootClass/}__score">
-        // {call cl.iUtils.Utils.stringify}
-        //     {param json: $params?.data?.score /}
-        // {/call}
-        // {call .renderChild}
-        //     {param params: [
-        //         'type': 'smScoreBrief',
-        //         'renderParams': [
-        //             'data': $params.data.score,
-        //             'config': [
-        //                 'primaryMark': [
-        //                     'isNameVisible': false,
-        //                     'zeroSign': 'nothing'
-        //                 ],
-        //                 'theme': 'bold'
-        //             ]
-        //         ]
-        //     ]/}
-        // {/call}
-
         {call .renderChild}
             {param params: [
                 'type': 'smScoreBrief',
                 'renderParams': [
-                    'data': [
-                        'marks': [
-                            'primary': [
-                                'name': $params.data.score.data.visibleMark.name,
-                                'value': $params.data.score.data.visibleMark.value
-                            ],
-                            'secondary': [
-                                [
-                                'name': $params.data.score.data?.hiddenMarks[0].name,
-                                'value': $params.data.score.data?.hiddenMarks[0].value
-                                ],
-                                [
-                                'name': $params.data.score.data?.hiddenMarks[1].name,
-                                'value': $params.data.score.data?.hiddenMarks[1].value
-                                ],
-                                [
-                                'name': $params.data.score.data?.hiddenMarks[2].name,
-                                'value': $params.data.score.data?.hiddenMarks[2].value
-                                ],
-                                [
-                                'name': $params.data.score.data?.hiddenMarks[3].name,
-                                'value': $params.data.score.data?.hiddenMarks[3].value
-                                ]
-                            ]
-                        ],
-                        'secondaryMarkListHeader': 'Оценки, поставленные пользователями'
-                    ],
+                    'data': $params.data.score,
                     'config': [
                         'primaryMark': [
                             'size': 'l',
@@ -346,7 +301,7 @@
 
     {let $icon kind="html"}
         {if $params.data.online == 'only'}
-            arrow
+            cursor
         {/if}
     {/let}
 
@@ -361,7 +316,7 @@
                 ],
                 'config': [
                     'type': 'online',
-                    'iconName': 'cursor'
+                    'iconName': $icon ?: ''
                 ]
             ]
         ]/}
@@ -409,22 +364,53 @@
  */
 {template .countDepartment_}
     {if $params.data?.countDepartment}
+        {let $text kind="html"}
+            {call .countDepartmentText_ data="all" /}
+        {/let}
+
         <div class="{call .rootClass/}__badge{sp}
                     {call .rootClass/}__badge_department">
-            {$params.data.countDepartment}{sp}
-
-            {call cl.iUtils.Utils.declensionPrint}
+            {call .renderChild}
                 {param params: [
-                    'num': $params.data.countDepartment,
-                    'nom': 'филиал',
-                    'gen': 'филиала',
-                    'plu': 'филиалов'
+                    'type': 'smBadge',
+                    'renderParams': [
+                        'data': [
+                            'items': [
+                                ['name': $text]
+                            ],
+                        ],
+                        'config': [
+                            'type': 'online'
+                        ]
+                    ]
                 ]/}
             {/call}
-
-            {sp}в Москве
         </div>
     {/if}
+{/template}
+
+
+/**
+ * Text for badge count department
+ * @param params {{
+ *     data: {
+ *         countDepartment: (number|undefined)
+ *     }
+ * }}
+ */
+{template .countDepartmentText_}
+    {$params.data.countDepartment}{sp}
+
+    {call cl.iUtils.Utils.declensionPrint}
+        {param params: [
+            'num': $params.data.countDepartment,
+            'nom': 'филиал',
+            'gen': 'филиала',
+            'plu': 'филиалов'
+        ]/}
+    {/call}
+
+    {sp}в Москве
 {/template}
 
 

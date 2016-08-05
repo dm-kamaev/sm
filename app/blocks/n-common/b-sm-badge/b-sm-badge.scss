@@ -23,9 +23,6 @@
 
 .b-sm-badge__items {
     display: inline-block;
-
-    box-sizing: border-box;
-    padding-left: 19px;
 }
 
 .b-sm-badge__item {
@@ -37,7 +34,7 @@
 }
 
 .b-sm-badge__icon {
-    position: absolute;
+    display: inline-block;
 
     margin-right: 8px;
 }
