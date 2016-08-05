@@ -19,6 +19,8 @@ goog.require('sm.bSchoolListPaged.SchoolListPaged');
 goog.require('sm.bSchoolListPaged.View');
 goog.require('sm.bSearchPanel.SearchPanel');
 goog.require('sm.bSearchPanel.View');
+goog.require('sm.bSmBadge.SmBadge');
+goog.require('sm.bSmBadge.View');
 goog.require('sm.bSmFeedbackBoard.SmFeedbackBoard');
 goog.require('sm.bSmFeedbackBoard.View');
 goog.require('sm.bSmInformationBoard.SmInformationBoard');
@@ -174,6 +176,10 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('smListPaged', {
             control: sm.bSmListPaged.SmListPaged,
             view: sm.bSmListPaged.View
+        })
+        .setControlListItem('smBadge', {
+            control: sm.bSmBadge.SmBadge,
+            view: sm.bSmBadge.View
         });
 };
 goog.inherits(sm.iFactory.FactoryStendhal, cl.iFactory.Factory);
