@@ -39,9 +39,12 @@ goog.require('sm.lSearchResult.bFilterSearch.Template');
 /**
  * Template factory
  * @constructor
+ * @extends {cl.iFactory.TemplateFactory}
  */
 sm.iFactory.TemplateFactoryStendhal = function() {
-    goog.base(this, 'stendhal');
+    sm.iFactory.TemplateFactoryStendhal.base(
+        this, 'constructor', 'stendhal'
+    );
 
     this.setTemplateListItem(
             'tab',

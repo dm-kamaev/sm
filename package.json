@@ -21,7 +21,7 @@
   "homepage": "https://github.com/c7s/l3_school-market#readme",
   "devDependencies": {
     "asyncawait": "^1.0.1",
-    "auth-service": "git+ssh://git@github.com:c7s/auth-service.git#dev",
+    "auth-service": "git+ssh://git@github.com:c7s/auth-service.git#release-20160803",
     "axios": "^0.9.1",
     "bluebird": "^3.4.1",
     "body-parser": "~1.13.2",
@@ -68,7 +68,7 @@
     "multi-geocoder": "^0.1.4",
     "node-sass": "^3.3.3",
     "node-xlsx": "^0.6.0",
-    "nodules": "git+ssh://git@github.com:c7s/nodules.git#dev",
+    "nodules": "git+ssh://git@github.com:c7s/nodules.git#release-20160802",
     "passport": "^0.3.2",
     "pg": "^4.4.2",
     "pg-hstore": "^2.3.2",
