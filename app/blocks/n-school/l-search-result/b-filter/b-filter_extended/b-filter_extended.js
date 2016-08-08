@@ -87,7 +87,7 @@ goog.scope(function() {
      */
     FilterExtended.ApiUrlPopular = {
         ACTIVITY_SPHERE: '/api/school/activitySphere/popular',
-        SPECIALIZED_CLASS_TYPE: 'api/school/specializedClassType/popular'
+        SPECIALIZED_CLASS_TYPE: '/api/school/specializedClassType/popular'
     };
 
 
