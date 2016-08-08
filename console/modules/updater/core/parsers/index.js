@@ -6,6 +6,7 @@ const ArrayOfIntArraysParser = require('./ArrayOfIntArraysParser');
 const BoolParser = require('./BoolParser');
 const BaseListParser = require('./BaseListParser');
 const StringParser = require('./StringParser');
+const ProfilesParser = require('./ProfilesParser');
 
 module.exports = {
     EmptyParser: EmptyParser,
@@ -15,4 +16,5 @@ module.exports = {
     BoolParser: BoolParser,
     BaseListParser: BaseListParser,
     StringParser: StringParser,
+    ProfilesParser: ProfilesParser,
 };

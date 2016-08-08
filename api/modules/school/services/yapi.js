@@ -57,6 +57,11 @@ exports.getCoords = async(function(addressName) {
             return true;
         }
     });
-    return geoData.featureMember.GeoObject.Point.pos.split(' ')
-               .map(coord => Number(coord));
+    var result = null;
+    if (geoData.featureMember) {
+        result = geoData.featureMember.GeoObject.Point.pos
+            .split(' ')
+            .map(coord => Number(coord));
+    }
+    return result;
 });

@@ -11,10 +11,12 @@ const ArrayOfPairsParser =
     require('../../core/parsers/ArrayOfPairsParser');
 const ArrayOfIntArraysParser = 
     require('../../core/parsers/ArrayOfIntArraysParser');
+const ProfilesParser = 
+    require('../../core/parsers/ProfilesParser');
 
 module.exports = {
     'Полное название': {
-        columnName: 'full_name',
+        columnName: 'fullName',
         parser: StringParser,
     },
     'Красивое название': {
@@ -30,8 +32,8 @@ module.exports = {
         parser: ArrayOfPairsParser,
     },
     'Профили (fixed)': {
-        columnName: 'specialized_classes',
-        parser: ArrayParser,
+        columnName: 'specializedClasses',
+        parser: ProfilesParser,
     },
     'Краткое описание (около 112 знаков)': {
         columnName: 'description',
@@ -42,15 +44,15 @@ module.exports = {
         parser: BaseListParser,
     },
     'Наличие и стоимость продлёнки': {
-        columnName: 'extended_day_cost',
+        columnName: 'extendedDayCost',
         parser: StringParser,
     },
     'Наличие формы': {
-        columnName: 'dress_code',
+        columnName: 'dressCode',
         parser: BoolParser,
     },
     'Тип школы': {
-        columnName: 'school_type',
+        columnName: 'schoolType',
         parser: StringParser,
     },
     'Наличие интерната': {
@@ -70,7 +72,7 @@ module.exports = {
         parser: ArrayParser,
     },
     'Образовательные программы': {
-        columnName: 'educational_grades',
+        columnName: 'educationalGrades',
         parser: ArrayOfIntArraysParser,
     },
     'телефон': {

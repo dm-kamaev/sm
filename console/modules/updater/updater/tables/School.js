@@ -1,5 +1,6 @@
 'use strict';
 
+const async = require('asyncawait/async');
 const await = require('asyncawait/await');
 
 const lodash = require('lodash');
@@ -12,20 +13,23 @@ const BaseSchool = require('../../core/tables/BaseSchool');
 
 var models = require('../../../../../app/components/models').all;
 
+var db = require('../../../../../app/components/db');
+
 var services = require('../../../../../app/components/services').all;
 
 var SCHOOL_COLUMNS = [ 
-    'full_name',
+    'fullName',
     'name',
     'links',
-    'specialized_classes',
+    'specializedClasses',
     'description',
     'features',
-    'extended_day_cost',
-    'dress_code',
-    'school_type',
+    'extendedDayCost',
+    'dressCode',
+    'schoolType',
     'boarding',
     'phones',
+    'director',
 ];
 
 var ADDRESS_COLUMNS = [
@@ -33,15 +37,15 @@ var ADDRESS_COLUMNS = [
     'address',
     'department',
     'district',
-    'educational_grades',
+    'educationalGrades',
 ];
 
 class School extends BaseSchool {
     update() {
-        this.concatColumnsData()
+        this.concatColumnsData();
         this.loadSchool();
         if (this.hasModel()) {
-            //this.updateSchool();
+            this.updateSchool();
             this.updateAddresses();
         }
     }
@@ -63,13 +67,19 @@ class School extends BaseSchool {
                 include: [{
                     model: models.Department,
                     as: 'departments',
-                }],
-                include: [{
+                }, {
                     model: models.Area,
                     as: 'area',
+                    include: {
+                        model: models.District,
+                        as: 'district',
+                    }
                 }],
             }
         }));
+        if(!school) {
+            throw new Error(schoolName);
+        }
         this.model = school;
     }
 
@@ -100,26 +110,90 @@ class School extends BaseSchool {
                 }
             }
         );
-        await(this.model.update(queryParams));
+        this.model = await(this.model.update(queryParams));
     }
 
     updateAddresses() {
         var schoolId = this.model.id;
-        console.log(schoolId);
         var addresses = this.collectAddresses();
         var addressesReferences = lodash.groupBy(addresses, 'address');
         addresses = addresses.map(item => item.address);
-        console.log(addressesReferences);
         addresses.forEach(address => {
-            var findedAddress =
-                this.findAddressByName(address);
-            console.log(findedAddress === null);
-            if (findedAddress) {
-                
-            } else {
-                this.createAddress(schoolId, address);
-            };
+            var departments = addressesReferences[address];
+            this.updateAddress({
+                schoolId: schoolId,
+                address: address,
+                departments: departments
+            });
         });
+    }
+    
+    updateAddress(params) {
+        var addressInstance =
+            this.findAddressByName(params.address);
+        if (!addressInstance) {
+            addressInstance =
+                await(this.createAddress(params.schoolId, params))
+        }
+        addressInstance = this.clearAddressDepartments(
+            addressInstance,
+            params.departments
+        );
+        if (params.departments && params.departments.length) {
+            params.departments.forEach(departmentData => {
+                this.updateDepartment(
+                    addressInstance,
+                    departmentData
+                );
+            });
+        }
+    }
+    
+    clearAddressDepartments(address, departments) {
+        var namelessDepsCount = 0;
+        address.departments = address.departments || [];
+        address.departments = address.departments
+            .map(modelDepartment => {
+                var department = null;
+                var isDepartmentNameless =
+                    modelDepartment.name === '';
+                if (isDepartmentNameless) {
+                    namelessDepsCount += 1;
+                }
+                var mustDepartmetBeRemoved =
+                    isDepartmentNameless && namelessDepsCount > 1;
+                if (mustDepartmetBeRemoved) {
+                    await(address.removeDepartment(modelDepartment));
+                }
+                return department;
+            }).filter(model => model);
+        return address;
+    }
+    
+    updateDepartment(addressInstance, departmentData) {
+        var area = addressInstance.area;
+        var district = area.district;
+        var departmentInstance = this.findAddressDepartment(
+            addressInstance,
+            departmentData.department
+        );
+        var data = {
+            educational_grades: departmentData.educational_grades,
+        };
+        if (!departmentInstance) {
+            data.name  = departmentData.department;
+            departmentInstance = await(
+                services.department.addDepartment(
+                    addressInstance.schoolId,
+                    addressInstance.id,
+                    data
+                )
+            );
+        } else {
+            departmentInstance =
+                await(departmentInstance.update(data));
+        }
+        return departmentInstance;
     }
 
     findAddressByName(name) {
@@ -132,13 +206,27 @@ class School extends BaseSchool {
         }
         return finded;
     }
+    
+    findAddressDepartment(address, departmentName) {
+        var finded = lodash.find(address.dataValues.departments, {
+            name: departmentName
+        });
+        return finded;
+    }
 
-    createAddress(schoolId, address) {
+    createAddress(schoolId, params) {
         var createdAddress = await(services.address.addAddress(
             schoolId, {
-                name: address
+                name: params.address,
             }
         ));
+        var departmentData = params.departments[0];
+        var area = await(services.area.getByName(departmentData.area));
+        var district = await(services.district.getByName(
+            departmentData.district
+        ));
+        area.distsrict = district;
+        createdAddress.area = area;
         return createdAddress;
     }
 
@@ -156,7 +244,7 @@ class School extends BaseSchool {
     getAddress(index) {
         var result = {};
         var address = this.columns.address[index];
-        address = address.split('-')
+        address = address.split(' - ')
             .map(adr => adr.trim())
             .filter(adr => adr);
         if (address.length === 1) {
@@ -174,8 +262,8 @@ class School extends BaseSchool {
             result.district = this.columns.district[index];
         }
         if (this.columns.educational_grades) {
-            result.educational_grades = 
-                this.columns.educational_grades[index];
+            result.educationalGrades = 
+                this.columns.educationalGrades[index];
         }
         return result;
     }
@@ -191,10 +279,6 @@ class School extends BaseSchool {
             )
         );
         return address;
-    }
-
-    addAddressWithDepartment(params) {
-        //console.log(params);
     }
 };
 

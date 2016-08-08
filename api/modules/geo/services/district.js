@@ -19,7 +19,7 @@ var service = {
  * }} districtData
  */
 service.create = async(function(districtData) {
-    return models.District.create(districtData);
+    return await(models.District.create(districtData));
 });
 
 
