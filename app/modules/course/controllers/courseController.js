@@ -66,96 +66,122 @@ exports.search = async(function(req, res, next) {
                     items: [
                         {
                             id: 5,
+                            type: 'course',
                             name: {
                                 light: 'Подготовка к ЕГЭ по русскому языку'
                             },
+                            description: 'Центр «Эрудит», 1 год',
+                            cost: '1 200',
                             score: {
-                                primary: {
-                                    name: 'Средняя оценка',
-                                    value: 4.5
-                                },
-                                secondary: [
-                                    {
-                                        name: 'Стоимость',
-                                        value: 4.7
+                                marks: {
+                                    primary: {
+                                        name: 'Средняя оценка',
+                                        value: 4.5
                                     },
-                                    {
-                                        name: 'Качество',
-                                        value: 3
-                                    }
-                                ]
+                                    secondary: [
+                                        {
+                                            name: 'Стоимость',
+                                            value: 4.7
+                                        },
+                                        {
+                                            name: 'Качество',
+                                            value: 3
+                                        }
+                                    ]
+                                }
                             },
-                            area: [
-                                'Даниловский'
-                            ],
                             metro: [
-                                'Юго-западная',
-                                'Беляево'
+                                {
+                                    id: 9,
+                                    name: 'Сокол'
+                                },
+                                {
+                                    id: 7,
+                                    name: 'Дмитровская'
+                                }
                             ],
-                            isFavorite: true,
-                            countDepartment: 10
+                            isFavorite: true
                         },
                         {
                             id: 5,
+                            type: 'course',
                             name: {
                                 light: 'Подготовка к ЕГЭ по русскому языку'
                             },
+                            description: 'Компания Резольвента предлагает для ' +
+                                'подготовки к ЕГЭ по русскому языку в 11 классе учебный курс ' +
+                                'ЕГЭ классический включающий подготовку к итоговому ' +
+                                'сочинению Приводятся программа курса и стоимость обучения.',
                             score: {
-                                primary: {
-                                    name: 'Средняя оценка',
-                                    value: 4.5
-                                },
-                                secondary: [
-                                    {
-                                        name: 'Стоимость',
-                                        value: 4.7
+                                marks: {
+                                    primary: {
+                                        name: 'Средняя оценка',
+                                        value: 4.5
                                     },
-                                    {
-                                        name: 'Качество',
-                                        value: 3
-                                    }
-                                ]
+                                    secondary: [
+                                        {
+                                            name: 'Стоимость',
+                                            value: 4.7
+                                        },
+                                        {
+                                            name: 'Качество',
+                                            value: 3
+                                        }
+                                    ]
+                                }
                             },
                             area: [
-                                'Даниловский'
+                                {
+                                    id: 3,
+                                    name: 'Даниловский'
+                                }
                             ],
                             metro: [
-                                'Юго-западная',
-                                'Беляево'
+                                {
+                                    id: 6,
+                                    name: 'Юго-западная'
+                                },
+                                {
+                                    id: 3,
+                                    name: 'Беляево'
+                                }
                             ],
-                            isFavorite: true,
-                            countDepartment: 10
+                            online: 'only',
+                            isFavorite: true
                         },
                         {
                             id: 5,
+                            type: 'course',
                             name: {
                                 light: 'Подготовка к ЕГЭ по русскому языку'
                             },
+                            cost: 0,
                             score: {
-                                primary: {
-                                    name: 'Средняя оценка',
-                                    value: 4.5
-                                },
-                                secondary: [
-                                    {
-                                        name: 'Стоимость',
-                                        value: 4.7
+                                marks: {
+                                    primary: {
+                                        name: 'Средняя оценка',
+                                        value: 4.5
                                     },
-                                    {
-                                        name: 'Качество',
-                                        value: 3
-                                    }
-                                ]
+                                    secondary: [
+                                        {
+                                            name: 'Стоимость',
+                                            value: 4.7
+                                        },
+                                        {
+                                            name: 'Качество',
+                                            value: 3
+                                        }
+                                    ]
+                                }
                             },
                             area: [
-                                'Даниловский'
+                                {
+                                    id: 3,
+                                    name: 'Покровское-стрешнево'
+                                }
                             ],
-                            metro: [
-                                'Юго-западная',
-                                'Беляево'
-                            ],
-                            isFavorite: true,
-                            countDepartment: 10
+                            online: 'available',
+                            isFavorite: true
                         }
                     ],
                     itemType: 'smItemEntity'
