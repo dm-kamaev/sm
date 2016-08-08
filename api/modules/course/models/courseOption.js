@@ -17,11 +17,18 @@ var CourseOption = db.define('CourseOption', {
     teacher: Sequelize.STRING
 }, {
     underscored: true,
-    tableName: 'course_brand',
+    tableName: 'course_option',
     classMethods: {
         associate: function(models) {
             CourseOption.belongsTo(models.Course, {
                 foreignKey: 'course_id'
+            });
+            CourseOption.hasMany(models.CourseSchedule, {
+                as: 'schedule',
+                foreignKey: 'course_option_id'
+            });
+            CourseOption.belongsToMany(models.CourseDepartment, {
+                through: 'course_option_course_department'
             });
         }
     }
