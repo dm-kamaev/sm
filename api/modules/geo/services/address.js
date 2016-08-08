@@ -229,7 +229,7 @@ exports.getWithDepartmentsWithMetro = async(function(
         ]];
     }
 
-    return models.Address.findAll(params);
+    return models.Address.findAll(addressParams);
 });
 
 /**
