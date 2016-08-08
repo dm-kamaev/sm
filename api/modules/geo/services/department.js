@@ -24,11 +24,12 @@ exports.addDepartment = function(schoolId, addressId, data) {
         }
         return result;
     });
-
     return await(models.Department.create(data)
         .then(instance => {
             address.addDepartment(instance);
             return instance;
+        }).catch(err => {
+            console.log(err);
         }));
 };
 

@@ -59,3 +59,17 @@ exports.getByIds = async(function(ids) {
         })) :
         [];
 });
+
+/**
+ * Updates area with given name
+ * @param {string} areaName
+ * @return {Area}
+ */
+exports.getByName = async(function(areaName) {
+    var area = await(models.Area.findOne({
+        where: {
+            name: areaName
+        }
+    }));
+    return area;
+});

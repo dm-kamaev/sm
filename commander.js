@@ -14,6 +14,7 @@ require('./console/dump.js').Command;
 require('./console/egeData.js').Command;
 require('./console/geocord.js').Command;
 require('./console/getActs.js').Command;
+require('./console/execUpdater.js').Command;
 require('./console/isAddressIsSchool.js').Command;
 require('./console/metro.js').Command;
 require('./console/modelArchiver.js').Command;
