@@ -27,4 +27,4 @@ var CourseOption = db.define('CourseOption', {
     }
 });
 
-module.exports = CourseBrand;
+module.exports = CourseOption;
