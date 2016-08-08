@@ -183,8 +183,43 @@
 
 /**
  * Container for map
+ * @param params {{
+ *     data: {
+ *         entities: Array<{
+ *             id: number,
+ *             name: string,
+ *             alias: ?string,
+ *             description: ?string,
+ *             totalScore: ?number,
+ *             address: Array<{
+ *                 id: number,
+ *                 lat: number,
+ *                 lng: number,
+ *                 name: string,
+ *                 stages: (string|Array<string>)
+ *             }>,
+ *         }>,
+ *         position: {
+ *             center: ?Array<number>,
+ *             type: ?string
+ *         },
+ *         search: {
+ *             countResults: number,
+ *             searchText: string
+ *         }
+ *     }
+ * }}
  */
 {template .sectionMap_ autoescape="strict" kind="html"}
+    {call .listHeader_}
+        {param params: [
+            'data': $params.data,
+            'config': [
+                'size': 's'
+            ]
+        ]/}
+    {/call}
+
     {let $classes kind="html"}
         {call .rootClass/}__section{sp}
         {call .rootClass/}__section_map
@@ -196,31 +231,6 @@
 
     <div class="{$classes}">
         /*
-
-         * @param params {{
-         *     data: {
-         *         entities: Array<{
-         *             id: number,
-         *             name: string,
-         *             alias: ?string,
-         *             description: ?string,
-         *             totalScore: ?number,
-         *             address: Array<{
-         *                 id: number,
-         *                 lat: number,
-         *                 lng: number,
-         *                 name: string,
-         *                 stages: (string|Array<string>)
-         *             }>,
-         *         }>,
-         *         position: {
-         *             center: ?Array<number>,
-         *             type: ?string
-         *         }
-         *     }
-         * }}
-
-
         {call sm.bMap.Template.map}
             {param params: [
                 'data': $params.data.map,
@@ -256,14 +266,6 @@
         {sp}{call .rootClass/}__section_content">
 
         {call .leftMenu_ data="all" /}
-        {call .listHeader_}
-            {param params: [
-                'data': $params.data,
-                'config': [
-                    'size': 's'
-                ]
-            ]/}
-        {/call}
 
         {call .results_ data="all" /}
     </div>
