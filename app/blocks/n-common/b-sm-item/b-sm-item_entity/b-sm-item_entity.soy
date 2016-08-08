@@ -13,6 +13,7 @@
  *     alias: ?string,
  *     score: (sm.bSmScore.TemplateBrief.Params.Data|undefined),
  *     description: string,
+ *     brand: (string|undefined),
  *     metro: (Array<{
  *         id: number,
  *         name: string
@@ -21,7 +22,7 @@
  *         id: number,
  *         name: string
  *     }>|undefined),
- *     online: ('only'|available'|undefidned),
+ *     online: ('only'|'available'|undefidned),
  *     isFavorite: ?boolean,
  *     countDepartment: ?number,
  *     position: (number|undefined)
@@ -83,7 +84,8 @@
  *     data: {
  *         type: string,
  *         cost: (number|undefined),
- *         description: (string|undefined)
+ *         description: (string|undefined),
+ *         brand: (string|undefined)
  *     }
  * }}
  * @override
@@ -93,13 +95,15 @@
         {call .rootClass/}__section{sp}
         {call .rootClass/}__section_description
 
-        {if not $params.data?.description or not $params.data.type == 'course'}
+        {if not $params.data?.description and $params.data.type != 'course'}
             {sp}i-utils__hidden
         {/if}
     {/let}
 
     <div class="{$classes}">
         {call .description_ data="all" /}
+
+        {call .brand_ data="all" /}
 
         {call .cost_}
             {param params: [
@@ -125,7 +129,7 @@
  *             id: number,
  *             name: string
  *         }>|undefined),
- *         online: ('only'|available'|undefidned),
+ *         online: ('only'|'available'|undefidned),
  *         isFavorite: ?boolean,
  *         countDepartment: ?number
  *     },
@@ -258,9 +262,28 @@
  * }}
  */
 {template .description_}
-    <div class="{call .rootClass/}__description">
-        {$params.data?.description ?: ''}
-    </div>
+    {if $params.data?.description}
+        <div class="{call .rootClass/}__description">
+            {$params.data.description}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Center names which provide training
+ * @param params {{
+ *     data: {
+ *         brand: (string|undefined)
+ *     }
+ * }}
+ */
+{template .brand_}
+    {if $params.data?.brand}
+        <div class="{call .rootClass/}__brand">
+            {$params.data.brand}
+        </div>
+    {/if}
 {/template}
 
 
@@ -268,7 +291,7 @@
  * Online access
  * @param params {{
  *     data: {
- *         online: ('only'|available'|undefidned)
+ *         online: ('only'|'available'|undefidned)
  *     }
  * }}
  */
@@ -416,8 +439,14 @@
 
 /**
  * Css classes
+ * @param params {{
+ *     data: {
+ *         type: string
+ *     }
+ * }}
  * @override
  */
 {template .additionalClasses}
-    b-sm-item_entity
+    {call .rootClass/}_entity{sp}
+    {call .rootClass/}_type_{$params.data.type}
 {/template}

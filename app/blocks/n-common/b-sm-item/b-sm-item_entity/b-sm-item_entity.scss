@@ -6,7 +6,7 @@
     cursor: default;
 
     .b-sm-item__section {
-        margin-bottom: 10px;
+        margin-bottom: 9px;
 
         &:last-child {
             margin-bottom: 0;
@@ -20,7 +20,6 @@
         box-sizing: border-box;
 
         cursor: pointer;
-        text-decoration: none;
 
         color: black;
 
@@ -31,12 +30,6 @@
         }
     }
 
-    .b-sm-item__cost {
-        text-decoration: none;
-
-        font: 16px/22px 'PT Serif', Arial, sans-serif;
-    }
-
     .b-sm-item__name-bold {
         font-weight: 800;
 
@@ -45,20 +38,42 @@
         }
     }
 
+    .b-sm-item__cost {
+        font: 16px/22px 'PT Serif', Arial, sans-serif;
+    }
+
+    .b-sm-item__cost_size_l {
+        position: absolute;
+        top: 3px;
+        right: 55px;
+
+        min-width: 185px;
+    }
+
+    .b-sm-item__cost_size_s {
+        display: none;
+    }
+
     .b-sm-item__score {
         top: 2px;
     }
 
-    .b-sm-item__description {
-        display: inline-block;
-
+    .b-sm-item__section_description {
         max-width: 705px;
-        margin-bottom: 5px;
+        margin-bottom: 15px;
         padding-right: 80px;
 
         color: #000;
 
         font: 16px/22px 'PT Serif', Arial, sans-serif;
+    }
+
+    .b-sm-item__description {
+        margin-bottom: 10px;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
     }
 
     .b-sm-item__section_badges {
@@ -69,7 +84,18 @@
     }
 
     .b-sm-item__badge {
+        margin-right: 28px;
         margin-bottom: 5px;
+
+        &:last-child {
+            margin-right: 0;
+        }
+    }
+}
+
+.b-sm-item_type_course {
+    .b-sm-item__name {
+        padding-right: 250px;
     }
 }
 
@@ -77,18 +103,53 @@
 @include media-l {
     .b-sm-item_entity {
         padding: 20px 0;
+
+        .b-sm-item__cost_size_l {
+            top: 28px;
+            right: 0;
+
+            text-align: right;
+        }
+    }
+
+    .b-sm-item_type_course {
+        .b-sm-item__section_header {
+            min-height: 52px;
+        }
+
+        .b-sm-item__name {
+            padding-right: 180px;
+        }
     }
 }
 
 
 @include media-xs {
     .b-sm-item_entity {
+        .b-sm-item__section_description {
+            padding-right: 0;
+        }
+
         .b-sm-item__name {
             padding-right: 75px;
         }
 
-        .b-sm-item__description {
-            padding-right: 0;
+        .b-sm-item__cost_size_l {
+            display: none;
+        }
+
+        .b-sm-item__cost_size_s {
+            display: block;
+        }
+
+        .b-sm-item__brand {
+            margin-bottom: 0;
+        }
+    }
+
+    .b-sm-item_type_course {
+        .b-sm-item__section_header {
+            min-height: 0;
         }
     }
 }
