@@ -24,6 +24,14 @@ goog.scope(function() {
          * @private
          */
         this.sort_ = null;
+
+
+        /**
+         * List Instance
+         * @type {sm.bSmItemList.SmItemList}
+         * @private
+         */
+        this.resultsList_ = null;
     };
     goog.inherits(sm.lSmSearch.SmSearch, sm.iLayout.LayoutStendhal);
     var Search = sm.lSmSearch.SmSearch;
@@ -35,9 +43,15 @@ goog.scope(function() {
      */
     Search.prototype.decorateInternal = function(element) {
         Search.base(this, 'decorateInternal', element);
+
         this.sort_ = this.decorateChild(
             'dropdown-select',
             this.getView().getDom().sort
+        );
+
+        this.resultsList_ = this.decorateChild(
+            'smItemList',
+            this.getView().getDom().resultsList
         );
     };
 

@@ -55,6 +55,9 @@ goog.scope(function() {
         this.dom = {
             sort: this.getElementByClass(
                 sm.gDropdown.ViewSelect.CssClass.ROOT
+            ),
+            resultsList: this.getElementByClass(
+                sm.bSmItemList.View.CssClass.ROOT
             )
         };
     };
