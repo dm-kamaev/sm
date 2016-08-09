@@ -3,6 +3,7 @@ goog.provide('sm.bSmItem.SmItemEntity');
 goog.require('sm.bSmItem.Event.FavoriteRemoved');
 goog.require('sm.bSmItem.SmItem');
 goog.require('sm.bSmItem.ViewEntity');
+goog.require('sm.iSmViewport.SmViewport');
 
 
 
@@ -19,7 +20,7 @@ sm.bSmItem.SmItemEntity = function(view, opt_domHelper) {
 
     /**
      * Score instance
-     * @type {sm.bScore.Score}
+     * @type {sm.bSmScore.SmScoreBrief}
      * @private
      */
     this.score_ = null;
@@ -49,6 +50,7 @@ goog.scope(function() {
         FavoriteLink = sm.bFavoriteLink.FavoriteLink;
 
     var Event = sm.bSmItem.Event;
+    var Viewport = sm.iSmViewport.SmViewport;
 
 
     /**
@@ -80,7 +82,27 @@ goog.scope(function() {
     Item.prototype.enterDocument = function() {
         Item.base(this, 'enterDocument');
 
+        this.initScoreListeners_();
         this.initFavoriteLinkListeners_();
+    };
+
+
+    /**
+     * Initializes listeners for score
+     * @private
+     */
+    Item.prototype.initScoreListeners_ = function() {
+        this.getHandler().listen(
+            this.score_,
+            sm.bSmScore.SmScoreBrief.Event.PRIMARY_NAME_SHOW,
+            this.onScorePrimaryNameShow_
+        );
+
+        this.getHandler().listen(
+            this.score_,
+            sm.bSmScore.SmScoreBrief.Event.PRIMARY_NAME_HIDE,
+            this.onScorePrimaryNameHide_
+        );
     };
 
 
@@ -100,6 +122,32 @@ goog.scope(function() {
             sm.bFavoriteLink.FavoriteLink.Event.SET_NOT_FAVORITE_STATE,
             this.onRemoveFavoriteClick_
         );
+    };
+
+
+    /**
+     * Listener for show score primary name
+     * @private
+     */
+    Item.prototype.onScorePrimaryNameShow_ = function() {
+        var viewportSize = Viewport.getInstance().getSize();
+
+        if (viewportSize >= Viewport.Size.XL) {
+            this.getView().setCostVisibility(false);
+        }
+    };
+
+
+    /**
+     * Listener for hide score primary name
+     * @private
+     */
+    Item.prototype.onScorePrimaryNameHide_ = function() {
+        var viewportSize = Viewport.getInstance().getSize();
+
+        if (viewportSize >= Viewport.Size.XL) {
+            this.getView().setCostVisibility(true);
+        }
     };
 
 

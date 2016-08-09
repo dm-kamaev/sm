@@ -47,6 +47,7 @@
         top: 3px;
         right: 55px;
 
+        height: 100%;
         min-width: 185px;
     }
 
@@ -56,6 +57,8 @@
 
     .b-sm-item__score {
         top: 2px;
+
+        height: 100%;
     }
 
     .b-sm-item__section_description {
@@ -108,16 +111,18 @@
             top: 28px;
             right: 0;
 
+            min-width: 160px;
+
             text-align: right;
         }
     }
 
     .b-sm-item_type_course {
-        .b-sm-item__section_header {
-            min-height: 52px;
+        .b-sm-item__name {
+            padding-right: 180px;
         }
 
-        .b-sm-item__name {
+        .b-sm-item__section_description {
             padding-right: 180px;
         }
     }
@@ -148,8 +153,6 @@
     }
 
     .b-sm-item_type_course {
-        .b-sm-item__section_header {
-            min-height: 0;
-        }
+
     }
 }

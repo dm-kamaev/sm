@@ -65,6 +65,16 @@ goog.scope(function() {
 
 
     /**
+     * Event enum
+     * @enum
+     */
+    View.Event = {
+        PRIMARY_NAME_SHOW: 'primary_name_show',
+        PRIMARY_NAME_HIDE: 'primary_name_hide'
+    };
+
+
+    /**
      * @override
      * @param {Element} element
      */
@@ -106,6 +116,7 @@ goog.scope(function() {
         return this;
     };
 
+
     /**
      * Handles a click over a document and if click occurs not in score element
      * or secondary marks element, set not visible secondary marks
@@ -120,8 +131,10 @@ goog.scope(function() {
 
         if (!inElement && this.secondaryMarksVisibility_) {
             this.setSecondaryMarksVisibility_(false);
+            this.dispatchEventPrimaryNameVisibility_(false);
         }
     };
+
 
     /**
      * Initializes listeners for element
@@ -138,9 +151,53 @@ goog.scope(function() {
                 this.getElement(),
                 goog.events.EventType.TOUCHSTART,
                 this.onClick_
+            ).listen(
+                this.getElement(),
+                goog.events.EventType.MOUSEOVER,
+                this.onMouseover_
+            ).listen(
+                this.getElement(),
+                goog.events.EventType.MOUSEOUT,
+                this.onMouseout_
             );
         }
         return this;
+    };
+
+
+    /**
+     * Element Mouseover
+     * @private
+     */
+    View.prototype.onMouseover_ = function() {
+        this.dispatchEventPrimaryNameVisibility_(true);
+    };
+
+
+    /**
+     * Element Mouseout
+     * @private
+     */
+    View.prototype.onMouseout_ = function() {
+        if (!this.secondaryMarksVisibility_) {
+            this.dispatchEventPrimaryNameVisibility_(false);
+        }
+    };
+
+
+    /**
+     * Dispatch event show or hide primary name
+     * @param {boolean} visibility
+     * @private
+     */
+    View.prototype.dispatchEventPrimaryNameVisibility_ = function(visibility) {
+        var type = visibility ?
+            View.Event.PRIMARY_NAME_SHOW :
+            View.Event.PRIMARY_NAME_HIDE;
+
+        this.dispatchEvent({
+            'type': type
+        });
     };
 
 
@@ -153,16 +210,18 @@ goog.scope(function() {
         event.preventDefault();
 
         this.toggleSecondaryMarksVisibility_();
+        this.dispatchEventPrimaryNameVisibility_(true);
     };
+
 
     /**
      * Toggle visibility of secondary marks
      * @private
      */
     View.prototype.toggleSecondaryMarksVisibility_ = function() {
-        var newMarksVisibility = !this.secondaryMarksVisibility_;
+        var visibility = !this.secondaryMarksVisibility_;
 
-        this.setSecondaryMarksVisibility_(newMarksVisibility);
+        this.setSecondaryMarksVisibility_(visibility);
     };
 
 
@@ -198,6 +257,7 @@ goog.scope(function() {
 
         this.secondaryMarksVisibility_ = visibility;
     };
+
 
     /**
      * Check hoverability for block and

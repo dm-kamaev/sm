@@ -69,7 +69,8 @@ goog.scope(function() {
      */
     View.CssClass = {
         ROOT: 'b-sm-item_entity',
-        DETAILS_SECTION: 'b-sm-item__section_details'
+        DETAILS_SECTION: 'b-sm-item__section_details',
+        COST_SIZE_L: 'b-sm-item__cost_size_l'
     };
 
 
@@ -91,6 +92,25 @@ goog.scope(function() {
         View.base(this, 'enterDocument');
 
         this.initDetailsListeners_();
+    };
+
+
+    /**
+     * adds or deletes class to show cost size l
+     * @param {bool} visible
+     */
+    View.prototype.setCostVisibility = function(visible) {
+        if (this.dom.costSizeL) {
+            visible ?
+                goog.dom.classlist.remove(
+                    this.dom.costSizeL,
+                    cl.iUtils.Utils.CssClass.HIDDEN
+                ) :
+                goog.dom.classlist.add(
+                    this.dom.costSizeL,
+                    cl.iUtils.Utils.CssClass.HIDDEN
+                );
+        }
     };
 
 
@@ -138,6 +158,10 @@ goog.scope(function() {
             ),
             favoriteLink: this.getElementByClass(
                 sm.bFavoriteLink.View.CssClass.ROOT,
+                element
+            ),
+            costSizeL: this.getElementByClass(
+                View.CssClass.COST_SIZE_L,
                 element
             )
         };
