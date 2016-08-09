@@ -65,7 +65,7 @@
 }
 
 .b-sm-subheader__logo-img {
-    height: 30px;
+    height: 42px;
 }
 /* logo end */
 
@@ -182,6 +182,10 @@
     .b-sm-subheader__link-search {
         left: 40px;
     }
+
+    .b-sm-subheader__logo-img {
+        height: 30px;
+    }
 }
 
 @include media-l {
@@ -234,10 +238,6 @@
         width: 217px;
 
         text-align: left;
-    }
-
-    .b-sm-subheader__logo-img {
-        height: 22px;
     }
 }
 
@@ -404,5 +404,9 @@
 
     .b-sm-subheader__user-control_authorization {
         border-left: none;
+    }
+
+    .b-sm-subheader__logo-img {
+        height: 25px;
     }
 }
