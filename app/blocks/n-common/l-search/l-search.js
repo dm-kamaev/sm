@@ -1,7 +1,7 @@
-goog.provide('sm.lSmSearch.SmSearch');
+goog.provide('sm.lSearch.Search');
 
 goog.require('sm.iLayout.LayoutStendhal');
-goog.require('sm.lSmSearch.View');
+goog.require('sm.lSearch.View');
 
 
 goog.scope(function() {
@@ -15,8 +15,8 @@ goog.scope(function() {
      * @constructor
      * @extends {sm.iLayout.LayoutStendhal}
      */
-    sm.lSmSearch.SmSearch = function(view, opt_domHelper) {
-        sm.lSmSearch.SmSearch.base(this, 'constructor', view, opt_domHelper);
+    sm.lSearch.Search = function(view, opt_domHelper) {
+        sm.lSearch.Search.base(this, 'constructor', view, opt_domHelper);
 
         /**
          * Sort control
@@ -33,8 +33,8 @@ goog.scope(function() {
          */
         this.resultsList_ = null;
     };
-    goog.inherits(sm.lSmSearch.SmSearch, sm.iLayout.LayoutStendhal);
-    var Search = sm.lSmSearch.SmSearch;
+    goog.inherits(sm.lSearch.Search, sm.iLayout.LayoutStendhal);
+    var Search = sm.lSearch.Search;
 
 
     /**
@@ -60,15 +60,15 @@ goog.scope(function() {
 
 
 /**
- * creates sm.lSmSearch.SmSearch instance
+ * creates sm.lSearch.Search instance
  */
 jQuery(function() {
     var domElement = goog.dom.getElementByClass(
-        sm.lSmSearch.View.CssClass.ROOT
+        sm.lSearch.View.CssClass.ROOT
     );
 
-    var view = new sm.lSmSearch.View(null, null, 'stendhal');
-    var instance = new sm.lSmSearch.SmSearch(view);
+    var view = new sm.lSearch.View(null, null, 'stendhal');
+    var instance = new sm.lSearch.Search(view);
 
     instance.decorate(domElement);
 });

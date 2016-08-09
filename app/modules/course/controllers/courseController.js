@@ -196,7 +196,6 @@ exports.search = async(function(req, res, next) {
                 }
             },
             config: {
-                landingScript: 'l-sm-search.js',
                 modifier: 'stendhal',
                 staticVersion: config.lastBuildTimestamp,
                 year: new Date().getFullYear(),

@@ -97,7 +97,7 @@
  */
 {template .layoutScript kind="html"}
     {call cl.iStatic.Template.script}
-        {param path: 'l-sm-search.js' /}
+        {param path: 'l-search.js' /}
         {param staticVersion: $params?.config?.staticVersion /}
     {/call}
 {/template}
@@ -230,6 +230,9 @@
     {/let}
 
     <div class="{$classes}">
+        <div class="{call .rootClass /}__section-inner">
+            Map
+        </div>
         /*
         {call sm.bMap.Template.map}
             {param params: [
@@ -265,9 +268,11 @@
     <div class="{call .rootClass/}__section
         {sp}{call .rootClass/}__section_content">
 
-        {call .leftMenu_ data="all" /}
+        <div class="{call .rootClass /}__section-inner">
+                {call .leftMenu_ data="all" /}
 
-        {call .results_ data="all" /}
+                {call .results_ data="all" /}
+        </div>
     </div>
 {/template}
 
@@ -313,9 +318,10 @@
  */
 {template .search_ private="true" autoescape="strict" kind="html"}
     <div class="{call .rootClass/}__search">
-    {call cl.iUtils.Utils.stringify}
-           {param json: $params /}
-    {/call}
+        Search field
+        {call cl.iUtils.Utils.stringify}
+               {param json: $params /}
+        {/call}
 
         /*{call sm.bSearch.Template.base}
             {param params: [
@@ -338,8 +344,8 @@
  */
 {template .filters_ autoescape="strict" kind="html" private="true"}
     <div class="{call .rootClass/}__filters">
+        Filters
         /*
-
          * @param? params {
          *     data: {
          *         filters: sm.lSearch.bFilters.Template.Params
@@ -416,11 +422,6 @@
                 ]
             ] /}
         {/call}
-        /*{call sm.lSearchResult.bSchoolList.Template.base}
-            {param params: [
-                'schools': $params.data.entityList
-            ]/}
-        {/call}*/
     </div>
 {/template}
 
@@ -637,25 +638,27 @@
  * }}
  */
 {template .sectionFooterSeo_}
-    {if $params.data?.seo and
-        ($params.data?.seo.textLeft or $params.data?.seo.textRight)}
-        <div class="{call .rootClass/}__section{sp}
-                    {call .rootClass/}__section_footer-seo">
-            <div class="{call .rootClass/}__text-seo{sp}
-                        {call .rootClass/}__text-seo_left">
-                {call .textSeo_}
-                    {param text: $params.data.seo.textLeft /}
-                {/call}
-            </div>
+    <div class="{call .rootClass /}__section-inner">
+        {if $params.data?.seo and
+            ($params.data?.seo.textLeft or $params.data?.seo.textRight)}
+            <div class="{call .rootClass/}__section{sp}
+                        {call .rootClass/}__section_footer-seo">
+                <div class="{call .rootClass/}__text-seo{sp}
+                            {call .rootClass/}__text-seo_left">
+                    {call .textSeo_}
+                        {param text: $params.data.seo.textLeft /}
+                    {/call}
+                </div>
 
-            <div class="{call .rootClass/}__text-seo{sp}
-                        {call .rootClass/}__text-seo_right">
-                {call .textSeo_}
-                    {param text: $params.data.seo.textRight /}
-                {/call}
+                <div class="{call .rootClass/}__text-seo{sp}
+                            {call .rootClass/}__text-seo_right">
+                    {call .textSeo_}
+                        {param text: $params.data.seo.textRight /}
+                    {/call}
+                </div>
             </div>
-        </div>
-    {/if}
+        {/if}
+    </div>
 {/template}
 
 
@@ -675,7 +678,7 @@
 
 
 /**
- * Popular entityes
+ * Popular entities
  * @param params {{
  *     data: {
  *         popularEntities: Array<{
@@ -690,23 +693,24 @@
  * }}
  */
 {template .sectionPopular_}
-    <div class="{call .rootClass/}__section{sp}
-                {call .rootClass/}__section_popular">
-        {call cl.iUtils.Utils.stringify}
-            {param json: $params.data.popularEntities /}
-        {/call}
+    <div class="{call .rootClass /}__section-inner">
+        <div class="{call .rootClass/}__section{sp}
+                    {call .rootClass/}__section_popular">
+            {if $params}
+            {/if}
 
-        // {call sm.bPopularSchools.Template.base}
-        //     {param params: [
-        //         'popularSchools': $params.data.popularSchools,
-        //         'config': [
-        //             'popularSchool': [
-        //                 'customClasses': 'l-school__popular'
-        //             ],
-        //             'analyticsAction': 'school click'
-        //         ]
-        //     ]/}
-        // {/call}
+            // {call sm.bPopularSchools.Template.base}
+            //     {param params: [
+            //         'popularSchools': $params.data.popularSchools,
+            //         'config': [
+            //             'popularSchool': [
+            //                 'customClasses': 'l-school__popular'
+            //             ],
+            //             'analyticsAction': 'school click'
+            //         ]
+            //     ]/}
+            // {/call}
+        </div>
     </div>
 {/template}
 
@@ -716,5 +720,5 @@
  * @override
  */
 {template .rootClass}
-    l-sm-search
+    l-search
 {/template}
