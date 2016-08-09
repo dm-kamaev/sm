@@ -1,4 +1,4 @@
-{namespace sm.lSmInformation.Template}
+{namespace sm.lInformation.Template}
 
 
 /*
@@ -35,13 +35,13 @@
  *         name: string,
  *         type: string,
  *         shortDescription: string,
- *         informationBoard: sm.bSmInformationBoard.Template.Params.Data
+ *         informationBoard: sm.lInformation.bInformationBoard.Template.Params.Data
  *         detailedDescription: string,
  *         features: {
  *              title: string,
  *              items: Array<string>
  *         },
- *         feedbackBoard: sm.bSmFeedbackBoard.Template.Params.Data
+ *         feedbackBoard: sm.lInformation.bFeedbackBoard.Template.Params.Data
  *         comments: Array<{sm.lSchool.bComment.Template.Params}>,
  *         addresses: Array<
  *            Array<number>
@@ -62,14 +62,14 @@
  *         metro: ?Array<string>,
  *         totalScore: ?number
  *     }>
- * }} sm.lSmInformation.Template.Params.Data
+ * }} sm.lInformation.Template.Params.Data
  */
 
 
 /**
  * Search page
  * @param? params {{
- *     data: sm.lSmInformation.Template.Params.Data,
+ *     data: sm.lInformation.Template.Params.Data,
  *     config: ?sm.iLayout.Template.Params.Config
  * }}
  * @extends sm.iLayout.TemplateStendhal
@@ -99,13 +99,13 @@
  *             name: string,
  *             type: string,
  *             shortDescription: string,
- *             informationBoard: sm.bSmInformationBoard.Template.Params.Data
+ *             informationBoard: sm.lInformation.bInformationBoard.Template.Params.Data
  *             detailedDescription: string,
  *             features: {
  *                  title: string,
  *                  items: Array<string>
  *             },
- *             feedbackBoard: sm.bSmFeedbackBoard.Template.Params.Data
+ *             feedbackBoard: sm.lInformation.bFeedbackBoard.Template.Params.Data
  *             comments: Array<{sm.lSchool.bComment.Template.Params}>,
  *             addresses: Array<
  *                Array<number>
@@ -159,13 +159,13 @@
  *             name: string,
  *             type: string,
  *             shortDescription: string,
- *             informationBoard: sm.bSmInformationBoard.Template.Params.Data
+ *             informationBoard: sm.lInformation.bInformationBoard.Template.Params.Data
  *             detailedDescription: string,
  *             features: {
  *                  title: string,
  *                  items: Array<string>
  *             },
- *             feedbackBoard: sm.bSmFeedbackBoard.Template.Params.Data
+ *             feedbackBoard: sm.lInformation.bFeedbackBoard.Template.Params.Data
  *             addresses: Array<
  *                Array<number>
  *             >,
@@ -332,7 +332,7 @@
  * @param params {{
  *     data: {
  *         entityData: {
- *             informationBoard: sm.bSmInformationBoard.Template.Params.Data
+ *             informationBoard: sm.lInformation.bInformationBoard.Template.Params.Data
  *         }
  *     }
  * }}
@@ -342,7 +342,7 @@
         {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
                 'factory': $params.config.modifier,
-                'type': 'smInformationBoard',
+                'type': 'informationBoard',
                 'renderParams': [
                     'data': $params.data.entityData.informationBoard
                 ]
@@ -365,7 +365,7 @@
  *                  title: string,
  *                  items: Array<string>
  *             },
- *             feedbackBoard: sm.bSmFeedbackBoard.Template.Params.Data
+ *             feedbackBoard: sm.lInformation.bFeedbackBoard.Template.Params.Data
  *         }
  *     }
  * }}
@@ -426,7 +426,7 @@
  * @param params {{
  *     data: {
  *         entityData: {
- *             feedbackBoard: sm.bSmFeedbackBoard.Template.Params.Data
+ *             feedbackBoard: sm.lInformation.bFeedbackBoard.Template.Params.Data
  *         }
  *     }
  * }}
@@ -436,7 +436,7 @@
         {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
                 'factory': $params.config.modifier,
-                'type': 'smFeedbackBoard',
+                'type': 'feedbackBoard',
                 'renderParams': [
                     'data': $params.data.entityData.feedbackBoard
                 ]
@@ -529,5 +529,5 @@
  * @override
  */
 {template .rootClass}
-    l-sm-information
+    l-information
 {/template}

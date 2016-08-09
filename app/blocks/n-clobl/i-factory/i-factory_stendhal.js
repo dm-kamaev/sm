@@ -21,10 +21,6 @@ goog.require('sm.bSearchPanel.SearchPanel');
 goog.require('sm.bSearchPanel.View');
 goog.require('sm.bSmBadge.SmBadge');
 goog.require('sm.bSmBadge.View');
-goog.require('sm.bSmFeedbackBoard.SmFeedbackBoard');
-goog.require('sm.bSmFeedbackBoard.View');
-goog.require('sm.bSmInformationBoard.SmInformationBoard');
-goog.require('sm.bSmInformationBoard.View');
 goog.require('sm.bSmItem.SmItem');
 goog.require('sm.bSmItem.SmItemEntity');
 goog.require('sm.bSmItem.View');
@@ -53,6 +49,10 @@ goog.require('sm.gModal.ViewStendhal');
 goog.require('sm.gTextarea.TextareaStendhal');
 goog.require('sm.gTextarea.ViewStendhal');
 goog.require('sm.iFactory.TemplateFactoryStendhal');
+goog.require('sm.lInformation.bFeedbackBoard.FeedbackBoard');
+goog.require('sm.lInformation.bFeedbackBoard.View');
+goog.require('sm.lInformation.bInformationBoard.InformationBoard');
+goog.require('sm.lInformation.bInformationBoard.View');
 goog.require('sm.lSchool.bFoldList.FoldList');
 goog.require('sm.lSchool.bFoldList.View');
 goog.require('sm.lSearchResult.bFilterSearch.FilterSearch');
@@ -149,14 +149,6 @@ sm.iFactory.FactoryStendhal = function() {
             control: sm.bSmSubheader.SmSubheader,
             view: sm.bSmSubheader.View
         })
-        .setControlListItem('smInformationBoard', {
-            control: sm.bSmInformationBoard.SmInformationBoard,
-            view: sm.bSmInformationBoard.View
-        })
-        .setControlListItem('smFeedbackBoard', {
-            control: sm.bSmFeedbackBoard.SmFeedbackBoard,
-            view: sm.bSmFeedbackBoard.View
-        })
         .setControlListItem('smScore', {
             control: sm.bSmScore.SmScore,
             view: sm.bSmScore.View
@@ -184,6 +176,17 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('smBadge', {
             control: sm.bSmBadge.SmBadge,
             view: sm.bSmBadge.View
+        });
+
+
+    /** l-information blocks **/
+    this.setControlListItem('informationBoard', {
+            control: sm.lInformation.bInformationBoard.InformationBoard,
+            view: sm.lInformation.bInformationBoard.View
+        })
+        .setControlListItem('feedbackBoard', {
+            control: sm.lInformation.bFeedbackBoard.FeedbackBoard,
+            view: sm.lInformation.bFeedbackBoard.View
         });
 };
 goog.inherits(sm.iFactory.FactoryStendhal, cl.iFactory.Factory);

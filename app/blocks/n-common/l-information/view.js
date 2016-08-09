@@ -1,4 +1,4 @@
-goog.provide('sm.lSmInformation.View');
+goog.provide('sm.lInformation.View');
 
 goog.require('sm.iLayout.ViewStendhal');
 
@@ -12,15 +12,15 @@ goog.require('sm.iLayout.ViewStendhal');
  * @constructor
  * @extends {sm.iLayout.ViewStendhal}
  */
-sm.lSmInformation.View = function(opt_params, opt_type, opt_modifier) {
-    sm.lSmInformation.View.base(this, 'constructor', opt_params,
+sm.lInformation.View = function(opt_params, opt_type, opt_modifier) {
+    sm.lInformation.View.base(this, 'constructor', opt_params,
         opt_type, opt_modifier);
 };
-goog.inherits(sm.lSmInformation.View, sm.iLayout.ViewStendhal);
+goog.inherits(sm.lInformation.View, sm.iLayout.ViewStendhal);
 
 
 goog.scope(function() {
-    var View = sm.lSmInformation.View;
+    var View = sm.lInformation.View;
 
 
     /**
@@ -28,6 +28,6 @@ goog.scope(function() {
      * @enum {string}
      */
     View.CssClass = {
-        ROOT: 'l-sm-information'
+        ROOT: 'l-information'
     };
 });  // goog.scope

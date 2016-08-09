@@ -12,9 +12,7 @@ goog.require('sm.bSchoolCatalog.Template');
 goog.require('sm.bSchoolListPaged.Template');
 goog.require('sm.bSearchPanel.Template');
 goog.require('sm.bSmBadge.Template');
-goog.require('sm.bSmFeedbackBoard.Template');
 goog.require('sm.bSmFooter.Template');
-goog.require('sm.bSmInformationBoard.Template');
 goog.require('sm.bSmItem.Template');
 goog.require('sm.bSmItem.TemplateEntity');
 goog.require('sm.bSmItemList.Template');
@@ -35,6 +33,8 @@ goog.require('sm.gModal.TemplateFeedback');
 goog.require('sm.gModal.TemplateStendhal');
 goog.require('sm.gTab.TemplateStendhal');
 goog.require('sm.gTextarea.TemplateStendhal');
+goog.require('sm.lInformation.bFeedbackBoard.Template');
+goog.require('sm.lInformation.bInformationBoard.Template');
 goog.require('sm.lSchool.bDate.Template');
 goog.require('sm.lSchool.bFoldList.Template');
 goog.require('sm.lSchoolHome.bArticleLink.Template');
@@ -172,14 +172,6 @@ sm.iFactory.TemplateFactoryStendhal = function() {
             sm.bSmSubheader.Template.subheader
         )
         .setTemplateListItem(
-            'smInformationBoard',
-            sm.bSmInformationBoard.Template.informationBoard
-        )
-        .setTemplateListItem(
-            'smFeedbackBoard',
-            sm.bSmFeedbackBoard.Template.feedbackBoard
-        )
-        .setTemplateListItem(
             'smItem',
             sm.bSmItem.Template.item
         )
@@ -206,6 +198,16 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'smBadge',
             sm.bSmBadge.Template.badge
+        );
+
+    /** l-information blocks **/
+    this.setTemplateListItem(
+            'informationBoard',
+            sm.lInformation.bInformationBoard.Template.informationBoard
+        )
+        .setTemplateListItem(
+            'feedbackBoard',
+            sm.lInformation.bFeedbackBoard.Template.feedbackBoard
         );
 };
 goog.inherits(sm.iFactory.TemplateFactoryStendhal, cl.iFactory.TemplateFactory);
