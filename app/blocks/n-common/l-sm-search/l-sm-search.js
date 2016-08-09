@@ -4,23 +4,58 @@ goog.require('sm.iLayout.LayoutStendhal');
 goog.require('sm.lSmSearch.View');
 
 
-
-/**
- * Constructor
- * @param {Object} view
- * @param {Object=} opt_domHelper
- * @constructor
- * @extends {sm.iLayout.LayoutStendhal}
- */
-sm.lSmSearch.SmSearch = function(view, opt_domHelper) {
-    sm.lSmSearch.SmSearch.base(this, 'constructor', view, opt_domHelper);
-};
-goog.inherits(sm.lSmSearch.SmSearch, sm.iLayout.LayoutStendhal);
-
-
 goog.scope(function() {
-    var Search = sm.lSmSearch.SmSearch,
-       View = sm.lSmSearch.View;
+
+
+
+    /**
+     * Constructor
+     * @param {Object} view
+     * @param {Object=} opt_domHelper
+     * @constructor
+     * @extends {sm.iLayout.LayoutStendhal}
+     */
+    sm.lSmSearch.SmSearch = function(view, opt_domHelper) {
+        sm.lSmSearch.SmSearch.base(this, 'constructor', view, opt_domHelper);
+
+        /**
+         * Sort control
+         * @type {sm.gDropdown.DropdownSelect}
+         * @private
+         */
+        this.sort_ = null;
+
+
+        /**
+         * List Instance
+         * @type {sm.bSmItemList.SmItemList}
+         * @private
+         */
+        this.resultsList_ = null;
+    };
+    goog.inherits(sm.lSmSearch.SmSearch, sm.iLayout.LayoutStendhal);
+    var Search = sm.lSmSearch.SmSearch;
+
+
+    /**
+     * @param {Element} element
+     * @override
+     */
+    Search.prototype.decorateInternal = function(element) {
+        Search.base(this, 'decorateInternal', element);
+
+        this.sort_ = this.decorateChild(
+            'dropdown-select',
+            this.getView().getDom().sort
+        );
+
+        this.resultsList_ = this.decorateChild(
+            'smItemList',
+            this.getView().getDom().resultsList
+        );
+    };
+
+
 });  // goog.scope
 
 

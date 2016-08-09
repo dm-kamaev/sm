@@ -1,0 +1,111 @@
+/** Layout start **/
+.b-sm-score_brief {
+    .b-sm-score__mark {
+        display: inline-block;
+    }
+
+    .b-sm-score__mark.b-sm-score__mark_primary {
+        .b-sm-score__mark-name {
+            display: inline-block;
+
+            width: auto;
+            padding-right: 22px;
+        }
+
+        .b-sm-score__mark-value {
+            width: 54px;
+        }
+    }
+
+    .b-sm-score__mark.b-sm-score__mark_secondary {
+        margin-bottom: 7px;
+        padding-top: 1px;
+        padding-bottom: 10px;
+
+        border-bottom: 1px solid #e5e5e5;
+
+        &:first-child {
+            margin-bottom: 8px;
+            padding-top: 0;
+        }
+
+        &:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+
+            border-bottom: none;
+        }
+
+        .b-sm-score__mark-name {
+            width: 120px;
+        }
+    }
+
+    .b-sm-score__secondary-mark-wrap {
+        box-sizing: border-box;
+        padding: 24px 30px;
+
+        width: 230px;
+    }
+}
+/** Layout end **/
+
+
+/** States **/
+.b-sm-score_brief.b-sm-score_active {
+    .b-sm-score__mark.b-sm-score__mark_primary {
+        cursor: pointer;
+    }
+
+    &.b-sm-score_hoverable {
+        &.b-sm-score_primary-mark-name-hidden.b-sm-score_secondary-marks-hidden {
+            .b-sm-score__mark.b-sm-score__mark_primary:hover {
+                .b-sm-score__mark-name {
+                    display: inline-block;
+                }
+            }
+        }
+
+        &.b-sm-score_primary-mark-name-visible.b-sm-score_hoverable:hover {
+            .b-sm-score__mark.b-sm-score__mark_primary {
+                color: #ff0000;
+            }
+        }
+    }
+}
+
+/** State when hint closed **/
+.b-sm-score_brief.b-sm-score_primary-mark-name-hidden {
+    .b-sm-score__mark.b-sm-score__mark_primary {
+        .b-sm-score__mark-name {
+            display: none;
+        }
+    }
+}
+/** State when hint closed end **/
+
+/** State when hint opened **/
+.b-sm-score_brief.b-sm-score_primary-mark-name-hidden.b-sm-score_secondary-marks-visible {
+    .b-sm-score__mark.b-sm-score__mark_primary {
+        .b-sm-score__mark-name {
+            display: inline-block;
+        }
+    }
+}
+/** State when hint opened end **/
+/** States end **/
+
+/** Themes **/
+.b-sm-score_brief.b-sm-score_bold-theme {
+    font-size: 13px;
+    line-height: 20px;
+
+    .b-sm-score__mark.b-sm-score__mark_primary {
+        .b-sm-score__mark-value {
+            font-size: 19px;
+            font-family: 'Proxima', Arial, sans-serif;
+            font-weight: 600;
+        }
+    }
+}
+/** Themes end **/

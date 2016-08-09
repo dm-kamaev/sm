@@ -9,7 +9,7 @@ goog.require('sm.iAnimate.Animate');
 
 
 /**
- * Header View
+ * Subheader View
  * @param {Object=} opt_params
  * @param {string=} opt_type
  * @param {string=} opt_modifier

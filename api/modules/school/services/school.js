@@ -194,8 +194,10 @@ service.getPopularSchools = async(function(opt_amount) {
             include: [{
                 model: models.Address,
                 as: 'addresses',
+                required: false,
                 where: {
-                    isSchool: true
+                    isSchool: true,
+                    entityType: entityType.SCHOOL
                 },
                 include: [
                     {
@@ -280,7 +282,10 @@ service.getRandomIndexes = function(start, end, amount) {
 service.getAddresses = async(function(schoolId) {
     return await(
         models.Address.findAll({
-            where: {schoolId: schoolId},
+            where: {
+                entityId: schoolId,
+                entityType: entityType.SCHOOL
+            },
             include: [
                 {
                     model: models.Department,
@@ -408,8 +413,10 @@ service.getByIdsWithGeoData = async(function(schoolIds) {
         attributes: ['id', 'name', 'totalScore'],
         include: [{
             model: models.Address,
+            required: false,
             where: {
-                isSchool: true
+                isSchool: true,
+                entityType: entityType.SCHOOL
             },
             as: 'addresses',
             attributes: ['id', 'name'],
@@ -684,13 +691,19 @@ service.findBySite = async(function(site) {
  */
 service.viewOne = function(id) {
     var school = await(models.School.findOne({
-        where: { id: id }
+        where: {id: id}
     }));
 
     var resultPromises = {
         activities: services.additionalEducation.findBySchoolId(id),
         comments: services.comment.getComments(school.commentGroupId),
-        addresses: services.address.getWithDepartmentsWithMetro(id, true, true)
+        addresses: services.address.getWithDepartmentsWithMetro(
+            id,
+            entityType.SCHOOL, {
+                isSchool: true,
+                order: true
+            }
+        )
     };
 
     var result = await(resultPromises);
@@ -826,6 +839,10 @@ service.listInstances = async(function() {
         }, {
             model: models.Address,
             as: 'addresses',
+            required: false,
+            where: {
+                entityType: entityType.SCHOOL
+            },
             include: [{
                 model: models.Department,
                 as: 'departments'
@@ -894,6 +911,10 @@ service.searchByIds = function(ids) {
                 attributes: [
                     'id'
                 ],
+                required: false,
+                where: {
+                    entityType: entityType.SCHOOL
+                },
                 include: [{
                     model: models.Area,
                     as: 'area',

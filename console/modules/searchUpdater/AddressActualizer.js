@@ -80,13 +80,13 @@ class AddressActualizer {
         );
         if (searchData) {
             services.addressSearch.update(searchData.id, {
-                entityId: this.address_.schoolId,
+                entityId: this.address_.entityId,
                 entityType: entityType.SCHOOL,
                 values: values
             });
         } else if (values.length) {
             services.addressSearch.create({
-                entityId: this.address_.schoolId,
+                entityId: this.address_.entityId,
                 entityType: entityType.SCHOOL,
                 addressId: this.address_.id,
                 values: values,

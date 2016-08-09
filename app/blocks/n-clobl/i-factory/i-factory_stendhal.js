@@ -19,19 +19,33 @@ goog.require('sm.bSchoolListPaged.SchoolListPaged');
 goog.require('sm.bSchoolListPaged.View');
 goog.require('sm.bSearchPanel.SearchPanel');
 goog.require('sm.bSearchPanel.View');
+goog.require('sm.bSmBadge.SmBadge');
+goog.require('sm.bSmBadge.View');
 goog.require('sm.bSmFeedbackBoard.SmFeedbackBoard');
 goog.require('sm.bSmFeedbackBoard.View');
 goog.require('sm.bSmInformationBoard.SmInformationBoard');
 goog.require('sm.bSmInformationBoard.View');
+goog.require('sm.bSmItem.SmItem');
+goog.require('sm.bSmItem.SmItemEntity');
+goog.require('sm.bSmItem.View');
+goog.require('sm.bSmItem.ViewEntity');
+goog.require('sm.bSmItemList.SmItemList');
+goog.require('sm.bSmItemList.View');
+goog.require('sm.bSmListPaged.SmListPaged');
+goog.require('sm.bSmListPaged.View');
+goog.require('sm.bSmScore.SmScore');
+goog.require('sm.bSmScore.SmScoreBrief');
+goog.require('sm.bSmScore.View');
+goog.require('sm.bSmScore.ViewBrief');
 goog.require('sm.bSmSubheader.SmSubheader');
 goog.require('sm.bSmSubheader.View');
 goog.require('sm.gAuthSocial.ViewStendhal');
 goog.require('sm.gDropdown.DropdownSelect');
-goog.require('sm.gDropdown.DropdownSelectView');
+goog.require('sm.gDropdown.ViewSelect');
 goog.require('sm.gInput.DigitInput');
 goog.require('sm.gInput.DigitInputView');
-goog.require('sm.gList.SelectList');
-goog.require('sm.gList.SelectListView');
+goog.require('sm.gList.List.Select');
+goog.require('sm.gList.ViewSelect');
 goog.require('sm.gModal.ModalFeedback');
 goog.require('sm.gModal.ModalStendhal');
 goog.require('sm.gModal.ViewFeedback');
@@ -60,11 +74,11 @@ sm.iFactory.FactoryStendhal = function() {
 
     this.setControlListItem('dropdown-select', {
             control: sm.gDropdown.DropdownSelect,
-            view: sm.gDropdown.DropdownSelectView
+            view: sm.gDropdown.ViewSelect
         })
         .setControlListItem('list-select', {
-            control: sm.gList.SelectList,
-            view: sm.gList.SelectListView
+            control: sm.gList.List.Select,
+            view: sm.gList.ViewSelect
         })
         .setControlListItem('digit-input', {
             control: sm.gInput.DigitInput,
@@ -128,8 +142,10 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('filter-search', {
             control: sm.lSearchResult.bFilterSearch.FilterSearch,
             view: sm.lSearchResult.bFilterSearch.View
-        })
-        .setControlListItem('smSubheader', {
+        });
+
+    /** Common blocks and their heirs **/
+    this.setControlListItem('smSubheader', {
             control: sm.bSmSubheader.SmSubheader,
             view: sm.bSmSubheader.View
         })
@@ -140,6 +156,34 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('smFeedbackBoard', {
             control: sm.bSmFeedbackBoard.SmFeedbackBoard,
             view: sm.bSmFeedbackBoard.View
+        })
+        .setControlListItem('smScore', {
+            control: sm.bSmScore.SmScore,
+            view: sm.bSmScore.View
+        })
+        .setControlListItem('smScoreBrief', {
+            control: sm.bSmScore.SmScoreBrief,
+            view: sm.bSmScore.ViewBrief
+        })
+        .setControlListItem('smItem', {
+            control: sm.bSmItem.SmItem,
+            view: sm.bSmItem.View
+        })
+        .setControlListItem('smItemEntity', {
+            control: sm.bSmItem.SmItemEntity,
+            view: sm.bSmItem.ViewEntity
+        })
+        .setControlListItem('smItemList', {
+            control: sm.bSmItemList.SmItemList,
+            view: sm.bSmItemList.View
+        })
+        .setControlListItem('smListPaged', {
+            control: sm.bSmListPaged.SmListPaged,
+            view: sm.bSmListPaged.View
+        })
+        .setControlListItem('smBadge', {
+            control: sm.bSmBadge.SmBadge,
+            view: sm.bSmBadge.View
         });
 };
 goog.inherits(sm.iFactory.FactoryStendhal, cl.iFactory.Factory);

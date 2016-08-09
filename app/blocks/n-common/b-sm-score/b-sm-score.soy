@@ -1,0 +1,248 @@
+{namespace sm.bSmScore.Template}
+
+/**
+ * @typedef {{
+ *     marks: {
+ *         primary: {
+ *             name: string,
+ *             value: number
+ *         },
+ *         secondary: Array<{
+ *             name: string,
+ *             value: number
+ *         }>
+ *      }
+ * }} sm.bSmScore.Template.Params.Data
+ */
+
+/**
+ * Template for Score block
+ * @param params {{
+ *     data: sm.bSmScore.Template.Params.Data,
+ *     config: {
+ *         isActive: boolean,
+ *         theme: string
+ *     }
+ * }}
+ * @constructor
+ * @extends cl.iControl.Template
+ */
+{template .score}
+    {call .init data="all" /}
+{/template}
+
+
+/**
+ * @param params {{
+ *     data: sm.bSmScore.Template.Params.Data
+ *     config: {
+ *         isActive: boolean,
+ *         theme: string
+ *     }
+ * }}
+ * @override
+ */
+{template .body}
+    {call .primaryMark data="all" /}
+
+    {call .secondaryMarks data="all" /}
+{/template}
+
+
+/**
+ * Primary mark template
+ * @param params {{
+ *     data: {
+ *         marks: {
+ *             primary: {
+ *                 name: string,
+ *                 value: number
+ *             }
+ *         }
+ *     }
+ *     config: {
+ *         theme: string
+ *     }
+ * }}
+ * @protected
+ */
+{template .primaryMark kind="html"}
+    <div class="{call .rootClass /}__primary-mark-wrap">
+        {call .mark_}
+            {param params: [
+                'data': $params.data.marks.primary,
+                'config': [
+                        'type': 'primary'
+                    ]
+                ]
+            /}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Secondary marks template
+ * @param params {{
+ *     data: {
+ *         marks: {
+ *             secondary: Array{
+ *                 name: string,
+ *                 value: string
+ *             }
+ *         }
+ *     },
+ *     config: {
+ *         theme: string
+ *     }
+ * }}
+ * @protected
+ */
+{template .secondaryMarks kind="html"}
+    {let $cssClasses kind="html"}
+        {call .rootClass /}__secondary-mark-wrap
+        {if not ($params.data.marks.secondary and
+            length($params.data.marks.secondary))}
+            {sp}{cl.iUtils.Utils.CssClass.HIDDEN}
+        {/if}
+    {/let}
+
+
+    <div class="{$cssClasses}">
+        {call .markList data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * List of secondary marks with names and values
+ * @param? params {{
+ *     data: {
+ *         marks: {
+ *             secondary: Array{
+ *                 name: string,
+ *                 value: string
+ *             }
+ *         }
+ *     },
+ *     config: {
+ *         theme: string
+ *     }
+ * }}
+ * @protected
+ */
+{template .markList kind="html"}
+    {call .markListItems data="all" /}
+{/template}
+
+
+/**
+ * @param params {{
+ *     data: {
+ *         marks: {
+ *             secondary: Array{
+ *                 name: string,
+ *                 value: string
+ *             }
+ *         }
+ *     },
+ *     config: {
+ *         theme: string
+ *     }
+ * }}
+ * @protected
+ */
+{template .markListItems kind="html"}
+     {if $params.data.marks.secondary and
+                            length($params.data.marks.secondary)}
+         {foreach $mark in $params.data.marks.secondary}
+             {call .mark_}
+                 {param params: [
+                     'data': $mark,
+                     'config': [
+                         'type': 'secondary',
+                         'theme': $params?.config?.theme
+                     ]
+                 ] /}
+             {/call}
+         {/foreach}
+     {/if}
+{/template}
+
+/**
+ * Mark template
+ * @param params {{
+ *     data: {
+ *         name: (string|undefined),
+ *         value: number
+ *     },
+ *     config: {
+ *         type: ?string
+ *     }
+ * }}
+ * @private
+ */
+{template .mark_ kind="html"}
+    {let $modifier kind="html"}
+         {if $params?.config?.type}
+            {call .rootClass /}__mark_{$params.config.type}
+         {else}
+            {call .rootClass /}__mark_default;
+         {/if}
+    {/let}
+
+    <div class="{call .rootClass /}__mark
+        {sp}{$modifier}">
+        {call .markName_ data="all" /}
+        {call .markValue data="all" /}
+    </div>
+{/template}
+
+
+/**
+ *
+ * @param params {{
+ *     data: {
+ *         name: string
+ *     }
+ * }}
+ * @private
+ */
+{template .markName_ kind="html"}
+    <div class="{call .rootClass /}__mark-name">
+        {$params.data.name ? $params.data.name : ''}
+    </div>
+{/template}
+
+
+/**
+ * Mark value template
+ * @param params {{
+ *     data: {
+ *         value: number
+ *     },
+ *     config: ({
+ *         type: (string|undefined)
+ *     }|undefined)
+ * }}
+ * @protected
+ */
+{template .markValue kind="html"}
+    {let $markParams: [
+        'value': $params?.data?.value,
+        'size': 'm'
+    ]/}
+
+    <div class="{call .rootClass /}__mark-value">
+        {call sm.bMark.Template.base}
+            {param params: $markParams/}
+        {/call}
+    </div>
+{/template}
+
+/**
+ * @override
+ */
+{template .rootClass}
+    b-sm-score
+{/template}

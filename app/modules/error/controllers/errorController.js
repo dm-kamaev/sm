@@ -61,5 +61,6 @@ exports.notFound = async(function(req, res) {
         }
     });
 
+    res.header('Content-Type', 'text/html; charset=utf-8');
     res.end(html);
 });

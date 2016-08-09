@@ -1,0 +1,340 @@
+{namespace sm.bSmItem.Template}
+
+
+/**
+ * @typedef {{
+ *     id: ?number,
+ *     type: string,
+ *     name: {
+ *         light: string,
+ *         bold: ?string
+ *     },
+ *     alias: ?string,
+ *     score: ?sm.bSmScore.Template.Params.Data,
+ *     description: (string|undefined),
+ *     metro: ?Array<{
+ *         id: number,
+ *         name: string
+ *     }>,
+ *     area: ?Array<{
+ *         id: number,
+ *         name: string
+ *     }>
+ * }} sm.bSmItem.Template.Params.Data
+ */
+
+
+ /**
+ * @typedef {{
+ *     stylizationModifier: string,
+ *     customClasses: ?Array<string>
+ * }} sm.bSmItem.Template.Params.Config
+ */
+
+
+ /**
+ * Constructor
+ * @param params {{
+ *     data: sm.bSmItem.Template.Params.Data,
+ *     config: sm.bSmItem.Template.Params.Config
+ * }}
+ * @extends cl.iControl.Template
+ * @constructor
+ */
+{template .item}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * Body
+ * @param params {{
+ *     data: sm.bSmItem.Template.Params.Data,
+ *     config: sm.bSmItem.Template.Params.Config
+ * }}
+ * @override
+ */
+{template .body}
+    {call .sectionHeader data="all" /}
+    {call .sectionDescription data="all" /}
+    {call .sectionDetails data="all" /}
+{/template}
+
+
+/**
+ * Header
+ * @param params {{
+ *     data: {
+ *         name: {
+ *             light: string,
+ *             bold: ?string
+ *         },
+ *         score: ?sm.bSmScore.Template.Params.Data
+ *     }
+ * }}
+ * @protected
+ */
+{template .sectionHeader}
+    <div class="{call .rootClass/}__section{sp}
+                {call .rootClass/}__section_header">
+        {call .name data="all" /}
+        {call .score data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Description
+ * @param params {{
+ *     data: {
+ *         description: (string|undefined)
+ *     }
+ * }}
+ * @protected
+ */
+{template .sectionDescription}
+    {let $classes kind="html"}
+        {call .rootClass/}__section{sp}
+        {call .rootClass/}__section_description
+
+        {if not $params.data?.description}
+            {sp}i-utils__hidden
+        {/if}
+    {/let}
+
+    <div class="{$classes}">
+        {$params.data?.description ?: ''}
+    </div>
+{/template}
+
+
+/**
+ * Details
+ * @param params {{
+ *     data: {
+ *         metro: ?Array<{
+ *             id: number,
+ *             name: string
+ *         }>,
+ *         area: ?Array<{
+ *             id: number,
+ *             name: string
+ *         }>
+ *     }
+ * }}
+ * @protected
+ */
+{template .sectionDetails}
+    <div class="{call .rootClass/}__section{sp}
+                {call .rootClass/}__section_details">
+        {call .location data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Item name
+ * @param params {{
+ *     data: {
+ *         name: {
+ *             light: string,
+ *             bold: ?string
+ *         }
+ *     }
+ * }}
+ * @protected
+ */
+{template .name}
+    <div class="{call .rootClass/}__name">
+        {let $name kind="html"}
+            {$params.data.name.light}
+
+            {if $params.data.name?.bold}
+                {$params.data.name.bold}
+            {/if}
+        {/let}
+
+        {let $customClasses kind="html"}
+            {call .rootClass/}__link-name
+        {/let}
+
+        {call sm.bLink.Template.base}
+            {param params: [
+                'data': [
+                    'name': $name
+                ],
+                'config': [
+                    'size': 'large',
+                    'customClasses': $customClasses
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Score
+ * @param params {{
+ *     data: {
+ *         score: ?sm.bSmScore.Template.Params.Data
+ *     }
+ * }}
+ * @protected
+ */
+{template .score}
+    <div class="{call .rootClass/}__score">
+        {$params.data?.score}
+        // {call .renderChild}
+        //     {param params: [
+        //         'type': 'smScore',
+        //         'renderParams': [
+        //             'data': $params.data.score
+        //         ]
+        //     ]/}
+        // {/call}
+    </div>
+{/template}
+
+
+/**
+ * Location
+ * @param params {{
+ *     data: {
+ *         metro: ?Array<{
+ *             id: number,
+ *             name: string
+ *         }>,
+ *         area: ?Array<{
+ *             id: number,
+ *             name: string
+ *         }>
+ *     }
+ * }}
+ * @protected
+ */
+{template .location}
+    {if $params.data?.metro and length($params.data?.metro)}
+    // {if $params.data?.metroStations and length($params.data?.metroStations)}
+        {call .metro_ data="all" /}
+    {elseif $params.data?.area and length($params.data?.area)}
+        {call .area_ data="all" /}
+    {/if}
+{/template}
+
+
+/**
+ * Metro badge
+ * @param params {{
+ *     data: {
+ *         metro: ?Array<{
+ *             id: number,
+ *             name: string
+ *         }>
+ *     }
+ * }}
+ */
+{template .metro_}
+    <div class="{call .rootClass/}__badge {call .rootClass/}__badge_metro">
+        {call .renderChild}
+            {param params: [
+                'type': 'smBadge',
+                'renderParams': [
+                    'data': [
+                        'items': $params.data.metro,
+                    ],
+                    'config': [
+                        'type': 'metro',
+                        'iconName': 'metro'
+                    ]
+                ]
+            ]/}
+        {/call}
+        //'data': $params.data.metro,
+    </div>
+{/template}
+
+
+/**
+ * Area badge
+ * @param params {{
+ *     data: {
+ *         area: ?Array<{
+ *             id: number,
+ *             name: string
+ *         }>
+ *     }
+ * }}
+ */
+{template .area_}
+    <div class="{call .rootClass/}__badge {call .rootClass/}__badge_area">
+        {call .renderChild}
+            {param params: [
+                'type': 'smBadge',
+                'renderParams': [
+                    'data': [
+                        'items': $params.data.area,
+                    ],
+                    'config': [
+                        'type': 'area',
+                        'iconName': 'location'
+                    ]
+                ]
+            ]/}
+        {/call}
+        //'data': $params.data.area
+    </div>
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-sm-item
+{/template}
+
+
+/**
+ * Attributes
+ * Important to write kind="attributes" when overrides
+ * @param params {{
+ *     data: {
+ *         id: ?number,
+ *         type: string,
+ *         name: {
+ *             light: string,
+ *             bold: ?string
+ *         },
+ *         alias: ?string,
+ *         score: ?sm.bSmScore.Template.Params.Data,
+ *         description: (string|undefined),
+ *         metro: ?Array<{
+ *             id: number,
+ *             name: string
+ *         }>,
+ *         area: ?Array<{
+ *             id: number,
+ *             name: string
+ *         }>
+ *     }
+ * }}
+ * @override
+ */
+{template .attributes kind="attributes"}
+    {sp}href="/{$params.data.type}/{$params.data.alias}"
+    {sp}data-params="
+        {call cl.iUtils.Utils.stringify}
+            {param json: $params /}
+        {/call}"
+{/template}
+
+
+/**
+ * Tag name
+ * @override
+ */
+{template .tag}
+    a
+{/template}

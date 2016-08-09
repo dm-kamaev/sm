@@ -39,9 +39,6 @@
     .g-dropdown__opener,
     .g-dropdown__content,
     .g-dropdown__opener-custom-text {
-        letter-spacing: 0.01em;
-
-        font-family: arial, sans-serif;
         font-size: 14px;
     }
 }
@@ -61,7 +58,7 @@
     }
 }
 
-.g-dropdown.g-dropdown_select.g-dropdown_sort-theme {
+.g-dropdown.g-dropdown_select.g-dropdown_minimal-theme {
     .g-dropdown__opener {
         box-sizing: content-box;
         padding: 0;
@@ -81,7 +78,7 @@
     }
 
     .g-dropdown__content {
-        right: 0px;
+        right: 0;
         left: auto;
 
         float: right;
@@ -90,6 +87,7 @@
         margin-top: 14px;
     }
 }
+
 
 .g-dropdown.g-dropdown_select.g-dropdown_small-icon-offset {
     .g-dropdown__opener-arrow {

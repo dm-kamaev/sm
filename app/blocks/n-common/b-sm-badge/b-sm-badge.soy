@@ -1,0 +1,263 @@
+{namespace sm.bSmBadge.Template}
+
+
+/**
+ * @typedef {{
+ *     items: Array<{
+ *         id: (number|undefined),
+ *         name: string
+ *     }>
+ * }} sm.bSmBadge.Template.Params.Data
+ */
+
+
+  /**
+ * @typedef {{
+ *     type: string,
+ *     iconName: (string|undefined),
+ *     isNotActive: boolean,
+ *     stylizationModifier: string
+ * }} sm.bSmBadge.Template.Params.Config
+ */
+
+
+/**
+ * Constructor
+ * @param params {{
+ *     data: sm.bSmBadge.Template.Params.Data,
+ *     config: sm.bSmBadge.Template.Params.Config
+ * }}
+ * @extends cl.iControl.Template
+ * @constructor
+ */
+{template .badge}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * Body
+ * @param params {{
+ *     data: sm.bSmBadge.Template.Params.Data,
+ *     config: sm.bSmBadge.Template.Params.Config
+ * }}
+ * @override
+ */
+{template .body}
+    {call .icon_ data="all" /}
+    {call .items_ data="all" /}
+    {call .hint_ data="all" /}
+{/template}
+
+
+/**
+ * Icon
+ * @param params {{
+ *     config: {
+ *         iconName: (string|undefined),
+ *         stylizationModifier: string
+ *     }
+ * }}
+ * @override
+ */
+{template .icon_}
+    {if $params?.config?.iconName}
+        <div class="{call .rootClass/}__icon">
+            {call .renderChild}
+                {param params: [
+                    'type': 'icon',
+                    'renderParams': [
+                        'data': [
+                            'type': $params.config.iconName
+                        ]
+                    ]
+                ]/}
+            {/call}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Container for items
+ * @param params {{
+ *     data: {
+ *         items: Array<{
+ *             id: (number|undefined),
+ *             name: string
+ *         }>
+ *     },
+ *     config: {
+ *         type: string
+ *     }
+ * }}
+ * @override
+ */
+{template .items_}
+    <div class="{call .rootClass/}__items">
+        {foreach $item in $params.data.items}
+            {call .item_}
+                {param params: [
+                    'data': $item,
+                    'config': $params?.config
+                ]/}
+            {/call}
+
+            {if not isLast($item)}
+                ,{sp}
+            {/if}
+        {/foreach}
+    </div>
+{/template}
+
+
+/**
+ * Container for items
+ * @param params {{
+ *     data: {
+ *         id: (number|undefined),
+ *         name: string
+ *     },
+ *     config: {
+ *         type: string
+ *     }
+ * }}
+ * @override
+ */
+{template .item_}
+    <div class="{call .rootClass/}__item"
+        {call .itemDataParams_ data="all" /}>
+        {$params.data.name}
+    </div>
+{/template}
+
+
+/**
+ * Item Data Params
+ * @param params {{
+ *     data: {
+ *         id: (number|undefined),
+ *         name: string
+ *     },
+ *     config: {
+ *         type: string
+ *     }
+ * }}
+ * @override
+ */
+{template .itemDataParams_ kind="attributes"}
+    data-params="
+        {call cl.iUtils.Utils.stringify}
+            {param json: [
+                'id': $params.data.id ?: '',
+                'name': $params.data.name,
+                'type': $params?.config?.type ?: ''
+            ]/}
+        {/call}"
+{/template}
+
+
+/**
+ * Hint
+ * @param params {{
+ *     config: {
+ *         type: string
+ *     }
+ * }}
+ * @override
+ */
+{template .hint_}
+    {if $params?.config?.type == 'rating'}
+        {let $hintContent kind="html"}
+            {call .hintContent_ /}
+        {/let}
+
+        <div class="{call .rootClass/}__hint">
+            {call .renderChild}
+                {param params: [
+                    'type': 'hint',
+                    'renderParams': [
+                        'data': $hintContent,
+                        'config': [
+                            'align': 'left'
+                        ]
+                    ]
+                ]/}
+            {/call}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Hint Content
+ * @override
+ */
+{template .hintContent_}
+    <div class="{call .rootClass/}__hint-content">
+        Рейтинг составлен Департаментом образования{sp}
+        Москвы по итогам 2014—2015 учебного года
+        <br>
+
+        <div class="{call .rootClass/}__hint-link">
+            {call sm.bLink.Template.base}
+                {param params: [
+                    'data': [
+                        'name': 'Подробнее'
+                    ]
+                ]/}
+            {/call}
+
+            {call .hintIcon_ /}
+        </div>
+    </div>
+{/template}
+
+
+/**
+ * Hint Icon
+ * @override
+ */
+{template .hintIcon_}
+    <div class="{call .rootClass/}__hint-link-icon">
+        {call .renderChild}
+            {param params: [
+                'type': 'icon',
+                'renderParams': [
+                    'data': [
+                        'type': 'window-href'
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Css classes
+ * @param params {{
+ *     config: {
+ *         type: string,
+ *         isNotActive: boolean
+ *     }
+ * }}
+ * @override
+ */
+{template .additionalClasses}
+    {if $params?.config?.type}
+        {sp}{call .rootClass/}_{$params.config.type}
+    {/if}
+    {if not $params?.config?.isNotActive}
+        {sp}{call .rootClass/}_active
+    {/if}
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-sm-badge
+{/template}
