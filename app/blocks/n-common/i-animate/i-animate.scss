@@ -1,5 +1,6 @@
 .i-animate {
     animation-duration: 750ms;
+
     animation-fill-mode: both;
 }
 
@@ -57,8 +58,9 @@
 
 @keyframes slideInLeft {
     from {
-        transform: translate3d(-100%, 0, 0);
         visibility: visible;
+
+        transform: translate3d(-100%, 0, 0);
     }
 
     to {
@@ -68,8 +70,9 @@
 
 @keyframes slideInRight {
     from {
-        transform: translate3d(100%, 0, 0);
         visibility: visible;
+
+        transform: translate3d(100%, 0, 0);
     }
 
     to {
@@ -85,6 +88,7 @@
 
     to {
         visibility: hidden;
+
         transform: translate3d(-100%, 0, 0);
     }
 }
@@ -96,6 +100,7 @@
 
     to {
         visibility: hidden;
+
         transform: translate3d(100%, 0, 0);
     }
 }
@@ -107,6 +112,7 @@
 
     to {
         visibility: visible;
+
         opacity: 1;
     }
 }
@@ -118,6 +124,7 @@
 
     to {
         visibility: hidden;
+
         opacity: 0;
     }
 }
@@ -128,29 +135,34 @@
     }
 
     50% {
-        opacity: 0;
         transform: scale3d(.3, .3, .3);
+
+        opacity: 0;
     }
 
     to {
         visibility: hidden;
+
         opacity: 0;
     }
 }
 
 @keyframes zoomIn {
     from {
-        opacity: 0;
         transform: scale3d(.3, .3, .3);
+
+        opacity: 0;
     }
 
     50% {
         visibility: visible;
+
         opacity: 1;
     }
 
 	to {
 		visibility: visible;
+
 		opacity: 1;
 	}
 }

@@ -2,6 +2,7 @@
 
 .b-sm-list-paged {
     width: 350px;
+
     text-align: left;
 }
 
@@ -20,6 +21,7 @@
     padding: 15px 0 10px 0;
 
     text-align: center;
+
     border-top: 1px solid #e5e5e5;
 }
 
@@ -42,9 +44,9 @@
 
 .b-sm-list-paged__link.b-sm-list-paged__link_inactive {
     cursor: default;
+    user-select: none;
 
     color: #bfbfbf;
-    user-select: none;
 }
 
 @include media-xs {

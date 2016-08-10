@@ -19,6 +19,7 @@
     &.l-search__section_map {
         width: 100%;
         height: 500px;
+
         background: #f4f4ec;
     }
 
@@ -26,20 +27,22 @@
     &.l-search__section_content {
         margin-top: 60px;
         padding-bottom: 60px;
+
         border-bottom: 1px solid #e5e5e5;
 
 
         &:after {
-            content: '';
             display: block;
             clear: both;
+
+            content: '';
         }
     }
 
     &.l-search__section_popular {
+        height: 370px;
         margin-top: 45px;
 
-        height: 370px;
         background: #f4f4ec;
     }
 }
@@ -47,7 +50,6 @@
 .l-search__section-inner {
     width: 1200px;
     min-width: 255px;
-
     margin: 0 auto;
 }
 /** layout end **/
@@ -59,7 +61,6 @@
 
     width: 350px;
     height: 1100px;
-
     margin-right: 60px;
 
     text-align: center;
@@ -69,7 +70,6 @@
 
 .l-search__list-results {
     box-sizing: border-box;
-
     padding-left: 410px;
 }
 
@@ -81,14 +81,16 @@
     &.l-search__list-header_size_s {
         display: none;
 
-        text-align: center;
         padding: 26px 0;
+
+        text-align: center;
     }
 }
 
 .l-search__sort {
-    height: 13px;
     position: relative;
+
+    height: 13px;
 }
 
 .l-search__sort-control {
@@ -128,8 +130,8 @@
 
 @include media-xl {
     .l-search__section-inner {
-        margin: 0 40px;
         width: auto;
+        margin: 0 40px;
     }
 }
 
@@ -146,13 +148,12 @@
     }
 
     .l-search__left-menu {
-        float: none;
         display: block;
+        float: none;
 
-        margin-bottom: 35px;
-
-        height: 169px;
         width: 100%;
+        height: 169px;
+        margin-bottom: 35px;
     }
 
 
@@ -164,8 +165,9 @@
         &.l-search__list-header_size_s {
             display: block;
 
-            border-top: 1px solid #e5e5e5;
             padding-top: 25px;
+
+            border-top: 1px solid #e5e5e5;
         }
     }
 
@@ -190,9 +192,8 @@
     }
 
     .l-search__list-header {
-        line-height: normal;
-
         font-size: 20px;
+        line-height: normal;
     }
 
     .l-search__list-results {

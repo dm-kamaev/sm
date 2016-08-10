@@ -1,20 +1,20 @@
 @import "../../n-common/i-media/i-media";
 
 .b-sm-footer {
+    box-sizing: border-box;
     width: 1200px;
     min-width: 255px;
-
     margin: 0 auto;
     padding: 33px 0 85px;
 
     text-align: left;
-    box-sizing: border-box;
 
     font: 14px/20px Arial, sans-serif;
 }
 
 .b-sm-footer__link {
     display: inline-block;
+
     margin-right: 20px;
 
     line-height: 18px;
@@ -31,7 +31,6 @@
 @include media-xl {
     .b-sm-footer {
         width: 100%;
-
         padding-right: 40px;
         padding-bottom: 73px;
         padding-left: 40px;
