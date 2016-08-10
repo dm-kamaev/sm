@@ -128,13 +128,8 @@
 
 @include media-xl {
     .l-search__section-inner {
-        width: 100%;
-    }
-
-    .l-search__section {
-        &.l-search__section_content {
-            margin: 0 40px;
-        }
+        margin: 0 40px;
+        width: auto;
     }
 }
 
@@ -189,11 +184,6 @@
             display: none;
         }
 
-        &.l-search__section_content {
-            padding-bottom: 0;
-            border-bottom: none;
-        }
-
         &.l-search__section_popular {
             margin-top: 0;
         }
@@ -210,8 +200,6 @@
     }
 
     .l-search__list-body {
-        border-bottom: 1px solid #e5e5e5;
-
         padding-bottom: 60px;
     }
 
