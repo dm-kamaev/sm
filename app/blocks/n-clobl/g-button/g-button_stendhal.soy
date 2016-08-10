@@ -13,12 +13,16 @@
  * @override
  * @param params {
  *     config: {
- *         isDisabled: bool
+ *         size: (string|undefined),
+ *         isDisabled: (bool|undefined)
  *     }
  * }
  */
 {template .additionalClasses}
     {if $params?.config?.isDisabled}
         {call .rootClass /}_disabled
+    {/if}
+    {if $params?.config?.size}
+        {call .rootClass /}_size_{$params.config.size}
     {/if}
 {/template}

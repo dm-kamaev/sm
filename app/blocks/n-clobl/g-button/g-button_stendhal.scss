@@ -23,6 +23,25 @@
     }
 }
 
+.g-button.g-button_dark-theme {
+    border: 4px solid #000;
+    color: #000;
+
+    &:hover {
+        border: 4px solid #e62424;
+        color: #e62424;
+
+        background-color: transparent;
+    }
+}
+
+.g-button.g-button_size_s {
+    height: 47px;
+    padding: 7px;
+
+    font-size: 15px;
+}
+
 .g-button_stendhal.g-button_disabled {
     cursor: default;
 
