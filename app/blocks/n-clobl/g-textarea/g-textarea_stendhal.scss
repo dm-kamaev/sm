@@ -1,15 +1,17 @@
 .g-textarea.g-textarea_stendhal.g-textarea_auto-height {
     .g-textarea__textarea,
     .g-textarea__text-container {
-        box-shadow: inset 0 0 5px 0 rgba(0, 0, 0, 0.2);
         min-height: 80px;
         padding: 10px 14px;
 
+        white-space: pre-wrap;
+
         border: 1px solid rgba(0, 0, 0, 0.1);
+        box-shadow: inset 0 0 5px 0 rgba(0, 0, 0, 0.2);
+
+        font-family: 'Arial', sans-serif;
         font-size: 14px;
         line-height: 20px;
-        font-family: 'Arial', sans-serif;
-        white-space: pre-wrap;
 
         -webkit-appearance: none;
     }
@@ -21,14 +23,18 @@
         padding: 15px;
 
         color: #cccccc;
+
         font-size: 16px;
     }
 
     .g-textarea__counter {
-        text-align: right;
-        font-size: 12px;
         margin-top: 15px;
+
+        text-align: right;
+
         color: #cccccc;
+
+        font-size: 12px;
     }
 
     .g-textarea__counter_warning {
