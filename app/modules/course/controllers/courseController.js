@@ -62,6 +62,94 @@ exports.search = async(function(req, res, next) {
                     staticText: 'Сортировать по ',
                     defaultOpenerText: 'стоимости'
                 },
+                filterPanel: {
+                    filters: [
+                        {
+                            data: {
+                                "header":{
+                                   "title":"Дополнительные занятия",
+                                   "tooltip":""
+                                },
+                                "name":"additionalEducation",
+                                "filters":[
+                                   {
+                                      "label":"Математика",
+                                      "value":"math",
+                                      "isChecked":false
+                                   },
+                                   {
+                                      "label":"Занимательная математика",
+                                      "value":"zanMath",
+                                      "isChecked":false
+                                   },
+                                   {
+                                      "label":"Робототехника",
+                                      "value":"robo",
+                                      "isChecked":false
+                                   },
+                                   {
+                                      "label":"Макраме",
+                                      "value":"4",
+                                      "isChecked":false
+                                   },
+                                   {
+                                      "label":"Вязание",
+                                      "value":"vaz",
+                                      "isChecked":false
+                                   },
+                                   {
+                                      "label":"Пение",
+                                      "value":"pen",
+                                      "isChecked":false
+                                   },
+                                   {
+                                      "label":"Чтение",
+                                      "value":"cht",
+                                      "isChecked":false
+                                   },
+                                   {
+                                      "label":"Рисование",
+                                      "value":"ris",
+                                      "isChecked":false
+                                   },
+                                   {
+                                      "label":"История",
+                                      "value":"ist",
+                                      "isChecked":false
+                                   }
+                                ]
+                            },
+                            config: {
+                                type: 'extended',
+                                isShowed: false
+                            }
+                        },
+                        {
+                            data: {
+                                "header":{
+                                   "title":"Default",
+                                   "tooltip":""
+                                },
+                                "name":"Default",
+                                "filters":[
+                                   {
+                                      "label":"Математика",
+                                      "value":"math",
+                                      "isChecked":false
+                                   },
+                                   {
+                                      "label":"Занимательная математика",
+                                      "value":"zanMath",
+                                      "isChecked":false
+                                   }
+                                ]
+                            },
+                            config: {
+                                isShowed: false
+                            }
+                        }
+                    ]
+                },
                 entityList: {
                     items: [
                         {
