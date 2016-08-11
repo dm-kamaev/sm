@@ -43,21 +43,28 @@ goog.scope(function() {
     View.prototype.decorateInternal = function(element) {
         View.base(this, 'decorateInternal', element);
 
-        this.initDom_();
+        this.initDom_(element);
     };
 
 
     /**
      * Init dom elements
+     * @param {Element} element
      * @private
      */
-    View.prototype.initDom_ = function() {
+    View.prototype.initDom_ = function(element) {
         this.dom = {
             sort: this.getElementByClass(
-                sm.gDropdown.ViewSelect.CssClass.ROOT
+                sm.gDropdown.ViewSelect.CssClass.ROOT,
+                element
+            ),
+            filterPanel: this.getElementByClass(
+                sm.lSearch.bFilterPanel.View.CssClass.ROOT,
+                element
             ),
             resultsList: this.getElementByClass(
-                sm.bSmItemList.View.CssClass.ROOT
+                sm.bSmItemList.View.CssClass.ROOT,
+                element
             )
         };
     };

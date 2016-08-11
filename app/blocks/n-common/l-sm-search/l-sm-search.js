@@ -27,6 +27,14 @@ goog.scope(function() {
 
 
         /**
+         * Filters Instance
+         * @type {sm.lSearch.bFilterPanel.FilterPanel}
+         * @private
+         */
+        this.filterPanel_ = null;
+
+
+        /**
          * List Instance
          * @type {sm.bSmItemList.SmItemList}
          * @private
@@ -47,6 +55,11 @@ goog.scope(function() {
         this.sort_ = this.decorateChild(
             'dropdown-select',
             this.getView().getDom().sort
+        );
+
+        this.filters_ = this.decorateChild(
+            'lSearch-filterPanel',
+            this.getView().getDom().filterPanel
         );
 
         this.resultsList_ = this.decorateChild(

@@ -41,7 +41,7 @@
  *     },
  *     sort: sm.gDropdown.TemplateSelect.Params.Data
  *     entityList: sm.bSmItemList.Template.Params.Data,
- *     filters: sm.lSearch.bFilters.Template.Params,
+ *     filterPanel: sm.lSearch.bFilterPanel.Template.Params,
  *     searchSettings: {
  *         url: string,
  *         method: string,
@@ -128,7 +128,7 @@
  *         },
  *         sort: sm.gDropdown.TemplateSelect.Params.Data
  *         entityList: sm.bSmItemList.Template.Params.Data,
- *         filters: sm.lSearch.bFilters.Template.Params,
+ *         filterPanel: sm.lSearch.bFilterPanel.Template.Params,
  *         searchSettings: {
  *             url: string,
  *             method: string,
@@ -247,7 +247,7 @@
  *             placeholder: ?string
  *         },
  *         entityList: sm.bSmItemList.Template.Params.Data,
- *         filters: {sm.lSearch.bFilters.Template.Params}
+ *         filterPanel: {sm.lSearch.bFilterPanel.Template.Params}
  *     }
  * }}
  */
@@ -311,9 +311,11 @@
  */
 {template .search_ private="true" autoescape="strict" kind="html"}
     <div class="{call .rootClass/}__search">
-    {call cl.iUtils.Utils.stringify}
-           {param json: $params /}
-    {/call}
+    // {call cl.iUtils.Utils.stringify}
+    //        {param json: $params /}
+    // {/call}
+    {if $params}
+    {/if}
 
         /*{call sm.bSearch.Template.base}
             {param params: [
@@ -333,20 +335,23 @@
 
 /**
  * Filter template
+ * @param? params {
+ *     data: {
+ *         filterPanel: sm.lSearch.bFilterPanel.Template.Params
+ *     }
+ * }
  */
 {template .filters_ autoescape="strict" kind="html" private="true"}
     <div class="{call .rootClass/}__filters">
-        /*
-
-         * @param? params {
-         *     data: {
-         *         filters: sm.lSearch.bFilters.Template.Params
-         *     }
-         * }
-
-         {call sm.lSearchResult.bFilters.Template.base}
-            {param params: $params?.data?.filters/}
-        {/call}*/
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': $params.config.modifier,
+                'type': 'lSearch-filterPanel',
+                'renderParams': [
+                    'data': $params.data.filterPanel
+                ]
+            ] /}
+        {/call}
     </div>
 {/template}
 

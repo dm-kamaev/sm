@@ -55,6 +55,8 @@ goog.require('sm.lInformation.bInformationBoard.InformationBoard');
 goog.require('sm.lInformation.bInformationBoard.View');
 goog.require('sm.lSchool.bFoldList.FoldList');
 goog.require('sm.lSchool.bFoldList.View');
+goog.require('sm.lSearch.bFilterPanel.FilterPanel');
+goog.require('sm.lSearch.bFilterPanel.View');
 goog.require('sm.lSearchResult.bFilterSearch.FilterSearch');
 goog.require('sm.lSearchResult.bFilterSearch.View');
 
@@ -178,15 +180,20 @@ sm.iFactory.FactoryStendhal = function() {
             view: sm.bSmBadge.View
         });
 
-
     /** l-information blocks **/
-    this.setControlListItem('informationBoard', {
+    this.setControlListItem('lInformation-informationBoard', {
             control: sm.lInformation.bInformationBoard.InformationBoard,
             view: sm.lInformation.bInformationBoard.View
         })
-        .setControlListItem('feedbackBoard', {
+        .setControlListItem('lInformation-feedbackBoard', {
             control: sm.lInformation.bFeedbackBoard.FeedbackBoard,
             view: sm.lInformation.bFeedbackBoard.View
+        });
+
+    /** l-search blocks **/
+    this.setControlListItem('lSearch-filterPanel', {
+            control: sm.lSearch.bFilterPanel.FilterPanel,
+            view: sm.lSearch.bFilterPanel.View
         });
 };
 goog.inherits(sm.iFactory.FactoryStendhal, cl.iFactory.Factory);
