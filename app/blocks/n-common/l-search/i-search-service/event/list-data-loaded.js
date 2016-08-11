@@ -1,7 +1,7 @@
 /**
  * @fileoverview Event with loaded data for results list
  */
-goog.provide('sm.lSmSearch.iSearchService.ListDataLoadedEvent');
+goog.provide('sm.lSearch.iSearchService.ListDataLoadedEvent');
 
 
 goog.require('goog.events.Event');
@@ -17,27 +17,27 @@ goog.scope(function() {
      * @param  {goog.events.EventTarget=} opt_target
      * @constructor
      */
-     sm.lSmSearch.iSearchService.ListDataLoadedEvent =
+     sm.lSearch.iSearchService.ListDataLoadedEvent =
         function(listData, opt_target) {
-            sm.lSmSearch.iSearchService.ListDataLoadedEvent.base(
+            sm.lSearch.iSearchService.ListDataLoadedEvent.base(
                 this,
                 'constructor',
-                sm.lSmSearch.iSearchService.ListDataLoadedEvent.Type,
+                sm.lSearch.iSearchService.ListDataLoadedEvent.Type,
                 opt_target
             );
 
             /**
              * Loaded data for entity list
-             * @type {sm.lSmSearch.iSearchService.ListDataLoadedEvent.ListData}
+             * @type {sm.lSearch.iSearchService.ListDataLoadedEvent.ListData}
              * @private
              */
             this.listData_ = listData;
     };
     goog.inherits(
-        sm.lSmSearch.iSearchService.ListDataLoadedEvent,
+        sm.lSearch.iSearchService.ListDataLoadedEvent,
         goog.events.Event
     );
-    var ListDataLoadedEvent = sm.lSmSearch.iSearchService.ListDataLoadedEvent;
+    var ListDataLoadedEvent = sm.lSearch.iSearchService.ListDataLoadedEvent;
 
 
     /**
@@ -55,7 +55,7 @@ goog.scope(function() {
 
     /**
      * Getter for listData_
-     * @return {sm.lSmSearch.iSearchService.ListDataLoadedEvent.ListData}
+     * @return {sm.lSearch.iSearchService.ListDataLoadedEvent.ListData}
      */
     ListDataLoadedEvent.prototype.getListData = function() {
         return this.listData_;

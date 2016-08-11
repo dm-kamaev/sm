@@ -14,10 +14,9 @@
     }
 
     .b-sm-item__name {
+        box-sizing: border-box;
         width: 100%;
         padding-right: 180px;
-
-        box-sizing: border-box;
 
         cursor: pointer;
 
@@ -47,8 +46,8 @@
         top: 3px;
         right: 55px;
 
-        height: 100%;
         min-width: 185px;
+        height: 100%;
     }
 
     .b-sm-item__cost_size_s {

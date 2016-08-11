@@ -115,6 +115,7 @@
  *         links: {
  *             nameL: string,
  *             nameM: string,
+ *             nameS: (string|undefined),
  *             url: string
  *         }
  *     },
@@ -126,16 +127,6 @@
 {template .linkSearch_}
     {let $iconCustomClasses kind="html"}
         {call .rootClass/}__search-link-icon
-    {/let}
-
-    {let $linkLCustomClasses kind="html"}
-        {call .rootClass/}__search-link-text{sp}
-        {call .rootClass/}__search-link-text_visible_l
-    {/let}
-
-    {let $linkMCustomClasses kind="html"}
-        {call .rootClass/}__search-link-text{sp}
-        {call .rootClass/}__search-link-text_visible_m
     {/let}
 
     <a class="{call .rootClass/}__search-link" href="{$params.data.links.url}">
@@ -154,6 +145,12 @@
             ]/}
         {/call}
 
+
+        {let $linkLCustomClasses kind="html"}
+            {call .rootClass/}__search-link-text{sp}
+            {call .rootClass/}__search-link-text_visible_l
+        {/let}
+
         {call sm.bLink.Template.base}
             {param params: [
                 'data': [
@@ -166,6 +163,11 @@
             ]/}
         {/call}
 
+        {let $linkMCustomClasses kind="html"}
+            {call .rootClass/}__search-link-text{sp}
+            {call .rootClass/}__search-link-text_visible_m
+        {/let}
+
         {call sm.bLink.Template.base}
             {param params: [
                 'data': [
@@ -174,6 +176,26 @@
                 'config': [
                     'size': 'extralarge',
                     'customClasses': $linkMCustomClasses
+                ]
+            ]/}
+        {/call}
+
+
+        {let $linkSCustomClasses kind="html"}
+            {call .rootClass/}__search-link-text{sp}
+            {call .rootClass/}__search-link-text_visible_s
+        {/let}
+
+        {call sm.bLink.Template.base}
+            {param params: [
+                'data': [
+                    'name': $params.data.links.nameS ?
+                        $params.data.links.nameS :
+                        $params.data.links.nameM,
+                ],
+                'config': [
+                    'size': 'extralarge',
+                    'customClasses': $linkSCustomClasses
                 ]
             ]/}
         {/call}

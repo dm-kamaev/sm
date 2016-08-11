@@ -1,4 +1,4 @@
-goog.provide('sm.lSmSearch.View');
+goog.provide('sm.lSearch.View');
 
 goog.require('sm.iLayout.ViewStendhal');
 
@@ -16,15 +16,15 @@ goog.scope(function() {
      * @constructor
      * @extends {sm.iLayout.ViewStendhal}
      */
-    sm.lSmSearch.View = function(opt_params, opt_type, opt_modifier) {
-        sm.lSmSearch.View.base(this, 'constructor', opt_params,
+    sm.lSearch.View = function(opt_params, opt_type, opt_modifier) {
+        sm.lSearch.View.base(this, 'constructor', opt_params,
             opt_type, opt_modifier);
     };
-    goog.inherits(sm.lSmSearch.View, sm.iLayout.ViewStendhal);
+    goog.inherits(sm.lSearch.View, sm.iLayout.ViewStendhal);
 
 
 
-    var View = sm.lSmSearch.View;
+    var View = sm.lSearch.View;
 
 
     /**
@@ -32,7 +32,7 @@ goog.scope(function() {
      * @enum {string}
      */
     View.CssClass = {
-        ROOT: 'l-sm-search'
+        ROOT: 'l-search'
     };
 
 

@@ -1,17 +1,18 @@
 /**
  * @fileoverview Page with filters and results of search
  */
-goog.provide('sm.lSmSearch.SmSearch');
+goog.provide('sm.lSearch.Search');
+
 
 goog.require('cl.iRequest.Request');
 goog.require('sm.iLayout.LayoutStendhal');
-goog.require('sm.lSmSearch.View');
-goog.require('sm.lSmSearch.iSearchService.SearchService');
+goog.require('sm.lSearch.View');
+goog.require('sm.lSearch.iSearchService.SearchService');
 
 
 goog.scope(function() {
     var Request = cl.iRequest.Request;
-    var SearchService = sm.lSmSearch.iSearchService.SearchService;
+    var SearchService = sm.lSearch.iSearchService.SearchService;
 
 
 
@@ -22,8 +23,8 @@ goog.scope(function() {
      * @constructor
      * @extends {sm.iLayout.LayoutStendhal}
      */
-    sm.lSmSearch.SmSearch = function(view, opt_domHelper) {
-        sm.lSmSearch.SmSearch.base(this, 'constructor', view, opt_domHelper);
+    sm.lSearch.Search = function(view, opt_domHelper) {
+        sm.lSearch.Search.base(this, 'constructor', view, opt_domHelper);
 
         /**
          * Sort control
@@ -51,12 +52,12 @@ goog.scope(function() {
 
         /**
          * Search service instance
-         * @type {sm.lSmSearch.iSearchService.SearchService}
+         * @type {sm.lSearch.iSearchService.SearchService}
          */
         this.searchService = null;
     };
-    goog.inherits(sm.lSmSearch.SmSearch, sm.iLayout.LayoutStendhal);
-    var Search = sm.lSmSearch.SmSearch;
+    goog.inherits(sm.lSearch.Search, sm.iLayout.LayoutStendhal);
+    var Search = sm.lSearch.Search;
 
 
     /**
@@ -85,7 +86,7 @@ goog.scope(function() {
 
     /**
      * Init data loading services
-     * @return {sm.lSmSearch.SmSearch}
+     * @return {sm.lSearch.SmSearch}
      */
     Search.prototype.initServices = function() {
         /** IRequest init **/
@@ -101,15 +102,15 @@ goog.scope(function() {
 
 
 /**
- * creates sm.lSmSearch.SmSearch instance
+ * creates sm.lSearch.Search instance
  */
 jQuery(function() {
     var domElement = goog.dom.getElementByClass(
-        sm.lSmSearch.View.CssClass.ROOT
+        sm.lSearch.View.CssClass.ROOT
     );
 
-    var view = new sm.lSmSearch.View(null, null, 'stendhal');
-    var instance = new sm.lSmSearch.SmSearch(view);
+    var view = new sm.lSearch.View(null, null, 'stendhal');
+    var instance = new sm.lSearch.Search(view);
 
     instance.decorate(domElement);
 });

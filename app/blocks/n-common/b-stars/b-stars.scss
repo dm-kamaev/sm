@@ -3,19 +3,20 @@
 
     min-width: 50px;
 
-    outline: none;
     text-align: right;
-    color: #000;
 
-    line-height: 1em;
+    color: #000;
+    outline: none;
+
     font: 0 "WebSymbols", Arial, sans-serif;
+    line-height: 1em;
 }
 
 .b-stars_clickable {
     cursor: pointer;
 }
 
-.b-stars__hidden-input{
+.b-stars__hidden-input {
     display: none;
 }
 
@@ -45,8 +46,9 @@
 
 .b-stars__star_theme_colored {
     .b-star__star_not-selected {
-        color: #e6e6e6;
         display: inline-block;
+
+        color: #e6e6e6;
     }
 
     .b-stars__star_selected {

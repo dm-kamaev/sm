@@ -1,14 +1,14 @@
 .b-badge {
+    font-family: Arial, sans-serif;
     font-size: 13px;
     line-height: 18px;
-
-    font-family: Arial, sans-serif;
 }
 
 .b-badge__item {
     display: inline;
 
     text-decoration: none;
+
     color: #808080;
 }
 
@@ -40,8 +40,9 @@
 
     margin-top: 7px;
 
-    color: #356fc4;
     cursor: pointer;
+
+    color: #356fc4;
 }
 
 .b-badge__hint-href-icon {
@@ -54,16 +55,19 @@
     width: 212px;
     margin-right: 8px;
 
+    cursor: default;
+
+    color: #808080;
+
     font-family: Arial, sans-serif;
     font-size: 13px;
     font-weight: 400;
-    color: #808080;
-    cursor: default;
 }
 
 .b-badge_star {
-    font-family: "WebSymbols", Arial, sans-serif;
     color: #ee362c;
+
+    font-family: "WebSymbols", Arial, sans-serif;
 }
 
 .b-badge.b-badge_rating {

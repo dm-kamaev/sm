@@ -6,20 +6,20 @@
  *
  * Require already inited iRequest.
  */
-goog.provide('sm.lSmSearch.iSearchService.SearchService');
+goog.provide('sm.lSearch.iSearchService.SearchService');
 
 goog.require('cl.iRequest.Request');
 goog.require('goog.events.EventTarget');
-goog.require('sm.lSmSearch.iSearchService.ListDataLoadedEvent');
-goog.require('sm.lSmSearch.iSearchService.MapDataLoadedEvent');
+goog.require('sm.lSearch.iSearchService.ListDataLoadedEvent');
+goog.require('sm.lSearch.iSearchService.MapDataLoadedEvent');
 
 
 goog.scope(function() {
     var Request = cl.iRequest.Request;
     var ListDataLoadedEvent =
-        sm.lSmSearch.iSearchService.SearchService.ListDataLoadedEvent;
+        sm.lSearch.iSearchService.SearchService.ListDataLoadedEvent;
     var MapDataLoadedEvent =
-        sm.lSmSearch.iSearchService.SearchService.MapDataLoadedEvent;
+        sm.lSearch.iSearchService.SearchService.MapDataLoadedEvent;
 
 
 
@@ -27,7 +27,7 @@ goog.scope(function() {
      * Data loader
      * @constructor
      */
-    sm.lSmSearch.iSearchService.SearchService = function() {
+    sm.lSearch.iSearchService.SearchService = function() {
 
         /**
          * iRequest instance
@@ -53,9 +53,9 @@ goog.scope(function() {
         this.searchMapApi_ = null;
     };
     goog.inherits(
-        sm.lSmSearch.iSearchService.SearchService, goog.events.EventTarget
+        sm.lSearch.iSearchService.SearchService, goog.events.EventTarget
     );
-    var SearchService = sm.lSmSearch.iSearchService.SearchService;
+    var SearchService = sm.lSearch.iSearchService.SearchService;
 
 
     /**

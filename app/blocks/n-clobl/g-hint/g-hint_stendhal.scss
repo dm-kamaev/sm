@@ -7,14 +7,15 @@
     width: auto;
     padding: 0;
 
-    background-color: transparent;
     cursor: default;
+
+    background-color: transparent;
 
     .g-hint__content {
         position: relative;
+        z-index: 2;
         top: 10px;
         left: -20px;
-        z-index: 2;
 
         box-sizing: border-box;
         padding: 18px;
@@ -28,31 +29,32 @@
 
     .g-hint__arrow {
         position: absolute;
+        z-index: 3;
         top: 0;
         left: 0;
-        z-index: 3;
 
         width: 10px;
         height: 10px;
 
-        border-left: 10px solid #ffffff;
         border-top: 10px solid transparent;
+        border-left: 10px solid #ffffff;
     }
 
     .g-hint__arrow-shadow {
         position: absolute;
+        z-index: 1;
         top: 10px;
         left: 0;
-        z-index: 1;
 
         width: 20px;
         height: 10px;
+
         -webkit-transform: skewX(-125deg) rotate(-215deg) translate(0px, 0px);
         -ms-transform: skewX(-125deg) rotate(-215deg) translate(0px, 0px);
         transform: skewY(45deg) rotate(0deg) translate(0px, 0px);
 
-        box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.25);
         background-color: #ffffff;
+        box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.25);
     }
 }
 
@@ -113,7 +115,7 @@
 .g-hint.g-hint_stendhal.g-hint_top-offset_l {
     top: 30px;
 
-    .g-hint__arrow{
+    .g-hint__arrow {
         top: 7px;
         left: -5px;
     }
@@ -134,7 +136,6 @@
 
     .g-hint__arrow-shadow {
         top: -2px;
-
         left: 160px;
     }
 }
@@ -187,44 +188,44 @@
     }
 
     .g-hint.g-hint_stendhal.g-hint_offset-m {
-        left: 0;
         right: 0;
+        left: 0;
 
         .g-hint__content {
-            left: 0;
             right: 0;
+            left: 0;
         }
 
         .g-hint__arrow {
             top: 7px;
-            left: auto;
             right: 33px;
+            left: auto;
         }
 
         .g-hint__arrow-shadow {
-            left: auto;
             right: 23px;
+            left: auto;
         }
     }
 
     .g-hint.g-hint_stendhal.g-hint_offset-l {
-        left: 0;
         right: 0;
+        left: 0;
 
         .g-hint__content {
-            left: 0;
             right: 0;
+            left: 0;
         }
 
         .g-hint__arrow {
             top: 7px;
-            left: auto;
             right: 88px;
+            left: auto;
         }
 
         .g-hint__arrow-shadow {
-            left: auto;
             right: 78px;
+            left: auto;
         }
     }
 }

@@ -1,10 +1,9 @@
 @import "../i-media/i-media";
 
 .b-sm-badge {
+    font-family: Arial, sans-serif;
     font-size: 13px;
     line-height: 18px;
-
-    font-family: Arial, sans-serif;
 }
 
 .b-sm-badge_rating {
@@ -44,6 +43,7 @@
     margin-right: 8px;
 
     cursor: default;
+
     color: #808080;
 
     font-family: Arial, sans-serif;

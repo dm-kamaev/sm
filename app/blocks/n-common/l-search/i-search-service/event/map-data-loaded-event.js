@@ -1,7 +1,7 @@
 /**
  * @fileoverview Event with loaded data for map
  */
-goog.provide('sm.lSmSearch.iSearchService.MapDataLoadedEvent');
+goog.provide('sm.lSearch.iSearchService.MapDataLoadedEvent');
 
 
 goog.require('goog.events.Event');
@@ -13,31 +13,31 @@ goog.scope(function() {
 
     /**
      * Event with loaded data for results list
-     * @param  {sm.lSmSearch.iSearchService.MapDataLoadedEvent.MapData} mapData
+     * @param  {sm.lSearch.iSearchService.MapDataLoadedEvent.MapData} mapData
      * @param  {goog.events.EventTarget=} opt_target
      * @constructor
      */
-    sm.lSmSearch.iSearchService.MapDataLoadedEvent =
+    sm.lSearch.iSearchService.MapDataLoadedEvent =
         function(mapData, opt_target) {
-            sm.lSmSearch.iSearchService.MapDataLoadedEvent.base(
+            sm.lSearch.iSearchService.MapDataLoadedEvent.base(
                 this,
                 'constructor',
                 opt_target,
-                sm.lSmSearch.iSearchService.MapDataLoadedEvent.Type
+                sm.lSearch.iSearchService.MapDataLoadedEvent.Type
             );
 
             /**
              * Loaded data for entity list
-             * @type {sm.lSmSearch.iSearchService.MapDataLoadedEvent.MapData}
+             * @type {sm.lSearch.iSearchService.MapDataLoadedEvent.MapData}
              * @private
              */
             this.mapData_ = mapData;
     };
     goog.inherits(
-        sm.lSmSearch.iSearchService.MapDataLoadedEvent,
+        sm.lSearch.iSearchService.MapDataLoadedEvent,
         goog.events.Event
     );
-    var MapDataLoadedEvent = sm.lSmSearch.iSearchService.MapDataLoadedEvent;
+    var MapDataLoadedEvent = sm.lSearch.iSearchService.MapDataLoadedEvent;
 
 
     /**
@@ -61,7 +61,7 @@ goog.scope(function() {
 
     /**
      * Getter for mapData_
-     * @return {sm.lSmSearch.iSearchService.MapDataLoadedEvent.MapData}
+     * @return {sm.lSearch.iSearchService.MapDataLoadedEvent.MapData}
      */
     MapDataLoadedEvent.prototype.getMapData = function() {
         return this.mapData_;
