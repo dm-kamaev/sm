@@ -46,7 +46,7 @@ sm.bSmItem.ViewEntity = function(opt_params, opt_type, opt_modifier) {
      *     }
      * }}
      */
-    sm.bSmItem.TemplateEntity.Params;
+    sm.bSmItem.ViewEntity.RenderParams;
 
 
     /**

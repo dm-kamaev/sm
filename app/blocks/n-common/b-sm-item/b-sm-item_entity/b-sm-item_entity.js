@@ -46,11 +46,16 @@ goog.inherits(sm.bSmItem.SmItemEntity, sm.bSmItem.SmItem);
 
 goog.scope(function() {
     var Item = sm.bSmItem.SmItemEntity,
-        View = sm.bSmItem.ViewEntity,
         FavoriteLink = sm.bFavoriteLink.FavoriteLink;
 
     var Event = sm.bSmItem.Event;
     var Viewport = sm.iSmViewport.SmViewport;
+
+
+    /**
+     * @typedef {sm.bSmItem.ViewEntity.RenderParams}
+     */
+    Item.RenderParams;
 
 
     /**

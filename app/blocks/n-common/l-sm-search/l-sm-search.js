@@ -1,10 +1,17 @@
+/**
+ * @fileoverview Page with filters and results of search
+ */
 goog.provide('sm.lSmSearch.SmSearch');
 
+goog.require('cl.iRequest.Request');
 goog.require('sm.iLayout.LayoutStendhal');
 goog.require('sm.lSmSearch.View');
+goog.require('sm.lSmSearch.iSearchService.SearchService');
 
 
 goog.scope(function() {
+    var Request = cl.iRequest.Request;
+    var SearchService = sm.lSmSearch.iSearchService.SearchService;
 
 
 
@@ -40,6 +47,13 @@ goog.scope(function() {
          * @private
          */
         this.resultsList_ = null;
+
+
+        /**
+         * Search service instance
+         * @type {sm.lSmSearch.iSearchService.SearchService}
+         */
+        this.searchService = null;
     };
     goog.inherits(sm.lSmSearch.SmSearch, sm.iLayout.LayoutStendhal);
     var Search = sm.lSmSearch.SmSearch;
@@ -57,18 +71,32 @@ goog.scope(function() {
             this.getView().getDom().sort
         );
 
-        this.filters_ = this.decorateChild(
-            'lSearch-filterPanel',
-            this.getView().getDom().filterPanel
-        );
-
         this.resultsList_ = this.decorateChild(
             'smItemList',
             this.getView().getDom().resultsList
         );
+
+        this.filterPanel_ = this.decorateChild(
+            'lSearch-filterPanel',
+            this.getView().getDom().filterPanel
+        );
     };
 
 
+    /**
+     * Init data loading services
+     * @return {sm.lSmSearch.SmSearch}
+     */
+    Search.prototype.initServices = function() {
+        /** IRequest init **/
+        Request.getInstance().init(window.location.pathname);
+
+        /** Search searvice init **/
+        this.searchService = new SearchService();
+        this.searchService.init(this.params.type);
+
+        return this;
+    };
 });  // goog.scope
 
 
