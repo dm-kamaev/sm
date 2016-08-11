@@ -17,9 +17,9 @@ goog.require('sm.lSearch.iSearchService.MapDataLoadedEvent');
 goog.scope(function() {
     var Request = cl.iRequest.Request;
     var ListDataLoadedEvent =
-        sm.lSearch.iSearchService.SearchService.ListDataLoadedEvent;
+        sm.lSearch.iSearchService.ListDataLoadedEvent;
     var MapDataLoadedEvent =
-        sm.lSearch.iSearchService.SearchService.MapDataLoadedEvent;
+        sm.lSearch.iSearchService.MapDataLoadedEvent;
 
 
 

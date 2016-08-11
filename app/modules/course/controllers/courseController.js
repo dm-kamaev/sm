@@ -295,7 +295,7 @@ exports.search = async(function(req, res, next) {
             }
         };
         var html = soy.render(
-            'sm.lSmSearch.Template.search',
+            'sm.lSearch.Template.search',
             {
                 params: params
             }

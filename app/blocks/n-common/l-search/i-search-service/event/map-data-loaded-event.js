@@ -4,7 +4,7 @@
 goog.provide('sm.lSearch.iSearchService.MapDataLoadedEvent');
 
 
-goog.require('goog.events.Event');
+goog.require('goog.events');
 
 
 goog.scope(function() {

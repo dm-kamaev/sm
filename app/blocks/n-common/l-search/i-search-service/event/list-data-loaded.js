@@ -4,7 +4,7 @@
 goog.provide('sm.lSearch.iSearchService.ListDataLoadedEvent');
 
 
-goog.require('goog.events.Event');
+goog.require('goog.events');
 
 
 goog.scope(function() {
