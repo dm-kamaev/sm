@@ -120,8 +120,7 @@ exports.search = async(function(req, res, next) {
                                 ]
                             },
                             config: {
-                                type: 'extended',
-                                isShowed: false
+                                type: 'extended'
                             }
                         },
                         {
@@ -131,7 +130,7 @@ exports.search = async(function(req, res, next) {
                                    "tooltip":""
                                 },
                                 "name":"Default",
-                                "filters":[
+                                "options":[
                                    {
                                       "label":"Математика",
                                       "value":"math",
@@ -143,9 +142,6 @@ exports.search = async(function(req, res, next) {
                                       "isChecked":false
                                    }
                                 ]
-                            },
-                            config: {
-                                isShowed: false
                             }
                         }
                     ]

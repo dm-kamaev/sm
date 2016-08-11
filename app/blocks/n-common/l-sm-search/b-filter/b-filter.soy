@@ -1,0 +1,571 @@
+{namespace sm.lSearch.bFilter.Template}
+
+
+/**
+ * @typedef {{
+ *     name: string,
+ *     header: ({
+ *         title: (string|undefined),
+ *         tooltip: (string|undefined)
+ *     }|undefined),
+ *     options: Array<{
+ *         label: string,
+ *         value: string,
+ *         isChecked: (boolean|undefined)
+ *     }>
+ * }} sm.lSearch.bFilter.Template.Params.Data
+ */
+
+
+/**
+ * @typedef {{
+ *     type: (string|undefined),
+ *     optionsToShow: (boolean|undefined),
+ *     cannotBeHidden: (boolean|undefined),
+ *     isShowed: (boolean|undefined),
+ *     showMoreButtonText: (number|undefined),
+ *     theme: (string|undefined),
+ *     stylizationModifier: string
+ * }} sm.lSearch.bFilter.Template.Params.Config
+ */
+
+
+/**
+ * @typedef {{
+ *     data: sm.lSearch.bFilter.Template.Params.Data,
+ *     config: sm.lSearch.bFilter.Template.Params.Config
+ * }} sm.lSearch.bFilter.Template.Params
+ */
+
+
+/**
+ * Constructor
+ * @param params {sm.lSearch.bFilter.Template.Params}
+ * @extends cl.iControl.Template
+ * @constructor
+ */
+{template .filter}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * Body
+ * @param params {sm.lSearch.bFilter.Template.Params}
+ * @override
+ */
+{template .body}
+    {call .header data="all"/}
+    {call .content data="all"/}
+{/template}
+
+
+/**
+ * Header template
+ * @param params {{
+ *     data: {
+ *         header: ({
+ *             title: (string|undefined),
+ *             tooltip: (string|undefined)
+ *         }|undefined)
+ *     },
+ *     config: {
+ *         cannotBeHidden: (boolean|undefined)
+ *     }
+ * }}
+ * @protected
+ */
+{template .header}
+    {if $params.data?.header?.title}
+        <div class="{call .rootClass/}__header">
+            {call .title data="all" /}
+            {call .tooltip data="all" /}
+            {call .showOptions data="all" /}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Filter content template
+ * @param params {{
+ *     data: {
+ *         name: string,
+ *         options: Array<{
+ *             label: string,
+ *             value: string,
+ *             isChecked: (boolean|undefined)
+ *         }>
+ *     },
+ *     config: {
+ *         type: (string|undefined),
+ *         optionsToShow: (number|undefined),
+ *         cannotBeHidden: (boolean|undefined),
+ *         isShowed: (bolean|undefined),
+ *         showMoreButtonText: (number|undefined)
+ *     }
+ * }}
+ * @protected
+ */
+{template .content}
+    {let $classes kind="html"}
+        {call .rootClass/}__content
+
+        {if not $params?.config?.cannotBeHidden}
+            {if not $params?.config?.isShowed}
+                {sp}i-utils__hidden
+            {/if}
+        {/if}
+    {/let}
+
+    <div class="{$classes}">
+        {call .listOptions data="all" /}
+        {call .showMore data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * List options template
+ * @param params {{
+ *     data: {
+ *         name: string,
+ *         options: Array<{
+ *             label: string,
+ *             value: string,
+ *             isChecked: (boolean|undefined)
+ *         }>
+ *     },
+ *     config: {
+ *         optionsToShow: (number|undefined),
+ *         type: (string|undefined)
+ *     }
+ * }}
+ * @public
+ */
+{template .listOptions}
+    {let $numberOptionsToShow kind="html"}
+        {call .numberOptionsToShow data="all" /}
+    {/let}
+
+    <div class="{call .rootClass/}__list-options">
+        {for $i in range($params.data.options.length)}
+            {let $id kind="html"}
+                {if $params.config?.type}
+                    {$i}-{$params.config?.type}
+                {else}
+                    {$i}
+                {/if}
+            {/let}
+
+            {call .option}
+                {param params: [
+                    'data': [
+                        'name': $params.data.name,
+                        'option': $params.data.options[$i],
+                        'inputId': $id
+                    ],
+                    'config': [
+                        'hidden': $i > $numberOptionsToShow - 1 ? true : false,
+                        'hidable': $i > $numberOptionsToShow - 1 ? true : false,
+                    ]
+                ]/}
+            {/call}
+        {/for}
+    </div>
+{/template}
+
+
+/**
+ * Option template
+ * @param params {{
+ *     data: {
+ *         name: string,
+ *         option: {
+ *             label: string,
+ *             value: string,
+ *             isChecked: (boolean|undefined)
+ *         },
+ *         inputId: string
+ *     },
+ *     config: {
+ *         hidden: boolean,
+ *         hidable: boolean
+ *     }
+ * }}
+ * @public
+ */
+{template .option}
+    {let $classes kind="html"}
+        {call .rootClass/}__section
+
+        {if $params.hidden}
+            {sp}i-utils__hidden
+        {/if}
+
+        {if $params.hidable or $params.hidden}
+            {sp}{call .rootClass/}__section_hidable
+        {/if}
+    {/let}
+
+    {let $dataParams kind="html"}
+        {call cl.iUtils.Utils.stringify}
+            {param json: [
+                'value': $params.data.option.value,
+                'label': $params.data.option.label,
+                'name': $params.name
+            ]/}
+        {/call}
+    {/let}
+
+    <div class="{$classes}" data-params="{$dataParams}">
+        <div class="{call .rootClass/}__option">
+            {call .input data="all" /}
+            {call .label data="all" /}
+        </div>
+    </div>
+{/template}
+
+
+/**
+ * Input template
+ * @param params {{
+ *     data: {
+ *         name: string,
+ *         option: {
+ *             label: string,
+ *             value: string,
+ *             isChecked: (boolean|undefined)
+ *         },
+ *         inputId: string
+ *     }
+ * }}
+ * @protected
+ */
+{template .input}
+    <input type="checkbox"
+        class="{call .rootClass/}__input"
+        id="{$params.data.name}-{$params.data.inputId}"
+        name="{$params.data.name}"
+        value="{$params.data.option.value}"
+        {$params.data.option?.isChecked ? 'checked' : ''}
+    />
+{/template}
+
+
+/**
+ * Label template
+ * @param params {{
+ *     data: {
+ *         name: string,
+ *         option: {
+ *             label: string,
+ *             value: string,
+ *             isChecked: (boolean|undefined)
+ *         },
+ *         inputId: string
+ *     }
+ * }}
+ * @protected
+ */
+{template .label}
+    <label for="{$params.data.name}-{$params.data.inputId}"
+        class="{call .rootClass/}__input-label">
+        {$params.data.option.label}
+    </label>
+{/template}
+
+
+/**
+ * Title template
+ * @param params {{
+ *     data: {
+ *         header: {
+ *             title: string
+ *         }
+ *     }
+ * }}
+ * @protected
+ */
+{template .title}
+    <div class="{call .rootClass/}__title">
+        {$params.data.header.title}
+    </div>
+{/template}
+
+
+/**
+ * Template tooltip
+ * @param params {{
+ *     data: {
+ *         header: {
+ *             tooltip: (string|undefined)
+ *         }
+ *     }
+ * }}
+ * @protected
+ */
+{template .tooltip}
+    {if $params.data?.header?.tooltip}
+        <div class="{call .rootClass/}__tooltip i-hint">
+            {call .tooltipIcon /}
+            {call .tooltipHint data="all" /}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Show filter options button
+ * @param params {{
+ *     config: {
+ *         cannotBeHidden: (boolean|undefined),
+ *         isShowed: (boolean|undefined)
+ *     }
+ * }}
+ * @protected
+ */
+{template .showOptions}
+    {if not $params?.config?.cannotBeHidden}
+        <div class="{call .rootClass/}__show-options-button">
+            <div class="{call .rootClass/}__show-options-icon{sp}
+                        {call .rootClass/}__show-options-icon_up{sp}
+                        {$params?.config?.isShowed ? '' : 'i-utils__hidden'}">
+
+                {call .icon}
+                    {param type: 'filter-arrow-up'/}
+                {/call}
+            </div>
+
+            <div class="{call .rootClass/}__show-options-icon{sp}
+                        {call .rootClass/}__show-options-icon_down{sp}
+                        {$params?.config?.isShowed ? 'i-utils__hidden' : ''}">
+
+                {call .icon}
+                    {param type: 'filter-arrow-down'/}
+                {/call}
+            </div>
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Show more template
+ * @param params {{
+ *     data: {
+ *         options: Array<{
+ *             label: string,
+ *             value: string,
+ *             isChecked: (boolean|undefined)
+ *         }>
+ *     },
+ *     config: {
+ *         type: (string|undefined),
+ *         optionsToShow: (number|undefined),
+ *         showMoreButtonText: (number|undefined)
+ *     }
+ * }}
+  * @protected
+ */
+{template .showMore}
+    {let $numberOptionsToShow kind="html"}
+        {call .numberOptionsToShow data="all" /}
+    {/let}
+
+    {let $showMoreButtonText kind="html"}
+        {if $params.config?.showMoreButtonText}
+            {$params.config?.showMoreButtonText}
+        {else}
+            Еще {$params.data.options.length - $numberOptionsToShow} предметов
+        {/if}
+    {/let}
+
+    {if $params.data.options.length > $numberOptionsToShow}
+        {call .showMoreButton}
+            {param text: $showMoreButtonText/}
+        {/call}
+    {/if}
+{/template}
+
+
+/**
+ * Tempate button
+ * @param text {string}
+ * @protected
+ */
+{template .showMoreButton}
+    <div class="{call .rootClass/}__button{sp}
+                {call .rootClass/}__button_show">
+        {call sm.bLink.Template.base}
+            {param params: [
+                'data': [
+                    'name': $text
+                ]
+            ]/}
+        {/call}
+    </div>
+
+    <div class="{call .rootClass/}__button{sp}
+                {call .rootClass/}__button_hide{sp}
+                i-utils__hidden">
+        {call sm.bLink.Template.base}
+            {param params: [
+                'data': [
+                    'name': 'Свернуть список'
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Template tooltip hint
+ * @param params {{
+ *     data: {
+ *         header: {
+ *             tooltip: string
+ *         }
+ *     }
+ * }}
+ * @protected
+ */
+{template .tooltipHint}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__hint
+    {/let}
+
+    {let $tooltipData kind="html"}
+        <div class="{call .rootClass/}__hint-content">
+            {$params.data?.header?.tooltip}
+        </div>
+    {/let}
+
+    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+        {param params: [
+            'factory': 'stendhal',
+            'type': 'hint',
+            'renderParams': [
+                'data': $tooltipData,
+                'config': [
+                    'align': 'arrow',
+                    'customClasses': [$customClasses]
+                ]
+            ]
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * Template tooltip icon
+ * @protected
+ */
+{template .tooltipIcon}
+    <div class="{call .rootClass/}__tooltip-icon">
+        {call .icon}
+            {param type: 'school-button'/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Show filters button
+ * @param type {string}
+ * @protected
+ */
+{template .icon}
+    {call .renderChild}
+        {param params: [
+            'type': 'icon',
+            'renderParams': [
+                'data': [
+                    'type': $type
+                ]
+            ]
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * Determines how many options filter show
+ * @param params {{
+ *     data: {
+ *         options: Array<{
+ *             label: string,
+ *             value: string,
+ *             isChecked: (boolean|undefined)
+ *         }>
+ *     },
+ *     config: {
+ *         optionsToShow: (number|undefined),
+ *         type: (string|undefined)
+ *     }
+ * }}
+ * @protected
+ */
+{template .numberOptionsToShow}
+    {if $params?.config?.optionsToShow}
+        {$params.config.optionsToShow}
+    // {elseif $params?.config?.type == 'minimal'}
+    //     {length($params.data.options) - 1}
+    {else}
+        //5
+        6
+    {/if}
+{/template}
+
+
+/**
+ * Tag name
+ * @override
+ */
+{template .tag}
+    form
+{/template}
+
+
+/**
+ * Attributes
+ * @param params {{
+ *     data: {
+ *         name: string
+ *     },
+ *     config: {
+ *         type: (string|undefined)
+ *     }
+ * }}
+ * @override
+ */
+{template .attributes kind="attributes"}
+    {let $data kind="html"}
+        {call cl.iUtils.Utils.stringify}
+            {param json: [
+                'name': $params.data.name,
+                'type': $params?.config?.type
+            ]/}
+        {/call}
+    {/let}
+
+    data-params="{$data}"
+{/template}
+
+
+/**
+ * Css classes
+ * @override
+ */
+{template .additionalClasses}
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-sm-filter
+{/template}

@@ -39,8 +39,7 @@ goog.inherits(sm.lSearch.bFilterPanel.FilterPanel, cl.iControl.Control);
 
 goog.scope(function() {
     var FilterPanel = sm.lSearch.bFilterPanel.FilterPanel,
-        View = sm.lSearch.bFilterPanel.View,
-        FactoryManager = cl.iFactory.FactoryManager;
+        View = sm.lSearch.bFilterPanel.View;
 
     var Filter = sm.lSearchResult.bFilter.Filter,
         FilterExtended = sm.lSearchResult.bFilter.FilterExtended,

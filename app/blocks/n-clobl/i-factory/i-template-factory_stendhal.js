@@ -39,6 +39,7 @@ goog.require('sm.lSchool.bDate.Template');
 goog.require('sm.lSchool.bFoldList.Template');
 goog.require('sm.lSchoolHome.bArticleLink.Template');
 goog.require('sm.lSchoolHome.bArticleLinks.Template');
+goog.require('sm.lSearch.bFilter.Template');
 goog.require('sm.lSearch.bFilterPanel.Template');
 goog.require('sm.lSearchResult.bFilterSearch.Template');
 
@@ -215,6 +216,10 @@ sm.iFactory.TemplateFactoryStendhal = function() {
     this.setTemplateListItem(
             'lSearch-filterPanel',
             sm.lSearch.bFilterPanel.Template.filterPanel
+        )
+        .setTemplateListItem(
+            'lSearch-filter',
+            sm.lSearch.bFilter.Template.filter
         );
 };
 goog.inherits(sm.iFactory.TemplateFactoryStendhal, cl.iFactory.TemplateFactory);

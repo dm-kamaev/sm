@@ -27,7 +27,7 @@ goog.scope(function() {
     var View = sm.lSearch.bFilterPanel.View;
 
 
-     /**
+    /**
      * Css class enum
      * @enum {string}
      */
