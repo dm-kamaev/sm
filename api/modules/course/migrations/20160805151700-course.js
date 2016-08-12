@@ -11,7 +11,12 @@ module.exports = {
             name: Sequelize.STRING,
             brandId: {
                 type: Sequelize.INTEGER,
-                field: 'brand_id'
+                field: 'brand_id',
+                references: {
+                    model: 'course_brand',
+                    key: 'id',
+                },
+                onDelete: 'cascade'
             },
             description: Sequelize.STRING,
             score: Sequelize.ARRAY(Sequelize.FLOAT),

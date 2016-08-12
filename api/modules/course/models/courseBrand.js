@@ -3,7 +3,10 @@ var Sequelize = require('sequelize');
 var db = require('../../../../app/components/db');
 
 var CourseBrand = db.define('CourseBrand', {
-    name: Sequelize.STRING
+    name: {
+        type: Sequelize.STRING,
+        allowNull: false
+    }
 }, {
     underscored: true,
     tableName: 'course_brand',

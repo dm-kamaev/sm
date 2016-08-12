@@ -3,8 +3,10 @@ var await = require('asyncawait/await');
 var sequelizeInclude = require('../../../components/sequelizeInclude');
 var models = require('../../../../app/components/models').all;
 var services = require('../../../../app/components/services').all;
-exports.name = 'address';
+var logger = require('../../../../app/components/logger/logger')
+    .getLogger('app');
 
+exports.name = 'address';
 
 exports.getTest = async(() => {
     return await(models.Address.findOne({
@@ -18,28 +20,35 @@ exports.getTest = async(() => {
 
 /**
  * Added new address
- * @param {number} schoolId
+ * @param {number} entityId
+ * @param {string} entityType
  * @param {{
  *     name: string,
  *     coords?: array
  * }} data
+ * @return {Address}
  */
-exports.addAddress = async(function(schoolId, data) {
+exports.addAddress = async(function(entityId, entityType, data) {
     var addressBD = await(services.address.getAddress({
-        name: data.name
+        name: data.name,
+        entityType: entityType
     }));
     var address;
 
     if (addressBD) {
-        console.log('Address:'.yellow, data.name);
-        console.log('is alredy binded to school '.yellow +
-            'with id:'.yellow, addressBD.school_id);
+        logger.info('Address:' + data.name);
+        logger.info(
+            'is alredy binded to ' + entityType +
+            ' with id:' + addressBD.school_id
+        );
         address = addressBD;
     } else {
-        data.schoolId = schoolId;
+        data.entityId = entityId;
+        data.entityType = entityType;
         if (!data.coords) {
-            data.coords = await(
-                    services.yapi.getCoords('Москва, ' + data.name));
+            data.coords = await(services.yapi.getCoords(
+                'Москва, ' + data.name
+            ));
         }
         address = await(models.Address.create(data));
     }

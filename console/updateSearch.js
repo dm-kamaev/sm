@@ -5,8 +5,32 @@ const commander = require('commander');
 const SearchUpdater = require('./modules/searchUpdater/SearchUpdater');
 var sequelize = require.main.require('./app/components/db');
 var modules = require('../api/modules'); // eslint-disable-line no-unused-vars
+var services = require('../app/components/services').all;
 
 var start = async(function(argstring) {
+    // await(services.courseDepartment.create({
+    //     description: 'Здание на улице',
+    //     address: 'ул. Пушкина, д. Колотушкина',
+    //     area: 'Замоскворечье'
+    // }));
+    // await(services.course.create({
+    //     name: 'ЕГЭ',
+    //     description: 'Топ ЕГЭ',
+    //     brandName: 'Maximum',
+    //     options: [{
+    //         costPerHour: 540,
+    //         online: false,
+    //         age: [14, 15],
+    //         group: true,
+    //         teacher: 'Матюкан В.А.',
+    //         schedule: [{
+    //             startTime: '14:00',
+    //             day: 5,
+    //             duration: 1.5
+    //         }]
+    //     }]
+    // }));
+    // process.exit();
     var args = argstring.split(' ');
     var options = {};
     if (args.indexOf('silent') != -1) {

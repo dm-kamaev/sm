@@ -10,7 +10,12 @@ module.exports = {
             },
             courseId: {
                 type: Sequelize.INTEGER,
-                field: 'course_id'
+                field: 'course_id',
+                references: {
+                    model: 'course',
+                    key: 'id',
+                },
+                onDelete: 'cascade'
             },
             costPerHour: {
                 type: Sequelize.INTEGER,

@@ -5,7 +5,8 @@ exports.name = 'area';
 
 /**
  * Creates an Area instance and returns it
- * @param {string} name
+ * @param {Object} params
+ * @param {string} params.name
  * @return {Area}
  */
 exports.create = async(function(params) {
