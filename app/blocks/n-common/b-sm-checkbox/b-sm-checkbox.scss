@@ -1,0 +1,30 @@
+@import "../i-media/i-media";
+
+.b-sm-checkbox {
+    position: relative;
+
+    display: inline-block;
+
+    padding: 11px 0;
+    margin-right: 5px;
+}
+
+.b-sm-checkbox__label {
+    display: inline-block;
+
+    margin: 0 9px;
+    padding-left: 13px;
+
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+.b-sm-checkbox__input {
+    position: absolute;
+    top: 12px;
+    left: 0;
+
+    margin: 0;
+
+    cursor: pointer;
+}

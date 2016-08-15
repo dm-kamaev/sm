@@ -1,0 +1,122 @@
+{namespace sm.bSmCheckbox.Template}
+
+
+/**
+ * @typedef {{
+ *     id: (string|undefined),
+ *     name: (string|undefined),
+ *     label: string,
+ *     value: string,
+ *     isChecked: (boolean|undefined)
+ * }} sm.bSmCheckbox.Template.Params.Data
+ */
+
+
+/**
+ * @typedef {{
+ *     theme: (string|undefined),
+ *     stylizationModifier: string
+ * }} sm.bSmCheckbox.Template.Params.Config
+ */
+
+
+/**
+ * Constructor
+ * @param params {{
+ *     data: sm.bSmCheckbox.Template.Params.Data,
+ *     config: sm.bSmCheckbox.Template.Params.Config
+ * }}
+ * @extends cl.iControl.Template
+ * @constructor
+ */
+{template .checkbox}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * Body
+ * @param params {{
+ *     data: sm.bSmCheckbox.Template.Params.Data,
+ *     config: sm.bSmCheckbox.Template.Params.Config
+ * }}
+ * @override
+ */
+{template .body}
+    {call .input_ data="all"/}
+    {call .label_ data="all"/}
+{/template}
+
+
+/**
+ * Input template
+ * @param params {{
+ *     data: {
+ *         id: (string|undefined),
+ *         value: string,
+ *         isChecked: (boolean|undefined)
+ *     }
+ * }}
+ */
+{template .input_}
+    <input type="checkbox"
+        class="{call .rootClass/}__input"
+        id="{$params.data.id ?: $params.data.value}"
+        name="{$params.data.name ?: ''}"
+        value="{$params.data.value}"
+        {$params.data?.isChecked ? 'checked' : ''}
+    />
+{/template}
+
+
+/**
+ * Label template
+ * @param params {{
+ *     data: {
+ *         id: (string|undefined),
+ *         label: string,
+ *         value: string
+ *     }
+ * }}
+ */
+{template .label_}
+    <label for="{$params.data.id ?: $params.data.value}"
+        class="{call .rootClass/}__label">
+        {$params.data.label}
+    </label>
+{/template}
+
+
+/**
+ * Attributes
+ * @param params {{
+ *     data {
+ *         id: (string|undefined),
+ *         name: (string|undefined),
+ *         label: string,
+ *         value: string,
+ *         isChecked: (boolean|undefined)
+ *     }
+ * }}
+ * @override
+ */
+{template .attributes kind="attributes"}
+    data-params="
+        {call cl.iUtils.Utils.stringify}
+            {param json: [
+                'id': $params.data.id ?: $params.data.value,
+                'name': $params.data.name ?: '',
+                'label': $params.data.label,
+                'value': $params.data.value
+            ]/}
+        {/call}"
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-sm-checkbox
+{/template}
