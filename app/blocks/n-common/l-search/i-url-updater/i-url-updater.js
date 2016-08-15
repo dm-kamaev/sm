@@ -64,30 +64,29 @@ goog.scope(function() {
         );
     };
 
-
     /**
-     * Transform params map for build url
-     * @param  {Object<string, (Array|string|number|boolean)>} params
-     * @return {Object<string, (string|number|boolean)>}
-     * @private
-     */
+    * Transform params map for build url
+    * @param  {Object<string, (Array|string|number|boolean)>} params
+    * @return {Object<string, (string|number|boolean)>}
+    * @private
+    */
     UrlUpdater.transformParams_ = function(params) {
         var notEmptyParams = goog.object.filter(
-                params, UrlUpdater.isNotEmptyParam_
-            );
+            params, UrlUpdater.isNotEmptyParam_
+        );
 
         return goog.object.map(notEmptyParams, UrlUpdater.transformParam_);
     };
 
 
     /**
-     * Check that parame is not empty
-     * Which means is not null and
-     * if param is array it has length more than zero
-     * @param  {?(Array|number|string|boolean)} param
-     * @return {boolean}
-     * @private
-     */
+    * Check that parame is not empty
+    * Which means is not null and
+    * if param is array it has length more than zero
+    * @param  {?(Array|number|string|boolean)} param
+    * @return {boolean}
+    * @private
+    */
     UrlUpdater.isNotEmptyParam_ = function(param) {
         var result = param;
         if (goog.isDefAndNotNull(param) && Array.isArray(param)) {
@@ -99,11 +98,11 @@ goog.scope(function() {
 
 
     /**
-     * Transform array to string of elements divivded by commas
-     * @param  {(Array|number|string|boolean)} param
-     * @return {(string|number|boolean)} trasformed param
-     * @private
-     */
+    * Transform array to string of elements divivded by commas
+    * @param  {(Array|number|string|boolean)} param
+    * @return {(string|number|boolean)} trasformed param
+    * @private
+    */
     UrlUpdater.transformParam_ = function(param) {
         var result = param;
         if (Array.isArray(param)) {
@@ -112,4 +111,5 @@ goog.scope(function() {
 
         return result;
     };
+
 });  // goog.scope
