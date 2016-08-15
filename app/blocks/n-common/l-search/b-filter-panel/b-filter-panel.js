@@ -83,9 +83,9 @@ goog.scope(function() {
      * Reset filters
      */
     FilterPanel.prototype.reset = function() {
-        // this.filters_.forEach(function(filter) {
-        //     filter.reset();
-        // });
+        this.filters_.forEach(function(filter) {
+            filter.reset();
+        });
 
         this.getView().setResetButtonVisibility(false);
     };
@@ -109,15 +109,17 @@ goog.scope(function() {
 
     /**
      * Get selected filters data
-     * @return {Object}
+     * @return {Array<{
+     *     string: Array<Object>
+     * }>}
      */
     FilterPanel.prototype.getData = function() {
         var result = {};
 
-        // this.filters_.forEach(function(filter) {
-        //     name = filter.getName();
-        //     result[name] = filter.getData();
-        // });
+        this.filters_.forEach(function(filter) {
+            name = filter.getName();
+            result[name] = filter.getData();
+        });
 
         return result;
     };
@@ -145,14 +147,14 @@ goog.scope(function() {
 
             this.getHandler().listen(
                 filter,
-                Filter.Event.CHECKED_FILTER,
-                this.onCheckedFilter_
+                sm.lSearch.bFilter.Filter.Event.CHECK,
+                this.onFilterCheck_
             );
 
             this.getHandler().listen(
                 filter,
-                Filter.Event.UNCHECKED_FILTER,
-                this.onUncheckedFilter_
+                sm.lSearch.bFilter.Filter.Event.UNCHECK,
+                this.onFilterUncheck_
             );
 
             this.getHandler().listen(
@@ -183,7 +185,6 @@ goog.scope(function() {
      */
     FilterPanel.prototype.onResetClick_ = function() {
         this.reset();
-        console.log('onResetClick_');
     };
 
 
@@ -193,31 +194,31 @@ goog.scope(function() {
      */
     FilterPanel.prototype.onSubmit_ = function() {
         this.dispatchEvent({
-            'type': FilterPanel.Event.SUBMIT
+            'type': FilterPanel.Event.SUBMIT,
+            'data': this.getData()
         });
-        console.log('onSubmit_');
+
+        console.log(this.getData());
     };
 
 
     /**
-     * Checked filters handler
+     * Handler for check filters
      * @private
      */
-    FilterPanel.prototype.onCheckedFilter_ = function() {
+    FilterPanel.prototype.onFilterCheck_ = function() {
         this.getView().setResetButtonVisibility(true);
-        console.log('onCheckedFilter_');
     };
 
 
     /**
-     * Unchecked filters handler
+     * Handler for uncheck filters
      * @private
      */
-    FilterPanel.prototype.onUncheckedFilter_ = function() {
+    FilterPanel.prototype.onFilterUncheck_ = function() {
         if (!this.isChecked_()) {
             this.getView().setResetButtonVisibility(false);
         }
-        console.log('onUncheckedFilter_');
     };
 
 
@@ -228,8 +229,7 @@ goog.scope(function() {
      */
     FilterPanel.prototype.isChecked_ = function() {
         return this.filters_.some(function(filter) {
-            // return filter.isChecked();
-            return true;
+            return filter.isChecked();
         });
     };
 
@@ -240,19 +240,19 @@ goog.scope(function() {
      * @return {string}
      * @private
      */
-    FilterPanel.prototype.decorateFilter_ = function(element) {
+    FilterPanel.prototype.getFilterType_ = function(element) {
         var type;
 
-        // switch (true) {
-        //     case FilterClasses.isControl(element):
-        //         type = '';
-        //         break;
-        //     case FilterClasses.isControl(element):
-        //         type = '';
-        //         break;
-        //     default:
-        //         type = '';
-        // }
+        switch (true) {
+            // case FilterClasses.isControl(element):
+            //     type = '';
+            //     break;
+            // case FilterClasses.isControl(element):
+            //     type = '';
+            //     break;
+            default:
+                type = 'lSearch-filter';
+        }
 
         return type;
     };
@@ -263,40 +263,19 @@ goog.scope(function() {
      * @private
      */
     FilterPanel.prototype.initFilters_ = function() {
-        var filters = this.getView().getDom().filters;
+        var filters = this.getView().getDom().filters,
+            instance,
+            type;
 
-        // placeholder (delete)
         for (var i = 0; i < filters.length; i++) {
-            elem = filters[i];
+            type = this.getFilterType_(filters[i]);
 
-            if (goog.dom.classes.has(elem, FilterExtended.CssClass.ROOT)) {
-                filter = new FilterExtended();
-                this.addChild(filter);
-                filter.decorate(elem);
-                this.filters_.push(filter);
-            }
-            else {
-                filter = new Filter();
-                this.addChild(filter);
-                filter.decorate(elem);
-                this.filters_.push(filter);
-            }
+            instance = this.decorateChild(
+                type,
+                filters[i]
+            );
+            this.filters_.push(instance);
         }
-        // end placeholder
-
-        // var instance,
-        //     type;
-
-        // for (var i = 0; i < filters.length; i++) {
-        //     type = this.getFilterType(filters[i]);
-
-        //     instance = this.decorateChild(
-        //         type,
-        //         filters[i]
-        //     );
-
-        //     this.filters_.push(instance);
-        // }
     };
 
 

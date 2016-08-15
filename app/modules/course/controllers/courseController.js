@@ -67,11 +67,60 @@ exports.search = async(function(req, res, next) {
                         {
                             data: {
                                 "header":{
-                                   "title":"Дополнительные занятия",
+                                   "title":"Направления занятий",
                                    "tooltip":""
                                 },
-                                "name":"additionalEducation",
-                                "filters":[
+                                "name":"zan",
+                                "options":[
+                                   {
+                                      "label":"Подготовка к ЕГЭ по русскому языку",
+                                      "value":"001",
+                                      "isChecked":false
+                                   },
+                                   {
+                                      "label":"Подготовка к ЕГЭ по математике",
+                                      "value":"002",
+                                      "isChecked":false
+                                   },
+                                   {
+                                      "label":"Подготовка к ОГЭ по русскому языку",
+                                      "value":"003",
+                                      "isChecked":false
+                                   },
+                                   {
+                                      "label":"Подготовка к ОГЭ по математике",
+                                      "value":"004",
+                                      "isChecked":false
+                                   },
+                                   {
+                                      "label":"Фортепиано",
+                                      "value":"005",
+                                      "isChecked":false
+                                   },
+                                   {
+                                      "label":"Русский язык",
+                                      "value":"006",
+                                      "isChecked":false
+                                   },
+                                   {
+                                      "label":"Математика",
+                                      "value":"007",
+                                      "isChecked":false
+                                   }
+                                ]
+                            },
+                            config: {
+                                showMoreButtonText: 'Все направления'
+                            }
+                        },
+                        {
+                            data: {
+                                "header":{
+                                   "title":"Default",
+                                   "tooltip":""
+                                },
+                                "name":"Default",
+                                "options":[
                                    {
                                       "label":"Математика",
                                       "value":"math",
@@ -115,30 +164,6 @@ exports.search = async(function(req, res, next) {
                                    {
                                       "label":"История",
                                       "value":"ist",
-                                      "isChecked":false
-                                   }
-                                ]
-                            },
-                            config: {
-                                type: 'extended'
-                            }
-                        },
-                        {
-                            data: {
-                                "header":{
-                                   "title":"Default",
-                                   "tooltip":""
-                                },
-                                "name":"Default",
-                                "options":[
-                                   {
-                                      "label":"Математика",
-                                      "value":"math",
-                                      "isChecked":false
-                                   },
-                                   {
-                                      "label":"Занимательная математика",
-                                      "value":"zanMath",
                                       "isChecked":false
                                    }
                                 ]

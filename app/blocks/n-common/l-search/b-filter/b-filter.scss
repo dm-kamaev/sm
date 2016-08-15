@@ -18,11 +18,13 @@
     width: 100%;
     padding: 10px 0 15px 0;
 
-    cursor: pointer;
-
     font-weight: bold;
     font-size: 15px;
     line-height: 25px;
+}
+
+.b-sm-filter__header_button {
+    cursor: pointer;
 }
 
 .b-sm-filter__title {
@@ -35,81 +37,24 @@
     margin-left: 8px;
 }
 
-.b-sm-filter__show-options-button {
+.b-sm-filter__header-icon {
     float: right;
-}
-
-.b-sm-filter__list-options {
-    display: inline;
-}
-
-.b-sm-filter__section {
-    position: relative;
-
-    display: inline-block;
-
-    min-width: 50%;
-    margin: 0;
 }
 
 .b-sm-filter__option {
     display: inline-block;
 
-    padding: 11px 0;
-    margin-right: 5px;
+    min-width: 50%;
+    margin: 0;
 
     font-size: 14px;
 }
 
-.b-sm-filter__input-label {
+.b-sm-filter__button {
     display: inline-block;
 
-    margin: 0 9px;
-    padding-left: 13px;
-
-    vertical-align: middle;
-    cursor: pointer;
-}
-
-.b-sm-filter__button {
     margin-top: 12px;
     margin-bottom: 12px;
-}
-
-.b-sm-filter__input {
-    position: absolute;
-    top: 12px;
-    left: 0;
-
-    margin: 0;
-
-    cursor: pointer;
-}
-
-.b-sm-filter_minimal {
-    border: none;
-
-    .b-sm-filter__header {
-        padding: 5px 0 10px;
-        font: 14px Arial, sans-serif;
-    }
-
-    .b-sm-filter__section {
-        width: 50%;
-
-        vertical-align: top;
-
-        font: 14px Arial, sans-serif;
-        line-height: 20px;
-    }
-
-    .b-sm-filter__option {
-        padding: 9px 0;
-    }
-
-    .b-sm-filter__input {
-        top: 13px;
-    }
 }
 
 
@@ -138,12 +83,6 @@
 
     .b-sm-filter__reset {
         display: none;
-    }
-
-    .b-sm-filter_minimal {
-        .b-sm-filter__section {
-            width: 100%;
-        }
     }
 }
 

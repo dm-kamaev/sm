@@ -77,7 +77,15 @@
  */
 {template .header}
     {if $params.data?.header?.title}
-        <div class="{call .rootClass/}__header">
+        {let $classes kind="html"}
+            {call .rootClass/}__header
+
+            {if not $params?.config?.cannotBeHidden}
+                {sp}{call .rootClass/}__header_button
+            {/if}
+        {/let}
+
+        <div class="{$classes}">
             {call .title data="all" /}
             {call .tooltip data="all" /}
             {call .showOptions data="all" /}
@@ -151,23 +159,21 @@
     <div class="{call .rootClass/}__list-options">
         {for $i in range($params.data.options.length)}
             {let $id kind="html"}
-                {if $params.config?.type}
-                    {$i}-{$params.config?.type}
-                {else}
-                    {$i}
-                {/if}
+                {$i}-{$params.config?.type ?: ''}-{$params.data.name}
             {/let}
 
             {call .option}
                 {param params: [
                     'data': [
+                        'id': $id,
                         'name': $params.data.name,
-                        'option': $params.data.options[$i],
-                        'inputId': $id
+                        'label': $params.data.options[$i].label,
+                        'value': $params.data.options[$i].value,
+                        'isChecked': $params.data.options[$i].isChecked
                     ],
                     'config': [
-                        'hidden': $i > $numberOptionsToShow - 1 ? true : false,
-                        'hidable': $i > $numberOptionsToShow - 1 ? true : false,
+                        'hidden': $i + 1 > $numberOptionsToShow ? true : false,
+                        'hidable': $i + 1> $numberOptionsToShow ? true : false
                     ]
                 ]/}
             {/call}
@@ -180,13 +186,11 @@
  * Option template
  * @param params {{
  *     data: {
+ *         id: string,
  *         name: string,
- *         option: {
- *             label: string,
- *             value: string,
- *             isChecked: (boolean|undefined)
- *         },
- *         inputId: string
+ *         label: string,
+ *         value: string,
+ *         isChecked: (boolean|undefined)
  *     },
  *     config: {
  *         hidden: boolean,
@@ -197,82 +201,27 @@
  */
 {template .option}
     {let $classes kind="html"}
-        {call .rootClass/}__section
+        {call .rootClass/}__option
 
-        {if $params.hidden}
+        {if $params.config.hidden}
             {sp}i-utils__hidden
         {/if}
 
-        {if $params.hidable or $params.hidden}
-            {sp}{call .rootClass/}__section_hidable
+        {if $params.config.hidable}
+            {sp}{call .rootClass/}__option_hidable
         {/if}
     {/let}
 
-    {let $dataParams kind="html"}
-        {call cl.iUtils.Utils.stringify}
-            {param json: [
-                'value': $params.data.option.value,
-                'label': $params.data.option.label,
-                'name': $params.name
+    <div class="{$classes}">
+        {call .renderChild}
+            {param params: [
+                'type': 'smCheckbox',
+                'renderParams': [
+                    'data': $params.data
+                ]
             ]/}
         {/call}
-    {/let}
-
-    <div class="{$classes}" data-params="{$dataParams}">
-        <div class="{call .rootClass/}__option">
-            {call .input data="all" /}
-            {call .label data="all" /}
-        </div>
     </div>
-{/template}
-
-
-/**
- * Input template
- * @param params {{
- *     data: {
- *         name: string,
- *         option: {
- *             label: string,
- *             value: string,
- *             isChecked: (boolean|undefined)
- *         },
- *         inputId: string
- *     }
- * }}
- * @protected
- */
-{template .input}
-    <input type="checkbox"
-        class="{call .rootClass/}__input"
-        id="{$params.data.name}-{$params.data.inputId}"
-        name="{$params.data.name}"
-        value="{$params.data.option.value}"
-        {$params.data.option?.isChecked ? 'checked' : ''}
-    />
-{/template}
-
-
-/**
- * Label template
- * @param params {{
- *     data: {
- *         name: string,
- *         option: {
- *             label: string,
- *             value: string,
- *             isChecked: (boolean|undefined)
- *         },
- *         inputId: string
- *     }
- * }}
- * @protected
- */
-{template .label}
-    <label for="{$params.data.name}-{$params.data.inputId}"
-        class="{call .rootClass/}__input-label">
-        {$params.data.option.label}
-    </label>
 {/template}
 
 
@@ -327,24 +276,22 @@
  */
 {template .showOptions}
     {if not $params?.config?.cannotBeHidden}
-        <div class="{call .rootClass/}__show-options-button">
-            <div class="{call .rootClass/}__show-options-icon{sp}
-                        {call .rootClass/}__show-options-icon_up{sp}
-                        {$params?.config?.isShowed ? '' : 'i-utils__hidden'}">
+        <div class="{call .rootClass/}__header-icon{sp}
+                    {call .rootClass/}__header-icon_up{sp}
+                    {$params?.config?.isShowed ? '' : 'i-utils__hidden'}">
 
-                {call .icon}
-                    {param type: 'filter-arrow-up'/}
-                {/call}
-            </div>
+            {call .icon}
+                {param type: 'filter-arrow-up'/}
+            {/call}
+        </div>
 
-            <div class="{call .rootClass/}__show-options-icon{sp}
-                        {call .rootClass/}__show-options-icon_down{sp}
-                        {$params?.config?.isShowed ? 'i-utils__hidden' : ''}">
+        <div class="{call .rootClass/}__header-icon{sp}
+                    {call .rootClass/}__header-icon_down{sp}
+                    {$params?.config?.isShowed ? 'i-utils__hidden' : ''}">
 
-                {call .icon}
-                    {param type: 'filter-arrow-down'/}
-                {/call}
-            </div>
+            {call .icon}
+                {param type: 'filter-arrow-down'/}
+            {/call}
         </div>
     {/if}
 {/template}
@@ -377,7 +324,7 @@
         {if $params.config?.showMoreButtonText}
             {$params.config?.showMoreButtonText}
         {else}
-            Еще {$params.data.options.length - $numberOptionsToShow} предметов
+            Еще {$params.data.options.length - $numberOptionsToShow}
         {/if}
     {/let}
 
@@ -396,7 +343,7 @@
  */
 {template .showMoreButton}
     <div class="{call .rootClass/}__button{sp}
-                {call .rootClass/}__button_show">
+                {call .rootClass/}__button_show-more">
         {call sm.bLink.Template.base}
             {param params: [
                 'data': [
@@ -407,7 +354,7 @@
     </div>
 
     <div class="{call .rootClass/}__button{sp}
-                {call .rootClass/}__button_hide{sp}
+                {call .rootClass/}__button_show-less{sp}
                 i-utils__hidden">
         {call sm.bLink.Template.base}
             {param params: [
@@ -510,8 +457,6 @@
 {template .numberOptionsToShow}
     {if $params?.config?.optionsToShow}
         {$params.config.optionsToShow}
-    // {elseif $params?.config?.type == 'minimal'}
-    //     {length($params.data.options) - 1}
     {else}
         //5
         6

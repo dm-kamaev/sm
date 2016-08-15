@@ -143,7 +143,6 @@ goog.scope(function() {
      * @private
      */
     View.prototype.onExpanderClick_ = function() {
-        console.log('onExpanderClick_');
         this.expand();
     };
 
@@ -153,7 +152,6 @@ goog.scope(function() {
      * @private
      */
     View.prototype.onCollapserClick_ = function() {
-        console.log('onCollapserClick_');
         this.collapse();
     };
 
@@ -181,7 +179,7 @@ goog.scope(function() {
                 element
             ),
             filters: this.getElementsByClass(
-                sm.lSearchResult.bFilter.Filter.CssClass.ROOT,
+                sm.lSearch.bFilter.View.CssClass.ROOT,
                 element
             ),
             expander: this.getElementByClass(
