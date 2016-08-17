@@ -2,9 +2,6 @@ goog.provide('sm.lSearch.bFilterPanel.FilterPanel');
 
 goog.require('cl.iControl.Control');
 goog.require('sm.lSearch.bFilterPanel.View');
-goog.require('sm.lSearchResult.bFilter.Filter');
-goog.require('sm.lSearchResult.bFilter.FilterClasses');
-goog.require('sm.lSearchResult.bFilter.FilterExtended');
 
 
 
@@ -21,7 +18,10 @@ sm.lSearch.bFilterPanel.FilterPanel = function(view, opt_domHelper) {
 
     /**
      * Array instances filters
-     * @type {Array<{sm.lSearch.bFilter.Filter}>}
+     * @type {Array<{
+     *     sm.lSearch.bFilter.Filter|
+     *     sm.lSearch.bFilter.FilterExtended
+     * }>}
      * @private
      */
     this.filters_ = [];
@@ -40,10 +40,6 @@ goog.inherits(sm.lSearch.bFilterPanel.FilterPanel, cl.iControl.Control);
 goog.scope(function() {
     var FilterPanel = sm.lSearch.bFilterPanel.FilterPanel,
         View = sm.lSearch.bFilterPanel.View;
-
-    var Filter = sm.lSearchResult.bFilter.Filter,
-        FilterExtended = sm.lSearchResult.bFilter.FilterExtended,
-        FilterClasses = sm.lSearchResult.bFilter.FilterClasses;
 
 
     /**
@@ -108,7 +104,7 @@ goog.scope(function() {
 
 
     /**
-     * Get selected filters data
+     * Get filters data
      * @return {Array<{
      *     string: Array<Object>
      * }>}
@@ -118,7 +114,7 @@ goog.scope(function() {
 
         this.filters_.forEach(function(filter) {
             name = filter.getName();
-            result[name] = filter.getData();
+            result[name] = filter.getCheckedData();
         });
 
         return result;
@@ -159,7 +155,7 @@ goog.scope(function() {
 
             this.getHandler().listen(
                 filter,
-                FilterExtended.Event.APPLY_CLICK,
+                sm.lSearch.bFilter.FilterExtended.Event.APPLY_CLICK,
                 this.onSubmit_
             );
         }
@@ -244,12 +240,9 @@ goog.scope(function() {
         var type;
 
         switch (true) {
-            // case FilterClasses.isControl(element):
-            //     type = '';
-            //     break;
-            // case FilterClasses.isControl(element):
-            //     type = '';
-            //     break;
+            case sm.lSearch.bFilter.FilterExtended.isControl(element) :
+                type = 'lSearch-filterExtended';
+                break;
             default:
                 type = 'lSearch-filter';
         }

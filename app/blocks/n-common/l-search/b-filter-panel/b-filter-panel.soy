@@ -120,8 +120,11 @@
     <div class="{call .rootClass/}__filter">
         {switch $params?.config?.type}
             {case 'extended'}
-                {call sm.lSearchResult.bFilterExtended.Template.base}
-                    {param params: $params/}
+                {call .renderChild}
+                    {param params: [
+                        'type': 'lSearch-filterExtended',
+                        'renderParams': $params
+                    ]/}
                 {/call}
 
             {case 'classes'}

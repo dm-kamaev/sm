@@ -59,6 +59,10 @@
 
 
 @include media-m {
+    .b-filter-panel {
+        padding: 0 40px;
+    }
+
     .b-filter-panel_state_expanded {
         .b-filter-panel__expander {
             display: none;
@@ -81,5 +85,11 @@
 
     .b-filter-panel__collapser {
         display: inline-block;
+    }
+}
+
+@include media-xs {
+    .b-filter-panel {
+        padding: 0 30px;
     }
 }
