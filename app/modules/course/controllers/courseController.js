@@ -110,6 +110,7 @@ exports.search = async(function(req, res, next) {
                                 ]
                             },
                             config: {
+                                type: 'extended',
                                 showMoreButtonText: 'Все направления'
                             }
                         },
