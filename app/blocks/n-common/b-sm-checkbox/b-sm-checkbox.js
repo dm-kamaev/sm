@@ -96,7 +96,10 @@ goog.scope(function() {
      * @return {sm.bSmCheckbox.SmCheckbox.Params}
      */
     Checkbox.prototype.getData = function() {
-        return this.params;
+        var data = this.params;
+        this.params.isChecked = this.isChecked();
+
+        return data;
     };
 
 

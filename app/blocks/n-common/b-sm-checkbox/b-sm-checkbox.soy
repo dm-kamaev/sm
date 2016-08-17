@@ -61,7 +61,7 @@
 {template .input_}
     <input type="checkbox"
         class="{call .rootClass/}__input"
-        id="{$params.data.id ?: $params.data.value}"
+        id="{$params.data?.id ?: $params.data.value}"
         name="{$params.data.name ?: ''}"
         value="{$params.data.value}"
         {$params.data?.isChecked ? 'checked' : ''}
@@ -80,7 +80,7 @@
  * }}
  */
 {template .label_}
-    <label for="{$params.data.id ?: $params.data.value}"
+    <label for="{$params.data?.id ?: $params.data.value}"
         class="{call .rootClass/}__label">
         {$params.data.label}
     </label>
@@ -104,7 +104,7 @@
     data-params="
         {call cl.iUtils.Utils.stringify}
             {param json: [
-                'id': $params.data.id ?: $params.data.value,
+                'id': $params.data?.id ?: $params.data.value,
                 'name': $params.data.name ?: '',
                 'label': $params.data.label,
                 'value': $params.data.value

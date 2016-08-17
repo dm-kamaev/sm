@@ -57,6 +57,7 @@ goog.scope(function() {
      *     name: ?string,
      *     label: string,
      *     value: string
+     *     isChecked: (boolean|undefined)
      * }}
      */
     sm.bSmCheckbox.View.Params;
