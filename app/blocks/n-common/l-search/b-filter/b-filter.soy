@@ -110,7 +110,8 @@
  *         optionsToShow: (number|undefined),
  *         cannotBeHidden: (boolean|undefined),
  *         isShowed: (bolean|undefined),
- *         showMoreButtonText: (number|undefined)
+ *         showMoreButtonText: (number|undefined),
+ *         stylizationModifier: string
  *     }
  * }}
  * @protected
@@ -146,7 +147,8 @@
  *     },
  *     config: {
  *         optionsToShow: (number|undefined),
- *         type: (string|undefined)
+ *         type: (string|undefined),
+ *         stylizationModifier: string
  *     }
  * }}
  * @public
@@ -169,11 +171,12 @@
                         'name': $params.data.name,
                         'label': $params.data.options[$i].label,
                         'value': $params.data.options[$i].value,
-                        'isChecked': $params.data.options[$i].isChecked
+                        'isChecked': $params.data.options[$i]?.isChecked ?: ''
                     ],
                     'config': [
                         'hidden': $i + 1 > $numberOptionsToShow ? true : false,
-                        'hidable': $i + 1> $numberOptionsToShow ? true : false
+                        'hidable': $i + 1> $numberOptionsToShow ? true : false,
+                        'stylizationModifier': $params.config.stylizationModifier
                     ]
                 ]/}
             {/call}
@@ -193,8 +196,9 @@
  *         isChecked: (boolean|undefined)
  *     },
  *     config: {
- *         hidden: boolean,
- *         hidable: boolean
+ *         hidden: (boolean|undefined),
+ *         hidable: (boolean|undefined),
+ *         stylizationModifier: string
  *     }
  * }}
  * @public
@@ -203,18 +207,19 @@
     {let $classes kind="html"}
         {call .rootClass/}__option
 
-        {if $params.config.hidden}
+        {if $params.config?.hidden}
             {sp}i-utils__hidden
         {/if}
 
-        {if $params.config.hidable}
+        {if $params.config?.hidable}
             {sp}{call .rootClass/}__option_hidable
         {/if}
     {/let}
 
     <div class="{$classes}">
-        {call .renderChild}
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
+                'factory': $params.config.stylizationModifier,
                 'type': 'smCheckbox',
                 'renderParams': [
                     'data': $params.data
@@ -308,7 +313,7 @@
  *         }>
  *     },
  *     config: {
- *         type: (string|undefined),
+ *         cannotBeHidden: (boolean|undefined),
  *         optionsToShow: (number|undefined),
  *         showMoreButtonText: (number|undefined)
  *     }
@@ -448,8 +453,8 @@
  *         }>
  *     },
  *     config: {
- *         optionsToShow: (number|undefined),
- *         type: (string|undefined)
+ *         cannotBeHidden: (boolean|undefined),
+ *         optionsToShow: (number|undefined)
  *     }
  * }}
  * @protected
@@ -457,8 +462,9 @@
 {template .numberOptionsToShow}
     {if $params?.config?.optionsToShow}
         {$params.config.optionsToShow}
+    {elseif $params?.config?.cannotBeHidden}
+        {length($params.data.options)}
     {else}
-        //5
         6
     {/if}
 {/template}

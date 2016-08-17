@@ -4,7 +4,7 @@
     display: inline-block;
 
     width: 100%;
-    padding: 10px 0;
+    padding: 10px 0 15px;
 
     text-align: left;
     color: #000000;
@@ -16,7 +16,7 @@
     display: inline-block;
 
     width: 100%;
-    padding: 10px 0 15px 0;
+    padding: 10px 0 7px 0;
 
     font-weight: bold;
     font-size: 15px;
@@ -59,7 +59,7 @@
 
 
 @include media-l {
-    .b-sm-filter__section {
+    .b-sm-filter__option {
         width: 25%;
         min-width: unset;
 
@@ -68,7 +68,7 @@
 }
 
 @include media-m {
-    .b-sm-filter__section {
+    .b-sm-filter__option {
         width: 33.33%;
         min-width: unset;
 
@@ -76,18 +76,8 @@
     }
 }
 
-@include media-s {
-    .b-sm-filter__section {
-        width: 50%;
-    }
-
-    .b-sm-filter__reset {
-        display: none;
-    }
-}
-
 @include media-xs {
-    .b-sm-filter__section {
+    .b-sm-filter__option {
         width: 100%;
     }
 }

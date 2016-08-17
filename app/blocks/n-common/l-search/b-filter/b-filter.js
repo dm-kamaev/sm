@@ -20,9 +20,17 @@ sm.lSearch.bFilter.Filter = function(view, opt_domHelper) {
     /**
      * Instances checkboxes
      * @type {Array<sm.bSmCheckbox.SmCheckbox>}
-     * @private
+     * @protected
      */
-    this.options_ = [];
+    this.options = [];
+
+
+    /**
+     * Options params
+     * @type {Array<sm.bSmCheckbox.SmCheckbox.Params>}
+     * @protected
+     */
+    this.allOptionsData = [];
 };
 goog.inherits(sm.lSearch.bFilter.Filter, cl.iControl.Control);
 
@@ -37,8 +45,8 @@ goog.scope(function() {
      * @enum {string}
      */
     Filter.Event = {
-        'CHECK': goog.events.getUniqueId('check'),
-        'UNCHECK': goog.events.getUniqueId('uncheck')
+        CHECK: goog.events.getUniqueId('check'),
+        UNCHECK: goog.events.getUniqueId('uncheck')
     };
 
 
@@ -50,6 +58,7 @@ goog.scope(function() {
         Filter.base(this, 'decorateInternal', element);
 
         this.initOptions();
+        this.setAllData();
     };
 
 
@@ -67,8 +76,8 @@ goog.scope(function() {
      * Reset options filters
      */
     Filter.prototype.reset = function() {
-        for (var i = 0; i < this.options_.length; i++) {
-            this.options_[i].uncheck();
+        for (var i = 0; i < this.options.length; i++) {
+            this.options[i].uncheck();
         }
 
         this.collapse();
@@ -98,8 +107,8 @@ goog.scope(function() {
     Filter.prototype.isChecked = function() {
         var isChecked = false;
 
-        for (var i = 0; i < this.options_.length; i++) {
-            if (this.options_[i].isChecked()) {
+        for (var i = 0; i < this.options.length; i++) {
+            if (this.options[i].isChecked()) {
                 isChecked = true;
             }
         }
@@ -108,19 +117,28 @@ goog.scope(function() {
 
 
     /**
-     * Get data of selected options
+     * Get data of checked options
      * @return {Array<sm.bSmCheckbox.SmCheckbox.Params>}
      */
-    Filter.prototype.getData = function() {
+    Filter.prototype.getCheckedData = function() {
         var result = [];
 
-        for (var i = 0; i < this.options_.length; i++) {
-            if (this.options_[i].isChecked()) {
-                result.push(this.options_[i].getData());
+        this.options.forEach(function(option) {
+            if (option.isChecked()) {
+                result.push(option.getData());
             }
-        }
+        }, this);
 
         return result;
+    };
+
+
+    /**
+     * Get all options data
+     * @return {Array<sm.bSmCheckbox.SmCheckbox.Params>}
+     */
+    Filter.prototype.getAllData = function() {
+        return this.allOptionsData;
     };
 
 
@@ -143,21 +161,119 @@ goog.scope(function() {
 
 
     /**
+     * In first array is set to isChecked true
+     * according to the value of the second array
+     * @param {Array<{
+     *     value: string,
+     *     label: string,
+     *     name: string,
+     *     isChecked: boolean
+     * }>} options
+     * @param {Array<{Object}>} checkedOptions like options
+     * @return {Array<{Object}>} like options
+     */
+    Filter.prototype.setChecked = function(options, checkedOptions) {
+        return options.map(function(item) {
+            var itemClone = goog.object.clone(item);
+
+            itemClone.isChecked = checkedOptions.some(function(checked) {
+                return itemClone.value == checked.value;
+            });
+
+            return itemClone;
+        });
+    };
+
+
+    /**
+     * Update list options
+     * @param {Array<{sm.bSmCheckbox.SmCheckbox.Params}>} data
+     */
+    Filter.prototype.updateOptions = function(data) {
+        this.removeOptions();
+        this.createOptions(data);
+
+        this.initOptions();
+        this.initOptionsListeners();
+    };
+
+
+    /**
+     * Remove list options
+     * @protected
+     */
+    Filter.prototype.removeOptions = function() {
+        this.options.forEach(function(option) {
+            this.removeOption(option);
+        }, this);
+
+        this.options = [];
+    };
+
+
+    /**
+     * Update list options
+     * @param {Array<{sm.bSmCheckbox.SmCheckbox.Params}>} params
+     * @protected
+     */
+    Filter.prototype.createOptions = function(params) {
+        params.forEach(function(data) {
+            this.createOption(data);
+        }, this);
+    };
+
+
+    /**
+     * Remove option
+     * @param {sm.bSmCheckbox.SmCheckbox} option
+     * @protected
+     */
+    Filter.prototype.removeOption = function(option) {
+        this.removeChild(option);
+
+        var domElement = option.getElement();
+        this.getView().removeOption(domElement);
+    };
+
+
+    /**
+     * Create option
+     * @param {sm.bSmCheckbox.SmCheckbox.Params} data
+     * @protected
+     */
+    Filter.prototype.createOption = function(data) {
+        this.getView().addOption(data);
+    };
+
+
+    /**
+     * Set all options data
+     * @protected
+     */
+    Filter.prototype.setAllData = function() {
+        this.options.forEach(function(option) {
+            this.allOptionsData.push(option.getData());
+
+        }, this);
+    };
+
+
+    /**
      * Initializes listeners for options
      * @protected
      */
     Filter.prototype.initOptionsListeners = function() {
         var handler = this.getHandler();
 
-        for (var i = 0; i < this.options_.length; i++) {
+        for (var i = 0; i < this.options.length; i++) {
             handler.listen(
-                this.options_[i],
+                this.options[i],
                 sm.bSmCheckbox.SmCheckbox.Event.CHECK,
                 this.onOptionCheck
             );
 
             handler.listen(
-                this.options_[i],
+                this.options[i],
                 sm.bSmCheckbox.SmCheckbox.Event.UNCHECK,
                 this.onOptionUnheck
             );
@@ -203,16 +319,18 @@ goog.scope(function() {
      * @protected
      */
     Filter.prototype.initOptions = function() {
-        var options = this.getView().getDom().options,
+        this.getView().initOptions();
+
+        var elements = this.getView().getDom().options,
             instance;
 
-        for (var i = 0; i < options.length; i++) {
+        for (var i = 0; i < elements.length; i++) {
             instance = this.decorateChild(
                 'smCheckbox',
-                options[i]
+                elements[i]
             );
 
-            this.options_.push(instance);
+            this.options.push(instance);
         }
     };
 });  // goog.scope

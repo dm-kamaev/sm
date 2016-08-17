@@ -51,22 +51,14 @@ goog.scope(function() {
 
 
     /**
-     * Event enum
-     * @enum {string}
-     */
-    View.Event = {
-    };
-
-
-    /**
-     * @override
      * @param {Element} element
+     * @override
      */
     View.prototype.decorateInternal = function(element) {
         View.base(this, 'decorateInternal', element);
 
-        this.initOptions(element);
         this.initButtons(element);
+        this.initHeaderControls_(element);
         this.initContainers_(element);
 
         this.initParams_();
@@ -80,7 +72,8 @@ goog.scope(function() {
     View.prototype.enterDocument = function() {
         View.base(this, 'enterDocument');
 
-        this.initButtonsListeners_();
+        this.initButtonsListeners();
+        this.initHeaderControlsListeners_();
     };
 
 
@@ -103,6 +96,36 @@ goog.scope(function() {
         this.setHeaderIconUpState_(false);
 
         this.contentVisibility_ = false;
+    };
+
+
+    /**
+     * Remove option (dom element)
+     * @param {Element} option
+     */
+    View.prototype.removeOption = function(option) {
+        var container = goog.dom.getAncestorByClass(
+            option,
+            View.CssClass.OPTION
+        );
+
+        goog.dom.removeNode(
+            container
+        );
+    };
+
+
+    /**
+     * Add option (dom element)
+     * @param {sm.bSmCheckbox.SmCheckbox.Params} data
+     */
+    View.prototype.addOption = function(data) {
+        var option = this.renderOption_(data);
+
+        goog.dom.appendChild(
+            this.dom.list,
+            option
+        );
     };
 
 
@@ -131,11 +154,6 @@ goog.scope(function() {
      * @protected
      */
     View.prototype.initButtons = function(element) {
-        this.dom.buttonSwitchContentVisibility = goog.dom.getElementByClass(
-            View.CssClass.BUTTON_SWITCH_CONTENT_VISIBILITY,
-            element
-        );
-
         this.dom.buttonShowMore = goog.dom.getElementByClass(
             View.CssClass.BUTTON_SHOW_MORE,
             element
@@ -143,6 +161,42 @@ goog.scope(function() {
 
         this.dom.buttonShowLess = goog.dom.getElementByClass(
             View.CssClass.BUTTON_SHOW_LESS,
+            element
+        );
+    };
+
+
+    /**
+     * Initializes listeners for buttons
+     * @protected
+     */
+    View.prototype.initButtonsListeners = function() {
+        var handler = this.getHandler();
+
+        if (this.dom.buttonShowMore) {
+            handler.listen(
+                this.dom.buttonShowMore,
+                goog.events.EventType.CLICK,
+                this.onButtonShowMoreClick_
+            );
+
+            handler.listen(
+                this.dom.buttonShowLess,
+                goog.events.EventType.CLICK,
+                this.onButtonShowLessClick_
+            );
+        }
+    };
+
+
+    /**
+     * Initializes header controls
+     * @param {Element} element
+     * @private
+     */
+    View.prototype.initHeaderControls_ = function(element) {
+        this.dom.buttonSwitchContentVisibility = goog.dom.getElementByClass(
+            View.CssClass.BUTTON_SWITCH_CONTENT_VISIBILITY,
             element
         );
 
@@ -159,10 +213,10 @@ goog.scope(function() {
 
 
     /**
-     * Initializes listeners for buttons
+     * Initializes listeners for header controls
      * @private
      */
-    View.prototype.initButtonsListeners_ = function() {
+    View.prototype.initHeaderControlsListeners_ = function() {
         var handler = this.getHandler();
 
         if (this.dom.buttonSwitchContentVisibility) {
@@ -170,20 +224,6 @@ goog.scope(function() {
                 this.dom.buttonSwitchContentVisibility,
                 goog.events.EventType.CLICK,
                 this.onSwitchContentVisibilityClick_
-            );
-        }
-
-        if (this.dom.buttonShowMore) {
-            handler.listen(
-                this.dom.buttonShowMore,
-                goog.events.EventType.CLICK,
-                this.onButtonShowMoreClick_
-            );
-
-            handler.listen(
-                this.dom.buttonShowLess,
-                goog.events.EventType.CLICK,
-                this.onButtonShowLessClick_
             );
         }
     };
@@ -350,7 +390,7 @@ goog.scope(function() {
             element
         );
 
-        this.dom.wrapperList = goog.dom.getElementByClass(
+        this.dom.list = goog.dom.getElementByClass(
             View.CssClass.LIST_OPTIONS,
             element
         );
@@ -384,5 +424,25 @@ goog.scope(function() {
 
         this.params.name = data.name;
         this.params.type = data.type;
+    };
+
+
+    /**
+     * Render option
+     * @param {sm.bSmCheckbox.SmCheckbox.Params} data
+     * @return {Element}
+     * @private
+     */
+    View.prototype.renderOption_ = function(data) {
+        return goog.soy.renderAsElement(
+            sm.lSearch.bFilter.Template.option, {
+                params: {
+                    data: data,
+                    config: {
+                        stylizationModifier: this.getStylization()
+                    }
+                }
+            }
+        );
     };
 });  // goog.scope
