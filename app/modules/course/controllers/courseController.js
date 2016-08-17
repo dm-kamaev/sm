@@ -169,6 +169,35 @@ exports.search = async(function(req, res, next) {
                                    }
                                 ]
                             }
+                        },
+                        {
+                            data: {
+                                "header":{
+                                   "title":"Занятия в группе",
+                                   "tooltip":""
+                                },
+                                "name":"zanGr",
+                                "options":[
+                                   {
+                                      "label":"Групповые занятия",
+                                      "value":"001",
+                                      "isChecked":false
+                                   },
+                                   {
+                                      "label":"Индивидуальные занятия",
+                                      "value":"002",
+                                      "isChecked":false
+                                   },
+                                   {
+                                      "label":"Неважно",
+                                      "value":"003",
+                                      "isChecked":false
+                                   }
+                                ]
+                            },
+                            config: {
+                                type: 'switch'
+                            }
                         }
                     ]
                 },

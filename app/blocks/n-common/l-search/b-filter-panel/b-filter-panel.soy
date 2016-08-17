@@ -127,6 +127,14 @@
                     ]/}
                 {/call}
 
+            {case 'switch'}
+                {call .renderChild}
+                    {param params: [
+                        'type': 'lSearch-filterSwitch',
+                        'renderParams': $params
+                    ]/}
+                {/call}
+
             {case 'classes'}
                 classes
 

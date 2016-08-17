@@ -31,6 +31,8 @@ goog.require('sm.bSmItemList.SmItemList');
 goog.require('sm.bSmItemList.View');
 goog.require('sm.bSmListPaged.SmListPaged');
 goog.require('sm.bSmListPaged.View');
+goog.require('sm.bSmRadioButton.SmRadioButton');
+goog.require('sm.bSmRadioButton.View');
 goog.require('sm.bSmScore.SmScore');
 goog.require('sm.bSmScore.SmScoreBrief');
 goog.require('sm.bSmScore.View');
@@ -59,8 +61,10 @@ goog.require('sm.lSchool.bFoldList.FoldList');
 goog.require('sm.lSchool.bFoldList.View');
 goog.require('sm.lSearch.bFilter.Filter');
 goog.require('sm.lSearch.bFilter.FilterExtended');
+goog.require('sm.lSearch.bFilter.FilterSwitch');
 goog.require('sm.lSearch.bFilter.View');
 goog.require('sm.lSearch.bFilter.ViewExtended');
+goog.require('sm.lSearch.bFilter.ViewSwitch');
 goog.require('sm.lSearch.bFilterPanel.FilterPanel');
 goog.require('sm.lSearch.bFilterPanel.View');
 goog.require('sm.lSearchResult.bFilterSearch.FilterSearch');
@@ -188,6 +192,10 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('smCheckbox', {
             control: sm.bSmCheckbox.SmCheckbox,
             view: sm.bSmCheckbox.View
+        })
+        .setControlListItem('smRadioButton', {
+            control: sm.bSmRadioButton.SmRadioButton,
+            view: sm.bSmRadioButton.View
         });
 
     /** l-information blocks **/
@@ -212,6 +220,10 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('lSearch-filterExtended', {
             control: sm.lSearch.bFilter.FilterExtended,
             view: sm.lSearch.bFilter.ViewExtended
+        })
+        .setControlListItem('lSearch-filterSwitch', {
+            control: sm.lSearch.bFilter.FilterSwitch,
+            view: sm.lSearch.bFilter.ViewSwitch
         });
 };
 goog.inherits(sm.iFactory.FactoryStendhal, cl.iFactory.Factory);

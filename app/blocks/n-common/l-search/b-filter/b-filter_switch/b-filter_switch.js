@@ -1,0 +1,89 @@
+goog.provide('sm.lSearch.bFilter.FilterSwitch');
+
+goog.require('sm.lSearch.bFilter.Filter');
+goog.require('sm.lSearch.bFilter.ViewSwitch');
+
+
+
+/**
+ * Constructor
+ * @param {Object} view
+ * @param {Object=} opt_domHelper
+ * @constructor
+ * @extends {sm.lSearch.bFilter.Filter}
+ */
+sm.lSearch.bFilter.FilterSwitch = function(view, opt_domHelper) {
+    sm.lSearch.bFilter.FilterSwitch.base(this, 'constructor',
+        view, opt_domHelper);
+
+
+    /**
+     * instance Modal
+     * @type {sm.gModal.ModalStendhal}
+     * @private
+     */
+    this.filterModal_ = null;
+};
+goog.inherits(sm.lSearch.bFilter.FilterSwitch, sm.lSearch.bFilter.Filter);
+
+
+goog.scope(function() {
+    var FilterSwitch = sm.lSearch.bFilter.FilterSwitch,
+        View = sm.lSearch.bFilter.ViewSwitch;
+
+    /**
+     * Checks refers element to this control
+     * @param {Element} element
+     * @return {boolean}
+     */
+    FilterSwitch.isControl = function(element) {
+        return goog.dom.classlist.contains(
+            element,
+            View.CssClass.ROOT
+        );
+    };
+
+
+    /**
+     * Initializes listeners for options
+     * @protected
+     */
+    FilterSwitch.prototype.initOptionsListeners = function() {
+        var handler = this.getHandler();
+
+        for (var i = 0; i < this.options.length; i++) {
+            handler.listen(
+                this.options[i],
+                sm.bSmRadioButton.SmRadioButton.Event.CHECK,
+                this.onOptionCheck
+            );
+
+            handler.listen(
+                this.options[i],
+                sm.bSmRadioButton.SmRadioButton.Event.UNCHECK,
+                this.onOptionUnheck
+            );
+        }
+    };
+
+
+    /**
+     * Initializes options
+     * @protected
+     */
+    FilterSwitch.prototype.initOptions = function() {
+        this.getView().initOptions();
+
+        var elements = this.getView().getDom().options,
+            instance;
+
+        for (var i = 0; i < elements.length; i++) {
+            instance = this.decorateChild(
+                'smRadioButton',
+                elements[i]
+            );
+
+            this.options.push(instance);
+        }
+    };
+});  // goog.scope
