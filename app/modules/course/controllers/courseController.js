@@ -63,143 +63,168 @@ exports.search = async(function(req, res, next) {
                     defaultOpenerText: 'стоимости'
                 },
                 filterPanel: {
-                    filters: [
-                        {
-                            data: {
-                                "header":{
-                                   "title":"Направления занятий",
-                                   "tooltip":""
-                                },
-                                "name":"zan",
-                                "options":[
-                                   {
-                                      "label":"Подготовка к ЕГЭ по русскому языку",
-                                      "value":"001",
-                                      "isChecked":false
-                                   },
-                                   {
-                                      "label":"Подготовка к ЕГЭ по математике",
-                                      "value":"002",
-                                      "isChecked":false
-                                   },
-                                   {
-                                      "label":"Подготовка к ОГЭ по русскому языку",
-                                      "value":"003",
-                                      "isChecked":false
-                                   },
-                                   {
-                                      "label":"Подготовка к ОГЭ по математике",
-                                      "value":"004",
-                                      "isChecked":false
-                                   },
-                                   {
-                                      "label":"Фортепиано",
-                                      "value":"005",
-                                      "isChecked":false
-                                   },
-                                   {
-                                      "label":"Русский язык",
-                                      "value":"006",
-                                      "isChecked":false
-                                   },
-                                   {
-                                      "label":"Математика",
-                                      "value":"007",
-                                      "isChecked":false
-                                   }
-                                ]
-                            },
-                            config: {
-                                type: 'extended',
-                                showMoreButtonText: 'Все направления'
-                            }
-                        },
-                        {
-                            data: {
-                                "header":{
-                                   "title":"Default",
-                                   "tooltip":""
-                                },
-                                "name":"Default",
-                                "options":[
-                                   {
-                                      "label":"Математика",
-                                      "value":"math",
-                                      "isChecked":false
-                                   },
-                                   {
-                                      "label":"Занимательная математика",
-                                      "value":"zanMath",
-                                      "isChecked":false
-                                   },
-                                   {
-                                      "label":"Робототехника",
-                                      "value":"robo",
-                                      "isChecked":false
-                                   },
-                                   {
-                                      "label":"Макраме",
-                                      "value":"4",
-                                      "isChecked":false
-                                   },
-                                   {
-                                      "label":"Вязание",
-                                      "value":"vaz",
-                                      "isChecked":false
-                                   },
-                                   {
-                                      "label":"Пение",
-                                      "value":"pen",
-                                      "isChecked":false
-                                   },
-                                   {
-                                      "label":"Чтение",
-                                      "value":"cht",
-                                      "isChecked":false
-                                   },
-                                   {
-                                      "label":"Рисование",
-                                      "value":"ris",
-                                      "isChecked":false
-                                   },
-                                   {
-                                      "label":"История",
-                                      "value":"ist",
-                                      "isChecked":false
-                                   }
-                                ]
-                            }
-                        },
-                        {
-                            data: {
-                                "header":{
-                                   "title":"Занятия в группе",
-                                   "tooltip":""
-                                },
-                                "name":"zanGr",
-                                "options":[
-                                   {
-                                      "label":"Групповые занятия",
-                                      "value":"001",
-                                      "isChecked":false
-                                   },
-                                   {
-                                      "label":"Индивидуальные занятия",
-                                      "value":"002",
-                                      "isChecked":false
-                                   },
-                                   {
-                                      "label":"Неважно",
-                                      "value":"003",
-                                      "isChecked":false
-                                   }
-                                ]
-                            },
-                            config: {
-                                type: 'switch'
-                            }
-                        }
-                    ]
+                    data: {
+                        filters: [
+                          {
+                              data: {
+                                  "header":{
+                                     "title":"Возраст"
+                                  },
+                                  "name":"age",
+                                  "options":[
+                                     {
+                                        'title': 'лет',
+                                        'value': 17,
+                                        "maxLength": 2
+                                     }
+                                  ]
+                              },
+                              config: {
+                                  type: 'input',
+                                  isShowed: true
+                              }
+                          },
+                          {
+                              data: {
+                                  "header":{
+                                     "title":"Направления занятий",
+                                     "tooltip":""
+                                  },
+                                  "name":"zan",
+                                  "options":[
+                                     {
+                                        "label":"Подготовка к ЕГЭ по русскому языку",
+                                        "value":"001",
+                                        "isChecked":false
+                                     },
+                                     {
+                                        "label":"Подготовка к ЕГЭ по математике",
+                                        "value":"002",
+                                        "isChecked":false
+                                     },
+                                     {
+                                        "label":"Подготовка к ОГЭ по русскому языку",
+                                        "value":"003",
+                                        "isChecked":true
+                                     },
+                                     {
+                                        "label":"Подготовка к ОГЭ по математике",
+                                        "value":"004",
+                                        "isChecked":false
+                                     },
+                                     {
+                                        "label":"Игра на фортепиано",
+                                        "value":"005",
+                                        "isChecked":false
+                                     },
+                                     {
+                                        "label":"Русский язык",
+                                        "value":"006",
+                                        "isChecked":false
+                                     },
+                                     {
+                                        "label":"Математика",
+                                        "value":"007",
+                                        "isChecked":false
+                                     }
+                                  ]
+                              },
+                              config: {
+                                  type: 'extended',
+                                  isShowed: true,
+                                  showMoreButtonText: 'Все направления'
+                              }
+                          },
+                          {
+                              data: {
+                                  "header":{
+                                     "title":"Default",
+                                     "tooltip":""
+                                  },
+                                  "name":"Default",
+                                  "options":[
+                                     {
+                                        "label":"Математика",
+                                        "value":"math",
+                                        "isChecked":false
+                                     },
+                                     {
+                                        "label":"Занимательная математика",
+                                        "value":"zanMath",
+                                        "isChecked":false
+                                     },
+                                     {
+                                        "label":"Робототехника",
+                                        "value":"robo",
+                                        "isChecked":false
+                                     },
+                                     {
+                                        "label":"Макраме",
+                                        "value":"4",
+                                        "isChecked":false
+                                     },
+                                     {
+                                        "label":"Вязание",
+                                        "value":"vaz",
+                                        "isChecked":false
+                                     },
+                                     {
+                                        "label":"Пение",
+                                        "value":"pen",
+                                        "isChecked":false
+                                     },
+                                     {
+                                        "label":"Чтение",
+                                        "value":"cht",
+                                        "isChecked":false
+                                     },
+                                     {
+                                        "label":"Рисование",
+                                        "value":"ris",
+                                        "isChecked":false
+                                     },
+                                     {
+                                        "label":"История",
+                                        "value":"ist",
+                                        "isChecked":false
+                                     }
+                                  ]
+                              }
+                          },
+                          {
+                              data: {
+                                  "header":{
+                                     "title":"Занятия в группе",
+                                     "tooltip":""
+                                  },
+                                  "name":"zanGr",
+                                  "options":[
+                                     {
+                                        "label":"Групповые занятия",
+                                        "value":"001",
+                                        "isChecked":false
+                                     },
+                                     {
+                                        "label":"Индивидуальные занятия",
+                                        "value":"002",
+                                        "isChecked":false
+                                     },
+                                     {
+                                        "label":"Неважно",
+                                        "value":"003",
+                                        "isChecked":false
+                                     }
+                                  ]
+                              },
+                              config: {
+                                  type: 'switch'
+                              }
+                          }
+                        ]
+                    },
+                    config: {
+                        hasCheckedFilters: true
+                    }
                 },
                 entityList: {
                     items: [
