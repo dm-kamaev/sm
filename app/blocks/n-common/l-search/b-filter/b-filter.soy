@@ -318,7 +318,7 @@
  *         showMoreButtonText: (number|undefined)
  *     }
  * }}
-  * @protected
+ * @protected
  */
 {template .showMore}
     {let $numberOptionsToShow kind="html"}
@@ -353,6 +353,9 @@
             {param params: [
                 'data': [
                     'name': $text
+                ],
+                'config': [
+                    'size': 'large'
                 ]
             ]/}
         {/call}
@@ -365,6 +368,9 @@
             {param params: [
                 'data': [
                     'name': 'Свернуть список'
+                ],
+                'config': [
+                    'size': 'large'
                 ]
             ]/}
         {/call}
@@ -467,15 +473,6 @@
     {else}
         6
     {/if}
-{/template}
-
-
-/**
- * Tag name
- * @override
- */
-{template .tag}
-    form
 {/template}
 
 

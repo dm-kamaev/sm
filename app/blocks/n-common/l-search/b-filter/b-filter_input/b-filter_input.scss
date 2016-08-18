@@ -1,0 +1,43 @@
+@import "../../../i-media/i-media";
+
+.b-sm-filter_input {
+    .b-sm-filter__content {
+        margin: 5px 0 16px;
+    }
+
+    .b-sm-filter__list-options {
+        display: inline-block;
+
+        margin-right: 35px;
+    }
+
+    .b-sm-filter__input {
+        display: inline-block;
+
+        height: 40px;
+        width: 50px;
+    }
+
+    .b-sm-filter__input-title {
+        display: inline-block;
+
+        margin-left: 20px;
+    }
+
+    .b-sm-filter__button_reset {
+        display: inline-block;
+
+        margin: 0;
+    }
+}
+
+
+@include media-l {
+    .b-sm-filter_input {
+        .b-sm-filter__option {
+            width: auto;
+
+            vertical-align: baseline;
+        }
+    }
+}

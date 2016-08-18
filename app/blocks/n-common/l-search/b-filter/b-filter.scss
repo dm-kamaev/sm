@@ -58,7 +58,7 @@
 }
 
 
-@include media-l {
+@include media-m {
     .b-sm-filter__option {
         width: 25%;
         min-width: unset;
@@ -67,7 +67,7 @@
     }
 }
 
-@include media-m {
+@include media-s {
     .b-sm-filter__option {
         width: 33.33%;
         min-width: unset;
