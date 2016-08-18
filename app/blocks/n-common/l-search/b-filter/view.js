@@ -149,7 +149,7 @@ goog.scope(function() {
 
 
     /**
-     * Initializes controls
+     * Initializes buttons
      * @param {Element} element
      * @protected
      */

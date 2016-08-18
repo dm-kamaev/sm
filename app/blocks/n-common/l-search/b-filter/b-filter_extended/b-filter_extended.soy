@@ -2,8 +2,16 @@
 
 
 /**
+ * @typedef {{
+ *     data: sm.lSearch.bFilter.Template.Params.Data,
+ *     config: sm.lSearch.bFilter.Template.Params.Config
+ * }} sm.lSearch.bFilter.TemplateExtended.Params
+ */
+
+
+/**
  * Constructor
- * @param params {sm.lSearch.bFilter.Template.Params}
+ * @param params {sm.lSearch.bFilter.TemplateExtended.Params}
  * @extends sm.lSearch.bFilter.Template
  * @constructor
  */
@@ -55,6 +63,9 @@
             {param params: [
                 'data': [
                     'name': $text
+                ],
+                'config': [
+                    'size': 'large'
                 ]
             ]/}
         {/call}

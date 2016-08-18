@@ -15,14 +15,6 @@ goog.require('sm.lSearch.bFilter.ViewSwitch');
 sm.lSearch.bFilter.FilterSwitch = function(view, opt_domHelper) {
     sm.lSearch.bFilter.FilterSwitch.base(this, 'constructor',
         view, opt_domHelper);
-
-
-    /**
-     * instance Modal
-     * @type {sm.gModal.ModalStendhal}
-     * @private
-     */
-    this.filterModal_ = null;
 };
 goog.inherits(sm.lSearch.bFilter.FilterSwitch, sm.lSearch.bFilter.Filter);
 

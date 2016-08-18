@@ -157,9 +157,6 @@
  * }}
  */
 {template .bodyContent_ autoescape="strict" kind="html"}
-// {call cl.iUtils.Utils.stringify}
-//           {param json: $params /}
-//     {/call}
     {let $data: [
         'searchSettings': $params.searchSettings,
         'params': [
@@ -354,9 +351,7 @@
             {param params: [
                 'factory': $params.config.modifier,
                 'type': 'lSearch-filterPanel',
-                'renderParams': [
-                    'data': $params.data.filterPanel
-                ]
+                'renderParams': $params.data.filterPanel
             ] /}
         {/call}
     </div>

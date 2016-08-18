@@ -10,7 +10,7 @@
 
 /**
  * @typedef {{
- *     hasCheckedFilters: (bool|undefined),
+ *     hasCheckedFilters: (boolean|undefined),
  *     stylizationModifier: string
  * }} sm.lSearch.bFilterPanel.Template.Params.Config
  */
@@ -108,7 +108,12 @@
  * @param params {{
  *     data: {
  *         filters: Array<{
- *             data: sm.lSearch.bFilter.Template.Params.Data,
+ *             data: (
+ *                 sm.lSearch.bFilter.Template.Params.Data|
+ *                 sm.lSearch.bFilter.TemplateExtended.Params.Data|
+ *                 sm.lSearch.bFilter.TemplateSwitch.Params.Data|
+ *                 sm.lSearch.bFilter.TemplateInput.Params.Data
+ *             ),
  *             config: {
  *                 type: (string|undefined)
  *             }
@@ -135,8 +140,13 @@
                     ]/}
                 {/call}
 
-            {case 'classes'}
-                classes
+            {case 'input'}
+                {call .renderChild}
+                    {param params: [
+                        'type': 'lSearch-filterInput',
+                        'renderParams': $params
+                    ]/}
+                {/call}
 
             {default}
                 {call .renderChild}
@@ -213,7 +223,8 @@
                     'name': 'Сбросить фильтр'
                 ],
                 'config': [
-                    'theme': 'attention'
+                    'theme': 'attention',
+                    'size': 'large'
                 ]
             ]/}
         {/call}
@@ -230,6 +241,9 @@
             {param params: [
                 'data': [
                     'name': 'Свернуть фильтр'
+                ],
+                'config': [
+                    'size': 'large'
                 ]
             ]/}
         {/call}
