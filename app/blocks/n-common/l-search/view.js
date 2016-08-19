@@ -32,7 +32,8 @@ goog.scope(function() {
      * @enum {string}
      */
     View.CssClass = {
-        ROOT: 'l-search'
+        ROOT: 'l-search',
+        SEARCH: 'l-search__search-field'
     };
 
 
@@ -56,6 +57,10 @@ goog.scope(function() {
         this.dom = {
             sort: this.getElementByClass(
                 sm.gDropdown.ViewSelect.CssClass.ROOT,
+                element
+            ),
+            search: this.getElementByClass(
+                View.CssClass.SEARCH,
                 element
             ),
             filterPanel: this.getElementByClass(

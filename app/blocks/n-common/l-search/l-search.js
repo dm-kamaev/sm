@@ -35,6 +35,14 @@ goog.scope(function() {
 
 
         /**
+         * Search Instance
+         * @type {sm.bSearch.Search}
+         * @private
+         */
+        this.search_ = null;
+
+
+        /**
          * Filters Instance
          * @type {sm.lSearch.bFilterPanel.FilterPanel}
          * @private
@@ -67,20 +75,8 @@ goog.scope(function() {
     Search.prototype.decorateInternal = function(element) {
         Search.base(this, 'decorateInternal', element);
 
-        this.sort_ = this.decorateChild(
-            'dropdown-select',
-            this.getView().getDom().sort
-        );
-
-        this.resultsList_ = this.decorateChild(
-            'smItemList',
-            this.getView().getDom().resultsList
-        );
-
-        this.filterPanel_ = this.decorateChild(
-            'lSearch-filterPanel',
-            this.getView().getDom().filterPanel
-        );
+        this.initLeftMenuInstances_();
+        this.initResultsListInstances_();
     };
 
 
@@ -97,6 +93,65 @@ goog.scope(function() {
         this.searchService.init(this.params.type);
 
         return this;
+    };
+
+
+    /**
+     * Init listeners for search block in menu
+     * @private
+     */
+    Search.prototype.initSearchListeners_ = function() {
+        this.getHandler().listen(
+            this.search_,
+            Search.Event.SUBMIT,
+            this.onSearchSubmit_
+        ).listen(
+            this.search_,
+            Search.Event.ITEM_SELECT,
+            this.onSearchSubmit_
+        );
+    };
+
+
+    /**
+     * Search submit handler
+     * @private
+     */
+    Search.prototype.onSearchSubmit_ = function() {
+        console.log('submit');
+    };
+
+
+    /**
+     * Init left menu instances
+     * @private
+     */
+    Search.prototype.initLeftMenuInstances_ = function() {
+        this.search_ = new sm.bSearch.Search();
+        this.addChild(this.search_);
+        this.search_.decorate(this.getView().getDom().search);
+
+        this.filterPanel_ = this.decorateChild(
+            'lSearch-filterPanel',
+            this.getView().getDom().filterPanel
+        );
+    };
+
+
+    /**
+     * Init results list and sort instances
+     * @private
+     */
+    Search.prototype.initResultsListInstances_ = function() {
+        this.sort_ = this.decorateChild(
+            'dropdown-select',
+            this.getView().getDom().sort
+        );
+
+        this.resultsList_ = this.decorateChild(
+            'smItemList',
+            this.getView().getDom().resultsList
+        );
     };
 });  // goog.scope
 

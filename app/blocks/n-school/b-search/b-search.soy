@@ -1,5 +1,7 @@
 {namespace sm.bSearch.Template}
 
+
+
 /**
  * Search parameters
  * @typedef {object} sm.bSearch.Template.Params
@@ -13,6 +15,7 @@
  * @property {?map} config
  * @property {?boolean} config.showSearchIcon
  * @property {?string} config.height
+ * @property {string} config.entityType
  */
 
 /**
@@ -21,7 +24,8 @@
  */
 {template .base autoescape="strict" kind="html"}
     {let $data: [
-        'redirect': $params?.redirect
+        'redirect': $params?.redirect,
+        'type': $params.config.entityType
     ] /}
 
     <div class="b-search{sp}
@@ -34,44 +38,55 @@
         {if $params?.theme == 'foldable'}
             <div class="b-search__fader i-animate"></div>
         {/if}
-        <div class="b-search__body">
-            {if $params?.theme == 'foldable' or $params?.config?.showSearchIcon}
-                <div class="b-search__bg i-animate"></div>
-                {call .searchButton_ /}
-            {/if}
-            <div class="b-search__suggest-holder i-animate">
-                {call gorod.gSuggest.SuggestTemplate.render}
-                    {param params: [
-                        'data': [
-                            'text': $params?.text,
-                            'minLength': 3,
-                            'autofocus': $params?.autofocus,
-                            'placeholder': $params?.placeholder,
-                            'sourceUrl': '/api/school/search/suggest',
-                            'argName': 'searchString'
-                        ],
-                        'config': [
-                            'customClasses': 'b-search__suggest',
-                            'filtrationEnabled': false,
-                        ],
-                        'list': [
-                            'theme': 'stendhal',
-                            'color': 'sienna'
-                        ],
-                        'input': [
-                            'style': [
-                                'theme': 'stendhal',
-                                'size': $params?.inputSize
-                            ]
-                        ]
-                    ]/}
-                {/call}
-            </div>
 
-            {if $params?.theme == 'foldable'}
-                {call .clearButton_ /}
-            {/if}
+        {call .body_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Body template
+ * @param? params {sm.bSearch.Template.Params}
+ */
+{template .body_ autoescape="strict" kind="html"}
+    <div class="b-search__body">
+        {if $params?.theme == 'foldable' or $params?.config?.showSearchIcon}
+            <div class="b-search__bg i-animate"></div>
+            {call .searchButton_ /}
+        {/if}
+
+        <div class="b-search__suggest-holder i-animate">
+            {call gorod.gSuggest.SuggestTemplate.render}
+                {param params: [
+                    'data': [
+                        'text': $params?.text,
+                        'minLength': 3,
+                        'autofocus': $params?.autofocus,
+                        'placeholder': $params?.placeholder,
+                        'sourceUrl': '/api/' + $params.config.entityType + '/search/suggest',
+                        'argName': 'searchString'
+                    ],
+                    'config': [
+                        'customClasses': 'b-search__suggest',
+                        'filtrationEnabled': false,
+                    ],
+                    'list': [
+                        'theme': 'stendhal',
+                        'color': 'sienna'
+                    ],
+                    'input': [
+                        'style': [
+                            'theme': 'stendhal',
+                            'size': $params?.inputSize
+                        ]
+                    ]
+                ]/}
+            {/call}
         </div>
+
+        {if $params?.theme == 'foldable'}
+            {call .clearButton_ /}
+        {/if}
     </div>
 {/template}
 
@@ -106,7 +121,9 @@
 {template .itemIcon_ private="true" autoescape="strict" kind="html"}
     {switch $params.type}
         {case 'schools'}
-            {call .itemIconSchool_ data="all" /}
+            {call .itemIconEntity_ data="all" /}
+        {case 'courses'}
+            {call .itemIconEntity_ data="all" /}
         {case 'metro'}
             {call .itemIconMetro_ /}
         {case 'areas'}
@@ -118,12 +135,12 @@
 
 
 /**
- * Search suggest school icon
+ * Search suggest entity icon
  * @param? params {{
  *     totalScore: ?number
  * }}
  */
-{template .itemIconSchool_ private="true" autoescape="strict" kind="html"}
+{template .itemIconEntity_ private="true" autoescape="strict" kind="html"}
     {call sm.bMark.Template.base}
         {param params: [
             'value': $params.totalScore,

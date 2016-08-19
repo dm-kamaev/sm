@@ -2,13 +2,8 @@
 
 .b-filter-panel {
     width: 100%;
-    padding: 0 30px;
-
-    box-sizing: border-box;
 
     color: #000;
-
-    background-color: #f7f7f1;
 
     font-family: Arial, sans-serif;
     font-size: 15px;
@@ -59,10 +54,6 @@
 
 
 @include media-m {
-    .b-filter-panel {
-        padding: 0 40px;
-    }
-
     .b-filter-panel_state_expanded {
         .b-filter-panel__expander {
             display: none;
@@ -85,11 +76,5 @@
 
     .b-filter-panel__collapser {
         display: inline-block;
-    }
-}
-
-@include media-xs {
-    .b-filter-panel {
-        padding: 0 30px;
     }
 }

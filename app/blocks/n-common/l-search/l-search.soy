@@ -36,7 +36,7 @@
  *     map: sm.bMap.Template.Params.Data,
  *     search: {
  *         countResults: number,
- *         searchText: string,
+ *         searchText: ?string,
  *         placeholder: ?string
  *     },
  *     sort: sm.gDropdown.TemplateSelect.Params.Data
@@ -123,7 +123,7 @@
  *         map: sm.bMap.Template.Params.Data,
  *         search: {
  *             countResults: number,
- *             searchText: string,
+ *             searchText: ?string,
  *             placeholder: ?string
  *         },
  *         sort: sm.gDropdown.TemplateSelect.Params.Data
@@ -153,12 +153,15 @@
  *             metro: ?Array<string>,
  *             totalScore: ?number
  *         }>
+ *     },
+ *     config: {
+ *         type: string
  *     }
  * }}
  */
 {template .bodyContent_ autoescape="strict" kind="html"}
     {let $data: [
-        'searchSettings': $params.searchSettings,
+        'searchSettings': $params.data.searchSettings,
         'params': [
             'isUserAuthorized': $params.data?.user ? true : false,
             'authSocialLinks': $params.data?.authSocialLinks
@@ -202,7 +205,7 @@
  *         },
  *         search: {
  *             countResults: number,
- *             searchText: string
+ *             searchText: ?string
  *         }
  *     }
  * }}
@@ -253,11 +256,14 @@
  *         },
  *         search: {
  *             countResults: number,
- *             searchText: string,
+ *             searchText: ?string,
  *             placeholder: ?string
  *         },
  *         entityList: sm.bSmItemList.Template.Params.Data,
  *         filterPanel: {sm.lSearch.bFilterPanel.Template.Params}
+ *     },
+ *     config: {
+ *         type: string
  *     }
  * }}
  */
@@ -266,9 +272,8 @@
         {sp}{call .rootClass/}__section_content">
 
         <div class="{call .rootClass /}__section-inner">
-                {call .leftMenu_ data="all" /}
-
-                {call .results_ data="all" /}
+            {call .leftMenu_ data="all" /}
+            {call .results_ data="all" /}
         </div>
     </div>
 {/template}
@@ -282,20 +287,15 @@
  *             placeholder: ?string
  *             searchText: ?string
  *         }
+ *     },
+ *     config: {
+ *         type: string
  *     }
  * }}
  */
-{template .leftMenu_ autoescape="strict" kind="html" private="true"}
+{template .leftMenu_}
     <div class="{call .rootClass/}__left-menu">
-        {call .search_}
-            {param params: [
-                'data': $params.data?.search,
-                'config': [
-                    'redirect': false
-                ]
-            ]/}
-        {/call}
-
+        {call .search_ data="all"/}
         {call .filters_ data="all"/}
     </div>
 {/template}
@@ -305,34 +305,36 @@
  * Search
  * @param params {{
  *     data: {
- *        placeholder: ?string
- *        searchText: ?string
+ *         search: {
+ *             placeholder: ?string,
+ *             searchText: ?string
+ *         }
  *     },
  *     config: {
- *         redirect: bool
+ *         type: string
  *     }
  * }}
  */
-{template .search_ private="true" autoescape="strict" kind="html"}
-    <div class="{call .rootClass/}__search">
-        // {call cl.iUtils.Utils.stringify}
-        //        {param json: $params /}
-        // {/call}
-        {if $params}
-        {/if}
+{template .search_}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__search-field
+    {/let}
 
-        /*{call sm.bSearch.Template.base}
+    <div class="{call .rootClass/}__search">
+        {call sm.bSearch.Template.base}
             {param params: [
-                'placeholder': $params.data?.placeholder,
-                'text': $params.data?.searchText,
+                'placeholder': $params.data?.search?.placeholder,
+                'text': $params.data?.search?.searchText,
                 'theme': 'min',
-                'redirect': $params.config?.searchRedirect,
+                'redirect': false,
                 'inputSize': 'min',
+                'customClasses': $customClasses,
                 'config': [
+                    'entityType': $params.config.type,
                     'height': 's'
                 ]
             ]/}
-        {/call}*/
+        {/call}
     </div>
 {/template}
 
@@ -345,7 +347,7 @@
  *     }
  * }
  */
-{template .filters_ autoescape="strict" kind="html" private="true"}
+{template .filters_}
     <div class="{call .rootClass/}__filters">
         {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
@@ -368,8 +370,7 @@
  *         },
  *         search: {
  *             countResults: number,
- *             searchText: string,
- *             placeholder: ?string
+ *             searchText: ?string
  *         },
  *         entityList: sm.bSmItemList.Template.Params.Data
  *     }
@@ -402,7 +403,7 @@
  *     }
  * }
  */
-{template .listBody_ private="true"}
+{template .listBody_}
     {let $classes kind="html"}
         {call .rootClass/}__list-body
 
@@ -435,8 +436,7 @@
  *         },
  *         search: {
  *             countResults: number,
- *             searchText: string,
- *             placeholder: ?string
+ *             searchText: ?string
  *         }
  *     },
  *     config: {
@@ -469,7 +469,7 @@
  *         },
  *         search: {
  *             countResults: number,
- *             searchText: string
+ *             searchText: ?string
  *         }
  *     }
  * }}
@@ -584,12 +584,12 @@
 /**
  * Generates header text for results
  * @param params {{
- *     searchText: string,
+ *     searchText: ?string,
  *     countResults: number
  * }}
  */
 {template .generateHeaderText_}
-    {if length($params.searchText)}
+    {if $params?.searchText and length($params?.searchText)}
         По запросу{sp}
         <span class="{call .rootClass/}__list-header-text{sp}
                      {call .rootClass/}__list-header-text_strong">

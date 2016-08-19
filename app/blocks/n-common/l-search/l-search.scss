@@ -61,6 +61,20 @@
 
     width: 350px;
     margin-right: 60px;
+
+    background-color: #f7f7f1;
+}
+
+.l-search__search {
+    box-sizing: border-box;
+    padding: 30px;
+
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.l-search__filters {
+    box-sizing: border-box;
+    padding: 0 30px;
 }
 
 .l-search__list-results {
@@ -154,6 +168,14 @@
         margin-bottom: 35px;
     }
 
+    .l-search__search {
+        padding-right: 40px;
+        padding-left: 40px;
+    }
+
+    .l-search__filters {
+        padding: 0 40px;
+    }
 
     .l-search__list-header {
         &.l-search__list-header_size_l {
@@ -189,6 +211,15 @@
         }
     }
 
+    .l-search__search {
+        padding-right: 30px;
+        padding-left: 30px;
+    }
+
+    .l-search__filters {
+        padding: 0 30px;
+    }
+
     .l-search__list-header {
         font-size: 20px;
         line-height: normal;
@@ -201,5 +232,4 @@
     .l-search__list-body {
         padding-bottom: 60px;
     }
-
 }

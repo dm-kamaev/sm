@@ -41,6 +41,7 @@
  *     csrf: string,
  *     year: (number|undefined),
  *     modifier: string,
+ *     type: string,
  *     page: (string|undefined)
  * }} sm.iLayout.TemplateStendhal.Params.Config
  */
@@ -48,9 +49,9 @@
 
 /**
  * Base landing for pages
- * @param? params {{
+ * @param params {{
  *     data: sm.iLayout.TemplateStendhal.Params.Data,
- *     config: ?sm.iLayout.TemplateStendhal.Params.Config
+ *     config: sm.iLayout.TemplateStendhal.Params.Config
  * }}
  * @extends cl.iLayout.Template
  * @constructor
@@ -236,6 +237,10 @@
  * @param params {{
  *     data: {
  *         subheader: sm.bSmSubheader.Template.Params.Data
+ *     },
+ *     config: {
+ *         type: string,
+ *         modifier: ?string
  *     }
  * }}
  */
@@ -246,7 +251,10 @@
                 'factory': $params.config.modifier ?: 'stendhal',
                 'type': 'smSubheader',
                 'renderParams': [
-                    'data': $params.data.subHeader
+                    'data': $params.data.subHeader,
+                    'config': [
+                        'entityType': $params.config.type
+                    ]
                 ]
             ]/}
         {/call}
@@ -265,7 +273,8 @@
  * Footer
  * @param params {
  *     config: {
- *         year: ?number
+ *         year: ?number,
+ *         modifier: ?string
  *     }
  * }
  */

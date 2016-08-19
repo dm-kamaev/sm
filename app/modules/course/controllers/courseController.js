@@ -42,7 +42,7 @@ exports.search = async(function(req, res, next) {
                 },
                 search: {
                     countResults: 100,
-                    searchText: 'Супер курс'
+                    placeholder: 'Район, метро, название курса'
                 },
                 sort: {
                     listItems: [
@@ -361,6 +361,7 @@ exports.search = async(function(req, res, next) {
             },
             config: {
                 modifier: 'stendhal',
+                type: 'course',
                 staticVersion: config.lastBuildTimestamp,
                 year: new Date().getFullYear(),
                 analyticsId: ANALYTICS_ID,
