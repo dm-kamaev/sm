@@ -15,7 +15,7 @@ var schoolSearchType = require('../enums/searchType');
 
 const mapPositionType = require('../enums/mapPositionType');
 
-exports.name = 'search';
+exports.name = 'schoolSearch';
 
 
 /**
@@ -77,10 +77,10 @@ exports.suggestSearch = async(function(searchString) {
     });
 });
 
-exports.getSearchSql = function(searchParams, limit) {
+exports.getSearchSql = function(searchParams, opt_limit) {
     return new SchoolSearchQuery()
-        .setLimit(limit)
-        .setOffset(searchParams.page * limit || 0)
+        .setLimit(opt_limit)
+        .setOffset(searchParams.page * opt_limit || 0)
         .setSortType(searchParams.sortType)
         .setSearchString(searchParams.name)
         .setClasses(searchParams.classes)
@@ -187,7 +187,7 @@ exports.initSearchParams = async(function(params) {
     var filterTypes = schoolSearchType.toCamelCaseArray();
     var ids = filterTypes.map(filterType => {
         var filter = params[filterType];
-        return await(services.search.getFilterIds(filter, filterType));
+        return await(services.schoolSearch.getFilterIds(filter, filterType));
     });
     var filters = lodash.zipObject(filterTypes, ids);
 
@@ -203,7 +203,8 @@ exports.getFilterIds = async(function(filter, type) {
     var ids = [];
     if (filter) {
         if (type == schoolSearchType.camelCaseFields.SCHOOL_TYPE) {
-            var types = await(services.search.getSchoolTypesByAliases(filter));
+            var types =
+                await(services.schoolSearch.getSchoolTypesByAliases(filter));
             ids = searchView.schoolTypeFilterIds(types);
         } else {
             var subjects = await(services.subject.getByAliases(filter));

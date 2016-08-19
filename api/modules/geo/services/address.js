@@ -3,6 +3,7 @@ var await = require('asyncawait/await');
 var sequelizeInclude = require('../../../components/sequelizeInclude');
 var models = require('../../../../app/components/models').all;
 var services = require('../../../../app/components/services').all;
+var geoTools = require('../../../../console/modules/geoTools/geoTools');
 var logger = require('../../../../app/components/logger/logger')
     .getLogger('app');
 
@@ -38,7 +39,7 @@ exports.addAddress = async(function(entityId, entityType, data) {
     if (addressBD) {
         logger.info('Address:' + data.name);
         logger.info(
-            'is alredy binded to ' + entityType +
+            'is already binded to ' + entityType +
             ' with id:' + addressBD.school_id
         );
         address = addressBD;
@@ -50,7 +51,14 @@ exports.addAddress = async(function(entityId, entityType, data) {
                 'Москва, ' + data.name
             ));
         }
+        data.areaId = data.areaId || await(services.area.create({
+            name: await(geoTools.getArea(data.coords)) // area name from coords
+        }))[0].id; // area id
+
         address = await(models.Address.create(data));
+
+        var metros = await(geoTools.getMetros(data.coords, 3));
+        await(this.setMetro(address, metros));
     }
     return address;
 });

@@ -11,40 +11,74 @@ var service = {
 
 /**
  * @param {{
+ *     name: ?string,
  *     description: ?string,
+ *     phone: ?string,
+ *     address: string
+ * }} data
+ * @return {CourseDepartment}
+ */
+service.findOrCreate = async(function(data) {
+    var address = await(services.address.getAddress({
+            name: data.address,
+            entityType: entityType.COURSE_DEPARTMENT
+        })),
+        courseDepartment;
+
+    if (address) {
+        courseDepartment = await(this.getById(address.entityId));
+    } else {
+        courseDepartment = await(this.create({
+            name: data.name,
+            description: data.description,
+            phone: data.phone,
+            address: data.address
+        }));
+    }
+
+    return courseDepartment;
+});
+
+/**
+ * @param {{
+ *     description: ?string,
+ *     phone: ?string,
  *     address: string,
- *     area: string
+ *     areaId: number
  * }} data
  * @return {CourseDepartment}
  */
 service.create = async(function(data) {
-    var area = await(services.area.create({name: data.area})),
-        courseDepartment = await(models.CourseDepartment.findOrCreate({
-            include: [{
-                model: models.Address,
-                as: 'address'
-            }],
-            where: {
-                addressId:
-            }
-        }));
-    console.log(area, courseDepartment); process.exit();
     var courseDepartment = await(models.CourseDepartment.create({
-        description: data.description
-    }));
-    var addresses = data.addresses.map(address => {
-        var area = services.area.create(area);
-        return await(services.address.addAddress(
+            name: data.name,
+            description: data.description,
+            phone: data.phone
+        })),
+        address = await(services.address.addAddress(
             courseDepartment.id,
             entityType.COURSE_DEPARTMENT, {
-                name: address.name,
-                areaId: area.id
+                name: data.address
             }
         ));
-    });
-    courseDepartment.addresses = addresses;
+    courseDepartment.address = address;
 
     return courseDepartment;
+});
+
+/**
+ * @param {number} id
+ * @return {CourseDepartment}
+ */
+service.getById = async(function(id) {
+    return await(models.CourseDepartment.find({
+        where: {
+            id: id
+        },
+        include: [{
+            model: models.Address,
+            as: 'address'
+        }]
+    }));
 });
 
 module.exports = service;

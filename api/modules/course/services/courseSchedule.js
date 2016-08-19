@@ -10,9 +10,9 @@ var service = {
 /**
  * @param {number} courseOptionId
  * @param Array<{
- *     start_time: ?Date,
- *     day: ?number,
- *     duration: ?number
+ *     startTime: ?string,
+ *     endTime: ?string,
+ *     day: ?number
  * }> data
  * @return {Array<CourseSchedule>}
  */

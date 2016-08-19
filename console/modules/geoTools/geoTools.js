@@ -1,5 +1,10 @@
 'use strict';
 
+var await = require('asyncawait/await'),
+    axios = require('axios'),
+    lodash = require('lodash');
+
+const GEOCODER = 'http://geocode-maps.yandex.ru/1.x/';
 
 class geoTools {
     constructor() {}
@@ -40,6 +45,68 @@ class geoTools {
             longitude: 1 / (geoTools.LO * Math.cos(coords[0])) * lenKM
         };
     };
+
+    /**
+     * @param {Array<number>} coords
+     * @return {string}
+     */
+    getArea(coords) {
+        var response = await(axios.get(GEOCODER, {
+                params: {
+                    geocode: coords.join(','),
+                    kind: 'district',
+                    format: 'json'
+                }
+            })),
+            areas = response
+                .data
+                .response
+                .GeoObjectCollection
+                .featureMember
+                .map(featureMember => featureMember.GeoObject.name)
+                .filter(name => ~name.indexOf('район')),
+            area;
+
+        if (areas.length > 1) {
+            throw new Error('Found more than one area: ' + areas)
+        } else {
+            area = areas[0]
+                .replace('район', '')
+                .trim();
+        }
+
+        return area;
+    }
+
+    /**
+     * @param {Array<number>} coords
+     * @param {number} searchRadius
+     * @return {Array<Object>}
+     */
+    getMetros(coords, searchRadius) {
+        var restriction = this.restriction(searchRadius, coords),
+            response = await(axios.get(GEOCODER, {
+                params: {
+                    geocode: coords.join(','),
+                    kind: 'metro',
+                    format: 'json',
+                    spn: restriction.longitude + ',' + restriction.latitude
+                }
+            })),
+            metros = response
+                .data
+                .response
+                .GeoObjectCollection
+                .featureMember
+                .map(featureMember => ({
+                    name: featureMember.GeoObject.name,
+                    coords: featureMember.GeoObject.Point.pos.split(' ')
+                }));
+
+        return lodash.uniq(metros, 'name');
+    }
+
+
 
     /**
      * Calculate distance in km

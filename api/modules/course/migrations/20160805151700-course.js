@@ -19,6 +19,10 @@ module.exports = {
                 onDelete: 'cascade'
             },
             description: Sequelize.STRING,
+            fullInfo: {
+                type: Sequelize.TEXT,
+                field: 'full_info'
+            },
             score: Sequelize.ARRAY(Sequelize.FLOAT),
             scoreCount: {
                 type: Sequelize.ARRAY(Sequelize.INTEGER),
@@ -26,7 +30,8 @@ module.exports = {
             },
             totalScore: {
                 type: Sequelize.FLOAT,
-                field: 'total_score'
+                field: 'total_score',
+                defaultValue: 0
             },
             'created_at': Sequelize.DATE,
             'updated_at': Sequelize.DATE

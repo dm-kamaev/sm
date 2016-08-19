@@ -8,7 +8,9 @@ module.exports = {
                 autoIncrement: true,
                 type: Sequelize.INTEGER
             },
+            name: Sequelize.STRING,
             description: Sequelize.STRING,
+            phone: Sequelize.STRING,
             createdAt: {
                 type: Sequelize.DATE,
                 field: 'created_at'

@@ -1,7 +1,8 @@
 var async = require('asyncawait/async'),
     await = require('asyncawait/await');
 
-var models = require('../../../../app/components/models').all,
+var sequelize = require('../../../../app/components/db'),
+    models = require('../../../../app/components/models').all,
     services = require('../../../../app/components/services').all;
 
 var service = {
@@ -12,22 +13,26 @@ var service = {
  * @param {{
  *     name: string,
  *     description: ?string,
+ *     fullInfo: ?string
  *     brandName: string,
  *     options: Array<{
  *         costPerHour: ?number,
  *         online: (boolean|null),
  *         age: ?number,
- *         group: ?boolean,
- *         teacher: ?string,
+ *         maxGroupSize: ?integer,
+ *         nativeSpeaker: ?boolean,
+ *         startDate: ?string,
+ *         duration: ?string,
  *         schedule: Array<{
  *             startTime: ?string,
- *             day: ?number,
- *             duration: ?number
+ *             endTime: ?string,
+ *             day: ?number
  *         }>,
  *         departments: Array<{
+ *             name: ?string,
  *             description: ?string,
- *             address: string,
- *             area: string
+ *             phone: ?string,
+ *             address: string
  *         }
  *     }>
  * }} data
@@ -40,13 +45,34 @@ service.create = async(function(data) {
         course = await(models.Course.create({
             name: data.name,
             brandId: brand.id,
-            description: data.description
+            description: data.description,
+            fullInfo: data.fullInfo
         }));
     course.options = data.options.map(option =>
         await(services.courseOption.create(course.id, option))
     );
 
     return course;
+});
+
+/**
+ * @param {Object} searchParams
+ * @param {number=} opt_limit
+ * @return {Array<Object>}
+ */
+service.list = async(function(searchParams, opt_limit) {
+    var searchString = services.courseSearch.getSearchSql(
+        searchParams,
+        opt_limit
+    );
+
+    var courses = await(sequelize.query(
+        searchString, {
+            type: sequelize.QueryTypes.SELECT
+        }
+    ));
+
+    return courses;
 });
 
 module.exports = service;

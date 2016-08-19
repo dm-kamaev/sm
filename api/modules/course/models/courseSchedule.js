@@ -11,8 +11,11 @@ var CourseSchedule = db.define('CourseSchedule', {
         type: Sequelize.TIME,
         field: 'start_time'
     },
-    day: Sequelize.INTEGER,
-    duration: Sequelize.FLOAT
+    endTime: {
+        type: Sequelize.TIME,
+        field: 'end_time'
+    },
+    day: Sequelize.INTEGER
 }, {
     underscored: true,
     tableName: 'course_schedule',

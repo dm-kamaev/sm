@@ -9,6 +9,10 @@ var Course = db.define('Course', {
         field: 'brand_id'
     },
     description: Sequelize.STRING,
+    fullInfo: {
+        type: Sequelize.TEXT,
+        field: 'full_info'
+    },
     score: Sequelize.ARRAY(Sequelize.FLOAT),
     scoreCount: {
         type: Sequelize.ARRAY(Sequelize.INTEGER),

@@ -49,8 +49,8 @@ exports.list = async(function(req, res, next) {
             req.params.listType &&
             lodash.isEmpty(req.query)) {
             var seoSchoolList = await(services.seoSchoolList.getByType(
-                    req.params
-                ));
+                req.params
+            ));
 
             if (!seoSchoolList) {
                 throw new errors.PageNotFoundError();
@@ -64,7 +64,7 @@ exports.list = async(function(req, res, next) {
             seoData = schoolSeoListView.seoData(seoSchoolList);
         } else {
             searchParams =
-                await(services.search.initSearchParams(req.query));
+                await(services.schoolSearch.initSearchParams(req.query));
             searchText = req.query.name || '';
         }
 
@@ -78,7 +78,7 @@ exports.list = async(function(req, res, next) {
                     }
                 ),
                 filtersData: services.school.searchFiltersData(searchParams),
-                mapPosition: services.search.getMapPositionParams(searchParams),
+                mapPosition: services.schoolSearch.getMapPositionParams(searchParams),
                 authSocialLinks: services.auth.getAuthSocialUrl(),
                 favorites: {
                     items: services.school.getByIdsWithGeoData(favoriteIds),
@@ -135,7 +135,9 @@ exports.list = async(function(req, res, next) {
                 }
             }
         };
+        console.time('render');
         var html = soy.render('sm.lSearchResult.Template.list', params);
+        console.timeEnd('render');
 
         res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(html);
@@ -273,6 +275,7 @@ exports.search = async(function(req, res) {
     data.popularSchools =
         schoolView.joinAliases(data.popularSchools, schoolAliases);
 
+    console.time('render');
     var html = soy.render('sm.lSchoolHome.Template.base', {
         params: {
             data: {
@@ -296,6 +299,7 @@ exports.search = async(function(req, res) {
             }
         }
     });
+    console.timeEnd('render');
 
     res.header('Content-Type', 'text/html; charset=utf-8');
     res.end(html);

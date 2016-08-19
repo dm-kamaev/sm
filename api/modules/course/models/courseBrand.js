@@ -5,7 +5,8 @@ var db = require('../../../../app/components/db');
 var CourseBrand = db.define('CourseBrand', {
     name: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true
     }
 }, {
     underscored: true,

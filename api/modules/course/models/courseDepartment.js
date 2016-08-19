@@ -3,7 +3,9 @@ var Sequelize = require('sequelize');
 var db = require('../../../../app/components/db');
 
 var CourseDepartment = db.define('CourseDepartment', {
-    description: Sequelize.STRING
+    name: Sequelize.STRING,
+    description: Sequelize.STRING,
+    phone: Sequelize.STRING
 }, {
     underscored: true,
     tableName: 'course_department',

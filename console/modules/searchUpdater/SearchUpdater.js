@@ -56,7 +56,7 @@ class SearchUpdater {
      */
     init() {
         this.citySubjects_ = await(services.subject.listCityResults());
-        this.schoolTypeFilters_ = await(services.search.getTypeFilters());
+        this.schoolTypeFilters_ = await(services.schoolSearch.getTypeFilters());
     }
 
     /**
@@ -113,7 +113,7 @@ class SearchUpdater {
         await(schools.forEach(school => {
             /* update type filters */
             var filterInstance = this.getTypeFilter_(school.schoolType);
-            await(services.search.setSchoolType(school.id, filterInstance.id));
+            await(services.schoolSearch.setSchoolType(school.id, filterInstance.id));
 
             /* update ege filters */
             var egeActualizer =

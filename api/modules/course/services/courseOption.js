@@ -14,13 +14,22 @@ var service = {
  *     costPerHour: ?number,
  *     online: (boolean|null),
  *     age: ?number,
- *     group: ?boolean,
- *     teacher: ?string,
+ *     maxGroupSize: ?integer,
+ *     nativeSpeaker: ?boolean,
+ *     startDate: ?string
+ *     duration: ?string,
  *     schedule: Array<{
- *         start_time: ?Date,
- *         day: ?number,
- *         duration: ?number
- *     }>
+ *         startTime: ?string,
+ *         endTime: ?string,
+ *         day: ?number
+ *     }>,
+ *     departments: Array<{
+ *         name: ?string,
+ *         description: ?string,
+ *         phone: ?string,
+ *         address: string,
+ *         area: string
+ *     }
  * }} data
  * @return {CourseOption}
  */
@@ -30,13 +39,18 @@ service.create = async(function(courseId, data) {
         costPerHour: data.costPerHour,
         online: data.online,
         age: data.age,
-        group: data.group,
-        teacher: data.teacher
+        maxGroupSize: data.maxGroupSize,
+        nativeSpeaker: data.nativeSpeaker,
+        startDate: data.startDate,
+        duration: data.duration
     }));
     courseOption.schedule = await(services.courseSchedule.bulkCreate(
         courseOption.id,
         data.schedule
     ));
+    await(courseOption.setCourseDepartments(data.departments.map(department =>
+        await(services.courseDepartment.findOrCreate(department))
+    )));
 
     return courseOption;
 });
