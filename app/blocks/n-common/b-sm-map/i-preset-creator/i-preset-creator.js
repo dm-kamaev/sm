@@ -97,6 +97,53 @@ PresetCreator.StateSettings = {
 
 
 /**
+ * @typedef {{
+ *     balloonOffset: Array<number>,
+ *     iconImageHref: string,
+ *     iconImageSize: Array<number>,
+ *     iconImageOffset: Array<number>,
+ *     iconLayout: string,
+ *     zIndex: number,
+ *     zIndexHover: number
+ * }}
+ */
+PresetCreator.PresetSettings;
+
+
+/**
+ * @typedef {{
+ *     name: string,
+ *     settings: sm.bSmMap.IPresetCreator.PresetSettings
+ * }}
+ */
+PresetCreator.Preset;
+
+/**
+ * Generate preset name by score and object type
+ * @param {number} score
+ * @param {sm.bSmMap.IPresetCreator.PresetType} presetType
+ * @return {string}
+ */
+PresetCreator.prototype.generateNameByEntityScore = function(
+    score,
+    presetType
+) {
+    var presetName;
+
+    if (score >= 4) {
+        presetName = PresetCreator.PresetName.GREEN;
+    } else if (score >= 3) {
+        presetName = PresetCreator.PresetName.YELLOW;
+    } else if (score > 0) {
+        presetName = PresetCreator.PresetName.RED;
+    } else {
+        presetName = PresetCreator.PresetName.DEFAULT;
+    }
+
+    return presetType + '-' + presetName;
+};
+
+/**
  * Generate presets for yandex map
  * @return {Array<sm.bSmMap.SmMap.Preset>}
  */
@@ -179,7 +226,7 @@ PresetCreator.prototype.generatePresetsByStateSettings_ = function(
  * @param {sm.bSmMap.IPresetCreator.TypeSettings} typeSettings
  * @param {sm.bSmMap.IPresetCreator.StateSettings} stateSettings
  * @param {sm.bSmMap.IPresetCreator.PresetName} presetName
- * @return {Array<sm.bMap.Preset>}
+ * @return {sm.bSmMap.IPresetCreator.Preset}
  * @private
  */
 PresetCreator.prototype.generatePresetsByName_ = function(
@@ -239,7 +286,7 @@ PresetCreator.prototype.generatePresetName_ = function(
  * @param {string} imageHref   [description]
  * @param {sm.bSmMap.IPresetCreator.TypeSettings} typeSettings
  * @param {sm.bSmMap.IPresetCreator.StateSettings} stateSettings
- * @return {sm.bMap.Preset}
+ * @return {sm.bSmMap.IPresetCreator.PresetSettings}
  * @private
  */
 PresetCreator.prototype.generatePresetSettings_ = function(
