@@ -20,9 +20,8 @@ exports.search = async(function(req, res, next) {
             await(services.schoolSearch.initSearchParams(req.query));
 
         var courses = await(services.course.list({page: 0}, 10));
-        console.time('sborka');
+
         var listCourses = courseView.list(courses);
-        console.timeEnd('sborka');
 
         console.log(listCourses);
 
@@ -197,7 +196,7 @@ exports.search = async(function(req, res, next) {
                     defaultOpenerText: 'стоимости'
                 },
                 entityList: {
-                    items: items,
+                    items: listCourses,
                     itemType: 'smItemEntity'
                 },
                 searchSettings: {
@@ -217,14 +216,12 @@ exports.search = async(function(req, res, next) {
                 fbClientId: FB_CLIENT_ID
             }
         };
-        console.time('render');
         var html = soy.render(
             'sm.lSmSearch.Template.search',
             {
                 params: params
             }
         );
-        console.timeEnd('render');
 
         res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(html);

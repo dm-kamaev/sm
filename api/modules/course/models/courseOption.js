@@ -11,7 +11,11 @@ var CourseOption = db.define('CourseOption', {
         type: Sequelize.INTEGER,
         field: 'cost_per_hour'
     },
-    online: Sequelize.BOOLEAN,
+    online: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+    },
     age: Sequelize.ARRAY(Sequelize.FLOAT),
     maxGroupSize: {
         type: Sequelize.INTEGER,

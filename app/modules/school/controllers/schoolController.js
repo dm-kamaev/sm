@@ -135,9 +135,7 @@ exports.list = async(function(req, res, next) {
                 }
             }
         };
-        console.time('render');
         var html = soy.render('sm.lSearchResult.Template.list', params);
-        console.timeEnd('render');
 
         res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(html);
@@ -275,7 +273,6 @@ exports.search = async(function(req, res) {
     data.popularSchools =
         schoolView.joinAliases(data.popularSchools, schoolAliases);
 
-    console.time('render');
     var html = soy.render('sm.lSchoolHome.Template.base', {
         params: {
             data: {
@@ -299,7 +296,6 @@ exports.search = async(function(req, res) {
             }
         }
     });
-    console.timeEnd('render');
 
     res.header('Content-Type', 'text/html; charset=utf-8');
     res.end(html);

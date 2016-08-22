@@ -45,6 +45,14 @@ exports.list = function(courses) {
                 name: {light: curr.name},
                 description: curr.description,
                 brand: curr.brand,
+                score: {
+                    marks: {
+                        primary: {
+                            name: 'Средняя оценка',
+                            value: curr.totalScore
+                        }
+                    }
+                },
                 cost: curr.optionCost,
                 online: ONLINE[curr.optionOnline],
                 metro: [{

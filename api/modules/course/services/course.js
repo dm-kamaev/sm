@@ -17,7 +17,7 @@ var service = {
  *     brandName: string,
  *     options: Array<{
  *         costPerHour: ?number,
- *         online: (boolean|null),
+ *         online: ?boolean,
  *         age: ?number,
  *         maxGroupSize: ?integer,
  *         nativeSpeaker: ?boolean,

@@ -12,7 +12,7 @@ var service = {
  * @param {number} courseId
  * @param {{
  *     costPerHour: ?number,
- *     online: (boolean|null),
+ *     online: ?boolean,
  *     age: ?number,
  *     maxGroupSize: ?integer,
  *     nativeSpeaker: ?boolean,
