@@ -4,7 +4,7 @@
     display: inline-block;
 
     width: 100%;
-    padding: 10px 0 15px;
+    padding: 11px 0 15px;
 
     text-align: left;
     color: #000000;
@@ -42,24 +42,37 @@
 }
 
 .b-sm-filter__option {
-    display: inline-block;
-
     min-width: 50%;
     margin: 0;
 
     font-size: 14px;
 }
 
+.b-sm-filter__content {
+    margin-bottom: 8px;
+}
+
 .b-sm-filter__button {
     display: inline-block;
 
     margin-top: 12px;
-    margin-bottom: 12px;
+    margin-bottom: 4px;
+}
+
+.b-sm-filter_align_horizontal {
+    .b-sm-filter__option {
+        display: inline-block;
+
+        width: 13.8%;
+        min-width: unset;
+    }
 }
 
 
 @include media-m {
     .b-sm-filter__option {
+        display: inline-block;
+
         width: 25%;
         min-width: unset;
 

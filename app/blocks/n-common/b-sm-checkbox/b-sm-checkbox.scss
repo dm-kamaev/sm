@@ -21,10 +21,25 @@
 
 .b-sm-checkbox__input {
     position: absolute;
-    top: 12px;
+    top: 11px;
     left: 0;
 
     margin: 0;
 
     cursor: pointer;
+}
+
+.b-sm-checkbox_narrow-theme {
+    min-height: 36px;
+    padding: 10px 0;
+
+    .b-sm-checkbox__label {
+        margin: 0;
+        padding-left: 0;
+    }
+
+    .b-sm-checkbox__input {
+        top: 35px;
+        left: 2px;
+    }
 }

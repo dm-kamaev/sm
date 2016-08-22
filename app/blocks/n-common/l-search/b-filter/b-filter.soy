@@ -25,6 +25,7 @@
  *     isShowed: (boolean|undefined),
  *     showMoreButtonText: (number|undefined),
  *     theme: (string|undefined),
+ *     align: (string|undefined),
  *     stylizationModifier: string
  * }} sm.lSearch.bFilter.Template.Params.Config
  */
@@ -111,6 +112,7 @@
  *         cannotBeHidden: (boolean|undefined),
  *         isShowed: (bolean|undefined),
  *         showMoreButtonText: (number|undefined),
+ *         align: (string|undefined),
  *         stylizationModifier: string
  *     }
  * }}
@@ -148,6 +150,7 @@
  *     config: {
  *         optionsToShow: (number|undefined),
  *         type: (string|undefined),
+ *         align: (string|undefined),
  *         stylizationModifier: string
  *     }
  * }}
@@ -176,6 +179,7 @@
                     'config': [
                         'hidden': $i + 1 > $numberOptionsToShow ? true : false,
                         'hidable': $i + 1> $numberOptionsToShow ? true : false,
+                        'theme': $params.config.align == 'horizontal' ? 'narrow' : '',
                         'stylizationModifier': $params.config.stylizationModifier
                     ]
                 ]/}
@@ -198,6 +202,7 @@
  *     config: {
  *         hidden: (boolean|undefined),
  *         hidable: (boolean|undefined),
+ *         theme: (string|undefined),
  *         stylizationModifier: string
  *     }
  * }}
@@ -222,7 +227,10 @@
                 'factory': $params.config.stylizationModifier,
                 'type': 'smCheckbox',
                 'renderParams': [
-                    'data': $params.data
+                    'data': $params.data,
+                    'config': [
+                        'theme': $params.config?.theme
+                    ]
                 ]
             ]/}
         {/call}
@@ -504,9 +512,17 @@
 
 /**
  * Css classes
+ * @param params {{
+ *     config: {
+ *         align: (string|undefined)
+ *     }
+ * }}
  * @override
  */
 {template .additionalClasses}
+    {if $params.config?.align}
+        {call .rootClass/}_align_{$params.config.align}
+    {/if}
 {/template}
 
 
