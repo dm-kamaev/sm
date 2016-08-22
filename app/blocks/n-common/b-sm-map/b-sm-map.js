@@ -486,45 +486,34 @@ goog.scope(function() {
      * @private
      */
     Map.prototype.initPresets_ = function() {
-        var names = [
-            Map.PresetName.DEFAULT,
-            Map.PresetName.GREEN,
-            Map.PresetName.YELLOW,
-            Map.PresetName.RED
-        ];
-        var typeOptions = [
-            Map.PresetTypeOptions.DEFAULT,
-            Map.PresetTypeOptions.POINT
-        ];
-        var stateOptions = [
-            Map.PresetStateOptions.DEFAULT,
-            Map.PresetStateOptions.ACTIVE
-        ];
-        var typeOptionsLength = typeOptions.length;
-        var stateOptionsLength = stateOptions.length;
-        var namesLength = names.length;
+        var presetCreator = new PresetCreator();
+        var presets = presetCreator.generate();
 
-        for (var j = 0, prefix, typeOption; j < typeOptionsLength; j++) {
-            typeOption = typeOptions[j];
-            prefix = typeOption.prefix;
-
-            for (var k = 0, postfix, stateOption; k < stateOptionsLength; k++) {
-                stateOption = stateOptions[k];
-                postfix = stateOption.postfix;
-
-                for (var i = 0, name, href; i < namesLength; i++) {
-                    name = names[i];
-                    href = this.getPresetImageHref_(name, prefix);
-
-                    ymaps.option.presetStorage.add(
-                        this.getPresetName_(name, prefix, postfix),
-                        this.getPresetOptions_(href, typeOption, stateOption)
-                    );
-                }
-            }
-        }
+        this.addPresetsToMap_(presets);
     };
 
+
+    /**
+     * Add presets to map
+     * @param {Array<sm.bSmMap.SmMap.Preset>} presets
+     * @private
+     */
+    Map.prototype.addPresetsToMap_ = function(presets) {
+        presets.forEach(this.addPresetToMap_);
+    };
+
+
+    /**
+     * Add each preset to map
+     * @param {sm.bSmMap.SmMap.Preset} preset
+     * @private
+     */
+    Map.prototype.addPresetToMap_ = function(preset) {
+        ymaps.option.presetStorage.add(
+            preset.name,
+            preset.settings
+        );
+    };
 
     /**
      * Check if the zoom of map is too small, the increase zoom
@@ -535,61 +524,6 @@ goog.scope(function() {
             this.ymaps_.setZoom(16);
         }
     };
-
-
-    /**
-     * Getter for preset image href
-     * @param {string} name
-     * @param {string} prefix
-     * @return {string}
-     * @private
-     */
-    Map.prototype.getPresetImageHref_ = function(name, prefix) {
-        var hrefPrefix = prefix != '' ? prefix + '-' : '',
-            hrefName = name == 'default' ? '' : '-' + name;
-
-        return Map.ICON_DIR + 'map-' + hrefPrefix + 'pin' + hrefName +
-            '-th.png';
-    };
-
-
-    /**
-     * Getter for preset name
-     * @param {string} name
-     * @param {string} prefix
-     * @param {string} postfix
-     * @return {string}
-     * @private
-     */
-    Map.prototype.getPresetName_ = function(name, prefix, postfix) {
-        var namePrefix = prefix != '' ? prefix + '-' : '',
-            namePostfix = postfix != '' ? '-' + postfix : '';
-
-        return namePrefix + name + namePostfix;
-    };
-
-
-    /**
-     *
-     * @param {string} imageHref
-     * @param {Object} typeOption
-     * @param {Object} stateOption
-     * @return {Object}
-     * @private
-     */
-    Map.prototype.getPresetOptions_ =
-        function(imageHref, typeOption, stateOption) {
-            return {
-                'balloonOffset': typeOption.balloonOffset,
-                'iconImageHref': imageHref,
-                'iconImageSize': typeOption.iconImageSize,
-                'iconImageOffset': typeOption.iconImageOffset,
-                'iconLayout': 'default#image',
-                'zIndex': typeOption.zIndex + stateOption.zIndex,
-                'zIndexHover': typeOption.zIndex + 100 + stateOption.zIndex
-            };
-        };
-
 
     /**
      * Create a layout for the balloon, required by ymaps API
