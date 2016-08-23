@@ -3,21 +3,22 @@
 
 /**
  * @typedef {{
- *     items: Array<{
- *         viewType: ("pin"|"point"),
- *         entities: Array<{
- *         id: number,
- *         name: string,
- *         alias: ?string,
- *         description: ?string,
- *         totalScore: ?number,
- *         address: Array<{
+ *     itemGroups: Array<{
+ *         viewType: ('pin'|'point'),
+ *         items: Array<{
  *             id: number,
- *             lat: number,
- *             lng: number,
- *             name: string,
- *             stages: (string|Array<string>)
- *         }>
+ *             coordinates: Array<number>,
+ *             title: {
+ *                 text: string,
+ *                 alias: string
+ *             },
+ *             description: string,
+ *             link: {
+ *                 text: string,
+ *                 alias: string
+ *             },
+ *             score: number
+ *         }>,
  *     }>,
  *     position: ({
  *         center: (Array<number>|undefined),
@@ -34,22 +35,29 @@
  *         enableScrollZoom: boolean
  *     }|undefined)
  * }}
+ * @constructor
+ * @extends cl.iControl.Template
  */
 {template .map}
-    {let $dataParams kind="html"}
-        {call cl.iUtils.Utils.stringify}
-            {param json: $params /}
-        {/call}
-    {/let}
-
-    <div class="b-map" data-params="{$dataParams}">
-    </div>
+    {call .init data="all" /}
 {/template}
 
+/**
+ * @param params {{
+ *     data: sm.bSmMap.Template.Params.Data
+ *     config: ({
+ *         enableScrollZoom: boolean
+ *     }|undefined)
+ * }}
+ */
+{template .body kind="html"}
+
+{/template}
 
 /**
-* API request for ymaps
-*/
+ * API request for ymaps
+ * @public
+ */
 {template .api}
     <script type="text/javascript" src="//api-maps.yandex.ru/2.1/?lang=ru_RU">
     </script>
@@ -57,7 +65,34 @@
 
 
 /**
+ * @param params {{
+ *     data: sm.bSmMap.Template.Params.Data
+ *     config: ({
+ *         enableScrollZoom: boolean
+ *     }|undefined)
+ * }}
+ * @override
+ */
+{template .attributes kind="attributes"}
+    {let $dataParams kind="html"}
+        {call cl.iUtils.Utils.stringify}
+            {param json: $params /}
+        {/call}
+    {/let}
+    data-params="{$dataParams}"
+{/template}
+
+/**
+ * @override
+ */
+{template .rootClass kind="html"}
+    b-map
+{/template} 
+
+
+/**
  * Balloon Template
+ * @public
  */
 {template .balloon}
     <div class="b-map__balloon">
@@ -65,29 +100,14 @@
             {lb}"id": $[properties.id]{rb}
         {/let}
 
-        <div class="b-map__balloon-name">
-            [if properties.alias]
-                <a href="/school/$[properties.alias]" class="b-map__href"
-                    data-params="{$dataParams}">
-                    $[properties.name]
-                </a>
-            [else]
-                $[properties.name]
-            [endif]
+        <div class="{call .rootClass /}__baloon">
+            {call .balloonSectionTitle_ /}
+            {call .balloonCloseButton_ /}
+            {call .balloonSectionLinks_ /}
+            {call .balloonSectionDescription_ /}
+            {call .balloonSectionGeo_ /}
         </div>
 
-        <div class="b-map__balloon-close">
-            {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
-                {param params: [
-                    'type': 'icon',
-                    'renderParams': [
-                        'data': [
-                            'type': 'close-balloon'
-                        ]
-                    ]
-                ]/}
-            {/call}
-        </div>
 
         <div class="b-map__balloon-content">
             [if properties.address.stages]
@@ -108,4 +128,98 @@
             [endif]
         </div>
     </div>
+{/template}
+
+/**
+ * Title balloon section
+ * @private
+ */
+{template .balloonSectionTitle_ kind="html"}
+    <div class="{call .rootClass /}__balloon-section
+        {call .rootClass /}__balloon-section_title">
+
+        {let $dataParams kind="js"}
+            {lb}"id": $[properties.id]{rb}
+        {/let}
+
+        [if properties.titleAlias]
+            <a class="{call .rootClass /}__balloon-title"
+                href="$[properties.titleHref]"
+                data-params="{$dataParams}">
+                $[properties.titleAlias]
+            </a>
+        [else]
+            <div class="{call .rootClass /}__balloon-title">
+                $[properties.name]
+            </div>
+        [endif]
+    </div>
+{/template}
+
+/**
+ * Balloon close button template
+ * @private
+ */
+{template .balloonCloseButton_  kind="html"}
+    <div class="{call .rootClass /}__balloon-close">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': 'stendhal',
+                'type': 'icon',
+                'renderParams': [
+                    'data': [
+                        'type': 'close-balloon'
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Balloon section links template
+ */
+{template .balloonSectionLinks_ kind="html"}
+    [if properties.linkText]
+        <div class="{call .rootClass /}__balloon-section
+            {call .rootClass /}__balloon-section_links">
+
+                <a class="{call .rootClass /}__balloon-link"
+                    href="$[properties.linkHref]"></a>
+        </div>
+    [endif]
+{/template}
+
+
+/**
+ * Balloon section description template
+ */
+{template .balloonSectionDescription_ kind="html"}
+    [if properties.decription]
+        <div class="{call .rootClass /}__balloon-section
+            {call .rootClass /}__balloon-section_description">
+            <div class="{call .rootClass /}__balloon-description">
+                $[properties.description]
+            </div>
+        </div>
+    [endif]
+{/template}
+
+
+/**
+ * Balloon section geo data description
+ */
+{template .balloonSectionGeo_ kind="html"}
+    [if properties.decription]
+        <div class="{call .rootClass /}__balloon-section
+            {call .rootClass /}__balloon-section_geodata">
+            <div class="{call .rootClass /}__balloon-geodata">
+                $[properties.name]{sp}
+                    [if properties.stages]
+                        $[properties.stages]
+                    [endif]
+            </div>
+        </div>
+    [endif]
 {/template}
