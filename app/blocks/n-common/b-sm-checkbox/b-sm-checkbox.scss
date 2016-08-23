@@ -43,3 +43,17 @@
         left: 2px;
     }
 }
+
+.b-sm-checkbox_minimal-theme {
+    padding: 0;
+    margin: 0;
+
+    .b-sm-checkbox__label {
+        margin: 0;
+        padding-left: 0;
+    }
+
+    .b-sm-checkbox__input {
+        display: none;
+    }
+}
