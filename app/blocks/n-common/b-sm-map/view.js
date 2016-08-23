@@ -4,6 +4,8 @@
 goog.provide('sm.bSmMap.View');
 
 goog.require('cl.iControl.View');
+goog.require('goog.dom');
+goog.require('goog.style');
 goog.require('sm.bSmMap.Template');
 
 goog.scope(function() {
@@ -28,14 +30,14 @@ goog.scope(function() {
 
 
     /**
-     * A config object with DOM class names
+     * Css class enum
      * @enum {string}
      */
     View.CssClass = {
-        ITEM_NAME: 'b-map__href',
+        ROOT: 'b-map',
         BALLOON: 'b-map__balloon',
-        CLOSE_BALLOON: 'b-map__balloon-close',
-        ROOT: 'b-map'
+        ITEM_NAME: 'b-map__href',
+        CLOSE_BALLOON: 'b-map__balloon-close'
     };
 
 
@@ -81,6 +83,61 @@ goog.scope(function() {
 
 
     /**
+     * Generate balooon html content for ?map? init
+     * @return {string}
+     */
+    View.prototype.generateBalloonHtmlContent = function() {
+        return sm.bSmMap.Template.balloon();
+    };
+
+
+    /**
+     * Align baloon relative to point or pin.
+     * It center baloon vertically and lift it horizontally
+     * @param  {Element} balloonElement
+     * @public
+     */
+    View.prototype.setBalloonOffset = function(balloonElement) {
+        var elementSize = goog.style.getSize(balloonElement);
+        var leftCoordinate = - (elementSize.width / 2);
+        var topCoordinate = - elementSize.height;
+
+        goog.style.setPosition(
+            balloonElement,
+            leftCoordinate,
+            topCoordinate
+        );
+    };
+
+    /**
+     * Init dom elements inside baloon
+     * @param {Element} balloonParentElement
+     * @return {{
+     *     balloon: Element,
+     *     closeButton: Element,
+     *     title: Element
+     * }}
+     */
+    View.prototype.initBalloonDomElements = function(balloonParentElement) {
+        var baloonElement = goog.dom.getElementByClass(
+            View.CssClass.BALLOON,
+            balloonParentElement
+        );
+        return {
+            balloon: baloonElement,
+            closeButton: goog.dom.getElementByClass(
+                View.CssClass.CLOSE_BALLOON,
+                baloonElement
+            ),
+            title: goog.dom.getElementByClass(
+                View.CssClass.ITEM_NAME,
+                baloonElement
+            )
+        };
+    };
+
+
+    /**
      * @param {Element} element
      * @override
      */
@@ -99,9 +156,7 @@ goog.scope(function() {
      * @private
      */
     View.prototype.initParams_ = function() {
-        var rawParams = this.getRawDataParams_();
-
-        this.params_ = rawParams;
+        this.params_ = this.getRawDataParams_();
 
         if (!this.params_['data']) {
             this.params_['data'] = {};
@@ -119,14 +174,5 @@ goog.scope(function() {
      */
     View.prototype.getRawDataParams_ = function() {
         return JSON.parse(goog.dom.dataset.get(this.getElement(), 'params'));
-    };
-
-
-    /**
-     * Generate balooon html content for ?map? init
-     * @return {string}
-     */
-    View.prototype.generateBalloonHtmlContent = function() {
-        return sm.bSmMap.Template.balloon();
     };
 });  // goog.scope
