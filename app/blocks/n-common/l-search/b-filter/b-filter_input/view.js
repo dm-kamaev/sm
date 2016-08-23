@@ -43,23 +43,6 @@ goog.scope(function() {
 
 
     /**
-     * Adds or deletes class to show button reset
-     * @override
-     */
-    View.prototype.setButtonResetVisibility = function(visible) {
-        visible ?
-            goog.dom.classlist.remove(
-                this.dom.buttonReset,
-                Utils.CssClass.HIDDEN
-            ) :
-            goog.dom.classlist.add(
-                this.dom.buttonReset,
-                Utils.CssClass.HIDDEN
-            );
-    };
-
-
-    /**
      * Initializes options
      * @param {Element=} opt_element
      */
@@ -88,6 +71,23 @@ goog.scope(function() {
             View.CssClass.BUTTON_RESET,
             element
         );
+    };
+
+
+    /**
+     * Adds or deletes class to show button reset
+     * @override
+     */
+    View.prototype.setButtonResetVisibility = function(visible) {
+        visible ?
+            goog.dom.classlist.remove(
+                this.dom.buttonReset,
+                Utils.CssClass.HIDDEN
+            ) :
+            goog.dom.classlist.add(
+                this.dom.buttonReset,
+                Utils.CssClass.HIDDEN
+            );
     };
 
 

@@ -38,47 +38,6 @@
 
 
 /**
- * Filter content template
- * @param params {{
- *     data: {
- *         name: string,
- *         options: Array<{
- *             title: (string|undefined),
- *             placeholder: ?string,
- *             value: ?string,
- *             maxLength: number
- *         }>
- *     },
- *     config: {
- *         type: (string|undefined),
- *         optionsToShow: (number|undefined),
- *         cannotBeHidden: (boolean|undefined),
- *         isShowed: (bolean|undefined),
- *         showMoreButtonText: (number|undefined),
- *         stylizationModifier: string
- *     }
- * }}
- * @override
- */
-{template .content}
-    {let $classes kind="html"}
-        {call .rootClass/}__content
-
-        {if not $params?.config?.cannotBeHidden}
-            {if not $params?.config?.isShowed}
-                {sp}i-utils__hidden
-            {/if}
-        {/if}
-    {/let}
-
-    <div class="{$classes}">
-        {call .listOptions data="all" /}
-        {call .reset_ data="all" /}
-    </div>
-{/template}
-
-
-/**
  * List options template
  * @param params {{
  *     data: {
@@ -165,7 +124,7 @@
 
 
 /**
- * Show more template
+ * Template button
  * @param params {{
  *     data: {
  *         options: Array<{
@@ -173,9 +132,9 @@
  *         }>
  *     }
  * }}
- * @private
+ * @override
  */
-{template .reset_}
+{template .button}
     {let $isEmptyInputs kind="html"}
         {for $i in range($params.data.options.length)}
             {if not $params.data.options[$i]?.value}
@@ -191,7 +150,7 @@
 
 
 /**
- * Show more template
+ * Reset button
  * @param isEmptyInputs {boolean}
  * @private
  */

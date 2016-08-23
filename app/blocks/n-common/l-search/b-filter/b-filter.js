@@ -186,15 +186,37 @@ goog.scope(function() {
 
 
     /**
+     * Remove option
+     * @param {sm.bSmCheckbox.SmCheckbox} option
+     */
+    Filter.prototype.removeOption = function(option) {
+        this.removeChild(option);
+        this.getView().removeOption(option.getElement());
+
+        this.initOptions();
+        this.initOptionsListeners();
+    };
+
+
+    /**
+     * Create option
+     * @param {sm.bSmCheckbox.SmCheckbox.Params} data
+     */
+    Filter.prototype.createOption = function(data) {
+        this.getView().addOption(data);
+
+        this.initOptions();
+        this.initOptionsListeners();
+    };
+
+
+    /**
      * Update list options
      * @param {Array<{sm.bSmCheckbox.SmCheckbox.Params}>} data
      */
     Filter.prototype.updateOptions = function(data) {
         this.removeOptions();
         this.createOptions(data);
-
-        this.initOptions();
-        this.initOptionsListeners();
     };
 
 
@@ -204,10 +226,12 @@ goog.scope(function() {
      */
     Filter.prototype.removeOptions = function() {
         this.options.forEach(function(option) {
-            this.removeOption(option);
+            this.removeChild(option);
+            this.getView().removeOption(option.getElement());
         }, this);
 
-        this.options = [];
+        this.initOptions();
+        this.initOptionsListeners();
     };
 
 
@@ -218,31 +242,11 @@ goog.scope(function() {
      */
     Filter.prototype.createOptions = function(params) {
         params.forEach(function(data) {
-            this.createOption(data);
+            this.getView().addOption(data);
         }, this);
-    };
 
-
-    /**
-     * Remove option
-     * @param {sm.bSmCheckbox.SmCheckbox} option
-     * @protected
-     */
-    Filter.prototype.removeOption = function(option) {
-        this.removeChild(option);
-
-        var domElement = option.getElement();
-        this.getView().removeOption(domElement);
-    };
-
-
-    /**
-     * Create option
-     * @param {sm.bSmCheckbox.SmCheckbox.Params} data
-     * @protected
-     */
-    Filter.prototype.createOption = function(data) {
-        this.getView().addOption(data);
+        this.initOptions();
+        this.initOptionsListeners();
     };
 
 
@@ -283,18 +287,20 @@ goog.scope(function() {
 
     /**
      * Handler for option check
+     * @param {Object} event
      * @protected
      */
-    Filter.prototype.onOptionCheck = function() {
+    Filter.prototype.onOptionCheck = function(event) {
         this.dispatchEventChangeOptions();
     };
 
 
     /**
      * Handler for option uncheck
+     * @param {Object} event
      * @protected
      */
-    Filter.prototype.onOptionUnheck = function() {
+    Filter.prototype.onOptionUnheck = function(event) {
         this.dispatchEventChangeOptions();
     };
 
@@ -323,6 +329,8 @@ goog.scope(function() {
 
         var elements = this.getView().getDom().options,
             instance;
+
+        this.options = [];
 
         for (var i = 0; i < elements.length; i++) {
             instance = this.decorateChild(

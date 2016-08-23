@@ -120,7 +120,7 @@ goog.scope(function() {
      * @param {sm.bSmCheckbox.SmCheckbox.Params} data
      */
     View.prototype.addOption = function(data) {
-        var option = this.renderOption_(data);
+        var option = this.renderOption(data);
 
         goog.dom.appendChild(
             this.dom.list,
@@ -144,6 +144,26 @@ goog.scope(function() {
         this.dom.options = goog.dom.getElementsByClass(
             sm.bSmCheckbox.View.CssClass.ROOT,
             element
+        );
+    };
+
+
+    /**
+     * Render option
+     * @param {sm.bSmCheckbox.SmCheckbox.Params} data
+     * @return {Element}
+     * @protected
+     */
+    View.prototype.renderOption = function(data) {
+        return goog.soy.renderAsElement(
+            sm.lSearch.bFilter.Template.option, {
+                params: {
+                    data: data,
+                    config: {
+                        stylizationModifier: this.getStylization()
+                    }
+                }
+            }
         );
     };
 
@@ -424,25 +444,5 @@ goog.scope(function() {
 
         this.params.name = data.name;
         this.params.type = data.type;
-    };
-
-
-    /**
-     * Render option
-     * @param {sm.bSmCheckbox.SmCheckbox.Params} data
-     * @return {Element}
-     * @private
-     */
-    View.prototype.renderOption_ = function(data) {
-        return goog.soy.renderAsElement(
-            sm.lSearch.bFilter.Template.option, {
-                params: {
-                    data: data,
-                    config: {
-                        stylizationModifier: this.getStylization()
-                    }
-                }
-            }
-        );
     };
 });  // goog.scope

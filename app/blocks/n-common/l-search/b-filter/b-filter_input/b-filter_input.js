@@ -151,6 +151,8 @@ goog.scope(function() {
         var elements = this.getView().getDom().options,
             instance;
 
+        this.options = [];
+
         for (var i = 0; i < elements.length; i++) {
             instance = this.decorateChild(
                 'input',

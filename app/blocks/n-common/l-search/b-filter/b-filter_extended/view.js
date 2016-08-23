@@ -43,6 +43,26 @@ goog.scope(function() {
 
 
     /**
+     * Render option
+     * @param {sm.bSmCheckbox.SmCheckbox.Params} data
+     * @return {Element}
+     * @protected
+     */
+    View.prototype.renderOption = function(data) {
+        return goog.soy.renderAsElement(
+            sm.lSearch.bFilter.TemplateExtended.option, {
+                params: {
+                    data: data,
+                    config: {
+                        stylizationModifier: this.getStylization()
+                    }
+                }
+            }
+        );
+    };
+
+
+    /**
      * Initializes controls
      * @param {Element} element
      * @override

@@ -131,7 +131,7 @@
 
     <div class="{$classes}">
         {call .listOptions data="all" /}
-        {call .showMore data="all" /}
+        {call .button data="all" /}
     </div>
 {/template}
 
@@ -311,7 +311,7 @@
 
 
 /**
- * Show more template
+ * Tempate button
  * @param params {{
  *     data: {
  *         options: Array<{
@@ -328,7 +328,7 @@
  * }}
  * @protected
  */
-{template .showMore}
+{template .button}
     {let $numberOptionsToShow kind="html"}
         {call .numberOptionsToShow data="all" /}
     {/let}
@@ -350,7 +350,7 @@
 
 
 /**
- * Tempate button
+ * Show more template
  * @param text {string}
  * @protected
  */
