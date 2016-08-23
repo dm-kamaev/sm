@@ -1,8 +1,4 @@
-const ONLINE = {
-    true: 'only',
-    false: null,
-    null: 'available'
-};
+var scoreView = require('./scoreView');
 
 /**
  * @param {Array<Object>} courses
@@ -11,60 +7,83 @@ const ONLINE = {
 exports.list = function(courses) {
     return courses.reduce((prev, curr, i) => {
         var coursePosition = prev.findIndex(course => course.id === curr.id);
-        if (coursePosition !== -1) {
-            var foundCourse = prev[coursePosition],
-                foundCost = foundCourse.cost,
-                foundOnline = foundCourse.online;
-
-            if (curr.optionCost < foundCost) {
-                foundCourse.cost = curr.optionCost;
-            }
-            if (foundOnline === false && curr.optionOnline !== ONLINE.false) {
-                foundCourse.online = ONLINE.null;
-            } else if (
-                foundOnline === true && curr.optionOnline !== ONLINE.true
-            ) {
-                foundCourse.online = ONLINE.null;
-            }
-
-            if (!foundCourse.area.find(area => area.id === curr.areaId)) {
-                foundCourse.area.push({
-                    id: curr.areaId,
-                    name: curr.areaName
-                });
-            }
-            if (!foundCourse.metro.find(metro => metro.id === curr.metroId)) {
-                foundCourse.metro.push({
-                    id: curr.metroId,
-                    name: curr.metroName
-                });
-            }
+        if (~coursePosition) {
+            prev[coursePosition] = this.joinListCourse(
+                prev[coursePosition],
+                curr
+            );
         } else {
-            prev.push({
-                id: curr.id,
-                name: {light: curr.name},
-                description: curr.description,
-                brand: curr.brand,
-                score: {
-                    marks: {
-                        primary: {
-                            name: 'Средняя оценка',
-                            value: curr.totalScore
-                        }
-                    }
-                },
-                cost: curr.optionCost,
-                online: ONLINE[curr.optionOnline],
-                metro: [{
-                    id: curr.metroId,
-                    name: curr.metroName
-                }],
-                area: [{
-                    id: curr.areaId,
-                    name: curr.areaName
-                }]
-            });
+            prev.push(this.getListCourse(curr));
         }
         return prev;
     }, []);
+};
+
+/**
+ * @param {Object} course
+ * @return {Object}
+ */
+exports.getListCourse = function(course) {
+    return {
+        id: course.id,
+        type: 'course',
+        name: {light: course.name},
+        description: course.description,
+        brand: course.brand,
+        score: scoreView.results(
+            course.score,
+            course.totalScore
+        ),
+        cost: course.optionCost,
+        online: course.optionOnline ? 'only' : null,
+        addresses: [course.addressId],
+        metro: course.metroId ? [{
+            id: course.metroId,
+            name: course.metroName
+        }] :
+        [],
+        area: [{
+            id: course.areaId,
+            name: course.areaName
+        }]
+    };
+};
+
+/**
+ * @param {Object} existingCourse
+ * @param {Object} newCourse
+ * @return {Object}
+ */
+exports.joinListCourse = function(existingCourse, newCourse) {
+    if (newCourse.optionCost < existingCourse.cost) {
+        existingCourse.cost = newCourse.optionCost;
+    }
+
+    if (
+        existingCourse.online === 'only' && !newCourse.optionOnline ||
+        !existingCourse.online && newCourse.optionOnline === 'only'
+    ) {
+        existingCourse.online = 'available';
+    }
+
+    if (!existingCourse.area.find(area => area.id === newCourse.areaId)) {
+        existingCourse.area.push({
+            id: newCourse.areaId,
+            name: newCourse.areaName
+        });
+    }
+
+    if (
+        !~existingCourse.addresses.indexOf(newCourse.addressId) &&
+        newCourse.metroId &&
+        !existingCourse.metro.find(metro => metro.id === newCourse.metroId)
+    ) {
+        existingCourse.addresses.push(newCourse.addressId);
+        existingCourse.metro.push({
+            id: newCourse.metroId,
+            name: newCourse.metroName
+        });
+    }
+
+    return existingCourse;
 };

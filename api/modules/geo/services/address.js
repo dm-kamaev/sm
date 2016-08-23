@@ -59,6 +59,8 @@ exports.addAddress = async(function(entityId, entityType, data) {
 
         var metros = await(geoTools.getMetros(data.coords, 3));
         await(this.setMetro(address, metros));
+
+        await(this.setDistance(address));
     }
     return address;
 });
@@ -285,5 +287,28 @@ exports.getAllWithSearchData = async(function() {
             'distance',
             'ASC'
         ]]
+    });
+});
+
+/**
+ * @param {Address} address
+ * @return {Array<AddressMetro>}
+ */
+exports.setDistance = async(function(address) {
+    var addressMetros = await(models.AddressMetro.findAll({
+        where: {
+            addressId: address.id,
+        }
+    }));
+
+    return addressMetros.map(addressMetro => {
+        var metroCoords = await(services.metro.getCoords(addressMetro.metroId))
+            .reverse();
+        return await(addressMetro.update({
+            distance: (
+                geoTools.distance(address.coords, metroCoords)
+                    .toFixed(3) * 1000
+            ).toFixed(0)
+        }));
     });
 });

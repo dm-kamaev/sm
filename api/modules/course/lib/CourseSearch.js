@@ -122,7 +122,8 @@ class CourseSearchQuery extends SearchQuery {
         this.baseQuery_
             .order('course.total_score', false)
             .order('course.score DESC NULLS LAST', null)
-            .order('course.id', true);
+            .order('course.id', true)
+            .order('address_metro.distance');
     }
 
     /**
