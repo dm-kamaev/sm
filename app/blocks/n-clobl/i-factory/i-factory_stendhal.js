@@ -62,13 +62,17 @@ goog.require('sm.lSchool.bFoldList.View');
 goog.require('sm.lSearch.bFilter.Filter');
 goog.require('sm.lSearch.bFilter.FilterExtended');
 goog.require('sm.lSearch.bFilter.FilterInput');
+goog.require('sm.lSearch.bFilter.FilterLabels');
 goog.require('sm.lSearch.bFilter.FilterSwitch');
 goog.require('sm.lSearch.bFilter.View');
 goog.require('sm.lSearch.bFilter.ViewExtended');
 goog.require('sm.lSearch.bFilter.ViewInput');
+goog.require('sm.lSearch.bFilter.ViewLabels');
 goog.require('sm.lSearch.bFilter.ViewSwitch');
 goog.require('sm.lSearch.bFilterPanel.FilterPanel');
 goog.require('sm.lSearch.bFilterPanel.View');
+goog.require('sm.lSearch.bLabel.Label');
+goog.require('sm.lSearch.bLabel.View');
 goog.require('sm.lSearchResult.bFilterSearch.FilterSearch');
 goog.require('sm.lSearchResult.bFilterSearch.View');
 
@@ -230,6 +234,14 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('lSearch-filterInput', {
             control: sm.lSearch.bFilter.FilterInput,
             view: sm.lSearch.bFilter.ViewInput
+        })
+        .setControlListItem('lSearch-filterLabels', {
+            control: sm.lSearch.bFilter.FilterLabels,
+            view: sm.lSearch.bFilter.ViewLabels
+        })
+        .setControlListItem('lSearch-label', {
+            control: sm.lSearch.bLabel.Label,
+            view: sm.lSearch.bLabel.View
         });
 };
 goog.inherits(sm.iFactory.FactoryStendhal, cl.iFactory.Factory);
