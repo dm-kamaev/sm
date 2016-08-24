@@ -21,11 +21,13 @@ class CourseParser {
 
         var courses = this.formatCourses_(brandName, data);
 
-        process.exit();
-
-        await(courses.map(course =>
-            services.course.create(course))
-        );
+        try {
+            await(courses.map(course =>
+                services.course.create(course))
+            );
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     /**
@@ -95,7 +97,6 @@ class CourseParser {
         option.age = option.age.split(',');
         option.costPerHour = Number(option.costPerHour).toFixed(0);
         option.schedule = this.formatSchedule_(option.schedule);
-        console.log(option.departments.split(','));
         option.departments = option.departments.split(',').map(id =>
             departments.find(department => department.departmentId == id)
         );
