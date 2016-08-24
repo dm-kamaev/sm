@@ -1,6 +1,6 @@
 /**
  * @param {{
- *     user: Object
+ *     user: Object,
  *     authSocialLinks: Object,
  *     countResults: number,
  *     coursesList: Array<Object>,
