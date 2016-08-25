@@ -21,4 +21,12 @@ metroView.list = function(metros) {
         });
 };
 
+/**
+ * @param {string} name
+ * @return {string}
+ */
+metroView.formatName = function(name) {
+    return name.replace('метро', '').trim();
+};
+
 module.exports = metroView;

@@ -1,4 +1,5 @@
-var scoreView = require('./scoreView');
+var scoreView = require('./scoreView'),
+    metroView = require('../../geo/views/metroView');
 
 /**
  * @param {Array<Object>} courses
@@ -39,7 +40,7 @@ exports.getListCourse = function(course) {
         addresses: [course.addressId],
         metro: course.metroId ? [{
             id: course.metroId,
-            name: course.metroName
+            name: metroView.formatName(course.metroName)
         }] :
         [],
         area: [{
@@ -81,7 +82,7 @@ exports.joinListCourse = function(existingCourse, newCourse) {
         existingCourse.addresses.push(newCourse.addressId);
         existingCourse.metro.push({
             id: newCourse.metroId,
-            name: newCourse.metroName
+            name: metroView.formatName(newCourse.metroName)
         });
     }
 
