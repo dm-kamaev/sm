@@ -53,7 +53,13 @@
                 'factory': $params.config.stylizationModifier,
                 'type': 'lSearch-label',
                 'renderParams': [
-                    'data': $params.data
+                    'data': [
+                        'id': $params.data.id + '-selected',
+                        'name': $params.data.name,
+                        'label': $params.data.label,
+                        'value': $params.data.value,
+                        'isChecked': $params.data.isChecked
+                    ]
                 ]
             ]/}
         {/call}

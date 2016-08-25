@@ -73,7 +73,7 @@ goog.scope(function() {
     /**
      * Change state of the button, when added or removed filter option
      */
-    View.prototype.changeButtonState = function() {
+    View.prototype.changeButtonMoreState = function() {
         var numberAllItems = this.dom.options.length;
 
         if (numberAllItems == this.numberShowOptions_) {
@@ -91,9 +91,9 @@ goog.scope(function() {
 
 
     /**
-     * show last hidden filter item
+     * Show last hidden filter option
      */
-    View.prototype.showLastHiddenItem = function() {
+    View.prototype.showLastHiddenOption = function() {
         if (this.dom.wrapOptions.length + 1 > this.numberShowOptions_) {
             goog.dom.classlist.remove(
                 this.dom.wrapOptions[this.numberShowOptions_ - 1],
@@ -104,9 +104,9 @@ goog.scope(function() {
 
 
     /**
-     * hide last shown filter item
+     * Hide last shown filter option
      */
-    View.prototype.hideLastShownItem = function() {
+    View.prototype.hideLastShownOption = function() {
         if (this.dom.wrapOptions.length > this.numberShowOptions_) {
             goog.dom.classlist.add(
                 this.dom.wrapOptions[this.numberShowOptions_],

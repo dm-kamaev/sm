@@ -42,6 +42,12 @@ goog.scope(function() {
 
 
     /**
+     * @typedef {sm.bSmCheckbox.SmCheckbox.Params}
+     */
+    sm.lSearch.bLabel.Label.Params;
+
+
+    /**
      * @param {Element} element
      * @override
      */

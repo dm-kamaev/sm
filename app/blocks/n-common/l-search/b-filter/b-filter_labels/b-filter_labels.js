@@ -25,6 +25,18 @@ goog.scope(function() {
 
 
     /**
+     * Event enum
+     * @enum {string}
+     */
+    FilterLabels.Event = {
+        CHECK_OPTION: sm.lSearch.bFilter.Filter.Event.CHECK_OPTION,
+        UNCHECK_OPTION: sm.lSearch.bFilter.Filter.Event.UNCHECK_OPTION,
+        CHECK: sm.lSearch.bFilter.Filter.Event.CHECK,
+        UNCHECK: sm.lSearch.bFilter.Filter.Event.UNCHECK
+    };
+
+
+    /**
      * Checks refers element to this control
      * @param {Element} element
      * @return {boolean}
@@ -68,7 +80,7 @@ goog.scope(function() {
 
     /**
      * Get data of checked options
-     * @return {Array<sm.bSmCheckbox.SmCheckbox.Params>}
+     * @return {Array<sm.lSearch.bLabel.Label.Params>}
      * @override
      */
     FilterLabels.prototype.getCheckedData = function() {
@@ -83,40 +95,65 @@ goog.scope(function() {
 
 
     /**
+     * Check option
+     * @param {sm.lSearch.bLabel.Label.Params} data
+     */
+    FilterLabels.prototype.checkOption = function(data) {
+        this.createOption(data);
+    };
+
+
+    /**
+     * Uncheck option
+     * @param {sm.lSearch.bLabel.Label.Params} data
+     */
+    FilterLabels.prototype.uncheckOption = function(data) {
+        var option = this.findOption(data);
+
+        if (option) {
+            this.removeOption(option);
+        }
+    };
+
+
+    /**
      * Remove option
-     * @param {sm.bSmCheckbox.SmCheckbox} option
+     * @param {sm.lSearch.bLabel.Label} option
      * @override
      */
     FilterLabels.prototype.removeOption = function(option) {
         FilterLabels.base(this, 'removeOption', option);
 
-        this.getView().showLastHiddenItem();
-        this.getView().changeButtonState();
+        this.getView().showLastHiddenOption();
+        this.getView().changeButtonMoreState();
     };
 
 
     /**
      * Create option
-     * @param {sm.bSmCheckbox.SmCheckbox.Params} data
+     * @param {sm.lSearch.bLabel.Label.Params} data
      * @override
      */
     FilterLabels.prototype.createOption = function(data) {
-        FilterLabels.base(this, 'createOption', data);
+        this.getView().addOption(data, 0);
 
-        this.getView().hideLastShownItem();
-        this.getView().changeButtonState();
+        this.initOptions();
+        this.initOptionsListeners();
+
+        this.getView().hideLastShownOption();
+        this.getView().changeButtonMoreState();
     };
 
 
     /**
      * Update list options
-     * @param {Array<{sm.bSmCheckbox.SmCheckbox.Params}>} data
+     * @param {Array<{sm.lSearch.bLabel.Label.Params}>} data
      * @override
      */
     FilterLabels.prototype.updateOptions = function(data) {
         FilterLabels.base(this, 'updateOptions', data);
 
-        this.getView().changeButtonState();
+        this.getView().changeButtonMoreState();
     };
 
 

@@ -42,7 +42,6 @@
 }
 
 .b-sm-filter__option {
-    min-width: 50%;
     margin: 0;
 
     font-size: 14px;
@@ -64,7 +63,24 @@
         display: inline-block;
 
         width: 13.8%;
-        min-width: unset;
+        min-width: 0;
+    }
+}
+
+.b-sm-filter_minimal-theme {
+    .b-sm-filter__header {
+        padding: 5px 0 10px;
+    }
+
+    .b-sm-filter__option {
+        display: inline-block;
+
+        width: 50%;
+        margin-bottom: 3px;
+
+        vertical-align: top;
+
+        line-height: 20px;
     }
 }
 
@@ -74,7 +90,7 @@
         display: inline-block;
 
         width: 25%;
-        min-width: unset;
+        min-width: 0;
 
         vertical-align: top;
     }
@@ -83,9 +99,15 @@
 @include media-s {
     .b-sm-filter__option {
         width: 33.33%;
-        min-width: unset;
+        min-width: 0;
 
         vertical-align: top;
+    }
+
+    .b-sm-filter_minimal-theme {
+        .b-sm-filter__option {
+            width: 100%;
+        }
     }
 }
 

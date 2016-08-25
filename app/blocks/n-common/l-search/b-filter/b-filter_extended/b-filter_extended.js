@@ -106,7 +106,7 @@ goog.scope(function() {
     FilterExtended.prototype.initModalFilterListeners_ = function() {
         this.getHandler().listen(
             this.filterModal_,
-            sm.lSearchResult.bFilterSearch.FilterSearch.Event.BUTTON_CLICK,
+            sm.lSearch.bSuggestFilter.SuggestFilter.Event.BUTTON_CLICK,
             this.onModalFilterButtonClick_
         );
     };
@@ -190,9 +190,12 @@ goog.scope(function() {
                 size: 'l'
             }
         };
-
         this.filterModal_ = sm.gModal.ModalStendhal.render(params, true);
-        this.filterModal_.renderContent('filter-search', this.getModalData_());
+
+        this.filterModal_.renderContent(
+            'lSearch-suggestFilter',
+            this.getModalData_()
+        );
     };
 
 
@@ -201,21 +204,21 @@ goog.scope(function() {
      * @return {{
      *     data: {
      *         header: string,
-     *         name: string,
-     *         filters: {
-     *             title: string
-     *             options: Array<{
-     *                 label: string,
-     *                 value: string,
-     *                 isChecked: boolean
-     *             }>
+     *         search: {
+     *             placeholder: (string|undefined),
+     *             sourceUrl: string
      *         },
-     *         selectedItems: Array<{
-     *             label: string,
-     *             value: string,
-     *             isChecked: bool
-     *         }>,
-     *         search: string
+     *         filter: {
+     *             name: string,
+     *             header: {
+     *                 title: string
+     *             },
+     *             options: Array<sm.bSmCheckbox.SmCheckbox>
+     *         },
+     *         selected: {
+     *             name: string,
+     *             options: Array<sm.bSmCheckbox.SmCheckbox>
+     *         }
      *     }
      * }}
      * @private
@@ -229,15 +232,20 @@ goog.scope(function() {
         return {
             data: {
                 header: 'Курсы, кружки и секции',
-                name: this.getName(),
-                filters: {
-                    title: 'Популярные',
-                    items: allOptionsData
-                },
-                selectedItems: this.getCheckedData(),
                 search: {
                     placeholder: 'Какие занятия вы ищете?',
                     sourceUrl: '/api/school/activitySphere'
+                },
+                filter: {
+                    name: this.getName(),
+                    header: {
+                        title: 'Популярные'
+                    },
+                    options: allOptionsData
+                },
+                selected: {
+                    name: this.getName(),
+                    options: this.getCheckedData()
                 }
             }
         };

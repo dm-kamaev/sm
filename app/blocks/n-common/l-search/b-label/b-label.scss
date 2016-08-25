@@ -35,3 +35,14 @@
 .b-label__icon-cross:hover {
     opacity: 1;
 }
+
+@include media-xs {
+    .b-label {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .b-label__cross {
+        right: 10px;
+    }
+}

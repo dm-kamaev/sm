@@ -38,6 +38,7 @@ goog.scope(function() {
      */
     View.CssClass = {
         ROOT: 'b-sm-filter',
+        HEADER: 'b-sm-filter__header',
         BUTTON_SWITCH_CONTENT_VISIBILITY: 'b-sm-filter__header_button',
         ICON_UP: 'b-sm-filter__header-icon_up',
         ICON_DOWN: 'b-sm-filter__header-icon_down',
@@ -58,7 +59,7 @@ goog.scope(function() {
         View.base(this, 'decorateInternal', element);
 
         this.initButtons(element);
-        this.initHeaderControls_(element);
+        this.initHeader_(element);
         this.initContainers_(element);
 
         this.initParams_();
@@ -118,13 +119,15 @@ goog.scope(function() {
     /**
      * Add option (dom element)
      * @param {sm.bSmCheckbox.SmCheckbox.Params} data
+     * @param {number=} opt_index
      */
-    View.prototype.addOption = function(data) {
+    View.prototype.addOption = function(data, opt_index) {
         var option = this.renderOption(data);
 
-        goog.dom.appendChild(
+        goog.dom.insertChildAt(
             this.dom.list,
-            option
+            option,
+            opt_index
         );
     };
 
@@ -145,6 +148,33 @@ goog.scope(function() {
             sm.bSmCheckbox.View.CssClass.ROOT,
             element
         );
+    };
+
+
+    /**
+     * adds or deletes class to show header
+     * @param {bool} visible
+     */
+    View.prototype.setHeaderVisibility = function(visible) {
+        if (this.dom.header) {
+            var isContains = goog.dom.classlist.contains(
+                this.dom.header,
+                Utils.CssClass.HIDDEN
+            );
+
+            if (visible && isContains) {
+                goog.dom.classlist.remove(
+                    this.dom.header,
+                    Utils.CssClass.HIDDEN
+                );
+            }
+            else if (!visible && !isContains) {
+                goog.dom.classlist.add(
+                    this.dom.header,
+                    Utils.CssClass.HIDDEN
+                );
+            }
+        }
     };
 
 
@@ -210,11 +240,16 @@ goog.scope(function() {
 
 
     /**
-     * Initializes header controls
+     * Initializes header and his controls
      * @param {Element} element
      * @private
      */
-    View.prototype.initHeaderControls_ = function(element) {
+    View.prototype.initHeader_ = function(element) {
+        this.dom.header = goog.dom.getElementByClass(
+            View.CssClass.HEADER,
+            element
+        );
+
         this.dom.buttonSwitchContentVisibility = goog.dom.getElementByClass(
             View.CssClass.BUTTON_SWITCH_CONTENT_VISIBILITY,
             element
