@@ -20,7 +20,6 @@ class CourseParser {
             brandName = path.parse(filePath).name;
 
         var courses = this.formatCourses_(brandName, data);
-
         try {
             await(courses.map(course =>
                 services.course.create(course))
@@ -79,13 +78,15 @@ class CourseParser {
             this.formatOption_(option, data.departments)
         );
 
-        return data.courses.map(course => {
-            course.brandName = brandName;
-            course.options = course.options.split(',').map(id =>
-                data.options.find(option => option.optionId == id)
-            );
-            return course;
-        });
+        return data.courses
+            .map(course => {
+                course.brandName = brandName;
+                course.options = course.options.split(',').map(id =>
+                    data.options.find(option => option.optionId == id)
+                );
+                return course;
+            })
+            .filter(course => course.name);
     }
 
     /**
