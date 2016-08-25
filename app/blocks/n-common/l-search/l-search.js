@@ -85,11 +85,7 @@ goog.scope(function() {
 
         this.initLeftMenuInstances_();
         this.initResultsListInstances_();
-
-        this.map_ = this.decorateChild(
-            'smMap',
-            this.getView().getDom().map
-        );
+        this.initMap_();
     };
 
 
@@ -164,6 +160,18 @@ goog.scope(function() {
         this.resultsList_ = this.decorateChild(
             'smItemList',
             this.getView().getDom().resultsList
+        );
+    };
+
+
+    /**
+     * Init map instance
+     * @private
+     */
+    Search.prototype.initMap_ = function() {
+        this.map_ = this.decorateChild(
+            'smMap',
+            this.getView().getDom().map
         );
     };
 });  // goog.scope

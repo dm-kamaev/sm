@@ -218,7 +218,7 @@ sm.iFactory.TemplateFactoryStendhal = function() {
             'smRadioButton',
             sm.bSmRadioButton.Template.radioButton
         )
-        .setTemplateListItem (
+        .setTemplateListItem(
             'smMap',
             sm.bSmMap.Template.map
         );
