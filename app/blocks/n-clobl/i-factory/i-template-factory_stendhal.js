@@ -48,6 +48,7 @@ goog.require('sm.lSearch.bFilter.TemplateLabels');
 goog.require('sm.lSearch.bFilter.TemplateSwitch');
 goog.require('sm.lSearch.bFilterPanel.Template');
 goog.require('sm.lSearch.bLabel.Template');
+goog.require('sm.lSearch.bSuggestFilter.Template');
 goog.require('sm.lSearchResult.bFilterSearch.Template');
 
 
@@ -255,6 +256,10 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'lSearch-label',
             sm.lSearch.bLabel.Template.label
+        )
+        .setTemplateListItem(
+            'lSearch-suggestFilter',
+            sm.lSearch.bSuggestFilter.Template.suggestFilter
         );
 };
 goog.inherits(sm.iFactory.TemplateFactoryStendhal, cl.iFactory.TemplateFactory);
