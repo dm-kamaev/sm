@@ -38,6 +38,13 @@ exports.createComment = async(function(req, res) {
 });
 
 
+exports.search = async(function(req, res, next) {
+    res.status(301);
+    res.header('Location', '/school');
+    res.end();
+});
+
+
 exports.list = async(function(req, res, next) {
     try {
         var searchParams = {},
@@ -249,7 +256,7 @@ exports.view = async(function(req, res, next) {
     }
 });
 
-exports.search = async(function(req, res) {
+exports.home = async(function(req, res) {
     var user = req.user || {};
     var favoriteIds = await(services.favorite.getAllItemIdsByUserId(user.id)),
         dataPromises = {
