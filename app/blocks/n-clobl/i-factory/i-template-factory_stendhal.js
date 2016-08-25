@@ -18,6 +18,7 @@ goog.require('sm.bSmItem.Template');
 goog.require('sm.bSmItem.TemplateEntity');
 goog.require('sm.bSmItemList.Template');
 goog.require('sm.bSmListPaged.Template');
+goog.require('sm.bSmMap.Template');
 goog.require('sm.bSmRadioButton.Template');
 goog.require('sm.bSmScore.Template');
 goog.require('sm.bSmScore.TemplateBrief');
@@ -216,6 +217,10 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'smRadioButton',
             sm.bSmRadioButton.Template.radioButton
+        )
+        .setTemplateListItem (
+            'smMap',
+            sm.bSmMap.Template.map
         );
 
     /** l-information blocks **/

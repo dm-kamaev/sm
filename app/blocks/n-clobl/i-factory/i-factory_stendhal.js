@@ -31,6 +31,8 @@ goog.require('sm.bSmItemList.SmItemList');
 goog.require('sm.bSmItemList.View');
 goog.require('sm.bSmListPaged.SmListPaged');
 goog.require('sm.bSmListPaged.View');
+goog.require('sm.bSmMap.SmMap');
+goog.require('sm.bSmMap.View');
 goog.require('sm.bSmRadioButton.SmRadioButton');
 goog.require('sm.bSmRadioButton.View');
 goog.require('sm.bSmScore.SmScore');
@@ -204,6 +206,10 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('smRadioButton', {
             control: sm.bSmRadioButton.SmRadioButton,
             view: sm.bSmRadioButton.View
+        })
+        .setControlListItem('smMap', {
+            control: sm.bSmMap.SmMap,
+            view: sm.bSmMap.View
         });
 
     /** l-information blocks **/

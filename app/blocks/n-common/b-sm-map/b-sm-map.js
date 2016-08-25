@@ -1,18 +1,17 @@
-
 /**
  * @fileoverview Component with yandex map
- *
- * It can manipulate with points on map (replace or add)
+ * It initializes yandex map and manipulate points on map: replace or add
  */
 goog.provide('sm.bSmMap.SmMap');
 
+goog.require('cl.iControl.Control');
 goog.require('goog.Promise');
 goog.require('sm.bSmMap.IPresetGenerator');
 goog.require('sm.iSmViewport.SmViewport');
 
 
 goog.scope(function() {
-    var Viewport = sm.lSchool.iViewport.Viewport;
+    var Viewport = sm.iSmViewport.SmViewport;
     var PresetGenerator = sm.bSmMap.IPresetGenerator;
 
 
@@ -25,6 +24,12 @@ goog.scope(function() {
      */
     sm.bSmMap.SmMap = function(view, opt_domHelper) {
         sm.bSmMap.SmMap.base(this, 'constructor', view, opt_domHelper);
+
+        /**
+         * Map parameters
+         * @type {sm.bSmMap.SmMap.Params}
+         */
+        this.params = null;
 
 
         /**
@@ -48,7 +53,7 @@ goog.scope(function() {
          * @type {sm.bSmMap.IPresetGenerator}
          * @private
          */
-        this.presetCreator_ = null;
+        this.presetGenerator_ = null;
 
 
         /**
@@ -64,9 +69,9 @@ goog.scope(function() {
          * @type {number}
          * @private
          */
-        this.selectedObjectId_ = null;
+        this.selectedPlacemarkId_ = null;
     };
-    goog.inherits(sm.bSmMap.SmMap, goog.ui.Component);
+    goog.inherits(sm.bSmMap.SmMap, cl.iControl.Control);
     var Map = sm.bSmMap.SmMap;
 
 
@@ -235,7 +240,7 @@ goog.scope(function() {
             this.objectManager_.removeAll();
         }
         this.mapObjectsAmount_ = 0;
-        this.selectedObjectId_ = null;
+        this.selectedPlacemarkId_ = null;
     };
 
 
@@ -280,10 +285,10 @@ goog.scope(function() {
      * @private
      */
     Map.prototype.generateMapObjects_ = function(itemGroup) {
-        var addresses = itemGroup['addresses'];
+        var items = itemGroup['items'];
         var viewType = itemGroup['viewType'];
 
-        return addresses.map(this.generateAddressMapObject_.bind(
+        return items.map(this.generateItemMapObject_.bind(
             this,
             viewType
         ));
@@ -292,39 +297,39 @@ goog.scope(function() {
     /**
      * Generate map object from entity address
      * @param {string} viewType
-     * @param {sm.bSmMap.SmMap.AddressItem} address
+     * @param {sm.bSmMap.SmMap.AddressItem} item
      * @return {sm.bSmMap.SmMap.GeoObject}
      * @private
      */
-    Map.prototype.generateAddressMapObject_ = function(
-        viewType, address) {
+    Map.prototype.generateItemMapObject_ = function(
+        viewType, item) {
         var id = this.mapObjectsAmount_++;
-        var score = address['score'];
+        var score = item['score'];
 
-        var preset = this.presetCreator_.generateNameByEntityScore(
+        var preset = this.presetGenerator_.generatePresetNameByEntityParameters(
             score, viewType
         );
 
         return {
             'type': 'Feature',
             'id': id,
-            'addressId': address['id'],
+            'addressId': item['id'],
             'geometry': {
                 'type': 'Point',
-                'coordinates': address['coordinates']
+                'coordinates': item['coordinates']
             },
             'properties': {
-                'title': address['title']['text'],
-                'name': address['name'],
+                'title': item['title']['text'],
+                'name': item['name'],
                 //TODO build href from alias here via url builder or smth
-                'titleHref': address['title']['alias'] ?
-                    address['title']['alias'] :
+                'titleHref': item['title']['alias'] ?
+                    item['title']['alias'] :
                     '',
-                'linkText': address['link'] ? address['link']['text'] : null,
+                'linkText': item['link'] ? item['link']['text'] : null,
                 //TODO build href from alias url builder or smth
-                'linkHref': address['link'] ? address['link']['alias'] : null,
-                'description': address['description'],
-                'stages': address['stages'] ? address['stages'] : null
+                'linkHref': item['link'] ? item['link']['alias'] : null,
+                'description': item['description'],
+                'stages': item['stages'] ? item['stages'] : null
             },
             'options': {
                 'preset': preset
@@ -491,18 +496,15 @@ goog.scope(function() {
      * @private
      */
     Map.prototype.onReady_ = function() {
-        //presets initialize
         this.initPresets_();
-
-        //maps initialization
         this.initMap_();
-
-        //object manager initialization
         this.initObjectManager_();
 
-        /** Add points from data-params to map **/
-        this.addItems(this.params_['items']);
-        this.center(this.params_['position']);
+        var itemGroups = this.params['data']['itemGroups'];
+        this.addItems(itemGroups);
+
+        var position = this.params['data']['position'];
+        this.center(position);
 
         this.dispatchEvent(Map.Event.READY);
     };
@@ -543,7 +545,7 @@ goog.scope(function() {
                     this.constructor.superclass.build.call(this);
                     this.initDom_();
                     this.addEventListeners_();
-                    mapInstance.getView().setBalloonOffset(this.element_);
+                    this.setBalloonOffset_();
                 },
                 clear: function() {
                     this.removeEventListeners_();
@@ -583,9 +585,9 @@ goog.scope(function() {
                         mapInstance.onBalloonCloseClick_.bind(mapInstance, this)
                     );
                     this.itemNameClickKey_ = goog.events.listen(
-                        this.itemName_,
+                        this.title_,
                         goog.events.EventType.CLICK,
-                        mapInstance.onBalloonNameClick_.bind(mapInstance)
+                        mapInstance.onBalloonTitleClick_.bind(mapInstance)
                     );
                 },
                 removeEventListeners_: function() {
@@ -600,7 +602,10 @@ goog.scope(function() {
 
                     this.element_ = domElements.balloon;
                     this.closeButton_ = domElements.closeButton;
-                    this.itemName_ = domElements.title;
+                    this.title_ = domElements.title;
+                },
+                setBalloonOffset_: function() {
+                    mapInstance.getView().setBalloonOffset(this.element_);
                 }
             }
         );
@@ -614,7 +619,7 @@ goog.scope(function() {
      * @param  {Object} event
      * @private
      */
-    Map.prototype.onBalloonNameClick_ = function(event) {
+    Map.prototype.onBalloonTitleClick_ = function(event) {
         var balloonNameElement = event.target;
         var name = goog.dom.getTextContent(balloonNameElement);
 
@@ -633,64 +638,22 @@ goog.scope(function() {
 
 
     /**
-     * Ballon close button click handler
-     * Fire event to close balloon
-     * @param  {Object} balloonInstance
-     * @param  {Object} event
-     * @private
-     */
-    Map.prototype.onBalloonCloseClick_ = function(balloonInstance, event) {
-        event.preventDefault();
-        this.removeActiveStateFromSelectedPlacemark_();
-        balloonInstance.events.fire('userclose');
-    };
-
-
-    /**
-     * On placemark click actions
+     * Placemark click handler
+     * Remove active state from already selected placemark (if exists) and
+     * set active state to clicked placemark
      * @param {Object} event
      * @private
      */
     Map.prototype.onPlacemarkClick_ = function(event) {
-        var id = event.get('objectId');
+        var clickedPlacemarkId = event.get('objectId');
 
-        if (this.selectedObjectId_ != id) {
-            var currentSelectedPlacemarkPreset =
-                this.objectManager_.objects.getById(id).options.preset;
-
-            this.objectManager_.objects.setObjectOptions(id, {
-                preset: currentSelectedPlacemarkPreset + '-' +
-                    Map.PresetState.ACTIVE
-            });
-
-            if (this.selectedObjectId_ != null) {
-                this.removeActiveStateFromSelectedPlacemark_();
+        if (this.selectedPlacemarkId_ != clickedPlacemarkId) {
+            if (goog.isDefAndNotNull(this.selectedPlacemarkId_)) {
+                this.setPlacemarkDefaultState_(this.selectedPlacemarkId_);
             }
-            this.selectedObjectId_ = id;
+            this.setPlacemarkActiveState_(clickedPlacemarkId);
+            this.selectedPlacemarkId_ = clickedPlacemarkId;
         }
-    };
-
-
-    /**
-     * Balloon name click handler
-     * @param  {Object} event
-     * @private
-     */
-    Map.prototype.onBalloonNameClick_ = function(event) {
-        var balloonNameElement = event.target;
-        var name = goog.dom.getTextContent(balloonNameElement);
-
-        var params = JSON.parse(
-                goog.dom.dataset.get(balloonNameElement, 'params')
-            );
-
-        this.dispatchEvent({
-            'type': Map.Event.ITEM_NAME_CLICK,
-            'data': {
-                'name': name,
-                'id': params['id']
-            }
-        });
     };
 
 
@@ -703,29 +666,64 @@ goog.scope(function() {
      */
     Map.prototype.onBalloonCloseClick_ = function(balloonInstance, event) {
         event.preventDefault();
-        this.removeActiveStateFromSelectedPlacemark_();
+        this.setPlacemarkDefaultState_(this.selectedPlacemarkId_);
+        this.selectedPlacemarkId_ = null;
         balloonInstance.events.fire('userclose');
     };
 
 
     /**
-     * Removing of active state from selected placemark
+     * Removing of active state from placemark with given id
+     * @param {number} placemarkId
      * @private
      */
-    Map.prototype.removeActiveStateFromSelectedPlacemark_ = function() {
-        var selectedPlacemark = this.objectManager_.objects.getById(
-            this.selectedObjectId_
-        );
-        var placemarkPreset = selectedPlacemark.options.preset;
+    Map.prototype.setPlacemarkDefaultState_ = function(placemarkId) {
+        var currentPlacemarkPreset = this.getPlacemarkPreset_(placemarkId);
         var newPlacemarkPreset =
-            this.presetCreator_.generateUnactiveStatePresetName(
-                placemarkPreset
+            this.presetGenerator_.generateDefaultStatePresetName(
+                currentPlacemarkPreset
             );
+        this.setPlacemarkPreset_(placemarkId, newPlacemarkPreset);
+    };
 
+
+    /**
+     * Add active state to placemark with given id
+     * @param {number} placemarkId
+     * @private
+     */
+    Map.prototype.setPlacemarkActiveState_ = function(placemarkId) {
+        var currentPlacemarkPreset = this.getPlacemarkPreset_(placemarkId);
+        var newPlacemarkPreset =
+            this.presetGenerator_.generateActiveStatePresetName(
+                currentPlacemarkPreset
+            );
+        this.setPlacemarkPreset_(placemarkId, newPlacemarkPreset);
+    };
+
+
+    /**
+     * Get placemark preset by their id
+     * @param {number} placemarkId
+     * @return {string}
+     * @private
+     */
+    Map.prototype.getPlacemarkPreset_ = function(placemarkId) {
+        var placemark = this.objectManager_.objects.getById(placemarkId);
+        return placemark ? placemark.options.preset : null;
+    };
+
+    /**
+     * Set placemark preset by their id
+     * @param {number} placemarkId
+     * @param {string} preset
+     * @private
+     */
+    Map.prototype.setPlacemarkPreset_ = function(placemarkId, preset) {
         this.objectManager_.objects.setObjectOptions(
-            this.selectedObjectId_,
+            placemarkId,
             {
-                preset: newPlacemarkPreset
+                preset: preset
             }
         );
     };
@@ -736,15 +734,16 @@ goog.scope(function() {
      * @private
      */
     Map.prototype.initPresetGenerator_ = function() {
-        this.presetCreator_ = new PresetGenerator();
+        this.presetGenerator_ = new PresetGenerator();
     };
+
 
     /**
      * Presets initialization
      * @private
      */
     Map.prototype.initPresets_ = function() {
-        var presets = this.presetCreator_.generate();
+        var presets = this.presetGenerator_.generate();
 
         this.addPresetsToMap_(presets);
     };
@@ -827,13 +826,17 @@ goog.scope(function() {
      * @private
      */
     Map.prototype.generateBehaviors_ = function() {
-        var behaviors = ['default'];
+        var behaviors = [
+            'dblClickZoom',
+            'drag',
+            'multiTouch',
+            'rightMouseButtonMagnifier'
+        ];
 
-        var enableScrollZoom = this.params_['config']['enableScrollZoom'];
+        var enableScrollZoom = this.params['config']['enableScrollZoom'];
         if (enableScrollZoom) {
             behaviors.push('scrollZoom');
         }
-
         return behaviors;
     };
 
@@ -849,10 +852,10 @@ goog.scope(function() {
         var positionType;
         var centerCoordinates;
 
-        if (this.params_['data']['position']) {
-            positionType = this.params_['data']['position']['type'];
-            centerCoordinates = this.params_['data']['position']['center'] ?
-                this.params_['data']['position']['center'] :
+        if (this.params['data']['position']) {
+            positionType = this.params['data']['position']['type'];
+            centerCoordinates = this.params['data']['position']['center'] ?
+                this.params['data']['position']['center'] :
                 Map.defaultPosition.COORDS;
         } else {
             positionType = Map.PositionType.DEFAULT;
