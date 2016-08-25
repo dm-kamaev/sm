@@ -29,7 +29,7 @@ exports.search = async(function(req, res, next) {
         var data = searchView.render({
             user: user,
             authSocialLinks: authSocialLinks,
-            countResults: courses[0].countResults,
+            countResults: courses[0] && courses[0].countResults || 0,
             coursesList: coursesList,
             searchParams: searchParams
         });
