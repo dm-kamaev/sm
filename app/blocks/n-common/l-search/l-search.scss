@@ -21,6 +21,10 @@
         height: 500px;
 
         background: #f4f4ec;
+
+        .l-search__section-inner {
+            width: auto;
+        }
     }
 
 
@@ -50,6 +54,7 @@
 .l-search__section-inner {
     width: 1200px;
     min-width: 255px;
+    height: 100%;
     margin: 0 auto;
 }
 /** layout end **/
@@ -138,6 +143,12 @@
 }
 
 @include media-xl {
+    .l-search__section.l-search__section_map {
+        .l-search__section-inner {
+            margin: 0;
+        }
+    }
+
     .l-search__section-inner {
         width: auto;
         margin: 0 40px;

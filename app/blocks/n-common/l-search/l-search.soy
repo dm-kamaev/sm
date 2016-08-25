@@ -120,7 +120,7 @@
  *            vk: ?string,
  *            fb: ?string
  *         },
- *         map: sm.bMap.Template.Params.Data,
+ *         map: sm.bSmMap.Template.Params.Data,
  *         search: {
  *             countResults: number,
  *             searchText: ?string,
@@ -185,27 +185,15 @@
  * Container for map
  * @param params {{
  *     data: {
- *         entities: Array<{
- *             id: number,
- *             name: string,
- *             alias: ?string,
- *             description: ?string,
- *             totalScore: ?number,
- *             address: Array<{
- *                 id: number,
- *                 lat: number,
- *                 lng: number,
- *                 name: string,
- *                 stages: (string|Array<string>)
- *             }>,
- *         }>,
- *         position: {
- *             center: ?Array<number>,
- *             type: ?string
+ *         map: {sm.bSmMap.Template.Params.Data},
+ *         seo: {
+ *             title: (string|undefined),
+ *             description: (string|undefined)
  *         },
  *         search: {
  *             countResults: number,
- *             searchText: ?string
+ *             searchText: (string|undefined),
+ *             placeholder: (string|undefined)
  *         }
  *     }
  * }}
@@ -223,25 +211,23 @@
     {let $classes kind="html"}
         {call .rootClass/}__section{sp}
         {call .rootClass/}__section_map
-
-        // {if not length($params?.entities)}
-        //     {sp}i-utils__hidden
-        // {/if}
     {/let}
 
     <div class="{$classes}">
         <div class="{call .rootClass /}__section-inner">
-            Map
+            {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+                {param params: [
+                    'factory': $params.config.modifier,
+                    'type': 'smMap',
+                    'renderParams': [
+                        'data': $params.data.map,
+                        'config': [
+                            'enableScrollZoom': false
+                        ]
+                    ]
+                ] /}
+            {/call}
         </div>
-        /*
-        {call sm.bMap.Template.map}
-            {param params: [
-                'data': $params.data.map,
-                'config': [
-                    'enableScrollZoom': false
-                ]
-            ]/}
-        {/call}*/
     </div>
 {/template}
 

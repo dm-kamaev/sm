@@ -70,6 +70,10 @@ goog.scope(function() {
             resultsList: this.getElementByClass(
                 sm.bSmItemList.View.CssClass.ROOT,
                 element
+            ),
+            map: this.getElementByClass(
+                sm.bSmMap.View.CssClass.ROOT,
+                element
             )
         };
     };

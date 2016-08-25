@@ -59,6 +59,14 @@ goog.scope(function() {
 
 
         /**
+         * Map instance
+         * @type {sm.bSmMap.SmMap}
+         * @private
+         */
+        this.map_ = null;
+
+
+        /**
          * Search service instance
          * @type {sm.lSearch.iSearchService.SearchService}
          */
@@ -77,6 +85,11 @@ goog.scope(function() {
 
         this.initLeftMenuInstances_();
         this.initResultsListInstances_();
+
+        this.map_ = this.decorateChild(
+            'smMap',
+            this.getView().getDom().map
+        );
     };
 
 
@@ -88,7 +101,7 @@ goog.scope(function() {
         /** IRequest init **/
         Request.getInstance().init(window.location.pathname);
 
-        /** Search searvice init **/
+        /** Search service init **/
         this.searchService = new SearchService();
         this.searchService.init(this.params.type);
 
