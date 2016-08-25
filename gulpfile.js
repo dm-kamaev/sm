@@ -138,12 +138,7 @@ gulp.task('authConfig', function() {
         exec('node ./console/buildLocalConfig ' + ENV +
             ' ../environment/config/authorization',
             function() {
-                gulp.src([
-                    path.join(__dirname, '/environment/config/authorization/config.json'),
-                    path.join(__dirname, '/environment/config/authorization/services.json')
-                ]).pipe(
-                    gulp.dest(path.join(__dirname, '/node_modules/auth-service/config/'))
-                ).on('end', function() { resolve() });
+                resolve();
             }
         );
     });
@@ -154,12 +149,7 @@ gulp.task('userConfig', function() {
         exec('node ./console/buildLocalConfig ' + ENV +
             ' ../environment/config/user',
             function() {
-                gulp.src([
-                    path.join(__dirname, '/environment/config/user/config.json'),
-                    path.join(__dirname, '/environment/config/user/config.db.json')
-                ]).pipe(
-                    gulp.dest(path.join(__dirname, '/node_modules/user-service/config/'))
-                ).on('end', function() { resolve() });
+                resolve();
             }
         );
     });
