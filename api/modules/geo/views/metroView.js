@@ -14,7 +14,7 @@ metroView.list = function(metros) {
             if (metro.name) {
                 return {
                     id: metro.id,
-                    name: metro.name.replace('метро ', ''),
+                    name: this.formatName(metro.name),
                     coords: metro.coords
                 };
             }
