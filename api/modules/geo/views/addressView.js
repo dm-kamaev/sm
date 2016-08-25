@@ -196,4 +196,32 @@ var filterBydepartment = function(addresses) {
 };
 
 
+/**
+ * Create map item from address model instance
+ * @param  {models.Address} address
+ * @return {{
+ *     coordinates: Array<number>,
+ *     title: {
+ *         text: string,
+ *         alias: string
+ *     },
+ *     description: string,
+ *     name: string,
+ *     score: number
+ * }}
+ */
+addressView.mapItem = function(address) {
+    return {
+        coordinates: address.coords,
+        title: {
+            text: 'Название бренда',
+            alias: 'school/search'
+        },
+        description: 'Лучший курс',
+        name: address.name,
+        score: 5 * Math.random()
+    };
+};
+
+
 module.exports = addressView;

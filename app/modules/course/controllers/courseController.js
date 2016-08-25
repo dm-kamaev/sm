@@ -6,6 +6,7 @@ const await = require('asyncawait/await');
 const soy = require('../../../components/soy');
 
 const searchView = require('../../../../api/modules/course/views/searchView');
+const addressView = require('../../../../api/modules/geo/views/addressView');
 
 const config = require('../../../config').config;
 const ANALYTICS_ID = config.analyticsId;
@@ -13,11 +14,25 @@ const YANDEX_METRIKA_ID = config.yandexMetrikaId;
 const DOMAIN = config.url.protocol + '://' + config.url.host;
 const FB_CLIENT_ID = config.facebookClientId;
 
+const models = require('../../../components/models').all;
+
 exports.search = async(function(req, res, next) {
     try {
         var searchParams =
             await(services.search.initSearchParams(req.query));
         var authSocialLinks = await(services.auth.getAuthSocialUrl());
+
+        /** Temporary map address data */
+        var pinAddresses = await(models.Address.findAll({
+            limit: 10
+        }));
+        var pointAddresses = await(models.Address.findAll({
+            limit: 10,
+            offset: 10
+        }));
+        /** End temporary address data */
+
+        var mapItems = createMapItems(pinAddresses, pointAddresses);
 
         var params = {
             data: {
@@ -39,9 +54,7 @@ exports.search = async(function(req, res, next) {
                 },
                 user: null,
                 authSocialLinks: authSocialLinks,
-                map: {
-                    schools: []
-                },
+                map: mapItems,
                 search: {
                     countResults: 100,
                     placeholder: 'Район, метро, название курса'
@@ -226,3 +239,41 @@ exports.search = async(function(req, res, next) {
         next();
     }
 });
+
+
+/**
+ * Creates map items from addresses
+ * @param {Array<models.Address>} pinAddresses
+ * @param {Array<models.Address>} pointAddresses
+ * @return {{
+ *     itemGroups: Array<{
+ *         viewType: string,
+ *         items: Array<Object>
+ *     }>,
+ *     position: {
+ *         center: Array<number>,
+ *         type: string
+ *     }
+ * }}
+ */
+var createMapItems = function(pinAddresses, pointAddresses) {
+    var district = await(models.District.findAll({
+        limit: 1
+    }));
+    return {
+        itemGroups: [
+            {
+                viewType: 'pin',
+                items: pinAddresses.map(addressView.mapItem)
+            },
+            {
+                viewType: 'point',
+                items: pointAddresses.map(addressView.mapItem)
+            }
+        ],
+        position: {
+            center: [district[0].centerCoords[1], district[0].centerCoords[0]],
+            type: 'district'
+        }
+    };
+};
