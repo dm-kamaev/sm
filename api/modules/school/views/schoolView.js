@@ -549,7 +549,7 @@ schoolView.suggest = function(data) {
  * @return {array<object>}
  */
 schoolView.dataLinks = function() {
-    var searchUrl = '/search?name=';
+    var searchUrl = '/school?name=';
 
     return [
         {

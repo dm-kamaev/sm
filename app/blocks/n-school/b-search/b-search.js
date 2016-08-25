@@ -887,7 +887,7 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.searchRequest_ = function(searchString) {
-        var url = '/search';
+        var url = '/school';
         if (searchString) {
             url += '?name=' + encodeURIComponent(searchString);
         }
@@ -918,7 +918,7 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.onNotSchoolSelect_ = function(event, data) {
-        var url = '/search' +
+        var url = '/school' +
                 '?name=' + encodeURIComponent(data['text']);
         if (data['item']['type'] === 'metro') {
             url += '&metroId=' + data['item']['id'];

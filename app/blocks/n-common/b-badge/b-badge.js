@@ -295,7 +295,7 @@ goog.scope(function() {
     Badge.prototype.onItemClickLocationMode_ = function(itemId) {
         var data = this.params_.data[itemId];
 
-        document.location.href = '/search?' +
+        document.location.href = '/school?' +
             goog.uri.utils.buildQueryDataFromMap(data);
     };
 });  // goog.scope
