@@ -37,7 +37,12 @@
  *     search: {
  *         countResults: number,
  *         searchText: string,
- *         placeholder: ?string
+ *         placeholder: ?string,
+ *         declensionEntityType: {
+ *             nom: string,
+ *             gen: string,
+ *             plu: string
+ *         }
  *     },
  *     sort: sm.gDropdown.TemplateSelect.Params.Data
  *     entityList: sm.bSmItemList.Template.Params.Data,
@@ -124,7 +129,12 @@
  *         search: {
  *             countResults: number,
  *             searchText: string,
- *             placeholder: ?string
+ *             placeholder: ?string,
+ *             declensionEntityType: {
+ *                 nom: string,
+ *                 gen: string,
+ *                 plu: string
+ *             }
  *         },
  *         sort: sm.gDropdown.TemplateSelect.Params.Data
  *         entityList: sm.bSmItemList.Template.Params.Data,
@@ -257,7 +267,12 @@
  *         search: {
  *             countResults: number,
  *             searchText: string,
- *             placeholder: ?string
+ *             placeholder: ?string,
+ *             declensionEntityType: {
+ *                 nom: string,
+ *                 gen: string,
+ *                 plu: string
+ *             }
  *         },
  *         entityList: sm.bSmItemList.Template.Params.Data,
  *         filters: {sm.lSearch.bFilters.Template.Params}
@@ -370,7 +385,11 @@
  *         search: {
  *             countResults: number,
  *             searchText: string,
- *             placeholder: ?string
+ *             declensionEntityType: {
+ *                 nom: string,
+ *                 gen: string,
+ *                 plu: string
+ *             }
  *         },
  *         entityList: sm.bSmItemList.Template.Params.Data
  *     }
@@ -437,7 +456,11 @@
  *         search: {
  *             countResults: number,
  *             searchText: string,
- *             placeholder: ?string
+ *             declensionEntityType: {
+ *                 nom: string,
+ *                 gen: string,
+ *                 plu: string
+ *             }
  *         }
  *     },
  *     config: {
@@ -470,7 +493,12 @@
  *         },
  *         search: {
  *             countResults: number,
- *             searchText: string
+ *             searchText: string,
+ *             declensionEntityType: {
+ *                 nom: string,
+ *                 gen: string,
+ *                 plu: string
+ *             }
  *         }
  *     }
  * }}
@@ -487,7 +515,8 @@
             {call .generateHeaderText_}
                 {param params: [
                     'searchText': $params.data?.search?.searchText,
-                    'countResults': $params.data?.search?.countResults
+                    'countResults': $params.data?.search?.countResults,
+                    'declensionEntityType': $params.data?.search?.declensionEntityType
                 ]/}
             {/call}
         {/if}
@@ -586,7 +615,12 @@
  * Generates header text for results
  * @param params {{
  *     searchText: string,
- *     countResults: number
+ *     countResults: number,
+ *     declensionEntityType: {
+ *         nom: string,
+ *         gen: string,
+ *         plu: string
+ *     }
  * }}
  */
 {template .generateHeaderText_}
@@ -615,9 +649,9 @@
                 {call cl.iUtils.Utils.declensionPrint}
                     {param params: [
                         'num': $params.countResults,
-                        'nom': ' школу',
-                        'gen': ' школы',
-                        'plu': ' школ'
+                        'nom': ' ' + $params.declensionEntityType.nom,
+                        'gen': ' ' + $params.declensionEntityType.gen,
+                        'plu': ' ' + $params.declensionEntityType.plu
                     ]/}
                 {/call}
             </span>

@@ -33,7 +33,12 @@ exports.render = function(data) {
         },
         search: {
             countResults: data.countResults,
-            searchText: ''
+            searchText: '',
+            declensionEntityType: {
+                nom: 'курс',
+                gen: 'курса',
+                plu: 'курсов'
+            }
         },
         sort: {
             listItems: [{
