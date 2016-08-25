@@ -11,19 +11,26 @@ goog.require('sm.bPopularSchools.Template');
 goog.require('sm.bSchoolCatalog.Template');
 goog.require('sm.bSchoolListPaged.Template');
 goog.require('sm.bSearchPanel.Template');
+goog.require('sm.bSmBadge.Template');
 goog.require('sm.bSmFeedbackBoard.Template');
 goog.require('sm.bSmFooter.Template');
 goog.require('sm.bSmInformationBoard.Template');
+goog.require('sm.bSmItem.Template');
+goog.require('sm.bSmItem.TemplateEntity');
+goog.require('sm.bSmItemList.Template');
+goog.require('sm.bSmListPaged.Template');
+goog.require('sm.bSmScore.Template');
+goog.require('sm.bSmScore.TemplateBrief');
 goog.require('sm.bSmSubheader.Template');
 goog.require('sm.gAuthSocial.TemplateStendhal');
 goog.require('sm.gAuthSocialModal.TemplateStendhal');
 goog.require('sm.gButton.TemplateSocialStendhal');
 goog.require('sm.gButton.TemplateStendhal');
-goog.require('sm.gDropdown.DropdownSelectTemplate');
+goog.require('sm.gDropdown.TemplateSelect');
 goog.require('sm.gHint.TemplateStendhal');
 goog.require('sm.gIcon.TemplateStendhal');
 goog.require('sm.gInput.DigitInputTemplate');
-goog.require('sm.gList.SelectTemplate');
+goog.require('sm.gList.TemplateSelect');
 goog.require('sm.gModal.TemplateFeedback');
 goog.require('sm.gModal.TemplateStendhal');
 goog.require('sm.gTab.TemplateStendhal');
@@ -68,11 +75,11 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         )
         .setTemplateListItem(
             'dropdown-select',
-            sm.gDropdown.DropdownSelectTemplate.dropdown
+            sm.gDropdown.TemplateSelect.dropdown
         )
         .setTemplateListItem(
             'list-select',
-            sm.gList.SelectTemplate.list
+            sm.gList.TemplateSelect.list
         )
         .setTemplateListItem(
             'digit-input',
@@ -153,8 +160,10 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'filter-search',
             sm.lSearchResult.bFilterSearch.Template.filterSearch
-        )
-        .setTemplateListItem(
+        );
+
+    /** Global blocks an their heirs **/
+    this.setTemplateListItem(
             'smFooter',
             sm.bSmFooter.Template.footer
         )
@@ -169,6 +178,34 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'smFeedbackBoard',
             sm.bSmFeedbackBoard.Template.feedbackBoard
+        )
+        .setTemplateListItem(
+            'smItem',
+            sm.bSmItem.Template.item
+        )
+        .setTemplateListItem(
+            'smScore',
+            sm.bSmScore.Template.score
+        )
+        .setTemplateListItem(
+            'smScoreBrief',
+            sm.bSmScore.TemplateBrief.score
+        )
+        .setTemplateListItem(
+            'smItemEntity',
+            sm.bSmItem.TemplateEntity.item
+        )
+        .setTemplateListItem(
+            'smItemList',
+            sm.bSmItemList.Template.itemList
+        )
+        .setTemplateListItem(
+            'smListPaged',
+            sm.bSmListPaged.Template.listPaged
+        )
+        .setTemplateListItem(
+            'smBadge',
+            sm.bSmBadge.Template.badge
         );
 };
 goog.inherits(sm.iFactory.TemplateFactoryStendhal, cl.iFactory.TemplateFactory);

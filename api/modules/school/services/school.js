@@ -194,8 +194,10 @@ service.getPopularSchools = async(function(opt_amount) {
             include: [{
                 model: models.Address,
                 as: 'addresses',
+                required: false,
                 where: {
-                    isSchool: true
+                    isSchool: true,
+                    entityType: entityType.SCHOOL
                 },
                 include: [
                     {
@@ -280,7 +282,10 @@ service.getRandomIndexes = function(start, end, amount) {
 service.getAddresses = async(function(schoolId) {
     return await(
         models.Address.findAll({
-            where: {schoolId: schoolId},
+            where: {
+                entityId: schoolId,
+                entityType: entityType.SCHOOL
+            },
             include: [
                 {
                     model: models.Department,
@@ -408,8 +413,10 @@ service.getByIdsWithGeoData = async(function(schoolIds) {
         attributes: ['id', 'name', 'totalScore'],
         include: [{
             model: models.Address,
+            required: false,
             where: {
-                isSchool: true
+                isSchool: true,
+                entityType: entityType.SCHOOL
             },
             as: 'addresses',
             attributes: ['id', 'name'],
@@ -613,7 +620,7 @@ var isFeedbackLack = function(scoreCount, reviewCount) {
 service.searchFiltersData = async(function(searchParams) {
     var data = {
         subjects: services.subject.getAll(),
-        schoolTypes: services.search.getTypeFilters(),
+        schoolTypes: services.schoolSearch.getTypeFilters(),
         egeSubjects: services.egeResult.getUniqueSubjects(),
         giaSubjects: services.giaResult.getUniqueSubjects(),
         olympiadSubjects: services.olimpResult.getUniqueSubjects(),
@@ -684,13 +691,19 @@ service.findBySite = async(function(site) {
  */
 service.viewOne = function(id) {
     var school = await(models.School.findOne({
-        where: { id: id }
+        where: {id: id}
     }));
 
     var resultPromises = {
         activities: services.additionalEducation.findBySchoolId(id),
         comments: services.comment.getComments(school.commentGroupId),
-        addresses: services.address.getWithDepartmentsWithMetro(id, true, true)
+        addresses: services.address.getWithDepartmentsWithMetro(
+            id,
+            entityType.SCHOOL, {
+                isSchool: true,
+                order: true
+            }
+        )
     };
 
     var result = await(resultPromises);
@@ -826,6 +839,10 @@ service.listInstances = async(function() {
         }, {
             model: models.Address,
             as: 'addresses',
+            required: false,
+            where: {
+                entityType: entityType.SCHOOL
+            },
             include: [{
                 model: models.Department,
                 as: 'departments'
@@ -858,7 +875,10 @@ service.list = async(function(opt_params, opt_config) {
         config = opt_config || {},
         limitResults = config.limitResults || null;
 
-    var sqlString = services.search.getSearchSql(searchParams, limitResults);
+    var sqlString = services.schoolSearch.getSearchSql(
+        searchParams,
+        limitResults
+    );
 
     var options = {
         type: sequelize.QueryTypes.SELECT
@@ -894,6 +914,10 @@ service.searchByIds = function(ids) {
                 attributes: [
                     'id'
                 ],
+                required: false,
+                where: {
+                    entityType: entityType.SCHOOL
+                },
                 include: [{
                     model: models.Area,
                     as: 'area',

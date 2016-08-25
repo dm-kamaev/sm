@@ -21,7 +21,7 @@
   "homepage": "https://github.com/c7s/l3_school-market#readme",
   "devDependencies": {
     "asyncawait": "^1.0.1",
-    "auth-service": "git+ssh://git@github.com:c7s/auth-service.git#release-20160803",
+    "auth-service": "git+ssh://git@github.com:c7s/auth-service.git#dev",
     "axios": "^0.9.1",
     "bluebird": "^3.4.1",
     "body-parser": "~1.13.2",
@@ -67,8 +67,8 @@
     "morgan": "^1.6.1",
     "multi-geocoder": "^0.1.4",
     "node-sass": "^3.3.3",
-    "node-xlsx": "^0.6.0",
-    "nodules": "git+ssh://git@github.com:c7s/nodules.git#release-20160802",
+    "node-xlsx": "^0.7.2",
+    "nodules": "git+ssh://git@github.com:c7s/nodules.git#dev",
     "passport": "^0.3.2",
     "pg": "^4.4.2",
     "pg-hstore": "^2.3.2",
@@ -89,7 +89,8 @@
     "tipograph": "^0.3.3",
     "translitit-cyrillic-russian-to-latin": "git+ssh://git@github.com:c7s-bot/translitit-cyrillic-russian-to-latin.git#master",
     "uid-safe": "^2.1.0",
-    "user-service": "git+ssh://git@github.com/c7s/user-service.git#dev"
+    "user-service": "git+ssh://git@github.com/c7s/user-service.git#dev",
+    "xlsx-to-json": "^0.2.4"
   },
   "dependencies": {
     "express": "^4.13.3",

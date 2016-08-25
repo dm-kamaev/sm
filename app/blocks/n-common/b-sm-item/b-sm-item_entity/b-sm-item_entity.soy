@@ -1,0 +1,452 @@
+{namespace sm.bSmItem.TemplateEntity}
+
+
+/**
+ * @typedef {{
+ *     id: (number|undefined),
+ *     type: string,
+ *     name: {
+ *         light: (string|undefined),
+ *         bold: (string|undefined)
+ *     },
+ *     cost: (number|undefined),
+ *     alias: ?string,
+ *     score: (sm.bSmScore.TemplateBrief.Params.Data|undefined),
+ *     description: string,
+ *     brand: (string|undefined),
+ *     metro: (Array<{
+ *         id: number,
+ *         name: string
+ *     }>|undefined),
+ *     area: (Array<{
+ *         id: number,
+ *         name: string
+ *     }>|undefined),
+ *     online: ('only'|'available'|undefidned),
+ *     isFavorite: ?boolean,
+ *     countDepartment: ?number,
+ *     position: (number|undefined)
+ * }} sm.bSmItem.TemplateEntity.Params.Data
+ */
+
+
+ /**
+ * Constructor
+ * @param params {{
+ *     data: sm.bSmItem.TemplateEntity.Params.Data,
+ *     config: sm.bSmItem.Template.Params.Config
+ * }}
+ * @extends sm.bSmItem.Template
+ * @constructor
+ */
+{template .item}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * Header
+ * @param params {{
+ *     data: {
+ *         type: string,
+ *         name: {
+ *             light: string,
+ *             bold: ?string
+ *         },
+ *         cost: (number|undefined),
+ *         score: ?sm.bSmScore.Template.Params.Data
+ *     }
+ * }}
+ * @override
+ */
+{template .sectionHeader}
+    <div class="{call .rootClass/}__section{sp}
+                {call .rootClass/}__section_header">
+        {call .name data="all" /}
+
+        {call .cost_}
+            {param params: [
+                'data': $params.data,
+                'config': [
+                    'size': 'l'
+                ]
+            ]/}
+        {/call}
+
+        {call .score data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Description
+ * @param params {{
+ *     data: {
+ *         type: string,
+ *         cost: (number|undefined),
+ *         description: (string|undefined),
+ *         brand: (string|undefined)
+ *     }
+ * }}
+ * @override
+ */
+{template .sectionDescription}
+    {let $classes kind="html"}
+        {call .rootClass/}__section{sp}
+        {call .rootClass/}__section_description
+
+        {if not $params.data?.description and $params.data.type != 'course'}
+            {sp}i-utils__hidden
+        {/if}
+    {/let}
+
+    <div class="{$classes}">
+        {call .description_ data="all" /}
+
+        {call .brand_ data="all" /}
+
+        {call .cost_}
+            {param params: [
+                'data': $params.data,
+                'config': [
+                    'size': 's'
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Details
+ * @param params {{
+ *     data: {
+ *         metro: (Array<{
+ *             id: number,
+ *             name: string
+ *         }>|undefined),
+ *         area: (Array<{
+ *             id: number,
+ *             name: string
+ *         }>|undefined),
+ *         online: ('only'|'available'|undefidned),
+ *         isFavorite: ?boolean,
+ *         countDepartment: ?number
+ *     },
+ *     config: {
+ *         stylizationModifier: string
+ *     }
+ * }}
+ * @override
+ */
+{template .sectionDetails}
+    <div class="{call .rootClass/}__section{sp}
+                {call .rootClass/}__section_details">
+        {call .location data="all" /}
+        {call .countDepartment_ data="all" /}
+        {call .online_ data="all" /}
+        {call .favoriteLink_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Item name
+ * @param params {{
+ *     data: {
+ *         name: {
+ *             light: string,
+ *             bold: ?string
+ *         }
+ *     }
+ * }}
+ * @override
+ */
+{template .name}
+    <div class="{call .rootClass/}__name">
+        {$params.data.name.light}
+
+        {if $params.data.name?.bold}
+            <span class="{call .rootClass/}__name-bold">
+                {$params.data.name.bold}
+            </span>
+        {/if}
+    </div>
+{/template}
+
+
+/**
+ * Cost
+ * @param params {{
+ *     data: {
+ *         type: string,
+ *         cost: (number|undefined)
+ *     },
+ *     config: {
+ *         size: string
+ *     }
+ * }}
+ */
+{template .cost_}
+    {let $classes kind="html"}
+        {call .rootClass/}__cost{sp}
+        {call .rootClass/}__cost_size_{$params.config.size}
+    {/let}
+
+    {if $params.data.type == 'course'}
+        <div class="{$classes}">
+            {call .insertCost_ data="all" /}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Insert cost of
+ * @param params {{
+ *     data: {
+ *         cost: (number|undefined)
+ *     }
+ * }}
+ */
+{template .insertCost_}
+    {if $params.data?.cost == 0}
+        бесплатно
+    {elseif $params.data?.cost}
+        от&nbsp;{$params.data.cost} руб./мес
+    {else}
+        цена&nbsp;по&nbsp;запросу
+    {/if}
+{/template}
+
+
+/**
+ * Score
+ * @param params {{
+ *     data: {
+ *         score: ?sm.bSmScore.TemplateBrief.Params.Data
+ *     }
+ * }}
+ * @override
+ */
+{template .score}
+    <div class="{call .rootClass/}__score">
+        {call .renderChild}
+            {param params: [
+                'type': 'smScoreBrief',
+                'renderParams': [
+                    'data': $params.data.score,
+                    'config': [
+                        'primaryMark': [
+                            'size': 'l',
+                            'isNameVisible': false,
+                            'zeroSign': 'nothing',
+                            'showMark': true
+                        ],
+                        'theme': 'bold',
+                        'isActive': true
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Description
+ * @param params {{
+ *     data: {
+ *         description: (string|undefined)
+ *     }
+ * }}
+ */
+{template .description_}
+    {if $params.data?.description}
+        <div class="{call .rootClass/}__description">
+            {$params.data.description}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Center names which provide training
+ * @param params {{
+ *     data: {
+ *         brand: (string|undefined)
+ *     }
+ * }}
+ */
+{template .brand_}
+    {if $params.data?.brand}
+        <div class="{call .rootClass/}__brand">
+            {$params.data.brand}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Online access
+ * @param params {{
+ *     data: {
+ *         online: ('only'|'available'|undefidned)
+ *     }
+ * }}
+ */
+{template .online_}
+    {if $params.data?.online}
+        <div class="{call .rootClass/}__badge{sp}
+                    {call .rootClass/}__badge_online">
+            {call .insertOnline_ data="all" /}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Insert online access
+ * @param params {{
+ *     data: {
+ *         online: ('only'|available'|undefidned)
+ *     }
+ * }}
+ */
+{template .insertOnline_}
+    {let $text kind="html"}
+        {if $params.data.online == 'only'}
+            Онлайн-курсы
+        {elseif $params.data.online == 'available'}
+            Доступны онлайн-курсы
+        {/if}
+    {/let}
+
+    {let $icon kind="html"}
+        {if $params.data.online == 'only'}
+            cursor
+        {/if}
+    {/let}
+
+    {call .renderChild}
+        {param params: [
+            'type': 'smBadge',
+            'renderParams': [
+                'data': [
+                    'items': [
+                        ['name': $text]
+                    ],
+                ],
+                'config': [
+                    'type': 'online',
+                    'iconName': $icon ?: ''
+                ]
+            ]
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * Favorite Link
+ * @param params {{
+ *     data: {
+ *         isFavorite: boolean
+ *     },
+ *     config: {
+ *         stylizationModifier: string
+ *     }
+ * }}
+ */
+{template .favoriteLink_ kind="html" private="true"}
+    <div class="{call .rootClass/}__badge {call .rootClass/}__badge_favorite">
+        {call .renderChild}
+            {param params: [
+                'type': 'favorite-link',
+                'renderParams': [
+                    'data': [
+                        'isFavorite': $params.data?.isFavorite
+                    ],
+                    'config': [
+                        'theme': 'light'
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Details
+ * @param params {{
+ *     data: {
+ *         countDepartment: (number|undefined)
+ *     }
+ * }}
+ */
+{template .countDepartment_}
+    {if $params.data?.countDepartment}
+        {let $text kind="html"}
+            {call .countDepartmentText_ data="all" /}
+        {/let}
+
+        <div class="{call .rootClass/}__badge{sp}
+                    {call .rootClass/}__badge_department">
+            {call .renderChild}
+                {param params: [
+                    'type': 'smBadge',
+                    'renderParams': [
+                        'data': [
+                            'items': [
+                                ['name': $text]
+                            ],
+                        ],
+                        'config': [
+                            'type': 'online'
+                        ]
+                    ]
+                ]/}
+            {/call}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Text for badge count department
+ * @param params {{
+ *     data: {
+ *         countDepartment: (number|undefined)
+ *     }
+ * }}
+ */
+{template .countDepartmentText_}
+    {$params.data.countDepartment}{sp}
+
+    {call cl.iUtils.Utils.declensionPrint}
+        {param params: [
+            'num': $params.data.countDepartment,
+            'nom': 'филиал',
+            'gen': 'филиала',
+            'plu': 'филиалов'
+        ]/}
+    {/call}
+
+    {sp}в Москве
+{/template}
+
+
+/**
+ * Css classes
+ * @param params {{
+ *     data: {
+ *         type: string
+ *     }
+ * }}
+ * @override
+ */
+{template .additionalClasses}
+    {call .rootClass/}_entity{sp}
+    {call .rootClass/}_type_{$params.data.type}
+{/template}

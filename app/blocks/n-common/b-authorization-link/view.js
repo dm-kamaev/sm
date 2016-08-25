@@ -23,7 +23,7 @@ sm.bAuthorizationLink.View = function(opt_params, opt_type, opt_modifier) {
      * @type {boolean}
      * @private
      */
-    this.isHintVisible_ = false;
+    this.secondaryMarksVisibility_ = false;
 };
 goog.inherits(sm.bAuthorizationLink.View, cl.iControl.View);
 
@@ -153,7 +153,7 @@ goog.scope(function() {
             event.target
         );
 
-        if (this.isHintVisible_ && !isContaints) {
+        if (this.secondaryMarksVisibility_ && !isContaints) {
             this.setInactiveState();
         }
     };
@@ -165,7 +165,7 @@ goog.scope(function() {
      * @private
      */
     View.prototype.onIconClick_ = function() {
-        if (this.isHintVisible_) {
+        if (this.secondaryMarksVisibility_) {
             this.setInactiveState();
         }
         else {
@@ -190,7 +190,7 @@ goog.scope(function() {
                 cl.gHint.View.CssClass.INCLUDE_CLICK_MODE
             );
 
-        this.isHintVisible_ = visible;
+        this.secondaryMarksVisibility_ = visible;
     };
 
 

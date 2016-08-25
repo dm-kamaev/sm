@@ -1,0 +1,66 @@
+@import "../i-media/i-media";
+
+.b-sm-badge {
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    line-height: 18px;
+}
+
+.b-sm-badge_rating {
+    cursor: pointer;
+}
+
+.b-sm-badge_active {
+    .b-sm-badge__item:hover {
+        color: #ee362c;
+    }
+
+    .b-sm-badge__item {
+        cursor: pointer;
+    }
+}
+
+.b-sm-badge__items {
+    display: inline-block;
+}
+
+.b-sm-badge__item {
+    display: inline;
+
+    text-decoration: none;
+
+    color: #808080;
+}
+
+.b-sm-badge__icon {
+    display: inline-block;
+
+    margin-right: 8px;
+}
+
+.b-sm-badge__hint-content {
+    width: 212px;
+    margin-right: 8px;
+
+    cursor: default;
+
+    color: #808080;
+
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+}
+
+.b-sm-badge__hint-link {
+    display: inline-block;
+
+    margin-top: 7px;
+
+    cursor: pointer;
+}
+
+.b-sm-badge__hint-link-icon {
+    display: inline-block;
+
+    margin-left: 10px;
+}

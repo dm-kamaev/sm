@@ -9,11 +9,13 @@ var geo = require('./geo');
 var user = require('./user');
 var favorite = require('./favorite');
 var entity = require('./entity');
+var course = require('./course');
 var models = require('../../app/components/models');
 
 models.initAssociations();
 
 exports.school = school;
+exports.course = course;
 exports.comment = comment;
 exports.debug = debug;
 exports.geo = geo;

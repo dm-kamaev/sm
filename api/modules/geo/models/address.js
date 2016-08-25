@@ -1,10 +1,19 @@
-var DataType = require('sequelize'),
-    db = require('../../../../app/components/db');
+var DataType = require('sequelize');
+
+var db = require('../../../../app/components/db'),
+    entityTypes = require('../../entity/enums/entityType');
 
 var Address = db.define('Address', {
-    schoolId: {
+    entityId: {
         type: DataType.INTEGER,
-        field: 'school_id'
+        field: 'entity_id'
+    },
+    entityType: {
+        type: DataType.STRING,
+        field: 'entity_type',
+        validate: {
+            isIn: [entityTypes.toArray()]
+        }
     },
     areaId: {
         type: DataType.INTEGER,
@@ -22,7 +31,7 @@ var Address = db.define('Address', {
     classMethods: {
         associate: function(models) {
             Address.belongsTo(models.School, {
-                foreignKey: 'school_id'
+                foreignKey: 'entity_id'
             });
             Address.belongsToMany(models.Metro, {
                 as: 'metroStations',
@@ -40,6 +49,10 @@ var Address = db.define('Address', {
             Address.belongsTo(models.Area, {
                 as: 'area',
                 foreignKey: 'area_id'
+            });
+            Address.belongsTo(models.CourseDepartment, {
+                as: 'courseDepartment',
+                foreignKey: 'entity_id'
             });
             Address.hasMany(models.AddressSearchData, {
                 as: 'searchData',

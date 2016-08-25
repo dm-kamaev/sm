@@ -14,11 +14,19 @@ metroView.list = function(metros) {
             if (metro.name) {
                 return {
                     id: metro.id,
-                    name: metro.name.replace('метро ', ''),
+                    name: this.formatName(metro.name),
                     coords: metro.coords
                 };
             }
         });
+};
+
+/**
+ * @param {string} name
+ * @return {string}
+ */
+metroView.formatName = function(name) {
+    return name.replace('метро', '').trim();
 };
 
 module.exports = metroView;

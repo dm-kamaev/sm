@@ -5,6 +5,7 @@ const commander = require('commander');
 const SearchUpdater = require('./modules/searchUpdater/SearchUpdater');
 var sequelize = require.main.require('./app/components/db');
 var modules = require('../api/modules'); // eslint-disable-line no-unused-vars
+var services = require('../app/components/services').all;
 
 var start = async(function(argstring) {
     var args = argstring.split(' ');

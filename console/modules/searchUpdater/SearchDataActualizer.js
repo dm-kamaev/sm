@@ -61,7 +61,7 @@ class SearchDataActualizer {
      */
     getSearchData_() {
         var searchData =
-            await(services.search.getSchoolRecords(
+            await(services.schoolSearch.getSchoolRecords(
                 this.school_.id,
                 this.searchType_
             ));
@@ -93,7 +93,7 @@ class SearchDataActualizer {
                 values: searchValues
             }));
         } else {
-            await(services.search.addSearchData(
+            await(services.schoolSearch.addSearchData(
                 this.school_.id,
                 searchValues,
                 this.searchType_)

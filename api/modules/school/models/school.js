@@ -143,7 +143,7 @@ var School = db.define('School', {
             });
             School.hasMany(models.Address, {
                 as: 'addresses',
-                foreignKey: 'school_id',
+                foreignKey: 'entity_id',
             });
             School.belongsTo(models.CommentGroup, {
                 foreignKey: 'comment_group_id',

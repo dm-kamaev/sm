@@ -49,8 +49,8 @@ exports.list = async(function(req, res, next) {
             req.params.listType &&
             lodash.isEmpty(req.query)) {
             var seoSchoolList = await(services.seoSchoolList.getByType(
-                    req.params
-                ));
+                req.params
+            ));
 
             if (!seoSchoolList) {
                 throw new errors.PageNotFoundError();
@@ -64,7 +64,7 @@ exports.list = async(function(req, res, next) {
             seoData = schoolSeoListView.seoData(seoSchoolList);
         } else {
             searchParams =
-                await(services.search.initSearchParams(req.query));
+                await(services.schoolSearch.initSearchParams(req.query));
             searchText = req.query.name || '';
         }
 
@@ -78,7 +78,7 @@ exports.list = async(function(req, res, next) {
                     }
                 ),
                 filtersData: services.school.searchFiltersData(searchParams),
-                mapPosition: services.search.getMapPositionParams(searchParams),
+                mapPosition: services.schoolSearch.getMapPositionParams(searchParams),
                 authSocialLinks: services.auth.getAuthSocialUrl(),
                 favorites: {
                     items: services.school.getByIdsWithGeoData(favoriteIds),
