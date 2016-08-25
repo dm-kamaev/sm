@@ -24,6 +24,14 @@ goog.scope(function() {
         sm.bSmMap.View.base(
             this, 'constructor', opt_params, opt_type, opt_modifier
         );
+
+
+        /**
+         * Map parameters
+         * @type {sm.bSmMap.View.Params}
+         * @protected
+         */
+        this.params = null;
     };
     goog.inherits(sm.bSmMap.View, cl.iControl.View);
     var View = sm.bSmMap.View;
@@ -34,10 +42,10 @@ goog.scope(function() {
      * @enum {string}
      */
     View.CssClass = {
-        ROOT: 'b-map',
-        BALLOON: 'b-map__balloon',
-        ITEM_NAME: 'b-map__href',
-        CLOSE_BALLOON: 'b-map__balloon-close'
+        ROOT: 'b-sm-map',
+        BALLOON: 'b-sm-map__balloon',
+        TITLE: 'b-sm-map__balloon-title',
+        BALLOON_CLOSE_BUTTON: 'b-sm-map__balloon-close'
     };
 
 
@@ -87,7 +95,7 @@ goog.scope(function() {
      * @return {string}
      */
     View.prototype.generateBalloonHtmlContent = function() {
-        return sm.bSmMap.Template.balloon();
+        return sm.bSmMap.Template.balloon().content;
     };
 
 
@@ -126,11 +134,11 @@ goog.scope(function() {
         return {
             balloon: baloonElement,
             closeButton: goog.dom.getElementByClass(
-                View.CssClass.CLOSE_BALLOON,
+                View.CssClass.BALLOON_CLOSE_BUTTON,
                 baloonElement
             ),
             title: goog.dom.getElementByClass(
-                View.CssClass.ITEM_NAME,
+                View.CssClass.TITLE,
                 baloonElement
             )
         };
@@ -156,14 +164,14 @@ goog.scope(function() {
      * @private
      */
     View.prototype.initParams_ = function() {
-        this.params_ = this.getRawDataParams_();
+        this.params = this.getRawDataParams_();
 
-        if (!this.params_['data']) {
-            this.params_['data'] = {};
+        if (!this.params['data']) {
+            this.params['data'] = {};
         }
 
-        if (!this.params_['config']) {
-            this.params_['config'] = {};
+        if (!this.params['config']) {
+            this.params['config'] = {};
         }
     };
 

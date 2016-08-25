@@ -11,21 +11,21 @@ goog.scope(function() {
      * @constructor
      */
     sm.bSmMap.IPresetGenerator = function() {};
-    var PresetCreator = sm.bSmMap.IPresetGenerator;
+    var PresetGenerator = sm.bSmMap.IPresetGenerator;
 
 
     /**
      * Icon directory
      * @type {string}
      */
-    PresetCreator.ICON_DIR = '/images/n-school/b-map/icons/';
+    PresetGenerator.ICON_DIR = '/images/n-common/b-sm-map/icons/';
 
 
     /**
      * Map presets names enum
      * @enum {string}
      */
-    PresetCreator.PresetName = {
+    PresetGenerator.PresetName = {
         DEFAULT: 'default',
         GREEN: 'green',
         YELLOW: 'yellow',
@@ -37,7 +37,7 @@ goog.scope(function() {
      * Map presets types enum
      * @enum {string}
      */
-    PresetCreator.PresetType = {
+    PresetGenerator.PresetType = {
         PIN: 'pin',
         POINT: 'point'
     };
@@ -52,16 +52,16 @@ goog.scope(function() {
      *     balloonOffset:
      * }}
      */
-    PresetCreator.TypeSettings = {
+    PresetGenerator.TypeSettings = {
         PIN: {
-            prefix: PresetCreator.PresetType.PIN,
+            prefix: PresetGenerator.PresetType.PIN,
             iconImageSize: [38, 40],
             iconImageOffset: [-12, -39],
             balloonOffset: [0, -30],
             zIndex: 230
         },
         POINT: {
-            prefix: PresetCreator.PresetType.POINT,
+            prefix: PresetGenerator.PresetType.POINT,
             iconImageSize: [13, 13],
             iconImageOffset: [-6, -6],
             balloonOffset: [0, -1],
@@ -74,7 +74,7 @@ goog.scope(function() {
      * Map presets states enum
      * @enum {string}
      */
-    PresetCreator.PresetState = {
+    PresetGenerator.PresetState = {
         DEFAULT: '',
         ACTIVE: 'active'
     };
@@ -84,13 +84,13 @@ goog.scope(function() {
      * Preset state options
      * @enum {Object}
      */
-    PresetCreator.StateSettings = {
+    PresetGenerator.StateSettings = {
         DEFAULT: {
-            postfix: PresetCreator.PresetState.DEFAULT,
+            postfix: PresetGenerator.PresetState.DEFAULT,
             zIndex: 0
         },
         ACTIVE: {
-            postfix: PresetCreator.PresetState.ACTIVE,
+            postfix: PresetGenerator.PresetState.ACTIVE,
             zIndex: 1200
         }
     };
@@ -107,7 +107,7 @@ goog.scope(function() {
      *     zIndexHover: number
      * }}
      */
-    PresetCreator.PresetSettings;
+    PresetGenerator.PresetSettings;
 
 
     /**
@@ -116,27 +116,27 @@ goog.scope(function() {
      *     settings: sm.bSmMap.IPresetGenerator.PresetSettings
      * }}
      */
-    PresetCreator.Preset;
+    PresetGenerator.Preset;
 
     /**
-     * Generate preset name by score and object type
+     * Generate preset name by score and view type
      * @param {number} score
      * @param {sm.bSmMap.IPresetGenerator.PresetType} presetType
      * @return {string}
+     * @public
      */
-    PresetCreator.prototype.generateNameByEntityScore = function(
-        score,
-        presetType) {
+    PresetGenerator.prototype.generatePresetNameByEntityParameters = function(
+        score, presetType) {
         var presetName;
 
         if (score >= 4) {
-            presetName = PresetCreator.PresetName.GREEN;
+            presetName = PresetGenerator.PresetName.GREEN;
         } else if (score >= 3) {
-            presetName = PresetCreator.PresetName.YELLOW;
+            presetName = PresetGenerator.PresetName.YELLOW;
         } else if (score > 0) {
-            presetName = PresetCreator.PresetName.RED;
+            presetName = PresetGenerator.PresetName.RED;
         } else {
-            presetName = PresetCreator.PresetName.DEFAULT;
+            presetName = PresetGenerator.PresetName.DEFAULT;
         }
 
         return presetType + '-' + presetName;
@@ -147,20 +147,40 @@ goog.scope(function() {
      * Generate unactive state preset name from given preset name
      * @param {string} preset
      * @return {string}
+     * @public
      */
-    PresetCreator.generateUnactiveStatePresetName = function(preset) {
-        var activeStateNamePart = '-' + PresetCreator.PresetState.ACTIVE;
+    PresetGenerator.prototype.generateDefaultStatePresetName = function(
+        preset) {
+        var activeStateNamePart = '-' + PresetGenerator.PresetState.ACTIVE;
 
         return preset.replace(activeStateNamePart, '');
+    };
+
+    /**
+     * Generate active preset name from given preset name
+     * @param {string} preset
+     * @return {string}
+     */
+    PresetGenerator.prototype.generateActiveStatePresetName = function(preset) {
+        var result;
+
+        if (~preset.indexOf(PresetGenerator.PresetState.ACTIVE)) {
+            result = preset;
+        } else {
+            var activeStateNamePart = '-' + PresetGenerator.PresetState.ACTIVE;
+            result = preset + activeStateNamePart;
+        }
+        return result;
     };
 
 
     /**
      * Generate presets for yandex map
      * @return {Array<sm.bSmMap.SmMap.Preset>}
+     * @public
      */
-    PresetCreator.prototype.generate = function() {
-        var generatedPresets = this.generatedPresets_();
+    PresetGenerator.prototype.generate = function() {
+        var generatedPresets = this.generatePresets_();
 
         return goog.array.flatten(generatedPresets);
     };
@@ -177,9 +197,9 @@ goog.scope(function() {
      * >} [description]
      * @private
      */
-    PresetCreator.prototype.generatedPresets_ = function() {
+    PresetGenerator.prototype.generatePresets_ = function() {
         var typePresetsSettings = goog.object.getValues(
-            PresetCreator.TypeSettings
+            PresetGenerator.TypeSettings
         );
 
         return typePresetsSettings.map(
@@ -198,10 +218,10 @@ goog.scope(function() {
      * >}
      * @private
      */
-    PresetCreator.prototype.generatePresetsByTypeSettings_ = function(
+    PresetGenerator.prototype.generatePresetsByTypeSettings_ = function(
         typeSettings) {
         var statePresetsSettings = goog.object.getValues(
-            PresetCreator.StateSettings
+            PresetGenerator.StateSettings
         );
 
         return statePresetsSettings.map(
@@ -218,10 +238,9 @@ goog.scope(function() {
      * >}
      * @private
      */
-    PresetCreator.prototype.generatePresetsByStateSettings_ = function(
-        typeSettings,
-        stateSettings) {
-        var presetNames = goog.object.getValues(PresetCreator.PresetName);
+    PresetGenerator.prototype.generatePresetsByStateSettings_ = function(
+        typeSettings, stateSettings) {
+        var presetNames = goog.object.getValues(PresetGenerator.PresetName);
         return presetNames.map(
             this.generatePresetsByName_.bind(
                 this,
@@ -239,10 +258,8 @@ goog.scope(function() {
      * @return {sm.bSmMap.IPresetGenerator.Preset}
      * @private
      */
-    PresetCreator.prototype.generatePresetsByName_ = function(
-        typeSettings,
-        stateSettings,
-        presetName) {
+    PresetGenerator.prototype.generatePresetsByName_ = function(
+        typeSettings, stateSettings, presetName) {
         var prefix = typeSettings.prefix;
         var postfix = stateSettings.postfix;
 
@@ -264,8 +281,8 @@ goog.scope(function() {
      * @return {string}
      * @private
      */
-    PresetCreator.prototype.generateIconHref_ = function(prefix, name) {
-        return PresetCreator.ICON_DIR + 'map-' + prefix + '-' + name +
+    PresetGenerator.prototype.generateIconHref_ = function(prefix, name) {
+        return PresetGenerator.ICON_DIR + 'map-' + prefix + '-' + name +
             '-th.png';
     };
 
@@ -278,10 +295,8 @@ goog.scope(function() {
      * @return {string}
      * @private
      */
-    PresetCreator.prototype.generatePresetName_ = function(
-        name,
-        prefix,
-        postfix) {
+    PresetGenerator.prototype.generatePresetName_ = function(
+        name, prefix, postfix) {
         var namePrefix = prefix != '' ? prefix + '-' : '';
         var namePostfix = postfix != '' ? '-' + postfix : '';
 
@@ -297,10 +312,8 @@ goog.scope(function() {
      * @return {sm.bSmMap.IPresetGenerator.PresetSettings}
      * @private
      */
-    PresetCreator.prototype.generatePresetSettings_ = function(
-        imageHref,
-        typeSettings,
-        stateSettings) {
+    PresetGenerator.prototype.generatePresetSettings_ = function(
+        imageHref, typeSettings, stateSettings) {
         return {
             'balloonOffset': typeSettings.balloonOffset,
             'iconImageHref': imageHref,
