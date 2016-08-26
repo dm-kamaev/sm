@@ -1,6 +1,7 @@
 const config = require('../../../../app/config').config;
 
-const AUTH_URL = config.authApi + '/oauth/?type=';
+const AUTH_URL = config.authApi + '/oauth/?type=',
+    REDIRECT_URI = config.redirectUri;
 
 var service = {
     name: 'auth'
@@ -12,7 +13,8 @@ var service = {
  * @return {sttring}
  */
 service.getSocialLink = function(socialType) {
-    var url = AUTH_URL + socialType;
+    var redirectUri = encodeURIComponent(REDIRECT_URI + '/' + socialType),
+        url = AUTH_URL + socialType + '&redirectUri=' + redirectUri;
 
     return url;
 };
