@@ -214,11 +214,15 @@ addressView.mapItem = function(address) {
     return {
         coordinates: address.coords,
         title: {
-            text: 'Название бренда',
+            text: 'Центр «Максимум»',
             alias: 'school/search'
         },
-        description: 'Лучший курс',
-        name: address.name,
+        link: {
+            text: 'Подготовка к ЕГЭ по русскому языку',
+            alias: 'school/search'
+        },
+        description: '660 руб./занятие',
+        addressName: address.name,
         score: 5 * Math.random()
     };
 };
