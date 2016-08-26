@@ -7,7 +7,8 @@ const config = require('../../../../app/config').config;
 const USER_API = config.userApi,
     GET_USER = '/user/',
     AUTH_API = config.authApi,
-    POST_AUTH = '/oauth/';
+    POST_AUTH = '/oauth/',
+    REDIRECT_URI = config.redirectUri;
 
 var service = {
     name: 'user'
@@ -20,9 +21,11 @@ var service = {
  * @return {string}
  */
 service.getUserByCode = async(function(data) {
-    var userUrlResponse = await(axios.post(AUTH_API + POST_AUTH, {
+    var redirectUri = REDIRECT_URI + '/' + data.type,
+        userUrlResponse = await(axios.post(AUTH_API + POST_AUTH, {
             code: data.code,
-            type: data.type
+            type: data.type,
+            redirectUri: redirectUri
         })),
         userUrl = userUrlResponse.headers.location;
 
