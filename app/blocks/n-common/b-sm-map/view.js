@@ -50,6 +50,21 @@ goog.scope(function() {
 
 
     /**
+     * Balloon horizontal offset in pixels for align
+     * @type {number}
+     * @const
+     */
+    View.BALLOON_HORZONTAL_OFFSET = 4;
+
+    /**
+     * Balloon vertical offset in pixels for align
+     * @type {number}
+     * @const
+     */
+    View.BALLOON_VERTICAL_OFFSET = 0;
+
+
+    /**
      * @typedef {{
      *     id: number,
      *     name: string,
@@ -107,9 +122,10 @@ goog.scope(function() {
      */
     View.prototype.setBalloonOffset = function(balloonElement) {
         var elementSize = goog.style.getSize(balloonElement);
-        var leftCoordinate = - (elementSize.width / 2);
-        var topCoordinate = - elementSize.height;
-
+        var leftCoordinate = - (elementSize.width / 2) +
+            View.BALLOON_VERTICAL_OFFSET;
+        var topCoordinate = - elementSize.height +
+            View.BALLOON_HORZONTAL_OFFSET;
         goog.style.setPosition(
             balloonElement,
             leftCoordinate,

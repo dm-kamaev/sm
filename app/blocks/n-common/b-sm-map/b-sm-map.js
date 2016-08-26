@@ -188,8 +188,8 @@ goog.scope(function() {
     Map.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
         this.initPresetGenerator_();
-
         var viewportPromise = this.getViewportPromise_(),
+
             ymapsPromise = this.getYmapsPromise_();
 
         viewportPromise.then(this.onShown_.bind(this));
@@ -270,7 +270,6 @@ goog.scope(function() {
      */
     Map.prototype.addItemGroup_ = function(itemGroup) {
         var mapObjects = this.generateMapObjects_(itemGroup);
-
         this.addMapObjects_(mapObjects);
     };
 
@@ -319,8 +318,8 @@ goog.scope(function() {
                 'coordinates': item['coordinates']
             },
             'properties': {
-                'title': item['title']['text'],
-                'name': item['name'],
+                'titleText': item['title']['text'],
+                'addressName': item['addressName'],
                 //TODO build href from alias here via url builder or smth
                 'titleHref': item['title']['alias'] ?
                     item['title']['alias'] :
