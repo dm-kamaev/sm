@@ -3,9 +3,9 @@ var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var commander = require('commander');
 
-var sequelize = require.main.require('./app/components/db');
+var sequelize = require('../app/components/db');
 var squel = require('squel').useFlavour('postgres');
-var services = require.main.require('./app/components/services').all;
+var services = require('../app/components/services').all;
 var colors = require('colors');
 const RatingParser = require('./modules/parse/dogm.mos.ru/RatingParser.js');
 
@@ -14,9 +14,10 @@ var parse = async(function() {
     var notFoundCount = 0;
     var firstPageParser
        = await(new RatingParser('http://dogm.mos.ru/rating/'));
-    var secondPageParser
-       = await(new RatingParser('http://dogm.mos.ru/napdeyat/obdet/ranking-301-to-500.php'));
-    var results = firstPageParser.results.concat(secondPageParser.results);
+    // var secondPageParser
+    //    = await(new RatingParser('http://dogm.mos.ru/napdeyat/obdet/ranking-301-to-500.php'));
+    // var results = firstPageParser.results.concat(secondPageParser.results);
+    var results = firstPageParser.results;
     await(results.forEach(res => {
         var isNotFound = await(processRank(res));
         if (isNotFound)
@@ -35,9 +36,12 @@ var parse = async(function() {
 var processRank = async(function(rank) {
     var notFound = false;
     var sqlRes = await(sequelize.query(generateFindSql(rank.site)));
+    var id = rank.id || sqlRes[0][0].id;
 
-    if (sqlRes[0].length == 1) {
-        sequelize.query(generateUpdateSql(sqlRes[0][0].id, rank.rankDogm));
+    console.log(rank.rankDogm + ' ' + id);
+
+    if (sqlRes[0].length == 1 || id) {
+        // sequelize.query(generateUpdateSql(id, rank.rankDogm));
     } else {
         console.log(colors.red(rank.name) + ' | ' + colors.red(rank.site));
         notFound = true;
