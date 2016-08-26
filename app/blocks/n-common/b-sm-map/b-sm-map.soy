@@ -86,39 +86,16 @@
  */
 {template .balloon}
     <div class="{call .rootClass /}__balloon">
-        {let $dataParams kind="js"}
-            {lb}"id": $[properties.id]{rb}
-        {/let}
-
-        <div class="{call .rootClass /}__baloon">
+        <div class="{call .rootClass /}__balloon-content">
             {call .balloonSectionTitle_ /}
             {call .balloonCloseButton_ /}
             {call .balloonSectionLinks_ /}
             {call .balloonSectionDescription_ /}
             {call .balloonSectionGeo_ /}
         </div>
-
-
-        <div class="b-map__balloon-content">
-            [if properties.address.stages]
-                <div class="b-map__content-item">
-                    {lb}{lb} properties.address.stages {rb}{rb}
-                </div>
-            [endif]
-
-            <div class="b-map__content-item">
-                $[properties.address.name]
-            </div>
-
-            [if properties.description]
-                <div class="b-map__content-item
-                            b-map__content-item_school-descr">
-                    $[properties.description]
-                </div>
-            [endif]
-        </div>
     </div>
 {/template}
+
 
 /**
  * Title balloon section
@@ -126,21 +103,21 @@
  */
 {template .balloonSectionTitle_ kind="html"}
     <div class="{call .rootClass /}__balloon-section
-        {call .rootClass /}__balloon-section_title">
+        {sp}{call .rootClass /}__balloon-section_title">
 
         {let $dataParams kind="js"}
             {lb}"id": $[properties.id]{rb}
         {/let}
 
-        [if properties.titleAlias]
+        [if properties.titleHref]
             <a class="{call .rootClass /}__balloon-title"
                 href="$[properties.titleHref]"
                 data-params="{$dataParams}">
-                $[properties.titleAlias]
+                $[properties.titleText]
             </a>
         [else]
             <div class="{call .rootClass /}__balloon-title">
-                $[properties.name]
+                $[properties.titleText]
             </div>
         [endif]
     </div>
@@ -171,14 +148,15 @@
  * Balloon section links template
  */
 {template .balloonSectionLinks_ kind="html"}
-    [if properties.linkText]
-        <div class="{call .rootClass /}__balloon-section
-            {call .rootClass /}__balloon-section_links">
-
-                <a class="{call .rootClass /}__balloon-link"
-                    href="$[properties.linkHref]"></a>
-        </div>
-    [endif]
+    <div class="{call .rootClass /}__balloon-section
+    {sp}{call .rootClass /}__balloon-section_links">
+        [if properties.linkHref]
+            <a class="{call .rootClass /}__balloon-link"
+                href="$[properties.linkHref]">
+                $[properties.linkText]
+            </a>
+        [endif]
+    </div>
 {/template}
 
 
@@ -186,9 +164,9 @@
  * Balloon section description template
  */
 {template .balloonSectionDescription_ kind="html"}
-    [if properties.decription]
+    [if properties.description]
         <div class="{call .rootClass /}__balloon-section
-            {call .rootClass /}__balloon-section_description">
+            {sp}{call .rootClass /}__balloon-section_description">
             <div class="{call .rootClass /}__balloon-description">
                 $[properties.description]
             </div>
@@ -201,11 +179,11 @@
  * Balloon section geo data description
  */
 {template .balloonSectionGeo_ kind="html"}
-    [if properties.decription]
+    [if properties.addressName]
         <div class="{call .rootClass /}__balloon-section
-            {call .rootClass /}__balloon-section_geodata">
+            {sp}{call .rootClass /}__balloon-section_geodata">
             <div class="{call .rootClass /}__balloon-geodata">
-                $[properties.name]{sp}
+                $[properties.addressName]{sp}
                     [if properties.stages]
                         $[properties.stages]
                     [endif]
