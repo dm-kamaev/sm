@@ -1,5 +1,3 @@
-var searchView = {};
-
 /**
  * Data for filter panel
  * @param {Array<Object>} filtersData
@@ -49,8 +47,8 @@ var searchView = {};
  *     }
  * }}
  */
-searchView.filterPanel = function(filtersData, searchParams) {
-    var filters = searchView.filters(filtersData, searchParams);
+module.exports.filterPanel = function(filtersData, searchParams) {
+    var filters = this.filters(filtersData, searchParams);
 
     return {
         data: {
@@ -107,19 +105,19 @@ searchView.filterPanel = function(filtersData, searchParams) {
  *     }>
  * }
  */
-searchView.filters = function(filtersData, searchParams) {
+module.exports.filters = function(filtersData, searchParams) {
     /** here makes order of filters in left menu **/
     var filters = [];
 
     filters.push(
-        filterAge(),
-        filterCourse(),
-        filterCost(),
-        filterSchedule(),
-        filterTime(),
-        filterRegularity(),
-        filterFormTraining(),
-        filterDuration()
+        this.filterAge(),
+        this.filterCourse(),
+        this.filterCost(),
+        this.filterSchedule(),
+        this.filterTime(),
+        this.filterRegularity(),
+        this.filterFormTraining(),
+        this.filterDuration()
     );
 
     return filters;
@@ -153,7 +151,7 @@ searchView.filters = function(filtersData, searchParams) {
  *     }
  * }}
  */
-var filterAge = function() {
+module.exports.filterAge = function() {
     return {
         data: {
             header: {
@@ -201,7 +199,7 @@ var filterAge = function() {
  *     }
  * }}
  */
-var filterCourse = function() {
+module.exports.filterCourse = function() {
     var options = [
         {
             'label': 'Подготовка к ЕГЭ по русскому языку',
@@ -282,7 +280,7 @@ var filterCourse = function() {
  *     }
  * }}
  */
-var filterCost = function() {
+module.exports.filterCost = function() {
     return {
         data: {
             header: {
@@ -349,7 +347,7 @@ var filterCost = function() {
  *     }
  * }}
  */
-var filterSchedule = function() {
+module.exports.filterSchedule = function() {
     return {
         data: {
             header: {
@@ -428,7 +426,7 @@ var filterSchedule = function() {
  *     }
  * }}
  */
-var filterTime = function() {
+module.exports.filterTime = function() {
     return {
         data: {
             header: {
@@ -490,7 +488,7 @@ var filterTime = function() {
  *     }
  * }}
  */
-var filterRegularity = function() {
+module.exports.filterRegularity = function() {
     return {
         data: {
             header: {
@@ -552,7 +550,7 @@ var filterRegularity = function() {
  *     }
  * }}
  */
-var filterFormTraining = function() {
+module.exports.filterFormTraining = function() {
     return {
         data: {
             header: {
@@ -609,7 +607,7 @@ var filterFormTraining = function() {
  *     }
  * }}
  */
-var filterDuration = function() {
+module.exports.filterDuration = function() {
     return {
         data: {
             header: {
@@ -639,4 +637,77 @@ var filterDuration = function() {
     };
 };
 
-module.exports = searchView;
+/**
+ * @param {{
+ *     user: Object,
+ *     authSocialLinks: Object,
+ *     countResults: number,
+ *     coursesList: Array<Object>,
+ *     mapData: Object<Object>,
+ *     searchParams: Object
+ * }} data
+ * @return {Object}
+ */
+module.exports.render = function(data) {
+    return {
+        seo: {
+            metaTitle: 'Кружки и секции'
+        },
+        subHeader: {
+            logo: {
+                imgUrl: '/images/n-common/b-sm-subheader/course-logo.svg'
+            },
+            links: {
+                nameL: 'Все курсы, кружки и секции',
+                nameM: 'Все курсы',
+                url: '/'
+            },
+            search: {},
+            user: data.user,
+            favorites: []
+        },
+        user: data.user,
+        authSocialLinks: data.authSocialLinks,
+        map: data.mapData,
+        search: {
+            countResults: data.countResults,
+            searchText: '',
+            placeholder: 'Район, метро, название курса',
+            declensionEntityType: {
+                nom: 'курс',
+                gen: 'курса',
+                plu: 'курсов'
+            }
+        },
+        sort: {
+            listItems: [{
+                'label': 'Средняя оценка',
+                'text': 'средней оценке'
+            }, {
+                'label': 'Образование',
+                'text': 'образованию'
+            }, {
+                'label': 'Преподаватели',
+                'text': 'преподавателям'
+            }, {
+                'label': 'Атмосфера',
+                'text': 'атмосфере'
+            }, {
+                'label': 'Инфраструктура',
+                'text': 'инфраструктуре'
+            }],
+            staticText: 'Сортировать по ',
+            defaultOpenerText: 'средней оценке'
+        },
+        entityList: {
+            items: data.coursesList,
+            itemType: 'smItemEntity'
+        },
+        filterPanel: this.filterPanel(),
+        searchSettings: {
+            url: 'api/course/search',
+            method: 'GET',
+            searchParams: data.searchParams
+        }
+    };
+};

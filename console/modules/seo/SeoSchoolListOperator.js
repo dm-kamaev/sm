@@ -768,7 +768,7 @@ class SeoSchoolListOperator {
      */
     getSchoolTypeId_(schoolTypeName) {
         var schoolType =
-            await(services.search.getTypeFilterByValue(schoolTypeName));
+            await(services.schoolSearch.getTypeFilterByValue(schoolTypeName));
 
         return schoolType ? schoolType.id : null;
     }

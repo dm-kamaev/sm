@@ -36,7 +36,5 @@ module.exports = {
         return up(queryInterface.sequelize);
     },
 
-    down: function(queryInterface, Sequelize) {
-        
-    }
+    down: function(queryInterface, Sequelize) { }
 };

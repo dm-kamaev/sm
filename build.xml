@@ -20,6 +20,10 @@
               value="${packaging.source.frontend-app.runtime.path}"/>
     <property name="auth.runtime-path"
         value="${packaging.source.frontend-app.runtime.path}"/>
+    <property name="user.config-path"
+        value="${basedir}/environment/config/user"/>
+    <property name="auth.config-path"
+        value="${basedir}/environment/config/authorization"/>
 
     <import file="${basedir}/node_modules/deployment/packaging.xml"/>
     <import file="${basedir}/node_modules/deployment/node.xml"/>

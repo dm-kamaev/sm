@@ -1,7 +1,7 @@
-const express = require('express'),
-    router = express.Router();
+var express = require('express');
+var router = express.Router();
 
-const courseController = require('./courseController');
+var courseController = require('./courseController');
 
 router.get('/courseSearch', courseController.search);
 

@@ -21,8 +21,11 @@ module.exports = {
                 type: Sequelize.TIME,
                 field: 'start_time'
             },
+            endTime: {
+                type: Sequelize.TIME,
+                field: 'end_time'
+            },
             day: Sequelize.INTEGER,
-            duration: Sequelize.FLOAT,
             createdAt: {
                 type: Sequelize.DATE,
                 field: 'created_at'

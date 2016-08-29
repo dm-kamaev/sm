@@ -3,8 +3,11 @@ var await = require('asyncawait/await');
 var sequelizeInclude = require('../../../components/sequelizeInclude');
 var models = require('../../../../app/components/models').all;
 var services = require('../../../../app/components/services').all;
-exports.name = 'address';
+var geoTools = require('../../../../console/modules/geoTools/geoTools');
+var logger = require('../../../../app/components/logger/logger')
+    .getLogger('app');
 
+exports.name = 'address';
 
 exports.getTest = async(() => {
     return await(models.Address.findOne({
@@ -18,30 +21,46 @@ exports.getTest = async(() => {
 
 /**
  * Added new address
- * @param {number} schoolId
+ * @param {number} entityId
+ * @param {string} entityType
  * @param {{
  *     name: string,
  *     coords?: array
  * }} data
+ * @return {Address}
  */
-exports.addAddress = async(function(schoolId, data) {
+exports.addAddress = async(function(entityId, entityType, data) {
     var addressBD = await(services.address.getAddress({
-        name: data.name
+        name: data.name,
+        entityType: entityType
     }));
     var address;
 
     if (addressBD) {
-        console.log('Address:'.yellow, data.name);
-        console.log('is alredy binded to school '.yellow +
-            'with id:'.yellow, addressBD.school_id);
+        logger.info('Address:' + data.name);
+        logger.info(
+            'is already binded to ' + entityType +
+            ' with id:' + addressBD.school_id
+        );
         address = addressBD;
     } else {
-        data.schoolId = schoolId;
+        data.entityId = entityId;
+        data.entityType = entityType;
         if (!data.coords) {
-            data.coords = await(
-                    services.yapi.getCoords('Москва, ' + data.name));
+            data.coords = await(services.yapi.getCoords(
+                'Москва, ' + data.name
+            ));
         }
+        data.areaId = data.areaId || await(services.area.create({
+            name: await(geoTools.getArea(data.coords)) // area name from coords
+        }))[0].id; // area id
+
         address = await(models.Address.create(data));
+
+        var metros = await(geoTools.getMetros(data.coords, 3));
+        await(this.setMetro(address, metros));
+
+        await(this.setDistance(address));
     }
     return address;
 });
@@ -268,5 +287,28 @@ exports.getAllWithSearchData = async(function() {
             'distance',
             'ASC'
         ]]
+    });
+});
+
+/**
+ * @param {Address} address
+ * @return {Array<AddressMetro>}
+ */
+exports.setDistance = async(function(address) {
+    var addressMetros = await(models.AddressMetro.findAll({
+        where: {
+            addressId: address.id,
+        }
+    }));
+
+    return addressMetros.map(addressMetro => {
+        var metroCoords = await(services.metro.getCoords(addressMetro.metroId))
+            .reverse();
+        return await(addressMetro.update({
+            distance: (
+                geoTools.distance(address.coords, metroCoords)
+                    .toFixed(3) * 1000
+            ).toFixed(0)
+        }));
     });
 });

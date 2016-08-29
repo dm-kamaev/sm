@@ -620,7 +620,7 @@ var isFeedbackLack = function(scoreCount, reviewCount) {
 service.searchFiltersData = async(function(searchParams) {
     var data = {
         subjects: services.subject.getAll(),
-        schoolTypes: services.search.getTypeFilters(),
+        schoolTypes: services.schoolSearch.getTypeFilters(),
         egeSubjects: services.egeResult.getUniqueSubjects(),
         giaSubjects: services.giaResult.getUniqueSubjects(),
         olympiadSubjects: services.olimpResult.getUniqueSubjects(),
@@ -875,7 +875,10 @@ service.list = async(function(opt_params, opt_config) {
         config = opt_config || {},
         limitResults = config.limitResults || null;
 
-    var sqlString = services.search.getSearchSql(searchParams, limitResults);
+    var sqlString = services.schoolSearch.getSearchSql(
+        searchParams,
+        limitResults
+    );
 
     var options = {
         type: sequelize.QueryTypes.SELECT

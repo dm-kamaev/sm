@@ -3,9 +3,9 @@ var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var commander = require('commander');
 
-var sequelize = require.main.require('./app/components/db');
+var sequelize = require('../app/components/db');
 var squel = require('squel').useFlavour('postgres');
-var services = require.main.require('./app/components/services').all;
+var services = require('../app/components/services').all;
 var colors = require('colors');
 const RatingParser = require('./modules/parse/dogm.mos.ru/RatingParser.js');
 
@@ -35,9 +35,10 @@ var parse = async(function() {
 var processRank = async(function(rank) {
     var notFound = false;
     var sqlRes = await(sequelize.query(generateFindSql(rank.site)));
+    var id = rank.id || sqlRes[0][0].id;
 
-    if (sqlRes[0].length == 1) {
-        sequelize.query(generateUpdateSql(sqlRes[0][0].id, rank.rankDogm));
+    if (sqlRes[0].length == 1 || id) {
+        sequelize.query(generateUpdateSql(id, rank.rankDogm));
     } else {
         console.log(colors.red(rank.name) + ' | ' + colors.red(rank.site));
         notFound = true;
