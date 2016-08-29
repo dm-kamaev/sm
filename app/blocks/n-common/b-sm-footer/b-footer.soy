@@ -70,7 +70,10 @@
         {foreach $link in $params?.data.links}
             {call .link_}
                 {param params:[
-                    'data': $link
+                    'data': $link,
+                    'config': [
+                        'size': 'large'
+                    ]
                 ]/}
             {/call}
         {/foreach}
@@ -91,7 +94,10 @@
     <div class="{call .rootClass/}__link">
         {call sm.bLink.Template.base}
             {param params: [
-                'data': $params.data
+                'data': $params.data,
+                'config': [
+                    'size': 'large'
+                ]
             ]/}
         {/call}
     </div>
