@@ -3,8 +3,8 @@ const soy = require('../../../components/soy');
 const services = require('../../../components/services').all;
 const schoolView = require('../../../../api/modules/school/views/schoolView');
 const searchView = require('../../../../api/modules/school/views/searchView');
-const schoolSeoListView =
-    require('../../../../api/modules/school/views/schoolSeoListView');
+const seoView = require('../../../../api/modules/school/views/seoView');
+
 const userView = require('../../../../api/modules/user/views/user');
 const entityType = require('../../../../api/modules/entity/enums/entityType');
 
@@ -16,6 +16,8 @@ const logger = require('../../../components/logger/logger').getLogger('app');
 
 const DOMAIN = config.url.protocol + '://' + config.url.host;
 const FB_CLIENT_ID = config.facebookClientId;
+
+const ENTITY_TYPE = 'school';
 
 const async = require('asyncawait/async'),
     await = require('asyncawait/await'),
@@ -64,11 +66,11 @@ exports.list = async(function(req, res, next) {
             }
 
             var storedParams =
-                schoolSeoListView.searchParams(seoSchoolList);
+                seoView.searchParams(seoSchoolList);
 
             searchParams = storedParams.searchParams;
             searchText = storedParams.searchText;
-            seoData = schoolSeoListView.seoData(seoSchoolList);
+            seoData = seoView.seoListData(seoSchoolList);
         } else {
             searchParams =
                 await(services.schoolSearch.initSearchParams(req.query));
@@ -306,4 +308,66 @@ exports.home = async(function(req, res) {
 
     res.header('Content-Type', 'text/html; charset=utf-8');
     res.end(html);
+});
+
+
+exports.catalog = async(function(req, res, next) {
+    try {
+        var user = req.user || {};
+
+        var data = seoView.catalog({
+            entityType: ENTITY_TYPE,
+            user: userView.default(user),
+            authSocialLinks: services.auth.getAuthSocialUrl()
+        });
+        console.log(data);
+
+        var params = {
+            params: {
+                // data: {
+                //     type: 'school',
+                //     seo: {
+                //         metaTitle: 'Каталог школ Москвы'
+                //     },
+                //     subHeader: {
+                //         logo: {
+                //             imgUrl: '/images/n-common/b-sm-subheader/school-logo.svg'
+                //         },
+                //         links: {
+                //             nameL: 'Все школы Москвы',
+                //             nameM: 'Все школы',
+                //             url: '/'
+                //         },
+                //         search: {
+                //             placeholder: 'Номер школы, метро, район'
+                //         },
+                //         user: userView.default(user),
+                //         favorites: []
+                //     },
+                //     authSocialLinks: services.auth.getAuthSocialUrl(),
+                //     user: userView.default(user)
+                // },
+                data: data,
+                config: {
+                    modifier: 'stendhal',
+                    staticVersion: config.lastBuildTimestamp,
+                    year: new Date().getFullYear(),
+                    analyticsId: analyticsId,
+                    yandexMetrikaId: yandexMetrikaId,
+                    csrf: req.csrfToken(),
+                    domain: DOMAIN,
+                    fbClientId: FB_CLIENT_ID
+                }
+            }
+        };
+
+        var html = soy.render('sm.lCatalog.Template.catalog', params);
+
+        res.header('Content-Type', 'text/html; charset=utf-8');
+        res.end(html);
+    } catch (error) {
+        console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', error);
+        res.status(error.code || 500);
+        next();
+    }
 });
