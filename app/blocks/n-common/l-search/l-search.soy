@@ -25,7 +25,7 @@
  *         textRight: (Array<string>|undefined)
  *     },
  *     subHeader: sm.bSmSubheader.Template.Params.Data,
- *     user: ?{
+ *     user: {
  *        firstName: (string|undefined),
  *        lastName: (string|undefined)
  *     },
@@ -47,22 +47,10 @@
  *     sort: sm.gDropdown.TemplateSelect.Params.Data
  *     entityList: sm.bSmItemList.Template.Params.Data,
  *     filterPanel: sm.lSearch.bFilterPanel.Template.Params,
- *     searchSettings: {
- *         url: string,
- *         method: string,
- *         searchParams: {
- *             name: ?string,
- *             metroId: ?number,
- *             areaId: ?number,
- *             schoolType: ?Array<string>,
- *             classes: ?Array<number>,
- *             ege: ?Array<string>,
- *             gia: ?Array<string>,
- *             olimp: ?Array<string>,
- *             sortType: ?number,
- *             page: ?number
- *         }
- *     },
+ *     searchParams: {Array<{
+ *         name: string,
+ *         value: (Array<(string|number)>)
+ *     }>},
  *     popularEntities: Array<{
  *         id: number,
  *         alias: string,
@@ -178,8 +166,7 @@
         ]
     ]/}
 
-    <div class="{call .rootClass/}__body"
-        data-params="{call goog.json.serialize data="$data" /}">
+    <div class="{call .rootClass/}__body">
 
         {call .sectionMap_ data="all" /}
         {call .sectionContent_ data="all" /}
@@ -734,6 +721,42 @@
             // {/call}
         </div>
     </div>
+{/template}
+
+
+
+/**
+ * @param params {{
+ *     data: {
+ *         user: {
+ *             firstName: (string|undefined),
+ *             lastName: (string|undefined)
+ *         },
+ *         authSocialLinks: {
+ *             vk: (string|undefined),
+ *             fb: (string|undefined)
+ *         },
+ *         searchParams: Array<{
+ *             name: string,
+ *             value: (Array<(string|number)>)
+ *         }>
+ *     },
+ *     config: {
+ *         type: string
+ *     }
+ * }}
+ * @override
+ */
+{template .attributes kind="attributes"}
+    data-params="
+        {call cl.iUtils.Utils.stringify}
+            {param json: [
+                'searchParams': $params.data?.searchParams,
+                'isUserAuthorized': $params.data?.user ? true : false,
+                'authSocialLinks': $params.data?.authSocialLinks,
+                'type': $params?.config.type
+            ] /}
+        {/call}"
 {/template}
 
 

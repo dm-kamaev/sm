@@ -27,6 +27,13 @@ goog.scope(function() {
         sm.lSearch.Search.base(this, 'constructor', view, opt_domHelper);
 
         /**
+         * @type {sm.lSearch.Search.Params}
+         * @protected
+         */
+        this.params = null;
+
+
+        /**
          * Sort control
          * @type {sm.gDropdown.DropdownSelect}
          * @private
@@ -63,17 +70,23 @@ goog.scope(function() {
          * @type {sm.bSmMap.SmMap}
          * @private
          */
-        this.map_ = null;
 
 
         /**
-         * Search service instance
+        this.map_ = null;
          * @type {sm.lSearch.iSearchService.SearchService}
+         * Search service instance
          */
         this.searchService = null;
     };
     goog.inherits(sm.lSearch.Search, sm.iLayout.LayoutStendhal);
     var Search = sm.lSearch.Search;
+
+
+    /**
+     * @typedef {sm.lSearch.View.Params}
+     */
+    Search.Params;
 
 
     /**
@@ -83,6 +96,7 @@ goog.scope(function() {
     Search.prototype.decorateInternal = function(element) {
         Search.base(this, 'decorateInternal', element);
 
+        this.initServices_();
         this.initLeftMenuInstances_();
         this.initResultsListInstances_();
         this.initMap_();
@@ -90,10 +104,23 @@ goog.scope(function() {
 
 
     /**
+     * @override
+     * @protected
+     */
+    Search.prototype.enterDocument = function() {
+        Search.base(this, 'enterDocument');
+
+        this.initSearchListeners_();
+        this.initFilterPanelListeners_();
+    };
+
+
+    /**
      * Init data loading services
      * @return {sm.lSearch.SmSearch}
+     * @private
      */
-    Search.prototype.initServices = function() {
+    Search.prototype.initServices_ = function() {
         /** IRequest init **/
         Request.getInstance().init(window.location.pathname);
 
@@ -112,12 +139,25 @@ goog.scope(function() {
     Search.prototype.initSearchListeners_ = function() {
         this.getHandler().listen(
             this.search_,
-            Search.Event.SUBMIT,
+            sm.bSearch.Search.Event.SUBMIT,
             this.onSearchSubmit_
         ).listen(
             this.search_,
-            Search.Event.ITEM_SELECT,
+            sm.bSearch.Search.Event.ITEM_SELECT,
             this.onSearchSubmit_
+        );
+    };
+
+
+    /**
+     * Init listeners for filter panel
+     * @private
+     */
+    Search.prototype.initFilterPanelListeners_ = function() {
+        this.getHandler().listen(
+            this.filterPanel_,
+            sm.lSearch.bFilterPanel.FilterPanel.Event.SUBMIT,
+            this.onFilterPanelSubmit_
         );
     };
 
@@ -127,7 +167,17 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.onSearchSubmit_ = function() {
+        console.log(this.filterPanel_.getData());
         console.log('submit');
+    };
+
+
+    /**
+     * Filter panel submit handler
+     * @private
+     */
+    Search.prototype.onFilterPanelSubmit_ = function() {
+        console.log(this.filterPanel_.getData());
     };
 
 
