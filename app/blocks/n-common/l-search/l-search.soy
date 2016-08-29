@@ -170,20 +170,7 @@
  * @override
  */
 {template .bodyContent autoescape="strict" kind="html"}
-// {call cl.iUtils.Utils.stringify}
-//           {param json: $params /}
-//     {/call}
-    {let $data: [
-        'searchSettings': $params.searchSettings,
-        'params': [
-            'isUserAuthorized': $params.data?.user ? true : false,
-            'authSocialLinks': $params.data?.authSocialLinks
-        ]
-    ]/}
-
-    <div class="{call .rootClass/}__body"
-        data-params="{call goog.json.serialize data="$data" /}">
-
+    <div class="{call .rootClass/}__body">
         {call .sectionMap_ data="all" /}
         {call .sectionContent_ data="all" /}
         {call .sectionFooterSeo_ data="all" /}
@@ -758,4 +745,48 @@
  */
 {template .rootClass}
     l-search
+{/template}
+
+
+/**
+ * Attributes
+ * @param params {{
+ *     data: {
+ *         user: ?{
+ *            firstName: (string|undefined),
+ *            lastName: (string|undefined)
+ *         },
+ *         authSocialLinks: {
+ *            vk: (string|undefined),
+ *            fb: (string|undefined)
+ *         },
+ *         searchSettings: {
+ *             url: string,
+ *             method: string,
+ *             searchParams: {
+ *                 name: ?string,
+ *                 metroId: ?number,
+ *                 areaId: ?number,
+ *                 schoolType: ?Array<string>,
+ *                 classes: ?Array<number>,
+ *                 ege: ?Array<string>,
+ *                 gia: ?Array<string>,
+ *                 olimp: ?Array<string>,
+ *                 sortType: ?number,
+ *                 page: ?number
+ *             }
+ *         }
+ *     }
+ * }}
+ * @override
+ */
+{template .attributes kind="attributes"}
+    data-params="
+        {call cl.iUtils.Utils.stringify}
+            {param json: [
+                'searchSettings': $params.data?.searchSettings,
+                'isUserAuthorized': $params.data?.user ? true : false,
+                'authSocialLinks': $params.data?.authSocialLinks
+            ]/}
+        {/call}"
 {/template}

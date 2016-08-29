@@ -106,9 +106,10 @@
     // {call cl.iUtils.Utils.stringify}
     //     {param json: $params.data /}
     // {/call}
-
-    {call .sectionHeader_ data="all" /}
-    {call .sectionCatalog_ data="all" /}
+    <div class="{call .rootClass/}__body">
+        {call .sectionHeader_ data="all" /}
+        {call .sectionCatalog_ data="all" /}
+    </div>
 {/template}
 
 
@@ -160,4 +161,31 @@
  */
 {template .rootClass}
     l-catalog
+{/template}
+
+
+/**
+ * Attributes
+ * @param params {{
+ *     data: {
+ *         user: ?{
+ *            firstName: (string|undefined),
+ *            lastName: (string|undefined)
+ *         },
+ *         authSocialLinks: {
+ *            vk: ?string,
+ *            fb: ?string
+ *         }
+ *     }
+ * }}
+ * @override
+ */
+{template .attributes kind="attributes"}
+    data-params="
+        {call cl.iUtils.Utils.stringify}
+            {param json: [
+                'isUserAuthorized': $params.data.user ? true : false,
+                'authSocialLinks': $params.data?.authSocialLinks
+            ]/}
+        {/call}"
 {/template}

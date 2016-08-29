@@ -130,17 +130,7 @@
  * }}
  */
 {template .bodyContent autoescape="strict" kind="html"}
-    {let $data: [
-        'id': $params.data.entityData?.id,
-        'name': $params.data.entityData?.name,
-        'isCommented': $params.data.user?.isCommented,
-        'isUserAuthorized': $params.data.user ? true : false,
-        'authSocialLinks': $params.data?.authSocialLinks
-    ]/}
-
-    <div class="{call .rootClass/}__body"
-        data-params="{call goog.json.serialize data="$data" /}">
-
+    <div class="{call .rootClass/}__body">
         {call .sectionData_ data="all" /}
         {call .sectionComments_ data="all" /}
         {call .sectionPopular_ data="all" /}
@@ -530,4 +520,39 @@
  */
 {template .rootClass}
     l-sm-information
+{/template}
+
+
+/**
+ * Attributes
+ * @param params {{
+ *     data: {
+ *         user: ?{
+ *            firstName: (string|undefined),
+ *            lastName: (string|undefined),
+ *            isCommented: boolean
+ *         },
+ *         authSocialLinks: {
+ *            vk: ?string,
+ *            fb: ?string
+ *         },
+ *         entityData: {
+ *             id: number,
+ *             name: string
+ *         }
+ *     }
+ * }}
+ * @override
+ */
+{template .attributes kind="attributes"}
+    data-params="
+        {call cl.iUtils.Utils.stringify}
+            {param json: [
+                'id': $params.data.entityData?.id,
+                'name': $params.data.entityData?.name,
+                'isCommented': $params.data.user?.isCommented,
+                'isUserAuthorized': $params.data.user ? true : false,
+                'authSocialLinks': $params.data?.authSocialLinks
+            ]/}
+        {/call}"
 {/template}

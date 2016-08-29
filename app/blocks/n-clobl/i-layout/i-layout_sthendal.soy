@@ -227,7 +227,7 @@
  * @override
  */
 {template .content autoescape="strict" kind="html"}
-    <div class="{call .rootClass/}">
+    <div class="{call .rootClass/}" {call .attributes data="all"/}>
         {call .subheader data="all" /}
         {call .bodyContent data="all" /}
         {call .footer data="all" /}
@@ -314,4 +314,12 @@
  */
 {template .rootClass}
     i-layout
+{/template}
+
+
+/**
+ * Attributes
+ * @override
+ */
+{template .attributes kind="attributes"}
 {/template}
