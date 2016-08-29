@@ -10,6 +10,7 @@
  */
 exports.render = function(data) {
     return {
+        type: data.entityType,
         seo: {
             metaTitle: 'Кружки и секции'
         },
