@@ -48,7 +48,9 @@ exports.search = async(function(req, res, next) {
                         nameM: 'Все курсы',
                         url: '/'
                     },
-                    search: {},
+                    search: {
+                        placeholder: 'Район, метро, название курса'
+                    },
                     user: null,
                     favorites: []
                 },
