@@ -113,7 +113,7 @@ goog.scope(function() {
         var result = {};
 
         this.filters_.forEach(function(filter) {
-            name = filter.getName();
+            var name = filter.getName();
             result[name] = filter.getCheckedData();
         });
 
@@ -193,8 +193,6 @@ goog.scope(function() {
             'type': FilterPanel.Event.SUBMIT,
             'data': this.getData()
         });
-
-        console.log(this.getData());
     };
 
 

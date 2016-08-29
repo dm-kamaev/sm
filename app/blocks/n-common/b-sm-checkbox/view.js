@@ -27,8 +27,7 @@ sm.bSmCheckbox.View = function(opt_params, opt_type, opt_modifier) {
 goog.inherits(sm.bSmCheckbox.View, cl.iControl.View);
 
 goog.scope(function() {
-    var View = sm.bSmCheckbox.View,
-        Utils = cl.iUtils.Utils;
+    var View = sm.bSmCheckbox.View;
 
 
     /**

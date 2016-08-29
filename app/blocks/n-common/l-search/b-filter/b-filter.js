@@ -36,8 +36,7 @@ goog.inherits(sm.lSearch.bFilter.Filter, cl.iControl.Control);
 
 
 goog.scope(function() {
-    var Filter = sm.lSearch.bFilter.Filter,
-        View = sm.lSearch.bFilter.View;
+    var Filter = sm.lSearch.bFilter.Filter;
 
 
     /**
