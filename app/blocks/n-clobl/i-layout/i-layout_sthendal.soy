@@ -224,7 +224,8 @@
  * @override
  */
 {template .content autoescape="strict" kind="html"}
-    <div class="{call .rootClass/}">
+    <div class="{call .rootClass/}"
+        {call .attributes data="all" /}>
         {call .subheader_ data="all" /}
         {call .bodyContent_ data="all" /}
         {call .footer_ data="all" /}
@@ -302,6 +303,15 @@
             ]/}
         {/call}
     </div>
+{/template}
+
+
+/**
+ * Attributes on element
+ * Important to write kind="attributes" when overrides
+ * @protected
+ */
+{template .attributes kind="attributes"}
 {/template}
 
 
