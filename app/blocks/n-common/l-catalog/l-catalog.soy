@@ -1,0 +1,163 @@
+{namespace sm.lCatalog.Template}
+
+
+/**
+ * @typedef {{
+ *     type: string,
+ *     openGraph: ({
+ *         url: (string|undefined),
+ *         siteName: (string|undefined),
+ *         title: (string|undefined),
+ *         type: (string|undefined),
+ *         description: (string|undefined),
+ *         image: (string|undefined),
+ *         fbClientId: (string|undefined),
+ *         twitterCardType: (string|undefined),
+ *         twitterSiteName: (string|undefined),
+ *         imageWidth: (string|undefined),
+ *         imageHeight: (string|undefined)
+ *     }|undefined),
+ *     seo: {
+ *         metaTitle: string,
+ *         metaDescription: (string|undefined),
+ *         title: (string|undefined),
+ *         description: (string|undefined),
+ *         textLeft: (Array<string>|undefined),
+ *         textRight: (Array<string>|undefined)
+ *     },
+ *     subHeader: sm.bSmSubheader.Template.Params.Data,
+ *     user: ?{
+ *        firstName: (string|undefined),
+ *        lastName: (string|undefined)
+ *     },
+ *     authSocialLinks: {
+ *        vk: (string|undefined),
+ *        fb: (string|undefined)
+ *     },
+ *     search: {
+ *         placeholder: ?string
+ *     },
+ *     catalog: {
+ *         header: string,
+ *         tabs: Array<{
+ *             title: string,
+ *             links: Array<{
+ *                 name: string,
+ *                 url: string
+ *             }>
+ *         }>
+ *     }
+ * }} sm.lCatalog.Template.Params.Data
+ */
+
+
+/**
+ * Page catalog
+ * @param params {{
+ *     data: sm.lCatalog.Template.Params.Data,
+ *     config: ?sm.iLayout.TemplateStendhal.Params.Config
+ * }}
+ * @extends sm.iLayout.TemplateStendhal
+ * @constructor
+ * @doc
+ */
+{template .catalog}
+    {call .document data="all" /}
+{/template}
+
+
+/**
+ * Add layout script to page
+ * @param params {{
+ *     config: {
+ *         staticVersion: (string|undefined)
+ *     }
+ * }}
+ * @protected
+ * @override
+ */
+{template .layoutScript kind="html"}
+    {call cl.iStatic.Template.script}
+        {param path: 'l-catalog.js' /}
+        {param staticVersion: $params?.config?.staticVersion /}
+    {/call}
+{/template}
+
+
+/**
+ * Content
+ * @param params {{
+ *     data: {
+ *         catalog: {
+ *             header: string,
+ *             tabs: Array<{
+ *                 title: string,
+ *                 links: Array<{
+ *                     name: string,
+ *                     url: string
+ *                 }>
+ *             }>
+ *         }
+ *     }
+ * }}
+ * @override
+ */
+{template .bodyContent}
+    // {call cl.iUtils.Utils.stringify}
+    //     {param json: $params.data /}
+    // {/call}
+
+    {call .sectionHeader_ data="all" /}
+    {call .sectionCatalog_ data="all" /}
+{/template}
+
+
+/**
+ * Catalog header
+ * @param params {{
+ *     data: {
+ *         catalog: {
+ *             header: string
+ *         }
+ *     }
+ * }}
+ */
+{template .sectionHeader_}
+    <div class="{call .rootClass/}__section {call .rootClass/}__section_header">
+        {$params.data.catalog?.header}
+    </div>
+{/template}
+
+
+/**
+ * Catalog
+ * @param params {{
+ *     data: {
+ *         catalog: {
+ *             tabs: Array<{
+ *                 title: string,
+ *                 links: Array<{
+ *                     name: string,
+ *                     url: string
+ *                 }>
+ *             }>
+ *         }
+ *     }
+ * }}
+ */
+{template .sectionCatalog_}
+    <div class="{call .rootClass/}__section {call .rootClass/}__section_catalog">
+        {call cl.iUtils.Utils.stringify}
+            {param json: $params.data.catalog.tabs /}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    l-catalog
+{/template}

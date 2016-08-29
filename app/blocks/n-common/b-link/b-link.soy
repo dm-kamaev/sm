@@ -1,23 +1,41 @@
 {namespace sm.bLink.Template}
 
+
 /**
- * Link
- * @param params {
- *    data: ?[
- *        name: ?string,
- *        url: ?string,
- *        content: ?string,
- *        icon: ?string
- *    ],
- *    config: ?[
- *        customClasses: ?string,
- *        target: ?string,
- *        theme: ?string,
- *        size: ?string
- *    ]
- * }
+ * @typedef {
+ *     name: string,
+ *     url: (string|undefined),
+ *     content: (string|undefined),
+ *     icon: (string|undefined)
+ * } sm.bLink.Template.Params.Data
  */
 
+
+/**
+ * @typedef {
+ *     target: (string|undefined),
+ *     size: (string|undefined),
+ *     theme: (string|undefined),
+ *     customClasses: (string|undefined)
+ * } sm.bLink.Template.Params.Config
+ */
+
+
+/**
+ * @typedef {
+ *     data: sm.bLink.Template.Params.Data,
+ *     config: sm.bLink.Template.Params.Config
+ * } sm.bLink.Template.Params
+ */
+
+
+/**
+ * Link
+ * @param params {{
+ *     data: sm.bLink.Template.Params.Data,
+ *     config: sm.bLink.Template.Params.Config
+ * }}
+ */
 {template .base autoescape="strict" kind="html"}
     {call .openTag_ data="all" /}
         {if $params?.data?.icon}
