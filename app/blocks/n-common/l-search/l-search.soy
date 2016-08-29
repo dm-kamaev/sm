@@ -3,6 +3,7 @@
 
 /**
  * @typedef {{
+ *     type: string,
  *     openGraph: ({
  *         url: (string|undefined),
  *         siteName: (string|undefined),
@@ -77,7 +78,7 @@
 
 /**
  * Search page
- * @param? params {{
+ * @param params {{
  *     data: sm.lSmSearch.Template.Params.Data,
  *     config: ?sm.iLayout.TemplateStendhal.Params.Config
  * }}
@@ -106,6 +107,7 @@
         {param staticVersion: $params?.config?.staticVersion /}
     {/call}
 {/template}
+
 
 /**
  * Content
@@ -165,8 +167,9 @@
  *         }>
  *     }
  * }}
+ * @override
  */
-{template .bodyContent_ autoescape="strict" kind="html"}
+{template .bodyContent autoescape="strict" kind="html"}
 // {call cl.iUtils.Utils.stringify}
 //           {param json: $params /}
 //     {/call}
