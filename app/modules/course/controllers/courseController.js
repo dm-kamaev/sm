@@ -39,6 +39,8 @@ exports.search = async(function(req, res, next) {
 
         var mapData = createMapItems(pinAddresses, pointAddresses);
 
+            /** End temporary address data */
+
         var data = searchView.render({
             user: user,
             authSocialLinks: authSocialLinks,
@@ -47,7 +49,8 @@ exports.search = async(function(req, res, next) {
             mapData: mapData,
             searchParams: searchParams
         });
-        /** End temporary address data */
+
+
         var html = soy.render(
             'sm.lSearch.Template.search', {
                 params: {

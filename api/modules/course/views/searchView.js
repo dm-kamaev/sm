@@ -662,7 +662,9 @@ module.exports.render = function(data) {
                 nameM: 'Все курсы',
                 url: '/'
             },
-            search: {},
+            search: {
+                placeholder: 'Район, метро, название курса'
+            },
             user: data.user,
             favorites: []
         },
