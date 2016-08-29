@@ -3,7 +3,6 @@ const cheerio = require('cheerio');
 const request = require('request');
 const await = require('asyncawait/await');
 
-var modules = require('../../../../api/modules'); // eslint-disable-line
 var services = require('../../../../app/components/services').all;
 var SchoolSearcher = require('../SchoolSearcher');
 
@@ -76,7 +75,7 @@ class RatingParser {
         var site = siteNode.attr('href');
         if (site || school) {
             return {
-                id: school.id,
+                id: school && school.id,
                 rankDogm: rating.trim(),
                 name: name
                     .trim()

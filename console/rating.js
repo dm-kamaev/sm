@@ -14,10 +14,9 @@ var parse = async(function() {
     var notFoundCount = 0;
     var firstPageParser
        = await(new RatingParser('http://dogm.mos.ru/rating/'));
-    // var secondPageParser
-    //    = await(new RatingParser('http://dogm.mos.ru/napdeyat/obdet/ranking-301-to-500.php'));
-    // var results = firstPageParser.results.concat(secondPageParser.results);
-    var results = firstPageParser.results;
+    var secondPageParser
+       = await(new RatingParser('http://dogm.mos.ru/napdeyat/obdet/ranking-301-to-500.php'));
+    var results = firstPageParser.results.concat(secondPageParser.results);
     await(results.forEach(res => {
         var isNotFound = await(processRank(res));
         if (isNotFound)
@@ -38,10 +37,8 @@ var processRank = async(function(rank) {
     var sqlRes = await(sequelize.query(generateFindSql(rank.site)));
     var id = rank.id || sqlRes[0][0].id;
 
-    console.log(rank.rankDogm + ' ' + id);
-
     if (sqlRes[0].length == 1 || id) {
-        // sequelize.query(generateUpdateSql(id, rank.rankDogm));
+        sequelize.query(generateUpdateSql(id, rank.rankDogm));
     } else {
         console.log(colors.red(rank.name) + ' | ' + colors.red(rank.site));
         notFound = true;
