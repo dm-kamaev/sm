@@ -33,6 +33,7 @@ goog.require('sm.gInput.DigitInputTemplate');
 goog.require('sm.gList.TemplateSelect');
 goog.require('sm.gModal.TemplateFeedback');
 goog.require('sm.gModal.TemplateStendhal');
+goog.require('sm.gTab.TemplateCatalog');
 goog.require('sm.gTab.TemplateStendhal');
 goog.require('sm.gTextarea.TemplateStendhal');
 goog.require('sm.lSchool.bDate.Template');
@@ -160,6 +161,10 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'filter-search',
             sm.lSearchResult.bFilterSearch.Template.filterSearch
+        )
+        .setTemplateListItem(
+            'tab-catalog',
+            sm.gTab.TemplateCatalog.tab
         );
 
     /** Global blocks an their heirs **/

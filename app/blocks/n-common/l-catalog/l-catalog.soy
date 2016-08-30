@@ -40,11 +40,8 @@
  *     catalog: {
  *         header: string,
  *         tabs: Array<{
- *             title: string,
- *             links: Array<{
- *                 name: string,
- *                 url: string
- *             }>
+ *             label: ?string,
+ *             content: Array<{sm.bLink.Template.Params.Data}>
  *         }>
  *     }
  * }} sm.lCatalog.Template.Params.Data
@@ -85,17 +82,33 @@
 
 
 /**
+ * @param params {{
+ *     data: sm.iLayout.TemplateStendhal.Params.Data,
+ *     config: sm.iLayout.TemplateStendhal.Params.Config
+ * }}
+ * @override
+ */
+{template .content autoescape="strict" kind="html"}
+    <div class="{call .rootClass/}" {call .attributes data="all"/}>
+        <div class="{call .rootClass/}__wrapper-content">
+            {call .subheader data="all" /}
+            {call .bodyContent data="all" /}
+        </div>
+
+        {call .footer data="all" /}
+    </div>
+{/template}
+
+
+/**
  * Content
  * @param params {{
  *     data: {
  *         catalog: {
  *             header: string,
  *             tabs: Array<{
- *                 title: string,
- *                 links: Array<{
- *                     name: string,
- *                     url: string
- *                 }>
+ *                 label: ?string,
+ *                 content: Array<{sm.bLink.Template.Params.Data}>
  *             }>
  *         }
  *     }
@@ -103,12 +116,26 @@
  * @override
  */
 {template .bodyContent}
-    // {call cl.iUtils.Utils.stringify}
-    //     {param json: $params.data /}
-    // {/call}
     <div class="{call .rootClass/}__body">
         {call .sectionHeader_ data="all" /}
         {call .sectionCatalog_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Section header
+ * @param params {{
+ *     data: {
+ *         catalog: {
+ *             header: string
+ *         }
+ *     }
+ * }}
+ */
+{template .sectionHeader_}
+    <div class="{call .rootClass/}__section {call .rootClass/}__section_header">
+        {call .header_ data="all" /}
     </div>
 {/template}
 
@@ -123,8 +150,8 @@
  *     }
  * }}
  */
-{template .sectionHeader_}
-    <div class="{call .rootClass/}__section {call .rootClass/}__section_header">
+{template .header_}
+    <div class="{call .rootClass/}__header">
         {$params.data.catalog?.header}
     </div>
 {/template}
@@ -136,11 +163,8 @@
  *     data: {
  *         catalog: {
  *             tabs: Array<{
- *                 title: string,
- *                 links: Array<{
- *                     name: string,
- *                     url: string
- *                 }>
+ *                 label: ?string,
+ *                 content: Array<{sm.bLink.Template.Params.Data}>
  *             }>
  *         }
  *     }
@@ -148,9 +172,19 @@
  */
 {template .sectionCatalog_}
     <div class="{call .rootClass/}__section {call .rootClass/}__section_catalog">
-        {call cl.iUtils.Utils.stringify}
-            {param json: $params.data.catalog.tabs /}
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': $params.config.modifier,
+                'type': 'tab-catalog',
+                'renderParams': [
+                    'data': $params.data.catalog
+                ]
+            ] /}
         {/call}
+
+        // {call cl.iUtils.Utils.stringify}
+        //     {param json: $params.data.catalog.tabs /}
+        // {/call}
     </div>
 {/template}
 

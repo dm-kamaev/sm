@@ -17,6 +17,14 @@ goog.scope(function() {
      */
     sm.lCatalog.Catalog = function(view, opt_domHelper) {
         sm.lCatalog.Catalog.base(this, 'constructor', view, opt_domHelper);
+
+
+        /**
+         * Tab instance
+         * @type {cl.gTab.Tab}
+         * @private
+         */
+        this.tabsCatalog_ = null;
     };
     goog.inherits(sm.lCatalog.Catalog, sm.iLayout.LayoutStendhal);
 
@@ -29,9 +37,21 @@ goog.scope(function() {
      */
     Catalog.prototype.decorateInternal = function(element) {
         Catalog.base(this, 'decorateInternal', element);
+
+        this.initTabsCatalog_();
     };
 
 
+    /**
+     * Initializes tabs-catalog instance
+     * @private
+     */
+    Catalog.prototype.initTabsCatalog_ = function() {
+        this.tabsCatalog_ = this.decorateChild(
+            'tab',
+            this.getView().getDom().tabsCatalog
+        );
+    };
 });  // goog.scope
 
 

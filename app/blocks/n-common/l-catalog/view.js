@@ -51,6 +51,9 @@ goog.scope(function() {
      */
     View.prototype.initDom_ = function() {
         this.dom = {
+            tabsCatalog: this.getElementByClass(
+                cl.gTab.View.CssClass.ROOT
+            )
         };
     };
 });  // goog.scope

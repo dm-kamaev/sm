@@ -1,0 +1,90 @@
+{namespace sm.gTab.TemplateCatalog}
+
+
+/**
+ * @typedef {{
+ *     tabs: Array<{
+ *         label: ?string,
+ *         content: Array<{sm.bLink.Template.Params.Data}>
+ *     }>,
+ *     selectedTabId: (number|undefined)
+ * }} sm.gTab.TemplateCatalog.Data
+ */
+
+
+/**
+ * @typedef {{
+ *     noDefaultTab: (boolean|undefined)
+ * }} sm.gTab.TemplateCatalog.Config
+ */
+
+
+/**
+ * Constructor
+ * @extends cl.gTab.Template
+ * @constructor
+ * @param params {{
+ *     data: sm.gTab.TemplateCatalog.Data,
+ *     config: sm.gTab.TemplateCatalog.Config
+ * }}
+ */
+{template .tab}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * Inner content template
+ * @param params {{
+ *     content: Array<{sm.bLink.Template.Params.Data}>
+ * }}
+ * @override
+ */
+{template .innerContent}
+    {call .linksList_ data="all" /}
+{/template}
+
+
+/**
+ * Links list template
+ * @param params {{
+ *     content: Array<{sm.bLink.Template.Params.Data}>
+ * }}
+ */
+{template .linksList_}
+    <div class="{call .rootClass/}__links-list">
+        {for $i in range(length($params.content))}
+            {call .link_}
+                {param params: [
+                    'data': $params.content[$i]
+                ]/}
+            {/call}
+        {/for}
+    </div>
+{/template}
+
+
+/**
+ * Template Link
+ * @param params {{
+ *     data: sm.bLink.Template.Params.Data
+ * }}
+ */
+{template .link_}
+    <div class="{call .rootClass/}__link">
+        {call sm.bLink.Template.base}
+            {param params: [
+                'data': $params.data
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Additional classes
+ * @override
+ */
+{template .additionalClasses}
+    {call .rootClass/}_catalog
+{/template}
