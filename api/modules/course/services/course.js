@@ -13,13 +13,22 @@ var service = {
  * @param {{
  *     name: string,
  *     description: ?string,
- *     fullInfo: ?string
+ *     fullDescription: ?string,
+ *     about: ?string,
+ *     entranceExam: ?string,
+ *     learningOutcome: ?string,
+ *     leadType: string,
  *     brandName: string,
+ *     type: ?string,
  *     options: Array<{
+ *         name: ?string,
+ *         description: ?string,
+ *         totalCost: ?number,
  *         costPerHour: ?number,
  *         online: ?boolean,
  *         age: ?number,
  *         maxGroupSize: ?integer,
+ *         currentGroupSize: ?integer,
  *         nativeSpeaker: ?boolean,
  *         startDate: ?string,
  *         duration: ?string,
@@ -45,8 +54,13 @@ service.create = async(function(data) {
         course = await(models.Course.create({
             name: data.name,
             brandId: brand.id,
+            type: data.type,
             description: data.description,
-            fullInfo: data.fullInfo
+            fullDescription: data.fullDescription,
+            about: data.about,
+            entranceExam: data.entranceExam,
+            learningOutcome: data.learningOutcome,
+            leadType: data.leadType
         }));
     course.options = data.options.map(option =>
         await(services.courseOption.create(course.id, option))

@@ -11,10 +11,14 @@ var service = {
 /**
  * @param {number} courseId
  * @param {{
+ *     name: ?string,
+ *     description: ?string,
+ *     totalCost: ?number,
  *     costPerHour: ?number,
  *     online: ?boolean,
  *     age: ?number,
  *     maxGroupSize: ?integer,
+ *     currentGroupSize: ?integer,
  *     nativeSpeaker: ?boolean,
  *     startDate: ?string
  *     duration: ?string,
@@ -36,10 +40,14 @@ var service = {
 service.create = async(function(courseId, data) {
     var courseOption = await(models.CourseOption.create({
         courseId: courseId,
+        name: data.name,
+        description: data.description,
+        totalCost: data.totalCost,
         costPerHour: data.costPerHour,
         online: data.online,
         age: data.age,
         maxGroupSize: data.maxGroupSize,
+        currentGroupSize: data.currentGroupSize,
         nativeSpeaker: data.nativeSpeaker,
         startDate: data.startDate,
         duration: data.duration

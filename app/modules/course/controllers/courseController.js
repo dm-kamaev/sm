@@ -39,7 +39,7 @@ exports.search = async(function(req, res, next) {
 
         var mapData = createMapItems(pinAddresses, pointAddresses);
 
-            /** End temporary address data */
+        /** End temporary address data */
 
         var data = searchView.render({
             user: user,
