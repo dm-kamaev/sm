@@ -28,8 +28,7 @@ goog.inherits(sm.bSmItemList.SmItemList, cl.iControl.Control);
 
 
 goog.scope(function() {
-    var ItemList = sm.bSmItemList.SmItemList,
-        View = sm.bSmItemList.View;
+    var ItemList = sm.bSmItemList.SmItemList;
 
 
     /**

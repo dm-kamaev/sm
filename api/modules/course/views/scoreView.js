@@ -74,9 +74,12 @@ scoreView.minimized = function(scoreSections, opt_visibleMarkIndex) {
     });
 
     return {
-        marks: {
-            primary: primary,
-            secondary: secondary
+        data: {
+            marks: {
+                primary: primary,
+                secondary: secondary
+            },
+            secondaryMarkListHeader: 'Оценки, поставленные пользователями'
         },
         config: {
             isActive: !!scoreView.isNotEmpty(secondary, primary)

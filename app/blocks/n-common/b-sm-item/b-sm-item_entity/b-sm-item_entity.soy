@@ -11,7 +11,7 @@
  *     },
  *     cost: (number|undefined),
  *     alias: ?string,
- *     score: (sm.bSmScore.TemplateBrief.Params.Data|undefined),
+ *     score: (sm.bSmScore.TemplateBrief.Params|undefined),
  *     description: string,
  *     brand: (string|undefined),
  *     metro: (Array<{
@@ -54,7 +54,7 @@
  *             bold: ?string
  *         },
  *         cost: (number|undefined),
- *         score: ?sm.bSmScore.Template.Params.Data
+     *         score: ?sm.bSmScore.Template.Params.Data
  *     }
  * }}
  * @override
@@ -224,7 +224,7 @@
  * Score
  * @param params {{
  *     data: {
- *         score: ?sm.bSmScore.TemplateBrief.Params.Data
+ *         score: sm.bSmScore.TemplateBrief.Params
  *     }
  * }}
  * @override
@@ -235,7 +235,7 @@
             {param params: [
                 'type': 'smScoreBrief',
                 'renderParams': [
-                    'data': $params.data.score,
+                    'data': $params.data.score.data,
                     'config': [
                         'primaryMark': [
                             'size': 'l',
@@ -244,7 +244,7 @@
                             'showMark': true
                         ],
                         'theme': 'bold',
-                        'isActive': true
+                        'isActive': $params.data.score?.config.isActive
                     ]
                 ]
             ]/}
