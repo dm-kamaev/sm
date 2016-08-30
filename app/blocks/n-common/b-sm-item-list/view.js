@@ -20,7 +20,6 @@ sm.bSmItemList.View = function(opt_params, opt_type, opt_modifier) {
         opt_type, opt_modifier);
 
     /**
-     * Parameters
      * @type {{
      *     itemType: (smItem|smItemEntity),
      *     countItemsPerPage: (number|undefined),
@@ -46,6 +45,15 @@ goog.scope(function() {
         LIST: 'b-sm-item-list__list',
         ITEM_CONTAINER: 'b-sm-item-list__item'
     };
+
+
+    /**
+     * @typedef {{
+     *     itemType: string,
+     *     countItemsPerPage: number
+     * }}
+     */
+    View.Params;
 
 
     /**
@@ -250,15 +258,41 @@ goog.scope(function() {
      * @private
      */
     View.prototype.initParams_ = function() {
-        this.params = JSON.parse(
+        var rawParams = this.getRawDataParams_();
+
+        this.params = this.transformParams_(rawParams);
+
+        if (this.params.countItemsPerPage) {
+            this.params.pageNumber = 1;
+        }
+    };
+
+
+    /**
+     * Return raw data params from dom element
+     * @return {Object}
+     * @private
+     */
+    View.prototype.getRawDataParams_ = function() {
+        return JSON.parse(
             goog.dom.dataset.get(
                 this.getElement(),
                 'params'
             )
         );
+    };
 
-        if (this.params.countItemsPerPage) {
-            this.params.pageNumber = 1;
-        }
+
+    /**
+     * Transform raw params object to compiled one
+     * @param  {Object} rawParams
+     * @return {sm.bSmItemList.View.Params}
+     * @private
+     */
+    View.prototype.transformParams_ = function(rawParams) {
+        return {
+            itemType: rawParams['itemType'],
+            countItemsPerPage: rawParams['countItemsPerPage']
+        };
     };
 });  // goog.scope
