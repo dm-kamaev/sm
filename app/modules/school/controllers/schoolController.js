@@ -17,8 +17,6 @@ const logger = require('../../../components/logger/logger').getLogger('app');
 const DOMAIN = config.url.protocol + '://' + config.url.host;
 const FB_CLIENT_ID = config.facebookClientId;
 
-const ENTITY_TYPE = 'school';
-
 const async = require('asyncawait/async'),
     await = require('asyncawait/await'),
     lodash = require('lodash');
@@ -314,39 +312,37 @@ exports.home = async(function(req, res) {
 exports.catalog = async(function(req, res, next) {
     try {
         var user = req.user || {};
+        var seoCatalogData = await(
+            services.seoSchoolList.getAll(['title', 'listType', 'geoType'])
+        );
+
+        var favoriteIds = await(
+            services.favorite.getAllItemIdsByUserId(user.id)
+        );
+
+        var promises = {
+            authSocialLinks: services.auth.getAuthSocialUrl(),
+            favorites: {
+                items: services.school.getByIdsWithGeoData(favoriteIds),
+                itemUrls: services.page.getAliases(
+                    favoriteIds,
+                    entityType.SCHOOL
+                )
+            }
+        };
+
+        var results = await(promises);
 
         var data = seoView.catalog({
-            entityType: ENTITY_TYPE,
+            entityType: entityType.SCHOOL,
             user: userView.default(user),
-            authSocialLinks: services.auth.getAuthSocialUrl()
+            favorites: schoolView.listCompact(results.favorites),
+            authSocialLinks: results.authSocialLinks,
+            listsCatalog: seoView.listsCatalog(seoCatalogData)
         });
-        console.log(data);
 
         var params = {
             params: {
-                // data: {
-                //     type: 'school',
-                //     seo: {
-                //         metaTitle: 'Каталог школ Москвы'
-                //     },
-                //     subHeader: {
-                //         logo: {
-                //             imgUrl: '/images/n-common/b-sm-subheader/school-logo.svg'
-                //         },
-                //         links: {
-                //             nameL: 'Все школы Москвы',
-                //             nameM: 'Все школы',
-                //             url: '/'
-                //         },
-                //         search: {
-                //             placeholder: 'Номер школы, метро, район'
-                //         },
-                //         user: userView.default(user),
-                //         favorites: []
-                //     },
-                //     authSocialLinks: services.auth.getAuthSocialUrl(),
-                //     user: userView.default(user)
-                // },
                 data: data,
                 config: {
                     modifier: 'stendhal',
@@ -366,7 +362,6 @@ exports.catalog = async(function(req, res, next) {
         res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(html);
     } catch (error) {
-        console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', error);
         res.status(error.code || 500);
         next();
     }

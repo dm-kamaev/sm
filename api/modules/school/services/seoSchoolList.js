@@ -28,10 +28,13 @@ service.create = async(function(data) {
 
 /**
  * Return all instances of SeoSchoolList
+ * @param {Array<string>=} opt_attributes
  * @return {Promise<models.SeoSchoolList>}
  */
-service.getAll = function() {
-    return models.SeoSchoolList.findAll();
+service.getAll = function(opt_attributes) {
+    return models.SeoSchoolList.findAll({
+        attributes: opt_attributes
+    });
 };
 
 
@@ -61,6 +64,7 @@ service.updateByType = async(function(type, data) {
     ));
 });
 
+
 /**
  * Return search parameters for given listType and geoType
  * @param {{
@@ -77,5 +81,6 @@ service.getByType = async(function(requestParams) {
         }
     }));
 });
+
 
 module.exports = service;
