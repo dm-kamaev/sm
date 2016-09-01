@@ -85,6 +85,7 @@ app.use('/', modules.course.router);
 app.use('/', api.user.router);
 app.use('/api', api.comment.router);
 app.use('/api', api.school.router);
+app.use('/api', api.course.router);
 app.use('/api', api.geo.router);
 app.use('/api', api.feedback.router);
 app.use('/api', api.favorite.router);

@@ -38,7 +38,6 @@ exports.search = async(function(req, res, next) {
         }));
 
         var mapData = createMapItems(pinAddresses, pointAddresses);
-
         /** End temporary address data */
 
         var data = searchView.render({
@@ -63,7 +62,8 @@ exports.search = async(function(req, res, next) {
                         yandexMetrikaId: YANDEX_METRIKA_ID,
                         csrf: req.csrfToken(),
                         domain: DOMAIN,
-                        fbClientId: FB_CLIENT_ID
+                        fbClientId: FB_CLIENT_ID,
+                        type: 'course'
                     }
                 }
             }

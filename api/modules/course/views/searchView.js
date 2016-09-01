@@ -706,10 +706,6 @@ module.exports.render = function(data) {
             itemType: 'smItemEntity'
         },
         filterPanel: this.filterPanel(),
-        searchSettings: {
-            url: 'api/course/search',
-            method: 'GET',
-            searchParams: data.searchParams
-        }
+        searchParams: data.searchParams
     };
 };
