@@ -3,6 +3,7 @@ goog.provide('sm.bSmItemList.View');
 goog.require('cl.iControl.View');
 
 goog.require('cl.iUtils.Utils');
+goog.require('goog.array');
 goog.require('goog.dom.classes');
 
 
@@ -89,6 +90,16 @@ goog.scope(function() {
         goog.dom.removeNode(
             itemContainer
         );
+    };
+
+
+    /**
+     * Remove all items dom elements
+     */
+    View.prototype.removeAllItems = function() {
+        goog.array.forEach(this.dom.itemContainers, function(itemContainer) {
+            goog.dom.removeNode(itemContainer);
+        });
     };
 
 
