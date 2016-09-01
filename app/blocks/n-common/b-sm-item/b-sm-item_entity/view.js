@@ -17,6 +17,20 @@ sm.bSmItem.ViewEntity = function(opt_params, opt_type, opt_modifier) {
         opt_type, opt_modifier);
 
     /**
+     * Parameters
+     * @type {sm.bSmItem.TemplateEntity.Params}
+     * @protected
+     */
+    this.params = opt_params || {};
+};
+goog.inherits(sm.bSmItem.ViewEntity, sm.bSmItem.View);
+
+
+goog.scope(function() {
+    var View = sm.bSmItem.ViewEntity;
+
+
+    /**
      * @typedef {{
      *     data: {
      *         id: ?number,
@@ -47,20 +61,6 @@ sm.bSmItem.ViewEntity = function(opt_params, opt_type, opt_modifier) {
      * }}
      */
     sm.bSmItem.ViewEntity.RenderParams;
-
-
-    /**
-     * Parameters
-     * @type {sm.bSmItem.TemplateEntity.Params}
-     * @protected
-     */
-    this.params = opt_params || {};
-};
-goog.inherits(sm.bSmItem.ViewEntity, sm.bSmItem.View);
-
-
-goog.scope(function() {
-    var View = sm.bSmItem.ViewEntity;
 
 
     /**
