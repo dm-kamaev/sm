@@ -9,7 +9,9 @@
 goog.provide('sm.lSearch.iSearchService.SearchService');
 
 goog.require('cl.iRequest.Request');
+goog.require('goog.Uri.QueryData');
 goog.require('goog.events.EventTarget');
+goog.require('goog.object');
 goog.require('sm.lSearch.iSearchService.ListDataLoadedEvent');
 goog.require('sm.lSearch.iSearchService.MapDataLoadedEvent');
 
@@ -51,6 +53,22 @@ goog.scope(function() {
          * @private
          */
         this.searchMapApi_ = null;
+
+
+        /**
+         * Stores search promise
+         * @type {goog.Promise}
+         * @private
+         */
+        this.searchDataPromise_ = null;
+
+
+        /**
+         * Stores map promise
+         * @type {goog.Promise}
+         * @private
+         */
+        this.mapDataPromise_ = null;
     };
     goog.inherits(
         sm.lSearch.iSearchService.SearchService, goog.events.EventTarget
@@ -73,8 +91,8 @@ goog.scope(function() {
      * @enum {string}
      */
     SearchService.SearchApiAddress = {
-        SCHOOL: 'school/search',
-        COURSE: 'course/search'
+        SCHOOL: '/api/school/search',
+        COURSE: '/api/course/search'
     };
 
     /**
@@ -83,8 +101,8 @@ goog.scope(function() {
      * @enum {string}
      */
     SearchService.SearchMapApiAddress = {
-        SCHOOL: 'school/search/map',
-        COURSE: 'course/search/map'
+        SCHOOL: '/api/school/search/map',
+        COURSE: '/api/course/search/map'
     };
 
 
@@ -110,7 +128,9 @@ goog.scope(function() {
 
     /**
      * Init search service by given type
+     * Please note, that servis must be inited before use
      * @param {string} entityType entityType of search page
+     * @public
      */
     SearchService.prototype.init = function(entityType) {
         switch (entityType) {
@@ -127,36 +147,134 @@ goog.scope(function() {
         this.request_ = Request.getInstance();
     };
 
+
+    /**
+     * Resets all requests
+     * @public
+     */
+    SearchService.prototype.resetRequests = function() {
+        this.resetSearchDataRequest_();
+        this.resetMapDataRequest_();
+    };
+
+
     /**
      * Load search data for map and list of entities
-     * @param {Object<string, Array<number>>} searchParams
+     * @param {Object<string, (number|string)>} searchParams
+     * @public
      */
-    SearchService.prototype.getData = function(searchParams) {
-        this.send_(searchParams, this.searchApi_)
-            .then(this.onDataLoaded_.bind(this));
+    SearchService.prototype.loadSearchData = function(searchParams) {
+        if (!this.isSearchDataPending()) {
+            this.searchDataPromise_ = this.send_(
+                searchParams,
+                SearchService.DataType.SEARCH
+            );
+
+            this.searchDataPromise_.then(this.onSearchDataLoaded_.bind(this));
+        }
     };
+
 
 
     /**
      * Load search data for map
-     * @param {Object<string, Array<number>>} searchParams
-     * @return {goog.Promise<{
-     *     primary: Array<Object>,
-     *     secondary: Array<Object>
-     * }>}
+     * @param {Object<string, (number|string)>} searchParams
+     * @public
      */
-    SearchService.prototype.getMapData = function(searchParams) {
-        return this.send_(searchParams, SearchService.DataType.LIST);
+    SearchService.prototype.loadMapData = function(searchParams) {
+        if (!this.isMapDataPending()) {
+                searchParams,
+                this.mapDataPromise_ = this.send_(
+                SearchService.DataType.MAP_POINTS
+            );
+
+            this.mapDataPromise_.then(this.onMapDataLoaded_.bind(this));
+        }
     };
 
 
     /**
-     * On data loaded callback
-     * Dispatches events with loaded data for map and list
-     * @param {Object} data
+     * Check whether loaded map data
+     * @return {boolean}
+     * @public
+     */
+    SearchService.prototype.isMapDataPending = function() {
+        return !goog.isNull(this.mapDataPromise_);
+    };
+
+
+    /**
+     * Check whether loaded search data
+     * @return {boolean}
+     * @public
+     */
+    SearchService.prototype.isSearchDataPending = function() {
+        return !goog.isNull(this.searchDataPromise_);
+    };
+
+
+    /**
+     * Search data loaded callback
+     * @param {{
+     *     list: Object,
+     *     map: Object
+     * }} data
      * @private
      */
-    SearchService.prototype.onDataLoaded_ = function(data) {
+    SearchService.prototype.onSearchDataLoaded_ = function(data) {
+        this.dispatchDataEvents_(data);
+        this.resetSearchDataRequest_();
+    };
+
+
+    /**
+     * Map data loaded callback
+     * @param {{
+     *     list: Object,
+     *     map: Object
+     * }} data
+     * @private
+     */
+    SearchService.prototype.onMapDataLoaded_ = function(data) {
+        this.dispatchDataEvents_(data);
+        this.resetMapDataRequest_();
+    };
+
+
+    /**
+     * Reset data request promise
+     * @private
+     */
+    SearchService.prototype.resetSearchDataRequest_ = function() {
+        if (this.isSearchDataPending()) {
+            this.searchDataPromise_.cancel();
+        }
+        this.searchDataPromise_ = null;
+    };
+
+
+    /**
+     * Reset map data request promise
+     * @private
+     */
+    SearchService.prototype.resetMapDataRequest_ = function() {
+        if (this.isMapDataPending()) {
+            this.mapDataPromise_.cancel();
+        }
+        this.mapDataPromise_ = null;
+    };
+
+
+    /**
+     * Dispatches events about loaded data
+     * Dispatches events with loaded data for map and list
+     * @param {{
+     *     list: Object,
+     *     map: Object
+     * }} data
+     * @private
+     */
+    SearchService.prototype.dispatchDataEvents_ = function(data) {
         var listData = data['list'];
         if (goog.isDefAndNotNull(listData)) {
             var listDataLoadedEvent = new ListDataLoadedEvent(listData, this);
@@ -174,15 +292,45 @@ goog.scope(function() {
 
     /**
      * Load data fom backend
-     * @param {Object} searchParams
+     * @param {Object<string, Array<(string|number)>>} searchParams
      * @param {string} type
      * @return {goog.Promise<Object>}
      * @private
      */
     SearchService.prototype.send_ = function(searchParams, type) {
-        var apiAddress;
+        var apiRequest = this.buildApiRequest_(searchParams, type);
 
-        switch (type) {
+        return this.request_.send({
+            url: apiRequest
+        });
+    };
+
+
+    /**
+     * Build api requiest for get requiest from given parameters and searchType
+     * @param {Object<string, (string|number|Array<(string|number)>)>} searchParams
+     * @param {sm.lSearch.iSearchService.SearchService.DataType} searchType
+     * @return {string}
+     * @private
+     */
+    SearchService.prototype.buildApiRequest_ = function(
+        searchParams, searchType) {
+        var apiAddress = this.generateApiAddress_(searchType);
+        var queryParams = this.buildQueryParams_(searchParams);
+
+        return apiAddress + '?' + queryParams;
+    };
+
+
+    /**
+     * Generate api address from given search type
+     * @param {m.lSearch.iSearchService.SearchService.DataType} searchType
+     * @return {string}
+     * @private
+     */
+    SearchService.prototype.generateApiAddress_ = function(searchType) {
+        var apiAddress;
+        switch (searchType) {
             case SearchService.DataType.SEARCH:
                 apiAddress = this.searchApi_;
                 break;
@@ -190,11 +338,34 @@ goog.scope(function() {
                 apiAddress = this.searchMapApi_;
                 break;
         }
+        return apiAddress;
+    };
 
-        return this.request.send({
-            url: apiAddress,
-            data: searchParams,
-            isJSON: true
-        });
+
+    /**
+     * Build query params from given search parameters
+     * @param {Object<string, (string|number|Array<(string|number)>)>} searchParams
+     * @return {string}
+     * @private
+     */
+    SearchService.prototype.buildQueryParams_ = function(searchParams) {
+        var notNullParams = goog.object.filter(
+            searchParams,
+            this.isNotEmptyParameter_
+        );
+        var queryData = goog.Uri.QueryData.createFromMap(notNullParams);
+
+        return queryData.toString();
+    };
+
+
+    /**
+     * Check whether parameter is not empty
+     * @param {string|number|Array} parameter
+     * @return {boolean}
+     * @private
+     */
+    SearchService.prototype.isNotEmptyParameter_ = function(parameter) {
+        return goog.isDefAndNotNull(parameter) && parameter !== '';
     };
 });  // goog.scope

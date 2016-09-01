@@ -41,7 +41,10 @@ goog.scope(function() {
 
 
     /**
-     * @typedef {Array<sm.bSmItem.SmItem.RenderParams>}
+     * @typedef {{
+     *     items: Array<sm.bSmItem.SmItem.RenderParams>,
+     *     countResults: number
+     *  }}
      */
     ListDataLoadedEvent.listData;
 
@@ -59,5 +62,22 @@ goog.scope(function() {
      */
     ListDataLoadedEvent.prototype.getListData = function() {
         return this.listData_;
+    };
+
+
+    /**
+     * Getter for items in results list
+     * @return {Array<sm.bSmItem.SmItem.RenderParams>}
+     */
+    ListDataLoadedEvent.prototype.getListItems = function() {
+        return this.listData_['items'];
+    };
+
+    /**
+     * Getter for count results
+     * @return {number}
+     */
+    ListDataLoadedEvent.prototype.getCountResults = function() {
+        return this.listData_['countResults'];
     };
 });  // goog.scope
