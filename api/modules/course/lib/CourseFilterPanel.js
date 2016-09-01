@@ -1,0 +1,331 @@
+'use strict';
+
+var FilterPanel = require('../../entity/lib/FilterPanel');
+
+class CourseFilterPanel extends FilterPanel {
+
+    /**
+     * Init params for filter panel
+     */
+    constructor() {
+        super();
+
+        /**
+         * Params for filter by days of week
+         * @type {Object}
+         * @override
+         * @protected
+         */
+        this.filterWeekDays = {
+            data: {
+                header: {
+                    title: 'Расписание'
+                },
+                name: 'schedule'
+            },
+            config: {}
+        };
+
+        /**
+         * Params for filter by age
+         * @type {Object}
+         * @private
+         */
+        this.filterAge_ = {
+            data: {
+                header: {
+                    title: 'Возраст'
+                },
+                name: 'age',
+                options: [
+                    {
+                        'title': 'лет',
+                        'value': '',
+                        'maxLength': 2
+                    }
+                ]
+            },
+            config: {}
+        };
+
+        /**
+         * Params for filter by course
+         * @type {Object}
+         * @private
+         */
+        this.filterCourse_ = {
+            data: {
+                header: {
+                    title: 'Направления занятий'
+                },
+                name: 'course',
+                options: []
+            },
+            config: {
+                showMoreButtonText: 'Все направления'
+            }
+        };
+
+        /**
+         * Params for filter by cost
+         * @type {Object}
+         * @private
+         */
+        this.filterCost_ = {
+            data: {
+                header: {
+                    title: 'Стоимость'
+                },
+                name: 'cost',
+                options: [{
+                    'label': 'Бесплатно'
+                }, {
+                    'label': 'До 1 000 руб'
+                }, {
+                    'label': 'От 1 000 до 2 000 руб'
+                }, {
+                    'label': 'От 2 000 руб'
+                }, {
+                    'label': 'Скрыть, если не указана цена'
+                }]
+            },
+            config: {}
+        };
+
+        /**
+         * Params for filter by time
+         * @type {Object}
+         * @private
+         */
+        this.filterTime_ = {
+            data: {
+                header: {
+                    title: 'Время занятий'
+                },
+                name: 'time',
+                options: [{
+                    'label': 'Утром (до 14:00)'
+                }, {
+                    'label': 'Днём (14:00 - 18:00)'
+                }, {
+                    'label': 'Вечером (18:00 и позже)'
+                }, {
+                    'label': 'Скрыть, если не указано расписание'
+                }]
+            },
+            config: {}
+        };
+
+        /**
+         * Params for filter by regularity
+         * @type {Object}
+         * @private
+         */
+        this.filterRegularity_ = {
+            data: {
+                header: {
+                    title: 'Регулярность занятий'
+                },
+                name: 'regularity',
+                options: [{
+                    'label': 'Раз в неделю'
+                }, {
+                    'label': 'Два раза в неделю'
+                }, {
+                    'label': 'Чаще двух раз в неделю'
+                }, {
+                    'label': 'Скрыть, если не указана регулярность'
+                }]
+            },
+            config: {}
+        };
+
+        /**
+         * Params for filter by form training
+         * @type {Object}
+         * @private
+         */
+        this.filterFormTraining_ = {
+            data: {
+                header: {
+                    title: 'Форма занятий'
+                },
+                name: 'formTraining',
+                options: [
+                    {
+                        'label': 'Очная индивидуальная',
+                        'value': 'individual'
+                    },
+                    {
+                        'label': 'Очная групповая',
+                        'value': 'group'
+                    },
+                    {
+                        'label': 'Онлайн',
+                        'value': 'online'
+                    }
+                ]
+            },
+            config: {}
+        };
+
+        /**
+         * Params for filter by duration
+         * @type {Object}
+         * @private
+         */
+        this.filterDuration_ = {
+            data: {
+                header: {
+                    title: 'Продолжительность занятий'
+                },
+                name: 'duration',
+                options: [{
+                    'label': 'До 1 часа'
+                }, {
+                    'label': '1-2 часа'
+                }, {
+                    'label': 'более двух часов'
+                }]
+            },
+            config: {}
+        };
+    }
+
+
+    /**
+     * Set filter for days of age
+     * @param {Array<(number|string)>=} opt_checkedValues
+     * @return {Object}
+     */
+    setFilterAge(opt_checkedValues) {
+        var params = this.filterAge_;
+
+        params.data.options = this.updateFilterAgeValue(
+            this.filterAge_.data.options,
+            opt_checkedValues
+        );
+
+        this.setFilterInput(params, opt_checkedValues);
+
+        return this;
+    }
+
+
+    /**
+     * Set filter for days of course
+     * @param {Array<Object>} options
+     * @param {Array<(number|string)>=} opt_checkedValues
+     * @return {Object}
+     */
+    setFilterCourse(options, opt_checkedValues) {
+        var params = this.filterCourse_;
+        params.data.options = options;
+
+        this.setFilterModal(params, opt_checkedValues);
+
+        return this;
+    }
+
+
+    /**
+     * Set filter for days of Cost
+     * @param {Array<(number|string)>=} opt_checkedValues
+     * @return {Object}
+     */
+    setFilterCost(opt_checkedValues) {
+        var params = this.filterCost_;
+
+        params.data.options = this.createOptionsValuesInOrder(
+            this.filterCost_.data.options
+        );
+
+        this.setFilter(params, opt_checkedValues);
+
+        return this;
+    }
+
+
+    /**
+     * Set filter for days of Time
+     * @param {Array<(number|string)>=} opt_checkedValues
+     * @return {Object}
+     */
+    setFilterTime(opt_checkedValues) {
+        var params = this.filterTime_;
+
+        params.data.options = this.createOptionsValuesInOrder(
+            this.filterTime_.data.options
+        );
+
+        this.setFilter(params, opt_checkedValues);
+
+        return this;
+    }
+
+
+    /**
+     * Set filter for days of Regularity
+     * @param {Array<(number|string)>=} opt_checkedValues
+     * @return {Object}
+     */
+    setFilterRegularity(opt_checkedValues) {
+        var params = this.filterRegularity_;
+
+        params.data.options = this.createOptionsValuesInOrder(
+            this.filterRegularity_.data.options
+        );
+
+        this.setFilter(params, opt_checkedValues);
+
+        return this;
+    }
+
+    /**
+     * Set filter for days of Form Training
+     * @param {Array<(number|string)>=} opt_checkedValues
+     * @return {Object}
+     */
+    setFilterFormTraining(opt_checkedValues) {
+        this.setFilter(this.filterFormTraining_, opt_checkedValues);
+
+        return this;
+    }
+
+    /**
+     * Set filter for days of Duration
+     * @param {Array<(number|string)>=} opt_checkedValues
+     * @return {Object}
+     */
+    setFilterDuration(opt_checkedValues) {
+        var params = this.filterDuration_;
+
+        params.data.options = this.createOptionsValuesInOrder(
+            this.filterDuration_.data.options
+        );
+
+        this.setFilter(params, opt_checkedValues);
+
+        return this;
+    }
+
+
+    /**
+     * Set value for filter age
+     * @param {Array<{
+     *     value: ?(number|string)
+     * }>} filterOptions
+     * @param {Array<(number|string)>} values
+     * @return {Array<Object>}
+     * @protected
+     */
+    updateFilterAgeValue(filterOptions, values) {
+        var options = filterOptions;
+
+        options[0].value = (values && values[0]) ? values[0] : '';
+
+        return options;
+    }
+}
+
+module.exports = CourseFilterPanel;
