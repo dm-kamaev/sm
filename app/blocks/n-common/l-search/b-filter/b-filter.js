@@ -52,6 +52,12 @@ goog.scope(function() {
 
 
     /**
+     * @typedef {Array<sm.bSmCheckbox.SmCheckbox.Params>}
+     */
+    Filter.Data;
+
+
+    /**
      * @override
      * @param {Element} element
      */
@@ -119,7 +125,7 @@ goog.scope(function() {
 
     /**
      * Get data of checked options
-     * @return {Array<sm.bSmCheckbox.SmCheckbox.Params>}
+     * @return {sm.lSearch.bFilter.Filter.Data}
      */
     Filter.prototype.getCheckedData = function() {
         var result = [];
@@ -136,7 +142,7 @@ goog.scope(function() {
 
     /**
      * Get all options data
-     * @return {Array<sm.bSmCheckbox.SmCheckbox.Params>}
+     * @return {sm.lSearch.bFilter.Filter.Data}
      */
     Filter.prototype.getAllData = function() {
         return this.allOptionsData;

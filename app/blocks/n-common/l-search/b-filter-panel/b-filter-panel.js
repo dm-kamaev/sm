@@ -52,6 +52,12 @@ goog.scope(function() {
 
 
     /**
+     * @typedef {Array<sm.lSearch.bFilter.Filter.Data>}
+     */
+    FilterPanel.FilterData;
+
+
+    /**
      * @override
      * @param {Element} element
      */
@@ -105,9 +111,7 @@ goog.scope(function() {
 
     /**
      * Get filters data
-     * @return {Array<{
-     *     string: Array<Object>
-     * }>}
+     * @return {Object<string, sm.lSearch.bFilterPanel.FilterPanel.FilterData>}
      */
     FilterPanel.prototype.getData = function() {
         var result = {};

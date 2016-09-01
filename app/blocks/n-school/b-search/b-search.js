@@ -176,12 +176,18 @@ goog.scope(function() {
 
 
     /**
-     * @return {{
+     * @typedef {{
      *     areaId: ?number,
      *     metroId: ?number,
      *     districtId: ?number,
      *     text: ?string
      * }}
+     */
+    Search.Data;
+
+
+    /**
+     * @return {sm.bSearch.Search.Data}
      * @public
      */
     Search.prototype.getData = function() {
