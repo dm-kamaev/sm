@@ -416,6 +416,72 @@
             ] /}
         {/call}
     </div>
+
+    {call .loader /}
+    {call .showMoreButton data="all" /}
+{/template}
+
+
+/**
+ * Loader template
+ */
+{template .loader kind="html"}
+    <div class="{call .rootClass /}__loader {cl.iUtils.Utils.CssClass.HIDDEN}">
+        <div class="{call .rootClass /}__loader-image">
+        </div>
+        <div class="{call .rootClass /}__loader-text">
+            Загружаем список...
+        </div>
+    </div>
+{/template}
+
+
+/**
+ * Show more button template
+ * @param params {{
+ *     data: {
+ *         entityList: {
+ *             items: Array<Object>
+ *         }
+ *     },
+ *     config: {
+ *         modifier: string
+ *     }
+ * }}
+ */
+{template .showMoreButton kind="html"}
+    {let $cssClasses kind="html"}
+        {call .rootClass /}__show-more-button-wrap
+        {if length($params.data.entityList.items) < 10}
+            {sp}{cl.iUtils.Utils.CssClass.HIDDEN}
+        {/if}
+    {/let}
+
+    {let $buttonCustomClasses kind="html"}
+        {call .rootClass /}__show-more-button
+    {/let}
+
+    {let $buttonContent kind="html"}
+        Показать ещё
+    {/let}
+
+    <div class="{$cssClasses}">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': $params.config.modifier,
+                'type': 'button',
+                'renderParams': [
+                    'data': [
+                        'content': $buttonContent
+                    ],
+                    'config': [
+                        'theme': 'thin',
+                        'customClasses': [$buttonCustomClasses]
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
 {/template}
 
 

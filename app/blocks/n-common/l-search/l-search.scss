@@ -132,6 +132,46 @@
         font-weight: 800;
     }
 }
+
+.l-search__show-more-button-wrap {
+    width: 240px;
+
+    color: #000000;
+}
+
+
+.b-school-list__loader {
+    display: inline-block;
+
+    width: 100%;
+    margin: 30px 0 30px 0;
+}
+
+.l-search__loader-text {
+    display: inline-block;
+
+    width: 210px;
+    padding: 18px 0 18px 0;
+
+    text-align: center;
+    vertical-align: bottom;
+    text-transform: uppercase;
+
+    color: #000000;
+
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.l-search__loader-image {
+    display: inline-block;
+
+    width: 48px;
+    height: 48px;
+
+    background: url(images/n-common/l-search/search-spinner.gif) no-repeat left;
+}
+
 /** content section end **/
 
 .l-search__horizontal-line {
