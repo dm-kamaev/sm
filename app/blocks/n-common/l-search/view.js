@@ -1,5 +1,6 @@
 goog.provide('sm.lSearch.View');
 
+goog.require('goog.dom.classlist');
 goog.require('sm.iLayout.ViewStendhal');
 
 
@@ -40,16 +41,19 @@ goog.scope(function() {
      */
     View.CssClass = {
         ROOT: 'l-search',
+        LOADER: 'l-search-result__loader',
+        SHOW_MORE_BUTTON: 'l-search__show-more-button',
+        SHOW_MORE_BUTTON_WRAP: 'l-search__show-more-button-wrap',
         SEARCH: 'l-search__search-field'
     };
 
 
     /**
+     * Data parameters from dom element. Please note, that field 'searchParams'
+     * is uncompressed by closure compiler, as this parameters sends to backend
+     * and forms from filters.
      * @typedef {{
-     *     searchParams: Array<{
-     *         name: string,
-     *         value: Array<(string|number)>
-     *     }>
+     *     searchParams: Object<string, (number|string)>,
      *     isUserAuthorzed: boolean,
      *     authSocialLinks:  {
      *             vk: (string|undefined),
@@ -67,9 +71,42 @@ goog.scope(function() {
      */
     View.prototype.decorateInternal = function(element) {
         View.base(this, 'decorateInternal', element);
-
         this.initDom_(element);
         this.params = this.getRawDataParams_();
+    };
+
+
+    /**
+     * Show or hide loader
+     * @param {boolean} visibility
+     */
+    View.prototype.setLoaderVisibility = function(visibility) {
+        visibility ?
+            goog.dom.classlist.remove(
+                this.dom.loader,
+                cl.iUtils.Utils.CssClass.HIDDEN
+            ) :
+            goog.dom.classlist.add(
+                this.dom.loader,
+                cl.iUtils.Utils.CssClass.HIDDEN
+            );
+    };
+
+
+    /**
+     * Show or hide show more button
+     * @param {boolean} visibility
+     */
+    View.prototype.setShowMoreButtonVisibility = function(visibility) {
+        visibility ?
+        goog.classlist.remove(
+            this.dom.showMoreButtonWrap,
+            cl.iUtils.Utils.CssClass.HIDDEN
+        ) :
+        goog.classlist.add(
+            this.dom.showMoreButtonWrap,
+            cl.iUtils.Utils.CssClass.HIDDEN
+        );
     };
 
 
@@ -99,6 +136,18 @@ goog.scope(function() {
             map: this.getElementByClass(
                 sm.bSmMap.View.CssClass.ROOT,
                 element
+            ),
+            loader: this.getElementByClass(
+                View.CssClass.LOADER,
+                element
+            ),
+            showMoreButton: this.getElementByClass(
+                View.CssClass.SHOW_MORE_BUTTON,
+                element
+            ),
+            showMoreButtonWrap: this.getElementByClass(
+                View.CssClass.SHOW_MORE_BUTTON_WRAP,
+                element
             )
         };
     };
@@ -126,12 +175,7 @@ goog.scope(function() {
      */
     View.prototype.transformParams_ = function(rawParams) {
         return {
-            searchParams: rawParams['searchParams'].map(function(searchParam) {
-                return {
-                    name: searchParam['name'],
-                    value: searchParam['value']
-                };
-            }),
+            searchParams: rawParams['searchParams'],
             isUserAuthorzed: rawParams['isUserAuthorzed'],
             authSocialLinks: {
                 vk: rawParams['authSocialLinks']['vk'],
