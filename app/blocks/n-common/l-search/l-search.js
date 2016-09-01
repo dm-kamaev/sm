@@ -130,10 +130,6 @@ goog.scope(function() {
         this.initLeftMenuListeners_()
             .initResultsListListeners_()
             .initWindowListeners_();
-
-        if (!this.isAllSearchItemsLoaded_(this.resultsList_.getCountItems())) {
-            this.enableLoadMoreResultsListItems_();
-        }
     };
 
 
@@ -213,6 +209,11 @@ goog.scope(function() {
             sm.gDropdown.DropdownSelect.Event.ITEM_SELECT,
             this.onSortReleased_
         );
+
+        var resultListItemsCount = this.resultsList_.getCountItems();
+        if (!this.isAllSearchItemsLoaded_(resultListItemsCount)) {
+            this.enableLoadMoreResultsListItems_();
+        }
 
         return this;
     };
@@ -316,6 +317,9 @@ goog.scope(function() {
 
         if (this.isAllSearchItemsLoaded_(listItems.length, countResults)) {
             this.disableLoadMoreResultsListItems_();
+            this.getView().setShowMoreButtonVisibility(false);
+        } else {
+            this.getView().setShowMoreButtonVisibility(true);
         }
         this.getView().setLoaderVisibility(false);
     };
@@ -369,8 +373,6 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.disableLoadMoreResultsListItems_ = function() {
-        this.getView().setShowMoreButtonVisibility(false);
-
         this.getHandler().unlisten(
             this.showMoreButton_,
             cl.gButton.Button.Event.CLICK
@@ -419,7 +421,10 @@ goog.scope(function() {
      */
     Search.prototype.loadNextPage_ = function() {
         this.params.searchParams['page']++;
+
         this.getView().setLoaderVisibility(true);
+        this.getView().setShowMoreButtonVisibility(false);
+
         this.searchService_.loadSearchData(this.params.searchParams);
     };
 

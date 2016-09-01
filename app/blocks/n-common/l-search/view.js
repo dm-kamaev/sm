@@ -41,7 +41,7 @@ goog.scope(function() {
      */
     View.CssClass = {
         ROOT: 'l-search',
-        LOADER: 'l-search-result__loader',
+        LOADER: 'l-search__loader',
         SHOW_MORE_BUTTON: 'l-search__show-more-button',
         SHOW_MORE_BUTTON_WRAP: 'l-search__show-more-button-wrap',
         SEARCH: 'l-search__search-field'
@@ -99,14 +99,14 @@ goog.scope(function() {
      */
     View.prototype.setShowMoreButtonVisibility = function(visibility) {
         visibility ?
-        goog.classlist.remove(
-            this.dom.showMoreButtonWrap,
-            cl.iUtils.Utils.CssClass.HIDDEN
-        ) :
-        goog.classlist.add(
-            this.dom.showMoreButtonWrap,
-            cl.iUtils.Utils.CssClass.HIDDEN
-        );
+            goog.dom.classlist.remove(
+                this.dom.showMoreButtonWrap,
+                cl.iUtils.Utils.CssClass.HIDDEN
+            ) :
+            goog.dom.classlist.add(
+                this.dom.showMoreButtonWrap,
+                cl.iUtils.Utils.CssClass.HIDDEN
+            );
     };
 
 
