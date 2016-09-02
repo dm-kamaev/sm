@@ -29,6 +29,8 @@ goog.require('sm.bSmItem.View');
 goog.require('sm.bSmItem.ViewEntity');
 goog.require('sm.bSmItemList.SmItemList');
 goog.require('sm.bSmItemList.View');
+goog.require('sm.bSmLink.SmLink');
+goog.require('sm.bSmLink.View');
 goog.require('sm.bSmListPaged.SmListPaged');
 goog.require('sm.bSmListPaged.View');
 goog.require('sm.bSmMap.SmMap');
@@ -210,6 +212,10 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('smMap', {
             control: sm.bSmMap.SmMap,
             view: sm.bSmMap.View
+        })
+        .setControlListItem('smLink', {
+            control: sm.bSmLink.SmLink,
+            view: sm.bSmLink.View
         });
 
     /** l-information blocks **/

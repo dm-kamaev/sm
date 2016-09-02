@@ -1,0 +1,43 @@
+.b-link {
+    display: inline-block;
+
+    cursor: pointer;
+    text-decoration: none;
+
+    color: #356fc4;
+
+    font-size: 13px;
+    line-height: 18px;
+}
+
+.b-sm-link_hoverable.b-link:hover {
+    color: #ff0000;
+}
+
+/** Possible sizes */
+.b-link_size_s {
+    font-size: 12px;
+}
+
+.b-link_size_m {
+    font-size: 13px;
+}
+
+.b-link_size_l {
+    font-size: 14px;
+}
+
+.b-link_size_xl {
+    font-size: 15px;
+}
+/** Possible sizes end */
+
+/** Themes */
+.b-link_light-theme {
+    color: #808080;
+}
+
+.b-link_attention-theme {
+    color: #ff0000;
+}
+/** Themes end */

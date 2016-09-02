@@ -17,6 +17,7 @@ goog.require('sm.bSmFooter.Template');
 goog.require('sm.bSmItem.Template');
 goog.require('sm.bSmItem.TemplateEntity');
 goog.require('sm.bSmItemList.Template');
+goog.require('sm.bSmLink.Template');
 goog.require('sm.bSmListPaged.Template');
 goog.require('sm.bSmMap.Template');
 goog.require('sm.bSmRadioButton.Template');
@@ -221,6 +222,10 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'smMap',
             sm.bSmMap.Template.map
+        )
+        .setTemplateListItem(
+            'smLink',
+            sm.bSmLink.Template.link
         );
 
     /** l-information blocks **/

@@ -1,0 +1,115 @@
+/**
+ * @fileoverview Link template for unification of links on project
+ */
+{namespace sm.bSmLink.Template}
+
+
+/**
+ * @typedef {{
+ *     url: (strnig|undefined),
+ *     content: (string|undefined),
+ * }} sm.bSmLink.Template.Params.Data
+ */
+
+
+/**
+ * @typedef {{
+ *     target: (string|undefined),
+ *     size: ('s'|'m'|'l'|'xl'),
+ *     theme: ('attention'|'light'|undefined)
+ * }} sm.bSmLink.Template.Params.Config
+ */
+
+
+/**
+ * Link template
+ * @param params {{
+ *     data: sm.bSmLink.Template.Params.Data,
+ *     config: sm.bSmLink.Template.Params.Config
+ * }}
+ * @extends cl.iControl.Template
+ * @constructor
+ */
+{template .link kind="html"}
+    {call .init data="all" /}
+{/template}
+
+/**
+ * Link
+ * @param params {{
+ *     data: sm.bSmLink.Template.Params.Data,
+ *     config: sm.bSmLink.Template.Params.Config
+ * }}
+ * @override
+ */
+{template .body autoescape="strict" kind="html"}
+    {$params?.data?.content}
+{/template}
+
+
+/**
+ * Icon template if exists
+ * @type {String}
+ */
+{template .icon kind="html"}
+
+{/template}
+
+
+/**
+ * Define tag
+ * @param params {{
+ *     data: {
+ *         url: (string|undefined)
+ *     }
+ * }}
+ * @override
+ */
+{template .tag kind="html"}
+    {if $params.data.url}
+        a
+    {else}
+        span
+    {/if}
+{/template}
+
+
+/**
+ * Attributes template
+ * @param params {{
+ *     config: {
+ *         target: ('_blank'|undefined)
+ *     }
+ * }}
+ * @override
+ */
+{template .attributes kind="attributes"}
+    {if $params?.config.target}
+        target="{$params.config.target}"
+    {/if}
+{/template}
+
+
+/**
+ * Addtitonal classes
+ * @param params {{
+ *     config: {
+ *         size: ('s'|'m'|'l'|'xl')
+ *     }
+ * }}
+ * @override
+ */
+{template .additionalClasses kind="html"}
+    {if $params?.config.size}
+        {call .rootClass /}_size_{$params?.config.size}
+    {/if}
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-sm-link
+{/template}
