@@ -36,7 +36,11 @@
  *             description: (string|undefined),
  *             textLeft: (Array<string>|undefined),
  *             textRight: (Array<string>|undefined)
- *         }
+ *         },
+ *         seoLinks: Array<{
+ *             name: string,
+ *             url: string
+ *         }>
  *     },
  *     searchText: string,
  *     countResults: number,
@@ -117,7 +121,8 @@
                     'image': $params?.config?.domain +
                         '/images/n-school/i-layout/schools-share.png',
                     'fbClientId': $params?.config?.fbClientId
-                ]
+                ],
+                'seoLinks': $params.data?.seoLinks
             ],
             'config': [
                 'modifier': 'stendhal',

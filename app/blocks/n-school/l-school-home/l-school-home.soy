@@ -27,7 +27,11 @@
  *         name: ?string,
  *         url: ?string
  *     ]>,
- *     amountSchools: ?number
+ *     amountSchools: ?number,
+ *     seoLinks: Array<{
+ *         name: string,
+ *         url: string
+ *     }>,
  *     config: [
  *         analyticsId: ?string,
  *         yandexMetrikaId: ?number,
@@ -69,7 +73,8 @@
                     'image': $params?.config?.domain +
                         '/images/n-school/i-layout/schools-share.png',
                     'fbClientId': $params?.config?.fbClientId
-                ]
+                ],
+                'seoLinks': $params.data?.seoLinks
             ],
             'config': [
                 'modifier': 'stendhal',
