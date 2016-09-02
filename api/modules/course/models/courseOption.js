@@ -53,7 +53,9 @@ var CourseOption = db.define('CourseOption', {
                 foreignKey: 'course_option_id'
             });
             CourseOption.belongsToMany(models.CourseDepartment, {
-                through: 'course_option_course_department'
+                through: 'course_option_course_department',
+                as: 'courseDepartments',
+                foreignKey: 'course_option_id'
             });
         }
     }

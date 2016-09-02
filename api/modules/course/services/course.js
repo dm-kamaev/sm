@@ -1,5 +1,6 @@
 var async = require('asyncawait/async'),
-    await = require('asyncawait/await');
+    await = require('asyncawait/await'),
+    squel = require('squel');
 
 var sequelize = require('../../../../app/components/db'),
     models = require('../../../../app/components/models').all,
@@ -87,6 +88,38 @@ service.list = async(function(searchParams, opt_limit) {
     ));
 
     return courses;
+});
+
+/**
+ * @param {number} departmentId
+ * @return {Array<number>}
+ */
+service.findByDepartmentId = async(function(departmentId) {
+    var query = squel.select()
+        .from('course')
+        .field('DISTINCT course.id')
+        .left_join('course_option', null, 'course.id = course_option.course_id')
+        .left_join(
+            'course_option_course_department',
+            null,
+            'course_option.id = ' +
+                'course_option_course_department.course_option_id'
+        )
+        .left_join(
+            'course_department',
+            null,
+            'course_option_course_department.course_department_id = ' +
+                'course_department.id'
+        )
+        .where('course_department_id = ' + departmentId)
+        .toString();
+    var result = await(sequelize.query(
+        query, {
+            type: sequelize.QueryTypes.SELECT
+        }
+    ));
+
+    return result.map(item => item.id);
 });
 
 module.exports = service;

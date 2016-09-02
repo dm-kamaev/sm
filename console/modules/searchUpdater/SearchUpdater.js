@@ -87,7 +87,6 @@ class SearchUpdater {
                 metros: services.metro.getAll()
             },
             data = await(dataPromises);
-
         await(
             this.updateSchools_(data.schools),
             this.updateAddresses_(data.addresses),
@@ -113,7 +112,10 @@ class SearchUpdater {
         await(schools.forEach(school => {
             /* update type filters */
             var filterInstance = this.getTypeFilter_(school.schoolType);
-            await(services.schoolSearch.setSchoolType(school.id, filterInstance.id));
+            await(services.schoolSearch.setSchoolType(
+                school.id,
+                filterInstance.id
+            ));
 
             /* update ege filters */
             var egeActualizer =

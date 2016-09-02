@@ -12,7 +12,9 @@ var CourseDepartment = db.define('CourseDepartment', {
     classMethods: {
         associate: function(models) {
             CourseDepartment.belongsToMany(models.CourseOption, {
-                through: 'course_option_course_department'
+                through: 'course_option_course_department',
+                as: 'courseOptions',
+                foreignKey: 'course_department_id'
             });
             CourseDepartment.hasOne(models.Address, {
                 as: 'address',
