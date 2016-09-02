@@ -5,7 +5,8 @@ var squel = require('squel').useFlavour('postgres');
 var SearchQuery = require('../../entity/lib/Search');
 
 var addressSearchType = require('../../geo/enums/addressSearchType'),
-    schoolSearchType = require('../enums/searchType');
+    schoolSearchType = require('../enums/searchType'),
+    entityType = require('../../entity/enums/entityType');
 
 class SchoolSearchQuery extends SearchQuery {
     /**
@@ -44,7 +45,8 @@ class SchoolSearchQuery extends SearchQuery {
     setClasses(classes) {
         this.addAddressSearchData_(
             classes,
-            addressSearchType.fields.EDUCATIONAL_GRADES
+            addressSearchType.fields.EDUCATIONAL_GRADES,
+            entityType.SCHOOL
         );
 
         return this;
@@ -117,7 +119,8 @@ class SchoolSearchQuery extends SearchQuery {
         if (areaId) {
             this.addAddressSearchData_(
                 [areaId],
-                addressSearchType.fields.AREA
+                addressSearchType.fields.AREA,
+                entityType.SCHOOL
             );
         }
 
@@ -132,7 +135,8 @@ class SchoolSearchQuery extends SearchQuery {
         if (metroId) {
             this.addAddressSearchData_(
                 [metroId],
-                addressSearchType.fields.METRO
+                addressSearchType.fields.METRO,
+                entityType.SCHOOL
             );
         }
 
@@ -147,7 +151,8 @@ class SchoolSearchQuery extends SearchQuery {
         if (districtId) {
             this.addAddressSearchData_(
                 [districtId],
-                addressSearchType.fields.DISTRICT
+                addressSearchType.fields.DISTRICT,
+                entityType.SCHOOL
             );
         }
 
