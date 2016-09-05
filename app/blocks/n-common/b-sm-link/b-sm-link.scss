@@ -1,4 +1,4 @@
-.b-link {
+.b-sm-link {
     display: inline-block;
 
     cursor: pointer;
@@ -10,34 +10,38 @@
     line-height: 18px;
 }
 
-.b-sm-link_hoverable.b-link:hover {
+.b-sm-link_hoverable:hover {
     color: #ff0000;
 }
 
 /** Possible sizes */
-.b-link_size_s {
+.b-sm-link_size_s {
     font-size: 12px;
 }
 
-.b-link_size_m {
+.b-sm-link_size_m {
     font-size: 13px;
 }
 
-.b-link_size_l {
+.b-sm-link_size_l {
     font-size: 14px;
 }
 
-.b-link_size_xl {
+.b-sm-link_size_xl {
     font-size: 15px;
 }
 /** Possible sizes end */
 
 /** Themes */
-.b-link_light-theme {
+.b-sm-link_light-theme {
     color: #808080;
 }
 
-.b-link_attention-theme {
+.b-sm-lin_kattention-theme {
     color: #ff0000;
+}
+
+.b-sm-link_dark-theme {
+    color: #000;
 }
 /** Themes end */

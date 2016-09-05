@@ -77,6 +77,9 @@
 /**
  * Attributes template
  * @param params {{
+ *     data: {
+ *         url: string
+ *     },
  *     config: {
  *         target: ('_blank'|undefined)
  *     }
@@ -84,8 +87,11 @@
  * @override
  */
 {template .attributes kind="attributes"}
+    {if $params.data.url}
+        href="{$params.data.url}"
+    {/if}
     {if $params?.config.target}
-        target="{$params.config.target}"
+        {sp}target="{$params.config.target}"
     {/if}
 {/template}
 
