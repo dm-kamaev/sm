@@ -1,5 +1,0 @@
-{
-    "port": 3002,
-    "scheme": "mel",
-    "logFile": "../../runtime/user-service-report.log"
-}

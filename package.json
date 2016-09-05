@@ -21,7 +21,6 @@
   "homepage": "https://github.com/c7s/l3_school-market#readme",
   "devDependencies": {
     "asyncawait": "^1.0.1",
-    "auth-service": "git+ssh://git@github.com:c7s/auth-service.git#dev",
     "axios": "^0.9.1",
     "bluebird": "^3.4.1",
     "body-parser": "~1.13.2",
@@ -89,7 +88,6 @@
     "tipograph": "^0.3.3",
     "translitit-cyrillic-russian-to-latin": "git+ssh://git@github.com:c7s-bot/translitit-cyrillic-russian-to-latin.git#master",
     "uid-safe": "^2.1.0",
-    "user-service": "git+ssh://git@github.com/c7s/user-service.git#dev",
     "xlsx-to-json": "^0.2.4"
   },
   "dependencies": {

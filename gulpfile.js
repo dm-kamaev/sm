@@ -133,28 +133,6 @@ gulp.task('localConfig', function() {
     });
 });
 
-gulp.task('authConfig', function() {
-    return new Promise(function(resolve, reject) {
-        exec('node ./console/buildLocalConfig ' + ENV +
-            ' ../environment/config/authorization',
-            function() {
-                resolve();
-            }
-        );
-    });
-});
-
-gulp.task('userConfig', function() {
-    return new Promise(function(resolve, reject) {
-        exec('node ./console/buildLocalConfig ' + ENV +
-            ' ../environment/config/user',
-            function() {
-                resolve();
-            }
-        );
-    });
-});
-
 gulp.task('backendLint', function () {
     return gulp.src('api/**/*.js')
         .pipe(eslint({
@@ -172,9 +150,9 @@ gulp.task('backendLint', function () {
 const tasks = function (bool) {
     return bool ?
         ['createTimestamp', 'soy', 'compile', 'sprite', 'images', 'fonts',
-            'styles', 'copy', 'localConfig', 'authConfig', 'userConfig'] :
+            'styles', 'copy', 'localConfig'] :
         ['watch', 'soy', 'scripts', 'sprite', 'images', 'fonts','styles',
-            'copy', 'localConfig', 'authConfig', 'userConfig', 'backendLint'];
+            'copy', 'localConfig', 'backendLint'];
 };
 
 gulp.task('build', tasks(true));
