@@ -11,6 +11,7 @@ const SchoolActivitySphereActualizer =
     require('./SchoolActivitySphereActualizer');
 const AddressActualizer = require('./AddressActualizer');
 const TextActualizer = require('./TextActualizer');
+const CourseActualizer = require('./CourseActualizer');
 const models = require('../../../app/components/models').all;
 const entityType = require('../../../api/modules/entity/enums/entityType');
 
@@ -84,11 +85,13 @@ class SearchUpdater {
                 addresses: services.address.getAllWithSearchData(),
                 areas: services.area.getAll(),
                 districts: services.district.getAll(),
-                metros: services.metro.getAll()
+                metros: services.metro.getAll(),
+                courses: services.course.getAll()
             },
             data = await(dataPromises);
         await(
             this.updateSchools_(data.schools),
+            this.updateCourses_(data.courses),
             this.updateAddresses_(data.addresses),
             this.updateTextData_(data)
         );
@@ -149,6 +152,19 @@ class SearchUpdater {
 
     /**
      * @private
+     * @param {Array<Object>} courses
+     */
+    updateCourses_(courses) {
+        var bar = this.getProgressBar_('courses', courses.length);
+        courses.forEach(course => {
+            var courseActualizer = new CourseActualizer(course);
+            await(courseActualizer.actualize());
+            bar.tick();
+        });
+    }
+
+    /**
+     * @private
      * @param {Array<Object>} addresses
      */
     updateAddresses_(addresses) {
@@ -186,7 +202,12 @@ class SearchUpdater {
                     data.districts,
                     entityType.DISTRICT,
                     DISTRICT_FIELDS
-                )
+                )//,
+                // new TextActualizer(
+                //     data.courses,
+                //     entityType.COURSE,
+                //     COURSE_FIELDS
+                // )
             ];
 
         textActualizers.forEach(textActualizer => {

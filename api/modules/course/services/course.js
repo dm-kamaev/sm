@@ -122,4 +122,21 @@ service.findByDepartmentId = async(function(departmentId) {
     return result.map(item => item.id);
 });
 
+/**
+ * @return {Array<Course>}
+ */
+service.getAll = async(function() {
+    return await(models.Course.findAll({
+        include: [{
+            model: models.CourseOption,
+            as: 'courseOptions',
+            include: [{
+                model: models.CourseDepartment,
+                as: 'departments',
+                through: 'course_option_course_department'
+            }]
+        }]
+    }));
+});
+
 module.exports = service;
