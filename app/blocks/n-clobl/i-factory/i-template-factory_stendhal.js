@@ -12,6 +12,7 @@ goog.require('sm.bSchoolCatalog.Template');
 goog.require('sm.bSchoolListPaged.Template');
 goog.require('sm.bSearchPanel.Template');
 goog.require('sm.bSmBadge.Template');
+goog.require('sm.bSmBalloon.Template');
 goog.require('sm.bSmCheckbox.Template');
 goog.require('sm.bSmFooter.Template');
 goog.require('sm.bSmItem.Template');
@@ -222,6 +223,10 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'smMap',
             sm.bSmMap.Template.map
+        )
+        .setTemplateListItem(
+            'smBalloon',
+            sm.bSmBalloon.Template.balloon
         )
         .setTemplateListItem(
             'smLink',
