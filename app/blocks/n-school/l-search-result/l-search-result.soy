@@ -34,13 +34,11 @@
  *             metaDescription: (string|undefined),
  *             title: (string|undefined),
  *             description: (string|undefined),
+ *             links: ?(Array<sm.bLink.Template.Params.Data>|undefined),
  *             textLeft: (Array<string>|undefined),
  *             textRight: (Array<string>|undefined)
  *         },
- *         seoLinks: Array<{
- *             name: string,
- *             url: string
- *         }>
+ *         seoLinks: Array<sm.bLink.Template.Params.Data>
  *     },
  *     searchText: string,
  *     countResults: number,
@@ -309,7 +307,8 @@
  *     data: {
  *         seo: {
  *             title: (string|undefined),
- *             description: (string|undefined)
+ *             description: (string|undefined),
+ *             links: ?(Array<sm.bLink.Template.Params.Data>|undefined)
  *         }
  *     },
  *     countResults: ?number,
@@ -320,9 +319,9 @@
     <span class="l-search-result__list-header-text">
             {if $params.data?.seo and $params.data?.seo?.title}
                 {call .headerText_ data="all" /}
-                {if $params.data.seo.description}
-                    {call .headerDescription_ data="all" /}
-                {/if}
+                {call .headerDescription_ data="all" /}
+                {call .headerLinksTitle_ data="all" /}
+                {call .headerLinks_ data="all" /}
             {else}
                 {call .generateHeaderText_ data="all" /}
             {/if}
@@ -332,7 +331,7 @@
 
 /**
  * Text of header for list of schools
- * @param? params {
+ * @param params {
  *     data: {
  *         seo: {
  *             title: (string|undefined),
@@ -344,7 +343,7 @@
 {template .headerText_ private="true"}
     <h1 class="l-search-result__list-header-text
                 l-search-result__list-header-text_strong
-                {$params.data.seo.description ?
+                {$params.data.seo.title ?
                     ' l-search-result__list-header-text_title' :
                     ''}
                 ">
@@ -355,18 +354,83 @@
 
 /**
  * Description of header for list of schools
- * @param? params {
+ * @param params {{
  *     data: {
  *         seo: {
  *             description: ?string
  *         }
  *     }
- * }
+ * }}
  */
 {template .headerDescription_ private="true"}
-    <div class="l-search-result__list-header-text
-                l-search-result__list-header-text_description">
-        {$params.data.seo?.description}
+    {if $params.data.seo?.description}
+        <div class="l-search-result__list-header-text
+                    l-search-result__list-header-text_description">
+            {$params.data.seo.description}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Links title of header for list of schools
+ * @param params {{
+ *     data: {
+ *         seo: {
+ *             linksTitle: ?string,
+ *             links: ?(Array<sm.bLink.Template.Params.Data>|undefined)
+ *         }
+ *     }
+ * }}
+ */
+{template .headerLinksTitle_ private="true"}
+    {if $params.data.seo?.links and $params.data.seo?.linksTitle}
+        <div class="l-search-result__list-header-text
+                    l-search-result__list-header-text_links-title">
+            {$params.data.seo.linksTitle}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Links of header for list of schools
+ * @param params {{
+ *     data: {
+ *         seo: {
+ *             links: ?(Array<sm.bLink.Template.Params.Data>|undefined)
+ *         }
+ *     }
+ * }}
+ */
+{template .headerLinks_}
+    {if $params.data.seo?.links}
+        <div class="l-search-result__list-header-text
+                    l-search-result__list-header-text_links">
+            {foreach $link in $params.data.seo.links}
+                {call .headerlink_}
+                    {param params: $link/}
+                {/call}
+            {/foreach}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Template link of header
+ * @param params {{
+ *     name: string,
+ *     url: ?string
+ * }}
+ */
+{template .headerlink_}
+    <div class="l-search-result__link l-search-result__link_list-header">
+        {call sm.bLink.Template.base}
+            {param params: [
+                'data': $params
+            ]/}
+        {/call}
     </div>
 {/template}
 
