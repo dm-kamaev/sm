@@ -70,7 +70,7 @@ service.updateByType = async(function(type, data) {
  * @param {{
  *     listType: string,
  *     geoType: (string|undefined)
- * }} pageParams
+ * }} requestParams
  * @return {models.SeoSchoolList}
  */
 service.getByType = async(function(requestParams) {
@@ -82,5 +82,34 @@ service.getByType = async(function(requestParams) {
     }));
 });
 
+
+/**
+ * Return search parameters for given listTypes and geoTypes
+ * @return {Array<models.SeoSchoolList>}
+ */
+service.getByTypes = async(function() {
+    return await(models.SeoSchoolList.findAll({
+        attributes: ['title', 'listType', 'geoType'],
+        where: {
+            listType: ['licei', 'gimnazii', 'kadetskiye'],
+            geoType: null
+        }
+    }));
+});
+
+
+/**
+ * Return parameters for given listType
+ * @param {string} listType
+ * @return {Array<models.SeoSchoolList>}
+ */
+service.getByListType = async(function(listType) {
+    return await(models.SeoSchoolList.findAll({
+        attributes: ['title', 'listType', 'geoType'],
+        where: {
+            listType: listType
+        }
+    }));
+});
 
 module.exports = service;

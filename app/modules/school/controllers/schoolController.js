@@ -55,20 +55,32 @@ exports.list = async(function(req, res, next) {
         if (req.params &&
             req.params.listType &&
             lodash.isEmpty(req.query)) {
-            var seoSchoolList = await(services.seoSchoolList.getByType(
-                req.params
-            ));
 
-            if (!seoSchoolList) {
+            var seoPromises = {
+                schoolList: services.seoSchoolList.getByType(
+                    req.params
+                ),
+                schoolListsForLinks: services.seoSchoolList.getByListType(
+                    req.params.listType
+                )
+            };
+
+            var seoResults = await(seoPromises);
+
+            if (!seoResults.schoolList) {
                 throw new errors.PageNotFoundError();
             }
 
             var storedParams =
-                seoView.searchParams(seoSchoolList);
+                seoView.searchParams(seoResults.schoolList);
 
             searchParams = storedParams.searchParams;
             searchText = storedParams.searchText;
-            seoData = seoView.seoListData(seoSchoolList);
+            seoData = seoView.seoListData(
+                seoResults.schoolList,
+                seoResults.schoolListsForLinks
+            );
+
         } else {
             searchParams =
                 await(services.schoolSearch.initSearchParams(req.query));
@@ -93,7 +105,8 @@ exports.list = async(function(req, res, next) {
                         favoriteIds,
                         entityType.SCHOOL
                     )
-                }
+                },
+                seoLinks: services.seoSchoolList.getByTypes()
             };
         var results = await(promises);
 
@@ -118,10 +131,14 @@ exports.list = async(function(req, res, next) {
                     filters: filters,
                     authSocialLinks: results.authSocialLinks,
                     user: userView.default(user),
+                    seo: seoData,
                     favorites: {
                         schools: favorites
                     },
-                    seo: seoData
+                    seoLinks: seoView.linksList(
+                        results.seoLinks,
+                        (!req.params.geoType) ? req.params.listType : null
+                    )
                 },
                 searchText: searchText,
                 countResults: schoolsList.countResults,
@@ -204,7 +221,8 @@ exports.view = async(function(req, res, next) {
                                 favoriteIds,
                                 entityType.SCHOOL
                             )
-                        }
+                        },
+                        seoLinks: services.seoSchoolList.getByTypes()
                     },
                     dataFromPromises = await(promises);
 
@@ -218,7 +236,6 @@ exports.view = async(function(req, res, next) {
                     dataFromPromises.popularSchools,
                     schoolAliases
                 );
-
 
                 var isUserCommented = typeof await(
                         services.userData.checkCredentials(
@@ -269,7 +286,8 @@ exports.home = async(function(req, res) {
                     favoriteIds,
                     entityType.SCHOOL
                 )
-            }
+            },
+            seoLinks: services.seoSchoolList.getByTypes()
         },
         data = await(dataPromises);
 
@@ -277,6 +295,7 @@ exports.home = async(function(req, res) {
             data.popularSchools.map(school => school.id),
             entityType.SCHOOL
         ));
+
     data.popularSchools =
         schoolView.joinAliases(data.popularSchools, schoolAliases);
 
@@ -287,7 +306,8 @@ exports.home = async(function(req, res) {
                 user: userView.default(user),
                 favorites: {
                     schools: schoolView.listCompact(data.favorites)
-                }
+                },
+                seoLinks: seoView.linksList(data.seoLinks)
             },
             popularSchools: schoolView.popular(data.popularSchools),
             dataLinks: schoolView.dataLinks(),
@@ -313,7 +333,7 @@ exports.catalog = async(function(req, res, next) {
     try {
         var user = req.user || {};
         var seoCatalogData = await(
-            services.seoSchoolList.getAll(['title', 'listType', 'geoType'])
+            services.seoSchoolList.getAll()
         );
 
         var favoriteIds = await(

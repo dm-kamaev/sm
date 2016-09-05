@@ -19,6 +19,7 @@ const giaResultView = require(
 const olimpResultView = require(
     '../../study/views/olimpResultView.js');
 const scoreView = require('../views/scoreView');
+const seoView = require('./seoView.js');
 
 const commentView = require('../../comment/views/commentView');
 
@@ -87,7 +88,8 @@ schoolView.default = function(schoolInstance, data, user, opt_popularSchools) {
         favorites: {
             schools: schoolView.listCompact(data.favorites)
         },
-        seoDescription: data.page.description
+        seoDescription: data.page.description,
+        seoLinks: seoView.linksList(data.seoLinks)
     };
     if (data.popularSchools) {
         result.popularSchools = this.popular(data.popularSchools);

@@ -41,19 +41,26 @@ seoView.searchParams = function(seoSchoolList) {
 /**
  * Return seo data from given seoSchoolList instance
  * @param {models.seoSchoolList} seoSchoolList
+ * @param {Array<models.SeoSchoolList>} seoSchoolListsForLinks
  * @return {{
  *     metaTitle: ?string,
  *     metaDescription: ?string,
  *     title: ?string,
  *     description: ?string,
+ *     linksTitle: ?string,
+ *     links: ?Array<{
+ *         name: string,
+ *         url: ?string
+ *     }>,
  *     textLeft: ?Array<string>,
  *     textRight : ?Array<string>
  * }}
  */
-seoView.seoListData = function(seoSchoolList) {
-    var text = seoSchoolList.text || [];
+seoView.seoListData = function(seoSchoolList, seoSchoolListsForLinks) {
+    var text = seoSchoolList.text || [],
+        listType = seoSchoolList.listType;
 
-    return {
+    var listData = {
         metaTitle: seoSchoolList.seoTitle,
         metaDescription: seoSchoolList.seoDescription,
         title: seoSchoolList.title,
@@ -61,6 +68,22 @@ seoView.seoListData = function(seoSchoolList) {
         textLeft: splitTextForParagraphs(text[1]),
         textRight: splitTextForParagraphs(text[2])
     };
+
+    if ((listType == seoListType.LYCEUM) ||
+        (listType == seoListType.GYMNASIUM) ||
+        (listType == seoListType.CADET_SCHOOL)
+    ) {
+        var currentUrl = seoView.url(listType, seoSchoolList.geoType);
+
+        listData.linksTitle = seoView.linksTitle(listType);
+
+        listData.links = seoView.linksListForSearchResults(
+            seoSchoolListsForLinks,
+            currentUrl
+        );
+    }
+
+    return listData;
 };
 
 
@@ -71,6 +94,112 @@ seoView.seoListData = function(seoSchoolList) {
  */
 var splitTextForParagraphs = function(text) {
     return text ? text.split('\n') : null;
+};
+
+
+/**
+ * Return seo schools type
+ * @return {Array<string>}
+ */
+seoView.seoSchoolTypes = function() {
+    return [
+        seoListType.LYCEUM,
+        seoListType.GYMNASIUM,
+        seoListType.CADET_SCHOOL,
+        seoListType.EDUCATIONAL_CENTER
+    ];
+};
+
+
+/**
+ * Return links Title
+ * @param {string} listType
+ * @return {string}
+ */
+seoView.linksTitle = function(listType) {
+    var title;
+
+    switch (listType) {
+    case seoListType.LYCEUM:
+        title = 'Лицеи Москвы по округам';
+        break;
+
+    case seoListType.GYMNASIUM:
+        title = 'Гимназии Москвы по округам';
+        break;
+
+    case seoListType.CADET_SCHOOL:
+        title = 'Кадетские школы Москвы по округам';
+        break;
+    }
+
+    return title;
+};
+
+
+/**
+ * Return links list for one school type,
+ * not including link with geoType == null
+ * @param {Array<models.SeoSchoolList>} seoSchoolLists
+ * @param {string=} opt_currentUrl
+ * @return {Array<{
+ *     name: string,
+ *     url: ?string
+ * }>}
+ */
+seoView.linksListForSearchResults = function(seoSchoolLists, opt_currentUrl) {
+    var filtredSeoSchoolLists = seoView.filterDataBySchoolType(
+        seoView.seoSchoolTypes(),
+        seoSchoolLists
+    );
+
+    var links = filtredSeoSchoolLists.map(item =>
+        seoView.item(item)
+    );
+
+    return seoView.updateLinks(links, opt_currentUrl);
+};
+
+
+/**
+ * Return links list
+ * @param {Array<models.SeoSchoolList>} seoSchoolLists
+ * @param {string=} opt_currentListType
+ * @return {Array<{
+ *     name: string,
+ *     url: ?string
+ * }>}
+ */
+seoView.linksList = function(seoSchoolLists, opt_currentListType) {
+    var links = seoSchoolLists.map(item =>
+        seoView.itemWithFullName(item)
+    );
+
+    var currentUrl = seoView.url(opt_currentListType) || '';
+
+    return seoView.updateLinks(links, currentUrl);
+};
+
+
+/**
+ * Make link to current url is inactive
+ * @param {Array<{
+ *     name: string,
+ *     url: string
+ * }>} links
+ * @param {string} currentUrl
+ * @return {Array<{
+ *     name: string,
+ *     url: ?string
+ * }>}
+ */
+seoView.updateLinks = function(links, currentUrl) {
+    return links.map(link => {
+        if (link.url == currentUrl) {
+            link.url = '';
+        }
+        return link;
+    });
 };
 
 
@@ -86,12 +215,7 @@ var splitTextForParagraphs = function(text) {
  * }>}
  */
 seoView.listsCatalog = function(seoSchoolList) {
-    var listTypes = [
-        seoListType.LYCEUM,
-        seoListType.GYMNASIUM,
-        seoListType.CADET_SCHOOL,
-        seoListType.EDUCATIONAL_CENTER
-    ];
+    var listTypes = seoView.seoSchoolTypes();
 
     var filteredList = seoView.filterDataByType(listTypes, seoSchoolList);
     var listsCatalog = seoView.transformCatalogData(listTypes, filteredList);
@@ -157,7 +281,20 @@ seoView.catalog = function(data) {
 
 
 /**
- * Returns filtered data by type
+ * Returns filtered data by school type
+ * @param {Array<string>} listTypes
+ * @param {Array<models.SeoSchoolList>} seoSchoolList
+ * @return {Array<models.SeoSchoolList>}
+ */
+seoView.filterDataBySchoolType = function(listTypes, seoSchoolList) {
+    return seoSchoolList.filter(item =>
+        (listTypes.some(type => type == item.listType) && item.geoType)
+    );
+};
+
+
+/**
+ * Returns filtered data by geoType and listType
  * @param {Array<string>} listTypes
  * @param {Array<models.SeoSchoolList>} seoSchoolList
  * @return {Array<models.SeoSchoolList>}
@@ -288,7 +425,7 @@ seoView.list = function(header, items) {
 
 
 /**
- * Return data for link catalog
+ * Return data for links
  * @param {models.SeoSchoolList} item
  * @return {{
  *     name: string,
@@ -297,6 +434,22 @@ seoView.list = function(header, items) {
  */
 seoView.item = function(item) {
     return {
+        name: seoView.title(item.title, true, true),
+        url: seoView.url(item.listType, item.geoType)
+    };
+};
+
+
+/**
+ * Return data for links with full name
+ * @param {models.SeoSchoolList} item
+ * @return {{
+ *     name: string,
+ *     url: string
+ * }}
+ */
+seoView.itemWithFullName = function(item) {
+    return {
         name: seoView.title(item.title),
         url: seoView.url(item.listType, item.geoType)
     };
@@ -304,12 +457,29 @@ seoView.item = function(item) {
 
 
 /**
- * Return item title
+ * Return transformed title, can optionally delete first and/or last word
  * @param {string} title
+ * @param {boolean=} opt_lastWord
+ * @param {boolean=} opt_firstWord
  * @return {string}
  */
-seoView.title = function(title) {
-    return title.replace(' Москвы', '');
+seoView.title = function(title, opt_lastWord, opt_firstWord) {
+    var newTitle = title;
+
+    if (opt_lastWord) {
+        newTitle = newTitle.replace(/[а-я,ё]+$/i, '').trim();
+    }
+    if (opt_firstWord) {
+        newTitle = newTitle
+            .match(/ [А-Я,Ё][А-Я,Ё,а-я,ё,\s]+/, '')[0]
+            .trim();
+    }
+
+    if (newTitle == 'ЗелАО') {
+        newTitle = 'Зеленоград';
+    }
+
+    return newTitle;
 };
 
 
