@@ -94,7 +94,7 @@ goog.scope(function() {
     /**
      * @typedef {{
      *     data: {
-     *         entities: Array<sm.bSmMap.View.MapEntity>
+     *         entities: Array<sm.bSmMap.View.MapEntity>,
      *         position: (sm.bSmMap.View.PositionParams|undefined)
      *     },
      *     config: {
@@ -108,6 +108,7 @@ goog.scope(function() {
     /**
      * Generate balooon html content for ?map? init
      * @return {string}
+     * @public
      */
     View.prototype.generateBalloonHtmlContent = function() {
         return sm.bSmMap.Template.balloon().content;
@@ -136,34 +137,21 @@ goog.scope(function() {
     /**
      * Init dom elements inside baloon
      * @param {Element} balloonParentElement
-     * @return {{
-     *     balloon: Element,
-     *     closeButton: Element,
-     *     title: Element
-     * }}
+     * @return {Element}
+     * @public
      */
-    View.prototype.initBalloonDomElements = function(balloonParentElement) {
-        var baloonElement = goog.dom.getElementByClass(
+    View.prototype.initBalloonDomElement = function(balloonParentElement) {
+        return goog.dom.getElementByClass(
             View.CssClass.BALLOON,
             balloonParentElement
         );
-        return {
-            balloon: baloonElement,
-            closeButton: goog.dom.getElementByClass(
-                View.CssClass.BALLOON_CLOSE_BUTTON,
-                baloonElement
-            ),
-            title: goog.dom.getElementByClass(
-                View.CssClass.TITLE,
-                baloonElement
-            )
-        };
     };
 
 
     /**
      * @param {Element} element
      * @override
+     * @protected
      */
     View.prototype.decorateInternal = function(element) {
         View.base(this, 'decorateInternal', element);

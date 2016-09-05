@@ -57,6 +57,14 @@ goog.scope(function() {
 
 
         /**
+         * Balloon component instance
+         * @type {sm.bSmBalloon.SmBalloon}
+         * @private
+         */
+        this.balloon_ = null;
+
+
+        /**
          * Current placemark id
          * @type {number}
          * @private
@@ -261,6 +269,45 @@ goog.scope(function() {
 
 
     /**
+     * Create ballon with giv params and set it to field
+     * @param {Object} params
+     * @param {Element} balloonElement element balloon render to
+     * @private
+     */
+    Map.prototype.createBalloonComponent_ = function(params, balloonElement) {
+        this.setBalloon_(
+            this.renderChild(
+                'smBalloon',
+                balloonElement,
+                {
+                    'data': params
+                }
+            )
+        );
+    };
+
+
+    /**
+     * Balloon setter
+     * @param {sm.bSmBalloon.SmBalloon} balloonInstance
+     * @private
+     */
+    Map.prototype.setBalloon_ = function(balloonInstance) {
+        this.balloon_ = balloonInstance;
+    };
+
+
+    /**
+     * Balloon getter
+     * @return {sm.bSmBalloon.SmBalloon}
+     * @private
+     */
+    Map.prototype.getBalloon_ = function() {
+        return this.balloon_;
+    };
+
+
+    /**
      * Add each item group to map, with view type, given from it
      * @param {{
      *     viewType: sm.bSmMap.IPresetGenerator.PresetType,
@@ -318,17 +365,24 @@ goog.scope(function() {
                 'coordinates': item['coordinates']
             },
             'properties': {
-                'titleText': item['title']['text'],
-                'addressName': item['addressName'],
-                //TODO build href from alias here via url builder or smth
-                'titleHref': item['title']['alias'] ?
-                    item['title']['alias'] :
-                    '',
-                'linkText': item['link'] ? item['link']['text'] : null,
-                //TODO build href from alias url builder or smth
-                'linkHref': item['link'] ? item['link']['alias'] : null,
-                'description': item['description'],
-                'stages': item['stages'] ? item['stages'] : null
+                id: item['id'] || id,
+                title: {
+                    'text': item['title']['text'],
+                    'url': item['title']['alias']
+                },
+                subtitle: item['addressName'],
+                description: item['description']
+                // 'titleText': item['title']['text'],
+                // 'addressName': item['addressName'],
+                // //TODO build href from alias here via url builder or smth
+                // 'titleHref': item['title']['alias'] ?
+                //     item['title']['alias'] :
+                //     '',
+                // 'linkText': item['link'] ? item['link']['text'] : null,
+                // //TODO build href from alias url builder or smth
+                // 'linkHref': item['link'] ? item['link']['alias'] : null,
+                // 'description': item['description'],
+                // 'stages': item['stages'] ? item['stages'] : null
             },
             'options': {
                 'preset': preset
@@ -543,11 +597,13 @@ goog.scope(function() {
                 build: function() {
                     this.constructor.superclass.build.call(this);
                     this.initDom_();
+                    this.initBalloon_();
                     this.addEventListeners_();
                     this.setBalloonOffset_();
                 },
                 clear: function() {
                     this.removeEventListeners_();
+                    this.disposeBalloon_();
                     this.constructor.superclass.clear.call(this);
                 },
                 onSublayoutSizeChange: function() {
@@ -577,31 +633,31 @@ goog.scope(function() {
                         ])
                     );
                 },
-                addEventListeners_: function() {
-                    this.closeButtonClickKey_ = goog.events.listen(
-                        this.closeButton_,
-                        goog.events.EventType.CLICK,
-                        mapInstance.onBalloonCloseClick_.bind(mapInstance, this)
+                initDom_: function() {
+                    this.element_ = mapInstance.getView().initBalloonDomElement(
+                        this.getParentElement()
                     );
-                    this.itemNameClickKey_ = goog.events.listen(
-                        this.title_,
-                        goog.events.EventType.CLICK,
-                        mapInstance.onBalloonTitleClick_.bind(mapInstance)
+                },
+                initBalloon_: function() {
+                    var params = this.getData().object.properties;
+                    mapInstance.createBalloonComponent_(params, this.element_);
+                },
+                disposeBalloon_: function() {
+                    mapInstance.getBalloon_().dispose();
+                    mapInstance.setBalloon_(null);
+                },
+                addEventListeners_: function() {
+                    mapInstance.getHandler().listen(
+                        mapInstance.getBalloon_(),
+                        sm.bSmBalloon.SmBalloon.Event.CLOSE_BUTTON_CLICK,
+                        mapInstance.onBalloonCloseClick_.bind(mapInstance, this)
                     );
                 },
                 removeEventListeners_: function() {
-                    goog.events.unlistenByKey(this.closeButtonClickKey_);
-                    goog.events.unlistenByKey(this.itemNameClickKey_);
-                },
-                initDom_: function() {
-                    var parentElement = this.getParentElement();
-                    var domElements =
-                        mapInstance.getView().initBalloonDomElements(
-                            parentElement);
-
-                    this.element_ = domElements.balloon;
-                    this.closeButton_ = domElements.closeButton;
-                    this.title_ = domElements.title;
+                    mapInstance.getHandler().listen(
+                        mapInstance.getBalloon_(),
+                        sm.bSmBalloon.SmBalloon.Event.CLOSE_BUTTON_CLICK
+                    );
                 },
                 setBalloonOffset_: function() {
                     mapInstance.getView().setBalloonOffset(this.element_);
@@ -657,7 +713,7 @@ goog.scope(function() {
 
 
     /**
-     * Ballon close button click handler
+     * Balloon close button click handler
      * Close already opened balooon and fire event about it
      * @param  {Object} balloonInstance
      * @param  {Object} event
