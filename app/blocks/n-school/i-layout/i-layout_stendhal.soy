@@ -33,7 +33,11 @@
  *             twitterSiteName: ?string,
  *             imageWidth: ?string,
  *             imageHeight: ?string
- *         }
+ *         },
+ *         seoLinks: Array<{
+ *             name: string,
+ *             url: string
+ *         }>
  *     },
  *     config: ?sm.iLayout.Template.Params.Config
  * }}
@@ -190,6 +194,12 @@
 /**
  * Footer
  * @param? params {
+ *     data: {
+ *         seoLinks: Array<{
+ *             name: string,
+ *             url: string
+ *         }>
+ *     },
  *     config: ?{
  *         year: ?number
  *     }
@@ -200,19 +210,20 @@
         {call sm.lSchool.bFooter.Template.base}
             {param params: [
                 'data': [
-                    'year': $params?.config?.year
-                ],
-                'dataLinks': [
-                    [
-                        'name': 'Сотрудничество',
-                        'url': 'http://mel.fm/contacts'
+                    'year': $params?.config?.year,
+                    'links': [
+                        [
+                            'name': 'Сотрудничество',
+                            'url': 'http://mel.fm/contacts'
+                        ],
+                        [
+                            'name': 'Пользовательское соглашение',
+                            'url': 'http://mel.fm/terms-of-use'
+                        ]
                     ],
-                    [
-                        'name': 'Пользовательское соглашение',
-                        'url': 'http://mel.fm/terms'
-                    ]
+                    'seoLinks': $params.data?.seoLinks
                 ]
-            ] /}
+            ]/}
         {/call}
     </div>
 {/template}

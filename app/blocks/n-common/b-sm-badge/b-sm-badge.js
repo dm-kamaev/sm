@@ -81,7 +81,7 @@ goog.scope(function() {
      * @private
      */
     Badge.prototype.redirectSearch_ = function(data) {
-        document.location.href = '/search?' +
+        document.location.href = '/school?' +
             goog.uri.utils.buildQueryDataFromMap(data);
     };
 

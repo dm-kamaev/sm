@@ -28,10 +28,13 @@ service.create = async(function(data) {
 
 /**
  * Return all instances of SeoSchoolList
+ * @param {Array<string>=} opt_attributes
  * @return {Promise<models.SeoSchoolList>}
  */
-service.getAll = function() {
-    return models.SeoSchoolList.findAll();
+service.getAll = function(opt_attributes) {
+    return models.SeoSchoolList.findAll({
+        attributes: opt_attributes
+    });
 };
 
 
@@ -61,12 +64,13 @@ service.updateByType = async(function(type, data) {
     ));
 });
 
+
 /**
  * Return search parameters for given listType and geoType
  * @param {{
  *     listType: string,
  *     geoType: (string|undefined)
- * }} pageParams
+ * }} requestParams
  * @return {models.SeoSchoolList}
  */
 service.getByType = async(function(requestParams) {
@@ -74,6 +78,36 @@ service.getByType = async(function(requestParams) {
         where: {
             listType: requestParams.listType,
             geoType: requestParams.geoType || null
+        }
+    }));
+});
+
+
+/**
+ * Return search parameters for given listTypes and geoTypes
+ * @return {Array<models.SeoSchoolList>}
+ */
+service.getByTypes = async(function() {
+    return await(models.SeoSchoolList.findAll({
+        attributes: ['title', 'listType', 'geoType'],
+        where: {
+            listType: ['licei', 'gimnazii', 'kadetskiye'],
+            geoType: null
+        }
+    }));
+});
+
+
+/**
+ * Return parameters for given listType
+ * @param {string} listType
+ * @return {Array<models.SeoSchoolList>}
+ */
+service.getByListType = async(function(listType) {
+    return await(models.SeoSchoolList.findAll({
+        attributes: ['title', 'listType', 'geoType'],
+        where: {
+            listType: listType
         }
     }));
 });
