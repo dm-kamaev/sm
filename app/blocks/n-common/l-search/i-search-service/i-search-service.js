@@ -183,8 +183,8 @@ goog.scope(function() {
      */
     SearchService.prototype.loadMapData = function(searchParams) {
         if (!this.isMapDataPending()) {
+            this.mapDataPromise_ = this.send_(
                 searchParams,
-                this.mapDataPromise_ = this.send_(
                 SearchService.DataType.MAP_POINTS
             );
 
