@@ -3,74 +3,8 @@
 }
 
 .b-sm-map__balloon {
+    display: inline-block;
     position: relative;
 
-    width: 240px;
-    height: auto;
-
-    background-color: #fff;
-
-    font-family: Arial, sans-serif;
-    font-size: 14px;
-    line-height: 20px;
-}
-
-.b-sm-map__balloon-content {
-    display: inline-block;
-
-    box-sizing: border-box;
-    width: 100%;
-    padding: 16px 20px 20px;
-}
-
-.b-sm-map__balloon-section {
-    width: 180px;
-
-    margin-bottom: 12px;
-
-
-    &.b-sm-map__balloon-section_title {
-        font-weight: 700;
-        line-height: 16px;
-    }
-
-    &.b-sm-map__balloon-section_links {
-        margin-bottom: 10px;
-    }
-
-    &.b-sm-map__balloon-section_description {
-        margin-bottom: 4px;
-    }
-
-    &.b-sm-map__balloon-section_geodata {
-        font-size: 12px;
-        color: #8d8d8d;
-    }
-
-    &:last-child {
-        margin-bottom: 0;
-    }
-}
-
-.b-sm-map__balloon-close {
-    position: absolute;
-
-    top: 20px;
-    right: 20px;
-
-    cursor: pointer;
-}
-
-.b-sm-map__balloon-title {
-    color: #000;
-    text-decoration: none;
-}
-
-.b-sm-map__balloon-link {
-    color: #356fc4;
-    text-decoration: none;
-
-    &:hover {
-        color: #ff0000;
-    }
+    width: auto;
 }

@@ -27,8 +27,7 @@ sm.bSmRadioButton.View = function(opt_params, opt_type, opt_modifier) {
 goog.inherits(sm.bSmRadioButton.View, cl.iControl.View);
 
 goog.scope(function() {
-    var View = sm.bSmRadioButton.View,
-        Utils = cl.iUtils.Utils;
+    var View = sm.bSmRadioButton.View;
 
 
     /**
@@ -56,7 +55,7 @@ goog.scope(function() {
      *     id: string,
      *     name: string,
      *     label: string,
-     *     value: string
+     *     value: string,
      *     isChecked: (boolean|undefined)
      * }}
      */

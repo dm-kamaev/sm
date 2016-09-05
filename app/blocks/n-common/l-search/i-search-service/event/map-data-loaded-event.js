@@ -43,7 +43,7 @@ goog.scope(function() {
     /**
      * @typedef {{
      *     data: Array<{
-     *         entities: Array<sm.bSmMap.SmMap.Entity>
+     *         entities: Array<sm.bSmMap.SmMap.Entity>,
      *         type: string
      *     }>,
      *     center: Array<number>

@@ -21,6 +21,8 @@ goog.require('sm.bSearchPanel.SearchPanel');
 goog.require('sm.bSearchPanel.View');
 goog.require('sm.bSmBadge.SmBadge');
 goog.require('sm.bSmBadge.View');
+goog.require('sm.bSmBalloon.SmBalloon');
+goog.require('sm.bSmBalloon.View');
 goog.require('sm.bSmCheckbox.SmCheckbox');
 goog.require('sm.bSmCheckbox.View');
 goog.require('sm.bSmItem.SmItem');
@@ -212,6 +214,10 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('smMap', {
             control: sm.bSmMap.SmMap,
             view: sm.bSmMap.View
+        })
+        .setControlListItem('smBalloon', {
+            control: sm.bSmBalloon.SmBalloon,
+            view: sm.bSmBalloon.View
         })
         .setControlListItem('smLink', {
             control: sm.bSmLink.SmLink,
