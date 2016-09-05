@@ -10,7 +10,11 @@
  *        authSocialLinks: {
  *            vk: ?string,
  *            fb: ?string
- *        }
+ *        },
+ *        seoLinks: Array<{
+ *             name: string,
+ *             url: string
+ *        }>
  *     },
  *     errorText: ?string,
  *     popularSchools: ?list<[
@@ -51,7 +55,8 @@
                     'user': $params.data?.user,
                     'favorites': $params?.data?.favorites
                 ],
-                'landingScript': '/l-error-not-found.js'
+                'landingScript': '/l-error-not-found.js',
+                'seoLinks': $params.data?.seoLinks
             ],
             'config': [
                 'modifier': 'stendhal',
@@ -223,7 +228,7 @@
                     'amount': $params.amountSchools,
                     'dataLink': [
                         'name': 'Все школы',
-                        'url': '/search'
+                        'url': '/school'
                     ]
                 ]
             ]/}

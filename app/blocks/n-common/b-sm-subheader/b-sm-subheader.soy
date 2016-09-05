@@ -31,6 +31,8 @@
  /**
  * @typedef {{
  *     bottomLine: ?boolean,
+ *     theme: (string|undefined),
+ *     entityType: string,
  *     stylizationModifier: string
  * }} sm.bSmSubheader.Template.Params.Config
  */
@@ -386,14 +388,16 @@
  * Css classes
  * @param params {{
  *     config: {
- *         bottomLine: ?boolean
+ *         bottomLine: ?boolean,
+ *         entityType: string
  *     }
  * }}
  * @override
  */
 {template .additionalClasses}
+    {call .rootClass/}_entity-type_{$params.config?.entityType}
+
     {if $params?.config?.bottomLine}
         {sp}{call .rootClass/}_line_bottom
     {/if}
 {/template}
-

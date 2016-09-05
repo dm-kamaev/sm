@@ -9,6 +9,7 @@
 
 /**
  * @typedef {{
+ *     type: string,
  *     openGraph: ({
  *         url: (string|undefined),
  *         siteName: (string|undefined),
@@ -145,9 +146,9 @@
  */
 {template .extraScripts autoescape="strict" kind="html"}
     {call .layoutScript data="all" /}
-    {call .csrf_ data="all"/}
-    {call .analytics_ data="all"/}
-    {call .metrika_ data="all"/}
+    {call .csrf data="all"/}
+    {call .analytics data="all"/}
+    {call .metrika data="all"/}
 {/template}
 
 
@@ -166,8 +167,9 @@
  *         csrf: string
  *     }
  * }}
+ * @protected
  */
-{template .csrf_ autoescape="strict" kind="html"}
+{template .csrf autoescape="strict" kind="html"}
     <script>
         window['ctx'] = [];
         window['ctx']['csrf'] = {$params?.config?.csrf};
@@ -181,8 +183,9 @@
  *         analyticsId: (string|undefined)
  *     }
  * }}
+ * @protected
  */
-{template .analytics_ autoescape="strict" kind="html"}
+{template .analytics autoescape="strict" kind="html"}
     <script>
         var analytics = sm.iAnalytics.Analytics.getInstance();
         analytics.init('{$params?.config?.analyticsId}');
@@ -196,8 +199,9 @@
  *         yandexMetrikaId: (string|undefined)
  *     }
  * }}
+ * @protected
  */
-{template .metrika_ autoescape="strict" kind="html"}
+{template .metrika autoescape="strict" kind="html"}
     <!-- Yandex.Metrika counter -->
     <script type="text/javascript">
         var metrika = sm.iMetrika.Metrika.getInstance();
@@ -223,10 +227,10 @@
  * @override
  */
 {template .content autoescape="strict" kind="html"}
-    <div class="{call .rootClass/}">
-        {call .subheader_ data="all" /}
-        {call .bodyContent_ data="all" /}
-        {call .footer_ data="all" /}
+    <div class="{call .rootClass/}" {call .attributes data="all"/}>
+        {call .subheader data="all" /}
+        {call .bodyContent data="all" /}
+        {call .footer data="all" /}
     </div>
 {/template}
 
@@ -235,18 +239,24 @@
  * Subheader
  * @param params {{
  *     data: {
- *         subheader: sm.bSmSubheader.Template.Params.Data
+ *         subheader: sm.bSmSubheader.Template.Params.Data,
+ *         type: string
  *     }
  * }}
+ * @protected
  */
-{template .subheader_ autoescape="strict" kind="html"}
+{template .subheader autoescape="strict" kind="html"}
     <div class="{call .rootClass/}__subheader">
         {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
                 'factory': $params.config.modifier ?: 'stendhal',
                 'type': 'smSubheader',
                 'renderParams': [
-                    'data': $params.data.subHeader
+                    'data': $params.data.subHeader,
+                    'config': [
+                        'entityType': $params.data.type,
+                        'bottomLine': true
+                    ]
                 ]
             ]/}
         {/call}
@@ -256,8 +266,9 @@
 
 /**
  * Content
+ * @protected
  */
-{template .bodyContent_ autoescape="strict" kind="html"}
+{template .bodyContent autoescape="strict" kind="html"}
 {/template}
 
 
@@ -268,8 +279,9 @@
  *         year: ?number
  *     }
  * }
+ * @protected
  */
-{template .footer_ autoescape="strict" kind="html"}
+{template .footer autoescape="strict" kind="html"}
     <div class="{call .rootClass/}__footer">
         {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
@@ -285,7 +297,7 @@
                             ],
                             [
                                 'name': 'Пользовательское соглашение',
-                                'url': 'http://mel.fm/terms'
+                                'url': 'http://mel.fm/terms-of-use'
                             ]
                         ]
                     ]
@@ -302,4 +314,12 @@
  */
 {template .rootClass}
     i-layout
+{/template}
+
+
+/**
+ * Attributes
+ * @override
+ */
+{template .attributes kind="attributes"}
 {/template}

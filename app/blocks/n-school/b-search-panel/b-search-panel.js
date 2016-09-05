@@ -75,7 +75,7 @@ goog.scope(function() {
      * @private
      */
     SearchPanel.prototype.searchRequest_ = function(searchString) {
-        var url = '/search';
+        var url = '/school';
         if (searchString) {
             url += '?name=' + encodeURIComponent(searchString);
         }

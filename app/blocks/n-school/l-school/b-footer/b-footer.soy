@@ -1,59 +1,179 @@
 {namespace sm.lSchool.bFooter.Template}
 
+
 /**
-* base footer template
-* @param? params {
-*     data: ?{
-*         year: ?number
-*     },
-*     dataLinks: ?list<[
-*         name: ?string,
-*         url: ?string
-*     ]>
-* }
-*/
+ * base footer template
+ * @param params {{
+ *     data: {
+ *         year: ?number,
+ *         links: Array<{
+ *             name: string,
+ *             url: string
+ *         }>,
+ *         seoLinks: Array<{
+ *             name: string,
+ *             url: string
+ *         }>
+ *     }
+ * }}
+ */
 {template .base autoescape="strict" kind="html"}
-    <div class="b-schools-footer">
-        <div class="b-schools-footer__left-block">
-            <div class="b-schools-footer__link b-schools-footer__link_copyright">
-                © Мел, {$params?.data?.year ?: 2016}
-            </div>
-            {if $params?.dataLinks}
-                {call .links_ data="all" /}
-            {/if}
-        </div>
-        //TODO: uncomment
-        /*
-        <div class="b-schools-footer__right-block">
-            <div class="b-schools-footer__help">
-                Нашли ошибку? Выделите текст и нажмите <span class="b-schools-footer__help b-schools-footer__help_key">Ctrl+Enter</span> чтобы сообщить нам о ней
-            </div>
-        </div>
-        */
+    <div class="{call .rootClass/}">
+        {call .sectionCopyright_ data="all" /}
+        {call .sectionLinks_ data="all" /}
     </div>
 {/template}
 
 
 /**
-* Links template
-* @param? params {
-*     dataLinks: ?list<[
-*         name: ?string,
-*         url: ?string
-*     ]>
-* }
-*/
-{template .links_ autoescape="strict" kind="html"}
-    {foreach $link in $params?.dataLinks}
-        <div class="b-schools-footer__link">
-            {call sm.bLink.Template.base}
+ * Copyright section
+ * @param params {{
+ *     data: {
+ *         year: ?number
+ *     }
+ * }}
+ * @override
+ */
+{template .sectionCopyright_}
+    <div class="{call .rootClass/}__section{sp}
+                {call .rootClass/}__section_copyright">
+        {call .copyright_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Copyright
+ * @param params {{
+ *     data: {
+ *         year: ?number
+ *     }
+ * }}
+ * @override
+ */
+{template .copyright_}
+    <div class="{call .rootClass/}__copyright">
+        © Мел, {$params.data?.year ?: 2016}
+    </div>
+{/template}
+
+
+/**
+ * Links section
+ * @param params {{
+ *     data: {
+ *         links: Array<{
+ *             name: string,
+ *             url: string
+ *         }>,
+ *         seoLinks: Array<{
+ *             name: string,
+ *             url: string
+ *         }>
+ *     }
+ * }}
+ */
+{template .sectionLinks_}
+    <div class="{call .rootClass/}__section{sp}
+                {call .rootClass/}__section_links">
+        {call .linksSeo_ data="all" /}
+        {call .linksContacts_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Links contacts
+ * @param params {{
+ *     data: {
+ *         links: Array<{
+ *             name: string,
+ *             url: string
+ *         }>
+ *     }
+ * }}
+ */
+{template .linksContacts_}
+    <div class="{call .rootClass/}__links{sp}
+                {call .rootClass/}__links_contacts">
+        {call .links_}
+            {param params: [
+                'data': $params.data.links
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Links seo
+ * @param params {{
+ *     data: {
+ *         seoLinks: Array<{
+ *             name: string,
+ *             url: string
+ *         }>
+ *     }
+ * }}
+ */
+{template .linksSeo_}
+    {if $params.data?.seoLinks}
+        <div class="{call .rootClass/}__links{sp}
+                    {call .rootClass/}__links_seo">
+            {call .links_}
                 {param params: [
-                    'data': [
-                        'name': $link?.name,
-                        'url': $link?.url
-                    ]
+                    'data': $params.data.seoLinks
                 ]/}
             {/call}
         </div>
+    {/if}
+{/template}
+
+
+/**
+ * Links template
+ * @param params {{
+ *     data: Array<{
+ *         name: string,
+ *         url: string
+ *     }>
+ * }}
+ */
+{template .links_}
+    {foreach $link in $params.data}
+        {call .link_}
+            {param params: [
+                'data': $link
+            ]/}
+        {/call}
     {/foreach}
+{/template}
+
+
+/**
+ * Link template
+ * @param params {{
+ *     data: {
+ *         name: string,
+ *         url: string
+ *     }
+ * }}
+ */
+{template .link_}
+    <div class="{call .rootClass/}__link">
+        {call sm.bLink.Template.base}
+            {param params: [
+                'data': $params.data,
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-schools-footer
 {/template}

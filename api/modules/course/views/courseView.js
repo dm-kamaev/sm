@@ -22,12 +22,13 @@ exports.list = function(courses) {
 
 /**
  * @param {Object} course
+ * @param {string} type
  * @return {Object}
  */
-exports.getListCourse = function(course) {
+exports.getListCourse = function(course, type) {
     return {
         id: course.id,
-        type: 'course',
+        type: type,
         name: {light: course.name},
         description: course.description,
         brand: course.brand,

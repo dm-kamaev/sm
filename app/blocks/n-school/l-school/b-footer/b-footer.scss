@@ -1,47 +1,40 @@
 @import "../../../n-common/i-media/i-media";
 
 .b-schools-footer {
+    position: relative;
+
+    box-sizing: border-box;
     width:100%;
-    padding: 35px 0 25px;
-    margin-bottom: 30px;
+    padding: 25px 0 25px;
 
     text-align: left;
+    color: #000;
     border-top: 1px solid rgba(0, 0, 0, 0.1);
-    box-sizing: border-box;
 
     font-family: Arial, sans-serif;
-}
-
-.b-schools-footer__left-block {
-    display: inline-block;
     font-size: 13px;
 }
 
-.b-schools-footer__right-block {
-    text-align: right;
-    display: inline-block;
-    float:right;
+.b-schools-footer__section_copyright {
+    position: absolute;
+    top: 27px;
+}
+
+.b-schools-footer__section_links {
+    margin-left: 105px;
+}
+
+.b-schools-footer__links_seo {
+    margin-bottom: 12px;
 }
 
 .b-schools-footer__link {
     display: inline-block;
-    margin-right: 20px;
+    margin-right: 16px;
 
     &:last-child {
         margin-right: 0;
     }
-}
-
-.b-schools-footer__link_copyright {
-    color: black;
-}
-
-.b-schools-footer__help {
-    font-size: 12px;
-    color: #a3a3a3;
-}
-.b-schools-footer__help_key {
-    font-weight: bold;
 }
 
 @include media-xs {
@@ -49,26 +42,23 @@
         padding-bottom: 10px;
     }
 
-    .b-schools-footer__link_copyright {
-        display: block;
+    .b-schools-footer__section_copyright {
+        position: static;
+        
+        margin-bottom: 15px;
+    }
+
+    .b-schools-footer__section_links {
+        margin-left: 0;
     }
 
     .b-schools-footer__link {
-        margin-bottom: 15px;
+        margin-bottom: 12px;
     }
 }
 
 @include media-xxs {
     .b-schools-footer {
-        padding: 30px 0 30px;
+        padding: 30px 0 20px;
     }
-
-    .b-schools-footer__link {
-        margin-bottom: 2px;
-    }
-
-    .b-schools-footer__link.b-schools-footer__link_copyright {
-        margin-bottom: 15px;
-    }
-
 }

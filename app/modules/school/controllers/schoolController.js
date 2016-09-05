@@ -3,8 +3,8 @@ const soy = require('../../../components/soy');
 const services = require('../../../components/services').all;
 const schoolView = require('../../../../api/modules/school/views/schoolView');
 const searchView = require('../../../../api/modules/school/views/searchView');
-const schoolSeoListView =
-    require('../../../../api/modules/school/views/schoolSeoListView');
+const seoView = require('../../../../api/modules/school/views/seoView');
+
 const userView = require('../../../../api/modules/user/views/user');
 const entityType = require('../../../../api/modules/entity/enums/entityType');
 
@@ -38,6 +38,13 @@ exports.createComment = async(function(req, res) {
 });
 
 
+exports.search = async(function(req, res, next) {
+    res.status(301);
+    res.header('Location', '/school');
+    res.end();
+});
+
+
 exports.list = async(function(req, res, next) {
     try {
         var searchParams = {},
@@ -48,20 +55,32 @@ exports.list = async(function(req, res, next) {
         if (req.params &&
             req.params.listType &&
             lodash.isEmpty(req.query)) {
-            var seoSchoolList = await(services.seoSchoolList.getByType(
-                req.params
-            ));
 
-            if (!seoSchoolList) {
+            var seoPromises = {
+                schoolList: services.seoSchoolList.getByType(
+                    req.params
+                ),
+                schoolListsForLinks: services.seoSchoolList.getByListType(
+                    req.params.listType
+                )
+            };
+
+            var seoResults = await(seoPromises);
+
+            if (!seoResults.schoolList) {
                 throw new errors.PageNotFoundError();
             }
 
             var storedParams =
-                schoolSeoListView.searchParams(seoSchoolList);
+                seoView.searchParams(seoResults.schoolList);
 
             searchParams = storedParams.searchParams;
             searchText = storedParams.searchText;
-            seoData = schoolSeoListView.seoData(seoSchoolList);
+            seoData = seoView.seoListData(
+                seoResults.schoolList,
+                seoResults.schoolListsForLinks
+            );
+
         } else {
             searchParams =
                 await(services.schoolSearch.initSearchParams(req.query));
@@ -86,7 +105,8 @@ exports.list = async(function(req, res, next) {
                         favoriteIds,
                         entityType.SCHOOL
                     )
-                }
+                },
+                seoLinks: services.seoSchoolList.getByTypes()
             };
         var results = await(promises);
 
@@ -111,10 +131,14 @@ exports.list = async(function(req, res, next) {
                     filters: filters,
                     authSocialLinks: results.authSocialLinks,
                     user: userView.default(user),
+                    seo: seoData,
                     favorites: {
                         schools: favorites
                     },
-                    seo: seoData
+                    seoLinks: seoView.linksList(
+                        results.seoLinks,
+                        (!req.params.geoType) ? req.params.listType : null
+                    )
                 },
                 searchText: searchText,
                 countResults: schoolsList.countResults,
@@ -197,7 +221,8 @@ exports.view = async(function(req, res, next) {
                                 favoriteIds,
                                 entityType.SCHOOL
                             )
-                        }
+                        },
+                        seoLinks: services.seoSchoolList.getByTypes()
                     },
                     dataFromPromises = await(promises);
 
@@ -211,7 +236,6 @@ exports.view = async(function(req, res, next) {
                     dataFromPromises.popularSchools,
                     schoolAliases
                 );
-
 
                 var isUserCommented = typeof await(
                         services.userData.checkCredentials(
@@ -249,7 +273,7 @@ exports.view = async(function(req, res, next) {
     }
 });
 
-exports.search = async(function(req, res) {
+exports.home = async(function(req, res) {
     var user = req.user || {};
     var favoriteIds = await(services.favorite.getAllItemIdsByUserId(user.id)),
         dataPromises = {
@@ -262,7 +286,8 @@ exports.search = async(function(req, res) {
                     favoriteIds,
                     entityType.SCHOOL
                 )
-            }
+            },
+            seoLinks: services.seoSchoolList.getByTypes()
         },
         data = await(dataPromises);
 
@@ -270,6 +295,7 @@ exports.search = async(function(req, res) {
             data.popularSchools.map(school => school.id),
             entityType.SCHOOL
         ));
+
     data.popularSchools =
         schoolView.joinAliases(data.popularSchools, schoolAliases);
 
@@ -280,7 +306,8 @@ exports.search = async(function(req, res) {
                 user: userView.default(user),
                 favorites: {
                     schools: schoolView.listCompact(data.favorites)
-                }
+                },
+                seoLinks: seoView.linksList(data.seoLinks)
             },
             popularSchools: schoolView.popular(data.popularSchools),
             dataLinks: schoolView.dataLinks(),
@@ -299,4 +326,63 @@ exports.search = async(function(req, res) {
 
     res.header('Content-Type', 'text/html; charset=utf-8');
     res.end(html);
+});
+
+
+exports.catalog = async(function(req, res, next) {
+    try {
+        var user = req.user || {};
+        var seoCatalogData = await(
+            services.seoSchoolList.getAll()
+        );
+
+        var favoriteIds = await(
+            services.favorite.getAllItemIdsByUserId(user.id)
+        );
+
+        var promises = {
+            authSocialLinks: services.auth.getAuthSocialUrl(),
+            favorites: {
+                items: services.school.getByIdsWithGeoData(favoriteIds),
+                itemUrls: services.page.getAliases(
+                    favoriteIds,
+                    entityType.SCHOOL
+                )
+            }
+        };
+
+        var results = await(promises);
+
+        var data = seoView.catalog({
+            entityType: entityType.SCHOOL,
+            user: userView.default(user),
+            favorites: schoolView.listCompact(results.favorites),
+            authSocialLinks: results.authSocialLinks,
+            listsCatalog: seoView.listsCatalog(seoCatalogData)
+        });
+
+        var params = {
+            params: {
+                data: data,
+                config: {
+                    modifier: 'stendhal',
+                    staticVersion: config.lastBuildTimestamp,
+                    year: new Date().getFullYear(),
+                    analyticsId: analyticsId,
+                    yandexMetrikaId: yandexMetrikaId,
+                    csrf: req.csrfToken(),
+                    domain: DOMAIN,
+                    fbClientId: FB_CLIENT_ID
+                }
+            }
+        };
+
+        var html = soy.render('sm.lCatalog.Template.catalog', params);
+
+        res.header('Content-Type', 'text/html; charset=utf-8');
+        res.end(html);
+    } catch (error) {
+        res.status(error.code || 500);
+        next();
+    }
 });

@@ -15,6 +15,8 @@ const ANALYTICS_ID = config.analyticsId,
     DOMAIN = config.url.protocol + '://' + config.url.host,
     FB_CLIENT_ID = config.facebookClientId;
 
+const ENTITY_TYPE = 'course';
+
 
 exports.search = async(function(req, res, next) {
     try {
@@ -24,9 +26,10 @@ exports.search = async(function(req, res, next) {
                 await(services.schoolSearch.initSearchParams(req.query));
 
         var courses = await(services.course.list({page: 0}, 10)),
-            coursesList = courseView.list(courses);
+            coursesList = courseView.list(courses, ENTITY_TYPE);
 
         var data = searchView.render({
+            entityType: ENTITY_TYPE,
             user: user,
             authSocialLinks: authSocialLinks,
             countResults: courses[0] && courses[0].countResults || 0,

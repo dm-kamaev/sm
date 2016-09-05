@@ -57,6 +57,7 @@
 }
 /* header body end */
 
+
 /* logo */
 .b-sm-subheader__logo {
     display: inline-block;
@@ -68,6 +69,7 @@
     height: 42px;
 }
 /* logo end */
+
 
 /* search */
 .b-sm-subheader__search {
@@ -172,6 +174,14 @@
 /* links end */
 
 
+/* type entity course */
+.b-sm-subheader_entity-type_school {
+    .b-sm-subheader__logo-img {
+        height: 31px;
+    }
+}
+/* course */
+
 @include media-xl {
     .b-sm-subheader__body {
         box-sizing: border-box;
@@ -202,6 +212,12 @@
 
     .b-sm-subheader__logo-img {
         height: 30px;
+    }
+
+    .b-sm-subheader_entity-type_school {
+        .b-sm-subheader__logo-img {
+            height: 23px;
+        }
     }
 }
 
@@ -404,5 +420,11 @@
 
     .b-sm-subheader__logo-img {
         height: 25px;
+    }
+
+    .b-sm-subheader_entity-type_school {
+        .b-sm-subheader__logo-img {
+            height: 20px;
+        }
     }
 }
