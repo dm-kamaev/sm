@@ -1,0 +1,191 @@
+{namespace sm.bSmBalloon.Template}
+
+/**
+ * @typedef {{
+ *         id: number,
+ *         title: {
+ *             url: (string|undefined),
+ *             name: (string|undefined)
+ *         },
+ *         subtitle: (string|undefined),
+ *         items: Array<string>
+ * }}  sm.bSmBalloon.Template.Params.Data
+ */
+
+/**
+ * Template for Ymaps ballon content template block
+ * @param params {{
+ *     data:  sm.bSmBalloon.Template.Params.Data,
+ *     config: {}
+ * }}
+ * @constructor
+ * @extends cl.iControl.Template
+ */
+{template .balloon kind="html"}
+    {call .init data="all" /}
+{/template}
+
+
+/**
+ * @override
+ */
+{template .body  kind="html"}
+    <div class="{call .rootClass /}__wrap">
+        {call .closer_ /}
+        {call .header_ data="all" /}
+        {call .content_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Close button template
+ */
+{template .closer_ kind="html"}
+    {let $customClasses kind="html"}
+        {call .rootClass /}__close
+    {/let}
+
+    <div class="{call .rootClass /}__close-wrap">
+        {call .renderChild}
+            {param params: [
+                'type': 'icon',
+                'renderParams': [
+                    'data': [
+                        'type': 'close-balloon'
+                    ],
+                    'config': [
+                        'customClasses': [$customClasses]
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Header template
+ * @param params {{
+ *     data: {
+ *         id: number,
+ *         title: {
+ *             url: (string|undefined),
+ *             name: (string|undefined)
+ *         },
+ *         subtitle: (string|undefined),
+ *         items: Array<string>
+ *     }
+ * }}
+ */
+{template .header_ kind="html"}
+    <div class="{call .rootClass /}__section
+        {call .rootClass /}__section_header">
+        <div class="{call .rootClass /}__header">
+            {if $params.data.title}
+                {call .title_ data="all" /}
+            {/if}
+            {if $params.data.subtitle}
+                {call .subtitle_ data="all" /}
+            {/if}
+        </div>
+    </div>
+{/template}
+
+
+/**
+ * Title template
+ * @param params {{
+ *     data: {
+ *         title: {
+ *             url: (string|undefined),
+ *             text: (string|undefined)
+ *         }
+ *     }
+ * }}
+ */
+{template .title_ kind="html"}
+    <div class="{call .rootClass /}__title">
+        {if $params.data.title.url}
+            {let $customClasses kind="html"}
+                {call .rootClass /}__title-link
+            {/let}
+            {call .renderChild}
+                {param params: [
+                    'type': 'smLink',
+                    'renderParams': [
+                        'data': [
+                            'url': $params.data.title.url,
+                            'content': $params.data.title.text
+                        ],
+                        'config': [
+                            'size': 'l',
+                            'customClasses': [$customClasses],
+                            'theme': 'dark'
+                        ]
+                    ]
+                ]/}
+            {/call}
+        {else}
+            {$params.data.title.text}
+        {/if}
+    </div>
+{/template}
+
+
+/**
+ * Subtitle template
+ * @param params {{
+ *     data: {
+ *         subtitle: string
+ *     }
+ * }}
+ */
+{template .subtitle_ kind="html"}
+    <div class="{call .rootClass /}__subtitle">
+        {$params.data.subtitle}
+    </div>
+{/template}
+
+
+/**
+ * Content template
+ * @param params {{
+ *     items: Array<string>
+ * }}
+ */
+{template .content_ kind="html"}
+    <div class="{call .rootClass /}__section
+        {call .rootClass /}__section_content">
+        {if $params?.items}
+        {/if}
+    </div>
+{/template}
+
+
+/**
+ * Attributes
+ * @param params {{
+ *     data: {
+ *         id: number
+ *     }
+ * }}
+ * @override
+ */
+{template .attributes kind="attributes"}
+    {let $dataParams: [
+        'id': $params.data.id
+    ] /}
+
+    data-params="{call cl.iUtils.Utils.stringify}
+        {param json: $dataParams /}
+    {/call}"
+{/template}
+
+
+/**
+ * @override
+ */
+{template .rootClass}
+    b-sm-balloon
+{/template}

@@ -1,0 +1,49 @@
+.b-sm-balloon {
+    position: relative;
+
+    width: 240px;
+    height: auto;
+
+    background-color: #fff;
+
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    line-height: 20px;
+}
+
+.b-sm-balloon__wrap {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 16px 20px 20px;
+}
+
+.b-sm-balloon__close-wrap {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+
+    cursor: pointer;
+}
+
+.b-sm-balloon__title {
+    margin-bottom: 10px;
+
+    font-weight: 700;
+    line-height: 16px;
+}
+
+.b-sm-balloon__subtitle {
+    color: #8d8d8d;
+
+    font-size: 12px;
+}
+
+.b-sm-balloon-section {
+    width: 180px;
+    margin-bottom: 12px;
+
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
