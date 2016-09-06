@@ -1,4 +1,7 @@
 {
+    "emailNotifier": {
+        "email": "easyrider377@yandex.ru"
+    },
     "port": 3000,
     "environment": "development",
     "url": {
