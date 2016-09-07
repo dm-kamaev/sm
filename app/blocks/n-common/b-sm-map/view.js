@@ -54,7 +54,8 @@ goog.scope(function() {
      * @type {number}
      * @const
      */
-    View.BALLOON_HORZONTAL_OFFSET = 4;
+    View.BALLOON_HORZONTAL_OFFSET = 0;
+
 
     /**
      * Balloon vertical offset in pixels for align
