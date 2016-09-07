@@ -17,11 +17,11 @@
 /** layout end **/
 
 
-/** Content**/
+/** Section data **/
 .l-course__section_data {
     width: 1200px;
     min-width: 255px;
-    margin: 0 auto 95px;
+    margin: 0 auto 65px;
 
     &:after {
         display: block;
@@ -45,7 +45,44 @@
 
     background-color: #f7f7f1;
 }
-/** content end **/
+
+.l-course__location {
+    width: 100%;
+    height: 350px;
+
+    background-color: #ede1c5;
+}
+
+.l-course__user-interaction {
+    padding: 23px 30px;
+}
+
+.l-course__cost {
+    margin-bottom: 22px;
+
+    font: 28px 'Proxima', Arial, sans-serif;
+    font-weight: 600;
+}
+
+.l-course__button {
+    background-color: #f7f7f1;
+}
+/** section data end **/
+
+
+/** Section fixed **/
+.l-course__section_fixed {
+    display: none;
+
+    box-sizing: border-box;
+    width: 100%;
+    padding: 18px 30px;
+
+    background-color: #f7f7f1;
+}
+
+/** section fixed end **/
+
 
 @include media-xl {
     .l-course__section_data {
@@ -54,6 +91,7 @@
         padding: 0 40px;
     }
 }
+
 
 @include media-m {
     .l-course__data_left {
@@ -65,12 +103,20 @@
     }
 }
 
+
 @include media-xs {
     .l-course__section_data {
         padding: 0 30px;
     }
 
+    .l-course__section_fixed {
+        position: fixed;
+        bottom: 0;
+
+        display: block;
+    }
+
     .l-course__footer {
-        padding: 0;
+        padding: 0 0 50px;
     }
 }

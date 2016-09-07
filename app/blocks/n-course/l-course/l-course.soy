@@ -7,8 +7,10 @@
  *         id: number,
  *         name: string,
  *         type: string,
+ *         cost: ?string,
  *         generalOptions: sm.lCourse.bInformationBoard.Template.Params.Data
- *     }
+ *     },
+ *     actionButtonText: string
  * }} sm.lCourse.Template.Data
  */
 
@@ -61,6 +63,7 @@
         // {call .sectionPrograms_ data="all" /}
         // {call .sectionComments_ data="all" /}
         // {call .sectionPopular_ data="all" /}
+        {call .sectionFixed_ data="all" /}
     </div>
 
     // {call sm.bMap.Template.api}{/call}
@@ -82,6 +85,28 @@
 
 
 /**
+ * Section with fixed button
+ * @param params {{
+ *     data: {
+ *         actionButtonText: string
+ *     }
+ * }}
+ */
+{template .sectionFixed_}
+    <div class="{call .rootClass/}__section {call .rootClass/}__section_fixed">
+        {call .actionButton_}
+            {param params: [
+                'data': $params.data,
+                'config': [
+                    'size': 's'
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
  * Data on the left
  * @param params {{
  *     data: {?}
@@ -90,7 +115,7 @@
 {template .leftData_}
     <div class="{call .rootClass/}__data {call .rootClass/}__data_left">
         {call .header_ data="all" /}
-        {call .information_ data="all" /}
+        {call .generalOptions_ data="all" /}
     </div>
 {/template}
 
@@ -103,14 +128,14 @@
  */
 {template .rightData_}
     <div class="{call .rootClass/}__data {call .rootClass/}__data_right">
-        {if $params}
-        {/if}
+        {call .location_ data="all" /}
+        {call .userInteraction_ data="all" /}
     </div>
 {/template}
 
 
 /**
- * Data on the left
+ * Header
  * @param params {{
  *     data: {?}
  * }}
@@ -125,7 +150,7 @@
 
 
 /**
- * Data on the left
+ * General options of course
  * @param params {{
  *     data: {
  *         entityData: {
@@ -137,14 +162,124 @@
  *     }
  * }}
  */
-{template .information_}
-    <div class="{call .rootClass/}__information">
+{template .generalOptions_}
+    <div class="{call .rootClass/}__general-options">
         {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
                 'factory': $params.config.modifier,
                 'type': 'lCourse-informationBoard',
                 'renderParams': [
-                    'data': $params.data.generalOptions
+                    'data': $params.data.entityData.generalOptions
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Template for location
+ * @param params {{
+ *     data: {?}
+ * }}
+ */
+{template .location_}
+    <div class="{call .rootClass/}__location">
+        {if $params}
+        {/if}
+
+        // {if $params.data?.map}
+        //     {call .map_ data="all" /}
+        // {else}
+        //     {call .online_ data="all" /}
+        // {/if}
+    </div>
+{/template}
+
+
+/**
+ * Template with buttons for user interaction
+ * @param params {{
+ *     data: {
+ *         entityData: {
+ *             cost: ?string
+ *         },
+ *         actionButtonText: string
+ *     }
+ * }}
+ */
+{template .userInteraction_}
+    <div class="{call .rootClass/}__user-interaction">
+        {call .cost_ data="all" /}
+
+        {call .actionButton_}
+            {param params: [
+                'data': $params.data,
+                'config': [
+                    'size': 'xl'
+                ]
+            ]/}
+        {/call}
+
+        // {call .feedbackLink_  data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Cost of course
+ * @param params {{
+ *     data: {
+ *         entityData: {
+ *             cost: ?string
+ *         }
+ *     }
+ * }}
+ */
+{template .cost_}
+    <div class="{call .rootClass/}__cost">
+        {if $params.data.entityData.cost}
+            От {$params.data.entityData.cost}
+        {else}
+            Цена по запросу
+        {/if}
+    </div>
+{/template}
+
+
+/**
+ * Button template
+ * @param params {{
+ *     data: {
+ *         actionButtonText: string
+ *     },
+ *     config: {
+ *         size: string
+ *     }
+ * }}
+ */
+{template .actionButton_}
+    {let $classes kind="html"}
+        {call .rootClass/}__button{sp}
+        {call .rootClass/}__button_action{sp}
+        {call .rootClass/}__button_action-{$params.config.size}
+    {/let}
+
+    {let $customClasses kind="html"}
+        {call .rootClass/}__action-button
+    {/let}
+
+    <div class="{$classes}">
+        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+            {param params: [
+                'type': 'button',
+                'renderParams': [
+                    'data': [
+                        'content': $params.data.actionButtonText
+                    ],
+                    'config': [
+                        'customClasses': [$customClasses]
+                    ]
                 ]
             ]/}
         {/call}

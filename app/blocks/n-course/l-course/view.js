@@ -32,7 +32,8 @@ goog.scope(function() {
      * @enum {string}
      */
     View.CssClass = {
-        ROOT: 'l-course'
+        ROOT: 'l-course',
+        ACTION_BUTTON: 'l-course__action-button'
     };
 
 
@@ -43,15 +44,21 @@ goog.scope(function() {
     View.prototype.decorateInternal = function(element) {
         View.base(this, 'decorateInternal', element);
 
-        this.initDom_();
+        this.initDom_(element);
     };
 
 
     /**
      * Init dom elements
+     * @param {Element} element
      * @private
      */
-    View.prototype.initDom_ = function() {
-        this.dom = {};
+    View.prototype.initDom_ = function(element) {
+        this.dom = {
+            actionButtons: this.getElementsByClass(
+                View.CssClass.ACTION_BUTTON,
+                element
+            )
+        };
     };
 });  // goog.scope

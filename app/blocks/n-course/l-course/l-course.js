@@ -17,6 +17,13 @@ goog.scope(function() {
      */
     sm.lCourse.Course = function(view, opt_domHelper) {
         sm.lCourse.Course.base(this, 'constructor', view, opt_domHelper);
+
+        /**
+         * Instances button
+         * @type {cl.gButton.Button}
+         * @private
+         */
+        this.actionButtons_ = [];
     };
     goog.inherits(sm.lCourse.Course, sm.iLayout.LayoutStendhal);
     var Course = sm.lCourse.Course;
@@ -28,6 +35,61 @@ goog.scope(function() {
      */
     Course.prototype.decorateInternal = function(element) {
         Course.base(this, 'decorateInternal', element);
+
+        this.initActionButtons_();
+    };
+
+
+    /**
+     * @override
+     */
+    Course.prototype.enterDocument = function() {
+        Course.base(this, 'enterDocument');
+
+        this.initActionButtonsListeners_();
+    };
+
+
+    /**
+     * Initializes listeners for instances of action buttons
+     * @private
+     */
+    Course.prototype.initActionButtonsListeners_ = function() {
+        for (var i = 0; i < this.actionButtons_.length; i++) {
+            this.getHandler().listen(
+                this.actionButtons_[i],
+                cl.gButton.Button.Event.CLICK,
+                this.onActionButtonClick_
+            );
+        }
+    };
+
+
+    /**
+     * Action button handler
+     * @private
+     */
+    Course.prototype.onActionButtonClick_ = function() {
+        console.log('onActionButtonClick_');
+    };
+
+
+    /**
+     * Initializes instances of action buttons
+     * @private
+     */
+    Course.prototype.initActionButtons_ = function() {
+        var domElements = this.getView().getDom().actionButtons,
+            instance;
+
+        for (var i = 0; i < domElements.length; i++) {
+            instance = this.decorateChild(
+                'button',
+                domElements[i]
+            );
+
+            this.actionButtons_.push(instance);
+        }
     };
 });  // goog.scope
 

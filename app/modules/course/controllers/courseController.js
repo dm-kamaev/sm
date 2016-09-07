@@ -89,10 +89,15 @@ exports.information = async(function(req, res, next) {
                 favorites: []
             },
             user: user,
-            authSocialLinks: authSocialLinks
+            authSocialLinks: authSocialLinks,
+            entityData: {
+                generalOptions: {},
+                cost: '39 520 руб. / курс'
+            },
+            actionButtonText: 'Хочу этот курс!'
         };
 
-        data.generalOptions = {
+        data.entityData.generalOptions = {
             items: [{
                 name: 'Культурный центр ЗИЛ',
                 score: 4.9,
