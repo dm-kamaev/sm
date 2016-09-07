@@ -8,15 +8,17 @@
  *             name: (string|undefined)
  *         },
  *         subtitle: (string|undefined),
- *         items: Array<string>
+ *         items: Array<{
+ *             url: string,
+ *             text: string
+ *         }>
  * }}  sm.bSmBalloon.Template.Params.Data
  */
 
 /**
  * Template for Ymaps ballon content template block
  * @param params {{
- *     data:  sm.bSmBalloon.Template.Params.Data,
- *     config: {}
+ *     data:  sm.bSmBalloon.Template.Params.Data
  * }}
  * @constructor
  * @extends cl.iControl.Template
@@ -27,6 +29,9 @@
 
 
 /**
+ * @param params {{
+ *     data:  sm.bSmBalloon.Template.Params.Data
+ * }}
  * @override
  */
 {template .body  kind="html"}
@@ -80,7 +85,7 @@
  */
 {template .header_ kind="html"}
     <div class="{call .rootClass /}__section
-        {call .rootClass /}__section_header">
+        {sp}{call .rootClass /}__section_header">
         <div class="{call .rootClass /}__header">
             {if $params.data.title}
                 {call .title_ data="all" /}
@@ -151,15 +156,95 @@
 /**
  * Content template
  * @param params {{
- *     items: Array<string>
+ *     data: {
+ *         items: Array<{
+ *             url: string,
+ *             text: string
+ *         }>
+ *     }
  * }}
  */
 {template .content_ kind="html"}
     <div class="{call .rootClass /}__section
-        {call .rootClass /}__section_content">
-        {if $params?.items}
+        {sp}{call .rootClass /}__section_content">
+        {if length($params.data.items) == 1}
+            {call .item_ data="all" /}
+        {else}
+            {call .itemList_ data="all" /}
         {/if}
     </div>
+{/template}
+
+
+
+/**
+ * Item template for case, where ballon contain one link
+ * @param params {{
+ *     data: {
+ *         items: Array<{
+ *             url: string,
+ *             content: string
+ *         }>
+ *     }
+ * }}
+ */
+{template .item_ kind="html"}
+    {let $customClasses kind="html"}
+        {call .rootClass /}__item
+    {/let}
+    {call .renderChild}
+        {param params: [
+            'type': 'smLink',
+            'renderParams': [
+                'data': $params.data.items[0],
+                'config': [
+                    'size': 'l',
+                    'customClasses': [$customClasses]
+                ]
+            ]
+        ] /}
+    {/call}
+{/template}
+
+
+/**
+ * Item list template, for case, where ballon contain several link
+ * @param params {{
+ *     data: {
+ *         items: Array<{
+ *             url: string,
+ *             content: string
+ *         }>
+ *     }
+ * }}
+ */
+{template .itemList_ kind="html"}
+    {let $customClasses kind="html"}
+        {call .rootClass /}__item-list
+    {/let}
+
+    {call .renderChild}
+        {param params: [
+            'type': 'smListPaged',
+            'renderParams': [
+                'data': [
+                    'items': $params.data.items,
+                    'countItemsPerPage': 5,
+                    'itemConfig': [
+                        'theme': 'block',
+                        'size': 'l'
+                    ],
+                    'listConfig': [
+                        'theme': 'light'
+                    ]
+                ],
+                'config': [
+                    'itemType': 'smLink',
+                    'customClasses': [$customClasses]
+                ]
+            ]
+        ] /}
+    {/call}
 {/template}
 
 
@@ -180,6 +265,25 @@
     data-params="{call cl.iUtils.Utils.stringify}
         {param json: $dataParams /}
     {/call}"
+{/template}
+
+
+/**
+ * @param params {{
+ *     data: {
+ *         items: Array<{
+ *             url: string,
+ *             content: string
+ *         }>
+ *     }
+ * }}
+ */
+{template .additionalClasses kind="html"}
+    {if length($params.data.items) == 1}
+        {call .rootClass /}_item
+    {else}
+        {call .rootClass /}_item-list
+    {/if}
 {/template}
 
 

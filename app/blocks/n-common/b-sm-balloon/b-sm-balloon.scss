@@ -1,7 +1,7 @@
 .b-sm-balloon {
     position: relative;
 
-    width: 240px;
+    width: auto;
     height: auto;
 
     background-color: #fff;
@@ -16,6 +16,7 @@
     width: 100%;
     padding: 16px 20px 20px;
 }
+
 
 .b-sm-balloon__close-wrap {
     position: absolute;
@@ -36,6 +37,7 @@
     color: #8d8d8d;
 
     font-size: 12px;
+    margin-bottom: 15px;
 }
 
 .b-sm-balloon-section {
@@ -46,4 +48,24 @@
     &:last-child {
         margin-bottom: 0;
     }
+}
+
+.b-sm-balloon_item-list {
+    width: 300px;
+
+    .b-sm-balloon__wrap {
+        padding-bottom: 14px;
+    }
+
+    .b-sm-balloon__section_header {
+        border-bottom: 1px solid #e5e5e5;
+    }
+
+    .b-sm-balloon__section_content {
+        padding-top: 12px;
+    }
+}
+
+.b-sm-balloon_item {
+    width: 240px;
 }

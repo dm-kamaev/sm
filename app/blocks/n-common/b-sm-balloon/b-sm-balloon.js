@@ -5,6 +5,7 @@ goog.require('sm.bSmBalloon.View');
 
 
 goog.scope(function() {
+    var ListPaged = sm.bSmListPaged.SmListPaged;
     var View = sm.bSmBalloon.View;
 
 
@@ -34,7 +35,8 @@ goog.scope(function() {
      */
     Balloon.Event = {
         CLOSE_BUTTON_CLICK: View.Event.CLOSE_BUTTON_CLICK,
-        TITLE_LINK_CLICK: View.Event.TITLE_LINK_CLICK
+        TITLE_LINK_CLICK: View.Event.TITLE_LINK_CLICK,
+        LIST_PAGE_CHANGE: ListPaged.Event.PAGE_CHANGE
     };
 
 
@@ -54,11 +56,25 @@ goog.scope(function() {
      * @private
      */
     Balloon.prototype.initComponents_ = function() {
-        var titleLink = this.getView().getDom().titleLink;
-        if (goog.isDefAndNotNull(titleLink)) {
+        var dom = this.getView().getDom();
+        if (goog.isDefAndNotNull(dom.titleLink)) {
             this.decorateChild(
                 'smLink',
-                titleLink
+                dom.titleLink
+            );
+        }
+
+        if (goog.isDefAndNotNull(dom.item)) {
+            this.decorateChild(
+                'smLink',
+                dom.item
+            );
+        }
+
+        if (goog.isDefAndNotNull(dom.itemList)) {
+            this.decorateChild(
+                'smListPaged',
+                dom.itemList
             );
         }
     };
