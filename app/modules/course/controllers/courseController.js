@@ -2,9 +2,13 @@ var async = require('asyncawait/async'),
     await = require('asyncawait/await');
 
 var soy = require('../../../components/soy'),
-    services = require('../../../components/services').all,
-    courseView = require('../../../../api/modules/course/views/courseView'),
-    searchView = require('../../../../api/modules/course/views/searchView');
+    services = require('../../../components/services').all;
+
+var courseView = require('../../../../api/modules/course/views/courseView'),
+    searchView = require('../../../../api/modules/course/views/searchView'),
+    informationView = require(
+        '../../../../api/modules/course/views/informationView'
+    );
 
 var config = require('../../../config').config;
 
@@ -71,54 +75,37 @@ exports.information = async(function(req, res, next) {
         var authSocialLinks = services.auth.getAuthSocialUrl(),
             user = req.user || {};
 
-        var data = {
-            seo: {
-                metaTitle: 'Кружки и секции'
+        var entityData = {
+            generalOptions: {
+                items: [{
+                    name: 'Культурный центр ЗИЛ',
+                    score: 4.9,
+                    description: 'Одна из крупнейших сетей курсов английского языка в Москве'
+                }, {
+                    name: 'Возраст',
+                    description: 'от 7 лет'
+                }, {
+                    name: 'Расписание',
+                    description: 'Два раза в неделю, чт в 16:00 и сб в 11:00'
+                }, {
+                    name: 'Возраст',
+                    description: '13-17 лет'
+                }, {
+                    name: 'Группы',
+                    description: 'Не более 10 человек в группе'
+                }, {
+                    name: 'Начало занятий',
+                    description: 'В сентябре 2016'
+                }]
             },
-            subHeader: {
-                logo: {
-                    imgUrl: '/images/n-common/b-sm-subheader/course-logo.svg'
-                },
-                links: {
-                    nameL: 'Все курсы, кружки и секции',
-                    nameM: 'Все курсы',
-                    url: '/'
-                },
-                search: {},
-                user: user,
-                favorites: []
-            },
-            user: user,
-            authSocialLinks: authSocialLinks,
-            entityData: {
-                generalOptions: {},
-                cost: '39 520 руб. / курс'
-            },
-            actionButtonText: 'Хочу этот курс!'
+            cost: '39 520 руб. / курс'
         };
 
-        data.entityData.generalOptions = {
-            items: [{
-                name: 'Культурный центр ЗИЛ',
-                score: 4.9,
-                description: 'Одна из крупнейших сетей курсов английского языка в Москве'
-            }, {
-                name: 'Возраст',
-                description: 'от 7 лет'
-            }, {
-                name: 'Расписание',
-                description: 'Два раза в неделю, чт в 16:00 и сб в 11:00'
-            }, {
-                name: 'Возраст',
-                description: '13-17 лет'
-            }, {
-                name: 'Группы',
-                description: 'Не более 10 человек в группе'
-            }, {
-                name: 'Начало занятий',
-                description: 'В сентябре 2016'
-            }]
-        };
+        var data = informationView.render({
+            user: user,
+            authSocialLinks: authSocialLinks,
+            entityData: entityData
+        });
 
         var html = soy.render(
             'sm.lCourse.Template.course', {
