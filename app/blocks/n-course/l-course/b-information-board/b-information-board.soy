@@ -6,7 +6,8 @@
  *     items: Array<{
  *         name: string,
  *         description: ?(string|undefined),
- *         score: ?(number|undefined)
+ *         score: ?(number|undefined),
+ *         currentStatus: (string|undefined)
  *     }>
  * }} sm.lCourse.bInformationBoard.Template.Params.Data
  */
@@ -44,7 +45,8 @@
  *         items: Array<{
  *             name: string,
  *             description: ?(string|undefined),
- *             score: ?(number|undefined)
+ *             score: ?(number|undefined),
+ *             currentStatus: (string|undefined)
  *         }>
  *     }
  * }}
@@ -68,7 +70,8 @@
  *     data: {
  *         name: string,
  *         description: ?(string|undefined),
- *         score: ?(number|undefined)
+ *         score: ?(number|undefined),
+ *         currentStatus: (string|undefined)
  *     }
  * }}
  */
@@ -113,7 +116,7 @@
  * }}
  */
 {template .score_}
-    {if $params.data.score}
+    {if $params.data?.score}
         <div class="{call .rootClass/}__score">
             {call sm.bMark.Template.base}
                 {param params: [
@@ -135,18 +138,51 @@
  * Item description
  * @param params {{
  *     data: {
- *         description: ?(string|undefined)
+ *         description: ?(string|undefined),
+ *         currentStatus: (string|undefined)
  *     }
  * }}
  */
 {template .description_}
-    {if $params.data.description}
+    {if $params.data?.description}
         <div class="{call .rootClass/}__description">
-            {$params.data.description}
+            {call .descriptionText_ data="all" /}
+            {call .status_ data="all" /}
         </div>
     {/if}
 {/template}
 
+
+/**
+ * Item description text
+ * @param params {{
+ *     data: {
+ *         description: ?(string|undefined)
+ *     }
+ * }}
+ */
+{template .descriptionText_}
+    <div class="{call .rootClass/}__description-text">
+        {$params.data.description}
+    </div>
+{/template}
+
+
+/**
+ * Current status of item
+ * @param params {{
+ *     data: {
+ *         currentStatus: (string|undefined)
+ *     }
+ * }}
+ */
+{template .status_}
+    {if $params.data?.currentStatus}
+        <div class="{call .rootClass/}__status">
+            {$params.data.currentStatus}
+        </div>
+    {/if}
+{/template}
 
 
 /**
