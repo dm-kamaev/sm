@@ -45,7 +45,7 @@
         {if not $params?.config?.showMark}
             b-mark_no-mark{sp}
         {/if}
-        {if not $params?.config?.notFontSize}
+        {if $params?.config?.notFontSize}
             b-mark_font-size_inherit{sp}
         {/if}
         {$params?.config?.customClasses ?: ''}

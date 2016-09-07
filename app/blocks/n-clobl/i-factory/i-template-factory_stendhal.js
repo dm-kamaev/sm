@@ -36,6 +36,7 @@ goog.require('sm.gModal.TemplateStendhal');
 goog.require('sm.gTab.TemplateCatalog');
 goog.require('sm.gTab.TemplateStendhal');
 goog.require('sm.gTextarea.TemplateStendhal');
+goog.require('sm.lCourse.bInformationBoard.Template');
 goog.require('sm.lSchool.bDate.Template');
 goog.require('sm.lSchool.bFoldList.Template');
 goog.require('sm.lSchoolHome.bArticleLink.Template');
@@ -211,6 +212,12 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'smBadge',
             sm.bSmBadge.Template.badge
+        );
+
+    /** l-course blocks */
+    this.setTemplateListItem(
+            'lCourse-informationBoard',
+            sm.lCourse.bInformationBoard.Template.informationBoard
         );
 };
 goog.inherits(sm.iFactory.TemplateFactoryStendhal, cl.iFactory.TemplateFactory);

@@ -1,0 +1,158 @@
+{namespace sm.lCourse.bInformationBoard.Template}
+
+
+/*
+ * @typedef {{
+ *     items: Array<{
+ *         name: string,
+ *         description: ?(string|undefined),
+ *         score: ?(number|undefined)
+ *     }>
+ * }} sm.lCourse.bInformationBoard.Template.Params.Data
+ */
+
+
+ /**
+ * Information Board
+ * @param params {{
+ *     data: sm.lCourse.bInformationBoard.Template.Params.Data
+ * }}
+ * @extends cl.iControl.Template
+ * @constructor
+ */
+{template .informationBoard autoescape="strict" kind="html"}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * Body
+ * @param params {{
+ *     data: sm.lCourse.bInformationBoard.Template.Params.Data
+ * }}
+ * @override
+ */
+{template .body}
+    {call .listItems_ data="all" /}
+{/template}
+
+
+/**
+ * Items list
+ * @param params {{
+ *     data: {
+ *         items: Array<{
+ *             name: string,
+ *             description: ?(string|undefined),
+ *             score: ?(number|undefined)
+ *         }>
+ *     }
+ * }}
+ */
+{template .listItems_}
+    <div class="{call .rootClass/}__list-items">
+        {for $i in range(length($params.data.items))}
+            {call .item_}
+                {param params: [
+                    'data': $params.data.items[$i]
+                ]/}
+            {/call}
+        {/for}
+    </div>
+{/template}
+
+
+/**
+ * Item
+ * @param params {{
+ *     data: {
+ *         name: string,
+ *         description: ?(string|undefined),
+ *         score: ?(number|undefined)
+ *     }
+ * }}
+ */
+{template .item_}
+    {let $classes kind="html"}
+        {call .rootClass/}__item
+
+        {if $params.data?.score}
+            {sp}{call .rootClass/}__item_details
+        {/if}
+    {/let}
+
+    <div class="{$classes}">
+        {call .name_ data="all" /}
+        {call .score_ data="all" /}
+        {call .description_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Item name
+ * @param params {{
+ *     data: {
+ *         name: string
+ *     }
+ * }}
+ */
+{template .name_}
+    <div class="{call .rootClass/}__name">
+        {$params.data.name}
+    </div>
+{/template}
+
+
+/**
+ * Item score
+ * @param params {{
+ *     data: {
+ *         score: ?(number|undefined)
+ *     }
+ * }}
+ */
+{template .score_}
+    {if $params.data.score}
+        <div class="{call .rootClass/}__score">
+            {call sm.bMark.Template.base}
+                {param params: [
+                    'value': $params.data.score,
+                    'display': 'inline',
+                    'config': [
+                        'showMark': true,
+                        'size': 'm',
+                        'notFontSize': true
+                    ]
+                ]/}
+            {/call}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Item description
+ * @param params {{
+ *     data: {
+ *         description: ?(string|undefined)
+ *     }
+ * }}
+ */
+{template .description_}
+    {if $params.data.description}
+        <div class="{call .rootClass/}__description">
+            {$params.data.description}
+        </div>
+    {/if}
+{/template}
+
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-information-board
+{/template}

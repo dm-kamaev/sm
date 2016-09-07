@@ -1,0 +1,264 @@
+{namespace sm.lCourse.Template}
+
+
+/**
+ * typedef {{
+ *     entityData: {
+ *         id: number,
+ *         name: string,
+ *         type: string,
+ *         generalOptions: sm.lCourse.bInformationBoard.Template.Params.Data
+ *     }
+ * }} sm.lCourse.Template.Data
+ */
+
+
+/**
+ * Page course information
+ * @param params {{
+ *     data: sm.lCourse.Template.Data,
+ *     config: ?sm.iLayout.Template.Params.Config
+ * }}
+ * @extends sm.iLayout.TemplateStendhal
+ * @constructor
+ * @doc
+ */
+{template .course autoescape="strict" kind="html"}
+    {call .document data="all" /}
+{/template}
+
+
+/**
+ * Add layout script to page
+ * @param params {{
+ *     config: {
+ *         staticVersion: (string|undefined)
+ *     }
+ * }}
+ * @protected
+ * @override
+ */
+{template .layoutScript kind="html"}
+    {call cl.iStatic.Template.script}
+        {param path: 'l-course.js' /}
+        {param staticVersion: $params?.config?.staticVersion /}
+    {/call}
+{/template}
+
+
+/**
+ * Content
+ * @param params {{
+ *     data: sm.lCourse.Template.Data,
+ *     config: ?sm.iLayout.Template.Params.Config
+ * }}
+ */
+{template .bodyContent autoescape="strict" kind="html"}
+    <div class="{call .rootClass/}__body">
+        {call .sectionData_ data="all" /}
+        // {call .sectionOptions_ data="all" /}
+        // {call .sectionAdditional_ data="all" /}
+        // {call .sectionPrograms_ data="all" /}
+        // {call .sectionComments_ data="all" /}
+        // {call .sectionPopular_ data="all" /}
+    </div>
+
+    // {call sm.bMap.Template.api}{/call}
+{/template}
+
+
+/**
+ * Section with a complete data entity
+ * @param params {{
+ *     data: {?}
+ * }}
+ */
+{template .sectionData_}
+    <div class="{call .rootClass/}__section {call .rootClass/}__section_data">
+        {call .rightData_ data="all" /}
+        {call .leftData_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Data on the left
+ * @param params {{
+ *     data: {?}
+ * }}
+ */
+{template .leftData_}
+    <div class="{call .rootClass/}__data {call .rootClass/}__data_left">
+        {call .header_ data="all" /}
+        {call .information_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Data on the right
+ * @param params {{
+ *     data: {?}
+ * }}
+ */
+{template .rightData_}
+    <div class="{call .rootClass/}__data {call .rootClass/}__data_right">
+        {if $params}
+        {/if}
+    </div>
+{/template}
+
+
+/**
+ * Data on the left
+ * @param params {{
+ *     data: {?}
+ * }}
+ */
+{template .header_}
+    <div class="{call .rootClass/}__header">
+        {if $params}
+            HEADER
+        {/if}
+    </div>
+{/template}
+
+
+/**
+ * Data on the left
+ * @param params {{
+ *     data: {
+ *         entityData: {
+ *             generalOptions: sm.lCourse.bInformationBoard.Template.Params.Data
+ *         }
+ *     },
+ *     config: {
+ *         modifier: string
+ *     }
+ * }}
+ */
+{template .information_}
+    <div class="{call .rootClass/}__information">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': $params.config.modifier,
+                'type': 'lCourse-informationBoard',
+                'renderParams': [
+                    'data': $params.data.generalOptions
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Section comments
+ * @param params {{
+ *     data: {
+ *         user: ?{
+ *            isCommented: boolean
+ *         },
+ *         entityData: {
+ *             comments: Array<{sm.lSchool.bComment.Template.Params}>
+ *         }
+ *     }
+ * }}
+ */
+{template .sectionComments_}
+    <div class="{call .rootClass/}__section{sp}
+                {call .rootClass/}__section_comments">
+        {call cl.iUtils.Utils.stringify}
+            {param json: $params.data /}
+        {/call}
+        // {call sm.lSchool.bComments.Template.base}
+        //     {param params: [
+        //         'comments': $params.data.comments,
+        //         'isCommented': $params.data?.user?.isCommented
+        //     ] /}
+        // {/call}
+    </div>
+{/template}
+
+
+/**
+ * Section popular entities
+ * @param params {{
+ *     data: {
+ *         popularEntities: Array<{
+ *             id: number,
+ *             alias: ?string,
+ *             name: string,
+ *             description: ?string,
+ *             metro: ?Array<string>,
+ *             totalScore: ?number
+ *         }>
+ *     }
+ * }}
+ */
+{template .sectionPopular_}
+    <div class="{call .rootClass/}__section{sp}
+                {call .rootClass/}__section_popular">
+        {call cl.iUtils.Utils.stringify}
+            {param json: $params.data /}
+        {/call}
+
+        // {call sm.bPopularSchools.Template.base}
+        //     {param params: [
+        //         'popularSchools': $params.data.popularSchools,
+        //         'config': [
+        //             'popularSchool': [
+        //                 'customClasses': 'l-school__popular'
+        //             ],
+        //             'analyticsAction': 'school click'
+        //         ]
+        //     ]/}
+        // {/call}
+    </div>
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    l-course
+{/template}
+
+
+/**
+ * Attributes
+ * @param params {{
+ *     data: {
+ *         user: ?{
+ *            firstName: (string|undefined),
+ *            lastName: (string|undefined),
+ *            isCommented: boolean
+ *         },
+ *         authSocialLinks: {
+ *            vk: ?string,
+ *            fb: ?string
+ *         },
+ *         entityData: {
+ *             id: number,
+ *             name: string
+ *         }
+ *     }
+ * }}
+ * @override
+ */
+{template .attributes kind="attributes"}
+    {if $params}
+    {/if}
+    // data-params="
+    //     {call cl.iUtils.Utils.stringify}
+    //         {param json: [
+    //             'id': $params.data.entityData?.id,
+    //             'name': $params.data.entityData?.name,
+    //             'isCommented': $params.data.user?.isCommented,
+    //             'isUserAuthorized': $params.data.user ? true : false,
+    //             'authSocialLinks': $params.data?.authSocialLinks
+    //         ]/}
+    //     {/call}"
+{/template}

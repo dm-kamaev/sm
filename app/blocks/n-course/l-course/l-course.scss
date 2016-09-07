@@ -1,0 +1,76 @@
+@import "../../n-common/i-media/i-media";
+
+.l-course__body {
+    margin: auto;
+
+    color: #000;
+
+    font-family: Arial, sans-serif;
+}
+
+/** layout **/
+.l-course__footer {
+    margin: 60px auto 0;
+
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+/** layout end **/
+
+
+/** Content**/
+.l-course__section_data {
+    width: 1200px;
+    min-width: 255px;
+    margin: 0 auto 95px;
+
+    &:after {
+        display: block;
+        clear: both;
+
+        content: '';
+    }
+}
+
+.l-course__data_left {
+    box-sizing: border-box;
+    padding-right: 420px;
+}
+
+.l-course__data_right {
+    float: right;
+    margin-top: 40px;
+
+    width: 380px;
+    height: 550px;
+
+    background-color: #f7f7f1;
+}
+/** content end **/
+
+@include media-xl {
+    .l-course__section_data {
+        box-sizing: border-box;
+        width: auto;
+        padding: 0 40px;
+    }
+}
+
+@include media-m {
+    .l-course__data_left {
+        padding-right: 0;
+    }
+
+    .l-course__data_right {
+        display: none;
+    }
+}
+
+@include media-xs {
+    .l-course__section_data {
+        padding: 0 30px;
+    }
+
+    .l-course__footer {
+        padding: 0;
+    }
+}
