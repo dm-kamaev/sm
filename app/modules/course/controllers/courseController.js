@@ -64,3 +64,83 @@ exports.search = async(function(req, res, next) {
         next();
     }
 });
+
+
+exports.information = async(function(req, res, next) {
+    try {
+        var authSocialLinks = services.auth.getAuthSocialUrl(),
+            user = req.user || {};
+
+        var data = {
+            seo: {
+                metaTitle: 'Кружки и секции'
+            },
+            subHeader: {
+                logo: {
+                    imgUrl: '/images/n-common/b-sm-subheader/course-logo.svg'
+                },
+                links: {
+                    nameL: 'Все курсы, кружки и секции',
+                    nameM: 'Все курсы',
+                    url: '/'
+                },
+                search: {},
+                user: user,
+                favorites: []
+            },
+            user: user,
+            authSocialLinks: authSocialLinks
+        };
+
+        data.generalOptions = {
+            items: [{
+                name: 'Культурный центр ЗИЛ',
+                score: 4.9,
+                description: 'Одна из крупнейших сетей курсов английского языка в Москве'
+            }, {
+                name: 'Возраст',
+                description: 'от 7 лет'
+            }, {
+                name: 'Расписание',
+                description: 'Два раза в неделю, чт в 16:00 и сб в 11:00'
+            }, {
+                name: 'Возраст',
+                description: '13-17 лет'
+            }, {
+                name: 'Группы',
+                description: 'Не более 10 человек в группе'
+            }, {
+                name: 'Начало занятий',
+                description: 'В сентябре 2016'
+            }]
+        };
+
+        var html = soy.render(
+            'sm.lCourse.Template.course', {
+                params: {
+                    data: data,
+                    config: {
+                        entityType: ENTITY_TYPE,
+                        modifier: 'stendhal',
+                        staticVersion: config.lastBuildTimestamp,
+                        year: new Date().getFullYear(),
+                        analyticsId: ANALYTICS_ID,
+                        yandexMetrikaId: YANDEX_METRIKA_ID,
+                        csrf: req.csrfToken(),
+                        domain: DOMAIN,
+                        fbClientId: FB_CLIENT_ID
+                    }
+                }
+            }
+        );
+
+        res.header('Content-Type', 'text/html; charset=utf-8');
+        res.end(html);
+    } catch (error) {
+        console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', error);
+        logger.error(error);
+
+        res.status(error.code || 500);
+        next();
+    }
+});
