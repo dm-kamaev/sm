@@ -189,6 +189,7 @@ class SearchQuery {
     /**
      * Set base params
      * @virtual
+     * @protected
      */
     setBaseQuery_() {}
 
