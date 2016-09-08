@@ -91,6 +91,27 @@ service.list = async(function(searchParams, opt_limit) {
 });
 
 /**
+ * Search with given parameters for map
+ * @param {Object} searchParams
+ * @param {number=} opt_limit
+ * @return {Array<Object>}
+ */
+service.listMap = async(function(searchParams, opt_limit) {
+    var searchString = services.courseSearch.getSearchMapSql(
+        searchParams,
+        opt_limit
+    );
+
+    var courses = await(sequelize.query(
+        searchString, {
+            type: sequelize.QueryTypes.SELECT
+        }
+    ));
+
+    return courses;
+});
+
+/**
  * @param {number} departmentId
  * @return {Array<number>}
  */
