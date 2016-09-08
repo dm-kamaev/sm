@@ -3,9 +3,7 @@ var async = require('asyncawait/async'),
 
 var soy = require('../../../components/soy'),
     services = require('../../../components/services').all,
-    courseView = require('../../../../api/modules/course/views/courseView'),
-    searchView = require('../../../../api/modules/course/views/searchView'),
-    addressView = require('../../../../api/modules/geo/views/addressView');
+    searchView = require('../../../../api/modules/course/views/searchView');
 
 var config = require('../../../config').config;
 
@@ -16,8 +14,6 @@ const ANALYTICS_ID = config.analyticsId,
     DOMAIN = config.url.protocol + '://' + config.url.host,
     FB_CLIENT_ID = config.facebookClientId;
 
-const models = require('../../../components/models').all;
-
 exports.search = async(function(req, res, next) {
     try {
         var authSocialLinks = services.auth.getAuthSocialUrl(),
@@ -25,27 +21,15 @@ exports.search = async(function(req, res, next) {
             searchParams =
                 await(services.schoolSearch.initSearchParams(req.query));
 
-        var courses = await(services.course.list({page: 0}, 10)),
-            coursesList = courseView.list(courses);
-
-        /** Temporary map address data */
-        var pinAddresses = await(models.Address.findAll({
-            limit: 10
-        }));
-        var pointAddresses = await(models.Address.findAll({
-            limit: 10,
-            offset: 10
-        }));
-
-        var mapData = createMapItems(pinAddresses, pointAddresses);
-        /** End temporary address data */
+        var courses = await(services.course.list({page: 0}, 10));
+        var mapCourses = await(services.course.listMap({page: 0}, 10));
 
         var data = searchView.render({
             user: user,
             authSocialLinks: authSocialLinks,
             countResults: courses[0] && courses[0].countResults || 0,
-            coursesList: coursesList,
-            mapData: mapData,
+            coursesList: courses,
+            mapCourses: mapCourses,
             searchParams: searchParams
         });
 
@@ -78,41 +62,3 @@ exports.search = async(function(req, res, next) {
         next();
     }
 });
-
-
-/**
- * Creates map items from addresses
- * @param {Array<models.Address>} pinAddresses
- * @param {Array<models.Address>} pointAddresses
- * @return {{
- *     itemGroups: Array<{
- *         viewType: string,
- *         items: Array<Object>
- *     }>,
- *     position: {
- *         center: Array<number>,
- *         type: string
- *     }
- * }}
- */
-var createMapItems = function(pinAddresses, pointAddresses) {
-    var district = await(models.District.findAll({
-        limit: 1
-    }));
-    return {
-        itemGroups: [
-            {
-                viewType: 'pin',
-                items: pinAddresses.map(addressView.mapItem)
-            },
-            {
-                viewType: 'point',
-                items: pointAddresses.map(addressView.mapItem)
-            }
-        ],
-        position: {
-            center: [district[0].centerCoords[1], district[0].centerCoords[0]],
-            type: 'district'
-        }
-    };
-};
