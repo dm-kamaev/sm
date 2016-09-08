@@ -6,6 +6,7 @@ goog.provide('sm.bSmMap.SmMap');
 
 goog.require('cl.iControl.Control');
 goog.require('goog.Promise');
+goog.require('sm.bSmBalloon.SmBalloon');
 goog.require('sm.bSmMap.IPresetGenerator');
 goog.require('sm.iSmViewport.SmViewport');
 
@@ -149,16 +150,19 @@ goog.scope(function() {
      *         coordinates: Array<number>
      *     },
      *     properties: {
-     *         id: number,
-     *         name: string,
-     *         alias: string,
-     *         description: string,
-     *         address: {
-     *             name: string,
-     *             stages: string
-     *         }
-     *     },
-     *
+     *         title: {
+     *             id: number,
+     *             text: string,
+     *             url: ?string
+     *         },
+     *         subtitle: string,
+     *         items: Array<{
+     *             id: number,
+     *             content: string,
+     *             url: ?string
+     *         }>,
+     *         description: string
+     *     }
      * }}
      */
     Map.GeoObject;
@@ -167,18 +171,21 @@ goog.scope(function() {
     /**
      * Address item, sended from backend
      * @typedef {{
-     *     id: number,
+     *     addressId: number,
+     *     addressName: string,
      *     coordinates: Array<number>,
+     *     score: number,
      *     title: {
+     *         id: number,
      *         text: string,
-     *         alias: string
+     *         url: ?string
      *     },
-     *     description: string,
-     *     link: {
-     *         text: string,
-     *         alias: string
-     *     },
-     *     score: number
+     *     subtitle: string,
+     *     items: Array<{
+     *         id: number,
+     *         content: string,
+     *         url: ?string
+     *     }>
      * }}
      */
     Map.AddressItem;
@@ -606,19 +613,19 @@ goog.scope(function() {
         var CustomBalloonLayout = ymaps.templateLayoutFactory.createClass(
             balloonContent,
             {
-                build: function() {
+                'build': function() {
                     this.constructor.superclass.build.call(this);
                     this.initDom_();
                     this.initBalloon_();
                     this.addEventListeners_();
                     this.setBalloonOffset_();
                 },
-                clear: function() {
+                'clear': function() {
                     this.removeEventListeners_();
                     this.disposeBalloon_();
                     this.constructor.superclass.clear.call(this);
                 },
-                onSublayoutSizeChange: function() {
+                'onSublayoutSizeChange': function() {
                     CustomBalloonLayout.superclass.onSublayoutSizeChange.apply(
                         this,
                         arguments
@@ -629,9 +636,9 @@ goog.scope(function() {
                         this.events.fire('shapechange');
                     }
                 },
-                getShape: function() {
+                'getShape': function() {
                     if (!this.element_) {
-                        return CustomBalloonLayout.superclass['getShape']
+                        return CustomBalloonLayout.superclass.getShape
                             .call(this);
                     }
 

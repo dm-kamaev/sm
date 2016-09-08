@@ -2,16 +2,18 @@
 
 /**
  * @typedef {{
- *         id: number,
  *         title: {
- *             url: (string|undefined),
- *             name: (string|undefined)
+ *             id: number,
+ *             text: string,
+ *             url: ?string
  *         },
- *         subtitle: (string|undefined),
+ *         subtitle: string,
  *         items: Array<{
- *             url: string,
- *             text: string
- *         }>
+ *             id: number,
+ *             content: string,
+ *             url: ?string
+ *         }>,
+ *         description: string
  * }}  sm.bSmBalloon.Template.Params.Data
  */
 
@@ -90,6 +92,7 @@
             {if $params.data.title}
                 {call .title_ data="all" /}
             {/if}
+
             {if $params.data.subtitle}
                 {call .subtitle_ data="all" /}
             {/if}
@@ -172,6 +175,10 @@
         {else}
             {call .itemList_ data="all" /}
         {/if}
+
+        {if $params.data.description}
+            {call .description_ data="all" /}
+        {/if}
     </div>
 {/template}
 
@@ -245,6 +252,22 @@
             ]
         ] /}
     {/call}
+{/template}
+
+
+/**
+ * Description template
+ * @param params {{
+ *     data: {
+ *         description: string
+ *     }
+ * }}
+ * @private
+ */
+{template .description_ kind="html"}
+    <div class="{call .rootClass /}__description">
+        {$params.data.description}
+    </div>
 {/template}
 
 

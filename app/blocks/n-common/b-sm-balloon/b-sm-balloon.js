@@ -2,10 +2,10 @@ goog.provide('sm.bSmBalloon.SmBalloon');
 
 goog.require('cl.iControl.Control');
 goog.require('sm.bSmBalloon.View');
+goog.require('sm.bSmListPaged.SmListPaged');
 
 
 goog.scope(function() {
-    var ListPaged = sm.bSmListPaged.SmListPaged;
     var View = sm.bSmBalloon.View;
 
 
@@ -36,7 +36,7 @@ goog.scope(function() {
     Balloon.Event = {
         CLOSE_BUTTON_CLICK: View.Event.CLOSE_BUTTON_CLICK,
         TITLE_LINK_CLICK: View.Event.TITLE_LINK_CLICK,
-        LIST_PAGE_CHANGE: ListPaged.Event.PAGE_CHANGE
+        LIST_PAGE_CHANGE: sm.bSmListPaged.SmListPaged.Event.PAGE_CHANGE
     };
 
 
