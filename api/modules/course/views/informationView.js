@@ -2,7 +2,8 @@
  * @param {{
  *     user: Object,
  *     authSocialLinks: Object,
- *     entityData: Object
+ *     entityData: Object,
+ *     actionButtonText: string
  * }} data
  * @return {Object}
  */
@@ -27,6 +28,7 @@ exports.render = function(data) {
         user: data.user,
         authSocialLinks: data.authSocialLinks,
         entityData: data.entityData,
+        actionButtonText: data.actionButtonText,
         map: {}
     };
 };

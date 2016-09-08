@@ -18,9 +18,18 @@ goog.scope(function() {
     sm.lCourse.Course = function(view, opt_domHelper) {
         sm.lCourse.Course.base(this, 'constructor', view, opt_domHelper);
 
+
+        /**
+         * Instances score
+         * @type {Array<sm.bSmScore.SmScoreBrief>}
+         * @private
+         */
+        this.scoreItems_ = [];
+
+
         /**
          * Instances button
-         * @type {cl.gButton.Button}
+         * @type {Array<cl.gButton.Button>}
          * @private
          */
         this.actionButtons_ = [];
@@ -36,6 +45,7 @@ goog.scope(function() {
     Course.prototype.decorateInternal = function(element) {
         Course.base(this, 'decorateInternal', element);
 
+        this.initScore_();
         this.initActionButtons_();
     };
 
@@ -71,6 +81,25 @@ goog.scope(function() {
      */
     Course.prototype.onActionButtonClick_ = function() {
         console.log('onActionButtonClick_');
+    };
+
+
+    /**
+     * Initializes instances of score
+     * @private
+     */
+    Course.prototype.initScore_ = function() {
+        var domElements = this.getView().getDom().scoreItems,
+            instance;
+
+        for (var i = 0; i < domElements.length; i++) {
+            instance = this.decorateChild(
+                'smScoreBrief',
+                domElements[i]
+            );
+
+            this.scoreItems_.push(instance);
+        }
     };
 
 

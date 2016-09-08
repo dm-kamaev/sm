@@ -76,6 +76,35 @@ exports.information = async(function(req, res, next) {
             user = req.user || {};
 
         var entityData = {
+            id: 12,
+            name: 'Система «Выбор»',
+            description: 'Месячный курс, направленный на выработку навыка осознанного выбора',
+            fullDescription: 'Программа, которая поможет подростку задавать себе правильные вопросы и принимать осознанные решения',
+            score: {
+                marks: {
+                    primary: {
+                        value: 4.5
+                    },
+                    secondary: [{
+                        name: 'Средняя оценка',
+                        value: 4.2
+                    }, {
+                        name: 'Образование',
+                        value: 4
+                    }, {
+                        name: 'Преподаватели',
+                        value: 4.8
+                    }, {
+                        name: 'Атмосфера',
+                        value: 4.9
+                    }, {
+                        name: 'Инфраструктура',
+                        value: 3.3
+                    }]
+                },
+                secondaryMarkListHeader: 'Оценки, поставленные пользователями'
+            },
+            cost: '39 520 руб. / курс',
             generalOptions: {
                 items: [{
                     name: 'Культурный центр ЗИЛ',
@@ -97,14 +126,14 @@ exports.information = async(function(req, res, next) {
                     name: 'Начало занятий',
                     description: 'В сентябре 2016'
                 }]
-            },
-            cost: '39 520 руб. / курс'
+            }
         };
 
         var data = informationView.render({
             user: user,
             authSocialLinks: authSocialLinks,
-            entityData: entityData
+            entityData: entityData,
+            actionButtonText: 'Хочу этот курс!'
         });
 
         var html = soy.render(

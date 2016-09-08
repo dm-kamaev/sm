@@ -55,6 +55,10 @@ goog.scope(function() {
      */
     View.prototype.initDom_ = function(element) {
         this.dom = {
+            scoreItems: this.getElementsByClass(
+                sm.bSmScore.ViewBrief.CssClass.ROOT,
+                element
+            ),
             actionButtons: this.getElementsByClass(
                 View.CssClass.ACTION_BUTTON,
                 element

@@ -229,9 +229,9 @@
  */
 {template .content autoescape="strict" kind="html"}
     <div class="{call .rootClass/}" {call .attributes data="all"/}>
-        {call .subheader data="all" /}
-        {call .bodyContent data="all" /}
-        {call .footer data="all" /}
+        {call .mainSubheader data="all" /}
+        {call .mainContent data="all" /}
+        {call .mainFooter data="all" /}
     </div>
 {/template}
 
@@ -246,7 +246,7 @@
  * }}
  * @protected
  */
-{template .subheader autoescape="strict" kind="html"}
+{template .mainSubheader autoescape="strict" kind="html"}
     <div class="{call .rootClass/}__subheader">
         {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
@@ -269,7 +269,7 @@
  * Content
  * @protected
  */
-{template .bodyContent autoescape="strict" kind="html"}
+{template .mainContent autoescape="strict" kind="html"}
 {/template}
 
 
@@ -282,7 +282,7 @@
  * }
  * @protected
  */
-{template .footer autoescape="strict" kind="html"}
+{template .mainFooter autoescape="strict" kind="html"}
     <div class="{call .rootClass/}__footer">
         {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [

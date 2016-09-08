@@ -6,7 +6,8 @@
  *     entityData: {
  *         id: number,
  *         name: string,
- *         type: string,
+ *         description: ?string,
+ *         fullDescription: ?string,
  *         cost: ?string,
  *         generalOptions: sm.lCourse.bInformationBoard.Template.Params.Data
  *     },
@@ -55,7 +56,7 @@
  *     config: ?sm.iLayout.Template.Params.Config
  * }}
  */
-{template .bodyContent autoescape="strict" kind="html"}
+{template .mainContent autoescape="strict" kind="html"}
     <div class="{call .rootClass/}__body">
         {call .sectionData_ data="all" /}
         // {call .sectionOptions_ data="all" /}
@@ -137,15 +138,216 @@
 /**
  * Header
  * @param params {{
- *     data: {?}
+ *     data: {
+ *         entityData: {
+ *             id: number,
+ *             name: string,
+ *             description: ?string,
+ *             fullDescription: ?string,
+ *         }
+ *     }
  * }}
  */
 {template .header_}
     <div class="{call .rootClass/}__header">
-        {if $params}
-            HEADER
-        {/if}
+        {call .score_ data="all" /}
+        {call .title_ data="all" /}
+        {call .fullDescription_ data="all" /}
     </div>
+{/template}
+
+
+/**
+ * Course rating
+ * @param params {{
+ *     data: {?}
+ * }}
+ */
+{template .score_}
+    <div class="{call .rootClass/}__score {call .rootClass/}__score_xl">
+    {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+        {param params: [
+            'type': 'smScoreBrief',
+            'renderParams': [
+                'data': $params.data.entityData.score,
+                'config': [
+                    'primaryMark': [
+                        'zeroSign': 'question-mark',
+                        'showMark': true
+                    ],
+                    'hintSecondaryMark': [
+                        'offset': 'left-l',
+                        'topOffset': 'xxl'
+                    ],
+                    'isActive': true
+                ]
+            ]
+        ]/}
+    {/call}
+
+        // {call .scoreItem_}
+        //     {param params: [
+        //         'data': [
+        //             'score': $params.data.entityData.score
+        //         ],
+        //         'config': [
+        //             'primaryMark': [
+        //                 'zeroSign': 'question-mark',
+        //                 'showMark': true
+        //             ],
+        //             'hintSecondaryMark': [
+        //                 'offset': 'left-m'
+        //             ]
+        //         ]
+        //     ]/}
+        // {/call}
+    </div>
+
+    <div class="{call .rootClass/}__score {call .rootClass/}__score_s">
+    {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+        {param params: [
+            'type': 'smScoreBrief',
+            'renderParams': [
+                'data': $params.data.entityData.score,
+                'config': [
+                    'primaryMark': [
+                        'display': 'inline',
+                        'zeroSign': 'nothing',
+                        'showMark': false
+                    ],
+                    'hintSecondaryMark': [
+                        'offset': 'left-m',
+                        'topOffset': ''
+                    ],
+                    'isActive': true
+                ]
+            ]
+        ]/}
+    {/call}
+        // {call .scoreItem_}
+        //     {param params: [
+        //         'data': [
+        //             'score': $params.data.entityData.score
+        //         ],
+        //         'config': [
+        //             'primaryMark': [
+        //                 'display': 'inline',
+        //                 'zeroSign': 'nothing',
+        //                 'showMark': false
+        //             ]
+        //         ]
+        //     ]/}
+        // {/call}
+    </div>
+{/template}
+
+
+/**
+ * Template score
+ * @param params {{
+ *     data: {
+ *         score: sm.bSmScore.TemplateBrief.Params.Data
+ *     },
+ *     config: {
+ *         primaryMark: {
+ *             offset: left-m'
+ *             display: ('inline'|undefined)
+ *             zeroSign: string,
+ *             showMark: boolean
+ *         }
+ *     }
+ * }}
+ */
+{template .scoreItem_}
+    {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+        {param params: [
+            'type': 'smScoreBrief',
+            'renderParams': [
+                'data': $params.data.score,
+                'config': [
+                    'primaryMark': $params.config.primaryMark,
+                    'hintSecondaryMark': [
+                        'offset': 'left-m'
+                    ],
+                    'isActive': true
+                ]
+            ]
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * Course title
+ * @param params {{
+ *     data: {
+ *         entityData: {
+ *             name: string,
+ *             description: ?string
+ *         }
+ *     }
+ * }}
+ */
+{template .title_}
+    <div class="{call .rootClass/}__title">
+        {call .name_ data="all" /}
+        {call .description_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Course name
+ * @param params {{
+ *     data: {
+ *         entityData: {
+ *             name: string
+ *         }
+ *     }
+ * }}
+ */
+{template .name_}
+    <div class="{call .rootClass/}__name">
+        {$params.data.entityData.name}
+    </div>
+{/template}
+
+
+/**
+ * Course short description
+ * @param params {{
+ *     data: {
+ *         entityData: {
+ *             description: ?string
+ *         }
+ *     }
+ * }}
+ */
+{template .description_}
+    {if $params.data.entityData.description}
+        <div class="{call .rootClass/}__description">
+            {$params.data.entityData.description}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Course full description
+ * @param params {{
+ *     data: {
+ *         entityData: {
+ *             fullDescription: ?string
+ *         }
+ *     }
+ * }}
+ */
+{template .fullDescription_}
+    {if $params.data.entityData.fullDescription}
+        <div class="{call .rootClass/}__full-description">
+            {$params.data.entityData.fullDescription}
+        </div>
+    {/if}
 {/template}
 
 
@@ -156,17 +358,13 @@
  *         entityData: {
  *             generalOptions: sm.lCourse.bInformationBoard.Template.Params.Data
  *         }
- *     },
- *     config: {
- *         modifier: string
  *     }
  * }}
  */
 {template .generalOptions_}
     <div class="{call .rootClass/}__general-options">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
             {param params: [
-                'factory': $params.config.modifier,
                 'type': 'lCourse-informationBoard',
                 'renderParams': [
                     'data': $params.data.entityData.generalOptions
