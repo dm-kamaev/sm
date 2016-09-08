@@ -360,24 +360,12 @@ goog.scope(function() {
         return {
             'type': 'Feature',
             'id': id,
-            'addressId': item['id'],
+            'addressId': item['addressId'],
             'geometry': {
                 'type': 'Point',
                 'coordinates': item['coordinates']
             },
-            'properties': {
-                id: item['id'] || id,
-                title: {
-                    'text': item['title']['text'],
-                    'url': item['title']['alias']
-                },
-                subtitle: item['addressName'],
-                description: item['description'],
-                items: [{
-                        url: item['title']['alias'],
-                        content: item['title']['text']
-                }]
-            },
+            'properties': item,
             'options': {
                 'preset': preset
             }
@@ -393,7 +381,8 @@ goog.scope(function() {
      */
     Map.prototype.addMapObjects_ = function(geoObjects) {
         if (this.objectManager_) {
-            this.objectManager_.add(geoObjects);
+            var objectsToAdd = this.filterAlreadyAdded_(geoObjects);
+            this.objectManager_.add(objectsToAdd);
 
             this.objectManager_.objects.events.add(
                 'click',
@@ -401,6 +390,35 @@ goog.scope(function() {
                 this
             );
         }
+    };
+
+
+    /**
+     * Filter objectsToAdd, removing already added to map objects
+     * @param  {Array<sm.bSmMap.SmMap.GeoObject>} objectsToAdd
+     * @return {Array<sm.bSmMap.SmMap.GeoObject>}
+     * @private
+     */
+    Map.prototype.filterAlreadyAdded_ = function(objectsToAdd) {
+        var mapObjects = this.objectManager_.objects.getAll();
+        return goog.array.filter(
+            objectsToAdd, this.isNotAdded_.bind(this, mapObjects)
+        );
+    };
+
+
+
+    /**
+     * Check whether given geo object is already on map
+     * @param {Array<sm.bSmMap.SmMap.GeoObject>} mapObjects
+     * @param {sm.bSmMap.SmMap.GeoObject} objectToAdd
+     * @return {boolean}
+     * @private
+     */
+    Map.prototype.isNotAdded_ = function(mapObjects, objectToAdd) {
+        return !goog.array.find(mapObjects, function(mapObject) {
+            return mapObject['addressId'] == objectToAdd['addressId'];
+        });
     };
 
 
