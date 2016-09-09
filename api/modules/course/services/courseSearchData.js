@@ -60,7 +60,7 @@ service.update = function(id, data) {
  * @param {number} opt_limit
  * @return {string}
  */
-exports.getSearchMapSql = function(searchParams, opt_limit) {
+service.getSearchMapSql = function(searchParams, opt_limit) {
     return new CourseSearchMapQuery()
         .setLimit(opt_limit)
         .setOffset(searchParams.page * opt_limit || 0)
