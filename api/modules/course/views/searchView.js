@@ -1,4 +1,6 @@
 var FilterPanel = require('../lib/CourseFilterPanel');
+const courseView = require('./courseView');
+const mapViewType = require('../../entity/enums/mapViewType');
 
 var searchView = {};
 
@@ -92,6 +94,32 @@ searchView.filterPanel = function(filtersData, opt_searchParams) {
     return filterPanel.getParams();
 };
 
+
+/**
+ * View for courses on map
+ * @param  {Array<Object>} courses
+ * @param  {string} viewType
+ * @return {{
+ *     itemGroups: Array<{
+ *         viewType: string,
+ *         items: Array<{Object}>
+ *     }>,
+ *     position: ({
+ *         center: Array<number>,
+ *         type: string
+ *     }|undefined)
+ * }}
+ */
+searchView.map = function(courses, viewType) {
+    return {
+        itemGroups: [{
+            viewType: viewType,
+            items: courseView.listMap(courses, viewType)
+        }],
+        position: {}
+    };
+};
+
 /**
  * @param {{
  *     user: Object,
@@ -125,7 +153,7 @@ searchView.render = function(data) {
         },
         user: data.user,
         authSocialLinks: data.authSocialLinks,
-        map: data.mapData,
+        map: this.map(data.mapCourses, mapViewType.PIN),
         search: {
             countResults: data.countResults,
             searchText: '',
@@ -157,7 +185,7 @@ searchView.render = function(data) {
             defaultOpenerText: 'средней оценке'
         },
         entityList: {
-            items: data.coursesList,
+            items: courseView.list(data.coursesList),
             itemType: 'smItemEntity'
         },
         filterPanel: searchView.filterPanel(null, data.searchParams),

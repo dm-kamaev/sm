@@ -33,7 +33,9 @@ goog.scope(function() {
     View.CssClass = {
         ROOT: 'b-sm-balloon',
         CLOSE_BUTTON: 'b-sm-balloon__close',
-        TITLE_LINK: 'b-sm-balloon__title-link'
+        TITLE_LINK: 'b-sm-balloon__title-link',
+        ITEM: 'b-sm-balloon__item',
+        ITEM_LIST: 'b-sm-balloon__item-list'
     };
 
 
@@ -121,6 +123,12 @@ goog.scope(function() {
             ),
             titleLink: this.getElementByClass(
                 View.CssClass.TITLE_LINK
+            ),
+            item: this.getElementByClass(
+                View.CssClass.ITEM
+            ),
+            itemList: this.getElementByClass(
+                View.CssClass.ITEM_LIST
             )
         };
     };

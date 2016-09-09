@@ -6,6 +6,7 @@ goog.provide('sm.bSmMap.SmMap');
 
 goog.require('cl.iControl.Control');
 goog.require('goog.Promise');
+goog.require('sm.bSmBalloon.SmBalloon');
 goog.require('sm.bSmMap.IPresetGenerator');
 goog.require('sm.iSmViewport.SmViewport');
 
@@ -24,6 +25,7 @@ goog.scope(function() {
      */
     sm.bSmMap.SmMap = function(view, opt_domHelper) {
         sm.bSmMap.SmMap.base(this, 'constructor', view, opt_domHelper);
+
 
         /**
          * Map parameters
@@ -148,16 +150,19 @@ goog.scope(function() {
      *         coordinates: Array<number>
      *     },
      *     properties: {
-     *         id: number,
-     *         name: string,
-     *         alias: string,
-     *         description: string,
-     *         address: {
-     *             name: string,
-     *             stages: string
-     *         }
-     *     },
-     *
+     *         title: {
+     *             id: number,
+     *             text: string,
+     *             url: ?string
+     *         },
+     *         subtitle: string,
+     *         items: Array<{
+     *             id: number,
+     *             content: string,
+     *             url: ?string
+     *         }>,
+     *         description: string
+     *     }
      * }}
      */
     Map.GeoObject;
@@ -166,18 +171,21 @@ goog.scope(function() {
     /**
      * Address item, sended from backend
      * @typedef {{
-     *     id: number,
+     *     addressId: number,
+     *     addressName: string,
      *     coordinates: Array<number>,
+     *     score: number,
      *     title: {
+     *         id: number,
      *         text: string,
-     *         alias: string
+     *         url: ?string
      *     },
-     *     description: string,
-     *     link: {
-     *         text: string,
-     *         alias: string
-     *     },
-     *     score: number
+     *     subtitle: string,
+     *     items: Array<{
+     *         id: number,
+     *         content: string,
+     *         url: ?string
+     *     }>
      * }}
      */
     Map.AddressItem;
@@ -196,9 +204,9 @@ goog.scope(function() {
     Map.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
         this.initPresetGenerator_();
-        var viewportPromise = this.getViewportPromise_(),
 
-            ymapsPromise = this.getYmapsPromise_();
+        var viewportPromise = this.getViewportPromise_();
+        var ymapsPromise = this.getYmapsPromise_();
 
         viewportPromise.then(this.onShown_.bind(this));
 
@@ -359,31 +367,12 @@ goog.scope(function() {
         return {
             'type': 'Feature',
             'id': id,
-            'addressId': item['id'],
+            'addressId': item['addressId'],
             'geometry': {
                 'type': 'Point',
                 'coordinates': item['coordinates']
             },
-            'properties': {
-                id: item['id'] || id,
-                title: {
-                    'text': item['title']['text'],
-                    'url': item['title']['alias']
-                },
-                subtitle: item['addressName'],
-                description: item['description']
-                // 'titleText': item['title']['text'],
-                // 'addressName': item['addressName'],
-                // //TODO build href from alias here via url builder or smth
-                // 'titleHref': item['title']['alias'] ?
-                //     item['title']['alias'] :
-                //     '',
-                // 'linkText': item['link'] ? item['link']['text'] : null,
-                // //TODO build href from alias url builder or smth
-                // 'linkHref': item['link'] ? item['link']['alias'] : null,
-                // 'description': item['description'],
-                // 'stages': item['stages'] ? item['stages'] : null
-            },
+            'properties': item,
             'options': {
                 'preset': preset
             }
@@ -399,7 +388,8 @@ goog.scope(function() {
      */
     Map.prototype.addMapObjects_ = function(geoObjects) {
         if (this.objectManager_) {
-            this.objectManager_.add(geoObjects);
+            var objectsToAdd = this.filterAlreadyAdded_(geoObjects);
+            this.objectManager_.add(objectsToAdd);
 
             this.objectManager_.objects.events.add(
                 'click',
@@ -407,6 +397,35 @@ goog.scope(function() {
                 this
             );
         }
+    };
+
+
+    /**
+     * Filter objectsToAdd, removing already added to map objects
+     * @param  {Array<sm.bSmMap.SmMap.GeoObject>} objectsToAdd
+     * @return {Array<sm.bSmMap.SmMap.GeoObject>}
+     * @private
+     */
+    Map.prototype.filterAlreadyAdded_ = function(objectsToAdd) {
+        var mapObjects = this.objectManager_.objects.getAll();
+        return goog.array.filter(
+            objectsToAdd, this.isNotAdded_.bind(this, mapObjects)
+        );
+    };
+
+
+
+    /**
+     * Check whether given geo object is already on map
+     * @param {Array<sm.bSmMap.SmMap.GeoObject>} mapObjects
+     * @param {sm.bSmMap.SmMap.GeoObject} objectToAdd
+     * @return {boolean}
+     * @private
+     */
+    Map.prototype.isNotAdded_ = function(mapObjects, objectToAdd) {
+        return !goog.array.find(mapObjects, function(mapObject) {
+            return mapObject['addressId'] == objectToAdd['addressId'];
+        });
     };
 
 
@@ -594,19 +613,19 @@ goog.scope(function() {
         var CustomBalloonLayout = ymaps.templateLayoutFactory.createClass(
             balloonContent,
             {
-                build: function() {
+                'build': function() {
                     this.constructor.superclass.build.call(this);
                     this.initDom_();
                     this.initBalloon_();
                     this.addEventListeners_();
                     this.setBalloonOffset_();
                 },
-                clear: function() {
+                'clear': function() {
                     this.removeEventListeners_();
                     this.disposeBalloon_();
                     this.constructor.superclass.clear.call(this);
                 },
-                onSublayoutSizeChange: function() {
+                'onSublayoutSizeChange': function() {
                     CustomBalloonLayout.superclass.onSublayoutSizeChange.apply(
                         this,
                         arguments
@@ -617,9 +636,9 @@ goog.scope(function() {
                         this.events.fire('shapechange');
                     }
                 },
-                getShape: function() {
+                'getShape': function() {
                     if (!this.element_) {
-                        return CustomBalloonLayout.superclass['getShape']
+                        return CustomBalloonLayout.superclass.getShape
                             .call(this);
                     }
 
@@ -651,12 +670,20 @@ goog.scope(function() {
                         mapInstance.getBalloon_(),
                         sm.bSmBalloon.SmBalloon.Event.CLOSE_BUTTON_CLICK,
                         mapInstance.onBalloonCloseClick_.bind(mapInstance, this)
+                    ).listen(
+                        mapInstance.getBalloon_(),
+                        sm.bSmBalloon.SmBalloon.Event.LIST_PAGE_CHANGE,
+                        mapInstance.onBalloonListPageChange_.bind(
+                            mapInstance, this)
                     );
                 },
                 removeEventListeners_: function() {
-                    mapInstance.getHandler().listen(
+                    mapInstance.getHandler().unlisten(
                         mapInstance.getBalloon_(),
                         sm.bSmBalloon.SmBalloon.Event.CLOSE_BUTTON_CLICK
+                    ).unlisten(
+                        mapInstance.getBalloon_(),
+                        sm.bSmBalloon.SmBalloon.Event.LIST_PAGE_CHANGE
                     );
                 },
                 setBalloonOffset_: function() {
@@ -666,29 +693,6 @@ goog.scope(function() {
         );
 
         return CustomBalloonLayout;
-    };
-
-
-    /**
-     * Balloon entity name click handler
-     * @param  {Object} event
-     * @private
-     */
-    Map.prototype.onBalloonTitleClick_ = function(event) {
-        var balloonNameElement = event.target;
-        var name = goog.dom.getTextContent(balloonNameElement);
-
-        var params = JSON.parse(
-                goog.dom.dataset.get(balloonNameElement, 'params')
-            );
-
-        this.dispatchEvent({
-            'type': Map.Event.ITEM_NAME_CLICK,
-            'data': {
-                'name': name,
-                'id': params['id']
-            }
-        });
     };
 
 
@@ -724,6 +728,19 @@ goog.scope(function() {
         this.setPlacemarkDefaultState_(this.selectedPlacemarkId_);
         this.selectedPlacemarkId_ = null;
         balloonInstance.events.fire('userclose');
+    };
+
+
+    /**
+     * Handler for event of changing page of paged list in balloon. In this case
+     * is possible to change shape of ballon
+     * @param  {Object} balloonInstance
+     * @private
+     */
+    Map.prototype.onBalloonListPageChange_ = function(balloonInstance) {
+        var balloonElement = balloonInstance.element_;
+        this.getView().setBalloonOffset(balloonElement);
+        balloonInstance.events.fire('shapechange');
     };
 
 

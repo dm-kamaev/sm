@@ -2,7 +2,8 @@ const async = require('asyncawait/async'),
     await = require('asyncawait/await');
 
 const models = require('../../../../app/components/models').all,
-    CourseSearchQuery = require('../lib/CourseSearch');
+    CourseSearchQuery = require('../lib/CourseSearch'),
+    CourseSearchMapQuery = require('../lib/CourseSearchMap');
 
 var service = {
     name: 'courseSearchData'
@@ -51,6 +52,19 @@ service.update = function(id, data) {
             id: id
         }
     }));
+};
+
+/**
+ * Generate sql query for search for map with given searchParams
+ * @param {Object} searchParams
+ * @param {number} opt_limit
+ * @return {string}
+ */
+exports.getSearchMapSql = function(searchParams, opt_limit) {
+    return new CourseSearchMapQuery()
+        .setLimit(opt_limit)
+        .setOffset(searchParams.page * opt_limit || 0)
+        .getQuery();
 };
 
 module.exports = service;

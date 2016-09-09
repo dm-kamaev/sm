@@ -77,7 +77,28 @@ service.create = async(function(data) {
  * @return {Array<Object>}
  */
 service.list = async(function(searchParams, opt_limit) {
-    var searchString = services.courseSearch.getSearchSql(
+    var searchString = services.courseSearchData.getSearchSql(
+        searchParams,
+        opt_limit
+    );
+
+    var courses = await(sequelize.query(
+        searchString, {
+            type: sequelize.QueryTypes.SELECT
+        }
+    ));
+
+    return courses;
+});
+
+/**
+ * Search with given parameters for map
+ * @param {Object} searchParams
+ * @param {number=} opt_limit
+ * @return {Array<Object>}
+ */
+service.listMap = async(function(searchParams, opt_limit) {
+    var searchString = services.courseSearchData.getSearchMapSql(
         searchParams,
         opt_limit
     );

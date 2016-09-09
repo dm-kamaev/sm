@@ -5,8 +5,12 @@
  * @typedef {{
  *     items: Array<(
  *         sm.bSmItem.Template.Params.Data|
- *         sm.bSmItem.TemplateEntity.Params.Data
+ *         sm.bSmItem.TemplateEntity.Params.Data|
+ *         sm.bSmLink.Template.Params.Data
  *     )>,
+ *     itemConfig: (sm.bSmItem.Template.Params.Config|
+ *         sm.bSmItem.TemplateEntity.Params.Config|
+ *         sm.bSmLink.Template.Params.Config)
  *     countItemsPerPage: number
  * }} sm.bSmListPaged.Template.Params.Data
  */
@@ -14,7 +18,8 @@
 
 /**
  * @typedef {{
- *     stylizationModifier: (string|undefined)
+ *     stylizationModifier: (string|undefined),
+ *     itemType: ('smItem'|'smLink')
  * }} sm.bSmListPaged.Template.Params.Config
  */
 
@@ -94,10 +99,12 @@
  *             sm.bSmItem.Template.Params.Data|
  *             sm.bSmItem.TemplateEntity.Params.Data
  *         )>,
- *         countItemsPerPage: number
+ *         countItemsPerPage: number,
+ *         listConfig: sm.bSmItemList.Template.Config
  *     },
  *     config: {
- *         stylizationModifier: (string|undefined)
+ *         stylizationModifier: (string|undefined),
+ *         itemType: ('smItem'|'smLink')
  *     }
  * }}
  */
@@ -110,9 +117,11 @@
                 'renderParams': [
                     'data': [
                         'items': $params?.data?.items,
-                        'itemType': 'smItem',
+                        'itemConfig': $params.data.itemConfig,
+                        'itemType': $params.config.itemType,
                         'countItemsPerPage': $params?.data?.countItemsPerPage
-                    ]
+                    ],
+                    'config': $params.data.listConfig
                 ]
             ]/}
         {/call}
@@ -136,7 +145,7 @@
     {let $classes kind="html"}
         {call .rootClass/}__footer
 
-        {if $params?.data?.items and 
+        {if $params?.data?.items and
             length($params?.data?.items) <= $params?.data?.countItemsPerPage}
 
             {sp}i-utils__hidden

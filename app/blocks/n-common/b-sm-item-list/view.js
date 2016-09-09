@@ -45,7 +45,8 @@ goog.scope(function() {
     View.CssClass = {
         ROOT: 'b-sm-item-list',
         LIST: 'b-sm-item-list__list',
-        ITEM_CONTAINER: 'b-sm-item-list__item'
+        ITEM: 'b-sm-item-list__item',
+        ITEM_CONTAINER: 'b-sm-item-list__item-wrap'
     };
 
 
@@ -126,7 +127,7 @@ goog.scope(function() {
         var element = opt_element || this.getElement();
 
         this.dom.items = this.getElementsByClass(
-            sm.bSmItem.View.CssClass.ROOT,
+            sm.bSmItemList.View.CssClass.ITEM,
             element
         );
 

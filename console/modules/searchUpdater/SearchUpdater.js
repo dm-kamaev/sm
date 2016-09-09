@@ -157,7 +157,7 @@ class SearchUpdater {
      */
     updateCourses_(courses) {
         var bar = this.getProgressBar_('courses', courses.length),
-            courseSearchData = await(services.courseSearch.getAll());
+            courseSearchData = await(services.courseSearchData.getAll());
         courses.forEach(course => {
             var courseActualizer = new CourseActualizer(
                 course,

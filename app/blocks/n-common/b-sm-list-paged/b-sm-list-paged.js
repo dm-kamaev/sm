@@ -28,8 +28,16 @@ goog.inherits(sm.bSmListPaged.SmListPaged, cl.iControl.Control);
 
 goog.scope(function() {
     var ListPaged = sm.bSmListPaged.SmListPaged,
-        View = sm.bSmListPaged.View,
-        FactoryManager = cl.iFactory.FactoryManager;
+        View = sm.bSmListPaged.View;
+
+
+    /**
+     * Events enum
+     * @enum {string}
+     */
+    ListPaged.Event = {
+        PAGE_CHANGE: goog.events.getUniqueId('pageChange')
+    };
 
 
     /**
@@ -176,6 +184,7 @@ goog.scope(function() {
      */
     ListPaged.prototype.onSetNextPageClick_ = function() {
         this.setNextPage();
+        this.dispatchEvent(ListPaged.Event.PAGE_CHANGE);
     };
 
 
@@ -185,6 +194,7 @@ goog.scope(function() {
      */
     ListPaged.prototype.onSetPreviousPageClick_ = function() {
         this.setPreviousPage();
+        this.dispatchEvent(ListPaged.Event.PAGE_CHANGE);
     };
 
 
