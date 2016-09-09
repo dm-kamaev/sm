@@ -21,7 +21,10 @@
 }
 
 .b-sm-badge__items {
-    display: inline-block;
+    display: block;
+
+    box-sizing: border-box;
+    padding-left: 20px;
 }
 
 .b-sm-badge__item {
@@ -33,9 +36,7 @@
 }
 
 .b-sm-badge__icon {
-    display: inline-block;
-
-    margin-right: 8px;
+    float: left;
 }
 
 .b-sm-badge__hint-content {
