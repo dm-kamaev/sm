@@ -56,7 +56,7 @@ service.create = async(function(courseId, data) {
         courseOption.id,
         data.schedule
     ));
-    await(courseOption.setCourseDepartments(data.departments.map(department =>
+    await(courseOption.setDepartments(data.departments.map(department =>
         await(services.courseDepartment.findOrCreate(department))
     )));
 

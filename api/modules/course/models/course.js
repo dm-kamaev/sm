@@ -8,7 +8,14 @@ var Course = db.define('Course', {
         type: Sequelize.INTEGER,
         field: 'brand_id'
     },
-    type: Sequelize.STRING,
+    type: {
+        type: Sequelize.STRING,
+        references: {
+            model: 'course_type',
+            key: 'id'
+        },
+        onUpdate: 'cascade'
+    },
     description: Sequelize.STRING,
     fullDescription: {
         type: Sequelize.TEXT,

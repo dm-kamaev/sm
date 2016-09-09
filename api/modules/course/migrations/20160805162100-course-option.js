@@ -17,12 +17,6 @@ module.exports = {
                 },
                 onDelete: 'cascade'
             },
-            name: Sequelize.STRING,
-            description: Sequelize.STRING,
-            totalCost: {
-                type: Sequelize.INTEGER,
-                field: 'total_cost'
-            },
             costPerHour: {
                 type: Sequelize.INTEGER,
                 field: 'cost_per_hour'
@@ -36,10 +30,6 @@ module.exports = {
             maxGroupSize: {
                 type: Sequelize.INTEGER,
                 field: 'max_group_size'
-            },
-            currentGroupSize: {
-                type: Sequelize.INTEGER,
-                field: 'current_group_size'
             },
             nativeSpeaker: {
                 type: Sequelize.BOOLEAN,

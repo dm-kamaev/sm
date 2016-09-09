@@ -52,10 +52,11 @@ service.create = async(function(data) {
     var brand = await(services.courseBrand.create({
             name: data.brandName
         })),
+        type = await(services.courseType.create(data.type)),
         course = await(models.Course.create({
             name: data.name,
             brandId: brand.id,
-            type: data.type,
+            type: type.id,
             description: data.description,
             fullDescription: data.fullDescription,
             about: data.about,
@@ -134,6 +135,9 @@ service.getAll = async(function() {
                 model: models.CourseDepartment,
                 as: 'departments',
                 through: 'course_option_course_department'
+            }, {
+                model: models.CourseSchedule,
+                as: 'schedule'
             }]
         }]
     }));

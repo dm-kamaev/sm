@@ -18,24 +18,10 @@ module.exports = {
                 },
                 onDelete: 'cascade'
             },
-            type: Sequelize.STRING,
             description: Sequelize.STRING,
-            fullDescription: {
+            fullInfo: {
                 type: Sequelize.TEXT,
-                field: 'full_description'
-            },
-            about: Sequelize.STRING,
-            entranceExam: {
-                type: Sequelize.TEXT,
-                field: 'entrance_exam'
-            },
-            learningOutcome: {
-                type: Sequelize.TEXT,
-                field: 'learning_outcome'
-            },
-            leadType: {
-                type: Sequelize.STRING,
-                field: 'lead_type'
+                field: 'full_info'
             },
             score: Sequelize.ARRAY(Sequelize.FLOAT),
             scoreCount: {

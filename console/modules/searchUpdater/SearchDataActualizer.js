@@ -96,8 +96,8 @@ class SearchDataActualizer {
             await(services.schoolSearch.addSearchData(
                 this.school_.id,
                 searchValues,
-                this.searchType_)
-            );
+                this.searchType_
+            ));
         }
     }
 }

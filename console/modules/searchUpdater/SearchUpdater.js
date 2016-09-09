@@ -20,7 +20,8 @@ const services = require('../../../app/components/services').all;
 const SCHOOL_FIELDS = ['name', 'fullName', 'abbreviation'],
     METRO_FIELDS = ['name'],
     AREA_FIELDS = ['name'],
-    DISTRICT_FIELDS = ['name'];
+    DISTRICT_FIELDS = ['name'],
+    COURSE_FIELDS = ['name'];
 
 class SearchUpdater {
     /**
@@ -155,9 +156,13 @@ class SearchUpdater {
      * @param {Array<Object>} courses
      */
     updateCourses_(courses) {
-        var bar = this.getProgressBar_('courses', courses.length);
+        var bar = this.getProgressBar_('courses', courses.length),
+            courseSearchData = await(services.courseSearch.getAll());
         courses.forEach(course => {
-            var courseActualizer = new CourseActualizer(course);
+            var courseActualizer = new CourseActualizer(
+                course,
+                courseSearchData
+            );
             await(courseActualizer.actualize());
             bar.tick();
         });
@@ -202,12 +207,12 @@ class SearchUpdater {
                     data.districts,
                     entityType.DISTRICT,
                     DISTRICT_FIELDS
-                )//,
-                // new TextActualizer(
-                //     data.courses,
-                //     entityType.COURSE,
-                //     COURSE_FIELDS
-                // )
+                ),
+                new TextActualizer(
+                    data.courses,
+                    entityType.COURSE,
+                    COURSE_FIELDS
+                )
             ];
 
         textActualizers.forEach(textActualizer => {
