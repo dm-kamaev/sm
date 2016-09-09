@@ -1,5 +1,7 @@
 goog.provide('sm.lCourse.View');
 
+goog.require('sm.bSmCollapsedText.View');
+goog.require('sm.bSmScore.ViewBrief');
 goog.require('sm.iLayout.ViewStendhal');
 
 
@@ -61,6 +63,10 @@ goog.scope(function() {
             ),
             actionButtons: this.getElementsByClass(
                 View.CssClass.ACTION_BUTTON,
+                element
+            ),
+            fullDescription: this.getElementByClass(
+                sm.bSmCollapsedText.View.CssClass.ROOT,
                 element
             )
         };

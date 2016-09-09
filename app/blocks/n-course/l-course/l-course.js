@@ -28,6 +28,14 @@ goog.scope(function() {
 
 
         /**
+         * Instance collansed text
+         * @type {sm.bSmCollapsedText.SmCollapsedText}
+         * @private
+         */
+        this.fullDescription_ = null;
+
+
+        /**
          * Instances button
          * @type {Array<cl.gButton.Button>}
          * @private
@@ -46,6 +54,7 @@ goog.scope(function() {
         Course.base(this, 'decorateInternal', element);
 
         this.initScore_();
+        this.initFullDescription_();
         this.initActionButtons_();
     };
 
@@ -81,6 +90,18 @@ goog.scope(function() {
      */
     Course.prototype.onActionButtonClick_ = function() {
         console.log('onActionButtonClick_');
+    };
+
+
+    /**
+     * Initializes instance of full description
+     * @private
+     */
+    Course.prototype.initFullDescription_ = function() {
+        this.fullDescription_ = this.decorateChild(
+            'smCollapsedText',
+            this.getView().getDom().fullDescription
+        );
     };
 
 

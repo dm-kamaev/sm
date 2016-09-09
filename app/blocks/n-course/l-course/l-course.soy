@@ -158,83 +158,113 @@
 
 
 /**
- * Course rating
+ * Template for location
  * @param params {{
  *     data: {?}
  * }}
  */
-{template .score_}
-    <div class="{call .rootClass/}__score {call .rootClass/}__score_xl">
-    {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
-        {param params: [
-            'type': 'smScoreBrief',
-            'renderParams': [
-                'data': $params.data.entityData.score,
-                'config': [
-                    'primaryMark': [
-                        'zeroSign': 'question-mark',
-                        'showMark': true
-                    ],
-                    'hintSecondaryMark': [
-                        'offset': 'left-l',
-                        'topOffset': 'xxl'
-                    ],
-                    'isActive': true
-                ]
-            ]
-        ]/}
-    {/call}
+{template .location_}
+    <div class="{call .rootClass/}__location">
+        {if $params}
+        {/if}
 
-        // {call .scoreItem_}
+        // {if $params.data?.map}
+        //     {call .map_ data="all" /}
+        // {else}
+        //     {call .online_ data="all" /}
+        // {/if}
+    </div>
+{/template}
+
+
+/**
+ * Template with buttons for user interaction
+ * @param params {{
+ *     data: {
+ *         entityData: {
+ *             cost: ?string
+ *         },
+ *         actionButtonText: string
+ *     }
+ * }}
+ */
+{template .userInteraction_}
+    <div class="{call .rootClass/}__user-interaction">
+        {call .cost_ data="all" /}
+
+        {call .actionButton_}
+            {param params: [
+                'data': $params.data,
+                'config': [
+                    'size': 'xl'
+                ]
+            ]/}
+        {/call}
+
+        // {call .feedbackLink_  data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Section comments
+ * @param params {{
+ *     data: {
+ *         user: ?{
+ *            isCommented: boolean
+ *         },
+ *         entityData: {
+ *             comments: Array<{sm.lSchool.bComment.Template.Params}>
+ *         }
+ *     }
+ * }}
+ */
+{template .sectionComments_}
+    <div class="{call .rootClass/}__section{sp}
+                {call .rootClass/}__section_comments">
+        {call cl.iUtils.Utils.stringify}
+            {param json: $params.data /}
+        {/call}
+        // {call sm.lSchool.bComments.Template.base}
         //     {param params: [
-        //         'data': [
-        //             'score': $params.data.entityData.score
-        //         ],
-        //         'config': [
-        //             'primaryMark': [
-        //                 'zeroSign': 'question-mark',
-        //                 'showMark': true
-        //             ],
-        //             'hintSecondaryMark': [
-        //                 'offset': 'left-m'
-        //             ]
-        //         ]
-        //     ]/}
+        //         'comments': $params.data.comments,
+        //         'isCommented': $params.data?.user?.isCommented
+        //     ] /}
         // {/call}
     </div>
+{/template}
 
-    <div class="{call .rootClass/}__score {call .rootClass/}__score_s">
-    {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
-        {param params: [
-            'type': 'smScoreBrief',
-            'renderParams': [
-                'data': $params.data.entityData.score,
-                'config': [
-                    'primaryMark': [
-                        'display': 'inline',
-                        'zeroSign': 'nothing',
-                        'showMark': false
-                    ],
-                    'hintSecondaryMark': [
-                        'offset': 'left-m',
-                        'topOffset': ''
-                    ],
-                    'isActive': true
-                ]
-            ]
-        ]/}
-    {/call}
-        // {call .scoreItem_}
+
+/**
+ * Section popular entities
+ * @param params {{
+ *     data: {
+ *         popularEntities: Array<{
+ *             id: number,
+ *             alias: ?string,
+ *             name: string,
+ *             description: ?string,
+ *             metro: ?Array<string>,
+ *             totalScore: ?number
+ *         }>
+ *     }
+ * }}
+ */
+{template .sectionPopular_}
+    <div class="{call .rootClass/}__section{sp}
+                {call .rootClass/}__section_popular">
+        {call cl.iUtils.Utils.stringify}
+            {param json: $params.data /}
+        {/call}
+
+        // {call sm.bPopularSchools.Template.base}
         //     {param params: [
-        //         'data': [
-        //             'score': $params.data.entityData.score
-        //         ],
+        //         'popularSchools': $params.data.popularSchools,
         //         'config': [
-        //             'primaryMark': [
-        //                 'display': 'inline',
-        //                 'zeroSign': 'nothing',
-        //                 'showMark': false
-        //             ]
+        //             'popularSchool': [
+        //                 'customClasses': 'l-school__popular'
+        //             ],
+        //             'analyticsAction': 'school click'
         //         ]
         //     ]/}
         // {/call}
@@ -243,37 +273,55 @@
 
 
 /**
- * Template score
+ * Course rating
  * @param params {{
- *     data: {
- *         score: sm.bSmScore.TemplateBrief.Params.Data
- *     },
- *     config: {
- *         primaryMark: {
- *             offset: left-m'
- *             display: ('inline'|undefined)
- *             zeroSign: string,
- *             showMark: boolean
- *         }
- *     }
+ *     data: {?}
  * }}
  */
-{template .scoreItem_}
-    {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
-        {param params: [
-            'type': 'smScoreBrief',
-            'renderParams': [
-                'data': $params.data.score,
-                'config': [
-                    'primaryMark': $params.config.primaryMark,
-                    'hintSecondaryMark': [
-                        'offset': 'left-m'
-                    ],
-                    'isActive': true
+{template .score_}
+    <div class="{call .rootClass/}__score {call .rootClass/}__score_xl">
+        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+            {param params: [
+                'type': 'smScoreBrief',
+                'renderParams': [
+                    'data': $params.data.entityData.score,
+                    'config': [
+                        'primaryMark': [
+                            'zeroSign': 'question-mark',
+                            'showMark': true
+                        ],
+                        'hintSecondaryMark': [
+                            'offset': 'left-l',
+                            'topOffset': 'xxl'
+                        ],
+                        'isActive': true
+                    ]
                 ]
-            ]
-        ]/}
-    {/call}
+            ]/}
+        {/call}
+    </div>
+
+    <div class="{call .rootClass/}__score {call .rootClass/}__score_s">
+        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+            {param params: [
+                'type': 'smScoreBrief',
+                'renderParams': [
+                    'data': $params.data.entityData.score,
+                    'config': [
+                        'primaryMark': [
+                            'display': 'inline',
+                            'zeroSign': 'nothing',
+                            'showMark': false
+                        ],
+                        'hintSecondaryMark': [
+                            'offset': 'left-m'
+                        ],
+                        'isActive': true
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
 {/template}
 
 
@@ -345,7 +393,21 @@
 {template .fullDescription_}
     {if $params.data.entityData.fullDescription}
         <div class="{call .rootClass/}__full-description">
-            {$params.data.entityData.fullDescription}
+            {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+                {param params: [
+                    'type': 'smCollapsedText',
+                    'renderParams': [
+                        'data': [
+                            'text': $params.data.entityData.fullDescription,
+                            'buttonTextExpand': 'Развернуть описание'
+                        ],
+                        'config': [
+                            'isButtonCollapse': true,
+                            'buttonFont': 'inherit'
+                        ]
+                    ]
+                ]/}
+            {/call}
         </div>
     {/if}
 {/template}
@@ -371,55 +433,6 @@
                 ]
             ]/}
         {/call}
-    </div>
-{/template}
-
-
-/**
- * Template for location
- * @param params {{
- *     data: {?}
- * }}
- */
-{template .location_}
-    <div class="{call .rootClass/}__location">
-        {if $params}
-        {/if}
-
-        // {if $params.data?.map}
-        //     {call .map_ data="all" /}
-        // {else}
-        //     {call .online_ data="all" /}
-        // {/if}
-    </div>
-{/template}
-
-
-/**
- * Template with buttons for user interaction
- * @param params {{
- *     data: {
- *         entityData: {
- *             cost: ?string
- *         },
- *         actionButtonText: string
- *     }
- * }}
- */
-{template .userInteraction_}
-    <div class="{call .rootClass/}__user-interaction">
-        {call .cost_ data="all" /}
-
-        {call .actionButton_}
-            {param params: [
-                'data': $params.data,
-                'config': [
-                    'size': 'xl'
-                ]
-            ]/}
-        {/call}
-
-        // {call .feedbackLink_  data="all" /}
     </div>
 {/template}
 
@@ -481,72 +494,6 @@
                 ]
             ]/}
         {/call}
-    </div>
-{/template}
-
-
-/**
- * Section comments
- * @param params {{
- *     data: {
- *         user: ?{
- *            isCommented: boolean
- *         },
- *         entityData: {
- *             comments: Array<{sm.lSchool.bComment.Template.Params}>
- *         }
- *     }
- * }}
- */
-{template .sectionComments_}
-    <div class="{call .rootClass/}__section{sp}
-                {call .rootClass/}__section_comments">
-        {call cl.iUtils.Utils.stringify}
-            {param json: $params.data /}
-        {/call}
-        // {call sm.lSchool.bComments.Template.base}
-        //     {param params: [
-        //         'comments': $params.data.comments,
-        //         'isCommented': $params.data?.user?.isCommented
-        //     ] /}
-        // {/call}
-    </div>
-{/template}
-
-
-/**
- * Section popular entities
- * @param params {{
- *     data: {
- *         popularEntities: Array<{
- *             id: number,
- *             alias: ?string,
- *             name: string,
- *             description: ?string,
- *             metro: ?Array<string>,
- *             totalScore: ?number
- *         }>
- *     }
- * }}
- */
-{template .sectionPopular_}
-    <div class="{call .rootClass/}__section{sp}
-                {call .rootClass/}__section_popular">
-        {call cl.iUtils.Utils.stringify}
-            {param json: $params.data /}
-        {/call}
-
-        // {call sm.bPopularSchools.Template.base}
-        //     {param params: [
-        //         'popularSchools': $params.data.popularSchools,
-        //         'config': [
-        //             'popularSchool': [
-        //                 'customClasses': 'l-school__popular'
-        //             ],
-        //             'analyticsAction': 'school click'
-        //         ]
-        //     ]/}
-        // {/call}
     </div>
 {/template}
 

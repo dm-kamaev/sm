@@ -12,6 +12,7 @@ goog.require('sm.bSchoolCatalog.Template');
 goog.require('sm.bSchoolListPaged.Template');
 goog.require('sm.bSearchPanel.Template');
 goog.require('sm.bSmBadge.Template');
+goog.require('sm.bSmCollapsedText.Template');
 goog.require('sm.bSmFeedbackBoard.Template');
 goog.require('sm.bSmFooter.Template');
 goog.require('sm.bSmInformationBoard.Template');
@@ -212,6 +213,10 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'smBadge',
             sm.bSmBadge.Template.badge
+        )
+        .setTemplateListItem(
+            'smCollapsedText',
+            sm.bSmCollapsedText.Template.collapsedText
         );
 
     /** l-course blocks */
