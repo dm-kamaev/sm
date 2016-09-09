@@ -1,10 +1,7 @@
 var async = require('asyncawait/async'),
-    await = require('asyncawait/await'),
-    squel = require('squel');
+    await = require('asyncawait/await');
 
-var sequelize = require('../../../../app/components/db'),
-    models = require('../../../../app/components/models').all,
-    services = require('../../../../app/components/services').all;
+var models = require('../../../../app/components/models').all;
 
 var service = {
     name: 'courseType'

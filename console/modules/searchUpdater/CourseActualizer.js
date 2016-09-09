@@ -45,6 +45,9 @@ class CourseActualizer {
         this.actualizeData_(age, searchType.AGE);
     }
 
+    /**
+     * @private
+     */
     actualizeType_() {
         this.actualizeData_([this.course_.type], searchType.TYPE);
     }
