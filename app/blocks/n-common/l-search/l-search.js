@@ -5,15 +5,22 @@ goog.provide('sm.lSearch.Search');
 
 
 goog.require('cl.iRequest.Request');
+goog.require('goog.events');
 goog.require('goog.object');
+goog.require('sm.bSearch.Search');
+goog.require('sm.bSmMap.SmMap');
+goog.require('sm.gDropdown.DropdownSelect');
 goog.require('sm.iLayout.LayoutStendhal');
+goog.require('sm.iSmSearchParamsManager.SmSearchParamsManager');
 goog.require('sm.lSearch.View');
+goog.require('sm.lSearch.bFilterPanel.FilterPanel');
 goog.require('sm.lSearch.iSearchService.SearchService');
 
 
 goog.scope(function() {
     var Request = cl.iRequest.Request;
     var SearchService = sm.lSearch.iSearchService.SearchService;
+    var SearchParamsManager = sm.iSmSearchParamsManager.SmSearchParamsManager;
 
 
 
@@ -88,6 +95,14 @@ goog.scope(function() {
          * @private
          */
         this.searchService_ = null;
+
+
+        /**
+         * Search parameters manager
+         * @type {sm.lSearch.iSearchParamsManager.SearchParamsManager}
+         * @private
+         */
+        this.paramsManager_ = null;
     };
     goog.inherits(sm.lSearch.Search, sm.iLayout.LayoutStendhal);
     var Search = sm.lSearch.Search;
@@ -103,7 +118,7 @@ goog.scope(function() {
     /**
      * @typedef {sm.lSearch.View.Params}
      */
-    Search.Params;
+    sm.lSearch.Params;
 
 
     /**
@@ -113,10 +128,11 @@ goog.scope(function() {
     Search.prototype.decorateInternal = function(element) {
         Search.base(this, 'decorateInternal', element);
 
-        this.initServices_();
-        this.initLeftMenuInstances_();
-        this.initResultsListInstances_();
-        this.initMap_();
+        this.initServices_()
+            .initParamsManager_()
+            .initLeftMenuInstances_()
+            .initResultsListInstances_()
+            .initMap_();
     };
 
 
@@ -129,7 +145,8 @@ goog.scope(function() {
 
         this.initLeftMenuListeners_()
             .initResultsListListeners_()
-            .initWindowListeners_();
+            .initWindowListeners_()
+            .initMapListeners_();
     };
 
 
@@ -145,6 +162,20 @@ goog.scope(function() {
         /** Search service init **/
         this.searchService_ = new SearchService();
         this.searchService_.init(this.params.type);
+
+        return this;
+    };
+
+
+    /**
+     * Init search params manager by
+     * creating it and setting search params from data params to it
+     * @return {sm.lSearch.SmSearch}
+     * @private
+     */
+    Search.prototype.initParamsManager_ = function() {
+        var searchParams = this.params.searchParams;
+        this.paramsManager_ = new SearchParamsManager(searchParams);
 
         return this;
     };
@@ -236,6 +267,22 @@ goog.scope(function() {
 
 
     /**
+     * Init listeners for map
+     * @return {sm.lSearch.Search}
+     * @private
+     */
+    Search.prototype.initMapListeners_ = function() {
+        this.getHandler().listen(
+            this.map_,
+            sm.bSmMap.SmMap.Event.READY,
+            this.onMapReady_
+        );
+
+        return this;
+    };
+
+
+    /**
      * Init search service listeners
      * @return {sm.lSearch.Search}
      * @private
@@ -260,7 +307,10 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.onSearchSubmit_ = function() {
-        console.log('Search submit');
+        this.resetSecondarySearchParams_();
+        this.paramsManager_.updateParams(this.getParamsFromSearch_());
+
+        this.makeSearch_();
     };
 
 
@@ -269,16 +319,47 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.onFilterPanelSubmit_ = function() {
-        console.log('Filter panel submit');
+        this.resetSecondarySearchParams_();
+        this.paramsManager_.updateParams(this.getParamsFromFilterPanel_());
+
+        this.makeSearch_();
+    };
+
+
+    /**
+     * Reset secondary search params to default values
+     * Secondary search params is page and sortType, it affect more view of
+     * results page than search results
+     * @private
+     */
+    Search.prototype.resetSecondarySearchParams_ = function() {
+        this.paramsManager_.setSortType(0);
+        this.paramsManager_.setPage(0);
     };
 
 
     /**
      * Sort action event handler
+     * @param {Object} event
      * @private
      */
-    Search.prototype.onSortReleased_ = function() {
-        console.log('Sort released!');
+    Search.prototype.onSortReleased_ = function(event) {
+        this.resetSecondarySearchParams_();
+        this.paramsManager_.setSortType(event['itemId']);
+
+        this.makeSearch_();
+    };
+
+
+    /**
+     * Take params from search params manager and send queries for list and map
+     * for small amount results and for other map results
+     * @private
+     */
+    Search.prototype.makeSearch_ = function() {
+        this.searchService_.loadSearchData(
+            this.paramsManager_.getParams(/*requestMapResults*/ true));
+        this.searchService_.loadMapData(this.paramsManager_.getParams());
     };
 
 
@@ -290,6 +371,15 @@ goog.scope(function() {
         if (!this.searchService_.isSearchDataPending()) {
             this.loadNextPage_();
         }
+    };
+
+
+    /**
+     * Send request to load additional points to map
+     * @private
+     */
+    Search.prototype.onMapReady_ = function() {
+        this.searchService_.loadMapData(this.paramsManager_.getParams());
     };
 
 
@@ -313,15 +403,42 @@ goog.scope(function() {
         var listItems = event.getListItems();
         var countResults = event.getCountResults();
 
-        this.resultsList_.addItemsBottom(listItems);
+        this.updateResultsList_(listItems);
+        this.detectShowMoreResultsList_(listItems.length, countResults);
 
-        if (this.isAllSearchItemsLoaded_(listItems.length, countResults)) {
+        this.getView().setLoaderVisibility(false);
+    };
+
+
+    /**
+     * Update results list with given items
+     * @param  {Array<sm.bSmItem.SmItem.RenderParams>} listItems
+     * @private
+     */
+    Search.prototype.updateResultsList_ = function(listItems) {
+        if (this.paramsManager_.getPage == 0) {
+            this.resultsList_.clear();
+        }
+        this.resultsList_.addItemsBottom(listItems);
+    };
+
+
+    /**
+     * Detect whether results list can be loaded more items.
+     * If all items loaded, then results list cannot add more items and send
+     * queries to backend to load more results
+     * @param  {number} countListItems amount of currently loaded items
+     * @param  {number} countResults overall amount of search results
+     * @private
+     */
+    Search.prototype.detectShowMoreResultsList_ = function(
+        countListItems, countResults) {
+        if (this.isAllSearchItemsLoaded_(countListItems, countResults)) {
             this.disableLoadMoreResultsListItems_();
             this.getView().setShowMoreButtonVisibility(false);
         } else {
             this.getView().setShowMoreButtonVisibility(true);
         }
-        this.getView().setLoaderVisibility(false);
     };
 
 
@@ -420,12 +537,12 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.loadNextPage_ = function() {
-        this.params.searchParams['page']++;
+        this.paramsManager_.increasePage();
 
         this.getView().setLoaderVisibility(true);
         this.getView().setShowMoreButtonVisibility(false);
 
-        this.searchService_.loadSearchData(this.params.searchParams);
+        this.searchService_.loadSearchData(this.paramsManager_.getParams());
     };
 
 
@@ -437,7 +554,7 @@ goog.scope(function() {
     Search.prototype.getParamsFromFilterPanel_ = function() {
         var params = this.filterPanel_.getData();
 
-        return goog.object.map(params, this.getParamsFromFilterPanel_);
+        return goog.object.map(params, this.getParamsFromFilter_);
     };
 
 
@@ -466,40 +583,8 @@ goog.scope(function() {
 
 
     /**
-     * Update search parameters object with given data
-     * @param {Object<string, (string, number)>} params
-     * @private
-     */
-    Search.prototype.updateSearchParams_ = function(params) {
-        var paramsToUpdate = goog.object.getKeys(params);
-
-        paramsToUpdate.forEach(this.updateSearchParam_.bind(this, params));
-    };
-
-
-    /**
-     * Get value for each paramName from paramsToUpdate and put it to
-     * corresponding field of searchParams_ object.
-     * 'text' field from paramsToUpdate correspond to
-     * 'name' field in searchParams_
-     * @param {Object<string, (string,number)>} paramsToUpdate - object with new
-     * parameters
-     * @param {string} paramName - name of each parameter
-     * @private
-     */
-    Search.prototype.updateSearchParam_ = function(
-        paramsToUpdate,
-        paramName) {
-        if (paramName == 'text') {
-            this.params.searchParams['name'] = paramsToUpdate['text'];
-        } else {
-            this.params.searchParams[paramName] = paramsToUpdate[paramName];
-        }
-    };
-
-
-    /**
      * Init left menu instances
+     * @return {sm.lSearch.Search}
      * @private
      */
     Search.prototype.initLeftMenuInstances_ = function() {
@@ -511,11 +596,14 @@ goog.scope(function() {
             'lSearch-filterPanel',
             this.getView().getDom().filterPanel
         );
+
+        return this;
     };
 
 
     /**
      * Init results list, sort and show more button instances
+     * @return {sm.lSearch.Search}
      * @private
      */
     Search.prototype.initResultsListInstances_ = function() {
@@ -533,11 +621,14 @@ goog.scope(function() {
             'button',
             this.getView().getDom().showMoreButton
         );
+
+        return this;
     };
 
 
     /**
      * Init map instance
+     * @return {sm.lSearch.Search}
      * @private
      */
     Search.prototype.initMap_ = function() {
@@ -545,6 +636,8 @@ goog.scope(function() {
             'smMap',
             this.getView().getDom().map
         );
+
+        return this;
     };
 });  // goog.scope
 

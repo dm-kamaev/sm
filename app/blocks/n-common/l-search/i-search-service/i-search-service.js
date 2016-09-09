@@ -28,8 +28,10 @@ goog.scope(function() {
     /**
      * Data loader
      * @constructor
+     * @extends {goog.events.EventTarget}
      */
     sm.lSearch.iSearchService.SearchService = function() {
+        sm.lSearch.iSearchService.SearchService.base(this, 'constructor');
 
         /**
          * iRequest instance

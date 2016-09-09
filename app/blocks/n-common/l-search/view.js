@@ -62,7 +62,7 @@ goog.scope(function() {
      *     type: string
      * }}
      */
-    View.Params;
+    sm.lSearch.View.Params;
 
 
     /**
@@ -72,7 +72,8 @@ goog.scope(function() {
     View.prototype.decorateInternal = function(element) {
         View.base(this, 'decorateInternal', element);
         this.initDom_(element);
-        this.params = this.getRawDataParams_();
+
+        this.initParams_();
     };
 
 
@@ -151,6 +152,17 @@ goog.scope(function() {
             )
         };
     };
+
+
+    /**
+     * Init params from dom element
+     * @private
+     */
+    View.prototype.initParams_ = function() {
+        var rawParams = this.getRawDataParams_();
+        this.params = this.transformParams_(rawParams);
+    };
+
 
     /**
      * Return raw data-params from dom element

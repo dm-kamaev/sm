@@ -46,7 +46,7 @@ goog.scope(function() {
      *     countResults: number
      *  }}
      */
-    ListDataLoadedEvent.ListData;
+    sm.lSearch.iSearchService.ListDataLoadedEvent.ListData;
 
 
     /**
