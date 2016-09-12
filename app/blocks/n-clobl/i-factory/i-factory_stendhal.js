@@ -21,20 +21,26 @@ goog.require('sm.bSearchPanel.SearchPanel');
 goog.require('sm.bSearchPanel.View');
 goog.require('sm.bSmBadge.SmBadge');
 goog.require('sm.bSmBadge.View');
+goog.require('sm.bSmBalloon.SmBalloon');
+goog.require('sm.bSmBalloon.View');
+goog.require('sm.bSmCheckbox.SmCheckbox');
+goog.require('sm.bSmCheckbox.View');
 goog.require('sm.bSmCollapsedText.SmCollapsedText');
 goog.require('sm.bSmCollapsedText.View');
-goog.require('sm.bSmFeedbackBoard.SmFeedbackBoard');
-goog.require('sm.bSmFeedbackBoard.View');
-goog.require('sm.bSmInformationBoard.SmInformationBoard');
-goog.require('sm.bSmInformationBoard.View');
 goog.require('sm.bSmItem.SmItem');
 goog.require('sm.bSmItem.SmItemEntity');
 goog.require('sm.bSmItem.View');
 goog.require('sm.bSmItem.ViewEntity');
 goog.require('sm.bSmItemList.SmItemList');
 goog.require('sm.bSmItemList.View');
+goog.require('sm.bSmLink.SmLink');
+goog.require('sm.bSmLink.View');
 goog.require('sm.bSmListPaged.SmListPaged');
 goog.require('sm.bSmListPaged.View');
+goog.require('sm.bSmMap.SmMap');
+goog.require('sm.bSmMap.View');
+goog.require('sm.bSmRadioButton.SmRadioButton');
+goog.require('sm.bSmRadioButton.View');
 goog.require('sm.bSmScore.SmScore');
 goog.require('sm.bSmScore.SmScoreBrief');
 goog.require('sm.bSmScore.View');
@@ -55,8 +61,28 @@ goog.require('sm.gModal.ViewStendhal');
 goog.require('sm.gTextarea.TextareaStendhal');
 goog.require('sm.gTextarea.ViewStendhal');
 goog.require('sm.iFactory.TemplateFactoryStendhal');
+goog.require('sm.lInformation.bFeedbackBoard.FeedbackBoard');
+goog.require('sm.lInformation.bFeedbackBoard.View');
+goog.require('sm.lInformation.bInformationBoard.InformationBoard');
+goog.require('sm.lInformation.bInformationBoard.View');
 goog.require('sm.lSchool.bFoldList.FoldList');
 goog.require('sm.lSchool.bFoldList.View');
+goog.require('sm.lSearch.bFilter.Filter');
+goog.require('sm.lSearch.bFilter.FilterExtended');
+goog.require('sm.lSearch.bFilter.FilterInput');
+goog.require('sm.lSearch.bFilter.FilterLabels');
+goog.require('sm.lSearch.bFilter.FilterSwitch');
+goog.require('sm.lSearch.bFilter.View');
+goog.require('sm.lSearch.bFilter.ViewExtended');
+goog.require('sm.lSearch.bFilter.ViewInput');
+goog.require('sm.lSearch.bFilter.ViewLabels');
+goog.require('sm.lSearch.bFilter.ViewSwitch');
+goog.require('sm.lSearch.bFilterPanel.FilterPanel');
+goog.require('sm.lSearch.bFilterPanel.View');
+goog.require('sm.lSearch.bLabel.Label');
+goog.require('sm.lSearch.bLabel.View');
+goog.require('sm.lSearch.bSuggestFilter.SuggestFilter');
+goog.require('sm.lSearch.bSuggestFilter.View');
 goog.require('sm.lSearchResult.bFilterSearch.FilterSearch');
 goog.require('sm.lSearchResult.bFilterSearch.View');
 
@@ -151,14 +177,6 @@ sm.iFactory.FactoryStendhal = function() {
             control: sm.bSmSubheader.SmSubheader,
             view: sm.bSmSubheader.View
         })
-        .setControlListItem('smInformationBoard', {
-            control: sm.bSmInformationBoard.SmInformationBoard,
-            view: sm.bSmInformationBoard.View
-        })
-        .setControlListItem('smFeedbackBoard', {
-            control: sm.bSmFeedbackBoard.SmFeedbackBoard,
-            view: sm.bSmFeedbackBoard.View
-        })
         .setControlListItem('smScore', {
             control: sm.bSmScore.SmScore,
             view: sm.bSmScore.View
@@ -190,6 +208,70 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('smCollapsedText', {
             control: sm.bSmCollapsedText.SmCollapsedText,
             view: sm.bSmCollapsedText.View
+        })
+        .setControlListItem('smCheckbox', {
+            control: sm.bSmCheckbox.SmCheckbox,
+            view: sm.bSmCheckbox.View
+        })
+        .setControlListItem('smRadioButton', {
+            control: sm.bSmRadioButton.SmRadioButton,
+            view: sm.bSmRadioButton.View
+        })
+        .setControlListItem('smMap', {
+            control: sm.bSmMap.SmMap,
+            view: sm.bSmMap.View
+        })
+        .setControlListItem('smBalloon', {
+            control: sm.bSmBalloon.SmBalloon,
+            view: sm.bSmBalloon.View
+        })
+        .setControlListItem('smLink', {
+            control: sm.bSmLink.SmLink,
+            view: sm.bSmLink.View
+        });
+
+    /** l-information blocks **/
+    this.setControlListItem('lInformation-informationBoard', {
+            control: sm.lInformation.bInformationBoard.InformationBoard,
+            view: sm.lInformation.bInformationBoard.View
+        })
+        .setControlListItem('lInformation-feedbackBoard', {
+            control: sm.lInformation.bFeedbackBoard.FeedbackBoard,
+            view: sm.lInformation.bFeedbackBoard.View
+        });
+
+    /** l-search blocks **/
+    this.setControlListItem('lSearch-filterPanel', {
+            control: sm.lSearch.bFilterPanel.FilterPanel,
+            view: sm.lSearch.bFilterPanel.View
+        })
+        .setControlListItem('lSearch-filter', {
+            control: sm.lSearch.bFilter.Filter,
+            view: sm.lSearch.bFilter.View
+        })
+        .setControlListItem('lSearch-filterExtended', {
+            control: sm.lSearch.bFilter.FilterExtended,
+            view: sm.lSearch.bFilter.ViewExtended
+        })
+        .setControlListItem('lSearch-filterSwitch', {
+            control: sm.lSearch.bFilter.FilterSwitch,
+            view: sm.lSearch.bFilter.ViewSwitch
+        })
+        .setControlListItem('lSearch-filterInput', {
+            control: sm.lSearch.bFilter.FilterInput,
+            view: sm.lSearch.bFilter.ViewInput
+        })
+        .setControlListItem('lSearch-filterLabels', {
+            control: sm.lSearch.bFilter.FilterLabels,
+            view: sm.lSearch.bFilter.ViewLabels
+        })
+        .setControlListItem('lSearch-label', {
+            control: sm.lSearch.bLabel.Label,
+            view: sm.lSearch.bLabel.View
+        })
+        .setControlListItem('lSearch-suggestFilter', {
+            control: sm.lSearch.bSuggestFilter.SuggestFilter,
+            view: sm.lSearch.bSuggestFilter.View
         });
 };
 goog.inherits(sm.iFactory.FactoryStendhal, cl.iFactory.Factory);

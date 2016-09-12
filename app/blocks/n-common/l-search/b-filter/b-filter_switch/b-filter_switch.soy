@@ -1,0 +1,73 @@
+{namespace sm.lSearch.bFilter.TemplateSwitch}
+
+
+/**
+ * @typedef {{
+ *     data: sm.lSearch.bFilter.Template.Params.Data,
+ *     config: sm.lSearch.bFilter.Template.Params.Config
+ * }} sm.lSearch.bFilter.TemplateSwitch.Params
+ */
+
+
+/**
+ * Constructor
+ * @param params {sm.lSearch.bFilter.TemplateSwitch.Params}
+ * @extends sm.lSearch.bFilter.Template
+ * @constructor
+ */
+{template .filter}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * Option template
+ * @param params {{
+ *     data: {
+ *         id: string,
+ *         name: string,
+ *         label: string,
+ *         value: string,
+ *         isChecked: (boolean|undefined)
+ *     },
+ *     config: {
+ *         hidden: (boolean|undefined),
+ *         hidable: (boolean|undefined),
+ *         stylizationModifier: string
+ *     }
+ * }}
+ * @public
+ */
+{template .option}
+    {let $classes kind="html"}
+        {call .rootClass/}__option
+
+        {if $params.config?.hidden}
+            {sp}i-utils__hidden
+        {/if}
+
+        {if $params.config?.hidable}
+            {sp}{call .rootClass/}__option_hidable
+        {/if}
+    {/let}
+
+    <div class="{$classes}">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': $params.config.stylizationModifier,
+                'type': 'smRadioButton',
+                'renderParams': [
+                    'data': $params.data
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * @override
+ */
+{template .additionalClasses}
+    {call .rootClass/}_switch
+{/template}

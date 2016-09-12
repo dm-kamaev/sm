@@ -5,7 +5,7 @@ var SearchQuery = require('../../entity/lib/Search'),
 
 class CourseSearchQuery extends SearchQuery {
     /**
-     * @private
+     * @protected
      */
     setBaseQuery_() {
         this.baseQuery_

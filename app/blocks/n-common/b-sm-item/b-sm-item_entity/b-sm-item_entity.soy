@@ -22,7 +22,7 @@
  *         id: number,
  *         name: string
  *     }>|undefined),
- *     online: ('only'|'available'|undefidned),
+ *     online: ?('only'|'available'|undefidned),
  *     isFavorite: ?boolean,
  *     countDepartment: ?number,
  *     position: (number|undefined)
@@ -296,7 +296,7 @@
  * Online access
  * @param params {{
  *     data: {
- *         online: ('only'|'available'|undefidned)
+ *         online: ?('only'|'available'|undefidned)
  *     }
  * }}
  */
@@ -314,7 +314,7 @@
  * Insert online access
  * @param params {{
  *     data: {
- *         online: ('only'|available'|undefidned)
+ *         online: ('only'|'available')
  *     }
  * }}
  */

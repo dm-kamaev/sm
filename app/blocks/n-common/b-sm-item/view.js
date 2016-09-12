@@ -36,6 +36,32 @@ goog.scope(function() {
 
 
     /**
+     * @typedef {{
+     *     data: {
+     *         id: ?number,
+     *         type: string,
+     *         name: {
+     *             light: string,
+     *             bold: ?string
+     *         },
+     *         alias: ?string,
+     *         score: ?sm.bSmScore.Template.Params.Data,
+     *         description: (string|undefined),
+     *         metro: ?Array<{
+     *             id: number,
+     *             name: string
+     *         }>,
+     *         area: ?Array<{
+     *             id: number,
+     *             name: string
+     *         }>
+     *     }
+     * }}
+     */
+    View.RenderParams;
+
+
+    /**
      * @override
      * @param {Element} element
      */

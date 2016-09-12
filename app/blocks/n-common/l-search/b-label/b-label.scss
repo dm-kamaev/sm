@@ -1,0 +1,48 @@
+@import "../../i-media/i-media";
+
+.b-label {
+    position: relative;
+
+    display: inline-block;
+
+    margin: 10px 10px 0 0;
+    padding: 8px 15px 10px;
+
+    vertical-align: baseline;
+    border: 1px solid #e5e5e5;
+    border-radius: 5px;
+}
+
+.b-label__checkbox {
+    display: inline-block;
+
+    box-sizing: border-box;
+    padding: 0 28px 0 0;
+}
+
+.b-label__cross {
+    position: absolute;
+    top: 8px;
+    right: 15px;
+
+    cursor: pointer;
+}
+
+.b-label__icon-cross {
+    opacity: 0.3;
+}
+
+.b-label__icon-cross:hover {
+    opacity: 1;
+}
+
+@include media-xs {
+    .b-label {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .b-label__cross {
+        right: 10px;
+    }
+}

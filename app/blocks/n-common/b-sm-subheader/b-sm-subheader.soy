@@ -16,7 +16,6 @@
  *     },
  *     search: {
  *         placeholder: (string|undefined),
- *         searchText: (string|undefined),
  *         searchRedirect: boolean
  *     },
  *     user: ?{
@@ -30,6 +29,7 @@
 
  /**
  * @typedef {{
+ *     entityType: string,
  *     bottomLine: ?boolean,
  *     theme: (string|undefined),
  *     entityType: string,
@@ -328,8 +328,7 @@
  * @param? params {{
  *     data: {
  *         search: {
- *             placeholder: ?string
- *             searchText: ?string,
+ *             placeholder: ?string,
  *             searchRedirect: ?boolean
  *         }
  *     }
@@ -354,6 +353,7 @@
             'redirect': $params.data?.search?.searchRedirect,
             'inputSize': 'min',
             'config': [
+                'entityType': $params.config.entityType,
                 'showSearchIcon': true,
                 'height': 'l'
             ]
@@ -368,6 +368,7 @@
             'redirect': $params.data?.search?.searchRedirect,
             'inputSize': 'min',
             'config': [
+                'entityType': $params.config.entityType,
                 'height': 'xxl'
             ]
         ]/}

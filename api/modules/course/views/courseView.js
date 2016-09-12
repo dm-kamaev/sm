@@ -1,5 +1,6 @@
 var scoreView = require('./scoreView'),
-    metroView = require('../../geo/views/metroView');
+    metroView = require('../../geo/views/metroView'),
+    geoView = require('../../geo/views/geoView');
 
 /**
  * @param {Array<Object>} courses
@@ -19,6 +20,94 @@ exports.list = function(courses) {
         return prev;
     }, []);
 };
+
+
+/**
+ * Group given courses from raw search query by addresses
+ * @param {Array<Object>} courses
+ * @param {string} viewType
+ * @return {{
+ *     itemGroups: Array<{Object}>
+ * }}
+ */
+exports.listMap = function(courses, viewType) {
+    return courses.reduce((prev, curr) => {
+        var addressPosition = prev.findIndex(
+            course => course.addressId == curr.addressId
+        );
+
+        if (~addressPosition) {
+            var isCourseAdded = ~prev[addressPosition].items.findIndex(
+                mapCourse => mapCourse.id == curr.id
+            );
+            if (!isCourseAdded) {
+                prev[addressPosition].items.push(this.mapCourse(curr));
+            }
+        } else {
+            prev.push(this.getMapItem(curr));
+        }
+
+        return prev;
+    }, []);
+};
+
+
+/**
+ * Generate map item from course object
+ * @param  {Object} course
+ * @return {{
+ *     addressId: number,
+ *     addressName: string,
+ *     coordinates: Array<number>,
+ *     score: number,
+ *     title: {
+ *         id: number,
+ *         text: string,
+ *         url: null
+ *     },
+ *     subtitle: string,
+ *     items: Array<{
+ *         id: number,
+ *         content: string,
+ *         url: null
+ *     }>
+ * }}
+ */
+exports.getMapItem = function(course) {
+    return {
+        addressId: course.addressId,
+        addressName: course.addressName,
+        coordinates: geoView.coordinatesDefault(
+            course.addressCoords),
+        score: course.totalScore,
+        title: {
+            id: course.brandId,
+            text: course.brand,
+            url: null
+        },
+        subtitle: course.addressName,
+        items: [this.mapCourse(course)]
+    };
+};
+
+
+/**
+ * Create course object for map
+ * @param  {Object} course
+ * @return {{
+ *     id: number,
+ *     content: string,
+ *     url: string
+ * }}
+ */
+exports.mapCourse = function(course) {
+    return {
+        id: course.id,
+        content: course.name,
+        url: null
+    };
+};
+
 
 /**
  * @param {Object} course

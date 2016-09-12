@@ -29,23 +29,26 @@ exports.search = async(function(req, res, next) {
             searchParams =
                 await(services.schoolSearch.initSearchParams(req.query));
 
-        var courses = await(services.course.list({page: 0}, 10)),
-            coursesList = courseView.list(courses, ENTITY_TYPE);
+        var courses = await(services.course.list({page: 0}, 10));
+        var mapCourses = await(services.course.listMap({page: 0}, 10));
 
         var data = searchView.render({
             entityType: ENTITY_TYPE,
             user: user,
             authSocialLinks: authSocialLinks,
             countResults: courses[0] && courses[0].countResults || 0,
-            coursesList: coursesList,
+            coursesList: courses,
+            mapCourses: mapCourses,
             searchParams: searchParams
         });
 
+
         var html = soy.render(
-            'sm.lSmSearch.Template.search', {
+            'sm.lSearch.Template.search', {
                 params: {
                     data: data,
                     config: {
+                        entityType: ENTITY_TYPE,
                         modifier: 'stendhal',
                         staticVersion: config.lastBuildTimestamp,
                         year: new Date().getFullYear(),
@@ -53,7 +56,8 @@ exports.search = async(function(req, res, next) {
                         yandexMetrikaId: YANDEX_METRIKA_ID,
                         csrf: req.csrfToken(),
                         domain: DOMAIN,
-                        fbClientId: FB_CLIENT_ID
+                        fbClientId: FB_CLIENT_ID,
+                        type: 'course'
                     }
                 }
             }

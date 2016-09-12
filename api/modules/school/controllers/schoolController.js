@@ -295,9 +295,9 @@ exports.search = async(function(req, res) {
                 await(services.favorite.getAllItemIdsByUserId(user.id));
 
         var schools = await(services.school.list(
-            params, {
-                limitResults: 10
-            }
+                params, {
+                    limitResults: 10
+                }
             )),
             schoolIds = schoolView.uniqueIds(schools),
             aliases = await(services.page.getAliases(

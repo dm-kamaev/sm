@@ -12,14 +12,17 @@ goog.require('sm.bSchoolCatalog.Template');
 goog.require('sm.bSchoolListPaged.Template');
 goog.require('sm.bSearchPanel.Template');
 goog.require('sm.bSmBadge.Template');
+goog.require('sm.bSmBalloon.Template');
+goog.require('sm.bSmCheckbox.Template');
 goog.require('sm.bSmCollapsedText.Template');
-goog.require('sm.bSmFeedbackBoard.Template');
 goog.require('sm.bSmFooter.Template');
-goog.require('sm.bSmInformationBoard.Template');
 goog.require('sm.bSmItem.Template');
 goog.require('sm.bSmItem.TemplateEntity');
 goog.require('sm.bSmItemList.Template');
+goog.require('sm.bSmLink.Template');
 goog.require('sm.bSmListPaged.Template');
+goog.require('sm.bSmMap.Template');
+goog.require('sm.bSmRadioButton.Template');
 goog.require('sm.bSmScore.Template');
 goog.require('sm.bSmScore.TemplateBrief');
 goog.require('sm.bSmSubheader.Template');
@@ -38,10 +41,20 @@ goog.require('sm.gTab.TemplateCatalog');
 goog.require('sm.gTab.TemplateStendhal');
 goog.require('sm.gTextarea.TemplateStendhal');
 goog.require('sm.lCourse.bInformationBoard.Template');
+goog.require('sm.lInformation.bFeedbackBoard.Template');
+goog.require('sm.lInformation.bInformationBoard.Template');
 goog.require('sm.lSchool.bDate.Template');
 goog.require('sm.lSchool.bFoldList.Template');
 goog.require('sm.lSchoolHome.bArticleLink.Template');
 goog.require('sm.lSchoolHome.bArticleLinks.Template');
+goog.require('sm.lSearch.bFilter.Template');
+goog.require('sm.lSearch.bFilter.TemplateExtended');
+goog.require('sm.lSearch.bFilter.TemplateInput');
+goog.require('sm.lSearch.bFilter.TemplateLabels');
+goog.require('sm.lSearch.bFilter.TemplateSwitch');
+goog.require('sm.lSearch.bFilterPanel.Template');
+goog.require('sm.lSearch.bLabel.Template');
+goog.require('sm.lSearch.bSuggestFilter.Template');
 goog.require('sm.lSearchResult.bFilterSearch.Template');
 
 
@@ -71,8 +84,8 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'modal',
             sm.gModal.TemplateStendhal.modal
-        ).
-        setTemplateListItem(
+        )
+        .setTemplateListItem(
             'feedback-modal',
             sm.gModal.TemplateFeedback.modal
         )
@@ -179,14 +192,6 @@ sm.iFactory.TemplateFactoryStendhal = function() {
             sm.bSmSubheader.Template.subheader
         )
         .setTemplateListItem(
-            'smInformationBoard',
-            sm.bSmInformationBoard.Template.informationBoard
-        )
-        .setTemplateListItem(
-            'smFeedbackBoard',
-            sm.bSmFeedbackBoard.Template.feedbackBoard
-        )
-        .setTemplateListItem(
             'smItem',
             sm.bSmItem.Template.item
         )
@@ -217,10 +222,74 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'smCollapsedText',
             sm.bSmCollapsedText.Template.collapsedText
+        )
+        .setTemplateListItem(
+            'smCheckbox',
+            sm.bSmCheckbox.Template.checkbox
+        )
+        .setTemplateListItem(
+            'smRadioButton',
+            sm.bSmRadioButton.Template.radioButton
+        )
+        .setTemplateListItem(
+            'smMap',
+            sm.bSmMap.Template.map
+        )
+        .setTemplateListItem(
+            'smBalloon',
+            sm.bSmBalloon.Template.balloon
+        )
+        .setTemplateListItem(
+            'smLink',
+            sm.bSmLink.Template.link
         );
 
-    /** l-course blocks */
+    /** l-information blocks **/
     this.setTemplateListItem(
+            'lInformation-informationBoard',
+            sm.lInformation.bInformationBoard.Template.informationBoard
+        )
+        .setTemplateListItem(
+            'lInformation-feedbackBoard',
+            sm.lInformation.bFeedbackBoard.Template.feedbackBoard
+        );
+
+    /** l-search blocks **/
+    this.setTemplateListItem(
+            'lSearch-filterPanel',
+            sm.lSearch.bFilterPanel.Template.filterPanel
+        )
+        .setTemplateListItem(
+            'lSearch-filter',
+            sm.lSearch.bFilter.Template.filter
+        )
+        .setTemplateListItem(
+            'lSearch-filterExtended',
+            sm.lSearch.bFilter.TemplateExtended.filter
+        )
+        .setTemplateListItem(
+            'lSearch-filterSwitch',
+            sm.lSearch.bFilter.TemplateSwitch.filter
+        )
+        .setTemplateListItem(
+            'lSearch-filterInput',
+            sm.lSearch.bFilter.TemplateInput.filter
+        )
+        .setTemplateListItem(
+            'lSearch-filterLabels',
+            sm.lSearch.bFilter.TemplateLabels.filter
+        )
+        .setTemplateListItem(
+            'lSearch-label',
+            sm.lSearch.bLabel.Template.label
+        )
+        .setTemplateListItem(
+            'lSearch-suggestFilter',
+            sm.lSearch.bSuggestFilter.Template.suggestFilter
+        );
+
+        /** l-course blocks */
+        this.setTemplateListItem(
             'lCourse-informationBoard',
             sm.lCourse.bInformationBoard.Template.informationBoard
         );

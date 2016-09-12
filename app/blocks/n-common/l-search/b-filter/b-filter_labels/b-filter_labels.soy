@@ -1,0 +1,153 @@
+{namespace sm.lSearch.bFilter.TemplateLabels}
+
+
+/**
+ * @typedef {{
+ *     data: sm.lSearch.bFilter.Template.Params.Data,
+ *     config: sm.lSearch.bFilter.Template.Params.Config
+ * }} sm.lSearch.bFilter.TemplateLabels.Params
+ */
+
+
+/**
+ * Constructor
+ * @param params {sm.lSearch.bFilter.TemplateLabels.Params}
+ * @extends sm.lSearch.bFilter.Template
+ * @constructor
+ */
+{template .filter}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * Option template
+ * @param params {{
+ *     data: {
+ *         id: string,
+ *         name: string,
+ *         label: string,
+ *         value: string,
+ *         isChecked: (boolean|undefined)
+ *     },
+ *     config: {
+ *         hidden: (boolean|undefined),
+ *         theme: (string|undefined),
+ *         stylizationModifier: string
+ *     }
+ * }}
+ * @override
+ */
+{template .option}
+    {let $classes kind="html"}
+        {call .rootClass/}__option
+
+        {if $params.config?.hidden}
+            {sp}i-utils__hidden
+        {/if}
+    {/let}
+
+    <div class="{$classes}">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': $params.config.stylizationModifier,
+                'type': 'lSearch-label',
+                'renderParams': [
+                    'data': [
+                        'id': $params.data.id + '-selected',
+                        'name': $params.data.name,
+                        'label': $params.data.label,
+                        'value': $params.data.value,
+                        'isChecked': $params.data.isChecked
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Number Hidden Items
+ * @param numberHiddenItems {number}
+ * @public
+ */
+{template .numberHiddenItems kind="html"}
+    <span class="{call .rootClass/}__button-number">
+        {$numberHiddenItems}
+    </span>
+{/template}
+
+
+/**
+ * Tempate button
+ * @param params {{
+ *     data: {
+ *         options: Array<{
+ *             label: string,
+ *             value: string,
+ *             isChecked: (boolean|undefined)
+ *         }>
+ *     },
+ *     config: {
+ *         cannotBeHidden: (boolean|undefined),
+ *         optionsToShow: (number|undefined),
+ *         showMoreButtonText: (number|undefined)
+ *     }
+ * }}
+ * @protected
+ */
+{template .button}
+    {let $numberOptionsToShow kind="html"}
+        {call .numberOptionsToShow data="all" /}
+    {/let}
+
+    {let $numberHiddenItems kind="html"}
+        {$params.data.options.length - $numberOptionsToShow}
+    {/let}
+
+    {call .buttonMore_}
+        {param numberHiddenItems: $numberHiddenItems/}
+    {/call}
+{/template}
+
+
+/**
+ * Button-Label more
+ * @param numberHiddenItems {number}
+ * @private
+ */
+{template .buttonMore_}
+    {let $classes kind="html"}
+        {call .rootClass/}__button{sp}
+        {call .rootClass/}__button_more
+
+        {if $numberHiddenItems <= 0}
+            {sp}i-utils__hidden
+        {/if}
+    {/let}
+
+    <div class="{$classes}">
+        {call .buttonText_ /}
+        {call .numberHiddenItems data="all"/}
+    </div>
+{/template}
+
+
+/**
+ * Button text
+ */
+{template .buttonText_ kind="html"}
+    <span class="{call .rootClass/}__button-text">
+        Еще{sp}
+    </span>
+{/template}
+
+
+
+/**
+ * @override
+ */
+{template .additionalClasses}
+    {call .rootClass/}_labels
+{/template}

@@ -489,8 +489,8 @@
         <div class="l-search-result__search">
             {call .search_}
                 {param params: [
-                     'searchText': $params?.searchText,
-                     'redirect': false
+                    'searchText': $params?.searchText,
+                    'redirect': false
                 ]/}
             {/call}
         </div>
@@ -550,7 +550,8 @@
             'redirect': $params?.searchRedirect,
             'inputSize': 'min',
             'config': [
-                'height': 's'
+                'height': 's',
+                'entityType': 'school'
             ]
         ]/}
     {/call}

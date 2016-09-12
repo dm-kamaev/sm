@@ -163,12 +163,31 @@ goog.scope(function() {
 
 
     /**
-     * @return {{
+     * Search types
+     * @enum {string}
+     */
+    Search.SearchType = {
+        SCHOOLS: 'schools',
+        COURSES: 'courses',
+        AREAS: 'areas',
+        METRO: 'metro',
+        DISTRICTS: 'districts'
+    };
+
+
+    /**
+     * @typedef {{
      *     areaId: ?number,
      *     metroId: ?number,
      *     districtId: ?number,
      *     text: ?string
      * }}
+     */
+    Search.Data;
+
+
+    /**
+     * @return {sm.bSearch.Search.Data}
      * @public
      */
     Search.prototype.getData = function() {
@@ -481,18 +500,21 @@ goog.scope(function() {
                 var res = [],
                     items;
 
-                var types = ['schools', 'areas', 'metro', 'districts'];
+                var types = goog.object.getValues(Search.SearchType);
 
                 for (var i = 0, type; type = types[i]; i++) {
-                    items = data[type];
+                    items = data[type] || [];
+
                     for (var j = 0, item; item = items[j]; j++) {
                         item['type'] = type;
                     }
-                    if (type == 'schools') {
-                        items = items.sort(function(school1, school2) {
+                    if (type == Search.SearchType.SCHOOLS ||
+                        type == Search.SearchType.COURSES) {
+
+                        items = items.sort(function(entity1, entity2) {
                             var res = 0,
-                                matches1 = school1.name.match(/№(\d+)/),
-                                matches2 = school2.name.match(/№(\d+)/),
+                                matches1 = entity1.name.match(/№(\d+)/),
+                                matches2 = entity2.name.match(/№(\d+)/),
                                 num1 = matches1 && matches1[1] || 1000000,
                                 num2 = matches2 && matches2[1] || 1000000;
 
@@ -500,7 +522,7 @@ goog.scope(function() {
                                 res = num1 - num2;
                             }
                             else {
-                                res = (school1.name > school2.name) ? 1 : -1;
+                                res = (entity1.name > entity2.name) ? 1 : -1;
                             }
 
                             return res;
@@ -517,9 +539,11 @@ goog.scope(function() {
             },
 
             search: function(elem) {
-                return elem.name + ' ' +
-                    elem.fullName + ' ' +
-                    elem.abbreviation;
+                var name = elem.name +
+                    (elem.fullName ? ' ' + elem.fullName : '') +
+                    (elem.abbreviation ? ' ' + elem.abbreviation : '');
+
+                return name;
             },
 
             renderItem: this.renderItem_.bind(this),
@@ -579,7 +603,7 @@ goog.scope(function() {
 
     /**
      * Render suggest item
-     * @param {Object} item - School or metro or area or district item
+     * @param {Object} item - Entity or metro or area or district item
      * @param {string} str - Search str
      * @return {string}
      * @private
@@ -606,7 +630,7 @@ goog.scope(function() {
 
     /**
      * Render suggest item name
-     * @param {Object} item - School or metro or area or district item
+     * @param {Object} item - Entity or metro or area or district item
      * @param {string} str - Search string
      * @return {string}
      * @private
@@ -633,7 +657,7 @@ goog.scope(function() {
 
     /**
      * Render suggest item areas
-     * @param {Object} item - School or metro or area item
+     * @param {Object} item - Entity or metro or area item
      * @return {string}
      * @private
      */
@@ -769,7 +793,7 @@ goog.scope(function() {
      * @param {Object} data
      */
     Search.prototype.itemClickHandler_ = function(event, data) {
-        if (data['item']['type'] === 'schools') {
+        if (data['item']['type'] === Search.SearchType.SCHOOLS) {
             this.sendEcAnalytics_(data);
         }
         this.sendAnalyticsSchoolData_(data);
@@ -788,10 +812,16 @@ goog.scope(function() {
         this.setText(data['item']['name']);
         this.suggest_.blur();
 
-        if (data['item']['type'] === 'schools') {
-            document.location.href = '/school/' + data['item']['alias'];
+        var itemType = data['item']['type'];
+
+        if (itemType === Search.SearchType.SCHOOLS ||
+            itemType === Search.SearchType.COURSES) {
+
+            var type = this.dataParams_.type;
+            document.location.href = '/' + type + '/' + data['item']['alias'];
+
         } else if (this.dataParams_.redirect) {
-            this.onNotSchoolSelect_(event, data);
+            this.onNotEntitySelect_(event, data);
         } else {
             this.processItem_(data['item']);
             this.dispatchEvent({
@@ -917,8 +947,8 @@ goog.scope(function() {
      * @param {Object} data
      * @private
      */
-    Search.prototype.onNotSchoolSelect_ = function(event, data) {
-        var url = '/school' +
+    Search.prototype.onNotEntitySelect_ = function(event, data) {
+        var url = '/search' +
                 '?name=' + encodeURIComponent(data['text']);
         if (data['item']['type'] === 'metro') {
             url += '&metroId=' + data['item']['id'];

@@ -5,17 +5,22 @@
  * @typedef {{
  *     items: Array<(
  *         sm.bSmItem.Template.Params.Data|
- *         sm.bSmItem.TemplateEntity.Params.Data
+ *         sm.bSmItem.TemplateEntity.Params.Data|
+ *         sm.bSmLink.Template.Params.Data
  *     )>,
  *     itemType: string,
- *     countItemsPerPage: (number|undefined)
+ *     countItemsPerPage: (number|undefined),
+ *     itemConfig: (sm.bSmItem.Template.Params.Config|
+ *         sm.bSmItem.TemplateEntity.Params.Config|
+ *         sm.bSmLink.Template.Params.Config)
  * }} sm.bSmItemList.Template.Params.Data
  */
 
 
  /**
  * @typedef {{
- *     stylizationModifier: (string|undefined)
+ *     stylizationModifier: (string|undefined),
+ *     theme: ('light')
  * }} sm.bSmItemList.Template.Params.Config
  */
 
@@ -80,7 +85,11 @@
  *             sm.bSmItem.TemplateEntity.Params.Data
  *         )>,
  *         itemType: string,
- *         countItemsPerPage: ?number
+ *         countItemsPerPage: ?number,
+ *         itemConfig: (sm.bSmItem.Template.Params.Config|
+ *             sm.bSmItem.TemplateEntity.Params.Config|
+ *             sm.bSmLink.Template.Params.Config|
+ *             undefined)
  *     },
  *     config: {
  *         stylizationModifier: (string|undefined)
@@ -101,7 +110,8 @@
             {call .item}
                 {param params: [
                     'data': [
-                        'item': $params.data.items[$i]
+                        'item': $params.data.items[$i],
+                        'itemConfig': $params.data.itemConfig
                     ],
                     'config': [
                         'type': $params.data.itemType,
@@ -122,7 +132,11 @@
  *         item: (
  *             sm.bSmItem.Template.Params.Data|
  *             sm.bSmItem.TemplateEntity.Params.Data
- *         )
+ *         ),
+ *         itemConfig: (sm.bSmItem.Template.Params.Config|
+ *             sm.bSmItem.TemplateEntity.Params.Config|
+ *             sm.bSmLink.Template.Params.Config|
+ *             undefined)
  *     },
  *     config: {
  *         type: string,
@@ -133,7 +147,7 @@
  */
 {template .item}
     {let $classes kind="html"}
-        {call .rootClass/}__item
+        {call .rootClass/}__item-wrap
 
         {if $params.config?.isHidden}
             {sp}{cl.iUtils.Utils.CssClass.HIDDEN}
@@ -141,8 +155,13 @@
     {/let}
 
     {let $customClasses kind="html"}
-        {call .rootClass/}__item-list
+        {call .rootClass/}__item
     {/let}
+
+    {let $itemConfig: augmentMap(
+        $params.data.itemConfig,
+        ['customClasses': [$customClasses]]
+    ) /}
 
     <div class="{$classes}">
         {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
@@ -151,9 +170,7 @@
                 'type': $params.config.type,
                 'renderParams': [
                     'data': $params.data.item,
-                    'config': [
-                        'customClasses': [$customClasses]
-                    ]
+                    'config': $itemConfig
                 ]
             ]/}
         {/call}

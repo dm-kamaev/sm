@@ -50,9 +50,9 @@
 
 /**
  * Base landing for pages
- * @param? params {{
+ * @param params {{
  *     data: sm.iLayout.TemplateStendhal.Params.Data,
- *     config: ?sm.iLayout.TemplateStendhal.Params.Config
+ *     config: sm.iLayout.TemplateStendhal.Params.Config
  * }}
  * @extends cl.iLayout.Template
  * @constructor
@@ -240,8 +240,11 @@
  * Subheader
  * @param params {{
  *     data: {
- *         subheader: sm.bSmSubheader.Template.Params.Data,
- *         type: string
+ *         subheader: sm.bSmSubheader.Template.Params.Data
+ *     },
+ *     config: {
+ *         entityType: string,
+ *         modifier: ?string
  *     }
  * }}
  * @protected
@@ -255,8 +258,8 @@
                 'renderParams': [
                     'data': $params.data.subHeader,
                     'config': [
-                        'entityType': $params.data.type,
-                        'bottomLine': true
+                        'bottomLine': true,
+                        'entityType': $params.config.entityType
                     ]
                 ]
             ]/}
@@ -277,7 +280,8 @@
  * Footer
  * @param params {
  *     config: {
- *         year: ?number
+ *         year: ?number,
+ *         modifier: ?string
  *     }
  * }
  * @protected
@@ -310,17 +314,18 @@
 
 
 /**
+ * Attributes on element
+ * Important to write kind="attributes" when overrides
+ * @protected
+ */
+{template .attributes kind="attributes"}
+{/template}
+
+
+/**
  * Root css class
  * @override
  */
 {template .rootClass}
     i-layout
-{/template}
-
-
-/**
- * Attributes
- * @override
- */
-{template .attributes kind="attributes"}
 {/template}

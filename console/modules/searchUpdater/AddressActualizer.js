@@ -1,6 +1,7 @@
 'use strict';
 
-const lodash = require('lodash');
+const lodash = require('lodash'),
+    await = require('asyncawait/await');
 
 const services = require('../../../app/components/services').all,
     searchTypeEnum =
@@ -13,16 +14,28 @@ class AddressActualizer {
      */
     constructor(address) {
         /**
+         * @private
          * @type {Object}
          */
         this.address_ = address;
+
+        /**
+         * @private
+         * @type {Object}
+         */
+        this.addressEntityType_ = {
+            'school': entityType.SCHOOL,
+            'course_department': entityType.COURSE
+        };
     }
 
     /**
      * Actualize address related search data
      */
     actualize() {
-        this.actualizeEducationalGrades_();
+        if (this.address_.entityType === 'school') {
+            this.actualizeEducationalGrades_();
+        }
         this.actualizeMetros_();
         this.actualizeArea_();
         this.actualizeDistrict_();
@@ -75,22 +88,36 @@ class AddressActualizer {
      */
     actualizeData_(values, searchType) {
         var searchData = this.getSearchDataByType_(
-            this.address_.searchData,
-            searchType
-        );
+                this.address_.searchData,
+                searchType
+            ),
+            entityType = this.addressEntityType_[this.address_.entityType],
+            entityIds;
+        if (entityType === 'course') { // address may contains few entities
+            entityIds = await(services.course.findByDepartmentId(
+                this.address_.entityId
+            ));
+        } else { // address contains only 1 entity
+            entityIds = [this.address_.entityId];
+        }
+
+
         if (searchData) {
-            services.addressSearch.update(searchData.id, {
-                entityId: this.address_.entityId,
-                entityType: entityType.SCHOOL,
-                values: values
-            });
+            await(services.addressSearch.updateBySearchData(
+                this.address_.id,
+                searchType, {
+                    values: values
+                }
+            ));
         } else if (values.length) {
-            services.addressSearch.create({
-                entityId: this.address_.entityId,
-                entityType: entityType.SCHOOL,
-                addressId: this.address_.id,
-                values: values,
-                type: searchType
+            entityIds.forEach(entityId => {
+                await(services.addressSearch.create({
+                    entityId: entityId,
+                    entityType: entityType,
+                    addressId: this.address_.id,
+                    values: values,
+                    type: searchType
+                }));
             });
         }
     }

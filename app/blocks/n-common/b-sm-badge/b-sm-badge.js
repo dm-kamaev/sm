@@ -20,8 +20,7 @@ goog.inherits(sm.bSmBadge.SmBadge, cl.iControl.Control);
 
 goog.scope(function() {
     var Badge = sm.bSmBadge.SmBadge,
-        View = sm.bSmBadge.View,
-        FactoryManager = cl.iFactory.FactoryManager;
+        View = sm.bSmBadge.View;
 
 
     /**
