@@ -2,8 +2,11 @@ const async = require('asyncawait/async'),
     await = require('asyncawait/await');
 
 const models = require('../../../../app/components/models').all,
+    services = require('../../../../app/components/services').all,
     CourseSearchQuery = require('../lib/CourseSearch'),
     CourseSearchMapQuery = require('../lib/CourseSearchMap');
+
+const entityType = require('../../entity/enums/entityType');
 
 var service = {
     name: 'courseSearchData'
@@ -19,6 +22,13 @@ service.getSearchSql = function(searchParams, opt_limit) {
         .setLimit(opt_limit)
         .setOffset(searchParams.page * opt_limit || 0)
         .setSortType(searchParams.setSortType)
+        .setAge(searchParams.age)
+        .setCost(searchParams.cost)
+        .setWeekdays(searchParams.weekdays)
+        .setTime(searchParams.time)
+        .setRegularity(searchParams.regularity)
+        .setFormTraining(searchParams.formTraining)
+        .setDuration(searchParams.duration)
         .getQuery();
 };
 
@@ -65,6 +75,24 @@ service.getSearchMapSql = function(searchParams, opt_limit) {
         .setLimit(opt_limit)
         .setOffset(searchParams.page * opt_limit || 0)
         .getQuery();
+};
+
+service.suggestSearch = function(searchString) {
+    var resultIds = await(services.textSearchData.entitiesSearch(searchString, [
+        entityType.COURSE,
+        entityType.METRO,
+        entityType.AREA,
+        entityType.DISTRICT
+    ]));
+
+    return await({
+        courses: services.course.getByIds(resultIds[entityType.COURSE] || []),
+        areas: services.area.getByIds(resultIds[entityType.AREA] || []),
+        metros: services.metro.getByIds(resultIds[entityType.METRO] || []),
+        districts: services.district.getByIds(
+            resultIds[entityType.DISTRICT] || []
+        )
+    });
 };
 
 module.exports = service;

@@ -18,10 +18,11 @@ exports.search = async(function(req, res, next) {
     try {
         var authSocialLinks = services.auth.getAuthSocialUrl(),
             user = req.user || {},
-            searchParams =
-                await(services.schoolSearch.initSearchParams(req.query));
+            searchParams = searchView.initSearchParams(req.query);
 
-        var courses = await(services.course.list({page: 0}, 10));
+        searchParams.page = 0;
+
+        var courses = await(services.course.list(searchParams, 10));
         var mapCourses = await(services.course.listMap({page: 0}, 10));
 
         var data = searchView.render({

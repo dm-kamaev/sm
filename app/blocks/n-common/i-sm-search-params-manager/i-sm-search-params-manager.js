@@ -1,9 +1,9 @@
 /**
  * @fileoverview Utilities for Search page for manipulating Search parameters
  *
- * It store parameters and can update each parameter or all at one time.
+ * It stores parameters and can update either each parameter or all at a time.
  *
- * Please note, that search params returns and updates in uncompressed state
+ * Please note, that search params return and update in uncompressed state.
  */
 goog.provide('sm.iSmSearchParamsManager.SmSearchParamsManager');
 

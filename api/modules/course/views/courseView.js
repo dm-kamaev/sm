@@ -1,6 +1,10 @@
-var scoreView = require('./scoreView'),
+const lodash = require('lodash');
+
+const scoreView = require('./scoreView'),
     metroView = require('../../geo/views/metroView'),
-    geoView = require('../../geo/views/geoView');
+    geoView = require('../../geo/views/geoView'),
+    areaView = require('../../geo/views/areaView'),
+    districtView = require('../../geo/views/districtView');
 
 /**
  * @param {Array<Object>} courses
@@ -51,6 +55,55 @@ exports.listMap = function(courses, viewType) {
     }, []);
 };
 
+/**
+ * @param {{
+ *    courses: Array<models.Course>,
+ *    areas: Array<models.Area>,
+ *    metro: Array<models.Metro>,
+ *    districts: Array<models.District>
+ * }} data
+ * @return {{
+ *     courses: Array<Object>,
+ *     areas: Array<Object>,
+ *     metro: Array<Object>,
+ *     districts: Array<Object>
+ * }}
+ */
+exports.suggest = function(data) {
+    return {
+        courses: this.suggestList(data.courses),
+        areas: areaView.list(data.areas),
+        metro: metroView.list(data.metros),
+        districts: districtView.list(data.districts)
+    };
+};
+
+/**
+ * @param  {Array<Object>} courses
+ * @return {Array<Object>}
+ */
+exports.suggestList = function(courses) {
+    return courses.map(course => ({
+        id: course.id,
+        alias: 'undefined',
+        name: course.name,
+        score: course.score || [0, 0, 0, 0],
+        totalScore: course.totalScore,
+        addresses: this.getAddresses(course.courseOptions)
+    }));
+};
+
+/**
+ * @param  {Array<Object>} courseOptions
+ * @return {Array<Object>}
+ */
+exports.getAddresses = function(courseOptions) {
+    return lodash.flatten(courseOptions.map(courseOption =>
+        courseOption.departments.map(department =>
+            department.address
+        )
+    ));
+};
 
 /**
  * Generate map item from course object

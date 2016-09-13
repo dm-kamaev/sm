@@ -32,7 +32,7 @@ class SchoolSearchQuery extends SearchQuery {
         this.schoolSearchParams_ = squel.expr();
 
         /**
-         * @protected
+         * @private
          * @type {number}
          */
         this.schoolDataCount_ = 0;

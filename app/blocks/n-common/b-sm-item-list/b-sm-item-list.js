@@ -76,7 +76,7 @@ goog.scope(function() {
      * @public
      */
     ItemList.prototype.addItemsBottom = function(data) {
-        goog.array.forEach(data, this.addItem.bind(this));
+        goog.array.forEach(data, this.addItemBottom.bind(this));
     };
 
 

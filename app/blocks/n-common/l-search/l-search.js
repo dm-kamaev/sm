@@ -144,6 +144,7 @@ goog.scope(function() {
         Search.base(this, 'enterDocument');
 
         this.initLeftMenuListeners_()
+            .initSearchServiceListeners_()
             .initResultsListListeners_()
             .initWindowListeners_()
             .initMapListeners_();

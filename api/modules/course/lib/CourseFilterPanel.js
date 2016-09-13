@@ -21,7 +21,7 @@ class CourseFilterPanel extends FilterPanel {
                 header: {
                     title: 'Расписание'
                 },
-                name: 'schedule'
+                name: 'weekdays'
             },
             config: {}
         };
@@ -151,20 +151,13 @@ class CourseFilterPanel extends FilterPanel {
                     title: 'Форма занятий'
                 },
                 name: 'formTraining',
-                options: [
-                    {
-                        'label': 'Очная индивидуальная',
-                        'value': 'individual'
-                    },
-                    {
-                        'label': 'Очная групповая',
-                        'value': 'group'
-                    },
-                    {
-                        'label': 'Онлайн',
-                        'value': 'online'
-                    }
-                ]
+                options: [{
+                    'label': 'Очная индивидуальная'
+                }, {
+                    'label': 'Очная групповая'
+                }, {
+                    'label': 'Онлайн'
+                }]
             },
             config: {}
         };
@@ -287,7 +280,14 @@ class CourseFilterPanel extends FilterPanel {
      * @return {Object}
      */
     setFilterFormTraining(opt_checkedValues) {
-        this.setFilter(this.filterFormTraining_, opt_checkedValues);
+        var params = this.filterFormTraining_;
+
+        params.data.options = this.createOptionsValuesInOrder(
+            this.filterFormTraining_.data.options
+        );
+
+        this.setFilter(params, opt_checkedValues);
+
 
         return this;
     }

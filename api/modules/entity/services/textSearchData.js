@@ -1,11 +1,14 @@
 'use strict';
 
-var async = require('asyncawait/async');
-var await = require('asyncawait/await');
+const async = require('asyncawait/async'),
+    await = require('asyncawait/await');
 
-var models = require('../../../../app/components/models').all;
+const models = require('../../../../app/components/models').all,
+    sequelize = require('../../../../app/components/db');
 
-var service = {
+const SuggestSearchQuery = require('../lib/SuggestSearch');
+
+const service = {
     name: 'textSearchData'
 };
 
@@ -37,6 +40,10 @@ service.getByEntityType = async(function(entityType) {
     }));
 });
 
+/**
+ * @type {string} searchString
+ * @return {Array<TextSearchData>}
+ */
 service.search = async(function(searchString) {
     return await(models.TextSearchData.findAll({
         attributes: ['entityId', 'entityType'],
@@ -47,5 +54,42 @@ service.search = async(function(searchString) {
         }
     }));
 });
+
+
+
+/**
+ * @public
+ * @param {string} searchString,
+ * @param {Array<string>} entities
+ * @return {Object}
+ */
+service.entitiesSearch = async(function(searchString, entities) {
+    var queryString = new SuggestSearchQuery(entities)
+        .setSearchString(searchString)
+        .getQuery(),
+        foundData = await(sequelize.query(
+            queryString,
+            {type: sequelize.QueryTypes.SELECT}
+        )),
+        resultIds = joinSuggestData(foundData);
+
+    return resultIds;
+});
+
+/**
+ * @param {Array<Object>} data
+ * @return {Object}
+ */
+var joinSuggestData = function(data) {
+    var result = {};
+
+    data.forEach(item => {
+        result.hasOwnProperty(item.entityType) ?
+            result[item.entityType].push(item.entityId) :
+            result[item.entityType] = [item.entityId];
+    });
+
+    return result;
+};
 
 module.exports = service;

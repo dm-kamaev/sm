@@ -193,4 +193,36 @@ searchView.render = function(data) {
     };
 };
 
+/**
+ * @param  {Object} params
+ * @return {Object}
+ */
+searchView.initSearchParams = function(params) {
+    return {
+        age: this.transformToArray(params.age),
+        cost: this.transformToArray(params.cost),
+        weekdays: this.transformToArray(params.weekdays),
+        time: this.transformToArray(params.time),
+        regularity: this.transformToArray(params.regularity),
+        formTraining: this.transformToArray(params.formTraining),
+        duration: this.transformToArray(params.duration)
+    };
+};
+
+/**
+ * @param  {(number|string|undefined|Array)} value
+ * @return {Array}
+ */
+searchView.transformToArray = function(value) {
+    var result;
+    if (typeof value === 'number' || typeof value === 'string') {
+        result = [value];
+    } else if (Array.isArray(value)) {
+        result = value;
+    } else {
+        result = [];
+    }
+    return result;
+};
+
 module.exports = searchView;
