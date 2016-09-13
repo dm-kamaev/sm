@@ -1,3 +1,9 @@
+/**
+ * @fileOverview param sizeViewportShow determines
+ * to what size Viewport to initialize map (This size
+ * is sm.iSmViewport.SmViewport.Size)
+ */
+
 {namespace sm.bSmMap.Template}
 
 
@@ -6,17 +12,20 @@
  *     itemGroups: Array<{
  *         viewType: ('pin'|'point'),
  *         items: Array<{
- *             id: number,
+ *             addressId: number,
  *             coordinates: Array<number>,
  *             title: {
+ *                 id: number,
  *                 text: string,
- *                 alias: string
+ *                 url: ?string
  *             },
+ *             subtitle: string,
+ *             items: Array<{
+ *                 id: number,
+ *                 content: string,
+ *                 url: ?string
+ *             }>,
  *             description: string,
- *             link: {
- *                 text: string,
- *                 alias: string
- *             },
  *             score: number
  *         }>,
  *     }>,
@@ -29,12 +38,19 @@
 
 
 /**
+ * @typedef {{
+ *     enableScrollZoom: (boolean|undefined),
+ *     alignZoomControl: ('left'|'right'|undefined),
+ *     sizeViewportShow: ('xxs'|'xs'|'s'|'m'|'l'|'xl')
+ * }} sm.bSmMap.Template.Params.Config
+ */
+
+
+/**
  * A layout for Yandex.Maps block
  * @param params {{
- *     data: sm.bSmMap.Template.Params.Data
- *     config: ({
- *         enableScrollZoom: boolean
- *     }|undefined)
+ *     data: sm.bSmMap.Template.Params.Data,
+ *     config: (sm.bSmMap.Template.Params.Config|undefined)
  * }}
  * @constructor
  * @extends cl.iControl.Template
@@ -56,10 +72,8 @@
 
 /**
  * @param params {{
- *     data: sm.bSmMap.Template.Params.Data
- *     config: ({
- *         enableScrollZoom: boolean
- *     }|undefined)
+ *     data: sm.bSmMap.Template.Params.Data,
+ *     config: (sm.bSmMap.Template.Params.Config|undefined)
  * }}
  * @override
  */

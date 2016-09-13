@@ -133,9 +133,10 @@ goog.scope(function() {
      * Position of zoom control
      * @type {Object}
      */
-    Map.ZOOM_CONTROL_POSITION = {
-        top: '20px',
-        left: '10px'
+    Map.zoomControlPozition = {
+        TOP: '20px',
+        RIGHT: '10px',
+        LEFT: '10px'
     };
 
 
@@ -545,7 +546,10 @@ goog.scope(function() {
      * @private
      */
     Map.prototype.onResize_ = function(callback) {
-        if (Viewport.getInstance().getSize() > Viewport.Size.M) {
+        var size = this.params['config']['sizeViewportShow'] || 'M',
+            viewportSize = size.toUpperCase();
+
+        if (Viewport.getInstance().getSize() > Viewport.Size[viewportSize]) {
             callback();
         }
     };
@@ -864,11 +868,41 @@ goog.scope(function() {
      * @private
      */
     Map.prototype.addZoomControl_ = function() {
-        this.ymaps_.controls.add(
-            'zoomControl',
-            Map.ZOOM_CONTROL_POSITION
-        );
+        var position = this.getZoomPosition_();
+
+        var zoomControl = new ymaps.control.ZoomControl({
+            options: {
+                position: position
+            }
+        });
+
+        this.ymaps_.controls.add(zoomControl);
     };
+
+
+    /**
+     * Get position for zoom control
+     * @return {{
+     *     top: string,
+     *     left: (string|undefined),
+     *     right: (string|undefined)
+     * }}
+     * @private
+     */
+    Map.prototype.getZoomPosition_ = function() {
+        var position = {
+            top: Map.zoomControlPozition.TOP
+        };
+
+        if (this.params['config']['alignZoomControl'] == 'right') {
+            position.right = Map.zoomControlPozition.RIGHT;
+        } else {
+            position.left = Map.zoomControlPozition.LEFT;
+        }
+
+        return position;
+    };
+
 
     /**
      * Map state generator
