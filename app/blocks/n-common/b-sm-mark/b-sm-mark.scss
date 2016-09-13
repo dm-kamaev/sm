@@ -1,0 +1,55 @@
+@import "../i-media/i-media";
+
+.b-sm-mark {
+    display: inline-block;
+}
+
+.b-sm-mark__sign {
+    display: inline-block;
+
+    width: 11px;
+    height: 11px;
+    margin-right: 11px;
+
+    border-radius: 50%;
+
+    &:last-child {
+        margin-right: 0;
+    }
+}
+
+.b-sm-mark__value {
+    display: inline-block;
+
+    font-size: 13px;
+}
+
+.b-sm-mark_color_green {
+    .b-sm-mark__sign {
+        background-color: #00aa00;
+    }
+}
+
+.b-sm-mark_color_yellow {
+    .b-sm-mark__sign {
+        background-color: #ffaa00;
+    }
+}
+
+.b-sm-mark_color_red {
+    .b-sm-mark__sign {
+        background-color: #ee362c;
+    }
+}
+
+.b-sm-mark_color_grey {
+    .b-sm-mark__sign {
+        background-color: #c6c6c1;
+    }
+}
+
+@include media-xxs {
+    .b-sm-mark__sign {
+        display: none;
+    }
+}
