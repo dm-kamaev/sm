@@ -3,6 +3,7 @@
  *     user: Object,
  *     authSocialLinks: Object,
  *     entityData: Object,
+ *     map: Object,
  *     actionButtonText: string
  * }} data
  * @return {Object}
@@ -21,14 +22,16 @@ exports.render = function(data) {
                 nameM: 'Все курсы',
                 url: '/'
             },
-            search: {},
+            search: {
+                placeholder: 'Район, метро, название курса'
+            },
             user: data.user,
             favorites: []
         },
         user: data.user,
         authSocialLinks: data.authSocialLinks,
         entityData: data.entityData,
-        actionButtonText: data.actionButtonText,
-        map: {}
+        map: data.map,
+        actionButtonText: data.actionButtonText
     };
 };

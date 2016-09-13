@@ -1,6 +1,7 @@
 goog.provide('sm.lCourse.Course');
 
 goog.require('sm.iLayout.LayoutStendhal');
+goog.require('sm.iSmViewport.SmViewport');
 goog.require('sm.lCourse.View');
 
 
@@ -36,6 +37,14 @@ goog.scope(function() {
 
 
         /**
+         * Instance map
+         * @type {sm.bSmMap.SmMap}
+         * @private
+         */
+        this.map_ = null;
+
+
+        /**
          * Instances button
          * @type {Array<cl.gButton.Button>}
          * @private
@@ -43,7 +52,8 @@ goog.scope(function() {
         this.actionButtons_ = [];
     };
     goog.inherits(sm.lCourse.Course, sm.iLayout.LayoutStendhal);
-    var Course = sm.lCourse.Course;
+    var Course = sm.lCourse.Course,
+        Viewport = sm.iSmViewport.SmViewport;
 
 
     /**
@@ -55,6 +65,7 @@ goog.scope(function() {
 
         this.initScore_();
         this.initFullDescription_();
+        this.initMap_();
         this.initActionButtons_();
     };
 
@@ -94,18 +105,6 @@ goog.scope(function() {
 
 
     /**
-     * Initializes instance of full description
-     * @private
-     */
-    Course.prototype.initFullDescription_ = function() {
-        this.fullDescription_ = this.decorateChild(
-            'smCollapsedText',
-            this.getView().getDom().fullDescription
-        );
-    };
-
-
-    /**
      * Initializes instances of score
      * @private
      */
@@ -120,6 +119,32 @@ goog.scope(function() {
             );
 
             this.scoreItems_.push(instance);
+        }
+    };
+
+
+    /**
+     * Initializes instance of full description
+     * @private
+     */
+    Course.prototype.initFullDescription_ = function() {
+        this.fullDescription_ = this.decorateChild(
+            'smCollapsedText',
+            this.getView().getDom().fullDescription
+        );
+    };
+
+
+    /**
+     * Initializes instance of map
+     * @private
+     */
+    Course.prototype.initMap_ = function() {
+        if (this.getView().getDom().map) {
+            this.map_ = this.decorateChild(
+                'smMap',
+                this.getView().getDom().map
+            );
         }
     };
 

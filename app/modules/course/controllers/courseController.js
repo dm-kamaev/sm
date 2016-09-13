@@ -134,13 +134,49 @@ exports.information = async(function(req, res, next) {
                     name: 'Начало занятий',
                     description: 'В сентябре 2016'
                 }]
-            }
+            },
+            online: 'available'
+        };
+
+        var map = {
+            itemGroups: [{
+                viewType: 'pin',
+                items: [{
+                    addressId: 12,
+                    coordinates: [55.783946, 37.602038],
+                    title: {
+                        text: 'School №234',
+                        alias: '/'
+                    },
+                    description: 'Best school',
+                    items: [{
+                        content: 'School',
+                        url: '/'
+                    }],
+                    score: 5.5
+                },
+                {
+                    addressId: 12,
+                    coordinates: [55.78, 37.63],
+                    title: {
+                        text: 'School №345',
+                        alias: '/'
+                    },
+                    description: 'Best school',
+                    items: [{
+                        content: 'School2',
+                        url: '/'
+                    }],
+                    score: 3
+                }]
+            }]
         };
 
         var data = informationView.render({
             user: user,
             authSocialLinks: authSocialLinks,
             entityData: entityData,
+            map: map,
             actionButtonText: 'Хочу этот курс!'
         });
 

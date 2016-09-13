@@ -9,7 +9,8 @@
  *         description: ?string,
  *         fullDescription: ?string,
  *         cost: ?string,
- *         generalOptions: sm.lCourse.bInformationBoard.Template.Params.Data
+ *         generalOptions: sm.lCourse.bInformationBoard.Template.Params.Data,
+ *         online: ?('only'|'available'|undefidned)
  *     },
  *     actionButtonText: string
  * }} sm.lCourse.Template.Data
@@ -67,7 +68,7 @@
         {call .sectionFixed_ data="all" /}
     </div>
 
-    // {call sm.bMap.Template.api}{/call}
+    {call sm.bSmMap.Template.api/}
 {/template}
 
 
@@ -160,19 +161,87 @@
 /**
  * Template for location
  * @param params {{
- *     data: {?}
+ *     data: {
+ *         entityData: {
+ *             online: ?('only'|'available'|undefidned)
+ *         }
+ *     }
  * }}
  */
 {template .location_}
     <div class="{call .rootClass/}__location">
-        {if $params}
+        {if $params.data.entityData.online == 'only'}
+            {call .online_/}
+        {else}
+            {call .map_ data="all" /}
         {/if}
+    </div>
+{/template}
 
-        // {if $params.data?.map}
-        //     {call .map_ data="all" /}
-        // {else}
-        //     {call .online_ data="all" /}
-        // {/if}
+
+/**
+ * Template for map
+ * @param params {{
+ *     data: {
+ *         map: sm.bSmMap.Template.Params.Data
+ *     }
+ * }}
+ */
+{template .map_}
+    <div class="{call .rootClass/}__map">
+        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+            {param params: [
+                'type': 'smMap',
+                'renderParams': [
+                    'data': $params.data.map,
+                    'config': [
+                        'enableScrollZoom': true,
+                        'alignZoomControl': 'right',
+                        'sizeViewportShow': 'm'
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Template displaying that is only online course
+ */
+{template .online_}
+    <div class="{call .rootClass/}__online">
+        {call .onlineIcon_ /}
+        {call .onlineText_ /}
+    </div>
+{/template}
+
+
+/**
+ * Template online icon
+ */
+{template .onlineIcon_}
+    <div class="{call .rootClass/}__icon {call .rootClass/}__icon_online">
+        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+            {param params: [
+                'type': 'icon',
+                'renderParams': [
+                    'data': [
+                        'type': 'cursor'
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Template online text
+ */
+{template .onlineText_}
+    <div class="{call .rootClass/}__text {call .rootClass/}__text_online">
+        Онлайн-курсы
     </div>
 {/template}
 
