@@ -1,0 +1,53 @@
+.b-sm-stars {
+    text-align: right;
+
+    color: #000;
+    outline: none;
+
+    font-family: "WebSymbols", Arial, sans-serif;
+    line-height: 1em;
+}
+
+.b-sm-stars_active {
+    cursor: pointer;
+}
+
+.b-sm-stars__star {
+    display: inline-block;
+
+    margin-right: 3px;
+
+    color: #e6e6e6;
+
+    font-size: 12px;
+
+    &:last-child {
+        margin-right: 0;
+    }
+}
+
+.b-sm-stars__star_selected {
+    color: #9a9a9a;
+}
+
+.b-sm-stars_size_l {
+    .b-sm-stars__star {
+        margin-right: 4px;
+
+        font-size: 22px;
+
+        &:last-child {
+            margin-right: 0;
+        }
+    }
+}
+
+.b-sm-stars_colored-theme {
+    .b-sm-stars__star {
+        color: #e6e6e6;
+    }
+
+    .b-sm-stars__star_selected {
+        color: #e2332a;
+    }
+}
