@@ -128,6 +128,8 @@ class CourseSearchQuery extends SearchQuery {
             .field('course_option.cost_per_hour', 'optionCost')
             .field('course_option.online', 'optionOnline')
             .field('address.id', 'addressId')
+            .field('address.name', 'addressName')
+            .field('address.coords', 'addressCoords')
             .field('metro.id', 'metroId')
             .field('metro.name', 'metroName')
             .field('area.id', 'areaId')

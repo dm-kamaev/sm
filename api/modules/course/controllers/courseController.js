@@ -5,6 +5,8 @@ const courseView = require('../views/courseView'),
     searchView = require('../views/searchView'),
     services = require('../../../../app/components/services').all;
 
+const mapViewType = require('../../entity/enums/mapViewType');
+
 const logger = require('../../../../app/components/logger/logger')
     .getLogger('app');
 
@@ -40,12 +42,16 @@ controller.search = async(function(req, res) {
 
         result = {
             list: {
-                items: courses,
+                items: courseView.list(courses),
                 countResults: countResults
             }
         };
+
+        if (req.query.requestMapResults) {
+            result.map = searchView.map(courses, mapViewType.PIN);
+        }
     } catch (error) {
-        logger.error(result);
+        logger.error(error.message);
         result = JSON.stringify(error);
     } finally {
         res.header('Content-Type', 'application/json; charset=utf-8');
@@ -59,8 +65,21 @@ controller.search = async(function(req, res) {
  *     Send all results for request with params
  */
 controller.searchMap = async(function(req, res) {
-    res.header('Content-Type', 'text/html; charset=utf-8');
-    res.end();
+    // var result;
+    // try {
+    //     var searchParams = searchView.initSearchParams(req.query),
+    //         mapCourses = await(services.course.listMap(searchParams));
+    //
+    //     result = {
+    //         map: searchView.map(mapCourses, mapViewType.POINT)
+    //     };
+    // } catch (error) {
+    //     logger.error(error.message);
+    //     result = JSON.stringify(error);
+    // } finally {
+        res.header('Content-Type', 'application/json; charset=utf-8');
+        res.end();
+    // }
 });
 
 /**

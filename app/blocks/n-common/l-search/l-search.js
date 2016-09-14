@@ -391,7 +391,10 @@ goog.scope(function() {
      */
     Search.prototype.onMapDataLoaded_ = function(event) {
         var mapData = event.getMapData();
-        this.map_.addItems(mapData);
+        if (this.paramsManager_.getPage() == 0) {
+            this.map_.clear();
+        }
+        this.map_.addItems(mapData['itemGroups']);
     };
 
 
@@ -417,7 +420,7 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.updateResultsList_ = function(listItems) {
-        if (this.paramsManager_.getPage == 0) {
+        if (this.paramsManager_.getPage() == 0) {
             this.resultsList_.clear();
         }
         this.resultsList_.addItemsBottom(listItems);
