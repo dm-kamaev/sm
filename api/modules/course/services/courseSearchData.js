@@ -18,18 +18,11 @@ var service = {
  * @return {string}
  */
 service.getSearchSql = function(searchParams, opt_limit) {
-    return new CourseSearchQuery()
-        .setLimit(opt_limit)
-        .setOffset(searchParams.page * opt_limit || 0)
-        .setSortType(searchParams.setSortType)
-        .setAge(searchParams.age)
-        .setCost(searchParams.cost)
-        .setWeekdays(searchParams.weekdays)
-        .setTime(searchParams.time)
-        .setRegularity(searchParams.regularity)
-        .setFormTraining(searchParams.formTraining)
-        .setDuration(searchParams.duration)
-        .getQuery();
+    searchParams.limit = opt_limit;
+    return this.setSearchQueryParams(
+        new CourseSearchQuery(),
+        searchParams
+    );
 };
 
 /**
@@ -71,12 +64,17 @@ service.update = function(id, data) {
  * @return {string}
  */
 service.getSearchMapSql = function(searchParams, opt_limit) {
-    return new CourseSearchMapQuery()
-        .setLimit(opt_limit)
-        .setOffset(searchParams.page * opt_limit || 0)
-        .getQuery();
+    searchParams.limit = opt_limit;
+    return this.setSearchQueryParams(
+        new CourseSearchMapQuery(),
+        searchParams
+    );
 };
 
+/**
+ * @param  {string} searchString
+ * @return {Object}
+ */
 service.suggestSearch = function(searchString) {
     var resultIds = await(services.textSearchData.entitiesSearch(searchString, [
         entityType.COURSE,
@@ -93,6 +91,31 @@ service.suggestSearch = function(searchString) {
             resultIds[entityType.DISTRICT] || []
         )
     });
+};
+
+/**
+ * [setSearchQueryParams description]
+ * @param {Object} searchInstance
+ * @param {Object} searchParams
+ * @return {Object}
+ */
+service.setSearchQueryParams = function(searchInstance, searchParams) {
+    return searchInstance
+        .setLimit(searchParams.limit)
+        .setOffset(searchParams.page * searchParams.limit || 0)
+        .setSortType(searchParams.sortType)
+        .setAge(searchParams.age)
+        .setType(searchParams.type)
+        .setCost(searchParams.cost)
+        .setWeekdays(searchParams.weekdays)
+        .setTime(searchParams.time)
+        .setRegularity(searchParams.regularity)
+        .setFormTraining(searchParams.formTraining)
+        .setDuration(searchParams.duration)
+        .setArea(searchParams.areaId)
+        .setMetro(searchParams.metroId)
+        .setDistrict(searchParams.districtId)
+        .getQuery();
 };
 
 module.exports = service;

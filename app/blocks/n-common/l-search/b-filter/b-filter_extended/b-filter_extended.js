@@ -79,7 +79,7 @@ goog.scope(function() {
      * @override
      */
     FilterExtended.prototype.setAllData = function() {
-        this.send_('/api/school/activitySphere/popular')
+        this.send_('/api/course/course-type/popular')
             .then(function(data) {
                 this.allOptionsData = data;
             }
@@ -234,7 +234,7 @@ goog.scope(function() {
                 header: 'Курсы, кружки и секции',
                 search: {
                     placeholder: 'Какие занятия вы ищете?',
-                    sourceUrl: '/api/school/activitySphere'
+                    sourceUrl: '/api/course/course-type'
                 },
                 filter: {
                     name: this.getName(),

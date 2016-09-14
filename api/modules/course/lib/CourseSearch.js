@@ -4,7 +4,8 @@ const squel = require('squel');
 
 const SearchQuery = require('../../entity/lib/Search'),
     entityType = require('../../entity/enums/entityType'),
-    searchType = require('../enums/searchType');
+    searchType = require('../enums/searchType'),
+    addressSearchType = require('../../geo/enums/addressSearchType');
 
 const HIDE_INDEX = {
     COST: 4,
@@ -38,6 +39,16 @@ class CourseSearchQuery extends SearchQuery {
      */
     setAge(age) {
         this.addCourseSearchData_(age, searchType.AGE);
+
+        return this;
+    }
+
+    /**
+     * @param {Array<number>} type
+     * @return {Object}
+     */
+    setType(type) {
+        this.addCourseSearchData_(type, searchType.TYPE);
 
         return this;
     }
@@ -107,6 +118,54 @@ class CourseSearchQuery extends SearchQuery {
      */
     setDuration(duration) {
         this.addCourseSearchData_(duration, searchType.DURATION);
+
+        return this;
+    }
+
+    /**
+     * @param {(number|undefined)} areaId
+     * @return {Object}
+     */
+    setArea(areaId) {
+        if (areaId) {
+            this.addAddressSearchData_(
+                [areaId],
+                addressSearchType.AREA,
+                entityType.COURSE
+            );
+        }
+
+        return this;
+    }
+
+    /**
+     * @param {(number|undefined)} metroId
+     * @return {Object}
+     */
+    setMetro(metroId) {
+        if (metroId) {
+            this.addAddressSearchData_(
+                [metroId],
+                addressSearchType.METRO,
+                entityType.COURSE
+            );
+        }
+
+        return this;
+    }
+
+    /**
+     * @param {(number|undefined)} districtId
+     * @return {Object}
+     */
+    setDistrict(districtId) {
+        if (districtId) {
+            this.addAddressSearchData_(
+                [districtId],
+                addressSearchType.DISTRICT,
+                entityType.COURSE
+            );
+        }
 
         return this;
     }
@@ -225,7 +284,7 @@ class CourseSearchQuery extends SearchQuery {
     }
 
     /**
-     * @private
+     * @protected
      */
     setBaseOrder_() {
         this.baseQuery_
@@ -330,12 +389,12 @@ class CourseSearchQuery extends SearchQuery {
      * @private
      */
     updateInnerWhere_() {
-        // if (this.addressDataCount_) {
-        //     this.innerQuery_
-        //         .where(
-        //             'school.id IN (' + this.generateAddressDataQuery_() + ')'
-        //         );
-        // }
+        if (this.addressDataCount_) {
+            this.innerQuery_
+                .where(
+                    'course.id IN (' + this.generateAddressDataQuery_() + ')'
+                );
+        }
 
         if (this.courseDataCount_) {
             this.innerQuery_

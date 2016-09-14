@@ -56,34 +56,11 @@ var searchView = {};
 searchView.filterPanel = function(filtersData, opt_searchParams) {
     var searchParams = opt_searchParams || {};
 
-    var options = [{
-        'label': 'Подготовка к ЕГЭ по русскому языку',
-        'value': '1'
-    }, {
-        'label': 'Подготовка к ЕГЭ по математике',
-        'value': '2'
-    }, {
-        'label': 'Подготовка к ОГЭ по русскому языку',
-        'value': '3'
-    }, {
-        'label': 'Подготовка к ОГЭ по математике',
-        'value': '4'
-    }, {
-        'label': 'Игра на фортепиано',
-        'value': '5'
-    }, {
-        'label': 'Русский язык',
-        'value': '6'
-    }, {
-        'label': 'Математика',
-        'value': '7'
-    }];
-
     var filterPanel = new FilterPanel();
 
     filterPanel
         .setFilterAge(searchParams.age)
-        .setFilterCourse(options, searchParams.course)
+        .setFilterType(filtersData.type, searchParams.course)
         .setFilterCost(searchParams.cost)
         .setFilterWeekDays(searchParams.schedule)
         .setFilterTime(searchParams.time)
@@ -127,7 +104,8 @@ searchView.map = function(courses, viewType) {
  *     countResults: number,
  *     coursesList: Array<Object>,
  *     mapData: Object<Object>,
- *     searchParams: Object
+ *     searchParams: Object,
+ *     filtersData: Array<Object>
  * }} data
  * @return {Object}
  */
@@ -188,7 +166,10 @@ searchView.render = function(data) {
             items: courseView.list(data.coursesList),
             itemType: 'smItemEntity'
         },
-        filterPanel: searchView.filterPanel(null, data.searchParams),
+        filterPanel: searchView.filterPanel(
+            data.filtersData,
+            data.searchParams
+        ),
         searchParams: data.searchParams
     };
 };
@@ -200,12 +181,17 @@ searchView.render = function(data) {
 searchView.initSearchParams = function(params) {
     return {
         age: this.transformToArray(params.age),
+        type: this.transformToArray(params.type),
         cost: this.transformToArray(params.cost),
         weekdays: this.transformToArray(params.weekdays),
         time: this.transformToArray(params.time),
         regularity: this.transformToArray(params.regularity),
         formTraining: this.transformToArray(params.formTraining),
-        duration: this.transformToArray(params.duration)
+        duration: this.transformToArray(params.duration),
+        sortType: params.sortType,
+        metroId: params.metroId || null,
+        areaId: params.areaId || null,
+        districtId: params.districtId || null
     };
 };
 

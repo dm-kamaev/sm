@@ -53,12 +53,12 @@ class CourseFilterPanel extends FilterPanel {
          * @type {Object}
          * @private
          */
-        this.filterCourse_ = {
+        this.filterType_ = {
             data: {
                 header: {
                     title: 'Направления занятий'
                 },
-                name: 'course',
+                name: 'type',
                 options: []
             },
             config: {
@@ -211,9 +211,9 @@ class CourseFilterPanel extends FilterPanel {
      * @param {Array<(number|string)>=} opt_checkedValues
      * @return {Object}
      */
-    setFilterCourse(options, opt_checkedValues) {
-        var params = this.filterCourse_;
-        params.data.options = options;
+    setFilterType(options, opt_checkedValues) {
+        var params = this.filterType_;
+        params.data.options = this.formatType_(options);
 
         this.setFilterModal(params, opt_checkedValues);
 
@@ -325,6 +325,18 @@ class CourseFilterPanel extends FilterPanel {
         options[0].value = (values && values[0]) ? values[0] : '';
 
         return options;
+    }
+
+    /**
+     * @private
+     * @param {Array<Object>} types
+     * @return {Array<Object>}
+     */
+    formatType_(types) {
+        return types.map(type => ({
+            value: type.id,
+            label: type.name
+        }));
     }
 }
 

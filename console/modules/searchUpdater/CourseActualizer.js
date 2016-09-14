@@ -29,6 +29,7 @@ class CourseActualizer {
      */
     actualize() {
         this.actualizeAge_();
+        this.actualizeType_();
         this.actualizeCost_();
         this.actualizeWeekdays_();
         this.actualizeTime_();
@@ -49,7 +50,8 @@ class CourseActualizer {
      * @private
      */
     actualizeType_() {
-        this.actualizeData_([this.course_.type], searchType.TYPE);
+        var type = this.getType_(this.course_);
+        this.actualizeData_(type, searchType.TYPE);
     }
 
     /**
@@ -146,6 +148,15 @@ class CourseActualizer {
             .flatten()
             .uniq()
             .value();
+    }
+
+    /**
+     * @private
+     * @param {Object} course
+     * @return {Array<number>}
+     */
+    getType_(course) {
+        return [course.type];
     }
 
     /**

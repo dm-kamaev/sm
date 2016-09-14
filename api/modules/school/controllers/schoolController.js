@@ -498,7 +498,6 @@ exports.specializedClassType = async(function(req, res) {
                 await(services.specializedClasses.searchTypeByName(name));
 
         result = specializedClassesView.typeFilters(specializedClassTypes);
-        res.status(200);
     } catch (error) {
         res.status(500);
         result = error.message;

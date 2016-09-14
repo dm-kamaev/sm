@@ -22,16 +22,22 @@ exports.search = async(function(req, res, next) {
 
         searchParams.page = 0;
 
-        var courses = await(services.course.list(searchParams, 10));
-        var mapCourses = await(services.course.listMap({page: 0}, 10));
+        var data = await({
+            courses: services.course.list(searchParams, 10),
+            mapCourses: services.course.listMap(searchParams, 10),
+            filtersData: {
+                type: services.courseType.getAll()
+            }
+        });
 
         var data = searchView.render({
             user: user,
             authSocialLinks: authSocialLinks,
-            countResults: courses[0] && courses[0].countResults || 0,
-            coursesList: courses,
-            mapCourses: mapCourses,
-            searchParams: searchParams
+            countResults: data.courses[0] && data.courses[0].countResults || 0,
+            coursesList: data.courses,
+            mapCourses: data.mapCourses,
+            searchParams: searchParams,
+            filtersData: data.filtersData
         });
 
 
