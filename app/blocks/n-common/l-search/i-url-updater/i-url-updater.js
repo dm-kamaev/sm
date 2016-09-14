@@ -16,6 +16,14 @@ goog.require('goog.structs.Map');
 
 
 goog.scope(function() {
+
+
+
+    /**
+     * Url updater
+     * @constructor
+     */
+    sm.lSearch.iUrlUpdater.UrlUpdater = function() {};
     var UrlUpdater = sm.lSearch.iUrlUpdater.UrlUpdater;
 
 
@@ -26,8 +34,8 @@ goog.scope(function() {
      * otherwise it reload page
      * @param  {Object<string, (Array|string|number|boolean)>} params
      */
-    UrlUpdater.update = function(params) {
-        var newUrl = UrlUpdater.generateUrl_(params);
+    UrlUpdater.prototype.update = function(params) {
+        var newUrl = this.generateUrl_(params);
 
         if (goog.history.Html5History.isSupported()) {
            window.history.pushState(null, null, newUrl);
@@ -43,10 +51,10 @@ goog.scope(function() {
      * @return {string} builded url
      * @private
      */
-    UrlUpdater.generateUrl_ = function(params) {
+    UrlUpdater.prototype.generateUrl_ = function(params) {
         var currentPath = window.location.pathname;
-        var transformedParams = UrlUpdater.transformParams_(params);
-        var queryData = UrlUpdater.makeQueryData_(transformedParams);
+        var transformedParams = this.transformParams_(params);
+        var queryData = this.makeQueryData_(transformedParams);
 
         return currentPath + '?' + queryData.toString();
     };
@@ -58,7 +66,7 @@ goog.scope(function() {
      * @return {goog.uri.queryData}
      * @private
      */
-    UrlUpdater.makeQueryData_ = function(queryParams) {
+    UrlUpdater.prototype.makeQueryData_ = function(queryParams) {
         return goog.Uri.QueryData.createFromMap(
             new goog.structs.Map(queryParams)
         );
@@ -70,12 +78,12 @@ goog.scope(function() {
     * @return {Object<string, (string|number|boolean)>}
     * @private
     */
-    UrlUpdater.transformParams_ = function(params) {
+    UrlUpdater.prototype.transformParams_ = function(params) {
         var notEmptyParams = goog.object.filter(
-            params, UrlUpdater.isNotEmptyParam_
+            params, this.isNotEmptyParam_
         );
 
-        return goog.object.map(notEmptyParams, UrlUpdater.transformParam_);
+        return goog.object.map(notEmptyParams, this.transformParam_);
     };
 
 
@@ -87,7 +95,7 @@ goog.scope(function() {
     * @return {boolean}
     * @private
     */
-    UrlUpdater.isNotEmptyParam_ = function(param) {
+    UrlUpdater.prototype.isNotEmptyParam_ = function(param) {
         var result = param;
         if (goog.isDefAndNotNull(param) && Array.isArray(param)) {
             result = param.length;
@@ -103,7 +111,7 @@ goog.scope(function() {
     * @return {(string|number|boolean)} trasformed param
     * @private
     */
-    UrlUpdater.transformParam_ = function(param) {
+    UrlUpdater.prototype.transformParam_ = function(param) {
         var result = param;
         if (Array.isArray(param)) {
             result = goog.isNull(param) ? null : param.toString();

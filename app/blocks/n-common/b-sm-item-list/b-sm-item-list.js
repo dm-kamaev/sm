@@ -51,6 +51,7 @@ goog.scope(function() {
     /**
      * Add item to top of list
      * @param {sm.bSmItemList.ItemList.Item} data
+     * @public
      */
     ItemList.prototype.addItemTop = function(data) {
         this.getView().addItem(data, 0);
@@ -61,6 +62,7 @@ goog.scope(function() {
     /**
      * Add item to bottom of list
      * @param {sm.bSmItemList.ItemList.Item} data
+     * @public
      */
     ItemList.prototype.addItemBottom = function(data) {
         var index = this.items_.length;
@@ -71,12 +73,14 @@ goog.scope(function() {
 
 
     /**
-     * Add item to bottom of list
+     * Add items to bottom of list
      * @param {Array<sm.bSmItemList.ItemList.Item>} data
      * @public
      */
     ItemList.prototype.addItemsBottom = function(data) {
-        goog.array.forEach(data, this.addItemBottom.bind(this));
+        goog.array.forEach(data, this.getView().addItem, this.getView());
+
+        this.initItems_();
     };
 
 

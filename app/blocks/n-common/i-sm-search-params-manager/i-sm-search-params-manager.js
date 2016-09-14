@@ -51,7 +51,6 @@ goog.scope(function() {
      */
     SearchParamsManager.prototype.getParams = function(requestMapResults) {
         var result = goog.object.filter(this.params_, this.hasNotEmptyValue_);
-
         if (requestMapResults) {
             goog.object.extend(result, {
                 'requestMapResults': true
@@ -59,6 +58,19 @@ goog.scope(function() {
         }
 
         return result;
+    };
+
+
+    /**
+     * Return object with params which names are not in excluded params
+     * @param {Array<string>} paramsToExclude
+     * @return {Object<string, (Array<number>|number|string)>}
+     */
+    SearchParamsManager.prototype.getUrlParams = function(paramsToExclude) {
+        return goog.object.filter(
+            this.params_,
+            goog.partial(this.isExcludedParam_, paramsToExclude),
+            this);
     };
 
 
@@ -92,6 +104,18 @@ goog.scope(function() {
      */
     SearchParamsManager.prototype.setSortType = function(sortType) {
         return this.params_['sortType'] = sortType;
+    };
+
+
+    /**
+     * Getter for text of search
+     * @return {?string}
+     * @public
+     */
+    SearchParamsManager.prototype.getName = function() {
+        return goog.isDefAndNotNull(this.params_['name']) ?
+            this.params_['name'] :
+            null;
     };
 
 
@@ -144,6 +168,25 @@ goog.scope(function() {
 
 
     /**
+     * Check is parameter name not in excluded params
+     * @param {Array<string>} excludedParams
+     * @param {(number|string|Array<(number|string)>)} paramValue
+     * @param {string} paramName
+     * @return {boolean}
+     * @private
+     */
+    SearchParamsManager.prototype.isExcludedParam_ = function(
+        excludedParams, paramValue, paramName) {
+        return !~goog.array.findIndex(
+            excludedParams,
+            function(excludedParamName) {
+                return excludedParamName == paramName;
+            }
+        );
+    };
+
+
+    /**
      * Update search parameters object with given data
      * @param {Object<string, (Array<string>|number)>} params
      * @private
@@ -182,7 +225,7 @@ goog.scope(function() {
 
         if (result) {
             if (goog.isString(value)) {
-                result = (value == '');
+                result = (value !== '');
             } else if (goog.isArray(value)) {
                 result = !goog.array.isEmpty(value);
             } else if (goog.isObject(value)) {

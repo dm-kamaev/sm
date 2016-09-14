@@ -2,6 +2,7 @@ goog.provide('sm.lSearch.View');
 
 goog.require('goog.dom.classlist');
 goog.require('sm.iLayout.ViewStendhal');
+goog.require('sm.lSearch.Template');
 
 
 
@@ -41,6 +42,7 @@ goog.scope(function() {
      */
     View.CssClass = {
         ROOT: 'l-search',
+        RESULTS_LIST_HEADER: 'l-search__list-header',
         LOADER: 'l-search__loader',
         SHOW_MORE_BUTTON: 'l-search__show-more-button',
         SHOW_MORE_BUTTON_WRAP: 'l-search__show-more-button-wrap',
@@ -59,6 +61,11 @@ goog.scope(function() {
      *             vk: (string|undefined),
      *             fb: (string|undefined)
      *     },
+     *     declensionEntityType: {
+     *         nom: string,
+     *         gen: string,
+     *         plu: string
+     *     },
      *     type: string
      * }}
      */
@@ -66,8 +73,8 @@ goog.scope(function() {
 
 
     /**
-     *
      * @param {Element} element
+     * @override
      */
     View.prototype.decorateInternal = function(element) {
         View.base(this, 'decorateInternal', element);
@@ -112,6 +119,34 @@ goog.scope(function() {
 
 
     /**
+     * Update headers size s and l for results list
+     * @param {number} countResults
+     * @param {string} searchText
+     */
+    View.prototype.updateListHeader = function(countResults,
+        searchText) {
+
+        var headers = this.dom.headersResults;
+
+        for (var i = 0; i < headers.length; i++) {
+            goog.soy.renderElement(
+                headers[i],
+                sm.lSearch.Template.listHeaderText, {
+                    params: {
+                        data: {
+                            countResults: countResults,
+                            searchText: searchText,
+                            declensionEntityType:
+                                this.params.declensionEntityType
+                        }
+                    }
+                }
+            );
+        }
+    };
+
+
+    /**
      * Init dom elements
      * @param {Element} element
      * @private
@@ -120,6 +155,10 @@ goog.scope(function() {
         this.dom = {
             sort: this.getElementByClass(
                 sm.gDropdown.ViewSelect.CssClass.ROOT,
+                element
+            ),
+            headersResults: this.getElementsByClass(
+                View.CssClass.RESULTS_LIST_HEADER,
                 element
             ),
             search: this.getElementByClass(
@@ -192,6 +231,11 @@ goog.scope(function() {
             authSocialLinks: {
                 vk: rawParams['authSocialLinks']['vk'],
                 fb: rawParams['authSocialLinks']['fb']
+            },
+            declensionEntityType: {
+                nom: rawParams['declensionEntityType']['nom'],
+                gen: rawParams['declensionEntityType']['gen'],
+                plu: rawParams['declensionEntityType']['plu']
             },
             type: rawParams['type']
         };
