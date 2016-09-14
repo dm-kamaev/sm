@@ -407,7 +407,7 @@ goog.scope(function() {
         var listItems = event.getListItems();
         var countResults = event.getCountResults();
 
-        this.updateResultsList_(listItems);
+        this.updateResultsList_(listItems, countResults);
         this.detectShowMoreResultsList_(listItems.length, countResults);
 
         this.getView().setLoaderVisibility(false);
@@ -415,13 +415,19 @@ goog.scope(function() {
 
 
     /**
-     * Update results list with given items
-     * @param  {Array<sm.bSmItem.SmItem.RenderParams>} listItems
+     * Update results list and results header with given items and amount items
+     * @param {Array<sm.bSmItem.SmItem.RenderParams>} listItems
+     * @param {number} countResults
      * @private
      */
-    Search.prototype.updateResultsList_ = function(listItems) {
+    Search.prototype.updateResultsList_ = function(listItems, countResults) {
         if (this.paramsManager_.getPage() == 0) {
             this.resultsList_.clear();
+
+            this.getView().updateListHeader(
+                countResults,
+                this.paramsManager_.getName()
+            );
         }
         this.resultsList_.addItemsBottom(listItems);
     };

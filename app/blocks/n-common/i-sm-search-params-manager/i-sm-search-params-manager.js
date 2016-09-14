@@ -96,6 +96,18 @@ goog.scope(function() {
 
 
     /**
+     * Getter for text of search
+     * @return {?string}
+     * @public
+     */
+    SearchParamsManager.prototype.getName = function() {
+        return goog.isDefAndNotNull(this.params_['name']) ?
+            this.params_['name'] :
+            null;
+    };
+
+
+    /**
      * Getter for sort type
      * @return {?number}
      * @public
