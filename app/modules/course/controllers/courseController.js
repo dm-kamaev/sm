@@ -22,23 +22,32 @@ exports.search = async(function(req, res, next) {
     try {
         var authSocialLinks = services.auth.getAuthSocialUrl(),
             user = req.user || {},
-            searchParams =
-                await(services.schoolSearch.initSearchParams(req.query));
+            searchParams = searchView.initSearchParams(req.query);
 
-        var courses = await(services.course.list({page: 0}, 10)),
-            coursesList = courseView.list(courses, ENTITY_TYPE);
+        searchParams.page = 0;
+
+        var data = await({
+            courses: services.course.list(searchParams, 10),
+            mapCourses: services.course.listMap(searchParams, 10),
+            filtersData: {
+                type: services.courseType.getAll()
+            }
+        });
 
         var data = searchView.render({
             entityType: ENTITY_TYPE,
             user: user,
             authSocialLinks: authSocialLinks,
-            countResults: courses[0] && courses[0].countResults || 0,
-            coursesList: coursesList,
-            searchParams: searchParams
+            countResults: data.courses[0] && data.courses[0].countResults || 0,
+            coursesList: data.courses,
+            mapCourses: data.mapCourses,
+            searchParams: searchParams,
+            filtersData: data.filtersData
         });
 
+
         var html = soy.render(
-            'sm.lSmSearch.Template.search', {
+            'sm.lSearch.Template.search', {
                 params: {
                     data: data,
                     config: {
@@ -49,7 +58,8 @@ exports.search = async(function(req, res, next) {
                         yandexMetrikaId: YANDEX_METRIKA_ID,
                         csrf: req.csrfToken(),
                         domain: DOMAIN,
-                        fbClientId: FB_CLIENT_ID
+                        fbClientId: FB_CLIENT_ID,
+                        type: 'course'
                     }
                 }
             }

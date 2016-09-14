@@ -1,0 +1,30 @@
+@import "../i-media/i-media";
+
+.b-sm-radio-button {
+    position: relative;
+
+    display: inline-block;
+
+    padding: 8px 0;
+    margin-right: 5px;
+}
+
+.b-sm-radio-button__label {
+    display: inline-block;
+
+    margin: 0 9px;
+    padding-left: 13px;
+
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+.b-sm-radio-button__input {
+    position: absolute;
+    top: 12px;
+    left: 0;
+
+    margin: 0;
+
+    cursor: pointer;
+}

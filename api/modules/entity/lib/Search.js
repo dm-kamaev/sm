@@ -100,8 +100,9 @@ class SearchQuery {
      * @protected
      * @param {Array<number>} values
      * @param {string} type
+     * @param {string} entityType
      */
-    addAddressSearchData_(values, type) {
+    addAddressSearchData_(values, type, entityType) {
         if (values && values.length) {
             this.addressSearchParams_.or(
                 squel.expr()
@@ -112,6 +113,10 @@ class SearchQuery {
                     .and(
                         'address_search_data.values @> ' +
                         this.intArrayToSql_(values)
+                    )
+                    .and(
+                        'address_search_data.entity_type = ?',
+                        entityType
                     )
                     .toString()
             );
@@ -184,6 +189,7 @@ class SearchQuery {
     /**
      * Set base params
      * @virtual
+     * @protected
      */
     setBaseQuery_() {}
 

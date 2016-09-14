@@ -53,6 +53,12 @@ goog.scope(function() {
 
 
     /**
+     * @typedef {sm.bSmItem.ViewEntity.RenderParams}
+     */
+    Item.RenderParams;
+
+
+    /**
      * Event enum
      * @enum {string}
      */

@@ -8,10 +8,31 @@ var Course = db.define('Course', {
         type: Sequelize.INTEGER,
         field: 'brand_id'
     },
+    type: {
+        type: Sequelize.STRING,
+        references: {
+            model: 'course_type',
+            key: 'id'
+        },
+        onUpdate: 'cascade'
+    },
     description: Sequelize.STRING,
-    fullInfo: {
+    fullDescription: {
         type: Sequelize.TEXT,
-        field: 'full_info'
+        field: 'full_description'
+    },
+    about: Sequelize.STRING,
+    entranceExam: {
+        type: Sequelize.TEXT,
+        field: 'entrance_exam'
+    },
+    learningOutcome: {
+        type: Sequelize.TEXT,
+        field: 'learning_outcome'
+    },
+    leadType: {
+        type: Sequelize.STRING,
+        field: 'lead_type'
     },
     score: Sequelize.ARRAY(Sequelize.FLOAT),
     scoreCount: {

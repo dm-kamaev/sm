@@ -11,6 +11,7 @@ const SchoolActivitySphereActualizer =
     require('./SchoolActivitySphereActualizer');
 const AddressActualizer = require('./AddressActualizer');
 const TextActualizer = require('./TextActualizer');
+const CourseActualizer = require('./CourseActualizer');
 const models = require('../../../app/components/models').all;
 const entityType = require('../../../api/modules/entity/enums/entityType');
 
@@ -19,7 +20,8 @@ const services = require('../../../app/components/services').all;
 const SCHOOL_FIELDS = ['name', 'fullName', 'abbreviation'],
     METRO_FIELDS = ['name'],
     AREA_FIELDS = ['name'],
-    DISTRICT_FIELDS = ['name'];
+    DISTRICT_FIELDS = ['name'],
+    COURSE_FIELDS = ['name'];
 
 class SearchUpdater {
     /**
@@ -84,12 +86,13 @@ class SearchUpdater {
                 addresses: services.address.getAllWithSearchData(),
                 areas: services.area.getAll(),
                 districts: services.district.getAll(),
-                metros: services.metro.getAll()
+                metros: services.metro.getAll(),
+                courses: services.course.getAll()
             },
             data = await(dataPromises);
-
         await(
             this.updateSchools_(data.schools),
+            this.updateCourses_(data.courses),
             this.updateAddresses_(data.addresses),
             this.updateTextData_(data)
         );
@@ -113,7 +116,10 @@ class SearchUpdater {
         await(schools.forEach(school => {
             /* update type filters */
             var filterInstance = this.getTypeFilter_(school.schoolType);
-            await(services.schoolSearch.setSchoolType(school.id, filterInstance.id));
+            await(services.schoolSearch.setSchoolType(
+                school.id,
+                filterInstance.id
+            ));
 
             /* update ege filters */
             var egeActualizer =
@@ -143,6 +149,23 @@ class SearchUpdater {
 
             bar.tick();
         }));
+    }
+
+    /**
+     * @private
+     * @param {Array<Object>} courses
+     */
+    updateCourses_(courses) {
+        var bar = this.getProgressBar_('courses', courses.length),
+            courseSearchData = await(services.courseSearchData.getAll());
+        courses.forEach(course => {
+            var courseActualizer = new CourseActualizer(
+                course,
+                courseSearchData
+            );
+            await(courseActualizer.actualize());
+            bar.tick();
+        });
     }
 
     /**
@@ -184,6 +207,11 @@ class SearchUpdater {
                     data.districts,
                     entityType.DISTRICT,
                     DISTRICT_FIELDS
+                ),
+                new TextActualizer(
+                    data.courses,
+                    entityType.COURSE,
+                    COURSE_FIELDS
                 )
             ];
 

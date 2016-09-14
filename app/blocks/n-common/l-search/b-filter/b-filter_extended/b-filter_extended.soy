@@ -1,0 +1,81 @@
+{namespace sm.lSearch.bFilter.TemplateExtended}
+
+
+/**
+ * @typedef {{
+ *     data: sm.lSearch.bFilter.Template.Params.Data,
+ *     config: sm.lSearch.bFilter.Template.Params.Config
+ * }} sm.lSearch.bFilter.TemplateExtended.Params
+ */
+
+
+/**
+ * Constructor
+ * @param params {sm.lSearch.bFilter.TemplateExtended.Params}
+ * @extends sm.lSearch.bFilter.Template
+ * @constructor
+ */
+{template .filter}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * Tempate button
+ * @param params {{
+ *     data: {
+ *         options: Array<{
+ *             label: string,
+ *             value: string,
+ *             isChecked: (boolean|undefined)
+ *         }>
+ *     },
+ *     config: {
+ *         showMoreButtonText: (number|undefined)
+ *     }
+ * }}
+  * @override
+ */
+{template .button}
+    {let $showMoreButtonText kind="html"}
+        {if $params.config?.showMoreButtonText}
+            {$params.config?.showMoreButtonText}
+        {else}
+            Полный список
+        {/if}
+    {/let}
+
+    {call .showMoreButton}
+        {param text: $showMoreButtonText/}
+    {/call}
+{/template}
+
+
+/**
+ * Show more template
+ * @param text {string}
+ * @override
+ */
+{template .showMoreButton}
+    <div class="{call .rootClass/}__button{sp}
+                {call .rootClass/}__button_show-modal">
+        {call sm.bLink.Template.base}
+            {param params: [
+                'data': [
+                    'name': $text
+                ],
+                'config': [
+                    'size': 'large'
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * @override
+ */
+{template .additionalClasses}
+    {call .rootClass/}_extended
+{/template}

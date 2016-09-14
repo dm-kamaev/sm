@@ -4,5 +4,6 @@ module.exports = new Enum('entityType', {
     METRO: 'metro',
     AREA: 'area',
     DISTRICT: 'district',
-    COURSE_DEPARTMENT: 'course_department'
+    COURSE_DEPARTMENT: 'course_department',
+    COURSE: 'course'
 });

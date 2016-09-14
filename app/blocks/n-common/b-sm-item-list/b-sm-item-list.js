@@ -1,6 +1,7 @@
 goog.provide('sm.bSmItemList.SmItemList');
 
 goog.require('cl.iControl.Control');
+goog.require('goog.array');
 goog.require('goog.dom.classlist');
 goog.require('sm.bSmItemList.View');
 
@@ -32,6 +33,12 @@ goog.scope(function() {
 
 
     /**
+     * @typedef {(sm.bSmItem.SmItem.RenderParams|sm.bSmItem.SmItemEntity.RenderParams)}
+     */
+    ItemList.Item;
+
+
+    /**
      * @override
      */
     ItemList.prototype.decorateInternal = function(element) {
@@ -43,7 +50,8 @@ goog.scope(function() {
 
     /**
      * Add item to top of list
-     * @param {Object} data
+     * @param {sm.bSmItemList.ItemList.Item} data
+     * @public
      */
     ItemList.prototype.addItemTop = function(data) {
         this.getView().addItem(data, 0);
@@ -53,12 +61,25 @@ goog.scope(function() {
 
     /**
      * Add item to bottom of list
-     * @param {Object} data
+     * @param {sm.bSmItemList.ItemList.Item} data
+     * @public
      */
     ItemList.prototype.addItemBottom = function(data) {
         var index = this.items_.length;
 
         this.getView().addItem(data, index);
+        this.initItems_();
+    };
+
+
+    /**
+     * Add items to bottom of list
+     * @param {Array<sm.bSmItemList.ItemList.Item>} data
+     * @public
+     */
+    ItemList.prototype.addItemsBottom = function(data) {
+        goog.array.forEach(data, this.getView().addItem, this.getView());
+
         this.initItems_();
     };
 
@@ -76,6 +97,16 @@ goog.scope(function() {
         this.getView().removeItem(domElement);
 
         this.initItems_();
+    };
+
+
+    /**
+     * Remove all items from list
+     */
+    ItemList.prototype.clear = function() {
+        this.removeChildren();
+        this.items_ = [];
+        this.getView().removeAllItems();
     };
 
 

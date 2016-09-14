@@ -256,11 +256,11 @@ exports.getWithDepartmentsWithMetro = async(function(
  */
 exports.getAllWithSearchData = async(function() {
     return models.Address.findAll({
-        attributes: ['id', 'entityId', 'areaId'],
+        attributes: ['id', 'entityId', 'entityType', 'areaId'],
         include: [{
             model: models.AddressSearchData,
             as: 'searchData',
-            attributes: ['id', 'type']
+            attributes: ['id', 'type', 'entityId']
         }, {
             model: models.Department,
             as: 'departments',

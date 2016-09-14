@@ -19,8 +19,13 @@ goog.inherits(sm.bSmItem.SmItem, cl.iControl.Control);
 
 
 goog.scope(function() {
-    var Item = sm.bSmItem.SmItem,
-        View = sm.bSmItem.View;
+    var Item = sm.bSmItem.SmItem;
+
+
+    /**
+     * @typedef {sm.bSmItem.View.RenderParams}
+     */
+    Item.RenderParams;
 
 
     /**

@@ -3,6 +3,7 @@ goog.provide('sm.bSmItemList.View');
 goog.require('cl.iControl.View');
 
 goog.require('cl.iUtils.Utils');
+goog.require('goog.array');
 goog.require('goog.dom.classes');
 
 
@@ -43,7 +44,8 @@ goog.scope(function() {
     View.CssClass = {
         ROOT: 'b-sm-item-list',
         LIST: 'b-sm-item-list__list',
-        ITEM_CONTAINER: 'b-sm-item-list__item'
+        ITEM: 'b-sm-item-list__item',
+        ITEM_CONTAINER: 'b-sm-item-list__item-wrap'
     };
 
 
@@ -101,6 +103,16 @@ goog.scope(function() {
 
 
     /**
+     * Remove all items dom elements
+     */
+    View.prototype.removeAllItems = function() {
+        goog.array.forEach(this.dom.itemContainers, function(itemContainer) {
+            goog.dom.removeNode(itemContainer);
+        });
+    };
+
+
+    /**
      * Set page (show amount items = countItemsPerPage)
      * @param {number} pageNumber
      */
@@ -123,7 +135,7 @@ goog.scope(function() {
         var element = opt_element || this.getElement();
 
         this.dom.items = this.getElementsByClass(
-            sm.bSmItem.View.CssClass.ROOT,
+            sm.bSmItemList.View.CssClass.ITEM,
             element
         );
 

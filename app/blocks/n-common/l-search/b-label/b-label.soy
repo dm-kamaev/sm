@@ -1,0 +1,113 @@
+{namespace sm.lSearch.bLabel.Template}
+
+
+/**
+ * @typedef {{
+ *     id: (string|undefined),
+ *     name: (string|undefined),
+ *     label: string,
+ *     value: string,
+ *     isChecked: (boolean|undefined)
+ * }} sm.lSearch.bLabel.Template.Params.Data
+ */
+
+
+/**
+ * @typedef {{
+ *     theme: (string|undefined),
+ *     stylizationModifier: string
+ * }} sm.lSearch.bLabel.Template.Params.Config
+ */
+
+
+/**
+ * Constructor
+ * @param params {{
+ *     data: sm.lSearch.bLabel.Template.Params.Data,
+ *     config: sm.lSearch.bLabel.Template.Params.Config
+ * }}
+ * @extends cl.iControl.Template
+ * @constructor
+ */
+{template .label}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * Body
+ * @param params {{
+ *     data: sm.lSearch.bLabel.Template.Params.Data,
+ *     config: sm.lSearch.bLabel.Template.Params.Config
+ * }}
+ * @override
+ */
+{template .body}
+    {call .checkbox_ data="all"/}
+    {call .cross_/}
+{/template}
+
+
+/**
+ * Checkbox template
+ * @param params {{
+ *     data: {
+ *         id: string,
+ *         name: string,
+ *         label: string,
+ *         value: string,
+ *         isChecked: (boolean|undefined)
+ *     }
+ * }}
+ * @private
+ */
+{template .checkbox_}
+    <div class="{call .rootClass/}__checkbox">
+        {call .renderChild}
+            {param params: [
+                'type': 'smCheckbox',
+                'renderParams': [
+                    'data': $params.data,
+                    'config': [
+                        'theme': 'minimal'
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Cross template
+ */
+{template .cross_}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__icon-cross
+    {/let}
+
+    <div class="{call .rootClass/}__cross">
+        {call .renderChild}
+            {param params: [
+                'type': 'icon',
+                'renderParams': [
+                    'data': [
+                        'type': 'cross'
+                    ],
+                    'config': [
+                        'customClasses': [$customClasses]
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-label
+{/template}

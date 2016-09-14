@@ -1,0 +1,240 @@
+{namespace sm.lSearch.bFilter.TemplateInput}
+
+
+/**
+ * @typedef {{
+ *     name: string,
+ *     header: ({
+ *         title: (string|undefined),
+ *         tooltip: (string|undefined)
+ *     }|undefined),
+ *     options: Array<{
+ *         title: (string|undefined),
+ *         placeholder: ?string,
+ *         value: ?string,
+ *         maxLength: number
+ *     }>
+ * }} sm.lSearch.bFilter.TemplateInput.Params.Data
+ */
+
+
+/**
+ * @typedef {{
+ *     data: sm.lSearch.bFilter.TemplateInput.Params.Data,
+ *     config: sm.lSearch.bFilter.Template.Params.Config
+ * }} sm.lSearch.bFilter.TemplateInput.Params
+ */
+
+
+/**
+ * Constructor
+ * @param params {sm.lSearch.bFilter.TemplateInput.Params}
+ * @extends sm.lSearch.bFilter.Template
+ * @constructor
+ */
+{template .filter}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * List options template
+ * @param params {{
+ *     data: {
+ *         name: string,
+ *         options: Array<{
+ *             title: (string|undefined),
+ *             placeholder: ?string,
+ *             value: ?string,
+ *             maxLength: number
+ *         }>
+ *     },
+ *     config: {
+ *         optionsToShow: (number|undefined),
+ *         type: (string|undefined),
+ *         stylizationModifier: string
+ *     }
+ * }}
+ * @public
+ */
+{template .listOptions}
+    {let $numberOptionsToShow kind="html"}
+        {call .numberOptionsToShow data="all" /}
+    {/let}
+
+    <div class="{call .rootClass/}__list-options">
+        {for $i in range($params.data.options.length)}
+            {call .option}
+                {param params: [
+                    'data': [
+                        'name': $params.data.name,
+                        'title': $params.data.options[$i].title,
+                        'placeholder': $params.data.options[$i].placeholder,
+                        'value': $params.data.options[$i].value,
+                        'maxLength': $params.data.options[$i].maxLength
+                    ],
+                    'config': [
+                        'hidden': $i + 1 > $numberOptionsToShow ? true : false,
+                        'hidable': $i + 1> $numberOptionsToShow ? true : false,
+                        'stylizationModifier': $params.config.stylizationModifier
+                    ]
+                ]/}
+            {/call}
+        {/for}
+    </div>
+{/template}
+
+
+/**
+ * Option template
+ * @param params {{
+ *     data: {
+ *         name: string,
+ *         title: (string|undefined),
+ *         placeholder: ?string,
+ *         value: ?string,
+ *         maxLength: number
+ *     },
+ *     config: {
+ *         hidden: (boolean|undefined),
+ *         hidable: (boolean|undefined),
+ *         stylizationModifier: string
+ *     }
+ * }}
+ * @public
+ */
+{template .option}
+    {let $classes kind="html"}
+        {call .rootClass/}__option
+
+        {if $params.config?.hidden}
+            {sp}i-utils__hidden
+        {/if}
+
+        {if $params.config?.hidable}
+            {sp}{call .rootClass/}__option_hidable
+        {/if}
+    {/let}
+
+    <div class="{$classes}">
+        {call .input_ data="all" /}
+        {call .inputTitle_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Template button
+ * @param params {{
+ *     data: {
+ *         options: Array<{
+ *             value: ?string
+ *         }>
+ *     }
+ * }}
+ * @override
+ */
+{template .button}
+    {let $isEmptyInputs kind="html"}
+        {for $i in range($params.data.options.length)}
+            {if not $params.data.options[$i]?.value}
+                true
+            {/if}
+        {/for}
+    {/let}
+
+    {call .resetButton_}
+        {param isEmptyInputs: $isEmptyInputs/}
+    {/call}
+{/template}
+
+
+/**
+ * Reset button
+ * @param isEmptyInputs {boolean}
+ * @private
+ */
+{template .resetButton_}
+    {let $classes kind="html"}
+        {call .rootClass/}__button{sp}
+        {call .rootClass/}__button_reset{sp}
+
+        {if $isEmptyInputs}
+            i-utils__hidden
+        {/if}
+    {/let}
+
+    <div class="{$classes}">
+        {call sm.bLink.Template.base}
+            {param params: [
+                'data': [
+                    'name': 'Сбросить'
+                ],
+                'config': [
+                    'theme': 'attention',
+                    'size': 'large'
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Input template
+ * @param params {{
+ *     data: {
+ *         name: string,
+ *         placeholder: ?string,
+ *         value: ?string,
+ *         maxLength: number
+ *     },
+ *     config: {
+ *         stylizationModifier: string
+ *     }
+ * }}
+ * @private
+ */
+{template .input_}
+    <div class="{call .rootClass/}__input">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': $params.config.stylizationModifier,
+                'type': 'input',
+                'renderParams': [
+                    'data': $params.data,
+                    'config': [
+                        'theme': 'light'
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Input title template
+ * @param params {{
+ *     data: {
+ *         title: (string|undefined),
+ *     }
+ * }}
+ * @private
+ */
+{template .inputTitle_}
+    {if $params.data?.title}
+        <div class="{call .rootClass/}__input-title">
+            {$params.data.title}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Css classes
+ * @override
+ */
+{template .additionalClasses}
+    {call .rootClass/}_input
+{/template}

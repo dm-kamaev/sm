@@ -1,0 +1,535 @@
+{namespace sm.lSearch.bFilter.Template}
+
+
+/**
+ * @typedef {{
+ *     name: string,
+ *     header: ({
+ *         title: (string|undefined),
+ *         tooltip: (string|undefined)
+ *     }|undefined),
+ *     options: Array<{
+ *         label: string,
+ *         value: string,
+ *         isChecked: (boolean|undefined)
+ *     }>
+ * }} sm.lSearch.bFilter.Template.Params.Data
+ */
+
+
+/**
+ * @typedef {{
+ *     type: (string|undefined),
+ *     optionsToShow: (boolean|undefined),
+ *     cannotBeHidden: (boolean|undefined),
+ *     isShowed: (boolean|undefined),
+ *     showMoreButtonText: (number|undefined),
+ *     theme: (string|undefined),
+ *     align: (string|undefined),
+ *     stylizationModifier: string
+ * }} sm.lSearch.bFilter.Template.Params.Config
+ */
+
+
+/**
+ * @typedef {{
+ *     data: sm.lSearch.bFilter.Template.Params.Data,
+ *     config: sm.lSearch.bFilter.Template.Params.Config
+ * }} sm.lSearch.bFilter.Template.Params
+ */
+
+
+/**
+ * Constructor
+ * @param params {sm.lSearch.bFilter.Template.Params}
+ * @extends cl.iControl.Template
+ * @constructor
+ */
+{template .filter}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * Body
+ * @param params {sm.lSearch.bFilter.Template.Params}
+ * @override
+ */
+{template .body}
+    {call .header data="all"/}
+    {call .content data="all"/}
+{/template}
+
+
+/**
+ * Header template
+ * @param params {{
+ *     data: {
+ *         header: ({
+ *             title: (string|undefined),
+ *             tooltip: (string|undefined)
+ *         }|undefined)
+ *     },
+ *     config: {
+ *         cannotBeHidden: (boolean|undefined)
+ *     }
+ * }}
+ * @protected
+ */
+{template .header}
+    {if $params.data?.header?.title}
+        {let $classes kind="html"}
+            {call .rootClass/}__header
+
+            {if not $params?.config?.cannotBeHidden}
+                {sp}{call .rootClass/}__header_button
+            {/if}
+        {/let}
+
+        <div class="{$classes}">
+            {call .title data="all" /}
+            {call .tooltip data="all" /}
+            {call .showOptions data="all" /}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Filter content template
+ * @param params {{
+ *     data: {
+ *         name: string,
+ *         options: Array<{
+ *             label: string,
+ *             value: string,
+ *             isChecked: (boolean|undefined)
+ *         }>
+ *     },
+ *     config: {
+ *         type: (string|undefined),
+ *         optionsToShow: (number|undefined),
+ *         cannotBeHidden: (boolean|undefined),
+ *         isShowed: (bolean|undefined),
+ *         showMoreButtonText: (number|undefined),
+ *         align: (string|undefined),
+ *         stylizationModifier: string
+ *     }
+ * }}
+ * @protected
+ */
+{template .content}
+    {let $classes kind="html"}
+        {call .rootClass/}__content
+
+        {if not $params?.config?.cannotBeHidden}
+            {if not $params?.config?.isShowed}
+                {sp}i-utils__hidden
+            {/if}
+        {/if}
+    {/let}
+
+    <div class="{$classes}">
+        {call .listOptions data="all" /}
+        {call .button data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * List options template
+ * @param params {{
+ *     data: {
+ *         name: string,
+ *         options: Array<{
+ *             label: string,
+ *             value: string,
+ *             isChecked: (boolean|undefined)
+ *         }>
+ *     },
+ *     config: {
+ *         optionsToShow: (number|undefined),
+ *         type: (string|undefined),
+ *         align: (string|undefined),
+ *         stylizationModifier: string
+ *     }
+ * }}
+ * @public
+ */
+{template .listOptions}
+    {let $numberOptionsToShow kind="html"}
+        {call .numberOptionsToShow data="all" /}
+    {/let}
+
+    <div class="{call .rootClass/}__list-options">
+        {for $i in range($params.data.options.length)}
+            {let $id: $i + '-' + ($params.config?.type ?: '') + '-' +
+                $params.data.name
+            /}
+
+            {call .option}
+                {param params: [
+                    'data': [
+                        'id': $id,
+                        'name': $params.data.name,
+                        'label': $params.data.options[$i].label,
+                        'value': $params.data.options[$i].value,
+                        'isChecked': $params.data.options[$i]?.isChecked ?: ''
+                    ],
+                    'config': [
+                        'hidden': $i + 1 > $numberOptionsToShow ? true : false,
+                        'hidable': $i + 1> $numberOptionsToShow ? true : false,
+                        'theme': $params.config.align == 'horizontal' ? 'narrow' : '',
+                        'stylizationModifier': $params.config.stylizationModifier
+                    ]
+                ]/}
+            {/call}
+        {/for}
+    </div>
+{/template}
+
+
+/**
+ * Option template
+ * @param params {{
+ *     data: {
+ *         id: string,
+ *         name: string,
+ *         label: string,
+ *         value: string,
+ *         isChecked: (boolean|undefined)
+ *     },
+ *     config: {
+ *         hidden: (boolean|undefined),
+ *         hidable: (boolean|undefined),
+ *         theme: (string|undefined),
+ *         stylizationModifier: string
+ *     }
+ * }}
+ * @public
+ */
+{template .option}
+    {let $classes kind="html"}
+        {call .rootClass/}__option
+
+        {if $params.config?.hidden}
+            {sp}i-utils__hidden
+        {/if}
+
+        {if $params.config?.hidable}
+            {sp}{call .rootClass/}__option_hidable
+        {/if}
+    {/let}
+
+    <div class="{$classes}">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': $params.config.stylizationModifier,
+                'type': 'smCheckbox',
+                'renderParams': [
+                    'data': $params.data,
+                    'config': [
+                        'theme': $params.config?.theme
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Title template
+ * @param params {{
+ *     data: {
+ *         header: {
+ *             title: string
+ *         }
+ *     }
+ * }}
+ * @protected
+ */
+{template .title}
+    <div class="{call .rootClass/}__title">
+        {$params.data.header.title}
+    </div>
+{/template}
+
+
+/**
+ * Template tooltip
+ * @param params {{
+ *     data: {
+ *         header: {
+ *             tooltip: (string|undefined)
+ *         }
+ *     }
+ * }}
+ * @protected
+ */
+{template .tooltip}
+    {if $params.data?.header?.tooltip}
+        <div class="{call .rootClass/}__tooltip i-hint">
+            {call .tooltipIcon /}
+            {call .tooltipHint data="all" /}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Show filter options button
+ * @param params {{
+ *     config: {
+ *         cannotBeHidden: (boolean|undefined),
+ *         isShowed: (boolean|undefined)
+ *     }
+ * }}
+ * @protected
+ */
+{template .showOptions}
+    {if not $params?.config?.cannotBeHidden}
+        <div class="{call .rootClass/}__header-icon{sp}
+                    {call .rootClass/}__header-icon_up{sp}
+                    {$params?.config?.isShowed ? '' : 'i-utils__hidden'}">
+
+            {call .icon}
+                {param type: 'filter-arrow-up'/}
+            {/call}
+        </div>
+
+        <div class="{call .rootClass/}__header-icon{sp}
+                    {call .rootClass/}__header-icon_down{sp}
+                    {$params?.config?.isShowed ? 'i-utils__hidden' : ''}">
+
+            {call .icon}
+                {param type: 'filter-arrow-down'/}
+            {/call}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Tempate button
+ * @param params {{
+ *     data: {
+ *         options: Array<{
+ *             label: string,
+ *             value: string,
+ *             isChecked: (boolean|undefined)
+ *         }>
+ *     },
+ *     config: {
+ *         cannotBeHidden: (boolean|undefined),
+ *         optionsToShow: (number|undefined),
+ *         showMoreButtonText: (number|undefined)
+ *     }
+ * }}
+ * @protected
+ */
+{template .button}
+    {let $numberOptionsToShow kind="html"}
+        {call .numberOptionsToShow data="all" /}
+    {/let}
+
+    {let $showMoreButtonText kind="html"}
+        {if $params.config?.showMoreButtonText}
+            {$params.config?.showMoreButtonText}
+        {else}
+            Еще {$params.data.options.length - $numberOptionsToShow}
+        {/if}
+    {/let}
+
+    {if $params.data.options.length > $numberOptionsToShow}
+        {call .showMoreButton}
+            {param text: $showMoreButtonText/}
+        {/call}
+    {/if}
+{/template}
+
+
+/**
+ * Show more template
+ * @param text {string}
+ * @protected
+ */
+{template .showMoreButton}
+    <div class="{call .rootClass/}__button{sp}
+                {call .rootClass/}__button_show-more">
+        {call sm.bLink.Template.base}
+            {param params: [
+                'data': [
+                    'name': $text
+                ],
+                'config': [
+                    'size': 'large'
+                ]
+            ]/}
+        {/call}
+    </div>
+
+    <div class="{call .rootClass/}__button{sp}
+                {call .rootClass/}__button_show-less{sp}
+                i-utils__hidden">
+        {call sm.bLink.Template.base}
+            {param params: [
+                'data': [
+                    'name': 'Свернуть список'
+                ],
+                'config': [
+                    'size': 'large'
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Template tooltip hint
+ * @param params {{
+ *     data: {
+ *         header: {
+ *             tooltip: string
+ *         }
+ *     }
+ * }}
+ * @protected
+ */
+{template .tooltipHint}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__hint
+    {/let}
+
+    {let $tooltipData kind="html"}
+        <div class="{call .rootClass/}__hint-content">
+            {$params.data?.header?.tooltip}
+        </div>
+    {/let}
+
+    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+        {param params: [
+            'factory': 'stendhal',
+            'type': 'hint',
+            'renderParams': [
+                'data': $tooltipData,
+                'config': [
+                    'align': 'arrow',
+                    'customClasses': [$customClasses]
+                ]
+            ]
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * Template tooltip icon
+ * @protected
+ */
+{template .tooltipIcon}
+    <div class="{call .rootClass/}__tooltip-icon">
+        {call .icon}
+            {param type: 'school-button'/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Show filters button
+ * @param type {string}
+ * @protected
+ */
+{template .icon}
+    {call .renderChild}
+        {param params: [
+            'type': 'icon',
+            'renderParams': [
+                'data': [
+                    'type': $type
+                ]
+            ]
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * Determines how many options filter show
+ * @param params {{
+ *     data: {
+ *         options: Array<{
+ *             label: string,
+ *             value: string,
+ *             isChecked: (boolean|undefined)
+ *         }>
+ *     },
+ *     config: {
+ *         cannotBeHidden: (boolean|undefined),
+ *         optionsToShow: (number|undefined)
+ *     }
+ * }}
+ * @protected
+ */
+{template .numberOptionsToShow}
+    {if $params?.config?.optionsToShow}
+        {$params.config.optionsToShow}
+    {elseif $params?.config?.cannotBeHidden}
+        {length($params.data.options)}
+    {else}
+        6
+    {/if}
+{/template}
+
+
+/**
+ * Attributes
+ * @param params {{
+ *     data: {
+ *         name: string
+ *     },
+ *     config: {
+ *         type: (string|undefined)
+ *     }
+ * }}
+ * @override
+ */
+{template .attributes kind="attributes"}
+    {let $data kind="html"}
+        {call cl.iUtils.Utils.stringify}
+            {param json: [
+                'name': $params.data.name,
+                'type': $params?.config?.type
+            ]/}
+        {/call}
+    {/let}
+
+    data-params="{$data}"
+{/template}
+
+
+/**
+ * Css classes
+ * @param params {{
+ *     config: {
+ *         align: (string|undefined)
+ *     }
+ * }}
+ * @override
+ */
+{template .additionalClasses}
+    {if $params.config?.align}
+        {call .rootClass/}_align_{$params.config.align}
+    {/if}
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-sm-filter
+{/template}

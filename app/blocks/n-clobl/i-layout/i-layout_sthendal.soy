@@ -42,6 +42,7 @@
  *     csrf: string,
  *     year: (number|undefined),
  *     modifier: string,
+ *     type: string,
  *     page: (string|undefined)
  * }} sm.iLayout.TemplateStendhal.Params.Config
  */
@@ -49,9 +50,9 @@
 
 /**
  * Base landing for pages
- * @param? params {{
+ * @param params {{
  *     data: sm.iLayout.TemplateStendhal.Params.Data,
- *     config: ?sm.iLayout.TemplateStendhal.Params.Config
+ *     config: sm.iLayout.TemplateStendhal.Params.Config
  * }}
  * @extends cl.iLayout.Template
  * @constructor
@@ -227,9 +228,10 @@
  * @override
  */
 {template .content autoescape="strict" kind="html"}
-    <div class="{call .rootClass/}" {call .attributes data="all"/}>
+    <div class="{call .rootClass/}"
+        {call .attributes data="all" /}>
         {call .subheader data="all" /}
-        {call .bodyContent data="all" /}
+        {call .bodyContent_ data="all" /}
         {call .footer data="all" /}
     </div>
 {/template}
@@ -239,8 +241,11 @@
  * Subheader
  * @param params {{
  *     data: {
- *         subheader: sm.bSmSubheader.Template.Params.Data,
- *         type: string
+ *         subheader: sm.bSmSubheader.Template.Params.Data
+ *     },
+ *     config: {
+ *         type: string,
+ *         modifier: ?string
  *     }
  * }}
  * @protected
@@ -254,8 +259,7 @@
                 'renderParams': [
                     'data': $params.data.subHeader,
                     'config': [
-                        'entityType': $params.data.type,
-                        'bottomLine': true
+                        'entityType': $params.config.type
                     ]
                 ]
             ]/}
@@ -276,7 +280,8 @@
  * Footer
  * @param params {
  *     config: {
- *         year: ?number
+ *         year: ?number,
+ *         modifier: ?string
  *     }
  * }
  * @protected
@@ -309,17 +314,18 @@
 
 
 /**
+ * Attributes on element
+ * Important to write kind="attributes" when overrides
+ * @protected
+ */
+{template .attributes kind="attributes"}
+{/template}
+
+
+/**
  * Root css class
  * @override
  */
 {template .rootClass}
     i-layout
-{/template}
-
-
-/**
- * Attributes
- * @override
- */
-{template .attributes kind="attributes"}
 {/template}

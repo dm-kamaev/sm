@@ -6,11 +6,8 @@
 
 'use strict';
 
-const await = require('asyncawait/await');
-
 const SearchDataActualizer = require('./SearchDataActualizer'),
-    searchType = require('../../../api/modules/school/enums/searchType'),
-    services = require('../../../app/components/services').all;
+    searchType = require('../../../api/modules/school/enums/searchType');
 
 /**
  * Actualizes school search data related to specialized classes

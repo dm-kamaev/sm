@@ -1,0 +1,269 @@
+{namespace sm.lSearch.bFilterPanel.Template}
+
+
+/**
+ * @typedef {{
+ *    filters: Array<{sm.lSearch.bFilter.Template.Params}>
+ * }} sm.lSearch.bFilterPanel.Template.Params.Data
+ */
+
+
+/**
+ * @typedef {{
+ *     hasCheckedFilters: (boolean|undefined),
+ *     stylizationModifier: string
+ * }} sm.lSearch.bFilterPanel.Template.Params.Config
+ */
+
+
+/**
+ * Constructor
+ * @param params {{
+ *     data: sm.lSearch.bFilterPanel.Template.Params.Data,
+ *     config: sm.lSearch.bFilterPanel.Template.Params.Config
+ * }}
+ * @extends cl.iControl.Template
+ * @constructor
+ */
+{template .filterPanel}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * Body
+ * @param params {{
+ *     data: sm.lSearch.bFilterPanel.Template.Params.Data,
+ *     config: sm.lSearch.bFilterPanel.Template.Params.Config
+ * }}
+ * @override
+ */
+{template .body}
+    {call .expander_ data="all" /}
+    {call .content_ data="all" /}
+{/template}
+
+
+/**
+ * Control for expand filters
+ */
+{template .expander_}
+    <div class="{call .rootClass/}__expander">
+        Показать фильтры
+
+        <div class="{call .rootClass/}__expander-icon">
+            {call .renderChild}
+                {param params: [
+                    'type': 'icon',
+                    'renderParams': [
+                        'data': [
+                            'type': 'filter-arrow-down'
+                        ]
+                    ]
+                ]/}
+            {/call}
+        </div>
+    </div>
+{/template}
+
+
+/**
+ * Content
+ * @param params {{
+ *     data: sm.lSearch.bFilterPanel.Template.Params.Data,
+ *     config: sm.lSearch.bFilterPanel.Template.Params.Config
+ * }}
+ * @override
+ */
+{template .content_}
+    <div class="{call .rootClass/}__content">
+        {call .filtersList_ data="all" /}
+        {call .button_ /}
+        {call .controlLinks_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Filters list
+ * @param params {{
+ *     data: {
+ *         filters: Array<{sm.lSearch.bFilter.Template.Params}>
+ *     }
+ * }}
+ */
+{template .filtersList_}
+    <div class="{call .rootClass/}__filters-list">
+        {foreach $filter in $params.data.filters}
+            {call .filter_}
+                {param params: $filter/}
+            {/call}
+        {/foreach}
+    </div>
+{/template}
+
+
+/**
+ * Filters
+ * @param params {{
+ *     data: {
+ *         filters: Array<{
+ *             data: (
+ *                 sm.lSearch.bFilter.Template.Params.Data|
+ *                 sm.lSearch.bFilter.TemplateExtended.Params.Data|
+ *                 sm.lSearch.bFilter.TemplateSwitch.Params.Data|
+ *                 sm.lSearch.bFilter.TemplateInput.Params.Data
+ *             ),
+ *             config: {
+ *                 type: (string|undefined)
+ *             }
+ *         }>
+ *     }
+ * }}
+ */
+{template .filter_}
+    <div class="{call .rootClass/}__filter">
+        {switch $params?.config?.type}
+            {case 'extended'}
+                {call .renderChild}
+                    {param params: [
+                        'type': 'lSearch-filterExtended',
+                        'renderParams': $params
+                    ]/}
+                {/call}
+
+            {case 'switch'}
+                {call .renderChild}
+                    {param params: [
+                        'type': 'lSearch-filterSwitch',
+                        'renderParams': $params
+                    ]/}
+                {/call}
+
+            {case 'input'}
+                {call .renderChild}
+                    {param params: [
+                        'type': 'lSearch-filterInput',
+                        'renderParams': $params
+                    ]/}
+                {/call}
+
+            {default}
+                {call .renderChild}
+                    {param params: [
+                        'type': 'lSearch-filter',
+                        'renderParams': $params
+                    ]/}
+                {/call}
+        {/switch}
+    </div>
+{/template}
+
+
+/**
+ * Button to search for entity on filters
+ */
+{template .button_}
+    <div class="{call .rootClass/}__button">
+        {call .renderChild}
+            {param params: [
+                'type': 'button',
+                'renderParams': [
+                    'data': [
+                        'content': 'Подобрать'
+                    ],
+                    'config': [
+                        'theme': 'dark',
+                        'size': 's'
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Links Controls for filters
+ * @param params {{
+ *     config: {
+ *         hasCheckedFilters: (bool|undefined)
+ *     }
+ * }}
+ */
+{template .controlLinks_}
+    <div class="{call .rootClass/}__control-links">
+        {call .reset_ data="all" /}
+        {call .collapser_ /}
+    </div>
+{/template}
+
+
+/**
+ * Control for reset filters
+ * @param params {{
+ *     config: {
+ *         hasCheckedFilters: (bool|undefined)
+ *     }
+ * }}
+ */
+{template .reset_}
+    {let $classes kind="html"}
+        {call .rootClass/}__reset
+
+        {if not $params?.config?.hasCheckedFilters}
+            {sp}i-utils__hidden
+        {/if}
+    {/let}
+
+    <div class="{$classes}">
+        {call sm.bLink.Template.base}
+            {param params: [
+                'data': [
+                    'name': 'Сбросить фильтр'
+                ],
+                'config': [
+                    'theme': 'attention',
+                    'size': 'large'
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Control for collapse filters
+ */
+{template .collapser_}
+    <div class="{call .rootClass/}__collapser">
+        {call sm.bLink.Template.base}
+            {param params: [
+                'data': [
+                    'name': 'Свернуть фильтр'
+                ],
+                'config': [
+                    'size': 'large'
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Css classes
+ * @override
+ */
+{template .additionalClasses}
+    {call .rootClass /}_state_collapsed
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-filter-panel
+{/template}

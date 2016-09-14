@@ -4,11 +4,9 @@ var lodash = require('lodash');
 
 var models = require('../../../../app/components/models').all;
 var services = require('../../../../app/components/services').all;
-var sequelize = require('../../../../app/components/db');
 var subjectView = require('../../study/views/subjectView');
 var searchView = require('../views/searchView');
 var SchoolSearchQuery = require('../lib/SchoolSearch');
-var SuggestSearchQuery = require('../../entity/lib/SuggestSearch');
 var entityType = require('../../entity/enums/entityType');
 
 var schoolSearchType = require('../enums/searchType');
@@ -55,25 +53,22 @@ exports.getSchoolRecords = async(function(id, opt_type) {
  * }}
  */
 exports.suggestSearch = async(function(searchString) {
-    var queryString = new SuggestSearchQuery([
-            entityType.SCHOOL,
-            entityType.AREA,
-            entityType.METRO,
-            entityType.DISTRICT
-        ])
-        .setSearchString(searchString)
-        .getQuery(),
-        foundData = await(sequelize.query(
-            queryString,
-            {type: sequelize.QueryTypes.SELECT}
-        )),
-        resultIds = joinSuggestData(foundData);
+    var resultIds = await(services.textSearchData.entitiesSearch(searchString, [
+        entityType.SCHOOL,
+        entityType.METRO,
+        entityType.AREA,
+        entityType.DISTRICT
+    ]));
 
     return await({
-        schools: services.school.searchByIds(resultIds.school || []),
-        areas: services.area.getByIds(resultIds.area || []),
-        metros: services.metro.getByIds(resultIds.metro || []),
-        districts: services.district.getByIds(resultIds.district || [])
+        schools: services.school.searchByIds(
+            resultIds[entityType.SCHOOL] || []
+        ),
+        areas: services.area.getByIds(resultIds[entityType.AREA] || []),
+        metros: services.metro.getByIds(resultIds[entityType.METRO] || []),
+        districts: services.district.getByIds(
+            resultIds[entityType.DISTRICT] || []
+        )
     });
 });
 
@@ -94,22 +89,6 @@ exports.getSearchSql = function(searchParams, opt_limit) {
         .setMetro(searchParams.metroId)
         .setDistrict(searchParams.districtId)
         .getQuery();
-};
-
-/**
- * @param {Array<Object>} data
- * @return {Object}
- */
-var joinSuggestData = function(data) {
-    var result = {};
-
-    data.forEach(item => {
-        result.hasOwnProperty(item.entityType) ?
-            result[item.entityType].push(item.entityId) :
-            result[item.entityType] = [item.entityId];
-    });
-
-    return result;
 };
 
 /**

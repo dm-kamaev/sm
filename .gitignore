@@ -19,6 +19,7 @@ assets/dump/
 sftp-config.json
 deployment-config.json
 .remote-sync.json
+.ftpconfig
 .tern-project
 .eslintrc
 .jshintrc

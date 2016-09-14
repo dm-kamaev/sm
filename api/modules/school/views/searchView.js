@@ -175,13 +175,13 @@ var hasCheckedFilters = function(schoolFilters, classesFilter) {
 /**
  * Generate school filters
  * @param {{
- *      subjects: Array<models.Subject>,
- *      schoolTypes: Array<models.SchoolTypeFilter>,
- *      egeSubjects: Array<models.EgeResult>,
- *      giaSubjects: Array<models.GiaResult>,
- *      olympiadSubjects: Array<models.OlimpResult>,
- *      activitySpheres: Array<models.AdditionalEducationSphere>,
- *      specializedClassesTypes: Array<models.SpecializedClassType>
+ *     subjects: Array<models.Subject>,
+ *     schoolTypes: Array<models.SchoolTypeFilter>,
+ *     egeSubjects: Array<models.EgeResult>,
+ *     giaSubjects: Array<models.GiaResult>,
+ *     olympiadSubjects: Array<models.OlimpResult>,
+ *     activitySpheres: Array<models.AdditionalEducationSphere>,
+ *     specializedClassesTypes: Array<models.SpecializedClassType>
  * }} filtersData
  * @param {{
  *     schoolType: Array<number>,
