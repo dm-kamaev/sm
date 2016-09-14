@@ -378,9 +378,9 @@ class CourseSearchQuery extends SearchQuery {
             'address.area_id = area.id'
         )
         .left_join(
-            'distric',
+            'district',
             null,
-            'area.district_id = distric.id'
+            'area.district_id = district.id'
         )
         .group('course.id');
     }

@@ -134,7 +134,7 @@ searchView.render = function(data) {
         map: this.map(data.mapCourses, mapViewType.PIN),
         search: {
             countResults: data.countResults,
-            searchText: '',
+            searchText: data.searchParams.name,
             placeholder: 'Район, метро, название курса',
             declensionEntityType: {
                 nom: 'курс',
@@ -189,6 +189,7 @@ searchView.initSearchParams = function(params) {
         formTraining: this.transformToArray(params.formTraining),
         duration: this.transformToArray(params.duration),
         sortType: params.sortType,
+        name: params.name,
         metroId: params.metroId || null,
         areaId: params.areaId || null,
         districtId: params.districtId || null
@@ -201,7 +202,9 @@ searchView.initSearchParams = function(params) {
  */
 searchView.transformToArray = function(value) {
     var result;
-    if (typeof value === 'number' || typeof value === 'string') {
+    if (value && ~value.indexOf(',')) {
+        result = value.split(',');
+    } else if (typeof value === 'number' || typeof value === 'string') {
         result = [value];
     } else if (Array.isArray(value)) {
         result = value;

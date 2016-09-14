@@ -37,7 +37,6 @@ var controller = {};
 controller.search = async(function(req, res) {
     var result;
     try {
-        console.log(req.query);
         var searchParams = searchView.initSearchParams(req.query),
             courses = await(services.course.list(searchParams, 10)),
             countResults = courses[0] && courses[0].countResults || 0;
