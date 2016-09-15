@@ -58,11 +58,12 @@
 .b-sm-subheader__section_search {
     float: right;
 
-    padding-left: 20px;
+    width: 380px;
 }
 
 .b-sm-subheader__section_links {
     padding-left: 10px;
+    padding-right: 10px;
 }
 /* header body end */
 
@@ -183,13 +184,13 @@
 /* links end */
 
 
-/* type entity course */
+/* type entity school */
 .b-sm-subheader_entity-type_school {
     .b-sm-subheader__logo-img {
         height: 31px;
     }
 }
-/* course */
+/* school */
 
 @include media-xl {
     .b-sm-subheader__body {
@@ -211,7 +212,6 @@
         left: 0;
 
         width: auto;
-        margin-right: 40px;
         padding: 0;
     }
 
