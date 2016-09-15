@@ -159,7 +159,7 @@ goog.scope(function() {
 
             this.getHandler().listen(
                 filter,
-                sm.lSearch.bFilter.FilterExtended.Event.APPLY_CLICK,
+                sm.lSearch.bFilter.Filter.Event.SUBMIT,
                 this.onSubmit_
             );
         }

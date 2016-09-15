@@ -47,7 +47,8 @@ goog.scope(function() {
         CHECK_OPTION: goog.events.getUniqueId('check_on'),
         UNCHECK_OPTION: goog.events.getUniqueId('uncheck_on'),
         CHECK: goog.events.getUniqueId('check'),
-        UNCHECK: goog.events.getUniqueId('uncheck')
+        UNCHECK: goog.events.getUniqueId('uncheck'),
+        SUBMIT: goog.events.getUniqueId('submit')
     };
 
 
@@ -348,6 +349,16 @@ goog.scope(function() {
 
 
     /**
+     * Handler for submit
+     * @param {Object} event
+     * @protected
+     */
+    Filter.prototype.onSubmit = function(event) {
+        this.dispatchEventSubmit();
+    };
+
+
+    /**
      * Handler for option check
      * @param {Object} event
      * @protected
@@ -406,6 +417,17 @@ goog.scope(function() {
         this.dispatchEvent({
             'type': Filter.Event.UNCHECK_OPTION,
             'data': option.getData()
+        });
+    };
+
+
+    /**
+     * Dispatch event if submit filter
+     * @protected
+     */
+    Filter.prototype.dispatchEventSubmit = function() {
+        this.dispatchEvent({
+            'type': Filter.Event.SUBMIT
         });
     };
 
