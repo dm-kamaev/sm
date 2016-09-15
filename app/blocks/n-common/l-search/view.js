@@ -2,6 +2,7 @@ goog.provide('sm.lSearch.View');
 
 goog.require('goog.dom.classlist');
 goog.require('sm.iLayout.ViewStendhal');
+goog.require('sm.lSearch.Template');
 
 
 goog.scope(function() {

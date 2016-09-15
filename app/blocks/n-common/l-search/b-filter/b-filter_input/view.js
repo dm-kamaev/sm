@@ -55,7 +55,7 @@ goog.scope(function() {
         );
 
         this.dom.options = goog.dom.getElementsByClass(
-            cl.gInput.View.CssClass.ROOT,
+            sm.gInput.ViewStendhal.CssClass.ROOT,
             element
         );
     };

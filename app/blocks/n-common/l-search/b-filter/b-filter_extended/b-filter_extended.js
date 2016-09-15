@@ -33,15 +33,6 @@ goog.scope(function() {
 
 
     /**
-     * Event enum
-     * @enum {String}
-     */
-    FilterExtended.Event = {
-        APPLY_CLICK: goog.events.getUniqueId('apply-click')
-    };
-
-
-    /**
      * Checks refers element to this control
      * @param {Element} element
      * @return {boolean}
@@ -136,7 +127,7 @@ goog.scope(function() {
         this.removeFilterModal_();
 
         this.dispatchEventChangeOptions();
-        this.dispatchApplyClickEvent_();
+        this.dispatchEventSubmit();
     };
 
 
@@ -166,17 +157,6 @@ goog.scope(function() {
      */
     FilterExtended.prototype.showFilterModal_ = function() {
         this.filterModal_.show();
-    };
-
-
-    /**
-     * Dispatch Apply Click Event
-     * @private
-     */
-    FilterExtended.prototype.dispatchApplyClickEvent_ = function() {
-        this.dispatchEvent({
-            'type': FilterExtended.Event.APPLY_CLICK
-        });
     };
 
 
