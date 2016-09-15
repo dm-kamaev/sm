@@ -22,7 +22,7 @@
  *         firstName: ?string,
  *         lastName: ?string
  *     },
- *     favorites: sm.bSchoolListPaged.Template.Params.Data
+ *     favorites: sm.bSmListPaged.Template.Params.Data
  * }} sm.bSmSubheader.Template.Params.Data
  */
 
@@ -32,7 +32,6 @@
  *     entityType: string,
  *     bottomLine: ?boolean,
  *     theme: (string|undefined),
- *     entityType: string,
  *     stylizationModifier: string
  * }} sm.bSmSubheader.Template.Params.Config
  */
@@ -61,28 +60,36 @@
  */
 {template .body}
     <div class="{call .rootClass/}__body">
-        <div class="{call .rootClass/}__section
-            {sp}{call .rootClass/}__section_logo
-            {sp}i-animate">
-            {call .logo_ data="all"/}
-        </div>
-
-        <div class="{call .rootClass/}__section
-            {sp}{call .rootClass/}__section_links
-            {sp}i-animate">
-            {call .links_ data="all"/}
-        </div>
-
-        <div class="{call .rootClass/}__section
-            {sp}{call .rootClass/}__section_search">
-            {call .search_ data="all" /}
-        </div>
+        {call .sectionLogo_ data="all" /}
+        {call .sectionLinks_ data="all" /}
+        {call .sectionSearch_ data="all" /}
     </div>
 {/template}
 
 
 /**
- * Links template
+ * Section Logo
+ * @param params {{
+ *     data: {
+ *         logo: {
+ *             imgUrl: string,
+ *             altText: ?string,
+ *             linkUrl: ?string
+ *         }
+ *     }
+ * }}
+ */
+{template .sectionLogo_}
+    <div class="{call .rootClass/}__section
+                {sp}{call .rootClass/}__section_logo
+                {sp}i-animate">
+        {call .logo_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Section links
  * @param params {{
  *     data: {
  *         links: {
@@ -95,19 +102,37 @@
  *             firstName: ?string,
  *             lastName: ?string
  *         },
- *         favorites: sm.bSchoolListPaged.Template.Params.Data
- *     },
- *     config: {
- *         stylizationModifier: string
+ *         favorites: sm.bSmListPaged.Template.Params.Data
  *     }
  * }}
  */
-{template .links_}
-    {call .linkSearch_ data="all" /}
+{template .sectionLinks_}
+    <div class="{call .rootClass/}__section
+                {sp}{call .rootClass/}__section_links
+                {sp}i-animate">
+        {call .linksSearch_ data="all" /}
+        {call .userControls_ data="all" /}
+    </div>
+{/template}
 
-    <div class="{call .rootClass/}__user-controls">
-        {call .linkAuthorization_ data="all" /}
-        {call .favorite_ data="all" /}
+
+/**
+ * Section search
+ * @param params {{
+ *     data: {
+ *         search: {
+ *             placeholder: ?string,
+ *             searchRedirect: ?boolean
+ *         }
+ *     }
+ * }}
+ */
+{template .sectionSearch_}
+    <div class="{call .rootClass/}__section
+            {sp}{call .rootClass/}__section_search">
+
+        {call .searchL_ data="all" /}
+        {call .searchS_ data="all" /}
     </div>
 {/template}
 
@@ -122,88 +147,67 @@
  *             nameS: (string|undefined),
  *             url: string
  *         }
- *     },
- *     config: {
- *         stylizationModifier: string
  *     }
  * }}
  */
-{template .linkSearch_}
-    {let $iconCustomClasses kind="html"}
-        {call .rootClass/}__search-link-icon
-    {/let}
-
-    <a class="{call .rootClass/}__search-link" href="{$params.data.links.url}">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': $params.config.stylizationModifier,
-                'type': 'icon',
-                'renderParams': [
-                    'data': [
-                        'type': 'list'
-                    ],
-                    'config': [
-                        'customClasses': [$iconCustomClasses]
-                    ]
-                ]
-            ]/}
-        {/call}
-
-
-        {let $linkLCustomClasses kind="html"}
-            {call .rootClass/}__search-link-text{sp}
-            {call .rootClass/}__search-link-text_visible_l
-        {/let}
-
-        {call sm.bLink.Template.base}
+{template .linksSearch_}
+    <div class="{call .rootClass/}__search-links">
+        {call .linkSearch_}
             {param params: [
                 'data': [
                     'name': $params.data.links.nameL,
+                    'url': $params.data.links.url
                 ],
                 'config': [
-                    'size': 'extralarge',
-                    'customClasses': $linkLCustomClasses
+                    'size': 'l'
                 ]
             ]/}
         {/call}
 
-        {let $linkMCustomClasses kind="html"}
-            {call .rootClass/}__search-link-text{sp}
-            {call .rootClass/}__search-link-text_visible_m
-        {/let}
-
-        {call sm.bLink.Template.base}
+        {call .linkSearch_}
             {param params: [
                 'data': [
                     'name': $params.data.links.nameM,
+                    'url': $params.data.links.url
                 ],
                 'config': [
-                    'size': 'extralarge',
-                    'customClasses': $linkMCustomClasses
+                    'size': 'm'
                 ]
             ]/}
         {/call}
 
-
-        {let $linkSCustomClasses kind="html"}
-            {call .rootClass/}__search-link-text{sp}
-            {call .rootClass/}__search-link-text_visible_s
-        {/let}
-
-        {call sm.bLink.Template.base}
+        {call .linkSearch_}
             {param params: [
                 'data': [
-                    'name': $params.data.links.nameS ?
-                        $params.data.links.nameS :
-                        $params.data.links.nameM,
+                    'name': $params.data.links.nameS ?: $params.data.links.nameM,
+                    'url': $params.data.links.url
                 ],
                 'config': [
-                    'size': 'extralarge',
-                    'customClasses': $linkSCustomClasses
+                    'size': 's'
                 ]
             ]/}
         {/call}
-    </a>
+    </div>
+{/template}
+
+
+/**
+ * Links for authorization and favorite
+ * @param params {{
+ *     data: {
+ *         user: ?{
+ *             firstName: ?string,
+ *             lastName: ?string
+ *         },
+ *         favorites: sm.bSmListPaged.Template.Params.Data
+ *     }
+ * }}
+ */
+{template .userControls_}
+    <div class="{call .rootClass/}__user-controls">
+        {call .linkAuthorization_ data="all" /}
+        {call .favorite_ data="all" /}
+    </div>
 {/template}
 
 
@@ -215,9 +219,6 @@
  *            firstName: ?string,
  *            lastName: ?string
  *        }
- *     },
- *     config: {
- *         stylizationModifier: string
  *     }
  * }}
  */
@@ -225,9 +226,8 @@
     <div class="{call .rootClass/}__user-control
                 {sp}{call .rootClass/}__user-control_authorization">
         <div class="{call .rootClass/}__authorization-content">
-            {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {call .renderChild}
                 {param params: [
-                    'factory': $params.config.stylizationModifier,
                     'type': 'authorization-link',
                     'renderParams': [
                         'data': [
@@ -245,7 +245,7 @@
  * template favorite
  * @param params {{
  *     data: {
- *          favorites: sm.bSchoolListPaged.Template.Params.Data
+ *          favorites: sm.bSmListPaged.Template.Params.Data
  *     },
  *     config: {
  *         stylizationModifier: string
@@ -256,9 +256,8 @@
     <div class="{call .rootClass/}__user-control
                 {sp}{call .rootClass/}__user-control_favorite">
         <div class="{call .rootClass/}__favorite-content">
-            {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {call .renderChild}
                 {param params: [
-                    'factory': $params.config.stylizationModifier,
                     'type': 'favorite',
                     'renderParams': [
                         'data': $params.data?.favorites,
@@ -286,14 +285,16 @@
  * }}
  */
 {template .logo_}
-    <div class="{call .rootClass/}__logo i-animate">
+    {let $href kind="attributes"}
         {if $params.data.logo?.linkUrl}
-            <a class="{call .rootClass/}__link" href="{$params.data.logo.linkUrl}">
-                {call .logoImg_ data="all"/}
-            </a>
-        {else}
-            {call .logoImg_ data="all"/}
+            href="{$params.data.logo?.linkUrl}"
         {/if}
+    {/let}
+
+    <div class="{call .rootClass/}__logo i-animate">
+        <a class="{call .rootClass/}__link" {$href}>
+            {call .logoImg_ data="all"/}
+        </a>
     </div>
 {/template}
 
@@ -318,38 +319,34 @@
 
     <img class="{call .rootClass/}__logo-img"
         src="{$params.data.logo.imgUrl}" {$altText}>
-    //alt="Школы Мела - индивидуальный рейтинг школ"
-    //src="/images/n-school/b-header/logo.svg"
 {/template}
 
 
 /**
- * Search
- * @param? params {{
+ * Search field for display size l
+ * @param params {{
  *     data: {
  *         search: {
  *             placeholder: ?string,
  *             searchRedirect: ?boolean
  *         }
+ *     },
+ *     config: {
+ *         entityType: string
  *     }
  * }}
  */
-{template .search_}
-    {let $searchLCustomClasses kind="html"}
+{template .searchL_}
+    {let $customClasses kind="html"}
         {call .rootClass/}__search{sp}
         {call .rootClass/}__search_visible_l
-    {/let}
-
-    {let $searchSCustomClasses kind="html"}
-        {call .rootClass/}__search{sp}
-        {call .rootClass/}__search_visible_s
     {/let}
 
     {call sm.bSearch.Template.base}
         {param params: [
             'placeholder': $params.data?.search?.placeholder,
             'theme': 'min',
-            'customClasses': $searchLCustomClasses,
+            'customClasses': $customClasses,
             'redirect': $params.data?.search?.searchRedirect,
             'inputSize': 'min',
             'config': [
@@ -359,12 +356,34 @@
             ]
         ]/}
     {/call}
+{/template}
+
+
+/**
+ * Search field for display size s
+ * @param params {{
+ *     data: {
+ *         search: {
+ *             placeholder: ?string,
+ *             searchRedirect: ?boolean
+ *         }
+ *     },
+ *     config: {
+ *         entityType: string
+ *     }
+ * }}
+ */
+{template .searchS_}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__search{sp}
+        {call .rootClass/}__search_visible_s
+    {/let}
 
     {call sm.bSearch.Template.base}
         {param params: [
             'placeholder': $params.data?.search?.placeholder,
             'theme': 'foldable',
-            'customClasses': $searchSCustomClasses,
+            'customClasses': $customClasses,
             'redirect': $params.data?.search?.searchRedirect,
             'inputSize': 'min',
             'config': [
@@ -373,6 +392,66 @@
             ]
         ]/}
     {/call}
+{/template}
+
+
+/**
+ * Search links for display certain size
+ * @param params {{
+ *     data: {
+ *         url: (string|undefined),
+ *         name: (string|undefined)
+ *     },
+ *     config: {
+ *         size: string
+ *     }
+ * }}
+ */
+{template .linkSearch_}
+    {let $content kind="html"}
+        {call .iconLinkSearch_ /}
+        {$params.data?.name ?: ''}
+    {/let}
+
+    <div class="{call .rootClass/}__search-link{sp}
+                {call .rootClass/}__search-link_visible_{$params.config.size}">
+        {call .renderChild}
+            {param params: [
+                'type': 'smLink',
+                'renderParams': [
+                    'data': [
+                        'url': $params.data?.url,
+                        'content': $content
+                    ],
+                    'config': [
+                        'size': 'l'
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Icon for search link
+ */
+{template .iconLinkSearch_}
+    <div class="{call .rootClass/}__icon {call .rootClass/}__icon_search-link">
+        {call .renderChild}
+            {param params: [
+                'type': 'icon',
+                'renderParams': [
+                    'data': [
+                        'type': 'list'
+                    ],
+                    'config': [
+                        'customClasses': ''
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
 {/template}
 
 
