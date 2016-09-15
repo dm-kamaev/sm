@@ -21,6 +21,14 @@ goog.scope(function() {
 
 
         /**
+         * Subheader instance
+         * @type {sm.bSmSubheader.SmSubheader}
+         * @protected
+         */
+        this.subheader = null;
+
+
+        /**
          * Instances score
          * @type {Array<sm.bSmScore.SmScoreBrief>}
          * @private

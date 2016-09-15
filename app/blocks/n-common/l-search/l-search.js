@@ -42,6 +42,14 @@ goog.scope(function() {
 
 
         /**
+         * Subheader instance
+         * @type {sm.bSmSubheader.SmSubheader}
+         * @protected
+         */
+        this.subheader = null;
+
+
+        /**
          * Sort control
          * @type {sm.gDropdown.DropdownSelect}
          * @private

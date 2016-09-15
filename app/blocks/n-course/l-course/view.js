@@ -46,34 +46,32 @@ goog.scope(function() {
      */
     View.prototype.decorateInternal = function(element) {
         View.base(this, 'decorateInternal', element);
-
-        this.initDom_(element);
     };
 
 
     /**
      * Init dom elements
-     * @param {Element} element
-     * @private
+     * @override
      */
-    View.prototype.initDom_ = function(element) {
-        this.dom = {
-            scoreItems: this.getElementsByClass(
-                sm.bSmScore.ViewBrief.CssClass.ROOT,
-                element
-            ),
-            fullDescription: this.getElementByClass(
-                sm.bSmCollapsedText.View.CssClass.ROOT,
-                element
-            ),
-            map: this.getElementByClass(
-                sm.bSmMap.View.CssClass.ROOT,
-                element
-            ),
-            actionButtons: this.getElementsByClass(
-                View.CssClass.ACTION_BUTTON,
-                element
-            )
-        };
+    View.prototype.initDom = function() {
+        View.base(this, 'initDom');
+
+        goog.object.extend(
+            this.dom,
+            {
+                scoreItems: this.getElementsByClass(
+                    sm.bSmScore.ViewBrief.CssClass.ROOT
+                ),
+                fullDescription: this.getElementByClass(
+                    sm.bSmCollapsedText.View.CssClass.ROOT
+                ),
+                map: this.getElementByClass(
+                    sm.bSmMap.View.CssClass.ROOT
+                ),
+                actionButtons: this.getElementsByClass(
+                    View.CssClass.ACTION_BUTTON
+                )
+            }
+        );
     };
 });  // goog.scope

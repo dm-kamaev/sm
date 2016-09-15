@@ -32,4 +32,27 @@ goog.scope(function() {
     View.CssClass = {
         ROOT: 'i-layout'
     };
+
+
+    /**
+     * @override
+     */
+    View.prototype.decorateInternal = function(element) {
+        View.base(this, 'decorateInternal', element);
+
+        this.initDom();
+    };
+
+
+    /**
+     * Initializes dom elements
+     * @protected
+     */
+    View.prototype.initDom = function() {
+        this.dom = {
+            subheader: this.getElementByClass(
+                sm.bSmSubheader.View.CssClass.ROOT
+            )
+        };
+    };
 });  // goog.scope
