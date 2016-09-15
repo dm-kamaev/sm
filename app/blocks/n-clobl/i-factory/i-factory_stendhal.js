@@ -50,6 +50,8 @@ goog.require('sm.gDropdown.DropdownSelect');
 goog.require('sm.gDropdown.ViewSelect');
 goog.require('sm.gInput.DigitInput');
 goog.require('sm.gInput.DigitInputView');
+goog.require('sm.gInput.InputStendhal');
+goog.require('sm.gInput.ViewStendhal');
 goog.require('sm.gList.List.Select');
 goog.require('sm.gList.ViewSelect');
 goog.require('sm.gModal.ModalFeedback');
@@ -105,6 +107,10 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('list-select', {
             control: sm.gList.List.Select,
             view: sm.gList.ViewSelect
+        })
+        .setControlListItem('input', {
+            control: sm.gInput.InputStendhal,
+            view: sm.gInput.ViewStendhal
         })
         .setControlListItem('digit-input', {
             control: sm.gInput.DigitInput,

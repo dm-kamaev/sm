@@ -122,8 +122,14 @@ goog.scope(function() {
         for (var i = 0; i < this.options.length; i++) {
             handler.listen(
                 this.options[i],
-                cl.gInput.Input.Event.INPUT,
+                sm.gInput.InputStendhal.Event.INPUT,
                 this.onOptionChange_
+            );
+
+            handler.listen(
+                this.options[i],
+                sm.gInput.InputStendhal.Event.ENTER_PRESS,
+                this.onSubmit
             );
         }
     };
@@ -132,6 +138,7 @@ goog.scope(function() {
     /**
      * Initializes listeners for view
      * @protected
+     * @override
      */
     FilterInput.prototype.initViewListeners = function() {
         this.viewListen(
@@ -144,6 +151,7 @@ goog.scope(function() {
     /**
      * Initializes options
      * @protected
+     * @override
      */
     FilterInput.prototype.initOptions = function() {
         this.getView().initOptions();
