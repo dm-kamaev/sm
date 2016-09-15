@@ -181,6 +181,7 @@ searchView.render = function(data) {
  */
 searchView.initSearchParams = function(params) {
     return {
+        page: params.page || 0,
         age: this.transformToArray(params.age),
         type: this.transformToArray(params.type),
         cost: this.transformToArray(params.cost),
