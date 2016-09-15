@@ -30,39 +30,73 @@ service.stringToURL = function(string) {
 };
 
 /**
- * @param {object} school - school instance
+ * @param {Object} entity - entity instance
+ * @param {string} entityType
  */
-service.generateSchoolAlias = async(function(school) {
-    if (!school.name) {
+service.generateEntityAlias = async(function(entity, entityType) {
+    if (!entity.name) {
         console.log(
             'WARN:'.yellow +
-            ' can\'t create url to school with id', school.id
+            ' can\'t create url to entity with id', entity.id
         );
     } else {
-        var alias = service.stringToURL(school.name),
-            schoolPage =
-                await(services.page.getOne(school.id, entityType.SCHOOL));
-        if (alias != schoolPage.alias) {
+        var alias = service.stringToURL(entity.name),
+            entityPage =
+                await(services.page.getOne(entity.id, entityType));
+        if (entityPage && alias != entityPage.alias) {
             try {
-                await(schoolPage.update(
+                await(entityPage.update(
                     {alias: alias}
                 ));
             } catch (error) {
                 /* if url in use then generate different url*/
                 logger.error(error);
                 alias = alias + '_';
-                await(schoolPage.update(
+                await(entityPage.update(
                     {alias: alias}
                 ));
             } finally {
                 await(models.AliasBacklog.create({
-                    entityId: school.id,
-                    entityType: entityType.SCHOOL,
+                    entityId: entity.id,
+                    entityType: entityType,
                     alias: alias
                 }));
             }
+        } else if (!entityPage) {
+            await(service.createAlias({
+                entityId: entity.id,
+                entityType: entityType,
+                alias: alias,
+                views: 0
+            }));
         }
     }
+});
+
+/**
+ * @param {Object} data
+ */
+service.createAlias = async(function(data) {
+    var page = await(services.page.getOne(data.entityId, data.entityType));
+    if (page) {
+        data.alias += '_';
+    } else {
+        await(services.page.create(data));
+    }
+});
+
+/**
+ * @param {Object} school
+ */
+service.generateSchoolAlias = async(function(school) {
+    await(service.generateEntityAlias(school, entityType.SCHOOL));
+});
+
+/**
+ * @param {Object} course
+ */
+service.generateCourseAlias = async(function(course) {
+    await(service.generateEntityAlias(course, entityType.COURSE));
 });
 
 /**
