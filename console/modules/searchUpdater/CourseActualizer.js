@@ -265,7 +265,7 @@ class CourseActualizer {
             result = 0;
         } else if (hour >= 14 && hour < 18) {
             result = 1;
-        } else if (hour > 18) {
+        } else if (hour >= 18) {
             result = 2;
         }
 

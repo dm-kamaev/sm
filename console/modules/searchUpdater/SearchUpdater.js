@@ -186,7 +186,7 @@ class SearchUpdater {
      * @param {Object} data
      */
     updateTextData_(data) {
-        textActualizers = [
+        var textActualizers = [
                 new TextActualizer(
                     data.schools,
                     entityType.SCHOOL,
