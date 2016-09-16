@@ -184,15 +184,14 @@
  */
 {template .score}
     <div class="{call .rootClass/}__score">
-        {$params.data?.score}
-        // {call .renderChild}
-        //     {param params: [
-        //         'type': 'smScore',
-        //         'renderParams': [
-        //             'data': $params.data.score
-        //         ]
-        //     ]/}
-        // {/call}
+        {call .renderChild}
+            {param params: [
+                'type': 'smScore',
+                'renderParams': [
+                    'data': $params.data.score
+                ]
+            ]/}
+        {/call}
     </div>
 {/template}
 
@@ -215,7 +214,6 @@
  */
 {template .location}
     {if $params.data?.metro and length($params.data?.metro)}
-    // {if $params.data?.metroStations and length($params.data?.metroStations)}
         {call .metro_ data="all" /}
     {elseif $params.data?.area and length($params.data?.area)}
         {call .area_ data="all" /}
@@ -281,7 +279,6 @@
                 ]
             ]/}
         {/call}
-        //'data': $params.data.area
     </div>
 {/template}
 
@@ -300,23 +297,7 @@
  * Important to write kind="attributes" when overrides
  * @param params {{
  *     data: {
- *         id: ?number,
- *         type: string,
- *         name: {
- *             light: string,
- *             bold: ?string
- *         },
- *         alias: ?string,
- *         score: ?sm.bSmScore.Template.Params.Data,
- *         description: (string|undefined),
- *         metro: ?Array<{
- *             id: number,
- *             name: string
- *         }>,
- *         area: ?Array<{
- *             id: number,
- *             name: string
- *         }>
+ *         id: number
  *     }
  * }}
  * @override
@@ -325,7 +306,9 @@
     {sp}href="/{$params.data.type}/{$params.data.alias}"
     {sp}data-params="
         {call cl.iUtils.Utils.stringify}
-            {param json: $params /}
+            {param json: quoteKeysIfJs([
+                'id': $params.data.id
+            ]) /}
         {/call}"
 {/template}
 

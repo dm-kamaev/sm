@@ -1,5 +1,6 @@
 goog.provide('sm.bSmItem.ViewEntity');
 
+goog.require('goog.object');
 goog.require('sm.bSmItem.View');
 
 
@@ -61,6 +62,25 @@ goog.scope(function() {
      * }}
      */
     sm.bSmItem.ViewEntity.RenderParams;
+
+
+    /**
+     * Transform raw params to compressed ones
+     * @param {Object<string, (string|number|Object)>} rawParams
+     * @return {sm.bSmItem.SmItemEntity.RenderParams}
+     */
+    View.getRenderParams = function(rawParams) {
+        var params = sm.bSmItem.View.getRenderParams(rawParams);
+        goog.object.extend(params.data, {
+            brand: rawParams['brand'],
+            online: rawParams['online'],
+            isFavorite: rawParams['isFavorite'],
+            countDepartment: rawParams['countDepartment'],
+            position: rawParams['position']
+        });
+
+        return params;
+    };
 
 
     /**
