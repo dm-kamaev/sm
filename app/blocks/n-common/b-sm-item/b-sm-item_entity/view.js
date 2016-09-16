@@ -5,6 +5,7 @@ goog.require('sm.bSmItem.View');
 goog.require('sm.bSmScore.SmScoreBrief');
 
 
+
 /**
  * Item View
  * @param {Object=} opt_params
@@ -71,7 +72,6 @@ goog.scope(function() {
      */
     View.getRenderParams = function(rawParams) {
         var params = sm.bSmItem.View.getRenderParams(rawParams);
-        console.log(sm.bSmScore.SmScoreBrief.getRenderParams(rawParams['score']));
         goog.object.extend(params.data, {
             score: sm.bSmScore.SmScoreBrief.getRenderParams(rawParams['score']),
             brand: rawParams['brand'],
