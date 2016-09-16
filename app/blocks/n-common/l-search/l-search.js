@@ -321,11 +321,11 @@ goog.scope(function() {
     Search.prototype.initSearchServiceListeners_ = function() {
         this.getHandler().listen(
             this.searchService_,
-            sm.lSearch.iSearchService.SearchService.Event.MAP_DATA_LOADED,
+            SearchService.Event.MAP_DATA_LOADED,
             this.onMapDataLoaded_
         ).listen(
             this.searchService_,
-            sm.lSearch.iSearchService.SearchService.Event.LIST_DATA_LOADED,
+            SearchService.Event.LIST_DATA_LOADED,
             this.onResultsListDataLoaded_
         );
 
@@ -461,7 +461,6 @@ goog.scope(function() {
     Search.prototype.onResultsListDataLoaded_ = function(event) {
         var listItems = event.getListItems();
         var countResults = event.getCountResults();
-
         this.updateResultsList_(listItems, countResults);
         this.detectShowMoreResultsList_(listItems.length, countResults);
 
@@ -521,11 +520,11 @@ goog.scope(function() {
 
     /**
      * Handler for page show
+     * @param {goog.events.BrowserEvent} event
      * @private
-     * @param {Object} event
      */
     Search.prototype.onShowPage_ = function(event) {
-        if (event.event_.persisted) {
+        if (event.getBrowserEvent().persisted) {
             this.resultsList_.clear();
         }
     };
