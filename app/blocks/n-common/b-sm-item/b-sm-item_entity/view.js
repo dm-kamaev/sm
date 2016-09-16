@@ -2,7 +2,7 @@ goog.provide('sm.bSmItem.ViewEntity');
 
 goog.require('goog.object');
 goog.require('sm.bSmItem.View');
-
+goog.require('sm.bSmScore.SmScoreBrief');
 
 
 /**
@@ -71,7 +71,9 @@ goog.scope(function() {
      */
     View.getRenderParams = function(rawParams) {
         var params = sm.bSmItem.View.getRenderParams(rawParams);
+        console.log(sm.bSmScore.SmScoreBrief.getRenderParams(rawParams['score']));
         goog.object.extend(params.data, {
+            score: sm.bSmScore.SmScoreBrief.getRenderParams(rawParams['score']),
             brand: rawParams['brand'],
             online: rawParams['online'],
             isFavorite: rawParams['isFavorite'],
