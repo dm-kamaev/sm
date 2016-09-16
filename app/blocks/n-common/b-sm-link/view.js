@@ -35,6 +35,30 @@ goog.scope(function() {
 
 
     /**
+     * @typedef {{
+     *     id: (number|undefined),
+     *     url: (string|undefined),
+     *     content: (string|undefined),
+     * }}
+     */
+    View.RenderParams;
+
+
+    /**
+     * Transform raw params to compressed ones
+     * @param {Object<string, (string, number)>} rawParams
+     * @return {sm.bSmItem.View.RenderParams}
+     */
+    View.getRenderParams = function(rawParams) {
+        return {
+            id: rawParams['id'],
+            url: rawParams['url'],
+            content: rawParams['content']
+        };
+    };
+
+
+    /**
      * @override
      * @param {Element} element
      * @protected

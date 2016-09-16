@@ -45,16 +45,10 @@ goog.scope(function() {
      *             bold: ?string
      *         },
      *         alias: ?string,
-     *         score: ?sm.bSmScore.Template.Params.Data,
+     *         score: sm.bSmScore.SmScore.RenderParams,
      *         description: (string|undefined),
-     *         metro: ?Array<{
-     *             id: number,
-     *             name: string
-     *         }>,
-     *         area: ?Array<{
-     *             id: number,
-     *             name: string
-     *         }>
+     *         metro: sm.bSmBadge.Badge.RenderParams,
+     *         area: sm.bSmBadge.Badge.RenderParams
      *     }
      * }}
      */
@@ -62,8 +56,37 @@ goog.scope(function() {
 
 
     /**
+     * Transform raw params to compressed ones
+     * @param {Object<string, (string, number, Object)>} rawParams
+     * @return {sm.bSmItem.View.RenderParams}
+     */
+    View.getRenderParams = function(rawParams) {
+        var metroParams =
+            sm.bSmBadge.SmBadge.getRenderParams(rawParams['metro']);
+        var areaParams =
+            sm.bSmBadge.SmBadge.getRenderParams(rawParams['area']);
+        return {
+            data: {
+                id: rawParams['id'],
+                type: rawParams['type'],
+                name: {
+                    light: rawParams['name']['light'],
+                    bold: rawParams['name']['bold']
+                },
+                alias: rawParams['alias'],
+                score: sm.bSmScore.SmScore.getRenderParams(rawParams['score']),
+                description: rawParams['description'],
+                metro: metroParams.data,
+                area: areaParams.data
+            }
+        };
+    };
+
+
+    /**
      * @override
      * @param {Element} element
+     * @protected
      */
     View.prototype.decorateInternal = function(element) {
         View.base(this, 'decorateInternal', element);

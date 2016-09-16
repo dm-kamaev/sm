@@ -23,7 +23,6 @@ exports.search = async(function(req, res, next) {
         var authSocialLinks = services.auth.getAuthSocialUrl(),
             user = req.user || {},
             searchParams = searchView.initSearchParams(req.query);
-
         searchParams.page = 0;
 
         var data = await({
@@ -34,7 +33,7 @@ exports.search = async(function(req, res, next) {
             }
         });
 
-        var data = searchView.render({
+        var templateData = searchView.render({
             entityType: ENTITY_TYPE,
             user: user,
             authSocialLinks: authSocialLinks,
@@ -49,7 +48,7 @@ exports.search = async(function(req, res, next) {
         var html = soy.render(
             'sm.lSearch.Template.search', {
                 params: {
-                    data: data,
+                    data: templateData,
                     config: {
                         modifier: 'stendhal',
                         staticVersion: config.lastBuildTimestamp,

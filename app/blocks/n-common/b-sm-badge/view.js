@@ -1,7 +1,7 @@
 goog.provide('sm.bSmBadge.View');
 
 goog.require('cl.iControl.View');
-goog.require('cl.iUtils.Utils');
+goog.require('goog.array');
 goog.require('goog.dom.classlist');
 
 
@@ -36,8 +36,7 @@ sm.bSmBadge.View = function(opt_params, opt_type, opt_modifier) {
 goog.inherits(sm.bSmBadge.View, cl.iControl.View);
 
 goog.scope(function() {
-    var View = sm.bSmBadge.View,
-        Utils = cl.iUtils.Utils;
+    var View = sm.bSmBadge.View;
 
 
      /**
@@ -60,6 +59,34 @@ goog.scope(function() {
     View.Event = {
         ITEM_CLICK: 'item-click',
         HINT_LINK_CLICK: 'hint-link-click'
+    };
+
+
+    /**
+     * @typedef {{
+     *     data: Array<{
+     *         id: number,
+     *         name: string
+     *     }>
+     * }}
+     */
+    sm.bSmBadge.View.RenderParams;
+
+
+    /**
+     * Transform raw params to compressed ones
+     * @param {Array<Object<string, (number|string)>>} rawParams
+     * @return {sm.bSmBadge.View.RenderParams}
+     */
+    View.getRenderParams = function(rawParams) {
+        return {
+            data: goog.array.map(rawParams, function(item) {
+                return {
+                    id: item['id'],
+                    name: item['name']
+                };
+            })
+        };
     };
 
 

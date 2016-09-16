@@ -52,6 +52,11 @@ goog.scope(function() {
     /**
      * @typedef {{
      *     itemType: string,
+     *     itemConfig: (sm.bSmItem.Template.Params.Config|
+     *         sm.bSmItem.TemplateEntity.Params.Config|
+     *         sm.bSmLink.Template.Params.Config|
+     *         undefined
+     *     ),
      *     countItemsPerPage: number
      * }}
      */
@@ -73,15 +78,15 @@ goog.scope(function() {
     /**
      * Insert item on index (Dom Element)
      * @param {Object} data
-     * @param {number} index
+     * @param {number=} opt_index
      */
-    View.prototype.addItem = function(data, index) {
+    View.prototype.addItem = function(data, opt_index) {
         var item = this.renderItem_(data);
 
         goog.dom.insertChildAt(
             this.dom.list,
             item,
-            index
+            opt_index
         );
     };
 
@@ -217,7 +222,7 @@ goog.scope(function() {
     /**
      * Check contains an element of class HIDDEN or not
      * @param {Element} element
-     * @return {bool}
+     * @return {boolean}
      * @private
      */
     View.prototype.isShown_ = function(element) {
@@ -238,11 +243,12 @@ goog.scope(function() {
         return goog.soy.renderAsElement(
             sm.bSmItemList.Template.item, {
                 params: {
-                    'data': {
-                        'item': data
+                    data: {
+                        item: data
                     },
-                    'config': {
-                        'type': this.params.itemType
+                    config: {
+                        type: this.params.itemType,
+                        stylizationModifier: this.getStylization()
                     }
                 }
             }
@@ -304,7 +310,8 @@ goog.scope(function() {
     View.prototype.transformParams_ = function(rawParams) {
         return {
             itemType: rawParams['itemType'],
-            countItemsPerPage: rawParams['countItemsPerPage']
+            countItemsPerPage: rawParams['countItemsPerPage'],
+            itemConfig: rawParams['itemConfig']
         };
     };
 });  // goog.scope

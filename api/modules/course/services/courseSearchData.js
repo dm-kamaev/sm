@@ -18,10 +18,13 @@ var service = {
  * @return {string}
  */
 service.getSearchSql = function(searchParams, opt_limit) {
-    searchParams.limit = opt_limit;
+    var limit = opt_limit || null;
+    var params = Object.assign({
+        limit: limit
+    }, searchParams);
     return this.setSearchQueryParams(
         new CourseSearchQuery(),
-        searchParams
+        params
     );
 };
 
@@ -64,10 +67,13 @@ service.update = function(id, data) {
  * @return {string}
  */
 service.getSearchMapSql = function(searchParams, opt_limit) {
-    searchParams.limit = opt_limit;
+    var limit = opt_limit || null;
+    var params = Object.assign({
+        limit: limit
+    }, searchParams);
     return this.setSearchQueryParams(
         new CourseSearchMapQuery(),
-        searchParams
+        params
     );
 };
 

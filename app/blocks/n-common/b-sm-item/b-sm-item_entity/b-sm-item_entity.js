@@ -1,5 +1,6 @@
 goog.provide('sm.bSmItem.SmItemEntity');
 
+goog.require('sm.bFavoriteLink.FavoriteLink');
 goog.require('sm.bSmItem.Event.FavoriteRemoved');
 goog.require('sm.bSmItem.SmItem');
 goog.require('sm.bSmItem.ViewEntity');
@@ -45,9 +46,10 @@ goog.inherits(sm.bSmItem.SmItemEntity, sm.bSmItem.SmItem);
 
 
 goog.scope(function() {
-    var Item = sm.bSmItem.SmItemEntity,
-        FavoriteLink = sm.bFavoriteLink.FavoriteLink;
+    var Item = sm.bSmItem.SmItemEntity;
+    var View = sm.bSmItem.ViewEntity;
 
+    var FavoriteLink = sm.bFavoriteLink.FavoriteLink;
     var Event = sm.bSmItem.Event;
     var Viewport = sm.iSmViewport.SmViewport;
 
@@ -55,7 +57,17 @@ goog.scope(function() {
     /**
      * @typedef {sm.bSmItem.ViewEntity.RenderParams}
      */
-    Item.RenderParams;
+    sm.bSmItem.SmItemEntity.RenderParams;
+
+
+    /**
+     * Transform raw params to compressed ones
+     * @param {Object<string, (string|number|Object)>} rawParams
+     * @return {sm.bSmItem.SmItemEntity.RenderParams}
+     */
+    Item.getRenderParams = function(rawParams) {
+        return View.getRenderParams(rawParams);
+    };
 
 
     /**

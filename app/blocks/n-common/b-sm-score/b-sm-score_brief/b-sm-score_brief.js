@@ -43,6 +43,23 @@ goog.scope(function() {
 
 
     /**
+     * @typedef {sm.bSmScore.ViewBrief.RenderParams}
+     */
+    sm.bSmScore.SmScoreBrief.RenderParams;
+
+
+    /**
+     * Transform raw params to compressed ones
+     * @param {Object<string, Object>} rawParams
+     * @return {sm.bSmScore.SmScoreBrief.RenderParams}
+     */
+    Score.getRenderParams = function(rawParams) {
+        console.log(rawParams);
+        return View.getRenderParams(rawParams);
+    };
+
+
+    /**
      * @override
      */
     Score.prototype.enterDocument = function() {

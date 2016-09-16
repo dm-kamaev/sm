@@ -5,8 +5,10 @@
 goog.provide('sm.bSmScore.SmScore');
 
 goog.require('cl.iControl.Control');
+goog.require('sm.bSmScore.View');
 
 goog.scope(function() {
+    var View = sm.bSmScore.View;
 
 
 
@@ -25,4 +27,21 @@ goog.scope(function() {
         this.setSupportedState(goog.ui.Component.State.ALL, false);
     };
     goog.inherits(sm.bSmScore.SmScore, cl.iControl.Control);
+    var Score = sm.bSmScore.SmScore;
+
+
+    /**
+     * @typedef {sm.bSmScore.View.RenderParams}
+     */
+    sm.bSmScore.SmScore.RenderParams;
+
+
+    /**
+     * Transform raw params to compressed ones
+     * @param {Object<string, Object>} rawParams
+     * @return {sm.bSmBadge.View.RenderParams}
+     */
+    Score.getRenderParams = function(rawParams) {
+        return View.getRenderParams(rawParams);
+    };
 });  // goog.scope

@@ -186,8 +186,7 @@ class SearchUpdater {
      * @param {Object} data
      */
     updateTextData_(data) {
-        var bar = this.getProgressBar_('text data', 4),
-            textActualizers = [
+        var textActualizers = [
                 new TextActualizer(
                     data.schools,
                     entityType.SCHOOL,
@@ -213,7 +212,8 @@ class SearchUpdater {
                     entityType.COURSE,
                     COURSE_FIELDS
                 )
-            ];
+            ],
+            bar = this.getProgressBar_('text data', textActualizers.length);
 
         textActualizers.forEach(textActualizer => {
             await(textActualizer.actualize());
