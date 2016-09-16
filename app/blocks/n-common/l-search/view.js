@@ -71,8 +71,6 @@ goog.scope(function() {
      */
     View.prototype.decorateInternal = function(element) {
         View.base(this, 'decorateInternal', element);
-
-        this.initParams_();
     };
 
 
@@ -150,45 +148,17 @@ goog.scope(function() {
 
 
     /**
-     * Init params from dom element
-     * @private
-     */
-    View.prototype.initParams_ = function() {
-        var rawParams = this.getRawDataParams_();
-        this.params = this.transformParams_(rawParams);
-    };
-
-
-    /**
-     * Return raw data-params from dom element
-     * @return {Object}
-     * @private
-     */
-    View.prototype.getRawDataParams_ = function() {
-        var dataParams = goog.dom.dataset.get(
-            this.getElement(),
-            'params'
-        );
-
-        return JSON.parse(dataParams);
-    };
-
-
-    /**
      * Transform raw params from dom element to sm.lSearch.View.Params
      * @param  {Object} rawParams
      * @return {sm.lSearch.View.Params}
-     * @private
+     * @protected
+     * @override
      */
-    View.prototype.transformParams_ = function(rawParams) {
-        return {
-            searchParams: rawParams['searchParams'],
-            isUserAuthorzed: rawParams['isUserAuthorzed'],
-            authSocialLinks: {
-                vk: rawParams['authSocialLinks']['vk'],
-                fb: rawParams['authSocialLinks']['fb']
-            },
-            type: rawParams['type']
-        };
+    View.prototype.transformParams = function(rawParams) {
+        var params = View.base(this, 'transformParams', rawParams);
+
+        params.searchParams = rawParams['searchParams'];
+
+        return params;
     };
 });  // goog.scope

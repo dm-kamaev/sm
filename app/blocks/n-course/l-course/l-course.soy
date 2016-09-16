@@ -3,6 +3,15 @@
 
 /**
  * typedef {{
+ *     user: {
+ *         firstName: (string|undefined),
+ *         lastName: (string|undefined),
+ *         isCommented: boolean
+ *     },
+ *     authSocialLinks: {
+ *         vk: (string|undefined),
+ *         fb: (string|undefined)
+ *     },
  *     entityData: {
  *         id: number,
  *         name: string,
@@ -581,34 +590,40 @@
  * Attributes
  * @param params {{
  *     data: {
- *         user: ?{
- *            firstName: (string|undefined),
- *            lastName: (string|undefined),
- *            isCommented: boolean
+ *         user: {
+ *             firstName: (string|undefined),
+ *             lastName: (string|undefined),
+ *             isCommented: boolean
  *         },
  *         authSocialLinks: {
- *            vk: ?string,
- *            fb: ?string
+ *             vk: (string|undefined),
+ *             fb: (string|undefined)
+ *         },
+ *         authSocialLinks: {
+ *            vk: string,
+ *            fb: string
  *         },
  *         entityData: {
  *             id: number,
  *             name: string
  *         }
+ *     },
+ *     config: {
+ *         entityType: string
  *     }
  * }}
  * @override
  */
 {template .attributes kind="attributes"}
-    {if $params}
-    {/if}
-    // data-params="
-    //     {call cl.iUtils.Utils.stringify}
-    //         {param json: [
-    //             'id': $params.data.entityData?.id,
-    //             'name': $params.data.entityData?.name,
-    //             'isCommented': $params.data.user?.isCommented,
-    //             'isUserAuthorized': $params.data.user ? true : false,
-    //             'authSocialLinks': $params.data?.authSocialLinks
-    //         ]/}
-    //     {/call}"
+    data-params="
+        {call cl.iUtils.Utils.stringify}
+            {param json: [
+                'id': $params.data.entityData?.id,
+                'name': $params.data.entityData?.name,
+                'isCommented': $params.data.user?.isCommented,
+                'isUserAuthorized': $params.data.user ? true : false,
+                'authSocialLinks': $params.data?.authSocialLinks,
+                'type': $params.config.entityType
+            ]/}
+        {/call}"
 {/template}

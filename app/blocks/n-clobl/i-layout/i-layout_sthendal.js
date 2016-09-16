@@ -4,6 +4,7 @@ goog.require('cl.iControl.Control');
 goog.require('cl.iFactory.FactoryManager');
 goog.require('goog.dom');
 goog.require('sm.iAnalytics.Analytics');
+goog.require('sm.iAuthorization.Authorization');
 goog.require('sm.iFactory.FactoryStendhal');
 goog.require('sm.iFactory.TemplateFactoryStendhal');
 goog.require('sm.iLayout.ViewStendhal');
@@ -20,6 +21,7 @@ goog.require('sm.iMetrika.Metrika');
  */
 sm.iLayout.LayoutStendhal = function(view, opt_domHelper) {
     sm.iLayout.LayoutStendhal.base(this, 'constructor', view, opt_domHelper);
+
 
     /**
      * Subheader instance
@@ -41,7 +43,20 @@ goog.scope(function() {
     Layout.prototype.decorateInternal = function(element) {
         Layout.base(this, 'decorateInternal', element);
 
+        this.initAuthorization();
         this.initSubheader();
+    };
+
+
+    /**
+     * Init authorization
+     * @protected
+     */
+    Layout.prototype.initAuthorization = function() {
+        var authorization = sm.iAuthorization.Authorization.getInstance(),
+            params = this.getView().getAuthParams();
+
+        authorization.init(params);
     };
 
 

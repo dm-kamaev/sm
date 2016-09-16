@@ -277,10 +277,10 @@ goog.scope(function() {
 
         this.authParams_ = {
             isUserAuthorized: params['isUserAuthorized'],
-                authSocialLinks: {
-                    fb: params['authSocialLinks']['fb'],
-                    vk: params['authSocialLinks']['vk']
-                },
+            authSocialLinks: {
+                fb: params['authSocialLinks']['fb'],
+                vk: params['authSocialLinks']['vk']
+            },
             factoryType: 'stendhal'
         };
     };

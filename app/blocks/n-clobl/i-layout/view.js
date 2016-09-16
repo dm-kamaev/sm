@@ -41,6 +41,21 @@ goog.scope(function() {
         View.base(this, 'decorateInternal', element);
 
         this.initDom();
+        this.initParams();
+    };
+
+
+    /**
+     * Get params for authentication
+     * @return {Object}
+     * @public
+     */
+    View.prototype.getAuthParams = function() {
+        return {
+            isUserAuthorzed: this.params.isUserAuthorzed,
+            authSocialLinks: this.params.authSocialLinks,
+            factoryType: this.getStylization()
+        };
     };
 
 
@@ -53,6 +68,56 @@ goog.scope(function() {
             subheader: this.getElementByClass(
                 sm.bSmSubheader.View.CssClass.ROOT
             )
+        };
+    };
+
+
+    /**
+     * Init params from dom element
+     * @protected
+     */
+    View.prototype.initParams = function() {
+        var rawParams = this.getRawDataParams();
+        this.params = this.transformParams(rawParams);
+    };
+
+
+    /**
+     * Return raw data-params from dom element
+     * @return {Object}
+     * @protected
+     */
+    View.prototype.getRawDataParams = function() {
+        var dataParams = goog.dom.dataset.get(
+            this.getElement(),
+            'params'
+        );
+
+        return JSON.parse(dataParams);
+    };
+
+
+    /**
+     * Transform raw params from dom element
+     * @param {Object} rawParams
+     * @return {{
+     *     isUserAuthorzed: boolean,
+     *     authSocialLinks: {
+     *         vk: string,
+     *         fb: string
+     *     },
+     *     type: string
+     * }}
+     * @protected
+     */
+    View.prototype.transformParams = function(rawParams) {
+        return {
+            isUserAuthorzed: rawParams['isUserAuthorzed'],
+            authSocialLinks: {
+                vk: rawParams['authSocialLinks']['vk'],
+                fb: rawParams['authSocialLinks']['fb']
+            },
+            type: rawParams['type']
         };
     };
 });  // goog.scope
