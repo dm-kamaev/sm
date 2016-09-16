@@ -6,6 +6,7 @@
 
 /**
  * @typedef {{
+ *     id: number,
  *     url: (strnig|undefined),
  *     content: (string|undefined),
  * }} sm.bSmLink.Template.Params.Data
@@ -78,7 +79,8 @@
  * Attributes template
  * @param params {{
  *     data: {
- *         url: string
+ *         id: (number|undefined),
+ *         url: (string|undefined)
  *     },
  *     config: {
  *         target: ('_blank'|undefined)
@@ -89,6 +91,13 @@
 {template .attributes kind="attributes"}
     {if $params.data.url}
         href="{$params.data.url}"
+    {/if}
+    {if $params.data.id}
+        data-params="{call cl.iUtils.Utils.stringify}
+            {param json: quoteKeysIfJs([
+                'id': $params.data.id
+            ]) /}
+        {/call}"
     {/if}
     {if $params?.config.target}
         {sp}target="{$params.config.target}"
