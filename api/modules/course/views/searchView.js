@@ -1,3 +1,4 @@
+
 var FilterPanel = require('../lib/CourseFilterPanel');
 const courseView = require('./courseView');
 const mapViewType = require('../../entity/enums/mapViewType');
