@@ -20,12 +20,22 @@ goog.inherits(sm.bSmItem.SmItem, cl.iControl.Control);
 
 goog.scope(function() {
     var Item = sm.bSmItem.SmItem;
-
+    var View = sm.bSmItem.View;
 
     /**
      * @typedef {sm.bSmItem.View.RenderParams}
      */
-    Item.RenderParams;
+    sm.bSmItem.SmItem.RenderParams;
+
+
+    /**
+     * Transform raw params to compressed ones
+     * @param {Object<string, (string, number, Object)>} rawParams
+     * @return {sm.bSmItem.smItem.RenderParams}
+     */
+    Item.getRenderParams = function(rawParams) {
+        return View.getRenderParams(rawParams);
+    };
 
 
     /**
@@ -33,6 +43,6 @@ goog.scope(function() {
      * @return {number}
      */
     Item.prototype.getItemId = function() {
-        return this.params.data.id;
+        return this.params.id;
     };
 });  // goog.scope

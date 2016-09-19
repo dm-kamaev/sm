@@ -24,6 +24,22 @@ goog.scope(function() {
 
 
     /**
+     * @typedef {sm.bSmBadge.View.RenderParams}
+     */
+    sm.bSmBadge.SmBadge.RenderParams;
+
+
+    /**
+     * Transform raw params to compressed ones
+     * @param {Array<Object<string, (number|string)>>} rawParams
+     * @return {sm.bSmBadge.View.RenderParams}
+     */
+    Badge.getRenderParams = function(rawParams) {
+        return View.getRenderParams(rawParams);
+    };
+
+
+    /**
      * @override
      * @param {Element} element
      */

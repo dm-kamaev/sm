@@ -22,8 +22,8 @@ goog.scope(function() {
             sm.lSearch.iSearchService.MapDataLoadedEvent.base(
                 this,
                 'constructor',
-                opt_target,
-                sm.lSearch.iSearchService.MapDataLoadedEvent.Type
+                sm.lSearch.iSearchService.MapDataLoadedEvent.Type,
+                opt_target
             );
 
             /**
@@ -56,7 +56,7 @@ goog.scope(function() {
      * Event type
      * @type {string}
      */
-    MapDataLoadedEvent.Type = goog.events.getUniqueId('listDataLoaded');
+    MapDataLoadedEvent.Type = goog.events.getUniqueId('mapDataLoaded');
 
 
     /**

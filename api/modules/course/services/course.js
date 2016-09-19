@@ -164,4 +164,43 @@ service.getAll = async(function() {
     }));
 });
 
+/**
+ * [getByIds description]
+ * @param  {Array<number>} ids
+ * @return {Array<Object>}
+ */
+service.getByIds = function(ids) {
+    return ids.length ?
+        models.Course.findAll({
+            attributes: ['id', 'name', 'totalScore'],
+            where: {
+                id: {
+                    $in: ids
+                }
+            },
+            include: [{
+                model: models.CourseOption,
+                as: 'courseOptions',
+                attributes: ['id'],
+                include: [{
+                    model: models.CourseDepartment,
+                    as: 'departments',
+                    through: 'course_option_course_department',
+                    attributes: ['id'],
+                    include: [{
+                        model: models.Address,
+                        as: 'address',
+                        attributes: ['id'],
+                        include: [{
+                            model: models.Area,
+                            as: 'area',
+                            attributes: ['id', 'name']
+                        }]
+                    }]
+                }]
+            }]
+        }) :
+        [];
+};
+
 module.exports = service;

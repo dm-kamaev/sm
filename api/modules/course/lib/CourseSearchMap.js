@@ -52,6 +52,11 @@ class CourseSearchMapQuery extends CourseSearchQuery {
                     entityType.COURSE_DEPARTMENT + '\''
             );
     }
+
+    /**
+     * @protected
+     */
+    setBaseOrder_() { }
 }
 
 module.exports = CourseSearchMapQuery;

@@ -281,9 +281,9 @@
  * @override
  */
 {template .attributes kind="attributes"}
-    {let $dataParams: [
+    {let $dataParams: quoteKeysIfJs([
         'id': $params.data.id
-    ] /}
+    ]) /}
 
     data-params="{call cl.iUtils.Utils.stringify}
         {param json: $dataParams /}

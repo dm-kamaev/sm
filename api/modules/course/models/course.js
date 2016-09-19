@@ -1,6 +1,7 @@
 var Sequelize = require('sequelize');
 
-var db = require('../../../../app/components/db');
+var db = require('../../../../app/components/db'),
+    urlService = require('../../entity/services/urls');
 
 var Course = db.define('Course', {
     name: Sequelize.STRING,
@@ -46,6 +47,10 @@ var Course = db.define('Course', {
 }, {
     underscored: true,
     tableName: 'course',
+    hooks: {
+        afterCreate: urlService.generateCourseAlias,
+        afterUpdate: urlService.generateCourseAlias,
+    },
     classMethods: {
         associate: function(models) {
             Course.hasMany(models.CourseOption, {

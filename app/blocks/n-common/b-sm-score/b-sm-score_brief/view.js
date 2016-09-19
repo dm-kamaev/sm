@@ -12,6 +12,7 @@ goog.provide('sm.bSmScore.ViewBrief');
 
 goog.require('goog.dom');
 goog.require('goog.labs.userAgent.device');
+goog.require('goog.object');
 goog.require('sm.bSmScore.View');
 
 
@@ -71,6 +72,51 @@ goog.scope(function() {
     View.Event = {
         PRIMARY_NAME_SHOW: 'primary_name_show',
         PRIMARY_NAME_HIDE: 'primary_name_hide'
+    };
+
+
+    /**
+     * @typedef {{
+     *     data: {
+     *         marks: {
+     *             primary: {
+     *                 name: string,
+     *                 value: number
+     *             },
+     *             secondary: Array<{
+     *                 name: string,
+     *                 value: number
+     *             }>
+     *         },
+     *         secondaryMarkListHeader: string
+     *     },
+     *     config: {
+     *         primaryMark: {
+     *             size: string,
+     *             isNameVisible: boolean,
+     *             zeroSign: string,
+     *             showMark: boolean
+     *         },
+     *         theme: string,
+     *         isActive: boolean
+     *     }
+     * }}
+     */
+    sm.bSmScore.ViewBrief.RenderParams;
+
+
+    /**
+     * Transform raw params to compressed ones
+     * @param {Object<string, Object>} rawParams
+     * @return {sm.bSmScore.ViewBrief.RenderParams}
+     */
+    View.getRenderParams = function(rawParams) {
+        var params = sm.bSmScore.View.getRenderParams(rawParams);
+        goog.object.extend(params.data, {
+            secondaryMarkListHeader:
+                rawParams['data']['secondaryMarkListHeader']
+        });
+        return params;
     };
 
 

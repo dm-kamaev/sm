@@ -21,8 +21,8 @@ class CourseParser {
 
         var courses = this.formatCourses_(brandName, data);
         try {
-            await(courses.map(course =>
-                services.course.create(course))
+            courses.map(course =>
+                await(services.course.create(course))
             );
         } catch (error) {
             console.log(error);

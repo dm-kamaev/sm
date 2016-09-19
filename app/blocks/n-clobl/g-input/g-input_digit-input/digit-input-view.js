@@ -1,6 +1,6 @@
 goog.provide('sm.gInput.DigitInputView');
 
-goog.require('cl.gInput.View');
+goog.require('sm.gInput.ViewStendhal');
 
 
 
@@ -10,12 +10,12 @@ goog.require('cl.gInput.View');
  * @param {string=} opt_type
  * @param {string=} opt_modifier
  * @constructor
- * @extends {cl.iControl.View}
+ * @extends {sm.gInput.ViewStendhal}
  */
 sm.gInput.DigitInputView = function(opt_params, opt_type, opt_modifier) {
     goog.base(this, opt_params, opt_type, opt_modifier);
 };
-goog.inherits(sm.gInput.DigitInputView, cl.gInput.View);
+goog.inherits(sm.gInput.DigitInputView, sm.gInput.ViewStendhal);
 
 
 goog.scope(function() {

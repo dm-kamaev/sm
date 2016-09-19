@@ -57,34 +57,11 @@ var searchView = {};
 searchView.filterPanel = function(filtersData, opt_searchParams) {
     var searchParams = opt_searchParams || {};
 
-    var options = [{
-        'label': 'Подготовка к ЕГЭ по русскому языку',
-        'value': '1'
-    }, {
-        'label': 'Подготовка к ЕГЭ по математике',
-        'value': '2'
-    }, {
-        'label': 'Подготовка к ОГЭ по русскому языку',
-        'value': '3'
-    }, {
-        'label': 'Подготовка к ОГЭ по математике',
-        'value': '4'
-    }, {
-        'label': 'Игра на фортепиано',
-        'value': '5'
-    }, {
-        'label': 'Русский язык',
-        'value': '6'
-    }, {
-        'label': 'Математика',
-        'value': '7'
-    }];
-
     var filterPanel = new FilterPanel();
 
     filterPanel
         .setFilterAge(searchParams.age)
-        .setFilterCourse(options, searchParams.course)
+        .setFilterType(filtersData.type, searchParams.course)
         .setFilterCost(searchParams.cost)
         .setFilterWeekDays(searchParams.schedule)
         .setFilterTime(searchParams.time)
@@ -121,6 +98,7 @@ searchView.map = function(courses, viewType) {
     };
 };
 
+
 /**
  * @param {{
  *     user: Object,
@@ -129,7 +107,8 @@ searchView.map = function(courses, viewType) {
  *     coursesList: Array<Object>,
  *     mapData: Object<Object>,
  *     searchParams: Object,
- *     favorites: Object
+ *     favorites: Object,
+ *     filtersData: Array<Object>
  * }} data
  * @return {Object}
  */
@@ -148,7 +127,7 @@ searchView.render = function(data) {
             links: {
                 nameL: 'Все курсы, кружки и секции',
                 nameM: 'Все курсы',
-                url: '/'
+                url: '/coursesearch'
             },
             search: {
                 placeholder: 'Район, метро, название курса'
@@ -161,7 +140,7 @@ searchView.render = function(data) {
         map: this.map(data.mapCourses, mapViewType.PIN),
         search: {
             countResults: data.countResults,
-            searchText: '',
+            searchText: data.searchParams.name,
             placeholder: 'Район, метро, название курса',
             declensionEntityType: {
                 nom: 'курс',
@@ -193,9 +172,53 @@ searchView.render = function(data) {
             items: courseView.list(data.coursesList),
             itemType: 'smItemEntity'
         },
-        filterPanel: searchView.filterPanel(null, data.searchParams),
+        filterPanel: searchView.filterPanel(
+            data.filtersData,
+            data.searchParams
+        ),
         searchParams: data.searchParams
     };
+};
+
+/**
+ * @param  {Object} params
+ * @return {Object}
+ */
+searchView.initSearchParams = function(params) {
+    return {
+        page: params.page || 0,
+        age: this.transformToArray(params.age),
+        type: this.transformToArray(params.type),
+        cost: this.transformToArray(params.cost),
+        weekdays: this.transformToArray(params.weekdays),
+        time: this.transformToArray(params.time),
+        regularity: this.transformToArray(params.regularity),
+        formTraining: this.transformToArray(params.formTraining),
+        duration: this.transformToArray(params.duration),
+        sortType: params.sortType,
+        name: params.name,
+        metroId: params.metroId || null,
+        areaId: params.areaId || null,
+        districtId: params.districtId || null
+    };
+};
+
+/**
+ * @param  {(number|string|undefined|Array)} value
+ * @return {Array}
+ */
+searchView.transformToArray = function(value) {
+    var result;
+    if (value && ~value.indexOf(',')) {
+        result = value.split(',');
+    } else if (typeof value === 'number' || typeof value === 'string') {
+        result = [value];
+    } else if (Array.isArray(value)) {
+        result = value;
+    } else {
+        result = [];
+    }
+    return result;
 };
 
 module.exports = searchView;

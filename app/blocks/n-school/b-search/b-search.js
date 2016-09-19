@@ -947,9 +947,9 @@ goog.scope(function() {
      * @param {Object} data
      * @private
      */
-    Search.prototype.onNotEntitySelect_ = function(event, data) {
-        var url = '/search' +
-                '?name=' + encodeURIComponent(data['text']);
+    Search.prototype.onNotSchoolSelect_ = function(event, data) {
+        var url = '/school' + '?name=' + encodeURIComponent(data['text']);
+
         if (data['item']['type'] === 'metro') {
             url += '&metroId=' + data['item']['id'];
         } else if (data['item']['type'] === 'areas') {

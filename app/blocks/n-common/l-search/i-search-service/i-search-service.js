@@ -224,7 +224,7 @@ goog.scope(function() {
      * @private
      */
     SearchService.prototype.onSearchDataLoaded_ = function(data) {
-        this.dispatchDataEvents_(data);
+        this.dispatchDataEvents_(data.data);
         this.resetSearchDataRequest_();
     };
 
@@ -238,7 +238,7 @@ goog.scope(function() {
      * @private
      */
     SearchService.prototype.onMapDataLoaded_ = function(data) {
-        this.dispatchDataEvents_(data);
+        this.dispatchDataEvents_(data.data);
         this.resetMapDataRequest_();
     };
 

@@ -348,11 +348,15 @@ exports.search = async(function(req, res) {
 exports.searchMapPoints = async(function(req, res) {
     var result;
     try {
-        var params = await(services.schoolSearch.initSearchParams(req.query));
+        var params = await(services.schoolSearch.initSearchParams(
+            req.query
+        ));
 
         var promises = {
             schools: services.school.list(params),
-            mapPosition: services.schoolSearch.getMapPositionParams(params),
+            mapPosition: services.schoolSearch.getMapPositionParams(
+                params
+            ),
             aliases: services.page.getAllAliases(entityType.SCHOOL)
         };
         var results = await(promises);
@@ -494,7 +498,6 @@ exports.specializedClassType = async(function(req, res) {
                 await(services.specializedClasses.searchTypeByName(name));
 
         result = specializedClassesView.typeFilters(specializedClassTypes);
-        res.status(200);
     } catch (error) {
         res.status(500);
         result = error.message;

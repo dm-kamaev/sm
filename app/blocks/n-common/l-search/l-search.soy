@@ -160,7 +160,6 @@
  * }}
  * @override
  */
-
 {template .mainContent autoescape="strict" kind="html"}
     <div class="{call .rootClass/}__body">
         {call .sectionMap_ data="all" /}
@@ -515,7 +514,16 @@
     {/let}
 
     <div class="{$classes}">
-        {call .listHeaderText data="all"/}
+        {call .listHeaderText}
+            {param params: [
+                'data': [
+                    'seo': $params.data?.seo,
+                    'searchText': $params.data?.search?.searchText,
+                    'countResults': $params.data?.search?.countResults,
+                    'declensionEntityType': $params.data?.search?.declensionEntityType
+                ]
+            ]/}
+        {/call}
     </div>
 {/template}
 
@@ -528,14 +536,12 @@
  *             title: (string|undefined),
  *             description: (string|undefined)
  *         },
- *         search: {
- *             countResults: number,
- *             searchText: ?string,
- *             declensionEntityType: {
- *                 nom: string,
- *                 gen: string,
- *                 plu: string
- *             }
+ *         countResults: number,
+ *         searchText: ?string,
+ *         declensionEntityType: {
+ *             nom: string,
+ *             gen: string,
+ *             plu: string
  *         }
  *     }
  * }}
@@ -543,19 +549,13 @@
 {template .listHeaderText}
     <div class="{call .rootClass/}__list-header-text">
         {if $params.data?.seo and $params.data?.seo?.title}
-            {call .headerText_ data="all" /}
+            {call .headerTextSeo_ data="all" /}
 
             {if $params.data.seo.description}
-                {call .headerDescription_ data="all" /}
+                {call .headerDescriptionSeo_ data="all" /}
             {/if}
         {else}
-            {call .generateHeaderText_}
-                {param params: [
-                    'searchText': $params.data?.search?.searchText,
-                    'countResults': $params.data?.search?.countResults,
-                    'declensionEntityType': $params.data?.search?.declensionEntityType
-                ]/}
-            {/call}
+            {call .generateHeaderText_ data="all" /}
         {/if}
     </div>
 {/template}
@@ -576,6 +576,7 @@
 
     {let $wrapperClasses kind="html"}
         {call .rootClass /}__sort
+
         {if not $params.data.search?.countResults}
             {sp}{cl.iUtils.Utils.CssClass.HIDDEN}
         {/if}
@@ -614,7 +615,7 @@
  *     }
  * }}
  */
-{template .headerText_}
+{template .headerTextSeo_}
     {let $classes kind="html"}
         {call .rootClass/}__list-header-text{sp}
         {call .rootClass/}__list-header-text_strong
@@ -640,7 +641,7 @@
  *     }
  * }}
  */
-{template .headerDescription_}
+{template .headerDescriptionSeo_}
     <div class="{call .rootClass/}__list-header-text{sp}
                 {call .rootClass/}__list-header-text_description">
         {$params.data.seo?.description}
@@ -651,8 +652,142 @@
 /**
  * Generates header text for results
  * @param params {{
+ *     data: {
+ *         searchText: ?string,
+ *         countResults: number,
+ *         declensionEntityType: {
+ *             nom: string,
+ *             gen: string,
+ *             plu: string
+ *         }
+ *     }
+ * }}
+ */
+{template .generateHeaderText_}
+    {call .listHeaderTextFirstPart_ data="all" /}
+        мы{sp}
+    {call .listHeaderTextSecondPart_ data="all" /}
+{/template}
+
+
+/**
+ * First part of text for list header
+ * @param params {{
+ *     data: {
+ *         searchText: string
+ *     }
+ * }}
+ */
+{template .listHeaderTextFirstPart_}
+    {if $params.data?.searchText and length($params.data?.searchText)}
+        {call .listHeaderSearchText_ data="all" /}
+    {else}
+        По вашему запросу{sp}
+    {/if}
+{/template}
+
+
+/**
+ * Search text for list header
+ * @param params {{
+ *     data: {
+ *         searchText: string
+ *     }
+ * }}
+ */
+{template .listHeaderSearchText_}
+    По запросу{sp}
+
+    <span class="{call .rootClass/}__list-header-text{sp}
+                 {call .rootClass/}__list-header-text_strong">
+        «{$params.data.searchText}»
+    </span>{sp}
+{/template}
+
+
+/**
+ * Second part of text for list header
+ * @param params {{
+ *     data: {
+ *         countResults: number,
+ *         declensionEntityType: {
+ *             nom: string,
+ *             gen: string,
+ *             plu: string
+ *         }
+ *     }
+ * }}
+ * }}
+ */
+{template .listHeaderTextSecondPart_}
+     <span class="{call .rootClass/}__list-header-text{sp}
+                 {call .rootClass/}__list-header-text_change">
+        {if $params.data.countResults == 0}
+            не нашли ничего.
+        {else}
+            {call .listHeaderCountResults_ data="all" /}
+        {/if}
+    </span>
+{/template}
+
+
+/**
+ * Count results for list header
+ * @param params {{
+ *     data: {
+ *         countResults: number,
+ *         declensionEntityType: {
+ *             nom: string,
+ *             gen: string,
+ *             plu: string
+ *         }
+ *     }
+ * }}
+ * }}
+ */
+{template .listHeaderCountResults_}
+    нашли{sp}
+
+    <span class="{call .rootClass/}__list-header-text{sp}
+                {call .rootClass/}__list-header-text_strong{sp}
+                {call .rootClass/}__list-header-text_amount">
+        {$params.data.countResults}{sp}
+
+        {call .listHeaderEntityType_ data="all" /}
+    </span>
+{/template}
+
+
+/**
+ * Entity type for list header
+ * @param params {{
+ *     data: {
+ *         countResults: number,
+ *         declensionEntityType: {
+ *             nom: string,
+ *             gen: string,
+ *             plu: string
+ *         }
+ *     }
+ * }}
+ * }}
+ */
+{template .listHeaderEntityType_}
+    {call cl.iUtils.Utils.declensionPrint}
+        {param params: [
+            'num': $params.data.countResults,
+            'nom': ' ' + $params.data.declensionEntityType.nom,
+            'gen': ' ' + $params.data.declensionEntityType.gen,
+            'plu': ' ' + $params.data.declensionEntityType.plu
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * Generates header text for results
+ * @param params {{
  *     searchText: ?string,
- *     countResults: number,
  *     countResults: number,
  *     declensionEntityType: {
  *         nom: string,
@@ -661,7 +796,7 @@
  *     }
  * }}
  */
-{template .generateHeaderText_}
+{template .eee}
     {if $params?.searchText and length($params?.searchText)}
         По запросу{sp}
         <span class="{call .rootClass/}__list-header-text{sp}
@@ -802,7 +937,14 @@
  *         searchParams: Array<{
  *             name: string,
  *             value: (Array<(string|number)>)
- *         }>
+ *         }>,
+ *         search: {
+ *             declensionEntityType: {
+ *                 nom: string,
+ *                 gen: string,
+ *                 plu: string
+ *             }
+ *         }
  *     },
  *     config: {
  *         entityType: string
@@ -817,6 +959,7 @@
                 'searchParams': $params.data?.searchParams,
                 'isUserAuthorized': $params.data?.user ? true : false,
                 'authSocialLinks': $params.data?.authSocialLinks,
+                'declensionEntityType': $params.data?.search?.declensionEntityType,
                 'type': $params?.config.entityType
             ] /}
         {/call}"

@@ -26,27 +26,38 @@ exports.search = async(function(req, res, next) {
     try {
         var authSocialLinks = services.auth.getAuthSocialUrl(),
             user = req.user || {},
-            searchParams =
-                await(services.schoolSearch.initSearchParams(req.query));
+            searchParams = searchView.initSearchParams(req.query);
+        searchParams.page = 0;
 
-        var courses = await(services.course.list({page: 0}, 10));
-        var mapCourses = await(services.course.listMap({page: 0}, 10));
+        var data = await({
+            courses: services.course.list(searchParams, 10),
+            mapCourses: services.course.listMap(searchParams, 10),
+            filtersData: {
+                type: services.courseType.getAll()
+            }
+        });
 
-        var data = searchView.render({
+         var favorites = {
+            entities: []
+        };
+
+        var templateData = searchView.render({
             entityType: ENTITY_TYPE,
             user: user,
+            favorites: favorites,
             authSocialLinks: authSocialLinks,
-            countResults: courses[0] && courses[0].countResults || 0,
-            coursesList: courses,
-            mapCourses: mapCourses,
-            searchParams: searchParams
+            countResults: data.courses[0] && data.courses[0].countResults || 0,
+            coursesList: data.courses,
+            mapCourses: data.mapCourses,
+            searchParams: searchParams,
+            filtersData: data.filtersData
         });
 
 
         var html = soy.render(
             'sm.lSearch.Template.search', {
                 params: {
-                    data: data,
+                    data: templateData,
                     config: {
                         entityType: ENTITY_TYPE,
                         modifier: 'stendhal',
@@ -66,6 +77,7 @@ exports.search = async(function(req, res, next) {
         res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(html);
     } catch (error) {
+        console.log('!!!!!!!!!!!!!!!!!!!!!!!!!', error);
         logger.error(error);
 
         res.status(error.code || 500);

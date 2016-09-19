@@ -166,7 +166,7 @@
     <div class="{$classes}">
         {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
-                'factory': $params?.config?.stylizationModifier ?: 'stendhal',
+                'factory': $params?.config?.stylizationModifier,
                 'type': $params.config.type,
                 'renderParams': [
                     'data': $params.data.item,
@@ -183,10 +183,10 @@
  * Attributes
  * @param params {{
  *     data: {
- *         items: Array<(
- *             sm.bSmItem.Template.Params.Data|
- *             sm.bSmItem.TemplateEntity.Params.Data
- *         )>,
+ *         itemConfig: (sm.bSmItem.Template.Params.Config|
+ *             sm.bSmItem.TemplateEntity.Params.Config|
+ *             sm.bSmLink.Template.Params.Config|
+ *             undefined),
  *         itemType: ?string,
  *         countItemsPerPage: ?number
  *     }
@@ -194,11 +194,12 @@
  * @override
  */
 {template .attributes kind="attributes"}
-    {let $data: [
+    {let $data: quoteKeysIfJs([
         'itemType': $params.data.itemType,
+        'itemConfig': $params.data.itemConfig,
         'countItemsPerPage': $params.data?.countItemsPerPage ?:
             length($params.data.items)
-    ]/}
+    ])/}
 
     data-params="
     {call cl.iUtils.Utils.stringify}
