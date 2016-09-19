@@ -43,6 +43,7 @@ service.generateEntityAlias = async(function(entity, entityType) {
         var alias = service.stringToURL(entity.name),
             entityPage =
                 await(services.page.getOne(entity.id, entityType));
+
         if (entityPage && alias != entityPage.alias) {
             try {
                 await(entityPage.update(
@@ -98,6 +99,7 @@ service.generateSchoolAlias = async(function(school) {
 service.generateCourseAlias = async(function(course) {
     await(service.generateEntityAlias(course, entityType.COURSE));
 });
+
 
 /**
  * Used once to generate urls by school id
