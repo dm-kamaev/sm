@@ -118,8 +118,6 @@ goog.scope(function() {
             'smListPaged',
             this.getView().getDom().entitiesListPaged
         );
-
-        entitiesListPaged = this.entitiesListPaged_;
     };
 
 
