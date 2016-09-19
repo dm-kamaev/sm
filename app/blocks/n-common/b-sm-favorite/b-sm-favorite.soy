@@ -1,0 +1,229 @@
+{namespace sm.bSmFavorite.Template}
+
+
+/**
+ * Favorite template parameters
+ * @typedef {{
+ *     entities: ?Array<sm.bSmItem.Template.Params.Data>
+ * }} sm.bSmFavorite.Template.Params.Data
+ */
+
+
+/**
+ * Constructor
+ * @param params {{
+ *     data: sm.bSmFavorite.Template.Params.Data,
+ *     config: {
+ *         isUserAuthorized: boolean
+ *     }
+ * }}
+ * @extends cl.iControl.Template
+ * @constructor
+ */
+{template .favorite}
+    {call .init data="all" /}
+{/template}
+
+
+/**
+ * Body
+ * @override
+ */
+{template .body}
+    {call .icon_/}
+    {call .tooltip_ data="all"/}
+{/template}
+
+
+/**
+ * Icon template
+ */
+{template .icon_}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__icon
+    {/let}
+
+    <div class="{call .rootClass/}__icon-wrap">
+        {call .renderChild}
+            {param params: [
+                'type': 'icon',
+                'renderParams': [
+                    'data': [
+                        'type': 'favorite'
+                    ],
+                    'config': [
+                        'customClasses': [$customClasses]
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Tooltips template
+ */
+{template .tooltip_}
+    {let $tooltipData kind="html"}
+        {call .tooltipData_ data="all" /}
+    {/let}
+
+    {let $customClasses kind="html"}
+        {call .rootClass/}__hint
+    {/let}
+
+    {call .renderChild}
+        {param params: [
+            'type': 'hint',
+            'renderParams': [
+                'data': $tooltipData,
+                'config': [
+                    'offset': 'm',
+                    'topOffset': 'l',
+                    'contentAlign': 'middle',
+                    'customClasses': [$customClasses],
+                    'noPadding': true,
+                    'theme': 'straight-arrow'
+                ]
+            ]
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * tooltip Data
+ */
+{template .tooltipData_}
+    <div class="{call .rootClass/}__hint-content
+                {sp}{call .rootClass/}__hint-content_user-authorized">
+        {call .contentUserAuthorized_ data="all"/}
+    </div>
+
+    <div class="{call .rootClass/}__hint-content
+                {sp}{call .rootClass/}__hint-content_user-not-authorized">
+        {call .contentUserNotAuthorized_ /}
+    </div>
+{/template}
+
+
+/**
+ * Tooltip content for state, when user is authorized
+ */
+{template .contentUserAuthorized_}
+    <div class="{call .rootClass/}__hint-content-text
+                {sp}{call .rootClass/}__hint-content-text_favorite-empty">
+        {call .contentTextAuthoroized_ /}
+    </div>
+
+     <div class="{call .rootClass/}__hint-content-list">
+        {call .listEntities_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Сontent text if array entities is empty
+ */
+{template .contentTextAuthoroized_}
+    Пока&nbsp;вы&nbsp;ничего не&nbsp;добавили&nbsp;в&nbsp;избранное.
+{/template}
+
+
+/**
+ * list of entities
+ * @param params {{
+ *     data: {
+ *         entities: ?Array<sm.bSmItem.Template.Params.Data>
+ *     }
+ * }}
+ */
+{template .listEntities_}
+    {call .renderChild}
+        {param params: [
+            'type': 'smListPaged',
+            'renderParams': [
+                'data': [
+                    'countItemsPerPage': 5,
+                    'items': $params.data?.entities
+                ],
+                'config': [
+                    'itemType': 'smItem'
+                ]
+            ]
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * Tooltip content for state, when user not authorized
+ */
+{template .contentUserNotAuthorized_}
+    <div class="{call .rootClass/}__hint-content-text
+                {sp}{call .rootClass/}__hint-content-text_user-not-authorized">
+        {call .contentTextNotAuthorized_ /}
+    </div>
+{/template}
+
+
+/**
+ * content text if user not authorized
+ */
+{template .contentTextNotAuthorized_}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__link-authorize
+    {/let}
+
+    {call .renderChild}
+        {param params: [
+            'type': 'smLink',
+            'renderParams': [
+                'data': [
+                    'content': 'Войдите'
+                ],
+                'config': [
+                    'size': 'm',
+                    'customClasses': [$customClasses]
+                ]
+            ]
+        ]/}
+    {/call}
+
+    ,{sp}чтобы добавлять&nbsp;в&nbsp;избранное
+{/template}
+
+
+/**
+ * Css classes
+ * @param params {{
+ *     data: {
+ *         entities: ?Array<sm.bSmItem.Template.Params.Data>
+ *     },
+ *     config: {
+ *         isUserAuthorized: boolean
+ *     }
+ * }}
+ * @override
+ */
+{template .additionalClasses}
+    {if $params.data?.entities and length($params.data?.entities)}
+        {sp}{call .rootClass/}_filled
+    {/if}
+
+    {if $params.config.isUserAuthorized}
+        {sp}{call .rootClass/}_user-authorized
+    {else}
+        {sp}{call .rootClass/}_user-not-authorized
+    {/if}
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-sm-favorite
+{/template}

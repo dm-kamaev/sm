@@ -10,7 +10,7 @@
  *     )>,
  *     itemConfig: (sm.bSmItem.Template.Params.Config|
  *         sm.bSmItem.TemplateEntity.Params.Config|
- *         sm.bSmLink.Template.Params.Config)
+ *         sm.bSmLink.Template.Params.Config),
  *     countItemsPerPage: number
  * }} sm.bSmListPaged.Template.Params.Data
  */
@@ -110,9 +110,8 @@
  */
 {template .list_ kind="html" private="true"}
     <div class="{call .rootClass/}__list">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+        {call .renderChild}
             {param params: [
-                'factory': $params?.config?.stylizationModifier ?: 'stendhal',
                 'type': 'smItemList',
                 'renderParams': [
                     'data': [

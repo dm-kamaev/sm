@@ -357,7 +357,7 @@ goog.scope(function() {
      */
     Subheader.prototype.initFavorite_ = function() {
         this.favorite_ = this.decorateChild(
-            'favorite',
+            'smFavorite',
             this.getView().getDom().favorite
         );
     };

@@ -22,7 +22,7 @@
  *         firstName: ?string,
  *         lastName: ?string
  *     },
- *     favorites: sm.bSmListPaged.Template.Params.Data
+ *     favorites: sm.bSmFavorite.Template.Params.Data
  * }} sm.bSmSubheader.Template.Params.Data
  */
 
@@ -102,7 +102,7 @@
  *             firstName: ?string,
  *             lastName: ?string
  *         },
- *         favorites: sm.bSmListPaged.Template.Params.Data
+ *         favorites: sm.bSmFavorite.Template.Params.Data
  *     }
  * }}
  */
@@ -199,7 +199,7 @@
  *             firstName: ?string,
  *             lastName: ?string
  *         },
- *         favorites: sm.bSmListPaged.Template.Params.Data
+ *         favorites: sm.bSmFavorite.Template.Params.Data
  *     }
  * }}
  */
@@ -245,7 +245,7 @@
  * template favorite
  * @param params {{
  *     data: {
- *          favorites: sm.bSmListPaged.Template.Params.Data
+ *          favorites: sm.bSmFavorite.Template.Params.Data
  *     },
  *     config: {
  *         stylizationModifier: string
@@ -258,11 +258,11 @@
         <div class="{call .rootClass/}__favorite-content">
             {call .renderChild}
                 {param params: [
-                    'type': 'favorite',
+                    'type': 'smFavorite',
                     'renderParams': [
                         'data': $params.data?.favorites,
                         'config': [
-                            'isUserAuthorized': $params.data?.user ? true : false
+                            'isUserAuthorized': $params.data.user ? true : false
                         ]
                     ]
                 ]/}

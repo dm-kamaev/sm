@@ -137,7 +137,7 @@ goog.scope(function() {
      */
     View.prototype.initFavorite_ = function(element) {
         this.dom.favorite = this.getElementByClass(
-            sm.bFavorite.View.CssClass.ROOT,
+            sm.bSmFavorite.View.CssClass.ROOT,
             element
         );
     };
