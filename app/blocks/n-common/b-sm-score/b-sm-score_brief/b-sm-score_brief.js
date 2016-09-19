@@ -54,7 +54,6 @@ goog.scope(function() {
      * @return {sm.bSmScore.SmScoreBrief.RenderParams}
      */
     Score.getRenderParams = function(rawParams) {
-        console.log(rawParams);
         return View.getRenderParams(rawParams);
     };
 
