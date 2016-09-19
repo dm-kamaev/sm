@@ -6,6 +6,9 @@ var soy = require('../../../components/soy'),
     courseView = require('../../../../api/modules/course/views/courseView'),
     searchView = require('../../../../api/modules/course/views/searchView');
 
+const entityType =
+    require('../../../../api/modules/entity/enums/entityType.js');
+
 var config = require('../../../config').config;
 
 var logger = require('../../../components/logger/logger').getLogger('app');
@@ -14,8 +17,6 @@ const ANALYTICS_ID = config.analyticsId,
     YANDEX_METRIKA_ID = config.yandexMetrikaId,
     DOMAIN = config.url.protocol + '://' + config.url.host,
     FB_CLIENT_ID = config.facebookClientId;
-
-const ENTITY_TYPE = 'course';
 
 
 exports.search = async(function(req, res, next) {
@@ -34,7 +35,7 @@ exports.search = async(function(req, res, next) {
         });
 
         var templateData = searchView.render({
-            entityType: ENTITY_TYPE,
+            entityType: entityType.COURSE,
             user: user,
             authSocialLinks: authSocialLinks,
             countResults: data.courses[0] && data.courses[0].countResults || 0,
@@ -43,7 +44,6 @@ exports.search = async(function(req, res, next) {
             searchParams: searchParams,
             filtersData: data.filtersData
         });
-
 
         var html = soy.render(
             'sm.lSearch.Template.search', {

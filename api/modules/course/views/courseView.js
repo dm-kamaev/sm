@@ -6,6 +6,9 @@ const scoreView = require('./scoreView'),
     areaView = require('../../geo/views/areaView'),
     districtView = require('../../geo/views/districtView');
 
+const entityType =
+        require('../../../../api/modules/entity/enums/entityType.js');
+
 /**
  * @param {Array<Object>} courses
  * @return {Object}
@@ -167,10 +170,10 @@ exports.mapCourse = function(course) {
  * @param {string} type
  * @return {Object}
  */
-exports.getListCourse = function(course, type) {
+exports.getListCourse = function(course) {
     return {
         id: course.id,
-        type: type,
+        type: entityType.COURSE,
         name: {light: course.name},
         description: course.description,
         brand: course.brand,

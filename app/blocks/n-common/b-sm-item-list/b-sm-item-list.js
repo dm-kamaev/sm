@@ -115,7 +115,7 @@ goog.scope(function() {
      * @public
      */
     ItemList.prototype.addItemsBottom = function(data) {
-        goog.array.forEach(data, function (rawItemData) {
+        goog.array.forEach(data, function(rawItemData) {
                 this.addItem(rawItemData);
         }, this);
 
