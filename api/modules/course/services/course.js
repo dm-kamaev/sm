@@ -1,13 +1,44 @@
-var async = require('asyncawait/async'),
+const async = require('asyncawait/async'),
     await = require('asyncawait/await'),
     squel = require('squel');
 
-var sequelize = require('../../../../app/components/db'),
+const sequelize = require('../../../../app/components/db'),
     models = require('../../../../app/components/models').all,
     services = require('../../../../app/components/services').all;
 
 var service = {
     name: 'course'
+};
+
+const informationFields = {
+    COURSE: [
+        'id',
+        'name',
+        'totalScore',
+        'score',
+        'scoreCount',
+        'description',
+        'fullDescription',
+        'entranceExam',
+        'learningOutcome',
+        'leadType'
+    ],
+    BRAND: ['id', 'name'],
+    OPTION: [
+        'id',
+        'totalCost',
+        'age',
+        'maxGroupSize',
+        'currentGroupSize',
+        'lengthWeeks',
+        'online',
+        'name',
+        'description'
+    ],
+    SCHEDULE: ['day', 'startTime'],
+    DEPARTMENT: ['id'],
+    ADDRESS: ['id', 'name', 'coords'],
+    METRO: ['id', 'name']
 };
 
 /**
@@ -69,6 +100,49 @@ service.create = async(function(data) {
     );
 
     return course;
+});
+
+/**
+ * @type {number} id
+ * @return {Course}
+ */
+service.information = async(function(id) {
+    var optionInclude = [{
+        attributes: informationFields.SCHEDULE,
+        model: models.CourseSchedule,
+        as: 'schedule'
+    }, {
+        attributes: informationFields.DEPARTMENT,
+        model: models.CourseDepartment,
+        as: 'departments',
+        include: [{
+            attributes: informationFields.ADDRESS,
+            model: models.Address,
+            as: 'address',
+            include: [{
+                attributes: informationFields.METRO,
+                model: models.Metro,
+                as: 'metroStations'
+            }]
+        }]
+    }];
+
+    return models.Course.findOne({
+        attributes: informationFields.COURSE,
+        where: {
+            id: id
+        },
+        include: [{
+            attributes: informationFields.BRAND,
+            model: models.CourseBrand,
+            as: 'courseBrand'
+        }, {
+            attributes: informationFields.OPTION,
+            model: models.CourseOption,
+            as: 'courseOptions',
+            include: optionInclude
+        }]
+    });
 });
 
 /**

@@ -91,6 +91,8 @@ exports.information = async(function(req, res, next) {
         var authSocialLinks = services.auth.getAuthSocialUrl(),
             user = req.user || {};
 
+        var course = await(services.course.information(1));
+
         var entityData = {
             id: 12,
             name: 'Система «Выбор»',
@@ -358,7 +360,7 @@ exports.information = async(function(req, res, next) {
         var data = informationView.render({
             user: user,
             authSocialLinks: authSocialLinks,
-            entityData: entityData,
+            entityData: entityData,//courseView.page(course),
             map: map,
             favorites: favorites,
             actionButtonText: 'Хочу этот курс!'

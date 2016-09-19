@@ -1,16 +1,79 @@
+'use strict';
+
 const lodash = require('lodash');
 
 const scoreView = require('./scoreView'),
     metroView = require('../../geo/views/metroView'),
     geoView = require('../../geo/views/geoView'),
     areaView = require('../../geo/views/areaView'),
-    districtView = require('../../geo/views/districtView');
+    districtView = require('../../geo/views/districtView'),
+    FormatText = require('../../entity/lib/FormatText');
+
+let view = {};
+
+const FULL_DESCRIPTION_LENGTH = 300;
+
+/**
+ * @param  {Object} course
+ * @return {Object}
+ */
+view.page = function(course) {
+    return {
+        id: course.id,
+        name: course.name,
+        description: course.description,
+        fullDescription: this.formatFullDescription(course.fullDescription),
+        score: {
+            marks: {
+                primary: {
+                    value: course.totalScore
+                },
+                secondary: [{
+                    name: 'Образование',
+                    value: course.score ? course.score[0] : 0
+                }, {
+                    name: 'Преподаватели',
+                    value: course.score ? course.score[1] : 0
+                }, {
+                    name: 'Атмосфера',
+                    value: course.score ? course.score[2] : 0
+                }, {
+                    name: 'Инфраструктура',
+                    value: course.score ? course.score[3] : 0
+                }]
+            },
+            secondaryMarkListHeader: 'Оценки, поставленные пользователями'
+        },
+        cost: Math.min.apply(null, course.courseOptions.map(
+            option => option.totalCost
+        )) + ' руб. / курс',
+        generalOptions: {
+            items: []
+        }
+    };
+};
+
+/**
+ * @param  {string} text
+ * @return {Object}
+ */
+view.formatFullDescription = function(text) {
+    let result = {};
+    if (text.length > FULL_DESCRIPTION_LENGTH) {
+        let formatText = new FormatText();
+        result.fullText = text;
+        result.cutText = formatText.cut(text, FULL_DESCRIPTION_LENGTH, ' ');
+    } else {
+        result.cutText = text;
+    }
+    return result;
+};
 
 /**
  * @param {Array<Object>} courses
  * @return {Object}
  */
-exports.list = function(courses) {
+view.list = function(courses) {
     return courses.reduce((prev, curr, i) => {
         var coursePosition = prev.findIndex(course => course.id === curr.id);
         if (~coursePosition) {
@@ -34,7 +97,7 @@ exports.list = function(courses) {
  *     itemGroups: Array<{Object}>
  * }}
  */
-exports.listMap = function(courses, viewType) {
+view.listMap = function(courses, viewType) {
     return courses.reduce((prev, curr) => {
         var addressPosition = prev.findIndex(
             course => course.addressId == curr.addressId
@@ -69,7 +132,7 @@ exports.listMap = function(courses, viewType) {
  *     districts: Array<Object>
  * }}
  */
-exports.suggest = function(data) {
+view.suggest = function(data) {
     return {
         courses: this.suggestList(data.courses),
         areas: areaView.list(data.areas),
@@ -82,7 +145,7 @@ exports.suggest = function(data) {
  * @param  {Array<Object>} courses
  * @return {Array<Object>}
  */
-exports.suggestList = function(courses) {
+view.suggestList = function(courses) {
     return courses.map(course => ({
         id: course.id,
         alias: 'undefined',
@@ -97,7 +160,7 @@ exports.suggestList = function(courses) {
  * @param  {Array<Object>} courseOptions
  * @return {Array<Object>}
  */
-exports.getAddresses = function(courseOptions) {
+view.getAddresses = function(courseOptions) {
     return lodash.flatten(courseOptions.map(courseOption =>
         courseOption.departments.map(department =>
             department.address
@@ -126,7 +189,7 @@ exports.getAddresses = function(courseOptions) {
  *     }>
  * }}
  */
-exports.getMapItem = function(course) {
+view.getMapItem = function(course) {
     return {
         addressId: course.addressId,
         addressName: course.addressName,
@@ -153,7 +216,7 @@ exports.getMapItem = function(course) {
  *     url: string
  * }}
  */
-exports.mapCourse = function(course) {
+view.mapCourse = function(course) {
     return {
         id: course.id,
         content: course.name,
@@ -167,7 +230,7 @@ exports.mapCourse = function(course) {
  * @param {string} type
  * @return {Object}
  */
-exports.getListCourse = function(course, type) {
+view.getListCourse = function(course, type) {
     return {
         id: course.id,
         type: type,
@@ -198,7 +261,7 @@ exports.getListCourse = function(course, type) {
  * @param {Object} newCourse
  * @return {Object}
  */
-exports.joinListCourse = function(existingCourse, newCourse) {
+view.joinListCourse = function(existingCourse, newCourse) {
     if (newCourse.optionCost < existingCourse.cost) {
         existingCourse.cost = newCourse.optionCost;
     }
@@ -231,3 +294,5 @@ exports.joinListCourse = function(existingCourse, newCourse) {
 
     return existingCourse;
 };
+
+module.exports = view;
