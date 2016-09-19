@@ -12,7 +12,7 @@
  * @typedef {{
  *     zeroSign: ('dash'|'question'|undefined),
  *     notShowValue: (boolean|undefined),
- *     size: (string|undefined),
+ *     size: ('m','l','xl'|undefined),
  *     theme: ('ring'|undefined),
  *     stylizationModifier: string,
  *     customClasses: ?Array<string>
@@ -160,7 +160,7 @@
  *         value: number
  *     },
  *     config: {
- *         size: (string|undefined)
+ *         size: ('m','l','xl'|undefined)
  *     }
  * }}
  * @override
@@ -169,7 +169,7 @@
     {call .rootClass/}_color_{call .signColor_ data="all"/}
 
     {if $params.config.size}
-        {sp}b-mark_size_{$params.config.size}
+        {sp}{call .rootClass/}_size_{$params.config.size}
     {/if}
 {/template}
 

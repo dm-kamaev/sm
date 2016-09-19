@@ -92,6 +92,30 @@
 }
 /** end theme ring */
 
+
+/** size */
+.b-sm-mark_size_m {
+    .b-sm-mark__sign {
+        width: 9px;
+        height: 9px;
+    }
+}
+
+.b-sm-mark_size_l {
+    .b-sm-mark__sign {
+        width: 10px;
+        height: 10px;
+    }
+}
+
+.b-sm-mark_size_xl {
+    .b-sm-mark__sign {
+        width: 11px;
+        height: 11px;
+    }
+}
+/** end size */
+
 @include media-xxs {
     .b-sm-mark__sign {
         display: none;
