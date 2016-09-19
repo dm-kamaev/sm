@@ -6,12 +6,14 @@
     }
 }
 
-.b-sm-item-list__item-wrap_not-line-bottom {
-    border-bottom: none;
-}
-
 .b-sm-item-list_light-theme {
     .b-sm-item-list__item-wrap {
+        border-bottom: none;
+    }
+}
+
+.b-sm-item-list_count-items_5 {
+    .b-sm-item-list__item-wrap:nth-child(5n) {
         border-bottom: none;
     }
 }

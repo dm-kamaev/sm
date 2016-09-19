@@ -107,12 +107,6 @@
 
     <div class="{call .rootClass/}__list">
         {for $i in range(length($params.data.items))}
-
-            {let $isLastOnPage:
-                ceiling(($i + 1)/$params.data.countItemsPerPage) ==
-                ($i + 1)/$params.data.countItemsPerPage
-            /}
-
             {call .item}
                 {param params: [
                     'data': [
@@ -122,8 +116,7 @@
                     'config': [
                         'type': $params.data.itemType,
                         'isHidden': $i >= $countItemsPerPage ? true : false,
-                        'stylizationModifier': $params.config.stylizationModifier,
-                        'isLastOnPage': $isLastOnPage
+                        'stylizationModifier': $params.config.stylizationModifier
                     ]
                 ]/}
             {/call}
@@ -148,8 +141,7 @@
  *     config: {
  *         type: string,
  *         isHidden: ?boolean,
- *         stylizationModifier: (string|undefined),
- *         isLastOnPage: boolean
+ *         stylizationModifier: (string|undefined)
  *     }
  * }}
  */
@@ -217,6 +209,21 @@
     {call cl.iUtils.Utils.stringify}
         {param json: $data/}
     {/call}"
+{/template}
+
+
+/**
+ * @param params {
+ *     data: {
+ *         countItemsPerPage: (number|undefined)
+ *     }
+ * }
+ * @override
+ */
+{template .additionalClasses}
+    {if $params.data?.countItemsPerPage}
+        {call .rootClass /}_count-items_{$params.data.countItemsPerPage}
+    {/if}
 {/template}
 
 

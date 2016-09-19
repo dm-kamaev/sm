@@ -248,27 +248,11 @@ goog.scope(function() {
                     },
                     config: {
                         type: this.params.itemType,
-                        stylizationModifier: this.getStylization(),
-                        isLastOnPage: this.params.countItemsPerPage ?
-                            this.isLastItemOnPage_() :
-                            null
+                        stylizationModifier: this.getStylization()
                     }
                 }
             }
         );
-    };
-
-
-    /**
-     * Return true if item is last visible item on page or false
-     * @return {boolean}
-     * @private
-     */
-    View.prototype.isLastItemOnPage_ = function() {
-        return Math.ceil(
-            (this.dom.items.length + 1) / this.params.countItemsPerPage
-        ) ==
-            this.dom.items.length + 1 / this.params.countItemsPerPage;
     };
 
 
