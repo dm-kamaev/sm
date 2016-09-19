@@ -1,6 +1,7 @@
 var FilterPanel = require('../lib/CourseFilterPanel');
 const courseView = require('./courseView');
 const mapViewType = require('../../entity/enums/mapViewType');
+const userView = require('../../user/views/user');
 
 var searchView = {};
 
@@ -127,11 +128,14 @@ searchView.map = function(courses, viewType) {
  *     countResults: number,
  *     coursesList: Array<Object>,
  *     mapData: Object<Object>,
- *     searchParams: Object
+ *     searchParams: Object,
+ *     favorites: Object
  * }} data
  * @return {Object}
  */
 searchView.render = function(data) {
+    var user = userView.default(data.user);
+
     return {
         type: data.entityType,
         seo: {
@@ -149,10 +153,10 @@ searchView.render = function(data) {
             search: {
                 placeholder: 'Район, метро, название курса'
             },
-            user: data.user,
-            favorites: []
+            user: user,
+            favorites: data.favorites
         },
-        user: data.user,
+        user: user,
         authSocialLinks: data.authSocialLinks,
         map: this.map(data.mapCourses, mapViewType.PIN),
         search: {

@@ -172,11 +172,135 @@ exports.information = async(function(req, res, next) {
             }]
         };
 
+        var favorites = {
+            entities: [{
+                id: 12,
+                type: ENTITY_TYPE,
+                name: {
+                    light: 'School',
+                    bold: '#12'
+                },
+                alias: '',
+                score: {
+                    marks: {
+                        primary: {
+                            value: 12
+                        }
+                    }
+                },
+                metro: [{
+                    id: 3,
+                    name: 'Павелецкая'
+                }]
+            },
+            {
+                id: 12,
+                type: ENTITY_TYPE,
+                name: {
+                    light: 'School',
+                    bold: '#12'
+                },
+                alias: '',
+                score: {
+                    marks: {
+                        primary: {
+                            value: 12
+                        }
+                    }
+                },
+                metro: [{
+                    id: 3,
+                    name: 'Павелецкая'
+                }]
+            },
+            {
+                id: 12,
+                type: ENTITY_TYPE,
+                name: {
+                    light: 'School',
+                    bold: '#12'
+                },
+                alias: '',
+                score: {
+                    marks: {
+                        primary: {
+                            value: 12
+                        }
+                    }
+                },
+                metro: [{
+                    id: 3,
+                    name: 'Павелецкая'
+                }]
+            },
+            {
+                id: 12,
+                type: ENTITY_TYPE,
+                name: {
+                    light: 'School',
+                    bold: '#12'
+                },
+                alias: '',
+                score: {
+                    marks: {
+                        primary: {
+                            value: 12
+                        }
+                    }
+                },
+                metro: [{
+                    id: 3,
+                    name: 'Павелецкая'
+                }]
+            },
+            {
+                id: 12,
+                type: ENTITY_TYPE,
+                name: {
+                    light: 'School',
+                    bold: '#12'
+                },
+                alias: '',
+                score: {
+                    marks: {
+                        primary: {
+                            value: 12
+                        }
+                    }
+                },
+                metro: [{
+                    id: 3,
+                    name: 'Павелецкая'
+                }]
+            },
+            {
+                id: 12,
+                type: ENTITY_TYPE,
+                name: {
+                    light: 'School',
+                    bold: '#12'
+                },
+                alias: '',
+                score: {
+                    marks: {
+                        primary: {
+                            value: 12
+                        }
+                    }
+                },
+                metro: [{
+                    id: 3,
+                    name: 'Павелецкая'
+                }]
+            }]
+        };
+
         var data = informationView.render({
             user: user,
             authSocialLinks: authSocialLinks,
             entityData: entityData,
             map: map,
+            favorites: favorites,
             actionButtonText: 'Хочу этот курс!'
         });
 

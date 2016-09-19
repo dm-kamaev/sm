@@ -1,14 +1,20 @@
+const userView = require('../../user/views/user');
+
+
 /**
  * @param {{
  *     user: Object,
  *     authSocialLinks: Object,
  *     entityData: Object,
  *     map: Object,
+ *     favorites: Object,
  *     actionButtonText: string
  * }} data
  * @return {Object}
  */
 exports.render = function(data) {
+    var user = userView.default(data.user);
+
     return {
         seo: {
             metaTitle: 'Кружки и секции'
@@ -25,10 +31,10 @@ exports.render = function(data) {
             search: {
                 placeholder: 'Район, метро, название курса'
             },
-            user: data.user,
-            favorites: []
+            user: user,
+            favorites: data.favorites
         },
-        user: data.user,
+        user: user,
         authSocialLinks: data.authSocialLinks,
         entityData: data.entityData,
         map: data.map,
