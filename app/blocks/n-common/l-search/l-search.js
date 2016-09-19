@@ -272,10 +272,10 @@ goog.scope(function() {
             this.onSortReleased_
         );
 
-        var resultListItemsCount = this.resultsList_.getCountItems();
-        if (!this.isAllSearchItemsLoaded_(resultListItemsCount)) {
-            this.enableLoadMoreResultsListItems_();
-        }
+        var loadedItemsAmount = this.resultsList_.getCountItems();
+        this.detectShowMoreResultsList_(
+            loadedItemsAmount, this.params.countResults
+        );
 
         return this;
     };
@@ -501,6 +501,7 @@ goog.scope(function() {
             this.disableLoadMoreResultsListItems_();
             this.getView().setShowMoreButtonVisibility(false);
         } else {
+            this.enableLoadMoreResultsListItems_();
             this.getView().setShowMoreButtonVisibility(true);
         }
     };
@@ -532,17 +533,16 @@ goog.scope(function() {
 
     /**
      * Check if all items of current search parameters loaded
-     * @param {number} listItemsLength
-     * @param {number=} opt_countResults
+     * @param {number} loadedItemsAmount
+     * @param {number} countResults
      * @return {boolean}
      * @private
      */
     Search.prototype.isAllSearchItemsLoaded_ = function(
-        listItemsLength,
-        opt_countResults) {
+        loadedItemsAmount,
+        countResults) {
         var listItemsAmount = this.resultsList_.getCountItems();
-        var countResults = opt_countResults || 0;
-        return (listItemsLength < Search.SEARCH_CHUNK_SIZE) ||
+        return (loadedItemsAmount < Search.SEARCH_CHUNK_SIZE) ||
             (countResults == listItemsAmount);
     };
 
