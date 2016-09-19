@@ -190,16 +190,10 @@ exports.information = async(function(req, res, next) {
                 type: ENTITY_TYPE,
                 name: {
                     light: 'School',
-                    bold: '#12'
+                    bold: '#1'
                 },
                 alias: '',
-                score: {
-                    marks: {
-                        primary: {
-                            value: 12
-                        }
-                    }
-                },
+                score: 3,
                 metro: [{
                     id: 3,
                     name: 'Павелецкая'
@@ -210,16 +204,10 @@ exports.information = async(function(req, res, next) {
                 type: ENTITY_TYPE,
                 name: {
                     light: 'School',
-                    bold: '#12'
+                    bold: '#2'
                 },
                 alias: '',
-                score: {
-                    marks: {
-                        primary: {
-                            value: 12
-                        }
-                    }
-                },
+                score: 5,
                 metro: [{
                     id: 3,
                     name: 'Павелецкая'
@@ -230,16 +218,10 @@ exports.information = async(function(req, res, next) {
                 type: ENTITY_TYPE,
                 name: {
                     light: 'School',
-                    bold: '#12'
+                    bold: '#3'
                 },
                 alias: '',
-                score: {
-                    marks: {
-                        primary: {
-                            value: 12
-                        }
-                    }
-                },
+                score: 2,
                 metro: [{
                     id: 3,
                     name: 'Павелецкая'
@@ -250,16 +232,10 @@ exports.information = async(function(req, res, next) {
                 type: ENTITY_TYPE,
                 name: {
                     light: 'School',
-                    bold: '#12'
+                    bold: '#4'
                 },
                 alias: '',
-                score: {
-                    marks: {
-                        primary: {
-                            value: 12
-                        }
-                    }
-                },
+                score: 5,
                 metro: [{
                     id: 3,
                     name: 'Павелецкая'
@@ -270,16 +246,10 @@ exports.information = async(function(req, res, next) {
                 type: ENTITY_TYPE,
                 name: {
                     light: 'School',
-                    bold: '#12'
+                    bold: '#5'
                 },
                 alias: '',
-                score: {
-                    marks: {
-                        primary: {
-                            value: 12
-                        }
-                    }
-                },
+                score: 4,
                 metro: [{
                     id: 3,
                     name: 'Павелецкая'
@@ -290,16 +260,94 @@ exports.information = async(function(req, res, next) {
                 type: ENTITY_TYPE,
                 name: {
                     light: 'School',
-                    bold: '#12'
+                    bold: '#6'
                 },
                 alias: '',
-                score: {
-                    marks: {
-                        primary: {
-                            value: 12
-                        }
-                    }
+                score: 4,
+                metro: [{
+                    id: 3,
+                    name: 'Павелецкая'
+                }]
+            },
+            {
+                id: 12,
+                type: ENTITY_TYPE,
+                name: {
+                    light: 'School',
+                    bold: '#6'
                 },
+                alias: '',
+                score: 4,
+                metro: [{
+                    id: 3,
+                    name: 'Павелецкая'
+                }]
+            },
+            {
+                id: 12,
+                type: ENTITY_TYPE,
+                name: {
+                    light: 'School',
+                    bold: '#6'
+                },
+                alias: '',
+                score: 4,
+                metro: [{
+                    id: 3,
+                    name: 'Павелецкая'
+                }]
+            },
+            {
+                id: 12,
+                type: ENTITY_TYPE,
+                name: {
+                    light: 'School',
+                    bold: '#6'
+                },
+                alias: '',
+                score: 4,
+                metro: [{
+                    id: 3,
+                    name: 'Павелецкая'
+                }]
+            },
+            {
+                id: 12,
+                type: ENTITY_TYPE,
+                name: {
+                    light: 'School',
+                    bold: '#6'
+                },
+                alias: '',
+                score: 4,
+                metro: [{
+                    id: 3,
+                    name: 'Павелецкая'
+                }]
+            },
+            {
+                id: 12,
+                type: ENTITY_TYPE,
+                name: {
+                    light: 'School',
+                    bold: '#6'
+                },
+                alias: '',
+                score: 4,
+                metro: [{
+                    id: 3,
+                    name: 'Павелецкая'
+                }]
+            },
+            {
+                id: 12,
+                type: ENTITY_TYPE,
+                name: {
+                    light: 'School',
+                    bold: '#20'
+                },
+                alias: '',
+                score: 4,
                 metro: [{
                     id: 3,
                     name: 'Павелецкая'

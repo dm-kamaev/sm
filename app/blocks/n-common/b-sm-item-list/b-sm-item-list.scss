@@ -6,6 +6,10 @@
     }
 }
 
+.b-sm-item-list__item-wrap_not-line-bottom {
+    border-bottom: none;
+}
+
 .b-sm-item-list_light-theme {
     .b-sm-item-list__item-wrap {
         border-bottom: none;

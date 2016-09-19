@@ -107,6 +107,12 @@
 
     <div class="{call .rootClass/}__list">
         {for $i in range(length($params.data.items))}
+
+            {let $isLastOnPage:
+                ceiling(($i + 1)/$params.data.countItemsPerPage) ==
+                ($i + 1)/$params.data.countItemsPerPage
+            /}
+
             {call .item}
                 {param params: [
                     'data': [
@@ -116,7 +122,8 @@
                     'config': [
                         'type': $params.data.itemType,
                         'isHidden': $i >= $countItemsPerPage ? true : false,
-                        'stylizationModifier': $params.config.stylizationModifier
+                        'stylizationModifier': $params.config.stylizationModifier,
+                        'isLastOnPage': $isLastOnPage
                     ]
                 ]/}
             {/call}
@@ -141,7 +148,8 @@
  *     config: {
  *         type: string,
  *         isHidden: ?boolean,
- *         stylizationModifier: (string|undefined)
+ *         stylizationModifier: (string|undefined),
+ *         isLastOnPage: boolean
  *     }
  * }}
  */
@@ -151,6 +159,10 @@
 
         {if $params.config?.isHidden}
             {sp}{cl.iUtils.Utils.CssClass.HIDDEN}
+        {/if}
+
+        {if $params.config?.isLastOnPage}
+            {sp}{call .rootClass/}__item-wrap_not-line-bottom
         {/if}
     {/let}
 

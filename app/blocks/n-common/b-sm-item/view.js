@@ -61,10 +61,14 @@ goog.scope(function() {
      * @return {sm.bSmItem.View.RenderParams}
      */
     View.getRenderParams = function(rawParams) {
-        var metroParams =
-            sm.bSmBadge.SmBadge.getRenderParams(rawParams['metro']);
-        var areaParams =
-            sm.bSmBadge.SmBadge.getRenderParams(rawParams['area']);
+        var metroData = rawParams['metro'] ?
+            sm.bSmBadge.SmBadge.getRenderParams(rawParams['metro']).data :
+            null;
+
+        var areaData = rawParams['area'] ?
+            sm.bSmBadge.SmBadge.getRenderParams(rawParams['area']).data :
+            null;
+
         return {
             data: {
                 id: rawParams['id'],
@@ -74,10 +78,10 @@ goog.scope(function() {
                     bold: rawParams['name']['bold']
                 },
                 alias: rawParams['alias'],
-                score: sm.bSmScore.SmScore.getRenderParams(rawParams['score']),
+                score: rawParams['score'],
                 description: rawParams['description'],
-                metro: metroParams.data,
-                area: areaParams.data
+                metro: metroData,
+                area: areaData
             }
         };
     };
