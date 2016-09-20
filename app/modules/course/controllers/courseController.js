@@ -360,7 +360,7 @@ exports.information = async(function(req, res, next) {
         var data = informationView.render({
             user: user,
             authSocialLinks: authSocialLinks,
-            entityData: entityData,//courseView.page(course),
+            entityData: courseView.page(course),
             map: map,
             favorites: favorites,
             actionButtonText: 'Хочу этот курс!'

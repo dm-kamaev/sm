@@ -23,30 +23,8 @@ view.page = function(course) {
         name: course.name,
         description: course.description,
         fullDescription: this.formatFullDescription(course.fullDescription),
-        score: {
-            marks: {
-                primary: {
-                    value: course.totalScore
-                },
-                secondary: [{
-                    name: 'Образование',
-                    value: course.score ? course.score[0] : 0
-                }, {
-                    name: 'Преподаватели',
-                    value: course.score ? course.score[1] : 0
-                }, {
-                    name: 'Атмосфера',
-                    value: course.score ? course.score[2] : 0
-                }, {
-                    name: 'Инфраструктура',
-                    value: course.score ? course.score[3] : 0
-                }]
-            },
-            secondaryMarkListHeader: 'Оценки, поставленные пользователями'
-        },
-        cost: Math.min.apply(null, course.courseOptions.map(
-            option => option.totalCost
-        )) + ' руб. / курс',
+        score: scoreView.results(course.score, course.totalScore).data,
+        cost: this.formatCost(course.courseOptions),
         generalOptions: {
             items: []
         }
@@ -67,6 +45,15 @@ view.formatFullDescription = function(text) {
         result.cutText = text;
     }
     return result;
+};
+
+/**
+ * @param  {Array<Object>} options
+ * @return {string}
+ */
+view.formatCost = function(options) {
+    return Math.min.apply(null, options.map(option => option.totalCost)) +
+        ' руб. / курс';
 };
 
 /**
