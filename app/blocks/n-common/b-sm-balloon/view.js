@@ -92,7 +92,7 @@ goog.scope(function() {
                 subtitle: rawParams['subtitle'],
                 items: goog.array.map(rawParams['items'],
                     function(rawLinkParams) {
-                        return  Link.getRenderParams(rawLinkParams).data
+                        return Link.getRenderParams(rawLinkParams).data;
                     }),
                 description: rawParams['description']
             }
