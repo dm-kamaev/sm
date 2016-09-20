@@ -284,7 +284,7 @@ schoolView.list = function(schools, opt_criterion, opt_page) {
                     fullName: school.fullName,
                     ratings: ratingView.ratingResultView(school.rankDogm),
                     metroStations: addressView.getMetro(school.addresses),
-                    area: addressView.getAreas(school.addresses),
+                    area: addressView.getArea(school.addresses)[0],
                     position: getPosition(i, opt_page),
                     isFavorite: school.isFavorite
                 };
@@ -611,7 +611,7 @@ schoolView.listCompact = function(schoolsData) {
             name: getName(school.name),
             score: scoreView.schoolListCompact(school.totalScore),
             metroStations: addressView.getMetro(school.addresses),
-            area: addressView.getAreas(school.addresses),
+            area: addressView.getArea(school.addresses)[0],
             alias: getAlias(itemUrls, school.id)
         };
     });
@@ -659,7 +659,7 @@ schoolView.listCompactItem = function(schoolData) {
         name: getName(school.name),
         score: scoreView.schoolListCompact(school.totalScore),
         metroStations: addressView.getMetro(school.addresses),
-        area: addressView.getAreas(school.addresses),
+        area: addressView.getArea(school.addresses)[0],
         alias: page.alias
     };
 };
