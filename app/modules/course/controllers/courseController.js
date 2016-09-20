@@ -37,7 +37,7 @@ exports.search = async(function(req, res, next) {
         });
 
         var favorites = {
-            entities: []
+            items: []
         };
 
         var templateData = searchView.render({
@@ -92,7 +92,7 @@ exports.information = async(function(req, res, next) {
         var course = await(services.course.information(1));
 
         var favorites = {
-            entities: [{
+            items: [{
                 id: 12,
                 type: ENTITY_TYPE,
                 name: {
