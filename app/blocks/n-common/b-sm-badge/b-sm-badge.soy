@@ -11,9 +11,10 @@
  */
 
 
-  /**
+/**
  * @typedef {{
  *     type: string,
+ *     entityType: string,
  *     iconName: (string|undefined),
  *     isNotActive: boolean,
  *     stylizationModifier: string
@@ -253,6 +254,24 @@
     {/if}
 {/template}
 
+
+/**
+ * @param params {{
+ *     config: {
+ *         entityType: string
+ *     }
+ * }}
+ * @override
+ * @protected
+ */
+{template .attributes kind="attributes"}
+    data-params="
+        {call cl.iUtils.Utils.stringify}
+            {param json: quoteKeysIfJs([
+                'entityType': $params.config.entityType
+            ]) /}
+        {/call}"
+{/template}
 
 /**
  * Root css class

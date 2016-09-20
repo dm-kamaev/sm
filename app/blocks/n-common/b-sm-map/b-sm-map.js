@@ -283,13 +283,12 @@ goog.scope(function() {
      * @private
      */
     Map.prototype.createBalloonComponent_ = function(params, balloonElement) {
+        var renderParams = sm.bSmBalloon.SmBalloon.getRenderParams(params);
         this.setBalloon_(
             this.renderChild(
                 'smBalloon',
                 balloonElement,
-                {
-                    'data': params
-                }
+                renderParams
             )
         );
     };

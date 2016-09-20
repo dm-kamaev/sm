@@ -441,11 +441,6 @@
 /**
  * Show more button template
  * @param params {{
- *     data: {
- *         entityList: {
- *             items: Array<Object>
- *         }
- *     },
  *     config: {
  *         modifier: string
  *     }
@@ -454,9 +449,7 @@
 {template .showMoreButton kind="html"}
     {let $cssClasses kind="html"}
         {call .rootClass /}__show-more-button-wrap
-        {if length($params.data.entityList.items) < 10}
-            {sp}{cl.iUtils.Utils.CssClass.HIDDEN}
-        {/if}
+        {sp}{cl.iUtils.Utils.CssClass.HIDDEN}
     {/let}
 
     {let $buttonCustomClasses kind="html"}
@@ -966,6 +959,7 @@
                 'isUserAuthorized': $params.data?.user ? true : false,
                 'authSocialLinks': $params.data?.authSocialLinks,
                 'declensionEntityType': $params.data?.search?.declensionEntityType,
+                'countResults': $params.data.search.countResults,
                 'type': $params?.config.type
             ] /}
         {/call}"
