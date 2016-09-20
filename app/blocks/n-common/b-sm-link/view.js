@@ -36,9 +36,11 @@ goog.scope(function() {
 
     /**
      * @typedef {{
-     *     id: (number|undefined),
-     *     url: (string|undefined),
-     *     content: (string|undefined),
+     *     data: {
+     *         id: (number|undefined),
+     *         url: (string|undefined),
+     *         content: (string|undefined)
+     *     }
      * }}
      */
     View.RenderParams;
@@ -51,9 +53,11 @@ goog.scope(function() {
      */
     View.getRenderParams = function(rawParams) {
         return {
-            id: rawParams['id'],
-            url: rawParams['url'],
-            content: rawParams['content']
+            data: {
+                id: rawParams['id'],
+                url: rawParams['url'],
+                content: rawParams['content']
+            }
         };
     };
 

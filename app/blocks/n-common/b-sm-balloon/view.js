@@ -1,10 +1,13 @@
 goog.provide('sm.bSmBalloon.View');
 
 goog.require('cl.iControl.View');
+goog.require('goog.array');
+goog.require('sm.bSmLink.View');
 
 
 
 goog.scope(function() {
+    var Link = sm.bSmLink.View;
 
 
 
@@ -47,6 +50,53 @@ goog.scope(function() {
     View.Event = {
         CLOSE_BUTTON_CLICK: goog.events.getUniqueId('close-button-click'),
         TITLE_LINK_CLICK: goog.events.getUniqueId('title-link-click')
+    };
+
+
+    /**
+     * @typedef {{
+     *     data: {
+     *         title: {
+     *             id: number,
+     *             text: string,
+     *             url: ?string
+     *         },
+     *         subtitle: string,
+     *         items: Array<{
+     *             id: number,
+     *             content: string,
+     *             url: ?string
+     *         }>,
+     *         description: string
+     *     }
+     * }}
+     */
+    sm.bSmBalloon.View.RenderParams;
+
+
+
+    /**
+     * Transform raw params to compressed ones
+     * @param {Object<string, (string, number, Array)>} rawParams
+     * @return {sm.bSmBalloon.View.RenderParams}
+     */
+    View.getRenderParams = function(rawParams) {
+        var title = rawParams['title'];
+        return {
+            data: {
+                title: {
+                    id: title['id'],
+                    text: title['text'],
+                    url: title['url']
+                },
+                subtitle: rawParams['subtitle'],
+                items: goog.array.map(rawParams['items'],
+                    function(rawLinkParams) {
+                        return  Link.getRenderParams(rawLinkParams).data
+                    }),
+                description: rawParams['description']
+            }
+        };
     };
 
 
