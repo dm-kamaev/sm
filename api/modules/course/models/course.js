@@ -61,6 +61,11 @@ var Course = db.define('Course', {
                 as: 'courseOptions',
                 foreignKey: 'course_id'
             });
+            Course.hasMany(models.Favorite, {
+                as: 'favorite',
+                foreignKey: 'entity_id',
+                onDelete: 'cascade'
+            });
         }
     }
 });
