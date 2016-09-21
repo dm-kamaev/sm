@@ -416,13 +416,14 @@ class CourseSearchQuery extends SearchQuery {
                 .and(
                     'course_search_data.type = ?',
                     type
-                )
-                .and(
-                    'course_search_data.values && ' +
-                    this.intArrayToSql_(values)
                 );
             if (opt_hide) {
                 condition.and('course_search_data.values IS NOT NULL');
+            } else {
+                condition.and(
+                    'course_search_data.values && ' +
+                    this.intArrayToSql_(values)
+                );
             }
             this.courseSearchParams_.or(
                 condition
