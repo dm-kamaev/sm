@@ -109,20 +109,21 @@ class CourseActualizer {
      * @param {string} type
      */
     actualizeData_(values, type) {
-        let searchData = this.getSearchData_(type);
-        if (!searchData) {
-            services.courseSearchData.create({
-                courseId: this.course_.id,
-                values: values,
-                type: type
-            });
-        } else if (values.length &&
-            !lodash.isEqual(values, searchData.values)) {
-            services.courseSearchData.update(
-                searchData.id, {
-                    values: values
-                }
-            );
+        if (values && values.length) {
+            let searchData = this.getSearchData_(type);
+            if (!searchData) {
+                services.courseSearchData.create({
+                    courseId: this.course_.id,
+                    values: values,
+                    type: type
+                });
+            } else if (!lodash.isEqual(values, searchData.values)) {
+                services.courseSearchData.update(
+                    searchData.id, {
+                        values: values
+                    }
+                );
+            }
         }
     }
 
@@ -258,7 +259,7 @@ class CourseActualizer {
      * @return {number}
      */
     transformTime_(time) {
-        var hour = ~~time.split(':')[0],
+        var hour = time && ~~time.split(':')[0],
             result;
 
         if (hour < 14) {
