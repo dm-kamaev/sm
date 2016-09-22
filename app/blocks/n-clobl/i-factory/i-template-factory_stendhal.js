@@ -37,6 +37,8 @@ goog.require('sm.gDropdown.TemplateSelect');
 goog.require('sm.gHint.TemplateStendhal');
 goog.require('sm.gIcon.TemplateStendhal');
 goog.require('sm.gInput.DigitInputTemplate');
+goog.require('sm.gInput.TemplatePhone');
+goog.require('sm.gInput.TemplateStendhal');
 goog.require('sm.gList.TemplateSelect');
 goog.require('sm.gModal.TemplateFeedback');
 goog.require('sm.gModal.TemplateStendhal');
@@ -85,6 +87,10 @@ sm.iFactory.TemplateFactoryStendhal = function() {
             sm.gHint.TemplateStendhal.hint
         )
         .setTemplateListItem(
+            'input',
+            sm.gInput.TemplateStendhal.input
+        )
+        .setTemplateListItem(
             'modal',
             sm.gModal.TemplateStendhal.modal
         )
@@ -103,6 +109,10 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'digit-input',
             sm.gInput.DigitInputTemplate.input
+        )
+        .setTemplateListItem(
+            'phone-input',
+            sm.gInput.TemplatePhone.input
         )
         .setTemplateListItem(
             'button-social',

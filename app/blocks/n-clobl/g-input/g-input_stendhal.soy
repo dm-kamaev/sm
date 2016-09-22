@@ -1,0 +1,41 @@
+{namespace sm.gInput.TemplateStendhal}
+
+
+/**
+ * Constructor
+ * @param? params {{
+ *     data: {
+ *         placeholder: (string|undefined),
+ *         value: (string|undefined),
+ *         name: (string|undefined),
+ *         maxLength: (number|undefined)
+ *     },
+ *     config: {
+ *         validations: (Array<string>|undefined)
+ *     }
+ * }}
+ * @extends cl.gInput.Template
+ * @constructor
+ */
+{template .input}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * @override
+ * @param params {
+ *     config: {
+ *         validations: (Array<string>|undefined)
+ *     }
+ * }}
+ */
+{template .attributes kind="attributes"}
+    data-params="{call cl.iUtils.Utils.stringify}
+            {param json: quoteKeysIfJs([
+                'validations': $params?.config?.validations ?
+                    $params?.config?.validations :
+                    []
+            ]) /}
+        {/call}"
+{/template}

@@ -1,7 +1,6 @@
 goog.provide('sm.gInput.ViewStendhal');
 
 goog.require('cl.gInput.View');
-goog.require('cl.iUtils.Utils');
 
 
 
@@ -20,8 +19,7 @@ goog.inherits(sm.gInput.ViewStendhal, cl.gInput.View);
 
 
 goog.scope(function() {
-    var View = sm.gInput.ViewStendhal,
-        Utils = cl.iUtils.Utils;
+    var View = sm.gInput.ViewStendhal;
 
 
     /**
@@ -39,12 +37,23 @@ goog.scope(function() {
      * @enum {string}
      */
     View.Event = {
-        ENTER_PRESS: goog.events.getUniqueId('enter-press')
+        ENTER_PRESS: goog.events.getUniqueId('enter-press'),
+        INPUT: cl.gInput.View.Event.INPUT,
+        FOCUS: cl.gInput.View.Event.FOCUS
     };
 
 
     /**
+     * @typedef {{
+     *     validations: Array<string>
+     * }}
+     */
+    sm.gInput.ViewStendhal.DataParams;
+
+
+    /**
      * @override
+     * @protected
      */
     View.prototype.enterDocument = function() {
         View.base(this, 'enterDocument');
@@ -52,7 +61,7 @@ goog.scope(function() {
         this.getHandler().listen(
             this.dom.input,
             goog.events.EventType.KEYPRESS,
-            this.onKeyPress_
+            this.onKeyPress
         );
     };
 
@@ -60,9 +69,9 @@ goog.scope(function() {
     /**
      * Key press handler
      * @param {goog.events.BrowserEvent} event
-     * @private
+     * @protected
      */
-    View.prototype.onKeyPress_ = function(event) {
+    View.prototype.onKeyPress = function(event) {
         if (event.keyCode == goog.events.KeyCodes.ENTER) {
             this.dispatchEvent(View.Event.ENTER_PRESS);
         }
