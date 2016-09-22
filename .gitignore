@@ -1,5 +1,6 @@
 .idea/
 .sass-cache/
+.vscode/
 node_modules/
 
 public/
@@ -25,6 +26,7 @@ deployment-config.json
 .eslintrc
 .jshintrc
 .eslintrc
+.ftpconfig
 .csscomb*
 .tags*
 
