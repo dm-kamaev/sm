@@ -75,8 +75,9 @@ goog.scope(function() {
     View.SPECIAL_SYBOL_CODE = 31;
 
 
-    /*
-*     * @override
+    /**
+     * @protected
+     * @override
      */
     View.prototype.enterDocument = function() {
         View.base(this, 'enterDocument');
