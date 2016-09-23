@@ -37,7 +37,7 @@ exports.search = async(function(req, res, next) {
             }
         });
 
-         var favorites = {
+        var favorites = {
             entities: []
         };
 
@@ -77,7 +77,6 @@ exports.search = async(function(req, res, next) {
         res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(html);
     } catch (error) {
-        console.log('!!!!!!!!!!!!!!!!!!!!!!!!!', error);
         logger.error(error);
 
         res.status(error.code || 500);
@@ -93,99 +92,6 @@ exports.information = async(function(req, res, next) {
 
         var course = await(services.course.information(1));
 
-        var entityData = {
-            id: 12,
-            name: 'Система «Выбор»',
-            description: 'Месячный курс, направленный на выработку навыка осознанного выбора',
-            fullDescription: {
-                cutText: ['Программа, которая поможет подростку ' +
-                        'задавать себе правильные вопросы и принимать ' +
-                        'осознанные решения']
-            },
-            score: {
-                marks: {
-                    primary: {
-                        value: 4.5
-                    },
-                    secondary: [{
-                        name: 'Средняя оценка',
-                        value: 4.2
-                    }, {
-                        name: 'Образование',
-                        value: 4
-                    }, {
-                        name: 'Преподаватели',
-                        value: 4.8
-                    }, {
-                        name: 'Атмосфера',
-                        value: 4.9
-                    }, {
-                        name: 'Инфраструктура',
-                        value: 3.3
-                    }]
-                },
-                secondaryMarkListHeader: 'Оценки, поставленные пользователями'
-            },
-            cost: '39 520 руб. / курс',
-            generalOptions: {
-                items: [{
-                    name: 'Культурный центр ЗИЛ',
-                    score: 4.9,
-                    description: 'Одна из крупнейших сетей курсов английского языка в Москве'
-                }, {
-                    name: 'Возраст',
-                    description: 'от 7 лет'
-                }, {
-                    name: 'Расписание',
-                    description: 'Два раза в неделю, чт в 16:00 и сб в 11:00'
-                }, {
-                    name: 'Возраст',
-                    description: '13-17 лет'
-                }, {
-                    name: 'Группы',
-                    description: 'Не более 10 человек в группе'
-                }, {
-                    name: 'Начало занятий',
-                    description: 'В сентябре 2016'
-                }]
-            },
-            online: 'available'
-        };
-
-        var map = {
-            itemGroups: [{
-                viewType: 'pin',
-                items: [{
-                    addressId: 12,
-                    coordinates: [55.783946, 37.602038],
-                    title: {
-                        text: 'School №234',
-                        alias: '/'
-                    },
-                    description: 'Best school',
-                    items: [{
-                        content: 'School',
-                        url: '/'
-                    }],
-                    score: 5.5
-                },
-                {
-                    addressId: 12,
-                    coordinates: [55.78, 37.63],
-                    title: {
-                        text: 'School №345',
-                        alias: '/'
-                    },
-                    description: 'Best school',
-                    items: [{
-                        content: 'School2',
-                        url: '/'
-                    }],
-                    score: 3
-                }]
-            }]
-        };
-
         var favorites = {
             entities: [{
                 id: 12,
@@ -200,8 +106,7 @@ exports.information = async(function(req, res, next) {
                     id: 3,
                     name: 'Павелецкая'
                 }]
-            },
-            {
+            }, {
                 id: 12,
                 type: ENTITY_TYPE,
                 name: {
@@ -214,8 +119,7 @@ exports.information = async(function(req, res, next) {
                     id: 3,
                     name: 'Павелецкая'
                 }]
-            },
-            {
+            }, {
                 id: 12,
                 type: ENTITY_TYPE,
                 name: {
@@ -228,8 +132,7 @@ exports.information = async(function(req, res, next) {
                     id: 3,
                     name: 'Павелецкая'
                 }]
-            },
-            {
+            }, {
                 id: 12,
                 type: ENTITY_TYPE,
                 name: {
@@ -242,8 +145,7 @@ exports.information = async(function(req, res, next) {
                     id: 3,
                     name: 'Павелецкая'
                 }]
-            },
-            {
+            }, {
                 id: 12,
                 type: ENTITY_TYPE,
                 name: {
@@ -256,8 +158,7 @@ exports.information = async(function(req, res, next) {
                     id: 3,
                     name: 'Павелецкая'
                 }]
-            },
-            {
+            }, {
                 id: 12,
                 type: ENTITY_TYPE,
                 name: {
@@ -270,8 +171,7 @@ exports.information = async(function(req, res, next) {
                     id: 3,
                     name: 'Павелецкая'
                 }]
-            },
-            {
+            }, {
                 id: 12,
                 type: ENTITY_TYPE,
                 name: {
@@ -284,8 +184,7 @@ exports.information = async(function(req, res, next) {
                     id: 3,
                     name: 'Павелецкая'
                 }]
-            },
-            {
+            }, {
                 id: 12,
                 type: ENTITY_TYPE,
                 name: {
@@ -298,8 +197,7 @@ exports.information = async(function(req, res, next) {
                     id: 3,
                     name: 'Павелецкая'
                 }]
-            },
-            {
+            }, {
                 id: 12,
                 type: ENTITY_TYPE,
                 name: {
@@ -312,8 +210,7 @@ exports.information = async(function(req, res, next) {
                     id: 3,
                     name: 'Павелецкая'
                 }]
-            },
-            {
+            }, {
                 id: 12,
                 type: ENTITY_TYPE,
                 name: {
@@ -326,8 +223,7 @@ exports.information = async(function(req, res, next) {
                     id: 3,
                     name: 'Павелецкая'
                 }]
-            },
-            {
+            }, {
                 id: 12,
                 type: ENTITY_TYPE,
                 name: {
@@ -340,8 +236,7 @@ exports.information = async(function(req, res, next) {
                     id: 3,
                     name: 'Павелецкая'
                 }]
-            },
-            {
+            }, {
                 id: 12,
                 type: ENTITY_TYPE,
                 name: {
@@ -361,7 +256,7 @@ exports.information = async(function(req, res, next) {
             user: user,
             authSocialLinks: authSocialLinks,
             entityData: courseView.page(course),
-            map: map,
+            map: courseView.pageMap(course),
             favorites: favorites,
             actionButtonText: 'Хочу этот курс!'
         });
@@ -388,7 +283,6 @@ exports.information = async(function(req, res, next) {
         res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(html);
     } catch (error) {
-        console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', error);
         logger.error(error);
 
         res.status(error.code || 500);

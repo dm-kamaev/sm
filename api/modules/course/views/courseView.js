@@ -96,6 +96,34 @@ view.formatGeneralOptions = function(course) {
 };
 
 /**
+ * @param  {Object} course
+ * @return {Object}
+ */
+view.pageMap = function(course) {
+    let addresses = lodash.flatten(course.courseOptions.map(courseOption =>
+        courseOption.departments.map(department => {
+            let address = department.address;
+            return {
+                addressId: address.id,
+                coordinates: address.coords,
+                title: {
+                    text: course.courseBrand.name
+                },
+                items: [],
+                description: address.name,
+                score: course.totalScore
+            };
+        })
+    ));
+    return {
+        itemGroups: [{
+            viewType: 'pin',
+            items: addresses
+        }]
+    };
+};
+
+/**
  * @param  {Array<Object>} courses
  * @return {Object}
  */
