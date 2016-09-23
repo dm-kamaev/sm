@@ -7,7 +7,8 @@ const scoreView = require('./scoreView'),
     geoView = require('../../geo/views/geoView'),
     areaView = require('../../geo/views/areaView'),
     districtView = require('../../geo/views/districtView'),
-    FormatText = require('../../entity/lib/FormatText');
+    FormatText = require('../../entity/lib/FormatText'),
+    CourseOptions = require('../lib/CourseOptions');
 
 let view = {};
 
@@ -25,9 +26,7 @@ view.page = function(course) {
         fullDescription: this.formatFullDescription(course.fullDescription),
         score: scoreView.results(course.score, course.totalScore).data,
         cost: this.formatCost(course.courseOptions),
-        generalOptions: {
-            items: []
-        }
+        generalOptions: this.formatGeneralOptions(course)
     };
 };
 
@@ -57,12 +56,52 @@ view.formatCost = function(options) {
 };
 
 /**
- * @param {Array<Object>} courses
+ * @param  {Object} course
+ * @return {Object}
+ */
+view.formatGeneralOptions = function(course) {
+    let items = [],
+        courseOptions = new CourseOptions(course.courseOptions);
+
+    items.push({
+        name: course.courseBrand.name,
+        description: course.courseBrand.description
+    });
+
+    if (course.entranceExam) {
+        items.push({
+            name: 'Вступительнео расписание',
+            description: course.entranceExam
+        });
+    }
+
+    if (course.learningOutcome) {
+        items.push({
+            name: 'Результаты обучения',
+            description: course.learningOutcome
+        });
+    }
+
+    if (course.openSchedule) {
+        items.push({
+            name: 'Сроки записи',
+            description:
+                'Запись в новые и существующие группы ведётся постоянно'
+        });
+    }
+
+    return {
+        items: items.concat(courseOptions.getGeneralOptions())
+    };
+};
+
+/**
+ * @param  {Array<Object>} courses
  * @return {Object}
  */
 view.list = function(courses) {
     return courses.reduce((prev, curr, i) => {
-        var coursePosition = prev.findIndex(course => course.id === curr.id);
+        let coursePosition = prev.findIndex(course => course.id === curr.id);
         if (~coursePosition) {
             prev[coursePosition] = this.joinListCourse(
                 prev[coursePosition],
@@ -78,20 +117,20 @@ view.list = function(courses) {
 
 /**
  * Group given courses from raw search query by addresses
- * @param {Array<Object>} courses
- * @param {string} viewType
+ * @param  {Array<Object>} courses
+ * @param  {string} viewType
  * @return {{
  *     itemGroups: Array<{Object}>
  * }}
  */
 view.listMap = function(courses, viewType) {
     return courses.reduce((prev, curr) => {
-        var addressPosition = prev.findIndex(
+        let addressPosition = prev.findIndex(
             course => course.addressId == curr.addressId
         );
 
         if (~addressPosition) {
-            var isCourseAdded = ~prev[addressPosition].items.findIndex(
+            let isCourseAdded = ~prev[addressPosition].items.findIndex(
                 mapCourse => mapCourse.id == curr.id
             );
             if (!isCourseAdded) {
@@ -213,8 +252,8 @@ view.mapCourse = function(course) {
 
 
 /**
- * @param {Object} course
- * @param {string} type
+ * @param  {Object} course
+ * @param  {string} type
  * @return {Object}
  */
 view.getListCourse = function(course, type) {
@@ -244,8 +283,8 @@ view.getListCourse = function(course, type) {
 };
 
 /**
- * @param {Object} existingCourse
- * @param {Object} newCourse
+ * @param  {Object} existingCourse
+ * @param  {Object} newCourse
  * @return {Object}
  */
 view.joinListCourse = function(existingCourse, newCourse) {

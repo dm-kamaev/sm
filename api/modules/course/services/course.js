@@ -35,7 +35,7 @@ const informationFields = {
         'name',
         'description'
     ],
-    SCHEDULE: ['day', 'startTime'],
+    SCHEDULE: ['day', 'startTime', 'endTime'],
     DEPARTMENT: ['id'],
     ADDRESS: ['id', 'name', 'coords'],
     METRO: ['id', 'name']
