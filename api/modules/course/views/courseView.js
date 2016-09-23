@@ -7,6 +7,7 @@ const scoreView = require('./scoreView'),
     geoView = require('../../geo/views/geoView'),
     areaView = require('../../geo/views/areaView'),
     districtView = require('../../geo/views/districtView'),
+    addressView = require('../../geo/views/addressView'),
     FormatText = require('../../entity/lib/FormatText'),
     CourseOptions = require('../lib/CourseOptions');
 
@@ -94,6 +95,7 @@ view.formatGeneralOptions = function(course) {
         items: items.concat(courseOptions.getGeneralOptions())
     };
 };
+
 
 /**
  * @param  {Object} course
@@ -349,6 +351,7 @@ view.joinListCourse = function(existingCourse, newCourse) {
     return existingCourse;
 };
 
+
 /**
  * @param {{
  *     name: string,
@@ -362,6 +365,51 @@ view.letterData = function(data) {
     return {
         theme: 'Запись на курс',
         content: `Имя: ${data.name}<br/>Телефон: ${data.phone}` + comment
+    };
+};
+
+
+/*
+ * Used for item of list favorites
+ * @param {{
+ *     entity: models.Course,
+ *     type: string,
+ *     url: models.Page
+ * }} data
+ * @return {{
+ *     id: number,
+ *     type: string,
+ *     name: {
+ *         light: string,
+ *         bold: ?string
+ *     },
+ *     alias: string,
+ *     score: number,
+ *     metro: ?Array<{
+ *         id: number,
+ *         name: string
+ *     }>,
+ *     area: ?Array<{
+ *         id: number,
+ *         name: string
+ *     }>
+ * }}
+ */
+exports.item = function(data) {
+    var entity = data.entity,
+        type = data.type,
+        url = data.url;
+
+    var addresses = this.getAddresses(entity.courseOptions);
+
+    return {
+        id: entity.id,
+        type: type,
+        name: {light: entity.name},
+        score: entity.totalScore,
+        metro: addressView.getMetro(addresses),
+        area: [addressView.getArea(addresses)[0]],
+        alias: url ? url.alias : entity.id
     };
 };
 

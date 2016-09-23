@@ -23,6 +23,8 @@ const seoView = require('./seoView.js');
 
 const commentView = require('../../comment/views/commentView');
 
+const entityType = require('../../entity/enums/entityType');
+
 var schoolView = {};
 
 
@@ -654,6 +656,7 @@ schoolView.listCompact = function(schoolsData) {
 schoolView.listCompactItem = function(schoolData) {
     var school = schoolData.item,
         page = schoolData.itemUrl;
+
     return {
         id: school.id,
         name: getName(school.name),
@@ -699,7 +702,7 @@ schoolView.isFavorite = function(school, favoriteItems) {
  *     }),
  *     url: string
  * }>} schools
- * @param {Array<number>} favoriteItemIds
+ * @param {Array<models.Favorite>} favorites
  * @return {Array<{
  *     id: number,
  *     name: {
@@ -720,13 +723,14 @@ schoolView.isFavorite = function(school, favoriteItems) {
  *     isFavorite: boolean
  * }>}
  */
-schoolView.listWithFavorites = function(schools, favoriteItemIds) {
+schoolView.listWithFavorites = function(schools, favorites) {
+    var type = entityType.SCHOOL;
+
     return schools.map(school => {
-        var schoolWithFavorite = school;
-        schoolWithFavorite.isFavorite = favoriteItemIds.some(itemId => {
-            return itemId == school.id;
-        });
-        return schoolWithFavorite;
+        school.isFavorite = favorites.some(favorite =>
+            (favorite.entityType == type && school.id == favorite.entityId)
+        );
+        return school;
     });
 };
 
@@ -737,6 +741,49 @@ schoolView.listWithFavorites = function(schools, favoriteItemIds) {
  */
 schoolView.uniqueIds = function(schools) {
     return lodash.uniq(schools.map(school => school.id));
+};
+
+
+/**
+ * Used for item of list favorites
+ * @param {{
+ *     entity: models.School,
+ *     type: string,
+ *     url: models.Page
+ * }} data
+ * @return {{
+ *     id: number,
+ *     type: string,
+ *     name: {
+ *         light: string,
+ *         bold: ?string
+ *     },
+ *     alias: string,
+ *     score: number,
+ *     metro: ?Array<{
+ *         id: number,
+ *         name: string
+ *     }>,
+ *     area: ?Array<{
+ *         id: number,
+ *         name: string
+ *     }>
+ * }}
+ */
+schoolView.item = function(data) {
+    var entity = data.entity,
+        type = data.type,
+        url = data.url;
+
+    return {
+        id: entity.id,
+        type: type,
+        name: {light: entity.name},
+        score: entity.totalScore,
+        metro: addressView.getMetro(entity.addresses),
+        area: addressView.getArea(entity.addresses),
+        alias: url.alias
+    };
 };
 
 module.exports = schoolView;

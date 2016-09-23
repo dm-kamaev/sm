@@ -1,24 +1,34 @@
 'use strict';
 
 const schoolView = require('../../school/views/schoolView');
+const favoriteView = require('../views/favoriteView');
+
 const entityType = require('../../entity/enums/entityType');
 
-const lodash = require('lodash');
 const async = require('asyncawait/async');
 const await = require('asyncawait/await');
 const services = require('../../../../app/components/services').all;
 
+var logger =
+    require('../../../../app/components/logger/logger').getLogger('app');
+
 
 /**
  * @api {post} api/favorite Get comment view
- * @apiName Delete
+ * @apiName Create
  * @apiGroup Favorite
  * @apiVersion 0.0.1
  *
- * @apiParam {number} itemId
+ * @apiParam {{
+ *     id: number,
+ *     type: string
+ * }} entity
  * @apiParamExample {json} Request-Example:
  * {
- *     "itemId": 200
+ *     "entity": {
+ *         "id": 200,
+ *         "type": "school"
+ *     }
  * }
  *
  * @apiSuccessExample {json} Success-Response:
@@ -30,71 +40,69 @@ const services = require('../../../../app/components/services').all;
  *             "bold": "№ 1543"
  *         },
  *         "alias": "gimnazija-1543",
- *         "score": {
- *             "visibleMark": {
- *                 "value": 4.66428884986831
- *             },
- *             "hiddenMarks": []
- *         }
- *         "metroStations": [
- *              {"id":60,"name":"Юго-Западная"}
- *         ],
- *         "area": {
- *             "id":3,
- *             "name":"Тропарёво-Никулино"
- *         }
+ *         "score": 4.2,
+ *         "metro": Array<{
+ *             "id":60,
+ *             "name":"Юго-Западная"
+ *         }>,
+ *         "area": Array<{
+ *              "id":3,
+ *              "name":"Тропарёво-Никулино"
+ *         }>
  *     }
- * @apiError (Error 404) NotFoundError favorite item not found
+ * @apiError (Error 404) NotFoundError favorite entry not found
  * @apiError (Error 400) AlreadyExists favorite entry already exists
  */
 exports.create = async(function(req, res) {
-    var user = req.user,
-        itemId = req.body.itemId;
-    var favoriteSchool =
-        await(services.school.getByIdsWithGeoData([itemId]))[0],
-        userFavorites = await(services.favorite.getAllItemIdsByUserId(user.id));
+    var result;
 
-    if (favoriteSchool) {
-        var alreadyAdded = lodash.find(userFavorites, (favoriteItemId) => {
-            return favoriteItemId == favoriteSchool.id;
-        });
+    try {
+        var user = req.user,
+            entity = req.body.entity;
 
-        if (!alreadyAdded) {
-            var page = await(services.page.getOne(
-                    favoriteSchool.id,
-                    entityType.SCHOOL
-                )),
-                result = schoolView.listCompactItem({
-                    item: favoriteSchool,
-                    itemUrl: page
-                });
+        var entityData = await(services.favorite.addToFavoriteAndGetEntity(
+            user.id,
+            entity
+        ));
 
-            await(services.favorite.create(user.id, itemId));
-
-            res.header('Content-Type', 'application/json; charset=utf-8');
-            res.status(200);
-            res.end(JSON.stringify(result));
+        if (entity.type == entityType.SCHOOL) {
+        // TODO delete when in school will be new b-sm-favorite-link
+            result = schoolView.listCompactItem({
+                item: entityData.entity,
+                itemUrl: entityData.url
+            });
         } else {
-            res.status(400);
-            res.end();
+            result = favoriteView.item(entityData);
         }
-    } else {
-        res.status(404);
-        res.end();
+
+        res.status(200);
+    } catch (error) {
+        res.status(400);
+        logger.error(error.message);
+        result = error.message;
+    } finally {
+        res.header('Content-Type', 'application/json; charset=utf-8');
+        res.end(JSON.stringify(result));
     }
 });
 
 
 /**
- * @api {delete} api/favorite Delete favorite entry with given id
+ * @api {delete} api/favorite Delete favorite entry with given id and type
  * @apiName Delete
  * @apiGroup Favorite
  * @apiVersion 0.0.1
  *
- * @apiParam {number} itemId
+ * @apiParam {{
+ *     id: number,
+ *     type: string
+ * }} entity
  * @apiParamExample {json} Request-Example:
  * {
- *     "itemId": 200
+ *     "entity": {
+ *         "id": 200,
+ *         "type": "school"
+ *     }
  * }
  *
  * @apiSuccessExample {json} Success-Response:
@@ -103,18 +111,17 @@ exports.create = async(function(req, res) {
  * @apiError (Error 404) NotFoundError favorite entry not found
  */
 exports.delete = async(function(req, res) {
-    var user = req.user,
-        itemId = req.body.itemId;
-
     try {
-        services.favorite.deleteByUserIdAndItemId(user.id, itemId);
+        var user = req.user,
+            entity = req.body.entity;
+
+        services.favorite.deleteByUserIdAndEntityData(user.id, entity);
+        res.status(204);
     } catch (error) {
-        if (error) {
-            res.status(404);
-        } else {
-            res.header('Content-Type', 'application/json; charset=utf-8');
-            res.status(204);
-        }
+        res.status(404);
+        logger.error(error.message);
+    } finally {
+        res.header('Content-Type', 'application/json; charset=utf-8');
+        res.end();
     }
-    res.end();
 });
