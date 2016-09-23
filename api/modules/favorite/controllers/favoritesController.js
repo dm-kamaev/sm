@@ -19,16 +19,12 @@ var logger =
  * @apiGroup Favorite
  * @apiVersion 0.0.1
  *
- * @apiParam {{
- *     id: number,
- *     type: string
- * }} entity
+ * @apiParam {number} entityId
+ * @apiParam {number} entityType
  * @apiParamExample {json} Request-Example:
  * {
- *     "entity": {
- *         "id": 200,
- *         "type": "school"
- *     }
+ *     "entityId": 200,
+ *     "entityType": "school"
  * }
  *
  * @apiSuccessExample {json} Success-Response:
@@ -57,10 +53,14 @@ exports.create = async(function(req, res) {
     var result;
 
     try {
-        var user = req.user,
-            entity = req.body.entity;
+        var user = req.user;
 
-        var entityData = await(services.favorite.addToFavoriteAndGetEntity(
+        var entity = {
+            id: req.body.entityId,
+            type: req.body.entityType
+        };
+
+        var entityData = await(services.favorite.addToFavorite(
             user.id,
             entity
         ));
@@ -93,10 +93,10 @@ exports.create = async(function(req, res) {
  * @apiGroup Favorite
  * @apiVersion 0.0.1
  *
- * @apiParam {{
- *     id: number,
- *     type: string
- * }} entity
+ * {
+ *     "entityId": 200,
+ *     "entityType": "school"
+ * }
  * @apiParamExample {json} Request-Example:
  * {
  *     "entity": {
@@ -111,17 +111,23 @@ exports.create = async(function(req, res) {
  * @apiError (Error 404) NotFoundError favorite entry not found
  */
 exports.delete = async(function(req, res) {
+    var result = '';
     try {
-        var user = req.user,
-            entity = req.body.entity;
+        var user = req.user;
+
+        var entity = {
+            id: req.body.entityId,
+            type: req.body.entityType
+        };
 
         services.favorite.deleteByUserIdAndEntityData(user.id, entity);
         res.status(204);
     } catch (error) {
         res.status(404);
         logger.error(error.message);
+        result = error.message;
     } finally {
         res.header('Content-Type', 'application/json; charset=utf-8');
-        res.end();
+        res.end(JSON.stringify(result));
     }
 });

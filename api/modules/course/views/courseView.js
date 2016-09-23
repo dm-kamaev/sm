@@ -395,7 +395,7 @@ view.letterData = function(data) {
  *     }>
  * }}
  */
-exports.item = function(data) {
+view.item = function(data) {
     var entity = data.entity,
         type = data.type,
         url = data.url;

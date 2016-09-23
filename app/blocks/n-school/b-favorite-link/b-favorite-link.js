@@ -114,10 +114,8 @@ goog.scope(function() {
         var method = '';
 
         var data = {
-            'entity': {
-                'id': itemId,
-                'type': 'school'
-            },
+            'entityId': itemId,
+            'entityType': 'school',
             '_csrf': window['ctx']['csrf']
         };
 

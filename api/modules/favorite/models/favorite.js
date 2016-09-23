@@ -1,27 +1,28 @@
-var DataType = require('sequelize'),
-    db = require('../../../../app/components/db');
+const Sequelize = require('sequelize');
 
-const entityType = require('../../entity/enums/entityType');
+const db = require('../../../../app/components/db'),
+    entityType = require('../../entity/enums/entityType');
 
 var Favorite = db.define(
     'Favorite',
     {
         userId: {
-            type: DataType.INTEGER,
+            type: Sequelize.INTEGER,
             field: 'user_id'
         },
         entityId: {
-            type: DataType.INTEGER,
+            type: Sequelize.INTEGER,
             field: 'entity_id'
         },
         entityType: {
             field: 'entity_type',
-            type: DataType.ENUM,
-            values: entityType.toArray(),
-            allowNull: false
+            type: Sequelize.STRING,
+            validate: {
+                isIn: [entityType.toArray()]
+            }
         },
         createdAt: {
-            type: DataType.DATE,
+            type: Sequelize.DATE,
             field: 'created_at'
         }
     },

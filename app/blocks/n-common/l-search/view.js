@@ -122,7 +122,7 @@ goog.scope(function() {
     View.prototype.updateListHeader = function(countResults,
         searchText) {
 
-        var headers = this.dom.headersResults;
+        var headers = this.dom.resultsListHeaders;
 
         for (var i = 0; i < headers.length; i++) {
             goog.soy.renderElement(
@@ -162,6 +162,9 @@ goog.scope(function() {
                 filterPanel: this.getElementByClass(
                     sm.lSearch.bFilterPanel.View.CssClass.ROOT
                 ),
+                resultsListHeaders: this.getElementsByClass(
+                    View.CssClass.RESULTS_LIST_HEADER
+                ),
                 resultsList: this.getElementByClass(
                     sm.bSmItemList.View.CssClass.ROOT
                 ),
@@ -193,6 +196,14 @@ goog.scope(function() {
         var params = View.base(this, 'transformParams', rawParams);
 
         params.searchParams = rawParams['searchParams'];
+
+        params.declensionEntityType = {
+            nom: rawParams['declensionEntityType']['nom'],
+            gen: rawParams['declensionEntityType']['gen'],
+            plu: rawParams['declensionEntityType']['plu']
+        };
+
+        params.countResults = rawParams['countResults'];
 
         return params;
     };

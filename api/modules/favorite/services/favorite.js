@@ -136,7 +136,7 @@ service.deleteByUserIdAndEntityData = async(function(userId, entityData) {
  *     type: string
  * }}
  */
-service.addToFavoriteAndGetEntity = async(function(userId, entity) {
+service.addToFavorite = async(function(userId, entity) {
     var entities;
 
     var getDataFavoriteEntities = {
@@ -144,34 +144,12 @@ service.addToFavoriteAndGetEntity = async(function(userId, entity) {
         [entityType.COURSE]: this.getListFavoriteCourses
     };
 
-    if (this.addToFavorite(userId, entity)) {
+    if (!await(this.isFavorite(userId, entity))) {
+        await(this.create(userId, entity));
         entities = await(getDataFavoriteEntities[entity.type]([entity.id]));
     }
 
-    return entities[0];
-});
-
-
-/**
- * Create favorite entry with given entity id and type for given user
- * @param {number} userId
- * @param {{
- *     id: numder,
- *     type: string
- * }} entity
- * @return {boolean}
- */
-service.addToFavorite = async(function(userId, entity) {
-    var isFavorite = await(this.isFavorite(userId, entity));
-
-    if (!isFavorite) {
-        await(this.create(userId, {
-            id: entity.id,
-            type: entity.type
-        }));
-    }
-
-    return !isFavorite;
+    return entities ? entities[0] : null;
 });
 
 
@@ -235,10 +213,7 @@ service.getFavoriteEntities = async(function(userId) {
 service.getListFavoriteSchools = async(function(schoolsIds) {
     var listFavoriteSchools = await({
         entities: services.school.getByIdsWithGeoData(schoolsIds),
-        urls: services.page.getAliases(
-            schoolsIds,
-            entityType.SCHOOL
-        ),
+        urls: services.page.getAliases(schoolsIds, entityType.SCHOOL),
         type: entityType.SCHOOL
     });
 
@@ -258,10 +233,7 @@ service.getListFavoriteSchools = async(function(schoolsIds) {
 service.getListFavoriteCourses = async(function(coursesIds) {
     var listFavoriteCourses = await({
         entities: services.course.getByIds(coursesIds, {metro: true}),
-        urls: services.page.getAliases(
-            coursesIds,
-            entityType.COURSE
-        ),
+        urls: services.page.getAliases(coursesIds, entityType.COURSE),
         type: entityType.COURSE
     });
 
@@ -325,13 +297,10 @@ service.sortListEntities = function(listEntities, listFavorites) {
  * @return {Array<number>}
  */
 service.getEntityIdsFiltredByType = function(listFavorites, type) {
-    var ids = [];
-
-    listFavorites.forEach(favorite =>
-        favorite.entityType == type ? ids.push(favorite.entityId) : false
-    );
-
-    return ids;
+    return listFavorites.map(favorite =>
+            favorite.entityType == type ? favorite.entityId : false
+        )
+        .filter(id => id);
 };
 
 
