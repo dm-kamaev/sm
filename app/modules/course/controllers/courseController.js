@@ -29,6 +29,7 @@ exports.search = async(function(req, res, next) {
             searchParams = searchView.initSearchParams(req.query);
 
         var data = await({
+            favorites: services.favorite.getFavoriteEntities(user.id),
             courses: services.course.list(searchParams, 10),
             mapCourses: services.course.listMap(searchParams, 10),
             filtersData: {
@@ -36,14 +37,10 @@ exports.search = async(function(req, res, next) {
             }
         });
 
-        var favorites = {
-            items: []
-        };
-
         var templateData = searchView.render({
             entityType: ENTITY_TYPE,
             user: user,
-            favorites: favorites,
+            favorites: data.favorites,
             authSocialLinks: authSocialLinks,
             countResults: data.courses[0] && data.courses[0].countResults || 0,
             coursesList: data.courses,
@@ -89,181 +86,24 @@ exports.information = async(function(req, res, next) {
         var authSocialLinks = services.auth.getAuthSocialUrl(),
             user = req.user || {};
 
-        var course = await(services.course.information(1));
+        var data = await({
+            favorites: services.favorite.getFavoriteEntities(user.id),
+            course: services.course.information(1)
+        });
 
-        var favorites = {
-            items: [{
-                id: 12,
-                type: ENTITY_TYPE,
-                name: {
-                    light: 'School',
-                    bold: '#1'
-                },
-                alias: '',
-                score: 3,
-                metro: [{
-                    id: 3,
-                    name: 'Павелецкая'
-                }]
-            }, {
-                id: 12,
-                type: ENTITY_TYPE,
-                name: {
-                    light: 'School',
-                    bold: '#2'
-                },
-                alias: '',
-                score: 5,
-                metro: [{
-                    id: 3,
-                    name: 'Павелецкая'
-                }]
-            }, {
-                id: 12,
-                type: ENTITY_TYPE,
-                name: {
-                    light: 'School',
-                    bold: '#3'
-                },
-                alias: '',
-                score: 2,
-                metro: [{
-                    id: 3,
-                    name: 'Павелецкая'
-                }]
-            }, {
-                id: 12,
-                type: ENTITY_TYPE,
-                name: {
-                    light: 'School',
-                    bold: '#4'
-                },
-                alias: '',
-                score: 5,
-                metro: [{
-                    id: 3,
-                    name: 'Павелецкая'
-                }]
-            }, {
-                id: 12,
-                type: ENTITY_TYPE,
-                name: {
-                    light: 'School',
-                    bold: '#5'
-                },
-                alias: '',
-                score: 4,
-                metro: [{
-                    id: 3,
-                    name: 'Павелецкая'
-                }]
-            }, {
-                id: 12,
-                type: ENTITY_TYPE,
-                name: {
-                    light: 'School',
-                    bold: '#6'
-                },
-                alias: '',
-                score: 4,
-                metro: [{
-                    id: 3,
-                    name: 'Павелецкая'
-                }]
-            }, {
-                id: 12,
-                type: ENTITY_TYPE,
-                name: {
-                    light: 'School',
-                    bold: '#6'
-                },
-                alias: '',
-                score: 4,
-                metro: [{
-                    id: 3,
-                    name: 'Павелецкая'
-                }]
-            }, {
-                id: 12,
-                type: ENTITY_TYPE,
-                name: {
-                    light: 'School',
-                    bold: '#6'
-                },
-                alias: '',
-                score: 4,
-                metro: [{
-                    id: 3,
-                    name: 'Павелецкая'
-                }]
-            }, {
-                id: 12,
-                type: ENTITY_TYPE,
-                name: {
-                    light: 'School',
-                    bold: '#6'
-                },
-                alias: '',
-                score: 4,
-                metro: [{
-                    id: 3,
-                    name: 'Павелецкая'
-                }]
-            }, {
-                id: 12,
-                type: ENTITY_TYPE,
-                name: {
-                    light: 'School',
-                    bold: '#6'
-                },
-                alias: '',
-                score: 4,
-                metro: [{
-                    id: 3,
-                    name: 'Павелецкая'
-                }]
-            }, {
-                id: 12,
-                type: ENTITY_TYPE,
-                name: {
-                    light: 'School',
-                    bold: '#6'
-                },
-                alias: '',
-                score: 4,
-                metro: [{
-                    id: 3,
-                    name: 'Павелецкая'
-                }]
-            }, {
-                id: 12,
-                type: ENTITY_TYPE,
-                name: {
-                    light: 'School',
-                    bold: '#20'
-                },
-                alias: '',
-                score: 4,
-                metro: [{
-                    id: 3,
-                    name: 'Павелецкая'
-                }]
-            }]
-        };
-
-        var data = informationView.render({
+        var templateData = informationView.render({
             user: user,
             authSocialLinks: authSocialLinks,
-            entityData: courseView.page(course),
-            map: courseView.pageMap(course),
-            favorites: favorites,
+            entityData: courseView.page(data.course),
+            map: courseView.pageMap(data.course),
+            favorites: data.favorites,
             actionButtonText: 'Хочу этот курс!'
         });
 
         var html = soy.render(
             'sm.lCourse.Template.course', {
                 params: {
-                    data: data,
+                    data: templateData,
                     config: {
                         entityType: ENTITY_TYPE,
                         modifier: 'stendhal',

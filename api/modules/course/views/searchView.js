@@ -2,6 +2,7 @@ var FilterPanel = require('../lib/CourseFilterPanel');
 const courseView = require('./courseView');
 const mapViewType = require('../../entity/enums/mapViewType');
 const userView = require('../../user/views/user');
+const favoriteView = require('../../favorite/views/favoriteView');
 
 var searchView = {};
 
@@ -133,7 +134,9 @@ searchView.render = function(data) {
                 placeholder: 'Район, метро, название курса'
             },
             user: user,
-            favorites: data.favorites
+            favorites: {
+                items: favoriteView.list(data.favorites)
+            }
         },
         user: user,
         authSocialLinks: data.authSocialLinks,
