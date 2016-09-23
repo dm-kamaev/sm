@@ -197,6 +197,33 @@ service.isFavorite = async(function(userId, entity) {
 
 
 /**
+ * Get favorite entities data for list favorites
+ * @param {Array<models.Favorite>} listFavorites
+ * @return {Array<{
+ *     entity: (models.School|models.Course),
+ *     url: models.Page,
+ *     type: string
+ * }>}
+ */
+service.getFavoriteEntities = async(function(userId) {
+    var listFavorites = await(this.getByUserId(userId));
+
+    var coursesIds =
+        this.getEntityIdsFiltredByType(listFavorites, entityType.COURSE);
+    var schoolsIds =
+        this.getEntityIdsFiltredByType(listFavorites, entityType.SCHOOL);
+
+    var entities = await({
+        courses: this.getListFavoriteCourses(coursesIds),
+        schools: this.getListFavoriteSchools(schoolsIds)
+    });
+
+    var listEntities = entities.courses.concat(entities.schools);
+    return this.sortListEntities(listEntities, listFavorites);
+});
+
+
+/**
  * Get favorite schools data for list favorites
  * @param {number} schoolsIds
  * @return {Array<{
@@ -263,6 +290,30 @@ service.groupDataByIds = function(data) {
             url: data.urls.find(url => entity.id == url.entityId),
             type: data.type
         };
+    });
+};
+
+
+/**
+ * Sort list Entities based on list Favorites
+ * @param {Array<{
+ *     entity: (models.School|models.Course),
+ *     url: models.Page,
+ *     type: string
+ * }>} listEntities
+ * @param {Array<models.Favorite>} listFavorites
+ * @return {Array<{
+ *     entity: (models.School|models.Course),
+ *     url: models.Page,
+ *     type: string
+ * }>}
+ */
+service.sortListEntities = function(listEntities, listFavorites) {
+    return listFavorites.map(favorite => {
+        return listEntities.find(entityData =>
+            (favorite.entityType == entityData.type &&
+            favorite.entityId == entityData.entity.id)
+        );
     });
 };
 
