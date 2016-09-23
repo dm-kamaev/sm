@@ -421,6 +421,12 @@ goog.scope(function() {
             geoObject['properties']['items'],
             addressItem['items']
         );
+        goog.array.removeDuplicates(
+            extendedItems,
+            null,
+            function(item) {
+                return item['id'];
+        });
 
         geoObject['properties']['items'] = extendedItems;
     };
