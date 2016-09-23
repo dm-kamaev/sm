@@ -349,4 +349,20 @@ view.joinListCourse = function(existingCourse, newCourse) {
     return existingCourse;
 };
 
+/**
+ * @param {{
+ *     name: string,
+ *     phone: string,
+ *     comment: ?string
+ * }} data
+ * @return {Object}
+ */
+view.letterData = function(data) {
+    let comment = data.comment ? `<br/>Комментарий: ${data.comment}` : '';
+    return {
+        theme: 'Запись на курс',
+        content: `Имя: ${data.name}<br/>Телефон: ${data.phone}` + comment
+    };
+};
+
 module.exports = view;

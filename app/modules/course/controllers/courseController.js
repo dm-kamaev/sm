@@ -27,7 +27,6 @@ exports.search = async(function(req, res, next) {
         var authSocialLinks = services.auth.getAuthSocialUrl(),
             user = req.user || {},
             searchParams = searchView.initSearchParams(req.query);
-        searchParams.page = 0;
 
         var data = await({
             courses: services.course.list(searchParams, 10),

@@ -1,3 +1,5 @@
+'use strict';
+
 const async = require('asyncawait/async'),
     await = require('asyncawait/await');
 
@@ -7,6 +9,8 @@ const courseView = require('../views/courseView'),
     services = require('../../../../app/components/services').all;
 
 const mapViewType = require('../../entity/enums/mapViewType');
+
+const config = require('../../../../app/config/config.json');
 
 const logger = require('../../../../app/components/logger/logger')
     .getLogger('app');
@@ -189,6 +193,50 @@ controller.searchCourseType = async(function(req, res) {
         result = error.message;
     } finally {
         res.header('Content-Type', 'text/html; charset=utf-8');
+        res.end(JSON.stringify(result));
+    }
+});
+
+/**
+ * @api {post} /course/enrollment
+ * @apiName EnrollOnCourse
+ * @apiGroup Course
+ *
+ * @apiError {Object[]} ValidationError
+ *
+ * @apiParam {string} name
+ * @apiParam {string} phone
+ * @apiParam {string{..300}} [comment]
+ * @apiParamExample {json} Request-Example:
+ *     {
+ *         "name": "Nikolay",
+ *         "phone": "+7 (966) 435-36-70"
+ *         "comment": "Can my dead son be enrolled on the course? :3"
+ *     }
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ */
+controller.enrollOnCourse = async(function(req, res) {
+    let result;
+    try {
+        let data = await(services.course.enrollOnCourse(req.body)),
+            letterData = courseView.letterData(data);
+
+        await(services.mail.sendLetter(letterData, {
+            from: 'schools.mel.fm <sender@mel.fm>',
+            to: config.emailNotifier.email
+        }));
+    } catch (error) {
+        logger.error(error.message);
+        if (~error.message.indexOf('ValidationError')) {
+            res.status(422);
+        } else {
+            res.status(404);
+        }
+        result = error.message;
+    } finally {
+        res.header('Content-Type', 'application/json; charset=utf-8');
         res.end(JSON.stringify(result));
     }
 });

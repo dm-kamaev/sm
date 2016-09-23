@@ -4,7 +4,8 @@ const async = require('asyncawait/async'),
 
 const sequelize = require('../../../../app/components/db'),
     models = require('../../../../app/components/models').all,
-    services = require('../../../../app/components/services').all;
+    services = require('../../../../app/components/services').all,
+    error = require('../../entity/lib/Error');
 
 var service = {
     name: 'course'
@@ -275,6 +276,28 @@ service.getByIds = function(ids) {
             }]
         }) :
         [];
+};
+
+/**
+ * @param {{
+ *     name: string,
+ *     phone: string,
+ *     comment: ?string
+ * }} data
+ * @return {Object}
+ */
+service.enrollOnCourse = function(data) {
+    if (!data.name) {
+        error.throwValidation('name', 'Необходимо заполнить поле имя');
+    } else if (!data.phone) {
+        error.throwValidation('phone', 'Необходимо заполнить поле телефон');
+    } else if (data.comment && data.comment.length > 300) {
+        error.throwValidation(
+            'comment',
+            'Длина комментария не должна превышать 300 символов'
+        );
+    }
+    return data;
 };
 
 module.exports = service;
