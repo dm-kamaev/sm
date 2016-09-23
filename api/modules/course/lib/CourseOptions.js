@@ -29,6 +29,7 @@ module.exports = class {
 
     /**
      * Get course's options which are the same
+     * @return {Array<Object>}
      */
     getGeneralOptions() {
         return this.generalOptions_.map(generalOption =>
@@ -38,7 +39,7 @@ module.exports = class {
     }
 
     /**
-     * @param  {Object} option
+     * @param  {Object} generalOption
      * @return {(Object|null)}
      */
     getGeneralOptionValue_(generalOption) {
@@ -108,7 +109,7 @@ module.exports = class {
 
     /**
      * @private
-     * @param {string}
+     * @param  {string} time
      * @return {string}
      */
     formatTime_(time) {
@@ -120,7 +121,8 @@ module.exports = class {
 
     /**
      * @private
-     * @param {number} maxGroupSize
+     * @param  {number} maxGroupSize
+     * @return {string}
      */
     formatGroupSize_(maxGroupSize) {
         let result;
@@ -133,4 +135,4 @@ module.exports = class {
         }
         return result;
     }
-}
+};
