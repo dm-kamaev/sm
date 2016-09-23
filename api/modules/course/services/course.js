@@ -219,6 +219,7 @@ service.findByDepartmentId = async(function(departmentId) {
     return result.map(item => item.id);
 });
 
+
 /**
  * @return {Array<Course>}
  */
@@ -239,12 +240,34 @@ service.getAll = async(function() {
     }));
 });
 
+
 /**
  * [getByIds description]
  * @param  {Array<number>} ids
+ * @param {{
+ *     metro: ?boolean
+ * }} opt_include
  * @return {Array<Object>}
  */
-service.getByIds = function(ids) {
+service.getByIds = function(ids, opt_include) {
+    var addressInclude = [{
+        model: models.Area,
+        as: 'area',
+        attributes: ['id', 'name']
+    }];
+
+    if (opt_include && opt_include.metro) {
+        addressInclude.push({
+            model: models.AddressMetro,
+            as: 'addressMetroes',
+            attributes: ['id', 'distance']
+        }, {
+            model: models.Metro,
+            as: 'metroStations',
+            attributes: ['id', 'name']
+        });
+    }
+
     return ids.length ?
         models.Course.findAll({
             attributes: ['id', 'name', 'totalScore'],
@@ -266,11 +289,7 @@ service.getByIds = function(ids) {
                         model: models.Address,
                         as: 'address',
                         attributes: ['id'],
-                        include: [{
-                            model: models.Area,
-                            as: 'area',
-                            attributes: ['id', 'name']
-                        }]
+                        include: addressInclude
                     }]
                 }]
             }]
