@@ -5,7 +5,8 @@ const async = require('asyncawait/async'),
 const sequelize = require('../../../../app/components/db'),
     models = require('../../../../app/components/models').all,
     services = require('../../../../app/components/services').all,
-    error = require('../../entity/lib/Error');
+    error = require('../../entity/lib/Error'),
+    entityType = require('../../entity/enums/entityType');
 
 var service = {
     name: 'course'
@@ -288,6 +289,10 @@ service.getByIds = function(ids, opt_include) {
                     include: [{
                         model: models.Address,
                         as: 'address',
+                        required: false,
+                        where: {
+                            entityType: entityType.COURSE_DEPARTMENT
+                        },
                         attributes: ['id'],
                         include: addressInclude
                     }]
