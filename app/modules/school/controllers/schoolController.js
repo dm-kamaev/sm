@@ -55,7 +55,6 @@ exports.list = async(function(req, res, next) {
         if (req.params &&
             req.params.listType &&
             lodash.isEmpty(req.query)) {
-
             var seoPromises = {
                 schoolList: services.seoSchoolList.getByType(
                     req.params
@@ -80,7 +79,6 @@ exports.list = async(function(req, res, next) {
                 seoResults.schoolList,
                 seoResults.schoolListsForLinks
             );
-
         } else {
             searchParams =
                 await(services.schoolSearch.initSearchParams(req.query));
@@ -97,7 +95,8 @@ exports.list = async(function(req, res, next) {
                     }
                 ),
                 filtersData: services.school.searchFiltersData(searchParams),
-                mapPosition: services.schoolSearch.getMapPositionParams(searchParams),
+                mapPosition:
+                    services.schoolSearch.getMapPositionParams(searchParams),
                 authSocialLinks: services.auth.getAuthSocialUrl(),
                 favorites: {
                     items: services.school.getByIdsWithGeoData(favoriteIds),

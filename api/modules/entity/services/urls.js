@@ -1,17 +1,17 @@
 'use strict';
 
-var async = require('asyncawait/async');
-var await = require('asyncawait/await');
-var translit = require('translitit-cyrillic-russian-to-latin');
+const async = require('asyncawait/async'),
+    await = require('asyncawait/await'),
+    translit = require('translitit-cyrillic-russian-to-latin');
 
-var logger =
+const logger =
     require('../../../../app/components/logger/logger').getLogger('app');
 
-var models = require('../../../../app/components/models').all,
+const models = require('../../../../app/components/models').all,
     services = require('../../../../app/components/services').all,
     entityType = require('../enums/entityType');
 
-var service = {
+const service = {
     name: 'urls'
 };
 
@@ -24,7 +24,7 @@ service.stringToURL = function(string) {
         .replace(/ /g, '-')
         .replace(/\./g, '-')
         .replace(/(№|«|»|%|(|))/g, '');
-    var latin = translit(string)
+    let latin = translit(string)
         .replace(/(--)/g, '-');
     return encodeURIComponent(latin);
 };
@@ -40,9 +40,10 @@ service.generateEntityAlias = async(function(entity, entityType) {
             ' can\'t create url to entity with id', entity.id
         );
     } else {
-        var alias = service.stringToURL(entity.name),
+        let alias = service.stringToURL(entity.name),
             entityPage =
                 await(services.page.getOne(entity.id, entityType));
+
         if (entityPage && alias != entityPage.alias) {
             try {
                 await(entityPage.update(
@@ -77,12 +78,18 @@ service.generateEntityAlias = async(function(entity, entityType) {
  * @param {Object} data
  */
 service.createAlias = async(function(data) {
-    var page = await(services.page.getOne(data.entityId, data.entityType));
-    if (page) {
-        data.alias += '_';
-    } else {
-        await(services.page.create(data));
+    let isAliasUniq = false;
+
+    while (!isAliasUniq) {
+        let page = await(services.page.getByAlias(data.alias, data.entityType));
+        if (page) {
+            data.alias += '_';
+        } else {
+            isAliasUniq = true;
+        }
     }
+
+    await(services.page.create(data));
 });
 
 /**
@@ -99,11 +106,12 @@ service.generateCourseAlias = async(function(course) {
     await(service.generateEntityAlias(course, entityType.COURSE));
 });
 
+
 /**
  * Used once to generate urls by school id
  */
 service.createIdUrls = async(function() {
-    var schools = await(models.School.findAll());
+    let schools = await(models.School.findAll());
     await(schools.forEach(school => {
         models.SchoolUrl.create({
             schoolId: school.id,
@@ -116,7 +124,7 @@ service.createIdUrls = async(function() {
  * Used in console script to initialise urls
  */
 service.updateAll = async(function() {
-    var schools = await(models.School.findAll());
+    let schools = await(models.School.findAll());
     await(schools.forEach(school => this.generateSchoolAlias(school)));
 });
 
@@ -125,7 +133,7 @@ service.updateAll = async(function() {
  * @return {Array}
  */
 service.getAllSchoolUrls = async(function() {
-    var schoolPages = await(models.Page.findAll({
+    let schoolPages = await(models.Page.findAll({
         attributes: ['alias'],
         where: {
             entityType: entityType.SCHOOL
@@ -139,7 +147,7 @@ service.getAllSchoolUrls = async(function() {
  * @return {?models.School} school
  */
 service.getSchoolByUrl = async(function(alias) {
-    var page = await(services.page.getByAlias(alias, entityType.SCHOOL)),
+    let page = await(services.page.getByAlias(alias, entityType.SCHOOL)),
         school = await(models.School.findOne({
             where: {
                 id: page.entityId
@@ -147,7 +155,7 @@ service.getSchoolByUrl = async(function(alias) {
             attributes: ['id']
         }));
     if (!school) {
-        var record = await(models.AliasBacklog.findOne({
+        let record = await(models.AliasBacklog.findOne({
             where: {
                 alias: alias,
                 entityType: entityType.SCHOOL

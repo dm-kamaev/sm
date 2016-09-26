@@ -949,6 +949,7 @@ goog.scope(function() {
      */
     Search.prototype.onNotSchoolSelect_ = function(event, data) {
         var url = '/school' + '?name=' + encodeURIComponent(data['text']);
+
         if (data['item']['type'] === 'metro') {
             url += '&metroId=' + data['item']['id'];
         } else if (data['item']['type'] === 'areas') {

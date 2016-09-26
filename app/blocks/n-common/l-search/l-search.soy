@@ -155,20 +155,12 @@
  *         }>
  *     },
  *     config: {
- *         type: string
+ *         entityType: string
  *     }
  * }}
  * @override
  */
-{template .bodyContent_ autoescape="strict" kind="html"}
-    {let $data: [
-        'searchSettings': $params.data.searchSettings,
-        'params': [
-            'isUserAuthorized': $params.data?.user ? true : false,
-            'authSocialLinks': $params.data?.authSocialLinks
-        ]
-    ]/}
-
+{template .mainContent autoescape="strict" kind="html"}
     <div class="{call .rootClass/}__body">
         {call .sectionMap_ data="all" /}
         {call .sectionContent_ data="all" /}
@@ -221,7 +213,9 @@
                     'renderParams': [
                         'data': $params.data.map,
                         'config': [
-                            'enableScrollZoom': false
+                            'enableScrollZoom': false,
+                            'alignZoomControl': 'left',
+                            'sizeViewportShow': 'xs'
                         ]
                     ]
                 ] /}
@@ -253,7 +247,7 @@
  *         filterPanel: {sm.lSearch.bFilterPanel.Template.Params}
  *     },
  *     config: {
- *         type: string
+ *         entityType: string
  *     }
  * }}
  */
@@ -279,7 +273,7 @@
  *         }
  *     },
  *     config: {
- *         type: string
+ *         entityType: string
  *     }
  * }}
  */
@@ -301,7 +295,7 @@
  *         }
  *     },
  *     config: {
- *         type: string
+ *         entityType: string
  *     }
  * }}
  */
@@ -320,7 +314,7 @@
                 'inputSize': 'min',
                 'customClasses': $customClasses,
                 'config': [
-                    'entityType': $params.config.type,
+                    'entityType': $params.config.entityType,
                     'height': 's'
                 ]
             ]/}
@@ -946,7 +940,7 @@
  *         }
  *     },
  *     config: {
- *         type: string
+ *         entityType: string
  *     }
  * }}
  * @override
@@ -960,7 +954,7 @@
                 'authSocialLinks': $params.data?.authSocialLinks,
                 'declensionEntityType': $params.data?.search?.declensionEntityType,
                 'countResults': $params.data.search.countResults,
-                'type': $params?.config.type
+                'type': $params?.config.entityType
             ] /}
         {/call}"
 {/template}

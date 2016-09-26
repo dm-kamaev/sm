@@ -152,6 +152,10 @@
         {if $params.config?.isHidden}
             {sp}{cl.iUtils.Utils.CssClass.HIDDEN}
         {/if}
+
+        {if $params.config?.isLastOnPage}
+            {sp}{call .rootClass/}__item-wrap_not-line-bottom
+        {/if}
     {/let}
 
     {let $customClasses kind="html"}
@@ -205,6 +209,21 @@
     {call cl.iUtils.Utils.stringify}
         {param json: $data/}
     {/call}"
+{/template}
+
+
+/**
+ * @param params {
+ *     data: {
+ *         countItemsPerPage: (number|undefined)
+ *     }
+ * }
+ * @override
+ */
+{template .additionalClasses}
+    {if $params.data?.countItemsPerPage}
+        {call .rootClass /}_count-items_{$params.data.countItemsPerPage}
+    {/if}
 {/template}
 
 

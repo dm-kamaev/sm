@@ -107,7 +107,6 @@
         {/if}
     {/let}
 
-
     <div class="{$cssClasses}">
         {call .markList data="all" /}
     </div>
@@ -209,9 +208,11 @@
  * @private
  */
 {template .markName_ kind="html"}
-    <div class="{call .rootClass /}__mark-name">
-        {$params.data.name ? $params.data.name : ''}
-    </div>
+    {if $params.data.name}
+        <div class="{call .rootClass /}__mark-name">
+            {$params.data.name}
+        </div>
+    {/if}
 {/template}
 
 

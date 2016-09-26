@@ -77,9 +77,6 @@ goog.scope(function() {
      */
     View.prototype.decorateInternal = function(element) {
         View.base(this, 'decorateInternal', element);
-        this.initDom_(element);
-
-        this.initParams_();
     };
 
 
@@ -147,73 +144,41 @@ goog.scope(function() {
 
     /**
      * Init dom elements
-     * @param {Element} element
-     * @private
+     * @protected
+     * @override
      */
-    View.prototype.initDom_ = function(element) {
-        this.dom = {
-            sort: this.getElementByClass(
-                sm.gDropdown.ViewSelect.CssClass.ROOT,
-                element
-            ),
-            headersResults: this.getElementsByClass(
-                View.CssClass.RESULTS_LIST_HEADER,
-                element
-            ),
-            search: this.getElementByClass(
-                View.CssClass.SEARCH,
-                element
-            ),
-            filterPanel: this.getElementByClass(
-                sm.lSearch.bFilterPanel.View.CssClass.ROOT,
-                element
-            ),
-            resultsList: this.getElementByClass(
-                sm.bSmItemList.View.CssClass.ROOT,
-                element
-            ),
-            map: this.getElementByClass(
-                sm.bSmMap.View.CssClass.ROOT,
-                element
-            ),
-            loader: this.getElementByClass(
-                View.CssClass.LOADER,
-                element
-            ),
-            showMoreButton: this.getElementByClass(
-                View.CssClass.SHOW_MORE_BUTTON,
-                element
-            ),
-            showMoreButtonWrap: this.getElementByClass(
-                View.CssClass.SHOW_MORE_BUTTON_WRAP,
-                element
-            )
-        };
-    };
+    View.prototype.initDom = function() {
+        View.base(this, 'initDom');
 
-
-    /**
-     * Init params from dom element
-     * @private
-     */
-    View.prototype.initParams_ = function() {
-        var rawParams = this.getRawDataParams_();
-        this.params = this.transformParams_(rawParams);
-    };
-
-
-    /**
-     * Return raw data-params from dom element
-     * @return {Object}
-     * @private
-     */
-    View.prototype.getRawDataParams_ = function() {
-        var dataParams = goog.dom.dataset.get(
-            this.getElement(),
-            'params'
+        goog.object.extend(
+            this.dom,
+            {
+                sort: this.getElementByClass(
+                    sm.gDropdown.ViewSelect.CssClass.ROOT
+                ),
+                search: this.getElementByClass(
+                    View.CssClass.SEARCH
+                ),
+                filterPanel: this.getElementByClass(
+                    sm.lSearch.bFilterPanel.View.CssClass.ROOT
+                ),
+                resultsList: this.getElementByClass(
+                    sm.bSmItemList.View.CssClass.ROOT
+                ),
+                map: this.getElementByClass(
+                    sm.bSmMap.View.CssClass.ROOT
+                ),
+                loader: this.getElementByClass(
+                    View.CssClass.LOADER
+                ),
+                showMoreButton: this.getElementByClass(
+                    View.CssClass.SHOW_MORE_BUTTON
+                ),
+                showMoreButtonWrap: this.getElementByClass(
+                    View.CssClass.SHOW_MORE_BUTTON_WRAP
+                )
+            }
         );
-
-        return JSON.parse(dataParams);
     };
 
 
@@ -221,23 +186,22 @@ goog.scope(function() {
      * Transform raw params from dom element to sm.lSearch.View.Params
      * @param  {Object} rawParams
      * @return {sm.lSearch.View.Params}
-     * @private
+     * @protected
+     * @override
      */
     View.prototype.transformParams_ = function(rawParams) {
-        return {
+        var params = View.base(this, 'transformParams', rawParams);
+
+        goog.object.extend(params, {
             searchParams: rawParams['searchParams'],
-            isUserAuthorzed: rawParams['isUserAuthorzed'],
-            authSocialLinks: {
-                vk: rawParams['authSocialLinks']['vk'],
-                fb: rawParams['authSocialLinks']['fb']
-            },
             declensionEntityType: {
                 nom: rawParams['declensionEntityType']['nom'],
                 gen: rawParams['declensionEntityType']['gen'],
                 plu: rawParams['declensionEntityType']['plu']
             },
-            countResults: rawParams['countResults'],
-            type: rawParams['type']
-        };
+            countResults: rawParams['countResults']
+        });
+
+        return params;
     };
 });  // goog.scope

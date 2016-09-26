@@ -53,6 +53,10 @@ var Course = db.define('Course', {
     },
     classMethods: {
         associate: function(models) {
+            Course.belongsTo(models.CourseBrand, {
+                as: 'courseBrand',
+                foreignKey: 'brand_id'
+            });
             Course.hasMany(models.CourseOption, {
                 as: 'courseOptions',
                 foreignKey: 'course_id'

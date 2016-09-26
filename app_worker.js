@@ -25,12 +25,10 @@ const soy = require('./node_modules/clobl/soy').setOptions({
 var modules = require('./app/modules');
 var api = require('./api/modules');
 var bodyParser = require('body-parser');
-var vm = require('vm');
 
 var errorController =
     require('./app/modules/error/controllers/errorController');
 
-const await = require('asyncawait/await');
 const async = require('asyncawait/async');
 
 const app = express();
@@ -39,7 +37,6 @@ const config = require('./app/config').config;
 
 const morgan = require('morgan');
 const expressLogStream = require('./app/components/logger/expressLogStream');
-const logger = require('./app/components/logger/logger').getLogger('app');
 const redis = require('./app/components/redis');
 
 app.set('views', path.join(__dirname, 'api-debug'));

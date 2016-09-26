@@ -15,6 +15,7 @@
  * @typedef {
  *     target: (string|undefined),
  *     size: (string|undefined),
+ *     font: (string|undefined),
  *     theme: (string|undefined),
  *     customClasses: (string|undefined)
  * } sm.bLink.Template.Params.Config
@@ -52,15 +53,15 @@
  * Open tag
  * @param params {
  *    data: ?[
- *        name: ?string,
+ *        name: string,
  *        url: ?string
  *    ],
  *    config: ?[
- *        customClasses: ?string,
- *        target: ?string,
- *        theme: ?string,
- *        size: ?string,
- *        font: ?string
+ *        customClasses: (string|undefined),
+ *        target: (string|undefined),
+ *        theme: (string|undefined),
+ *        size: (string|undefined),
+ *        font: (string|undefined)
  *    ]
  * }
  */

@@ -1,7 +1,7 @@
-
 var FilterPanel = require('../lib/CourseFilterPanel');
 const courseView = require('./courseView');
 const mapViewType = require('../../entity/enums/mapViewType');
+const userView = require('../../user/views/user');
 
 var searchView = {};
 
@@ -98,6 +98,7 @@ searchView.map = function(courses, viewType) {
     };
 };
 
+
 /**
  * @param {{
  *     user: Object,
@@ -106,11 +107,14 @@ searchView.map = function(courses, viewType) {
  *     coursesList: Array<Object>,
  *     mapData: Object<Object>,
  *     searchParams: Object,
+ *     favorites: Object,
  *     filtersData: Array<Object>
  * }} data
  * @return {Object}
  */
 searchView.render = function(data) {
+    var user = userView.default(data.user);
+
     return {
         type: data.entityType,
         seo: {
@@ -123,15 +127,15 @@ searchView.render = function(data) {
             links: {
                 nameL: 'Все курсы, кружки и секции',
                 nameM: 'Все курсы',
-                url: '/'
+                url: '/coursesearch'
             },
             search: {
                 placeholder: 'Район, метро, название курса'
             },
-            user: data.user,
-            favorites: []
+            user: user,
+            favorites: data.favorites
         },
-        user: data.user,
+        user: user,
         authSocialLinks: data.authSocialLinks,
         map: this.map(data.mapCourses, mapViewType.PIN),
         search: {

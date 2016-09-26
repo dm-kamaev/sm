@@ -48,9 +48,10 @@ goog.scope(function() {
     View.prototype.decorateInternal = function(element) {
         View.base(this, 'decorateInternal', element);
 
-        this.initSearch_();
-        this.initAuthorizationLink_();
-        this.initFavorite_();
+        this.initSearch_(element);
+        this.initAuthorizationLink_(element);
+        this.initFavorite_(element);
+        this.initLinks_(element);
         this.detectAnimationSupportion_();
     };
 
@@ -100,37 +101,57 @@ goog.scope(function() {
 
     /**
      * Find search dom elements
+     * @param {Element} element
      * @private
      */
-    View.prototype.initSearch_ = function() {
+    View.prototype.initSearch_ = function(element) {
         this.dom.minifiedSearch = this.getElementByClass(
-            View.CssClass.MINIFIED_SEARCH
+            View.CssClass.MINIFIED_SEARCH,
+            element
         );
 
         this.dom.search = this.getElementByClass(
-            View.CssClass.SEARCH
+            View.CssClass.SEARCH,
+            element
         );
     };
 
 
     /**
      * Initializes dom elements
+     * @param {Element} element
      * @private
      */
-    View.prototype.initAuthorizationLink_ = function() {
+    View.prototype.initAuthorizationLink_ = function(element) {
         this.dom.authorizationLink = this.getElementByClass(
-            sm.bAuthorizationLink.View.CssClass.ROOT
+            sm.bAuthorizationLink.View.CssClass.ROOT,
+            element
         );
     };
 
 
     /**
      * Initializes dom elements
+     * @param {Element} element
      * @private
      */
-    View.prototype.initFavorite_ = function() {
+    View.prototype.initFavorite_ = function(element) {
         this.dom.favorite = this.getElementByClass(
-            sm.bFavorite.View.CssClass.ROOT
+            sm.bSmFavorite.View.CssClass.ROOT,
+            element
+        );
+    };
+
+
+    /**
+     * Initializes links (dom elements)
+     * @param {Element} element
+     * @private
+     */
+    View.prototype.initLinks_ = function(element) {
+        this.dom.links = this.getElementsByClass(
+            sm.bSmLink.View.CssClass.ROOT,
+            element
         );
     };
 });  // goog.scope
