@@ -1,44 +1,61 @@
-var async = require('asyncawait/async'),
+'use strict';
+
+const async = require('asyncawait/async'),
     await = require('asyncawait/await');
 
-var soy = require('../../../components/soy'),
-    services = require('../../../components/services').all;
-
-var courseView = require('../../../../api/modules/course/views/courseView'),
+const soy = require('../../../components/soy'),
+    services = require('../../../components/services').all,
+    courseView = require('../../../../api/modules/course/views/courseView'),
     searchView = require('../../../../api/modules/course/views/searchView'),
     informationView = require(
         '../../../../api/modules/course/views/informationView'
-    );
+    ),
+    pageView = require('../../../../api/modules/entity/views/pageView'),
+    entityType = require('../../../../api/modules/entity/enums/entityType.js');
 
-const entityType =
-    require('../../../../api/modules/entity/enums/entityType.js');
+const logger = require('../../../components/logger/logger').getLogger('app');
 
-var config = require('../../../config').config;
-
-var logger = require('../../../components/logger/logger').getLogger('app');
+const config = require('../../../config').config;
 
 const ANALYTICS_ID = config.analyticsId,
     YANDEX_METRIKA_ID = config.yandexMetrikaId,
     DOMAIN = config.url.protocol + '://' + config.url.host,
     FB_CLIENT_ID = config.facebookClientId;
 
+let controller = {};
 
-exports.search = async(function(req, res, next) {
+controller.search = async(function(req, res, next) {
     try {
-        var authSocialLinks = services.auth.getAuthSocialUrl(),
+        let authSocialLinks = services.auth.getAuthSocialUrl(),
             user = req.user || {},
             searchParams = searchView.initSearchParams(req.query);
 
-        var data = await({
-            favorites: services.favorite.getFavoriteEntities(user.id),
-            courses: services.course.list(searchParams, 10),
-            mapCourses: services.course.listMap(searchParams, 10),
-            filtersData: {
-                type: services.courseType.getAll()
-            }
-        });
+        let data = await({
+                favorites: services.favorite.getFavoriteEntities(user.id),
+                courses: services.course.list(searchParams, 10),
+                mapCourses: services.course.listMap(searchParams, 10),
+                filtersData: {
+                    type: services.courseType.getAll()
+                }
+            });
 
-        var templateData = searchView.render({
+        let courseAliases = await(services.page.getAliases(
+                pageView.uniqueIds(data.courses),
+                entityType.COURSE
+            )),
+            brandAliases = await(services.page.getAliases(
+                pageView.uniqueIds(data.courses.map(course => ({
+                    id: course.brandId
+                }))),
+                entityType.COURSE_BRAND
+            )),
+            courses = courseView.joinAliases(
+                data.courses,
+                courseAliases,
+                brandAliases
+            );
+
+        let templateData = searchView.render({
             entityType: entityType.COURSE,
             user: user,
             favorites: data.favorites,
@@ -50,7 +67,7 @@ exports.search = async(function(req, res, next) {
             filtersData: data.filtersData
         });
 
-        var html = soy.render(
+        let html = soy.render(
             'sm.lSearch.Template.search', {
                 params: {
                     data: templateData,
@@ -81,46 +98,69 @@ exports.search = async(function(req, res, next) {
 });
 
 
-exports.information = async(function(req, res, next) {
+controller.information = async(function(req, res, next) {
     try {
-        var authSocialLinks = services.auth.getAuthSocialUrl(),
-            user = req.user || {};
+        let alias = services.urls.stringToURL(req.params.name),
+            brandAlias = services.urls.stringToURL(req.params.brandName),
+            page = await({
+                course: services.page.getByAlias(
+                    alias,
+                    entityType.COURSE
+                ),
+                brand: services.page.getByAlias(
+                    brandAlias,
+                    entityType.COURSE_BRAND
+                )
+            });
+        if (!page.course || !page.brand) {
+            throw new errors.PageNotFoundError();
+        } else {
+            let courseInstance = await(services.urls.getEntityByUrl(
+                alias, entityType.COURSE
+            ));
+            if (!courseInstance || courseInstance.brandId != page.brand.id) {
+                throw new errors.SchoolNotFoundError();
+            } else {
+                let authSocialLinks = services.auth.getAuthSocialUrl(),
+                    user = req.user || {};
 
-        var data = await({
-            favorites: services.favorite.getFavoriteEntities(user.id),
-            course: services.course.information(1)
-        });
+                let data = await({
+                    favorites: services.favorite.getFavoriteEntities(user.id),
+                    course: services.course.information(courseInstance.id)
+                });
 
-        var templateData = informationView.render({
-            user: user,
-            authSocialLinks: authSocialLinks,
-            entityData: courseView.page(data.course),
-            map: courseView.pageMap(data.course),
-            favorites: data.favorites,
-            actionButtonText: 'Хочу этот курс!'
-        });
+                let templateData = informationView.render({
+                    user: user,
+                    authSocialLinks: authSocialLinks,
+                    entityData: courseView.page(data.course),
+                    map: courseView.pageMap(data.course),
+                    favorites: data.favorites,
+                    actionButtonText: 'Хочу этот курс!'
+                });
 
-        var html = soy.render(
-            'sm.lCourse.Template.course', {
-                params: {
-                    data: templateData,
-                    config: {
-                        entityType: entityType.COURSE,
-                        modifier: 'stendhal',
-                        staticVersion: config.lastBuildTimestamp,
-                        year: new Date().getFullYear(),
-                        analyticsId: ANALYTICS_ID,
-                        yandexMetrikaId: YANDEX_METRIKA_ID,
-                        csrf: req.csrfToken(),
-                        domain: DOMAIN,
-                        fbClientId: FB_CLIENT_ID
+                let html = soy.render(
+                    'sm.lCourse.Template.course', {
+                        params: {
+                            data: templateData,
+                            config: {
+                                entityType: entityType.COURSE,
+                                modifier: 'stendhal',
+                                staticVersion: config.lastBuildTimestamp,
+                                year: new Date().getFullYear(),
+                                analyticsId: ANALYTICS_ID,
+                                yandexMetrikaId: YANDEX_METRIKA_ID,
+                                csrf: req.csrfToken(),
+                                domain: DOMAIN,
+                                fbClientId: FB_CLIENT_ID
+                            }
+                        }
                     }
-                }
-            }
-        );
+                );
 
-        res.header('Content-Type', 'text/html; charset=utf-8');
-        res.end(html);
+                res.header('Content-Type', 'text/html; charset=utf-8');
+                res.end(html);
+            }
+        }
     } catch (error) {
         logger.error(error);
 
@@ -128,3 +168,5 @@ exports.information = async(function(req, res, next) {
         next();
     }
 });
+
+module.exports = controller;

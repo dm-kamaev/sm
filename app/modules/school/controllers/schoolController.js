@@ -186,7 +186,10 @@ exports.view = async(function(req, res, next) {
         } else if (!page.entityId) {
             next();
         } else {
-            var schoolInstance = await(services.urls.getSchoolByUrl(alias));
+            var schoolInstance = await(services.urls.getEntityByUrl(
+                alias,
+                entityType.SCHOOL
+            ));
             if (!schoolInstance) {
                 throw new errors.SchoolNotFoundError();
             } else if (alias != schoolInstance.alias) {

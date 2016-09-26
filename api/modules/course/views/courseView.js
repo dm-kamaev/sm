@@ -9,7 +9,8 @@ const scoreView = require('./scoreView'),
     districtView = require('../../geo/views/districtView'),
     addressView = require('../../geo/views/addressView'),
     FormatText = require('../../entity/lib/FormatText'),
-    CourseOptions = require('../lib/CourseOptions');
+    CourseOptions = require('../lib/CourseOptions'),
+    pageView = require('../../entity/views/pageView');
 
 let view = {};
 
@@ -291,6 +292,7 @@ view.mapCourse = function(course) {
 view.getListCourse = function(course) {
     return {
         id: course.id,
+        alias: this.generateAlias(course.alias, course.brandAlias),
         type: entityType.COURSE,
         name: {light: course.name},
         description: course.description,
@@ -353,6 +355,16 @@ view.joinListCourse = function(existingCourse, newCourse) {
     return existingCourse;
 };
 
+/**
+ * @param  {string} alias
+ * @param  {string} brandAlias
+ * @return {string}
+ */
+view.generateAlias = function(alias, brandAlias) {
+    return 'proforientacija/' + brandAlias + '/' +
+        alias;
+};
+
 
 /**
  * @param {{
@@ -413,6 +425,20 @@ view.item = function(data) {
         area: [addressView.getArea(addresses)[0]],
         alias: url ? url.alias : entity.id
     };
+};
+
+/**
+ * @param  {Array<Object>} courses
+ * @param  {Array<Object>} courseAliases
+ * @param  {Array<Object>} brandAliases
+ * @return {Array<Object>}
+ */
+view.joinAliases = function(courses, courseAliases, brandAliases) {
+    let result = pageView.joinAliases(courses, courseAliases);
+    return pageView.joinAliases(result, brandAliases, {
+        outputField: 'brandAlias',
+        inputId: 'brandId'
+    });
 };
 
 module.exports = view;

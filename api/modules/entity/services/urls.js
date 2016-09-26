@@ -142,6 +142,13 @@ service.generateCourseAlias = async(function(course) {
     await(service.generateEntityAlias(course, entityTypes.COURSE));
 });
 
+/**
+ * @param {Object} courseBrand
+ */
+service.generateCourseBrandAlias = async(function(courseBrand) {
+    await(service.generateEntityAlias(courseBrand, entityTypes.COURSE_BRAND));
+});
+
 
 /**
  * Used once to generate urls by school id
@@ -180,30 +187,37 @@ service.getAllSchoolUrls = async(function() {
 
 /**
  * @param {string} alias
- * @return {?models.School} school
+ * @param {string} entityType
+ * @return {(Object|null)}
  */
-service.getSchoolByUrl = async(function(alias) {
-    let page = await(services.page.getByAlias(alias, entityTypes.SCHOOL)),
-        school = await(models.School.findOne({
+service.getEntityByUrl = async(function(alias, entityType) {
+    let entityModels = {
+        school: models.School,
+        course: models.Course
+    };
+    let page = await(services.page.getByAlias(alias, entityType)),
+        entity = await(entityModels[entityType].findOne({
             where: {
                 id: page.entityId
             },
             attributes: ['id']
         }));
-    if (!school) {
+    if (!entity) {
         let record = await(models.AliasBacklog.findOne({
             where: {
                 alias: alias,
-                entityType: entityTypes.SCHOOL
+                entityType: entityType
             }
         }));
-        school = record ?
-            await(models.School.findOne({where: {id: record.entityId}})) :
+        entity = record ?
+            await(entityModels[entityType].findOne(
+                {where: {id: record.entityId}}
+            )) :
             null;
     } else {
-        school.alias = page.alias;
+        entity.alias = page.alias;
     }
-    return school;
+    return entity;
 });
 
 module.exports = service;
