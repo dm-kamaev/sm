@@ -279,6 +279,19 @@ service.getByIds = function(ids) {
 };
 
 /**
+ * @param  {number} brandId
+ * @return {Array<number>}
+ */
+service.getByBrandId = function(brandId) {
+    return await(models.Course.findAll({
+        attributes: ['id'],
+        where: {
+            brandId: brandId
+        }
+    }));
+};
+
+/**
  * @param {{
  *     name: string,
  *     phone: string,

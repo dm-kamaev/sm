@@ -9,7 +9,7 @@ const logger =
 
 const models = require('../../../../app/components/models').all,
     services = require('../../../../app/components/services').all,
-    entityType = require('../enums/entityType');
+    entityTypes = require('../enums/entityType');
 
 const service = {
     name: 'urls'
@@ -64,12 +64,21 @@ service.generateEntityAlias = async(function(entity, entityType) {
                 }));
             }
         } else if (!entityPage) {
-            await(service.createAlias({
-                entityId: entity.id,
-                entityType: entityType,
-                alias: alias,
-                views: 0
-            }));
+            if (entityType == entityTypes.COURSE) {
+                await(service.getUniqueCourseAlias({
+                    entityId: entity.id,
+                    entityType: entityType,
+                    alias: alias,
+                    views: 0
+                }, entity.brandId));
+            } else {
+                await(service.createAlias({
+                    entityId: entity.id,
+                    entityType: entityType,
+                    alias: alias,
+                    views: 0
+                }));
+            }
         }
     }
 });
@@ -93,17 +102,44 @@ service.createAlias = async(function(data) {
 });
 
 /**
+ * @param {Object} data
+ * @param {number} brandId
+ * @return {string}
+ */
+service.getUniqueCourseAlias = async(function(data, brandId) {
+    let brandCourseIds = await(services.course.getByBrandId(brandId))
+        .map(course => course.id),
+        coursePages = await(services.page.getAliases(
+            brandCourseIds,
+            entityTypes.COURSE
+        )),
+        isAliasUniq = false;
+
+    while (!isAliasUniq) {
+        let page = coursePages.find(coursePage =>
+            coursePage.alias == data.alias);
+        if (page) {
+            data.alias += '_';
+        } else {
+            isAliasUniq = true;
+        }
+    }
+
+    await(services.page.create(data));
+});
+
+/**
  * @param {Object} school
  */
 service.generateSchoolAlias = async(function(school) {
-    await(service.generateEntityAlias(school, entityType.SCHOOL));
+    await(service.generateEntityAlias(school, entityTypes.SCHOOL));
 });
 
 /**
  * @param {Object} course
  */
 service.generateCourseAlias = async(function(course) {
-    await(service.generateEntityAlias(course, entityType.COURSE));
+    await(service.generateEntityAlias(course, entityTypes.COURSE));
 });
 
 
@@ -136,7 +172,7 @@ service.getAllSchoolUrls = async(function() {
     let schoolPages = await(models.Page.findAll({
         attributes: ['alias'],
         where: {
-            entityType: entityType.SCHOOL
+            entityType: entityTypes.SCHOOL
         }
     }));
     return schoolPages.map(schoolPage => schoolPage.alias);
@@ -147,7 +183,7 @@ service.getAllSchoolUrls = async(function() {
  * @return {?models.School} school
  */
 service.getSchoolByUrl = async(function(alias) {
-    let page = await(services.page.getByAlias(alias, entityType.SCHOOL)),
+    let page = await(services.page.getByAlias(alias, entityTypes.SCHOOL)),
         school = await(models.School.findOne({
             where: {
                 id: page.entityId
@@ -158,7 +194,7 @@ service.getSchoolByUrl = async(function(alias) {
         let record = await(models.AliasBacklog.findOne({
             where: {
                 alias: alias,
-                entityType: entityType.SCHOOL
+                entityType: entityTypes.SCHOOL
             }
         }));
         school = record ?
