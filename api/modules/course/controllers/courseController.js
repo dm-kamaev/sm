@@ -76,7 +76,7 @@ controller.searchMap = async(function(req, res) {
             mapCourses = await(services.course.listMap(searchParams));
 
         result = {
-            map: searchView.map(mapCourses, mapViewType.POINT)
+            map: searchView.map(mapCourses, mapViewType.PIN)
         };
     } catch (error) {
         logger.error(error.message);

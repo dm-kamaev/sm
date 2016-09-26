@@ -105,8 +105,8 @@ addressView.default = function(addresses) {
 
 /**
  * returns metro names for departments from addresses array
- * @param {array<object>} addresses
- * @return {array<string>}
+ * @param {Array<Object>} addresses
+ * @return {Array<Object>}
  */
 addressView.getMetro = function(addresses) {
     var metroStations =
@@ -118,15 +118,16 @@ addressView.getMetro = function(addresses) {
     return metroView.list(metroStations);
 };
 
+
 /**
- * returns area names and id for departments from addresses array
- * @param {array<object>} addresses
- * @return {object}
+ * returns area names and ids for departments from addresses array
+ * @param {Array<Object>} addresses
+ * @return {Array<Object>}
  */
-addressView.getAreas = function(addresses) {
+addressView.getArea = function(addresses) {
     var areas = addresses.map(address => address.area);
 
-    return areaView.list(areas)[0];
+    return areaView.list(areas);
 };
 
 

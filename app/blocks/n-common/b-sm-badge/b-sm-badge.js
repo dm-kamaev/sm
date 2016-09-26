@@ -24,6 +24,26 @@ goog.scope(function() {
 
 
     /**
+     * Search address for different entity types
+     * @enum {string}
+     */
+    Badge.SearchAddress = {
+        SCHOOL: 'school',
+        COURSE: 'courseSearch'
+    };
+
+
+    /**
+     * Possible antity types
+     * @enum {string}
+     */
+    Badge.EntityType = {
+        SCHOOL: 'school',
+        COURSE: 'course'
+    };
+
+
+    /**
      * @typedef {sm.bSmBadge.View.RenderParams}
      */
     sm.bSmBadge.SmBadge.RenderParams;
@@ -96,8 +116,43 @@ goog.scope(function() {
      * @private
      */
     Badge.prototype.redirectSearch_ = function(data) {
-        document.location.href = '/school?' +
+        document.location.href = this.buildRedirectHref_(data);
+    };
+
+
+    /**
+     * Build redirect href for search redirect
+     * @param {{
+     *     id: number,
+     *     name: string
+     * }} data
+     * @return {string}
+     * @private
+     */
+    Badge.prototype.buildRedirectHref_ = function(data) {
+        return this.buildSearchAddress_() + '?' +
             goog.uri.utils.buildQueryDataFromMap(data);
+    };
+
+
+    /**
+     * Build search page address
+     * @return {string}
+     * @private
+     */
+    Badge.prototype.buildSearchAddress_ = function() {
+        var result = '/';
+
+        switch (this.params.entityType) {
+            case Badge.EntityType.COURSE:
+                result += Badge.SearchAddress.COURSE;
+                break;
+            case Badge.EntityType.SCHOOL:
+                result += Badge.SearchAddress.SCHOOL;
+                break;
+        }
+
+        return result;
     };
 
 

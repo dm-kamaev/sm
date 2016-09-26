@@ -4,7 +4,7 @@
 /**
  * Favorite template parameters
  * @typedef {{
- *     entities: ?Array<sm.bSmItem.Template.Params.Data>
+ *     items: ?Array<sm.bSmItem.Template.Params.Data>
  * }} sm.bSmFavorite.Template.Params.Data
  */
 
@@ -118,13 +118,13 @@
     </div>
 
      <div class="{call .rootClass/}__hint-content-list">
-        {call .listEntities_ data="all" /}
+        {call .listItems_ data="all" /}
     </div>
 {/template}
 
 
 /**
- * Сontent text if array entities is empty
+ * Сontent text if array items is empty
  */
 {template .contentTextAuthoroized_}
     Пока&nbsp;вы&nbsp;ничего не&nbsp;добавили&nbsp;в&nbsp;избранное.
@@ -132,21 +132,21 @@
 
 
 /**
- * list of entities
+ * list of items
  * @param params {{
  *     data: {
- *         entities: ?Array<sm.bSmItem.Template.Params.Data>
+ *         items: ?Array<sm.bSmItem.Template.Params.Data>
  *     }
  * }}
  */
-{template .listEntities_}
+{template .listItems_}
     {call .renderChild}
         {param params: [
             'type': 'smListPaged',
             'renderParams': [
                 'data': [
                     'countItemsPerPage': 5,
-                    'items': $params.data?.entities
+                    'items': $params.data?.items
                 ],
                 'config': [
                     'itemType': 'smItem'
@@ -199,7 +199,7 @@
  * Css classes
  * @param params {{
  *     data: {
- *         entities: ?Array<sm.bSmItem.Template.Params.Data>
+ *         items: ?Array<sm.bSmItem.Template.Params.Data>
  *     },
  *     config: {
  *         isUserAuthorized: boolean
@@ -208,7 +208,7 @@
  * @override
  */
 {template .additionalClasses}
-    {if $params.data?.entities and length($params.data?.entities)}
+    {if $params.data?.items and length($params.data?.items)}
         {sp}{call .rootClass/}_filled
     {/if}
 

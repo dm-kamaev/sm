@@ -1,4 +1,5 @@
 const userView = require('../../user/views/user');
+const favoriteView = require('../../favorite/views/favoriteView');
 
 
 /**
@@ -32,7 +33,9 @@ exports.render = function(data) {
                 placeholder: 'Район, метро, название курса'
             },
             user: user,
-            favorites: data.favorites
+            favorites: {
+                items: favoriteView.list(data.favorites)
+            }
         },
         user: user,
         authSocialLinks: data.authSocialLinks,

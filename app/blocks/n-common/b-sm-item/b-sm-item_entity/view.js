@@ -73,6 +73,7 @@ goog.scope(function() {
     View.getRenderParams = function(rawParams) {
         var params = sm.bSmItem.View.getRenderParams(rawParams);
         goog.object.extend(params.data, {
+            cost: rawParams['cost'],
             score: sm.bSmScore.SmScoreBrief.getRenderParams(rawParams['score']),
             brand: rawParams['brand'],
             online: rawParams['online'],

@@ -71,7 +71,7 @@ goog.scope(function() {
          * @type {number}
          * @private
          */
-        this.mapObjectsAmount_ = 0;
+        this.geoObjectsAmount_ = 0;
 
 
         /**
@@ -222,12 +222,12 @@ goog.scope(function() {
      * If item groups exists, add each item group to map
      * @param {Array<{
      *     viewType: sm.bSmMap.IPresetGenerator.PresetType,
-     *     addresses: Array<sm.bSmMap.AddressItem>
+     *     items: Array<sm.bSmMap.AddressItem>
      * }>} itemGroups
      * @public
      */
     Map.prototype.addItems = function(itemGroups) {
-        if (itemGroups.length > 0) {
+        if (this.objectManager_ && itemGroups.length > 0) {
             itemGroups.forEach(this.addItemGroup_.bind(this));
         }
     };
@@ -237,7 +237,7 @@ goog.scope(function() {
      * Clear map, then add item groups
      * @param {Array<{
      *     viewType: sm.bSmMap.IPresetGenerator.PresetType,
-     *     addresses: Array<sm.bSmMap.AddressItem>
+     *     items: Array<sm.bSmMap.AddressItem>
      * }>} itemGroups
      * @public
      */
@@ -254,9 +254,10 @@ goog.scope(function() {
      */
     Map.prototype.clear = function() {
         if (this.objectManager_) {
+            this.clearMapObjectsListeners_();
             this.objectManager_.removeAll();
         }
-        this.mapObjectsAmount_ = 0;
+        this.geoObjectsAmount_ = 0;
         this.selectedPlacemarkId_ = null;
     };
 
@@ -284,13 +285,12 @@ goog.scope(function() {
      * @private
      */
     Map.prototype.createBalloonComponent_ = function(params, balloonElement) {
+        var renderParams = sm.bSmBalloon.SmBalloon.getRenderParams(params);
         this.setBalloon_(
             this.renderChild(
                 'smBalloon',
                 balloonElement,
-                {
-                    'data': params
-                }
+                renderParams
             )
         );
     };
@@ -320,51 +320,28 @@ goog.scope(function() {
      * Add each item group to map, with view type, given from it
      * @param {{
      *     viewType: sm.bSmMap.IPresetGenerator.PresetType,
-     *     addresses: Array<sm.bSmMap.AddressItem>
+     *     items: Array<sm.bSmMap.AddressItem>
      * }} itemGroup
      * @private
      */
     Map.prototype.addItemGroup_ = function(itemGroup) {
-        var mapObjects = this.generateMapObjects_(itemGroup);
-        this.addMapObjects_(mapObjects);
+        this.addMapObjects_(itemGroup['viewType'], itemGroup.items);
+        this.clearMapObjectsListeners_();
+        this.initMapObjectsListeners_();
     };
 
-
-    /**
-     * Generate map objects from given item group
-     * @param {{
-     *     viewType: sm.bSmMap.IPresetGenerator.PresetType,
-     *     entities: Array<Object>
-     * }} itemGroup
-     * @return {Array<Object>}
-     * @private
-     */
-    Map.prototype.generateMapObjects_ = function(itemGroup) {
-        var items = itemGroup['items'];
-        var viewType = itemGroup['viewType'];
-
-        return items.map(this.generateItemMapObject_.bind(
-            this,
-            viewType
-        ));
-    };
 
     /**
      * Generate map object from entity address
-     * @param {string} viewType
+     * @param {sm.bSmMap.IPresetGenerator.PresetType} viewType
      * @param {sm.bSmMap.SmMap.AddressItem} item
      * @return {sm.bSmMap.SmMap.GeoObject}
      * @private
      */
-    Map.prototype.generateItemMapObject_ = function(
+    Map.prototype.generateGeoObject_ = function(
         viewType, item) {
-        var id = this.mapObjectsAmount_++;
-        var score = item['score'];
-
-        var preset = this.presetGenerator_.generatePresetNameByEntityParameters(
-            score, viewType
-        );
-
+        var id = this.geoObjectsAmount_++;
+        var preset = this.generatePreset_(item, viewType);
         return {
             'type': 'Feature',
             'id': id,
@@ -382,50 +359,132 @@ goog.scope(function() {
 
 
     /**
-     * Add generated geo objects to map and event listeners to it possible
-     * (map is visible)
-     * @param {Array<sm.bSmMap.SmMap.GeoObject>} geoObjects
+     * Add given items to map with given view type
+     * @param {sm.bSmMap.IPresetGenerator.PresetType} viewType
+     * @param {Array<sm.bSmMap.AddressItem>} items
      * @private
      */
-    Map.prototype.addMapObjects_ = function(geoObjects) {
-        if (this.objectManager_) {
-            var objectsToAdd = this.filterAlreadyAdded_(geoObjects);
-            this.objectManager_.add(objectsToAdd);
+    Map.prototype.addMapObjects_ = function(viewType, items) {
+        goog.array.forEach(items, this.addMapObject_.bind(this, viewType));
+    };
 
-            this.objectManager_.objects.events.add(
-                'click',
-                this.onPlacemarkClick_,
-                this
-            );
+
+    /**
+     * Add given items to map with given view type
+     * It check if given address allready on map and in this case
+     * just extend existing geo object by their items and viewType (if PIN)
+     * or create new geo object otherwise
+     * @param {sm.bSmMap.IPresetGenerator.PresetType} viewType
+     * @param {sm.bSmMap.AddressItem} addressItem
+     * @private
+     */
+    Map.prototype.addMapObject_ = function(viewType, addressItem) {
+        var geoObject = this.find_(addressItem);
+        if (goog.isDefAndNotNull(geoObject)) {
+            this.updateViewType_(geoObject, viewType);
+            this.extendGeoObject_(geoObject, addressItem);
+        } else {
+            this.objectManager_.add(this.generateGeoObject_(
+                viewType,
+                addressItem
+            ));
         }
     };
 
 
     /**
-     * Filter objectsToAdd, removing already added to map objects
-     * @param  {Array<sm.bSmMap.SmMap.GeoObject>} objectsToAdd
-     * @return {Array<sm.bSmMap.SmMap.GeoObject>}
+     * If given viewtype is PIN, generate new preset and
+     * update it on given map object
+     * @param {sm.bSmMap.SmMap.GeoObject} geoObject
+     * @param {sm.bSmMap.IPresetGenerator.PresetType} viewType
      * @private
      */
-    Map.prototype.filterAlreadyAdded_ = function(objectsToAdd) {
-        var mapObjects = this.objectManager_.objects.getAll();
-        return goog.array.filter(
-            objectsToAdd, this.isNotAdded_.bind(this, mapObjects)
-        );
+    Map.prototype.updateViewType_ = function(geoObject, viewType) {
+        if (viewType == PresetGenerator.PresetType.PIN) {
+            var preset =
+                this.generatePreset_(geoObject['properties'], viewType);
+
+            geoObject['options']['preset'] = preset;
+        }
     };
 
 
 
     /**
-     * Check whether given geo object is already on map
-     * @param {Array<sm.bSmMap.SmMap.GeoObject>} mapObjects
-     * @param {sm.bSmMap.SmMap.GeoObject} objectToAdd
-     * @return {boolean}
+     * Extends geo object with items given from address item
+     * @param {sm.bSmMap.SmMap.GeoObject} geoObject
+     * @param {sm.bSmMap.SmMap.AddressItem} addressItem
      * @private
      */
-    Map.prototype.isNotAdded_ = function(mapObjects, objectToAdd) {
-        return !goog.array.find(mapObjects, function(mapObject) {
-            return mapObject['addressId'] == objectToAdd['addressId'];
+    Map.prototype.extendGeoObject_ = function(geoObject, addressItem) {
+
+        var extendedItems = goog.array.concat(
+            geoObject['properties']['items'],
+            addressItem['items']
+        );
+        goog.array.removeDuplicates(
+            extendedItems,
+            null,
+            function(item) {
+                return item['id'];
+        });
+
+        geoObject['properties']['items'] = extendedItems;
+    };
+
+
+    /**
+     * Generate preset for given object oan viewtype
+     * @param {sm.bSmMap.SmMap.AddressItem} addressItem
+     * @param {sm.bSmMap.IPresetGenerator.PresetType} viewType
+     * @return {string}
+     * @private
+     */
+    Map.prototype.generatePreset_ = function(addressItem, viewType) {
+        var score = addressItem['score'];
+
+        return this.presetGenerator_.generatePresetNameByEntityParameters(
+            score, viewType
+        );
+    };
+
+
+    /**
+     * Clear listeners from all map objects
+     * @private
+     */
+    Map.prototype.clearMapObjectsListeners_ = function() {
+        this.objectManager_.objects.events.remove(
+            'click',
+            this.onPlacemarkClick_,
+            this
+        );
+    };
+
+
+    /**
+     * Initialize event listeners on map objects
+     * @private
+     */
+    Map.prototype.initMapObjectsListeners_ = function() {
+        this.objectManager_.objects.events.add(
+            'click',
+            this.onPlacemarkClick_,
+            this
+        );
+    };
+
+
+    /**
+     * Check whether given geo object is already on map
+     * @param {sm.bSmMap.SmMap.AddressItem} addressItem
+     * @return {sm.bSmMap.SmMap.GeoObject}
+     * @private
+     */
+    Map.prototype.find_ = function(addressItem) {
+        var geoObjects = this.objectManager_.objects.getAll();
+        return goog.array.find(geoObjects, function(geoObject) {
+            return geoObject['addressId'] == addressItem['addressId'];
         });
     };
 

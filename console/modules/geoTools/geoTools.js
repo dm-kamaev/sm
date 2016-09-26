@@ -64,7 +64,10 @@ class geoTools {
                 .GeoObjectCollection
                 .featureMember
                 .map(featureMember => featureMember.GeoObject.name)
-                .filter(name => ~name.indexOf('район')),
+                .filter(name =>
+                    ~name.indexOf('район') && // area must contain 'район'
+                        !~name.indexOf('микрорайон') // and not 'микрорайон'
+                ),
             area;
 
         if (areas.length > 1) {

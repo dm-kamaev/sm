@@ -223,7 +223,7 @@ goog.scope(function() {
             authorizeLink: this.getElementByClass(
                 View.CssClass.AUTHORIZE_LINK
             ),
-            entitiesListPaged: this.getElementByClass(
+            listPaged: this.getElementByClass(
                 sm.bSmListPaged.View.CssClass.ROOT
             )
         };

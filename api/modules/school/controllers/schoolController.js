@@ -292,7 +292,7 @@ exports.search = async(function(req, res) {
         var user = req.user || {},
             params = await(services.schoolSearch.initSearchParams(req.query)),
             favoriteIds =
-                await(services.favorite.getAllItemIdsByUserId(user.id));
+                await(services.favorite.getByUserId(user.id));
 
         var schools = await(services.school.list(
                 params, {

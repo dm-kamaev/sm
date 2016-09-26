@@ -2,6 +2,7 @@ var FilterPanel = require('../lib/CourseFilterPanel');
 const courseView = require('./courseView');
 const mapViewType = require('../../entity/enums/mapViewType');
 const userView = require('../../user/views/user');
+const favoriteView = require('../../favorite/views/favoriteView');
 
 var searchView = {};
 
@@ -61,9 +62,9 @@ searchView.filterPanel = function(filtersData, opt_searchParams) {
 
     filterPanel
         .setFilterAge(searchParams.age)
-        .setFilterType(filtersData.type, searchParams.course)
+        .setFilterType(filtersData.type, searchParams.type)
         .setFilterCost(searchParams.cost)
-        .setFilterWeekDays(searchParams.schedule)
+        .setFilterWeekDays(searchParams.weekdays)
         .setFilterTime(searchParams.time)
         .setFilterRegularity(searchParams.regularity)
         .setFilterFormTraining(searchParams.formTraining)
@@ -133,7 +134,9 @@ searchView.render = function(data) {
                 placeholder: 'Район, метро, название курса'
             },
             user: user,
-            favorites: data.favorites
+            favorites: {
+                items: favoriteView.list(data.favorites)
+            }
         },
         user: user,
         authSocialLinks: data.authSocialLinks,

@@ -171,7 +171,7 @@ var School = db.define('School', {
             });
             School.hasMany(models.Favorite, {
                 as: 'favorite',
-                foreignKey: 'item_id',
+                foreignKey: 'entity_id',
                 onDelete: 'cascade'
             });
         }
