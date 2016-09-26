@@ -10,6 +10,9 @@ var courseView = require('../../../../api/modules/course/views/courseView'),
         '../../../../api/modules/course/views/informationView'
     );
 
+const entityType =
+    require('../../../../api/modules/entity/enums/entityType.js');
+
 var config = require('../../../config').config;
 
 var logger = require('../../../components/logger/logger').getLogger('app');
@@ -18,8 +21,6 @@ const ANALYTICS_ID = config.analyticsId,
     YANDEX_METRIKA_ID = config.yandexMetrikaId,
     DOMAIN = config.url.protocol + '://' + config.url.host,
     FB_CLIENT_ID = config.facebookClientId;
-
-const ENTITY_TYPE = 'course';
 
 
 exports.search = async(function(req, res, next) {
@@ -38,7 +39,7 @@ exports.search = async(function(req, res, next) {
         });
 
         var templateData = searchView.render({
-            entityType: ENTITY_TYPE,
+            entityType: entityType.COURSE,
             user: user,
             favorites: data.favorites,
             authSocialLinks: authSocialLinks,
@@ -49,13 +50,12 @@ exports.search = async(function(req, res, next) {
             filtersData: data.filtersData
         });
 
-
         var html = soy.render(
             'sm.lSearch.Template.search', {
                 params: {
                     data: templateData,
                     config: {
-                        entityType: ENTITY_TYPE,
+                        entityType: entityType.COURSE,
                         modifier: 'stendhal',
                         staticVersion: config.lastBuildTimestamp,
                         year: new Date().getFullYear(),
@@ -105,7 +105,7 @@ exports.information = async(function(req, res, next) {
                 params: {
                     data: templateData,
                     config: {
-                        entityType: ENTITY_TYPE,
+                        entityType: entityType.COURSE,
                         modifier: 'stendhal',
                         staticVersion: config.lastBuildTimestamp,
                         year: new Date().getFullYear(),

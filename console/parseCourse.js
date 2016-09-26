@@ -96,7 +96,10 @@ class CourseParser {
      */
     formatOption_(option, departments) {
         option.age = option.age.split(',');
-        option.costPerHour = Number(option.costPerHour).toFixed(0);
+        option.costPerHour = option.costPerHour === '' ?
+            null :
+            Number(option.costPerHour).toFixed(0);
+        option.totalCost = option.totalCost === '' ? null : option.totalCost;
         option.schedule = this.formatSchedule_(option.schedule);
         option.departments = option.departments.split(',').map(id =>
             departments.find(department => department.departmentId == id)
@@ -121,11 +124,11 @@ class CourseParser {
      * @return {Object}
      */
     formatDay_(day) {
-        var scheduleFields = day.split(', ').map(field => field.trim());
+        var scheduleFields = day.split(',').map(field => field.trim());
         return {
             day: WEEK_DAYS.indexOf(scheduleFields[0].toLowerCase()),
-            startTime: scheduleFields[1],
-            endTime: scheduleFields[2]
+            startTime: scheduleFields[1] || null,
+            endTime: scheduleFields[2] || null
         };
     }
 }

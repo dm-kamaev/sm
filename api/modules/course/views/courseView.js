@@ -56,6 +56,9 @@ view.formatCost = function(options) {
         ' руб. / курс';
 };
 
+const entityType =
+        require('../../../../api/modules/entity/enums/entityType.js');
+
 /**
  * @param  {Object} course
  * @return {Object}
@@ -283,13 +286,12 @@ view.mapCourse = function(course) {
 
 /**
  * @param  {Object} course
- * @param  {string} type
  * @return {Object}
  */
-view.getListCourse = function(course, type) {
+view.getListCourse = function(course) {
     return {
         id: course.id,
-        type: type,
+        type: entityType.COURSE,
         name: {light: course.name},
         description: course.description,
         brand: course.brand,

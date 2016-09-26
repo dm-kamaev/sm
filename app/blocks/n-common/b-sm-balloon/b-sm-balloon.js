@@ -41,6 +41,22 @@ goog.scope(function() {
 
 
     /**
+     * @typedef {sm.bSmBalloon.View.RenderParams}
+     */
+    sm.bSmBalloon.SmBalloon.RenderParams;
+
+
+    /**
+     * Transform raw params to compressed ones
+     * @param {Object<string, (string, number, Array)>} rawParams
+     * @return {sm.bSmBalloon.SmBalloon.RenderParams}
+     */
+    Balloon.getRenderParams = function(rawParams) {
+        return View.getRenderParams(rawParams);
+    };
+
+
+    /**
      * @override
      * @param {Element} element
      */

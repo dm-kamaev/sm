@@ -19,6 +19,13 @@ sm.bSmBadge.View = function(opt_params, opt_type, opt_modifier) {
         opt_modifier);
 
     /**
+     * @type {sm.bSmBadge.View.DataParams}
+     * @protected
+     */
+    this.params = null;
+
+
+    /**
      * It defines active badge or not
      * @type {boolean}
      * @private
@@ -64,6 +71,14 @@ goog.scope(function() {
 
     /**
      * @typedef {{
+     *     entityType: string
+     * }}
+     */
+    sm.bSmBadge.View.DataParams;
+
+
+    /**
+     * @typedef {{
      *     data: Array<{
      *         id: number,
      *         name: string
@@ -99,6 +114,7 @@ goog.scope(function() {
 
         this.initState_();
         this.initDom_();
+        this.initParams_();
     };
 
 
@@ -304,5 +320,29 @@ goog.scope(function() {
             this.getElement(),
             View.CssClass.ACTIVE_STATE
         );
+    };
+
+
+    /**
+     * Init data params from element
+     * @private
+     */
+    View.prototype.initParams_ = function() {
+        this.params = this.transformDataParams_(
+            this.getParams()
+        );
+    };
+
+
+    /**
+     * Transform data params to compressed ones
+     * @param {Object<string, (string|number)>} rawParams
+     * @return {sm.bSmBadge.View.DataParams}
+     * @private
+     */
+    View.prototype.transformDataParams_ = function(rawParams) {
+        return {
+            entityType: rawParams['entityType']
+        };
     };
 });  // goog.scope
