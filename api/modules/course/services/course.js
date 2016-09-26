@@ -1,3 +1,5 @@
+'use strict';
+
 const async = require('asyncawait/async'),
     await = require('asyncawait/await'),
     squel = require('squel');
@@ -8,7 +10,7 @@ const sequelize = require('../../../../app/components/db'),
     error = require('../../entity/lib/Error'),
     entityType = require('../../entity/enums/entityType');
 
-var service = {
+let service = {
     name: 'course'
 };
 
@@ -82,7 +84,7 @@ const informationFields = {
  * @return {Course}
  */
 service.create = async(function(data) {
-    var brand = await(services.courseBrand.create({
+    let brand = await(services.courseBrand.create({
             name: data.brandName
         })),
         type = await(services.courseType.create(data.type)),
@@ -109,7 +111,7 @@ service.create = async(function(data) {
  * @return {Course}
  */
 service.information = async(function(id) {
-    var optionInclude = [{
+    let optionInclude = [{
         attributes: informationFields.SCHEDULE,
         model: models.CourseSchedule,
         as: 'schedule'
@@ -153,12 +155,12 @@ service.information = async(function(id) {
  * @return {Array<Object>}
  */
 service.list = async(function(searchParams, opt_limit) {
-    var searchString = services.courseSearchData.getSearchSql(
+    let searchString = services.courseSearchData.getSearchSql(
         searchParams,
         opt_limit
     );
 
-    var courses = await(sequelize.query(
+    let courses = await(sequelize.query(
         searchString, {
             type: sequelize.QueryTypes.SELECT
         }
@@ -174,12 +176,12 @@ service.list = async(function(searchParams, opt_limit) {
  * @return {Array<Object>}
  */
 service.listMap = async(function(searchParams, opt_limit) {
-    var searchString = services.courseSearchData.getSearchMapSql(
+    let searchString = services.courseSearchData.getSearchMapSql(
         searchParams,
         opt_limit
     );
 
-    var courses = await(sequelize.query(
+    let courses = await(sequelize.query(
         searchString, {
             type: sequelize.QueryTypes.SELECT
         }
@@ -193,7 +195,7 @@ service.listMap = async(function(searchParams, opt_limit) {
  * @return {Array<number>}
  */
 service.findByDepartmentId = async(function(departmentId) {
-    var query = squel.select()
+    let query = squel.select()
         .from('course')
         .field('DISTINCT course.id')
         .left_join('course_option', null, 'course.id = course_option.course_id')
@@ -211,7 +213,7 @@ service.findByDepartmentId = async(function(departmentId) {
         )
         .where('course_department_id = ' + departmentId)
         .toString();
-    var result = await(sequelize.query(
+    let result = await(sequelize.query(
         query, {
             type: sequelize.QueryTypes.SELECT
         }
@@ -251,11 +253,12 @@ service.getAll = async(function() {
  * @return {Array<Object>}
  */
 service.getByIds = function(ids, opt_include) {
-    var addressInclude = [{
-        model: models.Area,
-        as: 'area',
-        attributes: ['id', 'name']
-    }];
+    let addressInclude = [{
+            model: models.Area,
+            as: 'area',
+            attributes: ['id', 'name']
+        }],
+        order = [];
 
     if (opt_include && opt_include.metro) {
         addressInclude.push({
@@ -267,6 +270,7 @@ service.getByIds = function(ids, opt_include) {
             as: 'metroStations',
             attributes: ['id', 'name']
         });
+        order = this.getDistanceOrder();
     }
 
     return ids.length ?
@@ -297,9 +301,47 @@ service.getByIds = function(ids, opt_include) {
                         include: addressInclude
                     }]
                 }]
-            }]
+            }],
+            order: order
         }) :
         [];
+};
+
+/**
+ * Get metro distance order
+ * @return {Array<Object>}
+ */
+service.getDistanceOrder = function() {
+    let courseOption = {
+            model: models.CourseOption,
+            as: 'courseOptions'
+        },
+        courseDepartment = {
+            model: models.CourseDepartment,
+            as: 'departments'
+        },
+        address = {
+            model: models.Address,
+            as: 'address'
+        },
+        addressMetro = {
+            model: models.AddressMetro,
+            as: 'addressMetroes'
+        };
+    return [
+        ['id', 'ASC'],
+        [courseOption, 'id', 'ASC'],
+        [courseOption, courseDepartment, 'id', 'ASC'],
+        [courseOption, courseDepartment, address, 'id', 'ASC'],
+        [
+            courseOption,
+            courseDepartment,
+            address,
+            addressMetro,
+            'distance',
+            'ASC'
+        ]
+    ];
 };
 
 /**
