@@ -70,6 +70,9 @@ goog.scope(function() {
                 ),
                 actionButtons: this.getElementsByClass(
                     View.CssClass.ACTION_BUTTON
+                ),
+                modalEnrollment: this.getElementByClass(
+                    sm.gModal.ViewEnrollment.CssClass.ROOT
                 )
             }
         );

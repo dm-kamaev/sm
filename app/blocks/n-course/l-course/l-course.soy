@@ -79,7 +79,7 @@
         // {call .sectionComments_ data="all" /}
         // {call .sectionPopular_ data="all" /}
         {call .sectionFixed_ data="all" /}
-        // {call .sectionsModals_ data="all" /}
+        {call .sectionsModals_ data="all" /}
     </div>
 
     {call sm.bSmMap.Template.api/}
@@ -119,6 +119,45 @@
             ]/}
         {/call}
     </div>
+{/template}
+
+
+/**
+ * Section with all modals
+ */
+{template .sectionsModals_}
+    <div class="{call .rootClass/}__section {call .rootClass/}__section_modals">
+        {call .modalEnrollment_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Modal for user Enrollment
+ * @param params {{
+ *     config: {
+ *         entityType: string
+ *     }
+ * }}
+ */
+{template .modalEnrollment_}
+    {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+        {param params: [
+            'type': 'modal-enrollment',
+            'renderParams': [
+                'data': [
+                    'content': [
+                        'title': 'Заявка на курс',
+                        'description': 'Оставьте свой номер и мы
+                                перезвоним в течении 24 часов'
+                    ]
+                ],
+                'config': [
+                    'entityType': $params.config.entityType
+                ]
+            ]
+        ]/}
+    {/call}
 {/template}
 
 
