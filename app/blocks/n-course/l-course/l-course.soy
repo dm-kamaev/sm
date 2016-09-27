@@ -141,6 +141,10 @@
  * }}
  */
 {template .modalEnrollment_}
+    {let $description kind="html"}
+        Оставьте свой номер и мы перезвоним в&nbsp;течении 24 часов
+    {/let}
+
     {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
         {param params: [
             'type': 'modal-enrollment',
@@ -148,8 +152,7 @@
                 'data': [
                     'content': [
                         'title': 'Заявка на курс',
-                        'description': 'Оставьте свой номер и мы
-                                перезвоним в течении 24 часов'
+                        'description': $description
                     ]
                 ],
                 'config': [

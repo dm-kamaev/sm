@@ -1,14 +1,19 @@
+@import "../../../n-common/i-media/i-media";
+
 .g-modal_stendhal.g-modal_enrollment {
+    font: 16px Arial, sans-serif;
+
     .g-modal__content {
         box-sizing: border-box;
-        width: 375px;
+        width: auto;
+        max-width: 375px;
         padding: 30px;
 
         text-align: left;
     }
 
     .g-modal__title {
-        margin-bottom: 20px;
+        margin-bottom: 22px;
 
         text-transform: uppercase;
 
@@ -17,9 +22,7 @@
     }
 
     .g-modal__description {
-        margin-bottom: 25px;
-
-        font: 16px Arial, sans-serif;
+        margin-bottom: 28px;
     }
 
     .g-modal__field {
@@ -27,7 +30,7 @@
     }
 
     .g-modal__close-button {
-        top: 30px;
+        top: 28px;
         right: 30px;
 
         padding: 0;
@@ -42,7 +45,7 @@
         font: 14px Arial, sans-serif;
 
         &:empty {
-            margin-top: 0;
+            margin-top: 10px;
         }
     }
 }
