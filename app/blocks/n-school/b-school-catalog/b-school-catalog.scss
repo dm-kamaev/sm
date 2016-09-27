@@ -1,0 +1,59 @@
+@import "../../n-common/i-media/i-media";
+
+.b-school-catalog__wrap-link {
+    position: relative;
+
+    display: block;
+    height: 100%;
+
+    text-decoration: none;
+
+    color: #000;
+}
+
+.b-school-catalog:hover .b-school-catalog__title {
+    color: #ff0000;
+}
+
+.b-school-catalog__catalog {
+    height: auto;
+    margin-top: 2px;
+    margin-bottom: 25px;
+}
+
+.b-school-catalog__title {
+    margin-bottom: 15px;
+
+    font-family: 'PT Serif', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+}
+
+.b-school-catalog__text {
+    font: 13px Arial, sans-serif;
+    line-height: 18px;
+}
+
+
+@include media-xs {
+    .b-school-catalog__wrap-link {
+        min-height: 65px;
+    }
+
+    .b-school-catalog__catalog {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    .b-school-catalog__content {
+        box-sizing: border-box;
+        width: 100%;
+        margin-top: 2px;
+        padding-left: 90px;
+    }
+
+    .b-school-catalog__title {
+        display: none;
+    }
+}

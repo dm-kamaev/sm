@@ -12,32 +12,17 @@
 
     <property name="packaging.source.supervisor"
               value="${packaging.target.current-path}/environment/supervisord/${packaging.project}.conf"/>
-    <property name="user.path"
-              value="${project.node-modules.path}/user-service"/>
-    <property name="auth.path"
-              value="${project.node-modules.path}/auth-service"/>
-    <property name="user.runtime-path"
-              value="${packaging.source.frontend-app.runtime.path}"/>
-    <property name="auth.runtime-path"
-        value="${packaging.source.frontend-app.runtime.path}"/>
 
     <import file="${basedir}/node_modules/deployment/packaging.xml"/>
     <import file="${basedir}/node_modules/deployment/node.xml"/>
-    <import file="${basedir}/node_modules/auth-service/build.xml"/>
-    <import file="${basedir}/node_modules/user-service/build.xml"/>
 
 
     <!-- Switch to new release -->
     <target name="packaging.release.switch"
             depends="packaging.shared-folders,
                      packaging.supervisor.link,
-                     user.supervisor.link,
-                     auth.supervisor.link,
                      schools.migrate,
                      schools.update-search-cache,
-                     user.migrate,
-                     auth.create-runtime-dir,
-                     user.create-runtime-dir,
                      packaging.release.folder.link,
                      packaging.rollback-script,
                      packaging.supervisor.restart,

@@ -1,0 +1,975 @@
+{namespace sm.lSearch.Template}
+
+
+/**
+ * @typedef {{
+ *     type: string,
+ *     openGraph: ({
+ *         url: (string|undefined),
+ *         siteName: (string|undefined),
+ *         title: (string|undefined),
+ *         type: (string|undefined),
+ *         description: (string|undefined),
+ *         image: (string|undefined),
+ *         fbClientId: (string|undefined),
+ *         twitterCardType: (string|undefined),
+ *         twitterSiteName: (string|undefined),
+ *         imageWidth: (string|undefined),
+ *         imageHeight: (string|undefined)
+ *     }|undefined),
+ *     seo: {
+ *         metaTitle: string,
+ *         metaDescription: (string|undefined),
+ *         title: (string|undefined),
+ *         description: (string|undefined),
+ *         textLeft: (Array<string>|undefined),
+ *         textRight: (Array<string>|undefined)
+ *     },
+ *     subHeader: sm.bSmSubheader.Template.Params.Data,
+ *     user: {
+ *        firstName: (string|undefined),
+ *        lastName: (string|undefined)
+ *     },
+ *     authSocialLinks: {
+ *        vk: (string|undefined),
+ *        fb: (string|undefined)
+ *     },
+ *     map: sm.bSmMap.Template.Params.Data,
+ *     search: {
+ *         countResults: number,
+ *         searchText: ?string,
+ *         placeholder: ?string,
+ *         declensionEntityType: {
+ *             nom: string,
+ *             gen: string,
+ *             plu: string
+ *         }
+ *     },
+ *     sort: sm.gDropdown.TemplateSelect.Params.Data
+ *     entityList: sm.bSmItemList.Template.Params.Data,
+ *     filterPanel: sm.lSearch.bFilterPanel.Template.Params,
+ *     searchParams: {Array<{
+ *         name: string,
+ *         value: (Array<(string|number)>)
+ *     }>},
+ *     popularEntities: Array<{
+ *         id: number,
+ *         alias: string,
+ *         name: string,
+ *         description: (string?undefined),
+ *         metro: (Array<string>|undefined),
+ *         totalScore: (number|undefined)
+ *     }>
+ * }} sm.lSmSearch.Template.Params.Data
+ */
+
+
+/**
+ * Search page
+ * @param params {{
+ *     data: sm.lSmSearch.Template.Params.Data,
+ *     config: ?sm.iLayout.TemplateStendhal.Params.Config
+ * }}
+ * @extends sm.iLayout.TemplateStendhal
+ * @constructor
+ * @doc
+ */
+{template .search autoescape="strict" kind="html"}
+    {call .document data="all" /}
+{/template}
+
+
+/**
+ * Add layout script to page
+ * @param params {{
+ *     config: {
+ *         staticVersion: (string|undefined)
+ *     }
+ * }}
+ * @protected
+ * @override
+ */
+{template .layoutScript kind="html"}
+    {call cl.iStatic.Template.script}
+        {param path: 'l-search.js' /}
+        {param staticVersion: $params?.config?.staticVersion /}
+    {/call}
+{/template}
+
+
+/**
+ * Content
+ * @param params {{
+ *     data: {
+ *         seo: {
+ *             title: (string|undefined),
+ *             description: (string|undefined),
+ *             textLeft: (Array<string>|undefined),
+ *             textRight: (Array<string>|undefined)
+ *         },
+ *         user: ?{
+ *            firstName: (string|undefined),
+ *            lastName: (string|undefined)
+ *         },
+ *         authSocialLinks: {
+ *            vk: ?string,
+ *            fb: ?string
+ *         },
+ *         map: sm.bSmMap.Template.Params.Data,
+ *         search: {
+ *             countResults: number,
+ *             searchText: ?string,
+ *             placeholder: ?string,
+ *             declensionEntityType: {
+ *                 nom: string,
+ *                 gen: string,
+ *                 plu: string
+ *             }
+ *         },
+ *         sort: sm.gDropdown.TemplateSelect.Params.Data
+ *         entityList: sm.bSmItemList.Template.Params.Data,
+ *         filterPanel: sm.lSearch.bFilterPanel.Template.Params,
+ *         searchSettings: {
+ *             url: string,
+ *             method: string,
+ *             searchParams: {
+ *                 name: ?string,
+ *                 metroId: ?number,
+ *                 areaId: ?number,
+ *                 schoolType: ?Array.<string>,
+ *                 classes: ?Array.<number>,
+ *                 ege: ?Array.<string>,
+ *                 gia: ?Array.<string>,
+ *                 olimp: ?Array.<string>,
+ *                 sortType: ?number,
+ *                 page: ?number
+ *             }
+ *         },
+ *         popularEntities: Array<{
+ *             id: number,
+ *             alias: ?string,
+ *             name: string,
+ *             description: ?string,
+ *             metro: ?Array<string>,
+ *             totalScore: ?number
+ *         }>
+ *     },
+ *     config: {
+ *         type: string
+ *     }
+ * }}
+ * @override
+ */
+{template .bodyContent_ autoescape="strict" kind="html"}
+    {let $data: [
+        'searchSettings': $params.data.searchSettings,
+        'params': [
+            'isUserAuthorized': $params.data?.user ? true : false,
+            'authSocialLinks': $params.data?.authSocialLinks
+        ]
+    ]/}
+
+    <div class="{call .rootClass/}__body">
+        {call .sectionMap_ data="all" /}
+        {call .sectionContent_ data="all" /}
+        {call .sectionFooterSeo_ data="all" /}
+        {call .sectionPopular_ data="all" /}
+    </div>
+
+    {call sm.bSmMap.Template.api/}
+{/template}
+
+
+/**
+ * Container for map
+ * @param params {{
+ *     data: {
+ *         map: {sm.bSmMap.Template.Params.Data},
+ *         seo: {
+ *             title: (string|undefined),
+ *             description: (string|undefined)
+ *         },
+ *         search: {
+ *             countResults: number,
+ *             searchText: (string|undefined),
+ *             placeholder: (string|undefined)
+ *         }
+ *     }
+ * }}
+ */
+{template .sectionMap_ autoescape="strict" kind="html"}
+    {call .listHeader_}
+        {param params: [
+            'data': $params.data,
+            'config': [
+                'size': 's'
+            ]
+        ]/}
+    {/call}
+
+    {let $classes kind="html"}
+        {call .rootClass/}__section{sp}
+        {call .rootClass/}__section_map
+    {/let}
+
+    <div class="{$classes}">
+        <div class="{call .rootClass /}__section-inner">
+            {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+                {param params: [
+                    'factory': $params.config.modifier,
+                    'type': 'smMap',
+                    'renderParams': [
+                        'data': $params.data.map,
+                        'config': [
+                            'enableScrollZoom': false
+                        ]
+                    ]
+                ] /}
+            {/call}
+        </div>
+    </div>
+{/template}
+
+
+/**
+ * Left menu and Search results
+ * @param params {{
+ *     data: {
+ *         seo: {
+ *             title: (string|undefined),
+ *             description: (string|undefined)
+ *         },
+ *         search: {
+ *             countResults: number,
+ *             searchText: ?string,
+ *             placeholder: ?string,
+ *             declensionEntityType: {
+ *                 nom: string,
+ *                 gen: string,
+ *                 plu: string
+ *             }
+ *         },
+ *         entityList: sm.bSmItemList.Template.Params.Data,
+ *         filterPanel: {sm.lSearch.bFilterPanel.Template.Params}
+ *     },
+ *     config: {
+ *         type: string
+ *     }
+ * }}
+ */
+{template .sectionContent_}
+    <div class="{call .rootClass/}__section
+        {sp}{call .rootClass/}__section_content">
+
+        <div class="{call .rootClass /}__section-inner">
+            {call .leftMenu_ data="all" /}
+            {call .results_ data="all" /}
+        </div>
+    </div>
+{/template}
+
+
+/**
+ * Left menu template
+ * @param params {{
+ *     data: {
+ *         search: {
+ *             placeholder: ?string
+ *             searchText: ?string
+ *         }
+ *     },
+ *     config: {
+ *         type: string
+ *     }
+ * }}
+ */
+{template .leftMenu_}
+    <div class="{call .rootClass/}__left-menu">
+        {call .search_ data="all"/}
+        {call .filters_ data="all"/}
+    </div>
+{/template}
+
+
+/**
+ * Search
+ * @param params {{
+ *     data: {
+ *         search: {
+ *             placeholder: ?string,
+ *             searchText: ?string
+ *         }
+ *     },
+ *     config: {
+ *         type: string
+ *     }
+ * }}
+ */
+{template .search_}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__search-field
+    {/let}
+
+    <div class="{call .rootClass/}__search">
+        {call sm.bSearch.Template.base}
+            {param params: [
+                'placeholder': $params.data?.search?.placeholder,
+                'text': $params.data?.search?.searchText,
+                'theme': 'min',
+                'redirect': false,
+                'inputSize': 'min',
+                'customClasses': $customClasses,
+                'config': [
+                    'entityType': $params.config.type,
+                    'height': 's'
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Filter template
+ * @param? params {
+ *     data: {
+ *         filterPanel: sm.lSearch.bFilterPanel.Template.Params
+ *     }
+ * }
+ */
+{template .filters_}
+    <div class="{call .rootClass/}__filters">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': $params.config.modifier,
+                'type': 'lSearch-filterPanel',
+                'renderParams': $params.data.filterPanel
+            ] /}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Left menu and list results
+ * @param params {{
+ *     data: {
+ *         seo: {
+ *             title: (string|undefined),
+ *             description: (string|undefined)
+ *         },
+ *         search: {
+ *             countResults: number,
+ *             searchText: ?string,
+ *             declensionEntityType: {
+ *                 nom: string,
+ *                 gen: string,
+ *                 plu: string
+ *             }
+ *         },
+ *         entityList: sm.bSmItemList.Template.Params.Data
+ *     }
+ * }}
+ */
+{template .results_}
+    <div class="{call .rootClass/}__list-results">
+        {call .listHeader_}
+            {param params: [
+                'data': $params.data,
+                'config': [
+                    'size': 'l'
+                ]
+            ]/}
+        {/call}
+        {call .sort_ data="all" /}
+        {call .listBody_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Body for list results
+ * @param params {
+ *     data: {
+ *         entityList: sm.bSmItemList.Template.Params.Data,
+ *         search: {
+ *             countResults: ?number
+ *         }
+ *     }
+ * }
+ */
+{template .listBody_}
+    {let $classes kind="html"}
+        {call .rootClass/}__list-body
+
+        {if not $params.data.search?.countResults}
+            {sp}{cl.iUtils.Utils.CssClass.HIDDEN}
+        {/if}
+    {/let}
+
+    <div class="{$classes}">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': $params.config.modifier,
+                'type': 'smItemList',
+                'renderParams': [
+                    'data': $params.data.entityList
+                ]
+            ] /}
+        {/call}
+    </div>
+
+    {call .loader /}
+    {call .showMoreButton data="all" /}
+{/template}
+
+
+/**
+ * Loader template
+ */
+{template .loader kind="html"}
+    <div class="{call .rootClass /}__loader {cl.iUtils.Utils.CssClass.HIDDEN}">
+        <div class="{call .rootClass /}__loader-image">
+        </div>
+        <div class="{call .rootClass /}__loader-text">
+            Загружаем список...
+        </div>
+    </div>
+{/template}
+
+
+/**
+ * Show more button template
+ * @param params {{
+ *     config: {
+ *         modifier: string
+ *     }
+ * }}
+ */
+{template .showMoreButton kind="html"}
+    {let $cssClasses kind="html"}
+        {call .rootClass /}__show-more-button-wrap
+        {sp}{cl.iUtils.Utils.CssClass.HIDDEN}
+    {/let}
+
+    {let $buttonCustomClasses kind="html"}
+        {call .rootClass /}__show-more-button
+    {/let}
+
+    {let $buttonContent kind="html"}
+        Показать ещё
+    {/let}
+
+    <div class="{$cssClasses}">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': $params.config.modifier,
+                'type': 'button',
+                'renderParams': [
+                    'data': [
+                        'content': $buttonContent
+                    ],
+                    'config': [
+                        'theme': 'thin',
+                        'customClasses': [$buttonCustomClasses]
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Header for list of results
+ * @param params {{
+ *     data: {
+ *         seo: {
+ *             title: (string|undefined),
+ *             description: (string|undefined)
+ *         },
+ *         search: {
+ *             countResults: number,
+ *             searchText: ?string,
+ *             declensionEntityType: {
+ *                 nom: string,
+ *                 gen: string,
+ *                 plu: string
+ *             }
+ *         }
+ *     },
+ *     config: {
+ *         size: (string|undefined)
+ *     }
+ * }}
+ */
+{template .listHeader_}
+    {let $classes kind="html"}
+        {call .rootClass/}__list-header
+
+        {if $params?.config?.size}
+            {sp}{call .rootClass/}__list-header_size_{$params?.config?.size}
+        {/if}
+    {/let}
+
+    <div class="{$classes}">
+        {call .listHeaderText}
+            {param params: [
+                'data': [
+                    'seo': $params.data?.seo,
+                    'searchText': $params.data?.search?.searchText,
+                    'countResults': $params.data?.search?.countResults,
+                    'declensionEntityType': $params.data?.search?.declensionEntityType
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Text of header for list of schools
+ * @param params {{
+ *     data: {
+ *         seo: {
+ *             title: (string|undefined),
+ *             description: (string|undefined)
+ *         },
+ *         countResults: number,
+ *         searchText: ?string,
+ *         declensionEntityType: {
+ *             nom: string,
+ *             gen: string,
+ *             plu: string
+ *         }
+ *     }
+ * }}
+ */
+{template .listHeaderText}
+    <div class="{call .rootClass/}__list-header-text">
+        {if $params.data?.seo and $params.data?.seo?.title}
+            {call .headerTextSeo_ data="all" /}
+
+            {if $params.data.seo.description}
+                {call .headerDescriptionSeo_ data="all" /}
+            {/if}
+        {else}
+            {call .generateHeaderText_ data="all" /}
+        {/if}
+    </div>
+{/template}
+
+
+/**
+ * Sort control template
+ * @param params {{
+ *     data: {
+ *         sort: sm.gDropdown.TemplateSelect.Params.Data
+ *     }
+ * }}
+ */
+{template .sort_ kind="html"}
+    {let $customClasses kind="html"}
+        {call .rootClass /}__sort-control-wrap
+    {/let}
+
+    {let $wrapperClasses kind="html"}
+        {call .rootClass /}__sort
+
+        {if not $params.data.search?.countResults}
+            {sp}{cl.iUtils.Utils.CssClass.HIDDEN}
+        {/if}
+    {/let}
+
+    <div class="{$wrapperClasses}">
+        <div class="{call .rootClass /}__horizontal-line"></div>
+        <div class="{call .rootClass /}__sort-control">
+            {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+                {param params: [
+                    'type': 'dropdown-select',
+                    'renderParams': [
+                        'data': $params.data.sort,
+                        'config': [
+                            'viewType': 'link',
+                            'iconSprite': 'small-opener-arrow',
+                            'theme': 'minimal',
+                            'customClasses': [$customClasses]
+                        ]
+                    ]
+                ]/}
+            {/call}
+        </div>
+    </div>
+{/template}
+
+
+/**
+ * Text of header for list results
+ * @param params {{
+ *     data: {
+ *         seo: {
+ *             title: (string|undefined),
+ *             description: (string|undefined)
+ *         }
+ *     }
+ * }}
+ */
+{template .headerTextSeo_}
+    {let $classes kind="html"}
+        {call .rootClass/}__list-header-text{sp}
+        {call .rootClass/}__list-header-text_strong
+
+        {if $params.data.seo.description}
+            {sp}{call .rootClass/}__list-header-text_title
+        {/if}
+    {/let}
+
+    <h1 class="{$classes}">
+        {$params.data.seo.title}
+    </h1>
+{/template}
+
+
+/**
+ * Description of header for list results
+ * @param params {{
+ *     data: {
+ *         seo: {
+ *             description: ?string
+ *         }
+ *     }
+ * }}
+ */
+{template .headerDescriptionSeo_}
+    <div class="{call .rootClass/}__list-header-text{sp}
+                {call .rootClass/}__list-header-text_description">
+        {$params.data.seo?.description}
+    </div>
+{/template}
+
+
+/**
+ * Generates header text for results
+ * @param params {{
+ *     data: {
+ *         searchText: ?string,
+ *         countResults: number,
+ *         declensionEntityType: {
+ *             nom: string,
+ *             gen: string,
+ *             plu: string
+ *         }
+ *     }
+ * }}
+ */
+{template .generateHeaderText_}
+    {call .listHeaderTextFirstPart_ data="all" /}
+        мы{sp}
+    {call .listHeaderTextSecondPart_ data="all" /}
+{/template}
+
+
+/**
+ * First part of text for list header
+ * @param params {{
+ *     data: {
+ *         searchText: string
+ *     }
+ * }}
+ */
+{template .listHeaderTextFirstPart_}
+    {if $params.data?.searchText and length($params.data?.searchText)}
+        {call .listHeaderSearchText_ data="all" /}
+    {else}
+        По вашему запросу{sp}
+    {/if}
+{/template}
+
+
+/**
+ * Search text for list header
+ * @param params {{
+ *     data: {
+ *         searchText: string
+ *     }
+ * }}
+ */
+{template .listHeaderSearchText_}
+    По запросу{sp}
+
+    <span class="{call .rootClass/}__list-header-text{sp}
+                 {call .rootClass/}__list-header-text_strong">
+        «{$params.data.searchText}»
+    </span>{sp}
+{/template}
+
+
+/**
+ * Second part of text for list header
+ * @param params {{
+ *     data: {
+ *         countResults: number,
+ *         declensionEntityType: {
+ *             nom: string,
+ *             gen: string,
+ *             plu: string
+ *         }
+ *     }
+ * }}
+ * }}
+ */
+{template .listHeaderTextSecondPart_}
+     <span class="{call .rootClass/}__list-header-text{sp}
+                 {call .rootClass/}__list-header-text_change">
+        {if $params.data.countResults == 0}
+            не нашли ничего.
+        {else}
+            {call .listHeaderCountResults_ data="all" /}
+        {/if}
+    </span>
+{/template}
+
+
+/**
+ * Count results for list header
+ * @param params {{
+ *     data: {
+ *         countResults: number,
+ *         declensionEntityType: {
+ *             nom: string,
+ *             gen: string,
+ *             plu: string
+ *         }
+ *     }
+ * }}
+ * }}
+ */
+{template .listHeaderCountResults_}
+    нашли{sp}
+
+    <span class="{call .rootClass/}__list-header-text{sp}
+                {call .rootClass/}__list-header-text_strong{sp}
+                {call .rootClass/}__list-header-text_amount">
+        {$params.data.countResults}{sp}
+
+        {call .listHeaderEntityType_ data="all" /}
+    </span>
+{/template}
+
+
+/**
+ * Entity type for list header
+ * @param params {{
+ *     data: {
+ *         countResults: number,
+ *         declensionEntityType: {
+ *             nom: string,
+ *             gen: string,
+ *             plu: string
+ *         }
+ *     }
+ * }}
+ * }}
+ */
+{template .listHeaderEntityType_}
+    {call cl.iUtils.Utils.declensionPrint}
+        {param params: [
+            'num': $params.data.countResults,
+            'nom': ' ' + $params.data.declensionEntityType.nom,
+            'gen': ' ' + $params.data.declensionEntityType.gen,
+            'plu': ' ' + $params.data.declensionEntityType.plu
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * Generates header text for results
+ * @param params {{
+ *     searchText: ?string,
+ *     countResults: number,
+ *     declensionEntityType: {
+ *         nom: string,
+ *         gen: string,
+ *         plu: string
+ *     }
+ * }}
+ */
+{template .eee}
+    {if $params?.searchText and length($params?.searchText)}
+        По запросу{sp}
+        <span class="{call .rootClass/}__list-header-text{sp}
+                     {call .rootClass/}__list-header-text_strong">
+            «{$params.searchText}»
+        </span>{sp}
+    {else}
+        По вашему запросу{sp}
+    {/if}
+
+    мы{sp}
+
+    <span class="{call .rootClass/}__list-header-text{sp}
+                 {call .rootClass/}__list-header-text_change">
+        {if $params.countResults == 0}
+            не нашли ничего.
+        {else}
+            нашли <span class="{call .rootClass/}__list-header-text{sp}
+                               {call .rootClass/}__list-header-text_strong{sp}
+                               {call .rootClass/}__list-header-text_amount">
+                {$params.countResults}{sp}
+
+                {call cl.iUtils.Utils.declensionPrint}
+                    {param params: [
+                        'num': $params.countResults,
+                        'nom': ' ' + $params.declensionEntityType.nom,
+                        'gen': ' ' + $params.declensionEntityType.gen,
+                        'plu': ' ' + $params.declensionEntityType.plu
+                    ]/}
+                {/call}
+            </span>
+        {/if}
+    </span>
+{/template}
+
+
+/**
+ * Footer for text SEO
+ * @param params {{
+ *     data: {
+ *         seo: {
+ *             textLeft: Array<string>,
+ *             textRight: Array<string>
+ *         }
+ *     }
+ * }}
+ */
+{template .sectionFooterSeo_}
+    <div class="{call .rootClass /}__section-inner">
+        {if $params.data?.seo and
+            ($params.data?.seo.textLeft or $params.data?.seo.textRight)}
+            <div class="{call .rootClass/}__section{sp}
+                        {call .rootClass/}__section_footer-seo">
+                <div class="{call .rootClass/}__text-seo{sp}
+                            {call .rootClass/}__text-seo_left">
+                    {call .textSeo_}
+                        {param text: $params.data.seo.textLeft /}
+                    {/call}
+                </div>
+
+                <div class="{call .rootClass/}__text-seo{sp}
+                            {call .rootClass/}__text-seo_right">
+                    {call .textSeo_}
+                        {param text: $params.data.seo.textRight /}
+                    {/call}
+                </div>
+            </div>
+        {/if}
+    </div>
+{/template}
+
+
+/**
+ * Text for SEO
+ * @param? text {Array<string>}
+ */
+{template .textSeo_ private="true"}
+    {if $text}
+        {for $i in range(length($text))}
+            <div class="{call .rootClass/}__paragraph-seo">
+                {$text[$i]}
+            </div>
+        {/for}
+    {/if}
+{/template}
+
+
+/**
+ * Popular entities
+ * @param params {{
+ *     data: {
+ *         popularEntities: Array<{
+ *             id: number,
+ *             alias: ?string,
+ *             name: string,
+ *             description: ?string,
+ *             metro: ?Array<string>,
+ *             totalScore: ?number
+ *         }>
+ *     }
+ * }}
+ */
+{template .sectionPopular_}
+    <div class="{call .rootClass /}__section-inner">
+        <div class="{call .rootClass/}__section{sp}
+                    {call .rootClass/}__section_popular">
+            {if $params}
+            {/if}
+
+            // {call sm.bPopularSchools.Template.base}
+            //     {param params: [
+            //         'popularSchools': $params.data.popularSchools,
+            //         'config': [
+            //             'popularSchool': [
+            //                 'customClasses': 'l-school__popular'
+            //             ],
+            //             'analyticsAction': 'school click'
+            //         ]
+            //     ]/}
+            // {/call}
+        </div>
+    </div>
+{/template}
+
+
+
+/**
+ * @param params {{
+ *     data: {
+ *         user: {
+ *             firstName: (string|undefined),
+ *             lastName: (string|undefined)
+ *         },
+ *         authSocialLinks: {
+ *             vk: (string|undefined),
+ *             fb: (string|undefined)
+ *         },
+ *         searchParams: Array<{
+ *             name: string,
+ *             value: (Array<(string|number)>)
+ *         }>,
+ *         search: {
+ *             declensionEntityType: {
+ *                 nom: string,
+ *                 gen: string,
+ *                 plu: string
+ *             }
+ *         }
+ *     },
+ *     config: {
+ *         type: string
+ *     }
+ * }}
+ * @override
+ */
+{template .attributes kind="attributes"}
+    data-params="
+        {call cl.iUtils.Utils.stringify}
+            {param json: [
+                'searchParams': $params.data?.searchParams,
+                'isUserAuthorized': $params.data?.user ? true : false,
+                'authSocialLinks': $params.data?.authSocialLinks,
+                'declensionEntityType': $params.data?.search?.declensionEntityType,
+                'countResults': $params.data.search.countResults,
+                'type': $params?.config.type
+            ] /}
+        {/call}"
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    l-search
+{/template}

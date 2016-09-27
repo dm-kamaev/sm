@@ -18,7 +18,9 @@ assets/dump/
 .jshintrc
 sftp-config.json
 deployment-config.json
+.atom-build.*
 .remote-sync.json
+.ftpconfig
 .tern-project
 .eslintrc
 .jshintrc

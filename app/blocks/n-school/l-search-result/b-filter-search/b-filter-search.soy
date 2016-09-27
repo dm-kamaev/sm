@@ -1,0 +1,222 @@
+{namespace sm.lSearchResult.bFilterSearch.Template}
+
+/**
+ * @typedef {{
+ *     header: string,
+ *     name: ?string,
+ *     filters: {
+ *         title: ?string,
+ *         items: Array<{
+ *             label: string,
+ *             value: string,
+ *             isChecked: (bool|undefined)
+ *         }>
+ *     },
+ *     search: {
+ *         placeholder: ?string,
+ *         text: ?string,
+ *         sourceUrl: string
+ *     },
+ *     selectedItems: Array<{
+ *         label: string,
+ *         value: string,
+ *         isChecked: (bool|undefined)
+ *     }>
+ * }} sm.lSearchResult.bFilterSearch.Template.Pasams.Data
+ */
+
+/**
+ * Constructor
+ * @param params {{
+ *     data: sm.lSearchResult.bFilterSearch.Template.Pasams.Data
+ * }}
+ * @extends cl.iControl.Template
+ * @constructor
+ */
+{template .filterSearch}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * Body
+ * @param params {{
+ *     data: sm.lSearchResult.bFilterSearch.Template.Pasams.Data
+ * }}
+ * @override
+ */
+{template .body}
+    {call .header_ data="all" /}
+    {call .search_ data="all" /}
+    {call .placeholder_ /}
+    {call .filter_ data="all" /}
+    {call .selected_ data="all" /}
+    {call .button_ data="all" /}
+{/template}
+
+
+/**
+ * Title
+ * @param params {{
+ *     data: {
+ *         header: string
+ *     }
+ * }}
+ */
+{template .header_ private="true"}
+    <div class="{call .rootClass/}__section {call .rootClass/}__section_header">
+        {$params.data.header}
+    </div>
+{/template}
+
+
+/**
+ * Search
+ * @param params {{
+ *     data: {
+ *         search: {
+ *             placeholder: ?string,
+ *             text: ?string,
+ *             sourceUrl: ?string
+ *         }
+ *     }
+ * }}
+ */
+{template .search_ private="true"}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__suggest
+    {/let}
+
+    <div class="{call .rootClass/}__section {call .rootClass/}__section_search">
+        {call gorod.gSuggest.SuggestTemplate.render}
+            {param params: [
+                'data': [
+                    'text': $params.data.search?.text,
+                    'minLength': 3,
+                    'placeholder': $params.data.search?.placeholder,
+                    'sourceUrl': $params.data.search?.sourceUrl,
+                    'argName': 'name'
+                ],
+                'config': [
+                    'customClasses': $customClasses,
+                    'filtrationEnabled': false,
+                    'notShowList': true
+                ],
+                'list': [
+                    'theme': 'stendhal',
+                    'color': 'sienna'
+                ],
+                'input': [
+                    'style': [
+                        'theme': 'stendhal',
+                        'size': 'min'
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Placeholder for filter
+ */
+{template .placeholder_ private="true"}
+    <div class="{call .rootClass/}__section{sp}
+        {call .rootClass/}__section_placeholder i-utils__hidden">
+
+        <div class="{call .rootClass/}__placeholder-text">
+            По вашему запросу ничего не найдено.
+        </div>
+    </div>
+{/template}
+
+
+/**
+ * Filter
+ * @param params {{
+ *     data: {
+ *         name: ?tring,
+ *         filters: {
+ *             title: ?string,
+ *             items: Array<Object>
+ *         }
+ *     }
+ * }}
+ */
+{template .filter_ private="true"}
+    <div class="{call .rootClass/}__section {call .rootClass/}__section_filter">
+        {call sm.lSearchResult.bFilter.Template.base}
+            {param params: [
+                'data': [
+                    'header': [
+                        'title': $params.data.filters?.title
+                    ],
+                    'name': $params.data.name,
+                    'filters': $params.data.filters?.items
+                ],
+                'config': [
+                    'cannotBeHidden': true,
+                    'filtersToShow': length($params.data.filters?.items),
+                    'type': 'minimal',
+                    'theme': 'minimal'
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Selected filter elements
+ * @param params {{
+ *     data: {
+ *         selectedItems: ?Array<Object>
+ *     }
+ * }}
+ */
+{template .selected_ private="true"}
+    <div class="{call .rootClass/}__section {call .rootClass/}__section_selected">
+        {call sm.lSearchResult.bFilterLabels.Template.base}
+            {param params: [
+                'data': [
+                    'name': $params.data.name,
+                    'filters': $params.data?.selectedItems ?: ''
+                ],
+                'config': [
+                    'cannotBeHidden': true,
+                    'filtersToShow': $params.data?.selectedItems ? 5 : ''
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Button
+ */
+{template .button_ private="true"}
+    <div class="{call .rootClass/}__section {call .rootClass/}__section_button">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': 'stendhal',
+                'type': 'button',
+                'renderParams': [
+                    'data': [
+                        'content': 'Применить'
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-filter-search
+{/template}

@@ -1,0 +1,56 @@
+@import "../i-media/i-media";
+
+.b-sm-list-paged {
+    width: 100%;
+
+    text-align: left;
+}
+
+.b-sm-list-paged__school {
+    &:nth-child(n) {
+        border-top: 1px solid #e5e5e5;
+    }
+
+    &:nth-child(5n+1) {
+        border-top: none;
+    }
+}
+
+.b-sm-list-paged__footer {
+    margin-top: 15px;
+    padding: 15px 0 10px 0;
+
+    text-align: center;
+
+    border-top: 1px solid #e5e5e5;
+}
+
+
+.b-sm-list-paged__link_next {
+    float: right;
+}
+
+
+.b-sm-list-paged__link_previous {
+    float: left;
+}
+
+.b-sm-list-paged__pages-count {
+    color: #808080;
+
+    font: 14px Arial, sans-serif;
+    line-height: 18px;
+}
+
+.b-sm-list-paged__link.b-sm-list-paged__link_inactive {
+    cursor: default;
+    user-select: none;
+
+    color: #bfbfbf;
+}
+
+@include media-xs {
+    .b-sm-list-paged {
+        width: 100%;
+    }
+}

@@ -1,21 +1,36 @@
-{namespace sm.gList.SelectTemplate}
+/**
+ * @fileoverview List only for dropdown-select.
+ */
+
+{namespace sm.gList.TemplateSelect}
+
+
+/**
+ * @typedef {{
+ *     items: Array<{
+ *         label: (string|undefined),
+ *         text: (string|undefined),
+ *         url: (string|undefined)
+ *     }>,
+ *     selectedItemId: (number|undefined)
+ * }} sm.gList.TemplateSelect.Params.Data
+ */
+
+ /**
+  * @typedef {
+ *      viewType: (string|undefined),
+ *      color: (string|undefined),
+ *      textSize: (string|undefined),
+ *      indent: (string|undefined),
+ *      theme: (('minimal'))|undefined)
+ * }} sm.gList.TemplateSelect.Params.Config
+  */
 
 /**
  * Constructor
  * @param? params {{
- *     data: {
- *         items: list<{
- *             label: ?string,
- *             text: ?string
- *         }>,
- *         selectedItemId: ?number
- *     },
- *     config: ?[
- *          viewType: ?string
- *          color: ?string,
- *          textSize: ?string
- *          indent: ?string
- *     ]
+ *     data: sm.gList.TemplateSelect.Params.Data,
+ *     config: (sm.gList.TemplateSelect.Params.Config|undefined)
  * }}
  * @extends cl.gList.Template
  * @constructor
@@ -28,18 +43,12 @@
 /**
  * Init
  * @param? params {{
- *     data: {
- *         items: list<{
- *             label: ?string,
- *             url: ?string
- *         }>,
- *         selectedItemId: ?number
- *     }
- *     config: ?[
- *         viewType: ?string
- *     ]
+ *     data: sm.gList.TemplateSelect.Params.Data,
+ *     config: ({
+ *         viewType: (string|undefined)
+ *     }|undefined
  * }}
- * @override
+ * @override)
  */
 {template .body}
     {let $selectedItemId: $params?.data?.selectedItemId /}
@@ -64,10 +73,10 @@
 /**
  * List Item
  * @param? params {{
- *     label: ?string,
- *     url: ?string,
- *     selectedItemId: ?number,
- *     viewType: ?string
+ *     label: (string|undefined),
+ *     url: (string|undefined),
+ *     isSelected: boolean,
+ *     viewType: (string|undefined)
  * }}
  * @override
  */
@@ -82,8 +91,8 @@
 /**
  * List item template
  * @param? params {{
- *     label: ?string,
- *     url: ?string,
+ *     label: (string|undefined),
+ *     url: (string|undefined),
  *     isSelected: boolean
  * }}
  */
@@ -117,10 +126,11 @@
  * Attributes
  * @param? params {{
  *     data: {
- *         items: list<{
- *             label: ?string,
- *             selectedName: ?string
- *         }>
+ *         items: Array<{
+ *             label: (string|undefined),
+ *             text: (string|undefined),
+ *             url: (string|undefined)
+ *     }>
  * }}
  * @override
  */
@@ -134,7 +144,9 @@
 /**
  * Css classes
  * @override
- * @param params ?{}
+ * @param params {
+ *     config: sm.gList.TemplateSelect.Params.Config
+ * }
  */
 {template .additionalClasses}
     {call .rootClass/}_select

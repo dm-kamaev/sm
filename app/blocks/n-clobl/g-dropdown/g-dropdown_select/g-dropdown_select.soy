@@ -1,25 +1,42 @@
-{namespace sm.gDropdown.DropdownSelectTemplate}
+/**
+ * @fileoverview Dropdown with select function (union of dropdown and list):
+ * It dispatches event when one of items in list selected.
+ * It take from list items text which need to place at changing opener text.
+ */
+
+{namespace sm.gDropdown.TemplateSelect}
 
 /**
- * Select template
+ * @typedef {{
+ *     defaultOpenerText: string,
+ *     staticText: string,
+ *     listItems: Array<{
+ *         label: (string|undefined),
+ *         text: (string|undefined),
+ *         url: (string|undefined)
+ *     ]>,
+ *     selectedItemId: (number|undefined)
+ * }} sm.gDropdown.TemplateSelect.Params.Data
+ */
+
+
+/**
+ * @typedef {{
+ *     usePlaceholder: boolean,
+ *     viewType: (string|undefined),
+ *     iconSprite: (('small-opener-arrow'|'opener-arrow')|undefined),
+ *     theme: (('minimal')|undefined),
+ *     textSize: (string|undefined),
+ *     indent: (string|undefined)
+ * }} sm.gDropdown.TemplateSelect.Params.Config
+ */
+
+
+/**
+ * Dropdown select template
  * @param? params {{
- *     data: {
- *        defaultOpenerText: string, - default selected item name or placeholder
- *        staticText: string, - text in opener, which not changes
- *        listItems: list<[
- *            label: ?<string>,
- *            text: ?<string> - optional field
- *        ]>,
- *        selectedItemId: number
- *     }
- *     config: {
- *        usePlaceholder: boolean,
- *        viewType: ?string,
- *        iconSprite: ?string,
- *        theme: ?string,
- *        textSize: ?string,
- *        indent: ?string
- *     }
+ *     data: sm.gDropdown.TemplateSelect.Params.Data,
+ *     config: sm.gDropdown.TemplateSelect.Params.Config
  * }}
  * @extends cl.gDropdown.Template
  * @constructor
@@ -32,23 +49,8 @@
 /**
  * Control
  * @param? params {{
- *     data: {
- *         defaultOpenerText: string,
- *         staticText: string,
- *         listItems: list<[
- *             label: ?<string>,
- *             text: ?<string> - optional field
- *         ]>,
- *         selectedItemId: number
- *     }
- *     config: {
- *         usePlaceholder: boolean,
- *         viewType: ?string,
- *         iconSprite: ?string,
- *         textSize: ?string,
- *         indent: ?string
- *         stylizationModifier: ?string
- *     }
+ *     data: sm.gDropdown.TemplateSelect.Params.Data,
+ *     config: sm.gDropdown.TemplateSelect.Params.Config
  * }}
  * @override
  */
@@ -96,19 +98,8 @@
 /**
  * List template
  * @param? params {{
- *     data: {
- *         listItems: Array<{
- *             label: string,
- *         >},
- *         selectedItemId: number
- *     }
- *     config: {
- *         viewType: ?string,
- *         theme: ?string,
- *         color: ?string,
- *         textSize: ?string,
- *         indent: ?string
- *     }
+ *     data:  sm.gList.TemplateSelect.Params.Data,
+ *     config: sm.gList.TemplateSelect.Params.Config
  * }}
  */
 {template .content kind="html"}
@@ -134,7 +125,9 @@
 
 /**
  * Css classes
- * @param params ?{}
+ * @param params {{
+ *     config: sm.gDropdown.TemplateSelect.Params.Config
+ * }}
  * @override
  */
 {template .additionalClasses}

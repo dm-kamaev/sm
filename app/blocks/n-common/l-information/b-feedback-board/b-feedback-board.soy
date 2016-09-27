@@ -1,0 +1,406 @@
+{namespace sm.lInformation.bFeedbackBoard.Template}
+
+
+/*
+ * @typedef {{
+ *     title: string,
+ *     description: string,
+ *     filter: {
+ *         title: string,
+ *         items: Array<{
+ *             label: string>
+ *         }>
+ *     },
+ *     teacherName: string,
+ *     priceList: {
+ *         price: string,
+ *         description: string,
+ *         sale: string
+ *     },
+ *     user: {
+ *         isCommented: boolean
+ *     }
+ * }} sm.lInformation.bFeedbackBoard.Template.Params.Data
+ */
+
+
+ /**
+ * Feedback Board
+ * @param params {{
+ *     data: sm.lInformation.bFeedbackBoard.Template.Params.Data
+ * }}
+ * @extends cl.iControl.Template
+ * @constructor
+ * @doc
+ */
+{template .feedbackBoard autoescape="strict" kind="html"}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * Body
+ * @param params {{
+ *     data: sm.lInformation.bFeedbackBoard.Template.Params.Data
+ * }}
+ * @override
+ */
+{template .body}
+    {call .header_ data="all" /}
+    {call .filter_ data="all" /}
+    {call .content_ data="all" /}
+    {call .buttons_ data="all" /}
+{/template}
+
+
+/**
+ * Title for board
+ * @param params {{
+ *     data: {
+ *         title: string,
+ *         description: string
+ *     }
+ * }}
+ */
+{template .header_}
+    <div class="{call .rootClass/}__header">
+        {call .title_ data="all" /}
+        {call .description_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Filter
+ * @param params {{
+ *     data: {
+ *         filter: {
+ *             title: string,
+ *             items: Array<{
+ *                 label: string>
+ *             }>
+ *         }
+ *     }
+ * }}
+ */
+{template .filter_}
+    <div class="{call .rootClass/}__filter">
+        {call .title_}
+            {param params: [
+                'data': [
+                    'title': $params.data.filter.title
+                ]
+            ]/}
+        {/call}
+
+        {call .listFilter_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Content for feedback board
+ * @param params {{
+ *     data: {
+ *         teacherName: string,
+ *         priceList: {
+ *             price: string,
+ *             description: string,
+ *             sale: string
+ *         }
+ *    }
+ * }}
+ */
+{template .content_}
+    <div class="{call .rootClass/}__content">
+        {call .teacher_ data="all" /}
+        {call .priceList_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Buttons
+ * @param params {{
+ *     data: {
+ *         user: {
+ *             isCommented: boolean
+ *         }
+ *     }
+ * }}
+ */
+{template .buttons_}
+    <div class="{call .rootClass/}__buttons">
+        {call .buttonLike_ /}
+        {call .feedbackButton_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Title for board
+ * @param params {{
+ *     data: {
+ *         title: string
+ *     }
+ * }}
+ */
+{template .title_}
+    <div class="{call .rootClass/}__title">
+        {$params.data.title}
+    </div>
+{/template}
+
+
+/**
+ * Description
+ * @param params {{
+ *     data: {
+ *         description: string
+ *     }
+ * }}
+ */
+{template .description_}
+    <div class="{call .rootClass/}__description">
+        {call .text_}
+            {param params: [
+                'data': [
+                    'text': $params.data.description
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * list filter
+ * @param params {{
+ *     data: {
+ *         filter: {
+ *             title: string
+ *             items: Array<{
+ *                 label: string>
+ *             }>
+ *         }
+ *     }
+ * }}
+ */
+{template .listFilter_}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__dropdown
+    {/let}
+
+    <div class="{call .rootClass/}__list-filter">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'type': 'dropdown-select',
+                'renderParams': [
+                    'data': [
+                        'defaultOpenerText': 'Не выбран',
+                        'listItems': $params.data.filter.items,
+                        'selectedItemId': 1
+                    ],
+                    'config': [
+                        'iconSprite': 'opener-arrow',
+                        'customClasses': [$customClasses],
+                        'textSize': 'medium'
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Teacher information
+ * @param params {{
+ *     data: {
+ *         teacherName: string
+ *     }
+ * }}
+ */
+{template .teacher_}
+    {if $params.data?.teacherName}
+        <div class="{call .rootClass/}__teacher">
+            {call .title_}
+                {param params: [
+                    'data': [
+                        'title': 'Преподаватель'
+                    ]
+                ]/}
+            {/call}
+
+            {call .text_}
+                {param params: [
+                    'data': [
+                        'text': $params.data.teacherName
+                    ]
+                ]/}
+            {/call}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Information about cost
+ * @param params {{
+ *     data: {
+ *         priceList: {
+ *             price: string,
+ *             description: string,
+ *             sale: string
+ *        }
+ *    }
+ * }}
+ */
+{template .priceList_}
+    {if $params.data?.priceList?.price}
+        <div class="{call .rootClass/}__price-list">
+            {call .price_ data="all" /}
+            {call .descriptionPrice_ data="all" /}
+            {call .sale_ data="all" /}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Price
+ * @param params {{
+ *     data: {
+ *         priceList: {
+ *             price: string
+ *        }
+ *    }
+ * }}
+ */
+{template .price_}
+    <div class="{call .rootClass/}__price">
+        {$params.data.priceList.price}
+    </div>
+{/template}
+
+
+/**
+ * description Price
+ * @param params {{
+ *     data: {
+ *         priceList: {
+ *             description: string
+ *        }
+ *    }
+ * }}
+ */
+{template .descriptionPrice_}
+    {if $params.data?.priceList?.description}
+        <div class="{call .rootClass/}__description-price">
+            {$params.data.priceList.description}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * sale
+ * @param params {{
+ *     data: {
+ *         priceList: {
+ *             sale: string
+ *        }
+ *    }
+ * }}
+ */
+{template .sale_}
+    {if $params.data?.priceList?.sale}
+        <div class="{call .rootClass/}__sale">
+            {$params.data.priceList.sale}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Text
+ * @param params {{
+ *     data: {
+ *         text: ?string
+ *     }
+ * }}
+ */
+{template .text_}
+    <div class="{call .rootClass/}__text">
+        {$params.data.text}
+    </div>
+{/template}
+
+
+/**
+ * Button like
+ */
+{template .buttonLike_}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__button-like
+    {/let}
+
+    <div class="{call .rootClass/}__button">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'type': 'button',
+                'renderParams': [
+                    'data': [
+                        'content': 'хочу этот курс!'
+                    ],
+                    'config': [
+                        'customClasses': [$customClasses]
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * feedback Button
+ * @param params {{
+ *     data: {
+ *         user: {
+ *             isCommented: boolean
+ *         }
+ *     }
+ * }}
+ */
+{template .feedbackButton_}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__feedback-button
+    {/let}
+
+    <div class="{call .rootClass/}__button">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'type': 'button',
+                'renderParams': [
+                    'data': [
+                        'content': 'оставить отзыв'
+                    ],
+                    'config': [
+                        'customClasses': [$customClasses],
+                        'isDisabled': $params?.data?.user?.isCommented
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-feedback-board
+{/template}

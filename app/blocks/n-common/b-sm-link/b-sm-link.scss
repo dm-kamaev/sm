@@ -1,0 +1,51 @@
+.b-sm-link {
+    display: inline-block;
+
+    cursor: pointer;
+    text-decoration: none;
+
+    color: #356fc4;
+
+    font-size: 13px;
+    line-height: 18px;
+}
+
+.b-sm-link_hoverable:hover {
+    color: #ff0000;
+}
+
+/** Possible sizes */
+.b-sm-link_size_s {
+    font-size: 12px;
+}
+
+.b-sm-link_size_m {
+    font-size: 13px;
+}
+
+.b-sm-link_size_l {
+    font-size: 14px;
+}
+
+.b-sm-link_size_xl {
+    font-size: 15px;
+}
+/** Possible sizes end */
+
+/** Themes */
+.b-sm-link_light-theme {
+    color: #808080;
+}
+
+.b-sm-link_attention-theme {
+    color: #ff0000;
+}
+
+.b-sm-link_dark-theme {
+    color: #000;
+}
+
+.b-sm-link_block-theme {
+    margin-bottom: 11px;
+}
+/** Themes end */

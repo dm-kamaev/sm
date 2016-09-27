@@ -1,4 +1,4 @@
-goog.provide('sm.gList.SelectListView');
+goog.provide('sm.gList.ViewSelect');
 
 goog.require('cl.gList.View');
 
@@ -12,14 +12,16 @@ goog.require('cl.gList.View');
  * @constructor
  * @extends {cl.iControl.View}
  */
-sm.gList.SelectListView = function(opt_params, opt_type, opt_modifier) {
-    goog.base(this, opt_params, opt_type, opt_modifier);
+sm.gList.ViewSelect = function(opt_params, opt_type, opt_modifier) {
+    sm.gList.ViewSelect.base(
+        this, 'constructor', opt_params, opt_type, opt_modifier
+    );
 };
-goog.inherits(sm.gList.SelectListView, cl.gList.View);
+goog.inherits(sm.gList.ViewSelect, cl.gList.View);
 
 
 goog.scope(function() {
-    var View = sm.gList.SelectListView;
+    var View = sm.gList.ViewSelect;
 
 
     /**

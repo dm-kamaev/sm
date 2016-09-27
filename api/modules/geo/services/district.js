@@ -19,7 +19,7 @@ var service = {
  * }} districtData
  */
 service.create = async(function(districtData) {
-    return models.District.create(districtData);
+    return await(models.District.create(districtData));
 });
 
 
@@ -65,6 +65,34 @@ service.getCenterCoords = async(function(districtId) {
     }));
 
     return geoView.coordinatesDefault(district.centerCoords);
+});
+
+/**
+ * @return {Array<Object>}
+ */
+service.getAll = async(function() {
+    return await(models.District.findAll({
+        attributes: ['id', 'name']
+    }));
+});
+
+
+
+/**
+ * @param {Array<number>} ids
+ * @return {Array<Object>}
+ */
+service.getByIds = async(function(ids) {
+    return ids.length ?
+        await(models.District.findAll({
+            attributes: ['id', 'name'],
+            where: {
+                id: {
+                    $in: ids
+                }
+            }
+        })) :
+        [];
 });
 
 module.exports = service;

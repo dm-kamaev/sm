@@ -1,5 +1,5 @@
 {
     "lintIgnore": [
-        "app/blocks/l-doc/**/*.js"
+        "app/blocks/n-doc/l-doc/**/*.js"
     ]
 }

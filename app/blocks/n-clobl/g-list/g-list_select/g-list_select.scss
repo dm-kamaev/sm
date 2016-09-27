@@ -3,9 +3,8 @@
 
     .g-list__item {
         display: block;
-        padding: 0 18px;
 
-        letter-spacing: 0.03em;
+        padding: 0 18px;
 
         line-height: 30px;
 
@@ -17,11 +16,8 @@
 
 .g-list.g-list_select.g-list_text-large {
     .g-list__item {
-        letter-spacing: 0.03em;
-
         color: #000;
 
-        font-family: 'PT Serif', Times, serif;
         font-size: 16px;
         line-height: 30px;
 
@@ -31,10 +27,8 @@
     }
 }
 
-.g-list.g-list_select.g-list_sort-theme {
+.g-list.g-list_select.g-list_minimal-theme {
     .g-list__item {
-        letter-spacing: 0.01em;
-
         line-height: 25px;
 
         &:hover {
@@ -47,11 +41,9 @@
     }
 }
 
+
 .g-list.g-list_select.g-list_text-small {
     .g-list__item {
-        letter-spacing: 0.01em;
-
-        font-family: Arial, sans-serif;
         font-size: 14px;
         &:hover {
             background-color: #f7f7f1;

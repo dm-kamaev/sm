@@ -1,0 +1,299 @@
+{namespace sm.lSchoolHome.Template}
+
+/**
+ * School home template
+ * @param? params {
+ *     data: {
+ *        user: ?{
+ *            firstName: ?string,
+ *            lastName: ?string
+ *        },
+ *        authSocialLinks: {
+ *            vk: ?string,
+ *            fb: ?string
+ *        },
+ *        favorites: sm.bSchoolListPaged.Template.Params.Data
+ *     },
+ *     images: ?list<string>,
+ *     popularSchools: ?list<[
+ *         id: ?number,
+ *         alias: ?string,
+ *         name: ?string,
+ *         description: ?string,
+ *         metro: ?list<string>,
+ *         totalScore: ?number
+ *     ]>,
+ *     dataLinks: ?list<[
+ *         name: ?string,
+ *         url: ?string
+ *     ]>,
+ *     amountSchools: ?number,
+ *     seoLinks: Array<{
+ *         name: string,
+ *         url: string
+ *     }>,
+ *     config: [
+ *         analyticsId: ?string,
+ *         yandexMetrikaId: ?number,
+ *         domain: ?string,
+ *         fbClientId: ?number
+ *     ]
+ * }
+ */
+{template .base autoescape="strict" kind="html"}
+    {let $title kind="text"}
+        Школы Москвы. Вся информация о школах Москвы, отзывы, контакты.
+        Школы Мела.
+    {/let}
+    {let $description kind="text"}
+        Информационный портал Школы Мела - лучший сайт для выбора школы.
+        Полная информация о школах Москвы: адреса и телефоны, результаты
+        экзаменов и олимпиад, профильные классы и дополнительные занятия.
+        Отзывы родителей и выпускников.
+    {/let}
+    {let $content kind="html"}
+        {call .layoutContent_ data="all" /}
+    {/let}
+    {call sm.iLayout.Template.layout}
+        {param params: [
+            'data': [
+                'title': $title,
+                'description': $description,
+                'content': $content,
+                'header': [
+                    'searchRedirect': true,
+                    'user': $params.data?.user,
+                    'favorites': $params?.data?.favorites
+                ],
+                'landingScript': '/l-school-home.js',
+                'openGraph': [
+                    'title': 'Школы «Мела»',
+                    'description': 'Найдите в Москве школу, ' +
+                        'которая подойдёт вашему ребёнку',
+                    'image': $params?.config?.domain +
+                        '/images/n-school/i-layout/schools-share.png',
+                    'fbClientId': $params?.config?.fbClientId
+                ],
+                'seoLinks': $params.data?.seoLinks
+            ],
+            'config': [
+                'modifier': 'stendhal',
+                'page': 'school-home',
+                'staticVersion': $params.config?.staticVersion,
+                'year':  $params.config?.year,
+                'analyticsId': $params.config?.analyticsId,
+                'yandexMetrikaId': $params.config?.yandexMetrikaId,
+                'csrf': $params.config?.csrf
+            ]
+        ] /}
+    {/call}
+{/template}
+
+/**
+ * @param? params {?}
+ */
+{template .layoutContent_ autoescape="strict" kind="html"}
+    {let $data: [
+        'isUserAuthorized': $params?.data?.user ? true : false,
+        'authSocialLinks': $params.data?.authSocialLinks
+    ] /}
+    <div class="l-school-home"
+         data-params="{call goog.json.serialize data="$data" /}">
+
+        <div class="l-school-home__body">
+            {call .header_ /}
+
+            {call .search_}
+                {param params: [
+                    'dataLinks' : $params.dataLinks
+                ]/}
+            {/call}
+
+            {call .headerImgClone_ /}
+        </div>
+
+        {call .informationLinks_ data="all" /}
+    </div>
+{/template}
+
+/**
+ * Header template
+ */
+{template .header_ autoescape="strict" kind="html" private="true"}
+    <div class="l-school-home__header-wrap">
+        <div class="l-school-home__header">
+            <div class="l-school-home__header-content">
+                <h1 class="l-school-home__title">
+                    Найдите в&nbsp;Москве лучшую школу
+                    для&nbsp;вашего&nbsp;ребёнка
+                </h1>
+
+                <ul class="l-school-home__title-list">
+                    {call .listItem_}
+                        {param text kind="html"}
+                            Ищите по&nbsp;номерам школ, адресам,
+                            станциям метро и&nbsp;районам&nbsp;Москвы
+                        {/param}
+                    {/call}
+
+                    {call .listItem_}
+                        {param text kind="html"}
+                            Узнайте результаты ГИА и ЕГЭ
+                            в&nbsp;выбранной&nbsp;школе
+                        {/param}
+                    {/call}
+
+                    {call .listItem_}
+                        {param text kind="html"}
+                            Сравнивайте школы
+                        {/param}
+                    {/call}
+                </ul>
+            </div>
+
+            <img class="l-school-home__image l-school-home__image_main"{sp}
+                 src="images/n-school/l-school-home/cover.svg">
+        </div>
+    </div>
+{/template}
+
+
+/**
+ * Template for block with search field
+ * @param? params {
+ *     examples: ?list<string>,
+ *     dataLinks: ?list<[
+ *         name: ?string,
+ *         url: ?string
+ *     ]>
+ * }
+ */
+{template .search_ autoescape="strict" kind="html" private="true"}
+    <div class="l-school-home__search">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': 'stendhal',
+                'type': 'search-panel',
+                'renderParams': [
+                    'panelTitle': 'Что вы ищете?',
+                    'dataLinks': $params.dataLinks,
+                    'config': [
+                        'theme': 'three-columns'
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+/**
+ * Cloned header image template
+ */
+{template .headerImgClone_ kind="html" private="true"}
+    <img class="l-school-home__image l-school-home__image_clone"
+         src="images/n-school/l-school-home/cover.svg">
+{/template}
+
+/**
+ * Information links template.
+ * Include popular schools, link to full school catalog and link to article
+ * @param params [
+ *     popularSchools: ?list<[
+ *         id: ?number,
+ *         url: ?string,
+ *         name: ?string,
+ *         description: ?string,
+ *         metro: ?list<string>,
+ *         totalScore: ?number
+ *     ]>,
+ *     amountSchools: ?number
+ * ]
+ */
+{template .informationLinks_}
+    <div class="l-school-home__information-links-wrap">
+        <div class="l-school-home__information-links">
+            <div class="l-school-home__schools">
+                <div class="l-school-home__popular-schools">
+                    {call sm.bPopularSchools.Template.base}
+                        {param params: [
+                            'popularSchools': $params.popularSchools,
+                            'config': [
+                                'popularSchool': [
+                                    'customClasses':
+                                    'l-school-home__popular-school'
+                                ],
+                                'analyticsAction': 'homepage click'
+                            ]
+                        ]/}
+                    {/call}
+                </div>
+
+                {call sm.lSchoolHome.Template.schoolCatalog_}
+                    {param params: [
+                        'amountSchools': $params.amountSchools
+                    ]/}
+                {/call}
+
+                {call sm.lSchoolHome.Template.articles_ /}
+            </div>
+        </div>
+    </div>
+{/template}
+
+/**
+ * Template for link to full school catalog
+ * @param? params {
+ *     amountSchools: ?string
+ * }
+ */
+{template .schoolCatalog_ autoescape="strict" kind="html" private="true"}
+    {let $text kind="html"}
+        Мы&nbsp;составили полный каталог школ Москвы&nbsp;&mdash;
+        {sp}в&nbsp;нём сейчас
+    {/let}
+
+    <div class="l-school-home__school-catalog">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': 'stendhal',
+                'type': 'school-catalog',
+                'renderParams': [
+                    'text': $text,
+                    'amount': $params.amountSchools,
+                    'dataLink': [
+                        'name': 'Все школы',
+                        'url': '/school'
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+/**
+ * Template for link to articles
+ */
+{template .articles_}
+    <div class="l-school-home__articles">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': 'stendhal',
+                'type': 'article-links'
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+/**
+ * List Item template
+ * @param text [string]
+ */
+{template .listItem_ kind="html"}
+    <li class="l-school-home__title-list-item">
+        <div class="l-school-home__title-list-dash"> — </div>
+
+        <div class="l-school-home__title-list-text">
+            {$text}
+        </div>
+    </li>
+{/template}

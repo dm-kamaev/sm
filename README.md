@@ -67,7 +67,8 @@ updateSearch - актуализация поисковой таблицы
     "url": {
         "protocol": "http",
         "host": "www21.lan"
-    }
+    },
+    "redirectUri": "www21.lan"
 }
 ```  
 **app/config/config.db.json**  
@@ -81,50 +82,6 @@ updateSearch - актуализация поисковой таблицы
     "dialect": "postgres"
 }
 ```  
-**environment/config/authorization/config.json**  
-```javascript
-{
-    "port": 3001,
-    "authorization": {
-        "vk": {
-            "clientId": 5334553,
-            "clientSecret": "6OA9JUBAlABYSm6iRFKb",
-            "redirectUri": "http://www21.lan:3000/authorize/vk"
-        },
-        "fb": {
-            "clientId": 525358880980041,
-            "clientSecret": "db1931569be7e254a87ab8aae5ae03db",
-            "redirectUri": "http://www21.lan:3000/authorize/fb"
-        }
-    }
-}
-```  
-```javascript
-{
-    "user": "http://localhost:3002"
-}
-```  
-**environment/config/user/config.json**  
-```javascript
-{
-    "port": 3002,
-    "scheme": "mel"
-}
-```  
-**environment/config/user/config.db.json**  
-```javascript
-{
-    "host": "median-mel1.qa.lan",
-    "port": "3306",
-    "username": "cityuser",
-    "database": "db1",
-    "dialect": "mysql"
-}
-```  
-Потом запускаем галп, и делаем `npm i` в `./node_modules/services` и
-`./node_modules/user`, и можно запускать микросервисы.
-Либо стандартно, можно `forever app.js`.
-
 
 ## Миграции ##
 Теперь все изменения в бд происходят через миграции. Чтобы накатить все

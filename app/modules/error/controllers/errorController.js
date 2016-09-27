@@ -3,6 +3,7 @@ var services = require('../../../../app/components/services').all;
 const schoolView = require('../../../../api/modules/school/views/schoolView');
 const userView = require('../../../../api/modules/user/views/user');
 const entityType = require('../../../../api/modules/entity/enums/entityType');
+const seoView = require('../../../../api/modules/school/views/seoView');
 
 const config = require('../../../config').config;
 const analyticsId = config.analyticsId;
@@ -25,7 +26,8 @@ exports.notFound = async(function(req, res) {
                     favoriteIds,
                     entityType.SCHOOL
                 )
-            }
+            },
+            seoLinks: services.seoSchoolList.getByTypes()
         },
         data = await(dataPromises);
 
@@ -45,7 +47,8 @@ exports.notFound = async(function(req, res) {
                 user: userView.default(user),
                 favorites: {
                     schools: schoolView.listCompact(data.favorites)
-                }
+                },
+                seoLinks: seoView.linksList(data.seoLinks)
             },
             errorText: 'Страница, которую вы искали, не найдена',
             popularSchools: schoolView.popular(data.popularSchools),
@@ -61,5 +64,6 @@ exports.notFound = async(function(req, res) {
         }
     });
 
+    res.header('Content-Type', 'text/html; charset=utf-8');
     res.end(html);
 });

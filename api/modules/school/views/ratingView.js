@@ -13,7 +13,7 @@ ratingView.ratingSchoolView = function(rankMel, rankDogm) {
         ratings.push({
             name: 'Рейтинг пользователей «Мела»',
             place: rankMel,
-            href: '/search'
+            href: '/school'
         });
     }
 

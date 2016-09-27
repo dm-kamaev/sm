@@ -146,7 +146,7 @@ exports.suggestSearch = async(function(req, res) {
     var result;
     try {
         var searchString = req.query.searchString;
-        var data = await(services.search.suggestSearch(searchString)),
+        var data = await(services.schoolSearch.suggestSearch(searchString)),
             aliases = await(services.page.getAliases(
                 data.schools.map(school => school.id),
                 entityType.SCHOOL
@@ -290,14 +290,14 @@ exports.search = async(function(req, res) {
     var result;
     try {
         var user = req.user || {},
-            params = await(services.search.initSearchParams(req.query)),
+            params = await(services.schoolSearch.initSearchParams(req.query)),
             favoriteIds =
                 await(services.favorite.getAllItemIdsByUserId(user.id));
 
         var schools = await(services.school.list(
-            params, {
-                limitResults: 10
-            }
+                params, {
+                    limitResults: 10
+                }
             )),
             schoolIds = schoolView.uniqueIds(schools),
             aliases = await(services.page.getAliases(
@@ -348,11 +348,15 @@ exports.search = async(function(req, res) {
 exports.searchMapPoints = async(function(req, res) {
     var result;
     try {
-        var params = await(services.search.initSearchParams(req.query));
+        var params = await(services.schoolSearch.initSearchParams(
+            req.query
+        ));
 
         var promises = {
             schools: services.school.list(params),
-            mapPosition: services.search.getMapPositionParams(params),
+            mapPosition: services.schoolSearch.getMapPositionParams(
+                params
+            ),
             aliases: services.page.getAllAliases(entityType.SCHOOL)
         };
         var results = await(promises);
@@ -494,7 +498,6 @@ exports.specializedClassType = async(function(req, res) {
                 await(services.specializedClasses.searchTypeByName(name));
 
         result = specializedClassesView.typeFilters(specializedClassTypes);
-        res.status(200);
     } catch (error) {
         res.status(500);
         result = error.message;

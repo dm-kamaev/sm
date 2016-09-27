@@ -1,0 +1,90 @@
+{namespace sm.bSmMap.Template}
+
+
+/**
+ * @typedef {{
+ *     itemGroups: Array<{
+ *         viewType: ('pin'|'point'),
+ *         items: Array<{
+ *             id: number,
+ *             coordinates: Array<number>,
+ *             title: {
+ *                 text: string,
+ *                 alias: string
+ *             },
+ *             description: string,
+ *             link: {
+ *                 text: string,
+ *                 alias: string
+ *             },
+ *             score: number
+ *         }>,
+ *     }>,
+ *     position: ({
+ *         center: (Array<number>|undefined),
+ *         type: ('cityCenter'|'district'|'area'|'metro'|undefined)
+ *     }|undefined)
+ * }} sm.bSmMap.Template.Params.Data
+ */
+
+
+/**
+ * A layout for Yandex.Maps block
+ * @param params {{
+ *     data: sm.bSmMap.Template.Params.Data
+ *     config: ({
+ *         enableScrollZoom: boolean
+ *     }|undefined)
+ * }}
+ * @constructor
+ * @extends cl.iControl.Template
+ */
+{template .map}
+    {call .init data="all" /}
+{/template}
+
+
+/**
+ * API request for ymaps
+ * @public
+ */
+{template .api}
+    <script type="text/javascript" src="//api-maps.yandex.ru/2.1/?lang=ru_RU">
+    </script>
+{/template}
+
+
+/**
+ * @param params {{
+ *     data: sm.bSmMap.Template.Params.Data
+ *     config: ({
+ *         enableScrollZoom: boolean
+ *     }|undefined)
+ * }}
+ * @override
+ */
+{template .attributes kind="attributes"}
+    {let $dataParams kind="html"}
+        {call cl.iUtils.Utils.stringify}
+            {param json: $params /}
+        {/call}
+    {/let}
+    data-params="{$dataParams}"
+{/template}
+
+/**
+ * @override
+ */
+{template .rootClass kind="html"}
+    b-sm-map
+{/template}
+
+
+/**
+ * Balloon Template
+ * @public
+ */
+{template .balloon}
+    <div class="{call .rootClass /}__balloon">
+    </div>
+{/template}

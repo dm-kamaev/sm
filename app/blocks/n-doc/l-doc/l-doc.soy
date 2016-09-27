@@ -1,0 +1,236 @@
+{namespace sm.lDoc.Template}
+
+
+/**
+ * Doc index layout
+ * @param list
+ */
+{template .index}
+    {let $html kind="html"}
+        {call .html_}
+            {param list: $list /}
+        {/call}
+    {/let}
+
+    {call .base_}
+        {param title: 'doc' /}
+        {param html: $html /}
+    {/call}
+{/template}
+
+
+/**
+ * Doc item layout
+ * @param? name
+ * @param list
+ */
+{template .item}
+    {let $html kind="html"}
+        {call .html_}
+            {param name: $name /}
+            {param list: $list /}
+        {/call}
+    {/let}
+
+    {call .base_}
+        {param title: $name /}
+        {param html: $html /}
+    {/call}
+{/template}
+
+
+/**
+ * Base layout
+ * @param title
+ * @param html
+ */
+{template .base_ private="true" kind="html"}
+    {call sm.lBase.Template.index}
+        {param title: $title /}
+        {param html: $html /}
+        {param css: ['/clobl.build.css', '/styles.css'] /}
+        {param js: ['/external.min.js', '/l-doc.js'] /}
+    {/call}
+{/template}
+
+
+/**
+ * Doc html
+ * @param? name
+ * @param list
+ */
+{template .html_ private="true" kind="html"}
+<link  href='https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700,700italic&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+    <div class="l-doc">
+        {call .menu_}
+            {param name: $name /}
+            {param list: $list /}
+        {/call}
+        {call .content_}
+            {param name: $name /}
+            {param list: $list /}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Doc menu
+ * @param? name
+ * @param list
+ */
+{template .menu_ private="true" kind="html"}
+    <div class="l-doc__menu">
+        {if $name}
+            <a class="l-doc__menu-return" href="/doc">Back</a>
+        {/if}
+        <div class="l-doc__menu-section">
+            <ul class="l-doc__menu-items">
+                {foreach $item in $list}
+                    <li class="l-doc__menu-item">
+                        {if $item == $name}
+                            <span class="l-doc__menu-selected">
+                                {$item}
+                            </span>
+                        {else}
+                            <a class="l-doc__menu-link" href="/doc/{$item}">
+                                {$item}
+                            </a>
+                        {/if}
+                    </li>
+                {/foreach}
+            </ul>
+        </div>
+    </div>
+{/template}
+
+
+/**
+ * Doc content
+ * @param? name
+ * @param? list
+ */
+{template .content_ private="true" kind="html"}
+    <div class="l-doc__content">
+        {if $name}
+            {call .itemContent_}
+                {param name: $name /}
+            {/call}
+        {else}
+            {call .indexContent_}
+                {param list: $list /}
+            {/call}
+        {/if}
+    </div>
+{/template}
+
+
+/**
+ * Doc index content
+ * @param? list
+ */
+{template .indexContent_ private="true" kind="html"}
+    <h1 class="l-doc__h1">All blocks</h1>
+    <div class="l-doc__previews">
+        {foreach $item in $list}
+            <div class="l-doc__preview">
+                <h2 class="l-doc__h2">
+                    <a href="/doc/{$item}">{$item}</a>
+                </h2>
+                <div class="l-doc__preview-content l-doc__preview-{$item}">
+                    {call .preview_}
+                        {param name: $item /}
+                    {/call}
+                </div>
+            </div>
+        {/foreach}
+    </div>
+{/template}
+
+
+/**
+ * Doc index preview
+ * @param? name
+ */
+{template .preview_ private="true" kind="html"}
+    {switch $name}
+        {case 'b-mark'}
+            {call sm.lDoc.nDemo.bBlockMark.Template.preview/}
+        {case 'b-stars'}
+            {call sm.lDoc.nDemo.bBlockStars.Template.preview/}
+        {case 'b-feedback-modal'}
+            {call sm.lDoc.nDemo.bBlockFeedbackModal.Template.preview/}
+        {case 'b-comments'}
+            {call sm.lDoc.nDemo.bBlockComments.Template.preview/}
+        {case 'b-school-list'}
+            {call sm.lDoc.nDemo.bBlockSchoolList.Template.preview/}
+        {case 'b-school-list-item'}
+            {call sm.lDoc.nDemo.bBlockSchoolListItem.Template.preview/}
+        {case 'b-sort'}
+            {call sm.lDoc.nDemo.bBlockSort.Template.preview/}
+        {case 'b-search'}
+            //TODO: uncomment
+            //{call sm.lDoc.nDemo.bBlockSearch.Template.preview/}
+        {case 'b-data-block'}
+            {call sm.lDoc.nDemo.bBlockDataBlock.Template.preview/}
+        {case 'b-filters'}
+            {call sm.lDoc.nDemo.bBlockFilters.Template.preview/}
+        {case 'b-diagram'}
+            {call sm.lDoc.nDemo.bBlockDiagram.Template.preview/}
+        {case 'b-score'}
+            {call sm.lDoc.nDemo.bBlockScore.Template.preview/}
+        {case 'b-badge'}
+            {call sm.lDoc.nDemo.bBlockBadge.Template.preview/}
+    {/switch}
+{/template}
+
+
+/**
+ * Doc item content
+ * @param? name
+ */
+{template .itemContent_ private="true" kind="html"}
+    <h1 class="l-doc__h1">{$name}</h1>
+    <div class="l-doc__documentation">
+        {call .documentation_}
+            {param name: $name /}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Doc item documentation
+ * @param? name
+ */
+{template .documentation_ private="true" kind="html"}
+    {switch $name}
+        {case 'b-mark'}
+            {call sm.lDoc.nDemo.bBlockMark.Template.doc /}
+        {case 'b-stars'}
+            {call sm.lDoc.nDemo.bBlockStars.Template.doc /}
+        {case 'b-feedback-modal'}
+            {call sm.lDoc.nDemo.bBlockFeedbackModal.Template.doc /}
+        {case 'b-comments'}
+            {call sm.lDoc.nDemo.bBlockComments.Template.doc /}
+        {case 'b-school-list'}
+            {call sm.lDoc.nDemo.bBlockSchoolList.Template.doc/}
+         {case 'b-school-list-item'}
+            {call sm.lDoc.nDemo.bBlockSchoolListItem.Template.doc/}
+        {case 'b-sort'}
+            {call sm.lDoc.nDemo.bBlockSort.Template.doc/}
+        {case 'b-data-block'}
+            {call sm.lDoc.nDemo.bBlockDataBlock.Template.doc/}
+        {case 'b-filters'}
+            {call sm.lDoc.nDemo.bBlockFilters.Template.doc/}
+        {case 'b-diagram'}
+            {call sm.lDoc.nDemo.bBlockDiagram.Template.doc/}
+        {case 'b-search'}
+            //TODO: uncomment
+            //{call sm.lDoc.nDemo.bBlockSearch.Template.doc/}
+        {case 'b-score'}
+            {call sm.lDoc.nDemo.bBlockScore.Template.doc/}
+        {case 'b-badge'}
+            {call sm.lDoc.nDemo.bBlockBadge.Template.doc /}
+    {/switch}
+{/template}

@@ -1,0 +1,41 @@
+.g-tab.g-tab_catalog {
+    .g-tab__tabs {
+        margin-bottom: 10px;
+
+        border: none;
+    }
+
+    .g-tab__tab {
+        margin: 0 40px 0 0;
+        padding: 0 0 25px 0;
+
+        border: none;
+        color: #d4d4d4;
+        text-transform: uppercase;
+
+        font-size: 15px;
+        font-weight: 800;
+
+        &:last-child {
+            margin-right: 0;
+        }
+    }
+
+    .g-tab__tab_selected {
+        color: #000;
+    }
+
+    .g-tab__content {
+        padding: 0;
+
+        border: none;
+    }
+
+    .g-tab__link {
+        margin-bottom: 7px;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+}

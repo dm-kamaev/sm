@@ -19,21 +19,70 @@ goog.require('sm.bSchoolListPaged.SchoolListPaged');
 goog.require('sm.bSchoolListPaged.View');
 goog.require('sm.bSearchPanel.SearchPanel');
 goog.require('sm.bSearchPanel.View');
+goog.require('sm.bSmBadge.SmBadge');
+goog.require('sm.bSmBadge.View');
+goog.require('sm.bSmBalloon.SmBalloon');
+goog.require('sm.bSmBalloon.View');
+goog.require('sm.bSmCheckbox.SmCheckbox');
+goog.require('sm.bSmCheckbox.View');
+goog.require('sm.bSmItem.SmItem');
+goog.require('sm.bSmItem.SmItemEntity');
+goog.require('sm.bSmItem.View');
+goog.require('sm.bSmItem.ViewEntity');
+goog.require('sm.bSmItemList.SmItemList');
+goog.require('sm.bSmItemList.View');
+goog.require('sm.bSmLink.SmLink');
+goog.require('sm.bSmLink.View');
+goog.require('sm.bSmListPaged.SmListPaged');
+goog.require('sm.bSmListPaged.View');
+goog.require('sm.bSmMap.SmMap');
+goog.require('sm.bSmMap.View');
+goog.require('sm.bSmRadioButton.SmRadioButton');
+goog.require('sm.bSmRadioButton.View');
+goog.require('sm.bSmScore.SmScore');
+goog.require('sm.bSmScore.SmScoreBrief');
+goog.require('sm.bSmScore.View');
+goog.require('sm.bSmScore.ViewBrief');
+goog.require('sm.bSmSubheader.SmSubheader');
+goog.require('sm.bSmSubheader.View');
 goog.require('sm.gAuthSocial.ViewStendhal');
 goog.require('sm.gDropdown.DropdownSelect');
-goog.require('sm.gDropdown.DropdownSelectView');
+goog.require('sm.gDropdown.ViewSelect');
 goog.require('sm.gInput.DigitInput');
 goog.require('sm.gInput.DigitInputView');
-goog.require('sm.gList.SelectList');
-goog.require('sm.gList.SelectListView');
+goog.require('sm.gInput.InputStendhal');
+goog.require('sm.gInput.ViewStendhal');
+goog.require('sm.gList.List.Select');
+goog.require('sm.gList.ViewSelect');
 goog.require('sm.gModal.ModalFeedback');
 goog.require('sm.gModal.ModalStendhal');
 goog.require('sm.gModal.ViewFeedback');
 goog.require('sm.gModal.ViewStendhal');
 goog.require('sm.gTextarea.TextareaStendhal');
 goog.require('sm.gTextarea.ViewStendhal');
+goog.require('sm.iFactory.TemplateFactoryStendhal');
+goog.require('sm.lInformation.bFeedbackBoard.FeedbackBoard');
+goog.require('sm.lInformation.bFeedbackBoard.View');
+goog.require('sm.lInformation.bInformationBoard.InformationBoard');
+goog.require('sm.lInformation.bInformationBoard.View');
 goog.require('sm.lSchool.bFoldList.FoldList');
 goog.require('sm.lSchool.bFoldList.View');
+goog.require('sm.lSearch.bFilter.Filter');
+goog.require('sm.lSearch.bFilter.FilterExtended');
+goog.require('sm.lSearch.bFilter.FilterInput');
+goog.require('sm.lSearch.bFilter.FilterLabels');
+goog.require('sm.lSearch.bFilter.FilterSwitch');
+goog.require('sm.lSearch.bFilter.View');
+goog.require('sm.lSearch.bFilter.ViewExtended');
+goog.require('sm.lSearch.bFilter.ViewInput');
+goog.require('sm.lSearch.bFilter.ViewLabels');
+goog.require('sm.lSearch.bFilter.ViewSwitch');
+goog.require('sm.lSearch.bFilterPanel.FilterPanel');
+goog.require('sm.lSearch.bFilterPanel.View');
+goog.require('sm.lSearch.bLabel.Label');
+goog.require('sm.lSearch.bLabel.View');
+goog.require('sm.lSearch.bSuggestFilter.SuggestFilter');
+goog.require('sm.lSearch.bSuggestFilter.View');
 goog.require('sm.lSearchResult.bFilterSearch.FilterSearch');
 goog.require('sm.lSearchResult.bFilterSearch.View');
 
@@ -45,17 +94,23 @@ goog.require('sm.lSearchResult.bFilterSearch.View');
  * @extends {cl.iFactory.Factory}
  */
 sm.iFactory.FactoryStendhal = function() {
-    var templateFactory = sm.iFactory.TemplateFactoryStendhal.getInstance();
+    var templateFactory = sm.iFactory.TemplateFactoryStendhal;
 
-    goog.base(this, templateFactory, 'stendhal');
+    sm.iFactory.FactoryStendhal.base(
+        this, 'constructor', templateFactory.getInstance(), 'stendhal'
+    );
 
     this.setControlListItem('dropdown-select', {
             control: sm.gDropdown.DropdownSelect,
-            view: sm.gDropdown.DropdownSelectView
+            view: sm.gDropdown.ViewSelect
         })
         .setControlListItem('list-select', {
-            control: sm.gList.SelectList,
-            view: sm.gList.SelectListView
+            control: sm.gList.List.Select,
+            view: sm.gList.ViewSelect
+        })
+        .setControlListItem('input', {
+            control: sm.gInput.InputStendhal,
+            view: sm.gInput.ViewStendhal
         })
         .setControlListItem('digit-input', {
             control: sm.gInput.DigitInput,
@@ -120,13 +175,111 @@ sm.iFactory.FactoryStendhal = function() {
             control: sm.lSearchResult.bFilterSearch.FilterSearch,
             view: sm.lSearchResult.bFilterSearch.View
         });
+
+    /** Common blocks and their heirs **/
+    this.setControlListItem('smSubheader', {
+            control: sm.bSmSubheader.SmSubheader,
+            view: sm.bSmSubheader.View
+        })
+        .setControlListItem('smScore', {
+            control: sm.bSmScore.SmScore,
+            view: sm.bSmScore.View
+        })
+        .setControlListItem('smScoreBrief', {
+            control: sm.bSmScore.SmScoreBrief,
+            view: sm.bSmScore.ViewBrief
+        })
+        .setControlListItem('smItem', {
+            control: sm.bSmItem.SmItem,
+            view: sm.bSmItem.View
+        })
+        .setControlListItem('smItemEntity', {
+            control: sm.bSmItem.SmItemEntity,
+            view: sm.bSmItem.ViewEntity
+        })
+        .setControlListItem('smItemList', {
+            control: sm.bSmItemList.SmItemList,
+            view: sm.bSmItemList.View
+        })
+        .setControlListItem('smListPaged', {
+            control: sm.bSmListPaged.SmListPaged,
+            view: sm.bSmListPaged.View
+        })
+        .setControlListItem('smBadge', {
+            control: sm.bSmBadge.SmBadge,
+            view: sm.bSmBadge.View
+        })
+        .setControlListItem('smCheckbox', {
+            control: sm.bSmCheckbox.SmCheckbox,
+            view: sm.bSmCheckbox.View
+        })
+        .setControlListItem('smRadioButton', {
+            control: sm.bSmRadioButton.SmRadioButton,
+            view: sm.bSmRadioButton.View
+        })
+        .setControlListItem('smMap', {
+            control: sm.bSmMap.SmMap,
+            view: sm.bSmMap.View
+        })
+        .setControlListItem('smBalloon', {
+            control: sm.bSmBalloon.SmBalloon,
+            view: sm.bSmBalloon.View
+        })
+        .setControlListItem('smLink', {
+            control: sm.bSmLink.SmLink,
+            view: sm.bSmLink.View
+        });
+
+    /** l-information blocks **/
+    this.setControlListItem('lInformation-informationBoard', {
+            control: sm.lInformation.bInformationBoard.InformationBoard,
+            view: sm.lInformation.bInformationBoard.View
+        })
+        .setControlListItem('lInformation-feedbackBoard', {
+            control: sm.lInformation.bFeedbackBoard.FeedbackBoard,
+            view: sm.lInformation.bFeedbackBoard.View
+        });
+
+    /** l-search blocks **/
+    this.setControlListItem('lSearch-filterPanel', {
+            control: sm.lSearch.bFilterPanel.FilterPanel,
+            view: sm.lSearch.bFilterPanel.View
+        })
+        .setControlListItem('lSearch-filter', {
+            control: sm.lSearch.bFilter.Filter,
+            view: sm.lSearch.bFilter.View
+        })
+        .setControlListItem('lSearch-filterExtended', {
+            control: sm.lSearch.bFilter.FilterExtended,
+            view: sm.lSearch.bFilter.ViewExtended
+        })
+        .setControlListItem('lSearch-filterSwitch', {
+            control: sm.lSearch.bFilter.FilterSwitch,
+            view: sm.lSearch.bFilter.ViewSwitch
+        })
+        .setControlListItem('lSearch-filterInput', {
+            control: sm.lSearch.bFilter.FilterInput,
+            view: sm.lSearch.bFilter.ViewInput
+        })
+        .setControlListItem('lSearch-filterLabels', {
+            control: sm.lSearch.bFilter.FilterLabels,
+            view: sm.lSearch.bFilter.ViewLabels
+        })
+        .setControlListItem('lSearch-label', {
+            control: sm.lSearch.bLabel.Label,
+            view: sm.lSearch.bLabel.View
+        })
+        .setControlListItem('lSearch-suggestFilter', {
+            control: sm.lSearch.bSuggestFilter.SuggestFilter,
+            view: sm.lSearch.bSuggestFilter.View
+        });
 };
 goog.inherits(sm.iFactory.FactoryStendhal, cl.iFactory.Factory);
 goog.addSingletonGetter(sm.iFactory.FactoryStendhal);
 
 goog.scope(function() {
     var Factory = sm.iFactory.FactoryStendhal;
-
+    //debugger;
     /**
      * Important!
      */

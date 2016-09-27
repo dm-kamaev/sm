@@ -15,10 +15,10 @@ base=/opt/@PACKAGENAME@/current
 
 case "$1" in
   start)
-	cd $base && ant node.forever.start && ant user.node.start && ant auth.node.start
+	cd $base && ant node.forever.start
     ;;
   stop)
-	cd $base && ant node.forever.stop && ant auth.node.stop && ant user.node.stop
+	cd $base && ant node.forever.stop
     ;;
   *)
     echo "Usage: /etc/init.d/@PACKAGENAME@-node {start|stop}"

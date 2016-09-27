@@ -1,0 +1,286 @@
+/**
+ * @fileoverview Brief type of score.
+ * In this type of score secondary marks are hidden by hint.
+ * Name of primary mark can be hidden too and show by hover over primary mark.
+ * If this score not active - secondary mark name not shown (if hidden)
+ * on hover and secondary marks not shown on click.
+ *
+ * There are two themes: bold and thick;
+ */
+{namespace sm.bSmScore.TemplateBrief}
+
+/**
+ * @typedef {{
+ *     marks: {
+ *        primary: {
+ *            name: string,
+ *            value: number
+ *        },
+ *        secondary: Array<{
+ *            name: string,
+ *            value: number
+ *        }>
+ *     },
+ *     secondaryMarkListHeader: string
+ * }} sm.bSmScore.TemplateBrief.Params.Data
+ */
+
+/**
+ * @typedef {{
+ *         primaryMark: {
+ *             size: string,
+ *             isNameVisible: boolean,
+ *             zeroSign: ('nothing'|'question-mark'|undefined),
+ *             showMark: boolean
+ *         }
+ *         theme: string,
+ *         isActive: boolean
+ *     }
+ * }} sm.bSmScore.TemplateBrief.Params.Config
+ */
+
+/**
+ * @typedef {{
+ *     data: sm.bSmScore.TemplateBrief.Params.Data,
+ *     config: sm.bSmScore.TemplateBrief.Params.Config
+ * }} sm.bSmScore.TemplateBrief.Params
+ */
+
+
+/**
+ * Template for ScoreBrief block
+ * @param params {{
+ *     data: sm.bSmScore.TemplateBrief.Params.Data,
+ *     config: sm.bSmScore.TemplateBrief.Params.Config
+ * }}
+ * @constructor
+ * @extends sm.bSmScore.Template
+ */
+{template .score}
+    {call .init data="all" /}
+{/template}
+
+
+/**
+ * @param params {{
+ *     data:
+ *         marks: {
+ *             primary: {
+ *                 name: string,
+ *                 value: number
+ *             }
+ *         }
+ *     },
+ *     config: ({
+ *         primaryMark: ({
+ *             size: (string|undefined),
+ *             isNameVisible: boolean,
+ *             zeroSign: ('nothing'|'question-mark'|undefined),
+ *             showMark: boolean
+ *         }|undefined),
+ *         theme: (string|undefined)
+ *     }|undefined)
+ * }}
+ * @override
+ * @protected
+ */
+{template .primaryMark kind="html"}
+    <div class="{call .rootClass /}__primary-mark-wrap">
+        {call .mark_}
+            {param params: [
+                'data': $params.data.marks.primary,
+                'config': [
+                        'type': 'primary',
+                        'size': $params?.config?.primaryMark?.size,
+                        'zeroSign': $params?.config?.primaryMark?.zeroSign,
+                        'showMark': $params?.config?.primaryMark?.showMark,
+                    ]
+                ]
+            /}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Primary mark template
+ * @param params {{
+ *     data: {
+ *         marks: {
+ *             secondary: Array<{
+ *                 label: string,
+ *                 value: number
+ *             }>
+ *         },
+ *         secondaryMarkListHeader: string
+ *     },
+ *     config: {
+ *         theme: string
+ *     }
+ * }}
+ * @protected
+ * @override
+ */
+{template .secondaryMarks kind="html"}
+    {let $cssClasses kind="html"}
+        {call .rootClass /}__secondary-mark-wrap
+        {if not ($params.data.marks.secondary and
+            length($params.data.marks.secondary))}
+            {sp}{cl.iUtils.Utils.CssClass.HIDDEN}
+        {/if}
+    {/let}
+
+    {let $hintContent kind="html"}
+        <div class="{$cssClasses}">
+            {call .markList data="all" /}
+        </div>
+    {/let}
+
+    {call .renderChild}
+        {param params: [
+            'type': 'hint',
+            'renderParams': [
+                'data': $hintContent,
+                'config': [
+                    'noPadding': true,
+                    'align': 'right-offset',
+                    'theme': 'straight-arrow',
+                    'topOffset': 'xl'
+                ]
+            ]
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * List of secondary marks with names and values
+ * @param params {{
+ *     data: {
+ *         marks: {
+ *             secondary: Array<{
+ *                 label: string,
+ *                 value: number
+ *             }>
+ *         },
+ *         secondaryMarkListHeader: string
+ *     }
+ *     config: {
+ *         theme: string
+ *     }
+ * }}
+ * @override
+ * @protected
+ */
+{template .markList kind="html"}
+    {call .markListHeader_ data="all" /}
+    {call .markListItems data="all" /}
+{/template}
+
+
+/**
+ * @param params {{
+ *     data: {
+ *         marks: {
+ *             secondary: Array{
+ *                 name: string,
+ *                 value: string
+ *             }
+ *         }
+ *     },
+ *     config: {
+ *         theme: string
+ *     }
+ * }}
+ * @override
+ * @protected
+ */
+{template .markListItems kind="html"}
+    {if $params.data.marks.secondary and
+                           length($params.data.marks.secondary)}
+        {foreach $mark in $params.data.marks.secondary}
+            {call .mark_}
+                {param params: [
+                    'data': $mark,
+                    'config': [
+                        'type': 'secondary',
+                        'showMark': true,
+                        'theme': $params?.config?.theme
+                    ]
+                ] /}
+            {/call}
+        {/foreach}
+    {/if}
+{/template}
+
+/**
+ * Secondary marks list header
+ * @param params {{
+ *     data: {
+ *         secondaryMarkListHeader: string
+ *     }
+ * }}
+ * @private
+ */
+{template .markListHeader_ kind="html"}
+    <div class="{call .rootClass /}__mark
+        {sp}{call .rootClass /}__mark_secondary
+        {sp}{call .rootClass /}__mark_header">
+        {$params.data.secondaryMarkListHeader}
+    </div>
+{/template}
+
+
+/**
+ * Mark value template
+ * @param params {{
+ *     data: {
+ *         value: number
+ *     },
+ *     config: ({
+ *         type: (string|undefined),
+ *         size: (string|undefined)
+ *         zeroSign: ('nothing'|'question-mark'|undefined),
+ *         showMark: boolean
+ *     }|undefined)
+ * }}
+ * @protected
+ * @override
+ */
+{template .markValue kind="html"}
+    <div class="{call .rootClass /}__mark-value">
+        {call sm.bMark.Template.base}
+            {param params: [
+               'value': $params?.data?.value,
+               'display': 'inline',
+               'config': [
+                   'size': $params?.config.size ?: 'm',
+                   'showMark': $params?.config.showMark,
+                   'zeroSign': $params?.config.zeroSign
+               ]
+            ] /}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * @param params {{
+ *     config: sm.bSmScore.TemplateBrief.Params.Config
+ * }}
+ * @override
+ */
+{template .additionalClasses kind="html"}
+    {sp}b-sm-score_brief
+    {sp}b-sm-score_secondary-marks-hidden
+    {if $params?.config.isActive}
+        {sp}{call .rootClass /}_active
+    {/if}
+
+    {if $params?.config?.primaryMark.isNameVisible}
+        {sp}{call .rootClass /}_primary-mark-name-visible
+    {else}
+        {sp}{call .rootClass /}_primary-mark-name-hidden
+    {/if}
+
+{/template}

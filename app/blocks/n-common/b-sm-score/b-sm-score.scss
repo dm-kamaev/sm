@@ -1,0 +1,27 @@
+.b-sm-score {
+    position: relative;
+
+    .b-sm-score__primary-mark-wrap {
+        display: inline-block;
+    }
+
+
+    .b-sm-score__secondary-mark-wrap {
+        display: inline-block;
+
+        font: 13px Arial, sans-serif;
+    }
+
+
+    /** mark layout **/
+    .b-sm-score__mark-name {
+        display: inline-block;
+    }
+
+    .b-sm-score__mark-value {
+        display: inline-block;
+
+        width: 42px;
+    }
+    /** mark layout end **/
+}

@@ -4,10 +4,10 @@
  * Hint template
  * @param params {
  *     config: {
- *         align: ?string,
- *         offset: ?string,
- *         noPadding: ?boolean,
- *         theme: ?string
+ *         align: (string|undefined),
+ *         offset: (string|undefined),
+ *         noPadding: boolean,
+ *         theme: (string|undefined)
  *     }
  * }
  * @constructor
@@ -23,7 +23,6 @@
  *     data: ?string
  * }}
  * @override
- * @doc
  */
 {template .body}
     <div class="{call .rootClass/}__arrow">
@@ -36,22 +35,29 @@
 {/template}
 
 /**
- * @override
  * @param params {
  *     config: {
- *         align: ?string,
- *         offset: ?string,
- *         noPadding: ?boolean,
- *         theme: ?string
+ *         align: (('left', 'right')|undefined),
+ *         offset: (('s', 'm', 'l')|undefined),
+ *         contentAlign: (('middle')|undefined),
+ *         noPadding: boolean,
+ *         theme: (('straight-arrow')|undefined)
  *     }
  * }
+ * @override
  */
 {template .additionalClasses}
     {if $params?.config?.align}
         {sp}{call .rootClass/}_{$params.config.align}-align
     {/if}
+    {if $params?.config?.topOffset}
+        {sp}{call .rootClass/}_top-offset_{$params?.config?.topOffset}
+    {/if}
     {if $params?.config?.offset}
         {sp}{call .rootClass/}_offset-{$params.config.offset}
+    {/if}
+    {if $params?.config.contentAlign}
+        {sp}{call .rootClass /}_content-align_{$params?.config.contentAlign}
     {/if}
     {if $params?.config?.noPadding}
         {sp}{call .rootClass/}_no-padding

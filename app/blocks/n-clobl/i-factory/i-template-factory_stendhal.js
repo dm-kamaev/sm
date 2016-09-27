@@ -11,23 +11,48 @@ goog.require('sm.bPopularSchools.Template');
 goog.require('sm.bSchoolCatalog.Template');
 goog.require('sm.bSchoolListPaged.Template');
 goog.require('sm.bSearchPanel.Template');
+goog.require('sm.bSmBadge.Template');
+goog.require('sm.bSmBalloon.Template');
+goog.require('sm.bSmCheckbox.Template');
+goog.require('sm.bSmFooter.Template');
+goog.require('sm.bSmItem.Template');
+goog.require('sm.bSmItem.TemplateEntity');
+goog.require('sm.bSmItemList.Template');
+goog.require('sm.bSmLink.Template');
+goog.require('sm.bSmListPaged.Template');
+goog.require('sm.bSmMap.Template');
+goog.require('sm.bSmRadioButton.Template');
+goog.require('sm.bSmScore.Template');
+goog.require('sm.bSmScore.TemplateBrief');
+goog.require('sm.bSmSubheader.Template');
 goog.require('sm.gAuthSocial.TemplateStendhal');
 goog.require('sm.gAuthSocialModal.TemplateStendhal');
 goog.require('sm.gButton.TemplateSocialStendhal');
 goog.require('sm.gButton.TemplateStendhal');
-goog.require('sm.gDropdown.DropdownSelectTemplate');
+goog.require('sm.gDropdown.TemplateSelect');
 goog.require('sm.gHint.TemplateStendhal');
 goog.require('sm.gIcon.TemplateStendhal');
 goog.require('sm.gInput.DigitInputTemplate');
-goog.require('sm.gList.SelectTemplate');
+goog.require('sm.gList.TemplateSelect');
 goog.require('sm.gModal.TemplateFeedback');
 goog.require('sm.gModal.TemplateStendhal');
+goog.require('sm.gTab.TemplateCatalog');
 goog.require('sm.gTab.TemplateStendhal');
 goog.require('sm.gTextarea.TemplateStendhal');
+goog.require('sm.lInformation.bFeedbackBoard.Template');
+goog.require('sm.lInformation.bInformationBoard.Template');
 goog.require('sm.lSchool.bDate.Template');
 goog.require('sm.lSchool.bFoldList.Template');
-goog.require('sm.lSearch.bArticleLink.Template');
-goog.require('sm.lSearch.bArticleLinks.Template');
+goog.require('sm.lSchoolHome.bArticleLink.Template');
+goog.require('sm.lSchoolHome.bArticleLinks.Template');
+goog.require('sm.lSearch.bFilter.Template');
+goog.require('sm.lSearch.bFilter.TemplateExtended');
+goog.require('sm.lSearch.bFilter.TemplateInput');
+goog.require('sm.lSearch.bFilter.TemplateLabels');
+goog.require('sm.lSearch.bFilter.TemplateSwitch');
+goog.require('sm.lSearch.bFilterPanel.Template');
+goog.require('sm.lSearch.bLabel.Template');
+goog.require('sm.lSearch.bSuggestFilter.Template');
 goog.require('sm.lSearchResult.bFilterSearch.Template');
 
 
@@ -35,9 +60,12 @@ goog.require('sm.lSearchResult.bFilterSearch.Template');
 /**
  * Template factory
  * @constructor
+ * @extends {cl.iFactory.TemplateFactory}
  */
 sm.iFactory.TemplateFactoryStendhal = function() {
-    goog.base(this, 'stendhal');
+    sm.iFactory.TemplateFactoryStendhal.base(
+        this, 'constructor', 'stendhal'
+    );
 
     this.setTemplateListItem(
             'tab',
@@ -54,18 +82,18 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'modal',
             sm.gModal.TemplateStendhal.modal
-        ).
-        setTemplateListItem(
+        )
+        .setTemplateListItem(
             'feedback-modal',
             sm.gModal.TemplateFeedback.modal
         )
         .setTemplateListItem(
             'dropdown-select',
-            sm.gDropdown.DropdownSelectTemplate.dropdown
+            sm.gDropdown.TemplateSelect.dropdown
         )
         .setTemplateListItem(
             'list-select',
-            sm.gList.SelectTemplate.list
+            sm.gList.TemplateSelect.list
         )
         .setTemplateListItem(
             'digit-input',
@@ -113,11 +141,11 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         )
         .setTemplateListItem(
             'article-links',
-            sm.lSearch.bArticleLinks.Template.articleLinks
+            sm.lSchoolHome.bArticleLinks.Template.articleLinks
         )
         .setTemplateListItem(
             'article-link',
-            sm.lSearch.bArticleLink.Template.articleLink
+            sm.lSchoolHome.bArticleLink.Template.articleLink
         )
         .setTemplateListItem(
             'date',
@@ -146,6 +174,112 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'filter-search',
             sm.lSearchResult.bFilterSearch.Template.filterSearch
+        )
+        .setTemplateListItem(
+            'tab-catalog',
+            sm.gTab.TemplateCatalog.tab
+        );
+
+    /** Global blocks an their heirs **/
+    this.setTemplateListItem(
+            'smFooter',
+            sm.bSmFooter.Template.footer
+        )
+        .setTemplateListItem(
+            'smSubheader',
+            sm.bSmSubheader.Template.subheader
+        )
+        .setTemplateListItem(
+            'smItem',
+            sm.bSmItem.Template.item
+        )
+        .setTemplateListItem(
+            'smScore',
+            sm.bSmScore.Template.score
+        )
+        .setTemplateListItem(
+            'smScoreBrief',
+            sm.bSmScore.TemplateBrief.score
+        )
+        .setTemplateListItem(
+            'smItemEntity',
+            sm.bSmItem.TemplateEntity.item
+        )
+        .setTemplateListItem(
+            'smItemList',
+            sm.bSmItemList.Template.itemList
+        )
+        .setTemplateListItem(
+            'smListPaged',
+            sm.bSmListPaged.Template.listPaged
+        )
+        .setTemplateListItem(
+            'smBadge',
+            sm.bSmBadge.Template.badge
+        )
+        .setTemplateListItem(
+            'smCheckbox',
+            sm.bSmCheckbox.Template.checkbox
+        )
+        .setTemplateListItem(
+            'smRadioButton',
+            sm.bSmRadioButton.Template.radioButton
+        )
+        .setTemplateListItem(
+            'smMap',
+            sm.bSmMap.Template.map
+        )
+        .setTemplateListItem(
+            'smBalloon',
+            sm.bSmBalloon.Template.balloon
+        )
+        .setTemplateListItem(
+            'smLink',
+            sm.bSmLink.Template.link
+        );
+
+    /** l-information blocks **/
+    this.setTemplateListItem(
+            'lInformation-informationBoard',
+            sm.lInformation.bInformationBoard.Template.informationBoard
+        )
+        .setTemplateListItem(
+            'lInformation-feedbackBoard',
+            sm.lInformation.bFeedbackBoard.Template.feedbackBoard
+        );
+
+    /** l-search blocks **/
+    this.setTemplateListItem(
+            'lSearch-filterPanel',
+            sm.lSearch.bFilterPanel.Template.filterPanel
+        )
+        .setTemplateListItem(
+            'lSearch-filter',
+            sm.lSearch.bFilter.Template.filter
+        )
+        .setTemplateListItem(
+            'lSearch-filterExtended',
+            sm.lSearch.bFilter.TemplateExtended.filter
+        )
+        .setTemplateListItem(
+            'lSearch-filterSwitch',
+            sm.lSearch.bFilter.TemplateSwitch.filter
+        )
+        .setTemplateListItem(
+            'lSearch-filterInput',
+            sm.lSearch.bFilter.TemplateInput.filter
+        )
+        .setTemplateListItem(
+            'lSearch-filterLabels',
+            sm.lSearch.bFilter.TemplateLabels.filter
+        )
+        .setTemplateListItem(
+            'lSearch-label',
+            sm.lSearch.bLabel.Template.label
+        )
+        .setTemplateListItem(
+            'lSearch-suggestFilter',
+            sm.lSearch.bSuggestFilter.Template.suggestFilter
         );
 };
 goog.inherits(sm.iFactory.TemplateFactoryStendhal, cl.iFactory.TemplateFactory);

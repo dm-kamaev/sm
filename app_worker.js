@@ -27,7 +27,8 @@ var api = require('./api/modules');
 var bodyParser = require('body-parser');
 var vm = require('vm');
 
-var errorController = require('./app/modules/error/controllers/errorController');
+var errorController =
+    require('./app/modules/error/controllers/errorController');
 
 const await = require('asyncawait/await');
 const async = require('asyncawait/async');
@@ -69,7 +70,7 @@ app.use('/api', api.mail.router);
 
 require('./app/middleware/csrf')(app);
 
-app.use(morgan('dev',  {
+app.use(morgan('dev', {
     skip: (req, res) => res.statusCode >= 400,
     stream: expressLogStream.debug
 }));
@@ -79,9 +80,12 @@ app.use(morgan('dev', {
 }));
 
 app.use('/', modules.school.router);
+app.use('/', modules.course.router);
+
 app.use('/', api.user.router);
 app.use('/api', api.comment.router);
 app.use('/api', api.school.router);
+app.use('/api', api.course.router);
 app.use('/api', api.geo.router);
 app.use('/api', api.feedback.router);
 app.use('/api', api.favorite.router);

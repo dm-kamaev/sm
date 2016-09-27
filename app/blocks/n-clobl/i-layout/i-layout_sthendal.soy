@@ -1,0 +1,331 @@
+/**
+ * @fileoverview Base layout template
+ * Create html, head, body tags;
+ * Add meta-tags scripts and css styles to page;
+ * Add header, subheader and footer to page;
+ */
+{namespace sm.iLayout.TemplateStendhal}
+
+
+/**
+ * @typedef {{
+ *     type: string,
+ *     openGraph: ({
+ *         url: (string|undefined),
+ *         siteName: (string|undefined),
+ *         title: (string|undefined),
+ *         type: (string|undefined),
+ *         description: (string|undefined),
+ *         image: (string|undefined),
+ *         fbClientId: ?number,
+ *         twitterCardType: (string|undefined),
+ *         twitterSiteName: (string|undefined),
+ *         imageWidth: (string|undefined),
+ *         imageHeight: (string|undefined)
+ *     }|undefined),
+ *     seo: {
+ *         metaTitle: string,
+ *         metaDescription: (string|undefined)
+ *     },
+ *     subHeader: sm.bSmSubHeader.Template.Params.Data
+ * }} sm.iLayout.TemplateStendhal.Params.Data
+ */
+
+
+/**
+ * @typedef {{
+ *     staticVersion: (string|undefined),
+ *     analyticsId: (string|undefined),
+ *     yandexMetrikaId: ?number,
+ *     domain: (string|undefined),
+ *     fbClientId: ?number,
+ *     csrf: string,
+ *     year: (number|undefined),
+ *     modifier: string,
+ *     type: string,
+ *     page: (string|undefined)
+ * }} sm.iLayout.TemplateStendhal.Params.Config
+ */
+
+
+/**
+ * Base landing for pages
+ * @param params {{
+ *     data: sm.iLayout.TemplateStendhal.Params.Data,
+ *     config: sm.iLayout.TemplateStendhal.Params.Config
+ * }}
+ * @extends cl.iLayout.Template
+ * @constructor
+ * @doc
+ */
+{template .layout autoescape="strict" kind="html"}
+    {call .document data="all" /}
+{/template}
+
+
+/**
+ * Meta tags
+ */
+{template .meta autoescape="strict" kind="html"}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+{/template}
+
+
+/**
+ * @param params {{
+ *     data: {
+ *         seo: {
+ *             metaTitle: string
+ *         }
+ *     }
+ * }}
+ * @override
+ */
+{template .title autoescape="strict" kind="html"}
+    {$params.data.seo.metaTitle}
+{/template}
+
+
+/**
+ * @param params {{
+ *     data: {
+ *         seo: {
+ *             metaDescription: (string|undefined)
+ *         }
+ *     }
+ * }}
+ * @override
+ */
+{template .description autoescape="strict" kind="html"}
+    {if $params.data.seo?.metaDescription}
+        <meta name="description" content="{$params.data.seo?.metaDescription}">
+    {/if}
+{/template}
+
+
+/**
+ * Favicon
+ * @override
+ */
+{template .favicon autoescape="strict" kind="html"}
+    <link rel="shortcut icon" href="/images/n-common/favicon.ico"
+        type="image/x-icon">
+{/template}
+
+
+/**
+ * @override
+ */
+{template .extraStyles autoescape="strict" kind="html"}
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700,700italic&subset=latin,cyrillic'
+        rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic'
+        rel='stylesheet' type='text/css'>
+{/template}
+
+
+/**
+ * @override
+ */
+{template .scripts autoescape="strict" kind="html"}
+    <script type="text/javascript"
+        src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js">
+    </script>
+{/template}
+
+
+/**
+ * @param params {{
+ *     config: {
+ *         staticVersion: (string|undefined),
+ *         analyticsId: (string|undefined),
+ *         yandexMetrikaId: (number|undefined),
+ *         csrf: string
+ *     }
+ * }}
+ * @override
+ */
+{template .extraScripts autoescape="strict" kind="html"}
+    {call .layoutScript data="all" /}
+    {call .csrf data="all"/}
+    {call .analytics data="all"/}
+    {call .metrika data="all"/}
+{/template}
+
+
+/**
+ * Add layout script to page
+ * Must be overridden when inheriting
+ * @protected
+ */
+{template .layoutScript kind="html"}
+{/template}
+
+
+/**
+ * @param params {{
+ *     config: {
+ *         csrf: string
+ *     }
+ * }}
+ * @protected
+ */
+{template .csrf autoescape="strict" kind="html"}
+    <script>
+        window['ctx'] = [];
+        window['ctx']['csrf'] = {$params?.config?.csrf};
+    </script>
+{/template}
+
+
+/**
+ * @param params {{
+ *     config: {
+ *         analyticsId: (string|undefined)
+ *     }
+ * }}
+ * @protected
+ */
+{template .analytics autoescape="strict" kind="html"}
+    <script>
+        var analytics = sm.iAnalytics.Analytics.getInstance();
+        analytics.init('{$params?.config?.analyticsId}');
+    </script>
+{/template}
+
+
+/**
+ * @param params {{
+ *     config: {
+ *         yandexMetrikaId: (string|undefined)
+ *     }
+ * }}
+ * @protected
+ */
+{template .metrika autoescape="strict" kind="html"}
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+        var metrika = sm.iMetrika.Metrika.getInstance();
+        metrika.init('{$params?.config?.yandexMetrikaId}');
+    </script>
+
+    <noscript>
+        <div>
+            <img src="https://mc.yandex.ru/watch/
+                {$params?.config?.yandexMetrikaId}"
+                style="position:absolute; left:-9999px;" alt="" />
+        </div>
+    </noscript>
+    <!-- /Yandex.Metrika counter -->
+{/template}
+
+
+/**
+ * @param params {{
+ *     data: sm.iLayout.TemplateStendhal.Params.Data,
+ *     config: sm.iLayout.TemplateStendhal.Params.Config
+ * }}
+ * @override
+ */
+{template .content autoescape="strict" kind="html"}
+    <div class="{call .rootClass/}"
+        {call .attributes data="all" /}>
+        {call .subheader data="all" /}
+        {call .bodyContent_ data="all" /}
+        {call .footer data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Subheader
+ * @param params {{
+ *     data: {
+ *         subheader: sm.bSmSubheader.Template.Params.Data
+ *     },
+ *     config: {
+ *         type: string,
+ *         modifier: ?string
+ *     }
+ * }}
+ * @protected
+ */
+{template .subheader autoescape="strict" kind="html"}
+    <div class="{call .rootClass/}__subheader">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': $params.config.modifier ?: 'stendhal',
+                'type': 'smSubheader',
+                'renderParams': [
+                    'data': $params.data.subHeader,
+                    'config': [
+                        'entityType': $params.config.type
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Content
+ * @protected
+ */
+{template .bodyContent autoescape="strict" kind="html"}
+{/template}
+
+
+/**
+ * Footer
+ * @param params {
+ *     config: {
+ *         year: ?number,
+ *         modifier: ?string
+ *     }
+ * }
+ * @protected
+ */
+{template .footer autoescape="strict" kind="html"}
+    <div class="{call .rootClass/}__footer">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': $params.config.modifier ?: 'stendhal',
+                'type': 'smFooter',
+                'renderParams': [
+                    'data': [
+                        'year': $params?.config?.year,
+                        'links': [
+                            [
+                                'name': 'Cвязаться с нами',
+                                'url': 'http://mel.fm/contacts'
+                            ],
+                            [
+                                'name': 'Пользовательское соглашение',
+                                'url': 'http://mel.fm/terms-of-use'
+                            ]
+                        ]
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Attributes on element
+ * Important to write kind="attributes" when overrides
+ * @protected
+ */
+{template .attributes kind="attributes"}
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    i-layout
+{/template}
