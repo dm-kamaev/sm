@@ -188,16 +188,6 @@ service.isFavorite = async(function(userId, entity) {
 service.getFavoriteEntities = async(function(userId) {
     var listFavorites = await(this.getByUserId(userId));
 
-    listFavorites = [{
-        userId: 1,
-        entityId: 1,
-        entityType: 'course'
-    }, {
-        userId: 1,
-        entityId: 5,
-        entityType: 'school'
-    }];
-
     var coursesIds =
         this.getEntityIdsFiltredByType(listFavorites, entityType.COURSE);
     var schoolsIds =
