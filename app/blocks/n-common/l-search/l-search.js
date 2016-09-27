@@ -390,8 +390,9 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.onMapDataLoaded_ = function(event) {
-        var mapData = event.getMapData();
-        this.map_.addItems(mapData['itemGroups']);
+        this.map_.addItems(event.getItemGroups());
+        console.log(event.getPosition());
+        this.map_.center(event.getPosition());
     };
 
 

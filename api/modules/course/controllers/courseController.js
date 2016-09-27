@@ -1,3 +1,5 @@
+'use strict';
+
 const async = require('asyncawait/async'),
     await = require('asyncawait/await');
 
@@ -49,7 +51,12 @@ controller.search = async(function(req, res) {
         };
 
         if (req.query.requestMapResults) {
-            result.map = searchView.map(courses, mapViewType.PIN);
+            let mapPosition =
+                await(services.map.getPositionParams(searchParams));
+            result.map = searchView.map(courses, {
+                viewType: mapViewType.PIN,
+                position: mapPosition
+            });
         }
     } catch (error) {
         logger.error(error.message);
@@ -66,13 +73,17 @@ controller.search = async(function(req, res) {
  *     Send all results for request with params
  */
 controller.searchMap = async(function(req, res) {
-    var result;
+    let result;
     try {
-        var searchParams = searchView.initSearchParams(req.query),
-            mapCourses = await(services.course.listMap(searchParams));
+        let searchParams = searchView.initSearchParams(req.query),
+            mapCourses = await(services.course.listMap(searchParams)),
+            mapPosition = await(services.map.getPositionParams(searchParams));
 
         result = {
-            map: searchView.map(mapCourses, mapViewType.PIN)
+            map: searchView.map(mapCourses, {
+                viewType: mapViewType.PIN,
+                position: mapPosition
+            })
         };
     } catch (error) {
         logger.error(error.message);

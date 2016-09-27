@@ -1,3 +1,5 @@
+'use strict';
+
 var async = require('asyncawait/async'),
     await = require('asyncawait/await');
 
@@ -29,6 +31,7 @@ exports.search = async(function(req, res, next) {
         var data = await({
             courses: services.course.list(searchParams, 10),
             mapCourses: services.course.listMap(searchParams, 10),
+            mapPosition: services.map.getPositionParams(searchParams),
             filtersData: {
                 type: services.courseType.getAll()
             }
@@ -41,6 +44,7 @@ exports.search = async(function(req, res, next) {
             countResults: data.courses[0] && data.courses[0].countResults || 0,
             coursesList: data.courses,
             mapCourses: data.mapCourses,
+            mapPosition: data.mapPosition,
             searchParams: searchParams,
             filtersData: data.filtersData
         });
