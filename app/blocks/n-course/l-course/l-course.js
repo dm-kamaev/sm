@@ -156,10 +156,13 @@ goog.scope(function() {
      * @private
      */
     Course.prototype.initFullDescription_ = function() {
-        this.fullDescription_ = this.decorateChild(
-            'smCollapsedText',
-            this.getView().getDom().fullDescription
-        );
+        var fullDescription = this.getView().getDom().fullDescription;
+        if (fullDescription) {
+            this.fullDescription_ = this.decorateChild(
+                'smCollapsedText',
+                fullDescription
+            );
+        }
     };
 
 

@@ -29,6 +29,7 @@ const informationFields = {
         'leadType'
     ],
     BRAND: ['id', 'name'],
+    TYPE: ['id', 'name'],
     OPTION: [
         'id',
         'totalCost',
@@ -38,7 +39,8 @@ const informationFields = {
         'lengthWeeks',
         'online',
         'name',
-        'description'
+        'description',
+        'duration'
     ],
     SCHEDULE: ['day', 'startTime', 'endTime'],
     DEPARTMENT: ['id'],
@@ -141,6 +143,10 @@ service.information = async(function(id) {
             attributes: informationFields.BRAND,
             model: models.CourseBrand,
             as: 'courseBrand'
+        }, {
+            attributes: informationFields.TYPE,
+            model: models.CourseType,
+            as: 'courseType'
         }, {
             attributes: informationFields.OPTION,
             model: models.CourseOption,

@@ -11,7 +11,8 @@ const soy = require('../../../components/soy'),
         '../../../../api/modules/course/views/informationView'
     ),
     pageView = require('../../../../api/modules/entity/views/pageView'),
-    entityType = require('../../../../api/modules/entity/enums/entityType.js');
+    entityType = require('../../../../api/modules/entity/enums/entityType.js'),
+    errors = require('../../school/lib/errors');
 
 const logger = require('../../../components/logger/logger').getLogger('app');
 

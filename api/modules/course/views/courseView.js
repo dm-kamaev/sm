@@ -12,6 +12,8 @@ const scoreView = require('./scoreView'),
     CourseOptions = require('../lib/CourseOptions'),
     pageView = require('../../entity/views/pageView');
 
+const entityType = require('../../../../api/modules/entity/enums/entityType');
+
 let view = {};
 
 const FULL_DESCRIPTION_LENGTH = 300;
@@ -33,7 +35,7 @@ view.page = function(course) {
 };
 
 /**
- * @param  {string} text
+ * @param  {string=} text
  * @return {Object}
  */
 view.formatFullDescription = function(text) {
@@ -42,12 +44,18 @@ view.formatFullDescription = function(text) {
         cutText: []
     };
 
-    if (text.length > FULL_DESCRIPTION_LENGTH) {
-        let formatText = new FormatText();
-        result.fullText.push(text);
-        result.cutText.push(formatText.cut(text, FULL_DESCRIPTION_LENGTH, ' '));
+    if (text) {
+        if (text.length > FULL_DESCRIPTION_LENGTH) {
+            let formatText = new FormatText();
+            result.fullText.push(text);
+            result.cutText.push(
+                formatText.cut(text, FULL_DESCRIPTION_LENGTH, ' ')
+            );
+        } else {
+            result.cutText.push(text);
+        }
     } else {
-        result.cutText.push(text);
+        result = null;
     }
     return result;
 };
@@ -61,48 +69,68 @@ view.formatCost = function(options) {
         ' руб. / курс';
 };
 
-const entityType =
-        require('../../../../api/modules/entity/enums/entityType.js');
-
 /**
  * @param  {Object} course
  * @return {Object}
  */
 view.formatGeneralOptions = function(course) {
-    let items = [],
+    let items = this.getStaticOptions(course),
         courseOptions = new CourseOptions(course.courseOptions);
 
-    items.push({
+    return {
+        items: items.concat(courseOptions.getGeneralOptions())
+    };
+};
+
+/**
+ * @param {{
+ *     courseBrand: {
+ *         name: string
+ *     },
+ *     courseType: {
+ *         name: string
+ *     },
+ *     entranceExam: ?string,
+ *     learningOutcome: ?string,
+ *     openSchedule: ?boolean
+ * }} course
+ * @return {Array<Object>}
+ */
+view.getStaticOptions = function(course) {
+    let result = [];
+    result.push({
         name: course.courseBrand.name,
         description: course.courseBrand.description
     });
 
+    result.push({
+        name: 'Направление',
+        description: course.courseType.name
+    });
+
     if (course.entranceExam) {
-        items.push({
+        result.push({
             name: 'Вступительнео расписание',
             description: course.entranceExam
         });
     }
 
     if (course.learningOutcome) {
-        items.push({
+        result.push({
             name: 'Результаты обучения',
             description: course.learningOutcome
         });
     }
 
     if (course.openSchedule) {
-        items.push({
+        result.push({
             name: 'Сроки записи',
             description:
                 'Запись в новые и существующие группы ведётся постоянно'
         });
     }
-
-    return {
-        items: items.concat(courseOptions.getGeneralOptions())
-    };
-};
+    return result;
+}
 
 
 /**

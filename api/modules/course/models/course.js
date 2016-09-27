@@ -59,6 +59,10 @@ let Course = db.define('Course', {
                 as: 'courseBrand',
                 foreignKey: 'brand_id'
             });
+            Course.belongsTo(models.CourseType, {
+                as: 'courseType',
+                foreignKey: 'type'
+            });
             Course.hasMany(models.CourseOption, {
                 as: 'courseOptions',
                 foreignKey: 'course_id'
