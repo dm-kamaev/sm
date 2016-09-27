@@ -12,6 +12,15 @@ var Comment = db.define('Comment', {
         type: DataType.INTEGER,
         field: 'user_data_id'
     },
+    source: {
+        type: DataType.STRING,
+        allowNull: false,
+        defaultValue: 'User',
+        field: 'source',
+        validate: {
+            isIn: sourceType
+        }
+    },
     isNoticeSend: {
         type: DataType.BOOLEAN,
         field: 'is_notice_send'
