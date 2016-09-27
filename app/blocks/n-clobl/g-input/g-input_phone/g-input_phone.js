@@ -366,7 +366,7 @@ goog.scope(function() {
      * @private
      */
     InputPhone.prototype.formatPastedText_ = function(text) {
-        var result = text.replace(/^\+7|^8|[^\d]/ig, '');
+        var result = this.filterValue_(text);
         return goog.array.toArray(result);
     };
 
@@ -486,7 +486,9 @@ goog.scope(function() {
      */
     InputPhone.prototype.validatePhone_ = function(text) {
         var filteredValue = this.filterValue_(text);
-        return this.validateDigits_(filteredValue);
+
+        return this.validateDigits_(filteredValue) &&
+            filteredValue.length == InputPhone.NUMBER_AMOUNT;
     };
 
 
@@ -498,7 +500,7 @@ goog.scope(function() {
      * @private
      */
     InputPhone.prototype.filterValue_ = function(text) {
-        return text.replace(/[+7()_\- ]/g, '');
+        return text.replace(/^\+7|^8|[^\d]/ig, '');
     };
 
 
