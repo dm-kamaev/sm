@@ -1,0 +1,305 @@
+{namespace sm.gModal.TemplateEnrollment}
+
+/**
+ * @typedef {
+ *     content: {
+ *         title: (string|undefined),
+ *         description: (string|undefined),
+ *         buttonText: (string|undefined)
+ *     },
+ *     errors: Array<string>
+ * } sm.gModal.TemplateEnrollment.Params.Data
+ */
+
+/**
+ * @typedef {
+ *     stylizationModifier: string,
+ *     entityType: string,
+ *     size: (string|undefined)
+ * } sm.gModal.TemplateEnrollment.Params.Config
+ */
+
+/**
+ * Modal template
+ * @param params {{
+ *     data: sm.gModal.TemplateEnrollment.Params.Data,
+ *     config: sm.gModal.TemplateEnrollment.Params.Config
+ * }}
+ * @extends sm.gModal.TemplateStendhal
+ * @constructor
+ * @doc
+ */
+{template .modal}
+    {call .init data="all" /}
+{/template}
+
+
+/**
+ * Content
+ * @param params {{
+ *     data: sm.gModal.TemplateEnrollment.Params.Data,
+ *     config: sm.gModal.TemplateEnrollment.Params.Config
+ * }}
+ * @override
+ */
+{template .content}
+    {call .sectionHeader_ data="all" /}
+    {call .sectionContent_/}
+    {call .sectionButton_ data="all" /}
+    {call .sectionError_ data="all" /}
+{/template}
+
+
+/**
+ * Section header
+ * @param params {{
+ *     data: {
+ *         content: {
+ *             title: (string|undefined),
+ *             description: (string|undefined)
+ *         }
+ *     },
+ *     config: sm.gModal.TemplateEnrollment.Params.Config
+ * }}
+ */
+{template .sectionHeader_}
+    <div class="{call .rootClass/}__section {call .rootClass/}__section_header">
+        {call .title_ data="all" /}
+        {call .closer data="all" /}
+        {call .description_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Section with fields for entering data
+ */
+{template .sectionContent_}
+    <div class="{call .rootClass/}__section {call .rootClass/}__section_content">
+        {call .nameField_/}
+        {call .phoneField_/}
+        {call .commentField_/}
+    </div>
+{/template}
+
+
+/**
+ * Section button
+ * @param params {{
+ *     data: {
+ *         content: {
+ *             buttonText: string
+ *         }
+ *     }
+ * }}
+ */
+{template .sectionButton_}
+    <div class="{call .rootClass/}__section {call .rootClass/}__section_button">
+        {let $customClasses kind="html"}
+            {call .rootClass/}__button
+        {/let}
+
+        {call .renderChild}
+            {param params: [
+                'type': 'button',
+                'renderParams': [
+                    'data': [
+                        'content': $params.data?.content?.buttonText ?:
+                            'Перезвоните мне'
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Section for error message
+ * @param params {{
+ *     data: {
+ *         errors: Array<string>
+ *     }
+ * }}
+ */
+{template .sectionError_}
+    <div class="{call .rootClass/}__section {call .rootClass/}__section_error">
+        {if $params.data.errors and length($params.data.errors)}
+            {call .listErrors data="all" /}
+        {/if}
+    </div>
+{/template}
+
+
+/**
+ * List error messages
+ * @param params {{
+ *     data: {
+ *         errors: Array<string>
+ *     }
+ * }}
+ * @public
+ */
+{template .listErrors}
+    {for $i in range(length($params.data.errors))}
+        <div class="{call .rootClass/}__error">
+            {$params.data.errors[$i]}
+        </div>
+    {/for}
+{/template}
+
+
+/**
+ * Field to enter name
+ */
+{template .nameField_}
+    <div class="{call .rootClass/}__field {call .rootClass/}__field_name">
+        {let $customClasses kind="html"}
+            {call .rootClass/}__name-input
+        {/let}
+
+        {call .renderChild}
+            {param params: [
+                'type': 'input',
+                'renderParams': [
+                    'data': [
+                        'placeholder': 'Имя',
+                        'maxLength': 50,
+                        'name': 'userName',
+                        'type': 'text'
+                    ],
+                    'config': [
+                        'validations': ['notEmpty'],
+                        'customClasses': [$customClasses]
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Field to enter phone
+ */
+{template .phoneField_}
+    <div class="{call .rootClass/}__field {call .rootClass/}__field_phone">
+        {let $customClasses kind="html"}
+            {call .rootClass/}__phone-input
+        {/let}
+
+        {call .renderChild}
+            {param params: [
+                'type': 'phone-input',
+                'renderParams': [
+                    'config': [
+                        'customClasses': [$customClasses]
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Field to enter comment
+ */
+{template .commentField_}
+    <div class="{call .rootClass/}__field {call .rootClass/}__field_comment">
+        {let $customClasses kind="html"}
+            {call .rootClass/}__comment-textarea
+        {/let}
+
+        {call .renderChild}
+            {param params: [
+                'type': 'textarea',
+                'renderParams': [
+                    'data': [
+                        'placeholder': 'Комментарий',
+                        'maxLength': 300,
+                        'name': 'comment'
+                    ],
+                    'config': [
+                        'autoHeight': true,
+                        'showCounter': true,
+                        'customClasses': [$customClasses]
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Title
+ * @param params {{
+ *     data: {
+ *         content: {
+ *             title: (string|undefined)
+ *         }
+ *     }
+ * }}
+ */
+{template .title_}
+    {if $params.data?.content?.title}
+        <div class="{call .rootClass/}__title">
+            {$params.data.content.title}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Description
+ * @param params {{
+ *     data: {
+ *         content: {
+ *             description: (string|undefined)
+ *         }
+ *     }
+ * }}
+ */
+{template .description_}
+    {if $params.data?.content?.description}
+        <div class="{call .rootClass/}__description">
+            {$params.data.content.description}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Css classes
+ * @param params {
+ *     config: {
+ *         size: (string|undefined)
+ *     }
+ * }
+ */
+{template .additionalClasses}
+    i-utils__hidden{sp}
+    {call .rootClass/}_enrollment
+
+    {if $params.config?.size}
+        {sp}{call .rootClass/}_size-{$params.config.size}
+    {/if}
+{/template}
+
+
+/**
+ * @param params {
+ *     config: {
+ *         entityType: string
+ *     }
+ * }}
+ * @override
+ */
+{template .attributes kind="attributes"}
+    data-params="{call cl.iUtils.Utils.stringify}
+            {param json: quoteKeysIfJs([
+                'entityType': $params.config.entityType
+            ]) /}
+        {/call}"
+{/template}
