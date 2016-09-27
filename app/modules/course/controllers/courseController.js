@@ -94,7 +94,7 @@ exports.information = async(function(req, res, next) {
         var favorites = {
             entities: [{
                 id: 12,
-                type: ENTITY_TYPE,
+                type: entityType.COURSE,
                 name: {
                     light: 'School',
                     bold: '#1'
@@ -107,7 +107,7 @@ exports.information = async(function(req, res, next) {
                 }]
             }, {
                 id: 12,
-                type: ENTITY_TYPE,
+                type: entityType.COURSE,
                 name: {
                     light: 'School',
                     bold: '#2'
@@ -120,7 +120,7 @@ exports.information = async(function(req, res, next) {
                 }]
             }, {
                 id: 12,
-                type: ENTITY_TYPE,
+                type: entityType.COURSE,
                 name: {
                     light: 'School',
                     bold: '#3'
@@ -133,7 +133,7 @@ exports.information = async(function(req, res, next) {
                 }]
             }, {
                 id: 12,
-                type: ENTITY_TYPE,
+                type: entityType.COURSE,
                 name: {
                     light: 'School',
                     bold: '#4'
@@ -146,7 +146,7 @@ exports.information = async(function(req, res, next) {
                 }]
             }, {
                 id: 12,
-                type: ENTITY_TYPE,
+                type: entityType.COURSE,
                 name: {
                     light: 'School',
                     bold: '#5'
@@ -159,7 +159,7 @@ exports.information = async(function(req, res, next) {
                 }]
             }, {
                 id: 12,
-                type: ENTITY_TYPE,
+                type: entityType.COURSE,
                 name: {
                     light: 'School',
                     bold: '#6'
@@ -172,7 +172,7 @@ exports.information = async(function(req, res, next) {
                 }]
             }, {
                 id: 12,
-                type: ENTITY_TYPE,
+                type: entityType.COURSE,
                 name: {
                     light: 'School',
                     bold: '#6'
@@ -185,7 +185,7 @@ exports.information = async(function(req, res, next) {
                 }]
             }, {
                 id: 12,
-                type: ENTITY_TYPE,
+                type: entityType.COURSE,
                 name: {
                     light: 'School',
                     bold: '#6'
@@ -198,7 +198,7 @@ exports.information = async(function(req, res, next) {
                 }]
             }, {
                 id: 12,
-                type: ENTITY_TYPE,
+                type: entityType.COURSE,
                 name: {
                     light: 'School',
                     bold: '#6'
@@ -211,7 +211,7 @@ exports.information = async(function(req, res, next) {
                 }]
             }, {
                 id: 12,
-                type: ENTITY_TYPE,
+                type: entityType.COURSE,
                 name: {
                     light: 'School',
                     bold: '#6'
@@ -224,7 +224,7 @@ exports.information = async(function(req, res, next) {
                 }]
             }, {
                 id: 12,
-                type: ENTITY_TYPE,
+                type: entityType.COURSE,
                 name: {
                     light: 'School',
                     bold: '#6'
@@ -237,7 +237,7 @@ exports.information = async(function(req, res, next) {
                 }]
             }, {
                 id: 12,
-                type: ENTITY_TYPE,
+                type: entityType.COURSE,
                 name: {
                     light: 'School',
                     bold: '#20'
@@ -265,7 +265,7 @@ exports.information = async(function(req, res, next) {
                 params: {
                     data: data,
                     config: {
-                        entityType: ENTITY_TYPE,
+                        entityType: entityType.COURSE,
                         modifier: 'stendhal',
                         staticVersion: config.lastBuildTimestamp,
                         year: new Date().getFullYear(),

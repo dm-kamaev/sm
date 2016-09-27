@@ -189,7 +189,7 @@ goog.scope(function() {
      * @protected
      * @override
      */
-    View.prototype.transformParams_ = function(rawParams) {
+    View.prototype.transformParams = function(rawParams) {
         var params = View.base(this, 'transformParams', rawParams);
 
         goog.object.extend(params, {
