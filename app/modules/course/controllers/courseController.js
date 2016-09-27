@@ -37,23 +37,11 @@ controller.search = async(function(req, res, next) {
                 filtersData: {
                     type: services.courseType.getAll()
                 }
+            }),
+            aliases = await({
+                courses: services.course.getAliases(data.courses),
+                map: services.course.getAliases(data.mapCourses)
             });
-
-        let courseAliases = await(services.page.getAliases(
-                pageView.uniqueIds(data.courses),
-                entityType.COURSE
-            )),
-            brandAliases = await(services.page.getAliases(
-                pageView.uniqueIds(data.courses.map(course => ({
-                    id: course.brandId
-                }))),
-                entityType.COURSE_BRAND
-            )),
-            courses = courseView.joinAliases(
-                data.courses,
-                courseAliases,
-                brandAliases
-            );
 
         let templateData = searchView.render({
             entityType: entityType.COURSE,
@@ -62,9 +50,14 @@ controller.search = async(function(req, res, next) {
             authSocialLinks: authSocialLinks,
             countResults: data.courses[0] && data.courses[0].countResults || 0,
             coursesList: data.courses,
-            mapCourses: data.mapCourses,
+            mapCourses: courseView.joinAliases(
+                data.mapCourses,
+                aliases.map.course,
+                aliases.map.brand
+            ),
             searchParams: searchParams,
-            filtersData: data.filtersData
+            filtersData: data.filtersData,
+            aliases: aliases.courses
         });
 
         let html = soy.render(

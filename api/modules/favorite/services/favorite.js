@@ -132,8 +132,9 @@ service.deleteByUserIdAndEntityData = async(function(userId, entityData) {
  * }} entity
  * @return {{
  *     entity: (models.School|models.Course),
- *     url: models.Page,
- *     type: string
+ *     alias: models.Page,
+ *     type: string,
+ *     brandAlias: ?models.Page
  * }}
  */
 service.addToFavorite = async(function(userId, entity) {
@@ -179,12 +180,23 @@ service.isFavorite = async(function(userId, entity) {
  * @param {Array<models.Favorite>} listFavorites
  * @return {Array<{
  *     entity: (models.School|models.Course),
- *     url: models.Page,
- *     type: string
+ *     alias: models.Page,
+ *     type: string,
+ *     brandAlias: ?models.Page
  * }>}
  */
 service.getFavoriteEntities = async(function(userId) {
     var listFavorites = await(this.getByUserId(userId));
+
+    listFavorites = [{
+        userId: 1,
+        entityId: 1,
+        entityType: 'course'
+    }, {
+        userId: 1,
+        entityId: 5,
+        entityType: 'school'
+    }];
 
     var coursesIds =
         this.getEntityIdsFiltredByType(listFavorites, entityType.COURSE);
@@ -206,14 +218,14 @@ service.getFavoriteEntities = async(function(userId) {
  * @param {number} schoolsIds
  * @return {Array<{
  *     entity: models.School,
- *     url: models.Page,
+ *     alias: models.Page,
  *     type: string
  * }>}
  */
 service.getListFavoriteSchools = async(function(schoolsIds) {
     var listFavoriteSchools = await({
         entities: services.school.getByIdsWithGeoData(schoolsIds),
-        urls: services.page.getAliases(schoolsIds, entityType.SCHOOL),
+        aliases: services.page.getAliases(schoolsIds, entityType.SCHOOL),
         type: entityType.SCHOOL
     });
 
@@ -226,16 +238,22 @@ service.getListFavoriteSchools = async(function(schoolsIds) {
  * @param {number} coursesIds
  * @return {Array<{
  *     entity: models.Course,
- *     url: models.Page,
- *     type: string
+ *     alias: models.Page,
+ *     type: string,
+ *     brandAlias: models.Page
  * }>}
  */
 service.getListFavoriteCourses = async(function(coursesIds) {
-    var listFavoriteCourses = await({
-        entities: services.course.getByIds(coursesIds, {metro: true}),
-        urls: services.page.getAliases(coursesIds, entityType.COURSE),
-        type: entityType.COURSE
-    });
+    let listFavoriteCourses = await({
+            entities: services.course.getByIds(coursesIds, {metro: true}),
+            type: entityType.COURSE
+        }),
+        aliases = await(services.course.getAliases(
+            listFavoriteCourses.entities, entityType.COURSE
+        ));
+
+    listFavoriteCourses.aliases = aliases.course;
+    listFavoriteCourses.brandAliases = aliases.brand;
 
     return service.groupDataByIds(listFavoriteCourses);
 });
@@ -245,22 +263,25 @@ service.getListFavoriteCourses = async(function(coursesIds) {
  * Group entity and url by given id and add entity type
  * @param {{
  *     entities: Array<(models.School|models.Course)>,
- *     urls: Array<models.Page>,
- *     type: string
+ *     aliases: Array<models.Page>,
+ *     type: string,
+ *     brandAliases: (Array<models.Page>|undefined)
  * }} data
- * @param {Array<models.Favorite>} listFavorites
  * @return {Array<{
  *     entity: (models.School|models.Course),
- *     url: models.Page,
- *     type: string
+ *     alias: models.Page,
+ *     type: string,
+ *     brandAlias: ?models.Page
  * }>}
  */
 service.groupDataByIds = function(data) {
     return data.entities.map(entity => {
         return {
             entity: entity,
-            url: data.urls.find(url => entity.id == url.entityId),
-            type: data.type
+            alias: data.aliases.find(alias => entity.id == alias.entityId),
+            type: data.type,
+            brandAlias: data.brandAliases ? data.brandAliases.find(alias =>
+                entity.id == alias.entityId) : undefined
         };
     });
 };
@@ -270,14 +291,16 @@ service.groupDataByIds = function(data) {
  * Sort list Entities based on list Favorites
  * @param {Array<{
  *     entity: (models.School|models.Course),
- *     url: models.Page,
- *     type: string
+ *     alias: models.Page,
+ *     type: string,
+ *     brandAlias: (models.Page|undefined)
  * }>} listEntities
  * @param {Array<models.Favorite>} listFavorites
  * @return {Array<{
  *     entity: (models.School|models.Course),
- *     url: models.Page,
- *     type: string
+ *     alias: models.Page,
+ *     type: string,
+ *     brandAlias: ?models.Page
  * }>}
  */
 service.sortListEntities = function(listEntities, listFavorites) {

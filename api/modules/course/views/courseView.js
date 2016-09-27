@@ -208,7 +208,7 @@ view.suggest = function(data) {
 view.suggestList = function(courses) {
     return courses.map(course => ({
         id: course.id,
-        alias: 'undefined',
+        alias: this.generateAlias(course.alias, course.brandAlias),
         name: course.name,
         score: course.score || [0, 0, 0, 0],
         totalScore: course.totalScore,
@@ -280,7 +280,7 @@ view.mapCourse = function(course) {
     return {
         id: course.id,
         content: course.name,
-        url: null
+        url: 'course/' + this.generateAlias(course.alias, course.brandAlias)
     };
 };
 
@@ -410,20 +410,19 @@ view.letterData = function(data) {
  * }}
  */
 view.item = function(data) {
-    var entity = data.entity,
-        type = data.type,
-        url = data.url;
+    var course = data.entity,
+        type = data.type;
 
-    var addresses = this.getAddresses(entity.courseOptions);
+    var addresses = this.getAddresses(course.courseOptions);
 
     return {
-        id: entity.id,
+        id: course.id,
         type: type,
-        name: {light: entity.name},
-        score: entity.totalScore,
+        name: {light: course.name},
+        score: course.totalScore,
         metro: addressView.getMetro(addresses),
         area: [addressView.getArea(addresses)[0]],
-        alias: url ? url.alias : entity.id
+        alias: this.generateAlias(data.alias.alias, data.brandAlias.alias)
     };
 };
 

@@ -8,7 +8,8 @@ const sequelize = require('../../../../app/components/db'),
     models = require('../../../../app/components/models').all,
     services = require('../../../../app/components/services').all,
     error = require('../../entity/lib/Error'),
-    entityType = require('../../entity/enums/entityType');
+    entityType = require('../../entity/enums/entityType'),
+    pageView = require('../../entity/views/pageView');
 
 let service = {
     name: 'course'
@@ -245,9 +246,8 @@ service.getAll = async(function() {
 
 
 /**
- * [getByIds description]
  * @param  {Array<number>} ids
- * @param {{
+ * @param  {{
  *     metro: ?boolean
  * }} opt_include
  * @return {Array<Object>}
@@ -275,7 +275,7 @@ service.getByIds = function(ids, opt_include) {
 
     return ids.length ?
         models.Course.findAll({
-            attributes: ['id', 'name', 'totalScore'],
+            attributes: ['id', 'name', 'totalScore', 'brandId'],
             where: {
                 id: {
                     $in: ids
@@ -378,5 +378,26 @@ service.enrollOnCourse = function(data) {
     }
     return data;
 };
+
+/**
+ * @param {Array<Object>} courses
+ * @return {Object}
+ */
+service.getAliases = async(function(courses) {
+    let getAliases = services.page.getAliases,
+        uniqueIds = pageView.uniqueIds;
+    return await({
+        course: getAliases(
+            uniqueIds(courses),
+            entityType.COURSE
+        ),
+        brand: getAliases(
+            uniqueIds(courses.map(course => ({
+                id: course.brandId
+            }))),
+            entityType.COURSE_BRAND
+        )
+    });
+});
 
 module.exports = service;

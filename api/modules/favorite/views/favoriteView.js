@@ -27,8 +27,9 @@ favoriteView.default = function(favorite) {
  * List favorites
  * @param {{
  *     entities: Array<(models.School|models.Course)>,
- *     urls: Array<models.Page>,
- *     type: string
+ *     aliases: Array<models.Page>,
+ *     type: string,
+ *     brandAlias: ?Array<models.Page>
  * }} listData
  * @return {Array<{
  *     id: number,
@@ -38,6 +39,7 @@ favoriteView.default = function(favorite) {
  *         bold: ?string
  *     },
  *     alias: string,
+ *     brandAlias: ?string,
  *     score: number,
  *     metro: ?Array<{
  *         id: number,
@@ -53,8 +55,9 @@ favoriteView.list = function(listData) {
     return listData.map(entityData => {
         return this.item({
             entity: entityData.entity,
-            url: entityData.url,
-            type: entityData.type
+            alias: entityData.alias,
+            type: entityData.type,
+            brandAlias: entityData.brandAlias
         });
     });
 };
@@ -64,7 +67,8 @@ favoriteView.list = function(listData) {
  * Item for list favorites
  * @param {{
  *     entity: (models.School|models.Course),
- *     url: models.Page,
+ *     alias: models.Page,
+ *     brandAlias: ?models.Page,
  *     type: string
  * }} entityData
  * @return {{
@@ -75,6 +79,7 @@ favoriteView.list = function(listData) {
  *         bold: ?string
  *     },
  *     alias: string,
+ *     brandAlias: ?string,
  *     score: number,
  *     metro: ?Array<{
  *         id: number,

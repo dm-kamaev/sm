@@ -773,7 +773,7 @@ schoolView.uniqueIds = function(schools) {
 schoolView.item = function(data) {
     var entity = data.entity,
         type = data.type,
-        url = data.url;
+        url = data.alias;
 
     return {
         id: entity.id,
