@@ -16,7 +16,10 @@
  *         id: number,
  *         name: string,
  *         description: ?string,
- *         fullDescription: ?string,
+ *         fullDescription: {
+ *             cutText: Array<string>,
+ *             fullText: (Array<string>|undefined)
+ *         },
  *         cost: ?string,
  *         generalOptions: sm.lCourse.bInformationBoard.Template.Params.Data,
  *         online: ?('only'|'available'|undefidned)
@@ -76,6 +79,7 @@
         // {call .sectionComments_ data="all" /}
         // {call .sectionPopular_ data="all" /}
         {call .sectionFixed_ data="all" /}
+        // {call .sectionsModals_ data="all" /}
     </div>
 
     {call sm.bSmMap.Template.api/}
@@ -154,7 +158,10 @@
  *             id: number,
  *             name: string,
  *             description: ?string,
- *             fullDescription: ?string,
+ *             fullDescription: {
+ *                 cutText: Array<string>,
+ *                 fullText: (Array<string>|undefined)
+ *             },
  *         }
  *     }
  * }}
@@ -464,7 +471,10 @@
  * @param params {{
  *     data: {
  *         entityData: {
- *             fullDescription: ?string
+ *             fullDescription: {
+ *                 cutText: Array<string>,
+ *                 fullText: (Array<string>|undefined)
+ *             }
  *         }
  *     }
  * }}

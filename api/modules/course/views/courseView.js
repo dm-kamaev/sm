@@ -37,13 +37,17 @@ view.page = function(course) {
  * @return {Object}
  */
 view.formatFullDescription = function(text) {
-    let result = {};
+    let result = {
+        fullText: [],
+        cutText: []
+    };
+
     if (text.length > FULL_DESCRIPTION_LENGTH) {
         let formatText = new FormatText();
-        result.fullText = text;
-        result.cutText = formatText.cut(text, FULL_DESCRIPTION_LENGTH, ' ');
+        result.fullText.push(text);
+        result.cutText.push(formatText.cut(text, FULL_DESCRIPTION_LENGTH, ' '));
     } else {
-        result.cutText = text;
+        result.cutText.push(text);
     }
     return result;
 };
