@@ -2,6 +2,7 @@ const metroView = require('./metroView.js');
 const areaView = require('./areaView.js');
 const departmentView = require('./departmentView.js');
 const lodashFlatten = require('lodash/array/flatten');
+const lodash = require('lodash');
 
 var addressView = {};
 
@@ -120,6 +121,25 @@ addressView.getMetro = function(addresses) {
 
 
 /**
+ * returns metro names for nearest Metro of address
+ * @param {Array<Object>} addresses
+ * @return {Array<string>}
+ */
+addressView.nearestMetro = function(addresses) {
+    var metroStations = addresses
+        .map(address => {
+            return address.addressMetroes[0] && {
+                id: address.addressMetroes[0].metro.id,
+                name: address.addressMetroes[0].metro.name.replace('метро ', '')
+            };
+        })
+        .filter(address => address);
+
+    return lodash.uniq(metroStations, 'id');
+};
+
+
+/**
  * returns area names and ids for departments from addresses array
  * @param {Array<Object>} addresses
  * @return {Array<Object>}
@@ -138,7 +158,7 @@ addressView.getArea = function(addresses) {
 addressView.transformSchoolAddress = function(school) {
     school.addresses = school.addresses.map(address => {
         address.metroStations = address.addressMetroes
-            .map(item => item.metroStation);
+            .map(item => item.metro);
         address.dataValues.metroStations = address.metroStations;
 
         return address;

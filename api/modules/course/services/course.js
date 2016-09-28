@@ -271,11 +271,11 @@ service.getByIds = function(ids, opt_include) {
         addressInclude.push({
             model: models.AddressMetro,
             as: 'addressMetroes',
-            attributes: ['id', 'distance']
-        }, {
-            model: models.Metro,
-            as: 'metroStations',
-            attributes: ['id', 'name']
+            attributes: ['id', 'distance'],
+            include: [{
+                model: models.Metro,
+                as: 'metro'
+            }]
         });
         order = this.getDistanceOrder();
     }

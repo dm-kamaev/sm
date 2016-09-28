@@ -23,7 +23,7 @@ var AddressMetro = db.define('AddressMetro', {
                 foreignKey: 'address_id'
             });
             AddressMetro.belongsTo(models.Metro, {
-                as: 'metroStation',
+                as: 'metro',
                 foreignKey: 'metro_id'
             });
         }

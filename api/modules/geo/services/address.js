@@ -122,7 +122,7 @@ exports.getAllWithMetro = async(function() {
         include: [{
             model: models.Metro,
             // through: 'address_metro',
-            as: 'metroStations'
+            as: 'metro'
         }]
     }));
 });
@@ -224,7 +224,7 @@ exports.getWithDepartmentsWithMetro = async(function(
             as: 'addressMetroes',
             include: [{
                 model: models.Metro,
-                as: 'metroStation'
+                as: 'metro'
             }]
         }],
         where: {

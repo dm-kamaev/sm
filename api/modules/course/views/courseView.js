@@ -452,11 +452,12 @@ view.item = function(data) {
         type: type,
         name: {light: course.name},
         score: course.totalScore,
-        metro: addressView.getMetro(addresses),
+        metro: addressView.nearestMetro(addresses),
         area: [addressView.getArea(addresses)[0]],
         alias: this.generateAlias(data.alias.alias, data.brandAlias.alias)
     };
 };
+
 
 /**
  * @param  {Array<Object>} courses

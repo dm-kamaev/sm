@@ -126,7 +126,7 @@ var nearestMetro = function(addresses) {
     return lodash.uniq(addresses
         .map(address => {
             return address.addressMetroes[0] &&
-                address.addressMetroes[0].metroStation.name
+                address.addressMetroes[0].metro.name
                     .replace('метро ', '');
         })
         .filter(address => address)
@@ -612,7 +612,7 @@ schoolView.listCompact = function(schoolsData) {
             id: school.id,
             name: getName(school.name),
             score: scoreView.schoolListCompact(school.totalScore),
-            metroStations: addressView.getMetro(school.addresses),
+            metroStations: addressView.nearestMetro(school.addresses),
             area: addressView.getArea(school.addresses)[0],
             alias: getAlias(itemUrls, school.id)
         };
@@ -661,7 +661,7 @@ schoolView.listCompactItem = function(schoolData) {
         id: school.id,
         name: getName(school.name),
         score: scoreView.schoolListCompact(school.totalScore),
-        metroStations: addressView.getMetro(school.addresses),
+        metroStations: addressView.nearestMetro(school.addresses),
         area: addressView.getArea(school.addresses)[0],
         alias: page.alias
     };
@@ -780,7 +780,7 @@ schoolView.item = function(data) {
         type: type,
         name: {light: entity.name},
         score: entity.totalScore,
-        metro: addressView.getMetro(entity.addresses),
+        metro: addressView.nearestMetro(entity.addresses),
         area: addressView.getArea(entity.addresses),
         alias: url.alias
     };
