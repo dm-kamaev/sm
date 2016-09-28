@@ -133,38 +133,6 @@
 
 
 /**
- * Modal for user Enrollment
- * @param params {{
- *     config: {
- *         entityType: string
- *     }
- * }}
- */
-{template .modalEnrollment_}
-    {let $description kind="html"}
-        Оставьте свой номер и мы перезвоним в&nbsp;течении 24 часов
-    {/let}
-
-    {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
-        {param params: [
-            'type': 'modal-enrollment',
-            'renderParams': [
-                'data': [
-                    'content': [
-                        'title': 'Заявка на курс',
-                        'description': $description
-                    ]
-                ],
-                'config': [
-                    'entityType': $params.config.entityType
-                ]
-            ]
-        ]/}
-    {/call}
-{/template}
-
-
-/**
  * Data on the left
  * @param params {{
  *     data: {?}
@@ -334,6 +302,40 @@
 {/template}
 
 
+
+
+/**
+ * Modal for user Enrollment
+ * @param params {{
+ *     config: {
+ *         entityType: string
+ *     }
+ * }}
+ */
+{template .modalEnrollment_}
+    {let $description kind="html"}
+        Оставьте свой номер и мы перезвоним в&nbsp;течении 24 часов
+    {/let}
+
+    {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+        {param params: [
+            'type': 'modal-enrollment',
+            'renderParams': [
+                'data': [
+                    'content': [
+                        'title': 'Заявка на курс',
+                        'description': $description
+                    ]
+                ],
+                'config': [
+                    'entityType': $params.config.entityType
+                ]
+            ]
+        ]/}
+    {/call}
+{/template}
+
+
 /**
  * Section comments
  * @param params {{
@@ -422,6 +424,7 @@
                             'offset': 'left-l',
                             'topOffset': 'xxl'
                         ],
+                        'theme': 'light',
                         'isActive': true
                     ]
                 ]
@@ -444,6 +447,7 @@
                         'hintSecondaryMark': [
                             'offset': 'left-m'
                         ],
+                        'theme': 'light',
                         'isActive': true
                     ]
                 ]
