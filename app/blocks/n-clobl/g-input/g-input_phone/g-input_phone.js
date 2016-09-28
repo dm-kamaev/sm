@@ -141,6 +141,16 @@ goog.scope(function() {
 
 
     /**
+     * Clear input
+     * @override
+     */
+    InputPhone.prototype.clear = function() {
+        this.getView().setValue('');
+        this.initEmptyPhoneValue_();
+    };
+
+
+    /**
      * @protected
      * @override
      */
@@ -510,6 +520,8 @@ goog.scope(function() {
      * @private
      */
     InputPhone.prototype.initEmptyPhoneValue_ = function() {
+        this.numbers_ = [];
+
         for (var i = 0; i < InputPhone.NUMBER_AMOUNT; i++) {
             this.numbers_.push(null);
         }

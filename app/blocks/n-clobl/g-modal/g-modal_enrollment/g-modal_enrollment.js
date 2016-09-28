@@ -68,7 +68,8 @@ goog.scope(function() {
      * @const
      */
     ModalEnrollment.Event = {
-        SUBMIT: goog.events.getUniqueId('submit')
+        SUCCESS: goog.events.getUniqueId('success'),
+        ERROR: goog.events.getUniqueId('error')
     };
 
 
@@ -97,6 +98,18 @@ goog.scope(function() {
 
 
     /**
+     * Clear all fields
+     */
+    ModalEnrollment.prototype.clear = function() {
+        this.nameField_.clear();
+        this.phoneField_.clear();
+        this.commentField_.clean();
+
+        this.button_.enable();
+    };
+
+
+    /**
      * Initializes listeners for button
      * @private
      */
@@ -117,6 +130,7 @@ goog.scope(function() {
      */
     ModalEnrollment.prototype.onButtonClick_ = function() {
         if (this.isValidFields_()) {
+            this.button_.disable();
             this.sendRequest_();
         }
     };
@@ -144,14 +158,26 @@ goog.scope(function() {
 
         Request.getInstance().send(data)
             .then(
-                this.hide.bind(this),
-                this.showErrors_.bind(this)
+                this.onSuccess_.bind(this),
+                this.onError_.bind(this)
             );
     };
 
 
     /**
-     * Show error messages request (server response)
+     * Handler of server response success
+     * @private
+     */
+    ModalEnrollment.prototype.onSuccess_ = function() {
+        this.hide();
+
+        this.clear();
+        this.dispatchEventSuccess_();
+    };
+
+
+    /**
+     * Handler of server response error
      * @param {{
      *     data: Array<{
      *         message: {Object}
@@ -159,11 +185,13 @@ goog.scope(function() {
      * }} error
      * @private
      */
-    ModalEnrollment.prototype.showErrors_ = function(error) {
+    ModalEnrollment.prototype.onError_ = function(error) {
         var errorData = JSON.parse(error.data),
             messages = this.transformErrorMessages_(errorData);
 
+        this.button_.enable();
         this.getView().showErrors(messages);
+        this.dispatchEventError_();
     };
 
 
@@ -225,6 +253,28 @@ goog.scope(function() {
             'phone': this.phoneField_.getValue(),
             'comment': this.commentField_.getValue()
         };
+    };
+
+
+    /**
+     * Dispatch Event of successfull enrollment
+     * @private
+     */
+    ModalEnrollment.prototype.dispatchEventSuccess_ = function() {
+        this.dispatchEvent({
+            'type': ModalEnrollment.Event.SUCCESS
+        });
+    };
+
+
+    /**
+     * Dispatch Event of unsuccessfull enrollment
+     * @private
+     */
+    ModalEnrollment.prototype.dispatchEventError_ = function() {
+        this.dispatchEvent({
+            'type': ModalEnrollment.Event.ERROR
+        });
     };
 
 

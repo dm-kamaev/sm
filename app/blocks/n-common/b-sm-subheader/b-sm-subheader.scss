@@ -11,6 +11,13 @@
     background: #fff;
 
     font-family: 'Proxima', Arial, sans-serif;
+
+    &:after {
+        display: block;
+        content: '';
+
+        clear: both;
+    }
 }
 
 .b-sm-subheader_line_bottom {
@@ -24,13 +31,6 @@
     width: 1200px;
     height: 130px;
     margin: 0 auto;
-
-    &:after {
-        display: block;
-        content: '';
-
-        clear: both;
-    }
 }
 
 .b-sm-subheader__section {
