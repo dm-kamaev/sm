@@ -267,7 +267,7 @@ goog.scope(function() {
      * @private
      */
     SuggestFilter.prototype.onSearch_ = function(event, data) {
-        var filters = JSON.parse(data.result);
+        var filters = data.result;
 
         if (filters.length) {
             this.updateFilterOptions_(filters);

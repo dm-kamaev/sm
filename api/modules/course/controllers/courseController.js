@@ -210,7 +210,7 @@ controller.searchCourseType = async(function(req, res) {
         logger.error(error);
         result = error.message;
     } finally {
-        res.header('Content-Type', 'text/html; charset=utf-8');
+        res.header('Content-Type', 'application/json; charset=utf-8');
         res.end(JSON.stringify(result));
     }
 });
