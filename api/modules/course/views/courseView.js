@@ -130,7 +130,7 @@ view.getStaticOptions = function(course) {
         });
     }
     return result;
-}
+};
 
 
 /**

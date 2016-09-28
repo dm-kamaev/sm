@@ -27,7 +27,7 @@ module.exports = class {
             key: 'age',
             name: 'Возраст'
         }, {
-            key: 'cost_per_hour',
+            key: 'costPerHour',
             name: 'Стоимость'
         }, {
             key: 'schedule',
@@ -104,7 +104,7 @@ module.exports = class {
             age: this.formatAge_(option.age),
             schedule: this.formatSchedule_(option.schedule),
             maxGroupSize: this.formatGroupSize_(option.maxGroupSize),
-            cost_per_hour: this.formatCost_(option.cost_per_hour),
+            costPerHour: this.formatCost_(option.costPerHour),
             regularity: this.formatRegularity_(option.schedule),
             online: this.formatOnline_(option.online),
             duration: this.formatDuration_(option.duration)

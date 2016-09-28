@@ -40,7 +40,8 @@ const informationFields = {
         'online',
         'name',
         'description',
-        'duration'
+        'duration',
+        'costPerHour'
     ],
     SCHEDULE: ['day', 'startTime', 'endTime'],
     DEPARTMENT: ['id'],
