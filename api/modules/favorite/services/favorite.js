@@ -271,7 +271,7 @@ service.groupDataByIds = function(data) {
             alias: data.aliases.find(alias => entity.id == alias.entityId),
             type: data.type,
             brandAlias: data.brandAliases ? data.brandAliases.find(alias =>
-                entity.id == alias.entityId) : undefined
+                entity.brandId == alias.entityId) : undefined
         };
     });
 };
