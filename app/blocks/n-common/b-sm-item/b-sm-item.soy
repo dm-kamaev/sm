@@ -10,7 +10,7 @@
  *         bold: ?string
  *     },
  *     alias: ?string,
- *     score: ?sm.bSmScore.Template.Params.Data,
+ *     score: ?number,
  *     description: (string|undefined),
  *     metro: ?Array<{
  *         id: number,
@@ -69,7 +69,7 @@
  *             light: string,
  *             bold: ?string
  *         },
- *         score: ?sm.bSmScore.Template.Params.Data
+ *         score: ?number
  *     }
  * }}
  * @protected
@@ -177,7 +177,7 @@
  * Score
  * @param params {{
  *     data: {
- *         score: ?sm.bSmScore.Template.Params.Data
+ *         score: ?number
  *     }
  * }}
  * @protected
@@ -186,9 +186,14 @@
     <div class="{call .rootClass/}__score">
         {call .renderChild}
             {param params: [
-                'type': 'smScore',
+                'type': 'smMark',
                 'renderParams': [
-                    'data': $params.data.score
+                    'data': [
+                        'value': $params.data.score
+                    ],
+                    'config': [
+                        'size': 'm'
+                    ]
                 ]
             ]/}
         {/call}

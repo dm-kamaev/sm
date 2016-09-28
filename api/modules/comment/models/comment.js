@@ -16,10 +16,10 @@ var Comment = db.define('Comment', {
         type: DataType.STRING,
         allowNull: false,
         defaultValue: 'User',
-        field: 'source',
-        validate: {
-            isIn: sourceType
-        }
+        field: 'source'
+        // validate: {
+        //     isIn: sourceType
+        // }
     },
     isNoticeSend: {
         type: DataType.BOOLEAN,

@@ -1,13 +1,13 @@
 'use strict';
 
 const cluster = require('cluster'),
-    osCpus = require('os').cpus(),
     async = require('asyncawait/async'),
     await = require('asyncawait/await');
+const osCpus = require('os').cpus();
 
 const logger = require('./app/components/logger/logger').getLogger('app');
 const StartupControl =
-    require('./app/components/startupControl/startupControl');
+        require('./app/components/startupControl/startupControl');
 
 cluster.setupMaster({
     exec: 'app_worker.js'

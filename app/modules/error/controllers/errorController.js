@@ -15,21 +15,27 @@ var await = require('asyncawait/await');
 exports.notFound = async(function(req, res) {
     var user = req.user || {};
 
-    var favoriteIds = await(services.favorite.getAllItemIdsByUserId(user.id)),
-        dataPromises = {
-            popularSchools: services.school.getRandomPopularSchools(5),
-            amountSchools: services.school.getSchoolsCount(),
-            authSocialLinks: services.auth.getAuthSocialUrl(),
-            favorites: {
-                items: services.school.getByIdsWithGeoData(favoriteIds),
-                itemUrls: services.page.getAliases(
-                    favoriteIds,
-                    entityType.SCHOOL
-                )
-            },
-            seoLinks: services.seoSchoolList.getByTypes()
+    var favorites = await(services.favorite.getByUserId(user.id)),
+        favoriteIds = services.favorite.getEntityIdsFiltredByType(
+            favorites,
+            entityType.SCHOOL
+        );
+
+    var dataPromises = {
+        popularSchools: services.school.getRandomPopularSchools(5),
+        amountSchools: services.school.getSchoolsCount(),
+        authSocialLinks: services.auth.getAuthSocialUrl(),
+        favorites: {
+            items: services.school.getByIdsWithGeoData(favoriteIds),
+            itemUrls: services.page.getAliases(
+                favoriteIds,
+                entityType.SCHOOL
+            )
         },
-        data = await(dataPromises);
+        seoLinks: services.seoSchoolList.getByTypes()
+    };
+
+    var data = await(dataPromises);
 
     var popularAliases = await(services.page.getAliases(
         data.popularSchools.map(school => school.id),

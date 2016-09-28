@@ -13,7 +13,7 @@
  * @typedef {{
  *     marks: {
  *        primary: {
- *            name: string,
+ *            name: (string|undefined),
  *            value: number
  *        },
  *        secondary: Array<{
@@ -27,12 +27,17 @@
 
 /**
  * @typedef {{
- *         primaryMark: {
+ *         primaryMark: ({
+ *             display: ('inline'|undefined),
  *             size: string,
  *             isNameVisible: boolean,
  *             zeroSign: ('nothing'|'question-mark'|undefined),
  *             showMark: boolean
- *         }
+ *         }|undefined),
+ *         hintSecondaryMark: ({
+ *             offset: (string|undefined),
+ *             topOffset: (string|undefined)
+ *         }|undefined),
  *         theme: string,
  *         isActive: boolean
  *     }
@@ -66,13 +71,14 @@
  *     data:
  *         marks: {
  *             primary: {
- *                 name: string,
+ *                 name: (string|undefined),
  *                 value: number
  *             }
  *         }
  *     },
  *     config: ({
  *         primaryMark: ({
+ *             display: ('inline'|undefined),
  *             size: (string|undefined),
  *             isNameVisible: boolean,
  *             zeroSign: ('nothing'|'question-mark'|undefined),
@@ -90,13 +96,13 @@
             {param params: [
                 'data': $params.data.marks.primary,
                 'config': [
-                        'type': 'primary',
-                        'size': $params?.config?.primaryMark?.size,
-                        'zeroSign': $params?.config?.primaryMark?.zeroSign,
-                        'showMark': $params?.config?.primaryMark?.showMark,
-                    ]
+                    'type': 'primary',
+                    'display': $params?.config?.primaryMark?.display,
+                    'size': $params?.config?.primaryMark?.size,
+                    'zeroSign': $params?.config?.primaryMark?.zeroSign,
+                    'showMark': $params?.config?.primaryMark?.showMark,
                 ]
-            /}
+            ]/}
         {/call}
     </div>
 {/template}
@@ -115,6 +121,10 @@
  *         secondaryMarkListHeader: string
  *     },
  *     config: {
+ *         hintSecondaryMark: ({
+ *             offset: (string|undefined),
+ *             topOffset: (string|undefined)
+ *         }|undefined),
  *         theme: string
  *     }
  * }}
@@ -143,9 +153,9 @@
                 'data': $hintContent,
                 'config': [
                     'noPadding': true,
-                    'align': 'right-offset',
+                    'offset': $params.config?.hintSecondaryMark?.offset,
                     'theme': 'straight-arrow',
-                    'topOffset': 'xl'
+                    'topOffset': $params.config?.hintSecondaryMark?.topOffset
                 ]
             ]
         ]/}
@@ -204,6 +214,7 @@
                     'data': $mark,
                     'config': [
                         'type': 'secondary',
+                        'display': 'inline',
                         'showMark': true,
                         'theme': $params?.config?.theme
                     ]
@@ -239,6 +250,7 @@
  *     },
  *     config: ({
  *         type: (string|undefined),
+ *         display: ('inline'|undefined),
  *         size: (string|undefined)
  *         zeroSign: ('nothing'|'question-mark'|undefined),
  *         showMark: boolean
@@ -252,7 +264,7 @@
         {call sm.bMark.Template.base}
             {param params: [
                'value': $params?.data?.value,
-               'display': 'inline',
+               'display': $params?.config.display,
                'config': [
                    'size': $params?.config.size ?: 'm',
                    'showMark': $params?.config.showMark,
@@ -277,10 +289,13 @@
         {sp}{call .rootClass /}_active
     {/if}
 
+    {if $params?.config?.primaryMark.display}
+        {sp}{call .rootClass /}_display_{$params.config.primaryMark.display}
+    {/if}
+
     {if $params?.config?.primaryMark.isNameVisible}
         {sp}{call .rootClass /}_primary-mark-name-visible
     {else}
         {sp}{call .rootClass /}_primary-mark-name-hidden
     {/if}
-
 {/template}

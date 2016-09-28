@@ -43,8 +43,7 @@ goog.scope(function() {
 
             if (item.text || item.text === 0) {
                 this.itemValues_.push(item.text);
-            }
-            else {
+            } else {
                 this.itemValues_.push(item.label);
             }
         }

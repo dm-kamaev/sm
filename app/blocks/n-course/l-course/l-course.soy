@@ -1,0 +1,685 @@
+{namespace sm.lCourse.Template}
+
+
+/**
+ * typedef {{
+ *     user: {
+ *         firstName: (string|undefined),
+ *         lastName: (string|undefined),
+ *         isCommented: boolean
+ *     },
+ *     authSocialLinks: {
+ *         vk: (string|undefined),
+ *         fb: (string|undefined)
+ *     },
+ *     entityData: {
+ *         id: number,
+ *         name: string,
+ *         description: ?string,
+ *         fullDescription: {
+ *             cutText: Array<string>,
+ *             fullText: (Array<string>|undefined)
+ *         },
+ *         cost: ?string,
+ *         generalOptions: sm.lCourse.bInformationBoard.Template.Params.Data,
+ *         online: ?('only'|'available'|undefidned)
+ *     },
+ *     map: sm.bSmMap.Template.Params.Data,
+ *     actionButtonText: string
+ * }} sm.lCourse.Template.Data
+ */
+
+
+/**
+ * Page course information
+ * @param params {{
+ *     data: sm.lCourse.Template.Data,
+ *     config: ?sm.iLayout.Template.Params.Config
+ * }}
+ * @extends sm.iLayout.TemplateStendhal
+ * @constructor
+ * @doc
+ */
+{template .course autoescape="strict" kind="html"}
+    {call .document data="all" /}
+{/template}
+
+
+/**
+ * Add layout script to page
+ * @param params {{
+ *     config: {
+ *         staticVersion: (string|undefined)
+ *     }
+ * }}
+ * @protected
+ * @override
+ */
+{template .layoutScript kind="html"}
+    {call cl.iStatic.Template.script}
+        {param path: '/l-course.js' /}
+        {param staticVersion: $params?.config?.staticVersion /}
+    {/call}
+{/template}
+
+
+/**
+ * Content
+ * @param params {{
+ *     data: sm.lCourse.Template.Data,
+ *     config: ?sm.iLayout.Template.Params.Config
+ * }}
+ */
+{template .mainContent autoescape="strict" kind="html"}
+    <div class="{call .rootClass/}__body">
+        {call .sectionData_ data="all" /}
+        // {call .sectionOptions_ data="all" /}
+        // {call .sectionAdditional_ data="all" /}
+        // {call .sectionPrograms_ data="all" /}
+        // {call .sectionComments_ data="all" /}
+        // {call .sectionPopular_ data="all" /}
+        {call .sectionFixed_ data="all" /}
+        {call .sectionsModals_ data="all" /}
+    </div>
+
+    {call sm.bSmMap.Template.api/}
+{/template}
+
+
+/**
+ * Section with a complete data entity
+ * @param params {{
+ *     data: {?}
+ * }}
+ */
+{template .sectionData_}
+    <div class="{call .rootClass/}__section {call .rootClass/}__section_data">
+        {call .rightData_ data="all" /}
+        {call .leftData_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Section with fixed button
+ * @param params {{
+ *     data: {
+ *         actionButtonText: string
+ *     }
+ * }}
+ */
+{template .sectionFixed_}
+    <div class="{call .rootClass/}__section {call .rootClass/}__section_fixed">
+        {call .actionButton_}
+            {param params: [
+                'data': $params.data,
+                'config': [
+                    'size': 's'
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Section with all modals
+ */
+{template .sectionsModals_}
+    <div class="{call .rootClass/}__section {call .rootClass/}__section_modals">
+        {call .modalEnrollment_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Data on the left
+ * @param params {{
+ *     data: {?}
+ * }}
+ */
+{template .leftData_}
+    <div class="{call .rootClass/}__data {call .rootClass/}__data_left">
+        {call .header_ data="all" /}
+        {call .generalOptions_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Data on the right
+ * @param params {{
+ *     data: {?}
+ * }}
+ */
+{template .rightData_}
+    <div class="{call .rootClass/}__data {call .rootClass/}__data_right">
+        {call .location_ data="all" /}
+        {call .userInteraction_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Header
+ * @param params {{
+ *     data: {
+ *         entityData: {
+ *             id: number,
+ *             name: string,
+ *             description: ?string,
+ *             fullDescription: {
+ *                 cutText: Array<string>,
+ *                 fullText: (Array<string>|undefined)
+ *             },
+ *         }
+ *     }
+ * }}
+ */
+{template .header_}
+    <div class="{call .rootClass/}__header">
+        {call .score_ data="all" /}
+        {call .title_ data="all" /}
+        {call .fullDescription_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Template for location
+ * @param params {{
+ *     data: {
+ *         entityData: {
+ *             online: ?('only'|'available'|undefidned)
+ *         }
+ *     }
+ * }}
+ */
+{template .location_}
+    <div class="{call .rootClass/}__location">
+        {if $params.data.entityData.online == 'only'}
+            {call .online_/}
+        {else}
+            {call .map_ data="all" /}
+        {/if}
+    </div>
+{/template}
+
+
+/**
+ * Template for map
+ * @param params {{
+ *     data: {
+ *         map: sm.bSmMap.Template.Params.Data
+ *     }
+ * }}
+ */
+{template .map_}
+    <div class="{call .rootClass/}__map">
+        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+            {param params: [
+                'type': 'smMap',
+                'renderParams': [
+                    'data': $params.data.map,
+                    'config': [
+                        'enableScrollZoom': true,
+                        'alignZoomControl': 'right',
+                        'sizeViewportShow': 'm'
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Template displaying that is only online course
+ */
+{template .online_}
+    <div class="{call .rootClass/}__online">
+        {call .onlineIcon_ /}
+        {call .onlineText_ /}
+    </div>
+{/template}
+
+
+/**
+ * Template online icon
+ */
+{template .onlineIcon_}
+    <div class="{call .rootClass/}__icon {call .rootClass/}__icon_online">
+        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+            {param params: [
+                'type': 'icon',
+                'renderParams': [
+                    'data': [
+                        'type': 'cursor'
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Template online text
+ */
+{template .onlineText_}
+    <div class="{call .rootClass/}__text {call .rootClass/}__text_online">
+        Онлайн-курсы
+    </div>
+{/template}
+
+
+/**
+ * Template with buttons for user interaction
+ * @param params {{
+ *     data: {
+ *         entityData: {
+ *             cost: ?string
+ *         },
+ *         actionButtonText: string
+ *     }
+ * }}
+ */
+{template .userInteraction_}
+    <div class="{call .rootClass/}__user-interaction">
+        {call .cost_ data="all" /}
+
+        {call .actionButton_}
+            {param params: [
+                'data': $params.data,
+                'config': [
+                    'size': 'xl'
+                ]
+            ]/}
+        {/call}
+
+        // {call .feedbackLink_  data="all" /}
+    </div>
+{/template}
+
+
+
+
+/**
+ * Modal for user Enrollment
+ * @param params {{
+ *     config: {
+ *         entityType: string
+ *     }
+ * }}
+ */
+{template .modalEnrollment_}
+    {let $description kind="html"}
+        Оставьте свой номер и мы перезвоним в&nbsp;течении 24 часов
+    {/let}
+
+    {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+        {param params: [
+            'type': 'modal-enrollment',
+            'renderParams': [
+                'data': [
+                    'content': [
+                        'title': 'Заявка на курс',
+                        'description': $description
+                    ]
+                ],
+                'config': [
+                    'entityType': $params.config.entityType
+                ]
+            ]
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * Section comments
+ * @param params {{
+ *     data: {
+ *         user: ?{
+ *            isCommented: boolean
+ *         },
+ *         entityData: {
+ *             comments: Array<{sm.lSchool.bComment.Template.Params}>
+ *         }
+ *     }
+ * }}
+ */
+{template .sectionComments_}
+    <div class="{call .rootClass/}__section{sp}
+                {call .rootClass/}__section_comments">
+        {call cl.iUtils.Utils.stringify}
+            {param json: $params.data /}
+        {/call}
+        // {call sm.lSchool.bComments.Template.base}
+        //     {param params: [
+        //         'comments': $params.data.comments,
+        //         'isCommented': $params.data?.user?.isCommented
+        //     ] /}
+        // {/call}
+    </div>
+{/template}
+
+
+/**
+ * Section popular entities
+ * @param params {{
+ *     data: {
+ *         popularEntities: Array<{
+ *             id: number,
+ *             alias: ?string,
+ *             name: string,
+ *             description: ?string,
+ *             metro: ?Array<string>,
+ *             totalScore: ?number
+ *         }>
+ *     }
+ * }}
+ */
+{template .sectionPopular_}
+    <div class="{call .rootClass/}__section{sp}
+                {call .rootClass/}__section_popular">
+        {call cl.iUtils.Utils.stringify}
+            {param json: $params.data /}
+        {/call}
+
+        // {call sm.bPopularSchools.Template.base}
+        //     {param params: [
+        //         'popularSchools': $params.data.popularSchools,
+        //         'config': [
+        //             'popularSchool': [
+        //                 'customClasses': 'l-school__popular'
+        //             ],
+        //             'analyticsAction': 'school click'
+        //         ]
+        //     ]/}
+        // {/call}
+    </div>
+{/template}
+
+
+/**
+ * Course rating
+ * @param params {{
+ *     data: {?}
+ * }}
+ */
+{template .score_}
+    <div class="{call .rootClass/}__score {call .rootClass/}__score_xl">
+        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+            {param params: [
+                'type': 'smScoreBrief',
+                'renderParams': [
+                    'data': $params.data.entityData.score,
+                    'config': [
+                        'primaryMark': [
+                            'zeroSign': 'question-mark',
+                            'showMark': true
+                        ],
+                        'hintSecondaryMark': [
+                            'offset': 'left-l',
+                            'topOffset': 'xxl'
+                        ],
+                        'theme': 'light',
+                        'isActive': true
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+
+    <div class="{call .rootClass/}__score {call .rootClass/}__score_s">
+        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+            {param params: [
+                'type': 'smScoreBrief',
+                'renderParams': [
+                    'data': $params.data.entityData.score,
+                    'config': [
+                        'primaryMark': [
+                            'display': 'inline',
+                            'zeroSign': 'nothing',
+                            'showMark': false
+                        ],
+                        'hintSecondaryMark': [
+                            'offset': 'left-m'
+                        ],
+                        'theme': 'light',
+                        'isActive': true
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Course title
+ * @param params {{
+ *     data: {
+ *         entityData: {
+ *             name: string,
+ *             description: ?string
+ *         }
+ *     }
+ * }}
+ */
+{template .title_}
+    <div class="{call .rootClass/}__title">
+        {call .name_ data="all" /}
+        {call .description_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Course name
+ * @param params {{
+ *     data: {
+ *         entityData: {
+ *             name: string
+ *         }
+ *     }
+ * }}
+ */
+{template .name_}
+    <div class="{call .rootClass/}__name">
+        {$params.data.entityData.name}
+    </div>
+{/template}
+
+
+/**
+ * Course short description
+ * @param params {{
+ *     data: {
+ *         entityData: {
+ *             description: ?string
+ *         }
+ *     }
+ * }}
+ */
+{template .description_}
+    {if $params.data.entityData.description}
+        <div class="{call .rootClass/}__description">
+            {$params.data.entityData.description}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Course full description
+ * @param params {{
+ *     data: {
+ *         entityData: {
+ *             fullDescription: {
+ *                 cutText: Array<string>,
+ *                 fullText: (Array<string>|undefined)
+ *             }
+ *         }
+ *     }
+ * }}
+ */
+{template .fullDescription_}
+    {if $params.data.entityData.fullDescription}
+        <div class="{call .rootClass/}__full-description">
+            {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+                {param params: [
+                    'type': 'smCollapsedText',
+                    'renderParams': [
+                        'data': [
+                            'text': $params.data.entityData.fullDescription,
+                            'buttonTextExpand': 'Развернуть описание'
+                        ],
+                        'config': [
+                            'isButtonCollapse': true,
+                            'buttonFont': 'inherit'
+                        ]
+                    ]
+                ]/}
+            {/call}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * General options of course
+ * @param params {{
+ *     data: {
+ *         entityData: {
+ *             generalOptions: sm.lCourse.bInformationBoard.Template.Params.Data
+ *         }
+ *     }
+ * }}
+ */
+{template .generalOptions_}
+    <div class="{call .rootClass/}__general-options">
+        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+            {param params: [
+                'type': 'lCourse-informationBoard',
+                'renderParams': [
+                    'data': $params.data.entityData.generalOptions
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Cost of course
+ * @param params {{
+ *     data: {
+ *         entityData: {
+ *             cost: ?string
+ *         }
+ *     }
+ * }}
+ */
+{template .cost_}
+    <div class="{call .rootClass/}__cost">
+        {if $params.data.entityData.cost}
+            От {$params.data.entityData.cost}
+        {else}
+            Цена по запросу
+        {/if}
+    </div>
+{/template}
+
+
+/**
+ * Button template
+ * @param params {{
+ *     data: {
+ *         actionButtonText: string
+ *     },
+ *     config: {
+ *         size: string
+ *     }
+ * }}
+ */
+{template .actionButton_}
+    {let $classes kind="html"}
+        {call .rootClass/}__button{sp}
+        {call .rootClass/}__button_action{sp}
+        {call .rootClass/}__button_action-{$params.config.size}
+    {/let}
+
+    {let $customClasses kind="html"}
+        {call .rootClass/}__action-button
+    {/let}
+
+    <div class="{$classes}">
+        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+            {param params: [
+                'type': 'button',
+                'renderParams': [
+                    'data': [
+                        'content': $params.data.actionButtonText
+                    ],
+                    'config': [
+                        'customClasses': [$customClasses]
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    l-course
+{/template}
+
+
+/**
+ * Attributes
+ * @param params {{
+ *     data: {
+ *         user: {
+ *             firstName: (string|undefined),
+ *             lastName: (string|undefined),
+ *             isCommented: boolean
+ *         },
+ *         authSocialLinks: {
+ *             vk: (string|undefined),
+ *             fb: (string|undefined)
+ *         },
+ *         authSocialLinks: {
+ *            vk: string,
+ *            fb: string
+ *         },
+ *         entityData: {
+ *             id: number,
+ *             name: string
+ *         }
+ *     },
+ *     config: {
+ *         entityType: string
+ *     }
+ * }}
+ * @override
+ */
+{template .attributes kind="attributes"}
+    data-params="
+        {call cl.iUtils.Utils.stringify}
+            {param json: [
+                'id': $params.data.entityData?.id,
+                'name': $params.data.entityData?.name,
+                'isCommented': $params.data.user?.isCommented,
+                'isUserAuthorized': $params.data.user ? true : false,
+                'authSocialLinks': $params.data?.authSocialLinks,
+                'type': $params.config.entityType
+            ]/}
+        {/call}"
+{/template}

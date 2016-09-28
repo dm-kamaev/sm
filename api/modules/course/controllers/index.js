@@ -10,4 +10,6 @@ router.get('/course/search/suggest', courseController.suggestSearch);
 router.get('/course/course-type/popular', courseController.popularCourseType);
 router.get('/course/course-type', courseController.searchCourseType);
 
+router.post('/course/enrollment', courseController.enrollOnCourse);
+
 module.exports = router;

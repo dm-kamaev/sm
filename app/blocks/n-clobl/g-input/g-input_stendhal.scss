@@ -17,17 +17,7 @@
             outline: none;
         }
     }
-
-    &.g-input_not-valid {
-        .g-input__input {
-            box-sizing: border-box;
-            padding-left: 17px;
-
-            border: 2px solid #ee362c;
-        }
-    }
 }
-
 
 .g-input_stendhal.g-input_light-theme {
     .g-input__input {
@@ -35,5 +25,13 @@
 
         border: 1px solid #dbdbd4;
         box-shadow: inset 0 1px 6px #dbdbd4;
+    }
+}
+
+.g-input_stendhal.g-input_not-valid {
+    .g-input__input {
+        box-sizing: border-box;
+
+        border: 2px solid #ee362c;
     }
 }

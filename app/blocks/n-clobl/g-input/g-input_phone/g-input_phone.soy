@@ -1,0 +1,51 @@
+/**
+ * @fileoverview
+ */
+{namespace sm.gInput.TemplatePhone}
+
+/**
+ * @typedef {{
+ * }} sm.gInput.TemplatePhone.Params.Data
+ */
+
+/**
+ * Template for Phone input block
+ * @param params {{
+ *     data: sm.gInput.TemplatePhone.Params.Data
+ *     config: {
+ *         stilizationModifier: string
+ *     }
+ * }}
+ * @constructor
+ * @override
+ * @extends sm.gInput.TemplateStendhal
+ */
+{template .input}
+    {let $data: augmentMap(
+        $params.data,
+        [
+            'placeholder': 'Телефон',
+            'maxLength': 18
+        ]
+    ) /}
+
+    {let $config: augmentMap($params.config, [
+        'validations': ['phone', 'notEmpty']
+    ]) /}
+
+    {call .init}
+        {param params: [
+            'data' : $data,
+            'config': $config
+        ] /}
+    {/call}
+{/template}
+
+
+/**
+ * Css classes
+ * @override
+ */
+{template .additionalClasses}
+    {call .rootClass/}_phone
+{/template}

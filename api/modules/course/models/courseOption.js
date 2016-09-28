@@ -39,7 +39,11 @@ var CourseOption = db.define('CourseOption', {
         type: Sequelize.DATEONLY,
         field: 'start_date'
     },
-    duration: Sequelize.FLOAT
+    duration: Sequelize.FLOAT,
+    lengthWeeks: {
+        type: Sequelize.INTEGER,
+        field: 'length_weeks'
+    }
 }, {
     underscored: true,
     tableName: 'course_option',

@@ -1,19 +1,28 @@
-var DataType = require('sequelize'),
-    db = require('../../../../app/components/db');
+const Sequelize = require('sequelize');
+
+const db = require('../../../../app/components/db'),
+    entityType = require('../../entity/enums/entityType');
 
 var Favorite = db.define(
     'Favorite',
     {
         userId: {
-            type: DataType.INTEGER,
+            type: Sequelize.INTEGER,
             field: 'user_id'
         },
-        itemId: {
-            type: DataType.INTEGER,
-            field: 'item_id'
+        entityId: {
+            type: Sequelize.INTEGER,
+            field: 'entity_id'
+        },
+        entityType: {
+            field: 'entity_type',
+            type: Sequelize.STRING,
+            validate: {
+                isIn: [entityType.toArray()]
+            }
         },
         createdAt: {
-            type: DataType.DATE,
+            type: Sequelize.DATE,
             field: 'created_at'
         }
     },
@@ -23,8 +32,12 @@ var Favorite = db.define(
         classMethods: {
             associate: function(models) {
                 Favorite.belongsTo(models.School, {
-                    as: 'item',
-                    foreignKey: 'item_id'
+                    as: 'entity',
+                    foreignKey: 'entity_id'
+                });
+                Favorite.belongsTo(models.Course, {
+                    as: 'entity',
+                    foreignKey: 'entity_id'
                 });
             }
         }

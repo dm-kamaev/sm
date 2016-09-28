@@ -11,3 +11,9 @@
         border-bottom: none;
     }
 }
+
+.b-sm-item-list_count-items_5 {
+    .b-sm-item-list__item-wrap:nth-child(5n) {
+        border-bottom: none;
+    }
+}
