@@ -119,39 +119,12 @@ goog.scope(function() {
 
 
     /**
-     * Init params from dom element
-     * @private
-     */
-    View.prototype.initParams_ = function() {
-        var dataParams = this.getDataParams_();
-        this.params = this.transformParams_(dataParams);
-    };
-
-
-    /**
-     * Return data-params from dom element
-     * @return {Object}
-     * @private
-     */
-    View.prototype.getDataParams_ = function() {
-        var dataParams = goog.dom.dataset.get(
-            this.getElement(),
-            'params'
-        );
-
-        return JSON.parse(dataParams);
-    };
-
-
-    /**
      * Transform raw params from dom element
      * @param {Object} rawParams
-     * @return {{
-     *     entityType: string
-     * }}
-     * @private
+     * @return {Object}
+     * @protected
      */
-    View.prototype.transformParams_ = function(rawParams) {
+    View.prototype.transformParams = function(rawParams) {
         return {
             entityType: rawParams['entityType']
         };

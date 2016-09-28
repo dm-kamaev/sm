@@ -16,7 +16,8 @@ goog.require('goog.labs.userAgent.device');
  * @extends {cl.gModal.View}
  */
 sm.gModal.ViewStendhal = function(opt_params, opt_type, opt_modifier) {
-    goog.base(this, opt_params, opt_type, opt_modifier);
+    sm.gModal.ViewStendhal.base(this, 'constructor', opt_params, opt_type,
+        opt_modifier);
 };
 goog.inherits(sm.gModal.ViewStendhal, cl.gModal.View);
 
@@ -50,7 +51,7 @@ goog.scope(function() {
      * @param {Element} element
      */
     View.prototype.decorateInternal = function(element) {
-        goog.base(this, 'decorateInternal', element);
+        View.base(this, 'decorateInternal', element);
 
         this.dom.closer = this.getElementByClass(View.CssClass.CLOSER);
 
@@ -67,7 +68,7 @@ goog.scope(function() {
      * @override
      */
     View.prototype.enterDocument = function() {
-        goog.base(this, 'enterDocument');
+        View.base(this, 'enterDocument');
 
         this.getHandler().listen(
             this.dom.closer,
@@ -76,6 +77,18 @@ goog.scope(function() {
             false,
             this
         );
+    };
+
+
+    /**
+     * Return data-params from dom element
+     * @return {Object}
+     * @protected
+     * @override
+     */
+    View.prototype.getParams = function() {
+        var dataParams = View.base(this, 'getParams');
+        return this.transformParams(dataParams);
     };
 
 
@@ -93,6 +106,17 @@ goog.scope(function() {
         if (ancestor !== this.dom.content && document.contains(event.target)) {
             this.dispatchEvent(View.Event.CLOSE);
         }
+    };
+
+
+    /**
+     * Transform raw params from dom element
+     * @param {Object} rawParams
+     * @return {Object}
+     * @protected
+     */
+    View.prototype.transformParams = function(rawParams) {
+        return {};
     };
 
 
