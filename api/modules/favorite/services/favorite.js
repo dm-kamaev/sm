@@ -265,15 +265,13 @@ service.getListFavoriteCourses = async(function(coursesIds) {
  * }>}
  */
 service.groupDataByIds = function(data) {
-    return data.entities.map(entity => {
-        return {
-            entity: entity,
-            alias: data.aliases.find(alias => entity.id == alias.entityId),
-            type: data.type,
-            brandAlias: data.brandAliases ? data.brandAliases.find(alias =>
-                entity.brandId == alias.entityId) : undefined
-        };
-    });
+    return data.entities.map(entity => ({
+        entity: entity,
+        alias: data.aliases.find(alias => entity.id == alias.entityId),
+        type: data.type,
+        brandAlias: data.brandAliases ? data.brandAliases.find(alias =>
+            entity.brandId == alias.entityId) : undefined
+    }));
 };
 
 

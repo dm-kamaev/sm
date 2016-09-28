@@ -69,7 +69,7 @@ exports.create = async(function(req, res) {
         // TODO delete when in school will be new b-sm-favorite-link
             result = schoolView.listCompactItem({
                 item: entityData.entity,
-                itemUrl: entityData.url
+                itemUrl: entityData.alias
             });
         } else {
             result = favoriteView.item(entityData);
