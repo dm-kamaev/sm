@@ -42,11 +42,11 @@ goog.scope(function() {
 
     /**
      * @typedef {{
-     *     data: Array<{
+     *     itemGroups: Array<{
      *         entities: Array<sm.bSmMap.SmMap.Entity>,
      *         type: string
      *     }>,
-     *     center: Array<number>
+     *     position: sm.bSmMap.SmMap.PositionParams
      * }}
      */
     MapDataLoadedEvent.MapData;
@@ -60,10 +60,22 @@ goog.scope(function() {
 
 
     /**
-     * Getter for mapData_
-     * @return {sm.lSearch.iSearchService.MapDataLoadedEvent.MapData}
+     * Getter for item groups
+     * @return {Array<{
+     *     entities: Array<sm.bSmMap.SmMap.Entity>,
+     *     type: string
+     * }>}
      */
-    MapDataLoadedEvent.prototype.getMapData = function() {
-        return this.mapData_;
+    MapDataLoadedEvent.prototype.getItemGroups = function() {
+        return this.mapData_['itemGroups'];
+    };
+
+
+    /**
+     * Getter for positoin
+     * @return {sm.bSmMap.SmMap.PositionParams}
+     */
+    MapDataLoadedEvent.prototype.getPosition = function() {
+        return this.mapData_['position'];
     };
 });  // goog.scope

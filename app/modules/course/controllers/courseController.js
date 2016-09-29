@@ -35,6 +35,7 @@ controller.search = async(function(req, res, next) {
                 favorites: services.favorite.getFavoriteEntities(user.id),
                 courses: services.course.list(searchParams, 10),
                 mapCourses: services.course.listMap(searchParams, 10),
+                mapPosition: services.map.getPositionParams(searchParams),
                 filtersData: {
                     type: services.courseType.getAll()
                 }
@@ -56,6 +57,7 @@ controller.search = async(function(req, res, next) {
                 aliases.map.course,
                 aliases.map.brand
             ),
+            mapPosition: data.mapPosition,
             searchParams: searchParams,
             filtersData: data.filtersData,
             aliases: aliases.courses

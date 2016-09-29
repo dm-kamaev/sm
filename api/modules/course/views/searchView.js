@@ -79,7 +79,13 @@ searchView.filterPanel = function(filtersData, opt_searchParams) {
 /**
  * View for courses on map
  * @param  {Array<Object>} courses
- * @param  {string} viewType
+ * @param  {{
+ *     viewType: string,
+ *     position: {
+ *         center: Array<number>,
+ *         type: string
+ *     }
+ * }} options
  * @return {{
  *     itemGroups: Array<{
  *         viewType: string,
@@ -91,13 +97,14 @@ searchView.filterPanel = function(filtersData, opt_searchParams) {
  *     }|undefined)
  * }}
  */
-searchView.map = function(courses, viewType) {
+searchView.map = function(courses, options) {
+    let viewType = options.viewType;
     return {
         itemGroups: [{
             viewType: viewType,
             items: courseView.listMap(courses, viewType)
         }],
-        position: {}
+        position: options.position
     };
 };
 
@@ -148,7 +155,10 @@ searchView.render = function(data) {
         },
         user: user,
         authSocialLinks: data.authSocialLinks,
-        map: this.map(data.mapCourses, mapViewType.PIN),
+        map: this.map(data.mapCourses, {
+            viewType: mapViewType.PIN,
+            position: data.mapPosition
+        }),
         search: {
             countResults: data.countResults,
             searchText: data.searchParams.name,

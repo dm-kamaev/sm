@@ -59,7 +59,12 @@ controller.search = async(function(req, res) {
         };
 
         if (req.query.requestMapResults) {
-            result.map = searchView.map(aliasedCourses, mapViewType.PIN);
+            let mapPosition =
+                await(services.map.getPositionParams(searchParams));
+            result.map = searchView.map(aliasedCourses, {
+                viewType: mapViewType.PIN,
+                position: mapPosition
+            });
         }
     } catch (error) {
         logger.error(error.message);
@@ -80,6 +85,7 @@ controller.searchMap = async(function(req, res) {
     try {
         let searchParams = searchView.initSearchParams(req.query),
             mapCourses = await(services.course.listMap(searchParams)),
+            mapPosition = await(services.map.getPositionParams(searchParams)),
             aliases = await(services.course.getAliases(mapCourses)),
             aliasedMapCourses = courseView.joinAliases(
                 mapCourses,
@@ -88,7 +94,10 @@ controller.searchMap = async(function(req, res) {
             );
 
         result = {
-            map: searchView.map(aliasedMapCourses, mapViewType.PIN)
+            map: searchView.map(aliasedMapCourses, {
+                viewType: mapViewType.PIN,
+                position: mapPosition
+            })
         };
     } catch (error) {
         logger.error(error.message);
