@@ -1,11 +1,18 @@
+/**
+ * @fileoverview Expander component
+ * Dispatch event about changing state
+ * When expanded change theme and hoverability of link in title
+ */
 goog.provide('sm.bSmExpander.SmExpander');
 
 goog.require('cl.iControl.Control');
 goog.require('sm.bSmExpander.View');
+goog.require('sm.bSmLink.SmLink');
 
 
 goog.scope(function() {
     var View = sm.bSmExpander.View;
+    var Link = sm.bSmLink.SmLink;
 
 
 
@@ -31,7 +38,19 @@ goog.scope(function() {
         this.state_ = null;
 
 
+        /**
+         * Link component instance
+         * @type {sm.bSmLink.SmLink}
+         * @private
+         */
+        this.link_ = null;
+
+
+        /** Disable all states for goog.ui.component */
         this.setSupportedState(goog.ui.Component.State.ALL, false);
+
+        /** Disable text selection */
+        this.setAllowTextSelection(false);
     };
     goog.inherits(sm.bSmExpander.SmExpander, cl.iControl.Control);
     var Expander = sm.bSmExpander.SmExpander;
@@ -104,6 +123,7 @@ goog.scope(function() {
         Expander.base(this, 'decorateInternal', element);
 
         this.initState_();
+        this.initLink_();
     };
 
 
@@ -153,6 +173,10 @@ goog.scope(function() {
      */
     Expander.prototype.setFoldedState_ = function() {
         this.setState(Expander.State.FOLDED);
+
+        this.link_.setTheme(Link.Theme.DEFAULT);
+        this.link_.enableHover();
+
         this.dispatchEvent(Expander.Event.FOLD);
     };
 
@@ -163,6 +187,10 @@ goog.scope(function() {
      */
     Expander.prototype.setExpandedState_ = function() {
         this.setState(Expander.State.EXPANDED);
+
+        this.link_.setTheme(Link.Theme.DARK);
+        this.link_.disableHover();
+
         this.dispatchEvent(Expander.Event.EXPAND);
     };
 
@@ -189,5 +217,17 @@ goog.scope(function() {
             Expander.State.FOLDED;
 
          return this;
+    };
+
+
+    /**
+     * Link init
+     * @private
+     */
+    Expander.prototype.initLink_ = function() {
+        this.link_ = this.decorateChild(
+            'smLink',
+            this.getView().getDom().link
+        );
     };
 });  // goog.scope

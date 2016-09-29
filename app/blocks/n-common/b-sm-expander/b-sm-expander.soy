@@ -1,4 +1,10 @@
+/**
+ * @fileoverview Expander component template. It take content as for expandable
+ * block.
+ * When expanded, increase own heigh and may change parent block height.
+ */
 {namespace sm.bSmExpander.Template}
+
 
 /**
  * @typedef {{
@@ -106,7 +112,19 @@
  */
 {template .expanderText_ kind="html"}
     <div class="{call .rootClass /}__expander-text">
-        {$params.data.expanderText}
+        {call .renderChild}
+            {param params: [
+                'type': 'smLink',
+                'renderParams': [
+                    'data': [
+                        'content': $params.data.expanderText
+                    ],
+                    'config': [
+                        'size': 'xxxl'
+                    ]
+                ]
+            ] /}
+        {/call}
     </div>
 {/template}
 
@@ -142,7 +160,7 @@
 
     {let $type kind="html"}
         {if $params.config.theme == 'default'}
-            filter-arrow-down
+            filter-arrow-up
         {/if}
     {/let}
 
@@ -177,7 +195,7 @@
 
     {let $type kind="html"}
         {if $params.config.theme == 'default'}
-            filter-arrow-up
+            filter-arrow-down
         {/if}
     {/let}
 

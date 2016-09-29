@@ -1,6 +1,7 @@
 goog.provide('sm.bSmExpander.View');
 
 goog.require('cl.iControl.View');
+goog.require('sm.bSmLink.SmLink');
 
 
 
@@ -161,7 +162,6 @@ goog.scope(function() {
      * @private
      */
     View.prototype.onExpandButtonClick_ = function() {
-        console.log(View.Event.EXPAND_BUTTON_CLICK);
         this.dispatchEvent(View.Event.EXPAND_BUTTON_CLICK);
     };
 
@@ -173,7 +173,11 @@ goog.scope(function() {
      */
     View.prototype.initDom_ = function() {
         this.dom = {
-            expandButton: this.getElementByClass(View.CssClass.EXPAND_BUTTON)
+            expandButton: this.getElementByClass(View.CssClass.EXPAND_BUTTON),
+            link: this.getElementByClass(
+                sm.bSmLink.SmLink.CssClass.ROOT
+            )
+
         };
 
         return this;
