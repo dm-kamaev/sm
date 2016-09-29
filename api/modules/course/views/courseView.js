@@ -78,6 +78,8 @@ view.formatGeneralOptions = function(course) {
     let items = this.getStaticOptions(course),
         courseOptions = new CourseOptions(course.courseOptions);
 
+    courseOptions.getUniqueOptions(courseOptions.getGeneralOptions());
+
     return {
         items: items.concat(courseOptions.getGeneralOptions())
     };

@@ -1,14 +1,28 @@
 'use strict';
 
 const WEEK_DAYS = [
-    'Понедельник',
-    'Вторник',
-    'Среда',
-    'Четверг',
-    'Пятница',
-    'Суббота',
-    'Воскресенье'
-];
+        'Понедельник',
+        'Вторник',
+        'Среда',
+        'Четверг',
+        'Пятница',
+        'Суббота',
+        'Воскресенье'
+    ],
+    MONTHS = [
+        'января',
+        'февраля',
+        'марта',
+        'апреля',
+        'мая',
+        'июня',
+        'июля',
+        'августа',
+        'сентября',
+        'октября',
+        'ноября',
+        'декабря'
+    ];
 
 module.exports = class {
     /**
@@ -23,7 +37,7 @@ module.exports = class {
         /**
          * @type {Array<Object>}
          */
-        this.generalOptions_ = [{
+        this.availableOptions_ = [{
             key: 'age',
             name: 'Возраст'
         }, {
@@ -44,7 +58,12 @@ module.exports = class {
         }, {
             key: 'duration',
             name: 'Продолжительность занятия'
+        }, {
+            key: 'startDate',
+            name: 'Начало занятий'
         }];
+
+        this.uniqueOptions_ = [];
     }
 
     /**
@@ -52,13 +71,46 @@ module.exports = class {
      * @return {Array<Object>}
      */
     getGeneralOptions() {
-        return this.generalOptions_.map(generalOption =>
+        return this.availableOptions_.map(generalOption =>
                 this.getGeneralOptionValue_(generalOption)
             )
             .filter(generalOption => generalOption);
     }
 
     /**
+     * @param  {Array<Object>} generalOptions
+     * @return {Array<Object>}
+     */
+    getUniqueOptions(generalOptions) {
+        let uniqueKeys = this.getUniqueKeys_(generalOptions);
+        return this.options_.map(option => this.getUniqueOptionValue_(option));
+    }
+
+    /**
+     * @private
+     * @param  {Array<Object>} generalOptions
+     * @return {Array<string>}
+     */
+    getUniqueKeys_(generalOptions) {
+        return this.availableOptions_.map(availableOption =>
+                generalOptions.every(generalOption =>
+                    generalOption.key != availableOption.key
+                ) ? availableOption : null
+            )
+            .filter(item => item);
+    }
+
+    /**
+     * @private
+     * @param  {Object} option
+     * @return {Object}
+     */
+    getUniqueOptionValue_() {
+        // console.log(this.options_[0]);
+    }
+
+    /**
+     * @private
      * @param  {Object} generalOption
      * @return {(Object|null)}
      */
@@ -76,6 +128,7 @@ module.exports = class {
     }
 
     /**
+     * @private
      * @param  {Object} generalOption
      * @param  {string} value
      * @return {Object}
@@ -101,13 +154,15 @@ module.exports = class {
      */
     formatOptions_(options) {
         return options.map(option => ({
+            departments: option.departments.map(d => d.address.toJSON()),
             age: this.formatAge_(option.age),
             schedule: this.formatSchedule_(option.schedule),
             maxGroupSize: this.formatGroupSize_(option.maxGroupSize),
             costPerHour: this.formatCost_(option.costPerHour),
             regularity: this.formatRegularity_(option.schedule),
             online: this.formatOnline_(option.online),
-            duration: this.formatDuration_(option.duration)
+            duration: this.formatDuration_(option.duration),
+            startDate: this.formatStartDate_(option.startDate)
         }));
     }
 
@@ -179,6 +234,7 @@ module.exports = class {
     }
 
     /**
+     * @private
      * @param  {Array<Object>} schedule
      * @return {string}
      */
@@ -189,6 +245,7 @@ module.exports = class {
     }
 
     /**
+     * @private
      * @param  {boolean} online
      * @return {string}
      */
@@ -197,6 +254,7 @@ module.exports = class {
     }
 
     /**
+     * @private
      * @param  {number} duration
      * @return {string}
      */
@@ -210,5 +268,14 @@ module.exports = class {
             result = duration + ' часов';
         }
         return result;
+    }
+
+    /**
+     * @private
+     * @param  {Date} startDate
+     * @return {string}
+     */
+    formatStartDate_(startDate) {
+        return startDate.getDate() + ' ' + MONTHS[startDate.getMonth()];
     }
 };
