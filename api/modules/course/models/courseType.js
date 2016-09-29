@@ -10,7 +10,15 @@ var CourseType = db.define('CourseType', {
     popularity: Sequelize.INTEGER
 }, {
     underscored: true,
-    tableName: 'course_type'
+    tableName: 'course_type',
+    classMethods: {
+        associate: function(models) {
+            CourseType.hasMany(models.Course, {
+                as: 'courses',
+                foreignKey: 'type'
+            });
+        }
+    }
 });
 
 module.exports = CourseType;

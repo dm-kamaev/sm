@@ -206,7 +206,7 @@ service.getPopularSchools = async(function(opt_amount) {
                         include: [
                             {
                                 model: models.Metro,
-                                as: 'metroStation'
+                                as: 'metro'
                             }
                         ]
                     }
@@ -424,12 +424,11 @@ service.getByIdsWithGeoData = async(function(schoolIds) {
                 {
                     model: models.AddressMetro,
                     as: 'addressMetroes',
-                    attributes: ['id', 'distance']
-                },
-                {
-                    model: models.Metro,
-                    as: 'metroStations',
-                    attributes: ['id', 'name']
+                    attributes: ['id', 'distance'],
+                    include: [{
+                        model: models.Metro,
+                        as: 'metro'
+                    }],
                 },
                 {
                     model: models.Area,

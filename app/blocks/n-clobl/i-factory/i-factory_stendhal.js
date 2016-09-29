@@ -64,8 +64,10 @@ goog.require('sm.gInput.ViewPhone');
 goog.require('sm.gInput.ViewStendhal');
 goog.require('sm.gList.List.Select');
 goog.require('sm.gList.ViewSelect');
+goog.require('sm.gModal.ModalEnrollment');
 goog.require('sm.gModal.ModalFeedback');
 goog.require('sm.gModal.ModalStendhal');
+goog.require('sm.gModal.ViewEnrollment');
 goog.require('sm.gModal.ViewFeedback');
 goog.require('sm.gModal.ViewStendhal');
 goog.require('sm.gTextarea.TextareaStendhal');
@@ -126,10 +128,6 @@ sm.iFactory.FactoryStendhal = function() {
             control: sm.gInput.DigitInput,
             view: sm.gInput.DigitInputView
         })
-        .setControlListItem('phone-input', {
-            control: sm.gInput.InputPhone,
-            view: sm.gInput.ViewPhone
-        })
         .setControlListItem('textarea', {
             control: sm.gTextarea.TextareaStendhal,
             view: sm.gTextarea.ViewStendhal
@@ -188,6 +186,16 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('filter-search', {
             control: sm.lSearchResult.bFilterSearch.FilterSearch,
             view: sm.lSearchResult.bFilterSearch.View
+        });
+
+    /** Heirs of the clobl blocks */
+    this.setControlListItem('phone-input', {
+            control: sm.gInput.InputPhone,
+            view: sm.gInput.ViewPhone
+        })
+        .setControlListItem('modal-enrollment', {
+            control: sm.gModal.ModalEnrollment,
+            view: sm.gModal.ViewEnrollment
         });
 
     /** Common blocks and their heirs **/

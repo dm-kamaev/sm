@@ -41,6 +41,7 @@ goog.require('sm.gInput.DigitInputTemplate');
 goog.require('sm.gInput.TemplatePhone');
 goog.require('sm.gInput.TemplateStendhal');
 goog.require('sm.gList.TemplateSelect');
+goog.require('sm.gModal.TemplateEnrollment');
 goog.require('sm.gModal.TemplateFeedback');
 goog.require('sm.gModal.TemplateStendhal');
 goog.require('sm.gTab.TemplateCatalog');
@@ -110,10 +111,6 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'digit-input',
             sm.gInput.DigitInputTemplate.input
-        )
-        .setTemplateListItem(
-            'phone-input',
-            sm.gInput.TemplatePhone.input
         )
         .setTemplateListItem(
             'button-social',
@@ -194,6 +191,16 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'tab-catalog',
             sm.gTab.TemplateCatalog.tab
+        );
+
+    /** Heirs of the clobl blocks */
+    this.setTemplateListItem(
+            'phone-input',
+            sm.gInput.TemplatePhone.input
+        )
+        .setTemplateListItem(
+            'modal-enrollment',
+            sm.gModal.TemplateEnrollment.modal
         );
 
     /** Global blocks an their heirs **/

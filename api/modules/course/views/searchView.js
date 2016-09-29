@@ -1,9 +1,12 @@
-var FilterPanel = require('../lib/CourseFilterPanel');
-const courseView = require('./courseView');
-const mapViewType = require('../../entity/enums/mapViewType');
-const userView = require('../../user/views/user');
+'use strict';
 
-var searchView = {};
+const FilterPanel = require('../lib/CourseFilterPanel'),
+    courseView = require('./courseView'),
+    mapViewType = require('../../entity/enums/mapViewType'),
+    userView = require('../../user/views/user'),
+    favoriteView = require('../../favorite/views/favoriteView');
+
+let searchView = {};
 
 /**
  * Data for filter panel
@@ -55,9 +58,9 @@ var searchView = {};
  * }}
  */
 searchView.filterPanel = function(filtersData, opt_searchParams) {
-    var searchParams = opt_searchParams || {};
+    let searchParams = opt_searchParams || {};
 
-    var filterPanel = new FilterPanel();
+    let filterPanel = new FilterPanel();
 
     filterPanel
         .setFilterAge(searchParams.age)
@@ -113,7 +116,13 @@ searchView.map = function(courses, viewType) {
  * @return {Object}
  */
 searchView.render = function(data) {
-    var user = userView.default(data.user);
+    let user = userView.default(data.user),
+        aliasedCourses = courseView.joinAliases(
+            data.coursesList,
+            data.aliases.course,
+            data.aliases.brand
+        ),
+        courses = courseView.list(aliasedCourses);
 
     return {
         type: data.entityType,
@@ -133,7 +142,9 @@ searchView.render = function(data) {
                 placeholder: 'Район, метро, название курса'
             },
             user: user,
-            favorites: data.favorites
+            favorites: {
+                items: favoriteView.list(data.favorites)
+            }
         },
         user: user,
         authSocialLinks: data.authSocialLinks,
@@ -169,7 +180,7 @@ searchView.render = function(data) {
             defaultOpenerText: 'средней оценке'
         },
         entityList: {
-            items: courseView.list(data.coursesList),
+            items: courses,
             itemType: 'smItemEntity'
         },
         filterPanel: searchView.filterPanel(
@@ -208,7 +219,7 @@ searchView.initSearchParams = function(params) {
  * @return {Array}
  */
 searchView.transformToArray = function(value) {
-    var result;
+    let result;
     if (value && ~value.indexOf(',')) {
         result = value.split(',');
     } else if (typeof value === 'number' || typeof value === 'string') {

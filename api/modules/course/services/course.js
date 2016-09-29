@@ -1,3 +1,5 @@
+'use strict';
+
 const async = require('asyncawait/async'),
     await = require('asyncawait/await'),
     squel = require('squel');
@@ -5,9 +7,11 @@ const async = require('asyncawait/async'),
 const sequelize = require('../../../../app/components/db'),
     models = require('../../../../app/components/models').all,
     services = require('../../../../app/components/services').all,
-    error = require('../../entity/lib/Error');
+    error = require('../../entity/lib/Error'),
+    entityType = require('../../entity/enums/entityType'),
+    pageView = require('../../entity/views/pageView');
 
-var service = {
+let service = {
     name: 'course'
 };
 
@@ -25,6 +29,7 @@ const informationFields = {
         'leadType'
     ],
     BRAND: ['id', 'name'],
+    TYPE: ['id', 'name'],
     OPTION: [
         'id',
         'totalCost',
@@ -34,7 +39,9 @@ const informationFields = {
         'lengthWeeks',
         'online',
         'name',
-        'description'
+        'description',
+        'duration',
+        'costPerHour'
     ],
     SCHEDULE: ['day', 'startTime', 'endTime'],
     DEPARTMENT: ['id'],
@@ -81,7 +88,7 @@ const informationFields = {
  * @return {Course}
  */
 service.create = async(function(data) {
-    var brand = await(services.courseBrand.create({
+    let brand = await(services.courseBrand.create({
             name: data.brandName
         })),
         type = await(services.courseType.create(data.type)),
@@ -108,7 +115,7 @@ service.create = async(function(data) {
  * @return {Course}
  */
 service.information = async(function(id) {
-    var optionInclude = [{
+    let optionInclude = [{
         attributes: informationFields.SCHEDULE,
         model: models.CourseSchedule,
         as: 'schedule'
@@ -138,6 +145,10 @@ service.information = async(function(id) {
             model: models.CourseBrand,
             as: 'courseBrand'
         }, {
+            attributes: informationFields.TYPE,
+            model: models.CourseType,
+            as: 'courseType'
+        }, {
             attributes: informationFields.OPTION,
             model: models.CourseOption,
             as: 'courseOptions',
@@ -152,12 +163,12 @@ service.information = async(function(id) {
  * @return {Array<Object>}
  */
 service.list = async(function(searchParams, opt_limit) {
-    var searchString = services.courseSearchData.getSearchSql(
+    let searchString = services.courseSearchData.getSearchSql(
         searchParams,
         opt_limit
     );
 
-    var courses = await(sequelize.query(
+    let courses = await(sequelize.query(
         searchString, {
             type: sequelize.QueryTypes.SELECT
         }
@@ -173,12 +184,12 @@ service.list = async(function(searchParams, opt_limit) {
  * @return {Array<Object>}
  */
 service.listMap = async(function(searchParams, opt_limit) {
-    var searchString = services.courseSearchData.getSearchMapSql(
+    let searchString = services.courseSearchData.getSearchMapSql(
         searchParams,
         opt_limit
     );
 
-    var courses = await(sequelize.query(
+    let courses = await(sequelize.query(
         searchString, {
             type: sequelize.QueryTypes.SELECT
         }
@@ -192,7 +203,7 @@ service.listMap = async(function(searchParams, opt_limit) {
  * @return {Array<number>}
  */
 service.findByDepartmentId = async(function(departmentId) {
-    var query = squel.select()
+    let query = squel.select()
         .from('course')
         .field('DISTINCT course.id')
         .left_join('course_option', null, 'course.id = course_option.course_id')
@@ -210,7 +221,7 @@ service.findByDepartmentId = async(function(departmentId) {
         )
         .where('course_department_id = ' + departmentId)
         .toString();
-    var result = await(sequelize.query(
+    let result = await(sequelize.query(
         query, {
             type: sequelize.QueryTypes.SELECT
         }
@@ -218,6 +229,7 @@ service.findByDepartmentId = async(function(departmentId) {
 
     return result.map(item => item.id);
 });
+
 
 /**
  * @return {Array<Course>}
@@ -239,15 +251,38 @@ service.getAll = async(function() {
     }));
 });
 
+
 /**
- * [getByIds description]
  * @param  {Array<number>} ids
+ * @param  {{
+ *     metro: ?boolean
+ * }} opt_include
  * @return {Array<Object>}
  */
-service.getByIds = function(ids) {
+service.getByIds = function(ids, opt_include) {
+    let addressInclude = [{
+            model: models.Area,
+            as: 'area',
+            attributes: ['id', 'name']
+        }],
+        order = [];
+
+    if (opt_include && opt_include.metro) {
+        addressInclude.push({
+            model: models.AddressMetro,
+            as: 'addressMetroes',
+            attributes: ['id', 'distance'],
+            include: [{
+                model: models.Metro,
+                as: 'metro'
+            }]
+        });
+        order = this.getDistanceOrder();
+    }
+
     return ids.length ?
         models.Course.findAll({
-            attributes: ['id', 'name', 'totalScore'],
+            attributes: ['id', 'name', 'totalScore', 'brandId'],
             where: {
                 id: {
                     $in: ids
@@ -265,17 +300,68 @@ service.getByIds = function(ids) {
                     include: [{
                         model: models.Address,
                         as: 'address',
+                        required: false,
+                        where: {
+                            entityType: entityType.COURSE_DEPARTMENT
+                        },
                         attributes: ['id'],
-                        include: [{
-                            model: models.Area,
-                            as: 'area',
-                            attributes: ['id', 'name']
-                        }]
+                        include: addressInclude
                     }]
                 }]
-            }]
+            }],
+            order: order
         }) :
         [];
+};
+
+/**
+ * Get metro distance order
+ * @return {Array<Object>}
+ */
+service.getDistanceOrder = function() {
+    let courseOption = {
+            model: models.CourseOption,
+            as: 'courseOptions'
+        },
+        courseDepartment = {
+            model: models.CourseDepartment,
+            as: 'departments'
+        },
+        address = {
+            model: models.Address,
+            as: 'address'
+        },
+        addressMetro = {
+            model: models.AddressMetro,
+            as: 'addressMetroes'
+        };
+    return [
+        ['id', 'ASC'],
+        [courseOption, 'id', 'ASC'],
+        [courseOption, courseDepartment, 'id', 'ASC'],
+        [courseOption, courseDepartment, address, 'id', 'ASC'],
+        [
+            courseOption,
+            courseDepartment,
+            address,
+            addressMetro,
+            'distance',
+            'ASC'
+        ]
+    ];
+};
+
+/**
+ * @param  {number} brandId
+ * @return {Array<number>}
+ */
+service.getByBrandId = function(brandId) {
+    return await(models.Course.findAll({
+        attributes: ['id'],
+        where: {
+            brandId: brandId
+        }
+    }));
 };
 
 /**
@@ -299,5 +385,26 @@ service.enrollOnCourse = function(data) {
     }
     return data;
 };
+
+/**
+ * @param {Array<Object>} courses
+ * @return {Object}
+ */
+service.getAliases = async(function(courses) {
+    let getAliases = services.page.getAliases,
+        uniqueIds = pageView.uniqueIds;
+    return await({
+        course: getAliases(
+            uniqueIds(courses),
+            entityType.COURSE
+        ),
+        brand: getAliases(
+            uniqueIds(courses.map(course => ({
+                id: course.brandId
+            }))),
+            entityType.COURSE_BRAND
+        )
+    });
+});
 
 module.exports = service;

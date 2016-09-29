@@ -1,9 +1,11 @@
-var Sequelize = require('sequelize');
+'use strict';
 
-var db = require('../../../../app/components/db'),
+const Sequelize = require('sequelize');
+
+const db = require('../../../../app/components/db'),
     urlService = require('../../entity/services/urls');
 
-var Course = db.define('Course', {
+let Course = db.define('Course', {
     name: Sequelize.STRING,
     brandId: {
         type: Sequelize.INTEGER,
@@ -49,7 +51,7 @@ var Course = db.define('Course', {
     tableName: 'course',
     hooks: {
         afterCreate: urlService.generateCourseAlias,
-        afterUpdate: urlService.generateCourseAlias,
+        afterUpdate: urlService.generateCourseAlias
     },
     classMethods: {
         associate: function(models) {
@@ -57,9 +59,18 @@ var Course = db.define('Course', {
                 as: 'courseBrand',
                 foreignKey: 'brand_id'
             });
+            Course.belongsTo(models.CourseType, {
+                as: 'courseType',
+                foreignKey: 'type'
+            });
             Course.hasMany(models.CourseOption, {
                 as: 'courseOptions',
                 foreignKey: 'course_id'
+            });
+            Course.hasMany(models.Favorite, {
+                as: 'favorite',
+                foreignKey: 'entity_id',
+                onDelete: 'cascade'
             });
         }
     }

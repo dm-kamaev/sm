@@ -12,7 +12,9 @@
  * Template for Phone input block
  * @param params {{
  *     data: sm.gInput.TemplatePhone.Params.Data
- *     config
+ *     config: {
+ *         stilizationModifier: string
+ *     }
  * }}
  * @constructor
  * @override
@@ -28,7 +30,7 @@
     ) /}
 
     {let $config: augmentMap($params.config, [
-        'validations': ['digits', 'phone']
+        'validations': ['phone', 'notEmpty']
     ]) /}
 
     {call .init}

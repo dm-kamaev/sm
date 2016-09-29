@@ -17,11 +17,11 @@ sm.bSmFavorite.SmFavorite = function(view, opt_domHelper) {
 
 
     /**
-     * Enties List Paged
+     * Items List Paged
      * @type {sm.bSmListPaged.SmListPaged}
      * @private
      */
-    this.entitiesListPaged_ = null;
+    this.listPaged_ = null;
 
 
     /**
@@ -42,10 +42,10 @@ goog.scope(function() {
 
     /**
      * Add given item to favorites
-     * @param {sm.bSmItem.SmItem.Params} entityParams
+     * @param {sm.bSmItem.SmItem.Params} itemParams
      */
-    Favorite.prototype.addItem = function(entityParams) {
-        this.entitiesListPaged_.addItem(entityParams);
+    Favorite.prototype.addItem = function(itemParams) {
+        this.listPaged_.addItem(itemParams);
         this.updateState_();
     };
 
@@ -55,7 +55,7 @@ goog.scope(function() {
      * @param {number} itemId
      */
     Favorite.prototype.removeItem = function(itemId) {
-        this.entitiesListPaged_.removeItem(itemId);
+        this.listPaged_.removeItem(itemId);
         this.updateState_();
     };
 
@@ -67,7 +67,7 @@ goog.scope(function() {
     Favorite.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
-        this.initEntitiesListPaged_();
+        this.initlistPaged_();
         this.initAuthorizeLink_();
     };
 
@@ -90,7 +90,7 @@ goog.scope(function() {
      * @private
      */
     Favorite.prototype.updateState_ = function() {
-        var state = this.entitiesListPaged_.isNotEmpty() ?
+        var state = this.listPaged_.isNotEmpty() ?
             View.State.FILLED :
             View.State.EMPTY;
 
@@ -113,10 +113,10 @@ goog.scope(function() {
      * Init List Paged
      * @private
      */
-    Favorite.prototype.initEntitiesListPaged_ = function() {
-        this.entitiesListPaged_ = this.decorateChild(
+    Favorite.prototype.initlistPaged_ = function() {
+        this.listPaged_ = this.decorateChild(
             'smListPaged',
-            this.getView().getDom().entitiesListPaged
+            this.getView().getDom().listPaged
         );
     };
 

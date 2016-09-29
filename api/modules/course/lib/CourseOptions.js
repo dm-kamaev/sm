@@ -1,6 +1,14 @@
 'use strict';
 
-const WEEK_DAYS = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
+const WEEK_DAYS = [
+    'Понедельник',
+    'Вторник',
+    'Среда',
+    'Четверг',
+    'Пятница',
+    'Суббота',
+    'Воскресенье'
+];
 
 module.exports = class {
     /**
@@ -19,11 +27,23 @@ module.exports = class {
             key: 'age',
             name: 'Возраст'
         }, {
+            key: 'costPerHour',
+            name: 'Стоимость'
+        }, {
             key: 'schedule',
             name: 'Расписание'
         }, {
             key: 'maxGroupSize',
             name: 'Группы'
+        }, {
+            key: 'regularity',
+            name: 'Регулярность занятий'
+        }, {
+            key: 'online',
+            name: 'Форма обучения'
+        }, {
+            key: 'duration',
+            name: 'Продолжительность занятия'
         }];
     }
 
@@ -83,7 +103,11 @@ module.exports = class {
         return options.map(option => ({
             age: this.formatAge_(option.age),
             schedule: this.formatSchedule_(option.schedule),
-            maxGroupSize: this.formatGroupSize_(option.maxGroupSize)
+            maxGroupSize: this.formatGroupSize_(option.maxGroupSize),
+            costPerHour: this.formatCost_(option.costPerHour),
+            regularity: this.formatRegularity_(option.schedule),
+            online: this.formatOnline_(option.online),
+            duration: this.formatDuration_(option.duration)
         }));
     }
 
@@ -103,7 +127,8 @@ module.exports = class {
      */
     formatSchedule_(schedule) {
         return schedule.map(item =>
-            WEEK_DAYS[item.day] + item.startTime + item.endTime
+            WEEK_DAYS[item.day] + ' ' + this.formatTime_(item.startTime) +
+                '—' + this.formatTime_(item.endTime)
         ).join(', ');
     }
 
@@ -132,6 +157,57 @@ module.exports = class {
             result = 'Индивидуальные занятия';
         } else {
             result = 'Не более ' + maxGroupSize + ' человек в группе';
+        }
+        return result;
+    }
+
+    /**
+     * @private
+     * @param  {number} cost
+     * @return {string}
+     */
+    formatCost_(cost) {
+        let result;
+        if (cost === 0) {
+            result = 'Бесплатно';
+        } else if (cost > 0) {
+            result = cost + ' руб. / час';
+        } else {
+            result = 'Цена не указана';
+        }
+        return result;
+    }
+
+    /**
+     * @param  {Array<Object>} schedule
+     * @return {string}
+     */
+    formatRegularity_(schedule) {
+        let count = schedule.length;
+        return count < 2 || count > 4 ? count + ' раз в неделю' :
+            count + ' раза в неделю';
+    }
+
+    /**
+     * @param  {boolean} online
+     * @return {string}
+     */
+    formatOnline_(online) {
+        return online ? 'Онлайн' : 'Очная';
+    }
+
+    /**
+     * @param  {number} duration
+     * @return {string}
+     */
+    formatDuration_(duration) {
+        let result;
+        if (duration < 2) {
+            result = '1 час';
+        } else if (duration < 5) {
+            result = duration + ' часа';
+        } else {
+            result = duration + ' часов';
         }
         return result;
     }

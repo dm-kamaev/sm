@@ -1,5 +1,6 @@
 goog.provide('sm.lCourse.Course');
 
+goog.require('cl.iRequest.Request');
 goog.require('sm.iLayout.LayoutStendhal');
 goog.require('sm.iSmViewport.SmViewport');
 goog.require('sm.lCourse.View');
@@ -58,6 +59,14 @@ goog.scope(function() {
          * @private
          */
         this.actionButtons_ = [];
+
+
+        /**
+         * Instances button
+         * @type {sm.gModal.ModalEnrollment}
+         * @private
+         */
+        this.modalEnrollment_ = null;
     };
     goog.inherits(sm.lCourse.Course, sm.iLayout.LayoutStendhal);
     var Course = sm.lCourse.Course,
@@ -75,6 +84,8 @@ goog.scope(function() {
         this.initFullDescription_();
         this.initMap_();
         this.initActionButtons_();
+        this.initModals_();
+        this.initIRequest_();
     };
 
 
@@ -108,7 +119,16 @@ goog.scope(function() {
      * @private
      */
     Course.prototype.onActionButtonClick_ = function() {
-        console.log('onActionButtonClick_');
+        this.modalEnrollment_.show();
+    };
+
+
+    /**
+     * Initializes instance of Request Sender
+     * @private
+     */
+    Course.prototype.initIRequest_ = function() {
+        cl.iRequest.Request.getInstance().init();
     };
 
 
@@ -136,10 +156,13 @@ goog.scope(function() {
      * @private
      */
     Course.prototype.initFullDescription_ = function() {
-        this.fullDescription_ = this.decorateChild(
-            'smCollapsedText',
-            this.getView().getDom().fullDescription
-        );
+        var fullDescription = this.getView().getDom().fullDescription;
+        if (fullDescription) {
+            this.fullDescription_ = this.decorateChild(
+                'smCollapsedText',
+                fullDescription
+            );
+        }
     };
 
 
@@ -173,6 +196,18 @@ goog.scope(function() {
 
             this.actionButtons_.push(instance);
         }
+    };
+
+
+    /**
+     * Initializes instances of modals
+     * @private
+     */
+    Course.prototype.initModals_ = function() {
+        this.modalEnrollment_ = this.decorateChild(
+            'modal-enrollment',
+            this.getView().getDom().modalEnrollment
+        );
     };
 });  // goog.scope
 

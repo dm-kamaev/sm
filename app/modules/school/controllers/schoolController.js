@@ -85,28 +85,32 @@ exports.list = async(function(req, res, next) {
             searchText = req.query.name || '';
         }
 
-        var favoriteIds =
-                await(services.favorite.getAllItemIdsByUserId(user.id)),
-            promises = {
-                schools: services.school.list(
-                    searchParams,
-                    {
-                        limitResults: 10
-                    }
-                ),
-                filtersData: services.school.searchFiltersData(searchParams),
-                mapPosition:
-                    services.schoolSearch.getMapPositionParams(searchParams),
-                authSocialLinks: services.auth.getAuthSocialUrl(),
-                favorites: {
-                    items: services.school.getByIdsWithGeoData(favoriteIds),
-                    itemUrls: services.page.getAliases(
-                        favoriteIds,
-                        entityType.SCHOOL
-                    )
-                },
-                seoLinks: services.seoSchoolList.getByTypes()
-            };
+        var favorites = await(services.favorite.getByUserId(user.id)),
+            favoriteIds = services.favorite.getEntityIdsFiltredByType(
+                favorites,
+                entityType.SCHOOL
+            );
+
+        var promises = {
+            schools: services.school.list(
+                searchParams,
+                {
+                    limitResults: 10
+                }
+            ),
+            filtersData: services.school.searchFiltersData(searchParams),
+            mapPosition: services.schoolSearch.getMapPositionParams(searchParams),
+            authSocialLinks: services.auth.getAuthSocialUrl(),
+            favorites: {
+                items: services.school.getByIdsWithGeoData(favoriteIds),
+                itemUrls: services.page.getAliases(
+                    favoriteIds,
+                    entityType.SCHOOL
+                )
+            },
+            seoLinks: services.seoSchoolList.getByTypes()
+        };
+
         var results = await(promises);
 
         var schoolAliases = await(services.page.getAliases(
@@ -115,13 +119,13 @@ exports.list = async(function(req, res, next) {
             )),
             schools = schoolView.joinAliases(results.schools, schoolAliases),
             schoolsWithFavoriteMark = schoolView.listWithFavorites(
-                schools, favoriteIds
+                schools,
+                favorites
             );
 
         var schoolsList = schoolView.list(schoolsWithFavoriteMark),
             map = schoolView.listMap(results.schools, results.mapPosition),
-            filters = searchView.filters(results.filtersData, searchParams),
-            favorites = schoolView.listCompact(results.favorites);
+            filters = searchView.filters(results.filtersData, searchParams);
 
         var params = {
             params: {
@@ -132,7 +136,7 @@ exports.list = async(function(req, res, next) {
                     user: userView.default(user),
                     seo: seoData,
                     favorites: {
-                        schools: favorites
+                        schools: schoolView.listCompact(results.favorites)
                     },
                     seoLinks: seoView.linksList(
                         results.seoLinks,
@@ -182,48 +186,55 @@ exports.view = async(function(req, res, next) {
         } else if (!page.entityId) {
             next();
         } else {
-            var schoolInstance = await(services.urls.getSchoolByUrl(alias));
+            var schoolInstance = await(services.urls.getEntityByUrl(
+                alias,
+                entityType.SCHOOL
+            ));
             if (!schoolInstance) {
                 throw new errors.SchoolNotFoundError();
             } else if (alias != schoolInstance.alias) {
                 res.redirect(schoolInstance.alias);
             } else {
-                var user = req.user || {},
-                    favoriteIds = await(
-                        services.favorite.getAllItemIdsByUserId(user.id)
+                var user = req.user || {};
+
+                var favorites = await(services.favorite.getByUserId(user.id)),
+                    favoriteIds = services.favorite.getEntityIdsFiltredByType(
+                        favorites,
+                        entityType.SCHOOL
+                    );
+
+                var promises = {
+                    ege: services.egeResult.getAllBySchoolId(
+                        schoolInstance.id
                     ),
-                    promises = {
-                        ege: services.egeResult.getAllBySchoolId(
-                            schoolInstance.id
+                    gia: services.giaResult.getAllBySchoolId(
+                        schoolInstance.id
+                    ),
+                    olymp: services.olimpResult.getAllBySchoolId(
+                        schoolInstance.id
+                    ),
+                    city: services.cityResult.getAll(),
+                    page: services.page.getDescription(
+                        schoolInstance.id,
+                        entityType.SCHOOL
+                    ),
+                    specializedClassTypes:
+                        services.specializedClasses.getAllTypes(),
+                    authSocialLinks: services.auth.getAuthSocialUrl(),
+                    popularSchools:
+                        services.school.getRandomPopularSchools(6),
+                    favorites: {
+                        items: services.school.getByIdsWithGeoData(
+                            favoriteIds
                         ),
-                        gia: services.giaResult.getAllBySchoolId(
-                            schoolInstance.id
-                        ),
-                        olymp: services.olimpResult.getAllBySchoolId(
-                            schoolInstance.id
-                        ),
-                        city: services.cityResult.getAll(),
-                        page: services.page.getDescription(
-                            schoolInstance.id,
+                        itemUrls: services.page.getAliases(
+                            favoriteIds,
                             entityType.SCHOOL
-                        ),
-                        specializedClassTypes:
-                            services.specializedClasses.getAllTypes(),
-                        authSocialLinks: services.auth.getAuthSocialUrl(),
-                        popularSchools:
-                            services.school.getRandomPopularSchools(6),
-                        favorites: {
-                            items: services.school.getByIdsWithGeoData(
-                                favoriteIds
-                            ),
-                            itemUrls: services.page.getAliases(
-                                favoriteIds,
-                                entityType.SCHOOL
-                            )
-                        },
-                        seoLinks: services.seoSchoolList.getByTypes()
+                        )
                     },
-                    dataFromPromises = await(promises);
+                    seoLinks: services.seoSchoolList.getByTypes()
+                };
+                var dataFromPromises = await(promises);
 
                 var school = await(services.school.viewOne(schoolInstance.id));
 
@@ -274,8 +285,14 @@ exports.view = async(function(req, res, next) {
 
 exports.home = async(function(req, res) {
     var user = req.user || {};
-    var favoriteIds = await(services.favorite.getAllItemIdsByUserId(user.id)),
-        dataPromises = {
+
+    var favorites = await(services.favorite.getByUserId(user.id)),
+        favoriteIds = services.favorite.getEntityIdsFiltredByType(
+            favorites,
+            entityType.SCHOOL
+        );
+
+    var dataPromises = {
             popularSchools: services.school.getRandomPopularSchools(3),
             amountSchools: services.school.getSchoolsCount(),
             authSocialLinks: services.auth.getAuthSocialUrl(),
@@ -335,9 +352,11 @@ exports.catalog = async(function(req, res, next) {
             services.seoSchoolList.getAll()
         );
 
-        var favoriteIds = await(
-            services.favorite.getAllItemIdsByUserId(user.id)
-        );
+        var favorites = await(services.favorite.getByUserId(user.id)),
+            favoriteIds = services.favorite.getEntityIdsFiltredByType(
+                favorites,
+                entityType.SCHOOL
+            );
 
         var promises = {
             authSocialLinks: services.auth.getAuthSocialUrl(),

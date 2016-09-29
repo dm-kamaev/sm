@@ -1,8 +1,11 @@
-var Sequelize = require('sequelize');
+'use strict';
 
-var db = require('../../../../app/components/db');
+const Sequelize = require('sequelize');
 
-var CourseBrand = db.define('CourseBrand', {
+const db = require('../../../../app/components/db'),
+    urlService = require('../../entity/services/urls');
+
+let CourseBrand = db.define('CourseBrand', {
     name: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -11,6 +14,10 @@ var CourseBrand = db.define('CourseBrand', {
 }, {
     underscored: true,
     tableName: 'course_brand',
+    hooks: {
+        afterCreate: urlService.generateCourseBrandAlias,
+        afterUpdate: urlService.generateCourseBrandAlias
+    },
     classMethods: {
         associate: function(models) {
             CourseBrand.hasMany(models.Course, {

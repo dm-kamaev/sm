@@ -15,7 +15,7 @@ const config = require('../../../../app/config/config.json');
 const logger = require('../../../../app/components/logger/logger')
     .getLogger('app');
 
-var controller = {};
+let controller = {};
 
 /**
  * @api {get} api/course/search Search controller
@@ -39,21 +39,27 @@ var controller = {};
  *     }
  */
 controller.search = async(function(req, res) {
-    var result;
+    let result;
     try {
-        var searchParams = searchView.initSearchParams(req.query),
+        let searchParams = searchView.initSearchParams(req.query),
             courses = await(services.course.list(searchParams, 10)),
-            countResults = courses[0] && courses[0].countResults || 0;
+            countResults = courses[0] && courses[0].countResults || 0,
+            aliases = await(services.course.getAliases(courses)),
+            aliasedCourses = courseView.joinAliases(
+                courses,
+                aliases.course,
+                aliases.brand
+            );
 
         result = {
             list: {
-                items: courseView.list(courses),
+                items: courseView.list(aliasedCourses),
                 countResults: countResults
             }
         };
 
         if (req.query.requestMapResults) {
-            result.map = searchView.map(courses, mapViewType.PIN);
+            result.map = searchView.map(aliasedCourses, mapViewType.PIN);
         }
     } catch (error) {
         logger.error(error.message);
@@ -70,13 +76,19 @@ controller.search = async(function(req, res) {
  *     Send all results for request with params
  */
 controller.searchMap = async(function(req, res) {
-    var result;
+    let result;
     try {
-        var searchParams = searchView.initSearchParams(req.query),
-            mapCourses = await(services.course.listMap(searchParams));
+        let searchParams = searchView.initSearchParams(req.query),
+            mapCourses = await(services.course.listMap(searchParams)),
+            aliases = await(services.course.getAliases(mapCourses)),
+            aliasedMapCourses = courseView.joinAliases(
+                mapCourses,
+                aliases.course,
+                aliases.brand
+            );
 
         result = {
-            map: searchView.map(mapCourses, mapViewType.PIN)
+            map: searchView.map(aliasedMapCourses, mapViewType.PIN)
         };
     } catch (error) {
         logger.error(error.message);
@@ -98,11 +110,17 @@ controller.searchMap = async(function(req, res) {
  *     }
  */
 controller.suggestSearch = async(function(req, res) {
-    var result;
+    let result;
     try {
-        var searchString = req.query.searchString,
-            data = await(services.courseSearchData.suggestSearch(searchString));
+        let searchString = req.query.searchString,
+            data = await(services.courseSearchData.suggestSearch(searchString)),
+            courseAliases = await(services.course.getAliases(data.courses));
 
+        data.courses = courseView.joinAliases(
+            data.courses,
+            courseAliases.course,
+            courseAliases.brand
+        );
         result = courseView.suggest(data);
     } catch (error) {
         logger.error(error.message);
@@ -135,9 +153,9 @@ controller.suggestSearch = async(function(req, res) {
  * @apiError Error (Error 500)
  */
 controller.popularCourseType = async(function(req, res) {
-    var result;
+    let result;
     try {
-        var popularCourseType =
+        let popularCourseType =
             await(services.courseType.getPopularTypes());
 
         result =
@@ -179,12 +197,12 @@ controller.popularCourseType = async(function(req, res) {
  * @apiError Error (Error 500)
  */
 controller.searchCourseType = async(function(req, res) {
-    var name,
+    let name,
         result;
     try {
         name = req.query.name || '';
 
-        var courseTypes =
+        let courseTypes =
                 await(services.courseType.findByName(name));
 
         result = courseTypeView.typeFilters(courseTypes);
@@ -192,7 +210,7 @@ controller.searchCourseType = async(function(req, res) {
         logger.error(error);
         result = error.message;
     } finally {
-        res.header('Content-Type', 'text/html; charset=utf-8');
+        res.header('Content-Type', 'application/json; charset=utf-8');
         res.end(JSON.stringify(result));
     }
 });

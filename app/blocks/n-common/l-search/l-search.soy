@@ -401,13 +401,20 @@
         {/if}
     {/let}
 
+    {let $customClasses kind="html"}
+        {call .rootClass/}__results-list
+    {/let}
+
     <div class="{$classes}">
         {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
                 'factory': $params.config.modifier,
                 'type': 'smItemList',
                 'renderParams': [
-                    'data': $params.data.entityList
+                    'data': $params.data.entityList,
+                    'config': [
+                        'customClasses': [$customClasses]
+                    ]
                 ]
             ] /}
         {/call}

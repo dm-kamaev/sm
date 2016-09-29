@@ -113,6 +113,12 @@ goog.scope(function() {
     FavoriteLink.prototype.sendData = function(itemId, opt_action) {
         var method = '';
 
+        var data = {
+            'entityId': itemId,
+            'entityType': 'school',
+            '_csrf': window['ctx']['csrf']
+        };
+
         if (opt_action == 'add') {
             method = 'POST';
             var callback = this.onSuccessFavoriteAdd_.bind(this);
@@ -121,16 +127,14 @@ goog.scope(function() {
         } else {
             method = 'GET';
         }
-        var token = window['ctx']['csrf'];
+
         return jQuery.ajax({
-            'url': this.favoriteApiAddress_,
-            'type': method,
-            'data': {
-                'itemId': itemId,
-                '_csrf': token
-            },
-            'dataType': 'json',
-            'success': callback
+            url: this.favoriteApiAddress_,
+            type: method,
+            data: JSON.stringify(data),
+            contentType: 'application/json',
+            dataType: 'json',
+            success: callback
         });
     };
 

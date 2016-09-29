@@ -7,11 +7,13 @@ const scoreView = require('./scoreView'),
     geoView = require('../../geo/views/geoView'),
     areaView = require('../../geo/views/areaView'),
     districtView = require('../../geo/views/districtView'),
+    addressView = require('../../geo/views/addressView'),
     FormatText = require('../../entity/lib/FormatText'),
-    CourseOptions = require('../lib/CourseOptions');
+    CourseOptions = require('../lib/CourseOptions'),
+    pageView = require('../../entity/views/pageView');
 
-const entityType =
-        require('../../../../api/modules/entity/enums/entityType');
+const entityType = require('../../../../api/modules/entity/enums/entityType');
+
 
 let view = {};
 
@@ -34,17 +36,27 @@ view.page = function(course) {
 };
 
 /**
- * @param  {string} text
+ * @param  {string=} text
  * @return {Object}
  */
 view.formatFullDescription = function(text) {
-    let result = {};
-    if (text.length > FULL_DESCRIPTION_LENGTH) {
-        let formatText = new FormatText();
-        result.fullText = text;
-        result.cutText = formatText.cut(text, FULL_DESCRIPTION_LENGTH, ' ');
+    let result = {
+        fullText: [],
+        cutText: []
+    };
+
+    if (text) {
+        if (text.length > FULL_DESCRIPTION_LENGTH) {
+            let formatText = new FormatText();
+            result.fullText.push(text);
+            result.cutText.push(
+                formatText.cut(text, FULL_DESCRIPTION_LENGTH, ' ')
+            );
+        } else {
+            result.cutText.push(text);
+        }
     } else {
-        result.cutText = text;
+        result = null;
     }
     return result;
 };
@@ -63,39 +75,62 @@ view.formatCost = function(options) {
  * @return {Object}
  */
 view.formatGeneralOptions = function(course) {
-    let items = [],
+    let items = this.getStaticOptions(course),
         courseOptions = new CourseOptions(course.courseOptions);
 
-    items.push({
+    return {
+        items: items.concat(courseOptions.getGeneralOptions())
+    };
+};
+
+/**
+ * @param {{
+ *     courseBrand: {
+ *         name: string
+ *     },
+ *     courseType: {
+ *         name: string
+ *     },
+ *     entranceExam: ?string,
+ *     learningOutcome: ?string,
+ *     openSchedule: ?boolean
+ * }} course
+ * @return {Array<Object>}
+ */
+view.getStaticOptions = function(course) {
+    let result = [];
+    result.push({
         name: course.courseBrand.name,
         description: course.courseBrand.description
     });
 
+    result.push({
+        name: 'Направление',
+        description: course.courseType.name
+    });
+
     if (course.entranceExam) {
-        items.push({
+        result.push({
             name: 'Вступительнео расписание',
             description: course.entranceExam
         });
     }
 
     if (course.learningOutcome) {
-        items.push({
+        result.push({
             name: 'Результаты обучения',
             description: course.learningOutcome
         });
     }
 
     if (course.openSchedule) {
-        items.push({
+        result.push({
             name: 'Сроки записи',
             description:
                 'Запись в новые и существующие группы ведётся постоянно'
         });
     }
-
-    return {
-        items: items.concat(courseOptions.getGeneralOptions())
-    };
+    return result;
 };
 
 
@@ -206,7 +241,7 @@ view.suggest = function(data) {
 view.suggestList = function(courses) {
     return courses.map(course => ({
         id: course.id,
-        alias: 'undefined',
+        alias: this.generateAlias(course.alias, course.brandAlias),
         name: course.name,
         score: course.score || [0, 0, 0, 0],
         totalScore: course.totalScore,
@@ -278,19 +313,19 @@ view.mapCourse = function(course) {
     return {
         id: course.id,
         content: course.name,
-        url: null
+        url: 'course/' + this.generateAlias(course.alias, course.brandAlias)
     };
 };
 
 
 /**
  * @param  {Object} course
- * @param  {string} type
  * @return {Object}
  */
 view.getListCourse = function(course) {
     return {
         id: course.id,
+        alias: this.generateAlias(course.alias, course.brandAlias),
         type: entityType.COURSE,
         name: {light: course.name},
         description: course.description,
@@ -354,6 +389,17 @@ view.joinListCourse = function(existingCourse, newCourse) {
 };
 
 /**
+ * @param  {string} alias
+ * @param  {string} brandAlias
+ * @return {string}
+ */
+view.generateAlias = function(alias, brandAlias) {
+    return 'proforientacija/' + brandAlias + '/' +
+        alias;
+};
+
+
+/**
  * @param {{
  *     name: string,
  *     phone: string,
@@ -367,6 +413,65 @@ view.letterData = function(data) {
         theme: 'Запись на курс',
         content: `Имя: ${data.name}<br/>Телефон: ${data.phone}` + comment
     };
+};
+
+
+/*
+ * Used for item of list favorites
+ * @param {{
+ *     entity: models.Course,
+ *     type: string,
+ *     url: models.Page
+ * }} data
+ * @return {{
+ *     id: number,
+ *     type: string,
+ *     name: {
+ *         light: string,
+ *         bold: ?string
+ *     },
+ *     alias: string,
+ *     score: number,
+ *     metro: ?Array<{
+ *         id: number,
+ *         name: string
+ *     }>,
+ *     area: ?Array<{
+ *         id: number,
+ *         name: string
+ *     }>
+ * }}
+ */
+view.item = function(data) {
+    var course = data.entity,
+        type = data.type;
+
+    var addresses = this.getAddresses(course.courseOptions);
+
+    return {
+        id: course.id,
+        type: type,
+        name: {light: course.name},
+        score: course.totalScore,
+        metro: addressView.nearestMetro(addresses),
+        area: [addressView.getArea(addresses)[0]],
+        alias: this.generateAlias(data.alias.alias, data.brandAlias.alias)
+    };
+};
+
+
+/**
+ * @param  {Array<Object>} courses
+ * @param  {Array<Object>} courseAliases
+ * @param  {Array<Object>} brandAliases
+ * @return {Array<Object>}
+ */
+view.joinAliases = function(courses, courseAliases, brandAliases) {
+    let result = pageView.joinAliases(courses, courseAliases);
+    return pageView.joinAliases(result, brandAliases, {
+        outputField: 'brandAlias',
+        inputId: 'brandId'
+    });
 };
 
 module.exports = view;

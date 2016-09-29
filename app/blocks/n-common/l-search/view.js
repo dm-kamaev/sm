@@ -42,6 +42,7 @@ goog.scope(function() {
     View.CssClass = {
         ROOT: 'l-search',
         RESULTS_LIST_HEADER: 'l-search__list-header',
+        RESULTS_LIST: 'l-search__results-list',
         LOADER: 'l-search__loader',
         SHOW_MORE_BUTTON: 'l-search__show-more-button',
         SHOW_MORE_BUTTON_WRAP: 'l-search__show-more-button-wrap',
@@ -122,7 +123,7 @@ goog.scope(function() {
     View.prototype.updateListHeader = function(countResults,
         searchText) {
 
-        var headers = this.dom.headersResults;
+        var headers = this.dom.resultsListHeaders;
 
         for (var i = 0; i < headers.length; i++) {
             goog.soy.renderElement(
@@ -162,8 +163,11 @@ goog.scope(function() {
                 filterPanel: this.getElementByClass(
                     sm.lSearch.bFilterPanel.View.CssClass.ROOT
                 ),
+                resultsListHeaders: this.getElementsByClass(
+                    View.CssClass.RESULTS_LIST_HEADER
+                ),
                 resultsList: this.getElementByClass(
-                    sm.bSmItemList.View.CssClass.ROOT
+                    View.CssClass.RESULTS_LIST
                 ),
                 map: this.getElementByClass(
                     sm.bSmMap.View.CssClass.ROOT
