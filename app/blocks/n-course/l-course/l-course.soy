@@ -20,6 +20,7 @@
  *             cutText: Array<string>,
  *             fullText: (Array<string>|undefined)
  *         },
+ *         score: sm.bSmScore.TemplateBrief.Params.Data,
  *         cost: ?string,
  *         generalOptions: sm.lCourse.bInformationBoard.Template.Params.Data,
  *         online: ?('only'|'available'|undefidned)
@@ -89,7 +90,22 @@
 /**
  * Section with a complete data entity
  * @param params {{
- *     data: {?}
+ *     data: {
+ *         entityData: {
+ *             id: number,
+ *             name: string,
+ *             description: ?string,
+ *             fullDescription: {
+ *                 cutText: Array<string>,
+ *                 fullText: (Array<string>|undefined)
+ *             },
+ *             score: sm.bSmScore.TemplateBrief.Params.Data,
+ *             online: ?('only'|'available'|undefidned),
+ *             cost: ?string
+ *             generalOptions: sm.lCourse.bInformationBoard.Template.Params.Data,
+ *         },
+ *         actionButtonText: string
+ *     }
  * }}
  */
 {template .sectionData_}
@@ -135,7 +151,19 @@
 /**
  * Data on the left
  * @param params {{
- *     data: {?}
+ *     data: {
+ *         entityData: {
+ *             id: number,
+ *             name: string,
+ *             description: ?string,
+ *             fullDescription: {
+ *                 cutText: Array<string>,
+ *                 fullText: (Array<string>|undefined)
+ *             },
+ *             score: sm.bSmScore.TemplateBrief.Params.Data,
+ *             generalOptions: sm.lCourse.bInformationBoard.Template.Params.Data
+ *         }
+ *     }
  * }}
  */
 {template .leftData_}
@@ -149,7 +177,13 @@
 /**
  * Data on the right
  * @param params {{
- *     data: {?}
+ *     data: {
+ *         entityData: {
+ *             online: ?('only'|'available'|undefidned),
+ *             cost: ?string
+ *         },
+ *         actionButtonText: string
+ *     }
  * }}
  */
 {template .rightData_}
@@ -172,6 +206,7 @@
  *                 cutText: Array<string>,
  *                 fullText: (Array<string>|undefined)
  *             },
+ *             score: sm.bSmScore.TemplateBrief.Params.Data
  *         }
  *     }
  * }}
@@ -191,7 +226,8 @@
  *     data: {
  *         entityData: {
  *             online: ?('only'|'available'|undefidned)
- *         }
+ *         },
+ *         map: sm.bSmMap.Template.Params.Data
  *     }
  * }}
  */
@@ -405,7 +441,11 @@
 /**
  * Course rating
  * @param params {{
- *     data: {?}
+ *     data: {
+ *         entityData: {
+ *             score: sm.bSmScore.TemplateBrief.Params.Data
+ *         }
+ *     }
  * }}
  */
 {template .score_}
@@ -425,7 +465,9 @@
                             'topOffset': 'xxl'
                         ],
                         'theme': 'light',
-                        'isActive': true
+                        'isActive': $params.data.entityData.score.marks.primary.value ?
+                            true :
+                            false
                     ]
                 ]
             ]/}
@@ -448,7 +490,9 @@
                             'offset': 'left-m'
                         ],
                         'theme': 'light',
-                        'isActive': true
+                        'isActive': $params.data.entityData.score.marks.primary.value ?
+                            true :
+                            false
                     ]
                 ]
             ]/}
