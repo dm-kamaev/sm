@@ -398,8 +398,14 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.onMapDataLoaded_ = function(event) {
-        this.map_.addItems(event.getItemGroups());
-        console.log(event.getPosition());
+        var itemGroups = event.getItemGroups();
+
+        var isItems = itemGroups.some(function(group) {
+            return group.items.length;
+        });
+        this.getView().setSectionMapVisibility(isItems);
+
+        this.map_.addItems(itemGroups);
         this.map_.center(event.getPosition());
     };
 
@@ -415,6 +421,7 @@ goog.scope(function() {
         this.updateResultsList_(listItems, countResults);
         this.detectShowMoreResultsList_(listItems.length, countResults);
 
+        this.getView().setSortVisibility(countResults);
         this.getView().setLoaderVisibility(false);
     };
 
