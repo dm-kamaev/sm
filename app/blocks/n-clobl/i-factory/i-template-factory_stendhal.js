@@ -48,6 +48,7 @@ goog.require('sm.gTab.TemplateCatalog');
 goog.require('sm.gTab.TemplateStendhal');
 goog.require('sm.gTextarea.TemplateStendhal');
 goog.require('sm.lCourse.bInformationBoard.Template');
+goog.require('sm.lCourse.bOption.Template');
 goog.require('sm.lInformation.bFeedbackBoard.Template');
 goog.require('sm.lInformation.bInformationBoard.Template');
 goog.require('sm.lSchool.bDate.Template');
@@ -325,11 +326,15 @@ sm.iFactory.TemplateFactoryStendhal = function() {
             sm.lSearch.bSuggestFilter.Template.suggestFilter
         );
 
-        /** l-course blocks */
-        this.setTemplateListItem(
-            'lCourse-informationBoard',
-            sm.lCourse.bInformationBoard.Template.informationBoard
-        );
+    /** l-course blocks */
+    this.setTemplateListItem(
+        'lCourse-informationBoard',
+        sm.lCourse.bInformationBoard.Template.informationBoard
+    )
+    .setTemplateListItem(
+        'lCourse-option',
+        sm.lCourse.bOption.Template.option
+    );
 };
 goog.inherits(sm.iFactory.TemplateFactoryStendhal, cl.iFactory.TemplateFactory);
 goog.addSingletonGetter(sm.iFactory.TemplateFactoryStendhal);
