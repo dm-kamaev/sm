@@ -1,0 +1,80 @@
+@import "../../../n-common/i-media/i-media";
+
+.b-option {
+    width: 100%;
+
+    font-family: 'PT Serif', serif;
+    font-size: 16px;
+    line-height: 22px;
+
+    &:after {
+        clear: both;
+    }
+}
+
+.b-option__description {
+    display: inline-block;
+
+    width: 360px;
+}
+
+.b-option__cost {
+    display: inline-block;
+
+    font: 16px 'Proxima', Arial, sans-serif;
+    font-weight: 700;
+
+    float: right;
+}
+
+.b-option__enroll-button {
+    font: 16px 'Proxima', Arial, sans-serif;
+    cursor: pointer;
+    font-weight: 700;
+
+    float: right;
+
+    color: #ee392f;
+
+    margin-left: 90px;
+}
+
+.b-option__button-text_xs {
+    display: none;
+}
+
+.b-option__button-text_s {
+    display: block;
+}
+
+@include media-s {
+    .b-option__enroll-button {
+        margin-left: 50px;
+    }
+}
+
+@include media-xs {
+    .b-option__description {
+        display: block;
+
+        width: 100%;
+    }
+
+    .b-option__enroll-button {
+        float: none;
+
+        margin-left: 30px;
+    }
+
+    .b-option__cost {
+        display: none;
+    }
+
+    .b-option__button-text_xs {
+        display: block;
+    }
+
+    .b-option__button-text_s {
+        display: none;
+    }
+}
