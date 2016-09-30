@@ -14,8 +14,6 @@
 
 .b-sm-expander__expander-text {
     display: inline-block;
-
-    margin-bottom: 15px;
 }
 
 .b-sm-expander_folded {
@@ -33,6 +31,10 @@
 }
 
 .b-sm-expander_expanded {
+    .b-sm-expander__expander-text {
+        margin-bottom: 9px;
+    }
+
     .b-sm-expander__content {
         display: block;
     }

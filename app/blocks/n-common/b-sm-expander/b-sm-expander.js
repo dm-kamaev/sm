@@ -146,7 +146,9 @@ goog.scope(function() {
      * @private
      */
     Expander.prototype.onExpandButtonClick_ = function() {
-        this.switchState_();
+        if (!this.params.isEmptyContent) {
+            this.switchState_();
+        }
     };
 
 

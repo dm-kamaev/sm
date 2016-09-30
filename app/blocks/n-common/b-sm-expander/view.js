@@ -60,7 +60,8 @@ goog.scope(function() {
 
     /**
      * @typedef {{
-     *     isExpanded: boolean
+     *     isExpanded: boolean,
+     *     isEmptyContent: boolean
      * }}
      */
     sm.bSmExpander.View.DataParams;
@@ -69,7 +70,8 @@ goog.scope(function() {
     /**
      * @typedef {{
      *     data: {
-     *         content: ?string
+     *         expanderText: string,
+     *         content: (string|undefined)
      *     },
      *     config: {
      *         isExpanded: boolean,
@@ -205,7 +207,8 @@ goog.scope(function() {
      */
     View.prototype.transformParams_ = function(rawParams) {
         return {
-            isExpanded: rawParams['isExpanded']
+            isExpanded: rawParams['isExpanded'],
+            isEmptyContent: rawParams['isEmptyContent']
         };
     };
 });  // goog.scope
