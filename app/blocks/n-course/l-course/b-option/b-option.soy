@@ -1,0 +1,183 @@
+/**
+ * @fileoverview Option template
+ *
+ * Features comes from backend as array, first element: is title of feature list
+ * other elements - its body
+ */
+{namespace sm.lCourse.bOption.Template}
+
+/**
+ * @typedef {{
+ *     features: Array<{
+ *         type: number,
+ *         value: string
+ *     }>,
+ *     cost: number,
+ *     buttonText: string
+ * }} sm.bOption.Template.Params.Data
+ */
+
+/**
+ * Template for Option block
+ * @param params {{
+ *     data: sm.bOption.Template.Params.Data
+ * }}
+ * @constructor
+ * @extends cl.iControl.Template
+ */
+{template .option}
+    {call .init data="all" /}
+{/template}
+
+
+/**
+ * @overrtypee
+ */
+{template .body}
+    {call .description_ data="all" /}
+    {call .enrollButton_ data="all" /}
+    {call .cost_ data="all" /}
+{/template}
+
+
+/**
+ * Description template
+ * @param params {{
+ *     data: {
+ *         features: Array<{
+ *             type: number,
+ *             value: string
+ *         }>
+ *     }
+ * }}
+ * @private
+ */
+{template .description_ kind="html"}
+    {let $featureList kind="html"}
+        {call .featureList_ data="all" /}
+    {/let}
+    <div class="{call .rootClass /}__description">
+        {call .renderChild}
+            {param params: [
+                'type': 'smExpander',
+                'renderParams': [
+                    'data': [
+                        'expanderText': $params.data.features[0].value,
+                        'content': $featureList
+                    ]
+                ]
+            ] /}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Feature list template
+ * @param params {{
+ *     data: {
+ *         features: Array<{
+ *             type: number,
+ *             value: string
+ *         }>
+ *     }
+ * }}
+ * @private
+ */
+{template .featureList_ kind="html"}
+    <div class="{call .rootClass /}__feature-list">
+        {for $i in range(length($params.data.features))}
+            {if $i > 0}
+                {call .featureItem_}
+                    {param params: [
+                        'value': $params.data.features[$i].value
+                    ]/}
+                {/call}
+            {/if}
+        {/for}
+    </div>
+{/template}
+
+
+/**
+ * Each feature template
+ * @param params {{
+ *     value: string
+ * }}
+ * @private
+ */
+{template .featureItem_ kind="html"}
+    <div class="{call .rootClass /}__feature">
+        {$params.value}
+    </div>
+{/template}
+
+
+/**
+ * Cost template
+ * @param params {{
+ *     data: {
+ *         cost: string
+ *     }
+ * }}
+ * @private
+ */
+{template .cost_ kind="html"}
+    <div class="{call .rootClass /}__cost">
+        {$params.data.cost}
+    </div>
+{/template}
+
+
+/**
+ * Enroll button template
+ * @param params {{
+ *     data: {
+ *         buttonText: string,
+ *         cost: string
+ *     }
+ * }}
+ * @private
+ */
+{template .enrollButton_ kind="html"}
+    <div class="{call .rootClass /}__enroll-button">
+        <div class="{call .rootClass /}__button-text
+            {sp}{call .rootClass /}__button-text_s">
+            {$params.data.buttonText}
+        </div>
+        <div class="{call .rootClass /}__button-text
+            {sp}{call .rootClass /}__button-text_xs">
+            {$params.data.cost}
+        </div>
+    </div>
+{/template}
+
+
+/**
+ * @param params {{
+ *     features: Array<{
+ *         type: number,
+ *         value: string
+ *     }>,
+ *     cost: number
+ * }}
+ */
+{template .attributes kind="attributes"}
+    {let $dataParams: quoteKeysIfJs([
+        'features': $params.data.features,
+        'cost': $params.data.cost
+    ]) /}
+
+    data-params="
+    {call cl.iUtils.Utils.stringify}
+        {param json: $dataParams /}
+    {/call}"
+{/template}
+
+
+/**
+ * @override
+ */
+{template .rootClass}
+    b-option
+{/template}

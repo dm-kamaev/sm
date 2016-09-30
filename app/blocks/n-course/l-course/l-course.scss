@@ -43,9 +43,9 @@
 
     &:after {
         display: block;
-        content: '';
-
         clear: both;
+
+        content: '';
     }
 }
 
@@ -90,9 +90,9 @@
 
 .l-course__data_right {
     float: right;
-    margin-top: 10px;
 
     width: 380px;
+    margin-top: 10px;
 
     background-color: #f7f7f1;
 }
@@ -204,12 +204,11 @@
     }
 
     .l-course__score_s {
+        display: block;
         float: left;
 
-        display: block;
-        margin-top: 10px;
-
         width: 24px;
+        margin-top: 10px;
     }
     /** section data end **/
 

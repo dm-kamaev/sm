@@ -1,0 +1,258 @@
+/**
+ * @fileoverview Expander component template. It take content as for expandable
+ * block.
+ * When expanded, increase own heigh and may change parent block height.
+ */
+{namespace sm.bSmExpander.Template}
+
+
+/**
+ * @typedef {{
+ *     content: string,
+ *     expanderText: string
+ * }} sm.bSmExpander.Template.Params.Data
+ */
+
+
+/**
+ * @typedef {{
+ *     isExpanded: boolean,
+ *     theme: (string|undefined)
+ * }} sm.bSmExpander.Template.Params.Config
+ */
+
+
+/**
+ * Template for Expander block block
+ * @param params {{
+ *     data: sm.bSmExpander.Template.Params.Data,
+ *     config: sm.bSmExpander.Template.Params.Config
+ * }}
+ * @constructor
+ * @extends cl.iControl.Template
+ */
+{template .expander}
+    {let $config: augmentMap(
+        [
+            'theme': 'default'
+        ],
+        $params.config
+    ) /}
+
+    {call .init}
+        {param params: [
+            'data': $params.data,
+            'config': $config
+        ] /}
+    {/call}
+{/template}
+
+
+/**
+ * @param params {{
+ *     data: sm.bSmExpander.Template.Params.Data,
+ *     config: sm.bSmExpander.Template.Params.Config
+ * }}
+ * @override
+ */
+{template .body}
+    {call .expandButton_ data="all" /}
+    {call .content_ data="all" /}
+{/template}
+
+
+/**
+ * Expand button template
+ * @param params {{
+ *     data: {
+ *         expanderText: string
+ *     },
+ *     config: {
+ *         notShowIcon: boolean
+ *     }
+ * }}
+ * @private
+ */
+{template .expandButton_ kind="html"}
+    <div class="{call .rootClass /}__expand-button">
+        {call .icon_ data="all" /}
+        {call .expanderText_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Icon template
+ * @param params {{
+ *     config: {
+ *         theme: (string|undefined)
+ *         notShowIcon: boolean
+ *     }
+ * }}
+ * @private
+ */
+{template .icon_ kind="html"}
+    <div class="{call .rootClass /}__icon-wrap">
+        {if not $params?.config.notShowIcon}
+            {call .foldedStateIcon_ data="all" /}
+            {call .expandedStateIcon_ data="all" /}
+        {/if}
+    </div>
+{/template}
+
+
+/**
+ * Expander text template
+ * @param params {{
+ *     data: {
+ *         expanderText: string
+ *     }
+ * }}
+ * @private
+ */
+{template .expanderText_ kind="html"}
+    <div class="{call .rootClass /}__expander-text">
+        {call .renderChild}
+            {param params: [
+                'type': 'smLink',
+                'renderParams': [
+                    'data': [
+                        'content': $params.data.expanderText
+                    ],
+                    'config': [
+                        'size': 'xxxl'
+                    ]
+                ]
+            ] /}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * @param params {{
+ *     data: {
+ *         content: ?string
+ *     }
+ * }}
+ * @private
+ */
+{template .content_ kind="html"}
+    <div class="{call .rootClass /}__content">
+        {$params.data.content}
+    </div>
+{/template}
+
+
+/**
+ * Icon which shows, when content is showed, i.e. in expanded state
+ * @param params {{
+ *     config: {
+ *         theme: string
+ *     }
+ * }}
+ */
+{template .expandedStateIcon_ kind="html"}
+    {let $classes kind="html"}
+        {call .rootClass /}__icon
+        {sp}{call .rootClass /}__icon_expanded
+    {/let}
+
+    {let $type kind="html"}
+        {if $params.config.theme == 'default'}
+            filter-arrow-up
+        {/if}
+    {/let}
+
+    <div class="{$classes}">
+        {call .renderChild}
+            {param params: [
+                'type': 'icon',
+                'renderParams': [
+                    'data': [
+                        'type': $type
+                    ]
+                ]
+            ] /}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Icon which shows, when content is hidden, i.e. in expanded folded state
+ * @param params {{
+ *     config: {
+ *         theme: string
+ *     }
+ * }}
+ */
+{template .foldedStateIcon_ kind="html"}
+    {let $classes kind="html"}
+        {call .rootClass /}__icon
+        {sp}{call .rootClass /}__icon_folded
+    {/let}
+
+    {let $type kind="html"}
+        {if $params.config.theme == 'default'}
+            filter-arrow-down
+        {/if}
+    {/let}
+
+    <div class="{$classes}">
+        {call .renderChild}
+            {param params: [
+                'type': 'icon',
+                'renderParams': [
+                    'data': [
+                        'type': $type
+                    ]
+                ]
+            ] /}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * @param params {{
+ *     config: {
+ *         isExpanded: boolean
+ *     }
+ * }}
+ * @override
+ */
+{template .attributes kind="attributes"}
+    {let $data: quoteKeysIfJs([
+        'isExpanded': $params.config.isExpanded
+    ]) /}
+
+    data-params="
+        {call cl.iUtils.Utils.stringify}
+            {param json: $data /}
+        {/call}"
+{/template}
+
+
+/**
+ * @param params {{
+ *     config: {
+ *         isExpanded: boolean
+ *     }
+ * }}
+ * @override
+ */
+{template .additionalClasses kind="html"}
+    {if $params?.config.isExpanded}
+        {call .rootClass /}_expanded
+    {else}
+        {call .rootClass /}_folded
+    {/if}
+{/template}
+
+/**
+ * @override
+ */
+{template .rootClass}
+    b-sm-expander
+{/template}

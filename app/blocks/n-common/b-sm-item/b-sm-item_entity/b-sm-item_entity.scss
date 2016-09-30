@@ -37,17 +37,22 @@
         }
     }
 
+    .b-sm-item__estimates {
+        position: absolute;
+        top: 2px;
+
+        width: 250px;
+        height: 100%;
+
+        text-align: right;
+    }
+
     .b-sm-item__cost {
         font: 16px/22px 'PT Serif', Arial, sans-serif;
     }
 
     .b-sm-item__cost_size_l {
-        position: absolute;
-        top: 3px;
-        right: 55px;
-
-        min-width: 185px;
-        height: 100%;
+        display: inline-block;
     }
 
     .b-sm-item__cost_size_s {
@@ -55,10 +60,7 @@
     }
 
     .b-sm-item__score {
-        top: 2px;
-        right: 0;
-
-        height: 100%;
+        display: inline-block;
     }
 
     .b-sm-item__section_description {
@@ -107,13 +109,9 @@
     .b-sm-item_entity {
         padding: 20px 0;
 
-        .b-sm-item__cost_size_l {
-            top: 28px;
-            right: 0;
-
+        .b-sm-item__estimates {
+            width: auto;
             min-width: 160px;
-
-            text-align: right;
         }
     }
 

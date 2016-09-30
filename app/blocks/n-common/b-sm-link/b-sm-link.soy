@@ -1,5 +1,7 @@
 /**
  * @fileoverview Link template for unification of links on project
+ *
+ * Set default theme if another theme not set
  */
 {namespace sm.bSmLink.Template}
 
@@ -17,7 +19,7 @@
  * @typedef {{
  *     target: (string|undefined),
  *     size: ('s'|'m'|'l'|'xl'),
- *     theme: ('attention'|'light'|undefined)
+ *     theme: ('attention'|'light'|'block'|'dark'|'default'|undefined)
  * }} sm.bSmLink.Template.Params.Config
  */
 
@@ -32,7 +34,19 @@
  * @constructor
  */
 {template .link kind="html"}
-    {call .init data="all" /}
+    {let $config: augmentMap(
+        [
+            'theme': 'default'
+        ],
+        $params.config
+    ) /}
+
+    {call .init}
+        {param params: [
+            'data': $params.data,
+            'config': $config
+        ] /}
+    {/call}
 {/template}
 
 /**

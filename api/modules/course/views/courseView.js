@@ -14,6 +14,7 @@ const scoreView = require('./scoreView'),
 
 const entityType = require('../../../../api/modules/entity/enums/entityType');
 
+
 let view = {};
 
 const FULL_DESCRIPTION_LENGTH = 300;
@@ -76,6 +77,10 @@ view.formatCost = function(options) {
 view.formatGeneralOptions = function(course) {
     let items = this.getStaticOptions(course),
         courseOptions = new CourseOptions(course.courseOptions);
+
+    let uO = courseOptions.getUniqueOptions(courseOptions.getGeneralOptions());
+
+    console.log(JSON.stringify(uO, null, 2));
 
     return {
         items: items.concat(courseOptions.getGeneralOptions())

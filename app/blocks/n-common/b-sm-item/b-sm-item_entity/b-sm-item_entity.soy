@@ -45,25 +45,18 @@
 
 
 /**
- * Header
+ * Template estimated parameters
  * @param params {{
  *     data: {
  *         type: string,
- *         name: {
- *             light: string,
- *             bold: ?string
- *         },
  *         cost: (number|undefined),
  *         score: ?sm.bSmScore.Template.Params.Data
  *     }
  * }}
  * @override
  */
-{template .sectionHeader}
-    <div class="{call .rootClass/}__section{sp}
-                {call .rootClass/}__section_header">
-        {call .name data="all" /}
-
+{template .estimates}
+    <div class="{call .rootClass/}__estimates">
         {call .cost_}
             {param params: [
                 'data': $params.data,
@@ -230,7 +223,13 @@
  * @override
  */
 {template .score}
-    <div class="{call .rootClass/}__score">
+    {let $classes kind="html"}
+        {call .rootClass/}__score
+
+        {sp}{cl.iUtils.Utils.CssClass.HIDDEN}
+    {/let}
+
+    <div class="{$classes}">
         {call .renderChild}
             {param params: [
                 'type': 'smScoreBrief',

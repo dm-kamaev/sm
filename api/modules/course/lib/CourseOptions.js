@@ -1,14 +1,28 @@
 'use strict';
 
 const WEEK_DAYS = [
-    'Понедельник',
-    'Вторник',
-    'Среда',
-    'Четверг',
-    'Пятница',
-    'Суббота',
-    'Воскресенье'
-];
+        'Понедельник',
+        'Вторник',
+        'Среда',
+        'Четверг',
+        'Пятница',
+        'Суббота',
+        'Воскресенье'
+    ],
+    MONTHS = [
+        'января',
+        'февраля',
+        'марта',
+        'апреля',
+        'мая',
+        'июня',
+        'июля',
+        'августа',
+        'сентября',
+        'октября',
+        'ноября',
+        'декабря'
+    ];
 
 module.exports = class {
     /**
@@ -23,7 +37,7 @@ module.exports = class {
         /**
          * @type {Array<Object>}
          */
-        this.generalOptions_ = [{
+        this.availableOptions_ = [{
             key: 'age',
             name: 'Возраст'
         }, {
@@ -44,6 +58,9 @@ module.exports = class {
         }, {
             key: 'duration',
             name: 'Продолжительность занятия'
+        }, {
+            key: 'startDate',
+            name: 'Начало занятий'
         }];
     }
 
@@ -52,13 +69,67 @@ module.exports = class {
      * @return {Array<Object>}
      */
     getGeneralOptions() {
-        return this.generalOptions_.map(generalOption =>
+        return this.availableOptions_.map(generalOption =>
                 this.getGeneralOptionValue_(generalOption)
             )
             .filter(generalOption => generalOption);
     }
 
     /**
+     * @param  {Array<Object>} generalOptions
+     * @return {Array<Object>}
+     */
+    getUniqueOptions(generalOptions) {
+        let uniqueOptionValues = this.getUniqueOptionValues_(generalOptions),
+            uniqueOptions = this.options_.map(option =>
+                this.getUniqueOptionValue_(option, uniqueOptionValues));
+
+        return this.groupByAddress_(uniqueOptions);
+    }
+
+    /**
+     * @private
+     * @param  {Array<Object>} generalOptions
+     * @return {Array<string>}
+     */
+    getUniqueOptionValues_(generalOptions) {
+        return this.availableOptions_.map(availableOption =>
+                generalOptions.every(generalOption =>
+                    generalOption.key != availableOption.key
+                ) ? availableOption : null
+            )
+            .filter(item => item);
+    }
+
+    /**
+     * @private
+     * @param  {Object} option
+     * @param  {Array<Object>} uniqueOptionValues
+     * @return {Object}
+     */
+    getUniqueOptionValue_(option, uniqueOptionValues) {
+        let result = {};
+
+        uniqueOptionValues.map(uniqueOptionValue => {
+            let key = uniqueOptionValue.key;
+            result[key] = option[key];
+        });
+        result.departments = option.departments;
+
+        return result;
+    }
+
+    /**
+     * @private
+     * @param  {Array<Object>} options
+     * @return {Array<Object>}
+     */
+    groupByAddress_(options) {
+        return options;
+    }
+
+    /**
+     * @private
      * @param  {Object} generalOption
      * @return {(Object|null)}
      */
@@ -76,6 +147,7 @@ module.exports = class {
     }
 
     /**
+     * @private
      * @param  {Object} generalOption
      * @param  {string} value
      * @return {Object}
@@ -101,14 +173,25 @@ module.exports = class {
      */
     formatOptions_(options) {
         return options.map(option => ({
+            departments: this.formatDepartments_(option.departments),
             age: this.formatAge_(option.age),
             schedule: this.formatSchedule_(option.schedule),
             maxGroupSize: this.formatGroupSize_(option.maxGroupSize),
             costPerHour: this.formatCost_(option.costPerHour),
             regularity: this.formatRegularity_(option.schedule),
             online: this.formatOnline_(option.online),
-            duration: this.formatDuration_(option.duration)
+            duration: this.formatDuration_(option.duration),
+            startDate: this.formatStartDate_(option.startDate)
         }));
+    }
+
+    /**
+     * @private
+     * @param  {Array<Object>} departments
+     * @return {Array<Object>}
+     */
+    formatDepartments_(departments) {
+        return departments.map(department => department.address.toJSON());
     }
 
     /**
@@ -179,6 +262,7 @@ module.exports = class {
     }
 
     /**
+     * @private
      * @param  {Array<Object>} schedule
      * @return {string}
      */
@@ -189,6 +273,7 @@ module.exports = class {
     }
 
     /**
+     * @private
      * @param  {boolean} online
      * @return {string}
      */
@@ -197,6 +282,7 @@ module.exports = class {
     }
 
     /**
+     * @private
      * @param  {number} duration
      * @return {string}
      */
@@ -210,5 +296,14 @@ module.exports = class {
             result = duration + ' часов';
         }
         return result;
+    }
+
+    /**
+     * @private
+     * @param  {Date} startDate
+     * @return {string}
+     */
+    formatStartDate_(startDate) {
+        return startDate.getDate() + ' ' + MONTHS[startDate.getMonth()];
     }
 };

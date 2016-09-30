@@ -32,7 +32,7 @@
         margin-top: 60px;
         padding-bottom: 60px;
 
-        border-bottom: 1px solid #e5e5e5;
+        // border-bottom: 1px solid #e5e5e5;
 
 
         &:after {
@@ -44,11 +44,16 @@
     }
 
     &.l-search__section_popular {
-        height: 370px;
+        // height: 370px;
         margin-top: 45px;
-
-        background: #f4f4ec;
     }
+}
+
+.l-search__section_hidden {
+    position: absolute;
+    z-index: -1;
+
+    visibility: hidden;
 }
 
 .l-search__section-inner {

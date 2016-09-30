@@ -1,3 +1,6 @@
+/**
+ * @fileoverview Link control
+ */
 goog.provide('sm.bSmLink.SmLink');
 
 goog.require('cl.iControl.Control');
@@ -24,6 +27,30 @@ goog.scope(function() {
 
 
     /**
+     * Css class enum
+     * @enum {string}
+     * @const
+     */
+    Link.CssClass = {
+        ROOT: sm.bSmLink.View.CssClass.ROOT
+    };
+
+
+    /**
+     * Possible themes
+     * @enum {string}
+     * @const
+     */
+    Link.Theme = {
+        DEFAULT: View.Theme.DEFAULT,
+        LIGHT: View.Theme.LIGHT,
+        ATTENTION: View.Theme.ATTENTION,
+        DARK: View.Theme.DARK,
+        BLOCK: View.Theme.BLOCK
+    };
+
+
+    /**
      * @typedef {sm.bSmLink.View.RenderParams}
      */
     sm.bSmLink.SmLink.RenderParams;
@@ -36,5 +63,32 @@ goog.scope(function() {
      */
     Link.getRenderParams = function(rawParams) {
         return View.getRenderParams(rawParams);
+    };
+
+
+    /**
+     * Set given theme
+     * @param {sm.bSmLink.SmLink.Theme} theme
+     * @public
+     */
+    Link.prototype.setTheme = function(theme) {
+        this.getView().setTheme(theme);
+    };
+
+    /**
+     * Enable hover reaction on element if it possible (not-mobile device)
+     * @public
+     */
+    Link.prototype.enableHover = function() {
+        this.getView().enableHover();
+    };
+
+
+    /**
+     * Disable hover reaction on element
+     * @public
+     */
+    Link.prototype.disableHover = function() {
+        this.getView().disableHover();
     };
 });  // goog.scope

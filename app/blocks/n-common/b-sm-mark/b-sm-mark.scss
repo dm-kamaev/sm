@@ -50,15 +50,14 @@
 
 /** theme ring */
 .b-sm-mark_ring-theme {
-    text-align: center;
-
     width: 52px;
     height: 52px;
 
+    text-align: center;
+    letter-spacing: 0.06em;
+
     border: 4px solid #000;
     border-radius: 50%;
-
-    letter-spacing: 0.06em;
 
     font-size: 22px;
     font-weight: 800;

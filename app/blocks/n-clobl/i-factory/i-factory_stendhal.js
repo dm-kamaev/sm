@@ -27,6 +27,8 @@ goog.require('sm.bSmCheckbox.SmCheckbox');
 goog.require('sm.bSmCheckbox.View');
 goog.require('sm.bSmCollapsedText.SmCollapsedText');
 goog.require('sm.bSmCollapsedText.View');
+goog.require('sm.bSmExpander.SmExpander');
+goog.require('sm.bSmExpander.View');
 goog.require('sm.bSmFavorite.SmFavorite');
 goog.require('sm.bSmFavorite.View');
 goog.require('sm.bSmItem.SmItem');
@@ -71,6 +73,8 @@ goog.require('sm.gModal.ViewStendhal');
 goog.require('sm.gTextarea.TextareaStendhal');
 goog.require('sm.gTextarea.ViewStendhal');
 goog.require('sm.iFactory.TemplateFactoryStendhal');
+goog.require('sm.lCourse.bOption.Option');
+goog.require('sm.lCourse.bOption.View');
 goog.require('sm.lInformation.bFeedbackBoard.FeedbackBoard');
 goog.require('sm.lInformation.bFeedbackBoard.View');
 goog.require('sm.lInformation.bInformationBoard.InformationBoard');
@@ -260,6 +264,10 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('smFavorite', {
             control: sm.bSmFavorite.SmFavorite,
             view: sm.bSmFavorite.View
+        })
+        .setControlListItem('smExpander', {
+            control: sm.bSmExpander.SmExpander,
+            view: sm.bSmExpander.View
         });
 
     /** l-information blocks **/
@@ -305,6 +313,14 @@ sm.iFactory.FactoryStendhal = function() {
             control: sm.lSearch.bSuggestFilter.SuggestFilter,
             view: sm.lSearch.bSuggestFilter.View
         });
+
+    /** l-course blocks */
+    this.setControlListItem('lCourse-option', {
+            control: sm.lCourse.bOption.Option,
+            view: sm.lCourse.bOption.View
+        });
+
+
 };
 goog.inherits(sm.iFactory.FactoryStendhal, cl.iFactory.Factory);
 goog.addSingletonGetter(sm.iFactory.FactoryStendhal);
