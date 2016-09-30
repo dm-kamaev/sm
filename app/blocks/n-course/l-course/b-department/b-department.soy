@@ -1,0 +1,131 @@
+{namespace sm.lCourse.bDepartment.Template}
+
+/**
+ * @typedef {{
+ *     name: string,
+ *     metro: Array<string>
+ *     options: Array<sm.bOption.Template.Params.Data>
+ * }} sm.lCourse.bDepartment.Template.Params.Data
+ */
+
+/**
+ * Template for Address block
+ * @param params {{
+ *     data: sm.lCourse.bDepartment.Template.Params.Data
+ * }}
+ * @constructor
+ * @extends cl.iControl.Template
+ */
+{template .address}
+    {call .init data="all" /}
+{/template}
+
+
+/**
+ * @protected
+ * @override
+ */
+{template .body}
+    {call .title_ data="all" /}
+    {call .options_ data="all" /}
+{/template}
+
+
+/**
+ * Title template
+ * @param params {{
+ * }}
+ */
+{template .title_ kind="html"}
+    <div class="{call .rootClass /}__title">
+        {call .name_ data="all" /}
+        {call .metro_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Options template
+ * @param params {{
+ *     options: Array<sm.bOption.Template.Params.Data>
+ * }}
+ * @private
+ */
+{template .options_ kind="html"}
+    {foreach $option in $params.data.options}
+        {call .option_}
+            {param params: [
+                'option': $option
+            ] /}
+        {/call}
+    {/foreach}
+{/template}
+
+
+/**
+ * Name template
+ * @param params {{
+ *     data: {
+ *         name: string
+ *     }
+ * }}
+ */
+{template .name_ kind="html"}
+    <div class="{call .rootClass /}__name">
+        {$params.data.name}
+    </div>
+{/template}
+
+
+/**
+ * Metro stations template
+ * @param params {{
+ *     data: {
+ *         metro: Array<string>
+ *     }
+ * }}
+ * @private
+ */
+{template .metro_ kind="html"}
+    <div class="{call .rootClass /}__metros">
+        м.{sp}
+        {foreach $metro in $params.data.metro}
+            <div class="{call .rootClass /}__metro">
+                {$metro}
+            </div>
+        {/foreach}
+    </div>
+{/template}
+
+
+/**
+ * Option template
+ * @param params {{
+ *     option: sm.bOption.Template.Params.Data
+ * }}
+ * @private
+ */
+{template .option_ kind="html"}
+    <div class="{call .rootClass /}__option">
+        {call .renderChild}
+            {param params: [
+                'type': 'lCourse-option',
+                'renderParams': [
+                    'data': $params.option
+                ]
+            ] /}
+        {/call}
+    </div>
+    <div class="{call .rootClass /}__horizontal-line"></div>
+{/template}
+
+
+/**
+ * @override
+ * @protected
+ */
+{template .rootClass}
+    b-department
+{/template}
+
+
