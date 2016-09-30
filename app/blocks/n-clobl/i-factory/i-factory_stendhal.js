@@ -73,6 +73,8 @@ goog.require('sm.gModal.ViewStendhal');
 goog.require('sm.gTextarea.TextareaStendhal');
 goog.require('sm.gTextarea.ViewStendhal');
 goog.require('sm.iFactory.TemplateFactoryStendhal');
+goog.require('sm.lCourse.bDepartment.Department');
+goog.require('sm.lCourse.bDepartment.View');
 goog.require('sm.lCourse.bOption.Option');
 goog.require('sm.lCourse.bOption.View');
 goog.require('sm.lInformation.bFeedbackBoard.FeedbackBoard');
@@ -318,6 +320,10 @@ sm.iFactory.FactoryStendhal = function() {
     this.setControlListItem('lCourse-option', {
             control: sm.lCourse.bOption.Option,
             view: sm.lCourse.bOption.View
+        })
+        .setControlListItem('lCourse-department', {
+            control: sm.lCourse.bDepartment.Department,
+            view: sm.lCourse.bDepartment.View
         });
 
 
