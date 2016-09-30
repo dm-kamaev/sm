@@ -82,6 +82,7 @@ goog.scope(function() {
 
     /**
      * @param {Element} element
+     * @protected
      * @override
      */
     Item.prototype.decorateInternal = function(element) {
@@ -94,6 +95,7 @@ goog.scope(function() {
 
 
     /**
+     * @protected
      * @override
      */
     Item.prototype.enterDocument = function() {

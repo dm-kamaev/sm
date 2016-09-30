@@ -3,7 +3,7 @@
 
 /**
  * @typedef {{
- *     id: ?number,
+ *     id: number,
  *     type: string,
  *     name: {
  *         light: string,
@@ -19,7 +19,8 @@
  *     area: ?Array<{
  *         id: number,
  *         name: string
- *     }>
+ *     }>,
+ *     category: string
  * }} sm.bSmItem.Template.Params.Data
  */
 
@@ -328,7 +329,13 @@
  * Important to write kind="attributes" when overrides
  * @param params {{
  *     data: {
- *         id: number
+ *         id: number,
+ *         type: string,
+ *         name: {
+ *             light: string,
+ *             bold: ?string
+ *         },
+ *         category: string
  *     }
  * }}
  * @override
@@ -338,7 +345,9 @@
     {sp}data-params="
         {call cl.iUtils.Utils.stringify}
             {param json: quoteKeysIfJs([
-                'id': $params.data.id
+                'id': $params.data.id,
+                'name': $params.data.name.light + ($params.data.name.bold ?: ''),
+                'category': $params.data.category
             ]) /}
         {/call}"
 {/template}

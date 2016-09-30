@@ -27,18 +27,9 @@ goog.scope(function() {
 
 
     /**
-     * Css class enum
-     * @enum {string}
-     */
-    View.CssClass = {
-        ROOT: 'b-sm-item'
-    };
-
-
-    /**
      * @typedef {{
      *     data: {
-     *         id: ?number,
+     *         id: number,
      *         type: string,
      *         name: {
      *             light: string,
@@ -48,17 +39,49 @@ goog.scope(function() {
      *         score: sm.bSmScore.SmScore.RenderParams,
      *         description: (string|undefined),
      *         metro: sm.bSmBadge.Badge.RenderParams,
-     *         area: sm.bSmBadge.Badge.RenderParams
+     *         area: sm.bSmBadge.Badge.RenderParams,
+     *         category: string
      *     }
      * }}
      */
-    View.RenderParams;
+    sm.bSmItem.View.RenderParams;
+
+
+    /**
+     * @typedef {{
+     *     id: number,
+     *     name: string,
+     *     category: string
+     * }}
+     */
+    sm.bSmItem.View.DataParams;
+
+
+    /**
+     * Css class enum
+     * @enum {string}
+     * @const
+     */
+    View.CssClass = {
+        ROOT: 'b-sm-item'
+    };
+
+
+    /**
+     * Css class enum
+     * @enum {string}
+     * @const
+     */
+    View.Event = {
+        CLICK: goog.events.getUniqueId('click')
+    };
 
 
     /**
      * Transform raw params to compressed ones
      * @param {Object<string, (string, number, Object)>} rawParams
      * @return {sm.bSmItem.View.RenderParams}
+     * @public
      */
     View.getRenderParams = function(rawParams) {
         var metroParams =
@@ -78,34 +101,77 @@ goog.scope(function() {
                 score: rawParams['score'],
                 description: rawParams['description'],
                 metro: metroParams.data,
-                area: areaParams.data
+                area: areaParams.data,
+                category: rawParams['category']
             }
         };
     };
 
 
     /**
+     * Getter for params
+     * @return {sm.bSmItem.View.DataParams}
      * @override
-     * @param {Element} element
-     * @protected
+     * @public
      */
-    View.prototype.decorateInternal = function(element) {
-        View.base(this, 'decorateInternal', element);
+    View.prototype.getParams = function() {
+        if (!this.params || goog.object.isEmpty(this.params)) {
+            var elem = this.getElement(),
+                data = elem && elem.getAttribute('data-params');
+            if (data) {
+                this.params = this.transformParams(JSON.parse(data));
+            }
+        }
 
-        this.initParams_();
+        return this.params;
     };
 
 
     /**
-     * Initializes params from attributes data-params
-     * @private
+     * @override
+     * @protected
      */
-    View.prototype.initParams_ = function() {
-        this.params = JSON.parse(
-            goog.dom.dataset.get(
-                this.getElement(),
-                'params'
-            )
+    View.prototype.enterDocument = function() {
+        View.base(this, 'enterDocument');
+
+        this.initRootElementListeners();
+    };
+
+
+    /**
+     * Initializes listeners for root Element
+     * @protected
+     */
+    View.prototype.initRootElementListeners = function() {
+        this.getHandler().listen(
+            this.getElement(),
+            goog.events.EventType.CLICK,
+            this.onClick
         );
+    };
+
+
+    /**
+     * Handler click on root Element
+     * @param {Object} event
+     * @protected
+     */
+    View.prototype.onClick = function(event) {
+        this.dispatchEvent(View.Event.CLICK);
+    };
+
+
+    /**
+     * Transform params to compressed ones
+     * @param {Object<string>} rawParams
+     * @return {sm.bSmItem.View.DataParams}
+     * @protected
+     */
+    View.prototype.transformParams = function(rawParams) {
+        return {
+            id: rawParams['id'],
+            name: rawParams['name'],
+            category: rawParams['category']
+        };
     };
 });  // goog.scope

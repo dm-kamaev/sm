@@ -108,7 +108,7 @@ goog.scope(function() {
         return this.params;
     };
 
-        /**
+    /**
      * Transform params to compressed ones
      * @param {Object<string, (Array|Object|number)>} rawParams
      * @return {sm.lCourse.bOption.View.DataParams}

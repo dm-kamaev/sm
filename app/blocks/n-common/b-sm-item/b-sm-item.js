@@ -29,6 +29,22 @@ goog.scope(function() {
 
 
     /**
+     * @typedef {sm.bSmItem.View.DataParams}
+     */
+    sm.bSmItem.SmItem.DataParams;
+
+
+    /**
+     * Css class enum
+     * @enum {string}
+     * @const
+     */
+    Item.Event = {
+        CLICK: View.Event.CLICK
+    };
+
+
+    /**
      * Transform raw params to compressed ones
      * @param {Object<string, (string, number, Object)>} rawParams
      * @return {sm.bSmItem.smItem.RenderParams}
@@ -39,10 +55,45 @@ goog.scope(function() {
 
 
     /**
+     * Get data to send analytics
+     * @return {Object}
+     * @public
+     */
+    Item.prototype.getAnalyticsData = function() {
+        return {
+            'id': this.params.id,
+            'name': this.params.name,
+            'category': this.params.category
+        };
+    };
+
+
+    /**
      * Get item id
      * @return {number}
+     * @public
      */
     Item.prototype.getItemId = function() {
         return this.params.id;
+    };
+
+
+    /**
+     * @override
+     * @protected
+     */
+    Item.prototype.enterDocument = function() {
+        Item.base(this, 'enterDocument');
+
+        this.initViewListeners();
+    };
+
+
+    /**
+     * Initializes listeners for view
+     * @protected
+     */
+    Item.prototype.initViewListeners = function() {
+        this.autoDispatch(View.Event.CLICK);
     };
 });  // goog.scope
