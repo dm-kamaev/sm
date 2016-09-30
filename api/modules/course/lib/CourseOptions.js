@@ -62,8 +62,6 @@ module.exports = class {
             key: 'startDate',
             name: 'Начало занятий'
         }];
-
-        this.uniqueOptions_ = [];
     }
 
     /**
@@ -82,8 +80,11 @@ module.exports = class {
      * @return {Array<Object>}
      */
     getUniqueOptions(generalOptions) {
-        let uniqueKeys = this.getUniqueKeys_(generalOptions);
-        return this.options_.map(option => this.getUniqueOptionValue_(option));
+        let uniqueOptionValues = this.getUniqueOptionValues_(generalOptions),
+            uniqueOptions = this.options_.map(option =>
+                this.getUniqueOptionValue_(option, uniqueOptionValues));
+
+        return this.groupByAddress_(uniqueOptions);
     }
 
     /**
@@ -91,7 +92,7 @@ module.exports = class {
      * @param  {Array<Object>} generalOptions
      * @return {Array<string>}
      */
-    getUniqueKeys_(generalOptions) {
+    getUniqueOptionValues_(generalOptions) {
         return this.availableOptions_.map(availableOption =>
                 generalOptions.every(generalOption =>
                     generalOption.key != availableOption.key
@@ -103,10 +104,28 @@ module.exports = class {
     /**
      * @private
      * @param  {Object} option
+     * @param  {Array<Object>} uniqueOptionValues
      * @return {Object}
      */
-    getUniqueOptionValue_() {
-        // console.log(this.options_[0]);
+    getUniqueOptionValue_(option, uniqueOptionValues) {
+        let result = {};
+
+        uniqueOptionValues.map(uniqueOptionValue => {
+            let key = uniqueOptionValue.key;
+            result[key] = option[key];
+        });
+        result.departments = option.departments;
+
+        return result;
+    }
+
+    /**
+     * @private
+     * @param  {Array<Object>} options
+     * @return {Array<Object>}
+     */
+    groupByAddress_(options) {
+        return options;
     }
 
     /**
@@ -154,7 +173,7 @@ module.exports = class {
      */
     formatOptions_(options) {
         return options.map(option => ({
-            departments: option.departments.map(d => d.address.toJSON()),
+            departments: this.formatDepartments_(option.departments),
             age: this.formatAge_(option.age),
             schedule: this.formatSchedule_(option.schedule),
             maxGroupSize: this.formatGroupSize_(option.maxGroupSize),
@@ -164,6 +183,15 @@ module.exports = class {
             duration: this.formatDuration_(option.duration),
             startDate: this.formatStartDate_(option.startDate)
         }));
+    }
+
+    /**
+     * @private
+     * @param  {Array<Object>} departments
+     * @return {Array<Object>}
+     */
+    formatDepartments_(departments) {
+        return departments.map(department => department.address.toJSON());
     }
 
     /**

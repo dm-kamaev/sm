@@ -78,7 +78,9 @@ view.formatGeneralOptions = function(course) {
     let items = this.getStaticOptions(course),
         courseOptions = new CourseOptions(course.courseOptions);
 
-    courseOptions.getUniqueOptions(courseOptions.getGeneralOptions());
+    let uO = courseOptions.getUniqueOptions(courseOptions.getGeneralOptions());
+
+    console.log(JSON.stringify(uO, null, 2));
 
     return {
         items: items.concat(courseOptions.getGeneralOptions())
