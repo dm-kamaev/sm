@@ -20,23 +20,23 @@
 
 .b-option__cost {
     display: inline-block;
+    float: right;
 
     font: 16px 'Proxima', Arial, sans-serif;
     font-weight: 700;
-
-    float: right;
 }
 
 .b-option__enroll-button {
-    font: 16px 'Proxima', Arial, sans-serif;
-    cursor: pointer;
-    font-weight: 700;
-
     float: right;
+
+    margin-left: 90px;
+
+    cursor: pointer;
 
     color: #ee392f;
 
-    margin-left: 90px;
+    font: 16px 'Proxima', Arial, sans-serif;
+    font-weight: 700;
 }
 
 .b-option__button-text_xs {

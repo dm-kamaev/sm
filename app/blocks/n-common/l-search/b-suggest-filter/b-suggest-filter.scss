@@ -1,14 +1,13 @@
 @import "../../i-media/i-media";
 
 .b-suggest-filter {
-    text-align: left;
-
     overflow: auto;
+
+    text-align: left;
 }
 
 .b-suggest-filter__section {
     box-sizing: border-box;
-
     padding: 0 40px;
 }
 
@@ -16,10 +15,10 @@
     padding-top: 40px;
     padding-bottom: 25px;
 
-    background-color: #f7f7f1;
-
     text-align: left;
     text-transform: uppercase;
+
+    background-color: #f7f7f1;
 
     font: 16px 'Proxima', Arial, sans-serif;
     font-weight: 800;
@@ -36,8 +35,8 @@
 
     height: 275px;
     padding-top: 15px;
-    padding-bottom: 10px;
     padding-right: 20px;
+    padding-bottom: 10px;
 }
 
 .b-suggest-filter__section_search {
@@ -77,17 +76,17 @@
 
 @include media-xs {
     .b-suggest-filter__section {
-        padding-left: 30px;
         padding-right: 30px;
+        padding-left: 30px;
     }
 
     .b-suggest-filter__section_placeholder {
-        min-height: 220px;
         height: auto;
+        min-height: 220px;
     }
 
     .b-suggest-filter__section_filter {
-        min-height: 220px;
         height: auto;
+        min-height: 220px;
     }
 }
