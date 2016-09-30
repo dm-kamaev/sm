@@ -1,5 +1,7 @@
 'use strict';
 
+const metroView = require('../../geo/views/metroView');
+
 const WEEK_DAYS = [
         'Понедельник',
         'Вторник',
@@ -62,6 +64,8 @@ module.exports = class {
             key: 'startDate',
             name: 'Начало занятий'
         }];
+
+        this.globalOptions_ = ['schedule', 'costPerHour'];
     }
 
     /**
@@ -84,7 +88,7 @@ module.exports = class {
             uniqueOptions = this.options_.map(option =>
                 this.getUniqueOptionValue_(option, uniqueOptionValues));
 
-        return this.groupByAddress_(uniqueOptions);
+        return this.groupByDepartments_(uniqueOptions);
     }
 
     /**
@@ -93,12 +97,29 @@ module.exports = class {
      * @return {Array<string>}
      */
     getUniqueOptionValues_(generalOptions) {
+        let notUniqueOptions = this.removeRequiredFields_(generalOptions);
         return this.availableOptions_.map(availableOption =>
-                generalOptions.every(generalOption =>
-                    generalOption.key != availableOption.key
+                notUniqueOptions.every(notUniqueOption =>
+                    notUniqueOption.key != availableOption.key
                 ) ? availableOption : null
             )
             .filter(item => item);
+    }
+
+    /**
+     * @private
+     * @param  {Array<Object>} generalOptions
+     * @return {Array<Object>}
+     */
+    removeRequiredFields_(generalOptions) {
+        this.globalOptions_.map(globalOption => {
+            let globalOptionIndex = generalOptions.findIndex(generalOption =>
+                generalOption.key == globalOption);
+            if (~globalOptionIndex) {
+                generalOptions.splice(globalOptionIndex, 1);
+            }
+        });
+        return generalOptions;
     }
 
     /**
@@ -124,7 +145,16 @@ module.exports = class {
      * @param  {Array<Object>} options
      * @return {Array<Object>}
      */
-    groupByAddress_(options) {
+    groupByDepartments_(options) {
+        let addresses = {};
+        options.map(option =>
+            option.departments.map(department => {
+                addresses[department.addressId] = {
+                    name: department.addressName,
+                    metros: department.metros
+                };
+            })
+        );
         return options;
     }
 
@@ -191,7 +221,15 @@ module.exports = class {
      * @return {Array<Object>}
      */
     formatDepartments_(departments) {
-        return departments.map(department => department.address.toJSON());
+        return departments.map(department => {
+            let address = department.address;
+            return {
+                addressId: address.id,
+                addressName: address.name,
+                metros: address.metroStations.map(metro =>
+                    metroView.formatName(metro.name))
+            };
+        });
     }
 
     /**

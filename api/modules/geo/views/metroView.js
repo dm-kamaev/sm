@@ -26,7 +26,7 @@ metroView.list = function(metros) {
  * @return {string}
  */
 metroView.formatName = function(name) {
-    return name.replace('метро', '').trim();
+    return name.replace(/метро|станция/, '').trim();
 };
 
 module.exports = metroView;
