@@ -18,6 +18,7 @@
 /**
  * @typedef {{
  *     target: (string|undefined),
+ *     disableHover: boolean,
  *     size: ('s'|'m'|'l'|'xl'),
  *     theme: ('attention'|'light'|'block'|'dark'|'default'|undefined)
  * }} sm.bSmLink.Template.Params.Config
@@ -97,7 +98,8 @@
  *         url: (string|undefined)
  *     },
  *     config: {
- *         target: ('_blank'|undefined)
+ *         target: ('_blank'|undefined),
+ *         disableHover: boolean
  *     }
  * }}
  * @override
@@ -106,13 +108,12 @@
     {if $params.data.url}
         href="{$params.data.url}"
     {/if}
-    {if $params.data.id}
-        data-params="{call cl.iUtils.Utils.stringify}
-            {param json: quoteKeysIfJs([
-                'id': $params.data.id
-            ]) /}
-        {/call}"
-    {/if}
+    data-params="{call cl.iUtils.Utils.stringify}
+        {param json: quoteKeysIfJs([
+            'id': $params?.data.id,
+            'disableHover': $params?.config.disableHover
+        ]) /}
+    {/call}"
     {if $params?.config.target}
         {sp}target="{$params.config.target}"
     {/if}

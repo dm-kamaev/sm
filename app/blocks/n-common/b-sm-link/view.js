@@ -32,6 +32,26 @@ goog.scope(function() {
 
 
     /**
+     * @typedef {{
+     *     data: {
+     *         id: (number|undefined),
+     *         url: (string|undefined),
+     *         content: (string|undefined)
+     *     }
+     * }}
+     */
+    View.RenderParams;
+
+
+    /**
+     * @typedef {{
+     *     disableHover: boolean
+     * }}
+     */
+    View.DataParams;
+
+
+    /**
      * Css class enum
      * @enum {string}
      * @const
@@ -65,18 +85,6 @@ goog.scope(function() {
 
 
     /**
-     * @typedef {{
-     *     data: {
-     *         id: (number|undefined),
-     *         url: (string|undefined),
-     *         content: (string|undefined)
-     *     }
-     * }}
-     */
-    View.RenderParams;
-
-
-    /**
      * Transform raw params to compressed ones
      * @param {Object<string, (string, number)>} rawParams
      * @return {sm.bSmItem.View.RenderParams}
@@ -89,6 +97,25 @@ goog.scope(function() {
                 content: rawParams['content']
             }
         };
+    };
+
+
+    /**
+     * Getter for params
+     * @return {sm.lCourse.bOption.View.DataParams}
+     * @public
+     * @override
+     */
+    View.prototype.getParams = function() {
+        if (!this.params || goog.object.isEmpty(this.params)) {
+            var elem = this.getElement(),
+                data = elem && elem.getAttribute('data-params');
+            if (data) {
+                this.params = this.transformParams(JSON.parse(data));
+            }
+        }
+
+        return this.params;
     };
 
 
@@ -132,19 +159,20 @@ goog.scope(function() {
 
 
     /**
-     * @override
-     * @param {Element} element
+     * Transform raw params to compressed ones
+     * @param {Object<string, string>} rawParams
+     * @return {sm.bSmLink.View.DataParams}
      * @protected
-     * @override
      */
-    View.prototype.decorateInternal = function(element) {
-        View.base(this, 'decorateInternal', element);
-
-        this.enableHover();
+    View.prototype.transformParams = function(rawParams) {
+        return {
+            id: rawParams['id'],
+            disableHover: rawParams['disableHover']
+        };
     };
 
 
-        /**
+    /**
      * Remove theme modifier
      * @private
      */
