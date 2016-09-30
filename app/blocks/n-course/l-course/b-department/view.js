@@ -1,3 +1,6 @@
+/**
+ * @fileoverview Department block view
+ */
 goog.provide('sm.lCourse.bDepartment.View');
 
 goog.require('cl.iControl.View');
