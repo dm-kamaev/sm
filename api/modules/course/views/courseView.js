@@ -88,7 +88,7 @@ view.formatGeneralOptions = function(course) {
 };
 
 /**
- * @param  {Array<Object>} courseOptions
+ * @param  {Array<Object>} options
  * @param  {Array<Object>} generalOptions
  * @return {Array<Object>}
  */
