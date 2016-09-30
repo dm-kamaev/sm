@@ -16,6 +16,7 @@
     display: inline-block;
 
     width: 360px;
+    margin-bottom: 15px;
 }
 
 .b-option__cost {
@@ -35,7 +36,7 @@
 
     color: #ee392f;
 
-    font: 16px 'Proxima', Arial, sans-serif;
+    font: 19px 'Proxima', Arial, sans-serif;
     font-weight: 700;
 }
 
@@ -47,11 +48,6 @@
     display: block;
 }
 
-@include media-s {
-    .b-option__enroll-button {
-        margin-left: 50px;
-    }
-}
 
 @include media-xs {
     .b-option__description {
@@ -76,5 +72,16 @@
 
     .b-option__button-text_s {
         display: none;
+    }
+}
+
+@include media-s {
+    .b-option__description {
+        margin-bottom: 10px;
+    }
+
+
+    .b-option__enroll-button {
+        margin-left: 50px;
     }
 }

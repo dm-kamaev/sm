@@ -78,12 +78,7 @@ goog.scope(function() {
      */
     View.getRenderParams = function(rawParams) {
         return {
-            features: goog.array.map(rawParams['features'], function(feature) {
-                return {
-                    type: feature['type'],
-                    value: feature['value']
-                };
-            }),
+            features: rawParams['features'],
             cost: rawParams['cost'],
             buttonText: rawParams['buttonText']
         };
