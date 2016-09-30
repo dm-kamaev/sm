@@ -349,7 +349,8 @@ view.getListCourse = function(course) {
         area: [{
             id: course.areaId,
             name: course.areaName
-        }]
+        }],
+        category: 'proforientacija'
     };
 };
 
@@ -443,7 +444,8 @@ view.letterData = function(data) {
  *     area: ?Array<{
  *         id: number,
  *         name: string
- *     }>
+ *     }>,
+ *     category: string
  * }}
  */
 view.item = function(data) {
@@ -459,7 +461,8 @@ view.item = function(data) {
         score: course.totalScore,
         metro: addressView.nearestMetro(addresses),
         area: [addressView.getArea(addresses)[0]],
-        alias: this.generateAlias(data.alias.alias, data.brandAlias.alias)
+        alias: this.generateAlias(data.alias.alias, data.brandAlias.alias),
+        category: 'proforientacija'
     };
 };
 

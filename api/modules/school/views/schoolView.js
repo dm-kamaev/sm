@@ -767,7 +767,8 @@ schoolView.uniqueIds = function(schools) {
  *     area: ?Array<{
  *         id: number,
  *         name: string
- *     }>
+ *     }>,
+ *     category: string
  * }}
  */
 schoolView.item = function(data) {
@@ -782,7 +783,8 @@ schoolView.item = function(data) {
         score: entity.totalScore,
         metro: addressView.nearestMetro(entity.addresses),
         area: addressView.getArea(entity.addresses),
-        alias: url.alias
+        alias: url.alias,
+        category: entityType.SCHOOL
     };
 };
 
