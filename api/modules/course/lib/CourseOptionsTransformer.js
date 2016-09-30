@@ -1,5 +1,7 @@
 'use strict';
 
+const lodash = require('lodash');
+
 const metroView = require('../../geo/views/metroView');
 
 const WEEK_DAYS = [
@@ -99,11 +101,22 @@ module.exports = class {
     getUniqueOptionValues_(generalOptions) {
         let notUniqueOptions = this.removeRequiredFields_(generalOptions);
         return this.availableOptions_.map(availableOption =>
-                notUniqueOptions.every(notUniqueOption =>
-                    notUniqueOption.key != availableOption.key
-                ) ? availableOption : null
+                this.isOptionUnique_(availableOption, notUniqueOptions) ?
+                    availableOption : null
             )
             .filter(item => item);
+    }
+
+    /**
+     * @private
+     * @param  {Object} option
+     * @param  {Array<Object>} notUniqueOptions
+     * @return {(Object|null)}
+     */
+    isOptionUnique_(option, notUniqueOptions) {
+        return notUniqueOptions.every(notUniqueOption =>
+            notUniqueOption.key != option.key
+        );
     }
 
     /**
@@ -149,13 +162,62 @@ module.exports = class {
         let addresses = {};
         options.map(option =>
             option.departments.map(department => {
-                addresses[department.addressId] = {
-                    name: department.addressName,
-                    metros: department.metros
-                };
+                let addressId = department.addressId;
+                if (addresses[addressId]) {
+                    addresses[addressId].features.push(
+                        this.transformOption_(option)
+                    );
+                } else {
+                    addresses[addressId] =
+                        this.transformDepartment_(department, option);
+                }
             })
         );
-        return options;
+        return lodash.values(addresses);
+    }
+
+    /**
+     * @private
+     * @param  {Object} department
+     * @param  {Object} option
+     * @return {Object}
+     */
+    transformDepartment_(department, option) {
+        let titleKey = this.globalOptions_[0],
+            costKey = this.globalOptions_[1];
+        return {
+            name: department.addressName,
+            title: {
+                key: titleKey,
+                value: option[titleKey]
+            },
+            cost: {
+                key: costKey,
+                value: option[costKey]
+            },
+            metros: department.metros,
+            features: [this.transformOption_(option)]
+        };
+    }
+
+    /**
+     * @private
+     * @param  {Object} option
+     * @return {Object}
+     */
+    transformOption_(option) {
+        let keys = Object.keys(option);
+        return keys.map(key => {
+            let feature;
+            if (!~this.globalOptions_.indexOf(key) && key !== 'departments') {
+                feature = {
+                    key: key,
+                    value: option[key],
+                    name: this.getName_(key)
+                };
+            }
+            return feature;
+        }).filter(feature => feature);
     }
 
     /**
@@ -343,5 +405,15 @@ module.exports = class {
      */
     formatStartDate_(startDate) {
         return startDate.getDate() + ' ' + MONTHS[startDate.getMonth()];
+    }
+
+    /**
+     * @private
+     * @param  {string} key
+     * @return {string}
+     */
+    getName_(key) {
+        let option = this.availableOptions_.find(option => option.key == key);
+        return option.name;
     }
 };

@@ -9,7 +9,7 @@ const scoreView = require('./scoreView'),
     districtView = require('../../geo/views/districtView'),
     addressView = require('../../geo/views/addressView'),
     FormatText = require('../../entity/lib/FormatText'),
-    CourseOptions = require('../lib/CourseOptions'),
+    CourseOptionsTransformer = require('../lib/CourseOptionsTransformer'),
     pageView = require('../../entity/views/pageView');
 
 const entityType = require('../../../../api/modules/entity/enums/entityType');
@@ -24,14 +24,20 @@ const FULL_DESCRIPTION_LENGTH = 300;
  * @return {Object}
  */
 view.page = function(course) {
+    let options = course.courseOptions,
+        generalOptions = this.formatGeneralOptions(course);
+
     return {
         id: course.id,
         name: course.name,
         description: course.description,
         fullDescription: this.formatFullDescription(course.fullDescription),
         score: scoreView.results(course.score, course.totalScore).data,
-        cost: this.formatCost(course.courseOptions),
-        generalOptions: this.formatGeneralOptions(course)
+        cost: this.formatCost(options),
+        generalOptions: {
+            items: generalOptions
+        },
+        departmentList: this.formatDepartmentList(options, generalOptions)
     };
 };
 
@@ -76,15 +82,19 @@ view.formatCost = function(options) {
  */
 view.formatGeneralOptions = function(course) {
     let items = this.getStaticOptions(course),
-        courseOptions = new CourseOptions(course.courseOptions);
+        optionsTransformer = new CourseOptionsTransformer(course.courseOptions);
 
-    let uO = courseOptions.getUniqueOptions(courseOptions.getGeneralOptions());
+    return items.concat(optionsTransformer.getGeneralOptions());
+};
 
-    // console.log(JSON.stringify(uO, null, 2));
-
-    return {
-        items: items.concat(courseOptions.getGeneralOptions())
-    };
+/**
+ * @param  {Array<Object>} courseOptions
+ * @param  {Array<Object>} generalOptions
+ * @return {Array<Object>}
+ */
+view.formatDepartmentList = function(options, generalOptions) {
+    let optionsTransformer = new CourseOptionsTransformer(options);
+    return optionsTransformer.getUniqueOptions(generalOptions);
 };
 
 /**
