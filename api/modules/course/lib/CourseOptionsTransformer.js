@@ -26,7 +26,8 @@ const WEEK_DAYS = [
         'октября',
         'ноября',
         'декабря'
-    ];
+    ],
+    BUTTON_TEXT = 'Хочу этот курс';
 
 module.exports = class {
     /**
@@ -196,6 +197,7 @@ module.exports = class {
                     name: this.getName_(costKey),
                     value: option[costKey]
                 },
+                buttonText: BUTTON_TEXT,
                 features: [this.transformOption_(option)]
             };
         return {
