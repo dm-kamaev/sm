@@ -75,6 +75,7 @@ goog.scope(function() {
      * @enum {string}
      */
     Item.Event = {
+        CLICK: sm.bSmItem.SmItem.Event.CLICK,
         FAVORITE_ADDED: FavoriteLink.Event.FAVORITE_ADDED,
         FAVORITE_REMOVED: Event.FavoriteRemoved.Type
     };

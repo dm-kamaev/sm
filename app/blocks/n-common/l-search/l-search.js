@@ -109,7 +109,7 @@ goog.scope(function() {
 
         /**
          * Search parameters manager
-         * @type {sm.lSearch.iSearchParamsManager.SearchParamsManager}
+         * @type {sm.iSearchParamsManager.SearchParamsManager}
          * @private
          */
         this.paramsManager_ = null;
@@ -174,49 +174,8 @@ goog.scope(function() {
             .initResultsListListeners_()
             .initWindowListeners_()
             .initMapListeners_();
-    };
 
-
-    /**
-     * Init data loading services
-     * @return {sm.lSearch.SmSearch}
-     * @private
-     */
-    Search.prototype.initServices_ = function() {
-        /** IRequest init **/
-        Request.getInstance().init();
-
-        /** Search service init **/
-        this.searchService_ = new SearchService();
-        this.searchService_.init(this.params.type);
-
-        return this;
-    };
-
-
-    /**
-     * Init url updater
-     * @return {sm.lSearch.SmSearch}
-     * @private
-     */
-    Search.prototype.initUrlUpdater_ = function() {
-        this.urlUpdater_ = new UrlUpdater();
-
-        return this;
-    };
-
-
-    /**
-     * Init search params manager by
-     * creating it and setting search params from data params to it
-     * @return {sm.lSearch.SmSearch}
-     * @private
-     */
-    Search.prototype.initParamsManager_ = function() {
-        var searchParams = this.params.searchParams;
-        this.paramsManager_ = new SearchParamsManager(searchParams);
-
-        return this;
+        this.sendAnalyticsItemsLoad_(1);
     };
 
 
@@ -278,6 +237,12 @@ goog.scope(function() {
             this.sort_,
             sm.gDropdown.DropdownSelect.Event.ITEM_SELECT,
             this.onSortReleased_
+        );
+
+        this.getHandler().listen(
+            this.resultsList_,
+            sm.bSmItemList.SmItemList.Event.ITEM_CLICK,
+            this.onListItemClick_
         );
 
         var loadedItemsAmount = this.resultsList_.getCountItems();
@@ -423,6 +388,8 @@ goog.scope(function() {
 
         this.getView().setSortVisibility(countResults);
         this.getView().setLoaderVisibility(false);
+
+        this.sendAnalyticsItemsLoad_(0);
     };
 
 
@@ -447,6 +414,19 @@ goog.scope(function() {
         if (event.getBrowserEvent().persisted) {
             this.resultsList_.clear();
         }
+    };
+
+
+    /**
+     * Search submit handler
+     * @param {goog.events.EventType} event
+     * @private
+     */
+    Search.prototype.onListItemClick_ = function(event) {
+        this.resultsList_.sendAnalyticsItemClick(
+            event.data.itemId,
+            'search results'
+        );
     };
 
 
@@ -672,6 +652,72 @@ goog.scope(function() {
      */
     Search.prototype.getParamsFromSearch_ = function() {
         return this.search_.getData();
+    };
+
+
+     /**
+     * Send Analytics when shown items
+     * Interval sets the position of the elements for which the analyst goes
+     * @param {number} nonInteraction - possible values 0 or 1
+     * @private
+     */
+    Search.prototype.sendAnalyticsItemsLoad_ = function(nonInteraction) {
+        var amountItems = Search.SEARCH_CHUNK_SIZE,
+            interval = {};
+
+        interval.start = amountItems * this.paramsManager_.getPage();
+        interval.end = interval.start + amountItems;
+
+        var params = {
+            list: 'search results',
+            action: 'load',
+            nonInteraction: nonInteraction
+        };
+
+        this.resultsList_.sendAnalyticsItemsImpression(params, interval);
+    };
+
+
+    /**
+     * Init data loading services
+     * @return {sm.lSearch.SmSearch}
+     * @private
+     */
+    Search.prototype.initServices_ = function() {
+        /** IRequest init **/
+        Request.getInstance().init();
+
+        /** Search service init **/
+        this.searchService_ = new SearchService();
+        this.searchService_.init(this.params.type);
+
+        return this;
+    };
+
+
+    /**
+     * Init url updater
+     * @return {sm.lSearch.SmSearch}
+     * @private
+     */
+    Search.prototype.initUrlUpdater_ = function() {
+        this.urlUpdater_ = new UrlUpdater();
+
+        return this;
+    };
+
+
+    /**
+     * Init search params manager by
+     * creating it and setting search params from data params to it
+     * @return {sm.lSearch.SmSearch}
+     * @private
+     */
+    Search.prototype.initParamsManager_ = function() {
+        var searchParams = this.params.searchParams;
+        this.paramsManager_ = new SearchParamsManager(searchParams);
+
+        return this;
     };
 
 

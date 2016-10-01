@@ -57,13 +57,21 @@ goog.scope(function() {
     /**
      * Get data to send analytics
      * @return {Object}
+     * @param {{
+     *     list: ?string,
+     *     position: ?number
+     * }=} opt_data
      * @public
      */
-    Item.prototype.getAnalyticsData = function() {
+    Item.prototype.getAnalyticsData = function(opt_data) {
+        var data = opt_data || {};
+
         return {
             'id': this.params.id,
             'name': this.params.name,
-            'category': this.params.category
+            'category': this.params.category,
+            'list': data.list,
+            'position': data.position
         };
     };
 
@@ -75,6 +83,16 @@ goog.scope(function() {
      */
     Item.prototype.getItemId = function() {
         return this.params.id;
+    };
+
+
+    /**
+     * Get Item Entity Type
+     * @return {string}
+     * @public
+     */
+    Item.prototype.getItemEntityType = function() {
+        return this.params.type;
     };
 
 

@@ -51,6 +51,7 @@ goog.scope(function() {
      * @typedef {{
      *     id: number,
      *     name: string,
+     *     type: string,
      *     category: string
      * }}
      */

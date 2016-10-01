@@ -347,6 +347,7 @@
             {param json: quoteKeysIfJs([
                 'id': $params.data.id,
                 'name': $params.data.name.light + ($params.data.name.bold ?: ''),
+                'type': $params.data.type,
                 'category': $params.data.category
             ]) /}
         {/call}"

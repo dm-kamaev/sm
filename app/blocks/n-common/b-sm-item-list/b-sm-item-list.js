@@ -15,6 +15,7 @@ goog.require('sm.bSmItem.SmItem');
 goog.require('sm.bSmItem.SmItemEntity');
 goog.require('sm.bSmItemList.View');
 goog.require('sm.bSmLink.SmLink');
+goog.require('sm.iAnalytics.Analytics');
 
 
 
@@ -50,18 +51,8 @@ goog.inherits(sm.bSmItemList.SmItemList, cl.iControl.Control);
 
 
 goog.scope(function() {
-    var ItemList = sm.bSmItemList.SmItemList;
-
-
-    /**
-     * Possible types of items, which list contain
-     * @enum {string}
-     */
-    ItemList.ItemType = {
-        ITEM: 'smItem',
-        ITEM_ENTITY: 'smItemEntity',
-        LINK: 'SmLink'
-    };
+    var ItemList = sm.bSmItemList.SmItemList,
+        Analytics = sm.iAnalytics.Analytics;
 
 
     /**
@@ -74,6 +65,27 @@ goog.scope(function() {
 
 
     /**
+     * Css class enum
+     * @enum {string}
+     * @const
+     */
+    ItemList.Event = {
+        ITEM_CLICK: goog.events.getUniqueId('item-click')
+    };
+
+
+    /**
+     * Possible types of items, which list contain
+     * @enum {string}
+     */
+    ItemList.ItemType = {
+        ITEM: 'smItem',
+        ITEM_ENTITY: 'smItemEntity',
+        LINK: 'smLink'
+    };
+
+
+    /**
      * @override
      * @protected
      */
@@ -82,6 +94,17 @@ goog.scope(function() {
 
         this.initItems_();
         this.initRenderParamsTransformator_(this.params.itemType);
+    };
+
+
+    /**
+     * @override
+     * @protected
+     */
+    ItemList.prototype.enterDocument = function() {
+        ItemList.base(this, 'enterDocument');
+
+        this.initItemsListeners_();
     };
 
 
@@ -259,6 +282,119 @@ goog.scope(function() {
 
 
     /**
+     * Send Analytics when shown items
+     * nonInteraction - possible values 0 or 1
+     * Interval sets the position of the elements for which the analyst goes
+     * @param {{
+     *    list: string,
+     *    action: string,
+     *    nonInteraction: number
+     * }} params
+     * @param {{
+     *     start: ?number,
+     *     end: ?number
+     * }=} opt_interval
+     * @public
+     */
+    ItemList.prototype.sendAnalyticsItemsImpression = function(
+        params, opt_interval) {
+
+        var data = this.getAnalyticsItemsData_(params.list, opt_interval);
+        Analytics.getInstance().addImpressions(data);
+
+        Analytics.getInstance().sendEvent(
+            params.list,
+            params.action,
+            params.nonInteraction
+        );
+    };
+
+
+    /**
+     * Send Analytics when user clicks on item
+     * @param {number} itemId
+     * @param {string} list
+     * @public
+     */
+    ItemList.prototype.sendAnalyticsItemClick = function(itemId, list) {
+        var item = this.getItem_(itemId);
+
+        var data = item.getAnalyticsData({
+            list: list,
+            position: this.items_.indexOf(item) + 1
+        });
+        Analytics.getInstance().clickProduct(data, list);
+    };
+
+
+    /**
+     * Initializes listeners for items
+     * @private
+     */
+    ItemList.prototype.initItemsListeners_ = function() {
+        for (var i = 0; i < this.items_.length; i++) {
+            this.getHandler().listen(
+                this.items_[i],
+                this.generateEventObject_().CLICK,
+                this.onItemClick_
+            );
+        }
+    };
+
+
+    /**
+     * Handler item click
+     * @param {goog.events.Event} event
+     * @private
+     */
+    ItemList.prototype.onItemClick_ = function(event) {
+        this.dispatchEvent({
+            type: ItemList.Event.ITEM_CLICK,
+            data: {
+                itemId: event.target.getItemId()
+            }
+        });
+    };
+
+
+    /**
+     * Get Analytics Items Data
+     * @param {string=} opt_list
+     * @param {{
+     *     start: ?number,
+     *     end: ?number
+     * }=} opt_interval
+     * @return {Array<{
+     *     id: number,
+     *     name: string,
+     *     category: string,
+     *     position: number
+     * }>}
+     * @private
+     */
+    ItemList.prototype.getAnalyticsItemsData_ = function(opt_list,
+        opt_interval) {
+
+        var interval = opt_interval || {},
+            itemsData = [];
+
+        var start = interval.start || 0,
+            end = (interval.end && (interval.end < this.items_.length)) ?
+                interval.end :
+                this.items_.length;
+
+        for (var i = start; i < end; i++) {
+            itemsData.push(this.items_[i].getAnalyticsData({
+                list: opt_list,
+                position: i + 1
+            }));
+        }
+
+        return itemsData;
+    };
+
+
+    /**
      * Get page number
      * @return {number}
      * @public
@@ -314,6 +450,25 @@ goog.scope(function() {
 
             this.items_.push(instance);
         }
+    };
+
+
+    /**
+     * Generate event object for different items
+     * @return {Object}
+     * @private
+     */
+    ItemList.prototype.generateEventObject_ = function() {
+        var ItemEvent = {};
+
+        ItemEvent[ItemList.ItemType.ITEM] =
+            sm.bSmItem.SmItem.Event;
+        ItemEvent[ItemList.ItemType.ITEM_ENTITY] =
+            sm.bSmItem.SmItemEntity.Event;
+        ItemEvent[ItemList.ItemType.LINK] =
+            sm.bSmLink.SmLink.Event;
+
+        return ItemEvent[this.params.itemType];
     };
 
 

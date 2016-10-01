@@ -175,6 +175,26 @@ goog.scope(function() {
 
 
     /**
+     * Add impression about related products
+     * @param {Array<{
+     *     id: string,
+     *     name: string,
+     *     list: ?string,
+     *     brand: ?string,
+     *     category: ?string,
+     *     variant: ?string,
+     *     position: ?number,
+     *     price: ?string
+     * }>} params
+     */
+    Analytics.prototype.addImpressions = function(params) {
+        params.forEach(function(data) {
+            this.addImpression(data);
+        }, this);
+    };
+
+
+    /**
      * Creates a counter for the resource
      * @private
      */
