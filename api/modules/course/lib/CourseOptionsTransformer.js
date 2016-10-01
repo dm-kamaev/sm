@@ -164,7 +164,7 @@ module.exports = class {
             option.departments.map(department => {
                 let addressId = department.addressId;
                 if (addresses[addressId]) {
-                    addresses[addressId].features.push(
+                    addresses[addressId].options.features.push(
                         this.transformOption_(option)
                     );
                 } else {
@@ -184,19 +184,24 @@ module.exports = class {
      */
     transformDepartment_(department, option) {
         let titleKey = this.globalOptions_[0],
-            costKey = this.globalOptions_[1];
+            costKey = this.globalOptions_[1],
+            options = {
+                title: {
+                    key: titleKey,
+                    name: this.getName_(titleKey),
+                    value: option[titleKey]
+                },
+                cost: {
+                    key: costKey,
+                    name: this.getName_(costKey),
+                    value: option[costKey]
+                },
+                features: [this.transformOption_(option)]
+            };
         return {
             name: department.addressName,
-            title: {
-                key: titleKey,
-                value: option[titleKey]
-            },
-            cost: {
-                key: costKey,
-                value: option[costKey]
-            },
             metros: department.metros,
-            features: [this.transformOption_(option)]
+            options: options
         };
     }
 
