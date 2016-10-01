@@ -74,7 +74,7 @@
 {template .mainContent autoescape="strict" kind="html"}
     <div class="{call .rootClass/}__body">
         {call .sectionData_ data="all" /}
-        // {call .sectionOptions_ data="all" /}
+        {call .sectionOptions_ data="all" /}
         // {call .sectionAdditional_ data="all" /}
         // {call .sectionPrograms_ data="all" /}
         // {call .sectionComments_ data="all" /}
@@ -112,6 +112,44 @@
     <div class="{call .rootClass/}__section {call .rootClass/}__section_data">
         {call .rightData_ data="all" /}
         {call .leftData_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Section with a complete data entity
+ * @param params {{
+ *     data: {
+ *         entityData: {
+ *             departmentList: sm.lCourse.bDepartment.Template.Params.Data
+ *         }
+ *     }
+ * }}
+ */
+{template .sectionOptions_}
+    <div class="{call .rootClass/}__section {call .rootClass/}__section_options">
+            // {call cl.iUtils.Utils.stringify}
+            //     {param json: $params.data.entityData.departmentList/}
+            // {/call}
+        {let $customClasses kind="html"}
+            {call .rootClass/}__department-list
+        {/let}
+
+        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+            {param params: [
+                'type': 'smItemList',
+                'renderParams': [
+                    'data': [
+                        'items': $params.data.entityData.departmentList,
+                        'itemConfig': [],
+                        'itemType': 'lCourse-department'
+                    ],
+                    'config': [
+                        'customClasses': [$customClasses]
+                    ]
+                ]
+            ]/}
+        {/call}
     </div>
 {/template}
 

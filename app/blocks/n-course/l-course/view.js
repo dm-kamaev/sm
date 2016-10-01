@@ -36,6 +36,7 @@ goog.scope(function() {
      */
     View.CssClass = {
         ROOT: 'l-course',
+        DEPARTMENT_LIST: 'l-course__department-list',
         ACTION_BUTTON: 'l-course__action-button'
     };
 
@@ -73,6 +74,9 @@ goog.scope(function() {
                 ),
                 modalEnrollment: this.getElementByClass(
                     sm.gModal.ViewEnrollment.CssClass.ROOT
+                ),
+                departmentList: this.getElementByClass(
+                    View.CssClass.DEPARTMENT_LIST
                 )
             }
         );

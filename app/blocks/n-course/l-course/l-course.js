@@ -62,6 +62,14 @@ goog.scope(function() {
 
 
         /**
+         * Instance list with departments
+         * @type {sm.bSmItemList.SmItemList}
+         * @private
+         */
+        this.departmentList_ = null;
+
+
+        /**
          * Instances button
          * @type {sm.gModal.ModalEnrollment}
          * @private
@@ -84,6 +92,7 @@ goog.scope(function() {
         this.initFullDescription_();
         this.initMap_();
         this.initActionButtons_();
+        this.initDepartmentList_();
         this.initModals_();
         this.initIRequest_();
     };
@@ -195,6 +204,22 @@ goog.scope(function() {
             );
 
             this.actionButtons_.push(instance);
+        }
+    };
+
+
+    /**
+     * Initializes instance of department List
+     * @private
+     */
+    Course.prototype.initDepartmentList_ = function() {
+        var domElement = this.getView().getDom().departmentList;
+
+        if (domElement) {
+            this.departmentList_ = this.decorateChild(
+                'smItemList',
+                domElement
+            );
         }
     };
 

@@ -8,7 +8,7 @@
 /**
  * @typedef {{
  *     name: string,
- *     metro: Array<string>
+ *     metros: Array<string>
  *     options: Array<sm.bOption.Template.Params.Data>
  * }} sm.lCourse.bDepartment.Template.Params.Data
  */
@@ -39,12 +39,16 @@
 /**
  * Title template
  * @param params {{
+ *     data: {
+ *         name: string,
+ *         metros: Array<string>
+ *     }
  * }}
  */
 {template .title_ kind="html"}
     <div class="{call .rootClass /}__title">
         {call .name_ data="all" /}
-        {call .metro_ data="all" /}
+        {call .metros_ data="all" /}
     </div>
 {/template}
 
@@ -83,20 +87,23 @@
 
 
 /**
- * Metro stations template
+ * Metros stations template
  * @param params {{
  *     data: {
- *         metro: Array<string>
+ *         metros: Array<string>
  *     }
  * }}
  * @private
  */
-{template .metro_ kind="html"}
+{template .metros_ kind="html"}
     <div class="{call .rootClass /}__metros">
         м.{sp}
-        {foreach $metro in $params.data.metro}
+        {foreach $metro in $params.data.metros}
             <div class="{call .rootClass /}__metro">
                 {$metro}
+                {if not isLast($metro)}
+                    ,{sp}
+                {/if}
             </div>
         {/foreach}
     </div>
