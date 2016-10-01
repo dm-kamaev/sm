@@ -6,9 +6,10 @@ var async = require('asyncawait/async'),
     commander = require('commander'),
     xlsxj = require('xlsx-to-json');
 
-var services = require('../app/components/services').all;
+var services = require('../app/components/services').all,
+    sequelize = require('../app/components/db');
 
-const SHEETS = ['Курсы', 'Опции', 'Адреса центров'],
+const SHEETS = ['Курсы', 'Опции', 'Адреса центров', 'О компании'],
     WEEK_DAYS = ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'];
 
 class CourseParser {
@@ -20,6 +21,8 @@ class CourseParser {
             brandName = path.parse(filePath).name;
 
         var courses = this.formatCourses_(brandName, data);
+
+        sequelize.options.logging = false;
         try {
             courses.map(course =>
                 await(services.course.create(course))
@@ -38,7 +41,8 @@ class CourseParser {
         return await({
             courses: this.openSheet_(filePath, SHEETS[0]),
             options: this.openSheet_(filePath, SHEETS[1]),
-            departments: this.openSheet_(filePath, SHEETS[2])
+            departments: this.openSheet_(filePath, SHEETS[2]),
+            brand: this.openSheet_(filePath, SHEETS[3])
         });
     }
 
@@ -69,18 +73,24 @@ class CourseParser {
      * @param {{
      *     courses: Array<Object>,
      *     options: Array<Object>,
-     *     departments: Array<Object>
+     *     departments: Array<Object>,
+     *     brand: Array<Object>
      * }} data
      * @return {Array<Object>}
      */
     formatCourses_(brandName, data) {
+        let brand = data.brand[0];
+
         data.options = data.options.map(option =>
             this.formatOption_(option, data.departments)
         );
 
         return data.courses
             .map(course => {
-                course.brandName = brandName;
+                course.brand = {
+                    name: brandName,
+                    description: brand.description
+                };
                 course.options = course.options.split(',').map(id =>
                     data.options.find(option => option.optionId == id)
                 );

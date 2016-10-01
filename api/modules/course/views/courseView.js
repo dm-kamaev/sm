@@ -100,7 +100,8 @@ view.formatDepartmentList = function(options, generalOptions) {
 /**
  * @param {{
  *     courseBrand: {
- *         name: string
+ *         name: string,
+ *         description: ?string
  *     },
  *     courseType: {
  *         name: string

@@ -28,7 +28,7 @@ const informationFields = {
         'learningOutcome',
         'leadType'
     ],
-    BRAND: ['id', 'name'],
+    BRAND: ['id', 'name', 'description'],
     TYPE: ['id', 'name'],
     OPTION: [
         'id',
@@ -59,8 +59,11 @@ const informationFields = {
  *     entranceExam: ?string,
  *     learningOutcome: ?string,
  *     leadType: string,
- *     brandName: string,
  *     type: ?string,
+ *     brand: {
+ *         name: string,
+ *         description: ?string
+ *     }
  *     options: Array<{
  *         name: ?string,
  *         description: ?string,
@@ -89,9 +92,7 @@ const informationFields = {
  * @return {Course}
  */
 service.create = async(function(data) {
-    let brand = await(services.courseBrand.create({
-            name: data.brandName
-        })),
+    let brand = await(services.courseBrand.create(data.brand)),
         type = await(services.courseType.create(data.type)),
         course = await(models.Course.create({
             name: data.name,
