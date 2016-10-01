@@ -165,7 +165,7 @@ module.exports = class {
             option.departments.map(department => {
                 let addressId = department.addressId;
                 if (addresses[addressId]) {
-                    addresses[addressId].options.features.push(
+                    addresses[addressId].options.push(
                         this.transformOption_(option)
                     );
                 } else {
@@ -184,26 +184,10 @@ module.exports = class {
      * @return {Object}
      */
     transformDepartment_(department, option) {
-        let titleKey = this.globalOptions_[0],
-            costKey = this.globalOptions_[1],
-            options = {
-                title: {
-                    key: titleKey,
-                    name: this.getName_(titleKey),
-                    value: option[titleKey]
-                },
-                cost: {
-                    key: costKey,
-                    name: this.getName_(costKey),
-                    value: option[costKey]
-                },
-                buttonText: BUTTON_TEXT,
-                features: [this.transformOption_(option)]
-            };
         return {
             name: department.addressName,
             metros: department.metros,
-            options: options
+            options: [this.transformOption_(option)]
         };
     }
 
@@ -213,6 +197,30 @@ module.exports = class {
      * @return {Object}
      */
     transformOption_(option) {
+        let titleKey = this.globalOptions_[0],
+            costKey = this.globalOptions_[1];
+        return {
+            title: {
+                key: titleKey,
+                name: this.getName_(titleKey),
+                value: option[titleKey]
+            },
+            cost: {
+                key: costKey,
+                name: this.getName_(costKey),
+                value: option[costKey]
+            },
+            buttonText: BUTTON_TEXT,
+            features: [this.transformFeature_(option)]
+        };
+    }
+
+    /**
+     * @private
+     * @param  {Object} option
+     * @return {Object}
+     */
+    transformFeature_(option) {
         let keys = Object.keys(option);
         return keys.map(key => {
             let feature;
