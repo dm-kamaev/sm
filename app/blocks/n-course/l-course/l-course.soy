@@ -128,7 +128,9 @@
  */
 {template .sectionOptions_}
     <div class="{call .rootClass/}__section {call .rootClass/}__section_options">
-        {call .departmentList_ data="all" /}
+        <div class="{call .rootClass/}__options">
+            {call .optionsList_ data="all" /}
+        </div>
     </div>
 {/template}
 
@@ -143,8 +145,8 @@
  *     }
  * }}
  */
-{template .departmentList_}
-    <div class="{call .rootClass/}__options">
+{template .optionsList_}
+    <div class="{call .rootClass/}__options-list">
         {let $customClasses kind="html"}
             {call .rootClass/}__department-list
         {/let}
