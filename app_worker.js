@@ -63,7 +63,6 @@ if (config.environment == 'development') {
     app.use('/api-debug', express.static(path.join(__dirname, '/api-debug')));
 }
 
-app.use('/api', api.mail.router);
 
 require('./app/middleware/csrf')(app);
 
@@ -76,17 +75,18 @@ app.use(morgan('dev', {
     stream: expressLogStream.warning
 }));
 
-app.use('/', modules.school.router);
-app.use('/', modules.course.router);
+app.use('/schools/', modules.school.router);
+app.use('/courses/', modules.course.router);
 
-app.use('/', api.user.router);
-app.use('/api', api.comment.router);
-app.use('/api', api.school.router);
-app.use('/api', api.course.router);
-app.use('/api', api.geo.router);
-app.use('/api', api.feedback.router);
-app.use('/api', api.favorite.router);
-app.use('/api', api.entity.router);
+app.use('/:subdomain/api', api.mail.router);
+app.use('/:subdomain/', api.user.router);
+app.use('/:subdomain/api', api.comment.router);
+app.use('/schools/api', api.school.router);
+app.use('/courses/api', api.course.router);
+app.use('/:subdomain/api', api.geo.router);
+app.use('/:subdomain/api', api.feedback.router);
+app.use('/:subdomain/api', api.favorite.router);
+app.use('/:subdomain/api', api.entity.router);
 
 async(function() {
     var paths = [

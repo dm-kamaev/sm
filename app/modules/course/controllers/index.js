@@ -7,7 +7,6 @@ router.get(
     '/course/proforientacija/:brandName/:name',
     courseController.information
 );
-router.get('/coursesearch', courseController.search);
-router.get('/course', courseController.information);
+router.get('/', courseController.search);
 
 module.exports = router;
