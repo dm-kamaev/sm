@@ -36,6 +36,9 @@
 
 
 /**
+ * @param params {{
+ *     data: sm.bOption.Template.Params.Data
+ * }}
  * @override
  */
 {template .body}
@@ -151,11 +154,15 @@
 
 
 /**
+ * Attributes
  * @param params {{
- *     title: sm.bOption.Template.Params.Data.Option,
- *     features: Array<sm.bOption.Template.Params.Data.Option>,
- *     cost: sm.bOption.Template.Params.Data.Option
+ *     data: {
+ *         title: sm.bOption.Template.Params.Data.Option,
+ *         features: Array<sm.bOption.Template.Params.Data.Option>,
+ *         cost: sm.bOption.Template.Params.Data.Option
+ *     }
  * }}
+ * @override
  */
 {template .attributes kind="attributes"}
     {let $dataParams: quoteKeysIfJs([

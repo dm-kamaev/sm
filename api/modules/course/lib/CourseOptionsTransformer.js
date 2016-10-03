@@ -211,7 +211,7 @@ module.exports = class {
                 value: option[costKey]
             },
             buttonText: BUTTON_TEXT,
-            features: [this.transformFeature_(option)]
+            features: this.transformFeature_(option)
         };
     }
 

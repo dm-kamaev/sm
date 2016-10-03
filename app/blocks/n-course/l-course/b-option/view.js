@@ -49,11 +49,19 @@ goog.scope(function() {
 
     /**
      * @typedef {{
-     *     features: Array<{
-     *         type: number,
-     *         value: string
-     *     }>,
-     *     cost: number
+     *     name: string,
+     *     value: string,
+     *     key: string
+     * }}
+     */
+    sm.lCourse.bOption.View.OptionParams;
+
+
+    /**
+     * @typedef {{
+     *     title: sm.lCourse.bOption.View.OptionParams
+     *     features: Array<sm.lCourse.bOption.View.OptionParams>
+     *     cost: sm.lCourse.bOption.View.OptionParams
      * }}
      */
     sm.lCourse.bOption.View.RenderParams;
@@ -61,11 +69,9 @@ goog.scope(function() {
 
     /**
      * @typedef {{
-     *     features: Array<{
-     *         type: number,
-     *         value: string
-     *     }>,
-     *     cost: number
+     *     title: sm.lCourse.bOption.View.OptionParams
+     *     features: Array<sm.lCourse.bOption.View.OptionParams>
+     *     cost: sm.lCourse.bOption.View.OptionParams
      * }}
      */
     sm.lCourse.bOption.View.DataParams;
@@ -78,6 +84,7 @@ goog.scope(function() {
      */
     View.getRenderParams = function(rawParams) {
         return {
+            title: rawParams['title'],
             features: rawParams['features'],
             cost: rawParams['cost'],
             buttonText: rawParams['buttonText']
@@ -111,13 +118,23 @@ goog.scope(function() {
      */
     View.prototype.transformParams = function(rawParams) {
         return {
+            title: {
+                name: rawParams['title']['name'],
+                value: rawParams['title']['value'],
+                key: rawParams['title']['key']
+            },
             features: goog.array.map(rawParams['features'], function(feature) {
                 return {
-                    type: feature['type'],
-                    value: feature['value']
+                    name: feature['name'],
+                    value: feature['value'],
+                    key: feature['key']
                 };
             }),
-            cost: rawParams['cost']
+            cost: {
+                name: rawParams['cost']['name'],
+                value: rawParams['cost']['value'],
+                key: rawParams['cost']['key']
+            }
         };
     };
 

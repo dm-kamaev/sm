@@ -4,10 +4,12 @@
 goog.provide('sm.lCourse.bDepartment.Department');
 
 goog.require('cl.iControl.Control');
+goog.require('sm.lCourse.bDepartment.Event.EnrollButtonClick');
 
 
 goog.scope(function() {
-    var View = sm.lCourse.bDepartment.View;
+    var View = sm.lCourse.bDepartment.View,
+        Event = sm.lCourse.bDepartment.Event;
 
 
 
@@ -51,7 +53,8 @@ goog.scope(function() {
      * @const
      */
     Department.Event = {
-        CLICK: goog.events.getUniqueId('click')
+        CLICK: goog.events.getUniqueId('click'),
+        ENROLL_BUTTON_CLICK: Event.EnrollButtonClick.Type
     };
 
 
@@ -91,6 +94,40 @@ goog.scope(function() {
      */
     Department.prototype.enterDocument = function() {
         Department.base(this, 'enterDocument');
+
+        this.initOptionsListeners_();
+    };
+
+
+    /**
+     * Initializes listeners for button
+     * @private
+     */
+    Department.prototype.initOptionsListeners_ = function() {
+        for (var i = 0; i < this.options_.length; i++) {
+            this.getHandler().listen(
+                this.options_[i],
+                sm.lCourse.bOption.Option.Event.ENROLL_BUTTON_CLICK,
+                this.onEnrollButtonClick_
+            );
+        }
+    };
+
+
+    /**
+     * Option button handler
+     * @param {goog.events.Event} event
+     * @private
+     */
+    Department.prototype.onEnrollButtonClick_ = function(event) {
+        var data = {
+            name: this.params.name,
+            metros: this.params.metros,
+            options: event.target.getData()
+        };
+
+        var event = new Event.EnrollButtonClick(data, this);
+        this.dispatchEvent(event);
     };
 
 

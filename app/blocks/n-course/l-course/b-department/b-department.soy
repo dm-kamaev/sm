@@ -27,6 +27,9 @@
 
 
 /**
+ * @param params {{
+ *     data: sm.lCourse.bDepartment.Template.Params.Data
+ * }}
  * @protected
  * @override
  */
@@ -129,6 +132,30 @@
         {/call}
     </div>
     <div class="{call .rootClass /}__horizontal-line"></div>
+{/template}
+
+
+/**
+ * Attributes
+ * @param params {{
+ *     data: {
+ *         name: string,
+ *         metros: Array<string>
+ *         options: Array<sm.bOption.Template.Params.Data>
+ *     }
+ * }}
+ * @override
+ */
+{template .attributes kind="attributes"}
+    {let $dataParams: quoteKeysIfJs([
+        'name': $params.data.name,
+        'metros': $params.data.metros
+    ]) /}
+
+    data-params="
+    {call cl.iUtils.Utils.stringify}
+        {param json: $dataParams /}
+    {/call}"
 {/template}
 
 

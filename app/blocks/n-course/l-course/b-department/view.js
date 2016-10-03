@@ -31,14 +31,21 @@ goog.scope(function() {
 
     /**
      * @typedef {{
-     *     data: {
-     *         name: string,
-     *         metro: Array<string>
-     *         options: Array<sm.bOption.Template.Params.Data>
-     *     }
+     *     name: string,
+     *     metros: Array<string>
+     *     options: Array<sm.bOption.Template.Params.Data>
      * }}
      */
     sm.lCourse.bDepartment.View.RenderParams;
+
+
+    /**
+     * @typedef {{
+     *     name: string,
+     *     metros: Array<string>
+     * }}
+     */
+    sm.lCourse.bDepartment.View.DataParams;
 
 
     /**
@@ -59,9 +66,28 @@ goog.scope(function() {
     View.getRenderParams = function(rawParams) {
         return {
             name: rawParams['name'],
-            metro: rawParams['metro'],
+            metros: rawParams['metros'],
             options: rawParams['options']
         };
+    };
+
+
+    /**
+     * Getter for params
+     * @return {sm.lCourse.bDepartment.View.DataParams}
+     * @public
+     * @override
+     */
+    View.prototype.getParams = function() {
+        if (!this.params || goog.object.isEmpty(this.params)) {
+            var elem = this.getElement(),
+                data = elem && elem.getAttribute('data-params');
+            if (data) {
+                this.params = this.transformParams(JSON.parse(data));
+            }
+        }
+
+        return this.params;
     };
 
 
@@ -73,6 +99,20 @@ goog.scope(function() {
         View.base(this, 'decorateInternal', element);
 
         this.initDom_();
+    };
+
+
+    /**
+     * Transform params to compressed ones
+     * @param {Object<string, (Array|Object|number)>} rawParams
+     * @return {sm.lCourse.bDepartment.View.DataParams}
+     * @protected
+     */
+    View.prototype.transformParams = function(rawParams) {
+        return {
+            name: rawParams['name'],
+            metros: rawParams['metros']
+        };
     };
 
 

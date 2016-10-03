@@ -89,9 +89,9 @@ goog.scope(function() {
     /**
      * Date getter
      * @return {sm.lCourse.bOption.Option.DataParams}
-     * @private
+     * @public
      */
-    Option.prototype.getData_ = function() {
+    Option.prototype.getData = function() {
         return this.params;
     };
 
