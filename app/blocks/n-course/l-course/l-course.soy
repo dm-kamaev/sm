@@ -128,9 +128,23 @@
  */
 {template .sectionOptions_}
     <div class="{call .rootClass/}__section {call .rootClass/}__section_options">
-            // {call cl.iUtils.Utils.stringify}
-            //     {param json: $params.data.entityData.departmentList/}
-            // {/call}
+        {call .departmentList_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Section with a complete data entity
+ * @param params {{
+ *     data: {
+ *         entityData: {
+ *             departmentList: sm.lCourse.bDepartment.Template.Params.Data
+ *         }
+ *     }
+ * }}
+ */
+{template .departmentList_}
+    <div class="{call .rootClass/}__options">
         {let $customClasses kind="html"}
             {call .rootClass/}__department-list
         {/let}

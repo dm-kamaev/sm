@@ -105,6 +105,7 @@ goog.scope(function() {
         Course.base(this, 'enterDocument');
 
         this.initActionButtonsListeners_();
+        this.initDepartmentListListeners_();
     };
 
 
@@ -124,10 +125,25 @@ goog.scope(function() {
 
 
     /**
-     * Action button handler
+     * Initializes listeners for department list
      * @private
      */
-    Course.prototype.onActionButtonClick_ = function() {
+    Course.prototype.initDepartmentListListeners_ = function() {
+        this.getHandler().listen(
+            this.departmentList_,
+            sm.lCourse.bDepartment.Department.Event.ENROLL_BUTTON_CLICK,
+            this.onActionButtonClick_
+        );
+    };
+
+
+    /**
+     * Action button handler
+     * @param {goog.events.Event} event
+     * @private
+     */
+    Course.prototype.onActionButtonClick_ = function(event) {
+        this.modalEnrollment_.setOptionsData(event.data);
         this.modalEnrollment_.show();
     };
 
