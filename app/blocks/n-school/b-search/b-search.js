@@ -821,7 +821,7 @@ goog.scope(function() {
             itemType == Search.SearchType.COURSES) {
 
             var aliasPage = (itemType == Search.SearchType.SCHOOLS) ?
-                ('/' + this.dataParams_.aliasPage) : '';
+                this.dataParams_.aliasPage : '';
 
             document.location.href = aliasPage + '/' + data['item']['alias'];
 
@@ -922,7 +922,7 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.searchRequest_ = function(searchString) {
-        var url = '/' + this.dataParams_.aliasPage;
+        var url = this.dataParams_.aliasPage;
         if (searchString) {
             url += '?name=' + encodeURIComponent(searchString);
         }
@@ -953,7 +953,7 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.onNotEntitySelect_ = function(event, data) {
-        var url = '/' + this.dataParams_.aliasPage +
+        var url = this.dataParams_.aliasPage +
             '?name=' + encodeURIComponent(data['text']);
 
         if (data['item']['type'] === 'metro') {

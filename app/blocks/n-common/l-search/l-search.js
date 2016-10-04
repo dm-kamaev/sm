@@ -9,6 +9,7 @@ goog.require('goog.events');
 goog.require('goog.object');
 goog.require('sm.bSearch.Search');
 goog.require('sm.bSmMap.SmMap');
+goog.require('sm.bSmSubheader.SmSubheader');
 goog.require('sm.gDropdown.DropdownSelect');
 goog.require('sm.iLayout.LayoutStendhal');
 goog.require('sm.iSmSearchParamsManager.SmSearchParamsManager');
@@ -169,7 +170,8 @@ goog.scope(function() {
     Search.prototype.enterDocument = function() {
         Search.base(this, 'enterDocument');
 
-        this.initLeftMenuListeners_()
+        this.initSubheaderListeners_()
+            .initLeftMenuListeners_()
             .initSearchServiceListeners_()
             .initResultsListListeners_()
             .initWindowListeners_()
@@ -322,6 +324,22 @@ goog.scope(function() {
 
 
     /**
+     * Init listeners for subheader
+     * @return {sm.lSearch.Search}
+     * @private
+     */
+    Search.prototype.initSubheaderListeners_ = function() {
+        this.getHandler().listen(
+            this.subheader,
+            sm.bSmSubheader.SmSubheader.Event.SEARCH_SUBMIT,
+            this.onHeaderSearchSubmit_
+        );
+
+        return this;
+    };
+
+
+    /**
      * Init search service listeners
      * @return {sm.lSearch.Search}
      * @private
@@ -338,6 +356,22 @@ goog.scope(function() {
         );
 
         return this;
+    };
+
+
+    /**
+     * Header submit handler
+     * @param {Object} event
+     * @private
+     */
+    Search.prototype.onHeaderSearchSubmit_ = function(event) {
+        var data = this.subheader.getSearchData();
+        this.search_.setData(data);
+
+        this.subheader.setMode(sm.bSmSubheader.SmSubheader.Mode.DEFAULT);
+
+        this.updatePage_();
+        this.filterPanel_.reset();
     };
 
 
@@ -399,7 +433,6 @@ goog.scope(function() {
      */
     Search.prototype.onMapDataLoaded_ = function(event) {
         this.map_.addItems(event.getItemGroups());
-        console.log(event.getPosition());
         this.map_.center(event.getPosition());
     };
 
