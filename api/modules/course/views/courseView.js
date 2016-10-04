@@ -423,11 +423,53 @@ view.generateAlias = function(alias, brandAlias) {
  * @return {Object}
  */
 view.letterData = function(data) {
-    let comment = data.comment ? `<br/>Комментарий: ${data.comment}` : '';
     return {
         theme: 'Запись на курс',
-        content: `Имя: ${data.name}<br/>Телефон: ${data.phone}` + comment
+        content: this.letterContent(data)
     };
+};
+
+/**
+ * @param  {{
+ *     applicationId: number,
+ *     name: string,
+ *     phone: string,
+ *     comment: ?string,
+ *     department: Object
+ * }} data
+ * @return {string}
+ */
+view.letterContent = function(data) {
+    let result = '',
+        comment = data.comment ? `<br>Комментарий: ${data.comment}` : '',
+        departmentOptions = data.department.options,
+        options = `<br>Адрес: ${data.department.name}`;
+
+    options += this.formatFeature(departmentOptions.title);
+    options += this.formatFeature(departmentOptions.cost);
+    departmentOptions.features.map(feature => {
+        options += this.formatFeature(feature);
+    });
+
+    result += `Номер заявки: ${data.applicationId}`;
+    result += `<br>Имя: ${data.name}`;
+    result += `<br>Телефон: ${data.phone}`;
+    result += comment;
+    result += options;
+
+    return result;
+};
+
+/**
+ * [formatFeature description]
+ * @param  {{
+ *     name: string,
+ *     value: string
+ * }} feature
+ * @return {string}
+ */
+view.formatFeature = function(feature) {
+    return `<br>${feature.name}: ${feature.value}`;
 };
 
 

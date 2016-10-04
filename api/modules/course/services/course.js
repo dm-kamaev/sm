@@ -2,7 +2,8 @@
 
 const async = require('asyncawait/async'),
     await = require('asyncawait/await'),
-    squel = require('squel');
+    squel = require('squel'),
+    url = require('url');
 
 const sequelize = require('../../../../app/components/db'),
     models = require('../../../../app/components/models').all,
@@ -374,11 +375,13 @@ service.getByBrandId = function(brandId) {
  * @param {{
  *     name: string,
  *     phone: string,
- *     comment: ?string
+ *     comment: ?string,
+ *     link: string,
+ *     department: Array<Object>
  * }} data
  * @return {Object}
  */
-service.enrollOnCourse = function(data) {
+service.enrollOnCourse = async(function(data) {
     if (!data.name) {
         error.throwValidation('name', 'Необходимо заполнить поле имя');
     } else if (!data.phone) {
@@ -389,8 +392,18 @@ service.enrollOnCourse = function(data) {
             'Длина комментария не должна превышать 300 символов'
         );
     }
+    let application = await(services.courseApplication.create({
+        username: data.name,
+        phone: data.phone,
+        comment: data.comment,
+        alias: url.parse(data.link).pathname,
+        option: JSON.stringify(data.department)
+    }));
+
+    data.applicationId = application.id;
+
     return data;
-};
+});
 
 /**
  * @param {Array<Object>} courses

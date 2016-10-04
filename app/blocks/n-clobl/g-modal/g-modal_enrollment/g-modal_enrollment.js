@@ -274,7 +274,7 @@ goog.scope(function() {
             'phone': this.phoneField_.getValue(),
             'comment': this.commentField_.getValue(),
             'link': window.location.href,
-            'options': JSON.stringify(this.optionsData_)
+            'department': this.optionsData_
         };
     };
 
