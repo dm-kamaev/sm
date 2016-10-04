@@ -16,6 +16,7 @@
  * @property {?map} config
  * @property {?boolean} config.showSearchIcon
  * @property {?string} config.height
+ * @property {?string} config.faderSize
  * @property {string} config.entityType
  */
 
@@ -36,12 +37,30 @@
                 {$params?.theme == 'foldable' ? 'i-animate ' : ''}"
         data-params="{call goog.json.serialize data="$data" /}"
     >
-        {if $params?.theme == 'foldable'}
-            <div class="b-search__fader i-animate"></div>
-        {/if}
-
+        
+        {call .fader_ data="all" /}
         {call .body_ data="all" /}
     </div>
+{/template}
+
+
+/**
+ * Fader template
+ * @param params {sm.bSearch.Template.Params}
+ */
+{template .fader_}
+    {if $params?.theme == 'foldable'}
+        {let $classes kind="html"}
+            b-search__fader{sp}
+            i-animate{sp}
+
+            {if $params?.config?.faderSize}
+                b-search__fader_size_{$params.config.faderSize}
+            {/if}
+        {/let}
+
+        <div class="{$classes}"></div>
+    {/if}
 {/template}
 
 
