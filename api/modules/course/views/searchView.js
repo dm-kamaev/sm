@@ -146,7 +146,8 @@ searchView.render = function(data) {
                 url: '/proforientacija'
             },
             search: {
-                placeholder: 'Район, метро, название курса'
+                placeholder: 'Район, метро, название курса',
+                aliasPage: '/proforientacija'
             },
             user: user,
             favorites: {
@@ -163,6 +164,7 @@ searchView.render = function(data) {
             countResults: data.countResults,
             searchText: data.searchParams.name,
             placeholder: 'Район, метро, название курса',
+            aliasPage: '/proforientacija',
             declensionEntityType: {
                 nom: 'курс',
                 gen: 'курса',

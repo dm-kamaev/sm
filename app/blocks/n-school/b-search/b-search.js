@@ -45,7 +45,10 @@ sm.bSearch.Search = function(opt_params) {
 
     /**
      * @private
-     * @type {?Object}
+     * @type {{
+     *     redirect: boolean,
+     *     aliasPage: string
+     * }}
      */
     this.dataParams_ = {};
 
@@ -814,11 +817,13 @@ goog.scope(function() {
 
         var itemType = data['item']['type'];
 
-        if (itemType === Search.SearchType.SCHOOLS ||
-            itemType === Search.SearchType.COURSES) {
+        if (itemType == Search.SearchType.SCHOOLS ||
+            itemType == Search.SearchType.COURSES) {
 
-            var type = this.dataParams_.type;
-            document.location.href = '/' + type + '/' + data['item']['alias'];
+            var aliasPage = (itemType == Search.SearchType.SCHOOLS) ?
+                ('/' + this.dataParams_.aliasPage) : '';
+
+            document.location.href = aliasPage + '/' + data['item']['alias'];
 
         } else if (this.dataParams_.redirect) {
             this.onNotEntitySelect_(event, data);
@@ -917,7 +922,7 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.searchRequest_ = function(searchString) {
-        var url = '/school';
+        var url = '/' + this.dataParams_.aliasPage;
         if (searchString) {
             url += '?name=' + encodeURIComponent(searchString);
         }
@@ -947,8 +952,9 @@ goog.scope(function() {
      * @param {Object} data
      * @private
      */
-    Search.prototype.onNotSchoolSelect_ = function(event, data) {
-        var url = '/school' + '?name=' + encodeURIComponent(data['text']);
+    Search.prototype.onNotEntitySelect_ = function(event, data) {
+        var url = '/' + this.dataParams_.aliasPage +
+            '?name=' + encodeURIComponent(data['text']);
 
         if (data['item']['type'] === 'metro') {
             url += '&metroId=' + data['item']['id'];
