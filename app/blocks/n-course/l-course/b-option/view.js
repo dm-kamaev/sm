@@ -59,9 +59,11 @@ goog.scope(function() {
 
     /**
      * @typedef {{
-     *     title: sm.lCourse.bOption.View.OptionParams
-     *     features: Array<sm.lCourse.bOption.View.OptionParams>
-     *     cost: sm.lCourse.bOption.View.OptionParams
+     *     data: {
+     *         title: sm.lCourse.bOption.View.OptionParams,
+     *         features: Array<sm.lCourse.bOption.View.OptionParams>,
+     *         cost: sm.lCourse.bOption.View.OptionParams
+     *     }
      * }}
      */
     sm.lCourse.bOption.View.RenderParams;
@@ -69,8 +71,8 @@ goog.scope(function() {
 
     /**
      * @typedef {{
-     *     title: sm.lCourse.bOption.View.OptionParams
-     *     features: Array<sm.lCourse.bOption.View.OptionParams>
+     *     title: sm.lCourse.bOption.View.OptionParams,
+     *     features: Array<sm.lCourse.bOption.View.OptionParams>,
      *     cost: sm.lCourse.bOption.View.OptionParams
      * }}
      */
@@ -84,10 +86,12 @@ goog.scope(function() {
      */
     View.getRenderParams = function(rawParams) {
         return {
-            title: rawParams['title'],
-            features: rawParams['features'],
-            cost: rawParams['cost'],
-            buttonText: rawParams['buttonText']
+            data: {
+                title: rawParams['title'],
+                features: rawParams['features'],
+                cost: rawParams['cost'],
+                buttonText: rawParams['buttonText']
+            }
         };
     };
 
@@ -110,7 +114,8 @@ goog.scope(function() {
         return this.params;
     };
 
-        /**
+
+    /**
      * Transform params to compressed ones
      * @param {Object<string, (Array|Object|number)>} rawParams
      * @return {sm.lCourse.bOption.View.DataParams}

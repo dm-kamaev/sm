@@ -51,7 +51,7 @@ goog.scope(function() {
 
         /**
          * Selected options data of user
-         * @type {Object}
+         * @type {sm.lCourse.bDepartment.Event.EnrollButtonClick.Data}
          * @private
          */
         this.optionsData_ = {};

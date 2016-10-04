@@ -31,9 +31,11 @@ goog.scope(function() {
 
     /**
      * @typedef {{
-     *     name: string,
-     *     metros: Array<string>
-     *     options: Array<sm.bOption.Template.Params.Data>
+     *     data: {
+     *         name: string,
+     *         metros: Array<string>,
+     *         options: Array<sm.lCourse.bOption.Option.RenderParams>
+     *     }
      * }}
      */
     sm.lCourse.bDepartment.View.RenderParams;
@@ -61,13 +63,16 @@ goog.scope(function() {
     /**
      * Transform params to compressed ones
      * @param {Object<string, (string|Array|Object)>} rawParams
-     * @return {sm.bDepartment.View.RenderParams}
+     * @return {sm.lCourse.bDepartment.View.RenderParams}
+     * @public
      */
     View.getRenderParams = function(rawParams) {
         return {
-            name: rawParams['name'],
-            metros: rawParams['metros'],
-            options: rawParams['options']
+            data: {
+                name: rawParams['name'],
+                metros: rawParams['metros'],
+                options: rawParams['options']
+            }
         };
     };
 
@@ -92,8 +97,9 @@ goog.scope(function() {
 
 
     /**
-     * @override
      * @param {Element} element
+     * @protected
+     * @override
      */
     View.prototype.decorateInternal = function(element) {
         View.base(this, 'decorateInternal', element);

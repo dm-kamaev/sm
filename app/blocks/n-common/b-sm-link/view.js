@@ -102,7 +102,7 @@ goog.scope(function() {
 
     /**
      * Getter for params
-     * @return {sm.lCourse.bOption.View.DataParams}
+     * @return {sm.bSmLink.View.DataParams}
      * @public
      * @override
      */

@@ -71,7 +71,7 @@ goog.scope(function() {
     /**
      * Transform params to compressed ones
      * @param {Object<string, (string|Array|Object)>} rawParams
-     * @return {sm.bDepartment.Department.RenderParams}
+     * @return {sm.lCourse.bDepartment.Department.RenderParams}
      */
     Department.getRenderParams = function(rawParams) {
         return View.transformParams(rawParams);
@@ -120,10 +120,16 @@ goog.scope(function() {
      * @private
      */
     Department.prototype.onEnrollButtonClick_ = function(event) {
+        var option = event.target.getData();
+
         var data = {
-            name: this.params.name,
-            metros: this.params.metros,
-            options: event.target.getData()
+            'name': this.params.name,
+            'metros': this.params.metros,
+            'options': {
+                'title': option.title,
+                'features': option.features,
+                'cost': option.cost
+            }
         };
 
         var event = new Event.EnrollButtonClick(data, this);

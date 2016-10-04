@@ -8,11 +8,7 @@ goog.scope(function() {
 
     /**
      * Enrollment button option click event
-     * @param {{
-     *     name: string,
-     *     metros: Array<string>
-     *     options: Array<sm.lCourse.bOption.Option.DataParams>
-     * }} data
+     * @param {Object} data
      * @param {goog.events.EventTarget=} opt_target
      * @constructor
      * @extends {goog.events.Event}
@@ -27,12 +23,34 @@ goog.scope(function() {
 
 
         /**
-         * Option data
-         * @type {{
+         * @typedef {{
          *     name: string,
-         *     metros: Array<string>
-         *     options: Array<sm.lCourse.bOption.Option.DataParams>
+         *     metros: Array<string>,
+         *     options: {
+         *         title: {
+         *             name: string,
+         *             value: string,
+         *             key: string
+         *         },
+         *         features: {
+         *             name: string,
+         *             value: string,
+         *             key: string
+         *         },
+         *         cost: {
+         *             name: string,
+         *             value: string,
+         *             key: string
+         *         }
+         *     }
          * }}
+         */
+         sm.lCourse.bDepartment.Event.EnrollButtonClick.Data;
+
+
+        /**
+         * Option data
+         * @type {sm.lCourse.bDepartment.Event.EnrollButtonClick.Data}
          */
         this.data = data;
     };
