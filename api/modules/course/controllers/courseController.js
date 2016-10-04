@@ -252,7 +252,7 @@ controller.enrollOnCourse = async(function(req, res) {
 
         await(services.mail.sendLetter(letterData, {
             from: 'schools.mel.fm <sender@mel.fm>',
-            to: config.emailNotifier.email
+            to: config.courseMail.email
         }));
     } catch (error) {
         logger.error(error.message);

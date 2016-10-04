@@ -409,7 +409,7 @@ view.generateAlias = function(alias, brandAlias) {
 view.letterData = function(data) {
     let comment = data.comment ? `<br/>Комментарий: ${data.comment}` : '';
     return {
-        theme: 'Запись на курс',
+        theme: 'Новая заявка на Курсах Мела',
         content: `Имя: ${data.name}<br/>Телефон: ${data.phone}` + comment
     };
 };
