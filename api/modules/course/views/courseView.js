@@ -328,7 +328,7 @@ view.mapCourse = function(course) {
     return {
         id: course.id,
         content: course.name,
-        url: 'course/' + this.generateAlias(course.alias, course.brandAlias)
+        url: this.generateAlias(course.alias, course.brandAlias)
     };
 };
 

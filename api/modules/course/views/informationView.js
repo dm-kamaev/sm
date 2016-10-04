@@ -27,7 +27,7 @@ exports.render = function(data) {
             links: {
                 nameL: 'Все курсы, кружки и секции',
                 nameM: 'Все курсы',
-                url: '/'
+                url: '/proforientacija'
             },
             search: {
                 placeholder: 'Район, метро, название курса'
