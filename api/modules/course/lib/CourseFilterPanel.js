@@ -62,7 +62,8 @@ class CourseFilterPanel extends FilterPanel {
                 options: []
             },
             config: {
-                showMoreButtonText: 'Все направления'
+                showMoreButtonText: 'Все направления',
+                optionsToShow: 9
             }
         };
 

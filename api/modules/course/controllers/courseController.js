@@ -165,7 +165,7 @@ controller.popularCourseType = async(function(req, res) {
     let result;
     try {
         let popularCourseType =
-            await(services.courseType.getPopularTypes());
+            await(services.courseType.getPopularTypes(12));
 
         result =
             courseTypeView.typeFilters(popularCourseType);
