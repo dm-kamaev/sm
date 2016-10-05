@@ -1,4 +1,5 @@
 {
+    "admin-token": "123qwe",
     "emailNotifier": {
         "email": "schools@mel.fm"
     },
