@@ -159,7 +159,7 @@ view.pageMap = function(course) {
             let address = department.address;
             return {
                 addressId: address.id,
-                coordinates: address.coords,
+                coordinates: geoView.coordinatesDefault(address.coords),
                 title: {
                     text: course.courseBrand.name
                 },
