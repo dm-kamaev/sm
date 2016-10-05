@@ -443,13 +443,16 @@ view.letterContent = function(data) {
     let result = '',
         comment = data.comment ? `<br>Комментарий: ${data.comment}` : '',
         departmentOptions = data.department.options,
-        options = `<br>Адрес: ${data.department.name}`;
+        options = '';
 
-    options += this.formatFeature(departmentOptions.title);
-    options += this.formatFeature(departmentOptions.cost);
-    departmentOptions.features.map(feature => {
-        options += this.formatFeature(feature);
-    });
+    if (departmentOptions) {
+        options = `<br>Адрес: ${data.department.name}`;
+        options += this.formatFeature(departmentOptions.title);
+        options += this.formatFeature(departmentOptions.cost);
+        departmentOptions.features.map(feature => {
+            options += this.formatFeature(feature);
+        });
+    }
 
     result += `Номер заявки: ${data.applicationId}`;
     result += `<br>Имя: ${data.name}`;
