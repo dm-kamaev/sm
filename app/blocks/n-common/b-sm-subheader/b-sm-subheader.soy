@@ -16,7 +16,8 @@
  *     },
  *     search: {
  *         placeholder: (string|undefined),
- *         searchRedirect: boolean
+ *         redirect: boolean,
+ *         pageAlias: string
  *     },
  *     user: ?{
  *         firstName: ?string,
@@ -122,7 +123,8 @@
  *     data: {
  *         search: {
  *             placeholder: ?string,
- *             searchRedirect: ?boolean
+ *             redirect: ?boolean,
+ *             pageAlias: string
  *         }
  *     }
  * }}
@@ -328,7 +330,8 @@
  *     data: {
  *         search: {
  *             placeholder: ?string,
- *             searchRedirect: ?boolean
+ *             redirect: ?boolean,
+ *             pageAlias: string
  *         }
  *     },
  *     config: {
@@ -347,7 +350,8 @@
             'placeholder': $params.data?.search?.placeholder,
             'theme': 'min',
             'customClasses': $customClasses,
-            'redirect': $params.data?.search?.searchRedirect,
+            'redirect': $params.data?.search?.redirect,
+            'pageAlias': $params.data?.search?.pageAlias,
             'inputSize': 'min',
             'config': [
                 'entityType': $params.config.entityType,
@@ -365,7 +369,8 @@
  *     data: {
  *         search: {
  *             placeholder: ?string,
- *             searchRedirect: ?boolean
+ *             redirect: ?boolean,
+ *             pageAlias: string
  *         }
  *     },
  *     config: {
@@ -384,7 +389,8 @@
             'placeholder': $params.data?.search?.placeholder,
             'theme': 'foldable',
             'customClasses': $customClasses,
-            'redirect': $params.data?.search?.searchRedirect,
+            'redirect': $params.data?.search?.redirect,
+            'pageAlias': $params.data?.search?.pageAlias,
             'inputSize': 'min',
             'config': [
                 'entityType': $params.config.entityType,

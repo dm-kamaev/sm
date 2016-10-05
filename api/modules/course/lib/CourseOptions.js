@@ -43,7 +43,7 @@ module.exports = class {
             name: 'Форма обучения'
         }, {
             key: 'duration',
-            name: 'Продолжительность занятия'
+            name: 'Время занятия'
         }];
     }
 

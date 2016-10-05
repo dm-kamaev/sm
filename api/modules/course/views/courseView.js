@@ -312,7 +312,7 @@ view.mapCourse = function(course) {
     return {
         id: course.id,
         content: course.name,
-        url: 'course/' + this.generateAlias(course.alias, course.brandAlias)
+        url: this.generateAlias(course.alias, course.brandAlias)
     };
 };
 
@@ -409,7 +409,7 @@ view.generateAlias = function(alias, brandAlias) {
 view.letterData = function(data) {
     let comment = data.comment ? `<br/>Комментарий: ${data.comment}` : '';
     return {
-        theme: 'Запись на курс',
+        theme: 'Новая заявка на Курсах Мела',
         content: `Имя: ${data.name}<br/>Телефон: ${data.phone}` + comment
     };
 };

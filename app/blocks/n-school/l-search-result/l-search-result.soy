@@ -490,7 +490,8 @@
             {call .search_}
                 {param params: [
                     'searchText': $params?.searchText,
-                    'redirect': false
+                    'redirect': false,
+                    'pageAlias': 'school'
                 ]/}
             {/call}
         </div>
@@ -548,6 +549,7 @@
             'text': $params?.searchText,
             'theme': 'min',
             'redirect': $params?.searchRedirect,
+            'pageAlias': 'school',
             'inputSize': 'min',
             'config': [
                 'height': 's',

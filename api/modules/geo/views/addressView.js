@@ -2,7 +2,6 @@ const metroView = require('./metroView.js');
 const areaView = require('./areaView.js');
 const departmentView = require('./departmentView.js');
 const lodashFlatten = require('lodash/array/flatten');
-const lodash = require('lodash');
 
 var addressView = {};
 
@@ -127,15 +126,12 @@ addressView.getMetro = function(addresses) {
  */
 addressView.nearestMetro = function(addresses) {
     var metroStations = addresses
-        .map(address => {
-            return address.addressMetroes[0] && {
-                id: address.addressMetroes[0].metro.id,
-                name: address.addressMetroes[0].metro.name.replace('метро ', '')
-            };
-        })
+        .map(address =>
+            address.addressMetroes[0] && address.addressMetroes[0].metro
+        )
         .filter(address => address);
 
-    return lodash.uniq(metroStations, 'id');
+    return metroView.list(metroStations);
 };
 
 
