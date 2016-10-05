@@ -1,12 +1,12 @@
 'use strict';
 
-var async = require('asyncawait/async'),
+const async = require('asyncawait/async'),
     await = require('asyncawait/await'),
     path = require('path'),
     commander = require('commander'),
     xlsxj = require('xlsx-to-json');
 
-var services = require('../app/components/services').all,
+const services = require('../app/components/services').all,
     sequelize = require('../app/components/db');
 
 const SHEETS = ['Курсы', 'Опции', 'Адреса центров', 'О компании'],
@@ -17,10 +17,10 @@ class CourseParser {
      * @param {string} filePath
      */
     parse(filePath) {
-        var data = this.readFile_(filePath),
+        let data = this.readFile_(filePath),
             brandName = path.parse(filePath).name;
 
-        var courses = this.formatCourses_(brandName, data);
+        let courses = this.formatCourses_(brandName, data);
 
         sequelize.options.logging = false;
         try {
@@ -34,7 +34,7 @@ class CourseParser {
 
     /**
      * @private
-     * @param {string} filePath
+     * @param  {string} filePath
      * @return {Object}
      */
     readFile_(filePath) {
@@ -48,12 +48,12 @@ class CourseParser {
 
     /**
      * @private
-     * @param {string} filePath
-     * @param {string} name
+     * @param  {string} filePath
+     * @param  {string} name
      * @return {Promise<Array<Object>>}
      */
     openSheet_(filePath, name) {
-        var options = {
+        let options = {
             input: filePath,
             output: null,
             sheet: name
@@ -69,8 +69,8 @@ class CourseParser {
     }
 
     /**
-     * @param {string} brandName
-     * @param {{
+     * @param  {string} brandName
+     * @param  {{
      *     courses: Array<Object>,
      *     options: Array<Object>,
      *     departments: Array<Object>,
@@ -100,8 +100,8 @@ class CourseParser {
     }
 
     /**
-     * @param {Object} option
-     * @param {Array<Object>} departments
+     * @param  {Object} option
+     * @param  {Array<Object>} departments
      * @return {Object}
      */
     formatOption_(option, departments) {
@@ -110,6 +110,8 @@ class CourseParser {
             null :
             Number(option.costPerHour).toFixed(0);
         option.totalCost = option.totalCost === '' ? null : option.totalCost;
+        option.openSchedule = option.openSchedule == 'true' ? true :
+            false;
         option.schedule = this.formatSchedule_(option.schedule);
         option.departments = option.departments.split(',').map(id =>
             departments.find(department => department.departmentId == id)
@@ -119,22 +121,23 @@ class CourseParser {
     }
 
     /**
-     * @param {string} schedule
+     * @param  {string} schedule
      * @return {Array<Object>}
      */
     formatSchedule_(schedule) {
-        var scheduleDays = schedule.split(';');
-        return scheduleDays.map(scheduleDay =>
-            this.formatDay_(scheduleDay.trim())
-        );
+        let scheduleDays = schedule.split(';');
+        return schedule ? scheduleDays.map(scheduleDay =>
+                this.formatDay_(scheduleDay.trim())
+            ) :
+            undefined;
     }
 
     /**
-     * @param {string} day
+     * @param  {string} day
      * @return {Object}
      */
     formatDay_(day) {
-        var scheduleFields = day.split(',').map(field => field.trim());
+        let scheduleFields = day.split(',').map(field => field.trim());
         return {
             day: WEEK_DAYS.indexOf(scheduleFields[0].toLowerCase()),
             startTime: scheduleFields[1] || null,
@@ -146,8 +149,8 @@ class CourseParser {
 /**
  * @param {string} filePath
  */
-var parseCourse = async(function(filePath) {
-    var courseParser = new CourseParser();
+let parseCourse = async(function(filePath) {
+    let courseParser = new CourseParser();
 
     await(courseParser.parse(filePath));
 });

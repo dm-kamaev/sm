@@ -77,10 +77,11 @@ const informationFields = {
  *         nativeSpeaker: ?boolean,
  *         startDate: ?string,
  *         duration: ?string,
- *         schedule: Array<{
+ *         openSchedule: ?boolean,
+ *         schedule: ?Array<{
  *             startTime: ?string,
  *             endTime: ?string,
- *             day: ?number
+ *             day: number
  *         }>,
  *         departments: Array<{
  *             name: ?string,

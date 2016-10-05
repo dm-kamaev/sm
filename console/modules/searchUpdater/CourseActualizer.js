@@ -179,6 +179,7 @@ class CourseActualizer {
     getWeekdays_(options) {
         return lodash
             .chain(options.map(option =>
+                // transformSchedule - check on openSchedule
                 option.schedule.map(schedule => schedule.day)
             ))
             .flatten()
