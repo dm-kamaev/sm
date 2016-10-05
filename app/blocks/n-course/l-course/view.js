@@ -75,6 +75,9 @@ goog.scope(function() {
                 modalEnrollment: this.getElementByClass(
                     sm.gModal.ViewEnrollment.CssClass.ROOT
                 ),
+                modalSuccess: this.getElementByClass(
+                    sm.gModal.ViewSuccess.CssClass.ROOT
+                ),
                 departmentList: this.getElementByClass(
                     View.CssClass.DEPARTMENT_LIST
                 )

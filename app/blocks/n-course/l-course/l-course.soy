@@ -198,6 +198,7 @@
 {template .sectionsModals_}
     <div class="{call .rootClass/}__section {call .rootClass/}__section_modals">
         {call .modalEnrollment_ data="all" /}
+        {call .modalSuccess_ /}
     </div>
 {/template}
 
@@ -392,8 +393,6 @@
 {/template}
 
 
-
-
 /**
  * Modal for user Enrollment
  * @param params {{
@@ -419,6 +418,29 @@
                 ],
                 'config': [
                     'entityType': $params.config.entityType
+                ]
+            ]
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * Modal to show text successful
+ */
+{template .modalSuccess_}
+    {let $textSuccess kind="html"}
+        Ваша заявка принята, скоро с&nbsp;вами свяжется наш оператор.
+    {/let}
+
+    {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+        {param params: [
+            'type': 'modal-success',
+            'renderParams': [
+                'data': [
+                    'content': [
+                        'textSuccess': $textSuccess
+                    ]
                 ]
             ]
         ]/}

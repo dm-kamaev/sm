@@ -70,11 +70,19 @@ goog.scope(function() {
 
 
         /**
-         * Instances button
+         * Instances modal
          * @type {sm.gModal.ModalEnrollment}
          * @private
          */
         this.modalEnrollment_ = null;
+
+
+        /**
+         * Instances modal
+         * @type {sm.gModal.ModalSuccess}
+         * @private
+         */
+        this.modalSuccess_ = null;
     };
     goog.inherits(sm.lCourse.Course, sm.iLayout.LayoutStendhal);
     var Course = sm.lCourse.Course,
@@ -106,6 +114,7 @@ goog.scope(function() {
 
         this.initActionButtonsListeners_();
         this.initDepartmentListListeners_();
+        this.initModalsListeners_();
     };
 
 
@@ -138,6 +147,19 @@ goog.scope(function() {
 
 
     /**
+     * Initializes listeners for department list
+     * @private
+     */
+    Course.prototype.initModalsListeners_ = function() {
+        this.getHandler().listen(
+            this.modalEnrollment_,
+            sm.gModal.ModalEnrollment.Event.SUCCESS,
+            this.onSendEnrollmentSuccess_
+        );
+    };
+
+
+    /**
      * Action button handler
      * @param {goog.events.Event} event
      * @private
@@ -145,6 +167,15 @@ goog.scope(function() {
     Course.prototype.onActionButtonClick_ = function(event) {
         this.modalEnrollment_.setOptionsData(event.data);
         this.modalEnrollment_.show();
+    };
+
+
+    /**
+     * Send enrollment success handler
+     * @private
+     */
+    Course.prototype.onSendEnrollmentSuccess_ = function() {
+        this.modalSuccess_.show();
     };
 
 
@@ -248,6 +279,11 @@ goog.scope(function() {
         this.modalEnrollment_ = this.decorateChild(
             'modal-enrollment',
             this.getView().getDom().modalEnrollment
+        );
+
+        this.modalSuccess_ = this.decorateChild(
+            'modal-success',
+            this.getView().getDom().modalSuccess
         );
     };
 });  // goog.scope
