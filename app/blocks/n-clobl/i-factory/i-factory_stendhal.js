@@ -67,9 +67,11 @@ goog.require('sm.gList.ViewSelect');
 goog.require('sm.gModal.ModalEnrollment');
 goog.require('sm.gModal.ModalFeedback');
 goog.require('sm.gModal.ModalStendhal');
+goog.require('sm.gModal.ModalSuccess');
 goog.require('sm.gModal.ViewEnrollment');
 goog.require('sm.gModal.ViewFeedback');
 goog.require('sm.gModal.ViewStendhal');
+goog.require('sm.gModal.ViewSuccess');
 goog.require('sm.gTextarea.TextareaStendhal');
 goog.require('sm.gTextarea.ViewStendhal');
 goog.require('sm.iFactory.TemplateFactoryStendhal');
@@ -200,6 +202,10 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('modal-enrollment', {
             control: sm.gModal.ModalEnrollment,
             view: sm.gModal.ViewEnrollment
+        })
+        .setControlListItem('modal-success', {
+            control: sm.gModal.ModalSuccess,
+            view: sm.gModal.ViewSuccess
         });
 
     /** Common blocks and their heirs **/

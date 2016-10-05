@@ -44,6 +44,7 @@ goog.require('sm.gList.TemplateSelect');
 goog.require('sm.gModal.TemplateEnrollment');
 goog.require('sm.gModal.TemplateFeedback');
 goog.require('sm.gModal.TemplateStendhal');
+goog.require('sm.gModal.TemplateSuccess');
 goog.require('sm.gTab.TemplateCatalog');
 goog.require('sm.gTab.TemplateStendhal');
 goog.require('sm.gTextarea.TemplateStendhal');
@@ -203,6 +204,10 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'modal-enrollment',
             sm.gModal.TemplateEnrollment.modal
+        )
+        .setTemplateListItem(
+            'modal-success',
+            sm.gModal.TemplateSuccess.modal
         );
 
     /** Global blocks an their heirs **/
