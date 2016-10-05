@@ -171,23 +171,14 @@ searchView.render = function(data) {
         },
         sort: {
             listItems: [{
-                'label': 'Средняя оценка',
-                'text': 'средней оценке'
+                'label': 'по возрастанию цены',
+                'text': 'возрастанию цены'
             }, {
-                'label': 'Образование',
-                'text': 'образованию'
-            }, {
-                'label': 'Преподаватели',
-                'text': 'преподавателям'
-            }, {
-                'label': 'Атмосфера',
-                'text': 'атмосфере'
-            }, {
-                'label': 'Инфраструктура',
-                'text': 'инфраструктуре'
+                'label': 'по убыванию цены',
+                'text': 'убыванию цены'
             }],
             staticText: 'Сортировать по ',
-            defaultOpenerText: 'средней оценке'
+            defaultOpenerText: 'убыванию цены'
         },
         entityList: {
             items: courses,
