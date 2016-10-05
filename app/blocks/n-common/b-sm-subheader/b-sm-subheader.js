@@ -145,16 +145,6 @@ goog.scope(function() {
 
 
     /**
-     * @override
-     */
-    Subheader.prototype.enterDocument = function() {
-        Subheader.base(this, 'enterDocument');
-        this.initMinifiedSearchListeners_();
-        this.initSearchListeners_();
-    };
-
-
-    /**
      * @private
      */
     Subheader.prototype.initMinifiedSearchListeners_ = function() {
