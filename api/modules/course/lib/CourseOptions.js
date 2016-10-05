@@ -127,9 +127,21 @@ module.exports = class {
      */
     formatSchedule_(schedule) {
         return schedule.map(item =>
-            WEEK_DAYS[item.day] + ' ' + this.formatTime_(item.startTime) +
-                '—' + this.formatTime_(item.endTime)
+            WEEK_DAYS[item.day] +
+                this.formatTimeRange_(item.startTime, item.endTime)
         ).join(', ');
+    }
+
+    /**
+     * @private
+     * @param  {(string|null)} startTime
+     * @param  {(string|null)} endTime
+     * @return {string}
+     */
+    formatTimeRange_(startTime, endTime) {
+        return startTime && endTime ?
+            ` ${this.formatTime_(startTime)}—${this.formatTime_(endTime)}` :
+            '';
     }
 
     /**
