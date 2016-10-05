@@ -39,7 +39,7 @@
  *         countResults: number,
  *         searchText: ?string,
  *         placeholder: ?string,
- *         aliasPage: string,
+ *         pageAlias: string,
  *         declensionEntityType: {
  *             nom: string,
  *             gen: string,
@@ -298,7 +298,7 @@
  *     data: {
  *         search: {
  *             placeholder: ?string,
- *             aliasPage: string,
+ *             pageAlias: string,
  *             searchText: ?string
  *         }
  *     },
@@ -319,7 +319,7 @@
                 'text': $params.data?.search?.searchText,
                 'theme': 'min',
                 'redirect': false,
-                'aliasPage': $params.data?.search?.aliasPage,
+                'pageAlias': $params.data?.search?.pageAlias,
                 'inputSize': 'min',
                 'customClasses': $customClasses,
                 'config': [

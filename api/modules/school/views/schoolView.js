@@ -782,7 +782,7 @@ schoolView.item = function(data) {
         score: entity.totalScore,
         metro: addressView.nearestMetro(entity.addresses),
         area: addressView.getArea(entity.addresses),
-        alias: url.alias
+        alias: entityType.SCHOOL + '/' + url.alias
     };
 };
 

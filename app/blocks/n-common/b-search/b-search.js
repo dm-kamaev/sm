@@ -47,7 +47,7 @@ sm.bSearch.Search = function(opt_params) {
      * @private
      * @type {{
      *     redirect: boolean,
-     *     aliasPage: string
+     *     pageAlias: string
      * }}
      */
     this.dataParams_ = {};
@@ -820,10 +820,10 @@ goog.scope(function() {
         if (itemType == Search.SearchType.SCHOOLS ||
             itemType == Search.SearchType.COURSES) {
 
-            var aliasPage = (itemType == Search.SearchType.SCHOOLS) ?
-                this.dataParams_.aliasPage : '';
+            var pageAlias = (itemType == Search.SearchType.SCHOOLS) ?
+                this.dataParams_.pageAlias : '';
 
-            document.location.href = aliasPage + '/' + data['item']['alias'];
+            document.location.href = pageAlias + '/' + data['item']['alias'];
 
         } else if (this.dataParams_.redirect) {
             this.onNotEntitySelect_(event, data);
@@ -922,7 +922,7 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.searchRequest_ = function(searchString) {
-        var url = this.dataParams_.aliasPage;
+        var url = this.dataParams_.pageAlias;
         if (searchString) {
             url += '?name=' + encodeURIComponent(searchString);
         }
@@ -953,7 +953,7 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.onNotEntitySelect_ = function(event, data) {
-        var url = this.dataParams_.aliasPage +
+        var url = this.dataParams_.pageAlias +
             '?name=' + encodeURIComponent(data['text']);
 
         if (data['item']['type'] === 'metro') {
