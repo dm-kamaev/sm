@@ -407,10 +407,11 @@ view.generateAlias = function(alias, brandAlias) {
  * @return {Object}
  */
 view.letterData = function(data) {
-    let comment = data.comment ? `<br/>Комментарий: ${data.comment}` : '';
+    let comment = data.comment ? `<br>Комментарий: ${data.comment}` : '';
     return {
         theme: 'Новая заявка на Курсах Мела',
-        content: `Имя: ${data.name}<br/>Телефон: ${data.phone}` + comment
+        content: `<div>Имя: ${data.name}<br>Телефон: ${data.phone}` +
+            comment + '</div>'
     };
 };
 
