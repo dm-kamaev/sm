@@ -32,7 +32,7 @@ exports.render = function(data) {
             search: {
                 placeholder: 'Район, метро, название курса',
                 redirect: 'true',
-                aliasPage: '/proforientacija'
+                pageAlias: '/proforientacija'
             },
             user: user,
             favorites: {

@@ -9,7 +9,7 @@
  * @property {?string} placeholder
  * @property {?boolean} autofocus
  * @property {?boolean} redirect
- * @property {?string} aliasPage
+ * @property {?string} pageAlias
  * @property {?string} theme
  * @property {?string} customClasses
  * @property {?string} inputSize
@@ -27,7 +27,7 @@
 {template .base autoescape="strict" kind="html"}
     {let $data: [
         'redirect': $params?.redirect,
-        'aliasPage': $params.aliasPage
+        'pageAlias': $params.pageAlias
     ] /}
 
     <div class="b-search{sp}

@@ -17,7 +17,7 @@
  *     search: {
  *         placeholder: (string|undefined),
  *         redirect: boolean,
- *         aliasPage: string
+ *         pageAlias: string
  *     },
  *     user: ?{
  *         firstName: ?string,
@@ -124,7 +124,7 @@
  *         search: {
  *             placeholder: ?string,
  *             redirect: ?boolean,
- *             aliasPage: string
+ *             pageAlias: string
  *         }
  *     }
  * }}
@@ -331,7 +331,7 @@
  *         search: {
  *             placeholder: ?string,
  *             redirect: ?boolean,
- *             aliasPage: string
+ *             pageAlias: string
  *         }
  *     },
  *     config: {
@@ -351,7 +351,7 @@
             'theme': 'min',
             'customClasses': $customClasses,
             'redirect': $params.data?.search?.redirect,
-            'aliasPage': $params.data?.search?.aliasPage,
+            'pageAlias': $params.data?.search?.pageAlias,
             'inputSize': 'min',
             'config': [
                 'entityType': $params.config.entityType,
@@ -370,7 +370,7 @@
  *         search: {
  *             placeholder: ?string,
  *             redirect: ?boolean,
- *             aliasPage: string
+ *             pageAlias: string
  *         }
  *     },
  *     config: {
@@ -390,7 +390,7 @@
             'theme': 'foldable',
             'customClasses': $customClasses,
             'redirect': $params.data?.search?.redirect,
-            'aliasPage': $params.data?.search?.aliasPage,
+            'pageAlias': $params.data?.search?.pageAlias,
             'inputSize': 'min',
             'config': [
                 'entityType': $params.config.entityType,
