@@ -271,7 +271,7 @@ class CourseSearchQuery extends SearchQuery {
             .field('course.total_score')
             .field('course.brand_id')
             .field('COUNT(course.id) OVER()', 'result_count')
-            .group('course.id')
+            .group('course.id');
 
         if (!this.isWhereString_) {
             this.innerQuery_.left_join(
