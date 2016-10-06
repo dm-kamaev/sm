@@ -148,7 +148,6 @@ view.getStaticOptions = function(course) {
     return result;
 };
 
-
 /**
  * @param  {Object} course
  * @return {Object}
@@ -222,7 +221,7 @@ view.listMap = function(courses, viewType) {
             prev.push(this.getMapItem(curr));
         }
 
-        return prev;
+        return prev.filter(item => item);
     }, []);
 };
 
@@ -298,20 +297,21 @@ view.getAddresses = function(courseOptions) {
  * }}
  */
 view.getMapItem = function(course) {
-    return {
-        addressId: course.addressId,
-        addressName: course.addressName,
-        coordinates: geoView.coordinatesDefault(
-            course.addressCoords),
-        score: course.totalScore,
-        title: {
-            id: course.brandId,
-            text: course.brand,
-            url: null
-        },
-        subtitle: course.addressName,
-        items: [this.mapCourse(course)]
-    };
+    return course.addressId ? {
+            addressId: course.addressId,
+            addressName: course.addressName,
+            coordinates: geoView.coordinatesDefault(
+                course.addressCoords),
+            score: course.totalScore,
+            title: {
+                id: course.brandId,
+                text: course.brand,
+                url: null
+            },
+            subtitle: course.addressName,
+            items: [this.mapCourse(course)]
+        } :
+        null;
 };
 
 

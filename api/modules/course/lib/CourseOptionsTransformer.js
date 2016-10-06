@@ -82,7 +82,8 @@ module.exports = class {
         return this.availableOptions_.map(generalOption =>
                 this.getGeneralOptionValue_(generalOption)
             )
-            .filter(generalOption => generalOption);
+            .filter(generalOption =>
+                generalOption && generalOption.description);
     }
 
     /**
@@ -432,7 +433,9 @@ module.exports = class {
      * @return {string}
      */
     formatStartDate_(startDate) {
-        return startDate.getDate() + ' ' + MONTHS[startDate.getMonth()];
+        return startDate ?
+            startDate.getDate() + ' ' + MONTHS[startDate.getMonth()] :
+            null;
     }
 
     /**

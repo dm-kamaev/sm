@@ -113,10 +113,14 @@ class CourseParser {
         option.openSchedule = option.openSchedule == 'true' ? true :
             false;
         option.schedule = this.formatSchedule_(option.schedule);
-        option.departments = option.departments.split(',').map(id =>
-            departments.find(department => department.departmentId == id)
-        );
-
+        option.startDate = option.startDate || null;
+        if (option.departments) {
+            option.departments = option.departments.split(',').map(id =>
+                departments.find(department => department.departmentId == id)
+            );
+        } else {
+            option.departments = [];
+        }
         return option;
     }
 
