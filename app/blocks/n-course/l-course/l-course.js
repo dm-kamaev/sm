@@ -92,13 +92,6 @@ goog.scope(function() {
 
 
     /**
-     * Place from which the analyst goes enum
-     * @enum {string}
-     */
-    Course.PLACE_ANALITICS = 'course details';
-
-
-    /**
      * @param {Element} element
      * @override
      */
@@ -193,8 +186,6 @@ goog.scope(function() {
      * @private
      */
     Course.prototype.onSendEnrollmentSuccess_ = function(event) {
-        var enrollmentId = event.data.enrollmentId;
-        console.log('enrollmentId', enrollmentId);
         this.modalSuccess_.show();
         this.sendAnalyticsSendEnrollment_(event.data);
     };
@@ -215,7 +206,6 @@ goog.scope(function() {
      */
     Course.prototype.sendAnalyticsPageview_ = function() {
         var data = this.getEcAnalyticsCourseData_();
-        console.log('sendAnalyticsPageview_ data', data);
 
         Analytics.getInstance().viewProduct(data);
         Analytics.getInstance().setView();
@@ -234,8 +224,7 @@ goog.scope(function() {
     Course.prototype.sendAnalyticsCheckoutEnrollment_ = function(data) {
         var courseData = this.getEcAnalyticsCourseData_(),
             enrollmentData = this.getEcAnalyticsEnrollmentData_(data);
-        console.log('sendAnalyticsCheckoutEnrollment_ courseData', courseData);
-        console.log('sendAnalyticsCheckoutEnrollment_ enrollmentData',
+
             enrollmentData);
         Analytics.getInstance().checkoutProduct(courseData, enrollmentData);
     };
@@ -248,8 +237,7 @@ goog.scope(function() {
     Course.prototype.sendAnalyticsSendEnrollment_ = function(id) {
         var courseData = this.getEcAnalyticsCourseData_(),
             enrollmentData = this.getEcAnalyticsEnrollmentData_(id);
-        console.log('sendAnalyticsSendEnrollment_ courseData', courseData);
-        console.log('sendAnalyticsSendEnrollment_ enrollmentData',
+
             enrollmentData);
         Analytics.getInstance().purchaseProduct(courseData, enrollmentData);
     };

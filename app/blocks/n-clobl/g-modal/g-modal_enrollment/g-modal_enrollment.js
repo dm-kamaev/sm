@@ -292,11 +292,11 @@ goog.scope(function() {
         this.dispatchEvent({
             'type': ModalEnrollment.Event.SUCCESS,
             'data': {
-                'enrollmentId': id,
-                'optionCost': this.optionsData_.options ?
-                    this.optionsData_.options.cost.value :
-                    ''
+                'enrollmentId': id
             }
+            //'optionCost': this.optionsData_.options ?
+                    //this.optionsData_.options.cost.value :
+                    //''
         });
     };
 
