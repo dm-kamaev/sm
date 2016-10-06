@@ -51,6 +51,16 @@ goog.scope(function() {
 
 
     /**
+     * Event enum
+     * @enum {string}
+     * @const
+     */
+    Link.Event = {
+        CLICK: View.Event.CLICK
+    };
+
+
+    /**
      * @typedef {sm.bSmLink.View.RenderParams}
      */
     sm.bSmLink.SmLink.RenderParams;
@@ -105,5 +115,25 @@ goog.scope(function() {
         if (!this.params.disableHover) {
             this.enableHover();
         }
+    };
+
+
+    /**
+     * @override
+     * @protected
+     */
+    Link.prototype.enterDocument = function() {
+        Link.base(this, 'enterDocument');
+
+        this.initViewListeners_();
+    };
+
+
+    /**
+     * Initializes listeners for view
+     * @private
+     */
+    Link.prototype.initViewListeners_ = function() {
+        this.autoDispatch(View.Event.CLICK);
     };
 });  // goog.scope

@@ -53,7 +53,7 @@ goog.scope(function() {
      * @const
      */
     Department.Event = {
-        CLICK: goog.events.getUniqueId('click'),
+        CLICK: View.Event.CLICK,
         ENROLL_BUTTON_CLICK: Event.EnrollButtonClick.Type
     };
 
@@ -96,6 +96,7 @@ goog.scope(function() {
         Department.base(this, 'enterDocument');
 
         this.initOptionsListeners_();
+        this.initViewListeners_();
     };
 
 
@@ -111,6 +112,15 @@ goog.scope(function() {
                 this.onEnrollButtonClick_
             );
         }
+    };
+
+
+    /**
+     * Initializes listeners for view
+     * @private
+     */
+    Department.prototype.initViewListeners_ = function() {
+        this.autoDispatch(View.Event.CLICK);
     };
 
 

@@ -69,7 +69,7 @@ goog.scope(function() {
 
 
     /**
-     * Css class enum
+     * Event enum
      * @enum {string}
      * @const
      */

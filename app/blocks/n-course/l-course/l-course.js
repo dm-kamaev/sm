@@ -189,10 +189,14 @@ goog.scope(function() {
 
     /**
      * Send enrollment success handler
+     * @param {Object} event
      * @private
      */
-    Course.prototype.onSendEnrollmentSuccess_ = function() {
+    Course.prototype.onSendEnrollmentSuccess_ = function(event) {
+        var enrollmentId = event.data.enrollmentId;
+        console.log('enrollmentId', enrollmentId);
         this.modalSuccess_.show();
+        this.sendAnalyticsSendEnrollment_(event.data);
     };
 
 
@@ -210,8 +214,8 @@ goog.scope(function() {
      * @private
      */
     Course.prototype.sendAnalyticsPageview_ = function() {
-        // console.log('sendAnalyticsPageview_');
         var data = this.getEcAnalyticsCourseData_();
+        console.log('sendAnalyticsPageview_ data', data);
 
         Analytics.getInstance().viewProduct(data);
         Analytics.getInstance().setView();
@@ -221,13 +225,18 @@ goog.scope(function() {
 
     /**
      * Send analytics about shown modal enrollment
+     * @param {{
+     *     enrollmentId: (number|undefined),
+     *     optionCost: (string|undefined)
+     * }} data
      * @private
      */
-    Course.prototype.sendAnalyticsCheckoutEnrollment_ = function() {
-        // console.log('sendAnalyticsCheckoutEnrollment_');
+    Course.prototype.sendAnalyticsCheckoutEnrollment_ = function(data) {
         var courseData = this.getEcAnalyticsCourseData_(),
-            enrollmentData = this.getEcAnalyticsEnrollmentData_();
-
+            enrollmentData = this.getEcAnalyticsEnrollmentData_(data);
+        console.log('sendAnalyticsCheckoutEnrollment_ courseData', courseData);
+        console.log('sendAnalyticsCheckoutEnrollment_ enrollmentData',
+            enrollmentData);
         Analytics.getInstance().checkoutProduct(courseData, enrollmentData);
     };
 
@@ -237,10 +246,11 @@ goog.scope(function() {
      * @private
      */
     Course.prototype.sendAnalyticsSendEnrollment_ = function(id) {
-        // console.log('sendAnalyticsSendEnrollment_');
         var courseData = this.getEcAnalyticsCourseData_(),
             enrollmentData = this.getEcAnalyticsEnrollmentData_(id);
-
+        console.log('sendAnalyticsSendEnrollment_ courseData', courseData);
+        console.log('sendAnalyticsSendEnrollment_ enrollmentData',
+            enrollmentData);
         Analytics.getInstance().purchaseProduct(courseData, enrollmentData);
     };
 
@@ -256,26 +266,29 @@ goog.scope(function() {
             'name': this.params.name,
             'category': this.params.category
         };
-        // console.log(data);
     };
 
 
     /**
      * Get enrollment data for ecommerce
-     * @param {number=} opt_id - id enrollment
+     * @param {{
+     *     enrollmentId: string,
+     *     optionCost: ?string
+     * }} data
      * @return {Object}
      * @private
      */
-    Course.prototype.getEcAnalyticsEnrollmentData_ = function(opt_id) {
+    Course.prototype.getEcAnalyticsEnrollmentData_ = function(data) {
+        var cost = (data && data.optionCost) ?
+            data.optionCost :
+            this.params.cost;
+
         var data = {
+            'id': data ? data.enrollmentId : '',
             'list': 'course details',
-            'revenue': this.params.cost.replace(/\D/gi, '')
+            'revenue': cost.replace(/\D/gi, '')
         };
 
-        if (opt_id) {
-            data['id'] = opt_id;
-        }
-        // console.log(data);
         return data;
     };
 

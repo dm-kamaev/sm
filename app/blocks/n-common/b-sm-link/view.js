@@ -77,6 +77,16 @@ goog.scope(function() {
 
 
     /**
+     * Css class enum
+     * @enum {string}
+     * @const
+     */
+    View.Event = {
+        CLICK: goog.events.getUniqueId('click')
+    };
+
+
+    /**
      * Sign of theme in css class
      * If css class contains this sign => it is theme modifier
      * @const {string}
@@ -159,6 +169,17 @@ goog.scope(function() {
 
 
     /**
+     * @override
+     * @protected
+     */
+    View.prototype.enterDocument = function() {
+        View.base(this, 'enterDocument');
+
+        this.initElementListeners_();
+    };
+
+
+    /**
      * Transform raw params to compressed ones
      * @param {Object<string, string>} rawParams
      * @return {sm.bSmLink.View.DataParams}
@@ -169,6 +190,29 @@ goog.scope(function() {
             id: rawParams['id'],
             disableHover: rawParams['disableHover']
         };
+    };
+
+
+    /**
+     * Initializes listeners for root Element
+     * @private
+     */
+    View.prototype.initElementListeners_ = function() {
+        this.getHandler().listen(
+            this.getElement(),
+            goog.events.EventType.CLICK,
+            this.onClick_
+        );
+    };
+
+
+    /**
+     * Handler click on root Element
+     * @param {Object} event
+     * @private
+     */
+    View.prototype.onClick_ = function(event) {
+        this.dispatchEvent(View.Event.CLICK);
     };
 
 

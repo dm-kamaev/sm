@@ -34,7 +34,8 @@ sm.bSmItemList.SmItemList = function(view, opt_domHelper) {
      * Item instances
      * @type {(sm.bSmItem.SmItem|
      *     sm.bSmItem.SmItemEntity|
-     *     sm.bSmLink.SmLink)}
+     *     sm.bSmLink.SmLink|
+     *     sm.lCourse.bDepartment.Department)}
      * @private
      */
     this.items_ = [];
@@ -81,7 +82,8 @@ goog.scope(function() {
     ItemList.ItemType = {
         ITEM: 'smItem',
         ITEM_ENTITY: 'smItemEntity',
-        LINK: 'smLink'
+        LINK: 'smLink',
+        DEPARTMENT: 'lCourse-department'
     };
 
 
@@ -348,10 +350,17 @@ goog.scope(function() {
      * @private
      */
     ItemList.prototype.onItemClick_ = function(event) {
+        var itemId;
+
+        if ((this.params.itemType == ItemList.ItemType.ITEM) ||
+            (this.params.itemType == ItemList.ItemType.ITEM_ENTITY)) {
+            itemId = event.target.getItemId();
+        }
+
         this.dispatchEvent({
             type: ItemList.Event.ITEM_CLICK,
             data: {
-                itemId: event.target.getItemId()
+                itemId: itemId
             }
         });
     };
@@ -467,6 +476,8 @@ goog.scope(function() {
             sm.bSmItem.SmItemEntity.Event;
         ItemEvent[ItemList.ItemType.LINK] =
             sm.bSmLink.SmLink.Event;
+        ItemEvent[ItemList.ItemType.DEPARTMENT] =
+            sm.lCourse.bDepartment.Department.Event;
 
         return ItemEvent[this.params.itemType];
     };

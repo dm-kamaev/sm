@@ -51,6 +51,16 @@ goog.scope(function() {
 
 
     /**
+     * Css class enum
+     * @enum {string}
+     * @const
+     */
+    View.Event = {
+        CLICK: goog.events.getUniqueId('click')
+    };
+
+
+    /**
      * List of CSS classes
      * @enum {string}
      * @const
@@ -105,6 +115,40 @@ goog.scope(function() {
         View.base(this, 'decorateInternal', element);
 
         this.initDom_();
+    };
+
+
+    /**
+     * @override
+     * @protected
+     */
+    View.prototype.enterDocument = function() {
+        View.base(this, 'enterDocument');
+
+        this.initElementListeners_();
+    };
+
+
+    /**
+     * Initializes listeners for root Element
+     * @private
+     */
+    View.prototype.initElementListeners_ = function() {
+        this.getHandler().listen(
+            this.getElement(),
+            goog.events.EventType.CLICK,
+            this.onClick_
+        );
+    };
+
+
+    /**
+     * Handler click on root Element
+     * @param {Object} event
+     * @private
+     */
+    View.prototype.onClick_ = function(event) {
+        this.dispatchEvent(View.Event.CLICK);
     };
 
 
