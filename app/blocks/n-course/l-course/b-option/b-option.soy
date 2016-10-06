@@ -1,0 +1,186 @@
+/**
+ * @fileoverview Option template
+ */
+{namespace sm.lCourse.bOption.Template}
+
+
+/**
+ * @typedef {{
+ *     name: string,
+ *     value: string,
+ *     key: string
+ * }} sm.bOption.Template.Params.Data.Option
+ */
+
+
+/**
+ * @typedef {{
+ *     title: sm.bOption.Template.Params.Data.Option,
+ *     features: Array<sm.bOption.Template.Params.Data.Option>,
+ *     cost: sm.bOption.Template.Params.Data.Option,
+ *     buttonText: string
+ * }} sm.bOption.Template.Params.Data
+ */
+
+/**
+ * Template for Option block
+ * @param params {{
+ *     data: sm.bOption.Template.Params.Data
+ * }}
+ * @constructor
+ * @extends cl.iControl.Template
+ */
+{template .option}
+    {call .init data="all" /}
+{/template}
+
+
+/**
+ * @param params {{
+ *     data: sm.bOption.Template.Params.Data
+ * }}
+ * @override
+ */
+{template .body}
+    {call .description_ data="all" /}
+    {call .enrollButton_ data="all" /}
+    {call .cost_ data="all" /}
+{/template}
+
+
+/**
+ * Description template
+ * @param params {{
+ *     data: {
+ *         title: sm.bOption.Template.Params.Data.Option,
+ *         features: Array<sm.bOption.Template.Params.Data.Option>
+ *     }
+ * }}
+ * @private
+ */
+{template .description_ kind="html"}
+    {let $featureList kind="html"}
+        {call .featureList_ data="all" /}
+    {/let}
+
+    <div class="{call .rootClass /}__description">
+        {call .renderChild}
+            {param params: [
+                'type': 'smExpander',
+                'renderParams': [
+                    'data': [
+                        'expanderText': $params.data.title.value,
+                        'content': $featureList
+                    ]
+                ]
+            ] /}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Feature list template
+ * @param params {{
+ *     data: {
+ *         features: Array<sm.bOption.Template.Params.Data.Option>
+ *     }
+ * }}
+ * @private
+ */
+{template .featureList_ kind="html"}
+    {if $params.data.features and length($params.data.features) > 0}
+        <div class="{call .rootClass /}__feature-list">
+            {foreach $feature in $params.data.features}
+                {call .featureItem_}
+                    {param params: $feature /}
+                {/call}
+            {/foreach}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Each feature template
+ * @param params {sm.lCourse.bOption.Template.Data.Option}
+ * @private
+ */
+{template .featureItem_ kind="html"}
+    <div class="{call .rootClass /}__feature">
+        {$params.name}: {$params.value}
+    </div>
+{/template}
+
+
+/**
+ * Cost template
+ * @param params {{
+ *     data: {
+ *         cost: sm.bOption.Template.Params.Data.Option
+ *     }
+ * }}
+ * @private
+ */
+{template .cost_ kind="html"}
+    <div class="{call .rootClass /}__cost">
+        {$params.data.cost.value}
+    </div>
+{/template}
+
+
+/**
+ * Enroll button template
+ * @param params {{
+ *     data: {
+ *         buttonText: string,
+ *         cost: sm.bOption.Template.Params.Data.Option
+ *     }
+ * }}
+ * @private
+ */
+{template .enrollButton_ kind="html"}
+    <div class="{call .rootClass /}__enroll-button">
+        <div class="{call .rootClass /}__button-text
+            {sp}{call .rootClass /}__button-text_s">
+            {$params.data.buttonText}
+        </div>
+        <div class="{call .rootClass /}__button-text
+            {sp}{call .rootClass /}__button-text_xs">
+            {$params.data.cost.value}
+        </div>
+    </div>
+{/template}
+
+
+/**
+ * Attributes
+ * @param params {{
+ *     data: {
+ *         title: sm.bOption.Template.Params.Data.Option,
+ *         features: Array<sm.bOption.Template.Params.Data.Option>,
+ *         cost: sm.bOption.Template.Params.Data.Option
+ *     }
+ * }}
+ * @override
+ */
+{template .attributes kind="attributes"}
+    {let $dataParams: quoteKeysIfJs([
+        'title': $params.data.title,
+        'features': $params.data.features,
+        'cost': $params.data.cost
+    ]) /}
+
+    data-params="
+    {call cl.iUtils.Utils.stringify}
+        {param json: $dataParams /}
+    {/call}"
+{/template}
+
+
+/**
+ * @override
+ */
+{template .rootClass}
+    b-option
+{/template}

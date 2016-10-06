@@ -1,0 +1,163 @@
+{namespace sm.gModal.TemplateSuccess}
+
+/**
+ * @typedef {
+ *     content: {
+ *         title: (string|undefined),
+ *         textSuccess: string,
+ *         buttonText: (string|undefined
+ *     }
+ * } sm.gModal.TemplateSuccess.Params.Data
+ */
+
+/**
+ * @typedef {
+ *     stylizationModifier: string
+ * } sm.gModal.TemplateSuccess.Params.Config
+ */
+
+/**
+ * Modal template
+ * @param params {{
+ *     data: sm.gModal.TemplateSuccess.Params.Data,
+ *     config: sm.gModal.TemplateSuccess.Params.Config
+ * }}
+ * @extends sm.gModal.TemplateStendhal
+ * @constructor
+ * @doc
+ */
+{template .modal}
+    {call .init data="all" /}
+{/template}
+
+
+/**
+ * Content
+ * @param params {{
+ *     data: sm.gModal.TemplateSuccess.Params.Data,
+ *     config: sm.gModal.TemplateSuccess.Params.Config
+ * }}
+ * @override
+ */
+{template .content}
+    {call .sectionHeader_ data="all" /}
+    {call .sectionContent_ data="all" /}
+    {call .sectionButton_ data="all" /}
+{/template}
+
+
+/**
+ * Section header
+ * @param params {{
+ *     data: {
+ *         content: {
+ *             title: (string|undefined)
+ *         }
+ *     }
+ * }}
+ */
+{template .sectionHeader_}
+    <div class="{call .rootClass/}__section {call .rootClass/}__section_header">
+        {call .title_ data="all" /}
+        {call .closer data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Section with text success
+ * @param params {{
+ *     data: {
+ *         content: {
+ *             textSuccess: string
+ *         }
+ *     }
+ * }}
+ */
+{template .sectionContent_}
+    <div class="{call .rootClass/}__section {call .rootClass/}__section_content">
+        {call .textSuccess_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Section button
+ * @param params {{
+ *     data: {
+ *         content: {
+ *             buttonText: (string|undefined)
+ *         }
+ *     }
+ * }}
+ */
+{template .sectionButton_}
+    <div class="{call .rootClass/}__section {call .rootClass/}__section_button">
+        {let $customClasses kind="html"}
+            {call .rootClass/}__button
+        {/let}
+
+        {call .renderChild}
+            {param params: [
+                'type': 'button',
+                'renderParams': [
+                    'data': [
+                        'content': $params.data.content.buttonText ?: 'Закрыть'
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Title
+ * @param params {{
+ *     data: {
+ *         content: {
+ *             title: (string|undefined)
+ *         }
+ *     }
+ * }}
+ */
+{template .title_}
+    <div class="{call .rootClass/}__title">
+        {$params.data.content.title ?: 'Спасибо!'}
+    </div>
+{/template}
+
+
+/**
+ * Text success
+ * @param params {{
+ *     data: {
+ *         content: {
+ *             textSuccess: string
+ *         }
+ *     }
+ * }}
+ */
+{template .textSuccess_}
+    <div class="{call .rootClass/}__text {call .rootClass/}__text_success">
+        {$params.data.content.textSuccess}
+    </div>
+{/template}
+
+
+/**
+ * Css classes
+ * @param params {
+ *     config: {
+ *         size: (string|undefined)
+ *     }
+ * }
+ */
+{template .additionalClasses}
+    i-utils__hidden{sp}
+    {call .rootClass/}_success
+
+    {if $params.config?.size}
+        {sp}{call .rootClass/}_size-{$params.config.size}
+    {/if}
+{/template}

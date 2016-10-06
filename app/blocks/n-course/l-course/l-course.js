@@ -1,6 +1,7 @@
 goog.provide('sm.lCourse.Course');
 
 goog.require('cl.iRequest.Request');
+goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.iLayout.LayoutStendhal');
 goog.require('sm.iSmViewport.SmViewport');
 goog.require('sm.lCourse.View');
@@ -62,15 +63,32 @@ goog.scope(function() {
 
 
         /**
-         * Instances button
+         * Instance list with departments
+         * @type {sm.bSmItemList.SmItemList}
+         * @private
+         */
+        this.departmentList_ = null;
+
+
+        /**
+         * Instances modal
          * @type {sm.gModal.ModalEnrollment}
          * @private
          */
         this.modalEnrollment_ = null;
+
+
+        /**
+         * Instances modal
+         * @type {sm.gModal.ModalSuccess}
+         * @private
+         */
+        this.modalSuccess_ = null;
     };
     goog.inherits(sm.lCourse.Course, sm.iLayout.LayoutStendhal);
     var Course = sm.lCourse.Course,
-        Viewport = sm.iSmViewport.SmViewport;
+        Viewport = sm.iSmViewport.SmViewport,
+        Analytics = sm.iAnalytics.Analytics;
 
 
     /**
@@ -84,6 +102,7 @@ goog.scope(function() {
         this.initFullDescription_();
         this.initMap_();
         this.initActionButtons_();
+        this.initDepartmentList_();
         this.initModals_();
         this.initIRequest_();
     };
@@ -96,6 +115,10 @@ goog.scope(function() {
         Course.base(this, 'enterDocument');
 
         this.initActionButtonsListeners_();
+        this.initDepartmentListListeners_();
+        this.initModalsListeners_();
+
+        this.sendAnalyticsPageview_();
     };
 
 
@@ -115,11 +138,144 @@ goog.scope(function() {
 
 
     /**
-     * Action button handler
+     * Initializes listeners for department list
      * @private
      */
-    Course.prototype.onActionButtonClick_ = function() {
+    Course.prototype.initDepartmentListListeners_ = function() {
+        this.getHandler().listen(
+            this.departmentList_,
+            sm.lCourse.bDepartment.Department.Event.ENROLL_BUTTON_CLICK,
+            this.onActionButtonClick_
+        );
+    };
+
+
+    /**
+     * Initializes listeners for department list
+     * @private
+     */
+    Course.prototype.initModalsListeners_ = function() {
+        this.getHandler().listen(
+            this.modalEnrollment_,
+            sm.gModal.ModalEnrollment.Event.SUCCESS,
+            this.onSendEnrollmentSuccess_
+        );
+
+        this.getHandler().listen(
+            this.modalEnrollment_,
+            sm.gModal.ModalEnrollment.Event.SHOW,
+            this.onModalEnrollmentShow_
+        );
+    };
+
+
+    /**
+     * Action button handler
+     * @param {goog.events.Event} event
+     * @private
+     */
+    Course.prototype.onActionButtonClick_ = function(event) {
+        this.modalEnrollment_.setOptionsData(event.data);
         this.modalEnrollment_.show();
+    };
+
+
+    /**
+     * Send enrollment success handler
+     * @param {Object} event
+     * @private
+     */
+    Course.prototype.onSendEnrollmentSuccess_ = function(event) {
+        this.modalSuccess_.show();
+        this.sendAnalyticsSendEnrollment_(event.data);
+    };
+
+
+    /**
+     * Send enrollment success handler
+     * @private
+     */
+    Course.prototype.onModalEnrollmentShow_ = function() {
+        this.sendAnalyticsCheckoutEnrollment_();
+    };
+
+
+    /**
+     * Send analytics about pageview
+     * @private
+     */
+    Course.prototype.sendAnalyticsPageview_ = function() {
+        var data = this.getEcAnalyticsCourseData_();
+
+        Analytics.getInstance().viewProduct(data);
+        Analytics.getInstance().setView();
+        Analytics.getInstance().send('pageview');
+    };
+
+
+    /**
+     * Send analytics about shown modal enrollment
+     * @param {{
+     *     enrollmentId: (number|undefined),
+     *     optionCost: (string|undefined)
+     * }} data
+     * @private
+     */
+    Course.prototype.sendAnalyticsCheckoutEnrollment_ = function(data) {
+        var courseData = this.getEcAnalyticsCourseData_(),
+            enrollmentData = this.getEcAnalyticsEnrollmentData_(data);
+
+        Analytics.getInstance().checkoutProduct(courseData, enrollmentData);
+    };
+
+    /**
+     * Send analytics about send Enrollment
+     * @param {number} id - id enrollment
+     * @private
+     */
+    Course.prototype.sendAnalyticsSendEnrollment_ = function(id) {
+        var courseData = this.getEcAnalyticsCourseData_(),
+            enrollmentData = this.getEcAnalyticsEnrollmentData_(id);
+
+        Analytics.getInstance().purchaseProduct(courseData, enrollmentData);
+    };
+
+
+    /**
+     * Get course data for ecommerce
+     * @return {Object}
+     * @private
+     */
+    Course.prototype.getEcAnalyticsCourseData_ = function() {
+        return {
+            'id': this.params.id,
+            'name': this.params.name,
+            'category': this.params.category
+        };
+    };
+
+
+    /**
+     * Get enrollment data for ecommerce
+     * @param {{
+     *     enrollmentId: string,
+     *     optionCost: ?string
+     * }} data
+     * @return {Object}
+     * @private
+     */
+    Course.prototype.getEcAnalyticsEnrollmentData_ = function(data) {
+        var cost = (data && data.optionCost) ?
+            data.optionCost :
+            this.params.cost;
+
+        var data = {
+            'id': data ? data.enrollmentId : '',
+            'list': 'course details',
+            'revenue': cost.replace(/\D/gi, '')
+        };
+
+        return data;
     };
 
 
@@ -200,6 +356,22 @@ goog.scope(function() {
 
 
     /**
+     * Initializes instance of department List
+     * @private
+     */
+    Course.prototype.initDepartmentList_ = function() {
+        var domElement = this.getView().getDom().departmentList;
+
+        if (domElement) {
+            this.departmentList_ = this.decorateChild(
+                'smItemList',
+                domElement
+            );
+        }
+    };
+
+
+    /**
      * Initializes instances of modals
      * @private
      */
@@ -207,6 +379,11 @@ goog.scope(function() {
         this.modalEnrollment_ = this.decorateChild(
             'modal-enrollment',
             this.getView().getDom().modalEnrollment
+        );
+
+        this.modalSuccess_ = this.decorateChild(
+            'modal-success',
+            this.getView().getDom().modalSuccess
         );
     };
 });  // goog.scope

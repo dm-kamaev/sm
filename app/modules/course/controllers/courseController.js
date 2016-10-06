@@ -18,8 +18,8 @@ const logger = require('../../../components/logger/logger').getLogger('app');
 
 const config = require('../../../config').config;
 
-const ANALYTICS_ID = config.analyticsId,
-    YANDEX_METRIKA_ID = config.yandexMetrikaId,
+const ANALYTICS_ID = config.courses.analyticsId,
+    YANDEX_METRIKA_ID = config.courses.yandexMetrikaId,
     DOMAIN = config.url.protocol + '://' + config.url.host,
     FB_CLIENT_ID = config.facebookClientId;
 
@@ -48,6 +48,7 @@ controller.search = async(function(req, res, next) {
         let templateData = searchView.render({
             entityType: entityType.COURSE,
             user: user,
+            fbClientId: FB_CLIENT_ID,
             favorites: data.favorites,
             authSocialLinks: authSocialLinks,
             countResults: data.courses[0] && data.courses[0].countResults || 0,
@@ -127,6 +128,7 @@ controller.information = async(function(req, res, next) {
 
                 let templateData = informationView.render({
                     user: user,
+                    fbClientId: FB_CLIENT_ID,
                     authSocialLinks: authSocialLinks,
                     entityData: courseView.page(data.course),
                     map: courseView.pageMap(data.course),

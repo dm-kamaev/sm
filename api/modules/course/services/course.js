@@ -2,7 +2,8 @@
 
 const async = require('asyncawait/async'),
     await = require('asyncawait/await'),
-    squel = require('squel');
+    squel = require('squel'),
+    url = require('url');
 
 const sequelize = require('../../../../app/components/db'),
     models = require('../../../../app/components/models').all,
@@ -28,7 +29,7 @@ const informationFields = {
         'learningOutcome',
         'leadType'
     ],
-    BRAND: ['id', 'name'],
+    BRAND: ['id', 'name', 'description'],
     TYPE: ['id', 'name'],
     OPTION: [
         'id',
@@ -41,7 +42,8 @@ const informationFields = {
         'name',
         'description',
         'duration',
-        'costPerHour'
+        'costPerHour',
+        'startDate'
     ],
     SCHEDULE: ['day', 'startTime', 'endTime'],
     DEPARTMENT: ['id'],
@@ -58,8 +60,11 @@ const informationFields = {
  *     entranceExam: ?string,
  *     learningOutcome: ?string,
  *     leadType: string,
- *     brandName: string,
  *     type: ?string,
+ *     brand: {
+ *         name: string,
+ *         description: ?string
+ *     }
  *     options: Array<{
  *         name: ?string,
  *         description: ?string,
@@ -72,10 +77,11 @@ const informationFields = {
  *         nativeSpeaker: ?boolean,
  *         startDate: ?string,
  *         duration: ?string,
- *         schedule: Array<{
+ *         openSchedule: ?boolean,
+ *         schedule: ?Array<{
  *             startTime: ?string,
  *             endTime: ?string,
- *             day: ?number
+ *             day: number
  *         }>,
  *         departments: Array<{
  *             name: ?string,
@@ -88,9 +94,7 @@ const informationFields = {
  * @return {Course}
  */
 service.create = async(function(data) {
-    let brand = await(services.courseBrand.create({
-            name: data.brandName
-        })),
+    let brand = await(services.courseBrand.create(data.brand)),
         type = await(services.courseType.create(data.type)),
         course = await(models.Course.create({
             name: data.name,
@@ -127,6 +131,10 @@ service.information = async(function(id) {
             attributes: informationFields.ADDRESS,
             model: models.Address,
             as: 'address',
+            required: false,
+            where: {
+                entityType: entityType.COURSE_DEPARTMENT
+            },
             include: [{
                 attributes: informationFields.METRO,
                 model: models.Metro,
@@ -368,11 +376,13 @@ service.getByBrandId = function(brandId) {
  * @param {{
  *     name: string,
  *     phone: string,
- *     comment: ?string
+ *     comment: ?string,
+ *     link: string,
+ *     department: Array<Object>
  * }} data
  * @return {Object}
  */
-service.enrollOnCourse = function(data) {
+service.enrollOnCourse = async(function(data) {
     if (!data.name) {
         error.throwValidation('name', 'Необходимо заполнить поле имя');
     } else if (!data.phone) {
@@ -383,8 +393,18 @@ service.enrollOnCourse = function(data) {
             'Длина комментария не должна превышать 300 символов'
         );
     }
+    let application = await(services.courseApplication.create({
+        username: data.name,
+        phone: data.phone,
+        comment: data.comment,
+        alias: url.parse(data.link).pathname,
+        option: JSON.stringify(data.department)
+    }));
+
+    data.applicationId = application.id;
+
     return data;
-};
+});
 
 /**
  * @param {Array<Object>} courses

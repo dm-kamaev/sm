@@ -9,10 +9,11 @@ const scoreView = require('./scoreView'),
     districtView = require('../../geo/views/districtView'),
     addressView = require('../../geo/views/addressView'),
     FormatText = require('../../entity/lib/FormatText'),
-    CourseOptions = require('../lib/CourseOptions'),
+    CourseOptionsTransformer = require('../lib/CourseOptionsTransformer'),
     pageView = require('../../entity/views/pageView');
 
 const entityType = require('../../../../api/modules/entity/enums/entityType');
+
 
 let view = {};
 
@@ -23,16 +24,22 @@ const FULL_DESCRIPTION_LENGTH = 300;
  * @return {Object}
  */
 view.page = function(course) {
-    let generalOptions = this.formatGeneralOptions(course);
+    let options = course.courseOptions,
+        generalOptions = this.formatGeneralOptions(course);
+
     return {
         id: course.id,
         name: course.name,
+        category: 'proforientacija',
         description: course.description,
         fullDescription: this.formatFullDescription(course.fullDescription),
         score: scoreView.results(course.score, course.totalScore).data,
-        cost: this.formatCost(course.courseOptions),
-        generalOptions: generalOptions,
-        online: this.onlineStatus(generalOptions.items)
+        online: this.onlineStatus(generalOptions),
+        cost: this.formatCost(options),
+        generalOptions: {
+            items: generalOptions
+        },
+        departmentList: this.formatDepartmentList(options, generalOptions)
     };
 };
 
@@ -77,11 +84,19 @@ view.formatCost = function(options) {
  */
 view.formatGeneralOptions = function(course) {
     let items = this.getStaticOptions(course),
-        courseOptions = new CourseOptions(course.courseOptions);
+        optionsTransformer = new CourseOptionsTransformer(course.courseOptions);
 
-    return {
-        items: items.concat(courseOptions.getGeneralOptions())
-    };
+    return items.concat(optionsTransformer.getGeneralOptions());
+};
+
+/**
+ * @param  {Array<Object>} options
+ * @param  {Array<Object>} generalOptions
+ * @return {Array<Object>}
+ */
+view.formatDepartmentList = function(options, generalOptions) {
+    let optionsTransformer = new CourseOptionsTransformer(options);
+    return optionsTransformer.getUniqueOptions(generalOptions);
 };
 
 /**
@@ -96,7 +111,8 @@ view.onlineStatus = function(generalOptions) {
 /**
  * @param {{
  *     courseBrand: {
- *         name: string
+ *         name: string,
+ *         description: ?string
  *     },
  *     courseType: {
  *         name: string
@@ -154,7 +170,7 @@ view.pageMap = function(course) {
             let address = department.address;
             return {
                 addressId: address.id,
-                coordinates: address.coords,
+                coordinates: geoView.coordinatesDefault(address.coords),
                 title: {
                     text: course.courseBrand.name
                 },
@@ -357,7 +373,8 @@ view.getListCourse = function(course) {
         area: course.areaId ? [{
             id: course.areaId,
             name: course.areaName
-        }] : []
+        }] : [],
+        category: 'proforientacija'
     };
 };
 
@@ -419,12 +436,56 @@ view.generateAlias = function(alias, brandAlias) {
  * @return {Object}
  */
 view.letterData = function(data) {
-    let comment = data.comment ? `<br>Комментарий: ${data.comment}` : '';
     return {
-        theme: 'Новая заявка на Курсах Мела',
-        content: `<div>Имя: ${data.name}<br>Телефон: ${data.phone}` +
-            comment + '</div>'
+        theme: 'Запись на курс',
+        content: this.letterContent(data)
     };
+};
+
+/**
+ * @param  {{
+ *     applicationId: number,
+ *     name: string,
+ *     phone: string,
+ *     comment: ?string,
+ *     department: Object
+ * }} data
+ * @return {string}
+ */
+view.letterContent = function(data) {
+    let result = '',
+        comment = data.comment ? `<br>Комментарий: ${data.comment}` : '',
+        departmentOptions = data.department.options,
+        options = '';
+
+    if (departmentOptions) {
+        options = `<br>Адрес: ${data.department.name}`;
+        options += this.formatFeature(departmentOptions.title);
+        options += this.formatFeature(departmentOptions.cost);
+        departmentOptions.features.map(feature => {
+            options += this.formatFeature(feature);
+        });
+    }
+
+    result += `Номер заявки: ${data.applicationId}`;
+    result += `<br>Имя: ${data.name}`;
+    result += `<br>Телефон: ${data.phone}`;
+    result += comment;
+    result += options;
+
+    return result;
+};
+
+/**
+ * [formatFeature description]
+ * @param  {{
+ *     name: string,
+ *     value: string
+ * }} feature
+ * @return {string}
+ */
+view.formatFeature = function(feature) {
+    return `<br>${feature.name}: ${feature.value}`;
 };
 
 
@@ -451,7 +512,8 @@ view.letterData = function(data) {
  *     area: ?Array<{
  *         id: number,
  *         name: string
- *     }>
+ *     }>,
+ *     category: string
  * }}
  */
 view.item = function(data) {
@@ -467,7 +529,8 @@ view.item = function(data) {
         score: course.totalScore,
         metro: addressView.nearestMetro(addresses),
         area: [addressView.getArea(addresses)[0]],
-        alias: this.generateAlias(data.alias.alias, data.brandAlias.alias)
+        alias: this.generateAlias(data.alias.alias, data.brandAlias.alias),
+        category: 'proforientacija'
     };
 };
 

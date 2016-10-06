@@ -29,6 +29,22 @@ goog.scope(function() {
 
 
     /**
+     * @typedef {sm.bSmItem.View.DataParams}
+     */
+    sm.bSmItem.SmItem.DataParams;
+
+
+    /**
+     * Css class enum
+     * @enum {string}
+     * @const
+     */
+    Item.Event = {
+        CLICK: View.Event.CLICK
+    };
+
+
+    /**
      * Transform raw params to compressed ones
      * @param {Object<string, (string, number, Object)>} rawParams
      * @return {sm.bSmItem.smItem.RenderParams}
@@ -39,10 +55,63 @@ goog.scope(function() {
 
 
     /**
+     * Get data to send analytics
+     * @return {Object}
+     * @param {{
+     *     list: ?string,
+     *     position: ?number
+     * }=} opt_data
+     * @public
+     */
+    Item.prototype.getAnalyticsData = function(opt_data) {
+        var data = opt_data || {};
+
+        return {
+            'id': this.params.id,
+            'name': this.params.name,
+            'category': this.params.category,
+            'list': data.list,
+            'position': data.position
+        };
+    };
+
+
+    /**
      * Get item id
      * @return {number}
+     * @public
      */
     Item.prototype.getItemId = function() {
         return this.params.id;
+    };
+
+
+    /**
+     * Get Item Entity Type
+     * @return {string}
+     * @public
+     */
+    Item.prototype.getItemEntityType = function() {
+        return this.params.type;
+    };
+
+
+    /**
+     * @override
+     * @protected
+     */
+    Item.prototype.enterDocument = function() {
+        Item.base(this, 'enterDocument');
+
+        this.initViewListeners();
+    };
+
+
+    /**
+     * Initializes listeners for view
+     * @protected
+     */
+    Item.prototype.initViewListeners = function() {
+        this.autoDispatch(View.Event.CLICK);
     };
 });  // goog.scope

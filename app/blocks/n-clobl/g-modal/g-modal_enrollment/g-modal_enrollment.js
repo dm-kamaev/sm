@@ -50,6 +50,14 @@ goog.scope(function() {
 
 
         /**
+         * Selected options data of user
+         * @type {sm.lCourse.bDepartment.Event.EnrollButtonClick.Data}
+         * @private
+         */
+        this.optionsData_ = {};
+
+
+        /**
          * Instance button
          * @type {sm.gButton.ButtonStendhal}
          * @private
@@ -68,6 +76,8 @@ goog.scope(function() {
      * @const
      */
     ModalEnrollment.Event = {
+        SHOW: sm.gModal.ModalStendhal.Event.SHOW,
+        HIDE: sm.gModal.ModalStendhal.Event.HIDE,
         SUCCESS: goog.events.getUniqueId('success'),
         ERROR: goog.events.getUniqueId('error')
     };
@@ -99,6 +109,7 @@ goog.scope(function() {
 
     /**
      * Clear all fields
+     * @public
      */
     ModalEnrollment.prototype.clear = function() {
         this.nameField_.clear();
@@ -106,6 +117,16 @@ goog.scope(function() {
         this.commentField_.clean();
 
         this.button_.enable();
+    };
+
+
+    /**
+     * Set selected options data of user
+     * @param {Object} optionsData
+     * @public
+     */
+    ModalEnrollment.prototype.setOptionsData = function(optionsData) {
+        this.optionsData_ = optionsData ? optionsData : {};
     };
 
 
@@ -160,19 +181,23 @@ goog.scope(function() {
             .then(
                 this.onSuccess_.bind(this),
                 this.onError_.bind(this)
+            )
+            .then(
+                this.setOptionsData.bind(this, null)
             );
     };
 
 
     /**
      * Handler of server response success
+     * @param {Object} response
      * @private
      */
-    ModalEnrollment.prototype.onSuccess_ = function() {
+    ModalEnrollment.prototype.onSuccess_ = function(response) {
         this.hide();
 
         this.clear();
-        this.dispatchEventSuccess_();
+        this.dispatchEventSuccess_(response.data.applicationId);
     };
 
 
@@ -251,18 +276,27 @@ goog.scope(function() {
             '_csrf': window['ctx']['csrf'],
             'name': this.nameField_.getValue(),
             'phone': this.phoneField_.getValue(),
-            'comment': this.commentField_.getValue()
+            'comment': this.commentField_.getValue(),
+            'link': window.location.href,
+            'department': this.optionsData_
         };
     };
 
 
     /**
      * Dispatch Event of successfull enrollment
+     * @param {number} id
      * @private
      */
-    ModalEnrollment.prototype.dispatchEventSuccess_ = function() {
+    ModalEnrollment.prototype.dispatchEventSuccess_ = function(id) {
         this.dispatchEvent({
-            'type': ModalEnrollment.Event.SUCCESS
+            'type': ModalEnrollment.Event.SUCCESS,
+            'data': {
+                'enrollmentId': id
+            }
+            //'optionCost': this.optionsData_.options ?
+                    //this.optionsData_.options.cost.value :
+                    //''
         });
     };
 

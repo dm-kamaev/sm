@@ -10,7 +10,8 @@ let CourseBrand = db.define('CourseBrand', {
         type: Sequelize.STRING,
         allowNull: false,
         unique: true
-    }
+    },
+    description: Sequelize.TEXT
 }, {
     underscored: true,
     tableName: 'course_brand',

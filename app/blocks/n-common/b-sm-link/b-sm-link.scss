@@ -4,8 +4,6 @@
     cursor: pointer;
     text-decoration: none;
 
-    color: #356fc4;
-
     font-size: 13px;
     line-height: 18px;
 }
@@ -30,9 +28,18 @@
 .b-sm-link_size_xl {
     font-size: 15px;
 }
+
+.b-sm-link_size_xxl {
+    font-size: 16px;
+    line-height: 22px;
+}
 /** Possible sizes end */
 
 /** Themes */
+.b-sm-link_default-theme {
+    color: #356fc4;
+}
+
 .b-sm-link_light-theme {
     color: #808080;
 }

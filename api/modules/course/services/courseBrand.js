@@ -1,3 +1,5 @@
+'use strict';
+
 var async = require('asyncawait/async'),
     await = require('asyncawait/await');
 
@@ -9,18 +11,22 @@ var service = {
 
 /**
  * @param {{
- *     name: string
+ *     name: string,
+ *     description: ?string
  * }} data
  * @return {CourseBrand}
  */
 service.create = async(function(data) {
-    return await(
+    let courseBrand = await(
         models.CourseBrand.findOrCreate({
             where: {
                 name: data.name
             }
         })
     )[0]; // findOrCreate returns array where zero element is instance
+    return await(courseBrand.update({
+        description: data.description
+    }));
 });
 
 module.exports = service;

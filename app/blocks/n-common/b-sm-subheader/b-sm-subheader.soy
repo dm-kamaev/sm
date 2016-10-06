@@ -256,7 +256,8 @@
  */
 {template .favorite_}
     <div class="{call .rootClass/}__user-control
-                {sp}{call .rootClass/}__user-control_favorite">
+                {sp}{call .rootClass/}__user-control_favorite
+                {sp}{cl.iUtils.Utils.CssClass.HIDDEN}">
         <div class="{call .rootClass/}__favorite-content">
             {call .renderChild}
                 {param params: [

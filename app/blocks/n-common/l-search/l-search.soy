@@ -3,20 +3,7 @@
 
 /**
  * @typedef {{
- *     type: string,
- *     openGraph: ({
- *         url: (string|undefined),
- *         siteName: (string|undefined),
- *         title: (string|undefined),
- *         type: (string|undefined),
- *         description: (string|undefined),
- *         image: (string|undefined),
- *         fbClientId: (string|undefined),
- *         twitterCardType: (string|undefined),
- *         twitterSiteName: (string|undefined),
- *         imageWidth: (string|undefined),
- *         imageHeight: (string|undefined)
- *     }|undefined),
+ *     openGraph: (sm.iLayout.TemplateStendhal.Params.Data.openGraph|undefined),
  *     seo: {
  *         metaTitle: string,
  *         metaDescription: (string|undefined),
@@ -203,6 +190,12 @@
     {let $classes kind="html"}
         {call .rootClass/}__section{sp}
         {call .rootClass/}__section_map
+
+        {for $i in range(length($params.data.map.itemGroups))}
+            {if not length($params.data.map.itemGroups[$i].items)}
+                {sp}{call .rootClass/}__section_hidden
+            {/if}
+        {/for}
     {/let}
 
     <div class="{$classes}">
@@ -398,10 +391,6 @@
 {template .listBody_}
     {let $classes kind="html"}
         {call .rootClass/}__list-body
-
-        {if not $params.data.search?.countResults}
-            {sp}{cl.iUtils.Utils.CssClass.HIDDEN}
-        {/if}
     {/let}
 
     {let $customClasses kind="html"}
@@ -848,11 +837,13 @@
  * }}
  */
 {template .sectionFooterSeo_}
-    <div class="{call .rootClass /}__section-inner">
-        {if $params.data?.seo and
-            ($params.data?.seo.textLeft or $params.data?.seo.textRight)}
-            <div class="{call .rootClass/}__section{sp}
-                        {call .rootClass/}__section_footer-seo">
+    {if $params.data?.seo and
+        ($params.data?.seo.textLeft or $params.data?.seo.textRight)}
+
+        <div class="{call .rootClass/}__section{sp}
+                    {call .rootClass/}__section_footer-seo">
+            <div class="{call .rootClass /}__section-inner">
+
                 <div class="{call .rootClass/}__text-seo{sp}
                             {call .rootClass/}__text-seo_left">
                     {call .textSeo_}
@@ -867,8 +858,8 @@
                     {/call}
                 </div>
             </div>
-        {/if}
-    </div>
+        </div>
+    {/if}
 {/template}
 
 
@@ -903,9 +894,9 @@
  * }}
  */
 {template .sectionPopular_}
-    <div class="{call .rootClass /}__section-inner">
-        <div class="{call .rootClass/}__section{sp}
-                    {call .rootClass/}__section_popular">
+    <div class="{call .rootClass/}__section{sp}
+                {call .rootClass/}__section_popular">
+        <div class="{call .rootClass /}__section-inner">
             {if $params}
             {/if}
 

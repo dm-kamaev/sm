@@ -9,6 +9,7 @@
     padding: 8px 15px 10px;
 
     vertical-align: baseline;
+
     border: 1px solid #e5e5e5;
     border-radius: 5px;
 }
@@ -38,8 +39,8 @@
 
 @include media-xs {
     .b-label {
-        padding-left: 10px;
         padding-right: 10px;
+        padding-left: 10px;
     }
 
     .b-label__cross {

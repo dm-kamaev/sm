@@ -27,6 +27,8 @@ goog.require('sm.bSmCheckbox.SmCheckbox');
 goog.require('sm.bSmCheckbox.View');
 goog.require('sm.bSmCollapsedText.SmCollapsedText');
 goog.require('sm.bSmCollapsedText.View');
+goog.require('sm.bSmExpander.SmExpander');
+goog.require('sm.bSmExpander.View');
 goog.require('sm.bSmFavorite.SmFavorite');
 goog.require('sm.bSmFavorite.View');
 goog.require('sm.bSmItem.SmItem');
@@ -65,12 +67,18 @@ goog.require('sm.gList.ViewSelect');
 goog.require('sm.gModal.ModalEnrollment');
 goog.require('sm.gModal.ModalFeedback');
 goog.require('sm.gModal.ModalStendhal');
+goog.require('sm.gModal.ModalSuccess');
 goog.require('sm.gModal.ViewEnrollment');
 goog.require('sm.gModal.ViewFeedback');
 goog.require('sm.gModal.ViewStendhal');
+goog.require('sm.gModal.ViewSuccess');
 goog.require('sm.gTextarea.TextareaStendhal');
 goog.require('sm.gTextarea.ViewStendhal');
 goog.require('sm.iFactory.TemplateFactoryStendhal');
+goog.require('sm.lCourse.bDepartment.Department');
+goog.require('sm.lCourse.bDepartment.View');
+goog.require('sm.lCourse.bOption.Option');
+goog.require('sm.lCourse.bOption.View');
 goog.require('sm.lInformation.bFeedbackBoard.FeedbackBoard');
 goog.require('sm.lInformation.bFeedbackBoard.View');
 goog.require('sm.lInformation.bInformationBoard.InformationBoard');
@@ -194,6 +202,10 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('modal-enrollment', {
             control: sm.gModal.ModalEnrollment,
             view: sm.gModal.ViewEnrollment
+        })
+        .setControlListItem('modal-success', {
+            control: sm.gModal.ModalSuccess,
+            view: sm.gModal.ViewSuccess
         });
 
     /** Common blocks and their heirs **/
@@ -260,6 +272,10 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('smFavorite', {
             control: sm.bSmFavorite.SmFavorite,
             view: sm.bSmFavorite.View
+        })
+        .setControlListItem('smExpander', {
+            control: sm.bSmExpander.SmExpander,
+            view: sm.bSmExpander.View
         });
 
     /** l-information blocks **/
@@ -305,6 +321,18 @@ sm.iFactory.FactoryStendhal = function() {
             control: sm.lSearch.bSuggestFilter.SuggestFilter,
             view: sm.lSearch.bSuggestFilter.View
         });
+
+    /** l-course blocks */
+    this.setControlListItem('lCourse-option', {
+            control: sm.lCourse.bOption.Option,
+            view: sm.lCourse.bOption.View
+        })
+        .setControlListItem('lCourse-department', {
+            control: sm.lCourse.bDepartment.Department,
+            view: sm.lCourse.bDepartment.View
+        });
+
+
 };
 goog.inherits(sm.iFactory.FactoryStendhal, cl.iFactory.Factory);
 goog.addSingletonGetter(sm.iFactory.FactoryStendhal);

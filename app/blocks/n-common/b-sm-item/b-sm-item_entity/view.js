@@ -1,5 +1,6 @@
 goog.provide('sm.bSmItem.ViewEntity');
 
+goog.require('cl.iUtils.Utils');
 goog.require('goog.object');
 goog.require('sm.bSmItem.View');
 goog.require('sm.bSmScore.SmScoreBrief');

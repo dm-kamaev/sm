@@ -3,6 +3,7 @@
 
 /**
  * typedef {{
+ *     openGraph: (sm.iLayout.TemplateStendhal.Params.Data.openGraph|undefined),
  *     user: {
  *         firstName: (string|undefined),
  *         lastName: (string|undefined),
@@ -20,6 +21,8 @@
  *             cutText: Array<string>,
  *             fullText: (Array<string>|undefined)
  *         },
+ *         category: string,
+ *         score: sm.bSmScore.TemplateBrief.Params.Data,
  *         cost: ?string,
  *         generalOptions: sm.lCourse.bInformationBoard.Template.Params.Data,
  *         online: ?('only'|'available'|undefidned)
@@ -73,7 +76,7 @@
 {template .mainContent autoescape="strict" kind="html"}
     <div class="{call .rootClass/}__body">
         {call .sectionData_ data="all" /}
-        // {call .sectionOptions_ data="all" /}
+        {call .sectionOptions_ data="all" /}
         // {call .sectionAdditional_ data="all" /}
         // {call .sectionPrograms_ data="all" /}
         // {call .sectionComments_ data="all" /}
@@ -89,13 +92,82 @@
 /**
  * Section with a complete data entity
  * @param params {{
- *     data: {?}
+ *     data: {
+ *         entityData: {
+ *             id: number,
+ *             name: string,
+ *             description: ?string,
+ *             fullDescription: {
+ *                 cutText: Array<string>,
+ *                 fullText: (Array<string>|undefined)
+ *             },
+ *             score: sm.bSmScore.TemplateBrief.Params.Data,
+ *             online: ?('only'|'available'|undefidned),
+ *             cost: ?string
+ *             generalOptions: sm.lCourse.bInformationBoard.Template.Params.Data,
+ *         },
+ *         actionButtonText: string
+ *     }
  * }}
  */
 {template .sectionData_}
     <div class="{call .rootClass/}__section {call .rootClass/}__section_data">
         {call .rightData_ data="all" /}
         {call .leftData_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Section with a complete data entity
+ * @param params {{
+ *     data: {
+ *         entityData: {
+ *             departmentList: sm.lCourse.bDepartment.Template.Params.Data
+ *         }
+ *     }
+ * }}
+ */
+{template .sectionOptions_}
+    <div class="{call .rootClass/}__section {call .rootClass/}__section_options">
+        <div class="{call .rootClass/}__options">
+            {call .optionsList_ data="all" /}
+        </div>
+    </div>
+{/template}
+
+
+/**
+ * Section with a complete data entity
+ * @param params {{
+ *     data: {
+ *         entityData: {
+ *             departmentList: sm.lCourse.bDepartment.Template.Params.Data
+ *         }
+ *     }
+ * }}
+ */
+{template .optionsList_}
+    <div class="{call .rootClass/}__options-list">
+        {let $customClasses kind="html"}
+            {call .rootClass/}__department-list
+        {/let}
+
+        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+            {param params: [
+                'type': 'smItemList',
+                'renderParams': [
+                    'data': [
+                        'items': $params.data.entityData.departmentList,
+                        'itemConfig': [],
+                        'itemType': 'lCourse-department'
+                    ],
+                    'config': [
+                        'customClasses': [$customClasses]
+                    ]
+                ]
+            ]/}
+        {/call}
     </div>
 {/template}
 
@@ -128,6 +200,7 @@
 {template .sectionsModals_}
     <div class="{call .rootClass/}__section {call .rootClass/}__section_modals">
         {call .modalEnrollment_ data="all" /}
+        {call .modalSuccess_ /}
     </div>
 {/template}
 
@@ -135,7 +208,19 @@
 /**
  * Data on the left
  * @param params {{
- *     data: {?}
+ *     data: {
+ *         entityData: {
+ *             id: number,
+ *             name: string,
+ *             description: ?string,
+ *             fullDescription: {
+ *                 cutText: Array<string>,
+ *                 fullText: (Array<string>|undefined)
+ *             },
+ *             score: sm.bSmScore.TemplateBrief.Params.Data,
+ *             generalOptions: sm.lCourse.bInformationBoard.Template.Params.Data
+ *         }
+ *     }
  * }}
  */
 {template .leftData_}
@@ -149,7 +234,13 @@
 /**
  * Data on the right
  * @param params {{
- *     data: {?}
+ *     data: {
+ *         entityData: {
+ *             online: ?('only'|'available'|undefidned),
+ *             cost: ?string
+ *         },
+ *         actionButtonText: string
+ *     }
  * }}
  */
 {template .rightData_}
@@ -172,6 +263,7 @@
  *                 cutText: Array<string>,
  *                 fullText: (Array<string>|undefined)
  *             },
+ *             score: sm.bSmScore.TemplateBrief.Params.Data
  *         }
  *     }
  * }}
@@ -191,7 +283,8 @@
  *     data: {
  *         entityData: {
  *             online: ?('only'|'available'|undefidned)
- *         }
+ *         },
+ *         map: sm.bSmMap.Template.Params.Data
  *     }
  * }}
  */
@@ -302,8 +395,6 @@
 {/template}
 
 
-
-
 /**
  * Modal for user Enrollment
  * @param params {{
@@ -329,6 +420,29 @@
                 ],
                 'config': [
                     'entityType': $params.config.entityType
+                ]
+            ]
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * Modal to show text successful
+ */
+{template .modalSuccess_}
+    {let $textSuccess kind="html"}
+        Ваша заявка принята, скоро с&nbsp;вами свяжется наш оператор.
+    {/let}
+
+    {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+        {param params: [
+            'type': 'modal-success',
+            'renderParams': [
+                'data': [
+                    'content': [
+                        'textSuccess': $textSuccess
+                    ]
                 ]
             ]
         ]/}
@@ -405,7 +519,11 @@
 /**
  * Course rating
  * @param params {{
- *     data: {?}
+ *     data: {
+ *         entityData: {
+ *             score: sm.bSmScore.TemplateBrief.Params.Data
+ *         }
+ *     }
  * }}
  */
 {template .score_}
@@ -425,7 +543,9 @@
                             'topOffset': 'xxl'
                         ],
                         'theme': 'light',
-                        'isActive': true
+                        'isActive': $params.data.entityData.score.marks.primary.value ?
+                            true :
+                            false
                     ]
                 ]
             ]/}
@@ -448,7 +568,9 @@
                             'offset': 'left-m'
                         ],
                         'theme': 'light',
-                        'isActive': true
+                        'isActive': $params.data.entityData.score.marks.primary.value ?
+                            true :
+                            false
                     ]
                 ]
             ]/}
@@ -661,7 +783,9 @@
  *         },
  *         entityData: {
  *             id: number,
- *             name: string
+ *             name: string,
+ *             cost: string,
+ *             category: string
  *         }
  *     },
  *     config: {
@@ -676,6 +800,8 @@
             {param json: [
                 'id': $params.data.entityData?.id,
                 'name': $params.data.entityData?.name,
+                'category': $params.data.entityData?.category,
+                'cost': $params.data.entityData?.cost,
                 'isCommented': $params.data.user?.isCommented,
                 'isUserAuthorized': $params.data.user ? true : false,
                 'authSocialLinks': $params.data?.authSocialLinks,

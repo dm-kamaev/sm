@@ -2,6 +2,7 @@
 
 const async = require('asyncawait/async'),
     await = require('asyncawait/await'),
+    url = require('url'),
     translit = require('translitit-cyrillic-russian-to-latin');
 
 const logger =
@@ -219,5 +220,18 @@ service.getEntityByUrl = async(function(alias, entityType) {
     }
     return entity;
 });
+
+/**
+ * @param  {string} uri
+ * @param  {string} baseUrl
+ * @return {string}
+ */
+service.addSubdomain = function(uri, baseUrl) {
+    let parsedUri = url.parse(uri),
+        host = parsedUri.host;
+    parsedUri.host = baseUrl.replace('/', '') + '.' + host;
+
+    return url.format(parsedUri);
+};
 
 module.exports = service;

@@ -31,12 +31,17 @@
  *         }>
  *     },
  *     config: {
+ *         optionsToShow: (number|undefined),
  *         showMoreButtonText: (number|undefined)
  *     }
  * }}
   * @override
  */
 {template .button}
+    {let $numberOptionsToShow kind="html"}
+        {call .numberOptionsToShow data="all" /}
+    {/let}
+
     {let $showMoreButtonText kind="html"}
         {if $params.config?.showMoreButtonText}
             {$params.config?.showMoreButtonText}
@@ -45,9 +50,11 @@
         {/if}
     {/let}
 
-    {call .showMoreButton}
-        {param text: $showMoreButtonText/}
-    {/call}
+    {if $params.data.options.length > $numberOptionsToShow}
+        {call .showMoreButton}
+            {param text: $showMoreButtonText/}
+        {/call}
+    {/if}
 {/template}
 
 

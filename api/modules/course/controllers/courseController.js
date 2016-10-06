@@ -165,7 +165,7 @@ controller.popularCourseType = async(function(req, res) {
     let result;
     try {
         let popularCourseType =
-            await(services.courseType.getPopularTypes());
+            await(services.courseType.getPopularTypes(12));
 
         result =
             courseTypeView.typeFilters(popularCourseType);
@@ -234,15 +234,32 @@ controller.searchCourseType = async(function(req, res) {
  * @apiParam {string} name
  * @apiParam {string} phone
  * @apiParam {string{..300}} [comment]
+ * @apiParam {string} link
+ * @apiParam {Object} department
  * @apiParamExample {json} Request-Example:
  *     {
  *         "name": "Nikolay",
  *         "phone": "+7 (966) 435-36-70"
- *         "comment": "Can my dead son be enrolled on the course? :3"
+ *         "comment": "Can my dead son be enrolled on the course? :3",
+ *         "link":
+ *             "http://courses.www21.lan/course/proforientacija/Pro/RussianEge",
+ *         "department": {
+ *             "name": "Трубниковский переулок, 11",
+ *             "options" : [{
+ *                 title: {
+ *                     name: 'Раписание',
+ *                     key: 'schedule',
+ *                     value: 'Среда 18:00–19:50'
+ *                 }
+ *             }]
+ *         }
  *     }
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
+ *     {
+ *         "applicationId": 2
+ *     }
  */
 controller.enrollOnCourse = async(function(req, res) {
     let result;
@@ -254,6 +271,10 @@ controller.enrollOnCourse = async(function(req, res) {
             from: 'schools.mel.fm <sender@mel.fm>',
             to: config.courseMail.email
         }));
+
+        result = {
+            applicationId: data.applicationId
+        };
     } catch (error) {
         logger.error(error.message);
         if (~error.message.indexOf('ValidationError')) {

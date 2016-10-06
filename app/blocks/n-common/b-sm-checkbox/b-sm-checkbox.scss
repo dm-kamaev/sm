@@ -6,8 +6,8 @@
     display: inline-block;
 
     box-sizing: border-box;
-    padding: 8px 0;
     margin-right: 5px;
+    padding: 8px 0;
 }
 
 .b-sm-checkbox__label {
@@ -16,8 +16,8 @@
     margin: 0 9px;
     padding-left: 13px;
 
-    vertical-align: middle;
     cursor: pointer;
+    vertical-align: middle;
 }
 
 .b-sm-checkbox__input {
@@ -46,8 +46,8 @@
 }
 
 .b-sm-checkbox_minimal-theme {
-    padding: 0;
     margin: 0;
+    padding: 0;
 
     .b-sm-checkbox__label {
         margin: 0;

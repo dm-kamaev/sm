@@ -1,5 +1,6 @@
 goog.provide('sm.lSearch.View');
 
+goog.require('cl.iUtils.Utils');
 goog.require('goog.dom.classlist');
 goog.require('sm.iLayout.ViewStendhal');
 goog.require('sm.lSearch.Template');
@@ -41,6 +42,9 @@ goog.scope(function() {
      */
     View.CssClass = {
         ROOT: 'l-search',
+        SECTION_MAP: 'l-search__section_map',
+        SECTION_HIDDEN: 'l-search__section_hidden',
+        SORT: 'l-search__sort',
         RESULTS_LIST_HEADER: 'l-search__list-header',
         RESULTS_LIST: 'l-search__results-list',
         LOADER: 'l-search__loader',
@@ -78,6 +82,40 @@ goog.scope(function() {
      */
     View.prototype.decorateInternal = function(element) {
         View.base(this, 'decorateInternal', element);
+    };
+
+
+    /**
+     * Show or hide map section
+     * @param {boolean} visibility
+     */
+    View.prototype.setSectionMapVisibility = function(visibility) {
+        visibility ?
+            goog.dom.classlist.remove(
+                this.dom.sectionMap,
+                View.CssClass.SECTION_HIDDEN
+            ) :
+            goog.dom.classlist.add(
+                this.dom.sectionMap,
+                View.CssClass.SECTION_HIDDEN
+            );
+    };
+
+
+    /**
+     * Show or hide sorter
+     * @param {boolean} visibility
+     */
+    View.prototype.setSortVisibility = function(visibility) {
+        visibility ?
+            goog.dom.classlist.remove(
+                this.dom.sectionSort,
+                cl.iUtils.Utils.CssClass.HIDDEN
+            ) :
+            goog.dom.classlist.add(
+                this.dom.sectionSort,
+                cl.iUtils.Utils.CssClass.HIDDEN
+            );
     };
 
 
@@ -154,6 +192,9 @@ goog.scope(function() {
         goog.object.extend(
             this.dom,
             {
+                sectionSort: this.getElementByClass(
+                    View.CssClass.SORT
+                ),
                 sort: this.getElementByClass(
                     sm.gDropdown.ViewSelect.CssClass.ROOT
                 ),
@@ -168,6 +209,9 @@ goog.scope(function() {
                 ),
                 resultsList: this.getElementByClass(
                     View.CssClass.RESULTS_LIST
+                ),
+                sectionMap: this.getElementByClass(
+                    View.CssClass.SECTION_MAP
                 ),
                 map: this.getElementByClass(
                     sm.bSmMap.View.CssClass.ROOT
@@ -196,15 +240,15 @@ goog.scope(function() {
     View.prototype.transformParams = function(rawParams) {
         var params = View.base(this, 'transformParams', rawParams);
 
-        params.searchParams = rawParams['searchParams'];
-
-        params.declensionEntityType = {
-            nom: rawParams['declensionEntityType']['nom'],
-            gen: rawParams['declensionEntityType']['gen'],
-            plu: rawParams['declensionEntityType']['plu']
-        };
-
-        params.countResults = rawParams['countResults'];
+        goog.object.extend(params, {
+            searchParams: rawParams['searchParams'],
+            declensionEntityType: {
+                nom: rawParams['declensionEntityType']['nom'],
+                gen: rawParams['declensionEntityType']['gen'],
+                plu: rawParams['declensionEntityType']['plu']
+            },
+            countResults: rawParams['countResults']
+        });
 
         return params;
     };

@@ -45,7 +45,7 @@ goog.scope(function() {
         ROOT: 'b-sm-item-list',
         LIST: 'b-sm-item-list__list',
         ITEM: 'b-sm-item-list__item',
-        ITEM_CONTAINER: 'b-sm-item-list__item-wrap'
+        ITEM_WRAP: 'b-sm-item-list__item-wrap'
     };
 
 
@@ -96,13 +96,13 @@ goog.scope(function() {
      * @param {Element} item
      */
     View.prototype.removeItem = function(item) {
-        var itemContainer = goog.dom.getAncestorByClass(
+        var itemWrapper = goog.dom.getAncestorByClass(
             item,
-            sm.bSmItemList.View.CssClass.ITEM_CONTAINER
+            sm.bSmItemList.View.CssClass.ITEM_WRAP
         );
 
         goog.dom.removeNode(
-            itemContainer
+            itemWrapper
         );
     };
 
@@ -111,8 +111,8 @@ goog.scope(function() {
      * Remove all items dom elements
      */
     View.prototype.removeAllItems = function() {
-        goog.array.forEach(this.dom.itemContainers, function(itemContainer) {
-            goog.dom.removeNode(itemContainer);
+        goog.array.forEach(this.dom.itemWrappers, function(itemWrapper) {
+            goog.dom.removeNode(itemWrapper);
         });
     };
 
@@ -123,7 +123,7 @@ goog.scope(function() {
      */
     View.prototype.setPage = function(pageNumber) {
 
-        this.hideItems_(0, this.dom.itemContainers.length);
+        this.hideItems_(0, this.dom.itemWrappers.length);
 
         var start = (pageNumber - 1) * this.params.countItemsPerPage,
             end = start + this.params.countItemsPerPage;
@@ -144,8 +144,8 @@ goog.scope(function() {
             element
         );
 
-        this.dom.itemContainers = this.getElementsByClass(
-            sm.bSmItemList.View.CssClass.ITEM_CONTAINER,
+        this.dom.itemWrappers = this.getElementsByClass(
+            sm.bSmItemList.View.CssClass.ITEM_WRAP,
             element
         );
     };
@@ -158,11 +158,11 @@ goog.scope(function() {
      * @private
      */
     View.prototype.showItems_ = function(start, end) {
-        for (var i = start, itemContainer; i < end; i++) {
-            itemContainer = this.dom.itemContainers[i];
+        for (var i = start, itemWrapper; i < end; i++) {
+            itemWrapper = this.dom.itemWrappers[i];
 
-            if (itemContainer) {
-                this.show_(itemContainer);
+            if (itemWrapper) {
+                this.show_(itemWrapper);
             }
         }
     };
@@ -175,11 +175,11 @@ goog.scope(function() {
      * @private
      */
     View.prototype.hideItems_ = function(start, end) {
-        for (var i = start, itemContainer; i < end; i++) {
-            itemContainer = this.dom.itemContainers[i];
+        for (var i = start, itemWrapper; i < end; i++) {
+            itemWrapper = this.dom.itemWrappers[i];
 
-            if (itemContainer) {
-                this.hide_(itemContainer);
+            if (itemWrapper) {
+                this.hide_(itemWrapper);
             }
         }
     };
@@ -257,7 +257,7 @@ goog.scope(function() {
 
 
     /**
-     * Initializes list (container for items)
+     * Initializes list (Wrapper for items)
      * @param {Element=} opt_element
      * @private
      */
