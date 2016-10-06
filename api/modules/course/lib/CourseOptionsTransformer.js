@@ -46,7 +46,7 @@ module.exports = class {
             key: 'age',
             name: 'Возраст'
         }, {
-            key: 'costPerHour',
+            key: 'totalCost',
             name: 'Стоимость'
         }, {
             key: 'schedule',
@@ -66,9 +66,12 @@ module.exports = class {
         }, {
             key: 'startDate',
             name: 'Начало занятий'
+        }, {
+            key: 'name',
+            name: 'Пакет'
         }];
 
-        this.globalOptions_ = ['schedule', 'costPerHour'];
+        this.globalOptions_ = ['schedule', 'totalCost', 'name'];
     }
 
     /**
@@ -197,8 +200,10 @@ module.exports = class {
      * @return {Object}
      */
     transformOption_(option) {
-        let titleKey = this.globalOptions_[0],
-            costKey = this.globalOptions_[1];
+        let scheduleKey = this.globalOptions_[0],
+            costKey = this.globalOptions_[1],
+            nameKey = this.globalOptions_[2],
+            titleKey = option[nameKey] ? nameKey : scheduleKey;
         return {
             title: {
                 key: titleKey,
@@ -284,11 +289,12 @@ module.exports = class {
             age: this.formatAge_(option.age),
             schedule: this.formatSchedule_(option.schedule),
             maxGroupSize: this.formatGroupSize_(option.maxGroupSize),
-            costPerHour: this.formatCost_(option.costPerHour),
+            totalCost: this.formatCost_(option.totalCost),
             regularity: this.formatRegularity_(option.schedule),
             online: this.formatOnline_(option.online),
             duration: this.formatDuration_(option.duration),
-            startDate: this.formatStartDate_(option.startDate)
+            startDate: this.formatStartDate_(option.startDate),
+            name: option.name
         }));
     }
 
@@ -369,7 +375,7 @@ module.exports = class {
         if (cost === 0) {
             result = 'Бесплатно';
         } else if (cost > 0) {
-            result = cost + ' руб. / час';
+            result = cost + ' руб.';
         } else {
             result = 'Цена не указана';
         }
@@ -382,9 +388,16 @@ module.exports = class {
      * @return {string}
      */
     formatRegularity_(schedule) {
-        let count = schedule.length;
-        return count < 2 || count > 4 ? count + ' раз в неделю' :
-            count + ' раза в неделю';
+        let count = schedule.length,
+            result;
+        if (count == 0) {
+            result = 'По желанию';
+        } else if (count < 2 || count > 4) {
+            result = count + ' раз в неделю';
+        } else {
+            result = count + ' раза в неделю';
+        }
+        return result;
     }
 
     /**
