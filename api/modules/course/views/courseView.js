@@ -23,6 +23,7 @@ const FULL_DESCRIPTION_LENGTH = 300;
  * @return {Object}
  */
 view.page = function(course) {
+    let generalOptions = this.formatGeneralOptions(course);
     return {
         id: course.id,
         name: course.name,
@@ -30,7 +31,8 @@ view.page = function(course) {
         fullDescription: this.formatFullDescription(course.fullDescription),
         score: scoreView.results(course.score, course.totalScore).data,
         cost: this.formatCost(course.courseOptions),
-        generalOptions: this.formatGeneralOptions(course)
+        generalOptions: generalOptions,
+        online: this.onlineStatus(generalOptions.items)
     };
 };
 
@@ -80,6 +82,15 @@ view.formatGeneralOptions = function(course) {
     return {
         items: items.concat(courseOptions.getGeneralOptions())
     };
+};
+
+/**
+ * @param  {Array<Object>}  generalOptions
+ * @return {(string|undefined)}
+ */
+view.onlineStatus = function(generalOptions) {
+    let online = generalOptions.find(option => option.key === 'online');
+    return online.description === 'Онлайн' ? 'only' : undefined;
 };
 
 /**
@@ -206,7 +217,7 @@ view.listMap = function(courses, viewType) {
             prev.push(this.getMapItem(curr));
         }
 
-        return prev;
+        return prev.filter(item => item);
     }, []);
 };
 
@@ -282,20 +293,22 @@ view.getAddresses = function(courseOptions) {
  * }}
  */
 view.getMapItem = function(course) {
-    return {
-        addressId: course.addressId,
-        addressName: course.addressName,
-        coordinates: geoView.coordinatesDefault(
-            course.addressCoords),
-        score: course.totalScore,
-        title: {
-            id: course.brandId,
-            text: course.brand,
-            url: null
-        },
-        subtitle: course.addressName,
-        items: [this.mapCourse(course)]
-    };
+    return course.addressId ?
+        {
+            addressId: course.addressId,
+            addressName: course.addressName,
+            coordinates: course.addressCoords &&
+                geoView.coordinatesDefault(course.addressCoords),
+            score: course.totalScore,
+            title: {
+                id: course.brandId,
+                text: course.brand,
+                url: null
+            },
+            subtitle: course.addressName,
+            items: [this.mapCourse(course)]
+        } :
+        null;
 };
 
 
@@ -341,10 +354,10 @@ view.getListCourse = function(course) {
             name: metroView.formatName(course.metroName)
         }] :
         [],
-        area: [{
+        area: course.areaId ? [{
             id: course.areaId,
             name: course.areaName
-        }]
+        }] : []
     };
 };
 
@@ -358,22 +371,21 @@ view.joinListCourse = function(existingCourse, newCourse) {
         existingCourse.cost = newCourse.optionCost;
     }
 
-    if (
-        existingCourse.online === 'only' && !newCourse.optionOnline ||
+    if (existingCourse.online === 'only' && !newCourse.optionOnline ||
         !existingCourse.online && newCourse.optionOnline === 'only'
     ) {
         existingCourse.online = 'available';
     }
 
-    if (!existingCourse.area.find(area => area.id === newCourse.areaId)) {
+    if (newCourse.areaId &&
+        !existingCourse.area.find(area => area.id === newCourse.areaId)) {
         existingCourse.area.push({
             id: newCourse.areaId,
             name: newCourse.areaName
         });
     }
 
-    if (
-        !~existingCourse.addresses.indexOf(newCourse.addressId) &&
+    if (!~existingCourse.addresses.indexOf(newCourse.addressId) &&
         newCourse.metroId &&
         !existingCourse.metro.find(metro => metro.id === newCourse.metroId)
     ) {
