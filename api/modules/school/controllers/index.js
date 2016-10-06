@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var schoolController = require('./schoolController');
 
-var usercheck = require('../../../../app/middleware/usercheck');
+var checkToken = require('../../../../app/middleware/checkToken');
 
 router.get('/school', schoolController.list);
 router.get('/school/search', schoolController.search);
@@ -25,11 +25,11 @@ router.get('/school/:id', schoolController.view);
 // router.get('/school/search', schoolController.search);
 
 
-router.post('/school/createschool', usercheck, schoolController.create);
+router.post('/school/createschool', checkToken, schoolController.create);
 router.post('/school/:id/comment', schoolController.createComment);
 
-router.put('/school/:id', usercheck,  schoolController.update);
+router.put('/school/:id', checkToken, schoolController.update);
 
-router.delete('/school/:id', usercheck, schoolController.delete);
+router.delete('/school/:id', checkToken, schoolController.delete);
 
 module.exports = router;
