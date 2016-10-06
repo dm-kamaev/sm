@@ -11,7 +11,13 @@
     "authApi": "http://pablo-mel.qa.lan:49611",
     "userApi": "http://pablo-mel.qa.lan:20348",
     "redirectUri": "http://schools1.qa.lan/authorize",
-    "analyticsId": "UA-34116537-11",
-    "yandexMetrikaId": 37512315,
+    "schools": {
+        "analyticsId": "UA-34116537-11",
+        "yandexMetrikaId": 37512315
+    },
+    "courses": {
+        "analyticsId": "UA-34116537-20",
+        "yandexMetrikaId": 37512315
+    },
     "facebookClientId": 525358880980041
 }
