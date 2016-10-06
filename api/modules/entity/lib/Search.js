@@ -70,12 +70,12 @@ class SearchQuery {
     }
 
     /**
-     * @param {(number|undefined)} scoreSortType
+     * @param {(number|undefined)} sortType
      * @return {Object}
      */
-    setSortType(scoreSortType) {
-        if (scoreSortType && scoreSortType !== '0') {
-            this.setScoreTypeOrder_(scoreSortType);
+    setSortType(sortType) {
+        if (sortType && sortType !== '0') {
+            this.setTypeOrder_(sortType);
         }
         this.setQueriesOrder_();
 
@@ -208,9 +208,9 @@ class SearchQuery {
 
     /**
      * @virtual
-     * @param {number} scoreSortType
+     * @param {number} sortType
      */
-    setScoreTypeOrder_(scoreSortType) {}
+    setTypeOrder_(sortType) {}
 
     /**
      * @virtual

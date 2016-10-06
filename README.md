@@ -82,7 +82,18 @@ updateSearch - актуализация поисковой таблицы
     "dialect": "postgres"
 }
 ```  
-
+## nginx ##
+Для того, чтобы доступ к одной node js был с двух хостов (schools.hostname.lan и
+courses.hostname.lan), необходимо настроить nginx. Для этого нужно сделать копию
+файла `environment/nginx/example.conf` в этой же папке с именем
+`schools-local.conf` и поменять все переменные `%HOST_NAME%` на хост виртуальной
+машины.  
+Далее сделать symlink:
+`ln -s %PATH_TO_PROJECT%/environment/nginx/schools-local.conf
+/etc/nginx/sites-enabled/schools-local.conf`, где `%PATH_TO_PROJECT%` – путь к
+проекту на виртуалке.  
+Потом выполнить команду `sudo service nginx configtest` и если все ok, то
+`sudo service nginx restart`.
 ## Миграции ##
 Теперь все изменения в бд происходят через миграции. Чтобы накатить все
 непримененные миграции следует выполнить **gulp migrate** на виртуалке.

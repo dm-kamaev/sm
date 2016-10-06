@@ -5,6 +5,7 @@ const favoriteView = require('../../favorite/views/favoriteView');
 /**
  * @param {{
  *     user: Object,
+ *     fbClientId: string,
  *     authSocialLinks: Object,
  *     entityData: Object,
  *     map: Object,
@@ -20,6 +21,12 @@ exports.render = function(data) {
         seo: {
             metaTitle: 'Кружки и секции'
         },
+        openGraph: {
+            title: 'Курс ' + data.entityData.name + ' на «Курсах Мела»',
+            description: data.entityData.description,
+            image: '/images/n-clobl/i-layout/cources_sharing.png',
+            fbClientId: data.fbClientId,
+        },
         subHeader: {
             logo: {
                 imgUrl: '/images/n-common/b-sm-subheader/course-logo.svg'
@@ -27,10 +34,12 @@ exports.render = function(data) {
             links: {
                 nameL: 'Все курсы, кружки и секции',
                 nameM: 'Все курсы',
-                url: '/coursesearch'
+                url: '/proforientacija'
             },
             search: {
-                placeholder: 'Район, метро, название курса'
+                placeholder: 'Район, метро, название курса',
+                redirect: true,
+                pageAlias: 'proforientacija'
             },
             user: user,
             favorites: {

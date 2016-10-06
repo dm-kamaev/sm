@@ -96,13 +96,13 @@ goog.scope(function() {
      * @enum {string}
      */
     Subheader.Event = {
-        'SUBMIT': Search.Event.SUBMIT,
-        'ITEM_SELECT': Search.Event.ITEM_SELECT
+        'SEARCH_SUBMIT': Search.Event.SUBMIT
     };
 
 
     /**
      * @override
+     * @protected
      */
     Subheader.prototype.decorateInternal = function(element) {
         Subheader.base(this, 'decorateInternal', element);
@@ -111,6 +111,18 @@ goog.scope(function() {
         this.initAuthorizationLink_();
         this.initFavorite_();
         this.initLinks_();
+    };
+
+
+    /**
+     * @override
+     * @protected
+     */
+    Subheader.prototype.enterDocument = function() {
+        Subheader.base(this, 'enterDocument');
+
+        this.initMinifiedSearchListeners_();
+        this.initSearchListeners_();
     };
 
 
@@ -129,16 +141,6 @@ goog.scope(function() {
      */
     Subheader.prototype.removeFavorite = function(itemId) {
         this.favorite_.removeItem(itemId);
-    };
-
-
-    /**
-     * @override
-     */
-    Subheader.prototype.enterDocument = function() {
-        Subheader.base(this, 'enterDocument');
-        this.initMinifiedSearchListeners_();
-        this.initSearchListeners_();
     };
 
 
@@ -194,6 +196,8 @@ goog.scope(function() {
      * @private
      */
     Subheader.prototype.onSubmit_ = function() {
+        this.dispatchEvent(Subheader.Event.SEARCH_SUBMIT);
+
         this.minifiedSearch_.reset();
         this.search_.reset();
     };

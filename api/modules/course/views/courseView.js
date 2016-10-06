@@ -9,7 +9,7 @@ const scoreView = require('./scoreView'),
     districtView = require('../../geo/views/districtView'),
     addressView = require('../../geo/views/addressView'),
     FormatText = require('../../entity/lib/FormatText'),
-    CourseOptions = require('../lib/CourseOptions'),
+    CourseOptionsTransformer = require('../lib/CourseOptionsTransformer'),
     pageView = require('../../entity/views/pageView');
 
 const entityType = require('../../../../api/modules/entity/enums/entityType');
@@ -24,14 +24,20 @@ const FULL_DESCRIPTION_LENGTH = 300;
  * @return {Object}
  */
 view.page = function(course) {
+    let options = course.courseOptions,
+        generalOptions = this.formatGeneralOptions(course);
+
     return {
         id: course.id,
         name: course.name,
         description: course.description,
         fullDescription: this.formatFullDescription(course.fullDescription),
         score: scoreView.results(course.score, course.totalScore).data,
-        cost: this.formatCost(course.courseOptions),
-        generalOptions: this.formatGeneralOptions(course)
+        cost: this.formatCost(options),
+        generalOptions: {
+            items: generalOptions
+        },
+        departmentList: this.formatDepartmentList(options, generalOptions)
     };
 };
 
@@ -76,21 +82,26 @@ view.formatCost = function(options) {
  */
 view.formatGeneralOptions = function(course) {
     let items = this.getStaticOptions(course),
-        courseOptions = new CourseOptions(course.courseOptions);
+        optionsTransformer = new CourseOptionsTransformer(course.courseOptions);
 
-    let uO = courseOptions.getUniqueOptions(courseOptions.getGeneralOptions());
+    return items.concat(optionsTransformer.getGeneralOptions());
+};
 
-    console.log(JSON.stringify(uO, null, 2));
-
-    return {
-        items: items.concat(courseOptions.getGeneralOptions())
-    };
+/**
+ * @param  {Array<Object>} options
+ * @param  {Array<Object>} generalOptions
+ * @return {Array<Object>}
+ */
+view.formatDepartmentList = function(options, generalOptions) {
+    let optionsTransformer = new CourseOptionsTransformer(options);
+    return optionsTransformer.getUniqueOptions(generalOptions);
 };
 
 /**
  * @param {{
  *     courseBrand: {
- *         name: string
+ *         name: string,
+ *         description: ?string
  *     },
  *     courseType: {
  *         name: string
@@ -148,7 +159,7 @@ view.pageMap = function(course) {
             let address = department.address;
             return {
                 addressId: address.id,
-                coordinates: address.coords,
+                coordinates: geoView.coordinatesDefault(address.coords),
                 title: {
                     text: course.courseBrand.name
                 },
@@ -317,7 +328,7 @@ view.mapCourse = function(course) {
     return {
         id: course.id,
         content: course.name,
-        url: 'course/' + this.generateAlias(course.alias, course.brandAlias)
+        url: this.generateAlias(course.alias, course.brandAlias)
     };
 };
 
@@ -413,11 +424,56 @@ view.generateAlias = function(alias, brandAlias) {
  * @return {Object}
  */
 view.letterData = function(data) {
-    let comment = data.comment ? `<br/>Комментарий: ${data.comment}` : '';
     return {
         theme: 'Запись на курс',
-        content: `Имя: ${data.name}<br/>Телефон: ${data.phone}` + comment
+        content: this.letterContent(data)
     };
+};
+
+/**
+ * @param  {{
+ *     applicationId: number,
+ *     name: string,
+ *     phone: string,
+ *     comment: ?string,
+ *     department: Object
+ * }} data
+ * @return {string}
+ */
+view.letterContent = function(data) {
+    let result = '',
+        comment = data.comment ? `<br>Комментарий: ${data.comment}` : '',
+        departmentOptions = data.department.options,
+        options = '';
+
+    if (departmentOptions) {
+        options = `<br>Адрес: ${data.department.name}`;
+        options += this.formatFeature(departmentOptions.title);
+        options += this.formatFeature(departmentOptions.cost);
+        departmentOptions.features.map(feature => {
+            options += this.formatFeature(feature);
+        });
+    }
+
+    result += `Номер заявки: ${data.applicationId}`;
+    result += `<br>Имя: ${data.name}`;
+    result += `<br>Телефон: ${data.phone}`;
+    result += comment;
+    result += options;
+
+    return result;
+};
+
+/**
+ * [formatFeature description]
+ * @param  {{
+ *     name: string,
+ *     value: string
+ * }} feature
+ * @return {string}
+ */
+view.formatFeature = function(feature) {
+    return `<br>${feature.name}: ${feature.value}`;
 };
 
 

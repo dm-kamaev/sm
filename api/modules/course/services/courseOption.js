@@ -22,10 +22,11 @@ var service = {
  *     nativeSpeaker: ?boolean,
  *     startDate: ?string
  *     duration: ?string,
- *     schedule: Array<{
+ *     openSchedule: ?boolean,
+ *     schedule: ?Array<{
  *         startTime: ?string,
  *         endTime: ?string,
- *         day: ?number
+ *         day: number
  *     }>,
  *     departments: Array<{
  *         name: ?string,
@@ -50,12 +51,15 @@ service.create = async(function(courseId, data) {
         currentGroupSize: data.currentGroupSize,
         nativeSpeaker: data.nativeSpeaker,
         startDate: data.startDate,
-        duration: data.duration
+        duration: data.duration,
+        openSchedule: data.openSchedule
     }));
-    courseOption.schedule = await(services.courseSchedule.bulkCreate(
-        courseOption.id,
-        data.schedule
-    ));
+    if (data.schedule) {
+        courseOption.schedule = await(services.courseSchedule.bulkCreate(
+            courseOption.id,
+            data.schedule
+        ));
+    }
     await(courseOption.setDepartments(data.departments.map(department =>
         await(services.courseDepartment.findOrCreate(department))
     )));

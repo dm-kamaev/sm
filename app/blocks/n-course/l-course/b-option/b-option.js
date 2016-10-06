@@ -29,6 +29,15 @@ goog.scope(function() {
 
 
         /**
+         * Params
+         * @type {sm.lCourse.bOption.Option.DataParams}
+         * @protected
+         * @override
+         */
+        this.params = {};
+
+
+        /**
          * Expander instance
          * @type {sm.bSmExpander.SmExpander}
          * @private
@@ -75,11 +84,10 @@ goog.scope(function() {
     sm.lCourse.bOption.Option.DataParams;
 
 
-
     /**
      * Transform params to compressed ones
      * @param {Object<string, (Array|Object|number)>} rawParams
-     * @return {sm.lCourse.bOption.View.RenderParams}
+     * @return {sm.lCourse.bOption.Option.RenderParams}
      */
     Option.getRenderParams = function(rawParams) {
         return View.getRenderParams(rawParams);
@@ -89,9 +97,9 @@ goog.scope(function() {
     /**
      * Date getter
      * @return {sm.lCourse.bOption.Option.DataParams}
-     * @private
+     * @public
      */
-    Option.prototype.getData_ = function() {
+    Option.prototype.getData = function() {
         return this.params;
     };
 

@@ -3,6 +3,7 @@
 
 /**
  * typedef {{
+ *     openGraph: (sm.iLayout.TemplateStendhal.Params.Data.openGraph|undefined),
  *     user: {
  *         firstName: (string|undefined),
  *         lastName: (string|undefined),
@@ -74,7 +75,7 @@
 {template .mainContent autoescape="strict" kind="html"}
     <div class="{call .rootClass/}__body">
         {call .sectionData_ data="all" /}
-        // {call .sectionOptions_ data="all" /}
+        {call .sectionOptions_ data="all" /}
         // {call .sectionAdditional_ data="all" /}
         // {call .sectionPrograms_ data="all" /}
         // {call .sectionComments_ data="all" /}
@@ -117,6 +118,60 @@
 
 
 /**
+ * Section with a complete data entity
+ * @param params {{
+ *     data: {
+ *         entityData: {
+ *             departmentList: sm.lCourse.bDepartment.Template.Params.Data
+ *         }
+ *     }
+ * }}
+ */
+{template .sectionOptions_}
+    <div class="{call .rootClass/}__section {call .rootClass/}__section_options">
+        <div class="{call .rootClass/}__options">
+            {call .optionsList_ data="all" /}
+        </div>
+    </div>
+{/template}
+
+
+/**
+ * Section with a complete data entity
+ * @param params {{
+ *     data: {
+ *         entityData: {
+ *             departmentList: sm.lCourse.bDepartment.Template.Params.Data
+ *         }
+ *     }
+ * }}
+ */
+{template .optionsList_}
+    <div class="{call .rootClass/}__options-list">
+        {let $customClasses kind="html"}
+            {call .rootClass/}__department-list
+        {/let}
+
+        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+            {param params: [
+                'type': 'smItemList',
+                'renderParams': [
+                    'data': [
+                        'items': $params.data.entityData.departmentList,
+                        'itemConfig': [],
+                        'itemType': 'lCourse-department'
+                    ],
+                    'config': [
+                        'customClasses': [$customClasses]
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
  * Section with fixed button
  * @param params {{
  *     data: {
@@ -144,6 +199,7 @@
 {template .sectionsModals_}
     <div class="{call .rootClass/}__section {call .rootClass/}__section_modals">
         {call .modalEnrollment_ data="all" /}
+        {call .modalSuccess_ /}
     </div>
 {/template}
 
@@ -338,8 +394,6 @@
 {/template}
 
 
-
-
 /**
  * Modal for user Enrollment
  * @param params {{
@@ -365,6 +419,29 @@
                 ],
                 'config': [
                     'entityType': $params.config.entityType
+                ]
+            ]
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * Modal to show text successful
+ */
+{template .modalSuccess_}
+    {let $textSuccess kind="html"}
+        Ваша заявка принята, скоро с&nbsp;вами свяжется наш оператор.
+    {/let}
+
+    {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+        {param params: [
+            'type': 'modal-success',
+            'renderParams': [
+                'data': [
+                    'content': [
+                        'textSuccess': $textSuccess
+                    ]
                 ]
             ]
         ]/}

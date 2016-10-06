@@ -91,4 +91,19 @@ goog.scope(function() {
     Link.prototype.disableHover = function() {
         this.getView().disableHover();
     };
+
+
+    /**
+     * @protected
+     * @override
+     */
+    Link.prototype.decorateInternal = function(element) {
+        Link.base(this, 'decorateInternal', element);
+
+
+        /** Enable hover here as params initialization already occurs */
+        if (!this.params.disableHover) {
+            this.enableHover();
+        }
+    };
 });  // goog.scope

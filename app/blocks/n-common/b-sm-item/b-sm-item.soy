@@ -336,12 +336,13 @@
  *             bold: ?string
  *         },
  *         category: string
+ *         alias: string
  *     }
  * }}
  * @override
  */
 {template .attributes kind="attributes"}
-    {sp}href="/{$params.data.type}/{$params.data.alias}"
+    {sp}href="/{$params.data.alias}"
     {sp}data-params="
         {call cl.iUtils.Utils.stringify}
             {param json: quoteKeysIfJs([

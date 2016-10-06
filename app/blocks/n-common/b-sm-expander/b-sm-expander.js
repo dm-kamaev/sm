@@ -2,6 +2,8 @@
  * @fileoverview Expander component
  * Dispatch event about changing state
  * When expanded change theme and hoverability of link in title
+ *
+ * When take empty content in template disable expand behaviour
  */
 goog.provide('sm.bSmExpander.SmExpander');
 
@@ -102,7 +104,7 @@ goog.scope(function() {
 
     /**
      * Set state
-     * @param {[type]} state [description]
+     * @param {sm.bSmExpander.SmExpander.State} state
      * @public
      */
     Expander.prototype.setState = function(state) {
@@ -146,7 +148,9 @@ goog.scope(function() {
      * @private
      */
     Expander.prototype.onExpandButtonClick_ = function() {
-        this.switchState_();
+        if (!this.params.isEmptyContent) {
+            this.switchState_();
+        }
     };
 
 

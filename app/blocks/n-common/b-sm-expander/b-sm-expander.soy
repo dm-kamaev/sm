@@ -2,6 +2,9 @@
  * @fileoverview Expander component template. It take content as for expandable
  * block.
  * When expanded, increase own heigh and may change parent block height.
+ *
+ * If content is empty, not show arrow and put corresponding to this state
+ * value to data params
  */
 {namespace sm.bSmExpander.Template}
 
@@ -84,6 +87,9 @@
 /**
  * Icon template
  * @param params {{
+ *     data: {
+ *         content: (string|undefined)
+ *     },
  *     config: {
  *         theme: (string|undefined)
  *         notShowIcon: boolean
@@ -93,7 +99,7 @@
  */
 {template .icon_ kind="html"}
     <div class="{call .rootClass /}__icon-wrap">
-        {if not $params?.config.notShowIcon}
+        {if $params?.data.content}
             {call .foldedStateIcon_ data="all" /}
             {call .expandedStateIcon_ data="all" /}
         {/if}
@@ -105,7 +111,8 @@
  * Expander text template
  * @param params {{
  *     data: {
- *         expanderText: string
+ *         expanderText: string,
+ *         content: (string|undefined)
  *     }
  * }}
  * @private
@@ -120,7 +127,9 @@
                         'content': $params.data.expanderText
                     ],
                     'config': [
-                        'size': 'xxxl'
+                        'size': 'xxl',
+                        'disableHover': $params.data.content ? false : true,
+                        'theme': $params.data.content ? 'default' : 'dark'
                     ]
                 ]
             ] /}
@@ -224,6 +233,7 @@
  */
 {template .attributes kind="attributes"}
     {let $data: quoteKeysIfJs([
+        'isEmptyContent': $params.data.content ? false : true,
         'isExpanded': $params.config.isExpanded
     ]) /}
 

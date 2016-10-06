@@ -24,16 +24,6 @@ goog.scope(function() {
 
 
     /**
-     * Search address for different entity types
-     * @enum {string}
-     */
-    Badge.SearchAddress = {
-        SCHOOL: 'school',
-        COURSE: 'courseSearch'
-    };
-
-
-    /**
      * Possible antity types
      * @enum {string}
      */
@@ -130,29 +120,8 @@ goog.scope(function() {
      * @private
      */
     Badge.prototype.buildRedirectHref_ = function(data) {
-        return this.buildSearchAddress_() + '?' +
+        return document.location.pathname + '?' +
             goog.uri.utils.buildQueryDataFromMap(data);
-    };
-
-
-    /**
-     * Build search page address
-     * @return {string}
-     * @private
-     */
-    Badge.prototype.buildSearchAddress_ = function() {
-        var result = '/';
-
-        switch (this.params.entityType) {
-            case Badge.EntityType.COURSE:
-                result += Badge.SearchAddress.COURSE;
-                break;
-            case Badge.EntityType.SCHOOL:
-                result += Badge.SearchAddress.SCHOOL;
-                break;
-        }
-
-        return result;
     };
 
 

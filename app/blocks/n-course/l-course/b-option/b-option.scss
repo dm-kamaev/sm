@@ -16,18 +16,28 @@
     display: inline-block;
 
     width: 360px;
+    margin-bottom: 15px;
+}
+
+.b-option__feature-list {
+    font-family: 'PT Serif', serif;
+    font-size: 16px;
+    line-height: 22px;
 }
 
 .b-option__cost {
     display: inline-block;
     float: right;
 
-    font: 16px 'Proxima', Arial, sans-serif;
+    font: 19px 'Proxima', Arial, sans-serif;
     font-weight: 700;
+    line-height: 24px;
 }
 
 .b-option__enroll-button {
     float: right;
+
+    display: inline-block;
 
     margin-left: 90px;
 
@@ -35,7 +45,7 @@
 
     color: #ee392f;
 
-    font: 16px 'Proxima', Arial, sans-serif;
+    font: 19px 'Proxima', Arial, sans-serif;
     font-weight: 700;
 }
 
@@ -47,27 +57,14 @@
     display: block;
 }
 
+
 @include media-s {
+    .b-option__description {
+        margin-bottom: 10px;
+    }
+
     .b-option__enroll-button {
         margin-left: 50px;
-    }
-}
-
-@include media-xs {
-    .b-option__description {
-        display: block;
-
-        width: 100%;
-    }
-
-    .b-option__enroll-button {
-        float: none;
-
-        margin-left: 30px;
-    }
-
-    .b-option__cost {
-        display: none;
     }
 
     .b-option__button-text_xs {
@@ -76,5 +73,25 @@
 
     .b-option__button-text_s {
         display: none;
+    }
+
+    .b-option__cost {
+        display: none;
+    }
+}
+
+
+@include media-xs {
+    .b-option__description {
+        display: block;
+
+        width: 100%;
+        margin-bottom: 7px;
+    }
+
+    .b-option__enroll-button {
+        float: none;
+
+        margin-left: 30px;
     }
 }

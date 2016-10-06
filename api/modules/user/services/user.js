@@ -1,6 +1,10 @@
-var async = require('asyncawait/async'),
+'use strict';
+
+const async = require('asyncawait/async'),
     await = require('asyncawait/await'),
     axios = require('axios');
+
+const services = require('../../../../app/components/services').all;
 
 const config = require('../../../../app/config').config;
 
@@ -10,18 +14,22 @@ const USER_API = config.userApi,
     POST_AUTH = '/oauth/',
     REDIRECT_URI = config.redirectUri;
 
-var service = {
+let service = {
     name: 'user'
 };
 
 /**
- * @param {Object} data
- * @param {string} data.code
- * @param {string} data.type
+ * @param  {Object} data
+ * @param  {string} data.code
+ * @param  {string} data.type
+ * @param  {string} baseUrl
  * @return {string}
  */
-service.getUserByCode = async(function(data) {
-    var redirectUri = REDIRECT_URI + '/' + data.type,
+service.getUserByCode = async(function(data, baseUrl) {
+    let redirectUri = services.urls.addSubdomain(
+            REDIRECT_URI + '/' + data.type,
+            baseUrl
+        ),
         userUrlResponse = await(axios.post(AUTH_API + POST_AUTH, {
             code: data.code,
             type: data.type,
@@ -29,14 +37,14 @@ service.getUserByCode = async(function(data) {
         })),
         userUrl = userUrlResponse.headers.location;
 
-    var userDataResponse = await(axios.get(userUrl));
+    let userDataResponse = await(axios.get(userUrl));
 
     return userDataResponse.data;
 });
 
 /**
- * @param {string} id
- * @return {object}
+ * @param  {string} id
+ * @return {Object}
  */
 service.getUserById = async(function(id) {
     return await(axios.get(USER_API + GET_USER + id)).data;

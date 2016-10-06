@@ -206,7 +206,7 @@
     {if $params.data?.cost == 0}
         бесплатно
     {elseif $params.data?.cost}
-        от&nbsp;{$params.data.cost} руб./мес
+        от&nbsp;{$params.data.cost}&nbsp;руб.
     {else}
         цена&nbsp;по&nbsp;запросу
     {/if}
@@ -363,7 +363,8 @@
  * }}
  */
 {template .favoriteLink_ kind="html" private="true"}
-    <div class="{call .rootClass/}__badge {call .rootClass/}__badge_favorite">
+    <div class="{call .rootClass/}__badge {call .rootClass/}__badge_favorite
+        {sp}{cl.iUtils.Utils.CssClass.HIDDEN}">
         {call .renderChild}
             {param params: [
                 'type': 'favorite-link',

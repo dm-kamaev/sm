@@ -96,6 +96,8 @@
 
     &.b-sm-subheader__search_visible_s {
         display: none;
+
+        height: 100%;
     }
 }
 
@@ -341,7 +343,7 @@
 
 @include media-xs {
     .b-sm-subheader__body {
-        height: 120px;
+        height: 132px;
         padding: 0 30px;
     }
 
@@ -349,11 +351,16 @@
         height: 60px;
     }
 
-    .b-sm-subheader__section.b-sm-subheader__section_logo {
+    .b-sm-subheader__section_search {
+        height: 72px;
+    }
+
+    .b-sm-subheader__section_logo {
+        height: 72px;
         margin: 0;
     }
 
-    .b-sm-subheader__section.b-sm-subheader__section_links {
+    .b-sm-subheader__section_links {
         position: static;
 
         display: block;
@@ -379,7 +386,7 @@
         }
     }
 
-    .b-sm-subheader__section.b-sm-subheader__section_search {
+    .b-sm-subheader__section_search {
         width: 100%;
 
         border-bottom: 1px solid #e5e5e5;
@@ -422,7 +429,8 @@
     }
 
     .b-sm-subheader__logo-img {
-        height: 25px;
+        height: 26px;
+        margin-top: 14px;
     }
 
     .b-sm-subheader_entity-type_school {

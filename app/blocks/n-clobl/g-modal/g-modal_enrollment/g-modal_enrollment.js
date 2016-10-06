@@ -50,6 +50,14 @@ goog.scope(function() {
 
 
         /**
+         * Selected options data of user
+         * @type {sm.lCourse.bDepartment.Event.EnrollButtonClick.Data}
+         * @private
+         */
+        this.optionsData_ = {};
+
+
+        /**
          * Instance button
          * @type {sm.gButton.ButtonStendhal}
          * @private
@@ -99,6 +107,7 @@ goog.scope(function() {
 
     /**
      * Clear all fields
+     * @public
      */
     ModalEnrollment.prototype.clear = function() {
         this.nameField_.clear();
@@ -106,6 +115,16 @@ goog.scope(function() {
         this.commentField_.clean();
 
         this.button_.enable();
+    };
+
+
+    /**
+     * Set selected options data of user
+     * @param {Object} optionsData
+     * @public
+     */
+    ModalEnrollment.prototype.setOptionsData = function(optionsData) {
+        this.optionsData_ = optionsData ? optionsData : {};
     };
 
 
@@ -161,6 +180,8 @@ goog.scope(function() {
                 this.onSuccess_.bind(this),
                 this.onError_.bind(this)
             );
+
+        this.setOptionsData(null);
     };
 
 
@@ -251,7 +272,9 @@ goog.scope(function() {
             '_csrf': window['ctx']['csrf'],
             'name': this.nameField_.getValue(),
             'phone': this.phoneField_.getValue(),
-            'comment': this.commentField_.getValue()
+            'comment': this.commentField_.getValue(),
+            'link': window.location.href,
+            'department': this.optionsData_
         };
     };
 

@@ -34,6 +34,17 @@ class CourseSearchQuery extends SearchQuery {
     }
 
     /**
+     * @param {(number|undefined)} sortType
+     * @return {Object}
+     */
+    setSortType(sortType) {
+        this.setTypeOrder_(sortType);
+        this.setQueriesOrder_();
+
+        return this;
+    }
+
+    /**
      * @param {Array<number>} age
      * @return {Object}
      */
@@ -184,7 +195,7 @@ class CourseSearchQuery extends SearchQuery {
             .field('course.score_count', 'scoreCount')
             .field('course.total_score', 'totalScore')
             .field('course_option.id', 'courseOptionId')
-            .field('course_option.cost_per_hour', 'optionCost')
+            .field('course_option.total_cost', 'optionCost')
             .field('course_option.online', 'optionOnline')
             .field('address.id', 'addressId')
             .field('address.name', 'addressName')
@@ -253,7 +264,12 @@ class CourseSearchQuery extends SearchQuery {
             .field('course.score_count')
             .field('course.total_score')
             .field('course.brand_id')
-            .field('COUNT(course.id) OVER()', 'result_count');
+            .field('COUNT(course.id) OVER()', 'result_count')
+            .group('course.id')
+            .left_join('course_option',
+                null,
+                'course.id = course_option.course_id'
+            );
     }
 
     /**
@@ -266,13 +282,18 @@ class CourseSearchQuery extends SearchQuery {
 
     /**
      * @private
-     * @param {number} scoreSortType
+     * @param {number} sortType
      */
-    setScoreTypeOrder_(scoreSortType) {
+    setTypeOrder_(sortType) {
+        // this.baseQuery_
+        //     .order('course.score[' + sortType + '] DESC NULLS LAST', null);
+        // this.innerQuery_
+        //     .order('course.score[' + sortType + '] DESC NULLS LAST', null);
+        let order = sortType === '0' ? 'ASC' : 'DESC NULLS LAST';
         this.baseQuery_
-            .order('course.score[' + scoreSortType + '] DESC NULLS LAST', null);
+            .order(`course_option.total_cost ${order}`, null);
         this.innerQuery_
-            .order('course.score[' + scoreSortType + '] DESC NULLS LAST', null);
+            .order(`min(course_option.total_cost) ${order}`, null);
     }
 
     /**
@@ -288,8 +309,8 @@ class CourseSearchQuery extends SearchQuery {
      */
     setBaseOrder_() {
         this.baseQuery_
-            .order('course.total_score', false)
-            .order('course.score DESC NULLS LAST', null)
+            // .order('course.total_score', false)
+            // .order('course.score DESC NULLS LAST', null)
             .order('course.id', true)
             .order('address_metro.distance');
     }
@@ -299,8 +320,8 @@ class CourseSearchQuery extends SearchQuery {
      */
     setInnerOrder_() {
         this.innerQuery_
-            .order('course.total_score', false)
-            .order('course.score DESC NULLS LAST', null)
+            // .order('course.total_score', false)
+            // .order('course.score DESC NULLS LAST', null)
             .order('course.id', true);
     }
 
@@ -399,7 +420,7 @@ class CourseSearchQuery extends SearchQuery {
         if (this.courseDataCount_) {
             this.innerQuery_
                 .where(
-                    'course.id IN (' + this.generateSchoolDataQuery_() + ')'
+                    'course.id IN (' + this.generateCourseDataQuery_() + ')'
                 );
         }
     }
@@ -437,7 +458,7 @@ class CourseSearchQuery extends SearchQuery {
      * @private
      * @return {Object}
      */
-    generateSchoolDataQuery_() {
+    generateCourseDataQuery_() {
         return squel.select()
             .from('course_search_data')
             .field('DISTINCT course_id')

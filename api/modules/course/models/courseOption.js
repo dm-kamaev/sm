@@ -43,6 +43,10 @@ var CourseOption = db.define('CourseOption', {
     lengthWeeks: {
         type: Sequelize.INTEGER,
         field: 'length_weeks'
+    },
+    openSchedule: {
+        type: Sequelize.BOOLEAN,
+        field: 'open_schedule'
     }
 }, {
     underscored: true,

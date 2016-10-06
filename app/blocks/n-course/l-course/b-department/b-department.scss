@@ -1,0 +1,86 @@
+@import "../../../n-common/i-media/i-media";
+
+.b-department {
+    margin-bottom: 35px;
+    padding: 25px 0 10px;
+
+    font: 14px/19px Arial, sans-serif;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+
+}
+
+.b-department__title {
+    margin-bottom: 12px;
+}
+
+.b-department__metros {
+    display: inline-block;
+
+    color: gray;
+
+    font-size: 13px;
+}
+
+.b-department__metro {
+    display: inline-block;
+
+    white-space: pre-wrap;
+}
+
+.b-department__name {
+    display: inline-block;
+
+    margin-right: 30px;
+
+    font: 21px/38px Proxima, Arial, sans-serif;
+    font-weight: 700;
+}
+
+.b-department__option {
+    margin-bottom: 8px;
+}
+
+.b-department__horizontal-line {
+    margin-bottom: 20px;
+    margin-left: 30px;
+
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+
+    &:last-child {
+        margin-bottom: 0;
+
+        border-bottom: none;
+    }
+}
+
+@include media-s {
+    .b-department {
+        padding-bottom: 16px;
+    }
+
+    .b-department__title {
+        margin-bottom: 10px;
+    }
+
+    .b-department__name {
+        margin-bottom: 3px;
+    }
+}
+
+
+@include media-xs {
+    .b-department {
+        padding: 25px 0 0;
+    }
+
+    .b-department__name {
+        margin-bottom: 3px;
+    }
+
+    .b-department__option {
+        margin-bottom: 25px;
+    }
+}

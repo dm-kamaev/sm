@@ -16,7 +16,8 @@
  *     },
  *     search: {
  *         placeholder: (string|undefined),
- *         searchRedirect: boolean
+ *         redirect: boolean,
+ *         pageAlias: string
  *     },
  *     user: ?{
  *         firstName: ?string,
@@ -122,7 +123,8 @@
  *     data: {
  *         search: {
  *             placeholder: ?string,
- *             searchRedirect: ?boolean
+ *             redirect: ?boolean,
+ *             pageAlias: string
  *         }
  *     }
  * }}
@@ -254,7 +256,8 @@
  */
 {template .favorite_}
     <div class="{call .rootClass/}__user-control
-                {sp}{call .rootClass/}__user-control_favorite">
+                {sp}{call .rootClass/}__user-control_favorite
+                {sp}{cl.iUtils.Utils.CssClass.HIDDEN}">
         <div class="{call .rootClass/}__favorite-content">
             {call .renderChild}
                 {param params: [
@@ -328,7 +331,8 @@
  *     data: {
  *         search: {
  *             placeholder: ?string,
- *             searchRedirect: ?boolean
+ *             redirect: ?boolean,
+ *             pageAlias: string
  *         }
  *     },
  *     config: {
@@ -347,7 +351,8 @@
             'placeholder': $params.data?.search?.placeholder,
             'theme': 'min',
             'customClasses': $customClasses,
-            'redirect': $params.data?.search?.searchRedirect,
+            'redirect': $params.data?.search?.redirect,
+            'pageAlias': $params.data?.search?.pageAlias,
             'inputSize': 'min',
             'config': [
                 'entityType': $params.config.entityType,
@@ -365,7 +370,8 @@
  *     data: {
  *         search: {
  *             placeholder: ?string,
- *             searchRedirect: ?boolean
+ *             redirect: ?boolean,
+ *             pageAlias: string
  *         }
  *     },
  *     config: {
@@ -384,7 +390,8 @@
             'placeholder': $params.data?.search?.placeholder,
             'theme': 'foldable',
             'customClasses': $customClasses,
-            'redirect': $params.data?.search?.searchRedirect,
+            'redirect': $params.data?.search?.redirect,
+            'pageAlias': $params.data?.search?.pageAlias,
             'inputSize': 'min',
             'config': [
                 'entityType': $params.config.entityType,

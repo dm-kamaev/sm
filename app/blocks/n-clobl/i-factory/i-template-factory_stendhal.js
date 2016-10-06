@@ -44,9 +44,11 @@ goog.require('sm.gList.TemplateSelect');
 goog.require('sm.gModal.TemplateEnrollment');
 goog.require('sm.gModal.TemplateFeedback');
 goog.require('sm.gModal.TemplateStendhal');
+goog.require('sm.gModal.TemplateSuccess');
 goog.require('sm.gTab.TemplateCatalog');
 goog.require('sm.gTab.TemplateStendhal');
 goog.require('sm.gTextarea.TemplateStendhal');
+goog.require('sm.lCourse.bDepartment.Template');
 goog.require('sm.lCourse.bInformationBoard.Template');
 goog.require('sm.lCourse.bOption.Template');
 goog.require('sm.lInformation.bFeedbackBoard.Template');
@@ -202,6 +204,10 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'modal-enrollment',
             sm.gModal.TemplateEnrollment.modal
+        )
+        .setTemplateListItem(
+            'modal-success',
+            sm.gModal.TemplateSuccess.modal
         );
 
     /** Global blocks an their heirs **/
@@ -334,6 +340,10 @@ sm.iFactory.TemplateFactoryStendhal = function() {
     .setTemplateListItem(
         'lCourse-option',
         sm.lCourse.bOption.Template.option
+    )
+    .setTemplateListItem(
+        'lCourse-department',
+        sm.lCourse.bDepartment.Template.address
     );
 };
 goog.inherits(sm.iFactory.TemplateFactoryStendhal, cl.iFactory.TemplateFactory);
