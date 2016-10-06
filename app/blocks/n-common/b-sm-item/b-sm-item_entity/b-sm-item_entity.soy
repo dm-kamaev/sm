@@ -363,7 +363,8 @@
  * }}
  */
 {template .favoriteLink_ kind="html" private="true"}
-    <div class="{call .rootClass/}__badge {call .rootClass/}__badge_favorite">
+    <div class="{call .rootClass/}__badge {call .rootClass/}__badge_favorite
+        {sp}{cl.iUtils.Utils.CssClass.HIDDEN}">
         {call .renderChild}
             {param params: [
                 'type': 'favorite-link',
