@@ -92,8 +92,9 @@ module.exports = class {
      */
     getUniqueOptions(generalOptions) {
         let uniqueOptionValues = this.getUniqueOptionValues_(generalOptions),
-            uniqueOptions = this.options_.map(option =>
-                this.getUniqueOptionValue_(option, uniqueOptionValues));
+            uniqueOptions = this.options_
+                .map(option =>
+                    this.getUniqueOptionValue_(option, uniqueOptionValues));
 
         return this.groupByDepartments_(uniqueOptions);
     }
@@ -151,7 +152,9 @@ module.exports = class {
 
         uniqueOptionValues.map(uniqueOptionValue => {
             let key = uniqueOptionValue.key;
-            result[key] = option[key];
+            if (option[key]) {
+                result[key] = option[key];
+            }
         });
         result.departments = option.departments;
 
