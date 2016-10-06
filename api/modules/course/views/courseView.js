@@ -30,6 +30,7 @@ view.page = function(course) {
     return {
         id: course.id,
         name: course.name,
+        category: 'proforientacija',
         description: course.description,
         fullDescription: this.formatFullDescription(course.fullDescription),
         score: scoreView.results(course.score, course.totalScore).data,

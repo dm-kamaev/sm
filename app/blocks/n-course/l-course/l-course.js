@@ -1,6 +1,7 @@
 goog.provide('sm.lCourse.Course');
 
 goog.require('cl.iRequest.Request');
+goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.iLayout.LayoutStendhal');
 goog.require('sm.iSmViewport.SmViewport');
 goog.require('sm.lCourse.View');
@@ -86,7 +87,15 @@ goog.scope(function() {
     };
     goog.inherits(sm.lCourse.Course, sm.iLayout.LayoutStendhal);
     var Course = sm.lCourse.Course,
-        Viewport = sm.iSmViewport.SmViewport;
+        Viewport = sm.iSmViewport.SmViewport,
+        Analytics = sm.iAnalytics.Analytics;
+
+
+    /**
+     * Place from which the analyst goes enum
+     * @enum {string}
+     */
+    Course.PLACE_ANALITICS = 'course details';
 
 
     /**
@@ -115,6 +124,8 @@ goog.scope(function() {
         this.initActionButtonsListeners_();
         this.initDepartmentListListeners_();
         this.initModalsListeners_();
+
+        this.sendAnalyticsPageview_();
     };
 
 
@@ -156,6 +167,12 @@ goog.scope(function() {
             sm.gModal.ModalEnrollment.Event.SUCCESS,
             this.onSendEnrollmentSuccess_
         );
+
+        this.getHandler().listen(
+            this.modalEnrollment_,
+            sm.gModal.ModalEnrollment.Event.SHOW,
+            this.onModalEnrollmentShow_
+        );
     };
 
 
@@ -176,6 +193,90 @@ goog.scope(function() {
      */
     Course.prototype.onSendEnrollmentSuccess_ = function() {
         this.modalSuccess_.show();
+    };
+
+
+    /**
+     * Send enrollment success handler
+     * @private
+     */
+    Course.prototype.onModalEnrollmentShow_ = function() {
+        this.sendAnalyticsCheckoutEnrollment_();
+    };
+
+
+    /**
+     * Send analytics about pageview
+     * @private
+     */
+    Course.prototype.sendAnalyticsPageview_ = function() {
+        // console.log('sendAnalyticsPageview_');
+        var data = this.getEcAnalyticsCourseData_();
+
+        Analytics.getInstance().viewProduct(data);
+        Analytics.getInstance().setView();
+        Analytics.getInstance().send('pageview');
+    };
+
+
+    /**
+     * Send analytics about shown modal enrollment
+     * @private
+     */
+    Course.prototype.sendAnalyticsCheckoutEnrollment_ = function() {
+        // console.log('sendAnalyticsCheckoutEnrollment_');
+        var courseData = this.getEcAnalyticsCourseData_(),
+            enrollmentData = this.getEcAnalyticsEnrollmentData_();
+
+        Analytics.getInstance().checkoutProduct(courseData, enrollmentData);
+    };
+
+    /**
+     * Send analytics about send Enrollment
+     * @param {number} id - id enrollment
+     * @private
+     */
+    Course.prototype.sendAnalyticsSendEnrollment_ = function(id) {
+        // console.log('sendAnalyticsSendEnrollment_');
+        var courseData = this.getEcAnalyticsCourseData_(),
+            enrollmentData = this.getEcAnalyticsEnrollmentData_(id);
+
+        Analytics.getInstance().purchaseProduct(courseData, enrollmentData);
+    };
+
+
+    /**
+     * Get course data for ecommerce
+     * @return {Object}
+     * @private
+     */
+    Course.prototype.getEcAnalyticsCourseData_ = function() {
+        return {
+            'id': this.params.id,
+            'name': this.params.name,
+            'category': this.params.category
+        };
+        // console.log(data);
+    };
+
+
+    /**
+     * Get enrollment data for ecommerce
+     * @param {number=} opt_id - id enrollment
+     * @return {Object}
+     * @private
+     */
+    Course.prototype.getEcAnalyticsEnrollmentData_ = function(opt_id) {
+        var data = {
+            'list': 'course details',
+            'revenue': this.params.cost.replace(/\D/gi, '')
+        };
+
+        if (opt_id) {
+            data['id'] = opt_id;
+        }
+        // console.log(data);
+        return data;
     };
 
 

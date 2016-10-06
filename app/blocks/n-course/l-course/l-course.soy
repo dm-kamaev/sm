@@ -21,6 +21,7 @@
  *             cutText: Array<string>,
  *             fullText: (Array<string>|undefined)
  *         },
+ *         category: string,
  *         score: sm.bSmScore.TemplateBrief.Params.Data,
  *         cost: ?string,
  *         generalOptions: sm.lCourse.bInformationBoard.Template.Params.Data,
@@ -782,7 +783,9 @@
  *         },
  *         entityData: {
  *             id: number,
- *             name: string
+ *             name: string,
+ *             cost: string,
+ *             category: string
  *         }
  *     },
  *     config: {
@@ -797,6 +800,8 @@
             {param json: [
                 'id': $params.data.entityData?.id,
                 'name': $params.data.entityData?.name,
+                'category': $params.data.entityData?.category,
+                'cost': $params.data.entityData?.cost,
                 'isCommented': $params.data.user?.isCommented,
                 'isUserAuthorized': $params.data.user ? true : false,
                 'authSocialLinks': $params.data?.authSocialLinks,

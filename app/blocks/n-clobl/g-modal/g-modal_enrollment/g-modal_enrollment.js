@@ -76,6 +76,8 @@ goog.scope(function() {
      * @const
      */
     ModalEnrollment.Event = {
+        SHOW: sm.gModal.ModalStendhal.Event.SHOW,
+        HIDE: sm.gModal.ModalStendhal.Event.HIDE,
         SUCCESS: goog.events.getUniqueId('success'),
         ERROR: goog.events.getUniqueId('error')
     };

@@ -24,10 +24,26 @@ goog.scope(function() {
             opt_type, opt_modifier);
     };
     goog.inherits(sm.lCourse.View, sm.iLayout.ViewStendhal);
-
-
-
     var View = sm.lCourse.View;
+
+
+    /**
+     * Data parameters from dom element.
+     * @typedef {{
+     *     id: number,
+     *     name: string,
+     *     category: string,
+     *     cost: string,
+     *     isCommented: boolean,
+     *     isUserAuthorzed: boolean,
+     *     authSocialLinks:  {
+     *             vk: (string|undefined),
+     *             fb: (string|undefined)
+     *     },
+     *     type: string
+     * }}
+     */
+    sm.lCourse.View.Params;
 
 
     /**
@@ -83,5 +99,26 @@ goog.scope(function() {
                 )
             }
         );
+    };
+
+
+    /**
+     * Transform raw params from dom element to sm.lCourse.View.Params
+     * @param  {Object} rawParams
+     * @return {sm.lCourse.View.Params}
+     * @protected
+     * @override
+     */
+    View.prototype.transformParams = function(rawParams) {
+        var params = View.base(this, 'transformParams', rawParams);
+
+        goog.object.extend(params, {
+            id: rawParams['id'],
+            name: rawParams['name'],
+            category: rawParams['category'],
+            cost: rawParams['cost']
+        });
+
+        return params;
     };
 });  // goog.scope

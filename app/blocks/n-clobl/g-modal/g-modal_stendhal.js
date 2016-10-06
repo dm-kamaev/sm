@@ -42,6 +42,17 @@ goog.scope(function() {
 
 
     /**
+     * Events enum
+     * @enum {string}
+     * @const
+     */
+    Modal.Event = {
+        SHOW: cl.gModal.Modal.Event.SHOW,
+        HIDE: cl.gModal.Modal.Event.HIDE
+    };
+
+
+    /**
      * render modal
      * @param {Object=} opt_params
      * @param {bool=} opt_selfDestroy

@@ -130,7 +130,60 @@ goog.scope(function() {
 
 
     /**
-     * Add information about product
+     * Add information about checkout product
+     * @param {{
+     *     id: string,
+     *     name: string,
+     *     brand: ?string,
+     *     category: ?string,
+     *     variant: ?string,
+     *     price: ?string,
+     *     quantity: ?number,
+     *     coupon: ?string,
+     *     position: ?number
+     * }} productParams
+     * @param {{
+     *     id: string,
+     *     affiliation: ?string,
+     *     revenue: ?number,
+     *     tax: ?number,
+     *     shipping: ?number,
+     *     coupon: ?string,
+     *     list: ?string,
+     *     step: ?number,
+     *     option: ?string
+     * }} actionParams
+     */
+    Analytics.prototype.checkoutProduct = function(productParams,
+        actionParams) {
+
+        ga('ec:addProduct', productParams);
+        ga('ec:setAction', 'checkout', actionParams);
+    };
+
+
+    /**
+     * Add information about purchase product
+     * @param {{
+     *     id: string,
+     *     name: string,
+     *     brand: ?string,
+     *     category: ?string,
+     *     variant: ?string,
+     *     price: ?string,
+     *     quantity: ?number,
+     *     coupon: ?string,
+     *     position: ?number
+     * }} params
+     */
+    Analytics.prototype.purchaseProduct = function(params) {
+        ga('ec:addProduct', params);
+        ga('ec:setAction', 'purchase');
+    };
+
+
+    /**
+     * Add information about view product
      * @param {{
      *     id: string,
      *     name: string,
