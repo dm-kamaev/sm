@@ -25,6 +25,10 @@ goog.require('sm.bSmBalloon.SmBalloon');
 goog.require('sm.bSmBalloon.View');
 goog.require('sm.bSmCheckbox.SmCheckbox');
 goog.require('sm.bSmCheckbox.View');
+goog.require('sm.bSmCollapsedText.SmCollapsedText');
+goog.require('sm.bSmCollapsedText.View');
+goog.require('sm.bSmFavorite.SmFavorite');
+goog.require('sm.bSmFavorite.View');
 goog.require('sm.bSmItem.SmItem');
 goog.require('sm.bSmItem.SmItemEntity');
 goog.require('sm.bSmItem.View');
@@ -43,6 +47,8 @@ goog.require('sm.bSmScore.SmScore');
 goog.require('sm.bSmScore.SmScoreBrief');
 goog.require('sm.bSmScore.View');
 goog.require('sm.bSmScore.ViewBrief');
+goog.require('sm.bSmStars.SmStars');
+goog.require('sm.bSmStars.View');
 goog.require('sm.bSmSubheader.SmSubheader');
 goog.require('sm.bSmSubheader.View');
 goog.require('sm.gAuthSocial.ViewStendhal');
@@ -50,12 +56,16 @@ goog.require('sm.gDropdown.DropdownSelect');
 goog.require('sm.gDropdown.ViewSelect');
 goog.require('sm.gInput.DigitInput');
 goog.require('sm.gInput.DigitInputView');
+goog.require('sm.gInput.InputPhone');
 goog.require('sm.gInput.InputStendhal');
+goog.require('sm.gInput.ViewPhone');
 goog.require('sm.gInput.ViewStendhal');
 goog.require('sm.gList.List.Select');
 goog.require('sm.gList.ViewSelect');
+goog.require('sm.gModal.ModalEnrollment');
 goog.require('sm.gModal.ModalFeedback');
 goog.require('sm.gModal.ModalStendhal');
+goog.require('sm.gModal.ViewEnrollment');
 goog.require('sm.gModal.ViewFeedback');
 goog.require('sm.gModal.ViewStendhal');
 goog.require('sm.gTextarea.TextareaStendhal');
@@ -176,6 +186,16 @@ sm.iFactory.FactoryStendhal = function() {
             view: sm.lSearchResult.bFilterSearch.View
         });
 
+    /** Heirs of the clobl blocks */
+    this.setControlListItem('phone-input', {
+            control: sm.gInput.InputPhone,
+            view: sm.gInput.ViewPhone
+        })
+        .setControlListItem('modal-enrollment', {
+            control: sm.gModal.ModalEnrollment,
+            view: sm.gModal.ViewEnrollment
+        });
+
     /** Common blocks and their heirs **/
     this.setControlListItem('smSubheader', {
             control: sm.bSmSubheader.SmSubheader,
@@ -209,6 +229,10 @@ sm.iFactory.FactoryStendhal = function() {
             control: sm.bSmBadge.SmBadge,
             view: sm.bSmBadge.View
         })
+        .setControlListItem('smCollapsedText', {
+            control: sm.bSmCollapsedText.SmCollapsedText,
+            view: sm.bSmCollapsedText.View
+        })
         .setControlListItem('smCheckbox', {
             control: sm.bSmCheckbox.SmCheckbox,
             view: sm.bSmCheckbox.View
@@ -228,6 +252,14 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('smLink', {
             control: sm.bSmLink.SmLink,
             view: sm.bSmLink.View
+        })
+        .setControlListItem('smStars', {
+            control: sm.bSmStars.SmStars,
+            view: sm.bSmStars.View
+        })
+        .setControlListItem('smFavorite', {
+            control: sm.bSmFavorite.SmFavorite,
+            view: sm.bSmFavorite.View
         });
 
     /** l-information blocks **/

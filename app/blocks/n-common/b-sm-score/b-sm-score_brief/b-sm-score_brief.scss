@@ -4,7 +4,7 @@
         display: inline-block;
     }
 
-    .b-sm-score__mark.b-sm-score__mark_primary {
+    .b-sm-score__mark_primary {
         .b-sm-score__mark-name {
             display: inline-block;
 
@@ -17,7 +17,7 @@
         }
     }
 
-    .b-sm-score__mark.b-sm-score__mark_secondary {
+    .b-sm-score__mark_secondary {
         width: 100%;
         margin-bottom: 7px;
         padding-top: 1px;
@@ -53,13 +53,13 @@
 
 /** States **/
 .b-sm-score_brief.b-sm-score_active {
-    .b-sm-score__mark.b-sm-score__mark_primary {
+    .b-sm-score__mark_primary {
         cursor: pointer;
     }
 
     &.b-sm-score_hoverable {
         &.b-sm-score_primary-mark-name-hidden.b-sm-score_secondary-marks-hidden {
-            .b-sm-score__mark.b-sm-score__mark_primary:hover {
+            .b-sm-score__mark_primary:hover {
                 .b-sm-score__mark-name {
                     display: inline-block;
                 }
@@ -67,7 +67,7 @@
         }
 
         &.b-sm-score_primary-mark-name-visible.b-sm-score_hoverable:hover {
-            .b-sm-score__mark.b-sm-score__mark_primary {
+            .b-sm-score__mark_primary {
                 color: #ff0000;
             }
         }
@@ -76,7 +76,7 @@
 
 /** State when hint closed **/
 .b-sm-score_brief.b-sm-score_primary-mark-name-hidden {
-    .b-sm-score__mark.b-sm-score__mark_primary {
+    .b-sm-score__mark_primary {
         .b-sm-score__mark-name {
             display: none;
         }
@@ -86,7 +86,7 @@
 
 /** State when hint opened **/
 .b-sm-score_brief.b-sm-score_primary-mark-name-hidden.b-sm-score_secondary-marks-visible {
-    .b-sm-score__mark.b-sm-score__mark_primary {
+    .b-sm-score__mark_primary {
         .b-sm-score__mark-name {
             display: inline-block;
         }
@@ -100,11 +100,31 @@
     font-size: 13px;
     line-height: 20px;
 
-    .b-sm-score__mark.b-sm-score__mark_primary {
+    .b-sm-score__mark_primary {
         .b-sm-score__mark-value {
             font-family: 'Proxima', Arial, sans-serif;
             font-size: 19px;
             font-weight: 600;
+        }
+    }
+}
+
+.b-sm-score_brief.b-sm-score_light-theme {
+    &.b-sm-score_hoverable {
+        &.b-sm-score_primary-mark-name-hidden.b-sm-score_secondary-marks-hidden {
+            .b-sm-score__mark_primary:hover {
+                .b-sm-score__mark-name {
+                    display: none;
+                }
+            }
+        }
+    }
+
+    &.b-sm-score_primary-mark-name-hidden.b-sm-score_secondary-marks-visible {
+        .b-sm-score__mark_primary {
+            .b-sm-score__mark-name {
+                display: none;
+            }
         }
     }
 }

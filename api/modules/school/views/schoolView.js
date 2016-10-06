@@ -23,6 +23,8 @@ const seoView = require('./seoView.js');
 
 const commentView = require('../../comment/views/commentView');
 
+const entityType = require('../../entity/enums/entityType');
+
 var schoolView = {};
 
 
@@ -124,7 +126,7 @@ var nearestMetro = function(addresses) {
     return lodash.uniq(addresses
         .map(address => {
             return address.addressMetroes[0] &&
-                address.addressMetroes[0].metroStation.name
+                address.addressMetroes[0].metro.name
                     .replace('метро ', '');
         })
         .filter(address => address)
@@ -284,7 +286,7 @@ schoolView.list = function(schools, opt_criterion, opt_page) {
                     fullName: school.fullName,
                     ratings: ratingView.ratingResultView(school.rankDogm),
                     metroStations: addressView.getMetro(school.addresses),
-                    area: addressView.getAreas(school.addresses),
+                    area: addressView.getArea(school.addresses)[0],
                     position: getPosition(i, opt_page),
                     isFavorite: school.isFavorite
                 };
@@ -610,8 +612,8 @@ schoolView.listCompact = function(schoolsData) {
             id: school.id,
             name: getName(school.name),
             score: scoreView.schoolListCompact(school.totalScore),
-            metroStations: addressView.getMetro(school.addresses),
-            area: addressView.getAreas(school.addresses),
+            metroStations: addressView.nearestMetro(school.addresses),
+            area: addressView.getArea(school.addresses)[0],
             alias: getAlias(itemUrls, school.id)
         };
     });
@@ -654,12 +656,13 @@ schoolView.listCompact = function(schoolsData) {
 schoolView.listCompactItem = function(schoolData) {
     var school = schoolData.item,
         page = schoolData.itemUrl;
+
     return {
         id: school.id,
         name: getName(school.name),
         score: scoreView.schoolListCompact(school.totalScore),
-        metroStations: addressView.getMetro(school.addresses),
-        area: addressView.getAreas(school.addresses),
+        metroStations: addressView.nearestMetro(school.addresses),
+        area: addressView.getArea(school.addresses)[0],
         alias: page.alias
     };
 };
@@ -699,7 +702,7 @@ schoolView.isFavorite = function(school, favoriteItems) {
  *     }),
  *     url: string
  * }>} schools
- * @param {Array<number>} favoriteItemIds
+ * @param {Array<models.Favorite>} favorites
  * @return {Array<{
  *     id: number,
  *     name: {
@@ -720,13 +723,14 @@ schoolView.isFavorite = function(school, favoriteItems) {
  *     isFavorite: boolean
  * }>}
  */
-schoolView.listWithFavorites = function(schools, favoriteItemIds) {
+schoolView.listWithFavorites = function(schools, favorites) {
+    var type = entityType.SCHOOL;
+
     return schools.map(school => {
-        var schoolWithFavorite = school;
-        schoolWithFavorite.isFavorite = favoriteItemIds.some(itemId => {
-            return itemId == school.id;
-        });
-        return schoolWithFavorite;
+        school.isFavorite = favorites.some(favorite =>
+            (favorite.entityType == type && school.id == favorite.entityId)
+        );
+        return school;
     });
 };
 
@@ -737,6 +741,49 @@ schoolView.listWithFavorites = function(schools, favoriteItemIds) {
  */
 schoolView.uniqueIds = function(schools) {
     return lodash.uniq(schools.map(school => school.id));
+};
+
+
+/**
+ * Used for item of list favorites
+ * @param {{
+ *     entity: models.School,
+ *     type: string,
+ *     url: models.Page
+ * }} data
+ * @return {{
+ *     id: number,
+ *     type: string,
+ *     name: {
+ *         light: string,
+ *         bold: ?string
+ *     },
+ *     alias: string,
+ *     score: number,
+ *     metro: ?Array<{
+ *         id: number,
+ *         name: string
+ *     }>,
+ *     area: ?Array<{
+ *         id: number,
+ *         name: string
+ *     }>
+ * }}
+ */
+schoolView.item = function(data) {
+    var entity = data.entity,
+        type = data.type,
+        url = data.alias;
+
+    return {
+        id: entity.id,
+        type: type,
+        name: {light: entity.name},
+        score: entity.totalScore,
+        metro: addressView.nearestMetro(entity.addresses),
+        area: addressView.getArea(entity.addresses),
+        alias: entityType.SCHOOL + '/' + url.alias
+    };
 };
 
 module.exports = schoolView;

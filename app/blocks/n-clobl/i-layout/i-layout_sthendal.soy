@@ -34,16 +34,16 @@
 
 /**
  * @typedef {{
+ *     modifier: string,
+ *     entityType: string,
+ *     page: (string|undefined),
+ *     year: (number|undefined),
  *     staticVersion: (string|undefined),
  *     analyticsId: (string|undefined),
  *     yandexMetrikaId: ?number,
  *     domain: (string|undefined),
  *     fbClientId: ?number,
- *     csrf: string,
- *     year: (number|undefined),
- *     modifier: string,
- *     type: string,
- *     page: (string|undefined)
+ *     csrf: string
  * }} sm.iLayout.TemplateStendhal.Params.Config
  */
 
@@ -228,11 +228,10 @@
  * @override
  */
 {template .content autoescape="strict" kind="html"}
-    <div class="{call .rootClass/}"
-        {call .attributes data="all" /}>
-        {call .subheader data="all" /}
-        {call .bodyContent_ data="all" /}
-        {call .footer data="all" /}
+    <div class="{call .rootClass/}" {call .attributes data="all"/}>
+        {call .mainSubheader data="all" /}
+        {call .mainContent data="all" /}
+        {call .mainFooter data="all" /}
     </div>
 {/template}
 
@@ -244,13 +243,13 @@
  *         subheader: sm.bSmSubheader.Template.Params.Data
  *     },
  *     config: {
- *         type: string,
+ *         entityType: string,
  *         modifier: ?string
  *     }
  * }}
  * @protected
  */
-{template .subheader autoescape="strict" kind="html"}
+{template .mainSubheader autoescape="strict" kind="html"}
     <div class="{call .rootClass/}__subheader">
         {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
@@ -259,7 +258,8 @@
                 'renderParams': [
                     'data': $params.data.subHeader,
                     'config': [
-                        'entityType': $params.config.type
+                        'bottomLine': true,
+                        'entityType': $params.config.entityType
                     ]
                 ]
             ]/}
@@ -272,7 +272,7 @@
  * Content
  * @protected
  */
-{template .bodyContent autoescape="strict" kind="html"}
+{template .mainContent autoescape="strict" kind="html"}
 {/template}
 
 
@@ -286,7 +286,7 @@
  * }
  * @protected
  */
-{template .footer autoescape="strict" kind="html"}
+{template .mainFooter autoescape="strict" kind="html"}
     <div class="{call .rootClass/}__footer">
         {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [

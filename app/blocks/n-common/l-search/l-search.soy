@@ -39,6 +39,7 @@
  *         countResults: number,
  *         searchText: ?string,
  *         placeholder: ?string,
+ *         pageAlias: string,
  *         declensionEntityType: {
  *             nom: string,
  *             gen: string,
@@ -91,7 +92,7 @@
  */
 {template .layoutScript kind="html"}
     {call cl.iStatic.Template.script}
-        {param path: 'l-search.js' /}
+        {param path: '/l-search.js' /}
         {param staticVersion: $params?.config?.staticVersion /}
     {/call}
 {/template}
@@ -155,20 +156,12 @@
  *         }>
  *     },
  *     config: {
- *         type: string
+ *         entityType: string
  *     }
  * }}
  * @override
  */
-{template .bodyContent_ autoescape="strict" kind="html"}
-    {let $data: [
-        'searchSettings': $params.data.searchSettings,
-        'params': [
-            'isUserAuthorized': $params.data?.user ? true : false,
-            'authSocialLinks': $params.data?.authSocialLinks
-        ]
-    ]/}
-
+{template .mainContent autoescape="strict" kind="html"}
     <div class="{call .rootClass/}__body">
         {call .sectionMap_ data="all" /}
         {call .sectionContent_ data="all" /}
@@ -221,7 +214,9 @@
                     'renderParams': [
                         'data': $params.data.map,
                         'config': [
-                            'enableScrollZoom': false
+                            'enableScrollZoom': false,
+                            'alignZoomControl': 'left',
+                            'sizeViewportShow': 'xs'
                         ]
                     ]
                 ] /}
@@ -253,7 +248,7 @@
  *         filterPanel: {sm.lSearch.bFilterPanel.Template.Params}
  *     },
  *     config: {
- *         type: string
+ *         entityType: string
  *     }
  * }}
  */
@@ -279,7 +274,7 @@
  *         }
  *     },
  *     config: {
- *         type: string
+ *         entityType: string
  *     }
  * }}
  */
@@ -297,11 +292,12 @@
  *     data: {
  *         search: {
  *             placeholder: ?string,
+ *             pageAlias: string,
  *             searchText: ?string
  *         }
  *     },
  *     config: {
- *         type: string
+ *         entityType: string
  *     }
  * }}
  */
@@ -317,10 +313,11 @@
                 'text': $params.data?.search?.searchText,
                 'theme': 'min',
                 'redirect': false,
+                'pageAlias': $params.data?.search?.pageAlias,
                 'inputSize': 'min',
                 'customClasses': $customClasses,
                 'config': [
-                    'entityType': $params.config.type,
+                    'entityType': $params.config.entityType,
                     'height': 's'
                 ]
             ]/}
@@ -407,13 +404,20 @@
         {/if}
     {/let}
 
+    {let $customClasses kind="html"}
+        {call .rootClass/}__results-list
+    {/let}
+
     <div class="{$classes}">
         {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
                 'factory': $params.config.modifier,
                 'type': 'smItemList',
                 'renderParams': [
-                    'data': $params.data.entityList
+                    'data': $params.data.entityList,
+                    'config': [
+                        'customClasses': [$customClasses]
+                    ]
                 ]
             ] /}
         {/call}
@@ -946,7 +950,7 @@
  *         }
  *     },
  *     config: {
- *         type: string
+ *         entityType: string
  *     }
  * }}
  * @override
@@ -960,7 +964,7 @@
                 'authSocialLinks': $params.data?.authSocialLinks,
                 'declensionEntityType': $params.data?.search?.declensionEntityType,
                 'countResults': $params.data.search.countResults,
-                'type': $params?.config.type
+                'type': $params?.config.entityType
             ] /}
         {/call}"
 {/template}

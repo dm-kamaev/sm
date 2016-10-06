@@ -65,6 +65,7 @@ goog.scope(function() {
             sm.bSmBadge.SmBadge.getRenderParams(rawParams['metro']);
         var areaParams =
             sm.bSmBadge.SmBadge.getRenderParams(rawParams['area']);
+
         return {
             data: {
                 id: rawParams['id'],
@@ -74,7 +75,7 @@ goog.scope(function() {
                     bold: rawParams['name']['bold']
                 },
                 alias: rawParams['alias'],
-                score: sm.bSmScore.SmScore.getRenderParams(rawParams['score']),
+                score: rawParams['score'],
                 description: rawParams['description'],
                 metro: metroParams.data,
                 area: areaParams.data

@@ -3,6 +3,10 @@ var router = express.Router();
 
 var courseController = require('./courseController');
 
-router.get('/coursesearch', courseController.search);
+router.get(
+    '/proforientacija/:brandName/:name',
+    courseController.information
+);
+router.get('/proforientacija', courseController.search);
 
 module.exports = router;

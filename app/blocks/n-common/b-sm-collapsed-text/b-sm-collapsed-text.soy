@@ -1,0 +1,224 @@
+{namespace sm.bSmCollapsedText.Template}
+
+/**
+ * @typedef {{
+ *     text: {
+ *         cutText: Array<string>,
+ *         fullText: (Array<string>|undefined)
+ *     },
+ *     buttonTextExpand: (string|undefined),
+ *     buttonTextCollapse: (string|undefined)
+ * }} sm.bSmCollapsedText.Template.Params.Data
+ */
+
+
+/**
+ * @typedef {{
+ *     stylizationModifier: string,
+ *     isButtonCollapse: (boolean|undefined),
+ *     buttonFont: ('inherit'|undefined),
+ *     customClasses: (?Array<string>|undefined)
+ * }} sm.bSmCollapsedText.Template.Params.Config
+ */
+
+
+/**
+ * Constructor
+ * @param params {{
+ *     data: sm.bSmCollapsedText.Template.Params.Data,
+ *     config: sm.bSmCollapsedText.Template.Params.Config
+ * }}
+ * @extends cl.iControl.Template
+ * @constructor
+ */
+{template .collapsedText}
+    {call .init data="all" /}
+{/template}
+
+
+/**
+ * Body
+ * @param params {{
+ *     data: sm.bSmCollapsedText.Template.Params.Data,
+ *     config: sm.bSmCollapsedText.Template.Params.Config
+ * }}
+ * @override
+ */
+{template .body}
+    {call .cutText_ data="all" /}
+    {call .fullText_ data="all" /}
+    {call .buttonExpand_ data="all" /}
+    {call .buttonCollapse_ data="all" /}
+{/template}
+
+
+/**
+ * Template for cut text
+ * @param params {{
+ *     data: {
+ *         text: {
+ *             cutText: Array<string>
+ *         }
+ *     }
+ * }}
+ */
+{template .cutText_}
+    <div class="{call .rootClass/}__text {call .rootClass/}__text_cut">
+        {call .paragraphs_}
+            {param params: [
+                'data': [
+                    'paragraphs': $params.data.text.cutText
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Button expand template
+ * @param params {{
+ *     data: {
+ *         text: {
+ *             fullText: (Array<string>|undefined)
+ *         },
+ *         buttonTextExpand: (string|undefined)
+ *     },
+ *     config: {
+ *         buttonFont: ('inherit'|undefined)
+ *     }
+ * }}
+ */
+{template .buttonExpand_}
+    {if $params.data.text.fullText}
+        <div class="{call .rootClass/}__button{sp}
+                    {call .rootClass/}__button_expand">
+
+            {call sm.bLink.Template.base}
+                {param params: [
+                    'data': [
+                        'name': $params.data.buttonTextExpand ?: 'Показать полностью'
+                    ],
+                    'config': [
+                        'theme': 'attention',
+                        'font': $params.config.buttonFont == 'inherit' ?
+                            'default' :
+                            ''
+                    ]
+                ]/}
+            {/call}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Template for full text
+ * @param params {{
+ *     data: {
+ *         text: {
+ *             fullText: (Array<string>|undefined)
+ *         }
+ *     }
+ * }}
+ */
+{template .fullText_}
+    {if $params.data.text.fullText}
+        <div class="{call .rootClass/}__text {call .rootClass/}__text_full
+                    {sp}i-utils__hidden">
+            {call .paragraphs_}
+                {param params: [
+                    'data': [
+                        'paragraphs': $params.data.text.fullText
+                    ]
+                ]/}
+            {/call}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Button collapse template
+ * @param params {{
+ *     data: {
+ *         text: {
+ *             fullText: (Array<string>|undefined)
+ *         },
+ *         buttonTextCollapse: (string|undefined)
+ *     },
+ *     config: {
+ *         isButtonCollapse: (boolean|undefined),
+ *         buttonFont: ('inherit'|undefined)
+ *     }
+ * }}
+ */
+{template .buttonCollapse_}
+    {if $params.data.text.fullText and $params.config.isButtonCollapse}
+        <div class="{call .rootClass/}__button{sp}
+                    {call .rootClass/}__button_collapse{sp}
+                    i-utils__hidden">
+
+            {call sm.bLink.Template.base}
+                {param params: [
+                    'data': [
+                        'name': $params.data.buttonTextCollapse ?: 'Свернуть'
+                    ],
+                    'config': [
+                        'theme': 'attention',
+                        'font': $params.config.buttonFont == 'inherit' ?
+                            'default' :
+                            ''
+                    ]
+                ]/}
+            {/call}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * Template for paragraphs
+ * @param params {{
+ *     data: {
+ *         paragraphs: Array<string>
+ *     }
+ * }}
+ */
+{template .paragraphs_}
+    <div class="{call .rootClass/}__paragraphs">
+        {foreach $paragraph in $params.data.paragraphs}
+            {call .paragraph_}
+                {param params: [
+                    'data': [
+                        'paragraph': $paragraph
+                    ]
+                ]/}
+            {/call}
+        {/foreach}
+    </div>
+{/template}
+
+
+/**
+ * Paragraph template
+ * @param params {{
+ *     data: {
+ *         paragraph: string
+ *     }
+ * }}
+ */
+{template .paragraph_}
+    <p class="{call .rootClass/}__paragraph">
+        {$params.data.paragraph}
+    </p>
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-sm-collapsed-text
+{/template}

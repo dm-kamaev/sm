@@ -1,7 +1,8 @@
 const commander = require('commander');
 
-/*
- * Require Command objects from cli scripts here. No need to assign them to a variable.
+/**
+ * Require Command objects from cli scripts here.
+ * No need to assign them to a variable.
  */
 
 require('./console/addDepartments.js').Command;

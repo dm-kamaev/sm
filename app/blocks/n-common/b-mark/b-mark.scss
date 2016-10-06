@@ -180,6 +180,14 @@
     }
 }
 
+.b-mark_font-size_inherit {
+    font-size: inherit;
+
+    .b-mark__mark {
+        font-size: inherit;
+    }
+}
+
 .b-mark_number {
     .b-mark__mark {
         position: static;

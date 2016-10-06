@@ -1,0 +1,126 @@
+{namespace sm.bSmStars.Template}
+
+
+/**
+ * @typedef {{
+ *     amount: (number|undefined),
+ *     selectedAmount: (number|undefined)
+ * }} sm.bSmStars.Template.Params.Data
+ */
+
+
+ /**
+ * @typedef {{
+ *     isActive: (boolean|undefined),
+ *     size: ('l'|undefined),
+ *     theme: ('colored'|undefined),
+ *     stylizationModifier: string,
+ *     customClasses: (Array<string>|undefined)
+ * }} sm.bSmStars.Template.Params.Config
+ */
+
+
+ /**
+ * Constructor
+ * @param params {{
+ *     data: ?(sm.bSmStars.Template.Params.Data|undefined),
+ *     config: sm.bSmStars.Template.Params.Config
+ * }}
+ * @extends cl.iControl.Template
+ * @constructor
+ */
+{template .stars}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * Body
+ * @param params {{
+ *     data: ?(sm.bSmStars.Template.Params.Data|undefined),
+ *     config: sm.bSmStars.Template.Params.Config
+ * }}
+ * @override
+ */
+{template .body}
+    {call .listStars_ data="all" /}
+{/template}
+
+
+/**
+ * list stars
+ * @param params {{
+ *     data: {
+ *         amount: (number|undefined),
+ *         selectedAmount: (number|undefined)
+ *     }
+ * }}
+ */
+{template .listStars_}
+    <div class="{call .rootClass/}__list-stars">
+        {for $i in range($params?.data?.amount ?: 5)}
+            {call .star_}
+                {param params: [
+                    'data': [
+                        'index': $i,
+                        'selectedAmount': $params?.data?.selectedAmount
+                    ]
+                ]/}
+            {/call}
+        {/for}
+    </div>
+{/template}
+
+
+/**
+ * Star
+ * @param params {{
+ *     data: {
+ *         index: number,
+ *         selectedAmount: ?number
+ *     }
+ * }}
+ */
+{template .star_}
+    {let $classes kind="html"}
+        {call .rootClass/}__star{sp}
+
+        {if $params.data.index < $params.data.selectedAmount}
+            {call .rootClass/}__star_selected
+        {/if}
+    {/let}
+
+    <div class="{$classes}">
+        t
+    </div>
+{/template}
+
+
+/**
+ * Css classes
+ * @param params {{
+ *     config: {
+ *         isActive: (boolean|undefined),
+ *         size: (string|undefined)
+ *     }
+ * }}
+ * @override
+ */
+{template .additionalClasses}
+    {if $params.config?.isActive}
+        {sp}{call .rootClass/}_active
+    {/if}
+
+    {if $params.config?.size}
+        {sp}{call .rootClass/}_size_{$params.config.size}
+    {/if}
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-sm-stars
+{/template}

@@ -54,12 +54,21 @@ sm.bSmSubheader.SmSubheader = function(view, opt_domHelper) {
      */
     this.authorizationLink_ = null;
 
+
     /**
      * favorite instance
      * @type {sm.bFavorite.Favorite}
      * @private
      */
     this.favorite_ = null;
+
+
+    /**
+     * links instance
+     * @type {sm.bSmLink.SmLink}
+     * @private
+     */
+    this.links_ = [];
 };
 goog.inherits(sm.bSmSubheader.SmSubheader, cl.iControl.Control);
 
@@ -87,27 +96,33 @@ goog.scope(function() {
      * @enum {string}
      */
     Subheader.Event = {
-        'SUBMIT': Search.Event.SUBMIT,
-       'ITEM_SELECT': Search.Event.ITEM_SELECT
+        'SEARCH_SUBMIT': Search.Event.SUBMIT
     };
 
 
     /**
-     * Singleton getter
-     * @return {sm.bSmSubheader.SmSubheader}
+     * @override
+     * @protected
      */
-    Subheader.getInstance = function() {
-        var rootElement = goog.dom.getElementByClass(View.CssClass.ROOT);
+    Subheader.prototype.decorateInternal = function(element) {
+        Subheader.base(this, 'decorateInternal', element);
 
-        if (rootElement && !Subheader.instance_) {
-            Subheader.instance_ = FactoryManager.getInstance().decorate(
-                'stendhal',
-                'smSubheader',
-                rootElement
-            );
-        }
+        this.initSearch_();
+        this.initAuthorizationLink_();
+        this.initFavorite_();
+        this.initLinks_();
+    };
 
-        return Subheader.instance_;
+
+    /**
+     * @override
+     * @protected
+     */
+    Subheader.prototype.enterDocument = function() {
+        Subheader.base(this, 'enterDocument');
+
+        this.initMinifiedSearchListeners_();
+        this.initSearchListeners_();
     };
 
 
@@ -126,47 +141,6 @@ goog.scope(function() {
      */
     Subheader.prototype.removeFavorite = function(itemId) {
         this.favorite_.removeItem(itemId);
-    };
-
-
-    /**
-     * @override
-     */
-    Subheader.prototype.decorateInternal = function(element) {
-        Subheader.base(this, 'decorateInternal', element);
-
-        var domElements = this.getView().getDom();
-        if (domElements.minifiedSearch) {
-            this.minifiedSearch_ = new Search();
-            this.addChild(this.minifiedSearch_);
-            this.minifiedSearch_.decorate(domElements.minifiedSearch);
-        }
-
-        if (domElements.search) {
-            this.search_ = new Search();
-            this.addChild(this.search_);
-            this.search_.decorate(domElements.search);
-        }
-
-        this.authorizationLink_ = this.decorateChild(
-            'authorization-link',
-            domElements.authorizationLink
-        );
-
-        this.favorite_ = this.decorateChild(
-            'favorite',
-            domElements.favorite
-        );
-    };
-
-
-    /**
-     * @override
-     */
-    Subheader.prototype.enterDocument = function() {
-        Subheader.base(this, 'enterDocument');
-        this.initMinifiedSearchListeners_();
-        this.initSearchListeners_();
     };
 
 
@@ -222,6 +196,8 @@ goog.scope(function() {
      * @private
      */
     Subheader.prototype.onSubmit_ = function() {
+        this.dispatchEvent(Subheader.Event.SEARCH_SUBMIT);
+
         this.minifiedSearch_.reset();
         this.search_.reset();
     };
@@ -346,7 +322,66 @@ goog.scope(function() {
     };
 
 
-    jQuery(function() {
-        Subheader.getInstance();
-    });
+    /**
+     * Initializes search instance
+     * @private
+     */
+    Subheader.prototype.initSearch_ = function() {
+        var domElements = this.getView().getDom();
+
+        if (domElements.minifiedSearch) {
+            this.minifiedSearch_ = new Search();
+            this.addChild(this.minifiedSearch_);
+            this.minifiedSearch_.decorate(domElements.minifiedSearch);
+        }
+
+        if (domElements.search) {
+            this.search_ = new Search();
+            this.addChild(this.search_);
+            this.search_.decorate(domElements.search);
+        }
+    };
+
+
+    /**
+     * Initializes authorization Link instance
+     * @private
+     */
+    Subheader.prototype.initAuthorizationLink_ = function() {
+        this.authorizationLink_ = this.decorateChild(
+            'authorization-link',
+            this.getView().getDom().authorizationLink
+        );
+    };
+
+
+    /**
+     * Initializes favorite instance
+     * @private
+     */
+    Subheader.prototype.initFavorite_ = function() {
+        this.favorite_ = this.decorateChild(
+            'smFavorite',
+            this.getView().getDom().favorite
+        );
+    };
+
+
+    /**
+     * Initializes links instance
+     * @private
+     */
+    Subheader.prototype.initLinks_ = function() {
+        var links = this.getView().getDom().links,
+            instance;
+
+        for (var i = 0; i < links.length; i++) {
+            instance = this.decorateChild(
+                'smLink',
+                links[i]
+            );
+
+            this.links_.push(instance);
+        }
+    };
 });  // goog.scope

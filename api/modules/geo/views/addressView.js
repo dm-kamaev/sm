@@ -105,8 +105,8 @@ addressView.default = function(addresses) {
 
 /**
  * returns metro names for departments from addresses array
- * @param {array<object>} addresses
- * @return {array<string>}
+ * @param {Array<Object>} addresses
+ * @return {Array<Object>}
  */
 addressView.getMetro = function(addresses) {
     var metroStations =
@@ -118,15 +118,32 @@ addressView.getMetro = function(addresses) {
     return metroView.list(metroStations);
 };
 
+
 /**
- * returns area names and id for departments from addresses array
- * @param {array<object>} addresses
- * @return {object}
+ * returns metro names for nearest Metro of address
+ * @param {Array<Object>} addresses
+ * @return {Array<string>}
  */
-addressView.getAreas = function(addresses) {
+addressView.nearestMetro = function(addresses) {
+    var metroStations = addresses
+        .map(address =>
+            address.addressMetroes[0] && address.addressMetroes[0].metro
+        )
+        .filter(address => address);
+
+    return metroView.list(metroStations);
+};
+
+
+/**
+ * returns area names and ids for departments from addresses array
+ * @param {Array<Object>} addresses
+ * @return {Array<Object>}
+ */
+addressView.getArea = function(addresses) {
     var areas = addresses.map(address => address.area);
 
-    return areaView.list(areas)[0];
+    return areaView.list(areas);
 };
 
 
@@ -137,7 +154,7 @@ addressView.getAreas = function(addresses) {
 addressView.transformSchoolAddress = function(school) {
     school.addresses = school.addresses.map(address => {
         address.metroStations = address.addressMetroes
-            .map(item => item.metroStation);
+            .map(item => item.metro);
         address.dataValues.metroStations = address.metroStations;
 
         return address;

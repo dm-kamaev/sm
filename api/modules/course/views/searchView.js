@@ -1,10 +1,12 @@
 'use strict';
 
-var FilterPanel = require('../lib/CourseFilterPanel');
-const courseView = require('./courseView');
-const mapViewType = require('../../entity/enums/mapViewType');
+const FilterPanel = require('../lib/CourseFilterPanel'),
+    courseView = require('./courseView'),
+    mapViewType = require('../../entity/enums/mapViewType'),
+    userView = require('../../user/views/user'),
+    favoriteView = require('../../favorite/views/favoriteView');
 
-var searchView = {};
+let searchView = {};
 
 /**
  * Data for filter panel
@@ -56,9 +58,9 @@ var searchView = {};
  * }}
  */
 searchView.filterPanel = function(filtersData, opt_searchParams) {
-    var searchParams = opt_searchParams || {};
+    let searchParams = opt_searchParams || {};
 
-    var filterPanel = new FilterPanel();
+    let filterPanel = new FilterPanel();
 
     filterPanel
         .setFilterAge(searchParams.age)
@@ -106,6 +108,7 @@ searchView.map = function(courses, options) {
     };
 };
 
+
 /**
  * @param {{
  *     user: Object,
@@ -114,11 +117,20 @@ searchView.map = function(courses, options) {
  *     coursesList: Array<Object>,
  *     mapData: Object<Object>,
  *     searchParams: Object,
+ *     favorites: Object,
  *     filtersData: Array<Object>
  * }} data
  * @return {Object}
  */
 searchView.render = function(data) {
+    let user = userView.default(data.user),
+        aliasedCourses = courseView.joinAliases(
+            data.coursesList,
+            data.aliases.course,
+            data.aliases.brand
+        ),
+        courses = courseView.list(aliasedCourses);
+
     return {
         type: data.entityType,
         seo: {
@@ -131,15 +143,18 @@ searchView.render = function(data) {
             links: {
                 nameL: 'Все курсы, кружки и секции',
                 nameM: 'Все курсы',
-                url: '/'
+                url: '/proforientacija'
             },
             search: {
-                placeholder: 'Район, метро, название курса'
+                placeholder: 'Район, метро, название курса',
+                pageAlias: 'proforientacija'
             },
-            user: data.user,
-            favorites: []
+            user: user,
+            favorites: {
+                items: favoriteView.list(data.favorites)
+            }
         },
-        user: data.user,
+        user: user,
         authSocialLinks: data.authSocialLinks,
         map: this.map(data.mapCourses, {
             viewType: mapViewType.PIN,
@@ -149,6 +164,7 @@ searchView.render = function(data) {
             countResults: data.countResults,
             searchText: data.searchParams.name,
             placeholder: 'Район, метро, название курса',
+            pageAlias: 'proforientacija',
             declensionEntityType: {
                 nom: 'курс',
                 gen: 'курса',
@@ -176,7 +192,7 @@ searchView.render = function(data) {
             defaultOpenerText: 'средней оценке'
         },
         entityList: {
-            items: courseView.list(data.coursesList),
+            items: courses,
             itemType: 'smItemEntity'
         },
         filterPanel: searchView.filterPanel(
@@ -215,7 +231,7 @@ searchView.initSearchParams = function(params) {
  * @return {Array}
  */
 searchView.transformToArray = function(value) {
-    var result;
+    let result;
     if (value && ~value.indexOf(',')) {
         result = value.split(',');
     } else if (typeof value === 'number' || typeof value === 'string') {

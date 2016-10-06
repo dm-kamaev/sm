@@ -15,6 +15,10 @@ var Metro = db.define('Metro', {
                 through: 'address_metro',
                 foreignKey: 'metro_id'
             });
+            Metro.hasMany(models.AddressMetro, {
+                as: 'addressMetroes',
+                foreignKey: 'metro_id'
+            });
         }
     }
 });

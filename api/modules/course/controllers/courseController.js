@@ -10,10 +10,12 @@ const courseView = require('../views/courseView'),
 
 const mapViewType = require('../../entity/enums/mapViewType');
 
+const config = require('../../../../app/config/config.json');
+
 const logger = require('../../../../app/components/logger/logger')
     .getLogger('app');
 
-var controller = {};
+let controller = {};
 
 /**
  * @api {get} api/course/search Search controller
@@ -37,15 +39,21 @@ var controller = {};
  *     }
  */
 controller.search = async(function(req, res) {
-    var result;
+    let result;
     try {
-        var searchParams = searchView.initSearchParams(req.query),
+        let searchParams = searchView.initSearchParams(req.query),
             courses = await(services.course.list(searchParams, 10)),
-            countResults = courses[0] && courses[0].countResults || 0;
+            countResults = courses[0] && courses[0].countResults || 0,
+            aliases = await(services.course.getAliases(courses)),
+            aliasedCourses = courseView.joinAliases(
+                courses,
+                aliases.course,
+                aliases.brand
+            );
 
         result = {
             list: {
-                items: courseView.list(courses),
+                items: courseView.list(aliasedCourses),
                 countResults: countResults
             }
         };
@@ -53,7 +61,7 @@ controller.search = async(function(req, res) {
         if (req.query.requestMapResults) {
             let mapPosition =
                 await(services.map.getPositionParams(searchParams));
-            result.map = searchView.map(courses, {
+            result.map = searchView.map(aliasedCourses, {
                 viewType: mapViewType.PIN,
                 position: mapPosition
             });
@@ -77,10 +85,16 @@ controller.searchMap = async(function(req, res) {
     try {
         let searchParams = searchView.initSearchParams(req.query),
             mapCourses = await(services.course.listMap(searchParams)),
-            mapPosition = await(services.map.getPositionParams(searchParams));
+            mapPosition = await(services.map.getPositionParams(searchParams)),
+            aliases = await(services.course.getAliases(mapCourses)),
+            aliasedMapCourses = courseView.joinAliases(
+                mapCourses,
+                aliases.course,
+                aliases.brand
+            );
 
         result = {
-            map: searchView.map(mapCourses, {
+            map: searchView.map(aliasedMapCourses, {
                 viewType: mapViewType.PIN,
                 position: mapPosition
             })
@@ -105,11 +119,17 @@ controller.searchMap = async(function(req, res) {
  *     }
  */
 controller.suggestSearch = async(function(req, res) {
-    var result;
+    let result;
     try {
-        var searchString = req.query.searchString,
-            data = await(services.courseSearchData.suggestSearch(searchString));
+        let searchString = req.query.searchString,
+            data = await(services.courseSearchData.suggestSearch(searchString)),
+            courseAliases = await(services.course.getAliases(data.courses));
 
+        data.courses = courseView.joinAliases(
+            data.courses,
+            courseAliases.course,
+            courseAliases.brand
+        );
         result = courseView.suggest(data);
     } catch (error) {
         logger.error(error.message);
@@ -142,9 +162,9 @@ controller.suggestSearch = async(function(req, res) {
  * @apiError Error (Error 500)
  */
 controller.popularCourseType = async(function(req, res) {
-    var result;
+    let result;
     try {
-        var popularCourseType =
+        let popularCourseType =
             await(services.courseType.getPopularTypes());
 
         result =
@@ -186,12 +206,12 @@ controller.popularCourseType = async(function(req, res) {
  * @apiError Error (Error 500)
  */
 controller.searchCourseType = async(function(req, res) {
-    var name,
+    let name,
         result;
     try {
         name = req.query.name || '';
 
-        var courseTypes =
+        let courseTypes =
                 await(services.courseType.findByName(name));
 
         result = courseTypeView.typeFilters(courseTypes);
@@ -199,7 +219,51 @@ controller.searchCourseType = async(function(req, res) {
         logger.error(error);
         result = error.message;
     } finally {
-        res.header('Content-Type', 'text/html; charset=utf-8');
+        res.header('Content-Type', 'application/json; charset=utf-8');
+        res.end(JSON.stringify(result));
+    }
+});
+
+/**
+ * @api {post} /course/enrollment
+ * @apiName EnrollOnCourse
+ * @apiGroup Course
+ *
+ * @apiError {Object[]} ValidationError
+ *
+ * @apiParam {string} name
+ * @apiParam {string} phone
+ * @apiParam {string{..300}} [comment]
+ * @apiParamExample {json} Request-Example:
+ *     {
+ *         "name": "Nikolay",
+ *         "phone": "+7 (966) 435-36-70"
+ *         "comment": "Can my dead son be enrolled on the course? :3"
+ *     }
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ */
+controller.enrollOnCourse = async(function(req, res) {
+    let result;
+    try {
+        let data = await(services.course.enrollOnCourse(req.body)),
+            letterData = courseView.letterData(data);
+
+        await(services.mail.sendLetter(letterData, {
+            from: 'schools.mel.fm <sender@mel.fm>',
+            to: config.courseMail.email
+        }));
+    } catch (error) {
+        logger.error(error.message);
+        if (~error.message.indexOf('ValidationError')) {
+            res.status(422);
+        } else {
+            res.status(404);
+        }
+        result = error.message;
+    } finally {
+        res.header('Content-Type', 'application/json; charset=utf-8');
         res.end(JSON.stringify(result));
     }
 });

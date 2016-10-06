@@ -1,0 +1,183 @@
+{namespace sm.bSmMark.Template}
+
+
+/**
+ * @typedef {{
+ *     value: number
+ * }} sm.bSmMark.Template.Params.Data
+ */
+
+
+ /**
+ * @typedef {{
+ *     zeroSign: ('dash'|'question'|undefined),
+ *     notShowValue: (boolean|undefined),
+ *     size: ('m','l','xl'|undefined),
+ *     theme: ('ring'|undefined),
+ *     stylizationModifier: string,
+ *     customClasses: ?Array<string>
+ * }} sm.bSmMark.Template.Params.Config
+ */
+
+
+ /**
+ * Constructor
+ * @param params {{
+ *     data: sm.bSmMark.Template.Params.Data,
+ *     config: sm.bSmMark.Template.Params.Config
+ * }}
+ * @extends cl.iControl.Template
+ * @constructor
+ */
+{template .mark}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * Body
+ * @param params {{
+ *     data: sm.bSmMark.Template.Params.Data,
+ *     config: sm.bSmMark.Template.Params.Config
+ * }}
+ * @override
+ */
+{template .body}
+    {call .sign_ data="all" /}
+    {call .value_ data="all" /}
+{/template}
+
+
+/**
+ * Circle
+ */
+{template .sign_}
+    <div class="{call .rootClass/}__sign">
+    </div>
+{/template}
+
+
+/**
+ * Value
+ * @param params {{
+ *     data: {
+ *         value: number
+ *     },
+ *     config: {
+ *         zeroSign: ('dash'|'question'|undefined),
+ *         notShowValue: (boolean|undefined)
+ *     }
+ * }}
+ */
+{template .value_}
+    {let $classes kind="html"}
+        {call .rootClass/}__value
+
+        {if $params.data.value == 0}
+            {sp}{call .rootClass/}__value_empty
+
+            {if $params.config?.zeroSign}
+                {sp}{call .rootClass/}__value_{$params.config?.zeroSign}
+            {/if}
+        {/if}
+
+        {if $params.config.notShowValue}
+            {sp}{cl.iUtils.Utils.CssClass.HIDDEN}
+        {/if}
+    {/let}
+
+    <div class="{$classes}">
+        {if $params.data.value > 0}
+            {call .transformedValue_ data="all" /}
+        {else}
+            {call .emptyValue_ data="all" /}
+        {/if}
+    </div>
+{/template}
+
+
+/**
+ * Get transformed value
+ * @param params {{
+ *     data: {
+ *         value: number
+ *     }
+ * }}
+ */
+{template .transformedValue_}
+    {let $value: round($params.data.value, 1) /}
+
+    {floor($value)}
+
+    {if $value*10 % 10 != 0}
+        ,{$value*10 % 10}
+    {/if}
+{/template}
+
+
+/**
+ * Get empty transformed value
+ * @param params {{
+ *     config: {
+ *         zeroSign: ('dash'|'question'|undefined)
+ *     }
+ * }}
+ */
+{template .emptyValue_}
+    {if $params.config?.zeroSign == 'question'}
+        ?
+    {elseif $params.config?.zeroSign == 'dash'}
+        —
+    {/if}
+{/template}
+
+
+/**
+ * Get sign color
+ * @param params {{
+ *     data: {
+ *         value: number
+ *     }
+ * }}
+ */
+{template .signColor_}
+    {if $params.data.value >= 4}
+        green
+    {elseif $params.data.value >= 3}
+        yellow
+    {elseif $params.data.value > 0}
+        red
+    {else}
+        grey
+    {/if}
+{/template}
+
+
+/**
+ * Css classes
+ * @param params {{
+ *     data: {
+ *         value: number
+ *     },
+ *     config: {
+ *         size: ('m','l','xl'|undefined)
+ *     }
+ * }}
+ * @override
+ */
+{template .additionalClasses}
+    {call .rootClass/}_color_{call .signColor_ data="all"/}
+
+    {if $params.config.size}
+        {sp}{call .rootClass/}_size_{$params.config.size}
+    {/if}
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-sm-mark
+{/template}
