@@ -18,8 +18,8 @@ const logger = require('../../../components/logger/logger').getLogger('app');
 
 const config = require('../../../config').config;
 
-const ANALYTICS_ID = config.analyticsId,
-    YANDEX_METRIKA_ID = config.yandexMetrikaId,
+const ANALYTICS_ID = config.courses.analyticsId,
+    YANDEX_METRIKA_ID = config.courses.yandexMetrikaId,
     DOMAIN = config.url.protocol + '://' + config.url.host,
     FB_CLIENT_ID = config.facebookClientId;
 
