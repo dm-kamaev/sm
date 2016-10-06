@@ -257,6 +257,9 @@ controller.searchCourseType = async(function(req, res) {
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
+ *     {
+ *         "applicationId": 2
+ *     }
  */
 controller.enrollOnCourse = async(function(req, res) {
     let result;
@@ -268,6 +271,10 @@ controller.enrollOnCourse = async(function(req, res) {
             from: 'schools.mel.fm <sender@mel.fm>',
             to: config.courseMail.email
         }));
+
+        result = {
+            applicationId: data.applicationId
+        };
     } catch (error) {
         logger.error(error.message);
         if (~error.message.indexOf('ValidationError')) {
