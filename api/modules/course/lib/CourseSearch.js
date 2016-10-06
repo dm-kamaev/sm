@@ -31,6 +31,12 @@ class CourseSearchQuery extends SearchQuery {
          * @type {number}
          */
         this.courseDataCount_ = 0;
+
+        /**
+         * @private
+         * @type {boolean}
+         */
+        this.isWhereString_ = false;
     }
 
     /**
@@ -265,11 +271,15 @@ class CourseSearchQuery extends SearchQuery {
             .field('course.total_score')
             .field('course.brand_id')
             .field('COUNT(course.id) OVER()', 'result_count')
-            .group('course.id')
-            .left_join('course_option',
+            .group('course.id');
+
+        if (!this.isWhereString_) {
+            this.innerQuery_.left_join(
+                'course_option',
                 null,
                 'course.id = course_option.course_id'
             );
+        }
     }
 
     /**
@@ -332,6 +342,7 @@ class CourseSearchQuery extends SearchQuery {
      * @param {string} searchString
      */
     setStringWhere_(searchString) {
+        this.isWhereString_ = true;
         this.setNameWhere_(searchString);
         this.setNameJoinAndGroup_();
     }
@@ -358,52 +369,51 @@ class CourseSearchQuery extends SearchQuery {
      */
     setNameJoinAndGroup_() {
         this.innerQuery_
-
-        .left_join(
-            'course_option',
-            null,
-            'course.id = course_option.course_id'
-        )
-        .left_join(
-            'course_option_course_department',
-            null,
-            'course_option.id = ' +
-                'course_option_course_department.course_option_id'
-        )
-        .left_join(
-            'course_department',
-            null,
-            'course_option_course_department.course_department_id = ' +
-                'course_department.id'
-        )
-        .left_join(
-            'address',
-            null,
-            'course_department.id = address.entity_id AND ' +
-                'address.entity_type = \'' +
-                entityType.COURSE_DEPARTMENT + '\''
-        )
-        .left_join(
-            'address_metro',
-            null,
-            'address.id = address_metro.address_id'
-        )
-        .left_join(
-            'metro',
-            null,
-            'address_metro.metro_id = metro.id'
-        )
-        .left_join(
-            'area',
-            null,
-            'address.area_id = area.id'
-        )
-        .left_join(
-            'district',
-            null,
-            'area.district_id = district.id'
-        )
-        .group('course.id');
+            .left_join(
+                'course_option',
+                null,
+                'course.id = course_option.course_id'
+            )
+            .left_join(
+                'course_option_course_department',
+                null,
+                'course_option.id = ' +
+                    'course_option_course_department.course_option_id'
+            )
+            .left_join(
+                'course_department',
+                null,
+                'course_option_course_department.course_department_id = ' +
+                    'course_department.id'
+            )
+            .left_join(
+                'address',
+                null,
+                'course_department.id = address.entity_id AND ' +
+                    'address.entity_type = \'' +
+                    entityType.COURSE_DEPARTMENT + '\''
+            )
+            .left_join(
+                'address_metro',
+                null,
+                'address.id = address_metro.address_id'
+            )
+            .left_join(
+                'metro',
+                null,
+                'address_metro.metro_id = metro.id'
+            )
+            .left_join(
+                'area',
+                null,
+                'address.area_id = area.id'
+            )
+            .left_join(
+                'district',
+                null,
+                'area.district_id = district.id'
+            )
+            .group('course.id');
     }
 
     /**

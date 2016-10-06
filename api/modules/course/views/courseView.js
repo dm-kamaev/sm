@@ -34,12 +34,12 @@ view.page = function(course) {
         description: course.description,
         fullDescription: this.formatFullDescription(course.fullDescription),
         score: scoreView.results(course.score, course.totalScore).data,
-        online: this.onlineStatus(generalOptions),
         cost: this.formatCost(options),
         generalOptions: {
             items: generalOptions
         },
-        departmentList: this.formatDepartmentList(options, generalOptions)
+        departmentList: this.formatDepartmentList(options, generalOptions),
+        online: this.onlineStatus(generalOptions)
     };
 };
 
@@ -49,14 +49,13 @@ view.page = function(course) {
  */
 view.formatFullDescription = function(text) {
     let result = {
-        fullText: [],
         cutText: []
     };
 
     if (text) {
         if (text.length > FULL_DESCRIPTION_LENGTH) {
             let formatText = new FormatText();
-            result.fullText.push(text);
+            result.fullText = [text];
             result.cutText.push(
                 formatText.cut(text, FULL_DESCRIPTION_LENGTH, ' ')
             );
@@ -105,7 +104,7 @@ view.formatDepartmentList = function(options, generalOptions) {
  */
 view.onlineStatus = function(generalOptions) {
     let online = generalOptions.find(option => option.key === 'online');
-    return online.description === 'Онлайн' ? 'only' : undefined;
+    return online && online.description === 'Онлайн' ? 'only' : undefined;
 };
 
 /**
@@ -158,7 +157,6 @@ view.getStaticOptions = function(course) {
     }
     return result;
 };
-
 
 /**
  * @param  {Object} course
@@ -313,8 +311,8 @@ view.getMapItem = function(course) {
         {
             addressId: course.addressId,
             addressName: course.addressName,
-            coordinates: course.addressCoords &&
-                geoView.coordinatesDefault(course.addressCoords),
+            coordinates: geoView.coordinatesDefault(
+                course.addressCoords),
             score: course.totalScore,
             title: {
                 id: course.brandId,
@@ -389,7 +387,7 @@ view.joinListCourse = function(existingCourse, newCourse) {
     }
 
     if (existingCourse.online === 'only' && !newCourse.optionOnline ||
-        !existingCourse.online && newCourse.optionOnline === 'only'
+        !existingCourse.online && newCourse.optionOnline
     ) {
         existingCourse.online = 'available';
     }

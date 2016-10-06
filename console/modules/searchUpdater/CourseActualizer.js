@@ -6,7 +6,8 @@ const searchType = require('../../../api/modules/course/enums/searchType.js'),
     services = require('../../../app/components/services').all;
 
 const ALL_WEEKDAYS = [0, 1, 2, 3, 4, 5, 6],
-    ALL_TIMES = [0, 1, 2, 3];
+    ALL_TIMES = [0, 1, 2, 3],
+    ALL_REGULARITIES = [0, 1, 2];
 
 class CourseActualizer {
     /**
@@ -214,9 +215,11 @@ class CourseActualizer {
      * @return {Array<number>}
      */
     getLessonsPerWeek_(options) {
-        return lodash.uniq(options.map(option =>
-            option.schedule.length
-        ));
+        return this.isOpenSchedule(options) ?
+            ALL_REGULARITIES :
+            lodash.uniq(options.map(option =>
+                option.schedule.length
+            ));            
     }
 
     /**

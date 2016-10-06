@@ -210,7 +210,7 @@
  */
 {template .paragraph_}
     <p class="{call .rootClass/}__paragraph">
-        {$params.data.paragraph}
+        {$params.data.paragraph|changeNewlineToBr}
     </p>
 {/template}
 

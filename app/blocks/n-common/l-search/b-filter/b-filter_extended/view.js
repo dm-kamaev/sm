@@ -82,11 +82,13 @@ goog.scope(function() {
     View.prototype.initButtonsListeners = function() {
         var handler = this.getHandler();
 
-        handler.listen(
-            this.dom.buttonShowModal,
-            goog.events.EventType.CLICK,
-            this.onButtonShowModalClick_
-        );
+        if (this.dom.buttonShowModal) {
+            handler.listen(
+                this.dom.buttonShowModal,
+                goog.events.EventType.CLICK,
+                this.onButtonShowModalClick_
+            );
+        }
     };
 
 

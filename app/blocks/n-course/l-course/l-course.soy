@@ -129,7 +129,17 @@
  * }}
  */
 {template .sectionOptions_}
-    <div class="{call .rootClass/}__section {call .rootClass/}__section_options">
+    {let $classes kind="html"}
+        {call .rootClass/}__section{sp}
+        {call .rootClass/}__section_options
+
+        {if not $params.data.entityData.departmentList or
+            not length($params.data.entityData.departmentList)}
+            {sp}{cl.iUtils.Utils.CssClass.HIDDEN}
+        {/if}
+    {/let}
+
+    <div class="{$classes}">
         <div class="{call .rootClass/}__options">
             {call .optionsList_ data="all" /}
         </div>
