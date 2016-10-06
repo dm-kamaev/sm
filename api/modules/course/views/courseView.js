@@ -26,7 +26,6 @@ const FULL_DESCRIPTION_LENGTH = 300;
 view.page = function(course) {
     let options = course.courseOptions,
         generalOptions = this.formatGeneralOptions(course);
-
     return {
         id: course.id,
         name: course.name,
@@ -37,7 +36,8 @@ view.page = function(course) {
         generalOptions: {
             items: generalOptions
         },
-        departmentList: this.formatDepartmentList(options, generalOptions)
+        departmentList: this.formatDepartmentList(options, generalOptions),
+        online: this.onlineStatus(generalOptions)
     };
 };
 
@@ -95,6 +95,15 @@ view.formatGeneralOptions = function(course) {
 view.formatDepartmentList = function(options, generalOptions) {
     let optionsTransformer = new CourseOptionsTransformer(options);
     return optionsTransformer.getUniqueOptions(generalOptions);
+};
+
+/**
+ * @param  {Array<Object>}  generalOptions
+ * @return {(string|undefined)}
+ */
+view.onlineStatus = function(generalOptions) {
+    let online = generalOptions.find(option => option.key === 'online');
+    return online.description === 'Онлайн' ? 'only' : undefined;
 };
 
 /**
@@ -297,7 +306,8 @@ view.getAddresses = function(courseOptions) {
  * }}
  */
 view.getMapItem = function(course) {
-    return course.addressId ? {
+    return course.addressId ?
+        {
             addressId: course.addressId,
             addressName: course.addressName,
             coordinates: geoView.coordinatesDefault(
@@ -357,10 +367,10 @@ view.getListCourse = function(course) {
             name: metroView.formatName(course.metroName)
         }] :
         [],
-        area: [{
+        area: course.areaId ? [{
             id: course.areaId,
             name: course.areaName
-        }]
+        }] : []
     };
 };
 
@@ -374,22 +384,21 @@ view.joinListCourse = function(existingCourse, newCourse) {
         existingCourse.cost = newCourse.optionCost;
     }
 
-    if (
-        existingCourse.online === 'only' && !newCourse.optionOnline ||
+    if (existingCourse.online === 'only' && !newCourse.optionOnline ||
         !existingCourse.online && newCourse.optionOnline === 'only'
     ) {
         existingCourse.online = 'available';
     }
 
-    if (!existingCourse.area.find(area => area.id === newCourse.areaId)) {
+    if (newCourse.areaId &&
+        !existingCourse.area.find(area => area.id === newCourse.areaId)) {
         existingCourse.area.push({
             id: newCourse.areaId,
             name: newCourse.areaName
         });
     }
 
-    if (
-        !~existingCourse.addresses.indexOf(newCourse.addressId) &&
+    if (!~existingCourse.addresses.indexOf(newCourse.addressId) &&
         newCourse.metroId &&
         !existingCourse.metro.find(metro => metro.id === newCourse.metroId)
     ) {
