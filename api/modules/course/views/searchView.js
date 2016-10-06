@@ -112,6 +112,7 @@ searchView.map = function(courses, options) {
 /**
  * @param {{
  *     user: Object,
+ *     fbClientId: string,
  *     authSocialLinks: Object,
  *     countResults: number,
  *     coursesList: Array<Object>,
@@ -135,6 +136,13 @@ searchView.render = function(data) {
         type: data.entityType,
         seo: {
             metaTitle: 'Кружки и секции'
+        },
+        openGraph: {
+            title: 'Профориентация на «Курсах Мела»',
+            description: 'Курсы профориентации в Москве и онлайн: цены,' +
+                ' расписание, бронирование.',
+            image: '/images/n-clobl/i-layout/cources_sharing.png',
+            fbClientId: data.fbClientId,
         },
         subHeader: {
             logo: {
