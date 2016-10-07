@@ -25,6 +25,10 @@ const ANALYTICS_ID = config.courses.analyticsId,
 
 let controller = {};
 
+controller.home = async(function(req, res, next) {
+    res.redirect('/proforientacija');
+});
+
 controller.search = async(function(req, res, next) {
     try {
         let authSocialLinks = services.auth.getAuthSocialUrl(),

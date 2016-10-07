@@ -9,5 +9,6 @@ router.get(
 );
 
 router.get('/proforientacija', courseController.search);
+router.get('/', courseController.home);
 
 module.exports = router;
