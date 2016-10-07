@@ -14,9 +14,9 @@
 
     &:after {
         display: block;
-        content: '';
-
         clear: both;
+
+        content: '';
     }
 }
 
@@ -62,8 +62,8 @@
 }
 
 .b-sm-subheader__section_links {
-    padding-left: 10px;
     padding-right: 10px;
+    padding-left: 10px;
 
     font-family: Arial, sans-serif;
 }

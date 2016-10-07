@@ -1,7 +1,13 @@
+/**
+ * @fileoverview Link view
+ * Can change change theme and hoverability of link
+ */
 goog.provide('sm.bSmLink.View');
 
 goog.require('cl.iControl.View');
+goog.require('goog.array');
 goog.require('goog.labs.userAgent.device');
+goog.require('goog.object');
 
 
 goog.scope(function() {
@@ -19,19 +25,10 @@ goog.scope(function() {
     sm.bSmLink.View = function(opt_params, opt_type, opt_modifier) {
         sm.bSmLink.View.base(this, 'constructor', opt_params,
             opt_type, opt_modifier);
+
     };
     goog.inherits(sm.bSmLink.View, cl.iControl.View);
     var View = sm.bSmLink.View;
-
-
-    /**
-     * Css class enum
-     * @enum {string}
-     */
-    View.CssClass = {
-        ROOT: 'b-sm-link',
-        HOVERABLE: 'b-sm-link_hoverable'
-    };
 
 
     /**
@@ -44,6 +41,57 @@ goog.scope(function() {
      * }}
      */
     View.RenderParams;
+
+
+    /**
+     * @typedef {{
+     *     disableHover: boolean
+     * }}
+     */
+    View.DataParams;
+
+
+    /**
+     * Css class enum
+     * @enum {string}
+     * @const
+     */
+    View.CssClass = {
+        ROOT: 'b-sm-link',
+        HOVERABLE: 'b-sm-link_hoverable'
+    };
+
+
+    /**
+     * Possible themes
+     * @enum {string}
+     * @const
+     */
+    View.Theme = {
+        DEFAULT: 'default',
+        LIGHT: 'light',
+        ATTENTION: 'attention',
+        DARK: 'dark',
+        BLOCK: 'block'
+    };
+
+
+    /**
+     * Css class enum
+     * @enum {string}
+     * @const
+     */
+    View.Event = {
+        CLICK: goog.events.getUniqueId('click')
+    };
+
+
+    /**
+     * Sign of theme in css class
+     * If css class contains this sign => it is theme modifier
+     * @const {string}
+     */
+    View.THEME_SIGN = '-theme';
 
 
     /**
@@ -63,29 +111,166 @@ goog.scope(function() {
 
 
     /**
-     * @override
-     * @param {Element} element
-     * @protected
+     * Getter for params
+     * @return {sm.bSmLink.View.DataParams}
+     * @public
      * @override
      */
-    View.prototype.decorateInternal = function(element) {
-        View.base(this, 'decorateInternal', element);
+    View.prototype.getParams = function() {
+        if (!this.params || goog.object.isEmpty(this.params)) {
+            var elem = this.getElement(),
+                data = elem && elem.getAttribute('data-params');
+            if (data) {
+                this.params = this.transformParams(JSON.parse(data));
+            }
+        }
 
-        this.detectHoverability_();
+        return this.params;
     };
 
 
     /**
-     * Check hoverability for block and
-     * if it hoverable, add to it corresponding modifier
-     * @private
+     * Enable hover reaction on element if it possible (not-mobile device)
+     * @public
      */
-    View.prototype.detectHoverability_ = function() {
+    View.prototype.enableHover = function() {
         if (goog.labs.userAgent.device.isDesktop()) {
             goog.dom.classlist.add(
                 this.getElement(),
                 View.CssClass.HOVERABLE
             );
         }
+    };
+
+
+    /**
+     * Disable hover reaction on element
+     * @public
+     */
+    View.prototype.disableHover = function() {
+        goog.dom.classlist.remove(
+            this.getElement(),
+            View.CssClass.HOVERABLE
+        );
+    };
+
+
+    /**
+     * Check if theme is valid and set it to block
+     * @param {sm.bSmLink.View.Theme} theme
+     * @public
+     */
+    View.prototype.setTheme = function(theme) {
+        if (this.isValidTheme_(theme)) {
+            this.removeTheme_();
+            this.setTheme_(theme);
+        }
+    };
+
+
+    /**
+     * @override
+     * @protected
+     */
+    View.prototype.enterDocument = function() {
+        View.base(this, 'enterDocument');
+
+        this.initElementListeners_();
+    };
+
+
+    /**
+     * Transform raw params to compressed ones
+     * @param {Object<string, string>} rawParams
+     * @return {sm.bSmLink.View.DataParams}
+     * @protected
+     */
+    View.prototype.transformParams = function(rawParams) {
+        return {
+            id: rawParams['id'],
+            disableHover: rawParams['disableHover']
+        };
+    };
+
+
+    /**
+     * Initializes listeners for root Element
+     * @private
+     */
+    View.prototype.initElementListeners_ = function() {
+        this.getHandler().listen(
+            this.getElement(),
+            goog.events.EventType.CLICK,
+            this.onClick_
+        );
+    };
+
+
+    /**
+     * Handler click on root Element
+     * @param {Object} event
+     * @private
+     */
+    View.prototype.onClick_ = function(event) {
+        this.dispatchEvent(View.Event.CLICK);
+    };
+
+
+    /**
+     * Remove theme modifier
+     * @private
+     */
+    View.prototype.removeTheme_ = function() {
+        var classes = goog.dom.classlist.get(this.getElement());
+
+        var theme = goog.array.find(classes, function(cssClass) {
+            return ~cssClass.search(View.THEME_SIGN);
+        });
+
+        if (theme) {
+            goog.dom.classlist.remove(
+                this.getElement(),
+                theme
+            );
+        }
+    };
+
+
+    /**
+     * Check that given theme is in themes enum
+     * @param {sm.bSmLink.View.Theme} theme
+     * @return {boolean}
+     * @private
+     */
+    View.prototype.isValidTheme_ = function(theme) {
+        return goog.object.findValue(View.Theme, function(themeName) {
+            return themeName == theme;
+        });
+    };
+
+
+    /**
+     * Set theme modifier to block
+     * @param {sm.bSmLink.View.Theme} theme
+     * @private
+     */
+    View.prototype.setTheme_ = function(theme) {
+        var themeCssClass = this.generateThemeCssClass_(theme);
+
+        goog.dom.classlist.add(
+            this.getElement(),
+            themeCssClass
+        );
+    };
+
+
+    /**
+     * Generate theme modifier from given theme name
+     * @param {sm.bSmLink.View.Theme} theme
+     * @return {string}
+     * @private
+     */
+    View.prototype.generateThemeCssClass_ = function(theme) {
+        return View.CssClass.ROOT + '_' + theme + View.THEME_SIGN;
     };
 });  // goog.scope

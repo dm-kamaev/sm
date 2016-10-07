@@ -1,5 +1,7 @@
 /**
  * @fileoverview Link template for unification of links on project
+ *
+ * Set default theme if another theme not set
  */
 {namespace sm.bSmLink.Template}
 
@@ -16,8 +18,9 @@
 /**
  * @typedef {{
  *     target: (string|undefined),
+ *     disableHover: boolean,
  *     size: ('s'|'m'|'l'|'xl'),
- *     theme: ('attention'|'light'|undefined)
+ *     theme: ('attention'|'light'|'block'|'dark'|'default'|undefined)
  * }} sm.bSmLink.Template.Params.Config
  */
 
@@ -32,7 +35,19 @@
  * @constructor
  */
 {template .link kind="html"}
-    {call .init data="all" /}
+    {let $config: augmentMap(
+        [
+            'theme': 'default'
+        ],
+        $params.config
+    ) /}
+
+    {call .init}
+        {param params: [
+            'data': $params.data,
+            'config': $config
+        ] /}
+    {/call}
 {/template}
 
 /**
@@ -83,7 +98,8 @@
  *         url: (string|undefined)
  *     },
  *     config: {
- *         target: ('_blank'|undefined)
+ *         target: ('_blank'|undefined),
+ *         disableHover: boolean
  *     }
  * }}
  * @override
@@ -92,13 +108,12 @@
     {if $params.data.url}
         href="{$params.data.url}"
     {/if}
-    {if $params.data.id}
-        data-params="{call cl.iUtils.Utils.stringify}
-            {param json: quoteKeysIfJs([
-                'id': $params.data.id
-            ]) /}
-        {/call}"
-    {/if}
+    data-params="{call cl.iUtils.Utils.stringify}
+        {param json: quoteKeysIfJs([
+            'id': $params?.data.id,
+            'disableHover': $params?.config.disableHover
+        ]) /}
+    {/call}"
     {if $params?.config.target}
         {sp}target="{$params.config.target}"
     {/if}

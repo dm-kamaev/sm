@@ -767,7 +767,8 @@ schoolView.uniqueIds = function(schools) {
  *     area: ?Array<{
  *         id: number,
  *         name: string
- *     }>
+ *     }>,
+ *     category: string
  * }}
  */
 schoolView.item = function(data) {

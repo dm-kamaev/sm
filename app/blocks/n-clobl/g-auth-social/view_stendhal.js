@@ -59,6 +59,6 @@ goog.scope(function() {
      * @protected
      */
     View.prototype.onHrefClick = function() {
-        window.open('http://mel.fm/terms');
+        window.open('http://mel.fm/terms-of-use');
     };
 });  // goog.scope

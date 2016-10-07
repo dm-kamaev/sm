@@ -1,9 +1,11 @@
-var async = require('asyncawait/async');
-var await = require('asyncawait/await');
-var axios = require('axios');
+'use strict';
 
-var soy = require('../../../../app/components/soy');
-var services = require('../../../../app/components/services').all;
+const async = require('asyncawait/async'),
+    await = require('asyncawait/await'),
+    axios = require('axios');
+
+const soy = require('../../../../app/components/soy'),
+    services = require('../../../../app/components/services').all;
 
 /**
  * @api {get} /authorize/:type
@@ -18,12 +20,15 @@ var services = require('../../../../app/components/services').all;
  *     }
  */
 exports.authorize = async(function(req, res) {
-    var result;
+    let result;
     try {
-        var user = await(services.user.getUserByCode({
-            code: req.query.code,
-            type: req.params.type
-        }));
+        let user = await(services.user.getUserByCode(
+            {
+                code: req.query.code,
+                type: req.params.type
+            },
+            req.baseUrl
+        ));
 
         await(new Promise(function(resolve, reject) {
             req.logIn(user, function(err) {
@@ -54,7 +59,7 @@ exports.authorize = async(function(req, res) {
  * }
  */
 exports.unauthorize = async(function(req, res) {
-    var origin = req.query.origin;
+    let origin = req.query.origin;
 
     await(new Promise(function(resolve, reject) {
         req.session.destroy(resolve);
@@ -79,9 +84,12 @@ exports.unauthorize = async(function(req, res) {
  *     Absolute reference to authoriozation
  */
 exports.getLink = async(function(req, res) {
-    var result;
+    let result;
     try {
-        var socialLink = services.auth.getSocialLink(req.params.type),
+        let socialLink = services.auth.getSocialLink(
+                req.params.type,
+                req.baseUrl
+            ),
             authUrlResponse = await(axios.get(socialLink)),
             authUrl = authUrlResponse.headers.location;
         res.redirect(authUrl);

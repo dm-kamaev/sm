@@ -232,13 +232,13 @@ class SchoolSearchQuery extends SearchQuery {
 
     /**
      * @private
-     * @param {number} scoreSortType
+     * @param {number} sortType
      */
-    setScoreTypeOrder_(scoreSortType) {
+    setTypeOrder_(sortType) {
         this.baseQuery_
-            .order('school.score[' + scoreSortType + '] DESC NULLS LAST', null);
+            .order('school.score[' + sortType + '] DESC NULLS LAST', null);
         this.innerQuery_
-            .order('school.score[' + scoreSortType + '] DESC NULLS LAST', null);
+            .order('school.score[' + sortType + '] DESC NULLS LAST', null);
     }
 
     /**

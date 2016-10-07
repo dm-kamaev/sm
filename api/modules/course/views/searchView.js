@@ -58,19 +58,18 @@ let searchView = {};
  * }}
  */
 searchView.filterPanel = function(filtersData, opt_searchParams) {
-    let searchParams = opt_searchParams || {};
-
-    let filterPanel = new FilterPanel();
+    let searchParams = opt_searchParams || {},
+        filterPanel = new FilterPanel();
 
     filterPanel
-        .setFilterAge(searchParams.age)
-        .setFilterType(filtersData.type, searchParams.type)
-        .setFilterCost(searchParams.cost)
-        .setFilterWeekDays(searchParams.weekdays)
-        .setFilterTime(searchParams.time)
-        .setFilterRegularity(searchParams.regularity)
         .setFilterFormTraining(searchParams.formTraining)
-        .setFilterDuration(searchParams.duration);
+        .setFilterType(filtersData.type, searchParams.type)
+        .setFilterAge(searchParams.age);
+        // .setFilterCost(searchParams.cost)
+        // .setFilterWeekDays(searchParams.weekdays)
+        // .setFilterTime(searchParams.time)
+        // .setFilterRegularity(searchParams.regularity)
+        // .setFilterDuration(searchParams.duration);
 
     return filterPanel.getParams();
 };
@@ -112,6 +111,7 @@ searchView.map = function(courses, options) {
 /**
  * @param {{
  *     user: Object,
+ *     fbClientId: string,
  *     authSocialLinks: Object,
  *     countResults: number,
  *     coursesList: Array<Object>,
@@ -135,6 +135,13 @@ searchView.render = function(data) {
         type: data.entityType,
         seo: {
             metaTitle: 'Кружки и секции'
+        },
+        openGraph: {
+            title: 'Профориентация на «Курсах Мела»',
+            description: 'Курсы профориентации в Москве и онлайн: цены,' +
+                ' расписание, бронирование.',
+            image: '/images/n-clobl/i-layout/cources_sharing.png',
+            fbClientId: data.fbClientId,
         },
         subHeader: {
             logo: {
@@ -173,23 +180,14 @@ searchView.render = function(data) {
         },
         sort: {
             listItems: [{
-                'label': 'Средняя оценка',
-                'text': 'средней оценке'
+                'label': 'по возрастанию цены',
+                'text': 'возрастанию цены'
             }, {
-                'label': 'Образование',
-                'text': 'образованию'
-            }, {
-                'label': 'Преподаватели',
-                'text': 'преподавателям'
-            }, {
-                'label': 'Атмосфера',
-                'text': 'атмосфере'
-            }, {
-                'label': 'Инфраструктура',
-                'text': 'инфраструктуре'
+                'label': 'по убыванию цены',
+                'text': 'убыванию цены'
             }],
             staticText: 'Сортировать по ',
-            defaultOpenerText: 'средней оценке'
+            defaultOpenerText: 'убыванию цены'
         },
         entityList: {
             items: courses,

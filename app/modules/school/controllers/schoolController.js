@@ -9,8 +9,8 @@ const userView = require('../../../../api/modules/user/views/user');
 const entityType = require('../../../../api/modules/entity/enums/entityType');
 
 const config = require('../../../config').config;
-const analyticsId = config.analyticsId;
-const yandexMetrikaId = config.yandexMetrikaId;
+const analyticsId = config.schools.analyticsId;
+const yandexMetrikaId = config.schools.yandexMetrikaId;
 
 const logger = require('../../../components/logger/logger').getLogger('app');
 

@@ -12,7 +12,7 @@ var service = {
  * @param Array<{
  *     startTime: ?string,
  *     endTime: ?string,
- *     day: ?number
+ *     day: number
  * }> data
  * @return {Array<CourseSchedule>}
  */

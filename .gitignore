@@ -35,6 +35,7 @@ deployment-config.json
 /environment/config/*/local/
 /environment/config/*/*.json
 /environment/*/config.*
+/environment/nginx/schools-local.conf
 
 console/reports
 migrate_stderr

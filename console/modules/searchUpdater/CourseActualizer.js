@@ -5,6 +5,10 @@ const lodash = require('lodash');
 const searchType = require('../../../api/modules/course/enums/searchType.js'),
     services = require('../../../app/components/services').all;
 
+const ALL_WEEKDAYS = [0, 1, 2, 3, 4, 5, 6],
+    ALL_TIMES = [0, 1, 2, 3],
+    ALL_REGULARITIES = [0, 1, 2];
+
 class CourseActualizer {
     /**
      * @param {Object} course
@@ -177,13 +181,15 @@ class CourseActualizer {
      * @return {Array<number>}
      */
     getWeekdays_(options) {
-        return lodash
-            .chain(options.map(option =>
-                option.schedule.map(schedule => schedule.day)
-            ))
-            .flatten()
-            .uniq()
-            .value();
+        return this.isOpenSchedule(options) ?
+            ALL_WEEKDAYS :
+            lodash
+                .chain(options.map(option =>
+                    option.schedule.map(schedule => schedule.day)
+                ))
+                .flatten()
+                .uniq()
+                .value();
     }
 
     /**
@@ -192,13 +198,15 @@ class CourseActualizer {
      * @return {Array<number>}
      */
     getTime_(options) {
-        return lodash
-            .chain(options.map(option => option.schedule.map(schedule =>
-                this.transformTime_(schedule.startTime)
-            )))
-            .flatten()
-            .uniq()
-            .value();
+        return this.isOpenSchedule(options) ?
+            ALL_TIMES :
+            lodash
+                .chain(options.map(option => option.schedule.map(schedule =>
+                    this.transformTime_(schedule.startTime)
+                )))
+                .flatten()
+                .uniq()
+                .value();
     }
 
     /**
@@ -207,9 +215,11 @@ class CourseActualizer {
      * @return {Array<number>}
      */
     getLessonsPerWeek_(options) {
-        return lodash.uniq(options.map(option =>
-            option.schedule.length
-        ));
+        return this.isOpenSchedule(options) ?
+            ALL_REGULARITIES :
+            lodash.uniq(options.map(option =>
+                option.schedule.length
+            ));            
     }
 
     /**
@@ -232,6 +242,15 @@ class CourseActualizer {
         return lodash.uniq(options.map(option =>
             this.transformDuration_(option.duration)
         ));
+    }
+
+    /**
+     * @private
+     * @param {Array<Object>} options
+     * @return {boolean}
+     */
+    isOpenSchedule(options) {
+        return options.some(option => option.openSchedule);
     }
 
     /**

@@ -3,7 +3,7 @@
 
 /**
  * @typedef {{
- *     id: ?number,
+ *     id: number,
  *     type: string,
  *     name: {
  *         light: string,
@@ -19,7 +19,8 @@
  *     area: ?Array<{
  *         id: number,
  *         name: string
- *     }>
+ *     }>,
+ *     category: string
  * }} sm.bSmItem.Template.Params.Data
  */
 
@@ -78,7 +79,7 @@
     <div class="{call .rootClass/}__section{sp}
                 {call .rootClass/}__section_header">
         {call .name data="all" /}
-        {call .score data="all" /}
+        {call .estimates data="all" /}
     </div>
 {/template}
 
@@ -174,6 +175,22 @@
 
 
 /**
+ * Template estimated parameters
+ * @param params {{
+ *     data: {
+ *         score: ?number
+ *     }
+ * }}
+ * @protected
+ */
+{template .estimates}
+    <div class="{call .rootClass/}__estimates">
+        {call .score data="all" /}
+    </div>
+{/template}
+
+
+/**
  * Score
  * @param params {{
  *     data: {
@@ -183,7 +200,15 @@
  * @protected
  */
 {template .score}
-    <div class="{call .rootClass/}__score">
+    {let $classes kind="html"}
+        {call .rootClass/}__score
+
+        {if not $params.data.score}
+            {sp}{cl.iUtils.Utils.CssClass.HIDDEN}
+        {/if}
+    {/let}
+
+    <div class="{$classes}">
         {call .renderChild}
             {param params: [
                 'type': 'smMark',
@@ -305,6 +330,12 @@
  * @param params {{
  *     data: {
  *         id: number,
+ *         type: string,
+ *         name: {
+ *             light: string,
+ *             bold: ?string
+ *         },
+ *         category: string
  *         alias: string
  *     }
  * }}
@@ -315,7 +346,10 @@
     {sp}data-params="
         {call cl.iUtils.Utils.stringify}
             {param json: quoteKeysIfJs([
-                'id': $params.data.id
+                'id': $params.data.id,
+                'name': $params.data.name.light + ($params.data.name.bold ?: ''),
+                'type': $params.data.type,
+                'category': $params.data.category
             ]) /}
         {/call}"
 {/template}

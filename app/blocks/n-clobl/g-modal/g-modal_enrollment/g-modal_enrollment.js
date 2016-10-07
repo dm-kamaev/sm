@@ -4,6 +4,8 @@ goog.require('cl.iRequest.Request');
 goog.require('goog.array');
 goog.require('goog.events');
 goog.require('goog.object');
+goog.require('sm.gModal.Event.EnrollmentSuccess');
+goog.require('sm.gModal.Event.Show');
 goog.require('sm.gModal.ModalStendhal');
 goog.require('sm.gModal.ViewEnrollment');
 
@@ -50,6 +52,14 @@ goog.scope(function() {
 
 
         /**
+         * Selected options data of user
+         * @type {sm.lCourse.bDepartment.Event.EnrollButtonClick.Data}
+         * @private
+         */
+        this.optionsData_ = {};
+
+
+        /**
          * Instance button
          * @type {sm.gButton.ButtonStendhal}
          * @private
@@ -68,7 +78,9 @@ goog.scope(function() {
      * @const
      */
     ModalEnrollment.Event = {
-        SUCCESS: goog.events.getUniqueId('success'),
+        SHOW: sm.gModal.Event.Show.Type,
+        HIDE: sm.gModal.ModalStendhal.Event.HIDE,
+        SUCCESS: sm.gModal.Event.EnrollmentSuccess.Type,
         ERROR: goog.events.getUniqueId('error')
     };
 
@@ -98,7 +110,19 @@ goog.scope(function() {
 
 
     /**
+     * Show modal
+     * @override
+     * @public
+     */
+    ModalEnrollment.prototype.show = function() {
+        this.getView().show();
+        this.dispatchEventShow_();
+    };
+
+
+    /**
      * Clear all fields
+     * @public
      */
     ModalEnrollment.prototype.clear = function() {
         this.nameField_.clear();
@@ -106,6 +130,16 @@ goog.scope(function() {
         this.commentField_.clean();
 
         this.button_.enable();
+    };
+
+
+    /**
+     * Set selected options data of user
+     * @param {Object} optionsData
+     * @public
+     */
+    ModalEnrollment.prototype.setOptionsData = function(optionsData) {
+        this.optionsData_ = optionsData ? optionsData : {};
     };
 
 
@@ -160,19 +194,28 @@ goog.scope(function() {
             .then(
                 this.onSuccess_.bind(this),
                 this.onError_.bind(this)
+            )
+            .then(
+                this.setOptionsData.bind(this, null)
             );
     };
 
 
     /**
      * Handler of server response success
+     * @param {{
+     *     data: {
+     *         applicationId: number
+     *     },
+     *     status: number
+     * }} response
      * @private
      */
-    ModalEnrollment.prototype.onSuccess_ = function() {
+    ModalEnrollment.prototype.onSuccess_ = function(response) {
         this.hide();
 
         this.clear();
-        this.dispatchEventSuccess_();
+        this.dispatchEventSuccess_(response['data']['applicationId']);
     };
 
 
@@ -247,23 +290,62 @@ goog.scope(function() {
      * @private
      */
     ModalEnrollment.prototype.buildQueryParams_ = function() {
+        var department = {};
+
+        if (!goog.object.isEmpty(this.optionsData_)) {
+            department = {
+                'name': this.optionsData_.name,
+                'metros': this.optionsData_.metros,
+                'option': {
+                    'title': this.optionsData_.option.title,
+                    'features': this.optionsData_.option.features,
+                    'cost': this.optionsData_.option.cost
+                }
+            };
+        }
+
         return {
             '_csrf': window['ctx']['csrf'],
             'name': this.nameField_.getValue(),
             'phone': this.phoneField_.getValue(),
-            'comment': this.commentField_.getValue()
+            'comment': this.commentField_.getValue(),
+            'link': window.location.href,
+            'department': department
         };
     };
 
 
     /**
-     * Dispatch Event of successfull enrollment
+     * Dispatch event Show
      * @private
      */
-    ModalEnrollment.prototype.dispatchEventSuccess_ = function() {
-        this.dispatchEvent({
-            'type': ModalEnrollment.Event.SUCCESS
-        });
+    ModalEnrollment.prototype.dispatchEventShow_ = function() {
+        var data = {
+            optionCost: !goog.object.isEmpty(this.optionsData_) ?
+                this.optionsData_.option.cost.value :
+                ''
+        };
+
+        var event = new sm.gModal.Event.Show(data, this);
+        this.dispatchEvent(event);
+    };
+
+
+    /**
+     * Dispatch Event of successfull enrollment
+     * @param {number} id - enrollment id
+     * @private
+     */
+    ModalEnrollment.prototype.dispatchEventSuccess_ = function(id) {
+        var data = {
+            enrollmentId: id,
+            optionCost: !goog.object.isEmpty(this.optionsData_) ?
+                this.optionsData_.option.cost.value :
+                ''
+        };
+
+        var event = new sm.gModal.Event.EnrollmentSuccess(data, this);
+        this.dispatchEvent(event);
     };
 
 
@@ -272,9 +354,7 @@ goog.scope(function() {
      * @private
      */
     ModalEnrollment.prototype.dispatchEventError_ = function() {
-        this.dispatchEvent({
-            'type': ModalEnrollment.Event.ERROR
-        });
+        this.dispatchEvent(ModalEnrollment.Event.ERROR);
     };
 
 

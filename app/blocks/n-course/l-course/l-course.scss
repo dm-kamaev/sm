@@ -21,7 +21,7 @@
 .l-course__section_data {
     width: 1200px;
     min-width: 255px;
-    margin: 30px auto 65px;
+    margin: 30px auto 60px;
 
     &:after {
         display: block;
@@ -33,7 +33,7 @@
 
 .l-course__data_left {
     box-sizing: border-box;
-    padding-right: 420px;
+    padding-right: 440px;
 }
 
 .l-course__header {
@@ -43,9 +43,9 @@
 
     &:after {
         display: block;
-        content: '';
-
         clear: both;
+
+        content: '';
     }
 }
 
@@ -90,9 +90,9 @@
 
 .l-course__data_right {
     float: right;
-    margin-top: 10px;
 
     width: 380px;
+    margin-top: 10px;
 
     background-color: #f7f7f1;
 }
@@ -141,6 +141,29 @@
 /** section data end **/
 
 
+/** Section options **/
+.l-course__section_options {
+    width: 100%;
+
+    border-top: 6px solid #e5e5e5;
+}
+
+.l-course__options {
+    box-sizing: border-box;
+    width: 1200px;
+    min-width: 255px;
+    margin: 0 auto;
+    padding-top: 20px;
+}
+
+.l-course__options-list {
+    max-width: 760px;
+    width: 100%;
+}
+
+/** section options end **/
+
+
 /** Section fixed **/
 .l-course__section_fixed {
     display: none;
@@ -160,6 +183,12 @@
         box-sizing: border-box;
         width: auto;
         padding: 0 40px;
+    }
+
+    .l-course__options {
+        box-sizing: border-box;
+        width: auto;
+        padding: 20px 40px 0;
     }
 }
 
@@ -183,6 +212,7 @@
     /** Section data **/
     .l-course__section_data {
         margin-top: 30px;
+        margin-bottom: 30px;
         padding: 0 30px;
     }
 
@@ -204,14 +234,17 @@
     }
 
     .l-course__score_s {
+        display: block;
         float: left;
 
-        display: block;
-        margin-top: 10px;
-
         width: 24px;
+        margin-top: 10px;
     }
     /** section data end **/
+
+    .l-course__options {
+        padding: 0 30px 0;
+    }
 
     .l-course__section_fixed {
         position: fixed;

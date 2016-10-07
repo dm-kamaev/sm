@@ -15,6 +15,7 @@ goog.require('sm.bSmBadge.Template');
 goog.require('sm.bSmBalloon.Template');
 goog.require('sm.bSmCheckbox.Template');
 goog.require('sm.bSmCollapsedText.Template');
+goog.require('sm.bSmExpander.Template');
 goog.require('sm.bSmFavorite.Template');
 goog.require('sm.bSmFooter.Template');
 goog.require('sm.bSmItem.Template');
@@ -43,10 +44,13 @@ goog.require('sm.gList.TemplateSelect');
 goog.require('sm.gModal.TemplateEnrollment');
 goog.require('sm.gModal.TemplateFeedback');
 goog.require('sm.gModal.TemplateStendhal');
+goog.require('sm.gModal.TemplateSuccess');
 goog.require('sm.gTab.TemplateCatalog');
 goog.require('sm.gTab.TemplateStendhal');
 goog.require('sm.gTextarea.TemplateStendhal');
+goog.require('sm.lCourse.bDepartment.Template');
 goog.require('sm.lCourse.bInformationBoard.Template');
+goog.require('sm.lCourse.bOption.Template');
 goog.require('sm.lInformation.bFeedbackBoard.Template');
 goog.require('sm.lInformation.bInformationBoard.Template');
 goog.require('sm.lSchool.bDate.Template');
@@ -200,6 +204,10 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'modal-enrollment',
             sm.gModal.TemplateEnrollment.modal
+        )
+        .setTemplateListItem(
+            'modal-success',
+            sm.gModal.TemplateSuccess.modal
         );
 
     /** Global blocks an their heirs **/
@@ -274,6 +282,10 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'smFavorite',
             sm.bSmFavorite.Template.favorite
+        )
+        .setTemplateListItem(
+            'smExpander',
+            sm.bSmExpander.Template.expander
         );
 
     /** l-information blocks **/
@@ -320,11 +332,19 @@ sm.iFactory.TemplateFactoryStendhal = function() {
             sm.lSearch.bSuggestFilter.Template.suggestFilter
         );
 
-        /** l-course blocks */
-        this.setTemplateListItem(
-            'lCourse-informationBoard',
-            sm.lCourse.bInformationBoard.Template.informationBoard
-        );
+    /** l-course blocks */
+    this.setTemplateListItem(
+        'lCourse-informationBoard',
+        sm.lCourse.bInformationBoard.Template.informationBoard
+    )
+    .setTemplateListItem(
+        'lCourse-option',
+        sm.lCourse.bOption.Template.option
+    )
+    .setTemplateListItem(
+        'lCourse-department',
+        sm.lCourse.bDepartment.Template.address
+    );
 };
 goog.inherits(sm.iFactory.TemplateFactoryStendhal, cl.iFactory.TemplateFactory);
 goog.addSingletonGetter(sm.iFactory.TemplateFactoryStendhal);

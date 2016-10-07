@@ -75,6 +75,7 @@ goog.scope(function() {
      * @enum {string}
      */
     Item.Event = {
+        CLICK: sm.bSmItem.SmItem.Event.CLICK,
         FAVORITE_ADDED: FavoriteLink.Event.FAVORITE_ADDED,
         FAVORITE_REMOVED: Event.FavoriteRemoved.Type
     };
@@ -82,6 +83,7 @@ goog.scope(function() {
 
     /**
      * @param {Element} element
+     * @protected
      * @override
      */
     Item.prototype.decorateInternal = function(element) {
@@ -94,6 +96,7 @@ goog.scope(function() {
 
 
     /**
+     * @protected
      * @override
      */
     Item.prototype.enterDocument = function() {

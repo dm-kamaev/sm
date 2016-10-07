@@ -6,8 +6,8 @@ const entityType = require('../../../../api/modules/entity/enums/entityType');
 const seoView = require('../../../../api/modules/school/views/seoView');
 
 const config = require('../../../config').config;
-const analyticsId = config.analyticsId;
-const yandexMetrikaId = config.yandexMetrikaId;
+const analyticsId = config.schools.analyticsId;
+const yandexMetrikaId = config.schools.yandexMetrikaId;
 
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');

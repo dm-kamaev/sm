@@ -1,22 +1,31 @@
+'use strict';
+
+const services = require('../../../../app/components/services').all;
+
 const config = require('../../../../app/config').config;
 
 const AUTH_URL = config.authApi + '/oauth/?type=',
     REDIRECT_URI = config.redirectUri;
 
-var service = {
+let service = {
     name: 'auth'
 };
 
 /**
  * Getter for social link
  * @param  {string} socialType - ['vk', 'fb', 'gp']
- * @return {sttring}
+ * @param  {string} baseUrl
+ * @return {string}
  */
-service.getSocialLink = function(socialType) {
-    var redirectUri = encodeURIComponent(REDIRECT_URI + '/' + socialType),
-        url = AUTH_URL + socialType + '&redirectUri=' + redirectUri;
+service.getSocialLink = function(socialType, baseUrl) {
+    let redirectUri = services.urls.addSubdomain(
+            REDIRECT_URI + '/' + socialType,
+            baseUrl
+        ),
+        uri = AUTH_URL + socialType + '&redirectUri=' +
+            encodeURIComponent(redirectUri);
 
-    return url;
+    return uri;
 };
 
 /**
