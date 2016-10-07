@@ -64,7 +64,7 @@ searchView.filterPanel = function(filtersData, opt_searchParams) {
     filterPanel
         .setFilterFormTraining(searchParams.formTraining)
         .setFilterType(filtersData.type, searchParams.type)
-        .setFilterAge(searchParams.age)
+        .setFilterAge(searchParams.age);
         // .setFilterCost(searchParams.cost)
         // .setFilterWeekDays(searchParams.weekdays)
         // .setFilterTime(searchParams.time)

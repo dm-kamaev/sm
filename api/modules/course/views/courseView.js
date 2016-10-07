@@ -445,6 +445,7 @@ view.letterData = function(data) {
  *     applicationId: number,
  *     name: string,
  *     phone: string,
+ *     link: string,
  *     comment: ?string,
  *     department: Object
  * }} data
@@ -466,11 +467,12 @@ view.letterContent = function(data) {
     }
 
     result += `<div>Номер заявки: ${data.applicationId}`;
+    result += `<br>Ссылка: ${data.link}`;
     result += `<br>Имя: ${data.name}`;
     result += `<br>Телефон: ${data.phone}`;
     result += comment;
     result += option;
-    result += '</div>'
+    result += '</div>';
 
     return result;
 };
