@@ -26,7 +26,7 @@ goog.scope(function() {
          * @typedef {{
          *     name: string,
          *     metros: Array<string>,
-         *     options: {
+         *     option: {
          *         title: {
          *             name: string,
          *             value: string,
