@@ -465,11 +465,12 @@ view.letterContent = function(data) {
         });
     }
 
-    result += `Номер заявки: ${data.applicationId}`;
+    result += `<div>Номер заявки: ${data.applicationId}`;
     result += `<br>Имя: ${data.name}`;
     result += `<br>Телефон: ${data.phone}`;
     result += comment;
     result += option;
+    result += '</div>'
 
     return result;
 };
