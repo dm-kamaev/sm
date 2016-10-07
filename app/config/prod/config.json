@@ -7,7 +7,7 @@
     },
     "authApi": "http://mel.fm:49611",
     "userApi": "http://mel.fm:20348",
-    "redirectUri": "http://schools.mel.fm/authorize",
+    "redirectUri": "http://mel.fm/authorize",
     "schools": {
         "analyticsId": "UA-34116537-10",
         "yandexMetrikaId": 36890980
