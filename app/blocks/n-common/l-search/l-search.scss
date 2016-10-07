@@ -235,11 +235,11 @@
 
     .l-search__list-header {
         &.l-search__list-header_size_l {
-            display: none;
+            // display: none;
         }
 
         &.l-search__list-header_size_s {
-            display: block;
+            // display: block;
 
             padding-top: 25px;
         }
@@ -275,6 +275,8 @@
     }
 
     .l-search__list-header {
+        padding-bottom: 10px;
+
         font-size: 20px;
         line-height: normal;
     }

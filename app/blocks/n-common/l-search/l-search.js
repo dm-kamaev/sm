@@ -420,7 +420,7 @@ goog.scope(function() {
         this.updateResultsList_(listItems, countResults);
         this.detectShowMoreResultsList_(listItems.length, countResults);
 
-        this.getView().setSortVisibility(countResults);
+        this.getView().setSortVisibility(this.resultsList_.getCountItems());
         this.getView().setLoaderVisibility(false);
 
         this.sendAnalyticsItemsLoad_(0);
