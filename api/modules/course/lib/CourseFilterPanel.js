@@ -45,7 +45,9 @@ class CourseFilterPanel extends FilterPanel {
                     }
                 ]
             },
-            config: {}
+            config: {
+                isShowed: true
+            }
         };
 
         /**
@@ -63,7 +65,8 @@ class CourseFilterPanel extends FilterPanel {
             },
             config: {
                 showMoreButtonText: 'Все направления',
-                optionsToShow: 9
+                optionsToShow: 9,
+                isShowed: true
             }
         };
 
@@ -160,7 +163,9 @@ class CourseFilterPanel extends FilterPanel {
                     'label': 'Онлайн'
                 }]
             },
-            config: {}
+            config: {
+                isShowed: true
+            }
         };
 
         /**

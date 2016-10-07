@@ -58,19 +58,18 @@ let searchView = {};
  * }}
  */
 searchView.filterPanel = function(filtersData, opt_searchParams) {
-    let searchParams = opt_searchParams || {};
-
-    let filterPanel = new FilterPanel();
+    let searchParams = opt_searchParams || {},
+        filterPanel = new FilterPanel();
 
     filterPanel
-        .setFilterAge(searchParams.age)
-        .setFilterType(filtersData.type, searchParams.type)
-        .setFilterCost(searchParams.cost)
-        .setFilterWeekDays(searchParams.weekdays)
-        .setFilterTime(searchParams.time)
-        .setFilterRegularity(searchParams.regularity)
-        .setFilterFormTraining(searchParams.formTraining)
-        .setFilterDuration(searchParams.duration);
+        .setFilterFormTraining(searchParams.formTraining, config)
+        .setFilterType(filtersData.type, searchParams.type, config)
+        .setFilterAge(searchParams.age, config)
+        // .setFilterCost(searchParams.cost)
+        // .setFilterWeekDays(searchParams.weekdays)
+        // .setFilterTime(searchParams.time)
+        // .setFilterRegularity(searchParams.regularity)
+        // .setFilterDuration(searchParams.duration);
 
     return filterPanel.getParams();
 };
