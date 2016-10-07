@@ -130,16 +130,10 @@ goog.scope(function() {
      * @private
      */
     Department.prototype.onEnrollButtonClick_ = function(event) {
-        var option = event.target.getData();
-
         var data = {
-            'name': this.params.name,
-            'metros': this.params.metros,
-            'options': {
-                'title': option.title,
-                'features': option.features,
-                'cost': option.cost
-            }
+            name: this.params.name,
+            metros: this.params.metros,
+            option: event.target.getData()
         };
 
         var event = new Event.EnrollButtonClick(data, this);

@@ -453,15 +453,15 @@ view.letterData = function(data) {
 view.letterContent = function(data) {
     let result = '',
         comment = data.comment ? `<br>Комментарий: ${data.comment}` : '',
-        departmentOptions = data.department.options,
-        options = '';
+        departmentOptions = data.department.option,
+        option = '';
 
     if (departmentOptions) {
-        options = `<br>Адрес: ${data.department.name}`;
-        options += this.formatFeature(departmentOptions.title);
-        options += this.formatFeature(departmentOptions.cost);
+        option = `<br>Адрес: ${data.department.name}`;
+        option += this.formatFeature(departmentOptions.title);
+        option += this.formatFeature(departmentOptions.cost);
         departmentOptions.features.map(feature => {
-            options += this.formatFeature(feature);
+            option += this.formatFeature(feature);
         });
     }
 
@@ -469,7 +469,7 @@ view.letterContent = function(data) {
     result += `<br>Имя: ${data.name}`;
     result += `<br>Телефон: ${data.phone}`;
     result += comment;
-    result += options;
+    result += option;
 
     return result;
 };

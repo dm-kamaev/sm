@@ -182,7 +182,7 @@ goog.scope(function() {
 
     /**
      * Send enrollment success handler
-     * @param {Object} event
+     * @param {sm.gModal.Event.EnrollmentSuccess} event
      * @private
      */
     Course.prototype.onSendEnrollmentSuccess_ = function(event) {
@@ -193,10 +193,11 @@ goog.scope(function() {
 
     /**
      * Send enrollment success handler
+     * @param {sm.gModal.Event.EnrollmentSuccess} event
      * @private
      */
-    Course.prototype.onModalEnrollmentShow_ = function() {
-        this.sendAnalyticsCheckoutEnrollment_();
+    Course.prototype.onModalEnrollmentShow_ = function(event) {
+        this.sendAnalyticsCheckoutEnrollment_(event.data);
     };
 
 
@@ -215,10 +216,7 @@ goog.scope(function() {
 
     /**
      * Send analytics about shown modal enrollment
-     * @param {{
-     *     enrollmentId: (number|undefined),
-     *     optionCost: (string|undefined)
-     * }} data
+     * @param {sm.gModal.Event.Show.Data} data
      * @private
      */
     Course.prototype.sendAnalyticsCheckoutEnrollment_ = function(data) {
@@ -226,18 +224,20 @@ goog.scope(function() {
             enrollmentData = this.getEcAnalyticsEnrollmentData_(data);
 
         Analytics.getInstance().checkoutProduct(courseData, enrollmentData);
+        this.sendAnalyticsData_('form request');
     };
 
     /**
      * Send analytics about send Enrollment
-     * @param {number} id - id enrollment
+     * @param {sm.gModal.Event.EnrollmentSuccess.Data} data
      * @private
      */
-    Course.prototype.sendAnalyticsSendEnrollment_ = function(id) {
+    Course.prototype.sendAnalyticsSendEnrollment_ = function(data) {
         var courseData = this.getEcAnalyticsCourseData_(),
-            enrollmentData = this.getEcAnalyticsEnrollmentData_(id);
+            enrollmentData = this.getEcAnalyticsEnrollmentData_(data);
 
         Analytics.getInstance().purchaseProduct(courseData, enrollmentData);
+        this.sendAnalyticsData_('form submit');
     };
 
 
@@ -257,10 +257,10 @@ goog.scope(function() {
 
     /**
      * Get enrollment data for ecommerce
-     * @param {{
-     *     enrollmentId: string,
-     *     optionCost: ?string
-     * }} data
+     * @param {({
+     *     enrollmentId: (string|undefined),
+     *     optionCost: (string|undefined)
+     * }|undefined)} data
      * @return {Object}
      * @private
      */
@@ -276,6 +276,23 @@ goog.scope(function() {
         };
 
         return data;
+    };
+
+
+    /**
+     * Send data for Analytics
+     * @param {string} eventAction
+     * @private
+     */
+    Course.prototype.sendAnalyticsData_ = function(eventAction) {
+        var dataAnalytics = {
+            'hitType': 'event',
+            'eventCategory': 'checkout',
+            'eventAction': eventAction,
+            'eventLabel': this.params.name
+        };
+
+        Analytics.getInstance().send(dataAnalytics);
     };
 
 
