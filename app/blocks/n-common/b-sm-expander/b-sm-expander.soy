@@ -78,16 +78,15 @@
  * @private
  */
 {template .expandButton_ kind="html"}
+    {let $classes kind="text"}
+        {call .rootClass /}__expand-button
 
-    {let $expanderClass kind="text"}
         {if $params.data.content}
-            {call .rootClass /}__expand-button
-        {else}
-            {call .rootClass /}__expand-no-pointer
+            {sp}{call .rootClass /}__expand-button_active
         {/if}
     {/let}
 
-    <div class="{$expanderClass}">
+    <div class="{$classes}">
         {call .icon_ data="all" /}
         {call .expanderText_ data="all" /}
     </div>
