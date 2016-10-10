@@ -355,6 +355,7 @@ goog.scope(function() {
      */
     Search.prototype.onFilterPanelSubmit_ = function() {
         this.updatePage_();
+        this.filterPanel_.collapse();
     };
 
 
