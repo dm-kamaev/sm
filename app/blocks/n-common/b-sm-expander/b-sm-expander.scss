@@ -7,7 +7,9 @@
 .b-sm-expander__expand-button {
     cursor: pointer;
 }
-
+.b-sm-expander__expand-no-pointer {
+    cursor: default;
+}
 .b-sm-expander__icon-wrap {
     position: absolute;
 }
