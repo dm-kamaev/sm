@@ -156,10 +156,6 @@
         {if $params.config?.isHidden}
             {sp}{cl.iUtils.Utils.CssClass.HIDDEN}
         {/if}
-
-        {if $params.config?.isLastOnPage}
-            {sp}{call .rootClass/}__item-wrap_not-line-bottom
-        {/if}
     {/let}
 
     {let $customClasses kind="html"}
