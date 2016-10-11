@@ -880,8 +880,10 @@ service.list = async(function(opt_params, opt_config) {
     );
 
     var options = {
+        replacements: { name: '%' + searchParams.name + '%' },
         type: sequelize.QueryTypes.SELECT
     };
+
     return sequelize.query(sqlString, options)
         .then(schools => {
             return schools;
