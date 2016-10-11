@@ -5,6 +5,9 @@ const async = require('asyncawait/async'),
 
 const services = require('../../../components/services');
 
+const logger = require('../../../../app/components/logger/logger')
+    .getLogger('app');
+
 let controller = {};
 
 /**
