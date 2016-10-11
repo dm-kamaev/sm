@@ -284,16 +284,15 @@ class SchoolSearchQuery extends SearchQuery {
      * @param {string} name
      */
     setNameWhere_(name) {
-        var searchString = '%' + name + '%';
         this.innerQuery_
             .where(
                 squel.expr()
-                    .or('school.name ILIKE ?', searchString)
-                    .or('school.full_name ILIKE ?', searchString)
-                    .or('school.abbreviation ILIKE ?', searchString)
-                    .or('metro.name ILIKE ?', searchString)
-                    .or('area.name ILIKE ?', searchString)
-                    .or('district.name ILIKE ?', searchString)
+                    .or('school.name ILIKE :name')
+                    .or('school.full_name ILIKE :name')
+                    .or('school.abbreviation ILIKE :name')
+                    .or('metro.name ILIKE :name')
+                    .or('area.name ILIKE :name')
+                    .or('district.name ILIKE :name')
                     .toString()
             );
     }
