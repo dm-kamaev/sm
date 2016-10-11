@@ -355,7 +355,6 @@ goog.scope(function() {
      */
     Search.prototype.onFilterPanelSubmit_ = function() {
         this.updatePage_();
-        this.filterPanel_.collapse();
     };
 
 
@@ -447,9 +446,7 @@ goog.scope(function() {
      */
     Search.prototype.onShowPage_ = function(event) {
         if (event.getBrowserEvent().persisted) {
-            this.searchService_.loadSearchData(
-                this.paramsManager_.getParams()
-            );
+            this.resultsList_.clear();
         }
     };
 
@@ -467,7 +464,7 @@ goog.scope(function() {
     };
 
 
-    /**
+        /**
      * Make all actions to update information on page
      * @private
      */
@@ -522,8 +519,7 @@ goog.scope(function() {
      */
     Search.prototype.makeSearch_ = function() {
         this.searchService_.loadSearchData(
-            this.paramsManager_.getParams(/*requestMapResults*/ true)
-        );
+            this.paramsManager_.getParams(/*requestMapResults*/ true));
         this.searchService_.loadMapData(this.paramsManager_.getParams());
     };
 

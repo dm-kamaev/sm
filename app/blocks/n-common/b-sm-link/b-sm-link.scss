@@ -1,7 +1,7 @@
 .b-sm-link {
     display: inline-block;
 
-    cursor: text;
+    cursor: pointer;
     text-decoration: none;
 
     font-size: 13px;
@@ -10,7 +10,6 @@
 
 .b-sm-link_hoverable:hover {
     color: #ff0000;
-    cursor: pointer;
 }
 
 /** Possible sizes */
