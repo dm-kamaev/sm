@@ -284,6 +284,16 @@ goog.scope(function() {
 
 
     /**
+     * Get page number
+     * @return {number}
+     * @public
+     */
+    ItemList.prototype.getPageNumber = function() {
+        return this.params.pageNumber || null;
+    };
+
+
+    /**
      * Send Analytics when shown items
      * nonInteraction - possible values 0 or 1
      * Interval sets the position of the elements for which the analyst goes
@@ -326,6 +336,12 @@ goog.scope(function() {
             position: this.items_.indexOf(item) + 1
         });
         Analytics.getInstance().clickProduct(data, list);
+
+        Analytics.getInstance().sendEvent(
+            list,
+            'click',
+            0
+        );
     };
 
 
@@ -400,16 +416,6 @@ goog.scope(function() {
         }
 
         return itemsData;
-    };
-
-
-    /**
-     * Get page number
-     * @return {number}
-     * @public
-     */
-    ItemList.prototype.getPageNumber = function() {
-        return this.params.pageNumber || null;
     };
 
 
