@@ -498,14 +498,16 @@ goog.scope(function() {
         var coordinates = position['center'],
             scale = this.generateScale_(position['type']);
 
-        this.ymaps_.setCenter(
-            coordinates,
-            scale,
-            {
-                checkZoomRange: true,
-                duration: 400
-            }
-        );
+        if (this.ymaps_) {
+            this.ymaps_.setCenter(
+                coordinates,
+                scale,
+                {
+                    checkZoomRange: true,
+                    duration: 400
+                }
+            );
+        }
     };
 
 
@@ -544,7 +546,7 @@ goog.scope(function() {
         if (this.objectManager_) {
             var bounds = this.objectManager_.getBounds();
 
-            if (bounds) {
+            if (bounds && this.ymaps_) {
                 this.ymaps_.setBounds(
                     bounds,
                     {

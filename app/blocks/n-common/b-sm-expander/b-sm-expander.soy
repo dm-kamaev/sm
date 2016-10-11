@@ -68,7 +68,8 @@
  * Expand button template
  * @param params {{
  *     data: {
- *         expanderText: string
+ *         expanderText: string,
+ *         content: (string|undefined)
  *     },
  *     config: {
  *         notShowIcon: boolean
@@ -77,7 +78,15 @@
  * @private
  */
 {template .expandButton_ kind="html"}
-    <div class="{call .rootClass /}__expand-button">
+    {let $classes kind="text"}
+        {call .rootClass /}__expand-button
+
+        {if $params.data.content}
+            {sp}{call .rootClass /}__expand-button_active
+        {/if}
+    {/let}
+
+    <div class="{$classes}">
         {call .icon_ data="all" /}
         {call .expanderText_ data="all" /}
     </div>
