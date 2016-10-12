@@ -33,6 +33,8 @@ goog.scope(function() {
 
         this.loadingLibrary_();
         this.create_();
+        this.requireEc_();
+        this.setCurrency_();
     };
 
 
@@ -253,8 +255,24 @@ goog.scope(function() {
      */
     Analytics.prototype.create_ = function() {
         ga('create', this.clientId_, 'auto');
+    };
 
+
+    /**
+     * Attach ecommerce
+     * @private
+     */
+    Analytics.prototype.requireEc_ = function() {
         ga('require', 'ec');
+    };
+
+
+    /**
+     * Set local currency for transactions
+     * @private
+     */
+    Analytics.prototype.setCurrency_ = function() {
+        ga('set', '&cu', 'RUB');
     };
 
 
