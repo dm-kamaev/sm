@@ -94,5 +94,11 @@
     .b-information-board__description {
         padding-left: 145px;
     }
+
+    .b-information-board__description-text {
+        display: block;
+
+        word-wrap: break-word;
+    }
 }
 
