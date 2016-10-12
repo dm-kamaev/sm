@@ -23,7 +23,7 @@ module.exports = class CourseParser {
         sequelize.options.logging = false;
         try {
             courses.map(course =>
-                await(courseService.create(course))
+                await(courseService.fullCreate(course))
             );
         } catch (error) {
             console.log(error);

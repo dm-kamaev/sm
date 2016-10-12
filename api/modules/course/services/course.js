@@ -93,7 +93,7 @@ const informationFields = {
  * }} data
  * @return {Course}
  */
-service.create = async(function(data) {
+service.fullCreate = async(function(data) {
     let brand = await(services.courseBrand.create(data.brand)),
         type = await(services.courseType.create(data.type)),
         course = await(models.Course.create({
@@ -432,6 +432,49 @@ service.getAliases = async(function(courses) {
  */
 service.getAll = async(function() {
     return await(models.Course.findAll());
+});
+
+/**
+ * @param  {number} id
+ * @return {Course}
+ */
+service.getById = async(function(id) {
+    return await(models.Course.findOne({
+        where: {
+            id: id
+        }
+    }));
+});
+
+/**
+ * @param  {{
+ *     name: string,
+ *     brandId: number,
+ *     type: number,
+ *     description: ?string,
+ *     fullDescription: ?string,
+ *     about: ?string,
+ *     entranceExam: ?string,
+ *     learningOutcome: ?string,
+ *     leadType: ?string
+ * }} data
+ * @return {Course}
+ */
+service.create = async(function(data) {
+    return await(models.Course.create(data));
+});
+
+/**
+ * @param  {number} id
+ * @param  {data} Object
+ * @return {Array<number>}
+ */
+service.update = async(function(id, data) {
+    return await(models.Course.update(data, {
+        where: {
+            id: id
+        }
+    }));
 });
 
 module.exports = service;
