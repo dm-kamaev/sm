@@ -3,7 +3,7 @@
 const async = require('asyncawait/async'),
     await = require('asyncawait/await');
 
-const services = require('../../../components/services');
+const services = require('../../../../app/components/services').all;
 
 const logger = require('../../../../app/components/logger/logger')
     .getLogger('app');
