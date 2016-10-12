@@ -56,7 +56,10 @@
         {for $i in range(length($params.data.items))}
             {call .item_}
                 {param params: [
-                    'data': $params.data.items[$i]
+                    'data': $params.data.items[$i],
+                    'config': [
+                        'modifier': $i == 0 ? 'details' : ''
+                    ]
                 ]/}
             {/call}
         {/for}
@@ -72,6 +75,9 @@
  *         description: ?(string|undefined),
  *         score: ?(number|undefined),
  *         currentStatus: (string|undefined)
+ *     },
+ *     config: {
+ *         modifier: ?('details'|null)
  *     }
  * }}
  */
@@ -79,8 +85,8 @@
     {let $classes kind="html"}
         {call .rootClass/}__item
 
-        {if $params.data?.score}
-            {sp}{call .rootClass/}__item_details
+        {if $params.config?.modifier}
+            {sp}{call .rootClass/}__item_{$params.config.modifier}
         {/if}
     {/let}
 

@@ -73,6 +73,9 @@
 
 .b-information-board__item_details {
     .b-information-board__name {
+        float: none;
+
+        display: inline-block;
         width: auto;
         padding-right: 0;
     }
