@@ -289,4 +289,43 @@ controller.enrollOnCourse = async(function(req, res) {
     }
 });
 
+/**
+ * @api {get} /course Get all courses
+ * @apiVersion 1.0.0
+ * @apiGroup Course
+ * @apiName getAllCourses
+ * @apiSuccess {Course[]} courses
+ * @apiSuccessExample {json} Response-example
+ *     HTTP/1.1 200 OK
+ *     [{
+ *         "id": 1,
+ *         "name": "course's name",
+ *         "description": "course's description",
+ *         "brandId": 1,
+ *         "fullDescription": "course's full description",
+ *         "score": [1, 4, 4, 5],
+ *         "scoreCount": [3, 13, 14, 14],
+ *         "totalScore": 4.5,
+ *         "type": 2,
+ *         "about": "course's about",
+ *         "entranceExam": "course's entrance exam",
+ *         "learningOutcome": "course's learning outcome",
+ *         "leadType": "course's lead type",
+ *         "createdAt": "2016-09-15T15:18:28.395Z",
+ *         "updatedAt": "2016-09-15T15:18:28.395Z"
+ *     }]
+ */
+controller.list = async(function(req, res) {
+    let result;
+    try {
+        result = await(services.course.getAll());
+    } catch (error) {
+        logger.error(error.message);
+        result = error;
+    } finally {
+        res.header('Content-Type', 'application/json; charset=utf-8');
+        res.end(JSON.stringify(result));
+    }
+});
+
 module.exports = controller;

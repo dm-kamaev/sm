@@ -427,4 +427,11 @@ service.getAliases = async(function(courses) {
     });
 });
 
+/**
+ * @return {Array<Course>}
+ */
+service.getAll = async(function() {
+    return await(models.Course.findAll());
+});
+
 module.exports = service;

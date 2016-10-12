@@ -21,4 +21,6 @@ router.post('/coursebrand', checkToken, brandController.create);
 router.put('/coursebrand/:id', checkToken, brandController.update);
 router.delete('/coursebrand/:id', checkToken, brandController.delete);
 
+router.get('/course', courseController.list);
+
 module.exports = router;
