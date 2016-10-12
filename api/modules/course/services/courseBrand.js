@@ -50,14 +50,26 @@ service.getById = async(function(id) {
 
 /**
  * @param  {number} id
- * @param {{
+ * @param  {{
  *     name: string,
  *     description: ?string
  * }} data
- * @return {CourseBrand}
+ * @return {Array<number>}
  */
 service.update = async(function(id, data) {
     return await(models.CourseBrand.update(data, {
+        where: {
+            id: id
+        }
+    }));
+});
+
+/**
+ * @param  {number} id
+ * @return {number}
+ */
+service.delete = async(function(id) {
+    return await(models.CourseBrand.destroy({
         where: {
             id: id
         }

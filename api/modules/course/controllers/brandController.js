@@ -94,11 +94,11 @@ controller.create = async(function(req, res) {
 });
 
 /**
- * @api {post} /coursebrand/:id Create course brand
+ * @api {put} /coursebrand/:id Update course brand
  * @apiVersion 1.0.0
  * @apiGroup CourseBrand
  * @apiName updateCourseBrand
- * @apiSuccess {CourseBrand} courseBrand
+ * @apiSuccess {number[]} updatedRowsCount
  * @apiParamExample {json} Request-example
  * {
  *     "name": "Alibra",
@@ -109,6 +109,26 @@ controller.update = async(function(req, res) {
     let result;
     try {
         result = await(services.courseBrand.update(req.params.id, req.body));
+    } catch (error) {
+        logger.error(error.message);
+        result = error;
+    } finally {
+        res.header('Content-Type', 'application/json; charset=utf-8');
+        res.end(JSON.stringify(result));
+    }
+});
+
+/**
+ * @api {delete} /coursebrand/:id Delete course brand
+ * @apiVersion 1.0.0
+ * @apiGroup CourseBrand
+ * @apiName deleteCourseBrand
+ * @apiSuccess {number} deleteRowsCount
+ */
+controller.delete = async(function(req, res) {
+    let result;
+    try {
+        result = await(services.courseBrand.delete(req.params.id));
     } catch (error) {
         logger.error(error.message);
         result = error;
