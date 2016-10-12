@@ -3,7 +3,8 @@ var router = express.Router();
 
 const courseController = require('./courseController'),
     brandController = require('./brandController'),
-    csrf = require('../../../../app/middleware/csrf');
+    csrf = require('../../../../app/middleware/csrf'),
+    checkToken = require('../../../../app/middleware/checkToken');
 
 router.get('/course/search', courseController.search);
 router.get('/course/search/map', courseController.searchMap);
@@ -16,5 +17,7 @@ router.post('/course/enrollment', csrf, courseController.enrollOnCourse);
 
 router.get('/coursebrand', brandController.list);
 router.get('/coursebrand/:id', brandController.get);
+router.post('/coursebrand', checkToken, brandController.create);
+router.put('/coursebrand/:id', checkToken, brandController.update);
 
 module.exports = router;

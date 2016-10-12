@@ -48,4 +48,20 @@ service.getById = async(function(id) {
     }));
 });
 
+/**
+ * @param  {number} id
+ * @param {{
+ *     name: string,
+ *     description: ?string
+ * }} data
+ * @return {CourseBrand}
+ */
+service.update = async(function(id, data) {
+    return await(models.CourseBrand.update(data, {
+        where: {
+            id: id
+        }
+    }));
+});
+
 module.exports = service;
