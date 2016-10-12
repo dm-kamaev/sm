@@ -13,6 +13,23 @@
  */
 
 
+/*
+ * @typedef {{
+ *     items: Array<{
+ *         data: {
+ *             name: string,
+ *             description: ?(string|undefined),
+ *             score: ?(number|undefined),
+ *             currentStatus: (string|undefined)
+ *         },
+ *         config: {
+ *             align: ('horizontal'|'vertical')
+ *         }
+ *     }>
+ * }} sm.lCourse.bInformationBoard.Template.Params.Data
+ */
+
+
  /**
  * Information Board
  * @param params {{
@@ -43,10 +60,15 @@
  * @param params {{
  *     data: {
  *         items: Array<{
- *             name: string,
- *             description: ?(string|undefined),
- *             score: ?(number|undefined),
- *             currentStatus: (string|undefined)
+ *             data: {
+ *                 name: string,
+ *                 description: ?(string|undefined),
+ *                 score: ?(number|undefined),
+ *                 currentStatus: (string|undefined)
+ *             },
+ *             config: {
+ *                 align: ('horizontal'|'vertical')
+ *             }
  *         }>
  *     }
  * }}
@@ -55,9 +77,7 @@
     <div class="{call .rootClass/}__list-items">
         {for $i in range(length($params.data.items))}
             {call .item_}
-                {param params: [
-                    'data': $params.data.items[$i]
-                ]/}
+                {param params: $params.data.items[$i]/}
             {/call}
         {/for}
     </div>
@@ -72,6 +92,9 @@
  *         description: ?(string|undefined),
  *         score: ?(number|undefined),
  *         currentStatus: (string|undefined)
+ *     },
+ *     config: {
+ *         align: ('horizontal'|'vertical')
  *     }
  * }}
  */
@@ -79,8 +102,8 @@
     {let $classes kind="html"}
         {call .rootClass/}__item
 
-        {if $params.data?.score}
-            {sp}{call .rootClass/}__item_details
+        {if $params.config?.align}
+            {sp}{call .rootClass/}__item_{$params.config.align}
         {/if}
     {/let}
 

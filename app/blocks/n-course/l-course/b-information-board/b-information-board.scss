@@ -71,8 +71,11 @@
     color: #ee392f;
 }
 
-.b-information-board__item_details {
+.b-information-board__item_horizontal {
     .b-information-board__name {
+        float: none;
+
+        display: inline-block;
         width: auto;
         padding-right: 0;
     }
@@ -90,6 +93,12 @@
 
     .b-information-board__description {
         padding-left: 145px;
+    }
+
+    .b-information-board__description-text {
+        display: block;
+
+        word-wrap: break-word;
     }
 }
 

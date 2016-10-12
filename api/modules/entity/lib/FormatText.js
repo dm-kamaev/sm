@@ -19,7 +19,7 @@ class FormatText {
             /** Get a part from text from beginning to last dot, include dot **/
             result = text.slice(0, lastDotIndex + lastSymbol);
         }
-        return result;
+        return result || text;
     };
 };
 

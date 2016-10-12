@@ -17,7 +17,9 @@ const entityType = require('../../../../api/modules/entity/enums/entityType');
 
 let view = {};
 
-const FULL_DESCRIPTION_LENGTH = 300;
+const FULL_DESCRIPTION_LENGTH = 300,
+    LEARNING_OUTCOMES_NAME = 'Результаты обучения',
+    BRAND_INDEX = 0;
 
 /**
  * @param  {Object} course
@@ -36,7 +38,7 @@ view.page = function(course) {
         score: scoreView.results(course.score, course.totalScore).data,
         cost: this.formatCost(options),
         generalOptions: {
-            items: generalOptions
+            items: this.formatGeneralOptionsWithConfig(generalOptions)
         },
         departmentList: this.formatDepartmentList(options, generalOptions),
         online: this.onlineStatus(generalOptions)
@@ -143,7 +145,7 @@ view.getStaticOptions = function(course) {
 
     if (course.learningOutcome) {
         result.push({
-            name: 'Результаты обучения',
+            name: LEARNING_OUTCOMES_NAME,
             description: course.learningOutcome
         });
     }
@@ -156,6 +158,47 @@ view.getStaticOptions = function(course) {
         });
     }
     return result;
+};
+
+
+/**
+ * @param {Array<{
+ *     name: string,
+ *     description: string,
+ *     cost: (number|undefined)
+ * }>} generalOptions
+ * @return {Array<Object>}
+ */
+view.formatGeneralOptionsWithConfig = function(generalOptions) {
+    return generalOptions.map((option, index) => {
+        let isHorizontal = (BRAND_INDEX == index);
+        return {
+            data: option,
+            config: {
+                align: this.alignmentOption(option, isHorizontal)
+            }
+        };
+    });
+};
+
+
+/**
+ * @param {{
+ *     name: string,
+ *     description: string,
+ *     cost: (number|undefined)
+ * }} option
+ * @param {boolean=} opt_isHorizontal
+ * @return {string}
+ */
+view.alignmentOption = function(option, opt_isHorizontal) {
+    let optionsNameHorizontally = [LEARNING_OUTCOMES_NAME];
+
+    let isHorizontally = optionsNameHorizontally.some(optionName =>
+        opt_isHorizontal || (optionName == option.name)
+    );
+
+    return isHorizontally ? 'horizontal' : 'vertical';
 };
 
 /**
