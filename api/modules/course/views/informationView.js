@@ -1,5 +1,6 @@
 const userView = require('../../user/views/user');
 const favoriteView = require('../../favorite/views/favoriteView');
+const seoView = require('../../entity/views/seoView');
 
 
 /**
@@ -19,7 +20,11 @@ exports.render = function(data) {
 
     return {
         seo: {
-            metaTitle: 'Кружки и секции'
+            metaTitle: 'Профориентационный курс' + data.entityData.name +
+                'в Москве: стоимость обучения, отзывы.',
+            metaDescription: seoView.formatSeoDescription(
+                data.entityData.description
+            )
         },
         openGraph: {
             title: 'Курс ' + data.entityData.name + ' на «Курсах Мела»',

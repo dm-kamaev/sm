@@ -4,6 +4,10 @@
 /**
  * typedef {{
  *     openGraph: (sm.iLayout.TemplateStendhal.Params.Data.openGraph|undefined),
+ *     seo: {
+ *         metaTitle: string,
+ *         metaDescription: (string|undefined)
+ *     },
  *     user: {
  *         firstName: (string|undefined),
  *         lastName: (string|undefined),
@@ -619,9 +623,9 @@
  * }}
  */
 {template .name_}
-    <div class="{call .rootClass/}__name">
+    <h1 class="{call .rootClass/}__name">
         {$params.data.entityData.name}
-    </div>
+    </h1>
 {/template}
 
 
