@@ -489,4 +489,14 @@ service.delete = async(function(id) {
     }));
 });
 
+/*
+ * @param {Course} course
+ */
+service.deleteAlias = async(function(course) {
+    await(services.page.delete(
+        course.id,
+        entityType.COURSE
+    ));
+});
+
 module.exports = service;

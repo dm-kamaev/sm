@@ -1,11 +1,16 @@
 'use strict';
 
-var async = require('asyncawait/async'),
+const async = require('asyncawait/async'),
     await = require('asyncawait/await');
 
-var models = require('../../../../app/components/models').all;
+const squel = require('squel').useFlavour('postgres');
 
-var service = {
+const models = require('../../../../app/components/models').all,
+    services = require('../../../../app/components/services').all,
+    sequelize = require('../../../../app/components/db'),
+    entityType = require('../../entity/enums/entityType');
+
+let service = {
     name: 'courseBrand'
 };
 
@@ -30,10 +35,44 @@ service.create = async(function(data) {
 });
 
 /**
- * @return {Array<CourseBrand>}
+ * @return {Array<{
+ *     id: number,
+ *     name: string,
+ *     courseCount: number,
+ *     departmentCount: number,
+ *     updatedAt: Date
+ * }>}
  */
 service.getAll = async(function() {
-    return await(models.CourseBrand.findAll());
+    let query = squel.select({autoQuoteAliasNames: true})
+        .from('course_brand')
+        .field('course_brand.id')
+        .field('course_brand.name')
+        .field('COUNT(course.id)', 'courseCount')
+        .field('COUNT(course_department.id)', 'departmentCount')
+        .field('course_brand.updated_at', 'updatedAt')
+        .left_join('course', null, 'course_brand.id = course.brand_id')
+        .left_join('course_option', null, 'course.id = course_option.course_id')
+        .left_join(
+            'course_option_course_department',
+            null,
+            'course_option.id = ' +
+                'course_option_course_department.course_option_id'
+        )
+        .left_join(
+            'course_department',
+            null,
+            'course_option_course_department.course_department_id = ' +
+                'course_department.id'
+        )
+        .group('course_brand.id')
+        .toString();
+
+    return await(sequelize.query(
+        query, {
+            type: sequelize.QueryTypes.SELECT
+        }
+    ));
 });
 
 /**
@@ -66,14 +105,24 @@ service.update = async(function(id, data) {
 
 /**
  * @param  {number} id
- * @return {number}
  */
 service.delete = async(function(id) {
-    return await(models.CourseBrand.destroy({
+    let brand = await(models.CourseBrand.findOne({
         where: {
             id: id
         }
     }));
+    await(brand.destroy());
+});
+
+/**
+ * @param {CourseBrand} courseBrand
+ */
+service.deleteAlias = async(function(courseBrand) {
+    await(services.page.delete(
+        courseBrand.id,
+        entityType.COURSE_BRAND
+    ));
 });
 
 module.exports = service;

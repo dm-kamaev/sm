@@ -137,4 +137,18 @@ service.incrementViews = async(function(entityId, entityType) {
     entity.increment('views');
 });
 
+/**
+ * @param  {Object} entity
+ * @param  {string} entityType
+ * @return {number}
+ */
+service.delete = async(function(entityId, entityType) {
+    await(models.Page.destroy({
+        where: {
+            entityId: entityId,
+            entityType: entityType
+        }
+    }));
+});
+
 module.exports = service;
