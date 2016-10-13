@@ -480,21 +480,13 @@ goog.scope(function() {
     };
 
 
-    /**
-     * Sets EC analytics
-     * @private
-     */
-    School.prototype.setEcAnalyticsPageview_ = function() {
-        Analytics.viewProduct(this.getDataEc_());
-        Analytics.setView();
-    };
-
 
     /**
      * Sends pageview analytics
      * @private
      */
     School.prototype.sendAnalyticsPageview_ = function() {
+        Analytics.addImpression(this.getDataEc_());
         Analytics.send('pageview');
     };
 
@@ -546,7 +538,8 @@ goog.scope(function() {
     School.prototype.getDataEc_ = function(opt_id, opt_name) {
         return {
             'id': opt_id || this.params_.id,
-            'name': opt_name || this.params_.schoolName
+            'name': opt_name || this.params_.schoolName,
+            'list': 'School Details'
         };
     };
 
