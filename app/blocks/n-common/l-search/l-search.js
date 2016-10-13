@@ -689,7 +689,7 @@ goog.scope(function() {
 
     /**
      * Init data loading services
-     * @return {sm.lSearch.SmSearch}
+     * @return {sm.lSearch.Search}
      * @private
      */
     Search.prototype.initServices_ = function() {
@@ -706,7 +706,7 @@ goog.scope(function() {
 
     /**
      * Init url updater
-     * @return {sm.lSearch.SmSearch}
+     * @return {sm.lSearch.Search}
      * @private
      */
     Search.prototype.initUrlUpdater_ = function() {
@@ -719,7 +719,7 @@ goog.scope(function() {
     /**
      * Init search params manager by
      * creating it and setting search params from data params to it
-     * @return {sm.lSearch.SmSearch}
+     * @return {sm.lSearch.Search}
      * @private
      */
     Search.prototype.initParamsManager_ = function() {

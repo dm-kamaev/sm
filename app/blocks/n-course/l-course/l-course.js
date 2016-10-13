@@ -208,8 +208,7 @@ goog.scope(function() {
     Course.prototype.sendAnalyticsPageview_ = function() {
         var data = this.getEcAnalyticsCourseData_();
 
-        Analytics.getInstance().viewProduct(data);
-        Analytics.getInstance().setView();
+        Analytics.getInstance().addImpression(data);
         Analytics.getInstance().send('pageview');
     };
 
@@ -250,6 +249,7 @@ goog.scope(function() {
         return {
             'id': this.params.id,
             'name': this.params.name,
+            'list': 'course details',
             'category': this.params.category
         };
     };
