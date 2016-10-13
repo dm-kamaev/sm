@@ -427,4 +427,14 @@ service.getAliases = async(function(courses) {
     });
 });
 
+/**
+ * @param {Course} course
+ */
+service.deleteAlias = async(function(course) {
+    await(services.page.delete(
+        course.id,
+        entityType.COURSE
+    ));
+});
+
 module.exports = service;

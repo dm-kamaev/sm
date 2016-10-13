@@ -1,11 +1,13 @@
 'use strict';
 
-var async = require('asyncawait/async'),
+const async = require('asyncawait/async'),
     await = require('asyncawait/await');
 
-var models = require('../../../../app/components/models').all;
+const models = require('../../../../app/components/models').all,
+    services = require('../../../../app/components/services').all,
+    entityType = require('../../entity/enums/entityType');
 
-var service = {
+let service = {
     name: 'courseBrand'
 };
 
@@ -66,14 +68,24 @@ service.update = async(function(id, data) {
 
 /**
  * @param  {number} id
- * @return {number}
  */
 service.delete = async(function(id) {
-    return await(models.CourseBrand.destroy({
+    let brand = await(models.CourseBrand.findOne({
         where: {
             id: id
         }
     }));
+    await(brand.destroy());
+});
+
+/**
+ * @param {CourseBrand} courseBrand
+ */
+service.deleteAlias = async(function(courseBrand) {
+    await(services.page.delete(
+        courseBrand.id,
+        entityType.COURSE_BRAND
+    ));
 });
 
 module.exports = service;

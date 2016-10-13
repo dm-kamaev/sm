@@ -3,7 +3,8 @@
 const Sequelize = require('sequelize');
 
 const db = require('../../../../app/components/db'),
-    urlService = require('../../entity/services/urls');
+    urlService = require('../../entity/services/urls'),
+    brandService = require('../services/courseBrand');
 
 let CourseBrand = db.define('CourseBrand', {
     name: {
@@ -17,13 +18,16 @@ let CourseBrand = db.define('CourseBrand', {
     tableName: 'course_brand',
     hooks: {
         afterCreate: urlService.generateCourseBrandAlias,
-        afterUpdate: urlService.generateCourseBrandAlias
+        afterUpdate: urlService.generateCourseBrandAlias,
+        afterDestroy: brandService.deleteAlias
     },
     classMethods: {
         associate: function(models) {
             CourseBrand.hasMany(models.Course, {
                 as: 'courses',
-                foreignKey: 'brand_id'
+                foreignKey: 'brand_id',
+                onDelete: 'cascade',
+                hooks: true
             });
         }
     }
