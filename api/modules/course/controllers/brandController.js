@@ -123,7 +123,7 @@ controller.update = async(function(req, res) {
  * @apiVersion 1.0.0
  * @apiGroup CourseBrand
  * @apiName deleteCourseBrand
- * @apiSuccess {number} deleteRowsCount
+ * @apiSuccess {number} deletedRowsCount
  */
 controller.delete = async(function(req, res) {
     let result;

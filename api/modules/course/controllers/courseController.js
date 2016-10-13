@@ -437,4 +437,24 @@ controller.update = async(function(req, res) {
     }
 });
 
+/**
+ * @api {delete} /course/:id Delete course
+ * @apiVersion 1.0.0
+ * @apiGroup Course
+ * @apiName deleteCourse
+ * @apiSuccess {number} deletedRowsCount
+ */
+controller.delete = async(function(req, res) {
+    let result;
+    try {
+        result = await(services.course.delete(req.params.id));
+    } catch (error) {
+        logger.error(error.message);
+        result = error;
+    } finally {
+        res.header('Content-Type', 'application/json; charset=utf-8');
+        res.end(JSON.stringify(result));
+    }
+});
+
 module.exports = controller;

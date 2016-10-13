@@ -23,7 +23,8 @@ router.delete('/coursebrand/:id', checkToken, brandController.delete);
 
 router.get('/course', courseController.list);
 router.get('/course/:id', courseController.get);
-router.post('/course', courseController.create);
-router.put('/course/:id', courseController.update);
+router.post('/course', checkToken, courseController.create);
+router.put('/course/:id', checkToken, courseController.update);
+router.delete('/course/:id', checkToken, courseController.delete);
 
 module.exports = router;

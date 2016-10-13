@@ -477,4 +477,16 @@ service.update = async(function(id, data) {
     }));
 });
 
+/**
+ * @param  {number} id
+ * @return {number}
+ */
+service.delete = async(function(id) {
+    return await(models.Course.destroy({
+        where: {
+            id: id
+        }
+    }));
+});
+
 module.exports = service;
