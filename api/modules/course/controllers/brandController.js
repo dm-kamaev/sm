@@ -21,8 +21,8 @@ let controller = {};
  *     [{
  *         "id": 1,
  *         "name": "Alibra",
- *         "description": "Курсы иностранных языков",
- *         "createdAt": "2016-09-15T15:18:28.395Z",
+ *         "courseCount": 4,
+ *         "departmentCount": 7,
  *         "updatedAt": "2016-09-15T15:18:28.395Z"
  *     }]
  */
