@@ -1,15 +1,20 @@
 {namespace sm.gHint.TemplateStendhal}
 
 /**
+ * @typedef {{
+ *     align: (string|undefined),
+ *     offset: (string|undefined),
+ *     topOffset: (string|undefined),
+ *     noPadding: boolean,
+ *     theme: (string|undefined)
+ * }} sm.gHint.TemplateStendhal.Params.Config
+ */
+
+/**
  * Hint template
  * @param params {
- *     config: {
- *         align: (string|undefined),
- *         offset: (string|undefined),
- *         topOffset: (string|undefined),
- *         noPadding: boolean,
- *         theme: (string|undefined)
- *     }
+ *     data: string,
+ *     config: sm.gHint.TemplateStendhal.Params.Config
  * }
  * @constructor
  * @extends cl.gHint.Template
