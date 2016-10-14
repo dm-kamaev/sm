@@ -442,7 +442,6 @@ controller.update = async(function(req, res) {
  * @apiVersion 1.0.0
  * @apiGroup Course
  * @apiName deleteCourse
- * @apiSuccess {number} deletedRowsCount
  */
 controller.delete = async(function(req, res) {
     let result;

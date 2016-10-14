@@ -479,14 +479,14 @@ service.update = async(function(id, data) {
 
 /**
  * @param  {number} id
- * @return {number}
  */
 service.delete = async(function(id) {
-    return await(models.Course.destroy({
+    let course = await(models.Course.findOne({
         where: {
             id: id
         }
     }));
+    await(course.destroy());
 });
 
 /*
