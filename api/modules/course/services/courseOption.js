@@ -9,7 +9,7 @@ var service = {
 };
 
 /**
- * @param {number} courseId
+ * @param {Course} course
  * @param {{
  *     name: ?string,
  *     description: ?string,
@@ -38,9 +38,9 @@ var service = {
  * }} data
  * @return {CourseOption}
  */
-service.create = async(function(courseId, data) {
+service.create = async(function(course, data) {
     var courseOption = await(models.CourseOption.create({
-        courseId: courseId,
+        courseId: course.id,
         name: data.name,
         description: data.description,
         totalCost: data.totalCost,
@@ -61,7 +61,10 @@ service.create = async(function(courseId, data) {
         ));
     }
     await(courseOption.setDepartments(data.departments.map(department =>
-        await(services.courseDepartment.findOrCreate(department))
+        await(services.courseDepartment.findOrCreate(
+            course.brandId,
+            department
+        ))
     )));
 
     return courseOption;
