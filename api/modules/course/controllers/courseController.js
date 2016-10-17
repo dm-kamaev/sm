@@ -301,24 +301,18 @@ controller.enrollOnCourse = async(function(req, res) {
  *         "id": 1,
  *         "name": "course's name",
  *         "description": "course's description",
- *         "brandId": 1,
+ *         "brandName": "brand's name",
  *         "fullDescription": "course's full description",
- *         "score": [1, 4, 4, 5],
- *         "scoreCount": [3, 13, 14, 14],
- *         "totalScore": 4.5,
- *         "type": 2,
  *         "about": "course's about",
- *         "entranceExam": "course's entrance exam",
  *         "learningOutcome": "course's learning outcome",
- *         "leadType": "course's lead type",
- *         "createdAt": "2016-09-15T15:18:28.395Z",
  *         "updatedAt": "2016-09-15T15:18:28.395Z"
  *     }]
  */
 controller.list = async(function(req, res) {
     let result;
     try {
-        result = await(services.course.getAll());
+        let courses = await(services.course.getAll());
+        result = courseView.renderList(courses);
     } catch (error) {
         logger.error(error.message);
         result = error;
@@ -337,27 +331,21 @@ controller.list = async(function(req, res) {
  * @apiSuccessExample {json} Response-example
  *     HTTP/1.1 200 OK
  *     {
- *         "id": 1,
+ *        "id": 1,
  *         "name": "course's name",
  *         "description": "course's description",
- *         "brandId": 1,
+ *         "brandName": "brand's name",
  *         "fullDescription": "course's full description",
- *         "score": [1, 4, 4, 5],
- *         "scoreCount": [3, 13, 14, 14],
- *         "totalScore": 4.5,
- *         "type": 2,
  *         "about": "course's about",
- *         "entranceExam": "course's entrance exam",
  *         "learningOutcome": "course's learning outcome",
- *         "leadType": "course's lead type",
- *         "createdAt": "2016-09-15T15:18:28.395Z",
  *         "updatedAt": "2016-09-15T15:18:28.395Z"
  *     }
  */
 controller.get = async(function(req, res) {
     let result;
     try {
-        result = await(services.course.getById(req.params.id));
+        let course = await(services.course.getById(req.params.id));
+        result = courseView.render(course);
     } catch (error) {
         logger.error(error.message);
         result = error;

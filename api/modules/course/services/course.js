@@ -245,6 +245,9 @@ service.findByDepartmentId = async(function(departmentId) {
 service.getAll = async(function() {
     return await(models.Course.findAll({
         include: [{
+            model: models.CourseBrand,
+            as: 'courseBrand'
+        }, {
             model: models.CourseOption,
             as: 'courseOptions',
             include: [{
@@ -428,13 +431,6 @@ service.getAliases = async(function(courses) {
 });
 
 /**
- * @return {Array<Course>}
- */
-service.getAll = async(function() {
-    return await(models.Course.findAll());
-});
-
-/**
  * @param  {number} id
  * @return {Course}
  */
@@ -442,7 +438,11 @@ service.getById = async(function(id) {
     return await(models.Course.findOne({
         where: {
             id: id
-        }
+        },
+        include: [{
+            model: models.CourseBrand,
+            as: 'courseBrand'
+        }]
     }));
 });
 
