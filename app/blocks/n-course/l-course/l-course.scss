@@ -69,6 +69,9 @@
 }
 
 .l-course__name {
+    hyphens: auto;
+    word-break: break-all;
+
     font: 30px 'Proxima', Arial, sans-serif;
     font-weight: 800;
     line-height: 36px;
