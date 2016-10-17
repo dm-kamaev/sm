@@ -120,6 +120,7 @@
 
     {call .analytics_ data="all"/}
     {call .metrika_ data="all"/}
+    {call .relap_/}
 {/template}
 
 
@@ -158,6 +159,14 @@
         </div>
     </noscript>
     <!-- /Yandex.Metrika counter -->
+{/template}
+
+
+/**
+ * Recommender system
+ */
+{template .relap_ autoescape="strict" kind="html"}
+    <script type="text/javascript" async src="https://relap.io/api/v6/head.js?token=s4f-T0rORrtGBgMG"></script>
 {/template}
 
 
