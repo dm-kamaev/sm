@@ -69,9 +69,6 @@
 }
 
 .l-course__name {
-    hyphens: auto;
-    word-break: break-all;
-
     font: 30px 'Proxima', Arial, sans-serif;
     font-weight: 800;
     line-height: 36px;
@@ -230,6 +227,9 @@
     .l-course__name {
         box-sizing: border-box;
         padding-left: 24px;
+
+        font-size: 21px;
+        line-height: 1.2;
     }
 
     .l-course__score_xl {
@@ -241,7 +241,11 @@
         float: left;
 
         width: 24px;
-        margin-top: 10px;
+        margin-top: 6px;
+    }
+
+    .l-course__description {
+        display: none;
     }
     /** section data end **/
 
