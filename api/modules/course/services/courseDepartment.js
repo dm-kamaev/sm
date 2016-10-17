@@ -26,10 +26,14 @@ service.findOrCreate = async(function(brandId, data) {
             entityId: null,
             entityType: null
         })),
+        courseDepartment;
+
+    if (address) {
         courseDepartment = await(this.getByAddressBrandId(
             address.id,
             brandId
         ));
+    }
 
     if (!courseDepartment) {
         courseDepartment = await(this.create(
