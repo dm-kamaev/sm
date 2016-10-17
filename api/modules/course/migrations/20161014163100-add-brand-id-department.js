@@ -11,7 +11,8 @@ module.exports = {
                 references: {
                     model: 'course_brand',
                     key: 'id'
-                }
+                },
+                onDelete: 'cascade'
             }
         );
     }),

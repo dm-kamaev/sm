@@ -135,15 +135,15 @@ controller.update = async(function(req, res) {
 });
 
 /**
- * @api {delete} /coursebrand/:id Delete course brand
+ * @api {delete} /coursebrand/:id Delete department
  * @apiVersion 1.0.0
- * @apiGroup CourseBrand
- * @apiName deleteCourseBrand
+ * @apiGroup CourseDepartment
+ * @apiName deleteDepartment
  */
 controller.delete = async(function(req, res) {
     let result;
     try {
-        result = await(services.courseBrand.delete(req.params.id));
+        result = await(services.courseDepartment.delete(req.params.id));
     } catch (error) {
         logger.error(error.message);
         result = error;

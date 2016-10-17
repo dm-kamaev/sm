@@ -11,7 +11,8 @@ module.exports = {
                 references: {
                     model: 'address',
                     key: 'id'
-                }
+                },
+                onDelete: 'cascade'
             }
         );
     }),

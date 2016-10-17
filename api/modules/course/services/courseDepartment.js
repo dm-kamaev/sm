@@ -1,12 +1,12 @@
 'use strict';
 
-var async = require('asyncawait/async'),
+const async = require('asyncawait/async'),
     await = require('asyncawait/await');
 
-var models = require('../../../../app/components/models').all,
+const models = require('../../../../app/components/models').all,
     services = require('../../../../app/components/services').all;
 
-var service = {
+let service = {
     name: 'courseDepartment'
 };
 
@@ -23,17 +23,15 @@ var service = {
 service.findOrCreate = async(function(brandId, data) {
     var address = await(services.address.getAddress({
             name: data.address,
+            entityId: null,
             entityType: null
         })),
-        courseDepartment;
-
-    if (address) {
         courseDepartment = await(this.getByAddressBrandId(
             address.id,
             brandId
         ));
-    }
-    if (!address && !courseDepartment) {
+
+    if (!courseDepartment) {
         courseDepartment = await(this.create(
             brandId, {
                 name: data.name,
@@ -134,11 +132,32 @@ service.getById = async(function(id) {
  * @return {Array<number>}
  */
 service.update = async(function(id, data) {
-    return await(models.CourseDepartment.update(data, {
+    let address = await(services.address.addAddress(
+            null,
+            null, {
+                name: data.address
+            }
+        )),
+        departmentData = Object.assign({}, data);
+    departmentData.addressId = address.id;
+
+    return await(models.CourseDepartment.update(departmentData, {
         where: {
             id: id
         }
     }));
+});
+
+/**
+ * @param {number} id
+ */
+service.delete = async(function(id) {
+    let department = await(models.CourseDepartment.findOne({
+        where: {
+            id: id
+        }
+    }));
+    await(department.destroy());
 });
 
 module.exports = service;

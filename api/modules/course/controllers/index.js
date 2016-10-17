@@ -27,6 +27,11 @@ router.delete('/coursebrand/:id', checkToken, brandController.delete);
 router.get(DEPARTMENT_ROUTE, departmentController.list);
 router.get(`${DEPARTMENT_ROUTE}/:id`, departmentController.get);
 router.post(DEPARTMENT_ROUTE, checkToken, departmentController.create);
-router.put(`${DEPARTMENT_ROUTE}/:id`, departmentController.update);
+router.put(`${DEPARTMENT_ROUTE}/:id`, checkToken, departmentController.update);
+router.delete(
+    `${DEPARTMENT_ROUTE}/:id`,
+    checkToken,
+    departmentController.delete
+);
 
 module.exports = router;

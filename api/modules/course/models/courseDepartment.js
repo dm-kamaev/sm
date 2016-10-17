@@ -9,8 +9,7 @@ var CourseDepartment = db.define('CourseDepartment', {
         references: {
             model: 'brand',
             key: 'id'
-        },
-        onDelete: 'cascade'
+        }
     },
     addressId: {
         type: Sequelize.INTEGER,
