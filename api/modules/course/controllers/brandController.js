@@ -44,7 +44,7 @@ controller.list = async(function(req, res) {
  * @apiVersion 1.0.0
  * @apiGroup CourseBrand
  * @apiName getCourseBrand
- * @apiSuccess {CourseBrand} coursebrands
+ * @apiSuccess {CourseBrand} coursebrand
  * @apiSuccessExample {json} Response-example
  *     HTTP/1.1 200 OK
  *     {

@@ -70,4 +70,44 @@ service.create = async(function(course, data) {
     return courseOption;
 });
 
+/**
+ * @param  {number} courseId
+ * @return {Array<CourseOption>}
+ */
+service.getByCourseId = async(function(courseId) {
+    return await(models.CourseOption.findAll({
+        where: {
+            courseId: courseId
+        },
+        include: [{
+            model: models.CourseSchedule,
+            as: 'schedule'
+        }, {
+            model: models.CourseDepartment,
+            as: 'departments',
+            through: 'course_option_course_department'
+        }]
+    }));
+});
+
+/**
+ * @param  {number} id
+ * @return {CourseOption}
+ */
+service.getById = async(function(id) {
+    return await(models.CourseOption.findAll({
+        where: {
+            id: id
+        },
+        include: [{
+            model: models.CourseSchedule,
+            as: 'schedule'
+        }, {
+            model: models.CourseDepartment,
+            as: 'departments',
+            through: 'course_option_course_department'
+        }]
+    }));
+});
+
 module.exports = service;

@@ -4,6 +4,7 @@ var router = express.Router();
 const courseController = require('./courseController'),
     brandController = require('./brandController'),
     departmentController = require('./departmentController'),
+    optionController = require('./optionController'),
     csrf = require('../../../../app/middleware/csrf'),
     checkToken = require('../../../../app/middleware/checkToken');
 
@@ -39,5 +40,9 @@ router.delete(
     checkToken,
     departmentController.delete
 );
+
+router.get('/course/:courseId/option', optionController.list);
+router.get('/course/:courseId/option/:id', optionController.get);
+router.post('/course/:courseId/option', optionController.create);
 
 module.exports = router;
