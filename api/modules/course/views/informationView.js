@@ -20,8 +20,8 @@ exports.render = function(data) {
 
     return {
         seo: {
-            metaTitle: 'Профориентационный курс' + data.entityData.name +
-                'в Москве: стоимость обучения, отзывы.',
+            metaTitle: 'Профориентационный курс ' + data.entityData.name +
+                ' в Москве: стоимость обучения, отзывы.',
             metaDescription: seoView.formatSeoDescription(
                 data.entityData.description
             )

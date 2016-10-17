@@ -12,11 +12,19 @@
  */
 
 
+ /**
+ * @typedef {{
+ *     hintOffset: string
+ * }} sm.bAuthorizationLink.Params.Config
+ */
+
+
 /**
  * Constructor
- * @param? params {
- *     data: sm.bAuthorizationLink.Params.Data
- * }
+ * @param params {{
+ *     data: sm.bAuthorizationLink.Params.Data,
+ *     config: sm.bAuthorizationLink.Params.Config
+ * }}
  * @extends cl.iControl.Template
  * @constructor
  */
@@ -27,8 +35,9 @@
 
 /**
  * Body
- * @param? params {{
- *     data: sm.bAuthorizationLink.Params.Data
+ * @param params {{
+ *     data: sm.bAuthorizationLink.Params.Data,
+ *     config: sm.bAuthorizationLink.Params.Config
  * }}
  * @override
  */
@@ -67,6 +76,11 @@
 
 /**
  * authorization link Tooltip
+ * @param params {{
+ *     config: {
+ *         hintOffset: string
+ *     }
+ * }}
  */
 {template .tooltip_ kind="html" private="true"}
     {let $tooltipData kind="html"}
@@ -84,7 +98,7 @@
             'renderParams': [
                 'data': $tooltipData,
                 'config': [
-                    'offset': 'l',
+                    'offset': $params.config.hintOffset ?: 'l',
                     'topOffset': 'l',
                     'contentAlign': 'middle',
                     'customClasses': [$customClasses],
