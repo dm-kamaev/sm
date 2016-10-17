@@ -48,6 +48,7 @@ service.getAll = async(function() {
         .from('course_brand')
         .field('course_brand.id')
         .field('course_brand.name')
+        .field('course_brand.description')
         .field('COUNT(course.id)', 'courseCount')
         .field('COUNT(course_department.id)', 'departmentCount')
         .field('course_brand.updated_at', 'updatedAt')

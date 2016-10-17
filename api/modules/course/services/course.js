@@ -108,7 +108,7 @@ service.fullCreate = async(function(data) {
             leadType: data.leadType
         }));
     course.options = data.options.map(option =>
-        await(services.courseOption.create(course.id, option))
+        await(services.courseOption.create(course, option))
     );
 
     return course;

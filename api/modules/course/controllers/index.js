@@ -3,8 +3,11 @@ var router = express.Router();
 
 const courseController = require('./courseController'),
     brandController = require('./brandController'),
+    departmentController = require('./departmentController'),
     csrf = require('../../../../app/middleware/csrf'),
     checkToken = require('../../../../app/middleware/checkToken');
+
+const DEPARTMENT_ROUTE = '/coursebrand/:brandId/department';
 
 router.get('/course/search', courseController.search);
 router.get('/course/search/map', courseController.searchMap);
@@ -26,5 +29,15 @@ router.get('/course/:id', courseController.get);
 router.post('/course', checkToken, courseController.create);
 router.put('/course/:id', checkToken, courseController.update);
 router.delete('/course/:id', checkToken, courseController.delete);
+
+router.get(DEPARTMENT_ROUTE, departmentController.list);
+router.get(`${DEPARTMENT_ROUTE}/:id`, departmentController.get);
+router.post(DEPARTMENT_ROUTE, checkToken, departmentController.create);
+router.put(`${DEPARTMENT_ROUTE}/:id`, checkToken, departmentController.update);
+router.delete(
+    `${DEPARTMENT_ROUTE}/:id`,
+    checkToken,
+    departmentController.delete
+);
 
 module.exports = router;
