@@ -65,9 +65,11 @@ goog.scope(function() {
      * @protected
      */
     Layout.prototype.initSubheader = function() {
+        var that = this;
         this.subheader = this.decorateChild(
             'smSubheader',
-            this.getView().getDom().subheader
+            this.getView().getDom().subheader,
+            {parentElem: that.getElement()}
         );
     };
 });  // goog.scope
