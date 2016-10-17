@@ -473,7 +473,8 @@ service.update = async(function(id, data) {
     return await(models.Course.update(data, {
         where: {
             id: id
-        }
+        },
+        individualHooks: true
     }));
 });
 

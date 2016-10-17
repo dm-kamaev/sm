@@ -363,18 +363,13 @@ controller.get = async(function(req, res) {
  * @apiSuccess {Course} course
  * @apiParamExample {json} Response-example
  *     {
+ *         "brandId": 1,
+ *         "type": 2,
  *         "name": "course's name",
  *         "description": "course's description",
- *         "brandId": 1,
  *         "fullDescription": "course's full description",
- *         "score": [1, 4, 4, 5],
- *         "scoreCount": [3, 13, 14, 14],
- *         "totalScore": 4.5,
- *         "type": 2,
- *         "about": "course's about",
- *         "entranceExam": "course's entrance exam",
  *         "learningOutcome": "course's learning outcome",
- *         "leadType": "course's lead type"
+ *         "about": "course's about"
  *     }
  */
 controller.create = async(function(req, res) {
@@ -398,18 +393,13 @@ controller.create = async(function(req, res) {
  * @apiSuccess {number[]} updatedRowsCount
  * @apiParamExample {json} Response-example
  *     {
+ *         "brandId": 1,
+ *         "type": 2,
  *         "name": "course's name",
  *         "description": "course's description",
- *         "brandId": 1,
  *         "fullDescription": "course's full description",
- *         "score": [1, 4, 4, 5],
- *         "scoreCount": [3, 13, 14, 14],
- *         "totalScore": 4.5,
- *         "type": 2,
- *         "about": "course's about",
- *         "entranceExam": "course's entrance exam",
  *         "learningOutcome": "course's learning outcome",
- *         "leadType": "course's lead type"
+ *         "about": "course's about"
  *     }
  */
 controller.update = async(function(req, res) {

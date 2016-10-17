@@ -52,7 +52,7 @@ let Course = db.define('Course', {
     tableName: 'course',
     hooks: {
         afterCreate: urlService.generateCourseAlias,
-        afterUpdate: urlService.generateCourseAlias,
+        afterUpdate: urlService.replaceCourseAlias,
         afterDestroy: courseService.deleteAlias
     },
     classMethods: {
