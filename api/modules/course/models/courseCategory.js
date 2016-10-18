@@ -1,8 +1,12 @@
-var Sequelize = require('sequelize');
+'use strict';
 
-var db = require('../../../../app/components/db');
+const Sequelize = require('sequelize');
 
-var CourseCategory = db.define('CourseCategory', {
+const db = require('../../../../app/components/db'),
+    urlService = require('../../entity/services/urls'),
+    courseCategoryService = require('../services/corseCategory');
+
+let CourseCategory = db.define('CourseCategory', {
     name: Sequelize.STRING,
     filters: Sequelize.ARRAY(Sequelize.STRING),
     isActive: {
@@ -12,6 +16,11 @@ var CourseCategory = db.define('CourseCategory', {
 }, {
     underscored: true,
     tableName: 'course_category',
+    hooks: {
+        afterCreate: urlService.generateCourseCategoryAlias,
+        afterUpdate: urlService.generateCourseCategoryAlias,
+        afterDestroy: courseCategoryService.deleteAlias
+    },
     classMethods: {
         associate: function(models) {
             CourseCategory.hasMany(models.CourseType, {
