@@ -7,7 +7,11 @@ var CourseType = db.define('CourseType', {
         type: Sequelize.STRING,
         allowNull: false
     },
-    popularity: Sequelize.INTEGER
+    popularity: Sequelize.INTEGER,
+    categoryId: {
+        type: Sequelize.INTEGER,
+        field: 'category_id'
+    }
 }, {
     underscored: true,
     tableName: 'course_type',
@@ -16,6 +20,12 @@ var CourseType = db.define('CourseType', {
             CourseType.hasMany(models.Course, {
                 as: 'courses',
                 foreignKey: 'type'
+            });
+            CourseType.belongsTo(models.CourseCategory, {
+                as: 'category',
+                foreignKey: 'category_id',
+                onDelete: 'cascade',
+                onUpdate: 'cascade'
             });
         }
     }
