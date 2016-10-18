@@ -18,7 +18,7 @@ let CourseCategory = db.define('CourseCategory', {
     tableName: 'course_category',
     hooks: {
         afterCreate: urlService.generateCourseCategoryAlias,
-        afterUpdate: urlService.generateCourseCategoryAlias,
+        afterUpdate: urlService.replaceCourseCategoryAlias,
         afterDestroy: courseCategoryService.deleteAlias
     },
     classMethods: {
