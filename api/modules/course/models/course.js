@@ -61,7 +61,9 @@ let Course = db.define('Course', {
             });
             Course.belongsTo(models.CourseType, {
                 as: 'courseType',
-                foreignKey: 'type'
+                foreignKey: 'type',
+                onDelete: 'set null',
+                onUpdate: 'cascade'
             });
             Course.hasMany(models.CourseOption, {
                 as: 'courseOptions',
