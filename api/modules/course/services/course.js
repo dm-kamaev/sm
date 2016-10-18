@@ -255,6 +255,9 @@ service.getAll = async(function() {
                 model: models.CourseSchedule,
                 as: 'schedule'
             }]
+        }, {
+            model: models.CourseType,
+            as: 'courseType'
         }]
     }));
 });
