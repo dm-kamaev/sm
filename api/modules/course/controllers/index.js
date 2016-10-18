@@ -44,5 +44,7 @@ router.delete(
 router.get('/course/:courseId/option', optionController.list);
 router.get('/course/:courseId/option/:id', optionController.get);
 router.post('/course/:courseId/option', optionController.create);
+router.put('/course/:courseId/option/:id', optionController.update);
+router.delete('/course/:courseId/option/:id', optionController.delete);
 
 module.exports = router;

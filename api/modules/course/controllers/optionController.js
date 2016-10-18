@@ -127,13 +127,7 @@ controller.get = async(function(req, res) {
  *             "endTime": "15:00:00",
  *             "day": 2
  *         }],
- *         "departments": [{
- *             "name": "Дизайн карьеры",
- *             "address": "ул. Краснопролетарская, д 16., стр. 2",
- *             "phone": "7 (800) 500-64-59",
- *             "description": "Best appartments",
- *             "updatedAt": "2016-10-17T17:42:42.112Z"
- *         }],
+ *         "departments": [1, 2, 3],
  *         "costPerHour": 2300,
  *         "online": false,
  *         "age": [12, 13, 14],
@@ -166,23 +160,37 @@ controller.create = async(function(req, res) {
 });
 
 /**
- * @api {put} /coursebrand/:id Update course brand
+ * @api {put} /course/:courseId/option/:id Update course option
  * @apiVersion 1.0.0
- * @apiGroup CourseBrand
- * @apiName updateCourseBrand
+ * @apiGroup CourseOption
+ * @apiName updateCourseOption
  * @apiSuccess {number[]} updatedRowsCount
  * @apiParamExample {json} Request-example
- * {
- *     "name": "Alibra",
- *     "description": "Курсы неиностранных языков"
- * }
+ *     {
+ *         "name": "Optimaximus",
+ *         "schedule": [{
+ *             "startTime": "14:00:00",
+ *             "endTime": "15:00:00",
+ *             "day": 2
+ *         }],
+ *         "departments": [1, 2, 3],
+ *         "costPerHour": 2300,
+ *         "online": false,
+ *         "age": [12, 13, 14],
+ *         "maxGroupSize": 20,
+ *         "lengthWeeks": 14,
+ *         "nativeSpeaker": false,
+ *         "startDate": "2016-10-14T21:00:00.000Z",
+ *         "totalCost": "60000",
+ *         "duration": "3",
+ *         "updatedAt": "2016-09-15T15:18:28.395Z"
  */
 controller.update = async(function(req, res) {
     let result;
     try {
-        result = await(services.courseBrand.update(req.params.id, req.body));
+        result = await(services.courseOption.update(req.params.id, req.body));
     } catch (error) {
-        logger.error(error.message);
+        logger.error(error);
         result = error;
     } finally {
         res.header('Content-Type', 'application/json; charset=utf-8');
@@ -191,15 +199,15 @@ controller.update = async(function(req, res) {
 });
 
 /**
- * @api {delete} /coursebrand/:id Delete course brand
+ * @api {delete} /course/:courseId/option/:id Delete course option
  * @apiVersion 1.0.0
- * @apiGroup CourseBrand
- * @apiName deleteCourseBrand
+ * @apiGroup CourseOption
+ * @apiName deleteCourseOption
  */
 controller.delete = async(function(req, res) {
     let result;
     try {
-        result = await(services.courseBrand.delete(req.params.id));
+        result = await(services.courseOption.delete(req.params.id));
     } catch (error) {
         logger.error(error.message);
         result = error;

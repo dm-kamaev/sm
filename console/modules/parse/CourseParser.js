@@ -111,6 +111,7 @@ module.exports = class CourseParser {
         option.openSchedule = option.openSchedule == 'true';
         option.schedule = this.formatSchedule_(option.schedule);
         option.startDate = option.startDate || null;
+        option.lengthWeeks = option.lengthWeeks || null;
         if (option.departments) {
             option.departments = option.departments.split(',').map(id =>
                 departments.find(department => department.departmentId == id)

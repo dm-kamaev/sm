@@ -25,4 +25,15 @@ service.bulkCreate = async(function(courseOptionId, data) {
     ));
 });
 
+/**
+ * @param {number} optionId
+ */
+service.deleteByOptionId = async(function(optionId) {
+    await(models.CourseSchedule.destroy({
+        where: {
+            courseOptionId: optionId
+        }
+    }));
+});
+
 module.exports = service;
