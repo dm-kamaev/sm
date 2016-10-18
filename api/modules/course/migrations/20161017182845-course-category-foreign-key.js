@@ -10,7 +10,8 @@ module.exports = {
                 model: 'course_category',
                 key: 'id'
             },
-            onDelete: 'cascade'
+            onDelete: 'cascade',
+            onUpdate: 'cascade'
         });
     }),
     down: async(function(queryInterface) {
