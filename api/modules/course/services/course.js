@@ -449,7 +449,8 @@ service.getById = async(function(id) {
 /**
  * @param  {{
  *     name: string,
- *     brandId: number,
+ *     brandId: ?number,
+ *     brandName: ?string
  *     type: number,
  *     description: ?string,
  *     fullDescription: ?string,
@@ -461,6 +462,11 @@ service.getById = async(function(id) {
  * @return {Course}
  */
 service.create = async(function(data) {
+    if (!data.brandId) {
+        let brand = await(services.courseBrand.create({name: data.brandName}));
+        data.brandId = brand.id;
+    }
+
     return await(models.Course.create(data));
 });
 

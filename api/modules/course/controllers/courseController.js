@@ -363,7 +363,7 @@ controller.get = async(function(req, res) {
  * @apiSuccess {Course} course
  * @apiParamExample {json} Response-example
  *     {
- *         "brandId": 1,
+ *         "brandName": "Maximum",
  *         "type": 2,
  *         "name": "course's name",
  *         "description": "course's description",
