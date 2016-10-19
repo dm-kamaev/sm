@@ -52,7 +52,10 @@ controller.search = async(function(req, res, next) {
                     mapPosition: services.map.getPositionParams(searchParams),
                     filtersData: {
                         type: services.courseType.getAll()
-                    }
+                    },
+                    seoParams: services.seoCourseList.getByCategoryId(
+                        categoryInstance.id
+                    )
                 }),
                 aliases = await({
                     courses: services.course.getAliases(data.courses),
@@ -76,7 +79,8 @@ controller.search = async(function(req, res, next) {
                 mapPosition: data.mapPosition,
                 searchParams: searchParams,
                 filtersData: data.filtersData,
-                aliases: aliases.courses
+                aliases: aliases.courses,
+                seoParams: data.seoParams
             });
 
             let html = soy.render(

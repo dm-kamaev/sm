@@ -110,15 +110,19 @@ searchView.map = function(courses, options) {
 
 /**
  * @param {{
+ *     entityType: string,
  *     user: Object,
  *     fbClientId: string,
+ *     favorites: Array<Object>,
  *     authSocialLinks: Object,
  *     countResults: number,
  *     coursesList: Array<Object>,
- *     mapData: Object<Object>,
+ *     mapCourses: Object<Object>,
+ *     mapPosition: Object,
  *     searchParams: Object,
- *     favorites: Object,
- *     filtersData: Array<Object>
+ *     filtersData: Array<Object>,
+ *     aliases: Array<Object>,
+ *     seoParams: Object
  * }} data
  * @return {Object}
  */
@@ -129,22 +133,19 @@ searchView.render = function(data) {
             data.aliases.course,
             data.aliases.brand
         ),
-        courses = courseView.list(aliasedCourses);
+        courses = courseView.list(aliasedCourses),
+        seoParams = data.seoParams || {};
 
     return {
         type: data.entityType,
         seo: {
-            metaTitle: 'Курсы профориентации в Москве: стоимость обучения, ' +
-                'отзывы.',
-            metaDescription: 'Удобный фильтр для поиска курсов ' +
-                'профориентации для вашего ребенка: тесты, онлайн ' +
-                'профориентация, частные консультации, тренинги.',
-            title: 'Курсы профориентации'
+            metaTitle: seoParams.tabTitle,
+            metaDescription: seoParams.metaDescription,
+            title: seoParams.listTitle
         },
         openGraph: {
-            title: 'Профориентация на «Курсах Мела»',
-            description: 'Курсы профориентации в Москве и онлайн: цены,' +
-                ' расписание, бронирование.',
+            title: seoParams.openGraphTitle,
+            description: seoParams.openGraphDescription,
             image: '/images/n-clobl/i-layout/cources_sharing.png',
             fbClientId: data.fbClientId,
         },
