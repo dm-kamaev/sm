@@ -20,19 +20,17 @@ let controller = {};
  *     HTTP/1.1 200 OK
  *     [{
  *         "id": 1,
- *         "name": "course's name",
- *         "description": "course's description",
- *         "brandName": "brand's name",
- *         "fullDescription": "course's full description",
- *         "about": "course's about",
- *         "learningOutcome": "course's learning outcome",
- *         "updatedAt": "2016-09-15T15:18:28.395Z"
+ *         "name": "course's name"
+ *         "isActive": true,
+ *         "courseCount": 14,
+ *         "filters": ["age", "costPerHour"],
+ *         "updatedAt": "2016-10-19T15:56:35.234Z"
  *     }]
  */
 controller.list = async(function(req, res) {
     let result;
     try {
-        let courses = await(services.course.getAll());
+        result = await(services.courseCategory.getAll());
     } catch (error) {
         logger.error(error.message);
         result = error;
@@ -43,28 +41,26 @@ controller.list = async(function(req, res) {
 });
 
 /**
- * @api {get} /course/:id Get course
+ * @api {get} /coursecategory/:id Get category
  * @apiVersion 1.0.0
- * @apiGroup Course
- * @apiName getCourse
- * @apiSuccess {Course} course
+ * @apiGroup CourseCategory
+ * @apiName getCategory
+ * @apiSuccess {CourseCategory} coursecategory
  * @apiSuccessExample {json} Response-example
  *     HTTP/1.1 200 OK
  *     {
- *        "id": 1,
- *         "name": "course's name",
- *         "description": "course's description",
- *         "brandName": "brand's name",
- *         "fullDescription": "course's full description",
- *         "about": "course's about",
- *         "learningOutcome": "course's learning outcome",
- *         "updatedAt": "2016-09-15T15:18:28.395Z"
+ *         "id": 1,
+ *         "name": "Профориентация",
+ *         "filters": null,
+ *         "isActive": true,
+ *         "created_at": "2016-10-19T15:56:35.234Z",
+ *         "updated_at": "2016-10-19T15:56:35.234Z"
  *     }
  */
 controller.get = async(function(req, res) {
     let result;
     try {
-        let course = await(services.course.getById(req.params.id));
+        result = await(services.courseCategory.getById(req.params.id));
     } catch (error) {
         logger.error(error.message);
         result = error;
@@ -75,26 +71,22 @@ controller.get = async(function(req, res) {
 });
 
 /**
- * @api {post} /course Get course
+ * @api {post} /coursecategory Create course category
  * @apiVersion 1.0.0
- * @apiGroup Course
- * @apiName createCourse
- * @apiSuccess {Course} course
+ * @apiGroup CourseCategory
+ * @apiName createCategory
+ * @apiSuccess {CourseCategory} courseCategory
  * @apiParamExample {json} Response-example
  *     {
- *         "brandId": 1,
- *         "type": 2,
- *         "name": "course's name",
- *         "description": "course's description",
- *         "fullDescription": "course's full description",
- *         "learningOutcome": "course's learning outcome",
- *         "about": "course's about"
+ *         "name": "Профориентация",
+ *         "isActive": true,
+ *         "filters": ["age", "costPerHour"]
  *     }
  */
 controller.create = async(function(req, res) {
     let result;
     try {
-        result = await(services.course.create(req.body));
+        result = await(services.courseCategory.create(req.body));
     } catch (error) {
         logger.error(error.message);
         result = error;
@@ -105,26 +97,22 @@ controller.create = async(function(req, res) {
 });
 
 /**
- * @api {put} /course/:id Update course
+ * @api {put} /coursecategory/:id Update category
  * @apiVersion 1.0.0
- * @apiGroup Course
- * @apiName updateCourse
+ * @apiGroup CourseCategory
+ * @apiName updateCategory
  * @apiSuccess {number[]} updatedRowsCount
  * @apiParamExample {json} Response-example
  *     {
- *         "brandId": 1,
- *         "type": 2,
- *         "name": "course's name",
- *         "description": "course's description",
- *         "fullDescription": "course's full description",
- *         "learningOutcome": "course's learning outcome",
- *         "about": "course's about"
+ *         "name": "Профориентация",
+ *         "isActive": true,
+ *         "filters": ["age", "costPerHour"]
  *     }
  */
 controller.update = async(function(req, res) {
     let result;
     try {
-        result = await(services.course.update(req.params.id, req.body));
+        result = await(services.courseCategory.update(req.params.id, req.body));
     } catch (error) {
         logger.error(error.message);
         result = error;
@@ -135,15 +123,15 @@ controller.update = async(function(req, res) {
 });
 
 /**
- * @api {delete} /course/:id Delete course
+ * @api {delete} /coursecategory/:id Delete category
  * @apiVersion 1.0.0
- * @apiGroup Course
- * @apiName deleteCourse
+ * @apiGroup CourseCategory
+ * @apiName deleteCategory
  */
 controller.delete = async(function(req, res) {
     let result;
     try {
-        result = await(services.course.delete(req.params.id));
+        result = await(services.courseCategory.delete(req.params.id));
     } catch (error) {
         logger.error(error.message);
         result = error;
