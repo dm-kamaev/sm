@@ -304,7 +304,8 @@ goog.scope(function() {
         this.analyticsSender_.setProductParams({
             id: this.params.id,
             name: this.params.name,
-            category: this.params.category
+            category: this.params.category,
+            price: this.params.cost
         });
     };
 

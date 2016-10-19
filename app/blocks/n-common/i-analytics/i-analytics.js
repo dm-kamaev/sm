@@ -240,6 +240,8 @@ goog.scope(function() {
 
     /**
      * Transformation product params in not compressed params to send analysts
+     * price and quantity of required parameters to get a report
+     * from the income of the product
      * @param {Analytics.productFieldObjectParams} params
      * @return {Analytics.productFieldObjectParams}
      */
@@ -289,7 +291,7 @@ goog.scope(function() {
             currencyString.replace(/\D/gi, '') :
             null;
 
-        return Number(currency);
+        return currency;
     };
 
 

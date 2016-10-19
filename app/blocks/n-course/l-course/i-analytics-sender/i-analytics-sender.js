@@ -44,7 +44,7 @@ goog.scope(function() {
 
     /**
      * Set product params
-     * @param  {sm.iAnalytics.Analytics.productFieldObjectParams} params
+     * @param {sm.iAnalytics.Analytics.productFieldObjectParams} params
      */
     AnalyticsSender.prototype.setProductParams = function(params) {
         this.productParams_ = params || {};
@@ -89,18 +89,21 @@ goog.scope(function() {
         actionParams) {
 
         var params = actionDataEc;
-            params.list = this.list_;
-            params.step = 1;
+        params.list = this.list_;
+        params.step = 1;
 
-        var productParams = Analytics.getInstance().transformProductParams(
-            this.getProductParams()
+        var productParams = this.getProductParams();
+        productParams.price = actionDataEc.revenue;
+
+        var productParamsEc = Analytics.getInstance().transformProductParams(
+            productParams
         );
 
         var actionParamsEc = Analytics.getInstance().transformActionParams(
             params
         );
 
-        Analytics.getInstance().checkoutProduct(productParams, actionParamsEc);
+        Analytics.getInstance().checkoutProduct(productParamsEc, actionParamsEc);
         this.send(actionParams);
     };
 
@@ -118,11 +121,14 @@ goog.scope(function() {
         actionParams) {
 
         var params = actionDataEc;
-            params.list = this.list_;
-            params.step = 2;
+        params.list = this.list_;
+        params.step = 2;
+
+        var productParams = this.getProductParams();
+        productParams.price = actionDataEc.revenue;
 
         var productParams = Analytics.getInstance().transformProductParams(
-            this.getProductParams()
+            productParams
         );
 
         var actionParamsEc = Analytics.getInstance().transformActionParams(
