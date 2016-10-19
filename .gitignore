@@ -23,12 +23,12 @@ deployment-config.json
 .remote-sync.json
 .ftpconfig
 .tern-project
-.eslintrc
 .jshintrc
 .eslintrc
 .ftpconfig
 .csscomb*
 .tags*
+jsconfig.json
 
 /app/config/local/
 /app/config/config.*
