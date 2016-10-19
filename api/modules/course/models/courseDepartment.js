@@ -3,6 +3,22 @@ var Sequelize = require('sequelize');
 var db = require('../../../../app/components/db');
 
 var CourseDepartment = db.define('CourseDepartment', {
+    brandId: {
+        type: Sequelize.INTEGER,
+        field: 'brand_id',
+        references: {
+            model: 'brand',
+            key: 'id'
+        }
+    },
+    addressId: {
+        type: Sequelize.INTEGER,
+        field: 'address_id',
+        references: {
+            model: 'address',
+            key: 'id'
+        }
+    },
     name: Sequelize.STRING,
     description: Sequelize.STRING,
     phone: Sequelize.STRING
@@ -16,9 +32,9 @@ var CourseDepartment = db.define('CourseDepartment', {
                 through: 'course_option_course_department',
                 foreignKey: 'course_department_id'
             });
-            CourseDepartment.hasOne(models.Address, {
+            CourseDepartment.belongsTo(models.Address, {
                 as: 'address',
-                foreignKey: 'entity_id'
+                foreignKey: 'address_id'
             });
         }
     }

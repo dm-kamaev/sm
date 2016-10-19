@@ -169,6 +169,11 @@ service.replaceCourseCategoryAlias = async(function(courseCategory) {
     await(service.generateCourseCategoryAlias(courseCategory));
 });
 
+service.replaceCourseAlias = async(function(course) {
+    await(services.page.delete(course.id, entityTypes.COURSE));
+    await(service.generateCourseAlias(course));
+});
+
 /**
  * Used once to generate urls by school id
  */
