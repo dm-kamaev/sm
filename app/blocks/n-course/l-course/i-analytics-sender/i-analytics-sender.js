@@ -103,7 +103,9 @@ goog.scope(function() {
             params
         );
 
-        Analytics.getInstance().checkoutProduct(productParamsEc, actionParamsEc);
+        Analytics.getInstance().checkoutProduct(
+            productParamsEc, actionParamsEc
+        );
         this.send(actionParams);
     };
 
@@ -127,7 +129,7 @@ goog.scope(function() {
         var productParams = this.getProductParams();
         productParams.price = actionDataEc.revenue;
 
-        var productParams = Analytics.getInstance().transformProductParams(
+        var productParamsEc = Analytics.getInstance().transformProductParams(
             productParams
         );
 
@@ -135,7 +137,9 @@ goog.scope(function() {
             params
         );
 
-        Analytics.getInstance().purchaseProduct(productParams, actionParamsEc);
+        Analytics.getInstance().purchaseProduct(
+            productParamsEc, actionParamsEc
+        );
         this.send(actionParams);
     };
 
