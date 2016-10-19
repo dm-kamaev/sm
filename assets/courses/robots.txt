@@ -1,0 +1,4 @@
+User-agent: Yandex
+Host: courses.mel.fm
+
+Sitemap: http://courses.mel.fm/sitemap.xml

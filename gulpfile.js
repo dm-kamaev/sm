@@ -28,7 +28,7 @@ const gulpTasks = require('./gulp')(gulpHelper);
 gulp.task('doc', function() {
     apidoc({
         src: './api/modules/',
-        dest: './doc'
+        dest: './public/doc'
     }, function() {
     });
 });
@@ -69,6 +69,7 @@ gulp.task('styles', ['sprite'], function() {
             ],
             fileName: 'styles.css'
         }],
+        dest: path.join(__dirname, 'public/shared'),
         minify: production
     });
 });
@@ -86,7 +87,8 @@ gulp.task('sprite', function() {
                 BLOCKS_DIR,
                 '/n-clobl/g-icon/g-icon_img/*@2x.png'
             )]
-        }
+        },
+        pngDest: path.join(__dirname, 'public/shared')
     }]);
 });
 
@@ -94,7 +96,7 @@ gulp.task('images', function() {
     var src = ['png', 'ico', 'svg', 'gif', 'jpg']
             .map(ext => '**/*.' + ext)
             .map(mask => path.join(__dirname, BLOCKS_DIR, mask)),
-        dest = path.join(__dirname, 'public/images');
+        dest = path.join(__dirname, 'public/shared/images');
 
     return gulp.src(src)
         .pipe(gulp.dest(dest));
@@ -117,16 +119,25 @@ gulp.task('watch', function() {
 
 gulp.task('fonts', function() {
     return gulp.src(path.join(__dirname, '/assets/fonts/**/*.*'))
-        .pipe(gulp.dest(path.join(__dirname, '/public/fonts')));
+        .pipe(gulp.dest(path.join(__dirname, 'public/shared/fonts')));
 });
 
-gulp.task('copy', function() {
+gulp.task('copySchools', function() {
     return gulp.src([
-        path.join(__dirname, '/assets/robots.txt'),
-        path.join(__dirname, '/assets/google86acdf989d7328cf.html'),
-        path.join(__dirname, '/assets/yandex_7cfaf013e2f3373d.html')
+        path.join(__dirname, '/assets/schools/robots.txt'),
+        path.join(__dirname, '/assets/schools/google86acdf989d7328cf.html'),
+        path.join(__dirname, '/assets/schools/yandex_7cfaf013e2f3373d.html')
     ], {base: 'assets/'})
-         .pipe(gulp.dest('public'));
+        .pipe(gulp.dest('public/'));
+});
+
+gulp.task('copyCourses', ['copySchools'], function() {
+    return gulp.src([
+        path.join(__dirname, '/assets/courses/robots.txt'),
+        path.join(__dirname, '/assets/courses/google86acdf989d7328cf.html'),
+        path.join(__dirname, '/assets/courses/yandex_7cfaf013e2f3373d.html')
+    ], {base: 'assets/'})
+        .pipe(gulp.dest('public/'));
 });
 
 gulp.task('localConfig', function() {
@@ -159,9 +170,9 @@ gulp.task('backendLint', function() {
 const tasks = function(bool) {
     return bool ?
         ['createTimestamp', 'soy', 'compile', 'sprite', 'images', 'fonts',
-            'styles', 'copy', 'localConfig'] :
+            'styles', 'copySchools', 'copyCourses', 'localConfig'] :
         ['watch', 'soy', 'scripts', 'sprite', 'images', 'fonts', 'styles',
-            'copy', 'localConfig', 'backendLint'];
+            'copySchools', 'copyCourses', 'localConfig', 'backendLint'];
 };
 
 gulp.task('build', tasks(true));
