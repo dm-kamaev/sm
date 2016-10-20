@@ -67,26 +67,21 @@ controller.get = async(function(req, res) {
 });
 
 /**
- * @api {post} /coursebrand/:brandId/coursedepartment Create department
+ * @api {post} /coursetype Create type
  * @apiVersion 1.0.0
- * @apiGroup CourseDepartment
- * @apiName createCourseDepartment
- * @apiSuccess {CourseDepartment} coursedepartment
+ * @apiGroup CourseType
+ * @apiName createType
+ * @apiSuccess {CourseType} coursetype
  * @apiParamExample {json} Request-example
  * {
- *     "name": "Alibra",
- *     "description": "about",
- *     "address": "ул. Валовая, д. 2",
- *     "phone": "+7 (965) 156-33-17"
+ *     "name": "type's name",
+ *     "categoryId": 1
  * }
  */
 controller.create = async(function(req, res) {
     let result;
     try {
-        result = await(services.courseDepartment.findOrCreate(
-            req.params.brandId,
-            req.body
-        ));
+        result = await(services.courseType.create(req.body));
     } catch (error) {
         logger.error(error.message);
         result = error;
@@ -97,25 +92,21 @@ controller.create = async(function(req, res) {
 });
 
 /**
- * @api {put} /coursebrand/:id Update department
+ * @api {put} /coursetype/:id Update department
  * @apiVersion 1.0.0
- * @apiGroup CourseDepartment
- * @apiName updateCourseDepartment
+ * @apiGroup CourseType
+ * @apiName updateType
  * @apiSuccess {number[]} updatedRowsCount
  * @apiParamExample {json} Request-example
  * {
- *     "name": "Alibra",
- *     "description": "about",
- *     "address": "ул. Валовая, д. 2",
- *     "phone": "+7 (965) 156-33-17"
+ *     "name": "Подготовка к ЕГЭ",
+ *     "categoryId": 1
  * }
  */
 controller.update = async(function(req, res) {
     let result;
     try {
-        result = await(services.courseDepartment.update(
-            req.params.id, req.body
-        ));
+        result = await(services.courseType.update(req.params.id, req.body));
     } catch (error) {
         logger.error(error.message);
         result = error;
@@ -126,15 +117,15 @@ controller.update = async(function(req, res) {
 });
 
 /**
- * @api {delete} /coursebrand/:id Delete department
+ * @api {delete} /coursetype/:id Delete type
  * @apiVersion 1.0.0
- * @apiGroup CourseDepartment
- * @apiName deleteDepartment
+ * @apiGroup CourseType
+ * @apiName deleteType
  */
 controller.delete = async(function(req, res) {
     let result;
     try {
-        result = await(services.courseDepartment.delete(req.params.id));
+        result = await(services.courseType.delete(req.params.id));
     } catch (error) {
         logger.error(error.message);
         result = error;

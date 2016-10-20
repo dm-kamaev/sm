@@ -61,5 +61,8 @@ router.delete('/coursecategory/:id', checkToken, categoryController.delete);
 
 router.get('/coursetype', typeController.list);
 router.get('/coursetype/:id', typeController.get);
+router.post('/coursetype', checkToken, typeController.create);
+router.put('/coursetype/:id', checkToken, typeController.update);
+router.delete('/coursetype/:id', checkToken, typeController.delete);
 
 module.exports = router;
