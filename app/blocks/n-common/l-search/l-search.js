@@ -11,6 +11,7 @@ goog.require('sm.bSearch.Search');
 goog.require('sm.bSmMap.SmMap');
 goog.require('sm.bSmSubheader.SmSubheader');
 goog.require('sm.gDropdown.DropdownSelect');
+goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.iLayout.LayoutStendhal');
 goog.require('sm.iSmSearchParamsManager.SmSearchParamsManager');
 goog.require('sm.lSearch.View');
@@ -24,6 +25,8 @@ goog.scope(function() {
     var SearchService = sm.lSearch.iSearchService.SearchService;
     var SearchParamsManager = sm.iSmSearchParamsManager.SmSearchParamsManager;
     var UrlUpdater = sm.lSearch.iUrlUpdater.UrlUpdater;
+
+    var Analytics = sm.iAnalytics.Analytics;
 
 
 
@@ -175,8 +178,10 @@ goog.scope(function() {
             .initSearchServiceListeners_()
             .initResultsListListeners_()
             .initWindowListeners_()
-            .initMapListeners_();
+            .initMapListeners_()
+            .initLoadMoreResultsListItemsListeners_();
 
+        this.sendAnalyticsPageview_();
         this.sendAnalyticsItemsLoad_(1);
     };
 
@@ -247,11 +252,7 @@ goog.scope(function() {
             this.onListItemClick_
         );
 
-        var loadedItemsAmount = this.resultsList_.getCountItems();
-        this.detectShowMoreResultsList_(
-            loadedItemsAmount, this.params.countResults
-        );
-
+        this.detectShowMoreResultsList_();
         return this;
     };
 
@@ -417,11 +418,13 @@ goog.scope(function() {
      */
     Search.prototype.onResultsListDataLoaded_ = function(event) {
         var listItems = event.getListItems();
-        var countResults = event.getCountResults();
-        this.updateResultsList_(listItems, countResults);
-        this.detectShowMoreResultsList_(listItems.length, countResults);
+        this.params.countResults = event.getCountResults();
 
-        this.getView().setSortVisibility(this.resultsList_.getCountItems());
+        this.updateResultsList_(listItems, this.params.countResults);
+        this.detectShowMoreResultsList_();
+
+        var sortVisibility = this.resultsList_.getCountItems() ? true : false;
+        this.getView().setSortVisibility(sortVisibility);
         this.getView().setLoaderVisibility(false);
 
         this.sendAnalyticsItemsLoad_(0);
@@ -562,17 +565,12 @@ goog.scope(function() {
      * Detect whether results list can be loaded more items.
      * If all items loaded, then results list cannot add more items and send
      * queries to backend to load more results
-     * @param  {number} countListItems amount of currently loaded items
-     * @param  {number} countResults overall amount of search results
      * @private
      */
-    Search.prototype.detectShowMoreResultsList_ = function(
-        countListItems, countResults) {
-        if (this.isAllSearchItemsLoaded_(countListItems, countResults)) {
-            this.disableLoadMoreResultsListItems_();
+    Search.prototype.detectShowMoreResultsList_ = function() {
+        if (this.isAllSearchItemsLoaded_()) {
             this.getView().setShowMoreButtonVisibility(false);
         } else {
-            this.enableLoadMoreResultsListItems_();
             this.getView().setShowMoreButtonVisibility(true);
         }
     };
@@ -580,44 +578,20 @@ goog.scope(function() {
 
     /**
      * Check if all items of current search parameters loaded
-     * @param {number} loadedItemsAmount
-     * @param {number} countResults
      * @return {boolean}
      * @private
      */
-    Search.prototype.isAllSearchItemsLoaded_ = function(
-        loadedItemsAmount,
-        countResults) {
-        var listItemsAmount = this.resultsList_.getCountItems();
-        return (loadedItemsAmount < Search.SEARCH_CHUNK_SIZE) ||
-            (countResults == listItemsAmount);
+    Search.prototype.isAllSearchItemsLoaded_ = function() {
+        return this.resultsList_.getCountItems() == this.params.countResults;
     };
 
 
     /**
-     * Disable loading more items to results list
-     * Unlisten scroll and show more button click events
-     * to disable load more items to results list
+     * Init listeners event for loading new data
+     * @return {sm.lSearch.Search}
      * @private
      */
-    Search.prototype.disableLoadMoreResultsListItems_ = function() {
-        this.getHandler().unlisten(
-            this.showMoreButton_,
-            cl.gButton.Button.Event.CLICK
-        ).unlisten(
-            goog.dom.getWindow(),
-            goog.events.EventType.SCROLL
-        );
-    };
-
-
-    /**
-     * Enable loading more items to results list
-     * Listen scroll and show more button click events
-     * to enable load more items to results list
-     * @private
-     */
-    Search.prototype.enableLoadMoreResultsListItems_ = function() {
+    Search.prototype.initLoadMoreResultsListItemsListeners_ = function() {
         this.getHandler().listen(
             this.showMoreButton_,
             cl.gButton.Button.Event.CLICK,
@@ -627,6 +601,7 @@ goog.scope(function() {
             goog.events.EventType.SCROLL,
             this.onScroll_
         );
+        return this;
     };
 
 
@@ -648,12 +623,16 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.loadNextPage_ = function() {
-        this.paramsManager_.increasePage();
+        if (!this.isAllSearchItemsLoaded_()) {
+            this.paramsManager_.increasePage();
 
-        this.getView().setLoaderVisibility(true);
-        this.getView().setShowMoreButtonVisibility(false);
+            this.getView().setLoaderVisibility(true);
+            this.getView().setShowMoreButtonVisibility(false);
 
-        this.searchService_.loadSearchData(this.paramsManager_.getParams());
+            this.searchService_.loadSearchData(
+                this.paramsManager_.getParams()
+            );
+        }
     };
 
 
@@ -693,6 +672,15 @@ goog.scope(function() {
     };
 
 
+    /**
+     * Sends pageview analytics
+     * @private
+     */
+    Search.prototype.sendAnalyticsPageview_ = function() {
+        Analytics.getInstance().send('pageview');
+    };
+
+
      /**
      * Send Analytics when shown items
      * Interval sets the position of the elements for which the analyst goes
@@ -718,7 +706,7 @@ goog.scope(function() {
 
     /**
      * Init data loading services
-     * @return {sm.lSearch.SmSearch}
+     * @return {sm.lSearch.Search}
      * @private
      */
     Search.prototype.initServices_ = function() {
@@ -735,7 +723,7 @@ goog.scope(function() {
 
     /**
      * Init url updater
-     * @return {sm.lSearch.SmSearch}
+     * @return {sm.lSearch.Search}
      * @private
      */
     Search.prototype.initUrlUpdater_ = function() {
@@ -748,7 +736,7 @@ goog.scope(function() {
     /**
      * Init search params manager by
      * creating it and setting search params from data params to it
-     * @return {sm.lSearch.SmSearch}
+     * @return {sm.lSearch.Search}
      * @private
      */
     Search.prototype.initParamsManager_ = function() {

@@ -80,6 +80,7 @@ goog.scope(function() {
     ModalEnrollment.Event = {
         SHOW: sm.gModal.Event.Show.Type,
         HIDE: sm.gModal.ModalStendhal.Event.HIDE,
+        SEND_REQUEST: goog.events.getUniqueId('send-request'),
         SUCCESS: sm.gModal.Event.EnrollmentSuccess.Type,
         ERROR: goog.events.getUniqueId('error')
     };
@@ -189,6 +190,8 @@ goog.scope(function() {
      */
     ModalEnrollment.prototype.sendRequest_ = function() {
         var data = this.buildRequestData_();
+
+        this.dispatchEvent(ModalEnrollment.Event.SEND_REQUEST);
 
         Request.getInstance().send(data)
             .then(

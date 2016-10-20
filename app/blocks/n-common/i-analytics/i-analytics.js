@@ -24,6 +24,61 @@ goog.scope(function() {
 
 
     /**
+     * To use for sending data on pageview or products in list is shown (loaded)
+     * Price for example 29.20
+     * @typedef {{
+     *     id: string,
+     *     name: string,
+     *     list: (string|undefined),
+     *     brand: (string|undefined),
+     *     category: (string|undefined),
+     *     variant: (string|undefined),
+     *     position: (number|undefined),
+     *     price: (number|undefined)
+     * }}
+     */
+    sm.iAnalytics.Analytics.impressionFieldObjectParams;
+
+
+    /**
+     * To use for sending data about the products that were viewed,
+     * added to cart
+     * Price for example 29.20
+     * Position - product's position in the list
+     * @typedef {{
+     *     id: string,
+     *     name: string,
+     *     brand: (string|undefined),
+     *     category: (string|undefined),
+     *     variant: (string|undefined),
+     *     position: (number|undefined),
+     *     price: (number|undefined),
+     *     quantity: (number|undefined),
+     *     coupon: (string|undefined)
+     * }}
+     */
+    sm.iAnalytics.Analytics.productFieldObjectParams;
+
+
+    /**
+     * To use for sending data about the action
+     * Revenue for example 29.20
+     * @typedef {{
+     *     id: string,
+     *     affiliation: (string|undefined),
+     *     revenue: (number|undefined),
+     *     tax: (number|undefined),
+     *     shipping: (number|undefined),
+     *     coupon: (string|undefined),
+     *     list: (string|undefined),
+     *     step: (number|undefined),
+     *     option: (string|undefined)
+     * }}
+     */
+    sm.iAnalytics.Analytics.actionFieldObjectParams;
+
+
+    /**
      * Init analytics
      * @param {string} clientId
      * @public
@@ -33,6 +88,8 @@ goog.scope(function() {
 
         this.loadingLibrary_();
         this.create_();
+        this.requireEc_();
+        this.setCurrency_();
     };
 
 
@@ -62,17 +119,7 @@ goog.scope(function() {
 
     /**
      * Add item info on click
-     * @param {{
-     *     id: string,
-     *     name: string,
-     *     brand: ?string,
-     *     category: ?string,
-     *     variant: ?string,
-     *     price: ?string,
-     *     quantity: ?number,
-     *     coupon: ?string,
-     *     position: ?number
-     * }} params
+     * @param {Analytics.productFieldObjectParams} params
      * @param {string} place - where clicked the item
      */
     Analytics.prototype.clickProduct = function(params, place) {
@@ -85,17 +132,7 @@ goog.scope(function() {
 
     /**
      * Add product information in addition to favorites
-     * @param {{
-     *     id: string,
-     *     name: string,
-     *     brand: ?string,
-     *     category: ?string,
-     *     variant: ?string,
-     *     price: ?string,
-     *     quantity: ?number,
-     *     coupon: ?string,
-     *     position: ?number
-     * }} params
+     * @param {Analytics.productFieldObjectParams} params
      * @param {string} place - where clicked the item
      */
     Analytics.prototype.addProduct = function(params, place) {
@@ -108,17 +145,7 @@ goog.scope(function() {
 
     /**
      * Add information about the product by removing from favorites
-     * @param {{
-     *     id: string,
-     *     name: string,
-     *     brand: ?string,
-     *     category: ?string,
-     *     variant: ?string,
-     *     price: ?string,
-     *     quantity: ?number,
-     *     coupon: ?string,
-     *     position: ?number
-     * }} params
+     * @param {Analytics.productFieldObjectParams} params
      * @param {string} place - where clicked the item
      */
     Analytics.prototype.removeProduct = function(params, place) {
@@ -131,28 +158,8 @@ goog.scope(function() {
 
     /**
      * Add information about checkout product
-     * @param {{
-     *     id: string,
-     *     name: string,
-     *     brand: ?string,
-     *     category: ?string,
-     *     variant: ?string,
-     *     price: ?string,
-     *     quantity: ?number,
-     *     coupon: ?string,
-     *     position: ?number
-     * }} productParams
-     * @param {{
-     *     id: string,
-     *     affiliation: ?string,
-     *     revenue: ?number,
-     *     tax: ?number,
-     *     shipping: ?number,
-     *     coupon: ?string,
-     *     list: ?string,
-     *     step: ?number,
-     *     option: ?string
-     * }} actionParams
+     * @param {Analytics.productFieldObjectParams} productParams
+     * @param {Analytics.actionFieldObjectParams} actionParams
      */
     Analytics.prototype.checkoutProduct = function(productParams,
         actionParams) {
@@ -164,37 +171,20 @@ goog.scope(function() {
 
     /**
      * Add information about purchase product
-     * @param {{
-     *     id: string,
-     *     name: string,
-     *     brand: ?string,
-     *     category: ?string,
-     *     variant: ?string,
-     *     price: ?string,
-     *     quantity: ?number,
-     *     coupon: ?string,
-     *     position: ?number
-     * }} params
+     * @param {Analytics.productFieldObjectParams} productParams
+     * @param {Analytics.actionFieldObjectParams} actionParams
      */
-    Analytics.prototype.purchaseProduct = function(params) {
-        ga('ec:addProduct', params);
-        ga('ec:setAction', 'purchase');
+    Analytics.prototype.purchaseProduct = function(productParams,
+        actionParams) {
+
+        ga('ec:addProduct', productParams);
+        ga('ec:setAction', 'purchase', actionParams);
     };
 
 
     /**
      * Add information about view product
-     * @param {{
-     *     id: string,
-     *     name: string,
-     *     brand: ?string,
-     *     category: ?string,
-     *     variant: ?string,
-     *     price: ?string,
-     *     quantity: ?number,
-     *     coupon: ?string,
-     *     position: ?number
-     * }} params
+     * @param {Analytics.productFieldObjectParams} params
      */
     Analytics.prototype.viewProduct = function(params) {
         ga('ec:addProduct', params);
@@ -211,16 +201,7 @@ goog.scope(function() {
 
     /**
      * Add impression about related product
-     * @param {{
-     *     id: string,
-     *     name: string,
-     *     list: ?string,
-     *     brand: ?string,
-     *     category: ?string,
-     *     variant: ?string,
-     *     position: ?number,
-     *     price: ?string
-     * }} params
+     * @param {Analytics.impressionFieldObjectParams} params
      */
     Analytics.prototype.addImpression = function(params) {
         ga('ec:addImpression', params);
@@ -229,16 +210,7 @@ goog.scope(function() {
 
     /**
      * Add impression about related products
-     * @param {Array<{
-     *     id: string,
-     *     name: string,
-     *     list: ?string,
-     *     brand: ?string,
-     *     category: ?string,
-     *     variant: ?string,
-     *     position: ?number,
-     *     price: ?string
-     * }>} params
+     * @param {Array<Analytics.impressionFieldObjectParams>} params
      */
     Analytics.prototype.addImpressions = function(params) {
         params.forEach(function(data) {
@@ -248,13 +220,105 @@ goog.scope(function() {
 
 
     /**
+     * Transformation impression params in not compressed params to send
+     * @param {Analytics.impressionFieldObjectParams} params
+     * @return {Analytics.impressionFieldObjectParams}
+     */
+    Analytics.prototype.transformImpressionParams = function(params) {
+        return {
+            'id': params.id || null,
+            'name': params.name || null,
+            'list': params.list || null,
+            'brand': params.brand || null,
+            'category': params.category || null,
+            'variant': params.variant || null,
+            'position': params.position || null,
+            'price': this.transformCurrency_(params.price)
+        };
+    };
+
+
+    /**
+     * Transformation product params in not compressed params to send analysts
+     * price and quantity of required parameters to get a report
+     * from the income of the product
+     * @param {Analytics.productFieldObjectParams} params
+     * @return {Analytics.productFieldObjectParams}
+     */
+    Analytics.prototype.transformProductParams = function(params) {
+        return {
+            'id': params.id || null,
+            'name': params.name || null,
+            'brand': params.brand || null,
+            'category': params.category || null,
+            'variant': params.variant || null,
+            'position': params.position || null,
+            'price': this.transformCurrency_(params.price),
+            'quantity': params.quantity || 1,
+            'coupon': params.coupon || null
+        };
+    };
+
+
+    /**
+     * Transformation action params in not compressed params to send analysts
+     * @param {Analytics.actionFieldObjectParams} params
+     * @return {Analytics.actionFieldObjectParams}
+     */
+    Analytics.prototype.transformActionParams = function(params) {
+        return {
+            'id': params.id || null,
+            'affiliation': params.affiliation || null,
+            'revenue': this.transformCurrency_(params.revenue),
+            'tax': params.tax || null,
+            'shipping': params.shipping || null,
+            'coupon': params.coupon || null,
+            'list': params.list || null,
+            'step': params.step || null,
+            'option': params.option || null
+        };
+    };
+
+
+    /**
+     * Transformation of currency from string into the desired format
+     * @param {string} currencyString
+     * @return {number}
+     * @private
+     */
+    Analytics.prototype.transformCurrency_ = function(currencyString) {
+        var currency = currencyString ?
+            currencyString.replace(/\D/gi, '') :
+            null;
+
+        return currency;
+    };
+
+
+    /**
      * Creates a counter for the resource
      * @private
      */
     Analytics.prototype.create_ = function() {
         ga('create', this.clientId_, 'auto');
+    };
 
+
+    /**
+     * Attach ecommerce
+     * @private
+     */
+    Analytics.prototype.requireEc_ = function() {
         ga('require', 'ec');
+    };
+
+
+    /**
+     * Set local currency for transactions
+     * @private
+     */
+    Analytics.prototype.setCurrency_ = function() {
+        ga('set', '&cu', 'RUB');
     };
 
 

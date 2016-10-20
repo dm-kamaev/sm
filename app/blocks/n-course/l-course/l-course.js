@@ -5,6 +5,7 @@ goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.iLayout.LayoutStendhal');
 goog.require('sm.iSmViewport.SmViewport');
 goog.require('sm.lCourse.View');
+goog.require('sm.lCourse.iAnalyticsSender.AnalyticsSender');
 
 
 goog.scope(function() {
@@ -84,10 +85,19 @@ goog.scope(function() {
          * @private
          */
         this.modalSuccess_ = null;
+
+
+        /**
+         * Instances analytics sender
+         * @type {sm.lCourse.iAnalyticsSender.AnalyticsSender}
+         * @private
+         */
+        this.analyticsSender_ = null;
     };
     goog.inherits(sm.lCourse.Course, sm.iLayout.LayoutStendhal);
     var Course = sm.lCourse.Course,
         Viewport = sm.iSmViewport.SmViewport,
+        AnalyticsSender = sm.lCourse.iAnalyticsSender.AnalyticsSender,
         Analytics = sm.iAnalytics.Analytics;
 
 
@@ -105,6 +115,7 @@ goog.scope(function() {
         this.initDepartmentList_();
         this.initModals_();
         this.initIRequest_();
+        this.initAnalyticsSender_();
     };
 
 
@@ -118,7 +129,7 @@ goog.scope(function() {
         this.initDepartmentListListeners_();
         this.initModalsListeners_();
 
-        this.sendAnalyticsPageview_();
+        this.analyticsSender_.sendPageview();
     };
 
 
@@ -157,6 +168,12 @@ goog.scope(function() {
     Course.prototype.initModalsListeners_ = function() {
         this.getHandler().listen(
             this.modalEnrollment_,
+            sm.gModal.ModalEnrollment.Event.SEND_REQUEST,
+            this.onEnrollmentSend_
+        );
+
+        this.getHandler().listen(
+            this.modalEnrollment_,
             sm.gModal.ModalEnrollment.Event.SUCCESS,
             this.onSendEnrollmentSuccess_
         );
@@ -187,7 +204,16 @@ goog.scope(function() {
      */
     Course.prototype.onSendEnrollmentSuccess_ = function(event) {
         this.modalSuccess_.show();
-        this.sendAnalyticsSendEnrollment_(event.data);
+        this.sendAnalyticsSuccessEnrollment_(event.data);
+    };
+
+
+    /**
+     * Send enrollment handler
+     * @private
+     */
+    Course.prototype.onEnrollmentSend_ = function() {
+        this.sendAnalyticsSendEnrollment_();
     };
 
 
@@ -202,56 +228,50 @@ goog.scope(function() {
 
 
     /**
-     * Send analytics about pageview
-     * @private
-     */
-    Course.prototype.sendAnalyticsPageview_ = function() {
-        var data = this.getEcAnalyticsCourseData_();
-
-        Analytics.getInstance().viewProduct(data);
-        Analytics.getInstance().setView();
-        Analytics.getInstance().send('pageview');
-    };
-
-
-    /**
      * Send analytics about shown modal enrollment
      * @param {sm.gModal.Event.Show.Data} data
      * @private
      */
     Course.prototype.sendAnalyticsCheckoutEnrollment_ = function(data) {
-        var courseData = this.getEcAnalyticsCourseData_(),
-            enrollmentData = this.getEcAnalyticsEnrollmentData_(data);
+        var actionData = {
+            category: 'checkout',
+            action: 'form request'
+        };
 
-        Analytics.getInstance().checkoutProduct(courseData, enrollmentData);
-        this.sendAnalyticsData_('form request');
+        this.analyticsSender_.sendCheckout(
+            this.getEcAnalyticsEnrollmentData_(data),
+            actionData
+        );
     };
 
+
     /**
-     * Send analytics about send Enrollment
+     * Send analytics about success sending Enrollment
      * @param {sm.gModal.Event.EnrollmentSuccess.Data} data
      * @private
      */
-    Course.prototype.sendAnalyticsSendEnrollment_ = function(data) {
-        var courseData = this.getEcAnalyticsCourseData_(),
-            enrollmentData = this.getEcAnalyticsEnrollmentData_(data);
+    Course.prototype.sendAnalyticsSuccessEnrollment_ = function(data) {
+        var actionData = {
+            category: 'checkout',
+            action: 'form success'
+        };
 
-        Analytics.getInstance().purchaseProduct(courseData, enrollmentData);
-        this.sendAnalyticsData_('form submit');
+        this.analyticsSender_.sendPurchase(
+            this.getEcAnalyticsEnrollmentData_(data),
+            actionData
+        );
     };
 
 
     /**
-     * Get course data for ecommerce
-     * @return {Object}
+     * Send analytics about send Enrollment
      * @private
      */
-    Course.prototype.getEcAnalyticsCourseData_ = function() {
-        return {
-            'id': this.params.id,
-            'name': this.params.name,
-            'category': this.params.category
-        };
+    Course.prototype.sendAnalyticsSendEnrollment_ = function() {
+        this.analyticsSender_.send({
+            category: 'checkout',
+            action: 'form submit'
+        });
     };
 
 
@@ -265,34 +285,28 @@ goog.scope(function() {
      * @private
      */
     Course.prototype.getEcAnalyticsEnrollmentData_ = function(data) {
-        var cost = (data && data.optionCost) ?
-            data.optionCost :
-            this.params.cost;
-
-        var data = {
-            'id': data ? data.enrollmentId : '',
-            'list': 'course details',
-            'revenue': cost.replace(/\D/gi, '')
+        return {
+            id: data ? data.enrollmentId : '',
+            revenue: (data && data.optionCost) ?
+                data.optionCost :
+                this.params.cost
         };
-
-        return data;
     };
 
 
     /**
-     * Send data for Analytics
-     * @param {string} eventAction
+     * Initializes instance of Analytics Sender
      * @private
      */
-    Course.prototype.sendAnalyticsData_ = function(eventAction) {
-        var dataAnalytics = {
-            'hitType': 'event',
-            'eventCategory': 'checkout',
-            'eventAction': eventAction,
-            'eventLabel': this.params.name
-        };
+    Course.prototype.initAnalyticsSender_ = function() {
+        this.analyticsSender_ = new AnalyticsSender('course details');
 
-        Analytics.getInstance().send(dataAnalytics);
+        this.analyticsSender_.setProductParams({
+            id: this.params.id,
+            name: this.params.name,
+            category: this.params.category,
+            price: this.params.cost
+        });
     };
 
 
