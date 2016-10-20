@@ -23,7 +23,12 @@ service.create = async(function(categoryId, name) {
 
 service.getAll = async(function() {
     return await(models.CourseType.findAll({
-        attributes: ['id', 'name']
+        attributes: ['id', 'name', 'updated_at'],
+        include: [{
+            attributes: ['id', 'name'],
+            model: models.CourseCategory,
+            as: 'category'
+        }]
     }));
 });
 
@@ -49,6 +54,19 @@ service.findByName = async(function(name) {
             name: {
                 $iLike: '%' + name + '%'
             }
+        }
+    }));
+});
+
+/**
+ * @param  {number} id
+ * @return {CourseType}
+ */
+service.getById = async(function(id) {
+    return await(models.CourseType.findOne({
+        attributes: ['id', 'name', 'categoryId'],
+        where: {
+            id: id
         }
     }));
 });

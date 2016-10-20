@@ -6,6 +6,7 @@ const courseController = require('./courseController'),
     departmentController = require('./departmentController'),
     optionController = require('./optionController'),
     categoryController = require('./categoryController'),
+    typeController = require('./typeController'),
     csrf = require('../../../../app/middleware/csrf'),
     checkToken = require('../../../../app/middleware/checkToken');
 
@@ -57,5 +58,8 @@ router.get('/coursecategory/:id', categoryController.get);
 router.post('/coursecategory', checkToken, categoryController.create);
 router.put('/coursecategory/:id', checkToken, categoryController.update);
 router.delete('/coursecategory/:id', checkToken, categoryController.delete);
+
+router.get('/coursetype', typeController.list);
+router.get('/coursetype/:id', typeController.get);
 
 module.exports = router;
