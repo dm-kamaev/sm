@@ -476,6 +476,11 @@ service.create = async(function(data) {
  * @return {Array<number>}
  */
 service.update = async(function(id, data) {
+    if (!data.brandId) {
+        let brand = await(services.courseBrand.create({name: data.brandName}));
+        data.brandId = brand.id;
+    }
+
     return await(models.Course.update(data, {
         where: {
             id: id
