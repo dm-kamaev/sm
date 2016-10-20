@@ -559,6 +559,7 @@ view.render = function(course) {
         id: course.id,
         name: course.name,
         description: course.description,
+        brandId: course.courseBrand.id,
         brandName: course.courseBrand.name,
         fullDescription: course.fullDescription,
         about: course.about,

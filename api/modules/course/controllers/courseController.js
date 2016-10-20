@@ -301,6 +301,7 @@ controller.enrollOnCourse = async(function(req, res) {
  *         "id": 1,
  *         "name": "course's name",
  *         "description": "course's description",
+ *         "brandId": 2
  *         "brandName": "brand's name",
  *         "fullDescription": "course's full description",
  *         "about": "course's about",
@@ -334,6 +335,7 @@ controller.list = async(function(req, res) {
  *        "id": 1,
  *         "name": "course's name",
  *         "description": "course's description",
+ *         "brandId": 2,
  *         "brandName": "brand's name",
  *         "fullDescription": "course's full description",
  *         "about": "course's about",
