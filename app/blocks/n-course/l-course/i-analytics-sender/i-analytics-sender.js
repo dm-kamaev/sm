@@ -65,13 +65,18 @@ goog.scope(function() {
      */
     AnalyticsSender.prototype.sendPageview = function() {
         var params = this.getProductParams();
+
+        var productParams =
+            Analytics.getInstance().transformProductParams(params);
+
         params.list = this.list_;
 
-        var productParams = Analytics.getInstance().transformImpressionParams(
-            params
-        );
+        var impressionParams =
+            Analytics.getInstance().transformImpressionParams(params);
 
-        Analytics.getInstance().addImpression(productParams);
+        Analytics.getInstance().addImpression(impressionParams);
+        Analytics.getInstance().viewProduct(productParams);
+        Analytics.getInstance().setView();
         Analytics.getInstance().send('pageview');
     };
 
