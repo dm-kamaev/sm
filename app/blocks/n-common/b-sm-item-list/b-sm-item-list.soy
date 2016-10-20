@@ -24,7 +24,9 @@
  /**
  * @typedef {{
  *     stylizationModifier: (string|undefined),
- *     theme: ('light')
+ *     customClasses: (Array<string>|undefined),
+ *     theme: ('light'|undefined),
+ *     showLine: (boolean|undefined)
  * }} sm.bSmItemList.Template.Params.Config
  */
 
@@ -216,6 +218,9 @@
  * @param params {
  *     data: {
  *         countItemsPerPage: (number|undefined)
+ *     },
+ *     config: {
+ *         showLine: (boolean|undefined)
  *     }
  * }
  * @override
@@ -223,6 +228,9 @@
 {template .additionalClasses}
     {if $params.data?.countItemsPerPage}
         {call .rootClass /}_count-items_{$params.data.countItemsPerPage}
+    {/if}
+    {if $params.config?.showLine}
+        {call .rootClass /}_line_show
     {/if}
 {/template}
 
