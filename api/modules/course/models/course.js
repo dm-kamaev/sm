@@ -3,7 +3,8 @@
 const Sequelize = require('sequelize');
 
 const db = require('../../../../app/components/db'),
-    urlService = require('../../entity/services/urls');
+    urlService = require('../../entity/services/urls'),
+    courseService = require('../services/course');
 
 let Course = db.define('Course', {
     name: Sequelize.STRING,
@@ -51,7 +52,8 @@ let Course = db.define('Course', {
     tableName: 'course',
     hooks: {
         afterCreate: urlService.generateCourseAlias,
-        afterUpdate: urlService.generateCourseAlias
+        afterUpdate: urlService.replaceCourseAlias,
+        afterDestroy: courseService.deleteAlias
     },
     classMethods: {
         associate: function(models) {
@@ -61,11 +63,14 @@ let Course = db.define('Course', {
             });
             Course.belongsTo(models.CourseType, {
                 as: 'courseType',
-                foreignKey: 'type'
+                foreignKey: 'type',
+                onDelete: 'set null',
+                onUpdate: 'cascade'
             });
             Course.hasMany(models.CourseOption, {
                 as: 'courseOptions',
-                foreignKey: 'course_id'
+                foreignKey: 'course_id',
+                onDelete: 'cascade'
             });
             Course.hasMany(models.Favorite, {
                 as: 'favorite',
