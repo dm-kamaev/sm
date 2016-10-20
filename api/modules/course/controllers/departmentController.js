@@ -44,7 +44,7 @@ controller.list = async(function(req, res) {
 });
 
 /**
- * @api {get} /coursebrand/:brandId/coursedepartment/:id Get departments
+ * @api {get} /coursebrand/:brandId/department/:id Get departments
  * @apiVersion 1.0.0
  * @apiGroup CourseDepartment
  * @apiName getCourseDepartment
@@ -76,7 +76,7 @@ controller.get = async(function(req, res) {
 });
 
 /**
- * @api {post} /coursebrand/:brandId/coursedepartment Create department
+ * @api {post} /coursebrand/:brandId/department Create department
  * @apiVersion 1.0.0
  * @apiGroup CourseDepartment
  * @apiName createCourseDepartment
