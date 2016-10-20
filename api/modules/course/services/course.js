@@ -250,6 +250,13 @@ service.getAll = async(function() {
             model: models.CourseBrand,
             as: 'courseBrand'
         }, {
+            model: models.CourseType,
+            as: 'courseType',
+            include: [{
+                model: models.CourseCategory,
+                as: 'category'
+            }]
+        }, {
             model: models.CourseOption,
             as: 'courseOptions',
             include: [{

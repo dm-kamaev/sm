@@ -603,6 +603,7 @@ view.render = function(course) {
         name: course.name,
         description: course.description,
         brandName: course.courseBrand.name,
+        category: course.courseType && course.courseType.category.name || null,
         fullDescription: course.fullDescription,
         about: course.about,
         learningOutcome: course.learningOutcome,
