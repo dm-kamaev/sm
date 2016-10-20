@@ -40,7 +40,9 @@ goog.require('sm.gIcon.TemplateStendhal');
 goog.require('sm.gInput.DigitInputTemplate');
 goog.require('sm.gInput.TemplatePhone');
 goog.require('sm.gInput.TemplateStendhal');
+goog.require('sm.gList.TemplateLink');
 goog.require('sm.gList.TemplateSelect');
+goog.require('sm.gList.TemplateStendhal');
 goog.require('sm.gModal.TemplateEnrollment');
 goog.require('sm.gModal.TemplateFeedback');
 goog.require('sm.gModal.TemplateStendhal');
@@ -208,6 +210,14 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'modal-success',
             sm.gModal.TemplateSuccess.modal
+        )
+        .setTemplateListItem(
+            'list',
+            sm.gList.TemplateStendhal.list
+        )
+        .setTemplateListItem(
+            'list-link',
+            sm.gList.TemplateLink.list
         );
 
     /** Global blocks an their heirs **/

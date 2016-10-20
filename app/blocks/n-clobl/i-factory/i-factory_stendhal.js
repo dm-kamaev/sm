@@ -63,7 +63,11 @@ goog.require('sm.gInput.InputStendhal');
 goog.require('sm.gInput.ViewPhone');
 goog.require('sm.gInput.ViewStendhal');
 goog.require('sm.gList.List.Select');
+goog.require('sm.gList.ListLink');
+goog.require('sm.gList.ListStendhal');
+goog.require('sm.gList.ViewLink');
 goog.require('sm.gList.ViewSelect');
+goog.require('sm.gList.ViewStendhal');
 goog.require('sm.gModal.ModalEnrollment');
 goog.require('sm.gModal.ModalFeedback');
 goog.require('sm.gModal.ModalStendhal');
@@ -206,6 +210,14 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('modal-success', {
             control: sm.gModal.ModalSuccess,
             view: sm.gModal.ViewSuccess
+        })
+        .setControlListItem('list', {
+            control: sm.gList.ListStendhal,
+            view: sm.gList.ViewStendhal
+        })
+        .setControlListItem('list-link', {
+            control: sm.gList.ListLink,
+            view: sm.gList.ViewLink
         });
 
     /** Common blocks and their heirs **/

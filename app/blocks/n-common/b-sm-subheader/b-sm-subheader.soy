@@ -147,7 +147,8 @@
  *             nameL: string,
  *             nameM: string,
  *             nameS: (string|undefined),
- *             url: string
+ *             url: (string|undefined),
+ *             items: (Array<sm.bSmLink.Template.Params.Data>|undefined)
  *         }
  *     }
  * }}
@@ -186,6 +187,35 @@
                 ],
                 'config': [
                     'size': 's'
+                ]
+            ]/}
+        {/call}
+
+        {call .listLinks_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Search list of links
+ */
+{template .listLinks_}
+    <div class="{call .rootClass/}__list-links">
+        {call .renderChild}
+            {param params: [
+                'type': 'list-link',
+                'renderParams': [
+                    'data': [
+                        'items': [
+                            [
+                                'label': 'Английский язык',
+                                'val': '123'
+                            ], [
+                                'label': 'Французкий язык',
+                                'val': '456'
+                            ]
+                        ],
+                    ]
                 ]
             ]/}
         {/call}
