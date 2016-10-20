@@ -43,7 +43,7 @@ goog.scope(function() {
      * @enum {string}
      */
     View.CssClass = {
-        ROOT: 'g-list_list',
+        ROOT: 'g-list_link',
         ITEM: 'g-list__item',
         ITEM_SELECTED: 'g-list__item_selected',
         ITEM_DISABLED: 'g-list__item_disabled'

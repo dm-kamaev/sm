@@ -65,7 +65,7 @@ goog.scope(function() {
 
         for (var i = 0; i < domElements.length; i++) {
             instance = this.decorateChild(
-                'button',
+                'smLink',
                 domElements[i]
             );
 
