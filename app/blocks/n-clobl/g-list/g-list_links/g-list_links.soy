@@ -1,4 +1,4 @@
-{namespace sm.gList.TemplateLink}
+{namespace sm.gList.TemplateLinks}
 
 
 /**
@@ -11,7 +11,7 @@
  *         isDisabled: (boolean|undefined)
  *     }>,
  *     selectedItemId: (number|undefined)
- * }} sm.gList.TemplateLink.Params.Data
+ * }} sm.gList.TemplateLinks.Params.Data
  */
 
 
@@ -19,15 +19,15 @@
  * @typedef {{
  *     mode: ('selection'|'multiselection'|undefined),
  *     maxSelection: (number|undefined)
- * }} sm.gList.TemplateLink.Params.Config
+ * }} sm.gList.TemplateLinks.Params.Config
  */
 
 
 /**
  * Constructor
  * @param params {{
- *     data: sm.gList.TemplateLink.Params.Data,
- *     config: sm.gList.TemplateLink.Params.Config
+ *     data: sm.gList.TemplateLinks.Params.Data,
+ *     config: sm.gList.TemplateLinks.Params.Config
  * }}
  * @extends sm.gList.TemplateStendhal
  * @constructor
@@ -51,7 +51,7 @@
         {call .rootClass/}__link
     {/let}
 
-     <div class="{call .rootClass/}__item-link">
+    <div class="{call .rootClass/}__item-link">
         {call .renderChild}
             {param params: [
                 'type': 'smLink',
@@ -77,28 +77,5 @@
  * @protected
  */
 {template .additionalClasses}
-    {call .rootClass/}_link
-{/template}
-
-
-/**
- * @param params {{
- *     data: sm.gList.TemplateLink.Params.Data,
- *     config: sm.gList.TemplateLink.Params.Config
- * }}
- * @override
- */
-{template .attributes kind="attributes"}
-    data-params="{call cl.iUtils.Utils.stringify}
-        {param json: quoteKeysIfJs([
-            'data': [
-                'items': $params.data?.items ?: [],
-                'selectedItemId': $params.data?.selectedItemId
-            ],
-            'config': [
-                'mode': $params.config?.mode,
-                'maxSelection': $params.config?.maxSelection
-            ]
-        ]) /}
-    {/call}"
+    {call .rootClass/}_links
 {/template}

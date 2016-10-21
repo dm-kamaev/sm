@@ -1,7 +1,7 @@
-goog.provide('sm.gList.ListLink');
+goog.provide('sm.gList.ListLinks');
 
 goog.require('sm.gList.ListStendhal');
-goog.require('sm.gList.ViewLink');
+goog.require('sm.gList.ViewLinks');
 
 
 
@@ -13,10 +13,10 @@ goog.require('sm.gList.ViewLink');
  * @constructor
  * @extends {sm.gList.ListStendhal}
  */
-sm.gList.ListLink = function(view, opt_params, opt_domHelper) {
-    var instance = view || new sm.gList.ViewLink();
+sm.gList.ListLinks = function(view, opt_params, opt_domHelper) {
+    var instance = view || new sm.gList.ViewLinks();
 
-    sm.gList.ListLink.base(
+    sm.gList.ListLinks.base(
         this, 'constructor', instance, opt_params, opt_domHelper
     );
 
@@ -28,18 +28,18 @@ sm.gList.ListLink = function(view, opt_params, opt_domHelper) {
      */
     this.links_ = [];
 };
-goog.inherits(sm.gList.ListLink, sm.gList.ListStendhal);
+goog.inherits(sm.gList.ListLinks, sm.gList.ListStendhal);
 
 
 goog.scope(function() {
-    var List = sm.gList.ListLink,
-        View = sm.gList.ViewLink;
+    var ListLinks = sm.gList.ListLinks,
+        View = sm.gList.ViewLinks;
 
     /**
      * Event enum
      * @enum {string}
      */
-    List.Event = {
+    ListLinks.Event = {
         ITEM_SELECT: sm.gList.ListStendhal.Event.ITEM_SELECT,
         ITEM_CLICK: sm.gList.ListStendhal.Event.ITEM_CLICK
     };
@@ -48,8 +48,8 @@ goog.scope(function() {
     /**
      * @override
      */
-    List.prototype.decorateInternal = function(element) {
-        List.base(this, 'decorateInternal', element);
+    ListLinks.prototype.decorateInternal = function(element) {
+        ListLinks.base(this, 'decorateInternal', element);
 
         this.initLinks_();
     };
@@ -59,7 +59,7 @@ goog.scope(function() {
      * Initializes instance of links
      * @private
      */
-    List.prototype.initLinks_ = function() {
+    ListLinks.prototype.initLinks_ = function() {
         var domElements = this.getView().getDom().links,
             instance;
 

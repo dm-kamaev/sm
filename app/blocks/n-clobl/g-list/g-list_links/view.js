@@ -1,4 +1,4 @@
-goog.provide('sm.gList.ViewLink');
+goog.provide('sm.gList.ViewLinks');
 
 goog.require('cl.gList.ListMode');
 goog.require('goog.array');
@@ -18,16 +18,16 @@ goog.require('sm.gList.ViewStendhal');
  * @constructor
  * @extends {cl.gList.View}
  */
-sm.gList.ViewLink = function(opt_params, opt_template, opt_domHelper) {
-    sm.gList.ViewLink.base(
+sm.gList.ViewLinks = function(opt_params, opt_template, opt_domHelper) {
+    sm.gList.ViewLinks.base(
         this, 'constructor', opt_params, opt_template, opt_domHelper
     );
 };
-goog.inherits(sm.gList.ViewLink, sm.gList.ViewStendhal);
+goog.inherits(sm.gList.ViewLinks, sm.gList.ViewStendhal);
 
 
 goog.scope(function() {
-    var View = sm.gList.ViewLink,
+    var View = sm.gList.ViewLinks,
         ListMode = cl.gList.ListMode;
 
 
@@ -43,7 +43,7 @@ goog.scope(function() {
      * @enum {string}
      */
     View.CssClass = {
-        ROOT: 'g-list_link',
+        ROOT: 'g-list_links',
         ITEM: 'g-list__item',
         ITEM_SELECTED: 'g-list__item_selected',
         ITEM_DISABLED: 'g-list__item_disabled'

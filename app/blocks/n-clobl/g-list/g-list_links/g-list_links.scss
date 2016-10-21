@@ -1,0 +1,25 @@
+@import "../../../n-common/i-media/i-media";
+
+.g-list.g-list_links {
+    .g-list__item {
+        padding: 16px 20px 15px;
+
+        border-bottom: 1px solid #e3e3e3;
+
+        &:last-child {
+            border-bottom: none;
+        }
+    }
+
+    .g-list__item_selected {
+        font-weight: normal;
+    }
+}
+
+@include media-xs {
+    .g-list.g-list_links {
+        .g-list__item {
+            padding-left: 31px;
+        }
+    }
+}

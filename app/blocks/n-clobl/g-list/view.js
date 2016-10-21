@@ -6,6 +6,7 @@ goog.require('goog.array');
 goog.require('goog.dom.classes');
 goog.require('goog.dom.dataset');
 goog.require('goog.json');
+goog.require('goog.labs.userAgent.device');
 goog.require('goog.object');
 
 
@@ -44,6 +45,7 @@ goog.scope(function() {
      */
     View.CssClass = {
         ROOT: 'g-list_stendhal',
+        HOVERABLE: 'g-list_hoverable',
         ITEM: 'g-list__item',
         ITEM_SELECTED: 'g-list__item_selected',
         ITEM_DISABLED: 'g-list__item_disabled'
@@ -63,6 +65,7 @@ goog.scope(function() {
     /**
      * Resolve params from multiple sources
      * @param {Element} element
+     * @public
      */
     View.prototype.resolveParams = function(element) {
         var params = {
@@ -72,14 +75,49 @@ goog.scope(function() {
             }
         };
 
-        var dataParams = goog.json.parse(
-            goog.dom.dataset.get(element, 'params') || '{}'
-        );
-
+        var dataParams = this.initDataParams(element);
         var transformedParams = this.transformParams(dataParams);
 
         goog.object.extend(params, transformedParams, this.params || {});
         this.params = params;
+    };
+
+
+    /**
+     * @override
+     * @protected
+     */
+    View.prototype.decorateInternal = function(element) {
+        View.base(this, 'decorateInternal', element);
+
+        this.enableHover();
+    };
+
+
+    /**
+     * Enable hover reaction on element if it possible (not-mobile device)
+     * @protected
+     */
+    View.prototype.enableHover = function() {
+        if (goog.labs.userAgent.device.isDesktop()) {
+            goog.dom.classlist.add(
+                this.getElement(),
+                View.CssClass.HOVERABLE
+            );
+        }
+    };
+
+
+    /**
+     * Get data-params of dom element
+     * @param {Element} element
+     * @return {Object}
+     * @protected
+     */
+    View.prototype.initDataParams = function(element) {
+        return goog.json.parse(
+            goog.dom.dataset.get(element, 'params') || '{}'
+        );
     };
 
 

@@ -34,13 +34,14 @@ goog.require('sm.gAuthSocial.TemplateStendhal');
 goog.require('sm.gAuthSocialModal.TemplateStendhal');
 goog.require('sm.gButton.TemplateSocialStendhal');
 goog.require('sm.gButton.TemplateStendhal');
+goog.require('sm.gDropdown.TemplateListLinks');
 goog.require('sm.gDropdown.TemplateSelect');
 goog.require('sm.gHint.TemplateStendhal');
 goog.require('sm.gIcon.TemplateStendhal');
 goog.require('sm.gInput.DigitInputTemplate');
 goog.require('sm.gInput.TemplatePhone');
 goog.require('sm.gInput.TemplateStendhal');
-goog.require('sm.gList.TemplateLink');
+goog.require('sm.gList.TemplateLinks');
 goog.require('sm.gList.TemplateSelect');
 goog.require('sm.gList.TemplateStendhal');
 goog.require('sm.gModal.TemplateEnrollment');
@@ -216,8 +217,12 @@ sm.iFactory.TemplateFactoryStendhal = function() {
             sm.gList.TemplateStendhal.list
         )
         .setTemplateListItem(
-            'list-link',
-            sm.gList.TemplateLink.list
+            'list-links',
+            sm.gList.TemplateLinks.list
+        )
+        .setTemplateListItem(
+            'dropdown-list-links',
+            sm.gDropdown.TemplateListLinks.dropdown
         );
 
     /** Global blocks an their heirs **/
