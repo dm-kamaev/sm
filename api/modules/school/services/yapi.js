@@ -59,7 +59,7 @@ exports.getCoords = async(function(addressName, opt_house) {
         result = null;
 
     geoData.featureMember = geoData.featureMember.find(data =>
-        this.isCoordsCorrect(data.GeoObject)
+        this.isCoordsCorrect(data.GeoObject, opt_house)
     );
 
     if (geoData.featureMember) {
