@@ -87,17 +87,6 @@ service.getById = async(function(id) {
 });
 
 /**
- * @param  {{
- *     name: string,
- *     categoryId: number
- * }} data
- * @return {CourseType}
- */
-service.create = async(function(data) {
-    return await(models.CourseType.create(data));
-});
-
-/**
  * @param  {number} id
  * @param  {{
  *     name: ?string,
