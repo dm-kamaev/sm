@@ -108,7 +108,7 @@ service.create = async(function(data) {
             leadType: data.leadType
         }));
     course.options = data.options.map(option =>
-        await(services.courseOption.create(course.id, option))
+        await(services.courseOption.create(course, option))
     );
 
     return course;
@@ -425,6 +425,16 @@ service.getAliases = async(function(courses) {
             entityType.COURSE_BRAND
         )
     });
+});
+
+/**
+ * @param {Course} course
+ */
+service.deleteAlias = async(function(course) {
+    await(services.page.delete(
+        course.id,
+        entityType.COURSE
+    ));
 });
 
 module.exports = service;

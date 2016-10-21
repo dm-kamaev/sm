@@ -5,6 +5,7 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const passport = require('passport');
 
+const csrf = require('./app/middleware/csrf');
 const session = require('./app/components/session');
 var configurePassport = require('./app/components/configurePassport');
 const soy = require('./node_modules/clobl/soy').setOptions({
@@ -64,8 +65,6 @@ if (config.environment == 'development') {
 }
 
 
-require('./app/middleware/csrf')(app);
-
 app.use(morgan('dev', {
     skip: (req, res) => res.statusCode >= 400,
     stream: expressLogStream.debug
@@ -75,6 +74,10 @@ app.use(morgan('dev', {
     stream: expressLogStream.warning
 }));
 
+app.use('/courses/api', api.course.router);
+
+app.use(csrf);
+
 app.use('/schools/', modules.school.router);
 app.use('/courses/', modules.course.router);
 
@@ -82,7 +85,6 @@ app.use('/:subdomain/api', api.mail.router);
 app.use('/:subdomain/', api.user.router);
 app.use('/:subdomain/api', api.comment.router);
 app.use('/schools/api', api.school.router);
-app.use('/courses/api', api.course.router);
 app.use('/:subdomain/api', api.geo.router);
 app.use('/:subdomain/api', api.feedback.router);
 app.use('/:subdomain/api', api.favorite.router);

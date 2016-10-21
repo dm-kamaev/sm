@@ -48,7 +48,8 @@ exports.addAddress = async(function(entityId, entityType, data) {
         data.entityType = entityType;
         if (!data.coords) {
             data.coords = await(services.yapi.getCoords(
-                'Москва, ' + data.name
+                'Москва, ' + data.name,
+                true
             ));
         }
         data.areaId = data.areaId || await(services.area.create({
