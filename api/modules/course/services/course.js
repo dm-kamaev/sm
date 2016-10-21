@@ -131,10 +131,6 @@ service.information = async(function(id) {
             attributes: informationFields.ADDRESS,
             model: models.Address,
             as: 'address',
-            required: false,
-            where: {
-                entityType: entityType.COURSE_DEPARTMENT
-            },
             include: [{
                 attributes: informationFields.METRO,
                 model: models.Metro,
@@ -308,10 +304,6 @@ service.getByIds = function(ids, opt_include) {
                     include: [{
                         model: models.Address,
                         as: 'address',
-                        required: false,
-                        where: {
-                            entityType: entityType.COURSE_DEPARTMENT
-                        },
                         attributes: ['id'],
                         include: addressInclude
                     }]
