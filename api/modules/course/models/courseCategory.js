@@ -4,10 +4,14 @@ const Sequelize = require('sequelize');
 
 const db = require('../../../../app/components/db'),
     urlService = require('../../entity/services/urls'),
-    courseCategoryService = require('../services/corseCategory');
+    courseCategoryService = require('../services/courseCategory');
 
 let CourseCategory = db.define('CourseCategory', {
-    name: Sequelize.STRING,
+    name: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true
+    },
     filters: Sequelize.ARRAY(Sequelize.STRING),
     isActive: {
         type: Sequelize.BOOLEAN,
@@ -25,6 +29,10 @@ let CourseCategory = db.define('CourseCategory', {
         associate: function(models) {
             CourseCategory.hasMany(models.CourseType, {
                 as: 'types',
+                foreignKey: 'category_id'
+            });
+            CourseCategory.hasMany(models.SeoCourseList, {
+                as: 'seoCourseList',
                 foreignKey: 'category_id'
             });
         }

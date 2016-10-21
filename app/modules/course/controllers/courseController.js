@@ -31,95 +31,109 @@ controller.home = async(function(req, res, next) {
 
 controller.search = async(function(req, res, next) {
     try {
-        let authSocialLinks = services.auth.getAuthSocialUrl(),
-            user = req.user || {},
-            searchParams = searchView.initSearchParams(req.query);
+        let categoryName = req.params.categoryName,
+            categoryInstance = await(
+                services.courseCategory.getByAlias(categoryName)
+            );
 
-        let data = await({
-                favorites: services.favorite.getFavoriteEntities(user.id),
-                courses: services.course.list(searchParams, 10),
-                mapCourses: services.course.listMap(searchParams, 10),
-                mapPosition: services.map.getPositionParams(searchParams),
-                filtersData: {
-                    type: services.courseType.getAll()
-                }
-            }),
-            aliases = await({
-                courses: services.course.getAliases(data.courses),
-                map: services.course.getAliases(data.mapCourses)
+        if (!categoryInstance) {
+            throw new errors.SchoolNotFoundError();
+        } else {
+            let authSocialLinks = services.auth.getAuthSocialUrl(),
+                user = req.user || {},
+                searchParams = searchView.initSearchParams(
+                    req.query, categoryInstance.entityId
+                );
+
+            let data = await({
+                    favorites: services.favorite.getFavoriteEntities(user.id),
+                    courses: services.course.list(searchParams, 10),
+                    mapCourses: services.course.listMap(searchParams, 10),
+                    mapPosition: services.map.getPositionParams(searchParams),
+                    filtersData: {
+                        type: services.courseType.getAll()
+                    },
+                    seoParams: services.seoCourseList.getByCategoryId(
+                        categoryInstance.id
+                    )
+                }),
+                aliases = await({
+                    courses: services.course.getAliases(data.courses),
+                    map: services.course.getAliases(data.mapCourses)
+                });
+
+            let templateData = searchView.render({
+                entityType: entityType.COURSE,
+                user: user,
+                fbClientId: FB_CLIENT_ID,
+                favorites: data.favorites,
+                authSocialLinks: authSocialLinks,
+                countResults: data.courses[0] &&
+                    data.courses[0].countResults || 0,
+                coursesList: data.courses,
+                mapCourses: courseView.joinAliases(
+                    data.mapCourses,
+                    aliases.map.course,
+                    aliases.map.brand
+                ),
+                mapPosition: data.mapPosition,
+                searchParams: searchParams,
+                filtersData: data.filtersData,
+                aliases: aliases.courses,
+                seoParams: data.seoParams
             });
 
-        let templateData = searchView.render({
-            entityType: entityType.COURSE,
-            user: user,
-            fbClientId: FB_CLIENT_ID,
-            favorites: data.favorites,
-            authSocialLinks: authSocialLinks,
-            countResults: data.courses[0] && data.courses[0].countResults || 0,
-            coursesList: data.courses,
-            mapCourses: courseView.joinAliases(
-                data.mapCourses,
-                aliases.map.course,
-                aliases.map.brand
-            ),
-            mapPosition: data.mapPosition,
-            searchParams: searchParams,
-            filtersData: data.filtersData,
-            aliases: aliases.courses
-        });
+            templateData.subHeader.listLinks = {
+                opener: 'Все курсы',
+                content: {
+                    items: [{
+                        url: '/',
+                        label: 'Выбор профессии'
+                    }, {
+                        url: '',
+                        label: 'Англйский язык'
+                    }, {
+                        url: '',
+                        label: 'Французский язык'
+                    }, {
+                        url: '',
+                        label: 'Немецкий язык'
+                    }, {
+                        url: '',
+                        label: 'Испанский язык'
+                    }, {
+                        url: '',
+                        label: 'Англйский язык'
+                    }, {
+                        url: '',
+                        label: 'Китайский язык'
+                    }]
+                }
+            };
 
-        templateData.subHeader.listLinks = {
-            opener: 'Все курсы',
-            content: {
-                items: [{
-                    url: '/',
-                    label: 'Выбор профессии'
-                }, {
-                    id: 2,
-                    url: '',
-                    label: 'Англйский язык'
-                }, {
-                    url: '',
-                    label: 'Французский язык'
-                }, {
-                    url: '',
-                    label: 'Немецкий язык'
-                }, {
-                    url: '',
-                    label: 'Испанский язык'
-                }, {
-                    url: '',
-                    label: 'Англйский язык'
-                }, {
-                    url: '',
-                    label: 'Китайский язык'
-                }]
-            }
-        };
-
-
-        let html = soy.render(
-            'sm.lSearch.Template.search', {
-                params: {
-                    data: templateData,
-                    config: {
-                        entityType: entityType.COURSE,
-                        modifier: 'stendhal',
-                        staticVersion: config.lastBuildTimestamp,
-                        year: new Date().getFullYear(),
-                        analyticsId: ANALYTICS_ID,
-                        yandexMetrikaId: YANDEX_METRIKA_ID,
-                        csrf: req.csrfToken(),
-                        domain: DOMAIN,
-                        fbClientId: FB_CLIENT_ID,
-                        type: 'course'
+            let html = soy.render(
+                'sm.lSearch.Template.search', {
+                    params: {
+                        data: templateData,
+                        config: {
+                            entityType: entityType.COURSE,
+                            modifier: 'stendhal',
+                            staticVersion: config.lastBuildTimestamp,
+                            year: new Date().getFullYear(),
+                            analyticsId: ANALYTICS_ID,
+                            yandexMetrikaId: YANDEX_METRIKA_ID,
+                            csrf: req.csrfToken(),
+                            domain: DOMAIN,
+                            fbClientId: FB_CLIENT_ID,
+                            type: entityType.COURSE
+                        }
                     }
                 }
-            }
-        );
+            );
 
-        res.header('Content-Type', 'text/html; charset=utf-8');
-        res.end(html);
+            res.header('Content-Type', 'text/html; charset=utf-8');
+            res.end(html);
+        }
     } catch (error) {
         logger.error(error);
 
