@@ -154,7 +154,7 @@ goog.scope(function() {
      */
     View.prototype.initListLinks_ = function() {
         this.dom.listLinks = this.getElementByClass(
-            sm.gList.ViewLink.CssClass.ROOT
+            sm.gDropdown.ViewListLinks.CssClass.ROOT
         );
     };
 });  // goog.scope

@@ -396,7 +396,7 @@ goog.scope(function() {
 
         if (listLinks) {
             this.listLinks_ = this.decorateChild(
-                'list-link',
+                'dropdown-list-links',
                 listLinks
             );
         }
