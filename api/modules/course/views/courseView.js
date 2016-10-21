@@ -599,6 +599,8 @@ view.joinAliases = function(courses, courseAliases, brandAliases) {
  */
 view.render = function(course) {
     let courseType = course.courseType || {
+        id: null,
+        name: null,
         category: {
             id: null,
             name: null
@@ -612,6 +614,8 @@ view.render = function(course) {
         brandName: course.courseBrand.name,
         categoryId: courseType.category.id,
         categoryName: courseType.category.name,
+        type: courseType.id,
+        typeName: courseType.name,
         fullDescription: course.fullDescription,
         about: course.about,
         learningOutcome: course.learningOutcome,
