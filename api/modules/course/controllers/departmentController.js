@@ -4,7 +4,8 @@ const async = require('asyncawait/async'),
     await = require('asyncawait/await');
 
 const services = require('../../../../app/components/services').all,
-    departmentView = require('../views/courseDepartmentView');
+    departmentView = require('../views/courseDepartmentView'),
+    AddressNotFound = require('./errors/AddressNotFound');
 
 const logger = require('../../../../app/components/logger/logger')
     .getLogger('app');
@@ -97,8 +98,14 @@ controller.create = async(function(req, res) {
             req.body
         ));
     } catch (error) {
-        logger.error(error.message);
-        result = error;
+        logger.error(error);
+        if (~error.message.indexOf(req.body.address)) {
+            let addressNotFound = new AddressNotFound(error.message);
+            result = addressNotFound.response;
+            res.status(addressNotFound.status);
+        } else {
+            result = error.message;
+        }
     } finally {
         res.header('Content-Type', 'application/json; charset=utf-8');
         res.end(JSON.stringify(result));
@@ -126,8 +133,14 @@ controller.update = async(function(req, res) {
             req.params.id, req.body
         ));
     } catch (error) {
-        logger.error(error.message);
-        result = error;
+        logger.error(error);
+        if (~error.message.indexOf(req.body.address)) {
+            let addressNotFound = new AddressNotFound(error.message);
+            result = addressNotFound.response;
+            res.status(addressNotFound.status);
+        } else {
+            result = error.message;
+        }
     } finally {
         res.header('Content-Type', 'application/json; charset=utf-8');
         res.end(JSON.stringify(result));
