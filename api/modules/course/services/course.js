@@ -60,7 +60,8 @@ const informationFields = {
  *     entranceExam: ?string,
  *     learningOutcome: ?string,
  *     leadType: string,
- *     type: ?string,
+ *     category: string,
+ *     type: string,
  *     brand: {
  *         name: string,
  *         description: ?string
@@ -95,7 +96,8 @@ const informationFields = {
  */
 service.fullCreate = async(function(data) {
     let brand = await(services.courseBrand.create(data.brand)),
-        type = await(services.courseType.create(data.type)),
+        category = await(services.courseCategory.findOrCreate(data.category)),
+        type = await(services.courseType.create(category.id, data.type)),
         course = await(models.Course.create({
             name: data.name,
             brandId: brand.id,
@@ -243,6 +245,13 @@ service.getAll = async(function() {
         include: [{
             model: models.CourseBrand,
             as: 'courseBrand'
+        }, {
+            model: models.CourseType,
+            as: 'courseType',
+            include: [{
+                model: models.CourseCategory,
+                as: 'category'
+            }]
         }, {
             model: models.CourseOption,
             as: 'courseOptions',

@@ -8,12 +8,14 @@ var service = {
 };
 
 /**
+ * @param {number} categoryId
  * @param {string} name
  * @return {CourseType}
  */
-service.create = async(function(name) {
+service.create = async(function(categoryId, name) {
     return await(models.CourseType.findOrCreate({
         where: {
+            categoryId: categoryId,
             name: name
         }
     }))[0];

@@ -50,9 +50,16 @@ service.getAll = async(function() {
         .field('course_brand.name')
         .field('course_brand.description')
         .field('COUNT(course.id)', 'courseCount')
+        .field('COUNT(course_category.id)', 'categoryCount')
         .field('COUNT(course_department.id)', 'departmentCount')
         .field('course_brand.updated_at', 'updatedAt')
         .left_join('course', null, 'course_brand.id = course.brand_id')
+        .left_join('course_type', null, 'course.type = course_type.id')
+        .left_join(
+            'course_category',
+            null,
+            'course_type.category_id = course_category.id'
+        )
         .left_join('course_option', null, 'course.id = course_option.course_id')
         .left_join(
             'course_option_course_department',

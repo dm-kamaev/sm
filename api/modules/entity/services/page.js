@@ -9,7 +9,6 @@ var service = {
     name: 'page'
 };
 
-
 /**
  * @param {{
  *    entityId: ?number,
