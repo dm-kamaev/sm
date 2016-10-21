@@ -1,0 +1,136 @@
+{namespace sm.gDropdown.TemplateListLinks}
+
+
+/**
+ * @typedef {{
+ *     opener: string,
+ *     content: sm.gList.TemplateLinks.Params.Data
+ * }} sm.gDropdown.TemplateListLinks.Params.Data
+ */
+
+
+ /**
+ * @typedef {{
+ *     stylizationModifier: string,
+ *     customClasses: (Array<string>|undefined),
+ *     theme: (string|undefined)
+ * }} sm.gDropdown.TemplateListLinks.Params.Config
+ */
+
+
+/**
+ * Dropdown template
+ * @param params {{
+ *     data: sm.gDropdown.TemplateListLinks.Params.Data,
+ *     config: sm.gDropdown.TemplateListLinks.Params.Config
+ * }}
+ * @extends cl.gDropdown.Template
+ * @constructor
+ * @doc
+ */
+{template .dropdown}
+    {call .init data="all" /}
+{/template}
+
+
+/**
+ * Control for displaying content
+ * @param params {{
+ *     data: {
+ *         opener: string
+ *     }
+ * }}
+ * @override
+ */
+{template .opener}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__opener-link
+    {/let}
+
+    {let $openerContent kind="html"}
+        {call .openerText_ data="all" /}
+        {call .openerIcon_/}
+    {/let}
+
+    {call .renderChild}
+        {param params: [
+            'type': 'smLink',
+            'renderParams': [
+                'data': [
+                    'content': $openerContent
+                ],
+                'config': [
+                    'size': 'xl',
+                    'customClasses': [$customClasses],
+                    'theme': 'dark'
+                ]
+            ]
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * Text of opener
+ * @param params {{
+ *     data: {
+ *         opener: string
+ *     }
+ * }}
+ * @private
+ */
+{template .openerText_}
+    <div class="{call .rootClass/}__opener-text">
+        {$params.data.opener}
+    </div>
+{/template}
+
+
+/**
+ * Icon of opener
+ * @private
+ */
+{template .openerIcon_}
+    <div class="{call .rootClass/}__opener-icon">
+        {call .renderChild}
+            {param params: [
+                'type': 'icon',
+                'renderParams': [
+                    'data': [
+                        'type': 'small-opener-arrow'
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Content
+ * @param params {{
+ *     data: {
+ *        content: sm.gList.TemplateLinks.Params.Data
+ *     }
+ * }}
+ * @override
+ */
+{template .content}
+    {call .renderChild}
+        {param params: [
+            'type': 'list-links',
+            'renderParams': [
+                'data': $params.data.content
+            ]
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * Css classes
+ * @override
+ */
+{template .additionalClasses}
+    {call .rootClass/}_list-links
+{/template}
