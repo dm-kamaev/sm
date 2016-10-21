@@ -1,7 +1,6 @@
 'use strict';
 
 const CourseSearchQuery = require('./CourseSearch');
-const entityType = require('../../entity/enums/entityType');
 
 class CourseSearchMapQuery extends CourseSearchQuery {
 
