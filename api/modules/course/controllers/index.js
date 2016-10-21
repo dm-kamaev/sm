@@ -21,6 +21,10 @@ router.get('/course/course-type', courseController.searchCourseType);
 
 router.post('/course/enrollment', csrf, courseController.enrollOnCourse);
 
+/**
+ * @param {string} route
+ * @param {Object} controller
+ */
 let initCrudRouting = function(route, controller) {
     router.post(`${route}`, checkToken, controller.create);
     router.get(`${route}`, controller.list);
@@ -29,6 +33,7 @@ let initCrudRouting = function(route, controller) {
     router.delete(`${route}/:id`, checkToken, controller.delete);
 };
 
+initCrudRouting('/coursebrand', brandController);
 initCrudRouting('/course', courseController);
 initCrudRouting('/coursebrand/:brandId/department', departmentController);
 initCrudRouting('/course/:courseId/option', optionController);
