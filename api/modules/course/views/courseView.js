@@ -593,4 +593,30 @@ view.joinAliases = function(courses, courseAliases, brandAliases) {
     });
 };
 
+/**
+ * @param  {Course} course
+ * @return {Object}
+ */
+view.render = function(course) {
+    return {
+        id: course.id,
+        name: course.name,
+        description: course.description,
+        brandId: course.courseBrand.id,
+        brandName: course.courseBrand.name,
+        fullDescription: course.fullDescription,
+        about: course.about,
+        learningOutcome: course.learningOutcome,
+        updatedAt: course['updated_at']
+    };
+};
+
+/**
+ * @param  {Array<Course>} courses
+ * @return {Array<Object>}
+ */
+view.renderList = function(courses) {
+    return courses.map(this.render);
+};
+
 module.exports = view;

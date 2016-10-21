@@ -4,6 +4,7 @@ var router = express.Router();
 const courseController = require('./courseController'),
     brandController = require('./brandController'),
     departmentController = require('./departmentController'),
+    optionController = require('./optionController'),
     csrf = require('../../../../app/middleware/csrf'),
     checkToken = require('../../../../app/middleware/checkToken');
 
@@ -24,6 +25,12 @@ router.post('/coursebrand', checkToken, brandController.create);
 router.put('/coursebrand/:id', checkToken, brandController.update);
 router.delete('/coursebrand/:id', checkToken, brandController.delete);
 
+router.get('/course', courseController.list);
+router.get('/course/:id', courseController.get);
+router.post('/course', checkToken, courseController.create);
+router.put('/course/:id', checkToken, courseController.update);
+router.delete('/course/:id', checkToken, courseController.delete);
+
 router.get(DEPARTMENT_ROUTE, departmentController.list);
 router.get(`${DEPARTMENT_ROUTE}/:id`, departmentController.get);
 router.post(DEPARTMENT_ROUTE, checkToken, departmentController.create);
@@ -33,5 +40,11 @@ router.delete(
     checkToken,
     departmentController.delete
 );
+
+router.get('/course/:courseId/option', optionController.list);
+router.get('/course/:courseId/option/:id', optionController.get);
+router.post('/course/:courseId/option', optionController.create);
+router.put('/course/:courseId/option/:id', optionController.update);
+router.delete('/course/:courseId/option/:id', optionController.delete);
 
 module.exports = router;

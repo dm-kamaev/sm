@@ -150,6 +150,10 @@ service.generateCourseBrandAlias = async(function(courseBrand) {
     await(service.generateEntityAlias(courseBrand, entityTypes.COURSE_BRAND));
 });
 
+service.replaceCourseAlias = async(function(course) {
+    await(services.page.delete(course.id, entityTypes.COURSE));
+    await(service.generateCourseAlias(course));
+});
 
 /**
  * Used once to generate urls by school id
