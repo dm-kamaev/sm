@@ -9,6 +9,7 @@ const courseController = require('./courseController'),
     optionController = require('./optionController'),
     categoryController = require('./categoryController'),
     typeController = require('./typeController'),
+    filterController = require('./filterController'),
     csrf = require('../../../../app/middleware/csrf'),
     checkToken = require('../../../../app/middleware/checkToken');
 
@@ -20,6 +21,8 @@ router.get('/course/course-type/popular', courseController.popularCourseType);
 router.get('/course/course-type', courseController.searchCourseType);
 
 router.post('/course/enrollment', csrf, courseController.enrollOnCourse);
+
+router.get('/coursefilter', filterController.list);
 
 /**
  * @param {string} route
