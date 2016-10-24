@@ -261,7 +261,7 @@ exports.getAllWithSearchData = async(function() {
         include: [{
             model: models.AddressSearchData,
             as: 'searchData',
-            attributes: ['id', 'type', 'entityId']
+            attributes: ['id', 'type', 'entityId', 'entityType']
         }, {
             model: models.Department,
             as: 'departments',
@@ -279,6 +279,9 @@ exports.getAllWithSearchData = async(function() {
                 as: 'district',
                 attributes: ['id']
             }]
+        }, {
+            model: models.CourseDepartment,
+            as: 'courseDepartments'
         }],
         order: [[
             {
