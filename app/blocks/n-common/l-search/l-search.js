@@ -327,13 +327,10 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.onHeaderSearchSubmit_ = function(event) {
-        var data = this.subheader.getSearchData();
-        this.search_.setData(data);
+        var searchText = this.subheader.getSearchData();
 
-        this.subheader.setMode(sm.bSmSubheader.SmSubheader.Mode.DEFAULT);
-
-        this.updatePage_();
-        this.filterPanel_.reset();
+        this.setSearchFieldText_(searchText);
+        this.makeNewSearch_();
     };
 
 
@@ -499,7 +496,6 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.resetSecondarySearchParams_ = function() {
-        this.paramsManager_.setSortType(0);
         this.paramsManager_.setPage(0);
     };
 
@@ -524,6 +520,31 @@ goog.scope(function() {
             this.paramsManager_.getParams(/*requestMapResults*/ true)
         );
         this.searchService_.loadMapData(this.paramsManager_.getParams());
+    };
+
+
+    /**
+     * Set given text of search field
+     * @param {string} searchText
+     * @private
+     */
+    Search.prototype.setSearchFieldText_ = function(searchText) {
+        this.search_.setData(searchText);
+        this.subheader.setMode(sm.bSmSubheader.SmSubheader.Mode.DEFAULT);
+    };
+
+
+    /**
+     * Make new search using only the params of search field
+     * reset filters and sort
+     * @private
+     */
+    Search.prototype.makeNewSearch_ = function() {
+        this.paramsManager_.setSortType(1);
+
+        this.updatePage_();
+        this.sort_.clear();
+        this.filterPanel_.reset();
     };
 
 
