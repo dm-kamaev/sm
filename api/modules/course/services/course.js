@@ -97,7 +97,10 @@ const informationFields = {
 service.fullCreate = async(function(data) {
     let brand = await(services.courseBrand.create(data.brand)),
         category = await(services.courseCategory.findOrCreate(data.category)),
-        type = await(services.courseType.create(category.id, data.type)),
+        type = await(services.courseType.create({
+            categoryId: category.id,
+            name: data.type
+        })),
         course = await(models.Course.create({
             name: data.name,
             brandId: brand.id,
@@ -205,10 +208,10 @@ service.listMap = async(function(searchParams, opt_limit) {
 });
 
 /**
- * @param {number} departmentId
+ * @param {number} addressId
  * @return {Array<number>}
  */
-service.findByDepartmentId = async(function(departmentId) {
+service.findByAddressId = async(function(addressId) {
     let query = squel.select()
         .from('course')
         .field('DISTINCT course.id')
@@ -225,7 +228,8 @@ service.findByDepartmentId = async(function(departmentId) {
             'course_option_course_department.course_department_id = ' +
                 'course_department.id'
         )
-        .where('course_department_id = ' + departmentId)
+        .left_join('address', null, 'course_department.address_id = address.id')
+        .where('address.id = ' + addressId)
         .toString();
     let result = await(sequelize.query(
         query, {
