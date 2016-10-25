@@ -97,7 +97,10 @@ const informationFields = {
 service.fullCreate = async(function(data) {
     let brand = await(services.courseBrand.create(data.brand)),
         category = await(services.courseCategory.findOrCreate(data.category)),
-        type = await(services.courseType.create(category.id, data.type)),
+        type = await(services.courseType.create({
+            categoryId: category.id,
+            name: data.type
+        })),
         course = await(models.Course.create({
             name: data.name,
             brandId: brand.id,
