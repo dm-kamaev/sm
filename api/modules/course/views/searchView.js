@@ -213,11 +213,12 @@ searchView.render = function(data) {
  * @return {Object}
  */
 searchView.initSearchParams = function(params, opt_categoryId) {
+    let categoryId = opt_categoryId || params.categoryId || null;
     return {
         page: params.page || 0,
         age: this.transformToArray(params.age),
         type: this.transformToArray(params.type),
-        categoryId: opt_categoryId ? [opt_categoryId] : [],
+        categoryId: this.transformToArray(categoryId),
         cost: this.transformToArray(params.cost),
         weekdays: this.transformToArray(params.weekdays),
         time: this.transformToArray(params.time),

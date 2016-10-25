@@ -35,14 +35,13 @@ controller.search = async(function(req, res, next) {
             categoryInstance = await(
                 services.courseCategory.getByAlias(categoryName)
             );
-
         if (!categoryInstance) {
             throw new errors.SchoolNotFoundError();
         } else {
             let authSocialLinks = services.auth.getAuthSocialUrl(),
                 user = req.user || {},
                 searchParams = searchView.initSearchParams(
-                    req.query, categoryInstance.entityId
+                    req.query, categoryInstance.id
                 );
 
             let data = await({
