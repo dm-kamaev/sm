@@ -1,7 +1,6 @@
 'use strict';
 
 const CourseSearchQuery = require('./CourseSearch');
-const entityType = require('../../entity/enums/entityType');
 
 class CourseSearchMapQuery extends CourseSearchQuery {
 
@@ -47,9 +46,7 @@ class CourseSearchMapQuery extends CourseSearchQuery {
             .left_join(
                 'address',
                 null,
-                'course_department.id = address.entity_id AND ' +
-                    'address.entity_type = \'' +
-                    entityType.COURSE_DEPARTMENT + '\''
+                'course_department.address_id = address.id'
             );
     }
 

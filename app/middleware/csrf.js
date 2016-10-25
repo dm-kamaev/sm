@@ -1,7 +1,5 @@
-module.exports = function(app) {
-    var csrf = require('csurf');
+const csrf = require('csurf');
 
-    app.use(csrf({
-        cookie: true
-    }));
-};
+module.exports = csrf({
+    cookie: true
+});

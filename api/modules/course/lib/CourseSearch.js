@@ -246,9 +246,7 @@ class CourseSearchQuery extends SearchQuery {
             .left_join(
                 'address',
                 null,
-                'course_department.id = address.entity_id AND ' +
-                    'address.entity_type = \'' +
-                    entityType.COURSE_DEPARTMENT + '\''
+                'course_department.address_id = address.id'
             )
             .left_join(
                 'address_metro',
@@ -399,9 +397,7 @@ class CourseSearchQuery extends SearchQuery {
             .left_join(
                 'address',
                 null,
-                'course_department.id = address.entity_id AND ' +
-                    'address.entity_type = \'' +
-                    entityType.COURSE_DEPARTMENT + '\''
+                'course_department.address_id = address.id'
             )
             .left_join(
                 'address_metro',

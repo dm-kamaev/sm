@@ -593,4 +593,42 @@ view.joinAliases = function(courses, courseAliases, brandAliases) {
     });
 };
 
+/**
+ * @param  {Course} course
+ * @return {Object}
+ */
+view.render = function(course) {
+    let courseType = course.courseType || {
+        id: null,
+        name: null,
+        category: {
+            id: null,
+            name: null
+        }
+    };
+    return {
+        id: course.id,
+        name: course.name,
+        description: course.description,
+        brandId: course.courseBrand.id,
+        brandName: course.courseBrand.name,
+        categoryId: courseType.category.id,
+        categoryName: courseType.category.name,
+        type: courseType.id,
+        typeName: courseType.name,
+        fullDescription: course.fullDescription,
+        about: course.about,
+        learningOutcome: course.learningOutcome,
+        updatedAt: course['updated_at']
+    };
+};
+
+/**
+ * @param  {Array<Course>} courses
+ * @return {Array<Object>}
+ */
+view.renderList = function(courses) {
+    return courses.map(this.render);
+};
+
 module.exports = view;

@@ -47,6 +47,10 @@ var CourseOption = db.define('CourseOption', {
     openSchedule: {
         type: Sequelize.BOOLEAN,
         field: 'open_schedule'
+    },
+    updatedAt: {
+        type: Sequelize.DATE,
+        field: 'updated_at'
     }
 }, {
     underscored: true,
