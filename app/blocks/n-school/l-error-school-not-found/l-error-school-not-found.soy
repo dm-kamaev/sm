@@ -1,4 +1,4 @@
-{namespace sm.lErrorNotFound.Template}
+{namespace sm.lErrorSchoolNotFound.Template}
 
 /**
  * @param? params {
@@ -55,7 +55,7 @@
                     'user': $params.data?.user,
                     'favorites': $params?.data?.favorites
                 ],
-                'landingScript': '/l-error-not-found.js',
+                'landingScript': '/l-error-school-not-found.js',
                 'seoLinks': $params.data?.seoLinks
             ],
             'config': [
@@ -80,23 +80,23 @@
         'isUserAuthorized': $params?.data?.user ? true : false,
         'authSocialLinks': $params.data?.authSocialLinks
     ] /}
-    <div class="l-error-not-found"
+    <div class="l-error-school-not-found"
         data-params="{call goog.json.serialize data="$data" /}">
 
-        <div class="l-error-not-found__body">
-            {call sm.lErrorNotFound.Template.title_}
+        <div class="l-error-school-not-found__body">
+            {call .title_}
                 {param params: [
                     'errorText': $params?.errorText
                 ]/}
             {/call}
 
-            {call sm.lErrorNotFound.Template.search_}
+            {call .search_}
                 {param params: [
                     'dataLinks' : $params?.dataLinks
                 ]/}
             {/call}
 
-            {call sm.lErrorNotFound.Template.additionalInfo_}
+            {call .additionalInfo_}
                 {param params: [
                     'popularSchools': $params?.popularSchools,
                     'amountSchools': $params?.amountSchools
@@ -114,12 +114,12 @@
  *}
  */
 {template .title_ autoescape="strict" kind="html"}
-    <div class="l-error-not-found__title-wrap">
-        <div class="l-error-not-found__title">
-            <div class="l-error-not-found__title-img">
+    <div class="l-error-school-not-found__title-wrap">
+        <div class="l-error-school-not-found__title">
+            <div class="l-error-school-not-found__title-img">
             </div>
 
-            <div class="l-error-not-found__title-text">
+            <div class="l-error-school-not-found__title-text">
                 {$params?.errorText}
             </div>
         </div>
@@ -137,7 +137,7 @@
  * }
  */
 {template .search_ autoescape="strict" kind="html"}
-    <div class="l-error-not-found__search">
+    <div class="l-error-school-not-found__search">
         {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
                 'factory': 'stendhal',
@@ -163,15 +163,15 @@
  *}
  */
 {template .additionalInfo_ autoescape="strict" kind="html"}
-    <div class="l-error-not-found__additional-info-wrap">
-        <div class="l-error-not-found__additional-info">
-            {call sm.lErrorNotFound.Template.popularSchools_}
+    <div class="l-error-school-not-found__additional-info-wrap">
+        <div class="l-error-school-not-found__additional-info">
+            {call .popularSchools_}
                 {param params: [
                     'popularSchools': $params.popularSchools 
                 ]/}
             {/call}
 
-            {call sm.lErrorNotFound.Template.informationSchools_}
+            {call .informationSchools_}
                 {param params: [
                     'amountSchools': $params.amountSchools ]
                 /}
@@ -195,13 +195,13 @@
  *}
  */
 {template .popularSchools_ autoescape="strict" kind="html"}
-    <div class="l-error-not-found__popular-schools">
+    <div class="l-error-school-not-found__popular-schools">
         {call sm.bPopularSchools.Template.base}
             {param params: [
                 'popularSchools': $params.popularSchools,
                 'config': [
                     'popularSchool': [
-                        'customClasses': 'l-error-not-found__popular-school'
+                        'customClasses': 'l-error-school-not-found__popular-school'
                     ]
                 ]
             ]/}
@@ -217,7 +217,7 @@
  * }
  */
 {template .informationSchools_ autoescape="strict" kind="html" private="true"}
-    <div class="l-error-not-found__information-schools">
+    <div class="l-error-school-not-found__information-schools">
         {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
                 'factory': 'stendhal',

@@ -46,7 +46,7 @@ exports.notFound = async(function(req, res) {
         popularAliases
     );
 
-    var html = soy.render('sm.lErrorNotFound.Template.base', {
+    var html = soy.render('sm.lErrorSchoolNotFound.Template.base', {
         params: {
             data: {
                 authSocialLinks: data.authSocialLinks,

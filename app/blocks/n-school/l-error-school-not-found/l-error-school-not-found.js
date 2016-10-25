@@ -1,4 +1,4 @@
-goog.provide('sm.lErrorNotFound.ErrorNotFound');
+goog.provide('sm.lErrorSchoolNotFound.ErrorSchoolNotFound');
 
 goog.require('goog.dom.classes');
 goog.require('goog.dom.classlist');
@@ -14,11 +14,11 @@ goog.require('sm.iMetrika.Metrika');
 
 
 /**
- * ErrorNotFound result component
+ * ErrorSchoolNotFound result component
  * @constructor
  * @extends {goog.ui.Component}
  */
-sm.lErrorNotFound.ErrorNotFound = function() {
+sm.lErrorSchoolNotFound.ErrorSchoolNotFound = function() {
     goog.base(this);
 
 
@@ -44,11 +44,11 @@ sm.lErrorNotFound.ErrorNotFound = function() {
      */
     this.popularSchools_ = null;
 };
-goog.inherits(sm.lErrorNotFound.ErrorNotFound, goog.ui.Component);
+goog.inherits(sm.lErrorSchoolNotFound.ErrorSchoolNotFound, goog.ui.Component);
 
 
 goog.scope(function() {
-    var ErrorNotFound = sm.lErrorNotFound.ErrorNotFound,
+    var ErrorSchoolNotFound = sm.lErrorSchoolNotFound.ErrorSchoolNotFound,
         PopularSchools = sm.bPopularSchools.PopularSchools;
 
 
@@ -56,7 +56,7 @@ goog.scope(function() {
      * CSS-class enum
      * @enum {string}
      */
-    ErrorNotFound.CssClass = {
+    ErrorSchoolNotFound.CssClass = {
         ROOT: 'l-error-not-found'
     };
 
@@ -65,7 +65,7 @@ goog.scope(function() {
      * Internal decorates the DOM element
      * @param {Element} element
      */
-    ErrorNotFound.prototype.decorateInternal = function(element) {
+    ErrorSchoolNotFound.prototype.decorateInternal = function(element) {
         goog.base(this, 'decorateInternal', element);
 
         this.initParams_()
@@ -78,17 +78,17 @@ goog.scope(function() {
     /**
      * Set up the Component
      */
-    ErrorNotFound.prototype.enterDocument = function() {
+    ErrorSchoolNotFound.prototype.enterDocument = function() {
         goog.base(this, 'enterDocument');
     };
 
 
     /**
      * Get data params from dom element and put it to corresponding params
-     * @return {sm.lErrorNotFound.ErrorNotFound}
+     * @return {sm.lErrorSchoolNotFound.ErrorSchoolNotFound}
      * @private
      */
-    ErrorNotFound.prototype.initParams_ = function() {
+    ErrorSchoolNotFound.prototype.initParams_ = function() {
         var dataParams = JSON.parse(
             goog.dom.dataset.get(this.getElement(), 'params')
         );
@@ -107,10 +107,10 @@ goog.scope(function() {
 
     /**
      * Init authorization
-     * @return {sm.lErrorNotFound.ErrorNotFound}
+     * @return {sm.lErrorSchoolNotFound.ErrorSchoolNotFound}
      * @private
      */
-    ErrorNotFound.prototype.initAuthorization_ = function() {
+    ErrorSchoolNotFound.prototype.initAuthorization_ = function() {
         var authorization = sm.iAuthorization.Authorization.getInstance();
         authorization.init(this.authParams_);
         return this;
@@ -119,10 +119,10 @@ goog.scope(function() {
 
     /**
      * Init popular school instance
-     * @return {sm.lErrorNotFound.ErrorNotFound}
+     * @return {sm.lErrorSchoolNotFound.ErrorSchoolNotFound}
      * @private
      */
-    ErrorNotFound.prototype.initPopularSchools_ = function() {
+    ErrorSchoolNotFound.prototype.initPopularSchools_ = function() {
         var bPopularSchools = goog.dom.getElementByClass(
             sm.bPopularSchools.View.CssClass.ROOT,
             this.getElement()
@@ -141,10 +141,10 @@ goog.scope(function() {
 
     /**
      * Init search panel instance
-     * @return {sm.lErrorNotFound.ErrorNotFound}
+     * @return {sm.lErrorSchoolNotFound.ErrorSchoolNotFound}
      * @private
      */
-    ErrorNotFound.prototype.initSearchPanel_ = function() {
+    ErrorSchoolNotFound.prototype.initSearchPanel_ = function() {
         var bSearchPanel = goog.dom.getElementByClass(
             sm.bSearchPanel.View.CssClass.ROOT,
             this.getElement()
@@ -164,15 +164,15 @@ goog.scope(function() {
 
 
 /**
- * creates sm.lErrorNotFound.ErrorNotFound instance
+ * creates sm.lErrorSchoolNotFound.ErrorSchoolNotFound instance
  */
 jQuery(function() {
     var root = goog.dom.getElementByClass(
-            sm.lErrorNotFound.ErrorNotFound.CssClass.ROOT
+            sm.lErrorSchoolNotFound.ErrorSchoolNotFound.CssClass.ROOT
         );
 
     if (root) {
-        var search = new sm.lErrorNotFound.ErrorNotFound();
+        var search = new sm.lErrorSchoolNotFound.ErrorSchoolNotFound();
         search.decorate(root);
     }
 });
