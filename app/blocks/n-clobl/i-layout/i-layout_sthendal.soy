@@ -246,7 +246,8 @@
  * @override
  */
 {template .content autoescape="strict" kind="html"}
-    <div class="{call .rootClass/}" {call .attributes data="all"/}>
+    <div class="{call .rootClass/} {call .entityModifierClass data="all"/}"
+                {call .attributes data="all"/}>
         {call .mainSubheader data="all" /}
         {call .mainContent data="all" /}
         {call .mainFooter data="all" /}
@@ -334,15 +335,52 @@
 /**
  * Attributes on element
  * Important to write kind="attributes" when overrides
+ * @param params {{
+ *     data: {
+ *         user: {
+ *             firstName: (string|undefined),
+ *             lastName: (string|undefined)
+ *         },
+ *         authSocialLinks: {
+ *             vk: (string|undefined),
+ *             fb: (string|undefined)
+ *         }
+ *     },
+ *     config: {
+ *         entityType: string
+ *     }
+ * }}
  * @protected
  */
 {template .attributes kind="attributes"}
+    data-params="
+        {call cl.iUtils.Utils.stringify}
+            {param json: [
+                'isUserAuthorized': $params.data?.user ? true : false,
+                'authSocialLinks': $params.data?.authSocialLinks,
+                'type': $params?.config.entityType
+            ] /}
+        {/call}"
+{/template}
+
+/**
+ * Css class modifier of the entity type
+ * @param params {{
+ *     config: {
+ *         entityType: string
+ *     }
+ * }}
+ * @protected
+ */
+{template .entityModifierClass}
+    {call .rootClass/}_entity_{$params.config.entityType}
 {/template}
 
 
 /**
  * Root css class
  * @override
+ * @protected
  */
 {template .rootClass}
     i-layout
