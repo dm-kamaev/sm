@@ -1,6 +1,6 @@
 'use strict';
 
-const searchType = require('../enums/searchType');
+const filterName = require('../enums/filterName');
 
 let service = {
     name: 'courseFilter'
@@ -12,7 +12,7 @@ let service = {
  * @return {Array<string>}
  */
 service.getAll = function() {
-    return searchType.toArray();
+    return filterName.toArray();
 };
 
 module.exports = service;

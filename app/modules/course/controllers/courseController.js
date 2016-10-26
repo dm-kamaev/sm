@@ -14,6 +14,8 @@ const soy = require('../../../components/soy'),
     entityType = require('../../../../api/modules/entity/enums/entityType.js'),
     errors = require('../../school/lib/errors');
 
+const filterName = require('../../../../api/modules/course/enums/filterName');
+
 const logger = require('../../../components/logger/logger').getLogger('app');
 
 const config = require('../../../config').config;
@@ -50,7 +52,7 @@ controller.search = async(function(req, res, next) {
                     mapCourses: services.course.listMap(searchParams, 10),
                     mapPosition: services.map.getPositionParams(searchParams),
                     filtersData: {
-                        type: services.courseType.getAll()
+                        [filterName.TYPE]: services.courseType.getAll()
                     },
                     seoParams: services.seoCourseList.getByCategoryId(
                         categoryInstance.id
@@ -78,6 +80,7 @@ controller.search = async(function(req, res, next) {
                 mapPosition: data.mapPosition,
                 searchParams: searchParams,
                 filtersData: data.filtersData,
+                enabledFilters: categoryInstance.filters,
                 aliases: aliases.courses,
                 seoParams: data.seoParams
             });
