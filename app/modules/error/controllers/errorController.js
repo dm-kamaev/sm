@@ -1,24 +1,36 @@
-var soy = require.main.require('./app/components/soy');
-var services = require('../../../../app/components/services').all;
+'use strict';
+
+const soy = require.main.require('./app/components/soy');
+const services = require('../../../../app/components/services').all;
 const schoolView = require('../../../../api/modules/school/views/schoolView');
 const userView = require('../../../../api/modules/user/views/user');
-const entityType = require('../../../../api/modules/entity/enums/entityType');
 const seoView = require('../../../../api/modules/school/views/seoView');
+
+const entityTypeEnum = require('../../../../api/modules/entity/enums/entityType');
+const errorView = require('../../../../api/modules/error/views/errorView');
+
+const logger = require('../../../components/logger/logger').getLogger('app');
 
 const config = require('../../../config').config;
 const analyticsId = config.schools.analyticsId;
 const yandexMetrikaId = config.schools.yandexMetrikaId;
 
-var async = require('asyncawait/async');
-var await = require('asyncawait/await');
+const MODIFIER = 'stendhal',
+    FB_CLIENT_ID = config.facebookClientId,
+    DOMAIN = config.url.protocol + '://' + config.url.host;
 
-exports.notFound = async(function(req, res) {
+const async = require('asyncawait/async');
+const await = require('asyncawait/await');
+
+let controller = {};
+
+controller.schoolNotFound = async(function(req, res) {
     var user = req.user || {};
 
     var favorites = await(services.favorite.getByUserId(user.id)),
         favoriteIds = services.favorite.getEntityIdsFiltredByType(
             favorites,
-            entityType.SCHOOL
+            entityTypeEnum.SCHOOL
         );
 
     var dataPromises = {
@@ -29,7 +41,7 @@ exports.notFound = async(function(req, res) {
             items: services.school.getByIdsWithGeoData(favoriteIds),
             itemUrls: services.page.getAliases(
                 favoriteIds,
-                entityType.SCHOOL
+                entityTypeEnum.SCHOOL
             )
         },
         seoLinks: services.seoSchoolList.getByTypes()
@@ -39,14 +51,14 @@ exports.notFound = async(function(req, res) {
 
     var popularAliases = await(services.page.getAliases(
         data.popularSchools.map(school => school.id),
-        entityType.SCHOOL
+        entityTypeEnum.SCHOOL
     ));
     data.popularSchools = schoolView.joinAliases(
         data.popularSchools,
         popularAliases
     );
 
-    var html = soy.render('sm.lErrorNotFound.Template.base', {
+    var html = soy.render('sm.lErrorSchoolNotFound.Template.base', {
         params: {
             data: {
                 authSocialLinks: data.authSocialLinks,
@@ -69,7 +81,55 @@ exports.notFound = async(function(req, res) {
             }
         }
     });
-
+    res.status(404);
     res.header('Content-Type', 'text/html; charset=utf-8');
     res.end(html);
 });
+
+
+controller.notFound = async(function(req, res, entityType, subdomain) {
+    try {
+        let authSocialLinks = services.auth.getAuthSocialUrl(),
+            user = req.user || {};
+
+        let data = await({
+            favorites: services.favorite.getFavoriteEntities(user.id)
+        });
+
+        let templateData = errorView.render({
+            entityType: entityType,
+            user: user,
+            favorites: data.favorites,
+            authSocialLinks: authSocialLinks
+        });
+
+        var html = soy.render('sm.lErrorNotFound.Template.errorNotFound', {
+            params: {
+                data: templateData,
+                config: {
+                    staticVersion: config.lastBuildTimestamp,
+                    entityType: entityType,
+                    modifier: MODIFIER,
+                    year: new Date().getFullYear(),
+                    analyticsId: config[subdomain].analyticsId,
+                    yandexMetrikaId: config[subdomain].yandexMetrikaId,
+                    csrf: req.csrfToken(),
+                    fbClientId: FB_CLIENT_ID,
+                    domain: DOMAIN
+                }
+            }
+        });
+
+        res.status(404);
+    } catch (error) {
+        logger.error(error);
+
+        res.status(error.code || 500);
+        next(error);
+    } finally {
+        res.header('Content-Type', 'text/html; charset=utf-8');
+        res.end(html);
+    }
+});
+
+module.exports = controller;
