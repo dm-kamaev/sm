@@ -34,13 +34,16 @@ goog.require('sm.gAuthSocial.TemplateStendhal');
 goog.require('sm.gAuthSocialModal.TemplateStendhal');
 goog.require('sm.gButton.TemplateSocialStendhal');
 goog.require('sm.gButton.TemplateStendhal');
+goog.require('sm.gDropdown.TemplateListLinks');
 goog.require('sm.gDropdown.TemplateSelect');
 goog.require('sm.gHint.TemplateStendhal');
 goog.require('sm.gIcon.TemplateStendhal');
 goog.require('sm.gInput.DigitInputTemplate');
 goog.require('sm.gInput.TemplatePhone');
 goog.require('sm.gInput.TemplateStendhal');
+goog.require('sm.gList.TemplateLinks');
 goog.require('sm.gList.TemplateSelect');
+goog.require('sm.gList.TemplateStendhal');
 goog.require('sm.gModal.TemplateEnrollment');
 goog.require('sm.gModal.TemplateFeedback');
 goog.require('sm.gModal.TemplateStendhal');
@@ -208,6 +211,18 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'modal-success',
             sm.gModal.TemplateSuccess.modal
+        )
+        .setTemplateListItem(
+            'list',
+            sm.gList.TemplateStendhal.list
+        )
+        .setTemplateListItem(
+            'list-links',
+            sm.gList.TemplateLinks.list
+        )
+        .setTemplateListItem(
+            'dropdown-list-links',
+            sm.gDropdown.TemplateListLinks.dropdown
         );
 
     /** Global blocks an their heirs **/

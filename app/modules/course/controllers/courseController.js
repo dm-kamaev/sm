@@ -85,6 +85,34 @@ controller.search = async(function(req, res, next) {
                 seoParams: data.seoParams
             });
 
+            templateData.subHeader.listLinks = {
+                opener: 'Все курсы',
+                content: {
+                    items: [{
+                        url: '/',
+                        label: 'Выбор профессии'
+                    }, {
+                        url: '',
+                        label: 'Англйский язык'
+                    }, {
+                        url: '',
+                        label: 'Французский язык'
+                    }, {
+                        url: '',
+                        label: 'Немецкий язык'
+                    }, {
+                        url: '',
+                        label: 'Испанский язык'
+                    }, {
+                        url: '',
+                        label: 'Англйский язык'
+                    }, {
+                        url: '',
+                        label: 'Китайский язык'
+                    }]
+                }
+            };
+
             let html = soy.render(
                 'sm.lSearch.Template.search', {
                     params: {
@@ -99,7 +127,7 @@ controller.search = async(function(req, res, next) {
                             csrf: req.csrfToken(),
                             domain: DOMAIN,
                             fbClientId: FB_CLIENT_ID,
-                            type: 'course'
+                            type: entityType.COURSE
                         }
                     }
                 }

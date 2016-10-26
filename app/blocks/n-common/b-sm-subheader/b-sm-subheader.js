@@ -111,6 +111,7 @@ goog.scope(function() {
         this.initAuthorizationLink_();
         this.initFavorite_();
         this.initLinks_();
+        this.initListLinks_();
     };
 
 
@@ -382,6 +383,22 @@ goog.scope(function() {
             );
 
             this.links_.push(instance);
+        }
+    };
+
+
+    /**
+     * Initializes list of links instance
+     * @private
+     */
+    Subheader.prototype.initListLinks_ = function() {
+        var listLinks = this.getView().getDom().listLinks;
+
+        if (listLinks) {
+            this.listLinks_ = this.decorateChild(
+                'dropdown-list-links',
+                listLinks
+            );
         }
     };
 });  // goog.scope

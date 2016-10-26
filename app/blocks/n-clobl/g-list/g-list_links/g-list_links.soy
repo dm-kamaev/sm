@@ -1,0 +1,81 @@
+{namespace sm.gList.TemplateLinks}
+
+
+/**
+ * @typedef {{
+ *     items: Array<{
+ *         label: ?string,
+ *         val: (string|number|undefined),
+ *         url: (string|undefined),
+ *         isSelected: (boolean|undefined),
+ *         isDisabled: (boolean|undefined)
+ *     }>,
+ *     selectedItemId: (number|undefined)
+ * }} sm.gList.TemplateLinks.Params.Data
+ */
+
+
+/**
+ * @typedef {{
+ *     mode: ('selection'|'multiselection'|undefined),
+ *     maxSelection: (number|undefined)
+ * }} sm.gList.TemplateLinks.Params.Config
+ */
+
+
+/**
+ * Constructor
+ * @param params {{
+ *     data: sm.gList.TemplateLinks.Params.Data,
+ *     config: sm.gList.TemplateLinks.Params.Config
+ * }}
+ * @extends sm.gList.TemplateStendhal
+ * @constructor
+ * @doc
+ */
+{template .list}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * Value template
+ * @param params {{
+ *     label: ?string
+ * }}
+ * @override
+ * @protected
+ */
+{template .value}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__link
+    {/let}
+
+    <div class="{call .rootClass/}__item-link">
+        {call .renderChild}
+            {param params: [
+                'type': 'smLink',
+                'renderParams': [
+                    'data': [
+                        'content': $params.label
+                    ],
+                    'config': [
+                        'size': 'l',
+                        'customClasses': [$customClasses],
+                        'disableHover': true
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Css classes
+ * @override
+ * @protected
+ */
+{template .additionalClasses}
+    {call .rootClass/}_links
+{/template}
