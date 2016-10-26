@@ -1,0 +1,161 @@
+{namespace sm.lErrorNotFound.Template}
+
+
+/**
+ * @typedef {{
+ *     openGraph: (sm.iLayout.TemplateStendhal.Params.Data.openGraph|undefined),
+ *     seo: {
+ *         metaTitle: string,
+ *         metaDescription: (string|undefined)
+ *     },
+ *     error: {
+ *         text: string
+ *     },
+ *     subHeader: sm.bSmSubheader.Template.Params.Data
+ * }} sm.lErrorNotFound.Template.Params.Data
+ */
+
+
+/**
+ * Error not found page
+ * @param params {{
+ *     data: sm.lErrorNotFound.Template.Params.Data,
+ *     config: ?sm.iLayout.TemplateStendhal.Params.Config
+ * }}
+ * @extends sm.iLayout.TemplateStendhal
+ * @constructor
+ * @doc
+ */
+{template .errorNotFound autoescape="strict" kind="html"}
+    {call .document data="all" /}
+{/template}
+
+
+/**
+ * Add layout script to page
+ * @param params {{
+ *     config: {
+ *         staticVersion: (string|undefined)
+ *     }
+ * }}
+ * @protected
+ * @override
+ */
+{template .layoutScript kind="html"}
+    {call cl.iStatic.Template.script}
+        {param path: '/l-error-not-found.js' /}
+        {param staticVersion: $params?.config?.staticVersion /}
+    {/call}
+{/template}
+
+
+/**
+ * @param params {{
+ *     data: sm.iLayout.TemplateStendhal.Params.Data,
+ *     config: sm.iLayout.TemplateStendhal.Params.Config
+ * }}
+ * @override
+ */
+{template .content autoescape="strict" kind="html"}
+    <div class="{call .rootClass/} {call .entityModifierClass data="all"/}"
+                {call .attributes data="all"/}>
+        <div class="{call .rootClass/}__wrapper-content">
+            {call .mainSubheader data="all" /}
+            {call .mainContent data="all" /}
+        </div>
+
+        {call .mainFooter data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Content
+ * @param params {{
+ *     data: {
+ *         error: {
+ *             text: string
+ *         }
+ *     }
+ * }}
+ * @override
+ * @protected
+ */
+{template .mainContent autoescape="strict" kind="html"}
+    <div class="{call .rootClass/}__body">
+        {call .sectionContent_ data="all" /}
+        // {call .sectionPopular_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Section content with error information
+ * @param params {{
+ *     data: {
+ *         error: {
+ *             text: string
+ *         }
+ *     }
+ * }}
+ */
+{template .sectionContent_}
+    <div class="{call .rootClass/}__section
+        {sp}{call .rootClass/}__section_content">
+
+        {call .errorInformation_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Error information
+ * @param params {{
+ *     data: {
+ *         error: {
+ *             text: string
+ *         }
+ *     }
+ * }}
+ */
+{template .errorInformation_}
+    <div class="{call .rootClass/}__error-information">
+        {call .errorImg_/}
+        {call .errorText_ data="all"/}
+    </div>
+{/template}
+
+
+/**
+ * Error img
+ */
+{template .errorImg_}
+    <img class="{call .rootClass/}__error-img"
+        src="/images/n-common/l-error-not-found/404.svg" alt="Ошибка">
+{/template}
+
+
+/**
+ * Error text
+ * @param params {{
+ *     data: {
+ *         error: {
+ *             text: string
+ *         }
+ *     }
+ * }}
+ */
+{template .errorText_}
+    <div class="{call .rootClass/}__error-text">
+        {$params.data.error.text}
+    </div>
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    l-error-not-found
+{/template}
