@@ -141,7 +141,7 @@ goog.scope(function() {
      * Search params names, which exclude when built url
      * @const {Array<string>}
      */
-    Search.URL_PARAMS_TO_EXCLUDE = ['sortType', 'page'];
+    Search.URL_PARAMS_TO_EXCLUDE = ['sortType', 'page', 'categoryId'];
 
 
     /**
