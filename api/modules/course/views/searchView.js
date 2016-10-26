@@ -6,21 +6,26 @@ const FilterPanel = require('../lib/CourseFilterPanel'),
     userView = require('../../user/views/user'),
     favoriteView = require('../../favorite/views/favoriteView');
 
+const filterName = require('../enums/filterName');
+
 let searchView = {};
 
 /**
  * Data for filter panel
- * @param {Array<Object>} filtersData
  * @param {{
- *     age: Array<(string|number)>,
- *     course: Array<(string|number)>,
- *     cost: Array<(string|number)>,
- *     schedule: Array<(string|number)>,
- *     time: Array<(string|number)>,
- *     regularity: Array<(string|number)>,
- *     formTraining: Array<(string|number)>,
- *     duration: Array<(string|number)>
- * }} opt_searchParams
+ *     filtersData: Array<Object>,
+ *     searchParams: {
+ *         age: Array<(string|number)>,
+ *         course: Array<(string|number)>,
+ *         cost: Array<(string|number)>,
+ *         schedule: Array<(string|number)>,
+ *         time: Array<(string|number)>,
+ *         regularity: Array<(string|number)>,
+ *         formTraining: Array<(string|number)>,
+ *         duration: Array<(string|number)>
+ *     },
+ *     filters: Array<string>
+ * }} data
  * @return {{
  *     data: {
  *         filters: Array<{
@@ -57,19 +62,9 @@ let searchView = {};
  *     }
  * }}
  */
-searchView.filterPanel = function(filtersData, opt_searchParams) {
-    let searchParams = opt_searchParams || {},
-        filterPanel = new FilterPanel();
-
-    filterPanel
-        .setFilterFormTraining(searchParams.formTraining)
-        .setFilterType(filtersData.type, searchParams.type)
-        .setFilterAge(searchParams.age);
-        // .setFilterCost(searchParams.cost)
-        // .setFilterWeekDays(searchParams.weekdays)
-        // .setFilterTime(searchParams.time)
-        // .setFilterRegularity(searchParams.regularity)
-        // .setFilterDuration(searchParams.duration);
+searchView.filterPanel = function(data) {
+    let filterPanel = new FilterPanel();
+    filterPanel.init(data);
 
     return filterPanel.getParams();
 };
@@ -199,10 +194,11 @@ searchView.render = function(data) {
             items: courses,
             itemType: 'smItemEntity'
         },
-        filterPanel: searchView.filterPanel(
-            data.filtersData,
-            data.searchParams
-        ),
+        filterPanel: searchView.filterPanel({
+            filtersData: data.filtersData,
+            enabledFilters: data.enabledFilters,
+            searchParams: data.searchParams
+        }),
         searchParams: data.searchParams
     };
 };
@@ -213,23 +209,23 @@ searchView.render = function(data) {
  * @return {Object}
  */
 searchView.initSearchParams = function(params, opt_categoryId) {
-    let categoryId = opt_categoryId || params.categoryId || null;
+    let categoryId = opt_categoryId || params.categoryId || '';
     return {
+        [filterName.AGE]: this.transformToArray(params.age),
+        [filterName.TYPE]: this.transformToArray(params.type),
+        [filterName.COST]: this.transformToArray(params.cost),
+        [filterName.WEEK_DAYS]: this.transformToArray(params.weekdays),
+        [filterName.TIME]: this.transformToArray(params.time),
+        [filterName.REGULARITY]: this.transformToArray(params.regularity),
+        [filterName.FORM_TRAINING]: this.transformToArray(params.formTraining),
+        [filterName.DURATION]: this.transformToArray(params.duration),
         page: params.page || 0,
-        age: this.transformToArray(params.age),
-        type: this.transformToArray(params.type),
-        categoryId: this.transformToArray(categoryId),
-        cost: this.transformToArray(params.cost),
-        weekdays: this.transformToArray(params.weekdays),
-        time: this.transformToArray(params.time),
-        regularity: this.transformToArray(params.regularity),
-        formTraining: this.transformToArray(params.formTraining),
-        duration: this.transformToArray(params.duration),
         sortType: params.sortType,
         name: params.name,
         metroId: params.metroId || null,
         areaId: params.areaId || null,
-        districtId: params.districtId || null
+        districtId: params.districtId || null,
+        categoryId: this.transformToArray(categoryId)
     };
 };
 
@@ -238,15 +234,56 @@ searchView.initSearchParams = function(params, opt_categoryId) {
  * @return {Array}
  */
 searchView.transformToArray = function(value) {
+    let result = [];
+    if (value) {
+        switch (typeof value) {
+        case 'number':
+            result = searchView.transformNumberToArray(value);
+            break;
+        case 'string':
+            result = searchView.transformStringToArray(value);
+            break;
+        case 'object':
+            result = searchView.transformObjectToArray(value);
+            break;
+        }
+    }
+    return result;
+};
+
+/**
+ * Transform string to array
+ * @param {string} value
+ * @return {Array<string>}
+ */
+searchView.transformStringToArray = function(value) {
     let result;
-    if (value && ~value.indexOf(',')) {
+    if (~value.indexOf(',')) {
         result = value.split(',');
-    } else if (typeof value === 'number' || typeof value === 'string') {
-        result = [value];
-    } else if (Array.isArray(value)) {
-        result = value;
     } else {
-        result = [];
+        result = [value];
+    }
+    return result;
+};
+
+/**
+ * Transform number to array
+ * @param {number} value
+ * @return {Array<number>}
+ */
+searchView.transformNumberToArray = function(value) {
+    return [value];
+};
+
+/**
+ * Transform object to array
+ * @param {Object|Array} value
+ * @return {Array}
+ */
+searchView.transformObjectToArray = function(value) {
+    let result = [];
+    if (Array.isArray(value)) {
+        result = value;
     }
     return result;
 };
