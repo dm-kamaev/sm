@@ -114,8 +114,27 @@
  * @override
  */
 {template .favicon autoescape="strict" kind="html"}
-    <link rel="shortcut icon" href="/images/n-common/favicon.ico"
+    <link rel="shortcut icon" href="/static/images/n-common/favicon.ico"
         type="image/x-icon">
+{/template}
+
+
+/**
+ * Default styles
+ * @param params {{
+ *     config: sm.iLayout.TemplateStendhal.Params.Config
+ * }}
+ * @override
+ */
+{template .styles autoescape="strict" kind="html"}
+    {call cl.iStatic.Template.style}
+        {param path: '/static/clobl.build.css' /}
+        {param staticVersion: $params?.config?.staticVersion /}
+    {/call}
+    {call cl.iStatic.Template.style}
+        {param path: '/static/styles.css' /}
+        {param staticVersion: $params?.config?.staticVersion /}
+    {/call}
 {/template}
 
 
