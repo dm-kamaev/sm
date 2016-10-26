@@ -1,4 +1,3 @@
-const errors = require('../lib/errors');
 const soy = require('../../../components/soy');
 const services = require('../../../components/services').all;
 const schoolView = require('../../../../api/modules/school/views/schoolView');
@@ -7,6 +6,8 @@ const seoView = require('../../../../api/modules/school/views/seoView');
 
 const userView = require('../../../../api/modules/user/views/user');
 const entityType = require('../../../../api/modules/entity/enums/entityType');
+
+const PageNotFoundError = require('../../error/lib/PageNotFoundError');
 
 const config = require('../../../config').config;
 const analyticsId = config.schools.analyticsId;
@@ -67,7 +68,7 @@ exports.list = async(function(req, res, next) {
             var seoResults = await(seoPromises);
 
             if (!seoResults.schoolList) {
-                throw new errors.PageNotFoundError();
+                throw new PageNotFoundError();
             }
 
             var storedParams =
@@ -168,7 +169,7 @@ exports.list = async(function(req, res, next) {
         res.end(html);
     } catch (error) {
         res.status(error.code || 500);
-        next();
+        next(error);
     }
 });
 
@@ -182,7 +183,7 @@ exports.view = async(function(req, res, next) {
             ));
 
         if (!page) {
-            throw new errors.PageNotFoundError();
+            throw new PageNotFoundError();
         } else if (!page.entityId) {
             next();
         } else {
@@ -191,7 +192,7 @@ exports.view = async(function(req, res, next) {
                 entityType.SCHOOL
             ));
             if (!schoolInstance) {
-                throw new errors.SchoolNotFoundError();
+                throw new PageNotFoundError();
             } else if (alias != schoolInstance.alias) {
                 res.redirect(schoolInstance.alias);
             } else {
@@ -279,7 +280,7 @@ exports.view = async(function(req, res, next) {
         }
     } catch (error) {
         res.status(error.code || 500);
-        next();
+        next(error);
     }
 });
 
@@ -401,6 +402,6 @@ exports.catalog = async(function(req, res, next) {
         res.end(html);
     } catch (error) {
         res.status(error.code || 500);
-        next();
+        next(error);
     }
 });

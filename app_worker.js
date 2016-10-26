@@ -7,7 +7,7 @@ const passport = require('passport');
 
 const csrf = require('./app/middleware/csrf');
 const session = require('./app/components/session');
-var configurePassport = require('./app/components/configurePassport');
+const configurePassport = require('./app/components/configurePassport');
 const soy = require('./node_modules/clobl/soy').setOptions({
     templateFactory: path.join(
         __dirname,
@@ -23,12 +23,12 @@ const soy = require('./node_modules/clobl/soy').setOptions({
     )
 });
 
-var modules = require('./app/modules');
-var api = require('./api/modules');
-var bodyParser = require('body-parser');
+const criticalErrorHandler = require('./app/middleware/criticalErrorHandler');
+const notFoundErrorHandler = require('./app/middleware/notFoundErrorHandler');
 
-var errorController =
-    require('./app/modules/error/controllers/errorController');
+const modules = require('./app/modules');
+const api = require('./api/modules');
+const bodyParser = require('body-parser');
 
 const async = require('asyncawait/async');
 
@@ -91,7 +91,7 @@ app.use('/:subdomain/api', api.favorite.router);
 app.use('/:subdomain/api', api.entity.router);
 
 async(function() {
-    var paths = [
+    const paths = [
         'build/compiledServerSoy/server.soy.concat.js',
         'node_modules/clobl/blocks/i-utils/i-utils.js',
         'node_modules/clobl/blocks/i-utils-legacy/i-utils.js'
@@ -108,7 +108,6 @@ async(function() {
     configurePassport();
 })();
 
-app.use(function(req, res, next) {
-    res.status(404);
-    errorController.notFound(req, res);
-});
+app.use(criticalErrorHandler);
+
+app.use(notFoundErrorHandler);
