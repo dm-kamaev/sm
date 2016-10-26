@@ -7,6 +7,10 @@ const apidoc = require('gulp-apidoc');
 const exec = require('child_process').exec;
 const eslint = require('gulp-eslint');
 
+const MAX_BILD_FILE_AMOUNT = 20;
+
+process.stdout.setMaxListeners(20);
+
 const gulpHelper =
     require('./node_modules/clobl/gulp-helper.js')
         .use(gulp)
