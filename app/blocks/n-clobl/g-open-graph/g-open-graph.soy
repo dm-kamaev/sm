@@ -1,8 +1,8 @@
-{namespace cl.gOpenGraph.TemplateStendhal}
+{namespace sm.gOpenGraph.TemplateStendhal}
+
 
 /**
- * Open Graph base template
- * @param params {{
+ * @typedef {{
  *     url: ?string,
  *     siteName: ?string,
  *     title: ?string,
@@ -16,7 +16,13 @@
  *     imageHeight: ?string,
  *     relapTag: ?string,
  *     relapImage: ?string
- * }}
+ * }} sm.gOpenGraph.TemplateStendhal.Params
+ */
+
+
+/**
+ * Open Graph base template
+ * @param params {sm.gOpenGraph.TemplateStendhal.Params}
  * @extends cl.gOpenGraph.Template
  * @constructor
  */

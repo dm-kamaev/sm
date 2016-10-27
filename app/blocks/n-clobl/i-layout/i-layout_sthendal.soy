@@ -9,27 +9,8 @@
 
 /**
  * @typedef {{
- *     url: ?string,
- *     siteName: ?string,
- *     title: ?string,
- *     type: ?string,
- *     description: ?string,
- *     image: ?string,
- *     fbClientId: ?number,
- *     twitterCardType: ?string,
- *     twitterSiteName: ?string,
- *     imageWidth: ?string,
- *     imageHeight: ?string,
- *     relapTag: ?string,
- *     relapImage: ?string
- * }} sm.iLayout.TemplateStendhal.Params.Data.openGraph
- */
-
-
-/**
- * @typedef {{
  *     type: string,
- *     openGraph: (sm.iLayout.TemplateStendhal.Params.Data.openGraph|undefined),
+ *     openGraph: (sm.gOpenGraph.TemplateStendhal.Params|undefined),
  *     seo: {
  *         metaTitle: string,
  *         metaDescription: (string|undefined)
@@ -133,11 +114,11 @@
 
 
 /**
- * @param params {sm.iLayout.TemplateStendhal.Params.Data.openGraph}
+ * @param params {sm.gOpenGraph.TemplateStendhal.Params}
  * @override
  */
 {template .openGraph}
-    {call cl.gOpenGraph.TemplateStendhal.openGraph data="all"/}
+    {call sm.gOpenGraph.TemplateStendhal.openGraph data="all"/}
 {/template}
 
 
