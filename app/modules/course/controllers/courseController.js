@@ -59,9 +59,7 @@ controller.search = async(function(req, res, next) {
             countResults: data.courses[0] && data.courses[0].countResults || 0,
             coursesList: data.courses,
             mapCourses: courseView.joinAliases(
-                data.mapCourses,
-                aliases.map.course,
-                aliases.map.brand
+                data.mapCourses, aliases.map
             ),
             mapPosition: data.mapPosition,
             searchParams: searchParams,

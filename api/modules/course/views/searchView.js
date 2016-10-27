@@ -125,9 +125,7 @@ searchView.map = function(courses, options) {
 searchView.render = function(data) {
     let user = userView.default(data.user),
         aliasedCourses = courseView.joinAliases(
-            data.coursesList,
-            data.aliases.course,
-            data.aliases.brand
+            data.coursesList, data.aliases
         ),
         courses = courseView.list(aliasedCourses);
 

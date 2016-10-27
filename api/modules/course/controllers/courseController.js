@@ -47,8 +47,7 @@ controller.search = async(function(req, res) {
             aliases = await(services.course.getAliases(courses)),
             aliasedCourses = courseView.joinAliases(
                 courses,
-                aliases.course,
-                aliases.brand
+                aliases
             );
 
         result = {
@@ -89,8 +88,7 @@ controller.searchMap = async(function(req, res) {
             aliases = await(services.course.getAliases(mapCourses)),
             aliasedMapCourses = courseView.joinAliases(
                 mapCourses,
-                aliases.course,
-                aliases.brand
+                aliases
             );
 
         result = {
@@ -127,8 +125,7 @@ controller.suggestSearch = async(function(req, res) {
 
         data.courses = courseView.joinAliases(
             data.courses,
-            courseAliases.course,
-            courseAliases.brand
+            courseAliases
         );
         result = courseView.suggest(data);
     } catch (error) {

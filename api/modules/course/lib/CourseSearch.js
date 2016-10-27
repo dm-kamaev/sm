@@ -203,6 +203,7 @@ class CourseSearchQuery extends SearchQuery {
             .field('course_option.id', 'courseOptionId')
             .field('course_option.total_cost', 'optionCost')
             .field('course_option.online', 'optionOnline')
+            .field('course_type.category_id', 'categoryId')
             .field('address.id', 'addressId')
             .field('address.name', 'addressName')
             .field('address.coords', 'addressCoords')
@@ -215,6 +216,11 @@ class CourseSearchQuery extends SearchQuery {
                 'course_brand',
                 null,
                 'course.brand_id = course_brand.id'
+            )
+            .left_join(
+                'course_type',
+                null,
+                'course.type = course_type.id'
             )
             .left_join(
                 'course_option',
@@ -268,6 +274,7 @@ class CourseSearchQuery extends SearchQuery {
             .field('course.score_count')
             .field('course.total_score')
             .field('course.brand_id')
+            .field('course.type')
             .field('COUNT(course.id) OVER()', 'result_count')
             .group('course.id');
 

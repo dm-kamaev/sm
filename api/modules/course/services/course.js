@@ -324,9 +324,16 @@ service.getByIds = function(ids, opt_include) {
                         include: addressInclude
                     }]
                 }]
+            }, {
+                attributes: ['categoryId'],
+                model: models.CourseType,
+                as: 'courseType'
             }],
             order: order
-        }) :
+        }).then(courses => courses.map(course => {
+            course.categoryId = course.courseType.categoryId;
+            return course;
+        })) :
         [];
 };
 
@@ -431,6 +438,12 @@ service.getAliases = async(function(courses) {
                 id: course.brandId
             }))),
             entityType.COURSE_BRAND
+        ),
+        category: getAliases(
+            uniqueIds(courses.map(course => ({
+                id: course.categoryId
+            }))),
+            entityType.COURSE_CATEGORY
         )
     });
 });

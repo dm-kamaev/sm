@@ -16,6 +16,7 @@ class CourseSearchMapQuery extends CourseSearchQuery {
             .field('course.description')
             .field('course.brand_id', 'brandId')
             .field('course_brand.name', 'brand')
+            .field('course_type.category_id', 'categoryId')
             .field('course.total_score', 'totalScore')
             .field('address.id', 'addressId')
             .field('address.name', 'addressName')
@@ -25,6 +26,11 @@ class CourseSearchMapQuery extends CourseSearchQuery {
                 'course_brand',
                 null,
                 'course.brand_id = course_brand.id'
+            )
+            .left_join(
+                'course_type',
+                null,
+                'course.type = course_type.id'
             )
             .left_join(
                 'course_option',

@@ -100,7 +100,6 @@ service.suggestSearch = function(searchString) {
 };
 
 /**
- * [setSearchQueryParams description]
  * @param {Object} searchInstance
  * @param {Object} searchParams
  * @return {Object}
