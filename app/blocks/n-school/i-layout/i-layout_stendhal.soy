@@ -6,8 +6,9 @@
  *     page: (string|undefined),
  *     staticVersion: (string|undefined),
  *     year: (number|undefined),
- *     analyticsId: (string|undefined),
- *     yandexMetrikaId: (string|undefined),
+ *     analyticsId: string,
+ *     yandexMetrikaId: number,
+ *     carrotquestId: string,
  *     csrf: (string|undefined)
  * }} sm.iLayout.Template.Params.Config
  */
@@ -118,8 +119,9 @@
         {param staticVersion: $params?.config?.staticVersion /}
     {/call}
 
-    {call .analytics_ data="all"/}
-    {call .metrika_ data="all"/}
+    {call .analytics data="all"/}
+    {call .metrika data="all"/}
+    {call .carrotquest data="all" /}
 {/template}
 
 
@@ -127,8 +129,9 @@
  * @param? params {
  *     config: ?sm.iLayout.Template.Params.Config
  * }
+ * @protected
  */
-{template .analytics_ autoescape="strict" kind="html"}
+{template .analytics autoescape="strict" kind="html"}
     <script>
         var analytics = sm.iAnalytics.Analytics.getInstance();
         analytics.init('{$params?.config?.analyticsId}');
@@ -142,8 +145,9 @@
  * @param? params {
  *     config: ?sm.iLayout.Template.Params.Config
  * }
+ * @protected
  */
-{template .metrika_ autoescape="strict" kind="html"}
+{template .metrika autoescape="strict" kind="html"}
     <!-- Yandex.Metrika counter -->
     <script type="text/javascript">
         var metrika = sm.iMetrika.Metrika.getInstance();
@@ -158,6 +162,25 @@
         </div>
     </noscript>
     <!-- /Yandex.Metrika counter -->
+{/template}
+
+
+/**
+ * Carrotquest
+ * @param params {{
+ *     config: {
+ *         carrotquestId: string
+ *     }
+ * }}
+ * @protected
+ */
+{template .carrotquest autoescape="strict" kind="html"}
+    <!-- CarrotQuest BEGIN -->
+        <script type="text/javascript">
+            var carrotquestInstance = sm.iCarrotquest.Carrotquest.getInstance();
+            carrotquestInstance.init('{$params?.config?.carrotquestId}');
+        </script>
+    <!-- CarrotQuest END -->
 {/template}
 
 

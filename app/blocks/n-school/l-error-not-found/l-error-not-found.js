@@ -7,6 +7,7 @@ goog.require('goog.soy');
 goog.require('goog.ui.Component');
 goog.require('sm.bSearchPanel.View');
 goog.require('sm.iAnalytics.Analytics');
+goog.require('sm.iCarrotquest.Carrotquest');
 goog.require('sm.iFactory.FactoryStendhal');
 goog.require('sm.iFactory.TemplateFactoryStendhal');
 goog.require('sm.iMetrika.Metrika');

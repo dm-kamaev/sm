@@ -45,9 +45,10 @@
  *     page: (string|undefined),
  *     year: (number|undefined),
  *     staticVersion: (string|undefined),
- *     analyticsId: (string|undefined),
- *     yandexMetrikaId: ?number,
- *     domain: (string|undefined),
+ *     analyticsId: string,
+ *     yandexMetrikaId: number,
+ *     carrotquestId: string,
+ *     domain: string,
  *     fbClientId: ?number,
  *     csrf: string
  * }} sm.iLayout.TemplateStendhal.Params.Config
@@ -144,8 +145,9 @@
  * @param params {{
  *     config: {
  *         staticVersion: (string|undefined),
- *         analyticsId: (string|undefined),
- *         yandexMetrikaId: (number|undefined),
+ *         analyticsId: string,
+ *         yandexMetrikaId: number,
+ *         carrotquestId: string,
  *         csrf: string
  *     }
  * }}
@@ -156,6 +158,7 @@
     {call .csrf data="all"/}
     {call .analytics data="all"/}
     {call .metrika data="all"/}
+    {call .carrotquest data="all" /}
 {/template}
 
 
@@ -185,9 +188,10 @@
 
 
 /**
+ * Google analytics counter
  * @param params {{
  *     config: {
- *         analyticsId: (string|undefined)
+ *         analyticsId: string
  *     }
  * }}
  * @protected
@@ -201,9 +205,10 @@
 
 
 /**
+ * Yandex Metrika counter
  * @param params {{
  *     config: {
- *         yandexMetrikaId: (string|undefined)
+ *         yandexMetrikaId: number
  *     }
  * }}
  * @protected
@@ -223,6 +228,25 @@
         </div>
     </noscript>
     <!-- /Yandex.Metrika counter -->
+{/template}
+
+
+/**
+ * Carrotquest
+ * @param params {{
+ *     config: {
+ *         carrotquestId: string
+ *     }
+ * }}
+ * @protected
+ */
+{template .carrotquest autoescape="strict" kind="html"}
+    <!-- CarrotQuest BEGIN -->
+        <script type="text/javascript">
+            var carrotquestInstance = sm.iCarrotquest.Carrotquest.getInstance();
+            carrotquestInstance.init('{$params?.config?.carrotquestId}');
+        </script>
+    <!-- CarrotQuest END -->
 {/template}
 
 
