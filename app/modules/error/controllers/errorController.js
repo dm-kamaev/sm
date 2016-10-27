@@ -9,6 +9,8 @@ const config = require('../../../config').config;
 const analyticsId = config.schools.analyticsId;
 const yandexMetrikaId = config.schools.yandexMetrikaId;
 
+const CARROTQUEST_ID = config.carrotquestId;
+
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 
@@ -65,6 +67,7 @@ exports.notFound = async(function(req, res) {
                 year: new Date().getFullYear(),
                 analyticsId: analyticsId,
                 yandexMetrikaId: yandexMetrikaId,
+                carrotquestId: CARROTQUEST_ID,
                 csrf: req.csrfToken()
             }
         }
