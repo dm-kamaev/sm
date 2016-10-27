@@ -255,7 +255,7 @@ seoView.catalog = function(data) {
         },
         subHeader: {
             logo: {
-                imgUrl: '/images/n-common/b-sm-subheader/school-logo.svg'
+                imgUrl: '/static/images/n-common/b-sm-subheader/school-logo.svg'
             },
             links: {
                 nameL: 'Все школы Москвы',

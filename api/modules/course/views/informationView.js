@@ -29,12 +29,12 @@ exports.render = function(data) {
         openGraph: {
             title: 'Курс ' + data.entityData.name + ' на «Курсах Мела»',
             description: data.entityData.description,
-            image: '/images/n-clobl/i-layout/cources_sharing.png',
+            image: '/static/images/n-clobl/i-layout/cources_sharing.png',
             fbClientId: data.fbClientId,
         },
         subHeader: {
             logo: {
-                imgUrl: '/images/n-common/b-sm-subheader/course-logo.svg'
+                imgUrl: '/static/images/n-common/b-sm-subheader/course-logo.svg'
             },
             links: {
                 nameL: 'Все курсы, кружки и секции',

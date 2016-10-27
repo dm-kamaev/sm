@@ -98,7 +98,7 @@ goog.scope(function() {
      * Icon directory
      * @type {string}
      */
-    Map.ICON_DIR = '/images/n-school/b-map/b-map__pin/icons/';
+    Map.ICON_DIR = '/static/images/n-school/b-map/b-map__pin/icons/';
 
 
     /**

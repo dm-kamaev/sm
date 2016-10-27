@@ -65,13 +65,13 @@
                     'user': $params.data?.user,
                     'favorites': $params?.data?.favorites
                 ],
-                'landingScript': '/l-school-home.js',
+                'landingScript': '/static/l-school-home.js',
                 'openGraph': [
                     'title': 'Школы «Мела»',
                     'description': 'Найдите в Москве школу, ' +
                         'которая подойдёт вашему ребёнку',
                     'image': $params?.config?.domain +
-                        '/images/n-school/i-layout/schools-share.png',
+                        '/static/images/n-school/i-layout/schools-share.png',
                     'fbClientId': $params?.config?.fbClientId
                 ],
                 'seoLinks': $params.data?.seoLinks
@@ -152,7 +152,7 @@
             </div>
 
             <img class="l-school-home__image l-school-home__image_main"{sp}
-                 src="images/n-school/l-school-home/cover.svg">
+                 src="/static/images/n-school/l-school-home/cover.svg">
         </div>
     </div>
 {/template}
@@ -191,7 +191,7 @@
  */
 {template .headerImgClone_ kind="html" private="true"}
     <img class="l-school-home__image l-school-home__image_clone"
-         src="images/n-school/l-school-home/cover.svg">
+         src="/static/images/n-school/l-school-home/cover.svg">
 {/template}
 
 /**

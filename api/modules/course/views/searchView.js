@@ -143,12 +143,12 @@ searchView.render = function(data) {
             title: 'Профориентация на «Курсах Мела»',
             description: 'Курсы профориентации в Москве и онлайн: цены,' +
                 ' расписание, бронирование.',
-            image: '/images/n-clobl/i-layout/cources_sharing.png',
+            image: '/static/images/n-clobl/i-layout/cources_sharing.png',
             fbClientId: data.fbClientId,
         },
         subHeader: {
             logo: {
-                imgUrl: '/images/n-common/b-sm-subheader/course-logo.svg'
+                imgUrl: '/static/images/n-common/b-sm-subheader/course-logo.svg'
             },
             links: {
                 nameL: 'Все курсы, кружки и секции',
