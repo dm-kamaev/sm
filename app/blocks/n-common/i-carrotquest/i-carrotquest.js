@@ -69,9 +69,9 @@ goog.scope(function() {
      * @private
      */
     Carrotquest.prototype.create_ = function() {
-        window.carrotquest = {};
-        window.carrotquestasync = [];
-        carrotquest.settings = {};
+        window['carrotquest'] = {};
+        window['carrotquestasync'] = [];
+        window['carrotquest']['settings'] = {};
 
         var functions = [
             'connect', 'track', 'identify', 'auth', 'open',
@@ -80,7 +80,7 @@ goog.scope(function() {
         ];
 
         for (var i = 0; i < functions.length; i++) {
-            carrotquest[functions[i]] = this.build_(functions[i]);
+            window['carrotquest'][functions[i]] = this.build_(functions[i]);
         }
     };
 
@@ -94,7 +94,7 @@ goog.scope(function() {
      */
     Carrotquest.prototype.build_ = function(name, args) {
         return function() {
-            window.carrotquestasync.push(name, arguments);
+            window['carrotquestasync'].push(name, arguments);
         };
     };
 
@@ -105,7 +105,7 @@ goog.scope(function() {
      * @private
      */
     Carrotquest.prototype.connect_ = function(clientId) {
-        carrotquest.connect(clientId);
+        window['carrotquest'].connect(clientId);
     };
 
 
