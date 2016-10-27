@@ -69,7 +69,7 @@ gulp.task('styles', ['sprite'], function() {
             ],
             fileName: 'styles.css'
         }],
-        dest: path.join(__dirname, 'public/shared'),
+        dest: path.join(__dirname, 'public/shared/static'),
         minify: production
     });
 });
@@ -88,7 +88,8 @@ gulp.task('sprite', function() {
                 '/n-clobl/g-icon/g-icon_img/*@2x.png'
             )]
         },
-        pngDest: path.join(__dirname, 'public/shared')
+        pngDest: path.join(__dirname, 'public/shared/static/images'),
+        imgDir: ('./')
     }]);
 });
 
@@ -96,7 +97,7 @@ gulp.task('images', function() {
     var src = ['png', 'ico', 'svg', 'gif', 'jpg']
             .map(ext => '**/*.' + ext)
             .map(mask => path.join(__dirname, BLOCKS_DIR, mask)),
-        dest = path.join(__dirname, 'public/shared/images');
+        dest = path.join(__dirname, 'public/shared/static/images');
 
     return gulp.src(src)
         .pipe(gulp.dest(dest));
@@ -119,7 +120,7 @@ gulp.task('watch', function() {
 
 gulp.task('fonts', function() {
     return gulp.src(path.join(__dirname, '/assets/fonts/**/*.*'))
-        .pipe(gulp.dest(path.join(__dirname, 'public/shared/fonts')));
+        .pipe(gulp.dest(path.join(__dirname, 'public/shared/static/fonts')));
 });
 
 gulp.task('copySchools', function() {

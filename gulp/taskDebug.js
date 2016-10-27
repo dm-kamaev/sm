@@ -23,7 +23,7 @@ module.exports = function(gulpHelper) {
             compilerFlags: {
                 debug: true
             },
-            dest: './public/shared'
+            dest: './public/shared/static'
         });
     };
 };

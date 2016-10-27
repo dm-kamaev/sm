@@ -5,7 +5,7 @@ module.exports = function(gulpHelper) {
         return gulpHelper.js.build({
             outputFiles: scriptsHelper.getEntryPoints(),
             compile: true,
-            dest: './public/shared'
+            dest: './public/shared/static'
         });
     };
 };
