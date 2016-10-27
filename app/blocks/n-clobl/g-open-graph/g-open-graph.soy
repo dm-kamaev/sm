@@ -1,0 +1,50 @@
+{namespace cl.gOpenGraph.TemplateStendhal}
+
+/**
+ * Open Graph base template
+ * @param params {{
+ *     url: ?string,
+ *     siteName: ?string,
+ *     title: ?string,
+ *     type: ?string,
+ *     description: ?string,
+ *     image: ?string,
+ *     fbClientId: ?number,
+ *     twitterCardType: ?string,
+ *     twitterSiteName: ?string,
+ *     imageWidth: ?string,
+ *     imageHeight: ?string,
+ *     relapTag: ?string,
+ *     relapImage: ?string
+ * }}
+ * @extends cl.gOpenGraph.Template
+ * @constructor
+ */
+{template .openGraph autoescape="strict" kind="html"}
+    {call .ogMeta_ data="all" /}
+    {call .fbMeta_ data="all" /}
+    {call .twitterMeta_ data="all" /}
+{/template}
+
+
+/**
+ * Open Graph meta
+ * @param params {{
+ *     property: ?string,
+ *     content: ?string,
+ *     type: ?string
+ * }}
+ * @override
+ */
+{template .metaTag_ autoescape="strict" kind="html"}
+    {let $key: $params.type == 'twitter' ? 'name' : 'property' /}
+
+    {if $params.content}
+        {let $content kind="html"}
+            {call soydata.VERY_UNSAFE.ordainSanitizedHtml
+                data="$params.content" /}
+        {/let}
+
+        <meta {$key}="{$params.property}" content="{$content}" />
+    {/if}
+{/template}

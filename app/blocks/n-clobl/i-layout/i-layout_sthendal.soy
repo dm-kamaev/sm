@@ -20,7 +20,8 @@
  *     twitterSiteName: ?string,
  *     imageWidth: ?string,
  *     imageHeight: ?string,
- *     relapTag: ?string
+ *     relapTag: ?string,
+ *     relapImage: ?string
  * }} sm.iLayout.TemplateStendhal.Params.Data.openGraph
  */
 
@@ -128,6 +129,15 @@
         rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic'
         rel='stylesheet' type='text/css'>
+{/template}
+
+
+/**
+ * @param params {sm.iLayout.TemplateStendhal.Params.Data.openGraph}
+ * @override
+ */
+{template .openGraph}
+    {call cl.gOpenGraph.TemplateStendhal.openGraph data="all"/}
 {/template}
 
 
