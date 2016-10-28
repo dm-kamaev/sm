@@ -120,7 +120,6 @@ controller.get = async(function(req, res) {
  * @apiSuccess {CourseOption} courseOption
  * @apiParamExample {json} Request-example
  *     {
- *         "brandId": 16,
  *         "name": "Optima",
  *         "schedule": [{
  *             "startTime": "14:00:00",
@@ -145,8 +144,7 @@ controller.create = async(function(req, res) {
     try {
         result = await(services.courseOption.create(
             {
-                id: req.params.courseId,
-                brandId: req.body.brandId
+                id: req.params.courseId
             },
             req.body
         ));
