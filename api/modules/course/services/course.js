@@ -460,6 +460,13 @@ service.getById = async(function(id) {
         include: [{
             model: models.CourseBrand,
             as: 'courseBrand'
+        }, {
+            model: models.CourseType,
+            as: 'courseType',
+            include: [{
+                model: models.CourseCategory,
+                as: 'category'
+            }]
         }]
     }));
 });
