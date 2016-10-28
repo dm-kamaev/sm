@@ -1,24 +1,24 @@
 @import "../../n-common/i-media/i-media";
 
-.l-error-not-found__body {
+.l-error-school-not-found__body {
     margin: 0 auto 35px;
 
     color: #000000;
 }
 
-.l-error-not-found__title {
+.l-error-school-not-found__title {
     width: 1200px;
     height: 100%;
     margin: 0 auto;
 }
 
-.l-error-not-found__title-wrap {
+.l-error-school-not-found__title-wrap {
     height: 208px;
 
     line-height: 220px;
 }
 
-.l-error-not-found__title-img {
+.l-error-school-not-found__title-img {
     display: inline-block;
 
     width: 93px;
@@ -26,12 +26,12 @@
 
     vertical-align: middle;
 
-    background-image: url(images/n-school/l-error-not-found/404.svg);
+    background-image: url(/static/images/n-school/l-error-school-not-found/404.svg);
     background-repeat: no-repeat;
     background-size: 100%;
 }
 
-.l-error-not-found__title-text {
+.l-error-school-not-found__title-text {
     display: inline-block;
 
     margin-left: 38px;
@@ -45,17 +45,17 @@
     font-weight: bold;
 }
 
-.l-error-not-found__search {
+.l-error-school-not-found__search {
     width: 100%;
 
     margin-bottom: 45px;
 }
 
-.l-error-not-found__additional-info-wrap {
+.l-error-school-not-found__additional-info-wrap {
     margin-bottom: 50px;
 }
 
-.l-error-not-found__additional-info {
+.l-error-school-not-found__additional-info {
     position: relative;
 
     width: 1200px;
@@ -71,7 +71,7 @@
     }
 }
 
-.l-error-not-found__popular-schools {
+.l-error-school-not-found__popular-schools {
     display: inline-block;
 
     box-sizing: border-box;
@@ -79,7 +79,7 @@
     margin-top: 3px;
 }
 
-.l-error-not-found__popular-school {
+.l-error-school-not-found__popular-school {
     box-sizing: border-box;
 
     width: 20%;
@@ -105,7 +105,7 @@
     }
 }
 
-.l-error-not-found__information-schools {
+.l-error-school-not-found__information-schools {
     display: inline-block;
 
     box-sizing: border-box;
@@ -117,13 +117,13 @@
 }
 
 @include media-xl {
-    .l-error-not-found__title {
+    .l-error-school-not-found__title {
         box-sizing: border-box;
         width: 100%;
         padding: 0 40px;
     }
 
-    .l-error-not-found__additional-info {
+    .l-error-school-not-found__additional-info {
         width: 100%;
         box-sizing: border-box;
         padding: 0 40px;
@@ -131,7 +131,7 @@
 }
 
 @include media-l {
-    .l-error-not-found__popular-schools {
+    .l-error-school-not-found__popular-schools {
         width: 100%;
         padding: 0;
 
@@ -139,11 +139,11 @@
         overflow: hidden;
     }
 
-    .l-error-not-found__information-schools {
+    .l-error-school-not-found__information-schools {
         display: none;
     }
 
-    .l-error-not-found__popular-school {
+    .l-error-school-not-found__popular-school {
         width: 25%;
 
         &:nth-child(4) {
@@ -158,63 +158,63 @@
 }
 
 @include media-s {
-    .l-error-not-found__title {
+    .l-error-school-not-found__title {
         position: relative;
 
         box-sizing: border-box;
         padding: 0 30px;
     }
 
-    .l-error-not-found__title-img {
+    .l-error-school-not-found__title-img {
         position: absolute;
 
         margin-top: 65px;
     }
 
-    .l-error-not-found__title-text {
+    .l-error-school-not-found__title-text {
         box-sizing: border-box;
         width: 100%;
         margin-left: 0;
         padding-left: 130px;
     }
 
-    .l-error-not-found__additional-info {
+    .l-error-school-not-found__additional-info {
         box-sizing: border-box;
         padding: 0 30px;
     }
 
-    .l-error-not-found__information-schools {
+    .l-error-school-not-found__information-schools {
         display: inline-block;
 
         width: 33.33%;
         padding-left: 20px;
     }
 
-    .l-error-not-found__popular-schools {
+    .l-error-school-not-found__popular-schools {
         width: 66.66%;
         padding-right: 10px;
     }
 
-    .l-error-not-found__popular-school {
+    .l-error-school-not-found__popular-school {
         width: 50%;
     }
 }
 
 @include media-xs {
-    .l-error-not-found__title-text {
+    .l-error-school-not-found__title-text {
         margin-top: 65px;
         padding-left: 120px;
 
         vertical-align: top;
     }
 
-    .l-error-not-found__popular-schools {
+    .l-error-school-not-found__popular-schools {
         width: 100%;
 
         white-space: normal;
     }
 
-    .l-error-not-found__popular-school {
+    .l-error-school-not-found__popular-school {
         width: 100%;
         min-height: 70px;
         margin-bottom: 30px;
@@ -225,7 +225,7 @@
         }
     }
 
-    .l-error-not-found__information-schools {
+    .l-error-school-not-found__information-schools {
         position: relative;
 
         width: 100%;
@@ -236,19 +236,19 @@
 }
 
 @include media-xxs {
-    .l-error-not-found__title-wrap {
+    .l-error-school-not-found__title-wrap {
         height: 285px;
 
         line-height: 0;
     }
 
-    .l-error-not-found__title-img {
+    .l-error-school-not-found__title-img {
         position: static;
 
         margin-top: 60px;
     }
 
-    .l-error-not-found__title-text {
+    .l-error-school-not-found__title-text {
         margin-top: 20px;
         padding-left: 0;
     }

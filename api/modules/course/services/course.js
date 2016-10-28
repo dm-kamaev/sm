@@ -60,7 +60,8 @@ const informationFields = {
  *     entranceExam: ?string,
  *     learningOutcome: ?string,
  *     leadType: string,
- *     type: ?string,
+ *     category: string,
+ *     type: string,
  *     brand: {
  *         name: string,
  *         description: ?string
@@ -93,9 +94,13 @@ const informationFields = {
  * }} data
  * @return {Course}
  */
-service.create = async(function(data) {
+service.fullCreate = async(function(data) {
     let brand = await(services.courseBrand.create(data.brand)),
-        type = await(services.courseType.create(data.type)),
+        category = await(services.courseCategory.findOrCreate(data.category)),
+        type = await(services.courseType.create({
+            categoryId: category.id,
+            name: data.type
+        })),
         course = await(models.Course.create({
             name: data.name,
             brandId: brand.id,
@@ -108,7 +113,7 @@ service.create = async(function(data) {
             leadType: data.leadType
         }));
     course.options = data.options.map(option =>
-        await(services.courseOption.create(course.id, option))
+        await(services.courseOption.create(course, option))
     );
 
     return course;
@@ -131,10 +136,6 @@ service.information = async(function(id) {
             attributes: informationFields.ADDRESS,
             model: models.Address,
             as: 'address',
-            required: false,
-            where: {
-                entityType: entityType.COURSE_DEPARTMENT
-            },
             include: [{
                 attributes: informationFields.METRO,
                 model: models.Metro,
@@ -207,10 +208,10 @@ service.listMap = async(function(searchParams, opt_limit) {
 });
 
 /**
- * @param {number} departmentId
+ * @param {number} addressId
  * @return {Array<number>}
  */
-service.findByDepartmentId = async(function(departmentId) {
+service.findByAddressId = async(function(addressId) {
     let query = squel.select()
         .from('course')
         .field('DISTINCT course.id')
@@ -227,7 +228,8 @@ service.findByDepartmentId = async(function(departmentId) {
             'course_option_course_department.course_department_id = ' +
                 'course_department.id'
         )
-        .where('course_department_id = ' + departmentId)
+        .left_join('address', null, 'course_department.address_id = address.id')
+        .where('address.id = ' + addressId)
         .toString();
     let result = await(sequelize.query(
         query, {
@@ -245,6 +247,16 @@ service.findByDepartmentId = async(function(departmentId) {
 service.getAll = async(function() {
     return await(models.Course.findAll({
         include: [{
+            model: models.CourseBrand,
+            as: 'courseBrand'
+        }, {
+            model: models.CourseType,
+            as: 'courseType',
+            include: [{
+                model: models.CourseCategory,
+                as: 'category'
+            }]
+        }, {
             model: models.CourseOption,
             as: 'courseOptions',
             include: [{
@@ -308,17 +320,20 @@ service.getByIds = function(ids, opt_include) {
                     include: [{
                         model: models.Address,
                         as: 'address',
-                        required: false,
-                        where: {
-                            entityType: entityType.COURSE_DEPARTMENT
-                        },
                         attributes: ['id'],
                         include: addressInclude
                     }]
                 }]
+            }, {
+                attributes: ['categoryId'],
+                model: models.CourseType,
+                as: 'courseType'
             }],
             order: order
-        }) :
+        }).then(courses => courses.map(course => {
+            course.categoryId = course.courseType.categoryId;
+            return course;
+        })) :
         [];
 };
 
@@ -423,8 +438,95 @@ service.getAliases = async(function(courses) {
                 id: course.brandId
             }))),
             entityType.COURSE_BRAND
+        ),
+        category: getAliases(
+            uniqueIds(courses.map(course => ({
+                id: course.categoryId
+            }))),
+            entityType.COURSE_CATEGORY
         )
     });
+});
+
+/**
+ * @param  {number} id
+ * @return {Course}
+ */
+service.getById = async(function(id) {
+    return await(models.Course.findOne({
+        where: {
+            id: id
+        },
+        include: [{
+            model: models.CourseBrand,
+            as: 'courseBrand'
+        }]
+    }));
+});
+
+/**
+ * @param  {{
+ *     name: string,
+ *     brandId: ?number,
+ *     brandName: ?string
+ *     type: number,
+ *     description: ?string,
+ *     fullDescription: ?string,
+ *     about: ?string,
+ *     entranceExam: ?string,
+ *     learningOutcome: ?string,
+ *     leadType: ?string
+ * }} data
+ * @return {Course}
+ */
+service.create = async(function(data) {
+    if (!data.brandId) {
+        let brand = await(services.courseBrand.create({name: data.brandName}));
+        data.brandId = brand.id;
+    }
+
+    return await(models.Course.create(data));
+});
+
+/**
+ * @param  {number} id
+ * @param  {data} Object
+ * @return {Array<number>}
+ */
+service.update = async(function(id, data) {
+    if (!data.brandId) {
+        let brand = await(services.courseBrand.create({name: data.brandName}));
+        data.brandId = brand.id;
+    }
+
+    return await(models.Course.update(data, {
+        where: {
+            id: id
+        },
+        individualHooks: true
+    }));
+});
+
+/**
+ * @param  {number} id
+ */
+service.delete = async(function(id) {
+    let course = await(models.Course.findOne({
+        where: {
+            id: id
+        }
+    }));
+    await(course.destroy());
+});
+
+/*
+ * @param {Course} course
+ */
+service.deleteAlias = async(function(course) {
+    await(services.page.delete(
+        course.id,
+        entityType.COURSE
+    ));
 });
 
 module.exports = service;

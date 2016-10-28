@@ -884,10 +884,7 @@ service.list = async(function(opt_params, opt_config) {
         type: sequelize.QueryTypes.SELECT
     };
 
-    return sequelize.query(sqlString, options)
-        .then(schools => {
-            return schools;
-        });
+    return sequelize.query(sqlString, options);
 });
 
 /**

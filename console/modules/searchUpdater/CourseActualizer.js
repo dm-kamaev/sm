@@ -219,7 +219,7 @@ class CourseActualizer {
             ALL_REGULARITIES :
             lodash.uniq(options.map(option =>
                 option.schedule.length
-            ));            
+            ));
     }
 
     /**

@@ -11,6 +11,7 @@ goog.require('sm.bSearch.Search');
 goog.require('sm.bSmMap.SmMap');
 goog.require('sm.bSmSubheader.SmSubheader');
 goog.require('sm.gDropdown.DropdownSelect');
+goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.iLayout.LayoutStendhal');
 goog.require('sm.iSmSearchParamsManager.SmSearchParamsManager');
 goog.require('sm.lSearch.View');
@@ -24,6 +25,8 @@ goog.scope(function() {
     var SearchService = sm.lSearch.iSearchService.SearchService;
     var SearchParamsManager = sm.iSmSearchParamsManager.SmSearchParamsManager;
     var UrlUpdater = sm.lSearch.iUrlUpdater.UrlUpdater;
+
+    var Analytics = sm.iAnalytics.Analytics;
 
 
 
@@ -178,6 +181,7 @@ goog.scope(function() {
             .initMapListeners_()
             .initLoadMoreResultsListItemsListeners_();
 
+        this.sendAnalyticsPageview_();
         this.sendAnalyticsItemsLoad_(1);
     };
 
@@ -686,6 +690,15 @@ goog.scope(function() {
      */
     Search.prototype.getParamsFromSearch_ = function() {
         return this.search_.getData();
+    };
+
+
+    /**
+     * Sends pageview analytics
+     * @private
+     */
+    Search.prototype.sendAnalyticsPageview_ = function() {
+        Analytics.getInstance().send('pageview');
     };
 
 

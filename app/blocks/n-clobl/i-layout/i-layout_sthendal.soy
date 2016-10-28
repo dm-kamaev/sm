@@ -97,8 +97,27 @@
  * @override
  */
 {template .favicon autoescape="strict" kind="html"}
-    <link rel="shortcut icon" href="/images/n-common/favicon.ico"
+    <link rel="shortcut icon" href="/static/images/n-common/favicon.ico"
         type="image/x-icon">
+{/template}
+
+
+/**
+ * Default styles
+ * @param params {{
+ *     config: sm.iLayout.TemplateStendhal.Params.Config
+ * }}
+ * @override
+ */
+{template .styles autoescape="strict" kind="html"}
+    {call cl.iStatic.Template.style}
+        {param path: '/static/clobl.build.css' /}
+        {param staticVersion: $params?.config?.staticVersion /}
+    {/call}
+    {call cl.iStatic.Template.style}
+        {param path: '/static/styles.css' /}
+        {param staticVersion: $params?.config?.staticVersion /}
+    {/call}
 {/template}
 
 
@@ -150,6 +169,7 @@
     {call .analytics data="all"/}
     {call .metrika data="all"/}
     {call .carrotquest data="all" /}
+    {call .relap data="all" /}
 {/template}
 
 
@@ -242,6 +262,17 @@
 
 
 /**
+ * Recommender system
+ * @protected
+ */
+{template .relap autoescape="strict" kind="html"}
+    <script type="text/javascript" async
+        src="https://relap.io/api/v6/head.js?token=s4f-T0rORrtGBgMG">
+    </script>
+{/template}
+
+
+/**
  * @param params {{
  *     data: sm.iLayout.TemplateStendhal.Params.Data,
  *     config: sm.iLayout.TemplateStendhal.Params.Config
@@ -249,7 +280,8 @@
  * @override
  */
 {template .content autoescape="strict" kind="html"}
-    <div class="{call .rootClass/}" {call .attributes data="all"/}>
+    <div class="{call .rootClass/} {call .entityModifierClass data="all"/}"
+                {call .attributes data="all"/}>
         {call .mainSubheader data="all" /}
         {call .mainContent data="all" /}
         {call .mainFooter data="all" /}
@@ -346,15 +378,52 @@
 /**
  * Attributes on element
  * Important to write kind="attributes" when overrides
+ * @param params {{
+ *     data: {
+ *         user: {
+ *             firstName: (string|undefined),
+ *             lastName: (string|undefined)
+ *         },
+ *         authSocialLinks: {
+ *             vk: (string|undefined),
+ *             fb: (string|undefined)
+ *         }
+ *     },
+ *     config: {
+ *         entityType: string
+ *     }
+ * }}
  * @protected
  */
 {template .attributes kind="attributes"}
+    data-params="
+        {call cl.iUtils.Utils.stringify}
+            {param json: [
+                'isUserAuthorized': $params.data?.user ? true : false,
+                'authSocialLinks': $params.data?.authSocialLinks,
+                'type': $params?.config.entityType
+            ] /}
+        {/call}"
+{/template}
+
+/**
+ * Css class modifier of the entity type
+ * @param params {{
+ *     config: {
+ *         entityType: string
+ *     }
+ * }}
+ * @protected
+ */
+{template .entityModifierClass}
+    {call .rootClass/}_entity_{$params.config.entityType}
 {/template}
 
 
 /**
  * Root css class
  * @override
+ * @protected
  */
 {template .rootClass}
     i-layout

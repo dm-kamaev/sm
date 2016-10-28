@@ -18,7 +18,7 @@ goog.scope(function() {
      * Icon directory
      * @type {string}
      */
-    PresetGenerator.ICON_DIR = '/images/n-common/b-sm-map/icons/';
+    PresetGenerator.ICON_DIR = '/static/images/n-common/b-sm-map/icons/';
 
 
     /**

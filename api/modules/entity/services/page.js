@@ -9,7 +9,6 @@ var service = {
     name: 'page'
 };
 
-
 /**
  * @param {{
  *    entityId: ?number,
@@ -135,6 +134,20 @@ service.incrementViews = async(function(entityId, entityType) {
         entityType: entityType
     }}));
     entity.increment('views');
+});
+
+/**
+ * @param  {Object} entity
+ * @param  {string} entityType
+ * @return {number}
+ */
+service.delete = async(function(entityId, entityType) {
+    await(models.Page.destroy({
+        where: {
+            entityId: entityId,
+            entityType: entityType
+        }
+    }));
 });
 
 module.exports = service;

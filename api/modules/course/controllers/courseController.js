@@ -47,8 +47,7 @@ controller.search = async(function(req, res) {
             aliases = await(services.course.getAliases(courses)),
             aliasedCourses = courseView.joinAliases(
                 courses,
-                aliases.course,
-                aliases.brand
+                aliases
             );
 
         result = {
@@ -89,8 +88,7 @@ controller.searchMap = async(function(req, res) {
             aliases = await(services.course.getAliases(mapCourses)),
             aliasedMapCourses = courseView.joinAliases(
                 mapCourses,
-                aliases.course,
-                aliases.brand
+                aliases
             );
 
         result = {
@@ -127,8 +125,7 @@ controller.suggestSearch = async(function(req, res) {
 
         data.courses = courseView.joinAliases(
             data.courses,
-            courseAliases.course,
-            courseAliases.brand
+            courseAliases
         );
         result = courseView.suggest(data);
     } catch (error) {
@@ -283,6 +280,161 @@ controller.enrollOnCourse = async(function(req, res) {
             res.status(404);
         }
         result = error.message;
+    } finally {
+        res.header('Content-Type', 'application/json; charset=utf-8');
+        res.end(JSON.stringify(result));
+    }
+});
+
+/**
+ * @api {get} /course Get all courses
+ * @apiVersion 1.0.0
+ * @apiGroup Course
+ * @apiName getAllCourses
+ * @apiSuccess {Course[]} courses
+ * @apiSuccessExample {json} Response-example
+ *     HTTP/1.1 200 OK
+ *     [{
+ *         "id": 1,
+ *         "name": "course's name",
+ *         "description": "course's description",
+ *         "brandId": 2
+ *         "brandName": "brand's name",
+ *         "categoryId": 1,
+ *         "categoryName": "Профоаратциа",
+ *         "type": 2,
+ *         "typeName": "EGE",
+ *         "fullDescription": "course's full description",
+ *         "about": "course's about",
+ *         "learningOutcome": "course's learning outcome",
+ *         "updatedAt": "2016-09-15T15:18:28.395Z"
+ *     }]
+ */
+controller.list = async(function(req, res) {
+    let result;
+    try {
+        let courses = await(services.course.getAll());
+        result = courseView.renderList(courses);
+    } catch (error) {
+        logger.error(error.message);
+        result = error;
+    } finally {
+        res.header('Content-Type', 'application/json; charset=utf-8');
+        res.end(JSON.stringify(result));
+    }
+});
+
+/**
+ * @api {get} /course/:id Get course
+ * @apiVersion 1.0.0
+ * @apiGroup Course
+ * @apiName getCourse
+ * @apiSuccess {Course} course
+ * @apiSuccessExample {json} Response-example
+ *     HTTP/1.1 200 OK
+ *     {
+ *        "id": 1,
+ *         "name": "course's name",
+ *         "description": "course's description",
+ *         "brandId": 2,
+ *         "brandName": "brand's name",
+ *         "categoryId": 1,
+ *         "categoryName": "Профоаратциа",
+ *         "type": 2,
+ *         "typeName": "EGE",
+ *         "fullDescription": "course's full description",
+ *         "about": "course's about",
+ *         "learningOutcome": "course's learning outcome",
+ *         "updatedAt": "2016-09-15T15:18:28.395Z"
+ *     }
+ */
+controller.get = async(function(req, res) {
+    let result;
+    try {
+        let course = await(services.course.getById(req.params.id));
+        result = courseView.render(course);
+    } catch (error) {
+        logger.error(error.message);
+        result = error;
+    } finally {
+        res.header('Content-Type', 'application/json; charset=utf-8');
+        res.end(JSON.stringify(result));
+    }
+});
+
+/**
+ * @api {post} /course Get course
+ * @apiVersion 1.0.0
+ * @apiGroup Course
+ * @apiName createCourse
+ * @apiSuccess {Course} course
+ * @apiParamExample {json} Response-example
+ *     {
+ *         "brandName": "Maximum",
+ *         "type": 2,
+ *         "name": "course's name",
+ *         "description": "course's description",
+ *         "fullDescription": "course's full description",
+ *         "learningOutcome": "course's learning outcome",
+ *         "about": "course's about"
+ *     }
+ */
+controller.create = async(function(req, res) {
+    let result;
+    try {
+        result = await(services.course.create(req.body));
+    } catch (error) {
+        logger.error(error.message);
+        result = error;
+    } finally {
+        res.header('Content-Type', 'application/json; charset=utf-8');
+        res.end(JSON.stringify(result));
+    }
+});
+
+/**
+ * @api {put} /course/:id Update course
+ * @apiVersion 1.0.0
+ * @apiGroup Course
+ * @apiName updateCourse
+ * @apiSuccess {number[]} updatedRowsCount
+ * @apiParamExample {json} Response-example
+ *     {
+ *         "brandId": 1,
+ *         "type": 2,
+ *         "name": "course's name",
+ *         "description": "course's description",
+ *         "fullDescription": "course's full description",
+ *         "learningOutcome": "course's learning outcome",
+ *         "about": "course's about"
+ *     }
+ */
+controller.update = async(function(req, res) {
+    let result;
+    try {
+        result = await(services.course.update(req.params.id, req.body));
+    } catch (error) {
+        logger.error(error.message);
+        result = error;
+    } finally {
+        res.header('Content-Type', 'application/json; charset=utf-8');
+        res.end(JSON.stringify(result));
+    }
+});
+
+/**
+ * @api {delete} /course/:id Delete course
+ * @apiVersion 1.0.0
+ * @apiGroup Course
+ * @apiName deleteCourse
+ */
+controller.delete = async(function(req, res) {
+    let result;
+    try {
+        result = await(services.course.delete(req.params.id));
+    } catch (error) {
+        logger.error(error.message);
+        result = error;
     } finally {
         res.header('Content-Type', 'application/json; charset=utf-8');
         res.end(JSON.stringify(result));

@@ -75,7 +75,7 @@
  */
 {template .layoutScript kind="html"}
     {call cl.iStatic.Template.script}
-        {param path: 'l-catalog.js' /}
+        {param path: '/static/l-catalog.js' /}
         {param staticVersion: $params?.config?.staticVersion /}
     {/call}
 {/template}
@@ -89,13 +89,14 @@
  * @override
  */
 {template .content autoescape="strict" kind="html"}
-    <div class="{call .rootClass/}" {call .attributes data="all"/}>
+    <div class="{call .rootClass/} {call .entityModifierClass data="all"/}"
+                {call .attributes data="all"/}>
         <div class="{call .rootClass/}__wrapper-content">
-            {call .subheader data="all" /}
-            {call .bodyContent data="all" /}
+            {call .mainSubheader data="all" /}
+            {call .mainContent data="all" /}
         </div>
 
-        {call .footer data="all" /}
+        {call .mainFooter data="all" /}
     </div>
 {/template}
 
@@ -115,7 +116,7 @@
  * }}
  * @override
  */
-{template .bodyContent}
+{template .mainContent}
     <div class="{call .rootClass/}__body">
         {call .sectionHeader_ data="all" /}
         {call .sectionCatalog_ data="all" /}

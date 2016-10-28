@@ -11,8 +11,9 @@ const soy = require('../../../components/soy'),
         '../../../../api/modules/course/views/informationView'
     ),
     pageView = require('../../../../api/modules/entity/views/pageView'),
-    entityType = require('../../../../api/modules/entity/enums/entityType.js'),
-    errors = require('../../school/lib/errors');
+    entityType = require('../../../../api/modules/entity/enums/entityType.js');
+
+const PageNotFoundError = require('../../error/lib/PageNotFoundError');
 
 const logger = require('../../../components/logger/logger').getLogger('app');
 
@@ -59,9 +60,7 @@ controller.search = async(function(req, res, next) {
             countResults: data.courses[0] && data.courses[0].countResults || 0,
             coursesList: data.courses,
             mapCourses: courseView.joinAliases(
-                data.mapCourses,
-                aliases.map.course,
-                aliases.map.brand
+                data.mapCourses, aliases.map
             ),
             mapPosition: data.mapPosition,
             searchParams: searchParams,
@@ -96,7 +95,7 @@ controller.search = async(function(req, res, next) {
         logger.error(error);
 
         res.status(error.code || 500);
-        next();
+        next(error);
     }
 });
 
@@ -116,13 +115,13 @@ controller.information = async(function(req, res, next) {
                 )
             });
         if (!page.course || !page.brand) {
-            throw new errors.PageNotFoundError();
+            throw new PageNotFoundError();
         } else {
             let courseInstance = await(services.urls.getEntityByUrl(
                 alias, entityType.COURSE
             ));
             if (!courseInstance || courseInstance.brandId != page.brand.id) {
-                throw new errors.SchoolNotFoundError();
+                throw new PageNotFoundError();
             } else {
                 let authSocialLinks = services.auth.getAuthSocialUrl(),
                     user = req.user || {};
@@ -170,7 +169,7 @@ controller.information = async(function(req, res, next) {
         logger.error(error);
 
         res.status(error.code || 500);
-        next();
+        next(error);
     }
 });
 

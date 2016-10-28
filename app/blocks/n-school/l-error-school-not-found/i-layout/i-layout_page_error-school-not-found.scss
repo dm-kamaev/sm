@@ -1,7 +1,8 @@
 @import "../../../n-common/i-media/i-media";
 
 @include media-xl {
-    .i-layout_page_error-not-found.i-layout_modifier_stendhal .i-layout__footer {
+    .i-layout_page_error-school-not-found.i-layout_modifier_stendhal
+    .i-layout__footer {
         width: 100%;
         padding: 0 40px;
 
@@ -10,7 +11,8 @@
 }
 
 @include media-s {
-    .i-layout_page_error-not-found.i-layout_modifier_stendhal .i-layout__footer {
+    .i-layout_page_error-school-not-found.i-layout_modifier_stendhal
+    .i-layout__footer {
         padding: 0 30px;
     }
 }

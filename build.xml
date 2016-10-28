@@ -23,6 +23,7 @@
                      packaging.supervisor.link,
                      schools.migrate,
                      schools.update-search-cache,
+                     schools.update-sitemap,
                      packaging.release.folder.link,
                      packaging.rollback-script,
                      packaging.supervisor.restart,

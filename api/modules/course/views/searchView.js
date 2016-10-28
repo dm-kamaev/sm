@@ -125,9 +125,7 @@ searchView.map = function(courses, options) {
 searchView.render = function(data) {
     let user = userView.default(data.user),
         aliasedCourses = courseView.joinAliases(
-            data.coursesList,
-            data.aliases.course,
-            data.aliases.brand
+            data.coursesList, data.aliases
         ),
         courses = courseView.list(aliasedCourses);
 
@@ -145,14 +143,14 @@ searchView.render = function(data) {
             title: 'Выбор профессии и вуза',
             description: 'Все полезные курсы профориентации&nbsp;&mdash; ' +
                         'в&nbsp;одном месте',
-            image: '/images/n-clobl/i-layout/cources_sharing.png',
+            image: '/static/images/n-clobl/i-layout/cources_sharing.png',
             relapTag: 'курсы мела',
-            relapImage: '/images/n-clobl/i-layout/cources_sharing.png',
+            relapImage: '/static/images/n-clobl/i-layout/cources_sharing.png',
             fbClientId: data.fbClientId,
         },
         subHeader: {
             logo: {
-                imgUrl: '/images/n-common/b-sm-subheader/course-logo.svg'
+                imgUrl: '/static/images/n-common/b-sm-subheader/course-logo.svg'
             },
             links: {
                 nameL: 'Все курсы, кружки и секции',

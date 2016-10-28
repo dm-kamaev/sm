@@ -83,7 +83,26 @@
  * @override
  */
 {template .favicon autoescape="strict" kind="html"}
-    <link rel="shortcut icon" href="/images/n-common/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/static/images/n-common/favicon.ico" type="image/x-icon">
+{/template}
+
+
+/**
+ * Default styles
+ * @param? params {{
+ *     config: ?cl.iLayout.Template.Params.Config
+ * }}
+ * @override
+ */
+{template .styles autoescape="strict" kind="html"}
+    {call cl.iStatic.Template.style}
+        {param path: '/static/clobl.build.css' /}
+        {param staticVersion: $params?.config?.staticVersion /}
+    {/call}
+    {call cl.iStatic.Template.style}
+        {param path: '/static/styles.css' /}
+        {param staticVersion: $params?.config?.staticVersion /}
+    {/call}
 {/template}
 
 
@@ -122,6 +141,7 @@
     {call .analytics data="all"/}
     {call .metrika data="all"/}
     {call .carrotquest data="all" /}
+    {call .relap /}
 {/template}
 
 
@@ -181,6 +201,15 @@
             carrotquestInstance.init('{$params?.config?.carrotquestId}');
         </script>
     <!-- CarrotQuest END -->
+{/template}
+
+
+/**
+ * Recommender system
+ * @protected
+ */
+{template .relap autoescape="strict" kind="html"}
+    <script type="text/javascript" async src="https://relap.io/api/v6/head.js?token=s4f-T0rORrtGBgMG"></script>
 {/template}
 
 
