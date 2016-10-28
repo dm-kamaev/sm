@@ -3,7 +3,8 @@
 const async = require('asyncawait/async'),
     await = require('asyncawait/await');
 
-const services = require('../../../../app/components/services').all;
+const services = require('../../../../app/components/services').all,
+    courseOptionView = require('../views/courseOptionView');
 
 const logger = require('../../../../app/components/logger/logger')
     .getLogger('app');
@@ -28,13 +29,7 @@ let controller = {};
  *             "endTime": "15:00:00",
  *             "day": 2
  *         }],
- *         "departments": [{
- *             "id": 16,
- *             "name": "Дизайн карьеры",
- *             "address": "ул. Краснопролетарская, д 16., стр. 2",
- *             "phone": "7 (800) 500-64-59",
- *             "updatedAt": "2016-10-17T17:42:42.112Z"
- *         }],
+ *         "departments": [16],
  *         "costPerHour": 2300,
  *         "online": false,
  *         "age": [12, 13, 14],
@@ -50,9 +45,10 @@ let controller = {};
 controller.list = async(function(req, res) {
     let result;
     try {
-        result = await(services.courseOption.getByCourseId(
+        let courseOptions = await(services.courseOption.getByCourseId(
             req.params.courseId
         ));
+        result = courseOptionView.renderList(courseOptions);
     } catch (error) {
         logger.error(error.message);
         result = error;
@@ -80,13 +76,7 @@ controller.list = async(function(req, res) {
  *             "endTime": "15:00:00",
  *             "day": 2
  *         }],
- *         "departments": [{
- *             "id": 16,
- *             "name": "Дизайн карьеры",
- *             "address": "ул. Краснопролетарская, д 16., стр. 2",
- *             "phone": "7 (800) 500-64-59",
- *             "updatedAt": "2016-10-17T17:42:42.112Z"
- *         }],
+ *         "departments": [16],
  *         "costPerHour": 2300,
  *         "online": false,
  *         "age": [12, 13, 14],
@@ -102,7 +92,8 @@ controller.list = async(function(req, res) {
 controller.get = async(function(req, res) {
     let result;
     try {
-        result = await(services.courseOption.getById(req.params.id));
+        let courseOption = await(services.courseOption.getById(req.params.id));
+        result = courseOptionView.render(courseOption);
     } catch (error) {
         logger.error(error.message);
         result = error;
