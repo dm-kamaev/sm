@@ -43,7 +43,7 @@
  */
 {template .layoutScript kind="html"}
     {call cl.iStatic.Template.script}
-        {param path: '/l-error-not-found.js' /}
+        {param path: '/static/l-error-not-found.js' /}
         {param staticVersion: $params?.config?.staticVersion /}
     {/call}
 {/template}
@@ -131,7 +131,7 @@
  */
 {template .errorImg_}
     <img class="{call .rootClass/}__error-img"
-        src="/images/n-common/l-error-not-found/404.svg" alt="Ошибка">
+        src="/static/images/n-common/l-error-not-found/404.svg" alt="Ошибка">
 {/template}
 
 

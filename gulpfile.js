@@ -11,21 +11,23 @@ const MAX_BILD_FILE_AMOUNT = 20;
 
 process.stdout.setMaxListeners(MAX_BILD_FILE_AMOUNT);
 
+const config = require('./config.json');
+const production = !!util.env.production;
+const BLOCKS_DIR = '/app/blocks';
+const SHARED_STATIC_DIR = '/public/shared/static';
+
+const ENV = util.env.env ? util.env.env : 'dev';
+
 const gulpHelper =
     require('./node_modules/clobl/gulp-helper.js')
         .use(gulp)
         .setPath({
             root: __dirname,
-            blocks: path.join(__dirname, '/app/blocks')
+            blocks: path.join(__dirname, BLOCKS_DIR)
         })
         .setSoyPath({
             root: 'build'
         });
-
-const config = require('./config.json');
-const production = !!util.env.production;
-const BLOCKS_DIR = '/app/blocks';
-const ENV = util.env.env ? util.env.env : 'dev';
 
 const gulpTasks = require('./gulp')(gulpHelper);
 
@@ -73,7 +75,7 @@ gulp.task('styles', ['sprite'], function() {
             ],
             fileName: 'styles.css'
         }],
-        dest: path.join(__dirname, 'public/shared/static'),
+        dest: path.join(__dirname, SHARED_STATIC_DIR),
         minify: production
     });
 });
@@ -92,7 +94,7 @@ gulp.task('sprite', function() {
                 '/n-clobl/g-icon/g-icon_img/*@2x.png'
             )]
         },
-        pngDest: path.join(__dirname, 'public/shared/static/images'),
+        pngDest: path.join(__dirname, SHARED_STATIC_DIR + '/images'),
         imgDir: ('./')
     }]);
 });
@@ -101,7 +103,7 @@ gulp.task('images', function() {
     var src = ['png', 'ico', 'svg', 'gif', 'jpg']
             .map(ext => '**/*.' + ext)
             .map(mask => path.join(__dirname, BLOCKS_DIR, mask)),
-        dest = path.join(__dirname, 'public/shared/static/images');
+        dest = path.join(__dirname, SHARED_STATIC_DIR + '/images');
 
     return gulp.src(src)
         .pipe(gulp.dest(dest));
@@ -124,23 +126,19 @@ gulp.task('watch', function() {
 
 gulp.task('fonts', function() {
     return gulp.src(path.join(__dirname, '/assets/fonts/**/*.*'))
-        .pipe(gulp.dest(path.join(__dirname, 'public/shared/static/fonts')));
+        .pipe(gulp.dest(path.join(__dirname, SHARED_STATIC_DIR + '/fonts')));
 });
 
 gulp.task('copySchools', function() {
     return gulp.src([
-        path.join(__dirname, '/assets/schools/robots.txt'),
-        path.join(__dirname, '/assets/schools/google86acdf989d7328cf.html'),
-        path.join(__dirname, '/assets/schools/yandex_7cfaf013e2f3373d.html')
+        path.join(__dirname, '/assets/schools/*.*')
     ], {base: 'assets/'})
         .pipe(gulp.dest('public/'));
 });
 
 gulp.task('copyCourses', ['copySchools'], function() {
     return gulp.src([
-        path.join(__dirname, '/assets/courses/robots.txt'),
-        path.join(__dirname, '/assets/courses/google86acdf989d7328cf.html'),
-        path.join(__dirname, '/assets/courses/yandex_7cfaf013e2f3373d.html')
+        path.join(__dirname, '/assets/courses/*.*')
     ], {base: 'assets/'})
         .pipe(gulp.dest('public/'));
 });

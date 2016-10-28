@@ -20,7 +20,7 @@ exports.render = function(data) {
         },
         subHeader: {
             logo: {
-                imgUrl: '/images/n-common/b-sm-subheader/course-logo.svg'
+                imgUrl: '/static/images/n-common/b-sm-subheader/course-logo.svg'
             },
             links: {
                 nameL: 'Все курсы, кружки и секции',
