@@ -21,7 +21,7 @@ const config = require('../../../config').config;
 
 const ANALYTICS_ID = config.courses.analyticsId,
     YANDEX_METRIKA_ID = config.courses.yandexMetrikaId,
-    DOMAIN = config.url.protocol + '://' + config.url.host,
+    DOMAIN = config.courses.host,
     FB_CLIENT_ID = config.facebookClientId,
     CARROTQUEST_ID = config.carrotquestId;
 

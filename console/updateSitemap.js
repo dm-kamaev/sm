@@ -6,7 +6,7 @@ const commander = require('commander');
 const SitemapUpdater = require('./modules/sitemap/SitemapUpdater');
 
 var start = async(function() {
-    var sitemapUpdater = await(new SitemapUpdater());
+    var sitemapUpdater = await(new SitemapUpdater('schools'));
         sitemapUpdater.update();
 });
 

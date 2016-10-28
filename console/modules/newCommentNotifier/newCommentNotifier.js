@@ -20,7 +20,7 @@ class newCommentNotifier {
 
     start() {
         var email = config.emailNotifier.email,
-            domain = config.url.protocol + '://' + config.url.host;
+            domain = config.protocol + '://' + config.schools.host;
 
         var transporter = transporterGenerator.createSMTPTransporter({
             debug: true,

@@ -15,7 +15,7 @@ const yandexMetrikaId = config.schools.yandexMetrikaId;
 
 const logger = require('../../../components/logger/logger').getLogger('app');
 
-const DOMAIN = config.url.protocol + '://' + config.url.host;
+const DOMAIN = config.schools.host;
 const FB_CLIENT_ID = config.facebookClientId,
     CARROTQUEST_ID = config.carrotquestId;
 

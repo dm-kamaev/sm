@@ -107,7 +107,7 @@ class ParseMail {
                     commentHost = text.match(/(?:http:\/\/)([\w.]+)/) &&
                         text.match(/(?:http:\/\/)([\w.]+)/)[1];
 
-                if (commentHost === config.url.host) {
+                if (commentHost === config.schools.host) {
                     this.sendDeleteReq_(commentId);
                     processedLetters.push(letter.uid);
                 }
@@ -137,7 +137,7 @@ class ParseMail {
                 'token': TOKEN
             }),
             options = {
-                host: config.url.host,
+                host: config.schools.host,
                 method: 'DELETE',
                 path: '/api/comment/delete/' + id,
                 headers: {

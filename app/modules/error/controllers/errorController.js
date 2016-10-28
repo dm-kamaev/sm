@@ -17,8 +17,7 @@ const yandexMetrikaId = config.schools.yandexMetrikaId;
 
 const MODIFIER = 'stendhal',
     FB_CLIENT_ID = config.facebookClientId,
-    CARROTQUEST_ID = config.carrotquestId,
-    DOMAIN = config.url.protocol + '://' + config.url.host;
+    CARROTQUEST_ID = config.carrotquestId;
 
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
@@ -118,7 +117,7 @@ controller.notFound = async(function(req, res, entityType, subdomain) {
                     carrotquestId: CARROTQUEST_ID,
                     csrf: req.csrfToken(),
                     fbClientId: FB_CLIENT_ID,
-                    domain: DOMAIN
+                    domain: config[subdomain].host
                 }
             }
         });
