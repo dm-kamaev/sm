@@ -100,7 +100,9 @@ exports.list = async(function(req, res, next) {
                 }
             ),
             filtersData: services.school.searchFiltersData(searchParams),
-            mapPosition: services.schoolSearch.getMapPositionParams(searchParams),
+            mapPosition: services.schoolSearch.getMapPositionParams(
+                searchParams
+            ),
             authSocialLinks: services.auth.getAuthSocialUrl(),
             favorites: {
                 items: services.school.getByIdsWithGeoData(favoriteIds),

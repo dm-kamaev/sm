@@ -6,7 +6,8 @@ const schoolView = require('../../../../api/modules/school/views/schoolView');
 const userView = require('../../../../api/modules/user/views/user');
 const seoView = require('../../../../api/modules/school/views/seoView');
 
-const entityTypeEnum = require('../../../../api/modules/entity/enums/entityType');
+const entityTypeEnum =
+    require('../../../../api/modules/entity/enums/entityType');
 const errorView = require('../../../../api/modules/error/views/errorView');
 
 const logger = require('../../../components/logger/logger').getLogger('app');
@@ -87,7 +88,8 @@ controller.schoolNotFound = async(function(req, res) {
 });
 
 
-controller.notFound = async(function(req, res, entityType, subdomain) {
+controller.notFound = async(function(req, res, next, entityType, subdomain) {
+    let html;
     try {
         let authSocialLinks = services.auth.getAuthSocialUrl(),
             user = req.user || {};
@@ -103,7 +105,7 @@ controller.notFound = async(function(req, res, entityType, subdomain) {
             authSocialLinks: authSocialLinks
         });
 
-        var html = soy.render('sm.lErrorNotFound.Template.errorNotFound', {
+        html = soy.render('sm.lErrorNotFound.Template.errorNotFound', {
             params: {
                 data: templateData,
                 config: {

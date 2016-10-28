@@ -4,7 +4,7 @@ var router = express.Router();
 var courseController = require('./courseController');
 
 router.get(
-    '/proforientacija/:brandName/:name',
+    '/:categoryName/:brandName/:name',
     courseController.information
 );
 

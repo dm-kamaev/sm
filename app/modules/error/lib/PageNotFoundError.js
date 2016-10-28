@@ -4,6 +4,7 @@ class PageNotFoundError extends Error {
     /**
      * Page not found error
      * @constructor
+     * @param {string} entityType
      */
     constructor(entityType) {
         super('Page not found');

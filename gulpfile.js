@@ -156,7 +156,8 @@ gulp.task('localConfig', function() {
 gulp.task('backendLint', function() {
     return gulp.src([
         'api/**/*.js',
-        'app/modules/!(doc)**/*.js',
+        'app/modules/**/*.js',
+        '!app/modules/doc/**',
         './*.js'])
         .pipe(eslint({
             config: path.join(__dirname, 'node_modules/nodules/.eslintrc')

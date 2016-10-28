@@ -12,6 +12,6 @@ module.exports = function(req, res, next) {
     if (entityType == entityTypeEnum.SCHOOL) {
         errorController.schoolNotFound(req, res);
     } else {
-        errorController.notFound(req, res, entityType, subdomain);
+        errorController.notFound(req, res, next, entityType, subdomain);
     }
 };

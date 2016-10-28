@@ -10,7 +10,6 @@ const soy = require('../../../components/soy'),
     informationView = require(
         '../../../../api/modules/course/views/informationView'
     ),
-    pageView = require('../../../../api/modules/entity/views/pageView'),
     entityType = require('../../../../api/modules/entity/enums/entityType.js');
 
 const PageNotFoundError = require('../../error/lib/PageNotFoundError');
@@ -102,6 +101,7 @@ controller.information = async(function(req, res, next) {
     try {
         let alias = services.urls.stringToURL(req.params.name),
             brandAlias = services.urls.stringToURL(req.params.brandName),
+            categoryAlias = services.urls.stringToURL(req.params.categoryName),
             page = await({
                 course: services.page.getByAlias(
                     alias,
@@ -110,32 +110,39 @@ controller.information = async(function(req, res, next) {
                 brand: services.page.getByAlias(
                     brandAlias,
                     entityType.COURSE_BRAND
+                ),
+                category: services.page.getByAlias(
+                    categoryAlias,
+                    entityType.COURSE_CATEGORY
                 )
             });
-        if (!page.course || !page.brand) {
+        if (!page.course || !page.brand || !page.category) {
             throw new PageNotFoundError();
         } else {
             let courseInstance = await(services.urls.getEntityByUrl(
-                alias, entityType.COURSE
-            ));
-            if (!courseInstance || courseInstance.brandId != page.brand.id) {
+                    alias, entityType.COURSE
+                )),
+                course = await(services.course.information(courseInstance.id));
+            if (!courseInstance ||
+                course.brandId != page.brand.id ||
+                course.courseType.categoryId != page.category.id
+            ) {
                 throw new PageNotFoundError();
             } else {
                 let authSocialLinks = services.auth.getAuthSocialUrl(),
                     user = req.user || {};
 
-                let data = await({
-                    favorites: services.favorite.getFavoriteEntities(user.id),
-                    course: services.course.information(courseInstance.id)
-                });
+                let favorites = await(services.favorite.getFavoriteEntities(
+                    user.id
+                ));
 
                 let templateData = informationView.render({
                     user: user,
                     fbClientId: FB_CLIENT_ID,
                     authSocialLinks: authSocialLinks,
-                    entityData: courseView.page(data.course),
-                    map: courseView.pageMap(data.course),
-                    favorites: data.favorites,
+                    entityData: courseView.page(course),
+                    map: courseView.pageMap(course),
+                    favorites: favorites,
                     actionButtonText: 'Хочу этот курс!'
                 });
 
