@@ -6,7 +6,8 @@ const schoolView = require('../../../../api/modules/school/views/schoolView');
 const userView = require('../../../../api/modules/user/views/user');
 const seoView = require('../../../../api/modules/school/views/seoView');
 
-const entityTypeEnum = require('../../../../api/modules/entity/enums/entityType');
+const entityTypeEnum =
+    require('../../../../api/modules/entity/enums/entityType');
 const errorView = require('../../../../api/modules/error/views/errorView');
 
 const logger = require('../../../components/logger/logger').getLogger('app');

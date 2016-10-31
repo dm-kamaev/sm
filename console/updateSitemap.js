@@ -1,13 +1,19 @@
 'use strict';
 
-const async = require('asyncawait/async');
-const await = require('asyncawait/await');
+const async = require('asyncawait/async'),
+    await = require('asyncawait/await');
+
 const commander = require('commander');
 const SitemapUpdater = require('./modules/sitemap/SitemapUpdater');
 
-var start = async(function() {
-    var sitemapUpdater = await(new SitemapUpdater('schools'));
-        sitemapUpdater.update();
+const entityType = require('../api/modules/entity/enums/entityType');
+
+let start = async(function() {
+    let schoolSitemapUpdater = await(new SitemapUpdater(entityType.SCHOOL));
+        schoolSitemapUpdater.update();
+
+    let courseSitemapUpdater = await(new SitemapUpdater(entityType.COURSE));
+        courseSitemapUpdater.update();
 });
 
 commander
