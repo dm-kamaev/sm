@@ -56,11 +56,13 @@ controller.search = async(function(req, res, next) {
                     },
                     seoParams: services.seoCourseList.getByCategoryId(
                         categoryInstance.id
-                    )
+                    ),
+                    categories: services.courseCategory.getAll()
                 }),
                 aliases = await({
                     courses: services.course.getAliases(data.courses),
-                    map: services.course.getAliases(data.mapCourses)
+                    map: services.course.getAliases(data.mapCourses),
+                    categories: services.courseCategory.getAliases()
                 });
 
             let templateData = searchView.render({
@@ -82,36 +84,11 @@ controller.search = async(function(req, res, next) {
                 filtersData: data.filtersData,
                 enabledFilters: categoryInstance.filters,
                 aliases: aliases.courses,
-                seoParams: data.seoParams
+                seoParams: data.seoParams,
+                currentCategory: categoryName,
+                categories: data.categories,
+                categoryAliases: aliases.categories
             });
-
-            templateData.subHeader.listLinks = {
-                opener: 'Все курсы',
-                content: {
-                    items: [{
-                        url: '/',
-                        label: 'Выбор профессии'
-                    }, {
-                        url: '',
-                        label: 'Англйский язык'
-                    }, {
-                        url: '',
-                        label: 'Французский язык'
-                    }, {
-                        url: '',
-                        label: 'Немецкий язык'
-                    }, {
-                        url: '',
-                        label: 'Испанский язык'
-                    }, {
-                        url: '',
-                        label: 'Англйский язык'
-                    }, {
-                        url: '',
-                        label: 'Китайский язык'
-                    }]
-                }
-            };
 
             let html = soy.render(
                 'sm.lSearch.Template.search', {

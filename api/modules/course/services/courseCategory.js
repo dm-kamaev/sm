@@ -161,4 +161,11 @@ service.deleteAlias = async(function(courseCategory) {
     ));
 });
 
+/**
+ * @return {Array<Page>}
+ */
+service.getAliases = async(function() {
+    return await(services.page.getAllAliases(entityType.COURSE_CATEGORY));
+});
+
 module.exports = service;

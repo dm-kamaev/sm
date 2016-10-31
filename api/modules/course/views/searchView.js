@@ -4,7 +4,8 @@ const FilterPanel = require('../lib/CourseFilterPanel'),
     courseView = require('./courseView'),
     mapViewType = require('../../entity/enums/mapViewType'),
     userView = require('../../user/views/user'),
-    favoriteView = require('../../favorite/views/favoriteView');
+    favoriteView = require('../../favorite/views/favoriteView'),
+    courseCategoryView = require('./courseCategoryView');
 
 const filterName = require('../enums/filterName');
 
@@ -117,7 +118,10 @@ searchView.map = function(courses, options) {
  *     searchParams: Object,
  *     filtersData: Array<Object>,
  *     aliases: Array<Object>,
- *     seoParams: Object
+ *     seoParams: Object,
+ *     currentCategory: string,
+ *     categories: Array<Object>,
+ *     categoryAliases: Array<Object>
  * }} data
  * @return {Object}
  */
@@ -151,15 +155,24 @@ searchView.render = function(data) {
             links: {
                 nameL: 'Все курсы, кружки и секции',
                 nameM: 'Все курсы',
-                url: '/proforientacija'
+                url: `/${data.currentCategory}`
             },
             search: {
                 placeholder: 'Район, метро, название курса',
-                pageAlias: 'proforientacija'
+                pageAlias: data.currentCategory
             },
             user: user,
             favorites: {
                 items: favoriteView.list(data.favorites)
+            },
+            listLinks: {
+                opener: 'Все курсы',
+                content: {
+                    items: courseCategoryView.listLinks(
+                        data.categories,
+                        data.categoryAliases
+                    )
+                }
             }
         },
         user: user,
@@ -172,7 +185,7 @@ searchView.render = function(data) {
             countResults: data.countResults,
             searchText: data.searchParams.name,
             placeholder: 'Район, метро, название курса',
-            pageAlias: 'proforientacija',
+            pageAlias: data.currentCategory,
             declensionEntityType: {
                 nom: 'курс',
                 gen: 'курса',
