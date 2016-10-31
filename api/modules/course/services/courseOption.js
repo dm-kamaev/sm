@@ -25,11 +25,11 @@ let service = {
  *     startDate: ?string
  *     duration: ?string,
  *     openSchedule: ?boolean,
- *     schedule: ?Array<{
+ *     schedule: ?(Array<{
  *         startTime: ?string,
  *         endTime: ?string,
  *         day: number
- *     }>,
+ *     }>|string),
  *     departments: Array<{
  *         name: ?string,
  *         description: ?string,

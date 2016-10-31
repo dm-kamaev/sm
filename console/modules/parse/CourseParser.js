@@ -5,10 +5,11 @@ const await = require('asyncawait/await'),
     xlsxj = require('xlsx-to-json');
 
 const courseService = require('../../../api/modules/course/services/course'),
+    courseScheduleService =
+        require('../../../api/modules/course/services/courseSchedule'),
     sequelize = require('../../../app/components/db');
 
-const SHEETS = ['Курсы', 'Опции', 'Адреса центров', 'О компании'],
-    WEEK_DAYS = ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'];
+const SHEETS = ['Курсы', 'Опции', 'Адреса центров', 'О компании'];
 
 module.exports = class CourseParser {
     /**
@@ -109,7 +110,7 @@ module.exports = class CourseParser {
             Number(option.costPerHour).toFixed(0);
         option.totalCost = option.totalCost === '' ? null : option.totalCost;
         option.openSchedule = option.openSchedule == 'true';
-        option.schedule = this.formatSchedule_(option.schedule);
+        option.schedule = courseScheduleService.formatSchedule(option.schedule);
         option.startDate = option.startDate || null;
         option.lengthWeeks = option.lengthWeeks || null;
         if (option.departments) {
@@ -120,30 +121,5 @@ module.exports = class CourseParser {
             option.departments = [];
         }
         return option;
-    }
-
-    /**
-     * @param  {string} schedule
-     * @return {Array<Object>}
-     */
-    formatSchedule_(schedule) {
-        let scheduleDays = schedule && schedule.split(';');
-        return schedule ? scheduleDays.map(scheduleDay =>
-                this.formatDay_(scheduleDay.trim())
-            ) :
-            undefined;
-    }
-
-    /**
-     * @param  {string} day
-     * @return {Object}
-     */
-    formatDay_(day) {
-        let scheduleFields = day.split(',').map(field => field.trim());
-        return {
-            day: WEEK_DAYS.indexOf(scheduleFields[0].toLowerCase()),
-            startTime: scheduleFields[1] || null,
-            endTime: scheduleFields[2] || null
-        };
     }
 };

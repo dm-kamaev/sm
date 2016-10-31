@@ -4,7 +4,8 @@ const async = require('asyncawait/async'),
     await = require('asyncawait/await');
 
 const services = require('../../../../app/components/services').all,
-    courseOptionView = require('../views/courseOptionView');
+    courseOptionView = require('../views/courseOptionView'),
+    ScheduleFormatError = require('./errors/ScheduleFormatError');
 
 const logger = require('../../../../app/components/logger/logger')
     .getLogger('app');
@@ -112,11 +113,7 @@ controller.get = async(function(req, res) {
  * @apiParamExample {json} Request-example
  *     {
  *         "name": "Optima",
- *         "schedule": [{
- *             "startTime": "14:00:00",
- *             "endTime": "15:00:00",
- *             "day": 2
- *         }],
+ *         "schedule": "Вт, 16:30, 18:45; Чт, 17:30, 19:45",
  *         "departments": [1, 2, 3],
  *         "costPerHour": 2300,
  *         "online": false,
@@ -140,8 +137,13 @@ controller.create = async(function(req, res) {
             req.body
         ));
     } catch (error) {
-        logger.error(error.message);
-        result = error;
+        if (error instanceof ScheduleFormatError) {
+            res.status(error.status);
+            result = error.response;
+        } else {
+            logger.error(error.message);
+            result = error;
+        }
     } finally {
         res.header('Content-Type', 'application/json; charset=utf-8');
         res.end(JSON.stringify(result));
@@ -179,8 +181,13 @@ controller.update = async(function(req, res) {
     try {
         result = await(services.courseOption.update(req.params.id, req.body));
     } catch (error) {
-        logger.error(error);
-        result = error;
+        if (error instanceof ScheduleFormatError) {
+            res.status(error.status);
+            result = error.response;
+        } else {
+            logger.error(error.message);
+            result = error;
+        }
     } finally {
         res.header('Content-Type', 'application/json; charset=utf-8');
         res.end(JSON.stringify(result));

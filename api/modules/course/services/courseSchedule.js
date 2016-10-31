@@ -1,29 +1,67 @@
-var async = require('asyncawait/async'),
+'use strict';
+
+const async = require('asyncawait/async'),
     await = require('asyncawait/await');
 
-var models = require('../../../../app/components/models').all;
+const models = require('../../../../app/components/models').all,
+    ScheduleFormatError = require('../controllers/errors/ScheduleFormatError');
 
-var service = {
+let service = {
     name: 'courseSchedule'
 };
 
+const WEEK_DAYS = ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'];
+
 /**
  * @param {number} courseOptionId
- * @param Array<{
+ * @param (Array<{
  *     startTime: ?string,
  *     endTime: ?string,
  *     day: number
- * }> data
+ * }>|string) data
  * @return {Array<CourseSchedule>}
  */
 service.bulkCreate = async(function(courseOptionId, data) {
+    let schedule;
+    try {
+        schedule = typeof data == 'string' ?
+            service.formatSchedule(data) :
+            data;
+    } catch (error) {
+        throw new ScheduleFormatError(JSON.stringify(data));
+    }
     return await(models.CourseSchedule.bulkCreate(
-        data.map(item => {
+        schedule.map(item => {
             item.courseOptionId = courseOptionId;
             return item;
         })
     ));
 });
+
+/**
+ * @param  {string} schedule
+ * @return {Array<Object>}
+ */
+service.formatSchedule = function(schedule) {
+    let scheduleDays = schedule && schedule.split(';');
+    return schedule ? scheduleDays.map(scheduleDay =>
+            service.formatDay(scheduleDay.trim())
+        ) :
+        undefined;
+};
+
+/**
+ * @param  {string} day
+ * @return {Object}
+ */
+service.formatDay = function(day) {
+    let scheduleFields = day.split(',').map(field => field.trim());
+    return {
+        day: WEEK_DAYS.indexOf(scheduleFields[0].toLowerCase()),
+        startTime: scheduleFields[1] || null,
+        endTime: scheduleFields[2] || null
+    };
+};
 
 /**
  * @param {number} optionId
