@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "school-market-148109",
+  "private_key_id": "55aa2d283f38c7e999b74475a91855dccd9c477b",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDnKxo4TC8Xc8JD\nciBsJ6uYYhERgx1QW5u6df+sm2n5h6OlbAtCksIyjJ7P/vCJgEDVB7fA39t8zq9p\nPDMTMe42SGr+V3ERlKcHfhPQ9WRUqsbWi+0eiKjt5TKo+uCy8d6Vw2urZ1B8jfWz\nsZD7YeAvCtqSZAwTsvEdFWLpB/pI7l4b62lzUYUSqdZj9o0+yMZMjOxroM9Y/Gq5\nNU/cYEG+MpHS/iD+tNaxeIk9hr17cqnvTCM8RXobvWAqzCN+UJPy14IwgiCf/G7K\nVUcoZ/4fcf+2StYB08pAh3aaSbmmPDDl9QhGD0A6V5i1QpKeFqiRl5QOvciQRDks\nUjAocnX9AgMBAAECggEAC7igxLgAL0U8VWUlBbbhOYHHccbfJqLue37eLudWcUOS\nZaHb1E1SsXN13gAEPESXhPW2OH5hR6vHMyPNRyzh8jirzCes4QJTkcqvwImgw7ZB\nDMHdjQ3K2v0jG3RVDl27NobJH9DGQPqFuc3IFyb4UgpP2NpfzmPlW98ou74ez7HF\nvtV2aalfNvW8au+h9npAByyJXtkZ5TqCD87qY4GYGA55MFeXa9sTuXtm3IZGNEcs\nUgqAfCYatLeRUoeYiMUBleBd/7h3F87yLI5GIN+JAmcbGfubJt5iz1CRsRPbX3FA\naH+WTkK0Gmqk4UlAUWQkUU/2e5rTQ2ztRG+WoSzrgQKBgQD7hqi7NbDkYwiHUZ7j\n7NKrrYdgng93xxRtj72nVYfMaLxgrq2u3ODtoRafHyQGBHNZEdvsHX35v2IqpPeS\neQXthgSD/J5xsn3l2h3FwuaUxmYv1aZqA10BRW/Z9dZoYPAv4N+9g5hnyvZHfJIk\nvoGj3vsWOyqTdcNZb4zNI5xQYQKBgQDrR75PFpXaDe3u89THvfQP4U7/yzhhymvv\nHdYXvQFR2Im9rMRUl4Ez+s1Huf5bITlbZx7SYV9bKi7U6Jm0MwLSk886SUU6k/jf\nuPIKb+6B7ZFvfr+bLqYcl0w6mWRCnDnB3gZckTxYT22ymphsb+rcrfek6yALZ/1k\ncoRIsJc7HQKBgQCA7mProvgL+l/SzZn/B9RtwEPW2O7g3SGxj68N6Z/0vfNiM+g/\n7GU4KgzogBP9KabfD3KGNA/xR5NQfMOTR4osWThTV9j4OyCiBA6i4udDd/fFqWTm\njtbL4gYV2hiP5LD6OfE2uhATlExuFILtZuIZWCGpIacPc5wxaibouMpVwQKBgGon\nX30NgqT0ffK+/rT0RmbX0C3nAdRVYSdsvcjOFQdZfKQgjCBijv/l27LN/y4cqmVL\n/IMNPdnDCYg0Pg0oqtBZsjjpEBwi4ToHluUQpXrntiOo+0hH3tiths41oR/QntqS\nkyo2uRRbGfJof/cE8+GHeGFnWHjs/U3RwU+OpV0dAoGBAJOeYFKoHT41xPR4bBeb\nYZitJWJuCF4FgCNjGWkh9cKlVind1JNl3+Zb/hXNWEvVXABy6TYPtLNgdCXhfpNy\n0zpnLreGT7f5gPcIj+scMCsB0gtxTOFiXvS+BjMuEwlH5mGpiOLMrcCroMaDxH2e\ndJaUR/4dpcyU3bulGURHWEN3\n-----END PRIVATE KEY-----\n",
+  "client_email": "school-market-app@school-market-148109.iam.gserviceaccount.com",
+  "client_id": "101201044129796463642",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/school-market-app%40school-market-148109.iam.gserviceaccount.com"
+}
