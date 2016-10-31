@@ -230,7 +230,9 @@ class FilterPanel {
      * @protected
      */
     getHasCheckedFilters(filters) {
-        return filters.some(filter => filter.config.isShowed);
+        return filters.some(filter => {
+            return filter.data.options.some(option => option.isChecked);
+        });
     }
 
 
