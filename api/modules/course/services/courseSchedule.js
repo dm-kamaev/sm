@@ -55,9 +55,13 @@ service.formatSchedule = function(schedule) {
  * @return {Object}
  */
 service.formatDay = function(day) {
-    let scheduleFields = day.split(',').map(field => field.trim());
+    let scheduleFields = day.split(',').map(field => field.trim()),
+        weekday = WEEK_DAYS.indexOf(scheduleFields[0].toLowerCase());
+    if (weekday == -1) {
+        throw new Error(`${scheduleFields[0]} is not valid`);
+    }
     return {
-        day: WEEK_DAYS.indexOf(scheduleFields[0].toLowerCase()),
+        day: weekday,
         startTime: scheduleFields[1] || null,
         endTime: scheduleFields[2] || null
     };
