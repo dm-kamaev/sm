@@ -39,7 +39,7 @@ controller.search = async(function(req, res, next) {
                 services.courseCategory.getByAlias(categoryName)
             );
         if (!categoryInstance) {
-            throw new errors.SchoolNotFoundError();
+            throw new PageNotFoundError();
         } else {
             let authSocialLinks = services.auth.getAuthSocialUrl(),
                 user = req.user || {},
