@@ -247,6 +247,9 @@ service.findByAddressId = async(function(addressId) {
 service.getAll = async(function() {
     return await(models.Course.findAll({
         include: [{
+            model: models.CourseBrand,
+            as: 'courseBrand'
+        }, {
             model: models.CourseType,
             as: 'courseType',
             include: [{
