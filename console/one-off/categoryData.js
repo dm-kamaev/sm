@@ -11,16 +11,14 @@ const seoData = require('../../assets/categorySeoData.json');
 module.exports = async(function() {
     for (let categoryName in seoData) {
         let category = await(categoryModel.findOne({
-            where: {
-                name: categoryName
-            }
-        }));
+                where: {
+                    name: categoryName
+                }
+            })),
+            data = seoData[categoryName];
+        data.categoryId = category.id;
 
-        await(seoCourseListModel.update(seoData[categoryName], {
-            where: {
-                categoryId: category.id
-            }
-        }));
+        await(seoCourseListModel.create(data));
     }
 });
 
