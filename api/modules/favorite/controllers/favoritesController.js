@@ -93,16 +93,11 @@ exports.create = async(function(req, res) {
  * @apiGroup Favorite
  * @apiVersion 0.0.1
  *
+
+ * @apiParamExample {json} Request-Example:
  * {
  *     "entityId": 200,
  *     "entityType": "school"
- * }
- * @apiParamExample {json} Request-Example:
- * {
- *     "entity": {
- *         "id": 200,
- *         "type": "school"
- *     }
  * }
  *
  * @apiSuccessExample {json} Success-Response:

@@ -82,7 +82,9 @@ controller.search = async(function(req, res, next) {
                 mapPosition: data.mapPosition,
                 searchParams: searchParams,
                 filtersData: data.filtersData,
+                enabledFilters: categoryInstance.filters,
                 aliases: aliases.courses,
+                seoParams: data.seoParams,
                 currentCategory: categoryName,
                 categories: data.categories,
                 categoryAliases: aliases.categories

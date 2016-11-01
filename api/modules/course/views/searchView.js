@@ -138,7 +138,8 @@ searchView.render = function(data) {
         seo: {
             metaTitle: seoParams.tabTitle,
             metaDescription: seoParams.metaDescription,
-            title: seoParams.listTitle
+            title: seoParams.listTitle,
+            description: seoParams.text[0]
         },
         openGraph: {
             title: seoParams.openGraphTitle,

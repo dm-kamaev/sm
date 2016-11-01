@@ -34,7 +34,7 @@ let SeoCourseList = db.define('SeoCourseList', {
         type: Sequelize.STRING,
         field: 'list_title'
     },
-    text: Sequelize.ARRAY(Sequelize.STRING),
+    text: Sequelize.ARRAY(Sequelize.TEXT),
 }, {
     underscored: true,
     tableName: 'seo_course_list',
