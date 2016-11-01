@@ -82,7 +82,10 @@ controller.search = async(function(req, res, next) {
                 mapPosition: data.mapPosition,
                 searchParams: searchParams,
                 filtersData: data.filtersData,
-                aliases: aliases.courses
+                aliases: aliases.courses,
+                currentCategory: categoryName,
+                categories: data.categories,
+                categoryAliases: aliases.categories
             });
 
             let html = soy.render(
