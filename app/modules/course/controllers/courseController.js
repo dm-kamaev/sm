@@ -20,8 +20,9 @@ const config = require('../../../config').config;
 
 const ANALYTICS_ID = config.courses.analyticsId,
     YANDEX_METRIKA_ID = config.courses.yandexMetrikaId,
-    DOMAIN = config.url.protocol + '://' + config.url.host,
-    FB_CLIENT_ID = config.facebookClientId;
+    DOMAIN = config.courses.host,
+    FB_CLIENT_ID = config.facebookClientId,
+    CARROTQUEST_ID = config.carrotquestId;
 
 let controller = {};
 
@@ -77,6 +78,7 @@ controller.search = async(function(req, res, next) {
                         year: new Date().getFullYear(),
                         analyticsId: ANALYTICS_ID,
                         yandexMetrikaId: YANDEX_METRIKA_ID,
+                        carrotquestId: CARROTQUEST_ID,
                         csrf: req.csrfToken(),
                         domain: DOMAIN,
                         fbClientId: FB_CLIENT_ID,
@@ -157,6 +159,7 @@ controller.information = async(function(req, res, next) {
                                 year: new Date().getFullYear(),
                                 analyticsId: ANALYTICS_ID,
                                 yandexMetrikaId: YANDEX_METRIKA_ID,
+                                carrotquestId: CARROTQUEST_ID,
                                 csrf: req.csrfToken(),
                                 domain: DOMAIN,
                                 fbClientId: FB_CLIENT_ID

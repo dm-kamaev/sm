@@ -18,10 +18,10 @@ const yandexMetrikaId = config.schools.yandexMetrikaId;
 
 const MODIFIER = 'stendhal',
     FB_CLIENT_ID = config.facebookClientId,
-    DOMAIN = config.url.protocol + '://' + config.url.host;
+    CARROTQUEST_ID = config.carrotquestId;
 
-const async = require('asyncawait/async');
-const await = require('asyncawait/await');
+var async = require('asyncawait/async');
+var await = require('asyncawait/await');
 
 let controller = {};
 
@@ -78,6 +78,7 @@ controller.schoolNotFound = async(function(req, res) {
                 year: new Date().getFullYear(),
                 analyticsId: analyticsId,
                 yandexMetrikaId: yandexMetrikaId,
+                carrotquestId: CARROTQUEST_ID,
                 csrf: req.csrfToken()
             }
         }
@@ -115,9 +116,10 @@ controller.notFound = async(function(req, res, next, entityType, subdomain) {
                     year: new Date().getFullYear(),
                     analyticsId: config[subdomain].analyticsId,
                     yandexMetrikaId: config[subdomain].yandexMetrikaId,
+                    carrotquestId: CARROTQUEST_ID,
                     csrf: req.csrfToken(),
                     fbClientId: FB_CLIENT_ID,
-                    domain: DOMAIN
+                    domain: config[subdomain].host
                 }
             }
         });

@@ -96,7 +96,7 @@ goog.scope(function() {
      * @enum {string}
      */
     Subheader.Event = {
-        'SEARCH_SUBMIT': Search.Event.SUBMIT
+        'SEARCH_SUBMIT': goog.events.getUniqueId('search_submit')
     };
 
 
@@ -129,6 +129,7 @@ goog.scope(function() {
     /**
      * Add given item to favorites
      * @param {sm.bSchoolListItem.SchoolListItem.Params} favoriteItem
+     * @public
      */
     Subheader.prototype.addFavorite = function(favoriteItem) {
         this.favorite_.addItem(favoriteItem);
@@ -138,6 +139,7 @@ goog.scope(function() {
     /**
      * Remove item with given id from favorites
      * @param {number} itemId
+     * @public
      */
     Subheader.prototype.removeFavorite = function(itemId) {
         this.favorite_.removeItem(itemId);
@@ -145,6 +147,38 @@ goog.scope(function() {
 
 
     /**
+     * Set header mode
+     * @param {sm.bSmSubheader.SmSubheader.Mode} mode
+     * @return {boolean}
+     * @public
+     */
+    Subheader.prototype.setMode = function(mode) {
+        var res = (this.isCorrectMode_(mode) && !this.isCurrentMode_(mode));
+
+        if (res) {
+            this.mode_ = mode;
+            this.switchMode_(mode);
+        }
+
+        return res;
+    };
+
+
+    /**
+     * @return {{
+     *     text: ?string,
+     *     areaId: ?number,
+     *     metroId: ?number
+     * }}
+     * @public
+     */
+    Subheader.prototype.getSearchData = function() {
+        return this.search_.getData();
+    };
+
+
+    /**
+     * Init listeners for Minified search field
      * @private
      */
     Subheader.prototype.initMinifiedSearchListeners_ = function() {
@@ -173,6 +207,7 @@ goog.scope(function() {
 
 
     /**
+     * Init listeners for search field
      * @private
      */
     Subheader.prototype.initSearchListeners_ = function() {
@@ -200,36 +235,6 @@ goog.scope(function() {
 
         this.minifiedSearch_.reset();
         this.search_.reset();
-    };
-
-
-    /**
-     * Set header mode
-     * @param {sm.bSmSubheader.SmSubheader.Mode} mode
-     * @return {boolean}
-     */
-    Subheader.prototype.setMode = function(mode) {
-        var res = (this.isCorrectMode_(mode) && !this.isCurrentMode_(mode));
-
-        if (res) {
-            this.mode_ = mode;
-            this.switchMode_(mode);
-        }
-
-        return res;
-    };
-
-
-    /**
-     * @public
-     * @return {{
-     *     text: ?string,
-     *     areaId: ?number,
-     *     metroId: ?number
-     * }}
-     */
-    Subheader.prototype.getSearchData = function() {
-        return this.search_.getData();
     };
 
 

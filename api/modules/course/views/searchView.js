@@ -140,10 +140,12 @@ searchView.render = function(data) {
             title: 'Курсы профориентации'
         },
         openGraph: {
-            title: 'Профориентация на «Курсах Мела»',
-            description: 'Курсы профориентации в Москве и онлайн: цены,' +
-                ' расписание, бронирование.',
+            title: 'Выбор профессии и вуза',
+            description: 'Все полезные курсы профориентации&nbsp;&mdash; ' +
+                        'в&nbsp;одном месте',
             image: '/static/images/n-clobl/i-layout/cources_sharing.png',
+            relapTag: 'курсы мела',
+            relapImage: '/static/images/n-clobl/i-layout/cources_sharing.png',
             fbClientId: data.fbClientId,
         },
         subHeader: {

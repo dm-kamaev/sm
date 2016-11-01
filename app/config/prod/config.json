@@ -1,20 +1,20 @@
 {
     "port": 3000,
     "environment": "production",
-    "url": {
-        "protocol": "http",
-        "host": "schools.mel.fm"
-    },
+    "protocol": "http",
     "authApi": "http://mel.fm:49611",
     "userApi": "http://mel.fm:20348",
     "redirectUri": "http://mel.fm/authorize",
     "schools": {
         "analyticsId": "UA-34116537-10",
-        "yandexMetrikaId": 36890980
+        "yandexMetrikaId": 36890980,
+        "host": "schools.mel.fm"
     },
     "courses": {
         "analyticsId": "UA-34116537-19",
-        "yandexMetrikaId": 36890980
+        "yandexMetrikaId": 36890980,
+        "host": "courses.mel.fm"
     },
+    "carrotquestId": "6408-1ccff98844d996fc088fed318b4",
     "facebookClientId": 1463878833939061
 }

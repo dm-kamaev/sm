@@ -4,6 +4,7 @@ goog.require('cl.iControl.View');
 
 goog.require('cl.iUtils.Utils');
 goog.require('goog.dom.classes');
+goog.require('goog.dom.classlist');
 goog.require('sm.iAnimate.Animate');
 
 
@@ -19,6 +20,10 @@ goog.require('sm.iAnimate.Animate');
 sm.bSmSubheader.View = function(opt_params, opt_type, opt_modifier) {
     sm.bSmSubheader.View.base(this, 'constructor', opt_params,
         opt_type, opt_modifier);
+
+    if (goog.dom.classlist.contains(this.params.parentElem, 'l-search')) {
+        this.deleteHref();
+    }
 };
 goog.inherits(sm.bSmSubheader.View, cl.iControl.View);
 
@@ -38,7 +43,8 @@ goog.scope(function() {
         SEARCH_MODE: 'b-sm-subheader_mode_search',
         DEFAULT_MODE: 'b-sm-subheader_mode_default',
         ANIMATION_ON: 'b-sm-subheader_animation_on',
-        ANIMATION_OFF: 'b-sm-subheader_animation_off'
+        ANIMATION_OFF: 'b-sm-subheader_animation_off',
+        HEADER_LINK: 'b-sm-subheader__link'
     };
 
 
@@ -153,5 +159,14 @@ goog.scope(function() {
             sm.bSmLink.View.CssClass.ROOT,
             element
         );
+    };
+
+
+    /**
+     * Delete href
+     */
+    View.prototype.deleteHref = function() {
+        var link = this.getElementByClass(View.CssClass.HEADER_LINK);
+        link.removeAttribute('href');
     };
 });  // goog.scope
