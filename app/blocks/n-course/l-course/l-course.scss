@@ -125,18 +125,7 @@
 }
 
 .l-course__user-interaction {
-    padding: 23px 30px;
-}
-
-.l-course__cost {
-    margin-bottom: 22px;
-
-    font: 28px 'Proxima', Arial, sans-serif;
-    font-weight: 600;
-}
-
-.l-course__button {
-    background-color: #f7f7f1;
+    padding-bottom: 23px;
 }
 /** section data end **/
 
@@ -160,7 +149,6 @@
     max-width: 760px;
     width: 100%;
 }
-
 /** section options end **/
 
 
@@ -170,11 +158,9 @@
 
     box-sizing: border-box;
     width: 100%;
-    padding: 18px 30px;
 
     background-color: #f7f7f1;
 }
-
 /** section fixed end **/
 
 
@@ -254,11 +240,11 @@
     }
 
     .l-course__section_fixed {
+        display: block;
+
         position: fixed;
         z-index: 5;
         bottom: 0;
-
-        display: block;
     }
 
     .l-course__footer {

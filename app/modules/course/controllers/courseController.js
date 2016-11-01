@@ -143,6 +143,7 @@ controller.information = async(function(req, res, next) {
                     entityData: courseView.page(course),
                     map: courseView.pageMap(course),
                     favorites: favorites,
+                    priceLabelText: 'Гарантия лучшей цены',
                     actionButtonText: 'Хочу этот курс!'
                 });
 

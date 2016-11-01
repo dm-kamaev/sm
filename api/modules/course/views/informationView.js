@@ -11,6 +11,7 @@ const seoView = require('../../entity/views/seoView');
  *     entityData: Object,
  *     map: Object,
  *     favorites: Object,
+ *     priceLabelText: string,
  *     actionButtonText: string
  * }} data
  * @return {Object}
@@ -55,6 +56,7 @@ exports.render = function(data) {
         authSocialLinks: data.authSocialLinks,
         entityData: data.entityData,
         map: data.map,
+        priceLabelText: data.priceLabelText,
         actionButtonText: data.actionButtonText
     };
 };

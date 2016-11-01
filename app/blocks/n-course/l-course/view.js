@@ -52,8 +52,7 @@ goog.scope(function() {
      */
     View.CssClass = {
         ROOT: 'l-course',
-        DEPARTMENT_LIST: 'l-course__department-list',
-        ACTION_BUTTON: 'l-course__action-button'
+        DEPARTMENT_LIST: 'l-course__department-list'
     };
 
 
@@ -63,6 +62,14 @@ goog.scope(function() {
      */
     View.prototype.decorateInternal = function(element) {
         View.base(this, 'decorateInternal', element);
+    };
+
+
+    /**
+     * @override
+     */
+    View.prototype.enterDocument = function() {
+        View.base(this, 'enterDocument');
     };
 
 
@@ -85,8 +92,8 @@ goog.scope(function() {
                 map: this.getElementByClass(
                     sm.bSmMap.View.CssClass.ROOT
                 ),
-                actionButtons: this.getElementsByClass(
-                    View.CssClass.ACTION_BUTTON
+                userInteractions: this.getElementsByClass(
+                    sm.lCourse.bUserInteraction.View.CssClass.ROOT
                 ),
                 modalEnrollment: this.getElementByClass(
                     sm.gModal.ViewEnrollment.CssClass.ROOT

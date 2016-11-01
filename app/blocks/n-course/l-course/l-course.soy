@@ -32,6 +32,7 @@
  *         online: ?('only'|'available'|undefidned)
  *     },
  *     map: sm.bSmMap.Template.Params.Data,
+ *     priceLabelText: string,
  *     actionButtonText: string
  * }} sm.lCourse.Template.Data
  */
@@ -110,6 +111,7 @@
  *             cost: ?string
  *             generalOptions: sm.lCourse.bInformationBoard.Template.Params.Data,
  *         },
+ *         priceLabelText: string,
  *         actionButtonText: string
  *     }
  * }}
@@ -187,23 +189,20 @@
 
 
 /**
- * Section with fixed button
+ * Section with fixed 
  * @param params {{
  *     data: {
+ *         entityData: {
+ *             cost: ?string
+ *         },
+ *         priceLabelText: string,
  *         actionButtonText: string
  *     }
  * }}
  */
 {template .sectionFixed_}
     <div class="{call .rootClass/}__section {call .rootClass/}__section_fixed">
-        {call .actionButton_}
-            {param params: [
-                'data': $params.data,
-                'config': [
-                    'size': 's'
-                ]
-            ]/}
-        {/call}
+        {call .userInteraction_ data="all" /}
     </div>
 {/template}
 
@@ -253,6 +252,7 @@
  *             online: ?('only'|'available'|undefidned),
  *             cost: ?string
  *         },
+ *         priceLabelText: string,
  *         actionButtonText: string
  *     }
  * }}
@@ -387,24 +387,33 @@
  *         entityData: {
  *             cost: ?string
  *         },
+ *         priceLabelText: string,
  *         actionButtonText: string
  *     }
  * }}
  */
 {template .userInteraction_}
     <div class="{call .rootClass/}__user-interaction">
-        {call .cost_ data="all" /}
+        {let $cost kind="html"}
+            {if $params.data.entityData.cost}
+                От {$params.data.entityData.cost}
+            {else}
+                Цена по запросу
+            {/if}
+        {/let}
 
-        {call .actionButton_}
+        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
             {param params: [
-                'data': $params.data,
-                'config': [
-                    'size': 'xl'
+                'type': 'lCourse-userInteraction',
+                'renderParams': [
+                    'data': [
+                        'description': $cost,
+                        'labelText': $params.data.priceLabelText,
+                        'actionText': $params.data.actionButtonText
+                    ]
                 ]
             ]/}
         {/call}
-
-        // {call .feedbackLink_  data="all" /}
     </div>
 {/template}
 
@@ -701,67 +710,6 @@
                 'type': 'lCourse-informationBoard',
                 'renderParams': [
                     'data': $params.data.entityData.generalOptions
-                ]
-            ]/}
-        {/call}
-    </div>
-{/template}
-
-
-/**
- * Cost of course
- * @param params {{
- *     data: {
- *         entityData: {
- *             cost: ?string
- *         }
- *     }
- * }}
- */
-{template .cost_}
-    <div class="{call .rootClass/}__cost">
-        {if $params.data.entityData.cost}
-            От {$params.data.entityData.cost}
-        {else}
-            Цена по запросу
-        {/if}
-    </div>
-{/template}
-
-
-/**
- * Button template
- * @param params {{
- *     data: {
- *         actionButtonText: string
- *     },
- *     config: {
- *         size: string
- *     }
- * }}
- */
-{template .actionButton_}
-    {let $classes kind="html"}
-        {call .rootClass/}__button{sp}
-        {call .rootClass/}__button_action{sp}
-        {call .rootClass/}__button_action-{$params.config.size}
-    {/let}
-
-    {let $customClasses kind="html"}
-        {call .rootClass/}__action-button
-    {/let}
-
-    <div class="{$classes}">
-        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
-            {param params: [
-                'type': 'button',
-                'renderParams': [
-                    'data': [
-                        'content': $params.data.actionButtonText
-                    ],
-                    'config': [
-                        'customClasses': [$customClasses]
-                    ]
                 ]
             ]/}
         {/call}
