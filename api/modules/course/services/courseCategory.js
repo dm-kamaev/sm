@@ -10,11 +10,34 @@ const services = require('../../../../app/components/services').all,
 
 const entityType = require('../../entity/enums/entityType');
 
+const CATEGORY = 'course_category';
+
 let service = {
     name: 'courseCategory'
 };
 
-const CATEGORY = 'course_category';
+/**
+ * Get one category by their id
+ * @param {number} categoryId
+ * @return {models.CourseCategory}
+ */
+service.getOne = async(function(categoryId) {
+    return models.CourseCategory.findOne({
+        where: {
+            id: categoryId
+        }
+    });
+});
+
+/**
+ * Delete alias for given course category
+ * @param {models.CourseCategory} courseCategory
+ */
+service.deleteAlias = async(function(courseCategory) {
+    await(services.page.delete(
+        courseCategory.id, entityType.COURSE_CATEGORY
+    ));
+});
 
 /**
  * @param  {string} name
@@ -54,6 +77,28 @@ service.getAll = async(function() {
             type: sequelize.QueryTypes.SELECT
         }
     ));
+});
+
+/**
+ * Get category by alias
+ * @param {string} alias
+ * @return {models.CourseCategory}
+ */
+service.getByAlias = async(function(alias) {
+    let page = await(services.page.getByAlias(
+            alias, entityType.COURSE_CATEGORY
+        )),
+        category = null;
+
+    if (page) {
+        category = await(service.getOne(page.entityId));
+
+        if (!category.isActive) {
+            category = null;
+        }
+    }
+
+    return category;
 });
 
 /**
@@ -114,6 +159,13 @@ service.deleteAlias = async(function(courseCategory) {
     await(services.page.delete(
         courseCategory.id, entityType.COURSE_CATEGORY
     ));
+});
+
+/**
+ * @return {Array<Page>}
+ */
+service.getAliases = async(function() {
+    return await(services.page.getAllAliases(entityType.COURSE_CATEGORY));
 });
 
 module.exports = service;

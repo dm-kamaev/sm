@@ -34,6 +34,7 @@ class CourseActualizer {
     actualize() {
         this.actualizeAge_();
         this.actualizeType_();
+        this.actualizeCategory_();
         this.actualizeCost_();
         this.actualizeWeekdays_();
         this.actualizeTime_();
@@ -56,6 +57,15 @@ class CourseActualizer {
     actualizeType_() {
         var type = this.getType_(this.course_);
         this.actualizeData_(type, searchType.TYPE);
+    }
+
+    /**
+     * Update category data in search table
+     * @private
+     */
+    actualizeCategory_() {
+        let category = this.getCategory_(this.course_);
+        this.actualizeData_(category, searchType.CATEGORY);
     }
 
     /**
@@ -156,12 +166,27 @@ class CourseActualizer {
     }
 
     /**
+     * Return course type
      * @private
      * @param {Object} course
      * @return {Array<number>}
      */
     getType_(course) {
-        return [course.type];
+        return course.type ?
+            [course.type] :
+            null;
+    }
+
+    /**
+     * Return course category
+     * @param {models.Course} course
+     * @return {Array<number>}
+     * @private
+     */
+    getCategory_(course) {
+        return course.courseType.categoryId ?
+            [course.courseType.categoryId] :
+            null;
     }
 
     /**

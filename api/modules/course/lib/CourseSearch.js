@@ -71,6 +71,16 @@ class CourseSearchQuery extends SearchQuery {
     }
 
     /**
+     * @param {Array<number>} category
+     * @return {Object}
+     */
+    setCategory(category) {
+        this.addCourseSearchData_(category, searchType.CATEGORY);
+
+        return this;
+    }
+
+    /**
      * @param {Array<number>} cost
      * @return {Object}
      */

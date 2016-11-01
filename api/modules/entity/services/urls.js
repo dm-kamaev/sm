@@ -161,7 +161,7 @@ service.generateCourseCategoryAlias = async(function(courseCategory) {
 });
 
 /**
- * Reolace course category alias by deleting old one and creating new one
+ * Replace course category alias by deleting old one and creating new one
  * @param {models.CourseCategory} courseCategory
  */
 service.replaceCourseCategoryAlias = async(function(courseCategory) {
@@ -169,6 +169,10 @@ service.replaceCourseCategoryAlias = async(function(courseCategory) {
     await(service.generateCourseCategoryAlias(courseCategory));
 });
 
+/**
+ * Replace course alias by deleting old one and creating new one
+ * @param {models.Course}
+ */
 service.replaceCourseAlias = async(function(course) {
     await(services.page.delete(course.id, entityTypes.COURSE));
     await(service.generateCourseAlias(course));

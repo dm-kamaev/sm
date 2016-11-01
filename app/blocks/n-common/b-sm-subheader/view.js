@@ -54,10 +54,11 @@ goog.scope(function() {
     View.prototype.decorateInternal = function(element) {
         View.base(this, 'decorateInternal', element);
 
-        this.initSearch_(element);
-        this.initAuthorizationLink_(element);
-        this.initFavorite_(element);
-        this.initLinks_(element);
+        this.initSearch_();
+        this.initAuthorizationLink_();
+        this.initFavorite_();
+        this.initLinks_();
+        this.initListLinks_();
         this.detectAnimationSupportion_();
     };
 
@@ -107,57 +108,59 @@ goog.scope(function() {
 
     /**
      * Find search dom elements
-     * @param {Element} element
      * @private
      */
-    View.prototype.initSearch_ = function(element) {
+    View.prototype.initSearch_ = function() {
         this.dom.minifiedSearch = this.getElementByClass(
-            View.CssClass.MINIFIED_SEARCH,
-            element
+            View.CssClass.MINIFIED_SEARCH
         );
 
         this.dom.search = this.getElementByClass(
-            View.CssClass.SEARCH,
-            element
+            View.CssClass.SEARCH
         );
     };
 
 
     /**
      * Initializes dom elements
-     * @param {Element} element
      * @private
      */
-    View.prototype.initAuthorizationLink_ = function(element) {
+    View.prototype.initAuthorizationLink_ = function() {
         this.dom.authorizationLink = this.getElementByClass(
-            sm.bAuthorizationLink.View.CssClass.ROOT,
-            element
+            sm.bAuthorizationLink.View.CssClass.ROOT
         );
     };
 
 
     /**
      * Initializes dom elements
-     * @param {Element} element
      * @private
      */
-    View.prototype.initFavorite_ = function(element) {
+    View.prototype.initFavorite_ = function() {
         this.dom.favorite = this.getElementByClass(
-            sm.bSmFavorite.View.CssClass.ROOT,
-            element
+            sm.bSmFavorite.View.CssClass.ROOT
         );
     };
 
 
     /**
      * Initializes links (dom elements)
-     * @param {Element} element
      * @private
      */
-    View.prototype.initLinks_ = function(element) {
+    View.prototype.initLinks_ = function() {
         this.dom.links = this.getElementsByClass(
-            sm.bSmLink.View.CssClass.ROOT,
-            element
+            sm.bSmLink.View.CssClass.ROOT
+        );
+    };
+
+
+    /**
+     * Initializes list of links (dom elements)
+     * @private
+     */
+    View.prototype.initListLinks_ = function() {
+        this.dom.listLinks = this.getElementByClass(
+            sm.gDropdown.ViewListLinks.CssClass.ROOT
         );
     };
 

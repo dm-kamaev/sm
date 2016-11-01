@@ -49,6 +49,33 @@ class FilterPanel {
 
 
     /**
+     * Initialize filter panel with given data
+     * @param {{
+     *     enabledFilters: Array<string>,
+     *     filtersData: Array<Object>,
+     *     searchParams: Object<string, Array<string, number>>
+     * }} data
+     * @public
+     */
+    init(data) {
+        let enabledFilters = data.enabledFilters || this.defaultFilters;
+        let filtersData = data.filtersData || {};
+        let searchParams = data.searchParams || {};
+
+        enabledFilters.forEach((filterName) => {
+            let filterDataValues = filtersData[filterName];
+            let checkedValues = searchParams[filterName];
+
+            this.initFilter({
+                filterName: filterName,
+                dataValues: filterDataValues,
+                checkedValues: checkedValues
+            });
+        });
+    }
+
+
+    /**
      * Get filter panel params
      * @return {{
      *     data: {
@@ -221,6 +248,24 @@ class FilterPanel {
 
 
     /**
+     * Must be  overriden in heirs
+     * @return {Object<string, Function>}
+     */
+    get filterInitializers() {
+        return {};
+    }
+
+    /**
+     * Return array of default filter names
+     * Must be  overriden in heirs
+     * @return {Array<string>}
+     */
+    get defaultFilters() {
+        return [];
+    }
+
+
+    /**
      * Determines is expanded filter panel
      * @param {Array<{
      *     data: Object,
@@ -339,6 +384,30 @@ class FilterPanel {
             option.value = index;
             return option;
         });
+    }
+
+    /**
+     * Init filter
+     * @param {{
+     *     filterName: string,
+     *     dataValues: Array<Object>,
+     *     checkedValues: Array<(string|number)>
+     * }} data
+     * @protected
+     */
+    initFilter(data) {
+        let name = data.filterName,
+            dataValues = data.dataValues,
+            checkedValues = data.checkedValues,
+            initFunction = this.filterInitializers[name];
+
+        if (initFunction) {
+            if (dataValues) {
+                initFunction(dataValues, checkedValues);
+            } else {
+                initFunction(checkedValues);
+            }
+        }
     }
 }
 
