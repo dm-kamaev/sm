@@ -79,6 +79,8 @@ goog.require('sm.lCourse.bDepartment.Department');
 goog.require('sm.lCourse.bDepartment.View');
 goog.require('sm.lCourse.bOption.Option');
 goog.require('sm.lCourse.bOption.View');
+goog.require('sm.lCourse.bUserInteraction.UserInteraction');
+goog.require('sm.lCourse.bUserInteraction.View');
 goog.require('sm.lInformation.bFeedbackBoard.FeedbackBoard');
 goog.require('sm.lInformation.bFeedbackBoard.View');
 goog.require('sm.lInformation.bInformationBoard.InformationBoard');
@@ -330,9 +332,11 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('lCourse-department', {
             control: sm.lCourse.bDepartment.Department,
             view: sm.lCourse.bDepartment.View
+        })
+        .setControlListItem('lCourse-userInteraction', {
+            control: sm.lCourse.bUserInteraction.UserInteraction,
+            view: sm.lCourse.bUserInteraction.View
         });
-
-
 };
 goog.inherits(sm.iFactory.FactoryStendhal, cl.iFactory.Factory);
 goog.addSingletonGetter(sm.iFactory.FactoryStendhal);

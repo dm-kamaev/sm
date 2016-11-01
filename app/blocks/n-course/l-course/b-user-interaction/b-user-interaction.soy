@@ -1,0 +1,171 @@
+{namespace sm.lCourse.bUserInteraction.Template}
+
+
+/**
+ * @typedef {{
+ *     description: string,
+ *     labelText: string,
+ *     actionText: string
+ * }} sm.lCourse.bUserInteraction.Template.Params.Data
+ */
+
+
+ /**
+ * @typedef {{
+ *     stylizationModifier: string,
+ *     customClasses: ?Array<string>
+ * }} sm.lCourse.bUserInteraction.Template.Params.Config
+ */
+
+
+ /**
+ * Constructor
+ * @param params {{
+ *     data: sm.lCourse.bUserInteraction.Template.Params.Data,
+ *     config: sm.lCourse.bUserInteraction.Template.Params.Config
+ * }}
+ * @extends cl.iControl.Template
+ * @constructor
+ */
+{template .userInteraction}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * Body
+ * @param params {{
+ *     data: sm.lCourse.bUserInteraction.Template.Params.Data,
+ *     config: sm.lCourse.bUserInteraction.Template.Params.Config
+ * }}
+ * @override
+ */
+{template .body}
+    {call .label_ data="all" /}
+    {call .description_ data="all" /}
+    {call .button_ data="all" /}
+    {call .actionText_ data="all" /}
+{/template}
+
+
+/**
+ * Label with additional information
+ * @param params {{
+ *     data: {
+ *         labelText: string
+ *     }
+ * }}
+ */
+{template .label_}
+    {if $params.data.labelText}
+        <div class="{call .rootClass/}__label">
+            {call .labelIcon_ /}
+            {call .labelText_ data="all" /}
+        </div>
+    {/if}
+{/template}
+
+
+/**
+ * description
+ * @param params {{
+ *     data: {
+ *         description: string
+ *     }
+ * }}
+ */
+{template .description_}
+    <div class="{call .rootClass/}__description">
+        {$params.data.description}
+    </div>
+{/template}
+
+
+/**
+ * Action button template
+ * @param params {{
+ *     data: {
+ *         actionText: string
+ *     }
+ * }}
+ */
+{template .button_}
+    {let $customClasses kind="html"}
+        {call .rootClass/}__button-action
+    {/let}
+
+    <div class="{call .rootClass/}__button">
+        {call .renderChild}
+            {param params: [
+                'type': 'button',
+                'renderParams': [
+                    'data': [
+                        'content': $params.data.actionText
+                    ],
+                    'config': [
+                        'customClasses': [$customClasses]
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Action text template
+ * @param params {{
+ *     data: {
+ *         actionText: string
+ *     }
+ * }}
+ */
+{template .actionText_}
+    <div class="{call .rootClass/}__action-text">
+        {$params.data.actionText}
+    </div>
+{/template}
+
+
+/**
+ * Icon of label
+ */
+{template .labelIcon_}
+    <div class="{call .rootClass/}__icon-label">
+        {call .renderChild}
+            {param params: [
+                'type': 'icon',
+                'renderParams': [
+                    'data': [
+                        'type': 'green_star'
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Text of label
+ * @param params {{
+ *     data: {
+ *         labelText: string
+ *     }
+ * }}
+ */
+{template .labelText_}
+    <div class="{call .rootClass/}__text-label">
+        {$params.data.labelText}
+    </div>
+{/template}
+
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-user-interaction
+{/template}
