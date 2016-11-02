@@ -62,16 +62,9 @@ service.getAll = async(function() {
         )
         .left_join('course_option', null, 'course.id = course_option.course_id')
         .left_join(
-            'course_option_course_department',
-            null,
-            'course_option.id = ' +
-                'course_option_course_department.course_option_id'
-        )
-        .left_join(
             'course_department',
             null,
-            'course_option_course_department.course_department_id = ' +
-                'course_department.id'
+            'course_brand.id = course_department.brand_id'
         )
         .group('course_brand.id')
         .toString();
