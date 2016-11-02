@@ -34,6 +34,7 @@ exports.render = function(data) {
         },
         subHeader: {
             logo: {
+                linkUrl: '/',
                 imgUrl: '/static/images/n-common/b-sm-subheader/course-logo.svg'
             },
             links: {
