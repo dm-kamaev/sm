@@ -309,16 +309,7 @@
                 'factory': $params.config.modifier ?: 'stendhal',
                 'type': 'smSubheader',
                 'renderParams': [
-                    'data': [
-                        'logo': [
-                            'imgUrl': $params.data.subHeader.logo.imgUrl,
-                            'linkUrl': '/'
-                        ],
-                        'links': $params.data.subHeader.links,
-                        'search': $params.data.subHeader.search,
-                        'user': $params.data.subHeader.user,
-                        'favorites': $params.data.subHeader.favorites
-                    ],
+                    'data': $params.data.subHeader,
                     'config': [
                         'bottomLine': true,
                         'entityType': $params.config.entityType
