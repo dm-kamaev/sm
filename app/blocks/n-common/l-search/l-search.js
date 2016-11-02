@@ -366,6 +366,8 @@ goog.scope(function() {
         this.resetSecondarySearchParams_();
         this.paramsManager_.setSortType(event['itemId']);
 
+
+        this.getView().hideResultsList();
         this.makeSearch_();
     };
 
@@ -422,7 +424,7 @@ goog.scope(function() {
 
         var sortVisibility = this.resultsList_.getCountItems() ? true : false;
         this.getView().setSortVisibility(sortVisibility);
-        this.getView().setLoaderVisibility(false);
+        // this.getView().setLoaderVisibility(false);
 
         this.sendAnalyticsItemsLoad_(0);
     };
@@ -475,6 +477,8 @@ goog.scope(function() {
         this.resetSecondarySearchParams_();
         this.clearMap_();
         this.updateParams_();
+
+        this.getView().hideResultsListWrap();
 
         this.makeSearch_();
         this.updateUrl_();
@@ -647,7 +651,7 @@ goog.scope(function() {
         if (!this.isAllSearchItemsLoaded_()) {
             this.paramsManager_.increasePage();
 
-            this.getView().setLoaderVisibility(true);
+            // this.getView().setLoaderVisibility(true);
             this.getView().setShowMoreButtonVisibility(false);
 
             this.searchService_.loadSearchData(

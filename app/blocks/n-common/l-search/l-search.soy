@@ -233,6 +233,7 @@
         <div class="{call .rootClass /}__section-inner">
             {call .leftMenu_ data="all" /}
             {call .results_ data="all" /}
+            {call .loader /}
         </div>
     </div>
 {/template}
@@ -343,7 +344,8 @@
  * }}
  */
 {template .results_}
-    <div class="{call .rootClass/}__list-results">
+    <div class="{call .rootClass/}__list-results
+        {sp}i-animate">
         {call .listHeader_}
             {param params: [
                 'data': $params.data,
@@ -376,6 +378,7 @@
 
     {let $customClasses kind="html"}
         {call .rootClass/}__results-list
+        {sp}i-animate
     {/let}
 
     <div class="{$classes}">
@@ -394,7 +397,7 @@
         {/call}
     </div>
 
-    {call .loader /}
+    // {call .loader /}
     {call .showMoreButton data="all" /}
 {/template}
 
@@ -403,7 +406,9 @@
  * Loader template
  */
 {template .loader kind="html"}
-    <div class="{call .rootClass /}__loader {cl.iUtils.Utils.CssClass.HIDDEN}">
+    <div class="{call .rootClass /}__loader
+        {sp}l-search__loader_hidden
+        {sp}i-animate">
         <div class="{call .rootClass /}__loader-image">
         </div>
         <div class="{call .rootClass /}__loader-text">

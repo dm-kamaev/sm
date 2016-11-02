@@ -32,8 +32,6 @@
         margin-top: 60px;
         padding-bottom: 60px;
 
-        // border-bottom: 1px solid #e5e5e5;
-
 
         &:after {
             display: block;
@@ -44,7 +42,6 @@
     }
 
     &.l-search__section_popular {
-        // height: 370px;
         margin-top: 45px;
     }
 }
@@ -67,7 +64,9 @@
 
 /** Content section **/
 .l-search__left-menu {
+    position: relative;
     float: left;
+    z-index: 2;
 
     width: 350px;
     margin-right: 60px;
@@ -217,6 +216,7 @@
     }
 
     .l-search__left-menu {
+        position: static;
         display: block;
         float: none;
 
@@ -289,3 +289,41 @@
         padding-bottom: 60px;
     }
 }
+
+
+/** animations **/
+.l-search_animation_on {
+    .l-search__results-list.l-search__results-list_hidden,
+    .l-search__list-results.l-search__list-results_hidden {
+        animation-duration: 200ms;
+        animation-name: fadeOut;
+    }
+
+    .l-search__results-list.l-search__results-list_showed,
+    .l-search__list-results.l-search__list-results_showed {
+        animation-duration: 200ms;
+        animation-name: fadeIn;
+    }
+
+    .l-search__loader.l-search__loader_showed {
+        display: block;
+
+        animation-duration: 1000ms;
+        animation-name: stay;
+    }
+
+    .l-search__loader.l-search__loader_hidden {
+        display: none;
+    }
+
+    @keyframes stay {
+        from {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+}
+/** animations end **/
