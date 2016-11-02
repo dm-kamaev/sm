@@ -118,8 +118,8 @@
  */
 {template .sectionData_}
     <div class="{call .rootClass/}__section {call .rootClass/}__section_data">
-        {call .rightData_ data="all" /}
-        {call .leftData_ data="all" /}
+        {call .stickyData_ data="all" /}
+        {call .detailData_ data="all" /}
     </div>
 {/template}
 
@@ -219,7 +219,7 @@
 
 
 /**
- * Data on the left
+ * Detail data - data on the left
  * @param params {{
  *     data: {
  *         entityData: {
@@ -236,8 +236,8 @@
  *     }
  * }}
  */
-{template .leftData_}
-    <div class="{call .rootClass/}__data {call .rootClass/}__data_left">
+{template .detailData_}
+    <div class="{call .rootClass/}__data {call .rootClass/}__data_detail">
         {call .header_ data="all" /}
         {call .generalOptions_ data="all" /}
     </div>
@@ -245,7 +245,7 @@
 
 
 /**
- * Data on the right
+ * Data on the right - section sticky
  * @param params {{
  *     data: {
  *         entityData: {
@@ -257,10 +257,12 @@
  *     }
  * }}
  */
-{template .rightData_}
-    <div class="{call .rootClass/}__data {call .rootClass/}__data_right">
-        {call .location_ data="all" /}
-        {call .userInteraction_ data="all" /}
+{template .stickyData_}
+    <div class="{call .rootClass/}__data {call .rootClass/}__wrap-data_sticky">
+        <div class="{call .rootClass/}__data {call .rootClass/}__data_sticky">
+            {call .location_ data="all" /}
+            {call .userInteraction_ data="all" /}
+        </div>
     </div>
 {/template}
 

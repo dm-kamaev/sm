@@ -1,9 +1,12 @@
 goog.provide('sm.lCourse.View');
 
+goog.require('goog.dom.classlist');
+goog.require('goog.style');
 goog.require('sm.bSmCollapsedText.View');
 goog.require('sm.bSmMap.View');
 goog.require('sm.bSmScore.ViewBrief');
 goog.require('sm.iLayout.ViewStendhal');
+goog.require('sm.iSmViewport.SmViewport');
 
 
 
@@ -22,9 +25,22 @@ goog.scope(function() {
     sm.lCourse.View = function(opt_params, opt_type, opt_modifier) {
         sm.lCourse.View.base(this, 'constructor', opt_params,
             opt_type, opt_modifier);
+
+        /**
+         * From coord and height, stickyData
+         * coordToY not save, because it is dynamic variable
+         * @type {{
+         *     height: number,
+         *     fromCoordY: number
+         * }}
+         * @private
+         */
+        this.stickyDataParams_ = {};
     };
     goog.inherits(sm.lCourse.View, sm.iLayout.ViewStendhal);
     var View = sm.lCourse.View;
+
+    var Viewport = sm.iSmViewport.SmViewport;
 
 
     /**
@@ -47,11 +63,26 @@ goog.scope(function() {
 
 
     /**
+     * State enum of sticky data
+     * @enum {string}
+     */
+    View.StateStickyData = {
+        DEFAULT: 'default',
+        ABSOLUTE: 'absolute',
+        FIXED: 'fixed'
+    };
+
+
+    /**
      * Css class enum
      * @enum {string}
      */
     View.CssClass = {
         ROOT: 'l-course',
+        SECTION_DATA: 'l-course__section_data',
+        STICKY_DATA: 'l-course__data_sticky',
+        DATA_FIXED: 'l-course__data_position_fixed',
+        DATA_ABSOLUTE: 'l-course__data_position_absolute',
         DEPARTMENT_LIST: 'l-course__department-list'
     };
 
@@ -62,6 +93,9 @@ goog.scope(function() {
      */
     View.prototype.decorateInternal = function(element) {
         View.base(this, 'decorateInternal', element);
+
+        this.initStickyDataParams_();
+        this.onScrollPage_();
     };
 
 
@@ -70,6 +104,101 @@ goog.scope(function() {
      */
     View.prototype.enterDocument = function() {
         View.base(this, 'enterDocument');
+
+        this.initDocumentListeners_();
+    };
+
+
+    /**
+     * Init listeners for document
+     * @private
+     */
+    View.prototype.initDocumentListeners_ = function() {
+        this.getHandler().listen(
+            goog.dom.getDocument(),
+            goog.events.EventType.SCROLL,
+            this.onScrollPage_
+        );
+    };
+
+
+    /**
+     * Scroll page listeners
+     * @private
+     */
+    View.prototype.onScrollPage_ = function() {
+        var viewportSize = Viewport.getInstance().getSize();
+
+        if (viewportSize >= Viewport.Size.M) {
+            this.changeStickyDataState_();
+        }
+    };
+
+
+    /**
+     * Change stickyData state (change css property - position)
+     * if it not not fit in coords range
+     * @private
+     */
+    View.prototype.changeStickyDataState_ = function() {
+        var stickyDataBottomCoordY = goog.dom.getPageScroll().y +
+            this.stickyDataParams_.height;
+
+        var toCoordY = this.stickyDataParams_.fromCoordY +
+            goog.style.getSize(this.dom.sectionData).height;
+
+        if (goog.dom.getPageScroll().y < this.stickyDataParams_.fromCoordY) {
+            this.setStickyDataState_(View.StateStickyData.DEFAULT);
+        }
+        else if (stickyDataBottomCoordY >= toCoordY) {
+            this.setStickyDataState_(View.StateStickyData.ABSOLUTE);
+        }
+        else {
+            this.setStickyDataState_(View.StateStickyData.FIXED);
+        }
+    };
+
+
+    /**
+     * Set css position of sticky data
+     * @param {string} state
+     * @private
+     */
+    View.prototype.setStickyDataState_ = function(state) {
+        if (state == View.StateStickyData.ABSOLUTE) {
+            goog.dom.classlist.addRemove(
+                this.dom.stickyData,
+                View.CssClass.DATA_FIXED,
+                View.CssClass.DATA_ABSOLUTE
+            );
+        }
+        else if (state == View.StateStickyData.FIXED) {
+            goog.dom.classlist.addRemove(
+                this.dom.stickyData,
+                View.CssClass.DATA_ABSOLUTE,
+                View.CssClass.DATA_FIXED
+            );
+        }
+        else if (state == View.StateStickyData.DEFAULT) {
+            goog.dom.classlist.removeAll(
+                this.dom.stickyData, [
+                    View.CssClass.DATA_ABSOLUTE,
+                    View.CssClass.DATA_FIXED
+                ]
+            );
+        }
+    };
+
+
+    /**
+     * Init params StickyData - coords range and height
+     * @private
+     */
+    View.prototype.initStickyDataParams_ = function() {
+        this.stickyDataParams_ = {
+            height: goog.style.getSize(this.dom.stickyData).height,
+            fromCoordY: goog.style.getPageOffsetTop(this.dom.sectionData)
+        };
     };
 
 
@@ -88,6 +217,12 @@ goog.scope(function() {
                 ),
                 fullDescription: this.getElementByClass(
                     sm.bSmCollapsedText.View.CssClass.ROOT
+                ),
+                sectionData: this.getElementByClass(
+                    View.CssClass.SECTION_DATA
+                ),
+                stickyData: this.getElementByClass(
+                    View.CssClass.STICKY_DATA
                 ),
                 map: this.getElementByClass(
                     sm.bSmMap.View.CssClass.ROOT
