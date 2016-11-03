@@ -46,6 +46,10 @@ let Course = db.define('Course', {
     totalScore: {
         type: Sequelize.FLOAT,
         field: 'total_score'
+    },
+    imageUrl: {
+        type: Sequelize.STRING(511),
+        field: 'image_url'
     }
 }, {
     underscored: true,
