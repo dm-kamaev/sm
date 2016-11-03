@@ -85,7 +85,7 @@ goog.scope(function() {
     };
 
 
-    /**s
+    /**
      * Build Carrotquest
      * @param {string} name
      * @param {string|Object|Array} args
