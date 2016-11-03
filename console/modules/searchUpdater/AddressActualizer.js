@@ -109,7 +109,7 @@ class AddressActualizer {
                 searchType,
                 values
             );
-        } else if (values.length) {
+        } else if (values.length && entityIds) {
             entityIds.forEach(entityId => {
                 await(services.addressSearch.create({
                     entityId: entityId,
