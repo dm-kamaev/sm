@@ -58,7 +58,7 @@ controller.search = async(function(req, res, next) {
                     seoParams: services.seoCourseList.getByCategoryId(
                         categoryInstance.id
                     ),
-                    categories: services.courseCategory.getAll()
+                    categories: services.courseCategory.getAll({isActive: true})
                 }),
                 aliases = await({
                     courses: services.course.getAliases(data.courses),
