@@ -28,10 +28,12 @@ goog.scope(function() {
 
         /**
          * From coord and height, stickyData
-         * coordToY not save, because it is dynamic variable
+         * toCoordY and offsetBottom - dynamic variables
          * @type {{
          *     height: number,
-         *     fromCoordY: number
+         *     offsetBottom: ?number,
+         *     fromCoordY: number,
+         *     toCoordY: ?number
          * }}
          * @private
          */
@@ -95,7 +97,7 @@ goog.scope(function() {
         View.base(this, 'decorateInternal', element);
 
         this.initStickyDataParams_();
-        this.onScrollPage_();
+        this.initStickyDataState_();
     };
 
 
@@ -127,35 +129,66 @@ goog.scope(function() {
      * @private
      */
     View.prototype.onScrollPage_ = function() {
+        this.initStickyDataState_();
+    };
+
+
+    /**
+     * Init sticky data state
+     * @private
+     */
+    View.prototype.initStickyDataState_ = function() {
         var viewportSize = Viewport.getInstance().getSize();
 
         if (viewportSize >= Viewport.Size.M) {
-            this.changeStickyDataState_();
+            var state = this.getStickyDataNewState_();
+            this.setStickyDataState_(state);
         }
     };
 
 
     /**
-     * Change stickyData state (change css property - position)
-     * if it not not fit in coords range
+     * Get stickyData new state
+     * @return {string}
      * @private
      */
-    View.prototype.changeStickyDataState_ = function() {
-        var stickyDataBottomCoordY = goog.dom.getPageScroll().y +
-            this.stickyDataParams_.height;
+    View.prototype.getStickyDataNewState_ = function() {
+        var state,
+            scrollY = goog.dom.getPageScroll().y,
+            params = this.getStickyDataParams_();
 
-        var toCoordY = this.stickyDataParams_.fromCoordY +
+        if (scrollY > params.fromCoordY &&
+            params.offsetBottom < params.toCoordY) {
+
+            state = View.StateStickyData.FIXED;
+        } else if (scrollY <= params.fromCoordY) {
+            state = View.StateStickyData.DEFAULT;
+        }
+        else if (params.toCoordY <= params.offsetBottom) {
+            state = View.StateStickyData.ABSOLUTE;
+        }
+        return state;
+    };
+
+
+    /**
+     * Get stickyData params
+     * @return {{
+     *     height: number,
+     *     offsetBottom: number,
+     *     fromCoordY: number,
+     *     toCoordY: number
+     * }}
+     * @private
+     */
+    View.prototype.getStickyDataParams_ = function() {
+        var params = this.stickyDataParams_;
+
+        params.offsetBottom = goog.dom.getPageScroll().y + params.height;
+        params.toCoordY = params.fromCoordY +
             goog.style.getSize(this.dom.sectionData).height;
 
-        if (goog.dom.getPageScroll().y < this.stickyDataParams_.fromCoordY) {
-            this.setStickyDataState_(View.StateStickyData.DEFAULT);
-        }
-        else if (stickyDataBottomCoordY >= toCoordY) {
-            this.setStickyDataState_(View.StateStickyData.ABSOLUTE);
-        }
-        else {
-            this.setStickyDataState_(View.StateStickyData.FIXED);
-        }
+        return params;
     };
 
 
@@ -187,18 +220,6 @@ goog.scope(function() {
                 ]
             );
         }
-    };
-
-
-    /**
-     * Init params StickyData - coords range and height
-     * @private
-     */
-    View.prototype.initStickyDataParams_ = function() {
-        this.stickyDataParams_ = {
-            height: goog.style.getSize(this.dom.stickyData).height,
-            fromCoordY: goog.style.getPageOffsetTop(this.dom.sectionData)
-        };
     };
 
 
@@ -241,6 +262,24 @@ goog.scope(function() {
                 )
             }
         );
+    };
+
+
+    /**
+     * Init stickyData params
+     * offsetBottom and toCoordY not saved - because they are dinamic variables
+     * @private
+     */
+    View.prototype.initStickyDataParams_ = function() {
+        var marginStickyData = goog.style.getMarginBox(this.dom.stickyData);
+
+        this.stickyDataParams_ = {
+            height: goog.style.getSize(this.dom.stickyData).height +
+                marginStickyData.top + marginStickyData.bottom,
+            offsetBottom: '',
+            fromCoordY: goog.style.getPageOffsetTop(this.dom.sectionData),
+            toCoordY: ''
+        };
     };
 
 
