@@ -1,18 +1,20 @@
-.b-sm-item-list__item-wrap {
-    border-bottom: 1px solid #e5e5e5;
+.b-sm-item-list_line_show {
+    .b-sm-item-list__item-wrap {
+        border-bottom: 1px solid #e5e5e5;
 
-    &:last-child {
-        border-bottom: none;
+        &:last-child {
+            border-bottom: none;
+        }
     }
 }
 
 .b-sm-item-list_light-theme {
     .b-sm-item-list__item-wrap {
-        border-bottom: none;
+        padding-bottom: 10px;
     }
 }
 
-.b-sm-item-list_count-items_5 {
+.b-sm-item-list_line_show.b-sm-item-list_count-items_5 {
     .b-sm-item-list__item-wrap:nth-child(5n) {
         border-bottom: none;
     }

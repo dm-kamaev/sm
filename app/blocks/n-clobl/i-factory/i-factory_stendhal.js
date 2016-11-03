@@ -54,7 +54,9 @@ goog.require('sm.bSmStars.View');
 goog.require('sm.bSmSubheader.SmSubheader');
 goog.require('sm.bSmSubheader.View');
 goog.require('sm.gAuthSocial.ViewStendhal');
+goog.require('sm.gDropdown.DropdownListLinks');
 goog.require('sm.gDropdown.DropdownSelect');
+goog.require('sm.gDropdown.ViewListLinks');
 goog.require('sm.gDropdown.ViewSelect');
 goog.require('sm.gInput.DigitInput');
 goog.require('sm.gInput.DigitInputView');
@@ -63,7 +65,11 @@ goog.require('sm.gInput.InputStendhal');
 goog.require('sm.gInput.ViewPhone');
 goog.require('sm.gInput.ViewStendhal');
 goog.require('sm.gList.List.Select');
+goog.require('sm.gList.ListLinks');
+goog.require('sm.gList.ListStendhal');
+goog.require('sm.gList.ViewLinks');
 goog.require('sm.gList.ViewSelect');
+goog.require('sm.gList.ViewStendhal');
 goog.require('sm.gModal.ModalEnrollment');
 goog.require('sm.gModal.ModalFeedback');
 goog.require('sm.gModal.ModalStendhal');
@@ -208,6 +214,18 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('modal-success', {
             control: sm.gModal.ModalSuccess,
             view: sm.gModal.ViewSuccess
+        })
+        .setControlListItem('list', {
+            control: sm.gList.ListStendhal,
+            view: sm.gList.ViewStendhal
+        })
+        .setControlListItem('list-links', {
+            control: sm.gList.ListLinks,
+            view: sm.gList.ViewLinks
+        })
+        .setControlListItem('dropdown-list-links', {
+            control: sm.gDropdown.DropdownListLinks,
+            view: sm.gDropdown.ViewListLinks
         });
 
     /** Common blocks and their heirs **/

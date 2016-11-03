@@ -112,6 +112,7 @@ service.setSearchQueryParams = function(searchInstance, searchParams) {
         .setSearchString(searchParams.name)
         .setAge(searchParams.age)
         .setType(searchParams.type)
+        .setCategory(searchParams.categoryId)
         .setCost(searchParams.cost)
         .setWeekdays(searchParams.weekdays)
         .setTime(searchParams.time)

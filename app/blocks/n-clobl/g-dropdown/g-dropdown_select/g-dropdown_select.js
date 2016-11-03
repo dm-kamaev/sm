@@ -136,6 +136,8 @@ goog.scope(function() {
      */
     DropdownSelect.prototype.clear = function() {
         this.value_ = null;
+        this.listInstance_.deselectAll();
+
         this.getView().clear();
     };
 

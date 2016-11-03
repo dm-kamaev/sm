@@ -11,9 +11,9 @@ class SqlHelper {
      * @param {string} tableName
      */
     static actualizeSequence(tableName) {
-        var sqlString = 'SELECT setval(\'' + tableName +
-                '_id_seq\', (SELECT MAX(id) from ' +
-                tableName +'));';
+        let coalesce = `COALESCE((SELECT MAX(id) + 1 FROM ${tableName}), 1)`,
+            sqlString =
+                `SELECT setval('${tableName}_id_seq', ${coalesce}, FALSE);`;
         try {
             await(sequelize.query(
                 sqlString,

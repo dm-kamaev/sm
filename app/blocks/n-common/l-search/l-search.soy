@@ -3,7 +3,7 @@
 
 /**
  * @typedef {{
- *     openGraph: (sm.iLayout.TemplateStendhal.Params.Data.openGraph|undefined),
+ *     openGraph: (sm.gOpenGraph.TemplateStendhal.Params|undefined),
  *     seo: {
  *         metaTitle: string,
  *         metaDescription: (string|undefined),
@@ -386,7 +386,8 @@
                 'renderParams': [
                     'data': $params.data.entityList,
                     'config': [
-                        'customClasses': [$customClasses]
+                        'customClasses': [$customClasses],
+                        'showLine': true
                     ]
                 ]
             ] /}

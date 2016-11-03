@@ -15,8 +15,9 @@ const yandexMetrikaId = config.schools.yandexMetrikaId;
 
 const logger = require('../../../components/logger/logger').getLogger('app');
 
-const DOMAIN = config.url.protocol + '://' + config.url.host;
-const FB_CLIENT_ID = config.facebookClientId;
+const DOMAIN = config.schools.host;
+const FB_CLIENT_ID = config.facebookClientId,
+    CARROTQUEST_ID = config.carrotquestId;
 
 const async = require('asyncawait/async'),
     await = require('asyncawait/await'),
@@ -159,6 +160,7 @@ exports.list = async(function(req, res, next) {
                     year: new Date().getFullYear(),
                     analyticsId: analyticsId,
                     yandexMetrikaId: yandexMetrikaId,
+                    carrotquestId: CARROTQUEST_ID,
                     csrf: req.csrfToken(),
                     domain: DOMAIN,
                     fbClientId: FB_CLIENT_ID
@@ -272,6 +274,7 @@ exports.view = async(function(req, res, next) {
                                 year: new Date().getFullYear(),
                                 analyticsId: analyticsId,
                                 yandexMetrikaId: yandexMetrikaId,
+                                carrotquestId: CARROTQUEST_ID,
                                 csrf: req.csrfToken(),
                                 domain: DOMAIN,
                                 fbClientId: FB_CLIENT_ID
@@ -336,6 +339,7 @@ exports.home = async(function(req, res) {
                 year: new Date().getFullYear(),
                 analyticsId: analyticsId,
                 yandexMetrikaId: yandexMetrikaId,
+                carrotquestId: CARROTQUEST_ID,
                 csrf: req.csrfToken(),
                 domain: DOMAIN,
                 fbClientId: FB_CLIENT_ID
@@ -391,6 +395,7 @@ exports.catalog = async(function(req, res, next) {
                     year: new Date().getFullYear(),
                     analyticsId: analyticsId,
                     yandexMetrikaId: yandexMetrikaId,
+                    carrotquestId: CARROTQUEST_ID,
                     csrf: req.csrfToken(),
                     domain: DOMAIN,
                     fbClientId: FB_CLIENT_ID

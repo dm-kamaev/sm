@@ -32,12 +32,13 @@
  *         name: string,
  *         url: string
  *     }>,
- *     config: [
+ *     config: {
  *         analyticsId: ?string,
  *         yandexMetrikaId: ?number,
+ *         carrotquestId: string,
  *         domain: ?string,
  *         fbClientId: ?number
- *     ]
+ *     }
  * }
  */
 {template .base autoescape="strict" kind="html"}
@@ -83,6 +84,7 @@
                 'year':  $params.config?.year,
                 'analyticsId': $params.config?.analyticsId,
                 'yandexMetrikaId': $params.config?.yandexMetrikaId,
+                'carrotquestId': $params.config?.carrotquestId,
                 'csrf': $params.config?.csrf
             ]
         ] /}

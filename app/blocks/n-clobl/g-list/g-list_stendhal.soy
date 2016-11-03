@@ -1,0 +1,61 @@
+{namespace sm.gList.TemplateStendhal}
+
+
+/**
+ * @typedef {{
+ *     items: Array<{
+ *         label: ?string,
+ *         val: (string|number|undefined),
+ *         url: (string|undefined),
+ *         isSelected: (boolean|undefined),
+ *         isDisabled: (boolean|undefined)
+ *     }>,
+ *     selectedItemId: (number|undefined)
+ * }} sm.gList.TemplateStendhal.Params.Data
+ */
+
+
+/**
+ * @typedef {{
+ *     mode: ('selection'|'multiselection'|undefined),
+ *     maxSelection: (number|undefined)
+ * }} sm.gList.TemplateStendhal.Params.Config
+ */
+
+
+/**
+ * Constructor
+ * @param params {{
+ *     data: sm.gList.TemplateStendhal.Params.Data,
+ *     config: sm.gList.TemplateStendhal.Params.Config
+ * }}
+ * @extends cl.gList.Template
+ * @constructor
+ * @doc
+ */
+{template .list}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * @param params {{
+ *     data: sm.gList.TemplateStendhal.Params.Data,
+ *     config: sm.gList.TemplateStendhal.Params.Config
+ * }}
+ * @override
+ */
+{template .attributes kind="attributes"}
+    data-params="{call cl.iUtils.Utils.stringify}
+        {param json: quoteKeysIfJs([
+            'data': [
+                'items': $params.data?.items ?: [],
+                'selectedItemId': $params.data?.selectedItemId
+            ],
+            'config': [
+                'mode': $params.config?.mode,
+                'maxSelection': $params.config?.maxSelection
+            ]
+        ]) /}
+    {/call}"
+{/template}
