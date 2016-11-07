@@ -12,7 +12,8 @@
     }
 
     .g-dropdown__content {
-        width: 202px;
+        width: auto;
+        min-width: 202px;
         margin-top: 17px;
     }
 }
