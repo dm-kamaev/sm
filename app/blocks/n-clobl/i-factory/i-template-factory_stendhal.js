@@ -70,6 +70,7 @@ goog.require('sm.lSearch.bFilter.TemplateLabels');
 goog.require('sm.lSearch.bFilter.TemplateSwitch');
 goog.require('sm.lSearch.bFilterPanel.Template');
 goog.require('sm.lSearch.bLabel.Template');
+goog.require('sm.lSearch.bSearchResults.Template');
 goog.require('sm.lSearch.bSuggestFilter.Template');
 goog.require('sm.lSearchResult.bFilterSearch.Template');
 
@@ -356,6 +357,10 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'lSearch-suggestFilter',
             sm.lSearch.bSuggestFilter.Template.suggestFilter
+        )
+        .setTemplateListItem(
+            'lSearch-searchResults',
+            sm.lSearch.bSearchResults.Template.searchResults
         );
 
         /** l-course blocks */

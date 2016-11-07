@@ -107,6 +107,8 @@ goog.require('sm.lSearch.bFilterPanel.FilterPanel');
 goog.require('sm.lSearch.bFilterPanel.View');
 goog.require('sm.lSearch.bLabel.Label');
 goog.require('sm.lSearch.bLabel.View');
+goog.require('sm.lSearch.bSearchResults.SearchResults');
+goog.require('sm.lSearch.bSearchResults.View');
 goog.require('sm.lSearch.bSuggestFilter.SuggestFilter');
 goog.require('sm.lSearch.bSuggestFilter.View');
 goog.require('sm.lSearchResult.bFilterSearch.FilterSearch');
@@ -340,6 +342,10 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('lSearch-suggestFilter', {
             control: sm.lSearch.bSuggestFilter.SuggestFilter,
             view: sm.lSearch.bSuggestFilter.View
+        })
+        .setControlListItem('lSearch-searchResults', {
+            control: sm.lSearch.bSearchResults.SearchResults,
+            view: sm.lSearch.bSearchResults.View
         });
 
     /** l-course blocks */
