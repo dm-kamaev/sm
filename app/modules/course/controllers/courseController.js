@@ -158,9 +158,13 @@ controller.information = async(function(req, res, next) {
                 let authSocialLinks = services.auth.getAuthSocialUrl(),
                     user = req.user || {};
 
-                let favorites = await(services.favorite.getFavoriteEntities(
-                    user.id
-                ));
+                let data = await({
+                    favorites: services.favorite.getFavoriteEntities(user.id),
+                    categories: services.courseCategory.getAll({
+                        isActive: true
+                    }),
+                    categoryAliases: services.courseCategory.getAliases()
+                });
 
                 let templateData = informationView.render({
                     user: user,
@@ -168,7 +172,9 @@ controller.information = async(function(req, res, next) {
                     authSocialLinks: authSocialLinks,
                     entityData: courseView.page(course),
                     map: courseView.pageMap(course),
-                    favorites: favorites,
+                    favorites: data.favorites,
+                    categories: data.categories,
+                    categoryAliases: data.categoryAliases,
                     actionButtonText: 'Хочу этот курс!'
                 });
 

@@ -2,6 +2,7 @@ const userView = require('../../user/views/user');
 const favoriteView = require('../../favorite/views/favoriteView');
 const seoView = require('../../entity/views/seoView');
 
+const courseCategoryView = require('./courseCategoryView');
 
 /**
  * @param {{
@@ -11,6 +12,8 @@ const seoView = require('../../entity/views/seoView');
  *     entityData: Object,
  *     map: Object,
  *     favorites: Object,
+ *     categories: Array<Object>,
+ *     categoryAliases: Array<Object>,
  *     actionButtonText: string
  * }} data
  * @return {Object}
@@ -37,10 +40,14 @@ exports.render = function(data) {
                 linkUrl: '/',
                 imgUrl: '/static/images/n-common/b-sm-subheader/course-logo.svg'
             },
-            links: {
-                nameL: 'Все курсы, кружки и секции',
-                nameM: 'Все курсы',
-                url: '/proforientacija'
+            listLinks: {
+                opener: 'Все курсы',
+                content: {
+                    items: courseCategoryView.listLinks(
+                        data.categories,
+                        data.categoryAliases
+                    )
+                }
             },
             search: {
                 placeholder: 'Район, метро, название курса',
