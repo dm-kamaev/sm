@@ -10,7 +10,6 @@ goog.require('goog.object');
 goog.require('sm.bSearch.Search');
 goog.require('sm.bSmMap.SmMap');
 goog.require('sm.bSmSubheader.SmSubheader');
-goog.require('sm.gDropdown.DropdownSelect');
 goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.iLayout.LayoutStendhal');
 goog.require('sm.iSmSearchParamsManager.SmSearchParamsManager');
@@ -54,15 +53,6 @@ goog.scope(function() {
          */
         this.subheader = null;
 
-
-        /**
-         * Sort control
-         * @type {sm.gDropdown.DropdownSelect}
-         * @private
-         */
-        this.sort_ = null;
-
-
         /**
          * Search Instance
          * @type {sm.bSearch.Search}
@@ -81,18 +71,10 @@ goog.scope(function() {
 
         /**
          * List Instance
-         * @type {sm.bSmItemList.SmItemList}
+         * @type {sm.lSearch.bSearchResults.SearchResults}
          * @private
          */
-        this.resultsList_ = null;
-
-
-        /**
-         * Show more button instance
-         * @type {cl.gButton.Button}
-         * @private
-         */
-        this.showMoreButton_ = null;
+        this.searchResults_ = null;
 
 
         /**
@@ -151,8 +133,29 @@ goog.scope(function() {
 
 
     /**
+     * @override
+     * @public
+     */
+    Search.prototype.enterDocument = function() {
+        Search.base(this, 'enterDocument');
+
+        this.initSubheaderListeners_()
+            .initLeftMenuListeners_()
+            .initSearchServiceListeners_()
+            .initSearchResultsListeners_()
+            .initWindowListeners_()
+            .initMapListeners_();
+            // .initLoadMoreResultsListItemsListeners_();
+
+        this.sendAnalyticsPageview_();
+        this.sendAnalyticsItemsLoad_(1);
+    };
+
+
+    /**
      * @param {Element} element
      * @override
+     * @protected
      */
     Search.prototype.decorateInternal = function(element) {
         Search.base(this, 'decorateInternal', element);
@@ -161,28 +164,8 @@ goog.scope(function() {
             .initUrlUpdater_()
             .initParamsManager_()
             .initLeftMenuInstances_()
-            .initResultsListInstances_()
+            .initSearchResultsInstance_()
             .initMap_();
-    };
-
-
-    /**
-     * @override
-     * @protected
-     */
-    Search.prototype.enterDocument = function() {
-        Search.base(this, 'enterDocument');
-
-        this.initSubheaderListeners_()
-            .initLeftMenuListeners_()
-            .initSearchServiceListeners_()
-            .initResultsListListeners_()
-            .initWindowListeners_()
-            .initMapListeners_()
-            .initLoadMoreResultsListItemsListeners_();
-
-        this.sendAnalyticsPageview_();
-        this.sendAnalyticsItemsLoad_(1);
     };
 
 
@@ -239,20 +222,18 @@ goog.scope(function() {
      * @return {sm.lSearch.Search}
      * @private
      */
-    Search.prototype.initResultsListListeners_ = function() {
+    Search.prototype.initSearchResultsListeners_ = function() {
         this.getHandler().listen(
-            this.sort_,
-            sm.gDropdown.DropdownSelect.Event.ITEM_SELECT,
+            this.searchResults_,
+            sm.lSearch.bSearchResults.SearchResults.Event.LIST_ITEM_CLICK,
+            this.onListItemClick_
+        ).listen(
+            this.searchResults_,
+            sm.lSearch.bSearchResults.SearchResults.Event.SORT_TYPE_CHANGE,
             this.onSortReleased_
         );
 
-        this.getHandler().listen(
-            this.resultsList_,
-            sm.bSmItemList.SmItemList.Event.ITEM_CLICK,
-            this.onListItemClick_
-        );
-
-        this.detectShowMoreResultsList_();
+        // this.detectShowMoreResultsList_();
         return this;
     };
 
@@ -367,7 +348,7 @@ goog.scope(function() {
         this.paramsManager_.setSortType(event['itemId']);
 
 
-        this.getView().hideResultsList();
+        // this.getView().hideResultsList();
         this.makeSearch_();
     };
 
@@ -423,7 +404,7 @@ goog.scope(function() {
         this.detectShowMoreResultsList_();
 
         var sortVisibility = this.resultsList_.getCountItems() ? true : false;
-        this.getView().setSortVisibility(sortVisibility);
+        // this.getView().setSortVisibility(sortVisibility);
         // this.getView().setLoaderVisibility(false);
 
         this.sendAnalyticsItemsLoad_(0);
@@ -575,7 +556,7 @@ goog.scope(function() {
      */
     Search.prototype.updateResultsList_ = function(listItems, countResults) {
         if (this.paramsManager_.getPage() == 0) {
-            this.resultsList_.clear();
+            this.searchResults_.clearList();
 
             this.getView().updateListHeader(
                 countResults,
@@ -725,7 +706,7 @@ goog.scope(function() {
             nonInteraction: nonInteraction
         };
 
-        this.resultsList_.sendAnalyticsItemsImpression(params, interval);
+        this.searchResults_.sendAnalyticsItemsImpression(params, interval);
     };
 
 
@@ -796,20 +777,10 @@ goog.scope(function() {
      * @return {sm.lSearch.Search}
      * @private
      */
-    Search.prototype.initResultsListInstances_ = function() {
-        this.sort_ = this.decorateChild(
-            'dropdown-select',
-            this.getView().getDom().sort
-        );
-
-        this.resultsList_ = this.decorateChild(
-            'smItemList',
-            this.getView().getDom().resultsList
-        );
-
-        this.showMoreButton_ = this.decorateChild(
-            'button',
-            this.getView().getDom().showMoreButton
+    Search.prototype.initSearchResultsInstance_ = function() {
+        this.searchResults_ = this.decorateChild(
+            'lSearch-searchResults',
+            this.getView().getDom().searchResults
         );
 
         return this;

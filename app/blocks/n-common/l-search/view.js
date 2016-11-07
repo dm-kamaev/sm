@@ -45,12 +45,7 @@ goog.scope(function() {
         SECTION_MAP: 'l-search__section_map',
         SECTION_HIDDEN: 'l-search__section_hidden',
         SORT: 'l-search__sort',
-        RESULTS_LIST_HEADER: 'l-search__list-header',
-        RESULTS_LIST_WRAP: 'l-search__list-results',
-        RESULTS_LIST: 'l-search__results-list',
-        LOADER: 'l-search__loader',
-        SHOW_MORE_BUTTON: 'l-search__show-more-button',
-        SHOW_MORE_BUTTON_WRAP: 'l-search__show-more-button-wrap',
+        SEARCH_RESULTS: 'l-search__search-results',
         SEARCH: 'l-search__search-field',
         ANIMATION_ON: 'l-search_animation_on',
         ANIMATION_OFF: 'l-search_animation_off',
@@ -216,29 +211,14 @@ goog.scope(function() {
                 filterPanel: this.getElementByClass(
                     sm.lSearch.bFilterPanel.View.CssClass.ROOT
                 ),
-                resultsListHeaders: this.getElementsByClass(
-                    View.CssClass.RESULTS_LIST_HEADER
-                ),
-                resultsList: this.getElementByClass(
-                    View.CssClass.RESULTS_LIST
-                ),
-                resultsListWrap: this.getElementByClass(
-                    View.CssClass.RESULTS_LIST_WRAP
-                ),
                 sectionMap: this.getElementByClass(
                     View.CssClass.SECTION_MAP
                 ),
                 map: this.getElementByClass(
                     sm.bSmMap.View.CssClass.ROOT
                 ),
-                loader: this.getElementByClass(
-                    View.CssClass.LOADER
-                ),
-                showMoreButton: this.getElementByClass(
-                    View.CssClass.SHOW_MORE_BUTTON
-                ),
-                showMoreButtonWrap: this.getElementByClass(
-                    View.CssClass.SHOW_MORE_BUTTON_WRAP
+                searchResults: this.getElementByClass(
+                    View.CssClass.SEARCH_RESULTS
                 )
             }
         );
@@ -300,11 +280,6 @@ goog.scope(function() {
 
         goog.object.extend(params, {
             searchParams: rawParams['searchParams'],
-            declensionEntityType: {
-                nom: rawParams['declensionEntityType']['nom'],
-                gen: rawParams['declensionEntityType']['gen'],
-                plu: rawParams['declensionEntityType']['plu']
-            },
             countResults: rawParams['countResults']
         });
 

@@ -37,7 +37,7 @@
  *         name: string,
  *         value: (Array<(string|number)>)
  *     }>,
- *     sort: sm.gDropdown.TemplateSelect.Params.Data
+ *     sort: sm.gDropdown.TemplateSelect.Params.Data,
  *     entityList: sm.bSmItemList.Template.Params.Data,
  *     filterPanel: sm.lSearch.bFilterPanel.Template.Params,
  *     searchParams: {Array<{
@@ -159,15 +159,6 @@
  * }}
  */
 {template .sectionMap_ autoescape="strict" kind="html"}
-    {call .listHeader_}
-        {param params: [
-            'data': $params.data,
-            'config': [
-                'size': 's'
-            ]
-        ]/}
-    {/call}
-
     {let $classes kind="html"}
         {call .rootClass/}__section{sp}
         {call .rootClass/}__section_map
@@ -233,7 +224,6 @@
         <div class="{call .rootClass /}__section-inner">
             {call .leftMenu_ data="all" /}
             {call .results_ data="all" /}
-            {call .loader /}
         </div>
     </div>
 {/template}
@@ -321,45 +311,6 @@
     </div>
 {/template}
 
-
-/**
- * Left menu and list results
- * @param params {{
- *     data: {
- *         seo: {
- *             title: (string|undefined),
- *             description: (string|undefined)
- *         },
- *         search: {
- *             countResults: number,
- *             searchText: ?string,
- *             declensionEntityType: {
- *                 nom: string,
- *                 gen: string,
- *                 plu: string
- *             }
- *         },
- *         entityList: sm.bSmItemList.Template.Params.Data
- *     }
- * }}
- */
-{template .results_}
-    <div class="{call .rootClass/}__list-results
-        {sp}i-animate">
-        {call .listHeader_}
-            {param params: [
-                'data': $params.data,
-                'config': [
-                    'size': 'l'
-                ]
-            ]/}
-        {/call}
-        {call .sort_ data="all" /}
-        {call .listBody_ data="all" /}
-    </div>
-{/template}
-
-
 /**
  * Body for list results
  * @param params {
@@ -397,8 +348,7 @@
         {/call}
     </div>
 
-    // {call .loader /}
-    {call .showMoreButton data="all" /}
+    // {call .showMoreButton data="all" /}
 {/template}
 
 
@@ -421,345 +371,75 @@
 /**
  * Show more button template
  * @param params {{
+ *     data: {
+ *     },
  *     config: {
  *         modifier: string
  *     }
  * }}
  */
-{template .showMoreButton kind="html"}
-    {let $cssClasses kind="html"}
-        {call .rootClass /}__show-more-button-wrap
-        {sp}{cl.iUtils.Utils.CssClass.HIDDEN}
+{template .results_}
+    {let $customClasses kind="html"}
+        {call .rootClass /}__search-results
     {/let}
-
-    {let $buttonCustomClasses kind="html"}
-        {call .rootClass /}__show-more-button
-    {/let}
-
-    {let $buttonContent kind="html"}
-        Показать ещё
-    {/let}
-
-    <div class="{$cssClasses}">
+    <div class="{call .rootClass/}__search-results-wrap">
         {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
                 'factory': $params.config.modifier,
-                'type': 'button',
+                'type': 'lSearch-searchResults',
                 'renderParams': [
                     'data': [
-                        'content': $buttonContent
+                        'title': $params.data?.seo.title,
+                        'description': $params.data?.seo.description,
+                        'sort': $params.data.sort,
+                        'items': $params.data.entityList,
+                        'search': $params.data.search
                     ],
                     'config': [
-                        'theme': 'thin',
-                        'customClasses': [$buttonCustomClasses]
+                        'customClasses': [$customClasses]
                     ]
                 ]
-            ]/}
+            ] /}
         {/call}
     </div>
 {/template}
 
 
 /**
- * Header for list of results
+ * Popular entities
  * @param params {{
  *     data: {
- *         seo: {
- *             title: (string|undefined),
- *             description: (string|undefined)
- *         },
- *         search: {
- *             countResults: number,
- *             searchText: ?string,
- *             declensionEntityType: {
- *                 nom: string,
- *                 gen: string,
- *                 plu: string
- *             }
- *         }
- *     },
- *     config: {
- *         size: (string|undefined)
+ *         popularEntities: Array<{
+ *             id: number,
+ *             alias: ?string,
+ *             name: string,
+ *             description: ?string,
+ *             metro: ?Array<string>,
+ *             totalScore: ?number
+ *         }>
  *     }
  * }}
  */
-{template .listHeader_}
-    {let $classes kind="html"}
-        {call .rootClass/}__list-header
-
-        {if $params?.config?.size}
-            {sp}{call .rootClass/}__list-header_size_{$params?.config?.size}
-        {/if}
-    {/let}
-
-    <div class="{$classes}">
-        {call .listHeaderText}
-            {param params: [
-                'data': [
-                    'seo': $params.data?.seo,
-                    'searchText': $params.data?.search?.searchText,
-                    'countResults': $params.data?.search?.countResults,
-                    'declensionEntityType': $params.data?.search?.declensionEntityType
-                ]
-            ]/}
-        {/call}
-    </div>
-{/template}
-
-
-/**
- * Text of header for list of schools
- * @param params {{
- *     data: {
- *         seo: {
- *             title: (string|undefined),
- *             description: (string|undefined)
- *         },
- *         countResults: number,
- *         searchText: ?string,
- *         declensionEntityType: {
- *             nom: string,
- *             gen: string,
- *             plu: string
- *         }
- *     }
- * }}
- */
-{template .listHeaderText}
-    <div class="{call .rootClass/}__list-header-text">
-        {if $params.data?.seo and $params.data?.seo?.title}
-            {call .headerTextSeo_ data="all" /}
-
-            {if $params.data.seo.description}
-                {call .headerDescriptionSeo_ data="all" /}
+{template .sectionPopular_}
+    <div class="{call .rootClass/}__section{sp}
+                {call .rootClass/}__section_popular">
+        <div class="{call .rootClass /}__section-inner">
+            {if $params}
             {/if}
-        {else}
-            {call .generateHeaderText_ data="all" /}
-        {/if}
-    </div>
-{/template}
 
-
-/**
- * Sort control template
- * @param params {{
- *     data: {
- *         sort: sm.gDropdown.TemplateSelect.Params.Data
- *     }
- * }}
- */
-{template .sort_ kind="html"}
-    {let $customClasses kind="html"}
-        {call .rootClass /}__sort-control-wrap
-    {/let}
-
-    {let $wrapperClasses kind="html"}
-        {call .rootClass /}__sort
-
-        {if not $params.data.search?.countResults}
-            {sp}{cl.iUtils.Utils.CssClass.HIDDEN}
-        {/if}
-    {/let}
-
-    <div class="{$wrapperClasses}">
-        <div class="{call .rootClass /}__horizontal-line"></div>
-        <div class="{call .rootClass /}__sort-control">
-            {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
-                {param params: [
-                    'type': 'dropdown-select',
-                    'renderParams': [
-                        'data': $params.data.sort,
-                        'config': [
-                            'viewType': 'link',
-                            'iconSprite': 'small-opener-arrow',
-                            'theme': 'minimal',
-                            'customClasses': [$customClasses]
-                        ]
-                    ]
-                ]/}
-            {/call}
+            // {call sm.bPopularSchools.Template.base}
+            //     {param params: [
+            //         'popularSchools': $params.data.popularSchools,
+            //         'config': [
+            //             'popularSchool': [
+            //                 'customClasses': 'l-school__popular'
+            //             ],
+            //             'analyticsAction': 'school click'
+            //         ]
+            //     ]/}
+            // {/call}
         </div>
     </div>
-{/template}
-
-
-/**
- * Text of header for list results
- * @param params {{
- *     data: {
- *         seo: {
- *             title: (string|undefined),
- *             description: (string|undefined)
- *         }
- *     }
- * }}
- */
-{template .headerTextSeo_}
-    {let $classes kind="html"}
-        {call .rootClass/}__list-header-text{sp}
-        {call .rootClass/}__list-header-text_strong
-
-        {if $params.data.seo.description}
-            {sp}{call .rootClass/}__list-header-text_title
-        {/if}
-    {/let}
-
-    <h1 class="{$classes}">
-        {$params.data.seo.title}
-    </h1>
-{/template}
-
-
-/**
- * Description of header for list results
- * @param params {{
- *     data: {
- *         seo: {
- *             description: ?string
- *         }
- *     }
- * }}
- */
-{template .headerDescriptionSeo_}
-    <div class="{call .rootClass/}__list-header-text{sp}
-                {call .rootClass/}__list-header-text_description">
-        {$params.data.seo?.description}
-    </div>
-{/template}
-
-
-/**
- * Generates header text for results
- * @param params {{
- *     data: {
- *         searchText: ?string,
- *         countResults: number,
- *         declensionEntityType: {
- *             nom: string,
- *             gen: string,
- *             plu: string
- *         }
- *     }
- * }}
- */
-{template .generateHeaderText_}
-    {call .listHeaderTextFirstPart_ data="all" /}
-        мы{sp}
-    {call .listHeaderTextSecondPart_ data="all" /}
-{/template}
-
-
-/**
- * First part of text for list header
- * @param params {{
- *     data: {
- *         searchText: string
- *     }
- * }}
- */
-{template .listHeaderTextFirstPart_}
-    {if $params.data?.searchText and length($params.data?.searchText)}
-        {call .listHeaderSearchText_ data="all" /}
-    {else}
-        По вашему запросу{sp}
-    {/if}
-{/template}
-
-
-/**
- * Search text for list header
- * @param params {{
- *     data: {
- *         searchText: string
- *     }
- * }}
- */
-{template .listHeaderSearchText_}
-    По запросу{sp}
-
-    <span class="{call .rootClass/}__list-header-text{sp}
-                 {call .rootClass/}__list-header-text_strong">
-        «{$params.data.searchText}»
-    </span>{sp}
-{/template}
-
-
-/**
- * Second part of text for list header
- * @param params {{
- *     data: {
- *         countResults: number,
- *         declensionEntityType: {
- *             nom: string,
- *             gen: string,
- *             plu: string
- *         }
- *     }
- * }}
- * }}
- */
-{template .listHeaderTextSecondPart_}
-     <span class="{call .rootClass/}__list-header-text{sp}
-                 {call .rootClass/}__list-header-text_change">
-        {if $params.data.countResults == 0}
-            не нашли ничего.
-        {else}
-            {call .listHeaderCountResults_ data="all" /}
-        {/if}
-    </span>
-{/template}
-
-
-/**
- * Count results for list header
- * @param params {{
- *     data: {
- *         countResults: number,
- *         declensionEntityType: {
- *             nom: string,
- *             gen: string,
- *             plu: string
- *         }
- *     }
- * }}
- * }}
- */
-{template .listHeaderCountResults_}
-    нашли{sp}
-
-    <span class="{call .rootClass/}__list-header-text{sp}
-                {call .rootClass/}__list-header-text_strong{sp}
-                {call .rootClass/}__list-header-text_amount">
-        {$params.data.countResults}{sp}
-
-        {call .listHeaderEntityType_ data="all" /}
-    </span>
-{/template}
-
-
-/**
- * Entity type for list header
- * @param params {{
- *     data: {
- *         countResults: number,
- *         declensionEntityType: {
- *             nom: string,
- *             gen: string,
- *             plu: string
- *         }
- *     }
- * }}
- * }}
- */
-{template .listHeaderEntityType_}
-    {call cl.iUtils.Utils.declensionPrint}
-        {param params: [
-            'num': $params.data.countResults,
-            'nom': ' ' + $params.data.declensionEntityType.nom,
-            'gen': ' ' + $params.data.declensionEntityType.gen,
-            'plu': ' ' + $params.data.declensionEntityType.plu
-        ]/}
-    {/call}
 {/template}
 
 
@@ -814,45 +494,6 @@
         {/for}
     {/if}
 {/template}
-
-
-/**
- * Popular entities
- * @param params {{
- *     data: {
- *         popularEntities: Array<{
- *             id: number,
- *             alias: ?string,
- *             name: string,
- *             description: ?string,
- *             metro: ?Array<string>,
- *             totalScore: ?number
- *         }>
- *     }
- * }}
- */
-{template .sectionPopular_}
-    <div class="{call .rootClass/}__section{sp}
-                {call .rootClass/}__section_popular">
-        <div class="{call .rootClass /}__section-inner">
-            {if $params}
-            {/if}
-
-            // {call sm.bPopularSchools.Template.base}
-            //     {param params: [
-            //         'popularSchools': $params.data.popularSchools,
-            //         'config': [
-            //             'popularSchool': [
-            //                 'customClasses': 'l-school__popular'
-            //             ],
-            //             'analyticsAction': 'school click'
-            //         ]
-            //     ]/}
-            // {/call}
-        </div>
-    </div>
-{/template}
-
 
 /**
  * @param params {{
