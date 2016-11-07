@@ -364,8 +364,8 @@ goog.scope(function() {
             coordinates,
             scale,
             {
-                checkZoomRange: true,
-                duration: 400
+                'checkZoomRange': true,
+                'duration': 400
             }
         );
     };
@@ -405,9 +405,9 @@ goog.scope(function() {
                 this.ymaps_.setBounds(
                     bounds,
                     {
-                        duration: 400,
-                        checkZoomRange: true,
-                        zoomMargin: 35
+                        'duration': 400,
+                        'checkZoomRange': true,
+                        'zoomMargin': 35
                     }
                 ).then(this.checkZoom_.bind(this));
             }
@@ -920,10 +920,10 @@ goog.scope(function() {
         this.ymaps_.setZoom(Math.floor(this.ymaps_.getZoom()));
         this.ymaps_.controls.add(
             new ymaps.control.ZoomControl({
-                options: {
-                    position: {
-                        left: 10,
-                        top: 15
+                'options': {
+                    'position': {
+                        'left': 10,
+                        'top': 15
                     }
                 }
             }),
