@@ -1,0 +1,88 @@
+.b-search-results {
+
+}
+
+.b-search-results__list-header {
+    color: #000;
+
+    font: 600 22px/38px Proxima, arial, sans-serif;
+}
+
+.b-search-results__sort {
+    position: relative;
+
+    height: 13px;
+}
+
+.b-search-results__sort-control-wrap {
+    position: absolute;
+    right: 0;
+
+    padding-left: 18px;
+
+    background: #ffffff;
+}
+
+.b-search-results__horizontal-line {
+    width: 100%;
+    height: 1px;
+    margin: 10px 0 -10px;
+
+    background: #e5e5e5;
+}
+
+.b-search-results__list-header-text {
+    &.b-search-results__list-header-text_title {
+        margin-bottom: 15px;
+    }
+
+    &.b-search-results__list-header-text_description {
+        margin-bottom: 45px;
+
+        font: 16px 'PT Serif', serif;
+        line-height: 22px;
+    }
+
+    &.b-search-results__list-header-text_strong {
+        font-weight: 800;
+    }
+}
+
+.b-search-results__show-more-button-wrap {
+    width: 240px;
+
+    color: #000000;
+}
+
+
+.b-school-list__loader {
+    display: inline-block;
+
+    width: 100%;
+    margin: 30px 0 30px 0;
+}
+
+.b-search-results__loader-text {
+    display: inline-block;
+
+    width: 210px;
+    padding: 18px 0 18px 0;
+
+    text-align: center;
+    vertical-align: bottom;
+    text-transform: uppercase;
+
+    color: #000000;
+
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.b-search-results__loader-image {
+    display: inline-block;
+
+    width: 48px;
+    height: 48px;
+
+    background: url(/static/images/n-common/l-search/b-search-results/search-spinner.gif) no-repeat left;
+}

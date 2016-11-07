@@ -1,0 +1,408 @@
+{namespace sm.lSearch.bSearchResults.Template}
+
+/**
+ * @typedef {{
+ *     title: string,
+ *     description: string,
+ *     sort: sm.gDropdown.TemplateSelect.Params.Data,
+ *     items: sm.bSmItemList.Template.Params.Data,
+ *     search: {
+ *         countResults: number,
+ *         searchText: ?string,
+ *         declensionEntityType: {
+ *             nom: string,
+ *             gen: string,
+ *             plu: string
+ *         }
+ *     }
+ * }} sm.lSearch.bSearchResults.Template.Params.Data
+ */
+
+/**
+ * Template for SearchResults block
+ * @param params {{
+ *     data: sm.lSearch.bSearchResults.Template.Params.Data
+ * }}
+ * @constructor
+ * @extends cl.iControl.Template
+ */
+{template .searchResults}
+    {call .init data="all" /}
+{/template}
+
+/**
+ * @override
+ */
+{template .body}
+    {call .header_ data="all" /}
+    {call .sort_ data="all" /}
+    {call .list_ data="all" /}
+    {call .loader_ /}
+    {call .showMoreButton_ /}
+{/template}
+
+/**
+ * Text of header for list of schools
+ * @param params {{
+ *     data: {
+ *         title: (string|undefined),
+ *         description: (string|undefined)
+ *         countResults: number,
+ *         searchText: ?string,
+ *         declensionEntityType: {
+ *             nom: string,
+ *             gen: string,
+ *             plu: string
+ *         }
+ *     }
+ * }}
+ */
+{template .header_ kind="html"}
+    <div class="{call .rootClass/}__list-header">
+        {if $params.data.title}
+            {call .headerTextSeo_ data="all" /}
+
+            {if $params.data.description}
+                {call .headerDescriptionSeo_ data="all" /}
+            {/if}
+        {else}
+            {call .generateHeaderText_ data="all" /}
+        {/if}
+    </div>
+{/template}
+
+
+/**
+ * Text of header for list results
+ * @param params {{
+ *     data: {
+ *         title: (string|undefined),
+ *         description: (string|undefined)
+ *     }
+ * }}
+ */
+{template .headerTextSeo_}
+    {let $classes kind="html"}
+        {call .rootClass/}__list-header-text{sp}
+        {call .rootClass/}__list-header-text_strong
+
+        {if $params.data.description}
+            {sp}{call .rootClass/}__list-header-text_title
+        {/if}
+    {/let}
+
+    <h1 class="{$classes}">
+        {$params.data.title}
+    </h1>
+{/template}
+
+
+/**
+ * Description of header for list results
+ * @param params {{
+ *     data: {
+ *         description: ?string
+ *     }
+ * }}
+ */
+{template .headerDescriptionSeo_}
+    <div class="{call .rootClass/}__list-header-text{sp}
+                {call .rootClass/}__list-header-text_description">
+        {$params.data.description}
+    </div>
+{/template}
+
+
+/**
+ * Generates header text for results
+ * @param params {{
+ *     data: {
+ *         searchText: ?string,
+ *         countResults: number,
+ *         declensionEntityType: {
+ *             nom: string,
+ *             gen: string,
+ *             plu: string
+ *         }
+ *     }
+ * }}
+ */
+{template .generateHeaderText_}
+    {call .listHeaderTextFirstPart_ data="all" /}
+        мы{sp}
+    {call .listHeaderTextSecondPart_ data="all" /}
+{/template}
+
+
+/**
+ * First part of text for list header
+ * @param params {{
+ *     data:
+ *         search: {
+ *             searchText: string
+ *         }
+ *     }
+ * }}
+ */
+{template .listHeaderTextFirstPart_}
+    {if $params.data?.search.searchText and
+        length($params.data?.search.searchText)}
+        {call .listHeaderSearchText_ data="all" /}
+    {else}
+        По вашему запросу{sp}
+    {/if}
+{/template}
+
+
+/**
+ * Search text for list header
+ * @param params {{
+ *     data: {
+ *         search: {
+ *             searchText: string
+ *         }
+ *     }
+ * }}
+ */
+{template .listHeaderSearchText_}
+    По запросу{sp}
+
+    <span class="{call .rootClass/}__list-header-text{sp}
+                 {call .rootClass/}__list-header-text_strong">
+        «{$params.data?.search.searchText}»
+    </span>{sp}
+{/template}
+
+
+/**
+ * Second part of text for list header
+ * @param params {{
+ *     data: {
+ *         search: {
+ *             countResults: number,
+ *             declensionEntityType: {
+ *                 nom: string,
+ *                 gen: string,
+ *                 plu: string
+ *             }
+ *         }
+ *     }
+ * }}
+ */
+{template .listHeaderTextSecondPart_}
+     <span class="{call .rootClass/}__list-header-text{sp}
+                 {call .rootClass/}__list-header-text_change">
+        {if $params.data.search.countResults == 0}
+            не нашли ничего.
+        {else}
+            {call .listHeaderCountResults_ data="all" /}
+        {/if}
+    </span>
+{/template}
+
+
+/**
+ * Count results for list header
+ * @param params {{
+ *     data: {
+ *         search: {
+ *             countResults: number,
+ *             declensionEntityType: {
+ *                 nom: string,
+ *                 gen: string,
+ *                 plu: string
+ *             }
+ *         }
+ *     }
+ * }}
+ * }}
+ */
+{template .listHeaderCountResults_}
+    нашли{sp}
+
+    <span class="{call .rootClass/}__list-header-text{sp}
+                {call .rootClass/}__list-header-text_strong{sp}
+                {call .rootClass/}__list-header-text_amount">
+        {$params.data.search.countResults}{sp}
+
+        {call .listHeaderEntityType_ data="all" /}
+    </span>
+{/template}
+
+
+/**
+ * Entity type for list header
+ * @param params {{
+ *     data: {
+ *         countResults: number,
+ *         declensionEntityType: {
+ *             nom: string,
+ *             gen: string,
+ *             plu: string
+ *         }
+ *     }
+ * }}
+ * }}
+ */
+{template .listHeaderEntityType_}
+    {call cl.iUtils.Utils.declensionPrint}
+        {param params: [
+            'num': $params.data.countResults,
+            'nom': ' ' + $params.data.search.declensionEntityType.nom,
+            'gen': ' ' + $params.data.search.declensionEntityType.gen,
+            'plu': ' ' + $params.data.search.declensionEntityType.plu
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * Sort dropdown template
+ * @param params {{
+ *     data: {
+ *         search: {
+ *             countResults: number,
+ *         }
+ *         sort: sm.gDropdown.TemplateSelect.Params.Data
+ *     }
+ * }}
+ * @private
+ */
+{template .sort_ kind="html"}
+    {let $customClasses kind="html"}
+        {call .rootClass /}__sort-control
+    {/let}
+
+    <div class="{call .rootClass /}__sort">
+        <div class="{call .rootClass /}__horizontal-line"></div>
+        <div class="{call .rootClass /}__sort-control-wrap">
+            {call .renderChild}
+                {param params: [
+                    'type': 'dropdown-select',
+                    'renderParams': [
+                        'data': $params.data.sort,
+                        'config': [
+                            'viewType': 'link',
+                            'iconSprite': 'small-opener-arrow',
+                            'theme': 'minimal',
+                            'customClasses': [$customClasses]
+                        ]
+                    ]
+                ]/}
+            {/call}
+        </div>
+    </div>
+{/template}
+
+
+/**
+ * Item list template
+ * @param params {{
+ *     data: {
+ *         items: Array<sm.bSmItem.SmItem.Params.Data>
+ *     }
+ * }}
+ */
+{template .list_ kind="html"}
+    {let $customClasses kind="html"}
+        {call .rootClass /}__item-list
+    {/let}
+    {call .renderChild}
+        {param params: [
+           'type': 'smItemList',
+           'renderParams': [
+               'data': $params.data.items,
+               'config': [
+                   'showLine': true,
+                   'customClasses': [$customClasses]
+               ]
+           ]
+       ] /}
+    {/call}
+{/template}
+
+/**
+ * Loader template
+ */
+{template .loader_ kind="html"}
+    <div class="{call .rootClass /}__loader
+        {sp}l-search__loader_hidden
+        {sp}i-animate">
+        <div class="{call .rootClass /}__loader-image">
+        </div>
+        <div class="{call .rootClass /}__loader-text">
+            Загружаем список...
+        </div>
+    </div>
+{/template}
+
+
+/**
+ * Show more button template
+ * @private
+ */
+{template .showMoreButton_ kind="html"}
+    {let $cssClasses kind="html"}
+        {call .rootClass /}__show-more-button-wrap
+        {sp}{cl.iUtils.Utils.CssClass.HIDDEN}
+    {/let}
+
+    {let $buttonCustomClasses kind="html"}
+        {call .rootClass /}__show-more-button
+    {/let}
+
+    {let $buttonContent kind="html"}
+        Показать ещё
+    {/let}
+
+    <div class="{$cssClasses}">
+        {call .renderChild}
+            {param params: [
+                'type': 'button',
+                'renderParams': [
+                    'data': [
+                        'content': $buttonContent
+                    ],
+                    'config': [
+                        'theme': 'thin',
+                        'customClasses': [$buttonCustomClasses]
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+/**
+ * @param params {{
+ *     data: {
+ *         search: {
+ *              declensionEntityType
+ *         }
+ *     }
+ * }}
+ * @override
+ * @protected
+ */
+{template .attributes kind="attributes"}
+    data-params="{call cl.iUtils.Utils.stringify}
+        {param json: [
+            'declensionEntityType': $params.data.search.declensionEntityType
+        ] /}
+    {/call}"
+{/template}
+
+/**
+ * Additional classes
+ * @override
+ */
+{template .additionalClasses kind="html"}
+    i-animate
+{/template}
+
+/**
+ * @override
+ */
+{template .rootClass}
+    b-search-results
+{/template}
