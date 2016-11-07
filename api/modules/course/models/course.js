@@ -50,7 +50,8 @@ let Course = db.define('Course', {
     imageUrl: {
         type: Sequelize.STRING(511),
         field: 'image_url'
-    }
+    },
+    ctr: Sequelize.DOUBLE
 }, {
     underscored: true,
     tableName: 'course',
