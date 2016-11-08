@@ -96,6 +96,7 @@ controller.search = async(function(req, res, next) {
                         data: templateData,
                         config: {
                             entityType: entityType.COURSE,
+                            page: 'search',
                             modifier: 'stendhal',
                             staticVersion: config.lastBuildTimestamp,
                             year: new Date().getFullYear(),
@@ -184,6 +185,7 @@ controller.information = async(function(req, res, next) {
                             data: templateData,
                             config: {
                                 entityType: entityType.COURSE,
+                                page: entityType.COURSE,
                                 modifier: 'stendhal',
                                 staticVersion: config.lastBuildTimestamp,
                                 year: new Date().getFullYear(),

@@ -1,7 +1,9 @@
 @import "../i-media/i-media";
 
 @include media-xs {
-    .carrotquest-css-reset {
-        display: none !important;
+    .i-layout_page_course {
+        .carrotquest-css-reset {
+            display: none !important;
+        }
     }
 }
