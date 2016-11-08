@@ -65,9 +65,6 @@
     </target>
 
     <target name="schools.update-sitemap">
-        <exec executable="chmod" dir="${basedir}">
-            <arg line="644 ./public/*/sitemap.xml"/>
-        </exec>
         <exec executable="node" dir="${basedir}">
             <arg line="commander sitemap"/>
         </exec>

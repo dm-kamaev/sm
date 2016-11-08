@@ -134,10 +134,18 @@ class SitemapUpdater {
     writeSitemap_(sitemapObject) {
         if (!fs.existsSync(this.outputPath_)) {
             fs.open(this.outputPath_, "wx", function (err, fd) {
-                fs.close(fd);
+                if (err) {
+                    console.log(`Can't access ${this.outputPath_}: ${err}`);
+                } else {
+                    fs.close(fd);
+                }
             });
         }
-        fs.writeFileSync(this.outputPath_, sitemapObject.toString());
+        try {
+            fs.writeFileSync(this.outputPath_, sitemapObject.toString());
+        } catch (error) {
+            console.log(`Can't create sitemap.xml: ${sitemapObject}`);
+        }
     }
 
 
