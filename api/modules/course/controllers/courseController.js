@@ -316,7 +316,7 @@ controller.list = async(function(req, res) {
         let courses = await(services.course.getAll());
         result = courseView.renderList(courses);
     } catch (error) {
-        logger.error(error.message);
+        logger.error(error);
         result = error;
     } finally {
         res.header('Content-Type', 'application/json; charset=utf-8');
