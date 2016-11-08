@@ -246,6 +246,11 @@ service.findByAddressId = async(function(addressId) {
  */
 service.getAll = async(function() {
     return await(models.Course.findAll({
+        attributes: {
+            include: [
+                [sequelize.literal(true), 'isActive']
+            ]
+        },
         include: [{
             model: models.CourseBrand,
             as: 'courseBrand'
