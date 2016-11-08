@@ -3,8 +3,7 @@
 const path = require('path');
 const fs = require('fs');
 
-const async = require('asyncawait/async'),
-    await = require('asyncawait/await');
+const await = require('asyncawait/await');
 
 const sitemap = require('sitemap');
 
@@ -17,7 +16,8 @@ const courseView = require('../../../api/modules/course/views/courseView'),
     searchView = require('../../../api/modules/course/views/searchView'),
     seoView = require('../../../api/modules/school/views/seoView');
 
-const entityTypeEnum = require('../../../api/modules/entity/enums/entityType.js');
+const entityTypeEnum =
+    require('../../../api/modules/entity/enums/entityType.js');
 
 class SitemapUpdater {
     /**
@@ -25,7 +25,6 @@ class SitemapUpdater {
      * @param {string} entityType
      */
     constructor(entityType) {
-
         /**
          * Subdomain page
          * @type {string}
@@ -133,7 +132,7 @@ class SitemapUpdater {
      */
     writeSitemap_(sitemapObject) {
         if (!fs.existsSync(this.outputPath_)) {
-            fs.open(this.outputPath_, "wx", function (err, fd) {
+            fs.open(this.outputPath_, 'wx', function(err, fd) {
                 if (err) {
                     console.log(`Can't access ${this.outputPath_}: ${err}`);
                 } else {
