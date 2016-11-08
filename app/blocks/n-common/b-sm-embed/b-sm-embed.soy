@@ -1,0 +1,47 @@
+{namespace sm.bSmEmbed.Template}
+
+
+/**
+ * @typedef {{
+ *     data: {
+ *         videoId: string
+ *     }
+ * }} sm.bSmEmbed.Template.Params.Data
+ */
+
+
+/**
+ * Constructor
+ * @param params {{
+ *     data: sm.bSmEmbed.Template.Params.Data
+ * }}
+ * @extends cl.iControl.Template
+ * @constructor
+ */
+{template .embed}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * Body
+ * @param params {{
+ *     data: sm.bSmEmbed.Template.Params.Data
+ * }}
+ * @override
+ */
+{template .body}
+    <iframe class="{call .rootClass /}__video-content" type="text/html"
+      src="http://www.youtube.com/embed/{$params.data.videoId}"
+      frameborder="0">
+    </iframe>
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-sm-embed
+{/template}

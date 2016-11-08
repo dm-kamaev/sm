@@ -146,6 +146,23 @@
 .l-course__user-interaction {
     padding-bottom: 23px;
 }
+
+.l-course__video {
+    position: relative;
+    padding-bottom: 56.25%;
+    margin-bottom: 35px;
+    height: 0;
+    overflow: hidden;
+}
+
+.l-course__img-wrapper {
+    width: 100%;
+    margin-bottom: 35px;
+}
+
+.l-course__img {
+    width: 100%;
+}
 /** section data end **/
 
 
