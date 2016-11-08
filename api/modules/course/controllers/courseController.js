@@ -307,6 +307,7 @@ controller.enrollOnCourse = async(function(req, res) {
  *         "fullDescription": "course's full description",
  *         "about": "course's about",
  *         "learningOutcome": "course's learning outcome",
+ *         "isActive": true,
  *         "updatedAt": "2016-09-15T15:18:28.395Z"
  *     }]
  */
@@ -345,6 +346,7 @@ controller.list = async(function(req, res) {
  *         "fullDescription": "course's full description",
  *         "about": "course's about",
  *         "learningOutcome": "course's learning outcome",
+ *         "isActive": true,
  *         "updatedAt": "2016-09-15T15:18:28.395Z"
  *     }
  */

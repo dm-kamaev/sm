@@ -40,6 +40,7 @@ let controller = {};
  *         "startDate": "2016-10-14T21:00:00.000Z",
  *         "totalCost": "60000",
  *         "duration": "3",
+ *         "isActive": true,
  *         "updatedAt": "2016-09-15T15:18:28.395Z"
  *     }]
  */
