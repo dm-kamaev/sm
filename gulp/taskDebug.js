@@ -1,5 +1,7 @@
 const scriptsHelper = require('./ScriptsHelper.js');
 const minimist = require('minimist');
+const Path = require('./Path');
+
 
 var knownOptions = {
     string: 'layout',
@@ -23,7 +25,7 @@ module.exports = function(gulpHelper) {
             compilerFlags: {
                 debug: true
             },
-            dest: './public/shared/static'
+            dest: Path.SHARED_STATIC_DIR
         });
     };
 };
