@@ -48,8 +48,7 @@
     {/let}
 
     {let $openerContent kind="html"}
-        {call .openerText_ data="all" /}
-        {call .openerIcon_/}
+        {call .openerContent_ data="all" /}
     {/let}
 
     {call .renderChild}
@@ -67,6 +66,22 @@
             ]
         ]/}
     {/call}
+{/template}
+
+
+/**
+ * Content of opener
+ * @param params {{
+ *     data: {
+ *         opener: string
+ *     }
+ * }}
+ */
+{template .openerContent_}
+    <div class="{call .rootClass/}__opener-link-content">
+        {call .openerText_ data="all" /}
+        {call .openerIcon_/}
+    </div>
 {/template}
 
 

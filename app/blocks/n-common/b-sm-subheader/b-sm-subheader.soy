@@ -468,8 +468,10 @@
  */
 {template .linkSearch_}
     {let $content kind="html"}
-        {call .iconLinkSearch_ /}
-        {$params.data?.name ?: ''}
+        <div class="{call .rootClass/}__search-link-content">
+            {call .iconLinkSearch_ /}
+            {$params.data?.name ?: ''}
+        </div>
     {/let}
 
     <div class="{call .rootClass/}__search-link{sp}
