@@ -159,6 +159,7 @@ gulp.task('backendLint', function() {
         'api/**/*.js',
         'app/modules/**/*.js',
         '!app/modules/doc/**',
+        'gulp/*.js',
         './*.js'])
         .pipe(eslint({
             config: path.join(__dirname, 'node_modules/nodules/.eslintrc')
