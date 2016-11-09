@@ -5,6 +5,10 @@
         display: inline-block;
     }
 
+    .g-dropdown__opener-link-content {
+        padding: 10px 15px;
+    }
+
     .g-dropdown__opener-icon {
         display: inline-block;
 
@@ -26,6 +30,10 @@
 @include media-xs {
     .g-dropdown.g-dropdown_list-links {
         position: static;
+
+        .g-dropdown__opener-link-content {
+            padding-left: 0;
+        }
 
         .g-dropdown__content {
             position: absolute;
