@@ -18,7 +18,7 @@ module.exports = function() {
         .pipe(svgSprite({
             preview: false,
             selector: '%f',
-            common: 'g-icon',
+            common: 'g-icon_svg',
             cssFile: 'svg-sprite.scss',
             svgPath: '%f',
             svg: {

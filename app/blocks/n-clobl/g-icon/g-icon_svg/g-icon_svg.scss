@@ -1,0 +1,13 @@
+@import "../../../n-common/i-media/i-media";
+
+.g-icon_svg {
+    vertical-align: baseline;
+
+    &:before {
+        vertical-align: inherit;
+    }
+}
+
+.g-icon_svg.g-icon_img_metro {
+    font-size: 0.4px;
+}

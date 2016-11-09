@@ -69,9 +69,9 @@ gulp.task('styles', ['sprite', 'svgSprite'], function() {
     return gulpHelper.css.build({
         outputFiles: [{
             src: [
+                path.join(__dirname, 'build', '/**/*.scss'),
                 path.join(__dirname, BLOCKS_DIR, '/**/*.scss'),
                 path.join(__dirname, BLOCKS_DIR, '/**/*.css'),
-                path.join(__dirname, 'build', '/**/*.scss'),
                 path.join(__dirname, '/node_modules/css-reset/reset.css')
             ],
             fileName: 'styles.css'

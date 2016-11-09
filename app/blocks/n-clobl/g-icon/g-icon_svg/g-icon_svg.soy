@@ -1,22 +1,10 @@
-{namespace sm.gIcon.TemplateStendhal}
-
-
-/**
- * @typedef {{
- *     data: {
- *         type: string
- *     },
- *     config: {
- *         size: (string|undefined)
- *     }
- * }} cl.gIcon.TemplateStendhal.Params
- */
+{namespace sm.gIcon.TemplateSvg}
 
 
 /**
  * Icon template
  * @param params {cl.gIcon.TemplateStendhal.Params}
- * @extends cl.gIcon.Template
+ * @extends sm.gIcon.TemplateStendhal
  * @constructor
  * @doc
  */
@@ -31,6 +19,7 @@
  * @override
  */
 {template .additionalClasses}
+    {sp}{call .rootClass/}_svg
     {sp}{call .rootClass/}_img_{$params.data.type}
 
     {if $params?.config?.size}

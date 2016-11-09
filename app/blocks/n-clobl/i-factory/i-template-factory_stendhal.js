@@ -38,6 +38,7 @@ goog.require('sm.gDropdown.TemplateListLinks');
 goog.require('sm.gDropdown.TemplateSelect');
 goog.require('sm.gHint.TemplateStendhal');
 goog.require('sm.gIcon.TemplateStendhal');
+goog.require('sm.gIcon.TemplateSvg');
 goog.require('sm.gInput.DigitInputTemplate');
 goog.require('sm.gInput.TemplatePhone');
 goog.require('sm.gInput.TemplateStendhal');
@@ -188,10 +189,6 @@ sm.iFactory.TemplateFactoryStendhal = function() {
             sm.bFavoriteLink.Template.favoriteLink
         )
         .setTemplateListItem(
-            'icon',
-            sm.gIcon.TemplateStendhal.icon
-        )
-        .setTemplateListItem(
             'filter-search',
             sm.lSearchResult.bFilterSearch.Template.filterSearch
         )
@@ -202,6 +199,14 @@ sm.iFactory.TemplateFactoryStendhal = function() {
 
     /** Heirs of the clobl blocks */
     this.setTemplateListItem(
+            'icon',
+            sm.gIcon.TemplateStendhal.icon
+        )
+        .setTemplateListItem(
+            'icon-svg',
+            sm.gIcon.TemplateSvg.icon
+        )
+        .setTemplateListItem(
             'phone-input',
             sm.gInput.TemplatePhone.input
         )
