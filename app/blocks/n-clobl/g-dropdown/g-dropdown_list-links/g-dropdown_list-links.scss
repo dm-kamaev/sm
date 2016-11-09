@@ -9,6 +9,12 @@
         display: inline-block;
 
         margin-left: 10px;
+
+        opacity: 0.4;
+    }
+
+    .g-dropdown__opener:hover .g-dropdown__opener-icon {
+        opacity: 1;
     }
 
     .g-dropdown__content {
