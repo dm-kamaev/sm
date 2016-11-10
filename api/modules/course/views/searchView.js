@@ -137,9 +137,7 @@ searchView.render = function(data) {
         type: data.entityType,
         seo: {
             metaTitle: seoParams.tabTitle,
-            metaDescription: seoParams.metaDescription,
-            title: seoParams.listTitle,
-            description: seoParams.text && seoParams.text[0] || null
+            metaDescription: seoParams.metaDescription
         },
         openGraph: {
             title: seoParams.openGraphTitle,
@@ -183,30 +181,35 @@ searchView.render = function(data) {
             position: data.mapPosition
         }),
         search: {
-            countResults: data.countResults,
             searchText: data.searchParams.name,
             placeholder: 'Район, метро, название курса',
-            pageAlias: data.currentCategory,
+            pageAlias: data.currentCategory
+        },
+        resultsList: {
+            title: seoParams.listTitle,
+            description: seoParams.text && seoParams.text[0] || null,
+            countResults: data.countResults,
+            searchText: data.searchParams.name,
             declensionEntityType: {
                 nom: 'курс',
                 gen: 'курса',
                 plu: 'курсов'
+            },
+            sort: {
+                listItems: [{
+                    'label': 'по возрастанию цены',
+                    'text': 'возрастанию цены'
+                }, {
+                    'label': 'по убыванию цены',
+                    'text': 'убыванию цены'
+                }],
+                staticText: 'Сортировать по ',
+                defaultOpenerText: 'убыванию цены'
+            },
+            entityList: {
+                items: courses,
+                itemType: 'smItemEntity'
             }
-        },
-        sort: {
-            listItems: [{
-                'label': 'по возрастанию цены',
-                'text': 'возрастанию цены'
-            }, {
-                'label': 'по убыванию цены',
-                'text': 'убыванию цены'
-            }],
-            staticText: 'Сортировать по ',
-            defaultOpenerText: 'убыванию цены'
-        },
-        entityList: {
-            items: courses,
-            itemType: 'smItemEntity'
         },
         filterPanel: searchView.filterPanel({
             filtersData: data.filtersData,
