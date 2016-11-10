@@ -16,7 +16,6 @@
     vertical-align: baseline;
 }
 
-
 .g-icon_svg.g-icon_img_favorite.g-icon_size_l {
     font-size: 11.53px;
 }
@@ -39,4 +38,10 @@
 
 .g-icon_svg.g-icon_img_favorite_dark_red.g-icon_size_xs {
     font-size: 7.6px;
+}
+
+@include media-xs {
+    .g-icon_stendhal.g-icon_img_green_star {
+        font-size: 8px;
+    }
 }
