@@ -569,7 +569,7 @@ goog.scope(function() {
                 searchText: this.paramsManager_.getName()
             });
         } else {
-            this.searchResults_.addItems(listItems);
+            this.searchResults_.addPage(listItems);
         }
     };
 

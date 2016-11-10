@@ -123,6 +123,17 @@ goog.scope(function() {
 
 
     /**
+     * Add given items to bottom of list and hide loader
+     * @param {Array<sm.bSmItem.SmItem.RenderParams>} items
+     * @public
+     */
+    SearchResults.prototype.addPage = function(items) {
+        this.addItems(items);
+        this.setLoaderVisibility(false);
+    };
+
+
+    /**
      * Replaces items in results list
      * @param {Array<>} items
      * @public
