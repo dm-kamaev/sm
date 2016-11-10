@@ -308,7 +308,11 @@ view.suggest = function(data) {
 view.suggestList = function(courses) {
     return courses.map(course => ({
         id: course.id,
-        alias: this.generateAlias(course.alias, course.brandAlias),
+        alias: this.generateAlias(
+            course.alias,
+            course.brandAlias,
+            course.categoryAlias
+        ),
         name: course.name,
         score: course.score || [0, 0, 0, 0],
         totalScore: course.totalScore,
@@ -382,7 +386,11 @@ view.mapCourse = function(course) {
     return {
         id: course.id,
         content: course.name,
-        url: this.generateAlias(course.alias, course.brandAlias)
+        url: this.generateAlias(
+            course.alias,
+            course.brandAlias,
+            course.categoryAlias
+        )
     };
 };
 
@@ -394,7 +402,11 @@ view.mapCourse = function(course) {
 view.getListCourse = function(course) {
     return {
         id: course.id,
-        alias: this.generateAlias(course.alias, course.brandAlias),
+        alias: this.generateAlias(
+            course.alias,
+            course.brandAlias,
+            course.categoryAlias
+        ),
         type: entityType.COURSE,
         name: {light: course.name},
         description: course.description,
@@ -460,11 +472,11 @@ view.joinListCourse = function(existingCourse, newCourse) {
 /**
  * @param  {string} alias
  * @param  {string} brandAlias
+ * @param  {string} categoryAlias
  * @return {string}
  */
-view.generateAlias = function(alias, brandAlias) {
-    return 'proforientacija/' + brandAlias + '/' +
-        alias;
+view.generateAlias = function(alias, brandAlias, categoryAlias) {
+    return `${categoryAlias}/${brandAlias}/${alias}`;
 };
 
 
@@ -573,24 +585,85 @@ view.item = function(data) {
         score: course.totalScore,
         metro: addressView.nearestMetro(addresses),
         area: [addressView.getArea(addresses)[0]],
-        alias: this.generateAlias(data.alias.alias, data.brandAlias.alias),
+        alias: this.generateAlias(
+            data.alias.alias,
+            data.brandAlias.alias,
+            data.categoryAlias.alias
+        ),
         category: 'proforientacija'
     };
 };
 
-
 /**
- * @param  {Array<Object>} courses
- * @param  {Array<Object>} courseAliases
- * @param  {Array<Object>} brandAliases
+ * @typedef {{
+ *     entityId: number,
+ *     alias: string
+ * }} EntityAlias
+ * @param  {Array<Course>} courses
+ * @param  {{
+ *     course: Array<EntityAlias>,
+ *     brand: Array<EntityAlias>,
+ *     category: Array<EntityAlias>
+ * }} aliases
  * @return {Array<Object>}
  */
-view.joinAliases = function(courses, courseAliases, brandAliases) {
-    let result = pageView.joinAliases(courses, courseAliases);
-    return pageView.joinAliases(result, brandAliases, {
-        outputField: 'brandAlias',
-        inputId: 'brandId'
-    });
+view.joinAliases = function(courses, aliases) {
+    let aliasedCourses = pageView.joinAliases(courses, aliases.course),
+        brandAliasedCourses = pageView.joinAliases(
+            aliasedCourses,
+            aliases.brand, {
+                outputField: 'brandAlias',
+                inputId: 'brandId'
+            }
+        ),
+        categoryAliasedCourses = pageView.joinAliases(
+            brandAliasedCourses,
+            aliases.category, {
+                outputField: 'categoryAlias',
+                inputId: 'categoryId'
+            }
+        );
+
+    return categoryAliasedCourses;
+};
+
+/**
+ * @param  {Course} course
+ * @return {Object}
+ */
+view.render = function(course) {
+    let courseType = course.courseType || {
+        id: null,
+        name: null,
+        category: {
+            id: null,
+            name: null
+        }
+    };
+    return {
+        id: course.id,
+        name: course.name,
+        description: course.description,
+        brandId: course.courseBrand.id,
+        brandName: course.courseBrand.name,
+        categoryId: courseType.category.id,
+        categoryName: courseType.category.name,
+        type: courseType.id,
+        typeName: courseType.name,
+        fullDescription: course.fullDescription,
+        about: course.about,
+        learningOutcome: course.learningOutcome,
+        isActive: course.dataValues.isActive,
+        updatedAt: course['updated_at']
+    };
+};
+
+/**
+ * @param  {Array<Course>} courses
+ * @return {Array<Object>}
+ */
+view.renderList = function(courses) {
+    return courses.map(this.render);
 };
 
 module.exports = view;

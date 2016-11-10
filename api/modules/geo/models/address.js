@@ -50,9 +50,9 @@ var Address = db.define('Address', {
                 as: 'area',
                 foreignKey: 'area_id'
             });
-            Address.belongsTo(models.CourseDepartment, {
-                as: 'courseDepartment',
-                foreignKey: 'entity_id'
+            Address.hasMany(models.CourseDepartment, {
+                as: 'courseDepartments',
+                foreignKey: 'address_id'
             });
             Address.hasMany(models.AddressSearchData, {
                 as: 'searchData',

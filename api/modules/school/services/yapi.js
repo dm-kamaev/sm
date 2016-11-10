@@ -1,8 +1,11 @@
-var async = require('asyncawait/async');
-var await = require('asyncawait/await');
-var MultiGeocoder = require('multi-geocoder');
-var geocoder = new MultiGeocoder({coordorder: 'latlong', lang: 'ru-RU'});
-var https = require('https');
+'use strict';
+
+const async = require('asyncawait/async'),
+    await = require('asyncawait/await'),
+    MultiGeocoder = require('multi-geocoder'),
+    https = require('https');
+
+let geocoder = new MultiGeocoder({coordorder: 'latlong', lang: 'ru-RU'});
 
 exports.name = 'yapi';
 
@@ -48,20 +51,50 @@ exports.request = async(string => {
 /**
  * Get address coords
  * @param  {string} addressName
+ * @param  {boolean=} opt_house Coords for a building/house
  * @return {number[]} array of adress coords
  */
-exports.getCoords = async(function(addressName) {
-    var geoData = await(exports.request(addressName));
-    geoData.featureMember = geoData.featureMember.find(data => {
-        if (/^москва/ig.test(data.GeoObject.description)) {
-            return true;
-        }
-    });
-    var result = null;
+exports.getCoords = async(function(addressName, opt_house) {
+    let geoData = await(exports.request(addressName)),
+        result = null;
+
+    geoData.featureMember = geoData.featureMember.find(data =>
+        this.isCoordsCorrect(data.GeoObject, opt_house)
+    );
+
     if (geoData.featureMember) {
         result = geoData.featureMember.GeoObject.Point.pos
             .split(' ')
             .map(coord => Number(coord));
     }
+
+    if (!result) {
+        throw new Error(`Coordinates for "${addressName}" not found`);
+    }
+
     return result;
 });
+
+/**
+ * @param  {Object}  geoObject
+ * @param  {boolean=}  opt_house
+ * @return {boolean}
+ */
+exports.isCoordsCorrect = function(geoObject, opt_house) {
+    let isMoscow = /^москва/ig.test(geoObject.description),
+        isHouse = opt_house ?
+            this.isHouse(geoObject) :
+            true;
+    return isMoscow && isHouse;
+};
+
+/**
+ * @param  {Object}  geoObject
+ * @return {boolean}
+ */
+exports.isHouse = function(geoObject) {
+    let housePrecisions = ['exact', 'number'];
+    return Boolean(~housePrecisions.indexOf(
+        geoObject.metaDataProperty.GeocoderMetaData.precision
+    ));
+};

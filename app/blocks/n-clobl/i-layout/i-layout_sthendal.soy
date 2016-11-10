@@ -9,26 +9,8 @@
 
 /**
  * @typedef {{
- *     url: ?string,
- *     siteName: ?string,
- *     title: ?string,
- *     type: ?string,
- *     description: ?string,
- *     image: ?string,
- *     fbClientId: ?number,
- *     twitterCardType: ?string,
- *     twitterSiteName: ?string,
- *     imageWidth: ?string,
- *     imageHeight: ?string,
- *     relapTag: ?string
- * }} sm.iLayout.TemplateStendhal.Params.Data.openGraph
- */
-
-
-/**
- * @typedef {{
  *     type: string,
- *     openGraph: (sm.iLayout.TemplateStendhal.Params.Data.openGraph|undefined),
+ *     openGraph: (sm.gOpenGraph.TemplateStendhal.Params|undefined),
  *     seo: {
  *         metaTitle: string,
  *         metaDescription: (string|undefined)
@@ -45,9 +27,10 @@
  *     page: (string|undefined),
  *     year: (number|undefined),
  *     staticVersion: (string|undefined),
- *     analyticsId: (string|undefined),
- *     yandexMetrikaId: ?number,
- *     domain: (string|undefined),
+ *     analyticsId: string,
+ *     yandexMetrikaId: number,
+ *     carrotquestId: string,
+ *     domain: string,
  *     fbClientId: ?number,
  *     csrf: string
  * }} sm.iLayout.TemplateStendhal.Params.Config
@@ -114,8 +97,27 @@
  * @override
  */
 {template .favicon autoescape="strict" kind="html"}
-    <link rel="shortcut icon" href="/images/n-common/favicon.ico"
+    <link rel="shortcut icon" href="/static/images/n-common/favicon.ico"
         type="image/x-icon">
+{/template}
+
+
+/**
+ * Default styles
+ * @param params {{
+ *     config: sm.iLayout.TemplateStendhal.Params.Config
+ * }}
+ * @override
+ */
+{template .styles autoescape="strict" kind="html"}
+    {call cl.iStatic.Template.style}
+        {param path: '/static/clobl.build.css' /}
+        {param staticVersion: $params?.config?.staticVersion /}
+    {/call}
+    {call cl.iStatic.Template.style}
+        {param path: '/static/styles.css' /}
+        {param staticVersion: $params?.config?.staticVersion /}
+    {/call}
 {/template}
 
 
@@ -127,6 +129,15 @@
         rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic'
         rel='stylesheet' type='text/css'>
+{/template}
+
+
+/**
+ * @param params {sm.gOpenGraph.TemplateStendhal.Params}
+ * @override
+ */
+{template .openGraph}
+    {call sm.gOpenGraph.TemplateStendhal.openGraph data="all"/}
 {/template}
 
 
@@ -144,8 +155,9 @@
  * @param params {{
  *     config: {
  *         staticVersion: (string|undefined),
- *         analyticsId: (string|undefined),
- *         yandexMetrikaId: (number|undefined),
+ *         analyticsId: string,
+ *         yandexMetrikaId: number,
+ *         carrotquestId: string,
  *         csrf: string
  *     }
  * }}
@@ -156,6 +168,7 @@
     {call .csrf data="all"/}
     {call .analytics data="all"/}
     {call .metrika data="all"/}
+    {call .carrotquest data="all" /}
     {call .relap data="all" /}
 {/template}
 
@@ -186,9 +199,10 @@
 
 
 /**
+ * Google analytics counter
  * @param params {{
  *     config: {
- *         analyticsId: (string|undefined)
+ *         analyticsId: string
  *     }
  * }}
  * @protected
@@ -202,9 +216,10 @@
 
 
 /**
+ * Yandex Metrika counter
  * @param params {{
  *     config: {
- *         yandexMetrikaId: (string|undefined)
+ *         yandexMetrikaId: number
  *     }
  * }}
  * @protected
@@ -228,6 +243,25 @@
 
 
 /**
+ * Carrotquest
+ * @param params {{
+ *     config: {
+ *         carrotquestId: string
+ *     }
+ * }}
+ * @protected
+ */
+{template .carrotquest autoescape="strict" kind="html"}
+    <!-- CarrotQuest BEGIN -->
+        <script type="text/javascript">
+            var carrotquestInstance = sm.iCarrotquest.Carrotquest.getInstance();
+            carrotquestInstance.init('{$params?.config?.carrotquestId}');
+        </script>
+    <!-- CarrotQuest END -->
+{/template}
+
+
+/**
  * Recommender system
  * @protected
  */
@@ -246,7 +280,8 @@
  * @override
  */
 {template .content autoescape="strict" kind="html"}
-    <div class="{call .rootClass/}" {call .attributes data="all"/}>
+    <div class="{call .rootClass/} {call .entityModifierClass data="all"/}"
+                {call .attributes data="all"/}>
         {call .mainSubheader data="all" /}
         {call .mainContent data="all" /}
         {call .mainFooter data="all" /}
@@ -334,15 +369,52 @@
 /**
  * Attributes on element
  * Important to write kind="attributes" when overrides
+ * @param params {{
+ *     data: {
+ *         user: {
+ *             firstName: (string|undefined),
+ *             lastName: (string|undefined)
+ *         },
+ *         authSocialLinks: {
+ *             vk: (string|undefined),
+ *             fb: (string|undefined)
+ *         }
+ *     },
+ *     config: {
+ *         entityType: string
+ *     }
+ * }}
  * @protected
  */
 {template .attributes kind="attributes"}
+    data-params="
+        {call cl.iUtils.Utils.stringify}
+            {param json: [
+                'isUserAuthorized': $params.data?.user ? true : false,
+                'authSocialLinks': $params.data?.authSocialLinks,
+                'type': $params?.config.entityType
+            ] /}
+        {/call}"
+{/template}
+
+/**
+ * Css class modifier of the entity type
+ * @param params {{
+ *     config: {
+ *         entityType: string
+ *     }
+ * }}
+ * @protected
+ */
+{template .entityModifierClass}
+    {call .rootClass/}_entity_{$params.config.entityType}
 {/template}
 
 
 /**
  * Root css class
  * @override
+ * @protected
  */
 {template .rootClass}
     i-layout

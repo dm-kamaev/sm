@@ -48,7 +48,8 @@ exports.addAddress = async(function(entityId, entityType, data) {
         data.entityType = entityType;
         if (!data.coords) {
             data.coords = await(services.yapi.getCoords(
-                'Москва, ' + data.name
+                'Москва, ' + data.name,
+                true
             ));
         }
         data.areaId = data.areaId || await(services.area.create({
@@ -260,7 +261,7 @@ exports.getAllWithSearchData = async(function() {
         include: [{
             model: models.AddressSearchData,
             as: 'searchData',
-            attributes: ['id', 'type', 'entityId']
+            attributes: ['id', 'type', 'entityId', 'entityType']
         }, {
             model: models.Department,
             as: 'departments',
@@ -278,6 +279,9 @@ exports.getAllWithSearchData = async(function() {
                 as: 'district',
                 attributes: ['id']
             }]
+        }, {
+            model: models.CourseDepartment,
+            as: 'courseDepartments'
         }],
         order: [[
             {

@@ -1,0 +1,10 @@
+User-agent: Yandex
+Disallow: /search?*
+Disallow: /school/?*
+Host: schools.mel.fm
+
+User-agent: *
+Disallow: /search?*
+Disallow: /school/?*
+
+Sitemap: http://schools.mel.fm/sitemap.xml

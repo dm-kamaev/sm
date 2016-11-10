@@ -1,6 +1,8 @@
 'use strict';
 
-var FilterPanel = require('../../entity/lib/FilterPanel');
+const filterName = require('../enums/filterName');
+
+const FilterPanel = require('../../entity/lib/FilterPanel');
 
 class CourseFilterPanel extends FilterPanel {
 
@@ -23,7 +25,9 @@ class CourseFilterPanel extends FilterPanel {
                 },
                 name: 'weekdays'
             },
-            config: {}
+            config: {
+                isShowed: true
+            }
         };
 
         /**
@@ -93,7 +97,9 @@ class CourseFilterPanel extends FilterPanel {
                     'label': 'Скрыть, если не указана цена'
                 }]
             },
-            config: {}
+            config: {
+                isShowed: true
+            }
         };
 
         /**
@@ -117,7 +123,9 @@ class CourseFilterPanel extends FilterPanel {
                     'label': 'Скрыть, если не указано расписание'
                 }]
             },
-            config: {}
+            config: {
+                isShowed: true
+            }
         };
 
         /**
@@ -141,7 +149,9 @@ class CourseFilterPanel extends FilterPanel {
                     'label': 'Скрыть, если не указана регулярность'
                 }]
             },
-            config: {}
+            config: {
+                isShowed: true
+            }
         };
 
         /**
@@ -187,10 +197,39 @@ class CourseFilterPanel extends FilterPanel {
                     'label': 'более двух часов'
                 }]
             },
-            config: {}
+            config: {
+                isShowed: true
+            }
         };
     }
 
+
+    /**
+     * Must be  overriden in heirs
+     * @return {Object<string, Function>}
+     * @override
+     */
+    get filterInitializers() {
+        return {
+            [filterName.AGE]: this.setFilterAge.bind(this),
+            [filterName.COST]: this.setFilterCost.bind(this),
+            [filterName.TYPE]: this.setFilterType.bind(this),
+            [filterName.WEEK_DAYS]: this.setFilterWeekDays.bind(this),
+            [filterName.TIME]: this.setFilterTime.bind(this),
+            [filterName.REGULARITY]: this.setFilterRegularity.bind(this),
+            [filterName.FORM_TRAINING]: this.setFilterFormTraining.bind(this),
+            [filterName.DURATION]: this.setFilterDuration.bind(this)
+        };
+    }
+
+    /**
+     * Return array of default filter names
+     * @return {Array<string>}
+     * @override
+     */
+    get defaultFilters() {
+        return [filterName.FORM_TRAINING, filterName.TYPE, filterName.AGE];
+    }
 
     /**
      * Set filter for days of age

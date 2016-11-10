@@ -3,7 +3,7 @@
 
 /**
  * typedef {{
- *     openGraph: (sm.iLayout.TemplateStendhal.Params.Data.openGraph|undefined),
+ *     openGraph: (sm.gOpenGraph.TemplateStendhal.Params|undefined),
  *     seo: {
  *         metaTitle: string,
  *         metaDescription: (string|undefined)
@@ -64,7 +64,7 @@
  */
 {template .layoutScript kind="html"}
     {call cl.iStatic.Template.script}
-        {param path: '/l-course.js' /}
+        {param path: '/static/l-course.js' /}
         {param staticVersion: $params?.config?.staticVersion /}
     {/call}
 {/template}

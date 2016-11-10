@@ -5,17 +5,15 @@
 }
 
 .g-list__item {
-        padding: 8px 10px 9px 10px;
+    padding: 8px 10px 9px 10px;
 
-        cursor: pointer;
-        text-align: left;
-        white-space: nowrap;
-    }
+    cursor: pointer;
+    text-align: left;
+    white-space: nowrap;
+}
 
+.g-list_hoverable {
     .g-list__item:hover {
         background-color: #f7f7f1;
     }
-
-.g-list.g-list_stendhal.g-list_default {
-
 }

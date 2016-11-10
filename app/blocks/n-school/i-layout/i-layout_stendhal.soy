@@ -6,8 +6,9 @@
  *     page: (string|undefined),
  *     staticVersion: (string|undefined),
  *     year: (number|undefined),
- *     analyticsId: (string|undefined),
- *     yandexMetrikaId: (string|undefined),
+ *     analyticsId: string,
+ *     yandexMetrikaId: number,
+ *     carrotquestId: string,
  *     csrf: (string|undefined)
  * }} sm.iLayout.Template.Params.Config
  */
@@ -82,7 +83,26 @@
  * @override
  */
 {template .favicon autoescape="strict" kind="html"}
-    <link rel="shortcut icon" href="/images/n-common/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/static/images/n-common/favicon.ico" type="image/x-icon">
+{/template}
+
+
+/**
+ * Default styles
+ * @param? params {{
+ *     config: ?cl.iLayout.Template.Params.Config
+ * }}
+ * @override
+ */
+{template .styles autoescape="strict" kind="html"}
+    {call cl.iStatic.Template.style}
+        {param path: '/static/clobl.build.css' /}
+        {param staticVersion: $params?.config?.staticVersion /}
+    {/call}
+    {call cl.iStatic.Template.style}
+        {param path: '/static/styles.css' /}
+        {param staticVersion: $params?.config?.staticVersion /}
+    {/call}
 {/template}
 
 
@@ -118,9 +138,10 @@
         {param staticVersion: $params?.config?.staticVersion /}
     {/call}
 
-    {call .analytics_ data="all"/}
-    {call .metrika_ data="all"/}
-    {call .relap_/}
+    {call .analytics data="all"/}
+    {call .metrika data="all"/}
+    {call .carrotquest data="all" /}
+    {call .relap /}
 {/template}
 
 
@@ -128,8 +149,9 @@
  * @param? params {
  *     config: ?sm.iLayout.Template.Params.Config
  * }
+ * @protected
  */
-{template .analytics_ autoescape="strict" kind="html"}
+{template .analytics autoescape="strict" kind="html"}
     <script>
         var analytics = sm.iAnalytics.Analytics.getInstance();
         analytics.init('{$params?.config?.analyticsId}');
@@ -143,8 +165,9 @@
  * @param? params {
  *     config: ?sm.iLayout.Template.Params.Config
  * }
+ * @protected
  */
-{template .metrika_ autoescape="strict" kind="html"}
+{template .metrika autoescape="strict" kind="html"}
     <!-- Yandex.Metrika counter -->
     <script type="text/javascript">
         var metrika = sm.iMetrika.Metrika.getInstance();
@@ -163,9 +186,29 @@
 
 
 /**
- * Recommender system
+ * Carrotquest
+ * @param params {{
+ *     config: {
+ *         carrotquestId: string
+ *     }
+ * }}
+ * @protected
  */
-{template .relap_ autoescape="strict" kind="html"}
+{template .carrotquest autoescape="strict" kind="html"}
+    <!-- CarrotQuest BEGIN -->
+        <script type="text/javascript">
+            var carrotquestInstance = sm.iCarrotquest.Carrotquest.getInstance();
+            carrotquestInstance.init('{$params?.config?.carrotquestId}');
+        </script>
+    <!-- CarrotQuest END -->
+{/template}
+
+
+/**
+ * Recommender system
+ * @protected
+ */
+{template .relap autoescape="strict" kind="html"}
     <script type="text/javascript" async src="https://relap.io/api/v6/head.js?token=s4f-T0rORrtGBgMG"></script>
 {/template}
 

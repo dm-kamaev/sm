@@ -24,16 +24,30 @@ exports.update = async(function(id, data) {
 });
 
 /**
- * @param {number} addressId
- * @param {string} type
+ * @param {{
+ *     entityId: number,
+ *     entityType: string,
+ *     type: string,
+ *     addressId: number
+ * }} where
  * @param {Object} data
  * @return {AddressSearch}
  */
-exports.updateBySearchData = async(function(addressId, type, data) {
+exports.updateByEntity = async(function(where, data) {
     return models.AddressSearchData.update(data, {
-        where: {
-            addressId: addressId,
-            type: type
-        }
+        where: where
     });
+});
+
+/**
+ * @param {{
+ *     entityId: number,
+ *     entityType: string,
+ *     type: string,
+ *     addressId: number
+ * }} where
+ * @return {AddressSearch}
+ */
+exports.deleteByEntity = async(function(where) {
+    return models.AddressSearchData.destroy({where: where});
 });

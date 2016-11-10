@@ -1,0 +1,106 @@
+@import "../i-media/i-media";
+
+/** main blocks of layout **/
+.l-error-not-found {
+    box-sizing: border-box;
+    height: 100%;
+    padding-bottom: 200px;
+}
+
+.l-error-not-found__wrapper-content {
+    min-height: 100%;
+}
+
+.l-error-not-found__body {
+    width: 1200px;
+    min-width: 255px;
+    margin: 0 auto;
+
+    color: #000;
+
+    font-family: Arial, sans-serif;
+}
+
+.l-error-not-found__footer {
+    position: relative;
+    bottom: 0;
+
+    margin: 60px auto 0;
+
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+/** layout end **/
+
+
+/** section content **/
+.l-error-not-found__error-information {
+    position: relative;
+
+    margin-top: 60px;
+}
+
+.l-error-not-found__error-text {
+    display: inline-block;
+
+    padding-left: 38px;
+    vertical-align: middle;
+
+    font-family: 'Proxima';
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 30px;
+}
+
+.l-error-not-found__error-img {
+    display: inline-block;
+    width: 93px;
+    height: 93px;
+    vertical-align: middle;
+}
+
+@include media-xl {
+    .l-error-not-found__body {
+        box-sizing: border-box;
+        width: auto;
+        padding: 0 40px;
+    }
+}
+
+@include media-s {
+    .l-error-not-found__error-img {
+        position: absolute;
+    }
+
+    .l-error-not-found__error-text {
+        padding-left: 120px;
+
+        vertical-align: top;
+    }
+}
+
+@include media-xs {
+    .l-error-not-found {
+        box-sizing: border-box;
+        height: 100%;
+        padding-bottom: 235px;
+    }
+
+    .l-error-not-found__body {
+        padding: 0 30px;
+    }
+
+    .l-error-not-found__footer {
+        padding: 0;
+    }
+}
+
+@include media-xxs {
+    .l-error-not-found__error-img {
+        position: static;
+    }
+
+    .l-error-not-found__error-text {
+        margin-top: 20px;
+        padding-left: 0;
+    }
+}

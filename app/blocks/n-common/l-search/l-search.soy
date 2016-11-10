@@ -3,7 +3,7 @@
 
 /**
  * @typedef {{
- *     openGraph: (sm.iLayout.TemplateStendhal.Params.Data.openGraph|undefined),
+ *     openGraph: (sm.gOpenGraph.TemplateStendhal.Params|undefined),
  *     seo: {
  *         metaTitle: string,
  *         metaDescription: (string|undefined),
@@ -33,6 +33,10 @@
  *             plu: string
  *         }
  *     },
+ *     searchParams: Array<{
+ *         name: string,
+ *         value: (Array<(string|number)>)
+ *     }>,
  *     sort: sm.gDropdown.TemplateSelect.Params.Data
  *     entityList: sm.bSmItemList.Template.Params.Data,
  *     filterPanel: sm.lSearch.bFilterPanel.Template.Params,
@@ -48,14 +52,14 @@
  *         metro: (Array<string>|undefined),
  *         totalScore: (number|undefined)
  *     }>
- * }} sm.lSmSearch.Template.Params.Data
+ * }} sm.lSearch.Template.Params.Data
  */
 
 
 /**
  * Search page
  * @param params {{
- *     data: sm.lSmSearch.Template.Params.Data,
+ *     data: sm.lSearch.Template.Params.Data,
  *     config: ?sm.iLayout.TemplateStendhal.Params.Config
  * }}
  * @extends sm.iLayout.TemplateStendhal
@@ -79,7 +83,7 @@
  */
 {template .layoutScript kind="html"}
     {call cl.iStatic.Template.script}
-        {param path: '/l-search.js' /}
+        {param path: '/static/l-search.js' /}
         {param staticVersion: $params?.config?.staticVersion /}
     {/call}
 {/template}
@@ -95,14 +99,6 @@
  *             textLeft: (Array<string>|undefined),
  *             textRight: (Array<string>|undefined)
  *         },
- *         user: ?{
- *            firstName: (string|undefined),
- *            lastName: (string|undefined)
- *         },
- *         authSocialLinks: {
- *            vk: ?string,
- *            fb: ?string
- *         },
  *         map: sm.bSmMap.Template.Params.Data,
  *         search: {
  *             countResults: number,
@@ -117,22 +113,6 @@
  *         sort: sm.gDropdown.TemplateSelect.Params.Data
  *         entityList: sm.bSmItemList.Template.Params.Data,
  *         filterPanel: sm.lSearch.bFilterPanel.Template.Params,
- *         searchSettings: {
- *             url: string,
- *             method: string,
- *             searchParams: {
- *                 name: ?string,
- *                 metroId: ?number,
- *                 areaId: ?number,
- *                 schoolType: ?Array.<string>,
- *                 classes: ?Array.<number>,
- *                 ege: ?Array.<string>,
- *                 gia: ?Array.<string>,
- *                 olimp: ?Array.<string>,
- *                 sortType: ?number,
- *                 page: ?number
- *             }
- *         },
  *         popularEntities: Array<{
  *             id: number,
  *             alias: ?string,
@@ -147,6 +127,7 @@
  *     }
  * }}
  * @override
+ * @protected
  */
 {template .mainContent autoescape="strict" kind="html"}
     <div class="{call .rootClass/}__body">
@@ -405,7 +386,8 @@
                 'renderParams': [
                     'data': $params.data.entityList,
                     'config': [
-                        'customClasses': [$customClasses]
+                        'customClasses': [$customClasses],
+                        'showLine': true
                     ]
                 ]
             ] /}
@@ -777,55 +759,6 @@
 
 
 /**
- * Generates header text for results
- * @param params {{
- *     searchText: ?string,
- *     countResults: number,
- *     declensionEntityType: {
- *         nom: string,
- *         gen: string,
- *         plu: string
- *     }
- * }}
- */
-{template .eee}
-    {if $params?.searchText and length($params?.searchText)}
-        По запросу{sp}
-        <span class="{call .rootClass/}__list-header-text{sp}
-                     {call .rootClass/}__list-header-text_strong">
-            «{$params.searchText}»
-        </span>{sp}
-    {else}
-        По вашему запросу{sp}
-    {/if}
-
-    мы{sp}
-
-    <span class="{call .rootClass/}__list-header-text{sp}
-                 {call .rootClass/}__list-header-text_change">
-        {if $params.countResults == 0}
-            не нашли ничего.
-        {else}
-            нашли <span class="{call .rootClass/}__list-header-text{sp}
-                               {call .rootClass/}__list-header-text_strong{sp}
-                               {call .rootClass/}__list-header-text_amount">
-                {$params.countResults}{sp}
-
-                {call cl.iUtils.Utils.declensionPrint}
-                    {param params: [
-                        'num': $params.countResults,
-                        'nom': ' ' + $params.declensionEntityType.nom,
-                        'gen': ' ' + $params.declensionEntityType.gen,
-                        'plu': ' ' + $params.declensionEntityType.plu
-                    ]/}
-                {/call}
-            </span>
-        {/if}
-    </span>
-{/template}
-
-
-/**
  * Footer for text SEO
  * @param params {{
  *     data: {
@@ -914,7 +847,6 @@
         </div>
     </div>
 {/template}
-
 
 
 /**

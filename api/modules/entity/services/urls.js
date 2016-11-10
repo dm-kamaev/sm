@@ -150,6 +150,33 @@ service.generateCourseBrandAlias = async(function(courseBrand) {
     await(service.generateEntityAlias(courseBrand, entityTypes.COURSE_BRAND));
 });
 
+/**
+ * Generate alias for given course category and write it to db
+ * @param {models.CourseCategory} courseCategory
+ */
+service.generateCourseCategoryAlias = async(function(courseCategory) {
+    await(service.generateEntityAlias(
+        courseCategory, entityTypes.COURSE_CATEGORY
+    ));
+});
+
+/**
+ * Replace course category alias by deleting old one and creating new one
+ * @param {models.CourseCategory} courseCategory
+ */
+service.replaceCourseCategoryAlias = async(function(courseCategory) {
+    await(services.courseCategory.deleteAlias(courseCategory));
+    await(service.generateCourseCategoryAlias(courseCategory));
+});
+
+/**
+ * Replace course alias by deleting old one and creating new one
+ * @param {models.Course}
+ */
+service.replaceCourseAlias = async(function(course) {
+    await(services.page.delete(course.id, entityTypes.COURSE));
+    await(service.generateCourseAlias(course));
+});
 
 /**
  * Used once to generate urls by school id

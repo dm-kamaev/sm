@@ -145,8 +145,11 @@
             'type': 'smListPaged',
             'renderParams': [
                 'data': [
+                    'items': $params.data?.items,
                     'countItemsPerPage': 5,
-                    'items': $params.data?.items
+                    'listConfig': [
+                        'showLine': true
+                    ]
                 ],
                 'config': [
                     'itemType': 'smItem'

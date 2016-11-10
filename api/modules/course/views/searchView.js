@@ -4,23 +4,29 @@ const FilterPanel = require('../lib/CourseFilterPanel'),
     courseView = require('./courseView'),
     mapViewType = require('../../entity/enums/mapViewType'),
     userView = require('../../user/views/user'),
-    favoriteView = require('../../favorite/views/favoriteView');
+    favoriteView = require('../../favorite/views/favoriteView'),
+    courseCategoryView = require('./courseCategoryView');
+
+const filterName = require('../enums/filterName');
 
 let searchView = {};
 
 /**
  * Data for filter panel
- * @param {Array<Object>} filtersData
  * @param {{
- *     age: Array<(string|number)>,
- *     course: Array<(string|number)>,
- *     cost: Array<(string|number)>,
- *     schedule: Array<(string|number)>,
- *     time: Array<(string|number)>,
- *     regularity: Array<(string|number)>,
- *     formTraining: Array<(string|number)>,
- *     duration: Array<(string|number)>
- * }} opt_searchParams
+ *     filtersData: Array<Object>,
+ *     searchParams: {
+ *         age: Array<(string|number)>,
+ *         course: Array<(string|number)>,
+ *         cost: Array<(string|number)>,
+ *         schedule: Array<(string|number)>,
+ *         time: Array<(string|number)>,
+ *         regularity: Array<(string|number)>,
+ *         formTraining: Array<(string|number)>,
+ *         duration: Array<(string|number)>
+ *     },
+ *     filters: Array<string>
+ * }} data
  * @return {{
  *     data: {
  *         filters: Array<{
@@ -57,19 +63,9 @@ let searchView = {};
  *     }
  * }}
  */
-searchView.filterPanel = function(filtersData, opt_searchParams) {
-    let searchParams = opt_searchParams || {},
-        filterPanel = new FilterPanel();
-
-    filterPanel
-        .setFilterFormTraining(searchParams.formTraining)
-        .setFilterType(filtersData.type, searchParams.type)
-        .setFilterAge(searchParams.age);
-        // .setFilterCost(searchParams.cost)
-        // .setFilterWeekDays(searchParams.weekdays)
-        // .setFilterTime(searchParams.time)
-        // .setFilterRegularity(searchParams.regularity)
-        // .setFilterDuration(searchParams.duration);
+searchView.filterPanel = function(data) {
+    let filterPanel = new FilterPanel();
+    filterPanel.init(data);
 
     return filterPanel.getParams();
 };
@@ -110,60 +106,74 @@ searchView.map = function(courses, options) {
 
 /**
  * @param {{
+ *     entityType: string,
  *     user: Object,
  *     fbClientId: string,
+ *     favorites: Array<Object>,
  *     authSocialLinks: Object,
  *     countResults: number,
  *     coursesList: Array<Object>,
- *     mapData: Object<Object>,
+ *     mapCourses: Object<Object>,
+ *     mapPosition: Object,
  *     searchParams: Object,
- *     favorites: Object,
- *     filtersData: Array<Object>
+ *     filtersData: Array<Object>,
+ *     aliases: Array<Object>,
+ *     seoParams: Object,
+ *     currentCategory: string,
+ *     categories: Array<Object>,
+ *     categoryAliases: Array<Object>
  * }} data
  * @return {Object}
  */
 searchView.render = function(data) {
     let user = userView.default(data.user),
         aliasedCourses = courseView.joinAliases(
-            data.coursesList,
-            data.aliases.course,
-            data.aliases.brand
+            data.coursesList, data.aliases
         ),
-        courses = courseView.list(aliasedCourses);
+        courses = courseView.list(aliasedCourses),
+        seoParams = data.seoParams || {};
 
     return {
         type: data.entityType,
         seo: {
-            metaTitle: 'Курсы профориентации в Москве: стоимость обучения, ' +
-                'отзывы.',
-            metaDescription: 'Удобный фильтр для поиска курсов ' +
-                'профориентации для вашего ребенка: тесты, онлайн ' +
-                'профориентация, частные консультации, тренинги.',
-            title: 'Курсы профориентации'
+            metaTitle: seoParams.tabTitle,
+            metaDescription: seoParams.metaDescription,
+            title: seoParams.listTitle,
+            description: seoParams.text && seoParams.text[0] || null
         },
         openGraph: {
-            title: 'Профориентация на «Курсах Мела»',
-            description: 'Курсы профориентации в Москве и онлайн: цены,' +
-                ' расписание, бронирование.',
-            image: '/images/n-clobl/i-layout/cources_sharing.png',
+            title: seoParams.openGraphTitle,
+            description: seoParams.openGraphDescription,
+            image: '/static/images/n-clobl/i-layout/cources_sharing.png',
+            relapTag: 'курсы мела',
+            relapImage: '/static/images/n-clobl/i-layout/cources_sharing.png',
             fbClientId: data.fbClientId,
         },
         subHeader: {
             logo: {
-                imgUrl: '/images/n-common/b-sm-subheader/course-logo.svg'
+                imgUrl: '/static/images/n-common/b-sm-subheader/course-logo.svg'
             },
             links: {
                 nameL: 'Все курсы, кружки и секции',
                 nameM: 'Все курсы',
-                url: '/proforientacija'
+                url: `/${data.currentCategory}`
             },
             search: {
                 placeholder: 'Район, метро, название курса',
-                pageAlias: 'proforientacija'
+                pageAlias: data.currentCategory
             },
             user: user,
             favorites: {
                 items: favoriteView.list(data.favorites)
+            },
+            listLinks: {
+                opener: 'Все курсы',
+                content: {
+                    items: courseCategoryView.listLinks(
+                        data.categories,
+                        data.categoryAliases
+                    )
+                }
             }
         },
         user: user,
@@ -176,7 +186,7 @@ searchView.render = function(data) {
             countResults: data.countResults,
             searchText: data.searchParams.name,
             placeholder: 'Район, метро, название курса',
-            pageAlias: 'proforientacija',
+            pageAlias: data.currentCategory,
             declensionEntityType: {
                 nom: 'курс',
                 gen: 'курса',
@@ -198,34 +208,38 @@ searchView.render = function(data) {
             items: courses,
             itemType: 'smItemEntity'
         },
-        filterPanel: searchView.filterPanel(
-            data.filtersData,
-            data.searchParams
-        ),
+        filterPanel: searchView.filterPanel({
+            filtersData: data.filtersData,
+            enabledFilters: data.enabledFilters,
+            searchParams: data.searchParams
+        }),
         searchParams: data.searchParams
     };
 };
 
 /**
  * @param  {Object} params
+ * @param {number=} opt_categoryId
  * @return {Object}
  */
-searchView.initSearchParams = function(params) {
+searchView.initSearchParams = function(params, opt_categoryId) {
+    let categoryId = opt_categoryId || params.categoryId || '';
     return {
+        [filterName.AGE]: this.transformToArray(params.age),
+        [filterName.TYPE]: this.transformToArray(params.type),
+        [filterName.COST]: this.transformToArray(params.cost),
+        [filterName.WEEK_DAYS]: this.transformToArray(params.weekdays),
+        [filterName.TIME]: this.transformToArray(params.time),
+        [filterName.REGULARITY]: this.transformToArray(params.regularity),
+        [filterName.FORM_TRAINING]: this.transformToArray(params.formTraining),
+        [filterName.DURATION]: this.transformToArray(params.duration),
         page: params.page || 0,
-        age: this.transformToArray(params.age),
-        type: this.transformToArray(params.type),
-        cost: this.transformToArray(params.cost),
-        weekdays: this.transformToArray(params.weekdays),
-        time: this.transformToArray(params.time),
-        regularity: this.transformToArray(params.regularity),
-        formTraining: this.transformToArray(params.formTraining),
-        duration: this.transformToArray(params.duration),
         sortType: params.sortType,
         name: params.name,
         metroId: params.metroId || null,
         areaId: params.areaId || null,
-        districtId: params.districtId || null
+        districtId: params.districtId || null,
+        categoryId: this.transformToArray(categoryId)
     };
 };
 
@@ -234,15 +248,56 @@ searchView.initSearchParams = function(params) {
  * @return {Array}
  */
 searchView.transformToArray = function(value) {
+    let result = [];
+    if (value) {
+        switch (typeof value) {
+        case 'number':
+            result = searchView.transformNumberToArray(value);
+            break;
+        case 'string':
+            result = searchView.transformStringToArray(value);
+            break;
+        case 'object':
+            result = searchView.transformObjectToArray(value);
+            break;
+        }
+    }
+    return result;
+};
+
+/**
+ * Transform string to array
+ * @param {string} value
+ * @return {Array<string>}
+ */
+searchView.transformStringToArray = function(value) {
     let result;
-    if (value && ~value.indexOf(',')) {
+    if (~value.indexOf(',')) {
         result = value.split(',');
-    } else if (typeof value === 'number' || typeof value === 'string') {
-        result = [value];
-    } else if (Array.isArray(value)) {
-        result = value;
     } else {
-        result = [];
+        result = [value];
+    }
+    return result;
+};
+
+/**
+ * Transform number to array
+ * @param {number} value
+ * @return {Array<number>}
+ */
+searchView.transformNumberToArray = function(value) {
+    return [value];
+};
+
+/**
+ * Transform object to array
+ * @param {Object|Array} value
+ * @return {Array}
+ */
+searchView.transformObjectToArray = function(value) {
+    let result = [];
+    if (Array.isArray(value)) {
+        result = value;
     }
     return result;
 };

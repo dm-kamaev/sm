@@ -9,7 +9,7 @@ const CourseParser = require('../modules/parse/CourseParser'),
     modules = // eslint-disable-line no-unused-vars
         require('../../api/modules');
 
-const COURSES_PATH = path.resolve(__dirname, '../..', 'assets/courses');
+const COURSES_PATH = path.resolve(__dirname, '../..', 'assets/coursesData');
 
 module.exports = async(function() {
     let brandFiles = fs.readdirSync(COURSES_PATH),

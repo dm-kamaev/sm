@@ -8,12 +8,13 @@
  *         altText: ?string,
  *         linkUrl: ?string
  *     },
- *     links: {
+ *     listLinks: (Array<sm.bSmLink.Template.Params.Data>|undefined),
+ *     links: ({
  *         nameL: string,
  *         nameM: string,
  *         nameS: (string|undefined),
  *         url: string
- *     },
+ *     }|undefined),
  *     search: {
  *         placeholder: (string|undefined),
  *         redirect: boolean,
@@ -93,12 +94,13 @@
  * Section links
  * @param params {{
  *     data: {
- *         links: {
+ *         listLinks: (Array<sm.bSmLink.Template.Params.Data>|undefined),
+ *         links: ({
  *             nameL: string,
  *             nameM: string,
  *             nameS: (string|undefined),
  *             url: string
- *         },
+ *         }|undefined),
  *         user: ?{
  *             firstName: ?string,
  *             lastName: ?string
@@ -143,6 +145,29 @@
  * Search links
  * @param params {{
  *     data: {
+ *         listLinks: (Array<sm.bSmLink.Template.Params.Data>|undefined),
+ *         links: ({
+ *             nameL: string,
+ *             nameM: string,
+ *             nameS: (string|undefined),
+ *             url: string
+ *         }|undefined)
+ *     }
+ * }}
+ */
+{template .linksSearch_}
+    {if $params.data.listLinks}
+        {call .listLinks_ data="all" /}
+    {elseif $params.data.links}
+        {call .stringLinks_ data="all" /}
+    {/if}
+{/template}
+
+
+/**
+ * String of links to search
+ * @param params {{
+ *     data: {
  *         links: {
  *             nameL: string,
  *             nameM: string,
@@ -152,8 +177,9 @@
  *     }
  * }}
  */
-{template .linksSearch_}
-    <div class="{call .rootClass/}__search-links">
+{template .stringLinks_}
+    <div class="{call .rootClass/}__search-links{sp}
+                {call .rootClass/}__search-links_string">
         {call .linkSearch_}
             {param params: [
                 'data': [
@@ -186,6 +212,29 @@
                 ],
                 'config': [
                     'size': 's'
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * List of links to search
+ * @param params {{
+ *     data: {
+ *         listLinks: Array<sm.bSmLink.Template.Params.Data>
+ *     }
+ * }}
+ */
+{template .listLinks_}
+    <div class="{call .rootClass/}__search-links{sp}
+                {call .rootClass/}__search-links_list">
+        {call .renderChild}
+            {param params: [
+                'type': 'dropdown-list-links',
+                'renderParams': [
+                    'data': $params.data.listLinks
                 ]
             ]/}
         {/call}
@@ -419,8 +468,10 @@
  */
 {template .linkSearch_}
     {let $content kind="html"}
-        {call .iconLinkSearch_ /}
-        {$params.data?.name ?: ''}
+        <div class="{call .rootClass/}__search-link-content">
+            {call .iconLinkSearch_ /}
+            {$params.data?.name ?: ''}
+        </div>
     {/let}
 
     <div class="{call .rootClass/}__search-link{sp}

@@ -1,7 +1,6 @@
 .b-sm-link {
     display: inline-block;
 
-    cursor: text;
     text-decoration: none;
 
     font-size: 13px;
@@ -9,8 +8,9 @@
 }
 
 .b-sm-link_hoverable:hover {
-    color: #ff0000;
     cursor: pointer;
+
+    color: #ff0000;
 }
 
 /** Possible sizes */
@@ -54,8 +54,11 @@
 }
 
 .b-sm-link_block-theme {
-    margin-bottom: 11px;
+    width: 100%;
+    height: 100%;
 
     color: #356fc4;
+
+    line-height: inherit;
 }
 /** Themes end */

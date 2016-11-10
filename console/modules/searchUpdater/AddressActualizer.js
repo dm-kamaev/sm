@@ -6,7 +6,7 @@ const lodash = require('lodash'),
 const services = require('../../../app/components/services').all,
     searchTypeEnum =
         require('../../../api/modules/geo/enums/addressSearchType'),
-    entityType = require('../../../api/modules/entity/enums/entityType');
+    entityTypeEnum = require('../../../api/modules/entity/enums/entityType');
 
 class AddressActualizer {
     /**
@@ -24,8 +24,7 @@ class AddressActualizer {
          * @type {Object}
          */
         this.addressEntityType_ = {
-            'school': entityType.SCHOOL,
-            'course_department': entityType.COURSE
+            'school': entityTypeEnum.SCHOOL
         };
     }
 
@@ -93,23 +92,24 @@ class AddressActualizer {
             ),
             entityType = this.addressEntityType_[this.address_.entityType],
             entityIds;
-        if (entityType === 'course') { // address may contains few entities
-            entityIds = await(services.course.findByDepartmentId(
-                this.address_.entityId
-            ));
-        } else { // address contains only 1 entity
+        if (entityType === 'school') {
             entityIds = [this.address_.entityId];
+        } else if (this.address_.courseDepartments.length) {
+            entityIds = await(services.course.findByAddressId(
+                this.address_.id
+            ));
+            entityType = entityTypeEnum.COURSE;
         }
 
-
-        if (searchData) {
-            await(services.addressSearch.updateBySearchData(
-                this.address_.id,
-                searchType, {
-                    values: values
-                }
-            ));
-        } else if (values.length) {
+        if (searchData.length) {
+            this.updateValues_(
+                entityIds,
+                entityType,
+                searchData,
+                searchType,
+                values
+            );
+        } else if (values.length && entityIds) {
             entityIds.forEach(entityId => {
                 await(services.addressSearch.create({
                     entityId: entityId,
@@ -120,6 +120,34 @@ class AddressActualizer {
                 }));
             });
         }
+    }
+
+    /**
+     * @private
+     * @param {Array<number>} entityIds
+     * @param {string} entityType
+     * @param {Array<Object>} searchData
+     * @param {string} searchType
+     * @param {Array<number>} values
+     */
+    updateValues_(entityIds, entityType, searchData, searchType, values) {
+        entityIds.forEach(entityId => {
+            let where = {
+                entityId: entityId,
+                entityType: entityType,
+                type: searchType,
+                addressId: this.address_.id
+            };
+            if (searchData.find(datum =>
+                datum.entityId == entityId && datum.entityType == entityType
+            )) {
+                await(services.addressSearch.updateByEntity(where, {
+                    values: values
+                }));
+            } else {
+                await(services.addressSearch.deleteByEntity(where));
+            }
+        });
     }
 
     /**
@@ -152,7 +180,7 @@ class AddressActualizer {
      * @return {(Object | undefined)}
      */
     getSearchDataByType_(searchData, searchType) {
-        return searchData.find(data => data.type === searchType);
+        return searchData.filter(data => data.type === searchType);
     }
 }
 

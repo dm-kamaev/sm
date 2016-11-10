@@ -1,0 +1,46 @@
+@import "../../../n-common/i-media/i-media";
+
+.g-dropdown.g-dropdown_list-links {
+    .g-dropdown__opener-text {
+        display: inline-block;
+    }
+
+    .g-dropdown__opener-link-content {
+        padding: 10px 15px;
+    }
+
+    .g-dropdown__opener-icon {
+        display: inline-block;
+
+        margin-left: 10px;
+
+        opacity: 0.4;
+    }
+
+    .g-dropdown__opener:hover .g-dropdown__opener-icon {
+        opacity: 1;
+    }
+
+    .g-dropdown__content {
+        width: 202px;
+        margin-top: 17px;
+    }
+}
+
+@include media-xs {
+    .g-dropdown.g-dropdown_list-links {
+        position: static;
+
+        .g-dropdown__opener-link-content {
+            padding-left: 0;
+        }
+
+        .g-dropdown__content {
+            position: absolute;
+            top: 117px;
+            left: 0;
+
+            width: 100%
+        }
+    }
+}
