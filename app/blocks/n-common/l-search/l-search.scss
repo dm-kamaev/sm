@@ -32,8 +32,6 @@
         margin-top: 60px;
         padding-bottom: 60px;
 
-        // border-bottom: 1px solid #e5e5e5;
-
 
         &:after {
             display: block;
@@ -44,7 +42,6 @@
     }
 
     &.l-search__section_popular {
-        // height: 370px;
         margin-top: 45px;
     }
 }
@@ -67,7 +64,9 @@
 
 /** Content section **/
 .l-search__left-menu {
+    position: relative;
     float: left;
+    z-index: 2;
 
     width: 350px;
     margin-right: 60px;
@@ -87,104 +86,9 @@
     padding: 0 30px;
 }
 
-.l-search__list-results {
+.l-search__search-results-wrap {
     box-sizing: border-box;
     padding-left: 410px;
-}
-
-.l-search__list-header {
-    color: #000;
-
-    font: 600 22px/38px Proxima, arial, sans-serif;
-
-    &.l-search__list-header_size_s {
-        display: none;
-
-        padding: 26px 0;
-
-        text-align: center;
-    }
-}
-
-.l-search__sort {
-    position: relative;
-
-    height: 13px;
-}
-
-.l-search__sort-control {
-    position: absolute;
-    right: 0;
-
-    padding-left: 18px;
-
-    background: #ffffff;
-}
-
-.l-search__list-header-text {
-    &.l-search__list-header-text_title {
-        margin-bottom: 15px;
-    }
-
-    &.l-search__list-header-text_description {
-        margin-bottom: 45px;
-
-        font: 16px 'PT Serif', serif;
-        line-height: 22px;
-    }
-
-    &.l-search__list-header-text_strong {
-        font-weight: 800;
-    }
-}
-
-.l-search__show-more-button-wrap {
-    width: 240px;
-
-    color: #000000;
-}
-
-
-.b-school-list__loader {
-    display: inline-block;
-
-    width: 100%;
-    margin: 30px 0 30px 0;
-}
-
-.l-search__loader-text {
-    display: inline-block;
-
-    width: 210px;
-    padding: 18px 0 18px 0;
-
-    text-align: center;
-    vertical-align: bottom;
-    text-transform: uppercase;
-
-    color: #000000;
-
-    font-size: 13px;
-    font-weight: 800;
-}
-
-.l-search__loader-image {
-    display: inline-block;
-
-    width: 48px;
-    height: 48px;
-
-    background: url(/static/images/n-common/l-search/search-spinner.gif) no-repeat left;
-}
-
-/** content section end **/
-
-.l-search__horizontal-line {
-    width: 100%;
-    height: 1px;
-    margin: 10px 0 -10px;
-
-    background: #e5e5e5;
 }
 
 @include media-xl {
@@ -217,6 +121,7 @@
     }
 
     .l-search__left-menu {
+        position: static;
         display: block;
         float: none;
 
@@ -233,19 +138,7 @@
         padding: 0 40px;
     }
 
-    .l-search__list-header {
-        &.l-search__list-header_size_l {
-            // display: none;
-        }
-
-        &.l-search__list-header_size_s {
-            // display: block;
-
-            padding-top: 25px;
-        }
-    }
-
-    .l-search__list-results {
+    .l-search__search-results-wrap {
         padding: 0 40px;
     }
 }
@@ -274,18 +167,8 @@
         padding: 0 30px;
     }
 
-    .l-search__list-header {
-        padding-bottom: 10px;
 
-        font-size: 20px;
-        line-height: normal;
-    }
-
-    .l-search__list-results {
+    .l-search__search-results-wrap {
         padding: 0 30px;
-    }
-
-    .l-search__list-body {
-        padding-bottom: 60px;
     }
 }

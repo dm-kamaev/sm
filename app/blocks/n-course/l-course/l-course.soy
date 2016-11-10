@@ -32,6 +32,7 @@
  *         online: ?('only'|'available'|undefidned)
  *     },
  *     map: sm.bSmMap.Template.Params.Data,
+ *     priceLabelText: string,
  *     actionButtonText: string
  * }} sm.lCourse.Template.Data
  */
@@ -110,14 +111,15 @@
  *             cost: ?string
  *             generalOptions: sm.lCourse.bInformationBoard.Template.Params.Data,
  *         },
+ *         priceLabelText: string,
  *         actionButtonText: string
  *     }
  * }}
  */
 {template .sectionData_}
     <div class="{call .rootClass/}__section {call .rootClass/}__section_data">
-        {call .rightData_ data="all" /}
-        {call .leftData_ data="all" /}
+        {call .stickyData_ data="all" /}
+        {call .detailData_ data="all" /}
     </div>
 {/template}
 
@@ -187,23 +189,20 @@
 
 
 /**
- * Section with fixed button
+ * Section with fixed 
  * @param params {{
  *     data: {
+ *         entityData: {
+ *             cost: ?string
+ *         },
+ *         priceLabelText: string,
  *         actionButtonText: string
  *     }
  * }}
  */
 {template .sectionFixed_}
     <div class="{call .rootClass/}__section {call .rootClass/}__section_fixed">
-        {call .actionButton_}
-            {param params: [
-                'data': $params.data,
-                'config': [
-                    'size': 's'
-                ]
-            ]/}
-        {/call}
+        {call .userInteraction_ data="all" /}
     </div>
 {/template}
 
@@ -220,7 +219,7 @@
 
 
 /**
- * Data on the left
+ * Detail data - data on the left
  * @param params {{
  *     data: {
  *         entityData: {
@@ -237,30 +236,34 @@
  *     }
  * }}
  */
-{template .leftData_}
-    <div class="{call .rootClass/}__data {call .rootClass/}__data_left">
+{template .detailData_}
+    <div class="{call .rootClass/}__data {call .rootClass/}__data_detail">
         {call .header_ data="all" /}
+        {call .mediaContent data="all" /}
         {call .generalOptions_ data="all" /}
     </div>
 {/template}
 
 
 /**
- * Data on the right
+ * Data on the right - section sticky
  * @param params {{
  *     data: {
  *         entityData: {
  *             online: ?('only'|'available'|undefidned),
  *             cost: ?string
  *         },
+ *         priceLabelText: string,
  *         actionButtonText: string
  *     }
  * }}
  */
-{template .rightData_}
-    <div class="{call .rootClass/}__data {call .rootClass/}__data_right">
-        {call .location_ data="all" /}
-        {call .userInteraction_ data="all" /}
+{template .stickyData_}
+    <div class="{call .rootClass/}__data {call .rootClass/}__wrap-data_sticky">
+        <div class="{call .rootClass/}__data {call .rootClass/}__data_sticky">
+            {call .location_ data="all" /}
+            {call .userInteraction_ data="all" /}
+        </div>
     </div>
 {/template}
 
@@ -288,6 +291,42 @@
         {call .title_ data="all" /}
         {call .fullDescription_ data="all" /}
     </div>
+{/template}
+
+
+/**
+ * Media content
+ * @param params {{
+ *     data: {
+ *         entityData: {
+ *             videoId: ?string,
+ *             imgUrl: ?string
+ *         }
+ *     }
+ * }}
+ */
+{template .mediaContent}
+    {if $params.data.entityData.videoId}
+        <div class="{call .rootClass /}__video">
+            {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+                {param params: [
+                    'type': 'smEmbed',
+                    'renderParams': [
+                        'data': [
+                            'videoId': $params.data.entityData.videoId 
+                        ]
+                    ]
+                ]/}
+            {/call}
+        </div>
+    {/if}
+    {if $params.data.entityData.imgUrl}
+        <div class="{call .rootClass /}__img-wrapper">
+            <img class="{call .rootClass /}__img"
+                 src="{$params.data.entityData.imgUrl}">
+            </img>
+        </div>
+    {/if}
 {/template}
 
 
@@ -358,7 +397,7 @@
     <div class="{call .rootClass/}__icon {call .rootClass/}__icon_online">
         {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
             {param params: [
-                'type': 'icon',
+                'type': 'icon-svg',
                 'renderParams': [
                     'data': [
                         'type': 'cursor'
@@ -387,24 +426,33 @@
  *         entityData: {
  *             cost: ?string
  *         },
+ *         priceLabelText: string,
  *         actionButtonText: string
  *     }
  * }}
  */
 {template .userInteraction_}
     <div class="{call .rootClass/}__user-interaction">
-        {call .cost_ data="all" /}
+        {let $cost kind="html"}
+            {if $params.data.entityData.cost}
+                От {$params.data.entityData.cost}
+            {else}
+                Цена по запросу
+            {/if}
+        {/let}
 
-        {call .actionButton_}
+        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
             {param params: [
-                'data': $params.data,
-                'config': [
-                    'size': 'xl'
+                'type': 'lCourse-userInteraction',
+                'renderParams': [
+                    'data': [
+                        'description': $cost,
+                        'labelText': $params.data.priceLabelText,
+                        'actionText': $params.data.actionButtonText
+                    ]
                 ]
             ]/}
         {/call}
-
-        // {call .feedbackLink_  data="all" /}
     </div>
 {/template}
 
@@ -701,67 +749,6 @@
                 'type': 'lCourse-informationBoard',
                 'renderParams': [
                     'data': $params.data.entityData.generalOptions
-                ]
-            ]/}
-        {/call}
-    </div>
-{/template}
-
-
-/**
- * Cost of course
- * @param params {{
- *     data: {
- *         entityData: {
- *             cost: ?string
- *         }
- *     }
- * }}
- */
-{template .cost_}
-    <div class="{call .rootClass/}__cost">
-        {if $params.data.entityData.cost}
-            От {$params.data.entityData.cost}
-        {else}
-            Цена по запросу
-        {/if}
-    </div>
-{/template}
-
-
-/**
- * Button template
- * @param params {{
- *     data: {
- *         actionButtonText: string
- *     },
- *     config: {
- *         size: string
- *     }
- * }}
- */
-{template .actionButton_}
-    {let $classes kind="html"}
-        {call .rootClass/}__button{sp}
-        {call .rootClass/}__button_action{sp}
-        {call .rootClass/}__button_action-{$params.config.size}
-    {/let}
-
-    {let $customClasses kind="html"}
-        {call .rootClass/}__action-button
-    {/let}
-
-    <div class="{$classes}">
-        {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
-            {param params: [
-                'type': 'button',
-                'renderParams': [
-                    'data': [
-                        'content': $params.data.actionButtonText
-                    ],
-                    'config': [
-                        'customClasses': [$customClasses]
-                    ]
                 ]
             ]/}
         {/call}

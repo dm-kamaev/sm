@@ -1,0 +1,28 @@
+{namespace sm.gIcon.TemplateSvg}
+
+
+/**
+ * Icon template
+ * @param params {cl.gIcon.TemplateStendhal.Params}
+ * @extends sm.gIcon.TemplateStendhal
+ * @constructor
+ * @doc
+ */
+{template .icon}
+    {call .init data="all" /}
+{/template}
+
+
+/**
+ * Additional css classes
+ * @param params {cl.gIcon.TemplateStendhal.Params}
+ * @override
+ */
+{template .additionalClasses}
+    {sp}{call .rootClass/}_svg
+    {sp}{call .rootClass/}_img_{$params.data.type}
+
+    {if $params?.config?.size}
+        {sp}{call .rootClass/}_size_{$params.config.size}
+    {/if}
+{/template}

@@ -210,6 +210,7 @@ class CourseSearchQuery extends SearchQuery {
             .field('course.score')
             .field('course.score_count', 'scoreCount')
             .field('course.total_score', 'totalScore')
+            .field('course.image_url', 'imageUrl')
             .field('course_option.id', 'courseOptionId')
             .field('course_option.total_cost', 'optionCost')
             .field('course_option.online', 'optionOnline')
@@ -285,6 +286,7 @@ class CourseSearchQuery extends SearchQuery {
             .field('course.total_score')
             .field('course.brand_id')
             .field('course.type')
+            .field('course.image_url')
             .field('COUNT(course.id) OVER()', 'result_count')
             .group('course.id');
 

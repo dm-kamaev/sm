@@ -541,4 +541,24 @@ service.deleteAlias = async(function(course) {
     ));
 });
 
+/**
+ * @param {{
+ *     courseId: number,
+ *     ctr: number,
+ *     clicks: number,
+ *     views: number
+ * }} data
+ * @return {Course}
+ */
+service.updateCtr = async(function(data) {
+    let courseAnalytics = await(services.courseAnalytics.create(data));
+    return await(models.Course.update({
+        ctr: courseAnalytics.ctr
+    }, {
+        where: {
+            id: data.courseId
+        }
+    }));
+});
+
 module.exports = service;

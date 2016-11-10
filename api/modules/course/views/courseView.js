@@ -407,6 +407,7 @@ view.getListCourse = function(course) {
             course.brandAlias,
             course.categoryAlias
         ),
+        imageUrl: course.imageUrl,
         type: entityType.COURSE,
         name: {light: course.name},
         description: course.description,

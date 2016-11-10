@@ -176,6 +176,7 @@ controller.information = async(function(req, res, next) {
                     favorites: data.favorites,
                     categories: data.categories,
                     categoryAliases: data.categoryAliases,
+                    priceLabelText: 'Гарантия лучшей цены',
                     actionButtonText: 'Хочу этот курс!'
                 });
 

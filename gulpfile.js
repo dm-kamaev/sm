@@ -65,10 +65,11 @@ gulp.task('soy', function() {
     return gulpHelper.soy.build();
 });
 
-gulp.task('styles', ['sprite'], function() {
+gulp.task('styles', ['sprite', 'svgSprite'], function() {
     return gulpHelper.css.build({
         outputFiles: [{
             src: [
+                path.join(__dirname, 'build', '/**/*.scss'),
                 path.join(__dirname, BLOCKS_DIR, '/**/*.scss'),
                 path.join(__dirname, BLOCKS_DIR, '/**/*.css'),
                 path.join(__dirname, '/node_modules/css-reset/reset.css')
@@ -94,7 +95,7 @@ gulp.task('sprite', function() {
                 '/n-clobl/g-icon/g-icon_img/*@2x.png'
             )]
         },
-        pngDest: path.join(__dirname, SHARED_STATIC_DIR + '/images'),
+        pngDest: path.join(__dirname, SHARED_STATIC_DIR, '/images'),
         imgDir: ('./')
     }]);
 });
@@ -103,7 +104,7 @@ gulp.task('images', function() {
     var src = ['png', 'ico', 'svg', 'gif', 'jpg']
             .map(ext => '**/*.' + ext)
             .map(mask => path.join(__dirname, BLOCKS_DIR, mask)),
-        dest = path.join(__dirname, SHARED_STATIC_DIR + '/images');
+        dest = path.join(__dirname, SHARED_STATIC_DIR, '/images');
 
     return gulp.src(src)
         .pipe(gulp.dest(dest));
@@ -126,7 +127,7 @@ gulp.task('watch', function() {
 
 gulp.task('fonts', function() {
     return gulp.src(path.join(__dirname, '/assets/fonts/**/*.*'))
-        .pipe(gulp.dest(path.join(__dirname, SHARED_STATIC_DIR + '/fonts')));
+        .pipe(gulp.dest(path.join(__dirname, SHARED_STATIC_DIR, '/fonts')));
 });
 
 gulp.task('copySchools', function() {
@@ -158,6 +159,7 @@ gulp.task('backendLint', function() {
         'api/**/*.js',
         'app/modules/**/*.js',
         '!app/modules/doc/**',
+        'gulp/*.js',
         './*.js'])
         .pipe(eslint({
             config: path.join(__dirname, 'node_modules/nodules/.eslintrc')
@@ -182,8 +184,10 @@ const tasks = function(bool) {
 gulp.task('build', tasks(true));
 gulp.task('default', tasks(production));
 
+
 gulp.task('scripts', ['soy', 'lint'], gulpTasks.scripts);
 gulp.task('debug', ['soy'], gulpTasks.debug);
 gulp.task('compile', ['soy'], gulpTasks.compile);
 
 gulp.task('createTimestamp', gulpTasks.createTimestamp);
+gulp.task('svgSprite', gulpTasks.svgSprite);
