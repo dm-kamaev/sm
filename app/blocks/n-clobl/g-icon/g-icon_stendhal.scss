@@ -8,27 +8,6 @@
     vertical-align: text-bottom;
 }
 
-.g-icon_stendhal.g-icon_img_catalog {
-    width: 56px;
-    height: 56px;
-
-    vertical-align: baseline;
-
-    background-image: url(/static/images/n-clobl/g-icon/g-icon_img/g-icon_img_catalog.svg);
-    background-size: contain;
-}
-
-.g-icon_stendhal.g-icon_img_cross {
-    width: 10px;
-    height: 10px;
-
-    vertical-align: middle;
-
-    background-image: url(/static/images/n-clobl/g-icon/g-icon_img/g-icon_img_cross.svg);
-    background-repeat: no-repeat;
-    background-size: contain;
-}
-
 .g-icon_stendhal.g-icon_img_test {
     width: auto;
     height: auto;
@@ -42,16 +21,5 @@
         color: #ee362c;
 
         font-family: "WebSymbols", Arial, sans-serif;
-    }
-}
-
-
-.g-icon_stendhal.g-icon_img_cross {
-    background-image: url(/static/images/n-clobl/g-icon/g-icon_img/g-icon_img_cross.svg);
-    background-repeat: no-repeat;
-    background-size: contain;
-    &.g-icon_size_xs {
-        width: 15px;
-        height: 15px;
     }
 }
