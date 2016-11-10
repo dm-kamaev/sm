@@ -16,6 +16,7 @@
  *     type: string,
  *     entityType: string,
  *     iconName: (string|undefined),
+ *     iconType: ('svg'|undefined),
  *     isNotActive: boolean,
  *     stylizationModifier: string
  * }} sm.bSmBadge.Template.Params.Config
@@ -56,6 +57,7 @@
  * @param params {{
  *     config: {
  *         iconName: (string|undefined),
+ *         iconType: ('svg'|undefined),
  *         stylizationModifier: string
  *     }
  * }}
@@ -63,10 +65,18 @@
  */
 {template .icon_}
     {if $params?.config?.iconName}
+        {let $type kind="html"}
+            {if $params?.config?.iconType}
+                icon-{$params.config.iconType}
+            {else}
+                icon
+            {/if}
+        {/let}
+
         <div class="{call .rootClass/}__icon">
             {call .renderChild}
                 {param params: [
-                    'type': 'icon',
+                    'type': $type,
                     'renderParams': [
                         'data': [
                             'type': $params.config.iconName
