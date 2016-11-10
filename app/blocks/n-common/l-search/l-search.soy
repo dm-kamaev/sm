@@ -7,8 +7,6 @@
  *     seo: {
  *         metaTitle: string,
  *         metaDescription: (string|undefined),
- *         title: (string|undefined),
- *         description: (string|undefined),
  *         textLeft: (Array<string>|undefined),
  *         textRight: (Array<string>|undefined)
  *     },
@@ -22,23 +20,28 @@
  *        fb: (string|undefined)
  *     },
  *     map: sm.bSmMap.Template.Params.Data,
- *     search: {
+ *     searchParams: Array<{
+ *         name: string,
+ *         value: (Array<(string|number)>)
+ *     }>,
+ *     resultsList: {
+ *         title: string,
+ *         description: Array<string>,
+ *         sort: sm.gDropdown.TemplateSelect.Params.Data,
+ *         entityList: sm.bSmItemList.Template.Params.Data,
  *         countResults: number,
  *         searchText: ?string,
- *         placeholder: ?string,
- *         pageAlias: string,
  *         declensionEntityType: {
  *             nom: string,
  *             gen: string,
  *             plu: string
  *         }
  *     },
- *     searchParams: Array<{
- *         name: string,
- *         value: (Array<(string|number)>)
- *     }>,
- *     sort: sm.gDropdown.TemplateSelect.Params.Data,
- *     entityList: sm.bSmItemList.Template.Params.Data,
+ *     search: {
+ *         pageAlias: string,
+ *         placeholder: ?string,
+ *         searchText: ?string
+ *     },
  *     filterPanel: sm.lSearch.bFilterPanel.Template.Params,
  *     searchParams: {Array<{
  *         name: string,
@@ -311,62 +314,6 @@
     </div>
 {/template}
 
-/**
- * Body for list results
- * @param params {
- *     data: {
- *         entityList: sm.bSmItemList.Template.Params.Data,
- *         search: {
- *             countResults: ?number
- *         }
- *     }
- * }
- */
-{template .listBody_}
-    {let $classes kind="html"}
-        {call .rootClass/}__list-body
-    {/let}
-
-    {let $customClasses kind="html"}
-        {call .rootClass/}__results-list
-        {sp}i-animate
-    {/let}
-
-    <div class="{$classes}">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': $params.config.modifier,
-                'type': 'smItemList',
-                'renderParams': [
-                    'data': $params.data.entityList,
-                    'config': [
-                        'customClasses': [$customClasses],
-                        'showLine': true
-                    ]
-                ]
-            ] /}
-        {/call}
-    </div>
-
-    // {call .showMoreButton data="all" /}
-{/template}
-
-
-/**
- * Loader template
- */
-{template .loader kind="html"}
-    <div class="{call .rootClass /}__loader
-        {sp}l-search__loader_hidden
-        {sp}i-animate">
-        <div class="{call .rootClass /}__loader-image">
-        </div>
-        <div class="{call .rootClass /}__loader-text">
-            Загружаем список...
-        </div>
-    </div>
-{/template}
-
 
 /**
  * Show more button template
@@ -388,13 +335,7 @@
                 'factory': $params.config.modifier,
                 'type': 'lSearch-searchResults',
                 'renderParams': [
-                    'data': [
-                        'title': $params.data?.seo.title,
-                        'description': $params.data?.seo.description,
-                        'sort': $params.data.sort,
-                        'items': $params.data.entityList,
-                        'search': $params.data.search
-                    ],
+                    'data': $params.data.resultsList,
                     'config': [
                         'customClasses': [$customClasses]
                     ]
@@ -510,13 +451,7 @@
  *             name: string,
  *             value: (Array<(string|number)>)
  *         }>,
- *         search: {
- *             declensionEntityType: {
- *                 nom: string,
- *                 gen: string,
- *                 plu: string
- *             }
- *         }
+ *
  *     },
  *     config: {
  *         entityType: string
@@ -531,7 +466,6 @@
                 'searchParams': $params.data?.searchParams,
                 'isUserAuthorized': $params.data?.user ? true : false,
                 'authSocialLinks': $params.data?.authSocialLinks,
-                'declensionEntityType': $params.data?.search?.declensionEntityType,
                 'countResults': $params.data.search.countResults,
                 'type': $params?.config.entityType
             ] /}

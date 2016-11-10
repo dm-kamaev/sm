@@ -145,7 +145,8 @@ goog.scope(function() {
             .initSearchResultsListeners_()
             .initWindowListeners_()
             .initMapListeners_();
-            // .initLoadMoreResultsListItemsListeners_();
+
+        this.detectShowMoreResultsList_();
 
         this.sendAnalyticsPageview_();
         this.sendAnalyticsItemsLoad_(1);
@@ -231,9 +232,12 @@ goog.scope(function() {
             this.searchResults_,
             sm.lSearch.bSearchResults.SearchResults.Event.SORT_TYPE_CHANGE,
             this.onSortReleased_
+        ).listen(
+            this.searchResults_,
+            sm.lSearch.bSearchResults.SearchResults.Event.SHOW_MORE_CLICK,
+            this.onShowMoreButtonClick_
         );
 
-        // this.detectShowMoreResultsList_();
         return this;
     };
 
@@ -248,6 +252,10 @@ goog.scope(function() {
             goog.dom.getWindow(),
             goog.events.EventType.PAGESHOW,
             this.onShowPage_
+        ).listen(
+            goog.dom.getWindow(),
+            goog.events.EventType.SCROLL,
+            this.onScroll_
         );
 
         return this;
@@ -347,8 +355,10 @@ goog.scope(function() {
         this.resetSecondarySearchParams_();
         this.paramsManager_.setSortType(event['itemId']);
 
+        this.searchResults_.setStatus(
+            sm.lSearch.bSearchResults.SearchResults.Status.SORT_IN_PROGRESS
+        );
 
-        // this.getView().hideResultsList();
         this.makeSearch_();
     };
 
@@ -403,10 +413,6 @@ goog.scope(function() {
         this.updateResultsList_(listItems, this.params.countResults);
         this.detectShowMoreResultsList_();
 
-        var sortVisibility = this.resultsList_.getCountItems() ? true : false;
-        // this.getView().setSortVisibility(sortVisibility);
-        // this.getView().setLoaderVisibility(false);
-
         this.sendAnalyticsItemsLoad_(0);
     };
 
@@ -443,7 +449,7 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.onListItemClick_ = function(event) {
-        this.resultsList_.sendAnalyticsItemClick(
+        this.searchResults_.sendAnalyticsItemClick(
             event.data.itemId,
             'search results'
         );
@@ -459,7 +465,9 @@ goog.scope(function() {
         this.clearMap_();
         this.updateParams_();
 
-        this.getView().hideResultsListWrap();
+        this.searchResults_.setStatus(
+            sm.lSearch.bSearchResults.SearchResults.Status.SEARCH_IN_PROGRESS
+        );
 
         this.makeSearch_();
         this.updateUrl_();
@@ -475,7 +483,6 @@ goog.scope(function() {
         this.paramsManager_.updateParams(this.getParamsFromFilterPanel_());
         this.paramsManager_.updateParams(this.getParamsFromSearch_());
     };
-
 
 
     /**
@@ -556,14 +563,14 @@ goog.scope(function() {
      */
     Search.prototype.updateResultsList_ = function(listItems, countResults) {
         if (this.paramsManager_.getPage() == 0) {
-            this.searchResults_.clearList();
-
-            this.getView().updateListHeader(
-                countResults,
-                this.paramsManager_.getName()
-            );
+            this.searchResults_.update({
+                items: listItems,
+                countResults: countResults,
+                searchText: this.paramsManager_.getName()
+            });
+        } else {
+            this.searchResults_.addItems(listItems);
         }
-        this.resultsList_.addItemsBottom(listItems);
     };
 
 
@@ -575,9 +582,9 @@ goog.scope(function() {
      */
     Search.prototype.detectShowMoreResultsList_ = function() {
         if (this.isAllSearchItemsLoaded_()) {
-            this.getView().setShowMoreButtonVisibility(false);
+            this.searchResults_.setShowMoreButtonVisibility(false);
         } else {
-            this.getView().setShowMoreButtonVisibility(true);
+            this.searchResults_.setShowMoreButtonVisibility(true);
         }
     };
 
@@ -588,26 +595,7 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.isAllSearchItemsLoaded_ = function() {
-        return this.resultsList_.getCountItems() == this.params.countResults;
-    };
-
-
-    /**
-     * Init listeners event for loading new data
-     * @return {sm.lSearch.Search}
-     * @private
-     */
-    Search.prototype.initLoadMoreResultsListItemsListeners_ = function() {
-        this.getHandler().listen(
-            this.showMoreButton_,
-            cl.gButton.Button.Event.CLICK,
-            this.onShowMoreButtonClick_
-        ).listen(
-            goog.dom.getWindow(),
-            goog.events.EventType.SCROLL,
-            this.onScroll_
-        );
-        return this;
+        return this.searchResults_.getCountItems() == this.params.countResults;
     };
 
 
@@ -632,8 +620,8 @@ goog.scope(function() {
         if (!this.isAllSearchItemsLoaded_()) {
             this.paramsManager_.increasePage();
 
-            // this.getView().setLoaderVisibility(true);
-            this.getView().setShowMoreButtonVisibility(false);
+            this.searchResults_.setLoaderVisibility(true);
+            this.searchResults_.setShowMoreButtonVisibility(false);
 
             this.searchService_.loadSearchData(
                 this.paramsManager_.getParams()

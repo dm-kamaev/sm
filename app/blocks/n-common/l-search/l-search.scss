@@ -138,18 +138,6 @@
         padding: 0 40px;
     }
 
-    .l-search__list-header {
-        &.l-search__list-header_size_l {
-            // display: none;
-        }
-
-        &.l-search__list-header_size_s {
-            // display: block;
-
-            padding-top: 25px;
-        }
-    }
-
     .l-search__search-results-wrap {
         padding: 0 40px;
     }
@@ -179,56 +167,8 @@
         padding: 0 30px;
     }
 
-    .l-search__list-header {
-        padding-bottom: 10px;
-
-        font-size: 20px;
-        line-height: normal;
-    }
 
     .l-search__search-results-wrap {
         padding: 0 30px;
     }
-
-    .l-search__list-body {
-        padding-bottom: 60px;
-    }
 }
-
-
-/** animations **/
-.l-search_animation_on {
-    .l-search__results-list.l-search__results-list_hidden,
-    .l-search__search-results-wrap.l-search__search-results-wrap_hidden {
-        animation-duration: 200ms;
-        animation-name: fadeOut;
-    }
-
-    .l-search__results-list.l-search__results-list_showed,
-    .l-search__search-results-wrap.l-search__search-results-wrap_showed {
-        animation-duration: 200ms;
-        animation-name: fadeIn;
-    }
-
-    .l-search__loader.l-search__loader_showed {
-        display: block;
-
-        animation-duration: 1000ms;
-        animation-name: stay;
-    }
-
-    .l-search__loader.l-search__loader_hidden {
-        display: none;
-    }
-
-    @keyframes stay {
-        from {
-            opacity: 1;
-        }
-
-        to {
-            opacity: 1;
-        }
-    }
-}
-/** animations end **/
