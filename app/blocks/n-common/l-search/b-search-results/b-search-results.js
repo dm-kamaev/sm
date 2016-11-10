@@ -112,6 +112,7 @@ goog.scope(function() {
     SearchResults.prototype.update = function(params) {
         var status;
         if (params.countResults) {
+            this.params.countResults = params.countResults;
             status = SearchResults.Status.NOT_EMPTY_RESULTS;
             this.getView().updateHeader(params.countResults, params.searchText);
             this.replaceItems(params.items);
@@ -164,11 +165,12 @@ goog.scope(function() {
 
 
     /**
-     * Get count of items, added to item list
-     * @return {number}
+     * Check if all items of current search parameters loaded
+     * @return {boolean}
+     * @public
      */
-    SearchResults.prototype.getCountItems = function() {
-        return this.itemList_.getCountItems();
+    SearchResults.prototype.isAllSearchItemsLoaded = function() {
+        return this.itemList_.getCountItems() == this.params.countResults;
     };
 
 

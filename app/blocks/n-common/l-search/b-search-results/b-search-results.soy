@@ -13,20 +13,6 @@
  *         gen: string,
  *         plu: string
  *     }
- *
- *     title: string,
- *     description: string,
- *     sort: sm.gDropdown.TemplateSelect.Params.Data,
- *     entityList: sm.bSmItemList.Template.Params.Data,
- *     search: {
- *         countResults: number,
- *         searchText: ?string,
- *         declensionEntityType: {
- *             nom: string,
- *             gen: string,
- *             plu: string
- *         }
- *     }
  * }} sm.lSearch.bSearchResults.Template.Params.Data
  */
 
@@ -421,8 +407,11 @@
 /**
  * @param params {{
  *     data: {
- *         search: {
- *              declensionEntityType
+ *         countResults: number,
+ *         declensionEntityType: {
+ *              nom: string,
+ *              plu: string,
+ *              gen: string
  *         }
  *     }
  * }}
@@ -432,6 +421,7 @@
 {template .attributes kind="attributes"}
     data-params="{call cl.iUtils.Utils.stringify}
         {param json: [
+            'countResults': $params.data.countResults,
             'declensionEntityType': $params.data.declensionEntityType
         ] /}
     {/call}"

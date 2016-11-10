@@ -249,7 +249,8 @@ goog.scope(function() {
                 nom: rawParams['declensionEntityType']['nom'],
                 gen: rawParams['declensionEntityType']['gen'],
                 plu: rawParams['declensionEntityType']['plu']
-            }
+            },
+            countResults: rawParams['countResults']
         };
     };
 
