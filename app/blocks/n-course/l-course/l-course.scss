@@ -146,6 +146,24 @@
 .l-course__user-interaction {
     padding-bottom: 23px;
 }
+
+.l-course__video {
+    position: relative;
+    padding-bottom: 56.25%;
+    margin-bottom: 35px;
+    height: 0;
+    overflow: hidden;
+}
+
+.l-course__img-wrapper {
+    position: relative;
+    width: 100%;
+    margin-bottom: 35px;
+}
+
+.l-course__img {
+    width: 100%;
+}
 /** section data end **/
 
 
@@ -208,6 +226,16 @@
     .l-course__data_sticky {
         display: none;
     }
+
+    .l-course__video {
+        width: calc(100% + 80px);
+        left: -40px;
+    }
+
+    .l-course__img-wrapper {
+        width: calc(100% + 80px);
+        left: -40px;
+    }
 }
 
 
@@ -253,6 +281,16 @@
 
     .l-course__description {
         display: none;
+    }
+
+    .l-course__video {
+        width: calc(100% + 60px);
+        left: -30px;
+    }
+
+    .l-course__img-wrapper {
+        width: calc(100% + 60px);
+        left: -30px;
     }
     /** section data end **/
 

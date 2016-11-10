@@ -239,6 +239,7 @@
 {template .detailData_}
     <div class="{call .rootClass/}__data {call .rootClass/}__data_detail">
         {call .header_ data="all" /}
+        {call .mediaContent data="all" /}
         {call .generalOptions_ data="all" /}
     </div>
 {/template}
@@ -290,6 +291,42 @@
         {call .title_ data="all" /}
         {call .fullDescription_ data="all" /}
     </div>
+{/template}
+
+
+/**
+ * Media content
+ * @param params {{
+ *     data: {
+ *         entityData: {
+ *             videoId: ?string,
+ *             imgUrl: ?string
+ *         }
+ *     }
+ * }}
+ */
+{template .mediaContent}
+    {if $params.data.entityData.videoId}
+        <div class="{call .rootClass /}__video">
+            {call sm.iFactory.TemplateFactoryStendhal.INSTANCE.render}
+                {param params: [
+                    'type': 'smEmbed',
+                    'renderParams': [
+                        'data': [
+                            'videoId': $params.data.entityData.videoId 
+                        ]
+                    ]
+                ]/}
+            {/call}
+        </div>
+    {/if}
+    {if $params.data.entityData.imgUrl}
+        <div class="{call .rootClass /}__img-wrapper">
+            <img class="{call .rootClass /}__img"
+                 src="{$params.data.entityData.imgUrl}">
+            </img>
+        </div>
+    {/if}
 {/template}
 
 
