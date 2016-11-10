@@ -24,8 +24,7 @@ module.exports = function() {
             svg: {
                 sprite: 'images/g-icon_auto-svg-sprite.svg'
             }
-        }))
-        .pipe(gulp.dest(path.join(__dirname)));
+        }));
 
     streamSprite
         .pipe(gulpFilter('**/*.svg'))
