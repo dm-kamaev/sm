@@ -71,6 +71,18 @@ goog.scope(function() {
 
 
     /**
+     * Possible status enum
+     * @enum {string}
+     */
+    SearchResults.Status = {
+        NOT_EMPTY_RESULTS: View.Status.NOT_EMPTY_RESULTS,
+        EMPTY_RESULTS: View.Status.EMPTY_RESULTS,
+        SEARCH_IN_PROGRESS: View.Status.SEARCH_IN_PROGRESS,
+        SORT_IN_PROGRESS: View.Status.SORT_IN_PROGRESS
+    };
+
+
+    /**
      * @override
      * @public
      */
@@ -80,7 +92,77 @@ goog.scope(function() {
 
 
     /**
-     * * Send Analytics when shown items
+     * Set given status to block
+     * @param {sm.lSearch.bSearchResults.SearchResults.Status} status
+     * @public
+     */
+    SearchResults.prototype.setStatus = function(status) {
+        this.getView().changeStatus(status);
+    };
+
+    /**
+     * Update search results: list and header
+     * @param {{
+     *     items: Array<sm.bSmItem.SmItem.RenderParams>,
+     *     countResults: number,
+     *     searchText: string
+     * }} params
+     * @public
+     */
+    SearchResults.prototype.update = function(params) {
+        var status;
+        if (params.countResults) {
+            status = SearchResults.Status.NOT_EMPTY_RESULTS;
+            this.getView().updateHeader(params.countResults, params.searchText);
+            this.replaceItems(params.items);
+        } else {
+            status = SearchResults.Status.EMPTY_RESULTS;
+        }
+        this.setStatus(status);
+    };
+
+
+    /**
+     * Replaces items in results list
+     * @param {Array<>} items
+     * @public
+     */
+    SearchResults.prototype.replaceItems = function(items) {
+        this.clearList();
+        this.addItems(items);
+    };
+
+
+    /**
+     * Add items to bottom of list
+     * @param {Array<>} items
+     * @public
+     */
+    SearchResults.prototype.addItems = function(items) {
+        this.itemList_.addItemsBottom(items);
+    };
+
+
+    /**
+     * Clear search results list
+     * @public
+     */
+    SearchResults.prototype.clearList = function() {
+        this.itemList_.clear();
+    };
+
+
+    /**
+     * Get count of items, added to item list
+     * @return {number}
+     */
+    SearchResults.prototype.getCountItems = function() {
+        return this.itemList_.getCountItems();
+    };
+
+
+    /**
+     * Send Analytics when shown items
      * nonInteraction - possible values 0 or 1
      * Interval sets the position of the elements for which the analyst goes
      * @param {{
@@ -102,11 +184,22 @@ goog.scope(function() {
 
 
     /**
-     * Clear search results list
+     * Show or hide show more button
+     * @param {boolean} visibility
      * @public
      */
-    SearchResults.prototype.clearList = function() {
-        this.itemList_.clear();
+    SearchResults.prototype.setShowMoreButtonVisibility = function(visibility) {
+        this.getView().setShowMoreButtonVisibility(visibility);
+    };
+
+
+    /**
+     * Show or hide loader
+     * @param {boolean} visibility
+     * @public
+     */
+    SearchResults.prototype.setLoaderVisibility = function(visibility) {
+        this.getView().setLoaderVisibility(visibility);
     };
 
 

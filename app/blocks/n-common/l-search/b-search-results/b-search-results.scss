@@ -2,7 +2,12 @@
 
 }
 
-.b-search-results__list-header {
+.b-search-results__results,
+.b-search-results__placeholder {
+    display: none;
+}
+
+.b-search-results__header {
     color: #000;
 
     font: 600 22px/38px Proxima, arial, sans-serif;
@@ -31,19 +36,19 @@
     background: #e5e5e5;
 }
 
-.b-search-results__list-header-text {
-    &.b-search-results__list-header-text_title {
+.b-search-results__header-text {
+    &.b-search-results__header-text_title {
         margin-bottom: 15px;
     }
 
-    &.b-search-results__list-header-text_description {
+    &.b-search-results__header-text_description {
         margin-bottom: 45px;
 
         font: 16px 'PT Serif', serif;
         line-height: 22px;
     }
 
-    &.b-search-results__list-header-text_strong {
+    &.b-search-results__header-text_strong {
         font-weight: 800;
     }
 }
@@ -54,12 +59,11 @@
     color: #000000;
 }
 
-
-.b-school-list__loader {
+.b-search-results__loader {
     display: inline-block;
 
     width: 100%;
-    margin: 30px 0 30px 0;
+    margin: 0 auto;
 }
 
 .b-search-results__loader-text {
@@ -79,10 +83,64 @@
 }
 
 .b-search-results__loader-image {
-    display: inline-block;
+    margin: 0 auto;
 
     width: 48px;
     height: 48px;
 
     background: url(/static/images/n-common/l-search/b-search-results/search-spinner.gif) no-repeat left;
 }
+
+/* States */
+.b-search-results_empty-results {
+    .b-search-results__placeholder {
+        display: block;
+    }
+}
+
+.b-search-results_not-empty-results {
+    .b-search-results__results {
+        display: block;
+    }
+}
+
+.b-search-results_search-in-progress {
+    .b-search-results__loader {
+        margin-top: 100px;
+    }
+}
+
+.b-search-results_sort-in-progress {
+    .b-search-results__results {
+        display: block;
+    }
+
+    .b-search-results__item-list {
+        display: none;
+    }
+
+    .b-search-results__loader {
+        margin-top: 100px;
+    }
+
+    .b-search-results__show-more-button-wrap {
+        display: none;
+    }
+}
+/* States end */
+
+/* Animations */
+$shortAnimationDuration: 200ms;
+$longAnimationDuration: 1.5s;
+
+.b-search-results__loader_show {
+    margin-top: 100px;
+    animation-duration: $longAnimationDuration;
+    animation-name: stay;
+}
+
+.b-search-results__loader_hide {
+    animation-duration: $shortAnimationDuration;
+    animation-name: fadeOut;
+}
+/* Animations end */

@@ -1,13 +1,20 @@
 goog.provide('sm.lSearch.bSearchResults.View');
 
 goog.require('cl.iControl.View');
+goog.require('cl.iUtils.Utils');
 goog.require('goog.array');
 goog.require('goog.dom.classlist');
 goog.require('goog.object');
+goog.require('sm.iAnimate.Animate');
+goog.require('sm.lSearch.bSearchResults.Template');
 
 
 
 goog.scope(function() {
+    var Animate = sm.iAnimate.Animate;
+
+
+
     /**
      * View for SearchResults block
      * @param {Object=} opt_params
@@ -28,12 +35,36 @@ goog.scope(function() {
          */
         this.params = null;
 
+
         /**
-         * Current state
-         * @type {sm.lSearch.bSearchResults.View.State}
+         * Is css 3 animations supported by browser
          * @private
          */
-        this.state_ = sm.lSearch.bSearchResults.View.DEFAULT;
+        this.isAnimationSupported_ = false;
+
+        /**
+         * Current status
+         * @type {sm.lSearch.bSearchResults.View.Status}
+         * @private
+         */
+        this.status_ = sm.lSearch.bSearchResults.View.NOT_EMPTY_RESULTS;
+
+
+        /**
+         * Animation promise
+         * In case it not null -> animation in progress
+         * @type {goog.Promise}
+         * @private
+         */
+        this.animationPromise_ = null;
+
+
+        /**
+         * Stores status to switch
+         * @type {sm.lSearch.bSearchResults.View.Status}
+         * @private
+         */
+        this.pendingStatus_ = null;
     };
     goog.inherits(sm.lSearch.bSearchResults.View, cl.iControl.View);
     var View = sm.lSearch.bSearchResults.View;
@@ -46,26 +77,42 @@ goog.scope(function() {
      */
     View.CssClass = {
         ROOT: 'b-search-results',
-        HEADER: 'b-search-results__header',
+        HEADER: 'b-search-results__header_active',
         SORT: 'b-search-results__sort-control',
         ITEM_LIST: 'b-search-results__item-list',
         SHOW_MORE_BUTTON: 'b-search-results__show-more-button',
+        SHOW_MORE_BUTTON_WRAP: 'b-search-results__show-more-button-wrap',
         LOADER: 'b-search-results__loader',
+        RESULTS: 'b-search-results__results',
+        ANIMATION_ON: 'b-search_animation_on',
+        PLACEHOLDER: 'b-search-results__placeholder',
+        LOADER_SHOW_ANIMATION: 'b-search-results__loader_show',
+        LOADER_HIDE_ANIMATION: 'b-search-results__loader_hide',
         SEARCH_IN_PROGRESS: 'b-search-results_search-in-progress',
         SORT_IN_PROGRESS: 'b-search-results_sort-in-progress',
+        NOT_EMPTY_RESULTS: 'b-search-results_not-empty-results',
         EMPTY_RESULTS: 'b-search-results_empty-results'
     };
 
 
     /**
-     * Possible state enum
+     * Possible status enum
      * @enum {string}
      */
-    View.State = {
-        DEFAULT: 'default',
+    View.Status = {
+        NOT_EMPTY_RESULTS: 'notEmptyResults',
         EMPTY_RESULTS: 'emptyResults',
-        SEARCH_IN_PROGRESS: 'ssearchInProgress',
+        SEARCH_IN_PROGRESS: 'searchInProgress',
         SORT_IN_PROGRESS: 'sortInProgress'
+    };
+
+    /**
+     * Possible event enum
+     * @enum
+     */
+    View.Event = {
+        ANIMATION_END: goog.events.getUniqueId('animationEnd'),
+        HIDE_ANIMATION_END: goog.events.getUniqueId('hideAnimationEnd')
     };
 
 
@@ -82,24 +129,15 @@ goog.scope(function() {
 
 
     /**
-     * @override
-     * @public
-     */
-    View.prototype.enterDocument = function() {
-        View.base(this, 'enterDocument');
-    };
-
-
-    /**
      * Update headers size s and l for results list
      * @param {number} countResults
      * @param {string} searchText
      * @public
      */
-    View.prototype.updateListHeader = function(countResults, searchText) {
+    View.prototype.updateHeader = function(countResults, searchText) {
         goog.soy.renderElement(
             this.dom.header,
-            sm.lSearch.Template.listHeaderText, {
+            sm.lSearch.bSearchResults.Template.header_, {
                 params: {
                     data: {
                         countResults: countResults,
@@ -114,6 +152,67 @@ goog.scope(function() {
 
 
     /**
+     * Return animation promise
+     * @return {goog.Promise}
+     * @public
+     */
+    View.prototype.getAnimationPromise = function() {
+        return this.animationPromise_;
+    };
+
+
+    /**
+     * Reset animation promise
+     * @public
+     */
+    View.prototype.resetAnimationPromise = function() {
+        this.animationPromise_ = null;
+    };
+
+
+    /**
+     * Change if is possible and needed status to given one
+     * @param {sm.lSearch.bSearchResults.View.Status} status
+     * @public
+     */
+    View.prototype.changeStatus = function(status) {
+        if (this.isCorrectStatus_(status) && this.status_ != status) {
+            var animationPromise = this.getAnimationPromise();
+            if (animationPromise) {
+                this.pendingStatus_ = status;
+                animationPromise.then(this.setPendingStatus_, null, this);
+            } else {
+                this.setStatus_(status);
+            }
+        }
+    };
+
+
+    /**
+     * Show or hide show more button
+     * @param {boolean} visibility
+     * @public
+     */
+    View.prototype.setShowMoreButtonVisibility = function(visibility) {
+        visibility ?
+            this.show_(this.dom.showMoreWrap) :
+            this.hide_(this.dom.showMoreWrap);
+    };
+
+
+    /**
+     * Show or hide loader
+     * @param {boolean} visibility
+     * @public
+     */
+    View.prototype.setLoaderVisibility = function(visibility) {
+        visibility ?
+            this.show_(this.dom.loader) :
+            this.hide_(this.dom.loader);
+    };
+
+
+    /**
      * @param {Element} element
      * @protected
      * @override
@@ -121,7 +220,8 @@ goog.scope(function() {
     View.prototype.decorateInternal = function(element) {
         View.base(this, 'decorateInternal', element);
         this.initDom_()
-            .initState_();
+            .initStatus_()
+            .initAnimationSupportion_();
     };
 
 
@@ -155,90 +255,301 @@ goog.scope(function() {
 
 
     /**
-     * Change if is possible and needed state to given one
-     * @param {sm.lSearch.bSearchResults.View.State} state
-     */
-    View.prototype.changeState = function(state) {
-        if (this.isCorrectState_(state) && this.state_ != state) {
-            this.switchState_(state);
-        }
-    };
-
-
-    /**
-     * Check that give state is in possible states enum
-     * @param {sm.lSearch.bSearchResults.View.State} state
+     * Check that give status is in possible states enum
+     * @param {sm.lSearch.bSearchResults.View.Status} status
      * @return {boolean}
      * @private
      */
-    View.prototype.isCorrectState_ = function(state) {
-        var possibleStates = goog.object.getKeys(View.State);
-
-        return ~goog.array.findIndex(possibleStates, function(possibleState) {
-            return possibleState == state;
-        });
-    };
-
-
-    /**
-     * Switch state to given one
-     * @param {sm.lSearch.bSearchResults.View.State} state
-     * @private
-     */
-    View.prototype.switchState_ = function(state) {
-        this.removeOldState_();
-        this.setState_();
-    };
-
-
-    /**
-     * Set given state
-     * @param {sm.lSearch.bSearchResults.View.State} state
-     * @private
-     */
-    View.prototype.setState_ = function(state) {
-        this.state_ = state;
-        var cssClass;
-
-        switch (state) {
-            case View.State.DEFAULT:
-                cssClass = View.CssClass.DEFAULT;
-                break;
-
-            case View.State.SEARCH_IN_PROGRESS:
-                cssClass = View.CssClass.SEARCH_IN_PROGRESS;
-                break;
-
-            case View.State.SORT_IN_PROGRESS:
-                cssClass = View.CssClass.SORT_IN_PROGRESS;
-                break;
-
-            case View.State.EMPTY_RESULTS:
-                cssClass = View.CssClass.EMPTY_RESULTS;
-                break;
-        }
-
-        goog.dom.classlist.add(
-            this.getElement(),
-            cssClass
+    View.prototype.isCorrectStatus_ = function(status) {
+        return goog.object.containsValue(
+            View.Status, status
         );
     };
 
+
     /**
-     * Remove state css class from dom element
+     * Switch status to given one
+     * @param {sm.lSearch.bSearchResults.View.Status} status
      * @private
      */
-    View.prototype.removeOldState_ = function() {
-        var stateCssClasses = [
-            View.CssClass.SEARCH_IN_PROGRESS,
-            View.CssClass.SORT_IN_PROGRESS,
-            View.CssClass.EMPTY_RESULTS,
-            View.CssClass.DEFAULT
-        ];
-         goog.dom.classlist.removeAll(
-             this.getElement(),
-             stateCssClasses
-         );
+    View.prototype.switchStatus_ = function(status) {
+        this.removeOldStatus_();
+        this.setStatus_(status);
+    };
+
+
+    /**
+     * Switch to internally stored status
+     * @private
+     */
+    View.prototype.setPendingStatus_ = function() {
+        if (this.pendingStatus_) {
+            this.setStatus_(this.pendingStatus_);
+            this.pendingStatus_ = null;
+        }
+    };
+
+
+    /**
+     * Set given status
+     * @param {sm.lSearch.bSearchResults.View.Status} status
+     * @private
+     */
+    View.prototype.setStatus_ = function(status) {
+        switch (status) {
+            case View.Status.NOT_EMPTY_RESULTS:
+                this.setNotEmptyResultsStatus_();
+                break;
+
+            case View.Status.SEARCH_IN_PROGRESS:
+                this.setSearchInProgressStatus_();
+                break;
+
+            case View.Status.SORT_IN_PROGRESS:
+                this.setSortInProgressStatus_();
+                break;
+
+            case View.Status.EMPTY_RESULTS:
+                this.setEmptyResultsStatus_();
+                break;
+        }
+    };
+
+
+    /**
+     * Set empty resukts status
+     * @private
+     */
+    View.prototype.setEmptyResultsStatus_ = function() {
+        var oldStatusCssClass = this.getCssClassByStatus_(this.status_);
+        var newStatusCssClass = View.CssClass.EMPTY_RESULTS;
+        this.status_ = View.Status.EMPTY_RESULTS;
+
+        this.animationPromise_ = this.hideLoader_();
+
+        if (this.animationPromise_) {
+            this.animationPromise_.then(function() {
+                this.switchToSearchDoneStatus_(
+                    oldStatusCssClass, newStatusCssClass
+                );
+            }, null, this);
+        } else {
+            this.switchToSearchDoneStatus_(
+                oldStatusCssClass, newStatusCssClass
+            );
+        }
+    };
+
+
+    /**
+     * Set not empty results status
+     * @private
+     */
+    View.prototype.setNotEmptyResultsStatus_ = function() {
+        var oldStatusCssClass = this.getCssClassByStatus_(this.status_);
+        var newStatusCssClass = View.CssClass.NOT_EMPTY_RESULTS;
+        this.status_ = View.Status.NOT_EMPTY_RESULTS;
+
+        this.animationPromise_ = this.hideLoader_();
+
+        if (this.animationPromise_) {
+            this.animationPromise_.then(function() {
+                this.switchToSearchDoneStatus_(
+                    oldStatusCssClass, newStatusCssClass
+                );
+            }, null, this);
+        } else {
+            this.switchToSearchDoneStatus_(
+                oldStatusCssClass, newStatusCssClass
+            );
+        }
+    };
+
+
+    /**
+     * Hide loader, reset animation promise
+     * and change given classes on root element to switch to search done
+     * status
+     * @param {sm.lSearch.bSearchResults.View.CssClass} oldStatusCssClass
+     * @param {sm.lSearch.bSearchResults.View.CssClass} newStatusCssClass
+     * @private
+     */
+    View.prototype.switchToSearchDoneStatus_ = function(
+        oldStatusCssClass, newStatusCssClass) {
+        this.switchClass_(
+            oldStatusCssClass,
+            newStatusCssClass
+        );
+        this.setLoaderVisibility(false);
+        this.resetAnimationPromise();
+    };
+
+
+    /**
+     * Set search in progress status
+     * @private
+     */
+    View.prototype.setSearchInProgressStatus_ = function() {
+        var oldStatusCssClass = this.getCssClassByStatus_(this.status_);
+        this.status_ = View.Status.SEARCH_IN_PROGRESS;
+        this.switchClass_(
+            oldStatusCssClass,
+            View.CssClass.SEARCH_IN_PROGRESS
+        );
+
+        this.animationPromise_ = this.showLoader_();
+
+        if (this.animationPromise_) {
+            this.animationPromise_.then(this.resetAnimationPromise, null, this);
+        }
+    };
+
+
+    /**
+     * Set sort in progress status
+     * @private
+     */
+    View.prototype.setSortInProgressStatus_ = function() {
+        var oldStatusCssClass = this.getCssClassByStatus_(this.status_);
+        this.status_ = View.Status.SORT_IN_PROGRESS;
+        this.switchClass_(
+            oldStatusCssClass,
+            View.CssClass.SORT_IN_PROGRESS
+        );
+
+        this.animationPromise_ = this.showLoader_();
+        if (this.animationPromise_) {
+            this.animationPromise_.then(this.resetAnimationPromise, null, this);
+        }
+    };
+
+
+    /**
+     * Return css class corresponding to given status
+     * @param {sm.lSearch.bSearchResults.View.Status} status
+     * @return {sm.lSearch.bSearchResults.View.CssClass}
+     * @private
+     */
+    View.prototype.getCssClassByStatus_ = function(status) {
+        var cssClass;
+        switch (status) {
+            case View.Status.NOT_EMPTY_RESULTS:
+                cssClass = View.CssClass.NOT_EMPTY_RESULTS;
+                break;
+
+            case View.Status.SEARCH_IN_PROGRESS:
+                cssClass = View.CssClass.SEARCH_IN_PROGRESS;
+                break;
+
+            case View.Status.SORT_IN_PROGRESS:
+                cssClass = View.CssClass.SORT_IN_PROGRESS;
+                break;
+
+            case View.Status.EMPTY_RESULTS:
+                cssClass = View.CssClass.EMPTY_RESULTS;
+                break;
+        }
+        return cssClass;
+    };
+
+
+    /**
+     * Switch between given classes on root element
+     * @param {string} classToRemove
+     * @param {string} classToAdd
+     * @private
+     */
+    View.prototype.switchClass_ = function(classToRemove, classToAdd) {
+        goog.dom.classlist.addRemove(
+            this.getElement(),
+            classToRemove,
+            classToAdd
+        );
+    };
+
+
+    /**
+     * Hide given element
+     * @param {Element} element
+     * @private
+     */
+    View.prototype.hide_ = function(element) {
+        goog.dom.classlist.add(
+            element,
+            cl.iUtils.Utils.CssClass.HIDDEN
+        );
+    };
+
+
+    /**
+     * Show given element
+     * @param {Element} element
+     * @private
+     */
+    View.prototype.show_ = function(element) {
+        goog.dom.classlist.remove(
+            element,
+            cl.iUtils.Utils.CssClass.HIDDEN
+        );
+    };
+
+
+    /**
+     * Add to loader element class that show it
+     * @return {Promise}
+     * @private
+     */
+    View.prototype.showLoader_ = function() {
+        goog.dom.classlist.addRemove(
+            this.dom.loader,
+            cl.iUtils.Utils.CssClass.HIDDEN,
+            View.CssClass.LOADER_SHOW_ANIMATION
+        );
+
+        var promise = this.isAnimationSupported_ ?
+            new goog.Promise(function(resolve, reject) {
+                goog.events.listenOnce(
+                    this.dom.loader,
+                    goog.events.EventType.ANIMATIONEND,
+                    resolve
+                );
+            }, this) :
+            null;
+
+        return promise;
+    };
+
+
+    /**
+     * Add to loader element class that show it
+     * @return {Promise}
+     * @private
+     */
+    View.prototype.hideLoader_ = function() {
+        goog.dom.classlist.addRemove(
+            this.dom.loader,
+            View.CssClass.LOADER_SHOW_ANIMATION,
+            View.CssClass.LOADER_HIDE_ANIMATION
+        );
+
+        var promise = this.isAnimationSupported_ ?
+            new goog.Promise(function(resolve, reject) {
+                goog.events.listenOnce(
+                    this.dom.loader,
+                    goog.events.EventType.ANIMATIONEND,
+                    function() {
+                        this.setLoaderVisibility(false);
+                        goog.dom.classlist.remove(
+                            this.dom.loader,
+                            View.CssClass.LOADER_HIDE_ANIMATION
+                        );
+                        resolve();
+                    }.bind(this)
+                );
+            }, this) :
+            null;
+
+        return promise;
     };
 
 
@@ -249,10 +560,15 @@ goog.scope(function() {
      */
     View.prototype.initDom_ = function() {
         this.dom = {
+            results: this.getElementByClass(View.CssClass.RESULTS),
+            placeholder: this.getElementByClass(View.CssClass.PLACEHOLDER),
             header: this.getElementByClass(View.CssClass.HEADER),
             sort: this.getElementByClass(View.CssClass.SORT),
             itemList: this.getElementByClass(View.CssClass.ITEM_LIST),
             showMore: this.getElementByClass(View.CssClass.SHOW_MORE_BUTTON),
+            showMoreWrap: this.getElementByClass(
+                View.CssClass.SHOW_MORE_BUTTON_WRAP
+            ),
             loader: this.getElementByClass(View.CssClass.LOADER)
         };
 
@@ -261,22 +577,36 @@ goog.scope(function() {
 
 
     /**
-     * Init current state
+     * Init current status
      * @return {sm.lSearch.bSearchResults.View}
      * @private
      */
-    View.prototype.initState_ = function() {
-        var isEmptyResultsState = goog.dom.classlist.has(
+    View.prototype.initStatus_ = function() {
+        var isEmptyResultsStatus = goog.dom.classlist.contains(
             this.getElement(),
             View.CssClass.EMPTY_RESULTS
         );
 
-        if (isEmptyResultsState) {
-            this.state_ = View.State.EMPTY_RESULTS;
+        if (isEmptyResultsStatus) {
+            this.status_ = View.Status.EMPTY_RESULTS;
         } else {
-            this.state_ = View.State.DEFAULT;
+            this.status_ = View.Status.NOT_EMPTY_RESULTS;
         }
 
         return this;
+    };
+
+
+    /**
+     * Init css 3 animation suppotion by browser and put corresponding value to
+     * isAnimationSupported_ field
+     * @private
+     */
+    View.prototype.initAnimationSupportion_ = function() {
+        this.isAnimationSupported_ = Animate.isSupported();
+
+        if (this.isAnimationSupported_) {
+            this.addCssClass(View.CssClass.ANIMATION_ON);
+        }
     };
 });  // goog.scope

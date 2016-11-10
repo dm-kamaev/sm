@@ -3,9 +3,21 @@
 /**
  * @typedef {{
  *     title: string,
+ *     description: Array<string>,
+ *     sort: sm.gDropdown.TemplateSelect.Params.Data,
+ *     entityList: sm.bSmItemList.Template.Params.Data,
+ *     countResults: number,
+ *     searchText: ?string,
+ *     declensionEntityType: {
+ *         nom: string,
+ *         gen: string,
+ *         plu: string
+ *     }
+ *
+ *     title: string,
  *     description: string,
  *     sort: sm.gDropdown.TemplateSelect.Params.Data,
- *     items: sm.bSmItemList.Template.Params.Data,
+ *     entityList: sm.bSmItemList.Template.Params.Data,
  *     search: {
  *         countResults: number,
  *         searchText: ?string,
@@ -34,11 +46,45 @@
  * @override
  */
 {template .body}
-    {call .header_ data="all" /}
-    {call .sort_ data="all" /}
-    {call .list_ data="all" /}
+    {call .results_ data="all" /}
+    {call .placeholder_ /}
     {call .loader_ /}
-    {call .showMoreButton_ /}
+{/template}
+
+/**
+ * Results template, contains: header, sort control, item list
+ * @param params {{
+ *     data: sm.lSearch.bSearchResults.Template.Params.Data
+ * }}
+ * @private
+ */
+{template .results_ kind="html"}
+    <div class="{call .rootClass /}__results
+        {sp}i-animate">
+        {call .header_ data="all" /}
+        {call .sort_ data="all" /}
+        {call .list_ data="all" /}
+        {call .showMoreButton_ /}
+    </div>
+{/template}
+
+/**
+ * Placeholder for empty results template
+ * @private
+ */
+{template .placeholder_ kind="html"}
+    <div class="{call .rootClass /}__placeholder">
+        {call .header_}
+            {param params: [
+                'data': [
+                    'countResults': 0
+                ],
+                'config': [
+                    'notActive': true
+                ]
+            ] /}
+        {/call}
+    </div>
 {/template}
 
 /**
@@ -54,11 +100,20 @@
  *             gen: string,
  *             plu: string
  *         }
+ *     },
+ *     config: {
+ *         notActive: boolean
  *     }
  * }}
  */
 {template .header_ kind="html"}
-    <div class="{call .rootClass/}__list-header">
+    {let $classes kind="html"}
+        {call .rootClass/}__header
+        {if not $params?.config?.notActive}
+            {sp}{call .rootClass /}__header_active
+        {/if}
+    {/let}
+    <div class="{$classes}">
         {if $params.data.title}
             {call .headerTextSeo_ data="all" /}
 
@@ -83,11 +138,11 @@
  */
 {template .headerTextSeo_}
     {let $classes kind="html"}
-        {call .rootClass/}__list-header-text{sp}
-        {call .rootClass/}__list-header-text_strong
+        {call .rootClass/}__header-text{sp}
+        {call .rootClass/}__header-text_strong
 
         {if $params.data.description}
-            {sp}{call .rootClass/}__list-header-text_title
+            {sp}{call .rootClass/}__header-text_title
         {/if}
     {/let}
 
@@ -106,8 +161,8 @@
  * }}
  */
 {template .headerDescriptionSeo_}
-    <div class="{call .rootClass/}__list-header-text{sp}
-                {call .rootClass/}__list-header-text_description">
+    <div class="{call .rootClass/}__header-text{sp}
+                {call .rootClass/}__header-text_description">
         {$params.data.description}
     </div>
 {/template}
@@ -138,15 +193,13 @@
  * First part of text for list header
  * @param params {{
  *     data:
- *         search: {
- *             searchText: string
- *         }
+ *         searchText: string
  *     }
  * }}
  */
 {template .listHeaderTextFirstPart_}
-    {if $params.data?.search.searchText and
-        length($params.data?.search.searchText)}
+    {if $params.data.searchText and
+        length($params.data.searchText)}
         {call .listHeaderSearchText_ data="all" /}
     {else}
         По вашему запросу{sp}
@@ -167,9 +220,9 @@
 {template .listHeaderSearchText_}
     По запросу{sp}
 
-    <span class="{call .rootClass/}__list-header-text{sp}
-                 {call .rootClass/}__list-header-text_strong">
-        «{$params.data?.search.searchText}»
+    <span class="{call .rootClass/}__header-text{sp}
+                 {call .rootClass/}__header-text_strong">
+        «{$params.data.searchText}»
     </span>{sp}
 {/template}
 
@@ -178,21 +231,19 @@
  * Second part of text for list header
  * @param params {{
  *     data: {
- *         search: {
- *             countResults: number,
- *             declensionEntityType: {
- *                 nom: string,
- *                 gen: string,
- *                 plu: string
- *             }
+ *         countResults: number,
+ *         declensionEntityType: {
+ *             nom: string,
+ *             gen: string,
+ *             plu: string
  *         }
  *     }
  * }}
  */
 {template .listHeaderTextSecondPart_}
-     <span class="{call .rootClass/}__list-header-text{sp}
-                 {call .rootClass/}__list-header-text_change">
-        {if $params.data.search.countResults == 0}
+     <span class="{call .rootClass/}__header-text{sp}
+                 {call .rootClass/}__header-text_change">
+        {if $params.data.countResults == 0}
             не нашли ничего.
         {else}
             {call .listHeaderCountResults_ data="all" /}
@@ -205,25 +256,22 @@
  * Count results for list header
  * @param params {{
  *     data: {
- *         search: {
- *             countResults: number,
- *             declensionEntityType: {
- *                 nom: string,
- *                 gen: string,
- *                 plu: string
- *             }
+ *         countResults: number,
+ *         declensionEntityType: {
+ *             nom: string,
+ *             gen: string,
+ *             plu: string
  *         }
  *     }
- * }}
  * }}
  */
 {template .listHeaderCountResults_}
     нашли{sp}
 
-    <span class="{call .rootClass/}__list-header-text{sp}
-                {call .rootClass/}__list-header-text_strong{sp}
-                {call .rootClass/}__list-header-text_amount">
-        {$params.data.search.countResults}{sp}
+    <span class="{call .rootClass/}__header-text{sp}
+                {call .rootClass/}__header-text_strong{sp}
+                {call .rootClass/}__header-text_amount">
+        {$params.data.countResults}{sp}
 
         {call .listHeaderEntityType_ data="all" /}
     </span>
@@ -242,15 +290,14 @@
  *         }
  *     }
  * }}
- * }}
  */
 {template .listHeaderEntityType_}
     {call cl.iUtils.Utils.declensionPrint}
         {param params: [
             'num': $params.data.countResults,
-            'nom': ' ' + $params.data.search.declensionEntityType.nom,
-            'gen': ' ' + $params.data.search.declensionEntityType.gen,
-            'plu': ' ' + $params.data.search.declensionEntityType.plu
+            'nom': ' ' + $params.data.declensionEntityType.nom,
+            'gen': ' ' + $params.data.declensionEntityType.gen,
+            'plu': ' ' + $params.data.declensionEntityType.plu
         ]/}
     {/call}
 {/template}
@@ -299,19 +346,20 @@
  * Item list template
  * @param params {{
  *     data: {
- *         items: Array<sm.bSmItem.SmItem.Params.Data>
+ *         entityList: Array<sm.bSmItem.SmItem.Params.Data>
  *     }
  * }}
  */
 {template .list_ kind="html"}
     {let $customClasses kind="html"}
         {call .rootClass /}__item-list
+        {sp}i-animate
     {/let}
     {call .renderChild}
         {param params: [
            'type': 'smItemList',
            'renderParams': [
-               'data': $params.data.items,
+               'data': $params.data.entityList,
                'config': [
                    'showLine': true,
                    'customClasses': [$customClasses]
@@ -326,12 +374,9 @@
  */
 {template .loader_ kind="html"}
     <div class="{call .rootClass /}__loader
-        {sp}l-search__loader_hidden
+        {sp}{cl.iUtils.Utils.CssClass.HIDDEN}
         {sp}i-animate">
         <div class="{call .rootClass /}__loader-image">
-        </div>
-        <div class="{call .rootClass /}__loader-text">
-            Загружаем список...
         </div>
     </div>
 {/template}
@@ -387,17 +432,30 @@
 {template .attributes kind="attributes"}
     data-params="{call cl.iUtils.Utils.stringify}
         {param json: [
-            'declensionEntityType': $params.data.search.declensionEntityType
+            'declensionEntityType': $params.data.declensionEntityType
         ] /}
     {/call}"
 {/template}
 
 /**
  * Additional classes
+ * @param params {{
+ *     data: {
+ *          search: {
+ *               countResults: number
+ *          }
+ *     }
+ * }}
  * @override
  */
 {template .additionalClasses kind="html"}
     i-animate
+
+    {if $params.data.countResults == 0}
+        {sp}{call .rootClass /}_empty-results
+    {else}
+        {sp}{call .rootClass /}_not-empty-results
+    {/if}
 {/template}
 
 /**
