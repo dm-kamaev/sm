@@ -654,6 +654,7 @@ view.render = function(course) {
         fullDescription: course.fullDescription,
         about: course.about,
         learningOutcome: course.learningOutcome,
+        isActive: course.dataValues.isActive,
         updatedAt: course['updated_at']
     };
 };

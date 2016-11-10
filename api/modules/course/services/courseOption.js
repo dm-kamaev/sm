@@ -3,7 +3,8 @@
 const async = require('asyncawait/async'),
     await = require('asyncawait/await');
 
-const models = require('../../../../app/components/models').all,
+const sequelize = require('../../../../app/components/db'),
+    models = require('../../../../app/components/models').all,
     services = require('../../../../app/components/services').all;
 
 let service = {
@@ -81,6 +82,11 @@ service.create = async(function(course, data) {
  */
 service.getByCourseId = async(function(courseId) {
     return await(models.CourseOption.findAll({
+        attributes: {
+            include: [
+                [sequelize.literal(true), 'isActive']
+            ]
+        },
         where: {
             courseId: courseId
         },

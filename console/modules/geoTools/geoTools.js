@@ -6,9 +6,7 @@ var await = require('asyncawait/await'),
 
 const GEOCODER = 'http://geocode-maps.yandex.ru/1.x/';
 
-class geoTools {
-    constructor() {}
-
+class GeoTools {
     /**
      * ?
      * @type {number}
@@ -41,8 +39,8 @@ class geoTools {
      */
     restriction(lenKM, coords) {
         return {
-            latitude: 1 / geoTools.LT * lenKM,
-            longitude: 1 / (geoTools.LO * Math.cos(coords[0])) * lenKM
+            latitude: 1 / GeoTools.LT * lenKM,
+            longitude: 1 / (GeoTools.LO * Math.cos(coords[0])) * lenKM
         };
     };
 
@@ -66,12 +64,14 @@ class geoTools {
                 .map(featureMember => featureMember.GeoObject.name)
                 .filter(name =>
                     ~name.indexOf('район') && // area must contain 'район'
-                        !~name.indexOf('микрорайон') // and not 'микрорайон'
+                        !~name.indexOf('микрорайон') &&
+                        !~name.indexOf('квартал')
+                        // but neither 'микрорайон' or 'квартал'
                 ),
             area;
 
         if (areas.length > 1) {
-            throw new Error('Found more than one area: ' + areas)
+            throw new Error('Found more than one area: ' + areas);
         } else {
             area = areas[0]
                 .replace('район', '')
@@ -130,7 +130,7 @@ class geoTools {
         var arg = sinLat * sinLat +
                 sinLon * sinLon * cos;
 
-        return 2 * geoTools.R * Math.atan2(Math.sqrt(arg), Math.sqrt(1-arg));
+        return 2 * GeoTools.R * Math.atan2(Math.sqrt(arg), Math.sqrt(1 - arg));
     };
 
     /**
@@ -144,4 +144,4 @@ class geoTools {
     }
 }
 
-module.exports = new geoTools();
+module.exports = new GeoTools();

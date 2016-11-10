@@ -49,5 +49,5 @@ exports.updateByEntity = async(function(where, data) {
  * @return {AddressSearch}
  */
 exports.deleteByEntity = async(function(where) {
-    return models.AddressSearchData.destroy(where);
+    return models.AddressSearchData.destroy({where: where});
 });
