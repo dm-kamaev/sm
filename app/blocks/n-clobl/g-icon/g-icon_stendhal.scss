@@ -19,16 +19,6 @@
     background-size: contain;
 }
 
-.g-icon_stendhal.g-icon_img_list {
-    width: 13px;
-    height: 13px;
-
-    vertical-align: baseline;
-
-    background-image: url(/static/images/n-clobl/g-icon/g-icon_img/g-icon_img_list.svg);
-    background-size: contain;
-}
-
 .g-icon_stendhal.g-icon_img_cursor {
     width: 9px;
     height: 13px;
@@ -56,38 +46,6 @@
 
     background-image: url(/static/images/n-clobl/g-icon/g-icon_img/g-icon_img_cross.svg);
     background-repeat: no-repeat;
-    background-size: contain;
-}
-
-.g-icon_stendhal.g-icon_img_user {
-    width: 13px;
-    height: 13px;
-
-    background-image: url(/static/images/n-clobl/g-icon/g-icon_img/g-icon_img_user.svg);
-    background-size: contain;
-}
-
-.g-icon_stendhal.g-icon_img_favorite {
-    width: 13px;
-    height: 13px;
-
-    background-image: url(/static/images/n-clobl/g-icon/g-icon_img/g-icon_img_favorite.svg);
-    background-size: contain;
-}
-
-.g-icon_stendhal.g-icon_img_favorite_red {
-    width: 13px;
-    height: 13px;
-
-    background-image: url(/static/images/n-clobl/g-icon/g-icon_img/g-icon_img_favorite_red.svg);
-    background-size: contain;
-}
-
-.g-icon_stendhal.g-icon_img_favorite_dark_red {
-    width: 13px;
-    height: 13px;
-
-    background-image: url(/static/images/n-clobl/g-icon/g-icon_img/g-icon_img_favorite_dark_red.svg);
     background-size: contain;
 }
 
@@ -120,51 +78,10 @@
     background-image: url(/static/images/n-clobl/g-icon/g-icon_img/g-icon_img_cross.svg);
     background-repeat: no-repeat;
     background-size: contain;
-    &.g-icon_img_size_xs {
+    &.g-icon_size_xs {
         width: 15px;
         height: 15px;
     }
-}
-
-.g-icon_stendhal.g-icon_img_search {
-    background-image: url(/static/images/n-clobl/g-icon/g-icon_img/g-icon_img_search.svg);
-    background-repeat: no-repeat;
-    background-size: contain;
-    &.g-icon_img_size_xs {
-        width: 15px;
-        height: 15px;
-    }
-}
-
-
-.g-icon_stendhal.g-icon_img_favorite.g-icon_img_size_l {
-    width: 15px;
-    height: 15px;
-}
-
-.g-icon_stendhal.g-icon_img_favorite_red.g-icon_img_size_l {
-    width: 15px;
-    height: 15px;
-}
-
-.g-icon_stendhal.g-icon_img_favorite_dark_red.g-icon_img_size_l {
-    width: 15px;
-    height: 15px;
-}
-
-.g-icon_stendhal.g-icon_img_favorite.g-icon_img_size_xs {
-    width: 9px;
-    height: 9px;
-}
-
-.g-icon_stendhal.g-icon_img_favorite_red.g-icon_img_size_xs {
-    width: 9px;
-    height: 9px;
-}
-
-.g-icon_stendhal.g-icon_img_favorite_dark_red.g-icon_img_size_xs {
-    width: 9px;
-    height: 9px;
 }
 
 @include media-xs {
