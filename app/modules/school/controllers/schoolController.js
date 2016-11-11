@@ -1,3 +1,11 @@
+'use strict';
+
+const async = require('asyncawait/async'),
+    await = require('asyncawait/await'),
+    lodash = require('lodash');
+
+const logger = require('../../../components/logger/logger').getLogger('app');
+
 const soy = require('../../../components/soy');
 const services = require('../../../components/services').all;
 const schoolView = require('../../../../api/modules/school/views/schoolView');
@@ -10,18 +18,13 @@ const entityType = require('../../../../api/modules/entity/enums/entityType');
 const PageNotFoundError = require('../../error/lib/PageNotFoundError');
 
 const config = require('../../../config').config;
-const analyticsId = config.schools.analyticsId;
-const yandexMetrikaId = config.schools.yandexMetrikaId;
 
-const logger = require('../../../components/logger/logger').getLogger('app');
-
-const DOMAIN = config.schools.host;
-const FB_CLIENT_ID = config.facebookClientId,
-    CARROTQUEST_ID = config.carrotquestId;
-
-const async = require('asyncawait/async'),
-    await = require('asyncawait/await'),
-    lodash = require('lodash');
+const ANALYTICS_ID = config.schools.analyticsId,
+    YANDEX_METRIKA_ID = config.schools.yandexMetrikaId,
+    DOMAIN = config.schools.host,
+    FB_CLIENT_ID = config.facebookClientId,
+    CARROTQUEST_ID = config.carrotquestId,
+    MODIFIER = 'stendhal';
 
 
 exports.createComment = async(function(req, res) {
@@ -158,8 +161,8 @@ exports.list = async(function(req, res, next) {
                 config: {
                     staticVersion: config.lastBuildTimestamp,
                     year: new Date().getFullYear(),
-                    analyticsId: analyticsId,
-                    yandexMetrikaId: yandexMetrikaId,
+                    analyticsId: ANALYTICS_ID,
+                    yandexMetrikaId: YANDEX_METRIKA_ID,
                     carrotquestId: CARROTQUEST_ID,
                     csrf: req.csrfToken(),
                     domain: DOMAIN,
@@ -272,8 +275,8 @@ exports.view = async(function(req, res, next) {
                             config: {
                                 staticVersion: config.lastBuildTimestamp,
                                 year: new Date().getFullYear(),
-                                analyticsId: analyticsId,
-                                yandexMetrikaId: yandexMetrikaId,
+                                analyticsId: ANALYTICS_ID,
+                                yandexMetrikaId: YANDEX_METRIKA_ID,
                                 carrotquestId: CARROTQUEST_ID,
                                 csrf: req.csrfToken(),
                                 domain: DOMAIN,
@@ -337,8 +340,8 @@ exports.home = async(function(req, res) {
             config: {
                 staticVersion: config.lastBuildTimestamp,
                 year: new Date().getFullYear(),
-                analyticsId: analyticsId,
-                yandexMetrikaId: yandexMetrikaId,
+                analyticsId: ANALYTICS_ID,
+                yandexMetrikaId: YANDEX_METRIKA_ID,
                 carrotquestId: CARROTQUEST_ID,
                 csrf: req.csrfToken(),
                 domain: DOMAIN,
@@ -349,6 +352,50 @@ exports.home = async(function(req, res) {
 
     res.header('Content-Type', 'text/html; charset=utf-8');
     res.end(html);
+});
+
+
+exports.newSearch = async(function(req, res, next) {
+    try {
+        let authSocialLinks = services.auth.getAuthSocialUrl(),
+            user = req.user || {},
+            searchParams = {};
+
+        let templateData = searchView.render({
+            user: user,
+            fbClientId: FB_CLIENT_ID,
+            authSocialLinks: authSocialLinks,
+        });
+
+        let html = soy.render(
+            'sm.lSearch.Template.search', {
+                params: {
+                    data: templateData,
+                    config: {
+                        entityType: entityType.SCHOOL,
+                        page: 'search',
+                        modifier: MODIFIER,
+                        staticVersion: config.lastBuildTimestamp,
+                        year: new Date().getFullYear(),
+                        analyticsId: ANALYTICS_ID,
+                        yandexMetrikaId: YANDEX_METRIKA_ID,
+                        carrotquestId: CARROTQUEST_ID,
+                        csrf: req.csrfToken(),
+                        domain: DOMAIN,
+                        fbClientId: FB_CLIENT_ID
+                    }
+                }
+            }
+        );
+
+        res.header('Content-Type', 'text/html; charset=utf-8');
+        res.end(html);
+    } catch (error) {
+        logger.error(error);
+
+        res.status(error.code || 500);
+        next(error);
+    }
 });
 
 
@@ -393,8 +440,8 @@ exports.catalog = async(function(req, res, next) {
                     modifier: 'stendhal',
                     staticVersion: config.lastBuildTimestamp,
                     year: new Date().getFullYear(),
-                    analyticsId: analyticsId,
-                    yandexMetrikaId: yandexMetrikaId,
+                    analyticsId: ANALYTICS_ID,
+                    yandexMetrikaId: YANDEX_METRIKA_ID,
                     carrotquestId: CARROTQUEST_ID,
                     csrf: req.csrfToken(),
                     domain: DOMAIN,
