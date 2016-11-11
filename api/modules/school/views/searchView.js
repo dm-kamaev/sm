@@ -35,8 +35,18 @@ searchView.render = function(data) {
         seoParams = data.seoParams || {};
 
     return {
-        seo: {},
-        openGraph: {},
+        seo: {
+            metaTitle: seoParams.tabTitle,
+            metaDescription: seoParams.metaDescription
+        },
+        openGraph: {
+            title: seoParams.openGraphTitle,
+            description: seoParams.openGraphDescription,
+            image: '/static/images/n-clobl/i-layout/schools_sharing.png',
+            relapTag: 'школы мела',
+            relapImage: '/static/images/n-clobl/i-layout/schools_sharing.png',
+            fbClientId: data.fbClientId,
+        },
         subHeader: {
             logo: {
                 imgUrl: '/static/images/n-common/b-sm-subheader/school-logo.svg'
@@ -59,15 +69,45 @@ searchView.render = function(data) {
         user: user,
         authSocialLinks: data.authSocialLinks,
         map: {},
-        search: {},
+        search: {
+            searchText: data.searchParams.name,
+            placeholder: 'Район, метро, номер школы',
+            pageAlias: '',
+        },
         resultsList: {
-            title: '',
-            description: '',
-            countResults: '',
-            searchText: '',
-            declensionEntityType: {},
-            sort: {},
-            entityList: {}
+            title: seoParams.listTitle,
+            description: seoParams.text && seoParams.text[0] || null,
+            countResults: data.countResults,
+            searchText: data.searchParams.name,
+            declensionEntityType: {
+                nom: 'школа',
+                gen: 'школы',
+                plu: 'школ'
+            },
+            sort: {
+                listItems: [{
+                    'label': 'по средней оценке',
+                    'text': 'средняя оценка'
+                }, {
+                    'label': 'по образованию',
+                    'text': 'образование'
+                }, {
+                    'label': 'по преподавателям',
+                    'text': 'преподаватели'
+                }, {
+                    'label': 'по атмосфере',
+                    'text': 'атмосфера'
+                }, {
+                    'label': 'по инфраструктуре',
+                    'text': 'инфраструктура'
+                }],
+                staticText: 'Сортировать по ',
+                defaultOpenerText: 'средней оценке'
+            },
+            entityList: {
+                items: [],
+                itemType: 'smItemEntity'
+            }
         },
         filterPanel: {},
         searchParams: data.searchParams
