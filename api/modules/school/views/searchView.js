@@ -8,7 +8,60 @@ const olympResultView = require('../../study/views/olimpResultView'),
     specializedClassesView = require('./specializedClassesView'),
     searchTypeEnum = require('../enums/searchType');
 
+const userView = require('../../user/views/user'),
+    favoriteView = require('../../favorite/views/favoriteView');
+
 var searchView = {};
+
+
+/**
+ * @param {{
+ *     user: Object,
+ *     fbClientId: string,
+ *     favorites: Array<Object>,
+ *     authSocialLinks: Object,
+ *     countResults: number,
+ *     schoolsList: Array<Object>,
+ *     mapSchools: Object<Object>,
+ *     mapPosition: Object,
+ *     searchParams: Object,
+ *     filtersData: Array<Object>,
+ *     seoParams: Object
+ * }} data
+ * @return {Object}
+ */
+searchView.render = function(data) {
+    let user = userView.default(data.user),
+        seoParams = data.seoParams || {};
+
+    return {
+        seo: {},
+        openGraph: {},
+        subHeader: {
+            logo: {},
+            links: {},
+            search: {},
+            user: user,
+            favorites: {},
+        },
+        user: user,
+        authSocialLinks: data.authSocialLinks,
+        map: {},
+        search: {},
+        resultsList: {
+            title: '',
+            description: '',
+            countResults: '',
+            searchText: '',
+            declensionEntityType: {},
+            sort: {},
+            entityList: {}
+        },
+        filterPanel: {},
+        searchParams: data.searchParams
+    };
+};
+
 
 /**
  * Transform array of school type filters to array with their ids
