@@ -8,7 +8,7 @@ const scoreView = require('./scoreView'),
     areaView = require('../../geo/views/areaView'),
     districtView = require('../../geo/views/districtView'),
     addressView = require('../../geo/views/addressView'),
-    FormatText = require('../../entity/lib/FormatText'),
+    FormatUtils = require('../../entity/lib/FormatUtils'),
     CourseOptionsTransformer = require('../lib/CourseOptionsTransformer'),
     pageView = require('../../entity/views/pageView');
 
@@ -56,10 +56,10 @@ view.formatFullDescription = function(text) {
 
     if (text) {
         if (text.length > FULL_DESCRIPTION_LENGTH) {
-            let formatText = new FormatText();
+            let formatUtils = new FormatUtils();
             result.fullText = [text];
             result.cutText.push(
-                formatText.cut(text, FULL_DESCRIPTION_LENGTH, ' ')
+                formatUtils.cutText(text, FULL_DESCRIPTION_LENGTH, ' ')
             );
         } else {
             result.cutText.push(text);

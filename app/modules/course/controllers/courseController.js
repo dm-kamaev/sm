@@ -24,7 +24,8 @@ const ANALYTICS_ID = config.courses.analyticsId,
     YANDEX_METRIKA_ID = config.courses.yandexMetrikaId,
     DOMAIN = config.courses.host,
     FB_CLIENT_ID = config.facebookClientId,
-    CARROTQUEST_ID = config.carrotquestId;
+    CARROTQUEST_ID = config.carrotquestId,
+    MODIFIER = 'stendhal';
 
 let controller = {};
 
@@ -67,7 +68,6 @@ controller.search = async(function(req, res, next) {
                 });
 
             let templateData = searchView.render({
-                entityType: entityType.COURSE,
                 user: user,
                 fbClientId: FB_CLIENT_ID,
                 favorites: data.favorites,
@@ -97,7 +97,7 @@ controller.search = async(function(req, res, next) {
                         config: {
                             entityType: entityType.COURSE,
                             page: 'search',
-                            modifier: 'stendhal',
+                            modifier: MODIFIER,
                             staticVersion: config.lastBuildTimestamp,
                             year: new Date().getFullYear(),
                             analyticsId: ANALYTICS_ID,
@@ -105,8 +105,7 @@ controller.search = async(function(req, res, next) {
                             carrotquestId: CARROTQUEST_ID,
                             csrf: req.csrfToken(),
                             domain: DOMAIN,
-                            fbClientId: FB_CLIENT_ID,
-                            type: entityType.COURSE
+                            fbClientId: FB_CLIENT_ID
                         }
                     }
                 }
@@ -187,7 +186,7 @@ controller.information = async(function(req, res, next) {
                             config: {
                                 entityType: entityType.COURSE,
                                 page: entityType.COURSE,
-                                modifier: 'stendhal',
+                                modifier: MODIFIER,
                                 staticVersion: config.lastBuildTimestamp,
                                 year: new Date().getFullYear(),
                                 analyticsId: ANALYTICS_ID,
