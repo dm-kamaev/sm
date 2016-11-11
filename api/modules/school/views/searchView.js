@@ -38,11 +38,23 @@ searchView.render = function(data) {
         seo: {},
         openGraph: {},
         subHeader: {
-            logo: {},
-            links: {},
-            search: {},
+            logo: {
+                imgUrl: '/static/images/n-common/b-sm-subheader/school-logo.svg'
+            },
+            links: {
+                nameL: 'Все школы Москвы',
+                nameM: 'Все школы',
+                nameS: 'Все школы Москвы',
+                url: '',
+            },
+            search: {
+                placeholder: 'Район, метро, номер школы',
+                pageAlias: '',
+            },
             user: user,
-            favorites: {},
+            favorites: {
+                items: favoriteView.list(data.favorites)
+            },
         },
         user: user,
         authSocialLinks: data.authSocialLinks,

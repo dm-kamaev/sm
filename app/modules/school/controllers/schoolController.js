@@ -361,10 +361,16 @@ exports.newSearch = async(function(req, res, next) {
             user = req.user || {},
             searchParams = {};
 
+        let data = await({
+            favorites: services.favorite.getFavoriteEntities(user.id)
+        });
+
         let templateData = searchView.render({
             user: user,
             fbClientId: FB_CLIENT_ID,
+            favorites: data.favorites,
             authSocialLinks: authSocialLinks,
+            countResults: 0
         });
 
         let html = soy.render(
