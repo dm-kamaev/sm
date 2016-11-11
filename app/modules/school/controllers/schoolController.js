@@ -362,15 +362,38 @@ exports.newSearch = async(function(req, res, next) {
             searchParams = {};
 
         let data = await({
-            favorites: services.favorite.getFavoriteEntities(user.id)
-        });
+                favorites: services.favorite.getFavoriteEntities(user.id),
+                schools: services.school.list(searchParams, {limitResults: 10}),
+                mapSchools: [],
+                mapPosition: services.map.getPositionParams(searchParams),
+                filtersData: {},
+                seoParams: {}
+            }),
+            aliases = await({
+                schools: services.page.getAliases(
+                    schoolView.uniqueIds(data.schools),
+                    entityType.SCHOOL
+                ),
+                map: services.page.getAliases(
+                    schoolView.uniqueIds(data.mapSchools),
+                    entityType.SCHOOL
+                )
+            });
+
 
         let templateData = searchView.render({
             user: user,
             fbClientId: FB_CLIENT_ID,
             favorites: data.favorites,
             authSocialLinks: authSocialLinks,
-            countResults: 0
+            countResults: 0,
+            schoolsList: data.schools,
+            mapSchools: {},
+            mapPosition: data.mapPosition,
+            searchParams: searchParams,
+            filtersData: data.filtersData,
+            enabledFilters: null,
+            seoParams: data.seoParams,
         });
 
         let html = soy.render(
