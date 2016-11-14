@@ -15,7 +15,8 @@ const logger = require('../../../app/components/logger/logger')
 const googleApi = require('googleapis');
 const key = require('../../../assets/school-market-55aa2d283f38.json');
 
-const VIEW_ID = 'ga:130630878';
+const config = require('../../../app/config/config.json');
+const VIEW_ID = config.courses.analyticsViewId;
 
 /**
  * Api parameters
