@@ -2,7 +2,7 @@
 
 const lodash = require('lodash');
 
-const scoreView = require('./scoreView'),
+const scoreView = require('../../entity/views/scoreView'),
     metroView = require('../../geo/views/metroView'),
     geoView = require('../../geo/views/geoView'),
     areaView = require('../../geo/views/areaView'),

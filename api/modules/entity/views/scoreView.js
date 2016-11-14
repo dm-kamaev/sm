@@ -1,6 +1,6 @@
 'use strict';
 
-var scoreView = {};
+let scoreView = {};
 
 /**
  * View for search results page
@@ -18,7 +18,7 @@ var scoreView = {};
  * }}
  */
 scoreView.results = function(score, totalScore, opt_sortCriterion) {
-    var sortCriterion = opt_sortCriterion || 0,
+    let sortCriterion = opt_sortCriterion || 0,
         sectionNames = [
             'Средняя оценка',
             'Образование',
@@ -27,8 +27,8 @@ scoreView.results = function(score, totalScore, opt_sortCriterion) {
             'Инфраструктура'
         ],
         sectionValues = [totalScore].concat(score),
-        sections = this.sections(sectionNames, sectionValues);
-    return this.minimized(sections, sortCriterion);
+        sections = scoreView.sections(sectionNames, sectionValues);
+    return scoreView.minimized(sections, sortCriterion);
 };
 
 /**
@@ -41,7 +41,7 @@ scoreView.results = function(score, totalScore, opt_sortCriterion) {
  * }>}
  */
 scoreView.sections = function(sectionNames, nullableSectionValues) {
-    var sectionValues = nullableSectionValues || [];
+    let sectionValues = nullableSectionValues || [];
     return sectionNames.map((sectionName, index) => {
         return {
             name: sectionName,
@@ -66,10 +66,10 @@ scoreView.sections = function(sectionNames, nullableSectionValues) {
  * }}
  */
 scoreView.minimized = function(scoreSections, opt_visibleMarkIndex) {
-    var primaryMarkIndex = opt_visibleMarkIndex || 0;
+    let primaryMarkIndex = opt_visibleMarkIndex || 0;
 
-    var primary = scoreSections[primaryMarkIndex];
-    var secondary = scoreSections.filter(item => {
+    let primary = scoreSections[primaryMarkIndex];
+    let secondary = scoreSections.filter(item => {
         return item.name != primary.name;
     });
 
@@ -101,7 +101,7 @@ scoreView.minimized = function(scoreSections, opt_visibleMarkIndex) {
  * @return {boolean}
  */
 scoreView.isNotEmpty = function(score, opt_sortCriterion) {
-    var sortCriterion = opt_sortCriterion || {};
+    let sortCriterion = opt_sortCriterion || {};
     return sortCriterion.value || score.some(item => item.value);
 };
 
