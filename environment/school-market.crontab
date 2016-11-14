@@ -1,5 +1,6 @@
 basePath=/home/gorod
 0 */12 * * * cd $basePath && ./console/cron/updateSearch.sh
 0 */12 * * * cd $basePath && ./console/cron/updateRank.sh
+0 */24 * * * cd $basePath && ./console/cron/updateAnalytics.sh
 */15 * * * * cd $basePath && ./console/cron/sendNotifications.sh
 */5 * * * * cd $basePath && ./console/cron/deleteComments.sh
