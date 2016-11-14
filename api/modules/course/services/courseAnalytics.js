@@ -16,7 +16,7 @@ let service = {
  *     clicks: number,
  *     views: number
  * }} data
- * @return {courseCtr}
+ * @return {models.CourseAnalytics}
  */
 service.create = async(function(data) {
     return await(models.CourseAnalytics.create(data));
