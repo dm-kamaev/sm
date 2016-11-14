@@ -24,8 +24,7 @@
  *     }>|undefined),
  *     online: ?('only'|'available'|undefidned),
  *     isFavorite: ?boolean,
- *     countDepartment: ?number,
- *     position: (number|undefined)
+ *     countDepartment: ?number
  * }} sm.bSmItem.TemplateEntity.Params.Data
  */
 
@@ -226,7 +225,9 @@
     {let $classes kind="html"}
         {call .rootClass/}__score
 
-        {sp}{cl.iUtils.Utils.CssClass.HIDDEN}
+        {if $params.data.type == 'course'}
+            {sp}{cl.iUtils.Utils.CssClass.HIDDEN}
+        {/if}
     {/let}
 
     <div class="{$classes}">
