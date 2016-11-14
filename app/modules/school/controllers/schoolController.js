@@ -367,7 +367,7 @@ exports.newSearch = async(function(req, res, next) {
                 mapSchools: [],
                 mapPosition: services.map.getPositionParams(searchParams),
                 filtersData: {},
-                seoParams: {}
+                seoParams: {},
             }),
             aliases = await({
                 schools: services.page.getAliases(
@@ -380,19 +380,18 @@ exports.newSearch = async(function(req, res, next) {
                 )
             });
 
-
         let templateData = searchView.render({
             user: user,
             fbClientId: FB_CLIENT_ID,
             favorites: data.favorites,
             authSocialLinks: authSocialLinks,
-            countResults: 0,
             schoolsList: data.schools,
-            mapSchools: {},
+            mapSchools: data.mapSchools,
             mapPosition: data.mapPosition,
             searchParams: searchParams,
             filtersData: data.filtersData,
             enabledFilters: null,
+            aliases: aliases,
             seoParams: data.seoParams,
         });
 

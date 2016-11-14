@@ -9,10 +9,11 @@ const olympResultView = require('../../study/views/olimpResultView'),
     searchTypeEnum = require('../enums/searchType');
 
 const userView = require('../../user/views/user'),
-    favoriteView = require('../../favorite/views/favoriteView');
+    schoolView = require('./schoolView');
+
+//favoriteView = require('../../favorite/views/favoriteView');
 
 var searchView = {};
-
 
 /**
  * @param {{
@@ -20,12 +21,12 @@ var searchView = {};
  *     fbClientId: string,
  *     favorites: Array<Object>,
  *     authSocialLinks: Object,
- *     countResults: number,
  *     schoolsList: Array<Object>,
  *     mapSchools: Object<Object>,
  *     mapPosition: Object,
  *     searchParams: Object,
  *     filtersData: Array<Object>,
+ *     aliases: Object,
  *     seoParams: Object
  * }} data
  * @return {Object}
@@ -33,6 +34,13 @@ var searchView = {};
 searchView.render = function(data) {
     let user = userView.default(data.user),
         seoParams = data.seoParams || {};
+
+    let aliasedSchools = schoolView.joinAliases(
+            data.schoolsList, data.aliases.schools
+        );
+        // aliasedMapSchools = schoolView.joinAliases(
+        //     data.mapSchools, data.aliases.map
+        // );
 
     return {
         seo: {
@@ -63,7 +71,8 @@ searchView.render = function(data) {
             },
             user: user,
             favorites: {
-                items: favoriteView.list(data.favorites)
+                items: [],
+                //favoriteView.list(data.favorites)
             },
         },
         user: user,
@@ -77,7 +86,9 @@ searchView.render = function(data) {
         resultsList: {
             title: seoParams.listTitle,
             description: seoParams.text && seoParams.text[0] || null,
-            countResults: data.countResults,
+            countResults: data.schoolsList[0] &&
+                data.schoolsList[0].countResults ||
+                0,
             searchText: data.searchParams.name,
             declensionEntityType: {
                 nom: 'школа',
@@ -105,7 +116,7 @@ searchView.render = function(data) {
                 defaultOpenerText: 'средней оценке'
             },
             entityList: {
-                items: [],
+                items: schoolView.list(aliasedSchools),
                 itemType: 'smItemEntity'
             }
         },
@@ -401,7 +412,8 @@ var filterTooltip = function(filterType) {
  *     value: (string|number),
  *     id: (number|undefined)
  * }>} filters
- * @param {Array.<number>} checkedFilters - array with id of currently checked
+ * @param {Array.<number>} checkedFilters -
+ * array with id of currently checked
  * filters
  * @return {Array.<{
  *     label: string,

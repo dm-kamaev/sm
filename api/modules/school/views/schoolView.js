@@ -1,5 +1,7 @@
-var services = require('../../../../app/components/services').all;
-var lodash = require('lodash');
+'use strict';
+
+const services = require('../../../../app/components/services').all;
+const lodash = require('lodash');
 
 const areaView = require('../../geo/views/areaView.js');
 const metroView = require('../../geo/views/metroView.js');
@@ -19,13 +21,14 @@ const giaResultView = require(
 const olimpResultView = require(
     '../../study/views/olimpResultView.js');
 const scoreView = require('../views/scoreView');
+const scoreEntityView = require('../../entity/views/scoreView');
 const seoView = require('./seoView.js');
 
 const commentView = require('../../comment/views/commentView');
 
 const entityType = require('../../entity/enums/entityType');
 
-var schoolView = {};
+let schoolView = {};
 
 
 /**
@@ -298,6 +301,48 @@ schoolView.list = function(schools, opt_criterion, opt_page) {
         };
     }
     return res;
+};
+
+
+/**
+ * @param {Array<Object>} schoolInstances
+ * @param {number=} opt_sortCriterion
+ * @return {Object} contains results count and schools array
+ */
+schoolView.list = function(schoolInstances, opt_sortCriterion) {
+    let schoolList = [];
+
+    if (schoolInstances.length) {
+        let schools = groupSchools(schoolInstances);
+
+        schoolList = schools.map(school =>
+            schoolView.getListSchool(school, opt_sortCriterion)
+        );
+    }
+    return schoolList;
+};
+
+
+/**
+ * @param  {Object} school
+ * @param  {number=} opt_sortCriterion
+ * @return {Object}
+ */
+schoolView.getListSchool = function(school, opt_sortCriterion) {
+    return {
+        id: school.id,
+        alias: school.alias,
+        type: entityType.SCHOOL,
+        name: getName(school.name),
+        description: school.description,
+        score: scoreEntityView.results(
+            school.score,
+            school.totalScore,
+            opt_sortCriterion
+        ),
+        metro: addressView.getMetro(school.addresses) || [],
+        area: [addressView.getArea(school.addresses)[0]]
+    };
 };
 
 
