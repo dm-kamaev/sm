@@ -4,13 +4,13 @@
 /**
  * @typedef {{
  *     description: string,
- *     labelText: string,
+ *     labelText: (string|undefined),
  *     actionText: string
  * }} sm.lCourse.bUserInteraction.Template.Params.Data
  */
 
 
- /**
+/**
  * @typedef {{
  *     stylizationModifier: string,
  *     customClasses: ?Array<string>
@@ -52,7 +52,7 @@
  * Label with additional information
  * @param params {{
  *     data: {
- *         labelText: string
+ *         labelText: (string|undefined)
  *     }
  * }}
  */

@@ -1,0 +1,28 @@
+@import "../../../../n-common/i-media/i-media";
+
+.b-user-interaction_experimental {
+    padding-top: 23px;
+
+    .b-user-interaction__label {
+        display: none;
+    }
+}
+
+@include media-xs {
+    .b-user-interaction_experimental {
+        width: 100%;
+        padding-top: 20px;
+
+        .b-user-interaction__description {
+            display: none;
+        }
+
+        .b-user-interaction__button {
+            display: block;
+        }
+
+        .b-user-interaction__action-text {
+            display: none;
+        }
+    }
+}
