@@ -197,6 +197,17 @@ goog.scope(function() {
 
 
     /**
+     * Send Analytics when user clicks on list item
+     * @param {number} itemId
+     * @param {string} list
+     * @public
+     */
+    SearchResults.prototype.sendAnalyticsItemClick = function(itemId, list) {
+        this.itemList_.sendAnalyticsItemClick(itemId, list);
+    };
+
+
+    /**
      * Show or hide show more button
      * @param {boolean} visibility
      * @public
