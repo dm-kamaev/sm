@@ -51,7 +51,7 @@ class FilterPanel {
     /**
      * Initialize filter panel with given data
      * @param {{
-     *     enabledFilters: Array<string>,
+     *     enabledFilters: (Array<string>|undefined),
      *     filtersData: Array<Object>,
      *     searchParams: Object<string, Array<string, number>>
      * }} data

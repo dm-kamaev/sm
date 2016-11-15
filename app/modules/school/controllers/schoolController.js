@@ -359,7 +359,7 @@ exports.newSearch = async(function(req, res, next) {
     try {
         let authSocialLinks = services.auth.getAuthSocialUrl(),
             user = req.user || {},
-            searchParams = {};
+            searchParams = searchView.initSearchParams(req.query);
 
         let data = await({
                 favorites: services.favorite.getFavoriteEntities(user.id),
@@ -367,7 +367,7 @@ exports.newSearch = async(function(req, res, next) {
                 mapSchools: [],
                 mapPosition: services.map.getPositionParams(searchParams),
                 filtersData: {},
-                seoParams: {},
+                seoParams: {}
             }),
             aliases = await({
                 schools: services.page.getAliases(

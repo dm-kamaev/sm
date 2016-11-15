@@ -33,7 +33,7 @@ seoView.searchParams = function(seoSchoolList) {
     var storedParams = JSON.parse(seoSchoolList.searchParameters);
 
     return {
-        //searchParams: searchView.params(storedParams),
+        // searchParams: searchView.params(storedParams),
         searchText: storedParams.name || ''
     };
 };

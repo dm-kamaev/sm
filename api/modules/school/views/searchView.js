@@ -5,13 +5,19 @@ const olympResultView = require('../../study/views/olimpResultView'),
     egeResultView = require('../../study/views/egeResultView'),
     giaResultView = require('../../study/views/giaResultView'),
     activityView = require('./activityView'),
-    specializedClassesView = require('./specializedClassesView'),
+    specializedClassesView = require('./specializedClassesView');
+
+const filterName = require('../enums/filterName'),
     searchTypeEnum = require('../enums/searchType');
+
+const FormatUtils = require('../../entity/lib/FormatUtils');
+
+// FilterPanel = require('../lib/SchoolFilterPanel');
 
 const userView = require('../../user/views/user'),
     schoolView = require('./schoolView');
 
-//favoriteView = require('../../favorite/views/favoriteView');
+// favoriteView = require('../../favorite/views/favoriteView');
 
 var searchView = {};
 
@@ -120,9 +126,100 @@ searchView.render = function(data) {
                 itemType: 'smItemEntity'
             }
         },
-        filterPanel: {},
+        filterPanel: searchView.filterPanel({
+            filtersData: data.filtersData,
+            searchParams: data.searchParams
+        }),
         searchParams: data.searchParams
     };
+};
+
+
+/**
+ * @param {Object} params
+ * @return {Object}
+ */
+searchView.initSearchParams = function(params) {
+    let formatUtils = new FormatUtils();
+
+    return {
+        [filterName.CLASSES]: formatUtils.transformToArray(params.classes),
+        [filterName.SCHOOL_TYPE]:
+            formatUtils.transformToArray(params.schoolType),
+        [filterName.EGE]: formatUtils.transformToArray(params.ege),
+        [filterName.GIA]: formatUtils.transformToArray(params.gia),
+        [filterName.OLIMP]: formatUtils.transformToArray(params.olimp),
+        [filterName.SPECIALIZED_CLASS_TYPE]:
+            formatUtils.transformToArray(params.specializedClassType),
+        [filterName.ACTIVITY_SPHERE]:
+            formatUtils.transformToArray(params.activitySphere),
+        page: params.page || 0,
+        sortType: params.sortType,
+        name: params.name,
+        metroId: params.metroId || null,
+        areaId: params.areaId || null,
+        districtId: params.districtId || null
+    };
+};
+
+
+/**
+ * Data for filter panel
+ * @param {{
+ *     filtersData: Array<Object>,
+ *     searchParams: {
+ *         classes: Array<(string|number)>,
+ *         schoolType: Array<(string|number)>,
+ *         ege: Array<(string|number)>,
+ *         gia: Array<(string|number)>,
+ *         olimp: Array<(string|number)>,
+ *         specializedClassType: Array<(string|number)>,
+ *         activitySphere: Array<(string|number)>
+ *     },
+ *     filters: Array<string>
+ * }} data
+ * @return {{
+ *     data: {
+ *         filters: Array<{
+ *             data: {
+ *                 header: {
+ *                     title: (string|undefined),
+ *                     tooltip: (string|undefined)
+ *                 },
+ *                 name: string,
+ *                 options: Array<({
+ *                     label: string,
+ *                     value: string,
+ *                     isChecked: boolean
+ *                   }|{
+ *                     title: (string|undefined),
+ *                     value: (number|undefined),
+ *                     placeholder: (string|undefined),
+ *                     maxLength: (number|undefined)
+ *                 })>
+ *             },
+ *             config: {
+ *                 type: (string|undefined),
+ *                 optionsToShow: (boolean|undefined),
+ *                 cannotBeHidden: (boolean|undefined),
+ *                 isShowed: (boolean|undefined),
+ *                 showMoreButtonText: (number|undefined),
+ *                 theme: (string|undefined),
+ *                 align: (string|undefined)
+ *             }
+ *         }>
+ *     },
+ *     config: {
+ *         hasCheckedFilters: (boolean|undefined)
+ *     }
+ * }}
+ */
+searchView.filterPanel = function(data) {
+    // let filterPanel = new FilterPanel();
+    // filterPanel.init(data);
+
+    // return filterPanel.getParams();
+    return {};
 };
 
 
