@@ -28,6 +28,7 @@
  *     year: (number|undefined),
  *     staticVersion: (string|undefined),
  *     analyticsId: string,
+ *     experimentId: string,
  *     yandexMetrikaId: number,
  *     carrotquestId: string,
  *     domain: string,
@@ -142,6 +143,27 @@
 
 
 /**
+ * Call experiment script template if needed
+ * @param params {{
+ *     config: {
+ *         experimentId: string
+ *     }
+ * }}
+ */
+{template .experimentScript kind="html"}
+    {if $params?.config.experimentId}
+        {call sm.iExperiment.Template.script}
+            {param params: [
+                'data': [
+                    'experimentId': $params.config.experimentId
+                ]
+            ] /}
+        {/call}
+    {/if}
+{/template}
+
+
+/**
  * @override
  */
 {template .scripts autoescape="strict" kind="html"}
@@ -164,6 +186,7 @@
  * @override
  */
 {template .extraScripts autoescape="strict" kind="html"}
+    {call .experimentScript data="all" /}
     {call .layoutScript data="all" /}
     {call .csrf data="all"/}
     {call .analytics data="all"/}
