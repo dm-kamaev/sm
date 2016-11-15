@@ -54,6 +54,19 @@
 
 
 /**
+ * @param params {{
+ *     data: sm.iLayout.TemplateStendhal.Params.Data,
+ *     config: sm.iLayout.TemplateStendhal.Params.Config
+ * }}
+ * @override
+ */
+{template .head kind="html"}
+    {call .experimentScript data="all" /}
+    {call .super_head data="all" /}
+{/template}
+
+
+/**
  * Meta tags
  */
 {template .meta autoescape="strict" kind="html"}
@@ -186,7 +199,6 @@
  * @override
  */
 {template .extraScripts autoescape="strict" kind="html"}
-    {call .experimentScript data="all" /}
     {call .layoutScript data="all" /}
     {call .csrf data="all"/}
     {call .analytics data="all"/}
