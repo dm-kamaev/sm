@@ -4,6 +4,7 @@ const async = require('asyncawait/async'),
     await = require('asyncawait/await');
 
 const services = require('../../../../app/components/services').all;
+const categoryView = require('../views/courseCategoryView');
 
 const logger = require('../../../../app/components/logger/logger')
     .getLogger('app');
@@ -51,8 +52,16 @@ controller.list = async(function(req, res) {
  *     {
  *         "id": 1,
  *         "name": "Профориентация",
- *         "filters": null,
+ *         "filters": ["age", "costPerHour"],
  *         "isActive": true,
+ *         "tabTitle": "Курсы профориентации в Москве: стоимость обучения.",
+ *         "metaDescription": "Удобный фильтр для поиска курсов профориентации",
+ *         "openGraphTitle": "Выбор профессии и вуза",
+ *         "openGraphDescription": "Все полезные курсы профориентации",
+ *         "listTitle": "Курсы профориентации",
+ *         "searchDescription": "Курсы профориентации",
+ *         "seoText1": "Курсы профориентации",
+ *         "seoText2": "Курсы профориентации"
  *         "created_at": "2016-10-19T15:56:35.234Z",
  *         "updated_at": "2016-10-19T15:56:35.234Z"
  *     }
@@ -61,6 +70,13 @@ controller.get = async(function(req, res) {
     let result;
     try {
         result = await(services.courseCategory.getById(req.params.id));
+        let courseCategory = await(services.courseCategory.getById(
+                req.params.id
+            )),
+            seoCourseList = await(services.seoCourseList.getByCategoryId(
+                courseCategory.id
+            ));
+        result = categoryView.joinSeoData(courseCategory, seoCourseList);
     } catch (error) {
         logger.error(error.message);
         result = error;
@@ -78,15 +94,33 @@ controller.get = async(function(req, res) {
  * @apiSuccess {CourseCategory} courseCategory
  * @apiParamExample {json} Response-example
  *     {
+ *         "id": 1,
  *         "name": "Профориентация",
+ *         "filters": ["age", "costPerHour"],
  *         "isActive": true,
- *         "filters": ["age", "costPerHour"]
+ *         "tabTitle": "Курсы профориентации в Москве: стоимость обучения.",
+ *         "metaDescription": "Удобный фильтр для поиска курсов профориентации",
+ *         "openGraphTitle": "Выбор профессии и вуза",
+ *         "openGraphDescription": "Все полезные курсы профориентации.",
+ *         "listTitle": "Курсы профориентации",
+ *         "searchDescription": "Курсы профориентации",
+ *         "seoText1": "Курсы профориентации",
+ *         "seoText2": "Курсы профориентации"
+ *         "created_at": "2016-10-19T15:56:35.234Z",
+ *         "updated_at": "2016-10-19T15:56:35.234Z"
  *     }
  */
 controller.create = async(function(req, res) {
     let result;
     try {
-        result = await(services.courseCategory.create(req.body));
+        let data = req.body,
+            courseCategory = await(services.courseCategory.create(data)),
+            seoCourseList = await(services.seoCourseList.create(
+                courseCategory.id, data
+            ));
+
+        result = courseCategory.toJSON();
+        result.seoCourseList = seoCourseList.toJSON();
     } catch (error) {
         logger.error(error.message);
         result = error;
@@ -104,15 +138,32 @@ controller.create = async(function(req, res) {
  * @apiSuccess {number[]} updatedRowsCount
  * @apiParamExample {json} Response-example
  *     {
+ *         "id": 1,
  *         "name": "Профориентация",
+ *         "filters": ["age", "costPerHour"],
  *         "isActive": true,
- *         "filters": ["age", "costPerHour"]
+ *         "tabTitle": "Курсы профориентации в Москве: стоимость обучения.",
+ *         "metaDescription": "Удобный фильтр для поиска курсов профориентации",
+ *         "openGraphTitle": "Выбор профессии и вуза",
+ *         "openGraphDescription": "Все полезные курсы профориентации",
+ *         "listTitle": "Курсы профориентации",
+ *         "searchDescription": "Курсы профориентации",
+ *         "seoText1": "Курсы профориентации",
+ *         "seoText2": "Курсы профориентации"
+ *         "created_at": "2016-10-19T15:56:35.234Z",
+ *         "updated_at": "2016-10-19T15:56:35.234Z"
  *     }
  */
 controller.update = async(function(req, res) {
     let result;
     try {
-        result = await(services.courseCategory.update(req.params.id, req.body));
+        let data = req.body,
+            categoryId = req.params.id;
+
+        result = await(services.courseCategory.update(
+            categoryId, data
+        ));
+        await(services.seoCourseList.createUpdate(categoryId, data));
     } catch (error) {
         logger.error(error.message);
         result = error;
