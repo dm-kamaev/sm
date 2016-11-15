@@ -24,7 +24,8 @@ const ANALYTICS_ID = config.courses.analyticsId,
     YANDEX_METRIKA_ID = config.courses.yandexMetrikaId,
     DOMAIN = config.courses.host,
     FB_CLIENT_ID = config.facebookClientId,
-    CARROTQUEST_ID = config.carrotquestId;
+    CARROTQUEST_ID = config.carrotquestId,
+    EXPERIMENT_ID = config.courses.experimentId;
 
 let controller = {};
 
@@ -66,6 +67,7 @@ controller.search = async(function(req, res, next) {
                     categories: services.courseCategory.getAliases()
                 });
 
+            let factory = services.page.getFactoryByQuery(req.query);
             let templateData = searchView.render({
                 entityType: entityType.COURSE,
                 user: user,
@@ -87,7 +89,8 @@ controller.search = async(function(req, res, next) {
                 seoParams: data.seoParams,
                 currentCategory: categoryName,
                 categories: data.categories,
-                categoryAliases: aliases.categories
+                categoryAliases: aliases.categories,
+                factory: factory
             });
 
             let html = soy.render(
@@ -97,10 +100,11 @@ controller.search = async(function(req, res, next) {
                         config: {
                             entityType: entityType.COURSE,
                             page: 'search',
-                            modifier: 'stendhal',
+                            modifier: factory,
                             staticVersion: config.lastBuildTimestamp,
                             year: new Date().getFullYear(),
                             analyticsId: ANALYTICS_ID,
+                            experimentId: EXPERIMENT_ID,
                             yandexMetrikaId: YANDEX_METRIKA_ID,
                             carrotquestId: CARROTQUEST_ID,
                             csrf: req.csrfToken(),
@@ -179,6 +183,7 @@ controller.information = async(function(req, res, next) {
                     priceLabelText: 'Гарантия лучшей цены',
                     actionButtonText: 'Хочу этот курс!'
                 });
+                let factory = services.page.getFactoryByQuery(req.query);
 
                 let html = soy.render(
                     'sm.lCourse.Template.course', {
@@ -187,10 +192,11 @@ controller.information = async(function(req, res, next) {
                             config: {
                                 entityType: entityType.COURSE,
                                 page: entityType.COURSE,
-                                modifier: 'stendhal',
+                                modifier: factory,
                                 staticVersion: config.lastBuildTimestamp,
                                 year: new Date().getFullYear(),
                                 analyticsId: ANALYTICS_ID,
+                                experimentId: EXPERIMENT_ID,
                                 yandexMetrikaId: YANDEX_METRIKA_ID,
                                 carrotquestId: CARROTQUEST_ID,
                                 csrf: req.csrfToken(),
