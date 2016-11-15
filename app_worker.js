@@ -9,10 +9,17 @@ const csrf = require('./app/middleware/csrf');
 const session = require('./app/components/session');
 const configurePassport = require('./app/components/configurePassport');
 const soy = require('./node_modules/clobl/soy').setOptions({
-    templateFactory: path.join(
-        __dirname,
-        'app/blocks/n-clobl/i-factory/i-template-factory_stendhal.js'
-    ),
+    templateFactory: [
+        path.join(
+            __dirname,
+            'app/blocks/n-clobl/i-factory/i-template-factory_stendhal.js'
+        ),
+        path.join(
+            __dirname,
+            'app/blocks/n-clobl/i-factory/i-factory_experimental/' +
+            'i-template-factory_experimental.js'
+        )
+    ],
     closureLibrary: path.join(
         __dirname,
         'node_modules/google-closure-library'

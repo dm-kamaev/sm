@@ -788,7 +788,7 @@ jQuery(function() {
         sm.lSearch.View.CssClass.ROOT
     );
 
-    var view = new sm.lSearch.View(null, null, 'stendhal');
+    var view = new sm.lSearch.View();
     var instance = new sm.lSearch.Search(view);
 
     instance.decorate(domElement);

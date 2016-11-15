@@ -454,7 +454,8 @@
  *
  *     },
  *     config: {
- *         entityType: string
+ *         entityType: string,
+ *         modifier: string
  *     }
  * }}
  * @override
@@ -466,6 +467,7 @@
                 'searchParams': $params.data?.searchParams,
                 'isUserAuthorized': $params.data?.user ? true : false,
                 'authSocialLinks': $params.data?.authSocialLinks,
+                'modifier': $params.config?.modifier,
                 'type': $params?.config.entityType
             ] /}
         {/call}"

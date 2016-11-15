@@ -62,7 +62,7 @@ gulp.task('appES5', function() {
 });
 
 gulp.task('soy', function() {
-    return gulpHelper.soy.build();
+    return gulpHelper.soy.build([]);
 });
 
 gulp.task('styles', ['sprite', 'svgSprite'], function() {

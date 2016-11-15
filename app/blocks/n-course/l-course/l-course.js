@@ -422,7 +422,7 @@ jQuery(function() {
         sm.lCourse.View.CssClass.ROOT
     );
 
-    var view = new sm.lCourse.View(null, null, 'stendhal');
+    var view = new sm.lCourse.View();
     var instance = new sm.lCourse.Course(view);
 
     instance.decorate(domElement);
