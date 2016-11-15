@@ -7,6 +7,7 @@ const svgSprite = require('gulp-svg-sprites');
 const gulpFilter = require('gulp-filter');
 
 const Path = require('./Path');
+const gulpConfig = require('../app/config/base/config.json');
 
 module.exports = function() {
     let streamSprite = gulp
@@ -20,7 +21,10 @@ module.exports = function() {
             selector: '%f',
             common: 'g-icon_svg',
             cssFile: 'svg-sprite.scss',
-            svgPath: '%f',
+            svgPath: gulpConfig.lastBuildTimestamp ?
+                '/static/images/g-icon_auto-svg-sprite.svg' + '?' +
+                    gulpConfig.lastBuildTimestamp :
+                '%f',
             svg: {
                 sprite: 'images/g-icon_auto-svg-sprite.svg'
             }

@@ -128,7 +128,11 @@ service.getById = async(function(id) {
  * @return {CourseCategory}
  */
 service.create = async(function(data) {
-    return await(models.CourseCategory.create(data));
+    return await(models.CourseCategory.create({
+        name: data.name,
+        isActive: data.isActive,
+        filters: data.filters
+    }));
 });
 
 /**
@@ -141,7 +145,11 @@ service.create = async(function(data) {
  * @return {number}
  */
 service.update = async(function(id, data) {
-    return await(models.CourseCategory.update(data, {
+    return await(models.CourseCategory.update({
+        name: data.name,
+        isActive: data.isActive,
+        filters: data.filters
+    }, {
         where: {
             id: id
         },
