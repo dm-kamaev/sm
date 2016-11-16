@@ -27,7 +27,8 @@ const informationFields = {
         'fullDescription',
         'entranceExam',
         'learningOutcome',
-        'leadType'
+        'leadType',
+        'embedId'
     ],
     BRAND: ['id', 'name', 'description'],
     TYPE: ['id', 'name'],
