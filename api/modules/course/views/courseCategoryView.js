@@ -44,19 +44,19 @@ courseCategoryView.listLinks = function(categories, pages) {
 courseCategoryView.joinSeoData = function(courseCategory, opt_seoData) {
     let seoData = opt_seoData || {};
     return {
-        id: courseCategory.id,
-        name: courseCategory.name,
-        filters: courseCategory.filters,
-        isActive: courseCategory.isActive,
-        tabTitle: seoData.tabTitle,
-        metaDescription: seoData.metaDescription,
-        openGraphTitle: seoData.openGraphTitle,
-        listTitle: seoData.listTitle,
-        searchDescription: seoData.text ? seoData.text[0] : undefined,
-        seoText1: seoData.text ? seoData.text[1] : undefined,
-        seoText2: seoData.text ? seoData.text[2] : undefined,
-        createdAt: courseCategory.createdAt,
-        updatedAt: courseCategory.updatedAt
+        id: courseCategory.id || null,
+        name: courseCategory.name || null,
+        filters: courseCategory.filters || null,
+        isActive: courseCategory.isActive || null,
+        tabTitle: seoData.tabTitle || null,
+        metaDescription: seoData.metaDescription || null,
+        openGraphTitle: seoData.openGraphTitle || null,
+        listTitle: seoData.listTitle || null,
+        searchDescription: seoData.text ? seoData.text[0] : null,
+        seoText1: seoData.text ? seoData.text[1] : null,
+        seoText2: seoData.text ? seoData.text[2] : null,
+        createdAt: courseCategory.createdAt || null,
+        updatedAt: courseCategory.updatedAt || null
     };
 };
 
