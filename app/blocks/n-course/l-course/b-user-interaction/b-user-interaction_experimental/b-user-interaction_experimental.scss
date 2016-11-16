@@ -1,8 +1,11 @@
 @import "../../../../n-common/i-media/i-media";
 
 .b-user-interaction_experimental {
+    padding-top: 0px;
+
     .b-user-interaction__label {
         display: block;
+
         margin-bottom: 15px;
         padding: 8px 30px;
 
@@ -16,6 +19,7 @@
         padding: 0 30px;
 
         cursor: pointer;
+
         color: #ee392f;
 
         font: 19px 'Proxima', Arial, sans-serif;

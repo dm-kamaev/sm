@@ -61,7 +61,7 @@
  * @override
  */
 {template .head kind="html"}
-    {call .experimentScript data="all" /}
+    {call .contentExperimentScript data="all" /}
     {call .super_head data="all" /}
 {/template}
 
@@ -163,9 +163,9 @@
  *     }
  * }}
  */
-{template .experimentScript kind="html"}
+{template .contentExperimentScript kind="html"}
     {if $params?.config.experimentId}
-        {call sm.iExperiment.Template.script}
+        {call sm.iContentExperiment.Template.script}
             {param params: [
                 'data': [
                     'experimentId': $params.config.experimentId

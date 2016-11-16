@@ -5,6 +5,8 @@ const async = require('asyncawait/async'),
 
 const soy = require('../../../components/soy'),
     services = require('../../../components/services').all,
+    contentExperiment =
+        require('../../../components/contentExperiment/contentExperiment'),
     courseView = require('../../../../api/modules/course/views/courseView'),
     searchView = require('../../../../api/modules/course/views/searchView'),
     informationView = require(
@@ -67,7 +69,7 @@ controller.search = async(function(req, res, next) {
                     categories: services.courseCategory.getAliases()
                 });
 
-            let factory = services.page.getFactoryByQuery(req.query);
+            let factory = contentExperiment.getFactoryByQuery(req.query);
             let templateData = searchView.render({
                 entityType: entityType.COURSE,
                 user: user,
@@ -183,7 +185,7 @@ controller.information = async(function(req, res, next) {
                     priceLabelText: 'Гарантия лучшей цены',
                     actionButtonText: 'Хочу этот курс!'
                 });
-                let factory = services.page.getFactoryByQuery(req.query);
+                let factory = contentExperiment.getFactoryByQuery(req.query);
 
                 let html = soy.render(
                     'sm.lCourse.Template.course', {

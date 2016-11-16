@@ -1,6 +1,6 @@
 'use strict';
 
-const Enum = require('../../../components/enum');
+const Enum = require('../../../api/components/enum');
 
 module.exports = new Enum('factoryName', {
     STENDHAL: 'stendhal',

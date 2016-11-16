@@ -5,8 +5,6 @@ const async = require('asyncawait/async'),
 
 const models = require('../../../../app/components/models').all;
 
-const factoryNameEnum = require('../enums/factoryName');
-
 var service = {
     name: 'page'
 };
@@ -151,45 +149,4 @@ service.delete = async(function(entityId, entityType) {
         }
     }));
 });
-
-/**
- * Get factory name from query params provided with google analytics experiments
- * @param {{
- *     utm_expId: (string|undefined)
- * }} queryParams
- * @return {string}
- */
-service.getFactoryByQuery = function(queryParams) {
-    let experimentParams = queryParams.utm_expid;
-    let result;
-
-    if (experimentParams) {
-        // Params is a string with three parameters: experimentId, experiment
-        // key and version divided with '.' delimiter
-        let params = experimentParams.split('.');
-        // The last element in params is version
-        let version = params[params.length - 1];
-
-        result = service.getFactoryByVersion(version);
-    } else {
-        result = factoryNameEnum.STENDHAL;
-    }
-    return result;
-};
-
-/**
- * Return factory name by version id
- * @param {string} version
- * @return {strict}
- */
-service.getFactoryByVersion = function(version) {
-    let result;
-    if (version == '1') {
-        result = factoryNameEnum.EXPERIMENTAL;
-    } else {
-        result = factoryNameEnum.STENDHAL;
-    }
-    return result;
-};
-
 module.exports = service;
