@@ -73,9 +73,12 @@ goog.scope(function() {
      */
     View.getRenderParams = function(rawParams) {
         var params = sm.bSmItem.View.getRenderParams(rawParams);
+        var score = rawParams['score'] ?
+            sm.bSmScore.SmScoreBrief.getRenderParams(rawParams['score']) :
+            {};
         goog.object.extend(params.data, {
             cost: rawParams['cost'],
-            score: sm.bSmScore.SmScoreBrief.getRenderParams(rawParams['score']),
+            score: score,
             brand: rawParams['brand'],
             online: rawParams['online'],
             isFavorite: rawParams['isFavorite'],

@@ -1,37 +1,22 @@
 {namespace sm.gIcon.TemplateStendhal}
 
+
 /**
- * Constructor
- * @param params {{
- *     config: {
- *         stylizationModifier: ?string,
- *         customClasses: ?list<string>,
- *         theme: ?string,
- *         size: ?string
+ * @typedef {{
+ *     data: {
+ *         type: string
  *     },
- *     includes: ?list{
- *         type: ?string,
- *         data: ?string
+ *     config: {
+ *         size: (string|undefined),
+ *         customClasses: (Array<string>|undefined)
  *     }
- * }}
- * @constructor
- * @extends cl.gIcon.Template
+ * }} cl.gIcon.TemplateStendhal.Params
  */
-{template .base}
-    {call .init data="all"/}
-{/template}
 
 
 /**
  * Icon template
- * @param params {
- *     data: {
- *         type: ?string
- *     },
- *     config: {
- *         size: ?string
- *     }
- * }
+ * @param params {cl.gIcon.TemplateStendhal.Params}
  * @extends cl.gIcon.Template
  * @constructor
  * @doc
@@ -42,51 +27,14 @@
 
 
 /**
- * Css classes
- * @param params {{
- *     config: {
- *         stylizationModifier: ?string,
- *         customClasses: ?list<string>,
- *         theme: ?string,
- *         size: ?string
- *     },
- *     includes: ?list{
- *         type: ?string,
- *         data: ?string
- *     }
- * }}
+ * Additional css classes
+ * @param params {cl.gIcon.TemplateStendhal.Params}
+ * @override
  */
-{template .classes}
-    i-control
-    {sp}
-    {call .rootClass/}
-    {sp}
-    {call .stylizationModifierClass data="all"/}
-    {if $params?.config?.theme}
-        {sp}{call .rootClass/}_{$params.config.theme}-theme
-    {/if}
-    {if $params?.config?.customClasses}
-        {foreach $class in $params.config.customClasses}
-            {sp}{$class}
-        {/foreach}
-    {/if}
-    {sp}
-    {call .additionalClasses data="all"/}
-    {sp}
-    {call .size_ data="all"/}
-{/template}
+{template .additionalClasses}
+    {sp}{call .rootClass/}_img_{$params.data.type}
 
-
-/**
- * modifier class size
- * @param params {{
- *     config: {
- *         size: ?string
- *     }
- * }}
- */
-{template .size_}
     {if $params?.config?.size}
-        {call .rootClass/}_img_size_{$params?.config?.size}
+        {sp}{call .rootClass/}_size_{$params.config.size}
     {/if}
 {/template}

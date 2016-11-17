@@ -5,6 +5,8 @@ const async = require('asyncawait/async'),
 
 const soy = require('../../../components/soy'),
     services = require('../../../components/services').all,
+    contentExperiment =
+        require('../../../components/contentExperiment/contentExperiment'),
     courseView = require('../../../../api/modules/course/views/courseView'),
     searchView = require('../../../../api/modules/course/views/searchView'),
     informationView = require(
@@ -24,7 +26,8 @@ const ANALYTICS_ID = config.courses.analyticsId,
     YANDEX_METRIKA_ID = config.courses.yandexMetrikaId,
     DOMAIN = config.courses.host,
     FB_CLIENT_ID = config.facebookClientId,
-    CARROTQUEST_ID = config.carrotquestId;
+    CARROTQUEST_ID = config.carrotquestId,
+    EXPERIMENT_ID = config.courses.experimentId;
 
 let controller = {};
 
@@ -47,6 +50,7 @@ controller.search = async(function(req, res, next) {
                     req.query, categoryInstance.id
                 );
 
+            let factory = contentExperiment.getFactoryByQuery(req.query);
             let data = await({
                     favorites: services.favorite.getFavoriteEntities(user.id),
                     courses: services.course.list(searchParams, 10),
@@ -87,7 +91,8 @@ controller.search = async(function(req, res, next) {
                 seoParams: data.seoParams,
                 currentCategory: categoryName,
                 categories: data.categories,
-                categoryAliases: aliases.categories
+                categoryAliases: aliases.categories,
+                factory: factory
             });
 
             let html = soy.render(
@@ -97,10 +102,11 @@ controller.search = async(function(req, res, next) {
                         config: {
                             entityType: entityType.COURSE,
                             page: 'search',
-                            modifier: 'stendhal',
+                            modifier: factory,
                             staticVersion: config.lastBuildTimestamp,
                             year: new Date().getFullYear(),
                             analyticsId: ANALYTICS_ID,
+                            experimentId: EXPERIMENT_ID,
                             yandexMetrikaId: YANDEX_METRIKA_ID,
                             carrotquestId: CARROTQUEST_ID,
                             csrf: req.csrfToken(),
@@ -176,8 +182,10 @@ controller.information = async(function(req, res, next) {
                     favorites: data.favorites,
                     categories: data.categories,
                     categoryAliases: data.categoryAliases,
+                    priceLabelText: 'Гарантия лучшей цены',
                     actionButtonText: 'Хочу этот курс!'
                 });
+                let factory = contentExperiment.getFactoryByQuery(req.query);
 
                 let html = soy.render(
                     'sm.lCourse.Template.course', {
@@ -186,10 +194,11 @@ controller.information = async(function(req, res, next) {
                             config: {
                                 entityType: entityType.COURSE,
                                 page: entityType.COURSE,
-                                modifier: 'stendhal',
+                                modifier: factory,
                                 staticVersion: config.lastBuildTimestamp,
                                 year: new Date().getFullYear(),
                                 analyticsId: ANALYTICS_ID,
+                                experimentId: EXPERIMENT_ID,
                                 yandexMetrikaId: YANDEX_METRIKA_ID,
                                 carrotquestId: CARROTQUEST_ID,
                                 csrf: req.csrfToken(),

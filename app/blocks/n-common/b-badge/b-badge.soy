@@ -93,7 +93,7 @@
         {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
                 'factory': 'stendhal',
-                'type': 'icon',
+                'type': $params.display == 'metro' ? 'icon-svg' : 'icon',
                 'renderParams': [
                     'data': [
                         'type': $params.display ?: 'test'

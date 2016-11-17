@@ -85,6 +85,8 @@ goog.require('sm.lCourse.bDepartment.Department');
 goog.require('sm.lCourse.bDepartment.View');
 goog.require('sm.lCourse.bOption.Option');
 goog.require('sm.lCourse.bOption.View');
+goog.require('sm.lCourse.bUserInteraction.UserInteraction');
+goog.require('sm.lCourse.bUserInteraction.View');
 goog.require('sm.lInformation.bFeedbackBoard.FeedbackBoard');
 goog.require('sm.lInformation.bFeedbackBoard.View');
 goog.require('sm.lInformation.bInformationBoard.InformationBoard');
@@ -105,6 +107,8 @@ goog.require('sm.lSearch.bFilterPanel.FilterPanel');
 goog.require('sm.lSearch.bFilterPanel.View');
 goog.require('sm.lSearch.bLabel.Label');
 goog.require('sm.lSearch.bLabel.View');
+goog.require('sm.lSearch.bSearchResults.SearchResults');
+goog.require('sm.lSearch.bSearchResults.View');
 goog.require('sm.lSearch.bSuggestFilter.SuggestFilter');
 goog.require('sm.lSearch.bSuggestFilter.View');
 goog.require('sm.lSearchResult.bFilterSearch.FilterSearch');
@@ -338,6 +342,10 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('lSearch-suggestFilter', {
             control: sm.lSearch.bSuggestFilter.SuggestFilter,
             view: sm.lSearch.bSuggestFilter.View
+        })
+        .setControlListItem('lSearch-searchResults', {
+            control: sm.lSearch.bSearchResults.SearchResults,
+            view: sm.lSearch.bSearchResults.View
         });
 
     /** l-course blocks */
@@ -348,9 +356,11 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('lCourse-department', {
             control: sm.lCourse.bDepartment.Department,
             view: sm.lCourse.bDepartment.View
+        })
+        .setControlListItem('lCourse-userInteraction', {
+            control: sm.lCourse.bUserInteraction.UserInteraction,
+            view: sm.lCourse.bUserInteraction.View
         });
-
-
 };
 goog.inherits(sm.iFactory.FactoryStendhal, cl.iFactory.Factory);
 goog.addSingletonGetter(sm.iFactory.FactoryStendhal);

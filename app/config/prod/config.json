@@ -12,8 +12,9 @@
     },
     "courses": {
         "analyticsId": "UA-34116537-19",
-        "yandexMetrikaId": 36890980,
-        "host": "courses.mel.fm"
+        "yandexMetrikaId": 40495550,
+        "host": "courses.mel.fm",
+        "analyticsViewId": "ga:130670455"
     },
     "carrotquestId": "6408-1ccff98844d996fc088fed318b4",
     "facebookClientId": 1463878833939061

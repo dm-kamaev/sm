@@ -18,7 +18,8 @@
 /**
  * @typedef {{
  *     mode: ('selection'|'multiselection'|undefined),
- *     maxSelection: (number|undefined)
+ *     maxSelection: (number|undefined),
+ *     isChangingOpenerText: (boolean|undefined)
  * }} sm.gList.TemplateLinks.Params.Config
  */
 
@@ -38,6 +39,44 @@
 {/template}
 
 
+
+/**
+ * Init
+ * @param? params {{
+ *     data: {
+ *         items: list<{
+ *             label: ?string,
+ *             url: ?string
+ *         }>,
+ *         selectedItemId: ?number
+ *     },
+ *     config: sm.gList.TemplateLinks.Params.Config
+ * }}
+ * @override
+ */
+{template .body}
+    {let $selectedItemId: $params?.data?.selectedItemId /}
+
+    {if $params?.data?.items}
+        {for $i in range($params.data.items.length)}
+            {let $item: $params.data.items[$i]/}
+
+            {call .listItem}
+                {param params: [
+                    'label': $item.label,
+                    'url': $item.url,
+                    'isSelected': ($i == $selectedItemId) or
+                        ($item?.isSelected),
+                    'isDisabled': $item?.isDisabled,
+                    'itemData': $item,
+                    'isChangingOpenerText': $params.config.isChangingOpenerText
+                ]/}
+            {/call}
+        {/for}
+    {/if}
+{/template}
+
+
 /**
  * Value template
  * @param params {{
@@ -50,7 +89,13 @@
     {let $customClasses kind="html"}
         {call .rootClass/}__link
     {/let}
-
+    {let $size kind="text"}
+        {if $params.isChangingOpenerText}
+            m
+        {else}
+            l
+        {/if}
+    {/let}
     <div class="{call .rootClass/}__item-link">
         {call .renderChild}
             {param params: [
@@ -60,7 +105,7 @@
                         'content': $params.label
                     ],
                     'config': [
-                        'size': 'l',
+                        'size': $size,
                         'customClasses': [$customClasses],
                         'disableHover': true
                     ]
@@ -73,9 +118,15 @@
 
 /**
  * Css classes
+* @param params {{
+ *     config: sm.gList.TemplateLinks.Params.Config
+ * }}
  * @override
  * @protected
  */
 {template .additionalClasses}
     {call .rootClass/}_links
+    {if $params.config.isChangingOpenerText}
+        {sp}{call .rootClass/}_links_small
+    {/if}
 {/template}

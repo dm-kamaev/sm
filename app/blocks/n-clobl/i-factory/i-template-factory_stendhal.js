@@ -15,6 +15,7 @@ goog.require('sm.bSmBadge.Template');
 goog.require('sm.bSmBalloon.Template');
 goog.require('sm.bSmCheckbox.Template');
 goog.require('sm.bSmCollapsedText.Template');
+goog.require('sm.bSmEmbed.Template');
 goog.require('sm.bSmExpander.Template');
 goog.require('sm.bSmFavorite.Template');
 goog.require('sm.bSmFooter.Template');
@@ -38,6 +39,7 @@ goog.require('sm.gDropdown.TemplateListLinks');
 goog.require('sm.gDropdown.TemplateSelect');
 goog.require('sm.gHint.TemplateStendhal');
 goog.require('sm.gIcon.TemplateStendhal');
+goog.require('sm.gIcon.TemplateSvg');
 goog.require('sm.gInput.DigitInputTemplate');
 goog.require('sm.gInput.TemplatePhone');
 goog.require('sm.gInput.TemplateStendhal');
@@ -54,6 +56,7 @@ goog.require('sm.gTextarea.TemplateStendhal');
 goog.require('sm.lCourse.bDepartment.Template');
 goog.require('sm.lCourse.bInformationBoard.Template');
 goog.require('sm.lCourse.bOption.Template');
+goog.require('sm.lCourse.bUserInteraction.Template');
 goog.require('sm.lInformation.bFeedbackBoard.Template');
 goog.require('sm.lInformation.bInformationBoard.Template');
 goog.require('sm.lSchool.bDate.Template');
@@ -67,6 +70,7 @@ goog.require('sm.lSearch.bFilter.TemplateLabels');
 goog.require('sm.lSearch.bFilter.TemplateSwitch');
 goog.require('sm.lSearch.bFilterPanel.Template');
 goog.require('sm.lSearch.bLabel.Template');
+goog.require('sm.lSearch.bSearchResults.Template');
 goog.require('sm.lSearch.bSuggestFilter.Template');
 goog.require('sm.lSearchResult.bFilterSearch.Template');
 
@@ -187,10 +191,6 @@ sm.iFactory.TemplateFactoryStendhal = function() {
             sm.bFavoriteLink.Template.favoriteLink
         )
         .setTemplateListItem(
-            'icon',
-            sm.gIcon.TemplateStendhal.icon
-        )
-        .setTemplateListItem(
             'filter-search',
             sm.lSearchResult.bFilterSearch.Template.filterSearch
         )
@@ -201,6 +201,14 @@ sm.iFactory.TemplateFactoryStendhal = function() {
 
     /** Heirs of the clobl blocks */
     this.setTemplateListItem(
+            'icon',
+            sm.gIcon.TemplateStendhal.icon
+        )
+        .setTemplateListItem(
+            'icon-svg',
+            sm.gIcon.TemplateSvg.icon
+        )
+        .setTemplateListItem(
             'phone-input',
             sm.gInput.TemplatePhone.input
         )
@@ -301,6 +309,10 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'smExpander',
             sm.bSmExpander.Template.expander
+        )
+        .setTemplateListItem(
+            'smEmbed',
+            sm.bSmEmbed.Template.embed
         );
 
     /** l-information blocks **/
@@ -345,21 +357,29 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'lSearch-suggestFilter',
             sm.lSearch.bSuggestFilter.Template.suggestFilter
+        )
+        .setTemplateListItem(
+            'lSearch-searchResults',
+            sm.lSearch.bSearchResults.Template.searchResults
         );
 
-    /** l-course blocks */
+        /** l-course blocks */
     this.setTemplateListItem(
-        'lCourse-informationBoard',
-        sm.lCourse.bInformationBoard.Template.informationBoard
-    )
-    .setTemplateListItem(
-        'lCourse-option',
-        sm.lCourse.bOption.Template.option
-    )
-    .setTemplateListItem(
-        'lCourse-department',
-        sm.lCourse.bDepartment.Template.address
-    );
+            'lCourse-informationBoard',
+            sm.lCourse.bInformationBoard.Template.informationBoard
+        )
+        .setTemplateListItem(
+            'lCourse-option',
+            sm.lCourse.bOption.Template.option
+        )
+        .setTemplateListItem(
+            'lCourse-department',
+            sm.lCourse.bDepartment.Template.address
+        )
+        .setTemplateListItem(
+            'lCourse-userInteraction',
+            sm.lCourse.bUserInteraction.Template.userInteraction
+        );
 };
 goog.inherits(sm.iFactory.TemplateFactoryStendhal, cl.iFactory.TemplateFactory);
 goog.addSingletonGetter(sm.iFactory.TemplateFactoryStendhal);

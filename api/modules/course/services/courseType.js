@@ -89,6 +89,20 @@ service.getById = async(function(id) {
     }));
 });
 
+
+/**
+ * Get types by category id
+ * @return {Promise<Array<models.CourseType>>}
+ */
+service.getByCategory = async(function(categoryId) {
+    return models.CourseType.findAll({
+        where: {
+            categoryId: categoryId
+        },
+        raw: true
+    });
+});
+
 /**
  * @param  {number} id
  * @param  {{

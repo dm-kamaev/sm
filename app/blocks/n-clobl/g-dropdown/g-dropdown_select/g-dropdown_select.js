@@ -166,11 +166,6 @@ goog.scope(function() {
         this.selectByIndex(event['itemId']);
 
         this.validate();
-
-        this.dispatchEvent({
-            'type': DropdownSelect.Event.ITEM_SELECT,
-            'itemId': event['itemId']
-        });
     };
 
 

@@ -14,6 +14,7 @@ const courseCategoryView = require('./courseCategoryView');
  *     favorites: Object,
  *     categories: Array<Object>,
  *     categoryAliases: Array<Object>,
+ *     priceLabelText: string,
  *     actionButtonText: string
  * }} data
  * @return {Object}
@@ -63,6 +64,7 @@ exports.render = function(data) {
         authSocialLinks: data.authSocialLinks,
         entityData: data.entityData,
         map: data.map,
+        priceLabelText: data.priceLabelText,
         actionButtonText: data.actionButtonText
     };
 };

@@ -7,6 +7,7 @@ const FilterPanel = require('../lib/CourseFilterPanel'),
     favoriteView = require('../../favorite/views/favoriteView'),
     courseCategoryView = require('./courseCategoryView');
 
+const factoryName = require('../../../../app/components/enum/factoryName');
 const filterName = require('../enums/filterName');
 
 let searchView = {};
@@ -121,7 +122,8 @@ searchView.map = function(courses, options) {
  *     seoParams: Object,
  *     currentCategory: string,
  *     categories: Array<Object>,
- *     categoryAliases: Array<Object>
+ *     categoryAliases: Array<Object>,
+ *     factory: string
  * }} data
  * @return {Object}
  */
@@ -137,9 +139,7 @@ searchView.render = function(data) {
         type: data.entityType,
         seo: {
             metaTitle: seoParams.tabTitle,
-            metaDescription: seoParams.metaDescription,
-            title: seoParams.listTitle,
-            description: seoParams.text && seoParams.text[0] || null
+            metaDescription: seoParams.metaDescription
         },
         openGraph: {
             title: seoParams.openGraphTitle,
@@ -183,30 +183,43 @@ searchView.render = function(data) {
             position: data.mapPosition
         }),
         search: {
-            countResults: data.countResults,
             searchText: data.searchParams.name,
             placeholder: 'Район, метро, название курса',
-            pageAlias: data.currentCategory,
+            pageAlias: data.currentCategory
+        },
+        resultsList: {
+            title: seoParams.listTitle,
+            description: seoParams.text && seoParams.text[0] || null,
+            countResults: data.countResults,
+            searchText: data.searchParams.name,
             declensionEntityType: {
                 nom: 'курс',
                 gen: 'курса',
                 plu: 'курсов'
+            },
+            sort: {
+                opener: 'Сортировать ',
+                defaultOpenerText: 'по популярности',
+                content: {
+                    items: [{
+                        'label': 'по популярности',
+                        'value': 2
+                    }, {
+                        'label': 'по возрастанию цены',
+                        'value': 0
+                    }, {
+                        'label': 'по убыванию цены',
+                        'value': 1
+                    }]
+                }
+            },
+            entityList: {
+                items: courses,
+                itemType: 'smItemEntity',
+                itemConfig: {
+                    enableCover: data.factory == factoryName.EXPERIMENTAL
+                }
             }
-        },
-        sort: {
-            listItems: [{
-                'label': 'по возрастанию цены',
-                'text': 'возрастанию цены'
-            }, {
-                'label': 'по убыванию цены',
-                'text': 'убыванию цены'
-            }],
-            staticText: 'Сортировать по ',
-            defaultOpenerText: 'убыванию цены'
-        },
-        entityList: {
-            items: courses,
-            itemType: 'smItemEntity'
         },
         filterPanel: searchView.filterPanel({
             filtersData: data.filtersData,
