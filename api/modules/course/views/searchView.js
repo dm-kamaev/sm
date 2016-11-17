@@ -4,12 +4,14 @@ const FilterPanel = require('../lib/CourseFilterPanel'),
     FormatUtils = require('../../entity/lib/FormatUtils');
 
 const courseView = require('./courseView'),
-    mapViewType = require('../../entity/enums/mapViewType'),
     userView = require('../../user/views/user'),
     favoriteView = require('../../favorite/views/favoriteView'),
-    courseCategoryView = require('./courseCategoryView');
+    courseCategoryView = require('./courseCategoryView'),
+    searchViewEntity = require('../../entity/views/searchView');
 
-const filterName = require('../enums/filterName');
+const filterName = require('../enums/filterName'),
+    mapViewType = require('../../entity/enums/mapViewType'),
+    entityType = require('../../entity/enums/entityType');
 
 let searchView = {};
 
@@ -70,39 +72,6 @@ searchView.filterPanel = function(data) {
     filterPanel.init(data);
 
     return filterPanel.getParams();
-};
-
-
-/**
- * View for courses on map
- * @param  {Array<Object>} courses
- * @param  {{
- *     viewType: string,
- *     position: {
- *         center: Array<number>,
- *         type: string
- *     }
- * }} options
- * @return {{
- *     itemGroups: Array<{
- *         viewType: string,
- *         items: Array<{Object}>
- *     }>,
- *     position: ({
- *         center: Array<number>,
- *         type: string
- *     }|undefined)
- * }}
- */
-searchView.map = function(courses, options) {
-    let viewType = options.viewType;
-    return {
-        itemGroups: [{
-            viewType: viewType,
-            items: courseView.listMap(courses, viewType)
-        }],
-        position: options.position
-    };
 };
 
 
@@ -176,7 +145,8 @@ searchView.render = function(data) {
         },
         user: user,
         authSocialLinks: data.authSocialLinks,
-        map: this.map(data.mapCourses, {
+        map: searchViewEntity.map(data.mapCourses, {
+            entityType: entityType.COURSE,
             viewType: mapViewType.PIN,
             position: data.mapPosition
         }),
