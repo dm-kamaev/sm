@@ -90,13 +90,29 @@ goog.scope(function() {
                     url: title['url']
                 },
                 subtitle: rawParams['subtitle'],
-                items: goog.array.map(rawParams['items'],
-                    function(rawLinkParams) {
-                        return Link.getRenderParams(rawLinkParams).data;
-                    }),
+                items: View.getItemsRenderParams(rawParams['items']),
                 description: rawParams['description']
             }
         };
+    };
+
+
+    /**
+     * Transform raw params items to compressed ones
+     * @param {Array<Object>} rawParamsItems
+     * @return {sm.bSmLink.SmLink.RenderParams}
+     */
+    View.getItemsRenderParams = function(rawParamsItems) {
+        var params = [];
+
+        if (rawParamsItems) {
+            params = goog.array.map(rawParamsItems,
+                function(rawLinkParams) {
+                    return Link.getRenderParams(rawLinkParams).data;
+                }
+            );
+        }
+        return params;
     };
 
 

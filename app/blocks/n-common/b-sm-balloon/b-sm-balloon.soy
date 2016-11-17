@@ -170,10 +170,12 @@
 {template .content_ kind="html"}
     <div class="{call .rootClass /}__section
         {sp}{call .rootClass /}__section_content">
-        {if length($params.data.items) == 1}
-            {call .item_ data="all" /}
-        {else}
-            {call .itemList_ data="all" /}
+        {if $params.data.items and length($params.data.items)}
+            {if length($params.data.items) == 1}
+                {call .item_ data="all" /}
+            {else}
+                {call .itemList_ data="all" /}
+            {/if}
         {/if}
 
         {if $params.data.description}
