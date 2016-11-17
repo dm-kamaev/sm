@@ -79,9 +79,7 @@ goog.scope(function() {
         this.initListLinks_();
 
         this.params = this.getView().transformParams(this.params);
-        console.log(this.params);
         this.valueData_ = this.params.values;
-        console.log(this.valueData_);
         this.isChangingOpenerText_ = this.params.isChangingOpenerText;
         this.opener_ = this.params.opener;
     };
@@ -132,8 +130,6 @@ goog.scope(function() {
      */
     Dropdown.prototype.onListItemSelect_ = function(event) {
         var itemId = event['itemId'];
-        console.log(itemId);
-        console.log(event);
         this.dispatchEvent({
             'type': Dropdown.Event.CONTENT_CLICK,
             'data': this.getValue(itemId)
@@ -152,7 +148,6 @@ goog.scope(function() {
      * @return {number|string}
      */
     Dropdown.prototype.getValue = function(itemId) {
-        console.log(itemId);
         return this.valueData_[itemId].value;
     };
 
