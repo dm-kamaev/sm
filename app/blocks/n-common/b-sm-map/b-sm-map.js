@@ -90,8 +90,8 @@ goog.scope(function() {
      * @enum {string}
      */
     Map.Event = {
-      READY: 'ready',
-      ITEM_NAME_CLICK: 'item-name-click'
+        READY: 'ready',
+        ITEM_NAME_CLICK: 'item-name-click'
     };
 
 
@@ -379,8 +379,10 @@ goog.scope(function() {
      * @private
      */
     Map.prototype.addMapObject_ = function(viewType, addressItem) {
-        var geoObject = this.find_(addressItem);
-        if (goog.isDefAndNotNull(geoObject)) {
+        var geoObject = this.find_(addressItem),
+            isItems = addressItem['items'] && addressItem['items'].length;
+
+        if (goog.isDefAndNotNull(geoObject) && isItems) {
             this.updateViewType_(geoObject, viewType);
             this.extendGeoObject_(geoObject, addressItem);
         } else {
@@ -417,11 +419,11 @@ goog.scope(function() {
      * @private
      */
     Map.prototype.extendGeoObject_ = function(geoObject, addressItem) {
-
         var extendedItems = goog.array.concat(
             geoObject['properties']['items'],
             addressItem['items']
         );
+
         goog.array.removeDuplicates(
             extendedItems,
             null,

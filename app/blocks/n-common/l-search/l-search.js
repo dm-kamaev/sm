@@ -359,6 +359,7 @@ goog.scope(function() {
             sm.lSearch.bSearchResults.SearchResults.Status.SORT_IN_PROGRESS
         );
 
+        this.clearMap_();
         this.makeSearch_();
     };
 
