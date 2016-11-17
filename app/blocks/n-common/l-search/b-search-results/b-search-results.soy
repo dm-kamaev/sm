@@ -305,16 +305,16 @@
     {let $customClasses kind="html"}
         {call .rootClass /}__sort-control
     {/let}
-
     <div class="{call .rootClass /}__sort">
         <div class="{call .rootClass /}__horizontal-line"></div>
         <div class="{call .rootClass /}__sort-control-wrap">
             {call .renderChild}
                 {param params: [
-                    'type': 'dropdown-select',
+                    'type': 'dropdown-list-links',
                     'renderParams': [
                         'data': $params.data.sort,
                         'config': [
+                            'isChangingOpenerText': true,
                             'viewType': 'link',
                             'iconSprite': 'small-opener-arrow',
                             'theme': 'minimal',

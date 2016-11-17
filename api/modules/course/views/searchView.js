@@ -196,15 +196,17 @@ searchView.render = function(data) {
                 plu: 'курсов'
             },
             sort: {
-                listItems: [{
-                    label: 'по возрастанию цены',
-                    text: 'возрастанию цены'
-                }, {
-                    label: 'по убыванию цены',
-                    text: 'убыванию цены'
-                }],
-                staticText: 'Сортировать по ',
-                defaultOpenerText: 'убыванию цены'
+                opener: 'Сортировать ',
+                defaultOpenerText: 'по убыванию цены',
+                content: {
+                    items: [{
+                        'label': 'по возрастанию цены',
+                        'value': 0
+                    }, {
+                        'label': 'по убыванию цены',
+                        'value': 1
+                    }]
+                }
             },
             entityList: {
                 items: courses,

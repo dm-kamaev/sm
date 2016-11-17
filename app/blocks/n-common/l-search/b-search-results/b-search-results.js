@@ -249,7 +249,7 @@ goog.scope(function() {
 
         this.itemList_ = this.decorateChild('smItemList', dom.itemList);
 
-        this.sort_ = this.decorateChild('dropdown-select', dom.sort);
+        this.sort_ = this.decorateChild('dropdown-list-links', dom.sort);
 
         this.showMore_ = this.decorateChild('button', dom.showMore);
 
