@@ -58,7 +58,7 @@ controller.search = async(function(req, res, next) {
                     seoParams: services.seoCourseList.getByCategoryId(
                         categoryInstance.id
                     ),
-                    categories: services.courseCategory.getAll()
+                    categories: services.courseCategory.getAll({isActive: true})
                 }),
                 aliases = await({
                     courses: services.course.getAliases(data.courses),
@@ -96,6 +96,7 @@ controller.search = async(function(req, res, next) {
                         data: templateData,
                         config: {
                             entityType: entityType.COURSE,
+                            page: 'search',
                             modifier: 'stendhal',
                             staticVersion: config.lastBuildTimestamp,
                             year: new Date().getFullYear(),
@@ -158,9 +159,13 @@ controller.information = async(function(req, res, next) {
                 let authSocialLinks = services.auth.getAuthSocialUrl(),
                     user = req.user || {};
 
-                let favorites = await(services.favorite.getFavoriteEntities(
-                    user.id
-                ));
+                let data = await({
+                    favorites: services.favorite.getFavoriteEntities(user.id),
+                    categories: services.courseCategory.getAll({
+                        isActive: true
+                    }),
+                    categoryAliases: services.courseCategory.getAliases()
+                });
 
                 let templateData = informationView.render({
                     user: user,
@@ -168,8 +173,10 @@ controller.information = async(function(req, res, next) {
                     authSocialLinks: authSocialLinks,
                     entityData: courseView.page(course),
                     map: courseView.pageMap(course),
-                    favorites: favorites,
                     priceLabelText: 'Гарантия лучшей цены',
+                    favorites: data.favorites,
+                    categories: data.categories,
+                    categoryAliases: data.categoryAliases,
                     actionButtonText: 'Хочу этот курс!'
                 });
 
@@ -179,6 +186,7 @@ controller.information = async(function(req, res, next) {
                             data: templateData,
                             config: {
                                 entityType: entityType.COURSE,
+                                page: entityType.COURSE,
                                 modifier: 'stendhal',
                                 staticVersion: config.lastBuildTimestamp,
                                 year: new Date().getFullYear(),

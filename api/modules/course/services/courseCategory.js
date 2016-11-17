@@ -52,9 +52,12 @@ service.findOrCreate = async(function(name) {
 });
 
 /**
+ * @param {{
+ *     isActive: ?boolean
+ * }} opt_params
  * @return {Array<CourseCategory>}
  */
-service.getAll = async(function() {
+service.getAll = async(function(opt_params) {
     let query = squel.select()
         .from(CATEGORY)
         .field(`${CATEGORY}.id`)
@@ -69,11 +72,14 @@ service.getAll = async(function() {
             `${CATEGORY}.id = course_type.category_id`
         )
         .left_join('course', null, 'course_type.id = course.type')
-        .group(`${CATEGORY}.id`)
-        .toString();
+        .group(`${CATEGORY}.id`);
+
+    if (opt_params && opt_params.isActive) {
+        query.where('is_active = true');
+    }
 
     return await(sequelize.query(
-        query, {
+        query.toString(), {
             type: sequelize.QueryTypes.SELECT
         }
     ));
