@@ -50,6 +50,7 @@ controller.search = async(function(req, res, next) {
                     req.query, categoryInstance.id
                 );
 
+            let factory = contentExperiment.getFactoryByQuery(req.query);
             let data = await({
                     favorites: services.favorite.getFavoriteEntities(user.id),
                     courses: services.course.list(searchParams, 10),
@@ -69,7 +70,6 @@ controller.search = async(function(req, res, next) {
                     categories: services.courseCategory.getAliases()
                 });
 
-            let factory = contentExperiment.getFactoryByQuery(req.query);
             let templateData = searchView.render({
                 entityType: entityType.COURSE,
                 user: user,
