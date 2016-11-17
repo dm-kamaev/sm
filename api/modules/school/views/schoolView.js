@@ -264,7 +264,7 @@ var getDirectorName = function(name) {
  * @param {number} opt_page
  * @return {object} contains results count and schools array
  */
-schoolView.list = function(schools, opt_criterion, opt_page) {
+schoolView.listLegacy = function(schools, opt_criterion, opt_page) {
     var res = {};
 
     if (schools.length !== 0) {
@@ -348,6 +348,72 @@ schoolView.getListSchool = function(school, opt_sortCriterion) {
 
 /**
  * Group resutls of raw query to school object,
+ * @param {Array<Object>} schools - array of results of raw query
+ * @return {Array<Object>}
+ */
+schoolView.listMap = function(schools) {
+    let items = [];
+
+    if (schools.length > 0) {
+        let schoolsData = groupSchools(schools);
+
+        schoolsData.forEach(school => {
+            let schoolItems = schoolView.getMapItems(school);
+            items = items.concat(schoolItems);
+        });
+    }
+    return items;
+};
+
+
+/**
+ * Generate map items from one school and all its addresses
+ * @param {Object} school
+ * @return {{
+ *     addressId: number,
+ *     addressName: string,
+ *     coordinates: Array<number>,
+ *     score: number,
+ *     title: {
+ *         id: number,
+ *         text: string,
+ *         url: null
+ *     },
+ *     subtitle: string,
+ *     items: Array<{
+ *         id: number,
+ *         content: string,
+ *         url: null
+ *     }>
+ * }}
+ */
+schoolView.getMapItems = function(school) {
+    let addresses = addressView.default(school.addresses);
+
+    return addresses.length ?
+        addresses.map(address => {
+            return {
+                addressId: address.id,
+                addressName: address.name,
+                coordinates: [address.lat, address.lng],
+                score: school.totalScore,
+                title: {
+                    id: school.id,
+                    text: school.name,
+                    url: entityType.SCHOOL + '/' + school.alias
+                },
+                subtitle: address.stages && address.stages != 'Другие адреса' ?
+                    address.stages + ' ' + address.name :
+                    address.name,
+                description: school.description
+            };
+        }) :
+        [];
+};
+
+
+/**
+ * Group resutls of raw query to school object,
  * divide array of school objects for 2 parts for map
  * @param {Array.<Object>} schools - array of results of raw query
  * @param {{
@@ -362,11 +428,11 @@ schoolView.getListSchool = function(school, opt_sortCriterion) {
  *     }
  * }} contains results schools array and position perferences for map
  */
-schoolView.listMap = function(schools, opt_position) {
+schoolView.listMapLegacy = function(schools, opt_position) {
     var mapSchools = [];
 
     if (schools.length > 0) {
-        mapSchools = groupSchools(schools).map(this.schoolMap);
+        mapSchools = groupSchools(schools).map(this.schoolMapLegacy);
     }
 
     return {
@@ -375,12 +441,13 @@ schoolView.listMap = function(schools, opt_position) {
     };
 };
 
+
 /**
  * Transform school object for map
  * @param {Object} school
  * @return {Object}
  */
-schoolView.schoolMap = function(school) {
+schoolView.schoolMapLegacy = function(school) {
     return {
         addresses: addressView.default(school.addresses),
         id: school.id,

@@ -130,8 +130,10 @@ exports.list = async(function(req, res, next) {
                 favorites
             );
 
-        var schoolsList = schoolView.list(schoolsWithFavoriteMark),
-            map = schoolView.listMap(results.schools, results.mapPosition),
+        var schoolsList = schoolView.listLegacy(schoolsWithFavoriteMark),
+            map = schoolView.listMapLegacy(
+                results.schools, results.mapPosition
+            ),
             filters = searchView.filters(results.filtersData, searchParams);
 
         var params = {
@@ -364,21 +366,14 @@ exports.newSearch = async(function(req, res, next) {
         let data = await({
                 favorites: services.favorite.getFavoriteEntities(user.id),
                 schools: services.school.list(searchParams, {limitResults: 10}),
-                mapSchools: [],
                 mapPosition: services.map.getPositionParams(searchParams),
-                filtersData: {},
+                filtersData: services.school.searchFiltersData(searchParams),
                 seoParams: {}
             }),
-            aliases = await({
-                schools: services.page.getAliases(
-                    schoolView.uniqueIds(data.schools),
-                    entityType.SCHOOL
-                ),
-                map: services.page.getAliases(
-                    schoolView.uniqueIds(data.mapSchools),
-                    entityType.SCHOOL
-                )
-            });
+            schoolAliases = await(services.page.getAliases(
+                schoolView.uniqueIds(data.schools),
+                entityType.SCHOOL
+            ));
 
         let templateData = searchView.render({
             user: user,
@@ -386,12 +381,11 @@ exports.newSearch = async(function(req, res, next) {
             favorites: data.favorites,
             authSocialLinks: authSocialLinks,
             schoolsList: data.schools,
-            mapSchools: data.mapSchools,
+            schoolAliases: schoolAliases,
             mapPosition: data.mapPosition,
             searchParams: searchParams,
             filtersData: data.filtersData,
             enabledFilters: null,
-            aliases: aliases,
             seoParams: data.seoParams,
         });
 

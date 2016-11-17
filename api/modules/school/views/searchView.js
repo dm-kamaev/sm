@@ -7,7 +7,11 @@ const olympResultView = require('../../study/views/olimpResultView'),
     activityView = require('./activityView'),
     specializedClassesView = require('./specializedClassesView');
 
+const searchViewEntity = require('../../entity/views/searchView');
+
 const filterName = require('../enums/filterName'),
+    mapViewType = require('../../entity/enums/mapViewType'),
+    entityType = require('../../entity/enums/entityType'),
     searchTypeEnum = require('../enums/searchType');
 
 const FormatUtils = require('../../entity/lib/FormatUtils');
@@ -32,7 +36,7 @@ var searchView = {};
  *     mapPosition: Object,
  *     searchParams: Object,
  *     filtersData: Array<Object>,
- *     aliases: Object,
+ *     schoolAliases: Array<Object>,
  *     seoParams: Object
  * }} data
  * @return {Object}
@@ -42,11 +46,8 @@ searchView.render = function(data) {
         seoParams = data.seoParams || {};
 
     let aliasedSchools = schoolView.joinAliases(
-            data.schoolsList, data.aliases.schools
-        );
-        // aliasedMapSchools = schoolView.joinAliases(
-        //     data.mapSchools, data.aliases.map
-        // );
+        data.schoolsList, data.schoolAliases
+    );
 
     return {
         seo: {
@@ -83,7 +84,11 @@ searchView.render = function(data) {
         },
         user: user,
         authSocialLinks: data.authSocialLinks,
-        map: {},
+        map: searchViewEntity.map(aliasedSchools, {
+            entityType: entityType.SCHOOL,
+            viewType: mapViewType.PIN,
+            position: data.mapPosition
+        }),
         search: {
             searchText: data.searchParams.name,
             placeholder: 'Район, метро, номер школы',
