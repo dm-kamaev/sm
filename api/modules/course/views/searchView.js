@@ -197,11 +197,11 @@ searchView.render = function(data) {
             },
             sort: {
                 listItems: [{
-                    'label': 'по возрастанию цены',
-                    'text': 'возрастанию цены'
+                    label: 'по возрастанию цены',
+                    text: 'возрастанию цены'
                 }, {
-                    'label': 'по убыванию цены',
-                    'text': 'убыванию цены'
+                    label: 'по убыванию цены',
+                    text: 'убыванию цены'
                 }],
                 staticText: 'Сортировать по ',
                 defaultOpenerText: 'убыванию цены'
