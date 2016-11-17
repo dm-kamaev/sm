@@ -45,7 +45,9 @@ let getFileName = function(file) {
  * @return {Page}
  */
 let findCourseAlias = function(courseAliases, imageName) {
-    return courseAliases.find(courseAlias => courseAlias.alias === imageName);
+    return courseAliases.find(courseAlias =>
+        decodeURI(courseAlias.alias).replace(/[^-\w]/g, '') === imageName
+    );
 };
 
 /**
