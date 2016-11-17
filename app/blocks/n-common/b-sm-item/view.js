@@ -41,6 +41,9 @@ goog.scope(function() {
      *         metro: sm.bSmBadge.Badge.RenderParams,
      *         area: sm.bSmBadge.Badge.RenderParams,
      *         category: string
+     *     },
+     *     config: {
+     *         enableCover: boolean
      *     }
      * }}
      */
@@ -108,7 +111,9 @@ goog.scope(function() {
                 area: areaParams.data,
                 category: rawParams['category']
             },
-            config: {}
+            config: {
+                enableCover: rawParams['enableCover']
+            }
         };
     };
 

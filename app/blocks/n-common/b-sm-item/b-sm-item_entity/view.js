@@ -59,7 +59,6 @@ goog.scope(function() {
      *         position: (number|undefined)
      *     },
      *     config: {
-     *         enablePictures: boolean,
      *         stylizationModifier: string
      *     }
      * }}
@@ -85,10 +84,6 @@ goog.scope(function() {
             isFavorite: rawParams['isFavorite'],
             countDepartment: rawParams['countDepartment'],
             position: rawParams['position']
-        });
-
-        goog.object.extend(params.config, {
-            enablePictures: rawParams['enablePictures']
         });
 
         return params;
