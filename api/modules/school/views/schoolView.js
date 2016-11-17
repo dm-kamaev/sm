@@ -331,7 +331,7 @@ schoolView.list = function(schoolInstances, opt_sortCriterion) {
 schoolView.getListSchool = function(school, opt_sortCriterion) {
     return {
         id: school.id,
-        alias: school.alias,
+        alias: entityType.SCHOOL + '/' + school.alias,
         type: entityType.SCHOOL,
         name: getName(school.name),
         description: school.description,
@@ -405,7 +405,8 @@ schoolView.getMapItems = function(school) {
                 subtitle: address.stages && address.stages != 'Другие адреса' ?
                     address.stages + ' ' + address.name :
                     address.name,
-                description: school.description
+                description: school.description,
+                items: []
             };
         }) :
         [];

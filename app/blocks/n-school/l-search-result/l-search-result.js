@@ -105,8 +105,8 @@ sm.lSearchResult.SearchResult = function() {
      * @private
      */
     this.requestParams_ = {
-        listDataUrl: '/api/school/search',
-        mapDataUrl: '/api/school/searchMapPoints'
+        listDataUrl: '/api/school/searchLegacy',
+        mapDataUrl: '/api/school/searchMapPointsLegacy'
     };
 
 
