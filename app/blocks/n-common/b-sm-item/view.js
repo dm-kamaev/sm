@@ -85,18 +85,21 @@ goog.scope(function() {
      * @public
      */
     View.getRenderParams = function(rawParams) {
-        var metroParams =
-            sm.bSmBadge.SmBadge.getRenderParams(rawParams['metro']);
-        var areaParams =
-            sm.bSmBadge.SmBadge.getRenderParams(rawParams['area']);
+        var metroParams = rawParams['metro'] ?
+            sm.bSmBadge.SmBadge.getRenderParams(rawParams['metro']) :
+            {};
+        var areaParams = rawParams['area'] ?
+            sm.bSmBadge.SmBadge.getRenderParams(rawParams['area']) :
+            {};
+        var name = rawParams['name'] || {};
 
         return {
             data: {
                 id: rawParams['id'],
                 type: rawParams['type'],
                 name: {
-                    light: rawParams['name']['light'],
-                    bold: rawParams['name']['bold']
+                    light: name['light'],
+                    bold: name['bold']
                 },
                 alias: rawParams['alias'],
                 score: rawParams['score'],
@@ -104,7 +107,8 @@ goog.scope(function() {
                 metro: metroParams.data,
                 area: areaParams.data,
                 category: rawParams['category']
-            }
+            },
+            config: {}
         };
     };
 

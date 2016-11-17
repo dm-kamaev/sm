@@ -105,6 +105,12 @@ goog.scope(function() {
                 id: rawParams['id'],
                 url: rawParams['url'],
                 content: rawParams['content']
+            },
+            config: {
+                target: rawParams['target'],
+                size: rawParams['size'],
+                disableHover: rawParams['disableHover'],
+                theme: rawParams['theme']
             }
         };
     };

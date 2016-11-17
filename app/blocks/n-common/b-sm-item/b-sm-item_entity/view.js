@@ -59,6 +59,7 @@ goog.scope(function() {
      *         position: (number|undefined)
      *     },
      *     config: {
+     *         enablePictures: boolean,
      *         stylizationModifier: string
      *     }
      * }}
@@ -73,14 +74,21 @@ goog.scope(function() {
      */
     View.getRenderParams = function(rawParams) {
         var params = sm.bSmItem.View.getRenderParams(rawParams);
+        var score = rawParams['score'] ?
+            sm.bSmScore.SmScoreBrief.getRenderParams(rawParams['score']) :
+            {};
         goog.object.extend(params.data, {
             cost: rawParams['cost'],
-            score: sm.bSmScore.SmScoreBrief.getRenderParams(rawParams['score']),
+            score: score,
             brand: rawParams['brand'],
             online: rawParams['online'],
             isFavorite: rawParams['isFavorite'],
             countDepartment: rawParams['countDepartment'],
             position: rawParams['position']
+        });
+
+        goog.object.extend(params.config, {
+            enablePictures: rawParams['enablePictures']
         });
 
         return params;
