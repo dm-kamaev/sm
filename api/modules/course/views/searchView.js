@@ -199,9 +199,12 @@ searchView.render = function(data) {
             },
             sort: {
                 opener: 'Сортировать ',
-                defaultOpenerText: 'по убыванию цены',
+                defaultOpenerText: 'по популярности',
                 content: {
                     items: [{
+                        'label': 'по популярности',
+                        'value': 2
+                    }, {
                         'label': 'по возрастанию цены',
                         'value': 0
                     }, {

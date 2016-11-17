@@ -40,7 +40,9 @@
  *     data: {
  *         opener: string
  *     },
- *     config: sm.gDropdown.TemplateListLinks.Params.Config
+ *     config: {
+ *         isChangingOpenerText: boolean
+ *     }
  * }}
  * @override
  */
@@ -181,14 +183,14 @@
  * Attributes template
  * @param params {{
  *     data: {
- *         content: { 
+ *         content: {
  *              items: Array<{
  *                  label: (string|undefined),
  *                  value: (number|string|undefined)
  *              }>
  *         }
  *     }
- * }}  
+ * }}
  * @override
  */
 {template .attributes kind="attributes"}

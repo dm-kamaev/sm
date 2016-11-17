@@ -3,7 +3,7 @@ goog.provide('sm.lSearch.bSearchResults.SearchResults');
 goog.require('cl.gButton.Button');
 goog.require('cl.iControl.Control');
 goog.require('sm.bSmItemList.SmItemList');
-goog.require('sm.gDropdown.DropdownSelect');
+goog.require('sm.gDropdown.DropdownListLinks');
 goog.require('sm.lSearch.bSearchResults.View');
 
 
@@ -64,7 +64,7 @@ goog.scope(function() {
      * @const
      */
     SearchResults.Event = {
-        SORT_TYPE_CHANGE: sm.gDropdown.DropdownSelect.Event.ITEM_SELECT,
+        SORT_TYPE_CHANGE: sm.gDropdown.DropdownListLinks.Event.CONTENT_CLICK,
         SHOW_MORE_CLICK: cl.gButton.Button.Event.CLICK,
         LIST_ITEM_CLICK: sm.bSmItemList.SmItemList.Event.ITEM_CLICK
     };
