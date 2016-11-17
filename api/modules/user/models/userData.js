@@ -37,10 +37,6 @@ var UserData = db.define('UserData', {
                 as: 'userData',
                 foreignKey: 'user_data_id'
             });
-            UserData.hasOne(models.Rating, {
-                as: 'userData',
-                foreignKey: 'user_data_id'
-            });
         }
     }
 });

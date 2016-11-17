@@ -1,3 +1,4 @@
+'use strict';
 
 var services = require('../../../../app/components/services').all;
 var async = require('asyncawait/async');
@@ -223,16 +224,16 @@ exports.listSearchFilters = async(function(req, res) {
  *     }
  */
 exports.createComment = async(function(req, res) {
-    var result = '';
+    let result = '';
     try {
-        var schoolId = req.params.id,
-            params = req.body;
+        let schoolId = req.params.id,
+            params = req.body,
+            commentGroupId = await(services.school.getGroupId(schoolId));
 
         params.userId = req.user && req.user.id;
 
-        var userData = await(services.userData.checkCredentials(
-            schoolId,
-            params.key,
+        let userData = await(services.userData.checkCredentials(
+            commentGroupId,
             params.userId
         ));
 
@@ -248,18 +249,19 @@ exports.createComment = async(function(req, res) {
             });
         } else {
             if (params.userId) {
-                var user = await(services.user.getUserById(params.userId));
+                let user = await(services.user.getUserById(params.userId));
                 params.username = user.firstName;
             }
 
             result = await(services.school.review(schoolId, params));
         }
     } catch (error) {
-        result = JSON.stringify(error);
-        logger.error(result);
+        result = error.message;
+        logger.error(error);
     } finally {
+        res.status(201);
         res.header('Content-Type', 'text/html; charset=utf-8');
-        res.end(JSON.stringify(result));
+        res.end(result);
     }
 });
 

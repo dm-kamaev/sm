@@ -1,19 +1,8 @@
-var DataType = require('sequelize'),
-    schoolService = require('../services/school');
+var DataType = require('sequelize');
+
 var db = require('../../../../app/components/db');
 
-var async = require('asyncawait/async');
-var await = require('asyncawait/await');
-
-var onChangeHook = async(function(rating) {
-    await(schoolService.onRatingChange(rating.schoolId));
-});
-
 var Rating = db.define('Rating', {
-    schoolId: {
-        type: DataType.INTEGER,
-        field: 'school_id'
-    },
     score: {
         type: DataType.ARRAY(DataType.INTEGER),
         validate: {
@@ -30,35 +19,18 @@ var Rating = db.define('Rating', {
                 }
             }
         }
-        // allowNull: false
     },
     totalScore: {
         type: DataType.FLOAT,
         field: 'total_score'
-    },
-    userDataId: {
-        type: DataType.INTEGER,
-        field: 'user_data_id'
     }
 }, {
     underscored: true,
     tableName: 'rating',
-    hooks: {
-        afterUpdate: onChangeHook,
-        afterCreate: onChangeHook,
-        afterDestroy: onChangeHook
-    },
     classMethods: {
         associate: function(models) {
-            Rating.belongsTo(models.School, {
-                foreignKey: 'school_id'
-            });
             Rating.hasOne(models.Comment, {
                 foreignKey: 'rating_id'
-            });
-            Rating.belongsTo(models.UserData, {
-                as: 'userData',
-                foreignKey: 'user_data_id'
             });
         }
     }
