@@ -5,6 +5,7 @@ goog.provide('sm.lCourse.bDepartment.Department');
 
 goog.require('cl.iControl.Control');
 goog.require('sm.lCourse.bDepartment.Event.EnrollButtonClick');
+goog.require('sm.lCourse.bDepartment.View');
 
 
 goog.scope(function() {
@@ -74,7 +75,7 @@ goog.scope(function() {
      * @return {sm.lCourse.bDepartment.Department.RenderParams}
      */
     Department.getRenderParams = function(rawParams) {
-        return View.transformParams(rawParams);
+        return View.getRenderParams(rawParams);
     };
 
 
@@ -136,8 +137,8 @@ goog.scope(function() {
             option: event.target.getData()
         };
 
-        var event = new Event.EnrollButtonClick(data, this);
-        this.dispatchEvent(event);
+        var enrollEvent = new Event.EnrollButtonClick(data, this);
+        this.dispatchEvent(enrollEvent);
     };
 
 

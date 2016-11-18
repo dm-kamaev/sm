@@ -16,6 +16,7 @@ goog.require('sm.bSmItem.SmItemEntity');
 goog.require('sm.bSmItemList.View');
 goog.require('sm.bSmLink.SmLink');
 goog.require('sm.iAnalytics.Analytics');
+goog.require('sm.lCourse.bDepartment.Department');
 
 
 
@@ -349,6 +350,7 @@ goog.scope(function() {
 
         this.initItems_();
         this.initRenderParamsTransformator_(this.params.itemType);
+
         this.initItemRenderConfig_();
     };
 
@@ -504,12 +506,14 @@ goog.scope(function() {
      */
     ItemList.prototype.initRenderParamsTransformator_ = function(itemType) {
         var transformators = {};
-        transformators[ItemList.ItemType.ITEM] =
-            sm.bSmItem.SmItem.getRenderParams;
-        transformators[ItemList.ItemType.ITEM_ENTITY] =
-            sm.bSmItem.SmItemEntity.getRenderParams;
-        transformators[ItemList.ItemType.LINK] =
-            sm.bSmLink.SmLink.getRenderParams;
+            transformators[ItemList.ItemType.ITEM] =
+                sm.bSmItem.SmItem.getRenderParams;
+            transformators[ItemList.ItemType.ITEM_ENTITY] =
+                sm.bSmItem.SmItemEntity.getRenderParams;
+            transformators[ItemList.ItemType.LINK] =
+                sm.bSmLink.SmLink.getRenderParams;
+            transformators[ItemList.ItemType.DEPARTMENT] =
+                sm.lCourse.bDepartment.Department.getRenderParams;
 
         this.renderParamsTransformator_ = transformators[itemType];
     };
