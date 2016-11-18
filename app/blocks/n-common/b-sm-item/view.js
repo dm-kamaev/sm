@@ -163,11 +163,13 @@ goog.scope(function() {
 
     /**
      * Handler click on root Element
-     * @param {Object} event
+     * @param {goog.events.Event} event
      * @protected
      */
     View.prototype.onClick = function(event) {
-        this.dispatchEvent(View.Event.CLICK);
+        if (!event.defaultPrevented) {
+            this.dispatchEvent(View.Event.CLICK);
+        }
     };
 
 
