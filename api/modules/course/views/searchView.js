@@ -7,7 +7,6 @@ const FilterPanel = require('../lib/CourseFilterPanel'),
     favoriteView = require('../../favorite/views/favoriteView'),
     courseCategoryView = require('./courseCategoryView');
 
-const factoryName = require('../../../../app/components/enum/factoryName');
 const filterName = require('../enums/filterName');
 
 let searchView = {};
@@ -122,8 +121,7 @@ searchView.map = function(courses, options) {
  *     seoParams: Object,
  *     currentCategory: string,
  *     categories: Array<Object>,
- *     categoryAliases: Array<Object>,
- *     factory: string
+ *     categoryAliases: Array<Object>
  * }} data
  * @return {Object}
  */
@@ -215,10 +213,7 @@ searchView.render = function(data) {
             },
             entityList: {
                 items: courses,
-                itemType: 'smItemEntity',
-                itemConfig: {
-                    enableCover: data.factory == factoryName.EXPERIMENTAL
-                }
+                itemType: 'smItemEntity'
             }
         },
         filterPanel: searchView.filterPanel({

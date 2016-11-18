@@ -69,7 +69,8 @@
  * @protected
  */
 {template .sections}
-    {if $params.config.enableCover}
+    {if $params.config.enableCover or
+        $params.config.stylizationModifier == 'experimental'}
         {call .sectionGroupCover data="all" /}
     {/if}
 
