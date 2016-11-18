@@ -9,6 +9,8 @@ const categoryView = require('../views/courseCategoryView');
 const logger = require('../../../../app/components/logger/logger')
     .getLogger('app');
 
+const entityType = require('../../entity/enums/entityType');
+
 let controller = {};
 
 /**
@@ -69,14 +71,19 @@ controller.list = async(function(req, res) {
 controller.get = async(function(req, res) {
     let result;
     try {
-        result = await(services.courseCategory.getById(req.params.id));
-        let courseCategory = await(services.courseCategory.getById(
-                req.params.id
-            )),
+        let categoryId = req.params.id;
+        let courseCategory = await(services.courseCategory.getById(categoryId)),
             seoCourseList = await(services.seoCourseList.getByCategoryId(
-                courseCategory.id
+                categoryId
+            )),
+            page = await(services.page.getOne(
+                categoryId, entityType.COURSE_CATEGORY
             ));
-        result = categoryView.joinSeoData(courseCategory, seoCourseList);
+        result = categoryView.render({
+            category: courseCategory,
+            page: page,
+            seoData: seoCourseList
+        });
     } catch (error) {
         logger.error(error.message);
         result = error;
