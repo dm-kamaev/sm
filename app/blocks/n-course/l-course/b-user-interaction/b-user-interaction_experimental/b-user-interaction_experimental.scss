@@ -1,7 +1,9 @@
 @import "../../../../n-common/i-media/i-media";
 
 .b-user-interaction_experimental {
-    padding-top: 0px;
+    &.b-user-interaction {
+        padding-top: 0px;
+    }
 
     .b-user-interaction__label {
         display: block;
@@ -29,7 +31,7 @@
 
 @include media-xs {
     .b-user-interaction_experimental {
-        .b-user-interaction {
+        &.b-user-interaction {
             display: inline-block;
 
             padding-top: 25px;
