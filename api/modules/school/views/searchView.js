@@ -107,24 +107,26 @@ searchView.render = function(data) {
                 plu: 'школ'
             },
             sort: {
-                listItems: [{
-                    'label': 'по средней оценке',
-                    'text': 'средней оценке'
-                }, {
-                    'label': 'по образованию',
-                    'text': 'образованию'
-                }, {
-                    'label': 'по преподавателям',
-                    'text': 'преподавателям'
-                }, {
-                    'label': 'по атмосфере',
-                    'text': 'атмосфере'
-                }, {
-                    'label': 'по инфраструктуре',
-                    'text': 'инфраструктуре'
-                }],
-                staticText: 'Сортировать по ',
-                defaultOpenerText: 'средней оценке'
+                opener: 'Сортировать ',
+                defaultOpenerText: 'по средней оценке',
+                content: {
+                    items: [{
+                        'label': 'по средней оценке',
+                        'value': 0
+                    }, {
+                        'label': 'по образованию',
+                        'value': 1
+                    }, {
+                        'label': 'по преподавателям',
+                        'value': 2
+                    }, {
+                        'label': 'по атмосфере',
+                        'value': 3
+                    }, {
+                        'label': 'по инфраструктуре',
+                        'value': 4
+                    }]
+                }
             },
             entityList: {
                 items: schoolView.list(aliasedSchools),

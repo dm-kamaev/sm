@@ -54,6 +54,7 @@ goog.scope(function() {
     View.CssClass = {
         ROOT: 'g-dropdown_select',
         OPENER: 'g-dropdown__opener',
+        OPENER_TEXT: 'g-dropdown__opener-text',
         CONTENT: 'g-dropdown__content'
     };
 
@@ -81,12 +82,15 @@ goog.scope(function() {
     /**
      * Change text of opener
      * @param {string} text
+     * @protected
      */
     View.prototype.changeOpenerText = function(text) {
-        goog.dom.setTextContent(
-            this.dom.opener,
-            text
-        );
+        if (this.params.isChangingOpenerText) {
+            goog.dom.setTextContent(
+                this.dom.openerText,
+                text
+            );
+        }
     };
 
 
@@ -94,6 +98,7 @@ goog.scope(function() {
      * Return data-params from dom element
      * @return {sm.gDropdown.ViewSelect.Params}
      * @override
+     * @protected
      */
     View.prototype.getParams = function() {
         var rawParams = View.base(this, 'getParams');
@@ -132,6 +137,10 @@ goog.scope(function() {
     View.prototype.initDom = function() {
         this.dom.opener = this.getElementByClass(
             View.CssClass.OPENER
+        );
+
+        this.dom.openerText = this.getElementByClass(
+            View.CssClass.OPENER_TEXT
         );
 
         this.dom.list = this.getElementByClass(

@@ -35,6 +35,22 @@
 
 
 /**
+ * Control for displaying content
+ * @param params {{
+ *     data: {
+ *         opener: string
+ *     }
+ * }}
+ * @override
+ */
+{template .opener}
+    <div class="{call .rootClass/}__opener-text">
+        {$params.data.opener}
+    </div>
+{/template}
+
+
+/**
  * Content
  * @param params {{
  *     data: {

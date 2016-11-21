@@ -5,7 +5,7 @@
         display: inline-block;
     }
 
-    .g-dropdown__opener-link-content {
+    .g-dropdown__opener-content {
         padding: 10px 15px;
 
         text-align: right;
@@ -30,7 +30,7 @@
 }
 
 .g-dropdown.g-dropdown_minimal-theme {
-    .g-dropdown__opener-link-content {
+    .g-dropdown__opener-content {
         padding: 0;
     }
 
@@ -48,7 +48,7 @@
     .g-dropdown.g-dropdown_list-links {
         position: static;
 
-        .g-dropdown__opener-link-content {
+        .g-dropdown__opener-content {
             padding-left: 0;
         }
 

@@ -20,6 +20,14 @@ sm.gDropdown.DropdownSelect = function(view, opt_params, opt_domHelper) {
 
 
     /**
+     * @type {sm.gDropdown.DropdownSelect.Params}
+     * @override
+     * @protected
+     */
+    this.params = view.getParams() || {};
+
+
+    /**
      * Instance list
      * @type {sm.gList.ListStendhal}
      * @protected
@@ -32,6 +40,13 @@ goog.inherits(sm.gDropdown.DropdownSelect, cl.gDropdown.Dropdown);
 goog.scope(function() {
     var Dropdown = sm.gDropdown.DropdownSelect,
         View = sm.gDropdown.ViewSelect;
+
+
+    /**
+     * @typedef {sm.gDropdown.ViewSelect.Params}
+     */
+    sm.gDropdown.DropdownSelect.Params;
+
 
     /**
      * Event enum
@@ -104,10 +119,19 @@ goog.scope(function() {
             'data': this.getValue(itemId)
         });
 
-        if (this.params.isChangingOpenerText) {
-            var openerText = this.getLabel(itemId);
-            this.getView().changeOpenerText(openerText);
-        }
+        var openerText = this.generateOpenerText(itemId);
+        this.getView().changeOpenerText(openerText);
+    };
+
+
+    /**
+     * Generate Opener Text
+     * @param {number} itemId
+     * @return {string}
+     * @protected
+     */
+    Dropdown.prototype.generateOpenerText = function(itemId) {
+        return this.getLabel(itemId);
     };
 
 

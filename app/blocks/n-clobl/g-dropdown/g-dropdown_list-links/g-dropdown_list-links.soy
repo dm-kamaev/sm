@@ -28,7 +28,7 @@
  *     data: sm.gDropdown.TemplateListLinks.Params.Data,
  *     config: sm.gDropdown.TemplateListLinks.Params.Config
  * }}
- * @extends cl.gDropdown.Template
+ * @extends sm.gDropdown.TemplateSelect
  * @constructor
  * @doc
  */
@@ -89,7 +89,7 @@
  * }}
  */
 {template .openerContent_}
-    <div class="{call .rootClass/}__opener-link-content">
+    <div class="{call .rootClass/}__opener-content">
         {call .openerText_ data="all" /}
         {call .openerIcon_/}
     </div>
@@ -169,33 +169,7 @@
  * @override
  */
 {template .additionalClasses}
+    {call .rootClass/}_select{sp}
     {call .rootClass/}_list-links
-{/template}
-
-
-/**
- * Attributes template
- * @param params {{
- *     data: {
- *         content: {
- *              items: Array<{
- *                  label: (string|undefined),
- *                  value: (number|string|undefined)
- *              }>
- *         }
- *     }
- * }}
- * @override
- */
-{template .attributes kind="attributes"}
-    {let $array: $params.data.content.items /}
-
-    data-params="{call cl.iUtils.Utils.stringify}
-        {param json: quoteKeysIfJs([
-            'isChangingOpenerText': $params.config.isChangingOpenerText,
-            'values': $array,
-            'opener': $params.data.opener
-        ]) /}
-    {/call}"
 {/template}
 
