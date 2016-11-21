@@ -90,7 +90,7 @@ goog.scope(function() {
      * @enum
      */
     SchoolList.Event = {
-        SORT_CLICK: sm.gDropdown.DropdownSelect.Event.ITEM_SELECT,
+        SORT_CLICK: sm.gDropdown.DropdownSelectLegacy.Event.ITEM_SELECT,
         FAVORITE_ADDED: SchoolListItem.Event.FAVORITE_ADDED,
         FAVORITE_REMOVED: SchoolListItem.Event.FAVORITE_REMOVED,
         SHOW_MORE: 'show-more-items'
@@ -161,7 +161,7 @@ goog.scope(function() {
         );
 
         this.sort_ = sm.iFactory.FactoryStendhal.getInstance().decorate(
-            'dropdown-select',
+            'dropdown-select-legacy',
             sortElement,
             this
         );

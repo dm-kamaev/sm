@@ -1,4 +1,4 @@
-goog.provide('sm.gDropdown.DropdownSelect');
+goog.provide('sm.gDropdown.DropdownSelectLegacy');
 
 goog.require('cl.gDropdown.Dropdown');
 goog.require('cl.gList.List');
@@ -12,7 +12,7 @@ goog.require('cl.gList.List');
  * @constructor
  * @extends {cl.gDropdown.Dropdown}
  */
-sm.gDropdown.DropdownSelect = function(view, opt_domHelper) {
+sm.gDropdown.DropdownSelectLegacy = function(view, opt_domHelper) {
     goog.base(this, view, opt_domHelper);
 
 
@@ -31,10 +31,10 @@ sm.gDropdown.DropdownSelect = function(view, opt_domHelper) {
      */
     this.value_ = null;
 };
-goog.inherits(sm.gDropdown.DropdownSelect, cl.gDropdown.Dropdown);
+goog.inherits(sm.gDropdown.DropdownSelectLegacy, cl.gDropdown.Dropdown);
 
 goog.scope(function() {
-    var DropdownSelect = sm.gDropdown.DropdownSelect,
+    var DropdownSelect = sm.gDropdown.DropdownSelectLegacy,
         DropdownView = cl.gDropdown.View;
 
 

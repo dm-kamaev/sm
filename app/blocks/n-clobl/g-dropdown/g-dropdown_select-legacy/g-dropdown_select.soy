@@ -4,7 +4,7 @@
  * It take from list items text which need to place at changing opener text.
  */
 
-{namespace sm.gDropdown.TemplateSelect}
+{namespace sm.gDropdown.TemplateSelectLegacy}
 
 /**
  * @typedef {{
@@ -16,7 +16,7 @@
  *         url: (string|undefined)
  *     ]>,
  *     selectedItemId: (number|undefined)
- * }} sm.gDropdown.TemplateSelect.Params.Data
+ * }} sm.gDropdown.TemplateSelectLegacy.Params.Data
  */
 
 
@@ -28,15 +28,15 @@
  *     theme: (('minimal')|undefined),
  *     textSize: (string|undefined),
  *     indent: (string|undefined)
- * }} sm.gDropdown.TemplateSelect.Params.Config
+ * }} sm.gDropdown.TemplateSelectLegacy.Params.Config
  */
 
 
 /**
  * Dropdown select template
  * @param? params {{
- *     data: sm.gDropdown.TemplateSelect.Params.Data,
- *     config: sm.gDropdown.TemplateSelect.Params.Config
+ *     data: sm.gDropdown.TemplateSelectLegacy.Params.Data,
+ *     config: sm.gDropdown.TemplateSelectLegacy.Params.Config
  * }}
  * @extends cl.gDropdown.Template
  * @constructor
@@ -49,8 +49,8 @@
 /**
  * Control
  * @param? params {{
- *     data: sm.gDropdown.TemplateSelect.Params.Data,
- *     config: sm.gDropdown.TemplateSelect.Params.Config
+ *     data: sm.gDropdown.TemplateSelectLegacy.Params.Data,
+ *     config: sm.gDropdown.TemplateSelectLegacy.Params.Config
  * }}
  * @override
  */
@@ -126,12 +126,12 @@
 /**
  * Css classes
  * @param params {{
- *     config: sm.gDropdown.TemplateSelect.Params.Config
+ *     config: sm.gDropdown.TemplateSelectLegacy.Params.Config
  * }}
  * @override
  */
 {template .additionalClasses}
-    {call .rootClass/}_select
+    {call .rootClass/}_select-legacy
 
     {if $params?.config?.color}
         {sp}{call .rootClass/}_{$params.config.color}-color

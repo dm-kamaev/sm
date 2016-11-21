@@ -1,4 +1,4 @@
-goog.provide('sm.gDropdown.ViewSelect');
+goog.provide('sm.gDropdown.ViewSelectLegacy');
 
 goog.require('cl.gDropdown.View');
 
@@ -12,7 +12,7 @@ goog.require('cl.gDropdown.View');
  * @constructor
  * @extends {cl.iControl.View}
  */
-sm.gDropdown.ViewSelect = function(opt_params, opt_type, opt_modifier) {
+sm.gDropdown.ViewSelectLegacy = function(opt_params, opt_type, opt_modifier) {
     goog.base(this, opt_params, opt_type, opt_modifier);
 
 
@@ -23,11 +23,11 @@ sm.gDropdown.ViewSelect = function(opt_params, opt_type, opt_modifier) {
      */
     this.params_ = {};
 };
-goog.inherits(sm.gDropdown.ViewSelect, cl.gDropdown.View);
+goog.inherits(sm.gDropdown.ViewSelectLegacy, cl.gDropdown.View);
 
 
 goog.scope(function() {
-    var DropdownSelectView = sm.gDropdown.ViewSelect;
+    var DropdownSelectView = sm.gDropdown.ViewSelectLegacy;
 
 
     /**

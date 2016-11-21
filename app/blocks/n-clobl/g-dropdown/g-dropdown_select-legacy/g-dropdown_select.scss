@@ -1,4 +1,4 @@
-.g-dropdown.g-dropdown_select {
+.g-dropdown.g-dropdown_select-legacy {
 
     .g-dropdown__opener {
         box-sizing: border-box;
@@ -29,13 +29,13 @@
     }
 }
 
-.g-dropdown.g-dropdown_select.g-dropdown_not-selected {
+.g-dropdown.g-dropdown_select-legacy.g-dropdown_not-selected {
     .g-dropdown__opener {
         outline: 4px solid #e2332a;
     }
 }
 
-.g-dropdown.g-dropdown_select.g-dropdown_text-small {
+.g-dropdown.g-dropdown_select-legacy.g-dropdown_text-small {
     .g-dropdown__opener,
     .g-dropdown__content,
     .g-dropdown__opener-custom-text {
@@ -43,7 +43,7 @@
     }
 }
 
-.g-dropdown.g-dropdown_select.g-dropdown_indent-small {
+.g-dropdown.g-dropdown_select-legacy.g-dropdown_indent-small {
     .g-dropdown__opener {
         padding: 10px 14px 14px 17px;
     }
@@ -58,7 +58,7 @@
     }
 }
 
-.g-dropdown.g-dropdown_select.g-dropdown_minimal-theme {
+.g-dropdown.g-dropdown_select-legacy.g-dropdown_minimal-theme {
     .g-dropdown__opener {
         box-sizing: content-box;
         padding: 0;
@@ -89,7 +89,7 @@
 }
 
 
-.g-dropdown.g-dropdown_select.g-dropdown_small-icon-offset {
+.g-dropdown.g-dropdown_select-legacy.g-dropdown_small-icon-offset {
     .g-dropdown__opener-arrow {
         margin-left: 5px;
     }

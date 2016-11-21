@@ -32,8 +32,8 @@ goog.scope(function() {
         this.itemList_ = null;
 
         /**
-         * Sort control (dropdown-select) instance
-         * @type {sm.gDropdown.DropdownSelect}
+         * Sort control (dropdown-list-links) instance
+         * @type {sm.gDropdown.DropdownListLinks}
          * @private
          */
         this.sort_ = null;

@@ -90,7 +90,7 @@ goog.scope(function() {
         var factory = sm.iFactory.FactoryStendhal.getInstance();
 
         this.dropdown_ = factory.decorate(
-            'dropdown-select',
+            'dropdown-select-legacy',
             this.dropdownElement_,
             this
         );
@@ -125,7 +125,7 @@ goog.scope(function() {
 
         this.getHandler().listen(
             this.dropdown_,
-            sm.gDropdown.DropdownSelect.Event.ITEM_SELECT,
+            sm.gDropdown.DropdownSelectLegacy.Event.ITEM_SELECT,
             this.onDropdownItemSelect_,
             false,
             this
@@ -133,7 +133,7 @@ goog.scope(function() {
 
         this.getHandler().listen(
             this.dropdown_,
-            sm.gDropdown.DropdownSelect.Event.ITEM_SELECT,
+            sm.gDropdown.DropdownSelectLegacy.Event.ITEM_SELECT,
             this.onChangeFilter,
             false,
             this

@@ -55,9 +55,9 @@ goog.require('sm.bSmSubheader.SmSubheader');
 goog.require('sm.bSmSubheader.View');
 goog.require('sm.gAuthSocial.ViewStendhal');
 goog.require('sm.gDropdown.DropdownListLinks');
-goog.require('sm.gDropdown.DropdownSelect');
+goog.require('sm.gDropdown.DropdownSelectLegacy');
 goog.require('sm.gDropdown.ViewListLinks');
-goog.require('sm.gDropdown.ViewSelect');
+goog.require('sm.gDropdown.ViewSelectLegacy');
 goog.require('sm.gInput.DigitInput');
 goog.require('sm.gInput.DigitInputView');
 goog.require('sm.gInput.InputPhone');
@@ -128,9 +128,9 @@ sm.iFactory.FactoryStendhal = function() {
         this, 'constructor', templateFactory.getInstance(), 'stendhal'
     );
 
-    this.setControlListItem('dropdown-select', {
-            control: sm.gDropdown.DropdownSelect,
-            view: sm.gDropdown.ViewSelect
+    this.setControlListItem('dropdown-select-legacy', {
+            control: sm.gDropdown.DropdownSelectLegacy,
+            view: sm.gDropdown.ViewSelectLegacy
         })
         .setControlListItem('list-select', {
             control: sm.gList.List.Select,
