@@ -421,8 +421,7 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.onScroll_ = function() {
-        if (this.isDocumentEndReached_() &&
-            !this.searchService_.isSearchDataPending()) {
+        if (this.isNextPageCanBeLoaded_()) {
             this.loadNextPage_();
         }
     };
@@ -589,6 +588,18 @@ goog.scope(function() {
 
 
     /**
+     * Check is needed and possible to load next page
+     * @return {boolean}
+     * @private
+     */
+    Search.prototype.isNextPageCanBeLoaded_ = function() {
+        return this.isDocumentEndReached_() &&
+            !this.isAllSearchItemsLoaded_() &&
+            !this.isResultsListAnimationEnded_();
+    };
+
+
+    /**
      * Detect is user scroll on document end
      * @return {boolean}
      * @private
@@ -598,6 +609,26 @@ goog.scope(function() {
         var yCoordinate = goog.dom.getDocumentScroll().y;
         var documentHeght = goog.dom.getDocumentHeight();
         return viewportHeght + yCoordinate >= documentHeght;
+    };
+
+
+    /**
+     * Detect if all search items loaded
+     * @return {boolean}
+     * @private
+     */
+    Search.prototype.isAllSearchItemsLoaded_ = function() {
+        return this.searchResults_.isAllSearchItemsLoaded();
+    };
+
+
+    /**
+     * Detect if search results animation ended
+     * @return {boolean}
+     * @private
+     */
+    Search.prototype.isResultsListAnimationEnded_ = function() {
+        return this.searchResults_.isAnimationEnded();
     };
 
 

@@ -125,7 +125,10 @@ goog.scope(function() {
 
     /**
      * Add given items to bottom of list and hide loader
-     * @param {Array<sm.bSmItem.SmItem.RenderParams>} items
+     * @param {Array<(sm.bSmItem.SmItem.RenderParams|
+     * sm.bSmItem.SmItemEntity.RenderParams|
+     * sm.bSmLink.SmLink.RenderParams|
+     * sm.lCourse.bDepartment.Department.RenderParams)>} items
      * @public
      */
     SearchResults.prototype.addPage = function(items) {
@@ -224,6 +227,16 @@ goog.scope(function() {
      */
     SearchResults.prototype.setLoaderVisibility = function(visibility) {
         this.getView().setLoaderVisibility(visibility);
+    };
+
+
+    /**
+     * Return whether animation in progress
+     * @return {boolean}
+     * @public
+     */
+    SearchResults.prototype.isAnimationEnded = function() {
+        return this.getView().getAnimationPromise() ? true : false;
     };
 
 
