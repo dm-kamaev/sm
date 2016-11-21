@@ -382,6 +382,7 @@ goog.scope(function() {
             oldStatusCssClass,
             newStatusCssClass
         );
+
         this.setLoaderVisibility(false);
         this.resetAnimationPromise();
     };
