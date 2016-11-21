@@ -4,6 +4,7 @@
 /**
  * @typedef {{
  *     opener: string,
+ *     defaultOpenerText: (string|undefined),
  *     content: sm.gList.TemplateLinks.Params.Data
  * }} sm.gDropdown.TemplateListLinks.Params.Data
  */
@@ -13,7 +14,9 @@
  * @typedef {{
  *     stylizationModifier: string,
  *     customClasses: (Array<string>|undefined),
- *     theme: (string|undefined),
+ *     openerSize: ('m'|'xl'|undefined),
+ *     contentSize: ('m'|'l'|undefined),
+ *     theme: ('minimal'|undefined),
  *     isChangingOpenerText: (boolean|undefined)
  * }} sm.gDropdown.TemplateListLinks.Params.Config
  */
@@ -38,10 +41,12 @@
  * Control for displaying content
  * @param params {{
  *     data: {
- *         opener: string
+ *         opener: string,
+ *         defaultOpenerText: (string|undefined)
  *     },
  *     config: {
- *         isChangingOpenerText: boolean
+ *         openerSize: ('m'|'xl'|undefined),
+ *         isChangingOpenerText: (boolean|undefined)
  *     }
  * }}
  * @override
@@ -55,14 +60,6 @@
         {call .openerContent_ data="all" /}
     {/let}
 
-    {let $size kind="text"}
-        {if $params.config.isChangingOpenerText}
-            m
-        {else}
-            xl
-        {/if}
-    {/let}
-
     {call .renderChild}
         {param params: [
             'type': 'smLink',
@@ -71,7 +68,7 @@
                     'content': $openerContent
                 ],
                 'config': [
-                    'size': $size,
+                    'size': $params.config.openerSize,
                     'customClasses': [$customClasses],
                     'theme': 'dark'
                 ]
@@ -85,16 +82,14 @@
  * Content of opener
  * @param params {{
  *     data: {
- *         opener: string
+ *         opener: string,
+ *         defaultOpenerText: (string|undefined)
  *     },
  *     config: sm.gDropdown.TemplateListLinks.Params.Config
  * }}
  */
 {template .openerContent_}
-    <div class="{call .rootClass/}__opener-link-content
-        {if $params.config.isChangingOpenerText}
-            {sp}{call .rootClass/}__opener-link-content_small
-        {/if}">
+    <div class="{call .rootClass/}__opener-link-content">
         {call .openerText_ data="all" /}
         {call .openerIcon_/}
     </div>
@@ -105,7 +100,8 @@
  * Text of opener
  * @param params {{
  *     data: {
- *         opener: string
+ *         opener: string,
+ *         defaultOpenerText: (string|undefined)
  *     }
  * }}
  * @private
@@ -113,6 +109,7 @@
 {template .openerText_}
     <div class="{call .rootClass/}__opener-text">
         {$params.data.opener}
+
         {if $params.data.defaultOpenerText}
             {$params.data.defaultOpenerText}
         {/if}
@@ -145,6 +142,9 @@
  * @param params {{
  *     data: {
  *        content: sm.gList.TemplateLinks.Params.Data
+ *     },
+ *     config: {
+ *         contentSize: ('m'|'l'|undefined)
  *     }
  * }}
  * @override
@@ -156,7 +156,7 @@
             'renderParams': [
                 'data': $params.data.content,
                 'config': [
-                    'isChangingOpenerText': $params.config.isChangingOpenerText
+                    'size': $params.config.contentSize
                 ]
             ]
         ]/}
@@ -166,16 +166,10 @@
 
 /**
  * Css classes
- * @param params {{
- *     config: sm.gDropdown.TemplateListLinks.Params.Config
- * }}
  * @override
  */
 {template .additionalClasses}
     {call .rootClass/}_list-links
-    {if $params.config.isChangingOpenerText}
-        {sp}{call .rootClass/}_list-links_small
-    {/if}
 {/template}
 
 
