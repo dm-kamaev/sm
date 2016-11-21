@@ -28,6 +28,7 @@
  *     year: (number|undefined),
  *     staticVersion: (string|undefined),
  *     analyticsId: string,
+ *     experimentId: string,
  *     yandexMetrikaId: number,
  *     carrotquestId: string,
  *     domain: string,
@@ -49,6 +50,19 @@
  */
 {template .layout autoescape="strict" kind="html"}
     {call .document data="all" /}
+{/template}
+
+
+/**
+ * @param params {{
+ *     data: sm.iLayout.TemplateStendhal.Params.Data,
+ *     config: sm.iLayout.TemplateStendhal.Params.Config
+ * }}
+ * @override
+ */
+{template .head kind="html"}
+    {call .contentExperimentScript data="all" /}
+    {call .super_head data="all" /}
 {/template}
 
 
@@ -138,6 +152,27 @@
  */
 {template .openGraph}
     {call sm.gOpenGraph.TemplateStendhal.openGraph data="all"/}
+{/template}
+
+
+/**
+ * Call experiment script template if needed
+ * @param params {{
+ *     config: {
+ *         experimentId: string
+ *     }
+ * }}
+ */
+{template .contentExperimentScript kind="html"}
+    {if $params?.config.experimentId}
+        {call sm.iContentExperiment.Template.script}
+            {param params: [
+                'data': [
+                    'experimentId': $params.config.experimentId
+                ]
+            ] /}
+        {/call}
+    {/if}
 {/template}
 
 
@@ -282,6 +317,7 @@
 {template .content autoescape="strict" kind="html"}
     <div class="{call .rootClass/} {call .entityModifierClass data="all"/}"
                 {call .attributes data="all"/}>
+
         {call .mainSubheader data="all" /}
         {call .mainContent data="all" /}
         {call .mainFooter data="all" /}
@@ -306,7 +342,7 @@
     <div class="{call .rootClass/}__subheader">
         {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
-                'factory': $params.config.modifier ?: 'stendhal',
+                'factory': $params.config.modifier,
                 'type': 'smSubheader',
                 'renderParams': [
                     'data': $params.data.subHeader,
@@ -343,7 +379,7 @@
     <div class="{call .rootClass/}__footer">
         {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
-                'factory': $params.config.modifier ?: 'stendhal',
+                'factory': $params.config.modifier,
                 'type': 'smFooter',
                 'renderParams': [
                     'data': [
@@ -386,7 +422,8 @@
  *         }
  *     },
  *     config: {
- *         entityType: string
+ *         entityType: string,
+ *         modifier: string
  *     }
  * }}
  * @protected
@@ -397,7 +434,8 @@
             {param json: [
                 'isUserAuthorized': $params.data?.user ? true : false,
                 'authSocialLinks': $params.data?.authSocialLinks,
-                'type': $params?.config.entityType
+                'modifier': $params.config?.modifier,
+                'type': $params.config?.entityType,
             ] /}
         {/call}"
 {/template}

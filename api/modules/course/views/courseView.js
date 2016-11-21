@@ -28,7 +28,6 @@ const FULL_DESCRIPTION_LENGTH = 300,
 view.page = function(course) {
     let options = course.courseOptions,
         generalOptions = this.formatGeneralOptions(course);
-
     return {
         id: course.id,
         name: course.name,
@@ -41,6 +40,7 @@ view.page = function(course) {
             items: this.formatGeneralOptionsWithConfig(generalOptions)
         },
         departmentList: this.formatDepartmentList(options, generalOptions),
+        videoId: course.embedId,
         online: this.onlineStatus(generalOptions)
     };
 };
@@ -655,6 +655,7 @@ view.render = function(course) {
         about: course.about,
         learningOutcome: course.learningOutcome,
         isActive: course.dataValues.isActive,
+        embedId: course.embedId,
         updatedAt: course['updated_at']
     };
 };

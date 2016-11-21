@@ -2,6 +2,8 @@ goog.provide('sm.gDropdown.ViewListLinks');
 
 goog.require('cl.gDropdown.View');
 goog.require('cl.iUtils.Utils');
+goog.require('goog.dom');
+goog.require('goog.json');
 
 
 
@@ -33,7 +35,8 @@ goog.scope(function() {
         ROOT: 'g-dropdown_list-links',
         OPENER: 'g-dropdown__opener',
         OPENER_LINK: 'g-dropdown__opener-link',
-        CONTENT: 'g-dropdown__content'
+        CONTENT: 'g-dropdown__content',
+        OPENER_TEXT: 'g-dropdown__opener-text'
     };
 
     /**
@@ -69,5 +72,47 @@ goog.scope(function() {
         this.dom.listLinks = this.getElementByClass(
             sm.gList.ViewLinks.CssClass.ROOT
         );
+    };
+
+
+    /**
+     * Change label of opener
+     * @param {string} label
+     */
+    View.prototype.changeOpenerText = function(label) {
+        goog.dom.setTextContent(
+            this.getElementByClass(View.CssClass.OPENER_TEXT),
+            label
+        );
+    };
+
+
+    /**
+     * Transform params to compressed ones
+     * @param {Object} params
+     * @return {sm.gDropdown.ViewListLinks.DataParams}
+     * @protected
+     */
+    View.prototype.transformParams = function(params) {
+        var res = {};
+
+        res.opener = params['opener'];
+
+        params['isChangingOpenerText'] ?
+            res.isChangingOpenerText = params['isChangingOpenerText'] :
+            res.isChangingOpenerText = false;
+
+        if (params['values']) {
+            res.values = params['values'].map(function(item) {
+                return {
+                    label: item['label'],
+                    value: item['value']
+                };
+            });
+        } else {
+            res.values = null;
+        }
+
+        return res;
     };
 });  // goog.scope

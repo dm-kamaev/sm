@@ -9,10 +9,17 @@ const csrf = require('./app/middleware/csrf');
 const session = require('./app/components/session');
 const configurePassport = require('./app/components/configurePassport');
 const soy = require('./node_modules/clobl/soy').setOptions({
-    templateFactory: path.join(
-        __dirname,
-        'app/blocks/n-clobl/i-factory/i-template-factory_stendhal.js'
-    ),
+    templateFactory: [
+        path.join(
+            __dirname,
+            'app/blocks/n-clobl/i-factory/i-template-factory_stendhal.js'
+        ),
+        path.join(
+            __dirname,
+            'app/blocks/n-clobl/i-factory/i-factory_experimental/' +
+            'i-template-factory_experimental.js'
+        )
+    ],
     closureLibrary: path.join(
         __dirname,
         'node_modules/google-closure-library'
@@ -78,11 +85,12 @@ app.use('/courses/api', api.course.router);
 
 app.use(csrf);
 
+app.use('/:subdomain/', api.user.router);
+
 app.use('/schools/', modules.school.router);
 app.use('/courses/', modules.course.router);
 
 app.use('/:subdomain/api', api.mail.router);
-app.use('/:subdomain/', api.user.router);
 app.use('/:subdomain/api', api.comment.router);
 app.use('/schools/api', api.school.router);
 app.use('/:subdomain/api', api.geo.router);

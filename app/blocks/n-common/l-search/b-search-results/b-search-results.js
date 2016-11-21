@@ -3,7 +3,7 @@ goog.provide('sm.lSearch.bSearchResults.SearchResults');
 goog.require('cl.gButton.Button');
 goog.require('cl.iControl.Control');
 goog.require('sm.bSmItemList.SmItemList');
-goog.require('sm.gDropdown.DropdownSelect');
+goog.require('sm.gDropdown.DropdownListLinks');
 goog.require('sm.lSearch.bSearchResults.View');
 
 
@@ -64,7 +64,7 @@ goog.scope(function() {
      * @const
      */
     SearchResults.Event = {
-        SORT_TYPE_CHANGE: sm.gDropdown.DropdownSelect.Event.ITEM_SELECT,
+        SORT_TYPE_CHANGE: sm.gDropdown.DropdownListLinks.Event.CONTENT_CLICK,
         SHOW_MORE_CLICK: cl.gButton.Button.Event.CLICK,
         LIST_ITEM_CLICK: sm.bSmItemList.SmItemList.Event.ITEM_CLICK
     };
@@ -112,6 +112,7 @@ goog.scope(function() {
     SearchResults.prototype.update = function(params) {
         var status;
         if (params.countResults) {
+            this.params.countResults = params.countResults;
             status = SearchResults.Status.NOT_EMPTY_RESULTS;
             this.getView().updateHeader(params.countResults, params.searchText);
             this.replaceItems(params.items);
@@ -164,11 +165,12 @@ goog.scope(function() {
 
 
     /**
-     * Get count of items, added to item list
-     * @return {number}
+     * Check if all items of current search parameters loaded
+     * @return {boolean}
+     * @public
      */
-    SearchResults.prototype.getCountItems = function() {
-        return this.itemList_.getCountItems();
+    SearchResults.prototype.isAllSearchItemsLoaded = function() {
+        return this.itemList_.getCountItems() == this.params.countResults;
     };
 
 
@@ -191,6 +193,17 @@ goog.scope(function() {
         params, opt_interval) {
 
         this.itemList_.sendAnalyticsItemsImpression(params, opt_interval);
+    };
+
+
+    /**
+     * Send Analytics when user clicks on list item
+     * @param {number} itemId
+     * @param {string} list
+     * @public
+     */
+    SearchResults.prototype.sendAnalyticsItemClick = function(itemId, list) {
+        this.itemList_.sendAnalyticsItemClick(itemId, list);
     };
 
 
@@ -236,7 +249,7 @@ goog.scope(function() {
 
         this.itemList_ = this.decorateChild('smItemList', dom.itemList);
 
-        this.sort_ = this.decorateChild('dropdown-select', dom.sort);
+        this.sort_ = this.decorateChild('dropdown-list-links', dom.sort);
 
         this.showMore_ = this.decorateChild('button', dom.showMore);
 

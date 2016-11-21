@@ -233,7 +233,8 @@ goog.scope(function() {
      */
     View.prototype.getParams = function() {
         var rawParams = View.base(this, 'getParams');
-        return rawParams ? this.transformParams(rawParams) : null;
+        this.params = rawParams ? this.transformParams(rawParams) : null;
+        return this.params;
     };
 
 
@@ -249,7 +250,8 @@ goog.scope(function() {
                 nom: rawParams['declensionEntityType']['nom'],
                 gen: rawParams['declensionEntityType']['gen'],
                 plu: rawParams['declensionEntityType']['plu']
-            }
+            },
+            countResults: rawParams['countResults']
         };
     };
 

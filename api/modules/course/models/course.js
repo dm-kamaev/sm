@@ -51,6 +51,10 @@ let Course = db.define('Course', {
         type: Sequelize.STRING(511),
         field: 'image_url'
     },
+    embedId: {
+        type: Sequelize.STRING,
+        field: 'embed_id'
+    },
     ctr: Sequelize.DOUBLE
 }, {
     underscored: true,

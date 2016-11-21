@@ -344,7 +344,7 @@ controller.list = async(function(req, res) {
  * @apiSuccessExample {json} Response-example
  *     HTTP/1.1 200 OK
  *     {
- *        "id": 1,
+ *         "id": 1,
  *         "name": "course's name",
  *         "description": "course's description",
  *         "brandId": 2,
@@ -357,6 +357,7 @@ controller.list = async(function(req, res) {
  *         "about": "course's about",
  *         "learningOutcome": "course's learning outcome",
  *         "isActive": true,
+ *         "embedId": 'OulwjLUwLXM',
  *         "updatedAt": "2016-09-15T15:18:28.395Z"
  *     }
  */
@@ -388,7 +389,8 @@ controller.get = async(function(req, res) {
  *         "description": "course's description",
  *         "fullDescription": "course's full description",
  *         "learningOutcome": "course's learning outcome",
- *         "about": "course's about"
+ *         "about": "course's about",
+ *         "embedId": 'OulwjLUwLXM'
  *     }
  */
 controller.create = async(function(req, res) {
@@ -418,7 +420,8 @@ controller.create = async(function(req, res) {
  *         "description": "course's description",
  *         "fullDescription": "course's full description",
  *         "learningOutcome": "course's learning outcome",
- *         "about": "course's about"
+ *         "about": "course's about",
+ *         "embedId": 'OulwjLUwLXM'
  *     }
  */
 controller.update = async(function(req, res) {

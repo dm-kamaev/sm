@@ -12,6 +12,7 @@ const MAX_BILD_FILE_AMOUNT = 20;
 process.stdout.setMaxListeners(MAX_BILD_FILE_AMOUNT);
 
 const config = require('./config.json');
+const gulpConfig = require('./app/config/base/config.json');
 const production = !!util.env.production;
 const BLOCKS_DIR = '/app/blocks';
 const SHARED_STATIC_DIR = '/public/shared/static';
@@ -62,7 +63,7 @@ gulp.task('appES5', function() {
 });
 
 gulp.task('soy', function() {
-    return gulpHelper.soy.build();
+    return gulpHelper.soy.build([]);
 });
 
 gulp.task('styles', ['sprite', 'svgSprite'], function() {
@@ -93,10 +94,18 @@ gulp.task('sprite', function() {
                 __dirname,
                 BLOCKS_DIR,
                 '/n-clobl/g-icon/g-icon_img/*@2x.png'
-            )]
+            )],
+            imgPath: gulpConfig.lastBuildTimestamp ?
+                '/static/images/g-icon_auto-sprite@2x.png' + '?' +
+                    gulpConfig.lastBuildTimestamp :
+                '/static/images/g-icon_auto-sprite@2x.png'
         },
         pngDest: path.join(__dirname, SHARED_STATIC_DIR, '/images'),
-        imgDir: ('./')
+        imgDir: ('./'),
+        imgPath: gulpConfig.lastBuildTimestamp ?
+            '/static/images/g-icon_auto-sprite.png' + '?' +
+                gulpConfig.lastBuildTimestamp :
+            '/static/images/g-icon_auto-sprite.png'
     }]);
 });
 

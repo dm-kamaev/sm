@@ -7,6 +7,11 @@
 
     .g-dropdown__opener-link-content {
         padding: 10px 15px;
+        text-align: right;
+    }
+
+    .g-dropdown__opener-link-content_small {
+        padding: 0;
     }
 
     .g-dropdown__opener-icon {
@@ -27,6 +32,16 @@
     }
 }
 
+.g-dropdown.g-dropdown_list-links_small {
+    .g-dropdown__content {
+        right: 0;
+        left: auto;
+        float: right;
+        width: auto;
+        margin-top: 14px;
+    }
+}
+
 @include media-xs {
     .g-dropdown.g-dropdown_list-links {
         position: static;
@@ -41,6 +56,18 @@
             left: 0;
 
             width: 100%
+        }
+    }
+
+    .g-dropdown.g-dropdown_list-links_small {
+
+        .g-dropdown__content {
+            top: 0;
+            right: 0;
+            left: auto;
+            float: right;
+            width: auto;
+            margin-top: 30px;
         }
     }
 }

@@ -27,7 +27,8 @@ const informationFields = {
         'fullDescription',
         'entranceExam',
         'learningOutcome',
-        'leadType'
+        'leadType',
+        'embedId'
     ],
     BRAND: ['id', 'name', 'description'],
     TYPE: ['id', 'name'],
@@ -474,6 +475,28 @@ service.getById = async(function(id) {
             }]
         }]
     }));
+});
+
+
+/**
+ * Get course by given category alias and name
+ * @param {string} categoryAlias
+ * @param {string} name
+ * @return {models.Course}
+ */
+service.getGetByNameAndCategoryAlias = async(function(categoryAlias, name) {
+    let category = await(services.courseCategory.getByAlias(categoryAlias));
+    let types = await(services.courseType.getByCategory(category.id));
+
+    return models.Course.findOne({
+        where: {
+            name: name,
+            type: {
+                in: types.map(type => type.id)
+            }
+        },
+        raw: true
+    });
 });
 
 /**

@@ -31,9 +31,10 @@ let CourseCategory = db.define('CourseCategory', {
                 as: 'types',
                 foreignKey: 'category_id'
             });
-            CourseCategory.hasMany(models.SeoCourseList, {
+            CourseCategory.hasOne(models.SeoCourseList, {
                 as: 'seoCourseList',
-                foreignKey: 'category_id'
+                foreignKey: 'category_id',
+                onDelete: 'cascade'
             });
         }
     }

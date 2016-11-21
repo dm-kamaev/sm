@@ -13,6 +13,8 @@ const filterName = require('../enums/filterName'),
     mapViewType = require('../../entity/enums/mapViewType'),
     entityType = require('../../entity/enums/entityType');
 
+const factoryName = require('../../../../app/components/enum/factoryName');
+
 let searchView = {};
 
 /**
@@ -91,7 +93,8 @@ searchView.filterPanel = function(data) {
  *     seoParams: Object,
  *     currentCategory: string,
  *     categories: Array<Object>,
- *     categoryAliases: Array<Object>
+ *     categoryAliases: Array<Object>,
+ *     factory: string
  * }} data
  * @return {Object}
  */
@@ -166,19 +169,27 @@ searchView.render = function(data) {
                 plu: 'курсов'
             },
             sort: {
-                listItems: [{
-                    'label': 'по возрастанию цены',
-                    'text': 'возрастанию цены'
-                }, {
-                    'label': 'по убыванию цены',
-                    'text': 'убыванию цены'
-                }],
-                staticText: 'Сортировать по ',
-                defaultOpenerText: 'убыванию цены'
+                opener: 'Сортировать ',
+                defaultOpenerText: 'по популярности',
+                content: {
+                    items: [{
+                        'label': 'по популярности',
+                        'value': 2
+                    }, {
+                        'label': 'по возрастанию цены',
+                        'value': 0
+                    }, {
+                        'label': 'по убыванию цены',
+                        'value': 1
+                    }]
+                }
             },
             entityList: {
                 items: courses,
-                itemType: 'smItemEntity'
+                itemType: 'smItemEntity',
+                itemConfig: {
+                    enableCover: data.factory == factoryName.EXPERIMENTAL
+                }
             }
         },
         filterPanel: searchView.filterPanel({

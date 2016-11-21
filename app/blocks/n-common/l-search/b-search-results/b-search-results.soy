@@ -12,19 +12,6 @@
  *         nom: string,
  *         gen: string,
  *         plu: string
- *     },
- *     title: string,
- *     description: string,
- *     sort: sm.gDropdown.TemplateSelect.Params.Data,
- *     entityList: sm.bSmItemList.Template.Params.Data,
- *     search: {
- *         countResults: number,
- *         searchText: ?string,
- *         declensionEntityType: {
- *             nom: string,
- *             gen: string,
- *             plu: string
- *         }
  *     }
  * }} sm.lSearch.bSearchResults.Template.Params.Data
  */
@@ -318,16 +305,16 @@
     {let $customClasses kind="html"}
         {call .rootClass /}__sort-control
     {/let}
-
     <div class="{call .rootClass /}__sort">
         <div class="{call .rootClass /}__horizontal-line"></div>
         <div class="{call .rootClass /}__sort-control-wrap">
             {call .renderChild}
                 {param params: [
-                    'type': 'dropdown-select',
+                    'type': 'dropdown-list-links',
                     'renderParams': [
                         'data': $params.data.sort,
                         'config': [
+                            'isChangingOpenerText': true,
                             'viewType': 'link',
                             'iconSprite': 'small-opener-arrow',
                             'theme': 'minimal',
@@ -420,8 +407,11 @@
 /**
  * @param params {{
  *     data: {
- *         search: {
- *              declensionEntityType
+ *         countResults: number,
+ *         declensionEntityType: {
+ *              nom: string,
+ *              plu: string,
+ *              gen: string
  *         }
  *     }
  * }}
@@ -431,6 +421,7 @@
 {template .attributes kind="attributes"}
     data-params="{call cl.iUtils.Utils.stringify}
         {param json: [
+            'countResults': $params.data.countResults,
             'declensionEntityType': $params.data.declensionEntityType
         ] /}
     {/call}"

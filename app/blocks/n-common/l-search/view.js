@@ -129,8 +129,7 @@ goog.scope(function() {
         var params = View.base(this, 'transformParams', rawParams);
 
         goog.object.extend(params, {
-            searchParams: rawParams['searchParams'],
-            countResults: rawParams['countResults']
+            searchParams: rawParams['searchParams']
         });
 
         return params;

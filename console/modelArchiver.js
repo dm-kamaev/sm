@@ -16,10 +16,11 @@ var modules = {
     COMMENT: 'comment',
     USER: 'user'
 };
-/*List of models to update data*/
+/* List of models to update data */
 var modelModules = {
     Comment: modules.COMMENT,
     CommentGroup: modules.COMMENT,
+    Rating: modules.COMMENT,
 
     Address: modules.GEO,
     Area: modules.GEO,
@@ -29,13 +30,12 @@ var modelModules = {
     AddressMetro: modules.GEO,
 
     Activity: modules.SCHOOL,
-    Rating: modules.SCHOOL,
     School: modules.SCHOOL,
     SchoolUrl: modules.SCHOOL,
     SchoolTypeFilter: modules.SCHOOL,
 
     CityResult: modules.STUDY,
-    EgeResult:  modules.STUDY,
+    EgeResult: modules.STUDY,
     GiaResult: modules.STUDY,
     OlimpResult: modules.STUDY,
     Subject: modules.STUDY,
@@ -52,12 +52,16 @@ var start = async(function() {
     var index = readlineSync.keyInSelect(modelKeys, 'Choose model to archive');
     var selectedModel = modelKeys[index];
     options.model = models[selectedModel];
-    options.isCustomName = readlineSync.keyInYN('Would you like to name archive as one of migrations?');
-    if (options.isCustomName)
+    options.isCustomName = readlineSync.keyInYN(
+        'Would you like to name archive as one of migrations?'
+    );
+    if (options.isCustomName) {
         options.name = chooseName(modelModules[selectedModel]);
+    }
     options.isAllAttributes = readlineSync.keyInYN('Save all attributes?');
-    if (!options.isAllAttributes)
+    if (!options.isAllAttributes) {
         options.attributes = chooseAttributes(options.model);
+    }
     archiveModel(options);
 });
 
@@ -73,9 +77,11 @@ var chooseName = function(module) {
         /* Leave only .js files */
         .filter(filename => {
             var splitted = filename.split('.');
-            if (splitted[splitted.length - 1] == 'js')
-                return true; })
-        .map(filename => filename.replace('.js',''));
+            if (splitted[splitted.length - 1] == 'js') {
+                return true;
+            }
+        })
+        .map(filename => filename.replace('.js', ''));
 
     var index = readlineSync.keyInSelect(migrations, 'Choose name for archive');
     return migrations[index] + '.tar.gz';
@@ -98,12 +104,15 @@ var chooseAttributes = function(model) {
     console.log(variantsStr);
 
     try {
-        var answer = readlineSync.question('Choose attributes (format: 0,3,4)\n');
+        var answer = readlineSync.question(
+            'Choose attributes (format: 0,3,4)\n'
+        );
         var answerNumbers = answer.split(',');
         return answerNumbers.map(number => {
             var attribute = variants[number];
-            if (!attribute)
+            if (!attribute) {
                 throw new Error();
+            }
             return attribute;
         });
     } catch (e) {

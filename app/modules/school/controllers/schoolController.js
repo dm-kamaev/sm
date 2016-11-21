@@ -259,7 +259,7 @@ exports.view = async(function(req, res, next) {
 
                 var isUserCommented = typeof await(
                         services.userData.checkCredentials(
-                            school.id,
+                            school.commentGroupId,
                             req.user && req.user.id
                         )) !== 'undefined';
 
