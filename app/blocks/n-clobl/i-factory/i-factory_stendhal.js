@@ -55,6 +55,7 @@ goog.require('sm.bSmSubheader.SmSubheader');
 goog.require('sm.bSmSubheader.View');
 goog.require('sm.gAuthSocial.ViewStendhal');
 goog.require('sm.gDropdown.DropdownListLinks');
+goog.require('sm.gDropdown.DropdownSelect');
 goog.require('sm.gDropdown.DropdownSelectLegacy');
 goog.require('sm.gDropdown.ViewListLinks');
 goog.require('sm.gDropdown.ViewSelectLegacy');
@@ -224,6 +225,10 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('list-links', {
             control: sm.gList.ListLinks,
             view: sm.gList.ViewLinks
+        })
+        .setControlListItem('dropdown-select', {
+            control: sm.gDropdown.DropdownSelect,
+            view: sm.gDropdown.ViewSelect
         })
         .setControlListItem('dropdown-list-links', {
             control: sm.gDropdown.DropdownListLinks,

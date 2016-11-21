@@ -36,6 +36,7 @@ goog.require('sm.gAuthSocialModal.TemplateStendhal');
 goog.require('sm.gButton.TemplateSocialStendhal');
 goog.require('sm.gButton.TemplateStendhal');
 goog.require('sm.gDropdown.TemplateListLinks');
+goog.require('sm.gDropdown.TemplateSelect');
 goog.require('sm.gDropdown.TemplateSelectLegacy');
 goog.require('sm.gHint.TemplateStendhal');
 goog.require('sm.gIcon.TemplateStendhal');
@@ -227,6 +228,10 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'list-links',
             sm.gList.TemplateLinks.list
+        )
+        .setTemplateListItem(
+            'dropdown-select',
+            sm.gDropdown.TemplateSelect.dropdown
         )
         .setTemplateListItem(
             'dropdown-list-links',

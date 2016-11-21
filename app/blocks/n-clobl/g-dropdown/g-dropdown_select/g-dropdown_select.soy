@@ -1,0 +1,94 @@
+{namespace sm.gDropdown.TemplateSelect}
+
+
+/**
+ * @typedef {{
+ *     opener: string,
+ *     content: sm.gList.TemplateSthendal.Params.Data
+ * }} sm.gDropdown.TemplateSelect.Params.Data
+ */
+
+
+ /**
+ * @typedef {{
+ *     stylizationModifier: string,
+ *     customClasses: (Array<string>|undefined),
+ *     theme: (string|undefined),
+ *     isChangingOpenerText: (boolean|undefined)
+ * }} sm.gDropdown.TemplateSelect.Params.Config
+ */
+
+
+/**
+ * Dropdown template
+ * @param params {{
+ *     data: sm.gDropdown.TemplateSelect.Params.Data,
+ *     config: sm.gDropdown.TemplateSelect.Params.Config
+ * }}
+ * @extends cl.gDropdown.Template
+ * @constructor
+ * @doc
+ */
+{template .dropdown}
+    {call .init data="all" /}
+{/template}
+
+
+/**
+ * Content
+ * @param params {{
+ *     data: {
+ *        content: sm.gList.TemplateSthendal.Params.Data
+ *     }
+ * }}
+ * @override
+ */
+{template .content}
+    {call .renderChild}
+        {param params: [
+            'type': 'list',
+            'renderParams': [
+                'data': $params.data.content
+            ]
+        ]/}
+    {/call}
+{/template}
+
+
+/**
+ * Css classes
+ * @override
+ */
+{template .additionalClasses}
+    {call .rootClass/}_select
+{/template}
+
+
+/**
+ * Attributes template
+ * @param params {{
+ *     data: {
+ *         opener: string,
+ *         content: {
+ *              items: Array<{
+ *                  label: (string|undefined),
+ *                  value: (number|string|undefined)
+ *              }>
+ *         }
+ *     },
+ *     config: {
+ *         isChangingOpenerText: (boolean|undefined)
+ *     }
+ * }}
+ * @override
+ */
+{template .attributes kind="attributes"}
+    data-params="{call cl.iUtils.Utils.stringify}
+        {param json: quoteKeysIfJs([
+            'opener': $params.data.opener,
+            'items': $params.data.content.items,
+            'isChangingOpenerText': $params.config.isChangingOpenerText
+        ]) /}
+    {/call}"
+{/template}
+
