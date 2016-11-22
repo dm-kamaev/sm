@@ -84,7 +84,7 @@ service.getByAlias = async(function(alias) {
         category = null;
 
     if (page) {
-        category = await(service.getOne(page.entityId));
+        category = await(service.getById(page.entityId));
 
         if (!category.isActive) {
             category = null;
