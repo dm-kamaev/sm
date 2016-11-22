@@ -55,6 +55,7 @@
 .l-course__score_xl {
     float: left;
 
+    display: none;
     width: 100px;
     margin-top: 10px;
 
@@ -68,7 +69,7 @@
 
 .l-course__title {
     box-sizing: border-box;
-    padding-left: 100px;
+    // padding-left: 100px;
 }
 
 .l-course__name {
