@@ -124,7 +124,7 @@ service.pickSeoText = function(data) {
         data.searchDescription,
         data.seoText1,
         data.seoText2
-    ].filter(item => item);
+    ];
 };
 
 module.exports = service;
