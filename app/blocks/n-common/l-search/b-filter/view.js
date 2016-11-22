@@ -59,11 +59,11 @@ goog.scope(function() {
         View.base(this, 'decorateInternal', element);
 
         this.initButtons(element);
-        this.initHeader_(element);
-        this.initContainers_(element);
+        this.initHeader(element);
+        this.initContainers(element);
 
-        this.initParams_();
-        this.initStateContentVisibility_();
+        this.initParams();
+        this.initStateContentVisibility();
     };
 
 
@@ -74,7 +74,7 @@ goog.scope(function() {
         View.base(this, 'enterDocument');
 
         this.initButtonsListeners();
-        this.initHeaderControlsListeners_();
+        this.initHeaderControlsListeners();
     };
 
 
@@ -242,9 +242,9 @@ goog.scope(function() {
     /**
      * Initializes header and his controls
      * @param {Element} element
-     * @private
+     * @protected
      */
-    View.prototype.initHeader_ = function(element) {
+    View.prototype.initHeader = function(element) {
         this.dom.header = goog.dom.getElementByClass(
             View.CssClass.HEADER,
             element
@@ -269,9 +269,9 @@ goog.scope(function() {
 
     /**
      * Initializes listeners for header controls
-     * @private
+     * @protected
      */
-    View.prototype.initHeaderControlsListeners_ = function() {
+    View.prototype.initHeaderControlsListeners = function() {
         var handler = this.getHandler();
 
         if (this.dom.buttonSwitchContentVisibility) {
@@ -437,9 +437,9 @@ goog.scope(function() {
     /**
      * Initializes containers
      * @param {Element} element
-     * @private
+     * @protected
      */
-    View.prototype.initContainers_ = function(element) {
+    View.prototype.initContainers = function(element) {
         this.dom.content = goog.dom.getElementByClass(
             View.CssClass.CONTENT,
             element
@@ -454,9 +454,9 @@ goog.scope(function() {
 
     /**
      * Initializes state content visibility
-     * @private
+     * @protected
      */
-    View.prototype.initStateContentVisibility_ = function() {
+    View.prototype.initStateContentVisibility = function() {
         if (this.dom.buttonSwitchContentVisibility) {
             var isUp = goog.dom.classlist.contains(
                 this.dom.iconDown,
@@ -470,9 +470,9 @@ goog.scope(function() {
 
     /**
      * Initializes filter params
-     * @private
+     * @protected
      */
-    View.prototype.initParams_ = function() {
+    View.prototype.initParams = function() {
         var data = JSON.parse(
             this.getElement().getAttribute('data-params')
         );

@@ -65,6 +65,7 @@ goog.require('sm.lSchool.bFoldList.Template');
 goog.require('sm.lSchoolHome.bArticleLink.Template');
 goog.require('sm.lSchoolHome.bArticleLinks.Template');
 goog.require('sm.lSearch.bFilter.Template');
+goog.require('sm.lSearch.bFilter.TemplateDropdown');
 goog.require('sm.lSearch.bFilter.TemplateExtended');
 goog.require('sm.lSearch.bFilter.TemplateInput');
 goog.require('sm.lSearch.bFilter.TemplateLabels');
@@ -354,6 +355,10 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'lSearch-filterLabels',
             sm.lSearch.bFilter.TemplateLabels.filter
+        )
+        .setTemplateListItem(
+            'lSearch-filterDropdown',
+            sm.lSearch.bFilter.TemplateDropdown.filter
         )
         .setTemplateListItem(
             'lSearch-label',

@@ -112,7 +112,8 @@
  *                 sm.lSearch.bFilter.Template.Params.Data|
  *                 sm.lSearch.bFilter.TemplateExtended.Params.Data|
  *                 sm.lSearch.bFilter.TemplateSwitch.Params.Data|
- *                 sm.lSearch.bFilter.TemplateInput.Params.Data
+ *                 sm.lSearch.bFilter.TemplateInput.Params.Data|
+ *                 sm.lSearch.bFilter.TemplateDropdown.Params.Data
  *             ),
  *             config: {
  *                 type: (string|undefined)
@@ -144,6 +145,14 @@
                 {call .renderChild}
                     {param params: [
                         'type': 'lSearch-filterInput',
+                        'renderParams': $params
+                    ]/}
+                {/call}
+
+            {case 'dropdown'}
+                {call .renderChild}
+                    {param params: [
+                        'type': 'lSearch-filterDropdown',
                         'renderParams': $params
                     ]/}
                 {/call}

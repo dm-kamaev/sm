@@ -1,7 +1,7 @@
 goog.provide('sm.gDropdown.DropdownSelect');
 
-goog.require('sm.gDropdown.Event.ItemSelect');
 goog.require('cl.gDropdown.Dropdown');
+goog.require('sm.gDropdown.Event.ItemSelect');
 goog.require('sm.gDropdown.ViewSelect');
 
 

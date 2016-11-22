@@ -251,6 +251,9 @@ goog.scope(function() {
             case sm.lSearch.bFilter.FilterInput.isControl(element) :
                 type = 'lSearch-filterInput';
                 break;
+            case sm.lSearch.bFilter.FilterDropdown.isControl(element) :
+                type = 'lSearch-filterDropdown';
+                break;
             default:
                 type = 'lSearch-filter';
         }
