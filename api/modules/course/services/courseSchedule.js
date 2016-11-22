@@ -44,9 +44,8 @@ service.bulkCreate = async(function(courseOptionId, data) {
  */
 service.formatSchedule = function(schedule) {
     let scheduleDays = schedule && schedule.split(';');
-    return schedule ? scheduleDays.map(scheduleDay =>
-            service.formatDay(scheduleDay.trim())
-        ).reverse() :
+    return schedule ?
+        scheduleDays.map(scheduleDay => service.formatDay(scheduleDay.trim())) :
         undefined;
 };
 
