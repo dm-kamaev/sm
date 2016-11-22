@@ -59,8 +59,8 @@ service.update = async(function(categoryId, data) {
         categoryId: categoryId,
         tabTitle: data.tabTitle,
         metaDescription: data.metaDescription,
-        opengraphTitle: data.opengraphTitle,
-        opengraphDescription: data.opengraphDescription,
+        openGraphTitle: data.openGraphTitle,
+        openGraphDescription: data.openGraphDescription,
         listTitle: data.listTitle,
         text: seoText
     }, {
