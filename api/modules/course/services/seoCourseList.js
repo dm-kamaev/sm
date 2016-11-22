@@ -107,7 +107,8 @@ service.getByCategoryId = async(function(categoryId) {
     return models.SeoCourseList.findOne({
         where: {
             categoryId: categoryId
-        }
+        },
+        raw: true
     });
 });
 

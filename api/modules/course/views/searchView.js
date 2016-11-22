@@ -119,7 +119,7 @@ searchView.map = function(courses, options) {
  *     filtersData: Array<Object>,
  *     aliases: Array<Object>,
  *     seoParams: Object,
- *     currentCategory: string,
+ *     currentAlias: string,
  *     categories: Array<Object>,
  *     categoryAliases: Array<Object>
  * }} data
@@ -151,14 +151,9 @@ searchView.render = function(data) {
             logo: {
                 imgUrl: '/static/images/n-common/b-sm-subheader/course-logo.svg'
             },
-            links: {
-                nameL: 'Все курсы, кружки и секции',
-                nameM: 'Все курсы',
-                url: `/${data.currentCategory}`
-            },
             search: {
                 placeholder: 'Район, метро, название курса',
-                pageAlias: data.currentCategory
+                pageAlias: data.currentAlias
             },
             user: user,
             favorites: {
@@ -183,7 +178,7 @@ searchView.render = function(data) {
         search: {
             searchText: data.searchParams.name,
             placeholder: 'Район, метро, название курса',
-            pageAlias: data.currentCategory
+            pageAlias: data.currentAlias
         },
         resultsList: {
             title: seoParams.listTitle,
@@ -223,6 +218,17 @@ searchView.render = function(data) {
         }),
         searchParams: data.searchParams
     };
+};
+
+
+/**
+ * @param {Array<Course>} courses
+ * @return {number}
+ */
+searchView.countResults = function(courses) {
+    return courses[0] &&
+        courses[0].countResults ||
+        0;
 };
 
 /**
