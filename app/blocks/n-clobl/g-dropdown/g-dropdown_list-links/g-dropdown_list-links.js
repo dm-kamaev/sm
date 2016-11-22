@@ -57,7 +57,8 @@ goog.scope(function() {
     Dropdown.Event = {
         OPENER_CLICK: sm.gDropdown.DropdownSelect.Event.OPENER_CLICK,
         CONTENT_CLICK: sm.gDropdown.DropdownSelect.Event.CONTENT_CLICK,
-        CLOSE_DROPDOWN: sm.gDropdown.DropdownSelect.Event.CLOSE_DROPDOWN
+        CLOSE_DROPDOWN: sm.gDropdown.DropdownSelect.Event.CLOSE_DROPDOWN,
+        ITEM_SELECT: sm.gDropdown.DropdownSelect.Event.ITEM_SELECT
     };
 
 

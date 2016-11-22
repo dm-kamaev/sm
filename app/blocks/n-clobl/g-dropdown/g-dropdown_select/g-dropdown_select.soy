@@ -4,7 +4,7 @@
 /**
  * @typedef {{
  *     opener: string,
- *     content: sm.gList.TemplateSthendal.Params.Data
+ *     content: sm.gList.TemplateSthendal.Params.Data,
  * }} sm.gDropdown.TemplateSelect.Params.Data
  */
 
@@ -38,16 +38,73 @@
  * Control for displaying content
  * @param params {{
  *     data: {
- *         opener: string
+ *         opener: string,
+ *         defaultOpenerText: (string|undefined)
+ *     },
+ *     config: {
+ *         openerSize: ('m'|'xl'|undefined),
+ *         isChangingOpenerText: (boolean|undefined)
  *     }
  * }}
  * @override
  */
 {template .opener}
+    {call .openerContent data="all" /}
+{/template}
+
+
+/**
+ * Content of opener
+ * @param params {{
+ *     data: {
+ *         opener: string
+ *     }
+ * }}
+ * @protected
+ */
+{template .openerContent}
+    <div class="{call .rootClass/}__opener-content">
+        {call .openerText data="all" /}
+        {call .openerIcon/}
+    </div>
+{/template}
+
+
+/**
+ * Text of opener
+ * @param params {{
+ *     data: {
+ *         opener: string
+ *     }
+ * }}
+ * @protected
+ */
+{template .openerText}
     <div class="{call .rootClass/}__opener-text">
         {$params.data.opener}
     </div>
 {/template}
+
+
+/**
+ * Icon of opener
+ * @protected
+ */
+{template .openerIcon}
+    <div class="{call .rootClass/}__opener-icon">
+        {call .renderChild}
+            {param params: [
+                'type': 'icon',
+                'renderParams': [
+                    'data': [
+                        'type': 'opener-arrow'
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
 
 
 /**

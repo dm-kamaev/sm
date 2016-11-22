@@ -64,7 +64,7 @@ goog.scope(function() {
      * @const
      */
     SearchResults.Event = {
-        SORT_TYPE_CHANGE: sm.gDropdown.DropdownListLinks.Event.CONTENT_CLICK,
+        SORT_TYPE_CHANGE: sm.gDropdown.DropdownListLinks.Event.ITEM_SELECT,
         SHOW_MORE_CLICK: cl.gButton.Button.Event.CLICK,
         LIST_ITEM_CLICK: sm.bSmItemList.SmItemList.Event.ITEM_CLICK
     };

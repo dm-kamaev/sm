@@ -353,7 +353,9 @@ goog.scope(function() {
      */
     Search.prototype.onSortReleased_ = function(event) {
         this.resetSecondarySearchParams_();
-        this.paramsManager_.setSortType(event['data']);
+
+        var sortType = event.data ? event.data.value : null;
+        this.paramsManager_.setSortType(sortType);
 
         this.searchResults_.setStatus(
             sm.lSearch.bSearchResults.SearchResults.Status.SORT_IN_PROGRESS

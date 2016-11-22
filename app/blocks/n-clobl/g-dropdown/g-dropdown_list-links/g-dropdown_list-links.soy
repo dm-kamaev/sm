@@ -57,7 +57,7 @@
     {/let}
 
     {let $openerContent kind="html"}
-        {call .openerContent_ data="all" /}
+        {call .openerContent data="all" /}
     {/let}
 
     {call .renderChild}
@@ -79,24 +79,6 @@
 
 
 /**
- * Content of opener
- * @param params {{
- *     data: {
- *         opener: string,
- *         defaultOpenerText: (string|undefined)
- *     },
- *     config: sm.gDropdown.TemplateListLinks.Params.Config
- * }}
- */
-{template .openerContent_}
-    <div class="{call .rootClass/}__opener-content">
-        {call .openerText_ data="all" /}
-        {call .openerIcon_/}
-    </div>
-{/template}
-
-
-/**
  * Text of opener
  * @param params {{
  *     data: {
@@ -104,9 +86,9 @@
  *         defaultOpenerText: (string|undefined)
  *     }
  * }}
- * @private
+ * @override
  */
-{template .openerText_}
+{template .openerText}
     <div class="{call .rootClass/}__opener-text">
         {$params.data.opener}
 
@@ -119,9 +101,9 @@
 
 /**
  * Icon of opener
- * @private
+ * @override
  */
-{template .openerIcon_}
+{template .openerIcon}
     <div class="{call .rootClass/}__opener-icon">
         {call .renderChild}
             {param params: [

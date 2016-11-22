@@ -110,13 +110,15 @@ goog.scope(function() {
 
     /**
      * Transform params to compressed ones
+     * rawParams['opener']['content'] - get to soy parameters
+     * passed through the value - let with kind="html"
      * @param {Object} rawParams
      * @return {sm.gDropdown.ViewSelect.Params}
      * @protected
      */
     View.prototype.transformParams = function(rawParams) {
         return {
-            opener: rawParams['opener'],
+            opener: rawParams['opener']['content'] || rawParams['opener'],
             items: rawParams['items'] ?
                 rawParams['items'].map(function(item) {
                     return {

@@ -1,10 +1,6 @@
 @import "../../../n-common/i-media/i-media";
 
 .g-dropdown.g-dropdown_list-links {
-    .g-dropdown__opener-text {
-        display: inline-block;
-    }
-
     .g-dropdown__opener-content {
         padding: 10px 15px;
 
@@ -12,8 +8,6 @@
     }
 
     .g-dropdown__opener-icon {
-        display: inline-block;
-
         margin-left: 10px;
 
         opacity: 0.4;
