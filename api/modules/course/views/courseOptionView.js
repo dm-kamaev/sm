@@ -21,7 +21,6 @@ view.renderList = function(courseOptions) {
 view.render = function(courseOption) {
     let result = courseOption.toJSON();
     result.departments = lodashMap(courseOption.departments, ID);
-    result.schedule = result.schedule.reverse();
 
     return result;
 };
