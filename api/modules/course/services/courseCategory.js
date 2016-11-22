@@ -17,19 +17,6 @@ let service = {
 };
 
 /**
- * Get one category by their id
- * @param {number} categoryId
- * @return {models.CourseCategory}
- */
-service.getOne = async(function(categoryId) {
-    return models.CourseCategory.findOne({
-        where: {
-            id: categoryId
-        }
-    });
-});
-
-/**
  * Delete alias for given course category
  * @param {models.CourseCategory} courseCategory
  */
