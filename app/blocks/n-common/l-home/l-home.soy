@@ -1,0 +1,308 @@
+{namespace sm.lHome.Template}
+
+/**
+ * @typedef {{
+ *         title: string,
+ *         description: ?string,
+ *     openGraph: (sm.gOpenGraph.TemplateStendhal.Params|undefined),
+ *     subHeader: sm.bSmSubheader.Template.Params.Data,
+ *     user: {
+ *        firstName: (string|undefined),
+ *        lastName: (string|undefined)
+ *     },
+ *     authSocialLinks: {
+ *        vk: (string|undefined),
+ *        fb: (string|undefined)
+ *     },
+ *     search: {},
+ *     recomendations: Array<{
+ *         header: string,
+ *         links: Array<{
+ *             name: string,
+ *             url: string
+ *         }>
+ *     }>,
+ *     popularEntities: Array<{
+ *         id: number,
+ *         alias: string,
+ *         name: string,
+ *         description: (string?undefined),
+ *         metro: (Array<string>|undefined),
+ *         totalScore: (number|undefined)
+ *     }>
+ * }} sm.lHome.Template.Params.Data
+ */
+
+
+/**
+ * Home page
+ * @param params {{
+ *     data: sm.lHome.Template.Params.Data,
+ *     config: ?sm.iLayout.TemplateStendhal.Params.Config
+ * }}
+ * @extends sm.iLayout.TemplateStendhal
+ * @constructor
+ * @doc
+ */
+{template .home autoescape="strict" kind="html"}
+    {call .document data="all" /}
+{/template}
+
+
+/**
+ * Add layout script to page
+ * @param params {{
+ *     config: {
+ *         staticVersion: (string|undefined)
+ *     }
+ * }}
+ * @protected
+ * @override
+ */
+{template .layoutScript kind="html"}
+    {call cl.iStatic.Template.script}
+        {param path: '/static/l-home.js' /}
+        {param staticVersion: $params?.config?.staticVersion /}
+    {/call}
+{/template}
+
+
+/**
+ * Content
+ * @param params {{
+ *     data: sm.lHome.Template.Params.Data,
+ *     config: ?sm.iLayout.TemplateStendhal.Params.Config
+ * }}
+ * @override
+ * @protected
+ */
+{template .mainContent autoescape="strict" kind="html"}
+    <div class="{call .rootClass/}__body">
+        {call .sectionImageL_ data="all" /}
+        {call .sectionSearch_ data="all" /}
+        {call .sectionImageS_ data="all" /}
+        {call .sectionRecomendations_ data="all" /}
+        {call .sectionPopular_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Section image that shown on big screens
+ * @param params {{
+ *     data: {
+ *         imageUrl: string,
+ *         title: string,
+ *         items: Array<string>
+ *     }
+ * }}
+ * @private
+ */
+{template .sectionImageL_ kind="html"}
+    {let $content kind="html"}
+        {if $params}
+        {/if}
+    {/let}
+    {call .section_}
+        {param params: [
+            'data': [
+                'content': $content
+            ],
+            'config': [
+                'modifier': 'image-l'
+            ]
+        ] /}
+    {/call}
+{/template}
+
+
+/**
+ * Section image that shown on big screens
+ * @param params {{
+ *     data: {
+ *         imageUrl: string,
+ *     }
+ * }}
+ * @private
+ */
+{template .sectionImageS_ kind="html"}
+    {let $content kind="html"}
+        {if $params}
+        {/if}
+    {/let}
+    {call .section_}
+        {param params: [
+            'data': [
+                'content': $content
+            ],
+            'config': [
+                'modifier': 'image-s'
+            ]
+        ] /}
+    {/call}
+{/template}
+
+
+/**
+ * Search field section
+ * @param params {{
+ *     data: {
+ *         search: {}
+ *     }
+ * }}
+ * @private
+ */
+{template .sectionSearch_ kind="html"}
+    {let $content kind="html"}
+        {if $params}
+        {/if}
+    {/let}
+    {call .section_}
+        {param params: [
+            'data': [
+                'content': $content
+            ],
+            'config': [
+                'modifier': 'search'
+            ]
+        ] /}
+    {/call}
+{/template}
+
+
+/**
+ * Recomendations links section
+ * @param params {{
+ *     data: {
+ *         recomendations: Array<{
+ *             header: string,
+ *             links: Array<{
+ *                 name: string,
+ *                 url: string
+ *             }>
+ *         }>,
+ *     }
+ * }}
+ * @private
+ */
+{template .sectionRecomendations_ kind="html"}
+    {let $content kind="html"}
+        {if $params}
+        {/if}
+    {/let}
+    {call .section_}
+        {param params: [
+            'data': [
+                'content': $content
+            ],
+            'config': [
+                'modifier': 'recommendations'
+            ]
+        ] /}
+    {/call}
+{/template}
+
+/**
+ * Popular entity section
+ * @param params {{
+ *     data: {
+ *         popularEntities: Array<{
+ *             id: number,
+ *             alias: string,
+ *             name: string,
+ *             description: (string?undefined),
+ *             metro: (Array<string>|undefined),
+ *             totalScore: (number|undefined)
+ *         }>
+ *     }
+ * }}
+ * @private
+ */
+{template .sectionPopular_ kind="html"}
+    {let $content kind="html"}
+        {if $params}
+        {/if}
+    {/let}
+    {call .section_}
+        {param params: [
+            'data': [
+                'content': $content
+            ],
+            'config': [
+                'modifier': 'popular'
+            ]
+        ] /}
+    {/call}
+{/template}
+
+
+/**
+ * Section template
+ * @param params {
+ *     data: {
+ *         content: string
+ *     },
+ *     config: {
+ *         modifier: string
+ *     }
+ * }
+ * @private
+ */
+{template .section_ kind="html"}
+    <div class="{call .rootClass /}__section
+        {if $params?.config.modifier}
+            {sp}{call .rootClass /}__section_{$params.config.modifier}
+        {/if}
+    ">
+        <div class="{call .rootClass /}__section-content">
+            {$params.data.content}
+        </div>
+    </div>
+{/template}
+
+
+/**
+ * @param params {{
+ *     data: {
+ *         user: {
+ *             firstName: (string|undefined),
+ *             lastName: (string|undefined)
+ *         },
+ *         authSocialLinks: {
+ *             vk: (string|undefined),
+ *             fb: (string|undefined)
+ *         },
+ *         searchParams: Array<{
+ *             name: string,
+ *             value: (Array<(string|number)>)
+ *         }>,
+ *
+ *     },
+ *     config: {
+ *         entityType: string,
+ *         modifier: string
+ *     }
+ * }}
+ * @override
+ */
+{template .attributes kind="attributes"}
+    data-params="
+        {call cl.iUtils.Utils.stringify}
+            {param json: [
+                'searchParams': $params.data?.searchParams,
+                'isUserAuthorized': $params.data?.user ? true : false,
+                'authSocialLinks': $params.data?.authSocialLinks,
+                'modifier': $params.config?.modifier,
+                'type': $params?.config.entityType
+            ] /}
+        {/call}"
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    l-home
+{/template}

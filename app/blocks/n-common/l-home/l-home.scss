@@ -1,0 +1,31 @@
+@import "../i-media/i-media";
+
+.l-home__body {
+    margin: auto;
+
+    font-family: Arial, sans-serif;
+}
+
+/** layout **/
+.l-home__footer {
+    margin: 60px auto 0;
+
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.l-home__section {
+    width: 100%;
+    margin-bottom: 60px;
+}
+
+.l-home__section__image-l {
+    margin-bottom: 0;
+}
+
+.l-home__section_recommendations {
+    .l-home__section-content {
+        width: 1200px;
+        margin: 0 auto;
+    }
+}
+/** layout end **/
