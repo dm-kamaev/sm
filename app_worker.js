@@ -83,6 +83,8 @@ app.use(morgan('dev', {
 
 app.use('/courses/api', api.course.router);
 
+app.use('/schools/api', api.school.router);
+// generate token in cookies, all request not GET
 app.use(csrf);
 
 app.use('/:subdomain/', api.user.router);
@@ -92,7 +94,6 @@ app.use('/courses/', modules.course.router);
 
 app.use('/:subdomain/api', api.mail.router);
 app.use('/:subdomain/api', api.comment.router);
-app.use('/schools/api', api.school.router);
 app.use('/:subdomain/api', api.geo.router);
 app.use('/:subdomain/api', api.feedback.router);
 app.use('/:subdomain/api', api.favorite.router);
@@ -117,5 +118,4 @@ async(function() {
 })();
 
 app.use(criticalErrorHandler);
-
 app.use(notFoundErrorHandler);

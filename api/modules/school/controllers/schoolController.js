@@ -9,7 +9,8 @@ var schoolView = require('../views/schoolView'),
     specializedClassesView = require('../views/specializedClassesView'),
     activityView = require('../views/activityView');
 var entityType = require('../../entity/enums/entityType');
-
+const SchoolNotFoundError =
+     require('../controllers/errors/SchoolNotFoundError.js');
 
 /**
  * @api {post} api/school/createschool Creates school
@@ -61,31 +62,35 @@ exports.create = async(function(req, res) {
  * @apiGroup School
  * @apiName Update
  * @apiParamExample {json} Request-Example:
- *     {
- *         "schoolData" : {
- *             "name": "Общеобразовательная школа",
- *             "abbreviation": "ГОУ СКОШ № 00",
- *             "fullName": "Государственное образовательное учреждение",
- *             "schoolType": "Школа",
- *             "director": "Любимов Олег Вадимович",
- *             "phones": ["(495) 223-32-23", "(499)322-23-33"],
- *             "site": "school.ru",
- *             "educationInterval": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
- *         }
- *     }
+ * {
+ *   "description": "Многопрофильная школа с развитой системой профориентации и «университетскими субботами»",
+ *   "features": ["В лицее нет традиционных классов: ученики делятся на группы в зависимости от выбранного ими учебного плана", " В расписании предусмотрены факультетские дни, которые лицеисты проводят на профильных факультетах НИУ ВШЭ"]
+ * }
+ * @apiError (Error 404) SchoolNotFoundError
+ * @apiSuccessExample {json}
  */
 exports.update = async(function(req, res) {
-    var result = '';
+    let result = {}, schoolId = req.params.id, data = req.body;
+
     try {
-        var schoolId = req.params.id;
-        var data = req.body.schoolData;
-        result = await(services.school.update(schoolId, data));
-    } catch (error) {
-        logger.error(error.message);
-        result = error.message;
+        await(services.school.checkExist(schoolId));
+        await(services.school.update(schoolId, data));
+    } catch (err) {
+        result = handlerErr_(err);
     } finally {
-        res.header('Content-Type', 'text/html; charset=utf-8');
+        res.header('Content-Type', 'application/json; charset=utf-8');
         res.end(JSON.stringify(result));
+    }
+
+
+    function handlerErr_(err) {
+        if (err instanceof SchoolNotFoundError) {
+            res.status(err.status);
+            return err.response;
+        } else {
+            logger.error(err);
+            return err;
+        }
     }
 });
 
