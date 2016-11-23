@@ -65,7 +65,7 @@ service.create = async(function(course, data) {
         ));
     }
     await(courseOption.setDepartments(data.departments.map(department =>
-        Number.isInteger(department) ?
+        !Number.isNaN(Number(department)) ?
             department :
             await(services.courseDepartment.findOrCreate(
                 course.brandId,
