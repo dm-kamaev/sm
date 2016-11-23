@@ -27,7 +27,8 @@ module.exports = function() {
                 '%f',
             svg: {
                 sprite: 'images/g-icon_auto-svg-sprite.svg'
-            }
+            },
+            padding: 5
         }));
 
     streamSprite
