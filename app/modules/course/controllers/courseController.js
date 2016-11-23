@@ -9,6 +9,7 @@ const soy = require('../../../components/soy'),
         require('../../../components/contentExperiment/contentExperiment'),
     courseView = require('../../../../api/modules/course/views/courseView'),
     searchView = require('../../../../api/modules/course/views/searchView'),
+    homeView = require('../../../../api/modules/course/views/homeView'),
     informationView = require(
         '../../../../api/modules/course/views/informationView'
     ),
@@ -32,7 +33,58 @@ const ANALYTICS_ID = config.courses.analyticsId,
 let controller = {};
 
 controller.home = async(function(req, res, next) {
-    res.redirect('/proforientacija');
+    try {
+        let authSocialLinks = services.auth.getAuthSocialUrl(),
+            user = req.user || {};
+        let factory = contentExperiment.getFactoryByQuery(req.query);
+
+
+        let data = await({
+            favorites: services.favorite.getFavoriteEntities(user.id),
+            categories: services.courseCategory.getAll({isActive: true}),
+            categoryAliases: services.courseCategory.getAliases()
+        });
+
+        let templateData = homeView.render({
+            entityType: entityType.COURSE,
+            user: user,
+            fbClientId: FB_CLIENT_ID,
+            favorites: data.favorites,
+            authSocialLinks: authSocialLinks,
+            categories: data.categories,
+            categoryAliases: data.categoryAliases
+        });
+
+        let html = soy.render(
+            'sm.lHome.Template.home', {
+                params: {
+                    data: templateData,
+                    config: {
+                        entityType: entityType.COURSE,
+                        page: entityType.COURSE,
+                        modifier: factory,
+                        staticVersion: config.lastBuildTimestamp,
+                        year: new Date().getFullYear(),
+                        analyticsId: ANALYTICS_ID,
+                        experimentId: EXPERIMENT_ID,
+                        yandexMetrikaId: YANDEX_METRIKA_ID,
+                        carrotquestId: CARROTQUEST_ID,
+                        csrf: req.csrfToken(),
+                        domain: DOMAIN,
+                        fbClientId: FB_CLIENT_ID
+                    }
+                }
+            }
+        );
+
+        res.header('Content-Type', 'text/html; charset=utf-8');
+        res.end(html);
+    } catch (error) {
+        logger.error(error);
+
+        res.status(error.code || 500);
+        next(error);
+    }
 });
 
 controller.search = async(function(req, res, next) {

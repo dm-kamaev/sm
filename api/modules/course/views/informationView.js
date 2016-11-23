@@ -1,3 +1,5 @@
+'use strict';
+
 const userView = require('../../user/views/user');
 const favoriteView = require('../../favorite/views/favoriteView');
 const seoView = require('../../entity/views/seoView');
