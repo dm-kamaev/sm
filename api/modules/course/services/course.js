@@ -12,6 +12,8 @@ const sequelize = require('../../../../app/components/db'),
     entityType = require('../../entity/enums/entityType'),
     pageView = require('../../entity/views/pageView');
 
+const CategoryNotFound = require('../controllers/errors/CategoryNotFound');
+
 let service = {
     name: 'course'
 };
@@ -582,6 +584,21 @@ service.updateCtr = async(function(data) {
             id: data.courseId
         }
     }));
+});
+
+/**
+ * @param  {Array<number>} ids
+ * @param  {number}        categoryId
+ * @return {Array<Course>}
+ */
+service.getByIdsAndCategoryId = async(function(ids, categoryId) {
+    let category = await(services.courseCategory.getById(categoryId));
+    if (!category) {
+        throw new CategoryNotFound(categoryId);
+    }
+    let courses = await(service.getByIds(ids));
+
+    return courses.filter(course => course.categoryId == category.id);
 });
 
 module.exports = service;

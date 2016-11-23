@@ -8,6 +8,9 @@ const models = require('../../../../app/components/models').all,
 
 const SuggestSearchQuery = require('../lib/SuggestSearch');
 
+const MissingSearchString =
+    require('../controllers/errors/MissingSearchString');
+
 const service = {
     name: 'textSearchData'
 };
@@ -58,13 +61,15 @@ service.search = async(function(searchString) {
 
 
 /**
- * @public
- * @param {string} searchString,
- * @param {Array<string>} entities
+ * @param  {string}        searchString
+ * @param  {Array<string>} entities
  * @return {Object}
  */
 service.entitiesSearch = async(function(searchString, entities) {
-    var queryString = new SuggestSearchQuery(entities)
+    if (!searchString && typeof searchString !== 'string') {
+        throw new MissingSearchString();
+    }
+    let queryString = new SuggestSearchQuery(entities)
         .setSearchString(searchString)
         .getQuery(),
         foundData = await(sequelize.query(
