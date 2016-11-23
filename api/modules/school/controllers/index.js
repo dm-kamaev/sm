@@ -6,6 +6,7 @@ const schoolController = require('./schoolController');
 const schoolAdminController = require('./schoolAdminController.js');
 
 const checkToken = require('../../../../app/middleware/checkToken');
+const csrf = require('../../../../app/middleware/csrf.js');
 
 router.get('/school', schoolController.list);
 router.get('/school/search', schoolController.search);
@@ -28,12 +29,9 @@ router.get(
 );
 router.get('/school/:id', schoolController.view);
 // router.get('/school/apitest', schoolController.yapi);
-// router.get('/school/search', schoolController.search);
 
 
 router.post('/school/createschool', checkToken, schoolController.create);
-
-router.post('/school/:id/comment', schoolController.createComment);
 router.put(
     '/school/:schoolId/comment/:commentId',
     checkToken,
@@ -45,6 +43,8 @@ router.delete(
     schoolAdminController.removeComment
 );
 router.get('/school/:schoolId/comment', schoolAdminController.getAllComments);
+router.post('/school/:id/comment', csrf, schoolController.createComment);
+
 
 router.put('/school/:id', checkToken, schoolController.update);
 

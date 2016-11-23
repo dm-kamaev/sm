@@ -84,6 +84,8 @@ app.use(morgan('dev', {
 app.use('/schools/api', api.school.router);
 app.use('/courses/api', api.course.router);
 
+app.use('/schools/api', api.school.router);
+// generate token in cookies, all request not GET
 app.use(csrf);
 
 app.use('/:subdomain/', api.user.router);
@@ -117,5 +119,4 @@ async(function() {
 })();
 
 app.use(criticalErrorHandler);
-
 app.use(notFoundErrorHandler);
