@@ -63,7 +63,7 @@ goog.scope(function() {
      */
     Dropdown.Event = {
         OPENER_CLICK: cl.gDropdown.Dropdown.Event.OPENER_CLICK,
-        CONTENT_CLICK: cl.gDropdown.Dropdown.Event.CONTENT_CLICK,
+        SELECT: goog.events.getUniqueId('select'),
         CLOSE_DROPDOWN: cl.gDropdown.Dropdown.Event.CLOSE_DROPDOWN
     };
 
@@ -130,8 +130,9 @@ goog.scope(function() {
      */
     Dropdown.prototype.onListItemSelect_ = function(event) {
         var itemId = event['itemId'];
+
         this.dispatchEvent({
-            'type': Dropdown.Event.CONTENT_CLICK,
+            'type': Dropdown.Event.SELECT,
             'data': this.getValue(itemId)
         });
 

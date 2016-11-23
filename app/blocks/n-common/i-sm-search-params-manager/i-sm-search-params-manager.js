@@ -97,6 +97,15 @@ goog.scope(function() {
 
 
     /**
+     * Resets sort type
+     * @public
+     */
+    SearchParamsManager.prototype.resetSortType = function() {
+        this.params['sortType'] = null;
+    };
+
+
+    /**
      * Set given sortType and return new sort type
      * @param {number} sortType
      * @return {?number}
