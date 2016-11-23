@@ -326,12 +326,6 @@
         {/if}
     {/let}
 
-    {let $icon kind="html"}
-        {if $params.data.online == 'only'}
-            online
-        {/if}
-    {/let}
-
     {call .renderChild}
         {param params: [
             'type': 'smBadge',
@@ -343,7 +337,7 @@
                 ],
                 'config': [
                     'type': 'online',
-                    'iconName': $icon ?: '',
+                    'iconName': 'online',
                     'iconType': 'svg'
                 ]
             ]
