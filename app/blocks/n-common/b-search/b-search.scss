@@ -44,7 +44,9 @@
     top: 50%;
     right: 0;
 
-    margin-top: -7px;
+    box-sizing: border-box;
+    padding: 15px;
+    margin-top: -22px;
 
     cursor: pointer;
 
@@ -161,7 +163,7 @@
     }
 
     .b-search__control {
-        right: 20px;
+        right: 5px;
     }
 }
 
@@ -218,7 +220,7 @@
     .b-search__control {
         &.b-search__control_search {
             right: auto;
-            left: 0;
+            left: -15px;
         }
 
         &.b-search__control_clear {
@@ -306,7 +308,7 @@
     .b-search_mode_search.b-search_animation_on {
         .b-search__control {
             &.b-search__control_search {
-                left: 30px;
+                left: 15px;
             }
 
             &.b-search__control_clear {
@@ -340,7 +342,7 @@
     }
 
     .b-search__control {
-        right: 55px;
+        right: 40px;
     }
 }
 
@@ -369,7 +371,7 @@
     }
 
     .b-search__control {
-        right: 30px;
+        right: 15px;
     }
 
     .b-search_theme_foldable {
