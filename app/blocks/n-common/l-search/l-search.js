@@ -353,6 +353,7 @@ goog.scope(function() {
      */
     Search.prototype.onSortReleased_ = function(event) {
         this.resetSecondarySearchParams_();
+
         this.paramsManager_.setSortType(event['data']);
 
         this.searchResults_.setStatus(
@@ -534,10 +535,10 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.makeNewSearch_ = function() {
-        this.paramsManager_.setSortType(1);
+        this.paramsManager_.resetSortType();
+        this.searchResults_.resetSort();
 
         this.updatePage_();
-        this.sort_.clear();
         this.filterPanel_.reset();
     };
 

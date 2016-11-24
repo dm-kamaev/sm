@@ -27,7 +27,7 @@ let updateAnalyticsData = async(function(argstring) {
 });
 
 commander
-    .command('analytics')
+    .command('analytics [argstring]')
     .description('Fill db with courses analytics data')
     .action((argstring) => updateAnalyticsData(argstring || ''));
 

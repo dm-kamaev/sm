@@ -22,7 +22,10 @@
  *         id: number,
  *         name: string
  *     }>|undefined),
- *     online: ?('only'|'available'|undefidned),
+ *     online: ({
+ *         value: number,
+ *         type: ('only'|'available')
+ *     }|undefined),
  *     isFavorite: ?boolean,
  *     countDepartment: ?number,
  *     position: (number|undefined)
@@ -122,7 +125,10 @@
  *             id: number,
  *             name: string
  *         }>|undefined),
- *         online: ('only'|'available'|undefidned),
+ *         online: ({
+ *             value: number,
+ *             type: ('only'|'available')
+ *         }|undefined),
  *         isFavorite: ?boolean,
  *         countDepartment: ?number
  *     },
@@ -295,12 +301,15 @@
  * Online access
  * @param params {{
  *     data: {
- *         online: ?('only'|'available'|undefidned)
+ *         online: ({
+ *             value: number,
+ *             type: ('only'|'available')
+ *         }|undefined)
  *     }
  * }}
  */
 {template .online_}
-    {if $params.data?.online}
+    {if $params.data?.online?.type}
         <div class="{call .rootClass/}__badge{sp}
                     {call .rootClass/}__badge_online">
             {call .insertOnline_ data="all" /}
@@ -313,22 +322,19 @@
  * Insert online access
  * @param params {{
  *     data: {
- *         online: ('only'|'available')
+ *         online: ({
+ *             value: number,
+ *             type: ('only'|'available')
+ *         }|undefined)
  *     }
  * }}
  */
 {template .insertOnline_}
     {let $text kind="html"}
-        {if $params.data.online == 'only'}
+        {if $params.data.online.type == 'only'}
             Онлайн-курсы
-        {elseif $params.data.online == 'available'}
+        {elseif $params.data.online.type == 'available'}
             Доступны онлайн-курсы
-        {/if}
-    {/let}
-
-    {let $icon kind="html"}
-        {if $params.data.online == 'only'}
-            online
         {/if}
     {/let}
 
@@ -337,13 +343,14 @@
             'type': 'smBadge',
             'renderParams': [
                 'data': [
-                    'items': [
-                        ['name': $text]
-                    ],
+                    'items': [[
+                        'name': $text,
+                        'id': $params.data.online.value
+                    ]],
                 ],
                 'config': [
-                    'type': 'online',
-                    'iconName': $icon ?: '',
+                    'searchType': 'formTraining',
+                    'iconName': 'online',
                     'iconType': 'svg'
                 ]
             ]
