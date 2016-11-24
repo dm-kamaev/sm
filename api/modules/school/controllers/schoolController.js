@@ -63,14 +63,33 @@ exports.create = async(function(req, res) {
  * @apiName Update
  * @apiParamExample {json} Request-Example:
  * {
- *   "description": "Многопрофильная школа с развитой системой профориентации и «университетскими субботами»",
- *   "features": ["В лицее нет традиционных классов: ученики делятся на группы в зависимости от выбранного ими учебного плана", " В расписании предусмотрены факультетские дни, которые лицеисты проводят на профильных факультетах НИУ ВШЭ"]
+ *   "description": "
+ *       Многопрофильная школа с развитой
+ *       системой профориентации и «университетскими субботами»
+ *    ",
+ *   "features": [
+ *       "В лицее нет традиционных классов: ученики делятся на группы в
+ *        зависимости от выбранного ими учебного плана",
+ *       "В расписании предусмотрены факультетские дни, которые лицеисты
+ *        проводят на
+ *        профильных факультетах НИУ ВШЭ*"
+ *   ]
  * }
  * @apiError (Error 404) SchoolNotFoundError
  * @apiSuccessExample {json}
  */
 exports.update = async(function(req, res) {
     let result = {}, schoolId = req.params.id, data = req.body;
+
+    let handlerErr_ = function(err) {
+        if (err instanceof SchoolNotFoundError) {
+            res.status(err.status);
+            return err.response;
+        } else {
+            logger.error(err);
+            return err;
+        }
+    };
 
     try {
         await(services.school.checkExist(schoolId));
@@ -80,17 +99,6 @@ exports.update = async(function(req, res) {
     } finally {
         res.header('Content-Type', 'application/json; charset=utf-8');
         res.end(JSON.stringify(result));
-    }
-
-
-    function handlerErr_(err) {
-        if (err instanceof SchoolNotFoundError) {
-            res.status(err.status);
-            return err.response;
-        } else {
-            logger.error(err);
-            return err;
-        }
     }
 });
 
