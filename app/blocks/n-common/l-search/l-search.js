@@ -536,7 +536,7 @@ goog.scope(function() {
      */
     Search.prototype.makeNewSearch_ = function() {
         this.paramsManager_.resetSortType();
-        this.sort_.clear();
+        this.searchResults_.resetSort();
 
         this.updatePage_();
         this.filterPanel_.reset();

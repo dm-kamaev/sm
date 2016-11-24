@@ -168,6 +168,15 @@ goog.scope(function() {
 
 
     /**
+     * Select in sort dropdown initial value
+     * @public
+     */
+    SearchResults.prototype.resetSort = function() {
+        this.sort_.clear();
+    };
+
+
+    /**
      * Check if all items of current search parameters loaded
      * @return {boolean}
      * @public

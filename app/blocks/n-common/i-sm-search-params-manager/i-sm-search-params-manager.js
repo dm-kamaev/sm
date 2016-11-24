@@ -101,7 +101,7 @@ goog.scope(function() {
      * @public
      */
     SearchParamsManager.prototype.resetSortType = function() {
-        this.params['sortType'] = null;
+        this.params_['sortType'] = null;
     };
 
 
