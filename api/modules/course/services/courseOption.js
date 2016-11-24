@@ -128,29 +128,47 @@ service.getById = async(function(id) {
  */
 service.update = async(function(id, data) {
     let courseOption = await(service.getById(id));
-    await(courseOption.update({
-        name: data.name,
-        totalCost: data.totalCost,
-        costPerHour: data.costPerHour,
-        online: data.online,
-        age: data.age,
-        maxGroupSize: data.maxGroupSize,
-        lengthWeeks: data.lengthWeeks,
-        nativeSpeaker: data.nativeSpeaker,
-        startDate: data.startDate,
-        duration: data.duration,
-        openSchedule: data.openSchedule,
-        currentGroupSize: data.currentGroupSize
-    }));
 
-    await(services.courseSchedule.deleteByOptionId(id));
-    if (!data.openSchedule && data.schedule) {
-        courseOption.schedule = await(services.courseSchedule.bulkCreate(
-            courseOption.id,
-            data.schedule
+    let transaction = await(sequelize.transaction());
+
+    try {
+        await(courseOption.update({
+            name: data.name,
+            totalCost: data.totalCost,
+            costPerHour: data.costPerHour,
+            online: data.online,
+            age: data.age,
+            maxGroupSize: data.maxGroupSize,
+            lengthWeeks: data.lengthWeeks,
+            nativeSpeaker: data.nativeSpeaker,
+            startDate: data.startDate,
+            duration: data.duration,
+            openSchedule: data.openSchedule,
+            currentGroupSize: data.currentGroupSize
+        }, {
+            transaction: transaction
+        }));
+
+        await(services.courseSchedule.deleteByOptionId(id, transaction));
+        if (!data.openSchedule && data.schedule) {
+            courseOption.schedule = await(services.courseSchedule.bulkCreate(
+                courseOption.id,
+                data.schedule,
+                transaction
+            ));
+        }
+
+        await(courseOption.setDepartments(
+            data.departments, {
+                transaction: transaction
+            }
         ));
+
+        await(transaction.commit());
+    } catch (error) {
+        await(transaction.rollback());
+        throw error;
     }
-    await(courseOption.setDepartments(data.departments));
 
     return courseOption;
 });
