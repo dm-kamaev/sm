@@ -593,7 +593,7 @@ service.updateCtr = async(function(data) {
  */
 service.getByIdsAndCategoryId = async(function(ids, categoryId) {
     let category = await(services.courseCategory.getById(categoryId));
-    if (!category) {
+    if (!category || !category.isActive) {
         throw new CategoryNotFound(categoryId);
     }
     let courses = await(service.getByIds(ids));
