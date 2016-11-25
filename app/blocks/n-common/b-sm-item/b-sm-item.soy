@@ -27,6 +27,7 @@
 
  /**
  * @typedef {{
+ *     enableCover: boolean,
  *     stylizationModifier: string,
  *     customClasses: ?Array<string>
  * }} sm.bSmItem.Template.Params.Config
@@ -56,9 +57,138 @@
  * @override
  */
 {template .body}
-    {call .sectionHeader data="all" /}
-    {call .sectionDescription data="all" /}
-    {call .sectionDetails data="all" /}
+    {call .sections data="all" /}
+{/template}
+
+/**
+ * sections
+ * @param params {{
+ *     data: sm.bSmItem.Template.Params.Data,
+ *     config: sm.bSmItem.Template.Params.Config
+ * }}
+ * @protected
+ */
+{template .sections}
+    {if $params.config.enableCover or
+        $params.config.stylizationModifier == 'experimental'}
+        {call .sectionGroupCover data="all" /}
+    {/if}
+
+    {call .sectionGroupInfo data="all" /}
+{/template}
+
+
+/**
+ * Section group template
+ * @param params {{
+ *     content: string,
+ *     classes: string
+ * }}
+ * @protected
+ */
+{template .sectionGroup}
+    <div class="{call .rootClass/}__section-group
+        {if $params.classes}
+            {sp}{$params.classes}
+        {/if}
+    ">
+        {$params.content}
+    </div>
+{/template}
+
+
+/**
+ * Cover section group
+ * @param params {{
+ *     data: {
+ *         name: {
+ *             light: string,
+ *             bold: (string|undefined)
+ *         },
+ *         imageUrl: (string|undefined)
+ *     }
+ * }}
+ * @protected
+ */
+{template .sectionGroupCover kind="html"}
+    {let $content kind="html"}
+        {call .sectionCover data="all" /}
+    {/let}
+    {let $classes kind="html"}
+        {call .rootClass /}__section-group_cover
+    {/let}
+
+    {call .sectionGroup}
+        {param params: [
+            'content': $content,
+            'classes': $classes
+        ] /}
+    {/call}
+{/template}
+
+
+/**
+ * Iformation section group
+ * @param params {{
+ *     data: sm.bSmItem.Template.Params.Data
+ * }}
+ * @protected
+ */
+{template .sectionGroupInfo kind="html"}
+    {let $classes kind="html"}
+        {call .rootClass/}__section-group_info
+    {/let}
+
+    {let $content kind="html"}
+        {call .sectionHeader data="all" /}
+        {call .sectionDescription data="all" /}
+        {call .sectionDetails data="all" /}
+    {/let}
+
+    {call .sectionGroup}
+        {param params: [
+            'content': $content,
+            'classes': $classes
+        ] /}
+    {/call}
+{/template}
+
+/**
+ * @param params {{
+ *     data: {
+ *         name: {
+ *             light: string,
+ *             bold: (string|undefined)
+ *         },
+ *         imageUrl: (string|undefined)
+ *     }
+ * }}
+ * @protected
+ */
+{template .sectionCover}
+    {let $imageUrl kind="html"}
+        {if $params.data.imageUrl}
+            {$params.data.imageUrl}
+        {else}
+            /static/images/n-common/b-sm-item/b-sm-item_entity/images/placeholder.png
+        {/if}
+    {/let}
+
+    {let $description kind="html"}
+        {$params.data.name.light}
+        {if $params.data.name.bold}
+            {sp}{$params.data.name.bold}
+        {/if}
+    {/let}
+
+    <div class="{call .rootClass/}__section{sp}
+                {call .rootClass/}__section_cover">
+
+        <img class="{call .rootClass/}__cover-image"
+            src="{$imageUrl}"
+            alt="{$description}"
+        >
+    </div>
 {/template}
 
 
@@ -272,8 +402,10 @@
                         'items': $params.data.metro,
                     ],
                     'config': [
-                        'type': 'metro',
+                        'searchType': 'metroId',
+                        'searchByName': true,
                         'iconName': 'metro',
+                        'iconType': 'svg',
                         'entityType': $params.data.type
                     ]
                 ]
@@ -304,7 +436,8 @@
                         'items': $params.data.area,
                     ],
                     'config': [
-                        'type': 'area',
+                        'searchType': 'areaId',
+                        'searchByName': true,
                         'iconName': 'location',
                         'entityType': $params.data.type
                     ]

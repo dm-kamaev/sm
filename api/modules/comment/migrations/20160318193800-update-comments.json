@@ -9,7 +9,7 @@
             "fileName": "20160318193800-update-comments-comment-group.tar.gz"
         },
         {
-            "pathToModel": "../../api/modules/school/models/rating",
+            "pathToModel": "../../api/modules/comment/models/rating",
             "fileName": "20160318193800-update-comments-rating.tar.gz"
         },
         {

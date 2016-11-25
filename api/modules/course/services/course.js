@@ -27,7 +27,8 @@ const informationFields = {
         'fullDescription',
         'entranceExam',
         'learningOutcome',
-        'leadType'
+        'leadType',
+        'embedId'
     ],
     BRAND: ['id', 'name', 'description'],
     TYPE: ['id', 'name'],
@@ -476,6 +477,28 @@ service.getById = async(function(id) {
     }));
 });
 
+
+/**
+ * Get course by given category alias and name
+ * @param {string} categoryAlias
+ * @param {string} name
+ * @return {models.Course}
+ */
+service.getGetByNameAndCategoryAlias = async(function(categoryAlias, name) {
+    let category = await(services.courseCategory.getByAlias(categoryAlias));
+    let types = await(services.courseType.getByCategory(category.id));
+
+    return models.Course.findOne({
+        where: {
+            name: name,
+            type: {
+                in: types.map(type => type.id)
+            }
+        },
+        raw: true
+    });
+});
+
 /**
  * @param  {{
  *     name: string,
@@ -539,6 +562,26 @@ service.deleteAlias = async(function(course) {
         course.id,
         entityType.COURSE
     ));
+});
+
+/**
+ * @param {{
+ *     courseId: number,
+ *     ctr: number,
+ *     clicks: number,
+ *     views: number
+ * }} data
+ * @return {Course}
+ */
+service.updateCtr = async(function(data) {
+    let courseAnalytics = await(services.courseAnalytics.create(data));
+    return await(models.Course.update({
+        ctr: courseAnalytics.ctr
+    }, {
+        where: {
+            id: data.courseId
+        }
+    }));
 });
 
 module.exports = service;

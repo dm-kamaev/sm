@@ -1,22 +1,24 @@
 'use strict';
 
-var colors = require('colors');
-var async = require('asyncawait/async');
-var await = require('asyncawait/await');
-var lodash = require('lodash');
+const colors = require('colors'),
+    async = require('asyncawait/async'),
+    await = require('asyncawait/await'),
+    lodash = require('lodash');
 
-var models = require('../../../../app/components/models').all;
-var services = require('../../../../app/components/services').all;
-var entityType = require('../../entity/enums/entityType');
+const models = require('../../../../app/components/models').all,
+    services = require('../../../../app/components/services').all,
+    entityType = require('../../entity/enums/entityType');
 
-var sequelize = require('../../../../app/components/db');
-var redis = require('../../../../app/components/redis');
-var logger =
-    require('../../../../app/components/logger/logger').getLogger('app');
-var CsvConverter =
-    require('../../../../console/modules/modelArchiver/CsvConverter');
+const sequelize = require('../../../../app/components/db'),
+    redis = require('../../../../app/components/redis'),
+    CsvConverter =
+        require('../../../../console/modules/modelArchiver/CsvConverter'),
+    RatingChanger = require('../../comment/lib/RatingChanger');
 
-var service = {
+const logger = require('../../../../app/components/logger/logger')
+    .getLogger('app');
+
+let service = {
     name: 'school'
 };
 
@@ -351,10 +353,13 @@ service.getSchoolByGrouId = async(function(groupId) {
     return school;
 });
 
-
+/**
+ * @param {Object|string|number} school
+ * @type {number}
+ */
 service.getGroupId = async(function(school) {
     var instance = school;
-    if (typeof school === 'number') {
+    if (typeof school === 'number' || typeof school === 'string') {
         instance = await(models.School.findOne({
             where: {id: school}
         }));
@@ -732,80 +737,44 @@ service.review = async(function(schoolId, params) {
     if (!params.text && !params.score) {
         throw new Error('Expected comment text or rating');
     }
-    try {
-        var answer = {
-            ratingCreated: false,
-            commentCreated: false
-        };
-        var school = await(models.School.findOne({
-            where: {id: schoolId}
-        }));
-
-        var userData = {
-            userType: params.userType,
-            yearGraduate: params.yearGraduate,
-            classType: params.classType,
-            key: params.key,
-            username: params.username,
-            userId: params.userId
-        };
-
-        var userDataInstance = await(services.userData.create(userData));
-
-        params.userDataId = userDataInstance.id;
-
-        if (params.score) {
-            params.rating = await(service.rate(school, params));
-            answer.ratingCreated = true;
-        }
-        if (params.text) {
-            var commentGroup = await(service.getGroupId(school));
-            await(services.comment.create(commentGroup, params));
-            answer.commentCreated = true;
-        }
-        return answer;
-    } catch (e) {
-        throw e;
-    }
-});
-
-/**
- * @private
- * @param {Object} school
- * @param {Array.<number>} params.score
- * @return {Object}
- */
-service.rate = async(function(school, params) {
-    var totalScore = calculateTotalScore(params.score);
-    var rating = await(models.Rating.create({
-        score: params.score,
-        totalScore: totalScore,
-        schoolId: school.id,
-        userDataId: params.userDataId
+    var school = await(models.School.findOne({
+        where: {id: schoolId}
     }));
-    return rating;
+
+    var userData = {
+        userType: params.userType,
+        yearGraduate: params.yearGraduate,
+        classType: params.classType,
+        key: params.key,
+        username: params.username,
+        userId: params.userId
+    };
+
+    var userDataInstance = await(services.userData.create(userData));
+
+    params.userDataId = userDataInstance.id;
+
+    if (params.score) {
+        params.rating = await(services.rating.create(params.score));
+    }
+
+    var commentGroup = await(service.getGroupId(school));
+    await(services.comment.create(commentGroup, params));
+
+    await(service.updateRating(commentGroup));
 });
 
 /**
- * Calculate total score from score parameters. If one of score parameter
- * equals 0, total score equals 0 too
- * @param {Array.<number>} score
- * @return {number}
+ * @param {number} commentGroupId
  */
-var calculateTotalScore = function(score) {
-    var notEmptyScore = score.every(scoreItem => {
-            return parseFloat(scoreItem);
-        }),
-        result = 0;
-    if (notEmptyScore) {
-        var sum = 0;
-        score.forEach(currentScore => {
-            sum += parseFloat(currentScore);
-        });
-        result = sum / score.length;
-    }
-    return result;
-};
+service.updateRating = async(function(commentGroupId) {
+    let ratingChanger = new RatingChanger(
+        models.School.tableName,
+        commentGroupId
+    );
+
+    await(ratingChanger.update());
+});
 
 service.createActivity = async(params => {
     CsvConverter.cureQuotes(params);
@@ -833,9 +802,6 @@ service.deleteActivities = async(() => {
 service.listInstances = async(function() {
     return await(models.School.findAll({
         include: [{
-            model: models.Rating,
-            as: 'ratings'
-        }, {
             model: models.Address,
             as: 'addresses',
             required: false,

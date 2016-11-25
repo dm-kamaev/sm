@@ -1,8 +1,12 @@
-var async = require('asyncawait/async');
-var await = require('asyncawait/await');
-var models = require('../../../../app/components/models').all;
-var lodash = require('lodash');
-var service = {
+'use strict';
+
+const async = require('asyncawait/async'),
+    await = require('asyncawait/await');
+
+const models = require('../../../../app/components/models').all,
+    services = require('../../../../app/components/services').all;
+
+let service = {
     name: 'userData'
 };
 
@@ -30,32 +34,17 @@ service.create = async(function(data) {
 
 /**
  * Checks if user commented the school
- * @param {number} schoolId
+ * @param {number} commentGroupId
  * @param {number} userId
- * @return {object|undefined}
+ * @return {Object|undefined}
  */
-service.checkCredentials = async(function(schoolId, userId) {
-    var commented;
-    var relatedRating = await(models.Rating.findAll({
-        where: {
-            schoolId: schoolId
-        }
-    }));
-    var relatedUserData = await(models.UserData.findAll({
-        where: {
-            $or: [
-                { userId: userId }
-            ]
-        }
-    }));
-    var i = relatedRating.length;
-    while (i-- && typeof commented === 'undefined') {
-        commented = lodash.find(relatedUserData, function(userData) {
-            return userData.id === relatedRating[i].userDataId;
-        });
-    }
+service.checkCredentials = async(function(commentGroupId, userId) {
+    let comments = await(services.comment.getComments(commentGroupId)),
+        userComments = comments.filter(comment =>
+            comment.userData.userId == userId
+        ); // only one comment can be left by a user on the page
 
-    return commented;
+    return userComments && userComments[0];
 });
 
 /**

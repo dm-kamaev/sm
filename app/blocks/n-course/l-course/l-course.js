@@ -56,11 +56,11 @@ goog.scope(function() {
 
 
         /**
-         * Instances button
-         * @type {Array<cl.gButton.Button>}
+         * Instances user Interaction
+         * @type {Array<sm.lCourse.bUserInteraction.UserInteraction>}
          * @private
          */
-        this.actionButtons_ = [];
+        this.userInteractions_ = [];
 
 
         /**
@@ -96,6 +96,7 @@ goog.scope(function() {
     };
     goog.inherits(sm.lCourse.Course, sm.iLayout.LayoutStendhal);
     var Course = sm.lCourse.Course,
+        View = sm.lCourse.View,
         Viewport = sm.iSmViewport.SmViewport,
         AnalyticsSender = sm.lCourse.iAnalyticsSender.AnalyticsSender,
         Analytics = sm.iAnalytics.Analytics;
@@ -111,7 +112,7 @@ goog.scope(function() {
         this.initScore_();
         this.initFullDescription_();
         this.initMap_();
-        this.initActionButtons_();
+        this.initUserInteractions_();
         this.initDepartmentList_();
         this.initModals_();
         this.initIRequest_();
@@ -125,7 +126,7 @@ goog.scope(function() {
     Course.prototype.enterDocument = function() {
         Course.base(this, 'enterDocument');
 
-        this.initActionButtonsListeners_();
+        this.initUserInteractionsListeners_();
         this.initDepartmentListListeners_();
         this.initModalsListeners_();
 
@@ -134,14 +135,14 @@ goog.scope(function() {
 
 
     /**
-     * Initializes listeners for instances of action buttons
+     * Initializes listeners for User Interactions
      * @private
      */
-    Course.prototype.initActionButtonsListeners_ = function() {
-        for (var i = 0; i < this.actionButtons_.length; i++) {
+    Course.prototype.initUserInteractionsListeners_ = function() {
+        for (var i = 0; i < this.userInteractions_.length; i++) {
             this.getHandler().listen(
-                this.actionButtons_[i],
-                cl.gButton.Button.Event.CLICK,
+                this.userInteractions_[i],
+                sm.lCourse.bUserInteraction.UserInteraction.Event.CLICK,
                 this.onActionButtonClick_
             );
         }
@@ -368,21 +369,14 @@ goog.scope(function() {
 
 
     /**
-     * Initializes instances of action buttons
+     * Initializes instances of User interactions
      * @private
      */
-    Course.prototype.initActionButtons_ = function() {
-        var domElements = this.getView().getDom().actionButtons,
-            instance;
-
-        for (var i = 0; i < domElements.length; i++) {
-            instance = this.decorateChild(
-                'button',
-                domElements[i]
-            );
-
-            this.actionButtons_.push(instance);
-        }
+    Course.prototype.initUserInteractions_ = function() {
+        this.userInteractions_ = this.decorateChildren(
+            'lCourse-userInteraction',
+            this.getView().getDom().userInteractions
+        );
     };
 
 
@@ -428,7 +422,7 @@ jQuery(function() {
         sm.lCourse.View.CssClass.ROOT
     );
 
-    var view = new sm.lCourse.View(null, null, 'stendhal');
+    var view = new sm.lCourse.View();
     var instance = new sm.lCourse.Course(view);
 
     instance.decorate(domElement);

@@ -16,6 +16,7 @@ goog.require('sm.bSmItem.SmItemEntity');
 goog.require('sm.bSmItemList.View');
 goog.require('sm.bSmLink.SmLink');
 goog.require('sm.iAnalytics.Analytics');
+goog.require('sm.lCourse.bDepartment.Department');
 
 
 
@@ -47,6 +48,13 @@ sm.bSmItemList.SmItemList = function(view, opt_domHelper) {
      * @private
      */
     this.renderParamsTransformator_ = null;
+
+
+    /**
+     * Item config which item list rendered
+     * @private
+     */
+    this.itemConfig_ = {};
 };
 goog.inherits(sm.bSmItemList.SmItemList, cl.iControl.Control);
 
@@ -89,19 +97,7 @@ goog.scope(function() {
 
     /**
      * @override
-     * @protected
-     */
-    ItemList.prototype.decorateInternal = function(element) {
-        ItemList.base(this, 'decorateInternal', element);
-
-        this.initItems_();
-        this.initRenderParamsTransformator_(this.params.itemType);
-    };
-
-
-    /**
-     * @override
-     * @protected
+     * @public
      */
     ItemList.prototype.enterDocument = function() {
         ItemList.base(this, 'enterDocument');
@@ -156,7 +152,7 @@ goog.scope(function() {
      */
     ItemList.prototype.addItem = function(rawData, opt_index) {
         var renderParams = this.renderParamsTransformator_(rawData);
-        this.getView().addItem(renderParams.data, opt_index);
+        this.getView().addItem(renderParams.data, this.itemConfig_, opt_index);
     };
 
 
@@ -346,6 +342,20 @@ goog.scope(function() {
 
 
     /**
+     * @override
+     * @protected
+     */
+    ItemList.prototype.decorateInternal = function(element) {
+        ItemList.base(this, 'decorateInternal', element);
+
+        this.initItems_();
+        this.initRenderParamsTransformator_(this.params.itemType);
+
+        this.initItemRenderConfig_();
+    };
+
+
+    /**
      * Initializes listeners for items
      * @private
      */
@@ -496,13 +506,26 @@ goog.scope(function() {
      */
     ItemList.prototype.initRenderParamsTransformator_ = function(itemType) {
         var transformators = {};
-        transformators[ItemList.ItemType.ITEM] =
-            sm.bSmItem.SmItem.getRenderParams;
-        transformators[ItemList.ItemType.ITEM_ENTITY] =
-            sm.bSmItem.SmItemEntity.getRenderParams;
-        transformators[ItemList.ItemType.LINK] =
-            sm.bSmLink.SmLink.getRenderParams;
+            transformators[ItemList.ItemType.ITEM] =
+                sm.bSmItem.SmItem.getRenderParams;
+            transformators[ItemList.ItemType.ITEM_ENTITY] =
+                sm.bSmItem.SmItemEntity.getRenderParams;
+            transformators[ItemList.ItemType.LINK] =
+                sm.bSmLink.SmLink.getRenderParams;
+            transformators[ItemList.ItemType.DEPARTMENT] =
+                sm.lCourse.bDepartment.Department.getRenderParams;
 
         this.renderParamsTransformator_ = transformators[itemType];
+    };
+
+    /**
+     * Init item render config from itemConfig in params
+     * It is needed to use after init renderParamsTransformator_
+     * @private
+     */
+    ItemList.prototype.initItemRenderConfig_ = function() {
+        var rawItemConfig = this.params.itemConfig || {};
+        var transformedParams = this.renderParamsTransformator_(rawItemConfig);
+        this.itemConfig_ = transformedParams.config;
     };
 });  // goog.scope

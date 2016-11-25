@@ -1,3 +1,8 @@
+/**
+ * @fileOverview Can be used to search
+ * params id, searchType are used only to search
+ */
+
 {namespace sm.bSmBadge.Template}
 
 
@@ -13,9 +18,11 @@
 
 /**
  * @typedef {{
- *     type: string,
  *     entityType: string,
+ *     searchType: (string|undefined),
+ *     searchByName: boolean,
  *     iconName: (string|undefined),
+ *     iconType: ('svg'|undefined),
  *     isNotActive: boolean,
  *     stylizationModifier: string
  * }} sm.bSmBadge.Template.Params.Config
@@ -56,6 +63,7 @@
  * @param params {{
  *     config: {
  *         iconName: (string|undefined),
+ *         iconType: ('svg'|undefined),
  *         stylizationModifier: string
  *     }
  * }}
@@ -63,10 +71,18 @@
  */
 {template .icon_}
     {if $params?.config?.iconName}
+        {let $type kind="html"}
+            {if $params?.config?.iconType}
+                icon-{$params.config.iconType}
+            {else}
+                icon
+            {/if}
+        {/let}
+
         <div class="{call .rootClass/}__icon">
             {call .renderChild}
                 {param params: [
-                    'type': 'icon',
+                    'type': $type,
                     'renderParams': [
                         'data': [
                             'type': $params.config.iconName
@@ -89,7 +105,8 @@
  *         }>
  *     },
  *     config: {
- *         type: string
+ *         searchType: (string|undefined),
+ *         searchByName: boolean
  *     }
  * }}
  * @override
@@ -120,7 +137,8 @@
  *         name: string
  *     },
  *     config: {
- *         type: string
+ *         searchType: (string|undefined),
+ *         searchByName: boolean
  *     }
  * }}
  * @override
@@ -141,7 +159,8 @@
  *         name: string
  *     },
  *     config: {
- *         type: string
+ *         searchType: (string|undefined),
+ *         searchByName: boolean
  *     }
  * }}
  * @override
@@ -149,11 +168,11 @@
 {template .itemDataParams_ kind="attributes"}
     data-params="
         {call cl.iUtils.Utils.stringify}
-            {param json: [
+            {param json: quoteKeysIfJs([
                 'id': $params.data.id ?: '',
-                'name': $params.data.name,
-                'type': $params?.config?.type ?: ''
-            ]/}
+                'name': $params?.config?.searchByName ? $params.data.name : '',
+                'type': $params?.config?.searchType ?: ''
+            ])/}
         {/call}"
 {/template}
 
@@ -162,13 +181,13 @@
  * Hint
  * @param params {{
  *     config: {
- *         type: string
+ *         searchType: string
  *     }
  * }}
  * @override
  */
 {template .hint_}
-    {if $params?.config?.type == 'rating'}
+    {if $params?.config?.searchType == 'rating'}
         {let $hintContent kind="html"}
             {call .hintContent_ /}
         {/let}

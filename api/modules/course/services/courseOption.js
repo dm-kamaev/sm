@@ -42,36 +42,51 @@ let service = {
  * @return {CourseOption}
  */
 service.create = async(function(course, data) {
-    let courseOption = await(models.CourseOption.create({
-        courseId: course.id,
-        name: data.name,
-        description: data.description,
-        totalCost: data.totalCost,
-        costPerHour: data.costPerHour,
-        online: data.online,
-        age: data.age,
-        maxGroupSize: data.maxGroupSize,
-        currentGroupSize: data.currentGroupSize,
-        nativeSpeaker: data.nativeSpeaker,
-        startDate: data.startDate,
-        duration: data.duration,
-        openSchedule: data.openSchedule,
-        lengthWeeks: data.lengthWeeks
-    }));
-    if (!data.openSchedule && data.schedule) {
-        courseOption.schedule = await(services.courseSchedule.bulkCreate(
-            courseOption.id,
-            data.schedule
-        ));
+    let transaction = await(sequelize.transaction());
+
+    let courseOption;
+    try {
+        courseOption = await(models.CourseOption.create({
+            courseId: course.id,
+            name: data.name,
+            description: data.description,
+            totalCost: data.totalCost,
+            costPerHour: data.costPerHour,
+            online: data.online,
+            age: data.age,
+            maxGroupSize: data.maxGroupSize,
+            currentGroupSize: data.currentGroupSize,
+            nativeSpeaker: data.nativeSpeaker,
+            startDate: data.startDate,
+            duration: data.duration,
+            openSchedule: data.openSchedule,
+            lengthWeeks: data.lengthWeeks
+        }, {
+            transaction: transaction
+        }));
+        if (!data.openSchedule && data.schedule) {
+            courseOption.schedule = await(services.courseSchedule.bulkCreate(
+                courseOption.id,
+                data.schedule,
+                transaction
+            ));
+        }
+        await(courseOption.setDepartments(data.departments.map(department =>
+            !Number.isNaN(Number(department)) ?
+                department :
+                await(services.courseDepartment.findOrCreate(
+                    course.brandId,
+                    department
+                ))
+        ), {
+            transaction: transaction
+        }));
+
+        await(transaction.commit());
+    } catch (error) {
+        await(transaction.rollback());
+        throw error;
     }
-    await(courseOption.setDepartments(data.departments.map(department =>
-        Number.isInteger(department) ?
-            department :
-            await(services.courseDepartment.findOrCreate(
-                course.brandId,
-                department
-            ))
-    )));
 
     return courseOption;
 });
@@ -128,29 +143,47 @@ service.getById = async(function(id) {
  */
 service.update = async(function(id, data) {
     let courseOption = await(service.getById(id));
-    await(courseOption.update({
-        name: data.name,
-        totalCost: data.totalCost,
-        costPerHour: data.costPerHour,
-        online: data.online,
-        age: data.age,
-        maxGroupSize: data.maxGroupSize,
-        lengthWeeks: data.lengthWeeks,
-        nativeSpeaker: data.nativeSpeaker,
-        startDate: data.startDate,
-        duration: data.duration,
-        openSchedule: data.openSchedule,
-        currentGroupSize: data.currentGroupSize
-    }));
 
-    await(services.courseSchedule.deleteByOptionId(id));
-    if (!data.openSchedule && data.schedule) {
-        courseOption.schedule = await(services.courseSchedule.bulkCreate(
-            courseOption.id,
-            data.schedule
+    let transaction = await(sequelize.transaction());
+
+    try {
+        await(courseOption.update({
+            name: data.name,
+            totalCost: data.totalCost,
+            costPerHour: data.costPerHour,
+            online: data.online,
+            age: data.age,
+            maxGroupSize: data.maxGroupSize,
+            lengthWeeks: data.lengthWeeks,
+            nativeSpeaker: data.nativeSpeaker,
+            startDate: data.startDate,
+            duration: data.duration,
+            openSchedule: data.openSchedule,
+            currentGroupSize: data.currentGroupSize
+        }, {
+            transaction: transaction
+        }));
+
+        await(services.courseSchedule.deleteByOptionId(id, transaction));
+        if (!data.openSchedule && data.schedule) {
+            courseOption.schedule = await(services.courseSchedule.bulkCreate(
+                courseOption.id,
+                data.schedule,
+                transaction
+            ));
+        }
+
+        await(courseOption.setDepartments(
+            data.departments, {
+                transaction: transaction
+            }
         ));
+
+        await(transaction.commit());
+    } catch (error) {
+        await(transaction.rollback());
+        throw error;
     }
-    await(courseOption.setDepartments(data.departments));
 
     return courseOption;
 });

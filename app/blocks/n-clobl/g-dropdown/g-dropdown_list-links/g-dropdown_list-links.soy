@@ -13,7 +13,8 @@
  * @typedef {{
  *     stylizationModifier: string,
  *     customClasses: (Array<string>|undefined),
- *     theme: (string|undefined)
+ *     theme: (string|undefined),
+ *     isChangingOpenerText: (boolean|undefined)
  * }} sm.gDropdown.TemplateListLinks.Params.Config
  */
 
@@ -38,6 +39,9 @@
  * @param params {{
  *     data: {
  *         opener: string
+ *     },
+ *     config: {
+ *         isChangingOpenerText: boolean
  *     }
  * }}
  * @override
@@ -51,6 +55,14 @@
         {call .openerContent_ data="all" /}
     {/let}
 
+    {let $size kind="text"}
+        {if $params.config.isChangingOpenerText}
+            m
+        {else}
+            xl
+        {/if}
+    {/let}
+
     {call .renderChild}
         {param params: [
             'type': 'smLink',
@@ -59,7 +71,7 @@
                     'content': $openerContent
                 ],
                 'config': [
-                    'size': 'xl',
+                    'size': $size,
                     'customClasses': [$customClasses],
                     'theme': 'dark'
                 ]
@@ -74,11 +86,15 @@
  * @param params {{
  *     data: {
  *         opener: string
- *     }
+ *     },
+ *     config: sm.gDropdown.TemplateListLinks.Params.Config
  * }}
  */
 {template .openerContent_}
-    <div class="{call .rootClass/}__opener-link-content">
+    <div class="{call .rootClass/}__opener-link-content
+        {if $params.config.isChangingOpenerText}
+            {sp}{call .rootClass/}__opener-link-content_small
+        {/if}">
         {call .openerText_ data="all" /}
         {call .openerIcon_/}
     </div>
@@ -97,6 +113,9 @@
 {template .openerText_}
     <div class="{call .rootClass/}__opener-text">
         {$params.data.opener}
+        {if $params.data.defaultOpenerText}
+            {$params.data.defaultOpenerText}
+        {/if}
     </div>
 {/template}
 
@@ -135,7 +154,10 @@
         {param params: [
             'type': 'list-links',
             'renderParams': [
-                'data': $params.data.content
+                'data': $params.data.content,
+                'config': [
+                    'isChangingOpenerText': $params.config.isChangingOpenerText
+                ]
             ]
         ]/}
     {/call}
@@ -144,8 +166,42 @@
 
 /**
  * Css classes
+ * @param params {{
+ *     config: sm.gDropdown.TemplateListLinks.Params.Config
+ * }}
  * @override
  */
 {template .additionalClasses}
     {call .rootClass/}_list-links
+    {if $params.config.isChangingOpenerText}
+        {sp}{call .rootClass/}_list-links_small
+    {/if}
 {/template}
+
+
+/**
+ * Attributes template
+ * @param params {{
+ *     data: {
+ *         content: {
+ *              items: Array<{
+ *                  label: (string|undefined),
+ *                  value: (number|string|undefined)
+ *              }>
+ *         }
+ *     }
+ * }}
+ * @override
+ */
+{template .attributes kind="attributes"}
+    {let $array: $params.data.content.items /}
+
+    data-params="{call cl.iUtils.Utils.stringify}
+        {param json: quoteKeysIfJs([
+            'isChangingOpenerText': $params.config.isChangingOpenerText,
+            'values': $array,
+            'opener': $params.data.opener
+        ]) /}
+    {/call}"
+{/template}
+

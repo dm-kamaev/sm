@@ -41,6 +41,9 @@ goog.scope(function() {
      *         metro: sm.bSmBadge.Badge.RenderParams,
      *         area: sm.bSmBadge.Badge.RenderParams,
      *         category: string
+     *     },
+     *     config: {
+     *         enableCover: boolean
      *     }
      * }}
      */
@@ -85,18 +88,22 @@ goog.scope(function() {
      * @public
      */
     View.getRenderParams = function(rawParams) {
-        var metroParams =
-            sm.bSmBadge.SmBadge.getRenderParams(rawParams['metro']);
-        var areaParams =
-            sm.bSmBadge.SmBadge.getRenderParams(rawParams['area']);
+        var metroParams = rawParams['metro'] ?
+            sm.bSmBadge.SmBadge.getRenderParams(rawParams['metro']) :
+            {};
+        var areaParams = rawParams['area'] ?
+            sm.bSmBadge.SmBadge.getRenderParams(rawParams['area']) :
+            {};
+        var name = rawParams['name'] || {};
 
         return {
             data: {
                 id: rawParams['id'],
                 type: rawParams['type'],
+                imageUrl: rawParams['imageUrl'],
                 name: {
-                    light: rawParams['name']['light'],
-                    bold: rawParams['name']['bold']
+                    light: name['light'],
+                    bold: name['bold']
                 },
                 alias: rawParams['alias'],
                 score: rawParams['score'],
@@ -104,6 +111,9 @@ goog.scope(function() {
                 metro: metroParams.data,
                 area: areaParams.data,
                 category: rawParams['category']
+            },
+            config: {
+                enableCover: rawParams['enableCover']
             }
         };
     };
@@ -154,11 +164,13 @@ goog.scope(function() {
 
     /**
      * Handler click on root Element
-     * @param {Object} event
+     * @param {goog.events.Event} event
      * @protected
      */
     View.prototype.onClick = function(event) {
-        this.dispatchEvent(View.Event.CLICK);
+        if (!event.defaultPrevented) {
+            this.dispatchEvent(View.Event.CLICK);
+        }
     };
 
 

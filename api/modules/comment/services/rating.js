@@ -1,22 +1,24 @@
-var async = require('asyncawait/async');
-var await = require('asyncawait/await');
-var models = require('../../../../app/components/models').all;
-var service = {
+'use strict';
+
+const async = require('asyncawait/async'),
+    await = require('asyncawait/await');
+
+const models = require('../../../../app/components/models').all;
+
+let service = {
     name: 'rating'
 };
 
-
 /**
  * Add rating row
- * @params {number} schoolId
- * @param {{
- *     score?: Array [number]
- * }} data
+ * @param  {Array<number>} score
  * @return {Object} instance of Rating model
  */
-service.add = async(function(schoolId, data) {
-    data.schoolId = schoolId;
-    return await(models.Rating.create(data));
+service.create = async(function(score) {
+    return await(models.Rating.create({
+        score: score,
+        totalScore: service.calculateTotalScore(score)
+    }));
 });
 
 
@@ -80,5 +82,25 @@ service.delete = async(function(ratingId) {
     await(instance.destroy());
 });
 
+/**
+ * Calculate total score from score parameters. If one of score parameter
+ * equals 0, total score equals 0 too
+ * @param  {Array<number>} score
+ * @return {number}
+ */
+service.calculateTotalScore = function(score) {
+    let notEmptyScore = score.every(parseFloat),
+        result = 0;
+
+    if (notEmptyScore) {
+        let sum = score.reduce(
+            (total, current) => total + parseFloat(current),
+            0
+        );
+        result = sum / score.length;
+    }
+
+    return result;
+};
 
 module.exports = service;

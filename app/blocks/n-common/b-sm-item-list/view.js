@@ -64,24 +64,14 @@ goog.scope(function() {
 
 
     /**
-     * @override
-     * @param {Element} element
-     */
-    View.prototype.decorateInternal = function(element) {
-        View.base(this, 'decorateInternal', element);
-
-        this.initList_(element);
-        this.initParams_();
-    };
-
-
-    /**
      * Insert item on index (Dom Element)
      * @param {Object} data
+     * @param {Object} config
      * @param {number=} opt_index
+     * @public
      */
-    View.prototype.addItem = function(data, opt_index) {
-        var item = this.renderItem_(data);
+    View.prototype.addItem = function(data, config, opt_index) {
+        var item = this.renderItem_(data, config);
 
         goog.dom.insertChildAt(
             this.dom.list,
@@ -94,6 +84,7 @@ goog.scope(function() {
     /**
      * Remove item (Dom Element)
      * @param {Element} item
+     * @public
      */
     View.prototype.removeItem = function(item) {
         var itemWrapper = goog.dom.getAncestorByClass(
@@ -109,6 +100,7 @@ goog.scope(function() {
 
     /**
      * Remove all items dom elements
+     * @public
      */
     View.prototype.removeAllItems = function() {
         goog.array.forEach(this.dom.itemWrappers, function(itemWrapper) {
@@ -120,6 +112,7 @@ goog.scope(function() {
     /**
      * Set page (show amount items = countItemsPerPage)
      * @param {number} pageNumber
+     * @public
      */
     View.prototype.setPage = function(pageNumber) {
 
@@ -135,6 +128,7 @@ goog.scope(function() {
     /**
      * Initializes items (Dom elements)
      * @param {Element=} opt_element
+     * @public
      */
     View.prototype.initItems = function(opt_element) {
         var element = opt_element || this.getElement();
@@ -148,6 +142,19 @@ goog.scope(function() {
             sm.bSmItemList.View.CssClass.ITEM_WRAP,
             element
         );
+    };
+
+
+    /**
+     * @override
+     * @param {Element} element
+     * @protected
+     */
+    View.prototype.decorateInternal = function(element) {
+        View.base(this, 'decorateInternal', element);
+
+        this.initList_(element);
+        this.initParams_();
     };
 
 
@@ -236,15 +243,17 @@ goog.scope(function() {
     /**
      * Render Item
      * @param {Object} data
+     * @param {Object} config
      * @return {Element}
      * @private
      */
-    View.prototype.renderItem_ = function(data) {
+    View.prototype.renderItem_ = function(data, config) {
         return goog.soy.renderAsElement(
             sm.bSmItemList.Template.item, {
                 params: {
                     data: {
-                        item: data
+                        item: data,
+                        itemConfig: config
                     },
                     config: {
                         type: this.params.itemType,
@@ -303,6 +312,8 @@ goog.scope(function() {
 
     /**
      * Transform raw params object to compiled one
+     * Item config stay in uncompressed state as in view we dont know
+     * about transformation function for it
      * @param  {Object} rawParams
      * @return {sm.bSmItemList.View.Params}
      * @private

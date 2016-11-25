@@ -89,13 +89,14 @@
     <div class="{call .rootClass/}__cross">
         {call .renderChild}
             {param params: [
-                'type': 'icon',
+                'type': 'icon-svg',
                 'renderParams': [
                     'data': [
                         'type': 'cross'
                     ],
                     'config': [
-                        'customClasses': [$customClasses]
+                        'customClasses': [$customClasses],
+                        'size': 's'
                     ]
                 ]
             ]/}

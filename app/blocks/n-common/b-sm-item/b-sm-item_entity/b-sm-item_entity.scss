@@ -1,9 +1,10 @@
-@import "../../i-media/i-media";
+@import '../../i-media/i-media';
 
 .b-sm-item_entity {
     padding: 24px 0;
 
     cursor: default;
+
 
     .b-sm-item__section {
         margin-bottom: 9px;
@@ -23,7 +24,6 @@
         color: black;
 
         font: 700 21px/26px 'Proxima', Arial, sans-serif;
-
         &:hover {
             color: #ee362c;
         }
@@ -48,6 +48,8 @@
     }
 
     .b-sm-item__cost {
+        color: #ee362c;
+
         font: 16px/22px 'PT Serif', Arial, sans-serif;
     }
 
@@ -64,9 +66,10 @@
     }
 
     .b-sm-item__section_description {
-        max-width: 705px;
+        display: block;
+
         margin-bottom: 15px;
-        padding-right: 80px;
+        padding-right: 100px;
 
         color: #000;
 
@@ -96,11 +99,31 @@
             margin-right: 0;
         }
     }
-}
 
-.b-sm-item_type_course {
-    .b-sm-item__name {
-        padding-right: 250px;
+    .b-sm-item__section-group_cover {
+        float: left;
+
+        width: 150px;
+        padding-right: 20px;
+
+        cursor: pointer;
+    }
+
+    .b-sm-item__section-group_info {
+        overflow: hidden;
+
+        width: auto;
+    }
+
+    .b-sm-item__cover-image {
+        width: 100%;
+    }
+
+
+    .b-sm-item_type_course {
+        .b-sm-item__name {
+            padding-right: 250px;
+        }
     }
 }
 
@@ -108,10 +131,13 @@
 @include media-l {
     .b-sm-item_entity {
         padding: 20px 0;
-
         .b-sm-item__estimates {
             width: auto;
             min-width: 160px;
+        }
+
+        .b-sm-item__section-group_cover {
+            width: 100px;
         }
     }
 
@@ -126,6 +152,13 @@
     }
 }
 
+@include media-m {
+    .b-sm-item_entity {
+        .b-sm-item__section-group_cover {
+            width: 100px;
+        }
+    }
+}
 
 @include media-xs {
     .b-sm-item_entity {
@@ -148,9 +181,12 @@
         .b-sm-item__brand {
             margin-bottom: 0;
         }
-    }
 
-    .b-sm-item_type_course {
+        .b-sm-item__section-group_cover {
+            float: none;
 
+            width: 150px;
+            padding-bottom: 20px;
+        }
     }
 }

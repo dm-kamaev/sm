@@ -35,7 +35,8 @@ goog.scope(function() {
      *         name: string,
      *         metros: Array<string>,
      *         options: Array<sm.lCourse.bOption.Option.RenderParams>
-     *     }
+     *     },
+     *     config: Object
      * }}
      */
     sm.lCourse.bDepartment.View.RenderParams;
@@ -82,7 +83,8 @@ goog.scope(function() {
                 name: rawParams['name'],
                 metros: rawParams['metros'],
                 options: rawParams['options']
-            }
+            },
+            config: {}
         };
     };
 

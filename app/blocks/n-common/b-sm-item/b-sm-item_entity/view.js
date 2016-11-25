@@ -73,9 +73,12 @@ goog.scope(function() {
      */
     View.getRenderParams = function(rawParams) {
         var params = sm.bSmItem.View.getRenderParams(rawParams);
+        var score = rawParams['score'] ?
+            sm.bSmScore.SmScoreBrief.getRenderParams(rawParams['score']) :
+            {};
         goog.object.extend(params.data, {
             cost: rawParams['cost'],
-            score: sm.bSmScore.SmScoreBrief.getRenderParams(rawParams['score']),
+            score: score,
             brand: rawParams['brand'],
             online: rawParams['online'],
             isFavorite: rawParams['isFavorite'],
@@ -94,6 +97,7 @@ goog.scope(function() {
     View.CssClass = {
         ROOT: 'b-sm-item_entity',
         DETAILS_SECTION: 'b-sm-item__section_details',
+        SCORE_WRAP: 'b-sm-item__score',
         COST_SIZE_L: 'b-sm-item__cost_size_l'
     };
 
@@ -115,7 +119,7 @@ goog.scope(function() {
     View.prototype.enterDocument = function() {
         View.base(this, 'enterDocument');
 
-        this.initDetailsListeners_();
+        this.initDomElementsListeners_();
     };
 
 
@@ -139,24 +143,40 @@ goog.scope(function() {
 
 
     /**
-     * Initializes listeners for details section
+     * Initializes listeners for dom elements
      * @private
      */
-    View.prototype.initDetailsListeners_ = function() {
+    View.prototype.initDomElementsListeners_ = function() {
         this.getHandler().listen(
             this.dom.detailsSection,
             goog.events.EventType.CLICK,
             this.onDetailsSectionClick_
+        );
+
+        this.getHandler().listen(
+            this.dom.scoreWrap,
+            goog.events.EventType.CLICK,
+            this.onScoreWrapClick_
         );
     };
 
 
     /**
      * Click on details section
-     * @param {Object} event
+     * @param {goog.events.Event} event
      * @private
      */
     View.prototype.onDetailsSectionClick_ = function(event) {
+        event.preventDefault();
+    };
+
+
+    /**
+     * Click on score wrap
+     * @param {goog.events.Event} event
+     * @private
+     */
+    View.prototype.onScoreWrapClick_ = function(event) {
         event.preventDefault();
     };
 
@@ -168,25 +188,23 @@ goog.scope(function() {
      */
     View.prototype.initDom_ = function(element) {
         this.dom = {
+            scoreWrap: this.getElementByClass(
+                View.CssClass.SCORE_WRAP
+            ),
             score: this.getElementByClass(
-                sm.bSmScore.ViewBrief.CssClass.ROOT,
-                element
+                sm.bSmScore.ViewBrief.CssClass.ROOT
             ),
             detailsSection: this.getElementByClass(
-                View.CssClass.DETAILS_SECTION,
-                element
+                View.CssClass.DETAILS_SECTION
             ),
             badges: this.getElementsByClass(
-                sm.bSmBadge.View.CssClass.ROOT,
-                element
+                sm.bSmBadge.View.CssClass.ROOT
             ),
             favoriteLink: this.getElementByClass(
-                sm.bFavoriteLink.View.CssClass.ROOT,
-                element
+                sm.bFavoriteLink.View.CssClass.ROOT
             ),
             costSizeL: this.getElementByClass(
-                View.CssClass.COST_SIZE_L,
-                element
+                View.CssClass.COST_SIZE_L
             )
         };
     };

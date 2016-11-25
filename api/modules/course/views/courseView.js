@@ -12,7 +12,8 @@ const scoreView = require('./scoreView'),
     CourseOptionsTransformer = require('../lib/CourseOptionsTransformer'),
     pageView = require('../../entity/views/pageView');
 
-const entityType = require('../../../../api/modules/entity/enums/entityType');
+const entityType = require('../../../../api/modules/entity/enums/entityType'),
+    groupSizeTraining = require('../enums/groupSizeTraining');
 
 
 let view = {};
@@ -28,7 +29,6 @@ const FULL_DESCRIPTION_LENGTH = 300,
 view.page = function(course) {
     let options = course.courseOptions,
         generalOptions = this.formatGeneralOptions(course);
-
     return {
         id: course.id,
         name: course.name,
@@ -41,6 +41,7 @@ view.page = function(course) {
             items: this.formatGeneralOptionsWithConfig(generalOptions)
         },
         departmentList: this.formatDepartmentList(options, generalOptions),
+        videoId: course.embedId,
         online: this.onlineStatus(generalOptions)
     };
 };
@@ -407,6 +408,7 @@ view.getListCourse = function(course) {
             course.brandAlias,
             course.categoryAlias
         ),
+        imageUrl: course.imageUrl,
         type: entityType.COURSE,
         name: {light: course.name},
         description: course.description,
@@ -416,7 +418,11 @@ view.getListCourse = function(course) {
             course.totalScore
         ),
         cost: course.optionCost,
-        online: course.optionOnline ? 'only' : null,
+        online: course.optionOnline ? {
+            value: groupSizeTraining.ONLINE,
+            type: 'only'
+        } :
+        {},
         addresses: [course.addressId],
         metro: course.metroId ? [{
             id: course.metroId,
@@ -441,10 +447,13 @@ view.joinListCourse = function(existingCourse, newCourse) {
         existingCourse.cost = newCourse.optionCost;
     }
 
-    if (existingCourse.online === 'only' && !newCourse.optionOnline ||
-        !existingCourse.online && newCourse.optionOnline
+    if (existingCourse.online.type === 'only' && !newCourse.optionOnline ||
+        !existingCourse.online.type && newCourse.optionOnline
     ) {
-        existingCourse.online = 'available';
+        existingCourse.online = {
+            value: groupSizeTraining.ONLINE,
+            type: 'available'
+        };
     }
 
     if (newCourse.areaId &&
@@ -654,6 +663,7 @@ view.render = function(course) {
         about: course.about,
         learningOutcome: course.learningOutcome,
         isActive: course.dataValues.isActive,
+        embedId: course.embedId,
         updatedAt: course['updated_at']
     };
 };

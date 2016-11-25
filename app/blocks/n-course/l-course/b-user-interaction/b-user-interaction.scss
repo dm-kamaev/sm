@@ -1,0 +1,58 @@
+@import "../../../n-common/i-media/i-media";
+
+.b-user-interaction {
+    position: relative;
+
+    padding-top: 23px;
+}
+
+.b-user-interaction__label {
+    display: none;
+}
+
+.b-user-interaction__icon-label {
+    display: inline-block;
+
+    margin-right: 10px;
+}
+
+.b-user-interaction__text-label {
+    display: inline-block;
+
+    color: #fff;
+}
+
+.b-user-interaction__description {
+    margin-bottom: 22px;
+    padding: 0 30px;
+
+    font: 28px 'Proxima', Arial, sans-serif;
+    font-weight: 600;
+}
+
+.b-user-interaction__button {
+    padding: 0 30px;
+}
+
+.b-user-interaction__action-text {
+    display: none;
+}
+
+@include media-xs {
+    .b-user-interaction {
+        width: 100%;
+        padding-top: 20px;
+    }
+
+    .b-user-interaction__button {
+        display: block;
+    }
+
+    .b-user-interaction__action-text {
+        display: none;
+    }
+
+    .b-user-interaction__description {
+        display: none;
+    }
+}

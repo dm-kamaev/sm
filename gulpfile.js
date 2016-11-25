@@ -12,6 +12,7 @@ const MAX_BILD_FILE_AMOUNT = 20;
 process.stdout.setMaxListeners(MAX_BILD_FILE_AMOUNT);
 
 const config = require('./config.json');
+const gulpConfig = require('./app/config/base/config.json');
 const production = !!util.env.production;
 const BLOCKS_DIR = '/app/blocks';
 const SHARED_STATIC_DIR = '/public/shared/static';
@@ -62,13 +63,14 @@ gulp.task('appES5', function() {
 });
 
 gulp.task('soy', function() {
-    return gulpHelper.soy.build();
+    return gulpHelper.soy.build([]);
 });
 
-gulp.task('styles', ['sprite'], function() {
+gulp.task('styles', ['sprite', 'svgSprite'], function() {
     return gulpHelper.css.build({
         outputFiles: [{
             src: [
+                path.join(__dirname, 'build', '/**/*.scss'),
                 path.join(__dirname, BLOCKS_DIR, '/**/*.scss'),
                 path.join(__dirname, BLOCKS_DIR, '/**/*.css'),
                 path.join(__dirname, '/node_modules/css-reset/reset.css')
@@ -92,18 +94,26 @@ gulp.task('sprite', function() {
                 __dirname,
                 BLOCKS_DIR,
                 '/n-clobl/g-icon/g-icon_img/*@2x.png'
-            )]
+            )],
+            imgPath: gulpConfig.lastBuildTimestamp ?
+                '/static/images/g-icon_auto-sprite@2x.png' + '?' +
+                    gulpConfig.lastBuildTimestamp :
+                '/static/images/g-icon_auto-sprite@2x.png'
         },
-        pngDest: path.join(__dirname, SHARED_STATIC_DIR + '/images'),
-        imgDir: ('./')
+        pngDest: path.join(__dirname, SHARED_STATIC_DIR, '/images'),
+        imgDir: ('./'),
+        imgPath: gulpConfig.lastBuildTimestamp ?
+            '/static/images/g-icon_auto-sprite.png' + '?' +
+                gulpConfig.lastBuildTimestamp :
+            '/static/images/g-icon_auto-sprite.png'
     }]);
 });
 
 gulp.task('images', function() {
-    var src = ['png', 'ico', 'svg', 'gif', 'jpg']
+    var src = ['png', 'ico', 'svg', 'gif', 'jpg', 'jpeg']
             .map(ext => '**/*.' + ext)
             .map(mask => path.join(__dirname, BLOCKS_DIR, mask)),
-        dest = path.join(__dirname, SHARED_STATIC_DIR + '/images');
+        dest = path.join(__dirname, SHARED_STATIC_DIR, '/images');
 
     return gulp.src(src)
         .pipe(gulp.dest(dest));
@@ -126,7 +136,7 @@ gulp.task('watch', function() {
 
 gulp.task('fonts', function() {
     return gulp.src(path.join(__dirname, '/assets/fonts/**/*.*'))
-        .pipe(gulp.dest(path.join(__dirname, SHARED_STATIC_DIR + '/fonts')));
+        .pipe(gulp.dest(path.join(__dirname, SHARED_STATIC_DIR, '/fonts')));
 });
 
 gulp.task('copySchools', function() {
@@ -158,6 +168,7 @@ gulp.task('backendLint', function() {
         'api/**/*.js',
         'app/modules/**/*.js',
         '!app/modules/doc/**',
+        'gulp/*.js',
         './*.js'])
         .pipe(eslint({
             config: path.join(__dirname, 'node_modules/nodules/.eslintrc')
@@ -182,8 +193,10 @@ const tasks = function(bool) {
 gulp.task('build', tasks(true));
 gulp.task('default', tasks(production));
 
+
 gulp.task('scripts', ['soy', 'lint'], gulpTasks.scripts);
 gulp.task('debug', ['soy'], gulpTasks.debug);
 gulp.task('compile', ['soy'], gulpTasks.compile);
 
 gulp.task('createTimestamp', gulpTasks.createTimestamp);
+gulp.task('svgSprite', gulpTasks.svgSprite);

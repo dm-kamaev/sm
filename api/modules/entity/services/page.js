@@ -149,5 +149,4 @@ service.delete = async(function(entityId, entityType) {
         }
     }));
 });
-
 module.exports = service;

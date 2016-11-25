@@ -18,6 +18,19 @@
     }
 }
 
+.g-list_links_small {
+    padding: 10px 0;
+}
+
+.g-list.g-list_links_small {
+    .g-list__item {
+        padding: 0 18px;
+        border-bottom: none;
+        line-height: 25px;
+    }
+
+}
+
 @include media-xs {
     .g-list.g-list_links {
         .g-list__item {

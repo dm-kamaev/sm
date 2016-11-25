@@ -1,27 +1,30 @@
-var fs = require('fs');
-var path = require('path');
+'use strict';
+
+const fs = require('fs');
+const path = require('path');
 
 const CONFIG_PATH = '../app/config/base/config.json';
+const config = require(path.join(__dirname, CONFIG_PATH));
 
 module.exports = function(gulpHelper) {
-
+    /**
+     * add Timstamp to config
+     */
     function addTimstampToConfig() {
-        var configPath = path.join(__dirname, CONFIG_PATH),
-            config = require(configPath);
+        let configPath = path.join(__dirname, CONFIG_PATH);
 
         config.lastBuildTimestamp = new Date().getTime();
 
-        var json = JSON.stringify(config, null, 4);
+        let json = JSON.stringify(config, null, 4);
         fs.writeFileSync(configPath, json);
     }
 
     return function() {
-        var promise = new Promise(function(resolve, reject) {
+        let promise = new Promise(function(resolve, reject) {
             try {
                 addTimstampToConfig();
                 resolve();
-            }
-            catch (err) {
+            } catch (err) {
                 reject(err);
             }
         });

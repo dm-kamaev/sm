@@ -1,0 +1,56 @@
+@import "../../../n-common/i-media/i-media";
+
+.g-icon_svg {
+    &:before {
+        vertical-align: inherit;
+    }
+}
+
+.g-icon_svg.g-icon_img_metro {
+    vertical-align: baseline;
+
+    font-size: 0.4px;
+    line-height: 8px;
+}
+
+.g-icon_svg.g-icon_img_list {
+    vertical-align: baseline;
+}
+
+.g-icon_svg.g-icon_img_online {
+    font-size: 1.3px;
+}
+
+.g-icon_img_cross.g-icon_size_s {
+    font-size: 7px;
+}
+
+.g-icon_svg.g-icon_img_favorite.g-icon_size_l {
+    font-size: 11.53px;
+}
+
+.g-icon_svg.g-icon_img_favorite_red.g-icon_size_l {
+    font-size: 11.53px;
+}
+
+.g-icon_svg.g-icon_img_favorite_dark_red.g-icon_size_l {
+    font-size: 11.53px;
+}
+
+.g-icon_svg.g-icon_img_favorite.g-icon_size_xs {
+    font-size: 7.6px;
+}
+
+.g-icon_svg.g-icon_img_favorite_red.g-icon_size_xs {
+    font-size: 7.6px;
+}
+
+.g-icon_svg.g-icon_img_favorite_dark_red.g-icon_size_xs {
+    font-size: 7.6px;
+}
+
+@include media-xs {
+    .g-icon_stendhal.g-icon_img_green_star {
+        font-size: 8px;
+    }
+}

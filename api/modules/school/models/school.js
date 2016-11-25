@@ -156,11 +156,6 @@ var School = db.define('School', {
             School.hasMany(models.SchoolUniversity, {
                 as: 'schoolUniversities', foreignKey: 'school_id'
             });
-            School.hasMany(models.Rating, {
-                as: 'ratings',
-                foreignKey: 'school_id',
-                onDelete: 'cascade'
-            });
             School.hasMany(models.Activity, {
                 as: 'activites',
                 foreignKey: 'school_id'

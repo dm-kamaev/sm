@@ -56,10 +56,9 @@
     {/let}
 
     <div class="{call .rootClass/}__icon-wrap">
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+        {call .renderChild}
             {param params: [
-                'factory': 'stendhal',
-                'type': 'icon',
+                'type': 'icon-svg',
                 'renderParams': [
                     'data': [
                         'type': 'user'
@@ -91,9 +90,8 @@
         {call .rootClass/}__hint
     {/let}
 
-    {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+    {call .renderChild}
         {param params: [
-            'factory': 'stendhal',
             'type': 'hint',
             'renderParams': [
                 'data': $tooltipData,

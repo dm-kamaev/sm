@@ -210,6 +210,8 @@ class CourseSearchQuery extends SearchQuery {
             .field('course.score')
             .field('course.score_count', 'scoreCount')
             .field('course.total_score', 'totalScore')
+            .field('course.image_url', 'imageUrl')
+            .field('course.ctr')
             .field('course_option.id', 'courseOptionId')
             .field('course_option.total_cost', 'optionCost')
             .field('course_option.online', 'optionOnline')
@@ -285,6 +287,8 @@ class CourseSearchQuery extends SearchQuery {
             .field('course.total_score')
             .field('course.brand_id')
             .field('course.type')
+            .field('course.image_url')
+            .field('course.ctr')
             .field('COUNT(course.id) OVER()', 'result_count')
             .group('course.id');
 
@@ -314,11 +318,29 @@ class CourseSearchQuery extends SearchQuery {
         //     .order('course.score[' + sortType + '] DESC NULLS LAST', null);
         // this.innerQuery_
         //     .order('course.score[' + sortType + '] DESC NULLS LAST', null);
-        let order = sortType === '0' ? 'ASC' : 'DESC NULLS LAST';
+        let order,
+            baseField,
+            innerField;
+        switch (sortType) {
+        case '0':
+            order = 'ASC';
+            innerField = 'min(course_option.total_cost)';
+            baseField = `(${innerField} OVER(PARTITION BY course.id))`;
+            break;
+        case '1':
+            order = 'DESC NULLS LAST';
+            innerField = 'min(course_option.total_cost)';
+            baseField = `(${innerField} OVER(PARTITION BY course.id))`;
+            break;
+        default:
+            order = 'DESC NULLS LAST';
+            baseField = innerField = 'course.ctr';
+            break;
+        }
         this.baseQuery_
-            .order(`course_option.total_cost ${order}`, null);
+            .order(`${baseField} ${order}`, null);
         this.innerQuery_
-            .order(`min(course_option.total_cost) ${order}`, null);
+            .order(`${innerField} ${order}`, null);
     }
 
     /**

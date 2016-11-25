@@ -42,8 +42,8 @@ goog.scope(function() {
 
         this.initDom();
         this.initParams();
+        this.initStylization_();
     };
-
 
     /**
      * Get params for authentication
@@ -106,6 +106,7 @@ goog.scope(function() {
      *         vk: string,
      *         fb: string
      *     },
+     *     modifier: string,
      *     type: string
      * }}
      * @protected
@@ -117,7 +118,17 @@ goog.scope(function() {
                 vk: rawParams['authSocialLinks']['vk'],
                 fb: rawParams['authSocialLinks']['fb']
             },
+            modifier: rawParams['modifier'],
             type: rawParams['type']
         };
+    };
+
+
+    /**
+     * Init stylization
+     * @private
+     */
+    View.prototype.initStylization_ = function() {
+        this.modifier_ = this.modifier_ || this.params.modifier;
     };
 });  // goog.scope

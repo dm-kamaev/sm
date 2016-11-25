@@ -17,19 +17,6 @@ let service = {
 };
 
 /**
- * Get one category by their id
- * @param {number} categoryId
- * @return {models.CourseCategory}
- */
-service.getOne = async(function(categoryId) {
-    return models.CourseCategory.findOne({
-        where: {
-            id: categoryId
-        }
-    });
-});
-
-/**
  * Delete alias for given course category
  * @param {models.CourseCategory} courseCategory
  */
@@ -97,7 +84,7 @@ service.getByAlias = async(function(alias) {
         category = null;
 
     if (page) {
-        category = await(service.getOne(page.entityId));
+        category = await(service.getById(page.entityId));
 
         if (!category.isActive) {
             category = null;
@@ -128,7 +115,11 @@ service.getById = async(function(id) {
  * @return {CourseCategory}
  */
 service.create = async(function(data) {
-    return await(models.CourseCategory.create(data));
+    return await(models.CourseCategory.create({
+        name: data.name,
+        isActive: data.isActive,
+        filters: data.filters
+    }));
 });
 
 /**
@@ -141,7 +132,11 @@ service.create = async(function(data) {
  * @return {number}
  */
 service.update = async(function(id, data) {
-    return await(models.CourseCategory.update(data, {
+    return await(models.CourseCategory.update({
+        name: data.name,
+        isActive: data.isActive,
+        filters: data.filters
+    }, {
         where: {
             id: id
         },

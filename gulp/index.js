@@ -3,6 +3,7 @@ module.exports = function(gulpHelper) {
         compile: require('./taskCompile')(gulpHelper),
         createTimestamp: require('./taskCreateTimestamp')(gulpHelper),
         debug: require('./taskDebug')(gulpHelper),
-        scripts: require('./taskScripts')(gulpHelper)
+        scripts: require('./taskScripts')(gulpHelper),
+        svgSprite: require('./taskSvgSprite')
     };
 };
