@@ -149,6 +149,14 @@
                     ]/}
                 {/call}
 
+            {case 'switch-labels'}
+                {call .renderChild}
+                    {param params: [
+                        'type': 'lSearch-filterSwitchLabels',
+                        'renderParams': $params
+                    ]/}
+                {/call}
+
             {case 'dropdown'}
                 {call .renderChild}
                     {param params: [

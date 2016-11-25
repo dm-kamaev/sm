@@ -245,6 +245,9 @@ goog.scope(function() {
             case sm.lSearch.bFilter.FilterExtended.isControl(element) :
                 type = 'lSearch-filterExtended';
                 break;
+            case sm.lSearch.bFilter.FilterSwitchLabels.isControl(element) :
+                type = 'lSearch-filterSwitchLabels';
+                break;
             case sm.lSearch.bFilter.FilterSwitch.isControl(element) :
                 type = 'lSearch-filterSwitch';
                 break;

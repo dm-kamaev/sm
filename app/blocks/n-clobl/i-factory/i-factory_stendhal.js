@@ -100,12 +100,14 @@ goog.require('sm.lSearch.bFilter.FilterExtended');
 goog.require('sm.lSearch.bFilter.FilterInput');
 goog.require('sm.lSearch.bFilter.FilterLabels');
 goog.require('sm.lSearch.bFilter.FilterSwitch');
+goog.require('sm.lSearch.bFilter.FilterSwitchLabels');
 goog.require('sm.lSearch.bFilter.View');
 goog.require('sm.lSearch.bFilter.ViewDropdown');
 goog.require('sm.lSearch.bFilter.ViewExtended');
 goog.require('sm.lSearch.bFilter.ViewInput');
 goog.require('sm.lSearch.bFilter.ViewLabels');
 goog.require('sm.lSearch.bFilter.ViewSwitch');
+goog.require('sm.lSearch.bFilter.ViewSwitchLabels');
 goog.require('sm.lSearch.bFilterPanel.FilterPanel');
 goog.require('sm.lSearch.bFilterPanel.View');
 goog.require('sm.lSearch.bLabel.Label');
@@ -341,6 +343,10 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('lSearch-filterLabels', {
             control: sm.lSearch.bFilter.FilterLabels,
             view: sm.lSearch.bFilter.ViewLabels
+        })
+        .setControlListItem('lSearch-filterSwitchLabels', {
+            control: sm.lSearch.bFilter.FilterSwitchLabels,
+            view: sm.lSearch.bFilter.ViewSwitchLabels
         })
         .setControlListItem('lSearch-filterDropdown', {
             control: sm.lSearch.bFilter.FilterDropdown,

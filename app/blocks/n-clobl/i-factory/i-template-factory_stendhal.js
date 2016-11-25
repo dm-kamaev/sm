@@ -70,6 +70,7 @@ goog.require('sm.lSearch.bFilter.TemplateExtended');
 goog.require('sm.lSearch.bFilter.TemplateInput');
 goog.require('sm.lSearch.bFilter.TemplateLabels');
 goog.require('sm.lSearch.bFilter.TemplateSwitch');
+goog.require('sm.lSearch.bFilter.TemplateSwitchLabels');
 goog.require('sm.lSearch.bFilterPanel.Template');
 goog.require('sm.lSearch.bLabel.Template');
 goog.require('sm.lSearch.bSearchResults.Template');
@@ -355,6 +356,10 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'lSearch-filterLabels',
             sm.lSearch.bFilter.TemplateLabels.filter
+        )
+        .setTemplateListItem(
+            'lSearch-filterSwitchLabels',
+            sm.lSearch.bFilter.TemplateSwitchLabels.filter
         )
         .setTemplateListItem(
             'lSearch-filterDropdown',
