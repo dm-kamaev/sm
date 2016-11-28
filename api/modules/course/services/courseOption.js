@@ -42,6 +42,15 @@ let service = {
  * @return {CourseOption}
  */
 service.create = async(function(course, data) {
+    let departments = data.departments.map(department =>
+        !Number.isNaN(Number(department)) ?
+            department :
+            await(services.courseDepartment.findOrCreate(
+                course.brandId,
+                department
+            ))
+    );
+
     let transaction = await(sequelize.transaction());
 
     let courseOption;
@@ -71,14 +80,7 @@ service.create = async(function(course, data) {
                 transaction
             ));
         }
-        await(courseOption.setDepartments(data.departments.map(department =>
-            !Number.isNaN(Number(department)) ?
-                department :
-                await(services.courseDepartment.findOrCreate(
-                    course.brandId,
-                    department
-                ))
-        ), {
+        await(courseOption.setDepartments(departments, {
             transaction: transaction
         }));
 
