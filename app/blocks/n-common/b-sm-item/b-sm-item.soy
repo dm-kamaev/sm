@@ -507,7 +507,7 @@
  */
 {template .attributes kind="attributes"}
     {let $url kind="html"}
-        {if $params.data.url == 'minimal'}
+        {if $params.data.url}
             {$params.data.url}
         {else}
             {$params.data.alias}
