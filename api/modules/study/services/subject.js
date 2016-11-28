@@ -54,7 +54,9 @@ exports.get = async((subject, opt_option) => {
  * @return {Array<models.Subject>}
  */
 exports.getAll = async(function() {
-    return await(models.Subject.findAll());
+    return await(models.Subject.findAll({
+        raw: true
+    }));
 });
 
 exports.getOrCreate = async(name => {
