@@ -103,19 +103,6 @@ subjectView.getSubjects = function(results, subjects) {
     });
 };
 
-
-/**
- * Transform array of subjects to array of their id
- * @param {Array.<Object>} subjects
- * @return {Array.<number>}
- */
-subjectView.subjectIds = function(subjects) {
-    return subjects.map(subject => {
-        return subject.id;
-    });
-};
-
-
 /**
  * Generate filter of given type from subjects and their id's
  * @param {Array<(

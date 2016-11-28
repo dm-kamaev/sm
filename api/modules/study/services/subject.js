@@ -119,21 +119,3 @@ exports.listCityResults = async(() => {
         include: sequelizeInclude(includeParams)
     }));
 });
-
-/**
- * Get array with subject instances by array with their aliases
- * @param {Array.<string>} aliases
- * @return {Array.<Object>}
- */
-exports.getByAliases = async(function(aliases) {
-    var searchParams = {
-        where: {
-            alias: {
-                $in: aliases
-            }
-        },
-        attributes: ['id']
-    };
-
-    return await(models.Subject.findAll(searchParams));
-});
