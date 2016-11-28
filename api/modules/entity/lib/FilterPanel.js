@@ -387,6 +387,50 @@ class FilterPanel {
     }
 
     /**
+     * Transform array of models to options
+     * @param {Array<{
+     *     id: number,
+     *     name: string
+     * }>} models
+     * @return {Array<{
+     *     value: number,
+     *     label: string
+     * }>}
+     * @protected
+     */
+    getOptions(models) {
+        return models.map(this.getOption, this);
+    }
+
+    /**
+     * Create option from model
+     * @param {Object} model
+     * @return {{
+     *     value: number,
+     *     label: string
+     * }}
+     * @protected
+     */
+    getOption(model) {
+        return {
+            value: model.id,
+            label: this.getLabel(model)
+        };
+    }
+
+    /**
+     * Get label for option from model instance
+     * @param {Object} model
+     * @return {string}
+     * @protected
+     */
+    getLabel(model) {
+        return model.name;
+    }
+
+
+
+    /**
      * Init filter
      * @param {{
      *     filterName: string,
