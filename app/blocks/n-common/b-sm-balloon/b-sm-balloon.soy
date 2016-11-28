@@ -10,7 +10,8 @@
  *     subtitle: string,
  *     items: Array<{
  *         id: number,
- *         content: string,
+ *         name: string,
+ *         category: ?string,
  *         url: ?string
  *     }>,
  *     description: string
@@ -170,47 +171,13 @@
 {template .content_ kind="html"}
     <div class="{call .rootClass /}__section
         {sp}{call .rootClass /}__section_content">
-        {if length($params.data.items) == 1}
-            {call .item_ data="all" /}
-        {else}
-            {call .itemList_ data="all" /}
-        {/if}
+
+        {call .itemList_ data="all" /}
 
         {if $params.data.description}
             {call .description_ data="all" /}
         {/if}
     </div>
-{/template}
-
-
-
-/**
- * Item template for case, where ballon contain one link
- * @param params {{
- *     data: {
- *         items: Array<{
- *             url: string,
- *             content: string
- *         }>
- *     }
- * }}
- */
-{template .item_ kind="html"}
-    {let $customClasses kind="html"}
-        {call .rootClass /}__item
-    {/let}
-    {call .renderChild}
-        {param params: [
-            'type': 'smLink',
-            'renderParams': [
-                'data': $params.data.items[0],
-                'config': [
-                    'size': 'l',
-                    'customClasses': [$customClasses]
-                ]
-            ]
-        ] /}
-    {/call}
 {/template}
 
 
@@ -238,14 +205,14 @@
                     'items': $params.data.items,
                     'countItemsPerPage': 5,
                     'itemConfig': [
-                        'size': 'l'
+                        'theme': 'minimal'
                     ],
                     'listConfig': [
                         'theme': 'light'
                     ]
                 ],
                 'config': [
-                    'itemType': 'smLink',
+                    'itemType': 'smItem',
                     'customClasses': [$customClasses]
                 ]
             ]

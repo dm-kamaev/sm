@@ -20,7 +20,8 @@
  *         id: number,
  *         name: string
  *     }>,
- *     category: string
+ *     category: string,
+ *     url: ?string
  * }} sm.bSmItem.Template.Params.Data
  */
 
@@ -29,7 +30,8 @@
  * @typedef {{
  *     enableCover: boolean,
  *     stylizationModifier: string,
- *     customClasses: ?Array<string>
+ *     customClasses: ?Array<string>,
+ *     theme: ?string
  * }} sm.bSmItem.Template.Params.Config
  */
 
@@ -60,6 +62,7 @@
     {call .sections data="all" /}
 {/template}
 
+
 /**
  * sections
  * @param params {{
@@ -69,8 +72,9 @@
  * @protected
  */
 {template .sections}
-    {if $params.config.enableCover or
-        $params.config.stylizationModifier == 'experimental'}
+    {if ($params.config.enableCover or
+        $params.config.stylizationModifier == 'experimental')
+        and ($params.config.theme != 'minimal')}
         {call .sectionGroupCover data="all" /}
     {/if}
 
@@ -131,6 +135,7 @@
  * Iformation section group
  * @param params {{
  *     data: sm.bSmItem.Template.Params.Data
+ *     config: sm.bSmItem.Template.Params.Config
  * }}
  * @protected
  */
@@ -140,9 +145,13 @@
     {/let}
 
     {let $content kind="html"}
-        {call .sectionHeader data="all" /}
-        {call .sectionDescription data="all" /}
-        {call .sectionDetails data="all" /}
+        {if $params.config.theme == 'minimal'}
+            {call .sectionLink data="all" /}
+        {else}
+            {call .sectionHeader data="all" /}
+            {call .sectionDescription data="all" /}
+            {call .sectionDetails data="all" /}
+        {/if}
     {/let}
 
     {call .sectionGroup}
@@ -190,6 +199,30 @@
         >
     </div>
 {/template}
+
+
+/**
+ * Header
+ * @param params {{
+ *     data: {
+ *         id: number,
+ *         name: {
+ *             light: string,
+ *             bold: ?string
+ *         },
+ *         category: string,
+ *         url: string
+ *     }
+ * }}
+ * @protected
+ */
+{template .sectionLink}
+    <div class="{call .rootClass/}__section{sp}
+                {call .rootClass/}__section_link">
+    {$params.data.name.light}
+    </div>
+{/template}
+
 
 
 /**
@@ -467,13 +500,22 @@
  *             bold: ?string
  *         },
  *         category: string
- *         alias: string
- *     }
+ *         alias: ?string,
+ *         url: ?string
+ *     },
+ *     config: sm.bSmItem.Template.Params.Config
  * }}
  * @override
  */
 {template .attributes kind="attributes"}
-    {sp}href="/{$params.data.alias}"
+    {let $url kind="html"}
+        {if $params.data.url == 'minimal'}
+            {$params.data.url}
+        {else}
+            {$params.data.alias}
+        {/if}
+    {/let}
+    {sp}href="/{$url}"
     {sp}data-params="
         {call cl.iUtils.Utils.stringify}
             {param json: quoteKeysIfJs([

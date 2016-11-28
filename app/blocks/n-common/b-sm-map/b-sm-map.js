@@ -7,6 +7,7 @@ goog.provide('sm.bSmMap.SmMap');
 goog.require('cl.iControl.Control');
 goog.require('goog.Promise');
 goog.require('sm.bSmBalloon.SmBalloon');
+goog.require('sm.bSmMap.Event.PinClick');
 goog.require('sm.bSmMap.IPresetGenerator');
 goog.require('sm.iSmViewport.SmViewport');
 
@@ -91,7 +92,8 @@ goog.scope(function() {
      */
     Map.Event = {
       READY: 'ready',
-      ITEM_NAME_CLICK: 'item-name-click'
+      ITEM_NAME_CLICK: 'item-name-click',
+      PIN_CLICK: sm.bSmMap.Event.PinClick.Type
     };
 
 
@@ -286,6 +288,7 @@ goog.scope(function() {
      */
     Map.prototype.createBalloonComponent_ = function(params, balloonElement) {
         var renderParams = sm.bSmBalloon.SmBalloon.getRenderParams(params);
+
         this.setBalloon_(
             this.renderChild(
                 'smBalloon',
@@ -684,6 +687,7 @@ goog.scope(function() {
                     this.initBalloon_();
                     this.addEventListeners_();
                     this.setBalloonOffset_();
+                    this.dispatchDataForAnalitics_();
                 },
                 'clear': function() {
                     this.removeEventListeners_();
@@ -753,6 +757,12 @@ goog.scope(function() {
                 },
                 setBalloonOffset_: function() {
                     mapInstance.getView().setBalloonOffset(this.element_);
+                },
+                dispatchDataForAnalitics_: function() {
+                    var event = new sm.bSmMap.Event.PinClick(
+                        this.getData().object.properties
+                    );
+                    mapInstance.dispatchEvent(event);
                 }
             }
         );
@@ -1006,6 +1016,7 @@ goog.scope(function() {
         }
         return behaviors;
     };
+
 
     /**
      * Generate position parameters for initialization of yandex map

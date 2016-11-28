@@ -172,6 +172,8 @@ controller.information = async(function(req, res, next) {
                     categoryAliases: services.courseCategory.getAliases()
                 });
 
+                course.categories = data.categories;
+
                 let templateData = informationView.render({
                     user: user,
                     fbClientId: FB_CLIENT_ID,

@@ -217,6 +217,9 @@ view.pageMap = function(course) {
                 },
                 items: [],
                 description: address.name,
+                id: course.id,
+                courseName: course.name,
+                category: course.categories[0].name,
                 score: course.totalScore
             };
         })
@@ -348,7 +351,10 @@ view.getAddresses = function(courseOptions) {
  *     subtitle: string,
  *     items: Array<{
  *         id: number,
- *         content: string,
+ *         name: {
+ *             light: string,
+ *             bold: ?string
+ *         },
  *         url: null
  *     }>
  * }}
@@ -378,14 +384,20 @@ view.getMapItem = function(course) {
  * @param  {Object} course
  * @return {{
  *     id: number,
- *     content: string,
+ *     name: {
+ *         light: string,
+ *         bold: ?string
+ *     },
  *     url: string
  * }}
  */
 view.mapCourse = function(course) {
     return {
         id: course.id,
-        content: course.name,
+        name: {
+            light: course.name
+        },
+        category: course.categoryAlias,
         url: this.generateAlias(
             course.alias,
             course.brandAlias,

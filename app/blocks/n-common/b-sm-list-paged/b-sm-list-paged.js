@@ -162,6 +162,15 @@ goog.scope(function() {
 
 
     /**
+     * Get items list
+     * @return {sm.bSmItemList.SmItemList}
+     */
+    ListPaged.prototype.getList = function() {
+        return this.list_;
+    }
+
+
+    /**
      * Initializes links Listeners
      * @private
      */
