@@ -112,9 +112,13 @@ service.getByCourseId = async(function(courseId) {
             model: models.CourseDepartment,
             as: 'departments',
             through: 'course_option_course_department'
+        }, {
+            model: models.Course,
+            as: 'course'
         }]
     }));
 });
+
 
 /**
  * @param  {number} id
@@ -132,6 +136,9 @@ service.getById = async(function(id) {
             model: models.CourseDepartment,
             as: 'departments',
             through: 'course_option_course_department'
+        }, {
+            model: models.Course,
+            as: 'course'
         }]
     }));
 });
