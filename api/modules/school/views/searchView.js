@@ -4,8 +4,13 @@ const lodash = require('lodash');
 const olympResultView = require('../../study/views/olimpResultView'),
     egeResultView = require('../../study/views/egeResultView'),
     giaResultView = require('../../study/views/giaResultView'),
+    subjectView = require('../../study/views/subjectView'),
     activityView = require('./activityView'),
-    specializedClassesView = require('./specializedClassesView');
+    specializedClassesView = require('./specializedClassesView'),
+    userView = require('../../user/views/user'),
+    schoolView = require('./schoolView');
+
+const FilterPanel = require('../lib/SchoolFilterPanel');
 
 const searchViewEntity = require('../../entity/views/searchView');
 
@@ -15,11 +20,6 @@ const filterName = require('../enums/filterName'),
     searchTypeEnum = require('../enums/searchType');
 
 const FormatUtils = require('../../entity/lib/FormatUtils');
-
-// FilterPanel = require('../lib/SchoolFilterPanel');
-
-const userView = require('../../user/views/user'),
-    schoolView = require('./schoolView');
 
 // favoriteView = require('../../favorite/views/favoriteView');
 
@@ -48,6 +48,14 @@ searchView.render = function(data) {
     let aliasedSchools = schoolView.joinAliases(
         data.schoolsList, data.schoolAliases
     );
+
+    let filtersData = {
+        [filterName.OLYMPIAD]: subjectView.getSubjects(
+            data.filtersData.olympiadSubjects, data.filtersData.subjects
+        ),
+        [filterName.EGE]: egeResultView.getFilterData(data.filtersData),
+        [filterName.GIA]: giaResultView.getFilterData(data.filtersData)
+    };
 
     return {
         seo: {
@@ -111,20 +119,20 @@ searchView.render = function(data) {
                 defaultOpenerText: 'по средней оценке',
                 content: {
                     items: [{
-                        'label': 'по средней оценке',
-                        'value': 0
+                        label: 'по средней оценке',
+                        value: 0
                     }, {
-                        'label': 'по образованию',
-                        'value': 1
+                        label: 'по образованию',
+                        value: 1
                     }, {
-                        'label': 'по преподавателям',
-                        'value': 2
+                        label: 'по преподавателям',
+                        value: 2
                     }, {
-                        'label': 'по атмосфере',
-                        'value': 3
+                        label: 'по атмосфере',
+                        value: 3
                     }, {
-                        'label': 'по инфраструктуре',
-                        'value': 4
+                        label: 'по инфраструктуре',
+                        value: 4
                     }]
                 }
             },
@@ -134,7 +142,7 @@ searchView.render = function(data) {
             }
         },
         filterPanel: searchView.filterPanel({
-            filtersData: data.filtersData,
+            filtersData: filtersData,
             searchParams: data.searchParams
         }),
         searchParams: data.searchParams
@@ -155,7 +163,7 @@ searchView.initSearchParams = function(params) {
             formatUtils.transformToArray(params.schoolType),
         [filterName.EGE]: formatUtils.transformToArray(params.ege),
         [filterName.GIA]: formatUtils.transformToArray(params.gia),
-        [filterName.OLIMP]: formatUtils.transformToArray(params.olimp),
+        [filterName.OLYMPIAD]: formatUtils.transformToArray(params.olimp),
         [filterName.SPECIALIZED_CLASS_TYPE]:
             formatUtils.transformToArray(params.specializedClassType),
         [filterName.ACTIVITY_SPHERE]:
@@ -222,11 +230,10 @@ searchView.initSearchParams = function(params) {
  * }}
  */
 searchView.filterPanel = function(data) {
-    // let filterPanel = new FilterPanel();
-    // filterPanel.init(data);
+    let filterPanel = new FilterPanel();
+    filterPanel.init(data);
 
-    // return filterPanel.getParams();
-    return {};
+    return filterPanel.getParams();
 };
 
 
