@@ -61,3 +61,13 @@
 .b-sm-item__description {
     display: inline-block;
 }
+
+.b-sm-item_minimal-theme {
+    padding: 0px;
+    width: auto;
+    color: #356fc4;
+
+    &:hover {
+        color: #ff0000;
+    }
+}

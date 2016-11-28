@@ -2,12 +2,15 @@ goog.provide('sm.bSmBalloon.View');
 
 goog.require('cl.iControl.View');
 goog.require('goog.array');
+goog.require('goog.dom.dataset');
+goog.require('sm.bSmItem.View');
 goog.require('sm.bSmLink.View');
 
 
 
 goog.scope(function() {
-    var Link = sm.bSmLink.View;
+    var Link = sm.bSmLink.View,
+        Item = sm.bSmItem.View;
 
 
 
@@ -90,7 +93,10 @@ goog.scope(function() {
                     url: title['url']
                 },
                 subtitle: rawParams['subtitle'],
-                items: View.getItemsRenderParams(rawParams['items']),
+                items: goog.array.map(rawParams['items'],
+                    function(rawLinkParams) {
+                        return Item.getRenderParams(rawLinkParams).data;
+                    }),
                 description: rawParams['description']
             }
         };
@@ -150,6 +156,7 @@ goog.scope(function() {
             goog.events.EventType.CLICK,
             this.onCloseButtonClick_
         );
+
         if (dom.titleLink) {
             handler.listen(
                 dom.titleLink,
@@ -189,9 +196,6 @@ goog.scope(function() {
             ),
             titleLink: this.getElementByClass(
                 View.CssClass.TITLE_LINK
-            ),
-            item: this.getElementByClass(
-                View.CssClass.ITEM
             ),
             itemList: this.getElementByClass(
                 View.CssClass.ITEM_LIST
