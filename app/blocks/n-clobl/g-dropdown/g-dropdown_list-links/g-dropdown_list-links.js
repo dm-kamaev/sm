@@ -64,6 +64,7 @@ goog.scope(function() {
 
     /**
      * @param {Element} element
+     * @protected
      * @override
      */
     Dropdown.prototype.decorateInternal = function(element) {
@@ -74,6 +75,7 @@ goog.scope(function() {
 
 
     /**
+     * @public
      * @override
      */
     Dropdown.prototype.enterDocument = function() {

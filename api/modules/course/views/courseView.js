@@ -12,7 +12,8 @@ const scoreView = require('../../entity/views/scoreView'),
     CourseOptionsTransformer = require('../lib/CourseOptionsTransformer'),
     pageView = require('../../entity/views/pageView');
 
-const entityType = require('../../../../api/modules/entity/enums/entityType');
+const entityType = require('../../../../api/modules/entity/enums/entityType'),
+    groupSizeTraining = require('../enums/groupSizeTraining');
 
 
 let view = {};
@@ -417,7 +418,11 @@ view.getListCourse = function(course) {
             course.totalScore
         ),
         cost: course.optionCost,
-        online: course.optionOnline ? 'only' : null,
+        online: course.optionOnline ? {
+            value: groupSizeTraining.ONLINE,
+            type: 'only'
+        } :
+        {},
         addresses: [course.addressId],
         metro: course.metroId ? [{
             id: course.metroId,
@@ -442,10 +447,13 @@ view.joinListCourse = function(existingCourse, newCourse) {
         existingCourse.cost = newCourse.optionCost;
     }
 
-    if (existingCourse.online === 'only' && !newCourse.optionOnline ||
-        !existingCourse.online && newCourse.optionOnline
+    if (existingCourse.online.type === 'only' && !newCourse.optionOnline ||
+        !existingCourse.online.type && newCourse.optionOnline
     ) {
-        existingCourse.online = 'available';
+        existingCourse.online = {
+            value: groupSizeTraining.ONLINE,
+            type: 'available'
+        };
     }
 
     if (newCourse.areaId &&

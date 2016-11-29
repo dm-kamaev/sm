@@ -69,7 +69,8 @@
  * @protected
  */
 {template .sections}
-    {if $params.config.enableCover}
+    {if $params.config.enableCover or
+        $params.config.stylizationModifier == 'experimental'}
         {call .sectionGroupCover data="all" /}
     {/if}
 
@@ -401,7 +402,8 @@
                         'items': $params.data.metro,
                     ],
                     'config': [
-                        'type': 'metro',
+                        'searchType': 'metroId',
+                        'searchByName': true,
                         'iconName': 'metro',
                         'iconType': 'svg',
                         'entityType': $params.data.type
@@ -434,7 +436,8 @@
                         'items': $params.data.area,
                     ],
                     'config': [
-                        'type': 'area',
+                        'searchType': 'areaId',
+                        'searchByName': true,
                         'iconName': 'location',
                         'entityType': $params.data.type
                     ]

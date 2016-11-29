@@ -90,8 +90,7 @@ controller.search = async(function(req, res, next) {
                 seoParams: data.seoParams,
                 currentCategory: categoryName,
                 categories: data.categories,
-                categoryAliases: aliases.categories,
-                factory: factory
+                categoryAliases: aliases.categories
             });
 
             let html = soy.render(

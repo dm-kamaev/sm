@@ -100,6 +100,7 @@ goog.scope(function() {
             data: {
                 id: rawParams['id'],
                 type: rawParams['type'],
+                imageUrl: rawParams['imageUrl'],
                 name: {
                     light: name['light'],
                     bold: name['bold']

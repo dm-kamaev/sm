@@ -71,7 +71,7 @@ module.exports = class {
             name: 'Пакет'
         }];
 
-        this.globalOptions_ = ['schedule', 'totalCost', 'name'];
+        this.globalOptions_ = ['totalCost', 'name'];
     }
 
     /**
@@ -204,10 +204,8 @@ module.exports = class {
      * @return {Object}
      */
     transformOption_(option) {
-        let scheduleKey = this.globalOptions_[0],
-            costKey = this.globalOptions_[1],
-            nameKey = this.globalOptions_[2],
-            titleKey = option[nameKey] ? nameKey : scheduleKey;
+        let costKey = this.globalOptions_[0],
+            titleKey = this.globalOptions_[1];
         return {
             title: {
                 key: titleKey,
@@ -334,22 +332,31 @@ module.exports = class {
      * @return {string}
      */
     formatSchedule_(schedule) {
-        return schedule.map(item =>
-            WEEK_DAYS[item.day] + ' ' + this.formatTime_(item.startTime) +
-                '—' + this.formatTime_(item.endTime)
-        ).join(', ');
+        return schedule
+            .sort((previousSchedule, currentSchedule) =>
+                previousSchedule.day > currentSchedule.day
+            )
+            .map(item => {
+                let weekday = WEEK_DAYS[item.day],
+                    startTime = this.formatTime_(item.startTime),
+                    endTime = item.endTime ?
+                        `—${this.formatTime_(item.endTime)}` :
+                        '';
+                return `${weekday} ${startTime}${endTime}`;
+            })
+            .join(', ');
     }
 
     /**
      * @private
      * @param  {string} time
-     * @return {string}
+     * @return {string|null}
      */
     formatTime_(time) {
-        let result = time.split(':'),
+        let result = time && time.split(':') || ['', ''],
             hour = result[0],
             minute = result[1];
-        return hour + ':' + minute;
+        return time ? hour + ':' + minute : null;
     }
 
     /**

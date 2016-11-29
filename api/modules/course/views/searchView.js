@@ -13,8 +13,6 @@ const filterName = require('../enums/filterName'),
     mapViewType = require('../../entity/enums/mapViewType'),
     entityType = require('../../entity/enums/entityType');
 
-const factoryName = require('../../../../app/components/enum/factoryName');
-
 let searchView = {};
 
 /**
@@ -93,8 +91,7 @@ searchView.filterPanel = function(data) {
  *     seoParams: Object,
  *     currentCategory: string,
  *     categories: Array<Object>,
- *     categoryAliases: Array<Object>,
- *     factory: string
+ *     categoryAliases: Array<Object>
  * }} data
  * @return {Object}
  */
@@ -186,10 +183,7 @@ searchView.render = function(data) {
             },
             entityList: {
                 items: courses,
-                itemType: 'smItemEntity',
-                itemConfig: {
-                    enableCover: data.factory == factoryName.EXPERIMENTAL
-                }
+                itemType: 'smItemEntity'
             }
         },
         filterPanel: searchView.filterPanel({
