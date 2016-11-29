@@ -9,11 +9,12 @@
  */
 
 
- /**
+/**
  * @typedef {{
  *     stylizationModifier: string,
+ *     iconName: (string|undefined),
  *     customClasses: (Array<string>|undefined),
- *     theme: (string|undefined),
+ *     theme: ('rectangle'|undefined),
  *     isChangingOpenerText: (boolean|undefined)
  * }} sm.gDropdown.TemplateSelect.Params.Config
  */
@@ -43,6 +44,7 @@
  *     },
  *     config: {
  *         openerSize: ('m'|'xl'|undefined),
+ *         iconName: (string|undefined),
  *         isChangingOpenerText: (boolean|undefined)
  *     }
  * }}
@@ -58,6 +60,9 @@
  * @param params {{
  *     data: {
  *         opener: string
+ *     },
+ *     config: {
+ *         iconName: (string|undefined)
  *     }
  * }}
  * @protected
@@ -65,7 +70,7 @@
 {template .openerContent}
     <div class="{call .rootClass/}__opener-content">
         {call .openerText data="all" /}
-        {call .openerIcon/}
+        {call .openerIcon data="all" /}
     </div>
 {/template}
 
@@ -88,6 +93,11 @@
 
 /**
  * Icon of opener
+ * @param params {{
+ *     config: {
+ *         iconName: (string|undefined)
+ *     }
+ * }}
  * @protected
  */
 {template .openerIcon}
@@ -97,7 +107,7 @@
                 'type': 'icon',
                 'renderParams': [
                     'data': [
-                        'type': 'opener-arrow'
+                        'type': $params.config.iconName ?: 'opener-arrow'
                     ]
                 ]
             ]/}
@@ -164,4 +174,3 @@
         ]) /}
     {/call}"
 {/template}
-

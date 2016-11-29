@@ -35,7 +35,7 @@ goog.inherits(sm.lSearch.bFilter.FilterDropdown, sm.lSearch.bFilter.Filter);
 
 
 goog.scope(function() {
-    var Filter = sm.lSearch.bFilter.FilterDropdown,
+    var FilterDropdown = sm.lSearch.bFilter.FilterDropdown,
         View = sm.lSearch.bFilter.ViewDropdown;
 
 
@@ -44,7 +44,7 @@ goog.scope(function() {
      * @param {Element} element
      * @return {boolean}
      */
-    Filter.isControl = function(element) {
+    FilterDropdown.isControl = function(element) {
         return goog.dom.classlist.contains(
             element,
             View.CssClass.ROOT
@@ -56,37 +56,20 @@ goog.scope(function() {
      * Event enum
      * @enum {string}
      */
-    Filter.Event = {
+    FilterDropdown.Event = {
         CHECK_OPTION: sm.lSearch.bFilter.Filter.Event.CHECK_OPTION,
         UNCHECK_OPTION: sm.lSearch.bFilter.Filter.Event.UNCHECK_OPTION,
         CHECK: sm.lSearch.bFilter.Filter.Event.CHECK,
-        UNCHECK: sm.lSearch.bFilter.Filter.Event.UNCHECK,
-        SUBMIT: sm.lSearch.bFilter.Filter.Event.SUBMIT
-    };
-
-
-    /**
-     * @override
-     * @param {Element} element
-     */
-    Filter.prototype.decorateInternal = function(element) {
-        Filter.base(this, 'decorateInternal', element);
-    };
-
-
-    /**
-     * @override
-     */
-    Filter.prototype.enterDocument = function() {
-        Filter.base(this, 'enterDocument');
+        UNCHECK: sm.lSearch.bFilter.Filter.Event.UNCHECK
     };
 
 
     /**
      * Reset options filters
+     * @override
      * @public
      */
-    Filter.prototype.reset = function() {
+    FilterDropdown.prototype.reset = function() {
         this.list_.reset();
     };
 
@@ -94,10 +77,29 @@ goog.scope(function() {
     /**
      * Return true if selected at least one option, else return false
      * @return {boolean}
+     * @override
      * @public
      */
-    Filter.prototype.isChecked = function() {
+    FilterDropdown.prototype.isChecked = function() {
         return this.list_.isSelected();
+    };
+
+
+    /**
+     * Check option
+     * @param {{
+     *     value: (string|number),
+     *     label: string,
+     *     name: string,
+     *     isChecked: boolean
+     * }} data
+     * @override
+     * @public
+     */
+    FilterDropdown.prototype.checkOption = function(data) {
+        var itemId = this.list_.getItemId(data.value);
+
+        this.list_.selectItem(itemId);
     };
 
 
@@ -109,9 +111,10 @@ goog.scope(function() {
      *     name: string,
      *     isChecked: boolean
      * }>}
+     * @override
      * @public
      */
-    Filter.prototype.getCheckedData = function() {
+    FilterDropdown.prototype.getCheckedData = function() {
         var itemData = this.list_.getSelectedItemData();
 
         itemData.isChecked = true;
@@ -122,49 +125,21 @@ goog.scope(function() {
 
 
     /**
-     * Get all options data
-     * @return {Array<{Object}>}
-     * @public
-     */
-    Filter.prototype.getAllData = function() {
-        return this.allOptionsData;
-    };
-
-
-    /**
-     * Get filter name
-     * @return {string}
-     * @public
-     */
-    Filter.prototype.getName = function() {
-        return this.params.name;
-    };
-
-
-    /**
-     * Get filter type
-     * @return {string}
-     * @public
-     */
-    Filter.prototype.getType = function() {
-        return this.params.type;
-    };
-
-
-    /**
      * Set all options data
+     * @override
      * @protected
      */
-    Filter.prototype.setAllData = function() {
+    FilterDropdown.prototype.setAllData = function() {
         this.allOptionsData = [];
     };
 
 
     /**
      * Initializes listeners for options
+     * @override
      * @protected
      */
-    Filter.prototype.initOptionsListeners = function() {
+    FilterDropdown.prototype.initOptionsListeners = function() {
         this.getHandler().listen(
             this.list_,
             sm.gDropdown.DropdownSelect.Event.ITEM_SELECT,
@@ -176,30 +151,16 @@ goog.scope(function() {
     /**
      * Handler for option check
      * @param {Object} event
+     * @override
      * @protected
      */
-    Filter.prototype.onListItemChange = function(event) {
+    FilterDropdown.prototype.onListItemChange = function(event) {
         if (this.isChecked()) {
             this.dispatchEventCheckOption(event.data);
         } else {
-            this.dispatchEventUncheckOption();
+            this.dispatchEventUncheckOption(event.data);
         }
         this.dispatchEventChangeOptions();
-    };
-
-
-    /**
-     * Dispatch event if state options changed
-     * @protected
-     */
-    Filter.prototype.dispatchEventChangeOptions = function() {
-        var type = this.isChecked() ?
-            Filter.Event.CHECK :
-            Filter.Event.UNCHECK;
-
-        this.dispatchEvent({
-            'type': type
-        });
     };
 
 
@@ -209,11 +170,12 @@ goog.scope(function() {
      *     value: (string|number),
      *     label: string
      * }} optionData
+     * @override
      * @protected
      */
-    Filter.prototype.dispatchEventCheckOption = function(optionData) {
+    FilterDropdown.prototype.dispatchEventCheckOption = function(optionData) {
         this.dispatchEvent({
-            'type': Filter.Event.CHECK_OPTION,
+            'type': FilterDropdown.Event.CHECK_OPTION,
             'data': optionData
         });
     };
@@ -221,20 +183,27 @@ goog.scope(function() {
 
     /**
      * Dispatch event if uncheck option
+     * @param {{
+     *     value: (string|number),
+     *     label: string
+     * }} optionData
+     * @override
      * @protected
      */
-    Filter.prototype.dispatchEventUncheckOption = function() {
+    FilterDropdown.prototype.dispatchEventUncheckOption = function(optionData) {
         this.dispatchEvent({
-            'type': Filter.Event.UNCHECK_OPTION
+            'type': FilterDropdown.Event.UNCHECK_OPTION,
+            'data': optionData
         });
     };
 
 
     /**
      * Initializes list with options
+     * @override
      * @protected
      */
-    Filter.prototype.initOptions = function() {
+    FilterDropdown.prototype.initOptions = function() {
         this.list_ = this.decorateChild(
             'dropdown-select',
             this.getView().getDom().list

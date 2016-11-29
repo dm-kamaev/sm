@@ -100,6 +100,19 @@ goog.scope(function() {
 
 
     /**
+     * Get id on list item (index in array)
+     * @param {number} value
+     * @return {number}
+     * @public
+     */
+    Dropdown.prototype.getItemId = function(value) {
+        return goog.array.findIndex(this.params.items, function(item) {
+            return item.value == value;
+        });
+    };
+
+
+    /**
      * Get value on list item
      * @param {number} itemId
      * @return {?string}
@@ -133,7 +146,8 @@ goog.scope(function() {
         this.setSelectedItemData(null);
         this.list.deselectAll();
 
-        this.getView().changeOpenerText(this.params.opener);
+        var lastItem = this.params.items[this.params.items.length - 1];
+        this.getView().changeOpenerText(lastItem.label);
     };
 
 
@@ -144,6 +158,19 @@ goog.scope(function() {
      */
     Dropdown.prototype.isSelected = function() {
         return !goog.object.isEmpty(this.selectedItemData);
+    };
+
+
+    /**
+     * Select item
+     * @param {number} itemId
+     * @public
+     */
+    Dropdown.prototype.selectItem = function(itemId) {
+        this.setSelectedItemData(itemId);
+
+        var openerText = this.generateOpenerText(itemId);
+        this.getView().changeOpenerText(openerText);
     };
 
 
@@ -186,13 +213,11 @@ goog.scope(function() {
      */
     Dropdown.prototype.onListItemSelect = function(event) {
         var itemId = event['itemId'];
-        this.setSelectedItemData(itemId);
+
+        this.selectItem(itemId);
 
         var event = new Event.ItemSelect(this.getSelectedItemData(), this);
         this.dispatchEvent(event);
-
-        var openerText = this.generateOpenerText(itemId);
-        this.getView().changeOpenerText(openerText);
     };
 
 
