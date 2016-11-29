@@ -25,8 +25,12 @@
     float: right;
 }
 
-.b-filter-panel__filter {
+.b-filter-panel__filter-wrap {
     border-bottom: 1px solid #e5e5e5;
+}
+
+.b-filter-panel__filter-wrap_classes {
+    border-bottom: none;
 }
 
 .b-filter-panel__filters-list {

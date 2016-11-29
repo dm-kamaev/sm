@@ -3,9 +3,6 @@ goog.provide('sm.lSearch.bFilterPanel.View');
 goog.require('cl.iControl.View');
 goog.require('cl.iUtils.Utils');
 goog.require('goog.dom.classlist');
-goog.require('sm.lSearchResult.bFilter.Filter');
-goog.require('sm.lSearchResult.bFilter.FilterClasses');
-goog.require('sm.lSearchResult.bFilter.FilterExtended');
 
 
 
@@ -38,6 +35,7 @@ goog.scope(function() {
         EXPANDER: 'b-filter-panel__expander',
         COLLAPSER: 'b-filter-panel__collapser',
         CONTENT: 'b-filter-panel__content',
+        FILTER: 'b-filter-panel__filter',
         RESET: 'b-filter-panel__reset'
     };
 
@@ -169,34 +167,27 @@ goog.scope(function() {
 
     /**
      * Initializes dom elements
-     * @param {Element} element
      * @private
      */
-    View.prototype.initDom_ = function(element) {
+    View.prototype.initDom_ = function() {
         this.dom = {
             content: this.getElementByClass(
-                View.CssClass.CONTENT,
-                element
+                View.CssClass.CONTENT
             ),
             filters: this.getElementsByClass(
-                sm.lSearch.bFilter.View.CssClass.ROOT,
-                element
+                View.CssClass.FILTER
             ),
             expander: this.getElementByClass(
-                View.CssClass.EXPANDER,
-                element
+                View.CssClass.EXPANDER
             ),
             button: this.getElementByClass(
-                cl.gButton.View.CssClass.ROOT,
-                element
+                cl.gButton.View.CssClass.ROOT
             ),
             reset: this.getElementByClass(
-                View.CssClass.RESET,
-                element
+                View.CssClass.RESET
             ),
             collapser: this.getElementByClass(
-                View.CssClass.COLLAPSER,
-                element
+                View.CssClass.COLLAPSER
             )
         };
     };

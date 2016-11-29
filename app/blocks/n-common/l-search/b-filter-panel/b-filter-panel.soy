@@ -106,73 +106,62 @@
 /**
  * Filters
  * @param params {{
- *     data: {
- *         filters: Array<{
- *             data: (
- *                 sm.lSearch.bFilter.Template.Params.Data|
- *                 sm.lSearch.bFilter.TemplateExtended.Params.Data|
- *                 sm.lSearch.bFilter.TemplateSwitch.Params.Data|
- *                 sm.lSearch.bFilter.TemplateInput.Params.Data|
- *                 sm.lSearch.bFilter.TemplateDropdown.Params.Data
- *             ),
- *             config: {
- *                 type: (string|undefined)
- *             }
- *         }>
+ *     data: (sm.lSearch.bFilter.Template.Params.Data|
+ *         sm.lSearch.bFilter.TemplateExtended.Params.Data|
+ *         sm.lSearch.bFilter.TemplateSwitch.Params.Data|
+ *         sm.lSearch.bFilter.TemplateInput.Params.Data|
+ *         sm.lSearch.bFilter.TemplateDropdown.Params.Data
+ *     ),
+ *     config: {
+ *         type: (string|undefined)
  *     }
  * }}
  */
 {template .filter_}
-    <div class="{call .rootClass/}__filter">
+    {let $classes kind="html"}
+        {call .rootClass/}__filter-wrap{sp}
+
+        {if $params?.config?.type}
+            {call .rootClass/}__filter-wrap_{$params?.config?.type}
+        {/if}
+    {/let}
+
+    {let $type kind="html"}
         {switch $params?.config?.type}
             {case 'extended'}
-                {call .renderChild}
-                    {param params: [
-                        'type': 'lSearch-filterExtended',
-                        'renderParams': $params
-                    ]/}
-                {/call}
-
+                lSearch-filterExtended
             {case 'switch'}
-                {call .renderChild}
-                    {param params: [
-                        'type': 'lSearch-filterSwitch',
-                        'renderParams': $params
-                    ]/}
-                {/call}
-
+                lSearch-filterSwitch
             {case 'input'}
-                {call .renderChild}
-                    {param params: [
-                        'type': 'lSearch-filterInput',
-                        'renderParams': $params
-                    ]/}
-                {/call}
-
+                lSearch-filterInput
             {case 'switch-labels'}
-                {call .renderChild}
-                    {param params: [
-                        'type': 'lSearch-filterSwitchLabels',
-                        'renderParams': $params
-                    ]/}
-                {/call}
-
+                lSearch-filterSwitchLabels
             {case 'dropdown'}
-                {call .renderChild}
-                    {param params: [
-                        'type': 'lSearch-filterDropdown',
-                        'renderParams': $params
-                    ]/}
-                {/call}
-
+                lSearch-filterDropdown
+            {case 'classes'}
+                lSearch-filterClasses
             {default}
-                {call .renderChild}
-                    {param params: [
-                        'type': 'lSearch-filter',
-                        'renderParams': $params
-                    ]/}
-                {/call}
+                lSearch-filter
         {/switch}
+    {/let}
+
+    <div class="{$classes}">
+        {let $customClasses kind="html"}
+            {call .rootClass/}__filter
+        {/let}
+
+        {call .renderChild}
+            {param params: [
+                'type': $type,
+                'renderParams': [
+                    'data': $params.data,
+                    'config': augmentMap(
+                        $params.config,
+                        ['customClasses': [$customClasses]]
+                    )
+                ]
+            ]/}
+        {/call}
     </div>
 {/template}
 

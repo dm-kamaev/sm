@@ -257,6 +257,9 @@ goog.scope(function() {
             case sm.lSearch.bFilter.FilterDropdown.isControl(element) :
                 type = 'lSearch-filterDropdown';
                 break;
+            case sm.lSearch.bFilter.FilterClasses.isControl(element) :
+                type = 'lSearch-filterClasses';
+                break;
             default:
                 type = 'lSearch-filter';
         }
