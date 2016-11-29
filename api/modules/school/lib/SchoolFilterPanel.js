@@ -23,7 +23,7 @@ class SchoolFilterPanel extends FilterPanel {
         this.filterClasses_ = {
             data: {
                 header: {
-                    title: 'В какой класс Вы хотите отдать ребенка?'
+                    title: 'Класс'
                 },
                 options: new Array(12),
                 name: filterName.CLASSES,
@@ -45,9 +45,7 @@ class SchoolFilterPanel extends FilterPanel {
                 },
                 name: filterName.SCHOOL_TYPE
             },
-            config: {
-                isShowed: true
-            }
+            config: {}
         };
 
         /**
@@ -65,9 +63,7 @@ class SchoolFilterPanel extends FilterPanel {
                 },
                 name: filterName.EGE
             },
-            config: {
-                isShowed: true
-            }
+            config: {}
         };
 
         /**
@@ -85,9 +81,7 @@ class SchoolFilterPanel extends FilterPanel {
                 },
                 name: filterName.GIA
             },
-            config: {
-                isShowed: true
-            }
+            config: {}
         };
 
         /**
@@ -102,9 +96,7 @@ class SchoolFilterPanel extends FilterPanel {
                 },
                 name: filterName.OLYMPIAD
             },
-            config: {
-                isShowed: true
-            }
+            config: {}
         };
 
         /**
@@ -118,12 +110,16 @@ class SchoolFilterPanel extends FilterPanel {
                     title: 'Профильные классы'
                 },
                 name: filterName.SPECIALIZED_CLASS_TYPE,
-                api: '/api/school/specializedClassType'
+                api: '/api/school/specializedClassType',
+                modal: {
+                    header: 'Профильные классы',
+                    placeholder: 'Какой профиль вы ищете?',
+                    filterHeader: 'Популярные профильные классы'
+                }
             },
             config: {
                 showMoreButtonText: 'Полный список',
-                optionsToShow: 3,
-                isShowed: true
+                optionsToShow: 3
             }
         };
 
@@ -138,12 +134,16 @@ class SchoolFilterPanel extends FilterPanel {
                     title: 'Курсы, кружки и секции'
                 },
                 name: filterName.ACTIVITY_SPHERE,
-                api: '/api/school/activitySphere'
+                api: '/api/school/activitySphere',
+                modal: {
+                    header: 'Курсы, кружки и секции',
+                    placeholder: 'Какие занятия вы ищете?',
+                    filterHeader: 'Популярные'
+                }
             },
             config: {
                 showMoreButtonText: 'Полный список',
-                optionsToShow: 3,
-                isShowed: true
+                optionsToShow: 3
             }
         };
     }
