@@ -33,6 +33,9 @@
 }
 
 .b-sm-filter__tooltip {
+    position: relative;
+    top: -2px;
+
     display: inline-block;
 
     margin-left: 8px;

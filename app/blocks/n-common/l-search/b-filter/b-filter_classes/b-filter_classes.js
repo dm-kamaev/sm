@@ -108,10 +108,12 @@ goog.scope(function() {
         var result = [];
 
         if (this.options.optionLabels.isChecked()) {
-            result.push(this.options.optionLabels.getCheckedData());
+            result = result.concat(this.options.optionLabels.getCheckedData());
         }
         if (this.options.optionKindergarten.isChecked()) {
-            result.push(this.options.optionKindergarten.getCheckedData());
+            result = result.concat(
+                this.options.optionKindergarten.getCheckedData()
+            );
         }
 
         return result;
