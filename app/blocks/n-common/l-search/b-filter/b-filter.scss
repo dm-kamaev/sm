@@ -29,13 +29,21 @@
 }
 
 .b-sm-filter__title {
-    display: inline-block;
+    display: inline;
 }
 
 .b-sm-filter__tooltip {
     display: inline-block;
 
     margin-left: 8px;
+}
+
+.b-sm-filter__tooltip-icon {
+    cursor: pointer;
+}
+
+.b-sm-filter__tooltip-content {
+    line-height: 14px;
 }
 
 .b-sm-filter__header-icon {

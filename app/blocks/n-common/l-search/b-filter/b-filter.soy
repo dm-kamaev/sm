@@ -272,7 +272,7 @@
     {if $params.data?.header?.tooltip}
         <div class="{call .rootClass/}__tooltip i-hint">
             {call .tooltipIcon /}
-            {call .tooltipHint data="all" /}
+            {call .tooltipContent data="all" /}
         </div>
     {/if}
 {/template}
@@ -398,13 +398,13 @@
  * }}
  * @protected
  */
-{template .tooltipHint}
+{template .tooltipContent}
     {let $customClasses kind="html"}
         {call .rootClass/}__hint
     {/let}
 
     {let $tooltipData kind="html"}
-        <div class="{call .rootClass/}__hint-content">
+        <div class="{call .rootClass/}__tooltip-content">
             {$params.data?.header?.tooltip}
         </div>
     {/let}
