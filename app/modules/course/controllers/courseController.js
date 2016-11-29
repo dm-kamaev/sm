@@ -66,7 +66,7 @@ controller.commonSearch = async(function(req, res, next) {
             searchParams: searchParams,
             enabledFilters: [
                 filterName.CATEGORY,
-                filterName.TYPE,
+                filterName.FORM_TRAINING,
                 filterName.AGE
             ],
             filtersData: data.search.filtersData,
