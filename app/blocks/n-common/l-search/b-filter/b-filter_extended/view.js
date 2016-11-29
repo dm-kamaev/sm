@@ -26,6 +26,7 @@ goog.scope(function() {
      * @typedef {{
      *     name: string,
      *     type: string,
+     *     api: string,
      *     modal: {
      *         header: string,
      *         placeholder: ?string,
@@ -116,6 +117,7 @@ goog.scope(function() {
         return {
             name: rawParams['name'],
             type: rawParams['type'],
+            api: rawParams['api'],
             modal: {
                 header: rawParams['modal']['header'],
                 placeholder: rawParams['modal']['placeholder'],

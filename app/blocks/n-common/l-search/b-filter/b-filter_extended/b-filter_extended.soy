@@ -153,6 +153,7 @@
             {param json: quoteKeysIfJs([
                 'name': $params.data.name,
                 'type': $params?.config?.type,
+                'api': $params.data.api,
                 'modal': quoteKeysIfJs([
                     'header': $params.data.modal?.header ?: $params.data.header?.title,
                     'placeholder': $params.data.modal?.placeholder ?: '',

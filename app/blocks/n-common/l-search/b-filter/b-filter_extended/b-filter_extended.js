@@ -58,8 +58,6 @@ goog.scope(function() {
      */
     FilterExtended.prototype.enterDocument = function() {
         FilterExtended.base(this, 'enterDocument');
-
-        this.initViewListeners_();
     };
 
 
@@ -78,7 +76,7 @@ goog.scope(function() {
      * @override
      */
     FilterExtended.prototype.setAllData = function() {
-        this.send_('/api/course/course-type/popular')
+        this.send_(this.params.api + '/popular')
             .then(function(data) {
                 this.allOptionsData = data;
             }
@@ -88,9 +86,10 @@ goog.scope(function() {
 
     /**
      * Initializes listeners for view
-     * @private
+     * @override
+     * @protected
      */
-    FilterExtended.prototype.initViewListeners_ = function() {
+    FilterExtended.prototype.initViewListeners = function() {
         this.viewListen(
             View.Event.SHOW_MODAL_CLICK,
             this.onShowModalClick_
@@ -193,7 +192,7 @@ goog.scope(function() {
      *     data: {
      *         header: string,
      *         search: {
-     *             placeholder: (string|undefined),
+     *             placeholder: ?string,
      *             sourceUrl: string
      *         },
      *         filter: {
@@ -219,15 +218,15 @@ goog.scope(function() {
 
         return {
             data: {
-                header: 'Курсы, кружки и секции',
+                header: this.params.modal.header,
                 search: {
-                    placeholder: 'Какие занятия вы ищете?',
-                    sourceUrl: '/api/course/course-type'
+                    placeholder: this.params.modal.placeholder,
+                    sourceUrl: this.params.api
                 },
                 filter: {
                     name: this.getName(),
                     header: {
-                        title: 'Популярные'
+                        title: this.params.modal.filterHeader
                     },
                     options: allOptionsData
                 },

@@ -547,7 +547,7 @@ exports.activitySphere = async(function(req, res) {
         res.status(500);
         result = error.message;
     } finally {
-        res.header('Content-Type', 'text/html; charset=utf-8');
+        res.header('Content-Type', 'application/json; charset=utf-8');
         res.end(JSON.stringify(result));
     }
 });
@@ -633,7 +633,7 @@ exports.specializedClassType = async(function(req, res) {
         res.status(500);
         result = error.message;
     } finally {
-        res.header('Content-Type', 'text/html; charset=utf-8');
+        res.header('Content-Type', 'application/json; charset=utf-8');
         res.end(JSON.stringify(result));
     }
 });
