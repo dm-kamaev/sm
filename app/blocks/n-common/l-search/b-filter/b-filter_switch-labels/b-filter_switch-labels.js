@@ -40,29 +40,46 @@ goog.scope(function() {
 
 
     /**
-     * @override
-     * @param {Element} element
+     * Event enum
+     * @enum {string}
      */
-    FilterSwitchLabels.prototype.decorateInternal = function(element) {
-        FilterSwitchLabels.base(this, 'decorateInternal', element);
-    };
-
-
-    /**
-     * @override
-     */
-    FilterSwitchLabels.prototype.enterDocument = function() {
-        FilterSwitchLabels.base(this, 'enterDocument');
+    FilterSwitchLabels.Event = {
+        CHECK_OPTION: sm.lSearch.bFilter.Filter.Event.CHECK_OPTION,
+        UNCHECK_OPTION: sm.lSearch.bFilter.Filter.Event.UNCHECK_OPTION,
+        CHECK: sm.lSearch.bFilter.Filter.Event.CHECK,
+        UNCHECK: sm.lSearch.bFilter.Filter.Event.UNCHECK
     };
 
 
     /**
      * Reset options filters
+     * @override
      * @public
      */
     FilterSwitchLabels.prototype.reset = function() {
         FilterSwitchLabels.base(this, 'reset');
         this.switchStatusOptions_();
+    };
+
+
+    /**
+     * Check option
+     * @param {{
+     *     value: (string|number),
+     *     label: string,
+     *     name: string,
+     *     isChecked: boolean
+     * }} data
+     * @override
+     * @public
+     */
+    FilterSwitchLabels.prototype.checkOption = function(data) {
+        var option = this.findOption(data);
+
+        if (option) {
+            option.check();
+            this.switchStatusOptions_(option);
+        }
     };
 
 
