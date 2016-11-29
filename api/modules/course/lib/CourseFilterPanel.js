@@ -218,7 +218,8 @@ class CourseFilterPanel extends FilterPanel {
             [filterName.TIME]: this.setFilterTime.bind(this),
             [filterName.REGULARITY]: this.setFilterRegularity.bind(this),
             [filterName.FORM_TRAINING]: this.setFilterFormTraining.bind(this),
-            [filterName.DURATION]: this.setFilterDuration.bind(this)
+            [filterName.DURATION]: this.setFilterDuration.bind(this),
+            [filterName.CATEGORY]: this.setFilterCategory.bind(this)
         };
     }
 
@@ -351,6 +352,17 @@ class CourseFilterPanel extends FilterPanel {
 
         this.setFilter(params, opt_checkedValues);
 
+        return this;
+    }
+
+
+    /**
+     * Set filter by category
+     * @param {Array<Object>} options
+     * @param {Array<(number|string)>=} opt_checkedValues
+     * @return {Object}
+     */
+    setFilterCategory(options, opt_checkedValues) {
         return this;
     }
 

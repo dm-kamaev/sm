@@ -12,7 +12,8 @@ const soy = require('../../../components/soy'),
     informationView = require(
         '../../../../api/modules/course/views/informationView'
     ),
-    entityType = require('../../../../api/modules/entity/enums/entityType.js');
+    entityType = require('../../../../api/modules/entity/enums/entityType.js'),
+    filterName = require('../../../../api/modules/course/enums/filterName');
 
 const PageNotFoundError = require('../../error/lib/PageNotFoundError');
 
@@ -63,6 +64,11 @@ controller.commonSearch = async(function(req, res, next) {
             ),
             mapPosition: data.search.mapPosition,
             searchParams: searchParams,
+            enabledFilters: [
+                filterName.CATEGORY,
+                filterName.TYPE,
+                filterName.AGE
+            ],
             filtersData: data.search.filtersData,
             aliases: aliases.courses,
             seoParams: data.search.seoParams,

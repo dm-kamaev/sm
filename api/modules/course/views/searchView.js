@@ -247,13 +247,13 @@ searchView.initSearchParams = function(params, opt_categoryId) {
         [filterName.REGULARITY]: this.transformToArray(params.regularity),
         [filterName.FORM_TRAINING]: this.transformToArray(params.formTraining),
         [filterName.DURATION]: this.transformToArray(params.duration),
+        [filterName.CATEGORY]: this.transformToArray(categoryId),
         page: params.page || 0,
         sortType: params.sortType,
         name: params.name,
         metroId: params.metroId || null,
         areaId: params.areaId || null,
-        districtId: params.districtId || null,
-        categoryId: this.transformToArray(categoryId)
+        districtId: params.districtId || null
     };
 };
 
