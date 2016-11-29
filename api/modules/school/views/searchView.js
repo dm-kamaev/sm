@@ -4,8 +4,13 @@ const lodash = require('lodash');
 const olympResultView = require('../../study/views/olimpResultView'),
     egeResultView = require('../../study/views/egeResultView'),
     giaResultView = require('../../study/views/giaResultView'),
+    subjectView = require('../../study/views/subjectView'),
     activityView = require('./activityView'),
-    specializedClassesView = require('./specializedClassesView');
+    specializedClassesView = require('./specializedClassesView'),
+    userView = require('../../user/views/user'),
+    schoolView = require('./schoolView');
+
+const FilterPanel = require('../lib/SchoolFilterPanel');
 
 const searchViewEntity = require('../../entity/views/searchView');
 
@@ -15,11 +20,6 @@ const filterName = require('../enums/filterName'),
     searchTypeEnum = require('../enums/searchType');
 
 const FormatUtils = require('../../entity/lib/FormatUtils');
-
-// FilterPanel = require('../lib/SchoolFilterPanel');
-
-const userView = require('../../user/views/user'),
-    schoolView = require('./schoolView');
 
 // favoriteView = require('../../favorite/views/favoriteView');
 
@@ -48,6 +48,19 @@ searchView.render = function(data) {
     let aliasedSchools = schoolView.joinAliases(
         data.schoolsList, data.schoolAliases
     );
+
+    let rawFiltersData = data.filtersData;
+    let filtersData = {
+        [filterName.SCHOOL_TYPE]: rawFiltersData.schoolTypes,
+        [filterName.OLYMPIAD]: subjectView.getSubjects(
+            rawFiltersData.olympiadSubjects, rawFiltersData.subjects
+        ),
+        [filterName.EGE]: egeResultView.getFilterData(rawFiltersData),
+        [filterName.GIA]: giaResultView.getFilterData(rawFiltersData),
+        [filterName.ACTIVITY_SPHERE]: rawFiltersData.activitySpheres,
+        [filterName.SPECIALIZED_CLASS_TYPE]:
+            rawFiltersData.specializedClassesTypes
+    };
 
     return {
         seo: {
@@ -111,20 +124,20 @@ searchView.render = function(data) {
                 defaultOpenerText: 'по средней оценке',
                 content: {
                     items: [{
-                        'label': 'по средней оценке',
-                        'value': 0
+                        label: 'по средней оценке',
+                        value: 0
                     }, {
-                        'label': 'по образованию',
-                        'value': 1
+                        label: 'по образованию',
+                        value: 1
                     }, {
-                        'label': 'по преподавателям',
-                        'value': 2
+                        label: 'по преподавателям',
+                        value: 2
                     }, {
-                        'label': 'по атмосфере',
-                        'value': 3
+                        label: 'по атмосфере',
+                        value: 3
                     }, {
-                        'label': 'по инфраструктуре',
-                        'value': 4
+                        label: 'по инфраструктуре',
+                        value: 4
                     }]
                 }
             },
@@ -134,7 +147,7 @@ searchView.render = function(data) {
             }
         },
         filterPanel: searchView.filterPanel({
-            filtersData: data.filtersData,
+            filtersData: filtersData,
             searchParams: data.searchParams
         }),
         searchParams: data.searchParams
@@ -143,6 +156,7 @@ searchView.render = function(data) {
 
 
 /**
+ * Normalize query params to search params
  * @param {Object} params
  * @return {Object}
  */
@@ -155,7 +169,7 @@ searchView.initSearchParams = function(params) {
             formatUtils.transformToArray(params.schoolType),
         [filterName.EGE]: formatUtils.transformToArray(params.ege),
         [filterName.GIA]: formatUtils.transformToArray(params.gia),
-        [filterName.OLIMP]: formatUtils.transformToArray(params.olimp),
+        [filterName.OLYMPIAD]: formatUtils.transformToArray(params.olimp),
         [filterName.SPECIALIZED_CLASS_TYPE]:
             formatUtils.transformToArray(params.specializedClassType),
         [filterName.ACTIVITY_SPHERE]:
@@ -222,104 +236,11 @@ searchView.initSearchParams = function(params) {
  * }}
  */
 searchView.filterPanel = function(data) {
-    // let filterPanel = new FilterPanel();
-    // filterPanel.init(data);
+    let filterPanel = new FilterPanel();
+    filterPanel.init(data);
 
-    // return filterPanel.getParams();
-    return {};
+    return filterPanel.getParams();
 };
-
-
-/**
- * Transform array of school type filters to array with their ids
- * @param {Array.<Object>} typeInstances
- * @return {Array.<number>}
- */
-searchView.schoolTypeFilterIds = function(typeInstances) {
-    return typeInstances.map(typeInstance => {
-        return typeInstance.id;
-    }
-    );
-};
-
-/**
- * Update opt_filters in params and set default values
- * @param {{
- *     name: string,
- *     schoolType: (Array<number>|undefined),
- *     classes: (Array<number>|undefined),
- *     gia: (Array<number>|undefined),
- *     ege: (Array<number>|undefined),
- *     olimp: (Array<number>|undefined),
- *     activitySphere: (Array<number>|undefined),
- *     specializedClassType: (Array<number>|undefined),
- *     metroId: (number|undefined),
- *     areaId: (number|undefined),
- *     districtId: (number|undefined),
- *     sortType: (number|undefined),
- *     page: (number|undefined)
- * }} searchParams
- *
- * @param {{
- *     schoolType: (Array.<number>|undefined),
- *     ege: (Array.<number>|undefined),
- *     gia: (Array.<number>|undefined)
- * }=} opt_filters
- *
- * @return {{
- *     name: string,
- *     schoolType: Array<number>,
- *     classes: Array<number>,
- *     gia: Array<number>,
- *     ege: Array<number>,
- *     olimp: Array<number>,
- *     activitySphere: Array<number>,
- *     specializedClassType: Array<number>,
- *     metroId: ?number,
- *     areaId: ?number,
- *     districtId: ?number,
- *     sortType: ?number,
- *     page: number
- * }}
- */
-searchView.params = function(searchParams, opt_filters) {
-    var name,
-        filters = opt_filters || {};
-
-    if (searchParams.areaId ||
-        searchParams.metroId ||
-        searchParams.districtId ||
-        !searchParams.name) {
-        name = '';
-    } else {
-        name = searchParams.name;
-    }
-
-    return {
-        name: name,
-        schoolType: filters.schoolType ||
-            searchParams.schoolType ||
-            [],
-        classes: searchParams.classes || [],
-        gia: filters.gia ||
-            searchParams.gia ||
-            [],
-        ege: filters.ege ||
-            searchParams.ege ||
-            [],
-        olimp: filters.olimp ||
-            searchParams.olimp ||
-            [],
-        activitySphere: searchParams.activitySphere || [],
-        specializedClassType: searchParams.specializedClassType || [],
-        metroId: searchParams.metroId || null,
-        areaId: searchParams.areaId || null,
-        districtId: searchParams.districtId || null,
-        sortType: searchParams.sortType || null,
-        page: searchParams.page || 0
-    };
-};
-
 
 /**
  * @param {{

@@ -54,7 +54,9 @@ exports.get = async((subject, opt_option) => {
  * @return {Array<models.Subject>}
  */
 exports.getAll = async(function() {
-    return await(models.Subject.findAll());
+    return await(models.Subject.findAll({
+        raw: true
+    }));
 });
 
 exports.getOrCreate = async(name => {
@@ -116,22 +118,4 @@ exports.listCityResults = async(() => {
     return await(models.Subject.findAll({
         include: sequelizeInclude(includeParams)
     }));
-});
-
-/**
- * Get array with subject instances by array with their aliases
- * @param {Array.<string>} aliases
- * @return {Array.<Object>}
- */
-exports.getByAliases = async(function(aliases) {
-    var searchParams = {
-        where: {
-            alias: {
-                $in: aliases
-            }
-        },
-        attributes: ['id']
-    };
-
-    return await(models.Subject.findAll(searchParams));
 });

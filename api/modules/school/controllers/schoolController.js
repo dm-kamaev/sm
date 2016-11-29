@@ -303,8 +303,8 @@ exports.search = async(function(req, res) {
     try {
         let searchParams = searchView.initSearchParams(req.query),
             schools = await(services.school.list(
-                searchParams, {limitResults: 10})
-            ),
+                searchParams, {limitResults: 10}
+            )),
             aliases = await(services.page.getAliases(
                 schoolView.uniqueIds(schools),
                 entityType.SCHOOL

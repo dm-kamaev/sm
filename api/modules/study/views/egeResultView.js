@@ -1,12 +1,16 @@
+'use strict';
+
 const cityResultView = require('./cityResultView'),
     subjectView = require('./subjectView'),
     searchType = require('../../school/enums/searchType');
 
+const egeSortOrder = require('../views/constants/egeSubjectsOrder.json');
+
 /**
- * EgeResultView
+ * egeResultView
  * @constructor
  */
-var EgeResultView = function() {
+var egeResultView = {
 };
 
 /**
@@ -15,7 +19,7 @@ var EgeResultView = function() {
  * @param {Array<Object>} cityResults
  * @return {{years: U[], results: U[], range: number}}
  */
-EgeResultView.prototype.transformResults = function(results, cityResults) {
+egeResultView.transformResults = function(results, cityResults) {
     var res = {},
         keys,
         range = 5,
@@ -110,7 +114,7 @@ EgeResultView.prototype.transformResults = function(results, cityResults) {
  *    }>
  * }}
  */
-EgeResultView.prototype.searchFilter = function(egeSubjectsIds, subjects) {
+egeResultView.searchFilter = function(egeSubjectsIds, subjects) {
     var filters = subjectView.searchFilter(
         egeSubjectsIds, subjects, searchType.fields.EGE
     );
@@ -122,8 +126,21 @@ EgeResultView.prototype.searchFilter = function(egeSubjectsIds, subjects) {
     return filters;
 };
 
+
 /**
- * Exports
- * @type {EgeResultView}
+ * Transform raw filterData to filterData for filter panel
+ * @param {{
+ *     egeSubjects: Array<number>,
+ *     subjects: Array<models.Subject>
+ * }} filtersData
+ * @return {Array<models.Subject>}
  */
-module.exports = new EgeResultView();
+egeResultView.getFilterData = function(filtersData) {
+    let subjects = subjectView.getSubjects(
+        filtersData.egeSubjects, filtersData.subjects
+    );
+
+    return subjectView.sortByOrder(subjects, egeSortOrder);
+};
+
+module.exports = egeResultView;
