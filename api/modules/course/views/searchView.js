@@ -121,7 +121,8 @@ searchView.map = function(courses, options) {
  *     seoParams: Object,
  *     currentAlias: string,
  *     categories: Array<Object>,
- *     categoryAliases: Array<Object>
+ *     categoryAliases: Array<Object>,
+ *     categoryId: (number|undefined)
  * }} data
  * @return {Object}
  */
@@ -178,7 +179,10 @@ searchView.render = function(data) {
         search: {
             searchText: data.searchParams.name,
             placeholder: 'Район, метро, название курса',
-            pageAlias: data.currentAlias
+            pageAlias: data.currentAlias,
+            args: {
+                categoryId: data.categoryId
+            }
         },
         resultsList: {
             title: seoParams.listTitle,

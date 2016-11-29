@@ -21,10 +21,11 @@ let service = {
  *     courses: Array<Course>,
  *     mapCourses: Array<Course>,
  *     mapPosition: Object,
- *     categories: Array<CourseCategory>
+ *     categories: Array<CourseCategory>,
+ *     seoParams: SeoCourseList
  * }}
  */
-service.getData = async(function(searchParams, categoryId) {
+service.getData = async(function(searchParams, opt_categoryId) {
     return await({
         courses: services.course.list(searchParams, SEARCH_CHUNK_SIZE),
         mapCourses: services.course.listMap(searchParams, SEARCH_CHUNK_SIZE),
@@ -33,7 +34,9 @@ service.getData = async(function(searchParams, categoryId) {
         filtersData: {
             [filterName.TYPE]: services.courseType.getAll()
         },
-        seoParams: services.seoCourseList.getByCategoryId(categoryId)
+        seoParams: opt_categoryId ?
+            services.seoCourseList.getByCategoryId(opt_categoryId) :
+            {}
     });
 });
 

@@ -137,7 +137,6 @@ controller.search = async(function(req, res, next) {
                     map: services.course.getAliases(data.search.mapCourses),
                     categories: services.courseCategory.getAliases()
                 });
-            console.log(data.search.seoParams);
 
             let templateData = searchView.render({
                 entityType: entityType.COURSE,
@@ -158,7 +157,8 @@ controller.search = async(function(req, res, next) {
                 seoParams: data.search.seoParams,
                 currentAlias: categoryName,
                 categories: data.search.categories,
-                categoryAliases: aliases.categories
+                categoryAliases: aliases.categories,
+                categoryId: categoryInstance.id
             });
 
             let html = soy.render(

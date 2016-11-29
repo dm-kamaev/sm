@@ -14,6 +14,7 @@
  * @property {?string} customClasses
  * @property {?string} inputSize
  * @property {?map} config
+ * @property {string} searchArgs
  * @property {?boolean} config.showSearchIcon
  * @property {?string} config.height
  * @property {?string} config.faderSize
@@ -37,7 +38,7 @@
                 {$params?.theme == 'foldable' ? 'i-animate ' : ''}"
         data-params="{call goog.json.serialize data="$data" /}"
     >
-        
+
         {call .fader_ data="all" /}
         {call .body_ data="all" /}
     </div>
@@ -84,7 +85,8 @@
                         'autofocus': $params?.autofocus,
                         'placeholder': $params?.placeholder,
                         'sourceUrl': '/api/' + $params.config.entityType + '/search/suggest',
-                        'argName': 'searchString'
+                        'argName': 'searchString',
+                        'args': $params.searchArgs
                     ],
                     'config': [
                         'customClasses': 'b-search__suggest',
