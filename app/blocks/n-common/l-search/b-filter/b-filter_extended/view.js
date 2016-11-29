@@ -22,6 +22,19 @@ goog.scope(function() {
     var View = sm.lSearch.bFilter.ViewExtended,
         Utils = cl.iUtils.Utils;
 
+    /**
+     * @typedef {{
+     *     name: string,
+     *     type: string,
+     *     modal: {
+     *         header: string,
+     *         placeholder: ?string,
+     *         filterHeader: string
+     *     }
+     * }}
+     */
+    sm.lSearch.bFilter.ViewExtended.Params;
+
 
     /**
      * Css class enum
@@ -89,6 +102,26 @@ goog.scope(function() {
                 this.onButtonShowModalClick_
             );
         }
+    };
+
+
+    /**
+     * Transform raw params to compressed ones
+     * @param {Object} rawParams
+     * @return {sm.lSearch.bFilter.ViewExtended.Params}
+     * @override
+     * @protected
+     */
+    View.prototype.transformParams = function(rawParams) {
+        return {
+            name: rawParams['name'],
+            type: rawParams['type'],
+            modal: {
+                header: rawParams['modal']['header'],
+                placeholder: rawParams['modal']['placeholder'],
+                filterHeader: rawParams['modal']['filterHeader']
+            }
+        };
     };
 
 

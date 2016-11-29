@@ -62,7 +62,6 @@ goog.scope(function() {
         this.initHeader(element);
         this.initContainers(element);
 
-        this.initParams();
         this.initStateContentVisibility();
     };
 
@@ -471,15 +470,34 @@ goog.scope(function() {
 
 
     /**
-     * Initializes filter params
+     * Return data-params from dom element
+     * @return {{
+     *    name: string,
+     *    type: (string|undefined)
+     * }}
+     * @protected
+     * @override
+     */
+    View.prototype.getParams = function() {
+        var rawParams = View.base(this, 'getParams');
+        this.params = !goog.object.isEmpty(rawParams) ?
+            this.transformParams(rawParams) :
+            null;
+
+        return this.params;
+    };
+
+
+    /**
+     * Transform raw params to compressed ones
+     * @param {Object} rawParams
+     * @return {Object}
      * @protected
      */
-    View.prototype.initParams = function() {
-        var data = JSON.parse(
-            this.getElement().getAttribute('data-params')
-        );
-
-        this.params.name = data.name;
-        this.params.type = data.type;
+    View.prototype.transformParams = function(rawParams) {
+        return {
+            name: rawParams['name'],
+            type: rawParams['type']
+        };
     };
 });  // goog.scope

@@ -18,6 +18,14 @@ sm.lSearch.bFilter.FilterExtended = function(view, opt_domHelper) {
 
 
     /**
+     * @type {sm.lSearch.bFilter.ViewExtended.Params}
+     * @override
+     * @protected
+     */
+    this.params = view.getParams() || {};
+
+
+    /**
      * instance Modal
      * @type {sm.gModal.ModalStendhal}
      * @private
