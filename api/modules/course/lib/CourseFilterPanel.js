@@ -65,7 +65,13 @@ class CourseFilterPanel extends FilterPanel {
                     title: 'Направления занятий'
                 },
                 name: 'type',
-                options: []
+                options: [],
+                api: '/api/course/course-type',
+                modal: {
+                    header: 'Курсы, кружки и секции',
+                    placeholder: 'Какие занятия вы ищете?',
+                    filterHeader: 'Популярные'
+                }
             },
             config: {
                 showMoreButtonText: 'Все направления',
