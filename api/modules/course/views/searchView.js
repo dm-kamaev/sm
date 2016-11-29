@@ -202,6 +202,7 @@ searchView.render = function(data) {
 };
 
 /**
+ * Normalize query params to search params
  * @param  {Object} params
  * @param {number=} opt_categoryId
  * @return {Object}

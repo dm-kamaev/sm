@@ -4,6 +4,8 @@ const filterName = require('../enums/filterName');
 
 const FilterPanel = require('../../entity/lib/FilterPanel');
 
+const filterType = require('../../entity/enums/filterViewType');
+
 class SchoolFilterPanel extends FilterPanel {
 
     /**
@@ -23,35 +25,11 @@ class SchoolFilterPanel extends FilterPanel {
                 header: {
                     title: 'В какой класс Вы хотите отдать ребенка?'
                 },
+                options: new Array(12),
                 name: filterName.CLASSES,
-                options: [{
-                    label: 0
-                }, {
-                    label: 1
-                }, {
-                    label: 2
-                }, {
-                    label: 3
-                }, {
-                    label: 4
-                }, {
-                    label: 5
-                }, {
-                    label: 6
-                }, {
-                    label: 7
-                }, {
-                    label: 8
-                }, {
-                    label: 9
-                }, {
-                    label: 10
-                }, {
-                    label: 11
-                }]
             },
             config: {
-                isShowed: true
+                cannotBeHidden: true
             }
         };
 
@@ -139,7 +117,8 @@ class SchoolFilterPanel extends FilterPanel {
                 header: {
                     title: 'Профильные классы'
                 },
-                name: filterName.SPECIALIZED_CLASS_TYPE
+                name: filterName.SPECIALIZED_CLASS_TYPE,
+                api: '/api/school/specializedClassType'
             },
             config: {
                 showMoreButtonText: 'Полный список',
@@ -158,28 +137,12 @@ class SchoolFilterPanel extends FilterPanel {
                 header: {
                     title: 'Курсы, кружки и секции'
                 },
-                name: filterName.ACTIVITY_SPHERE
+                name: filterName.ACTIVITY_SPHERE,
+                api: '/api/school/activitySphere'
             },
             config: {
                 showMoreButtonText: 'Полный список',
                 optionsToShow: 3,
-                isShowed: true
-            }
-        };
-
-        /**
-         * Params for filter by kindergarten
-         * @type {Object}
-         * @private
-         */
-        this.filterKindergarten_ = {
-            data: {
-                name: filterName.kindergarten,
-                options: [{
-                    label: 'При школе есть детский сад'
-                }]
-            },
-            config: {
                 isShowed: true
             }
         };
@@ -201,8 +164,7 @@ class SchoolFilterPanel extends FilterPanel {
             [filterName.SPECIALIZED_CLASS_TYPE]:
                 this.setFilterSpecializedClassType.bind(this),
             [filterName.ACTIVITY_SPHERE]:
-                this.setFilterActivitySphere.bind(this),
-            //[filterName.KINDERGARTEN]: this.setFilterKindergarten_.bind(this)
+                this.setFilterActivitySphere.bind(this)
         };
     }
 
@@ -213,9 +175,13 @@ class SchoolFilterPanel extends FilterPanel {
      */
     get defaultFilters() {
         return [
+            filterName.CLASSES,
+            filterName.SCHOOL_TYPE,
             filterName.EGE,
             filterName.GIA,
-            filterName.OLYMPIAD
+            filterName.OLYMPIAD,
+            filterName.SPECIALIZED_CLASS_TYPE,
+            filterName.ACTIVITY_SPHERE
         ];
     }
 
@@ -227,6 +193,7 @@ class SchoolFilterPanel extends FilterPanel {
     setFilterClasses(opt_checkedValues) {
         var params = this.filterClasses_;
 
+        params.config.type = filterType.CLASSES;
         params.data.options = this.createOptionsValuesInOrder(
             this.filterClasses_.data.options
         );
@@ -239,7 +206,7 @@ class SchoolFilterPanel extends FilterPanel {
 
     /**
      * Set filter for schools type
-     * @param {Array<Object>} options
+     * @param {Array<models.SchoolTypeFilter>} options
      * @param {Array<(number|string)>=} opt_checkedValues
      * @return {Object}
      */

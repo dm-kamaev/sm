@@ -49,12 +49,17 @@ searchView.render = function(data) {
         data.schoolsList, data.schoolAliases
     );
 
+    let rawFiltersData = data.filtersData;
     let filtersData = {
+        [filterName.SCHOOL_TYPE]: rawFiltersData.schoolTypes,
         [filterName.OLYMPIAD]: subjectView.getSubjects(
-            data.filtersData.olympiadSubjects, data.filtersData.subjects
+            rawFiltersData.olympiadSubjects, rawFiltersData.subjects
         ),
-        [filterName.EGE]: egeResultView.getFilterData(data.filtersData),
-        [filterName.GIA]: giaResultView.getFilterData(data.filtersData)
+        [filterName.EGE]: egeResultView.getFilterData(rawFiltersData),
+        [filterName.GIA]: giaResultView.getFilterData(rawFiltersData),
+        [filterName.ACTIVITY_SPHERE]: rawFiltersData.activitySpheres,
+        [filterName.SPECIALIZED_CLASS_TYPE]:
+            rawFiltersData.specializedClassesTypes
     };
 
     return {
@@ -151,6 +156,7 @@ searchView.render = function(data) {
 
 
 /**
+ * Normalize query params to search params
  * @param {Object} params
  * @return {Object}
  */
