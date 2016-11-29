@@ -93,10 +93,12 @@ goog.scope(function() {
      * Collapse filter
      */
     View.prototype.collapse = function() {
-        this.setContentVisibility_(false);
-        this.setHeaderIconUpState_(false);
+        if (this.dom.buttonSwitchContentVisibility) {
+            this.setContentVisibility_(false);
+            this.setHeaderIconUpState_(false);
 
-        this.contentVisibility_ = false;
+            this.contentVisibility_ = false;
+        }
     };
 
 

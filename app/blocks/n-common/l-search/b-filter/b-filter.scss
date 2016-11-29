@@ -85,6 +85,14 @@
     }
 }
 
+.b-sm-filter_light-theme {
+    padding: 0;
+
+    .b-sm-filter__content {
+        margin-bottom: 0;
+    }
+}
+
 
 @include media-m {
     .b-sm-filter__option {
@@ -100,9 +108,6 @@
 @include media-s {
     .b-sm-filter__option {
         width: 33.33%;
-        min-width: 0;
-
-        vertical-align: top;
     }
 
     .b-sm-filter_minimal-theme {
