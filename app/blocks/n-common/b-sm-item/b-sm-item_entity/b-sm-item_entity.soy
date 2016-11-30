@@ -456,11 +456,17 @@
  * @param params {{
  *     data: {
  *         type: string
+ *     },
+ *     config: {
+ *         enableCover: (boolean|undefined),
+ *         stylizationModifier: string
  *     }
  * }}
  * @override
  */
 {template .additionalClasses}
+    {call .super_additionalClasses data="all"/}{sp}
+
     {call .rootClass/}_entity{sp}
     {call .rootClass/}_type_{$params.data.type}
 {/template}

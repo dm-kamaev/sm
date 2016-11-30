@@ -79,25 +79,6 @@
 
 
 /**
- * Section group template
- * @param params {{
- *     content: string,
- *     classes: string
- * }}
- * @protected
- */
-{template .sectionGroup}
-    <div class="{call .rootClass/}__section-group
-        {if $params.classes}
-            {sp}{$params.classes}
-        {/if}
-    ">
-        {$params.content}
-    </div>
-{/template}
-
-
-/**
  * Cover section group
  * @param params {{
  *     data: {
@@ -111,19 +92,14 @@
  * @protected
  */
 {template .sectionGroupCover kind="html"}
-    {let $content kind="html"}
-        {call .sectionCover data="all" /}
-    {/let}
     {let $classes kind="html"}
-        {call .rootClass /}__section-group_cover
+        {call .rootClass/}__section-group{sp}
+        {call .rootClass/}__section-group_cover
     {/let}
 
-    {call .sectionGroup}
-        {param params: [
-            'content': $content,
-            'classes': $classes
-        ] /}
-    {/call}
+    <div class="{$classes}">
+        {call .sectionCover data="all" /}
+    </div>
 {/template}
 
 
@@ -136,21 +112,15 @@
  */
 {template .sectionGroupInfo kind="html"}
     {let $classes kind="html"}
+        {call .rootClass/}__section-group{sp}
         {call .rootClass/}__section-group_info
     {/let}
 
-    {let $content kind="html"}
+    <div class="{$classes}">
         {call .sectionHeader data="all" /}
         {call .sectionDescription data="all" /}
         {call .sectionDetails data="all" /}
-    {/let}
-
-    {call .sectionGroup}
-        {param params: [
-            'content': $content,
-            'classes': $classes
-        ] /}
-    {/call}
+    </div>
 {/template}
 
 /**
@@ -446,6 +416,25 @@
         {/call}
     </div>
 {/template}
+
+
+/**
+ * Css classes
+ * @param params {{
+ *     config: {
+ *         enableCover: (boolean|undefined),
+ *         stylizationModifier: string
+ *     }
+ * }}
+ * @override
+ */
+{template .additionalClasses}
+    {if $params?.config?.enableCover or
+        $params.config.stylizationModifier == 'experimental'}
+        {call .rootClass/}_cover_enable
+    {/if}
+{/template}
+
 
 
 /**
