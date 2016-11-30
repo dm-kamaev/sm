@@ -16,9 +16,9 @@
  *         metaDescription: (string|undefined)
  *     },
  *     subHeader: sm.bSmSubHeader.Template.Params.Data,
- *     footer: {
+ *     footer: ({
  *         seoLinks: Array<sm.bSmLink.SmLink.Template.Params.Data>
- *     }
+ *     }|undefined)
  * }} sm.iLayout.TemplateStendhal.Params.Data
  */
 
@@ -371,9 +371,14 @@
 /**
  * Footer
  * @param params {
+ *     data: {
+ *         footer: ({
+ *             seoLinks: Array<sm.bSmLink.SmLink.Template.Params.Data>
+ *         }|undefined)
+ *     },
  *     config: {
- *         year: ?number,
- *         modifier: ?string
+ *         year: number,
+ *         modifier: string
  *     }
  * }
  * @protected
@@ -386,7 +391,8 @@
                 'type': 'smFooter',
                 'renderParams': [
                     'data': [
-                        'year': $params?.config?.year,
+                        'year': $params.config?.year,
+                        'seoLinks': $params.data?.footer?.seoLinks,
                         'contactLinks': [
                             [
                                 'content': 'Cвязаться с нами',

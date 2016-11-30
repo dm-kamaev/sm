@@ -5,7 +5,7 @@
  * @typedef {{
  *     year: number,
  *     contactLinks: Array<sm.bSmLink.Template.Params.Data>,
- *     seoLinks: Array<sm.bSmLink.Template.Params.Data>
+ *     seoLinks: (Array<sm.bSmLink.Template.Params.Data>|undefined)
  * }} sm.bSmFooter.Template.Params.Data
  */
 
@@ -59,15 +59,15 @@
  * @param params {{
  *    data: {
  *         contactLinks: Array<sm.bSmLink.Template.Params.Data>,
- *         seoLinks: Array<sm.bSmLink.Template.Params.Data>
+ *         seoLinks: (Array<sm.bSmLink.Template.Params.Data>|undefined)
  *    }
  * }}
  */
 {template .sectionLinks_}
     <div class="{call .rootClass/}__section{sp}
                 {call .rootClass/}__section_links">
-        {call .contactLinks_ data="all" /}
         {call .seoLinks_ data="all" /}
+        {call .contactLinks_ data="all" /}
     </div>
 {/template}
 
@@ -96,19 +96,21 @@
  * Links template
  * @param params {{
  *    data: {
- *         seoLinks: Array<sm.bSmLink.Template.Params.Data>
+ *         seoLinks: (Array<sm.bSmLink.Template.Params.Data>|undefined)
  *    }
  * }}
  */
 {template .seoLinks_}
-    <div class="{call .rootClass/}__links{sp}
-                {call .rootClass/}__links_seo">
-        {call .links_}
-            {param params:[
-                'data': $params.data.seoLinks
-            ]/}
-        {/call}
-    </div>
+    {if $params.data.seoLinks and length($params.data.seoLinks)}
+        <div class="{call .rootClass/}__links{sp}
+                    {call .rootClass/}__links_seo">
+            {call .links_}
+                {param params:[
+                    'data': $params.data.seoLinks
+                ]/}
+            {/call}
+        </div>
+    {/if}
 {/template}
 
 
