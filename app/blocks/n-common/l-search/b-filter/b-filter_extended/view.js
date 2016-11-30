@@ -27,6 +27,7 @@ goog.scope(function() {
      *     name: string,
      *     type: string,
      *     api: string,
+     *     optionsToShow: number,
      *     modal: {
      *         header: string,
      *         placeholder: ?string,
@@ -118,6 +119,7 @@ goog.scope(function() {
             name: rawParams['name'],
             type: rawParams['type'],
             api: rawParams['api'],
+            optionsToShow: rawParams['optionsToShow'],
             modal: {
                 header: rawParams['modal']['header'],
                 placeholder: rawParams['modal']['placeholder'],

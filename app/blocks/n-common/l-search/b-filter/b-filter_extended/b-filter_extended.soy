@@ -60,25 +60,13 @@
 /**
  * Tempate button
  * @param params {{
- *     data: {
- *         options: Array<{
- *             label: string,
- *             value: string,
- *             isChecked: (boolean|undefined)
- *         }>
- *     },
  *     config: {
- *         optionsToShow: (number|undefined),
  *         showMoreButtonText: (number|undefined)
  *     }
  * }}
-  * @override
+ * @override
  */
 {template .button}
-    {let $numberOptionsToShow kind="html"}
-        {call .numberOptionsToShow data="all" /}
-    {/let}
-
     {let $showMoreButtonText kind="html"}
         {if $params.config?.showMoreButtonText}
             {$params.config?.showMoreButtonText}
@@ -87,11 +75,9 @@
         {/if}
     {/let}
 
-    {if $params.data.options.length > $numberOptionsToShow}
-        {call .showMoreButton}
-            {param text: $showMoreButtonText/}
-        {/call}
-    {/if}
+    {call .showMoreButton}
+        {param text: $showMoreButtonText/}
+    {/call}
 {/template}
 
 
@@ -135,6 +121,7 @@
  *             tooltip: (string|undefined)
  *         }|undefined),
  *         api: string,
+ *         optionsToShow: (number|undefined),
  *         modal: {
  *             header: (string|undefined),
  *             placeholder: (string|undefined),
@@ -154,6 +141,7 @@
                 'name': $params.data.name,
                 'type': $params?.config?.type,
                 'api': $params.data.api,
+                'optionsToShow': $params?.config?.optionsToShow,
                 'modal': quoteKeysIfJs([
                     'header': $params.data.modal?.header ?: $params.data.header?.title,
                     'placeholder': $params.data.modal?.placeholder ?: '',

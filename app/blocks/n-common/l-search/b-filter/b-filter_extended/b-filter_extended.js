@@ -65,9 +65,24 @@ goog.scope(function() {
      * Reset options filters
      */
     FilterExtended.prototype.reset = function() {
-        this.updateOptions(this.getAllData());
-
+        this.updateOptions(this.getDefaultOptionsData_());
         this.collapse();
+    };
+
+
+    /**
+     * Get options data to show (data by default)
+     * @return {Array<sm.bSmCheckbox.SmCheckbox>}
+     * @private
+     */
+    FilterExtended.prototype.getDefaultOptionsData_ = function() {
+        var data = this.getAllData();
+
+        if (this.params.optionsToShow) {
+            data = data.slice(0, this.params.optionsToShow);
+        }
+
+        return data;
     };
 
 
@@ -128,7 +143,7 @@ goog.scope(function() {
     FilterExtended.prototype.onModalFilterButtonClick_ = function(event) {
         var params = event.data.filters.length ?
             event.data.filters :
-            this.allOptionsData;
+            this.getDefaultOptionsData_();
 
         this.updateOptions(params);
         this.removeFilterModal_();
