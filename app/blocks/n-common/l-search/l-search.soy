@@ -24,29 +24,14 @@
  *         name: string,
  *         value: (Array<(string|number)>)
  *     }>,
- *     resultsList: {
- *         title: string,
- *         description: Array<string>,
- *         sort: sm.gDropdown.TemplateSelect.Params.Data,
- *         entityList: sm.bSmItemList.Template.Params.Data,
- *         countResults: number,
- *         searchText: ?string,
- *         declensionEntityType: {
- *             nom: string,
- *             gen: string,
- *             plu: string
- *         }
- *     },
+ *     resultsList: sm.lSearch.bSearchResults.Template.Params.Data,
  *     search: {
  *         pageAlias: string,
  *         placeholder: ?string,
  *         searchText: ?string
  *     },
  *     filterPanel: sm.lSearch.bFilterPanel.Template.Params,
- *     searchParams: {Array<{
- *         name: string,
- *         value: (Array<(string|number)>)
- *     }>},
+ *     searchParams: {Array<{string, (string|Array<string>|number)}>},
  *     popularEntities: Array<{
  *         id: number,
  *         alias: string,
@@ -54,7 +39,10 @@
  *         description: (string?undefined),
  *         metro: (Array<string>|undefined),
  *         totalScore: (number|undefined)
- *     }>
+ *     }>,
+ *     footer: {
+ *         seoLinks: Array<sm.bSmLink.SmLink.Template.Params.Data>
+ *     }
  * }} sm.lSearch.Template.Params.Data
  */
 

@@ -2,8 +2,10 @@
 
 /**
  * @typedef {{
- *     title: string,
- *     description: Array<string>,
+ *     title: (string|undefined),
+ *     description: (Array<string>|undefined),
+ *     linksTtile: (string|undefined),
+ *     links: (Array<sm.bSmLink.SmLink.Template.Params.Data>|undefined),
  *     sort: sm.gDropdown.TemplateSelect.Params.Data,
  *     entityList: sm.bSmItemList.Template.Params.Data,
  *     countResults: number,
