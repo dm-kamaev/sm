@@ -10,6 +10,5 @@ router.get('/school/:listType', schoolController.list);
 router.get('/school/:listType/:geoType', schoolController.list);
 router.post('/school/:id/comment', schoolController.createComment);
 router.get('/search', schoolController.search);
-router.get('/new', schoolController.newSearch);
 
 module.exports = router;

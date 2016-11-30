@@ -21,6 +21,13 @@ const filterName = require('../enums/filterName'),
 
 const FormatUtils = require('../../entity/lib/FormatUtils');
 
+const DEFAULT_META_DESCRIPTION = 'Интерактивная карта Москвы с полной' +
+    'информацией о всех образовательных учреждениях города Москвы. ' +
+    'Список школ, лицеев и гимназий. Отзывы родителей и выпускников.';
+const DEFAULT_TITLE = 'Школы Москвы на карте. ' +
+    'Список школ Москвы с возможностью выбора по параметрам. ' +
+    'Школы Мела.';
+
 // favoriteView = require('../../favorite/views/favoriteView');
 
 var searchView = {};
@@ -64,12 +71,16 @@ searchView.render = function(data) {
 
     return {
         seo: {
-            metaTitle: seoParams.tabTitle,
-            metaDescription: seoParams.metaDescription
+            metaTitle: seoParams.title || DEFAULT_TITLE,
+            metaDescription:
+                seoParams.metaDescription || DEFAULT_META_DESCRIPTION,
+            textLeft: seoParams.textLeft,
+            textRight: seoParams.textRight
         },
         openGraph: {
-            title: seoParams.openGraphTitle,
-            description: seoParams.openGraphDescription,
+            title: 'Школы «Мела»',
+            description:
+                'Найдите в Москве школу, которая подойдёт вашему ребёнку',
             image: '/static/images/n-clobl/i-layout/schools_sharing.png',
             relapTag: 'школы мела',
             relapImage: '/static/images/n-clobl/i-layout/schools_sharing.png',
@@ -108,11 +119,11 @@ searchView.render = function(data) {
             pageAlias: '',
         },
         resultsList: {
-            title: seoParams.listTitle,
-            description: seoParams.text && seoParams.text[0] || null,
-            countResults: data.schoolsList[0] &&
-                data.schoolsList[0].countResults ||
-                0,
+            title: seoParams.title,
+            description: seoParams.description,
+            linksTitle: seoParams.linksTitle,
+            links: seoParams.links,
+            countResults: data.countResults,
             searchText: data.searchParams.name,
             declensionEntityType: {
                 nom: 'школа',
@@ -150,7 +161,10 @@ searchView.render = function(data) {
             filtersData: filtersData,
             searchParams: data.searchParams
         }),
-        searchParams: data.searchParams
+        searchParams: data.searchParams,
+        footer: {
+            seoLinks: data.seoLinks
+        }
     };
 };
 
@@ -176,7 +190,7 @@ searchView.initSearchParams = function(params) {
             formatUtils.transformToArray(params.activitySphere),
         page: params.page || 0,
         sortType: params.sortType,
-        name: params.name,
+        name: params.name || '',
         metroId: params.metroId || null,
         areaId: params.areaId || null,
         districtId: params.districtId || null

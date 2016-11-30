@@ -50,7 +50,7 @@ exports.search = async(function(req, res, next) {
 });
 
 
-exports.list = async(function(req, res, next) {
+exports.listLegasy = async(function(req, res, next) {
     try {
         var searchParams = {},
             searchText = '',
@@ -357,18 +357,41 @@ exports.home = async(function(req, res) {
 });
 
 
-exports.newSearch = async(function(req, res, next) {
+exports.list = async(function(req, res, next) {
     try {
-        let authSocialLinks = services.auth.getAuthSocialUrl(),
-            user = req.user || {},
+        let searchParams = {},
+            seoParams = {},
+            requestParams = req.params || {};
+
+        if (requestParams.listType && lodash.isEmpty(req.query)) {
+            let seoData = await(services.seoSchoolList.getDataByRequest(
+                requestParams
+            ));
+            if (!seoData.listParams) {
+                throw new PageNotFoundError();
+            }
+
+            searchParams = searchView.initSearchParams(
+                seoData.listParams.searchParameters
+            );
+            seoParams = seoView.seoListData(
+                seoData.listParams,
+                seoData.linksParams
+            );
+        } else {
             searchParams = searchView.initSearchParams(req.query);
+        }
+
+
+        let authSocialLinks = services.auth.getAuthSocialUrl(),
+            user = req.user || {};
 
         let data = await({
                 favorites: services.favorite.getFavoriteEntities(user.id),
                 schools: services.school.list(searchParams, {limitResults: 10}),
                 mapPosition: services.map.getPositionParams(searchParams),
                 filtersData: services.school.searchFiltersData(searchParams),
-                seoParams: {}
+                seoLinks: services.seoSchoolList.getByTypes()
             }),
             schoolAliases = await(services.page.getAliases(
                 schoolView.uniqueIds(data.schools),
@@ -382,11 +405,16 @@ exports.newSearch = async(function(req, res, next) {
             authSocialLinks: authSocialLinks,
             schoolsList: data.schools,
             schoolAliases: schoolAliases,
+            countResults: data.schools[0] && data.schools[0].countResults || 0,
             mapPosition: data.mapPosition,
             searchParams: searchParams,
             filtersData: data.filtersData,
             enabledFilters: null,
-            seoParams: data.seoParams,
+            seoParams: seoParams,
+            seoLinks: seoView.linksList(
+                data.seoLinks,
+                (!requestParams.geoType) ? requestParams.listType : null
+            )
         });
 
         let html = soy.render(

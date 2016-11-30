@@ -65,7 +65,7 @@ seoView.seoListData = function(seoSchoolList, seoSchoolListsForLinks) {
         metaTitle: seoSchoolList.seoTitle,
         metaDescription: seoSchoolList.seoDescription,
         title: seoSchoolList.title,
-        description: text[0],
+        description: text[0] || null,
         textLeft: splitTextForParagraphs(text[1]),
         textRight: splitTextForParagraphs(text[2])
     };
@@ -435,7 +435,7 @@ seoView.list = function(header, items) {
  */
 seoView.item = function(item) {
     return {
-        name: seoView.title(item.title, true, true),
+        content: seoView.title(item.title, true, true),
         url: seoView.url(item.listType, item.geoType)
     };
 };
@@ -451,7 +451,7 @@ seoView.item = function(item) {
  */
 seoView.itemWithFullName = function(item) {
     return {
-        name: seoView.title(item.title),
+        content: seoView.title(item.title),
         url: seoView.url(item.listType, item.geoType)
     };
 };
