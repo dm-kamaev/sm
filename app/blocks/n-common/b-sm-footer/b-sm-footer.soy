@@ -1,0 +1,164 @@
+{namespace sm.bSmFooter.Template}
+
+
+/**
+ * @typedef {{
+ *     year: number,
+ *     contactLinks: Array<sm.bSmLink.Template.Params.Data>,
+ *     seoLinks: Array<sm.bSmLink.Template.Params.Data>
+ * }} sm.bSmFooter.Template.Params.Data
+ */
+
+
+/**
+ * Constructor
+ * @param params {{
+ *     data: sm.bSchoolListPaged.Template.Params.Data
+ * }}
+ * @extends cl.iControl.Template
+ * @constructor
+ */
+{template .footer}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * Body
+ * @param params {{
+ *     data: sm.bSchoolListPaged.Template.Params.Data
+ * }}
+ * @override
+ */
+{template .body}
+    {call .sectionCopyright_ data="all" /}
+    {call .sectionLinks_ data="all" /}
+{/template}
+
+
+/**
+ * Copyright
+ * @param params {{
+ *     data: {
+ *         year: number
+ *     }
+ * }}
+ */
+{template .sectionCopyright_}
+    <div class="{call .rootClass/}__section{sp}
+                {call .rootClass/}__section_copyright">
+        <div class="{call .rootClass/}__copyright">
+            © Маркет Мела, {$params.data.year}
+        </div>
+    </div>
+{/template}
+
+
+/**
+ * Links template
+ * @param params {{
+ *    data: {
+ *         contactLinks: Array<sm.bSmLink.Template.Params.Data>,
+ *         seoLinks: Array<sm.bSmLink.Template.Params.Data>
+ *    }
+ * }}
+ */
+{template .sectionLinks_}
+    <div class="{call .rootClass/}__section{sp}
+                {call .rootClass/}__section_links">
+        {call .contactLinks_ data="all" /}
+        {call .seoLinks_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Links template
+ * @param params {{
+ *    data: {
+ *         contactLinks: Array<sm.bSmLink.Template.Params.Data>
+ *    }
+ * }}
+ */
+{template .contactLinks_}
+    <div class="{call .rootClass/}__links{sp}
+                {call .rootClass/}__links_contact">
+        {call .links_}
+            {param params:[
+                'data': $params.data.contactLinks
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Links template
+ * @param params {{
+ *    data: {
+ *         seoLinks: Array<sm.bSmLink.Template.Params.Data>
+ *    }
+ * }}
+ */
+{template .seoLinks_}
+    <div class="{call .rootClass/}__links{sp}
+                {call .rootClass/}__links_seo">
+        {call .links_}
+            {param params:[
+                'data': $params.data.seoLinks
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Links template
+ * @param params {{
+ *    data: Array<sm.bSmLink.Template.Params.Data>
+ * }}
+ */
+{template .links_}
+    {if $params.data and length($params.data)}
+        {foreach $link in $params.data}
+            {call .link_}
+                {param params:[
+                    'data': $link
+                ]/}
+            {/call}
+        {/foreach}
+    {/if}
+{/template}
+
+
+/**
+ * Link template
+ * @param params {{
+ *     data: sm.bSmLink.Template.Params.Data
+ * }}
+ */
+{template .link_}
+    <div class="{call .rootClass/}__link">
+        {call .renderChild}
+            {param params: [
+                'type': 'smLink',
+                'renderParams': [
+                    'data': $params.data,
+                    'config': [
+                        'size': 'l',
+                        'theme': 'default'
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Root css class
+ * @override
+ */
+{template .rootClass}
+    b-sm-footer
+{/template}
