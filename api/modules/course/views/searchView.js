@@ -118,6 +118,7 @@ searchView.render = function(data) {
         },
         subHeader: {
             logo: {
+                altText: '«Курсы Мела»',
                 imgUrl: '/static/images/n-common/b-sm-subheader/course-logo.svg'
             },
             links: {

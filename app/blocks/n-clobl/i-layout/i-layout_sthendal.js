@@ -80,8 +80,7 @@ goog.scope(function() {
         var that = this;
         this.subheader = this.decorateChild(
             'smSubheader',
-            this.getView().getDom().subheader,
-            {parentElem: that.getElement()}
+            this.getView().getDom().subheader
         );
     };
 
@@ -94,8 +93,7 @@ goog.scope(function() {
         var that = this;
         this.footer = this.decorateChild(
             'smFooter',
-            this.getView().getDom().footer,
-            {parentElem: that.getElement()}
+            this.getView().getDom().footer
         );
     };
 });  // goog.scope

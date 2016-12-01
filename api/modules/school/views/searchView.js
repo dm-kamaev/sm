@@ -88,6 +88,8 @@ searchView.render = function(data) {
         },
         subHeader: {
             logo: {
+                altText: '«Школы Мела»',
+                linkUrl: '/',
                 imgUrl: '/static/images/n-common/b-sm-subheader/school-logo.svg'
             },
             links: {
