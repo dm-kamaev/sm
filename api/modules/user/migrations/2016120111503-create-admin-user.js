@@ -13,7 +13,7 @@ module.exports = {
                 unique: true,
                 type: Sequelize.INTEGER,
             },
-            attributes: {
+            accessAttributes: {
                 type: Sequelize.JSONB,
             },
             'created_at': {

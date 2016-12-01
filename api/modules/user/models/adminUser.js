@@ -1,7 +1,9 @@
-var DataType = require('sequelize');
-var db = require('../../../../app/components/db');
+'use strict';
 
-var AdminUser = db.define('AdminUser', {
+let DataType = require('sequelize');
+let db = require('../../../../app/components/db');
+
+let AdminUser = db.define('AdminUser', {
     id: {
         autoIncrement: true,
         primaryKey: true,
@@ -12,7 +14,7 @@ var AdminUser = db.define('AdminUser', {
         unique: true,
         type: DataType.INTEGER,
     },
-    attributes: {
+    accessAttributes: {
         type: DataType.JSONB,
     },
     'created_at': {
