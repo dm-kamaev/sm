@@ -238,10 +238,10 @@ exports.createComment = async(function(req, res) {
         ));
 
         if (typeof userData !== 'undefined') {
-            result = [{
-                code: 1,
+            result = JSON.stringify([{
+                code: 'NotValidUser',
                 message: 'Вы уже оставляли отзыв у этой школы.'
-            }];
+            }]);
             res.statusCode = 400;
 
             services.userData.update(userData.id, {
@@ -254,13 +254,15 @@ exports.createComment = async(function(req, res) {
             }
 
             result = await(services.school.review(schoolId, params));
+            res.status(201);
         }
     } catch (error) {
         result = error.message;
+        res.status(400);
         logger.error(error);
     } finally {
-        res.status(201);
-        res.header('Content-Type', 'text/html; charset=utf-8');
+        res.header('Content-Type', 'application/json; charset=utf-8');
+        console.log(result);
         res.end(result);
     }
 });
