@@ -1,5 +1,4 @@
-var DataType = require('sequelize'),
-    userType = require('../enums/userType');
+var DataType = require('sequelize');
 var db = require('../../../../app/components/db');
 
 var AdminUser = db.define('AdminUser', {
@@ -24,9 +23,6 @@ var AdminUser = db.define('AdminUser', {
         allowNull: false,
         type: DataType.DATE
     },
-    'deleted_at': {
-        type: DataType.DATE
-    }
 }, {
     underscored: true,
     tableName: 'admin_user',
