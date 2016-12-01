@@ -236,9 +236,9 @@ exports.list = async(function(req, res, next) {
                 throw new PageNotFoundError();
             }
 
-            searchParams = searchView.initSearchParams(
-                seoData.listParams.searchParameters
-            );
+            let storedParams = JSON.parse(seoData.listParams.searchParameters);
+            searchParams = searchView.initSearchParams(storedParams);
+
             seoParams = seoView.seoListData(
                 seoData.listParams,
                 seoData.linksParams
