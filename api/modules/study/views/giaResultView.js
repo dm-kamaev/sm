@@ -1,8 +1,7 @@
 'use strict';
 
 const cityResultView = require('./cityResultView'),
-    subjectView = require('./subjectView'),
-    searchType = require('../../school/enums/searchType');
+    subjectView = require('./subjectView');
 
 const giaSortOrder = require('../views/constants/giaSubjectsOrder.json');
 
@@ -101,32 +100,6 @@ giaResultView.transformResults = function(results, cityResults) {
         range: range
     };
 };
-
-/**
- * Generate ege result filters with sorted values
- * @param {Array<models.GiaResult>} giaSubjectsIds
- * @param {Array<models.Subject>} subjects
- * @return {{
- *    filter: string,
- *    values: Array<{
- *       label: string,
- *       value: string,
- *       id: number
- *    }>
- * }}
- */
-giaResultView.searchFilter = function(giaSubjectsIds, subjects) {
-    var filters = subjectView.searchFilter(
-        giaSubjectsIds, subjects, searchType.fields.GIA
-    );
-
-    filters.values.sort(
-        (a, b) => subjectView.sorter(a.label, b.label, 'GIA')
-    );
-
-    return filters;
-};
-
 
 /**
  * Transform raw filterData to filterdata for filter panel

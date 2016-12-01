@@ -7,7 +7,6 @@ var checkToken = require('../../../../app/middleware/checkToken');
 router.get('/school', schoolController.list);
 router.get('/school/search', schoolController.search);
 router.get('/school/search/map', schoolController.searchMap);
-router.get('/school/searchLegacy', schoolController.searchLegacy);
 router.get(
     '/school/searchMapPointsLegacy', schoolController.searchMapPointsLegacy
 );

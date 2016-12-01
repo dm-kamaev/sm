@@ -10,36 +10,6 @@ var seoView = {};
 
 
 /**
- * Return search parameters from given seoSchoolList instance
- * @param {models.SeoSchoolList} seoSchoolList
- * @return {{
- *     searchText: string,
- *     searchParams: {
- *         name: string,
- *         schoolType: Array<number>,
- *         classes: Array<number>,
- *         gia: Array<number>,
- *         ege: Array<number>,
- *         olimp: Array<number>,
- *         metroId: ?number,
- *         areaId: ?number,
- *         districtId: ?number,
- *         sortType: ?number,
- *         page: number
- *     }
- * }}
- */
-seoView.searchParams = function(seoSchoolList) {
-    var storedParams = JSON.parse(seoSchoolList.searchParameters);
-
-    return {
-        // searchParams: searchView.params(storedParams),
-        searchText: storedParams.name || ''
-    };
-};
-
-
-/**
  * Return seo data from given seoSchoolList instance
  * @param {models.seoSchoolList} seoSchoolList
  * @param {Array<models.SeoSchoolList>} seoSchoolListsForLinks

@@ -167,7 +167,7 @@ exports.suggestSearch = async(function(req, res) {
         logger.error(error.message);
         result = error.message;
     } finally {
-        res.header('Content-Type', 'text/html; charset=utf-8');
+        res.header('Content-Type', 'application/json; charset=utf-8');
         res.end(JSON.stringify(result));
     }
 });
@@ -273,7 +273,7 @@ exports.createComment = async(function(req, res) {
 
 
 /**
- * @api {get} api/course/search Search controller
+ * @api {get} api/school/search Search controller
  *     Can send results for map on demand and for results list
  * @apiVersion 0.0.1
  * @apiGroup School
@@ -294,7 +294,6 @@ exports.createComment = async(function(req, res) {
  *         "metroId: 1,
  *         "areaId: 2,
  *         "districtId: 3,
- *         "categoryId: 4,
  *         "requestMapResults": true
  *     }
  */
@@ -313,7 +312,7 @@ exports.search = async(function(req, res) {
 
         result = {
             list: {
-                items: schoolView.list(aliasedSchools),
+                items: schoolView.list(aliasedSchools, searchParams.sortType),
                 countResults: schools[0] && schools[0].countResults || 0
             }
         };
@@ -394,68 +393,6 @@ exports.searchMap = async(function(req, res) {
     }
 });
 
-
-/**
- * @api {get} api/school/searchLegacy Search in all schools withs given
- * parameters and return 10 results depends of given page
- * @apiVersion 0.0.0
- * @apiGroup School
- * @apiName Search
- * @apiParam {Object} searchParams Search params.
- * @apiParamExample {json} Request-Example:
- *     {
- *       "name": "123",
- *       "classes": [1,2,3,4],
- *       "schoolType": ["school-or-center", "cadet"],
- *       "gia": ["math", "russian"],
- *       "ege": ["art", "handcraft"],
- *       "olimp": ["computer-science", "sports"],
- *       "metroId": 1,
- *       "areaId": 1,
- *       "districtId": 40,
- *       "sortType": 1,
- *       "page": 0
- *     }
- */
-exports.searchLegacy = async(function(req, res) {
-    var result;
-    try {
-        var user = req.user || {},
-            params = await(services.schoolSearch.initSearchParams(req.query)),
-            favoriteIds =
-                await(services.favorite.getByUserId(user.id));
-
-        var schools = await(services.school.list(
-                params, {
-                    limitResults: 10
-                }
-            )),
-            schoolIds = schoolView.uniqueIds(schools),
-            aliases = await(services.page.getAliases(
-                schoolIds,
-                entityType.SCHOOL
-            ));
-
-        var schoolsWithAliases = schoolView.joinAliases(schools, aliases),
-            schoolsWithFavoriteMark = schoolView.listWithFavorites(
-                schoolsWithAliases, favoriteIds
-            );
-
-        result = {
-            list: schoolView.listLegacy(
-                schoolsWithFavoriteMark, params.sortType, params.page
-            ),
-            map: schoolView.listMapLegacy(schools)
-        };
-    } catch (error) {
-        result = JSON.stringify(error);
-        logger.error(result);
-    } finally {
-        res.header('Content-Type', 'text/html; charset=utf-8');
-        res.end(JSON.stringify(result));
-    }
-});
-
 /**
  * @api {get} api/school/searchMapPointsLegacy Search in all schools with given
  * parameters and return all results to place it at map
@@ -479,9 +416,7 @@ exports.searchLegacy = async(function(req, res) {
 exports.searchMapPointsLegacy = async(function(req, res) {
     var result;
     try {
-        var params = await(services.schoolSearch.initSearchParams(
-            req.query
-        ));
+        var params = searchView.initSearchParams(req.query);
 
         var promises = {
             schools: services.school.list(params),

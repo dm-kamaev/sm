@@ -259,52 +259,6 @@ var getDirectorName = function(name) {
 };
 
 /**
- * @param {array<object>} schools - schoolInstances
- * @param {number} opt_criterion
- * @param {number} opt_page
- * @return {object} contains results count and schools array
- */
-schoolView.listLegacy = function(schools, opt_criterion, opt_page) {
-    var res = {};
-
-    if (schools.length !== 0) {
-        schools = groupSchools(schools);
-
-        res.countResults = schools[0].countResults;
-        res.schools = schools
-            .map((school, i) => {
-                var score = scoreView.results(
-                    school.score,
-                    school.totalScore,
-                    opt_criterion
-                );
-
-                return {
-                    id: school.id,
-                    alias: school.alias,
-                    name: getName(school.name),
-                    description: school.description,
-                    abbreviation: school.abbreviation,
-                    score: score,
-                    fullName: school.fullName,
-                    ratings: ratingView.ratingResultView(school.rankDogm),
-                    metroStations: addressView.getMetro(school.addresses),
-                    area: addressView.getArea(school.addresses)[0],
-                    position: getPosition(i, opt_page),
-                    isFavorite: school.isFavorite
-                };
-            });
-    } else {
-        res = {
-            countResults: 0,
-            schools: []
-        };
-    }
-    return res;
-};
-
-
-/**
  * @param {Array<Object>} schoolInstances
  * @param {number=} opt_sortCriterion
  * @return {Object} contains results count and schools array
@@ -629,17 +583,6 @@ var getName = function(name) {
 };
 
 /**
- * Get position of school in list
- * @param {number} localPosition
- * @param {number} page
- * @return {number}
- */
-var getPosition = function(localPosition, page) {
-    var pagePosition = page ? page * 10 : 0;
-    return pagePosition + localPosition + 1;
-};
-
-/**
  * @param {{
  *    schools: Array<models.School>,
  *    areas: Array<models.Area>,
@@ -790,60 +733,6 @@ schoolView.listCompactItem = function(schoolData) {
 schoolView.isFavorite = function(school, favoriteItems) {
     return favoriteItems.some(favoriteItem => {
         return favoriteItem.id == school.id;
-    });
-};
-
-
-/**
- * Add to given school list isFavorite property if school id
- * in given favorites ids
- * @param {Array<{
- *     id: number,
- *     name: {
- *         light: (undefined|string),
- *         bold: (undefined|string)
- *     },
- *     url: (undefined|string),
- *     score: (undefined|number),
- *     metroStations: (undefined|Array<{
- *         id: number,
- *         name: string
- *     }>),
- *     area: (undefined|{
- *         id: number,
- *         name: string
- *     }),
- *     url: string
- * }>} schools
- * @param {Array<models.Favorite>} favorites
- * @return {Array<{
- *     id: number,
- *     name: {
- *         light: (undefined|string),
- *         bold: (undefined|string)
- *     },
- *     url: (undefined|string),
- *     score: (undefined|number),
- *     metroStations: (undefined|Array<{
- *         id: number,
- *         name: string
- *     }>),
- *     area: (undefined|{
- *         id: number,
- *         name: string
- *     }),
- *     url: string,
- *     isFavorite: boolean
- * }>}
- */
-schoolView.listWithFavorites = function(schools, favorites) {
-    var type = entityType.SCHOOL;
-
-    return schools.map(school => {
-        school.isFavorite = favorites.some(favorite =>
-            (favorite.entityType == type && school.id == favorite.entityId)
-        );
-        return school;
     });
 };
 
