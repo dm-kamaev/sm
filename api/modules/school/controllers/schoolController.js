@@ -294,7 +294,6 @@ exports.createComment = async(function(req, res) {
  *         "metroId: 1,
  *         "areaId: 2,
  *         "districtId: 3,
- *         "categoryId: 4,
  *         "requestMapResults": true
  *     }
  */
@@ -313,7 +312,7 @@ exports.search = async(function(req, res) {
 
         result = {
             list: {
-                items: schoolView.list(aliasedSchools),
+                items: schoolView.list(aliasedSchools, searchParams.sortType),
                 countResults: schools[0] && schools[0].countResults || 0
             }
         };

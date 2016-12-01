@@ -42,7 +42,6 @@ exports.createComment = async(function(req, res) {
     }
 });
 
-
 exports.search = async(function(req, res, next) {
     res.status(301);
     res.header('Location', '/school');
