@@ -76,7 +76,6 @@ goog.require('sm.lSearch.bFilterPanel.Template');
 goog.require('sm.lSearch.bLabel.Template');
 goog.require('sm.lSearch.bSearchResults.Template');
 goog.require('sm.lSearch.bSuggestFilter.Template');
-goog.require('sm.lSearchResult.bFilterSearch.Template');
 
 
 
@@ -193,10 +192,6 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'favorite-link',
             sm.bFavoriteLink.Template.favoriteLink
-        )
-        .setTemplateListItem(
-            'filter-search',
-            sm.lSearchResult.bFilterSearch.Template.filterSearch
         )
         .setTemplateListItem(
             'tab-catalog',

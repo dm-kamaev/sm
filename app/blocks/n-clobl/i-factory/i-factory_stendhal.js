@@ -120,8 +120,6 @@ goog.require('sm.lSearch.bSearchResults.SearchResults');
 goog.require('sm.lSearch.bSearchResults.View');
 goog.require('sm.lSearch.bSuggestFilter.SuggestFilter');
 goog.require('sm.lSearch.bSuggestFilter.View');
-goog.require('sm.lSearchResult.bFilterSearch.FilterSearch');
-goog.require('sm.lSearchResult.bFilterSearch.View');
 
 
 
@@ -207,10 +205,6 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('favorite-link', {
             control: sm.bFavoriteLink.FavoriteLink,
             view: sm.bFavoriteLink.View
-        })
-        .setControlListItem('filter-search', {
-            control: sm.lSearchResult.bFilterSearch.FilterSearch,
-            view: sm.lSearchResult.bFilterSearch.View
         });
 
     /** Heirs of the clobl blocks */
