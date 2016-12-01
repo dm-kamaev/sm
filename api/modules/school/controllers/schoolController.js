@@ -417,9 +417,7 @@ exports.searchMap = async(function(req, res) {
 exports.searchMapPointsLegacy = async(function(req, res) {
     var result;
     try {
-        var params = await(services.schoolSearch.initSearchParams(
-            req.query
-        ));
+        var params = searchView.initSearchParams(req.query);
 
         var promises = {
             schools: services.school.list(params),
