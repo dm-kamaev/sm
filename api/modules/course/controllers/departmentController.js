@@ -65,12 +65,11 @@ controller.get = async(function(req, res) {
     let result;
     try {
         let brandId = parseInt(req.params.brandId, 10),
-            departmentId = parseInt(req.params.id);
+            departmentId = parseInt(req.params.id, 10);
         let department = await(services.courseDepartment.getById(
             departmentId
         ));
-        department.brandId = brandId;
-        result = departmentView.render(department);
+        result = departmentView.render(department, brandId);
     } catch (error) {
         logger.error(error.message);
         result = error;

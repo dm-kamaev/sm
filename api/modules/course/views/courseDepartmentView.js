@@ -3,25 +3,26 @@
 let view = {};
 
 /**
- * @param  {Array<CourseDepartment>} departments
- * @return {Array<Object>}
+ * @param  {Object[]} departments
+ * @param  {Number} brandId
+ * @return {Object[]} [ { id, name, brandId, adress, phone, updatedAt }, ]
  */
 view.renderList = function(departments, brandId) {
-    return departments.map(department => {
-      department.brandId = brandId;
-      return this.render(department);
-    });
+    return departments.map(department => this.render(department, brandId));
 };
 
+
 /**
- * @param  {CourseDepartment} department
- * @return {Object}
+ * [render description]
+ * @param  {Object} department
+ * @param  {Number} brandId
+ * @return {Object} { id, name, brandId, adress, phone, updatedAt }
  */
-view.render = function(department) {
+view.render = function(department, brandId) {
     return {
         id: department.id,
         name: department.name,
-        brandId: department.brandId,
+        brandId: brandId,
         address: department.address.name,
         phone: department.phone,
         updatedAt: department['updated_at']
