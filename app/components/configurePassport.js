@@ -10,8 +10,8 @@ module.exports = function() {
         done(null, user.id);
     });
 
-    passport.deserializeUser(async(function (id, done) {
-        userData = await(services.user.getUserById(id));
+    passport.deserializeUser(async(function(id, done) {
+        var userData = await(services.user.getUserById(id));
         done(null, userData);
     }));
 };
