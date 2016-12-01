@@ -1,8 +1,7 @@
 'use strict';
 
 const cityResultView = require('./cityResultView'),
-    subjectView = require('./subjectView'),
-    searchType = require('../../school/enums/searchType');
+    subjectView = require('./subjectView');
 
 const egeSortOrder = require('../views/constants/egeSubjectsOrder.json');
 
@@ -100,32 +99,6 @@ egeResultView.transformResults = function(results, cityResults) {
         range: range
     };
 };
-
-/**
- * Generate ege result filters with sorted values
- * @param {Array<models.EgeResult>} egeSubjectsIds
- * @param {Array<models.Subject>} subjects
- * @return {{
- *    filter: string,
- *    values: Array<{
- *       label: string,
- *       value: string,
- *       id: number
- *    }>
- * }}
- */
-egeResultView.searchFilter = function(egeSubjectsIds, subjects) {
-    var filters = subjectView.searchFilter(
-        egeSubjectsIds, subjects, searchType.fields.EGE
-    );
-
-    filters.values.sort(
-        (a, b) => subjectView.sorter(a.label, b.label, 'EGE')
-    );
-
-    return filters;
-};
-
 
 /**
  * Transform raw filterData to filterData for filter panel

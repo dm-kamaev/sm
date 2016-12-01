@@ -1,13 +1,6 @@
 'use strict';
 
-const subjectView = require('./subjectView'),
-    searchType = require('../../school/enums/searchType');
-
-/**
- * Olympiad results view
- * @constructor
- */
-var OlimpResultView = function() {
+let olympiadResultsView = {
 };
 
 /**
@@ -15,7 +8,7 @@ var OlimpResultView = function() {
  * @param {Array<Object>} results
  * @return {{years: U[], results: U[]}}
  */
-OlimpResultView.prototype.transformResults = function(results) {
+olympiadResultsView.transformResults = function(results) {
     var res = {},
         keys,
         schoolClass,
@@ -135,34 +128,9 @@ OlimpResultView.prototype.transformResults = function(results) {
  * @return {number}
  * @private
  */
-OlimpResultView.prototype.sorter_ = function(a, b) {
+olympiadResultsView.sorter_ = function(a, b) {
     return (b.winners || 0) - (a.winners || 0) ||
         (b.awardees || 0) - (a.awardees || 0);
 };
 
-/**
- * Generate olympiads result filters
- * @param {Array<models.OlimpResult>} egeSubjectsIds
- * @param {Array<models.Subject>} subjects
- * @return {{
- *    filter: string,
- *    values: Array<{
- *       label: string,
- *       value: string,
- *       id: number
- *    }>
- * }}
- */
-OlimpResultView.prototype.searchFilter = function(egeSubjectsIds, subjects) {
-    var filters = subjectView.searchFilter(
-        egeSubjectsIds, subjects, searchType.fields.OLIMPIAD
-    );
-
-    return filters;
-};
-
-/**
- * Exports
- * @type {OlimpResultView}
- */
-module.exports = new OlimpResultView();
+module.exports = olympiadResultsView;
