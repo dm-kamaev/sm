@@ -389,17 +389,18 @@
 
         <div class="{call .rootClass/}__section{sp}
                     {call .rootClass/}__section_footer-seo">
-            <div class="{call .rootClass /}__section-inner">
+            <div class="{call .rootClass /}__section-inner{sp}
+                        {call .rootClass /}__section-inner_seo">
 
-                <div class="{call .rootClass/}__text-seo{sp}
-                            {call .rootClass/}__text-seo_left">
+                <div class="{call .rootClass/}__column-seo{sp}
+                            {call .rootClass/}__column-seo_left">
                     {call .textSeo_}
                         {param text: $params.data.seo.textLeft /}
                     {/call}
                 </div>
 
-                <div class="{call .rootClass/}__text-seo{sp}
-                            {call .rootClass/}__text-seo_right">
+                <div class="{call .rootClass/}__column-seo{sp}
+                            {call .rootClass/}__column-seo_right">
                     {call .textSeo_}
                         {param text: $params.data.seo.textRight /}
                     {/call}
