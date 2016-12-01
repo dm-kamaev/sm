@@ -380,11 +380,13 @@ goog.scope(function() {
      */
     Map.prototype.addMapObject_ = function(viewType, addressItem) {
         var geoObject = this.find_(addressItem),
-            isItems = addressItem['items'] && addressItem['items'].length;
+            hasItems = addressItem['items'] && addressItem['items'].length;
 
-        if (goog.isDefAndNotNull(geoObject) && isItems) {
-            this.updateViewType_(geoObject, viewType);
-            this.extendGeoObject_(geoObject, addressItem);
+        if (goog.isDefAndNotNull(geoObject)) {
+            if (hasItems) {
+                this.updateViewType_(geoObject, viewType);
+                this.extendGeoObject_(geoObject, addressItem);
+            }
         } else {
             this.objectManager_.add(this.generateGeoObject_(
                 viewType,
