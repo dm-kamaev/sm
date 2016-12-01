@@ -213,11 +213,15 @@ view.pageMap = function(course) {
             return {
                 addressId: address.id,
                 coordinates: geoView.coordinatesDefault(address.coords),
-                title: {
-                    text: course.courseBrand.name
+                header: {
+                    title: course.courseBrand.name
                 },
-                items: [],
-                description: address.name,
+                content: {
+                    items: []
+                },
+                description: {
+                    text: address.name
+                },
                 id: course.id,
                 courseName: course.name,
                 category: course.categories[0].name,
@@ -268,11 +272,11 @@ view.listMap = function(courses, viewType) {
         );
 
         if (~addressPosition) {
-            let isCourseAdded = ~prev[addressPosition].items.findIndex(
+            let isCourseAdded = ~prev[addressPosition].content.items.findIndex(
                 mapCourse => mapCourse.id == curr.id
             );
             if (!isCourseAdded) {
-                prev[addressPosition].items.push(this.mapCourse(curr));
+                prev[addressPosition].content.items.push(this.mapCourse(curr));
             }
         } else {
             prev.push(this.getMapItem(curr));
@@ -364,7 +368,6 @@ view.getMapItem = function(course) {
     return course.addressId ?
         {
             addressId: course.addressId,
-            addressName: course.addressName,
             coordinates: geoView.coordinatesDefault(
                 course.addressCoords),
             score: course.totalScore,
@@ -373,8 +376,16 @@ view.getMapItem = function(course) {
                 text: course.brand,
                 url: null
             },
-            subtitle: course.addressName,
-            items: [this.mapCourse(course)]
+            header: {
+                title: course.brand
+            },
+            content: {
+                title: 'Курсы',
+                items: [this.mapCourse(course)]
+            },
+            footer: {
+                title: course.addressName
+            }
         } :
         null;
 };

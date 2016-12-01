@@ -714,7 +714,6 @@ goog.scope(function() {
                         return CustomBalloonLayout.superclass.getShape
                             .call(this);
                     }
-
                     var position = goog.style.getPosition(this.element_);
                     return new ymaps.shape.Rectangle(
                         new ymaps.geometry.pixel.Rectangle([
@@ -766,6 +765,7 @@ goog.scope(function() {
                     var event = new sm.bSmMap.Event.PinClick(
                         this.getData().object.properties
                     );
+                    console.log(event.data);
                     mapInstance.dispatchEvent(event);
                 }
             }
@@ -813,7 +813,7 @@ goog.scope(function() {
     /**
      * Handler for event of changing page of paged list in balloon. In this case
      * is possible to change shape of ballon
-     * @param  {Object} balloonInstance
+     * @param {Object} balloonInstance
      * @private
      */
     Map.prototype.onBalloonListPageChange_ = function(balloonInstance) {

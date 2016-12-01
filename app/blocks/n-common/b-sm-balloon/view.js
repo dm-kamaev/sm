@@ -39,7 +39,6 @@ goog.scope(function() {
     View.CssClass = {
         ROOT: 'b-sm-balloon',
         CLOSE_BUTTON: 'b-sm-balloon__close',
-        TITLE_LINK: 'b-sm-balloon__title-link',
         ITEM: 'b-sm-balloon__item',
         ITEM_LIST: 'b-sm-balloon__item-list'
     };
@@ -84,21 +83,59 @@ goog.scope(function() {
      * @return {sm.bSmBalloon.View.RenderParams}
      */
     View.getRenderParams = function(rawParams) {
-        var title = rawParams['title'];
-        return {
-            data: {
-                title: {
-                    id: title['id'],
-                    text: title['text'],
-                    url: title['url']
-                },
-                subtitle: rawParams['subtitle'],
-                items: goog.array.map(rawParams['items'],
-                    function(rawLinkParams) {
-                        return Item.getRenderParams(rawLinkParams).data;
-                    }),
-                description: rawParams['description']
+        var header = rawParams['header'],
+            description = rawParams['description'],
+            content = rawParams['content'],
+            footer = rawParams['footer'],
+            res = {};
+
+        if (header) {
+            res.header = {};
+
+            res.header.title =
+                header['title'] ? header['title'] : null;
+
+            res.header.description =
+                header['description'] ? header['description'] : null;
+        }
+        if (description) {
+            res.description = {};
+
+            res.description.text =
+                description['text'] ? description['text'] : null;
+
+            if (description['link']) {
+                res.description.link = {};
+
+                res.description.link.text =
+                    description['link']['text'] ?
+                        description['link']['text'] : null;
+
+                res.description.link.url =
+                    description['link']['url'] ?
+                        description['link']['url'] : null;
             }
+        }
+        if (content) {
+            res.content = {};
+
+            res.content.title =
+                content['title'] ? content['title'] : null;
+
+            res.content.items =
+                content['items'] ?
+                goog.array.map(content['items'], function(rawLinkParams) {
+                        return Item.getRenderParams(rawLinkParams).data;
+                }) : null;
+        }
+        if (footer) {
+            res.footer = {};
+
+            res.footer.title =
+                footer['title'] ? footer['title'] : null;
+        }
+        return {
+            data: res
         };
     };
 
@@ -193,9 +230,6 @@ goog.scope(function() {
         this.dom = {
             closeButton: this.getElementByClass(
                 View.CssClass.CLOSE_BUTTON
-            ),
-            titleLink: this.getElementByClass(
-                View.CssClass.TITLE_LINK
             ),
             itemList: this.getElementByClass(
                 View.CssClass.ITEM_LIST

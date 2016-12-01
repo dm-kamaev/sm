@@ -80,13 +80,15 @@ goog.scope(function() {
     Balloon.prototype.enterDocument = function() {
         Balloon.base(this, 'enterDocument');
 
-        var itemList = this.listPaged_.getList();
+        if (goog.isDefAndNotNull(this.listPaged_)) {
 
-        this.getHandler().listen(
-            itemList,
-            sm.bSmItemList.SmItemList.Event.ITEM_CLICK,
-            this.sendAnalyticsItemClick_
-        );
+            this.getHandler().listen(
+                this.listPaged_.getList(),
+                sm.bSmItemList.SmItemList.Event.ITEM_CLICK,
+                this.sendAnalyticsItemClick_
+            );
+    
+        }
 
         this.autoDispatch(
             View.Event.CLOSE_BUTTON_CLICK, Balloon.Event.CLOSE_BUTTON_CLICK
@@ -111,13 +113,6 @@ goog.scope(function() {
      */
     Balloon.prototype.initComponents_ = function() {
         var dom = this.getView().getDom();
-        
-        if (goog.isDefAndNotNull(dom.titleLink)) {
-            this.decorateChild(
-                'smLink',
-                dom.titleLink
-            );
-        }
 
         if (goog.isDefAndNotNull(dom.itemList)) {
             this.listPaged_ =

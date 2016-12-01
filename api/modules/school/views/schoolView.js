@@ -343,10 +343,27 @@ schoolView.listMap = function(schools) {
  */
 schoolView.getMapItems = function(school) {
     let addresses = addressView.default(school.addresses);
-
     return addresses.length ?
         addresses.map(address => {
             return {
+                id: school.id,
+                header: {
+                    title: school.name,
+                    description: address.stages
+                },
+                description: {
+                    text: school.description,
+                    link: {
+                        text: 'Подробнее',
+                        url: entityType.SCHOOL + '/' + school.alias 
+                    }
+                },
+                content: {
+                    items: []
+                },
+                footer: {
+                    title: address.name
+                },
                 addressId: address.id,
                 addressName: address.name,
                 coordinates: [address.lat, address.lng],
@@ -358,9 +375,7 @@ schoolView.getMapItems = function(school) {
                 },
                 subtitle: address.stages && address.stages != 'Другие адреса' ?
                     address.stages + ' ' + address.name :
-                    address.name,
-                description: school.description,
-                items: []
+                    address.name
             };
         }) :
         [];

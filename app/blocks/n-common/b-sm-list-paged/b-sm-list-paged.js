@@ -167,7 +167,7 @@ goog.scope(function() {
      */
     ListPaged.prototype.getList = function() {
         return this.list_;
-    }
+    };
 
 
     /**
