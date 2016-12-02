@@ -121,7 +121,7 @@
         {call .rootClass/}__section-group_info
     {/let}
 
-    {let $content kind="html"}
+    <div class="{$classes}">
         {if $params.config.theme == 'minimal'}
             {call .sectionLink data="all" /}
         {else}
@@ -129,14 +129,7 @@
             {call .sectionDescription data="all" /}
             {call .sectionDetails data="all" /}
         {/if}
-    {/let}
-
-    {call .sectionGroup}
-        {param params: [
-            'content': $content,
-            'classes': $classes
-        ] /}
-    {/call}
+    </div>
 {/template}
 
 /**
