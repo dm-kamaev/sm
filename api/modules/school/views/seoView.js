@@ -2,40 +2,11 @@
 
 const lodash = require('lodash');
 
-const searchView = require('./searchView');
+// const searchView = require('./searchView');
+
 const seoListType = require('../enums/seoListType');
 
 var seoView = {};
-
-
-/**
- * Return search parameters from given seoSchoolList instance
- * @param {models.SeoSchoolList} seoSchoolList
- * @return {{
- *     searchText: string,
- *     searchParams: {
- *         name: string,
- *         schoolType: Array<number>,
- *         classes: Array<number>,
- *         gia: Array<number>,
- *         ege: Array<number>,
- *         olimp: Array<number>,
- *         metroId: ?number,
- *         areaId: ?number,
- *         districtId: ?number,
- *         sortType: ?number,
- *         page: number
- *     }
- * }}
- */
-seoView.searchParams = function(seoSchoolList) {
-    var storedParams = JSON.parse(seoSchoolList.searchParameters);
-
-    return {
-        searchParams: searchView.params(storedParams),
-        searchText: storedParams.name || ''
-    };
-};
 
 
 /**
@@ -64,7 +35,7 @@ seoView.seoListData = function(seoSchoolList, seoSchoolListsForLinks) {
         metaTitle: seoSchoolList.seoTitle,
         metaDescription: seoSchoolList.seoDescription,
         title: seoSchoolList.title,
-        description: text[0],
+        description: text[0] || null,
         textLeft: splitTextForParagraphs(text[1]),
         textRight: splitTextForParagraphs(text[2])
     };
@@ -434,7 +405,7 @@ seoView.list = function(header, items) {
  */
 seoView.item = function(item) {
     return {
-        name: seoView.title(item.title, true, true),
+        content: seoView.title(item.title, true, true),
         url: seoView.url(item.listType, item.geoType)
     };
 };
@@ -450,7 +421,7 @@ seoView.item = function(item) {
  */
 seoView.itemWithFullName = function(item) {
     return {
-        name: seoView.title(item.title),
+        content: seoView.title(item.title),
         url: seoView.url(item.listType, item.geoType)
     };
 };

@@ -499,7 +499,7 @@ goog.scope(function() {
 
         this.suggest_.setCallbacks({
             getData: function(elem) {
-                var data = JSON.parse(elem);
+                var data = elem;
                 var res = [],
                     items;
 

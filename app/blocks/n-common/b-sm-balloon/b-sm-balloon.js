@@ -2,6 +2,7 @@ goog.provide('sm.bSmBalloon.SmBalloon');
 
 goog.require('cl.iControl.Control');
 goog.require('sm.bSmBalloon.View');
+goog.require('sm.bSmItemList.SmItemList');
 goog.require('sm.bSmListPaged.SmListPaged');
 
 
@@ -23,6 +24,12 @@ goog.scope(function() {
         );
 
 
+        /**
+         * Instance list paged
+         * @type {sm.bSmListPaged.SmListPaged}
+         * @private
+         */
+        this.listPaged_ = null;
     };
     goog.inherits(sm.bSmBalloon.SmBalloon, cl.iControl.Control);
     var Balloon = sm.bSmBalloon.SmBalloon;
@@ -35,7 +42,6 @@ goog.scope(function() {
      */
     Balloon.Event = {
         CLOSE_BUTTON_CLICK: View.Event.CLOSE_BUTTON_CLICK,
-        TITLE_LINK_CLICK: View.Event.TITLE_LINK_CLICK,
         LIST_PAGE_CHANGE: sm.bSmListPaged.SmListPaged.Event.PAGE_CHANGE
     };
 
@@ -68,41 +74,53 @@ goog.scope(function() {
 
 
     /**
-     * Inner components initialization
-     * @private
-     */
-    Balloon.prototype.initComponents_ = function() {
-        var dom = this.getView().getDom();
-        if (goog.isDefAndNotNull(dom.titleLink)) {
-            this.decorateChild(
-                'smLink',
-                dom.titleLink
-            );
-        }
-
-        if (goog.isDefAndNotNull(dom.item)) {
-            this.decorateChild(
-                'smLink',
-                dom.item
-            );
-        }
-
-        if (goog.isDefAndNotNull(dom.itemList)) {
-            this.decorateChild(
-                'smListPaged',
-                dom.itemList
-            );
-        }
-    };
-
-    /**
      * @override
      */
     Balloon.prototype.enterDocument = function() {
         Balloon.base(this, 'enterDocument');
+
+        if (goog.isDefAndNotNull(this.listPaged_)) {
+
+            this.getHandler().listen(
+                this.listPaged_,
+                sm.bSmListPaged.SmListPaged.Event.ITEM_CLICK,
+                this.sendAnalyticsItemClick_
+            );
+
+        }
+
         this.autoDispatch(
             View.Event.CLOSE_BUTTON_CLICK, Balloon.Event.CLOSE_BUTTON_CLICK
         );
     };
 
+
+    /**
+     * Send analytics item click
+     * @param {goog.events.Event} event
+     * @private
+     */
+    Balloon.prototype.sendAnalyticsItemClick_ = function(event) {
+        this.listPaged_.sendAnalyticsItemClick(event.data.itemId,
+            'map balloon');
+    };
+
+
+    /**
+     * Inner components initialization
+     * @private
+     */
+    Balloon.prototype.initComponents_ = function() {
+        var dom = this.getView().getDom();
+
+        if (goog.isDefAndNotNull(dom.itemList)) {
+            this.listPaged_ =
+                this.decorateChild('smListPaged', dom.itemList);
+        }
+
+        if (goog.isDefAndNotNull(dom.descriptionLink)) {
+            this.descriptionLink_ =
+                this.decorateChild('smLink', dom.descriptionLink);
+        }
+    };
 });  // goog.scope

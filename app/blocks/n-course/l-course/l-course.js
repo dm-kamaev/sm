@@ -1,6 +1,7 @@
 goog.provide('sm.lCourse.Course');
 
 goog.require('cl.iRequest.Request');
+goog.require('sm.bSmMap.SmMap');
 goog.require('sm.iAnalytics.Analytics');
 goog.require('sm.iLayout.LayoutStendhal');
 goog.require('sm.iSmViewport.SmViewport');
@@ -99,7 +100,8 @@ goog.scope(function() {
         View = sm.lCourse.View,
         Viewport = sm.iSmViewport.SmViewport,
         AnalyticsSender = sm.lCourse.iAnalyticsSender.AnalyticsSender,
-        Analytics = sm.iAnalytics.Analytics;
+        Analytics = sm.iAnalytics.Analytics,
+        Map = sm.bSmMap.SmMap;
 
 
     /**
@@ -129,6 +131,7 @@ goog.scope(function() {
         this.initUserInteractionsListeners_();
         this.initDepartmentListListeners_();
         this.initModalsListeners_();
+        this.initMapListeners_();
 
         this.analyticsSender_.sendPageview();
     };
@@ -184,6 +187,29 @@ goog.scope(function() {
             sm.gModal.ModalEnrollment.Event.SHOW,
             this.onModalEnrollmentShow_
         );
+    };
+
+
+    /**
+     * Initializes listeners for map
+     * @private
+     */
+    Course.prototype.initMapListeners_ = function() {
+        this.getHandler().listen(
+            this.map_,
+            Map.Event.PIN_CLICK,
+            this.onMapPinClick_
+        );
+    };
+
+
+    /**
+     * Action pin handler
+     * @param {sm.bSmMap.Event.PinClick} event
+     * @private
+     */
+    Course.prototype.onMapPinClick_ = function(event) {
+        this.sendMapAnalytics_(event.data);
     };
 
 
@@ -307,6 +333,27 @@ goog.scope(function() {
             name: this.params.name,
             category: this.params.category,
             price: this.params.cost
+        });
+    };
+
+
+    /**
+     * Send map analytics
+     * @param {sm.bSmMap.Event.PinClick.Data} data
+     * @private
+     */
+    Course.prototype.sendMapAnalytics_ = function(data) {
+        var params = this.analyticsSender_.getProductParams();
+        params.list = data[0].list;
+        params.price = null;
+        params.position = data[0].position;
+
+        this.analyticsSender_.setProductParams(params);
+
+        this.analyticsSender_.sendMapAnalytics({
+            category: 'details map',
+            action: 'pin details',
+            name: data[0].address
         });
     };
 

@@ -27,8 +27,7 @@
  *         type: ('only'|'available')
  *     }|undefined),
  *     isFavorite: ?boolean,
- *     countDepartment: ?number,
- *     position: (number|undefined)
+ *     countDepartment: ?number
  * }} sm.bSmItem.TemplateEntity.Params.Data
  */
 
@@ -232,7 +231,9 @@
     {let $classes kind="html"}
         {call .rootClass/}__score
 
-        {sp}{cl.iUtils.Utils.CssClass.HIDDEN}
+        {if $params.data.type == 'course'}
+            {sp}{cl.iUtils.Utils.CssClass.HIDDEN}
+        {/if}
     {/let}
 
     <div class="{$classes}">
@@ -455,11 +456,17 @@
  * @param params {{
  *     data: {
  *         type: string
+ *     },
+ *     config: {
+ *         enableCover: (boolean|undefined),
+ *         stylizationModifier: string
  *     }
  * }}
  * @override
  */
 {template .additionalClasses}
+    {call .super_additionalClasses data="all"/}{sp}
+
     {call .rootClass/}_entity{sp}
     {call .rootClass/}_type_{$params.data.type}
 {/template}

@@ -3,8 +3,45 @@
 
 /**
  * @typedef {{
- *     data: sm.lSearch.bFilter.Template.Params.Data,
- *     config: sm.lSearch.bFilter.Template.Params.Config
+ *     name: string,
+ *     header: ({
+ *         title: (string|undefined),
+ *         tooltip: (string|undefined)
+ *     }|undefined),
+ *     options: Array<{
+ *         label: string,
+ *         value: string,
+ *         isChecked: (boolean|undefined)
+ *     }>,
+ *     api: string,
+ *     modal: {
+ *         header: (string|undefined),
+ *         placeholder: (string|undefined),
+ *         filterHeader: (string|undefined)
+ *     }
+ * }} sm.lSearch.bFilter.TemplateExtended.Params.Data
+ */
+
+
+/**
+ * @typedef {{
+ *     type: (string|undefined),
+ *     optionsToShow: (boolean|undefined),
+ *     cannotBeHidden: (boolean|undefined),
+ *     isShowed: (boolean|undefined),
+ *     showMoreButtonText: (number|undefined),
+ *     theme: ('light'|'minimal'|undefined),
+ *     align: (string|undefined),
+ *     customClasses: (Array<string>|undefined),
+ *     stylizationModifier: string
+ * }} sm.lSearch.bFilter.TemplateExtended.Params.Config
+ */
+
+
+/**
+ * @typedef {{
+ *     data: sm.lSearch.bFilter.TemplateExtended.Params.Data,
+ *     config: sm.lSearch.bFilter.TemplateExtended.Params.Config
  * }} sm.lSearch.bFilter.TemplateExtended.Params
  */
 
@@ -23,25 +60,13 @@
 /**
  * Tempate button
  * @param params {{
- *     data: {
- *         options: Array<{
- *             label: string,
- *             value: string,
- *             isChecked: (boolean|undefined)
- *         }>
- *     },
  *     config: {
- *         optionsToShow: (number|undefined),
  *         showMoreButtonText: (number|undefined)
  *     }
  * }}
-  * @override
+ * @override
  */
 {template .button}
-    {let $numberOptionsToShow kind="html"}
-        {call .numberOptionsToShow data="all" /}
-    {/let}
-
     {let $showMoreButtonText kind="html"}
         {if $params.config?.showMoreButtonText}
             {$params.config?.showMoreButtonText}
@@ -50,11 +75,9 @@
         {/if}
     {/let}
 
-    {if $params.data.options.length > $numberOptionsToShow}
-        {call .showMoreButton}
-            {param text: $showMoreButtonText/}
-        {/call}
-    {/if}
+    {call .showMoreButton}
+        {param text: $showMoreButtonText/}
+    {/call}
 {/template}
 
 
@@ -85,4 +108,48 @@
  */
 {template .additionalClasses}
     {call .rootClass/}_extended
+{/template}
+
+
+/**
+ * Attributes
+ * @param params {{
+ *     data: {
+ *         name: string,
+ *         header: ({
+ *             title: (string|undefined),
+ *             tooltip: (string|undefined)
+ *         }|undefined),
+ *         api: string,
+ *         optionsToShow: (number|undefined),
+ *         modal: {
+ *             header: (string|undefined),
+ *             placeholder: (string|undefined),
+ *             filterHeader: (string|undefined)
+ *         }
+ *     },
+ *     config: {
+ *         type: (string|undefined)
+ *     }
+ * }}
+ * @override
+ */
+{template .attributes kind="attributes"}
+    {let $data kind="html"}
+        {call cl.iUtils.Utils.stringify}
+            {param json: quoteKeysIfJs([
+                'name': $params.data.name,
+                'type': $params?.config?.type,
+                'api': $params.data.api,
+                'optionsToShow': $params?.config?.optionsToShow,
+                'modal': quoteKeysIfJs([
+                    'header': $params.data.modal?.header ?: $params.data.header?.title,
+                    'placeholder': $params.data.modal?.placeholder ?: '',
+                    'filterHeader': $params.data.modal?.filterHeader ?: 'Популярные'
+                ])
+            ])/}
+        {/call}
+    {/let}
+
+    data-params="{$data}"
 {/template}

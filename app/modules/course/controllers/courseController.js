@@ -71,7 +71,6 @@ controller.search = async(function(req, res, next) {
                 });
 
             let templateData = searchView.render({
-                entityType: entityType.COURSE,
                 user: user,
                 fbClientId: FB_CLIENT_ID,
                 favorites: data.favorites,
@@ -110,8 +109,7 @@ controller.search = async(function(req, res, next) {
                             carrotquestId: CARROTQUEST_ID,
                             csrf: req.csrfToken(),
                             domain: DOMAIN,
-                            fbClientId: FB_CLIENT_ID,
-                            type: entityType.COURSE
+                            fbClientId: FB_CLIENT_ID
                         }
                     }
                 }
@@ -171,6 +169,8 @@ controller.information = async(function(req, res, next) {
                     }),
                     categoryAliases: services.courseCategory.getAliases()
                 });
+
+                course.categories = data.categories;
 
                 let templateData = informationView.render({
                     user: user,

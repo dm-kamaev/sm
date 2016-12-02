@@ -2,13 +2,13 @@
 
 const lodash = require('lodash');
 
-const scoreView = require('./scoreView'),
+const scoreView = require('../../entity/views/scoreView'),
     metroView = require('../../geo/views/metroView'),
     geoView = require('../../geo/views/geoView'),
     areaView = require('../../geo/views/areaView'),
     districtView = require('../../geo/views/districtView'),
     addressView = require('../../geo/views/addressView'),
-    FormatText = require('../../entity/lib/FormatText'),
+    FormatUtils = require('../../entity/lib/FormatUtils'),
     CourseOptionsTransformer = require('../lib/CourseOptionsTransformer'),
     pageView = require('../../entity/views/pageView');
 
@@ -57,10 +57,10 @@ view.formatFullDescription = function(text) {
 
     if (text) {
         if (text.length > FULL_DESCRIPTION_LENGTH) {
-            let formatText = new FormatText();
+            let formatUtils = new FormatUtils();
             result.fullText = [text];
             result.cutText.push(
-                formatText.cut(text, FULL_DESCRIPTION_LENGTH, ' ')
+                formatUtils.cutText(text, FULL_DESCRIPTION_LENGTH, ' ')
             );
         } else {
             result.cutText.push(text);
@@ -213,11 +213,18 @@ view.pageMap = function(course) {
             return {
                 addressId: address.id,
                 coordinates: geoView.coordinatesDefault(address.coords),
-                title: {
-                    text: course.courseBrand.name
+                header: {
+                    title: course.courseBrand.name
                 },
-                items: [],
-                description: address.name,
+                content: {
+                    items: []
+                },
+                description: {
+                    text: address.name
+                },
+                id: course.id,
+                courseName: course.name,
+                category: course.categories[0].name,
                 score: course.totalScore
             };
         })
@@ -265,11 +272,11 @@ view.listMap = function(courses, viewType) {
         );
 
         if (~addressPosition) {
-            let isCourseAdded = ~prev[addressPosition].items.findIndex(
+            let isCourseAdded = ~prev[addressPosition].content.items.findIndex(
                 mapCourse => mapCourse.id == curr.id
             );
             if (!isCourseAdded) {
-                prev[addressPosition].items.push(this.mapCourse(curr));
+                prev[addressPosition].content.items.push(this.mapCourse(curr));
             }
         } else {
             prev.push(this.getMapItem(curr));
@@ -349,7 +356,10 @@ view.getAddresses = function(courseOptions) {
  *     subtitle: string,
  *     items: Array<{
  *         id: number,
- *         content: string,
+ *         name: {
+ *             light: string,
+ *             bold: ?string
+ *         },
  *         url: null
  *     }>
  * }}
@@ -358,7 +368,6 @@ view.getMapItem = function(course) {
     return course.addressId ?
         {
             addressId: course.addressId,
-            addressName: course.addressName,
             coordinates: geoView.coordinatesDefault(
                 course.addressCoords),
             score: course.totalScore,
@@ -367,8 +376,16 @@ view.getMapItem = function(course) {
                 text: course.brand,
                 url: null
             },
-            subtitle: course.addressName,
-            items: [this.mapCourse(course)]
+            header: {
+                title: course.brand
+            },
+            content: {
+                title: 'Курсы',
+                items: [this.mapCourse(course)]
+            },
+            footer: {
+                title: course.addressName
+            }
         } :
         null;
 };
@@ -379,14 +396,20 @@ view.getMapItem = function(course) {
  * @param  {Object} course
  * @return {{
  *     id: number,
- *     content: string,
+ *     name: {
+ *         light: string,
+ *         bold: ?string
+ *     },
  *     url: string
  * }}
  */
 view.mapCourse = function(course) {
     return {
         id: course.id,
-        content: course.name,
+        name: {
+            light: course.name
+        },
+        category: course.categoryAlias,
         url: this.generateAlias(
             course.alias,
             course.brandAlias,

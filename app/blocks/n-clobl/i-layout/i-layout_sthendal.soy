@@ -15,7 +15,10 @@
  *         metaTitle: string,
  *         metaDescription: (string|undefined)
  *     },
- *     subHeader: sm.bSmSubHeader.Template.Params.Data
+ *     subHeader: sm.bSmSubHeader.Template.Params.Data,
+ *     footer: ({
+ *         seoLinks: Array<sm.bSmLink.SmLink.Template.Params.Data>
+ *     }|undefined)
  * }} sm.iLayout.TemplateStendhal.Params.Data
  */
 
@@ -368,9 +371,14 @@
 /**
  * Footer
  * @param params {
+ *     data: {
+ *         footer: ({
+ *             seoLinks: Array<sm.bSmLink.SmLink.Template.Params.Data>
+ *         }|undefined)
+ *     },
  *     config: {
- *         year: ?number,
- *         modifier: ?string
+ *         year: number,
+ *         modifier: string
  *     }
  * }
  * @protected
@@ -383,18 +391,19 @@
                 'type': 'smFooter',
                 'renderParams': [
                     'data': [
-                        'year': $params?.config?.year,
-                        'links': [
+                        'year': $params.config?.year,
+                        'seoLinks': $params.data?.footer?.seoLinks,
+                        'contactLinks': [
                             [
-                                'name': 'Cвязаться с нами',
+                                'content': 'Cвязаться с нами',
                                 'url': 'http://mel.fm/contacts'
                             ],
                             [
-                                'name': 'Пользовательское соглашение',
+                                'content': 'Пользовательское соглашение',
                                 'url': 'http://mel.fm/terms-of-use'
                             ],
                             [
-                                'name': 'Стать партнёром',
+                                'content': 'Стать партнёром',
                                 'url': 'mailto:vs@mel.fm'
                             ]
 
@@ -439,6 +448,7 @@
             ] /}
         {/call}"
 {/template}
+
 
 /**
  * Css class modifier of the entity type

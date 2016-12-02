@@ -15,6 +15,7 @@ goog.require('sm.iLayout.LayoutStendhal');
 goog.require('sm.iSmSearchParamsManager.SmSearchParamsManager');
 goog.require('sm.lSearch.View');
 goog.require('sm.lSearch.bFilterPanel.FilterPanel');
+goog.require('sm.lSearch.iAnalyticsSender.AnalyticsSender');
 goog.require('sm.lSearch.iSearchService.SearchService');
 goog.require('sm.lSearch.iUrlUpdater.UrlUpdater');
 
@@ -24,8 +25,9 @@ goog.scope(function() {
     var SearchService = sm.lSearch.iSearchService.SearchService;
     var SearchParamsManager = sm.iSmSearchParamsManager.SmSearchParamsManager;
     var UrlUpdater = sm.lSearch.iUrlUpdater.UrlUpdater;
-
+    var Map = sm.bSmMap.SmMap;
     var Analytics = sm.iAnalytics.Analytics;
+    var AnalyticsSender = sm.lSearch.iAnalyticsSender.AnalyticsSender;
 
 
 
@@ -107,6 +109,14 @@ goog.scope(function() {
          * @private
          */
         this.urlUpdater_ = null;
+
+
+        /**
+         * Instances analytics sender
+         * @type {sm.lSearch.iAnalyticsSender.AnalyticsSender}
+         * @private
+         */
+        this.analyticsSender_ = null;
     };
     goog.inherits(sm.lSearch.Search, sm.iLayout.LayoutStendhal);
     var Search = sm.lSearch.Search;
@@ -270,8 +280,12 @@ goog.scope(function() {
     Search.prototype.initMapListeners_ = function() {
         this.getHandler().listen(
             this.map_,
-            sm.bSmMap.SmMap.Event.READY,
+            Map.Event.READY,
             this.onMapReady_
+        ).listen(
+            this.map_,
+            Map.Event.PIN_CLICK,
+            this.onMapPinClick_
         );
 
         return this;
@@ -354,12 +368,14 @@ goog.scope(function() {
     Search.prototype.onSortReleased_ = function(event) {
         this.resetSecondarySearchParams_();
 
-        this.paramsManager_.setSortType(event['data']);
+        var sortType = event.data ? event.data.value : null;
+        this.paramsManager_.setSortType(sortType);
 
         this.searchResults_.setStatus(
             sm.lSearch.bSearchResults.SearchResults.Status.SORT_IN_PROGRESS
         );
 
+        this.clearMap_();
         this.makeSearch_();
     };
 
@@ -381,6 +397,17 @@ goog.scope(function() {
      */
     Search.prototype.onMapReady_ = function() {
         this.searchService_.loadMapData(this.paramsManager_.getParams());
+    };
+
+
+    /**
+     * Action pin handler
+     * @param {sm.bSmMap.Event.PinClick} event
+     * @private
+     */
+    Search.prototype.onMapPinClick_ = function(event) {
+        this.initAnalyticsSender_(event.data);
+        this.sendMapAnalytics_(event.data);
     };
 
 
@@ -808,6 +835,32 @@ goog.scope(function() {
         );
 
         return this;
+    };
+
+
+    /**
+     * Initializes instance of Analytics Sender
+     * @param {sm.bSmMap.Event.PinClick.Data} data
+     * @private
+     */
+    Search.prototype.initAnalyticsSender_ = function(data) {
+        this.analyticsSender_ = new AnalyticsSender('course search');
+    };
+
+
+    /**
+     * Send map analytics
+     * @param {sm.bSmMap.Event.PinClick.Data} data
+     * @private
+     */
+    Search.prototype.sendMapAnalytics_ = function(data) {
+        this.analyticsSender_.addImpressions(data);
+
+        this.analyticsSender_.send({
+            category: 'search map',
+            action: 'pin details',
+            name: data[0].address
+        });
     };
 });  // goog.scope
 
