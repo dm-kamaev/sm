@@ -25,15 +25,16 @@ const FULL_DESCRIPTION_LENGTH = 300,
 
 /**
  * @param  {Object} course
+ * @param  {string} categoryAlias
  * @return {Object}
  */
-view.page = function(course) {
+view.page = function(course, categoryAlias) {
     let options = course.courseOptions,
         generalOptions = this.formatGeneralOptions(course);
     return {
         id: course.id,
         name: course.name,
-        category: 'proforientacija',
+        category: categoryAlias,
         description: course.description,
         fullDescription: this.formatFullDescription(course.fullDescription),
         score: scoreView.results(course.score, course.totalScore).data,
@@ -41,7 +42,11 @@ view.page = function(course) {
         generalOptions: {
             items: this.formatGeneralOptionsWithConfig(generalOptions)
         },
-        departmentList: this.formatDepartmentList(options, generalOptions),
+        departmentList: this.formatDepartmentList(
+            options,
+            generalOptions,
+            lodash.camelCase(course.courseType.category.priceType)
+        ),
         videoId: course.embedId,
         online: this.onlineStatus(generalOptions)
     };
@@ -108,10 +113,11 @@ view.formatGeneralOptions = function(course) {
 /**
  * @param  {Array<Object>} options
  * @param  {Array<Object>} generalOptions
+ * @param  {string}        priceType
  * @return {Array<Object>}
  */
-view.formatDepartmentList = function(options, generalOptions) {
-    let optionsTransformer = new CourseOptionsTransformer(options);
+view.formatDepartmentList = function(options, generalOptions, priceType) {
+    let optionsTransformer = new CourseOptionsTransformer(options, priceType);
     return optionsTransformer.getUniqueOptions(generalOptions);
 };
 

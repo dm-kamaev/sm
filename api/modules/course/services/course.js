@@ -32,6 +32,7 @@ const informationFields = {
     ],
     BRAND: ['id', 'name', 'description'],
     TYPE: ['id', 'name'],
+    CATEGORY: ['id', 'name', 'priceType'],
     OPTION: [
         'id',
         'totalCost',
