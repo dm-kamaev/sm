@@ -143,7 +143,11 @@ controller.search = async(function(req, res, next) {
                 seoParams: data.seoParams,
                 currentCategory: categoryName,
                 categories: data.categories,
-                categoryAliases: aliases.categories
+                categoryAliases: aliases.categories,
+                links: {
+                    [entityType.SCHOOL]: config.schools.host,
+                    [entityType.COURSE]: config.courses.host
+                }
             });
 
             let html = soy.render(

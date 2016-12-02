@@ -1,6 +1,7 @@
 'use strict';
 
 const FilterPanel = require('../lib/CourseFilterPanel'),
+    Header = require('../../entity/lib/Header'),
     courseView = require('./courseView'),
     mapViewType = require('../../entity/enums/mapViewType'),
     userView = require('../../user/views/user'),
@@ -147,6 +148,7 @@ searchView.render = function(data) {
             relapImage: '/static/images/n-clobl/i-layout/cources_sharing.png',
             fbClientId: data.fbClientId,
         },
+        header: searchView.header(data.entityType, data.links),
         subHeader: {
             logo: {
                 imgUrl: '/static/images/n-common/b-sm-subheader/course-logo.svg'
@@ -249,6 +251,22 @@ searchView.initSearchParams = function(params, opt_categoryId) {
         districtId: params.districtId || null,
         categoryId: this.transformToArray(categoryId)
     };
+};
+
+/**
+ * @param {string} entityType
+ * @param {Object<string, string>} links
+ * @return {Object}
+ */
+searchView.header = function(entityType, links) {
+    let header = new Header();
+
+    header.init({
+        entityType: entityType,
+        entityLinks: links
+    });
+
+    return header.getParams();
 };
 
 /**
