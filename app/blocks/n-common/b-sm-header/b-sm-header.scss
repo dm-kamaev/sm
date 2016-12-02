@@ -1,0 +1,36 @@
+.b-sm-header {
+    width: 100%;
+
+    height: 70px;
+
+    font: 'Proxima', 'sans-serif';
+    font-weight: 800;
+}
+
+.b-sm-header__section {
+    display: inline-block;
+
+    height: 100%;
+}
+
+.b-sm-header__section_menu {
+
+}
+
+.b-sm-header__section_contacts {
+    float: right;
+}
+
+.b-sm-header__menu-item {
+    display: inline-block;
+
+    height: 100%;
+}
+
+.b-sm-header__helper-text {
+    display: inline-block;
+}
+
+.b-sm-header__contacts {
+    display: inline-block;
+}

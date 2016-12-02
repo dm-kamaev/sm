@@ -1,0 +1,208 @@
+{namespace sm.bSmHeader.Template}
+
+/**
+ * @typedef {{
+ *     menuItems: Array<{
+ *         name: string,
+ *         url: string,
+ *         type: string,
+ *         isSelected: boolean
+ *     }>,
+ *     contacts: sm.bSmContacts.Template.Params.Data,
+ *     helperText: string
+ * }} sm.bSmHeader.Template.Params.Data
+ */
+
+
+/**
+ * @typedef {{
+ *     theme: string,
+ *     customClasses: Array<string>
+ * }} sm.bSmHeader.Template.Params.Config
+ */
+
+
+/**
+ * @typedef {{
+ *     data: sm.bSmHeader.Template.Params.Data,
+ *     config: sm.bSmHeader.Template.Params.Config
+ * }} sm.bSmHeader.Template.Params
+ */
+
+
+/**
+ * Template for Header block
+ * @param params {{
+ *     data: sm.bSmHeader.Template.Params.Data
+ * }}
+ * @constructor
+ * @extends cl.iControl.Template
+ */
+{template .header}
+    {call .init data="all" /}
+{/template}
+
+
+/**
+ * @param params {{
+ *     data: sm.bSmHeader.Template.Params.Data
+ * }}
+ * @override
+ */
+{template .body}
+    <div class="{call .rootClass /}__body">
+        {call .sectionNavigation data="all" /}
+        {call .sectionContacts data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Navigation section
+ * @param params {{
+ *     menuItems: Array<{
+ *         name: string,
+ *         url: string,
+ *         type: string,
+ *         isSelected: boolean
+ *     }>
+ * }}
+ */
+{template .sectionNavigation kind="html"}
+    <div class="{call .rootClass /}__section
+        {sp}{call .rootClass /}__section_menu">
+        {call .menu data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Contacts section
+ * @param params {{
+ *     data: {
+ *         contacts: sm.bSmContacts.Template.Params.Data,
+ *         helperText: string
+ *     }
+ * }}
+ */
+{template .sectionContacts kind="html"}
+    <div class="{call .rootClass /}__section
+        {sp}{call .rootClass /}__section_contacts">
+        {call .helperText data="all" /}
+        {call .contacts data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Menu template
+ * @param params {{
+ *     data: {
+ *         menuItems: Array<{
+ *             name: string,
+ *             url: string,
+ *             type: string,
+ *             isSelected: boolean
+ *         }>
+ *     }
+ * }}
+ */
+{template .menu kind="html"}
+    <ul class="{call .rootClass /}__navigation-menu">
+        {foreach $item in $params.data.menuItems}
+            {call .menuItem}
+                {param params: [
+                    'data': $item
+                ] /}
+            {/call}
+        {/foreach}
+    </ul>
+{/template}
+
+
+/**
+ * Menu item template
+ * @param params {{
+ *
+ *     name: string,
+ *     url: string,
+ *     type: string,
+ *     isSelected: boolean
+ * }}
+ */
+{template .menuItem kind="html"}
+    {let $classes kind="html"}
+        {call .rootClass /}__menu-item
+        {if $params.data.type}
+            {sp}{call .rootClass /}__menu-item_{$params.data.type}
+        {/if}
+    {/let}
+
+    {let $customClasses kind="html"}
+        {call .rootClass /}__menu-link
+    {/let}
+
+    <li class="{$classes}">
+        {call .renderChild}
+            {param params: [
+                'type': 'smLink',
+                'renderParams': [
+                    'data': [
+                        'url': $params.data.url,
+                        'content': $params.data.name
+                    ],
+                    'config': [
+                        'size': 'xxxl',
+                        'theme': 'dark',
+                        'customClasses': [$customClasses]
+                    ]
+                ]
+            ]/}
+        {/call}
+    </li>
+{/template}
+
+
+/**
+ * Contacts template
+ * @param params {{
+ *     data: {
+ *         contacts: sm.bSmContacts.Template.Params.Data
+ *     }
+ * }}
+ */
+{template .contacts kind="html"}
+    <div class="{call .rootClass /}__contacts">
+        {call .renderChild}
+            {param params: [
+                'type': 'smContacts',
+                'renderParams': [
+                    'data': $params.data.contacts,
+                    'config': [
+                        'size': 'xl'
+                    ]
+                ]
+            ] /}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Helper text template
+ * @param params {{
+ *      helperText: string
+ * }}
+ */
+{template .helperText kind="html"}
+    <div class="{call .rootClass /}__helper-text">
+        {$params.data.helperText}
+    </div>
+{/template}
+
+/**
+ * @override
+ */
+{template .rootClass}
+    b-sm-header
+{/template}
