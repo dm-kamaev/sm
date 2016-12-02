@@ -15,10 +15,12 @@ goog.require('sm.bSmBadge.Template');
 goog.require('sm.bSmBalloon.Template');
 goog.require('sm.bSmCheckbox.Template');
 goog.require('sm.bSmCollapsedText.Template');
+goog.require('sm.bSmContacts.Template');
 goog.require('sm.bSmEmbed.Template');
 goog.require('sm.bSmExpander.Template');
 goog.require('sm.bSmFavorite.Template');
 goog.require('sm.bSmFooter.Template');
+goog.require('sm.bSmHeader.Template');
 goog.require('sm.bSmItem.Template');
 goog.require('sm.bSmItem.TemplateEntity');
 goog.require('sm.bSmItemList.Template');
@@ -313,6 +315,14 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'smEmbed',
             sm.bSmEmbed.Template.embed
+        )
+        .setTemplateListItem(
+            'smContacts',
+            sm.bSmContacts.Template.contacts
+        )
+        .setTemplateListItem(
+            'smHeader',
+            sm.bSmHeader.Template.header
         );
 
     /** l-information blocks **/

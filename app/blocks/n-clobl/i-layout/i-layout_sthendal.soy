@@ -15,7 +15,8 @@
  *         metaTitle: string,
  *         metaDescription: (string|undefined)
  *     },
- *     subHeader: sm.bSmSubHeader.Template.Params.Data
+ *     subHeader: sm.bSmSubHeader.Template.Params.Data,
+ *     header: sm.bSmHeader.Template.Params.Data
  * }} sm.iLayout.TemplateStendhal.Params.Data
  */
 
@@ -318,9 +319,31 @@
     <div class="{call .rootClass/} {call .entityModifierClass data="all"/}"
                 {call .attributes data="all"/}>
 
+        {call .mainHeader data="all" /}
         {call .mainSubheader data="all" /}
         {call .mainContent data="all" /}
         {call .mainFooter data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Main header template
+ * @param params {{
+ *     data: {
+ *          header: sm.bSmHeader.Template.Params
+ *     }
+ * }}
+ */
+{template .mainHeader kind="html"}
+    <div class="{call .rootClass /}__main-header">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': $params.config.modifier,
+                'type': 'smHeader',
+                'renderParams': $params.data.header
+            ] /}
+        {/call}
     </div>
 {/template}
 
