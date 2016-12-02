@@ -144,10 +144,6 @@
 }
 
 @include media-xs {
-    .l-search__footer {
-        padding: 0;
-    }
-
     .l-search__section {
         &.l-search__section_map {
             display: none;

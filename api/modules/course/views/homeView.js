@@ -45,6 +45,18 @@ view.render = function(data) {
                 }
             }
         },
+        image: {
+            imageUrl: '/static/images/n-common/l-home/images/main-courses.svg',
+            title: 'Найдите в Москве лучший&nbsp;кружок или секцию ' +
+                'для вашего ребёнка',
+            items: [
+                'Ищите развивающие кружки и&nbsp;курсы рядом с&nbsp;домом ' +
+                'и&nbsp;онлайн с&nbsp;удобным для&nbsp;вас расписанием',
+                'Не платите лишнего: мы гарантируем лучшую цену',
+                'Не можете выбрать? Позвоните или&nbsp;напишите экспертам ' +
+                '«Курсов Мела»'
+            ]
+        },
         user: user,
         authSocialLinks: data.authSocialLinks,
     };

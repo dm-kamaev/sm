@@ -2,8 +2,6 @@
 
 /**
  * @typedef {{
- *         title: string,
- *         description: ?string,
  *     openGraph: (sm.gOpenGraph.TemplateStendhal.Params|undefined),
  *     subHeader: sm.bSmSubheader.Template.Params.Data,
  *     user: {
@@ -13,6 +11,11 @@
  *     authSocialLinks: {
  *        vk: (string|undefined),
  *        fb: (string|undefined)
+ *     },
+ *     image: {
+ *         imageUrl: string,
+ *         title: string,
+ *         items: Array<string>,
  *     },
  *     search: {},
  *     recomendations: Array<{
@@ -91,18 +94,21 @@
  * Section image that shown on big screens
  * @param params {{
  *     data: {
- *         imageUrl: string,
- *         title: string,
- *         items: Array<string>
+ *         image: {
+ *             imageUrl: string,
+ *             title: string,
+ *             items: Array<string>
+ *         }
  *     }
  * }}
  * @private
  */
 {template .sectionImageL_ kind="html"}
     {let $content kind="html"}
-        {if $params}
-        {/if}
+        {call .imageDescription_ data="all" /}
+        {call .image_ data="all" /}
     {/let}
+
     {call .section_}
         {param params: [
             'data': [
@@ -127,9 +133,9 @@
  */
 {template .sectionImageS_ kind="html"}
     {let $content kind="html"}
-        {if $params}
-        {/if}
+        {call .image_ data="all" /}
     {/let}
+
     {call .section_}
         {param params: [
             'data': [
@@ -254,10 +260,107 @@
             {sp}{call .rootClass /}__section_{$params.config.modifier}
         {/if}
     ">
-        <div class="{call .rootClass /}__section-content">
+        <div class="{call .rootClass /}__section-content
+            {if $params?.config.modifier}
+                {sp}{call .rootClass /}__section-content_{$params.config.modifier}
+            {/if}
+        ">
             {$params.data.content}
         </div>
     </div>
+{/template}
+
+
+/**
+ * Image
+ * @param params {{
+ *     data: {
+ *         image: {
+ *             imageUrl: string
+ *         }
+ *     }
+ * }}
+ * @private
+ */
+{template .image_ kind="html"}
+    <img class="{call .rootClass/}__image" src="{$params.data.image.imageUrl}">
+{/template}
+
+
+/**
+ * Image
+ * @param params {{
+ *     data: {
+ *         image: {
+ *             title: string,
+ *             items: Array<string>
+ *         }
+ *     }
+ * }}
+ * @private
+ */
+{template .imageDescription_ kind="html"}
+    <div class="{call .rootClass/}__image-description">
+        {call .imageTitle_ data="all" /}
+        {call .imageItems_ data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * Image title
+ * @param params {{
+ *     data: {
+ *         image: {
+ *             title: string
+ *         }
+ *     }
+ * }}
+ * @private
+ */
+{template .imageTitle_ kind="html"}
+    <div class="{call .rootClass/}__image-title">
+        {call soydata.VERY_UNSAFE.ordainSanitizedHtml
+            data="$params.data.image.title" /}
+    </div>
+{/template}
+
+
+/**
+ * Image list
+ * @param params {{
+ *     data: {
+ *         image: {
+ *             items: Array<string>
+ *         }
+ *     }
+ * }}
+ * @private
+ */
+{template .imageItems_ kind="html"}
+    <ul class="{call .rootClass/}__image-items">
+        {foreach $item in $params.data.image.items}
+            {call .imageItem_}
+                {param text: $item/}
+            {/call}
+        {/foreach}
+    </ul>
+{/template}
+
+
+/**
+ * Image item list
+ * @param text {string}
+ * @private
+ */
+{template .imageItem_ kind="html"}
+    <li class="{call .rootClass/}__image-item">
+        <div class="{call .rootClass/}__image-item-dash"> — </div>
+        <div class="{call .rootClass/}__image-item-text">
+            {call soydata.VERY_UNSAFE.ordainSanitizedHtml
+                data="$text" /}
+        </div>
+    </li>
 {/template}
 
 
