@@ -355,7 +355,7 @@ schoolView.getMapItems = function(school) {
                     text: school.description,
                     link: {
                         text: 'Подробнее',
-                        url: entityType.SCHOOL + '/' + school.alias 
+                        url: entityType.SCHOOL + '/' + school.alias
                     }
                 },
                 content: {

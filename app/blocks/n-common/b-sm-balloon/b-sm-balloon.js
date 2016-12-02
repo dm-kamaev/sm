@@ -87,7 +87,7 @@ goog.scope(function() {
                 sm.bSmItemList.SmItemList.Event.ITEM_CLICK,
                 this.sendAnalyticsItemClick_
             );
-    
+
         }
 
         this.autoDispatch(

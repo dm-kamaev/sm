@@ -20,9 +20,12 @@
 
 .b-sm-balloon__close-wrap {
     position: absolute;
-    top: 20px;
-    right: 20px;
-
+    top: 10px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+    padding: 10px 10px 10px 10px;
+    box-sizing: border-box;
     cursor: pointer;
 }
 

@@ -765,8 +765,9 @@ goog.scope(function() {
                     var event = new sm.bSmMap.Event.PinClick(
                         this.getData().object.properties
                     );
-                    console.log(event.data);
-                    mapInstance.dispatchEvent(event);
+                    if (event.data[0].category) {
+                        mapInstance.dispatchEvent(event);
+                    }
                 }
             }
         );
