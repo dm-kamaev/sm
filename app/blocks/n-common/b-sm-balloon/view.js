@@ -38,9 +38,9 @@ goog.scope(function() {
      */
     View.CssClass = {
         ROOT: 'b-sm-balloon',
-        CLOSE_BUTTON: 'b-sm-balloon__close',
-        ITEM: 'b-sm-balloon__item',
-        ITEM_LIST: 'b-sm-balloon__item-list'
+        CLOSE_BUTTON: 'b-sm-balloon__close-wrap',
+        ITEM_LIST: 'b-sm-balloon__item-list',
+        DESCRIPTION_LINK: 'b-sm-balloon__description-link'
     };
 
 
@@ -90,37 +90,27 @@ goog.scope(function() {
             res = {};
 
         if (header) {
-            res.header = {};
-
-            res.header.title =
-                header['title'] ? header['title'] : null;
-
-            res.header.description =
-                header['description'] ? header['description'] : null;
+            res.header = {
+                title: header['title'] || null,
+                description: header['description'] || null
+            };
         }
         if (description) {
-            res.description = {};
-
-            res.description.text =
-                description['text'] ? description['text'] : null;
+            res.description = {
+                text: description['text'] || null
+            };
 
             if (description['link']) {
-                res.description.link = {};
-
-                res.description.link.text =
-                    description['link']['text'] ?
-                        description['link']['text'] : null;
-
-                res.description.link.url =
-                    description['link']['url'] ?
-                        description['link']['url'] : null;
+                res.description.link = {
+                    text: description['link']['text'] || null,
+                    url: description['link']['url'] || null
+                };
             }
         }
         if (content) {
-            res.content = {};
-
-            res.content.title =
-                content['title'] ? content['title'] : null;
+            res.content = {
+                title: content['title'] || null
+            };
 
             res.content.items =
                 content['items'] ?
@@ -129,10 +119,9 @@ goog.scope(function() {
                 }) : null;
         }
         if (footer) {
-            res.footer = {};
-
-            res.footer.title =
-                footer['title'] ? footer['title'] : null;
+            res.footer = {
+                title: footer['title'] || null
+            };
         }
         return {
             data: res
@@ -193,14 +182,6 @@ goog.scope(function() {
             goog.events.EventType.CLICK,
             this.onCloseButtonClick_
         );
-
-        if (dom.titleLink) {
-            handler.listen(
-                dom.titleLink,
-                goog.events.EventType.CLICK,
-                this.onTitleLinkClick_
-            );
-        }
     };
 
 
@@ -233,6 +214,9 @@ goog.scope(function() {
             ),
             itemList: this.getElementByClass(
                 View.CssClass.ITEM_LIST
+            ),
+            descriptionLink: this.getElementByClass(
+                View.CssClass.DESCRIPTION_LINK
             )
         };
     };

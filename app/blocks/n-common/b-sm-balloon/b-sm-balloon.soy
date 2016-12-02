@@ -23,7 +23,7 @@
  *         }>
  *     }
  *     footer: {
- *         title: string   
+ *         title: string
  *     }
  * }} sm.bSmBalloon.Template.Params.Data
  */
@@ -31,7 +31,7 @@
 /**
  * Template for Ymaps ballon content template block
  * @param params {{
- *     data:  sm.bSmBalloon.Template.Params.Data
+ *     data: sm.bSmBalloon.Template.Params.Data
  * }}
  * @constructor
  * @extends cl.iControl.Template
@@ -43,7 +43,7 @@
 
 /**
  * @param params {{
- *     data:  sm.bSmBalloon.Template.Params.Data
+ *     data: sm.bSmBalloon.Template.Params.Data
  * }}
  * @override
  */
@@ -158,24 +158,26 @@
  * @param params {{
  *     data: {
  *         content:{
- *             title:string
+ *             title: string
  *         }
  *     }
  * }}
  */
 {template .content_ kind="html"}
-    {if isNonnull($params.data.content.title) or ($params.data.content.items.length != 0) }
+    {if isNonnull($params.data.content.title) or ($params.data.content.items.length > 0) }
         <div class="{call .rootClass /}__section
-        {sp}{call .rootClass /}__section_content">
+            {sp}{call .rootClass /}__section_content">
 
-        {if isNonnull($params.data.content.title)}
-            <div class="{call .rootClass /}__content-title">
-                {$params.data.content.title}
-            </div>
-        {/if}
-        {if $params.data.content.items.length != 0}
-            {call .itemList_ data="all" /}
-        {/if}
+            {if isNonnull($params.data.content.title)}
+                <div class="{call .rootClass /}__content-title">
+                    {$params.data.content.title}
+                </div>
+            {/if}
+
+            {if $params.data.content.items.length > 0}
+                {call .itemList_ data="all" /}
+            {/if}
+
         </div>
     {/if}
 {/template}
@@ -260,7 +262,8 @@
                         ],
                         'config': [
                             'size': 'l',
-                            'customClasses': [$customClasses]
+                            'customClasses': [$customClasses],
+                            'theme': 'default'
                         ]
                     ]
                 ]/}

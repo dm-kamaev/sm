@@ -691,7 +691,7 @@ goog.scope(function() {
                     this.initBalloon_();
                     this.addEventListeners_();
                     this.setBalloonOffset_();
-                    this.dispatchDataForAnalitics_();
+                    this.dispatchDataForAnalytics_();
                 },
                 'clear': function() {
                     this.removeEventListeners_();
@@ -761,7 +761,7 @@ goog.scope(function() {
                 setBalloonOffset_: function() {
                     mapInstance.getView().setBalloonOffset(this.element_);
                 },
-                dispatchDataForAnalitics_: function() {
+                dispatchDataForAnalytics_: function() {
                     var event = new sm.bSmMap.Event.PinClick(
                         this.getData().object.properties
                     );

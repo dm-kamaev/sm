@@ -42,7 +42,6 @@ goog.scope(function() {
      */
     Balloon.Event = {
         CLOSE_BUTTON_CLICK: View.Event.CLOSE_BUTTON_CLICK,
-        TITLE_LINK_CLICK: View.Event.TITLE_LINK_CLICK,
         LIST_PAGE_CHANGE: sm.bSmListPaged.SmListPaged.Event.PAGE_CHANGE
     };
 
@@ -83,8 +82,8 @@ goog.scope(function() {
         if (goog.isDefAndNotNull(this.listPaged_)) {
 
             this.getHandler().listen(
-                this.listPaged_.getList(),
-                sm.bSmItemList.SmItemList.Event.ITEM_CLICK,
+                this.listPaged_,
+                sm.bSmListPaged.SmListPaged.Event.ITEM_CLICK,
                 this.sendAnalyticsItemClick_
             );
 
@@ -102,8 +101,8 @@ goog.scope(function() {
      * @private
      */
     Balloon.prototype.sendAnalyticsItemClick_ = function(event) {
-        var itemList = this.listPaged_.getList();
-        itemList.sendAnalyticsItemClick(event.data.itemId, 'map balloon');
+        this.listPaged_.sendAnalyticsItemClick(event.data.itemId,
+            'map balloon');
     };
 
 
@@ -117,6 +116,11 @@ goog.scope(function() {
         if (goog.isDefAndNotNull(dom.itemList)) {
             this.listPaged_ =
                 this.decorateChild('smListPaged', dom.itemList);
+        }
+
+        if (goog.isDefAndNotNull(dom.descriptionLink)) {
+            this.descriptionLink_ =
+                this.decorateChild('smLink', dom.descriptionLink);
         }
     };
 });  // goog.scope

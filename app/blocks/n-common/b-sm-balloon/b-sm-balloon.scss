@@ -24,7 +24,7 @@
     right: 10px;
     width: 30px;
     height: 30px;
-    padding: 10px 10px 10px 10px;
+    padding: 10px;   ;
     box-sizing: border-box;
     cursor: pointer;
 }
@@ -42,14 +42,6 @@
 
 .b-sm-balloon__description-text {
     margin-bottom: 2px;
-}
-
-.b-sm-balloon__description-link {
-    color: #356fc4;
-
-    &:hover {
-        color: #ff0000;
-    }
 }
 
 .b-sm-balloon__subtitle {
