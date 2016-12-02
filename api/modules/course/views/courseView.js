@@ -13,7 +13,8 @@ const scoreView = require('./scoreView'),
     pageView = require('../../entity/views/pageView');
 
 const entityType = require('../../../../api/modules/entity/enums/entityType'),
-    groupSizeTraining = require('../enums/groupSizeTraining');
+    groupSizeTraining = require('../enums/groupSizeTraining'),
+    categoryPrice = require('../enums/categoryPrice');
 
 
 let view = {};
@@ -36,7 +37,7 @@ view.page = function(course) {
         description: course.description,
         fullDescription: this.formatFullDescription(course.fullDescription),
         score: scoreView.results(course.score, course.totalScore).data,
-        cost: this.formatCost(options),
+        cost: this.formatCost(options, course.courseType.category.priceType),
         generalOptions: {
             items: this.formatGeneralOptionsWithConfig(generalOptions)
         },
@@ -73,11 +74,24 @@ view.formatFullDescription = function(text) {
 
 /**
  * @param  {Array<Object>} options
+ * @param  {string}        priceType
  * @return {string}
  */
-view.formatCost = function(options) {
-    return Math.min.apply(null, options.map(option => option.totalCost)) +
-        ' руб. / курс';
+view.formatCost = function(options, priceType) {
+    let costField = lodash.camelCase(priceType);
+
+    let value = Math.min.apply(
+            null,
+            options.map(option => option[costField])
+        ),
+        text;
+    if (priceType == categoryPrice.COST_PER_HOUR) {
+        text = 'руб. / час';
+    } else if (priceType == categoryPrice.TOTAL_COST) {
+        text = 'руб. / курс';
+    }
+
+    return `${value} ${text}`;
 };
 
 /**

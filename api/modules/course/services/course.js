@@ -157,7 +157,12 @@ service.information = async(function(id) {
         }, {
             attributes: informationFields.TYPE,
             model: models.CourseType,
-            as: 'courseType'
+            as: 'courseType',
+            include: [{
+                attributes: informationFields.CATEGORY,
+                model: models.CourseCategory,
+                as: 'category'
+            }]
         }, {
             attributes: informationFields.OPTION,
             model: models.CourseOption,
@@ -168,21 +173,36 @@ service.information = async(function(id) {
 });
 
 /**
- * @param {Object} searchParams
- * @param {number=} opt_limit
- * @return {Array<Object>}
+ * @param  {Object}         searchParams
+ * @param  {Object=}        opt_params
+ * @param  {number=}        opt_params.limit
+ * @param  {Array<Object>=} opt_params.categories
+ * @return {Promise.Array<Object>}
  */
-service.list = async(function(searchParams, opt_limit) {
-    let searchString = services.courseSearchData.getSearchSql(
-        searchParams,
-        opt_limit
-    );
+service.list = async(function(searchParams, opt_params) {
+    let limit,
+        categories;
+    if (opt_params) {
+        limit = opt_params.limit;
+        categories = opt_params.categories;
+    }
 
-    let courses = await(sequelize.query(
-        searchString, {
-            type: sequelize.QueryTypes.SELECT
-        }
-    ));
+    let searchString = services.courseSearchData.getSearchSql(
+            searchParams,
+            limit
+        ),
+        costField = services.courseCategory.getCostField(categories);
+
+    let courses = sequelize
+        .query(
+            searchString, {
+                type: sequelize.QueryTypes.SELECT
+            }
+        )
+        .then(courses => courses.map(course => {
+            course.optionCost = course[costField];
+            return course;
+        }));
 
     return courses;
 });

@@ -53,7 +53,12 @@ controller.search = async(function(req, res, next) {
             let factory = contentExperiment.getFactoryByQuery(req.query);
             let data = await({
                     favorites: services.favorite.getFavoriteEntities(user.id),
-                    courses: services.course.list(searchParams, 10),
+                    courses: services.course.list(
+                        searchParams, {
+                            limit: 10,
+                            categories: [categoryInstance]
+                        }
+                    ),
                     mapCourses: services.course.listMap(searchParams, 10),
                     mapPosition: services.map.getPositionParams(searchParams),
                     filtersData: {
