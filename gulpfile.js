@@ -167,6 +167,8 @@ gulp.task('backendLint', function() {
     return gulp.src([
         'api/**/*.js',
         'app/modules/**/*.js',
+        'app/components/**/*.js',
+        'app/middleware/**/*.js',
         '!app/modules/doc/**',
         'gulp/*.js',
         './*.js'])
