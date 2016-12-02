@@ -3,7 +3,8 @@
 const async = require('asyncawait/async'),
     await = require('asyncawait/await'),
     squel = require('squel'),
-    url = require('url');
+    url = require('url'),
+    lodash = require('lodash');
 
 const sequelize = require('../../../../app/components/db'),
     models = require('../../../../app/components/models').all,
@@ -188,11 +189,13 @@ service.list = async(function(searchParams, opt_params) {
         categories = opt_params.categories;
     }
 
+    let costField = services.courseCategory.getCostField(categories);
+
+    searchParams.costSortColumn = lodash.snakeCase(costField);
     let searchString = services.courseSearchData.getSearchSql(
-            searchParams,
-            limit
-        ),
-        costField = services.courseCategory.getCostField(categories);
+        searchParams,
+        limit
+    );
 
     let courses = sequelize
         .query(

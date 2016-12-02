@@ -184,7 +184,7 @@ service.getCostField = function(opt_categories) {
     if (opt_categories && opt_categories.length == 1) {
         result = lodash.camelCase(opt_categories[0].priceType);
     } else {
-        result = DEFAULT_COST_FIELD;
+        result = lodash.camelCase(DEFAULT_COST_FIELD);
     }
     return result;
 };
