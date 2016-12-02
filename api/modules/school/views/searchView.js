@@ -95,7 +95,7 @@ searchView.render = function(data) {
             },
             search: {
                 placeholder: 'Район, метро, номер школы',
-                pageAlias: '',
+                pageAlias: 'school',
             },
             user: user,
             favorites: {
@@ -113,7 +113,7 @@ searchView.render = function(data) {
         search: {
             searchText: data.searchParams.name,
             placeholder: 'Район, метро, номер школы',
-            pageAlias: '',
+            pageAlias: 'school'
         },
         resultsList: {
             title: seoParams.title,
