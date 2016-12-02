@@ -51,7 +51,7 @@ class Header {
 
         this.setContacts()
             .setHelperText()
-            .setMenuItems(data.links);
+            .setMenuItems();
     }
 
 
