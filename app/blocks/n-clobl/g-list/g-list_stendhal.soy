@@ -59,3 +59,20 @@
         ]) /}
     {/call}"
 {/template}
+
+
+/**
+ * Css classes
+* @param params {{
+ *     config: {
+ *         mode: ('selection'|'multiselection'|undefined)
+ *     }
+ * }}
+ * @override
+ * @protected
+ */
+{template .additionalClasses}
+    {if $params.config.mode}
+        {call .rootClass/}_mode_{$params.config.mode}
+    {/if}
+{/template}

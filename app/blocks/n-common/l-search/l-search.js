@@ -367,12 +367,15 @@ goog.scope(function() {
      */
     Search.prototype.onSortReleased_ = function(event) {
         this.resetSecondarySearchParams_();
-        this.paramsManager_.setSortType(event['data']);
+
+        var sortType = event.data ? event.data.value : null;
+        this.paramsManager_.setSortType(sortType);
 
         this.searchResults_.setStatus(
             sm.lSearch.bSearchResults.SearchResults.Status.SORT_IN_PROGRESS
         );
 
+        this.clearMap_();
         this.makeSearch_();
     };
 
@@ -559,10 +562,10 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.makeNewSearch_ = function() {
-        this.paramsManager_.setSortType(1);
+        this.paramsManager_.resetSortType();
+        this.searchResults_.resetSort();
 
         this.updatePage_();
-        this.sort_.clear();
         this.filterPanel_.reset();
     };
 

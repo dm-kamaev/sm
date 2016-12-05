@@ -1,0 +1,148 @@
+/**
+ * @fileoverview Dropdown with select function (union of dropdown and list):
+ * It dispatches event when one of items in list selected.
+ * It take from list items text which need to place at changing opener text.
+ */
+
+{namespace sm.gDropdown.TemplateSelectLegacy}
+
+/**
+ * @typedef {{
+ *     defaultOpenerText: string,
+ *     staticText: string,
+ *     listItems: Array<{
+ *         label: (string|undefined),
+ *         text: (string|undefined),
+ *         url: (string|undefined)
+ *     ]>,
+ *     selectedItemId: (number|undefined)
+ * }} sm.gDropdown.TemplateSelectLegacy.Params.Data
+ */
+
+
+/**
+ * @typedef {{
+ *     usePlaceholder: boolean,
+ *     viewType: (string|undefined),
+ *     iconSprite: (('small-opener-arrow'|'opener-arrow')|undefined),
+ *     theme: (('minimal')|undefined),
+ *     textSize: (string|undefined),
+ *     indent: (string|undefined)
+ * }} sm.gDropdown.TemplateSelectLegacy.Params.Config
+ */
+
+
+/**
+ * Dropdown select template
+ * @param? params {{
+ *     data: sm.gDropdown.TemplateSelectLegacy.Params.Data,
+ *     config: sm.gDropdown.TemplateSelectLegacy.Params.Config
+ * }}
+ * @extends cl.gDropdown.Template
+ * @constructor
+ * @doc
+ */
+{template .dropdown}
+    {call .init data="all" /}
+{/template}
+
+/**
+ * Control
+ * @param? params {{
+ *     data: sm.gDropdown.TemplateSelectLegacy.Params.Data,
+ *     config: sm.gDropdown.TemplateSelectLegacy.Params.Config
+ * }}
+ * @override
+ */
+{template .opener  kind="html"}
+    {let $data: [
+        'defaultOpenerText': $params?.data?.defaultOpenerText,
+        'usePlaceholder': $params?.config?.usePlaceholder
+    ] /}
+
+    <div class="{call .rootClass/}__opener-text">
+        {if $params?.data?.staticText}
+            {$params?.data?.staticText}{sp}
+        {/if}
+        <span class="{call .rootClass/}__opener-custom-text
+                     {if $params?.config?.usePlaceholder}
+                        {sp}{call .rootClass/}__opener-text_placeholder
+                     {/if}"
+              data-params="{call goog.json.serialize data="$data" /}">
+            {if $params?.data?.defaultOpenerText and
+                not $params?.data?.selectedItemId}
+                {$params?.data?.defaultOpenerText}
+            {/if}
+            {if $params?.data?.selectedItemId}
+                {$params?.data?.listItems[$params?.data?.selectedItemId].label}
+            {/if}
+        </span>
+    </div>
+    {if $params?.config?.iconSprite}
+        <div class="{call .rootClass/}__opener-arrow">
+            {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+                {param params: [
+                    'factory': $params.config.stylizationModifier,
+                    'type': 'icon',
+                    'renderParams': [
+                        'data': [
+                            'type': $params?.config?.iconSprite
+                        ]
+                    ]
+                ]/}
+            {/call}
+        </div>
+    {/if}
+{/template}
+
+/**
+ * List template
+ * @param? params {{
+ *     data:  sm.gList.TemplateSelect.Params.Data,
+ *     config: sm.gList.TemplateSelect.Params.Config
+ * }}
+ */
+{template .content kind="html"}
+    {call .renderChild}
+        {param params: [
+            'type': 'list-select',
+            'renderParams': [
+                'data': [
+                    'items': $params.data.listItems,
+                    'selectedItemId': $params.data.selectedItemId
+                ],
+                'config': [
+                    'viewType': $params?.config?.viewType,
+                    'theme': $params?.config?.theme,
+                    'color': $params?.config?.color,
+                    'textSize': $params?.config?.textSize,
+                    'indent': $params?.config?.indent
+                ]
+            ]
+        ]/}
+    {/call}
+{/template}
+
+/**
+ * Css classes
+ * @param params {{
+ *     config: sm.gDropdown.TemplateSelectLegacy.Params.Config
+ * }}
+ * @override
+ */
+{template .additionalClasses}
+    {call .rootClass/}_select-legacy
+
+    {if $params?.config?.color}
+        {sp}{call .rootClass/}_{$params.config.color}-color
+    {/if}
+    {if $params?.config?.textSize}
+        {sp}{call .rootClass/}_text-{$params.config.textSize}
+    {/if}
+    {if $params?.config?.iconOffset}
+        {sp}{call .rootClass/}_{$params.config.iconOffset}-icon-offset
+    {/if}
+    {if $params?.config?.indent}
+        {sp}{call .rootClass/}_indent-{$params?.config?.indent}
+    {/if}
+{/template}

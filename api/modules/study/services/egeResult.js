@@ -114,7 +114,8 @@ exports.getUniqueSubjects = async(function() {
         {
             attributes: [
                 [Sequelize.literal('DISTINCT "subject_id"'), 'subjectId']
-            ]
+            ],
+            raw: true
         }
     ));
 });

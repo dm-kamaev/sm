@@ -5,10 +5,12 @@ const async = require('asyncawait/async'),
 
 const courseView = require('../views/courseView'),
     searchView = require('../views/searchView'),
+    searchViewEntity = require('../../entity/views/searchView'),
     courseTypeView = require('../views/courseTypeView'),
     services = require('../../../../app/components/services').all;
 
-const mapViewType = require('../../entity/enums/mapViewType');
+const mapViewType = require('../../entity/enums/mapViewType'),
+    entityType = require('../../entity/enums/entityType');
 
 const config = require('../../../../app/config/config.json');
 
@@ -39,6 +41,12 @@ let controller = {};
  *         "regularity": [0, 2],
  *         "formTraining": 0,
  *         "duration": [0, 1],
+ *         "sortType": 1,
+ *         "page": 0,
+ *         "metroId: 1,
+ *         "areaId: 2,
+ *         "districtId: 3,
+ *         "categoryId: 4,
  *         "requestMapResults": true
  *     }
  */
@@ -64,7 +72,8 @@ controller.search = async(function(req, res) {
         if (req.query.requestMapResults) {
             let mapPosition =
                 await(services.map.getPositionParams(searchParams));
-            result.map = searchView.map(aliasedCourses, {
+            result.map = searchViewEntity.map(aliasedCourses, {
+                entityType: entityType.COURSE,
                 viewType: mapViewType.PIN,
                 position: mapPosition
             });
@@ -96,7 +105,8 @@ controller.searchMap = async(function(req, res) {
             );
 
         result = {
-            map: searchView.map(aliasedMapCourses, {
+            map: searchViewEntity.map(aliasedMapCourses, {
+                entityType: entityType.COURSE,
                 viewType: mapViewType.PIN,
                 position: mapPosition
             })

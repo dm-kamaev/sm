@@ -55,6 +55,7 @@
 .l-course__score_xl {
     float: left;
 
+    display: none;
     width: 100px;
     margin-top: 10px;
 
@@ -68,7 +69,7 @@
 
 .l-course__title {
     box-sizing: border-box;
-    padding-left: 100px;
+    // padding-left: 100px;
 }
 
 .l-course__name {
@@ -229,11 +230,13 @@
 
     .l-course__video {
         width: calc(100% + 80px);
+        padding-bottom: calc(56.25% + 45px);
         left: -40px;
     }
 
     .l-course__img-wrapper {
         width: calc(100% + 80px);
+        padding-bottom: calc(56.25% + 45px);
         left: -40px;
     }
 }
@@ -285,11 +288,13 @@
 
     .l-course__video {
         width: calc(100% + 60px);
+        padding-bottom: calc(56.25% + 33.75px);
         left: -30px;
     }
 
     .l-course__img-wrapper {
         width: calc(100% + 60px);
+        padding-bottom: calc(56.25% + 33.75px);
         left: -30px;
     }
     /** section data end **/

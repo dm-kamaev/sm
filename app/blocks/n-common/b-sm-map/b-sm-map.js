@@ -91,9 +91,9 @@ goog.scope(function() {
      * @enum {string}
      */
     Map.Event = {
-      READY: 'ready',
-      ITEM_NAME_CLICK: 'item-name-click',
-      PIN_CLICK: sm.bSmMap.Event.PinClick.Type
+        READY: 'ready',
+        ITEM_NAME_CLICK: 'item-name-click',
+        PIN_CLICK: sm.bSmMap.Event.PinClick.Type
     };
 
 
@@ -382,10 +382,14 @@ goog.scope(function() {
      * @private
      */
     Map.prototype.addMapObject_ = function(viewType, addressItem) {
-        var geoObject = this.find_(addressItem);
+        var geoObject = this.find_(addressItem),
+            hasItems = addressItem['items'] && addressItem['items'].length;
+
         if (goog.isDefAndNotNull(geoObject)) {
-            this.updateViewType_(geoObject, viewType);
-            this.extendGeoObject_(geoObject, addressItem);
+            if (hasItems) {
+                this.updateViewType_(geoObject, viewType);
+                this.extendGeoObject_(geoObject, addressItem);
+            }
         } else {
             this.objectManager_.add(this.generateGeoObject_(
                 viewType,
@@ -420,11 +424,11 @@ goog.scope(function() {
      * @private
      */
     Map.prototype.extendGeoObject_ = function(geoObject, addressItem) {
-
         var extendedItems = goog.array.concat(
             geoObject['properties']['items'],
             addressItem['items']
         );
+
         goog.array.removeDuplicates(
             extendedItems,
             null,
@@ -687,7 +691,7 @@ goog.scope(function() {
                     this.initBalloon_();
                     this.addEventListeners_();
                     this.setBalloonOffset_();
-                    this.dispatchDataForAnalitics_();
+                    this.dispatchDataForAnalytics_();
                 },
                 'clear': function() {
                     this.removeEventListeners_();
@@ -710,7 +714,6 @@ goog.scope(function() {
                         return CustomBalloonLayout.superclass.getShape
                             .call(this);
                     }
-
                     var position = goog.style.getPosition(this.element_);
                     return new ymaps.shape.Rectangle(
                         new ymaps.geometry.pixel.Rectangle([
@@ -758,11 +761,13 @@ goog.scope(function() {
                 setBalloonOffset_: function() {
                     mapInstance.getView().setBalloonOffset(this.element_);
                 },
-                dispatchDataForAnalitics_: function() {
+                dispatchDataForAnalytics_: function() {
                     var event = new sm.bSmMap.Event.PinClick(
                         this.getData().object.properties
                     );
-                    mapInstance.dispatchEvent(event);
+                    if (event.data[0].category) {
+                        mapInstance.dispatchEvent(event);
+                    }
                 }
             }
         );
@@ -809,7 +814,7 @@ goog.scope(function() {
     /**
      * Handler for event of changing page of paged list in balloon. In this case
      * is possible to change shape of ballon
-     * @param  {Object} balloonInstance
+     * @param {Object} balloonInstance
      * @private
      */
     Map.prototype.onBalloonListPageChange_ = function(balloonInstance) {

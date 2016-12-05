@@ -2,17 +2,18 @@
 
 const lodash = require('lodash');
 
-const scoreView = require('./scoreView'),
+const scoreView = require('../../entity/views/scoreView'),
     metroView = require('../../geo/views/metroView'),
     geoView = require('../../geo/views/geoView'),
     areaView = require('../../geo/views/areaView'),
     districtView = require('../../geo/views/districtView'),
     addressView = require('../../geo/views/addressView'),
-    FormatText = require('../../entity/lib/FormatText'),
+    FormatUtils = require('../../entity/lib/FormatUtils'),
     CourseOptionsTransformer = require('../lib/CourseOptionsTransformer'),
     pageView = require('../../entity/views/pageView');
 
-const entityType = require('../../../../api/modules/entity/enums/entityType');
+const entityType = require('../../../../api/modules/entity/enums/entityType'),
+    groupSizeTraining = require('../enums/groupSizeTraining');
 
 
 let view = {};
@@ -56,10 +57,10 @@ view.formatFullDescription = function(text) {
 
     if (text) {
         if (text.length > FULL_DESCRIPTION_LENGTH) {
-            let formatText = new FormatText();
+            let formatUtils = new FormatUtils();
             result.fullText = [text];
             result.cutText.push(
-                formatText.cut(text, FULL_DESCRIPTION_LENGTH, ' ')
+                formatUtils.cutText(text, FULL_DESCRIPTION_LENGTH, ' ')
             );
         } else {
             result.cutText.push(text);
@@ -212,11 +213,15 @@ view.pageMap = function(course) {
             return {
                 addressId: address.id,
                 coordinates: geoView.coordinatesDefault(address.coords),
-                title: {
-                    text: course.courseBrand.name
+                header: {
+                    title: course.courseBrand.name
                 },
-                items: [],
-                description: address.name,
+                content: {
+                    items: []
+                },
+                description: {
+                    text: address.name
+                },
                 id: course.id,
                 courseName: course.name,
                 category: course.categories[0].name,
@@ -267,11 +272,11 @@ view.listMap = function(courses, viewType) {
         );
 
         if (~addressPosition) {
-            let isCourseAdded = ~prev[addressPosition].items.findIndex(
+            let isCourseAdded = ~prev[addressPosition].content.items.findIndex(
                 mapCourse => mapCourse.id == curr.id
             );
             if (!isCourseAdded) {
-                prev[addressPosition].items.push(this.mapCourse(curr));
+                prev[addressPosition].content.items.push(this.mapCourse(curr));
             }
         } else {
             prev.push(this.getMapItem(curr));
@@ -363,7 +368,6 @@ view.getMapItem = function(course) {
     return course.addressId ?
         {
             addressId: course.addressId,
-            addressName: course.addressName,
             coordinates: geoView.coordinatesDefault(
                 course.addressCoords),
             score: course.totalScore,
@@ -372,8 +376,16 @@ view.getMapItem = function(course) {
                 text: course.brand,
                 url: null
             },
-            subtitle: course.addressName,
-            items: [this.mapCourse(course)]
+            header: {
+                title: course.brand
+            },
+            content: {
+                title: 'Курсы',
+                items: [this.mapCourse(course)]
+            },
+            footer: {
+                title: course.addressName
+            }
         } :
         null;
 };
@@ -429,7 +441,11 @@ view.getListCourse = function(course) {
             course.totalScore
         ),
         cost: course.optionCost,
-        online: course.optionOnline ? 'only' : null,
+        online: course.optionOnline ? {
+            value: groupSizeTraining.ONLINE,
+            type: 'only'
+        } :
+        {},
         addresses: [course.addressId],
         metro: course.metroId ? [{
             id: course.metroId,
@@ -454,10 +470,13 @@ view.joinListCourse = function(existingCourse, newCourse) {
         existingCourse.cost = newCourse.optionCost;
     }
 
-    if (existingCourse.online === 'only' && !newCourse.optionOnline ||
-        !existingCourse.online && newCourse.optionOnline
+    if (existingCourse.online.type === 'only' && !newCourse.optionOnline ||
+        !existingCourse.online.type && newCourse.optionOnline
     ) {
-        existingCourse.online = 'available';
+        existingCourse.online = {
+            value: groupSizeTraining.ONLINE,
+            type: 'available'
+        };
     }
 
     if (newCourse.areaId &&

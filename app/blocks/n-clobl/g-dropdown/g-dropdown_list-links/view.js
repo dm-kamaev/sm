@@ -1,9 +1,9 @@
 goog.provide('sm.gDropdown.ViewListLinks');
 
-goog.require('cl.gDropdown.View');
 goog.require('cl.iUtils.Utils');
 goog.require('goog.dom');
 goog.require('goog.json');
+goog.require('sm.gDropdown.ViewSelect');
 
 
 
@@ -13,14 +13,14 @@ goog.require('goog.json');
  * @param {Function=} opt_template
  * @param {string=} opt_modifier
  * @constructor
- * @extends {cl.gDropdown.View}
+ * @extends {sm.gDropdown.ViewSelect}
  */
 sm.gDropdown.ViewListLinks = function(opt_params, opt_template, opt_modifier) {
     sm.gDropdown.ViewListLinks.base(
         this, 'constructor', opt_params, opt_template, opt_modifier
     );
 };
-goog.inherits(sm.gDropdown.ViewListLinks, cl.gDropdown.View);
+goog.inherits(sm.gDropdown.ViewListLinks, sm.gDropdown.ViewSelect);
 
 
 goog.scope(function() {
@@ -34,9 +34,9 @@ goog.scope(function() {
     View.CssClass = {
         ROOT: 'g-dropdown_list-links',
         OPENER: 'g-dropdown__opener',
+        OPENER_TEXT: 'g-dropdown__opener-text',
         OPENER_LINK: 'g-dropdown__opener-link',
-        CONTENT: 'g-dropdown__content',
-        OPENER_TEXT: 'g-dropdown__opener-text'
+        CONTENT: 'g-dropdown__content'
     };
 
     /**
@@ -44,9 +44,9 @@ goog.scope(function() {
      * @enum {string}
      */
     View.Event = {
-        OPENER_CLICK: cl.gDropdown.View.Event.OPENER_CLICK,
-        CONTENT_CLICK: cl.gDropdown.View.Event.CONTENT_CLICK,
-        CLOSE_DROPDOWN: cl.gDropdown.View.Event.CLOSE_DROPDOWN
+        OPENER_CLICK: sm.gDropdown.ViewSelect.Event.OPENER_CLICK,
+        CONTENT_CLICK: sm.gDropdown.ViewSelect.Event.CONTENT_CLICK,
+        CLOSE_DROPDOWN: sm.gDropdown.ViewSelect.Event.CLOSE_DROPDOWN
     };
 
     /**
@@ -55,64 +55,29 @@ goog.scope(function() {
      */
     View.prototype.decorateInternal = function(element) {
         View.base(this, 'decorateInternal', element);
-
-        this.initDom_();
     };
 
 
     /**
      * Init dom elements
-     * @private
+     * @protected
+     * @override
      */
-    View.prototype.initDom_ = function() {
+    View.prototype.initDom = function() {
+        this.dom.opener = this.getElementByClass(
+            View.CssClass.OPENER
+        );
+
+        this.dom.openerText = this.getElementByClass(
+            View.CssClass.OPENER_TEXT
+        );
+
         this.dom.openerLink = this.getElementByClass(
             View.CssClass.OPENER_LINK
         );
 
-        this.dom.listLinks = this.getElementByClass(
+        this.dom.list = this.getElementByClass(
             sm.gList.ViewLinks.CssClass.ROOT
         );
-    };
-
-
-    /**
-     * Change label of opener
-     * @param {string} label
-     */
-    View.prototype.changeOpenerText = function(label) {
-        goog.dom.setTextContent(
-            this.getElementByClass(View.CssClass.OPENER_TEXT),
-            label
-        );
-    };
-
-
-    /**
-     * Transform params to compressed ones
-     * @param {Object} params
-     * @return {sm.gDropdown.ViewListLinks.DataParams}
-     * @protected
-     */
-    View.prototype.transformParams = function(params) {
-        var res = {};
-
-        res.opener = params['opener'];
-
-        params['isChangingOpenerText'] ?
-            res.isChangingOpenerText = params['isChangingOpenerText'] :
-            res.isChangingOpenerText = false;
-
-        if (params['values']) {
-            res.values = params['values'].map(function(item) {
-                return {
-                    label: item['label'],
-                    value: item['value']
-                };
-            });
-        } else {
-            res.values = null;
-        }
-
-        return res;
     };
 });  // goog.scope

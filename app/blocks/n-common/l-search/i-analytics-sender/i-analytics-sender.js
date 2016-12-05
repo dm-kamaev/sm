@@ -99,21 +99,6 @@ goog.scope(function() {
 
 
     /**
-     * Send clicked on balloon product
-     * @param {sm.bSmMap.Event.BalloonItemClick.Data} data
-     */
-    AnalyticsSender.prototype.sendClickedProduct = function(data) {
-
-        var productParams =
-            Analytics.getInstance().transformProductParams(data);
-
-        Analytics.getInstance().clickProduct(productParams, 'map balloon');
-
-        Analytics.getInstance().sendEvent(data.list, 'click', 0);
-    };
-
-
-    /**
      * Send data
      * @param {{
      *     category: string,

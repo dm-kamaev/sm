@@ -50,23 +50,23 @@ goog.scope(function() {
      */
     PinClick.prototype.getPinData = function(params) {
         var res = [];
-        if (params.items.length == 0) {
+        if (params.content.items.length == 0) {
             res.push({
                 id: params['id'],
-                name: params['name'],
+                name: params['header']['title'],
                 list: 'map baloon',
                 category: params['category'],
-                address: params['description'],
+                address: params['description']['text'],
                 position: 1
             });
         } else {
-            params.items.map(function(item, index) {
+            params.content.items.map(function(item, index) {
                 res.push({
                     id: item['id'],
                     name: item['name']['light'],
                     list: 'map baloon',
                     category: item['category'],
-                    address: params['addressName'],
+                    address: params['footer']['title'],
                     position: index + 1
                 });
             });

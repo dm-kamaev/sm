@@ -323,7 +323,23 @@ module.exports = class {
      * @return {string}
      */
     formatAge_(age) {
-        return age[0] + '—' + age[age.length - 1] + ' лет';
+        let result,
+            firstAge = age[0],
+            lastDigit = firstAge % 10;
+
+        if (age.length > 1) {
+            result = `${firstAge}—${age[age.length - 1]} лет`;
+        } else if (firstAge >= 11 && firstAge <= 14) {
+            result = `${firstAge} лет`;
+        } else if (lastDigit == 1) {
+            result = `${firstAge} год`;
+        } else if (lastDigit >= 2 && lastDigit <= 4) {
+            result = `${firstAge} года`;
+        } else {
+            result = `${firstAge} лет`;
+        }
+
+        return result;
     }
 
     /**
@@ -332,14 +348,19 @@ module.exports = class {
      * @return {string}
      */
     formatSchedule_(schedule) {
-        return schedule.map(item => {
-            let weekday = WEEK_DAYS[item.day],
-                startTime = this.formatTime_(item.startTime),
-                endTime = item.endTime ?
-                    `—${this.formatTime_(item.endTime)}` :
-                    '';
-            return `${weekday} ${startTime}${endTime}`;
-        }).join(', ');
+        return schedule
+            .sort((previousSchedule, currentSchedule) =>
+                previousSchedule.day > currentSchedule.day
+            )
+            .map(item => {
+                let weekday = WEEK_DAYS[item.day],
+                    startTime = this.formatTime_(item.startTime),
+                    endTime = item.endTime ?
+                        `—${this.formatTime_(item.endTime)}` :
+                        '';
+                return `${weekday} ${startTime}${endTime}`;
+            })
+            .join(', ');
     }
 
     /**
