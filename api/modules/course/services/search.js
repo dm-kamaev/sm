@@ -26,13 +26,16 @@ let service = {
  * }}
  */
 service.getData = async(function(searchParams, opt_categoryId) {
+    let categories = await(services.courseCategory.getAll({isActive: true}));
+
     return await({
         courses: services.course.list(searchParams, SEARCH_CHUNK_SIZE),
         mapCourses: services.course.listMap(searchParams, SEARCH_CHUNK_SIZE),
         mapPosition: services.map.getPositionParams(searchParams),
-        categories: services.courseCategory.getAll({isActive: true}),
+        categories: categories,
         filtersData: {
-            [filterName.TYPE]: services.courseType.getAll()
+            [filterName.TYPE]: services.courseType.getAll(),
+            [filterName.CATEGORY]: categories
         },
         seoParams: opt_categoryId ?
             services.seoCourseList.getByCategoryId(opt_categoryId) :

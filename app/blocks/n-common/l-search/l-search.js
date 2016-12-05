@@ -5,6 +5,7 @@ goog.provide('sm.lSearch.Search');
 
 
 goog.require('cl.iRequest.Request');
+goog.require('goog.array');
 goog.require('goog.events');
 goog.require('goog.object');
 goog.require('sm.bSearch.Search');
@@ -576,8 +577,25 @@ goog.scope(function() {
      */
     Search.prototype.updateUrl_ = function() {
         this.urlUpdater_.update(this.paramsManager_.getUrlParams(
-            Search.URL_PARAMS_TO_EXCLUDE
+            this.getUrlParamsToExclude_()
         ));
+    };
+
+
+    /**
+     * Search params names, which exclude when built url
+     * all names of filters used to build url
+     * @return {Array<string>}
+     * @private
+     */
+    Search.prototype.getUrlParamsToExclude_ = function() {
+        var filtersName = Object.keys(this.getParamsFromFilterPanel_());
+
+        return goog.array.filter(Search.URL_PARAMS_TO_EXCLUDE, function(param) {
+            return !filtersName.some(function(filterName) {
+                return param == filterName;
+            });
+        });
     };
 
 
