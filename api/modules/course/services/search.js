@@ -37,9 +37,7 @@ service.getData = async(function(searchParams, opt_categoryId) {
             [filterName.TYPE]: services.courseType.getAll(),
             [filterName.CATEGORY]: categories
         },
-        seoParams: opt_categoryId ?
-            services.seoCourseList.getByCategoryId(opt_categoryId) :
-            {}
+        seoParams: services.seoCourseList.getByCategoryId(opt_categoryId) || {}
     });
 });
 
