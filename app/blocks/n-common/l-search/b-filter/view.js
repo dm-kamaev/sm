@@ -59,11 +59,10 @@ goog.scope(function() {
         View.base(this, 'decorateInternal', element);
 
         this.initButtons(element);
-        this.initHeader_(element);
-        this.initContainers_(element);
+        this.initHeader(element);
+        this.initContainers(element);
 
-        this.initParams_();
-        this.initStateContentVisibility_();
+        this.initStateContentVisibility();
     };
 
 
@@ -74,7 +73,7 @@ goog.scope(function() {
         View.base(this, 'enterDocument');
 
         this.initButtonsListeners();
-        this.initHeaderControlsListeners_();
+        this.initHeaderControlsListeners();
     };
 
 
@@ -93,10 +92,12 @@ goog.scope(function() {
      * Collapse filter
      */
     View.prototype.collapse = function() {
-        this.setContentVisibility_(false);
-        this.setHeaderIconUpState_(false);
+        if (this.dom.buttonSwitchContentVisibility) {
+            this.setContentVisibility_(false);
+            this.setHeaderIconUpState_(false);
 
-        this.contentVisibility_ = false;
+            this.contentVisibility_ = false;
+        }
     };
 
 
@@ -242,9 +243,9 @@ goog.scope(function() {
     /**
      * Initializes header and his controls
      * @param {Element} element
-     * @private
+     * @protected
      */
-    View.prototype.initHeader_ = function(element) {
+    View.prototype.initHeader = function(element) {
         this.dom.header = goog.dom.getElementByClass(
             View.CssClass.HEADER,
             element
@@ -269,9 +270,9 @@ goog.scope(function() {
 
     /**
      * Initializes listeners for header controls
-     * @private
+     * @protected
      */
-    View.prototype.initHeaderControlsListeners_ = function() {
+    View.prototype.initHeaderControlsListeners = function() {
         var handler = this.getHandler();
 
         if (this.dom.buttonSwitchContentVisibility) {
@@ -437,9 +438,9 @@ goog.scope(function() {
     /**
      * Initializes containers
      * @param {Element} element
-     * @private
+     * @protected
      */
-    View.prototype.initContainers_ = function(element) {
+    View.prototype.initContainers = function(element) {
         this.dom.content = goog.dom.getElementByClass(
             View.CssClass.CONTENT,
             element
@@ -454,9 +455,9 @@ goog.scope(function() {
 
     /**
      * Initializes state content visibility
-     * @private
+     * @protected
      */
-    View.prototype.initStateContentVisibility_ = function() {
+    View.prototype.initStateContentVisibility = function() {
         if (this.dom.buttonSwitchContentVisibility) {
             var isUp = goog.dom.classlist.contains(
                 this.dom.iconDown,
@@ -469,15 +470,34 @@ goog.scope(function() {
 
 
     /**
-     * Initializes filter params
-     * @private
+     * Return data-params from dom element
+     * @return {{
+     *    name: string,
+     *    type: (string|undefined)
+     * }}
+     * @protected
+     * @override
      */
-    View.prototype.initParams_ = function() {
-        var data = JSON.parse(
-            this.getElement().getAttribute('data-params')
-        );
+    View.prototype.getParams = function() {
+        var rawParams = View.base(this, 'getParams');
+        this.params = !goog.object.isEmpty(rawParams) ?
+            this.transformParams(rawParams) :
+            null;
 
-        this.params.name = data.name;
-        this.params.type = data.type;
+        return this.params;
+    };
+
+
+    /**
+     * Transform raw params to compressed ones
+     * @param {Object} rawParams
+     * @return {Object}
+     * @protected
+     */
+    View.prototype.transformParams = function(rawParams) {
+        return {
+            name: rawParams['name'],
+            type: rawParams['type']
+        };
     };
 });  // goog.scope

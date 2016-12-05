@@ -1,3 +1,12 @@
+/**
+ * @fileOverview
+ * params isUncheckable used to uncheck RadioButton when click
+ * if the RadioButton was checked, when you click on it a second time
+ * it will be unchecked
+ *
+ * params isNotDefaultStatus used to set classes with modifiers
+ */
+
 {namespace sm.bSmRadioButton.Template}
 
 
@@ -14,7 +23,10 @@
 
 /**
  * @typedef {{
- *     theme: (string|undefined),
+ *     theme: ('label'|undefined),
+ *     isNotDefaultStatus: (boolean|undefined),
+ *     isUncheckable: (boolean|undefined),
+ *     viewType: ('low'|'middle'|'high'|undefined),
  *     stylizationModifier: string
  * }} sm.bSmRadioButton.Template.Params.Config
  */
@@ -119,4 +131,33 @@
  */
 {template .rootClass}
     b-sm-radio-button
+{/template}
+
+
+/**
+ * Css classes
+ * @param params {{
+ *     data: {
+ *         isChecked: (boolean|undefined)
+ *     },
+ *     config: {
+ *         isNotDefaultStatus: (boolean|undefined),
+ *         isUncheckable: (boolean|undefined),
+ *         viewType: ('low'|'middle'|'high'|undefined)
+ *     }
+ * }}
+ * @override
+ */
+{template .additionalClasses}
+    {if $params.config.isNotDefaultStatus}
+        {call .rootClass/}_{$params.data.isChecked ? 'active': 'inactive'}
+    {/if}
+
+    {if $params.config.viewType}
+        {sp}{call .rootClass/}_view-type_{$params.config.viewType}
+    {/if}
+
+    {if $params.config.isUncheckable}
+        {sp}{call .rootClass/}_uncheckable
+    {/if}
 {/template}

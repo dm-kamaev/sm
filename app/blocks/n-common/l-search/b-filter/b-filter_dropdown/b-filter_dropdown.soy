@@ -1,0 +1,138 @@
+{namespace sm.lSearch.bFilter.TemplateDropdown}
+
+
+/**
+ * @typedef {{
+ *     name: string,
+ *     header: ({
+ *         title: (string|undefined),
+ *         tooltip: (string|undefined)
+ *     }|undefined),
+ *     options: Array<{
+ *         label: string,
+ *         value: string,
+ *         isChecked: (boolean|undefined)
+ *     }>
+ * }} sm.lSearch.bFilter.TemplateDropdown.Params.Data
+ */
+
+
+/**
+ * @typedef {{
+ *     data: sm.lSearch.bFilter.TemplateDropdown.Params.Data,
+ *     config: sm.lSearch.bFilter.Template.Params.Config
+ * }} sm.lSearch.bFilter.TemplateDropdown.Params
+ */
+
+
+/**
+ * Constructor
+ * @param params {sm.lSearch.bFilter.TemplateDropdown.Params}
+ * @extends sm.lSearch.bFilter.Template
+ * @constructor
+ */
+{template .filter}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * Filter content template
+ * @param params {{
+ *     data: {
+ *         name: string,
+ *         options: Array<{
+ *             label: string,
+ *             value: string,
+ *             isSelected: (boolean|undefined)
+ *         }>
+ *     },
+ *     config: {
+ *         type: (string|undefined),
+ *         optionsToShow: (number|undefined),
+ *         cannotBeHidden: (boolean|undefined),
+ *         stylizationModifier: string
+ *     }
+ * }}
+ * @protected
+ */
+{template .content}
+    {let $classes kind="html"}
+        {call .rootClass/}__content
+
+        {if not $params?.config?.cannotBeHidden}
+            {if not $params?.config?.isShowed}
+                {sp}i-utils__hidden
+            {/if}
+        {/if}
+    {/let}
+
+    <div class="{$classes}">
+        {call .listOptions data="all" /}
+        {call .button data="all" /}
+    </div>
+{/template}
+
+
+/**
+ * List options template
+ * @param params {{
+ *     data: {
+ *         name: string,
+ *         options: Array<{
+ *             label: string,
+ *             value: string,
+ *             isSelected: (boolean|undefined)
+ *         }>
+ *     },
+ *     config: {
+ *         optionsToShow: (number|undefined),
+ *         type: (string|undefined),
+ *         stylizationModifier: string
+ *     }
+ * }}
+ * defaultOpener is label of the last option
+ * @public
+ */
+{template .listOptions}
+    <div class="{call .rootClass/}__list-options">
+        {let $checkedOpener kind="html"}
+            {foreach $option in $params.data.options}
+                {if $option?.isChecked}
+                    {$option.label}
+                {/if}
+            {/foreach}
+        {/let}
+
+        {let $defaultOpener kind="html"}
+            {$params.data.options[(length($params.data.options))]}
+        {/let}
+
+        {call .renderChild}
+            {param params: [
+                'factory': $params.config.modifier,
+                'type': 'dropdown-select',
+                'renderParams': [
+                    'data': [
+                        'opener': $checkedOpener ?: $defaultOpener,
+                        'content': [
+                            'items': $params.data.options
+                        ]
+                    ],
+                    'config': [
+                        'isChangingOpenerText': true,
+                        'theme': 'rectangle'
+                    ]
+                ]
+            ] /}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * @override
+ */
+{template .additionalClasses}
+    {call .rootClass/}_dropdown
+{/template}

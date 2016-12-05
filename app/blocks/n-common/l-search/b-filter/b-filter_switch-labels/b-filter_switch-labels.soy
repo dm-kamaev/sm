@@ -1,0 +1,151 @@
+{namespace sm.lSearch.bFilter.TemplateSwitchLabels}
+
+
+/**
+ * @typedef {{
+ *     data: sm.lSearch.bFilter.Template.Params.Data,
+ *     config: sm.lSearch.bFilter.Template.Params.Config
+ * }} sm.lSearch.bFilter.TemplateSwitchLabels.Params
+ */
+
+
+/**
+ * Constructor
+ * @param params {sm.lSearch.bFilter.TemplateSwitchLabels.Params}
+ * @extends sm.lSearch.bFilter.TemplateSwitch
+ * @constructor
+ */
+{template .filter}
+    {call .init data="all"/}
+{/template}
+
+
+/**
+ * List options template
+ * @param params {{
+ *     data: {
+ *         name: string,
+ *         options: Array<{
+ *             label: string,
+ *             value: string,
+ *             viewType: (string|undefined),
+ *             isChecked: (boolean|undefined)
+ *         }>
+ *     },
+ *     config: {
+ *         optionsToShow: (number|undefined),
+ *         type: (string|undefined),
+ *         align: (string|undefined),
+ *         stylizationModifier: string
+ *     }
+ * }}
+ * @public
+ */
+{template .listOptions}
+    {let $isCheckedFilter kind="html"}
+        {call .isCheckedFilter_ data="all" /}
+    {/let}
+
+    <div class="{call .rootClass/}__list-options">
+        {for $i in range($params.data.options.length)}
+            {let $id: $i + '-' + ($params.config?.type ?: '') + '-' +
+                $params.data.name
+            /}
+
+            {call .option}
+                {param params: [
+                    'data': [
+                        'id': $id,
+                        'name': $params.data.name,
+                        'label': $params.data.options[$i].label,
+                        'value': $params.data.options[$i].value,
+                        'isChecked': $params.data.options[$i]?.isChecked ?: ''
+                    ],
+                    'config': [
+                        'isNotDefaultStatus': $isCheckedFilter,
+                        'viewType': $params.data.options[$i].viewType ?: '',
+                        'stylizationModifier': $params.config.stylizationModifier
+                    ]
+                ]/}
+            {/call}
+        {/for}
+    </div>
+{/template}
+
+
+/**
+ * Option template
+ * @param params {{
+ *     data: {
+ *         id: string,
+ *         name: string,
+ *         label: string,
+ *         value: string,
+ *         isChecked: (boolean|undefined)
+ *     },
+ *     config: {
+ *         isNotDefaultStatus: (boolean),
+ *         viewType: (string|undefined),
+ *         stylizationModifier: string
+ *     }
+ * }}
+ * @public
+ */
+{template .option}
+    <div class="{call .rootClass/}__option">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': $params.config.stylizationModifier,
+                'type': 'smRadioButton',
+                'renderParams': [
+                    'data': $params.data,
+                    'config': [
+                        'theme': 'label',
+                        'isUncheckable': true,
+                        'isNotDefaultStatus': $params.config.isNotDefaultStatus,
+                        'viewType': $params.config.viewType
+                    ]
+                ]
+            ]/}
+        {/call}
+    </div>
+{/template}
+
+
+/**
+ * Tempate button
+ * @protected
+ */
+{template .button}
+{/template}
+
+
+/**
+ * Tempate to define checed filters or not
+ * @param params {{
+ *     data: {
+ *         options: Array<{
+ *             label: string,
+ *             value: string,
+ *             isChecked: (boolean|undefined)
+ *         }>
+ *     }
+ * }}
+ * @private
+ */
+{template .isCheckedFilter_}
+    {foreach $option in $params.data.options}
+        {if $option.isChecked}
+            true
+        {/if}
+    {/foreach}
+{/template}
+
+
+/**
+ * @override
+ */
+{template .additionalClasses}
+    {call .rootClass/}_switch{sp}
+    {call .rootClass/}_switch-labels
+{/template}

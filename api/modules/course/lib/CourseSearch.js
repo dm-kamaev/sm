@@ -324,13 +324,13 @@ class CourseSearchQuery extends SearchQuery {
         switch (sortType) {
         case '0':
             order = 'ASC';
-            baseField = 'course_option.total_cost';
-            innerField = `min(${baseField})`;
+            innerField = 'min(course_option.total_cost)';
+            baseField = `(${innerField} OVER(PARTITION BY course.id))`;
             break;
         case '1':
             order = 'DESC NULLS LAST';
-            baseField = 'course_option.total_cost';
-            innerField = `min(${baseField})`;
+            innerField = 'min(course_option.total_cost)';
+            baseField = `(${innerField} OVER(PARTITION BY course.id))`;
             break;
         default:
             order = 'DESC NULLS LAST';

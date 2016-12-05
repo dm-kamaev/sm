@@ -68,8 +68,6 @@ class CourseFilterPanel extends FilterPanel {
                 options: []
             },
             config: {
-                showMoreButtonText: 'Все направления',
-                optionsToShow: 9,
                 isShowed: true
             }
         };
@@ -258,9 +256,9 @@ class CourseFilterPanel extends FilterPanel {
      */
     setFilterType(options, opt_checkedValues) {
         var params = this.filterType_;
-        params.data.options = this.formatType_(options);
+        params.data.options = this.getOptions(options);
 
-        this.setFilterModal(params, opt_checkedValues);
+        this.setFilter(params, opt_checkedValues);
 
         return this;
     }
@@ -370,18 +368,6 @@ class CourseFilterPanel extends FilterPanel {
         options[0].value = (values && values[0]) ? values[0] : '';
 
         return options;
-    }
-
-    /**
-     * @private
-     * @param {Array<Object>} types
-     * @return {Array<Object>}
-     */
-    formatType_(types) {
-        return types.map(type => ({
-            value: type.id,
-            label: type.name
-        }));
     }
 }
 

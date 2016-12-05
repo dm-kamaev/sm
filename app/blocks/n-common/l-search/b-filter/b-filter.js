@@ -77,6 +77,7 @@ goog.scope(function() {
         Filter.base(this, 'enterDocument');
 
         this.initOptionsListeners();
+        this.initViewListeners();
     };
 
 
@@ -322,6 +323,14 @@ goog.scope(function() {
             this.allOptionsData.push(option.getData());
 
         }, this);
+    };
+
+
+    /**
+     * Initializes listeners for view
+     * @protected
+     */
+    Filter.prototype.initViewListeners = function() {
     };
 
 

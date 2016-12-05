@@ -1,3 +1,11 @@
+'use strict';
+
+const async = require('asyncawait/async'),
+    await = require('asyncawait/await'),
+    lodash = require('lodash');
+
+const logger = require('../../../components/logger/logger').getLogger('app');
+
 const soy = require('../../../components/soy');
 const services = require('../../../components/services').all;
 const schoolView = require('../../../../api/modules/school/views/schoolView');
@@ -10,18 +18,13 @@ const entityType = require('../../../../api/modules/entity/enums/entityType');
 const PageNotFoundError = require('../../error/lib/PageNotFoundError');
 
 const config = require('../../../config').config;
-const analyticsId = config.schools.analyticsId;
-const yandexMetrikaId = config.schools.yandexMetrikaId;
 
-const logger = require('../../../components/logger/logger').getLogger('app');
-
-const DOMAIN = config.schools.host;
-const FB_CLIENT_ID = config.facebookClientId,
-    CARROTQUEST_ID = config.carrotquestId;
-
-const async = require('asyncawait/async'),
-    await = require('asyncawait/await'),
-    lodash = require('lodash');
+const ANALYTICS_ID = config.schools.analyticsId,
+    YANDEX_METRIKA_ID = config.schools.yandexMetrikaId,
+    DOMAIN = config.schools.host,
+    FB_CLIENT_ID = config.facebookClientId,
+    CARROTQUEST_ID = config.carrotquestId,
+    MODIFIER = 'stendhal';
 
 
 exports.createComment = async(function(req, res) {
@@ -39,144 +42,11 @@ exports.createComment = async(function(req, res) {
     }
 });
 
-
 exports.search = async(function(req, res, next) {
     res.status(301);
     res.header('Location', '/school');
     res.end();
 });
-
-
-exports.list = async(function(req, res, next) {
-    try {
-        var searchParams = {},
-            searchText = '',
-            seoData = {},
-            user = req.user || {};
-
-        if (req.params &&
-            req.params.listType &&
-            lodash.isEmpty(req.query)) {
-            var seoPromises = {
-                schoolList: services.seoSchoolList.getByType(
-                    req.params
-                ),
-                schoolListsForLinks: services.seoSchoolList.getByListType(
-                    req.params.listType
-                )
-            };
-
-            var seoResults = await(seoPromises);
-
-            if (!seoResults.schoolList) {
-                throw new PageNotFoundError();
-            }
-
-            var storedParams =
-                seoView.searchParams(seoResults.schoolList);
-
-            searchParams = storedParams.searchParams;
-            searchText = storedParams.searchText;
-            seoData = seoView.seoListData(
-                seoResults.schoolList,
-                seoResults.schoolListsForLinks
-            );
-        } else {
-            searchParams =
-                await(services.schoolSearch.initSearchParams(req.query));
-            searchText = req.query.name || '';
-        }
-
-        var favorites = await(services.favorite.getByUserId(user.id)),
-            favoriteIds = services.favorite.getEntityIdsFiltredByType(
-                favorites,
-                entityType.SCHOOL
-            );
-
-        var promises = {
-            schools: services.school.list(
-                searchParams,
-                {
-                    limitResults: 10
-                }
-            ),
-            filtersData: services.school.searchFiltersData(searchParams),
-            mapPosition: services.schoolSearch.getMapPositionParams(
-                searchParams
-            ),
-            authSocialLinks: services.auth.getAuthSocialUrl(),
-            favorites: {
-                items: services.school.getByIdsWithGeoData(favoriteIds),
-                itemUrls: services.page.getAliases(
-                    favoriteIds,
-                    entityType.SCHOOL
-                )
-            },
-            seoLinks: services.seoSchoolList.getByTypes()
-        };
-
-        var results = await(promises);
-
-        var schoolAliases = await(services.page.getAliases(
-                schoolView.uniqueIds(results.schools),
-                entityType.SCHOOL
-            )),
-            schools = schoolView.joinAliases(results.schools, schoolAliases),
-            schoolsWithFavoriteMark = schoolView.listWithFavorites(
-                schools,
-                favorites
-            );
-
-        var schoolsList = schoolView.list(schoolsWithFavoriteMark),
-            map = schoolView.listMap(results.schools, results.mapPosition),
-            filters = searchView.filters(results.filtersData, searchParams);
-
-        var params = {
-            params: {
-                data: {
-                    schools: schoolsList.schools,
-                    filters: filters,
-                    authSocialLinks: results.authSocialLinks,
-                    user: userView.default(user),
-                    seo: seoData,
-                    favorites: {
-                        schools: schoolView.listCompact(results.favorites)
-                    },
-                    seoLinks: seoView.linksList(
-                        results.seoLinks,
-                        (!req.params.geoType) ? req.params.listType : null
-                    )
-                },
-                searchText: searchText,
-                countResults: schoolsList.countResults,
-                searchSettings: {
-                    url: '/api/school/search',
-                    method: 'GET',
-                    searchParams: searchParams
-                },
-                map: map,
-                config: {
-                    staticVersion: config.lastBuildTimestamp,
-                    year: new Date().getFullYear(),
-                    analyticsId: analyticsId,
-                    yandexMetrikaId: yandexMetrikaId,
-                    carrotquestId: CARROTQUEST_ID,
-                    csrf: req.csrfToken(),
-                    domain: DOMAIN,
-                    fbClientId: FB_CLIENT_ID
-                }
-            }
-        };
-        var html = soy.render('sm.lSearchResult.Template.list', params);
-
-        res.header('Content-Type', 'text/html; charset=utf-8');
-        res.end(html);
-    } catch (error) {
-        res.status(error.code || 500);
-        next(error);
-    }
-});
-
 
 exports.view = async(function(req, res, next) {
     try {
@@ -272,8 +142,8 @@ exports.view = async(function(req, res, next) {
                             config: {
                                 staticVersion: config.lastBuildTimestamp,
                                 year: new Date().getFullYear(),
-                                analyticsId: analyticsId,
-                                yandexMetrikaId: yandexMetrikaId,
+                                analyticsId: ANALYTICS_ID,
+                                yandexMetrikaId: YANDEX_METRIKA_ID,
                                 carrotquestId: CARROTQUEST_ID,
                                 csrf: req.csrfToken(),
                                 domain: DOMAIN,
@@ -337,8 +207,8 @@ exports.home = async(function(req, res) {
             config: {
                 staticVersion: config.lastBuildTimestamp,
                 year: new Date().getFullYear(),
-                analyticsId: analyticsId,
-                yandexMetrikaId: yandexMetrikaId,
+                analyticsId: ANALYTICS_ID,
+                yandexMetrikaId: YANDEX_METRIKA_ID,
                 carrotquestId: CARROTQUEST_ID,
                 csrf: req.csrfToken(),
                 domain: DOMAIN,
@@ -349,6 +219,98 @@ exports.home = async(function(req, res) {
 
     res.header('Content-Type', 'text/html; charset=utf-8');
     res.end(html);
+});
+
+
+exports.list = async(function(req, res, next) {
+    try {
+        let searchParams = {},
+            seoParams = {},
+            requestParams = req.params || {};
+
+        if (requestParams.listType && lodash.isEmpty(req.query)) {
+            let seoData = await(services.seoSchoolList.getDataByRequest(
+                requestParams
+            ));
+            if (!seoData.listParams) {
+                throw new PageNotFoundError();
+            }
+
+            let storedParams = JSON.parse(seoData.listParams.searchParameters);
+            searchParams = searchView.initSearchParams(storedParams);
+
+            seoParams = seoView.seoListData(
+                seoData.listParams,
+                seoData.linksParams
+            );
+        } else {
+            searchParams = searchView.initSearchParams(req.query);
+        }
+
+
+        let authSocialLinks = services.auth.getAuthSocialUrl(),
+            user = req.user || {};
+
+        let data = await({
+                favorites: services.favorite.getFavoriteEntities(user.id),
+                schools: services.school.list(searchParams, {limitResults: 10}),
+                mapPosition: services.map.getPositionParams(searchParams),
+                filtersData: services.school.searchFiltersData(searchParams),
+                seoLinks: services.seoSchoolList.getByTypes()
+            }),
+            schoolAliases = await(services.page.getAliases(
+                schoolView.uniqueIds(data.schools),
+                entityType.SCHOOL
+            ));
+
+        let templateData = searchView.render({
+            user: user,
+            fbClientId: FB_CLIENT_ID,
+            favorites: data.favorites,
+            authSocialLinks: authSocialLinks,
+            schoolsList: data.schools,
+            schoolAliases: schoolAliases,
+            countResults: data.schools[0] && data.schools[0].countResults || 0,
+            mapPosition: data.mapPosition,
+            searchParams: searchParams,
+            filtersData: data.filtersData,
+            enabledFilters: null,
+            seoParams: seoParams,
+            seoLinks: seoView.linksList(
+                data.seoLinks,
+                (!requestParams.geoType) ? requestParams.listType : null
+            )
+        });
+
+        let html = soy.render(
+            'sm.lSearch.Template.search', {
+                params: {
+                    data: templateData,
+                    config: {
+                        entityType: entityType.SCHOOL,
+                        page: 'search',
+                        modifier: MODIFIER,
+                        staticVersion: config.lastBuildTimestamp,
+                        year: new Date().getFullYear(),
+                        analyticsId: ANALYTICS_ID,
+                        yandexMetrikaId: YANDEX_METRIKA_ID,
+                        carrotquestId: CARROTQUEST_ID,
+                        csrf: req.csrfToken(),
+                        domain: DOMAIN,
+                        fbClientId: FB_CLIENT_ID
+                    }
+                }
+            }
+        );
+
+        res.header('Content-Type', 'text/html; charset=utf-8');
+        res.end(html);
+    } catch (error) {
+        logger.error(error);
+
+        res.status(error.code || 500);
+        next(error);
+    }
 });
 
 
@@ -393,8 +355,8 @@ exports.catalog = async(function(req, res, next) {
                     modifier: 'stendhal',
                     staticVersion: config.lastBuildTimestamp,
                     year: new Date().getFullYear(),
-                    analyticsId: analyticsId,
-                    yandexMetrikaId: yandexMetrikaId,
+                    analyticsId: ANALYTICS_ID,
+                    yandexMetrikaId: YANDEX_METRIKA_ID,
                     carrotquestId: CARROTQUEST_ID,
                     csrf: req.csrfToken(),
                     domain: DOMAIN,

@@ -263,7 +263,7 @@ goog.scope(function() {
             data = {};
 
         if (params.id) {
-            data[params.type + 'Id'] = params.id;
+            data[params.type] = params.id;
             data.name = params.name;
         } else {
             data = null;

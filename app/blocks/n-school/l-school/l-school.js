@@ -391,7 +391,7 @@ goog.scope(function() {
      */
     School.prototype.onMapReady_ = function() {
         jQuery.ajax({
-            url: '/api/school/searchMapPoints',
+            url: '/api/school/searchMapPointsLegacy',
             dataType: 'json',
             type: 'GET'
         }).then(this.addMapPoints.bind(this));

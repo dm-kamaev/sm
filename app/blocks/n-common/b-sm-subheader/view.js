@@ -20,10 +20,6 @@ goog.require('sm.iAnimate.Animate');
 sm.bSmSubheader.View = function(opt_params, opt_type, opt_modifier) {
     sm.bSmSubheader.View.base(this, 'constructor', opt_params,
         opt_type, opt_modifier);
-
-    if (goog.dom.classlist.contains(this.params.parentElem, 'l-search')) {
-        this.deleteHref();
-    }
 };
 goog.inherits(sm.bSmSubheader.View, cl.iControl.View);
 
@@ -162,14 +158,5 @@ goog.scope(function() {
         this.dom.listLinks = this.getElementByClass(
             sm.gDropdown.ViewListLinks.CssClass.ROOT
         );
-    };
-
-
-    /**
-     * Delete href
-     */
-    View.prototype.deleteHref = function() {
-        var link = this.getElementByClass(View.CssClass.HEADER_LINK);
-        link.removeAttribute('href');
     };
 });  // goog.scope

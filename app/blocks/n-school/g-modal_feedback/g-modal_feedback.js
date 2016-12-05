@@ -218,7 +218,7 @@ goog.scope(function() {
         var domElements = this.getView().getDom();
         this.elements_ = {
             dropdown: this.decorateChild(
-                'dropdown-select', domElements.themeField
+                'dropdown-select-legacy', domElements.themeField
             ),
             submitButton: this.decorateChild(
                 'button', domElements.submitButton

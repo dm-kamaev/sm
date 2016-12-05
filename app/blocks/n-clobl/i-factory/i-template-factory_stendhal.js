@@ -39,6 +39,7 @@ goog.require('sm.gButton.TemplateSocialStendhal');
 goog.require('sm.gButton.TemplateStendhal');
 goog.require('sm.gDropdown.TemplateListLinks');
 goog.require('sm.gDropdown.TemplateSelect');
+goog.require('sm.gDropdown.TemplateSelectLegacy');
 goog.require('sm.gHint.TemplateStendhal');
 goog.require('sm.gIcon.TemplateStendhal');
 goog.require('sm.gIcon.TemplateSvg');
@@ -66,15 +67,17 @@ goog.require('sm.lSchool.bFoldList.Template');
 goog.require('sm.lSchoolHome.bArticleLink.Template');
 goog.require('sm.lSchoolHome.bArticleLinks.Template');
 goog.require('sm.lSearch.bFilter.Template');
+goog.require('sm.lSearch.bFilter.TemplateClasses');
+goog.require('sm.lSearch.bFilter.TemplateDropdown');
 goog.require('sm.lSearch.bFilter.TemplateExtended');
 goog.require('sm.lSearch.bFilter.TemplateInput');
 goog.require('sm.lSearch.bFilter.TemplateLabels');
 goog.require('sm.lSearch.bFilter.TemplateSwitch');
+goog.require('sm.lSearch.bFilter.TemplateSwitchLabels');
 goog.require('sm.lSearch.bFilterPanel.Template');
 goog.require('sm.lSearch.bLabel.Template');
 goog.require('sm.lSearch.bSearchResults.Template');
 goog.require('sm.lSearch.bSuggestFilter.Template');
-goog.require('sm.lSearchResult.bFilterSearch.Template');
 
 
 
@@ -113,8 +116,8 @@ sm.iFactory.TemplateFactoryStendhal = function() {
             sm.gModal.TemplateFeedback.modal
         )
         .setTemplateListItem(
-            'dropdown-select',
-            sm.gDropdown.TemplateSelect.dropdown
+            'dropdown-select-legacy',
+            sm.gDropdown.TemplateSelectLegacy.dropdown
         )
         .setTemplateListItem(
             'list-select',
@@ -193,10 +196,6 @@ sm.iFactory.TemplateFactoryStendhal = function() {
             sm.bFavoriteLink.Template.favoriteLink
         )
         .setTemplateListItem(
-            'filter-search',
-            sm.lSearchResult.bFilterSearch.Template.filterSearch
-        )
-        .setTemplateListItem(
             'tab-catalog',
             sm.gTab.TemplateCatalog.tab
         );
@@ -229,6 +228,10 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'list-links',
             sm.gList.TemplateLinks.list
+        )
+        .setTemplateListItem(
+            'dropdown-select',
+            sm.gDropdown.TemplateSelect.dropdown
         )
         .setTemplateListItem(
             'dropdown-list-links',
@@ -359,6 +362,18 @@ sm.iFactory.TemplateFactoryStendhal = function() {
         .setTemplateListItem(
             'lSearch-filterLabels',
             sm.lSearch.bFilter.TemplateLabels.filter
+        )
+        .setTemplateListItem(
+            'lSearch-filterSwitchLabels',
+            sm.lSearch.bFilter.TemplateSwitchLabels.filter
+        )
+        .setTemplateListItem(
+            'lSearch-filterDropdown',
+            sm.lSearch.bFilter.TemplateDropdown.filter
+        )
+        .setTemplateListItem(
+            'lSearch-filterClasses',
+            sm.lSearch.bFilter.TemplateClasses.filter
         )
         .setTemplateListItem(
             'lSearch-label',

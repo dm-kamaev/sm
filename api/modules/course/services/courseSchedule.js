@@ -19,9 +19,10 @@ const WEEK_DAYS = ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'];
  *     endTime: ?string,
  *     day: number
  * }>|string) data
+ * @param {Object=} opt_transaction
  * @return {Array<CourseSchedule>}
  */
-service.bulkCreate = async(function(courseOptionId, data) {
+service.bulkCreate = async(function(courseOptionId, data, opt_transaction) {
     let schedule;
     try {
         schedule = typeof data == 'string' ?
@@ -34,7 +35,9 @@ service.bulkCreate = async(function(courseOptionId, data) {
         schedule.map(item => {
             item.courseOptionId = courseOptionId;
             return item;
-        })
+        }), {
+            transaction: opt_transaction
+        }
     ));
 });
 
@@ -68,12 +71,14 @@ service.formatDay = function(day) {
 
 /**
  * @param {number} optionId
+ * @param {Object=} opt_transaction
  */
-service.deleteByOptionId = async(function(optionId) {
+service.deleteByOptionId = async(function(optionId, opt_transaction) {
     await(models.CourseSchedule.destroy({
         where: {
             courseOptionId: optionId
-        }
+        },
+        transaction: opt_transaction
     }));
 });
 

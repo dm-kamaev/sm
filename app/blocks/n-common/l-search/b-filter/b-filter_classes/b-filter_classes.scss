@@ -1,0 +1,57 @@
+@import "../../../i-media/i-media";
+
+.b-sm-filter_classes {
+    padding-bottom: 0;
+
+    .b-sm-filter__content {
+        margin-bottom: 0;
+    }
+
+    .b-sm-filter__option {
+        display: inline-block;
+    }
+
+    .b-sm-filter__option-labels {
+        margin-bottom: 7px;
+    }
+
+    .b-sm-filter__option_list {
+        display: none;
+
+        margin-top: 5px;
+    }
+}
+
+@include media-m {
+    .b-sm-filter_classes {
+        .b-sm-filter__option {
+            width: auto;
+
+            vertical-align: middle;
+        }
+
+        .b-sm-filter__option-labels {
+            margin-right: 40px;
+        }
+    }
+}
+
+@include media-s {
+    .b-sm-filter_classes {
+        .b-sm-filter__option {
+            width: auto;
+        }
+    }
+}
+
+@include media-xs {
+    .b-sm-filter_classes {
+        .b-sm-filter__option-labels {
+            display: none;
+        }
+
+        .b-sm-filter__option_list {
+            display: block;
+        }
+    }
+}
