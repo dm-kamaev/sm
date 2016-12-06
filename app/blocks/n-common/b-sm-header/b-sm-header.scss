@@ -1,36 +1,60 @@
-.b-sm-header {
+.b-sm-header
+{
+    font-family: Proxima, sans-serif;
+    font-weight: 800;
+
     width: 100%;
 
-    height: 70px;
-
-    font: 'Proxima', 'sans-serif';
-    font-weight: 800;
+    color: #000;
+    border-bottom: 1px solid #eee;
 }
 
-.b-sm-header__section {
+.b-sm-header__section
+{
     display: inline-block;
 
     height: 100%;
 }
 
-.b-sm-header__section_menu {
-
+.b-sm-header__body
+{
+    width: 1200px;
+    margin: 0 auto;
 }
 
-.b-sm-header__section_contacts {
+.b-sm-header__section_contacts
+{
     float: right;
-}
 
-.b-sm-header__menu-item {
+    margin-top: 25px;
+}
+.b-sm-header__menu-item
+{
     display: inline-block;
 
     height: 100%;
+    margin-right: 30px;
+    padding: 25px 0 25px 0;
 }
+.b-sm-header__menu-item_active-course
+{
+    border-bottom: 3px solid #f7eb30;
+}
+.b-sm-header__menu-item_active-school
+{
+    border-bottom: 3px solid #0c6b2c;
+}
+.b-sm-header__helper-text
+{
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 20px;
+    font-weight: 200;
 
-.b-sm-header__helper-text {
     display: inline-block;
 }
+.b-sm-header__contacts
+{
+    font-size: 20px;
 
-.b-sm-header__contacts {
     display: inline-block;
 }

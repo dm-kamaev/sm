@@ -123,6 +123,7 @@ controller.search = async(function(req, res, next) {
                 });
 
             let templateData = searchView.render({
+                entityType: entityType.COURSE,
                 user: user,
                 fbClientId: FB_CLIENT_ID,
                 favorites: data.favorites,
@@ -144,8 +145,10 @@ controller.search = async(function(req, res, next) {
                 categories: data.categories,
                 categoryAliases: aliases.categories,
                 links: {
-                    [entityType.SCHOOL]: config.schools.host,
-                    [entityType.COURSE]: config.courses.host
+                    [entityType.SCHOOL]: `${config.protocol}://` +
+                                            config.schools.host,
+                    [entityType.COURSE]: `${config.protocol}://` +
+                                            config.courses.host
                 }
             });
 

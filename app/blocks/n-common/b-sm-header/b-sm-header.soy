@@ -136,6 +136,9 @@
         {if $params.data.type}
             {sp}{call .rootClass /}__menu-item_{$params.data.type}
         {/if}
+        {if $params.data.isSelected}
+            {sp}{call .rootClass /}__menu-item_active-{$params.data.type}
+        {/if}
     {/let}
 
     {let $customClasses kind="html"}
@@ -154,7 +157,9 @@
                     'config': [
                         'size': 'xxxl',
                         'theme': 'dark',
-                        'customClasses': [$customClasses]
+                        'customClasses': [$customClasses],
+                        'target': $params.data.target or '',
+                        'disableHover': false
                     ]
                 ]
             ]/}

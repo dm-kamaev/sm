@@ -207,14 +207,16 @@ class Header {
      * Generate menu item for mel.fm
      * @return {{
      *     name: string,
-     *     url: string
+     *     url: string,
+     *     target: string
      * }}
      * @protected
      */
     generateCommonMenuItem() {
         return {
             name: 'Мел',
-            url: 'mel.fm'
+            url: 'https://mel.fm',
+            target: '_blank'
         };
     }
 }

@@ -235,6 +235,7 @@ searchView.initSearchParams = function(params, opt_categoryId) {
  * @return {Object}
  */
 searchView.header = function(entityType, links) {
+    console.log(entityType);
     let header = new Header();
 
     header.init({

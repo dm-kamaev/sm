@@ -45,16 +45,18 @@
  * Icon for phone template
  */
 {template .phoneIcon kind="html"}
-    {call .renderChild}
-        {param params: [
-            'type': 'icon-svg',
-            'renderParams': [
-                'data': [
-                    'type': 'phone'
+    <div class='{call .rootClass /}__phone-icon'>
+        {call .renderChild}
+            {param params: [
+                'type': 'icon-svg',
+                'renderParams': [
+                    'data': [
+                        'type': 'phone'
+                    ]
                 ]
-            ]
-        ] /}
-    {/call}
+            ]/}
+        {/call}
+    </div>
 {/template}
 
 
