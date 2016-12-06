@@ -19,6 +19,11 @@ goog.scope(function() {
             this, 'constructor', view, opt_domHelper
         );
 
+        /**
+         * Array of link instances
+         * @type {array<sm.bSmLink.SmLink>}
+         */
+        this.links = [];
     };
     goog.inherits(sm.bSmHeader.SmHeader, cl.iControl.Control);
     var Header = sm.bSmHeader.SmHeader;
@@ -39,8 +44,36 @@ goog.scope(function() {
      */
     Header.prototype.decorateInternal = function(element) {
         Header.base(this, 'decorateInternal', element);
+
+        this.initLinks();
     };
 
+
+    /**
+     * Link instanses initialization
+     * @protected
+     */
+    Header.prototype.initLinks = function() {
+        var links = this.getView().getLinks(),
+            linksLength = links.length,
+            i = 0;
+
+        for (i; i < linksLength; i++) {
+            this.initLink(links[i]);
+        }
+    };
+
+
+    /**
+     * Init
+     * @param  {Element} link
+     * @protected
+     */
+    Header.prototype.initLink = function(link) {
+        this.links.push(
+            this.decorateChild('smLink', link)
+        );
+    };
 
     /**
      * @override

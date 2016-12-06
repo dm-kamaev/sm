@@ -3,6 +3,7 @@ goog.provide('sm.iLayout.ViewStendhal');
 goog.require('cl.iControl.View');
 goog.require('cl.iUtils.Utils');
 goog.require('goog.dom.classlist');
+goog.require('sm.bSmHeader.View');
 
 
 
@@ -65,6 +66,9 @@ goog.scope(function() {
      */
     View.prototype.initDom = function() {
         this.dom = {
+            mainHeader: this.getElementByClass(
+                sm.bSmHeader.View.CssClass.ROOT
+            ),
             subheader: this.getElementByClass(
                 sm.bSmSubheader.View.CssClass.ROOT
             ),

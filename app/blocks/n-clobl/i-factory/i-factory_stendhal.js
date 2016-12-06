@@ -33,6 +33,8 @@ goog.require('sm.bSmFavorite.SmFavorite');
 goog.require('sm.bSmFavorite.View');
 goog.require('sm.bSmFooter.SmFooter');
 goog.require('sm.bSmFooter.View');
+goog.require('sm.bSmHeader.SmHeader');
+goog.require('sm.bSmHeader.View');
 goog.require('sm.bSmItem.SmItem');
 goog.require('sm.bSmItem.SmItemEntity');
 goog.require('sm.bSmItem.View');
@@ -309,6 +311,10 @@ sm.iFactory.FactoryStendhal = function() {
         .setControlListItem('smExpander', {
             control: sm.bSmExpander.SmExpander,
             view: sm.bSmExpander.View
+        })
+        .setControlListItem('smHeader', {
+            control: sm.bSmHeader.SmHeader,
+            view: sm.bSmHeader.View
         });
 
     /** l-information blocks **/

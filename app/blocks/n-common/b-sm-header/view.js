@@ -1,6 +1,7 @@
 goog.provide('sm.bSmHeader.View');
 
 goog.require('cl.iControl.View');
+goog.require('sm.bSmLink.View');
 
 
 goog.scope(function() {
@@ -19,6 +20,14 @@ goog.scope(function() {
         sm.bSmHeader.View.base(
             this, 'constructor', opt_params, opt_type, opt_modifier
         );
+
+        /**
+         * Collection of dom objects
+         * @type {{
+         *   links: {array<element>}
+         * }}
+         */
+        this.dom = {};
     };
     goog.inherits(sm.bSmHeader.View, cl.iControl.View);
     var View = sm.bSmHeader.View;
@@ -40,6 +49,25 @@ goog.scope(function() {
      */
     View.prototype.decorateInternal = function(element) {
         View.base(this, 'decorateInternal', element);
+
+        this.initDom();
+    };
+
+    /**
+     * Dom initialization
+     * @protected
+     */
+    View.prototype.initDom = function() {
+        this.dom.links = this.getElementsByClass(
+            sm.bSmLink.View.CssClass.ROOT
+        );
+    };
+
+    /**
+     * @return {array<element>}
+     */
+    View.prototype.getLinks = function() {
+        return this.dom.links;
     };
 
 

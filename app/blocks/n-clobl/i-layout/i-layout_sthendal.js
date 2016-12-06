@@ -25,6 +25,12 @@ goog.require('sm.iMetrika.Metrika');
 sm.iLayout.LayoutStendhal = function(view, opt_domHelper) {
     sm.iLayout.LayoutStendhal.base(this, 'constructor', view, opt_domHelper);
 
+    /**
+     * Main header instance
+     * @type {sm.bSmHeader.SmHeader}
+     * @protected
+     */
+    this.mainHeader = null;
 
     /**
      * Subheader instance
@@ -55,8 +61,21 @@ goog.scope(function() {
         Layout.base(this, 'decorateInternal', element);
 
         this.initAuthorization();
+        this.initMainHeader();
         this.initSubheader();
         this.initFooter();
+    };
+
+
+    /**
+     * Initializes the main header of the page
+     * @protected
+     */
+    Layout.prototype.initMainHeader = function() {
+        this.mainHeader = this.decorateChild(
+            'smHeader',
+            this.getView().getDom().mainHeader
+        );
     };
 
 
