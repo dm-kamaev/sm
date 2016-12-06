@@ -80,7 +80,9 @@ module.exports = async(function(folderPath) {
         let imageName = getFileName(image),
             courseAlias = findCourseAlias(courseAliases, imageName);
 
-        return updateCourse(courseAlias.entityId, image);
+        if (courseAlias) {
+            return updateCourse(courseAlias.entityId, image);
+        }
     }));
 });
 
