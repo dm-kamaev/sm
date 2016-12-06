@@ -213,7 +213,10 @@ searchView.render = function(data) {
             },
             entityList: {
                 items: courses,
-                itemType: 'smItemEntity'
+                itemType: 'smItemEntity',
+                itemConfig: {
+                    enableCover: true
+                }
             }
         },
         filterPanel: searchView.filterPanel({
