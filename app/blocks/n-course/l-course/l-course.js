@@ -101,7 +101,8 @@ goog.scope(function() {
         Viewport = sm.iSmViewport.SmViewport,
         AnalyticsSender = sm.lCourse.iAnalyticsSender.AnalyticsSender,
         Analytics = sm.iAnalytics.Analytics,
-        Map = sm.bSmMap.SmMap;
+        Map = sm.bSmMap.SmMap,
+        Balloon = sm.bSmBalloon.SmBalloon;
 
 
     /**
@@ -197,18 +198,18 @@ goog.scope(function() {
     Course.prototype.initMapListeners_ = function() {
         this.getHandler().listen(
             this.map_,
-            Map.Event.PIN_CLICK,
-            this.onMapPinClick_
+            Map.Event.BALLOON_OPEN,
+            this.onBalloonOpen_
         );
     };
 
 
     /**
      * Action pin handler
-     * @param {sm.bSmMap.Event.PinClick} event
+     * @param {sm.bSmBalloon.Event.Open} event
      * @private
      */
-    Course.prototype.onMapPinClick_ = function(event) {
+    Course.prototype.onBalloonOpen_ = function(event) {
         this.sendMapAnalytics_(event.data);
     };
 
@@ -339,21 +340,24 @@ goog.scope(function() {
 
     /**
      * Send map analytics
-     * @param {sm.bSmMap.Event.PinClick.Data} data
+     * @param {sm.bSmBalloon.View.RenderParams} params
      * @private
      */
-    Course.prototype.sendMapAnalytics_ = function(data) {
-        var params = this.analyticsSender_.getProductParams();
-        params.list = data[0].list;
-        params.price = null;
-        params.position = data[0].position;
+    Course.prototype.sendMapAnalytics_ = function(params) {
+        var data = {
+            id: params.data.id,
+            name: params.data.header.title,
+            list: 'map balloon',
+            category: params.data.category,
+            position: 1
+        };
 
-        this.analyticsSender_.setProductParams(params);
+        this.analyticsSender_.setProductParams(data);
 
         this.analyticsSender_.sendMapAnalytics({
             category: 'details map',
             action: 'pin details',
-            name: data[0].address
+            name: params.data.footer.title
         });
     };
 

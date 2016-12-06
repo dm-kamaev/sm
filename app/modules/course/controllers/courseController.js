@@ -177,7 +177,7 @@ controller.information = async(function(req, res, next) {
                     fbClientId: FB_CLIENT_ID,
                     authSocialLinks: authSocialLinks,
                     entityData: courseView.page(course),
-                    map: courseView.pageMap(course),
+                    map: courseView.pageMap(course, categoryAlias),
                     favorites: data.favorites,
                     categories: data.categories,
                     categoryAliases: data.categoryAliases,

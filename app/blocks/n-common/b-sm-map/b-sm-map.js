@@ -7,7 +7,6 @@ goog.provide('sm.bSmMap.SmMap');
 goog.require('cl.iControl.Control');
 goog.require('goog.Promise');
 goog.require('sm.bSmBalloon.SmBalloon');
-goog.require('sm.bSmMap.Event.PinClick');
 goog.require('sm.bSmMap.IPresetGenerator');
 goog.require('sm.iSmViewport.SmViewport');
 
@@ -92,8 +91,7 @@ goog.scope(function() {
      */
     Map.Event = {
         READY: 'ready',
-        ITEM_NAME_CLICK: 'item-name-click',
-        PIN_CLICK: sm.bSmMap.Event.PinClick.Type
+        BALLOON_OPEN: sm.bSmBalloon.SmBalloon.Event.OPEN
     };
 
 
@@ -691,7 +689,6 @@ goog.scope(function() {
                     this.initBalloon_();
                     this.addEventListeners_();
                     this.setBalloonOffset_();
-                    this.dispatchDataForAnalytics_();
                 },
                 'clear': function() {
                     this.removeEventListeners_();
@@ -760,14 +757,6 @@ goog.scope(function() {
                 },
                 setBalloonOffset_: function() {
                     mapInstance.getView().setBalloonOffset(this.element_);
-                },
-                dispatchDataForAnalytics_: function() {
-                    var event = new sm.bSmMap.Event.PinClick(
-                        this.getData().object.properties
-                    );
-                    if (event.data[0].category) {
-                        mapInstance.dispatchEvent(event);
-                    }
                 }
             }
         );

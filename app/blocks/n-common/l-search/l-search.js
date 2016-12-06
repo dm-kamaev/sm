@@ -21,13 +21,14 @@ goog.require('sm.lSearch.iUrlUpdater.UrlUpdater');
 
 
 goog.scope(function() {
-    var Request = cl.iRequest.Request;
-    var SearchService = sm.lSearch.iSearchService.SearchService;
-    var SearchParamsManager = sm.iSmSearchParamsManager.SmSearchParamsManager;
-    var UrlUpdater = sm.lSearch.iUrlUpdater.UrlUpdater;
-    var Map = sm.bSmMap.SmMap;
-    var Analytics = sm.iAnalytics.Analytics;
-    var AnalyticsSender = sm.lSearch.iAnalyticsSender.AnalyticsSender;
+    var Request = cl.iRequest.Request,
+        SearchService = sm.lSearch.iSearchService.SearchService,
+        SearchParamsManager = sm.iSmSearchParamsManager.SmSearchParamsManager,
+        UrlUpdater = sm.lSearch.iUrlUpdater.UrlUpdater,
+        Map = sm.bSmMap.SmMap,
+        Analytics = sm.iAnalytics.Analytics,
+        AnalyticsSender = sm.lSearch.iAnalyticsSender.AnalyticsSender,
+        Balloon = sm.bSmBalloon.SmBalloon;
 
 
 
@@ -137,6 +138,16 @@ goog.scope(function() {
 
 
     /**
+     * Entity type
+     * @const {Object<string>}
+     */
+    Search.EntityType = {
+        SCHOOL: 'school',
+        COURSE: 'course'
+    };
+
+
+    /**
      * @typedef {sm.lSearch.View.Params}
      */
     sm.lSearch.Params;
@@ -148,7 +159,6 @@ goog.scope(function() {
      */
     Search.prototype.enterDocument = function() {
         Search.base(this, 'enterDocument');
-
         this.initSubheaderListeners_()
             .initLeftMenuListeners_()
             .initSearchServiceListeners_()
@@ -284,8 +294,8 @@ goog.scope(function() {
             this.onMapReady_
         ).listen(
             this.map_,
-            Map.Event.PIN_CLICK,
-            this.onMapPinClick_
+            Map.Event.BALLOON_OPEN,
+            this.onBalloonOpen_
         );
 
         return this;
@@ -396,17 +406,17 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.onMapReady_ = function() {
+        this.initAnalyticsSender_();
         this.searchService_.loadMapData(this.paramsManager_.getParams());
     };
 
 
     /**
      * Action pin handler
-     * @param {sm.bSmMap.Event.PinClick} event
+     * @param {sm.bSmBalloon.Event.Open} event
      * @private
      */
-    Search.prototype.onMapPinClick_ = function(event) {
-        this.initAnalyticsSender_(event.data);
+    Search.prototype.onBalloonOpen_ = function(event) {
         this.sendMapAnalytics_(event.data);
     };
 
@@ -840,26 +850,72 @@ goog.scope(function() {
 
     /**
      * Initializes instance of Analytics Sender
-     * @param {sm.bSmMap.Event.PinClick.Data} data
      * @private
      */
-    Search.prototype.initAnalyticsSender_ = function(data) {
-        this.analyticsSender_ = new AnalyticsSender('course search');
+    Search.prototype.initAnalyticsSender_ = function() {
+        this.analyticsSender_ = new AnalyticsSender('search page');
     };
 
 
     /**
      * Send map analytics
-     * @param {sm.bSmMap.Event.PinClick.Data} data
+     * @param {sm.bSmBalloon.View.RenderParams} params
      * @private
      */
-    Search.prototype.sendMapAnalytics_ = function(data) {
-        this.analyticsSender_.addImpressions(data);
+    Search.prototype.sendMapAnalytics_ = function(params) {
+        switch (this.params.type) {
+            case Search.EntityType.COURSE:
+                this.sendCourseAnalytics_(params.data);
+                break;
+            case Search.EntityType.SCHOOL:
+                this.sendSchoolAnalytics_(params.data);
+                break;
+        }
+    };
+
+
+    /**
+     * Send course data to analytics
+     * @param {sm.bSmBalloon.View.RenderParams} data
+     * @private
+     */
+    Search.prototype.sendCourseAnalytics_ = function(data) {
+        var courses = data.content.items;
+
+        courses.map(function(item, index) {
+            item.list = 'map balloon';
+            item.position = index + 1;
+            item.name = item.name.light;
+        });
+        this.analyticsSender_.addImpressions(courses);
 
         this.analyticsSender_.send({
             category: 'search map',
             action: 'pin details',
-            name: data[0].address
+            name: data.footer.title
+        });
+    };
+
+
+    /**
+     * Send school data to analytics
+     * @param {sm.bSmBalloon.View.RenderParams} data
+     * @private
+     */
+    Search.prototype.sendSchoolAnalytics_ = function(data) {
+        var schools = [{
+            id: data.id,
+            name: data.header.title,
+            list: 'map balloon',
+            position: 1
+        }];
+
+        this.analyticsSender_.addImpressions(schools);
+
+        this.analyticsSender_.send({
+            category: 'search map',
+            action: 'pin details',
+            name: data.header.title
         });
     };
 });  // goog.scope

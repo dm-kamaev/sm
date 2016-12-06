@@ -2,28 +2,29 @@
 
 /**
  * @typedef {{
- *     id: number,
+ *     id: (number|undefined),
+ *     category: (string|undefined),
  *     header: {
- *         title: string,
- *         description: string
+ *         title: (string|undefined),
+ *         description: (string|undefined)
  *     },
  *     description: {
- *         text: string,
+ *         text: (string|undefined),
  *         link: {
- *             text: string,
- *             url: string
+ *             text: (string|undefined),
+ *             url: (string|undefined)
  *         }
  *     },
  *     content:{
- *         title: string,
+ *         title: (string|undefined),
  *         items: Array<{
  *             id: number,
  *             content: string,
- *             url: ?string
+ *             url: string
  *         }>
  *     }
  *     footer: {
- *         title: string
+ *         title: (string|undefined)
  *     }
  * }} sm.bSmBalloon.Template.Params.Data
  */
