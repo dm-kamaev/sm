@@ -85,12 +85,10 @@ goog.scope(function() {
         Balloon.base(this, 'enterDocument');
 
         this.initListListeners_();
-        this.initDescriptionLinkListeners_();
+        this.initDescriptionListeners_();
 
         this.dispatchOpenBalloonEvent_();
-        this.autoDispatch(
-            View.Event.CLOSE_BUTTON_CLICK, Balloon.Event.CLOSE_BUTTON_CLICK
-        );
+        this.autoDispatch(View.Event.CLOSE_BUTTON_CLICK);
     };
 
 
@@ -113,7 +111,7 @@ goog.scope(function() {
      * Init description link listeners
      * @private
      */
-    Balloon.prototype.initDescriptionLinkListeners_ = function() {
+    Balloon.prototype.initDescriptionListeners_ = function() {
         this.viewListen(
             View.Event.DESCRIPTION_LINK_CLICK,
             this.onDescriptionLinkClick_
@@ -126,9 +124,8 @@ goog.scope(function() {
      * @private
      */
     Balloon.prototype.dispatchOpenBalloonEvent_ = function() {
-        var params = Balloon.getRenderParams(this.params.data);
         this.dispatchEvent(
-            new sm.bSmBalloon.Event.Open(params)
+            new sm.bSmBalloon.Event.Open(this.params.data)
         );
     };
 
@@ -158,7 +155,7 @@ goog.scope(function() {
      * @private
      */
     Balloon.prototype.sendAnalyticsDescriptionLinkClick_ = function() {
-        var data = Balloon.getRenderParams(this.params.data).data;
+        var data = this.params.data;
 
         var list = 'map balloon';
 

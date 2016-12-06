@@ -863,60 +863,55 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.sendMapAnalytics_ = function(params) {
-        switch (this.params.type) {
-            case Search.EntityType.COURSE:
-                this.sendCourseAnalytics_(params.data);
-                break;
-            case Search.EntityType.SCHOOL:
-                this.sendSchoolAnalytics_(params.data);
-                break;
+        var entityItems;
+        var name;
+
+        if (params.content.items.length > 0) {
+            entityItems = params.content.items;
+            name = params.footer.title;
+        } else {
+            entityItems = [params];
+            name = params.header.title;
         }
-    };
 
+        entityItems = this.transformEntityItemsParams_(entityItems);
 
-    /**
-     * Send course data to analytics
-     * @param {sm.bSmBalloon.View.RenderParams} data
-     * @private
-     */
-    Search.prototype.sendCourseAnalytics_ = function(data) {
-        var courses = data.content.items;
-
-        courses.map(function(item, index) {
-            item.list = 'map balloon';
-            item.position = index + 1;
-            item.name = item.name.light;
-        });
-        this.analyticsSender_.addImpressions(courses);
+        this.analyticsSender_.addImpressions(entityItems);
 
         this.analyticsSender_.send({
             category: 'search map',
             action: 'pin details',
-            name: data.footer.title
+            name: name
         });
     };
 
 
     /**
-     * Send school data to analytics
-     * @param {sm.bSmBalloon.View.RenderParams} data
+     * Transform entity items
+     * @param {Array<{Object}>} entityItems
+     * @return {Array<{
+     *             id: number,
+     *             name: string,
+     *             list: string,
+     *             category: ?string,
+     *             position: number
+     * }>}
      * @private
      */
-    Search.prototype.sendSchoolAnalytics_ = function(data) {
-        var schools = [{
-            id: data.id,
-            name: data.header.title,
-            list: 'map balloon',
-            position: 1
-        }];
+    Search.prototype.transformEntityItemsParams_ = function(entityItems) {
+        var result = [];
 
-        this.analyticsSender_.addImpressions(schools);
-
-        this.analyticsSender_.send({
-            category: 'search map',
-            action: 'pin details',
-            name: data.header.title
+        entityItems.forEach(function(item, index) {
+            result.push({
+                id: item.id,
+                name: item.name ? item.name.light : item.header.title,
+                list: 'map balloon',
+                category: item.category || null,
+                position: index + 1
+            });
         });
+
+        return result;
     };
 });  // goog.scope
 

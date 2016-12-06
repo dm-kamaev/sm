@@ -60,29 +60,29 @@ goog.scope(function() {
      * @typedef {{
      *     data: {
      *         id: ?number,
-     *         category: ?string
-     *         header: {
+     *         category: ?string,
+     *         header: ({
      *             title: ?string,
      *             description: ?string
-     *         },
-     *         description: {
+     *         }|undefined),
+     *         description: ({
      *             text: ?string,
      *             link: {
      *                 text: ?string,
      *                 url: ?string
      *             }
-     *         },
-     *         content:{
+     *         }|undefined),
+     *         content: ({
      *             title: ?string,
      *             items: Array<{
      *                 id: ?number,
      *                 content: ?string,
      *                 url: ?string
      *             }>
-     *         }
-     *         footer: {
+     *         }|undefined),
+     *         footer: ({
      *             title: ?string
-     *         }
+     *         }|undefined)
      *     }
      * }}
      */

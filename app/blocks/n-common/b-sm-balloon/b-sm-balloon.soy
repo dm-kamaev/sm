@@ -4,28 +4,28 @@
  * @typedef {{
  *     id: (number|undefined),
  *     category: (string|undefined),
- *     header: {
+ *     header: ({
  *         title: (string|undefined),
  *         description: (string|undefined)
- *     },
- *     description: {
+ *     }|undefined),
+ *     description: ({
  *         text: (string|undefined),
  *         link: {
  *             text: (string|undefined),
  *             url: (string|undefined)
  *         }
- *     },
- *     content:{
+ *     }|undefined),
+ *     content: ({
  *         title: (string|undefined),
  *         items: Array<{
  *             id: number,
  *             content: string,
  *             url: string
  *         }>
- *     }
- *     footer: {
+ *     }|undefined),
+ *     footer: ({
  *         title: (string|undefined)
- *     }
+ *     }|undefined)
  * }} sm.bSmBalloon.Template.Params.Data
  */
 
