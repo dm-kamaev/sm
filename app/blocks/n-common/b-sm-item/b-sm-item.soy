@@ -60,6 +60,7 @@
     {call .sections data="all" /}
 {/template}
 
+
 /**
  * sections
  * @param params {{
@@ -69,8 +70,7 @@
  * @protected
  */
 {template .sections}
-    {if $params.config.enableCover or
-        $params.config.stylizationModifier == 'experimental'}
+    {if $params.config.enableCover}
         {call .sectionGroupCover data="all" /}
     {/if}
 

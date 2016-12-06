@@ -53,7 +53,12 @@ controller.search = async(function(req, res, next) {
             let factory = contentExperiment.getFactoryByQuery(req.query);
             let data = await({
                     favorites: services.favorite.getFavoriteEntities(user.id),
-                    courses: services.course.list(searchParams, 10),
+                    courses: services.course.list(
+                        searchParams, {
+                            limit: 10,
+                            categories: [categoryInstance]
+                        }
+                    ),
                     mapCourses: services.course.listMap(searchParams, 10),
                     mapPosition: services.map.getPositionParams(searchParams),
                     filtersData: {
@@ -176,7 +181,7 @@ controller.information = async(function(req, res, next) {
                     user: user,
                     fbClientId: FB_CLIENT_ID,
                     authSocialLinks: authSocialLinks,
-                    entityData: courseView.page(course),
+                    entityData: courseView.page(course, categoryAlias),
                     map: courseView.pageMap(course),
                     favorites: data.favorites,
                     categories: data.categories,

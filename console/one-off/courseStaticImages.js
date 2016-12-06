@@ -3,12 +3,13 @@
 const async = require('asyncawait/async'),
     await = require('asyncawait/await'),
     path = require('path'),
-    fs = require('fs');
+    fs = require('fs'),
+    minimist = require('minimist');
 
 const pageModel = require('../../api/modules/entity/models/page'),
     courseModel = require('../../api/modules/course/models/course');
 
-const IMAGES_FOLDER = path.resolve(
+const DEFAULT_IMAGES_FOLDER = path.resolve(
         __dirname,
         '../../',
         'app/blocks/n-course/cover-images'
@@ -65,18 +66,27 @@ let updateCourse = async(function(id, image) {
     });
 });
 
-module.exports = async(function() {
+/**
+ * @param {string} folderPath
+ */
+module.exports = async(function(folderPath) {
     let courseAliases = await(getCourseAliases()),
-        images = fs.readdirSync(IMAGES_FOLDER);
+        imagesFolder = folderPath ?
+            path.resolve(folderPath) :
+            DEFAULT_IMAGES_FOLDER,
+        images = fs.readdirSync(imagesFolder);
 
     await(images.map(image => {
         let imageName = getFileName(image),
             courseAlias = findCourseAlias(courseAliases, imageName);
 
-        return updateCourse(courseAlias.entityId, image);
+        if (courseAlias) {
+            return updateCourse(courseAlias.entityId, image);
+        }
     }));
 });
 
 if (!module.parent) {
-    module.exports();
+    let args = minimist(process.argv.slice(2));
+    module.exports(args.path);
 }

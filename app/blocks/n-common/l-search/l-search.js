@@ -422,7 +422,9 @@ goog.scope(function() {
      * @private
      */
     Search.prototype.onScroll_ = function() {
-        if (this.isNextPageCanBeLoaded_()) {
+        if (this.isNextPageCanBeLoaded_() &&
+            !this.searchService_.isSearchDataPending()) {
+
             this.loadNextPage_();
         }
     };

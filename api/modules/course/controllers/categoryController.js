@@ -25,6 +25,7 @@ let controller = {};
  *         "id": 1,
  *         "name": "course's name"
  *         "isActive": true,
+ *         "priceType": "total_cost",
  *         "courseCount": 14,
  *         "filters": ["age", "costPerHour"],
  *         "updatedAt": "2016-10-19T15:56:35.234Z"
@@ -56,6 +57,7 @@ controller.list = async(function(req, res) {
  *         "name": "Профориентация",
  *         "filters": ["age", "costPerHour"],
  *         "isActive": true,
+ *         "priceType": "total_cost",
  *         "tabTitle": "Курсы профориентации в Москве: стоимость обучения.",
  *         "metaDescription": "Удобный фильтр для поиска курсов профориентации",
  *         "openGraphTitle": "Выбор профессии и вуза",
@@ -105,6 +107,7 @@ controller.get = async(function(req, res) {
  *         "name": "Профориентация",
  *         "filters": ["age", "costPerHour"],
  *         "isActive": true,
+ *         "priceType": "total_cost",
  *         "tabTitle": "Курсы профориентации в Москве: стоимость обучения.",
  *         "metaDescription": "Удобный фильтр для поиска курсов профориентации",
  *         "openGraphTitle": "Выбор профессии и вуза",
@@ -149,6 +152,7 @@ controller.create = async(function(req, res) {
  *         "name": "Профориентация",
  *         "filters": ["age", "costPerHour"],
  *         "isActive": true,
+ *         "priceType": "total_cost"
  *         "tabTitle": "Курсы профориентации в Москве: стоимость обучения.",
  *         "metaDescription": "Удобный фильтр для поиска курсов профориентации",
  *         "openGraphTitle": "Выбор профессии и вуза",

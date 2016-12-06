@@ -130,7 +130,7 @@ searchView.render = function(data) {
         aliasedCourses = courseView.joinAliases(
             data.coursesList, data.aliases
         ),
-        courses = courseView.list(aliasedCourses),
+        courses = courseView.list(aliasedCourses, data.categories),
         seoParams = data.seoParams || {};
 
     return {
@@ -213,7 +213,10 @@ searchView.render = function(data) {
             },
             entityList: {
                 items: courses,
-                itemType: 'smItemEntity'
+                itemType: 'smItemEntity',
+                itemConfig: {
+                    enableCover: true
+                }
             }
         },
         filterPanel: searchView.filterPanel({
