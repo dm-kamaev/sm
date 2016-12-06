@@ -17,7 +17,7 @@
  *         title: string,
  *         items: Array<string>,
  *     },
- *     search: {},
+ *     searchPanel: sm.bSmSearchPanel.Template.Params.Data,
  *     recomendations: Array<{
  *         header: string,
  *         links: Array<{
@@ -153,16 +153,24 @@
  * Search field section
  * @param params {{
  *     data: {
- *         search: {}
+ *         searchPanel: sm.bSmSearchPanel.Template.Params.Data,
  *     }
  * }}
  * @private
  */
 {template .sectionSearch_ kind="html"}
     {let $content kind="html"}
-        {if $params}
-        {/if}
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': $params.config.modifier,
+                'type': 'smSearchPanel',
+                'renderParams': [
+                    'data': $params.data.searchPanel
+                ]
+            ] /}
+        {/call}
     {/let}
+
     {call .section_}
         {param params: [
             'data': [

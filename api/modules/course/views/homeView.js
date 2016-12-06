@@ -22,14 +22,15 @@ view.render = function(data) {
             metaTitle: 'Курсы мела',
             metaDescription: ''
         },
-        type: data.entityType,
+        user: user,
+        authSocialLinks: data.authSocialLinks,
         subHeader: {
             logo: {
                 imgUrl: '/static/images/n-common/b-sm-subheader/course-logo.svg'
             },
             search: {
                 placeholder: 'Район, метро, название курса',
-                pageAlias: '/'
+                pageAlias: ''
             },
             user: user,
             favorites: {
@@ -57,8 +58,43 @@ view.render = function(data) {
                 '«Курсов Мела»'
             ]
         },
-        user: user,
-        authSocialLinks: data.authSocialLinks,
+        searchPanel: view.searchPanel()
+    };
+};
+
+
+/**
+ * @return {Object}
+ */
+view.searchPanel = function() {
+    let searchUrl = '/school?name=';
+
+    let links = [{
+        'content': 'Английский язык',
+        'url': encodeURIComponent(`${searchUrl}Английский язык`)
+    }, {
+        'content': 'ЦАО',
+        'url': encodeURIComponent(`${searchUrl}ЦАО`)
+    }, {
+        'content': 'Кутузовская',
+        'url': encodeURIComponent(`${searchUrl}Кутузовская`)
+    }];
+
+    return {
+        title: 'Что вы ищете?',
+        search: {
+            placeholder: 'Район, метро, название курса',
+            pageAlias: ''
+        },
+        links: links,
+        button: {
+            textL: 'Найти кружок или секцию',
+            textS: 'Найти'
+        },
+        searchLink: {
+            content: 'Расширенный поиск',
+            url: '/search'
+        }
     };
 };
 
