@@ -1,8 +1,9 @@
 'use strict';
 
-var await = require('asyncawait/await'),
+const await = require('asyncawait/await'),
     axios = require('axios'),
-    lodash = require('lodash');
+    lodash = require('lodash'),
+    GeoPoint = require('geopoint');
 
 const GEOCODER = 'http://geocode-maps.yandex.ru/1.x/';
 
@@ -42,7 +43,34 @@ class GeoTools {
             latitude: 1 / GeoTools.LT * lenKM,
             longitude: 1 / (GeoTools.LO * Math.cos(coords[0])) * lenKM
         };
-    };
+    }
+
+
+    /**
+     * getPointsSouthEastAndNorthWest
+     * @param  {Object[]} coords [ 37.587614, 55.753083 ]
+     * @param  {Number}   radius 3
+     * @return {Object}
+     * { southWest: { latitude, longitude }, northEast: { latitude, longitude } }
+     */
+    getPointsSouthEastAndNorthWest(coords, radius) {
+        const latitude = coords[1], longitude = coords[0];
+        const coord = new GeoPoint(latitude, longitude);
+        // radius search, radius earth, Kilometers
+        const squareSearch = coord.boundingCoordinates(radius, null, true);
+        const southWest = squareSearch[0];
+        const northEast = squareSearch[1];
+        return {
+            southWest: {
+                latitude: southWest.latitude(),
+                longitude: southWest.longitude(),
+            },
+            northEast: {
+                latitude:  northEast.latitude(),
+                longitude: northEast.longitude(),
+            },
+        };
+    }
 
     /**
      * @param {Array<number>} coords
@@ -82,33 +110,53 @@ class GeoTools {
     }
 
     /**
-     * @param {Array<number>} coords
-     * @param {number} searchRadius
-     * @return {Array<Object>}
+     * getMetros get metros for point by coordinat
+     * @param  {Object[]} coords     [ 37.587614, 55.753083 ]
+     * @param  {Number} searchRadius 3
+     * @return {Object[]}
+     * [ { name: 'метро Смоленская', coords: [ '37.581658', '55.74906' ] }, ]
      */
     getMetros(coords, searchRadius) {
-        var restriction = this.restriction(searchRadius, coords),
-            response = await(axios.get(GEOCODER, {
-                params: {
-                    geocode: coords.join(','),
-                    kind: 'metro',
-                    format: 'json',
-                    spn: restriction.longitude + ',' + restriction.latitude
-                }
-            })),
-            metros = response
-                .data
-                .response
-                .GeoObjectCollection
-                .featureMember
-                .map(featureMember => ({
-                    name: featureMember.GeoObject.name,
-                    coords: featureMember.GeoObject.Point.pos.split(' ')
-                }));
+        const square = this.getPointsSouthEastAndNorthWest(coords, searchRadius);
+        const southWest = square.southWest, northEast = square.northEast;
 
-        return lodash.uniq(metros, 'name');
+        const bbox = southWest.longitude+','+southWest.latitude+
+               '~'+
+               northEast.longitude+','+northEast.latitude
+        const responceGeo = await(axios.get(GEOCODER, {
+            params: {
+                geocode: coords.join(','),
+                kind: 'metro',
+                format: 'json',
+                bbox,
+            }
+        })).data;
+
+        let metros = responceGeo.response.GeoObjectCollection.featureMember;
+        metros = metros.map(metro => {
+            metro = metro.GeoObject;
+            return {
+                name: metro.name,
+                coords: metro.Point.pos.split(' ')
+            };
+        });
+        let metrosUniq = lodash.uniq(metros, 'name');
+        return metrosUniq;
     }
 
+
+    /**
+     * distanceKm
+     * @param  {Object} coord1 { latitude, longitude }
+     * @param  {Object} coord2 { latitude, longitude }
+     * @return {Number}   1200 (kilometres)
+     */
+    distanceKm(coord1, coord2) {
+        coord1 = new GeoPoint(coord1.latitude, coord1.longitude);
+        coord2 = new GeoPoint(coord2.latitude, coord2.longitude);
+        //kilometers
+        return coord1.distanceTo(coord2, true);
+    }
 
 
     /**

@@ -45,35 +45,19 @@ goog.scope(function() {
     Header.prototype.decorateInternal = function(element) {
         Header.base(this, 'decorateInternal', element);
 
-        this.initLinks();
+        this.initLinks_();
     };
 
 
     /**
      * Link instanses initialization
-     * @protected
+     * @private
      */
-    Header.prototype.initLinks = function() {
-        var links = this.getView().getLinks(),
-            linksLength = links.length,
-            i = 0;
-
-        for (i; i < linksLength; i++) {
-            this.initLink(links[i]);
-        }
+    Header.prototype.initLinks_ = function() {
+        var links = this.getView().getLinks();
+        this.links = this.decorateChildren('smLink', links);
     };
 
-
-    /**
-     * Init
-     * @param  {Element} link
-     * @protected
-     */
-    Header.prototype.initLink = function(link) {
-        this.links.push(
-            this.decorateChild('smLink', link)
-        );
-    };
 
     /**
      * @override

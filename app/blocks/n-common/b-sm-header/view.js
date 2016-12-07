@@ -24,7 +24,7 @@ goog.scope(function() {
         /**
          * Collection of dom objects
          * @type {{
-         *   links: {array<element>}
+         *   links: {Array<Element>}
          * }}
          */
         this.dom = {};
@@ -64,7 +64,7 @@ goog.scope(function() {
     };
 
     /**
-     * @return {array<element>}
+     * @return {Array<Element>}
      */
     View.prototype.getLinks = function() {
         return this.dom.links;
