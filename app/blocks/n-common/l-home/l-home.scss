@@ -4,6 +4,8 @@
 .l-home__body {
     margin: auto;
 
+    color: #000;
+
     font-family: Arial, sans-serif;
 }
 
@@ -33,8 +35,6 @@
 .l-home__section_image-l {
     height: 400px;
     margin-bottom: 0;
-
-    color: #000;
 }
 
 .l-home__image {
@@ -83,20 +83,26 @@
     padding-left: 20px;
 }
 
-.l-home_entity_course {
-    .l-home__section_image-l, .l-home__section_image-s {
-        background-color: #fbf4e9;
-    }
+.l-home__section_search {
+    height: 155px;
 }
 
-.l-home__section_search {
-    height: 75px;
+.l-home__search-panel {
+    height: 100%;
 }
 
 .l-home__section_recommendations {
     .l-home__section-content {
         width: 1200px;
         margin: 0 auto;
+    }
+}
+
+.l-home_entity_course {
+    .l-home__section_image-l,
+    .l-home__section_image-s,
+    .l-home__section_search {
+        background-color: #fbf4e9;
     }
 }
 /** content end **/
@@ -184,8 +190,12 @@
         }
     }
 
+    .l-home__section_search {
+        height: 80px;
+    }
+
     .l-home__section_image-s {
         display: block;
-        height: 170px;
+        height: 165px;
     }
 }

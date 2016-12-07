@@ -50,27 +50,28 @@
  * @override
  */
 {template .body}
-    {call .sectionTitle_ data="all" /}
+    {call .sectionHeader_ data="all" /}
     {call .sectionSearch_ data="all" /}
     {call .sectionButton_ data="all" /}
 {/template}
 
 
 /**
- * Section title
+ * Section header
  * @param params {{
  *     data: {
  *         title: (string|undefined)
  *     }
  * }}
  */
-{template .sectionTitle_}
+{template .sectionHeader_}
     {if $params.data.title}
-        <div class="{call .rootClass/}__section_title">
+        <div class="{call .rootClass/}__section{sp}
+                    {call .rootClass/}__section_header">
             <div class="{call .rootClass/}__title">
                 {$params.data.title}
             </div>
-        <div>
+        </div>
     {/if}
 {/template}
 
@@ -91,7 +92,8 @@
  * }}
  */
 {template .sectionSearch_}
-    <div class="{call .rootClass/}__section_search">
+    <div class="{call .rootClass/}__section{sp}
+                {call .rootClass/}__section_search">
         {call .search_ data="all" /}
 
         {call .links_}
@@ -119,7 +121,8 @@
  * }}
  */
 {template .sectionButton_}
-    <div class="{call .rootClass/}__section_button">
+    <div class="{call .rootClass/}__section{sp}
+                {call .rootClass/}__section_button">
         {call .button_ data="all" /}
 
         {call .links_}
@@ -197,6 +200,11 @@
                 'renderParams': [
                     'data': [
                         'content': $content
+                    ],
+                    'config': [
+                        'disableHover': true,
+                        'theme': 'dark',
+                        'size': 'm'
                     ]
                 ]
             ]/}
@@ -215,7 +223,15 @@
  * }}
  */
 {template .links_}
-    <div class="{call .rootClass/}__links">
+    {let $classes kind="html"}
+        {call .rootClass/}__links
+
+        {if $params?.config?.modifier}
+            {sp}{call .rootClass/}__links_{$params.config.modifier}
+        {/if}
+    {/let}
+
+    <div class="{$classes}">
         {foreach $link in $params.data}
             {call .link_}
                 {param params: [
@@ -255,7 +271,7 @@
                 'renderParams': [
                     'data': $params.data,
                     'config': [
-                        'size': 'l'
+                        'size': 'm'
                     ]
                 ]
             ]/}

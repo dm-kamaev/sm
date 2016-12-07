@@ -150,25 +150,20 @@
 
 
 /**
- * Search field section
+ * Search section
  * @param params {{
  *     data: {
  *         searchPanel: sm.bSmSearchPanel.Template.Params.Data,
+ *     },
+ *     config: {
+ *         entityType: string
  *     }
  * }}
  * @private
  */
 {template .sectionSearch_ kind="html"}
     {let $content kind="html"}
-        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
-            {param params: [
-                'factory': $params.config.modifier,
-                'type': 'smSearchPanel',
-                'renderParams': [
-                    'data': $params.data.searchPanel
-                ]
-            ] /}
-        {/call}
+        {call .searchPanel_ data="all" /}
     {/let}
 
     {call .section_}
@@ -275,6 +270,36 @@
         ">
             {$params.data.content}
         </div>
+    </div>
+{/template}
+
+
+/**
+ * Search panel template
+ * @param params {{
+ *     data: {
+ *         searchPanel: sm.bSmSearchPanel.Template.Params.Data,
+ *     },
+ *     config: {
+ *         entityType: string
+ *     }
+ * }}
+ * @private
+ */
+{template .searchPanel_ kind="html"}
+    <div class="{call .rootClass/}__search-panel">
+        {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
+            {param params: [
+                'factory': $params.config.modifier,
+                'type': 'smSearchPanel',
+                'renderParams': [
+                    'data': $params.data.searchPanel,
+                    'config': [
+                        'entityType': $params.config.entityType
+                    ]
+                ]
+            ] /}
+        {/call}
     </div>
 {/template}
 
