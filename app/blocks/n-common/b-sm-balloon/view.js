@@ -51,35 +51,47 @@ goog.scope(function() {
      */
     View.Event = {
         CLOSE_BUTTON_CLICK: goog.events.getUniqueId('close-button-click'),
-        TITLE_LINK_CLICK: goog.events.getUniqueId('title-link-click')
+        DESCRIPTION_LINK_CLICK:
+            goog.events.getUniqueId('description-link-click')
     };
 
 
     /**
      * @typedef {{
      *     data: {
-     *         title: {
-     *             id: number,
-     *             text: string,
-     *             url: ?string
-     *         },
-     *         subtitle: string,
-     *         items: Array<{
-     *             id: number,
-     *             content: string,
-     *             url: ?string
-     *         }>,
-     *         description: string
+     *         id: ?number,
+     *         category: ?string,
+     *         header: ({
+     *             title: ?string,
+     *             description: ?string
+     *         }|undefined),
+     *         description: ({
+     *             text: ?string,
+     *             link: {
+     *                 text: ?string,
+     *                 url: ?string
+     *             }
+     *         }|undefined),
+     *         content: ({
+     *             title: ?string,
+     *             items: Array<{
+     *                 id: ?number,
+     *                 content: ?string,
+     *                 url: ?string
+     *             }>
+     *         }|undefined),
+     *         footer: ({
+     *             title: ?string
+     *         }|undefined)
      *     }
      * }}
      */
     sm.bSmBalloon.View.RenderParams;
 
 
-
     /**
      * Transform raw params to compressed ones
-     * @param {Object<string, (string, number, Array)>} rawParams
+     * @param {sm.bSmBalloon.Template.Params.Data} rawParams
      * @return {sm.bSmBalloon.View.RenderParams}
      */
     View.getRenderParams = function(rawParams) {
@@ -87,7 +99,10 @@ goog.scope(function() {
             description = rawParams['description'],
             content = rawParams['content'],
             footer = rawParams['footer'],
-            res = {};
+            res = {
+                id: rawParams['id'] || null,
+                category: rawParams['category'] || null
+            };
 
         if (header) {
             res.header = {
@@ -123,28 +138,10 @@ goog.scope(function() {
                 title: footer['title'] || null
             };
         }
+
         return {
             data: res
         };
-    };
-
-
-    /**
-     * Transform raw params items to compressed ones
-     * @param {Array<Object>} rawParamsItems
-     * @return {sm.bSmLink.SmLink.RenderParams}
-     */
-    View.getItemsRenderParams = function(rawParamsItems) {
-        var params = [];
-
-        if (rawParamsItems) {
-            params = goog.array.map(rawParamsItems,
-                function(rawLinkParams) {
-                    return Link.getRenderParams(rawLinkParams).data;
-                }
-            );
-        }
-        return params;
     };
 
 
@@ -182,6 +179,14 @@ goog.scope(function() {
             goog.events.EventType.CLICK,
             this.onCloseButtonClick_
         );
+
+        if (dom.descriptionLink) {
+            handler.listen(
+                dom.descriptionLink,
+                goog.events.EventType.CLICK,
+                this.onDescriptionLinkClick_
+            );
+        }
     };
 
 
@@ -195,11 +200,11 @@ goog.scope(function() {
 
 
     /**
-     * Title click handler
+     * Description link click handler
      * @private
      */
-    View.prototype.onTitleLinkClick_ = function() {
-        this.dispatchEvent(View.Event.TITLE_LINK_CLICK);
+    View.prototype.onDescriptionLinkClick_ = function() {
+        this.dispatchEvent(View.Event.DESCRIPTION_LINK_CLICK);
     };
 
 

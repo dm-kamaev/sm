@@ -1,9 +1,11 @@
 goog.provide('sm.bSmBalloon.SmBalloon');
 
 goog.require('cl.iControl.Control');
+goog.require('sm.bSmBalloon.Event.Open');
 goog.require('sm.bSmBalloon.View');
 goog.require('sm.bSmItemList.SmItemList');
 goog.require('sm.bSmListPaged.SmListPaged');
+goog.require('sm.iAnalytics.Analytics');
 
 
 goog.scope(function() {
@@ -32,7 +34,9 @@ goog.scope(function() {
         this.listPaged_ = null;
     };
     goog.inherits(sm.bSmBalloon.SmBalloon, cl.iControl.Control);
-    var Balloon = sm.bSmBalloon.SmBalloon;
+
+    var Balloon = sm.bSmBalloon.SmBalloon,
+        Analytics = sm.iAnalytics.Analytics;
 
 
     /**
@@ -42,7 +46,8 @@ goog.scope(function() {
      */
     Balloon.Event = {
         CLOSE_BUTTON_CLICK: View.Event.CLOSE_BUTTON_CLICK,
-        LIST_PAGE_CHANGE: sm.bSmListPaged.SmListPaged.Event.PAGE_CHANGE
+        LIST_PAGE_CHANGE: sm.bSmListPaged.SmListPaged.Event.PAGE_CHANGE,
+        OPEN: sm.bSmBalloon.Event.Open.Type
     };
 
 
@@ -54,7 +59,7 @@ goog.scope(function() {
 
     /**
      * Transform raw params to compressed ones
-     * @param {Object<string, (string, number, Array)>} rawParams
+     * @param {sm.bSmBalloon.Template.Params.Data} rawParams
      * @return {sm.bSmBalloon.SmBalloon.RenderParams}
      */
     Balloon.getRenderParams = function(rawParams) {
@@ -79,19 +84,58 @@ goog.scope(function() {
     Balloon.prototype.enterDocument = function() {
         Balloon.base(this, 'enterDocument');
 
-        if (goog.isDefAndNotNull(this.listPaged_)) {
+        this.initListListeners_();
+        this.initDescriptionListeners_();
 
+        this.dispatchOpenBalloonEvent_();
+        this.autoDispatch(View.Event.CLOSE_BUTTON_CLICK);
+    };
+
+
+    /**
+     * Init list paged listeners
+     * @private
+     */
+    Balloon.prototype.initListListeners_ = function() {
+        if (goog.isDefAndNotNull(this.listPaged_)) {
             this.getHandler().listen(
                 this.listPaged_,
                 sm.bSmListPaged.SmListPaged.Event.ITEM_CLICK,
                 this.sendAnalyticsItemClick_
             );
-
         }
+    };
 
-        this.autoDispatch(
-            View.Event.CLOSE_BUTTON_CLICK, Balloon.Event.CLOSE_BUTTON_CLICK
+
+    /**
+     * Init description link listeners
+     * @private
+     */
+    Balloon.prototype.initDescriptionListeners_ = function() {
+        this.viewListen(
+            View.Event.DESCRIPTION_LINK_CLICK,
+            this.onDescriptionLinkClick_
         );
+    };
+
+
+    /**
+     * Dispatch event of ballonn open
+     * @private
+     */
+    Balloon.prototype.dispatchOpenBalloonEvent_ = function() {
+        this.dispatchEvent(
+            new sm.bSmBalloon.Event.Open(this.params.data)
+        );
+    };
+
+
+    /**
+     * Description link click handler
+     * @private
+     */
+    Balloon.prototype.onDescriptionLinkClick_ = function() {
+        this.sendAnalyticsDescriptionLinkClick_();
     };
 
 
@@ -103,6 +147,32 @@ goog.scope(function() {
     Balloon.prototype.sendAnalyticsItemClick_ = function(event) {
         this.listPaged_.sendAnalyticsItemClick(event.data.itemId,
             'map balloon');
+    };
+
+
+    /**
+     * Send analytics description link click
+     * @private
+     */
+    Balloon.prototype.sendAnalyticsDescriptionLinkClick_ = function() {
+        var data = this.params.data;
+
+        var list = 'map balloon';
+
+        var params = {
+            id: data.id,
+            name: data.header.title,
+            list: list,
+            position: 1
+        };
+
+        Analytics.getInstance().clickProduct(params, list);
+
+        Analytics.getInstance().sendEvent(
+            list,
+            'click',
+            0
+        );
     };
 
 

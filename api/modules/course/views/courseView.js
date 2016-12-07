@@ -203,10 +203,11 @@ view.alignmentOption = function(option, opt_isHorizontal) {
 };
 
 /**
- * @param  {Object} course
+ * @param {Object} course
+ * @param {string} categoryAlias
  * @return {Object}
  */
-view.pageMap = function(course) {
+view.pageMap = function(course, categoryAlias) {
     let addresses = lodash.flatten(course.courseOptions.map(courseOption =>
         courseOption.departments.map(department => {
             let address = department.address;
@@ -214,17 +215,16 @@ view.pageMap = function(course) {
                 addressId: address.id,
                 coordinates: geoView.coordinatesDefault(address.coords),
                 header: {
-                    title: course.courseBrand.name
+                    title: course.name
                 },
                 content: {
                     items: []
                 },
-                description: {
-                    text: address.name
+                footer: {
+                    title: address.name
                 },
                 id: course.id,
-                courseName: course.name,
-                category: course.categories[0].name,
+                category: categoryAlias,
                 score: course.totalScore
             };
         })
