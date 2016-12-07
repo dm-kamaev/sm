@@ -17,6 +17,10 @@ const config = require('../../../../app/config/config.json');
 const logger = require('../../../../app/components/logger/logger')
     .getLogger('app');
 
+const CategoryNotFound = require('./errors/CategoryNotFound'),
+    MissingSearchString =
+        require('../../entity/controllers/errors/MissingSearchString');
+
 let controller = {};
 
 /**
@@ -117,20 +121,56 @@ controller.searchMap = async(function(req, res) {
 });
 
 /**
- * @api {get} api/course/search/suggest
- * @apiVersion 0.0.1
- * @apiGroup Course
+ * @api {get} /api/course/search/suggest Search course data by string
+ * @apiVersion 0.1.0
  * @apiName SuggestSearch
+ * @apiGroup Course
+ *
+ * @apiParam {String} searchString The search string.
+ * @apiParam {Number} [categoryId] Category's id of search courses in.
+ *
  * @apiParamExample {json} Request-Example:
  *     {
- *       "searchString" : "123"
+ *         "searchString" : "pro",
+ *         "categoryId": 1
  *     }
+ *
+ * @apiSuccess {Object[]} courses                     Array of found courses.
+ * @apiSuccess {Number}   courses.id                  Course's id.
+ * @apiSuccess {String}   courses.alias               Course's alias.
+ * @apiSuccess {String}   courses.name                Course's name.
+ * @apiSuccess {Number[]} courses.score               Course's scores array
+ *                                                    of each parameter.
+ * @apiSuccess {Number}   courses.totalScore          Course's total score.
+ * @apiSuccess {Object[]} courses.addresses           Course's addresses.
+ * @apiSuccess {Number}   courses.addresses.id        Address' id.
+ * @apiSuccess {Object}   courses.addresses.area      Area's object.
+ * @apiSuccess {Number}   courses.addresses.area.id   Area's id.
+ * @apiSuccess {Number}   courses.addresses.area.name Area's name.
+ * @apiSuccess {Object[]} areas                       Array of found areas.
+ * @apiSuccess {Number}   areas.id                    Area's id.
+ * @apiSuccess {String}   areas.name                  Area's name.
+ * @apiSuccess {Object[]} metro                       Array of found metros.
+ * @apiSuccess {Number}   metro.id                    Metro's id.
+ * @apiSuccess {String}   metro.name                  Metro's name.
+ * @apiSuccess {Number[]} metro.coords                Array of longtitude
+ *                                                    and latitude.
+ * @apiSuccess {Object[]} districts                   Array of found districts.
+ * @apiSuccess {Number}   districts.id                District's id.
+ * @apiSuccess {String}   districts.name              District's name.
+ *
+ * @apiError (422) CategoryNotFound    Category with specified id not found.
+ * @apiError (422) MissingSearchString Field searchString must be specified.
  */
 controller.suggestSearch = async(function(req, res) {
     let result;
     try {
         let searchString = req.query.searchString,
-            data = await(services.courseSearchData.suggestSearch(searchString)),
+            categoryId = req.query.categoryId || null,
+            data = await(services.courseSearchData.suggestSearch(
+                searchString,
+                categoryId
+            )),
             courseAliases = await(services.course.getAliases(data.courses));
 
         data.courses = courseView.joinAliases(
@@ -139,10 +179,18 @@ controller.suggestSearch = async(function(req, res) {
         );
         result = courseView.suggest(data);
     } catch (error) {
-        logger.error(error.message);
-        result = error.message;
+        if (error instanceof CategoryNotFound) {
+            res.status(error.status);
+            result = error.response;
+        } else if (error instanceof MissingSearchString) {
+            res.status(error.status);
+            result = error.response;
+        } else {
+            logger.error(error);
+            result = error.message;
+        }
     } finally {
-        res.header('Content-Type', 'text/html; charset=utf-8');
+        res.header('Content-Type', 'application/json; charset=utf-8');
         res.end(JSON.stringify(result));
     }
 });

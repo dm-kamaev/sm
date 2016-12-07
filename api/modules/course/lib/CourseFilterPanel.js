@@ -72,6 +72,26 @@ class CourseFilterPanel extends FilterPanel {
             }
         };
 
+
+        /**
+         * Params for filter by category
+         * @type {Object}
+         * @private
+         */
+        this.filterCategory_ = {
+            data: {
+                header: {
+                    title: 'Категории'
+                },
+                name: 'categoryId',
+                options: []
+            },
+            config: {
+                isShowed: true
+            }
+        };
+
+
         /**
          * Params for filter by cost
          * @type {Object}
@@ -216,7 +236,8 @@ class CourseFilterPanel extends FilterPanel {
             [filterName.TIME]: this.setFilterTime.bind(this),
             [filterName.REGULARITY]: this.setFilterRegularity.bind(this),
             [filterName.FORM_TRAINING]: this.setFilterFormTraining.bind(this),
-            [filterName.DURATION]: this.setFilterDuration.bind(this)
+            [filterName.DURATION]: this.setFilterDuration.bind(this),
+            [filterName.CATEGORY]: this.setFilterCategory.bind(this)
         };
     }
 
@@ -346,6 +367,22 @@ class CourseFilterPanel extends FilterPanel {
         params.data.options = this.createOptionsValuesInOrder(
             this.filterDuration_.data.options
         );
+
+        this.setFilter(params, opt_checkedValues);
+
+        return this;
+    }
+
+
+    /**
+     * Set filter by category
+     * @param {Array<Object>} options
+     * @param {Array<(number|string)>=} opt_checkedValues
+     * @return {Object}
+     */
+    setFilterCategory(options, opt_checkedValues) {
+        var params = this.filterCategory_;
+        params.data.options = this.getOptions(options);
 
         this.setFilter(params, opt_checkedValues);
 

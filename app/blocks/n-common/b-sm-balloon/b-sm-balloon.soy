@@ -159,7 +159,12 @@
  * @param params {{
  *     data: {
  *         content:{
- *             title: string
+ *             title: string,
+ *             items: Array<{
+ *                 id: number,
+ *                 content: string,
+ *                 url: ?string
+ *             }>
  *         }
  *     }
  * }}
@@ -178,7 +183,6 @@
             {if $params.data.content.items.length > 0}
                 {call .itemList_ data="all" /}
             {/if}
-
         </div>
     {/if}
 {/template}
@@ -202,6 +206,7 @@
     {let $customClasses kind="html"}
         {call .rootClass /}__item-list
     {/let}
+
     {call .renderChild}
         {param params: [
             'type': 'smListPaged',
@@ -249,10 +254,12 @@
                 {$params.data.description.text}
             </div>
         {/if}
+
         {if $params.data.description.link}
             {let $customClasses kind="html"}
                 {call .rootClass /}__description-link
             {/let}
+
             {call .renderChild}
                 {param params: [
                     'type': 'smLink',

@@ -89,9 +89,10 @@ searchView.filterPanel = function(data) {
  *     filtersData: Array<Object>,
  *     aliases: Array<Object>,
  *     seoParams: Object,
- *     currentCategory: string,
+ *     currentAlias: string,
  *     categories: Array<Object>,
- *     categoryAliases: Array<Object>
+ *     categoryAliases: Array<Object>,
+ *     categoryId: (number|undefined)
  * }} data
  * @return {Object}
  */
@@ -121,14 +122,9 @@ searchView.render = function(data) {
                 altText: '«Курсы Мела»',
                 imgUrl: '/static/images/n-common/b-sm-subheader/course-logo.svg'
             },
-            links: {
-                nameL: 'Все курсы, кружки и секции',
-                nameM: 'Все курсы',
-                url: `/${data.currentCategory}`
-            },
             search: {
                 placeholder: 'Район, метро, название курса',
-                pageAlias: data.currentCategory
+                pageAlias: data.currentAlias
             },
             user: user,
             favorites: {
@@ -154,7 +150,10 @@ searchView.render = function(data) {
         search: {
             searchText: data.searchParams.name,
             placeholder: 'Район, метро, название курса',
-            pageAlias: data.currentCategory
+            pageAlias: data.currentAlias,
+            args: {
+                categoryId: data.categoryId
+            }
         },
         resultsList: {
             title: seoParams.listTitle,
@@ -196,6 +195,17 @@ searchView.render = function(data) {
     };
 };
 
+
+/**
+ * @param {Array<Course>} courses
+ * @return {number}
+ */
+searchView.countResults = function(courses) {
+    return courses[0] &&
+        courses[0].countResults ||
+        0;
+};
+
 /**
  * Normalize query params to search params
  * @param  {Object} params
@@ -217,6 +227,7 @@ searchView.initSearchParams = function(params, opt_categoryId) {
         [filterName.FORM_TRAINING]:
             formatUtils.transformToArray(params.formTraining),
         [filterName.DURATION]: formatUtils.transformToArray(params.duration),
+        [filterName.CATEGORY]: formatUtils.transformToArray(params.category),
         page: params.page || 0,
         sortType: params.sortType,
         name: params.name,
