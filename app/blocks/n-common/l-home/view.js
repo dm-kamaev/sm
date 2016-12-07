@@ -47,5 +47,26 @@ goog.scope(function() {
      */
     View.prototype.decorateInternal = function(element) {
         View.base(this, 'decorateInternal', element);
+
+        this.initDom();
+    };
+
+
+    /**
+     * Init dom elements
+     * @protected
+     * @override
+     */
+    View.prototype.initDom = function() {
+        View.base(this, 'initDom');
+
+        goog.object.extend(
+            this.dom,
+            {
+                searchPanel: this.getElementByClass(
+                    sm.bSmSearchPanel.View.CssClass.ROOT
+                )
+            }
+        );
     };
 });  // goog.scope

@@ -42,11 +42,11 @@ goog.scope(function() {
 
 
         /**
-         * Search Instance
-         * @type {sm.bSearch.Search}
+         * Search Panel Instance
+         * @type {sm.bSmSearchPanel.SearchPanel}
          * @private
          */
-        this.search_ = null;
+        this.searchPanel_ = null;
     };
     goog.inherits(sm.lHome.Home, sm.iLayout.LayoutStendhal);
     var Home = sm.lHome.Home;
@@ -59,6 +59,20 @@ goog.scope(function() {
      */
     Home.prototype.decorateInternal = function(element) {
         Home.base(this, 'decorateInternal', element);
+
+        this.initSectionSearch_();
+    };
+
+
+    /**
+     * Init search section instances
+     * @private
+     */
+    Home.prototype.initSectionSearch_ = function() {
+        this.searchPanel_ = this.decorateChild(
+            'smSearchPanel',
+            this.getView().getDom().searchPanel
+        );
     };
 });  // goog.scope
 

@@ -96,7 +96,6 @@ goog.scope(function() {
      * @protected
      */
     Layout.prototype.initSubheader = function() {
-        var that = this;
         this.subheader = this.decorateChild(
             'smSubheader',
             this.getView().getDom().subheader
@@ -109,7 +108,6 @@ goog.scope(function() {
      * @protected
      */
     Layout.prototype.initFooter = function() {
-        var that = this;
         this.footer = this.decorateChild(
             'smFooter',
             this.getView().getDom().footer

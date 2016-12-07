@@ -344,6 +344,22 @@ goog.scope(function() {
 
 
     /**
+     * Make search
+     * @public
+     */
+    Search.prototype.search = function() {
+        if (this.dataParams_['redirect']) {
+            this.searchRequest_(this.getText());
+        } else {
+            this.dispatchEvent({
+                'type': Search.Event.SUBMIT,
+                'data': this.getData()
+            });
+        }
+    };
+
+
+    /**
      * Switch to search mode
      * @public
      */
@@ -905,14 +921,7 @@ goog.scope(function() {
      * @param {Object} event
      */
     Search.prototype.onSubmit_ = function(event) {
-        if (this.dataParams_['redirect']) {
-            this.searchRequest_(this.getText());
-        } else {
-            this.dispatchEvent({
-                'type': Search.Event.SUBMIT,
-                'data': this.getData()
-            });
-        }
+        this.search();
     };
 
 

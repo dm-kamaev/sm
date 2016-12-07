@@ -30,7 +30,7 @@ view.render = function(data) {
             },
             search: {
                 placeholder: 'Район, метро, название курса',
-                pageAlias: ''
+                pageAlias: 'search'
             },
             user: user,
             favorites: {
@@ -84,7 +84,7 @@ view.searchPanel = function() {
         title: 'Что вы ищете?',
         search: {
             placeholder: 'Район, метро, название курса',
-            pageAlias: ''
+            pageAlias: 'search'
         },
         links: links,
         button: {
