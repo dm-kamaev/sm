@@ -94,6 +94,7 @@
   },
   "dependencies": {
     "express": "^4.13.3",
+    "geopoint": "^1.0.1",
     "glob": "^5.0.15",
     "q": "^1.4.1",
     "reset.css": "^2.0.2"
