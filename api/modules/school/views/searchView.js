@@ -91,7 +91,7 @@ searchView.render = function(data) {
                 nameL: 'Все школы Москвы',
                 nameM: 'Все школы',
                 nameS: 'Все школы Москвы',
-                url: '',
+                url: '/school',
             },
             search: {
                 placeholder: 'Район, метро, номер школы',
