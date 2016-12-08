@@ -10,11 +10,11 @@ const scoreView = require('../../entity/views/scoreView'),
     addressView = require('../../geo/views/addressView'),
     FormatUtils = require('../../entity/lib/FormatUtils'),
     CourseOptionsTransformer = require('../lib/CourseOptionsTransformer'),
-    pageView = require('../../entity/views/pageView');
+    pageView = require('../../entity/views/pageView'),
+    costView = require('../views/costView');
 
 const entityType = require('../../../../api/modules/entity/enums/entityType'),
-    groupSizeTraining = require('../enums/groupSizeTraining'),
-    categoryPrice = require('../enums/categoryPrice');
+    groupSizeTraining = require('../enums/groupSizeTraining');
 
 
 let view = {};
@@ -38,7 +38,10 @@ view.page = function(course, categoryAlias) {
         description: course.description,
         fullDescription: this.formatFullDescription(course.fullDescription),
         score: scoreView.results(course.score, course.totalScore).data,
-        cost: this.formatCost(options, course.courseType.category.priceType),
+        cost: costView.formatPageCost(
+            options,
+            course.courseType.category.priceType
+        ),
         generalOptions: {
             items: this.formatGeneralOptionsWithConfig(generalOptions)
         },
@@ -75,28 +78,6 @@ view.formatFullDescription = function(text) {
         result = null;
     }
     return result;
-};
-
-/**
- * @param  {Array<Object>} options
- * @param  {string}        priceType
- * @return {string}
- */
-view.formatCost = function(options, priceType) {
-    let costField = lodash.camelCase(priceType);
-
-    let value = Math.min.apply(
-            null,
-            options.map(option => option[costField])
-        ),
-        text;
-    if (priceType == categoryPrice.COST_PER_HOUR) {
-        text = 'руб. / час';
-    } else if (priceType == categoryPrice.TOTAL_COST) {
-        text = 'руб. / курс';
-    }
-
-    return `${value} ${text}`;
 };
 
 /**
@@ -460,7 +441,7 @@ view.getListCourse = function(course) {
             course.score,
             course.totalScore
         ),
-        cost: course.optionCost,
+        cost: costView.formatListCost(course.optionCost, course.priceType),
         online: course.optionOnline ? {
             value: groupSizeTraining.ONLINE,
             type: 'only'

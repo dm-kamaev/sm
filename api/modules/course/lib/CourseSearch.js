@@ -7,8 +7,6 @@ const SearchQuery = require('../../entity/lib/Search'),
     searchType = require('../enums/searchType'),
     addressSearchType = require('../../geo/enums/addressSearchType');
 
-const categoryPrice = require('../enums/categoryPrice');
-
 const HIDE_INDEX = {
     COST: 4,
     TIME: 3,
@@ -43,11 +41,10 @@ class CourseSearchQuery extends SearchQuery {
 
     /**
      * @param {(number|undefined)} sortType
-     * @param {string=} opt_costColumn
      * @return {Object}
      */
-    setSortType(sortType, opt_costColumn) {
-        this.setTypeOrder_(sortType, opt_costColumn);
+    setSortType(sortType) {
+        this.setTypeOrder_(sortType);
         this.setQueriesOrder_();
 
         return this;
@@ -220,6 +217,7 @@ class CourseSearchQuery extends SearchQuery {
             .field('course_option.total_cost', 'totalCost')
             .field('course_option.online', 'optionOnline')
             .field('course_type.category_id', 'categoryId')
+            .field('course_category.price_type', 'priceType')
             .field('address.id', 'addressId')
             .field('address.name', 'addressName')
             .field('address.coords', 'addressCoords')
@@ -233,10 +231,11 @@ class CourseSearchQuery extends SearchQuery {
                 null,
                 'course.brand_id = course_brand.id'
             )
+            .left_join('course_type', null, 'course.type = course_type.id')
             .left_join(
-                'course_type',
+                'course_category',
                 null,
-                'course.type = course_type.id'
+                'course_type.category_id = course_category.id'
             )
             .left_join(
                 'course_option',
@@ -265,16 +264,8 @@ class CourseSearchQuery extends SearchQuery {
                 null,
                 'address.id = address_metro.address_id'
             )
-            .left_join(
-                'metro',
-                null,
-                'address_metro.metro_id = metro.id'
-            )
-            .left_join(
-                'area',
-                null,
-                'address.area_id = area.id'
-            );
+            .left_join('metro', null, 'address_metro.metro_id = metro.id')
+            .left_join('area', null, 'address.area_id = area.id');
     }
 
     /**
@@ -316,9 +307,8 @@ class CourseSearchQuery extends SearchQuery {
     /**
      * @private
      * @param {number} sortType
-     * @param {string=} opt_costColumn
      */
-    setTypeOrder_(sortType, opt_costColumn) {
+    setTypeOrder_(sortType) {
         // this.baseQuery_
         //     .order('course.score[' + sortType + '] DESC NULLS LAST', null);
         // this.innerQuery_
@@ -326,17 +316,33 @@ class CourseSearchQuery extends SearchQuery {
         let order,
             baseField,
             innerField,
-            costColumn = opt_costColumn || categoryPrice.TOTAL_COST;
+            followingInnerField,
+            followingBaseField;
+
+        const costPerHour = 'min(course_option.cost_per_hour)',
+            totalCost = 'min(course_option.total_cost)',
+            over = 'OVER(PARTITION BY course.id)';
+
         switch (sortType) {
         case '0':
             order = 'ASC';
-            innerField = `min(course_option.${costColumn})`;
-            baseField = `(${innerField} OVER(PARTITION BY course.id))`;
+            innerField = costPerHour;
+            baseField = `(${innerField} ${over})`;
             break;
         case '1':
             order = 'DESC NULLS LAST';
-            innerField = `min(course_option.${costColumn})`;
-            baseField = `(${innerField} OVER(PARTITION BY course.id))`;
+            innerField = costPerHour;
+            baseField = `(${innerField} ${over})`;
+            break;
+        case '2':
+            order = 'ASC';
+            innerField = totalCost;
+            baseField = `(${innerField} ${over})`;
+            break;
+        case '3':
+            order = 'DESC NULLS LAST';
+            innerField = totalCost;
+            baseField = `(${innerField} ${over})`;
             break;
         default:
             order = 'DESC NULLS LAST';
@@ -347,6 +353,17 @@ class CourseSearchQuery extends SearchQuery {
             .order(`${baseField} ${order}`, null);
         this.innerQuery_
             .order(`${innerField} ${order}`, null);
+
+        if (sortType <= 3) {
+            followingInnerField = innerField == totalCost ?
+                costPerHour :
+                totalCost;
+            followingBaseField = `(${followingInnerField} ${over})`;
+            this.baseQuery_
+                .order(`${followingBaseField} ${order}`, null);
+            this.innerQuery_
+                .order(`${followingInnerField} ${order}`, null);
+        }
     }
 
     /**

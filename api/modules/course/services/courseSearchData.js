@@ -115,7 +115,7 @@ service.setSearchQueryParams = function(searchInstance, searchParams) {
     return searchInstance
         .setLimit(searchParams.limit)
         .setOffset(searchParams.page * searchParams.limit || 0)
-        .setSortType(searchParams.sortType, searchParams.costSortColumn)
+        .setSortType(searchParams.sortType)
         .setSearchString(searchParams.name)
         .setAge(searchParams.age)
         .setType(searchParams.type)

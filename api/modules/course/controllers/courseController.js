@@ -53,16 +53,10 @@ let controller = {};
 controller.search = async(function(req, res) {
     let result;
     try {
-        let searchParams = searchView.initSearchParams(req.query),
-            category = searchParams.categoryId.length == 1 ?
-                await(services.courseCategory.getById(
-                    searchParams.categoryId
-                )) :
-                null;
+        let searchParams = searchView.initSearchParams(req.query);
 
         let courses = await(services.course.list(searchParams, {
-                limit: 10,
-                categories: [category]
+                limit: 10
             })),
             countResults = courses[0] && courses[0].countResults || 0,
             aliases = await(services.course.getAliases(courses)),
@@ -88,8 +82,8 @@ controller.search = async(function(req, res) {
             });
         }
     } catch (error) {
-        logger.error(error.message);
-        result = error;
+        logger.error(error);
+        result = error.message;
     } finally {
         res.header('Content-Type', 'application/json; charset=utf-8');
         res.end(JSON.stringify(result));

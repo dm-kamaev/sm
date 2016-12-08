@@ -180,23 +180,12 @@ service.information = async(function(id) {
  * @param  {Object}         searchParams
  * @param  {Object=}        opt_params
  * @param  {number=}        opt_params.limit
- * @param  {Array<Object>=} opt_params.categories
  * @return {Promise.Array<Object>}
  */
 service.list = async(function(searchParams, opt_params) {
-    let limit,
-        categories;
-    if (opt_params) {
-        limit = opt_params.limit;
-        categories = opt_params.categories;
-    }
-
-    let costField = services.courseCategory.getCostField(categories);
-
-    searchParams.costSortColumn = lodash.snakeCase(costField);
     let searchString = services.courseSearchData.getSearchSql(
         searchParams,
-        limit
+        opt_params.limit
     );
 
     let courses = sequelize
@@ -206,7 +195,7 @@ service.list = async(function(searchParams, opt_params) {
             }
         )
         .then(courses => courses.map(course => {
-            course.optionCost = course[costField];
+            course.optionCost = course[lodash.camelCase(course.priceType)];
             return course;
         }));
 

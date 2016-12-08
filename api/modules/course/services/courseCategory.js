@@ -2,18 +2,15 @@
 
 const async = require('asyncawait/async'),
     await = require('asyncawait/await'),
-    squel = require('squel'),
-    lodash = require('lodash');
+    squel = require('squel');
 
 const services = require('../../../../app/components/services').all,
     models = require('../../../../app/components/models').all,
     sequelize = require('../../../../app/components/db');
 
-const entityType = require('../../entity/enums/entityType'),
-    categoryPrice = require('../enums/categoryPrice');
+const entityType = require('../../entity/enums/entityType');
 
-const CATEGORY = 'course_category',
-    DEFAULT_COST_FIELD = categoryPrice.COST_PER_HOUR;
+const CATEGORY = 'course_category';
 
 let service = {
     name: 'courseCategory'
@@ -174,19 +171,5 @@ service.deleteAlias = async(function(courseCategory) {
 service.getAliases = async(function() {
     return await(services.page.getAllAliases(entityType.COURSE_CATEGORY));
 });
-
-/**
- * @param  {Array<CourseCategory>=} opt_categories
- * @return {string}
- */
-service.getCostField = function(opt_categories) {
-    let result;
-    if (opt_categories && opt_categories.length == 1) {
-        result = lodash.camelCase(opt_categories[0].priceType);
-    } else {
-        result = lodash.camelCase(DEFAULT_COST_FIELD);
-    }
-    return result;
-};
 
 module.exports = service;

@@ -24,6 +24,8 @@
 }
 
 .g-dropdown.g-dropdown_minimal-theme {
+    position: static;
+
     .g-dropdown__opener-content {
         padding: 0;
     }

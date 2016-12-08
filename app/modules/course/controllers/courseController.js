@@ -133,8 +133,7 @@ controller.search = async(function(req, res, next) {
                     ),
                     courses: services.course.list(
                         searchParams, {
-                            limit: 10,
-                            categories: [categoryInstance]
+                            limit: 10
                         }
                     ),
                     mapCourses: services.course.listMap(searchParams, 10),
