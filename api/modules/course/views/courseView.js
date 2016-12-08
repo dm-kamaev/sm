@@ -13,7 +13,8 @@ const scoreView = require('../../entity/views/scoreView'),
     pageView = require('../../entity/views/pageView');
 
 const entityType = require('../../../../api/modules/entity/enums/entityType'),
-    groupSizeTraining = require('../enums/groupSizeTraining');
+    groupSizeTraining = require('../enums/groupSizeTraining'),
+    categoryPrice = require('../enums/categoryPrice');
 
 
 let view = {};
@@ -24,23 +25,28 @@ const FULL_DESCRIPTION_LENGTH = 300,
 
 /**
  * @param  {Object} course
+ * @param  {string} categoryAlias
  * @return {Object}
  */
-view.page = function(course) {
+view.page = function(course, categoryAlias) {
     let options = course.courseOptions,
         generalOptions = this.formatGeneralOptions(course);
     return {
         id: course.id,
         name: course.name,
-        category: 'proforientacija',
+        category: categoryAlias,
         description: course.description,
         fullDescription: this.formatFullDescription(course.fullDescription),
         score: scoreView.results(course.score, course.totalScore).data,
-        cost: this.formatCost(options),
+        cost: this.formatCost(options, course.courseType.category.priceType),
         generalOptions: {
             items: this.formatGeneralOptionsWithConfig(generalOptions)
         },
-        departmentList: this.formatDepartmentList(options, generalOptions),
+        departmentList: this.formatDepartmentList(
+            options,
+            generalOptions,
+            lodash.camelCase(course.courseType.category.priceType)
+        ),
         videoId: course.embedId,
         online: this.onlineStatus(generalOptions)
     };
@@ -73,11 +79,24 @@ view.formatFullDescription = function(text) {
 
 /**
  * @param  {Array<Object>} options
+ * @param  {string}        priceType
  * @return {string}
  */
-view.formatCost = function(options) {
-    return Math.min.apply(null, options.map(option => option.totalCost)) +
-        ' руб. / курс';
+view.formatCost = function(options, priceType) {
+    let costField = lodash.camelCase(priceType);
+
+    let value = Math.min.apply(
+            null,
+            options.map(option => option[costField])
+        ),
+        text;
+    if (priceType == categoryPrice.COST_PER_HOUR) {
+        text = 'руб. / час';
+    } else if (priceType == categoryPrice.TOTAL_COST) {
+        text = 'руб. / курс';
+    }
+
+    return `${value} ${text}`;
 };
 
 /**
@@ -94,10 +113,11 @@ view.formatGeneralOptions = function(course) {
 /**
  * @param  {Array<Object>} options
  * @param  {Array<Object>} generalOptions
+ * @param  {string}        priceType
  * @return {Array<Object>}
  */
-view.formatDepartmentList = function(options, generalOptions) {
-    let optionsTransformer = new CourseOptionsTransformer(options);
+view.formatDepartmentList = function(options, generalOptions, priceType) {
+    let optionsTransformer = new CourseOptionsTransformer(options, priceType);
     return optionsTransformer.getUniqueOptions(generalOptions);
 };
 

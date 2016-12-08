@@ -2,12 +2,16 @@
 
 .b-user-interaction {
     position: relative;
-
-    padding-top: 23px;
 }
 
 .b-user-interaction__label {
-    display: none;
+    margin-bottom: 15px;
+    padding: 8px 30px;
+
+    background-color: #64c22c;
+
+    font: 15px Arial, sans-serif;
+    font-weight: 600;
 }
 
 .b-user-interaction__icon-label {
@@ -36,23 +40,50 @@
 
 .b-user-interaction__action-text {
     display: none;
+
+    padding: 0 30px;
+
+    cursor: pointer;
+
+    color: #ee392f;
+
+    font: 19px 'Proxima', Arial, sans-serif;
+    font-weight: 700;
 }
 
 @include media-xs {
     .b-user-interaction {
+        display: inline-block;
+
         width: 100%;
-        padding-top: 20px;
+        padding-top: 25px;
+    }
+
+    .b-user-interaction__label {
+        position: absolute;
+        top: -15px;
+        left: 30px;
+
+        padding: 6px 10px 6px 9px;
+
+        font-size: 14px;
+    }
+
+    .b-user-interaction__icon-label {
+        margin-right: 9px;
     }
 
     .b-user-interaction__button {
-        display: block;
+        display: none;
     }
 
     .b-user-interaction__action-text {
-        display: none;
+        display: block;
     }
 
     .b-user-interaction__description {
-        display: none;
+        margin-bottom: 5px;
+
+        font-size: 19px;
     }
 }

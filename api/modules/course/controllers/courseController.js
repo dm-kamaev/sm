@@ -54,7 +54,16 @@ controller.search = async(function(req, res) {
     let result;
     try {
         let searchParams = searchView.initSearchParams(req.query),
-            courses = await(services.course.list(searchParams, 10)),
+            category = searchParams.categoryId.length == 1 ?
+                await(services.courseCategory.getById(
+                    searchParams.categoryId
+                )) :
+                null;
+
+        let courses = await(services.course.list(searchParams, {
+                limit: 10,
+                categories: [category]
+            })),
             countResults = courses[0] && courses[0].countResults || 0,
             aliases = await(services.course.getAliases(courses)),
             aliasedCourses = courseView.joinAliases(

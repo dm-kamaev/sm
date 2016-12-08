@@ -7,6 +7,8 @@ const SearchQuery = require('../../entity/lib/Search'),
     searchType = require('../enums/searchType'),
     addressSearchType = require('../../geo/enums/addressSearchType');
 
+const categoryPrice = require('../enums/categoryPrice');
+
 const HIDE_INDEX = {
     COST: 4,
     TIME: 3,
@@ -41,10 +43,11 @@ class CourseSearchQuery extends SearchQuery {
 
     /**
      * @param {(number|undefined)} sortType
+     * @param {string=} opt_costColumn
      * @return {Object}
      */
-    setSortType(sortType) {
-        this.setTypeOrder_(sortType);
+    setSortType(sortType, opt_costColumn) {
+        this.setTypeOrder_(sortType, opt_costColumn);
         this.setQueriesOrder_();
 
         return this;
@@ -213,7 +216,8 @@ class CourseSearchQuery extends SearchQuery {
             .field('course.image_url', 'imageUrl')
             .field('course.ctr')
             .field('course_option.id', 'courseOptionId')
-            .field('course_option.total_cost', 'optionCost')
+            .field('course_option.cost_per_hour', 'costPerHour')
+            .field('course_option.total_cost', 'totalCost')
             .field('course_option.online', 'optionOnline')
             .field('course_type.category_id', 'categoryId')
             .field('address.id', 'addressId')
@@ -312,24 +316,26 @@ class CourseSearchQuery extends SearchQuery {
     /**
      * @private
      * @param {number} sortType
+     * @param {string=} opt_costColumn
      */
-    setTypeOrder_(sortType) {
+    setTypeOrder_(sortType, opt_costColumn) {
         // this.baseQuery_
         //     .order('course.score[' + sortType + '] DESC NULLS LAST', null);
         // this.innerQuery_
         //     .order('course.score[' + sortType + '] DESC NULLS LAST', null);
         let order,
             baseField,
-            innerField;
+            innerField,
+            costColumn = opt_costColumn || categoryPrice.TOTAL_COST;
         switch (sortType) {
         case '0':
             order = 'ASC';
-            innerField = 'min(course_option.total_cost)';
+            innerField = `min(course_option.${costColumn})`;
             baseField = `(${innerField} OVER(PARTITION BY course.id))`;
             break;
         case '1':
             order = 'DESC NULLS LAST';
-            innerField = 'min(course_option.total_cost)';
+            innerField = `min(course_option.${costColumn})`;
             baseField = `(${innerField} OVER(PARTITION BY course.id))`;
             break;
         default:
