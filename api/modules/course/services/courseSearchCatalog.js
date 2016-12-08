@@ -44,7 +44,7 @@ service.getById = async(function(linkId) {
  * @return {[type]}       [description]
  */
 service.create = async(function(data) {
-    await(models.CourseSearchCatalog.create(data));
+    return await(models.CourseSearchCatalog.create(data));
 });
 
 
@@ -54,11 +54,12 @@ service.create = async(function(data) {
  * @param  {Object{}} data
  */
 service.update = async(function(linkId, data) {
-    await(models.CourseSearchCatalog.update(data, {
+    return await(models.CourseSearchCatalog.update(data, {
         where: {
             id: linkId
-        }
-    }));
+        },
+        returning: true
+    }))[1][0];
 });
 
 
@@ -67,7 +68,7 @@ service.update = async(function(linkId, data) {
  * @param  {Number} linkId record id
  */
 service.delete = async(function(linkId) {
-    await(models.CourseSearchCatalog.destroy({
+    return await(models.CourseSearchCatalog.destroy({
         where: {
             id: linkId
         }

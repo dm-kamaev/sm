@@ -108,7 +108,7 @@ controller.create = async(function(req, res) {
     };
 
     try {
-        await(services.courseSearchCatalog.create(data));
+        result = await(services.courseSearchCatalog.create(data));
     } catch (err) {
         result = handlerErr_(err);
     } finally {
@@ -152,7 +152,7 @@ controller.update = async(function(req, res) {
     try {
         var link = await(services.courseSearchCatalog.getById(linkId));
         if (!link) { throw new SearchCatalogNotFound(linkId); }
-        await(services.courseSearchCatalog.update(linkId, data));
+        result = await(services.courseSearchCatalog.update(linkId, data));
     } catch (err) {
         result = handlerErr_(err);
     } finally {
@@ -173,6 +173,7 @@ controller.update = async(function(req, res) {
 controller.delete = async(function(req, res) {
     let result = {}, linkId = req.params.id;
     await(services.courseSearchCatalog.delete(linkId));
+    result.id = linkId;
     res.header('Content-Type', 'application/json; charset=utf-8');
     res.end(JSON.stringify(result));
 });
