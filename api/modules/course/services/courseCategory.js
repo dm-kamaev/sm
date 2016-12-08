@@ -2,15 +2,18 @@
 
 const async = require('asyncawait/async'),
     await = require('asyncawait/await'),
-    squel = require('squel');
+    squel = require('squel'),
+    lodash = require('lodash');
 
 const services = require('../../../../app/components/services').all,
     models = require('../../../../app/components/models').all,
     sequelize = require('../../../../app/components/db');
 
-const entityType = require('../../entity/enums/entityType');
+const entityType = require('../../entity/enums/entityType'),
+    categoryPrice = require('../enums/categoryPrice');
 
-const CATEGORY = 'course_category';
+const CATEGORY = 'course_category',
+    DEFAULT_COST_FIELD = categoryPrice.COST_PER_HOUR;
 
 let service = {
     name: 'courseCategory'
@@ -52,6 +55,7 @@ service.getAll = async(function(opt_params) {
         .field(`${CATEGORY}.is_active`, 'isActive')
         .field('count(course.id)', 'courseCount')
         .field(`${CATEGORY}.filters`)
+        .field(`${CATEGORY}.price_type`, 'priceType')
         .field(`${CATEGORY}.updated_at`, 'updatedAt')
         .left_join(
             'course_type',
@@ -118,7 +122,8 @@ service.create = async(function(data) {
     return await(models.CourseCategory.create({
         name: data.name,
         isActive: data.isActive,
-        filters: data.filters
+        filters: data.filters,
+        priceType: data.priceType
     }));
 });
 
@@ -135,7 +140,8 @@ service.update = async(function(id, data) {
     return await(models.CourseCategory.update({
         name: data.name,
         isActive: data.isActive,
-        filters: data.filters
+        filters: data.filters,
+        priceType: data.priceType
     }, {
         where: {
             id: id
@@ -168,5 +174,19 @@ service.deleteAlias = async(function(courseCategory) {
 service.getAliases = async(function() {
     return await(services.page.getAllAliases(entityType.COURSE_CATEGORY));
 });
+
+/**
+ * @param  {Array<CourseCategory>=} opt_categories
+ * @return {string}
+ */
+service.getCostField = function(opt_categories) {
+    let result;
+    if (opt_categories && opt_categories.length == 1) {
+        result = lodash.camelCase(opt_categories[0].priceType);
+    } else {
+        result = lodash.camelCase(DEFAULT_COST_FIELD);
+    }
+    return result;
+};
 
 module.exports = service;

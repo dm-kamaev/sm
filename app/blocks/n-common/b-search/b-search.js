@@ -498,8 +498,7 @@ goog.scope(function() {
         var that = this;
 
         this.suggest_.setCallbacks({
-            getData: function(elem) {
-                var data = elem;
+            getData: function(data) {
                 var res = [],
                     items;
 

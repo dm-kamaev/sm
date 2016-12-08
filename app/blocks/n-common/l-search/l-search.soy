@@ -308,6 +308,19 @@
  * Show more button template
  * @param params {{
  *     data: {
+ *         resultsList: {
+ *             title: string,
+ *             description: Array<string>,
+ *             sort: sm.gDropdown.TemplateSelect.Params.Data,
+ *             entityList: sm.bSmItemList.Template.Params.Data,
+ *             countResults: number,
+ *             searchText: ?string,
+ *             declensionEntityType: {
+ *                 nom: string,
+ *                 gen: string,
+ *                 plu: string
+ *             }
+ *         }
  *     },
  *     config: {
  *         modifier: string
@@ -318,6 +331,7 @@
     {let $customClasses kind="html"}
         {call .rootClass /}__search-results
     {/let}
+
     <div class="{call .rootClass/}__search-results-wrap">
         {call cl.iFactory.FactoryManager.INSTANCE.renderTemplate}
             {param params: [
