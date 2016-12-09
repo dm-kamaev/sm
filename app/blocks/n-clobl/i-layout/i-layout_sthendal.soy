@@ -15,7 +15,7 @@
  *         metaTitle: string,
  *         metaDescription: (string|undefined)
  *     },
- *     subHeader: sm.bSmSubHeader.Template.Params.Data,
+ *     subHeader: sm.bSmSubHeader.Template.Params,
  *     header: sm.bSmHeader.Template.Params.Data
  *     footer: ({
  *         seoLinks: Array<sm.bSmLink.SmLink.Template.Params.Data>
@@ -355,7 +355,7 @@
  * Subheader
  * @param params {{
  *     data: {
- *         subheader: sm.bSmSubheader.Template.Params.Data
+ *         subheader: sm.bSmSubheader.Template.Params
  *     },
  *     config: {
  *         entityType: string,
@@ -370,13 +370,7 @@
             {param params: [
                 'factory': $params.config.modifier,
                 'type': 'smSubheader',
-                'renderParams': [
-                    'data': $params.data.subHeader,
-                    'config': [
-                        'bottomLine': true,
-                        'entityType': $params.config.entityType
-                    ]
-                ]
+                'renderParams': $params.data.subHeader
             ]/}
         {/call}
     </div>
