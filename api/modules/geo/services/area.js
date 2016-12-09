@@ -1,7 +1,11 @@
-var async = require('asyncawait/async');
-var await = require('asyncawait/await');
-var models = require('../../../../app/components/models').all;
+'use strict';
+
+const async = require('asyncawait/async');
+const await = require('asyncawait/await');
+const models = require('../../../../app/components/models').all;
+const geoView = require('../views/geoView');
 exports.name = 'area';
+
 
 /**
  * Creates an Area instance and returns it
@@ -74,3 +78,20 @@ exports.getByName = async(function(areaName) {
     }));
     return area;
 });
+
+
+/**
+ * getCenterCoords for area
+ * @param  {Number} areaId
+ * @return {Object[]} [ 55.733609, 37.633715 ],
+ */
+exports.getCenterCoords = function (areaId) {
+    return await(models.Area.findOne({
+        attributes: ['centerCoords'],
+        where: {
+            id: areaId
+        }
+    })).centerCoords;
+    // sort order value
+    // return geoView.coordinatesDefault(area.centerCoords);
+};

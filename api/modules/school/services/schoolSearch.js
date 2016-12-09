@@ -1,3 +1,5 @@
+'use strict';
+
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var lodash = require('lodash');
@@ -60,6 +62,7 @@ exports.suggestSearch = async(function(searchString) {
         entityType.DISTRICT
     ]));
 
+    console.log(await(services.area.getByIds(resultIds[entityType.AREA] || [])));
     return await({
         schools: services.school.searchByIds(
             resultIds[entityType.SCHOOL] || []
@@ -194,6 +197,7 @@ exports.getFilterIds = async(function(filter, type) {
     return ids;
 });
 
+
 /**
  * Get center coordinates for map depending of given search params
  * @param {Object} params
@@ -206,15 +210,15 @@ exports.getFilterIds = async(function(filter, type) {
  * }>}
  */
 exports.getMapPositionParams = function(params) {
-    var result = {};
+    let result = {};
     if (params.metroId) {
         result = {
             center: services.metro.getCoords(params.metroId),
             type: mapPositionType.METRO
         };
     } else if (params.areaId) {
-        /** Centering on area id **/
         result = {
+            center: services.area.getCenterCoords(params.areaId),
             type: mapPositionType.AREA
         };
     } else if (params.districtId) {
