@@ -1,7 +1,5 @@
 'use strict';
 
-const entityType = require('../enums/entityType');
-
 class Subheader {
 
     /**
@@ -13,7 +11,9 @@ class Subheader {
          * @type {Object<string, string>}
          * @protected
          */
-        this.logo = {};
+        this.logo = {
+            linkUrl: '/'
+        };
 
 
         /**
@@ -21,7 +21,7 @@ class Subheader {
          * @type {Object<string, (string|Array|Object)>}
          * @protected
          */
-        this.listlinks = {
+        this.listLinks = {
             content: {}
         };
 
@@ -70,9 +70,7 @@ class Subheader {
          */
         this.params = {
             data: {},
-            config: {
-                entityType: entityType.COURSE
-            }
+            config: {}
         };
     }
 
@@ -80,11 +78,11 @@ class Subheader {
     /**
      * Initializes class
      * @param {{
-     *     logoLinkUrl: (string|undefined),
+     *     isLogoRedirect: (boolean|undefined),
      *     contacts: (Object<string, string>|string),
      *     listLinks: Array<string>,
-     *     isRedirect: boolean,
-     *     pageAlias: string,
+     *     isSearchRedirect: (boolean|undefined),
+     *     pageAlias: (string|undefined),
      *     user: Object<string, string>,
      *     favoriteEntities: Object<string, (string|Array|Object)>,
      *     isBottomLine: boolean
@@ -92,7 +90,7 @@ class Subheader {
      * @public
      */
     init(data) {
-        this.setLogo(data.logoLinkUrl);
+        this.setLogo(data.isLogoRedirect);
         this.setContacts(data.contacts);
 
         if (data.listLinks) {
@@ -101,7 +99,7 @@ class Subheader {
             this.setLinks();
         }
 
-        this.setSearch(data.isRedirect, data.pageAlias);
+        this.setSearch(data.isSearchRedirect, data.pageAlias);
         this.setUser(data.user);
         this.setFavorites(data.favoriteEntities);
 
@@ -124,13 +122,15 @@ class Subheader {
 
     /**
      * Logo data setter
-     * @param {(string|undefined)} url
+     * @param {(boolean|undefined)} isLogoRedirect
      * @public
      */
-    setLogo(url) {
+    setLogo(isLogoRedirect) {
         this.params.data.logo = this.logo;
 
-        this.params.data.logo.linkUrl = url;
+        if (!isLogoRedirect) {
+            this.params.data.logo.linkUrl = null;
+        }
     }
 
 
@@ -152,9 +152,9 @@ class Subheader {
      * @public
      */
     setListLinks(links) {
-        this.params.data.listlinks = this.listlinks;
+        this.params.data.listLinks = this.listLinks;
 
-        this.params.data.listlinks.content.items = links;
+        this.params.data.listLinks.content.items = links;
     }
 
 
@@ -182,7 +182,7 @@ class Subheader {
         this.params.data.search = this.search;
 
         this.params.data.search.redirect = isRedirect;
-        this.params.data.search.pageAlias = pageAlias;
+        this.params.data.search.pageAlias = pageAlias || this.search.pageAlias;
     }
 
 

@@ -2,6 +2,8 @@
 
 const Subheader = require('../../entity/lib/Subheader');
 
+const entityType = require('../../entity/enums/entityType');
+
 class CourseSubheader extends Subheader {
 
     /**
@@ -29,7 +31,7 @@ class CourseSubheader extends Subheader {
          * @protected
          * @override
          */
-        this.listlinks = {
+        this.listLinks = {
             opener: 'Все курсы',
             content: {
                 items: []
@@ -57,8 +59,22 @@ class CourseSubheader extends Subheader {
          * @override
          */
         this.search = {
-            placeholder: 'Район, метро, название курса'
+            placeholder: 'Район, метро, название курса',
+            pageAlias: 'search'
         };
+    }
+
+
+    /**
+     * Config setter
+     * @param {boolean} isBottomLine
+     * @override
+     * @public
+     */
+    setConfig(isBottomLine) {
+        super.setConfig(isBottomLine);
+
+        this.params.config.entityType = entityType.COURSE;
     }
 }
 
