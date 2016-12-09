@@ -2,7 +2,8 @@
 
 const FilterPanel = require('../lib/CourseFilterPanel'),
     Header = require('../../entity/lib/Header'),
-    FormatUtils = require('../../entity/lib/FormatUtils');
+    FormatUtils = require('../../entity/lib/FormatUtils'),
+    Subheader = require('../lib/CourseSubheader');
 
 const courseView = require('./courseView'),
     userView = require('../../user/views/user'),
@@ -14,7 +15,10 @@ const filterName = require('../enums/filterName'),
     mapViewType = require('../../entity/enums/mapViewType'),
     entityType = require('../../entity/enums/entityType');
 
+const COMMON_PAGE_ALIAS = 'search';
+
 let searchView = {};
+
 
 /**
  * Data for filter panel
@@ -118,34 +122,16 @@ searchView.render = function(data) {
             fbClientId: data.fbClientId,
         },
         header: searchView.header(data.entityType, data.links),
-        subHeader: {
-            logo: {
-                altText: '«Курсы Мела»',
-                imgUrl: '/static/images/n-common/b-sm-subheader/course-logo.svg'
-            },
-            links: {
-                nameL: 'Все курсы, кружки и секции',
-                nameM: 'Все курсы',
-                url: `/${data.currentCategory}`
-            },
-            search: {
-                placeholder: 'Район, метро, название курса',
-                pageAlias: data.currentCategory
-            },
-            user: user,
-            favorites: {
-                items: favoriteView.list(data.favorites)
-            },
-            listLinks: {
-                opener: 'Все курсы',
-                content: {
-                    items: courseCategoryView.listLinks(
-                        data.categories,
-                        data.categoryAliases
-                    )
-                }
-            }
-        },
+        subHeader: searchView.subheader({
+            contacts: '',
+            listLinks: courseCategoryView.listLinks(
+                data.categories,
+                data.categoryAliases
+            ),
+            pageAlias: data.currentCategory,
+            favoriteEntities: favoriteView.list(data.favorites),
+            user: user
+        }),
         user: user,
         authSocialLinks: data.authSocialLinks,
         map: searchViewEntity.map(data.mapCourses, {
@@ -243,6 +229,27 @@ searchView.header = function(entityType, links) {
     });
 
     return header.getParams();
+};
+
+
+/**
+ * @param {Object<string, string>} data
+ * @return {Object}
+ */
+searchView.subheader = function(data) {
+    let subheader = new Subheader();
+
+    subheader.init({
+        isLogoRedirect: true,
+        contacts: data.contacts,
+        listLinks: data.listLinks,
+        isSearchRedirect: data.pageAlias != COMMON_PAGE_ALIAS,
+        user: data.user,
+        favoriteEntities: data.favoriteEntities,
+        isBottomLine: true
+    });
+
+    return subheader.getParams();
 };
 
 module.exports = searchView;

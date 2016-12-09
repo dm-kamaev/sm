@@ -6,6 +6,10 @@ const seoView = require('../../entity/views/seoView');
 
 const courseCategoryView = require('./courseCategoryView');
 
+const Subheader = require('../lib/CourseSubheader');
+
+let view = {};
+
 /**
  * @param {{
  *     user: Object,
@@ -21,7 +25,7 @@ const courseCategoryView = require('./courseCategoryView');
  * }} data
  * @return {Object}
  */
-exports.render = function(data) {
+view.render = function(data) {
     var user = userView.default(data.user);
 
     return {
@@ -38,31 +42,15 @@ exports.render = function(data) {
             image: '/static/images/n-clobl/i-layout/cources_sharing.png',
             fbClientId: data.fbClientId,
         },
-        subHeader: {
-            logo: {
-                linkUrl: '/',
-                altText: '«Курсы Мела»',
-                imgUrl: '/static/images/n-common/b-sm-subheader/course-logo.svg'
-            },
-            listLinks: {
-                opener: 'Все курсы',
-                content: {
-                    items: courseCategoryView.listLinks(
-                        data.categories,
-                        data.categoryAliases
-                    )
-                }
-            },
-            search: {
-                placeholder: 'Район, метро, название курса',
-                redirect: true,
-                pageAlias: 'proforientacija'
-            },
-            user: user,
-            favorites: {
-                items: favoriteView.list(data.favorites)
-            }
-        },
+        subHeader: view.subheader({
+            contacts: '',
+            listLinks: courseCategoryView.listLinks(
+                data.categories,
+                data.categoryAliases
+            ),
+            favoriteEntities: favoriteView.list(data.favorites),
+            user: user
+        }),
         user: user,
         authSocialLinks: data.authSocialLinks,
         entityData: data.entityData,
@@ -71,3 +59,26 @@ exports.render = function(data) {
         actionButtonText: data.actionButtonText
     };
 };
+
+
+/**
+ * @param {Object<string, string>} data
+ * @return {Object}
+ */
+view.subheader = function(data) {
+    let subheader = new Subheader();
+
+    subheader.init({
+        isLogoRedirect: true,
+        contacts: data.contacts,
+        listLinks: data.listLinks,
+        isSearchRedirect: true,
+        user: data.user,
+        favoriteEntities: data.favoriteEntities,
+        isBottomLine: true
+    });
+
+    return subheader.getParams();
+};
+
+module.exports = view;
