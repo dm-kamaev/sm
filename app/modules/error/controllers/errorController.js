@@ -110,6 +110,7 @@ controller.notFound = async(function(req, res, next, entityType, subdomain) {
             params: {
                 data: templateData,
                 config: {
+                    page: 'error-not-found',
                     staticVersion: config.lastBuildTimestamp,
                     entityType: entityType,
                     modifier: MODIFIER,
