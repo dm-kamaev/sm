@@ -4,12 +4,20 @@ const userView = require('../../user/views/user'),
     favoriteView = require('../../favorite/views/favoriteView'),
     courseCategoryView = require('../../course/views/courseCategoryView');
 
+const Subheader = require('../lib/CourseSubheader');
+
+const PAGE_ALIAS = 'search';
 
 let view = {};
+
 
 /**
  * @param {{
  *     user: Object,
+ *     authSocialLinks: Object,
+ *     favorites: Object,
+ *     categories: Array<Object>,
+ *     categoryAliases: Array<Object>,
  *     entityType: string
  * }} data
  * @return {Object}
@@ -24,28 +32,15 @@ view.render = function(data) {
         },
         user: user,
         authSocialLinks: data.authSocialLinks,
-        subHeader: {
-            logo: {
-                imgUrl: '/static/images/n-common/b-sm-subheader/course-logo.svg'
-            },
-            search: {
-                placeholder: 'Район, метро, название курса',
-                pageAlias: 'search'
-            },
-            user: user,
-            favorites: {
-                items: favoriteView.list(data.favorites)
-            },
-            listLinks: {
-                opener: 'Все курсы',
-                content: {
-                    items: courseCategoryView.listLinks(
-                        data.categories,
-                        data.categoryAliases
-                    )
-                }
-            }
-        },
+        subHeader: view.subheader({
+            contacts: '',
+            listLinks: courseCategoryView.listLinks(
+                data.categories,
+                data.categoryAliases
+            ),
+            favoriteEntities: favoriteView.list(data.favorites),
+            user: user
+        }),
         image: {
             imageUrl: '/static/images/n-common/l-home/images/main-courses.svg',
             title: 'Найдите в Москве лучший&nbsp;кружок или секцию ' +
@@ -61,6 +56,28 @@ view.render = function(data) {
         searchPanel: view.searchPanel()
     };
 };
+
+
+/**
+ * @param {Object<string, string>} data
+ * @return {Object}
+ */
+view.subheader = function(data) {
+    let subheader = new Subheader();
+
+    subheader.init({
+        isLogoRedirect: false,
+        contacts: data.contacts,
+        listLinks: data.listLinks,
+        isSearchRedirect: true,
+        user: data.user,
+        favoriteEntities: data.favoriteEntities,
+        bottomLine: false
+    });
+
+    return subheader.getParams();
+};
+
 
 
 /**
@@ -84,7 +101,7 @@ view.searchPanel = function() {
         title: 'Что вы ищете?',
         search: {
             placeholder: 'Район, метро, название курса',
-            pageAlias: 'search'
+            pageAlias: PAGE_ALIAS
         },
         links: links,
         button: {

@@ -61,7 +61,7 @@ controller.home = async(function(req, res, next) {
                     data: templateData,
                     config: {
                         entityType: entityType.COURSE,
-                        page: entityType.COURSE,
+                        page: 'home',
                         modifier: factory,
                         staticVersion: config.lastBuildTimestamp,
                         year: new Date().getFullYear(),
