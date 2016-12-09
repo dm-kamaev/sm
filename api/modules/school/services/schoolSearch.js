@@ -62,7 +62,6 @@ exports.suggestSearch = async(function(searchString) {
         entityType.DISTRICT
     ]));
 
-    console.log(await(services.area.getByIds(resultIds[entityType.AREA] || [])));
     return await({
         schools: services.school.searchByIds(
             resultIds[entityType.SCHOOL] || []
