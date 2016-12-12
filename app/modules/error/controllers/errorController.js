@@ -3,6 +3,7 @@
 const soy = require.main.require('./app/components/soy');
 const services = require('../../../../app/components/services').all;
 const schoolView = require('../../../../api/modules/school/views/schoolView');
+const headerView = require('../../../../api/modules/entity/views/haderView');
 const userView = require('../../../../api/modules/user/views/user');
 const seoView = require('../../../../api/modules/school/views/seoView');
 
@@ -103,7 +104,8 @@ controller.notFound = async(function(req, res, next, entityType, subdomain) {
             entityType: entityType,
             user: user,
             favorites: data.favorites,
-            authSocialLinks: authSocialLinks
+            authSocialLinks: authSocialLinks,
+            header: headerView.render(config, entityType)
         });
 
         html = soy.render('sm.lErrorNotFound.Template.errorNotFound', {

@@ -59,6 +59,9 @@
 {template .content autoescape="strict" kind="html"}
     <div class="{call .rootClass/} {call .entityModifierClass data="all"/}"
                 {call .attributes data="all"/}>
+
+        {call .mainHeader data="all" /}
+
         <div class="{call .rootClass/}__wrapper-content">
             {call .mainSubheader data="all" /}
             {call .mainContent data="all" /}

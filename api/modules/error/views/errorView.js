@@ -33,6 +33,7 @@ view.render = function(data) {
             user: user,
             entityType: data.entityType
         }),
+        header: data.header,
         user: user,
         authSocialLinks: data.authSocialLinks,
         error: {
