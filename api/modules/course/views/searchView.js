@@ -96,7 +96,8 @@ searchView.filterPanel = function(data) {
  *     seoParams: Object,
  *     currentCategory: string,
  *     categories: Array<Object>,
- *     categoryAliases: Array<Object>
+ *     categoryAliases: Array<Object>,
+ *     header: Object
  * }} data
  * @return {Object}
  */
@@ -106,8 +107,7 @@ searchView.render = function(data) {
             data.coursesList, data.aliases
         ),
         courses = courseView.list(aliasedCourses),
-        seoParams = data.seoParams || {},
-        header = searchView.header(data.entityType, data.links);
+        seoParams = data.seoParams || {};
     return {
         seo: {
             metaTitle: seoParams.tabTitle,
@@ -121,9 +121,9 @@ searchView.render = function(data) {
             relapImage: '/static/images/n-clobl/i-layout/cources_sharing.png',
             fbClientId: data.fbClientId,
         },
-        header: header,
+        header: data.header,
         subHeader: searchView.subheader({
-            contacts: header.data.contacts,
+            contacts: data.header.data.contacts,
             listLinks: courseCategoryView.listLinks(
                 data.categories,
                 data.categoryAliases

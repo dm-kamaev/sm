@@ -11,6 +11,7 @@ const services = require('../../../components/services').all;
 const schoolView = require('../../../../api/modules/school/views/schoolView');
 const searchView = require('../../../../api/modules/school/views/searchView');
 const seoView = require('../../../../api/modules/school/views/seoView');
+const headerView = require('../../../../api/modules/entity/views/haderView');
 
 const userView = require('../../../../api/modules/user/views/user');
 const entityType = require('../../../../api/modules/entity/enums/entityType');
@@ -279,7 +280,8 @@ exports.list = async(function(req, res, next) {
             seoLinks: seoView.linksList(
                 data.seoLinks,
                 (!requestParams.geoType) ? requestParams.listType : null
-            )
+            ),
+            header: headerView.render(config, entityType.SCHOOL)
         });
 
         let html = soy.render(

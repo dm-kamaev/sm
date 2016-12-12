@@ -13,7 +13,8 @@ const soy = require('../../../components/soy'),
     informationView = require(
         '../../../../api/modules/course/views/informationView'
     ),
-    entityType = require('../../../../api/modules/entity/enums/entityType.js');
+    headerView = require('../../../../api/modules/entity/views/haderView'),
+    entityType = require('../../../../api/modules/entity/enums/entityType');
 
 const PageNotFoundError = require('../../error/lib/PageNotFoundError');
 
@@ -52,7 +53,8 @@ controller.home = async(function(req, res, next) {
             favorites: data.favorites,
             authSocialLinks: authSocialLinks,
             categories: data.categories,
-            categoryAliases: data.categoryAliases
+            categoryAliases: data.categoryAliases,
+            header: headerView.render(config, entityType.COURSE)
         });
 
         let html = soy.render(
@@ -144,12 +146,7 @@ controller.search = async(function(req, res, next) {
                 currentCategory: categoryName,
                 categories: data.categories,
                 categoryAliases: aliases.categories,
-                links: {
-                    [entityType.SCHOOL]: `${config.protocol}://` +
-                                            config.schools.host,
-                    [entityType.COURSE]: `${config.protocol}://` +
-                                            config.courses.host
-                }
+                header: headerView.render(config, entityType.COURSE)
             });
 
             let html = soy.render(
@@ -241,7 +238,8 @@ controller.information = async(function(req, res, next) {
                     categories: data.categories,
                     categoryAliases: data.categoryAliases,
                     priceLabelText: 'Гарантия лучшей цены',
-                    actionButtonText: 'Хочу этот курс!'
+                    actionButtonText: 'Хочу этот курс!',
+                    header: headerView.render(config, entityType.COURSE)
                 });
                 let factory = contentExperiment.getFactoryByQuery(req.query);
 

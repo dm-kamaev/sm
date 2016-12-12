@@ -12,6 +12,7 @@ let view = {};
 
 /**
  * @param {{
+ *     header: Object,
  *     user: Object,
  *     fbClientId: string,
  *     authSocialLinks: Object,
@@ -42,6 +43,7 @@ view.render = function(data) {
             image: '/static/images/n-clobl/i-layout/cources_sharing.png',
             fbClientId: data.fbClientId,
         },
+        header: data.header,
         subHeader: view.subheader({
             contacts: '',
             listLinks: courseCategoryView.listLinks(

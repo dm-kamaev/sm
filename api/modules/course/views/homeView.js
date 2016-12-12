@@ -13,6 +13,7 @@ let view = {};
 
 /**
  * @param {{
+ *     header: Object,
  *     user: Object,
  *     authSocialLinks: Object,
  *     favorites: Object,
@@ -32,6 +33,7 @@ view.render = function(data) {
         },
         user: user,
         authSocialLinks: data.authSocialLinks,
+        header: data.header,
         subHeader: view.subheader({
             contacts: '',
             listLinks: courseCategoryView.listLinks(
