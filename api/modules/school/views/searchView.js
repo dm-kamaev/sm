@@ -86,7 +86,7 @@ searchView.render = function(data) {
         },
         header: data.header,
         subHeader: searchView.subheader({
-            favoriteEntities: [],
+            favoriteEntities: favoriteView.list(data.favorites),
             user: user
         }),
         user: user,
