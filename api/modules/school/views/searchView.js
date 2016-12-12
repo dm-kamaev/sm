@@ -83,9 +83,9 @@ searchView.render = function(data) {
             relapImage: '/static/images/n-clobl/i-layout/schools_sharing.png',
             fbClientId: data.fbClientId,
         },
+        header: data.header,
         subHeader: searchView.subheader({
-            contacts: '',
-            favoriteEntities: favoriteView.list(data.favorites),
+            favoriteEntities: [],
             user: user
         }),
         user: user,
@@ -254,6 +254,7 @@ searchView.subheader = function(data) {
         favoriteEntities: data.favoriteEntities,
         isBottomLine: true
     });
+
     return subheader.getParams();
 };
 
