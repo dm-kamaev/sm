@@ -345,10 +345,10 @@ goog.scope(function() {
      */
     Course.prototype.sendMapAnalytics_ = function(params) {
         var data = {
-            id: params.data.id,
-            name: params.data.header.title,
+            id: params.id,
+            name: params.header.title,
             list: 'map balloon',
-            category: params.data.category,
+            category: params.category,
             position: 1
         };
 
@@ -357,7 +357,7 @@ goog.scope(function() {
         this.analyticsSender_.sendMapAnalytics({
             category: 'details map',
             action: 'pin details',
-            name: params.data.footer.title
+            name: params.footer.title
         });
     };
 
